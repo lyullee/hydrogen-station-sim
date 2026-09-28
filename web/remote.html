@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>H₂ Station · 사고·공정 리모콘</title><link rel="stylesheet" href="/remote.css?v=20260928-hot1"><link rel="stylesheet" href="/remote-light.css?v=20260927-1"></head>
+<body>
+<main class="remote-shell">
+  <header><p class="eyebrow">H70 / REMOTE CONTROL</p><div class="section-title"><h1>사고·공정 리모콘</h1><span id="serverStatus" class="server-state">서버 확인 중</span></div><p>운전 조건과 사고를 구성한 뒤 실행하세요. 실행 중에도 다음 시나리오를 편집할 수 있습니다.</p><a id="monitorLink" href="/" target="hrs-monitor-window">공정 모니터 열기 ↗</a><p id="jobStatus" class="job-status" role="status">연결된 실행 없음</p></header>
+  <form id="scenarioForm" novalidate>
+    <fieldset id="scenarioFields">
+      <section class="remote-panel">
+        <div class="section-title"><h2>공정 운전 조건</h2><span class="hint">새 실행의 초기 조건</span></div>
+        <div class="grid">
+          <label>계산 구간 (s)<input id="duration" type="number" value="30" min="0.2" step="any" max="3600" required></label>
+          <label class="continuous-option"><input id="continuous" type="checkbox" checked> 정지할 때까지 계속 실행</label>
+          <label>제어 주기<select id="period"><option value="1">1.0 s · 빠름</option><option value="0.5">0.5 s · 균형</option><option value="0.2" selected>0.2 s · 정밀</option></select></label>
+          <label>외기 온도 (°C)<input id="ambient" type="number" value="25" min="-40" max="50" step="any" required></label>
+          <label>차량 1 초기압력 (MPa)<input id="initial1" type="number" value="5" min="0.1" max="70" step="any" required></label>
+          <label>차량 2 초기압력 (MPa)<input id="initial2" type="number" value="8" min="0.1" max="70" step="any" required></label>
+        </div>
+        <details><summary>목표압력 · 온도 · 유량 설정</summary><div class="grid">
+          <label>차량 1 목표압력 (MPa)<input id="target1" type="number" value="70" min="1.1" max="87.5" step="any" required></label>
+          <label>차량 2 목표압력 (MPa)<input id="target2" type="number" value="70" min="1.1" max="87.5" step="any" required></label>
+          <label>압력 상승률 (MPa/min)<input id="ramp" type="number" value="12" min="0.1" max="30" step="any" required></label>
+          <label>예냉 목표온도 (°C)<input id="delivery" type="number" value="-40" min="-50" max="20" step="any" required></label>
+          <label>최대 질량유량 (g/s)<input id="maxFlow" type="number" value="60" min="0.1" max="300" step="any" required></label>
+          <label>차량 1 초기온도 (°C)<input id="initialTemp1" type="number" value="25" min="-40" max="85" step="any" required></label>
+          <label>차량 2 초기온도 (°C)<input id="initialTemp2" type="number" value="25" min="-40" max="85" step="any" required></label>
+        </div></details>
+        <p class="hint">계속 실행을 켜면 계산 구간이 끝나도 모니터링을 이어갑니다. 차량은 목표압력에 도달하면 충전을 마칩니다.</p>
+      </section>
+      <section class="remote-panel library-panel" aria-label="사고 시나리오 라이브러리">
+        <div class="section-title"><h2>사고 시나리오 라이브러리</h2><span id="catalogCount" class="count">불러오는 중</span></div>
+        <p class="hint">위치·원인·입력값을 확인하고 추가하세요. 여러 시나리오를 함께 넣어 복합 사고를 구성할 수 있습니다.</p>
+        <div class="catalog-filters"><label class="sr-only" for="scenarioSearch">시나리오 검색</label><input id="scenarioSearch" type="search" placeholder="저장뱅크, 2번 호스, 화재, 센서…"><label class="sr-only" for="categoryFilter">시나리오 분류</label><select id="categoryFilter"><option value="all">전체 분류</option></select></div>
+        <div id="scenarioLibrary" class="scenario-library"><p class="hint">시나리오를 불러오고 있습니다.</p></div>
+      </section>
+      <section class="remote-panel">
+        <div class="section-title"><h2>실행할 사고 <span id="faultCount" class="count">0개</span></h2><div class="actions-small"><button id="clearFaults" type="button">정상 운전으로 비우기</button><button id="addFault" type="button" disabled>+ 직접 구성</button></div></div>
+        <p id="faultEmpty" class="hint">선택한 사고가 없습니다. 지금 실행하면 정상 운전을 시작합니다.</p><div id="faults"></div>
+        <p class="hint">새 공정에서는 모의 시작 시각 기준, 운전 중 투입은 현재 시각부터 지연·지속 시간 기준입니다. 가열·누출·압력 교란은 물리 공정에 적용됩니다.</p>
+      </section>
+    </fieldset>
+    <section class="remote-actions" aria-label="실행 컨트롤">
+      <div class="run-row"><button id="run" class="run" type="submit">공정 실행</button><button id="newRun" type="button" hidden>새 공정 시작</button><button id="stop" type="button" hidden>실행 정지</button><span id="status" role="status">사고 없이 정상 운전 실행 가능</span></div>
+      <p id="runHelp" class="action-note">선택한 운전 조건과 사고로 새 시뮬레이션을 시작합니다.</p>
+      <section class="live-faults"><h2>현재 운전의 사고</h2><div id="liveFaults" role="status">운전 중 사고가 없습니다.</div></section>
+      <p id="errorStatus" class="error-status" role="alert" hidden></p>
+    </section>
+  </form>
+</main>
+<template id="faultTemplate">
+  <article class="fault-card">
+    <div class="fault-head"><strong class="fault-title">직접 구성</strong><button type="button" class="remove">삭제</button></div>
+    <div class="grid">
+      <label>사고 종류<select class="kind"></select></label><label>사고 위치<select class="target"></select></label>
+      <label>시작 (s)<input data-field="start_time_s" type="number" value="5" min="0" step="any" required></label>
+      <label>종료 (s, 빈칸=계속)<input data-field="end_time_s" type="number" value="20" min="0" step="any"></label>
+      <label data-param="magnitude"><span class="magnitude-label">변화량</span><input data-field="magnitude" type="number" value="10" step="any" required></label>
+      <label data-param="rate_s">응답시간 (s)<input data-field="rate_s" type="number" value="30" min="0.1" step="any" required></label>
+      <label data-param="leak_diameter_mm">누출 구경 (mm)<input data-field="leak_diameter_mm" type="number" value="0.2" min="0.01" max="20" step="any" required></label>
+      <label data-param="external_temperature_c">열원 온도 (°C)<input data-field="external_temperature_c" type="number" value="800" min="-50" max="2500" step="any" required></label>
+      <label data-param="heat_transfer_ua_w_k">열전달 UA (W/K)<input data-field="heat_transfer_ua_w_k" type="number" value="1000" min="0.01" max="100000000" step="any" required></label>
+    </div><p class="fault-note hint"></p>
+  </article>
+</template>
+<script src="/remote.js?v=20260927-hot1"></script>
+</body></html>

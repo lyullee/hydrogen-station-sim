@@ -1,0 +1,1994 @@
+{
+  "version": "20260925-remote3",
+  "categories": [
+    {
+      "id": "leak",
+      "label": "누출"
+    },
+    {
+      "id": "fire",
+      "label": "외부 화재"
+    },
+    {
+      "id": "pressure",
+      "label": "압력"
+    },
+    {
+      "id": "thermal",
+      "label": "가열·냉각"
+    },
+    {
+      "id": "flow",
+      "label": "막힘·역류"
+    },
+    {
+      "id": "equipment",
+      "label": "설비 고장"
+    },
+    {
+      "id": "sensor",
+      "label": "센서 진단"
+    },
+    {
+      "id": "compound",
+      "label": "복합 사고"
+    }
+  ],
+  "kinds": [
+    {
+      "id": "hydrogen-leak",
+      "label": "수소 누출",
+      "targets": [
+        {
+          "value": "cascade.low",
+          "label": "저압 저장뱅크"
+        },
+        {
+          "value": "cascade.medium",
+          "label": "중압 저장뱅크"
+        },
+        {
+          "value": "cascade.high",
+          "label": "고압 저장뱅크"
+        },
+        {
+          "value": "dispenser.hose",
+          "label": "1번 충전호스"
+        },
+        {
+          "value": "dispenser_2.hose",
+          "label": "2번 충전호스"
+        },
+        {
+          "value": "vehicle.tank",
+          "label": "1번 차량탱크"
+        },
+        {
+          "value": "vehicle_2.tank",
+          "label": "2번 차량탱크"
+        },
+        {
+          "value": "compressor",
+          "label": "압축기 연결부"
+        },
+        {
+          "value": "header",
+          "label": "공급 헤더"
+        }
+      ],
+      "fields": [
+        "leak_diameter_mm"
+      ],
+      "note": "누출 질량·에너지를 재고에서 차감합니다. 압축기 연결부와 헤더는 고압뱅크의 재고를 공유합니다."
+    },
+    {
+      "id": "external-fire",
+      "label": "외부 화재",
+      "targets": [
+        {
+          "value": "cascade.low",
+          "label": "저압 저장뱅크"
+        },
+        {
+          "value": "cascade.medium",
+          "label": "중압 저장뱅크"
+        },
+        {
+          "value": "cascade.high",
+          "label": "고압 저장뱅크"
+        },
+        {
+          "value": "dispenser.hose",
+          "label": "1번 충전호스"
+        },
+        {
+          "value": "dispenser_2.hose",
+          "label": "2번 충전호스"
+        },
+        {
+          "value": "vehicle.tank",
+          "label": "1번 차량탱크"
+        },
+        {
+          "value": "vehicle_2.tank",
+          "label": "2번 차량탱크"
+        },
+        {
+          "value": "compressor",
+          "label": "압축기 연결부"
+        },
+        {
+          "value": "header",
+          "label": "공급 헤더"
+        }
+      ],
+      "fields": [
+        "external_temperature_c",
+        "heat_transfer_ua_w_k"
+      ],
+      "note": "열원과 설비의 온도차 및 UA로 열전달을 계산합니다. 자동 점화·연소 전파 모델은 아닙니다."
+    },
+    {
+      "id": "pressure-disturbance",
+      "label": "공정 압력 상승·저하",
+      "targets": [
+        {
+          "value": "cascade.low",
+          "label": "저압 저장뱅크"
+        },
+        {
+          "value": "cascade.medium",
+          "label": "중압 저장뱅크"
+        },
+        {
+          "value": "cascade.high",
+          "label": "고압 저장뱅크"
+        },
+        {
+          "value": "dispenser.hose",
+          "label": "1번 충전호스"
+        },
+        {
+          "value": "dispenser_2.hose",
+          "label": "2번 충전호스"
+        },
+        {
+          "value": "vehicle.tank",
+          "label": "1번 차량탱크"
+        },
+        {
+          "value": "vehicle_2.tank",
+          "label": "2번 차량탱크"
+        },
+        {
+          "value": "compressor",
+          "label": "압축기 연결부"
+        },
+        {
+          "value": "header",
+          "label": "공급 헤더"
+        }
+      ],
+      "fields": [
+        "magnitude",
+        "rate_s"
+      ],
+      "note": "MPa 변화량에 따른 질량 유입·유출을 적용합니다. 응답시간은 질량 변화 속도를 정합니다."
+    },
+    {
+      "id": "temperature-disturbance",
+      "label": "외부 가열·냉각",
+      "targets": [
+        {
+          "value": "cascade.low",
+          "label": "저압 저장뱅크"
+        },
+        {
+          "value": "cascade.medium",
+          "label": "중압 저장뱅크"
+        },
+        {
+          "value": "cascade.high",
+          "label": "고압 저장뱅크"
+        },
+        {
+          "value": "dispenser.hose",
+          "label": "1번 충전호스"
+        },
+        {
+          "value": "dispenser_2.hose",
+          "label": "2번 충전호스"
+        },
+        {
+          "value": "vehicle.tank",
+          "label": "1번 차량탱크"
+        },
+        {
+          "value": "vehicle_2.tank",
+          "label": "2번 차량탱크"
+        },
+        {
+          "value": "compressor",
+          "label": "압축기 연결부"
+        },
+        {
+          "value": "header",
+          "label": "공급 헤더"
+        }
+      ],
+      "fields": [
+        "external_temperature_c",
+        "heat_transfer_ua_w_k"
+      ],
+      "note": "가열·냉각 경계와 공정 사이의 열전달로 온도가 변합니다."
+    },
+    {
+      "id": "pipe-restriction",
+      "label": "배관·PCV 부분 막힘",
+      "targets": [
+        {
+          "value": "dispenser.hose",
+          "label": "1번 충전호스"
+        },
+        {
+          "value": "dispenser_2.hose",
+          "label": "2번 충전호스"
+        },
+        {
+          "value": "dispenser.pcv",
+          "label": "1번 PCV"
+        },
+        {
+          "value": "dispenser_2.pcv",
+          "label": "2번 PCV"
+        }
+      ],
+      "fields": [
+        "magnitude"
+      ],
+      "note": "유효 개방률 1은 정상, 0은 완전 폐쇄입니다."
+    },
+    {
+      "id": "check-valve-failure",
+      "label": "체크밸브 고장",
+      "targets": [
+        {
+          "value": "dispenser.hose",
+          "label": "1번 충전호스"
+        },
+        {
+          "value": "dispenser_2.hose",
+          "label": "2번 충전호스"
+        }
+      ],
+      "fields": [],
+      "note": "역방향 유동을 허용합니다. 실제 역류는 해당 시점의 압력차에 따라 결정됩니다."
+    },
+    {
+      "id": "pcv-stuck-open",
+      "label": "PCV 열린 고착",
+      "targets": [
+        {
+          "value": "pcv",
+          "label": "두 라인 공통 PCV"
+        }
+      ],
+      "fields": [],
+      "note": "현재 모델은 두 충전 라인에 공통 고착 명령을 적용합니다."
+    },
+    {
+      "id": "pcv-stuck-closed",
+      "label": "PCV 닫힌 고착",
+      "targets": [
+        {
+          "value": "pcv",
+          "label": "두 라인 공통 PCV"
+        }
+      ],
+      "fields": [],
+      "note": "현재 모델은 두 충전 라인에 공통 고착 명령을 적용합니다."
+    },
+    {
+      "id": "cascade-valve-stuck-open",
+      "label": "캐스케이드 밸브 열린 고착",
+      "targets": [
+        {
+          "value": "cascade",
+          "label": "공통 캐스케이드 밸브"
+        }
+      ],
+      "fields": [],
+      "note": "두 충전 라인의 뱅크 전환 밸브에 공통 적용됩니다."
+    },
+    {
+      "id": "cascade-valve-stuck-closed",
+      "label": "캐스케이드 밸브 닫힌 고착",
+      "targets": [
+        {
+          "value": "cascade",
+          "label": "공통 캐스케이드 밸브"
+        }
+      ],
+      "fields": [],
+      "note": "두 충전 라인의 뱅크 전환 밸브에 공통 적용됩니다."
+    },
+    {
+      "id": "precooler-loss",
+      "label": "예냉 성능 저하",
+      "targets": [
+        {
+          "value": "precooler",
+          "label": "두 라인 예냉기"
+        }
+      ],
+      "fields": [
+        "magnitude"
+      ],
+      "note": "잔존 냉각 용량을 0~1로 설정합니다. 0은 냉각 상실입니다."
+    },
+    {
+      "id": "compressor-trip",
+      "label": "압축기 정지",
+      "targets": [
+        {
+          "value": "compressor",
+          "label": "압축기"
+        }
+      ],
+      "fields": [],
+      "note": "저장뱅크 재충전을 중지합니다."
+    },
+    {
+      "id": "emergency-stop",
+      "label": "비상 정지 요청",
+      "targets": [
+        {
+          "value": "station",
+          "label": "전체 충전소"
+        }
+      ],
+      "fields": [],
+      "note": "기존 안전 PLC에 ESD 요청을 전달합니다. 종료 후에도 ESD 래치는 유지됩니다."
+    },
+    {
+      "id": "sensor-bias",
+      "label": "센서 편향",
+      "targets": [
+        {
+          "value": "FT-0701",
+          "label": "FT-0701 · N07 (g/s)",
+          "unit": "g/s",
+          "location": "저압 저장 뱅크 정방향 질량유량"
+        },
+        {
+          "value": "FT-0801",
+          "label": "FT-0801 · N08 (g/s)",
+          "unit": "g/s",
+          "location": "중압 저장 뱅크 정방향 질량유량"
+        },
+        {
+          "value": "FT-0901",
+          "label": "FT-0901 · N09 (g/s)",
+          "unit": "g/s",
+          "location": "고압 저장 뱅크 정방향 질량유량"
+        },
+        {
+          "value": "FT-1001",
+          "label": "FT-1001 · N10 (g/s)",
+          "unit": "g/s",
+          "location": "캐스케이드 공통 고압 헤더 정방향 질량유량"
+        },
+        {
+          "value": "FT-1101",
+          "label": "FT-1101 · N11 (g/s)",
+          "unit": "g/s",
+          "location": "충전기 1 PCV·계량라인 정방향 질량유량"
+        },
+        {
+          "value": "FT-1201",
+          "label": "FT-1201 · N12 (g/s)",
+          "unit": "g/s",
+          "location": "충전기 1 예냉 열교환기 정방향 질량유량"
+        },
+        {
+          "value": "FT-1301",
+          "label": "FT-1301 · N13 (g/s)",
+          "unit": "g/s",
+          "location": "충전기 1 호스·브레이크어웨이·노즐 정방향 질량유량"
+        },
+        {
+          "value": "FT-1501",
+          "label": "FT-1501 · N15 (g/s)",
+          "unit": "g/s",
+          "location": "충전기 2 PCV·계량라인 정방향 질량유량"
+        },
+        {
+          "value": "FT-1601",
+          "label": "FT-1601 · N16 (g/s)",
+          "unit": "g/s",
+          "location": "충전기 2 예냉 열교환기 정방향 질량유량"
+        },
+        {
+          "value": "FT-1701",
+          "label": "FT-1701 · N17 (g/s)",
+          "unit": "g/s",
+          "location": "충전기 2 호스·브레이크어웨이·노즐 정방향 질량유량"
+        },
+        {
+          "value": "PT-0101",
+          "label": "PT-0101 · N01 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "튜브트레일러 공급 경계 압력 취출점"
+        },
+        {
+          "value": "PT-0301",
+          "label": "PT-0301 · N03 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "압축기 흡입 압력 취출점"
+        },
+        {
+          "value": "PT-0701",
+          "label": "PT-0701 · N07 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "저압 저장 뱅크 압력 취출점"
+        },
+        {
+          "value": "PT-0801",
+          "label": "PT-0801 · N08 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "중압 저장 뱅크 압력 취출점"
+        },
+        {
+          "value": "PT-0901",
+          "label": "PT-0901 · N09 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "고압 저장 뱅크 압력 취출점"
+        },
+        {
+          "value": "PT-1101",
+          "label": "PT-1101 · N11 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "충전기 1 PCV·계량라인 압력 취출점"
+        },
+        {
+          "value": "PT-1102",
+          "label": "PT-1102 · N11 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "충전기 1 PCV 하류"
+        },
+        {
+          "value": "PT-1301",
+          "label": "PT-1301 · N13 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "충전기 1 호스·브레이크어웨이·노즐 압력 취출점"
+        },
+        {
+          "value": "PT-1401",
+          "label": "PT-1401 · N14 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "차량 1 Type IV 탱크 압력 취출점"
+        },
+        {
+          "value": "PT-1501",
+          "label": "PT-1501 · N15 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "충전기 2 PCV·계량라인 압력 취출점"
+        },
+        {
+          "value": "PT-1502",
+          "label": "PT-1502 · N15 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "충전기 2 PCV 하류"
+        },
+        {
+          "value": "PT-1701",
+          "label": "PT-1701 · N17 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "충전기 2 호스·브레이크어웨이·노즐 압력 취출점"
+        },
+        {
+          "value": "PT-1801",
+          "label": "PT-1801 · N18 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "차량 2 Type IV 탱크 압력 취출점"
+        },
+        {
+          "value": "TT-0101",
+          "label": "TT-0101 · N01 (degC)",
+          "unit": "degC",
+          "location": "튜브트레일러 공급 경계 수소 가스 온도"
+        },
+        {
+          "value": "TT-0301",
+          "label": "TT-0301 · N03 (degC)",
+          "unit": "degC",
+          "location": "압축기 흡입 수소 가스 온도"
+        },
+        {
+          "value": "TT-0701",
+          "label": "TT-0701 · N07 (degC)",
+          "unit": "degC",
+          "location": "저압 저장 뱅크 수소 가스 온도"
+        },
+        {
+          "value": "TT-0801",
+          "label": "TT-0801 · N08 (degC)",
+          "unit": "degC",
+          "location": "중압 저장 뱅크 수소 가스 온도"
+        },
+        {
+          "value": "TT-0901",
+          "label": "TT-0901 · N09 (degC)",
+          "unit": "degC",
+          "location": "고압 저장 뱅크 수소 가스 온도"
+        },
+        {
+          "value": "TT-1101",
+          "label": "TT-1101 · N11 (degC)",
+          "unit": "degC",
+          "location": "충전기 1 PCV·계량라인 수소 가스 온도"
+        },
+        {
+          "value": "TT-1201",
+          "label": "TT-1201 · N12 (degC)",
+          "unit": "degC",
+          "location": "충전기 1 예냉 열교환기 수소 가스 온도"
+        },
+        {
+          "value": "TT-1301",
+          "label": "TT-1301 · N13 (degC)",
+          "unit": "degC",
+          "location": "충전기 1 호스·브레이크어웨이·노즐 수소 가스 온도"
+        },
+        {
+          "value": "TT-1401",
+          "label": "TT-1401 · N14 (degC)",
+          "unit": "degC",
+          "location": "차량 1 Type IV 탱크 수소 가스 온도"
+        },
+        {
+          "value": "TT-1402",
+          "label": "TT-1402 · N14 (degC)",
+          "unit": "degC",
+          "location": "차량 1 탱크 표면"
+        },
+        {
+          "value": "TT-1501",
+          "label": "TT-1501 · N15 (degC)",
+          "unit": "degC",
+          "location": "충전기 2 PCV·계량라인 수소 가스 온도"
+        },
+        {
+          "value": "TT-1601",
+          "label": "TT-1601 · N16 (degC)",
+          "unit": "degC",
+          "location": "충전기 2 예냉 열교환기 수소 가스 온도"
+        },
+        {
+          "value": "TT-1701",
+          "label": "TT-1701 · N17 (degC)",
+          "unit": "degC",
+          "location": "충전기 2 호스·브레이크어웨이·노즐 수소 가스 온도"
+        },
+        {
+          "value": "TT-1801",
+          "label": "TT-1801 · N18 (degC)",
+          "unit": "degC",
+          "location": "차량 2 Type IV 탱크 수소 가스 온도"
+        },
+        {
+          "value": "TT-1802",
+          "label": "TT-1802 · N18 (degC)",
+          "unit": "degC",
+          "location": "차량 2 탱크 표면"
+        }
+      ],
+      "fields": [
+        "magnitude"
+      ],
+      "note": "표시 단위의 편향값을 HAZOP 진단 신호에 더합니다. 물리 공정값과 기존 PLC 입력은 바꾸지 않습니다."
+    },
+    {
+      "id": "sensor-freeze",
+      "label": "센서 값 고정",
+      "targets": [
+        {
+          "value": "FT-0701",
+          "label": "FT-0701 · N07 (g/s)",
+          "unit": "g/s",
+          "location": "저압 저장 뱅크 정방향 질량유량"
+        },
+        {
+          "value": "FT-0801",
+          "label": "FT-0801 · N08 (g/s)",
+          "unit": "g/s",
+          "location": "중압 저장 뱅크 정방향 질량유량"
+        },
+        {
+          "value": "FT-0901",
+          "label": "FT-0901 · N09 (g/s)",
+          "unit": "g/s",
+          "location": "고압 저장 뱅크 정방향 질량유량"
+        },
+        {
+          "value": "FT-1001",
+          "label": "FT-1001 · N10 (g/s)",
+          "unit": "g/s",
+          "location": "캐스케이드 공통 고압 헤더 정방향 질량유량"
+        },
+        {
+          "value": "FT-1101",
+          "label": "FT-1101 · N11 (g/s)",
+          "unit": "g/s",
+          "location": "충전기 1 PCV·계량라인 정방향 질량유량"
+        },
+        {
+          "value": "FT-1201",
+          "label": "FT-1201 · N12 (g/s)",
+          "unit": "g/s",
+          "location": "충전기 1 예냉 열교환기 정방향 질량유량"
+        },
+        {
+          "value": "FT-1301",
+          "label": "FT-1301 · N13 (g/s)",
+          "unit": "g/s",
+          "location": "충전기 1 호스·브레이크어웨이·노즐 정방향 질량유량"
+        },
+        {
+          "value": "FT-1501",
+          "label": "FT-1501 · N15 (g/s)",
+          "unit": "g/s",
+          "location": "충전기 2 PCV·계량라인 정방향 질량유량"
+        },
+        {
+          "value": "FT-1601",
+          "label": "FT-1601 · N16 (g/s)",
+          "unit": "g/s",
+          "location": "충전기 2 예냉 열교환기 정방향 질량유량"
+        },
+        {
+          "value": "FT-1701",
+          "label": "FT-1701 · N17 (g/s)",
+          "unit": "g/s",
+          "location": "충전기 2 호스·브레이크어웨이·노즐 정방향 질량유량"
+        },
+        {
+          "value": "PT-0101",
+          "label": "PT-0101 · N01 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "튜브트레일러 공급 경계 압력 취출점"
+        },
+        {
+          "value": "PT-0301",
+          "label": "PT-0301 · N03 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "압축기 흡입 압력 취출점"
+        },
+        {
+          "value": "PT-0701",
+          "label": "PT-0701 · N07 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "저압 저장 뱅크 압력 취출점"
+        },
+        {
+          "value": "PT-0801",
+          "label": "PT-0801 · N08 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "중압 저장 뱅크 압력 취출점"
+        },
+        {
+          "value": "PT-0901",
+          "label": "PT-0901 · N09 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "고압 저장 뱅크 압력 취출점"
+        },
+        {
+          "value": "PT-1101",
+          "label": "PT-1101 · N11 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "충전기 1 PCV·계량라인 압력 취출점"
+        },
+        {
+          "value": "PT-1102",
+          "label": "PT-1102 · N11 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "충전기 1 PCV 하류"
+        },
+        {
+          "value": "PT-1301",
+          "label": "PT-1301 · N13 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "충전기 1 호스·브레이크어웨이·노즐 압력 취출점"
+        },
+        {
+          "value": "PT-1401",
+          "label": "PT-1401 · N14 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "차량 1 Type IV 탱크 압력 취출점"
+        },
+        {
+          "value": "PT-1501",
+          "label": "PT-1501 · N15 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "충전기 2 PCV·계량라인 압력 취출점"
+        },
+        {
+          "value": "PT-1502",
+          "label": "PT-1502 · N15 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "충전기 2 PCV 하류"
+        },
+        {
+          "value": "PT-1701",
+          "label": "PT-1701 · N17 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "충전기 2 호스·브레이크어웨이·노즐 압력 취출점"
+        },
+        {
+          "value": "PT-1801",
+          "label": "PT-1801 · N18 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "차량 2 Type IV 탱크 압력 취출점"
+        },
+        {
+          "value": "TT-0101",
+          "label": "TT-0101 · N01 (degC)",
+          "unit": "degC",
+          "location": "튜브트레일러 공급 경계 수소 가스 온도"
+        },
+        {
+          "value": "TT-0301",
+          "label": "TT-0301 · N03 (degC)",
+          "unit": "degC",
+          "location": "압축기 흡입 수소 가스 온도"
+        },
+        {
+          "value": "TT-0701",
+          "label": "TT-0701 · N07 (degC)",
+          "unit": "degC",
+          "location": "저압 저장 뱅크 수소 가스 온도"
+        },
+        {
+          "value": "TT-0801",
+          "label": "TT-0801 · N08 (degC)",
+          "unit": "degC",
+          "location": "중압 저장 뱅크 수소 가스 온도"
+        },
+        {
+          "value": "TT-0901",
+          "label": "TT-0901 · N09 (degC)",
+          "unit": "degC",
+          "location": "고압 저장 뱅크 수소 가스 온도"
+        },
+        {
+          "value": "TT-1101",
+          "label": "TT-1101 · N11 (degC)",
+          "unit": "degC",
+          "location": "충전기 1 PCV·계량라인 수소 가스 온도"
+        },
+        {
+          "value": "TT-1201",
+          "label": "TT-1201 · N12 (degC)",
+          "unit": "degC",
+          "location": "충전기 1 예냉 열교환기 수소 가스 온도"
+        },
+        {
+          "value": "TT-1301",
+          "label": "TT-1301 · N13 (degC)",
+          "unit": "degC",
+          "location": "충전기 1 호스·브레이크어웨이·노즐 수소 가스 온도"
+        },
+        {
+          "value": "TT-1401",
+          "label": "TT-1401 · N14 (degC)",
+          "unit": "degC",
+          "location": "차량 1 Type IV 탱크 수소 가스 온도"
+        },
+        {
+          "value": "TT-1402",
+          "label": "TT-1402 · N14 (degC)",
+          "unit": "degC",
+          "location": "차량 1 탱크 표면"
+        },
+        {
+          "value": "TT-1501",
+          "label": "TT-1501 · N15 (degC)",
+          "unit": "degC",
+          "location": "충전기 2 PCV·계량라인 수소 가스 온도"
+        },
+        {
+          "value": "TT-1601",
+          "label": "TT-1601 · N16 (degC)",
+          "unit": "degC",
+          "location": "충전기 2 예냉 열교환기 수소 가스 온도"
+        },
+        {
+          "value": "TT-1701",
+          "label": "TT-1701 · N17 (degC)",
+          "unit": "degC",
+          "location": "충전기 2 호스·브레이크어웨이·노즐 수소 가스 온도"
+        },
+        {
+          "value": "TT-1801",
+          "label": "TT-1801 · N18 (degC)",
+          "unit": "degC",
+          "location": "차량 2 Type IV 탱크 수소 가스 온도"
+        },
+        {
+          "value": "TT-1802",
+          "label": "TT-1802 · N18 (degC)",
+          "unit": "degC",
+          "location": "차량 2 탱크 표면"
+        }
+      ],
+      "fields": [],
+      "note": "사고 시작 시점의 HAZOP 진단값을 유지합니다. 물리 공정은 계속 계산됩니다."
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "leak-01",
+      "category": "leak",
+      "title": "저압 저장뱅크 수소 누출",
+      "description": "5~20초 · 구경 0.2 mm · 누출 질량과 해당 구역 가스검지 신호 추적",
+      "faults": [
+        {
+          "kind": "hydrogen-leak",
+          "target": "cascade.low",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "leak_diameter_mm": 0.2,
+          "event_id": "leak-01-1"
+        }
+      ]
+    },
+    {
+      "id": "leak-02",
+      "category": "leak",
+      "title": "중압 저장뱅크 수소 누출",
+      "description": "5~20초 · 구경 0.2 mm · 누출 질량과 해당 구역 가스검지 신호 추적",
+      "faults": [
+        {
+          "kind": "hydrogen-leak",
+          "target": "cascade.medium",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "leak_diameter_mm": 0.2,
+          "event_id": "leak-02-1"
+        }
+      ]
+    },
+    {
+      "id": "leak-03",
+      "category": "leak",
+      "title": "고압 저장뱅크 수소 누출",
+      "description": "5~20초 · 구경 0.2 mm · 누출 질량과 해당 구역 가스검지 신호 추적",
+      "faults": [
+        {
+          "kind": "hydrogen-leak",
+          "target": "cascade.high",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "leak_diameter_mm": 0.2,
+          "event_id": "leak-03-1"
+        }
+      ]
+    },
+    {
+      "id": "leak-04",
+      "category": "leak",
+      "title": "1번 충전호스 수소 누출",
+      "description": "5~20초 · 구경 0.2 mm · 누출 질량과 해당 구역 가스검지 신호 추적",
+      "faults": [
+        {
+          "kind": "hydrogen-leak",
+          "target": "dispenser.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "leak_diameter_mm": 0.2,
+          "event_id": "leak-04-1"
+        }
+      ]
+    },
+    {
+      "id": "leak-05",
+      "category": "leak",
+      "title": "2번 충전호스 수소 누출",
+      "description": "5~20초 · 구경 0.2 mm · 누출 질량과 해당 구역 가스검지 신호 추적",
+      "faults": [
+        {
+          "kind": "hydrogen-leak",
+          "target": "dispenser_2.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "leak_diameter_mm": 0.2,
+          "event_id": "leak-05-1"
+        }
+      ]
+    },
+    {
+      "id": "leak-06",
+      "category": "leak",
+      "title": "1번 차량탱크 수소 누출",
+      "description": "5~20초 · 구경 0.2 mm · 누출 질량과 해당 구역 가스검지 신호 추적",
+      "faults": [
+        {
+          "kind": "hydrogen-leak",
+          "target": "vehicle.tank",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "leak_diameter_mm": 0.2,
+          "event_id": "leak-06-1"
+        }
+      ]
+    },
+    {
+      "id": "leak-07",
+      "category": "leak",
+      "title": "2번 차량탱크 수소 누출",
+      "description": "5~20초 · 구경 0.2 mm · 누출 질량과 해당 구역 가스검지 신호 추적",
+      "faults": [
+        {
+          "kind": "hydrogen-leak",
+          "target": "vehicle_2.tank",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "leak_diameter_mm": 0.2,
+          "event_id": "leak-07-1"
+        }
+      ]
+    },
+    {
+      "id": "leak-08",
+      "category": "leak",
+      "title": "압축기 연결부 수소 누출",
+      "description": "5~20초 · 구경 0.2 mm · 누출 질량과 해당 구역 가스검지 신호 추적",
+      "faults": [
+        {
+          "kind": "hydrogen-leak",
+          "target": "compressor",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "leak_diameter_mm": 0.2,
+          "event_id": "leak-08-1"
+        }
+      ]
+    },
+    {
+      "id": "leak-09",
+      "category": "leak",
+      "title": "공급 헤더 수소 누출",
+      "description": "5~20초 · 구경 0.2 mm · 누출 질량과 해당 구역 가스검지 신호 추적",
+      "faults": [
+        {
+          "kind": "hydrogen-leak",
+          "target": "header",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "leak_diameter_mm": 0.2,
+          "event_id": "leak-09-1"
+        }
+      ]
+    },
+    {
+      "id": "fire-01",
+      "category": "fire",
+      "title": "저압 저장뱅크 외부 화재",
+      "description": "5~20초 · 열원 800 °C · UA 1,000 W/K",
+      "faults": [
+        {
+          "kind": "external-fire",
+          "target": "cascade.low",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "external_temperature_c": 800,
+          "heat_transfer_ua_w_k": 1000,
+          "event_id": "fire-01-1"
+        }
+      ]
+    },
+    {
+      "id": "fire-02",
+      "category": "fire",
+      "title": "중압 저장뱅크 외부 화재",
+      "description": "5~20초 · 열원 800 °C · UA 1,000 W/K",
+      "faults": [
+        {
+          "kind": "external-fire",
+          "target": "cascade.medium",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "external_temperature_c": 800,
+          "heat_transfer_ua_w_k": 1000,
+          "event_id": "fire-02-1"
+        }
+      ]
+    },
+    {
+      "id": "fire-03",
+      "category": "fire",
+      "title": "고압 저장뱅크 외부 화재",
+      "description": "5~20초 · 열원 800 °C · UA 1,000 W/K",
+      "faults": [
+        {
+          "kind": "external-fire",
+          "target": "cascade.high",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "external_temperature_c": 800,
+          "heat_transfer_ua_w_k": 1000,
+          "event_id": "fire-03-1"
+        }
+      ]
+    },
+    {
+      "id": "fire-04",
+      "category": "fire",
+      "title": "1번 충전호스 외부 화재",
+      "description": "5~20초 · 열원 800 °C · UA 1,000 W/K",
+      "faults": [
+        {
+          "kind": "external-fire",
+          "target": "dispenser.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "external_temperature_c": 800,
+          "heat_transfer_ua_w_k": 1000,
+          "event_id": "fire-04-1"
+        }
+      ]
+    },
+    {
+      "id": "fire-05",
+      "category": "fire",
+      "title": "2번 충전호스 외부 화재",
+      "description": "5~20초 · 열원 800 °C · UA 1,000 W/K",
+      "faults": [
+        {
+          "kind": "external-fire",
+          "target": "dispenser_2.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "external_temperature_c": 800,
+          "heat_transfer_ua_w_k": 1000,
+          "event_id": "fire-05-1"
+        }
+      ]
+    },
+    {
+      "id": "fire-06",
+      "category": "fire",
+      "title": "1번 차량탱크 외부 화재",
+      "description": "5~20초 · 열원 800 °C · UA 1,000 W/K",
+      "faults": [
+        {
+          "kind": "external-fire",
+          "target": "vehicle.tank",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "external_temperature_c": 800,
+          "heat_transfer_ua_w_k": 1000,
+          "event_id": "fire-06-1"
+        }
+      ]
+    },
+    {
+      "id": "fire-07",
+      "category": "fire",
+      "title": "2번 차량탱크 외부 화재",
+      "description": "5~20초 · 열원 800 °C · UA 1,000 W/K",
+      "faults": [
+        {
+          "kind": "external-fire",
+          "target": "vehicle_2.tank",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "external_temperature_c": 800,
+          "heat_transfer_ua_w_k": 1000,
+          "event_id": "fire-07-1"
+        }
+      ]
+    },
+    {
+      "id": "pressure-01",
+      "category": "pressure",
+      "title": "저압 저장뱅크 압력 상승",
+      "description": "5~20초 · 변화량 +10 MPa · 응답시간 30초",
+      "faults": [
+        {
+          "kind": "pressure-disturbance",
+          "target": "cascade.low",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 10,
+          "rate_s": 30,
+          "event_id": "pressure-01-1"
+        }
+      ]
+    },
+    {
+      "id": "pressure-02",
+      "category": "pressure",
+      "title": "저압 저장뱅크 압력 저하",
+      "description": "5~20초 · 변화량 -10 MPa · 응답시간 30초",
+      "faults": [
+        {
+          "kind": "pressure-disturbance",
+          "target": "cascade.low",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": -10,
+          "rate_s": 30,
+          "event_id": "pressure-02-1"
+        }
+      ]
+    },
+    {
+      "id": "pressure-03",
+      "category": "pressure",
+      "title": "중압 저장뱅크 압력 상승",
+      "description": "5~20초 · 변화량 +10 MPa · 응답시간 30초",
+      "faults": [
+        {
+          "kind": "pressure-disturbance",
+          "target": "cascade.medium",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 10,
+          "rate_s": 30,
+          "event_id": "pressure-03-1"
+        }
+      ]
+    },
+    {
+      "id": "pressure-04",
+      "category": "pressure",
+      "title": "중압 저장뱅크 압력 저하",
+      "description": "5~20초 · 변화량 -10 MPa · 응답시간 30초",
+      "faults": [
+        {
+          "kind": "pressure-disturbance",
+          "target": "cascade.medium",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": -10,
+          "rate_s": 30,
+          "event_id": "pressure-04-1"
+        }
+      ]
+    },
+    {
+      "id": "pressure-05",
+      "category": "pressure",
+      "title": "고압 저장뱅크 압력 상승",
+      "description": "5~20초 · 변화량 +10 MPa · 응답시간 30초",
+      "faults": [
+        {
+          "kind": "pressure-disturbance",
+          "target": "cascade.high",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 10,
+          "rate_s": 30,
+          "event_id": "pressure-05-1"
+        }
+      ]
+    },
+    {
+      "id": "pressure-06",
+      "category": "pressure",
+      "title": "고압 저장뱅크 압력 저하",
+      "description": "5~20초 · 변화량 -10 MPa · 응답시간 30초",
+      "faults": [
+        {
+          "kind": "pressure-disturbance",
+          "target": "cascade.high",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": -10,
+          "rate_s": 30,
+          "event_id": "pressure-06-1"
+        }
+      ]
+    },
+    {
+      "id": "pressure-07",
+      "category": "pressure",
+      "title": "1번 충전호스 압력 상승",
+      "description": "5~20초 · 변화량 +10 MPa · 응답시간 30초",
+      "faults": [
+        {
+          "kind": "pressure-disturbance",
+          "target": "dispenser.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 10,
+          "rate_s": 30,
+          "event_id": "pressure-07-1"
+        }
+      ]
+    },
+    {
+      "id": "pressure-08",
+      "category": "pressure",
+      "title": "1번 충전호스 압력 저하",
+      "description": "5~20초 · 변화량 -10 MPa · 응답시간 30초",
+      "faults": [
+        {
+          "kind": "pressure-disturbance",
+          "target": "dispenser.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": -10,
+          "rate_s": 30,
+          "event_id": "pressure-08-1"
+        }
+      ]
+    },
+    {
+      "id": "pressure-09",
+      "category": "pressure",
+      "title": "2번 충전호스 압력 상승",
+      "description": "5~20초 · 변화량 +10 MPa · 응답시간 30초",
+      "faults": [
+        {
+          "kind": "pressure-disturbance",
+          "target": "dispenser_2.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 10,
+          "rate_s": 30,
+          "event_id": "pressure-09-1"
+        }
+      ]
+    },
+    {
+      "id": "pressure-10",
+      "category": "pressure",
+      "title": "2번 충전호스 압력 저하",
+      "description": "5~20초 · 변화량 -10 MPa · 응답시간 30초",
+      "faults": [
+        {
+          "kind": "pressure-disturbance",
+          "target": "dispenser_2.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": -10,
+          "rate_s": 30,
+          "event_id": "pressure-10-1"
+        }
+      ]
+    },
+    {
+      "id": "pressure-11",
+      "category": "pressure",
+      "title": "1번 차량탱크 압력 상승",
+      "description": "5~20초 · 변화량 +10 MPa · 응답시간 30초",
+      "faults": [
+        {
+          "kind": "pressure-disturbance",
+          "target": "vehicle.tank",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 10,
+          "rate_s": 30,
+          "event_id": "pressure-11-1"
+        }
+      ]
+    },
+    {
+      "id": "pressure-12",
+      "category": "pressure",
+      "title": "1번 차량탱크 압력 저하",
+      "description": "5~20초 · 변화량 -10 MPa · 응답시간 30초",
+      "faults": [
+        {
+          "kind": "pressure-disturbance",
+          "target": "vehicle.tank",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": -10,
+          "rate_s": 30,
+          "event_id": "pressure-12-1"
+        }
+      ]
+    },
+    {
+      "id": "pressure-13",
+      "category": "pressure",
+      "title": "2번 차량탱크 압력 상승",
+      "description": "5~20초 · 변화량 +10 MPa · 응답시간 30초",
+      "faults": [
+        {
+          "kind": "pressure-disturbance",
+          "target": "vehicle_2.tank",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 10,
+          "rate_s": 30,
+          "event_id": "pressure-13-1"
+        }
+      ]
+    },
+    {
+      "id": "pressure-14",
+      "category": "pressure",
+      "title": "2번 차량탱크 압력 저하",
+      "description": "5~20초 · 변화량 -10 MPa · 응답시간 30초",
+      "faults": [
+        {
+          "kind": "pressure-disturbance",
+          "target": "vehicle_2.tank",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": -10,
+          "rate_s": 30,
+          "event_id": "pressure-14-1"
+        }
+      ]
+    },
+    {
+      "id": "thermal-01",
+      "category": "thermal",
+      "title": "1번 차량탱크 가열",
+      "description": "5~20초 · 외부 경계 150 °C · UA 500 W/K",
+      "faults": [
+        {
+          "kind": "temperature-disturbance",
+          "target": "vehicle.tank",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "external_temperature_c": 150,
+          "heat_transfer_ua_w_k": 500,
+          "event_id": "thermal-01-1"
+        }
+      ]
+    },
+    {
+      "id": "thermal-02",
+      "category": "thermal",
+      "title": "2번 차량탱크 가열",
+      "description": "5~20초 · 외부 경계 150 °C · UA 500 W/K",
+      "faults": [
+        {
+          "kind": "temperature-disturbance",
+          "target": "vehicle_2.tank",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "external_temperature_c": 150,
+          "heat_transfer_ua_w_k": 500,
+          "event_id": "thermal-02-1"
+        }
+      ]
+    },
+    {
+      "id": "thermal-03",
+      "category": "thermal",
+      "title": "1번 호스 외부 냉각",
+      "description": "5~20초 · 외부 경계 -40 °C · UA 500 W/K",
+      "faults": [
+        {
+          "kind": "temperature-disturbance",
+          "target": "dispenser.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "external_temperature_c": -40,
+          "heat_transfer_ua_w_k": 500,
+          "event_id": "thermal-03-1"
+        }
+      ]
+    },
+    {
+      "id": "thermal-04",
+      "category": "thermal",
+      "title": "2번 호스 외부 냉각",
+      "description": "5~20초 · 외부 경계 -40 °C · UA 500 W/K",
+      "faults": [
+        {
+          "kind": "temperature-disturbance",
+          "target": "dispenser_2.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "external_temperature_c": -40,
+          "heat_transfer_ua_w_k": 500,
+          "event_id": "thermal-04-1"
+        }
+      ]
+    },
+    {
+      "id": "flow-01",
+      "category": "flow",
+      "title": "1번 충전호스 부분 막힘",
+      "description": "5~20초 · 유효 개방률 25%",
+      "faults": [
+        {
+          "kind": "pipe-restriction",
+          "target": "dispenser.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 0.25,
+          "event_id": "flow-01-1"
+        }
+      ]
+    },
+    {
+      "id": "flow-02",
+      "category": "flow",
+      "title": "2번 충전호스 부분 막힘",
+      "description": "5~20초 · 유효 개방률 25%",
+      "faults": [
+        {
+          "kind": "pipe-restriction",
+          "target": "dispenser_2.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 0.25,
+          "event_id": "flow-02-1"
+        }
+      ]
+    },
+    {
+      "id": "flow-03",
+      "category": "flow",
+      "title": "1번 PCV 부분 막힘",
+      "description": "5~20초 · 유효 개방률 25%",
+      "faults": [
+        {
+          "kind": "pipe-restriction",
+          "target": "dispenser.pcv",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 0.25,
+          "event_id": "flow-03-1"
+        }
+      ]
+    },
+    {
+      "id": "flow-04",
+      "category": "flow",
+      "title": "2번 PCV 부분 막힘",
+      "description": "5~20초 · 유효 개방률 25%",
+      "faults": [
+        {
+          "kind": "pipe-restriction",
+          "target": "dispenser_2.pcv",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 0.25,
+          "event_id": "flow-04-1"
+        }
+      ]
+    },
+    {
+      "id": "flow-05",
+      "category": "flow",
+      "title": "1번 충전호스 체크밸브 고장",
+      "description": "5~20초 · 역류 방지 상실 · 압력차에 따른 유동 추적",
+      "faults": [
+        {
+          "kind": "check-valve-failure",
+          "target": "dispenser.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "flow-05-1"
+        }
+      ]
+    },
+    {
+      "id": "flow-06",
+      "category": "flow",
+      "title": "2번 충전호스 체크밸브 고장",
+      "description": "5~20초 · 역류 방지 상실 · 압력차에 따른 유동 추적",
+      "faults": [
+        {
+          "kind": "check-valve-failure",
+          "target": "dispenser_2.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "flow-06-1"
+        }
+      ]
+    },
+    {
+      "id": "equipment-01",
+      "category": "equipment",
+      "title": "PCV 열린 고착",
+      "description": "현재 모델은 두 충전 라인에 공통 고착 명령을 적용합니다.",
+      "faults": [
+        {
+          "kind": "pcv-stuck-open",
+          "target": "pcv",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "equipment-01-1"
+        }
+      ]
+    },
+    {
+      "id": "equipment-02",
+      "category": "equipment",
+      "title": "PCV 닫힌 고착",
+      "description": "현재 모델은 두 충전 라인에 공통 고착 명령을 적용합니다.",
+      "faults": [
+        {
+          "kind": "pcv-stuck-closed",
+          "target": "pcv",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "equipment-02-1"
+        }
+      ]
+    },
+    {
+      "id": "equipment-03",
+      "category": "equipment",
+      "title": "캐스케이드 밸브 열린 고착",
+      "description": "두 충전 라인의 뱅크 전환 밸브에 공통 적용됩니다.",
+      "faults": [
+        {
+          "kind": "cascade-valve-stuck-open",
+          "target": "cascade",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "equipment-03-1"
+        }
+      ]
+    },
+    {
+      "id": "equipment-04",
+      "category": "equipment",
+      "title": "캐스케이드 밸브 닫힌 고착",
+      "description": "두 충전 라인의 뱅크 전환 밸브에 공통 적용됩니다.",
+      "faults": [
+        {
+          "kind": "cascade-valve-stuck-closed",
+          "target": "cascade",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "equipment-04-1"
+        }
+      ]
+    },
+    {
+      "id": "equipment-05",
+      "category": "equipment",
+      "title": "압축기 정지",
+      "description": "저장뱅크 재충전을 중지합니다.",
+      "faults": [
+        {
+          "kind": "compressor-trip",
+          "target": "compressor",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "equipment-05-1"
+        }
+      ]
+    },
+    {
+      "id": "equipment-06",
+      "category": "equipment",
+      "title": "비상 정지 요청",
+      "description": "기존 안전 PLC에 ESD 요청을 전달합니다. 종료 후에도 ESD 래치는 유지됩니다.",
+      "faults": [
+        {
+          "kind": "emergency-stop",
+          "target": "station",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "equipment-06-1"
+        }
+      ]
+    },
+    {
+      "id": "equipment-07",
+      "category": "equipment",
+      "title": "예냉 용량 75% 저하",
+      "description": "5~20초 · 두 충전 라인 공통 예냉 성능 변경",
+      "faults": [
+        {
+          "kind": "precooler-loss",
+          "target": "precooler",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 0.25,
+          "event_id": "equipment-07-1"
+        }
+      ]
+    },
+    {
+      "id": "equipment-08",
+      "category": "equipment",
+      "title": "예냉 냉각 완전 상실",
+      "description": "5~20초 · 두 충전 라인 공통 예냉 성능 변경",
+      "faults": [
+        {
+          "kind": "precooler-loss",
+          "target": "precooler",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 0,
+          "event_id": "equipment-08-1"
+        }
+      ]
+    },
+    {
+      "id": "sensor-01",
+      "category": "sensor",
+      "title": "1번 차량 압력 센서 편향",
+      "description": "PT-1401 · 표시 단위 +90 · 공정값과 진단값 비교",
+      "faults": [
+        {
+          "kind": "sensor-bias",
+          "target": "PT-1401",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 90,
+          "event_id": "sensor-01-1"
+        }
+      ]
+    },
+    {
+      "id": "sensor-02",
+      "category": "sensor",
+      "title": "1번 차량 압력 센서 고정",
+      "description": "PT-1401 · 5초의 진단값을 20초까지 유지",
+      "faults": [
+        {
+          "kind": "sensor-freeze",
+          "target": "PT-1401",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "sensor-02-1"
+        }
+      ]
+    },
+    {
+      "id": "sensor-03",
+      "category": "sensor",
+      "title": "2번 차량 압력 센서 편향",
+      "description": "PT-1801 · 표시 단위 +90 · 공정값과 진단값 비교",
+      "faults": [
+        {
+          "kind": "sensor-bias",
+          "target": "PT-1801",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 90,
+          "event_id": "sensor-03-1"
+        }
+      ]
+    },
+    {
+      "id": "sensor-04",
+      "category": "sensor",
+      "title": "2번 차량 압력 센서 고정",
+      "description": "PT-1801 · 5초의 진단값을 20초까지 유지",
+      "faults": [
+        {
+          "kind": "sensor-freeze",
+          "target": "PT-1801",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "sensor-04-1"
+        }
+      ]
+    },
+    {
+      "id": "sensor-05",
+      "category": "sensor",
+      "title": "1번 차량 온도 센서 편향",
+      "description": "TT-1401 · 표시 단위 +70 · 공정값과 진단값 비교",
+      "faults": [
+        {
+          "kind": "sensor-bias",
+          "target": "TT-1401",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 70,
+          "event_id": "sensor-05-1"
+        }
+      ]
+    },
+    {
+      "id": "sensor-06",
+      "category": "sensor",
+      "title": "1번 차량 온도 센서 고정",
+      "description": "TT-1401 · 5초의 진단값을 20초까지 유지",
+      "faults": [
+        {
+          "kind": "sensor-freeze",
+          "target": "TT-1401",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "sensor-06-1"
+        }
+      ]
+    },
+    {
+      "id": "sensor-07",
+      "category": "sensor",
+      "title": "2번 차량 온도 센서 편향",
+      "description": "TT-1801 · 표시 단위 +70 · 공정값과 진단값 비교",
+      "faults": [
+        {
+          "kind": "sensor-bias",
+          "target": "TT-1801",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 70,
+          "event_id": "sensor-07-1"
+        }
+      ]
+    },
+    {
+      "id": "sensor-08",
+      "category": "sensor",
+      "title": "2번 차량 온도 센서 고정",
+      "description": "TT-1801 · 5초의 진단값을 20초까지 유지",
+      "faults": [
+        {
+          "kind": "sensor-freeze",
+          "target": "TT-1801",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "sensor-08-1"
+        }
+      ]
+    },
+    {
+      "id": "sensor-09",
+      "category": "sensor",
+      "title": "고압뱅크 압력 센서 편향",
+      "description": "PT-0901 · 표시 단위 +20 · 공정값과 진단값 비교",
+      "faults": [
+        {
+          "kind": "sensor-bias",
+          "target": "PT-0901",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 20,
+          "event_id": "sensor-09-1"
+        }
+      ]
+    },
+    {
+      "id": "sensor-10",
+      "category": "sensor",
+      "title": "고압뱅크 압력 센서 고정",
+      "description": "PT-0901 · 5초의 진단값을 20초까지 유지",
+      "faults": [
+        {
+          "kind": "sensor-freeze",
+          "target": "PT-0901",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "sensor-10-1"
+        }
+      ]
+    },
+    {
+      "id": "sensor-11",
+      "category": "sensor",
+      "title": "1번 노즐 유량 센서 편향",
+      "description": "FT-1301 · 표시 단위 -30 · 공정값과 진단값 비교",
+      "faults": [
+        {
+          "kind": "sensor-bias",
+          "target": "FT-1301",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": -30,
+          "event_id": "sensor-11-1"
+        }
+      ]
+    },
+    {
+      "id": "sensor-12",
+      "category": "sensor",
+      "title": "1번 노즐 유량 센서 고정",
+      "description": "FT-1301 · 5초의 진단값을 20초까지 유지",
+      "faults": [
+        {
+          "kind": "sensor-freeze",
+          "target": "FT-1301",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "sensor-12-1"
+        }
+      ]
+    },
+    {
+      "id": "compound-01",
+      "category": "compound",
+      "title": "호스 누출 후 비상 정지",
+      "description": "2번 호스 5초 누출 → 10초 ESD. 잔류 재고에서의 누출 확인",
+      "faults": [
+        {
+          "kind": "hydrogen-leak",
+          "target": "dispenser_2.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "leak_diameter_mm": 0.3,
+          "event_id": "compound-01-1"
+        },
+        {
+          "kind": "emergency-stop",
+          "target": "station",
+          "start_time_s": 10,
+          "end_time_s": 20.0,
+          "event_id": "compound-01-2"
+        }
+      ]
+    },
+    {
+      "id": "compound-02",
+      "category": "compound",
+      "title": "두 호스 동시 누출",
+      "description": "1·2번 충전호스 동시 0.2 mm 누출",
+      "faults": [
+        {
+          "kind": "hydrogen-leak",
+          "target": "dispenser.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "leak_diameter_mm": 0.2,
+          "event_id": "compound-02-1"
+        },
+        {
+          "kind": "hydrogen-leak",
+          "target": "dispenser_2.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "leak_diameter_mm": 0.2,
+          "event_id": "compound-02-2"
+        }
+      ]
+    },
+    {
+      "id": "compound-03",
+      "category": "compound",
+      "title": "저장뱅크 화재와 압축기 정지",
+      "description": "고압뱅크 외부 화재 + 압축기 정지",
+      "faults": [
+        {
+          "kind": "external-fire",
+          "target": "cascade.high",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "external_temperature_c": 800,
+          "heat_transfer_ua_w_k": 1000,
+          "event_id": "compound-03-1"
+        },
+        {
+          "kind": "compressor-trip",
+          "target": "compressor",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "compound-03-2"
+        }
+      ]
+    },
+    {
+      "id": "compound-04",
+      "category": "compound",
+      "title": "예냉 상실과 차량 가열",
+      "description": "예냉 냉각 상실 + 1번 차량 외부 가열",
+      "faults": [
+        {
+          "kind": "precooler-loss",
+          "target": "precooler",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 0,
+          "event_id": "compound-04-1"
+        },
+        {
+          "kind": "temperature-disturbance",
+          "target": "vehicle.tank",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "external_temperature_c": 150,
+          "heat_transfer_ua_w_k": 500,
+          "event_id": "compound-04-2"
+        }
+      ]
+    },
+    {
+      "id": "compound-05",
+      "category": "compound",
+      "title": "저압 뱅크 저하와 호스 막힘",
+      "description": "공급 압력 저하 + 1번 호스 개방률 25%",
+      "faults": [
+        {
+          "kind": "pressure-disturbance",
+          "target": "cascade.low",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": -10,
+          "rate_s": 30,
+          "event_id": "compound-05-1"
+        },
+        {
+          "kind": "pipe-restriction",
+          "target": "dispenser.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 0.25,
+          "event_id": "compound-05-2"
+        }
+      ]
+    },
+    {
+      "id": "compound-06",
+      "category": "compound",
+      "title": "고압 뱅크 누출과 센서 고정",
+      "description": "물리 누출과 PT-0901 진단 센서 고정을 비교",
+      "faults": [
+        {
+          "kind": "hydrogen-leak",
+          "target": "cascade.high",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "leak_diameter_mm": 0.2,
+          "event_id": "compound-06-1"
+        },
+        {
+          "kind": "sensor-freeze",
+          "target": "PT-0901",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "compound-06-2"
+        }
+      ]
+    },
+    {
+      "id": "compound-07",
+      "category": "compound",
+      "title": "2번 차량 가압과 체크밸브 고장",
+      "description": "차량 가압 + 2번 호스 역류 허용. 역류 발생은 압력차에 의존",
+      "faults": [
+        {
+          "kind": "pressure-disturbance",
+          "target": "vehicle_2.tank",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 10,
+          "rate_s": 30,
+          "event_id": "compound-07-1"
+        },
+        {
+          "kind": "check-valve-failure",
+          "target": "dispenser_2.hose",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "compound-07-2"
+        }
+      ]
+    },
+    {
+      "id": "compound-08",
+      "category": "compound",
+      "title": "화재 노출 후 지연 누출",
+      "description": "고압뱅크 5초 화재, 10초 누출을 각각 명시적으로 주입",
+      "faults": [
+        {
+          "kind": "external-fire",
+          "target": "cascade.high",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "external_temperature_c": 800,
+          "heat_transfer_ua_w_k": 1000,
+          "event_id": "compound-08-1"
+        },
+        {
+          "kind": "hydrogen-leak",
+          "target": "cascade.high",
+          "start_time_s": 10,
+          "end_time_s": 20.0,
+          "leak_diameter_mm": 0.2,
+          "event_id": "compound-08-2"
+        }
+      ]
+    }
+  ]
+}

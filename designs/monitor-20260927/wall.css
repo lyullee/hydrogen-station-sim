@@ -1,0 +1,34 @@
+/* A complete 1600 × 900 control board, uniformly fitted to the display.
+   Scaling the board preserves every panel and the 16:9 process viewport. */
+html,body{width:100%;height:100%;margin:0;overflow:hidden}
+.app{position:fixed;left:50%;top:50%;width:1600px;height:900px;min-width:0;min-height:0;max-width:none;margin:0;padding:12px 18px;grid-template-rows:44px 44px minmax(0,1fr) 16px;gap:10px;transform:translate(-50%,-50%) scale(var(--wall-scale,.75));transform-origin:center;contain:layout}
+.workspace{grid-template-columns:minmax(0,1fr) 496px;gap:14px}
+.visual-column{grid-template-rows:auto minmax(92px,1fr)}
+.view-panel{align-self:start}
+.telemetry{gap:10px}
+.telemetry>.panel{padding:14px 18px}
+.section-head h2{font-size:13px}.section-head>span{font-size:10px}
+.bank{grid-template-columns:28px 1fr 68px;gap:14px;margin-top:12px}
+.bank>b{font-size:23px}.bank strong{font-size:12px}.bank span{font-size:10px}.bank-tag{height:28px}
+.bank .bar{margin-top:7px;height:4px}
+.assessment{padding:14px 18px}.assessment strong{font-size:14px}.assessment p{font-size:11px}.badge{font-size:10px}
+.process-metrics span{font-size:10px}.process-metrics b{font-size:19px}.process-metrics b small{font-size:10px}.process-metrics strong{font-size:12px}
+.dispenser-label{font-size:11px}.dispenser-label>b{font-size:10px}.dispenser-label>strong{font-size:10px}
+.dispenser-metrics>div:first-child b{font-size:29px}.dispenser-metrics>div:not(:first-child) b{font-size:17px}.dispenser-metrics span{font-size:10px}
+.soc>span{font-size:11px}.soc small{font-size:8px}
+.gas-panel{min-height:126px}.detectors{font-size:11px;gap:10px}.detectors i{width:6px;height:6px}.safety-foot{font-size:11px;margin-top:12px}
+.telemetry>.gas-panel{padding:12px 18px}
+.overview{gap:25px}.overview-item{gap:13px}.overview-item b{font-size:18px}.overview-item>span{font-size:11px}.overview-item small{font-size:10px}.status-summary{min-width:235px}.status-summary strong{font-size:13px}.status-summary small{font-size:10px}
+.mode-switch{font-size:10px}.topbar nav button{font-size:12px}.preview-label{font-size:10px}
+.wall-fullscreen{display:flex;align-items:center;gap:6px;border:1px solid #cad7d9;border-radius:6px;padding:8px 10px;font-size:11px;background:#f8fbfa;color:#41615e}
+.remote-button{font-size:12px}.top-right{gap:12px}.view-tabs button{font-size:12px}.view-tools{font-size:10px}
+.trend-title strong{font-size:13px}.trend-title small{font-size:10px}.trend-title>span{font-size:9px}.trends{grid-template-columns:146px repeat(3,minmax(0,1fr))}.trend header{font-size:11px}.trend header b{font-size:15px}.trend header small{font-size:10px}.trend svg{height:38px}
+.footer{font-size:9px}.scene-caption strong{font-size:20px}.scene-caption span{font-size:10px}.camera-views button{font-size:10px}
+.incident-mode .assessment{padding:12px 18px}.incident-mode .assessment p{font-size:11px;line-height:1.6}
+.incident-mode .telemetry{gap:8px}.incident-mode .compressor{padding:9px 18px}.incident-mode .compressor .process-metrics span{font-size:10px}.incident-mode .compressor .process-metrics b{font-size:13px}
+.incident-panel{padding:14px 18px}.incident-panel header{font-size:12px}.incident-panel header>b{font-size:10px}.incident-panel>p{font-size:11px}.incident-reading>b{font-size:27px}.incident-reading small,.incident-reading>span{font-size:10px}.incident-actions,.incident-actions button{font-size:12px}.incident-panel .hyram-note{font-size:11px}
+/* Details remain overlays; the monitoring canvas never becomes a scrolling page. */
+dialog{max-height:calc(100dvh - 32px)}
+.wall-note{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#263d43;color:white;padding:10px 18px;border-radius:8px;font-size:13px;z-index:100}
+/* CSS zoom rerasterizes labels at display resolution instead of stretching a layer. */
+.app{transform:none;left:var(--wall-left,0px);top:var(--wall-top,0px);zoom:var(--wall-scale,.75)}

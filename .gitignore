@@ -1,0 +1,25 @@
+# Local environments and editor state
+.venv/
+.idea/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ruff_cache/
+.mypy_cache/
+
+# Generated simulation runs, event databases, and server logs
+/data/
+*.log
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+
+# Build output and local configuration
+/build/
+/dist/
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db

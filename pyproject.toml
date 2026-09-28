@@ -1,0 +1,34 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hydrogen-station-sim"
+version = "0.1.0"
+description = "First-principles dynamic models for gaseous hydrogen refueling stations"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fluids>=1.0,<2",
+    "ht>=1.0,<2",
+    "numpy>=1.26,<3",
+    # HyRAM 6.1 uses scipy.integrate.ode's pre-1.16 callback contract.
+    "scipy>=1.11,<1.16",
+]
+
+[project.optional-dependencies]
+risk = ["hyram==6.1"]
+table-build = ["CoolProp>=7.1,<9"]
+api = ["fastapi>=0.115,<1", "uvicorn[standard]>=0.30,<1"]
+test = ["pytest>=8,<10", "httpx>=0.27,<1"]
+all = [
+    "hyram==6.1",
+    "fastapi>=0.115,<1",
+    "uvicorn[standard]>=0.30,<1",
+]
+
+[project.scripts]
+h2station = "h2station.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/h2station"]

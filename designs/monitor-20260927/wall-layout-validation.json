@@ -1,0 +1,98 @@
+[
+  {
+    "boardFits": true,
+    "clipped": [],
+    "footerClear": true,
+    "pageFits": true,
+    "stageRatio": 1.7778006931767223,
+    "state": "NORMAL",
+    "viewport": [
+      1366,
+      768
+    ]
+  },
+  {
+    "boardFits": true,
+    "clipped": [],
+    "footerClear": true,
+    "pageFits": true,
+    "stageRatio": 1.7778006931767223,
+    "state": "NORMAL",
+    "viewport": [
+      1920,
+      1080
+    ]
+  },
+  {
+    "boardFits": true,
+    "clipped": [],
+    "footerClear": true,
+    "pageFits": true,
+    "stageRatio": 1.7778006931767223,
+    "state": "NORMAL",
+    "viewport": [
+      2560,
+      1440
+    ]
+  },
+  {
+    "boardFits": true,
+    "clipped": [],
+    "footerClear": true,
+    "pageFits": true,
+    "stageRatio": 1.777780336442225,
+    "state": "NORMAL",
+    "viewport": [
+      3840,
+      2160
+    ]
+  },
+  {
+    "boardFits": true,
+    "clipped": [],
+    "footerClear": true,
+    "pageFits": true,
+    "stageRatio": 1.7778006931767223,
+    "state": "ATTENTION",
+    "viewport": [
+      1366,
+      768
+    ]
+  },
+  {
+    "boardFits": true,
+    "clipped": [],
+    "footerClear": true,
+    "pageFits": true,
+    "stageRatio": 1.7778006931767223,
+    "state": "ATTENTION",
+    "viewport": [
+      1920,
+      1080
+    ]
+  },
+  {
+    "boardFits": true,
+    "clipped": [],
+    "footerClear": true,
+    "pageFits": true,
+    "stageRatio": 1.777779009360126,
+    "state": "ATTENTION",
+    "viewport": [
+      2560,
+      1440
+    ]
+  },
+  {
+    "boardFits": true,
+    "clipped": [],
+    "footerClear": true,
+    "pageFits": true,
+    "stageRatio": 1.777779009360126,
+    "state": "ATTENTION",
+    "viewport": [
+      3840,
+      2160
+    ]
+  }
+]
