@@ -777,18 +777,47 @@ def _invoke_saga(prompt: str, answer_length: str = "concise") -> dict[str, Any]:
 
 def _safe_saga_text(answer: str) -> str:
     """Remove generic calculation requests and claims of a certified radius."""
-    calculation_request = re.compile(r"(?i)(?:HyRAM|피해\s*영향(?:예측)?|사고\s*범위).{0,35}(?:계산|평가|분석).{0,20}(?:필요|권장|해보|하시|실행)|(?:계산|평가).{0,25}(?:필요|권장).{0,15}(?:HyRAM|피해\s*영향)")
     unsafe_radius = re.compile(r"(?:안전\s*반경|영향\s*반경).{0,50}(?:확정|보장|안전)|(?:확정|안전).{0,30}(?:안전\s*반경|영향\s*반경)")
-    return "\n".join(line for line in answer.splitlines()
-        if not calculation_request.search(line) and not unsafe_radius.search(line)).strip()
+    def allowed(line: str) -> bool:
+        compact = re.sub(r"[\s`'\"‘’“”·]", "", line).lower()
+        deferred_calculation = (any(term in compact for term in ("피해영향", "hyram", "영향범위"))
+            and (bool(re.search(r"(?:계산|평가)(?:이|을|를)?(?:필요|요청|권장|해보|하시|실행)", compact))
+                 or ("필요시" in compact and "계산" in compact and "요청" in compact)))
+        return not deferred_calculation and not unsafe_radius.search(line)
+    return "\n".join(line for line in answer.splitlines() if allowed(line)).strip()
+
+
+def _mentioned_hazop_nodes(question: str, catalog: dict[str, Any]) -> list[dict[str, Any]]:
+    normalized = re.sub(r"\s+", "", question).lower()
+    matched = [node for node in catalog["nodes"]
+               if str(node["node_id"]).lower() in normalized
+               or (node.get("설비_라인") and re.sub(r"\s+", "", str(node["설비_라인"])).lower() in normalized)]
+    aliases: list[str] = []
+    if any(term in normalized for term in ("디스펜서", "충전기", "충전호스")):
+        first = any(term in normalized for term in ("디스펜서1", "1번디스펜서", "충전기1", "1번충전기", "1번호스"))
+        second = any(term in normalized for term in ("디스펜서2", "2번디스펜서", "충전기2", "2번충전기", "2번호스"))
+        aliases.extend(["N13"] if first and not second else ["N17"] if second and not first else ["N13", "N17"])
+    if "저장" in normalized:
+        banks = {"고압": "N09", "중압": "N08", "저압": "N07"}
+        requested = [node_id for word, node_id in banks.items() if word in normalized]
+        aliases.extend(requested or ["N07", "N08", "N09"])
+    for node in catalog["nodes"]:
+        if node["node_id"] in aliases and node not in matched:
+            matched.append(node)
+    return matched
 
 
 def _scenario_requested(request: SagaAnalysisInput) -> bool:
     if request.scenario_mode:
         return True
     question = re.sub(r"\s+", "", request.question)
-    return request.trigger == "manual" and "시나리오" in question and any(
-        word in question for word in ("생성", "만들", "평가", "계산", "비교", "제안"))
+    if request.trigger != "manual":
+        return False
+    if "시나리오" in question and any(word in question for word in ("생성", "만들", "평가", "계산", "비교", "제안")):
+        return True
+    hypothetical_leak = "누출" in question and any(word in question for word in ("발생했을때", "발생하면", "발생할경우", "가정", "예상", "만약"))
+    impact_request = any(word in question for word in ("피해", "영향", "범위", "계산", "평가"))
+    return hypothetical_leak and impact_request
 
 
 def _scenario_result_summary(results: list[dict[str, Any]]) -> str:
@@ -818,10 +847,17 @@ async def _run_saga_scenario_analysis(
     mentioned_ids: set[str], sensor_count: int,
 ) -> dict[str, Any]:
     available = available_sensor_cases(frame, catalog)
+    if mentioned_ids:
+        available = [row for row in available if row["node_id"] in mentioned_ids]
     if not available:
+        missing = await asyncio.to_thread(assess_sensor_cases, frame, catalog, backend,
+                                          sorted(mentioned_ids) if mentioned_ids else ["N09", "N13", "N17"])
+        names = ", ".join(f"{row['node_id']}({row.get('pressure_sensor', 'PT 미입력')}/"
+                          f"{row.get('temperature_sensor', 'TT 미입력')}: {row['calculation_status']})"
+                          for row in missing)
         return {"time_s": frame.get("time_s"), "trigger": request.trigger,
-                "scenario_mode": True, "answer": "현재 GOOD 품질의 압력·온도 센서 쌍이 없어 시나리오를 계산하지 않았습니다.",
-                "model": "", "proposed_scenarios": [], "impact_results": [], "sensor_count": sensor_count}
+                "scenario_mode": True, "answer": "요청한 설비의 현재 GOOD 품질 압력·온도 센서 쌍이 없어 가상 누출을 계산하지 않았습니다. " + names,
+                "model": "", "proposed_scenarios": [], "impact_results": missing, "sensor_count": sensor_count}
     eligible_ids = {row["node_id"] for row in available}
     sizes = [{"leak_size_id": row["size_id"], "diameter_mm": row["직경_mm"]}
              for row in catalog["leak_sizes"] if isinstance(row.get("직경_mm"), (int, float))
@@ -899,14 +935,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
     ids = {str(row.get("rule_id")) for row in active if isinstance(row, dict)}
     catalog = load_catalog()
     matched_rules = [rule for rule in catalog["rules"] if rule["rule_id"] in ids]
-    normalized_question = re.sub(r"\s+", "", request.question).lower()
-    mentioned_nodes = [node for node in catalog["nodes"]
-        if str(node["node_id"]).lower() in normalized_question
-        or (node.get("설비_라인") and re.sub(r"\s+", "", str(node["설비_라인"])).lower() in normalized_question)]
-    if "저장" in normalized_question:
-        bank_nodes = {"고압": "N09", "중압": "N08", "저압": "N07"}
-        mentioned_nodes.extend(node for node in catalog["nodes"]
-            if node["node_id"] in {node_id for word, node_id in bank_nodes.items() if word in normalized_question})
+    mentioned_nodes = _mentioned_hazop_nodes(request.question, catalog)
     mentioned_ids = {node["node_id"] for node in mentioned_nodes}
     reference_rules = [rule for rule in catalog["rules"] if rule["node_id"] in mentioned_ids]
     signal_prefixes = tuple(prefix for word, prefix in (("압력", "PT-"), ("온도", "TT-"), ("유량", "FT-"), ("가스", "GD-"))

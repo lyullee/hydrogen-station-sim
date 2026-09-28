@@ -265,3 +265,83 @@ def test_saga_rejects_proposal_without_good_sensor_pair(monkeypatch):
     finally:
         with api._jobs_lock:
             api._jobs.pop(job_id, None)
+
+
+def test_dispenser_hypothetical_leak_question_runs_scoped_impact_calculation(monkeypatch):
+    question = "디스펜서에서 현재 상태에서 누출이 발생했을 때 예상 피해영향을 계산해줘."
+    catalog = api.load_catalog()
+    assert api._scenario_requested(api.SagaAnalysisInput(question=question))
+    assert {row["node_id"] for row in api._mentioned_hazop_nodes(question, catalog)} == {"N13", "N17"}
+    captured = {"prompts": [], "requests": []}
+
+    class FakeBackend:
+        available = True
+
+        def evaluate_release(self, request):
+            captured["requests"].append(request)
+            return {"status": "calculated", "maximum_heat_flux_w_m2": 510.0,
+                    "maximum_overpressure_pa": 2100.0, "sampled_effect_radius_m": 0.0,
+                    "sampled_max_distance_m": 5.0, "effect_range_status": "BELOW_THRESHOLDS_AT_SAMPLES"}
+
+    def fake_urlopen(request, timeout):
+        captured["prompts"].append(json.loads(request.data)["message"])
+        answer = ('{"scenarios":[{"node_id":"N13","leak_size_id":"L03","rationale":"디스펜서 1 호스"},'
+                  '{"node_id":"N17","leak_size_id":"L02","rationale":"디스펜서 2 호스"}]}') if len(captured["prompts"]) == 1 else "계산된 두 가정 누출을 비교합니다."
+        return io.BytesIO(json.dumps({"answer": answer, "model": "test"}).encode())
+
+    monkeypatch.setattr(api, "load_hyram_backend", lambda: FakeBackend())
+    monkeypatch.setattr(api, "urlopen", fake_urlopen)
+    job_id = "saga-dispenser-question-test"
+    with api._jobs_lock:
+        api._jobs[job_id] = {"frames": [{"time_s": 12.0, "hazop": {"active": [], "releases": [], "signals": {
+            "PT-0901": {"value": 90.0, "quality": "GOOD"}, "TT-0901": {"value": 25.0, "quality": "GOOD"},
+            "PT-1301": {"value": 44.0, "quality": "GOOD"}, "TT-1301": {"value": -35.0, "quality": "GOOD"},
+            "PT-1701": {"value": 39.0, "quality": "GOOD"}, "TT-1701": {"value": -32.0, "quality": "GOOD"},
+        }}}]}
+    try:
+        with TestClient(api.app) as client:
+            response = client.post(f"/api/simulations/{job_id}/saga-analysis", json={"question": question})
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert data["scenario_mode"] is True
+        assert {row["node_id"] for row in data["impact_results"]} == {"N13", "N17"}
+        assert '"node_id": "N09"' not in captured["prompts"][0]
+        assert {request.component_id for request in captured["requests"]} == {"dispenser.hose", "dispenser_2.hose"}
+        assert "LLM-1" in data["answer"] and "LLM-2" in data["answer"]
+    finally:
+        with api._jobs_lock:
+            api._jobs.pop(job_id, None)
+
+
+def test_dispenser_question_reports_missing_sensor_instead_of_asking_for_calculation(monkeypatch):
+    question = "디스펜서에서 현재 상태에서 누출이 발생했을 때 예상 피해영향을 계산해줘."
+
+    def fake_urlopen(request, timeout):
+        raise AssertionError("No usable dispenser sensors: do not ask the LLM to guess")
+
+    monkeypatch.setattr(api, "urlopen", fake_urlopen)
+    job_id = "saga-dispenser-missing-test"
+    with api._jobs_lock:
+        api._jobs[job_id] = {"frames": [{"time_s": 2.0, "hazop": {"active": [], "releases": [], "signals": {
+            "PT-0901": {"value": 90.0, "quality": "GOOD"}, "TT-0901": {"value": 25.0, "quality": "GOOD"},
+            "PT-1301": {"value": 44.0, "quality": "GOOD"}, "TT-1301": {"value": -35.0, "quality": "BAD"},
+        }}}]}
+    try:
+        with TestClient(api.app) as client:
+            response = client.post(f"/api/simulations/{job_id}/saga-analysis", json={"question": question})
+        assert response.status_code == 200
+        data = response.json()
+        assert {row["node_id"] for row in data["impact_results"]} == {"N13", "N17"}
+        assert all(row["calculation_status"] == "input_unavailable" for row in data["impact_results"])
+        assert "N13" in data["answer"] and "N17" in data["answer"]
+        assert "계산을 요청" not in data["answer"]
+    finally:
+        with api._jobs_lock:
+            api._jobs.pop(job_id, None)
+
+
+def test_saga_removes_deferred_calculation_advice():
+    text = "필요 시 '피해영향예측' 계산을 요청해 주세요.\n피해영향예측 계산 완료, 현장 점검이 필요합니다."
+    answer = api._safe_saga_text(text)
+    assert "요청해 주세요" not in answer
+    assert "계산 완료" in answer
