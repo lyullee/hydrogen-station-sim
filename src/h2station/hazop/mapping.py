@@ -1,4 +1,4 @@
-"""Explicit mappings to existing model states, with no fabricated GD/utility readings."""
+"""Simulation telemetry mappings; proxy channels are explicitly marked as such."""
 from __future__ import annotations
 
 MODEL_BINDINGS = {}
@@ -21,6 +21,43 @@ for n in ("01", "03"):
     MODEL_BINDINGS[f"PT-{n}01"] = ("BOUNDARY_SETTING", "compressor_suction.pressure_pa/1e6; fixed supply, not trailer depletion")
     MODEL_BINDINGS[f"TT-{n}01"] = ("BOUNDARY_SETTING", "compressor_suction.temperature_k-273.15; not measured trailer gas")
 MODEL_BINDINGS["FT-1001"] = ("DERIVED_SHARED", "FT-1101 + FT-1501; cannot independently detect header mass loss")
+GD_SENSOR_ZONES = {
+    "GD-0101": "tube-trailer supply", "GD-0201": "unloading manifold",
+    "GD-0601": "compressor discharge", "GD-0701": "low bank",
+    "GD-0801": "medium bank", "GD-0901": "high bank",
+    "GD-1001": "cascade header", "GD-1301": "dispenser 1 hose",
+    "GD-1701": "dispenser 2 hose", "GD-1901": "cooling package",
+    "GD-2001": "vent header", "GD-2101": "compressor cabinet",
+    "GD-2201": "storage boundary", "GD-2301": "fueling canopy",
+    "GD-2302": "cooling enclosure",
+}
+for tag, zone in GD_SENSOR_ZONES.items():
+    MODEL_BINDINGS[tag] = ("VIRTUAL_DETECTOR_PROXY", f"location-specific leak proxy at {zone}; 0 when no active release")
+for node in ("01", "02", "03", "04", "05", "06"):
+    MODEL_BINDINGS[f"FT-{node}01"] = ("DERIVED_COMPRESSOR", "compressor mass flow to selected recharge bank; shared flow, no line loss model")
+for tag in ("PT-0201", "PT-0302"):
+    MODEL_BINDINGS[tag] = ("BOUNDARY_SETTING", "compressor suction pressure; unloading line drop not modeled")
+MODEL_BINDINGS["TT-0201"] = ("BOUNDARY_SETTING", "compressor suction temperature; unloading hose heat transfer not modeled")
+for stage, node in ((1, "04"), (2, "05")):
+    MODEL_BINDINGS[f"PT-{node}01"] = ("COMPRESSOR_STAGE_MODEL", f"compressor stage {stage} discharge pressure")
+    MODEL_BINDINGS[f"TT-{node}01"] = ("COMPRESSOR_STAGE_MODEL", f"compressor stage {stage} discharge temperature")
+    MODEL_BINDINGS[f"TT-{node}02"] = ("BOUNDARY_SETTING", f"compressor stage {stage} intercooler outlet temperature setpoint")
+MODEL_BINDINGS.update({
+    "PT-0601": ("COMPRESSOR_STAGE_MODEL", "compressor final discharge pressure"),
+    "TT-0601": ("COMPRESSOR_STAGE_MODEL", "compressor final discharge temperature"),
+    "TT-0602": ("PROCESS_STATE", "selected recharge bank gas temperature; no separate discharge line inventory"),
+    "PT-1001": ("DERIVED_SHARED", "highest selected bank supply pressure; no common header inventory"),
+    "TT-1001": ("DERIVED_SHARED", "flow-weighted selected bank supply temperature; no common header inventory"),
+    "PT-1201": ("DERIVED_SHARED", "dispenser 1 PCV outlet pressure less precooler hydrogen pressure drop"),
+    "PT-1601": ("DERIVED_SHARED", "dispenser 2 PCV outlet pressure less precooler hydrogen pressure drop"),
+    "FT-1901": ("DERIVED_THERMAL_PROXY", "coolant equivalent L/min from total heat rate / (water cp * assumed 5 K rise)"),
+    "TT-1901": ("PROCESS_STATE", "dispenser 1 coolant thermal inventory temperature"),
+    "TT-1902": ("PROCESS_STATE", "dispenser 2 coolant thermal inventory temperature"),
+    "PT-0001": ("ASSUMED_BOUNDARY", "ambient atmospheric pressure, 0.101325 MPa absolute"),
+    "PT-2001": ("VENT_PROXY", "vent release source pressure when injected; ambient otherwise"),
+    "TT-2001": ("VENT_PROXY", "vent release source temperature when injected; ambient otherwise"),
+    "FT-2001": ("VENT_PROXY", "vent release mass flow when injected; zero otherwise; no PSV model"),
+})
 HELPERS = {"MASS_HOSE_1", "MASS_HOSE_2"}
 MODE_KEYS = {"station.monitoring", "station.filling_count", "station.switch_elapsed_s", "station.esd", "station.esd_elapsed_s"}
 for d in (1, 2):
@@ -68,7 +105,7 @@ class ModelMapper:
         return t - self.transitions[key][1]
 
     def sample(self, t, *, station, state, commands, instantaneous, dispatch_indices,
-               dispatch_openings, recharge_index, safety, fault_events=()):
+               dispatch_openings, recharge_index, safety, fault_events=(), active_leaks=(), risk_snapshots=()):
         signals, modes = {}, {"station.monitoring": True, "station.esd": safety.esd_latched}
         def put(tag, value, unit=None, origin=None):
             signals[tag] = {"value": float(value), "unit": unit or self.specs[tag]["단위"], "quality": "GOOD",
@@ -77,9 +114,10 @@ class ModelMapper:
         if not safety.esd_latched: self.elapsed("esd", False, t)
         modes["station.filling_count"] = sum(c.phase.value == "filling" for c in commands)
         modes["station.switch_elapsed_s"] = self.elapsed("dispatch", dispatch_indices, t)
+        bank_gases = [bank.gas_state(bank_state) for bank, bank_state in zip(station.banks, state.banks)]
         for index, bank in enumerate(station.banks):
             z = str(7+index).zfill(2)
-            gas = bank.gas_state(state.banks[index])
+            gas = bank_gases[index]
             put(f"PT-{z}01", gas.pressure_pa/1e6); put(f"TT-{z}01", gas.temperature_k-273.15)
             flows = [inst["pcv_mass_flow"] for inst, selected in zip(instantaneous, dispatch_indices) if selected == index]
             put(f"FT-{z}01", sum(flows)*1000)
@@ -103,6 +141,7 @@ class ModelMapper:
             put(f"FT-{h}01", inst["nozzle_mass_flow"]*1000)
             put(f"PT-{v}01", vehicle.pressure_pa/1e6); put(f"TT-{v}01", vehicle.temperature_k-273.15)
             put(f"TT-{v}02", partial_state.vehicle.shell_temperature_k-273.15)
+            put(f"PT-{p+1}01", max(0.0, (inst["pcv_outlet_pressure"] - partial.precooler.hydrogen_pressure_drop_pa)/1e6))
             put(f"MASS_HOSE_{d}", partial_state.hose_hydrogen_mass_kg, "kg", "PROCESS_INVENTORY")
             modes.update({f"d{d}.phase": command.phase.value.upper(),
                           f"d{d}.phase_elapsed_s": self.elapsed(f"phase{d}", command.phase, t),
@@ -112,7 +151,41 @@ class ModelMapper:
         supply = station.compressor_suction(t)
         for n in ("01", "03"):
             put(f"PT-{n}01", supply.pressure_pa/1e6); put(f"TT-{n}01", supply.temperature_k-273.15)
+        put("PT-0201", supply.pressure_pa/1e6); put("PT-0302", supply.pressure_pa/1e6)
+        put("TT-0201", supply.temperature_k-273.15)
+        discharge = (bank_gases[recharge_index].pressure_pa + station.compressor.parameters.discharge_pressure_margin_pa
+                     if recharge_index is not None else supply.pressure_pa)
+        compressor = station.compressor.evaluate(supply, discharge, enabled=recharge_index is not None,
+                                                 include_stage_outlets=True)
+        for n in ("01", "02", "03", "04", "05", "06"):
+            put(f"FT-{n}01", compressor.mass_flow_kg_s*1000)
+        for stage, node in ((0,"04"), (1,"05")):
+            pressure, temperature = (compressor.stage_outlets[stage] if len(compressor.stage_outlets)>stage
+                                     else (supply.pressure_pa, supply.temperature_k))
+            put(f"PT-{node}01", pressure/1e6)
+            put(f"TT-{node}01", temperature-273.15)
+            put(f"TT-{node}02", station.compressor.parameters.intercooler_outlet_temperature_k-273.15)
+        put("PT-0601", discharge/1e6)
+        put("TT-0601", compressor.outlet_temperature_k-273.15)
+        put("TT-0602", bank_gases[recharge_index].temperature_k-273.15 if recharge_index is not None else supply.temperature_k-273.15)
+        selected = [inst for inst, index in zip(instantaneous, dispatch_indices) if index is not None]
+        header = selected or [instantaneous[0]]
+        put("PT-1001", max(inst["supply_pressure"] for inst in header)/1e6)
+        total_flow = sum(max(0.0,inst["pcv_mass_flow"]) for inst in header)
+        put("TT-1001", (sum(inst["supply_temperature"]*max(0.0,inst["pcv_mass_flow"]) for inst in header)/total_flow
+                         if total_flow else header[0]["supply_temperature"])-273.15)
         put("FT-1001", sum(inst["pcv_mass_flow"] for inst in instantaneous)*1000)
+        coolant_states = (state.partial_station, state.secondary_partial_station)
+        for tag, coolant in zip(("TT-1901","TT-1902"), coolant_states):
+            put(tag, coolant.coolant_temperature_k-273.15)
+        heat_w = sum(abs(inst["precooler_heat_rate"]) for inst in instantaneous)
+        put("FT-1901", heat_w/(4180.0*5.0)*60.0, origin="DERIVED_THERMAL_PROXY")
+        put("PT-0001", 0.101325)
+        vent = next(((source, snap) for event, leak, source, _ in active_leaks
+                     for snap in risk_snapshots if event.target.startswith("vent") and snap.release_id==leak.release_id), None)
+        put("PT-2001", vent[0].pressure_pa/1e6 if vent else 0.101325)
+        put("TT-2001", vent[0].temperature_k-273.15 if vent else station.ambient_temperature_k-273.15)
+        put("FT-2001", vent[1].mass_flow_kg_s*1000 if vent else 0.0)
         # Only explicit DB-tag faults affect these channels. Legacy aggregate PLC faults cannot
         # be attributed to one physical sensor, so remain separate and are reported in the frame.
         for event in fault_events:

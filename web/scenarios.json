@@ -1,5 +1,5 @@
 {
-  "version": "20260925-remote3",
+  "version": "20260928-sensors82",
   "categories": [
     {
       "id": "leak",
@@ -355,6 +355,42 @@
       "label": "센서 편향",
       "targets": [
         {
+          "value": "FT-0101",
+          "label": "FT-0101 · N01 (g/s)",
+          "unit": "g/s",
+          "location": "튜브트레일러 공급 경계 정방향 질량유량"
+        },
+        {
+          "value": "FT-0201",
+          "label": "FT-0201 · N02 (g/s)",
+          "unit": "g/s",
+          "location": "하역 호스·연결 매니폴드 정방향 질량유량"
+        },
+        {
+          "value": "FT-0301",
+          "label": "FT-0301 · N03 (g/s)",
+          "unit": "g/s",
+          "location": "압축기 흡입 정방향 질량유량"
+        },
+        {
+          "value": "FT-0401",
+          "label": "FT-0401 · N04 (g/s)",
+          "unit": "g/s",
+          "location": "압축기 1단 출구·중간냉각기 정방향 질량유량"
+        },
+        {
+          "value": "FT-0501",
+          "label": "FT-0501 · N05 (g/s)",
+          "unit": "g/s",
+          "location": "압축기 2단 출구·중간냉각기 정방향 질량유량"
+        },
+        {
+          "value": "FT-0601",
+          "label": "FT-0601 · N06 (g/s)",
+          "unit": "g/s",
+          "location": "압축기 최종 토출 정방향 질량유량"
+        },
+        {
           "value": "FT-0701",
           "label": "FT-0701 · N07 (g/s)",
           "unit": "g/s",
@@ -415,16 +451,154 @@
           "location": "충전기 2 호스·브레이크어웨이·노즐 정방향 질량유량"
         },
         {
+          "value": "FT-1901",
+          "label": "FT-1901 · N19 (L/min)",
+          "unit": "L/min",
+          "location": "HTF 순환 펌프 토출"
+        },
+        {
+          "value": "FT-2001",
+          "label": "FT-2001 · N20 (g/s)",
+          "unit": "g/s",
+          "location": "벤트 헤더·방출 스택 정방향 질량유량"
+        },
+        {
+          "value": "GD-0101",
+          "label": "GD-0101 · N01 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "튜브트레일러 밸브박스 상부"
+        },
+        {
+          "value": "GD-0201",
+          "label": "GD-0201 · N02 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "하역 접속부 상부"
+        },
+        {
+          "value": "GD-0601",
+          "label": "GD-0601 · N06 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "압축기 토출 피팅 상부"
+        },
+        {
+          "value": "GD-0701",
+          "label": "GD-0701 · N07 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "저압 뱅크 매니폴드 상부"
+        },
+        {
+          "value": "GD-0801",
+          "label": "GD-0801 · N08 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "중압 뱅크 매니폴드 상부"
+        },
+        {
+          "value": "GD-0901",
+          "label": "GD-0901 · N09 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "고압 뱅크 매니폴드 상부"
+        },
+        {
+          "value": "GD-1001",
+          "label": "GD-1001 · N10 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "공통 고압 밸브함 상부"
+        },
+        {
+          "value": "GD-1301",
+          "label": "GD-1301 · N13 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "충전기 1 노즐/호스 예상 누출 상부"
+        },
+        {
+          "value": "GD-1701",
+          "label": "GD-1701 · N17 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "충전기 2 노즐/호스 예상 누출 상부"
+        },
+        {
+          "value": "GD-1901",
+          "label": "GD-1901 · N19 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "열교환기/HTF 탈기 공간"
+        },
+        {
+          "value": "GD-2001",
+          "label": "GD-2001 · N20 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "벤트 스택 하부 배관 접속부 주변"
+        },
+        {
+          "value": "GD-2101",
+          "label": "GD-2101 · N21 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "압축기 캐비닛 천장"
+        },
+        {
+          "value": "GD-2201",
+          "label": "GD-2201 · N22 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "저장구역 인접 점유경계"
+        },
+        {
+          "value": "GD-2301",
+          "label": "GD-2301 · N23 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "충전 캐노피 1 상부"
+        },
+        {
+          "value": "GD-2302",
+          "label": "GD-2302 · N23 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "충전 캐노피 2 상부"
+        },
+        {
+          "value": "PT-0001",
+          "label": "PT-0001 · N20 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "대기압 기준점"
+        },
+        {
           "value": "PT-0101",
           "label": "PT-0101 · N01 (MPa_abs)",
           "unit": "MPa_abs",
           "location": "튜브트레일러 공급 경계 압력 취출점"
         },
         {
+          "value": "PT-0201",
+          "label": "PT-0201 · N02 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "하역 호스·연결 매니폴드 압력 취출점"
+        },
+        {
           "value": "PT-0301",
           "label": "PT-0301 · N03 (MPa_abs)",
           "unit": "MPa_abs",
           "location": "압축기 흡입 압력 취출점"
+        },
+        {
+          "value": "PT-0302",
+          "label": "PT-0302 · N03 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "압축기 흡입 필터 상류"
+        },
+        {
+          "value": "PT-0401",
+          "label": "PT-0401 · N04 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "압축기 1단 출구·중간냉각기 압력 취출점"
+        },
+        {
+          "value": "PT-0501",
+          "label": "PT-0501 · N05 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "압축기 2단 출구·중간냉각기 압력 취출점"
+        },
+        {
+          "value": "PT-0601",
+          "label": "PT-0601 · N06 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "압축기 최종 토출 압력 취출점"
         },
         {
           "value": "PT-0701",
@@ -445,6 +619,12 @@
           "location": "고압 저장 뱅크 압력 취출점"
         },
         {
+          "value": "PT-1001",
+          "label": "PT-1001 · N10 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "캐스케이드 공통 고압 헤더 압력 취출점"
+        },
+        {
           "value": "PT-1101",
           "label": "PT-1101 · N11 (MPa_abs)",
           "unit": "MPa_abs",
@@ -455,6 +635,12 @@
           "label": "PT-1102 · N11 (MPa_abs)",
           "unit": "MPa_abs",
           "location": "충전기 1 PCV 하류"
+        },
+        {
+          "value": "PT-1201",
+          "label": "PT-1201 · N12 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "충전기 1 예냉 열교환기 압력 취출점"
         },
         {
           "value": "PT-1301",
@@ -481,6 +667,12 @@
           "location": "충전기 2 PCV 하류"
         },
         {
+          "value": "PT-1601",
+          "label": "PT-1601 · N16 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "충전기 2 예냉 열교환기 압력 취출점"
+        },
+        {
           "value": "PT-1701",
           "label": "PT-1701 · N17 (MPa_abs)",
           "unit": "MPa_abs",
@@ -493,16 +685,64 @@
           "location": "차량 2 Type IV 탱크 압력 취출점"
         },
         {
+          "value": "PT-2001",
+          "label": "PT-2001 · N20 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "벤트 헤더·방출 스택 압력 취출점"
+        },
+        {
           "value": "TT-0101",
           "label": "TT-0101 · N01 (degC)",
           "unit": "degC",
           "location": "튜브트레일러 공급 경계 수소 가스 온도"
         },
         {
+          "value": "TT-0201",
+          "label": "TT-0201 · N02 (degC)",
+          "unit": "degC",
+          "location": "하역 호스·연결 매니폴드 수소 가스 온도"
+        },
+        {
           "value": "TT-0301",
           "label": "TT-0301 · N03 (degC)",
           "unit": "degC",
           "location": "압축기 흡입 수소 가스 온도"
+        },
+        {
+          "value": "TT-0401",
+          "label": "TT-0401 · N04 (degC)",
+          "unit": "degC",
+          "location": "압축기 1단 출구·중간냉각기 수소 가스 온도"
+        },
+        {
+          "value": "TT-0402",
+          "label": "TT-0402 · N04 (degC)",
+          "unit": "degC",
+          "location": "1단 압축 직후, 중간냉각기 전"
+        },
+        {
+          "value": "TT-0501",
+          "label": "TT-0501 · N05 (degC)",
+          "unit": "degC",
+          "location": "압축기 2단 출구·중간냉각기 수소 가스 온도"
+        },
+        {
+          "value": "TT-0502",
+          "label": "TT-0502 · N05 (degC)",
+          "unit": "degC",
+          "location": "2단 압축 직후, 중간냉각기 전"
+        },
+        {
+          "value": "TT-0601",
+          "label": "TT-0601 · N06 (degC)",
+          "unit": "degC",
+          "location": "압축기 최종 토출 수소 가스 온도"
+        },
+        {
+          "value": "TT-0602",
+          "label": "TT-0602 · N06 (degC)",
+          "unit": "degC",
+          "location": "3단 압축 직후, 최종냉각기 전"
         },
         {
           "value": "TT-0701",
@@ -521,6 +761,12 @@
           "label": "TT-0901 · N09 (degC)",
           "unit": "degC",
           "location": "고압 저장 뱅크 수소 가스 온도"
+        },
+        {
+          "value": "TT-1001",
+          "label": "TT-1001 · N10 (degC)",
+          "unit": "degC",
+          "location": "캐스케이드 공통 고압 헤더 수소 가스 온도"
         },
         {
           "value": "TT-1101",
@@ -581,6 +827,24 @@
           "label": "TT-1802 · N18 (degC)",
           "unit": "degC",
           "location": "차량 2 탱크 표면"
+        },
+        {
+          "value": "TT-1901",
+          "label": "TT-1901 · N19 (degC)",
+          "unit": "degC",
+          "location": "HTF 공급 헤더"
+        },
+        {
+          "value": "TT-1902",
+          "label": "TT-1902 · N19 (degC)",
+          "unit": "degC",
+          "location": "HTF 환수 헤더"
+        },
+        {
+          "value": "TT-2001",
+          "label": "TT-2001 · N20 (degC)",
+          "unit": "degC",
+          "location": "벤트 헤더·방출 스택 수소 가스 온도"
         }
       ],
       "fields": [
@@ -593,6 +857,42 @@
       "label": "센서 값 고정",
       "targets": [
         {
+          "value": "FT-0101",
+          "label": "FT-0101 · N01 (g/s)",
+          "unit": "g/s",
+          "location": "튜브트레일러 공급 경계 정방향 질량유량"
+        },
+        {
+          "value": "FT-0201",
+          "label": "FT-0201 · N02 (g/s)",
+          "unit": "g/s",
+          "location": "하역 호스·연결 매니폴드 정방향 질량유량"
+        },
+        {
+          "value": "FT-0301",
+          "label": "FT-0301 · N03 (g/s)",
+          "unit": "g/s",
+          "location": "압축기 흡입 정방향 질량유량"
+        },
+        {
+          "value": "FT-0401",
+          "label": "FT-0401 · N04 (g/s)",
+          "unit": "g/s",
+          "location": "압축기 1단 출구·중간냉각기 정방향 질량유량"
+        },
+        {
+          "value": "FT-0501",
+          "label": "FT-0501 · N05 (g/s)",
+          "unit": "g/s",
+          "location": "압축기 2단 출구·중간냉각기 정방향 질량유량"
+        },
+        {
+          "value": "FT-0601",
+          "label": "FT-0601 · N06 (g/s)",
+          "unit": "g/s",
+          "location": "압축기 최종 토출 정방향 질량유량"
+        },
+        {
           "value": "FT-0701",
           "label": "FT-0701 · N07 (g/s)",
           "unit": "g/s",
@@ -653,16 +953,154 @@
           "location": "충전기 2 호스·브레이크어웨이·노즐 정방향 질량유량"
         },
         {
+          "value": "FT-1901",
+          "label": "FT-1901 · N19 (L/min)",
+          "unit": "L/min",
+          "location": "HTF 순환 펌프 토출"
+        },
+        {
+          "value": "FT-2001",
+          "label": "FT-2001 · N20 (g/s)",
+          "unit": "g/s",
+          "location": "벤트 헤더·방출 스택 정방향 질량유량"
+        },
+        {
+          "value": "GD-0101",
+          "label": "GD-0101 · N01 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "튜브트레일러 밸브박스 상부"
+        },
+        {
+          "value": "GD-0201",
+          "label": "GD-0201 · N02 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "하역 접속부 상부"
+        },
+        {
+          "value": "GD-0601",
+          "label": "GD-0601 · N06 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "압축기 토출 피팅 상부"
+        },
+        {
+          "value": "GD-0701",
+          "label": "GD-0701 · N07 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "저압 뱅크 매니폴드 상부"
+        },
+        {
+          "value": "GD-0801",
+          "label": "GD-0801 · N08 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "중압 뱅크 매니폴드 상부"
+        },
+        {
+          "value": "GD-0901",
+          "label": "GD-0901 · N09 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "고압 뱅크 매니폴드 상부"
+        },
+        {
+          "value": "GD-1001",
+          "label": "GD-1001 · N10 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "공통 고압 밸브함 상부"
+        },
+        {
+          "value": "GD-1301",
+          "label": "GD-1301 · N13 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "충전기 1 노즐/호스 예상 누출 상부"
+        },
+        {
+          "value": "GD-1701",
+          "label": "GD-1701 · N17 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "충전기 2 노즐/호스 예상 누출 상부"
+        },
+        {
+          "value": "GD-1901",
+          "label": "GD-1901 · N19 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "열교환기/HTF 탈기 공간"
+        },
+        {
+          "value": "GD-2001",
+          "label": "GD-2001 · N20 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "벤트 스택 하부 배관 접속부 주변"
+        },
+        {
+          "value": "GD-2101",
+          "label": "GD-2101 · N21 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "압축기 캐비닛 천장"
+        },
+        {
+          "value": "GD-2201",
+          "label": "GD-2201 · N22 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "저장구역 인접 점유경계"
+        },
+        {
+          "value": "GD-2301",
+          "label": "GD-2301 · N23 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "충전 캐노피 1 상부"
+        },
+        {
+          "value": "GD-2302",
+          "label": "GD-2302 · N23 (vol%_H2)",
+          "unit": "vol%_H2",
+          "location": "충전 캐노피 2 상부"
+        },
+        {
+          "value": "PT-0001",
+          "label": "PT-0001 · N20 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "대기압 기준점"
+        },
+        {
           "value": "PT-0101",
           "label": "PT-0101 · N01 (MPa_abs)",
           "unit": "MPa_abs",
           "location": "튜브트레일러 공급 경계 압력 취출점"
         },
         {
+          "value": "PT-0201",
+          "label": "PT-0201 · N02 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "하역 호스·연결 매니폴드 압력 취출점"
+        },
+        {
           "value": "PT-0301",
           "label": "PT-0301 · N03 (MPa_abs)",
           "unit": "MPa_abs",
           "location": "압축기 흡입 압력 취출점"
+        },
+        {
+          "value": "PT-0302",
+          "label": "PT-0302 · N03 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "압축기 흡입 필터 상류"
+        },
+        {
+          "value": "PT-0401",
+          "label": "PT-0401 · N04 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "압축기 1단 출구·중간냉각기 압력 취출점"
+        },
+        {
+          "value": "PT-0501",
+          "label": "PT-0501 · N05 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "압축기 2단 출구·중간냉각기 압력 취출점"
+        },
+        {
+          "value": "PT-0601",
+          "label": "PT-0601 · N06 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "압축기 최종 토출 압력 취출점"
         },
         {
           "value": "PT-0701",
@@ -683,6 +1121,12 @@
           "location": "고압 저장 뱅크 압력 취출점"
         },
         {
+          "value": "PT-1001",
+          "label": "PT-1001 · N10 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "캐스케이드 공통 고압 헤더 압력 취출점"
+        },
+        {
           "value": "PT-1101",
           "label": "PT-1101 · N11 (MPa_abs)",
           "unit": "MPa_abs",
@@ -693,6 +1137,12 @@
           "label": "PT-1102 · N11 (MPa_abs)",
           "unit": "MPa_abs",
           "location": "충전기 1 PCV 하류"
+        },
+        {
+          "value": "PT-1201",
+          "label": "PT-1201 · N12 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "충전기 1 예냉 열교환기 압력 취출점"
         },
         {
           "value": "PT-1301",
@@ -719,6 +1169,12 @@
           "location": "충전기 2 PCV 하류"
         },
         {
+          "value": "PT-1601",
+          "label": "PT-1601 · N16 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "충전기 2 예냉 열교환기 압력 취출점"
+        },
+        {
           "value": "PT-1701",
           "label": "PT-1701 · N17 (MPa_abs)",
           "unit": "MPa_abs",
@@ -731,16 +1187,64 @@
           "location": "차량 2 Type IV 탱크 압력 취출점"
         },
         {
+          "value": "PT-2001",
+          "label": "PT-2001 · N20 (MPa_abs)",
+          "unit": "MPa_abs",
+          "location": "벤트 헤더·방출 스택 압력 취출점"
+        },
+        {
           "value": "TT-0101",
           "label": "TT-0101 · N01 (degC)",
           "unit": "degC",
           "location": "튜브트레일러 공급 경계 수소 가스 온도"
         },
         {
+          "value": "TT-0201",
+          "label": "TT-0201 · N02 (degC)",
+          "unit": "degC",
+          "location": "하역 호스·연결 매니폴드 수소 가스 온도"
+        },
+        {
           "value": "TT-0301",
           "label": "TT-0301 · N03 (degC)",
           "unit": "degC",
           "location": "압축기 흡입 수소 가스 온도"
+        },
+        {
+          "value": "TT-0401",
+          "label": "TT-0401 · N04 (degC)",
+          "unit": "degC",
+          "location": "압축기 1단 출구·중간냉각기 수소 가스 온도"
+        },
+        {
+          "value": "TT-0402",
+          "label": "TT-0402 · N04 (degC)",
+          "unit": "degC",
+          "location": "1단 압축 직후, 중간냉각기 전"
+        },
+        {
+          "value": "TT-0501",
+          "label": "TT-0501 · N05 (degC)",
+          "unit": "degC",
+          "location": "압축기 2단 출구·중간냉각기 수소 가스 온도"
+        },
+        {
+          "value": "TT-0502",
+          "label": "TT-0502 · N05 (degC)",
+          "unit": "degC",
+          "location": "2단 압축 직후, 중간냉각기 전"
+        },
+        {
+          "value": "TT-0601",
+          "label": "TT-0601 · N06 (degC)",
+          "unit": "degC",
+          "location": "압축기 최종 토출 수소 가스 온도"
+        },
+        {
+          "value": "TT-0602",
+          "label": "TT-0602 · N06 (degC)",
+          "unit": "degC",
+          "location": "3단 압축 직후, 최종냉각기 전"
         },
         {
           "value": "TT-0701",
@@ -759,6 +1263,12 @@
           "label": "TT-0901 · N09 (degC)",
           "unit": "degC",
           "location": "고압 저장 뱅크 수소 가스 온도"
+        },
+        {
+          "value": "TT-1001",
+          "label": "TT-1001 · N10 (degC)",
+          "unit": "degC",
+          "location": "캐스케이드 공통 고압 헤더 수소 가스 온도"
         },
         {
           "value": "TT-1101",
@@ -819,6 +1329,24 @@
           "label": "TT-1802 · N18 (degC)",
           "unit": "degC",
           "location": "차량 2 탱크 표면"
+        },
+        {
+          "value": "TT-1901",
+          "label": "TT-1901 · N19 (degC)",
+          "unit": "degC",
+          "location": "HTF 공급 헤더"
+        },
+        {
+          "value": "TT-1902",
+          "label": "TT-1902 · N19 (degC)",
+          "unit": "degC",
+          "location": "HTF 환수 헤더"
+        },
+        {
+          "value": "TT-2001",
+          "label": "TT-2001 · N20 (degC)",
+          "unit": "degC",
+          "location": "벤트 헤더·방출 스택 수소 가스 온도"
         }
       ],
       "fields": [],

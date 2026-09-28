@@ -4,7 +4,7 @@ from __future__ import annotations
 import math
 from .database import EventStore, load_catalog
 from .engine import RuleEngine
-from .mapping import ModelMapper, coverage
+from .mapping import GD_SENSOR_ZONES, ModelMapper, coverage
 
 
 class HazopMonitor:
@@ -22,7 +22,7 @@ class HazopMonitor:
         if store and run_id: store.start(run_id, self.catalog["metadata"])
 
     def sample(self, t, *, active_leaks, risk_snapshots, **model):
-        frame = self.mapper.sample(t, **model)
+        frame = self.mapper.sample(t, active_leaks=active_leaks, risk_snapshots=risk_snapshots, **model)
         # Location-specific detector output is accepted only under an explicit DB sensor ID.
         # Indoor maximum_concentration and virtual:<release> are never copied into a GD.
         for snapshot in risk_snapshots:
@@ -41,19 +41,25 @@ class HazopMonitor:
         # These are simulated signals, intentionally labelled so a plant historian can
         # replace the proxy with CFD/HyRAM detector concentrations later.
         zone_detectors = {
-            "dispenser.hose": ("GD-2101", "N21 dispenser"),
-            "dispenser_2.hose": ("GD-2201", "N22 dispenser 2"),
-            "vehicle.tank": ("GD-2101", "N21 vehicle"),
-            "vehicle_2.tank": ("GD-2201", "N22 vehicle 2"),
-            "pcv": ("GD-1701", "N17 PCV"),
-            "compressor": ("GD-1901", "N19 compressor"),
-            "header": ("GD-2001", "N20 header"),
-            "cascade.low": ("GD-2301", "N23 storage low"),
-            "cascade.medium": ("GD-2301", "N23 storage medium"),
-            "cascade.high": ("GD-2302", "N23 storage high"),
+            "supply": ("GD-0101", "GD-0201"),
+            "unloading": ("GD-0201", "GD-0101"),
+            "compressor": ("GD-0601", "GD-2101"),
+            "cascade.low": ("GD-0701", "GD-2201"),
+            "cascade.medium": ("GD-0801", "GD-2201"),
+            "cascade.high": ("GD-0901", "GD-2201"),
+            "header": ("GD-1001", "GD-2001"),
+            "pcv": ("GD-1301", "GD-2301"),
+            "dispenser.hose": ("GD-1301", "GD-2301"),
+            "dispenser_2.hose": ("GD-1701", "GD-2301"),
+            "vehicle.tank": ("GD-1301", "GD-2301"),
+            "vehicle_2.tank": ("GD-1701", "GD-2301"),
+            "dispenser": ("GD-1301", "GD-2301"),
+            "dispenser_2": ("GD-1701", "GD-2301"),
+            "cooler": ("GD-1901", "GD-2302"),
+            "vent": ("GD-2001", "GD-1001"),
         }
         if self.virtual_detectors:
-            for tag, zone in dict(zone_detectors.values()).items():
+            for tag, zone in GD_SENSOR_ZONES.items():
                 if tag in self.mapper.specs:
                     frame["signals"].setdefault(tag, {
                         "value": 0.0, "unit": "vol%_H2", "quality": "GOOD",
@@ -65,12 +71,12 @@ class HazopMonitor:
             if mass_flow <= 0.0:
                 continue
             target = str(event.target).lower()
-            key = next((k for k in zone_detectors if target == k or target.startswith(k + ".")), None)
-            detector, zone = zone_detectors.get(key or "header", ("GD-2001", "N20 header"))
+            key = max((k for k in zone_detectors if target == k or target.startswith(k + ".")), key=len, default="header")
+            near_tag, far_tag = zone_detectors[key]
             # Proxy plume: mass release converted to vol% with near/far heads. This
             # is an advisory virtual sensor, not a replacement for consequence CFD.
             near_value = min(100.0, mass_flow * 10000.0)
-            for tag, multiplier in ((detector, 1.0), ("GD-2301" if detector == "GD-2302" else detector, 0.45)):
+            for tag, multiplier in ((near_tag, 1.0), (far_tag, 0.45)):
                 if tag not in self.mapper.specs or self.mapper.specs[tag]["종류"] != "G":
                     continue
                 value = near_value * multiplier
@@ -79,7 +85,20 @@ class HazopMonitor:
                     continue
                 if old is None or value > float(old.get("value", 0.0)):
                     frame["signals"][tag] = {"value": value, "unit": "vol%_H2", "quality": "GOOD",
-                                               "time_s": t, "origin": "VIRTUAL_DETECTOR_PROXY", "zone": zone}
+                                               "time_s": t, "origin": "VIRTUAL_DETECTOR_PROXY", "zone": GD_SENSOR_ZONES[tag]}
+        for event in model.get("fault_events", ()):
+            if not event.target.startswith("GD-") or event.target not in frame["signals"]:
+                continue
+            signal = frame["signals"][event.target]
+            if event.kind.value == "sensor-bias":
+                signal["value"] += event.magnitude
+                signal["origin"] = "SIMULATED_SENSOR_BIAS"
+            elif event.kind.value == "sensor-freeze":
+                key = (event.event_id, event.target)
+                self.mapper.frozen.setdefault(key, signal["value"])
+                signal["value"] = self.mapper.frozen[key]
+                signal["origin"] = "SIMULATED_SENSOR_FREEZE"
+            frame["legacy_plc_sensor_faults"] = [tag for tag in frame["legacy_plc_sensor_faults"] if tag != event.target]
         result = self.engine.evaluate(frame)
         by_release = {x.release_id:x for x in risk_snapshots}
         releases = []

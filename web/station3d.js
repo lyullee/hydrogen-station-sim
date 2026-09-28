@@ -44,12 +44,13 @@ const stage = panel.querySelector('#s3Stage');
 const $ = id => panel.querySelector(`#${id}`);
 const visualColumn = document.createElement('div'); visualColumn.className='s3-visual-column';
 const surface = document.createElement('div'); surface.className='s3-visual-surface';
+const domain = document.createElement('div'); domain.className='s3-domain'; domain.hidden=true;
 const sidebar = document.createElement('aside'); sidebar.className='s3-sidebar'; sidebar.setAttribute('aria-label','운전 상태');
 const equipmentCards=document.createElement('div'); equipmentCards.className='s3-equipment-grid';
 panel.querySelectorAll('.s3-info-card').forEach(card=>equipmentCards.append(card));
 const selectionSlot=document.createElement('div'); selectionSlot.className='s3-selection-slot';
 selectionSlot.append(panel.querySelector('.s3-card'));
-surface.append(stage); visualColumn.append(surface,selectionSlot);
+surface.append(stage,domain); visualColumn.append(surface,selectionSlot);
 if(anchor){anchor.id='processPanel';surface.append(anchor);}
 sidebar.append(document.querySelector('.analysis-row'),equipmentCards,document.querySelector('#detectorStrip'));
 const incidents=document.createElement('div');incidents.className='s3-incidents';
@@ -61,11 +62,11 @@ layout.replaceChildren(visualColumn,sidebar);
 document.querySelector('.chart-panel').append(document.querySelector('.playback'));
 panel.querySelector('.s3-card').insertAdjacentHTML('beforeend','<button id="s3Details" type="button">설비 정보</button>');
 window.setMonitorView = view => {
-  stage.hidden=view!=='3d'; if(anchor)anchor.hidden=view!=='flow'; panel.hidden=false;
+  stage.hidden=view!=='3d'; if(anchor)anchor.hidden=view!=='flow'; domain.hidden=!['equipment','cameras'].includes(view); panel.hidden=false;
   document.body.dataset.monitorView=view;
-  panel.querySelector('.s3-head h2').textContent=view==='flow'?'충전소 공정 흐름':'충전소 공간 모니터';
+  panel.querySelector('.s3-head h2').textContent=({flow:'충전소 공정 흐름',equipment:'충전소 설비 모니터',cameras:'충전소 CCTV 모니터'})[view]||'충전소 공간 모니터';
   document.querySelectorAll('[data-panel-view]').forEach(b=>{b.classList.toggle('selected',b.dataset.panelView===view);b.setAttribute('aria-pressed',String(b.dataset.panelView===view));});
-  document.querySelectorAll('.side-nav [data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===(view==='flow'?'flow':'overview')));
+  document.querySelectorAll('.side-nav [data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===(view==='flow'?'flow':view==='equipment'?'equipment':view==='cameras'?'cameras':'overview')));
 };
 document.querySelectorAll('[data-panel-view]').forEach(b=>b.addEventListener('click',()=>window.setMonitorView(b.dataset.panelView)));
 window.setMonitorView('3d');
@@ -90,10 +91,12 @@ const cameraFor=id=>{
   if(['vehicle','vehicle2','vehicleUnit','vehicle.tank','vehicle_2.tank'].includes(id))return 'vehicle';
   if(/^(PT|TT|FT)-(11|12|13|14|15|16|17|18)/.test(id))return 'dispenser';
   if(/^(PT|TT|FT)-0[789]/.test(id))return 'storage';
-  if(['GD-2301','GD-2302'].includes(id))return 'storage';
-  if(['GD-2101','GD-2201','GD-1701'].includes(id))return 'dispenser';
-  if(id==='GD-1901')return 'compressor';
-  if(['low','medium','high','detector2301','detector2302'].includes(id)||String(id).startsWith('cascade.'))return 'storage';
+  if(['GD-0701','GD-0801','GD-0901','GD-2201'].includes(id))return 'storage';
+  if(['GD-1301','GD-1701','GD-2301'].includes(id))return 'dispenser';
+  if(['GD-0601','GD-2101'].includes(id))return 'compressor';
+  if(['GD-1901','GD-2302'].includes(id))return 'cooler';
+  if(['GD-0101','GD-0201'].includes(id))return 'supply';
+  if(['low','medium','high','detector0701','detector0801','detector0901','detector2201'].includes(id)||String(id).startsWith('cascade.'))return 'storage';
   if(['compressor','compressorUnit','detector1901'].includes(id))return 'compressor';
   if(['dispenser','standby','detector01','detector02'].includes(id)||/^(dispenser|vehicle)/.test(id))return 'dispenser';
   if(id==='supply')return 'supply';
@@ -273,7 +276,7 @@ function buildStation() {
   scene.add(hemi);
   const sun = new THREE.DirectionalLight(0xffefcd,3.1);
   sun.position.set(-18,32,15); sun.castShadow = true;
-  sun.shadow.mapSize.set(2048,2048);
+  sun.shadow.mapSize.set(1024,1024);
   Object.assign(sun.shadow.camera,{left:-28,right:28,top:25,bottom:-25,near:1,far:80});
   sun.shadow.bias = -.0005; sun.shadow.normalBias = .04; scene.add(sun);
   const rim = new THREE.DirectionalLight(0xbee8ee,.8); rim.position.set(20,12,-22); scene.add(rim);
@@ -599,513 +602,7 @@ function buildStation() {
     const light=new THREE.PointLight(0xffe1b0,0,18,2);light.position.set(-14.7,5.7,z);scene.add(light);nightLights.push(light);
   }
 
-  // Detailed perimeter landscaping, contextual buildings and animated pedestrians.
-  // These visual-only objects fade automatically when they obstruct the active camera view.
-  const ambientOccluders=[];
-  const pedestrianActors=[];
-  const trafficVehicles=[];
-  const ambientMaterial=(color,options={})=>new THREE.MeshStandardMaterial({
-    color,roughness:options.roughness??.82,metalness:options.metalness??0,
-    emissive:options.emissive??0x000000,emissiveIntensity:options.emissiveIntensity??0,
-    transparent:true,opacity:1
-  });
-  const registerAmbientOccluder=(group,radius,centerY,fadeOpacity)=>{
-    group.userData.occlusionRadius=radius;
-    group.userData.occlusionCenter=new THREE.Vector3(0,centerY,0);
-    group.userData.fadeOpacity=fadeOpacity;
-    group.userData.currentOpacity=1;
-    ambientOccluders.push(group);
-    return group;
-  };
-  const localBox=(group,w,h,d,x,y,z,material)=>{
-    const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);
-    mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);return mesh;
-  };
-  const localCylinder=(group,rTop,rBottom,h,x,y,z,material,segments=14)=>{
-    const mesh=new THREE.Mesh(new THREE.CylinderGeometry(rTop,rBottom,h,segments),material);
-    mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);return mesh;
-  };
-  function detailedTree(x,z,scale=1){
-    const tree=new THREE.Group();tree.position.set(x,0,z);scene.add(tree);
-    const bark=ambientMaterial(0x5d422b,{roughness:1});
-    const barkLight=ambientMaterial(0x7a5837,{roughness:1});
-    const leafDark=ambientMaterial(0x315b3c,{roughness:1});
-    const leafMid=ambientMaterial(0x4f7b4e,{roughness:1});
-    const leafLight=ambientMaterial(0x6e9360,{roughness:1});
-    localCylinder(tree,.18*scale,.28*scale,2.8*scale,0,1.4*scale,0,bark,18);
-    localCylinder(tree,.205*scale,.225*scale,.55*scale,0,1.05*scale,0,barkLight,18);
-    const branch=(from,to,radius)=>{
-      const direction=to.clone().sub(from);const midpoint=from.clone().add(to).multiplyScalar(.5);
-      const mesh=new THREE.Mesh(new THREE.CylinderGeometry(radius*.72,radius,direction.length(),10),bark);
-      mesh.position.copy(midpoint);mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),direction.clone().normalize());
-      mesh.castShadow=true;tree.add(mesh);
-    };
-    const branches=[
-      [new THREE.Vector3(0,2.05*scale,0),new THREE.Vector3(.72*scale,3.05*scale,.18*scale),.095*scale],
-      [new THREE.Vector3(0,2.18*scale,0),new THREE.Vector3(-.68*scale,3.18*scale,.12*scale),.09*scale],
-      [new THREE.Vector3(0,2.38*scale,0),new THREE.Vector3(.18*scale,3.5*scale,-.66*scale),.082*scale],
-      [new THREE.Vector3(0,2.45*scale,0),new THREE.Vector3(-.16*scale,3.62*scale,.58*scale),.078*scale]
-    ];
-    branches.forEach(([from,to,r])=>branch(from,to,r));
-    const crowns=[
-      [-.62,3.35,.12,.92,leafDark],[.62,3.28,.04,.98,leafMid],[0,3.75,-.5,1.02,leafDark],
-      [.08,4.02,.34,1.08,leafMid],[-.28,3.65,.62,.84,leafLight],[.42,3.72,.55,.78,leafLight]
-    ];
-    crowns.forEach(([cx,cy,cz,size,material])=>{
-      const crown=new THREE.Mesh(new THREE.IcosahedronGeometry(size*scale,2),material);
-      crown.position.set(cx*scale,cy*scale,cz*scale);crown.scale.set(1,.78,1);crown.castShadow=true;crown.receiveShadow=true;tree.add(crown);
-    });
-    return registerAmbientOccluder(tree,1.2*scale,2.5*scale,.24);
-  }
-  function contextBuilding(x,z,width,depth,height,color,signText){
-    const building=new THREE.Group();building.position.set(x,0,z);scene.add(building);
-    const facade=ambientMaterial(color,{roughness:.9});
-    const trim=ambientMaterial(0xd7d3c8,{roughness:.72});
-    const roof=ambientMaterial(0x384348,{roughness:.62,metalness:.18});
-    const glass=ambientMaterial(0x6f98a5,{roughness:.22,metalness:.08,emissive:0x183840,emissiveIntensity:.28});
-    localBox(building,width,height,depth,0,height/2,0,facade);
-    localBox(building,width+.25,.22,depth+.25,0,height+.08,0,roof);
-    localBox(building,width+.08,.20,depth+.10,0,.16,0,trim);
-    const cols=Math.max(2,Math.floor(width/1.55));
-    for(let floor=0;floor<Math.max(1,Math.floor((height-1)/1.55));floor++){
-      for(let col=0;col<cols;col++){
-        const wx=-width/2+(col+.5)*width/cols;
-        localBox(building,.68,.72,.035,wx,1.15+floor*1.48,depth/2+.022,glass);
-      }
-    }
-    localBox(building,Math.min(width*.55,4.2),.42,.10,0,height-.48,depth/2+.09,trim);
-    const signCanvas=document.createElement('canvas');signCanvas.width=512;signCanvas.height=96;
-    const ctx=signCanvas.getContext('2d');ctx.fillStyle='#e8e5da';ctx.fillRect(0,0,512,96);ctx.fillStyle='#173a3a';ctx.font='700 34px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(signText,256,50);
-    const signMap=new THREE.CanvasTexture(signCanvas);const signMat=new THREE.MeshBasicMaterial({map:signMap,transparent:true,opacity:1});
-    localBox(building,Math.min(width*.5,3.8),.48,.025,0,height-.48,depth/2+.151,signMat);
-    return registerAmbientOccluder(building,Math.max(width,depth)*.58,height*.52,.16);
-  }
-  function operationsAnnex(x,z){
-    const building=new THREE.Group();building.position.set(x,0,z);scene.add(building);
-    const brick=ambientMaterial(0xa88469,{roughness:.96});
-    const mortar=ambientMaterial(0xd8d0c1,{roughness:.92});
-    const roof=ambientMaterial(0x40545a,{roughness:.62,metalness:.28});
-    const glass=ambientMaterial(0x6f99a5,{roughness:.16,metalness:.12,emissive:0x183b42,emissiveIntensity:.25});
-    const frame=ambientMaterial(0x26343a,{roughness:.55,metalness:.35});
-    localBox(building,6.2,3.05,3.4,0,1.525,0,brick);
-    for(let y=.35;y<2.9;y+=.38)localBox(building,6.24,.018,3.43,0,y,0,mortar);
-    const leftRoof=localBox(building,3.35,.15,3.75,-1.48,3.30,0,roof);leftRoof.rotation.z=-.23;
-    const rightRoof=localBox(building,3.35,.15,3.75,1.48,3.30,0,roof);rightRoof.rotation.z=.23;
-    localBox(building,1.15,2.25,.06,1.85,1.16,1.73,glass);
-    localBox(building,1.27,.10,.12,1.85,2.31,1.77,frame);
-    localBox(building,1.45,.13,.70,1.85,2.48,1.95,roof);
-    for(const wx of [-2.1,-.75,.65]){
-      localBox(building,.90,.95,.045,wx,1.62,1.735,glass);
-      localBox(building,.05,.98,.055,wx,1.62,1.77,frame);
-      localBox(building,.93,.05,.055,wx,1.62,1.77,frame);
-    }
-    localBox(building,2.3,.34,.09,-1.35,2.68,1.79,mortar);
-    const annexSign=document.createElement('canvas');annexSign.width=512;annexSign.height=96;
-    const ac=annexSign.getContext('2d');ac.fillStyle='#e6dfd0';ac.fillRect(0,0,512,96);ac.fillStyle='#173a3a';ac.font='700 31px sans-serif';ac.textAlign='center';ac.textBaseline='middle';ac.fillText('STATION OPERATIONS',256,50);
-    localBox(building,2.15,.28,.025,-1.35,2.68,1.85,new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(annexSign),transparent:true}));
-    localBox(building,1.05,.38,.72,-1.72,3.62,-.55,frame);
-    for(let i=0;i<6;i++)localBox(building,.055,.30,.74,-2.10+i*.15,3.63,-.55,mortar);
-    return registerAmbientOccluder(building,3.5,1.9,.15);
-  }
-  function serviceWorkshop(x,z){
-    const workshop=new THREE.Group();workshop.position.set(x,0,z);scene.add(workshop);
-    const wall=ambientMaterial(0x8d9998,{roughness:.72,metalness:.12});
-    const dark=ambientMaterial(0x2e393c,{roughness:.58,metalness:.38});
-    const shutter=ambientMaterial(0xbfc4c0,{roughness:.58,metalness:.30});
-    const safety=ambientMaterial(0xe3a52b,{roughness:.68});
-    localBox(workshop,7.4,3.65,4.15,0,1.825,0,wall);
-    localBox(workshop,7.7,.22,4.45,0,3.72,0,dark);
-    for(const dx of [-2.05,1.25]){
-      localBox(workshop,2.55,2.55,.08,dx,1.40,2.105,shutter);
-      for(let sy=.28;sy<2.65;sy+=.22)localBox(workshop,2.58,.025,.095,dx,sy,2.16,dark);
-      localBox(workshop,.10,2.65,.16,dx-1.34,1.39,2.15,dark);
-      localBox(workshop,.10,2.65,.16,dx+1.34,1.39,2.15,dark);
-    }
-    localBox(workshop,.72,2.2,.07,3.18,1.18,2.11,dark);
-    localBox(workshop,.36,.16,.025,3.18,1.38,2.16,safety);
-    for(let i=0;i<7;i++)localBox(workshop,.72,.055,.07,-3.25,.52+i*.36,-2.10,dark);
-    for(const dx of [-2.4,0,2.4]){
-      localCylinder(workshop,.20,.24,.45,dx,4.02,-.55,dark,16);
-      localCylinder(workshop,.28,.28,.12,dx,4.27,-.55,shutter,18);
-    }
-    localBox(workshop,3.4,.30,.12,-.55,3.23,2.18,dark);
-    const workshopSign=document.createElement('canvas');workshopSign.width=512;workshopSign.height=80;
-    const wc=workshopSign.getContext('2d');wc.fillStyle='#26363a';wc.fillRect(0,0,512,80);wc.fillStyle='#f0b53e';wc.font='700 29px sans-serif';wc.textAlign='center';wc.textBaseline='middle';wc.fillText('SERVICE / INSPECTION',256,42);
-    localBox(workshop,3.2,.28,.025,-.55,3.23,2.25,new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(workshopSign),transparent:true}));
-    return registerAmbientOccluder(workshop,4.2,2.05,.14);
-  }
-  function electricalYard(x,z){
-    const yard=new THREE.Group();yard.position.set(x,0,z);scene.add(yard);
-    const concrete=ambientMaterial(0xa9aaa3,{roughness:1});
-    const steel=ambientMaterial(0x566268,{roughness:.48,metalness:.58});
-    const transformer=ambientMaterial(0x60756a,{roughness:.61,metalness:.34});
-    const ceramic=ambientMaterial(0x784b35,{roughness:.55});
-    const warning=ambientMaterial(0xe5b12c,{roughness:.65});
-    localBox(yard,5.2,.14,4.3,0,.07,0,concrete);
-    for(const px of [-2.55,2.55])for(let pz=-2.05;pz<=2.05;pz+=.68)localCylinder(yard,.035,.035,1.7,px,.86,pz,steel,8);
-    for(const pz of [-2.05,2.05])for(let px=-2.55;px<=2.55;px+=.68)localCylinder(yard,.035,.035,1.7,px,.86,pz,steel,8);
-    for(const y of [.40,.88,1.36]){
-      localBox(yard,5.15,.025,.025,0,y,-2.05,steel);localBox(yard,5.15,.025,.025,0,y,2.05,steel);
-      localBox(yard,.025,.025,4.1,-2.55,y,0,steel);localBox(yard,.025,.025,4.1,2.55,y,0,steel);
-    }
-    for(const tx of [-1.25,1.25]){
-      localBox(yard,1.55,1.32,1.25,tx,.77,0,transformer);
-      for(let fin=-.55;fin<=.55;fin+=.18)localBox(yard,.04,1.08,1.38,tx+fin,.77,0,steel);
-      for(const bx of [-.4,0,.4]){
-        localCylinder(yard,.07,.10,.40,tx+bx,1.66,0,ceramic,12);
-        localCylinder(yard,.035,.035,.20,tx+bx,1.95,0,steel,10);
-      }
-      localBox(yard,.28,.22,.035,tx,1.02,.65,warning);
-    }
-    localBox(yard,.95,1.75,.62,0,.94,-1.52,steel);
-    localBox(yard,.50,.28,.035,0,1.12,-1.85,warning);
-    return registerAmbientOccluder(yard,3.2,1.0,.20);
-  }
-  function gateHouse(x,z){
-    const gate=new THREE.Group();gate.position.set(x,0,z);scene.add(gate);
-    const frame=ambientMaterial(0x25383b,{roughness:.50,metalness:.30});
-    const wall=ambientMaterial(0xd6d4c9,{roughness:.88});
-    const glass=ambientMaterial(0x729aa5,{roughness:.12,metalness:.10,emissive:0x173b42,emissiveIntensity:.30});
-    const barrier=ambientMaterial(0xe8e5dc,{roughness:.62});
-    const red=ambientMaterial(0xcf4c3d,{roughness:.65});
-    localBox(gate,2.35,2.35,1.85,0,1.175,0,wall);
-    localBox(gate,2.72,.18,2.22,0,2.43,0,frame);
-    localBox(gate,1.55,1.12,.045,0,1.42,.95,glass);
-    localBox(gate,.72,1.95,.055,-.73,1.05,.96,frame);
-    localBox(gate,.45,.86,.055,-.73,1.28,.99,glass);
-    localBox(gate,.28,1.02,.28,1.55,.51,.35,frame);
-    const arm=localBox(gate,3.8,.11,.11,3.38,1.02,.35,barrier);arm.rotation.z=-.04;
-    for(let stripe=-1.35;stripe<1.45;stripe+=.58)localBox(gate,.28,.125,.13,3.38+stripe,1.02+stripe*-.04,.35,red);
-    localCylinder(gate,.18,.23,.22,1.55,1.15,.35,red,20);
-    return registerAmbientOccluder(gate,2.1,1.25,.22);
-  }
-  function solarParkingCanopy(x,z){
-    const canopy=new THREE.Group();canopy.position.set(x,0,z);scene.add(canopy);
-    const steel=ambientMaterial(0x59656a,{roughness:.48,metalness:.55});
-    const solar=ambientMaterial(0x183d51,{roughness:.22,metalness:.32,emissive:0x071820,emissiveIntensity:.16});
-    const line=ambientMaterial(0xe8dfbd,{roughness:.9});
-    for(const px of [-3.2,0,3.2]){
-      localCylinder(canopy,.09,.12,2.9,px,1.45,0,steel,14);
-      const brace=localBox(canopy,.10,1.20,.10,px+.28,2.42,0,steel);brace.rotation.z=-.48;
-    }
-    localBox(canopy,7.4,.15,3.25,0,3.0,0,steel);
-    for(let row=0;row<2;row++)for(let col=0;col<6;col++){
-      const panel=localBox(canopy,1.08,.045,1.38,-3.0+col*1.2,3.12,-.76+row*1.52,solar);panel.rotation.z=-.035;
-      localBox(canopy,.025,.055,1.40,-3.0+col*1.2,3.15,-.76+row*1.52,steel);
-    }
-    for(const bay of [-2.4,0,2.4]){
-      localBox(canopy,.09,.018,4.7,bay-1.05,.018,.15,line);localBox(canopy,.09,.018,4.7,bay+1.05,.018,.15,line);
-      localBox(canopy,1.2,.022,.10,bay,.022,-1.82,line);
-    }
-    return registerAmbientOccluder(canopy,4.2,2.2,.20);
-  }
-  function steppedOffice(x,z){
-    const office=new THREE.Group();office.position.set(x,0,z);scene.add(office);
-    const stone=ambientMaterial(0xb9b5aa,{roughness:.84});
-    const dark=ambientMaterial(0x34454a,{roughness:.48,metalness:.30});
-    const glass=ambientMaterial(0x527d8d,{roughness:.14,metalness:.18,emissive:0x15333c,emissiveIntensity:.25});
-    localBox(office,8.4,2.4,5.5,0,1.2,0,stone);
-    localBox(office,6.2,5.0,4.5,.55,4.9,-.20,stone);
-    localBox(office,4.4,4.2,3.7,1.1,9.5,-.38,dark);
-    for(let floor=0;floor<7;floor++){
-      const y=1.45+floor*1.32;const width=floor<2?7.2:(floor<5?5.3:3.6);
-      localBox(office,width,.55,.055,floor<2?0:(floor<5?.55:1.1),y,2.78-(floor<2?0:(floor<5?.45:.82)),glass);
-      for(let mullion=-width/2+.45;mullion<width/2;mullion+=.9)localBox(office,.045,.62,.08,(floor<2?0:(floor<5?.55:1.1))+mullion,y,2.84-(floor<2?0:(floor<5?.45:.82)),dark);
-    }
-    localBox(office,2.2,.35,1.1,-2.25,2.62,2.88,dark);
-    localBox(office,1.35,2.15,.07,-2.25,1.25,2.79,glass);
-    localBox(office,1.8,.65,1.3,1.25,12.0,-.35,dark);
-    localCylinder(office,.08,.08,2.3,1.25,13.45,-.35,dark,10);
-    return registerAmbientOccluder(office,5.1,6.4,.12);
-  }
-  function lShapedResearchBuilding(x,z){
-    const lab=new THREE.Group();lab.position.set(x,0,z);scene.add(lab);
-    const concrete=ambientMaterial(0xd0cbbf,{roughness:.88});
-    const accent=ambientMaterial(0x4e716e,{roughness:.58,metalness:.12});
-    const glass=ambientMaterial(0x7099a2,{roughness:.18,emissive:0x17363b,emissiveIntensity:.22});
-    const roof=ambientMaterial(0x4b5558,{roughness:.62,metalness:.28});
-    localBox(lab,8.6,4.4,3.2,0,2.2,0,concrete);
-    localBox(lab,3.3,6.8,7.2,-2.65,3.4,-2.0,concrete);
-    localBox(lab,8.85,.20,3.45,0,4.52,0,roof);
-    localBox(lab,3.55,.20,7.45,-2.65,6.92,-2.0,roof);
-    for(let floor=0;floor<4;floor++){
-      const y=1.25+floor*1.45;
-      for(let wx=-3.45;wx<=3.45;wx+=1.15)localBox(lab,.72,.70,.045,wx,y,1.63,glass);
-    }
-    for(let floor=0;floor<3;floor++)for(let wz=-4.6;wz<=.5;wz+=1.1)localBox(lab,.045,.68,.70,-4.32,1.3+floor*1.5,wz,glass);
-    localBox(lab,2.5,2.75,.10,1.6,1.48,1.69,glass);
-    localBox(lab,2.9,.30,1.15,1.6,3.0,2.02,accent);
-    localBox(lab,1.2,.8,1.6,-2.6,7.45,-2.2,accent);
-    localCylinder(lab,.28,.28,.5,-2.6,8.08,-2.2,roof,18);
-    return registerAmbientOccluder(lab,5.7,3.8,.13);
-  }
-  function sawtoothWarehouse(x,z){
-    const warehouse=new THREE.Group();warehouse.position.set(x,0,z);scene.add(warehouse);
-    const wall=ambientMaterial(0x9ca7a5,{roughness:.72,metalness:.13});
-    const roof=ambientMaterial(0x46565b,{roughness:.55,metalness:.34});
-    const translucent=ambientMaterial(0x83aab1,{roughness:.22,emissive:0x18383c,emissiveIntensity:.18});
-    const door=ambientMaterial(0x687378,{roughness:.58,metalness:.28});
-    localBox(warehouse,12.5,3.25,6.2,0,1.625,0,wall);
-    for(let bay=0;bay<5;bay++){
-      const cx=-5.0+bay*2.5;
-      const panelA=localBox(warehouse,2.75,.14,6.55,cx-.55,3.62,0,roof);panelA.rotation.z=-.23;
-      const panelB=localBox(warehouse,1.65,.10,6.55,cx+.72,3.82,0,translucent);panelB.rotation.z=.36;
-    }
-    for(const dx of [-4.3,-1.45,1.45,4.3]){
-      localBox(warehouse,2.25,2.45,.08,dx,1.32,3.13,door);
-      for(let sy=.25;sy<2.55;sy+=.25)localBox(warehouse,2.28,.025,.10,dx,sy,3.18,roof);
-    }
-    localBox(warehouse,.82,2.15,.08,5.6,1.16,3.14,roof);
-    for(let vx=-5.5;vx<=5.5;vx+=1.0)localBox(warehouse,.55,.35,.05,vx,2.75,-3.13,translucent);
-    return registerAmbientOccluder(warehouse,7.0,2.4,.15);
-  }
-  function detailedRoadNetwork(){
-    const roads=new THREE.Group();roads.name='surrounding-road-network';scene.add(roads);
-    const asphalt=ambientMaterial(0x30383a,{roughness:.98});
-    const asphaltLight=ambientMaterial(0x3b4344,{roughness:.96});
-    const concrete=ambientMaterial(0xb9b8af,{roughness:1});
-    const curb=ambientMaterial(0xd5d2c7,{roughness:.94});
-    const white=ambientMaterial(0xf1efe4,{roughness:.88});
-    const yellow=ambientMaterial(0xe4b83c,{roughness:.88});
-    const drain=ambientMaterial(0x41494b,{roughness:.58,metalness:.48});
-    const flatRect=(w,d,x,z,material,y=.045,rotation=0)=>{
-      const mesh=new THREE.Mesh(new THREE.PlaneGeometry(w,d),material);
-      mesh.rotation.set(-Math.PI/2,0,rotation);mesh.position.set(x,y,z);mesh.receiveShadow=true;roads.add(mesh);return mesh;
-    };
-    // Re-surface the original frontage so the former skewed crossing is completely covered.
-    flatRect(78,8.6,0,19,asphalt,.052);
-    flatRect(66,5.6,0,-21,asphaltLight,.047);
-    flatRect(5.8,39,-27,-1,asphaltLight,.048);
-    flatRect(5.8,39,27,-1,asphaltLight,.048);
-    // Separate one-way entry and exit throats into the forecourt.
-    flatRect(4.3,12.2,-7.2,10.7,asphalt,.057);
-    flatRect(4.3,12.2,10.7,10.7,asphalt,.057);
-    flatRect(5.2,2.5,-7.2,16.0,asphalt,.060);
-    flatRect(5.2,2.5,10.7,16.0,asphalt,.060);
-    // Continuous sidewalks and lowered curb sections at both driveways.
-    flatRect(78,2.25,0,13.55,concrete,.063);
-    flatRect(78,2.25,0,24.45,concrete,.063);
-    flatRect(66,1.65,0,-17.35,concrete,.055);
-    for(let x=-38;x<=38;x+=1.5){
-      flatRect(1.42,.035,x,13.55,curb,.074);flatRect(1.42,.035,x,24.45,curb,.074);
-      flatRect(1.42,.028,x,-17.35,curb,.065);
-    }
-    // Main-road lane edges, center dashes and rear service-road markings.
-    flatRect(76,.11,0,15.05,white,.073);flatRect(76,.11,0,22.95,white,.073);
-    for(let x=-36;x<=36;x+=5.0)flatRect(2.7,.13,x,19,yellow,.075);
-    flatRect(64,.10,0,-18.55,white,.066);flatRect(64,.10,0,-23.45,white,.066);
-    for(let x=-29;x<=29;x+=4.5)flatRect(2.4,.11,x,-21,white,.068);
-    // A perpendicular zebra crossing, offset from the station driveways.
-    for(let x=-20.5;x<=-14.5;x+=.82)flatRect(.48,7.05,x,19,white,.081);
-    flatRect(7.1,.32,-17.5,15.7,white,.082);flatRect(7.1,.32,-17.5,22.3,white,.082);
-    // Driveway stop lines, lane separators and directional arrows.
-    flatRect(3.65,.32,-7.2,15.15,white,.084);flatRect(3.65,.32,10.7,15.15,white,.084);
-    flatRect(.12,9.0,-7.2,9.7,yellow,.080);flatRect(.12,9.0,10.7,9.7,yellow,.080);
-    const arrow=(x,z,direction)=>{
-      flatRect(.28,1.65,x,z,white,.086);
-      const tip=z+direction*.96;
-      flatRect(.25,.95,x-.30,tip,white,.087,direction*.62);
-      flatRect(.25,.95,x+.30,tip,white,.087,-direction*.62);
-    };
-    arrow(-7.2,11.4,-1);arrow(10.7,9.0,1);
-    // Surface detail: storm drains and recessed manhole covers.
-    for(const x of [-31,-23,-12,2,16,29]){
-      localBox(roads,.72,.035,.28,x,.075,15.27,drain);
-      for(let slot=-.25;slot<=.25;slot+=.10)localBox(roads,.025,.018,.30,x+slot,.096,15.27,asphalt);
-    }
-    for(const [x,z] of [[-3,17.2],[20,20.8],[-17,-20.2]]){
-      const cover=localCylinder(roads,.43,.43,.035,x,.077,z,drain,28);
-      for(let angle=0;angle<Math.PI*2;angle+=Math.PI/4){
-        const bolt=localCylinder(roads,.025,.025,.018,x+Math.cos(angle)*.31,.102,z+Math.sin(angle)*.31,white,8);bolt.castShadow=false;
-      }
-      cover.castShadow=false;
-    }
-    // Streetlights remain outside the station boundary.
-    const lamp=(x,z)=>{
-      localCylinder(roads,.065,.095,4.3,x,2.15,z,drain,14);
-      const arm=localBox(roads,1.05,.075,.075,x+.48,4.18,z,drain);arm.rotation.z=-.08;
-      localBox(roads,.38,.10,.24,x+.94,4.08,z,white);
-    };
-    for(const x of [-32,-22,-12,18,28])lamp(x,12.65);
-    return roads;
-  }
-  function createDetailedVehicle(color,style='sedan'){
-    const vehicle=new THREE.Group();
-    const body=ambientMaterial(color,{roughness:.43,metalness:.30});
-    const trim=ambientMaterial(0x263136,{roughness:.42,metalness:.58});
-    const glass=ambientMaterial(0x203b47,{roughness:.12,metalness:.18,emissive:0x0a1c24,emissiveIntensity:.20});
-    const tyre=ambientMaterial(0x141719,{roughness:1});
-    const hub=ambientMaterial(0xaeb4b3,{roughness:.32,metalness:.78});
-    const lamp=ambientMaterial(0xf1edd2,{roughness:.22,emissive:0xffe6a5,emissiveIntensity:.60});
-    const tail=ambientMaterial(0x9d302b,{roughness:.32,emissive:0x7b0804,emissiveIntensity:.55});
-    const plate=ambientMaterial(0xefede3,{roughness:.72});
-    const isVan=style==='van';const isSuv=style==='suv';const length=isVan?4.3:(isSuv?4.0:3.65);
-    const bodyHeight=isSuv?.56:.46;const cabinHeight=isVan?1.0:(isSuv?.72:.58);
-    const roofLength=isVan?2.4:(isSuv?2.15:1.85);
-    localBox(vehicle,1.72,bodyHeight,length,0,.56,0,body);
-    localBox(vehicle,1.64,.14,length+.12,0,.34,0,trim);
-    localBox(vehicle,1.54,cabinHeight,roofLength,0,.98,isVan?-.16:-.12,glass);
-    localBox(vehicle,1.58,.10,roofLength+.18,0,1.34,isVan?-.16:-.12,body);
-    localBox(vehicle,1.76,.16,.18,0,.57,-length/2-.02,trim);
-    localBox(vehicle,1.76,.16,.18,0,.57,length/2+.02,trim);
-    localBox(vehicle,.35,.14,.05,-.52,.70,-length/2-.12,lamp);
-    localBox(vehicle,.35,.14,.05,.52,.70,-length/2-.12,lamp);
-    localBox(vehicle,.32,.13,.05,-.54,.70,length/2+.12,tail);
-    localBox(vehicle,.32,.13,.05,.54,.70,length/2+.12,tail);
-    localBox(vehicle,.44,.16,.035,0,.49,length/2+.14,plate);
-    localBox(vehicle,.44,.16,.035,0,.49,-length/2-.14,plate);
-    for(const wx of [-.87,.87])for(const wz of [-length*.28,length*.28]){
-      const wheel=localCylinder(vehicle,.27,.27,.19,wx,.34,wz,tyre,18);wheel.rotation.z=Math.PI/2;
-      const rim=localCylinder(vehicle,.15,.15,.205,wx+(wx<0?-.012:.012),.34,wz,hub,16);rim.rotation.z=Math.PI/2;
-      vehicle.userData.wheels??=[];vehicle.userData.wheels.push(wheel,rim);
-    }
-    for(const wx of [-.96,.96]){
-      const mirror=localBox(vehicle,.16,.09,.20,wx,.98,-.34,trim);mirror.rotation.y=.18*(wx<0?-1:1);
-    }
-    localBox(vehicle,.05,.05,.48,-.72,.73,-.34,trim);localBox(vehicle,.05,.05,.48,.72,.73,-.34,trim);
-    if(isSuv){
-      localBox(vehicle,.07,.07,2.0,-.58,1.43,-.08,trim);localBox(vehicle,.07,.07,2.0,.58,1.43,-.08,trim);
-      localBox(vehicle,1.56,.10,.44,0,.93,length/2-.25,body);
-    }
-    if(isVan){
-      localBox(vehicle,1.76,.72,1.62,0,1.05,.92,body);
-      localBox(vehicle,.035,.70,1.5,0,1.05,.91,trim);
-      localBox(vehicle,1.30,.13,.04,0,1.05,1.74,trim);
-    }
-    vehicle.castShadow=true;return vehicle;
-  }
-  function roadsideParking(x,z,rotation=0){
-    const lot=new THREE.Group();lot.position.set(x,0,z);lot.rotation.y=rotation;scene.add(lot);
-    const paving=ambientMaterial(0x4c5454,{roughness:.98});
-    const marking=ambientMaterial(0xe9e2c8,{roughness:.90});
-    const bodyColors=[0x335d70,0xc3c0b4,0x8a3e36,0x53614c,0x303438];
-    localBox(lot,10.8,.10,6.2,0,.05,0,paving);
-    for(let bay=-4.2;bay<=4.2;bay+=2.1){
-      localBox(lot,.065,.018,5.2,bay,.115,0,marking);
-      localBox(lot,1.0,.018,.10,bay+.95,.116,-2.25,marking);
-    }
-    const styles=['sedan','suv','van','sedan','suv'];
-    [-4.2,-2.1,0,2.1,4.2].forEach((px,index)=>{
-      const car=createDetailedVehicle(bodyColors[index%bodyColors.length],styles[index]);
-      car.position.set(px,.12,index%2?-.15:.15);car.rotation.y=index%2?Math.PI:0;car.scale.setScalar(styles[index]==='van'?.88:.94);lot.add(car);
-    });
-    return registerAmbientOccluder(lot,5.8,.8,.28);
-  }
-  function busShelter(x,z){
-    const shelter=new THREE.Group();shelter.position.set(x,0,z);scene.add(shelter);
-    const frame=ambientMaterial(0x34464a,{roughness:.48,metalness:.48});
-    const glass=ambientMaterial(0x76a1a9,{roughness:.12,metalness:.10,emissive:0x17363c,emissiveIntensity:.18});
-    const seat=ambientMaterial(0x8c633f,{roughness:.85});
-    localBox(shelter,4.3,.16,1.45,0,2.55,0,frame);
-    for(const px of [-2.0,2.0])localCylinder(shelter,.055,.075,2.5,px,1.25,0,frame,12);
-    localBox(shelter,4.0,2.15,.045,0,1.38,.60,glass);
-    localBox(shelter,3.0,.16,.48,0,.64,.12,seat);
-    localBox(shelter,3.0,.35,.10,0,.83,.35,seat);
-    localBox(shelter,.42,2.15,.08,-1.65,1.38,.54,frame);
-    return registerAmbientOccluder(shelter,2.4,1.35,.24);
-  }
-  function passingRoadVehicle(name,start,end,color,style,phase,speed){
-    const vehicle=createDetailedVehicle(color,style);vehicle.name=name;vehicle.position.copy(start);scene.add(vehicle);
-    vehicle.userData.traffic={start:start.clone(),end:end.clone(),phase,speed};
-    trafficVehicles.push(vehicle);return vehicle;
-  }
-  function pedestrian(name,start,end,shirtColor,phase,speed){
-    const actor=new THREE.Group();actor.name=name;scene.add(actor);
-    const skin=ambientMaterial(0xc99572,{roughness:.9});
-    const shirt=ambientMaterial(shirtColor,{roughness:.88});
-    const trousers=ambientMaterial(0x28323a,{roughness:.9});
-    const shoes=ambientMaterial(0x171a1b,{roughness:1});
-    localCylinder(actor,.22,.18,.62,0,1.13,0,shirt,16);
-    const head=new THREE.Mesh(new THREE.SphereGeometry(.16,16,12),skin);head.position.y=1.58;head.castShadow=true;actor.add(head);
-    const armL=localCylinder(actor,.052,.045,.55,-.25,1.13,0,skin,10);
-    const armR=localCylinder(actor,.052,.045,.55,.25,1.13,0,skin,10);
-    const legL=localCylinder(actor,.07,.06,.67,-.105,.49,0,trousers,10);
-    const legR=localCylinder(actor,.07,.06,.67,.105,.49,0,trousers,10);
-    localBox(actor,.15,.09,.27,-.105,.10,.06,shoes);localBox(actor,.15,.09,.27,.105,.10,.06,shoes);
-    actor.scale.setScalar(.95);actor.position.copy(start);
-    actor.userData.walk={start:start.clone(),end:end.clone(),phase,speed,armL,armR,legL,legR};
-    pedestrianActors.push(actor);return registerAmbientOccluder(actor,.48,.9,.34);
-  }
-  detailedTree(-27,-9,1.05);detailedTree(-24,-16,.88);detailedTree(-31,-22,1.12);
-  detailedTree(28,-10,.95);detailedTree(24,-17,1.08);detailedTree(31,-23,1.0);
-  contextBuilding(-21,-25,8.8,4.8,3.6,0xc6c0ad,'H2 MOBILITY LAB');
-  contextBuilding(-8,-28,11.5,5.2,6.8,0xb7c0ba,'ENERGY SERVICE');
-  contextBuilding(7,-27,7.5,4.5,4.4,0xc8b8a6,'MAINTENANCE');
-  contextBuilding(-29,-16,6.2,8.8,5.8,0xb8aea0,'CONTROL OFFICE');
-  contextBuilding(28,-17,6.8,9.2,8.2,0xb5c2c3,'TECH CENTER');
-  contextBuilding(-30,-3,7.0,5.8,3.2,0xc8c1b1,'SITE SERVICES');
-  contextBuilding(30,-4,7.4,5.8,4.8,0xbfc4b5,'LOGISTICS');
-  operationsAnnex(-19,-14);
-  serviceWorkshop(17,-14);
-  electricalYard(-23,-7);
-  gateHouse(-27,-1.5);
-  solarParkingCanopy(24,-7);
-  steppedOffice(-10,-37);
-  lShapedResearchBuilding(4,-35);
-  sawtoothWarehouse(22,-29);
-  detailedRoadNetwork();
-  roadsideParking(-19,5.5,-.08);
-  roadsideParking(21,5.0,.07);
-  busShelter(18.5,24.0);
-  pedestrian('west-sidewalk-a',new THREE.Vector3(-34,0,24.1),new THREE.Vector3(-21,0,24.1),0x2f7181,.10,.060);
-  pedestrian('west-sidewalk-b',new THREE.Vector3(-20,0,24.1),new THREE.Vector3(-10,0,24.1),0xc47a3d,.56,.052);
-  pedestrian('east-sidewalk-a',new THREE.Vector3(14,0,24.1),new THREE.Vector3(31,0,24.1),0x6c7f48,.32,.057);
-  pedestrian('rear-district-a',new THREE.Vector3(-20,0,-17.0),new THREE.Vector3(-7,0,-17.0),0x75577f,.72,.048);
-  pedestrian('rear-district-b',new THREE.Vector3(6,0,-17.0),new THREE.Vector3(20,0,-17.0),0x9a5945,.88,.050);
-  pedestrian('front-sidewalk-a',new THREE.Vector3(-9,0,24.1),new THREE.Vector3(4,0,24.1),0x3d6a92,.22,.054);
-  pedestrian('front-sidewalk-b',new THREE.Vector3(7,0,24.1),new THREE.Vector3(16,0,24.1),0x9a6b45,.68,.051);
-  pedestrian('bus-stop-walk',new THREE.Vector3(15.8,0,24.1),new THREE.Vector3(23.5,0,24.1),0x7c4c62,.41,.045);
-  pedestrian('west-connector',new THREE.Vector3(-30.5,0,8.5),new THREE.Vector3(-30.5,0,-9.5),0x547a50,.34,.040);
-  pedestrian('east-connector',new THREE.Vector3(30.5,0,8.5),new THREE.Vector3(30.5,0,-10.0),0xc2843d,.79,.043);
-  pedestrian('research-walk-a',new THREE.Vector3(-14,0,-28.0),new THREE.Vector3(-2,0,-28.0),0x456f7b,.14,.046);
-  pedestrian('research-walk-b',new THREE.Vector3(9,0,-28.0),new THREE.Vector3(21,0,-28.0),0x70664b,.62,.044);
-  passingRoadVehicle('main-road-sedan-east',new THREE.Vector3(-43,0,17.05),new THREE.Vector3(43,0,17.05),0x2b6581,'sedan',.06,.052);
-  passingRoadVehicle('main-road-suv-west',new THREE.Vector3(43,0,20.95),new THREE.Vector3(-43,0,20.95),0x66734e,'suv',.39,.044);
-  passingRoadVehicle('main-road-van-east',new THREE.Vector3(-43,0,20.95),new THREE.Vector3(43,0,20.95),0xd7d1c3,'van',.93,.038);
-  passingRoadVehicle('service-road-vehicle',new THREE.Vector3(36,0,-21.0),new THREE.Vector3(-36,0,-21.0),0x8b473e,'suv',.57,.035);
-  const ambientClock=new THREE.Clock();
-  function animateAmbientScene(){
-    requestAnimationFrame(animateAmbientScene);
-    const elapsed=ambientClock.getElapsedTime();
-    pedestrianActors.forEach(actor=>{
-      const walk=actor.userData.walk;const cycle=(elapsed*walk.speed+walk.phase)%2;
-      const amount=cycle<=1?cycle:2-cycle;
-      actor.position.lerpVectors(walk.start,walk.end,amount);
-      const direction=walk.end.clone().sub(walk.start).multiplyScalar(cycle<=1?1:-1);
-      actor.rotation.y=Math.atan2(direction.x,direction.z);
-      const stride=Math.sin(elapsed*walk.speed*Math.PI*12+walk.phase*Math.PI*2)*.52;
-      walk.armL.rotation.x=stride;walk.armR.rotation.x=-stride;walk.legL.rotation.x=-stride*.72;walk.legR.rotation.x=stride*.72;
-      actor.position.y=Math.abs(Math.sin(elapsed*walk.speed*Math.PI*12+walk.phase*Math.PI*2))*.018;
-    });
-    trafficVehicles.forEach(vehicle=>{
-      const drive=vehicle.userData.traffic;const journey=(elapsed*drive.speed+drive.phase)%1.75;
-      vehicle.visible=journey<1;
-      if(!vehicle.visible)return;
-      vehicle.position.lerpVectors(drive.start,drive.end,journey);
-      const direction=drive.end.clone().sub(drive.start);
-      vehicle.rotation.y=Math.atan2(direction.x,direction.z);
-      vehicle.userData.wheels?.forEach(wheel=>{wheel.rotation.x-=.14;});
-    });
-    const focus=(controls&&controls.target)?controls.target.clone():new THREE.Vector3(2,1.5,0);
-    const cameraToFocus=focus.clone().sub(camera.position);const focusDistance=cameraToFocus.length();
-    if(focusDistance>.01){
-      const viewDirection=cameraToFocus.clone().normalize();
-      ambientOccluders.forEach(object=>{
-        const center=object.localToWorld(object.userData.occlusionCenter.clone());
-        const cameraToObject=center.sub(camera.position);const along=cameraToObject.dot(viewDirection);
-        const perpendicular=cameraToObject.clone().sub(viewDirection.clone().multiplyScalar(along)).length();
-        const obstructs=along>1.2&&along<focusDistance-.6&&perpendicular<object.userData.occlusionRadius;
-        const desired=obstructs?object.userData.fadeOpacity:1;
-        object.userData.currentOpacity=THREE.MathUtils.lerp(object.userData.currentOpacity,desired,.12);
-        object.traverse(child=>{
-          if(!child.material)return;
-          const materials=Array.isArray(child.material)?child.material:[child.material];
-          materials.forEach(material=>{material.transparent=true;material.opacity=object.userData.currentOpacity;material.depthWrite=object.userData.currentOpacity>.88;});
-        });
-      });
-    }
-  }
-  animateAmbientScene();
+  // Off-site district, traffic and its independent animation loop are omitted.
 
   scene.updateMatrixWorld(true);
   const pipingRoutes=createStationPipeRoutes(equipment);
@@ -1325,37 +822,7 @@ function buildStation() {
   const totem=new THREE.Group();totem.position.set(15.1,0,10.8);scene.add(totem);
   box(1.35,4.3,.38,0,2.15,0,M.green,totem);sign('H2','700 BAR',1.12,.7,0,3.6,.20,totem);sign('OPEN','CLEAN MOBILITY',1.1,.48,0,2.55,.20,totem);
   for(const z of [-.5,.5]){cylinder(.10,.8,15.9,.40,10.8+z,M.yellow);}
-  // Surrounding public realm gives the facility believable scale and context.
-  const context=new THREE.Group();scene.add(context);
-  const asphalt=mat(0x4b5557,0,.96);asphalt.map=M.pavement.map;
-  box(82,.12,15,0,-.49,23,M.concrete,context);box(82,.04,11,0,-.40,23,asphalt,context);
-  box(82,.15,1.85,0,-.28,15.2,M.concrete,context);box(82,.15,1.85,0,-.28,30.8,M.concrete,context);
-  for(let x=-39;x<40;x+=4){box(2.0,.012,.10,x,-.37,23,M.white,context);}
-  for(const z of [18.2,27.8])box(82,.012,.10,0,-.37,z,M.white,context);
-  for(let x=-39;x<40;x+=1.5){box(.012,.009,1.8,x,-.195,15.2,M.frame,context);box(.012,.009,1.8,x,-.195,30.8,M.frame,context);}
-  for(const x of [-13,13]){
-    box(4.0,.16,3.0,x,-.30,13.6,M.concrete,context);
-    cylinder(.055,2.5,x,1.0,14.0,M.frame,context);
-    const signBoard=mesh(new THREE.CircleGeometry(.43,24),M.white,context);signBoard.position.set(x,2.13,14.03);
-    ring(.39,.04,x,2.13,14.04,M.red,context);sign('10','km/h',.48,.28,x,2.13,14.06,context,'#f4f4eb');
-  }
-  // Clear pedestrian crossing and tactile tiles; public road is decorative only.
-  for(let x=-2.8;x<3;x+=.65)box(.39,.015,4.4,x,-.365,20.6,M.white,context);
-  for(const z of [17.9,23.3]){
-    box(4,.017,.45,0,-.36,z,M.yellow,context);
-    const points=[];for(let x=-1.8;x<1.9;x+=.15)for(let dz=-.15;dz<=.15;dz+=.15)points.push([x,-.34,z+dz]);
-    const tileDots=new THREE.InstancedMesh(new THREE.SphereGeometry(.022,6,4),M.yellow,points.length);const transform=new THREE.Object3D();
-    points.forEach((point,i)=>{transform.position.set(...point);transform.scale.set(1,.35,1);transform.updateMatrix();tileDots.setMatrixAt(i,transform.matrix);});context.add(tileDots);
-  }
-  // Neighboring industrial premises kept unobtrusive behind the station.
-  const backgroundBuilding=new THREE.Group();backgroundBuilding.position.set(3,-.32,-23);scene.add(backgroundBuilding);
-  box(30,6.0,10,0,3,0,mat(0xafbdb9,.1,.86),backgroundBuilding);
-  box(30.3,.17,10.3,0,6.1,0,M.frame,backgroundBuilding);
-  for(let x=-13;x<=13;x+=2.6){box(1.65,1.20,.025,x,3.95,5.02,M.glass,backgroundBuilding);box(.06,5.5,.04,x,2.9,5.02,M.white,backgroundBuilding);}
-  for(const x of [-7,7]){
-    box(5.0,2.5,.05,x,1.25,5.05,M.frame,backgroundBuilding);
-    for(let y=.2;y<2.5;y+=.18)box(4.9,.025,.025,x,y,5.09,detailMetal,backgroundBuilding);
-  }
+  // The rendered footprint ends at the station boundary.
   // Fenced utility yard and gate with horizontal rails and welded-wire infill.
   function fenceSegment(x,z,length,rotation=0){
     const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=rotation;scene.add(g);
@@ -1395,8 +862,6 @@ function buildStation() {
   const helmet=mesh(new THREE.SphereGeometry(.13,12,8,0,Math.PI*2,0,Math.PI/2),M.white,attendant);helmet.position.set(0,1.54,0);cylinder(.15,.025,0,1.54,0,M.white,attendant);
   // Landscaped surroundings: static instanced foliage, not a vegetation CFD model.
   const landscape=new THREE.Group();scene.add(landscape);
-  const groundMaterial=mat(0x8c9c89,0,.96);groundMaterial.map=surfaceTexture('#a6b09a',.12,16);
-  box(92,.08,90,0,-.65,4,groundMaterial,landscape);
   box(33,.10,2.15,0,-.12,-13.4,M.turf,landscape);
   box(2.05,.10,23,-18,-.13,-1.0,M.turf,landscape);
   const foliageGeometry=new THREE.SphereGeometry(1,12,8);
@@ -1545,14 +1010,14 @@ function buildStation() {
   compactItem.description='공개 DI001 자료의 외형 치수 520 × 520 × 2500 mm를 참조한 컴팩트 충전기입니다. 외장·화면·호스 형상은 시각적으로 해석했으며, 이 두 번째 충전기는 공정 계산에 연결되지 않습니다.';
   compactItem.tag='DISPENSING / COMPACT VISUAL REFERENCE';
   // Illustrative high-level detectors above the dispensing equipment.
-  for(const [x,number] of [[0,'01'],[8,'02']]){
+  for(const [x,tag] of [[0,'1301'],[8,'1701']]){
     const detector=new THREE.Group();detector.position.set(x,4.66,4.25);scene.add(detector);
     box(.25,.12,.20,0,.08,0,M.white,detector);box(.05,.16,.05,0,.02,0,M.frame,detector);
     cylinder(.052,.08,0,-.07,0,detailMetal,detector);cylinder(.04,.018,0,-.116,0,M.dark,detector);
     for(const dx of [-.025,.025])box(.009,.016,.048,dx,-.126,0,detailMetal,detector);
     tube([[.12,.09,0],[.24,.09,0],[.24,.23,0],[.8,.23,0]],.008,M.black,detector);
-    sign(number==='01'?'GD-2101':'GD-2201','VIRTUAL H2',.38,.13,0,.055,.108,detector,'#edf2e9');
-    register(`detector${number}`,detector,`수소감지기 · 충전구역 ${number}`,'해당 충전 구역의 가상 농도 신호와 연결됩니다. 누출량 기반 대리 신호이며 현장 계측이나 검증된 가스 확산 해석값은 아닙니다.','DETECTION / VIRTUAL SIGNAL');
+    sign('GD-'+tag,'VIRTUAL H2',.38,.13,0,.055,.108,detector,'#edf2e9');
+    register(`detector${tag}`,detector,`수소감지기 · 충전구역 ${tag==='1301'?'1':'2'}`,'해당 충전 구역의 가상 농도 신호와 연결됩니다. 누출량 기반 대리 신호이며 현장 계측이나 검증된 가스 확산 해석값은 아닙니다.','GD-'+tag+' / VIRTUAL SIGNAL');
   }
   // Replace the earlier blocky transporter while preserving its supply equipment group.
   trailer.children.forEach(obj=>obj.visible=false);
@@ -1634,8 +1099,13 @@ function buildStation() {
 
   // Virtual detector heads at the remaining process zones.
   for(const [tag,title,x,y,z] of [
-    ['2301','저·중압 저장 구역',1,2.7,-3.8],['2302','고압 저장 구역',5,2.7,-3.8],
-    ['1901','압축기 구역',-6.2,2.8,-3.8],['2001','헤더·안전 구역',12,2.6,-3.3],['1701','PCV 구역',6.5,2.5,1.5]
+    ['0101','공급 트레일러',-12,2.7,7],['0201','하역 매니폴드',-12,2.5,-1],
+    ['0601','압축기 토출',-6,2.8,-4],['0701','저압 저장',-2,2.7,-5],
+    ['0801','중압 저장',1,2.7,-5],['0901','고압 저장',5,2.7,-5],
+    ['1001','캐스케이드 헤더',8,2.7,-3],['1901','냉각 패키지',-1,2.7,-4],
+    ['2001','벤트 헤더',12,2.8,-3],['2101','압축기 캐비닛 상부',-6,3.8,-3],
+    ['2201','저장 경계 상부',3,3.7,-5],['2301','충전 캐노피',4,4.7,4],
+    ['2302','냉각함 상부',-1,3.5,-4]
   ]){
     const detector=new THREE.Group();detector.position.set(x,y,z);scene.add(detector);
     box(.25,.14,.2,0,0,0,M.white,detector);cylinder(.05,.08,0,-.1,0,detailMetal,detector);
@@ -1665,7 +1135,7 @@ function buildStation() {
       sceneryBatchStats.objects+=objects.length;sceneryBatchStats.batches++;
     }
   }
-  for(const parent of [scene,context,backgroundBuilding,staticProcess,attendant,emergency,unloading,totem,gate,landscape])batchScenery(parent);
+  for(const parent of [scene,staticProcess,attendant,emergency,unloading,totem,gate,landscape])batchScenery(parent);
   panel.dataset.sceneryObjects=String(sceneryBatchStats.objects);panel.dataset.sceneryBatches=String(sceneryBatchStats.batches);
   const selection=new THREE.BoxHelper(car,0xe9b547);selection.visible=false;scene.add(selection);
   let selectedId=null,lastIndex=-1,lastResult=null,night=false,pipesVisible=true,visible=true;
@@ -1693,6 +1163,52 @@ function buildStation() {
   window.selectStationEquipment=id=>{window.setMonitorView('3d');selectEquipment(id);};
   $('s3Details').addEventListener('click',()=>window.showEquipmentDetails?.({...equipment.get(selectedId),id:selectedId}));
   window.stationEquipment=equipment;
+  window.showStationDomain=(view,selectedId)=>{
+    if(view!=='equipment'&&view!=='cameras')return;
+    window.setMonitorView(view);
+    domain.replaceChildren();
+    const list=document.createElement('div');list.className='s3-domain-list';
+    const detail=document.createElement('div');detail.className='s3-domain-detail';
+    domain.append(list,detail);
+    if(view==='equipment'){
+      for(const [id,item] of equipment){
+        const button=document.createElement('button');button.type='button';button.className='s3-domain-item';
+        const name=document.createElement('b');name.textContent=item.title;
+        const tag=document.createElement('small');tag.textContent=item.tag;
+        button.append(name,tag);list.append(button);
+        button.addEventListener('click',()=>{
+          list.querySelectorAll('button').forEach(el=>el.classList.toggle('selected',el===button));
+          window.showEquipmentDetails?.({...item,id},detail);
+        });
+        if(id===(selectedId||'compressor'))queueMicrotask(()=>button.click());
+      }
+    }else{
+      for(const [id,cameraView] of Object.entries(cctvScenes)){
+        const button=document.createElement('button');button.type='button';button.className='s3-domain-item s3-domain-camera-item';
+        const thumb=document.createElement('img');thumb.src=cameraView.image;thumb.alt='';thumb.loading='lazy';
+        const name=document.createElement('b');name.textContent=cameraView.label;
+        button.append(thumb,name);list.append(button);
+        button.addEventListener('click',()=>{
+          list.querySelectorAll('button').forEach(el=>el.classList.toggle('selected',el===button));
+          detail.replaceChildren();
+          const head=document.createElement('header'),title=document.createElement('h3'),state=document.createElement('span');
+          title.textContent=cameraView.zone;state.className='s3-domain-camera-state';state.dataset.camera=id;
+          head.append(title,state);
+          const photo=document.createElement('img');photo.className='s3-domain-photo';photo.src=cameraView.image;photo.alt=cameraView.zone+' · AI 생성 가상 CCTV 정지 이미지';
+          const note=document.createElement('p');note.textContent='AI 생성 참고 이미지 · 사고 상태는 실시간 센서·시나리오로 갱신';
+          detail.append(head,photo,note);updateDomainCameraState();
+        });
+        if(id===(selectedId||'site'))queueMicrotask(()=>button.click());
+      }
+    }
+  };
+  function updateDomainCameraState(){
+    const state=domain.querySelector('.s3-domain-camera-state');if(!state)return;
+    const status=cameraStatus(state.dataset.camera);
+    state.dataset.state=status.kind;
+    state.textContent=({fire:'● 화재 입력',leak:'● 누출 입력',advisory:'● 설비 이상',normal:'● 정상',waiting:'● 모델 대기'})[status.kind];
+  }
+  window.addEventListener('station-frame',updateDomainCameraState);
   const presets={overview:{p:[29,23,31],t:[0,1,0]},fueling:{p:[17,11,23],t:[4,1.4,5]},plant:{p:[21,16,-24],t:[0,1.4,-5]},top:{p:[0,42,.15],t:[0,0,0]}};
   panel.querySelectorAll('[data-view]').forEach(button=>button.addEventListener('click',()=>{
     const view=presets[button.dataset.view];transition={p:new THREE.Vector3(...view.p),t:new THREE.Vector3(...view.t)};
@@ -1780,7 +1296,7 @@ function buildStation() {
 
     if(selectedId==='vent'){label='상세 유동 모델';value='미연결';}
     if(selectedId?.startsWith('detector')){
-      const runtime=window.getStation3DState?.(),tag=selectedId==='detector01'?'GD-2101':selectedId==='detector02'?'GD-2201':'GD-'+selectedId.replace('detector','');
+      const runtime=window.getStation3DState?.(),tag='GD-'+selectedId.replace('detector','');
       const signal=runtime?.result?.series?.gas_detectors?.[runtime.index]?.[tag];
       label=tag+' · 가상 검지';value=Number.isFinite(signal?.value)?signal.value.toFixed(2)+' vol%':'미수신';
     }
@@ -1799,7 +1315,7 @@ function buildStation() {
   function resizeRenderer(){
     const width=stage.clientWidth,height=stage.clientHeight;if(width<1||height<1)return;
     const scale=stage.getBoundingClientRect().width/width||1;
-    renderer.setPixelRatio(Math.min((window.devicePixelRatio||1)*scale,3));
+    renderer.setPixelRatio(Math.min((window.devicePixelRatio||1)*scale,1.75));
     camera.aspect=width/height;camera.updateProjectionMatrix();renderer.setSize(width,height,false);
   }
   new ResizeObserver(resizeRenderer).observe(stage);
@@ -1818,7 +1334,7 @@ function buildStation() {
   },{capture:true,passive:false});
   let lastRender=0;
   function animate(timestamp) {
-    requestAnimationFrame(animate);if(!visible||document.hidden||timestamp-lastRender<33)return;lastRender=timestamp;readLive();
+    requestAnimationFrame(animate);if(!visible||document.hidden||document.body.dataset.monitorView!=='3d'||timestamp-lastRender<33)return;lastRender=timestamp;readLive();
     if(Math.abs(pendingWheel)>.1){
       const step=Math.abs(pendingWheel)<.5?pendingWheel:pendingWheel*.28;pendingWheel-=step;
       const wheel=new WheelEvent('wheel',{deltaY:step,deltaMode:0,clientX:wheelPosition.x,clientY:wheelPosition.y,cancelable:true});

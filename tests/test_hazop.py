@@ -40,7 +40,9 @@ def test_packaged_catalog_keys_and_numeric_values():
     assert all(isinstance(r["임계값"], float) for r in c["rules"])
     assert all(r["현장활성화"] is False for r in c["rules"])
     m = coverage(c)
-    assert m["mapped_sensors"]==38
+    assert m["mapped_sensors"]==82
+    assert not any(s["mapping_status"]=="UNAVAILABLE" for s in m["sensors"])
+    assert m["physical_sensor_connections"]==0
     assert 0 < m["simulation_ready_rules"] < 205
 
 
@@ -148,7 +150,7 @@ def test_actual_release_links_without_fabricating_location_gd(indoor_missing):
 def test_api_catalog_live_detail_and_persisted_events(tmp_path,monkeypatch):
     monkeypatch.setenv('H2STATION_HAZOP_EVENTS_DB',str(tmp_path/'events.sqlite3'))
     with TestClient(app) as client:
-        assert client.get('/api/hazop/mapping').json()['mapped_sensors']==38
+        assert client.get('/api/hazop/mapping').json()['mapped_sensors']==82
         assert len(client.get('/api/hazop/catalog').json()['rules'])==205
         created=client.post('/api/simulations',json={'duration_s':.8,'faults':[{'event_id':'bias','kind':'sensor-bias','target':'PT-1401','start_time_s':0,'magnitude':90}]}).json()
         for _ in range(200):
@@ -199,7 +201,7 @@ def test_leak_mass_is_removed_from_physical_inventory():
     assert changed.vehicle_pressure_pa[-1] < normal.vehicle_pressure_pa[-1]
     assert changed.leak_mass_flow_by_release['leak'].max() > 0
 
-@pytest.mark.parametrize('target,tag', [('dispenser_2.hose','GD-2201'),('vehicle_2.tank','GD-2201'),('cascade.low','GD-2301'),('cascade.high','GD-2302')])
+@pytest.mark.parametrize('target,tag', [('dispenser_2.hose','GD-1701'),('vehicle_2.tank','GD-1701'),('cascade.low','GD-0701'),('cascade.high','GD-0901')])
 def test_virtual_detector_follows_actual_release_zone(target, tag):
     fault=FaultEvent('zone-leak',FaultKind.HYDROGEN_LEAK,target,0,leak_diameter_m=.0001)
     built=build_reference_scenario(ReferenceScenario(fault_events=(fault,)),UnavailableHyRAMBackend())
@@ -209,7 +211,22 @@ def test_virtual_detector_follows_actual_release_zone(target, tag):
     assert signals[tag]['value'] > 0
     assert signals[tag]['origin']=='VIRTUAL_DETECTOR_PROXY'
     assert signals['GD-2001']['value']==0  # No unrelated header alarm.
-    assert len([k for k in signals if k.startswith('GD-')])==7
+    assert len([k for k in signals if k.startswith('GD-')])==15
+    assert len([k for k in signals if k in monitor.mapper.specs])==82
+
+
+def test_every_catalog_sensor_has_finite_sample_and_detector_fault_uses_db_tag():
+    fault=FaultEvent('detector-test',FaultKind.SENSOR_BIAS,'GD-0101',0,magnitude=1.5)
+    built=build_reference_scenario(ReferenceScenario(fault_events=(fault,)),UnavailableHyRAMBackend())
+    monitor=HazopMonitor(virtual_detectors=True);built.simulator.hazop_monitor=monitor
+    built.simulator.simulate(built.initial_state,.2,.2)
+    signals=monitor.latest['signals']
+    assert all(tag in signals and signals[tag]['quality']=='GOOD' and math.isfinite(signals[tag]['value'])
+               for tag in monitor.mapper.specs)
+    assert signals['PT-0301']['value'] < signals['PT-0401']['value'] < signals['PT-0501']['value'] < signals['PT-0601']['value']
+    assert signals['FT-1901']['origin']=='DERIVED_THERMAL_PROXY'
+    assert signals['GD-0101']['origin']=='SIMULATED_SENSOR_BIAS'
+    assert signals['GD-0101']['value']>=1.5
 
 
 def test_solver_stop_is_checked_inside_window_and_esd_survives_restart():

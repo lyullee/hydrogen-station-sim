@@ -220,6 +220,7 @@ class CompressorResult:
     outlet_enthalpy_j_kg: float
     outlet_temperature_k: float
     electrical_power_w: float
+    stage_outlets: tuple[tuple[float, float], ...] = ()  # (pressure Pa, discharge temperature K)
 
 
 class MultistageHydrogenCompressor:
@@ -240,6 +241,7 @@ class MultistageHydrogenCompressor:
         suction: SupplyState,
         discharge_pressure_pa: float,
         enabled: bool = True,
+        include_stage_outlets: bool = False,
     ) -> CompressorResult:
         p = self.parameters
         if (
@@ -275,6 +277,7 @@ class MultistageHydrogenCompressor:
         inlet_temperature = suction.temperature_k
         specific_work_j_kg = 0.0
         outlet_enthalpy = 0.0
+        stage_outlets: list[tuple[float, float]] = []
 
         effective_isentropic_efficiency = min(
             1.0,
@@ -308,6 +311,10 @@ class MultistageHydrogenCompressor:
             outlet_enthalpy = inlet_enthalpy + (
                 isentropic_outlet_enthalpy - inlet_enthalpy
             ) / effective_isentropic_efficiency
+            if include_stage_outlets:
+                stage_outlets.append((outlet_pressure, float(PropsSI(
+                    "T", "P", outlet_pressure, "Hmass", outlet_enthalpy, self.fluid,
+                ))))
             specific_work_j_kg += outlet_enthalpy - inlet_enthalpy
             if stage_index < p.number_of_stages - 1:
                 inlet_pressure = outlet_pressure
@@ -330,6 +337,7 @@ class MultistageHydrogenCompressor:
             outlet_enthalpy,
             outlet_temperature,
             electrical_power,
+            tuple(stage_outlets),
         )
 
 

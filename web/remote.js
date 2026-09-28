@@ -157,7 +157,7 @@ function renderLibrary(){
   if(!filtered.length){const empty=document.createElement('p');empty.className='hint';empty.textContent='검색 결과가 없습니다. 분류나 검색어를 바꿔보세요.';$('scenarioLibrary').append(empty);}
 }
 async function initCatalog(){
-  try{catalog=await api('/scenarios.json?v=20260925-remote3');for(const c of catalog.categories)$('categoryFilter').add(new Option(c.label,c.id));renderLibrary();$('addFault').disabled=false;}
+  try{catalog=await api('/scenarios.json?v=20260928-sensors82');for(const c of catalog.categories)$('categoryFilter').add(new Option(c.label,c.id));renderLibrary();$('addFault').disabled=false;}
   catch(error){errorMessage('사고 목록을 불러오지 못했습니다: '+error.message);$('catalogCount').textContent='불러오기 실패';$('scenarioLibrary').textContent='새로고침 후 다시 시도하세요. 정상 운전은 실행할 수 있습니다.';}
 }
 async function health(){try{await api('/api/health');$('serverStatus').textContent='서버 연결됨';$('serverStatus').dataset.state='ready';}catch{$('serverStatus').textContent='서버 연결 실패';$('serverStatus').dataset.state='error';}}

@@ -16,8 +16,9 @@ function borrowPanel(selector,title){
   restoreDialogContent=()=>{parent.insertBefore(node,next);window.dispatchEvent(new Event('resize'));};
   requestAnimationFrame(()=>window.dispatchEvent(new Event('resize')));
 }
-window.showEquipmentDetails=item=>{
-  const body=openWorkspace(item?.title||'충전소 운전 안내');
+window.showEquipmentDetails=(item,targetBody=null)=>{
+  const body=targetBody||openWorkspace(item?.title||'충전소 운전 안내');
+  if(targetBody){body.replaceChildren();const heading=document.createElement('h3');heading.textContent=item?.title||'설비 정보';body.append(heading);}
   const description=document.createElement('p');description.textContent=item?.description||'설비를 클릭해 운전값을 확인하세요. 3D 뷰는 드래그로 회전, 휠로 확대할 수 있습니다.';body.append(description);
   if(!item?.id)return;
   const specs={
@@ -79,14 +80,10 @@ function navigateMonitor(action){
     events.slice(-100).reverse().forEach(e=>{const p=document.createElement('p');p.textContent=`${Number(e.time_s||0).toFixed(1)} s · ${e.message}`;body.append(p);});return;
   }
   if(action==='cameras'){
-    const body=openWorkspace('구역별 가상 CCTV');const grid=document.createElement('div');grid.className='camera-grid';body.append(grid);
-    Object.entries(window.stationCameras||{}).filter(([id])=>id!=='site').forEach(([id,c])=>{
-      const b=document.createElement('button');b.className='camera-tile';b.type='button';const img=document.createElement('img');img.src=c.image;img.alt=c.zone+' AI 생성 참고 사진';const name=document.createElement('span');name.textContent=c.label;b.append(img,name);b.addEventListener('click',()=>{closeWorkspace();window.openStationCctv(id);});grid.append(b);
-    });return;
+    closeWorkspace();window.showStationDomain?.('cameras');return;
   }
   if(action==='equipment'){
-    const body=openWorkspace('설비 목록');const grid=document.createElement('div');grid.className='asset-grid';body.append(grid);
-    for(const [id,item] of window.stationEquipment||[]){const b=document.createElement('button');const tag=document.createElement('small');tag.textContent=item.tag;b.textContent=item.title;b.append(tag);b.addEventListener('click',()=>window.showEquipmentDetails?.({...item,id}));grid.append(b);}
+    closeWorkspace();window.showStationDomain?.('equipment');return;
   }
 }
 document.addEventListener('click',event=>{const nav=event.target.closest('[data-nav]');if(nav){event.preventDefault();navigateMonitor(nav.dataset.nav);}});

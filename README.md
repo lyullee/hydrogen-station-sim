@@ -45,6 +45,23 @@ Include HyRAM+ when its GPL-3.0 licensing is appropriate for the deployment:
 
 Open `http://127.0.0.1:8000`.
 
+## Monitoring and sensor provenance
+
+The monitor keeps the 3D station footprint, process flow, equipment specifications,
+and CCTV gallery in the same 16:9 display region. The 3D scene omits the surrounding
+district and traffic, and caps render resolution to reduce GPU load. The equipment
+and CCTV top-menu entries switch that region without opening a separate dialog.
+
+API monitoring jobs enable simulation outputs for all 82 HAZOP database sensor tags.
+The 15 gas detector tags are virtual zone proxies that respond to injected leaks or explicit sensor faults;
+they are not physical detector connections. Compressor-stage readings follow the
+three-stage model. Shared header and precooler channels are derived from upstream
+flows and temperatures. The coolant flow channel is a thermal-equivalent estimate;
+the vent channels use an assumed ambient boundary until a release is injected.
+Each API signal includes an `origin`, while `/api/hazop/mapping` reports its binding
+and still reports zero physical sensor connections. Site telemetry should replace
+these proxies before operational use.
+
 ## HyRAM configuration
 
 When `hyram==6.1` is installed, the native adapter is selected automatically. Default
