@@ -24,7 +24,7 @@ from pydantic import BaseModel, Field, ConfigDict, model_validator
 
 from .full_station import FullStationState
 from .risk.runtime_backend import load_hyram_backend
-from .risk.sensor_assessment import assess_sensor_cases, available_sensor_cases
+from .risk.sensor_assessment import assess_sensor_cases, available_sensor_inputs
 from .risk.scenario_planning import parse_saga_plan
 from .safe_operation import SafeOperationSample
 from .scenario import ReferenceScenario, build_reference_scenario
@@ -831,9 +831,12 @@ def _scenario_result_summary(results: list[dict[str, Any]]) -> str:
         sample_max = float(row.get("sampled_max_distance_m") or 0)
         range_text = (f"{float(extent):g} m 관측점까지 임계값 초과" if extent
             else f"{sample_max:g} m까지 표본 관측점에서 임계값 미달")
+        source_label = ("대체 신호" if row.get("sensor_basis") == "PROXY" else "목표 설비 직접 신호")
         lines.append(
-            f"- {label}: {row['pressure_sensor']} {row['current_pressure_mpa']:.2f} MPa, "
-            f"{row['temperature_sensor']} {row['current_temperature_c']:.1f} °C → "
+            f"- {label}: {source_label} · {row['pressure_sensor']}({row.get('pressure_source_node_id', row['node_id'])}) "
+            f"{row['current_pressure_mpa']:.2f} MPa, "
+            f"{row['temperature_sensor']}({row.get('temperature_source_node_id', row['node_id'])}) "
+            f"{row['current_temperature_c']:.1f} °C → "
             f"누출유량 {float(row.get('mass_flow_g_s') or 0):.2f} g/s, "
             f"열복사 최대 {float(row.get('maximum_heat_flux_w_m2') or 0):.0f} W/m², "
             f"과압 최대 {float(row.get('maximum_overpressure_pa') or 0):.0f} Pa; {range_text}.")
@@ -846,19 +849,25 @@ async def _run_saga_scenario_analysis(
     request: SagaAnalysisInput, active: list[dict[str, Any]],
     mentioned_ids: set[str], sensor_count: int,
 ) -> dict[str, Any]:
-    available = available_sensor_cases(frame, catalog)
-    if mentioned_ids:
-        available = [row for row in available if row["node_id"] in mentioned_ids]
-    if not available:
-        missing = await asyncio.to_thread(assess_sensor_cases, frame, catalog, backend,
-                                          sorted(mentioned_ids) if mentioned_ids else ["N09", "N13", "N17"])
-        names = ", ".join(f"{row['node_id']}({row.get('pressure_sensor', 'PT 미입력')}/"
-                          f"{row.get('temperature_sensor', 'TT 미입력')}: {row['calculation_status']})"
-                          for row in missing)
+    source_inputs = available_sensor_inputs(frame, catalog)
+    if not source_inputs["pressure"] or not source_inputs["temperature"]:
         return {"time_s": frame.get("time_s"), "trigger": request.trigger,
-                "scenario_mode": True, "answer": "요청한 설비의 현재 GOOD 품질 압력·온도 센서 쌍이 없어 가상 누출을 계산하지 않았습니다. " + names,
-                "model": "", "proposed_scenarios": [], "impact_results": missing, "sensor_count": sensor_count}
-    eligible_ids = {row["node_id"] for row in available}
+                "scenario_mode": True, "answer": "현재 사용할 수 있는 압력 또는 온도 센서값이 전혀 없어 수치 계산을 수행하지 않았습니다.",
+                "model": "", "proposed_scenarios": [], "impact_results": [], "sensor_count": sensor_count}
+    target_ids = mentioned_ids or {case["node_id"] for case in catalog["cases"]}
+    def source_distance(row: dict[str, Any]) -> int:
+        return min(abs(int(row["node_id"][1:]) - int(target[1:])) for target in target_ids)
+    source_inputs["pressure"].sort(key=source_distance)
+    source_inputs["temperature"].sort(key=source_distance)
+    target_nodes = [{"node_id": case["node_id"], "case_id": case["case_id"],
+                     "name": next((node.get("설비_라인") for node in catalog["nodes"]
+                                   if node["node_id"] == case["node_id"]), None),
+                     "expected_pressure": case.get("압력_sensor"),
+                     "expected_temperature": case.get("온도_sensor")}
+                    for case in catalog["cases"] if case["node_id"] in target_ids]
+    eligible_ids = {row["node_id"] for row in target_nodes}
+    pressure_tags = {row["sensor_id"] for row in source_inputs["pressure"]}
+    temperature_tags = {row["sensor_id"] for row in source_inputs["temperature"]}
     sizes = [{"leak_size_id": row["size_id"], "diameter_mm": row["직경_mm"]}
              for row in catalog["leak_sizes"] if isinstance(row.get("직경_mm"), (int, float))
              and 0.1 <= row["직경_mm"] <= 3.0]
@@ -872,26 +881,40 @@ async def _run_saga_scenario_analysis(
               "unit": row["단위"], "severity": row["등급"]}
              for row in catalog["rules"] if row["rule_id"] in rule_ids or row["node_id"] in relevant_nodes][:24]
     plan_context = {"question": request.question, "time_s": frame.get("time_s"),
-                    "eligible_nodes": available, "allowed_leak_sizes": sizes,
+                    "target_nodes": target_nodes, "available_sensor_inputs": source_inputs,
+                    "allowed_leak_sizes": sizes,
                     "active_hazop": active[:15], "hazop_rules": rules}
+    example_node = target_nodes[0]["node_id"]
+    example_pressure = next((row["sensor_id"] for row in source_inputs["pressure"]
+                             if row["node_id"] == example_node), source_inputs["pressure"][0]["sensor_id"])
+    example_temperature = next((row["sensor_id"] for row in source_inputs["temperature"]
+                                if row["node_id"] == example_node), source_inputs["temperature"][0]["sensor_id"])
+    example = {"scenarios": [{"node_id": example_node, "leak_size_id": "L03",
+                              "pressure_sensor": example_pressure, "temperature_sensor": example_temperature,
+                              "rationale": "HAZOP 근거와 선택 신호 이유"}]}
     plan_prompt = (
         "당신은 H70 수소충전소 시뮬레이션의 가상 사고 시나리오 제안자입니다. "
         "현재 센서와 HAZOP를 근거로 의미 있는 누출 시나리오 1~3개를 스스로 선택하세요. "
-        "오직 JSON 객체 하나만 출력하세요. 형식: "
-        '{"scenarios":[{"node_id":"N09","leak_size_id":"L03","rationale":"HAZOP 근거와 선택 이유"}]}. '
-        "node_id는 eligible_nodes, leak_size_id는 allowed_leak_sizes 중에서만 선택하세요. "
-        "압력·온도를 만들지 마세요. 서버가 현재 센서값을 적용합니다. 시나리오별 노드·구경 조합은 중복하지 마세요. "
+        "오직 JSON 객체 하나만 출력하세요. 유효한 형식 예시(그대로 복사하지 말고 직접 판단): "
+        + json.dumps(example, ensure_ascii=False) + ". "
+        "node_id는 target_nodes, leak_size_id는 allowed_leak_sizes 중에서만 선택하세요. "
+        "pressure_sensor와 temperature_sensor는 available_sensor_inputs의 현재 GOOD 태그 중 직접 선택하세요. "
+        "목표 설비 직접 센서를 우선 사용하고 없으면 물리적으로 가장 가까운 공정 신호를 대체값으로 고르세요. "
+        "목표와 출처가 다르면 rationale에 대체 이유를 명시하세요. 압력·온도 수치를 만들지 마세요. "
+        "시나리오별 노드·구경 조합은 중복하지 마세요. "
         "제안은 사고 주입이나 설비 제어가 아닌 계산용 가정입니다. 설명문이나 Markdown 코드를 붙이지 마세요.\n"
         + json.dumps(plan_context, ensure_ascii=False, default=str)[:7800])
     try:
         plan_reply = await asyncio.to_thread(_invoke_saga, plan_prompt)
         try:
-            proposals = parse_saga_plan(str(plan_reply.get("answer") or ""), eligible_ids, catalog)
+            proposals = parse_saga_plan(str(plan_reply.get("answer") or ""), eligible_ids, catalog,
+                                        pressure_tags, temperature_tags)
         except ValueError as exc:
             retry_prompt = plan_prompt[:7300] + (f"\n이전 출력은 검증 실패({exc})였습니다. 다시 JSON 객체만 출력하세요.\n"
                 + str(plan_reply.get("answer") or "")[:450])
             plan_reply = await asyncio.to_thread(_invoke_saga, retry_prompt)
-            proposals = parse_saga_plan(str(plan_reply.get("answer") or ""), eligible_ids, catalog)
+            proposals = parse_saga_plan(str(plan_reply.get("answer") or ""), eligible_ids, catalog,
+                                        pressure_tags, temperature_tags)
     except (URLError, HTTPError, TimeoutError, OSError) as exc:
         raise HTTPException(status_code=503, detail=f"SAGA 시나리오 제안 실패: {exc}") from exc
     except ValueError as exc:
@@ -905,6 +928,8 @@ async def _run_saga_scenario_analysis(
         "당신이 제안한 가상 누출 시나리오를 서버가 현재 GOOD 품질 센서값으로 피해영향예측 계산했습니다. "
         "아래 실제 계산 결과만 해석하세요. 계산을 다시 권하지 마세요. 사고가 실제 발생했다고 말하지 마세요. "
         "각 시나리오의 HAZOP 근거와 선택 이유, 센서값, 계산 상태, 열복사·과압, 표본 거리의 차이를 설명하세요. "
+        "sensor_basis=PROXY이면 대체 센서의 태그와 원래 노드를 밝히고 목표 설비의 직접 계측값으로 표현하지 마세요. "
+        "대체 신호로 계산된 경우 누락 입력을 나열하거나 추가 입력을 요구하지 말고 실제 사용한 태그·출처·가정만 밝히세요. "
         "sampled_effect_radius_m은 임계값을 초과한 최원거리 관측점일 뿐, 안전반경이나 최대 사고범위가 아닙니다. "
         "null이면 범위가 미확정입니다. 계산에 실패했으면 이유를 밝히고 수치를 만들지 마세요. "
         "사용자에게는 엔진 제품명 대신 '피해영향예측'이라고 쓰세요. 한국어 Markdown으로 간결하게 답하세요.\n"

@@ -3,6 +3,7 @@
 import io
 import json
 
+import pytest
 from fastapi.testclient import TestClient
 
 import h2station.api as api
@@ -232,7 +233,7 @@ def test_saga_can_propose_calculate_and_interpret_scenarios(monkeypatch):
             api._jobs.pop(job_id, None)
 
 
-def test_saga_rejects_proposal_without_good_sensor_pair(monkeypatch):
+def test_saga_rejects_proposal_using_bad_sensor_tag(monkeypatch):
     calls = []
 
     class FakeBackend:
@@ -243,7 +244,9 @@ def test_saga_rejects_proposal_without_good_sensor_pair(monkeypatch):
 
     def fake_urlopen(request, timeout):
         calls.append(json.loads(request.data)["message"])
-        answer = '{"scenarios":[{"node_id":"N08","leak_size_id":"L04","rationale":"test"}]}'
+        answer = ('{"scenarios":[{"node_id":"N13","leak_size_id":"L04",'
+                  '"pressure_sensor":"PT-0901","temperature_sensor":"TT-1301",'
+                  '"rationale":"test"}]}')
         return io.BytesIO(json.dumps({"answer": answer, "model": "test"}).encode())
 
     monkeypatch.setattr(api, "load_hyram_backend", lambda: FakeBackend())
@@ -305,7 +308,7 @@ def test_dispenser_hypothetical_leak_question_runs_scoped_impact_calculation(mon
         data = response.json()
         assert data["scenario_mode"] is True
         assert {row["node_id"] for row in data["impact_results"]} == {"N13", "N17"}
-        assert '"node_id": "N09"' not in captured["prompts"][0]
+        assert '"case_id": "HY-09"' not in captured["prompts"][0]
         assert {request.component_id for request in captured["requests"]} == {"dispenser.hose", "dispenser_2.hose"}
         assert "LLM-1" in data["answer"] and "LLM-2" in data["answer"]
     finally:
@@ -313,17 +316,33 @@ def test_dispenser_hypothetical_leak_question_runs_scoped_impact_calculation(mon
             api._jobs.pop(job_id, None)
 
 
-def test_dispenser_question_reports_missing_sensor_instead_of_asking_for_calculation(monkeypatch):
+def test_dispenser_question_uses_llm_selected_proxy_temperature(monkeypatch):
     question = "디스펜서에서 현재 상태에서 누출이 발생했을 때 예상 피해영향을 계산해줘."
+    captured = {"prompts": []}
+
+    class FakeBackend:
+        available = True
+
+        def evaluate_release(self, request):
+            captured["request"] = request
+            return {"status": "calculated", "maximum_heat_flux_w_m2": 42.0,
+                    "maximum_overpressure_pa": 1050.0, "sampled_effect_radius_m": 0.0,
+                    "sampled_max_distance_m": 5.0, "effect_range_status": "BELOW_THRESHOLDS_AT_SAMPLES"}
 
     def fake_urlopen(request, timeout):
-        raise AssertionError("No usable dispenser sensors: do not ask the LLM to guess")
+        captured["prompts"].append(json.loads(request.data)["message"])
+        answer = ('{"scenarios":[{"node_id":"N13","leak_size_id":"L03",'
+                  '"pressure_sensor":"PT-1301","temperature_sensor":"TT-1201",'
+                  '"rationale":"호스 압력과 인접 예냉기 온도를 대체 적용"}]}') if len(captured["prompts"]) == 1 else "N13의 온도는 N12 대체 신호입니다."
+        return io.BytesIO(json.dumps({"answer": answer, "model": "test"}).encode())
 
     monkeypatch.setattr(api, "urlopen", fake_urlopen)
+    monkeypatch.setattr(api, "load_hyram_backend", lambda: FakeBackend())
     job_id = "saga-dispenser-missing-test"
     with api._jobs_lock:
         api._jobs[job_id] = {"frames": [{"time_s": 2.0, "hazop": {"active": [], "releases": [], "signals": {
             "PT-0901": {"value": 90.0, "quality": "GOOD"}, "TT-0901": {"value": 25.0, "quality": "GOOD"},
+            "TT-1201": {"value": -34.0, "quality": "GOOD"},
             "PT-1301": {"value": 44.0, "quality": "GOOD"}, "TT-1301": {"value": -35.0, "quality": "BAD"},
         }}}]}
     try:
@@ -331,9 +350,16 @@ def test_dispenser_question_reports_missing_sensor_instead_of_asking_for_calcula
             response = client.post(f"/api/simulations/{job_id}/saga-analysis", json={"question": question})
         assert response.status_code == 200
         data = response.json()
-        assert {row["node_id"] for row in data["impact_results"]} == {"N13", "N17"}
-        assert all(row["calculation_status"] == "input_unavailable" for row in data["impact_results"])
-        assert "N13" in data["answer"] and "N17" in data["answer"]
+        assert len(captured["prompts"]) == 2
+        assert captured["prompts"][0].index('"sensor_id": "TT-1201"') < captured["prompts"][0].index('"sensor_id": "TT-0901"')
+        assert len(data["impact_results"]) == 1
+        assert data["impact_results"][0]["calculation_status"] == "calculated"
+        assert data["impact_results"][0]["calculation_basis"] == "LLM_PROPOSED_PROXY_HYPOTHESIS"
+        assert data["impact_results"][0]["pressure_sensor"] == "PT-1301"
+        assert data["impact_results"][0]["temperature_sensor"] == "TT-1201"
+        assert data["impact_results"][0]["temperature_source_node_id"] == "N12"
+        assert captured["request"].source_temperature_k == pytest.approx(239.15)
+        assert "대체 신호" in data["answer"] and "TT-1201(N12)" in data["answer"]
         assert "계산을 요청" not in data["answer"]
     finally:
         with api._jobs_lock:
@@ -345,3 +371,12 @@ def test_saga_removes_deferred_calculation_advice():
     answer = api._safe_saga_text(text)
     assert "요청해 주세요" not in answer
     assert "계산 완료" in answer
+
+
+def test_saga_rejects_non_string_sensor_selection():
+    from h2station.risk.scenario_planning import parse_saga_plan
+
+    answer = ('{"scenarios":[{"node_id":"N13","leak_size_id":"L03",'
+              '"pressure_sensor":[],"temperature_sensor":"TT-1201","rationale":"proxy"}]}')
+    with pytest.raises(ValueError, match="GOOD pressure and temperature"):
+        parse_saga_plan(answer, {"N13"}, api.load_catalog(), {"PT-1301"}, {"TT-1201"})

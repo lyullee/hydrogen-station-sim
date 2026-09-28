@@ -89,9 +89,11 @@ unavailable backend are reported as such without inventing an impact distance.
 
 The SAGA chat also has a **시나리오 생성·평가** action. SAGA first proposes one to
 three virtual leak scenarios from the current HAZOP nodes and the workbook's
-0.1/0.5/1/3 mm leak sizes. The simulator accepts only nodes with current GOOD
-pressure and temperature signals, calculates each proposal with the configured
-HyRAM backend, and sends those results back to SAGA for interpretation. The
+0.1/0.5/1/3 mm leak sizes. SAGA selects current GOOD pressure and temperature
+tags for each proposed node. When a target tag is unavailable, it may use a
+different measured node as an explicitly labeled proxy. The simulator validates
+those selections, calculates each proposal with the configured HyRAM backend,
+and sends those results back to SAGA for interpretation. The
 proposals are read-only calculations: they do not inject faults or change the
 process. Invalid proposals are rejected before the physics call. Results retain
 the sensor tags, proposed leak size, calculation status, and sampled-distance

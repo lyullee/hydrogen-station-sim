@@ -23,21 +23,23 @@ def _good_signal(signals: Mapping[str, Any], tags: str | None, prefix: str) -> t
     return None
 
 
-def available_sensor_cases(frame: Mapping[str, Any], catalog: Mapping[str, Any]) -> list[dict[str, Any]]:
-    """List HAZOP cases whose current source P/T pair is usable for calculation."""
+def available_sensor_inputs(frame: Mapping[str, Any], catalog: Mapping[str, Any]) -> dict[str, list[dict[str, Any]]]:
+    """Expose usable current P/T readings with their actual HAZOP node provenance."""
     signals = (frame.get("hazop") or {}).get("signals") or {}
-    nodes = {node["node_id"]: node for node in catalog["nodes"]}
-    available = []
-    for case in catalog["cases"]:
-        pressure = _good_signal(signals, case.get("압력_sensor"), "PT")
-        temperature = _good_signal(signals, case.get("온도_sensor"), "TT")
-        if not pressure or not temperature or pressure[1] <= 0.101325 or temperature[1] <= -273.15:
-            continue
-        available.append({"node_id": case["node_id"], "case_id": case["case_id"],
-                          "name": nodes.get(case["node_id"], {}).get("설비_라인"),
-                          "pressure_sensor": pressure[0], "pressure_mpa": pressure[1],
-                          "temperature_sensor": temperature[0], "temperature_c": temperature[1]})
-    return available
+    result: dict[str, list[dict[str, Any]]] = {"pressure": [], "temperature": []}
+    for sensor in catalog["sensors"]:
+        tag = sensor["sensor_id"]
+        if tag.startswith("PT-"):
+            reading = _good_signal(signals, tag, "PT")
+            if reading and reading[1] > 0.101325:
+                result["pressure"].append({"sensor_id": tag, "node_id": sensor["node_id"],
+                                            "value": reading[1], "unit": "MPa_abs"})
+        elif tag.startswith("TT-"):
+            reading = _good_signal(signals, tag, "TT")
+            if reading and reading[1] > -273.15:
+                result["temperature"].append({"sensor_id": tag, "node_id": sensor["node_id"],
+                                               "value": reading[1], "unit": "degC"})
+    return result
 
 
 def assess_sensor_cases(
@@ -65,8 +67,8 @@ def assess_sensor_cases(
         case, node = cases.get(node_id), nodes.get(node_id)
         if not case or not node:
             continue
-        pressure = _good_signal(signals, case.get("압력_sensor"), "PT")
-        temperature = _good_signal(signals, case.get("온도_sensor"), "TT")
+        pressure = _good_signal(signals, entry.get("pressure_sensor") or case.get("압력_sensor"), "PT")
+        temperature = _good_signal(signals, entry.get("temperature_sensor") or case.get("온도_sensor"), "TT")
         result: dict[str, Any] = {
             "case_id": case["case_id"], "node_id": node_id,
             "node_name": node.get("설비_라인"),
@@ -79,6 +81,15 @@ def assess_sensor_cases(
                           scenario_id=entry["scenario_id"],
                           scenario_rationale=entry["rationale"],
                           leak_size_id=entry["leak_size_id"])
+            direct_pressure = pressure and pressure[0] in re.findall(r"PT-\d{4}", case.get("압력_sensor") or "")
+            direct_temperature = temperature and temperature[0] in re.findall(r"TT-\d{4}", case.get("온도_sensor") or "")
+            proxy = not (direct_pressure and direct_temperature)
+            result.update(sensor_basis="PROXY" if proxy else "DIRECT",
+                          pressure_source_node_id=entry.get("pressure_source_node_id", node_id),
+                          temperature_source_node_id=entry.get("temperature_source_node_id", node_id))
+            if proxy:
+                result["calculation_basis"] = "LLM_PROPOSED_PROXY_HYPOTHESIS"
+                result["source_note"] = "선택한 대체 센서로 목표 설비의 가상 누출 조건을 근사; 목표 설비의 직접 계측값 아님"
         if pressure:
             result.update(pressure_sensor=pressure[0], current_pressure_mpa=pressure[1])
         if temperature:
