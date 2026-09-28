@@ -31,9 +31,10 @@ class DetectorBackend:
         }
 
 
-def test_coolprop_rho_u_round_trip():
+@pytest.mark.parametrize("pressure,temperature", [(5.0e6, 233.15), (35.0e6, 298.15), (90.0e6, 360.0)])
+def test_coolprop_rho_u_round_trip(pressure, temperature):
     eos = HydrogenEOS()
-    reference = eos.state_pt(35.0e6, 298.15)
+    reference = eos.state_pt(pressure, temperature)
     recovered = eos.state_rho_u(reference.density, reference.internal_energy)
     assert recovered.pressure == pytest.approx(reference.pressure, rel=1.0e-8)
     assert recovered.temperature == pytest.approx(reference.temperature, rel=1.0e-8)

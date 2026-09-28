@@ -77,6 +77,16 @@ Indoor accumulation requires an explicit enclosure definition through
 backend can instead be selected with
 `H2STATION_HYRAM_EVALUATOR=module:function`.
 
+Each SAGA analysis request first evaluates up to three relevant HAZOP nodes using
+the latest GOOD-quality pressure and temperature sensor readings. An active leak
+uses its current orifice size and flow. Without an active leak, the calculation
+is explicitly a hypothetical 1 mm opening, horizontal release at 1 m height and
+101325 Pa ambient pressure. SAGA receives the calculated consequence, sensor tags,
+quality, and assumptions together with the matching HAZOP rules. The reported
+distance is only the farthest sampled observation point exceeding 5 kW/m² or
+5 kPa; it is not a validated site safety boundary. Missing sensor pairs or an
+unavailable backend are reported as such without inventing an impact distance.
+
 ## Engineering status
 
 This is a modeling and monitoring prototype, not a certified controller. Reference

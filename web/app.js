@@ -298,7 +298,7 @@ function renderHazop(frame) {
   const counts=frame.counts || {};
   const unknown=counts.UNKNOWN || 0;
   $('hazopMetrics').textContent=`${frame.mapped_sensor_count}/${frame.sensor_total} 센서 연결 · 사고 후보 ${frame.groups?.length || 0}건 · 판정불가 ${unknown} · 조건 대기 ${counts.PENDING || 0}`;
-  const status={RESULT_LINKED:'피해영향예측 결과 연결', PARTIAL_RESULT:'피해영향예측 부분 결과 · 미계산 항목 확인 필요', NEEDS_RELEASE_INPUTS:'피해영향예측 계산 필요 · 누출 입력 대기', BACKEND_UNAVAILABLE:'피해영향예측 계산 불가', NOT_APPLICABLE:'직접 영향계산 대상 아님'};
+  const status={RESULT_LINKED:'피해영향예측 결과 연결', PARTIAL_RESULT:'피해영향예측 부분 결과 연결', NEEDS_RELEASE_INPUTS:'실제 누출 미등록 · 센서 기준 가정 결과는 SAGA 확인', BACKEND_UNAVAILABLE:'피해영향예측 엔진 연결 불가', NOT_APPLICABLE:'직접 영향계산 대상 아님'};
   const groups=frame.groups || [];
   const active=frame.active || [];
   let html=groups.map(g=>{

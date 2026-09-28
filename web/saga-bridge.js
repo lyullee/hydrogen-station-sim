@@ -7,13 +7,6 @@
   const defaultQuestion='현재 공정에서 주의해야 할 센서와 HAZOP 근거를 알려줘.';
   const publicTerms=value=>String(value??'').replace(/HyRAM\+?/gi,'피해영향예측');
   function current(){const runtime=window.getStation3DState?.(),i=runtime?.index??0;return {job:runtime?.activeJobId,frame:runtime?.result?.hazop?.frames?.[i],analysis:runtime?.result?.series?.analysis?.[i],time:runtime?.result?.series?.time_s?.[i]};}
-  function impactFacts(){
-    const releases=current().frame?.releases||[];
-    return releases.filter(r=>r.consequence?.status==='calculated').slice(0,2).map(r=>{
-      const c=r.consequence,range=Number(c.sampled_effect_radius_m)>0?`표본 영향 ${Number(c.sampled_effect_radius_m).toFixed(1)}m`:`${Number(c.sampled_max_distance_m||0).toFixed(1)}m 관측점까지 5kW/m²·5kPa 기준 미달, 영향 반경 미확정`;
-      return `${r.component_id} 누출: 피해영향예측 계산 완료, ${Number(r.mass_flow_g_s||0).toFixed(2)}g/s, 최대 열복사 ${Number(c.maximum_heat_flux_w_m2||0).toFixed(1)}W/m², 과압 ${Number(c.maximum_overpressure_pa||0).toFixed(0)}Pa, ${range}.`;
-    }).join(' ');
-  }
   function markdown(node,value){
     const display=publicTerms(value);
     if(!window.marked?.parse||!window.DOMPurify?.sanitize){node.textContent=display;return;}
@@ -58,15 +51,12 @@
     const {job}=current();
     if(!job){lastError='연결된 시뮬레이션이 없습니다.';if(trigger==='manual'){addMessage('user',question,'질문');addMessage('assistant','시뮬레이션을 실행한 뒤 다시 질문해 주세요.','연결 필요',true);}status();return;}
     const history=chatHistory(queued?.user?.id);
-    const facts=impactFacts();
-    const requestQuestion=facts&&question.length+facts.length<1150?`${question}\n현재 화면의 검증된 계산값: ${facts} 이미 계산된 값을 미계산 또는 안전반경 0m로 설명하지 마세요.`:question;
-    if(facts&&requestQuestion===question)history.push({role:'assistant',content:`현재 화면의 검증된 계산값: ${facts}`});
     if(trigger==='manual'&&!queued)addMessage('user',question,'질문');
     const pending=queued?.pending||addMessage('assistant','분석 중…',trigger==='alarm'?'경보 자동 분석 중…':trigger==='periodic'?'정기 자동 분석 중…':'분석 중…');
     if(queued)updateMessage(pending,'분석 중…','분석 중…');
     busy=true;lastError='';status();
     try{
-      const response=await fetch(`/api/simulations/${job}/saga-analysis`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({trigger,question:requestQuestion,history:history.slice(-8)})});
+      const response=await fetch(`/api/simulations/${job}/saga-analysis`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({trigger,question,history:history.slice(-8)})});
       const result=await response.json();if(!response.ok)throw new Error(result.detail||`SAGA 응답 ${response.status}`);
       lastAnswer=result;lastAt=Date.now();
       const source=trigger==='alarm'?'경보 자동 분석':trigger==='periodic'?'정기 자동 분석':'답변';
@@ -102,7 +92,7 @@
     const severity=analysis?.status||'NORMAL';
     const ruleIds=(hazop.active||[]).map(row=>row.rule_id).filter(Boolean).sort();
     const signature=severity==='NORMAL'&&ruleIds.length===0?'':`${severity}:${ruleIds.join(',')}`;
-    if(signature&&signature!==lastAlarm){lastAlarm=signature;analyze('alarm','발생한 주의/경보의 센서 태그, HAZOP 규칙, 피해영향예측 계산 여부와 조치 우선순위를 분석해 주세요.');}
+    if(signature&&signature!==lastAlarm){lastAlarm=signature;analyze('alarm','발생한 주의/경보의 센서 태그, HAZOP 규칙, 현재 센서 기준 피해영향예측 결과와 조치 우선순위를 분석해 주세요.');}
     if(!signature)lastAlarm='';
     if(Date.now()-lastAt>=30000&&!busy)analyze('periodic','현재 주요 센서값과 HAZOP DB를 검토해 운전 상태를 짧게 분석해 주세요.');
   }

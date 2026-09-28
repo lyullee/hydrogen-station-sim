@@ -24,6 +24,7 @@ from pydantic import BaseModel, Field, ConfigDict, model_validator
 
 from .full_station import FullStationState
 from .risk.runtime_backend import load_hyram_backend
+from .risk.sensor_assessment import assess_sensor_cases
 from .safe_operation import SafeOperationSample
 from .scenario import ReferenceScenario, build_reference_scenario
 from .safety_runtime import FaultEvent, FaultKind, FaultSchedule
@@ -803,7 +804,15 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         if isinstance(value, dict) and (value.get("quality") == "GOOD" or tag.startswith("GD-"))}
     reference_tags = {rule["sensor_id"] for rule in reference_rules}
     releases = hazop.get("releases") or []
-    impact_results = [{"release_id": release.get("release_id"),
+    backend = await asyncio.to_thread(load_hyram_backend)
+    active_nodes = [str(row.get("node_id")) for row in active if isinstance(row, dict) and row.get("node_id")]
+    release_nodes = [node["node_id"] for release in releases if isinstance(release, dict)
+        for node in catalog["nodes"] if node.get("누출_target") == release.get("component_id")]
+    candidates = [node["node_id"] for node in mentioned_nodes] + active_nodes + release_nodes
+    if not candidates:
+        candidates = ["N09", "N13", "N17"]
+    sensor_impacts = await asyncio.to_thread(assess_sensor_cases, frame, catalog, backend, candidates)
+    legacy_impacts = [{"release_id": release.get("release_id"),
         "component_id": release.get("component_id"),
         "mass_flow_g_s": release.get("mass_flow_g_s"),
         "calculation_status": (release.get("consequence") or {}).get("status"),
@@ -816,6 +825,8 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
             if (release.get("consequence") or {}).get("effect_range_status") == "BELOW_THRESHOLDS_AT_SAMPLES"
             else "관측점의 임계값 초과 거리만 확인; 현장 안전반경 아님")}
         for release in releases[:5] if isinstance(release, dict)]
+    assessed_releases = {row.get("release_id") for row in sensor_impacts if row.get("calculation_status") == "calculated"}
+    impact_results = sensor_impacts + [row for row in legacy_impacts if row.get("release_id") not in assessed_releases]
     context = {"station":"H70 reference simulation", "time_s":frame.get("time_s"),
         "impact_results":impact_results,
         "analysis":frame.get("analysis"), "active_faults":frame.get("active_faults"),
@@ -824,11 +835,14 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "reference_sensor_values":{tag: value for tag, value in sensor_values.items() if tag in reference_tags},
         "sensor_values":sensor_values,
         "hazop_nodes":[{"node_id": node["node_id"], "name": node.get("설비_라인")} for node in catalog["nodes"]],
-        "impact_backend_available":bool(getattr(load_hyram_backend(),"available",False))}
+        "impact_backend_available":bool(getattr(backend,"available",False))}
     history = "\n".join(f"{turn.role}: {turn.content}" for turn in request.history)[-1800:]
     prompt = ("당신은 H70 수소충전소 운전 분석 보조자입니다. 아래 데이터는 실제 현장 계측이 아닌 시뮬레이터 신호입니다. "
         "HAZOP 센서 임계값과 현재 신호 품질, 물리 누출 및 피해영향예측 계산 상태를 구분하세요. "
-        "impact_results의 calculation_status가 calculated이면 이미 계산된 결과입니다. 계산 전이라고 답하지 마세요. "
+        "impact_results는 이 LLM 호출 직전에 현재 GOOD 품질 압력·온도 센서로 피해영향예측 엔진을 실행한 결과를 우선 포함합니다. "
+        "calculation_basis=SENSOR_BASED_HYPOTHESIS는 실제 누출이 아닌 1 mm 가정 시나리오이며, ACTIVE_RELEASE_CURRENT_SENSORS는 현재 물리 누출입니다. 둘을 혼동하지 마세요. "
+        "calculation_status=calculated이면 이미 계산된 값입니다. 피해영향 계산이나 엔진 실행을 사용자에게 권하거나 요청하지 마세요. "
+        "calculation_status가 다른 경우에도 재계산을 권하지 말고 reason과 입력 상태만 사실대로 설명하세요. "
         "sampled_effect_radius_m이 null이면 표본 관측점에서 기준 미달입니다. 이때 숫자 반경을 만들지 말고 '표본 관측점에서 기준 미달, 영향 반경 미확정'이라고 쓰세요. "
         "계산 결과가 없으면 사고 범위를 추정값처럼 제시하지 마세요. 제공된 HAZOP 규칙에 없는 규칙 ID나 임계값을 만들지 마세요. "
         "사용자에게는 계산기 제품명 대신 '피해영향예측'이라고 표기하세요. "
@@ -846,9 +860,38 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         reply = await asyncio.to_thread(invoke)
     except (URLError, HTTPError, TimeoutError, OSError) as exc:
         raise HTTPException(status_code=503, detail=f"SAGA 연결/분석 실패: {exc}") from exc
+    answer = str(reply.get("answer") or "")
+    # Keep the chat factual even if the model falls back to generic advice.
+    calculation_request = re.compile(r"(?i)(?:HyRAM|피해\s*영향(?:예측)?|사고\s*범위).{0,35}(?:계산|평가|분석).{0,20}(?:필요|권장|해보|하시|실행)|(?:계산|평가).{0,25}(?:필요|권장).{0,15}(?:HyRAM|피해\s*영향)")
+    unsafe_radius = re.compile(r"(?:안전\s*반경|영향\s*반경).{0,50}(?:확정|보장|안전)|(?:확정|안전).{0,30}(?:안전\s*반경|영향\s*반경)")
+    answer = "\n".join(line for line in answer.splitlines()
+        if not calculation_request.search(line) and not unsafe_radius.search(line)).strip()
+    calculated = [row for row in sensor_impacts if row.get("calculation_status") == "calculated"]
+    if calculated and (request.trigger != "manual" or any(term in request.question for term in ("피해", "영향", "위험", "사고", "누출"))):
+        impact_lines = ["**현재 센서 기준 피해영향예측 · 표본 계산**"]
+        for row in calculated[:3 if request.trigger == "alarm" else 1]:
+            actual = row["calculation_basis"] == "ACTIVE_RELEASE_CURRENT_SENSORS"
+            basis = "활성 누출" if actual else f"{row['orifice_diameter_mm']:g} mm 가정 누출(실제 누출 아님)"
+            extent = row.get("sampled_effect_radius_m")
+            sample_max = row.get("sampled_max_distance_m")
+            range_text = (f"{float(extent):g} m 관측점까지 임계값 초과" if extent
+                else f"{float(sample_max or 0):g} m까지 표본 관측점에서 임계값 미달")
+            impact_lines.append(
+                f"- {row['node_id']} · {row['pressure_sensor']} {row['current_pressure_mpa']:.2f} MPa · "
+                f"{row['temperature_sensor']} {row['current_temperature_c']:.1f} °C · {basis}: "
+                f"열복사 최대 {float(row.get('maximum_heat_flux_w_m2') or 0):.0f} W/m², "
+                f"과압 최대 {float(row.get('maximum_overpressure_pa') or 0):.0f} Pa; {range_text}. "
+                "관측점 결과이며 현장 안전반경은 확정할 수 없습니다.")
+        answer = "\n".join(impact_lines) + ("\n\n" + answer if answer else "")
+    if not answer:
+        calculated = [row for row in impact_results if row.get("calculation_status") == "calculated"]
+        answer = ("현재 센서 기준 피해영향예측 결과가 있습니다. "
+            + ", ".join(f"{row.get('node_id') or row.get('component_id')}: {float(row.get('mass_flow_g_s') or 0):.2f} g/s"
+                for row in calculated[:3])) if calculated else "현재 센서와 계산 상태를 확인했습니다. 피해영향 결과는 제공되지 않았습니다."
     return {"time_s":frame.get("time_s"), "trigger":request.trigger,
-        "answer":reply.get("answer", ""), "model":reply.get("model", ""),
-        "active_rule_ids":sorted(ids), "sensor_count":len(sensor_values)}
+        "answer":answer, "model":reply.get("model", ""),
+        "active_rule_ids":sorted(ids), "sensor_count":len(sensor_values),
+        "impact_results":impact_results}
 
 
 @app.post("/api/simulations/{job_id}/faults", status_code=202)

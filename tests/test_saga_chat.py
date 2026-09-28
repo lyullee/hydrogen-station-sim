@@ -79,3 +79,101 @@ def test_saga_prompt_keeps_calculated_impact_before_large_sensor_context(monkeyp
     finally:
         with api._jobs_lock:
             api._jobs.pop(job_id, None)
+
+
+def test_saga_calculates_current_sensor_hazop_impact_before_llm(monkeypatch):
+    captured = {}
+
+    class FakeBackend:
+        available = True
+
+        def evaluate_release(self, request):
+            captured["request"] = request
+            return {"status": "calculated", "maximum_heat_flux_w_m2": 8300.0,
+                    "maximum_overpressure_pa": 6200.0, "sampled_effect_radius_m": 3.0,
+                    "sampled_max_distance_m": 5.0, "effect_range_status": "WITHIN_SAMPLED_POINTS"}
+
+    def fake_urlopen(request, timeout):
+        captured["prompt"] = json.loads(request.data)["message"]
+        return io.BytesIO(json.dumps({"answer": "HYRAM 피해영향예측 계산이 필요합니다.\n영향 반경은 3 m로 확정됩니다.\n현재 압력을 확인했습니다.",
+                                      "model": "test"}).encode())
+
+    monkeypatch.setattr(api, "load_hyram_backend", lambda: FakeBackend())
+    monkeypatch.setattr(api, "urlopen", fake_urlopen)
+    job_id = "saga-sensor-impact-test"
+    with api._jobs_lock:
+        api._jobs[job_id] = {"frames": [{
+            "time_s": 42.0, "analysis": {"status": "NORMAL"}, "active_faults": [],
+            "hazop": {"active": [], "releases": [], "signals": {
+                "PT-0901": {"value": 88.0, "unit": "MPa", "quality": "GOOD"},
+                "TT-0901": {"value": 31.0, "unit": "°C", "quality": "GOOD"},
+            }},
+        }]}
+    try:
+        with TestClient(api.app) as client:
+            response = client.post(f"/api/simulations/{job_id}/saga-analysis", json={
+                "question": "고압 저장뱅크 피해영향을 분석해줘.",
+            })
+        assert response.status_code == 200
+        data = response.json()
+        assert captured["request"].source_pressure_pa == 88e6
+        assert captured["request"].source_temperature_k == 304.15
+        assert captured["request"].orifice_diameter_m == 0.001
+        assert '"calculation_status": "calculated"' in captured["prompt"]
+        assert '"current_pressure_mpa": 88.0' in captured["prompt"]
+        assert '"calculation_basis": "SENSOR_BASED_HYPOTHESIS"' in captured["prompt"]
+        assert data["impact_results"][0]["maximum_heat_flux_w_m2"] == 8300.0
+        assert "계산이 필요" not in data["answer"]
+        assert "3 m로 확정" not in data["answer"]
+        assert "현장 안전반경은 확정할 수 없습니다" in data["answer"]
+        assert "현재 압력을 확인" in data["answer"]
+    finally:
+        with api._jobs_lock:
+            api._jobs.pop(job_id, None)
+
+
+def test_sensor_assessment_rejects_bad_quality_without_calling_backend():
+    from h2station.risk.sensor_assessment import assess_sensor_cases
+
+    class FakeBackend:
+        available = True
+
+        def evaluate_release(self, request):
+            raise AssertionError("Bad sensor values must not reach the consequence engine")
+
+    frame = {"time_s": 3.0, "hazop": {"signals": {
+        "PT-0901": {"value": 90, "quality": "GOOD"},
+        "TT-0901": {"value": 25, "quality": "BAD"},
+    }, "releases": []}}
+    impact = assess_sensor_cases(frame, api.load_catalog(), FakeBackend(), ["N09"])[0]
+    assert impact["calculation_status"] == "input_unavailable"
+    assert impact["pressure_sensor"] == "PT-0901"
+    assert "temperature_sensor" not in impact
+
+
+def test_sensor_assessment_uses_live_release_orifice_and_flow():
+    from h2station.risk.sensor_assessment import assess_sensor_cases
+
+    class FakeBackend:
+        available = True
+
+        def evaluate_release(self, request):
+            self.request = request
+            return {"status": "calculated", "maximum_heat_flux_w_m2": 12.0,
+                    "maximum_overpressure_pa": 34.0,
+                    "sampled_effect_radius_m": 0.0, "sampled_max_distance_m": 5.0,
+                    "effect_range_status": "BELOW_THRESHOLDS_AT_SAMPLES"}
+
+    backend = FakeBackend()
+    frame = {"time_s": 9.0, "hazop": {"signals": {
+        "PT-0901": {"value": 84.0, "quality": "GOOD"},
+        "TT-0901": {"value": 29.0, "quality": "GOOD"},
+    }, "releases": [{"release_id": "actual-1", "component_id": "cascade.high",
+                     "orifice_diameter_m": 0.003, "mass_flow_g_s": 8.0}]}}
+    impact = assess_sensor_cases(frame, api.load_catalog(), backend, ["N09"])[0]
+    assert impact["calculation_basis"] == "ACTIVE_RELEASE_CURRENT_SENSORS"
+    assert impact["orifice_source"] == "ACTIVE_RELEASE"
+    assert impact["sampled_effect_radius_m"] is None
+    assert backend.request.source_pressure_pa == 84e6
+    assert backend.request.orifice_diameter_m == 0.003
+    assert backend.request.mass_flow_override_kg_s == 0.008

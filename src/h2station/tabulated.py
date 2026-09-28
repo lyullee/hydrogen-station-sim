@@ -140,18 +140,62 @@ class HydrogenPropertyTable:
                 float(np.interp(internal_energy, curve, self.temperature_grid))
             )
 
+        # The rho-T table supplies a fast initial guess, but it was sampled on a
+        # different grid from the P-T table. Refine against the forward P-T
+        # interpolation so a state_pt -> state_rho_u round trip is consistent.
+        pressure_rows = [float(np.interp(temperatures[j], self.temperature_grid,
+                                         self.rhot["pressure"][ir + j])) for j in (0, 1)]
+        pressure_guess = pressure_rows[0] * (1.0 - wr) + pressure_rows[1] * wr
+        temperature_guess = temperatures[0] * (1.0 - wr) + temperatures[1] * wr
+        log_pressure = float(np.clip(np.log(pressure_guess), self._log_pressure_grid[0], self._log_pressure_grid[-1]))
+        temperature = float(np.clip(temperature_guess, self.temperature_grid[0], self.temperature_grid[-1]))
+        for _ in range(8):
+            ip, wp = self._bracket(self._log_pressure_grid, log_pressure, "pressure")
+            it, wt = self._bracket(self.temperature_grid, temperature, "temperature")
+
+            def interpolated(name: str) -> tuple[float, float, float]:
+                table = self.pt[name]
+                f00, f01 = table[ip, it], table[ip, it + 1]
+                f10, f11 = table[ip + 1, it], table[ip + 1, it + 1]
+                low = f00 + (f01 - f00) * wt
+                high = f10 + (f11 - f10) * wt
+                return (low + (high - low) * wp, high - low,
+                        (f01 - f00) * (1.0 - wp) + (f11 - f10) * wp)
+
+            rho, rho_dp, rho_dt = interpolated("density")
+            energy, energy_dp, energy_dt = interpolated("internal_energy")
+            rho_error, energy_error = density - rho, internal_energy - energy
+            if abs(rho_error) <= 1.0e-11 * density and abs(energy_error) <= 1.0e-11 * max(abs(internal_energy), 1.0):
+                break
+            determinant = rho_dp * energy_dt - rho_dt * energy_dp
+            if abs(determinant) < 1.0e-20:
+                break
+            pressure_step = (rho_error * energy_dt - energy_error * rho_dt) / determinant
+            temperature_step = (energy_error * rho_dp - rho_error * energy_dp) / determinant
+            log_pressure = float(np.clip(
+                log_pressure + np.clip(pressure_step, -1.0, 1.0) * (self._log_pressure_grid[ip + 1] - self._log_pressure_grid[ip]),
+                self._log_pressure_grid[0], self._log_pressure_grid[-1],
+            ))
+            temperature = float(np.clip(
+                temperature + np.clip(temperature_step, -1.0, 1.0) * (self.temperature_grid[it + 1] - self.temperature_grid[it]),
+                self.temperature_grid[0], self.temperature_grid[-1],
+            ))
+        refined = self.state_pt(float(np.exp(log_pressure)), temperature)
+        if (abs(refined.density - density) <= 1.0e-8 * density
+                and abs(refined.internal_energy - internal_energy) <= 1.0e-8 * max(abs(internal_energy), 1.0)):
+            return refined
+        # Preserve the original rho-T interpolation as a bounded fallback when
+        # the inverse lies outside the represented P-T region.
         values: dict[str, float] = {}
         for name, table in self.rhot.items():
             if name in {"density", "internal_energy", "temperature"}:
                 continue
             low = float(np.interp(temperatures[0], self.temperature_grid, table[ir]))
-            high = float(
-                np.interp(temperatures[1], self.temperature_grid, table[ir + 1])
-            )
+            high = float(np.interp(temperatures[1], self.temperature_grid, table[ir + 1]))
             values[name] = low * (1.0 - wr) + high * wr
         values["density"] = float(density)
         values["internal_energy"] = float(internal_energy)
-        values["temperature"] = temperatures[0] * (1.0 - wr) + temperatures[1] * wr
+        values["temperature"] = temperature_guess
         return ThermoState(**values)
 
 
