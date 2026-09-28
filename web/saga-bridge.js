@@ -39,30 +39,31 @@
   function status(){
     const label=$('sagaStatus');if(label){label.textContent=busy?'분석 중…':lastError||'센서·HAZOP 연결';label.dataset.state=busy?'busy':lastError?'error':'ready';}
     const send=$('sagaSend');if(send)send.disabled=pendingManual.length>=5;
+    const scenario=document.querySelector('.saga-scenario-button');if(scenario)scenario.disabled=pendingManual.length>=5;
     if($('sagaAlarmSummary'))$('sagaAlarmSummary').textContent=lastAnswer?`모의 ${Number(lastAnswer.time_s||0).toFixed(1)} s 기준\n${publicTerms(lastAnswer.answer)}`:lastError||'SAGA 분석 대기';
   }
   function chatHistory(excludeId){return messages.filter(message=>message.id!==excludeId&&!message.error&&!message.meta.endsWith('중…')&&message.meta!=='대기'&&['user','assistant'].includes(message.role)).slice(-8).map(message=>({role:message.role,content:message.content.slice(0,1200)}));}
-  async function analyze(trigger='manual',question=defaultQuestion,queued=null){
+  async function analyze(trigger='manual',question=defaultQuestion,queued=null,scenarioMode=false){
     if(busy){
       if(trigger==='alarm')pendingAlarm=true;
-      else if(trigger==='manual'&&pendingManual.length<5){const user=addMessage('user',question,'질문');const pending=addMessage('assistant','앞선 분석이 끝나면 답변합니다.','대기');pendingManual.push({question,user,pending});status();}
+      else if(trigger==='manual'&&pendingManual.length<5){const user=addMessage('user',question,scenarioMode?'가상 시나리오 평가':'질문');const pending=addMessage('assistant','앞선 분석이 끝나면 답변합니다.','대기');pendingManual.push({question,user,pending,scenarioMode});status();}
       return;
     }
     const {job}=current();
     if(!job){lastError='연결된 시뮬레이션이 없습니다.';if(trigger==='manual'){addMessage('user',question,'질문');addMessage('assistant','시뮬레이션을 실행한 뒤 다시 질문해 주세요.','연결 필요',true);}status();return;}
     const history=chatHistory(queued?.user?.id);
-    if(trigger==='manual'&&!queued)addMessage('user',question,'질문');
-    const pending=queued?.pending||addMessage('assistant','분석 중…',trigger==='alarm'?'경보 자동 분석 중…':trigger==='periodic'?'정기 자동 분석 중…':'분석 중…');
+    if(trigger==='manual'&&!queued)addMessage('user',question,scenarioMode?'가상 시나리오 평가':'질문');
+    const pending=queued?.pending||addMessage('assistant',scenarioMode?'시나리오 제안·계산 중…':'분석 중…',scenarioMode?'가상 시나리오 평가 중…':trigger==='alarm'?'경보 자동 분석 중…':trigger==='periodic'?'정기 자동 분석 중…':'분석 중…');
     if(queued)updateMessage(pending,'분석 중…','분석 중…');
     busy=true;lastError='';status();
     try{
-      const response=await fetch(`/api/simulations/${job}/saga-analysis`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({trigger,question,history:history.slice(-8)})});
+      const response=await fetch(`/api/simulations/${job}/saga-analysis`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({trigger,question,history:history.slice(-8),scenario_mode:scenarioMode})});
       const result=await response.json();if(!response.ok)throw new Error(result.detail||`SAGA 응답 ${response.status}`);
       lastAnswer=result;lastAt=Date.now();
-      const source=trigger==='alarm'?'경보 자동 분석':trigger==='periodic'?'정기 자동 분석':'답변';
+      const source=result.scenario_mode?'가상 시나리오 평가':trigger==='alarm'?'경보 자동 분석':trigger==='periodic'?'정기 자동 분석':'답변';
       updateMessage(pending,result.answer||'SAGA가 빈 답변을 반환했습니다.',`${source} · 모의 ${Number(result.time_s||0).toFixed(1)} s · ${result.model||'SAGA'}`);
     }catch(error){lastError=`SAGA 연결/분석 불가: ${error.message}`;lastAt=Date.now();updateMessage(pending,lastError,'응답 오류',true);}
-    finally{busy=false;status();if(pendingManual.length){const next=pendingManual.shift();analyze('manual',next.question,next);}else if(pendingAlarm){pendingAlarm=false;analyze('alarm','새 경보의 센서값과 HAZOP 규칙을 검토해 주세요.');}}
+    finally{busy=false;status();if(pendingManual.length){const next=pendingManual.shift();analyze('manual',next.question,next,next.scenarioMode);}else if(pendingAlarm){pendingAlarm=false;analyze('alarm','새 경보의 센서값과 HAZOP 규칙을 검토해 주세요.');}}
   }
   function mountChat(){
     const body=$('wallSagaChat');if(!body||$('sagaMessages'))return;
@@ -74,9 +75,10 @@
     const input=document.createElement('textarea');input.id='sagaQuestion';input.rows=2;input.placeholder='센서, HAZOP, 사고 영향에 대해 질문하세요…';input.setAttribute('aria-label','SAGA 질문');
     input.addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey&&!event.isComposing){event.preventDefault();form.requestSubmit();}});
     const actions=document.createElement('div');actions.className='saga-composer-actions';
-    const hint=document.createElement('span');hint.textContent='Enter 전송 · Shift+Enter 줄바꿈';
+    const scenario=document.createElement('button');scenario.type='button';scenario.className='saga-scenario-button';scenario.textContent='시나리오 생성·평가';scenario.title='SAGA가 현재 센서와 HAZOP를 보고 가상 누출을 제안한 뒤 피해영향을 계산합니다';
+    scenario.addEventListener('click',()=>{if(pendingManual.length>=5)return;const question=input.value.trim()||'현재 센서와 HAZOP를 근거로 의미 있는 가상 누출 시나리오를 생성하고 피해영향을 비교해줘.';input.value='';analyze('manual',question,null,true);});
     const send=document.createElement('button');send.type='submit';send.id='sagaSend';send.textContent='전송 ↑';
-    actions.append(hint,send);form.append(input,actions);
+    actions.append(scenario,send);form.append(input,actions);
     form.addEventListener('submit',event=>{event.preventDefault();const question=input.value.trim();if(!question||pendingManual.length>=5)return;input.value='';analyze('manual',question);});
     body.append(top,stream,form);
     if(messages.length){messages.forEach(appendMessage);}else{

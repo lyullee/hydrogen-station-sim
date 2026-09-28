@@ -23,9 +23,27 @@ def _good_signal(signals: Mapping[str, Any], tags: str | None, prefix: str) -> t
     return None
 
 
+def available_sensor_cases(frame: Mapping[str, Any], catalog: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """List HAZOP cases whose current source P/T pair is usable for calculation."""
+    signals = (frame.get("hazop") or {}).get("signals") or {}
+    nodes = {node["node_id"]: node for node in catalog["nodes"]}
+    available = []
+    for case in catalog["cases"]:
+        pressure = _good_signal(signals, case.get("압력_sensor"), "PT")
+        temperature = _good_signal(signals, case.get("온도_sensor"), "TT")
+        if not pressure or not temperature or pressure[1] <= 0.101325 or temperature[1] <= -273.15:
+            continue
+        available.append({"node_id": case["node_id"], "case_id": case["case_id"],
+                          "name": nodes.get(case["node_id"], {}).get("설비_라인"),
+                          "pressure_sensor": pressure[0], "pressure_mpa": pressure[1],
+                          "temperature_sensor": temperature[0], "temperature_c": temperature[1]})
+    return available
+
+
 def assess_sensor_cases(
     frame: Mapping[str, Any], catalog: Mapping[str, Any], backend: Any,
     node_ids: list[str], *, max_cases: int = 3,
+    proposals: list[dict[str, str]] | None = None,
 ) -> list[dict[str, Any]]:
     """Evaluate a clearly hypothetical 1 mm release unless a physical release exists.
 
@@ -39,9 +57,11 @@ def assess_sensor_cases(
     sizes = {size["size_id"]: size for size in catalog["leak_sizes"]}
     results: list[dict[str, Any]] = []
     leak_model = DynamicLeakModel()
-    for node_id in dict.fromkeys(node_ids):
+    entries = proposals if proposals is not None else [{"node_id": node_id} for node_id in dict.fromkeys(node_ids)]
+    for entry in entries:
         if len(results) >= max_cases:
             break
+        node_id = entry["node_id"]
         case, node = cases.get(node_id), nodes.get(node_id)
         if not case or not node:
             continue
@@ -54,6 +74,11 @@ def assess_sensor_cases(
             "calculation_basis": "SENSOR_BASED_HYPOTHESIS",
             "calculation_status": "input_unavailable",
         }
+        if proposals is not None:
+            result.update(calculation_basis="LLM_PROPOSED_HYPOTHESIS",
+                          scenario_id=entry["scenario_id"],
+                          scenario_rationale=entry["rationale"],
+                          leak_size_id=entry["leak_size_id"])
         if pressure:
             result.update(pressure_sensor=pressure[0], current_pressure_mpa=pressure[1])
         if temperature:
@@ -69,16 +94,17 @@ def assess_sensor_cases(
             results.append(result)
             continue
         component = node.get("누출_target") or case.get("누출_위치_target") or node_id
-        release = next((item for item in releases if isinstance(item, dict) and item.get("component_id") == component), None)
+        release = next((item for item in releases if isinstance(item, dict) and item.get("component_id") == component), None) if proposals is None else None
         if release:
             result["calculation_basis"] = "ACTIVE_RELEASE_CURRENT_SENSORS"
             result["release_id"] = release.get("release_id")
-        size = sizes.get("L03") or {}
+        size_id = entry.get("leak_size_id", "L03")
+        size = sizes.get(size_id) or {}
         orifice_m = (float(release["orifice_diameter_m"]) if release and release.get("orifice_diameter_m")
-                     else float(size.get("구경_mm") or 1.0) / 1000.0)
+                     else float(size.get("직경_mm") or 1.0) / 1000.0)
         coefficient = float(case.get("discharge_coefficient") or 0.8)
         result.update(orifice_diameter_mm=orifice_m * 1000.0,
-                      orifice_source="ACTIVE_RELEASE" if release and release.get("orifice_diameter_m") else "HAZOP_L03_ASSUMPTION",
+                      orifice_source="ACTIVE_RELEASE" if release and release.get("orifice_diameter_m") else f"HAZOP_{size_id}_ASSUMPTION",
                       assumed_release_height_m=1.0, assumed_release_angle_rad=0.0,
                       assumed_ambient_pressure_pa=101325.0,
                       assumption_note="누출 위치·방향·높이 미확정. 1 m 높이 수평 분출과 표본 관측점을 가정; 현장 안전반경 아님")

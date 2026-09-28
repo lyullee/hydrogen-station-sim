@@ -24,7 +24,8 @@ from pydantic import BaseModel, Field, ConfigDict, model_validator
 
 from .full_station import FullStationState
 from .risk.runtime_backend import load_hyram_backend
-from .risk.sensor_assessment import assess_sensor_cases
+from .risk.sensor_assessment import assess_sensor_cases, available_sensor_cases
+from .risk.scenario_planning import parse_saga_plan
 from .safe_operation import SafeOperationSample
 from .scenario import ReferenceScenario, build_reference_scenario
 from .safety_runtime import FaultEvent, FaultKind, FaultSchedule
@@ -107,6 +108,7 @@ class SagaChatTurn(BaseModel):
 class SagaAnalysisInput(BaseModel):
     question: str = Field(default="현재 공정의 이상 징후와 조치 우선순위를 분석해 주세요.", max_length=1200)
     trigger: str = Field(default="manual", pattern="^(manual|periodic|alarm)$")
+    scenario_mode: bool = False
     history: list[SagaChatTurn] = Field(default_factory=list, max_length=8)
 
 
@@ -765,6 +767,124 @@ def list_simulation_faults(job_id: str) -> dict[str, Any]:
         ]}
 
 
+def _invoke_saga(prompt: str, answer_length: str = "concise") -> dict[str, Any]:
+    saga_url = os.getenv("H2STATION_SAGA_URL", "http://127.0.0.1:8090").rstrip("/") + "/api/chat"
+    body = json.dumps({"message": prompt[:9900], "mode": "chat", "answer_length": answer_length},
+                      ensure_ascii=False).encode("utf-8")
+    with urlopen(Request(saga_url, data=body, headers={"Content-Type": "application/json"}), timeout=35) as response:
+        return json.load(response)
+
+
+def _safe_saga_text(answer: str) -> str:
+    """Remove generic calculation requests and claims of a certified radius."""
+    calculation_request = re.compile(r"(?i)(?:HyRAM|피해\s*영향(?:예측)?|사고\s*범위).{0,35}(?:계산|평가|분석).{0,20}(?:필요|권장|해보|하시|실행)|(?:계산|평가).{0,25}(?:필요|권장).{0,15}(?:HyRAM|피해\s*영향)")
+    unsafe_radius = re.compile(r"(?:안전\s*반경|영향\s*반경).{0,50}(?:확정|보장|안전)|(?:확정|안전).{0,30}(?:안전\s*반경|영향\s*반경)")
+    return "\n".join(line for line in answer.splitlines()
+        if not calculation_request.search(line) and not unsafe_radius.search(line)).strip()
+
+
+def _scenario_requested(request: SagaAnalysisInput) -> bool:
+    if request.scenario_mode:
+        return True
+    question = re.sub(r"\s+", "", request.question)
+    return request.trigger == "manual" and "시나리오" in question and any(
+        word in question for word in ("생성", "만들", "평가", "계산", "비교", "제안"))
+
+
+def _scenario_result_summary(results: list[dict[str, Any]]) -> str:
+    lines = ["**SAGA 제안 시나리오 · 현재 센서 기준 피해영향예측**"]
+    for row in results:
+        label = f"{row.get('scenario_id', '?')} · {row['node_id']} · {row.get('orifice_diameter_mm', 0):g} mm 가정 누출"
+        if row.get("calculation_status") != "calculated":
+            lines.append(f"- {label}: 계산 결과 없음 ({row.get('calculation_status')}; {row.get('reason', '입력 확인 필요')}).")
+            continue
+        extent = row.get("sampled_effect_radius_m")
+        sample_max = float(row.get("sampled_max_distance_m") or 0)
+        range_text = (f"{float(extent):g} m 관측점까지 임계값 초과" if extent
+            else f"{sample_max:g} m까지 표본 관측점에서 임계값 미달")
+        lines.append(
+            f"- {label}: {row['pressure_sensor']} {row['current_pressure_mpa']:.2f} MPa, "
+            f"{row['temperature_sensor']} {row['current_temperature_c']:.1f} °C → "
+            f"누출유량 {float(row.get('mass_flow_g_s') or 0):.2f} g/s, "
+            f"열복사 최대 {float(row.get('maximum_heat_flux_w_m2') or 0):.0f} W/m², "
+            f"과압 최대 {float(row.get('maximum_overpressure_pa') or 0):.0f} Pa; {range_text}.")
+    lines.append("이 결과는 가상 누출의 표본 관측점 계산이며 실제 사고 발생이나 현장 안전반경을 뜻하지 않습니다.")
+    return "\n".join(lines)
+
+
+async def _run_saga_scenario_analysis(
+    frame: dict[str, Any], catalog: dict[str, Any], backend: Any,
+    request: SagaAnalysisInput, active: list[dict[str, Any]],
+    mentioned_ids: set[str], sensor_count: int,
+) -> dict[str, Any]:
+    available = available_sensor_cases(frame, catalog)
+    if not available:
+        return {"time_s": frame.get("time_s"), "trigger": request.trigger,
+                "scenario_mode": True, "answer": "현재 GOOD 품질의 압력·온도 센서 쌍이 없어 시나리오를 계산하지 않았습니다.",
+                "model": "", "proposed_scenarios": [], "impact_results": [], "sensor_count": sensor_count}
+    eligible_ids = {row["node_id"] for row in available}
+    sizes = [{"leak_size_id": row["size_id"], "diameter_mm": row["직경_mm"]}
+             for row in catalog["leak_sizes"] if isinstance(row.get("직경_mm"), (int, float))
+             and 0.1 <= row["직경_mm"] <= 3.0]
+    rule_ids = {row.get("rule_id") for row in active if isinstance(row, dict)}
+    relevant_nodes = mentioned_ids | {row.get("node_id") for row in active if isinstance(row, dict)}
+    if not relevant_nodes:
+        relevant_nodes = {"N09", "N13", "N17"}
+    rules = [{"rule_id": row["rule_id"], "node_id": row["node_id"],
+              "sensor_id": row["sensor_id"], "name": row["시나리오명"],
+              "operator": row["연산자"], "threshold": row["임계값"],
+              "unit": row["단위"], "severity": row["등급"]}
+             for row in catalog["rules"] if row["rule_id"] in rule_ids or row["node_id"] in relevant_nodes][:24]
+    plan_context = {"question": request.question, "time_s": frame.get("time_s"),
+                    "eligible_nodes": available, "allowed_leak_sizes": sizes,
+                    "active_hazop": active[:15], "hazop_rules": rules}
+    plan_prompt = (
+        "당신은 H70 수소충전소 시뮬레이션의 가상 사고 시나리오 제안자입니다. "
+        "현재 센서와 HAZOP를 근거로 의미 있는 누출 시나리오 1~3개를 스스로 선택하세요. "
+        "오직 JSON 객체 하나만 출력하세요. 형식: "
+        '{"scenarios":[{"node_id":"N09","leak_size_id":"L03","rationale":"HAZOP 근거와 선택 이유"}]}. '
+        "node_id는 eligible_nodes, leak_size_id는 allowed_leak_sizes 중에서만 선택하세요. "
+        "압력·온도를 만들지 마세요. 서버가 현재 센서값을 적용합니다. 시나리오별 노드·구경 조합은 중복하지 마세요. "
+        "제안은 사고 주입이나 설비 제어가 아닌 계산용 가정입니다. 설명문이나 Markdown 코드를 붙이지 마세요.\n"
+        + json.dumps(plan_context, ensure_ascii=False, default=str)[:7800])
+    try:
+        plan_reply = await asyncio.to_thread(_invoke_saga, plan_prompt)
+        try:
+            proposals = parse_saga_plan(str(plan_reply.get("answer") or ""), eligible_ids, catalog)
+        except ValueError as exc:
+            retry_prompt = plan_prompt[:7300] + (f"\n이전 출력은 검증 실패({exc})였습니다. 다시 JSON 객체만 출력하세요.\n"
+                + str(plan_reply.get("answer") or "")[:450])
+            plan_reply = await asyncio.to_thread(_invoke_saga, retry_prompt)
+            proposals = parse_saga_plan(str(plan_reply.get("answer") or ""), eligible_ids, catalog)
+    except (URLError, HTTPError, TimeoutError, OSError) as exc:
+        raise HTTPException(status_code=503, detail=f"SAGA 시나리오 제안 실패: {exc}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=502, detail=f"SAGA 시나리오 형식 검증 실패: {exc}") from exc
+    results = await asyncio.to_thread(assess_sensor_cases, frame, catalog, backend, [], proposals=proposals)
+    interpretation_context = {"time_s": frame.get("time_s"), "question": request.question,
+                              "proposed_scenarios": proposals, "impact_results": results,
+                              "active_hazop": active[:15], "hazop_rules": rules,
+                              "scenario_is_hypothetical": True, "process_fault_injected": False}
+    interpretation_prompt = (
+        "당신이 제안한 가상 누출 시나리오를 서버가 현재 GOOD 품질 센서값으로 피해영향예측 계산했습니다. "
+        "아래 실제 계산 결과만 해석하세요. 계산을 다시 권하지 마세요. 사고가 실제 발생했다고 말하지 마세요. "
+        "각 시나리오의 HAZOP 근거와 선택 이유, 센서값, 계산 상태, 열복사·과압, 표본 거리의 차이를 설명하세요. "
+        "sampled_effect_radius_m은 임계값을 초과한 최원거리 관측점일 뿐, 안전반경이나 최대 사고범위가 아닙니다. "
+        "null이면 범위가 미확정입니다. 계산에 실패했으면 이유를 밝히고 수치를 만들지 마세요. "
+        "사용자에게는 엔진 제품명 대신 '피해영향예측'이라고 쓰세요. 한국어 Markdown으로 간결하게 답하세요.\n"
+        + json.dumps(interpretation_context, ensure_ascii=False, default=str)[:8200])
+    try:
+        interpretation = await asyncio.to_thread(_invoke_saga, interpretation_prompt, "standard")
+    except (URLError, HTTPError, TimeoutError, OSError) as exc:
+        raise HTTPException(status_code=503, detail=f"SAGA 계산 결과 해석 실패: {exc}") from exc
+    narrative = _safe_saga_text(str(interpretation.get("answer") or ""))
+    return {"time_s": frame.get("time_s"), "trigger": request.trigger,
+            "scenario_mode": True, "answer": _scenario_result_summary(results) + ("\n\n" + narrative if narrative else ""),
+            "model": interpretation.get("model", ""), "proposed_scenarios": proposals,
+            "impact_results": results, "active_rule_ids": sorted(rule_ids - {None}),
+            "sensor_count": sensor_count}
+
+
 @app.post("/api/simulations/{job_id}/saga-analysis")
 async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, Any]:
     with _jobs_lock:
@@ -805,6 +925,9 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
     reference_tags = {rule["sensor_id"] for rule in reference_rules}
     releases = hazop.get("releases") or []
     backend = await asyncio.to_thread(load_hyram_backend)
+    if _scenario_requested(request):
+        return await _run_saga_scenario_analysis(frame, catalog, backend, request, active,
+                                                 mentioned_ids, len(sensor_values))
     active_nodes = [str(row.get("node_id")) for row in active if isinstance(row, dict) and row.get("node_id")]
     release_nodes = [node["node_id"] for release in releases if isinstance(release, dict)
         for node in catalog["nodes"] if node.get("누출_target") == release.get("component_id")]
@@ -851,21 +974,12 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         f"요청 유형: {request.trigger}\n이전 대화(현재 센서보다 우선하지 않음):\n{history}\n"
         f"운전자 질문: {request.question}\n현재 데이터 및 HAZOP DB 발췌:\n"
         + json.dumps(context, ensure_ascii=False, default=str)[:7500])[:9900]
-    saga_url = os.getenv("H2STATION_SAGA_URL", "http://127.0.0.1:8090").rstrip("/") + "/api/chat"
-    def invoke() -> dict[str, Any]:
-        body = json.dumps({"message":prompt,"mode":"chat","answer_length":"concise"}, ensure_ascii=False).encode("utf-8")
-        with urlopen(Request(saga_url, data=body, headers={"Content-Type":"application/json"}), timeout=35) as response:
-            return json.load(response)
     try:
-        reply = await asyncio.to_thread(invoke)
+        reply = await asyncio.to_thread(_invoke_saga, prompt)
     except (URLError, HTTPError, TimeoutError, OSError) as exc:
         raise HTTPException(status_code=503, detail=f"SAGA 연결/분석 실패: {exc}") from exc
     answer = str(reply.get("answer") or "")
-    # Keep the chat factual even if the model falls back to generic advice.
-    calculation_request = re.compile(r"(?i)(?:HyRAM|피해\s*영향(?:예측)?|사고\s*범위).{0,35}(?:계산|평가|분석).{0,20}(?:필요|권장|해보|하시|실행)|(?:계산|평가).{0,25}(?:필요|권장).{0,15}(?:HyRAM|피해\s*영향)")
-    unsafe_radius = re.compile(r"(?:안전\s*반경|영향\s*반경).{0,50}(?:확정|보장|안전)|(?:확정|안전).{0,30}(?:안전\s*반경|영향\s*반경)")
-    answer = "\n".join(line for line in answer.splitlines()
-        if not calculation_request.search(line) and not unsafe_radius.search(line)).strip()
+    answer = _safe_saga_text(answer)
     calculated = [row for row in sensor_impacts if row.get("calculation_status") == "calculated"]
     if calculated and (request.trigger != "manual" or any(term in request.question for term in ("피해", "영향", "위험", "사고", "누출"))):
         impact_lines = ["**현재 센서 기준 피해영향예측 · 표본 계산**"]
