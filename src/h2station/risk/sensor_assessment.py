@@ -42,6 +42,16 @@ def available_sensor_inputs(frame: Mapping[str, Any], catalog: Mapping[str, Any]
     return result
 
 
+# Spatial detector nodes have no process P/T of their own. A nearby process
+# source is usable only as an explicitly labelled hypothetical proxy.
+_AREA_PROCESS_SOURCES = {
+    "N19": ("N12", "N16"),
+    "N21": ("N04", "N05"),
+    "N22": ("N07", "N08", "N09"),
+    "N23": ("N13", "N17"),
+}
+
+
 def assess_sensor_cases(
     frame: Mapping[str, Any], catalog: Mapping[str, Any], backend: Any,
     node_ids: list[str], *, max_cases: int = 3,
@@ -69,6 +79,15 @@ def assess_sensor_cases(
             continue
         pressure = _good_signal(signals, entry.get("pressure_sensor") or case.get("압력_sensor"), "PT")
         temperature = _good_signal(signals, entry.get("temperature_sensor") or case.get("온도_sensor"), "TT")
+        proxy_node_id = None
+        if proposals is None and (not pressure or not temperature) and node_id in _AREA_PROCESS_SOURCES:
+            for source_id in _AREA_PROCESS_SOURCES[node_id]:
+                source_case = cases.get(source_id) or {}
+                source_pressure = _good_signal(signals, source_case.get("압력_sensor"), "PT")
+                source_temperature = _good_signal(signals, source_case.get("온도_sensor"), "TT")
+                if source_pressure and source_temperature:
+                    pressure, temperature, proxy_node_id = source_pressure, source_temperature, source_id
+                    break
         result: dict[str, Any] = {
             "case_id": case["case_id"], "node_id": node_id,
             "node_name": node.get("설비_라인"),
@@ -76,6 +95,11 @@ def assess_sensor_cases(
             "calculation_basis": "SENSOR_BASED_HYPOTHESIS",
             "calculation_status": "input_unavailable",
         }
+        if proxy_node_id:
+            result.update(calculation_basis="SENSOR_BASED_PROXY_HYPOTHESIS", sensor_basis="PROXY",
+                          pressure_source_node_id=proxy_node_id,
+                          temperature_source_node_id=proxy_node_id,
+                          source_note="인접 공정 설비의 계측값으로 공간 누출을 가정한 근사; 해당 공간의 직접 압력·온도 계측값 아님")
         if proposals is not None:
             result.update(calculation_basis="LLM_PROPOSED_HYPOTHESIS",
                           scenario_id=entry["scenario_id"],

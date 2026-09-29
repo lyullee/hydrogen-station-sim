@@ -40,7 +40,7 @@
       catalog=data;
       for(const node of data.nodes){const label=node['설비_라인']||node.node_id;for(const input of [select,detailSelect])input.add(new Option(`${node.node_id} · ${label}`,node.node_id));}
       select.value=selected;detailSelect.value=selected;render();
-    }).catch(()=>{select.add(new Option('HAZOP DB 연결 실패',''));});
+    }).catch(()=>{select.add(new Option('센서 목록 연결 실패',''));});
     for(const input of [select,detailSelect])input.addEventListener('change',()=>{selected=input.value;select.value=selected;detailSelect.value=selected;render();window.drawStationTrend?.();});
     window.addEventListener('station-frame',render);window.addEventListener('wall-resize',render);
   }

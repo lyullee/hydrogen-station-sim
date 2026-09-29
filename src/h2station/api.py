@@ -23,10 +23,12 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, ConfigDict, model_validator
 
 from .full_station import FullStationState
+from .operations import ProcessRuntime, RELIEF_TARGETS
 from .risk.runtime_backend import load_hyram_backend
 from .risk.sensor_assessment import assess_sensor_cases, available_sensor_inputs
 from .risk.scenario_planning import parse_saga_plan
 from .safe_operation import SafeOperationSample
+from .simulation_clock import SimulationClock
 from .scenario import ReferenceScenario, build_reference_scenario
 from .safety_runtime import FaultEvent, FaultKind, FaultSchedule
 from .tabulated import PropsSI
@@ -76,10 +78,58 @@ class FaultInput(BaseModel):
         )
 
 
+class ReliefValveInput(BaseModel):
+    enabled: bool = True
+    open_mpa: float = Field(gt=0.1, le=120.0)
+    close_mpa: float = Field(gt=0.1, le=120.0)
+    orifice_mm: float = Field(default=1.0, gt=0.0, le=20.0)
+
+    @model_validator(mode="after")
+    def valid_hysteresis(self):
+        if self.close_mpa >= self.open_mpa:
+            raise ValueError("Relief closing pressure must be below opening pressure")
+        return self
+
+
+def _default_relief_valves() -> dict[str, ReliefValveInput]:
+    pressures = {"low": (50.0, 49.0), "medium": (70.0, 69.0), "high": (100.0, 99.0),
+                 "hose_1": (90.0, 88.0), "hose_2": (90.0, 88.0),
+                 "vehicle_1": (87.5, 85.0), "vehicle_2": (87.5, 85.0)}
+    return {key: ReliefValveInput(open_mpa=opening, close_mpa=closing)
+            for key, (opening, closing) in pressures.items()}
+
+
+class ProcessSettings(BaseModel):
+    """Operator-mode requests. All process paths start isolated."""
+    trailer_supply: bool = False
+    pressure_recharge: bool = False
+    vehicle_1: bool = False
+    vehicle_2: bool = False
+    trailer_pressure_mpa: float = Field(default=20.0, gt=2.0, le=50.0)
+    trailer_temperature_c: float = Field(default=25.0, ge=-40.0, le=85.0)
+    trailer_capacity_kg: float = Field(default=50.0, gt=0.1, le=10000.0)
+    recharge_auto_stop: bool = True
+    recharge_target_low_mpa: float = Field(default=48.0, gt=1.0, le=110.0)
+    recharge_target_medium_mpa: float = Field(default=68.0, gt=1.0, le=110.0)
+    recharge_target_high_mpa: float = Field(default=98.0, gt=1.0, le=110.0)
+    vehicle_1_auto_stop: bool = True
+    vehicle_1_target_pressure_mpa: float = Field(default=70.0, gt=1.0, le=110.0)
+    vehicle_2_auto_stop: bool = True
+    vehicle_2_target_pressure_mpa: float = Field(default=70.0, gt=1.0, le=110.0)
+    relief_valves: dict[str, ReliefValveInput] = Field(default_factory=_default_relief_valves)
+
+    @model_validator(mode="after")
+    def valid_relief_targets(self):
+        if set(self.relief_valves) != set(RELIEF_TARGETS):
+            raise ValueError("Settings are required for every relief valve")
+        return self
+
+
 class SimulationInput(BaseModel):
     model_config = ConfigDict(allow_inf_nan=False)
     duration_s: float = Field(default=300.0, gt=0.0, le=3600.0)
     continuous: bool = False
+    speed_multiplier: Literal[1, 10, 100] = 1
     control_period_s: float = Field(default=0.2, gt=0.0, le=2.0)
     ambient_temperature_c: float = Field(default=25.0, ge=-40.0, le=50.0)
     initial_vehicle_pressure_mpa: float = Field(default=5.0, gt=0.0, le=70.0)
@@ -91,6 +141,7 @@ class SimulationInput(BaseModel):
     pressure_ramp_rate_mpa_min: float = Field(default=12.0, gt=0.0, le=30.0)
     delivery_temperature_c: float = Field(default=-40.0, ge=-50.0, le=20.0)
     maximum_mass_flow_g_s: float = Field(default=60.0, gt=0.0, le=300.0)
+    process_settings: ProcessSettings | None = None
     faults: list[FaultInput] = Field(default_factory=list)
 
     @model_validator(mode="after")
@@ -103,6 +154,10 @@ class SimulationInput(BaseModel):
 class SagaChatTurn(BaseModel):
     role: Literal["user", "assistant"]
     content: str = Field(max_length=1200)
+
+
+class SimulationSpeedInput(BaseModel):
+    speed_multiplier: Literal[1, 10, 100]
 
 
 class SagaAnalysisInput(BaseModel):
@@ -126,6 +181,7 @@ app.add_middleware(
 
 _jobs: dict[str, dict[str, Any]] = {}
 _jobs_lock = Lock()
+_process_runtimes: dict[str, ProcessRuntime] = {}
 _executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="h2station")
 
 
@@ -141,9 +197,22 @@ def _analyze_frame(frame: dict[str, Any]) -> dict[str, Any]:
     findings: list[str] = []
     score = 0
     hazop_active = (frame.get("hazop") or {}).get("active", [])
+    operations = frame.get("process_operations") or {}
+    relief_open = (operations.get("relief_open") or {}) if isinstance(operations, dict) else {}
+    open_valves = [key for key, is_open in relief_open.items() if is_open]
+    relief_names = {"low": "저압 저장뱅크", "medium": "중압 저장뱅크", "high": "고압 저장뱅크",
+                    "hose_1": "1번 충전호스", "hose_2": "2번 충전호스",
+                    "vehicle_1": "차량 1 탱크", "vehicle_2": "차량 2 탱크"}
+    if open_valves:
+        releases = (frame.get("hazop") or {}).get("releases") or []
+        relief_flow = sum(float(row.get("mass_flow_g_s") or 0.0) for row in releases
+                          if str(row.get("release_id", "")).startswith("relief-"))
+        locations = ", ".join(relief_names.get(key, key) for key in open_valves)
+        findings.append(f"안전밸브 개방: {locations} · 방출 {relief_flow:.2f} g/s · 설비 압력과 피해영향예측 결과 확인")
+        score = 3 if any(fault.startswith("external-fire:") for fault in active_faults) else 2
     if hazop_active:
-        findings.append(f"HAZOP 임계값 초과 후보 {len(hazop_active)}건: 센서와 운전 조건 확인")
-        score = 3 if any(a.get("severity") == "TRIP" for a in hazop_active) else 2
+        findings.append(f"센서 이상 징후 {len(hazop_active)}건: 설비 상태와 운전 조건 확인")
+        score = max(score, 3 if any(a.get("severity") == "TRIP" for a in hazop_active) else 2)
     if pressure >= 87.5:
         findings.append(f"차량 압력 {pressure:.1f} MPa: 설계 상한 근접")
         score = max(score, 3)
@@ -168,9 +237,15 @@ def _analyze_frame(frame: dict[str, Any]) -> dict[str, Any]:
     elif max_detector >= 1.0:
         findings.append(f"가스검지기 최대 {max_detector:.2f} vol% H₂: 경보 후보")
         score = max(score, 2)
-    if active_faults:
-        findings.append("사고 주입 신호가 공정 상태와 연동됨")
-        score = max(score, 1)
+    if any(fault.startswith("external-fire:") for fault in active_faults):
+        findings.append("설비 외부 화재 입력 활성: 해당 구역 온도·압력과 확산 영향을 즉시 확인")
+        score = max(score, 3)
+    if any(fault.startswith("hydrogen-leak:") for fault in active_faults):
+        findings.append("수소 누출 입력 활성: 누출량과 가스검지기 신호를 확인")
+        score = max(score, 2)
+    if active_faults and score == 0:
+        findings.append("설비 이상 입력이 공정 상태와 연동됨")
+        score = 1
     if esd:
         findings.insert(0, "ESD 래치: 공정 격리 상태")
         score = 3
@@ -186,6 +261,18 @@ def _utc_now() -> str:
 def _set_job(job_id: str, **changes: Any) -> None:
     with _jobs_lock:
         _jobs[job_id].update(changes)
+
+
+def _position_live_fault(event: FaultEvent, time_s: float, relative: bool) -> FaultEvent:
+    """Anchor a remote delay at the solver step that consumes the command."""
+    if relative:
+        return replace(event, start_time_s=time_s + event.start_time_s,
+                       end_time_s=(time_s + event.end_time_s if event.end_time_s is not None else None))
+    if event.start_time_s < time_s:
+        shift = time_s - event.start_time_s
+        return replace(event, start_time_s=time_s,
+                       end_time_s=(event.end_time_s + shift if event.end_time_s is not None else None))
+    return event
 
 
 def _execute_simulation(job_id: str, request: SimulationInput) -> None:
@@ -233,6 +320,12 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             fault_events=tuple(fault.to_event() for fault in request.faults),
         )
         built = build_reference_scenario(config, backend)
+        with _jobs_lock:
+            process_runtime = _process_runtimes.get(job_id)
+            simulation_clock = _jobs[job_id]["_simulation_clock"]
+        if process_runtime is not None:
+            built.station.compressor_suction = lambda _time: process_runtime.trailer_state()
+            built.simulator.process_runtime = process_runtime
         def apply_runtime_commands(time_s: float) -> None:
             with _jobs_lock:
                 job = _jobs[job_id]
@@ -241,12 +334,8 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                     return
                 registry = job["fault_registry"]
                 for command, payload in commands:
-                    if command == "add":
-                        event = payload
-                        if event.start_time_s < time_s:
-                            shift = time_s - event.start_time_s
-                            event = replace(event, start_time_s=time_s,
-                                end_time_s=(event.end_time_s + shift if event.end_time_s is not None else None))
+                    if command in {"add", "add_relative"}:
+                        event = _position_live_fault(payload, time_s, command == "add_relative")
                         registry[event.event_id] = event
                     elif command == "remove":
                         event = registry.get(payload)
@@ -290,6 +379,11 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
         )
 
         def report_sample(sample: SafeOperationSample) -> None:
+            realtime_lag_s = None
+            simulation_rate_x = None
+            if request.continuous:
+                # Speed changes affect pacing only; every physical solver step runs.
+                realtime_lag_s, simulation_rate_x = simulation_clock.pace(sample.time_s)
             with _jobs_lock:
                 frames = _jobs[job_id]["frames"]
                 sequence = _jobs[job_id].get("next_sequence", 0)
@@ -325,6 +419,15 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                         "trip_causes": list(sample.trip_causes),
                         "consequence_updated": sample.consequence_updated,
                         "active_faults": list(sample.active_faults),
+                        "process_operations": sample.process_operations,
+                        "relief_valves_open": [key for key, is_open in
+                                               ((sample.process_operations or {}).get("relief_open") or {}).items()
+                                               if is_open],
+                        "process_activity": sample.process_activity,
+                        "realtime_lag_s": realtime_lag_s,
+                        "simulation_rate_x": simulation_rate_x,
+                        "vehicle_mass_kg": sample.vehicle_mass_kg,
+                        "vehicle_2_mass_kg": sample.vehicle_2_mass_kg,
                     }
                 previous_time = _jobs[job_id].get("last_sample_time_s")
                 previous_leak = _jobs[job_id].get("last_leak_kg_s", 0.0)
@@ -353,6 +456,11 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                 if len(frames) > 12000:
                     del frames[:len(frames) - 12000]
                 _jobs[job_id]["hazop_detail"] = hazop_monitor.latest
+                if process_runtime is not None:
+                    _jobs[job_id]["operations"] = process_runtime.snapshot()
+                if request.continuous:
+                    _jobs[job_id]["realtime_lag_s"] = realtime_lag_s
+                    _jobs[job_id]["simulation_rate_x"] = simulation_rate_x
 
         def should_stop() -> bool:
             with _jobs_lock:
@@ -683,7 +791,7 @@ def health() -> dict[str, Any]:
     return {
         "status": "ready",
         "thermodynamics": "CoolProp-generated H2 property table v1",
-        "solver": "SciPy BDF",
+        "solver": "SciPy LSODA (operator mode) / BDF (legacy mode)",
         "hyram_available": bool(getattr(backend, "available", False)),
         "hyram_backend": backend.name,
         "hyram_reason": getattr(backend, "reason", None),
@@ -699,7 +807,11 @@ def default_config() -> dict[str, Any]:
 @app.post("/api/simulations", status_code=202)
 def create_simulation(request: SimulationInput) -> dict[str, Any]:
     job_id = uuid4().hex
+    process_runtime = ProcessRuntime(request.process_settings.model_dump()) if request.process_settings is not None else None
+    simulation_clock = SimulationClock(request.speed_multiplier)
     with _jobs_lock:
+        if process_runtime is not None:
+            _process_runtimes[job_id] = process_runtime
         _jobs[job_id] = {
             "id": job_id,
             "status": "queued",
@@ -710,6 +822,8 @@ def create_simulation(request: SimulationInput) -> dict[str, Any]:
             "updated_at": _utc_now(),
             "duration_s": request.duration_s,
             "continuous": request.continuous,
+            "speed_multiplier": request.speed_multiplier,
+            "_simulation_clock": simulation_clock,
             "simulated_time_s": 0.0,
             "total_steps": int(np.ceil(request.duration_s / request.control_period_s)),
             "solver_step": 0,
@@ -718,6 +832,7 @@ def create_simulation(request: SimulationInput) -> dict[str, Any]:
             "stop_requested": False,
             "pending_fault_commands": [],
             "fault_registry": {fault.event_id: fault.to_event() for fault in request.faults},
+            "operations": process_runtime.snapshot() if process_runtime is not None else None,
         }
     _executor.submit(_execute_simulation, job_id, request)
     return {"id": job_id, "status": "queued"}
@@ -732,7 +847,7 @@ def simulation_status(job_id: str) -> dict[str, Any]:
         return {
             key: value
             for key, value in job.items()
-            if key not in {"result", "frames", "hazop_detail", "pending_fault_commands", "fault_registry"}
+            if key not in {"result", "frames", "hazop_detail", "pending_fault_commands", "fault_registry", "_simulation_clock"}
         }
 
 
@@ -744,9 +859,57 @@ def simulation_frames(job_id: str, after: int = -1) -> dict[str, Any]:
         if job is None:
             raise HTTPException(status_code=404, detail="Simulation not found")
         return {
-            "job": {k: v for k, v in job.items() if k not in {"result", "frames", "hazop_detail", "pending_fault_commands", "fault_registry"}},
+            "job": {k: v for k, v in job.items() if k not in {"result", "frames", "hazop_detail", "pending_fault_commands", "fault_registry", "_simulation_clock"}},
             "frames": [f for f in job.get("frames", []) if f["sequence"] > after],
         }
+
+
+@app.get("/api/simulations/{job_id}/operations")
+def get_process_operations(job_id: str) -> dict[str, Any]:
+    with _jobs_lock:
+        if job_id not in _jobs:
+            raise HTTPException(status_code=404, detail="Simulation not found")
+        runtime = _process_runtimes.get(job_id)
+        if runtime is None:
+            raise HTTPException(status_code=409, detail="This simulation has no operator process mode")
+        return runtime.snapshot()
+
+
+@app.put("/api/simulations/{job_id}/speed")
+def set_simulation_speed(job_id: str, request: SimulationSpeedInput) -> dict[str, Any]:
+    with _jobs_lock:
+        job = _jobs.get(job_id)
+        if job is None:
+            raise HTTPException(status_code=404, detail="Simulation not found")
+        if not job["continuous"] or job["status"] not in {"queued", "running"}:
+            raise HTTPException(status_code=409, detail="Speed can only change during continuous monitoring")
+        latest_sim_s = float(job.get("last_sample_time_s") or 0.0)
+        job["_simulation_clock"].set_speed(request.speed_multiplier, latest_sim_s)
+        job["speed_multiplier"] = request.speed_multiplier
+        job["simulation_rate_x"] = None
+        job["realtime_lag_s"] = None
+        job["updated_at"] = _utc_now()
+        return {"speed_multiplier": request.speed_multiplier, "simulated_time_s": latest_sim_s}
+
+
+@app.put("/api/simulations/{job_id}/operations")
+def set_process_operations(job_id: str, settings: ProcessSettings) -> dict[str, Any]:
+    with _jobs_lock:
+        job = _jobs.get(job_id)
+        if job is None:
+            raise HTTPException(status_code=404, detail="Simulation not found")
+        if job["status"] not in ("queued", "running"):
+            raise HTTPException(status_code=409, detail="Simulation is not running")
+        runtime = _process_runtimes.get(job_id)
+        if runtime is None:
+            raise HTTPException(status_code=409, detail="This simulation has no operator process mode")
+        try:
+            runtime.configure(settings.model_dump())
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        job["operations"] = runtime.snapshot()
+        job["updated_at"] = _utc_now()
+        return job["operations"]
 
 
 @app.get("/api/simulations/{job_id}/faults")
@@ -756,14 +919,17 @@ def list_simulation_faults(job_id: str) -> dict[str, Any]:
         if job is None:
             raise HTTPException(status_code=404, detail="Simulation not found")
         time_s = float(job.get("simulated_time_s", 0.0))
-        events = list(job["fault_registry"].values()) + [
-            payload for command, payload in job["pending_fault_commands"] if command == "add"
+        events = [(event, False) for event in job["fault_registry"].values()] + [
+            (payload, command == "add_relative") for command, payload in job["pending_fault_commands"]
+            if command in {"add", "add_relative"}
         ]
         return {"time_s": time_s, "faults": [
             {"event_id": event.event_id, "kind": event.kind.value, "target": event.target,
-             "start_time_s": event.start_time_s, "end_time_s": event.end_time_s,
-             "active": event.active_at(time_s)}
-            for event in events if event.end_time_s is None or event.end_time_s > time_s
+             "start_time_s": event.start_time_s + (time_s if relative else 0.0),
+             "end_time_s": (event.end_time_s + (time_s if relative else 0.0)
+                            if event.end_time_s is not None else None),
+             "active": not relative and event.active_at(time_s)}
+            for event, relative in events if relative or event.end_time_s is None or event.end_time_s > time_s
         ]}
 
 
@@ -777,14 +943,39 @@ def _invoke_saga(prompt: str, answer_length: str = "concise") -> dict[str, Any]:
 
 def _safe_saga_text(answer: str) -> str:
     """Remove generic calculation requests and claims of a certified radius."""
+    answer = re.sub(r"(?<![A-Za-z0-9_])(?:SENSOR_BASED_(?:PROXY_)?|LLM_PROPOSED_(?:PROXY_)?)HYPOTHESIS(?![A-Za-z0-9_])",
+                    "센서 기준 가정 누출", answer)
+    answer = re.sub(r"(?<![A-Za-z0-9_])ACTIVE_RELEASE_CURRENT_SENSORS(?![A-Za-z0-9_])", "현재 누출", answer)
+    answer = re.sub(r"(?<![A-Za-z0-9_])calculated(?![A-Za-z0-9_])", "계산 완료", answer, flags=re.IGNORECASE)
     unsafe_radius = re.compile(r"(?:안전\s*반경|영향\s*반경).{0,50}(?:확정|보장|안전)|(?:확정|안전).{0,30}(?:안전\s*반경|영향\s*반경)")
     def allowed(line: str) -> bool:
+        if line.lstrip().startswith("※ 일반 대화 모드"):
+            return False
+        if re.search(r"HAZOP|LATCHED|HZ[-‑–]\d+|HY[-‑–]\d+|rule_id|\bDB\b|규칙", line, re.IGNORECASE):
+            return False
+        if any(term in line for term in ("요청되지 않았", "요청하지 않았", "실행되지 않았", "아직 계산되지", "계산 결과를 제공하지")) and any(
+            term in line.lower() for term in ("피해영향", "영향평가", "impact_results", "hyram")
+        ):
+            return False
         compact = re.sub(r"[\s`'\"‘’“”·]", "", line).lower()
         deferred_calculation = (any(term in compact for term in ("피해영향", "hyram", "영향범위"))
             and (bool(re.search(r"(?:계산|평가)(?:이|을|를)?(?:필요|요청|권장|해보|하시|실행)", compact))
                  or ("필요시" in compact and "계산" in compact and "요청" in compact)))
         return not deferred_calculation and not unsafe_radius.search(line)
     return "\n".join(line for line in answer.splitlines() if allowed(line)).strip()
+
+
+def _impact_requested(question: str) -> bool:
+    return any(term in question for term in ("피해", "영향", "누출", "사고 범위", "위험 범위", "시나리오"))
+
+
+def _normal_monitoring_text(answer: str) -> str:
+    """Keep routine, healthy-state answers focused on current operation."""
+    impact_terms = ("피해영향", "영향 반경", "영향반경", "안전반경", "사고 범위", "열복사", "과압",
+                    "가정 누출", "가상 누출", "impact_results", "계산 실패", "입력 부족",
+                    "IntegratorConcurrencyError", "LATCHED", "HY-")
+    lines = [line for line in answer.splitlines() if not any(term.lower() in line.lower() for term in impact_terms)]
+    return "\n".join(lines).strip() or "현재 센서 상태를 확인했습니다. 활성 주의·경보는 없습니다."
 
 
 def _mentioned_hazop_nodes(question: str, catalog: dict[str, Any]) -> list[dict[str, Any]]:
@@ -818,30 +1009,6 @@ def _scenario_requested(request: SagaAnalysisInput) -> bool:
     hypothetical_leak = "누출" in question and any(word in question for word in ("발생했을때", "발생하면", "발생할경우", "가정", "예상", "만약"))
     impact_request = any(word in question for word in ("피해", "영향", "범위", "계산", "평가"))
     return hypothetical_leak and impact_request
-
-
-def _scenario_result_summary(results: list[dict[str, Any]]) -> str:
-    lines = ["**SAGA 제안 시나리오 · 현재 센서 기준 피해영향예측**"]
-    for row in results:
-        label = f"{row.get('scenario_id', '?')} · {row['node_id']} · {row.get('orifice_diameter_mm', 0):g} mm 가정 누출"
-        if row.get("calculation_status") != "calculated":
-            lines.append(f"- {label}: 계산 결과 없음 ({row.get('calculation_status')}; {row.get('reason', '입력 확인 필요')}).")
-            continue
-        extent = row.get("sampled_effect_radius_m")
-        sample_max = float(row.get("sampled_max_distance_m") or 0)
-        range_text = (f"{float(extent):g} m 관측점까지 임계값 초과" if extent
-            else f"{sample_max:g} m까지 표본 관측점에서 임계값 미달")
-        source_label = ("대체 신호" if row.get("sensor_basis") == "PROXY" else "목표 설비 직접 신호")
-        lines.append(
-            f"- {label}: {source_label} · {row['pressure_sensor']}({row.get('pressure_source_node_id', row['node_id'])}) "
-            f"{row['current_pressure_mpa']:.2f} MPa, "
-            f"{row['temperature_sensor']}({row.get('temperature_source_node_id', row['node_id'])}) "
-            f"{row['current_temperature_c']:.1f} °C → "
-            f"누출유량 {float(row.get('mass_flow_g_s') or 0):.2f} g/s, "
-            f"열복사 최대 {float(row.get('maximum_heat_flux_w_m2') or 0):.0f} W/m², "
-            f"과압 최대 {float(row.get('maximum_overpressure_pa') or 0):.0f} Pa; {range_text}.")
-    lines.append("이 결과는 가상 누출의 표본 관측점 계산이며 실제 사고 발생이나 현장 안전반경을 뜻하지 않습니다.")
-    return "\n".join(lines)
 
 
 async def _run_saga_scenario_analysis(
@@ -920,18 +1087,27 @@ async def _run_saga_scenario_analysis(
     except ValueError as exc:
         raise HTTPException(status_code=502, detail=f"SAGA 시나리오 형식 검증 실패: {exc}") from exc
     results = await asyncio.to_thread(assess_sensor_cases, frame, catalog, backend, [], proposals=proposals)
+    calculated_results = [row for row in results if row.get("calculation_status") == "calculated"]
+    if not calculated_results:
+        return {"time_s": frame.get("time_s"), "trigger": request.trigger,
+                "scenario_mode": True, "show_impact_results": False,
+                "answer": "제안한 가상 시나리오의 피해영향예측 수치 결과를 얻지 못했습니다. 현재 운전 중 사고가 발생했다는 뜻은 아닙니다.",
+                "model": plan_reply.get("model", ""), "proposed_scenarios": proposals,
+                "impact_results": [], "active_rule_ids": sorted(rule_ids - {None}),
+                "sensor_count": sensor_count}
     interpretation_context = {"time_s": frame.get("time_s"), "question": request.question,
-                              "proposed_scenarios": proposals, "impact_results": results,
+                              "proposed_scenarios": proposals, "impact_results": calculated_results,
                               "active_hazop": active[:15], "hazop_rules": rules,
                               "scenario_is_hypothetical": True, "process_fault_injected": False}
     interpretation_prompt = (
         "당신이 제안한 가상 누출 시나리오를 서버가 현재 GOOD 품질 센서값으로 피해영향예측 계산했습니다. "
         "아래 실제 계산 결과만 해석하세요. 계산을 다시 권하지 마세요. 사고가 실제 발생했다고 말하지 마세요. "
-        "각 시나리오의 HAZOP 근거와 선택 이유, 센서값, 계산 상태, 열복사·과압, 표본 거리의 차이를 설명하세요. "
+        "계산이 완료된 시나리오의 선택 이유, 센서값, 열복사·과압, 표본 거리의 차이를 설명하세요. "
         "sensor_basis=PROXY이면 대체 센서의 태그와 원래 노드를 밝히고 목표 설비의 직접 계측값으로 표현하지 마세요. "
         "대체 신호로 계산된 경우 누락 입력을 나열하거나 추가 입력을 요구하지 말고 실제 사용한 태그·출처·가정만 밝히세요. "
         "sampled_effect_radius_m은 임계값을 초과한 최원거리 관측점일 뿐, 안전반경이나 최대 사고범위가 아닙니다. "
-        "null이면 범위가 미확정입니다. 계산에 실패했으면 이유를 밝히고 수치를 만들지 마세요. "
+        "null이면 범위가 미확정입니다. 제공되지 않은 시나리오의 수치나 실패 이유를 만들지 마세요. "
+        "내부 분석 방식, HAZOP, 규칙 ID, DB 상태, LATCHED 같은 구현 정보는 사용자에게 밝히지 마세요. 현재 센서와 운전 상태만 자연스럽게 설명하세요. "
         "사용자에게는 엔진 제품명 대신 '피해영향예측'이라고 쓰세요. 한국어 Markdown으로 간결하게 답하세요.\n"
         + json.dumps(interpretation_context, ensure_ascii=False, default=str)[:8200])
     try:
@@ -940,9 +1116,10 @@ async def _run_saga_scenario_analysis(
         raise HTTPException(status_code=503, detail=f"SAGA 계산 결과 해석 실패: {exc}") from exc
     narrative = _safe_saga_text(str(interpretation.get("answer") or ""))
     return {"time_s": frame.get("time_s"), "trigger": request.trigger,
-            "scenario_mode": True, "answer": _scenario_result_summary(results) + ("\n\n" + narrative if narrative else ""),
+            "scenario_mode": True, "show_impact_results": True,
+            "answer": narrative or "제안한 가상 누출의 계산 결과를 아래에서 확인할 수 있습니다.",
             "model": interpretation.get("model", ""), "proposed_scenarios": proposals,
-            "impact_results": results, "active_rule_ids": sorted(rule_ids - {None}),
+            "impact_results": calculated_results, "active_rule_ids": sorted(rule_ids - {None}),
             "sensor_count": sensor_count}
 
 
@@ -978,17 +1155,34 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         if isinstance(value, dict) and (value.get("quality") == "GOOD" or tag.startswith("GD-"))}
     reference_tags = {rule["sensor_id"] for rule in reference_rules}
     releases = hazop.get("releases") or []
-    backend = await asyncio.to_thread(load_hyram_backend)
+    analysis = frame.get("analysis") or _analyze_frame(frame)
+    alert_status = str(analysis.get("status") or "NORMAL")
+    show_impact_results = (alert_status != "NORMAL" or bool(active or releases)
+                           or (request.trigger == "manual" and _impact_requested(request.question)))
     if _scenario_requested(request):
+        backend = await asyncio.to_thread(load_hyram_backend)
         return await _run_saga_scenario_analysis(frame, catalog, backend, request, active,
                                                  mentioned_ids, len(sensor_values))
-    active_nodes = [str(row.get("node_id")) for row in active if isinstance(row, dict) and row.get("node_id")]
-    release_nodes = [node["node_id"] for release in releases if isinstance(release, dict)
-        for node in catalog["nodes"] if node.get("누출_target") == release.get("component_id")]
-    candidates = [node["node_id"] for node in mentioned_nodes] + active_nodes + release_nodes
-    if not candidates:
-        candidates = ["N09", "N13", "N17"]
-    sensor_impacts = await asyncio.to_thread(assess_sensor_cases, frame, catalog, backend, candidates)
+    sensor_impacts = []
+    backend = None
+    if show_impact_results:
+        backend = await asyncio.to_thread(load_hyram_backend)
+        active_nodes = [str(row.get("node_id")) for row in active if isinstance(row, dict) and row.get("node_id")]
+        release_nodes = [node["node_id"] for release in releases if isinstance(release, dict)
+            for node in catalog["nodes"] if node.get("누출_target") == release.get("component_id")]
+        fault_targets = [str(fault).split(":", 1)[1] for fault in (frame.get("active_faults") or [])
+            if isinstance(fault, str) and ":" in fault]
+        fault_node_aliases = {"compressor": ["N06"], "precooler": ["N19"], "pcv": ["N11", "N15"],
+                              "header": ["N10"], "cascade": ["N07", "N08", "N09"],
+                              "supply": ["N01", "N02"], "station": ["N10"]}
+        fault_nodes = [node["node_id"] for target in fault_targets for node in catalog["nodes"]
+            if node.get("누출_target") == target]
+        fault_nodes += [node_id for target in fault_targets for node_id in fault_node_aliases.get(target, [])]
+        candidates = ([node["node_id"] for node in mentioned_nodes] + fault_nodes + release_nodes + active_nodes
+                      if request.trigger == "manual" else fault_nodes + release_nodes + active_nodes)
+        if not candidates:
+            candidates = ["N09", "N13", "N17"]
+        sensor_impacts = await asyncio.to_thread(assess_sensor_cases, frame, catalog, backend, candidates)
     legacy_impacts = [{"release_id": release.get("release_id"),
         "component_id": release.get("component_id"),
         "mass_flow_g_s": release.get("mass_flow_g_s"),
@@ -1003,67 +1197,80 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
             else "관측점의 임계값 초과 거리만 확인; 현장 안전반경 아님")}
         for release in releases[:5] if isinstance(release, dict)]
     assessed_releases = {row.get("release_id") for row in sensor_impacts if row.get("calculation_status") == "calculated"}
-    impact_results = sensor_impacts + [row for row in legacy_impacts if row.get("release_id") not in assessed_releases]
+    impact_results = [row for row in sensor_impacts + [row for row in legacy_impacts
+        if row.get("release_id") not in assessed_releases]
+        if row.get("calculation_status") == "calculated"]
     context = {"station":"H70 reference simulation", "time_s":frame.get("time_s"),
         "impact_results":impact_results,
-        "analysis":frame.get("analysis"), "active_faults":frame.get("active_faults"),
+        "analysis":analysis, "active_faults":frame.get("active_faults"),
+        "relief_valves_open":frame.get("relief_valves_open") or [],
+        "relief_valve_settings":{key: value for key, value in
+            (((frame.get("process_operations") or {}).get("settings") or {}).get("relief_valves") or {}).items()
+            if key in (frame.get("relief_valves_open") or [])},
         "hazop_active":active, "hazop_rules":matched_rules,
         "hazop_reference_rules":reference_rules,
         "reference_sensor_values":{tag: value for tag, value in sensor_values.items() if tag in reference_tags},
         "sensor_values":sensor_values,
         "hazop_nodes":[{"node_id": node["node_id"], "name": node.get("설비_라인")} for node in catalog["nodes"]],
-        "impact_backend_available":bool(getattr(backend,"available",False))}
+        "impact_backend_available":bool(getattr(backend,"available",False)),
+        "current_alert_status":alert_status,
+        "active_hazop_rule_count":len(active)}
     history = "\n".join(f"{turn.role}: {turn.content}" for turn in request.history)[-1800:]
     prompt = ("당신은 H70 수소충전소 운전 분석 보조자입니다. 아래 데이터는 실제 현장 계측이 아닌 시뮬레이터 신호입니다. "
         "HAZOP 센서 임계값과 현재 신호 품질, 물리 누출 및 피해영향예측 계산 상태를 구분하세요. "
-        "impact_results는 이 LLM 호출 직전에 현재 GOOD 품질 압력·온도 센서로 피해영향예측 엔진을 실행한 결과를 우선 포함합니다. "
+        + ("현재 주의·경보에 대응하여 서버가 현재 센서값으로 피해영향예측과 위험도 평가를 자동 수행했습니다. 사용자 요청을 기다리거나 계산을 권하지 마세요. "
+           if alert_status != "NORMAL" else
+           "정상 운전에서는 사용자가 사고 영향을 요청한 경우에만 계산 결과를 설명하세요. 요청하지 않았다면 사고 수치를 언급하지 마세요. ") +
+        "impact_results의 계산 성공 항목만 수치 결과로 설명하세요. "
         "calculation_basis=SENSOR_BASED_HYPOTHESIS는 실제 누출이 아닌 1 mm 가정 시나리오이며, ACTIVE_RELEASE_CURRENT_SENSORS는 현재 물리 누출입니다. 둘을 혼동하지 마세요. "
         "calculation_status=calculated이면 이미 계산된 값입니다. 피해영향 계산이나 엔진 실행을 사용자에게 권하거나 요청하지 마세요. "
-        "calculation_status가 다른 경우에도 재계산을 권하지 말고 reason과 입력 상태만 사실대로 설명하세요. "
+        "계산되지 않은 항목의 입력 부족이나 재계산 요청을 나열하지 마세요. 사용한 센서 태그와 출처·가정은 밝히세요. "
+        "relief_valves_open에 항목이 있으면 안전밸브 개방을 현재 운전 경고로 분명히 알리고, 해당 밸브의 개방 압력·실제 방출 및 이미 계산된 피해영향을 함께 해석하세요. 안전밸브 방출을 임의의 배관 파손으로 단정하지 마세요. "
         "sampled_effect_radius_m이 null이면 표본 관측점에서 기준 미달입니다. 이때 숫자 반경을 만들지 말고 '표본 관측점에서 기준 미달, 영향 반경 미확정'이라고 쓰세요. "
-        "계산 결과가 없으면 사고 범위를 추정값처럼 제시하지 마세요. 제공된 HAZOP 규칙에 없는 규칙 ID나 임계값을 만들지 마세요. "
+        "계산 결과가 없으면 사고 범위를 추정값처럼 제시하지 마세요. 계산이 요청되지 않았다는 문구를 출력하지 마세요. 제공된 HAZOP 규칙에 없는 규칙 ID나 임계값을 만들지 마세요. "
         "사용자에게는 계산기 제품명 대신 '피해영향예측'이라고 표기하세요. "
-        "관련 규칙이 전달되지 않았으면 해당 설비를 물어보세요. 규칙 목록이나 표를 요청받으면 hazop_reference_rules의 실제 rule_id와 임계값을 Markdown 표로 제시하세요. "
-        "현재 경보 여부와 등록 규칙 자체를 구분하세요. 근거 태그와 실제 규칙 ID를 밝히고 한국어로 간결하게 답하세요.\n"
+        "내부 규칙이나 DB 명칭을 밝히지 말고 센서값, 설비 상태, 주의 원인과 운전 조치만 설명하세요. "
+        "current_alert_status와 안전밸브 개방 상태가 현재 경보 상태의 근거입니다. 활성 내부 규칙이 없더라도 안전밸브가 열려 있으면 경보를 유지하세요. "
+        "현재 경보 여부와 내부 등록 기준을 구분하세요. 사용자에게는 실제 센서 태그와 운전 상태만 한국어로 간결하게 답하세요. "
+        "정상 운전이며 사용자가 피해영향을 요청하지 않았다면 계산값은 내부 판단에만 사용하고 답변에 피해영향 수치·가정 누출 결과를 쓰지 마세요.\n"
         f"요청 유형: {request.trigger}\n이전 대화(현재 센서보다 우선하지 않음):\n{history}\n"
         f"운전자 질문: {request.question}\n현재 데이터 및 HAZOP DB 발췌:\n"
         + json.dumps(context, ensure_ascii=False, default=str)[:7500])[:9900]
     try:
         reply = await asyncio.to_thread(_invoke_saga, prompt)
     except (URLError, HTTPError, TimeoutError, OSError) as exc:
-        raise HTTPException(status_code=503, detail=f"SAGA 연결/분석 실패: {exc}") from exc
+        if alert_status == "NORMAL":
+            raise HTTPException(status_code=503, detail=f"SAGA 연결/분석 실패: {exc}") from exc
+        severity_name = {"CRITICAL": "긴급", "WARNING": "경고", "ADVISORY": "주의"}.get(alert_status, alert_status)
+        findings = [str(item) for item in (analysis.get("findings") or [])[:3]]
+        fallback = [f"현재 위험도: **{severity_name}** (현재 센서·설비 신호 기준)"]
+        fallback.extend(f"- {item}" for item in findings)
+        if impact_results:
+            fallback.append(f"현재 센서 기준 피해영향예측 **{len(impact_results)}건**의 계산값을 아래에 표시합니다.")
+        else:
+            fallback.append("피해영향 수치가 확정되지 않아 정량 범위를 제시하지 않습니다.")
+        reply = {"answer": "\n".join(fallback), "model": "센서 기반 위험 분석"}
     answer = str(reply.get("answer") or "")
     answer = _safe_saga_text(answer)
-    calculated = [row for row in sensor_impacts if row.get("calculation_status") == "calculated"]
-    if calculated and (request.trigger != "manual" or any(term in request.question for term in ("피해", "영향", "위험", "사고", "누출"))):
-        impact_lines = ["**현재 센서 기준 피해영향예측 · 표본 계산**"]
-        for row in calculated[:3 if request.trigger == "alarm" else 1]:
-            actual = row["calculation_basis"] == "ACTIVE_RELEASE_CURRENT_SENSORS"
-            basis = "활성 누출" if actual else f"{row['orifice_diameter_mm']:g} mm 가정 누출(실제 누출 아님)"
-            extent = row.get("sampled_effect_radius_m")
-            sample_max = row.get("sampled_max_distance_m")
-            range_text = (f"{float(extent):g} m 관측점까지 임계값 초과" if extent
-                else f"{float(sample_max or 0):g} m까지 표본 관측점에서 임계값 미달")
-            impact_lines.append(
-                f"- {row['node_id']} · {row['pressure_sensor']} {row['current_pressure_mpa']:.2f} MPa · "
-                f"{row['temperature_sensor']} {row['current_temperature_c']:.1f} °C · {basis}: "
-                f"열복사 최대 {float(row.get('maximum_heat_flux_w_m2') or 0):.0f} W/m², "
-                f"과압 최대 {float(row.get('maximum_overpressure_pa') or 0):.0f} Pa; {range_text}. "
-                "관측점 결과이며 현장 안전반경은 확정할 수 없습니다.")
-        answer = "\n".join(impact_lines) + ("\n\n" + answer if answer else "")
+    if alert_status != "NORMAL":
+        answer = "\n".join(line for line in answer.splitlines()
+            if not re.search(r"(?:현재\s*(?:운전\s*)?상태는\s*정상|현재\s*운전은\s*정상|정상\s*운전\s*중|경보는\s*없)", line))
+    if not show_impact_results:
+        answer = _normal_monitoring_text(answer)
     if not answer:
-        calculated = [row for row in impact_results if row.get("calculation_status") == "calculated"]
-        answer = ("현재 센서 기준 피해영향예측 결과가 있습니다. "
-            + ", ".join(f"{row.get('node_id') or row.get('component_id')}: {float(row.get('mass_flow_g_s') or 0):.2f} g/s"
-                for row in calculated[:3])) if calculated else "현재 센서와 계산 상태를 확인했습니다. 피해영향 결과는 제공되지 않았습니다."
+        answer = "현재 센서와 설비 상태를 확인했습니다. 계산 결과는 아래에서 확인할 수 있습니다." if show_impact_results else "현재 센서와 설비 상태를 확인했습니다."
     return {"time_s":frame.get("time_s"), "trigger":request.trigger,
         "answer":answer, "model":reply.get("model", ""),
         "active_rule_ids":sorted(ids), "sensor_count":len(sensor_values),
+        "risk_assessment":{"status":alert_status, "score":analysis.get("score"),
+                           "findings":analysis.get("findings") or [],
+                           "calculated_impact_count":len(impact_results)},
+        "show_impact_results":show_impact_results,
         "impact_results":impact_results}
 
 
 @app.post("/api/simulations/{job_id}/faults", status_code=202)
-def add_simulation_fault(job_id: str, fault: FaultInput) -> dict[str, Any]:
+def add_simulation_fault(job_id: str, fault: FaultInput, relative: bool = False) -> dict[str, Any]:
     event = fault.to_event()
     with _jobs_lock:
         job = _jobs.get(job_id)
@@ -1072,11 +1279,11 @@ def add_simulation_fault(job_id: str, fault: FaultInput) -> dict[str, Any]:
         if job["status"] not in {"queued", "running"} or job.get("stop_requested"):
             raise HTTPException(status_code=409, detail="Simulation is not running")
         if event.event_id in job["fault_registry"] or any(
-            command == "add" and payload.event_id == event.event_id
+            command in {"add", "add_relative"} and payload.event_id == event.event_id
             for command, payload in job["pending_fault_commands"]
         ):
             raise HTTPException(status_code=409, detail="Fault event ID already exists")
-        job["pending_fault_commands"].append(("add", event))
+        job["pending_fault_commands"].append(("add_relative" if relative else "add", event))
         job["updated_at"] = _utc_now()
         return {"event_id": event.event_id, "status": "queued", "simulated_time_s": job["simulated_time_s"]}
 
@@ -1090,7 +1297,7 @@ def remove_simulation_fault(job_id: str, event_id: str) -> dict[str, Any]:
         if job["status"] not in {"queued", "running"}:
             raise HTTPException(status_code=409, detail="Simulation is not running")
         exists = event_id in job["fault_registry"] or any(
-            command == "add" and payload.event_id == event_id
+            command in {"add", "add_relative"} and payload.event_id == event_id
             for command, payload in job["pending_fault_commands"]
         )
         if not exists:
@@ -1145,7 +1352,7 @@ async def simulation_stream(websocket: WebSocket, job_id: str) -> None:
                 status = {
                     key: value
                     for key, value in job.items()
-                    if key not in {"result", "frames", "hazop_detail", "pending_fault_commands", "fault_registry"}
+                    if key not in {"result", "frames", "hazop_detail", "pending_fault_commands", "fault_registry", "_simulation_clock"}
                 }
 
             signature = (

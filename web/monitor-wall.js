@@ -19,7 +19,9 @@
     const fullscreen=make('button','wall-fullscreen','⛶ <span>전체 모니터</span>');fullscreen.id='wallFullscreen';fullscreen.type='button';right.append(fullscreen);
     fullscreen.addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{window.notifyOperator?.('브라우저 전체화면(F11)을 사용하세요. 화면 맞춤은 자동 유지됩니다.');}});
     document.addEventListener('fullscreenchange',()=>{const active=document.fullscreenElement===document.documentElement;fullscreen.querySelector('span').textContent=active?'전체 모니터 종료':'전체 모니터';fullscreen.setAttribute('aria-pressed',String(active));});
-    const overview=make('section','wall-overview','<div class="wall-connection"></div><div><span>총 충전 유량</span><b id="wallFlow">—</b><small>g/s</small></div><div><span>모의 시간</span><b id="wallTime">—</b><small>s</small></div><div><span>가스 최대</span><b id="wallGas">—</b><small>vol%</small></div><div><span>안전 PLC</span><b id="wallEsd">대기</b></div><div><span>활성 사고</span><b id="wallFaults">—</b></div>');
+    const processes=[['trailer_supply','트레일러 공급'],['pressure_recharge','압력 보완'],['vehicle_1','차량 1 충전'],['vehicle_2','차량 2 충전']];
+    const processRail=processes.map(([key,label])=>`<div class="wall-process-chip" data-wall-process="${key}" data-state="off"><span>${label}</span><b>정지</b></div>`).join('');
+    const overview=make('section','wall-overview',`<div class="wall-connection"></div><div class="wall-process-rail" aria-label="공정별 실시간 상태">${processRail}</div><div><span>가스 최대</span><b id="wallGas">—</b><small>vol%</small></div><div><span>안전 PLC</span><b id="wallEsd">대기</b></div><div><span>활성 사고</span><b id="wallFaults">—</b></div>`);
     overview.firstElementChild.append(document.querySelector('.side-nav-live'),$('connectionStatus'));overview.append($('systemBadge'));
     const footer=document.querySelector('body > footer');footer.classList.add('wall-footer');
     board.append(header,overview,panel,footer);
@@ -37,10 +39,10 @@
     const process=make('section','wall-card wall-machinery','<header><h2>압축기 · 프리쿨러</h2><span>실시간 공정</span></header><div class="wall-process-values"><div><small>압축기 운전</small><b id="wallCompressor">대기</b></div><div><small>재충전 뱅크</small><b id="wallRecharge">—</b></div><div><small>냉각 출구 1 / 2 · °C</small><b id="wallCooler">— / —</b></div></div>');
     const dispensers=make('section','wall-card wall-dispensers','<header><h2>디스펜서</h2><span>DUAL H70</span></header><div class="wall-dispenser-grid">'+[1,2].map(n=>`<article><header><span>0${n} <b>차량 ${n}</b></span><small id="wallDispStatus${n}">대기</small></header><div class="wall-pressure"><b id="wallPressure${n}">—</b><small>MPa</small></div><div class="wall-disp-secondary"><span><b id="wallTemp${n}">—</b> °C</span><span><b id="wallDispFlow${n}">—</b> g/s</span></div><div class="wall-soc"><div class="wall-bar"><i id="wallSocBar${n}"></i></div><span id="wallSoc${n}">—</span><small>% SOC</small></div></article>`).join('')+'</div>');
     const gas=make('section','wall-card wall-gas','<header><h2>가스 감시 · 안전 계통</h2><span>가상 검지 · 모델 추정</span></header>');gas.append(detectors);gas.insertAdjacentHTML('beforeend','<div class="wall-gas-foot"><span>유효 신호 <b id="wallDetectorCount">— / 15</b></span><button type="button" data-nav="sensors">센서 전체 ↗</button></div>');
-    const incident=make('button','wall-incident','<b id="wallAlertTitle">주의 · 경보 확인</b><span id="wallAlertText">설비 신호를 확인하세요.</span><small>클릭하여 HAZOP · 피해영향예측 분석 보기 ↗</small>');incident.id='wallIncident';incident.type='button';incident.dataset.nav='hazop';incident.hidden=true;
-    const saga=make('section','wall-saga-chat');saga.id='wallSagaChat';saga.setAttribute('aria-label','SAGA 센서·HAZOP 채팅');
+    const incident=make('button','wall-incident','<b id="wallAlertTitle">주의 · 경보 확인</b><span id="wallAlertText">설비 신호를 확인하세요.</span><small>클릭하여 센서·피해영향예측 분석 보기 ↗</small>');incident.id='wallIncident';incident.type='button';incident.dataset.nav='hazop';incident.hidden=true;
+    const saga=make('section','wall-saga-chat');saga.id='wallSagaChat';saga.setAttribute('aria-label','SAGA 센서·설비 채팅');
     sidebar.replaceChildren(analysis,storage,process,dispensers,gas,incident,saga);
-    analysis.tabIndex=0;analysis.setAttribute('role','button');analysis.setAttribute('aria-label','현재 경보와 HAZOP 분석 보기');analysis.addEventListener('click',()=>document.querySelector('[data-nav="alarms"]')?.click());analysis.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();analysis.click();}});
+    analysis.tabIndex=0;analysis.setAttribute('role','button');analysis.setAttribute('aria-label','현재 경보와 센서 분석 보기');analysis.addEventListener('click',()=>document.querySelector('[data-nav="alarms"]')?.click());analysis.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();analysis.click();}});
     // Stop controls belong to the remote; the overview remains read-only.
     selection.setAttribute('aria-label','선택 설비 정보');surface.setAttribute('aria-label','3D와 공정 흐름 공통 화면');
     window.addEventListener('station-frame',render);window.addEventListener('wall-resize',drawTrends);render();fit();
@@ -50,7 +52,15 @@
     if(!$('wallBoard'))return;
     const runtime=window.getStation3DState?.(),s=runtime?.result?.series,i=runtime?.index??0,has=Boolean(s?.time_s?.length),at=k=>has?s[k]?.[i]:undefined;
     const put=(id,v)=>$(id).textContent=v,esd=at('esd'),faults=at('active_faults')||[];
-    put('wallFlow',number(at('nozzle_flow_g_s')));put('wallTime',number(at('time_s')));put('wallEsd',has?(esd?'차단 / ESD':'대기 / READY'):'대기');put('wallFaults',has?`${faults.length}건`:'—');
+    put('wallEsd',has?(esd?'차단 / ESD':'대기 / READY'):'대기');put('wallFaults',has?`${faults.length}건`:'—');
+    const activities=at('process_activity')||runtime?.lastFrame?.process_activity||{},settings=at('process_operations')?.settings||runtime?.lastFrame?.process_operations?.settings||{};
+    for(const key of ['trailer_supply','pressure_recharge','vehicle_1','vehicle_2']){
+      const chip=document.querySelector(`[data-wall-process="${key}"]`),activity=activities[key],requested=Boolean(settings[key]);
+      const state=activity?.state||(!has?'off':requested?'pending':'off');
+      chip.dataset.state=state;
+      chip.querySelector('b').textContent=state==='flowing'?`${number(Number(activity.flow_g_s),1)} g/s`:state==='waiting'?'흐름 대기':state==='blocked'?'안전 차단':state==='auto-stopped'?'자동 종료':state==='pending'?'요청 반영 중':'정지';
+      chip.title=activity?.reason?`${key} · ${activity.reason}`:'';
+    }
     const detectorValues=at('gas_detectors')||{},ds=Object.values(detectorValues).filter(d=>d?.quality==='GOOD'&&Number.isFinite(d.value));put('wallGas',number(ds.length?Math.max(...ds.map(d=>d.value)):undefined,2));put('wallDetectorCount',`${ds.length} / ${Math.max(15,Object.keys(detectorValues).length)}`);
     for(const key of ['high','medium','low']){const v=has?s.bank_pressure_mpa?.[key]?.[i]:undefined;put(`wallBank-${key}`,number(v));put(`wallBankState-${key}`,!has?'미수신':at('recharge_bank')===key?'재충전':at('dispatch_bank')===key||at('dispatch_bank_2')===key?'토출 중':'대기');$(`wallBankBar-${key}`).style.width=`${Math.min(100,Math.max(0,(v||0)/100*100))}%`;}
     put('wallCompressor',has?(at('recharge_bank')?'재충전 중':'대기'):'미수신');put('wallRecharge',at('recharge_bank')?.toUpperCase()||'—');

@@ -115,16 +115,20 @@ class SampledFuelingController:
         self._initial_pressure_pa = initial_pressure_pa
         self._integral_error_pa_s = 0.0
 
-    def update(self, observation: FuelingObservation, sample_period_s: float) -> FuelingCommand:
+    def reset(self) -> None:
+        """Return the controller to idle before a separate operator fill request."""
+        self._phase = FuelingPhase.IDLE
+        self._integral_error_pa_s = 0.0
+
+    def update(self, observation: FuelingObservation, sample_period_s: float,
+               *, auto_stop: bool = True, target_pressure_pa: float | None = None) -> FuelingCommand:
         if self._phase is FuelingPhase.IDLE:
             self.start(observation.time_s, observation.pressure_pa)
 
         elapsed_s = max(0.0, observation.time_s - self._start_time_s)
-        reference_pressure_pa = min(
-            self.schedule.target_pressure_pa,
-            self._initial_pressure_pa
-            + self.schedule.average_pressure_ramp_rate_pa_s * elapsed_s,
-        )
+        target = target_pressure_pa or self.schedule.target_pressure_pa
+        ramp_reference = self._initial_pressure_pa + self.schedule.average_pressure_ramp_rate_pa_s * elapsed_s
+        reference_pressure_pa = min(target, ramp_reference) if auto_stop else min(110e6, ramp_reference)
         soc = self.soc_model.calculate(observation.density_kg_m3)
 
         if observation.temperature_k >= self.schedule.maximum_gas_temperature_k:
@@ -132,10 +136,10 @@ class SampledFuelingController:
             return self._stopped_command(reference_pressure_pa, soc, "gas-temperature-limit")
 
         pressure_complete = observation.pressure_pa >= (
-            self.schedule.target_pressure_pa
+            target
             - self.parameters.completion_pressure_tolerance_pa
         )
-        if pressure_complete or soc >= self.schedule.target_soc:
+        if auto_stop and (pressure_complete or soc >= self.schedule.target_soc):
             self._phase = FuelingPhase.COMPLETE
             reason = "target-pressure" if pressure_complete else "target-soc"
             return self._stopped_command(reference_pressure_pa, soc, reason)

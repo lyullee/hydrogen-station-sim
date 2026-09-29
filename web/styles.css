@@ -39,10 +39,12 @@ body>footer{display:flex;gap:20px;padding:0 20px 6px;color:#54677d;font:8px Cons
 .impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.impact-grid article{padding:6px;background:#151f2b;border:1px solid var(--line);border-radius:4px}.impact-grid small{display:block;font-size:9px}.impact-grid strong{font:600 15px "Segoe UI",sans-serif}.impact-grid em{font-size:9px}
 .monitor-cctv{display:none}.s3-incidents{display:grid;gap:9px}.s3-incidents:has(>[hidden]):not(:has(>:not([hidden]))){display:none}
 .process{width:100%;height:100%;padding:12px;display:flex;flex-direction:column;justify-content:center;background:#0e1926;border:0}
-.process>.section-heading{display:none}.flow-map{display:grid;grid-template-columns:1fr .25fr 1.2fr .25fr .9fr .25fr 1fr .25fr 1.1fr;align-items:center;gap:0}
+.process>.section-heading{display:none}.flow-map{display:grid;grid-template-columns:1.05fr .17fr 1fr .17fr 1.14fr .17fr .78fr .17fr .95fr .17fr 1fr;align-items:center;gap:0}
 .unit,.bank{cursor:pointer;background:#19293c;border:1px solid #3b5269;padding:10px;display:flex;flex-direction:column;align-items:center;gap:8px;border-radius:8px;min-height:100px;justify-content:center}
 .unit span,.bank span{font:9px Consolas,monospace;color:var(--muted)}.unit b{font-size:13px}.unit small,.bank small{font-size:9px}.bank-stack{display:grid;gap:10px}.bank{min-height:0;flex-direction:row;gap:4px;padding:10px 8px}.bank b{font:600 17px Consolas,monospace}.bank.active,.unit.active{border-color:var(--cyan);background:#183d38}.unit.trip{border-color:var(--red)}
 .pipe{height:3px;background:#354d60;overflow:hidden}.pipe i{display:block;height:100%;width:50%;background:var(--cyan);opacity:0}.flowing i{opacity:1;animation:flow 1s linear infinite}@keyframes flow{from{transform:translateX(-100%)}to{transform:translateX(200%)}}
+.flow-map .unit.requested,.flow-map .bank.requested{border-color:#c99c55;box-shadow:inset 0 0 0 1px #c99c5560}.flow-map .pipe.requested{background:#ad8b55}.flow-map .supply small{font-variant-numeric:tabular-nums}
+.flow-map .bank.recharging{border-color:#6fbcc6;background:#214b57}.flow-map .bank.recharging:after{content:'↑ 보충';font-size:9px;color:#a7e7df;white-space:nowrap}
 .flow-status{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:40px}.flow-status span{padding:5px 8px;background:#172737;border-radius:4px;color:var(--muted);font-size:10px}.flow-status .danger{color:var(--red)}
 dialog{color:var(--ink);border:1px solid #375069;background:#111e2d;border-radius:12px;padding:20px;width:min(800px,calc(100vw - 32px));max-height:90dvh;overflow:auto}
 dialog::backdrop{background:#040b15ba;backdrop-filter:blur(4px)}

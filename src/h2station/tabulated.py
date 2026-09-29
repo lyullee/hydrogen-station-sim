@@ -113,6 +113,32 @@ class HydrogenPropertyTable:
             self._temperature_from_pt_property(pressure, entropy, "entropy"),
         )
 
+    def flow_properties_ps(self, pressure: float, entropy: float) -> tuple[float, float]:
+        """Return density and enthalpy on an isentrope without building a full state.
+
+        Restrictions evaluate this pair repeatedly while locating a choking
+        point. The general state lookup interpolates every property, most of
+        which the flow equation never uses.
+        """
+        ip, wp = self._bracket(self._log_pressure_grid, np.log(pressure), "pressure")
+        entropy_rows = self.pt["entropy"]
+        entropy_curve = entropy_rows[ip] * (1.0 - wp) + entropy_rows[ip + 1] * wp
+        if entropy < entropy_curve[0] or entropy > entropy_curve[-1]:
+            raise ThermoDomainError(
+                f"Hydrogen table entropy={entropy:g} is outside the available "
+                f"range at P={pressure:g} Pa"
+            )
+        temperature = float(np.interp(entropy, entropy_curve, self.temperature_grid))
+        it, wt = self._bracket(self.temperature_grid, temperature, "temperature")
+
+        def value(name: str) -> float:
+            data = self.pt[name]
+            low = data[ip, it] * (1.0 - wt) + data[ip, it + 1] * wt
+            high = data[ip + 1, it] * (1.0 - wt) + data[ip + 1, it + 1] * wt
+            return float(low * (1.0 - wp) + high * wp)
+
+        return value("density"), value("enthalpy")
+
     @lru_cache(maxsize=4096)
     def state_ph(self, pressure: float, enthalpy: float) -> ThermoState:
         return self.state_pt(

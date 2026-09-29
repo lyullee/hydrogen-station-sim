@@ -6,7 +6,7 @@ model, API, and monitoring interface.
 
 ## Implemented system
 
-- CoolProp real-gas hydrogen properties
+- CoolProp-generated hydrogen property table (runtime lookup; no CoolProp calls in the process solver)
 - Storage mass, energy, and wall-temperature dynamics
 - Three-stage compressor with intercooling and electrical power
 - Three-bank cascade dispatch and recharge
@@ -23,6 +23,11 @@ model, API, and monitoring interface.
 
 Internal units are SI. The API accepts MPa, degrees Celsius, g/s, and millimetres and
 converts them at the boundary.
+
+The process solver reads `src/h2station/data/hydrogen_properties_v1.npz`, generated
+offline by `scripts/generate_hydrogen_table.py`. PCV/nozzle/release choking uses a
+small critical-pressure lookup derived from that same table; unusual pressures or
+temperatures outside its operating grid fall back to direct table-based search.
 
 ## Installation
 
@@ -61,6 +66,43 @@ the vent channels use an assumed ambient boundary until a release is injected.
 Each API signal includes an `origin`, while `/api/hazop/mapping` reports its binding
 and still reports zero physical sensor connections. Site telemetry should replace
 these proxies before operational use.
+
+## Operator process control
+
+Open `/remote.html` and start continuous monitoring. The trailer supply, storage-bank
+recharge, and each of the two vehicle fills begin **off**. The process inventories
+remain unchanged while no command or fault is active. Each path can be started or
+stopped independently during a running simulation. Bank recharge transfers hydrogen
+only when both trailer supply and pressure recharge are requested; vehicle fills
+draw from the cascade banks independently of those requests.
+
+The remote offers 1×, 10×, and 100× target speeds for continuous monitoring and
+allows switching during a run. This changes wall-clock pacing without enlarging
+the physical solver step. The remote shows both the selected target and measured
+speed; a computation-bound run may stay below its target. Accident delays entered
+during a run are anchored at the solver step that accepts the command.
+
+The remote exposes example, editable capacities: finite trailer inventory and its
+initial pressure and temperature, transfer limits for supply and recharge, and
+vehicle-tank mass limits. Each limit has its own automatic-stop switch. The trailer
+pressure falls as compressor transfer removes mass; its fixed volume and isothermal
+temperature are explicit reference-model assumptions. The normal pressure/SOC and
+safety-PLC stop logic still applies when a capacity switch is off.
+
+Seven virtual relief valves cover the three storage banks, two dispenser hoses,
+and two vehicle tanks. Their enable switches, opening and closing pressures, and
+orifice sizes are adjustable during a run. A valve stays open until pressure
+falls to its closing setting; close opening/closing settings reproduce sampled
+chatter. Relief mass flow is deducted from the corresponding inventory and enters
+the same leak, detector, HAZOP, and consequence pipeline as other releases. These
+settings are simulation inputs, not certified relief-valve sizing values.
+
+The remote shows command acknowledgement separately from actual flow, including
+why a requested path is waiting or blocked. It also displays wall-clock lag and
+simulation speed. Operator-mode integration uses SciPy LSODA, while the legacy
+batch API retains BDF. Continuous operator monitoring paces successful solves to
+wall time; if a step takes longer than real time, the solver keeps all physical
+steps and reports the accumulated lag instead of silently skipping them.
 
 ## HyRAM configuration
 

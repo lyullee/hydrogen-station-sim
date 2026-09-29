@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import wraps
 from importlib import import_module
 from typing import Any
 
 import numpy as np
 
 from ..thermo import ThermoState
+from ..integration_lock import nonreentrant_integrator_lock
 
 
 class HyRAMNotInstalledError(ImportError):
@@ -83,6 +85,14 @@ def _as_float_tuple(values: Any) -> tuple[float, ...]:
     return tuple(float(value) for value in np.asarray(values).reshape(-1))
 
 
+def _serialized_native_physics(method):
+    @wraps(method)
+    def wrapped(*args, **kwargs):
+        with nonreentrant_integrator_lock:
+            return method(*args, **kwargs)
+    return wrapped
+
+
 class HyRAMRiskMonitor:
     """Runs HyRAM consequence models no faster than a configured sample period."""
 
@@ -127,6 +137,7 @@ class HyRAMRiskMonitor:
         self._last_snapshot = snapshot
         return snapshot
 
+    @_serialized_native_physics
     def evaluate(
         self,
         simulation_time: float,
@@ -212,6 +223,7 @@ class HyRAMRiskMonitor:
             radiant_fraction=radiant_fraction,
         )
 
+    @_serialized_native_physics
     def analyze_indoor(
         self,
         release_state: ThermoState,
@@ -265,6 +277,7 @@ class HyRAMRiskMonitor:
         )
 
     @staticmethod
+    @_serialized_native_physics
     def conduct_qra(**parameters: Any) -> dict[str, Any]:
         """Pass a reviewed design-level input set to HyRAM's QRA entry point."""
         try:

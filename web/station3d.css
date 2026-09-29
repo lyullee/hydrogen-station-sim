@@ -37,7 +37,7 @@
 .s3-camera-marker:hover,.s3-camera-marker:focus-visible{background:#1b5c54;z-index:6}.s3-camera-marker b{font:9px Consolas,monospace}.s3-camera-marker small{display:none}.s3-camera-icon{display:grid;place-items:center;width:20px;height:20px;background:#70dbca;color:#102c35;border-radius:50%}
 .s3-camera-icon svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linejoin:round}
 .s3-cctv-dialog{width:min(960px,calc(100vw - 36px));padding:0}.s3-cctv-dialog-shell{margin:0}.s3-cctv-dialog-shell>header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)}.s3-cctv-dialog h3{font-size:18px;margin-top:5px}
-.s3-cctv-dialog-body{padding:16px}.s3-cctv-dialog-body>img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;max-height:63dvh;border-radius:6px}
+.s3-cctv-dialog-body{padding:16px}.s3-cctv-dialog-body>img{display:block;width:100%;height:auto;max-height:63dvh;object-fit:contain;background:#10252d;border-radius:6px}
 .s3-cctv-dialog-meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}.s3-cctv-dialog-meta b{font-size:12px}.s3-cctv-dialog-meta span{font-size:11px;color:var(--cyan)}.s3-cctv-dialog-meta small{flex-basis:100%;font-size:10px}.s3-cctv-dialog-meta select{font-size:11px}
 .s3-cctv-dialog[data-state=fire] #s3CctvDialogState,.s3-cctv-dialog[data-state=leak] #s3CctvDialogState{color:var(--red)}.s3-cctv-dialog[data-state=fire],.s3-cctv-dialog[data-state=leak]{border-color:var(--red)}
 .s3-stage-exit{position:absolute;top:12px;right:12px;z-index:10;background:#12283dec;color:#fff;font-size:11px}

@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>H2 Station Dynamics</title>
-  <link rel="stylesheet" href="/styles.css?v=20260925-ui2">
+  <title>수소충전소 운영관제 | H₂ Station</title>
+  <link rel="stylesheet" href="/styles.css?v=20260928-flowtarget1">
 </head>
 <body class="control-room-app">
   <div class="grain"></div>
   <header class="masthead">
     <div>
-      <p class="eyebrow">H70 / DIGITAL TWIN</p>
-      <h1>H₂ Station <span>운영 관제</span></h1>
+      <p class="eyebrow">H70 · DIGITAL TWIN</p>
+      <h1>수소충전소 <span>운영관제 시스템</span></h1>
     </div>
     <div class="masthead-right">
-      <div class="masthead-context"><span id="wallClock">--:--:--</span><b>SIMULATION CONTROL ROOM</b></div>
+        <div class="masthead-context"><span id="wallClock">--:--:--</span><b>LIVE OPERATIONS</b></div>
       <div class="system-badge" id="systemBadge">
         <i></i><span>시스템 확인 중</span>
       </div>
@@ -60,30 +60,32 @@
         <div class="process-heading-tools"><div class="view-switcher process-view-switch" aria-label="모니터 뷰 전환"><button type="button" data-panel-view="3d">3D</button><button type="button" data-panel-view="flow" class="selected">공정 흐름</button></div><div class="playback"><button id="playButton">재생</button><input id="timeline" type="range" min="0" max="0" value="0"><output id="timeOutput">0.0 s</output></div></div>
       </div>
       <div class="flow-map">
+        <div class="unit supply" id="supplyUnit"><span>GH₂ SOURCE</span><b>튜브트레일러</b><small id="supplyFlowLabel">공급 대기</small></div>
+        <div class="pipe p0 supply-line"><i></i></div>
         <div class="unit compressor" id="compressorUnit"><span>3 STAGE</span><b>압축기</b><small>중간냉각</small></div>
-        <div class="pipe p1"><i></i></div>
+        <div class="pipe p1 recharge-line"><i></i></div>
         <div class="bank-stack">
           <div class="bank high" data-bank="high"><span>HIGH</span><b id="bankHigh">90.0</b><small>MPa</small></div>
           <div class="bank medium" data-bank="medium"><span>MID</span><b id="bankMedium">65.0</b><small>MPa</small></div>
           <div class="bank low" data-bank="low"><span>LOW</span><b id="bankLow">45.0</b><small>MPa</small></div>
         </div>
-        <div class="pipe p2"><i></i></div>
+        <div class="pipe p2 dispense-line"><i></i></div>
         <div class="unit pcv" id="pcvUnit"><span>CONTROL</span><b>PCV</b><small id="flowLabel">0.0 g/s</small></div>
-        <div class="pipe p3"><i></i></div>
+        <div class="pipe p3 dispense-line"><i></i></div>
         <div class="unit cooler" id="coolerUnit"><span>THERMAL</span><b>프리쿨러</b><small>−40 °C 목표</small></div>
-        <div class="pipe p4"><i></i></div>
+        <div class="pipe p4 dispense-line"><i></i></div>
         <div class="unit vehicle" id="vehicleUnit"><span>DUAL H70</span><b>차량 1 · 2</b><small id="flowSplitLabel">1번 0.0 / 2번 0.0 g/s</small></div>
       </div>
       <div class="flow-status"><span id="dispatchStatus">토출 뱅크 없음</span><span id="rechargeStatus">압축기 대기</span><span id="leakStatus">누출 없음</span></div>
     </section>
 
-    <section class="panel hazop-panel" id="hazopPanel" hidden aria-label="센서 기반 HAZOP">
-      <div class="section-heading"><div><span class="section-number">03</span><h2>센서 기반 HAZOP</h2></div><span id="hazopCatalogStatus">DB 확인 중</span></div>
+    <section class="panel hazop-panel" id="hazopPanel" hidden aria-label="센서 기반 안전 분석">
+      <div class="section-heading"><div><span class="section-number">03</span><h2>센서 기반 안전 분석</h2></div><span id="hazopCatalogStatus">센서 확인 중</span></div>
       <p class="hazop-description">센서 수치와 운전 상태로 사고 후보를 판정합니다. 모델에 없는 입력은 판정불가로 표시합니다.</p>
       <div class="hazop-metrics" id="hazopMetrics">시뮬레이션 대기</div>
       <div class="hazop-alerts" id="hazopAlerts"><p class="empty">실시간 판정 결과가 여기에 표시됩니다.</p></div>
       <details><summary>센서 매핑과 미연결 항목</summary><div class="hazop-table-wrap"><table class="hazop-table"><thead><tr><th>센서</th><th>상태</th><th>연결 근거</th></tr></thead><tbody id="hazopMapping"></tbody></table></div></details>
-      <p class="hazop-description">이 DB의 TRIP은 시뮬레이션 진단 후보입니다. 기존 안전 PLC의 차단 판단과 구분합니다.</p>
+      <p class="hazop-description">표시된 분석은 가상 센서와 공정 상태를 기반으로 합니다. 안전 PLC의 실제 차단 상태도 함께 확인하세요.</p>
     </section>
 
     <section class="panel impact-panel" id="impactPanel" hidden aria-label="사고 영향">
@@ -107,7 +109,7 @@
     </main>
   </div>
 
-  <footer><span>H2 property table · CoolProp reference</span><span>SciPy BDF integration</span><span id="footerHyram">피해영향예측 확인 중</span></footer>
+  <footer><span>H2 property table · CoolProp reference</span><span>SciPy LSODA / BDF integration</span><span id="footerHyram">피해영향예측 확인 중</span></footer>
   <dialog class="calculation-monitor" id="calculationMonitor">
     <div class="monitor-head">
       <div><small>LIVE SOLVER TELEMETRY</small><h2>계산 모니터</h2></div>
@@ -130,16 +132,17 @@
 
   <dialog id="workspaceDialog" class="workspace-dialog"><header><h2 id="workspaceDialogTitle"></h2><button id="workspaceDialogClose" type="button" aria-label="상세 화면 닫기">닫기 ×</button></header><div id="workspaceDialogBody"></div></dialog>
   <div id="toast" class="toast" role="status" hidden></div>
-  <script src="/app.js?v=20260928-impact2"></script>
-  <script src="/dashboard.js?v=20260928-siteonly1"></script>
+  <script src="/app.js?v=20260929-speed1"></script>
+  <script src="/dashboard.js?v=20260928-flowtarget1"></script>
   <script src="/vendor/markdown/marked.umd.js"></script>
   <script src="/vendor/markdown/purify.min.js"></script>
-  <script src="/saga-bridge.js?v=20260928-impact2"></script>
-  <link rel="stylesheet" href="/station3d.css?v=20260925-ui2">
+  <script src="/saga-bridge.js?v=20260929-periodic-off-fix"></script>
+  <link rel="stylesheet" href="/station3d.css?v=20260929-alarmcctv1">
   <script>window.getStation3DState = () => state;</script>
-  <link rel="stylesheet" href="/monitor-wall.css?v=20260928-siteonly1">
-  <script src="/monitor-wall.js?v=20260928-siteonly1"></script>
-  <script src="/node-monitor.js?v=20260928-1"></script>
-  <script type="module" src="/station3d.js?v=20260928-siteonly1"></script>
+  <link rel="stylesheet" href="/monitor-wall.css?v=20260929-alarmcctv1">
+  <script src="/monitor-wall.js?v=20260928-flowtarget1"></script>
+  <script src="/node-monitor.js?v=20260928-flowtarget1"></script>
+  <script type="module" src="/station3d.js?v=20260929-koreanstation1"></script>
+  <link rel="stylesheet" href="/civic-theme.css?v=20260929-koreanstation1">
 </body>
 </html>

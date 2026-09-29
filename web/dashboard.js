@@ -34,9 +34,10 @@ window.showEquipmentDetails=(item,targetBody=null)=>{
   };
   const id=item.id,rows=specs[id]||(id==='vehicle2'?specs.vehicle:id.startsWith('dispenser')?[['충전 압력 등급','H70'],['PCV 유효 유로면적','1.5 mm²'],['노즐 유로면적','2.0 mm²'],['호스 내부 용적','2.0 L']]:id.startsWith('detector')?[['신호 종류','가상 H₂ 농도'],['실물 센서 연결','없음']]:[['모델 역할','3D 참조 설비'],['상세 정격','제작사 사양 미설정']]);
   const note=document.createElement('p');note.className='spec-note';note.textContent='참조 시뮬레이션의 가상 설비 사양입니다. 실제 제작사 데이터시트·현장 설계값이 아닙니다.';body.append(note);
-  const table=document.createElement('table');table.className='hazop-table';const tbody=document.createElement('tbody');table.append(tbody);rows.forEach(([name,value])=>{const tr=document.createElement('tr');for(const text of [name,value]){const td=document.createElement('td');td.textContent=text;tr.append(td);}tbody.append(tr);});body.append(table);
-  const photo=window.stationCameras?.[id==='high'||id==='medium'||id==='low'?id:id==='cooler'?'cooler':id==='vehicle'||id==='vehicle2'?'vehicle':id==='compressor'?'compressor':id==='supply'?'supply':id.startsWith('dispenser')?'dispenser':null];
+  const photoKey=id==='vehicle2'?'vehicle':id.startsWith('dispenser')?'dispenser':id.startsWith('detector')?'safety':id==='vent'?'safety':id;
+  const photo=window.stationCameras?.[photoKey];
   if(photo){const img=document.createElement('img');img.className='spec-photo';img.src=photo.image;img.alt=photo.zone+' · AI 생성 가상 CCTV';body.append(img);}
+  const table=document.createElement('table');table.className='hazop-table';const tbody=document.createElement('tbody');table.append(tbody);rows.forEach(([name,value])=>{const tr=document.createElement('tr');for(const text of [name,value]){const td=document.createElement('td');td.textContent=text;tr.append(td);}tbody.append(tr);});body.append(table);
 };
 function sensorTable(body){
   const heading=document.createElement('h3');heading.textContent='주요 설비 · 노드별 PT / TT / FT';body.append(heading);
@@ -67,14 +68,14 @@ function sensorTable(body){
 }
 function navigateMonitor(action){
   if(action==='overview'||action==='flow'){closeWorkspace();window.setMonitorView?.(action==='flow'?'flow':'3d');return;}
-  if(action==='hazop'){borrowPanel('.s3-incidents','HAZOP · 사고 영향 분석');return;}
+  if(action==='hazop'){borrowPanel('.s3-incidents','센서 · 사고 영향 분석');return;}
   if(action==='saga'){window.openSagaPrompt?.();return;}
   if(action==='trends'){borrowPanel('.chart-panel','실시간 추세 · 이력 탐색');return;}
   if(action==='sensors'){sensorTable(openWorkspace('센서 연결 현황'));return;}
   if(action==='alarms'){
     const body=openWorkspace('경보와 운전 기록');
-    const title=document.createElement('p');title.textContent=document.body.dataset.alertState==='incident'?'활성 이상이 있습니다. 아래 경보를 선택해 HAZOP·피해영향예측 분석을 확인하세요.':'현재 활성 사고 후보가 없습니다.';body.append(title);
-    if(document.body.dataset.alertState==='incident'){const detail=document.createElement('button');detail.type='button';detail.textContent='현재 HAZOP · 사고 영향 보기 ↗';detail.addEventListener('click',()=>navigateMonitor('hazop'));body.append(detail);}
+    const title=document.createElement('p');title.textContent=document.body.dataset.alertState==='incident'?'활성 이상이 있습니다. 아래 경보를 선택해 센서·피해영향예측 분석을 확인하세요.':'현재 활성 사고 후보가 없습니다.';body.append(title);
+    if(document.body.dataset.alertState==='incident'){const detail=document.createElement('button');detail.type='button';detail.textContent='현재 센서 · 사고 영향 보기 ↗';detail.addEventListener('click',()=>navigateMonitor('hazop'));body.append(detail);}
     const events=window.getStation3DState?.()?.result?.events||[];
     if(!events.length){const p=document.createElement('p');p.className='empty';p.textContent='아직 기록된 운전 이벤트가 없습니다.';body.append(p);}
     events.slice(-100).reverse().forEach(e=>{const p=document.createElement('p');p.textContent=`${Number(e.time_s||0).toFixed(1)} s · ${e.message}`;body.append(p);});return;

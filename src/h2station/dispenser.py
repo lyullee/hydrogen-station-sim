@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import lru_cache
 from typing import Callable, Mapping
 
 import numpy as np
-from .tabulated import PropsSI
+from .tabulated import PropsSI, hydrogen_table
 from .thermo_types import ThermoDomainError
 from scipy.integrate import solve_ivp
 from scipy.optimize import minimize_scalar
@@ -192,7 +193,59 @@ class PartialStationTrajectory:
 
 
 class IsentropicRealGasRestriction:
-    """Adiabatic real-gas restriction with numerical choking-point detection."""
+    """Adiabatic real-gas restriction using the hydrogen property table."""
+
+    # The sonic pressure ratio is smooth across the operating envelope. Build
+    # this small table from the same EOS lookup once, then evaluate only one
+    # isentropic state for each RHS flow call instead of optimizing every time.
+    _critical_pressure_grid = np.array(
+        [0.1, 0.5, 1.0, 2.0, 5.0, 10.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0]
+    ) * 1.0e6
+    _critical_temperature_grid = np.array(
+        [210.0, 240.0, 280.0, 320.0, 360.0, 420.0, 500.0]
+    )
+
+    @classmethod
+    @lru_cache(maxsize=1)
+    def _critical_ratios(cls) -> np.ndarray:
+        table = hydrogen_table()
+        ratios = np.empty((len(cls._critical_pressure_grid), len(cls._critical_temperature_grid)))
+        for ip, pressure in enumerate(cls._critical_pressure_grid):
+            for it, temperature in enumerate(cls._critical_temperature_grid):
+                upstream = table.state_pt(float(pressure), float(temperature))
+
+                def negative_flux(log_pressure: float) -> float:
+                    outlet_pressure = float(np.exp(log_pressure))
+                    density, enthalpy = table.flow_properties_ps(outlet_pressure, upstream.entropy)
+                    return -density * np.sqrt(max(0.0, 2.0 * (upstream.enthalpy - enthalpy)))
+
+                result = minimize_scalar(
+                    negative_flux,
+                    bounds=(np.log(max(table.pressure_grid[0], pressure * 0.25)), np.log(pressure)),
+                    method="bounded",
+                    options={"xatol": 1.0e-8},
+                )
+                if not result.success:
+                    raise RuntimeError("Could not build the hydrogen choking lookup")
+                ratios[ip, it] = np.exp(result.x) / pressure
+        return ratios
+
+    @classmethod
+    def _critical_ratio(cls, pressure: float, temperature: float) -> float | None:
+        pressures, temperatures = cls._critical_pressure_grid, cls._critical_temperature_grid
+        if not (pressures[0] <= pressure <= pressures[-1]
+                and temperatures[0] <= temperature <= temperatures[-1]):
+            return None
+        ip = min(int(np.searchsorted(pressures, pressure, side="right")) - 1, len(pressures) - 2)
+        it = min(int(np.searchsorted(temperatures, temperature, side="right")) - 1, len(temperatures) - 2)
+        pressure_weight = (np.log(pressure) - np.log(pressures[ip])) / (
+            np.log(pressures[ip + 1]) - np.log(pressures[ip])
+        )
+        temperature_weight = (temperature - temperatures[it]) / (temperatures[it + 1] - temperatures[it])
+        ratios = cls._critical_ratios()
+        low = ratios[ip, it] * (1.0 - temperature_weight) + ratios[ip, it + 1] * temperature_weight
+        high = ratios[ip + 1, it] * (1.0 - temperature_weight) + ratios[ip + 1, it + 1] * temperature_weight
+        return float(low * (1.0 - pressure_weight) + high * pressure_weight)
 
     def __init__(self, parameters: RestrictionParameters, fluid: str = "Hydrogen") -> None:
         self.parameters = parameters
@@ -222,28 +275,31 @@ class IsentropicRealGasRestriction:
             self.parameters.minimum_pressure_pa,
             min(downstream_pressure_pa, upstream_pressure_pa * (1.0 - 1.0e-10)),
         )
-        entropy = float(
-            PropsSI(
-                "Smass", "P", upstream_pressure_pa, "T", upstream_temperature_k,
-                self.fluid,
-            )
-        )
-        stagnation_enthalpy = float(
-            PropsSI(
-                "Hmass", "P", upstream_pressure_pa, "T", upstream_temperature_k,
-                self.fluid,
-            )
-        )
+        if self.fluid.lower() not in {"hydrogen", "h2"}:
+            raise ValueError("The tabulated runtime supports Hydrogen only")
+        table = hydrogen_table()
+        upstream = table.state_pt(upstream_pressure_pa, upstream_temperature_k)
+        entropy = upstream.entropy
+        stagnation_enthalpy = upstream.enthalpy
 
         def mass_flux(pressure_pa: float) -> float:
-            enthalpy = float(
-                PropsSI("Hmass", "P", pressure_pa, "Smass", entropy, self.fluid)
-            )
-            density = float(
-                PropsSI("Dmass", "P", pressure_pa, "Smass", entropy, self.fluid)
-            )
+            density, enthalpy = table.flow_properties_ps(pressure_pa, entropy)
             velocity = np.sqrt(max(0.0, 2.0 * (stagnation_enthalpy - enthalpy)))
             return density * velocity
+
+        critical_ratio = self._critical_ratio(upstream_pressure_pa, upstream_temperature_k)
+        if critical_ratio is not None:
+            critical_pressure = upstream_pressure_pa * critical_ratio
+            # A subcritical restriction is controlled by its downstream state;
+            # a choked one is controlled by the interpolated sonic state.
+            maximum_flux = mass_flux(max(lower_pressure, critical_pressure))
+            return (
+                self.parameters.discharge_coefficient
+                * self.parameters.flow_area_m2
+                * area_multiplier
+                * opening
+                * maximum_flux
+            )
 
         # Deep expansion to atmospheric pressure can leave the single-phase
         # table although the choking point itself remains inside it. Bracket

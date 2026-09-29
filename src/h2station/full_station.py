@@ -380,6 +380,8 @@ class CascadeSupervisor:
         banks: tuple[CascadeBank, ...],
         gas_states: tuple[CompositeTankGasState, ...],
         dispatch_index: int | tuple[int | None, ...] | None,
+        target_pressures_pa: tuple[float, ...] | None = None,
+        ignore_targets: bool = False,
     ) -> int | None:
         excluded = {
             index for index in (
@@ -391,15 +393,21 @@ class CascadeSupervisor:
             index
             for index, (bank, gas) in enumerate(zip(banks, gas_states))
             if index not in excluded
-            and gas.pressure_pa
-            < bank.parameters.target_pressure_pa
-            - self.parameters.recharge_pressure_hysteresis_pa
+            and (ignore_targets or gas.pressure_pa
+                 < (target_pressures_pa[index] if target_pressures_pa is not None
+                    else bank.parameters.target_pressure_pa
+                    - self.parameters.recharge_pressure_hysteresis_pa))
         ]
         if not needs_charge:
             return None
+        if ignore_targets:
+            # With operator auto-stop disabled, keep feeding the lowest-pressure
+            # available bank instead of pinning the compressor to the high bank.
+            return min(needs_charge, key=lambda index: gas_states[index].pressure_pa)
         return max(
             needs_charge,
-            key=lambda index: banks[index].parameters.target_pressure_pa,
+            key=lambda index: (target_pressures_pa[index] if target_pressures_pa is not None
+                               else banks[index].parameters.target_pressure_pa),
         )
 
 

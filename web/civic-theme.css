@@ -1,0 +1,278 @@
+/* Public-sector inspired operations theme. No government identity is implied. */
+:root {
+  --civic-navy: #102f58;
+  --civic-navy-2: #173e6b;
+  --civic-blue: #075eac;
+  --civic-blue-hover: #084e8c;
+  --civic-teal: #087c89;
+  --civic-ink: #172c47;
+  --civic-muted: #596e88;
+  --civic-line: #d4e0ec;
+  --civic-paper: #eef3f9;
+  --civic-soft: #f6f9fd;
+  --civic-alert: #b52536;
+  --civic-warning: #a5630b;
+}
+
+.wall-monitor,
+.remote-app {
+  color-scheme: light;
+  --ink: var(--civic-ink);
+  --muted: var(--civic-muted);
+  --paper: var(--civic-paper);
+  --panel: #fff;
+  --line: var(--civic-line);
+  --cyan: var(--civic-blue);
+  --orange: var(--civic-warning);
+  --red: var(--civic-alert);
+  color: var(--civic-ink);
+  background: var(--civic-paper);
+  font-family: "Pretendard GOV", Pretendard, "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+}
+
+.wall-monitor button:focus-visible,
+.wall-monitor a:focus-visible,
+.wall-monitor input:focus-visible,
+.wall-monitor select:focus-visible,
+.remote-app button:focus-visible,
+.remote-app a:focus-visible,
+.remote-app input:focus-visible,
+.remote-app select:focus-visible,
+.remote-app summary:focus-visible {
+  outline: 2px solid var(--civic-blue);
+  outline-offset: 2px;
+}
+
+/* The fixed 1600×900 wall board retains its geometry. */
+.wall-monitor { background: var(--civic-paper); }
+.wall-board { background: var(--civic-paper); }
+.wall-board .masthead {
+  position: relative;
+  padding: 0 15px;
+  border: 1px solid #274b72;
+  border-radius: 9px;
+  background: var(--civic-navy);
+  box-shadow: 0 3px 12px #12396017;
+}
+.wall-board .masthead::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 9px 0 0 9px;
+  background: #42a7da;
+}
+.wall-board .eyebrow { color: #a9c3df; letter-spacing: .13em; }
+.wall-board h1 { color: #fff; font-weight: 750; letter-spacing: -.045em; }
+.wall-board h1 span { color: #c8daec; font-weight: 450; }
+.wall-board .masthead-context span { color: #fff; }
+.wall-board .masthead-context b { color: #a9c3df; }
+.wall-board .side-nav-item { color: #bcd0e5; font-weight: 600; }
+.wall-board .side-nav-item:hover { color: #fff; background: #ffffff13; }
+.wall-board .side-nav-item.active { color: #fff; border-bottom-color: #76c6ef; }
+.wall-board #remoteLink {
+  border-color: #69b6e2;
+  background: #fff;
+  color: var(--civic-navy);
+  font-weight: 750;
+}
+.wall-board #remoteLink:hover { background: #eaf4ff; }
+.wall-board .monitor-button,
+.wall-board .wall-fullscreen { border-color: #7e9cbd; background: #20436d; color: #f7fbff; }
+.wall-board .monitor-button:hover,
+.wall-board .wall-fullscreen:hover { background: #2d5684; color: #fff; }
+
+.wall-overview {
+  border-color: #cad9e7;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #173b630a;
+}
+.wall-overview .wall-connection { border-right: 1px solid var(--civic-line); }
+.wall-overview .side-nav-live span { color: var(--civic-navy); font-weight: 750; }
+.wall-overview #connectionStatus { color: var(--civic-muted); }
+.wall-overview .wall-process-chip {
+  border-color: #d6e3ef;
+  border-left-color: #9daec0;
+  background: #f7f9fc;
+}
+.wall-overview .wall-process-chip b { color: var(--civic-ink); }
+.wall-overview .wall-process-chip[data-state=flowing] { border-left-color: var(--civic-blue); background: #eaf4ff; }
+.wall-overview .wall-process-chip[data-state=flowing] b { color: var(--civic-blue); }
+.wall-overview .wall-process-chip[data-state=waiting],
+.wall-overview .wall-process-chip[data-state=pending] { border-left-color: #d6992e; background: #fff8e9; }
+.wall-overview .wall-process-chip[data-state=blocked] { border-left-color: var(--civic-alert); background: #fff1f1; }
+.wall-overview .wall-process-chip[data-state=blocked] b { color: var(--civic-alert); }
+.wall-overview .system-badge { color: var(--civic-navy); }
+.wall-overview .system-badge.ready i { background: #198665; }
+
+.wall-board .s3-visual-column,
+.wall-board .wall-card,
+.wall-board .wall-saga-chat {
+  border-color: #cfdeeb;
+  box-shadow: 0 3px 14px #163b660d;
+}
+.wall-board .s3-head { border-bottom: 1px solid #d7e3ee; }
+.wall-board .s3-head h2,
+.wall-board .wall-card h2,
+.wall-board .wall-trend-title b { color: var(--civic-navy); font-weight: 750; }
+.wall-board .view-switcher button.selected { color: var(--civic-blue); border-bottom-color: var(--civic-blue); font-weight: 750; }
+.wall-board .s3-live.active i { background: #168668; }
+.wall-board .s3-visual-surface { background: #102843; }
+.wall-board #processPanel { background: #102d4b; }
+.wall-board #processPanel .unit,
+.wall-board #processPanel .bank { background: #1e456a; border-color: #5980a4; }
+.wall-board #processPanel .unit.active,
+.wall-board #processPanel .bank.active { background: #125b82; border-color: #68b9dc; }
+.wall-board .flow-status span { background: #173c5f; border-color: #517da4; color: #dceaf7; }
+.wall-board .s3-domain { background: #0f2c4d; color: #edf5ff; }
+.wall-board .s3-domain-list { background: #14375c; border-right-color: #52749b; }
+.wall-board .s3-domain-item { background: #21466d; border-color: #4a6c91; color: #f0f6fd; }
+.wall-board .s3-domain-item small { color: #bdd1e5; }
+.wall-board .s3-domain-item:hover,
+.wall-board .s3-domain-item.selected { background: #075eac; border-color: #83c3ed; color: #fff; }
+.wall-board .s3-domain-detail h3 { color: #fff; }
+.wall-board .s3-domain-detail p { color: #d2e1ef; }
+.wall-board .s3-domain-detail .hazop-table td { background: #1c3d62; border-color: #4e6f94; }
+.s3-camera-marker { border-color: #96d9fb; background: #123c60ec; color: #fff; }
+.s3-camera-marker { gap: 0; padding: 4px; border-radius: 50%; }
+.s3-camera-marker b { display: none; }
+.s3-camera-marker:hover,
+.s3-camera-marker:focus-visible { gap: 5px; padding-right: 8px; border-radius: 18px; background: #075eac; }
+.s3-camera-marker:hover b,
+.s3-camera-marker:focus-visible b { display: block; }
+.s3-camera-icon { width: 19px; height: 19px; background: #8ad6fa; color: #10365c; }
+
+.wall-board .s3-sidebar>.analysis-row {
+  border-color: #c8dceb;
+  border-left: 4px solid var(--civic-blue);
+  background: #eaf3fc;
+  color: var(--civic-navy);
+}
+.wall-board .analysis-state { background: #d8e9fa; color: var(--civic-blue); font-weight: 750; }
+.wall-board .analysis-row[data-state=ADVISORY],
+.wall-board .analysis-row[data-state=WARNING] { border-color: #edcf9c; border-left-color: #c98316; background: #fff8eb; color: #81501c; }
+.wall-board .analysis-row[data-state=CRITICAL] { border-color: #edb6bb; border-left-color: var(--civic-alert); background: #fff1f2; color: #962333; }
+.wall-board .wall-bank-tag { background: #e7f0f9; color: var(--civic-blue); font-weight: 750; }
+.wall-board .wall-bank>b,
+.wall-board .wall-pressure>b { color: var(--civic-navy); }
+.wall-board .wall-bar { background: #e6edf5; }
+.wall-board .wall-bar i,
+.wall-board .wall-bank:first-of-type .wall-bar i { background: var(--civic-blue); }
+.wall-board .wall-machinery .wall-process-values b { color: var(--civic-navy); }
+.wall-board .wall-gas #detectorStrip button { border-color: #d5e2ed; background: #f7fafe; }
+.wall-board .wall-gas #detectorStrip button b { color: var(--civic-blue); }
+.wall-board .wall-gas #detectorStrip button.alarm { background: #fff6e7; border-color: #e5bd7b; }
+.wall-board .wall-gas #detectorStrip button.trip { background: #fff0f1; border-color: #e7aeb6; }
+.wall-board #wallIncident { background: #fff1ed; border: 1px solid #edc2b8; border-left: 4px solid var(--civic-alert); color: #8d2d30; }
+.wall-board .wall-trends { border-color: #d5e2ef; background: #f8fbff; }
+.wall-board .wall-trends article { border-left-color: #d7e4ef; }
+.wall-board .wall-saga-chat .saga-messages { background: #f3f7fc; }
+.wall-board .wall-saga-chat .saga-chat-top { border-bottom-color: #d7e4ef; }
+.saga-avatar { border-radius: 7px; background: var(--civic-blue); box-shadow: none; font-family: inherit; }
+.saga-message.user .saga-bubble { background: var(--civic-blue); border-color: var(--civic-blue); }
+.saga-message-label b,
+.saga-message.user .saga-message-label b,
+.saga-bubble h1,.saga-bubble h2,.saga-bubble h3,.saga-bubble h4 { color: var(--civic-navy); }
+.saga-suggestions button,
+.saga-auto-toggle { border-color: #bfd5e9; background: #edf5fd; color: var(--civic-blue); }
+.saga-suggestions button:hover { border-color: #80b2da; background: #dfedfc; }
+.wall-monitor .saga-composer-actions button { background: var(--civic-blue); }
+.wall-monitor .saga-composer-actions .saga-scenario-button { border-color: #a9cbe5; background: #eaf4fd; color: var(--civic-blue); }
+.saga-impact-heading,
+.saga-bubble strong { color: var(--civic-navy); }
+.saga-impact-extent { border-left-color: var(--civic-blue); background: #eaf3fc; color: var(--civic-navy); }
+.wall-board .wall-footer { color: #6a7e93; }
+.wall-monitor dialog { border-color: #cfdeeb; box-shadow: 0 25px 80px #0b2d5045; }
+.wall-monitor dialog::backdrop { background: #0c284b83; }
+.wall-monitor .workspace-dialog .hazop-table th { background: #e8f1fa; color: var(--civic-navy); }
+
+/* Operator remote uses the same tokens and status semantics. */
+.remote-app .remote-shell>header {
+  padding: 17px 18px 12px;
+  border: 1px solid #274b72;
+  border-radius: 10px;
+  background: var(--civic-navy);
+  box-shadow: 0 5px 18px #173b6614;
+}
+.remote-app .remote-shell>header::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  border-radius: 10px 0 0 10px;
+  background: #42a7da;
+}
+.remote-app .remote-shell>header .eyebrow { color: #b6cde5; }
+.remote-app .remote-shell>header h1 { color: #fff; font-size: 23px; font-weight: 750; }
+.remote-app .remote-shell>header>p:not(.eyebrow):not(.job-status) { color: #cadbed; }
+.remote-app .remote-shell>header #monitorLink { top: 20px; right: 18px; border-color: #a3c1dd; background: #fff; color: var(--civic-navy); font-weight: 700; }
+.remote-app .remote-shell>header #monitorLink:hover { background: #e9f4ff; }
+.remote-app .server-state { color: #c7d8ea; }
+.remote-app .server-state[data-state=ready] { color: #9de5c8; }
+.remote-app .server-state[data-state=error] { color: #ffc1c4; }
+.remote-app .job-status { display: inline-block; padding: 4px 9px; border: 1px solid #45678d; background: #23466e; color: #e5f0fc; }
+.remote-app .process-live-summary { border-color: #5d81a7; background: #22466e; color: #f3f8ff; }
+.remote-app .process-live-summary span { color: #c6e2f6; }
+.remote-app .process-live-summary span[data-lag=true] { color: #ffd590; }
+.remote-app .process-status-rail>div { border-color: #d8e3ef; border-left-color: #9baec2; background: #f8fbff; }
+.remote-app .process-status-rail small { color: #526985; }
+.remote-app .process-status-rail b { color: var(--civic-navy); }
+.remote-app .process-status-rail [data-state=flowing] { border-left-color: var(--civic-blue); background: #e9f4ff; }
+.remote-app .process-status-rail [data-state=flowing] b { color: var(--civic-blue); }
+.remote-app .process-status-rail [data-state=waiting],
+.remote-app .process-status-rail [data-state=pending] { border-left-color: #c98316; background: #fff8eb; }
+.remote-app .process-status-rail [data-state=blocked] { border-left-color: var(--civic-alert); background: #fff1f2; }
+.remote-app .simulation-speed { border-color: #ccdaea; background: #f8fbff; }
+.remote-app .simulation-speed label { color: var(--civic-navy); }
+.remote-app .simulation-speed select { border-color: #9cbad7; color: var(--civic-navy); }
+.remote-app .simulation-speed span { color: var(--civic-muted); }
+.remote-app .remote-tabs button { border-color: #d2dfec; background: #fff; color: #47617e; font-weight: 650; }
+.remote-app .remote-tabs button:hover { border-color: #8fb6d9; background: #f2f8fe; }
+.remote-app .remote-tabs button[aria-selected=true] { border-color: #6da6d5; background: #eaf4ff; color: var(--civic-blue); box-shadow: inset 0 -3px var(--civic-blue); }
+.remote-app .remote-panel { border-color: #d2dfec; border-radius: 9px; box-shadow: 0 3px 14px #173b660c; }
+.remote-app .remote-panel h2 { color: var(--civic-navy); font-weight: 750; }
+.remote-app .remote-panel .hint { color: var(--civic-muted); }
+.remote-app .process-request { border-color: #d5e3f0; background: #f8fbff; }
+.remote-app .process-request[data-active=true] { border-color: #76add8; background: #edf6ff; }
+.remote-app .process-request[data-flowing=true] { border-color: var(--civic-blue); box-shadow: inset 3px 0 var(--civic-blue); }
+.remote-app .process-request header { border: 0; }
+.remote-app .process-request strong { color: var(--civic-navy); }
+.remote-app .process-request .process-reading { color: #285780; }
+.remote-app .process-activity { background: #e9f0f8; color: #4c6984; }
+.remote-app .process-request[data-flowing=true] .process-activity { background: #dcecff; color: var(--civic-blue); }
+.remote-app .process-request[data-active=true] .process-state { color: var(--civic-blue); }
+.remote-app .process-request>.switch-label { display: flex; flex-direction: row; align-items: center; gap: 7px; min-height: 25px; color: var(--civic-navy); font-size: 11px; font-weight: 650; }
+.remote-app .process-request>.switch-label input { flex: none; width: 15px; height: 15px; margin: 0; }
+.remote-app .process-toggle,
+.remote-app #applyProcess { border-color: #a4c7e5; background: #eaf4ff; color: var(--civic-blue); }
+.remote-app .process-toggle:hover,
+.remote-app #applyProcess:hover { background: #d7eafa; }
+.remote-app .process-request[data-active=true] .process-toggle { border-color: #e8b0b8; background: #fff2f3; color: var(--civic-alert); }
+.remote-app .process-request details { border-color: #d5e3f0; }
+.remote-app .relief-settings { border-top-color: #d8e3ef; }
+.remote-app .relief-row { border-color: #d9e5f1; background: #fbfdff; }
+.remote-app .scenario-option { border-color: #d5e2ef; background: #f9fbfe; }
+.remote-app .scenario-option strong { color: var(--civic-navy); }
+.remote-app .scenario-option button { color: var(--civic-blue); }
+.remote-app .fault-card { border-color: #edd9bf; border-left-color: #c98316; background: #fffaf2; }
+.remote-app .fault-head .remove { color: var(--civic-alert); }
+.remote-app .remote-actions { border-color: #cad9e8; background: #fffffff5; box-shadow: 0 -7px 25px #1539601c; }
+.remote-app .run { border-color: var(--civic-blue); background: var(--civic-blue); color: #fff; }
+.remote-app .run:hover { background: var(--civic-blue-hover); }
+.remote-app #stop { color: var(--civic-alert); }
+.remote-app .error-status { border-color: #e4b7be; background: #fff1f2; color: #9b2234; }
+.remote-app input,
+.remote-app select,
+.remote-app button { border-radius: 6px; }
+.remote-app input,
+.remote-app select { border-color: #bfcee0; background: #fff; color: var(--civic-ink); }
+.remote-app input[type=checkbox] { accent-color: var(--civic-blue); }
+.remote-app summary { color: var(--civic-blue); font-weight: 650; }
+.remote-app #status { color: var(--civic-muted); }
+.remote-app #calculationPace { font-variant-numeric: tabular-nums; }
+
+@media(max-width:750px) {
+  .remote-app .remote-shell>header #monitorLink { top: auto; right: auto; }
+}

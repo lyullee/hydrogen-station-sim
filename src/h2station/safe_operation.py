@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, replace
+from time import sleep
 
 import numpy as np
 from scipy.integrate import solve_ivp
@@ -15,6 +16,8 @@ from .full_station import (
     FullStationModel,
     FullStationState,
 )
+from .integration_lock import nonreentrant_integrator_lock
+from .operations import ProcessRuntime
 from .protocol import FuelingCommand, FuelingObservation, FuelingPhase
 from .risk.live import (
     DynamicRiskMonitor,
@@ -96,6 +99,10 @@ class SafeOperationSample:
     hose_2_temperature_k: float | None = None
     hazop: Mapping | None = None
     active_faults: tuple[str, ...] = ()
+    process_operations: Mapping | None = None
+    process_activity: Mapping | None = None
+    vehicle_mass_kg: float | None = None
+    vehicle_2_mass_kg: float | None = None
 
 
 class SafeFullStationSimulator:
@@ -110,6 +117,7 @@ class SafeFullStationSimulator:
         leak_scenarios: Mapping[str, LeakScenario] | None = None,
         concentration_extractor: ConcentrationExtractor | None = None,
         hazop_monitor=None,
+        process_runtime: ProcessRuntime | None = None,
     ) -> None:
         self.station = station
         self.fault_injector = fault_injector
@@ -117,6 +125,7 @@ class SafeFullStationSimulator:
         self.risk_monitor = risk_monitor
         self.leak_scenarios = dict(leak_scenarios or {})
         self.hazop_monitor = hazop_monitor
+        self.process_runtime = process_runtime
         self.concentration_extractor = (
             concentration_extractor or self._default_concentration_extractor
         )
@@ -146,6 +155,7 @@ class SafeFullStationSimulator:
             self.risk_monitor.reset()
             self.station.valve_sequencer.reset()
             self.station.secondary_valve_sequencer.reset()
+            self._last_vehicle_requested = (False, False)
         leak_ids = tuple(
             event.event_id
             for event in self.fault_injector.schedule.events
@@ -227,6 +237,13 @@ class SafeFullStationSimulator:
                     current.secondary_partial_station.vehicle
                 )
             )
+            process = self.process_runtime
+            if process is not None:
+                process.stop_recharge_at_targets(tuple(gas.pressure_pa for gas in bank_gases))
+                requested_1 = process.requested("vehicle_1")
+                requested_2 = process.requested("vehicle_2")
+            else:
+                requested_1 = requested_2 = True
             raw_measurements = StationMeasurements(
                 time_s=time_s,
                 fueling_phase=current_fueling_phase,
@@ -267,10 +284,20 @@ class SafeFullStationSimulator:
                 density_kg_m3=vehicle_gas.density_kg_m3,
                 measured_mass_flow_kg_s=previous_nozzle_flow,
             )
-            fueling_command = self.station.partial_station.controller.update(
-                observation,
-                control_period_s,
-            )
+            if process is not None and not requested_1:
+                if self._last_vehicle_requested[0]:
+                    self.station.partial_station.controller.reset()
+                fueling_command = FuelingCommand(FuelingPhase.IDLE, 0.0, vehicle_gas.pressure_pa,
+                    self.station.partial_station.controller.schedule.delivery_temperature_k,
+                    self.station.partial_station.controller.soc_model.calculate(vehicle_gas.density_kg_m3), "operator-idle")
+            else:
+                if process is not None and not self._last_vehicle_requested[0]:
+                    self.station.partial_station.controller.start(time_s, vehicle_gas.pressure_pa)
+                fueling_command = self.station.partial_station.controller.update(
+                    observation, control_period_s,
+                    auto_stop=process.settings["vehicle_1_auto_stop"] if process is not None else True,
+                    target_pressure_pa=(process.settings["vehicle_1_target_pressure_mpa"] * 1e6
+                                        if process is not None else None))
             current_fueling_phase = fueling_command.phase
             observation_2 = FuelingObservation(
                 time_s=time_s,
@@ -279,11 +306,30 @@ class SafeFullStationSimulator:
                 density_kg_m3=vehicle_2_gas.density_kg_m3,
                 measured_mass_flow_kg_s=previous_nozzle_2_flow,
             )
-            fueling_command_2 = (
-                self.station.secondary_partial_station.controller.update(
-                    observation_2, control_period_s
-                )
-            )
+            if process is not None and not requested_2:
+                if self._last_vehicle_requested[1]:
+                    self.station.secondary_partial_station.controller.reset()
+                fueling_command_2 = FuelingCommand(FuelingPhase.IDLE, 0.0, vehicle_2_gas.pressure_pa,
+                    self.station.secondary_partial_station.controller.schedule.delivery_temperature_k,
+                    self.station.secondary_partial_station.controller.soc_model.calculate(vehicle_2_gas.density_kg_m3), "operator-idle")
+            else:
+                if process is not None and not self._last_vehicle_requested[1]:
+                    self.station.secondary_partial_station.controller.start(time_s, vehicle_2_gas.pressure_pa)
+                fueling_command_2 = self.station.secondary_partial_station.controller.update(
+                    observation_2, control_period_s,
+                    auto_stop=process.settings["vehicle_2_auto_stop"] if process is not None else True,
+                    target_pressure_pa=(process.settings["vehicle_2_target_pressure_mpa"] * 1e6
+                                        if process is not None else None))
+            if process is not None:
+                self._last_vehicle_requested = (requested_1, requested_2)
+                if fueling_command.phase is FuelingPhase.COMPLETE:
+                    process.stop("vehicle_1", "vehicle-target")
+                elif fueling_command.phase is FuelingPhase.ABORTED:
+                    process.stop("vehicle_1", "safety-temperature")
+                if fueling_command_2.phase is FuelingPhase.COMPLETE:
+                    process.stop("vehicle_2", "vehicle-target")
+                elif fueling_command_2.phase is FuelingPhase.ABORTED:
+                    process.stop("vehicle_2", "safety-temperature")
             if current_fueling_phase is FuelingPhase.IDLE:
                 current_fueling_phase = fueling_command_2.phase
             if safety_command.close_pcv:
@@ -301,7 +347,7 @@ class SafeFullStationSimulator:
 
             requested_dispatch_index = (
                 None
-                if safety_command.close_cascade_valves
+                if safety_command.close_cascade_valves or (process is not None and not requested_1 and override.forced_pcv_opening is None)
                 else self.station.supervisor.select_dispatch_bank(
                     self.station.banks,
                     bank_gases,
@@ -316,7 +362,7 @@ class SafeFullStationSimulator:
             )
             requested_dispatch_2_index = (
                 None
-                if safety_command.close_cascade_valves
+                if safety_command.close_cascade_valves or (process is not None and not requested_2 and override.forced_pcv_opening is None)
                 else self.station.supervisor.select_dispatch_bank(
                     self.station.banks,
                     bank_gases,
@@ -345,11 +391,13 @@ class SafeFullStationSimulator:
 
             recharge_index = (
                 None
-                if safety_command.stop_compressor or not override.compressor_enabled
+                if safety_command.stop_compressor or not override.compressor_enabled or (process is not None and not process.source_available())
                 else self.station.supervisor.select_recharge_bank(
                     self.station.banks,
                     bank_gases,
                     (dispatch_index, dispatch_2_index),
+                    target_pressures_pa=process.recharge_targets_pa() if process is not None else None,
+                    ignore_targets=not process.settings["recharge_auto_stop"] if process is not None else False,
                 )
             )
             supply_index = dispatch_index if dispatch_index is not None else int(
@@ -375,7 +423,8 @@ class SafeFullStationSimulator:
                 ),
                 supply,
                 override.precooler_capacity_multiplier,
-                *self._flow_multipliers(override, "dispenser"),
+                self._flow_multipliers(override, "dispenser")[0],
+                self._flow_multipliers(override, "dispenser")[1] if requested_1 else 0.0,
                 self._allow_reverse_flow(override, "dispenser"),
             )
             supply_2_index = (
@@ -403,7 +452,8 @@ class SafeFullStationSimulator:
                     ),
                     supply_2,
                     override.precooler_capacity_multiplier,
-                    *self._flow_multipliers(override, "dispenser_2"),
+                    self._flow_multipliers(override, "dispenser_2")[0],
+                    self._flow_multipliers(override, "dispenser_2")[1] if requested_2 else 0.0,
                     self._allow_reverse_flow(override, "dispenser_2"),
                 )
             )
@@ -418,7 +468,18 @@ class SafeFullStationSimulator:
                 "precooler_outlet_temperature"
             ]
 
-            active_events = self.fault_injector.schedule.active_events(time_s)
+            relief_events = process.relief_events({
+                "low": bank_gases[0].pressure_pa,
+                "medium": bank_gases[1].pressure_pa,
+                "high": bank_gases[2].pressure_pa,
+                "hose_1": hose_gas.pressure_pa,
+                "hose_2": hose_2_gas.pressure_pa,
+                "vehicle_1": vehicle_gas.pressure_pa,
+                "vehicle_2": vehicle_2_gas.pressure_pa,
+            }, time_s) if process is not None else ()
+            if relief_events:
+                override = replace(override, active_leaks=override.active_leaks + relief_events)
+            active_events = self.fault_injector.schedule.active_events(time_s) + relief_events
             active_leaks = self._active_leak_inputs(
                 override.active_leaks,
                 current,
@@ -488,6 +549,46 @@ class SafeFullStationSimulator:
                     active_leaks=active_leaks, risk_snapshots=risk_snapshots,
                 )
 
+            process_snapshot = process.snapshot() if process is not None else None
+            process_activity = None
+            if process_snapshot is not None:
+                settings = process_snapshot["settings"]
+                reasons = process_snapshot["stop_reason"]
+                compressor_flow_g_s = 0.0
+                if recharge_index is not None:
+                    compressor_flow_g_s = 1000.0 * self.station.compressor.evaluate(
+                        self.station.compressor_suction(time_s),
+                        bank_gases[recharge_index].pressure_pa
+                        + self.station.compressor.parameters.discharge_pressure_margin_pa,
+                        enabled=True,
+                    ).mass_flow_kg_s
+
+                def operation_state(key: str, flow_g_s: float, wait_reason: str) -> dict[str, object]:
+                    if not settings[key]:
+                        reason = reasons[key]
+                        state = ("auto-stopped" if reason in ("bank-target", "vehicle-target")
+                                 else "blocked" if reason in ("source-depleted", "safety-temperature") else "idle")
+                    elif safety_command.esd_latched:
+                        state, reason = "blocked", "esd"
+                    elif flow_g_s > 1e-5:
+                        state, reason = "flowing", None
+                    else:
+                        state, reason = "waiting", wait_reason
+                    return {"state": state, "reason": reason, "flow_g_s": flow_g_s}
+
+                supply_wait = ("recharge-off" if not settings["pressure_recharge"]
+                               else "bank-target" if recharge_index is None else "compressor-starting")
+                recharge_wait = ("supply-off" if not settings["trailer_supply"]
+                                 else "bank-target" if recharge_index is None else "compressor-starting")
+                process_activity = {
+                    "trailer_supply": operation_state("trailer_supply", compressor_flow_g_s, supply_wait),
+                    "pressure_recharge": operation_state("pressure_recharge", compressor_flow_g_s, recharge_wait),
+                    "vehicle_1": operation_state("vehicle_1", 1000.0 * previous_nozzle_flow,
+                        "bank-unavailable" if dispatch_index is None else "valve-starting"),
+                    "vehicle_2": operation_state("vehicle_2", 1000.0 * previous_nozzle_2_flow,
+                        "bank-unavailable" if dispatch_2_index is None else "valve-starting"),
+                }
+
             if sample_callback is not None:
                 sample_callback(
                     SafeOperationSample(
@@ -536,19 +637,33 @@ class SafeFullStationSimulator:
                         hose_2_pressure_pa=hose_2_gas.pressure_pa,
                         hose_2_temperature_k=hose_2_gas.temperature_k,
                         hazop=hazop_frame,
-                        active_faults=tuple(f"{event.kind.value}:{event.target}" for event in active_events),
+                        active_faults=tuple(
+                            f"{'relief-open' if event.event_id.startswith('relief-') else event.kind.value}:{event.target}"
+                            for event in active_events
+                        ),
+                        process_operations=process_snapshot,
+                        process_activity=process_activity,
+                        vehicle_mass_kg=current.partial_station.vehicle.hydrogen_mass_kg,
+                        vehicle_2_mass_kg=current.secondary_partial_station.vehicle.hydrogen_mass_kg,
                     )
                 )
 
             if time_s >= end_time_s or (stop_callback is not None and stop_callback()):
                 break
             end_s = min(end_time_s, time_s + control_period_s)
-
+            if process is not None and not process.any_requested() and not active_events:
+                # Idle monitoring keeps all process inventories exactly unchanged.
+                # The controller scans at wall-clock pace until an operator request.
+                sleep(min(control_period_s, 0.25))
+                time_s = end_s
+                if progress_callback is not None:
+                    progress_callback(time_s, end_time_s)
+                continue
             def rhs(local_time_s: float, vector: np.ndarray) -> np.ndarray:
                 local_state = FullStationState.from_vector(
-                    vector, len(self.station.banks)
+                    vector[:-1] if process is not None else vector, len(self.station.banks)
                 )
-                base_rate, _, _ = self.station.derivative(
+                base_rate, compressor_result, _ = self.station.derivative(
                     local_time_s,
                     local_state,
                     effective_command,
@@ -560,13 +675,13 @@ class SafeFullStationSimulator:
                     secondary_dispatch_index=dispatch_2_index,
                     secondary_dispatch_valve_opening=dispatch_2_opening,
                     primary_pcv_area_multiplier=self._flow_multipliers(override, "dispenser")[0],
-                    primary_nozzle_area_multiplier=self._flow_multipliers(override, "dispenser")[1],
+                    primary_nozzle_area_multiplier=self._flow_multipliers(override, "dispenser")[1] if requested_1 else 0.0,
                     secondary_pcv_area_multiplier=self._flow_multipliers(override, "dispenser_2")[0],
-                    secondary_nozzle_area_multiplier=self._flow_multipliers(override, "dispenser_2")[1],
+                    secondary_nozzle_area_multiplier=self._flow_multipliers(override, "dispenser_2")[1] if requested_2 else 0.0,
                     primary_allow_reverse_flow=self._allow_reverse_flow(override, "dispenser"),
                     secondary_allow_reverse_flow=self._allow_reverse_flow(override, "dispenser_2"),
                 )
-                return self._apply_fault_effects(
+                rates = self._apply_fault_effects(
                     self._apply_leak_sinks(
                     base_rate,
                     local_state,
@@ -575,21 +690,27 @@ class SafeFullStationSimulator:
                     local_state,
                     active_events,
                 ).as_vector()
+                return np.append(rates, compressor_result.mass_flow_kg_s) if process is not None else rates
 
-            solution = solve_ivp(
-                rhs,
-                (time_s, end_s),
-                current.as_vector(),
-                method="BDF",
-                t_eval=[end_s],
-                rtol=1.0e-6,
-                atol=1.0e-8,
-            )
+            initial_vector = np.append(current.as_vector(), 0.0) if process is not None else current.as_vector()
+            method = "LSODA" if process is not None and not active_events else "BDF"
+            if method == "LSODA":
+                with nonreentrant_integrator_lock:
+                    solution = solve_ivp(rhs, (time_s, end_s), initial_vector, method=method,
+                                         t_eval=[end_s], rtol=1.0e-6, atol=1.0e-8)
+            else:
+                solution = solve_ivp(rhs, (time_s, end_s), initial_vector, method=method,
+                                     t_eval=[end_s], rtol=1.0e-6, atol=1.0e-8)
+            if not solution.success and method == "LSODA":
+                solution = solve_ivp(rhs, (time_s, end_s), initial_vector, method="BDF",
+                                     t_eval=[end_s], rtol=1.0e-6, atol=1.0e-8)
             if not solution.success:
                 raise RuntimeError(f"Safe-operation integration failed: {solution.message}")
             current = FullStationState.from_vector(
-                solution.y[:, -1], len(self.station.banks)
+                solution.y[:-1, -1] if process is not None else solution.y[:, -1], len(self.station.banks)
             )
+            if process is not None:
+                process.account_compressor(float(solution.y[-1, -1]), 1.0)
             time_s = end_s
             if progress_callback is not None:
                 progress_callback(time_s, end_time_s)
