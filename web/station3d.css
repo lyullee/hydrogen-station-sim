@@ -9,6 +9,12 @@
 .s3-visual-surface{display:flex;flex:1;align-items:center;justify-content:center;min-height:0;min-width:0;overflow:hidden}
 .s3-stage{position:relative;aspect-ratio:16/9;width:100%;height:auto;min-height:0;overflow:hidden;background:#dce5e4;flex:none}
 .s3-stage>canvas{width:100%;height:100%;display:block;touch-action:none}
+.s3-photo-view{position:absolute;inset:0;z-index:4;background:#10242d;overflow:hidden}
+.s3-photo-view[hidden]{display:none!important}
+.s3-photo-view img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.s3-photo-view span{position:absolute;right:12px;bottom:12px;padding:5px 9px;border-radius:4px;background:#102b39db;color:#e8f3f6;font-size:10px;letter-spacing:.01em}
+.s3-stage.photo-active .s3-camera-markers,.s3-stage.photo-active .s3-options,.s3-stage.photo-active .s3-card,.s3-stage.photo-active .s3-compass,.s3-stage.photo-active .s3-assets{display:none!important}
+.s3-stage #s3PhotoMode[aria-pressed=true]{background:#cde8f1;color:#123d50;border-color:#8fc9db}
 .s3-toolbar,.s3-options{position:absolute;display:flex;gap:4px;flex-wrap:wrap;z-index:5;left:12px;max-width:calc(100% - 24px)}
 .s3-toolbar{top:12px;padding-right:60px}.s3-options{bottom:12px}
 .s3-toolbar button,.s3-options button{font-size:10px;padding:6px 8px;background:#0e2237e6;border-color:#526777;color:#d1e5eb;box-shadow:0 2px 8px #0002;backdrop-filter:blur(8px)}
@@ -16,6 +22,11 @@
 .s3-compass{position:absolute;top:14px;right:14px;font:7px Consolas,monospace;color:#254b53;text-align:center;pointer-events:none}.s3-compass b{font-size:24px;display:block}
 .s3-assets{position:absolute;left:12px;top:50px;width:255px;max-height:calc(100% - 100px);overflow:auto;z-index:8;background:#111f30f5;border:1px solid #486780;border-radius:8px;padding:5px}
 .s3-assets button{display:grid;text-align:left;gap:4px;width:100%;border:0;background:transparent;font-size:11px;padding:8px}.s3-assets button small{font-size:8px}.s3-assets button:hover{background:#1d3a47}
+.s3-assets:not([hidden]){display:flex;flex-direction:column;overflow:hidden}
+.s3-assets-header{display:flex;flex:none;align-items:center;justify-content:space-between;gap:8px;padding:4px 5px 8px;border-bottom:1px solid #486780;color:#e1f3f6;font-size:11px}
+.s3-assets .s3-assets-header button{display:inline-flex;align-items:center;justify-content:center;width:auto;padding:5px 8px;border:1px solid #7caabb;border-radius:5px;background:#203d4d;color:#e6f6f8;font-size:10px;white-space:nowrap;cursor:pointer}
+.s3-assets .s3-assets-header button:hover,.s3-assets .s3-assets-header button:focus-visible{background:#2b6671;outline:2px solid #a4ddd8;outline-offset:1px}
+.s3-assets-list{min-height:0;overflow-y:auto;padding-top:5px;scrollbar-width:thin}
 .s3-selection-slot{flex:none;min-height:58px;border-top:1px solid var(--line);padding:8px 12px;background:#101a27}
 .s3-card{display:flex;align-items:center;gap:10px;min-width:0}
 .s3-card small{display:none}.s3-card h3{font-size:12px;max-width:30%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.s3-card p{display:none}
@@ -36,6 +47,8 @@
 .s3-camera-marker{position:absolute;display:flex;gap:5px;align-items:center;border:1px solid #99eadb;background:#112b3ae8;color:#e1fff7;border-radius:20px;padding:5px 7px 5px 5px;transform:translate(-50%,-50%);pointer-events:auto;box-shadow:0 4px 12px #0004;line-height:1}
 .s3-camera-marker:hover,.s3-camera-marker:focus-visible{background:#1b5c54;z-index:6}.s3-camera-marker b{font:9px Consolas,monospace}.s3-camera-marker small{display:none}.s3-camera-icon{display:grid;place-items:center;width:20px;height:20px;background:#70dbca;color:#102c35;border-radius:50%}
 .s3-camera-icon svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linejoin:round}
+.s3-risk-distance-label{position:absolute;z-index:6;transform:translate(-50%,-100%);max-width:190px;padding:5px 8px;border:1px solid #ffbe8d;border-radius:5px;background:#743728e8;color:#fff7ef;font:600 10px/1.25 'Segoe UI','Malgun Gothic',sans-serif;text-align:center;pointer-events:none;box-shadow:0 3px 12px #271b1b80}.s3-risk-distance-label.hypothetical{background:#15536be8;border-color:#7ad0e4}.s3-stage.photo-active .s3-risk-distance-label{display:none}
+.s3-risk-distance-label{max-width:240px;padding:7px 10px;border-width:2px;border-radius:8px;font-size:11px;line-height:1.35;box-shadow:0 4px 18px #271b1bb3}
 .s3-cctv-dialog{width:min(960px,calc(100vw - 36px));padding:0}.s3-cctv-dialog-shell{margin:0}.s3-cctv-dialog-shell>header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)}.s3-cctv-dialog h3{font-size:18px;margin-top:5px}
 .s3-cctv-dialog-body{padding:16px}.s3-cctv-dialog-body>img{display:block;width:100%;height:auto;max-height:63dvh;object-fit:contain;background:#10252d;border-radius:6px}
 .s3-cctv-dialog-meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}.s3-cctv-dialog-meta b{font-size:12px}.s3-cctv-dialog-meta span{font-size:11px;color:var(--cyan)}.s3-cctv-dialog-meta small{flex-basis:100%;font-size:10px}.s3-cctv-dialog-meta select{font-size:11px}

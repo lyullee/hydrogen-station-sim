@@ -5,7 +5,7 @@ import math
 import re
 from functools import lru_cache
 
-TAG = re.compile(r"(?:PT|TT|FT|GD)-\d{4}|MASS_HOSE_[12]|MASS_HEADER")
+TAG = re.compile(r"(?:PT|TT|FT|GD|FD)-\d{4}|MASS_HOSE_[12]|MASS_HEADER")
 CALLS = {"RATE": 2, "DIFF": 2, "ABS_DIFF": 2, "BALANCE": 4, "AGE": 1, "P_ISOTHERM": 2}
 CONDITION = re.compile(r"([a-z][a-z0-9_.]*)\s*(==|>=|<=|>|<)\s*(true|false|[A-Z_]+|-?\d+(?:\.\d+)?)")
 

@@ -5,6 +5,7 @@ import math
 from .database import EventStore, load_catalog
 from .engine import RuleEngine
 from .mapping import GD_SENSOR_ZONES, ModelMapper, coverage
+from .flame import FLAME_DETECTORS, FLAME_RESPONSE_DELAY_S, sees_target
 
 
 class HazopMonitor:
@@ -65,6 +66,18 @@ class HazopMonitor:
                         "value": 0.0, "unit": "vol%_H2", "quality": "GOOD",
                         "time_s": t, "origin": "VIRTUAL_DETECTOR_PROXY", "zone": zone,
                     })
+            fire_events = tuple(event for event in model.get("fault_events", ())
+                                if event.kind.value == "external-fire")
+            for tag, _node, zone, targets in FLAME_DETECTORS:
+                if tag not in self.mapper.specs:
+                    continue
+                visible = [event for event in fire_events if sees_target(event.target, targets)]
+                detected = any(t - event.start_time_s >= FLAME_RESPONSE_DELAY_S for event in visible)
+                frame["signals"][tag] = {
+                    "value": float(detected), "unit": "bool", "quality": "GOOD",
+                    "time_s": t, "origin": "VIRTUAL_FLAME_DETECTOR_PROXY", "zone": zone,
+                    "coverage": "MODELED_TARGET_ONLY",
+                }
         for event, leak, _source, _ in active_leaks if self.virtual_detectors else ():
             snap = next((x for x in risk_snapshots if x.release_id == leak.release_id), None)
             mass_flow = float(getattr(snap, "mass_flow_kg_s", 0.0) if snap else 0.0)
@@ -87,7 +100,7 @@ class HazopMonitor:
                     frame["signals"][tag] = {"value": value, "unit": "vol%_H2", "quality": "GOOD",
                                                "time_s": t, "origin": "VIRTUAL_DETECTOR_PROXY", "zone": GD_SENSOR_ZONES[tag]}
         for event in model.get("fault_events", ()):
-            if not event.target.startswith("GD-") or event.target not in frame["signals"]:
+            if not event.target.startswith(("GD-", "FD-")) or event.target not in frame["signals"]:
                 continue
             signal = frame["signals"][event.target]
             if event.kind.value == "sensor-bias":

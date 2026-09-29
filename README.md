@@ -107,12 +107,17 @@ steps and reports the accumulated lag instead of silently skipping them.
 ## HyRAM configuration
 
 When `hyram==6.1` is installed, the native adapter is selected automatically. Default
-outdoor observation points are 1 m, 3 m, and 5 m downstream at 1.5 m elevation.
+outdoor observation points are spaced every 0.5 m from 0.5–10 m, then at
+12, 15, 20, 25, 30, 40, and 50 m downstream at 1.5 m elevation. The reported
+extent is the farthest threshold-exceeding sample, not a certified safety radius.
 Override them with JSON:
 
 ```powershell
-$env:H2STATION_HYRAM_LOCATIONS='[[1,0,1.5],[5,0,1.5]]'
+$env:H2STATION_HYRAM_LOCATIONS='[[0.5,0,1.5],[1,0,1.5],[1.5,0,1.5],[2,0,1.5],[2.5,0,1.5],[3,0,1.5],[5,0,1.5],[10,0,1.5]]'
 ```
+
+Site overrides replace the entire default sampling transect. Sparse overrides
+can make a threshold crossed between two points appear at the nearer point.
 
 Indoor accumulation requires an explicit enclosure definition through
 `H2STATION_HYRAM_INDOOR_JSON`; no enclosure geometry is invented. A site-specific

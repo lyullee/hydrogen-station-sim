@@ -37,3 +37,34 @@ def test_add_and_remove_live_leak_changes_process():
                 "hydrogen-leak:cascade.high" not in frames[-1]["active_faults"])
         finally:
             client.post(f"/api/simulations/{job_id}/stop")
+
+
+def test_live_esd_latches_until_fresh_process_job():
+    with TestClient(app) as client:
+        settings = {"vehicle_1": True, "vehicle_2": True}
+        job_id = client.post("/api/simulations", json={"continuous": True,
+            "duration_s": 2.0, "control_period_s": .2,
+            "process_settings": settings}).json()["id"]
+        try:
+            _wait_for(client, job_id, lambda frames: len(frames) >= 2)
+            response = client.post(f"/api/simulations/{job_id}/faults?relative=true", json={
+                "event_id": "operator-esd", "kind": "emergency-stop", "target": "station",
+                "start_time_s": 0,
+            })
+            assert response.status_code == 202, response.text
+            frames = _wait_for(client, job_id, lambda frames: any(frame["esd"] for frame in frames))
+            tripped = next(frame for frame in frames if frame["esd"])
+            assert tripped["nozzle_1_flow_g_s"] == 0
+            assert tripped["nozzle_2_flow_g_s"] == 0
+            assert tripped["process_activity"]["vehicle_1"]["state"] == "blocked"
+            assert tripped["process_activity"]["vehicle_2"]["state"] == "blocked"
+        finally:
+            client.post(f"/api/simulations/{job_id}/stop")
+        fresh_id = client.post("/api/simulations", json={"continuous": True,
+            "duration_s": 2.0, "control_period_s": .2}).json()["id"]
+        try:
+            fresh = _wait_for(client, fresh_id, lambda frames: len(frames) >= 1)
+            assert fresh[0]["esd"] is False
+            assert not fresh[0]["active_faults"]
+        finally:
+            client.post(f"/api/simulations/{fresh_id}/stop")

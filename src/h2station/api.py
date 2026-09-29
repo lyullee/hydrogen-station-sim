@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+from contextvars import ContextVar
 import json
 import os
 import re
@@ -13,13 +14,14 @@ from datetime import datetime, timezone
 from dataclasses import replace, asdict
 from pathlib import Path
 from threading import Lock
-from typing import Any, Literal
+from typing import Any, Awaitable, Callable, Literal
 from uuid import uuid4
 
 import numpy as np
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field, ConfigDict, model_validator
 
 from .full_station import FullStationState
@@ -35,6 +37,8 @@ from .tabulated import PropsSI
 from .hazop.database import EventStore, load_catalog
 from .hazop.mapping import coverage as hazop_coverage
 from .hazop.runtime import HazopMonitor
+from .hazop.response import (classify_rule, load_playbooks, response_selection,
+                             prompt_guidance, render_guidance, structured_guidance)
 
 
 class FaultInput(BaseModel):
@@ -109,9 +113,9 @@ class ProcessSettings(BaseModel):
     trailer_temperature_c: float = Field(default=25.0, ge=-40.0, le=85.0)
     trailer_capacity_kg: float = Field(default=50.0, gt=0.1, le=10000.0)
     recharge_auto_stop: bool = True
-    recharge_target_low_mpa: float = Field(default=48.0, gt=1.0, le=110.0)
-    recharge_target_medium_mpa: float = Field(default=68.0, gt=1.0, le=110.0)
-    recharge_target_high_mpa: float = Field(default=98.0, gt=1.0, le=110.0)
+    recharge_target_low_mpa: float = Field(default=46.0, gt=1.0, le=110.0)
+    recharge_target_medium_mpa: float = Field(default=66.0, gt=1.0, le=110.0)
+    recharge_target_high_mpa: float = Field(default=96.0, gt=1.0, le=110.0)
     vehicle_1_auto_stop: bool = True
     vehicle_1_target_pressure_mpa: float = Field(default=70.0, gt=1.0, le=110.0)
     vehicle_2_auto_stop: bool = True
@@ -129,13 +133,16 @@ class SimulationInput(BaseModel):
     model_config = ConfigDict(allow_inf_nan=False)
     duration_s: float = Field(default=300.0, gt=0.0, le=3600.0)
     continuous: bool = False
-    speed_multiplier: Literal[1, 10, 100] = 1
+    speed_multiplier: Literal[0.5, 1, 2, 3, 5, 10, 30, 50, 100] = 1
     control_period_s: float = Field(default=0.2, gt=0.0, le=2.0)
     ambient_temperature_c: float = Field(default=25.0, ge=-40.0, le=50.0)
     initial_vehicle_pressure_mpa: float = Field(default=5.0, gt=0.0, le=70.0)
     initial_vehicle_temperature_c: float = Field(default=25.0, ge=-40.0, le=85.0)
     initial_vehicle_2_pressure_mpa: float = Field(default=8.0, gt=0.0, le=70.0)
     initial_vehicle_2_temperature_c: float = Field(default=25.0, ge=-40.0, le=85.0)
+    initial_bank_low_fill_percent: float = Field(default=90.0, ge=1.0, le=100.0)
+    initial_bank_medium_fill_percent: float = Field(default=100.0 * 65.0 / 70.0, ge=1.0, le=100.0)
+    initial_bank_high_fill_percent: float = Field(default=90.0, ge=1.0, le=100.0)
     target_vehicle_pressure_mpa: float = Field(default=70.0, gt=1.0, le=87.5)
     target_vehicle_2_pressure_mpa: float = Field(default=70.0, gt=1.0, le=87.5)
     pressure_ramp_rate_mpa_min: float = Field(default=12.0, gt=0.0, le=30.0)
@@ -157,14 +164,25 @@ class SagaChatTurn(BaseModel):
 
 
 class SimulationSpeedInput(BaseModel):
-    speed_multiplier: Literal[1, 10, 100]
+    speed_multiplier: Literal[0.5, 1, 2, 3, 5, 10, 30, 50, 100]
 
 
 class SagaAnalysisInput(BaseModel):
+    provider: Literal["service_hub", "groq"] = "service_hub"
     question: str = Field(default="현재 공정의 이상 징후와 조치 우선순위를 분석해 주세요.", max_length=1200)
     trigger: str = Field(default="manual", pattern="^(manual|periodic|alarm)$")
     scenario_mode: bool = False
+    # The live monitor uses SAGA's deterministic endpoint. Only an explicitly
+    # requested scenario-generation run uses the generative chat path.
+    direct: bool = False
     history: list[SagaChatTurn] = Field(default_factory=list, max_length=8)
+
+
+class SensorAnalysisInput(BaseModel):
+    provider: Literal["service_hub", "groq"] = "service_hub"
+    question: str = Field(default="", max_length=1200)
+    time_s: float | None = Field(default=None, ge=0)
+    direct: bool = False
 
 
 app = FastAPI(
@@ -183,6 +201,7 @@ _jobs: dict[str, dict[str, Any]] = {}
 _jobs_lock = Lock()
 _process_runtimes: dict[str, ProcessRuntime] = {}
 _executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="h2station")
+_saga_token_sink: ContextVar[Callable[[str], None] | None] = ContextVar("saga_token_sink", default=None)
 
 
 def _analyze_frame(frame: dict[str, Any]) -> dict[str, Any]:
@@ -192,6 +211,14 @@ def _analyze_frame(frame: dict[str, Any]) -> dict[str, Any]:
     leak = float(frame.get("total_leak_flow_g_s", 0.0))
     esd = bool(frame.get("esd", False))
     active_faults = list(frame.get("active_faults") or [])
+    fire_inputs = [fault for fault in active_faults if fault.startswith("external-fire:")]
+    flame_signals = frame.get("flame_detectors") or {}
+    confirmed_flames = [tag for tag, signal in flame_signals.items()
+                        if isinstance(signal, dict) and signal.get("quality") == "GOOD"
+                        and float(signal.get("value") or 0.0) >= 0.5]
+    fire_detection = {"status": "DETECTED" if confirmed_flames else "PENDING" if fire_inputs else "NONE",
+                      "detector_tags": confirmed_flames, "scenario_inputs": fire_inputs,
+                      "virtual": True}
     detector_values = [float(x.get("value", 0.0)) for x in (frame.get("gas_detectors") or {}).values() if isinstance(x, dict)]
     max_detector = max(detector_values, default=0.0)
     findings: list[str] = []
@@ -237,8 +264,13 @@ def _analyze_frame(frame: dict[str, Any]) -> dict[str, Any]:
     elif max_detector >= 1.0:
         findings.append(f"가스검지기 최대 {max_detector:.2f} vol% H₂: 경보 후보")
         score = max(score, 2)
-    if any(fault.startswith("external-fire:") for fault in active_faults):
-        findings.append("설비 외부 화재 입력 활성: 해당 구역 온도·압력과 확산 영향을 즉시 확인")
+    if fire_inputs:
+        findings.append("외부 화재 시나리오 입력 활성: " +
+                        (f"화염검지기 {', '.join(confirmed_flames)} 감지 · 온도·압력 확인"
+                         if confirmed_flames else "화염검지 신호 미확인 · 온도·압력 추적"))
+        score = max(score, 3)
+    elif confirmed_flames:
+        findings.append(f"화염검지기 {', '.join(confirmed_flames)} 감지: 주변 설비 상태 확인")
         score = max(score, 3)
     if any(fault.startswith("hydrogen-leak:") for fault in active_faults):
         findings.append("수소 누출 입력 활성: 누출량과 가스검지기 신호를 확인")
@@ -251,7 +283,8 @@ def _analyze_frame(frame: dict[str, Any]) -> dict[str, Any]:
         score = 3
     status = ("CRITICAL" if score >= 3 else "WARNING" if score >= 2 else "ADVISORY" if score else "NORMAL")
     headline = {"CRITICAL":"즉시 현장 확인 및 피해영향예측 확인", "WARNING":"운전 조건과 검지기 추세 감시", "ADVISORY":"사고 입력 영향 추적 중", "NORMAL":"모든 연결 신호가 정상 범위"}[status]
-    return {"status": status, "score": score, "headline": headline, "findings": findings, "max_detector_volpct": max_detector}
+    return {"status": status, "score": score, "headline": headline, "findings": findings,
+            "max_detector_volpct": max_detector, "fire_detection": fire_detection}
 
 
 def _utc_now() -> str:
@@ -306,6 +339,11 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             ),
             initial_vehicle_2_temperature_k=(
                 request.initial_vehicle_2_temperature_c + 273.15
+            ),
+            initial_bank_fill_percent=(
+                request.initial_bank_low_fill_percent,
+                request.initial_bank_medium_fill_percent,
+                request.initial_bank_high_fill_percent,
             ),
             target_vehicle_pressure_pa=request.target_vehicle_pressure_mpa * 1.0e6,
             target_vehicle_2_pressure_pa=(
@@ -449,6 +487,10 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                     tag: value for tag, value in signals.items()
                     if str(tag).startswith("GD-") and isinstance(value, dict)
                 }
+                frame["flame_detectors"] = {
+                    tag: value for tag, value in signals.items()
+                    if str(tag).startswith("FD-") and isinstance(value, dict)
+                }
                 frame["analysis"] = _analyze_frame(frame)
                 frames.append(frame)
                 _jobs[job_id]["next_sequence"] = sequence + 1
@@ -553,7 +595,7 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                 name: [f["bank_pressure_mpa"][name] for f in retained_frames]
                 for name in retained_frames[0]["bank_pressure_mpa"]
             }
-            for key in ("analysis", "gas_detectors", "released_mass_kg", "peak_vehicle_temperature_c", "trip_causes"):
+            for key in ("analysis", "gas_detectors", "flame_detectors", "released_mass_kg", "peak_vehicle_temperature_c", "trip_causes"):
                 result["series"][key] = [f.get(key) for f in retained_frames]
             result["hazop"]["frames"] = [f["hazop"] for f in retained_frames]
             releases_by_frame = [
@@ -568,6 +610,7 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
         if last_frame:
             result["analysis"] = last_frame.get("analysis")
             result["gas_detectors"] = last_frame.get("gas_detectors", {})
+            result["flame_detectors"] = last_frame.get("flame_detectors", {})
         _set_job(
             job_id,
             status="complete",
@@ -933,12 +976,236 @@ def list_simulation_faults(job_id: str) -> dict[str, Any]:
         ]}
 
 
-def _invoke_saga(prompt: str, answer_length: str = "concise") -> dict[str, Any]:
+def _invoke_saga(prompt: str, answer_length: str = "concise", provider: str = "service_hub") -> dict[str, Any]:
     saga_url = os.getenv("H2STATION_SAGA_URL", "http://127.0.0.1:8090").rstrip("/") + "/api/chat"
-    body = json.dumps({"message": prompt[:9900], "mode": "chat", "answer_length": answer_length},
+    body = json.dumps({"message": prompt[:9900], "mode": "chat", "answer_length": answer_length,
+                       "provider": provider},
                       ensure_ascii=False).encode("utf-8")
     with urlopen(Request(saga_url, data=body, headers={"Content-Type": "application/json"}), timeout=35) as response:
         return json.load(response)
+
+
+def _invoke_saga_stream(prompt: str, answer_length: str, provider: str,
+                        on_token: Callable[[str], None]) -> dict[str, Any]:
+    """Forward SAGA's real chat deltas while retaining its reviewed final answer."""
+    saga_url = os.getenv("H2STATION_SAGA_URL", "http://127.0.0.1:8090").rstrip("/") + "/api/chat/stream"
+    body = json.dumps({"message": prompt[:9900], "mode": "chat", "answer_length": answer_length,
+                       "provider": provider}, ensure_ascii=False).encode("utf-8")
+    final: dict[str, Any] | None = None
+    event_name = ""
+    data_lines: list[str] = []
+    with urlopen(Request(saga_url, data=body, headers={"Content-Type": "application/json"}), timeout=120) as response:
+        for raw_line in response:
+            line = raw_line.decode("utf-8").rstrip("\r\n")
+            if line.startswith("event:"):
+                event_name = line[6:].strip()
+            elif line.startswith("data:"):
+                data_lines.append(line[5:].strip())
+            elif not line and data_lines:
+                payload = json.loads("\n".join(data_lines))
+                if event_name in {"draft_token", "token"}:
+                    on_token(str(payload.get("text") or ""))
+                elif event_name == "answer":
+                    final = payload
+                elif event_name == "error":
+                    raise URLError(str(payload.get("detail") or "SAGA 스트림 오류"))
+                event_name = ""
+                data_lines.clear()
+    if final is None:
+        raise URLError("SAGA 스트림에서 최종 답변을 받지 못했습니다.")
+    return final
+
+
+async def _invoke_saga_selected(prompt: str, answer_length: str, provider: str,
+                                explicit_length: bool = False,
+                                stream_output: bool = False) -> dict[str, Any]:
+    sink = _saga_token_sink.get() if stream_output else None
+    if sink is not None:
+        return await asyncio.to_thread(_invoke_saga_stream, prompt, answer_length, provider, sink)
+    # Preserve the existing two-argument path for default requests and test doubles.
+    if provider == "groq":
+        return await asyncio.to_thread(_invoke_saga, prompt, answer_length, provider)
+    if answer_length == "concise" and not explicit_length:
+        return await asyncio.to_thread(_invoke_saga, prompt)
+    return await asyncio.to_thread(_invoke_saga, prompt, answer_length)
+
+
+def _stream_analysis_response(run: Callable[[], Awaitable[dict[str, Any]]],
+                              starting_status: str) -> StreamingResponse:
+    async def events():
+        queue: asyncio.Queue[tuple[str, dict[str, Any]]] = asyncio.Queue()
+        loop = asyncio.get_running_loop()
+        emitted_tokens = 0
+
+        def send_token(value: str) -> None:
+            if value:
+                loop.call_soon_threadsafe(queue.put_nowait, ("token", {"text": value}))
+
+        async def selected_run() -> dict[str, Any]:
+            token = _saga_token_sink.set(send_token)
+            try:
+                return await run()
+            finally:
+                _saga_token_sink.reset(token)
+
+        task = asyncio.create_task(selected_run())
+        yield f"event: status\ndata: {json.dumps({'text': starting_status}, ensure_ascii=False)}\n\n"
+        try:
+            while not task.done() or not queue.empty():
+                try:
+                    event_name, payload = await asyncio.wait_for(queue.get(), timeout=0.25)
+                except asyncio.TimeoutError:
+                    continue
+                if event_name == "token":
+                    emitted_tokens += 1
+                yield f"event: {event_name}\ndata: {json.dumps(payload, ensure_ascii=False)}\n\n"
+            result = await task
+            if not emitted_tokens:
+                # The deterministic endpoint returns one result. Reveal that
+                # result progressively in the same SSE UI, without invoking
+                # the generative/reasoning API just to obtain token events.
+                answer = str(result.get("analysis_answer") or result.get("answer") or "")
+                for offset in range(0, len(answer), 48):
+                    yield f"event: token\ndata: {json.dumps({'text': answer[offset:offset + 48]}, ensure_ascii=False)}\n\n"
+                    await asyncio.sleep(0.012)
+            yield f"event: result\ndata: {json.dumps(result, ensure_ascii=False, default=str)}\n\n"
+        except Exception as exc:
+            detail = exc.detail if isinstance(exc, HTTPException) else str(exc)
+            yield f"event: error\ndata: {json.dumps({'detail': detail}, ensure_ascii=False)}\n\n"
+        finally:
+            if not task.done():
+                task.cancel()
+
+    return StreamingResponse(events(), media_type="text/event-stream",
+                             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
+
+def _invoke_saga_hazop_direct(
+    frame: dict[str, Any], catalog: dict[str, Any], station_id: str, question: str = "",
+    impact_results: list[dict[str, Any]] | None = None,
+) -> dict[str, Any] | None:
+    """Send one simulator snapshot to SAGA's deterministic HAZOP endpoint.
+
+    This call deliberately does not use ``/api/chat``. It transfers the
+    simulator's own HAZOP rows and current signals, so SAGA can answer with
+    numeric comparisons and row-level emergency actions without waiting for
+    an LLM, RAG search, or review pass.
+    """
+    signals = (frame.get("hazop") or {}).get("signals") or {}
+    if not isinstance(signals, dict):
+        return None
+    readings: list[dict[str, Any]] = []
+    signal_tags: set[str] = set()
+    for tag, raw in signals.items():
+        if not isinstance(raw, dict) or raw.get("value") is None:
+            continue
+        try:
+            value = float(raw.get("value"))
+        except (TypeError, ValueError):
+            continue
+        if not np.isfinite(value):
+            continue
+        signal_tags.add(str(tag))
+        readings.append({
+            "tagId": str(tag),
+            "value": value,
+            "unit": str(raw.get("unit") or ""),
+            "quality": str(raw.get("quality") or "GOOD"),
+        })
+    if not readings:
+        return None
+    # Transfer only rows that can be evaluated against this snapshot. This
+    # keeps the request small even when the catalogue grows beyond 205 rows.
+    rules = [
+        row for row in (catalog.get("rules") or [])
+        if isinstance(row, dict) and str(row.get("sensor_id") or row.get("센서_ID") or "") in signal_tags
+    ]
+    equipment = [
+        {
+            "equipmentId": str(node.get("node_id")),
+            "name": str(node.get("설비_라인") or node.get("name") or ""),
+            "equipmentType": "digital-twin-node",
+        }
+        for node in (catalog.get("nodes") or [])
+        if isinstance(node, dict) and node.get("node_id")
+    ]
+    body = json.dumps({
+        "stationId": station_id,
+        "scenarioId": "*",
+        "readings": readings,
+        "equipment": equipment,
+        "hazopRules": rules,
+        "condition": question[:1200],
+        "impactResults": impact_results or [],
+        "interpret": False,
+        "generateSop": True,
+        "maxStalenessSeconds": 86400,
+    }, ensure_ascii=False, default=str).encode("utf-8")
+    saga_url = os.getenv("H2STATION_SAGA_DIRECT_URL")
+    if not saga_url:
+        saga_url = os.getenv("H2STATION_SAGA_URL", "http://127.0.0.1:8090").rstrip("/") + "/api/digital-twin/hazop/direct"
+    try:
+        with urlopen(Request(saga_url, data=body, headers={"Content-Type": "application/json"}), timeout=3) as response:
+            result = json.load(response)
+        return result if isinstance(result, dict) else None
+    except (URLError, HTTPError, TimeoutError, OSError, ValueError):
+        # A stopped or older SAGA process must not make the digital twin unavailable.
+        return None
+
+
+def _direct_hazop_answer(result: dict[str, Any]) -> str:
+    sop = result.get("sop") if isinstance(result.get("sop"), dict) else {}
+    answer = str(sop.get("answer") or "").strip()
+    if answer:
+        return answer
+    status = str(result.get("status") or "UNKNOWN")
+    hits = result.get("hits") if isinstance(result.get("hits"), list) else []
+    if status == "NORMAL":
+        return "현재 전달된 센서값은 전송된 HAZOP 수치 기준을 넘지 않았습니다. 다음 측정 주기와 알람 상태를 계속 감시하세요."
+    if hits:
+        labels = [str(item.get("item_name") or item.get("tag_id") or "조건") for item in hits[:5] if isinstance(item, dict)]
+        return "현재 HAZOP 수치 기준을 초과한 조건이 감지되었습니다: " + ", ".join(labels)
+    return "현재 스냅샷은 일부 HAZOP 기준과 연결되지 않아 상태를 완전한 정상으로 확정할 수 없습니다."
+
+
+def _direct_impact_summary(results: list[dict[str, Any]]) -> str:
+    """Report only computed sample results, with their measured basis visible."""
+    if not results:
+        return ""
+    lines = ["### 피해영향예측 · 현재 센서 기준"]
+    for row in results[:3]:
+        node = str(row.get("node_name") or row.get("node_id") or "설비")
+        pressure = row.get("current_pressure_mpa")
+        temperature = row.get("current_temperature_c")
+        basis = "현재 모의 누출" if row.get("calculation_basis") == "ACTIVE_RELEASE_CURRENT_SENSORS" else "가정 누출"
+        measured = []
+        if isinstance(pressure, (int, float)):
+            measured.append(f"{row.get('pressure_sensor') or '압력'} {pressure:g} MPa")
+        if isinstance(temperature, (int, float)):
+            measured.append(f"{row.get('temperature_sensor') or '온도'} {temperature:g} °C")
+        diameter = row.get("orifice_diameter_mm")
+        if isinstance(diameter, (int, float)):
+            measured.append(f"누출 구경 {diameter:g} mm")
+        lines.append(f"- **{node}** ({basis}): " + ", ".join(measured))
+        effect = []
+        heat = row.get("maximum_heat_flux_w_m2")
+        pressure_pa = row.get("maximum_overpressure_pa")
+        if isinstance(heat, (int, float)):
+            effect.append(f"최대 열복사 {heat / 1000:g} kW/m²")
+        if isinstance(pressure_pa, (int, float)):
+            effect.append(f"최대 과압 {pressure_pa / 1000:g} kPa")
+        radius = row.get("sampled_effect_radius_m")
+        if isinstance(radius, (int, float)) and radius > 0:
+            next_sample = row.get("sampled_next_distance_m")
+            detail = f"기준 초과 최원거리 표본점 {radius:g} m"
+            if isinstance(next_sample, (int, float)) and next_sample > radius:
+                detail += f" · 다음 표본점 {next_sample:g} m는 기준 미달"
+            effect.append(detail)
+        else:
+            effect.append("표본점 기준 초과 거리 미확정")
+        lines.append("  " + " · ".join(effect))
+    lines.append("표본점 결과는 현장 안전거리나 확정 대피반경이 아닙니다.")
+    return "\n".join(lines)
 
 
 def _safe_saga_text(answer: str) -> str:
@@ -1016,10 +1283,16 @@ async def _run_saga_scenario_analysis(
     request: SagaAnalysisInput, active: list[dict[str, Any]],
     mentioned_ids: set[str], sensor_count: int,
 ) -> dict[str, Any]:
+    hypothetical_guidance = response_selection(frame, catalog, request.question + " 가정 누출", "manual")
+    guidance_text = render_guidance(hypothetical_guidance, actual_alert=False)
     source_inputs = available_sensor_inputs(frame, catalog)
     if not source_inputs["pressure"] or not source_inputs["temperature"]:
+        summary = "현재 사용할 수 있는 압력 또는 온도 센서값이 전혀 없어 수치 계산을 수행하지 않았습니다."
         return {"time_s": frame.get("time_s"), "trigger": request.trigger,
-                "scenario_mode": True, "answer": "현재 사용할 수 있는 압력 또는 온도 센서값이 전혀 없어 수치 계산을 수행하지 않았습니다.",
+                "scenario_mode": True,
+                "answer": summary + ("\n\n---\n\n" + guidance_text if guidance_text else ""),
+                "analysis_answer": summary,
+                "response_guidance": structured_guidance(hypothetical_guidance, actual_alert=False),
                 "model": "", "proposed_scenarios": [], "impact_results": [], "sensor_count": sensor_count}
     target_ids = mentioned_ids or {case["node_id"] for case in catalog["cases"]}
     def source_distance(row: dict[str, Any]) -> int:
@@ -1072,14 +1345,14 @@ async def _run_saga_scenario_analysis(
         "제안은 사고 주입이나 설비 제어가 아닌 계산용 가정입니다. 설명문이나 Markdown 코드를 붙이지 마세요.\n"
         + json.dumps(plan_context, ensure_ascii=False, default=str)[:7800])
     try:
-        plan_reply = await asyncio.to_thread(_invoke_saga, plan_prompt)
+        plan_reply = await _invoke_saga_selected(plan_prompt, "concise", request.provider)
         try:
             proposals = parse_saga_plan(str(plan_reply.get("answer") or ""), eligible_ids, catalog,
                                         pressure_tags, temperature_tags)
         except ValueError as exc:
             retry_prompt = plan_prompt[:7300] + (f"\n이전 출력은 검증 실패({exc})였습니다. 다시 JSON 객체만 출력하세요.\n"
                 + str(plan_reply.get("answer") or "")[:450])
-            plan_reply = await asyncio.to_thread(_invoke_saga, retry_prompt)
+            plan_reply = await _invoke_saga_selected(retry_prompt, "concise", request.provider)
             proposals = parse_saga_plan(str(plan_reply.get("answer") or ""), eligible_ids, catalog,
                                         pressure_tags, temperature_tags)
     except (URLError, HTTPError, TimeoutError, OSError) as exc:
@@ -1089,14 +1362,18 @@ async def _run_saga_scenario_analysis(
     results = await asyncio.to_thread(assess_sensor_cases, frame, catalog, backend, [], proposals=proposals)
     calculated_results = [row for row in results if row.get("calculation_status") == "calculated"]
     if not calculated_results:
+        summary = "제안한 가상 시나리오의 피해영향예측 수치 결과를 얻지 못했습니다. 현재 운전 중 사고가 발생했다는 뜻은 아닙니다."
         return {"time_s": frame.get("time_s"), "trigger": request.trigger,
                 "scenario_mode": True, "show_impact_results": False,
-                "answer": "제안한 가상 시나리오의 피해영향예측 수치 결과를 얻지 못했습니다. 현재 운전 중 사고가 발생했다는 뜻은 아닙니다.",
+                "answer": summary + ("\n\n---\n\n" + guidance_text if guidance_text else ""),
+                "analysis_answer": summary,
+                "response_guidance": structured_guidance(hypothetical_guidance, actual_alert=False),
                 "model": plan_reply.get("model", ""), "proposed_scenarios": proposals,
                 "impact_results": [], "active_rule_ids": sorted(rule_ids - {None}),
                 "sensor_count": sensor_count}
     interpretation_context = {"time_s": frame.get("time_s"), "question": request.question,
                               "proposed_scenarios": proposals, "impact_results": calculated_results,
+                              "emergency_response_guidance": prompt_guidance(hypothetical_guidance),
                               "active_hazop": active[:15], "hazop_rules": rules,
                               "scenario_is_hypothetical": True, "process_fault_injected": False}
     interpretation_prompt = (
@@ -1106,18 +1383,25 @@ async def _run_saga_scenario_analysis(
         "sensor_basis=PROXY이면 대체 센서의 태그와 원래 노드를 밝히고 목표 설비의 직접 계측값으로 표현하지 마세요. "
         "대체 신호로 계산된 경우 누락 입력을 나열하거나 추가 입력을 요구하지 말고 실제 사용한 태그·출처·가정만 밝히세요. "
         "sampled_effect_radius_m은 임계값을 초과한 최원거리 관측점일 뿐, 안전반경이나 최대 사고범위가 아닙니다. "
+        "sampled_next_distance_m이 있으면 다음 관측점에서는 기준 미달임을 함께 설명하세요. 두 표본 사이의 정확한 경계는 계산되지 않았습니다. "
         "null이면 범위가 미확정입니다. 제공되지 않은 시나리오의 수치나 실패 이유를 만들지 마세요. "
         "내부 분석 방식, HAZOP, 규칙 ID, DB 상태, LATCHED 같은 구현 정보는 사용자에게 밝히지 마세요. 현재 센서와 운전 상태만 자연스럽게 설명하세요. "
+        "가상 사고가 실제 발생할 경우의 대응 우선순위를 제공된 대응 자료에 따라 요약하세요. 자료 밖의 절차나 확정 대피거리를 만들지 마세요. 상세 단계는 서버가 별도로 표시합니다. "
         "사용자에게는 엔진 제품명 대신 '피해영향예측'이라고 쓰세요. 한국어 Markdown으로 간결하게 답하세요.\n"
         + json.dumps(interpretation_context, ensure_ascii=False, default=str)[:8200])
     try:
-        interpretation = await asyncio.to_thread(_invoke_saga, interpretation_prompt, "standard")
+        interpretation = await _invoke_saga_selected(interpretation_prompt, "standard", request.provider,
+                                                     stream_output=True)
     except (URLError, HTTPError, TimeoutError, OSError) as exc:
         raise HTTPException(status_code=503, detail=f"SAGA 계산 결과 해석 실패: {exc}") from exc
     narrative = _safe_saga_text(str(interpretation.get("answer") or ""))
+    analysis_answer = narrative or "제안한 가상 누출의 계산 결과를 아래에서 확인할 수 있습니다."
+    if guidance_text:
+        narrative = (narrative + "\n\n---\n\n" if narrative else "") + guidance_text
     return {"time_s": frame.get("time_s"), "trigger": request.trigger,
             "scenario_mode": True, "show_impact_results": True,
-            "answer": narrative or "제안한 가상 누출의 계산 결과를 아래에서 확인할 수 있습니다.",
+            "answer": narrative or analysis_answer, "analysis_answer": analysis_answer,
+            "response_guidance": structured_guidance(hypothetical_guidance, actual_alert=False),
             "model": interpretation.get("model", ""), "proposed_scenarios": proposals,
             "impact_results": calculated_results, "active_rule_ids": sorted(rule_ids - {None}),
             "sensor_count": sensor_count}
@@ -1136,18 +1420,20 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
     active = hazop.get("active") or []
     ids = {str(row.get("rule_id")) for row in active if isinstance(row, dict)}
     catalog = load_catalog()
-    matched_rules = [rule for rule in catalog["rules"] if rule["rule_id"] in ids]
+    rule_fields = ("rule_id", "node_id", "sensor_id", "시나리오명", "연산자", "임계값",
+                   "단위", "등급", "원인후보", "사고_전개조건", "HyRAM_case_id")
+    matched_rules = [{field: rule.get(field) for field in rule_fields}
+                     for rule in catalog["rules"] if rule["rule_id"] in ids]
     mentioned_nodes = _mentioned_hazop_nodes(request.question, catalog)
     mentioned_ids = {node["node_id"] for node in mentioned_nodes}
     reference_rules = [rule for rule in catalog["rules"] if rule["node_id"] in mentioned_ids]
-    signal_prefixes = tuple(prefix for word, prefix in (("압력", "PT-"), ("온도", "TT-"), ("유량", "FT-"), ("가스", "GD-"))
+    signal_prefixes = tuple(prefix for word, prefix in (("압력", "PT-"), ("온도", "TT-"), ("유량", "FT-"), ("가스", "GD-"), ("화염", "FD-"))
         if word in request.question)
     if signal_prefixes:
         filtered_rules = [rule for rule in reference_rules if str(rule["sensor_id"]).startswith(signal_prefixes)]
         if filtered_rules:
             reference_rules = filtered_rules
     reference_rules = reference_rules[:18]
-    rule_fields = ("rule_id", "node_id", "sensor_id", "시나리오명", "연산자", "임계값", "단위", "등급", "원인후보", "사고_전개조건", "권고대응", "HyRAM_case_id")
     reference_rules = [{field: rule.get(field) for field in rule_fields} for rule in reference_rules]
     signals = hazop.get("signals") or {}
     sensor_values = {tag: {"value": value.get("value"), "unit": value.get("unit"),
@@ -1157,12 +1443,24 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
     releases = hazop.get("releases") or []
     analysis = frame.get("analysis") or _analyze_frame(frame)
     alert_status = str(analysis.get("status") or "NORMAL")
-    show_impact_results = (alert_status != "NORMAL" or bool(active or releases)
+    if alert_status == "NORMAL" and (active or releases or frame.get("active_faults")
+                                      or frame.get("relief_valves_open")):
+        derived = _analyze_frame(frame)
+        alert_status = str(derived.get("status") or "NORMAL")
+        if alert_status == "NORMAL":
+            alert_status = "WARNING"
+        analysis = {**analysis, "status": alert_status,
+                    "findings": analysis.get("findings") or derived.get("findings") or []}
+    emergency_context = (alert_status != "NORMAL" or bool(active or releases)
+                         or bool(frame.get("active_faults") or frame.get("relief_valves_open"))
+                         or bool((analysis.get("fire_detection") or {}).get("detector_tags")))
+    show_impact_results = (emergency_context
                            or (request.trigger == "manual" and _impact_requested(request.question)))
-    if _scenario_requested(request):
+    if request.scenario_mode or (not request.direct and _scenario_requested(request)):
         backend = await asyncio.to_thread(load_hyram_backend)
         return await _run_saga_scenario_analysis(frame, catalog, backend, request, active,
                                                  mentioned_ids, len(sensor_values))
+    response_plans = response_selection(frame, catalog, request.question, request.trigger)
     sensor_impacts = []
     backend = None
     if show_impact_results:
@@ -1181,7 +1479,20 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         candidates = ([node["node_id"] for node in mentioned_nodes] + fault_nodes + release_nodes + active_nodes
                       if request.trigger == "manual" else fault_nodes + release_nodes + active_nodes)
         if not candidates:
-            candidates = ["N09", "N13", "N17"]
+            # A status-only alarm can have no active rule row. Choose a
+            # reference case from the GOOD P/T pairs that actually exist in
+            # this frame instead of assuming the high bank is instrumented.
+            available = available_sensor_inputs(frame, catalog)
+            pressure_nodes = {row["node_id"] for row in available["pressure"]}
+            temperature_nodes = {row["node_id"] for row in available["temperature"]}
+            usable_nodes = pressure_nodes & temperature_nodes
+            preferred = ["N09", "N08", "N07", "N13", "N17", "N06"]
+            case_nodes = {row["node_id"] for row in catalog["cases"]}
+            candidates = [node_id for node_id in preferred if node_id in usable_nodes and node_id in case_nodes]
+            candidates += [node["node_id"] for node in catalog["nodes"]
+                           if node["node_id"] in usable_nodes and node["node_id"] in case_nodes
+                           and node["node_id"] not in candidates]
+            candidates = candidates[:3]
         sensor_impacts = await asyncio.to_thread(assess_sensor_cases, frame, catalog, backend, candidates)
     legacy_impacts = [{"release_id": release.get("release_id"),
         "component_id": release.get("component_id"),
@@ -1191,6 +1502,8 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "maximum_overpressure_pa": (release.get("consequence") or {}).get("maximum_overpressure_pa"),
         "sampled_effect_radius_m": ((release.get("consequence") or {}).get("sampled_effect_radius_m") or None),
         "sampled_max_distance_m": (release.get("consequence") or {}).get("sampled_max_distance_m"),
+        "sampled_next_distance_m": (release.get("consequence") or {}).get("sampled_next_distance_m"),
+        "observation_point_count": (release.get("consequence") or {}).get("observation_point_count"),
         "effect_range_status": (release.get("consequence") or {}).get("effect_range_status"),
         "range_interpretation": ("표본 관측점에서 5 kW/m² 및 5 kPa 기준 미달; 영향 반경 미확정"
             if (release.get("consequence") or {}).get("effect_range_status") == "BELOW_THRESHOLDS_AT_SAMPLES"
@@ -1200,9 +1513,61 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
     impact_results = [row for row in sensor_impacts + [row for row in legacy_impacts
         if row.get("release_id") not in assessed_releases]
         if row.get("calculation_status") == "calculated"]
-    context = {"station":"H70 reference simulation", "time_s":frame.get("time_s"),
-        "impact_results":impact_results,
-        "analysis":analysis, "active_faults":frame.get("active_faults"),
+    if request.direct:
+        # Keep the live monitor on the dedicated low-latency API even for
+        # alarms. Consequences are calculated first from this same snapshot;
+        # an unavailable SAGA process falls back to local deterministic data,
+        # never to the slower generative chat endpoint.
+        direct_result = await asyncio.to_thread(
+            _invoke_saga_hazop_direct, frame, catalog, str(job_id), request.question, impact_results
+        )
+        direct_sop = (direct_result or {}).get("sop") if isinstance((direct_result or {}).get("sop"), dict) else {}
+        direct_hits = (direct_result or {}).get("hits") if isinstance((direct_result or {}).get("hits"), list) else []
+        actual_alert = emergency_context or bool(direct_hits)
+        if direct_result:
+            answer = _safe_saga_text(_direct_hazop_answer(direct_result))
+        else:
+            answer = ""
+        if actual_alert and re.search(r"(?:정상\s*운전|정상\s*범위|이상\s*없|경보\s*없)", answer):
+            answer = ""
+        if not answer:
+            findings = [str(item) for item in (analysis.get("findings") or [])[:3]]
+            answer = ("현재 주의·경보 신호를 확인했습니다. " + " · ".join(findings)
+                      if actual_alert else "현재 센서와 설비 신호를 확인했습니다. 정상 운전 상태입니다.")
+        if actual_alert and alert_status == "NORMAL":
+            alert_status = "WARNING"
+        impact_text = _direct_impact_summary(impact_results) if show_impact_results else ""
+        if impact_text:
+            answer += "\n\n" + impact_text
+        elif show_impact_results:
+            answer += "\n\n현재 센서 기준 정량 피해영향 결과는 확보되지 않았습니다."
+        analysis_answer = answer
+        guidance = render_guidance(response_plans, actual_alert=actual_alert)
+        if guidance:
+            answer += "\n\n---\n\n" + guidance
+        return {
+            "time_s": frame.get("time_s"), "trigger": request.trigger,
+            "answer": answer, "analysis_answer": analysis_answer,
+            "response_guidance": structured_guidance(response_plans, actual_alert=actual_alert),
+            "model": "SAGA 직답 · 센서 기반 계산",
+            "active_rule_ids": sorted(ids), "sensor_count": len(sensor_values),
+            "risk_assessment": {"status": alert_status, "score": analysis.get("score"),
+                                "findings": analysis.get("findings") or [],
+                                "calculated_impact_count": len(impact_results)},
+            "show_impact_results": show_impact_results,
+            "impact_results": impact_results,
+            "hazop_direct": direct_result,
+            "hazop_sop": direct_sop,
+            "hazop_hit_count": len(direct_hits),
+        }
+    context = {"impact_results":impact_results,
+        "impact_calculation_attempted":show_impact_results,
+        "station":"H70 reference simulation", "time_s":frame.get("time_s"),
+        "fire_detection": analysis.get("fire_detection"),
+        "flame_detector_signals": frame.get("flame_detectors") or {},
+        "active_faults":frame.get("active_faults"),
+        "analysis":analysis,
+        "emergency_response_guidance":prompt_guidance(response_plans),
         "relief_valves_open":frame.get("relief_valves_open") or [],
         "relief_valve_settings":{key: value for key, value in
             (((frame.get("process_operations") or {}).get("settings") or {}).get("relief_valves") or {}).items()
@@ -1218,8 +1583,12 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
     history = "\n".join(f"{turn.role}: {turn.content}" for turn in request.history)[-1800:]
     prompt = ("당신은 H70 수소충전소 운전 분석 보조자입니다. 아래 데이터는 실제 현장 계측이 아닌 시뮬레이터 신호입니다. "
         "HAZOP 센서 임계값과 현재 신호 품질, 물리 누출 및 피해영향예측 계산 상태를 구분하세요. "
-        + ("현재 주의·경보에 대응하여 서버가 현재 센서값으로 피해영향예측과 위험도 평가를 자동 수행했습니다. 사용자 요청을 기다리거나 계산을 권하지 마세요. "
-           if alert_status != "NORMAL" else
+        "external-fire 사고 입력은 화염검지기의 감지 신호가 아닙니다. fire_detection.status=DETECTED이고 FD 신호가 GOOD일 때에만 해당 구역 화염검지라고 쓰세요. "
+        "현재 FD 신호는 주입 사고에서 계산한 가상 검지 대리값으로, 독립 실측이나 광학 시야 검증이 아닙니다. PENDING이면 화재 시나리오 입력과 검지 미확인을 명확히 구분하세요. "
+        + ("현재 주의·경보에 대응하여 서버가 현재 센서값으로 피해영향예측을 먼저 수행했습니다. impact_results의 계산 완료 항목과 사용 센서를 구체적으로 해석하고 계산을 다시 권하지 마세요. "
+           if emergency_context and impact_results else
+           "현재 주의·경보에 대응하여 서버가 피해영향예측을 시도했지만 정량 결과가 확보되지 않았습니다. 결과 수치를 만들거나 재계산을 권하지 말고 현재 위험상태와 우선 조치를 설명하세요. "
+           if emergency_context else
            "정상 운전에서는 사용자가 사고 영향을 요청한 경우에만 계산 결과를 설명하세요. 요청하지 않았다면 사고 수치를 언급하지 마세요. ") +
         "impact_results의 계산 성공 항목만 수치 결과로 설명하세요. "
         "calculation_basis=SENSOR_BASED_HYPOTHESIS는 실제 누출이 아닌 1 mm 가정 시나리오이며, ACTIVE_RELEASE_CURRENT_SENSORS는 현재 물리 누출입니다. 둘을 혼동하지 마세요. "
@@ -1227,9 +1596,12 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "계산되지 않은 항목의 입력 부족이나 재계산 요청을 나열하지 마세요. 사용한 센서 태그와 출처·가정은 밝히세요. "
         "relief_valves_open에 항목이 있으면 안전밸브 개방을 현재 운전 경고로 분명히 알리고, 해당 밸브의 개방 압력·실제 방출 및 이미 계산된 피해영향을 함께 해석하세요. 안전밸브 방출을 임의의 배관 파손으로 단정하지 마세요. "
         "sampled_effect_radius_m이 null이면 표본 관측점에서 기준 미달입니다. 이때 숫자 반경을 만들지 말고 '표본 관측점에서 기준 미달, 영향 반경 미확정'이라고 쓰세요. "
+        "sampled_effect_radius_m이 양수이고 sampled_next_distance_m이 있으면 기준 초과 최원거리 표본점과 다음 기준 미달 표본점을 함께 말하세요. 현장 안전거리로 단정하지 마세요. "
         "계산 결과가 없으면 사고 범위를 추정값처럼 제시하지 마세요. 계산이 요청되지 않았다는 문구를 출력하지 마세요. 제공된 HAZOP 규칙에 없는 규칙 ID나 임계값을 만들지 마세요. "
         "사용자에게는 계산기 제품명 대신 '피해영향예측'이라고 표기하세요. "
         "내부 규칙이나 DB 명칭을 밝히지 말고 센서값, 설비 상태, 주의 원인과 운전 조치만 설명하세요. "
+        "emergency_response_guidance가 있으면 현재 신호와 연결한 대응 우선순위를 요약하세요. 자료 밖의 절차를 만들지 마세요. 상세한 즉시 조치, 안정화 확인, 재가동 조건, 예방·안전관리는 서버가 별도로 표시합니다. "
+        "현장 승인 비상계획과 소방 지휘를 우선하고, 모의 영향 반경을 확정 대피거리로 쓰지 마세요. 공급이 계속되는 수소 화염을 임의로 끄도록 권하지 마세요. "
         "current_alert_status와 안전밸브 개방 상태가 현재 경보 상태의 근거입니다. 활성 내부 규칙이 없더라도 안전밸브가 열려 있으면 경보를 유지하세요. "
         "현재 경보 여부와 내부 등록 기준을 구분하세요. 사용자에게는 실제 센서 태그와 운전 상태만 한국어로 간결하게 답하세요. "
         "정상 운전이며 사용자가 피해영향을 요청하지 않았다면 계산값은 내부 판단에만 사용하고 답변에 피해영향 수치·가정 누출 결과를 쓰지 마세요.\n"
@@ -1237,9 +1609,9 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         f"운전자 질문: {request.question}\n현재 데이터 및 HAZOP DB 발췌:\n"
         + json.dumps(context, ensure_ascii=False, default=str)[:7500])[:9900]
     try:
-        reply = await asyncio.to_thread(_invoke_saga, prompt)
+        reply = await _invoke_saga_selected(prompt, "concise", request.provider, stream_output=True)
     except (URLError, HTTPError, TimeoutError, OSError) as exc:
-        if alert_status == "NORMAL":
+        if not emergency_context:
             raise HTTPException(status_code=503, detail=f"SAGA 연결/분석 실패: {exc}") from exc
         severity_name = {"CRITICAL": "긴급", "WARNING": "경고", "ADVISORY": "주의"}.get(alert_status, alert_status)
         findings = [str(item) for item in (analysis.get("findings") or [])[:3]]
@@ -1252,21 +1624,37 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         reply = {"answer": "\n".join(fallback), "model": "센서 기반 위험 분석"}
     answer = str(reply.get("answer") or "")
     answer = _safe_saga_text(answer)
-    if alert_status != "NORMAL":
+    if emergency_context:
         answer = "\n".join(line for line in answer.splitlines()
             if not re.search(r"(?:현재\s*(?:운전\s*)?상태는\s*정상|현재\s*운전은\s*정상|정상\s*운전\s*중|경보는\s*없)", line))
     if not show_impact_results:
         answer = _normal_monitoring_text(answer)
     if not answer:
         answer = "현재 센서와 설비 상태를 확인했습니다. 계산 결과는 아래에서 확인할 수 있습니다." if show_impact_results else "현재 센서와 설비 상태를 확인했습니다."
+    analysis_answer = answer
+    actual_alert = emergency_context
+    guidance = render_guidance(response_plans, actual_alert=actual_alert)
+    if guidance:
+        answer = f"{answer}\n\n---\n\n{guidance}"
     return {"time_s":frame.get("time_s"), "trigger":request.trigger,
-        "answer":answer, "model":reply.get("model", ""),
+        "answer":answer, "analysis_answer":analysis_answer,
+        "response_guidance":structured_guidance(response_plans, actual_alert=actual_alert),
+        "model":reply.get("model", ""),
         "active_rule_ids":sorted(ids), "sensor_count":len(sensor_values),
         "risk_assessment":{"status":alert_status, "score":analysis.get("score"),
                            "findings":analysis.get("findings") or [],
                            "calculated_impact_count":len(impact_results)},
         "show_impact_results":show_impact_results,
         "impact_results":impact_results}
+
+
+@app.post("/api/simulations/{job_id}/saga-analysis/stream")
+async def saga_analysis_stream(job_id: str, request: SagaAnalysisInput) -> StreamingResponse:
+    return _stream_analysis_response(
+        lambda: saga_analysis(job_id, request),
+        "센서 상태와 피해영향예측 결과를 확인하고 있습니다…" if request.trigger == "alarm"
+        else "현재 공정 신호를 분석하고 있습니다…",
+    )
 
 
 @app.post("/api/simulations/{job_id}/faults", status_code=202)
@@ -1396,6 +1784,377 @@ def hazop_catalog() -> dict[str, Any]:
 @app.get("/api/hazop/mapping")
 def hazop_mapping() -> dict[str, Any]:
     return hazop_coverage(hazop_catalog())
+
+
+@app.get("/api/hazop/emergency-responses")
+def hazop_emergency_responses() -> dict[str, Any]:
+    """Inspect the versioned response DB and its complete HAZOP rule join."""
+    catalog = hazop_catalog()
+    playbooks = load_playbooks()
+    return {"version": playbooks["version"], "sources": playbooks["sources"],
+            "common_response": playbooks["common_response"], "plans": playbooks["plans"],
+            "rule_mappings": [{"rule_id": rule["rule_id"], "node_id": rule["node_id"],
+                               "sensor_id": rule["sensor_id"], "scenario": rule["시나리오명"],
+                               "response_plan_id": rule.get("대응유형") or classify_rule(rule),
+                               "response_stages": rule.get("비상대응_단계") or {},
+                               "source_ids": rule.get("대응근거_출처") or []}
+                              for rule in catalog["rules"]]}
+
+
+def _sensor_analysis_context(job_id: str, sensor_id: str,
+                             time_s: float | None = None) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    """Snapshot one sensor and its linked rules without holding the job lock during SAGA I/O."""
+    with _jobs_lock:
+        job = _jobs.get(job_id)
+        if job is None:
+            raise HTTPException(status_code=404, detail="Simulation not found")
+        if not job["frames"]:
+            raise HTTPException(status_code=409, detail="No sensor frame available yet")
+        latest = job["frames"][-1]
+        if time_s is None:
+            selected = latest
+        else:
+            selected = min(job["frames"], key=lambda item: abs(item["time_s"] - time_s))
+            if abs(selected["time_s"] - time_s) > max(0.001, abs(time_s) * 1e-8):
+                raise HTTPException(status_code=409, detail="Displayed sensor frame is no longer retained")
+        frame = dict(selected)
+        detail = dict(job.get("hazop_detail") or {}) if selected is latest else {}
+    catalog = load_catalog()
+    sensor = next((item for item in catalog["sensors"] if item["sensor_id"] == sensor_id), None)
+    if sensor is None:
+        raise HTTPException(status_code=404, detail="Sensor not found")
+    node = next((item for item in catalog["nodes"] if item["node_id"] == sensor["node_id"]), {})
+    mapping = next((item for item in catalog["mappings"] if item["sensor_id"] == sensor_id), {})
+    related_nodes = {sensor["node_id"]}
+    if sensor["node_id"] in {"N07", "N08", "N09"}:
+        related_nodes.add("N22")  # Storage boundary gas head covers the bank row.
+    elif sensor["node_id"] == "N22":
+        related_nodes.update({"N07", "N08", "N09"})
+    hazop = frame.get("hazop") or {}
+    signals = hazop.get("signals") or {}
+    current_rules = {item.get("rule_id"): item for item in detail.get("rules") or hazop.get("active") or []
+                     if isinstance(item, dict)}
+    playbooks = load_playbooks()
+    plans = {plan["id"]: plan for plan in playbooks["plans"]}
+    rules = []
+    for rule in catalog["rules"]:
+        if rule["sensor_id"] != sensor_id:
+            continue
+        result = current_rules.get(rule["rule_id"], {})
+        rules.append({"rule_id": rule["rule_id"], "sensor_id": sensor_id,
+                      "scenario": rule["시나리오명"],
+                      "expression": rule["신호식"], "operator": rule["연산자"],
+                      "threshold": rule["임계값"], "unit": rule["단위"],
+                      "severity": rule["등급"], "persistence_s": rule["지속_s"],
+                      "cause": rule["원인후보"], "progression": rule["사고_전개조건"],
+                      "diagnostic_limit": rule["진단한계"],
+                      "response_plan_id": classify_rule(rule),
+                      "response_guidance": rule.get("비상대응_단계") or {},
+                      "response_source_ids": rule.get("대응근거_출처") or [],
+                      "active": bool(result.get("active")), "state": result.get("state") or "PENDING_DATA",
+                      "condition_status": result.get("condition_status"),
+                      "evaluated_value": result.get("value"), "quality": result.get("quality")})
+    plan_ids = dict.fromkeys(rule["response_plan_id"] for rule in rules)
+    node_signals = {tag: {"value": value.get("value"), "unit": value.get("unit"),
+                          "quality": value.get("quality")}
+                    for tag, value in signals.items() if isinstance(value, dict)
+                    and any(s["node_id"] in related_nodes and s["sensor_id"] == tag
+                            for s in catalog["sensors"])}
+    releases = [item for item in hazop.get("releases") or [] if isinstance(item, dict)
+                and item.get("component_id") == node.get("누출_target")]
+    release_flow_g_s = sum(max(0.0, float(item.get("mass_flow_g_s") or 0.0)) for item in releases)
+    physical_leak_g_s = sum(max(0.0, float(item.get("mass_flow_g_s") or 0.0)) for item in releases
+                               if not str(item.get("release_id") or "").startswith("relief-"))
+    relief_discharge_g_s = release_flow_g_s - physical_leak_g_s
+    gas_signal = None
+    if sensor_id.startswith("GD-") and isinstance(signal := signals.get(sensor_id), dict):
+        thresholds = [float(rule["임계값"]) for rule in catalog["rules"] if rule["sensor_id"] == sensor_id]
+        value = signal.get("value")
+        if isinstance(value, (int, float)) and signal.get("quality") == "GOOD":
+            gas_signal = {"value_volpct_h2": float(value),
+                          "alarm_threshold_volpct_h2": min(thresholds) if thresholds else None,
+                          "hydrogen_observed": float(value) > 0.0,
+                          "alarm_threshold_exceeded": bool(thresholds and float(value) >= min(thresholds))}
+    catalog_rules = {rule["rule_id"]: rule for rule in catalog["rules"]}
+    related_active = []
+    for item in hazop.get("active") or []:
+        if not isinstance(item, dict) or item.get("node_id") not in related_nodes or item.get("sensor_id") == sensor_id:
+            continue
+        definition = catalog_rules.get(item.get("rule_id"))
+        if definition is not None:
+            plan_id = classify_rule(definition)
+            plan_ids[plan_id] = None
+            related_active.append({**item, "scenario": definition["시나리오명"],
+                                   "response_plan_id": plan_id,
+                                   "expression": definition["신호식"],
+                                   "operator": definition["연산자"],
+                                   "threshold": definition["임계값"],
+                                   "unit": definition["단위"],
+                                   "persistence_s": definition["지속_s"],
+                                   "cause": definition["원인후보"],
+                                   "progression": definition["사고_전개조건"],
+                                   "diagnostic_limit": definition["진단한계"],
+                                   "evaluated_value": item.get("value"),
+                                   "response_guidance": definition.get("비상대응_단계") or {},
+                                   "response_source_ids": definition.get("대응근거_출처") or []})
+    signal = signals.get(sensor_id)
+    signal_issue = isinstance(signal, dict) and signal.get("quality") in {"BAD", "STALE", "FAULT", "INVALID"}
+    if signal_issue:
+        plan_ids["sensor_fault"] = None
+    active_rule_count = sum(bool(rule["active"]) for rule in rules)
+    payload = {"time_s": frame.get("time_s"), "sensor": sensor, "node": node,
+               "mapping": mapping, "signal": signal, "rules": rules,
+               "response_plans": {plan_id: plans[plan_id] for plan_id in plan_ids},
+               "response_sources": {key: playbooks["sources"][key]
+                                    for plan_id in plan_ids for key in plans[plan_id]["sources"]},
+               "related_signals": node_signals, "related_active_rules": related_active,
+               "related_active_count": len(related_active),
+               "active_rule_count": active_rule_count,
+               "sensor_status": "ALERT" if active_rule_count else "SIGNAL_ISSUE" if signal_issue else "NORMAL",
+               "releases": releases,
+               "gas_signal_evidence": gas_signal,
+               "simulated_release_evidence": {"active": release_flow_g_s > 0.001,
+                                              "mass_flow_g_s": release_flow_g_s,
+                                              "physical_leak_g_s": physical_leak_g_s,
+                                              "relief_discharge_g_s": relief_discharge_g_s,
+                                              "release_ids": [item.get("release_id") for item in releases]},
+               "station_status": (frame.get("analysis") or _analyze_frame(frame)).get("status", "NORMAL")}
+    return payload, frame, catalog
+
+
+@app.get("/api/simulations/{job_id}/sensors/{sensor_id}")
+def simulation_sensor_detail(job_id: str, sensor_id: str, time_s: float | None = None) -> dict[str, Any]:
+    payload, _, _ = _sensor_analysis_context(job_id, sensor_id, time_s)
+    return payload
+
+
+@app.post("/api/simulations/{job_id}/sensors/{sensor_id}/analyze")
+async def analyze_simulation_sensor(job_id: str, sensor_id: str,
+                                    request: SensorAnalysisInput) -> dict[str, Any]:
+    payload, frame, catalog = _sensor_analysis_context(job_id, sensor_id, request.time_s)
+    active_rules = [rule for rule in payload["rules"] if rule["active"]]
+    related_rules = payload["related_active_rules"]
+    alert = payload["sensor_status"] == "ALERT"
+    impact_results: list[dict[str, Any]] = []
+    current_triggers = [rule for rule in active_rules + related_rules if rule.get("state") == "TRIGGER"]
+    if current_triggers:
+        backend = await asyncio.to_thread(load_hyram_backend)
+        assessed = await asyncio.to_thread(assess_sensor_cases, frame, catalog, backend,
+                                           [payload["sensor"]["node_id"]])
+        impact_results = [item for item in assessed if item.get("calculation_status") == "calculated"][:2]
+    applicable_plan_ids = dict.fromkeys(rule["response_plan_id"] for rule in active_rules)
+    applicable_plan_ids.update(dict.fromkeys(rule["response_plan_id"] for rule in related_rules))
+    if payload["sensor_status"] == "SIGNAL_ISSUE":
+        applicable_plan_ids["sensor_fault"] = None
+    if not alert and not related_rules:
+        applicable_plan_ids = (dict.fromkeys(["sensor_fault"]) if payload["sensor_status"] == "SIGNAL_ISSUE"
+                               else dict.fromkeys(rule["response_plan_id"] for rule in payload["rules"]))
+    plans = load_playbooks()
+    known_plans = {plan["id"]: plan for plan in plans["plans"]}
+    plan_context = []
+    for plan_id in applicable_plan_ids:
+        plan = known_plans.get(plan_id)
+        if plan is None:
+            continue
+        linked = active_rules + related_rules if alert or related_rules else payload["rules"]
+        item = {"situation": plan["title"], "linked_scenarios": [rule["scenario"] for rule in linked
+                if rule["response_plan_id"] == plan_id]}
+        if alert or any(rule.get("state") == "TRIGGER" for rule in related_rules):
+            item.update({key: plan[key] for key in ("recognition", "immediate", "stabilize", "restart", "prevention")})
+        else:
+            item["prevention"] = plan["prevention"]
+            if payload["sensor_status"] == "SIGNAL_ISSUE":
+                item["recognition"] = plan["recognition"]
+        plan_context.append(item)
+    if request.direct:
+        # Scope the direct evaluation to the selected equipment. The detailed
+        # rules and staged plans are already returned by the sensor detail API.
+        focused_frame = {**frame, "hazop": {**(frame.get("hazop") or {}),
+                         "signals": payload["related_signals"]}}
+        direct_result = await asyncio.to_thread(
+            _invoke_saga_hazop_direct, focused_frame, catalog, str(job_id),
+            request.question or f"{sensor_id} 현재 상태", impact_results,
+        )
+        signal = payload["signal"]
+        value = signal.get("value")
+        unit = signal.get("unit") or ""
+        label = payload["node"].get("설비_라인") or payload["sensor"].get("설치_측정위치") or sensor_id
+        lines = [f"### {label} · {sensor_id}",
+                 f"현재값 **{value:g} {unit}** · 신호 품질 {signal.get('quality', 'UNKNOWN')}"
+                 if isinstance(value, (int, float)) else f"현재 신호 품질 {signal.get('quality', 'UNKNOWN')}"]
+        current_rules = [rule for rule in active_rules + related_rules if rule.get("state") == "TRIGGER"]
+        if current_rules:
+            names = list(dict.fromkeys(str(rule.get("scenario") or "이상 징후") for rule in current_rules))
+            lines.append("**현재 주의·경보:** " + ", ".join(names[:4]))
+        elif active_rules or related_rules:
+            lines.append("**경보 이력 유지:** 현재값과 과거 경보 유지 상태를 구분해 확인합니다.")
+        elif payload["sensor_status"] == "SIGNAL_ISSUE":
+            lines.append("**계측 신호 이상:** 현장 계측 상태를 확인합니다.")
+        else:
+            lines.append("현재 선택 센서는 정상 범위입니다.")
+        gas = payload.get("gas_signal_evidence") or {}
+        if gas.get("hydrogen_observed"):
+            lines.append(f"수소 농도 **{gas['value_volpct_h2']:.3f} vol%** 관측"
+                         + (" · 경보 기준 초과" if gas.get("alarm_threshold_exceeded") else " · 경보 기준 미만"))
+        release = payload.get("simulated_release_evidence") or {}
+        if release.get("physical_leak_g_s", 0) > 0.001:
+            lines.append(f"현재 모의 공정 누출 **{release['physical_leak_g_s']:.3f} g/s**")
+        if release.get("relief_discharge_g_s", 0) > 0.001:
+            lines.append(f"현재 안전밸브 방출 **{release['relief_discharge_g_s']:.3f} g/s**")
+        direct_answer = _safe_saga_text(_direct_hazop_answer(direct_result)) if direct_result else ""
+        if current_rules and re.search(r"(?:정상\s*운전|정상\s*범위|이상\s*없|경보\s*없)", direct_answer):
+            direct_answer = ""
+        if direct_answer and (current_rules or payload["sensor_status"] == "NORMAL"):
+            lines.append(direct_answer)
+        impact_text = _direct_impact_summary(impact_results)
+        if impact_text:
+            lines.append(impact_text)
+        if current_rules:
+            actions = list(dict.fromkeys(str(action) for plan in plan_context
+                for action in (plan.get("immediate") or []) if action))[:3]
+            if actions:
+                lines.append("**우선 대응**\n" + "\n".join(f"- {action}" for action in actions))
+        else:
+            prevention = list(dict.fromkeys(str(action) for plan in plan_context
+                for action in (plan.get("prevention") or []) if action))[:2]
+            if prevention:
+                lines.append("**안전관리**\n" + "\n".join(f"- {action}" for action in prevention))
+        return {"sensor_id": sensor_id, "time_s": payload["time_s"],
+                "answer": "\n\n".join(lines), "model": "SAGA 직답 · 센서 기반 계산",
+                "impact_results": impact_results,
+                "active_rule_count": len(active_rules), "related_active_count": len(related_rules),
+                "sensor_status": payload["sensor_status"], "hazop_direct": direct_result}
+    scenario_guidance = [{"rule_id": rule["rule_id"], "scenario": rule["scenario"],
+                          "sensor_id": rule["sensor_id"] if "sensor_id" in rule else sensor_id,
+                          "trigger": f"{rule.get('expression', rule.get('sensor_id', sensor_id))} {rule.get('operator', '')} {rule.get('threshold', '')} {rule.get('unit', '')}",
+                          "stages": {stage: (rule.get("response_guidance") or {}).get(stage, [])[:count]
+                                     for stage, count in (("recognition", 1), ("immediate", 2),
+                                                          ("stabilize", 1), ("restart", 1), ("prevention", 1))}}
+                         for rule in active_rules + related_rules] if alert or related_rules else []
+    compact_rules = lambda rows: [{key: rule.get(key) for key in
+                                   ("rule_id", "sensor_id", "scenario", "state", "condition_status",
+                                    "severity", "evaluated_value", "threshold", "unit", "quality", "cause")
+                                   if rule.get(key) is not None} for rule in rows]
+    gas_thresholds = {item["sensor_id"]: min(float(rule["임계값"]) for rule in catalog["rules"]
+                                                    if rule["sensor_id"] == item["sensor_id"])
+                      for item in catalog["sensors"] if item["sensor_id"].startswith("GD-")
+                      and any(rule["sensor_id"] == item["sensor_id"] for rule in catalog["rules"])}
+    current_gas_alerts = [{"tag": tag, "value": signal["value"], "threshold": gas_thresholds[tag]}
+                          for tag, signal in payload["related_signals"].items()
+                          if tag in gas_thresholds and signal.get("quality") == "GOOD"
+                          and isinstance(signal.get("value"), (int, float))
+                          and signal["value"] >= gas_thresholds[tag]]
+    observed_gas = [{"tag": tag, "value_volpct_h2": signal["value"],
+                     "alarm_threshold_volpct_h2": gas_thresholds.get(tag)}
+                    for tag, signal in payload["related_signals"].items()
+                    if tag.startswith("GD-") and signal.get("quality") == "GOOD"
+                    and isinstance(signal.get("value"), (int, float)) and signal["value"] > 0.0]
+    retained_gas_alerts = sorted({rule["sensor_id"] for rule in active_rules + related_rules
+                                  if rule.get("sensor_id", "").startswith("GD-")
+                                  and rule.get("state") in {"LATCHED", "ALARM_HOLD"}})
+    context = {"time_s": payload["time_s"], "sensor": {
+        "tag": sensor_id, "type": payload["sensor"].get("종류"),
+        "location": payload["sensor"].get("설치_측정위치"), "node": payload["node"].get("설비_라인"),
+        "current": payload["signal"], "mapping": payload["mapping"]},
+        "sensor_status": payload["sensor_status"], "impact_results": impact_results,
+        "detection_summary": {"observed_hydrogen_readings": observed_gas,
+                              "current_gas_alerts": current_gas_alerts,
+                              "retained_gas_alarm_tags": retained_gas_alerts},
+        "selected_gas_signal_evidence": payload["gas_signal_evidence"],
+        "simulated_release_evidence": payload["simulated_release_evidence"],
+        "active_scenarios": compact_rules(active_rules),
+        "same_equipment_active_signals": compact_rules(related_rules),
+        "related_signals": payload["related_signals"],
+        "scenario_specific_guidance": scenario_guidance,
+        "monitored_scenarios": [{"scenario": rule["scenario"], "sensor_id": sensor_id,
+                                  "threshold": rule["threshold"], "unit": rule["unit"],
+                                  "state": rule["state"]} for rule in payload["rules"]],
+        "active_faults": frame.get("active_faults") or [],
+        "fire_detection": (frame.get("analysis") or {}).get("fire_detection"),
+        "relief_valves_open": (frame.get("relief_valves_open") or []) if alert else [],
+        "actual_releases": payload["releases"],
+        "applicable_guidance": [{"situation": plan["situation"],
+                                 "prevention": (plan.get("prevention") or [])[:2]}
+                                for plan in plan_context] if not alert else [],
+        "station_status": payload["station_status"]}
+    if alert:
+        retained_only = not any(rule.get("state") == "TRIGGER" for rule in active_rules)
+        status_instruction = (("선택 센서의 경보 임계값은 현재 재초과되지 않았고 이전 경보가 유지 중입니다. 현재 경보와 경보 이력을 구분하되, 비영점 가스 농도나 모의 누출을 부정하지 마세요. "
+                               if retained_only else "선택 센서에서 동시에 활성화된 모든 시나리오를 각각 검토하고, 공통 원인·상호 악화 가능성·대응 우선순위를 종합하세요. ") +
+                              "한 시나리오만 활성이라도 제공된 원인 후보와 연동 신호로 복수의 가능한 전개 경로를 비교하되, 확인되지 않은 경로를 발생 사고로 단정하지 마세요. "
+                              "활성 시나리오와 아직 기준에 도달하지 않은 감시 시나리오를 명확히 구분하세요. ")
+    elif payload["sensor_status"] == "SIGNAL_ISSUE":
+        status_instruction = ("선택 센서의 신호 품질에 이상이 있습니다. 공정 사고를 단정하거나 비상대응을 출력하지 말고 "
+                              "계측 검증과 안전한 운전 판단, 예방·안전관리만 설명하세요. ")
+    elif related_rules:
+        status_instruction = ("선택 센서 자체와 관련 구역의 다른 센서를 분리해 설명하세요. "
+                              "선택 센서가 정상이어도 관련 센서의 활성 경보 또는 래치 이력을 빠뜨리지 마세요. "
+                              "현재 검지값이 경보 기준 미만이고 상태가 LATCHED/ALARM_HOLD라면 과거 경보 조건의 유지 이력으로 설명하세요. 현재 비영점 농도 관측 여부는 별도로 설명하세요. ")
+    else:
+        status_instruction = ("선택 센서는 정상입니다. 현재 사고나 비상대응을 출력하지 말고, "
+                              "여러 감시 시나리오의 기준과 예방·안전관리만 요약하세요. ")
+    prompt = ("당신은 H70 수소충전소의 선택 센서 분석 보조자입니다. 이 데이터는 실제 현장 계측이 아닌 시뮬레이션입니다. "
+        "외부 화재 시나리오 입력을 화염검지 확인으로 표현하지 마세요. FD 신호는 모의 위치·응답지연으로 계산된 가상 검지이며 독립적인 현장 실측이 아닙니다. "
+        "선택 센서의 현재 상태와 같은 설비·인접 저장구역의 관련 신호를 함께 분석하세요. "
+        "연결 규칙의 현재 판정과 임계값, 신호 품질을 구분하고 원인·사고 전개는 가능성으로만 표현하세요. "
+        "observed_hydrogen_readings는 현재 양의 수소 농도 관측, current_gas_alerts는 경보 임계값 초과, retained_gas_alarm_tags는 과거 경보 유지입니다. "
+        "current_gas_alerts가 비어 있어도 수소 농도 관측이나 실제 모의 누출이 없다는 뜻이 아닙니다. 세 상태를 구분하세요. "
+        "simulated_release_evidence의 physical_leak_g_s가 양수이면 모의 공정 누출, relief_discharge_g_s가 양수이면 안전밸브 방출이 진행 중입니다. "
+        "현재 방출률과 가스 농도를 먼저 명시하고, 진행 중인 누출을 '누출 없음'으로 답하지 마세요. "
+        "경보 시 scenario_specific_guidance의 각 시나리오를 따로 분석하고 단계별 조치를 현재 센서와 연결하세요. "
+        + status_instruction +
+        "실제 누출, 안전밸브 방출, 센서값 기준 가정 누출을 혼동하지 마세요. 계산된 피해영향 수치만 언급하고 안전거리를 확정하지 마세요. "
+        "사용자에게 HAZOP·DB·규칙 ID나 계산 엔진 제품명을 노출하지 마세요. "
+        + ("한국어 Markdown으로 '현재 상태', '관련 구역의 경보·이력', '예방·안전관리' 순서로 답하세요. "
+           if not alert else "한국어 Markdown으로 '현재 판정', '동시 시나리오와 상호 영향', '우선 대응', '지속 관리' 순서로 답하세요. ") +
+        ("사용자 질문에 먼저 직접 답하고, 관측값·관련 신호·원인 후보·다음 확인사항을 근거와 함께 상세히 풀어주세요. "
+         "서로 다른 내용을 제목, 짧은 표, 번호 목록으로 구분하세요. 핵심 판단과 주의사항은 Markdown 인용문(> **판단** …, > **주의** …)으로 표현하세요. "
+         "입력이 뒷받침하지 않는 수치나 상황을 만들지 말고 확정 관측·계산·가정을 구분하세요. 원시 HTML이나 이모지는 쓰지 마세요. "
+         if request.question else
+         "가장 중요한 현재 상태와 조치를 4~6문장으로 간결하게 답하세요. 상세 절차는 화면에 별도 표시됩니다. ") +
+        "추가 계산을 사용자에게 요청하지 마세요.\n"
+        f"운전자 추가 질문: {request.question or '현재 센서 상태와 위험 및 대응 우선순위를 분석해줘.'}\n선택 센서 데이터:\n"
+        + json.dumps(context, ensure_ascii=False, default=str)[:6000])[:8200]
+    try:
+        reply = await _invoke_saga_selected(prompt, "detailed" if request.question else "concise",
+                                            request.provider, explicit_length=True, stream_output=True)
+    except (URLError, HTTPError, TimeoutError, OSError) as exc:
+        raise HTTPException(status_code=503, detail=f"SAGA 센서 분석 실패: {exc}") from exc
+    answer = _safe_saga_text(str(reply.get("answer") or ""))
+    gas_evidence = payload["gas_signal_evidence"] or {}
+    release_evidence = payload["simulated_release_evidence"]
+    evidence_lines = []
+    if gas_evidence.get("hydrogen_observed"):
+        threshold = gas_evidence.get("alarm_threshold_volpct_h2")
+        alarm_note = (f"경보 기준 {threshold:g} vol% {'초과' if gas_evidence['alarm_threshold_exceeded'] else '미만'}"
+                      if threshold is not None else "경보 기준 미연결")
+        evidence_lines.append(f"{sensor_id} 수소 농도 {gas_evidence['value_volpct_h2']:.3f} vol% H₂ 관측 ({alarm_note})")
+    if release_evidence["physical_leak_g_s"] > 0.001:
+        evidence_lines.append(f"모의 공정 누출 {release_evidence['physical_leak_g_s']:.3f} g/s 진행 중")
+    if release_evidence["relief_discharge_g_s"] > 0.001:
+        evidence_lines.append(f"안전밸브 방출 {release_evidence['relief_discharge_g_s']:.3f} g/s 진행 중")
+    if evidence_lines:
+        conflicting_release = release_evidence["physical_leak_g_s"] > 0.001 and re.search(
+            r"(?:누출|방출)(?:이|은|은 현재|은 실제)?\s*(?:없|미발생|발생하지|확인되지|관찰되지)", answer)
+        conflicting_gas = gas_evidence.get("hydrogen_observed") and re.search(
+            r"(?:가스|수소).{0,30}(?:감지|검출|관측).{0,70}(?:없|되지 않|미확인)", answer)
+        if conflicting_release or conflicting_gas:
+            answer = "현재 확인된 모의 신호를 기준으로 누출 위치와 주변 설비를 확인하고, 가운데 표시된 단계별 대응을 적용하세요."
+        answer = "**현재 확인된 신호** · " + " · ".join(evidence_lines) + "\n\n" + answer
+    return {"sensor_id": sensor_id, "time_s": payload["time_s"],
+            "answer": answer or "선택 센서의 상태를 확인했습니다.",
+            "model": reply.get("model", ""), "impact_results": impact_results,
+            "active_rule_count": len(active_rules), "related_active_count": len(related_rules),
+            "sensor_status": payload["sensor_status"]}
+
+
+@app.post("/api/simulations/{job_id}/sensors/{sensor_id}/analyze/stream")
+async def analyze_simulation_sensor_stream(job_id: str, sensor_id: str,
+                                           request: SensorAnalysisInput) -> StreamingResponse:
+    return _stream_analysis_response(
+        lambda: analyze_simulation_sensor(job_id, sensor_id, request),
+        "선택 센서와 관련 설비 신호를 분석하고 있습니다…",
+    )
 
 
 @app.get("/api/simulations/{job_id}/hazop")

@@ -156,6 +156,7 @@ function applyLiveFrame(frame) {
   (s.trip_causes ||= []).push(frame.trip_causes||[]);
   (s.analysis ||= []).push(frame.analysis || null);
   (s.gas_detectors ||= []).push(frame.gas_detectors || {});
+  (s.flame_detectors ||= []).push(frame.flame_detectors || {});
   s.hose_pressure_mpa.push(frame.hose_pressure_mpa);
   s.hose_temperature_c.push(frame.hose_temperature_c);
   (s.hose_2_pressure_mpa ||= []).push(frame.hose_2_pressure_mpa);
@@ -254,7 +255,10 @@ function updateFrame(index) {
   $('coolerUnit').classList.toggle('active', flow > .01 && !esd);
   $('vehicleUnit').classList.toggle('active', flow > .01);
   $('pcvUnit').classList.toggle('trip', esd);
-  document.querySelectorAll('.flow-map .pipe').forEach(pipe => {const recharge=pipe.classList.contains('supply-line')||pipe.classList.contains('recharge-line');pipe.classList.toggle('flowing',recharge?supplyFlow>.01:flow1+flow2>.01);pipe.classList.toggle('requested',recharge&&supplyRequested&&supplyFlow<=.01);});
+  document.querySelector('.flow-map')?.classList.toggle('esd-active',Boolean(esd));
+  let esdStatus=$('flowEsdStatus');if(!esdStatus){esdStatus=document.createElement('span');esdStatus.id='flowEsdStatus';document.querySelector('.flow-status').prepend(esdStatus);}
+  esdStatus.textContent='ESD 차단 · 압축기 정지 · 차단밸브 폐쇄';esdStatus.hidden=!esd;
+  document.querySelectorAll('.flow-map .pipe').forEach(pipe => {const recharge=pipe.classList.contains('supply-line')||pipe.classList.contains('recharge-line');pipe.classList.toggle('flowing',!esd&&(recharge?supplyFlow>.01:flow1+flow2>.01));pipe.classList.toggle('requested',recharge&&supplyRequested&&supplyFlow<=.01);});
   document.querySelectorAll('.bank').forEach(bank => {const name=bank.dataset.bank,recharging=name===s.recharge_bank[state.index];bank.classList.toggle('active',name===s.dispatch_bank[state.index]||name===s.dispatch_bank_2?.[state.index]||recharging);bank.classList.toggle('recharging',recharging&&supplyFlow>.01);bank.classList.toggle('requested',supplyRequested&&recharging&&supplyFlow<=.01);});
   for (const name of ['low','medium','high']) {
     const value = s.bank_pressure_mpa[name][state.index];
@@ -265,21 +269,29 @@ function updateFrame(index) {
   $('leakStatus').textContent = leak > .001 ? `누출 ${leak.toFixed(2)} g/s` : '누출 없음';
   $('leakStatus').classList.toggle('danger', leak > .001);
   const faults=s.active_faults?.[state.index]||[];
+  const flameSignals=s.flame_detectors?.[state.index]||{};
+  const flameTags={supplyUnit:['FD-0101'],compressorUnit:['FD-0601'],low:['FD-0701'],medium:['FD-0801'],high:['FD-0901'],pcvUnit:['FD-1301','FD-1701'],coolerUnit:['FD-1901'],vehicleUnit:['FD-1301','FD-1701']};
+  const detectedFlames=Object.entries(flameSignals).filter(([,signal])=>signal?.quality==='GOOD'&&Number(signal.value)>=.5).map(([tag])=>tag);
   const reliefOpen=Object.keys(s.process_operations?.[state.index]?.relief_open||{}).filter(key=>s.process_operations[state.index].relief_open[key]);
   document.querySelectorAll('.flow-map .unit,.flow-map .bank').forEach(node=>{
     const id=node.dataset.bank||node.id,target=faults.find(f=>{
       const [,component]=f.split(':');return id==='compressorUnit'?component?.startsWith('compressor'):id==='pcvUnit'?component?.includes('pcv'):id==='coolerUnit'?component?.includes('cooler'):id==='vehicleUnit'?component?.includes('vehicle')||component?.includes('hose'):component===`cascade.${id}`;
     });
     node.classList.toggle('fault-active',Boolean(target)&&!target.startsWith('relief-open:'));node.dataset.fault=target?.startsWith('relief-open:')?'':target?.split(':')[0]||'';
+    node.classList.toggle('flame-detected',(flameTags[id]||[]).some(tag=>detectedFlames.includes(tag)));
     const bank=node.dataset.bank,relief=bank?reliefOpen.includes(bank):node.id==='vehicleUnit'?reliefOpen.some(key=>key.startsWith('vehicle_')):node.id==='pcvUnit'?reliefOpen.some(key=>key.startsWith('hose_')):false;
     node.classList.toggle('relief-open',relief);
   });
   let reliefStatus=$('reliefFlowStatus');if(!reliefStatus){reliefStatus=document.createElement('span');reliefStatus.id='reliefFlowStatus';document.querySelector('.flow-status').append(reliefStatus);}
   reliefStatus.textContent=reliefOpen.length?`안전밸브 개방 · ${reliefOpen.map(key=>reliefNames[key]||key).join(', ')}`:'';
   reliefStatus.hidden=!reliefOpen.length;
+  let flameStatus=$('flowFlameStatus');if(!flameStatus){flameStatus=document.createElement('span');flameStatus.id='flowFlameStatus';document.querySelector('.flow-status').append(flameStatus);}
+  flameStatus.textContent=detectedFlames.length?`화염검지 ${detectedFlames.join(', ')} 감지`:'화재 입력 · 화염검지 신호 대기';
+  flameStatus.hidden=!detectedFlames.length&&!faults.some(fault=>fault.startsWith('external-fire:'));
   const releases=state.result.hazop?.frames?.[state.index]?.releases||[],ranges=releases.filter(r=>r.consequence?.status==='calculated');
   if(!$('flowRisk')){const note=document.createElement('span');note.id='flowRisk';document.querySelector('.flow-status').append(note);}
-  $('flowRisk').textContent=ranges.length?(Number(ranges[0].consequence.sampled_effect_radius_m)>0?`피해영향예측 표본 영향 ${Number(ranges[0].consequence.sampled_effect_radius_m).toFixed(1)} m${ranges[0].consequence.effect_range_status==='BEYOND_SAMPLED_POINTS'?' 이상':''} · 배치 미검증`:`피해영향예측 ${Number(ranges[0].consequence.sampled_max_distance_m).toFixed(1)} m 관측점까지 기준 미달 · 범위 미확정`):'';
+  const flowConsequence=ranges[0]?.consequence,flowExtent=Number(flowConsequence?.sampled_effect_radius_m),flowNext=Number(flowConsequence?.sampled_next_distance_m);
+  $('flowRisk').textContent=flowConsequence?(flowExtent>0?`피해영향예측 ${flowExtent.toFixed(1)} m 표본점 초과${flowNext>flowExtent?` · ${flowNext.toFixed(1)} m 미달`:flowConsequence.effect_range_status==='BEYOND_SAMPLED_POINTS'?' · 더 먼 거리 미평가':''} · 안전거리 아님`:`피해영향예측 ${Number(flowConsequence.sampled_max_distance_m).toFixed(1)} m 관측점까지 기준 미달 · 범위 미확정`):'';
   $('riskKpi').textContent = ranges.length ? '피해영향예측 계산 완료' : releases.length ? '피해영향예측 계산 대기' : (state.result.summary.hyram_available ? '피해영향예측 대기' : '피해영향예측 미연결');
   window.dispatchEvent(new Event('station-frame'));
   drawCursor();
@@ -340,7 +352,7 @@ function renderHazop(frame) {
   if (!html) html=`<p class="empty">현재 활성 사고 후보가 없습니다. 미수신 센서 ${unknown}개는 상태를 판단하지 않았습니다.</p>`;
   for (const release of frame.releases || []) {
     const extent=release.consequence?.sampled_effect_radius_m;
-    html+=`<p class="hazop-release">누출 ${escapeHtml(release.release_id)} · ${escapeHtml(release.component_id)} · 피해영향예측 ${release.consequence?.status==='calculated'?'계산 완료':'계산 불가'}${Number(extent)>0?` · 5 kW/m²/5 kPa 표본 영향 ${Number(extent).toFixed(1)} m${release.consequence.effect_range_status==='BEYOND_SAMPLED_POINTS'?' 이상':''}`:release.consequence?.status==='calculated'?` · ${Number(release.consequence.sampled_max_distance_m||0).toFixed(1)} m 관측점까지 기준 미달(범위 미확정)`:''}${release.cached ? ' (이전 계산값)' : ''}</p>`;
+    html+=`<p class="hazop-release">누출 ${escapeHtml(release.release_id)} · ${escapeHtml(release.component_id)} · 피해영향예측 ${release.consequence?.status==='calculated'?'계산 완료':'계산 불가'}${Number(extent)>0?` · 5 kW/m²/5 kPa ${Number(extent).toFixed(1)} m 표본점 초과${Number(release.consequence.sampled_next_distance_m)>Number(extent)?` · ${Number(release.consequence.sampled_next_distance_m).toFixed(1)} m 표본점 미달`:release.consequence.effect_range_status==='BEYOND_SAMPLED_POINTS'?' · 더 먼 거리 미평가':''}`:release.consequence?.status==='calculated'?` · ${Number(release.consequence.sampled_max_distance_m||0).toFixed(1)} m 관측점까지 기준 미달(범위 미확정)`:''}${release.cached ? ' (이전 계산값)' : ''}</p>`;
   }
   if(frame.persistence_error)html+=`<p class="hazop-error">이벤트 저장 실패: ${escapeHtml(frame.persistence_error)}</p>`;
   $('hazopAlerts').innerHTML=html;

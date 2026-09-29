@@ -1,0 +1,43 @@
+/* Compact equipment-icon view for the existing process-flow grid. */
+.masthead-credit{padding:4px 8px;border:1px solid #547394;border-radius:5px;color:#cfe2f2;letter-spacing:.015em;font-size:10px;font-weight:600;white-space:nowrap}
+.wall-board .masthead-credit{color:#d3e6f5;font-size:10px}
+.wall-board #processPanel{justify-content:center;background:radial-gradient(circle at 48% 38%,#203d50 0,#152d3f 55%,#102536 100%);color:#e8f1f5}
+.wall-board #processPanel .flow-map{display:grid;grid-template-columns:1.05fr .13fr .95fr .13fr 1.45fr .13fr .75fr .13fr .9fr .13fr .98fr;align-items:center;gap:0;min-height:238px;width:100%;background:none}
+.wall-board #processPanel .unit,.wall-board #processPanel .bank{position:relative;min-width:0;border:1px solid #587288;background:linear-gradient(160deg,#2b485b,#21394d);color:#f1f7fa;box-shadow:0 7px 18px #06182430;transition:border-color .2s,background .2s,transform .2s,box-shadow .2s}
+.wall-board #processPanel .unit{height:164px;min-height:0;gap:7px;padding:13px 5px;border-radius:13px;text-align:center}
+.wall-board #processPanel .unit:hover,.wall-board #processPanel .bank:hover{border-color:#79c8d7;transform:translateY(-2px);box-shadow:0 9px 22px #06182470}
+.wall-board #processPanel .unit span{color:#9ebdcc;font:700 8px Consolas,monospace;letter-spacing:.07em}
+.wall-board #processPanel .unit b{font-size:12px;line-height:1.3;white-space:nowrap}
+.wall-board #processPanel .unit small{max-width:100%;color:#b7cbd4;font-size:9px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wall-board #processPanel .flow-icon{display:block;flex:none;width:49px;height:43px;overflow:visible;color:#9ed8e8}
+.wall-board #processPanel .flow-icon :is(path,rect,circle){fill:none;stroke:currentColor;stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
+.wall-board #processPanel .supply .flow-icon{color:#aad6e5}
+.wall-board #processPanel .compressor .flow-icon{color:#9dc9f5}
+.wall-board #processPanel .pcv .flow-icon{color:#d9c28e}
+.wall-board #processPanel .cooler .flow-icon{color:#9cdbef}
+.wall-board #processPanel .vehicle .flow-icon{color:#a9e1c6}
+.wall-board #processPanel .bank-stack{display:grid;grid-template-rows:repeat(3,50px);gap:6px;min-width:0;position:relative}
+.wall-board #processPanel .bank-stack::before{content:'저장 뱅크  ·  CASCADE';position:absolute;left:2px;top:-25px;color:#bdd1de;font:700 10px Consolas,'Malgun Gothic',sans-serif;letter-spacing:.04em}
+.wall-board #processPanel .bank{display:grid;grid-template-columns:29px minmax(0,1fr) auto;align-items:center;gap:5px;width:100%;height:50px;min-height:0;padding:5px 7px;border-radius:9px;text-align:left}
+.wall-board #processPanel .bank .bank-icon{width:28px;height:34px}
+.wall-board #processPanel .bank span{display:grid;gap:1px;font-size:11px;font-weight:750;line-height:1.15;color:#f3f9fa;white-space:nowrap}
+.wall-board #processPanel .bank span em{font:700 8px Consolas,monospace;letter-spacing:.035em;color:#c1d4e1}
+.wall-board #processPanel .bank .bank-reading{display:grid;justify-items:end;gap:0;min-width:35px}
+.wall-board #processPanel .bank b{font:700 17px Consolas,monospace;text-align:right;white-space:nowrap}
+.wall-board #processPanel .bank small{position:static;font-size:8px;color:#b8cad6;line-height:1}
+.wall-board #processPanel .bank.high{border-color:#5d9bcf;background:linear-gradient(110deg,#315a7d,#25435f)}.wall-board #processPanel .bank.high .bank-icon{color:#b5d9f8}
+.wall-board #processPanel .bank.medium{border-color:#57afa6;background:linear-gradient(110deg,#2b655f,#234d4b)}.wall-board #processPanel .bank.medium .bank-icon{color:#b0ece3}
+.wall-board #processPanel .bank.low{border-color:#9fb0bd;background:linear-gradient(110deg,#485b69,#324552)}.wall-board #processPanel .bank.low .bank-icon{color:#d5e1e9}
+.wall-board #processPanel .unit.active,.wall-board #processPanel .bank.active{border-color:#5de2ad;box-shadow:0 0 0 2px #4abf9240,0 8px 18px #071e2840}
+.wall-board #processPanel .unit.active{background:linear-gradient(160deg,#25584f,#1c4943)}
+.wall-board #processPanel .unit.requested,.wall-board #processPanel .bank.requested{border-color:#d6b76b;box-shadow:0 0 0 2px #d6b76b4d}
+.wall-board #processPanel .unit.requested{background:#514833}
+.wall-board #processPanel .pipe{height:4px;background:#5e7f91;overflow:visible;position:relative}
+.wall-board #processPanel .pipe::after{content:'';position:absolute;right:-1px;top:-4px;border-left:7px solid #8db0bf;border-top:6px solid transparent;border-bottom:6px solid transparent}
+.wall-board #processPanel .pipe.flowing{background:#48d29e;box-shadow:0 0 9px #48d29e80}
+.wall-board #processPanel .pipe.flowing::after{border-left-color:#48d29e}
+.wall-board #processPanel .pipe.requested{background:#cbaa65}.wall-board #processPanel .pipe.requested::after{border-left-color:#cbaa65}
+.wall-board #processPanel .flow-status{display:flex;justify-content:center;gap:7px;margin:17px 0 0;flex-wrap:wrap}
+.wall-board #processPanel .flow-status span{padding:5px 8px;border:1px solid #426276;border-radius:6px;background:#203b4d;color:#c4d9e3;font-size:9px}
+body[data-monitor-view=flow] .wall-board .s3-selection-slot{display:none}
+@media(max-width:1100px){.wall-board #processPanel .unit{height:145px}.wall-board #processPanel .flow-map{min-height:205px}.wall-board #processPanel .unit b{font-size:10px}.wall-board #processPanel .unit small{font-size:8px}.wall-board #processPanel .flow-icon{width:39px;height:35px}.wall-board #processPanel .bank b{font-size:14px}}

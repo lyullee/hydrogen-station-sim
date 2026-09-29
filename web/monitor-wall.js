@@ -38,11 +38,10 @@
     const storage=make('section','wall-card wall-storage','<header><h2>저장 뱅크</h2><span>압력 · MPa</span></header>'+[['high','H','고압'],['medium','M','중압'],['low','L','저압']].map(([key,tag,label])=>`<div class="wall-bank"><span class="wall-bank-tag">${tag}</span><div><span>${label} 저장 뱅크</span><small id="wallBankState-${key}">대기</small><div class="wall-bar"><i id="wallBankBar-${key}"></i></div></div><b id="wallBank-${key}">—</b></div>`).join(''));
     const process=make('section','wall-card wall-machinery','<header><h2>압축기 · 프리쿨러</h2><span>실시간 공정</span></header><div class="wall-process-values"><div><small>압축기 운전</small><b id="wallCompressor">대기</b></div><div><small>재충전 뱅크</small><b id="wallRecharge">—</b></div><div><small>냉각 출구 1 / 2 · °C</small><b id="wallCooler">— / —</b></div></div>');
     const dispensers=make('section','wall-card wall-dispensers','<header><h2>디스펜서</h2><span>DUAL H70</span></header><div class="wall-dispenser-grid">'+[1,2].map(n=>`<article><header><span>0${n} <b>차량 ${n}</b></span><small id="wallDispStatus${n}">대기</small></header><div class="wall-pressure"><b id="wallPressure${n}">—</b><small>MPa</small></div><div class="wall-disp-secondary"><span><b id="wallTemp${n}">—</b> °C</span><span><b id="wallDispFlow${n}">—</b> g/s</span></div><div class="wall-soc"><div class="wall-bar"><i id="wallSocBar${n}"></i></div><span id="wallSoc${n}">—</span><small>% SOC</small></div></article>`).join('')+'</div>');
-    const gas=make('section','wall-card wall-gas','<header><h2>가스 감시 · 안전 계통</h2><span>가상 검지 · 모델 추정</span></header>');gas.append(detectors);gas.insertAdjacentHTML('beforeend','<div class="wall-gas-foot"><span>유효 신호 <b id="wallDetectorCount">— / 15</b></span><button type="button" data-nav="sensors">센서 전체 ↗</button></div>');
-    const incident=make('button','wall-incident','<b id="wallAlertTitle">주의 · 경보 확인</b><span id="wallAlertText">설비 신호를 확인하세요.</span><small>클릭하여 센서·피해영향예측 분석 보기 ↗</small>');incident.id='wallIncident';incident.type='button';incident.dataset.nav='hazop';incident.hidden=true;
+    const gas=make('section','wall-card wall-gas','<header><h2>가스·화염 감시</h2><span>가상 검지 · 모델 추정</span></header>');gas.append(detectors);gas.insertAdjacentHTML('beforeend','<div class="wall-gas-foot"><span>가스 <b id="wallDetectorCount">— / 15</b> · 화염 <b id="wallFlameCount" title="감지 수 / 수신 수">— / 9</b></span><button type="button" data-nav="sensors">센서 전체 ↗</button></div>');
     const saga=make('section','wall-saga-chat');saga.id='wallSagaChat';saga.setAttribute('aria-label','SAGA 센서·설비 채팅');
-    sidebar.replaceChildren(analysis,storage,process,dispensers,gas,incident,saga);
-    analysis.tabIndex=0;analysis.setAttribute('role','button');analysis.setAttribute('aria-label','현재 경보와 센서 분석 보기');analysis.addEventListener('click',()=>document.querySelector('[data-nav="alarms"]')?.click());analysis.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();analysis.click();}});
+    sidebar.replaceChildren(analysis,storage,process,dispensers,gas,saga);
+    analysis.tabIndex=0;analysis.setAttribute('role','button');analysis.setAttribute('aria-label','현재 경보와 센서 분석 보기');analysis.addEventListener('click',()=>window.navigateMonitor?.(document.body.dataset.alertState==='incident'?'hazop':'alarms'));analysis.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();analysis.click();}});
     // Stop controls belong to the remote; the overview remains read-only.
     selection.setAttribute('aria-label','선택 설비 정보');surface.setAttribute('aria-label','3D와 공정 흐름 공통 화면');
     window.addEventListener('station-frame',render);window.addEventListener('wall-resize',drawTrends);render();fit();
@@ -56,20 +55,31 @@
     const activities=at('process_activity')||runtime?.lastFrame?.process_activity||{},settings=at('process_operations')?.settings||runtime?.lastFrame?.process_operations?.settings||{};
     for(const key of ['trailer_supply','pressure_recharge','vehicle_1','vehicle_2']){
       const chip=document.querySelector(`[data-wall-process="${key}"]`),activity=activities[key],requested=Boolean(settings[key]);
-      const state=activity?.state||(!has?'off':requested?'pending':'off');
+      const bankOver=['low','medium','high'].some(bank=>{
+        const pressure=s?.bank_pressure_mpa?.[bank]?.[i],target=settings[`recharge_target_${bank}_mpa`];
+        return Number.isFinite(pressure)&&Number.isFinite(target)&&pressure>target+.05;
+      });
+      const vehiclePressure=key==='vehicle_1'?at('vehicle_pressure_mpa'):at('vehicle_2_pressure_mpa');
+      const vehicleOver=Number.isFinite(vehiclePressure)&&Number.isFinite(settings[`${key}_target_pressure_mpa`])&&vehiclePressure>settings[`${key}_target_pressure_mpa`]+.05;
+      const overTarget=(key==='vehicle_1'||key==='vehicle_2')
+        ?settings[`${key}_auto_stop`]===false&&vehicleOver
+        :settings.recharge_auto_stop===false&&bankOver;
+      const baseState=activity?.state||(!has?'off':requested?'pending':'off');
+      const state=requested&&!esd&&baseState!=='blocked'&&overTarget?'overfill':baseState;
       chip.dataset.state=state;
-      chip.querySelector('b').textContent=state==='flowing'?`${number(Number(activity.flow_g_s),1)} g/s`:state==='waiting'?'흐름 대기':state==='blocked'?'안전 차단':state==='auto-stopped'?'자동 종료':state==='pending'?'요청 반영 중':'정지';
-      chip.title=activity?.reason?`${key} · ${activity.reason}`:'';
+      chip.querySelector('b').textContent=state==='overfill'?'설정 목표 초과':state==='flowing'?`${number(Number(activity.flow_g_s),1)} g/s`:state==='waiting'?'흐름 대기':state==='blocked'?'안전 차단':state==='auto-stopped'?'자동 종료':state==='pending'?'요청 반영 중':'정지';
+      chip.title=state==='overfill'?`${key} · 목표 초과 운전 · ${number(Number(activity?.flow_g_s),2)} g/s`:activity?.reason?`${key} · ${activity.reason}`:'';
     }
     const detectorValues=at('gas_detectors')||{},ds=Object.values(detectorValues).filter(d=>d?.quality==='GOOD'&&Number.isFinite(d.value));put('wallGas',number(ds.length?Math.max(...ds.map(d=>d.value)):undefined,2));put('wallDetectorCount',`${ds.length} / ${Math.max(15,Object.keys(detectorValues).length)}`);
+    const flameValues=at('flame_detectors')||{},fs=Object.values(flameValues).filter(d=>d?.quality==='GOOD'&&Number.isFinite(d.value));
+    put('wallFlameCount',`${fs.filter(d=>d.value>=.5).length} / ${fs.length}`);
     for(const key of ['high','medium','low']){const v=has?s.bank_pressure_mpa?.[key]?.[i]:undefined;put(`wallBank-${key}`,number(v));put(`wallBankState-${key}`,!has?'미수신':at('recharge_bank')===key?'재충전':at('dispatch_bank')===key||at('dispatch_bank_2')===key?'토출 중':'대기');$(`wallBankBar-${key}`).style.width=`${Math.min(100,Math.max(0,(v||0)/100*100))}%`;}
     put('wallCompressor',has?(at('recharge_bank')?'재충전 중':'대기'):'미수신');put('wallRecharge',at('recharge_bank')?.toUpperCase()||'—');
     const signals=runtime?.result?.hazop?.frames?.[i]?.signals||{};
     const signal=id=>signals[id]?.quality==='GOOD'?signals[id].value:undefined;
     put('wallCooler',`${number(signal('TT-1201'))} / ${number(signal('TT-1601'))}`);
     for(const n of [1,2]){const suffix=n===1?'':'_2',flow=at(`nozzle_${n}_flow_g_s`),soc=at(n===1?'soc_percent':'vehicle_2_soc_percent');put(`wallPressure${n}`,number(at(`vehicle${suffix}_pressure_mpa`)));put(`wallTemp${n}`,number(at(`vehicle${suffix}_temperature_c`)));put(`wallDispFlow${n}`,number(flow));put(`wallSoc${n}`,number(soc));$(`wallSocBar${n}`).style.width=`${Math.max(0,Math.min(100,soc||0))}%`;put(`wallDispStatus${n}`,!has?'미수신':esd?'ESD 차단':flow>.01?'충전 중':'대기');}
-    const assessment=at('analysis');put('wallAlertTitle',assessment?.status==='CRITICAL'?'위험 경보':assessment?.status==='WARNING'?'경고':'주의');put('wallAlertText',window.publicImpactText(assessment?.findings?.[0]||'설비 신호를 확인하세요.'));
-    $('wallIncident').hidden=document.body.dataset.alertState!=='incident';drawTrends();
+    drawTrends();
   }
   function drawTrends(){
     if(!$('wallTrend0'))return;

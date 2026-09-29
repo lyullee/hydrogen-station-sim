@@ -32,6 +32,10 @@ from .safety_runtime import (
 from .vehicle import CompositeTankParameters, CompositeVehicleTank
 
 
+BANK_REFERENCE_MAX_PRESSURE_PA = (50.0e6, 70.0e6, 100.0e6)
+DEFAULT_BANK_INITIAL_FILL_PERCENT = (90.0, 100.0 * 65.0 / 70.0, 90.0)
+
+
 @dataclass(frozen=True)
 class ReferenceScenario:
     duration_s: float = 300.0
@@ -49,6 +53,7 @@ class ReferenceScenario:
     risk_update_period_s: float = 1.0
     compressor_suction_pressure_pa: float = 20.0e6
     compressor_suction_temperature_k: float = 298.15
+    initial_bank_fill_percent: tuple[float, float, float] = DEFAULT_BANK_INITIAL_FILL_PERCENT
     fault_events: tuple[FaultEvent, ...] = ()
 
 
@@ -64,6 +69,10 @@ def build_reference_scenario(
     config: ReferenceScenario,
     hyram_backend: HyRAMConsequenceBackend,
 ) -> BuiltScenario:
+    if len(config.initial_bank_fill_percent) != len(BANK_REFERENCE_MAX_PRESSURE_PA) or any(
+        not 1.0 <= percent <= 100.0 for percent in config.initial_bank_fill_percent
+    ):
+        raise ValueError("initial_bank_fill_percent must contain three values from 1 to 100")
     vehicle = CompositeVehicleTank(
         CompositeTankParameters(
             internal_volume_m3=0.122,
@@ -198,10 +207,11 @@ def build_reference_scenario(
     )
     initial_state = FullStationState(
         banks=tuple(
-            bank.initial_state(pressure_pa, config.ambient_temperature_k)
-            for bank, pressure_pa in zip(
+            bank.initial_state(maximum_pa * percent / 100.0, config.ambient_temperature_k)
+            for bank, maximum_pa, percent in zip(
                 banks,
-                (45.0e6, 65.0e6, 90.0e6),
+                BANK_REFERENCE_MAX_PRESSURE_PA,
+                config.initial_bank_fill_percent,
             )
         ),
         partial_station=initial_partial,

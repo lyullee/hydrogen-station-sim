@@ -5,6 +5,7 @@ function closeWorkspace(){document.getElementById('workspaceDialog').close();}
 function openWorkspace(title){
   const dialog=document.getElementById('workspaceDialog');
   dialog.classList.remove('saga-chat-dialog');
+  dialog.classList.remove('equipment-trend-dialog');
   if(restoreDialogContent){restoreDialogContent();restoreDialogContent=null;}
   document.getElementById('workspaceDialogTitle').textContent=title;
   const body=document.getElementById('workspaceDialogBody');body.replaceChildren();
@@ -40,6 +41,7 @@ window.showEquipmentDetails=(item,targetBody=null)=>{
   const table=document.createElement('table');table.className='hazop-table';const tbody=document.createElement('tbody');table.append(tbody);rows.forEach(([name,value])=>{const tr=document.createElement('tr');for(const text of [name,value]){const td=document.createElement('td');td.textContent=text;tr.append(td);}tbody.append(tr);});body.append(table);
 };
 function sensorTable(body){
+  if(window.mountSensorWorkbench){restoreDialogContent=window.mountSensorWorkbench(body);return;}
   const heading=document.createElement('h3');heading.textContent='주요 설비 · 노드별 PT / TT / FT';body.append(heading);
   const matrix=document.createElement('table');matrix.className='hazop-table';body.append(matrix);
   function renderMatrix(){
@@ -68,10 +70,15 @@ function sensorTable(body){
 }
 function navigateMonitor(action){
   if(action==='overview'||action==='flow'){closeWorkspace();window.setMonitorView?.(action==='flow'?'flow':'3d');return;}
-  if(action==='hazop'){borrowPanel('.s3-incidents','센서 · 사고 영향 분석');return;}
+  if(action==='hazop'){sensorTable(openWorkspace('센서 분석'));return;}
   if(action==='saga'){window.openSagaPrompt?.();return;}
-  if(action==='trends'){borrowPanel('.chart-panel','실시간 추세 · 이력 탐색');return;}
-  if(action==='sensors'){sensorTable(openWorkspace('센서 연결 현황'));return;}
+  if(action==='trends'){
+    const body=openWorkspace('주요 설비 공정 추세 비교');
+    restoreDialogContent=window.mountEquipmentTrends?.(body)||null;
+    if(!restoreDialogContent)borrowPanel('.chart-panel','실시간 추세 · 이력 탐색');
+    return;
+  }
+  if(action==='sensors'){sensorTable(openWorkspace('센서 분석'));return;}
   if(action==='alarms'){
     const body=openWorkspace('경보와 운전 기록');
     const title=document.createElement('p');title.textContent=document.body.dataset.alertState==='incident'?'활성 이상이 있습니다. 아래 경보를 선택해 센서·피해영향예측 분석을 확인하세요.':'현재 활성 사고 후보가 없습니다.';body.append(title);
@@ -81,10 +88,12 @@ function navigateMonitor(action){
     events.slice(-100).reverse().forEach(e=>{const p=document.createElement('p');p.textContent=`${Number(e.time_s||0).toFixed(1)} s · ${e.message}`;body.append(p);});return;
   }
   if(action==='cameras'){
-    closeWorkspace();window.showStationDomain?.('cameras');return;
+    closeWorkspace();if(document.body.dataset.monitorView==='cameras')window.closeStationDomain?.();
+    else window.showStationDomain?.('cameras');return;
   }
   if(action==='equipment'){
-    closeWorkspace();window.showStationDomain?.('equipment');return;
+    closeWorkspace();if(document.body.dataset.monitorView==='equipment')window.closeStationDomain?.();
+    else window.showStationDomain?.('equipment');return;
   }
 }
 document.addEventListener('click',event=>{const nav=event.target.closest('[data-nav]');if(nav){event.preventDefault();navigateMonitor(nav.dataset.nav);}});

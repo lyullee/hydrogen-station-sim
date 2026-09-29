@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib
 import json
+import math
 import os
 from typing import Mapping
 
@@ -15,6 +16,17 @@ from .hyram_adapter import (
     LeakScenario as AdapterLeakScenario,
 )
 from .live import CallableHyRAMBackend, HyRAMDynamicReleaseRequest
+
+
+# The default is a one-direction screening transect at 1.5 m elevation,
+# not a site-wide safety boundary. Keep near-field spacing fine enough that
+# a threshold crossed between 1 m and 3 m is not reported simply as 1 m.
+DEFAULT_OBSERVATION_DISTANCES_M = tuple(step / 2 for step in range(1, 21)) + (
+    12.0, 15.0, 20.0, 25.0, 30.0, 40.0, 50.0,
+)
+DEFAULT_OBSERVATION_LOCATIONS = tuple(
+    (distance, 0.0, 1.5) for distance in DEFAULT_OBSERVATION_DISTANCES_M
+)
 
 
 class UnavailableHyRAMBackend:
@@ -64,18 +76,15 @@ class NativeHyRAMBackend:
 
     @classmethod
     def from_environment(cls) -> "NativeHyRAMBackend":
-        locations_data = json.loads(
-            os.getenv(
-                "H2STATION_HYRAM_LOCATIONS",
-                "[[1.0,0.0,1.5],[3.0,0.0,1.5],[5.0,0.0,1.5]]",
-            )
-        )
+        configured = os.getenv("H2STATION_HYRAM_LOCATIONS")
+        locations_data = json.loads(configured) if configured else DEFAULT_OBSERVATION_LOCATIONS
         locations = tuple(
             tuple(float(coordinate) for coordinate in location)
             for location in locations_data
         )
-        if any(len(location) != 3 for location in locations):
-            raise ValueError("Every HyRAM observation location requires x, y, z")
+        if not locations or any(len(location) != 3 or not all(math.isfinite(value) for value in location)
+                                for location in locations):
+            raise ValueError("HyRAM observation locations require finite x, y, z coordinates")
         indoor_data = os.getenv("H2STATION_HYRAM_INDOOR_JSON")
         indoor = IndoorScenario(**json.loads(indoor_data)) if indoor_data else None
         return cls(locations, indoor)
@@ -127,8 +136,12 @@ class NativeHyRAMBackend:
         affected += [distance for distance, value in blast_points if value >= 5000.0]
         sampled_max = max((distance for distance, _ in thermal_points + blast_points), default=0.0)
         extent = max(affected, default=0.0)
+        distances = sorted({distance for distance, _ in thermal_points + blast_points})
+        next_sample = next((distance for distance in distances if distance > extent), None) if extent > 0 else None
         output["sampled_effect_radius_m"] = extent
         output["sampled_max_distance_m"] = sampled_max
+        output["sampled_next_distance_m"] = next_sample
+        output["observation_point_count"] = len(self.observation_locations)
         output["effect_range_status"] = ("BEYOND_SAMPLED_POINTS" if extent >= sampled_max and extent > 0
             else "WITHIN_SAMPLED_POINTS" if extent > 0 else "BELOW_THRESHOLDS_AT_SAMPLES")
         output["thermal_threshold_w_m2"] = 5000.0

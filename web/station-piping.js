@@ -3,15 +3,15 @@ import * as THREE from '/vendor/three/three.module.js';
 // Explicit equipment anchors and conceptual routing, not pressure-piping design.
 export function createStationPipeRoutes(equipment) {
   const port=(id,point)=>equipment.get(id).group.localToWorld(new THREE.Vector3(...point)).toArray();
-  const inlet=port('compressor',[-.75,.75,2.05]);
-  const outlet=port('compressor',[.75,.75,2.05]);
-  const supply=port('supply',[1.02,1.30,-4.54]);
+  const inlet=port('compressor',[-.885,.90,2.132]);
+  const outlet=port('compressor',[.885,.90,2.132]);
+  const supply=port('supply',[1.02,1.30,-6.99]);
   const coolingPorts=equipment.get('cooler').group.userData.processPorts??{inlet:[-.50,.72,1.86],outlet:[.55,.72,1.86]};
   const coolIn=port('cooler',coolingPorts.inlet);
   const coolOut=port('cooler',coolingPorts.outlet);
   const dispenser=port('dispenser',[0,.32,-.45]);
   const standby=port('standby',[0,.32,-.37]);
-  const routes=[{id:'compressor',color:0xe5ad45,points:[supply,[supply[0],.75,-9.9],[-8.9,.75,-9.9],[-8.9,.75,-3.15],[inlet[0],.75,-3.15],inlet]}];
+  const routes=[{id:'compressor',color:0xe5ad45,points:[supply,[supply[0],.75,-10],[-8.9,.75,-10],[-8.9,.75,-3.15],[inlet[0],.75,-3.15],inlet]}];
   ['low','medium','high'].forEach((name,index)=>{
     const fill=port(name,[.99,.40,2.03]),draw=port(name,[.99,.65,2.03]);
     const fillZ=-3.15-index*.10,drawZ=-2.65-index*.10;
@@ -20,7 +20,7 @@ export function createStationPipeRoutes(equipment) {
   });
   // Barrier ends at x=14.5; x=15.2 routes outside it, inside the side fence.
   routes.push({id:'fueling',color:0x00bba3,points:[coolOut,[coolOut[0],.72,-3.20],[15.2,.72,-3.20],[15.2,.72,1.15],[dispenser[0],.72,1.15],[dispenser[0],.72,dispenser[2]],[dispenser[0],dispenser[1],dispenser[2]]]});
-  routes.push({id:'fueling2',color:0x00bba3,points:[[standby[0],.72,1.15],[standby[0],.72,standby[2]],standby]});
+  routes.push({id:'fueling2',color:0x00bba3,points:[coolOut,[coolOut[0],.72,-3.35],[14.9,.72,-3.35],[14.9,.72,2.30],[standby[0],.72,2.30],[standby[0],.72,standby[2]],standby]});
   return routes;
 }
 

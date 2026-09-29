@@ -1,5 +1,5 @@
 {
-  "version": "20260928-sensors82",
+  "version": "20260929-flame91",
   "categories": [
     {
       "id": "leak",
@@ -845,6 +845,60 @@
           "label": "TT-2001 · N20 (degC)",
           "unit": "degC",
           "location": "벤트 헤더·방출 스택 수소 가스 온도"
+        },
+        {
+          "value": "FD-0101",
+          "label": "FD-0101 · N01 (bool)",
+          "unit": "bool",
+          "location": "공급 트레일러·하역 구역 화염검지 헤드"
+        },
+        {
+          "value": "FD-0601",
+          "label": "FD-0601 · N06 (bool)",
+          "unit": "bool",
+          "location": "압축기 패키지 화염검지 헤드"
+        },
+        {
+          "value": "FD-0701",
+          "label": "FD-0701 · N07 (bool)",
+          "unit": "bool",
+          "location": "저압 저장뱅크 화염검지 헤드"
+        },
+        {
+          "value": "FD-0801",
+          "label": "FD-0801 · N08 (bool)",
+          "unit": "bool",
+          "location": "중압 저장뱅크 화염검지 헤드"
+        },
+        {
+          "value": "FD-0901",
+          "label": "FD-0901 · N09 (bool)",
+          "unit": "bool",
+          "location": "고압 저장뱅크 화염검지 헤드"
+        },
+        {
+          "value": "FD-1301",
+          "label": "FD-1301 · N13 (bool)",
+          "unit": "bool",
+          "location": "1번 디스펜서·차량 화염검지 헤드"
+        },
+        {
+          "value": "FD-1701",
+          "label": "FD-1701 · N17 (bool)",
+          "unit": "bool",
+          "location": "2번 디스펜서·차량 화염검지 헤드"
+        },
+        {
+          "value": "FD-1901",
+          "label": "FD-1901 · N19 (bool)",
+          "unit": "bool",
+          "location": "프리쿨러 패키지 화염검지 헤드"
+        },
+        {
+          "value": "FD-2001",
+          "label": "FD-2001 · N20 (bool)",
+          "unit": "bool",
+          "location": "벤트·공통 헤더 화염검지 헤드"
         }
       ],
       "fields": [
@@ -1347,6 +1401,60 @@
           "label": "TT-2001 · N20 (degC)",
           "unit": "degC",
           "location": "벤트 헤더·방출 스택 수소 가스 온도"
+        },
+        {
+          "value": "FD-0101",
+          "label": "FD-0101 · N01 (bool)",
+          "unit": "bool",
+          "location": "공급 트레일러·하역 구역 화염검지 헤드"
+        },
+        {
+          "value": "FD-0601",
+          "label": "FD-0601 · N06 (bool)",
+          "unit": "bool",
+          "location": "압축기 패키지 화염검지 헤드"
+        },
+        {
+          "value": "FD-0701",
+          "label": "FD-0701 · N07 (bool)",
+          "unit": "bool",
+          "location": "저압 저장뱅크 화염검지 헤드"
+        },
+        {
+          "value": "FD-0801",
+          "label": "FD-0801 · N08 (bool)",
+          "unit": "bool",
+          "location": "중압 저장뱅크 화염검지 헤드"
+        },
+        {
+          "value": "FD-0901",
+          "label": "FD-0901 · N09 (bool)",
+          "unit": "bool",
+          "location": "고압 저장뱅크 화염검지 헤드"
+        },
+        {
+          "value": "FD-1301",
+          "label": "FD-1301 · N13 (bool)",
+          "unit": "bool",
+          "location": "1번 디스펜서·차량 화염검지 헤드"
+        },
+        {
+          "value": "FD-1701",
+          "label": "FD-1701 · N17 (bool)",
+          "unit": "bool",
+          "location": "2번 디스펜서·차량 화염검지 헤드"
+        },
+        {
+          "value": "FD-1901",
+          "label": "FD-1901 · N19 (bool)",
+          "unit": "bool",
+          "location": "프리쿨러 패키지 화염검지 헤드"
+        },
+        {
+          "value": "FD-2001",
+          "label": "FD-2001 · N20 (bool)",
+          "unit": "bool",
+          "location": "벤트·공통 헤더 화염검지 헤드"
         }
       ],
       "fields": [],

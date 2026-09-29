@@ -1,12 +1,12 @@
 <!doctype html>
 <html lang="ko">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>수소충전소 · 공정 리모콘</title><link rel="stylesheet" href="/remote.css?v=20260928-hot1"><link rel="stylesheet" href="/remote-light.css?v=20260929-speed1"><link rel="stylesheet" href="/civic-theme.css?v=20260929-civic1"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>수소충전소 · 공정 리모콘</title><link rel="stylesheet" href="/remote.css?v=20260928-hot1"><link rel="stylesheet" href="/remote-light.css?v=20260929-start-fill2"><link rel="stylesheet" href="/civic-theme.css?v=20260929-civic1"></head>
 <body class="remote-app">
 <main class="remote-shell">
   <header><p class="eyebrow">H70 · DIGITAL OPERATIONS</p><div class="section-title"><h1>수소충전소 운영 리모콘</h1><span id="serverStatus" class="server-state">서버 확인 중</span></div><p>공정을 제어하고 사고 시나리오를 투입합니다. 현재 상태는 아래에서 확인할 수 있습니다.</p><a id="monitorLink" href="/" target="hrs-monitor-window">운영 모니터 열기 ↗</a><p id="jobStatus" class="job-status" role="status">연결된 실행 없음</p><div class="process-live-summary" role="status"><strong id="processSummary">공정 대기 · 실행 중인 명령 없음</strong><span id="calculationPace">계산 시작 전</span></div><div class="process-status-rail" aria-label="공정별 실시간 상태"><div data-status-process="trailer_supply"><small>트레일러 공급</small><b>정지</b></div><div data-status-process="pressure_recharge"><small>압력 보완</small><b>정지</b></div><div data-status-process="vehicle_1"><small>차량 1 충전</small><b>정지</b></div><div data-status-process="vehicle_2"><small>차량 2 충전</small><b>정지</b></div></div></header>
   <section class="simulation-speed" aria-label="시뮬레이션 속도">
     <label for="simulationSpeed">계산 속도</label>
-    <select id="simulationSpeed" aria-describedby="speedHelp"><option value="1">실시간 1×</option><option value="10">빠르게 10×</option><option value="100">최대 100×</option></select>
+    <select id="simulationSpeed" aria-describedby="speedHelp"><option value="0.5">0.5×</option><option value="1" selected>1× · 실시간</option><option value="2">2×</option><option value="3">3×</option><option value="5">5×</option><option value="10">10×</option><option value="30">30×</option><option value="50">50×</option><option value="100">100×</option></select>
     <span id="speedHelp">운전 중에도 변경 가능 · 실제 속도는 계산 성능에 따라 달라집니다.</span>
   </section>
   <nav class="remote-tabs" aria-label="리모콘 메뉴">
@@ -17,6 +17,15 @@
   <form id="scenarioForm" novalidate>
     <fieldset id="scenarioFields">
       <section class="remote-panel" data-remote-pane="settings" hidden>
+        <section class="bank-fill-settings startup-bank-settings" aria-label="공정 시작 저장뱅크 초기량">
+          <div class="bank-fill-heading"><strong>공정 시작 · 저장뱅크 초기량</strong><span>새 실행 · 공정 초기화에 적용</span></div>
+          <p class="hint">저압·중압·고압 뱅크의 기준 상한 압력 대비 비율을 입력하세요. 시작 압력은 기준 압력 × 입력 %이며, 실제 수소 질량은 해당 압력과 외기 온도로 계산됩니다. 이 값은 질량 비율이나 설비 인증 압력이 아닙니다.</p>
+          <div class="grid">
+            <label>저압 뱅크 · 50 MPa 기준 (%)<input id="bankFillLow" type="number" value="90" min="1" max="100" step="any" required><small id="bankPressureLow">시작 압력 45.00 MPa</small></label>
+            <label>중압 뱅크 · 70 MPa 기준 (%)<input id="bankFillMedium" type="number" value="92.86" min="1" max="100" step="any" required><small id="bankPressureMedium">시작 압력 65.00 MPa</small></label>
+            <label>고압 뱅크 · 100 MPa 기준 (%)<input id="bankFillHigh" type="number" value="90" min="1" max="100" step="any" required><small id="bankPressureHigh">시작 압력 90.00 MPa</small></label>
+          </div>
+        </section>
         <div class="section-title"><h2>공정 운전 조건</h2><span class="hint">새 실행의 초기 조건</span></div>
         <div class="grid">
           <label>계산 구간 (s)<input id="duration" type="number" value="30" min="0.2" step="any" max="3600" required></label>
@@ -32,7 +41,7 @@
           <label>최대 질량유량 (g/s)<input id="maxFlow" type="number" value="60" min="0.1" max="300" step="any" required></label>
           <label>차량 1 초기온도 (°C)<input id="initialTemp1" type="number" value="25" min="-40" max="85" step="any" required></label>
           <label>차량 2 초기온도 (°C)<input id="initialTemp2" type="number" value="25" min="-40" max="85" step="any" required></label>
-        </div></details>
+        </div><p class="hint">압력 상승률과 최대 유량은 이 시뮬레이터의 고정 운전 설정입니다. SAE J2601 조건표에 따른 자동 충전 일정 선택은 적용되지 않습니다.</p></details>
         <details class="relief-settings"><summary>안전밸브 · 개방/재폐쇄 압력</summary><p class="hint">압력이 개방값에 도달하면 방출하고 재폐쇄값까지 낮아지면 닫힙니다. 두 값을 가깝게 설정하면 채터링을 관찰할 수 있습니다.</p><div id="reliefRows" class="relief-rows"></div></details>
         <p class="hint">초기 조건은 새 실행에 적용됩니다. 운전 중 안전밸브 설정은 값을 바꾼 뒤 공정 조작의 ‘설정 적용’을 누르세요.</p>
       </section>
@@ -44,29 +53,30 @@
             <header><strong>트레일러 수소 공급</strong><span class="process-state">정지</span></header>
             <div class="process-activity">요청 없음</div>
             <div class="process-reading" id="trailerReading">재고 — kg · 압력 — MPa</div>
+            <label class="switch-label"><input id="trailerAutoStop" type="checkbox" checked> 저장뱅크 목표압력에서 자동 종료</label>
             <div class="process-fields">
               <label>초기 압력 MPa<input id="trailerPressure" type="number" min="2.1" max="50" step="any" value="20"></label>
               <label>초기 재고 kg<input id="trailerCapacity" type="number" min="0.2" max="10000" step="any" value="50"></label>
               <label>온도 °C<input id="trailerTemperature" type="number" min="-40" max="85" step="any" value="25"></label>
             </div>
-            <p class="hint">공급과 압력 보완은 동일한 이송 경로로 함께 작동합니다.</p>
+            <p class="hint">공급과 압력 보완은 동일한 이송 경로입니다. 두 카드의 자동 종료 스위치는 연동됩니다.</p>
             <button class="process-toggle" type="button" data-operation="trailer_supply">공급 시작</button>
           </article>
           <article class="process-request" data-process="pressure_recharge">
             <header><strong>저장뱅크 압력 보완</strong><span class="process-state">정지</span></header>
             <div class="process-activity">요청 없음</div>
             <div class="process-reading" id="rechargeReading">누적 보충 — kg</div>
-            <label class="switch-label"><input id="rechargeAutoStop" type="checkbox" checked> 목표압력 도달 시 자동 종료</label>
-            <p class="hint">해제하면 목표압력을 넘어도 계속 주입합니다. 수동 정지와 안전계통은 별도로 적용됩니다.</p>
+            <label class="switch-label"><input id="rechargeAutoStop" type="checkbox" checked> 설정 목표압력에서 자동 종료</label>
+            <p class="hint">체크 해제 = 트레일러 공급·저장뱅크 보완의 목표 초과 주입. 실행 중에도 즉시 적용됩니다. 공급 재고·안전밸브·ESD는 별도로 작동하며, 안전밸브 개방값은 운전 설정에서 조정합니다.</p>
             <div class="process-fields">
-              <label>저압 목표 MPa<input id="rechargeTargetLow" type="number" min="1.1" max="110" step="any" value="48"></label>
-              <label>중압 목표 MPa<input id="rechargeTargetMedium" type="number" min="1.1" max="110" step="any" value="68"></label>
-              <label>고압 목표 MPa<input id="rechargeTargetHigh" type="number" min="1.1" max="110" step="any" value="98"></label>
+              <label>저압 종료·초과 기준 MPa<input id="rechargeTargetLow" type="number" min="1.1" max="110" step="any" value="46"></label>
+              <label>중압 종료·초과 기준 MPa<input id="rechargeTargetMedium" type="number" min="1.1" max="110" step="any" value="66"></label>
+              <label>고압 종료·초과 기준 MPa<input id="rechargeTargetHigh" type="number" min="1.1" max="110" step="any" value="96"></label>
             </div>
             <button class="process-toggle" type="button" data-operation="pressure_recharge">보완 시작</button>
           </article>
-          <article class="process-request" data-process="vehicle_1"><header><strong>차량 1 충전</strong><span class="process-state">정지</span></header><div class="process-activity">요청 없음</div><div class="process-reading" id="vehicle1Reading">탱크 — kg</div><div class="process-fields"><label class="switch-label"><input id="vehicle1AutoStop" type="checkbox" checked> 목표압력 도달 시 자동 종료</label><label>차량 1 종료 목표 MPa<input id="vehicle1TargetPressure" type="number" min="1.1" max="110" step="any" value="70"></label></div><p class="hint">체크 해제: 목표압력·충전량 도달 후에도 요청을 유지합니다. 안전 차단은 별도입니다.</p><button class="process-toggle" type="button" data-operation="vehicle_1">차량 1 충전 시작</button></article>
-          <article class="process-request" data-process="vehicle_2"><header><strong>차량 2 충전</strong><span class="process-state">정지</span></header><div class="process-activity">요청 없음</div><div class="process-reading" id="vehicle2Reading">탱크 — kg</div><div class="process-fields"><label class="switch-label"><input id="vehicle2AutoStop" type="checkbox" checked> 목표압력 도달 시 자동 종료</label><label>차량 2 종료 목표 MPa<input id="vehicle2TargetPressure" type="number" min="1.1" max="110" step="any" value="70"></label></div><p class="hint">체크 해제: 목표압력·충전량 도달 후에도 요청을 유지합니다. 안전 차단은 별도입니다.</p><button class="process-toggle" type="button" data-operation="vehicle_2">차량 2 충전 시작</button></article>
+          <article class="process-request" data-process="vehicle_1"><header><strong>차량 1 충전</strong><span class="process-state">정지</span></header><div class="process-activity">요청 없음</div><div class="process-reading" id="vehicle1Reading">탱크 — kg</div><div class="process-fields"><label class="switch-label"><input id="vehicle1AutoStop" type="checkbox" checked> 설정 목표압력에서 자동 종료</label><label>차량 1 종료·초과 기준 MPa<input id="vehicle1TargetPressure" type="number" min="1.1" max="110" step="any" value="70"></label></div><p class="hint">체크 해제 = 목표 초과 충전. 이미 멈췄다면 충전 시작을 다시 누르세요. 온도 보호·안전밸브와 87.5 MPa ESD는 별도입니다.</p><button class="process-toggle" type="button" data-operation="vehicle_1">차량 1 충전 시작</button></article>
+          <article class="process-request" data-process="vehicle_2"><header><strong>차량 2 충전</strong><span class="process-state">정지</span></header><div class="process-activity">요청 없음</div><div class="process-reading" id="vehicle2Reading">탱크 — kg</div><div class="process-fields"><label class="switch-label"><input id="vehicle2AutoStop" type="checkbox" checked> 설정 목표압력에서 자동 종료</label><label>차량 2 종료·초과 기준 MPa<input id="vehicle2TargetPressure" type="number" min="1.1" max="110" step="any" value="70"></label></div><p class="hint">체크 해제 = 목표 초과 충전. 이미 멈췄다면 충전 시작을 다시 누르세요. 온도 보호·안전밸브와 87.5 MPa ESD는 별도입니다.</p><button class="process-toggle" type="button" data-operation="vehicle_2">차량 2 충전 시작</button></article>
         </div>
       </section>
       <section class="remote-panel library-panel" data-remote-pane="incidents" aria-label="사고 시나리오 라이브러리" hidden>
@@ -83,7 +93,7 @@
       </section>
     </fieldset>
     <section class="remote-actions" aria-label="실행 컨트롤">
-      <div class="run-row"><button id="run" class="run" type="submit">모니터링 시작</button><button id="newRun" type="button" hidden>새 공정 시작</button><button id="stop" type="button" hidden>실행 정지</button><span id="status" role="status">공정 정지 상태로 모니터링을 시작할 수 있습니다.</span></div>
+      <div class="run-row"><button id="run" class="run" type="submit">모니터링 시작</button><button id="newRun" type="button" hidden>새 공정 시작</button><button id="stop" type="button" hidden>실행 정지</button><button id="resetProcess" type="button">↺ 공정 초기화</button><button id="esdStop" class="esd-control" type="button" disabled>ESD 차단</button><span id="status" role="status">공정 정지 상태로 모니터링을 시작할 수 있습니다.</span></div>
       <p id="runHelp" class="action-note">선택한 운전 조건과 사고로 새 시뮬레이션을 시작합니다.</p>
       <p id="errorStatus" class="error-status" role="alert" hidden></p>
     </section>
@@ -104,5 +114,5 @@
     </div><p class="fault-note hint"></p>
   </article>
 </template>
-<script src="/remote.js?v=20260929-speed1"></script>
+<script src="/remote.js?v=20260929-start-fill2"></script>
 </body></html>

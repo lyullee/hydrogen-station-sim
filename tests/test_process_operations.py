@@ -161,6 +161,19 @@ def test_recharge_without_auto_stop_adds_mass_above_selected_target():
     assert process.requested("pressure_recharge")
 
 
+def test_recharge_without_auto_stop_crosses_a_target_set_above_initial_pressure():
+    settings = ProcessSettings(trailer_supply=True, pressure_recharge=True,
+                               recharge_auto_stop=False,
+                               recharge_target_low_mpa=45.001).model_dump()
+    built, process = _station(settings)
+    charging = built.simulator.simulate(built.initial_state, .4, .2)
+    initial = built.station.banks[0].gas_state(built.initial_state.banks[0]).pressure_pa
+    final = built.station.banks[0].gas_state(charging.final_state.banks[0]).pressure_pa
+    assert initial < 45.001e6 < final
+    assert process.requested("trailer_supply")
+    assert process.requested("pressure_recharge")
+
+
 def test_recharge_auto_stop_off_does_not_use_a_second_trailer_residual_cutoff():
     settings = ProcessSettings(trailer_supply=True, pressure_recharge=True,
                                recharge_auto_stop=False).model_dump()
@@ -211,16 +224,30 @@ def test_vehicle_auto_stop_off_keeps_controller_filling_past_target():
     assert stopped.phase is FuelingPhase.COMPLETE
 
 
+def test_vehicle_2_without_auto_stop_crosses_a_target_above_initial_pressure():
+    settings = ProcessSettings(vehicle_2=True, vehicle_2_auto_stop=False,
+                               vehicle_2_target_pressure_mpa=5.001).model_dump()
+    built, process = _station(settings)
+    result = built.simulator.simulate(built.initial_state, .4, .2)
+    assert result.vehicle_2_pressure_pa[0] < 5.001e6 < result.vehicle_2_pressure_pa[-1]
+    assert np.max(result.nozzle_2_mass_flow_kg_s) > 0
+    assert np.max(result.nozzle_1_mass_flow_kg_s) == 0
+    assert process.requested("vehicle_2")
+
+
 def test_live_operator_leak_uses_stable_solver_and_depletes_inventory():
     leak = FaultEvent(event_id="operator-leak", kind=FaultKind.HYDROGEN_LEAK,
                       target="cascade.high", start_time_s=0, leak_diameter_m=.0002)
-    built = build_reference_scenario(ReferenceScenario(duration_s=.4, control_period_s=.2,
+    built = build_reference_scenario(ReferenceScenario(duration_s=32, control_period_s=1,
                                       fault_events=(leak,)), UnavailableHyRAMBackend())
     process = ProcessRuntime(ProcessSettings().model_dump())
     built.simulator.process_runtime = process
-    result = built.simulator.simulate(built.initial_state, .4, .2)
+    result = built.simulator.simulate(built.initial_state, 32, 1)
     assert np.max(result.leak_mass_flow_by_release["operator-leak"]) > 0
-    assert result.final_state.banks[2].hydrogen_mass_kg < built.initial_state.banks[2].hydrogen_mass_kg
+    assert result.final_state.banks[2].hydrogen_mass_kg < built.initial_state.banks[2].hydrogen_mass_kg - .03
+    initial_pressure = built.station.banks[2].gas_state(built.initial_state.banks[2]).pressure_pa
+    final_pressure = built.station.banks[2].gas_state(result.final_state.banks[2]).pressure_pa
+    assert final_pressure < initial_pressure - .3e6
 
 
 def test_live_api_operation_settings_can_be_changed_and_invalid_hysteresis_rejected():
@@ -243,7 +270,7 @@ def test_live_api_operation_settings_can_be_changed_and_invalid_hysteresis_rejec
                 pytest.fail("Idle monitor clock did not advance")
             assert idle_job["realtime_lag_s"] is not None
             speed_path = f"/api/simulations/{job_id}/speed"
-            for speed in (10, 100, 1):
+            for speed in (0.5, 1, 2, 3, 5, 10, 30, 50, 100):
                 changed_speed = client.put(speed_path, json={"speed_multiplier": speed})
                 assert changed_speed.status_code == 200, changed_speed.text
                 assert client.get(f"/api/simulations/{job_id}").json()["speed_multiplier"] == speed

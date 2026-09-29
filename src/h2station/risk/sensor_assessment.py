@@ -179,6 +179,8 @@ def assess_sensor_cases(
                           maximum_overpressure_pa=consequence.get("maximum_overpressure_pa"),
                           sampled_effect_radius_m=radius if radius and radius > 0 else None,
                           sampled_max_distance_m=consequence.get("sampled_max_distance_m"),
+                          sampled_next_distance_m=consequence.get("sampled_next_distance_m"),
+                          observation_point_count=consequence.get("observation_point_count"),
                           effect_range_status=consequence.get("effect_range_status"),
                           range_interpretation=("표본 관측점에서 기준 미달, 영향 반경 미확정"
                               if consequence.get("effect_range_status") == "BELOW_THRESHOLDS_AT_SAMPLES"

@@ -20,12 +20,16 @@ def test_speed_changes_rebase_pacing_without_jumping_simulated_time():
     clock.pace(1.0)
     assert waits[-1] == pytest.approx(1.0)
 
-    clock.set_speed(10, 1.0)
+    clock.set_speed(0.5, 1.0)
     clock.pace(2.0)
+    assert waits[-1] == pytest.approx(2.0)
+
+    clock.set_speed(10, 2.0)
+    clock.pace(3.0)
     assert waits[-1] == pytest.approx(0.1)
 
-    clock.set_speed(100, 2.0)
-    clock.pace(3.0)
+    clock.set_speed(100, 3.0)
+    clock.pace(4.0)
     assert waits[-1] == pytest.approx(0.01)
     assert clock.speed_multiplier == 100
 

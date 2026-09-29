@@ -2,8 +2,14 @@
 from __future__ import annotations
 
 from collections import Counter
+from math import isfinite
 from .expressions import Evaluator, Unknown, compare, evaluate_gate, dependencies
 from .mapping import coverage
+
+
+# The H70 PCV intentionally throttles a high-pressure bank into a low-pressure
+# vehicle. A large differential alone is normal while hydrogen is flowing.
+PCV_DROP_FLOW_TAGS = {"HZ-081": "FT-1101", "HZ-109": "FT-1501"}
 
 
 class RuleEngine:
@@ -34,12 +40,27 @@ class RuleEngine:
             previous = memory["status"]
             value, reason, quality = None, "", "GOOD"
             gate = evaluate_gate(self.gates[r["gate_id"]], frame["modes"])
+            if gate is True and rid in PCV_DROP_FLOW_TAGS:
+                flow_tag = PCV_DROP_FLOW_TAGS[rid]
+                flow = frame["signals"].get(flow_tag)
+                try:
+                    flow_value = float(flow["value"]) if flow is not None else float("nan")
+                    flow_age = t - float(flow["time_s"]) if flow is not None else float("inf")
+                except (KeyError, TypeError, ValueError):
+                    flow_value = float("nan")
+                    flow_age = float("inf")
+                if (flow is None or flow.get("quality") != "GOOD" or not isfinite(flow_value)
+                        or not 0.0 <= flow_age <= self.specs[flow_tag]["최대데이터나이_s"]):
+                    gate = None
+                    reason = "MISSING_PCV_FLOW"
+                elif flow_value > 1.0:
+                    gate = False
             if gate is False:
                 state = "INACTIVE"
                 memory["since"] = memory["reset_since"] = None
                 if not r["래치"]: memory["active"] = False
             elif gate is None:
-                state, reason, quality = "UNKNOWN", "MISSING_MODE", "UNKNOWN"
+                state, reason, quality = "UNKNOWN", reason or "MISSING_MODE", "UNKNOWN"
                 memory["since"] = memory["reset_since"] = None
             else:
                 try:

@@ -10,7 +10,7 @@ from typing import Callable
 class SimulationClock:
     def __init__(
         self,
-        speed_multiplier: int = 1,
+        speed_multiplier: float = 1,
         *,
         now: Callable[[], float] = monotonic,
         wait: Callable[[float], None] = sleep,
@@ -25,7 +25,7 @@ class SimulationClock:
         self._meter_wall_s: float | None = None
         self._actual_rate_x: float | None = None
 
-    def set_speed(self, multiplier: int, latest_sim_s: float) -> None:
+    def set_speed(self, multiplier: float, latest_sim_s: float) -> None:
         """Rebase the clock so changing speed never jumps the simulation time."""
         with self._lock:
             if self._anchor_wall_s is not None:

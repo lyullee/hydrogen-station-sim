@@ -424,7 +424,7 @@ class SafeFullStationSimulator:
                 supply,
                 override.precooler_capacity_multiplier,
                 self._flow_multipliers(override, "dispenser")[0],
-                self._flow_multipliers(override, "dispenser")[1] if requested_1 else 0.0,
+                self._flow_multipliers(override, "dispenser")[1] if requested_1 and not safety_command.esd_latched else 0.0,
                 self._allow_reverse_flow(override, "dispenser"),
             )
             supply_2_index = (
@@ -453,7 +453,7 @@ class SafeFullStationSimulator:
                     supply_2,
                     override.precooler_capacity_multiplier,
                     self._flow_multipliers(override, "dispenser_2")[0],
-                    self._flow_multipliers(override, "dispenser_2")[1] if requested_2 else 0.0,
+                    self._flow_multipliers(override, "dispenser_2")[1] if requested_2 and not safety_command.esd_latched else 0.0,
                     self._allow_reverse_flow(override, "dispenser_2"),
                 )
             )
@@ -675,9 +675,9 @@ class SafeFullStationSimulator:
                     secondary_dispatch_index=dispatch_2_index,
                     secondary_dispatch_valve_opening=dispatch_2_opening,
                     primary_pcv_area_multiplier=self._flow_multipliers(override, "dispenser")[0],
-                    primary_nozzle_area_multiplier=self._flow_multipliers(override, "dispenser")[1] if requested_1 else 0.0,
+                    primary_nozzle_area_multiplier=self._flow_multipliers(override, "dispenser")[1] if requested_1 and not safety_command.esd_latched else 0.0,
                     secondary_pcv_area_multiplier=self._flow_multipliers(override, "dispenser_2")[0],
-                    secondary_nozzle_area_multiplier=self._flow_multipliers(override, "dispenser_2")[1] if requested_2 else 0.0,
+                    secondary_nozzle_area_multiplier=self._flow_multipliers(override, "dispenser_2")[1] if requested_2 and not safety_command.esd_latched else 0.0,
                     primary_allow_reverse_flow=self._allow_reverse_flow(override, "dispenser"),
                     secondary_allow_reverse_flow=self._allow_reverse_flow(override, "dispenser_2"),
                 )

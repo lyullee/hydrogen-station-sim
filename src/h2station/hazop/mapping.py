@@ -1,6 +1,8 @@
 """Simulation telemetry mappings; proxy channels are explicitly marked as such."""
 from __future__ import annotations
 
+from .flame import FLAME_DETECTORS
+
 MODEL_BINDINGS = {}
 for n, bank in (("07", "low"), ("08", "medium"), ("09", "high")):
     MODEL_BINDINGS[f"PT-{n}01"] = ("PROCESS_STATE", f"bank.{bank}.pressure_pa / 1e6")
@@ -33,6 +35,9 @@ GD_SENSOR_ZONES = {
 }
 for tag, zone in GD_SENSOR_ZONES.items():
     MODEL_BINDINGS[tag] = ("VIRTUAL_DETECTOR_PROXY", f"location-specific leak proxy at {zone}; 0 when no active release")
+for tag, _node, zone, targets in FLAME_DETECTORS:
+    MODEL_BINDINGS[tag] = ("VIRTUAL_FLAME_DETECTOR_PROXY",
+                           f"simulated optical flame line-of-sight at {zone}; modeled targets: {', '.join(targets)}")
 for node in ("01", "02", "03", "04", "05", "06"):
     MODEL_BINDINGS[f"FT-{node}01"] = ("DERIVED_COMPRESSOR", "compressor mass flow to selected recharge bank; shared flow, no line loss model")
 for tag in ("PT-0201", "PT-0302"):

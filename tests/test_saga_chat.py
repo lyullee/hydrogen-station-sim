@@ -182,6 +182,115 @@ def test_routine_saga_hides_impact_until_alert_or_explicit_request(monkeypatch):
             api._jobs.pop(job_id, None)
 
 
+def test_direct_alarm_calculates_sensor_impact_without_generating_llm_reply(monkeypatch):
+    captured = {"requests": []}
+
+    class FakeBackend:
+        available = True
+
+        def evaluate_release(self, request):
+            captured["requests"].append(request)
+            return {"status": "calculated", "maximum_heat_flux_w_m2": 5400.0,
+                    "maximum_overpressure_pa": 6100.0, "sampled_effect_radius_m": 3.0,
+                    "sampled_max_distance_m": 5.0, "effect_range_status": "WITHIN_SAMPLED_POINTS"}
+
+    def fake_direct(frame, catalog, station_id, question, impact_results):
+        captured["direct_impacts"] = impact_results
+        return {"status": "WARNING", "hits": [], "sop": {"answer": "중압 저장뱅크 압력 상승을 확인했습니다."}}
+
+    monkeypatch.setattr(api, "load_hyram_backend", lambda: FakeBackend())
+    monkeypatch.setattr(api, "_invoke_saga", lambda *args: (_ for _ in ()).throw(
+        AssertionError("Direct monitoring must not call the generative API")))
+    monkeypatch.setattr(api, "_invoke_saga_hazop_direct", fake_direct)
+    job_id = "saga-direct-alarm-impact-test"
+    with api._jobs_lock:
+        api._jobs[job_id] = {"frames": [{"time_s": 6.0, "analysis": {"status": "WARNING"},
+            "hazop": {"active": [{"rule_id": "HZ-TEST", "node_id": "N08"}], "releases": [],
+                      "signals": {"PT-0801": {"value": 68.0, "quality": "GOOD"},
+                                  "TT-0801": {"value": 30.0, "quality": "GOOD"}}}}]}
+    try:
+        with TestClient(api.app) as client:
+            response = client.post(f"/api/simulations/{job_id}/saga-analysis",
+                                   json={"trigger": "alarm", "direct": True, "question": "현재 상태를 알려줘"})
+        assert response.status_code == 200, response.text
+        result = response.json()
+        assert captured["requests"]
+        assert captured["requests"][0].source_pressure_pa == 68e6
+        assert result["impact_results"][0]["calculation_status"] == "calculated"
+        assert result["risk_assessment"]["calculated_impact_count"] >= 1
+        assert result["show_impact_results"] is True
+        assert captured["direct_impacts"][0]["maximum_heat_flux_w_m2"] == 5400.0
+        assert captured["direct_impacts"][0]["pressure_sensor"] == "PT-0801"
+        assert "피해영향예측" in result["answer"]
+        assert "5.4 kW/m²" in result["answer"]
+    finally:
+        with api._jobs_lock:
+            api._jobs.pop(job_id, None)
+
+
+def test_direct_saga_request_transfers_calculated_impact(monkeypatch):
+    captured = {}
+
+    def fake_urlopen(request, timeout):
+        captured["url"] = request.full_url
+        captured["body"] = json.loads(request.data)
+        return io.BytesIO(b'{"status":"WARNING","hits":[]}')
+
+    monkeypatch.setattr(api, "urlopen", fake_urlopen)
+    monkeypatch.delenv("H2STATION_SAGA_DIRECT_URL", raising=False)
+    frame = {"hazop": {"signals": {"PT-0801": {"value": 68.0, "unit": "MPa",
+                                                  "quality": "GOOD"}}}}
+    impact = [{"calculation_status": "calculated", "node_id": "N08",
+               "maximum_overpressure_pa": 6100.0}]
+    response = api._invoke_saga_hazop_direct(frame, api.load_catalog(), "station", "현재 상태", impact)
+    assert response["status"] == "WARNING"
+    assert captured["url"].endswith("/api/digital-twin/hazop/direct")
+    assert captured["body"]["interpret"] is False
+    assert captured["body"]["impactResults"] == impact
+
+
+def test_alarm_stream_uses_available_sensor_pair_and_emits_live_tokens(monkeypatch):
+    captured = {"requests": []}
+
+    class FakeBackend:
+        available = True
+
+        def evaluate_release(self, request):
+            captured["requests"].append(request)
+            return {"status": "calculated", "maximum_heat_flux_w_m2": 5000.0,
+                    "maximum_overpressure_pa": 6000.0, "sampled_effect_radius_m": 3.0,
+                    "sampled_max_distance_m": 5.0, "effect_range_status": "WITHIN_SAMPLED_POINTS"}
+
+    def fake_direct(frame, catalog, station_id, question, impact_results):
+        captured["direct_impacts"] = impact_results
+        return {"status": "WARNING", "hits": [], "sop": {"answer": "중압 저장뱅크 영향 확인"}}
+
+    monkeypatch.setattr(api, "load_hyram_backend", lambda: FakeBackend())
+    monkeypatch.setattr(api, "_invoke_saga_stream", lambda *args: (_ for _ in ()).throw(
+        AssertionError("Direct monitoring must not call the generative stream")))
+    monkeypatch.setattr(api, "_invoke_saga_hazop_direct", fake_direct)
+    job_id = "saga-alarm-stream-test"
+    with api._jobs_lock:
+        api._jobs[job_id] = {"frames": [{"time_s": 7.0, "analysis": {"status": "WARNING"},
+            "hazop": {"active": [], "releases": [], "signals": {
+                "PT-0801": {"value": 65.0, "quality": "GOOD"},
+                "TT-0801": {"value": 29.0, "quality": "GOOD"}}}}]}
+    try:
+        with TestClient(api.app) as client:
+            response = client.post(f"/api/simulations/{job_id}/saga-analysis/stream",
+                                   json={"trigger": "alarm", "direct": True, "question": "현재 상태"})
+        assert response.status_code == 200, response.text
+        assert response.headers["content-type"].startswith("text/event-stream")
+        assert captured["requests"] and captured["requests"][0].source_pressure_pa == 65e6
+        assert captured["direct_impacts"][0]["node_id"] == "N08"
+        assert captured["direct_impacts"][0]["maximum_heat_flux_w_m2"] == 5000.0
+        assert response.text.index("event: token") < response.text.index("event: result")
+        assert "중압 저장뱅크" in response.text
+    finally:
+        with api._jobs_lock:
+            api._jobs.pop(job_id, None)
+
+
 def test_routine_saga_discards_stale_failure_and_latched_claim(monkeypatch):
     def fake_urlopen(request, timeout):
         prompt = json.loads(request.data)["message"]

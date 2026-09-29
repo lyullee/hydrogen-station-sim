@@ -36,14 +36,14 @@ def frame(t, value=87.5, quality="GOOD", age=0, unit="MPa_abs", monitoring=True)
 
 def test_packaged_catalog_keys_and_numeric_values():
     c = load_catalog()
-    assert len(c["rules"]) == 205 and len(c["sensors"]) == 82
+    assert len(c["rules"]) == 214 and len(c["sensors"]) == 91
     assert all(isinstance(r["임계값"], float) for r in c["rules"])
     assert all(r["현장활성화"] is False for r in c["rules"])
     m = coverage(c)
-    assert m["mapped_sensors"]==82
+    assert m["mapped_sensors"]==91
     assert not any(s["mapping_status"]=="UNAVAILABLE" for s in m["sensors"])
     assert m["physical_sensor_connections"]==0
-    assert 0 < m["simulation_ready_rules"] < 205
+    assert 0 < m["simulation_ready_rules"] < 214
 
 
 def test_inclusive_threshold_elapsed_time_and_manual_reset():
@@ -150,8 +150,8 @@ def test_actual_release_links_without_fabricating_location_gd(indoor_missing):
 def test_api_catalog_live_detail_and_persisted_events(tmp_path,monkeypatch):
     monkeypatch.setenv('H2STATION_HAZOP_EVENTS_DB',str(tmp_path/'events.sqlite3'))
     with TestClient(app) as client:
-        assert client.get('/api/hazop/mapping').json()['mapped_sensors']==82
-        assert len(client.get('/api/hazop/catalog').json()['rules'])==205
+        assert client.get('/api/hazop/mapping').json()['mapped_sensors']==91
+        assert len(client.get('/api/hazop/catalog').json()['rules'])==214
         created=client.post('/api/simulations',json={'duration_s':.8,'faults':[{'event_id':'bias','kind':'sensor-bias','target':'PT-1401','start_time_s':0,'magnitude':90}]}).json()
         for _ in range(200):
             job=client.get('/api/simulations/'+created['id']).json()
@@ -212,7 +212,7 @@ def test_virtual_detector_follows_actual_release_zone(target, tag):
     assert signals[tag]['origin']=='VIRTUAL_DETECTOR_PROXY'
     assert signals['GD-2001']['value']==0  # No unrelated header alarm.
     assert len([k for k in signals if k.startswith('GD-')])==15
-    assert len([k for k in signals if k in monitor.mapper.specs])==82
+    assert len([k for k in signals if k in monitor.mapper.specs])==91
 
 
 def test_every_catalog_sensor_has_finite_sample_and_detector_fault_uses_db_tag():
