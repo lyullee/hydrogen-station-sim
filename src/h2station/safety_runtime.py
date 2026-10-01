@@ -193,6 +193,7 @@ class SafetyLimits:
     detector_alarm_volume_fraction: float
     detector_trip_volume_fraction: float
     trip_persistence_s: float
+    process_transient_persistence_s: float = 2.0
 
     def __post_init__(self) -> None:
         positive = (
@@ -209,6 +210,8 @@ class SafetyLimits:
             raise ValueError("Detector alarm threshold must be below trip threshold")
         if self.trip_persistence_s < 0.0:
             raise ValueError("trip_persistence_s cannot be negative")
+        if self.process_transient_persistence_s < self.trip_persistence_s:
+            raise ValueError("process transient persistence cannot be shorter than trip persistence")
 
 
 @dataclass(frozen=True)
@@ -250,7 +253,10 @@ class SafetyPLC:
                 self._condition_timers_s.get(cause, 0.0) + sample_period_s
                 if active else 0.0
             )
-            if active and self._condition_timers_s[cause] >= self.limits.trip_persistence_s:
+            required_persistence = (self.limits.process_transient_persistence_s
+                                    if cause in {"precooling-temperature-high", "flow-imbalance"}
+                                    else self.limits.trip_persistence_s)
+            if active and self._condition_timers_s[cause] >= required_persistence:
                 self._esd_latched = True
                 self._latched_causes.add(cause)
 

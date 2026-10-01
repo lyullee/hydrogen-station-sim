@@ -352,12 +352,15 @@ class CascadeSupervisor:
 
     def __init__(self, parameters: CascadeSupervisorParameters | None = None) -> None:
         self.parameters = parameters or CascadeSupervisorParameters()
+        self._recharge_index: int | None = None
+        self._recharge_armed: list[bool] = []
 
     def select_dispatch_bank(
         self,
         banks: tuple[CascadeBank, ...],
         gas_states: tuple[CompositeTankGasState, ...],
         downstream_pressure_pa: float,
+        excluded_indices: frozenset[int] = frozenset(),
     ) -> int | None:
         minimum_pressure = (
             downstream_pressure_pa
@@ -366,7 +369,7 @@ class CascadeSupervisor:
         available = [
             index
             for index, gas in enumerate(gas_states)
-            if gas.pressure_pa > minimum_pressure
+            if index not in excluded_indices and gas.pressure_pa > minimum_pressure
         ]
         if not available:
             return None
@@ -381,7 +384,9 @@ class CascadeSupervisor:
         gas_states: tuple[CompositeTankGasState, ...],
         dispatch_index: int | tuple[int | None, ...] | None,
         target_pressures_pa: tuple[float, ...] | None = None,
+        restart_margins_pa: tuple[float, ...] | None = None,
         ignore_targets: bool = False,
+        excluded_indices: frozenset[int] = frozenset(),
     ) -> int | None:
         excluded = {
             index for index in (
@@ -389,26 +394,54 @@ class CascadeSupervisor:
                 else (dispatch_index,)
             ) if index is not None
         }
+        if len(self._recharge_armed) != len(banks):
+            self._recharge_armed = [True] * len(banks)
+        targets = tuple(target_pressures_pa or tuple(
+            bank.parameters.target_pressure_pa for bank in banks
+        ))
+        margins = tuple(restart_margins_pa or (
+            self.parameters.recharge_pressure_hysteresis_pa for _ in banks
+        ))
+        if ignore_targets:
+            self._recharge_index = None
+            self._recharge_armed = [True] * len(banks)
+        else:
+            for index, (gas, target, margin) in enumerate(zip(gas_states, targets, margins)):
+                if gas.pressure_pa >= target:
+                    self._recharge_armed[index] = False
+                    if self._recharge_index == index:
+                        self._recharge_index = None
+                elif gas.pressure_pa <= target - margin:
+                    self._recharge_armed[index] = True
+
+            # Keep one bank selected until it reaches its upper target.  This
+            # prevents controller-sample noise and simultaneous vehicle draws
+            # from making the compressor alternate between READY and CHARGE.
+            if (self._recharge_index is not None
+                    and self._recharge_index not in excluded
+                    and self._recharge_index not in excluded_indices
+                    and gas_states[self._recharge_index].pressure_pa < targets[self._recharge_index]):
+                return self._recharge_index
+
         needs_charge = [
             index
             for index, (bank, gas) in enumerate(zip(banks, gas_states))
-            if index not in excluded
-            and (ignore_targets or gas.pressure_pa
-                 < (target_pressures_pa[index] if target_pressures_pa is not None
-                    else bank.parameters.target_pressure_pa
-                    - self.parameters.recharge_pressure_hysteresis_pa))
+            if index not in excluded and index not in excluded_indices
+            and (ignore_targets or (self._recharge_armed[index]
+                                    and gas.pressure_pa < targets[index]))
         ]
         if not needs_charge:
+            self._recharge_index = None
             return None
         if ignore_targets:
             # With operator auto-stop disabled, keep feeding the lowest-pressure
             # available bank instead of pinning the compressor to the high bank.
             return min(needs_charge, key=lambda index: gas_states[index].pressure_pa)
-        return max(
+        self._recharge_index = max(
             needs_charge,
-            key=lambda index: (target_pressures_pa[index] if target_pressures_pa is not None
-                               else banks[index].parameters.target_pressure_pa),
+            key=lambda index: targets[index],
         )
+        return self._recharge_index
 
 
 @dataclass(frozen=True)
@@ -594,6 +627,7 @@ class FullStationModel:
         secondary_nozzle_area_multiplier: float = 1.0,
         primary_allow_reverse_flow: bool = False,
         secondary_allow_reverse_flow: bool = False,
+        compressor_flow_multiplier: float = 1.0,
     ) -> tuple[FullStationState, CompressorResult, float]:
         bank_gases = tuple(
             bank.gas_state(bank_state)
@@ -688,6 +722,12 @@ class FullStationModel:
             ),
             enabled=recharge_index is not None,
         )
+        if compressor_flow_multiplier != 1.0:
+            compressor_result = replace(
+                compressor_result,
+                mass_flow_kg_s=compressor_result.mass_flow_kg_s * compressor_flow_multiplier,
+                electrical_power_w=compressor_result.electrical_power_w * compressor_flow_multiplier,
+            )
         bank_rates: list[CascadeBankState] = []
         for index, (bank, bank_state) in enumerate(zip(self.banks, state.banks)):
             bank_rates.append(

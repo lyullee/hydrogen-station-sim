@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ko">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>수소충전소 · 공정 리모콘</title><link rel="stylesheet" href="/remote.css?v=20260928-hot1"><link rel="stylesheet" href="/remote-light.css?v=20260929-start-fill2"><link rel="stylesheet" href="/civic-theme.css?v=20260929-civic1"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>수소충전소 · 공정 리모콘</title><link rel="stylesheet" href="/remote.css?v=20260928-hot1"><link rel="stylesheet" href="/remote-light.css?v=20260929-start-fill2"><link rel="stylesheet" href="/civic-theme.css?v=20260929-civic1"><link rel="stylesheet" href="/safety-console.css?v=1"></head>
 <body class="remote-app">
 <main class="remote-shell">
   <header><p class="eyebrow">H70 · DIGITAL OPERATIONS</p><div class="section-title"><h1>수소충전소 운영 리모콘</h1><span id="serverStatus" class="server-state">서버 확인 중</span></div><p>공정을 제어하고 사고 시나리오를 투입합니다. 현재 상태는 아래에서 확인할 수 있습니다.</p><a id="monitorLink" href="/" target="hrs-monitor-window">운영 모니터 열기 ↗</a><p id="jobStatus" class="job-status" role="status">연결된 실행 없음</p><div class="process-live-summary" role="status"><strong id="processSummary">공정 대기 · 실행 중인 명령 없음</strong><span id="calculationPace">계산 시작 전</span></div><div class="process-status-rail" aria-label="공정별 실시간 상태"><div data-status-process="trailer_supply"><small>트레일러 공급</small><b>정지</b></div><div data-status-process="pressure_recharge"><small>압력 보완</small><b>정지</b></div><div data-status-process="vehicle_1"><small>차량 1 충전</small><b>정지</b></div><div data-status-process="vehicle_2"><small>차량 2 충전</small><b>정지</b></div></div></header>
@@ -13,6 +13,7 @@
     <button type="button" data-remote-tab="operations" aria-selected="true">공정 조작 <small>공급 · 보완 · 차량 충전</small></button>
     <button type="button" data-remote-tab="incidents" aria-selected="false">사고 주입 <small>시나리오 · 현재 사고</small></button>
     <button type="button" data-remote-tab="settings" aria-selected="false">운전 설정 <small>초기 조건 · 안전밸브</small></button>
+    <button type="button" data-remote-tab="safety" aria-selected="false">안전 대응 <small>가상 조치 · 복구 · 훈련</small></button>
   </nav>
   <form id="scenarioForm" novalidate>
     <fieldset id="scenarioFields">
@@ -43,6 +44,11 @@
           <label>차량 2 초기온도 (°C)<input id="initialTemp2" type="number" value="25" min="-40" max="85" step="any" required></label>
         </div><p class="hint">압력 상승률과 최대 유량은 이 시뮬레이터의 고정 운전 설정입니다. SAE J2601 조건표에 따른 자동 충전 일정 선택은 적용되지 않습니다.</p></details>
         <details class="relief-settings"><summary>안전밸브 · 개방/재폐쇄 압력</summary><p class="hint">압력이 개방값에 도달하면 방출하고 재폐쇄값까지 낮아지면 닫힙니다. 두 값을 가깝게 설정하면 채터링을 관찰할 수 있습니다.</p><div id="reliefRows" class="relief-rows"></div></details>
+        <details class="risk-display-settings"><summary>3D 위험도 표시 · 계산 부하</summary><p class="hint">위험도 버튼을 켰을 때 주요 설비의 현재 센서와 피해영향예측을 아래 주기로 갱신합니다. ‘절대’는 고정 기준 0–100 지수이며 연간 개인위험도가 아닙니다.</p><div class="grid">
+          <label class="switch-label"><input id="riskOverlayEnabled" type="checkbox" checked> 주기적 위험도 갱신</label>
+          <label>기본 비교 방식<select id="riskDisplayMode"><option value="relative" selected>상대 위험도 · 현재 설비 간</option><option value="absolute">절대 위험도 · 고정 기준</option></select></label>
+          <label>갱신 주기<select id="riskUpdateInterval"><option value="15">15초 · 부하 높음</option><option value="30" selected>30초 · 권장</option><option value="60">60초 · 부하 낮음</option><option value="120">120초 · 최소 부하</option></select></label>
+        </div></details>
         <p class="hint">초기 조건은 새 실행에 적용됩니다. 운전 중 안전밸브 설정은 값을 바꾼 뒤 공정 조작의 ‘설정 적용’을 누르세요.</p>
       </section>
       <section class="remote-panel process-panel" data-remote-pane="operations" aria-label="공정 요청">
@@ -73,6 +79,11 @@
               <label>중압 종료·초과 기준 MPa<input id="rechargeTargetMedium" type="number" min="1.1" max="110" step="any" value="66"></label>
               <label>고압 종료·초과 기준 MPa<input id="rechargeTargetHigh" type="number" min="1.1" max="110" step="any" value="96"></label>
             </div>
+            <details class="recharge-band-settings"><summary>재충전 재기동 압력 여유폭</summary><p class="hint">목표에 도달한 뱅크는 압력이 아래 폭만큼 낮아진 뒤에만 다시 선택됩니다. 압축기·밸브의 짧은 반복 기동을 줄이는 시뮬레이션 설정입니다.</p><div class="process-fields">
+              <label>저압 여유폭 MPa<input id="rechargeMarginLow" type="number" min="0.2" max="20" step="0.1" value="2"></label>
+              <label>중압 여유폭 MPa<input id="rechargeMarginMedium" type="number" min="0.2" max="20" step="0.1" value="3"></label>
+              <label>고압 여유폭 MPa<input id="rechargeMarginHigh" type="number" min="0.2" max="20" step="0.1" value="4"></label>
+            </div></details>
             <button class="process-toggle" type="button" data-operation="pressure_recharge">보완 시작</button>
           </article>
           <article class="process-request" data-process="vehicle_1"><header><strong>차량 1 충전</strong><span class="process-state">정지</span></header><div class="process-activity">요청 없음</div><div class="process-reading" id="vehicle1Reading">탱크 — kg</div><div class="process-fields"><label class="switch-label"><input id="vehicle1AutoStop" type="checkbox" checked> 설정 목표압력에서 자동 종료</label><label>차량 1 종료·초과 기준 MPa<input id="vehicle1TargetPressure" type="number" min="1.1" max="110" step="any" value="70"></label></div><p class="hint">체크 해제 = 목표 초과 충전. 이미 멈췄다면 충전 시작을 다시 누르세요. 온도 보호·안전밸브와 87.5 MPa ESD는 별도입니다.</p><button class="process-toggle" type="button" data-operation="vehicle_1">차량 1 충전 시작</button></article>
@@ -91,9 +102,13 @@
         <section class="live-faults"><h2>현재 운전의 사고</h2><div id="liveFaults" role="status">운전 중 사고가 없습니다.</div></section>
         <p class="hint">운전 중 사고는 지금부터 설정한 지연 시간 뒤 시작합니다. 종료 시간을 비우면 직접 제거할 때까지 유지됩니다.</p>
       </section>
+      <section class="remote-panel safety-panel" data-remote-pane="safety" hidden>
+        <div class="section-title"><h2>가상 안전 대응</h2><span class="hint">명령 · 실제 동작 · 센서 확인을 분리해 기록합니다.</span></div>
+        <div id="safetyConsole">모니터링을 시작하면 가상 안전설비 상태가 표시됩니다.</div>
+      </section>
     </fieldset>
     <section class="remote-actions" aria-label="실행 컨트롤">
-      <div class="run-row"><button id="run" class="run" type="submit">모니터링 시작</button><button id="newRun" type="button" hidden>새 공정 시작</button><button id="stop" type="button" hidden>실행 정지</button><button id="resetProcess" type="button">↺ 공정 초기화</button><button id="esdStop" class="esd-control" type="button" disabled>ESD 차단</button><span id="status" role="status">공정 정지 상태로 모니터링을 시작할 수 있습니다.</span></div>
+      <div class="run-row"><button id="run" class="run" type="submit">모니터링 시작</button><button id="newRun" type="button" hidden>새 공정 시작</button><button id="stop" type="button" hidden>실행 정지</button><button id="resetProcess" type="button">■ 계산 정지 · 완전 초기화</button><button id="esdStop" class="esd-control" type="button" disabled>ESD 차단</button><span id="status" role="status">공정 정지 상태로 모니터링을 시작할 수 있습니다.</span></div>
       <p id="runHelp" class="action-note">선택한 운전 조건과 사고로 새 시뮬레이션을 시작합니다.</p>
       <p id="errorStatus" class="error-status" role="alert" hidden></p>
     </section>
@@ -115,4 +130,6 @@
   </article>
 </template>
 <script src="/remote.js?v=20260929-start-fill2"></script>
+<script src="/safety-actions.js?v=1"></script>
+<script src="/safety-console.js?v=20260930-evacuation-feedback1"></script>
 </body></html>

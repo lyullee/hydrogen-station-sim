@@ -69,6 +69,8 @@
 .wall-board h1 span { color: #c8daec; font-weight: 450; }
 .wall-board .masthead-context span { color: #fff; }
 .wall-board .masthead-context b { color: #a9c3df; }
+.wall-board .kgs-research-ci { background: #fff; color: var(--civic-ink); }
+.wall-board .kgs-research-ci:hover { background: #f5f9fd; }
 .wall-board .side-nav-item { color: #bcd0e5; font-weight: 600; }
 .wall-board .side-nav-item:hover { color: #fff; background: #ffffff13; }
 .wall-board .side-nav-item.active { color: #fff; border-bottom-color: #76c6ef; }

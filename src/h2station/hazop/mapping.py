@@ -110,8 +110,10 @@ class ModelMapper:
         return t - self.transitions[key][1]
 
     def sample(self, t, *, station, state, commands, instantaneous, dispatch_indices,
-               dispatch_openings, recharge_index, safety, fault_events=(), active_leaks=(), risk_snapshots=()):
-        signals, modes = {}, {"station.monitoring": True, "station.esd": safety.esd_latched}
+               dispatch_openings, recharge_index, safety, fault_events=(), active_leaks=(), risk_snapshots=(),
+               compressor_flow_multiplier=1.0):
+        signals, modes = {}, {"station.monitoring": True, "station.esd": safety.esd_latched,
+                              "station.scenario_active": bool(fault_events or active_leaks)}
         def put(tag, value, unit=None, origin=None):
             signals[tag] = {"value": float(value), "unit": unit or self.specs[tag]["단위"], "quality": "GOOD",
                             "time_s": t, "origin": origin or MODEL_BINDINGS[tag][0]}
@@ -148,7 +150,7 @@ class ModelMapper:
             put(f"TT-{v}02", partial_state.vehicle.shell_temperature_k-273.15)
             put(f"PT-{p+1}01", max(0.0, (inst["pcv_outlet_pressure"] - partial.precooler.hydrogen_pressure_drop_pa)/1e6))
             put(f"MASS_HOSE_{d}", partial_state.hose_hydrogen_mass_kg, "kg", "PROCESS_INVENTORY")
-            modes.update({f"d{d}.phase": command.phase.value.upper(),
+            modes.update({f"d{d}.phase": "ESD" if safety.esd_latched else command.phase.value.upper(),
                           f"d{d}.phase_elapsed_s": self.elapsed(f"phase{d}", command.phase, t),
                           f"d{d}.switch_elapsed_s": self.elapsed(f"dispatch{d}", selected, t),
                           f"d{d}.connected": True,  # Fixed connected-vehicle model topology, not connector telemetry.
@@ -163,7 +165,7 @@ class ModelMapper:
         compressor = station.compressor.evaluate(supply, discharge, enabled=recharge_index is not None,
                                                  include_stage_outlets=True)
         for n in ("01", "02", "03", "04", "05", "06"):
-            put(f"FT-{n}01", compressor.mass_flow_kg_s*1000)
+            put(f"FT-{n}01", compressor.mass_flow_kg_s*compressor_flow_multiplier*1000)
         for stage, node in ((0,"04"), (1,"05")):
             pressure, temperature = (compressor.stage_outlets[stage] if len(compressor.stage_outlets)>stage
                                      else (supply.pressure_pa, supply.temperature_k))

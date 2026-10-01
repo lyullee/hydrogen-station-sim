@@ -1,6 +1,8 @@
 /* HAZOP sensor tags are the single source for per-node P/T/F telemetry. */
 (()=>{
-  let catalog=null,selected='N13';
+  // The compact live trend starts on the high-pressure storage bank. This is
+  // the station's highest stored-energy bank and the most useful default view.
+  let catalog=null,selected='N09';
   const $=id=>document.getElementById(id);
   const metrics=[['P','압력','MPa'],['T','온도','°C'],['F','유량','g/s']];
   const sensors=(node,prefix)=>catalog?.sensors?.filter(s=>s.node_id===node&&s.sensor_id?.startsWith(prefix+'T-'))||[];

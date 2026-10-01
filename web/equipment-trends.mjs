@@ -66,12 +66,13 @@ function faultDescription(fault){const [kind,target]=String(fault).split(':');co
 let catalogPromise;
 function getCatalog(){return catalogPromise ||= fetch('/api/hazop/catalog').then(response=>{if(!response.ok)throw new Error('센서 목록 조회 실패');return response.json();}).catch(error=>{catalogPromise=null;throw error;});}
 
-export function mountEquipmentTrends(body){
+export function mountEquipmentTrends(body,initialSelection=null){
   const dialog=document.getElementById('workspaceDialog');dialog.classList.add('equipment-trend-dialog');body.classList.add('equipment-trend-workspace');
   body.innerHTML=`<div class="et-intro"><div><b>주요 공정 설비 비교</b><span>설비별 가상 센서값을 같은 모의 시간축에 겹쳐 봅니다.</span></div><span id="etClock">데이터 대기</span></div>
     <div class="et-toolbar"><div class="et-presets" role="group" aria-label="설비 빠른 선택"><button type="button" data-preset="storage">저장뱅크</button><button type="button" data-preset="supply">공급·압축</button><button type="button" data-preset="fueling">충전라인</button><button type="button" data-preset="all">전체 주요 설비</button></div><label>기간 <select id="etWindow"><option value="120">최근 120초</option><option value="600">최근 10분</option><option value="all">전체 이력</option></select></label><label>압력 그래프 <select id="etPressureMode"><option value="change">기간 시작 대비 변화</option><option value="absolute">절대압력 비교</option></select></label><label class="et-overlay"><input type="checkbox" id="etIncidents" checked> 사고 영향 구간</label><button type="button" id="etExport">CSV 저장</button></div>
     <div class="et-content"><aside class="et-equipment"><header><b>설비 선택</b><small id="etSelectionCount">0개 선택</small></header><div id="etEquipmentRows" class="et-equipment-rows"></div></aside><section class="et-graphs"><div id="etIncidentStrip" class="et-incident-strip"></div><div id="etCharts" class="et-charts"></div><p class="et-note">동일 시간축 · 배경색은 사고 입력 활성 시간 · 압력 변화는 기간 시작값 기준 · 저장뱅크 FT는 공정 토출 유량이며 누출 유량은 별도 표시 · GOOD 품질 센서만 표시</p></section></div>`;
-  const $=id=>body.querySelector('#'+id),selected=new Set(GROUPS.storage),rows=new Map(),canvases=new Map();
+  const requested=Array.isArray(initialSelection)?initialSelection.filter(id=>EQUIPMENT.some(item=>item.id===id)):[];
+  const $=id=>body.querySelector('#'+id),selected=new Set(requested.length?requested:GROUPS.storage),rows=new Map(),canvases=new Map();
   let catalog=null,alive=true,hoverIndex=null,lastPaint=0,scheduled=false;
   const equipmentRows=$('etEquipmentRows'),chartWrap=$('etCharts');
   for(const [index,item] of EQUIPMENT.entries()){

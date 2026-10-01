@@ -7,6 +7,7 @@ import re
 from typing import Any, Mapping
 
 from .live import DynamicLeakModel, HyRAMDynamicReleaseRequest, LeakScenario, LeakSourceState
+from .runtime_backend import consequence_risk_summary
 
 
 def _good_signal(signals: Mapping[str, Any], tags: str | None, prefix: str) -> tuple[str, float] | None:
@@ -172,6 +173,7 @@ def assess_sensor_cases(
                 delayed_ignition_probability=None,
             )
             consequence = dict(backend.evaluate_release(request))
+            consequence.update(consequence_risk_summary(consequence))
             radius = consequence.get("sampled_effect_radius_m")
             result.update(calculation_status=consequence.get("status", "unknown"),
                           mass_flow_g_s=mass_flow * 1000.0,
@@ -182,6 +184,9 @@ def assess_sensor_cases(
                           sampled_next_distance_m=consequence.get("sampled_next_distance_m"),
                           observation_point_count=consequence.get("observation_point_count"),
                           effect_range_status=consequence.get("effect_range_status"),
+                          risk_score=consequence.get("risk_score"),
+                          risk_level=consequence.get("risk_level"),
+                          risk_basis=consequence.get("risk_basis"),
                           range_interpretation=("표본 관측점에서 기준 미달, 영향 반경 미확정"
                               if consequence.get("effect_range_status") == "BELOW_THRESHOLDS_AT_SAMPLES"
                               else "임계값 초과 표본 거리만 확인, 현장 안전반경 아님"))

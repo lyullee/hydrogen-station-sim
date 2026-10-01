@@ -28,7 +28,7 @@ window.showEquipmentDetails=(item,targetBody=null)=>{
     low:[['모델 집합 용적','0.35 m³'],['목표 압력','45 MPa'],['벽체 열용량','300 kg × 500 J/kg/K']],
     medium:[['모델 집합 용적','0.35 m³'],['목표 압력','65 MPa'],['벽체 열용량','300 kg × 500 J/kg/K']],
     high:[['모델 집합 용적','0.35 m³'],['목표 압력','95 MPa'],['벽체 열용량','300 kg × 500 J/kg/K']],
-    cooler:[['수소-냉매 열전달 UA','900 W/K'],['냉동기 UA','3,000 W/K'],['수소 압력강하','0.1 MPa'],['냉매 열용량','150 kJ/K']],
+    cooler:[['수소-냉매 열전달 UA','2,200 W/K'],['냉동기 UA','6,000 W/K'],['수소 압력강하','0.1 MPa'],['냉매 열용량','300 kJ/K']],
     vehicle:[['탱크 유형','Type IV 참조 모델'],['내부 용적','0.122 m³'],['라이너','HDPE · 8 kg'],['복합재 쉘','CFRP · 70 kg']],
     safety:[['감지기 경보','H₂ 1.0 vol%'],['감지기 차단','H₂ 2.0 vol%'],['차단 방식','래칭 ESD']],
     vent:[['모델 수준','시각 참조'],['배압·확산 설계','모델에 미포함']],
@@ -68,6 +68,11 @@ function sensorTable(body){
   input.addEventListener('input',refresh);refresh();
   const timer=setInterval(refresh,1000);restoreDialogContent=()=>{clearInterval(timer);clearInterval(matrixTimer);};
 }
+window.openEquipmentTrendsFor=(nodeIds,title='선택 설비 온도·압력·유량 추세')=>{
+  if(restoreDialogContent){restoreDialogContent();restoreDialogContent=null;}
+  const body=openWorkspace(title);
+  restoreDialogContent=window.mountEquipmentTrends?.(body,nodeIds)||null;
+};
 function navigateMonitor(action){
   if(action==='overview'||action==='flow'){closeWorkspace();window.setMonitorView?.(action==='flow'?'flow':'3d');return;}
   if(action==='hazop'){sensorTable(openWorkspace('센서 분석'));return;}
@@ -105,9 +110,9 @@ document.getElementById('remoteLink').addEventListener('click',event=>{
   if(!window.open(url,'hrs-remote','popup,width=760,height=860'))window.location.href=url;
 });
 function attachRemoteJob(id){if(typeof id==='string'&&/^[a-f0-9]{32}$/.test(id)&&id!==state.activeJobId)window.connectStationJob?.(id);}
-if('BroadcastChannel' in window){const channel=new BroadcastChannel('hrs-monitor');channel.onmessage=e=>{if(e.data?.type==='job-created')attachRemoteJob(e.data.id);};}
+if('BroadcastChannel' in window){const channel=new BroadcastChannel('hrs-monitor');channel.onmessage=e=>{if(e.data?.type==='job-created')attachRemoteJob(e.data.id);else if(e.data?.type==='station-reset')window.resetStationMonitor?.();};}
 window.addEventListener('storage',e=>{if(e.key==='hrs-active-job')attachRemoteJob(e.newValue);});
-window.addEventListener('message',e=>{if(e.origin===location.origin&&e.data?.type==='hrs-job-created')attachRemoteJob(e.data.id);});
+window.addEventListener('message',e=>{if(e.origin!==location.origin)return;if(e.data?.type==='hrs-job-created')attachRemoteJob(e.data.id);else if(e.data?.type==='hrs-station-reset')window.resetStationMonitor?.();});
 function tick(){document.getElementById('wallClock').textContent=new Date().toLocaleTimeString('ko-KR',{hour12:false});window.updateConnectionDisplay?.();}
 tick();setInterval(tick,1000);
 window.addEventListener('station-ready',()=>{if(location.hash==='#processPanel')window.setMonitorView('flow');});

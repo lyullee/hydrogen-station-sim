@@ -46,12 +46,13 @@ class FuelingSchedule:
 
 @dataclass(frozen=True)
 class FuelingControllerParameters:
-    proportional_gain_pa_inverse: float = 2.0e-7
-    integral_gain_pa_inverse_s_inverse: float = 2.0e-9
+    proportional_gain_pa_inverse: float = 3.0e-8
+    integral_gain_pa_inverse_s_inverse: float = 2.0e-10
     minimum_opening: float = 0.0
     maximum_opening: float = 1.0
     completion_pressure_tolerance_pa: float = 1.0e5
     anti_windup_gain: float = 0.5
+    maximum_opening_slew_per_s: float = 0.03
 
 
 @dataclass(frozen=True)
@@ -108,17 +109,20 @@ class SampledFuelingController:
         self._start_time_s = 0.0
         self._initial_pressure_pa = 0.0
         self._integral_error_pa_s = 0.0
+        self._last_opening = 0.0
 
     def start(self, time_s: float, initial_pressure_pa: float) -> None:
         self._phase = FuelingPhase.FILLING
         self._start_time_s = time_s
         self._initial_pressure_pa = initial_pressure_pa
         self._integral_error_pa_s = 0.0
+        self._last_opening = 0.0
 
     def reset(self) -> None:
         """Return the controller to idle before a separate operator fill request."""
         self._phase = FuelingPhase.IDLE
         self._integral_error_pa_s = 0.0
+        self._last_opening = 0.0
 
     def update(self, observation: FuelingObservation, sample_period_s: float,
                *, auto_stop: bool = True, target_pressure_pa: float | None = None) -> FuelingCommand:
@@ -164,6 +168,11 @@ class SampledFuelingController:
                 / observation.measured_mass_flow_kg_s
             )
 
+        maximum_step = self.parameters.maximum_opening_slew_per_s * sample_period_s
+        opening = min(self._last_opening + maximum_step,
+                      max(self._last_opening - maximum_step, opening))
+        self._last_opening = opening
+
         saturated = abs(opening - raw_opening) > 1.0e-12
         if not saturated:
             self._integral_error_pa_s = candidate_integral
@@ -189,6 +198,7 @@ class SampledFuelingController:
         soc: float,
         reason: str,
     ) -> FuelingCommand:
+        self._last_opening = 0.0
         return FuelingCommand(
             phase=self._phase,
             valve_opening=0.0,

@@ -15,20 +15,21 @@ const panel = document.createElement('section');
 panel.className = 'station3d';
 panel.id = 'station3d';
 panel.innerHTML = `
-  <header class="s3-head"><div><div class="s3-eyebrow">SPATIAL OPERATIONS / H70 REFERENCE STATION</div><h2>수소충전소 · 3D 운영 뷰</h2></div><div class="s3-head-tools"><div class="view-switcher" aria-label="모니터 뷰 전환"><button type="button" data-panel-view="3d" class="selected">3D</button><button type="button" data-panel-view="flow">공정 흐름</button></div><button id="s3RiskToggle" class="s3-risk-toggle" type="button" aria-pressed="false">위험거리 표시</button><button id="s3Fullscreen" class="s3-fullscreen" type="button" aria-label="3D 화면 전체화면" title="3D 화면 전체화면"><span aria-hidden="true">⛶</span><b>전체화면</b></button><div class="s3-live" id="s3Live"><i></i><span>모델 대기</span></div></div></header>
+  <header class="s3-head"><div><div class="s3-eyebrow">SPATIAL OPERATIONS / H70 REFERENCE STATION</div><h2>수소충전소 · 3D 운영 뷰</h2></div><div class="s3-head-tools"><div class="view-switcher" aria-label="모니터 뷰 전환"><button type="button" data-panel-view="3d" class="selected">3D</button><button type="button" data-panel-view="flow">공정 흐름</button></div><button id="s3RiskToggle" class="s3-risk-toggle" type="button" aria-pressed="false">위험거리 표시</button><button id="s3RiskLevelToggle" class="s3-risk-toggle" type="button" aria-pressed="false">위험도 표시</button><button id="s3Fullscreen" class="s3-fullscreen" type="button" aria-label="3D 화면 전체화면" title="3D 화면 전체화면"><span aria-hidden="true">⛶</span><b>전체화면</b></button><div class="s3-live" id="s3Live"><i></i><span>모델 대기</span></div></div></header>
   <div class="s3-monitor-layout">
     <aside class="s3-info-column s3-info-left" aria-label="주요 설비 상태">
       <article class="s3-info-card"><header><span class="s3-info-kicker">STORAGE BANKS</span><b>저장 뱅크</b><i class="s3-status-dot"></i></header><div class="s3-bank-list"><div><span>HIGH</span><strong id="s3BankHigh">0.0</strong><em>MPa</em></div><div><span>MID</span><strong id="s3BankMedium">0.0</strong><em>MPa</em></div><div><span>LOW</span><strong id="s3BankLow">0.0</strong><em>MPa</em></div></div><small class="s3-info-foot" id="s3BankState">압력 신호 대기</small></article>
       <article class="s3-info-card"><header><span class="s3-info-kicker">COMPRESSOR</span><b>압축기</b><i class="s3-status-dot"></i></header><div class="s3-info-value"><strong id="s3CompressorState">대기</strong><span id="s3CompressorDetail">재충전 뱅크 없음</span></div><div class="s3-meter"><i id="s3CompressorMeter"></i></div><small class="s3-info-foot" id="s3CompressorFoot">3단 압축 · 중간 냉각</small></article>
     </aside>
     <div class="s3-stage" id="s3Stage">
+    <div id="s3ResponseOverlay" class="s3-response-overlay" hidden></div>
     <div class="s3-camera-markers" id="s3CameraMarkers" aria-label="CCTV 카메라 위치"></div>
     <button id="s3StageExit" class="s3-stage-exit" type="button" hidden>× 전체화면 닫기</button>
     <nav class="s3-toolbar" aria-label="3D 시점"><button data-view="overview" class="selected">전체 조감</button><button data-view="fueling">충전 구역</button><button data-view="plant">공정 설비</button><button data-view="top">평면 배치</button><button id="s3AssetsToggle" type="button" aria-expanded="false" aria-controls="s3Assets">설비 목록</button></nav>
     <div class="s3-assets" id="s3Assets" hidden role="group" aria-label="설비 선택"><div class="s3-assets-header"><strong>설비 목록</strong><button id="s3AssetsClose" type="button" aria-label="설비 목록 닫기">닫기 ×</button></div><div class="s3-assets-list" id="s3AssetsList"></div></div>
     <div class="s3-compass"><b>↑</b>N / PROCESS</div>
     <div class="s3-options"><button id="s3Pipes" aria-pressed="true">공정 배관</button><button id="s3Roof" aria-pressed="false">캐노피 투시</button><button id="s3Service" aria-pressed="false">설비 내부</button><button id="s3VehicleCutaway" aria-pressed="false">차량 탱크 투시</button><button id="s3Night" aria-pressed="false">야간 조명</button></div>
-    <aside class="s3-card"><small id="s3Tag">H70 / DIGITAL OPERATIONS</small><h3 id="s3Title">전체 충전소</h3><p id="s3Description">설비를 클릭하면 역할과 운전값을 확인합니다. 드래그로 회전, 휠로 확대, 오른쪽 드래그로 이동합니다.</p><div class="s3-reading"><span id="s3ReadingLabel">모의 시간</span><strong id="s3Reading">0.0 s</strong></div><button id="s3Focus" class="s3-focus" disabled>선택 설비 확대</button><button id="s3CctvButton" class="s3-cctv-button" type="button">가상 CCTV · 전체 구역</button><img id="s3Cctv" class="s3-cctv" src="/assets/cctv/cctv-storage-banks.png" alt="전체 구역 가상 CCTV"></aside>
+    <aside class="s3-card"><small id="s3Tag">H70 / DIGITAL OPERATIONS</small><h3 id="s3Title">전체 충전소</h3><p id="s3Description">설비를 클릭하면 역할과 운전값을 확인합니다. 왼쪽 드래그로 회전, 휠 버튼 드래그로 이동, 휠로 확대합니다.</p><div class="s3-reading"><span id="s3ReadingLabel">모의 시간</span><strong id="s3Reading">0.0 s</strong></div><button id="s3Focus" class="s3-focus" disabled>선택 설비 확대</button><button id="s3CctvButton" class="s3-cctv-button" type="button">가상 CCTV · 전체 구역</button><img id="s3Cctv" class="s3-cctv" src="/assets/cctv/cctv-storage-banks.png" alt="전체 구역 가상 CCTV"></aside>
     <dialog id="s3CctvDialog" class="s3-cctv-dialog" aria-labelledby="s3CctvDialogTitle"><form method="dialog" class="s3-cctv-dialog-shell"><header><div><span class="s3-info-kicker">VIRTUAL CCTV / LIVE FRAME</span><h3 id="s3CctvDialogTitle">CAM-00 · 전체 구역</h3></div><button class="s3-dialog-close" value="cancel" aria-label="CCTV 닫기">×</button></header><div class="s3-cctv-dialog-body"><img id="s3CctvDialogImage" src="/assets/cctv/cctv-storage-banks.png" alt="가상 CCTV"><div class="s3-cctv-dialog-meta"><b id="s3CctvDialogZone">전체 구역</b><span id="s3CctvDialogState">NORMAL · 모델 연동</span><small id="s3CctvDialogTime">모델 시간 0.0 s</small></div></div></form></dialog>
     </div>
     <aside class="s3-info-column s3-info-right" aria-label="충전 및 안전 상태">
@@ -54,6 +55,7 @@ const selectionSlot=document.createElement('div'); selectionSlot.className='s3-s
 selectionSlot.append(panel.querySelector('.s3-card'));
 surface.append(stage,domain); visualColumn.append(surface,selectionSlot);
 if(anchor){anchor.id='processPanel';surface.append(anchor);}
+if(anchor)anchor.insertAdjacentHTML('beforeend','<div id="flowResponseOverlay" class="flow-response-overlay" hidden></div>');
 sidebar.append(document.querySelector('.analysis-row'),equipmentCards,document.querySelector('#detectorStrip'));
 const incidents=document.createElement('div');incidents.className='s3-incidents';
 incidents.append(document.querySelector('#hazopPanel'),document.querySelector('#impactPanel'));
@@ -263,6 +265,45 @@ function buildStation() {
     markerLayer?.append(button);
     cameraMarkerNodes.push({ def, button });
   });
+  // Keep spatial markers quiet on first load. Operators can reveal them when
+  // they need placement details without covering the station overview.
+  cameraMarkerNodes.forEach(({button})=>button.dataset.layerHidden='true');
+  const cameraToggle=document.createElement('button');cameraToggle.id='s3CameraToggle';cameraToggle.type='button';cameraToggle.textContent='CCTV 위치 표시';cameraToggle.setAttribute('aria-pressed','false');
+  panel.querySelector('.s3-toolbar').append(cameraToggle);
+  cameraToggle.addEventListener('click',()=>{
+    const visible=cameraToggle.getAttribute('aria-pressed')!=='true';
+    cameraToggle.setAttribute('aria-pressed',String(visible));
+    cameraToggle.textContent=visible?'CCTV 위치 숨기기':'CCTV 위치 표시';
+    cameraMarkerNodes.forEach(({button})=>button.dataset.layerHidden=String(!visible));
+    updateCameraMarkers();
+  });
+  const detectorMarkerDefs=[
+    ['detector0101','GD-0101',-22,2.7,5,'공급 트레일러'],['detector0201','GD-0201',-22,2.5,-8,'하역 매니폴드'],
+    ['detector0601','GD-0601',-6,2.8,-4,'압축기'],['detector0701','GD-0701',-2,2.7,-5,'저압 저장'],
+    ['detector0801','GD-0801',1,2.7,-5,'중압 저장'],['detector0901','GD-0901',5,2.7,-5,'고압 저장'],
+    ['detector1001','GD-1001',8,2.7,-3,'공통 헤더'],['detector1301','GD-1301',0,4.66,4.25,'1번 충전'],
+    ['detector1701','GD-1701',8,4.66,4.25,'2번 충전'],['detector1901','GD-1901',11,2.7,-4,'프리쿨러'],
+    ['detector2001','GD-2001',12,2.8,-3,'벤트'],['detector2101','GD-2101',-6,3.8,-3,'압축기 상부'],
+    ['detector2201','GD-2201',3,3.7,-5,'저장 경계'],['detector2301','GD-2301',4,4.7,4,'충전 캐노피'],
+    ['detector2302','GD-2302',11,3.5,-4,'냉각함 상부'],
+    ['flame0101','FD-0101',-22,3.3,3,'트레일러'],['flame0601','FD-0601',-6,3.7,-3,'압축기'],
+    ['flame0701','FD-0701',-2,3.5,-4,'저압 저장'],['flame0801','FD-0801',1,3.5,-4,'중압 저장'],
+    ['flame0901','FD-0901',5,3.5,-4,'고압 저장'],['flame1301','FD-1301',0,4.55,3.6,'1번 충전'],
+    ['flame1701','FD-1701',8,4.55,3.6,'2번 충전'],['flame1901','FD-1901',11,3.6,-3,'프리쿨러'],
+    ['flame2001','FD-2001',12,3.5,-2,'벤트·헤더'],
+  ].map(([id,label,x,y,z,name])=>({id,label,name,type:label.startsWith('FD-')?'flame':'gas',position:new THREE.Vector3(x,y,z)}));
+  const detectorMarkerNodes=[];
+  detectorMarkerDefs.forEach(def=>{
+    const button=document.createElement('button');button.type='button';button.className=`s3-detector-marker ${def.type}`;
+    button.title=`${def.label} · ${def.name}`;button.setAttribute('aria-label',button.title);
+    button.innerHTML=`<span>${def.type==='flame'?'◆':'●'}</span><b>${def.label}</b>`;
+    button.addEventListener('click',event=>{event.stopPropagation();selectEquipment(def.id);});
+    markerLayer?.append(button);detectorMarkerNodes.push({def,button});
+  });
+  detectorMarkerNodes.forEach(({button})=>button.dataset.layerHidden='true');
+  const detectorToggle=document.createElement('button');detectorToggle.id='s3DetectorToggle';detectorToggle.type='button';detectorToggle.textContent='검지기 위치 표시';detectorToggle.setAttribute('aria-pressed','false');
+  panel.querySelector('.s3-toolbar').append(detectorToggle);
+  detectorToggle.addEventListener('click',()=>{const visible=detectorToggle.getAttribute('aria-pressed')!=='true';detectorToggle.setAttribute('aria-pressed',String(visible));detectorToggle.textContent=visible?'검지기 위치 숨기기':'검지기 위치 표시';detectorMarkerNodes.forEach(({button})=>button.dataset.layerHidden=String(!visible));updateCameraMarkers();});
   function updateCameraMarkers() {
     if (!markerLayer) return;
     const canvasRect = renderer.domElement.getBoundingClientRect();
@@ -272,7 +313,8 @@ function buildStation() {
     const height = canvasRect.height / scale || stage.clientHeight;
     cameraMarkerNodes.forEach(({ def, button }) => {
       const projected = def.position.clone().project(camera);
-      const visible = projected.z > -1 && projected.z < 1 && Math.abs(projected.x) <= 1.05 && Math.abs(projected.y) <= 1.05;
+      const layerHidden=button.dataset.layerHidden==='true';
+      const visible = !layerHidden&&projected.z > -1 && projected.z < 1 && Math.abs(projected.x) <= 1.05 && Math.abs(projected.y) <= 1.05;
       button.hidden = !visible;
       if (!visible) return;
       const x = Math.max(22,Math.min(width-22,(canvasRect.left - stageRect.left) / scale + (projected.x + 1) * .5 * width));
@@ -280,20 +322,33 @@ function buildStation() {
       button.style.left = `${x}px`;
       button.style.top = `${y}px`;
     });
+    detectorMarkerNodes.forEach(({def,button})=>{
+      const projected=def.position.clone().project(camera),layerHidden=button.dataset.layerHidden==='true';
+      const visible=!layerHidden&&projected.z>-1&&projected.z<1&&Math.abs(projected.x)<=1.05&&Math.abs(projected.y)<=1.05;
+      button.hidden=!visible;if(!visible)return;
+      button.style.left=`${Math.max(20,Math.min(width-20,(canvasRect.left-stageRect.left)/scale+(projected.x+1)*.5*width))}px`;
+      button.style.top=`${Math.max(62,Math.min(height-55,(canvasRect.top-stageRect.top)/scale+(1-projected.y)*.5*height))}px`;
+    });
   }
   scene.background = new THREE.Color(0xdbe7ef);
   scene.fog = new THREE.Fog(0xdbe7ef,65,130);
   const camera = new THREE.PerspectiveCamera(40,1,.1,180);
   camera.position.set(27,16,30);
   const controls = new OrbitControls(camera,renderer.domElement);
-  const panButton=document.createElement('button');panButton.type='button';panButton.id='s3PanMode';panButton.textContent='이동 모드';panButton.title='클릭하면 왼쪽 드래그로 화면을 상하좌우 이동합니다. 다시 클릭하면 회전합니다.';
-  panel.querySelector('.s3-toolbar').append(panButton);
-  panButton.addEventListener('click',()=>{const pan=panButton.getAttribute('aria-pressed')!=='true';panButton.setAttribute('aria-pressed',String(pan));panButton.textContent=pan?'회전 모드':'이동 모드';controls.mouseButtons.LEFT=pan?THREE.MOUSE.PAN:THREE.MOUSE.ROTATE;controls.mouseButtons.RIGHT=pan?THREE.MOUSE.ROTATE:THREE.MOUSE.PAN;});
-  const photoButton=document.createElement('button');photoButton.type='button';photoButton.id='s3PhotoMode';photoButton.textContent='실사 사진';photoButton.setAttribute('aria-pressed','false');photoButton.title='현재 조감도와 같은 시점의 가상 실사 사진';
-  panButton.after(photoButton);
-  const photoView=document.createElement('div');photoView.className='s3-photo-view';photoView.hidden=true;
+  // One consistent navigation scheme: left drag rotates, wheel-button drag
+  // pans, wheel zooms.  A separate move/rotate mode made the current mouse
+  // state hard to discover on a wall monitor.
+  controls.mouseButtons.LEFT=THREE.MOUSE.ROTATE;
+  controls.mouseButtons.MIDDLE=THREE.MOUSE.PAN;
+  controls.mouseButtons.RIGHT=THREE.MOUSE.PAN;
+  renderer.domElement.title='왼쪽 드래그: 회전 · 휠 버튼 드래그: 이동 · 휠: 확대/축소';
+  const photoButton=document.createElement('button');photoButton.type='button';photoButton.id='s3PhotoMode';photoButton.textContent='3D로 돌아가기';photoButton.setAttribute('aria-pressed','true');photoButton.title='현재 조감도와 같은 시점의 가상 실사 사진';
+  panel.querySelector('.s3-toolbar').append(photoButton);
+  const photoView=document.createElement('div');photoView.className='s3-photo-view';photoView.hidden=false;
   photoView.innerHTML='<img src="/assets/station-realistic-overview.png" alt="수정된 설비 규모와 트레일러 진출입로를 반영한 수소충전소 가상 실사 조감도"><span>가상 실사 조감도 · 현재 센서 상태와 별개인 참고 이미지</span>';
   stage.append(photoView);
+  stage.classList.add('photo-active');
+  controls.enabled=false;
   photoButton.addEventListener('click',()=>{const active=photoButton.getAttribute('aria-pressed')!=='true';photoButton.setAttribute('aria-pressed',String(active));photoButton.textContent=active?'3D로 돌아가기':'실사 사진';photoView.hidden=!active;stage.classList.toggle('photo-active',active);controls.enabled=!active;});
   controls.target.set(-3,0,0);
   controls.enableDamping = true;
@@ -355,6 +410,8 @@ function buildStation() {
   }
   const accidentLayer=new THREE.Group();accidentLayer.name='physical-accident-visualization';scene.add(accidentLayer);
   const effectLayer=new THREE.Group();effectLayer.name='sampled-consequence-effect';scene.add(effectLayer);
+  const riskZoneLayer=new THREE.Group();riskZoneLayer.name='current-state-risk-zones';riskZoneLayer.visible=false;scene.add(riskZoneLayer);
+  const riskZoneMeshes=new Map();let showRiskLevel=false,riskZonePayload=null,riskZoneBusy=false,lastRiskFetchSim=-Infinity;
   const effectDomes=new Map();let showRiskDistance=false,rangeJobId=null,effectRangeState=new Map();
   const rangeBadge=document.createElement('div');rangeBadge.id='s3RiskRange';rangeBadge.hidden=true;stage.append(rangeBadge);
   const esdBanner=document.createElement('div');esdBanner.id='s3EsdBanner';esdBanner.hidden=true;esdBanner.textContent='ESD 차단 · 압축기 정지 · 차단밸브 폐쇄';stage.append(esdBanner);
@@ -377,6 +434,73 @@ function buildStation() {
     'dispenser.pcv':[1.0,1.0],'dispenser_2.pcv':[1.0,1.0],
     'header':[2.0,1.0],'vent':[1.0,1.0]
   };
+  const riskZoneComponents=['supply','compressor','cascade.low','cascade.medium','cascade.high','cooler','dispenser.hose','vehicle.tank','dispenser_2.hose','vehicle_2.tank'];
+  const riskEquipmentIds={
+    supply:['supply'],compressor:['compressor'],'cascade.low':['low'],'cascade.medium':['medium'],'cascade.high':['high'],
+    cooler:['cooler'],'dispenser.hose':['dispenser'],'vehicle.tank':['vehicle'],
+    'dispenser_2.hose':['standby'],'vehicle_2.tank':['vehicle2']
+  };
+  const riskColor=score=>score>=80?0xb4162b:score>=60?0xe65a2b:score>=35?0xe6a328:score>=15?0x59a96f:0x4e8fbf;
+  const riskLevel=score=>score>=80?'매우 높음':score>=60?'높음':score>=35?'주의':score>=15?'낮음':'매우 낮음';
+  function equipmentRiskFootprint(component){
+    const bounds=new THREE.Box3();bounds.makeEmpty();
+    for(const id of riskEquipmentIds[component]||[]){
+      const root=equipment.get(id)?.group;if(!root)continue;root.updateWorldMatrix(true,true);
+      root.traverse(object=>{
+        if(!object.isMesh||!object.visible||!object.geometry)return;
+        for(let parent=object.parent;parent&&parent!==root;parent=parent.parent)if(!parent.visible)return;
+        if(!object.geometry.boundingBox)object.geometry.computeBoundingBox();
+        if(object.geometry.boundingBox)bounds.union(object.geometry.boundingBox.clone().applyMatrix4(object.matrixWorld));
+      });
+    }
+    if(bounds.isEmpty()){
+      const fallback=effectFootprints[component]||[1.2,1.2],anchor=accidentAnchors[component];
+      return {center:new THREE.Vector3(anchor[0],.08,anchor[2]),width:fallback[0]*2,depth:fallback[1]*2};
+    }
+    const center=bounds.getCenter(new THREE.Vector3()),size=bounds.getSize(new THREE.Vector3());
+    // Leave a narrow visible maintenance margin without turning the zone into
+    // an arbitrary large square. The rectangle follows the rendered asset.
+    const padding=Math.max(.22,Math.min(.48,Math.min(size.x,size.z)*.12));
+    return {center:new THREE.Vector3(center.x,.08,center.z),width:Math.max(.8,size.x+padding*2),depth:Math.max(.8,size.z+padding*2)};
+  }
+  function renderRiskZones(){
+    riskZoneLayer.visible=showRiskLevel;
+    for(const state of riskZoneMeshes.values())state.label.hidden=!showRiskLevel;
+    if(!showRiskLevel||!riskZonePayload)return;
+    const runtime=window.getStation3DState?.(),settings=runtime?.lastFrame?.process_operations?.settings||{};
+    const mode=settings.risk_display_mode==='absolute'?'absolute':'relative';
+    for(const zone of riskZonePayload.zones||[]){
+      const component=zone.component;if(!riskZoneComponents.includes(component)||!accidentAnchors[component])continue;
+      const score=Number(zone[`${mode}_score`]||0),color=riskColor(mode==='relative'?score:zone.absolute_score);
+      const footprint=equipmentRiskFootprint(component);
+      let state=riskZoneMeshes.get(component);
+      if(!state){
+        const material=new THREE.MeshBasicMaterial({color,transparent:true,opacity:.42,side:THREE.DoubleSide,depthWrite:false,depthTest:false});
+        const floor=new THREE.Mesh(new THREE.PlaneGeometry(1,1),material);floor.rotation.x=-Math.PI/2;floor.renderOrder=18;riskZoneLayer.add(floor);
+        const edge=new THREE.LineSegments(new THREE.EdgesGeometry(floor.geometry),new THREE.LineBasicMaterial({color,transparent:true,opacity:.9,depthTest:false}));edge.rotation.copy(floor.rotation);edge.position.copy(floor.position);edge.renderOrder=19;riskZoneLayer.add(edge);
+        const label=document.createElement('div');label.className='s3-risk-zone-label';stage.append(label);state={floor,edge,label};riskZoneMeshes.set(component,state);
+      }
+      state.floor.position.copy(footprint.center);state.floor.scale.set(footprint.width,footprint.depth,1);
+      state.edge.position.copy(footprint.center);state.edge.scale.set(footprint.width,footprint.depth,1);
+      state.floor.material.color.setHex(color);state.edge.material.color.setHex(color);state.label.hidden=false;
+      state.label.textContent=`${zone.name||component} · ${mode==='relative'?'상대':'절대'} ${score.toFixed(0)} · ${riskLevel(score)}`;
+      state.label.title=`3D 설비 외곽 기준 ${footprint.width.toFixed(1)} × ${footprint.depth.toFixed(1)} m`;
+    }
+    $('s3RiskLevelToggle').textContent=`위험도 숨기기 · ${mode==='relative'?'상대':'절대'}`;
+  }
+  async function refreshRiskZones(force=false){
+    const runtime=window.getStation3DState?.(),jobId=runtime?.activeJobId,settings=runtime?.lastFrame?.process_operations?.settings||{};
+    if(!showRiskLevel||riskZoneBusy)return;
+    if(settings.risk_overlay_enabled===false){$('s3RiskLevelToggle').textContent='위험도 갱신 꺼짐 · 리모콘';return;}
+    if(!jobId){$('s3RiskLevelToggle').textContent='위험도 · 시뮬레이션 대기';return;}
+    const now=Number(live?.time||0),interval=Number(settings.risk_update_interval_s||30);
+    if(!force&&now-lastRiskFetchSim<interval)return;
+    riskZoneBusy=true;
+    try{const response=await fetch(`/api/simulations/${encodeURIComponent(jobId)}/risk-zones`);if(!response.ok)throw new Error(`위험도 ${response.status}`);riskZonePayload=await response.json();lastRiskFetchSim=now;renderRiskZones();}
+    catch(error){$('s3RiskLevelToggle').textContent='위험도 재시도';console.warn('Risk-zone refresh failed',error);}
+    finally{riskZoneBusy=false;}
+  }
+  $('s3RiskLevelToggle').addEventListener('click',()=>{showRiskLevel=!showRiskLevel;$('s3RiskLevelToggle').setAttribute('aria-pressed',String(showRiskLevel));$('s3RiskLevelToggle').textContent=showRiskLevel?'위험도 계산 중':'위험도 표시';renderRiskZones();if(showRiskLevel)refreshRiskZones(true);});
   const glowCanvas=document.createElement('canvas');glowCanvas.width=128;glowCanvas.height=128;
   const glowContext=glowCanvas.getContext('2d');const glowGradient=glowContext.createRadialGradient(64,64,3,64,64,64);
   glowGradient.addColorStop(0,'rgba(255,255,255,1)');glowGradient.addColorStop(.18,'rgba(255,255,255,.8)');glowGradient.addColorStop(1,'rgba(255,255,255,0)');
@@ -403,6 +527,12 @@ function buildStation() {
     '22':['low','medium','high'],'23':['dispenser','standby']
   };
   function assetsForIssueTarget(target){
+    const valveTarget=/^(?:bank|vent)\.(low|medium|high)/.exec(target);
+    if(valveTarget)return [valveTarget[1]];
+    if(target.startsWith('compressor.'))return ['compressor'];
+    if(target.startsWith('trailer.'))return ['supply'];
+    if(target==='dispenser.1')return ['dispenser'];
+    if(target==='dispenser.2')return ['standby'];
     if(issueTargetAssets[target])return issueTargetAssets[target];
     const sensor=/^(?:PT|TT|FT|GD|FD)-(\d{2})\d{2}$/.exec(target);
     return sensor?issueSensorAssets[sensor[1]]||[]:[];
@@ -448,11 +578,11 @@ function buildStation() {
     }
   }
   function animateIssueHighlights(timestamp){
-    const pulse=.5+.5*Math.sin(timestamp*.003);
+    const pulse=.5+.5*Math.sin(timestamp*.00065);
     for(const state of issueHighlights.values()){
       if(!state.active)continue;
-      state.aura.material.opacity=.12+.07*pulse;
-      for(const highlight of state.highlights)highlight.emissiveIntensity=.32+.2*pulse;
+      state.aura.material.opacity=.125+.018*pulse;
+      for(const highlight of state.highlights)highlight.emissiveIntensity=.34+.045*pulse;
     }
   }
   const incidentClock={value:0};
@@ -486,7 +616,7 @@ function buildStation() {
       float breakup=.55+.45*fbm(vec2(p.x*16.0,along*13.0-uTime*4.5+uSeed));
       float alpha=body*breakup*smoothstep(.0,.045,along)*(1.0-smoothstep(.68,1.0,along));
       vec3 color=mix(vec3(.50,.60,.61),vec3(.89,.95,.92),1.0-along);
-      gl_FragColor=vec4(color,alpha*mix(.63,.78,uRelief));
+      gl_FragColor=vec4(color,alpha*mix(.30,.42,uRelief));
     }`;
   function incidentPlane(fragment,seed,relief=false){
     return new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.ShaderMaterial({
@@ -529,7 +659,7 @@ function buildStation() {
     }else{
       // Hydrogen is transparent. The muted white plume is a visible flow cue, not a gas colour.
       const core=new THREE.Mesh(new THREE.CylinderGeometry(relief?.2:.24,.025,relief?3.1:3.7,12,1,true),
-        new THREE.MeshBasicMaterial({color:0xb8d2cf,transparent:true,opacity:.42,side:THREE.DoubleSide,depthWrite:false,depthTest:false}));
+        new THREE.MeshBasicMaterial({color:0xb8d2cf,transparent:true,opacity:.20,side:THREE.DoubleSide,depthWrite:false,depthTest:false}));
       core.position.set(relief?0:.8,relief?1.55:1.85,0);core.rotation.z=relief?0:-.58;core.renderOrder=7;group.add(core);
       for(let i=0;i<4;i++){
         const jet=incidentPlane(vaporFragment,i*2.71,relief);
@@ -541,8 +671,8 @@ function buildStation() {
         const wisp=new THREE.Sprite(new THREE.SpriteMaterial({map:smokeTexture,color:0xaabfbc,transparent:true,opacity:.26,depthWrite:false}));
         group.add(wisp);particles.push({mesh:wisp,type:'vapor',phase:i/9,offset:i*1.91});
       }
-      const source=glow(0xe8f1ec,1.25,group);source.position.y=.15;source.material.opacity=.3;particles.push({mesh:source,type:'source'});
-      light=new THREE.PointLight(0xd8e6df,.8,5,2);light.position.y=.35;group.add(light);
+      const source=glow(0xe8f1ec,1.25,group);source.position.y=.15;source.material.opacity=.14;particles.push({mesh:source,type:'source'});
+      light=new THREE.PointLight(0xd8e6df,.35,4,2);light.position.y=.35;group.add(light);
     }
     const pin=document.createElement('div');pin.className=`s3-incident-pin ${fire?'fire':relief?'relief':'leak'}`;
     const pinKind=document.createElement('b');pinKind.textContent=fire?'화재':relief?'밸브 개방':'수소 누출';
@@ -550,15 +680,19 @@ function buildStation() {
     pin.append(pinKind,pinTarget);pin.hidden=true;incidentMarkers.append(pin);
     group.userData={kind,target,particles,light,pin};group.visible=false;accidentLayer.add(group);return group;
   }
+  let accidentVisualSignature='';
   function updateAccidentVisuals(activeFaults,fireDetection){
     const active=new Set((Array.isArray(activeFaults)?activeFaults:[]).filter(key=>/^(external-fire|hydrogen-leak|relief-open):/.test(key)));
+    const detected=fireDetection?.detector_tags||[];
+    const signature=`${[...active].sort().join('|')}::${[...detected].sort().join('|')}`;
+    if(signature===accidentVisualSignature)return;
+    accidentVisualSignature=signature;
     for(const child of accidentLayer.children){child.visible=active.has(child.name);child.userData.pin.hidden=!child.visible;}
     for(const key of active){const [kind,...rest]=key.split(':');const visual=accidentVisual(kind,rest.join(':'));visual.visible=true;visual.userData.pin.hidden=false;}
     if(!active.size){incidentBanner.hidden=true;return;}
     const entries=[...active].map(key=>{const [kind,...rest]=key.split(':');return {kind,target:rest.join(':')}});
     incidentBanner.hidden=false;incidentBanner.dataset.kind=entries.some(entry=>entry.kind==='external-fire')?'fire':entries.some(entry=>entry.kind==='relief-open')?'relief':'leak';
     const summary=entries.slice(0,2).map(entry=>`${entry.kind==='external-fire'?'화재':entry.kind==='relief-open'?'안전밸브 방출':'누출'} · ${accidentNames[entry.target]||entry.target}`).join(' / ');
-    const detected=fireDetection?.detector_tags||[];
     const headline=document.createElement('strong');headline.append(document.createElement('i'),
       detected.length?`화염검지 ${detected.join(', ')}`:`${entries.length}건 사고 시나리오 입력`);
     const detail=document.createElement('span');detail.textContent=summary+(entries.length>2?` 외 ${entries.length-2}건`:'');
@@ -573,7 +707,7 @@ function buildStation() {
     const scale=stageRect.width/stage.clientWidth||1,width=canvasRect.width/scale||stage.clientWidth,height=canvasRect.height/scale||stage.clientHeight;
     for(const group of accidentLayer.children){if(!group.visible)continue;const {kind,particles,light,pin}=group.userData;
       const fire=kind==='external-fire',relief=kind==='relief-open';
-      light.intensity=fire?2.8+.55*Math.sin(time*13)+.32*Math.sin(time*31):.65+.12*Math.sin(time*8);
+      light.intensity=fire?2.55+.16*Math.sin(time*2.7):.22+.025*Math.sin(time*2.1);
       for(const part of particles){const {mesh,type,phase=0,offset=0}=part;
         if(type==='sheet'){
           mesh.quaternion.copy(camera.quaternion);mesh.rotateZ(fire?Math.sin(time*2.2+phase)*.07:relief?0:-.58);
@@ -583,8 +717,8 @@ function buildStation() {
           mesh.position.set((fire?Math.sin(offset+time*.3)*.45:relief?Math.sin(offset)*.25:progress*1.9)+progress*.3,
             (fire?2.0:.55)+progress*(fire?4.3:3.3),Math.cos(offset+time*.22)*progress*.35);
           const size=(fire?1.1:.46)+progress*(fire?3.0:1.45);mesh.scale.set(size,size*.84,1);
-          mesh.material.opacity=(fire?.6:.31)*(1-progress);
-        }else if(type==='heat'){mesh.material.opacity=.17+.04*Math.sin(time*12);}
+          mesh.material.opacity=(fire?.6:.18)*(1-progress);
+        }else if(type==='heat'){mesh.material.opacity=.18+.012*Math.sin(time*2.4);}
       }
       const projected=group.position.clone().add(new THREE.Vector3(0,fire?4.3:relief?3.8:4.0,0)).project(camera);
       const visible=projected.z>-1&&projected.z<1&&Math.abs(projected.x)<1.1&&Math.abs(projected.y)<1.1;
@@ -620,13 +754,13 @@ function buildStation() {
       if(!group){
         group=new THREE.Group();group.name=`sampled-effect-plume-${row.id}`;
         const color=row.hypothetical?0x32b8d5:0xff663e;
-        const luminous=new THREE.MeshBasicMaterial({color,transparent:true,opacity:.11,side:THREE.DoubleSide,
-          blending:THREE.AdditiveBlending,depthWrite:false});
-        const edgeMaterial=new THREE.LineBasicMaterial({color,transparent:true,opacity:.92,depthWrite:false});
-        const rayMaterial=new THREE.LineBasicMaterial({color,transparent:true,opacity:.52,
-          blending:THREE.AdditiveBlending,depthWrite:false});
-        const groundMaterial=new THREE.MeshBasicMaterial({color,transparent:true,opacity:.78,
-          side:THREE.DoubleSide,blending:THREE.AdditiveBlending,depthWrite:false});
+        const luminous=new THREE.MeshBasicMaterial({color,transparent:true,opacity:.055,side:THREE.DoubleSide,
+          blending:THREE.NormalBlending,depthWrite:false,depthTest:false});
+        const edgeMaterial=new THREE.LineBasicMaterial({color,transparent:true,opacity:.58,depthWrite:false,depthTest:false});
+        const rayMaterial=new THREE.LineBasicMaterial({color,transparent:true,opacity:.20,
+          blending:THREE.NormalBlending,depthWrite:false,depthTest:false});
+        const groundMaterial=new THREE.MeshBasicMaterial({color,transparent:true,opacity:.38,
+          side:THREE.DoubleSide,blending:THREE.NormalBlending,depthWrite:false,depthTest:false});
         const groundContour=new THREE.Mesh(new THREE.RingGeometry(.984,1.016,96),groundMaterial);
         groundContour.rotation.x=-Math.PI/2;groundContour.position.y=.015;group.add(groundContour);
         // A thin vertical energy curtain leaves the equipment visible. Its
@@ -648,6 +782,8 @@ function buildStation() {
             new THREE.Vector3(x*.96,.34,z*.96),new THREE.Vector3(x*.74,.97,z*.74));
         }
         group.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(rays),rayMaterial));
+        const beacon=new THREE.Mesh(new THREE.CylinderGeometry(.07,.22,1,16,1,true),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.30,depthWrite:false,depthTest:false,blending:THREE.NormalBlending}));
+        beacon.position.y=.5;group.add(beacon);
         group.userData.pulseMaterial=luminous;
         group.renderOrder=20;
         const distanceLabel=document.createElement('div');distanceLabel.className=`s3-risk-distance-label${row.hypothetical?' hypothetical':''}`;
@@ -656,7 +792,10 @@ function buildStation() {
       }
       const footprint=effectFootprints[row.component]||[1.2,1.2];
       const height=Math.max(3,Math.min(18,radius*.75+2));
-      group.position.set(anchor[0],.09,anchor[2]);group.scale.set(footprint[0]+radius,height,footprint[1]+radius);
+       group.position.set(anchor[0],.09,anchor[2]);
+       const targetScale=new THREE.Vector3(footprint[0]+radius,height,footprint[1]+radius);
+       if(!group.userData.targetScale)group.scale.copy(targetScale);
+       group.userData.targetScale=targetScale;
       const selector=riskTargets[row.component],node=selector?document.querySelector(`.flow-map ${selector}`):null;
       const context=row.hypothetical?'가정 · ':row.displayState==='RECENTLY_ENDED'?'최근 방출 최대 · ':row.displayState==='PEAK_HELD'?'사고 중 최대 · ':'';
       const nextDistance=Number(row.consequence.sampled_next_distance_m);
@@ -668,17 +807,17 @@ function buildStation() {
     document.querySelectorAll('.flow-map .flow-risk-distance').forEach(el=>el.remove());
     for(const [node,items] of labels){const badge=document.createElement('span');badge.className='flow-risk-distance';badge.textContent=items.join(' / ');node.append(badge);}
     let other=document.querySelector('#flowRiskOther');if(!other){other=document.createElement('span');other.id='flowRiskOther';document.querySelector('.flow-status')?.append(other);}other.textContent=unplaced.join(' / ');other.hidden=!unplaced.length;
-    rangeBadge.hidden=!showRiskDistance||!cases.length&&!valid.length;
-    if(!rangeBadge.hidden)rangeBadge.textContent=valid.length?`표본 영향거리 ${valid.length}건 · 설비 주변 상승 띠는 개념도 · 5 kW/m² 또는 5 kPa · 실제 전방위 경계·안전거리 아님`:'계산 사례는 있으나 표본 관측점에서 영향 반경이 확정되지 않았습니다.';
+    rangeBadge.hidden=!showRiskDistance;
+    if(!rangeBadge.hidden)rangeBadge.textContent=valid.length?`표본 영향거리 ${valid.length}건 · 설비 주변 상승 띠는 개념도 · 5 kW/m² 또는 5 kPa · 실제 전방위 경계·안전거리 아님`:cases.length?'계산 사례는 있으나 5 kW/m²·5 kPa 기준을 넘는 표본 거리가 없어 경계를 그리지 않습니다.':'현재 계산된 피해영향 거리가 없습니다. 사고·경보 또는 분석 요청 시 계산 결과가 생기면 표시됩니다.';
     $('s3RiskToggle').textContent=showRiskDistance?`위험거리 숨기기${valid.length?` · ${valid.length}건`:''}`:'위험거리 표시';
   }
   $('s3RiskToggle').addEventListener('click',()=>{showRiskDistance=!showRiskDistance;$('s3RiskToggle').setAttribute('aria-pressed',String(showRiskDistance));const runtime=window.getStation3DState?.();updateEffectRanges(runtime?.result?.hazop?.frames?.[runtime?.index]);});
   window.addEventListener('station-impact-results',()=>{const runtime=window.getStation3DState?.();updateEffectRanges(runtime?.result?.hazop?.frames?.[runtime?.index]);});
   function updateRiskLabels(){
-    if(!showRiskDistance||!effectDomes.size)return;
+    if((!showRiskDistance||!effectDomes.size)&&(!showRiskLevel||!riskZoneMeshes.size))return;
     const canvasRect=renderer.domElement.getBoundingClientRect(),stageRect=stage.getBoundingClientRect();
     const scale=stageRect.width/stage.clientWidth||1,width=canvasRect.width/scale||stage.clientWidth,height=canvasRect.height/scale||stage.clientHeight;
-    for(const group of effectDomes.values()){
+    for(const group of showRiskDistance?effectDomes.values():[]){
       const label=group.userData.distanceLabel;
       const base=group.position.clone().project(camera);
       const projected=group.position.clone().add(new THREE.Vector3(0,group.scale.y,0)).project(camera);
@@ -686,6 +825,12 @@ function buildStation() {
       label.hidden=!visible;
       if(visible){const x=THREE.MathUtils.clamp(projected.x,-.88,.88),y=THREE.MathUtils.clamp(projected.y,-.82,.82);
         label.style.left=`${(canvasRect.left-stageRect.left)/scale+(x+1)*.5*width}px`;label.style.top=`${(canvasRect.top-stageRect.top)/scale+(1-y)*.5*height}px`;}
+    }
+    if(showRiskLevel)for(const state of riskZoneMeshes.values()){
+      const projected=state.floor.position.clone().add(new THREE.Vector3(0,.35,0)).project(camera);
+      const visible=projected.z>-1&&projected.z<1&&Math.abs(projected.x)<1.05&&Math.abs(projected.y)<1.05;
+      state.label.hidden=!visible;
+      if(visible){state.label.style.left=`${(canvasRect.left-stageRect.left)/scale+(projected.x+1)*.5*width}px`;state.label.style.top=`${(canvasRect.top-stageRect.top)/scale+(1-projected.y)*.5*height}px`;}
     }
   }
   function capsule(r,length,x,y,z,material,parent=scene,axis='z') {
@@ -806,9 +951,10 @@ function buildStation() {
     sign('H70','700 BAR',.68,.25,0,2,.368,g);
     sign('READY','H2 / DISPENSING',.61,.21,0,1.52,.365,g,'#152f2f');
     box(.15,.12,.025,-.24,1.07,.365,M.red,g);box(.35,.1,.025,.12,1.07,.365,M.frame,g);
+    const parkedHose=new THREE.Group();parkedHose.name=`${id}-hose-parked`;g.add(parkedHose);
     const hoseCurve=new THREE.CatmullRomCurve3([new THREE.Vector3(.5,1.7,0),new THREE.Vector3(.95,1.5,.15),new THREE.Vector3(1.1,.35,.5),new THREE.Vector3(.75,.3,1),new THREE.Vector3(.68,1.0,1.8)]);
-    mesh(new THREE.TubeGeometry(hoseCurve,36,.042,8,false),M.black,g);
-    const parkedNozzle=box(.08,.16,.32,.68,1,1.8,M.steel,g);parkedNozzle.userData.parkedNozzle=true;led(g,.32,1.1,.37,'fueling');
+    mesh(new THREE.TubeGeometry(hoseCurve,36,.042,8,false),M.black,parkedHose);
+    box(.08,.16,.32,.68,1,1.8,M.steel,parkedHose);g.userData.parkedHose=parkedHose;led(g,.32,1.1,.37,'fueling');
     for(const dx of [-1.1,1.1])for(const dz of [-.55,.55]){
       cylinder(.10,.8,dx,.55,dz,M.yellow,g);cylinder(.105,.18,dx,.58,dz,M.black,g);
     }
@@ -1028,16 +1174,16 @@ function buildStation() {
     sign('01 / H70','HYDROGEN',.55,.16,0,.43,.368,g,'#eff2e9');
   }
   const activeDispenser=equipment.get('dispenser').group;
-  activeDispenser.children.filter(obj=>obj.geometry?.type==='TubeGeometry').forEach(obj=>obj.visible=false);
-  activeDispenser.children.filter(obj=>obj.userData.parkedNozzle).forEach(obj=>obj.visible=false);
   scene.updateMatrixWorld(true);
   const vehiclePort=new THREE.Vector3(-1.95,.84,-.965);
   const nozzleTip=activeDispenser.worldToLocal(car.localToWorld(vehiclePort.clone()));
   const hoseEnd=nozzleTip.clone().add(new THREE.Vector3(0,-.065,-.31));
-  tube([[.52,1.75,0],[.79,1.65,.12],[.95,.55,.80],[nozzleTip.x-.12,.28,nozzleTip.z-.65],[nozzleTip.x-.04,.67,nozzleTip.z-.48],hoseEnd.toArray()],.043,rubber,activeDispenser);
-  cylinder(.06,.13,nozzleTip.x,nozzleTip.y,nozzleTip.z-.065,detailMetal,activeDispenser,'z');
-  box(.085,.13,.20,nozzleTip.x,nozzleTip.y-.045,nozzleTip.z-.20,M.dark,activeDispenser);
-  ring(.057,.009,nozzleTip.x,nozzleTip.y,nozzleTip.z-.12,detailMetal,activeDispenser);
+  const vehicle1Hose=new THREE.Group();vehicle1Hose.name='dispenser-1-hose-connected';vehicle1Hose.visible=false;activeDispenser.add(vehicle1Hose);
+  tube([[.52,1.75,0],[.79,1.65,.12],[.95,.55,.80],[nozzleTip.x-.12,.28,nozzleTip.z-.65],[nozzleTip.x-.04,.67,nozzleTip.z-.48],hoseEnd.toArray()],.043,rubber,vehicle1Hose);
+  cylinder(.06,.13,nozzleTip.x,nozzleTip.y,nozzleTip.z-.065,detailMetal,vehicle1Hose,'z');
+  box(.085,.13,.20,nozzleTip.x,nozzleTip.y-.045,nozzleTip.z-.20,M.dark,vehicle1Hose);
+  ring(.057,.009,nozzleTip.x,nozzleTip.y,nozzleTip.z-.12,detailMetal,vehicle1Hose);
+  activeDispenser.userData.connectedHose=vehicle1Hose;
   const inletSocket=mesh(new THREE.CircleGeometry(.075,24),M.dark,car);inletSocket.position.copy(vehiclePort);inletSocket.rotation.y=Math.PI;
   const openFuelDoor=box(.08,.20,.025,-1.60,1.04,-1.07,M.white,car);openFuelDoor.rotation.y=.65;
   // Car glazing, lower grille, panel joints, brake discs and tire shoulder grooves.
@@ -1241,11 +1387,13 @@ function buildStation() {
   instrument(equipment.get('standby').group,.61,.23,0,1.52,.389,'standby','standby');
   for(const name of ['low','medium','high'])instrument(equipment.get(name).group,.83,.31,-.25,2.97,2.32,'bank',name);
   instrument(cabinet,.52,.40,0,1.38,.649,'safety','safety');
-  function drawInstruments(values,connected) {
+  let lastInstrumentPaint=0;
+  function drawInstruments(values,connected,force=false) {
+    const now=performance.now();
+    if(!force&&now-lastInstrumentPaint<250)return;
+    lastInstrumentPaint=now;
     for(const item of instrumentScreens){
       const ctx=item.canvas.getContext('2d'),alarm=connected&&values.esd;
-      ctx.fillStyle=alarm?'#351c19':'#11292c';ctx.fillRect(0,0,1024,384);
-      ctx.fillStyle=alarm?'#ff7665':'#85ebca';ctx.font='bold 40px monospace';
       let title='MODEL DATA',number='--',unit='',foot='WAITING FOR SIMULATION';
       if(item.kind==='dispenser'){
         title=alarm?'ESD / CLOSED':'H70 / NOZZLE FLOW';number=connected?values.flow.toFixed(2):'--';unit='g/s';
@@ -1257,6 +1405,11 @@ function buildStation() {
         foot=connected?(values.dispatch===item.id?'DISPATCH SELECTED':values.recharge===item.id?'RECHARGING':'ISOLATED / STANDBY'):'SIMULATION DATA';
       }
       if(item.kind==='safety'){title='SAFETY PLC';number=connected?(alarm?'ESD':'NORMAL'):'WAIT';foot=connected?`MODEL TIME ${values.time.toFixed(1)} s`:'SIMULATION DATA';}
+      const signature=`${alarm}|${title}|${number}|${unit}|${foot}|${item.kind==='dispenser'&&connected?values.soc.toFixed(1):''}`;
+      if(!force&&item.lastSignature===signature)continue;
+      item.lastSignature=signature;
+      ctx.fillStyle=alarm?'#351c19':'#11292c';ctx.fillRect(0,0,1024,384);
+      ctx.fillStyle=alarm?'#ff7665':'#85ebca';ctx.font='bold 40px monospace';
       ctx.fillText(title,42,61);ctx.fillStyle=alarm?'#fff2eb':'#f0faf5';ctx.font=`bold ${number.length>6?90:128}px monospace`;ctx.fillText(number,42,214);
       ctx.font='44px monospace';ctx.fillStyle='#a0bdb6';ctx.fillText(unit,790,205);
       ctx.fillStyle='#294849';ctx.fillRect(42,251,940,3);ctx.fillStyle='#a1c4b9';ctx.font='29px monospace';ctx.fillText(foot,42,302);
@@ -1330,10 +1483,12 @@ function buildStation() {
   }
   box(.065,.13,.025,.17,.73,.286,M.frame,compactDispenser);
   cylinder(.055,.15,.29,2.12,0,detailMetal,compactDispenser,'x');
-  tube([[.35,2.12,0],[.66,1.97,.05],[.79,.65,.16],[.61,.42,.32],[.40,.75,.39],[.37,1.28,.33]],.032,rubber,compactDispenser);
-  capsule(.04,.15,.37,1.34,.30,detailMetal,compactDispenser,'z');box(.052,.11,.15,.37,1.25,.33,M.dark,compactDispenser);
-  ring(.063,.012,.37,1.25,.38,detailMetal,compactDispenser);
-  box(.09,.14,.09,.275,1.35,.20,M.frame,compactDispenser);
+  const compactParkedHose=new THREE.Group();compactParkedHose.name='dispenser-2-hose-parked';compactDispenser.add(compactParkedHose);
+  tube([[.35,2.12,0],[.66,1.97,.05],[.79,.65,.16],[.61,.42,.32],[.40,.75,.39],[.37,1.28,.33]],.032,rubber,compactParkedHose);
+  capsule(.04,.15,.37,1.34,.30,detailMetal,compactParkedHose,'z');box(.052,.11,.15,.37,1.25,.33,M.dark,compactParkedHose);
+  ring(.063,.012,.37,1.25,.38,detailMetal,compactParkedHose);
+  box(.09,.14,.09,.275,1.35,.20,M.frame,compactParkedHose);
+  compactDispenser.userData.parkedHose=compactParkedHose;
   for(const dx of [-1.1,1.1])for(const dz of [-.55,.55]){
     cylinder(.10,.8,dx,.55,dz,M.yellow,compactDispenser);cylinder(.105,.18,dx,.58,dz,M.black,compactDispenser);
   }
@@ -1416,7 +1571,8 @@ function buildStation() {
   const vehicle2Port = new THREE.Vector3(-1.95,.84,-.965);
   const nozzleTip2 = compactDispenser.worldToLocal(car2.localToWorld(vehicle2Port.clone()));
   const hoseEnd2 = nozzleTip2.clone().add(new THREE.Vector3(0,-.065,-.31));
-  tube([[.52,1.75,0],[.79,1.65,.12],[.95,.55,.80],[nozzleTip2.x-.12,.28,nozzleTip2.z-.65],[nozzleTip2.x-.04,.67,nozzleTip2.z-.48],hoseEnd2.toArray()],.043,rubber,compactDispenser);
+  const vehicle2Hose=new THREE.Group();vehicle2Hose.name='dispenser-2-hose-connected';vehicle2Hose.visible=false;compactDispenser.add(vehicle2Hose);
+  tube([[.52,1.75,0],[.79,1.65,.12],[.95,.55,.80],[nozzleTip2.x-.12,.28,nozzleTip2.z-.65],[nozzleTip2.x-.04,.67,nozzleTip2.z-.48],hoseEnd2.toArray()],.043,rubber,vehicle2Hose);
   const nozzleVector2 = nozzleTip2.clone().sub(hoseEnd2);
   const nozzle2 = new THREE.Mesh(
     new THREE.CylinderGeometry(.045,.058,nozzleVector2.length(),18),
@@ -1425,7 +1581,8 @@ function buildStation() {
   nozzle2.position.copy(hoseEnd2.clone().add(nozzleTip2).multiplyScalar(.5));
   nozzle2.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),nozzleVector2.clone().normalize());
   nozzle2.castShadow = true;
-  compactDispenser.add(nozzle2);
+  vehicle2Hose.add(nozzle2);
+  compactDispenser.userData.connectedHose=vehicle2Hose;
   const standbyItem = equipment.get('standby');
   standbyItem.title = '수소 디스펜서 02';
   standbyItem.description = '독립 PCV·프리쿨러 열용량·호스 라인팩·노즐·차량 탱크 모델을 갖는 두 번째 H70 충전 포인트입니다. 1번 디스펜서와 캐스케이드 저장 및 압축기를 공유합니다.';
@@ -1440,10 +1597,10 @@ function buildStation() {
     ['0101','공급 트레일러',-22,2.7,5],['0201','하역 매니폴드',-22,2.5,-8],
     ['0601','압축기 토출',-6,2.8,-4],['0701','저압 저장',-2,2.7,-5],
     ['0801','중압 저장',1,2.7,-5],['0901','고압 저장',5,2.7,-5],
-    ['1001','캐스케이드 헤더',8,2.7,-3],['1901','냉각 패키지',-1,2.7,-4],
+    ['1001','캐스케이드 헤더',8,2.7,-3],['1901','냉각 패키지',11,2.7,-4],
     ['2001','벤트 헤더',12,2.8,-3],['2101','압축기 캐비닛 상부',-6,3.8,-3],
     ['2201','저장 경계 상부',3,3.7,-5],['2301','충전 캐노피',4,4.7,4],
-    ['2302','냉각함 상부',-1,3.5,-4]
+    ['2302','냉각함 상부',11,3.5,-4]
   ]){
     const detector=new THREE.Group();detector.position.set(x,y,z);scene.add(detector);
     box(.25,.14,.2,0,0,0,M.white,detector);cylinder(.05,.08,0,-.1,0,detailMetal,detector);
@@ -1454,7 +1611,7 @@ function buildStation() {
     ['0101','트레일러 공급',-22,3.3,3],['0601','압축기',-6,3.7,-3],
     ['0701','저압 저장',-2,3.5,-4],['0801','중압 저장',1,3.5,-4],
     ['0901','고압 저장',5,3.5,-4],['1301','1번 디스펜서',0,4.55,3.6],
-    ['1701','2번 디스펜서',8,4.55,3.6],['1901','프리쿨러',-1,3.6,-3],
+    ['1701','2번 디스펜서',8,4.55,3.6],['1901','프리쿨러',11,3.6,-3],
     ['2001','벤트·헤더',12,3.5,-2]
   ]){
     const detector=new THREE.Group();detector.position.set(x,y,z);scene.add(detector);
@@ -1492,11 +1649,30 @@ function buildStation() {
       sceneryBatchStats.objects+=objects.length;sceneryBatchStats.batches++;
     }
   }
-  for(const parent of [scene,canopy,office,staticProcess,attendant,emergency,unloading,totem,gate,landscape])batchScenery(parent);
+  for(const parent of [scene,canopy,office,staticProcess,emergency,unloading,totem,gate,landscape])batchScenery(parent);
+  const attendantOrigin=attendant.position.clone(),attendantTarget=attendantOrigin.clone();
+  const departureVehicles=[
+    {name:'trailer',group:trailer,origin:trailer.position.clone(),exit:new THREE.Vector3(-22,0,15.5)},
+    {name:'vehicle_1',group:car,origin:car.position.clone(),exit:new THREE.Vector3(2.8,.03,15.5)},
+    {name:'vehicle_2',group:car2,origin:car2.position.clone(),exit:new THREE.Vector3(10.8,.03,15.5)},
+  ];
+  // A handful of live personnel markers move to the upwind assembly point
+  // when a virtual evacuation command is confirmed.
+  const zoneOrigins={unloading:[-9,-1],compressor:[-6,-6],storage:[3,-6],dispenser:[5,4]};
+  const personGeometry={head:new THREE.SphereGeometry(.11,8,6),body:new THREE.CylinderGeometry(.08,.1,.37,8)};
+  const personMaterial=new THREE.MeshStandardMaterial({color:0x216caa,roughness:.7});
+  const zonePeople=[];
+  for(const [zone,[x,z]] of Object.entries(zoneOrigins))for(let i=0;i<(zone==='storage'||zone==='dispenser'?2:1);i++){
+    const person=new THREE.Group();
+    const body=new THREE.Mesh(personGeometry.body,personMaterial),head=new THREE.Mesh(personGeometry.head,personMaterial);
+    body.position.y=.34;head.position.y=.64;person.add(body,head);
+    person.position.set(x+i*.3,0,z+i*.25);person.userData.origin=person.position.clone();person.userData.target=person.position.clone();
+    person.userData.zone=zone;person.userData.index=i;scene.add(person);zonePeople.push(person);
+  }
   panel.dataset.sceneryObjects=String(sceneryBatchStats.objects);panel.dataset.sceneryBatches=String(sceneryBatchStats.batches);
   const selection=new THREE.BoxHelper(car,0xe9b547);selection.visible=false;scene.add(selection);
   let selectedId=null,lastIndex=-1,lastResult=null,night=false,pipesVisible=true,visible=true;
-  let transition=null,live={time:0,pressure:5,temperature:25,soc:0,flow:0,flow1:0,flow2:0,pressure2:5,temperature2:25,soc2:0,dispatch:null,dispatch2:null,recharge:null,esd:false,leak:0,activeFaults:[],banks:{low:45,medium:65,high:90}};
+  let transition=null,live={time:0,pressure:5,temperature:25,soc:0,flow:0,flow1:0,flow2:0,pressure2:5,temperature2:25,soc2:0,dispatch:null,dispatch2:null,recharge:null,esd:false,leak:0,activeFaults:[],processActivity:{},banks:{low:45,medium:65,high:90}};
   const assetMenu=$('s3Assets'),assetList=$('s3AssetsList'),assetToggle=$('s3AssetsToggle');
   function setAssetMenuOpen(open){
     assetMenu.hidden=!open;
@@ -1633,6 +1809,33 @@ function buildStation() {
     let object=hit.object;while(object&&!object.userData.equipmentId)object=object.parent;if(!object)return;
     selectEquipment(object.userData.equipmentId);
   });
+  function updateResponseOverlay(){
+    const safety=live.virtualSafety,overlay=$('s3ResponseOverlay'),flow=document.getElementById('flowResponseOverlay');
+    if(!safety){overlay.hidden=true;if(flow)flow.hidden=true;return;}
+    const closed=Object.entries(safety.valves||{}).filter(([name,valve])=>!name.startsWith('vent.')&&!valve.actual_open).length;
+    const failed=Object.entries(safety.valves||{}).filter(([,valve])=>valve.status==='failed').length;
+    const vented=Object.entries(safety.valves||{}).filter(([name,valve])=>name.startsWith('vent.')&&valve.actual_open).map(([name])=>name.split('.')[1]);
+    const evacuated=Object.values(safety.evacuated||{}).reduce((sum,value)=>sum+value,0);
+    const remaining=Object.values(safety.personnel||{}).reduce((sum,value)=>sum+value,0);
+    const vehiclesEvacuated=Object.values(safety.vehicles_evacuated||{}).reduce((sum,value)=>sum+value,0);
+    const badges=[`${closed}개 차단밸브 닫힘`,failed?`${failed}개 조치 실패`:'밸브 피드백 정상',vented.length?`벤트 ${vented.join('·')} 방출`:'벤트 닫힘',`대피 ${evacuated}명·${vehiclesEvacuated}대 / 현장 ${remaining}명`,`풍향 ${Math.round(safety.wind_direction_deg||0)}° · ${Number(safety.wind_speed_m_s||0).toFixed(1)} m/s`];
+    for(const target of [overlay,flow])if(target){target.hidden=false;target.replaceChildren(...badges.map((label,index)=>{
+      const chip=document.createElement('span');chip.textContent=label;
+      chip.className=(index===1&&failed||index===2&&vented.length)?'alert':'';return chip;
+    }));}
+    const wind=(safety.wind_direction_deg||0)*Math.PI/180;
+    for(const person of zonePeople){
+      const evacuatedHere=Number(safety.evacuated?.[person.userData.zone]||0)>person.userData.index;
+      if(evacuatedHere)person.userData.target.set(-14-Math.cos(wind)*2+person.userData.index*.35,0,9-Math.sin(wind)*2);
+      else person.userData.target.copy(person.userData.origin);
+    }
+    if((safety.evacuated?.dispenser||0)>0)attendantTarget.set(-14-Math.cos(wind)*2,0,9-Math.sin(wind)*2);
+    else attendantTarget.copy(attendantOrigin);
+    for(const vehicle of departureVehicles){
+      vehicle.target=(safety.vehicles_evacuated?.[vehicle.name]||0)>0?vehicle.exit:vehicle.origin;
+    }
+  }
+  let lastEffectRangePaint=0;
   function readLive() {
     const runtime=window.getStation3DState?.();const result=runtime?.result;const s=result?.series;const index=runtime?.index;
     if(!s?.time_s?.length||index===undefined){
@@ -1642,14 +1845,20 @@ function buildStation() {
     if(lastIndex===index&&lastResult===result&&live.time===s.time_s[index])return;
     lastIndex=index;lastResult=result;
     const at=(name,fallback)=>s[name]?.[index]??fallback;
-    live={time:at('time_s',0),pressure:at('vehicle_pressure_mpa',0),temperature:at('vehicle_temperature_c',25),soc:at('soc_percent',0),flow:at('nozzle_flow_g_s',0),flow1:at('nozzle_1_flow_g_s',0),flow2:at('nozzle_2_flow_g_s',0),pressure2:at('vehicle_2_pressure_mpa',0),temperature2:at('vehicle_2_temperature_c',25),soc2:at('vehicle_2_soc_percent',0),dispatch:at('dispatch_bank',null),dispatch2:at('dispatch_bank_2',null),recharge:at('recharge_bank',null),esd:at('esd',false),leak:at('total_leak_flow_g_s',0),activeFaults:at('active_faults',[]),reliefOpen:Object.keys(at('process_operations',null)?.relief_open||{}).filter(key=>at('process_operations',null).relief_open[key]),banks:Object.fromEntries(['low','medium','high'].map(name=>[name,s.bank_pressure_mpa?.[name]?.[index]??0]))};
+    live={time:at('time_s',0),pressure:at('vehicle_pressure_mpa',0),temperature:at('vehicle_temperature_c',25),soc:at('soc_percent',0),flow:at('nozzle_flow_g_s',0),flow1:at('nozzle_1_flow_g_s',0),flow2:at('nozzle_2_flow_g_s',0),pressure2:at('vehicle_2_pressure_mpa',0),temperature2:at('vehicle_2_temperature_c',25),soc2:at('vehicle_2_soc_percent',0),dispatch:at('dispatch_bank',null),dispatch2:at('dispatch_bank_2',null),recharge:at('recharge_bank',null),esd:at('esd',false),leak:at('total_leak_flow_g_s',0),activeFaults:at('active_faults',[]),processActivity:at('process_activity',{}),reliefOpen:Object.keys(at('process_operations',null)?.relief_open||{}).filter(key=>at('process_operations',null).relief_open[key]),banks:Object.fromEntries(['low','medium','high'].map(name=>[name,s.bank_pressure_mpa?.[name]?.[index]??0]))};
+    live.virtualSafety=at('virtual_safety',null);
+    const deviceFaults=Object.entries(live.virtualSafety?.valves||{}).filter(([,valve])=>valve.status==='failed').map(([name])=>`virtual-device:${name}`);
+    const openVents=Object.entries(live.virtualSafety?.valves||{}).filter(([name,valve])=>name.startsWith('vent.')&&valve.actual_open).map(([name])=>`virtual-device:${name}`);
     updateAccidentVisuals(live.activeFaults,at('analysis',null)?.fire_detection);
-    updateIssueHighlights(live.activeFaults);
+    updateIssueHighlights([...live.activeFaults,...deviceFaults,...openVents]);
+    updateResponseOverlay();
     const flameSignals=at('flame_detectors',{});
     for(const lamp of flameLights){const active=flameSignals[lamp.tag]?.quality==='GOOD'&&flameSignals[lamp.tag].value>=.5;
       lamp.material.color.set(active?0xff6a38:0x459a7a);lamp.material.emissive.set(active?0xd33a08:0x124331);
       lamp.material.emissiveIntensity=active?1.6:.4;}
-    updateEffectRanges(result?.hazop?.frames?.[index]);
+    const rangeNow=performance.now();
+    if(rangeNow-lastEffectRangePaint>=350){lastEffectRangePaint=rangeNow;updateEffectRanges(result?.hazop?.frames?.[index]);}
+    refreshRiskZones();
     esdBanner.hidden=!live.esd;stage.classList.toggle('esd-active',Boolean(live.esd));
     const badge=$('s3Live');badge.classList.toggle('active',!live.esd&&!live.activeFaults.length);badge.querySelector('span').textContent=live.esd?`ESD · ${live.time.toFixed(1)} s`:live.activeFaults.length?`사고 시각화 · ${live.activeFaults.length}건`:`운전 데이터 연결 · ${live.time.toFixed(1)} s`;drawInstruments(live,true);updateCard();refreshCctv();
     updateMonitorCards();
@@ -1672,7 +1881,7 @@ function buildStation() {
     $('s3Focus').disabled=!equipment.has(selectedId);
     assetMenu.querySelectorAll('[data-equipment]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.equipment===selectedId)));
     const item=equipment.get(selectedId);$('s3Title').textContent=item?.title||'전체 충전소';$('s3Tag').textContent=item?.tag||'H70 / DIGITAL OPERATIONS';
-    $('s3Description').textContent=item?.description||'설비를 클릭하면 역할과 운전값을 확인합니다. 드래그로 회전, 휠로 확대, 오른쪽 드래그로 이동합니다.';
+    $('s3Description').textContent=item?.description||'설비를 클릭하면 역할과 운전값을 확인합니다. 왼쪽 드래그로 회전하고 휠 버튼 드래그로 이동합니다.';
     let label='모의 시간',value=`${live.time.toFixed(1)} s`;
     if(['low','medium','high'].includes(selectedId)){label='뱅크 압력';value=`${live.banks[selectedId].toFixed(2)} MPa`;}
     if(selectedId==='vehicle'){label=`SOC ${live.soc.toFixed(1)}% / ${live.temperature.toFixed(1)}°C`;value=`${live.pressure.toFixed(2)} MPa`;}
@@ -1702,6 +1911,17 @@ function buildStation() {
   function pipeActive(id) {
     return stationRouteActive(id,live);
   }
+  function updateDispenserHoses(){
+    for(const [dispenserGroup,operation,flow] of [
+      [activeDispenser,'vehicle_1',live.flow1],
+      [compactDispenser,'vehicle_2',live.flow2],
+    ]){
+      const state=live.processActivity?.[operation]?.state;
+      const connected=Boolean(state==='flowing'||state==='waiting'||flow>.01);
+      if(dispenserGroup.userData.parkedHose)dispenserGroup.userData.parkedHose.visible=!connected;
+      if(dispenserGroup.userData.connectedHose)dispenserGroup.userData.connectedHose.visible=connected;
+    }
+  }
   function resizeRenderer(){
     const width=stage.clientWidth,height=stage.clientHeight;if(width<1||height<1)return;
     const scale=stage.getBoundingClientRect().width/width||1;
@@ -1724,7 +1944,7 @@ function buildStation() {
   },{capture:true,passive:false});
   let lastRender=0;
   function animate(timestamp) {
-    requestAnimationFrame(animate);if(!visible||document.hidden||document.body.dataset.monitorView!=='3d'||timestamp-lastRender<33)return;lastRender=timestamp;readLive();
+    requestAnimationFrame(animate);if(!visible||document.hidden||document.body.dataset.monitorView!=='3d'||timestamp-lastRender<33)return;lastRender=timestamp;readLive();updateDispenserHoses();
     if(Math.abs(pendingWheel)>.1){
       const step=Math.abs(pendingWheel)<.5?pendingWheel:pendingWheel*.28;pendingWheel-=step;
       const wheel=new WheelEvent('wheel',{deltaY:step,deltaMode:0,clientX:wheelPosition.x,clientY:wheelPosition.y,cancelable:true});
@@ -1740,14 +1960,18 @@ function buildStation() {
       segment.particles.forEach((dot,i)=>{dot.visible=pipesVisible&&active;dot.position.copy(segment.curve.getPointAt((timestamp*.00018+i/segment.particles.length)%1));});
     }
     if(showRiskDistance)for(const [id,group] of effectDomes){
-      if(group.userData.pulseMaterial)group.userData.pulseMaterial.opacity=.08+.04*(1+Math.sin(timestamp*.002+id.length));
+      if(group.userData.targetScale)group.scale.lerp(group.userData.targetScale,.12);
+      if(group.userData.pulseMaterial)group.userData.pulseMaterial.opacity=.052+.006*Math.sin(timestamp*.0007+id.length);
     }
     animateIssueHighlights(timestamp);
+    for(const person of zonePeople)person.position.lerp(person.userData.target,.055);
+    attendant.position.lerp(attendantTarget,.055);
+    for(const vehicle of departureVehicles)vehicle.group.position.lerp(vehicle.target||vehicle.origin,.035);
     animatedFans.forEach(fan=>{fan.rotation.y=live.esd?0:timestamp*(live.flow>.01?.006:.0015);});
     if(!photoView.hidden)return;
     controls.update();updateCameraMarkers();updateRiskLabels();animateAccidents(timestamp);renderer.render(scene,camera);
   }
   window.addEventListener('station-frame',readLive);
-  drawInstruments(live,false);updateMonitorCards();updateCard();readLive();requestAnimationFrame(animate);
+  drawInstruments(live,false,true);updateMonitorCards();updateCard();readLive();requestAnimationFrame(animate);
   window.dispatchEvent(new Event('station-ready'));
 }

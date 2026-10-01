@@ -69,6 +69,13 @@ these proxies before operational use.
 
 ## Operator process control
 
+The remote's **안전 대응** tab adds simulation-only equipment isolation, delayed
+valve position/flow confirmation, venting, ventilation, cooling, evacuation,
+recovery tests, and training replay. Active sensor scenarios and SAGA response
+cards provide the same executable virtual actions. See
+[`docs/virtual-safety-simulation.md`](docs/virtual-safety-simulation.md) for the
+model assumptions, recovery gates, and limits.
+
 Open `/remote.html` and start continuous monitoring. The trailer supply, storage-bank
 recharge, and each of the two vehicle fills begin **off**. The process inventories
 remain unchanged while no command or fault is active. Each path can be started or
@@ -124,27 +131,27 @@ Indoor accumulation requires an explicit enclosure definition through
 backend can instead be selected with
 `H2STATION_HYRAM_EVALUATOR=module:function`.
 
-Each SAGA analysis request first evaluates up to three relevant HAZOP nodes using
-the latest GOOD-quality pressure and temperature sensor readings. An active leak
-uses its current orifice size and flow. Without an active leak, the calculation
-is explicitly a hypothetical 1 mm opening, horizontal release at 1 m height and
-101325 Pa ambient pressure. SAGA receives the calculated consequence, sensor tags,
-quality, and assumptions together with the matching HAZOP rules. The reported
-distance is only the farthest sampled observation point exceeding 5 kW/m² or
-5 kPa; it is not a validated site safety boundary. Missing sensor pairs or an
-unavailable backend are reported as such without inventing an impact distance.
+The digital-twin SAGA panel and selected-sensor follow-up questions use dedicated
+`/direct` API routes. The simulator first evaluates the current sensor state,
+then sends the operator's actual question and its calculated context to SAGA's
+single-completion LLM endpoint. This bypasses SAGA's multi-stage RAG/review
+pipeline but retains free-form question answering. The operator can manually
+select Service Hub or Groq. Groq's direct model defaults to Qwen with reasoning
+disabled; Service Hub defaults to the non-reasoning Llama instruct model. If the selected LLM is
+unavailable, the interface labels the connection error and retains a local
+sensor-based fallback answer. The older analysis API remains available for
+existing integrations, but the digital-twin interface does not call it.
 
-The SAGA chat also has a **시나리오 생성·평가** action. SAGA first proposes one to
-three virtual leak scenarios from the current HAZOP nodes and the workbook's
-0.1/0.5/1/3 mm leak sizes. SAGA selects current GOOD pressure and temperature
-tags for each proposed node. When a target tag is unavailable, it may use a
-different measured node as an explicitly labeled proxy. The simulator validates
-those selections, calculates each proposal with the configured HyRAM backend,
-and sends those results back to SAGA for interpretation. The
-proposals are read-only calculations: they do not inject faults or change the
-process. Invalid proposals are rejected before the physics call. Results retain
-the sensor tags, proposed leak size, calculation status, and sampled-distance
-limitations.
+Consequence evaluation remains in the direct path. An active warning/critical
+state automatically evaluates relevant nodes before building the answer. Normal
+operation only evaluates consequences when the operator explicitly requests an
+impact or uses **센서 기준 가상 평가**. The calculations use current GOOD-quality
+pressure and temperature readings. An active leak uses its current orifice size
+and flow; a hypothetical case uses a 1 mm horizontal release at 1 m height and
+101325 Pa ambient pressure. The calculated result, sensor tags, and assumptions
+are passed to both the direct state endpoint and the one-pass LLM. Reported distance is the farthest sampled
+point exceeding 5 kW/m² or 5 kPa, not a validated site safety boundary. Missing
+sensor pairs or an unavailable backend never produce an invented distance.
 
 ## Engineering status
 

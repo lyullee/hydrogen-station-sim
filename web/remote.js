@@ -2,6 +2,7 @@
 const $=id=>document.getElementById(id);
 const controls={duration_s:'duration',control_period_s:'period',ambient_temperature_c:'ambient',initial_vehicle_pressure_mpa:'initial1',initial_vehicle_2_pressure_mpa:'initial2',initial_vehicle_temperature_c:'initialTemp1',initial_vehicle_2_temperature_c:'initialTemp2',initial_bank_low_fill_percent:'bankFillLow',initial_bank_medium_fill_percent:'bankFillMedium',initial_bank_high_fill_percent:'bankFillHigh',pressure_ramp_rate_mpa_min:'ramp',delivery_temperature_c:'delivery',maximum_mass_flow_g_s:'maxFlow'};
 let activeJobId=new URLSearchParams(location.search).get('job'),job=null,pollTimer,mutating=false,catalog=null,faultSerial=0,esdRequested=false;
+window.getRemoteJobId=()=>activeJobId;
 let lastProcessFrame=-1,lastHydratedJobId=null;
 let activeRemoteTab='operations';
 let speedSaving=false;
@@ -21,7 +22,7 @@ let channel=null;try{channel=new BroadcastChannel('hrs-monitor');}catch{}
 const faultCards=()=>[...$('faults').querySelectorAll('.fault-card')];
 function errorMessage(message=''){$('errorStatus').textContent=message;$('errorStatus').hidden=!message;}
 function setRemoteTab(tab){
-  if(!['operations','incidents','settings'].includes(tab))return;
+  if(!['operations','incidents','settings','safety'].includes(tab))return;
   activeRemoteTab=tab;
   document.querySelectorAll('[data-remote-tab]').forEach(button=>button.setAttribute('aria-selected',String(button.dataset.remoteTab===tab)));
   document.querySelectorAll('[data-remote-pane]').forEach(pane=>pane.hidden=pane.dataset.remotePane!==tab);
@@ -71,6 +72,8 @@ function readProcessSettings(){
     trailer_pressure_mpa:value('trailerPressure'),trailer_temperature_c:value('trailerTemperature'),trailer_capacity_kg:value('trailerCapacity'),
     recharge_auto_stop:$('rechargeAutoStop').checked,recharge_target_low_mpa:value('rechargeTargetLow'),
     recharge_target_medium_mpa:value('rechargeTargetMedium'),recharge_target_high_mpa:value('rechargeTargetHigh'),
+    recharge_restart_margin_low_mpa:value('rechargeMarginLow'),recharge_restart_margin_medium_mpa:value('rechargeMarginMedium'),recharge_restart_margin_high_mpa:value('rechargeMarginHigh'),
+    risk_overlay_enabled:$('riskOverlayEnabled').checked,risk_display_mode:$('riskDisplayMode').value,risk_update_interval_s:Number($('riskUpdateInterval').value),
     vehicle_1_auto_stop:$('vehicle1AutoStop').checked,vehicle_1_target_pressure_mpa:value('vehicle1TargetPressure'),
     vehicle_2_auto_stop:$('vehicle2AutoStop').checked,vehicle_2_target_pressure_mpa:value('vehicle2TargetPressure'),relief_valves};
 }
@@ -79,11 +82,15 @@ function hydrateProcessSettings(settings){
   const fields={trailerPressure:'trailer_pressure_mpa',trailerCapacity:'trailer_capacity_kg',
     trailerTemperature:'trailer_temperature_c',rechargeTargetLow:'recharge_target_low_mpa',
     rechargeTargetMedium:'recharge_target_medium_mpa',rechargeTargetHigh:'recharge_target_high_mpa',
+    rechargeMarginLow:'recharge_restart_margin_low_mpa',rechargeMarginMedium:'recharge_restart_margin_medium_mpa',rechargeMarginHigh:'recharge_restart_margin_high_mpa',
     vehicle1TargetPressure:'vehicle_1_target_pressure_mpa',vehicle2TargetPressure:'vehicle_2_target_pressure_mpa'};
   for(const [id,key] of Object.entries(fields))if(settings[key]!==undefined)$(id).value=settings[key];
   for(const [id,key] of [['rechargeAutoStop','recharge_auto_stop'],['vehicle1AutoStop','vehicle_1_auto_stop'],['vehicle2AutoStop','vehicle_2_auto_stop']])
     if(settings[key]!==undefined)$(id).checked=Boolean(settings[key]);
   if(settings.recharge_auto_stop!==undefined)$('trailerAutoStop').checked=Boolean(settings.recharge_auto_stop);
+  if(settings.risk_overlay_enabled!==undefined)$('riskOverlayEnabled').checked=Boolean(settings.risk_overlay_enabled);
+  if(settings.risk_display_mode)$('riskDisplayMode').value=settings.risk_display_mode;
+  if(settings.risk_update_interval_s)$('riskUpdateInterval').value=String(settings.risk_update_interval_s);
   for(const row of $('reliefRows').children){const valve=settings.relief_valves?.[row.dataset.relief];if(!valve)continue;
     row.querySelector('.relief-enabled').checked=Boolean(valve.enabled);
     row.querySelector('.relief-open').value=valve.open_mpa;
@@ -203,6 +210,11 @@ function publishJob(id){
   try{localStorage.setItem('hrs-active-job',id);}catch{}
   try{window.opener?.postMessage({type:'hrs-job-created',id},location.origin);}catch{}
 }
+function publishReset(){
+  channel?.postMessage({type:'station-reset'});
+  try{localStorage.removeItem('hrs-active-job');}catch{}
+  try{window.opener?.postMessage({type:'hrs-station-reset'},location.origin);}catch{}
+}
 async function stopAndWait(id){
   let current;
   try{current=await api('/api/simulations/'+id);}catch(e){if(e.status===404)return;throw e;}
@@ -303,17 +315,22 @@ async function stop(){
 }
 async function resetProcess(){
   if(mutating)return;
-  errorMessage();if(!validateForm(false))return;
-  let payload;try{payload=readPayload(false);}catch(error){errorMessage(error.message);return;}
-  payload.continuous=true;payload.faults=[];
-  for(const operation of Object.keys(operationNames))payload.process_settings[operation]=false;
+  errorMessage();
   mutating=true;clearTimeout(pollTimer);renderControls();
   try{
     if(activeJobId)await stopAndWait(activeJobId);
-    await createSimulationJob(payload,'초기 조건으로 공정을 재설정했습니다. 모든 공정 요청·사고·ESD가 해제됐습니다.');
-    $('faults').replaceChildren();updateFaultCount();await refreshLiveFaults();
-  }catch(error){errorMessage('공정 초기화 실패: '+error.message);}
-  finally{mutating=false;renderControls();if(activeJobId)track();}
+    activeJobId=null;job=null;lastProcessFrame=-1;window.latestProcessFrame=null;
+    lastHydratedJobId=null;esdRequested=false;
+    $('scenarioForm').reset();
+    $('faults').replaceChildren();updateFaultCount();
+    $('liveFaults').textContent='운전 중 사고가 없습니다.';
+    $('monitorLink').href='/';
+    $('jobStatus').textContent='계산 정지 · 초기 화면';
+    $('status').textContent='완전 초기화 완료 · 계산, 공정 요청, 사고, ESD 표시를 모두 정리했습니다.';
+    history.replaceState(null,'',location.pathname);
+    updateBankPressurePreview();publishReset();
+  }catch(error){errorMessage('완전 초기화 실패: '+error.message);}
+  finally{mutating=false;renderControls();}
 }
 async function requestEsd(){
   if(mutating||esdRequested||!activeJobId||!['queued','running'].includes(job?.status))return;

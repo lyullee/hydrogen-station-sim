@@ -10,6 +10,14 @@ from .mapping import coverage
 # The H70 PCV intentionally throttles a high-pressure bank into a low-pressure
 # vehicle. A large differential alone is normal while hydrogen is flowing.
 PCV_DROP_FLOW_TAGS = {"HZ-081": "FT-1101", "HZ-109": "FT-1501"}
+# These rules diagnose a requested fill only after an injected disturbance is
+# present. The virtual PCV/hose line-pack model has normal start-up and bank-
+# switching transients that otherwise look like momentary no-flow, high dP,
+# warm outlet, or pressure-ramp deviations.
+SCENARIO_QUALIFIED_FILL_RULES = {
+    "HZ-077", "HZ-081", "HZ-082", "HZ-092", "HZ-100",
+    "HZ-105", "HZ-109", "HZ-110", "HZ-120", "HZ-128",
+}
 
 
 class RuleEngine:
@@ -40,6 +48,9 @@ class RuleEngine:
             previous = memory["status"]
             value, reason, quality = None, "", "GOOD"
             gate = evaluate_gate(self.gates[r["gate_id"]], frame["modes"])
+            if (gate is True and rid in SCENARIO_QUALIFIED_FILL_RULES
+                    and frame["modes"].get("station.scenario_active") is False):
+                gate = False
             if gate is True and rid in PCV_DROP_FLOW_TAGS:
                 flow_tag = PCV_DROP_FLOW_TAGS[rid]
                 flow = frame["signals"].get(flow_tag)

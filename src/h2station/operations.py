@@ -9,6 +9,7 @@ from typing import Any, Mapping
 from .dispenser import SupplyState
 from .safety_runtime import FaultEvent, FaultKind
 from .tabulated import PropsSI
+from .virtual_safety import VirtualSafetyRuntime
 
 
 RELIEF_TARGETS = {
@@ -38,6 +39,7 @@ class ProcessRuntime:
         self.trailer_transferred_kg = 0.0
         self.recharge_transferred_kg = 0.0
         self.relief_open = {key: False for key in RELIEF_TARGETS}
+        self.safety = VirtualSafetyRuntime()
         self.revision = 0
         self.stop_reason: dict[str, str | None] = {
             key: None for key in ("trailer_supply", "pressure_recharge", "vehicle_1", "vehicle_2")
@@ -49,6 +51,11 @@ class ProcessRuntime:
             for field in ("trailer_capacity_kg", "trailer_pressure_mpa", "trailer_temperature_c"):
                 if updated[field] != self.settings[field]:
                     raise ValueError(f"{field} can only change when a new simulation starts")
+            if not self.safety.vehicles["trailer"] and (updated["trailer_supply"] or updated["pressure_recharge"]):
+                raise ValueError("The trailer has departed; start a new simulation before transfer")
+            for vehicle in ("vehicle_1", "vehicle_2"):
+                if not self.safety.vehicles[vehicle] and updated[vehicle]:
+                    raise ValueError(f"{vehicle} has departed; start a new simulation before refueling")
             for key, counter in (("trailer_supply", "trailer_transferred_kg"),
                                  ("pressure_recharge", "recharge_transferred_kg")):
                 if updated[key] and not self.settings[key]:
@@ -113,6 +120,11 @@ class ProcessRuntime:
     def recharge_targets_pa(self) -> tuple[float, float, float]:
         with self._lock:
             return tuple(self.settings[f"recharge_target_{name}_mpa"] * 1e6
+                         for name in ("low", "medium", "high"))
+
+    def recharge_restart_margins_pa(self) -> tuple[float, float, float]:
+        with self._lock:
+            return tuple(self.settings[f"recharge_restart_margin_{name}_mpa"] * 1e6
                          for name in ("low", "medium", "high"))
 
     def stop_recharge_at_targets(self, pressures_pa: tuple[float, float, float]) -> None:

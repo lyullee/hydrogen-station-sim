@@ -105,6 +105,9 @@ def test_sensor_detail_exposes_current_value_rule_and_response_plan(monkeypatch)
         assert analysis.status_code == 200
         assert analysis.json()["active_rule_count"] == 0
         assert "중압 뱅크" in analysis.json()["answer"]
+        assert "### 예방·안전관리" in analysis.json()["answer"]
+        assert "**즉시 조치**" not in analysis.json()["answer"]
+        assert analysis.json()["response_guidance"]["actual_alert"] is False
         assert "PT-0801" in captured["prompt"]
         assert "TT-0801" in captured["prompt"]
         assert "PT-0901" not in captured["prompt"]
@@ -143,9 +146,83 @@ def test_active_sensor_computes_impact_before_focused_llm(monkeypatch):
         assert "사용자 질문에 먼저 직접 답하고" in captured["prompt"]
         assert "Markdown 인용문" in captured["prompt"]
         assert response.json()["active_rule_count"] == 1
+        answer = response.json()["answer"]
+        assert "### 종합 안전판단" in answer
+        assert "#### 발생 가능한 시나리오" in answer
+        assert "### 즉시 실행할 단계별 대응" in answer
+        assert "**2단계 · 공정 정지·격리 및 인원 보호**" in answer
+        assert "**3단계 · 안정화 확인**" in answer
+        assert "**4단계 · 복구·재가동 전 확인**" in answer
+        assert "### 단계별 예방·안전관리" in answer
+        assert response.json()["response_guidance"]["actual_alert"] is True
+        assert response.json()["response_guidance"]["mode"] == "consolidated"
     finally:
         with api._jobs_lock:
             api._jobs.pop(job_id, None)
+
+
+def test_direct_sensor_llm_cannot_replace_detailed_emergency_guidance(monkeypatch):
+    monkeypatch.setattr(api, "load_hyram_backend", lambda: object())
+    monkeypatch.setattr(api, "assess_sensor_cases", lambda *args: [])
+    monkeypatch.setattr(api, "_invoke_saga_hazop_direct",
+                        lambda *args: {"status": "WARNING", "hits": []})
+
+    async def terse_answer(*args, **kwargs):
+        return {"answer": "중압 저장뱅크 압력 경보입니다.", "model": "terse-test"}
+
+    monkeypatch.setattr(api, "_invoke_sensor_assistant_selected", terse_answer)
+    job_id = "sensor-workbench-direct-guidance"
+    _job(job_id, active=True)
+    try:
+        with TestClient(api.app) as client:
+            response = client.post(
+                f"/api/simulations/{job_id}/sensors/PT-0801/analyze/direct",
+                json={"provider": "groq", "question": "현재 상태를 분석해줘"},
+            )
+        assert response.status_code == 200
+        result = response.json()
+        assert result["model"] == "terse-test"
+        assert "중압 저장뱅크 압력 경보입니다." in result["answer"]
+        assert "### 종합 안전판단" in result["answer"]
+        assert "#### 발생 가능한 시나리오" in result["answer"]
+        assert "**2단계 · 공정 정지·격리 및 인원 보호**" in result["answer"]
+        assert "**3단계 · 안정화 확인**" in result["answer"]
+        assert "**4단계 · 복구·재가동 전 확인**" in result["answer"]
+        assert "### 단계별 예방·안전관리" in result["answer"]
+        assert result["response_guidance"]["plans"]
+    finally:
+        with api._jobs_lock:
+            api._jobs.pop(job_id, None)
+
+
+def test_related_threshold_alarms_collapse_into_one_operator_scenario():
+    catalog = api.load_catalog()
+    definitions = {rule["rule_id"]: rule for rule in catalog["rules"]}
+    ids = ("HZ-156", "HZ-157", "HZ-158", "HZ-178")
+    active = []
+    frame_active = []
+    for rule_id in ids:
+        rule = definitions[rule_id]
+        active.append({"rule_id": rule_id, "node_id": rule["node_id"],
+                       "sensor_id": rule["sensor_id"], "scenario": rule["시나리오명"],
+                       "response_plan_id": api.classify_rule(rule), "state": "TRIGGER"})
+        frame_active.append({"rule_id": rule_id, "node_id": rule["node_id"],
+                             "sensor_id": rule["sensor_id"], "state": "TRIGGER",
+                             "value": 100.0, "quality": "GOOD"})
+    playbooks = api.load_playbooks()
+    known = {plan["id"]: plan for plan in playbooks["plans"]}
+    markdown, guidance = api._sensor_response_guidance(
+        {"hazop": {"active": frame_active, "releases": []}, "active_faults": []},
+        catalog, "현재 상태를 분석해줘", active, [], {"gas_release": None}, known,
+    )
+    assert guidance["mode"] == "consolidated"
+    assert len(guidance["scenarios"]) == 1
+    assert guidance["scenarios"][0]["id"] == "gas_release"
+    assert "경보 조건 4건" in markdown
+    assert "**1개 대응 시나리오**" in markdown
+    assert markdown.count("### 즉시 실행할 단계별 대응") == 1
+    assert markdown.count("### 단계별 예방·안전관리") == 1
+    assert len(guidance["plans"]) == 1
 
 
 def test_unknown_sensor_returns_404():
@@ -282,7 +359,10 @@ def test_one_sensor_combines_simultaneous_scenarios_and_response_families(monkey
         assert '"rule_id": "HZ-057"' in captured["prompt"]
         assert '"rule_id": "HZ-059"' in captured["prompt"]
         assert '"immediate"' in captured["prompt"]
-        assert "동시에 활성화된 모든 시나리오" in captured["prompt"]
+        assert "동시 경보를 공통 원인별 시나리오로 묶고" in captured["prompt"]
+        assert analysis.json()["response_guidance"]["mode"] == "consolidated"
+        assert {row["id"] for row in analysis.json()["response_guidance"]["scenarios"]} == {
+            "overpressure", "gas_release", "flow_anomaly"}
     finally:
         with api._jobs_lock:
             api._jobs.pop(job_id, None)

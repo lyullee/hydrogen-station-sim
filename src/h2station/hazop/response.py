@@ -220,6 +220,10 @@ def structured_guidance(selection: list[dict[str, Any]], *, actual_alert: bool) 
     if not selection:
         return None
     data = load_playbooks()
+    from ..virtual_safety import suggested_actions
+    def _node_id(sensor_id: str | None) -> str | None:
+        match = re.search(r"-(\d\d)\d\d$", sensor_id or "")
+        return f"N{match.group(1)}" if match else None
     return {
         "actual_alert": actual_alert,
         "intro": "현장 승인 비상계획과 현장 지휘를 우선하세요. 시뮬레이션 기반 의사결정 지원입니다.",
@@ -228,6 +232,8 @@ def structured_guidance(selection: list[dict[str, Any]], *, actual_alert: bool) 
             "id": item["plan"]["id"], "title": item["plan"]["title"],
             "rule_id": item["plan"].get("rule_id"), "sensor_id": item["plan"].get("sensor_id"),
             "evidence": list(item["evidence"]),
+            "executable_actions": suggested_actions(item["plan"]["id"],
+                                                    _node_id(item["plan"].get("sensor_id"))) if actual_alert else [],
             **{stage: list(item["plan"][stage]) for stage in
                ("recognition", "immediate", "stabilize", "restart", "prevention")},
             "sources": [data["sources"][key] for key in item["plan"]["sources"]],

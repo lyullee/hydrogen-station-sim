@@ -42,7 +42,7 @@
   }
   window.mountSensorWorkbench=body=>{
     const dialog=document.getElementById('workspaceDialog');dialog.classList.add('sensor-workspace');body.classList.add('sensor-workbench');
-    let catalog=null,selected='',lastQuestion='',closed=false,epoch=0,analysisSequence=0,detailController=null,analysisController=null,analysisTimer=null,observedJob=runtime()?.activeJobId||null,lastIssueSignature='';
+    let catalog=null,selected='',lastQuestion='',closed=false,epoch=0,analysisSequence=0,detailController=null,analysisController=null,analysisTimer=null,observedJob=runtime()?.activeJobId||null,lastIssueSignature='',listRefreshTimer=null,lastValuePaint=0;
     const left=node('aside','sensor-browser'),middle=node('section','sensor-detail'),right=node('section','sensor-assistant');body.append(left,middle,right);
     const listHead=node('div','sensor-browser-head');listHead.append(node('b','','센서 목록'),node('small','sensor-count','불러오는 중'));left.append(listHead);
     const search=node('input','sensor-search');search.type='search';search.placeholder='태그·설비·위치 검색';search.setAttribute('aria-label','센서 검색');left.append(search);
@@ -54,8 +54,13 @@
     const list=node('div','sensor-browser-list');left.append(list);
     const detailIntro=node('div','sensor-detail-placeholder','센서를 선택하면 현재 신호와 위험분석결과를 표시합니다.');middle.append(detailIntro);
     const assistantHeader=node('div','sensor-assistant-head');assistantHeader.append(node('div','','SAGA · 선택 센서 분석'));
-    const provider=node('select','saga-provider-select');provider.setAttribute('aria-label','센서 분석 LLM 제공자 선택');provider.innerHTML='<option value="service_hub">Service Hub</option><option value="groq">Groq</option>';provider.value=localStorage.getItem('h2station.saga.provider')==='groq'?'groq':'service_hub';provider.addEventListener('change',()=>{localStorage.setItem('h2station.saga.provider',provider.value);document.querySelectorAll('.saga-provider-select').forEach(select=>{select.value=provider.value;});});assistantHeader.append(provider);
-    const deepDive=node('button','sensor-rerun sensor-deep-dive','상세 LLM 분석');deepDive.type='button';deepDive.disabled=true;assistantHeader.append(deepDive);
+    const sensorProviderKey='h2station.sensor-assistant.provider';
+    const selectedSensorProvider=()=>{
+      const saved=localStorage.getItem(sensorProviderKey)??localStorage.getItem('h2station.saga.provider');
+      return saved==='groq'?'groq':'service_hub';
+    };
+    const provider=node('select','saga-provider-select sensor-assistant-provider');provider.setAttribute('aria-label','센서 분석 LLM 제공자 선택');provider.title='선택 센서 분석 모델만 바꿉니다. 메인 대화와 8090 SAGA 설정은 유지됩니다.';provider.innerHTML='<option value="service_hub">Service Hub</option><option value="groq">Groq</option>';provider.value=selectedSensorProvider();provider.addEventListener('change',()=>{localStorage.setItem(sensorProviderKey,provider.value);document.querySelectorAll('.sensor-assistant-provider').forEach(select=>{select.value=provider.value;});});assistantHeader.append(provider);
+    const deepDive=node('button','sensor-rerun sensor-deep-dive','상세 분석');deepDive.type='button';deepDive.disabled=true;assistantHeader.append(deepDive);
     const rerun=node('button','sensor-rerun','다시 분석');rerun.type='button';rerun.disabled=true;assistantHeader.append(rerun);right.append(assistantHeader);
     const assistantMeta=node('p','sensor-assistant-meta','센서를 선택하면 자동으로 분석합니다.');right.append(assistantMeta);
     const transcript=node('div','sensor-assistant-transcript');transcript.setAttribute('role','log');transcript.setAttribute('aria-live','polite');right.append(transcript);
@@ -65,7 +70,9 @@
     const nodeById=()=>new Map((catalog?.nodes||[]).map(item=>[item.node_id,item['설비_라인']||item.node_id]));
     function visibleSensors(issues=issueMap(currentFrame())){
       const names=nodeById(),query=search.value.trim().toLowerCase(),kind=filters.dataset.kind||'ALL';
-      return (catalog?.sensors||[]).filter(item=>(!issueCheck.checked||issues.has(item.sensor_id))&&
+      // Keep the selected row mounted when an alarm clears. Removing and
+      // reselecting it on every threshold transition made the whole workbench flash.
+      return (catalog?.sensors||[]).filter(item=>(!issueCheck.checked||issues.has(item.sensor_id)||item.sensor_id===selected)&&
         (kind==='ALL'||item.sensor_id.startsWith(kind))&&
         `${item.sensor_id} ${item['설치_측정위치']||''} ${names.get(item.node_id)||''}`.toLowerCase().includes(query))
         .sort((a,b)=>issueCheck.checked?(issues.get(b.sensor_id)?.rank||0)-(issues.get(a.sensor_id)?.rank||0):0);
@@ -89,6 +96,9 @@
     }
     function refreshValues(){
       if(closed)return;
+      const now=performance.now();
+      if(now-lastValuePaint<180)return;
+      lastValuePaint=now;
       const job=runtime()?.activeJobId||null;
       if(job!==observedJob){
         observedJob=job;
@@ -103,13 +113,11 @@
       const issues=issueMap(currentFrame());
       const signature=issueSignature(issues);
       if(signature!==lastIssueSignature){
-        const oldSelectedIssue=issueCheck.checked&&selected?list.querySelector(`[data-sensor-id="${selected}"]`)?.dataset.issueKey:null;
-        lastIssueSignature=signature;renderList();
-        if(issueCheck.checked){
-          const next=visibleSensors(issues)[0]?.sensor_id;
-          if(!issues.has(selected)){if(next)selectSensor(next);else clearSelection();return;}
-          if(oldSelectedIssue!==issueKey(issues.get(selected)))selectSensor(selected);
-        }
+        lastIssueSignature=signature;
+        // Debounce structural list changes. Live values below continue to update,
+        // but the selected detail and LLM transcript are never remounted here.
+        clearTimeout(listRefreshTimer);
+        listRefreshTimer=setTimeout(()=>{listRefreshTimer=null;if(!closed)renderList();},650);
       }
       list.querySelectorAll('[data-sensor-id]').forEach(button=>{const signal=currentSignal(button.dataset.sensorId);button.querySelector('.sensor-list-reading').textContent=reading(signal);button.dataset.quality=signal?.quality||'UNKNOWN';});
       const live=middle.querySelector('.sensor-live-value');if(live&&selected){const signal=currentSignal(selected);live.textContent=reading(signal);const quality=middle.querySelector('.sensor-quality');if(quality){quality.dataset.quality=signal?.quality||'UNKNOWN';quality.textContent=signal?.quality==='GOOD'?'정상 수신':signal?.quality||'신호 대기';}}
@@ -138,6 +146,7 @@
       for(const [name,value] of [['판정 기준',`${rule.expression} ${rule.operator} ${rule.threshold} ${rule.unit}`],['지속 조건',`${rule.persistence_s} s`],['현재 판정값',typeof rule.evaluated_value==='number'?`${rule.evaluated_value.toFixed(3)} ${rule.unit}`:'판정값 대기'],['판정 상태',rule.state==='LATCHED'||rule.state==='ALARM_HOLD'?'현재 재검출 미확인 · 경보 유지':null],['원인 후보',rule.cause],['사고 전개 조건',rule.progression],['판단 한계',rule.diagnostic_limit]]){
         if(value==null||value==='')continue;const row=node('div');row.append(node('dt','',name),node('dd','',String(value)));facts.append(row);
       }target.append(facts);
+      if(rule.active&&rule.executable_actions?.length)window.mountVirtualActionButtons?.(target,rule.executable_actions);
       const guidance=rule.response_guidance||{};
       if(Object.keys(guidance).length){
         const steps=node('details','sensor-scenario-actions');steps.open=true;
@@ -221,12 +230,12 @@
       if(!job){answer.classList.remove('loading');answer.textContent='시뮬레이션이 연결되면 이 센서를 자동 분석할 수 있습니다.';assistantMeta.textContent='연결된 시뮬레이션 없음';return;}
       try{
         let draft='',paintScheduled=false,streamFinished=false;
-        const paintDraft=()=>{paintScheduled=false;if(streamFinished||closed||selection!==epoch||sequence!==analysisSequence)return;answer.classList.remove('loading');answer.classList.add('typing');renderMarkdown(answer,draft);transcript.scrollTop=transcript.scrollHeight;};
-        const result=await window.streamStationAnalysis(`/api/simulations/${encodeURIComponent(job)}/sensors/${encodeURIComponent(tag)}/analyze/stream`,
-          {question:extraQuestion,time_s:Number.isFinite(snapshotTime)?snapshotTime:null,direct:!extraQuestion,provider:localStorage.getItem('h2station.saga.provider')==='groq'?'groq':'service_hub'},
+        const paintDraft=()=>{paintScheduled=false;if(streamFinished||closed||selection!==epoch||sequence!==analysisSequence)return;answer.classList.remove('loading');answer.classList.add('typing');answer.textContent=draft;transcript.scrollTop=transcript.scrollHeight;};
+        const result=await window.streamStationAnalysis(`/api/simulations/${encodeURIComponent(job)}/assistants/sensors/${encodeURIComponent(tag)}/stream`,
+          {question:extraQuestion,time_s:Number.isFinite(snapshotTime)?snapshotTime:null,provider:selectedSensorProvider()},
           {signal,onStatus:text=>{if(!draft)answer.textContent=text;},onToken:text=>{draft+=text;if(!paintScheduled){paintScheduled=true;requestAnimationFrame(paintDraft);}}});
         if(closed||selection!==epoch||sequence!==analysisSequence)return;
-        if(!draft){answer.classList.remove('loading');answer.classList.add('typing');await window.revealStationText(result.answer||'분석 결과가 없습니다.',text=>{renderMarkdown(answer,text);transcript.scrollTop=transcript.scrollHeight;},()=>!closed&&selection===epoch&&sequence===analysisSequence&&!signal.aborted);}
+        if(!draft){answer.classList.remove('loading');answer.classList.add('typing');await window.revealStationText(result.answer||'분석 결과가 없습니다.',text=>{answer.textContent=text;transcript.scrollTop=transcript.scrollHeight;},()=>!closed&&selection===epoch&&sequence===analysisSequence&&!signal.aborted);}
         streamFinished=true;
         if(closed||selection!==epoch||sequence!==analysisSequence)return;
         answer.classList.remove('loading','typing');assistantMeta.textContent=`${tag} · 모의 ${Number(result.time_s||0).toFixed(1)} s · ${result.model||'SAGA'}`;rerun.disabled=false;deepDive.disabled=false;renderMarkdown(answer,result.answer||'분석 결과가 없습니다.');transcript.scrollTop=transcript.scrollHeight;
@@ -261,6 +270,6 @@
         if(initial)selectSensor(initial);
       }catch(error){if(!closed)list.replaceChildren(node('p','sensor-browser-empty',error.message));}
     })();
-    return ()=>{closed=true;epoch++;analysisSequence++;clearTimeout(analysisTimer);detailController?.abort();analysisController?.abort();window.removeEventListener('station-frame',refreshValues);dialog.classList.remove('sensor-workspace');body.classList.remove('sensor-workbench');};
+    return ()=>{closed=true;epoch++;analysisSequence++;clearTimeout(analysisTimer);clearTimeout(listRefreshTimer);detailController?.abort();analysisController?.abort();window.removeEventListener('station-frame',refreshValues);dialog.classList.remove('sensor-workspace');body.classList.remove('sensor-workbench');};
   };
 })();

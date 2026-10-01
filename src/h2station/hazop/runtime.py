@@ -23,6 +23,7 @@ class HazopMonitor:
         if store and run_id: store.start(run_id, self.catalog["metadata"])
 
     def sample(self, t, *, active_leaks, risk_snapshots, **model):
+        detector_multiplier = model.pop("detector_multiplier", None)
         frame = self.mapper.sample(t, active_leaks=active_leaks, risk_snapshots=risk_snapshots, **model)
         # Location-specific detector output is accepted only under an explicit DB sensor ID.
         # Indoor maximum_concentration and virtual:<release> are never copied into a GD.
@@ -88,7 +89,8 @@ class HazopMonitor:
             near_tag, far_tag = zone_detectors[key]
             # Proxy plume: mass release converted to vol% with near/far heads. This
             # is an advisory virtual sensor, not a replacement for consequence CFD.
-            near_value = min(100.0, mass_flow * 10000.0)
+            dilution = (float(detector_multiplier(target)) if detector_multiplier is not None else 1.0)
+            near_value = min(100.0, mass_flow * 10000.0 * dilution)
             for tag, multiplier in ((near_tag, 1.0), (far_tag, 0.45)):
                 if tag not in self.mapper.specs or self.mapper.specs[tag]["종류"] != "G":
                     continue

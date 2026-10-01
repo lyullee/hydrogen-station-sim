@@ -29,6 +29,27 @@ DEFAULT_OBSERVATION_LOCATIONS = tuple(
 )
 
 
+def consequence_risk_summary(consequence: Mapping[str, float | str | bool | None]) -> dict[str, float | str]:
+    """Return a transparent screening index for display beside consequences.
+
+    This is deliberately a consequence index, not annual individual risk: a
+    quantitative frequency is unavailable for sensor-based hypothetical leaks.
+    """
+    heat = max(0.0, float(consequence.get("maximum_heat_flux_w_m2") or 0.0))
+    blast = max(0.0, float(consequence.get("maximum_overpressure_pa") or 0.0))
+    radius = max(0.0, float(consequence.get("sampled_effect_radius_m") or 0.0))
+    flow = max(0.0, float(consequence.get("mass_flow_override_kg_s") or 0.0) * 1000.0)
+    threshold_ratio = max(heat / 5000.0, blast / 5000.0)
+    # Fixed scales let values remain comparable between different station runs.
+    score = min(100.0, 12.0 * math.log10(1.0 + flow)
+                + 30.0 * min(2.0, threshold_ratio) / 2.0
+                + 25.0 * min(2.0, radius / 10.0) / 2.0)
+    level = ("매우 높음" if score >= 80 else "높음" if score >= 60
+             else "주의" if score >= 35 else "낮음" if score >= 15 else "매우 낮음")
+    return {"risk_score": round(score, 1), "risk_level": level,
+            "risk_basis": "CONSEQUENCE_SCREENING_NO_FREQUENCY"}
+
+
 class UnavailableHyRAMBackend:
     """Honest fallback that preserves source terms without inventing consequences."""
 
@@ -146,6 +167,7 @@ class NativeHyRAMBackend:
             else "WITHIN_SAMPLED_POINTS" if extent > 0 else "BELOW_THRESHOLDS_AT_SAMPLES")
         output["thermal_threshold_w_m2"] = 5000.0
         output["overpressure_threshold_pa"] = 5000.0
+        output.update(consequence_risk_summary(output))
         if request.indoor:
             if self.indoor_scenario is None:
                 output["indoor_status"] = "enclosure-not-configured"

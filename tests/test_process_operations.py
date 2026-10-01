@@ -148,6 +148,43 @@ def test_operator_bank_target_does_not_stop_one_mpa_early():
     assert selected == 1
 
 
+def test_recharge_bank_waits_for_configured_restart_margin_after_target():
+    built, _ = _station(ProcessSettings().model_dump())
+    gases = tuple(bank.gas_state(state) for bank, state in
+                  zip(built.station.banks, built.initial_state.banks))
+    targets = (44e6, 68e6, 89e6)
+    margins = (2e6, 3e6, 4e6)
+
+    # The high bank is filled first and remains selected up to its target.
+    selected = built.station.supervisor.select_recharge_bank(
+        built.station.banks,
+        tuple(replace(gas, pressure_pa=pressure)
+              for gas, pressure in zip(gases, (44e6, 68e6, 88e6))),
+        None, target_pressures_pa=targets, restart_margins_pa=margins,
+    )
+    assert selected == 2
+
+    # Reaching the upper target disarms the bank. A small pressure drop must
+    # not make the compressor chatter between recharge and standby.
+    for high_pressure in (89e6, 88e6, 85.1e6):
+        selected = built.station.supervisor.select_recharge_bank(
+            built.station.banks,
+            tuple(replace(gas, pressure_pa=pressure)
+                  for gas, pressure in zip(gases, (44e6, 68e6, high_pressure))),
+            None, target_pressures_pa=targets, restart_margins_pa=margins,
+        )
+        assert selected is None
+
+    # It is re-armed only after the lower restart threshold is reached.
+    selected = built.station.supervisor.select_recharge_bank(
+        built.station.banks,
+        tuple(replace(gas, pressure_pa=pressure)
+              for gas, pressure in zip(gases, (44e6, 68e6, 85e6))),
+        None, target_pressures_pa=targets, restart_margins_pa=margins,
+    )
+    assert selected == 2
+
+
 def test_recharge_without_auto_stop_adds_mass_above_selected_target():
     settings = ProcessSettings().model_dump()
     settings.update(trailer_supply=True, pressure_recharge=True,

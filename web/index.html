@@ -4,21 +4,27 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>수소충전소 운영관제 | H₂ Station</title>
-  <link rel="stylesheet" href="/styles.css?v=20260928-flowtarget1">
+  <link rel="stylesheet" href="/styles.css?v=20260930-kgs-ci1">
 </head>
 <body class="control-room-app">
   <div class="grain"></div>
   <header class="masthead">
-    <div>
-      <p class="eyebrow">H70 · DIGITAL TWIN</p>
-      <h1>수소충전소 <span>운영관제 시스템</span></h1>
+    <div class="masthead-brand">
+      <a class="kgs-research-ci" href="https://www.kgs.or.kr/gsr/index.do" target="_blank" rel="noopener noreferrer" aria-label="한국가스안전공사 가스안전연구원 홈페이지 새 탭에서 열기">
+        <img src="/assets/kgs-logo.svg" alt="한국가스안전공사">
+        <span>가스안전연구원</span>
+      </a>
+      <div class="masthead-product">
+        <p class="eyebrow">H70 · DIGITAL TWIN</p>
+        <h1>수소충전소 <span>운영관제 시스템</span></h1>
+      </div>
     </div>
     <div class="masthead-right">
-        <span class="masthead-credit">제작 · KGS - AI Safety Research Team</span>
-        <div class="masthead-context"><span id="wallClock">--:--:--</span><b>LIVE OPERATIONS</b></div>
+      <div class="masthead-context"><span id="wallClock">--:--:--</span><b>LIVE OPERATIONS</b></div>
       <div class="system-badge" id="systemBadge">
         <i></i><span>시스템 확인 중</span>
       </div>
+      <span class="masthead-credit">제작 · KGS - AI Safety Research Team</span>
     </div>
   </header>
 
@@ -133,21 +139,23 @@
 
   <dialog id="workspaceDialog" class="workspace-dialog"><header><h2 id="workspaceDialogTitle"></h2><button id="workspaceDialogClose" type="button" aria-label="상세 화면 닫기">닫기 ×</button></header><div id="workspaceDialogBody"></div></dialog>
   <div id="toast" class="toast" role="status" hidden></div>
-  <script src="/app.js?v=20260929-risk-sampling1"></script>
-  <script src="/dashboard.js?v=20260929-sensor-workbench1"></script>
+  <script src="/app.js?v=20260930-unittrends1"></script>
+  <script src="/dashboard.js?v=20260930-unittrends1"></script>
   <script src="/vendor/markdown/marked.umd.js"></script>
   <script src="/vendor/markdown/purify.min.js"></script>
   <script src="/analysis-stream.js?v=20260929-live1"></script>
-  <script src="/saga-bridge.js?v=20260929-risk-sampling1"></script>
-  <link rel="stylesheet" href="/station3d.css?v=20260929-assets-close1">
+  <script src="/safety-actions.js?v=1"></script>
+  <script src="/saga-bridge.js?v=20260930-separated-lanes"></script>
+  <link rel="stylesheet" href="/station3d.css?v=20260930-camera-toggle1">
   <script>window.getStation3DState = () => state;</script>
-  <link rel="stylesheet" href="/monitor-wall.css?v=20260929-sensor-answer2">
+  <link rel="stylesheet" href="/monitor-wall.css?v=20260930-separated-lanes">
+  <link rel="stylesheet" href="/safety-console.css?v=1">
   <script src="/monitor-wall.js?v=20260929-flame1"></script>
-  <script src="/node-monitor.js?v=20260928-flowtarget1"></script>
-  <script type="module" src="/equipment-trends.mjs?v=20260930-leak-pressure1"></script>
-  <script src="/sensor-workbench.js?v=20260929-question-route2"></script>
-  <script type="module" src="/station3d.js?v=20260929-issue-glow1"></script>
-  <link rel="stylesheet" href="/civic-theme.css?v=20260929-koreanstation1">
+  <script src="/node-monitor.js?v=20260930-high-bank-default1"></script>
+  <script type="module" src="/equipment-trends.mjs?v=20260930-unittrends1"></script>
+  <script src="/sensor-workbench.js?v=20260930-stable-render1"></script>
+  <script type="module" src="/station3d.js?v=20260930-stable-render1"></script>
+  <link rel="stylesheet" href="/civic-theme.css?v=20260930-kgs-ci1">
   <link rel="stylesheet" href="/flow-icons.css?v=20260929-flowicons1">
   <link rel="stylesheet" href="/equipment-trends.css?v=20260930-leak-pressure1">
 </body>

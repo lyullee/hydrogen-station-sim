@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 from contextvars import ContextVar
+from copy import deepcopy
 import json
 import os
 import re
@@ -31,6 +32,7 @@ from .risk.sensor_assessment import assess_sensor_cases, available_sensor_inputs
 from .risk.scenario_planning import parse_saga_plan
 from .safe_operation import SafeOperationSample
 from .simulation_clock import SimulationClock
+from .virtual_safety import VALVE_LABELS, ZONES, RECOVERY_CHECKS, suggested_actions
 from .scenario import ReferenceScenario, build_reference_scenario
 from .safety_runtime import FaultEvent, FaultKind, FaultSchedule
 from .tabulated import PropsSI
@@ -116,6 +118,12 @@ class ProcessSettings(BaseModel):
     recharge_target_low_mpa: float = Field(default=46.0, gt=1.0, le=110.0)
     recharge_target_medium_mpa: float = Field(default=66.0, gt=1.0, le=110.0)
     recharge_target_high_mpa: float = Field(default=96.0, gt=1.0, le=110.0)
+    recharge_restart_margin_low_mpa: float = Field(default=2.0, ge=0.2, le=20.0)
+    recharge_restart_margin_medium_mpa: float = Field(default=3.0, ge=0.2, le=20.0)
+    recharge_restart_margin_high_mpa: float = Field(default=4.0, ge=0.2, le=20.0)
+    risk_overlay_enabled: bool = True
+    risk_display_mode: Literal["relative", "absolute"] = "relative"
+    risk_update_interval_s: Literal[15, 30, 60, 120] = 30
     vehicle_1_auto_stop: bool = True
     vehicle_1_target_pressure_mpa: float = Field(default=70.0, gt=1.0, le=110.0)
     vehicle_2_auto_stop: bool = True
@@ -126,6 +134,9 @@ class ProcessSettings(BaseModel):
     def valid_relief_targets(self):
         if set(self.relief_valves) != set(RELIEF_TARGETS):
             raise ValueError("Settings are required for every relief valve")
+        for name in ("low", "medium", "high"):
+            if getattr(self, f"recharge_restart_margin_{name}_mpa") >= getattr(self, f"recharge_target_{name}_mpa"):
+                raise ValueError(f"{name} recharge restart margin must be below the target pressure")
         return self
 
 
@@ -167,14 +178,40 @@ class SimulationSpeedInput(BaseModel):
     speed_multiplier: Literal[0.5, 1, 2, 3, 5, 10, 30, 50, 100]
 
 
+class VirtualSafetyActionInput(BaseModel):
+    kind: Literal["valve.close", "valve.open", "vent.close", "vent.open",
+                  "operation.stop", "esd.trip", "ventilation.on", "ventilation.off",
+                  "cooling.on", "cooling.off", "power.isolate", "power.restore",
+                  "access.restrict", "access.release", "personnel.evacuate", "vehicle.evacuate",
+                  "responders.notify", "recovery.record", "repair.leak", "purge.run",
+                  "tightness.test", "detector.test", "valve.test", "pressure.test",
+                  "restart.approve"]
+    target: str
+    note: str = Field(default="", max_length=240)
+
+
+class VirtualDeviceFaultInput(BaseModel):
+    fault: Literal["none", "stuck_open", "stuck_closed", "seat_leak", "feedback_fault", "failure"]
+
+
+class VirtualEnvironmentInput(BaseModel):
+    wind_direction_deg: float = Field(ge=0, lt=360)
+    wind_speed_m_s: float = Field(ge=0, le=40)
+
+
+class VirtualTrainingCompareInput(BaseModel):
+    other_job_id: str
+
+
 class SagaAnalysisInput(BaseModel):
     provider: Literal["service_hub", "groq"] = "service_hub"
     question: str = Field(default="현재 공정의 이상 징후와 조치 우선순위를 분석해 주세요.", max_length=1200)
     trigger: str = Field(default="manual", pattern="^(manual|periodic|alarm)$")
     scenario_mode: bool = False
-    # The live monitor uses SAGA's deterministic endpoint. Only an explicitly
-    # requested scenario-generation run uses the generative chat path.
+    # The monitor uses the dedicated /direct route; the legacy analysis route
+    # retains its request contract for existing integrations.
     direct: bool = False
+    one_pass: bool = False
     history: list[SagaChatTurn] = Field(default_factory=list, max_length=8)
 
 
@@ -183,6 +220,25 @@ class SensorAnalysisInput(BaseModel):
     question: str = Field(default="", max_length=1200)
     time_s: float | None = Field(default=None, ge=0)
     direct: bool = False
+    one_pass: bool = False
+
+
+class MainAssistantInput(BaseModel):
+    """Public contract for the main monitor assistant only."""
+
+    provider: Literal["service_hub", "groq"] = "service_hub"
+    question: str = Field(min_length=1, max_length=1200)
+    trigger: Literal["manual", "periodic", "alarm"] = "manual"
+    scenario_mode: bool = False
+    history: list[SagaChatTurn] = Field(default_factory=list, max_length=8)
+
+
+class SensorAssistantInput(BaseModel):
+    """Public contract for the selected-sensor assistant only."""
+
+    provider: Literal["service_hub", "groq"] = "service_hub"
+    question: str = Field(default="", max_length=1200)
+    time_s: float | None = Field(default=None, ge=0)
 
 
 app = FastAPI(
@@ -200,6 +256,7 @@ app.add_middleware(
 _jobs: dict[str, dict[str, Any]] = {}
 _jobs_lock = Lock()
 _process_runtimes: dict[str, ProcessRuntime] = {}
+_risk_zone_cache: dict[str, dict[str, Any]] = {}
 _executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="h2station")
 _saga_token_sink: ContextVar[Callable[[str], None] | None] = ContextVar("saga_token_sink", default=None)
 
@@ -368,6 +425,9 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             with _jobs_lock:
                 job = _jobs[job_id]
                 commands = job["pending_fault_commands"]
+                reset_safety = bool(job.pop("pending_safety_reset", False))
+                if reset_safety:
+                    built.simulator.safety_plc.reset()
                 if not commands:
                     return
                 registry = job["fault_registry"]
@@ -450,6 +510,11 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                             name: pressure / 1.0e6
                             for name, pressure in sample.bank_pressure_pa.items()
                         },
+                        "bank_temperature_c": {
+                            name: temperature - 273.15
+                            for name, temperature in (sample.bank_temperature_k or {}).items()
+                        },
+                        "bank_mass_kg": dict(sample.bank_mass_kg or {}),
                         "dispatch_bank": sample.dispatch_bank,
                         "dispatch_bank_2": sample.dispatch_bank_2,
                         "recharge_bank": sample.recharge_bank,
@@ -462,6 +527,7 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                                                ((sample.process_operations or {}).get("relief_open") or {}).items()
                                                if is_open],
                         "process_activity": sample.process_activity,
+                        "virtual_safety": sample.virtual_safety,
                         "realtime_lag_s": realtime_lag_s,
                         "simulation_rate_x": simulation_rate_x,
                         "vehicle_mass_kg": sample.vehicle_mass_kg,
@@ -492,6 +558,19 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                     if str(tag).startswith("FD-") and isinstance(value, dict)
                 }
                 frame["analysis"] = _analyze_frame(frame)
+                if process_runtime is not None:
+                    process_runtime.safety.observe_hazards(sample.active_faults)
+                    process_runtime.safety.record_metrics(sample.time_s, _virtual_safety_metrics(frame))
+                    resolved_fault_ids = _queue_incident_resolution(
+                        _jobs[job_id], process_runtime, sample.time_s
+                    )
+                    if resolved_fault_ids:
+                        frame["incident_resolution"] = {
+                            "status": "ending",
+                            "fault_ids": resolved_fault_ids,
+                            "reason": "ESD와 즉시 조치 확인",
+                        }
+                    frame["virtual_safety"] = process_runtime.safety.snapshot(include_actions=False)
                 frames.append(frame)
                 _jobs[job_id]["next_sequence"] = sequence + 1
                 # Keep the virtual monitor bounded while allowing it to run indefinitely.
@@ -875,6 +954,7 @@ def create_simulation(request: SimulationInput) -> dict[str, Any]:
             "stop_requested": False,
             "pending_fault_commands": [],
             "fault_registry": {fault.event_id: fault.to_event() for fault in request.faults},
+            "auto_resolved_fault_ids": [],
             "operations": process_runtime.snapshot() if process_runtime is not None else None,
         }
     _executor.submit(_execute_simulation, job_id, request)
@@ -892,6 +972,78 @@ def simulation_status(job_id: str) -> dict[str, Any]:
             for key, value in job.items()
             if key not in {"result", "frames", "hazop_detail", "pending_fault_commands", "fault_registry", "_simulation_clock"}
         }
+
+
+_RISK_ZONE_NODES = ("N01", "N06", "N07", "N08", "N09", "N13", "N14", "N17", "N18", "N19")
+_RISK_ZONE_COMPONENTS = {
+    "N01": "supply", "N06": "compressor", "N07": "cascade.low",
+    "N08": "cascade.medium", "N09": "cascade.high", "N13": "dispenser.hose",
+    "N14": "vehicle.tank", "N17": "dispenser_2.hose", "N18": "vehicle_2.tank",
+    "N19": "cooler",
+}
+_RISK_DESIGN_PRESSURE_MPA = {
+    "N01": 50.0, "N06": 100.0, "N07": 50.0, "N08": 70.0, "N09": 100.0,
+    "N13": 90.0, "N14": 87.5, "N17": 90.0, "N18": 87.5, "N19": 90.0,
+}
+
+
+@app.get("/api/simulations/{job_id}/risk-zones")
+async def simulation_risk_zones(job_id: str) -> dict[str, Any]:
+    """Rate-limited current-state screening risk for the spatial overlay."""
+    with _jobs_lock:
+        job = _jobs.get(job_id)
+        if job is None:
+            raise HTTPException(status_code=404, detail="Simulation not found")
+        frames = job.get("frames") or []
+        if not frames:
+            return {"time_s": None, "zones": [], "status": "waiting"}
+        frame = deepcopy(frames[-1])
+        settings = ((job.get("operations") or {}).get("settings") or {})
+    interval = int(settings.get("risk_update_interval_s", 30))
+    sample_time = float(frame.get("time_s") or 0.0)
+    bucket = int(sample_time // max(interval, 1))
+    cached = _risk_zone_cache.get(job_id)
+    if cached and cached.get("bucket") == bucket:
+        return cached["payload"]
+    backend = await asyncio.to_thread(load_hyram_backend)
+    catalog = load_catalog()
+    cases = await asyncio.to_thread(
+        assess_sensor_cases, frame, catalog, backend, list(_RISK_ZONE_NODES),
+        max_cases=len(_RISK_ZONE_NODES),
+    )
+    zones = []
+    for row in cases:
+        node = str(row.get("node_id") or "")
+        pressure = max(0.0, float(row.get("current_pressure_mpa") or 0.0))
+        temperature = float(row.get("current_temperature_c") or 25.0)
+        pressure_fraction = min(1.5, pressure / _RISK_DESIGN_PRESSURE_MPA.get(node, 100.0))
+        consequence_score = max(0.0, float(row.get("risk_score") or 0.0))
+        # Fixed-reference current-state index. It combines stored-energy
+        # margin and the bundled consequence-screening result. It is not an
+        # annual fatality probability because release frequency is not known.
+        absolute = min(100.0, 8.0 + pressure_fraction * 24.0
+                       + min(55.0, consequence_score * .65)
+                       + min(13.0, max(0.0, temperature - 45.0) * .25))
+        zones.append({
+            "node_id": node, "component": _RISK_ZONE_COMPONENTS.get(node, node),
+            "name": row.get("node_name"), "absolute_score": round(absolute, 1),
+            "pressure_mpa": pressure, "temperature_c": temperature,
+            "consequence_score": consequence_score,
+            "effect_radius_m": row.get("sampled_effect_radius_m"),
+            "calculation_status": row.get("calculation_status"),
+        })
+    maximum = max((zone["absolute_score"] for zone in zones), default=1.0)
+    for zone in zones:
+        zone["relative_score"] = round(100.0 * zone["absolute_score"] / maximum, 1)
+        score = zone["absolute_score"]
+        zone["level"] = ("매우 높음" if score >= 80 else "높음" if score >= 60
+                         else "주의" if score >= 35 else "낮음" if score >= 15 else "매우 낮음")
+    payload = {"time_s": sample_time, "zones": zones, "status": "calculated",
+               "backend_available": bool(getattr(backend, "available", False)),
+               "update_interval_s": interval,
+               "basis": "현재 압력·온도와 1 mm 가정 누출 피해영향의 고정 기준 지수; 연간 개인위험도 아님"}
+    _risk_zone_cache[job_id] = {"bucket": bucket, "payload": payload}
+    return payload
 
 
 @app.get("/api/simulations/{job_id}/frames")
@@ -955,6 +1107,299 @@ def set_process_operations(job_id: str, settings: ProcessSettings) -> dict[str, 
         return job["operations"]
 
 
+def _virtual_safety_metrics(frame: dict[str, Any] | None) -> dict[str, Any]:
+    if not frame:
+        return {}
+    gas = frame.get("gas_detectors") or {}
+    ranges = [float((release.get("consequence") or {}).get("sampled_effect_radius_m") or
+                    (release.get("consequence") or {}).get("effect_radius_m") or 0.0)
+              for release in (frame.get("hazop") or {}).get("releases", [])]
+    return {"time_s": frame.get("time_s"),
+            "bank_pressure_mpa": dict(frame.get("bank_pressure_mpa") or {}),
+            "bank_temperature_c": dict(frame.get("bank_temperature_c") or {}),
+            "bank_mass_kg": dict(frame.get("bank_mass_kg") or {}),
+            "nozzle_1_flow_g_s": frame.get("nozzle_1_flow_g_s", 0.0),
+            "nozzle_2_flow_g_s": frame.get("nozzle_2_flow_g_s", 0.0),
+            "compressor_flow_g_s": ((frame.get("process_activity") or {}).get("pressure_recharge") or {}).get("flow_g_s", 0.0),
+            "total_leak_flow_g_s": frame.get("total_leak_flow_g_s", 0.0),
+            "released_mass_kg": frame.get("released_mass_kg", 0.0),
+            "gas_max_volpct_h2": max((float(signal.get("value") or 0.0)
+                                      for signal in gas.values()), default=0.0),
+            "detectors_good": bool(gas) and all(signal.get("quality") == "GOOD"
+                                                for signal in gas.values()),
+            "effect_radius_m": max(ranges, default=0.0),
+             "esd": bool(frame.get("esd"))}
+
+
+def _queue_incident_resolution(job: dict[str, Any], runtime: ProcessRuntime,
+                               time_s: float) -> list[str]:
+    """End active injected incidents after ESD and the confirmed immediate stop.
+
+    This is a virtual-training transition, not a claim that a physical leak or fire
+    disappears instantly.  Ending the injected source lets the process, detectors,
+    consequence model, 3D scene, and flow diagram all follow the same state change.
+    """
+    state = runtime.safety.snapshot()
+    actions = state.get("actions") or []
+    registry: dict[str, FaultEvent] = job.get("fault_registry") or {}
+    already_queued = set(job.setdefault("auto_resolved_fault_ids", []))
+    active = [event for event in registry.values()
+              if event.kind is not FaultKind.EMERGENCY_STOP
+              and event.active_at(time_s) and event.event_id not in already_queued]
+    if not active or not state.get("esd_requested"):
+        return []
+    incident_start = min(event.start_time_s for event in active)
+    esd_confirmed = any(action.get("kind") == "esd.trip"
+                        and action.get("status") == "confirmed"
+                        and float(action.get("completed_s") or -1) + 1e-6 >= incident_start
+                        for action in actions)
+    immediate_stop_confirmed = any(action.get("kind") == "operation.stop"
+                                   and action.get("target") == "all"
+                                   and action.get("status") == "confirmed"
+                                   and float(action.get("completed_s") or -1) + 1e-6 >= incident_start
+                                   for action in actions)
+    if not (esd_confirmed and immediate_stop_confirmed):
+        return []
+    resolved = [event.event_id for event in active]
+    job["pending_fault_commands"].extend(("remove", event_id) for event_id in resolved)
+    job["auto_resolved_fault_ids"] = sorted(already_queued | set(resolved))
+    job["activity"] = "ESD·즉시 조치 확인 · 사고 입력 자동 종료 반영 중"
+    runtime.safety.record_incident_resolution(resolved, time_s)
+    return resolved
+
+
+@app.get("/api/simulations/{job_id}/safety")
+def get_virtual_safety(job_id: str) -> dict[str, Any]:
+    with _jobs_lock:
+        job = _jobs.get(job_id)
+        runtime = _process_runtimes.get(job_id)
+        if job is None:
+            raise HTTPException(status_code=404, detail="Simulation not found")
+        if runtime is None:
+            raise HTTPException(status_code=409, detail="Operator mode is required")
+        frame = job["frames"][-1] if job["frames"] else None
+        state = runtime.safety.snapshot()
+        state["current_metrics"] = _virtual_safety_metrics(frame)
+        releases = ((frame or {}).get("hazop") or {}).get("releases") or []
+        state["vent_releases"] = {bank: {"outlet_height_m": 6.0,
+            "release_flow_g_s": next((float(item.get("mass_flow_g_s") or 0.0)
+                                      for item in releases if item.get("release_id") == f"vent-{bank}"), 0.0),
+            "residual_pressure_mpa": state["current_metrics"].get("bank_pressure_mpa", {}).get(bank)}
+            for bank in ("low", "medium", "high")}
+        state["catalog"] = {"valves": VALVE_LABELS, "zones": ZONES,
+                            "recovery_checks": RECOVERY_CHECKS}
+        active = ((frame or {}).get("hazop") or {}).get("active") or []
+        definitions = {row["rule_id"]: row for row in load_catalog()["rules"]}
+        suggested = []
+        seen = set()
+        for row in active:
+            if row.get("state") != "TRIGGER":
+                continue
+            rule = definitions.get(row.get("rule_id"))
+            if rule is None:
+                continue
+            for action in suggested_actions(classify_rule(rule), row.get("node_id")):
+                key = (action["kind"], action["target"])
+                if key not in seen:
+                    seen.add(key)
+                    suggested.append({**action, "scenario": rule["시나리오명"]})
+        state["suggested_actions"] = suggested[:16]
+        return state
+
+
+@app.post("/api/simulations/{job_id}/safety/actions")
+def issue_virtual_safety_action(job_id: str, request: VirtualSafetyActionInput) -> dict[str, Any]:
+    with _jobs_lock:
+        job = _jobs.get(job_id)
+        runtime = _process_runtimes.get(job_id)
+        if job is None:
+            raise HTTPException(status_code=404, detail="Simulation not found")
+        if runtime is None or job["status"] not in ("queued", "running"):
+            raise HTTPException(status_code=409, detail="Running operator simulation required")
+        frame = job["frames"][-1] if job["frames"] else None
+        if request.kind == "repair.leak":
+            fault = job["fault_registry"].get(request.target)
+            if fault is None or fault.kind is not FaultKind.HYDROGEN_LEAK or not fault.active_at(
+                max(float(job.get("last_sample_time_s") or 0), runtime.safety.latest_time_s)):
+                raise HTTPException(status_code=422, detail="Select an active virtual leak")
+        if request.kind == "recovery.record" and frame:
+            active_hazards = [fault for fault in frame.get("active_faults") or []
+                              if not fault.startswith("relief-open:")]
+            if request.target in ("source_removed", "tightness_test", "supervisor_approval") and (
+                active_hazards or frame.get("total_leak_flow_g_s", 0) > .01):
+                raise HTTPException(status_code=409, detail="Active hazard blocks this recovery check")
+            if request.target == "source_removed" and runtime.any_requested():
+                raise HTTPException(status_code=409, detail="Stop all process operations before source-removal confirmation")
+            if request.target == "leak_repaired" and any(
+                fault.kind is FaultKind.HYDROGEN_LEAK for fault in job["fault_registry"].values()):
+                raise HTTPException(status_code=409, detail="Repair and remove the simulated leak before recording this check")
+            if request.target == "detector_test" and any(
+                item.get("quality") != "GOOD" for item in (frame.get("gas_detectors") or {}).values()):
+                raise HTTPException(status_code=409, detail="Gas detector quality check failed")
+            if request.target == "detector_test" and not frame.get("gas_detectors"):
+                raise HTTPException(status_code=409, detail="No gas detector telemetry to test")
+            if request.target == "valve_test" and any(
+                valve.status == "failed" or valve.feedback_open != valve.actual_open or
+                (not valve.commanded_open and valve.flow_fraction() > 0)
+                for valve in runtime.safety.valves.values()):
+                raise HTTPException(status_code=409, detail="Virtual valve feedback test failed")
+        if request.kind == "restart.approve" and frame and (
+            frame.get("total_leak_flow_g_s", 0.0) > .01 or
+            any(fault.startswith(("external-fire:", "hydrogen-leak:"))
+                for fault in frame.get("active_faults") or []) or
+            max((float(item.get("value") or 0) for item in (frame.get("gas_detectors") or {}).values()), default=0) >= .2):
+            raise HTTPException(status_code=409, detail="Active hazard or gas signal blocks restart")
+        now = max(float(job.get("last_sample_time_s") or 0.0), runtime.safety.latest_time_s)
+        try:
+            action = runtime.safety.issue(request.kind, request.target, now,
+                                          process=runtime, note=request.note,
+                                          baseline_metrics=_virtual_safety_metrics(frame))
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        if request.kind == "repair.leak":
+            job["pending_fault_commands"].append(("remove", request.target))
+        if request.kind == "restart.approve":
+            job["pending_safety_reset"] = True
+        job["updated_at"] = _utc_now()
+        return {"action": action, "state": runtime.safety.snapshot()}
+
+
+@app.put("/api/simulations/{job_id}/safety/faults/{device:path}")
+def set_virtual_device_fault(job_id: str, device: str, request: VirtualDeviceFaultInput) -> dict[str, Any]:
+    with _jobs_lock:
+        job = _jobs.get(job_id)
+        runtime = _process_runtimes.get(job_id)
+        if job is None:
+            raise HTTPException(status_code=404, detail="Simulation not found")
+        if runtime is None or job["status"] not in ("queued", "running"):
+            raise HTTPException(status_code=409, detail="Running operator simulation required")
+        try:
+            event = runtime.safety.set_fault(device, request.fault,
+                                            max(float(job.get("last_sample_time_s") or 0), runtime.safety.latest_time_s))
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        return {"event": event, "state": runtime.safety.snapshot()}
+
+
+@app.put("/api/simulations/{job_id}/safety/environment")
+def set_virtual_environment(job_id: str, request: VirtualEnvironmentInput) -> dict[str, Any]:
+    with _jobs_lock:
+        job = _jobs.get(job_id)
+        runtime = _process_runtimes.get(job_id)
+        if job is None:
+            raise HTTPException(status_code=404, detail="Simulation not found")
+        if runtime is None or job["status"] not in ("queued", "running"):
+            raise HTTPException(status_code=409, detail="Running operator simulation required")
+        runtime.safety.wind_direction_deg = request.wind_direction_deg
+        runtime.safety.wind_speed_m_s = request.wind_speed_m_s
+        return runtime.safety.snapshot()
+
+
+@app.get("/api/simulations/{job_id}/safety/replay")
+def virtual_safety_replay(job_id: str) -> dict[str, Any]:
+    with _jobs_lock:
+        job = _jobs.get(job_id)
+        runtime = _process_runtimes.get(job_id)
+        if job is None:
+            raise HTTPException(status_code=404, detail="Simulation not found")
+        if runtime is None:
+            raise HTTPException(status_code=409, detail="Operator mode is required")
+        return {"job_id": job_id, "actions": deepcopy(runtime.safety.actions),
+                "evaluation": _virtual_training_evaluation(job, runtime.safety),
+                "frames": [{"time_s": frame["time_s"], "sequence": frame["sequence"],
+                            "metrics": _virtual_safety_metrics(frame)} for frame in job["frames"]]}
+
+
+def _virtual_training_evaluation(job: dict[str, Any], safety) -> dict[str, Any]:
+    frames = job["frames"]
+    actions = safety.actions
+    incident = next((frame for frame in frames if any(
+        not fault.startswith("relief-open:") for fault in frame.get("active_faults") or [])), None)
+    first_hazard_s = incident["time_s"] if incident else None
+    protective = next((action for action in actions if action["kind"] in
+        ("operation.stop", "valve.close", "esd.trip", "access.restrict", "personnel.evacuate")
+        and first_hazard_s is not None and action["issued_s"] >= first_hazard_s), None)
+    response_delay_s = (max(0.0, protective["issued_s"] - first_hazard_s)
+                        if protective and first_hazard_s is not None else None)
+    failures = [action for action in actions if action["status"] == "failed"]
+    premature = []
+    for action in actions:
+        if action["kind"] not in ("valve.open", "power.restore", "access.release"):
+            continue
+        preceding = next((frame for frame in reversed(frames)
+                          if frame["time_s"] <= action["issued_s"]), None)
+        if preceding and (preceding.get("total_leak_flow_g_s", 0) > .01 or
+                          any(not fault.startswith("relief-open:")
+                              for fault in preceding.get("active_faults") or [])):
+            premature.append(action["id"])
+    vent_events = [action["id"] for action in actions
+                   if action["kind"] in ("vent.open", "purge.run")]
+    possible_wrong_isolations = []
+    secondary_hazards = []
+    for action in actions:
+        preceding = next((frame for frame in reversed(frames)
+                          if frame["time_s"] <= action["issued_s"]), None)
+        faults = (preceding or {}).get("active_faults") or []
+        targets = [fault.split(":", 1)[1] for fault in faults if ":" in fault
+                   and not fault.startswith("relief-open:")]
+        if (action["kind"] == "valve.close" and action["target"].startswith("bank.") and
+            targets and all(target.startswith("cascade.") for target in targets) and
+            not any(action["target"].startswith("bank." + target.split(".")[1]) for target in targets)):
+            possible_wrong_isolations.append(action["id"])
+        if action["kind"] == "vent.open" and any(fault.startswith("external-fire:") for fault in faults):
+            secondary_hazards.append({"action_id": action["id"],
+                                      "reason": "화재 중 벤트 방출 위험 중첩"})
+    peak_radius = max((_virtual_safety_metrics(frame)["effect_radius_m"] for frame in frames), default=0.0)
+    response_penalty = (30 if first_hazard_s is not None and protective is None
+                        else min(30, response_delay_s or 0))
+    score = max(0, round(100 - response_penalty -
+                       10 * len(failures) - 15 * len(premature) -
+                       5 * len(possible_wrong_isolations) - 12 * len(secondary_hazards)))
+    return {"first_hazard_s": first_hazard_s, "first_protective_action_s":
+            protective["issued_s"] if protective else None,
+            "response_delay_s": response_delay_s, "failed_action_ids": [a["id"] for a in failures],
+            "premature_restore_ids": premature, "vent_release_action_ids": vent_events,
+            "possible_wrong_isolation_ids": possible_wrong_isolations,
+            "secondary_hazards": secondary_hazards,
+            "peak_effect_sample_m": peak_radius, "training_score": score,
+            "score_note": "가상 훈련 비교용 지표이며 실제 안전성·대응 적합성을 판정하지 않습니다."}
+
+
+@app.post("/api/simulations/{job_id}/safety/compare")
+def compare_virtual_safety_runs(job_id: str, request: VirtualTrainingCompareInput) -> dict[str, Any]:
+    with _jobs_lock:
+        jobs = [_jobs.get(job_id), _jobs.get(request.other_job_id)]
+        if any(job is None for job in jobs):
+            raise HTTPException(status_code=404, detail="Simulation not found")
+        result = []
+        for key, job in zip((job_id, request.other_job_id), jobs):
+            frames = job["frames"]
+            safety = _process_runtimes.get(key)
+            fault_signature = _virtual_fault_signature(frames)
+            result.append({"job_id": key, "duration_s": frames[-1]["time_s"] if frames else 0,
+                           "fault_signature": fault_signature,
+                           "peak_leak_flow_g_s": max((frame.get("total_leak_flow_g_s", 0) for frame in frames), default=0),
+                           "released_mass_kg": frames[-1].get("released_mass_kg", 0) if frames else 0,
+                           "peak_gas_volpct_h2": max((_virtual_safety_metrics(frame)["gas_max_volpct_h2"]
+                                                     for frame in frames), default=0),
+                           "esd_time_s": next((frame["time_s"] for frame in frames if frame.get("esd")), None),
+                           "action_count": len(safety.safety.actions) if safety else 0,
+                           "failed_actions": sum(action["status"] == "failed" for action in safety.safety.actions) if safety else 0,
+                           "evaluation": _virtual_training_evaluation(job, safety.safety) if safety else None})
+        return {"runs": result, "same_fault_signature": result[0]["fault_signature"] == result[1]["fault_signature"]}
+
+
+def _virtual_fault_signature(frames: list[dict[str, Any]]) -> list[str]:
+    """Compare physical fault inputs, not per-run generated release IDs."""
+    return sorted(
+        {fault for frame in frames for fault in frame.get("active_faults") or []
+         if not fault.startswith(("relief-open:", "hydrogen-leak:"))} |
+        {"release:" + str(release.get("component_id")) + ":" +
+         f"{float(release.get('orifice_diameter_m') or 0):.6f}" for frame in frames
+         for release in ((frame.get("hazop") or {}).get("releases") or [])
+         if release.get("release_id") and not str(release["release_id"]).startswith(("vent-", "relief-"))})
+
+
 @app.get("/api/simulations/{job_id}/faults")
 def list_simulation_faults(job_id: str) -> dict[str, Any]:
     with _jobs_lock:
@@ -1016,6 +1461,116 @@ def _invoke_saga_stream(prompt: str, answer_length: str, provider: str,
     return final
 
 
+def _invoke_saga_one_pass(prompt: str, provider: str,
+                          on_token: Callable[[str], None] | None = None) -> dict[str, Any]:
+    """Call SAGA's single-completion LLM route, never its RAG/review chat."""
+    base = os.getenv("H2STATION_SAGA_URL", "http://127.0.0.1:8090").rstrip("/")
+    endpoint = "/api/digital-twin/chat/direct/stream" if on_token else "/api/digital-twin/chat/direct"
+    body = json.dumps({"message": prompt[:9900], "provider": provider, "max_tokens": 2200},
+                      ensure_ascii=False).encode("utf-8")
+    request = Request(base + endpoint, data=body, headers={"Content-Type": "application/json"})
+    if on_token is None:
+        with urlopen(request, timeout=35) as response:
+            return json.load(response)
+    final: dict[str, Any] | None = None
+    event_name = ""
+    data_lines: list[str] = []
+    with urlopen(request, timeout=35) as response:
+        for raw_line in response:
+            line = raw_line.decode("utf-8").rstrip("\r\n")
+            if line.startswith("event:"):
+                event_name = line[6:].strip()
+            elif line.startswith("data:"):
+                data_lines.append(line[5:].strip())
+            elif not line and data_lines:
+                payload = json.loads("\n".join(data_lines))
+                if event_name == "token":
+                    on_token(str(payload.get("text") or ""))
+                elif event_name == "answer":
+                    final = payload
+                elif event_name == "error":
+                    raise URLError(str(payload.get("detail") or "SAGA 직답 스트림 오류"))
+                event_name = ""
+                data_lines.clear()
+    if final is None:
+        raise URLError("SAGA 직답 스트림에서 최종 답변을 받지 못했습니다.")
+    return final
+
+
+async def _invoke_saga_one_pass_selected(prompt: str, provider: str,
+                                         stream_output: bool = False) -> dict[str, Any]:
+    sink = _saga_token_sink.get() if stream_output else None
+    return await asyncio.to_thread(_invoke_saga_one_pass, prompt, provider, sink)
+
+
+def _invoke_isolated_twin_assistant(channel: Literal["main", "sensor"], payload: dict[str, Any],
+                                    on_token: Callable[[str], None] | None = None) -> dict[str, Any]:
+    """Call one isolated 8090 integration contract without SAGA chat/session state."""
+    base = os.getenv("H2STATION_SAGA_URL", "http://127.0.0.1:8090").rstrip("/")
+    endpoint = f"/api/integrations/digital-twin/{channel}"
+    if on_token is not None:
+        endpoint += "/stream"
+    body = json.dumps(payload, ensure_ascii=False, default=str).encode("utf-8")
+    request = Request(base + endpoint, data=body, headers={"Content-Type": "application/json"})
+    if on_token is None:
+        with urlopen(request, timeout=35) as response:
+            return json.load(response)
+    final: dict[str, Any] | None = None
+    event_name = ""
+    data_lines: list[str] = []
+    with urlopen(request, timeout=35) as response:
+        for raw_line in response:
+            line = raw_line.decode("utf-8").rstrip("\r\n")
+            if line.startswith("event:"):
+                event_name = line[6:].strip()
+            elif line.startswith("data:"):
+                data_lines.append(line[5:].strip())
+            elif not line and data_lines:
+                event = json.loads("\n".join(data_lines))
+                if event_name == "token":
+                    on_token(str(event.get("text") or ""))
+                elif event_name == "answer":
+                    final = event
+                elif event_name == "error":
+                    raise URLError(str(event.get("detail") or f"{channel} 보조자 스트림 오류"))
+                event_name = ""
+                data_lines.clear()
+    if final is None:
+        raise URLError(f"{channel} 보조자 스트림에서 최종 답변을 받지 못했습니다.")
+    return final
+
+
+async def _invoke_main_assistant_selected(question: str, context: dict[str, Any],
+                                           history: list[SagaChatTurn], provider: str,
+                                           request_kind: str, stream_output: bool = False) -> dict[str, Any]:
+    payload = {
+        "question": question,
+        "context": context,
+        "history": [{"role": turn.role, "content": turn.content[:1200]} for turn in history[-8:]],
+        "request_kind": request_kind,
+        "provider": provider,
+        "max_tokens": 2200,
+    }
+    sink = _saga_token_sink.get() if stream_output else None
+    return await asyncio.to_thread(_invoke_isolated_twin_assistant, "main", payload, sink)
+
+
+async def _invoke_sensor_assistant_selected(sensor_id: str, question: str,
+                                             context: dict[str, Any], provider: str,
+                                             request_kind: str,
+                                             stream_output: bool = False) -> dict[str, Any]:
+    payload = {
+        "sensor_id": sensor_id,
+        "question": question,
+        "context": context,
+        "request_kind": request_kind,
+        "provider": provider,
+        "max_tokens": 2200,
+    }
+    sink = _saga_token_sink.get() if stream_output else None
+    return await asyncio.to_thread(_invoke_isolated_twin_assistant, "sensor", payload, sink)
+
+
 async def _invoke_saga_selected(prompt: str, answer_length: str, provider: str,
                                 explicit_length: bool = False,
                                 stream_output: bool = False) -> dict[str, Any]:
@@ -1064,7 +1619,7 @@ def _stream_analysis_response(run: Callable[[], Awaitable[dict[str, Any]]],
                 # The deterministic endpoint returns one result. Reveal that
                 # result progressively in the same SSE UI, without invoking
                 # the generative/reasoning API just to obtain token events.
-                answer = str(result.get("analysis_answer") or result.get("answer") or "")
+                answer = str(result.get("question_answer") or result.get("analysis_answer") or result.get("answer") or "")
                 for offset in range(0, len(answer), 48):
                     yield f"event: token\ndata: {json.dumps({'text': answer[offset:offset + 48]}, ensure_ascii=False)}\n\n"
                     await asyncio.sleep(0.012)
@@ -1168,13 +1723,73 @@ def _direct_hazop_answer(result: dict[str, Any]) -> str:
     return "현재 스냅샷은 일부 HAZOP 기준과 연결되지 않아 상태를 완전한 정상으로 확정할 수 없습니다."
 
 
+def _align_direct_evaluation(
+    result: dict[str, Any] | None, active_rules: list[dict[str, Any]],
+    station_status: str,
+) -> dict[str, Any] | None:
+    """Keep SAGA's stateless threshold check from overriding mode-aware alarms.
+
+    Zero flow is normal while a process is idle, and trapped pressure can be
+    normal until a disconnect is requested. The simulator's rule engine knows
+    those operating modes; SAGA's independent numeric check does not.
+    """
+    if result is None:
+        return None
+    triggered_tags = {str(rule.get("sensor_id")) for rule in active_rules
+                      if rule.get("state") == "TRIGGER" and rule.get("sensor_id")}
+    raw_hits = result.get("hits") if isinstance(result.get("hits"), list) else []
+    hits = [hit for hit in raw_hits if isinstance(hit, dict)
+            and str(hit.get("tag_id")) in triggered_tags]
+    return {**result, "status": station_status, "hits": hits, "sop": {}}
+
+
+def _direct_question_evidence(frame: dict[str, Any], catalog: dict[str, Any],
+                              question: str, nodes: list[dict[str, Any]]) -> str:
+    """Answer equipment/signal questions with the current numeric readings."""
+    signals = (frame.get("hazop") or {}).get("signals") or {}
+    if not signals:
+        return ""
+    node_ids = {str(node.get("node_id")) for node in nodes}
+    normalized = re.sub(r"\s+", "", question)
+    aliases = (("압축기", {"N03", "N04", "N05", "N06"}),
+               ("프리쿨러", {"N12", "N16", "N19"}),
+               ("트레일러", {"N01", "N02"}),
+               ("차량1", {"N11", "N12", "N13", "N14"}),
+               ("차량2", {"N15", "N16", "N17", "N18"}))
+    for word, ids in aliases:
+        if word in normalized:
+            node_ids.update(ids)
+    requested_tags = set(re.findall(r"(?:PT|TT|FT|GD|FD)-\d{4}", question.upper()))
+    prefixes = {prefix for word, prefix in (("압력", "PT-"), ("온도", "TT-"),
+                ("유량", "FT-"), ("가스", "GD-"), ("화염", "FD-")) if word in question}
+    sensor_nodes = {str(sensor.get("sensor_id")): str(sensor.get("node_id"))
+                    for sensor in catalog.get("sensors") or []}
+    selected = [(tag, row) for tag, row in signals.items() if isinstance(row, dict)
+                and (tag in requested_tags or sensor_nodes.get(tag) in node_ids
+                     or not node_ids and not requested_tags and any(tag.startswith(prefix) for prefix in prefixes))]
+    if not selected:
+        return ""
+    selected.sort(key=lambda item: (item[0][:2], item[0]))
+    lines = ["**질문 관련 현재 신호**"]
+    for tag, row in selected[:12]:
+        value = row.get("value")
+        rendered = f"{value:.3f}" if isinstance(value, (int, float)) else "값 없음"
+        lines.append(f"- {tag}: {rendered} {row.get('unit') or ''} · 품질 {row.get('quality') or 'UNKNOWN'}")
+    if len(selected) > 12:
+        lines.append(f"- 관련 신호 {len(selected) - 12}개는 센서 화면에서 확인할 수 있습니다.")
+    return "\n".join(lines)
+
+
 def _direct_impact_summary(results: list[dict[str, Any]]) -> str:
     """Report only computed sample results, with their measured basis visible."""
     if not results:
         return ""
+    node_names = {str(node.get("node_id")): str(node.get("설비_라인") or "")
+                  for node in load_catalog()["nodes"]}
     lines = ["### 피해영향예측 · 현재 센서 기준"]
     for row in results[:3]:
-        node = str(row.get("node_name") or row.get("node_id") or "설비")
+        node = str(row.get("node_name") or node_names.get(str(row.get("node_id")))
+                   or row.get("node_id") or "설비")
         pressure = row.get("current_pressure_mpa")
         temperature = row.get("current_temperature_c")
         basis = "현재 모의 누출" if row.get("calculation_basis") == "ACTIVE_RELEASE_CURRENT_SENSORS" else "가정 누출"
@@ -1232,6 +1847,38 @@ def _safe_saga_text(answer: str) -> str:
     return "\n".join(line for line in answer.splitlines() if allowed(line)).strip()
 
 
+def _direct_answer_conflicts_with_signals(
+    answer: str, *, alert: bool = False, gas_observed: bool = False,
+    physical_leak: bool = False, impact_calculated: bool = False,
+) -> bool:
+    """Reject a one-pass narrative that negates an already verified simulation fact.
+
+    This is deliberately narrow: a hypothetical leak may be described as not
+    real, but a measured gas signal or an active process release may not be
+    denied. The deterministic answer remains available as a safe fallback.
+    """
+    compact = re.sub(r"[\s*`_·]", "", answer).lower()
+    if alert and re.search(r"(?:현재|전체|공정|시스템)?(?:는|이)?(?:정상상태|정상운전|정상범위|이상없음|경보없음)", compact):
+        if not re.search(r"(?:정상상태|정상운전|정상범위|이상없음|경보없음)(?:가|이)?(?:아니|아닙|아님|않)", compact):
+            return True
+    if gas_observed and (
+        re.search(r"(?:수소|가스).{0,24}(?:감지|검출|관측).{0,18}(?:되지않|안되|없|미확인)", compact)
+        or re.search(r"(?:수소|가스)농도(?:는|가)?0(?:\.0+)?(?:vol%|%)", compact)
+    ):
+        return True
+    if physical_leak and re.search(
+        r"(?:현재|실제|모의|공정)?(?:의)?(?:수소|가스)?누출(?:은|이|량은|량이)?"
+        r"(?:없|미발생|발생하지않|확인되지않|관측되지않)", compact
+    ):
+        return True
+    if impact_calculated and re.search(
+        r"(?:피해영향|영향범위|사고영향).{0,18}"
+        r"(?:계산되지않|미계산|결과(?:가|는|이)?없|평가되지않)", compact
+    ):
+        return True
+    return False
+
+
 def _impact_requested(question: str) -> bool:
     return any(term in question for term in ("피해", "영향", "누출", "사고 범위", "위험 범위", "시나리오"))
 
@@ -1259,6 +1906,16 @@ def _mentioned_hazop_nodes(question: str, catalog: dict[str, Any]) -> list[dict[
         banks = {"고압": "N09", "중압": "N08", "저압": "N07"}
         requested = [node_id for word, node_id in banks.items() if word in normalized]
         aliases.extend(requested or ["N07", "N08", "N09"])
+    if "압축기" in normalized:
+        aliases.extend(["N03", "N04", "N05", "N06"])
+    if "프리쿨러" in normalized or "냉각기" in normalized:
+        aliases.extend(["N19", "N12", "N16"])
+    if "트레일러" in normalized:
+        aliases.extend(["N01", "N02"])
+    if "차량1" in normalized or "1번차량" in normalized:
+        aliases.extend(["N13", "N14"])
+    if "차량2" in normalized or "2번차량" in normalized:
+        aliases.extend(["N17", "N18"])
     for node in catalog["nodes"]:
         if node["node_id"] in aliases and node not in matched:
             matched.append(node)
@@ -1454,13 +2111,15 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
     emergency_context = (alert_status != "NORMAL" or bool(active or releases)
                          or bool(frame.get("active_faults") or frame.get("relief_valves_open"))
                          or bool((analysis.get("fire_detection") or {}).get("detector_tags")))
-    show_impact_results = (emergency_context
+    show_impact_results = (emergency_context or request.scenario_mode
                            or (request.trigger == "manual" and _impact_requested(request.question)))
-    if request.scenario_mode or (not request.direct and _scenario_requested(request)):
+    if not request.direct and _scenario_requested(request):
         backend = await asyncio.to_thread(load_hyram_backend)
         return await _run_saga_scenario_analysis(frame, catalog, backend, request, active,
                                                  mentioned_ids, len(sensor_values))
     response_plans = response_selection(frame, catalog, request.question, request.trigger)
+    virtual_safety = frame.get("virtual_safety") or {}
+    recent_virtual_actions = (virtual_safety.get("actions") or [])[-5:]
     sensor_impacts = []
     backend = None
     if show_impact_results:
@@ -1521,9 +2180,10 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         direct_result = await asyncio.to_thread(
             _invoke_saga_hazop_direct, frame, catalog, str(job_id), request.question, impact_results
         )
+        direct_result = _align_direct_evaluation(direct_result, active, alert_status)
         direct_sop = (direct_result or {}).get("sop") if isinstance((direct_result or {}).get("sop"), dict) else {}
         direct_hits = (direct_result or {}).get("hits") if isinstance((direct_result or {}).get("hits"), list) else []
-        actual_alert = emergency_context or bool(direct_hits)
+        actual_alert = emergency_context
         if direct_result:
             answer = _safe_saga_text(_direct_hazop_answer(direct_result))
         else:
@@ -1534,6 +2194,65 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
             findings = [str(item) for item in (analysis.get("findings") or [])[:3]]
             answer = ("현재 주의·경보 신호를 확인했습니다. " + " · ".join(findings)
                       if actual_alert else "현재 센서와 설비 신호를 확인했습니다. 정상 운전 상태입니다.")
+        llm_model = "SAGA 직답 · 센서 기반 계산"
+        llm_error = None
+        if request.one_pass:
+            focused_tags = {rule.get("sensor_id") for rule in matched_rules + reference_rules}
+            focused_tags.update(re.findall(r"(?:PT|TT|FT|GD|FD)-\d{4}", request.question.upper()))
+            selected_values = {tag: value for tag, value in sensor_values.items() if tag in focused_tags}
+            if not selected_values:
+                selected_values = dict(list(sensor_values.items())[:36])
+            prompt_data = {
+                "impact_calculation_attempted": show_impact_results,
+                "impact_results": impact_results[:3],
+                "recent_dialogue": [{"role": turn.role, "content": turn.content[:400]}
+                                    for turn in request.history[-4:]],
+                "simulation_time_s": frame.get("time_s"),
+                "station_status": alert_status,
+                "findings": analysis.get("findings") or [],
+                "active_faults": frame.get("active_faults") or [],
+                "relief_valves_open": frame.get("relief_valves_open") or [],
+                "current_signals": selected_values,
+                "active_conditions": matched_rules,
+                "related_conditions": reference_rules[:8],
+                "direct_evaluation": {"status": (direct_result or {}).get("status"),
+                                      "hits": direct_hits[:8]},
+                "response_guidance": prompt_guidance(response_plans),
+            }
+            try:
+                reply = await _invoke_main_assistant_selected(
+                    request.question, prompt_data, request.history, request.provider,
+                    "user_query" if request.trigger == "manual" else "automatic_analysis",
+                    stream_output=True,
+                )
+                llm_answer = _safe_saga_text(str(reply.get("answer") or ""))
+                gas_observed = any(
+                    tag.startswith("GD-") and value.get("quality") == "GOOD"
+                    and isinstance(value.get("value"), (int, float)) and value["value"] > 0
+                    for tag, value in sensor_values.items()
+                )
+                if llm_answer and _direct_answer_conflicts_with_signals(
+                    llm_answer, alert=actual_alert, gas_observed=gas_observed,
+                    physical_leak=any(float(release.get("mass_flow_g_s") or 0) > .001
+                                      and not str(release.get("release_id") or "").startswith("relief-")
+                                      for release in releases if isinstance(release, dict)),
+                    impact_calculated=bool(impact_results),
+                ):
+                    llm_model = "SAGA 직답 · 센서값 검증"
+                elif llm_answer:
+                    answer = llm_answer
+                    llm_model = str(reply.get("model") or "SAGA 단일 답변")
+                else:
+                    llm_error = "직답 LLM이 빈 응답을 반환했습니다."
+            except (URLError, HTTPError, TimeoutError, OSError, ValueError) as exc:
+                llm_error = ("SAGA 직답 LLM에 연결하지 못했습니다. SAGA 서버의 직답 API와 선택한 제공자 설정을 "
+                             f"확인하세요. ({exc})")
+            if llm_error:
+                answer = f"**{llm_error}**\n\n" + answer
+        evidence = _direct_question_evidence(frame, catalog, request.question, mentioned_nodes)
+        if evidence:
+            answer = answer + "\n\n" + evidence if request.one_pass else evidence + "\n\n" + answer
+        question_answer = answer
         if actual_alert and alert_status == "NORMAL":
             alert_status = "WARNING"
         impact_text = _direct_impact_summary(impact_results) if show_impact_results else ""
@@ -1541,15 +2260,29 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
             answer += "\n\n" + impact_text
         elif show_impact_results:
             answer += "\n\n현재 센서 기준 정량 피해영향 결과는 확보되지 않았습니다."
+        if recent_virtual_actions:
+            last = recent_virtual_actions[-1]
+            if float(frame.get("time_s") or 0) - float(last.get("issued_s") or 0) <= 15:
+                label = {"confirmed": "완료", "failed": "실패", "commanded": "동작 확인 대기"}.get(
+                    last.get("status"), "피드백 확인 중")
+                answer += (f"\n\n**최근 가상 안전조치:** {last.get('kind')} / {last.get('target')} · {label}. "
+                           "밸브 피드백과 유량 변화는 안전 대응 리모콘의 사건 기록에서 확인하세요.")
         analysis_answer = answer
-        guidance = render_guidance(response_plans, actual_alert=actual_alert)
+        wants_procedures = (request.trigger != "manual" or not request.one_pass or
+                            any(term in request.question for term in
+                                ("조치", "대응", "대피", "격리", "차단", "복구", "재가동", "안전관리", "절차")))
+        guidance = render_guidance(response_plans, actual_alert=actual_alert) if wants_procedures else ""
         if guidance:
             answer += "\n\n---\n\n" + guidance
         return {
             "time_s": frame.get("time_s"), "trigger": request.trigger,
+            "scenario_mode": bool(request.scenario_mode),
             "answer": answer, "analysis_answer": analysis_answer,
-            "response_guidance": structured_guidance(response_plans, actual_alert=actual_alert),
-            "model": "SAGA 직답 · 센서 기반 계산",
+            "question_answer": question_answer,
+            "response_guidance": (structured_guidance(response_plans, actual_alert=actual_alert)
+                                  if wants_procedures else None),
+            "model": llm_model,
+            "llm_error": llm_error,
             "active_rule_ids": sorted(ids), "sensor_count": len(sensor_values),
             "risk_assessment": {"status": alert_status, "score": analysis.get("score"),
                                 "findings": analysis.get("findings") or [],
@@ -1567,6 +2300,12 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "flame_detector_signals": frame.get("flame_detectors") or {},
         "active_faults":frame.get("active_faults"),
         "analysis":analysis,
+        "virtual_safety_actions": [{key: row.get(key) for key in
+            ("kind", "target", "issued_s", "completed_s", "status", "baseline_metrics", "after_metrics")}
+            for row in recent_virtual_actions],
+        "virtual_safety_state": {key: virtual_safety.get(key) for key in
+            ("ventilation", "cooling", "personnel", "evacuated", "access_restricted",
+             "power_isolated", "recovery_approved")},
         "emergency_response_guidance":prompt_guidance(response_plans),
         "relief_valves_open":frame.get("relief_valves_open") or [],
         "relief_valve_settings":{key: value for key, value in
@@ -1600,6 +2339,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "계산 결과가 없으면 사고 범위를 추정값처럼 제시하지 마세요. 계산이 요청되지 않았다는 문구를 출력하지 마세요. 제공된 HAZOP 규칙에 없는 규칙 ID나 임계값을 만들지 마세요. "
         "사용자에게는 계산기 제품명 대신 '피해영향예측'이라고 표기하세요. "
         "내부 규칙이나 DB 명칭을 밝히지 말고 센서값, 설비 상태, 주의 원인과 운전 조치만 설명하세요. "
+        "virtual_safety_actions가 있으면 명령과 완료 피드백, 조치 전후 센서값을 구분해 설명하세요. 실패한 조치를 성공했다고 쓰지 마세요. "
         "emergency_response_guidance가 있으면 현재 신호와 연결한 대응 우선순위를 요약하세요. 자료 밖의 절차를 만들지 마세요. 상세한 즉시 조치, 안정화 확인, 재가동 조건, 예방·안전관리는 서버가 별도로 표시합니다. "
         "현장 승인 비상계획과 소방 지휘를 우선하고, 모의 영향 반경을 확정 대피거리로 쓰지 마세요. 공급이 계속되는 수소 화염을 임의로 끄도록 권하지 마세요. "
         "current_alert_status와 안전밸브 개방 상태가 현재 경보 상태의 근거입니다. 활성 내부 규칙이 없더라도 안전밸브가 열려 있으면 경보를 유지하세요. "
@@ -1654,6 +2394,39 @@ async def saga_analysis_stream(job_id: str, request: SagaAnalysisInput) -> Strea
         lambda: saga_analysis(job_id, request),
         "센서 상태와 피해영향예측 결과를 확인하고 있습니다…" if request.trigger == "alarm"
         else "현재 공정 신호를 분석하고 있습니다…",
+    )
+
+
+@app.post("/api/simulations/{job_id}/saga-analysis/direct")
+async def saga_analysis_direct(job_id: str, request: SagaAnalysisInput) -> dict[str, Any]:
+    """Calculate consequences, then get one LLM answer without RAG/review."""
+    return await saga_analysis(job_id, request.model_copy(update={"direct": True, "one_pass": True}))
+
+
+@app.post("/api/simulations/{job_id}/saga-analysis/direct/stream")
+async def saga_analysis_direct_stream(job_id: str, request: SagaAnalysisInput) -> StreamingResponse:
+    return _stream_analysis_response(
+        lambda: saga_analysis_direct(job_id, request),
+        "현재 센서와 피해영향예측 결과를 확인하고 있습니다…",
+    )
+
+
+@app.post("/api/simulations/{job_id}/assistants/main")
+async def main_monitor_assistant(job_id: str, request: MainAssistantInput) -> dict[str, Any]:
+    """Main-screen assistant boundary with no sensor-workbench or RAG modes."""
+    internal = SagaAnalysisInput(
+        provider=request.provider, question=request.question, trigger=request.trigger,
+        scenario_mode=request.scenario_mode, direct=True, one_pass=True, history=request.history,
+    )
+    return await saga_analysis(job_id, internal)
+
+
+@app.post("/api/simulations/{job_id}/assistants/main/stream")
+async def main_monitor_assistant_stream(job_id: str,
+                                        request: MainAssistantInput) -> StreamingResponse:
+    return _stream_analysis_response(
+        lambda: main_monitor_assistant(job_id, request),
+        "현재 센서와 피해영향예측 결과를 확인하고 있습니다…",
     )
 
 
@@ -1849,6 +2622,7 @@ def _sensor_analysis_context(job_id: str, sensor_id: str,
                       "cause": rule["원인후보"], "progression": rule["사고_전개조건"],
                       "diagnostic_limit": rule["진단한계"],
                       "response_plan_id": classify_rule(rule),
+                      "executable_actions": suggested_actions(classify_rule(rule), sensor["node_id"]),
                       "response_guidance": rule.get("비상대응_단계") or {},
                       "response_source_ids": rule.get("대응근거_출처") or [],
                       "active": bool(result.get("active")), "state": result.get("state") or "PENDING_DATA",
@@ -1904,6 +2678,7 @@ def _sensor_analysis_context(job_id: str, sensor_id: str,
     active_rule_count = sum(bool(rule["active"]) for rule in rules)
     payload = {"time_s": frame.get("time_s"), "sensor": sensor, "node": node,
                "mapping": mapping, "signal": signal, "rules": rules,
+               "virtual_safety": frame.get("virtual_safety") or {},
                "response_plans": {plan_id: plans[plan_id] for plan_id in plan_ids},
                "response_sources": {key: playbooks["sources"][key]
                                     for plan_id in plan_ids for key in plans[plan_id]["sources"]},
@@ -1928,6 +2703,181 @@ def simulation_sensor_detail(job_id: str, sensor_id: str, time_s: float | None =
     return payload
 
 
+def _sensor_response_guidance(
+    frame: dict[str, Any],
+    catalog: dict[str, Any],
+    question: str,
+    active_rules: list[dict[str, Any]],
+    related_rules: list[dict[str, Any]],
+    applicable_plan_ids: dict[str, None],
+    known_plans: dict[str, dict[str, Any]],
+) -> tuple[str, dict[str, Any] | None]:
+    """Return trusted response steps that a generated answer cannot omit.
+
+    The LLM explains the current evidence. Emergency and prevention steps come
+    from the versioned response catalogue so provider/model changes cannot
+    silently remove operator guidance from the selected-sensor view.
+    """
+    relevant_rules = active_rules + related_rules
+    actual_alert = bool(relevant_rules)
+    if actual_alert:
+        selected = response_selection(frame, catalog, question, "alarm", limit=None)
+        rule_ids = {str(rule.get("rule_id")) for rule in relevant_rules}
+        plan_ids = set(applicable_plan_ids)
+        focused = [item for item in selected
+                   if str(item["plan"].get("rule_id")) in rule_ids
+                   or (not item["plan"].get("rule_id") and item["plan"].get("id") in plan_ids)]
+        if not focused:
+            evidence = [str(rule.get("scenario") or rule.get("rule_id") or "관련 경보")
+                        for rule in relevant_rules[:4]]
+            focused = [{"plan": known_plans[plan_id], "evidence": evidence, "score": 0}
+                       for plan_id in applicable_plan_ids if plan_id in known_plans][:4]
+
+        def unique(items: list[Any], limit: int | None = None) -> list[Any]:
+            result, seen = [], set()
+            for item in items:
+                key = re.sub(r"\s+", " ", str(item)).strip()
+                if not key or key in seen:
+                    continue
+                seen.add(key)
+                result.append(item)
+                if limit is not None and len(result) >= limit:
+                    break
+            return result
+
+        # Several thresholds from one detector are evidence for one developing
+        # event, not separate incidents. Group by response family before making
+        # the operator checklist.
+        grouped: dict[str, dict[str, Any]] = {}
+        for item in focused:
+            plan_id = str(item["plan"]["id"])
+            base = known_plans.get(plan_id, item["plan"])
+            group = grouped.setdefault(plan_id, {"id": plan_id, "title": base["title"],
+                                                  "plan": base, "evidence": [], "rules": []})
+            group["evidence"].extend(item.get("evidence") or [])
+            if item["plan"].get("rule_id"):
+                group["rules"].append(item["plan"].get("title"))
+        groups = list(grouped.values())[:4]
+        for group in groups:
+            group["evidence"] = unique(group["evidence"], 4)
+            group["rules"] = unique(group["rules"], 3)
+
+        rules_by_plan: dict[str, list[dict[str, Any]]] = {}
+        for rule in relevant_rules:
+            rules_by_plan.setdefault(str(rule.get("response_plan_id")), []).append(rule)
+        executable: list[dict[str, str]] = []
+        for group in groups:
+            linked = rules_by_plan.get(group["id"]) or relevant_rules[:1]
+            for rule in linked:
+                executable.extend(suggested_actions(group["id"], rule.get("node_id")))
+        unique_actions, action_keys = [], set()
+        for action in executable:
+            key = (action["kind"], action["target"])
+            if key not in action_keys:
+                action_keys.add(key)
+                unique_actions.append(action)
+
+        plans_for_groups = [group["plan"] for group in groups]
+        recognition = unique([step for plan in plans_for_groups for step in plan["recognition"]], 5)
+        immediate = unique([action["label"] for action in unique_actions]
+                           + [step for plan in plans_for_groups for step in plan["immediate"]], 9)
+        stabilize = unique([step for plan in plans_for_groups for step in plan["stabilize"]], 7)
+        restart = unique([step for plan in plans_for_groups for step in plan["restart"]], 6)
+        prevention = unique([step for plan in plans_for_groups for step in plan["prevention"]], 9)
+        playbooks = load_playbooks()
+        if len(playbooks.get("common_response") or []) >= 4:
+            immediate = unique(immediate + [playbooks["common_response"][3]], 10)
+
+        def numbered(steps: list[str]) -> str:
+            return "\n".join(f"{index}. {step}" for index, step in enumerate(steps, 1))
+
+        scenario_lines = []
+        for index, group in enumerate(groups, 1):
+            evidence = "; ".join(group["evidence"]) or "현재 선택 센서와 관련 구역 신호"
+            scenario_lines.append(f"{index}. **{group['title']}**\n   - 판단 근거: {evidence}")
+        alert_count = len(relevant_rules)
+        family_count = len(groups)
+        sections = [
+            "### 종합 안전판단",
+            (f"> **판단** 서로 연동된 경보 조건 {alert_count}건을 별도 사고로 나열하지 않고, "
+             f"공통 원인과 사고 전개가 같은 **{family_count}개 대응 시나리오**로 통합했습니다. "
+             "아래 순서대로 실행하고, 각 단계의 완료 조건을 확인한 뒤 다음 단계로 이동하세요."),
+            "#### 발생 가능한 시나리오\n" + "\n".join(scenario_lines),
+            "### 즉시 실행할 단계별 대응",
+            "**1단계 · 상황 확인**\n" + numbered(recognition),
+            "**2단계 · 공정 정지·격리 및 인원 보호**\n" + numbered(immediate),
+            "**3단계 · 안정화 확인**\n" + numbered(stabilize),
+            "**4단계 · 복구·재가동 전 확인**\n" + numbered(restart),
+            "### 단계별 예방·안전관리",
+        ]
+        prevention_groups = {"설비 건전성 관리": [], "검지·차단 보호계통 관리": [],
+                             "절차·교육·기록 관리": []}
+        for step in prevention:
+            if any(term in step for term in ("검지", "경보", "차단", "인터록", "환기", "ESD")):
+                key = "검지·차단 보호계통 관리"
+            elif any(term in step for term in ("훈련", "대피", "연락", "도면", "절차", "기록")):
+                key = "절차·교육·기록 관리"
+            else:
+                key = "설비 건전성 관리"
+            prevention_groups[key].append(step)
+        stage_number = 1
+        for title, steps in prevention_groups.items():
+            if steps:
+                sections.append(f"**{stage_number}단계 · {title}**\n" + numbered(steps))
+                stage_number += 1
+
+        source_ids = unique([source_id for plan in plans_for_groups
+                             for source_id in plan.get("sources", [])])
+        sources = [playbooks["sources"][source_id] for source_id in source_ids
+                   if source_id in playbooks["sources"]]
+        if sources:
+            sections.append("**근거 자료**\n" + ", ".join(
+                f"[{source['title']}]({source['url']})" for source in sources))
+        consolidated = {
+            "actual_alert": True,
+            "mode": "consolidated",
+            "intro": "연동 경보를 공통 원인별로 묶은 단일 운전자 행동계획입니다.",
+            "common_steps": [],
+            "scenarios": [{"id": group["id"], "title": group["title"],
+                           "evidence": group["evidence"], "combined_conditions": group["rules"]}
+                          for group in groups],
+            "plans": [{"id": "consolidated_response", "title": "종합 대응계획",
+                       "evidence": unique([entry for group in groups for entry in group["evidence"]], 8),
+                       "recognition": recognition, "immediate": immediate,
+                       "stabilize": stabilize, "restart": restart,
+                       "prevention": prevention, "executable_actions": unique_actions,
+                       "sources": sources}],
+        }
+        return "\n\n".join(sections), consolidated
+
+    # Healthy sensors deliberately show routine prevention only. Emergency,
+    # stabilization and restart instructions belong to warning/alarm states.
+    playbooks = load_playbooks()
+    source_index = playbooks["sources"]
+    parts = ["### 예방·안전관리",
+             "현재 선택 센서는 정상 범위입니다. 아래 항목을 평상시 점검과 사고 예방에 활용하세요."]
+    structured_plans = []
+    for plan_id in list(applicable_plan_ids)[:4]:
+        plan = known_plans.get(plan_id)
+        if not plan:
+            continue
+        prevention = list(dict.fromkeys(str(step) for step in plan.get("prevention", []) if step))
+        if not prevention:
+            continue
+        sources = [source_index[key] for key in plan.get("sources", []) if key in source_index]
+        section = [f"#### {plan['title']}", "\n".join(f"- {step}" for step in prevention)]
+        if sources:
+            section.append("근거 자료: " + ", ".join(
+                f"[{source['title']}]({source['url']})" for source in sources))
+        parts.append("\n\n".join(section))
+        structured_plans.append({"id": plan["id"], "title": plan["title"],
+                                 "prevention": prevention, "sources": sources})
+    if not structured_plans:
+        return "", None
+    return "\n\n".join(parts), {"actual_alert": False, "common_steps": [],
+                                   "plans": structured_plans}
+
+
 @app.post("/api/simulations/{job_id}/sensors/{sensor_id}/analyze")
 async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                                     request: SensorAnalysisInput) -> dict[str, Any]:
@@ -1937,7 +2887,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
     alert = payload["sensor_status"] == "ALERT"
     impact_results: list[dict[str, Any]] = []
     current_triggers = [rule for rule in active_rules + related_rules if rule.get("state") == "TRIGGER"]
-    if current_triggers:
+    if current_triggers or _impact_requested(request.question):
         backend = await asyncio.to_thread(load_hyram_backend)
         assessed = await asyncio.to_thread(assess_sensor_cases, frame, catalog, backend,
                                            [payload["sensor"]["node_id"]])
@@ -1966,6 +2916,10 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
             if payload["sensor_status"] == "SIGNAL_ISSUE":
                 item["recognition"] = plan["recognition"]
         plan_context.append(item)
+    response_markdown, response_guidance = _sensor_response_guidance(
+        frame, catalog, request.question, active_rules, related_rules,
+        applicable_plan_ids, known_plans,
+    )
     if request.direct:
         # Scope the direct evaluation to the selected equipment. The detailed
         # rules and staged plans are already returned by the sensor detail API.
@@ -1974,6 +2928,10 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         direct_result = await asyncio.to_thread(
             _invoke_saga_hazop_direct, focused_frame, catalog, str(job_id),
             request.question or f"{sensor_id} 현재 상태", impact_results,
+        )
+        direct_result = _align_direct_evaluation(
+            direct_result, active_rules + related_rules,
+            "WARNING" if current_triggers else "NORMAL",
         )
         signal = payload["signal"]
         value = signal.get("value")
@@ -1986,6 +2944,10 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         if current_rules:
             names = list(dict.fromkeys(str(rule.get("scenario") or "이상 징후") for rule in current_rules))
             lines.append("**현재 주의·경보:** " + ", ".join(names[:4]))
+            if any(term in request.question for term in ("왜", "원인", "위험", "상세")):
+                causes = list(dict.fromkeys(str(rule.get("cause")) for rule in current_rules if rule.get("cause")))
+                if causes:
+                    lines.append("**가능한 원인:** " + "; ".join(causes[:3]))
         elif active_rules or related_rules:
             lines.append("**경보 이력 유지:** 현재값과 과거 경보 유지 상태를 구분해 확인합니다.")
         elif payload["sensor_status"] == "SIGNAL_ISSUE":
@@ -2009,28 +2971,68 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         impact_text = _direct_impact_summary(impact_results)
         if impact_text:
             lines.append(impact_text)
-        if current_rules:
-            actions = list(dict.fromkeys(str(action) for plan in plan_context
-                for action in (plan.get("immediate") or []) if action))[:3]
-            if actions:
-                lines.append("**우선 대응**\n" + "\n".join(f"- {action}" for action in actions))
-        else:
-            prevention = list(dict.fromkeys(str(action) for plan in plan_context
-                for action in (plan.get("prevention") or []) if action))[:2]
-            if prevention:
-                lines.append("**안전관리**\n" + "\n".join(f"- {action}" for action in prevention))
+        recent_actions = (payload.get("virtual_safety") or {}).get("actions") or []
+        if recent_actions:
+            action = recent_actions[-1]
+            if float(payload["time_s"] or 0) - float(action.get("issued_s") or 0) <= 15:
+                lines.append("**최근 가상 조치** " + str(action.get("kind")) + " / " +
+                             str(action.get("target")) + " · " + str(action.get("status")))
+        answer = "\n\n".join(lines)
+        llm_model = "SAGA 직답 · 센서 기반 계산"
+        llm_error = None
+        if request.one_pass:
+            prompt_data = {
+                "time_s": payload["time_s"], "selected_sensor": sensor_id,
+                "selected_signal": signal, "sensor_status": payload["sensor_status"],
+                "equipment": label, "related_signals": payload["related_signals"],
+                "impact_results": impact_results,
+                "current_conditions": current_rules,
+                "retained_conditions": [rule for rule in active_rules + related_rules
+                                         if rule.get("state") != "TRIGGER"][:4],
+                "gas_detection": gas,
+                "current_release": release,
+                "consolidated_response_guidance": response_guidance,
+            }
+            try:
+                reply = await _invoke_sensor_assistant_selected(
+                    sensor_id, request.question, prompt_data, request.provider,
+                    "user_query" if request.question.strip() else "automatic_analysis",
+                    stream_output=True,
+                )
+                llm_answer = _safe_saga_text(str(reply.get("answer") or ""))
+                if llm_answer and _direct_answer_conflicts_with_signals(
+                    llm_answer, alert=bool(current_rules),
+                    gas_observed=bool(gas.get("hydrogen_observed")),
+                    physical_leak=release.get("physical_leak_g_s", 0) > .001,
+                    impact_calculated=bool(impact_results),
+                ):
+                    llm_model = "SAGA 직답 · 센서값 검증"
+                elif llm_answer:
+                    verified = [lines[1]]
+                    if gas.get("hydrogen_observed"):
+                        verified.append(f"수소 농도 {gas['value_volpct_h2']:.3f} vol% 관측")
+                    if release.get("physical_leak_g_s", 0) > 0.001:
+                        verified.append(f"모의 공정 누출 {release['physical_leak_g_s']:.3f} g/s")
+                    if impact_text:
+                        verified.append(impact_text)
+                    answer = llm_answer + "\n\n**현재 확인값**\n" + "\n".join(
+                        f"- {item}" if not item.startswith("###") else item for item in verified)
+                    llm_model = str(reply.get("model") or "SAGA 단일 답변")
+                else:
+                    llm_error = "직답 LLM이 빈 응답을 반환했습니다."
+            except (URLError, HTTPError, TimeoutError, OSError, ValueError) as exc:
+                llm_error = ("SAGA 직답 LLM에 연결하지 못했습니다. SAGA 서버의 직답 API와 선택한 제공자 설정을 "
+                             f"확인하세요. ({exc})")
+            if llm_error:
+                answer = f"**{llm_error}**\n\n" + answer
+        if response_markdown:
+            answer = answer.rstrip() + "\n\n---\n\n" + response_markdown
         return {"sensor_id": sensor_id, "time_s": payload["time_s"],
-                "answer": "\n\n".join(lines), "model": "SAGA 직답 · 센서 기반 계산",
+                "answer": answer, "model": llm_model, "llm_error": llm_error,
                 "impact_results": impact_results,
                 "active_rule_count": len(active_rules), "related_active_count": len(related_rules),
-                "sensor_status": payload["sensor_status"], "hazop_direct": direct_result}
-    scenario_guidance = [{"rule_id": rule["rule_id"], "scenario": rule["scenario"],
-                          "sensor_id": rule["sensor_id"] if "sensor_id" in rule else sensor_id,
-                          "trigger": f"{rule.get('expression', rule.get('sensor_id', sensor_id))} {rule.get('operator', '')} {rule.get('threshold', '')} {rule.get('unit', '')}",
-                          "stages": {stage: (rule.get("response_guidance") or {}).get(stage, [])[:count]
-                                     for stage, count in (("recognition", 1), ("immediate", 2),
-                                                          ("stabilize", 1), ("restart", 1), ("prevention", 1))}}
-                         for rule in active_rules + related_rules] if alert or related_rules else []
+                "sensor_status": payload["sensor_status"], "hazop_direct": direct_result,
+                "response_guidance": response_guidance}
     compact_rules = lambda rows: [{key: rule.get(key) for key in
                                    ("rule_id", "sensor_id", "scenario", "state", "condition_status",
                                     "severity", "evaluated_value", "threshold", "unit", "quality", "cause")
@@ -2065,7 +3067,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         "active_scenarios": compact_rules(active_rules),
         "same_equipment_active_signals": compact_rules(related_rules),
         "related_signals": payload["related_signals"],
-        "scenario_specific_guidance": scenario_guidance,
+        "consolidated_response_guidance": response_guidance,
         "monitored_scenarios": [{"scenario": rule["scenario"], "sensor_id": sensor_id,
                                   "threshold": rule["threshold"], "unit": rule["unit"],
                                   "state": rule["state"]} for rule in payload["rules"]],
@@ -2080,7 +3082,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
     if alert:
         retained_only = not any(rule.get("state") == "TRIGGER" for rule in active_rules)
         status_instruction = (("선택 센서의 경보 임계값은 현재 재초과되지 않았고 이전 경보가 유지 중입니다. 현재 경보와 경보 이력을 구분하되, 비영점 가스 농도나 모의 누출을 부정하지 마세요. "
-                               if retained_only else "선택 센서에서 동시에 활성화된 모든 시나리오를 각각 검토하고, 공통 원인·상호 악화 가능성·대응 우선순위를 종합하세요. ") +
+                               if retained_only else "선택 센서와 관련 구역의 동시 경보를 공통 원인별 시나리오로 묶고, 상호 악화 가능성과 대응 우선순위를 종합하세요. ") +
                               "한 시나리오만 활성이라도 제공된 원인 후보와 연동 신호로 복수의 가능한 전개 경로를 비교하되, 확인되지 않은 경로를 발생 사고로 단정하지 마세요. "
                               "활성 시나리오와 아직 기준에 도달하지 않은 감시 시나리오를 명확히 구분하세요. ")
     elif payload["sensor_status"] == "SIGNAL_ISSUE":
@@ -2101,12 +3103,13 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         "current_gas_alerts가 비어 있어도 수소 농도 관측이나 실제 모의 누출이 없다는 뜻이 아닙니다. 세 상태를 구분하세요. "
         "simulated_release_evidence의 physical_leak_g_s가 양수이면 모의 공정 누출, relief_discharge_g_s가 양수이면 안전밸브 방출이 진행 중입니다. "
         "현재 방출률과 가스 농도를 먼저 명시하고, 진행 중인 누출을 '누출 없음'으로 답하지 마세요. "
-        "경보 시 scenario_specific_guidance의 각 시나리오를 따로 분석하고 단계별 조치를 현재 센서와 연결하세요. "
+        "경보 시 여러 임계값 조건을 각각 독립 사고로 나열하지 말고 공통 원인과 전개가 같은 발생 가능 시나리오로 종합하세요. "
+        "consolidated_response_guidance는 서버가 최종 답변 뒤에 붙이는 단일 행동계획이므로 조치 문장을 반복하지 말고 현재 판단과 근거를 설명하세요. "
         + status_instruction +
         "실제 누출, 안전밸브 방출, 센서값 기준 가정 누출을 혼동하지 마세요. 계산된 피해영향 수치만 언급하고 안전거리를 확정하지 마세요. "
         "사용자에게 HAZOP·DB·규칙 ID나 계산 엔진 제품명을 노출하지 마세요. "
         + ("한국어 Markdown으로 '현재 상태', '관련 구역의 경보·이력', '예방·안전관리' 순서로 답하세요. "
-           if not alert else "한국어 Markdown으로 '현재 판정', '동시 시나리오와 상호 영향', '우선 대응', '지속 관리' 순서로 답하세요. ") +
+           if not alert else "한국어 Markdown으로 '현재 판정', '발생 가능 시나리오', '판단 근거와 피해영향' 순서로 간결하게 답하세요. 단계별 대응과 예방관리는 서버의 통합 행동계획에서 제시합니다. ") +
         ("사용자 질문에 먼저 직접 답하고, 관측값·관련 신호·원인 후보·다음 확인사항을 근거와 함께 상세히 풀어주세요. "
          "서로 다른 내용을 제목, 짧은 표, 번호 목록으로 구분하세요. 핵심 판단과 주의사항은 Markdown 인용문(> **판단** …, > **주의** …)으로 표현하세요. "
          "입력이 뒷받침하지 않는 수치나 상황을 만들지 말고 확정 관측·계산·가정을 구분하세요. 원시 HTML이나 이모지는 쓰지 마세요. "
@@ -2141,11 +3144,14 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         if conflicting_release or conflicting_gas:
             answer = "현재 확인된 모의 신호를 기준으로 누출 위치와 주변 설비를 확인하고, 가운데 표시된 단계별 대응을 적용하세요."
         answer = "**현재 확인된 신호** · " + " · ".join(evidence_lines) + "\n\n" + answer
+    if response_markdown:
+        answer = (answer or "선택 센서의 상태를 확인했습니다.").rstrip() + "\n\n---\n\n" + response_markdown
     return {"sensor_id": sensor_id, "time_s": payload["time_s"],
             "answer": answer or "선택 센서의 상태를 확인했습니다.",
             "model": reply.get("model", ""), "impact_results": impact_results,
             "active_rule_count": len(active_rules), "related_active_count": len(related_rules),
-            "sensor_status": payload["sensor_status"]}
+            "sensor_status": payload["sensor_status"],
+            "response_guidance": response_guidance}
 
 
 @app.post("/api/simulations/{job_id}/sensors/{sensor_id}/analyze/stream")
@@ -2154,6 +3160,43 @@ async def analyze_simulation_sensor_stream(job_id: str, sensor_id: str,
     return _stream_analysis_response(
         lambda: analyze_simulation_sensor(job_id, sensor_id, request),
         "선택 센서와 관련 설비 신호를 분석하고 있습니다…",
+    )
+
+
+@app.post("/api/simulations/{job_id}/sensors/{sensor_id}/analyze/direct")
+async def analyze_simulation_sensor_direct(job_id: str, sensor_id: str,
+                                           request: SensorAnalysisInput) -> dict[str, Any]:
+    """Selected-sensor one-pass LLM answer without the RAG/review pipeline."""
+    return await analyze_simulation_sensor(job_id, sensor_id,
+                                           request.model_copy(update={"direct": True, "one_pass": True}))
+
+
+@app.post("/api/simulations/{job_id}/sensors/{sensor_id}/analyze/direct/stream")
+async def analyze_simulation_sensor_direct_stream(job_id: str, sensor_id: str,
+                                                  request: SensorAnalysisInput) -> StreamingResponse:
+    return _stream_analysis_response(
+        lambda: analyze_simulation_sensor_direct(job_id, sensor_id, request),
+        "선택 센서와 관련 설비 신호를 확인하고 있습니다…",
+    )
+
+
+@app.post("/api/simulations/{job_id}/assistants/sensors/{sensor_id}")
+async def selected_sensor_assistant(job_id: str, sensor_id: str,
+                                    request: SensorAssistantInput) -> dict[str, Any]:
+    """Selected-sensor assistant boundary with no main-chat history or RAG modes."""
+    internal = SensorAnalysisInput(
+        provider=request.provider, question=request.question, time_s=request.time_s,
+        direct=True, one_pass=True,
+    )
+    return await analyze_simulation_sensor(job_id, sensor_id, internal)
+
+
+@app.post("/api/simulations/{job_id}/assistants/sensors/{sensor_id}/stream")
+async def selected_sensor_assistant_stream(job_id: str, sensor_id: str,
+                                           request: SensorAssistantInput) -> StreamingResponse:
+    return _stream_analysis_response(
+        lambda: selected_sensor_assistant(job_id, sensor_id, request),
+        "선택 센서와 관련 설비 신호를 확인하고 있습니다…",
     )
 
 

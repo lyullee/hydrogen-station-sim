@@ -285,7 +285,8 @@ def test_alarm_stream_uses_available_sensor_pair_and_emits_live_tokens(monkeypat
         assert captured["direct_impacts"][0]["node_id"] == "N08"
         assert captured["direct_impacts"][0]["maximum_heat_flux_w_m2"] == 5000.0
         assert response.text.index("event: token") < response.text.index("event: result")
-        assert "중압 저장뱅크" in response.text
+        # Use the simulator's equipment name, not an unfiltered SAGA SOP.
+        assert "중압 저장 뱅크" in response.text
     finally:
         with api._jobs_lock:
             api._jobs.pop(job_id, None)

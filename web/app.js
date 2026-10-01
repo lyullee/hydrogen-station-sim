@@ -102,6 +102,14 @@ async function streamJob(id) {
   });
 }
 window.connectStationJob=id=>streamJob(id).catch(e=>window.notifyOperator?.(e.message));
+window.resetStationMonitor=()=>{
+  state.socket?.close();state.generation++;stopPlayback();
+  try{localStorage.removeItem('hrs-active-job');}catch{}
+  const url=new URL(location.href);url.searchParams.delete('job');
+  // Reloading the monitor is deliberate: every transient chart, alarm, 3D effect,
+  // process highlight and dialog returns to the same verified initial state.
+  location.replace(url.pathname+url.search+url.hash);
+};
 window.updateConnectionDisplay=()=>{
   const labels={idle:'시나리오 대기',connecting:'모델 연결 중',connected:'실시간 수신',reconnecting:'재연결 중',complete:'계산 완료 · 이력',failed:'계산 / 연결 오류'};
   const elapsed=state.lastReceived?(Date.now()-state.lastReceived)/1000:0;
@@ -125,7 +133,7 @@ function initializeLiveResult() {
       pcv_flow_g_s:[], nozzle_flow_g_s:[], total_leak_flow_g_s:[],
       pcv_1_flow_g_s:[], pcv_2_flow_g_s:[], nozzle_1_flow_g_s:[], nozzle_2_flow_g_s:[], active_faults:[],
       hose_pressure_mpa:[], hose_temperature_c:[], bank_pressure_mpa:{ low:[], medium:[], high:[] },
-      dispatch_bank:[], dispatch_bank_2:[], recharge_bank:[], process_activity:[], process_operations:[], esd:[], leaks:{}
+      dispatch_bank:[], dispatch_bank_2:[], recharge_bank:[], process_activity:[], process_operations:[], virtual_safety:[], esd:[], leaks:{}
     },
     events:[], risk_updates:[], hazop:{frames:[]}
   };
@@ -167,6 +175,7 @@ function applyLiveFrame(frame) {
   s.recharge_bank.push(frame.recharge_bank);
   s.process_activity.push(frame.process_activity || {});
   s.process_operations.push(frame.process_operations || null);
+  s.virtual_safety.push(frame.virtual_safety || null);
   s.esd.push(frame.esd);
   for (const [name, pressure] of Object.entries(frame.bank_pressure_mpa)) {
     if (!s.bank_pressure_mpa[name]) s.bank_pressure_mpa[name] = [];
@@ -484,7 +493,12 @@ $('exportTrend').addEventListener('click',()=>{
   const csv=[keys.join(','),...s.time_s.map((_,i)=>keys.map(k=>Number.isFinite(s[k]?.[i])?s[k][i]:'').join(','))].join('\r\n');
   const url=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='hrs-telemetry.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 });
-document.querySelectorAll('.process .unit,.process .bank').forEach(node=>node.addEventListener('click',()=>window.openStationCctv?.(node.dataset.bank || node.id || 'site')));
+const flowTrendNodes={supplyUnit:['N01'],compressorUnit:['N06'],low:['N07'],medium:['N08'],high:['N09'],pcvUnit:['N11','N15'],coolerUnit:['N12','N16'],vehicleUnit:['N14','N18']};
+document.querySelectorAll('.process .unit,.process .bank').forEach(node=>node.addEventListener('click',()=>{
+  const key=node.dataset.bank||node.id;
+  const nodes=flowTrendNodes[key]||[];
+  window.openEquipmentTrendsFor?.(nodes,`${node.querySelector('b')?.textContent||'선택 설비'} · 온도·압력·유량 추세`);
+}));
 window.addEventListener('resize',()=>{if(state.result){drawChart();drawCursor();}});
 setInterval(()=>{if($('calculationMonitor').open)renderCalculationMonitor();},500);
 checkHealth();
@@ -496,7 +510,7 @@ window.addEventListener('station-ready',drawChart);
 
 // The process schematic supports keyboard selection and has no invented idle readings.
 document.querySelectorAll('.flow-map .unit,.flow-map .bank').forEach(unit=>{
-  unit.tabIndex=0;unit.setAttribute('role','button');unit.setAttribute('aria-label',unit.querySelector('b')?.textContent+' · CCTV 보기');
+  unit.tabIndex=0;unit.setAttribute('role','button');unit.setAttribute('aria-label',unit.querySelector('b')?.textContent+' · 온도 압력 유량 추세 보기');
   unit.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();unit.click();}});
 });
 ['bankHigh','bankMedium','bankLow','flowLabel','flowSplitLabel'].forEach(id=>$(id).textContent='—');

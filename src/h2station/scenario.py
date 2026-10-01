@@ -101,9 +101,9 @@ def build_reference_scenario(
         supply=lambda time_s: SupplyState(90.0e6, config.ambient_temperature_k),
         pcv=RestrictionParameters(flow_area_m2=1.5e-6),
         precooler=PrecoolerParameters(
-            hydrogen_coolant_ua_w_k=900.0,
-            coolant_thermal_capacity_j_k=1.5e5,
-            chiller_ua_w_k=3000.0,
+            hydrogen_coolant_ua_w_k=2200.0,
+            coolant_thermal_capacity_j_k=3.0e5,
+            chiller_ua_w_k=6000.0,
             hydrogen_pressure_drop_pa=1.0e5,
         ),
         hose=HoseParameters(
@@ -129,9 +129,9 @@ def build_reference_scenario(
         supply=lambda time_s: SupplyState(90.0e6, config.ambient_temperature_k),
         pcv=RestrictionParameters(flow_area_m2=1.5e-6),
         precooler=PrecoolerParameters(
-            hydrogen_coolant_ua_w_k=900.0,
-            coolant_thermal_capacity_j_k=1.5e5,
-            chiller_ua_w_k=3000.0,
+            hydrogen_coolant_ua_w_k=2200.0,
+            coolant_thermal_capacity_j_k=3.0e5,
+            chiller_ua_w_k=6000.0,
             hydrogen_pressure_drop_pa=1.0e5,
         ),
         hose=HoseParameters(
