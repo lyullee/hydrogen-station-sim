@@ -1,5 +1,11 @@
 # Hydrogen Station Dynamic Simulator
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23084421.svg)](https://doi.org/10.5281/zenodo.23084421)
+
+The badge DOI resolves to the latest archived release. Earlier versions retain their own DOIs.
+
+Original project software and associated documentation are available under the [MIT license](LICENSE). Bundled third-party libraries and assets retain their respective notices and terms.
+
 ## Current documentation
 
 - [Technical report](docs/TECHNICAL_REPORT.md): architecture, physical model, safety logic, APIs, LLM boundaries, validation and limits.
