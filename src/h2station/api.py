@@ -205,6 +205,7 @@ class VirtualTrainingCompareInput(BaseModel):
 
 class SagaAnalysisInput(BaseModel):
     provider: Literal["service_hub", "groq"] = "service_hub"
+    language: Literal["ko", "en"] = "ko"
     question: str = Field(default="현재 공정의 이상 징후와 조치 우선순위를 분석해 주세요.", max_length=1200)
     trigger: str = Field(default="manual", pattern="^(manual|periodic|alarm)$")
     scenario_mode: bool = False
@@ -217,6 +218,7 @@ class SagaAnalysisInput(BaseModel):
 
 class SensorAnalysisInput(BaseModel):
     provider: Literal["service_hub", "groq"] = "service_hub"
+    language: Literal["ko", "en"] = "ko"
     question: str = Field(default="", max_length=1200)
     time_s: float | None = Field(default=None, ge=0)
     direct: bool = False
@@ -227,6 +229,7 @@ class MainAssistantInput(BaseModel):
     """Public contract for the main monitor assistant only."""
 
     provider: Literal["service_hub", "groq"] = "service_hub"
+    language: Literal["ko", "en"] = "ko"
     question: str = Field(min_length=1, max_length=1200)
     trigger: Literal["manual", "periodic", "alarm"] = "manual"
     scenario_mode: bool = False
@@ -237,6 +240,7 @@ class SensorAssistantInput(BaseModel):
     """Public contract for the selected-sensor assistant only."""
 
     provider: Literal["service_hub", "groq"] = "service_hub"
+    language: Literal["ko", "en"] = "ko"
     question: str = Field(default="", max_length=1200)
     time_s: float | None = Field(default=None, ge=0)
 
@@ -1549,6 +1553,7 @@ async def _invoke_main_assistant_selected(question: str, context: dict[str, Any]
         "history": [{"role": turn.role, "content": turn.content[:1200]} for turn in history[-8:]],
         "request_kind": request_kind,
         "provider": provider,
+        "language": context.get("output_language", "ko"),
         "max_tokens": 2200,
     }
     sink = _saga_token_sink.get() if stream_output else None
@@ -1565,6 +1570,7 @@ async def _invoke_sensor_assistant_selected(sensor_id: str, question: str,
         "context": context,
         "request_kind": request_kind,
         "provider": provider,
+        "language": context.get("output_language", "ko"),
         "max_tokens": 2200,
     }
     sink = _saga_token_sink.get() if stream_output else None
@@ -1880,7 +1886,12 @@ def _direct_answer_conflicts_with_signals(
 
 
 def _impact_requested(question: str) -> bool:
-    return any(term in question for term in ("피해", "영향", "누출", "사고 범위", "위험 범위", "시나리오"))
+    normalized = question.lower()
+    return any(term in normalized for term in (
+        "피해", "영향", "누출", "사고 범위", "위험 범위", "시나리오",
+        "consequence", "impact", "leak", "release", "hazard distance",
+        "risk distance", "scenario", "thermal radiation", "overpressure",
+    ))
 
 
 def _normal_monitoring_text(answer: str) -> str:
@@ -1916,6 +1927,24 @@ def _mentioned_hazop_nodes(question: str, catalog: dict[str, Any]) -> list[dict[
         aliases.extend(["N13", "N14"])
     if "차량2" in normalized or "2번차량" in normalized:
         aliases.extend(["N17", "N18"])
+    if any(term in normalized for term in ("dispenser", "fuelinghose", "nozzle")):
+        first = any(term in normalized for term in ("dispenser1", "dispenser#1", "vehicle1", "car1"))
+        second = any(term in normalized for term in ("dispenser2", "dispenser#2", "vehicle2", "car2"))
+        aliases.extend(["N13"] if first and not second else ["N17"] if second and not first else ["N13", "N17"])
+    if any(term in normalized for term in ("storage", "bank", "cascade")):
+        banks = {"high": "N09", "medium": "N08", "mid": "N08", "low": "N07"}
+        requested = [node_id for word, node_id in banks.items() if word in normalized]
+        aliases.extend(requested or ["N07", "N08", "N09"])
+    if "compressor" in normalized:
+        aliases.extend(["N03", "N04", "N05", "N06"])
+    if "precool" in normalized or "chiller" in normalized:
+        aliases.extend(["N19", "N12", "N16"])
+    if "trailer" in normalized:
+        aliases.extend(["N01", "N02"])
+    if "vehicle1" in normalized or "car1" in normalized:
+        aliases.extend(["N13", "N14"])
+    if "vehicle2" in normalized or "car2" in normalized:
+        aliases.extend(["N17", "N18"])
     for node in catalog["nodes"]:
         if node["node_id"] in aliases and node not in matched:
             matched.append(node)
@@ -1929,6 +1958,13 @@ def _scenario_requested(request: SagaAnalysisInput) -> bool:
     if request.trigger != "manual":
         return False
     if "시나리오" in question and any(word in question for word in ("생성", "만들", "평가", "계산", "비교", "제안")):
+        return True
+    english = request.question.lower()
+    if "scenario" in english and any(word in english for word in
+                                     ("create", "generate", "evaluate", "calculate", "compare", "propose")):
+        return True
+    if any(word in english for word in ("leak", "release")) and any(word in english for word in
+            ("if", "hypothetical", "assume", "scenario")) and _impact_requested(english):
         return True
     hypothetical_leak = "누출" in question and any(word in question for word in ("발생했을때", "발생하면", "발생할경우", "가정", "예상", "만약"))
     impact_request = any(word in question for word in ("피해", "영향", "범위", "계산", "평가"))
@@ -2203,6 +2239,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
             if not selected_values:
                 selected_values = dict(list(sensor_values.items())[:36])
             prompt_data = {
+                "output_language": request.language,
                 "impact_calculation_attempted": show_impact_results,
                 "impact_results": impact_results[:3],
                 "recent_dialogue": [{"role": turn.role, "content": turn.content[:400]}
@@ -2250,29 +2287,29 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
             if llm_error:
                 answer = f"**{llm_error}**\n\n" + answer
         evidence = _direct_question_evidence(frame, catalog, request.question, mentioned_nodes)
-        if evidence:
+        if evidence and request.language == "ko":
             answer = answer + "\n\n" + evidence if request.one_pass else evidence + "\n\n" + answer
         question_answer = answer
         if actual_alert and alert_status == "NORMAL":
             alert_status = "WARNING"
         impact_text = _direct_impact_summary(impact_results) if show_impact_results else ""
-        if impact_text:
+        if impact_text and request.language == "ko":
             answer += "\n\n" + impact_text
-        elif show_impact_results:
+        elif show_impact_results and request.language == "ko":
             answer += "\n\n현재 센서 기준 정량 피해영향 결과는 확보되지 않았습니다."
-        if recent_virtual_actions:
+        if recent_virtual_actions and request.language == "ko":
             last = recent_virtual_actions[-1]
             if float(frame.get("time_s") or 0) - float(last.get("issued_s") or 0) <= 15:
                 label = {"confirmed": "완료", "failed": "실패", "commanded": "동작 확인 대기"}.get(
                     last.get("status"), "피드백 확인 중")
                 answer += (f"\n\n**최근 가상 안전조치:** {last.get('kind')} / {last.get('target')} · {label}. "
                            "밸브 피드백과 유량 변화는 안전 대응 리모콘의 사건 기록에서 확인하세요.")
-        analysis_answer = answer
+        analysis_answer = question_answer if request.language == "en" else answer
         wants_procedures = (request.trigger != "manual" or not request.one_pass or
                             any(term in request.question for term in
                                 ("조치", "대응", "대피", "격리", "차단", "복구", "재가동", "안전관리", "절차")))
         guidance = render_guidance(response_plans, actual_alert=actual_alert) if wants_procedures else ""
-        if guidance:
+        if guidance and request.language == "ko":
             answer += "\n\n---\n\n" + guidance
         return {
             "time_s": frame.get("time_s"), "trigger": request.trigger,
@@ -2417,6 +2454,7 @@ async def main_monitor_assistant(job_id: str, request: MainAssistantInput) -> di
     internal = SagaAnalysisInput(
         provider=request.provider, question=request.question, trigger=request.trigger,
         scenario_mode=request.scenario_mode, direct=True, one_pass=True, history=request.history,
+        language=request.language,
     )
     return await saga_analysis(job_id, internal)
 
@@ -2982,6 +3020,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         llm_error = None
         if request.one_pass:
             prompt_data = {
+                "output_language": request.language,
                 "time_s": payload["time_s"], "selected_sensor": sensor_id,
                 "selected_signal": signal, "sensor_status": payload["sensor_status"],
                 "equipment": label, "related_signals": payload["related_signals"],
@@ -3015,8 +3054,9 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                         verified.append(f"모의 공정 누출 {release['physical_leak_g_s']:.3f} g/s")
                     if impact_text:
                         verified.append(impact_text)
-                    answer = llm_answer + "\n\n**현재 확인값**\n" + "\n".join(
-                        f"- {item}" if not item.startswith("###") else item for item in verified)
+                    answer = (llm_answer if request.language == "en" else
+                              llm_answer + "\n\n**현재 확인값**\n" + "\n".join(
+                                  f"- {item}" if not item.startswith("###") else item for item in verified))
                     llm_model = str(reply.get("model") or "SAGA 단일 답변")
                 else:
                     llm_error = "직답 LLM이 빈 응답을 반환했습니다."
@@ -3025,7 +3065,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                              f"확인하세요. ({exc})")
             if llm_error:
                 answer = f"**{llm_error}**\n\n" + answer
-        if response_markdown:
+        if response_markdown and request.language == "ko":
             answer = answer.rstrip() + "\n\n---\n\n" + response_markdown
         return {"sensor_id": sensor_id, "time_s": payload["time_s"],
                 "answer": answer, "model": llm_model, "llm_error": llm_error,
@@ -3186,7 +3226,7 @@ async def selected_sensor_assistant(job_id: str, sensor_id: str,
     """Selected-sensor assistant boundary with no main-chat history or RAG modes."""
     internal = SensorAnalysisInput(
         provider=request.provider, question=request.question, time_s=request.time_s,
-        direct=True, one_pass=True,
+        direct=True, one_pass=True, language=request.language,
     )
     return await analyze_simulation_sensor(job_id, sensor_id, internal)
 

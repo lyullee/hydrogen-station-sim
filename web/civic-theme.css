@@ -278,3 +278,6 @@
 @media(max-width:750px) {
   .remote-app .remote-shell>header #monitorLink { top: auto; right: auto; }
 }
+.station-language-picker{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-size:11px;font-weight:700;color:#4d687b}
+.station-language-picker select{border:1px solid #b8cad9;border-radius:6px;background:#fff;color:#163c58;padding:5px 8px;font:inherit;cursor:pointer}
+.remote-language-picker{float:right;margin:0 0 8px 12px}

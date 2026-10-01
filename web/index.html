@@ -20,6 +20,7 @@
       </div>
     </div>
     <div class="masthead-right">
+      <label class="station-language-picker"><span>언어</span><select class="station-language-select" aria-label="화면 및 분석 언어"><option value="ko">한국어</option><option value="en">English</option></select></label>
       <div class="masthead-context"><span id="wallClock">--:--:--</span><b>LIVE OPERATIONS</b></div>
       <div class="system-badge" id="systemBadge">
         <i></i><span>시스템 확인 중</span>
@@ -139,13 +140,14 @@
 
   <dialog id="workspaceDialog" class="workspace-dialog"><header><h2 id="workspaceDialogTitle"></h2><button id="workspaceDialogClose" type="button" aria-label="상세 화면 닫기">닫기 ×</button></header><div id="workspaceDialogBody"></div></dialog>
   <div id="toast" class="toast" role="status" hidden></div>
+  <script src="/locale.js?v=20261001-language1"></script>
   <script src="/app.js?v=20260930-unittrends1"></script>
   <script src="/dashboard.js?v=20260930-unittrends1"></script>
   <script src="/vendor/markdown/marked.umd.js"></script>
   <script src="/vendor/markdown/purify.min.js"></script>
   <script src="/analysis-stream.js?v=20260929-live1"></script>
   <script src="/safety-actions.js?v=1"></script>
-  <script src="/saga-bridge.js?v=20260930-separated-lanes"></script>
+  <script src="/saga-bridge.js?v=20261001-language2"></script>
   <link rel="stylesheet" href="/station3d.css?v=20260930-camera-toggle1">
   <script>window.getStation3DState = () => state;</script>
   <link rel="stylesheet" href="/monitor-wall.css?v=20260930-separated-lanes">
@@ -153,9 +155,9 @@
   <script src="/monitor-wall.js?v=20260929-flame1"></script>
   <script src="/node-monitor.js?v=20260930-high-bank-default1"></script>
   <script type="module" src="/equipment-trends.mjs?v=20260930-unittrends1"></script>
-  <script src="/sensor-workbench.js?v=20260930-stable-render1"></script>
+  <script src="/sensor-workbench.js?v=20261001-language1"></script>
   <script type="module" src="/station3d.js?v=20260930-stable-render1"></script>
-  <link rel="stylesheet" href="/civic-theme.css?v=20260930-kgs-ci1">
+  <link rel="stylesheet" href="/civic-theme.css?v=20261001-language1">
   <link rel="stylesheet" href="/flow-icons.css?v=20260929-flowicons1">
   <link rel="stylesheet" href="/equipment-trends.css?v=20260930-leak-pressure1">
 </body>

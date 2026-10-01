@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="ko">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>수소충전소 · 공정 리모콘</title><link rel="stylesheet" href="/remote.css?v=20260928-hot1"><link rel="stylesheet" href="/remote-light.css?v=20260929-start-fill2"><link rel="stylesheet" href="/civic-theme.css?v=20260929-civic1"><link rel="stylesheet" href="/safety-console.css?v=1"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>수소충전소 · 공정 리모콘</title><link rel="stylesheet" href="/remote.css?v=20260928-hot1"><link rel="stylesheet" href="/remote-light.css?v=20260929-start-fill2"><link rel="stylesheet" href="/civic-theme.css?v=20261001-language1"><link rel="stylesheet" href="/safety-console.css?v=1"></head>
 <body class="remote-app">
 <main class="remote-shell">
-  <header><p class="eyebrow">H70 · DIGITAL OPERATIONS</p><div class="section-title"><h1>수소충전소 운영 리모콘</h1><span id="serverStatus" class="server-state">서버 확인 중</span></div><p>공정을 제어하고 사고 시나리오를 투입합니다. 현재 상태는 아래에서 확인할 수 있습니다.</p><a id="monitorLink" href="/" target="hrs-monitor-window">운영 모니터 열기 ↗</a><p id="jobStatus" class="job-status" role="status">연결된 실행 없음</p><div class="process-live-summary" role="status"><strong id="processSummary">공정 대기 · 실행 중인 명령 없음</strong><span id="calculationPace">계산 시작 전</span></div><div class="process-status-rail" aria-label="공정별 실시간 상태"><div data-status-process="trailer_supply"><small>트레일러 공급</small><b>정지</b></div><div data-status-process="pressure_recharge"><small>압력 보완</small><b>정지</b></div><div data-status-process="vehicle_1"><small>차량 1 충전</small><b>정지</b></div><div data-status-process="vehicle_2"><small>차량 2 충전</small><b>정지</b></div></div></header>
+  <header><p class="eyebrow">H70 · DIGITAL OPERATIONS</p><label class="station-language-picker remote-language-picker"><span>언어</span><select class="station-language-select" aria-label="화면 및 분석 언어"><option value="ko">한국어</option><option value="en">English</option></select></label><div class="section-title"><h1>수소충전소 운영 리모콘</h1><span id="serverStatus" class="server-state">서버 확인 중</span></div><p>공정을 제어하고 사고 시나리오를 투입합니다. 현재 상태는 아래에서 확인할 수 있습니다.</p><a id="monitorLink" href="/" target="hrs-monitor-window">운영 모니터 열기 ↗</a><p id="jobStatus" class="job-status" role="status">연결된 실행 없음</p><div class="process-live-summary" role="status"><strong id="processSummary">공정 대기 · 실행 중인 명령 없음</strong><span id="calculationPace">계산 시작 전</span></div><div class="process-status-rail" aria-label="공정별 실시간 상태"><div data-status-process="trailer_supply"><small>트레일러 공급</small><b>정지</b></div><div data-status-process="pressure_recharge"><small>압력 보완</small><b>정지</b></div><div data-status-process="vehicle_1"><small>차량 1 충전</small><b>정지</b></div><div data-status-process="vehicle_2"><small>차량 2 충전</small><b>정지</b></div></div></header>
   <section class="simulation-speed" aria-label="시뮬레이션 속도">
     <label for="simulationSpeed">계산 속도</label>
     <select id="simulationSpeed" aria-describedby="speedHelp"><option value="0.5">0.5×</option><option value="1" selected>1× · 실시간</option><option value="2">2×</option><option value="3">3×</option><option value="5">5×</option><option value="10">10×</option><option value="30">30×</option><option value="50">50×</option><option value="100">100×</option></select>
@@ -129,6 +129,7 @@
     </div><p class="fault-note hint"></p>
   </article>
 </template>
+<script src="/locale.js?v=20261001-language1"></script>
 <script src="/remote.js?v=20260929-start-fill2"></script>
 <script src="/safety-actions.js?v=1"></script>
 <script src="/safety-console.js?v=20260930-evacuation-feedback1"></script>

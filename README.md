@@ -1,5 +1,12 @@
 # Hydrogen Station Dynamic Simulator
 
+## Current documentation
+
+- [Technical report](docs/TECHNICAL_REPORT.md): architecture, physical model, safety logic, APIs, LLM boundaries, validation and limits.
+- [User manual](docs/USER_MANUAL.md): startup, remote operation, incident exercises, response controls, trends and troubleshooting.
+
+The monitor and remote now have a Korean/English language selector. New main and sensor assistant requests use the selected output language while consequence calculations and source data remain unchanged. English answers are advisory translations/analyses; verify exact safety requirements against their original source.
+
 Physics-first Python simulator for gaseous hydrogen refueling stations. The existing
 Java/browser simulator is a visual reference only; this package has an independent
 model, API, and monitoring interface.
@@ -78,23 +85,23 @@ model assumptions, recovery gates, and limits.
 
 Open `/remote.html` and start continuous monitoring. The trailer supply, storage-bank
 recharge, and each of the two vehicle fills begin **off**. The process inventories
-remain unchanged while no command or fault is active. Each path can be started or
-stopped independently during a running simulation. Bank recharge transfers hydrogen
-only when both trailer supply and pressure recharge are requested; vehicle fills
-draw from the cascade banks independently of those requests.
+remain unchanged while no command or fault is active. The remote couples trailer
+supply and storage-bank recharge on one transfer path; either start/stop control
+changes both requests. Vehicle 1 and 2 fills remain individually controlled and
+draw from the cascade banks.
 
-The remote offers 1×, 10×, and 100× target speeds for continuous monitoring and
+The remote offers 0.5×, 1×, 2×, 3×, 5×, 10×, 30×, 50×, and 100× target speeds and
 allows switching during a run. This changes wall-clock pacing without enlarging
 the physical solver step. The remote shows both the selected target and measured
 speed; a computation-bound run may stay below its target. Accident delays entered
 during a run are anchored at the solver step that accepts the command.
 
-The remote exposes example, editable capacities: finite trailer inventory and its
-initial pressure and temperature, transfer limits for supply and recharge, and
-vehicle-tank mass limits. Each limit has its own automatic-stop switch. The trailer
-pressure falls as compressor transfer removes mass; its fixed volume and isothermal
-temperature are explicit reference-model assumptions. The normal pressure/SOC and
-safety-PLC stop logic still applies when a capacity switch is off.
+The remote exposes a finite trailer inventory, initial pressure and temperature,
+individual bank starting fills, and configurable bank/vehicle stopping pressures.
+Each process target has an automatic-stop switch. Turning it off allows a virtual
+overfill exercise; relief valves and independent ESD protections remain separate.
+Trailer pressure falls as compressor transfer removes mass. Its fixed volume and
+isothermal temperature are explicit reference-model assumptions.
 
 Seven virtual relief valves cover the three storage banks, two dispenser hoses,
 and two vehicle tanks. Their enable switches, opening and closing pressures, and

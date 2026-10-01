@@ -32,6 +32,22 @@
     ['가상 사고 비교', '현재 센서값으로 저장뱅크의 가정 누출 피해영향을 비교해줘.'],
     ['운전 요약', '현재 충전소의 운전 상태를 핵심 센서 중심으로 간결하게 요약해줘.'],
   ];
+  const englishSuggestions=[
+    ['Current alerts', 'Which current sensor signals need attention, and why?'],
+    ['Storage banks', 'Compare pressure and anomalies in the high, medium, and low storage banks.'],
+    ['Compressor', 'Summarize compressor inlet and outlet pressure, temperature, and flow.'],
+    ['Precooler', 'Check the precooler outlet temperature and fueling conditions.'],
+    ['Dispensers', 'Compare pressure, temperature, and flow at dispensers 1 and 2.'],
+    ['Gas detectors', 'Report current gas-detector readings and alerts by zone.'],
+    ['Sensor quality', 'Which sensors are not GOOD quality, and how does that affect the analysis?'],
+    ['ESD', 'Explain the safety PLC and ESD state and recent trips.'],
+    ['Safety status', 'Summarize station safety and the signals to check first.'],
+    ['Abnormal process', 'What may be causing current anomalies, and what should be checked first?'],
+    ['Leak impact', 'Estimate the consequence of a hypothetical 1 mm high-pressure bank leak from current sensors.'],
+    ['Vehicle fueling', 'Compare both vehicle fueling states and remaining process risks.'],
+    ['Scenario comparison', 'Compare hypothetical storage-bank leak consequences using current sensors.'],
+    ['Operations summary', 'Briefly summarize current station operation using key sensors.'],
+  ];
   let previousSuggestions=[];
   const publicTerms=value=>String(value??'').replace(/HyRAM\+?/gi,'피해영향예측');
   function current(){const runtime=window.getStation3DState?.(),i=runtime?.index??0;return {job:runtime?.activeJobId,frame:runtime?.result?.hazop?.frames?.[i],analysis:runtime?.result?.series?.analysis?.[i],time:runtime?.result?.series?.time_s?.[i]};}
@@ -217,7 +233,7 @@
       let draft='',paintScheduled=false,streamFinished=false;
       const paintDraft=()=>{paintScheduled=false;if(streamFinished||current().job!==job)return;const article=document.querySelector(`.saga-message[data-message-id="${pending.id}"]`);if(!article)return;article.classList.add('streaming');markdown(article.querySelector('.saga-bubble'),draft);scrollToLatest(pending.channel);};
       const result=await window.streamStationAnalysis(`/api/simulations/${job}/assistants/main/stream`,
-        {trigger,question,history:history.slice(-8),scenario_mode:scenarioMode,provider:selectedProvider()},
+        {trigger,question,history:history.slice(-8),scenario_mode:scenarioMode,provider:selectedProvider(),language:window.stationLocale?.language()||'ko'},
         {signal:controller?.signal,onStatus:text=>{if(!draft)updateMessage(pending,text,trigger==='alarm'?'경보·피해영향 계산 중…':'분석 중…');},
          onToken:text=>{draft+=text;if(!paintScheduled){paintScheduled=true;requestAnimationFrame(paintDraft);}}});
       if(controller?.signal.aborted||current().job!==job)return;
@@ -247,8 +263,9 @@
     const pool=suggestedQuestions.map((_,index)=>index).filter(index=>!previousSuggestions.includes(index));
     for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
     previousSuggestions=pool.slice(0,3);tray.replaceChildren();
-    previousSuggestions.forEach(index=>{const [label,question]=suggestedQuestions[index],button=document.createElement('button');button.type='button';button.textContent=label;button.title=question;button.addEventListener('click',()=>analyze('manual',question));tray.append(button);});
+    previousSuggestions.forEach(index=>{const [label,question]=(window.stationLocale?.language()==='en'?englishSuggestions:suggestedQuestions)[index],button=document.createElement('button');button.type='button';button.textContent=label;button.title=question;button.addEventListener('click',()=>analyze('manual',question));tray.append(button);});
   }
+  document.addEventListener('station-language-change',()=>rotateSuggestions());
   function mountChat(){
     const body=$('wallSagaChat');if(!body||$('sagaMessages'))return;
     const top=document.createElement('div');top.className='saga-chat-top';

@@ -232,7 +232,7 @@
         let draft='',paintScheduled=false,streamFinished=false;
         const paintDraft=()=>{paintScheduled=false;if(streamFinished||closed||selection!==epoch||sequence!==analysisSequence)return;answer.classList.remove('loading');answer.classList.add('typing');answer.textContent=draft;transcript.scrollTop=transcript.scrollHeight;};
         const result=await window.streamStationAnalysis(`/api/simulations/${encodeURIComponent(job)}/assistants/sensors/${encodeURIComponent(tag)}/stream`,
-          {question:extraQuestion,time_s:Number.isFinite(snapshotTime)?snapshotTime:null,provider:selectedSensorProvider()},
+          {question:extraQuestion,time_s:Number.isFinite(snapshotTime)?snapshotTime:null,provider:selectedSensorProvider(),language:window.stationLocale?.language()||'ko'},
           {signal,onStatus:text=>{if(!draft)answer.textContent=text;},onToken:text=>{draft+=text;if(!paintScheduled){paintScheduled=true;requestAnimationFrame(paintDraft);}}});
         if(closed||selection!==epoch||sequence!==analysisSequence)return;
         if(!draft){answer.classList.remove('loading');answer.classList.add('typing');await window.revealStationText(result.answer||'분석 결과가 없습니다.',text=>{answer.textContent=text;transcript.scrollTop=transcript.scrollHeight;},()=>!closed&&selection===epoch&&sequence===analysisSequence&&!signal.aborted);}

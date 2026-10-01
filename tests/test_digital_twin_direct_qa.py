@@ -124,6 +124,42 @@ def test_direct_impact_question_targets_named_equipment():
     catalog = api.load_catalog()
     assert {row["node_id"] for row in api._mentioned_hazop_nodes("압축기 누출 피해영향", catalog)} >= {"N03", "N06"}
     assert {row["node_id"] for row in api._mentioned_hazop_nodes("트레일러 누출 피해영향", catalog)} >= {"N01", "N02"}
+    assert {row["node_id"] for row in api._mentioned_hazop_nodes("high-pressure storage bank leak impact", catalog)} >= {"N09"}
+    assert {row["node_id"] for row in api._mentioned_hazop_nodes("vehicle 2 dispenser leak", catalog)} >= {"N17"}
+    assert api._impact_requested("What is the consequence distance of this leak?")
+
+
+def test_english_main_assistant_keeps_impact_inputs_and_english_output(monkeypatch):
+    impact = {"node_id": "N09", "calculation_status": "calculated",
+              "maximum_heat_flux_w_m2": 6100.0, "sampled_effect_radius_m": 4.0}
+    captured = []
+    monkeypatch.setattr(api, "load_hyram_backend", lambda: object())
+    monkeypatch.setattr(api, "assess_sensor_cases", lambda *args: [impact])
+    monkeypatch.setattr(api, "_invoke_saga_hazop_direct", lambda *args: {"status": "NORMAL", "hits": []})
+
+    async def english_answer(question, context, history, provider, request_kind, stream_output=False):
+        captured.append(context)
+        return {"answer": "The modeled consequence distance is 4 m.", "model": "test"}
+
+    monkeypatch.setattr(api, "_invoke_main_assistant_selected", english_answer)
+    job_id = "english-impact-test"
+    with api._jobs_lock:
+        api._jobs[job_id] = {"frames": [_frame()]}
+    try:
+        with TestClient(api.app) as client:
+            response = client.post(f"/api/simulations/{job_id}/assistants/main", json={
+                "question": "What is the high-pressure storage bank leak impact?",
+                "language": "en",
+            })
+        assert response.status_code == 200
+        data = response.json()
+        assert data["impact_results"] == [impact]
+        assert data["answer"] == "The modeled consequence distance is 4 m."
+        assert captured[0]["output_language"] == "en"
+        assert captured[0]["impact_results"] == [impact]
+    finally:
+        with api._jobs_lock:
+            api._jobs.pop(job_id, None)
 
 
 def test_direct_answer_must_not_negate_confirmed_sensor_or_impact_evidence():
