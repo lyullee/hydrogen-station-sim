@@ -73,3 +73,52 @@ For a repeatable exercise, record the Git commit, Python/dependency versions, jo
 ## 8. Known boundaries
 
 The model is a training and research simulator. All sensors are simulated; no actual PLC, CCTV or gas detector is connected. The 3D image and CCTV illustrations are representational. The station layout, volumes, heat transfer, compressor performance, leak geometry, population and meteorology are scenario assumptions, not an as-built survey. Weather-dependent dispersion, structural failure, detailed indoor CFD and full probabilistic risk are outside the model's validated scope. HyRAM outputs are conditional consequences, and a successful LLM response does not validate a safety decision. Operators must use actual site procedures and measurements for real incidents.
+
+## 9. Reference configuration and validation rules
+
+The following are **software defaults**, not approved operating limits. API validation is in `SimulationInput`, `ProcessSettings`, `ReliefValveInput` and `FaultInput` in `api.py`; the remote may show edited values.
+
+| Parameter | Default | API constraint / meaning |
+|---|---:|---|
+| Continuous run | off | `continuous=true` runs until stopped. |
+| Calculation duration | 300 s | Finite runs accept >0 to 3600 s. |
+| Control period | 0.2 s | >0 to 2 s. |
+| Target playback speed | 1× | 0.5, 1, 2, 3, 5, 10, 30, 50 or 100×. |
+| Ambient temperature | 25 °C | −40 to 50 °C. |
+| Vehicle 1 / 2 starting pressure | 5 / 8 MPa | Greater than zero, at most 70 MPa. |
+| Low / medium / high starting fill | 90 / about 92.86 / 90% | Each 1–100% of its 50 / 70 / 100 MPa reference pressure. |
+| Vehicle target pressure | 70 MPa | Operator stop target; independent protection remains. |
+| Maximum requested mass flow | 60 g/s | >0 to 300 g/s model input. |
+| Requested pressure ramp | 12 MPa/min | >0 to 30 MPa/min model input. |
+| Delivery temperature | −40 °C | −50 to 20 °C model input. |
+| Trailer pressure / inventory | 20 MPa / 50 kg | Finite modeled source inventory. |
+| Bank recharge targets | 46 / 66 / 96 MPa | Low / medium / high target values. |
+| Recharge restart margins | 2 / 3 / 4 MPa | Must be below each target; prevent short cycling. |
+| Risk display refresh | 30 s | 15 / 30 / 60 / 120 s. |
+
+Relief valve reference pairs (opening / reclosing, MPa) are low bank 50/49, medium bank 70/69, high bank 100/99, hose 1/2 90/88 and vehicle 1/2 87.5/85. The API rejects a reclosing pressure greater than or equal to the opening pressure. These set points are scenario inputs, not sizing or inspection approval.
+
+The safety/runtime layers deliberately distinguish a requested operation, actual nonzero flow, threshold candidate, latched alarm, ESD command, valve position feedback and confirmed flow cessation. The distinctions explain why a button may show a request while the physical inventory remains unchanged. A zero-flow alarm must be qualified by the process command and intended mode; it is not automatically abnormal in idle operation.
+
+## 10. Calculation and display trace
+
+At each accepted control sample, the solver starts from a saved state and current process requests, applies active faults and available flow paths, computes component mass/energy exchange and protective response, then emits a frame. Frames contain simulated sensor values, provenance/quality, flow and inventory state, active faults, safety state and analysis results. Historical trend panes read those frames rather than asking the LLM to reconstruct time series. After a virtual action, the next solver sample recomputes pressure, temperature, release and detector response; the safety replay stores command/feedback and before/after metrics. Delayed or failed feedback is meaningful and must not be collapsed into success.
+
+The consequence pipeline operates on a controlled snapshot. It may evaluate an active modeled release or a clearly marked sensor-based hypothetical aperture. It serializes native HyRAM physics where the library is not concurrency-safe and samples observation points for criterion crossing. A null radius means the sampled points did not establish a boundary; it must not be rendered as a 1 m safety distance. A calculation status of failure/insufficient data cannot be replaced by a model-generated number. The LLM is called **after** available consequence calculations and receives structured results, sensor origins and uncertainty flags. This order is preserved for both Korean and English output.
+
+The 3D scene updates indicators, hoses, cameras, detector icons, incident visualization and danger/risk overlays from the same job frame. It is not a second process solver. The process flow view uses simplified icons instead of a detailed piping-and-instrumentation drawing. Equipment photos and CCTV scenes are visual references; they do not constitute real-time optical measurements.
+
+## 11. Integration example
+
+Create an idle continuous simulation with defaults, then inspect the returned job identifier:
+
+```json
+POST /api/simulations
+{"continuous": true, "speed_multiplier": 1,
+ "process_settings": {"trailer_supply": false, "pressure_recharge": false,
+                      "vehicle_1": false, "vehicle_2": false}}
+```
+
+The process settings object has additional defaulted fields; omitted fields use the Pydantic defaults. The application then polls `/api/simulations/{job_id}` or subscribes to `/api/simulations/{job_id}/stream`. A user question can be sent to `/api/simulations/{job_id}/assistants/main` with `{"question":"What is the current storage status?","language":"en"}`. Select a sensor via `/api/simulations/{job_id}/sensors/{sensor_id}` and ask its dedicated assistant at `.../assistants/sensors/{sensor_id}`. A virtual action uses `/api/simulations/{job_id}/safety/actions` with a validated `kind` and `target`; the subsequent `/safety` snapshot is needed to confirm completion. Query `/api/health` on both the twin and SAGA before diagnosing an assistant failure.
+
+No API response should be interpreted as a real station actuation. The reference model retains jobs only in the current Python process and is unsuitable for multi-worker load balancing without shared state.

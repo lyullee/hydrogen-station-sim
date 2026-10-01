@@ -49,3 +49,40 @@ Use the replay/compare view to review event time, command delay, success conditi
 Use the top-right **한국어 / English** selector. The control labels switch immediately and the twin passes the language to new assistant requests. Historical messages, technical tags, measurements, regulatory source titles and some original Korean HAZOP material are not retroactively rewritten. English text is an aid for training; where exact regulatory wording matters, follow the cited Korean original. Export trends as CSV where offered and record initial settings, faults, time and safety actions for reproducibility. Do not put API keys or confidential site data in browser questions or screenshots.
 
 For model internals, endpoints, assumptions and limitations, see [Technical Report](TECHNICAL_REPORT.md). For detailed staged virtual safety behavior, see [Virtual Safety Simulation](virtual-safety-simulation.md).
+
+## 8. Guided exercises and expected evidence
+
+### Exercise A — baseline and normal fueling
+
+Start from **full reset**, leave all incident slots empty and keep the normal automatic-stop and relief settings on. Start monitoring without a process request: process flow should remain idle, no modeled release should be present and the incident panel should not invent a critical warning. Start **vehicle 2 fueling** only. Confirm the vehicle 2 hose connects in the 3D view, vehicle 1 remains disconnected, the vehicle 2 tank pressure/inventory change in its own trend and the selected bank inventory responds. Stop vehicle 2 manually or allow its selected target pressure to stop it; the hose should return to the dispenser. Save the trend and note the simulated time. A temporary nonzero command with zero actual flow is a diagnostic state, not proof of fueling.
+
+### Exercise B — overfill target switch
+
+Use full reset. Set a reachable bank/vehicle target and leave automatic stop **on** for a first run; note the stop time, final pressure, relief state and ESD. Reset and repeat with the normal target switch **off**. The process request should continue past the configured stop target unless another modeled constraint intervenes. Observe the separate relief opening/reclosing values and ESD. Record which protective layer actually stopped or vented the flow. Do not describe “auto stop off” as disabling all protection: that is intentionally not how this model works.
+
+### Exercise C — storage leak, isolation and residual inventory
+
+Full reset and inject a leak at a named bank. Start the run and use the **sensor workbench** to compare its pressure, temperature, flow and nearby gas detector readings; inspect the fault's origin and quality. In the main/SAGA view, read calculated consequence status, assumed leak diameter and observation criterion rather than treating the 3D extent as a certified evacuation distance. In **Safety response**, command upstream isolation; wait for movement and closure feedback, then verify downstream flow. A pressure decline after isolation may continue from gas already trapped in the bank or line. If the action fails, inspect stuck/seat-leak/feedback faults and use the escalation branch. Venting introduces a separate discharge path: compare its release indication with the original leak. Finish with stabilization and recovery tests; use full reset for a new baseline.
+
+### Exercise D — fire, cooling and evacuation
+
+Inject an external-fire scenario at a chosen equipment zone. Confirm the virtual flame detector's **detected/pending** state before describing a fire as sensed. Compare equipment temperature, bank pressure, relief activity and adjacent-zone effects over time. Activate cooling and relevant isolation/ESD, then track the temperature trend and relief status. Restrict access and evacuate the modeled people/vehicles by zone; compare available routes with wind direction. Mark each step complete only when its virtual success condition is met. Restart remains gated by repair, tightness, detector/valve tests, purge where relevant, staged pressure test and approval. The model does not replace a site fire brigade or actual emergency plan.
+
+## 9. Interpreting signals and assistant output
+
+| Display field | Interpretation |
+|---|---|
+| Tag/value/unit | Virtual instrument reading at a particular simulated time. Check `quality` and `origin`. |
+| Alarm candidate versus active warning | A threshold may need persistence, state and other evidence; read its current status and history. |
+| Model leak flow | Flow removed from a modeled inventory; compare with the corresponding pressure/mass trend. |
+| Gas or flame detector | Simulation proxy responding to a modeled incident/fault; not an independent field measurement. |
+| Consequence status | `calculated`, unavailable or insufficient input must be distinguished before quoting a distance. |
+| Sampled effect distance | Furthest tested point crossing the chosen criterion, with next non-crossing point when available; not an approved exclusion radius. |
+| Relative / absolute risk floor | Comparative model index only; does not express annual individual fatality risk. |
+| Virtual action status | Commanded, moving, confirmed or failed. Validate flow and the next frame. |
+
+The assistant is deliberately separate from process control. A question such as “close the high-bank inlet” may receive advice and a mapped **virtual action button**; text alone is not evidence that a valve moved. If the text conflicts with the sensor pane, trust the structured current readings and investigate the discrepancy. English output uses the same structured inputs and consequence results; tag names, units and original cited Korean safety material may remain untranslated for traceability.
+
+## 10. Run record checklist
+
+For a useful training record, save the Git version, local date/time, job ID and simulation speed; starting bank percentages and vehicle/trailer state; process targets and stop switches; relief set points; fault type/target/aperture/timing; selected sensor quality and trend export; calculated consequence status and criteria; virtual action sequence with issue/feedback/flow timestamps; and the final recovery decision. Two runs can only be compared fairly when their initial and injected conditions match. The **Safety replay / compare** functions help identify the effect of response delay, wrong isolation and unverified closure.
