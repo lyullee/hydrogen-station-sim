@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-03",
+  "status": "retrospective protocol freeze before final reported model collection",
+  "scope": "Hydrogen-station process physics and SAGA-PY decision-support validation",
+  "process_physics": {
+    "dataset": "Powertech Labs SAE J2601 Tables Method laboratory data",
+    "population": "36 unique public laboratory fills",
+    "tank_submodel_split": "laboratory test number modulo 3 equals 0 is validation; all other eligible tests are calibration",
+    "experimental_quality_screen": "0.8 <= integrated measured mass / nominal SOC-implied mass change <= 1.2",
+    "quality_screen_sensitivity": "repeat the calibration with all 36 tests retained",
+    "fitted_parameters": [
+      "global effective-volume multiplier",
+      "global gas-to-liner heat-transfer multiplier"
+    ],
+    "primary_validation_endpoints": [
+      "pressure RMSE in MPa",
+      "tank-gas temperature RMSE in degC",
+      "SOC RMSE in percentage points"
+    ],
+    "secondary_endpoints": [
+      "final pressure error in MPa",
+      "peak temperature error in degC",
+      "final SOC error in percentage points"
+    ],
+    "uncertainty": "case-level nonparametric percentile bootstrap of each mean, 10000 replicates",
+    "closed_loop_role": "uncalibrated diagnostic baseline; controller and dispenser claims require acceptable external agreement"
+  },
+  "decision_support": {
+    "dataset": "JRC HIAD 2.2 HRS events with a response, lesson, or corrective field",
+    "split": "deterministic consequence-stratified 25 percent development / 75 percent holdout split using SHA-256 ordering",
+    "holdout_access": "freeze and approve leakage-reviewed vignettes before collecting model responses",
+    "variants": [
+      "deterministic alarm-only",
+      "SAGA-linked one-pass response"
+    ],
+    "sampling": "three SAGA responses per event under a frozen provider/model configuration",
+    "primary_endpoint": "paired event-level difference in mean seven-criterion expert composite score",
+    "safety_endpoints": [
+      "critical-omission rate",
+      "unsafe-advice rate"
+    ],
+    "secondary_endpoints": [
+      "response latency",
+      "failed-call rate",
+      "criterion-level pairwise quadratic-weighted kappa"
+    ],
+    "reviewers": "at least two independent qualified hydrogen/process-safety reviewers, blinded to allocation",
+    "inference": "case-level bootstrap 95 percent CI and paired two-sided Wilcoxon signed-rank test"
+  },
+  "consequence_physics": {
+    "dataset": "USN/FFI open-ended rectangular-channel hydrogen dispersion experiments",
+    "status": "normalization complete; no direct production-model validation claim before explicit release and sensor geometry mapping",
+    "prohibited_claim": "channel measurements alone validate outdoor station consequence distances"
+  },
+  "claim_rule": "Unit tests demonstrate implementation consistency only. Physical, decision-support, field-safety, and regulatory claims require their stated external evidence."
+}

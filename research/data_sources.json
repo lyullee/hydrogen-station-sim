@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-02",
+  "policy": "Raw third-party files are downloaded under data/public_validation/raw and are not committed or redistributed.",
+  "sources": {
+    "h2protocol_j2601_tables": {
+      "title": "SAE J2601 Tables Method - Laboratory Data",
+      "publisher": "H2Protocol.com / Powertech Labs",
+      "landing_page": "http://www.h2protocol.com/h2-fueling-data/",
+      "citation": "J. Schneider et al., Validation and Sensitivity Studies for SAE J2601, SAE Int. J. Alt. Powertrains 3(2), 2014, doi:10.4271/2014-01-1990.",
+      "rights_note": "The site provides free downloads and requests source citation, but does not state an open-data redistribution license. Do not republish the archives.",
+      "files": [
+        {
+          "name": "SAE J2601 Tables Validation Files 1.zip",
+          "url": "http://www.h2protocol.com/app/download/760831988/SAE+J2601+Tables+Validation+Files+1.zip",
+          "bytes": 99293902,
+          "sha256": "2b7e898ca86fa010bd78d7375199e6fdc55aed9ad3e1b77270ddd528b534cbc6"
+        },
+        {
+          "name": "SAE J2601 Tables Validation Files 2.zip",
+          "url": "http://www.h2protocol.com/app/download/760832063/SAE+J2601+Tables+Validation+Files+2.zip",
+          "bytes": 101653752,
+          "sha256": "82b989351cf17a2c49a3103164c98035015684ddd4e45eeb75925d28eca2686f"
+        },
+        {
+          "name": "SAE J2601 Tables Validation Files 3.zip",
+          "url": "http://www.h2protocol.com/app/download/760832250/SAE+J2601+Tables+Validation+Files+3.zip",
+          "bytes": 104481302,
+          "sha256": "9f1172091295ce975574a3d52bd518c5a6895836b34c968c38591748a2663edc"
+        },
+        {
+          "name": "SAE J2601 Tables Validation Files 4.zip",
+          "url": "http://www.h2protocol.com/app/download/760832455/SAE+J2601+Tables+Validation+Files+4.zip",
+          "bytes": 88473738,
+          "sha256": "721e28d6d6eefbd1159130941b28277ef457c9ac71f02a1065578fa335130f6d"
+        },
+        {
+          "name": "SAE J2601 Tables Validation Files 5.zip",
+          "url": "http://www.h2protocol.com/app/download/760832510/SAE+J2601+Tables+Validation+Files+5.zip",
+          "bytes": 46794786,
+          "sha256": "da008126c286c0fff31dd86162b3f1f48cd04f7da17bafd2337211e27a23f00d"
+        }
+      ]
+    },
+    "hiad_2_2": {
+      "title": "European Hydrogen Incidents and Accidents Database HIAD 2.2",
+      "publisher": "European Commission Joint Research Centre",
+      "landing_page": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt",
+      "citation": "European Hydrogen Incidents and Accidents Database HIAD 2.2, European Commission, Joint Research Centre, Petten, The Netherlands.",
+      "rights_note": "Free of charge for public use with acknowledgement under the conditions shown on the landing page. Keep the downloaded workbook outside version control.",
+      "files": [
+        {
+          "name": "HIAD 2.2.xlsx",
+          "url": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiad_22_export_for_users_2026_01_01xlsx",
+          "bytes": 1482278,
+          "sha256": "295772b60a4afe5ef47a00bc314eed48b76c170be00c29952d60e50fedd6f55f"
+        }
+      ]
+    },
+    "hydrogen_dispersion_channel": {
+      "title": "Experimental Data of Hydrogen Dispersion in an Open-ended Rectangular Channel",
+      "publisher": "University of South-Eastern Norway / Figshare",
+      "landing_page": "https://doi.org/10.23642/usn.26117989.v2",
+      "api_url": "https://api.figshare.com/v2/articles/26117989",
+      "citation": "M. Henriksen, H.E. Fossum, E. Akervik, D. Bjerketvedt, Experimental Data of Hydrogen Dispersion in an Open-ended Rectangular Channel, version 2, 2025, doi:10.23642/usn.26117989.v2.",
+      "license": "CC BY 4.0",
+      "rights_note": "Download metadata and files from the Figshare API and retain the supplied MD5 values."
+    }
+  }
+}

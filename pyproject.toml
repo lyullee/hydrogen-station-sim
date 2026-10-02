@@ -19,8 +19,9 @@ dependencies = [
 [project.optional-dependencies]
 risk = ["hyram==6.1"]
 table-build = ["CoolProp>=7.1,<9"]
+research = ["openpyxl>=3.1,<4", "matplotlib>=3.9,<4"]
 api = ["fastapi>=0.115,<1", "uvicorn[standard]>=0.30,<1"]
-test = ["pytest>=8,<10", "httpx>=0.27,<1"]
+test = ["pytest>=8,<10", "httpx>=0.27,<1", "openpyxl>=3.1,<4"]
 all = [
     "hyram==6.1",
     "fastapi>=0.115,<1",

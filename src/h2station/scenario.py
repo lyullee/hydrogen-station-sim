@@ -43,8 +43,10 @@ class ReferenceScenario:
     ambient_temperature_k: float = 298.15
     initial_vehicle_pressure_pa: float = 5.0e6
     initial_vehicle_temperature_k: float = 298.15
+    vehicle_internal_volume_m3: float = 0.122
     initial_vehicle_2_pressure_pa: float = 5.0e6
     initial_vehicle_2_temperature_k: float = 298.15
+    vehicle_2_internal_volume_m3: float = 0.122
     target_vehicle_pressure_pa: float = 70.0e6
     target_vehicle_2_pressure_pa: float = 70.0e6
     average_pressure_ramp_rate_pa_s: float = 2.0e5
@@ -65,6 +67,26 @@ class BuiltScenario:
     config: ReferenceScenario
 
 
+def build_vehicle_tank(internal_volume_m3: float) -> CompositeVehicleTank:
+    """Build a Type-IV surrogate while preserving reference mass ratios."""
+
+    reference_volume_m3 = 0.122
+    scale = internal_volume_m3 / reference_volume_m3
+    area_scale = scale ** (2.0 / 3.0)
+    return CompositeVehicleTank(
+        CompositeTankParameters(
+            internal_volume_m3=internal_volume_m3,
+            liner_mass_kg=8.0 * scale,
+            liner_specific_heat_j_kg_k=1580.0,
+            shell_mass_kg=70.0 * scale,
+            shell_specific_heat_j_kg_k=1120.0,
+            gas_liner_ua_w_k=18.0 * area_scale,
+            liner_shell_ua_w_k=35.0 * area_scale,
+            shell_ambient_ua_w_k=12.0 * area_scale,
+        )
+    )
+
+
 def build_reference_scenario(
     config: ReferenceScenario,
     hyram_backend: HyRAMConsequenceBackend,
@@ -73,18 +95,10 @@ def build_reference_scenario(
         not 1.0 <= percent <= 100.0 for percent in config.initial_bank_fill_percent
     ):
         raise ValueError("initial_bank_fill_percent must contain three values from 1 to 100")
-    vehicle = CompositeVehicleTank(
-        CompositeTankParameters(
-            internal_volume_m3=0.122,
-            liner_mass_kg=8.0,
-            liner_specific_heat_j_kg_k=1580.0,
-            shell_mass_kg=70.0,
-            shell_specific_heat_j_kg_k=1120.0,
-            gas_liner_ua_w_k=18.0,
-            liner_shell_ua_w_k=35.0,
-            shell_ambient_ua_w_k=12.0,
-        )
-    )
+    if config.vehicle_internal_volume_m3 <= 0.0 or config.vehicle_2_internal_volume_m3 <= 0.0:
+        raise ValueError("vehicle tank volumes must be positive")
+    vehicle = build_vehicle_tank(config.vehicle_internal_volume_m3)
+    secondary_vehicle = build_vehicle_tank(config.vehicle_2_internal_volume_m3)
     controller = SampledFuelingController(
         FuelingSchedule(
             target_pressure_pa=config.target_vehicle_pressure_pa,
@@ -124,7 +138,7 @@ def build_reference_scenario(
         )
     )
     secondary_partial = PartialStationModel(
-        vehicle_tank=vehicle,
+        vehicle_tank=secondary_vehicle,
         controller=secondary_controller,
         supply=lambda time_s: SupplyState(90.0e6, config.ambient_temperature_k),
         pcv=RestrictionParameters(flow_area_m2=1.5e-6),
@@ -195,7 +209,7 @@ def build_reference_scenario(
         hose_temperature_k=config.ambient_temperature_k,
         coolant_temperature_k=config.delivery_temperature_k,
     )
-    initial_vehicle_2 = vehicle.initial_state(
+    initial_vehicle_2 = secondary_vehicle.initial_state(
         config.initial_vehicle_2_pressure_pa,
         config.initial_vehicle_2_temperature_k,
     )

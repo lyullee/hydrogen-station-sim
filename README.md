@@ -10,6 +10,9 @@ Original project software and associated documentation are available under the [
 
 - [Technical report](docs/TECHNICAL_REPORT.md): architecture, physical model, safety logic, APIs, LLM boundaries, validation and limits.
 - [User manual](docs/USER_MANUAL.md): startup, remote operation, incident exercises, response controls, trends and troubleshooting.
+- [Paper evaluation](docs/PAPER_EVALUATION.md): repeatable fueling-boundary metrics and alarm-only versus SAGA-PY A/B scoring.
+- [Public-data validation](docs/PUBLIC_VALIDATION.md): checksum-verified SAE J2601 experiments, HIAD incidents, dispersion data, and the publication-readiness gate.
+- [HIAD expert-review protocol](docs/EXPERT_REVIEW_PROTOCOL.md): frozen casebook, masking, reviewer rubric, endpoints, and analysis plan.
 
 The monitor and remote now have a Korean/English language selector. New main and sensor assistant requests use the selected output language while consequence calculations and source data remain unchanged. English answers are advisory translations/analyses; verify exact safety requirements against their original source.
 
