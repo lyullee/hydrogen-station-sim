@@ -37,7 +37,11 @@ def consequence_risk_summary(consequence: Mapping[str, float | str | bool | None
     """
     heat = max(0.0, float(consequence.get("maximum_heat_flux_w_m2") or 0.0))
     blast = max(0.0, float(consequence.get("maximum_overpressure_pa") or 0.0))
-    radius = max(0.0, float(consequence.get("sampled_effect_radius_m") or 0.0))
+    radius = max(
+        0.0,
+        float(consequence.get("sampled_effect_radius_m") or 0.0),
+        float(consequence.get("flammable_plume_streamline_distance_m") or 0.0),
+    )
     flow = max(0.0, float(consequence.get("mass_flow_override_kg_s") or 0.0) * 1000.0)
     threshold_ratio = max(heat / 5000.0, blast / 5000.0)
     # Fixed scales let values remain comparable between different station runs.
@@ -141,7 +145,15 @@ class NativeHyRAMBackend:
             "maximum_impulse_pa_s": max(result.impulses, default=0.0),
             "visible_flame_length_m": result.visible_flame_length,
             "radiant_fraction": result.radiant_fraction,
+            "requested_mass_flow_override_kg_s": result.requested_mass_flow_rate,
+            "modeled_consequence_mass_flow_kg_s": result.mass_flow_rate,
+            # Compatibility field retained for existing UI/API consumers. It
+            # now states the mass flow actually used by HyRAM.
             "mass_flow_override_kg_s": result.mass_flow_rate,
+            "flammable_contour_volume_fraction": 0.04,
+            "flammable_plume_streamline_distance_m": result.flammable_streamline_distance,
+            "flammable_plume_x_extent_m": result.flammable_x_extent,
+            "flammable_plume_y_extent_m": result.flammable_y_extent,
         }
         # Report only the sampled extent. Three observation points cannot
         # establish a validated safe boundary beyond the farthest point.

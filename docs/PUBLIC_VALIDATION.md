@@ -202,6 +202,34 @@ ordinal criterion. Model, provider, prompt, temperature, token limit, latency,
 failures, source commits and every repeat must be retained. Do not substitute an
 LLM-as-judge score for the primary expert assessment.
 
+## Consequence-model boundary and adapter verification
+
+The production HyRAM adapter now evaluates three distinct quantities for each
+release: the 4 vol% unignited-jet plume centerline distance, sampled 5 kW/m² jet
+fire radiation, and sampled 5 kPa explosion overpressure. These are reported as
+different fields. The plume distance is directional and must not be rendered or
+described as a spherical exclusion radius. The heat/overpressure distance remains
+the farthest configured observation point exceeding either threshold, with the
+next sampled point reported when available.
+
+For choked releases HyRAM may reject a supplied process mass-flow override and
+calculate flow from source pressure, temperature, orifice and discharge
+coefficient. Reports therefore retain both
+`requested_mass_flow_override_kg_s` and
+`modeled_consequence_mass_flow_kg_s`; the latter is the value that generated the
+plume and flame fields. Treating the requested value as the modeled value would
+make the process/consequence coupling appear more exact than it is.
+
+The USN/FFI dataset and article define a downward 4.6 mm release inside a
+5.8 m × 0.9 m × 0.8 m open-ended channel with 29 fixed sensors. This is valuable
+for a confined-channel dispersion or CFD benchmark, but it is not geometrically
+applicable to the current free-jet station adapter. It must not be used to claim
+validation of the outdoor station plume. The underlying HyRAM physics validation
+basis is the Sandia report recorded in `research/data_sources.json`; a final
+manuscript must additionally verify this repository's adapter inputs and outputs
+against the installed HyRAM version and disclose the version gap between the
+published validation report and HyRAM 6.1.
+
 ## Publication-readiness gate
 
 Treat an IJHE-level submission as ready only when all of the following evidence

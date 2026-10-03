@@ -299,8 +299,8 @@ function updateFrame(index) {
   flameStatus.hidden=!detectedFlames.length&&!faults.some(fault=>fault.startsWith('external-fire:'));
   const releases=state.result.hazop?.frames?.[state.index]?.releases||[],ranges=releases.filter(r=>r.consequence?.status==='calculated');
   if(!$('flowRisk')){const note=document.createElement('span');note.id='flowRisk';document.querySelector('.flow-status').append(note);}
-  const flowConsequence=ranges[0]?.consequence,flowExtent=Number(flowConsequence?.sampled_effect_radius_m),flowNext=Number(flowConsequence?.sampled_next_distance_m);
-  $('flowRisk').textContent=flowConsequence?(flowExtent>0?`피해영향예측 ${flowExtent.toFixed(1)} m 표본점 초과${flowNext>flowExtent?` · ${flowNext.toFixed(1)} m 미달`:flowConsequence.effect_range_status==='BEYOND_SAMPLED_POINTS'?' · 더 먼 거리 미평가':''} · 안전거리 아님`:`피해영향예측 ${Number(flowConsequence.sampled_max_distance_m).toFixed(1)} m 관측점까지 기준 미달 · 범위 미확정`):'';
+  const flowConsequence=ranges[0]?.consequence,flowExtent=Number(flowConsequence?.sampled_effect_radius_m),flowNext=Number(flowConsequence?.sampled_next_distance_m),flowPlume=Number(flowConsequence?.flammable_plume_streamline_distance_m);
+  $('flowRisk').textContent=flowConsequence?[(flowExtent>0?`열·과압 ${flowExtent.toFixed(1)} m 표본점 초과${flowNext>flowExtent?` · ${flowNext.toFixed(1)} m 미달`:flowConsequence.effect_range_status==='BEYOND_SAMPLED_POINTS'?' · 더 먼 거리 미평가':''}`:`열·과압 ${Number(flowConsequence.sampled_max_distance_m).toFixed(1)} m 관측점까지 기준 미달`),(flowPlume>0?`4 vol% 플룸 중심선 ${flowPlume.toFixed(1)} m`:''),'안전거리 아님'].filter(Boolean).join(' · '):'';
   $('riskKpi').textContent = ranges.length ? '피해영향예측 계산 완료' : releases.length ? '피해영향예측 계산 대기' : (state.result.summary.hyram_available ? '피해영향예측 대기' : '피해영향예측 미연결');
   window.dispatchEvent(new Event('station-frame'));
   drawCursor();
@@ -360,8 +360,8 @@ function renderHazop(frame) {
   }).join('');
   if (!html) html=`<p class="empty">현재 활성 사고 후보가 없습니다. 미수신 센서 ${unknown}개는 상태를 판단하지 않았습니다.</p>`;
   for (const release of frame.releases || []) {
-    const extent=release.consequence?.sampled_effect_radius_m;
-    html+=`<p class="hazop-release">누출 ${escapeHtml(release.release_id)} · ${escapeHtml(release.component_id)} · 피해영향예측 ${release.consequence?.status==='calculated'?'계산 완료':'계산 불가'}${Number(extent)>0?` · 5 kW/m²/5 kPa ${Number(extent).toFixed(1)} m 표본점 초과${Number(release.consequence.sampled_next_distance_m)>Number(extent)?` · ${Number(release.consequence.sampled_next_distance_m).toFixed(1)} m 표본점 미달`:release.consequence.effect_range_status==='BEYOND_SAMPLED_POINTS'?' · 더 먼 거리 미평가':''}`:release.consequence?.status==='calculated'?` · ${Number(release.consequence.sampled_max_distance_m||0).toFixed(1)} m 관측점까지 기준 미달(범위 미확정)`:''}${release.cached ? ' (이전 계산값)' : ''}</p>`;
+    const extent=release.consequence?.sampled_effect_radius_m,plume=release.consequence?.flammable_plume_streamline_distance_m;
+    html+=`<p class="hazop-release">누출 ${escapeHtml(release.release_id)} · ${escapeHtml(release.component_id)} · 피해영향예측 ${release.consequence?.status==='calculated'?'계산 완료':'계산 불가'}${Number(extent)>0?` · 5 kW/m²/5 kPa ${Number(extent).toFixed(1)} m 표본점 초과${Number(release.consequence.sampled_next_distance_m)>Number(extent)?` · ${Number(release.consequence.sampled_next_distance_m).toFixed(1)} m 표본점 미달`:release.consequence.effect_range_status==='BEYOND_SAMPLED_POINTS'?' · 더 먼 거리 미평가':''}`:release.consequence?.status==='calculated'?` · ${Number(release.consequence.sampled_max_distance_m||0).toFixed(1)} m 관측점까지 열·과압 기준 미달`:''}${Number(plume)>0?` · 4 vol% 플룸 중심선 ${Number(plume).toFixed(1)} m`:''}${release.cached ? ' (이전 계산값)' : ''}</p>`;
   }
   if(frame.persistence_error)html+=`<p class="hazop-error">이벤트 저장 실패: ${escapeHtml(frame.persistence_error)}</p>`;
   $('hazopAlerts').innerHTML=html;

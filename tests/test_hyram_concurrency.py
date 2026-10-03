@@ -19,13 +19,18 @@ def test_native_physics_calls_are_serialized_across_monitors(monkeypatch):
         sleep(0.03)
         with counter_lock:
             state["active"] -= 1
-        return (None, None, [], None, None, 0.0, 0.0)
+        return (None, None, [], 0.001, None, 0.0, 0.0)
 
     fake_api = SimpleNamespace(create_fluid=lambda *args, **kwargs: object(),
                                jet_flame_analysis=jet_flame_analysis)
     monkeypatch.setattr(HyRAMRiskMonitor, "_physics_api", staticmethod(lambda: fake_api))
     release_state = SimpleNamespace(pressure=44e6, temperature=296.85)
-    scenario = LeakScenario(orifice_diameter=0.001, locations=(), calculate_overpressure=False)
+    scenario = LeakScenario(
+        orifice_diameter=0.001,
+        locations=(),
+        calculate_overpressure=False,
+        calculate_dispersion=False,
+    )
 
     def evaluate(_):
         monitor = HyRAMRiskMonitor()

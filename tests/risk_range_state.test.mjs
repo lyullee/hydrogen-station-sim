@@ -33,3 +33,10 @@ test('hypothetical cases follow the current assessment, not a past peak',()=>{
   state=reconcileRiskRanges(state,[],200);
   assert.equal(state.has('scenario-N13'),false);
 });
+
+test('the overlay includes a longer four-percent flammable plume',()=>{
+  const row=release(2);
+  row.consequence.flammable_plume_streamline_distance_m=6.5;
+  const state=reconcileRiskRanges(new Map(),[row],0);
+  assert.equal(state.get('leak-1').radius,6.5);
+});

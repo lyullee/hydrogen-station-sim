@@ -72,3 +72,7 @@ def test_native_hyram_dynamic_release() -> None:
     assert result["maximum_overpressure_pa"] >= 0.0
     assert result["maximum_impulse_pa_s"] >= 0.0
     assert result["visible_flame_length_m"] >= 0.0
+    assert result["flammable_contour_volume_fraction"] == pytest.approx(0.04)
+    assert result["flammable_plume_streamline_distance_m"] > 0.0
+    assert result["modeled_consequence_mass_flow_kg_s"] > 0.0
+    assert result["requested_mass_flow_override_kg_s"] == pytest.approx(0.01)

@@ -65,6 +65,14 @@
       "citation": "M. Henriksen, H.E. Fossum, E. Akervik, D. Bjerketvedt, Experimental Data of Hydrogen Dispersion in an Open-ended Rectangular Channel, version 2, 2025, doi:10.23642/usn.26117989.v2.",
       "license": "CC BY 4.0",
       "rights_note": "Download metadata and files from the Figshare API and retain the supplied MD5 values."
+    },
+    "hyram_validation_basis": {
+      "title": "HyRAM+ Version 5.1.1 Physics Validation",
+      "publisher": "Sandia National Laboratories / U.S. Department of Energy OSTI",
+      "landing_page": "https://www.osti.gov/biblio/2480221",
+      "report_url": "https://www.osti.gov/servlets/purl/2480221/",
+      "citation": "SAND2024-14886, HyRAM+ Version 5.1.1 Physics Validation, Sandia National Laboratories, 2024.",
+      "rights_note": "Authoritative model-validation basis for tank blowdown, unignited jet dispersion, jet flames, accumulation and overpressure. The application adapter still requires local verification against the installed HyRAM 6.1 package."
     }
   }
 }

@@ -36,6 +36,8 @@ class LeakScenario:
     tnt_factor: float = 0.03
     calculate_flame: bool = True
     calculate_overpressure: bool = True
+    calculate_dispersion: bool = True
+    dispersion_contour_fraction: float = 0.04
 
 
 @dataclass(frozen=True, slots=True)
@@ -72,11 +74,15 @@ class RiskSnapshot:
     release_pressure: float
     release_temperature: float
     mass_flow_rate: float
+    requested_mass_flow_rate: float | None
     heat_fluxes: tuple[float, ...]
     overpressures: tuple[float, ...]
     impulses: tuple[float, ...]
     visible_flame_length: float | None
     radiant_fraction: float | None
+    flammable_streamline_distance: float | None
+    flammable_x_extent: tuple[float, float] | None
+    flammable_y_extent: tuple[float, float] | None
 
 
 def _as_float_tuple(values: Any) -> tuple[float, ...]:
@@ -153,7 +159,10 @@ class HyRAMRiskMonitor:
         release_fluid = api.create_fluid(
             "H2", temp=release_state.temperature, pres=release_state.pressure
         )
-        if mass_flow_override is None:
+        requested_mass_flow_rate = (
+            None if mass_flow_override is None else max(float(mass_flow_override), 0.0)
+        )
+        if requested_mass_flow_rate is None:
             mass_flow_result = api.compute_mass_flow(
                 release_fluid,
                 scenario.orifice_diameter,
@@ -166,7 +175,36 @@ class HyRAMRiskMonitor:
                 np.asarray(mass_flow_result["rates"]).reshape(-1)[0]
             )
         else:
-            mass_flow_rate = max(float(mass_flow_override), 0.0)
+            mass_flow_rate = requested_mass_flow_rate
+
+        flammable_streamline_distance: float | None = None
+        flammable_x_extent: tuple[float, float] | None = None
+        flammable_y_extent: tuple[float, float] | None = None
+        if scenario.calculate_dispersion:
+            plume_result = api.analyze_jet_plume(
+                ambient_fluid,
+                release_fluid,
+                scenario.orifice_diameter,
+                mass_flow=mass_flow_rate,
+                rel_angle=scenario.release_angle,
+                dis_coeff=scenario.discharge_coefficient,
+                nozzle_model=scenario.nozzle_model,
+                create_plot=False,
+                contours=[scenario.dispersion_contour_fraction],
+            )
+            # HyRAM may replace a supplied mass flow for a choked source. Keep
+            # the requested process value separately and report the mass flow
+            # that actually generated the plume/flame consequence fields.
+            mass_flow_rate = float(plume_result["mass_flow_rate"])
+            distances = np.asarray(plume_result["streamline_dists"], dtype=float).reshape(-1)
+            if distances.size:
+                flammable_streamline_distance = float(distances[0])
+            contour = plume_result["mole_frac_dists"].get(
+                scenario.dispersion_contour_fraction
+            )
+            if contour is not None:
+                flammable_x_extent = tuple(float(value) for value in contour[0])
+                flammable_y_extent = tuple(float(value) for value in contour[1])
 
         heat_fluxes: tuple[float, ...] = ()
         visible_flame_length: float | None = None
@@ -187,6 +225,7 @@ class HyRAMRiskMonitor:
                 flux_coordinates=list(scenario.locations),
             )
             heat_fluxes = _as_float_tuple(flame_result[2])
+            mass_flow_rate = float(flame_result[3])
             visible_flame_length = float(flame_result[5])
             radiant_fraction = float(flame_result[6])
 
@@ -216,11 +255,15 @@ class HyRAMRiskMonitor:
             release_pressure=release_state.pressure,
             release_temperature=release_state.temperature,
             mass_flow_rate=mass_flow_rate,
+            requested_mass_flow_rate=requested_mass_flow_rate,
             heat_fluxes=heat_fluxes,
             overpressures=overpressures,
             impulses=impulses,
             visible_flame_length=visible_flame_length,
             radiant_fraction=radiant_fraction,
+            flammable_streamline_distance=flammable_streamline_distance,
+            flammable_x_extent=flammable_x_extent,
+            flammable_y_extent=flammable_y_extent,
         )
 
     @_serialized_native_physics

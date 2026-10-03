@@ -1033,7 +1033,11 @@ async def simulation_risk_zones(job_id: str) -> dict[str, Any]:
             "name": row.get("node_name"), "absolute_score": round(absolute, 1),
             "pressure_mpa": pressure, "temperature_c": temperature,
             "consequence_score": consequence_score,
-            "effect_radius_m": row.get("sampled_effect_radius_m"),
+            "effect_radius_m": max(
+                float(row.get("sampled_effect_radius_m") or 0.0),
+                float(row.get("flammable_plume_streamline_distance_m") or 0.0),
+            ),
+            "flammable_plume_distance_m": row.get("flammable_plume_streamline_distance_m"),
             "calculation_status": row.get("calculation_status"),
         })
     maximum = max((zone["absolute_score"] for zone in zones), default=1.0)
@@ -1115,8 +1119,11 @@ def _virtual_safety_metrics(frame: dict[str, Any] | None) -> dict[str, Any]:
     if not frame:
         return {}
     gas = frame.get("gas_detectors") or {}
-    ranges = [float((release.get("consequence") or {}).get("sampled_effect_radius_m") or
-                    (release.get("consequence") or {}).get("effect_radius_m") or 0.0)
+    ranges = [max(
+                    float((release.get("consequence") or {}).get("sampled_effect_radius_m") or
+                          (release.get("consequence") or {}).get("effect_radius_m") or 0.0),
+                    float((release.get("consequence") or {}).get("flammable_plume_streamline_distance_m") or 0.0),
+                  )
               for release in (frame.get("hazop") or {}).get("releases", [])]
     return {"time_s": frame.get("time_s"),
             "bank_pressure_mpa": dict(frame.get("bank_pressure_mpa") or {}),
@@ -1824,6 +1831,9 @@ def _direct_impact_summary(results: list[dict[str, Any]]) -> str:
             effect.append(detail)
         else:
             effect.append("표본점 기준 초과 거리 미확정")
+        plume = row.get("flammable_plume_streamline_distance_m")
+        if isinstance(plume, (int, float)) and plume > 0:
+            effect.append(f"4 vol% 비점화 플룸 중심선 거리 {plume:g} m")
         lines.append("  " + " · ".join(effect))
     lines.append("표본점 결과는 현장 안전거리나 확정 대피반경이 아닙니다.")
     return "\n".join(lines)
@@ -2076,6 +2086,7 @@ async def _run_saga_scenario_analysis(
         "sensor_basis=PROXY이면 대체 센서의 태그와 원래 노드를 밝히고 목표 설비의 직접 계측값으로 표현하지 마세요. "
         "대체 신호로 계산된 경우 누락 입력을 나열하거나 추가 입력을 요구하지 말고 실제 사용한 태그·출처·가정만 밝히세요. "
         "sampled_effect_radius_m은 임계값을 초과한 최원거리 관측점일 뿐, 안전반경이나 최대 사고범위가 아닙니다. "
+        "flammable_plume_streamline_distance_m은 비점화 수소 제트의 4 vol% 중심선 등농도 거리이며 구형 반경이나 확정 대피거리가 아닙니다. "
         "sampled_next_distance_m이 있으면 다음 관측점에서는 기준 미달임을 함께 설명하세요. 두 표본 사이의 정확한 경계는 계산되지 않았습니다. "
         "null이면 범위가 미확정입니다. 제공되지 않은 시나리오의 수치나 실패 이유를 만들지 마세요. "
         "내부 분석 방식, HAZOP, 규칙 ID, DB 상태, LATCHED 같은 구현 정보는 사용자에게 밝히지 마세요. 현재 센서와 운전 상태만 자연스럽게 설명하세요. "
@@ -2196,6 +2207,9 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "maximum_heat_flux_w_m2": (release.get("consequence") or {}).get("maximum_heat_flux_w_m2"),
         "maximum_overpressure_pa": (release.get("consequence") or {}).get("maximum_overpressure_pa"),
         "sampled_effect_radius_m": ((release.get("consequence") or {}).get("sampled_effect_radius_m") or None),
+        "flammable_contour_volume_fraction": (release.get("consequence") or {}).get("flammable_contour_volume_fraction"),
+        "flammable_plume_streamline_distance_m": (release.get("consequence") or {}).get("flammable_plume_streamline_distance_m"),
+        "modeled_consequence_mass_flow_kg_s": (release.get("consequence") or {}).get("modeled_consequence_mass_flow_kg_s"),
         "sampled_max_distance_m": (release.get("consequence") or {}).get("sampled_max_distance_m"),
         "sampled_next_distance_m": (release.get("consequence") or {}).get("sampled_next_distance_m"),
         "observation_point_count": (release.get("consequence") or {}).get("observation_point_count"),
@@ -2373,6 +2387,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "relief_valves_open에 항목이 있으면 안전밸브 개방을 현재 운전 경고로 분명히 알리고, 해당 밸브의 개방 압력·실제 방출 및 이미 계산된 피해영향을 함께 해석하세요. 안전밸브 방출을 임의의 배관 파손으로 단정하지 마세요. "
         "sampled_effect_radius_m이 null이면 표본 관측점에서 기준 미달입니다. 이때 숫자 반경을 만들지 말고 '표본 관측점에서 기준 미달, 영향 반경 미확정'이라고 쓰세요. "
         "sampled_effect_radius_m이 양수이고 sampled_next_distance_m이 있으면 기준 초과 최원거리 표본점과 다음 기준 미달 표본점을 함께 말하세요. 현장 안전거리로 단정하지 마세요. "
+        "flammable_plume_streamline_distance_m이 있으면 4 vol% 비점화 플룸 중심선 거리로 별도 설명하고 열복사·과압 표본 거리와 합치지 마세요. "
         "계산 결과가 없으면 사고 범위를 추정값처럼 제시하지 마세요. 계산이 요청되지 않았다는 문구를 출력하지 마세요. 제공된 HAZOP 규칙에 없는 규칙 ID나 임계값을 만들지 마세요. "
         "사용자에게는 계산기 제품명 대신 '피해영향예측'이라고 표기하세요. "
         "내부 규칙이나 DB 명칭을 밝히지 말고 센서값, 설비 상태, 주의 원인과 운전 조치만 설명하세요. "

@@ -5,7 +5,9 @@ export function reconcileRiskRanges(previous, cases, nowMs, graceMs=3000){
   for(const row of cases){
     if(!row?.id)continue;
     seen.add(row.id);
-    const radius=Number(row.consequence?.sampled_effect_radius_m);
+    const thermalBlast=Number(row.consequence?.sampled_effect_radius_m)||0;
+    const flammablePlume=Number(row.consequence?.flammable_plume_streamline_distance_m)||0;
+    const radius=Math.max(thermalBlast,flammablePlume);
     const prior=previous.get(row.id);
     if(Number.isFinite(radius)&&radius>0){
       const peak=row.actual?Math.max(radius,prior?.radius||0):radius;

@@ -65,10 +65,12 @@
     const badge=document.createElement('span');badge.textContent=String(row.release_id||'').startsWith('relief-')?'안전밸브 방출':actual?'활성 누출':'가정 누출';badge.className=actual?'actual':'hypothetical';title.append(heading,badge);card.append(title);
     const fmt=(value,digits=1)=>value!==null&&value!==undefined&&Number.isFinite(Number(value))?Number(value).toFixed(digits):'—';
     const metrics=document.createElement('div');metrics.className='saga-impact-metrics';
-    const fields=[['누출유량',`${fmt(row.mass_flow_g_s,2)} g/s`],['표본 최대 열복사',`${fmt(row.maximum_heat_flux_w_m2==null?null:row.maximum_heat_flux_w_m2/1000,2)} kW/m²`],['표본 최대 과압',`${fmt(row.maximum_overpressure_pa==null?null:row.maximum_overpressure_pa/1000,2)} kPa`],['위험도',row.risk_score==null?'—':`${fmt(row.risk_score,0)} / 100 · ${row.risk_level||''}`]];
+    const fields=[['누출유량',`${fmt(row.mass_flow_g_s,2)} g/s`],['4 vol% 플룸',`${fmt(row.flammable_plume_streamline_distance_m,1)} m`],['표본 최대 열복사',`${fmt(row.maximum_heat_flux_w_m2==null?null:row.maximum_heat_flux_w_m2/1000,2)} kW/m²`],['표본 최대 과압',`${fmt(row.maximum_overpressure_pa==null?null:row.maximum_overpressure_pa/1000,2)} kPa`],['위험도',row.risk_score==null?'—':`${fmt(row.risk_score,0)} / 100 · ${row.risk_level||''}`]];
     for(const [label,value] of fields){const cell=document.createElement('div');const name=document.createElement('small');name.textContent=label;const amount=document.createElement('strong');amount.textContent=value;cell.append(name,amount);metrics.append(cell);}card.append(metrics);
     const extent=document.createElement('p');extent.className='saga-impact-extent';
     extent.textContent=Number(row.sampled_effect_radius_m)>0?`5 kW/m² 또는 5 kPa 기준: ${fmt(row.sampled_effect_radius_m)} m 표본점 초과${Number(row.sampled_next_distance_m)>Number(row.sampled_effect_radius_m)?` · 다음 ${fmt(row.sampled_next_distance_m)} m 표본점 미달`:row.effect_range_status==='BEYOND_SAMPLED_POINTS'?' · 더 먼 거리 미평가':''} · 안전거리 아님`:row.sampled_max_distance_m==null?'표본 관측 범위 자료 없음 · 영향 반경 미확정':`5 kW/m² 또는 5 kPa 기준: ${fmt(row.sampled_max_distance_m)} m 표본점까지 미달 · 영향 반경 미확정`;
+    const plume=Number(row.flammable_plume_streamline_distance_m);
+    if(plume>0)extent.textContent+=` · 4 vol% 비점화 플룸 중심선 ${fmt(plume)} m`;
     card.append(extent);
     const basis=document.createElement('small');basis.className='saga-impact-basis';
     const sensorParts=[row.pressure_sensor&&`${row.pressure_sensor} ${fmt(row.current_pressure_mpa,2)} MPa`,row.temperature_sensor&&`${row.temperature_sensor} ${fmt(row.current_temperature_c)} °C`].filter(Boolean);
@@ -265,7 +267,7 @@
     previousSuggestions=pool.slice(0,3);tray.replaceChildren();
     previousSuggestions.forEach(index=>{const [label,question]=(window.stationLocale?.language()==='en'?englishSuggestions:suggestedQuestions)[index],button=document.createElement('button');button.type='button';button.textContent=label;button.title=question;button.addEventListener('click',()=>analyze('manual',question));tray.append(button);});
   }
-  document.addEventListener('station-language-change',()=>rotateSuggestions());
+  document.addEventListener?.('station-language-change',()=>rotateSuggestions());
   function mountChat(){
     const body=$('wallSagaChat');if(!body||$('sagaMessages'))return;
     const top=document.createElement('div');top.className='saga-chat-top';
