@@ -802,3 +802,44 @@ results are retained as discovery evidence only; none is counted as validation
 without file-level provenance, a common time base, vehicle/receptacle pressure,
 transferred mass or mass flow, initial conditions, protocol metadata and reuse
 terms.
+Add the official NREL HITRF page and the NREL Data Catalog follow-up to the
+public-source screening log. The HITRF page confirms the integrated station,
+automated data logging, and J2601-capable dispensing, while the catalogue
+recheck and the 2024 IJHE sample-fill table still do not expose the full
+synchronized station-to-vehicle logger needed for independent validation.
+
+## 2026-10-04 NREL HITRF/data-catalog follow-up
+
+The official [NREL Hydrogen Infrastructure Testing and Research Facility
+(HITRF) description](https://www.nrel.gov/hydrogen/hitrf-animation?print=)
+confirms an integrated production, compression, storage, chilling and H70/H35
+dispensing facility. It states that an automated data-logging system collects
+operating and maintenance data from HITRF components and that the research
+dispenser supports SAE J2601/MC Formula fueling and component-reliability
+experiments. The public page does not expose a downloadable synchronized
+station-to-vehicle logger, channel dictionary, uncertainty record or reuse
+terms, so it is classified as **REQUEST_DATA_HIGH_VALUE_FIELD_LIVING_LAB**.
+
+The [NREL Data Catalog](https://data.nrel.gov/search-page) was rechecked for
+HITRF, hydrogen-fueling and station time-series records. No public file with a
+common time base, vehicle/receptacle pressure, temperature, mass flow or
+transferred mass, initial conditions, protocol metadata and reuse terms was
+identified. This is recorded as **NO_NEW_ELIGIBLE_PUBLIC_RAW_SET**; a negative
+catalogue search does not imply that controlled-access NREL data do not exist.
+
+The NREL-hosted [2024 *International Journal of Hydrogen Energy* paper](https://docs.nrel.gov/docs/fy24osti/85333.pdf)
+contains a small HITRF sample-fill table with start/end pressure, dispensing
+temperature, amount and rate, together with maintenance examples. The related
+[dissertation record](https://api.mountainscholar.org/server/api/core/bitstreams/474f5f0b-4d5d-417a-a2c8-71633293835d/content)
+describes the highly instrumented HITRF reliability programme and controlled
+fill-cycle testing. These are useful endpoint and protocol-context leads, but
+they do not publish the underlying synchronized logger package or a reusable
+data dictionary. They are therefore classified as
+**REPORT_CONTEXT_AND_DATA_REQUEST_LEAD**, not as a full-loop holdout.
+
+The next evidence request should target a de-identified HITRF export with
+common timestamps, vehicle/receptacle pressure, gas and tank temperature, mass
+flow or transferred mass, source/cascade states, initial conditions, protocol
+version, quality/calibration metadata and permission to publish derived metrics.
+Any approved subset must be hashed and frozen before scoring. The independent
+full-loop numerical gate remains open.

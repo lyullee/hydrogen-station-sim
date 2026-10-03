@@ -1509,7 +1509,51 @@
       "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET",
       "claim_limit": "Search results are discovery evidence only; no record is counted as validation without file-level provenance, synchronized required channels, initial conditions, protocol metadata and reuse terms."
     },
-    "claim_limit": "Do not use article figures, aggregate event summaries or static inventories as primary full-loop numerical validation. Promote a source only after de-identified raw files, metadata, reuse terms and a pre-access freeze are recorded."
+    "claim_limit": "Do not use article figures, aggregate event summaries or static inventories as primary full-loop numerical validation. Promote a source only after de-identified raw files, metadata, reuse terms and a pre-access freeze are recorded.",
+    "nrel_hitrf_catalog_followup": {
+      "scope": "screening NREL HITRF public facility, NREL data catalogue and published HITRF sample-fill records for an independent full-loop holdout",
+      "sources": [
+        {
+          "id": "nrel_hitrf_official_animation_and_data_logging",
+          "title": "Hydrogen Infrastructure Testing and Research Facility Animation",
+          "url": "https://www.nrel.gov/hydrogen/hitrf-animation?print=",
+          "publisher": "National Renewable Energy Laboratory",
+          "finding": "The official HITRF description confirms an integrated production, compression, storage, chilling and H70/H35 dispensing facility. It states that an automated data-logging system collects operating and maintenance data from HITRF components and that the facility supports SAE J2601/MC Formula fueling and component reliability experiments. The public page exposes no downloadable synchronized station-to-vehicle logger, channel dictionary, uncertainty record or reuse terms.",
+          "decision": "REQUEST_DATA_HIGH_VALUE_FIELD_LIVING_LAB",
+          "claim_limit": "Use as a high-value data-custodian and facility-provenance lead only; the facility description is not a public numerical holdout."
+        },
+        {
+          "id": "nrel_data_catalog_public_search_2026_10_04",
+          "title": "NREL Data Catalog public search",
+          "url": "https://data.nrel.gov/search-page",
+          "finding": "The public catalogue was rechecked for hydrogen fueling, HITRF and station time-series records. No downloadable synchronized vehicle/receptacle pressure-temperature-mass-flow archive with initial conditions, protocol metadata and reuse terms was identified in the search results.",
+          "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET",
+          "claim_limit": "Catalogue search results are discovery evidence only; absence of a hit is not evidence that NREL has no controlled-access data."
+        },
+        {
+          "id": "nrel_hitrf_sample_fill_ijhe_2024",
+          "title": "Data-driven reliability-centered maintenance of hydrogen fueling stations",
+          "doi": "10.1016/j.ijhydene.2023.11.207",
+          "url": "https://docs.nrel.gov/docs/fy24osti/85333.pdf",
+          "publisher": "International Journal of Hydrogen Energy / NREL",
+          "finding": "The published paper includes a small HITRF sample-fill table with start/end pressure, dispensing temperature, amount and rate, plus maintenance examples. It is a valuable benchmark for endpoint face-validity and a request lead, but the public article does not expose the full synchronized logger behind the table or a machine-readable station-to-vehicle archive.",
+          "decision": "REPORT_CONTEXT_AND_DATA_REQUEST_LEAD",
+          "raw_common_timebase": false,
+          "claim_limit": "Use the reported table only for contextual comparison or a pre-registered endpoint check; do not reconstruct a time-series holdout from article rows or figures."
+        },
+        {
+          "id": "nrel_hitrf_dissertation_sample_fill_context",
+          "title": "NREL HITRF dissertation record and reliability discussion",
+          "url": "https://api.mountainscholar.org/server/api/core/bitstreams/474f5f0b-4d5d-417a-a2c8-71633293835d/content",
+          "finding": "The dissertation describes HITRF as highly instrumented and reports controlled dispenser reliability work, including thousands of fill cycles and component failure observations. It provides research context and sample-fill references but no public synchronized station-to-vehicle logger package with a reusable data dictionary.",
+          "decision": "REPORT_CONTEXT_AND_DATA_REQUEST_LEAD",
+          "claim_limit": "Use for protocol and reliability-test design context; it cannot close the independent dynamic full-loop gate."
+        }
+      ],
+      "result": "NREL HITRF is the strongest newly confirmed high-value data custodian and the IJHE sample-fill table offers a useful endpoint benchmark. No public file-level synchronized station-to-vehicle raw archive was located, so the independent full-loop numerical gate remains open.",
+      "next_action": "Request a de-identified HITRF export with common timestamps, vehicle/receptacle pressure, gas and tank temperature, mass flow or transferred mass, source/cascade states, initial conditions, protocol version, quality/calibration metadata and permission to publish derived metrics; hash-lock any approved subset before scoring.",
+      "claim_limit": "Do not promote facility descriptions, dissertation statements or article tables to raw validation. Keep endpoint context, component reliability and full-loop time-series validation as separate claims."
+    }
   },
   "last_reviewed": "2026-10-04"
 }
