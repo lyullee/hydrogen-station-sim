@@ -37,6 +37,13 @@ an approved JSON only after every frozen case has a KEEP or REWRITE decision, an
 individual confirmation, and a coded qualified-coordinator declaration. The
 export retains all split IDs; it does not offer case exclusion.
 
+Before response collection, the exported JSON is validated against the original
+casebook and cryptographically frozen. The freezer rejects missing/reordered
+cases, changed reference answers, changed non-editable context, inconsistent
+decisions, missing confirmations, and unexplained residual HIGH/MEDIUM flags.
+It writes a case-level change log and hashes the source, submitted and frozen
+casebooks so the reviewed input can be audited independently.
+
 The collection script constructs every model-visible field from the approved
 `input_context`; it never falls back to the original HIAD narrative after review.
 The approved casebook must contain every event in the frozen selected split
@@ -144,9 +151,16 @@ $env:PYTHONPATH = "src"
   --casebook data\public_validation\results\hiad_holdout_preparation\casebook_for_approval.json `
   --output data\public_validation\results\hiad_coordinator_prescreen
 
+# After completing the local HTML and downloading approved_holdout_casebook.json:
+.venv\Scripts\python.exe scripts\freeze_hiad_approved_casebook.py `
+  --source data\public_validation\results\hiad_holdout_preparation\casebook_for_approval.json `
+  --approved approved_holdout_casebook.json `
+  --output data\public_validation\results\hiad_casebook_frozen
+
 .venv\Scripts\python.exe scripts\run_hiad_decision_evaluation.py `
   --saga-url http://127.0.0.1:8090 --provider groq --split holdout `
-  --approved-casebook approved_holdout_casebook.json --repeats 3 `
+  --approved-casebook data\public_validation\results\hiad_casebook_frozen\approved_casebook_frozen.json --repeats 3 `
+  --casebook-freeze-manifest data\public_validation\results\hiad_casebook_frozen\casebook_freeze_manifest.json `
   --include-standards-rag
 
 # After the institutional ethics determination, build isolated R1/R2 packets.

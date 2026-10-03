@@ -49,7 +49,7 @@
   "decision_support": {
     "dataset": "JRC HIAD 2.2 HRS events with a response, lesson, or corrective field",
     "split": "deterministic consequence-stratified 25 percent development / 75 percent holdout split using SHA-256 ordering",
-    "holdout_access": "freeze and approve leakage-reviewed vignettes before collecting model responses",
+    "holdout_access": "a non-rating coordinator reviews every frozen vignette; validate exact case retention, immutable references and model-visible edits; SHA-256 lock the approved casebook before collecting model responses",
     "variants": [
       "deterministic alarm-only",
       "direct one-pass LLM response with the historical observation",

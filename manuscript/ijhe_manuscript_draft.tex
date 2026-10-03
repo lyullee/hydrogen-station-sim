@@ -199,7 +199,11 @@ The incident study population is the hydrogen-refuelling-station subset of the
 European Commission JRC HIAD 2.2 database \cite{hiad2026}. Of 34 identified HRS events, 33 contain
 at least one emergency action, lesson or corrective field. Only a coordinator-
 approved historical observation is supplied to the system; recorded response and
-lesson fields are withheld as reviewer reference material.
+lesson fields are withheld as reviewer reference material. A deterministic
+pre-screen highlights exact phrase overlap and possible completed-response
+sentences but cannot approve a case. A non-rating coordinator must inspect all
+holdout vignettes; the approved input is then checked against the original case
+set and SHA-256 locked before response collection.
 
 The frozen protocol compares a deterministic alarm, three direct one-pass SAGA
 responses and three SAGA responses with standards-document retrieval. Output is

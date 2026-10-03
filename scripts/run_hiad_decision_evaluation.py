@@ -202,6 +202,10 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=Path("data/public_validation/results/hiad_decision"))
     parser.add_argument("--prepare-casebook", action="store_true")
     parser.add_argument("--approved-casebook", type=Path)
+    parser.add_argument(
+        "--casebook-freeze-manifest", type=Path,
+        help="Required for holdout collection; verifies the frozen approved-casebook hash",
+    )
     args = parser.parse_args()
 
     splits = _split(_read_jsonl(args.cases))
@@ -239,6 +243,24 @@ def main() -> int:
         )
     if not args.saga_url:
         raise SystemExit("--saga-url is required during response collection")
+    freeze_manifest = None
+    if args.split == "holdout":
+        if args.casebook_freeze_manifest is None:
+            raise SystemExit(
+                "--casebook-freeze-manifest is required for holdout response collection"
+            )
+        freeze_manifest = json.loads(
+            args.casebook_freeze_manifest.read_text(encoding="utf-8")
+        )
+        expected_hash = (freeze_manifest.get("file_sha256") or {}).get(
+            args.approved_casebook.name
+        )
+        if not expected_hash or expected_hash != _sha256_file(args.approved_casebook):
+            raise SystemExit("Approved casebook does not match its freeze manifest")
+        if freeze_manifest.get("all_frozen_cases_retained") is not True or (
+            freeze_manifest.get("all_cases_approved") is not True
+        ):
+            raise SystemExit("Casebook freeze manifest does not confirm complete approval")
     approved = json.loads(args.approved_casebook.read_text(encoding="utf-8"))
     approved_ids = [str(case["event_id"]) for case in approved["cases"]]
     if len(approved_ids) != len(set(approved_ids)):
@@ -428,6 +450,11 @@ def main() -> int:
             ),
         },
     }
+    if freeze_manifest is not None:
+        manifest["casebook_freeze_manifest"] = args.casebook_freeze_manifest.name
+        manifest["casebook_freeze_manifest_sha256"] = _sha256_file(
+            args.casebook_freeze_manifest
+        )
     (args.output / "collection_manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
