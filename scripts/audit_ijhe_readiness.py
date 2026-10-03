@@ -360,7 +360,7 @@ def audit(root: Path) -> dict[str, object]:
     playbook_sources = (playbooks or {}).get("sources") or {}
     incident_plan_ids = {
         "gas_release", "hydrogen_fire", "external_fire", "overpressure",
-        "relief_discharge", "fueling_fault", "hose_connection",
+        "relief_discharge", "fueling_fault", "hose_connection", "structural_damage",
     }
     linked_plan_ids = {
         str(plan.get("id")) for plan in (playbooks or {}).get("plans", [])
@@ -370,7 +370,7 @@ def audit(root: Path) -> dict[str, object]:
         playbook_sources.get("HIAD2026", {}).get("url")
         == "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt"
         and incident_plan_ids.issubset(linked_plan_ids)
-        and len((playbooks or {}).get("plans", [])) == 15
+        and len((playbooks or {}).get("plans", [])) == 16
     )
     gates.append(_gate(
         "incident_playbook_public_evidence",

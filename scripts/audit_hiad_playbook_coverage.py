@@ -53,6 +53,8 @@ def candidate_plans(case: dict) -> list[str]:
         plans.append("overpressure")
     if any(token in text for token in ("dispenser failure", "malfunctioning", "dispenser of")):
         plans.append("fueling_fault")
+    if any(token in text for token in ("damage", "collision", "structural", "canopy")):
+        plans.append("structural_damage")
     if "pressure" in text or "overpressure" in text:
         plans.append("overpressure")
     # Preserve catalog order and remove duplicates.

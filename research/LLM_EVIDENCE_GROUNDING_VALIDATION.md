@@ -60,9 +60,10 @@ qualified expert review, which remain pending in
 
 The reproducible [HIAD-to-playbook coverage audit](HIAD_PLAYBOOK_COVERAGE.md)
 links 34 public HRS incident/near-miss metadata rows to the current emergency
-response families. The current metadata-only mapping covers 33 rows (97.1%);
-case 454, a canopy-damage near miss without hydrogen release, remains unmapped
-and is retained as a catalog gap. The audit deliberately excludes HIAD emergency
+response families. The current metadata-only mapping covers all 34 rows (100.0%);
+case 454, a canopy-damage near miss without hydrogen release, is linked to a
+dedicated structural-damage response family without inferring a hydrogen release.
+The audit deliberately excludes HIAD emergency
 action and lesson text, so it cannot leak a response answer key.
 
 This improves provenance and scenario coverage for evidence-grounded prompts, but

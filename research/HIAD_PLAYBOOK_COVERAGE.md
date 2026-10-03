@@ -6,13 +6,13 @@ action or lesson text, and it is not an effectiveness, probability or safety
 distance evaluation.
 
 - Cases reviewed: **34**
-- Cases with at least one registered response family: **33**
-- Cases without a registered response family: **1**
-- Metadata-only mapping fraction: **97.1%**
+- Cases with at least one registered response family: **34**
+- Cases without a registered response family: **0**
+- Metadata-only mapping fraction: **100.0%**
 
 ## Unmapped cases
 
-- `454` — Damage of a HRS canopy (Hydrogen delivery)
+None under the current conservative mapping rules.
 
 ## Interpretation
 

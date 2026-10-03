@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-10-03T21:46:16.967441+00:00",
+  "generated_at_utc": "2026-10-03T22:21:49.186310+00:00",
   "status": "qualitative_traceability_only",
   "source": {
     "inventory": "research/hiad_hrs_public_evidence.json",
@@ -11,18 +11,16 @@
   },
   "playbook_catalog": {
     "path": "src/h2station/data/emergency_playbooks.json",
-    "catalog_sha256": "580dadf4e0d41c7b1699b852868e9c79d58909861c50f6817ea248584f67c822",
-    "plan_count": 15,
+    "catalog_sha256": "21599382bacb42693d462c1d41f856693fe8c1f5790a387d522cfa0946439751",
+    "plan_count": 16,
     "candidate_rule_version": "metadata-keyword-v2-positive-effect"
   },
   "aggregate": {
     "case_count": 34,
-    "mapped_case_count": 33,
-    "unmapped_case_count": 1,
-    "mapped_fraction": 0.9705882352941176,
-    "unmapped_event_ids": [
-      "454"
-    ]
+    "mapped_case_count": 34,
+    "unmapped_case_count": 0,
+    "mapped_fraction": 1.0,
+    "unmapped_event_ids": []
   },
   "cases": [
     {
@@ -104,9 +102,11 @@
       "physical_effect": "No Hydrogen Release",
       "consequence_nature": "near miss",
       "stage": "Hydrogen delivery",
-      "candidate_plan_ids": [],
+      "candidate_plan_ids": [
+        "structural_damage"
+      ],
       "unregistered_candidate_plan_ids": [],
-      "coverage_status": "unmapped"
+      "coverage_status": "mapped"
     },
     {
       "event_id": "463",

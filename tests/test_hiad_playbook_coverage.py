@@ -27,11 +27,13 @@ def test_storage_explosion_maps_to_fire_release_and_pressure_families():
     assert plans == ["hydrogen_fire", "gas_release", "overpressure"]
 
 
-def test_non_hydrogen_canopy_damage_is_left_for_catalog_review():
-    assert candidate_plans({
+def test_canopy_damage_maps_to_structural_damage_without_inventing_release():
+    plans = candidate_plans({
         "title": "Damage of a HRS canopy",
         "physical_effect": "No Hydrogen Release",
         "consequence_nature": "Near miss",
         "sub_application": "HRS",
         "supply_chain_stage": "Hydrogen delivery",
-    }) == []
+    })
+    assert plans == ["structural_damage"]
+    assert "gas_release" not in plans

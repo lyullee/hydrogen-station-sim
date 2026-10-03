@@ -42,11 +42,9 @@
     "evidence": "research/hiad_playbook_coverage.json",
     "source": "HIAD 2.2 public HRS inventory",
     "case_count": 34,
-    "metadata_mapped_case_count": 33,
-    "metadata_mapped_fraction": 0.9705882352941176,
-    "unmapped_event_ids": [
-      "454"
-    ],
+    "metadata_mapped_case_count": 34,
+    "metadata_mapped_fraction": 1.0,
+    "unmapped_event_ids": [],
     "interpretation": "qualitative scenario-family coverage only; excludes HIAD response text and does not establish effectiveness or safety"
   }
 }

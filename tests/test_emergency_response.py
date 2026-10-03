@@ -24,7 +24,7 @@ def test_all_registered_sensor_rules_have_a_complete_response_plan():
         response = client.get("/api/hazop/emergency-responses")
     assert response.status_code == 200
     linked = response.json()
-    assert len(linked["plans"]) == 15
+    assert len(linked["plans"]) == 16
     assert len(linked["rule_mappings"]) == 214
     assert all(row["response_plan_id"] in plans for row in linked["rule_mappings"])
 
@@ -34,7 +34,7 @@ def test_high_consequence_playbooks_link_public_incident_evidence():
     assert playbooks["sources"]["HIAD2026"]["url"].startswith("https://minerva.jrc.ec.europa.eu/")
     by_id = {plan["id"]: plan for plan in playbooks["plans"]}
     for plan_id in ("gas_release", "hydrogen_fire", "external_fire", "overpressure",
-                    "relief_discharge", "fueling_fault", "hose_connection"):
+                    "relief_discharge", "fueling_fault", "hose_connection", "structural_damage"):
         assert "HIAD2026" in by_id[plan_id]["sources"]
 
 
