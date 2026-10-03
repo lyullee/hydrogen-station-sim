@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T08:54:59.828888+00:00",
+  "generated_at": "2026-10-03T09:10:08.529361+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
     "PASS": 12,
     "FAIL": 6,
-    "PENDING": 7
+    "PENDING": 8
   },
   "blocking_bounded_submission_gates": [
     "preslhy_blowdown_external_validation",
@@ -15,6 +15,7 @@
     "proust_independent_release_validation",
     "schefer_transient_release_validation",
     "schefer_2007_pressure_decay_validation",
+    "grune_2014_pressure_decay_validation",
     "institutional_ethics_determination",
     "hiad_casebook_frozen",
     "hiad_holdout_collection",
@@ -28,6 +29,7 @@
     "proust_independent_release_validation",
     "schefer_transient_release_validation",
     "schefer_2007_pressure_decay_validation",
+    "grune_2014_pressure_decay_validation",
     "institutional_ethics_determination",
     "hiad_casebook_frozen",
     "hiad_holdout_collection",
@@ -608,6 +610,37 @@
       }
     },
     {
+      "id": "grune_2014_pressure_decay_validation",
+      "status": "PENDING",
+      "claim": "The locked source model meets all pressure-decay screens on the independent KIT small-reservoir release.",
+      "evidence": "research\\grune_2014_holdout_result.json; research\\grune_2014_holdout_protocol.json; data\\public_validation\\derived\\grune_2014_figure2.csv",
+      "requirement": "At least 15 points plus an observable half-pressure crossing; <=10% NRMSE, <=15% median error and <=20% half-time error.",
+      "observed": {
+        "eligibility": {
+          "minimum_unique_points_met": true,
+          "measured_half_pressure_time_observed": false,
+          "minimum_requirements_met": false,
+          "reason": "The accessible publisher raster separates the valve trace only in the 0-0.01 s startup panel; the overlapping inset does not support a trace-specific half-pressure time."
+        },
+        "result": {
+          "points": 51,
+          "measured_initial_pressure_bar_abs": 199.843137,
+          "predicted_initial_pressure_bar_abs": 199.77756474266994,
+          "pressure_nrmse_percent_initial_measured": 11.11296821179252,
+          "median_absolute_percentage_error_percent": 10.879884084275622,
+          "experimental_half_pressure_time_s": null,
+          "predicted_half_pressure_time_s": null,
+          "half_pressure_time_relative_error_percent": null,
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": true,
+          "half_pressure_time_screen_pass": false,
+          "joint_primary_screen_pass": false
+        },
+        "hashes_match": true,
+        "claim_boundary": "One 20 MPa, 0.37 L, 4 mm pressure-decay trace; no flame, ignition, dispersion, radiation, station control or safety-distance claim."
+      }
+    },
+    {
       "id": "ekoto_transient_release_validation",
       "status": "PASS",
       "claim": "The locked adiabatic vessel-discharge model meets all frozen transient mass-flow screens on the independent Ekoto et al. scaled release.",
@@ -783,7 +816,7 @@
             75,
             75
           ],
-          "approximate_manuscript_words_before_references": 5934,
+          "approximate_manuscript_words_before_references": 5968,
           "figures": 2,
           "tables": 3,
           "citation_keys": 19,
@@ -815,12 +848,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-03T08:54:59.7321513Z",
+        "attempted_at": "2026-10-03T09:10:08.4218464Z",
         "attempts_this_run": 1,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "8017b3d165d796cfebf8938efb19a669f3c66078983853c0ca01a3ad5105c100",
+        "source_sha256": "efceccd2110453420c0450afe8a765435f5fcf8635479792da1437d61c646bda",
         "platform": "Microsoft Windows NT 10.0.26200.0",
         "diagnostic": "Unable to find standard directories for platform",
         "interpretation": "Compiler environment failure; LaTeX source compilation remains unverified."

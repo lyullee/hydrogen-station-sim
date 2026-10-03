@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "attempted_at": "2026-10-03T08:54:59.7321513Z",
+  "attempted_at": "2026-10-03T09:10:08.4218464Z",
   "attempts_this_run": 1,
   "success": false,
   "compiler": "Codex built-in LaTeX compiler",
   "source": "manuscript/ijhe_manuscript_draft.tex",
-  "source_sha256": "8017b3d165d796cfebf8938efb19a669f3c66078983853c0ca01a3ad5105c100",
+  "source_sha256": "efceccd2110453420c0450afe8a765435f5fcf8635479792da1437d61c646bda",
   "platform": "Microsoft Windows NT 10.0.26200.0",
   "diagnostic": "Unable to find standard directories for platform",
   "interpretation": "Compiler environment failure; LaTeX source compilation remains unverified."

@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-03T09:08:04.449493+00:00",
+  "protocol_sha256": "606dbd8a34853dfc0e98277ea23e5c0d07f0bb4e6e2da4ffcf8893299fcb62f2",
+  "data_sha256": "d0f1afa0fdc589a28235d12c62ddc8f9b303f63c8c229e967d8f1c758c3e3cab",
+  "eligibility": {
+    "minimum_unique_points_met": true,
+    "measured_half_pressure_time_observed": false,
+    "minimum_requirements_met": false,
+    "reason": "The accessible publisher raster separates the valve trace only in the 0-0.01 s startup panel; the overlapping inset does not support a trace-specific half-pressure time."
+  },
+  "result": {
+    "points": 51,
+    "measured_initial_pressure_bar_abs": 199.843137,
+    "predicted_initial_pressure_bar_abs": 199.77756474266994,
+    "pressure_nrmse_percent_initial_measured": 11.11296821179252,
+    "median_absolute_percentage_error_percent": 10.879884084275622,
+    "experimental_half_pressure_time_s": null,
+    "predicted_half_pressure_time_s": null,
+    "half_pressure_time_relative_error_percent": null,
+    "nrmse_screen_pass": false,
+    "median_ape_screen_pass": true,
+    "half_pressure_time_screen_pass": false,
+    "joint_primary_screen_pass": false
+  },
+  "claim_supported": false,
+  "claim_boundary": "One 20 MPa, 0.37 L, 4 mm pressure-decay trace; no flame, ignition, dispersion, radiation, station control or safety-distance claim."
+}

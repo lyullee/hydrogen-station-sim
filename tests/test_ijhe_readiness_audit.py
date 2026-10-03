@@ -58,6 +58,12 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert schefer_2007["result"]["half_pressure_time_screen_pass"] is True
     assert schefer_2007["protocol_hash_matches"] is True
     assert schefer_2007["data_hash_matches"] is True
+    assert gates["grune_2014_pressure_decay_validation"]["status"] == "PENDING"
+    grune = gates["grune_2014_pressure_decay_validation"]["observed"]
+    assert grune["eligibility"]["minimum_requirements_met"] is False
+    assert grune["eligibility"]["measured_half_pressure_time_observed"] is False
+    assert grune["result"]["points"] == 51
+    assert grune["hashes_match"] is True
     assert gates["ekoto_transient_release_validation"]["status"] == "PASS"
     ekoto = gates["ekoto_transient_release_validation"]["observed"]
     assert ekoto["result"]["points"] == 39

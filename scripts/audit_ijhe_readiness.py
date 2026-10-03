@@ -470,6 +470,48 @@ def audit(root: Path) -> dict[str, object]:
         } if schefer_2007_result else "missing; pressure-decay holdout has not completed",
     ))
 
+    grune_result_path = root / "research/grune_2014_holdout_result.json"
+    grune_result = _json(grune_result_path)
+    grune_protocol_path = root / "research/grune_2014_holdout_protocol.json"
+    grune_protocol = _json(grune_protocol_path)
+    grune_data_path = root / "data/public_validation/derived/grune_2014_figure2.csv"
+    grune_eligibility = (grune_result or {}).get("eligibility") or {}
+    grune_observed = (grune_result or {}).get("result") or {}
+    grune_hashes_match = bool(
+        grune_protocol_path.is_file()
+        and grune_data_path.is_file()
+        and (grune_result or {}).get("protocol_sha256") == _sha256(grune_protocol_path)
+        and (grune_result or {}).get("data_sha256") == _sha256(grune_data_path)
+    )
+    grune_pass = bool(
+        (grune_protocol or {}).get("status")
+        == "endpoints_and_code_frozen_before_numerical_curve_access"
+        and ((grune_protocol or {}).get("known_before_freeze") or {}).get(
+            "numerical_curve_coordinates_accessed"
+        ) is False
+        and grune_hashes_match
+        and grune_eligibility.get("minimum_requirements_met") is True
+        and grune_observed.get("joint_primary_screen_pass") is True
+    )
+    grune_status = (
+        "PASS" if grune_pass else
+        "PENDING" if grune_result and not grune_eligibility.get("minimum_requirements_met")
+        else "FAIL" if grune_result else "PENDING"
+    )
+    gates.append(_gate(
+        "grune_2014_pressure_decay_validation",
+        grune_status,
+        "The locked source model meets all pressure-decay screens on the independent KIT small-reservoir release.",
+        f"{grune_result_path.relative_to(root)}; {grune_protocol_path.relative_to(root)}; {grune_data_path.relative_to(root)}",
+        "At least 15 points plus an observable half-pressure crossing; <=10% NRMSE, <=15% median error and <=20% half-time error.",
+        {
+            "eligibility": grune_eligibility,
+            "result": grune_observed,
+            "hashes_match": grune_hashes_match,
+            "claim_boundary": (grune_result or {}).get("claim_boundary"),
+        } if grune_result else "missing; numeric holdout has not completed",
+    ))
+
     ekoto_result_path = root / "research/ekoto_2012_holdout_result.json"
     ekoto_result = _json(ekoto_result_path)
     ekoto_protocol_path = root / "research/ekoto_2012_holdout_protocol.json"
@@ -684,6 +726,7 @@ def audit(root: Path) -> dict[str, object]:
         "proust_independent_release_validation",
         "schefer_transient_release_validation",
         "schefer_2007_pressure_decay_validation",
+        "grune_2014_pressure_decay_validation",
         "ekoto_transient_release_validation",
         "hiad_protocol_integrity",
         "institutional_ethics_determination", "hiad_casebook_frozen",
