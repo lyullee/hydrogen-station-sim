@@ -46,6 +46,26 @@
       }
     },
     {
+      "id": "carb_hystep_2015_2017",
+      "title": "California HyStEP hydrogen station dispenser testing",
+      "url": "https://www.energy.ca.gov/sites/default/files/2021-05/CEC-600-2019-014.pdf",
+      "publisher": "California Energy Commission / CARB / NREL",
+      "public_raw_data": false,
+      "decision": "REQUEST_DATA_CONFIDENTIAL_TEST_MATRICES",
+      "inspection": {
+        "reported_scope": "HyStEP device tested 11 California hydrogen stations from 2015-12 through 2017-08 using three instrumented Type IV 70 MPa test tanks and CSA HGV 4.3 / SAE J2601 procedures.",
+        "reported_measurements": [
+          "test-tank pressure and temperature",
+          "dispenser communication and fueling data",
+          "table-based protocol and general-fault test outcomes"
+        ],
+        "raw_data_statement": "The public report states that station test data and results are confidential business information and are not included.",
+        "raw_common_timebase": "not public",
+        "role": "High-value independent dispenser/protocol validation lead; request de-identified HyStEP matrix files and reuse terms.",
+        "exclusion_reason": "The report provides test counts and procedures but no downloadable time-series matrices."
+      }
+    },
+    {
       "id": "nrel_h2fills",
       "title": "H2FillS: Hydrogen Filling Simulation",
       "url": "https://www.nrel.gov/hydrogen/h2fills",
@@ -626,6 +646,11 @@
         "id": "bam_demo_hrs_2026_sensor_monitoring",
         "url": "https://doi.org/10.3390/app16157856",
         "finding": "2026 BAM demonstration-HRS paper reports eight field safety sensors and three days of chronological monitoring, but its data-availability statement provides no raw download and directs requests to the corresponding author; no vehicle-side full-loop archive is exposed."
+      },
+      {
+        "id": "carb_hystep_2015_2017",
+        "url": "https://www.energy.ca.gov/sites/default/files/2021-05/CEC-600-2019-014.pdf",
+        "finding": "CEC HyStEP report documents 11 station campaigns with three instrumented Type IV 70 MPa tanks, protocol/fault/communication tests and pressure/temperature/fueling measurements; it explicitly states station test data and results are confidential and not included, so retain as a data-request lead only."
       },
       {
         "id": "h2_stations_export_api",

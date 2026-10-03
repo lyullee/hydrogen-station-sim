@@ -23,6 +23,7 @@ immutable digest are recorded.
 | Candidate | Evidence found | Decision |
 |---|---|---|
 | CARB 2024 Existing Light-Duty HRS In-Use Study | Tests at 22 in-use stations; report figures include pressure, temperature, mass flow and SOC. Appendix A says results were tabulated in an Excel workbook. The public page links only the PDF; the PDF has no attachments or data links. | **Request data.** Strongest independent field candidate, but the published plot and summary table are not machine-readable validation data. |
+| CARB/NREL HyStEP 2015–2017 dispenser test program | CEC report documents 11 California stations, three instrumented Type IV 70 MPa test tanks, pressure/temperature and dispenser communication/fueling measurements, plus CSA HGV 4.3 / SAE J2601 protocol and fault tests. The report explicitly says station test data and results are confidential and are not included. | **Request data.** Ask CARB/NREL for de-identified test matrices, data dictionary, calibration/quality flags and reuse terms; the report itself cannot close the untouched time-series gate. |
 | NREL H2FillS | Official page says the model was validated with empirical fueling datasets. | **Not available.** The empirical validation traces are not offered as a public download on the product page. Simulator output would not be independent experimental evidence. |
 | NREL 2024 HITRF reliability/fueling report | Table 4 gives sample HITRF fill summaries with timestamp, amount, rate, start/end pressure, dispensing temperature and dispensing pressure. | **Report table only.** The PDF does not provide a common-time-base raw trace, so it is useful field context and a lead for a data request, not an untouched full-loop validation set. |
 | DOE/NREL H2IQ Hour 2024 HD fast-flow experiment | 3/12/2024 HITRF test reports 73 kg in 423.5 s, 358.9 s fueling time, 172.3 g/s average, 483.33 g/s peak, 5.5→74.6 MPa, APRR 9.9 MPa/min under SAE J2601-5 MCF-HF-G H70 FM300 T40. | **Plot/summary only.** The presentation contains charts and aggregate endpoints but no machine-readable common-time-base trace; use for face-validity and operating-range checks only. |
@@ -64,6 +65,26 @@ The report states that testing occurred from October 2023 through May 2024 and
 that some older stations could not record or provide all HGV 4.3-required data.
 This limits the likely completeness of any released workbook and must be
 captured case by case if CARB supplies it.
+
+## HyStEP artifact inspection
+
+The California Energy Commission's public HyStEP report is a high-value
+independent dispenser/protocol-validation lead:
+
+- URL: <https://www.energy.ca.gov/sites/default/files/2021-05/CEC-600-2019-014.pdf>
+- Scope: 11 California hydrogen stations were tested from December 2015 through
+  August 2017 with three instrumented Type IV 70 MPa test tanks.
+- Measurements and procedures: test-tank pressure/temperature, dispenser
+  communication and fueling data, CSA HGV 4.3 / SAE J2601 table-based protocol
+  checks, and general-fault tests.
+- Limitation: the report states that station test data and results are
+  confidential business information and therefore are not included in the
+  public report.
+
+This is retained as a data-request lead only. It must not be counted as an
+eligible holdout until de-identified synchronized files, provenance,
+calibration/quality metadata, reuse permission and a cryptographic digest are
+obtained and frozen before model evaluation.
 
 ## NREL HITRF report artifact inspection
 
