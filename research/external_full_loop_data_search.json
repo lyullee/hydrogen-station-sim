@@ -165,6 +165,8 @@
         "osti_record": "https://www.osti.gov/biblio/1977265",
         "osti_id": "1977265",
         "accepted_manuscript_url": "https://www.osti.gov/servlets/purl/1977265",
+        "facility_data_acquisition_evidence": "https://www.hydrogen.energy.gov/docs/hydrogenprogramlibraries/pdfs/review15/tv024_blekhman_2015_p.pdf",
+        "facility_data_acquisition_finding": "DOE review states that station data were collected in a Microsoft SQL database and performance reports could be generated on request; the public presentation contains no SQL export.",
         "doi": "10.1016/j.jclepro.2021.129737",
         "manuscript_access": "accepted manuscript publicly available via OSTI",
         "raw_trace_access": "not provided in OSTI record or manuscript landing record",

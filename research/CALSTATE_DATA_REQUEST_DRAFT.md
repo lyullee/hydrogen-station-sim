@@ -20,6 +20,13 @@ one-year event and station behavior dataset; its accepted manuscript is
 available from OSTI (record 1977265). I am contacting the data custodian
 because the public records do not include synchronized raw traces.
 
+The DOE Hydrogen Annual Merit Review materials also document that the HRFF
+continuously collected station data in a Microsoft SQL database and generated
+performance reports on request (2015 review, project TV024):
+<https://www.hydrogen.energy.gov/docs/hydrogenprogramlibraries/pdfs/review15/tv024_blekhman_2015_p.pdf>.
+This is an additional route to the custodian; the public presentation itself
+does not include the underlying SQL export.
+
 Could you provide a de-identified event-level export, or identify the approved
 custodian and access route, for a small independent holdout? The minimum useful
 fields are:
