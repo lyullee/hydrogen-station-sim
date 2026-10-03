@@ -66,21 +66,53 @@ def _normalise(value: object) -> str:
     return re.sub(r"[^a-z0-9]+", "", str(value or "").lower())
 
 
-def _find_header(sheet, required: tuple[str, ...], max_rows: int = 15):
-    for row_number, row in enumerate(
-        sheet.iter_rows(min_row=1, max_row=max_rows, values_only=True), start=1
-    ):
-        normalised = [_normalise(value) for value in row]
-        if all(any(token in cell for cell in normalised) for token in required):
-            return row_number, row, normalised
-    raise ValueError(f"required headers {required} not found in {sheet.title}")
+def _header_layout(sheet, max_rows: int = 15, max_columns: int = 80):
+    rows = list(
+        sheet.iter_rows(
+            min_row=1,
+            max_row=max_rows,
+            max_col=min(sheet.max_column, max_columns),
+            values_only=True,
+        )
+    )
+    width = max((len(row) for row in rows), default=0)
+    profiles = [
+        [
+            _normalise(row[column])
+            for row in rows
+            if column < len(row) and row[column] is not None
+        ]
+        for column in range(width)
+    ]
+    return rows, profiles
 
 
-def _column_containing(normalised: list[str], *tokens: str) -> int:
-    for index, value in enumerate(normalised):
-        if all(token in value for token in tokens):
+def _data_time_column(rows) -> tuple[int, int]:
+    for row_index, row in enumerate(rows, start=1):
+        for column, value in enumerate(row):
+            normal = _normalise(value)
+            if normal == "times" or normal == "synchronizedtimes":
+                return row_index, column
+    raise ValueError("synchronized Time [s] data column not found")
+
+
+def _profile_column(profiles, *exact_tokens: str) -> int:
+    for index, profile in enumerate(profiles):
+        if any(
+            value == token or value.startswith(token)
+            for value in profile
+            for token in exact_tokens
+        ):
             return index
-    raise ValueError(f"column containing {tokens} not found")
+    raise ValueError(f"column profile containing {exact_tokens} not found")
+
+
+def _profile_label(rows, column: int) -> str:
+    return " | ".join(
+        str(row[column])
+        for row in rows
+        if column < len(row) and row[column] not in (None, "")
+    )
 
 
 def _numeric_rows(sheet, header_row: int, columns: tuple[int, ...]):
@@ -128,19 +160,17 @@ def _initial_temperature(workbook, case_prefix: str) -> tuple[float, bool]:
     ] or [sheet for sheet in workbook.worksheets if "temp" in sheet.title.lower()]
     for sheet in candidates:
         try:
-            header_row, headers, normalised = _find_header(sheet, ("synchronizedtime",))
+            rows, profiles = _header_layout(sheet)
+            header_row, time_column = _data_time_column(rows)
         except ValueError:
             continue
-        time_column = _column_containing(normalised, "synchronizedtime")
         temperature_columns = [
-            index for index, header in enumerate(normalised)
-            if re.fullmatch(r"t[123](?:o)?(?:c|degc|temperature)?", header)
+            index for index, profile in enumerate(profiles)
+            if any(
+                re.fullmatch(r"t[123](?:o)?(?:degc|c|kelvin)?", value)
+                for value in profile
+            )
         ]
-        if not temperature_columns:
-            temperature_columns = [
-                index for index, header in enumerate(normalised)
-                if re.match(r"^(?:temperature)?t[123](?:o)?", header)
-            ]
         samples = []
         for row in sheet.iter_rows(
             min_row=header_row + 1,
@@ -176,17 +206,18 @@ def _ambient_pressure(workbook, case_prefix: str) -> tuple[float, bool]:
     ]
     for sheet in candidates:
         try:
-            header_row, headers, normalised = _find_header(
-                sheet, ("synchronizedtime",)
-            )
+            rows, profiles = _header_layout(sheet)
+            header_row, time_column = _data_time_column(rows)
         except ValueError:
             continue
-        time_column = _column_containing(normalised, "synchronizedtime")
         pressure_columns = [
-            index for index, header in enumerate(normalised)
-            if (
-                ("ambient" in header or "pamb" in header or "airpressure" in header)
-                and ("pressure" in header or "pamb" in header)
+            index for index, profile in enumerate(profiles)
+            if any(
+                (
+                    ("ambient" in header or "pamb" in header or "airpressure" in header)
+                    and ("pressure" in header or "pamb" in header)
+                )
+                for header in profile
             )
         ]
         for pressure_column in pressure_columns:
@@ -200,7 +231,7 @@ def _ambient_pressure(workbook, case_prefix: str) -> tuple[float, bool]:
             if not samples:
                 continue
             value = float(np.median(samples))
-            header = str(headers[pressure_column] or "").lower()
+            header = _profile_label(rows, pressure_column).lower()
             normal = _normalise(header)
             if "hpa" in normal or "mbar" in normal:
                 pressure_pa = value * 100.0
@@ -236,18 +267,20 @@ def read_preslhy_workbook(
         if not pressure_sheets:
             raise ValueError("pressure worksheet not found")
         sheet = pressure_sheets[0]
-        header_row, headers, normalised = _find_header(
-            sheet, ("synchronizedtime", "pves")
+        header_rows, profiles = _header_layout(sheet)
+        header_row, time_column = _data_time_column(header_rows)
+        pressure_column = _profile_column(profiles, "pves", "pvessel")
+        samples = list(
+            _numeric_rows(sheet, header_row, (time_column, pressure_column))
         )
-        time_column = _column_containing(normalised, "synchronizedtime")
-        pressure_column = _column_containing(normalised, "pves")
-        rows = list(_numeric_rows(sheet, header_row, (time_column, pressure_column)))
-        if len(rows) < 20:
+        if len(samples) < 20:
             raise ValueError("fewer than 20 finite pressure samples")
-        values = np.asarray(rows, dtype=float)
+        values = np.asarray(samples, dtype=float)
         order = np.argsort(values[:, 0], kind="stable")
         time_s = values[order, 0]
-        pressure, unit = _pressure_unit(headers[pressure_column], values[order, 1])
+        pressure, unit = _pressure_unit(
+            _profile_label(header_rows, pressure_column), values[order, 1]
+        )
         unique = np.concatenate(([True], np.diff(time_s) > 0.0))
         time_s, pressure = time_s[unique], pressure[unique]
         if len(time_s) < 20:

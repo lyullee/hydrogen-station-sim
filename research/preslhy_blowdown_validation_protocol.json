@@ -21,6 +21,13 @@
       "outcomes_accessed": false,
       "change": "Implemented the protocol's measured-ambient-pressure preference and calculated peak flow only from accepted integration states.",
       "basis": "Pre-outcome code review found that the first adapter revision always substituted standard atmosphere and allowed rejected solver trial states to influence a secondary peak-flow value."
+    },
+    {
+      "date": "2026-10-03",
+      "raw_workbook_structure_accessed": true,
+      "numerical_model_outcomes_computed": false,
+      "change": "Corrected header discovery to join the publisher's row 1 sensor labels with row 4 units and row 6 synchronized data-column labels.",
+      "basis": "All four D05 workbooks failed structural parsing because Pves and Time [s] occupy different header rows. Only sheet names and string-valued cells in rows 1-15 were printed; no pressure values, error metrics or model predictions were reviewed."
     }
   ],
   "objective": "Externally evaluate the digital twin's ambient-temperature high-pressure hydrogen release and inventory-depletion physics against PRESLHY E3.1 DisCha experiments.",
@@ -58,12 +65,13 @@
     "case_specific_fitting_permitted": false
   },
   "validation_implementation_pre_outcome": {
-    "revision": 2,
+    "revision": 3,
     "files_sha256": {
-      "src/h2station/preslhy_validation.py": "80ed6c8df8f1b6aabb70db9551b73fb31784ee520b61d2f7e91a75e3f48c280c",
+      "src/h2station/preslhy_validation.py": "3b5fe2149c1f5374e89cdabfed90074d0b9b0b2c33aa091526615d8d4f094673",
       "scripts/run_preslhy_blowdown_validation.py": "da31f4518bab4f8e271ddce5b43a754df9f04da1525d6f4dc080d2ed1ecf5631"
     },
-    "outcomes_accessed_when_hashed": false
+    "raw_workbook_structure_accessed_when_hashed": true,
+    "numerical_model_outcomes_computed_when_hashed": false
   },
   "eligibility": {
     "include": [

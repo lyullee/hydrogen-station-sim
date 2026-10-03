@@ -86,7 +86,9 @@ def test_preslhy_primary_screens_are_fixed_before_outcome_access():
 def test_preslhy_validation_implementation_matches_pre_outcome_hashes():
     protocol = _protocol()
     implementation = protocol["validation_implementation_pre_outcome"]
-    assert implementation["outcomes_accessed_when_hashed"] is False
+    assert implementation["revision"] == 3
+    assert implementation["raw_workbook_structure_accessed_when_hashed"] is True
+    assert implementation["numerical_model_outcomes_computed_when_hashed"] is False
     for relative, expected in implementation["files_sha256"].items():
         actual = hashlib.sha256((ROOT / relative).read_bytes()).hexdigest()
         assert actual == expected

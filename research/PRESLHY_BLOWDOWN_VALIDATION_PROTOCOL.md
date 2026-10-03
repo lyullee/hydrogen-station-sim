@@ -32,6 +32,14 @@ when available, and the secondary peak-flow value is calculated from accepted
 integration states rather than rejected solver trial states. Revision 2 hashes
 are the operative validation implementation.
 
+After the first package was acquired, a structure-only check found that the
+publisher places sensor names in row 1, units in row 4 and synchronized data
+column names in row 6. All four D05 workbooks failed before any model run. The
+parser was corrected to join those header rows. Only sheet names and string
+cells in rows 1-15 were printed; no pressure values, error metric or prediction
+was inspected. This post-freeze structural correction is revision 3 and is
+recorded separately from the frozen physics and decision thresholds.
+
 ## Purpose
 
 This experiment evaluates the safety twin's source depletion and hydrogen
