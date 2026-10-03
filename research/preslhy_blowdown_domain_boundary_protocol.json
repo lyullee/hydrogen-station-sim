@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-03",
+  "status": "post_outcome_development_diagnostic",
+  "amendments": [
+    {
+      "date": "2026-10-03",
+      "outcomes_accessed": false,
+      "supersedes_git_commit": "b7cfd76",
+      "change": "Corrected time zero from the valve-relay transition to the published synchronized-time definition: first significant Pnoz increase.",
+      "basis": "PRESLHY D3.4 section 5.1 states that Pnoz, rather than the earlier relay transition, defines synchronized t = 0."
+    },
+    {
+      "date": "2026-10-03",
+      "outcomes_accessed": false,
+      "change": "Fixed pressure-basis inference, significant-increase tolerance, pressure strata and bootstrap seed before numerical workbook access.",
+      "basis": "The technical report specifies a 250 bar WIKA S-20 pressure sensor with less than 0.125 percent full-scale non-linearity; the workbook structure, but no numerical outcome, was available from the report."
+    },
+    {
+      "date": "2026-10-03",
+      "outcomes_accessed": false,
+      "change": "Implemented the protocol's measured-ambient-pressure preference and calculated peak flow only from accepted integration states.",
+      "basis": "Pre-outcome code review found that the first adapter revision always substituted standard atmosphere and allowed rejected solver trial states to influence a secondary peak-flow value."
+    },
+    {
+      "date": "2026-10-03",
+      "raw_workbook_structure_accessed": true,
+      "numerical_model_outcomes_computed": false,
+      "change": "Corrected header discovery to join the publisher's row 1 sensor labels with row 4 units and row 6 synchronized data-column labels.",
+      "basis": "All four D05 workbooks failed structural parsing because Pves and Time [s] occupy different header rows. Only sheet names and string-valued cells in rows 1-15 were printed; no pressure values, error metrics or model predictions were reviewed."
+    },
+    {
+      "date": "2026-10-03",
+      "raw_workbook_structure_accessed": true,
+      "numerical_model_outcomes_computed": false,
+      "change": "Corrected the negative-result retention path so an eligible model or integration failure is recorded as a failed case instead of aborting the validation run.",
+      "basis": "Pre-outcome failure-path review found a reference to an unset successful-result object after an evaluation exception. The fixed record derives the pressure group from the retained case pressure and leaves all primary screens false."
+    }
+  ],
+  "objective": "Externally evaluate the digital twin's ambient-temperature high-pressure hydrogen release and inventory-depletion physics against PRESLHY E3.1 DisCha experiments.",
+  "claim_boundary": "This protocol evaluates a rigid source vessel discharging through a nominal circular aperture. It does not validate a vehicle-fueling loop, cryogenic two-phase release, a site vent stack, pipe backpressure, ignition, dispersion, or emergency separation distance.",
+  "source": {
+    "title": "PRESLHY Experiment series E3.1 (Cryogenic Hydrogen Blow-down/Discharge) results - part A high pressure",
+    "doi": "10.35097/1187",
+    "landing_page": "https://radar.kit.edu/radar/en/dataset/vuyYifgxlfOuFrSP",
+    "archive_url": "https://www.radar-service.eu/radar-backend/archives/vuyYifgxlfOuFrSP/versions/1/content",
+    "archive_format": "application/x-tar",
+    "archive_bytes": 1313122304,
+    "archive_md5": "b4d245866b7daed5705a06415a83b013",
+    "license": "CC BY 4.0",
+    "technical_report_url": "https://preslhy.eu/wp-content/uploads/sites/3/2019/07/PRESLHY_D3_4_E3P1A_DisCha_190723.pdf",
+    "technical_report_sha256": "27872e8f8f1dc51396e8759c77b32b3799039a91d2d7172c8f6df186a6402fe8",
+    "facility_internal_volume_m3": 0.002815,
+    "published_nozzle_diameters_mm": [
+      0.5,
+      1.0,
+      2.0,
+      4.0
+    ],
+    "published_initial_pressure_range_bar": [
+      5,
+      200
+    ],
+    "outcomes_accessed_before_freeze": true,
+    "prior_information_seen": "The public technical report, its summary plots and experiment matrices were inspected. No numerical Excel outcome file from the archive was opened before this protocol was frozen. Numerical workbook outcomes were accessed in the frozen baseline run before this diagnostic protocol was authored."
+  },
+  "frozen_model": {
+    "git_commit": "d5eb663d7c48d93e29ecf83601175d8b16e3eeaf",
+    "worktree_dirty_at_freeze": false,
+    "files_sha256": {
+      "src/h2station/risk/live.py": "112b630ad7be4bfcbc49e23015a30cc50ef28a3746019709c8cd8c4fce8f75ca",
+      "src/h2station/dispenser.py": "3e45b4613752c83f5228d7711ed27e6aa4e6899b3968cf1560fa10342f88b855",
+      "src/h2station/full_station.py": "f4d03624a5128f780a0e138213ded13d0f0eed0d48aeb02ec62de53de2c3fa22",
+      "src/h2station/tabulated.py": "ed7678ce4b4979ffb1e9d031f7e5a29d81c08bd81f57901470b869a0608fd3b8",
+      "src/h2station/data/hydrogen_properties_v1.npz": "7ee25c94cdba920398679d9eb5c2828460fe58bba32595bcff076adc4d2d2433"
+    },
+    "fluid": "Hydrogen",
+    "discharge_coefficient": 0.8,
+    "parameter_fitting_permitted": false,
+    "case_specific_fitting_permitted": false
+  },
+  "validation_implementation_pre_outcome": {
+    "revision": 4,
+    "files_sha256": {
+      "src/h2station/preslhy_validation.py": "3b5fe2149c1f5374e89cdabfed90074d0b9b0b2c33aa091526615d8d4f094673",
+      "scripts/run_preslhy_blowdown_validation.py": "3271de0a656bb6b586ff4a1a861ea15071feaa429c51b43df8192221be265924"
+    },
+    "raw_workbook_structure_accessed_when_hashed": true,
+    "numerical_model_outcomes_computed_when_hashed": false
+  },
+  "eligibility": {
+    "include": [
+      "Excel numerical result files from packages named PRE3P1A_KIT_D*_300K_DATA.zip",
+      "nominal aperture 0.5, 1, 2 or 4 mm",
+      "measured vessel pressure and the published synchronized-time channel based on the first significant Pnoz rise",
+      "positive initial absolute pressure above ambient",
+      "at least 20 pressure samples after valve opening"
+    ],
+    "exclude_without_model_outcome_review": [
+      "80 K cryogenic packages",
+      "photograph-only packages",
+      "missing or non-finite time/pressure records",
+      "no identifiable published synchronized release start",
+      "pressure trace increasing after the synchronized release start for more than 10 percent of usable samples",
+      "documented sensor saturation or acquisition failure"
+    ],
+    "minimum_evaluable_cases": 12,
+    "minimum_nozzle_diameter_groups": 3,
+    "minimum_initial_pressure_groups": 3
+  },
+  "time_alignment": {
+    "zero": "published synchronized time zero: first significant pressure increase in the release line (Pnoz), as defined in the technical report; the earlier valve-relay transition is not used",
+    "evaluation_start_s": 0.1,
+    "evaluation_end": "first sample at or below 1.05 times measured ambient absolute pressure, or the last valid recorded sample",
+    "prediction_mapping": "linear interpolation onto experimental timestamps; no dynamic time warping or time shift optimization"
+  },
+  "input_interpretation": {
+    "pressure_signal": "Pves from the fast pressure worksheet",
+    "pressure_basis": "Use an explicit absolute/gauge header when present. Otherwise classify a terminal median from -0.5 to 0.5 bar as gauge and add 1.01325 bar; classify 0.5 to 1.5 bar as absolute; exclude any other ambiguous basis.",
+    "significant_pressure_increase_bar": 0.3125,
+    "increase_basis": "0.125 percent of the published 250 bar pressure-sensor full scale",
+    "initial_pressure": "last valid Pves sample before synchronized t = 0",
+    "pressure_groups_bar_abs": {
+      "low": "<=20",
+      "medium": ">20 and <=100",
+      "high": ">100"
+    }
+  },
+  "model_definition": {
+    "source_volume_m3": 0.002815,
+    "initial_pressure": "first valid measured vessel absolute pressure before release",
+    "initial_temperature": "median valid internal gas-temperature channels during the final 0.5 s before valve opening; use report nominal 293.15 K only when every internal temperature channel is unavailable and flag the substitution",
+    "ambient_pressure": "measured ambient absolute pressure, otherwise 101325 Pa with a substitution flag",
+    "aperture": "published nominal circular nozzle diameter",
+    "outflow": "current DynamicLeakModel real-gas isentropic restriction with discharge coefficient 0.8",
+    "inventory_energy": "rigid adiabatic control volume; remove upstream specific enthalpy with discharged mass",
+    "valve_and_pipe": "instantaneous full opening with no explicit upstream line inventory, valve travel or pipe backpressure"
+  },
+  "primary_endpoints": {
+    "pressure_nrmse_percent_initial_absolute_pressure": {
+      "case_screen_max": 10.0
+    },
+    "time_to_50_percent_initial_gauge_pressure_relative_error_percent": {
+      "case_screen_max": 20.0
+    }
+  },
+  "secondary_endpoints": {
+    "pressure_rmse_bar": {},
+    "pressure_mae_bar": {},
+    "peak_mass_flow_kg_s": {},
+    "cumulative_released_mass_kg": {},
+    "final_mass_loss_relative_error_percent": {
+      "screen_max": 20.0,
+      "quality_note": "The PRESLHY report describes balance-derived mass as qualitative; this endpoint cannot override the pressure endpoints."
+    },
+    "temperature_rmse_k": {
+      "exploratory": true
+    }
+  },
+  "aggregate_decision": {
+    "minimum_joint_primary_screen_pass_fraction": 0.7,
+    "bootstrap_replicates": 10000,
+    "bootstrap_random_seed": 20261003,
+    "bootstrap_unit": "experiment",
+    "report_by": [
+      "nozzle_diameter_mm",
+      "initial_pressure_group"
+    ],
+    "retain_all_eligible_failures": true,
+    "negative_result_policy": "A failed screen remains a publishable model-development result and prohibits a validated blowdown/vent claim."
+  },
+  "sensitivity_only_not_calibration": {
+    "discharge_coefficient_values": [
+      0.7,
+      0.8,
+      0.9
+    ],
+    "claim_rule": "Only the pre-existing 0.8 result controls the primary decision; sensitivity runs cannot replace it or be selected after outcome inspection."
+  },
+  "development_change": {
+    "reason": "The restriction solver now returns the finite lower-pressure flux when the isentropic sonic point lies below the represented hydrogen P-s table; no extrapolation is used.",
+    "claim_status": "Not eligible to replace the frozen prospective result or support an external validation claim.",
+    "source_of_change": "Post-outcome numerical domain diagnosis after the frozen baseline retained table-domain failures."
+  }
+}

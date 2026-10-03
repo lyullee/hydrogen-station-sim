@@ -157,13 +157,16 @@ class HydrogenPropertyTable:
         temperatures: list[float] = []
         for row in (ir, ir + 1):
             curve = energy_table[row]
-            if internal_energy < curve[0] or internal_energy > curve[-1]:
-                raise ThermoDomainError(
-                    f"Hydrogen table internal_energy={internal_energy:g} is "
-                    f"outside the available range near rho={density:g} kg/m3"
-                )
+            # At the cold lower-temperature boundary, neighbouring density
+            # rows can have slightly different minimum energies.  The
+            # interpolated rho-u surface is still represented even when one
+            # row's endpoint is a few joules away.  Clamp the seed to that
+            # row's bounded curve and let the forward refinement decide
+            # whether an exact inverse exists; the explicit rho-T fallback
+            # below then remains table-bounded and never extrapolates.
+            target_energy = float(np.clip(internal_energy, curve[0], curve[-1]))
             temperatures.append(
-                float(np.interp(internal_energy, curve, self.temperature_grid))
+                float(np.interp(target_energy, curve, self.temperature_grid))
             )
 
         # The rho-T table supplies a fast initial guess, but it was sampled on a

@@ -41,3 +41,16 @@ def test_fast_restriction_matches_direct_choking_search(
         pressure, temperature_k, downstream
     )
     assert actual == pytest.approx(0.8e-8 * reference_flux, rel=2.0e-4)
+
+
+def test_deep_expansion_uses_admissible_table_boundary():
+    """Cold blowdown remains finite when the sonic point is below the P-s table."""
+    restriction = IsentropicRealGasRestriction(
+        RestrictionParameters(flow_area_m2=1.0e-8, discharge_coefficient=0.8)
+    )
+    # This state is reached late in the public PRESLHY 0.5 mm blowdown
+    # trace. The mathematical choking point is below the represented entropy
+    # curve, but the lower admissible table boundary still gives a bounded
+    # conservative mass flux.
+    flow = restriction.mass_flow_kg_s(313508.43, 79.56074, 101325.0)
+    assert flow > 0.0

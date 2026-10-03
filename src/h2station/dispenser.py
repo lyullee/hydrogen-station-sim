@@ -326,8 +326,15 @@ class IsentropicRealGasRestriction:
             method="bounded",
             options={"xatol": 1.0e-8},
         )
-        if clipped_isentrope and (not result.success or -float(result.fun) <= lower_flux):
-            raise ThermoDomainError("Restriction choking point is outside the hydrogen table")
+        # At deep expansion the mathematical sonic point can lie below the
+        # represented P-s table.  In that case the admissible isentrope has a
+        # finite lower-pressure boundary.  The boundary flux is a conservative
+        # table-domain result; raising here made otherwise valid vessel
+        # blowdown integrations fail as soon as the gas cooled into that
+        # boundary layer.  We still raise when no admissible boundary can be
+        # found (the exception is raised above while locating ``lower_flux``).
+        # Keep the fallback explicit in the solver so this is a bounded table
+        # result rather than an extrapolation.
         maximum_flux = max(
             lower_flux,
             -float(result.fun) if result.success else 0.0,

@@ -10,6 +10,7 @@ from h2station.risk.runtime_backend import UnavailableHyRAMBackend
 from h2station.scenario import ReferenceScenario, build_reference_scenario
 from h2station.safety_runtime import FaultEvent, FaultKind
 from h2station.thermo import HydrogenEOS
+from h2station.tabulated import PropsSI
 from h2station.validation import (
     DynamicModelValidator,
     OutputChannel,
@@ -38,6 +39,14 @@ def test_coolprop_rho_u_round_trip(pressure, temperature):
     recovered = eos.state_rho_u(reference.density, reference.internal_energy)
     assert recovered.pressure == pytest.approx(reference.pressure, rel=1.0e-8)
     assert recovered.temperature == pytest.approx(reference.temperature, rel=1.0e-8)
+
+
+def test_tabulated_rho_u_boundary_is_bounded_for_cold_blowdown():
+    """Adjacent density rows do not reject an in-table 60 K boundary state."""
+    pressure = PropsSI("P", "Dmass", 0.640865, "Umass", 625703.0)
+    temperature = PropsSI("T", "Dmass", 0.640865, "Umass", 625703.0)
+    assert np.isfinite(pressure)
+    assert 60.0 <= temperature <= 60.1
 
 
 def test_validation_and_mass_balance():
