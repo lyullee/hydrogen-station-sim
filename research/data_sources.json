@@ -162,6 +162,17 @@
       "rights_note": "The public deliverable may be cited. It contains test matrices and plotted experimental comparisons but no machine-readable synchronized trace archive was identified.",
       "eligibility_note": "Independent heavy-duty tank-filling campaign description and protocol context for a future data request; plot-only figures are not an untouched time-series validation set."
     },
+    "monde_2012_jhfc_open_data_claim": {
+      "title": "Estimation of temperature change in practical hydrogen pressure tanks being filled at high pressures of 35 and 70 MPa",
+      "publisher": "International Journal of Hydrogen Energy / JHFC-NEDO-JARI",
+      "landing_page": "https://doi.org/10.1016/j.ijhydene.2011.12.136",
+      "doi": "10.1016/j.ijhydene.2011.12.136",
+      "archive_url": "https://www.jari.or.jp/jhfc/",
+      "citation": "Monde, M., Woodfield, P., Takahashi, T., and Ishimoto, M., Estimation of temperature change in practical hydrogen pressure tanks being filled at high pressures of 35 and 70 MPa, International Journal of Hydrogen Energy 37 (2012) 5723-5734.",
+      "license": "Article may be cited; underlying six-run data rights and reuse terms not identified",
+      "rights_note": "The paper states complete experimental data were opened for analysis, but the public article, JHFC archive and indexed supplementary material expose no machine-readable six-run archive.",
+      "eligibility_note": "High-value independent tank-thermal data-request lead; no raw file, common-time-base trace or immutable digest is currently available, so it cannot close the independent full-loop gate."
+    },
     "tessema_2026_hrs_performance_simulation": {
       "title": "HRSs refueling perfromance Data sets",
       "publisher": "Mendeley Data",
