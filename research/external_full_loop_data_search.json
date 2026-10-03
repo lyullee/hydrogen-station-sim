@@ -902,6 +902,63 @@
           "request_route": "study authors and BAM H2Safety@BAM data custodian"
         }
       }
+    },
+    {
+      "id": "dtu_hydrogen_fuelling_station_library",
+      "title": "DTU-TES Hydrogen Fuelling Station Library v2.1",
+      "doi": "10.5281/zenodo.4436147",
+      "url": "https://zenodo.org/records/4436147",
+      "publisher": "Technical University of Denmark / Zenodo",
+      "public_raw_data": false,
+      "decision": "OPEN_PROTOCOL_LIBRARY_NO_MEASUREMENTS",
+      "inspection": {
+        "local_artifact": "data/public_validation/raw/dtu_hydrogen_fuelling_station_v2_1.zip",
+        "sha256": "EBA42CF3E3F6BF2B024C59A95642F81A932241EEAE95547E94321EE698090E11",
+        "bytes": 452175,
+        "license_record": "other-open",
+        "contents": "Modelica library source, MATLAB coefficient tables, SAE J2601 MC/APRR fueling protocol implementation and high-pressure ejector models; no measured station or vehicle time-series files.",
+        "common_timebase": false,
+        "role": "Independent protocol/model implementation reference and reproducibility cross-check only; it cannot close the physical full-loop validation gate.",
+        "claim_limit": "Do not count simulator outputs or library coefficients as external experimental evidence."
+      }
+    },
+    {
+      "id": "hiad_2_2_public_hrs_incident_data",
+      "title": "European Hydrogen Incidents and Accidents Database HIAD 2.2: HRS application rows",
+      "url": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt",
+      "publisher": "European Commission Joint Research Centre / Clean Hydrogen Joint Undertaking",
+      "public_raw_data": true,
+      "decision": "ACCIDENT_EVIDENCE_NOT_TIME_SERIES",
+      "inspection": {
+        "local_artifact": "data/public_validation/raw/hiad_2_2/HIAD 2.2.xlsx",
+        "sha256": "295772b60a4afe5ef47a00bc314eed48b76c170be00c29952d60e50fedd6f55f",
+        "hrs_case_count": 34,
+        "with_emergency_action": 29,
+        "physical_effect_counts": {
+          "Unignited Hydrogen Release": 22,
+          "No Hydrogen Release": 6,
+          "Hydrogen release and ignition": 1,
+          "Hydrogen Release and Ignition": 5
+        },
+        "scope": "Historical HRS incidents and near misses with source references, emergency actions, lessons learned and corrective measures; no synchronized pressure/temperature/flow traces.",
+        "reuse_note": "JRC permits free use with acknowledgement and states source validity remains the responsibility of the original source.",
+        "role": "Primary public accident-evidence source for scenario taxonomy and response-grounding; suitable for a separately frozen SAGA/HAZOP response evaluation, not for the station dynamic full-loop numerical holdout.",
+        "claim_limit": "Accident records must not be treated as measured process trajectories; the current expert vignette and ethics gates remain pending."
+      }
+    },
+    {
+      "id": "nrel_retail_cdp_aggregate_safety",
+      "title": "NREL/National Laboratory of the Rockies Next Generation Hydrogen Station Composite Data Products",
+      "url": "https://www.nlr.gov/hydrogen/infrastructure-cdps-retail",
+      "publisher": "U.S. Department of Energy / National Laboratory of the Rockies",
+      "public_raw_data": false,
+      "decision": "AGGREGATE_SAFETY_CONTEXT_ONLY",
+      "inspection": {
+        "reported_scope": "Retail-station aggregate safety, equipment categories, reliability, fill rates and final pressures through 2020.",
+        "raw_common_timebase": false,
+        "role": "Independent contextual benchmark for event-category frequencies and operating ranges; no row-level physical trace or incident narrative archive is exposed.",
+        "claim_limit": "Do not use aggregate charts as external numerical validation or as a substitute for HIAD source-linked accident cases."
+      }
     }
   ],
   "next_action": "Use the NREL HDVS workbook for the frozen tank-submodel diagnostic, request permission for publication of derived values, and request synchronized station-side traces from NREL/BAM/JRC/Empa/DLR before freezing a new full-loop holdout.",
@@ -1024,7 +1081,29 @@
       }
     ],
     "result": "NorCAL ZERO is a stronger raw-data request lead than the standalone CEC event-summary report, but it does not close the untouched full-loop gate without the underlying logs, temperature channels, vehicle linkage, provenance and reuse terms.",
-    "next_action": "request de-identified NorCAL ZERO station and vehicle logger files, freeze provenance and scoring before any evaluation"
+    "next_action": "request de-identified NorCAL ZERO station and vehicle logger files, freeze provenance and scoring before any evaluation",
+    "zenodo_and_accident_review": {
+      "scope": "follow-up review of Zenodo HRS records and current public accident evidence",
+      "sources": [
+        {
+          "id": "dtu_hydrogen_fuelling_station_library",
+          "url": "https://zenodo.org/records/4436147",
+          "finding": "open protocol/model library, but the archive contains no measured station or vehicle time series"
+        },
+        {
+          "id": "hiad_2_2_public_hrs_incident_data",
+          "url": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt",
+          "finding": "current HIAD 2.2 public workbook yields 34 HRS application rows with emergency-action and lesson fields; it is accident evidence, not dynamic process time series"
+        },
+        {
+          "id": "nrel_retail_cdp_aggregate_safety",
+          "url": "https://www.nlr.gov/hydrogen/infrastructure-cdps-retail",
+          "finding": "NREL composite products expose aggregate safety and performance charts only"
+        }
+      ],
+      "result": "HIAD 2.2 remains the strongest open accident-evidence source for the SAGA response-grounding track. No new Zenodo record found in this review closes the untouched station-to-vehicle full-loop numerical gate.",
+      "claim_limit": "Keep numerical full-loop validation, accident-response effectiveness, and LLM safety claims separate until each frozen gate is independently completed."
+    }
   },
   "last_reviewed": "2026-10-04"
 }

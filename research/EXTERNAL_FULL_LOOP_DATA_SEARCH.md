@@ -53,6 +53,9 @@ immutable digest are recorded.
 | Beijing Winter Olympics HRS Operational Data List, CSTR 16666.11.nbsdc.aI3fJrzX | National Basic Science Data Center metadata reports 2022 HRS data with dispenser monitoring, fueling records and compressor monitoring; four files, 10.22 MB. | **Access request.** The machine-readable record is marked “approval required” and the file-tree endpoint returns no files without authorization. It is a high-value candidate, not an available holdout. |
 | Hungarian HRS digital-twin validation, Hasulyó, DOI 10.32604/ee.2026.081099 | Open-access paper reports operational pressure, temperature, mass-flow and refueling comparisons from an existing Hungarian HRS. | **Request data.** The paper's data-availability statement says supporting data are unavailable because of participant consent and legal restrictions. |
 | MetHyTrucks HySaM system measurements, Zenodo DOI 10.5281/zenodo.20590842 | CC BY 4.0 record with three downloadable XLSX time series from hydrogen sampling-system experiments; the files contain 0.5 s pressure/temperature/flow-like channels. | **Measurement-system reference only.** There are no vehicle/tank/refuelling fields or station operating context, so this cannot close the station-to-vehicle full-loop gate. |
+| DTU-TES Hydrogen Fuelling Station Library v2.1, Zenodo DOI 10.5281/zenodo.4436147 | Open archive contains a Modelica/Matlab SAE J2601 MC/APRR protocol implementation, coefficient tables and ejector models. | **Protocol/model reference only.** The archive has no measured station or vehicle time-series files, so simulator output cannot be counted as external experimental validation. |
+| JRC HIAD 2.2 HRS application rows | Current public workbook contains 34 HRS incidents/near misses with source references, emergency actions, lessons learned and corrective measures. | **Accident-evidence track.** It is suitable for a separately frozen SAGA response-grounding evaluation, but it has no synchronized pressure/temperature/flow trajectory and cannot close the numerical full-loop gate. |
+| NREL/National Laboratory of the Rockies retail-station composite products | Public aggregate safety, reliability and fueling-rate/final-pressure charts through 2020. | **Aggregate context only.** No row-level trace or incident narrative archive is exposed. |
 | BAM demonstration-HRS monitoring study, DOI 10.3390/app16157856 | 2026 paper reports three days of real HRS monitoring across eight compressor/storage/dispenser safety sensors and chronological field deployment. | **Request data.** The data-availability statement directs requests to the corresponding author; no raw synchronized archive or vehicle-side full-loop data are publicly downloadable. |
 | An et al. Samcheok HRS digital-twin sensor table, DOI 10.3390/su16219482 | Open-access paper prints a 24-channel HRS sensor schema and 1 s normal-operation examples covering trailer, chillers, compressors and storage banks. | **Sensor benchmark only.** Vehicle/receptacle pressure and mass-flow channels are absent from the printed table; abnormal compressor/chiller/dispenser values were artificially created, so the paper cannot close the physical full-loop gate. |
 
@@ -470,3 +473,32 @@ aggregate products from being silently relabelled as independent validation.
 The machine-readable counterpart is
 `research/external_full_loop_data_search.json`; its `review_log_2026_10_03`
 records the URLs and the same access decisions used by the readiness audit.
+
+## 2026-10-04 Zenodo and accident-evidence follow-up
+
+A targeted Zenodo API review of records matching `hydrogen AND station`,
+`hydrogen fueling` and `hydrogen refuelling station` found the DTU-TES
+Hydrogen Fuelling Station Library (DOI
+<https://zenodo.org/records/4436147>). The archive is useful for an
+independent SAE J2601 MC/APRR protocol and Modelica implementation comparison,
+but the downloaded release contains only source/model files and coefficient
+tables; no measured station or vehicle time series are present. Its outputs
+therefore cannot be used as an external validation set.
+
+The current JRC page identifies HIAD 2.2 as the public accident/incident
+workbook, updated through 31 December 2025:
+<https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt>. The repository
+freezes 34 HRS application rows from the workbook in
+`research/hiad_hrs_public_evidence.json`, including emergency-action, lesson
+and corrective-measure fields. This is a strong source for scenario taxonomy
+and response-grounding, but its event records are not synchronized process
+trajectories. The casebook, ethics determination and independent expert
+review remain separate pending gates; no accident-response effectiveness
+claim is made from the workbook alone.
+
+NREL's retail composite data products
+(<https://www.nlr.gov/hydrogen/infrastructure-cdps-retail>) add independent
+aggregate safety, reliability and fueling-range context. They do not expose
+row-level pressure/temperature/flow traces or a machine-readable incident
+archive and therefore do not close the numerical full-loop gate.
+
