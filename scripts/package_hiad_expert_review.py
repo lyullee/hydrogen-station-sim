@@ -167,7 +167,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--collection", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--reviewer-codes", nargs="+", default=["R1", "R2"])
+    parser.add_argument("--reviewer-codes", nargs="+", default=["R1", "R2", "R3"])
     parser.add_argument("--study-id", default="HIAD-SAGA-2601")
     parser.add_argument(
         "--ethics-status",
@@ -176,8 +176,8 @@ def main() -> int:
     )
     args = parser.parse_args()
     codes = [code.strip() for code in args.reviewer_codes if code.strip()]
-    if len(codes) < 2 or len(codes) != len(set(codes)):
-        raise SystemExit("At least two unique reviewer codes are required")
+    if len(codes) < 3 or len(codes) != len(set(codes)):
+        raise SystemExit("At least three unique reviewer codes are required")
 
     manifest, blind_rows = _verify_collection(args.collection)
     args.output.mkdir(parents=True, exist_ok=True)
@@ -210,8 +210,9 @@ def main() -> int:
     qualification_fields = [
         "reviewer_code", "professional_role", "relevant_years_experience",
         "qualifications", "hydrogen_safety_experience", "hazop_experience",
-        "emergency_response_experience", "prior_system_familiarity",
-        "conflict_of_interest", "independence_confirmed_yes_no",
+        "emergency_response_experience", "hrs_operating_experience",
+        "prior_system_familiarity", "conflict_of_interest",
+        "conflict_management_or_none", "independence_confirmed_yes_no",
         "ethics_information_provided_yes_no", "rating_completed_utc",
     ]
     qualification_rows = [{field: "" for field in qualification_fields} for _ in codes]
@@ -240,6 +241,9 @@ def main() -> int:
         "reviewer_codes": codes,
         "response_count_per_reviewer": len(blind_rows),
         "packet_file_sha256": packet_hashes,
+        "reviewer_qualifications_template_sha256": _sha256(
+            args.output / "reviewer_qualifications.csv"
+        ),
         "collection_failed_call_count": manifest.get("failed_call_count", 0),
         "failed_calls_retained_for_scoring": manifest.get(
             "failed_calls_retained_for_blinded_scoring", False

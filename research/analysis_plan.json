@@ -67,7 +67,7 @@
       "failed-call rate",
       "criterion-level pairwise quadratic-weighted kappa"
     ],
-    "reviewers": "at least two independent qualified hydrogen/process-safety reviewers, blinded to allocation; one complete locked file per coded reviewer",
+    "reviewers": "three independent qualified hydrogen/process-safety reviewers, blinded to allocation; one complete locked file per coded reviewer",
     "human_participant_governance": "record the applicable institutional approval, exemption, or not-required determination before recruiting reviewers or collecting ratings",
     "integrity_checks": "hash-locked casebook, allocation and blank form; reject incomplete forms, changed response text, duplicate codes, invalid scores, and unexplained binary safety marks",
     "inference": "case-level bootstrap 95 percent CI and paired two-sided Wilcoxon signed-rank test"

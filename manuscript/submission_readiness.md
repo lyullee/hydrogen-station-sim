@@ -19,7 +19,7 @@ The current official IJHE Guide for Authors was checked on 3 October 2026. A res
 | Outdoor station plume geometry | Not independently validated | The open-channel experiment is not geometrically applicable to the outdoor free jet |
 | HIAD casebook leakage review | Pending | Advisory pre-screen flags 16 HIGH, 6 MEDIUM and 2 LOW among 24 holdout vignettes; a qualified non-rating coordinator must inspect every case, rewrite/remove hindsight actions without adding facts, then approve and freeze the complete set |
 | Human-participant ethics determination | Pending | Record institutional approval, exemption or not-required determination before reviewer recruitment/rating |
-| Blinded SAGA expert review | Pending and mandatory | At least two independent qualified reviewers; lock ratings before unmasking |
+| Blinded SAGA expert review | Pending and mandatory | Three independent qualified reviewers; lock ratings before unmasking |
 | SAGA ablation result | Pending | Alarm-only vs direct LLM vs standards-RAG, with unsafe advice, omissions, latency, failures and agreement |
 | New untouched full-loop set | Recommended for a broad control claim | Freeze the next protocol representation before collecting or obtaining new cases |
 | Author metadata | Pending | Names, affiliations, corresponding author, ORCID |
@@ -36,13 +36,19 @@ The current official IJHE Guide for Authors was checked on 3 October 2026. A res
 - `graphical_abstract.svg` and `.png`: editable and 1328 × 531 px graphical abstract.
 - `../output/pdf/IJHE_graphical_abstract.pdf`: visually verified 13 cm submission PDF.
 - Reproduction and evidence files in `docs/` and `research/`.
+- `research/HIAD_EXPERT_STUDY_PREREGISTRATION.md`: confirmatory comparison,
+  endpoints, exclusions, missingness and analysis frozen before holdout collection.
+- `research/ETHICS_DETERMINATION_REQUEST.md`, reviewer information sheet and
+  data-management plan: institution-ready governance packet; determination pending.
+- `research/hiad_study_protocol_manifest.json`: SHA-256 manifest that keeps
+  recruitment and holdout collection disabled while governance fields are pending.
 
 ## Finalization sequence
 
 1. Have a non-rating coordinator remove hindsight-action leakage from the 24 holdout HIAD vignettes and freeze the approved casebook.
 2. Obtain and record the applicable institutional ethics determination for the expert-review study.
 3. Collect all three response variants under frozen provider/model, prompt, sampling and token settings.
-4. Build isolated reviewer packets and obtain independent blinded ratings from at least two qualified hydrogen/process-safety reviewers.
+4. Build isolated reviewer packets and obtain independent blinded ratings from three qualified hydrogen/process-safety reviewers.
 5. Lock the rating database, unmask once, and run the committed analysis script.
 6. Add the SAGA effect sizes, bootstrap confidence intervals, unsafe-advice and omission rates, latency, failures and inter-rater agreement to the Results and Abstract.
 7. Decide whether the paper limits the process claim to the tank submodel or adds a new untouched full-loop dataset.

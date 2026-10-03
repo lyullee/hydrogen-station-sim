@@ -83,7 +83,7 @@ rubric after reading an answer introduces evaluator bias.
 The bundled two cases are a storage-bank hydrogen leak and vehicle-tank
 overtemperature. For a submission, add at least overpressure/relief opening,
 external fire, cooling failure and detector failure. Run each model/case at least
-five times and report mean, standard deviation and worst result. Have two or more
+five times and report mean, standard deviation and worst result. Have three
 gas-safety reviewers independently rate action correctness; report their rubric
 and agreement rather than treating keyword coverage as expert validation.
 

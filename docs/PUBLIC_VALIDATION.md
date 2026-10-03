@@ -188,21 +188,22 @@ RAG variants. It isolates the added value of language generation and retrieval;
 it does not claim that the HIAD narrative contains live process or consequence
 measurements. The generated `blind_expert_review.csv` hides the response variant.
 `reviewer_case_reference.csv` supplies the observation and withheld HIAD response
-fields without revealing the allocation. At least two
+fields without revealing the allocation. Three
 independent hydrogen-safety reviewers should score situation accuracy, immediate
 action correctness, priority order, stabilization/restart criteria, prevention,
 evidence grounding and operator usability. Critical omissions and unsafe advice
 are separate binary endpoints. The allocation key must remain with the study
 coordinator until ratings are locked.
 
-After two or more reviewers return separate completed copies and the coordinator
+After three reviewers return separate completed copies and the coordinator
 marks approved casebook vignettes `YES`, analyze the locked files:
 
 ```powershell
 .venv\Scripts\python.exe scripts\analyze_hiad_expert_review.py `
   --allocation data\public_validation\results\hiad_decision\allocation_key.csv `
   --casebook data\public_validation\results\hiad_decision\casebook_snapshot.json `
-  --ratings reviewer_1.csv reviewer_2.csv
+  --ratings reviewer_1.csv reviewer_2.csv reviewer_3.csv `
+  --reviewer-qualifications reviewer_qualifications.csv
 ```
 
 The analyzer reports each model variant's paired event-level difference versus
@@ -284,7 +285,7 @@ exists and the results support the stated claims:
    is documented. The open-channel data cannot validate an outdoor station model
    until release and sensor geometry are mapped explicitly.
 3. **Incident decision support:** the holdout vignettes are checked for response
-   leakage; at least two qualified reviewers complete blinded ratings; agreement,
+   leakage; three qualified reviewers complete blinded ratings; agreement,
    unsafe-advice rate, critical-omission rate, response latency and failed-call
    rate are reported.
 4. **Ablation:** alarm-only, process context, process plus consequence results,

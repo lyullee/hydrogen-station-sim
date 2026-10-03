@@ -2,3 +2,16 @@
 *.jpg binary
 *.jpeg binary
 *.pdf binary
+research/HIAD_EXPERT_STUDY_PREREGISTRATION.md text eol=lf
+research/ETHICS_DETERMINATION_REQUEST.md text eol=lf
+research/EXPERT_REVIEWER_INFORMATION_SHEET.md text eol=lf
+research/HIAD_DATA_MANAGEMENT_PLAN.md text eol=lf
+research/analysis_plan.json text eol=lf
+research/hiad_study_protocol_manifest.json text eol=lf
+docs/EXPERT_REVIEW_PROTOCOL.md text eol=lf
+scripts/prepare_hiad_coordinator_review.py text eol=lf
+scripts/freeze_hiad_approved_casebook.py text eol=lf
+scripts/run_hiad_decision_evaluation.py text eol=lf
+scripts/package_hiad_expert_review.py text eol=lf
+scripts/analyze_hiad_expert_review.py text eol=lf
+scripts/freeze_hiad_study_protocol.py text eol=lf

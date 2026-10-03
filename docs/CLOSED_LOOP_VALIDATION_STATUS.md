@@ -50,5 +50,5 @@ physics claim to the measured-boundary tank model and present the full loop as a
 demonstrator with negative validation evidence.
 
 IJHE readiness also still requires the preregistered blinded HIAD/SAGA review by
-at least two qualified independent reviewers. Software tests and LLM self-scoring
+three qualified independent reviewers. Software tests and LLM self-scoring
 cannot substitute for that assessment.

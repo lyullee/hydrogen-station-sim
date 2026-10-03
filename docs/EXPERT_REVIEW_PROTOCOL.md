@@ -13,6 +13,10 @@ Before recruiting reviewers or collecting ratings, obtain and record the
 applicable institutional determination for research involving expert human
 participants (for example, approval, exemption, or a documented determination
 that review is not required). The software cannot make that determination.
+The ethics request, reviewer information sheet, data-management plan and
+pre-collection preregistration are maintained under `research/`. The protocol
+freezer records their hashes and keeps recruitment disabled while institutional
+fields or the determination remain pending.
 
 ## Cases and freezing
 
@@ -74,7 +78,7 @@ rating is locked.
 
 ## Reviewers
 
-Use at least two independent reviewers with documented hydrogen-safety,
+Use three independent reviewers with documented hydrogen-safety,
 process-safety, HAZOP, emergency-response, or HRS operating experience. Record
 professional role, relevant years of experience, applicable qualifications,
 prior familiarity with the system, and conflicts of interest in the study log.
@@ -85,6 +89,12 @@ Use coded reviewer identifiers in analysis files. Keep any identity/contact key
 under the institution's approved data-management procedure and outside the
 repository. One rating file must contain one reviewer code and every locked
 response exactly once.
+
+Before analysis, complete the coded `reviewer_qualifications.csv`. The analyzer
+requires a professional role, relevant experience/qualification, at least one
+applicable experience category, conflict and management entries, prior-system
+familiarity, independence confirmation, ethics-information receipt and completion
+time for exactly the same three reviewer codes as the rating files.
 
 Before scoring the holdout set, reviewers jointly score only development cases
 to align the meaning of the rubric. They may clarify the rubric, but they may not
@@ -141,6 +151,9 @@ the rubric, and binary safety marks without an explanation.
 
 ```powershell
 $env:PYTHONPATH = "src"
+.venv\Scripts\python.exe scripts\freeze_hiad_study_protocol.py `
+  --ethics-status pending
+
 .venv\Scripts\python.exe scripts\run_hiad_decision_evaluation.py `
   --split holdout --prepare-casebook
 
@@ -163,11 +176,11 @@ $env:PYTHONPATH = "src"
   --casebook-freeze-manifest data\public_validation\results\hiad_casebook_frozen\casebook_freeze_manifest.json `
   --include-standards-rag
 
-# After the institutional ethics determination, build isolated R1/R2 packets.
+# After the institutional ethics determination, build isolated R1/R2/R3 packets.
 .venv\Scripts\python.exe scripts\package_hiad_expert_review.py `
   --collection data\public_validation\results\hiad_decision `
   --output data\public_validation\results\hiad_review_package `
-  --reviewer-codes R1 R2 --ethics-status exempt
+  --reviewer-codes R1 R2 R3 --ethics-status exempt
 
 # Each reviewer completes only their own ratings_R*.csv.
 .venv\Scripts\python.exe scripts\analyze_hiad_expert_review.py `
@@ -175,7 +188,10 @@ $env:PYTHONPATH = "src"
   --casebook data\public_validation\results\hiad_decision\casebook_snapshot.json `
   --ratings `
     data\public_validation\results\hiad_review_package\reviewers\R1\ratings_R1.csv `
-    data\public_validation\results\hiad_review_package\reviewers\R2\ratings_R2.csv
+    data\public_validation\results\hiad_review_package\reviewers\R2\ratings_R2.csv `
+    data\public_validation\results\hiad_review_package\reviewers\R3\ratings_R3.csv `
+  --reviewer-qualifications `
+    data\public_validation\results\hiad_review_package\reviewer_qualifications.csv
 ```
 
 Archive the collection manifest, approved casebook, raw responses, blinded

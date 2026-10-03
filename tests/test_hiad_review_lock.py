@@ -122,20 +122,48 @@ def _complete(path: Path) -> None:
         writer.writerows(rows)
 
 
+def _complete_qualifications(path: Path) -> None:
+    with path.open(encoding="utf-8-sig", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+        fields = list(rows[0])
+    for index, row in enumerate(rows, start=1):
+        row.update({
+            "professional_role": "Process safety engineer",
+            "relevant_years_experience": str(index + 4),
+            "qualifications": "Professional safety qualification",
+            "hydrogen_safety_experience": "Hydrogen risk review",
+            "hazop_experience": "HAZOP facilitator",
+            "emergency_response_experience": "Emergency plan review",
+            "hrs_operating_experience": "none",
+            "prior_system_familiarity": "none",
+            "conflict_of_interest": "none",
+            "conflict_management_or_none": "none",
+            "independence_confirmed_yes_no": "yes",
+            "ethics_information_provided_yes_no": "yes",
+            "rating_completed_utc": f"2026-10-0{index}T00:00:00Z",
+        })
+    with path.open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
 def test_reviewer_packets_are_blinded_locked_and_analyzable(tmp_path: Path):
     collection = _collection(tmp_path)
     package = tmp_path / "package"
     completed = subprocess.run([
         sys.executable, str(PACKAGE_SCRIPT),
         "--collection", str(collection), "--output", str(package),
-        "--reviewer-codes", "R1", "R2", "--ethics-status", "exempt",
+        "--reviewer-codes", "R1", "R2", "R3", "--ethics-status", "exempt",
     ], check=True, capture_output=True, text=True)
     assert "coordinator_lock_manifest.json" in completed.stdout
-    for code in ("R1", "R2"):
+    for code in ("R1", "R2", "R3"):
         folder = package / "reviewers" / code
         assert not (folder / "allocation_key.csv").exists()
         ratings = folder / f"ratings_{code}.csv"
         _complete(ratings)
+    qualifications = package / "reviewer_qualifications.csv"
+    _complete_qualifications(qualifications)
 
     output = tmp_path / "analysis"
     subprocess.run([
@@ -144,13 +172,16 @@ def test_reviewer_packets_are_blinded_locked_and_analyzable(tmp_path: Path):
         "--casebook", str(collection / "casebook_snapshot.json"),
         "--ratings", str(package / "reviewers/R1/ratings_R1.csv"),
         str(package / "reviewers/R2/ratings_R2.csv"),
+        str(package / "reviewers/R3/ratings_R3.csv"),
+        "--reviewer-qualifications", str(qualifications),
         "--output", str(output),
     ], check=True, capture_output=True, text=True)
     report = json.loads((output / "expert_review_analysis.json").read_text())
     assert report["event_count"] == 2
-    assert report["rater_count"] == 2
+    assert report["rater_count"] == 3
     assert report["paired_composite_differences_vs_alarm"]["saga-linked"]["mean"] == 1.0
     assert report["variant_summary"]["saga-linked"]["latency_ms_mean"] == 125.0
+    assert report["reviewer_qualification_summary"]["reviewer_count"] == 3
 
 
 def test_analyzer_rejects_modified_locked_response_text(tmp_path: Path):
@@ -159,11 +190,16 @@ def test_analyzer_rejects_modified_locked_response_text(tmp_path: Path):
     subprocess.run([
         sys.executable, str(PACKAGE_SCRIPT),
         "--collection", str(collection), "--output", str(package),
-        "--reviewer-codes", "R1", "R2", "--ethics-status", "exempt",
+        "--reviewer-codes", "R1", "R2", "R3", "--ethics-status", "exempt",
     ], check=True, capture_output=True, text=True)
-    paths = [package / f"reviewers/{code}/ratings_{code}.csv" for code in ("R1", "R2")]
+    paths = [
+        package / f"reviewers/{code}/ratings_{code}.csv"
+        for code in ("R1", "R2", "R3")
+    ]
     for path in paths:
         _complete(path)
+    qualifications = package / "reviewer_qualifications.csv"
+    _complete_qualifications(qualifications)
     text = paths[0].read_text(encoding="utf-8-sig")
     paths[0].write_text(text.replace("response 1-alarm-only", "tampered"), encoding="utf-8-sig")
     result = subprocess.run([
@@ -171,7 +207,56 @@ def test_analyzer_rejects_modified_locked_response_text(tmp_path: Path):
         "--allocation", str(collection / "allocation_key.csv"),
         "--casebook", str(collection / "casebook_snapshot.json"),
         "--ratings", *(str(path) for path in paths),
+        "--reviewer-qualifications", str(qualifications),
         "--output", str(tmp_path / "analysis"),
     ], capture_output=True, text=True)
     assert result.returncode != 0
     assert "Locked response_text was changed" in result.stderr
+
+
+def test_packet_builder_requires_three_independent_reviewers(tmp_path: Path):
+    collection = _collection(tmp_path)
+    result = subprocess.run([
+        sys.executable, str(PACKAGE_SCRIPT),
+        "--collection", str(collection), "--output", str(tmp_path / "package"),
+        "--reviewer-codes", "R1", "R2", "--ethics-status", "exempt",
+    ], capture_output=True, text=True)
+    assert result.returncode != 0
+    assert "At least three unique reviewer codes" in result.stderr
+
+
+def test_analyzer_rejects_reviewer_without_independence_confirmation(tmp_path: Path):
+    collection = _collection(tmp_path)
+    package = tmp_path / "package"
+    subprocess.run([
+        sys.executable, str(PACKAGE_SCRIPT),
+        "--collection", str(collection), "--output", str(package),
+        "--reviewer-codes", "R1", "R2", "R3", "--ethics-status", "exempt",
+    ], check=True, capture_output=True, text=True)
+    paths = [
+        package / f"reviewers/{code}/ratings_{code}.csv"
+        for code in ("R1", "R2", "R3")
+    ]
+    for path in paths:
+        _complete(path)
+    qualifications = package / "reviewer_qualifications.csv"
+    _complete_qualifications(qualifications)
+    with qualifications.open(encoding="utf-8-sig", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+        fields = list(rows[0])
+    rows[1]["independence_confirmed_yes_no"] = "no"
+    with qualifications.open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    result = subprocess.run([
+        sys.executable, str(ANALYZE_SCRIPT),
+        "--allocation", str(collection / "allocation_key.csv"),
+        "--casebook", str(collection / "casebook_snapshot.json"),
+        "--ratings", *(str(path) for path in paths),
+        "--reviewer-qualifications", str(qualifications),
+        "--output", str(tmp_path / "analysis"),
+    ], capture_output=True, text=True)
+    assert result.returncode != 0
+    assert "Reviewer R2 independence is not confirmed" in result.stderr

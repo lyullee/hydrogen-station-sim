@@ -68,6 +68,7 @@ def main() -> int:
     parser.add_argument("--allocation", type=Path, required=True)
     parser.add_argument("--casebook", type=Path, required=True)
     parser.add_argument("--ratings", type=Path, nargs="+", required=True)
+    parser.add_argument("--reviewer-qualifications", type=Path, required=True)
     parser.add_argument(
         "--manifest", type=Path,
         help="Collection manifest; defaults to collection_manifest.json beside allocation",
@@ -193,8 +194,60 @@ def main() -> int:
     review_keys = [(row["rater_id"], row["response_code"]) for row in ratings]
     if len(review_keys) != len(set(review_keys)):
         raise SystemExit("Duplicate (rater_id, response_code) rows are not allowed")
-    if len(rater_ids) < 2:
-        raise SystemExit("At least two independent raters are required")
+    if len(rater_ids) < 3:
+        raise SystemExit("At least three independent raters are required")
+
+    qualification_rows = _read_csv(args.reviewer_qualifications)
+    qualification_codes = [row.get("reviewer_code", "").strip() for row in qualification_rows]
+    if len(qualification_codes) != len(set(qualification_codes)) or "" in qualification_codes:
+        raise SystemExit("Reviewer qualification codes must be non-empty and unique")
+    if set(qualification_codes) != rater_ids:
+        raise SystemExit(
+            "Reviewer qualification codes do not match completed rating files"
+        )
+    experience_fields = (
+        "hydrogen_safety_experience", "hazop_experience",
+        "emergency_response_experience", "hrs_operating_experience",
+    )
+    parsed_qualifications = []
+    for row in qualification_rows:
+        code = row["reviewer_code"].strip()
+        role = row.get("professional_role", "").strip()
+        if not role:
+            raise SystemExit(f"Reviewer {code} has no professional role")
+        try:
+            years = float(row.get("relevant_years_experience", ""))
+        except ValueError as exc:
+            raise SystemExit(f"Reviewer {code} has invalid relevant experience years") from exc
+        documented_qualification = bool(row.get("qualifications", "").strip())
+        if years < 3 and not documented_qualification:
+            raise SystemExit(
+                f"Reviewer {code} needs at least three years of relevant experience "
+                "or a documented relevant qualification"
+            )
+        meaningful_experience = [
+            field for field in experience_fields
+            if row.get(field, "").strip().lower() not in {"", "no", "none", "0", "n/a"}
+        ]
+        if not meaningful_experience:
+            raise SystemExit(f"Reviewer {code} has no documented relevant experience category")
+        for field in (
+            "prior_system_familiarity", "conflict_of_interest",
+            "conflict_management_or_none", "rating_completed_utc",
+        ):
+            if not row.get(field, "").strip():
+                raise SystemExit(f"Reviewer {code} has no value for {field}")
+        if row.get("independence_confirmed_yes_no", "").strip().lower() != "yes":
+            raise SystemExit(f"Reviewer {code} independence is not confirmed")
+        if row.get("ethics_information_provided_yes_no", "").strip().lower() != "yes":
+            raise SystemExit(f"Reviewer {code} ethics information receipt is not confirmed")
+        parsed_qualifications.append({
+            "reviewer_code": code,
+            "years": years,
+            "documented_qualification": documented_qualification,
+            "experience_fields": meaningful_experience,
+            "prior_system_familiarity": row["prior_system_familiarity"].strip(),
+        })
 
     design_counts: dict[tuple[str, str], int] = {}
     for row in allocation_rows:
@@ -295,6 +348,23 @@ def main() -> int:
         "primary_variant": args.primary_variant,
         "paired_composite_differences_vs_alarm": paired_comparisons,
         "inter_rater_agreement": agreement,
+        "reviewer_qualification_summary": {
+            "reviewer_count": len(parsed_qualifications),
+            "relevant_years_min": float(min(item["years"] for item in parsed_qualifications)),
+            "relevant_years_median": float(np.median([
+                item["years"] for item in parsed_qualifications
+            ])),
+            "relevant_years_max": float(max(item["years"] for item in parsed_qualifications)),
+            "documented_qualification_count": sum(
+                item["documented_qualification"] for item in parsed_qualifications
+            ),
+            "experience_category_counts": {
+                field: sum(
+                    field in item["experience_fields"] for item in parsed_qualifications
+                )
+                for field in experience_fields
+            },
+        },
         "lock": {
             "allocation_sha256": _sha256_file(args.allocation),
             "casebook_sha256": _sha256_file(args.casebook),
@@ -303,6 +373,9 @@ def main() -> int:
             ),
             "manifest": manifest_path.name if manifest is not None else None,
             "rating_files": rating_file_hashes,
+            "reviewer_qualifications_sha256": _sha256_file(
+                args.reviewer_qualifications
+            ),
         },
     }
     args.output.mkdir(parents=True, exist_ok=True)
