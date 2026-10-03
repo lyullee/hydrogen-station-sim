@@ -11,6 +11,21 @@ published synchronized `t = 0` as the first significant `Pnoz` increase, not
 the earlier valve-relay transition. This correction is recorded in the JSON
 protocol amendment history and does not use model-performance information.
 
+The same pre-outcome amendment history fixes the remaining input rules. An
+explicit pressure-basis label controls when available. Otherwise a terminal
+median from -0.5 to 0.5 bar is treated as gauge and receives a 1.01325 bar
+ambient offset; a terminal median from 0.5 to 1.5 bar is treated as absolute;
+other cases are excluded as ambiguous. A post-release increase must exceed
+0.3125 bar before it counts toward the 10% increasing-sample exclusion. This is
+0.125% of the report's 250 bar pressure-sensor full scale. Pressure strata are
+fixed at <=20, >20 to <=100, and >100 bar absolute. The 10,000 case bootstrap
+uses seed 20261003.
+
+The parser, evaluator and runner were implemented and SHA-256 locked in the
+JSON protocol before numerical workbook access. Eligible cases that encounter
+a model/integration error are retained as primary-screen failures; they are not
+converted into data exclusions.
+
 ## Purpose
 
 This experiment evaluates the safety twin's source depletion and hydrogen

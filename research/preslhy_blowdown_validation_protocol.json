@@ -9,6 +9,12 @@
       "supersedes_git_commit": "b7cfd76",
       "change": "Corrected time zero from the valve-relay transition to the published synchronized-time definition: first significant Pnoz increase.",
       "basis": "PRESLHY D3.4 section 5.1 states that Pnoz, rather than the earlier relay transition, defines synchronized t = 0."
+    },
+    {
+      "date": "2026-10-03",
+      "outcomes_accessed": false,
+      "change": "Fixed pressure-basis inference, significant-increase tolerance, pressure strata and bootstrap seed before numerical workbook access.",
+      "basis": "The technical report specifies a 250 bar WIKA S-20 pressure sensor with less than 0.125 percent full-scale non-linearity; the workbook structure, but no numerical outcome, was available from the report."
     }
   ],
   "objective": "Externally evaluate the digital twin's ambient-temperature high-pressure hydrogen release and inventory-depletion physics against PRESLHY E3.1 DisCha experiments.",
@@ -45,6 +51,13 @@
     "parameter_fitting_permitted": false,
     "case_specific_fitting_permitted": false
   },
+  "validation_implementation_pre_outcome": {
+    "files_sha256": {
+      "src/h2station/preslhy_validation.py": "43fa30e271360f44ca3047d19b84dcf0a5e12b56f27e135af74716eccc886f48",
+      "scripts/run_preslhy_blowdown_validation.py": "da31f4518bab4f8e271ddce5b43a754df9f04da1525d6f4dc080d2ed1ecf5631"
+    },
+    "outcomes_accessed_when_hashed": false
+  },
   "eligibility": {
     "include": [
       "Excel numerical result files from packages named PRE3P1A_KIT_D*_300K_DATA.zip",
@@ -70,6 +83,18 @@
     "evaluation_start_s": 0.1,
     "evaluation_end": "first sample at or below 1.05 times measured ambient absolute pressure, or the last valid recorded sample",
     "prediction_mapping": "linear interpolation onto experimental timestamps; no dynamic time warping or time shift optimization"
+  },
+  "input_interpretation": {
+    "pressure_signal": "Pves from the fast pressure worksheet",
+    "pressure_basis": "Use an explicit absolute/gauge header when present. Otherwise classify a terminal median from -0.5 to 0.5 bar as gauge and add 1.01325 bar; classify 0.5 to 1.5 bar as absolute; exclude any other ambiguous basis.",
+    "significant_pressure_increase_bar": 0.3125,
+    "increase_basis": "0.125 percent of the published 250 bar pressure-sensor full scale",
+    "initial_pressure": "last valid Pves sample before synchronized t = 0",
+    "pressure_groups_bar_abs": {
+      "low": "<=20",
+      "medium": ">20 and <=100",
+      "high": ">100"
+    }
   },
   "model_definition": {
     "source_volume_m3": 0.002815,
@@ -105,6 +130,7 @@
   "aggregate_decision": {
     "minimum_joint_primary_screen_pass_fraction": 0.7,
     "bootstrap_replicates": 10000,
+    "bootstrap_random_seed": 20261003,
     "bootstrap_unit": "experiment",
     "report_by": [
       "nozzle_diameter_mm",

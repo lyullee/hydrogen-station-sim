@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from pathlib import Path
 import re
 
@@ -41,6 +42,7 @@ def test_preslhy_protocol_keeps_claim_boundary_and_negative_results():
         "minimum_joint_primary_screen_pass_fraction"
     ] == 0.7
     assert protocol["aggregate_decision"]["bootstrap_replicates"] == 10_000
+    assert protocol["aggregate_decision"]["bootstrap_random_seed"] == 20261003
     assert protocol["eligibility"]["minimum_evaluable_cases"] >= 12
     assert protocol["time_alignment"]["evaluation_start_s"] == 0.1
     assert "first significant pressure increase" in protocol["time_alignment"][
@@ -53,6 +55,14 @@ def test_preslhy_protocol_keeps_claim_boundary_and_negative_results():
     assert "no dynamic time warping" in protocol["time_alignment"][
         "prediction_mapping"
     ].lower()
+    assert protocol["input_interpretation"][
+        "significant_pressure_increase_bar"
+    ] == 0.3125
+    assert protocol["input_interpretation"]["pressure_groups_bar_abs"] == {
+        "low": "<=20",
+        "medium": ">20 and <=100",
+        "high": ">100",
+    }
 
 
 def test_preslhy_primary_screens_are_fixed_before_outcome_access():
@@ -71,3 +81,12 @@ def test_preslhy_primary_screens_are_fixed_before_outcome_access():
     assert "cannot replace" in protocol["sensitivity_only_not_calibration"][
         "claim_rule"
     ].lower()
+
+
+def test_preslhy_validation_implementation_matches_pre_outcome_hashes():
+    protocol = _protocol()
+    implementation = protocol["validation_implementation_pre_outcome"]
+    assert implementation["outcomes_accessed_when_hashed"] is False
+    for relative, expected in implementation["files_sha256"].items():
+        actual = hashlib.sha256((ROOT / relative).read_bytes()).hexdigest()
+        assert actual == expected
