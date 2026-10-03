@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-03",
+  "status": "fully_frozen_before_numerical_figure_outcome_access",
+  "numerical_figure_outcomes_accessed_before_freeze": false,
+  "objective": "Evaluate transfer of the fixed real-gas isentropic aperture relation to an independent 90 MPa Type-IV hydrogen release campaign.",
+  "claim_boundary": "This holdout concerns local gaseous-hydrogen mass flow from measured source pressure and temperature through nominal 1-3 mm terminal orifices. It does not validate the 25 L vessel thermal transient, the 10 m supply-line inventory, valve opening, flame geometry, radiation, dispersion, station separation distance, or a vehicle-fuelling controller.",
+  "source": {
+    "title": "High pressure hydrogen fires",
+    "authors": ["Christophe Proust", "Didier Jamois", "Etienne Studer"],
+    "journal": "International Journal of Hydrogen Energy",
+    "year": 2011,
+    "doi": "10.1016/j.ijhydene.2010.04.055",
+    "open_conference_pdf": "https://conference.ing.unipi.it/ichs2009/images/stories/papers/214.pdf",
+    "known_before_freeze": "Abstract, bibliographic metadata and descriptive methods only: a 25 L Type-IV source initially near 90 MPa, a 10 m by 10 mm supply line, 1-3 mm terminal orifices, 0.1 s valve opening, continuous vessel weighing, source pressure and upstream temperature measurements.",
+    "numerical_curve_values_seen_before_freeze": false,
+    "rights_note": "The conference PDF is publicly readable but no data-redistribution licence was identified. Do not commit the PDF. Commit only extraction metadata, source citation and derived numerical validation evidence with an explicit rights note."
+  },
+  "independence": {
+    "institution": "INERIS and CEA, France",
+    "independent_from_preslhy_discha_facility": true,
+    "independent_from_model_development_records": true,
+    "model_development_records": "PRESLHY E3.1 Part A, DOI 10.35097/1187",
+    "limitation": "The published plots rather than original logger files are available, so digitization uncertainty and graph resolution limit the comparison."
+  },
+  "locked_model": {
+    "description": "Maximum real-gas isentropic mass flux multiplied by nominal circular area and global discharge coefficient 0.8; no case-specific fitting.",
+    "path": "src/h2station/preslhy_nonadiabatic.py",
+    "sha256": "c20c49c884f31dce7d1501a36ae0af4ba85eca3417a37079704f4e4d3d10e194",
+    "discharge_coefficient": 0.8,
+    "downstream_pressure_pa": 101325.0,
+    "post_freeze_parameter_changes": "prohibited for the primary result"
+  },
+  "locked_implementation": {
+    "evaluator": {
+      "path": "src/h2station/proust_release_validation.py",
+      "sha256": "e6f71a29e02f5ecd088dbb0f190eeff06fba2485d19281f42dce9d376a5a9078"
+    },
+    "runner": {
+      "path": "scripts/run_proust_release_holdout.py",
+      "sha256": "d2f00f9b8298f2b4ed101f02664e238bc1277e4794adec8845b185affad8c365"
+    }
+  },
+  "digitization": {
+    "required_columns": [
+      "case_id",
+      "nozzle_diameter_mm",
+      "source_pressure_mpa_abs",
+      "source_temperature_k",
+      "measured_mass_flow_g_s",
+      "digitization_uncertainty_g_s",
+      "source_figure",
+      "point_index"
+    ],
+    "axis_calibration": "Use at least two labelled ticks on each axis and preserve the publisher's plotted coordinate system.",
+    "two_pass_rule": "Digitize each usable curve twice without viewing model predictions. Store the mean as the observation and at least half the between-pass difference plus half-pixel axis resolution as uncertainty.",
+    "time_alignment": "When pressure, temperature and mass flow are separate time plots, align only on their publisher time axes by linear interpolation within overlapping measured support. No fitted shift, dynamic time warping or outcome-driven cropping.",
+    "pressure_basis": "Use the publisher's stated absolute basis. If a plot is explicitly gauge pressure, add 101325 Pa and flag that conversion in extraction metadata.",
+    "missing_temperature_policy": "A series without measured temperature paired to each pressure/mass-flow state is supplementary and cannot enter the primary decision. Do not substitute ambient temperature.",
+    "raw_plot_policy": "Retain all readable plotted states in the frozen 2-95 MPa window. Do not trace a smoothed replacement curve or delete points because of prediction error."
+  },
+  "eligibility": {
+    "state_window": {
+      "source_pressure_mpa_abs": [2.0, 95.0],
+      "source_temperature_k": [220.0, 330.0],
+      "nozzle_diameter_mm": [1.0, 3.0]
+    },
+    "minimum_points_per_series": 8,
+    "minimum_primary_series": 3,
+    "minimum_nozzle_diameter_groups": 3,
+    "primary_requires": [
+      "measured mass flow",
+      "measured source pressure",
+      "measured upstream or source temperature",
+      "unambiguous common physical run and time/state mapping",
+      "readable axes and at least eight states"
+    ],
+    "insufficient_data_policy": "If all three diameter groups cannot satisfy the primary mapping, retain every evaluable series as supplementary evidence and label the aggregate claim ineligible."
+  },
+  "primary_endpoints": {
+    "mass_flow_nrmse_percent_peak_measured": {
+      "series_screen_max": 15.0
+    },
+    "median_absolute_percentage_error_percent": {
+      "series_screen_max": 20.0,
+      "relative_error_states": "measured mass flow at least 10 percent of that series peak"
+    },
+    "digitization_interval_coverage_fraction": {
+      "role": "diagnostic only; it cannot override a failed primary screen"
+    }
+  },
+  "aggregate_decision": {
+    "required_joint_primary_passes": "at least two of three eligible nozzle-diameter series",
+    "all_minimum_eligibility_requirements_must_be_met": true,
+    "retain_all_eligible_parse_property_and_model_failures_as_failed_series": true,
+    "negative_result_policy": "A failed or ineligible result remains archived and prohibits an independently validated high-pressure mass-flow claim from this dataset."
+  },
+  "access_audit": {
+    "bibliographic_metadata_accessed": true,
+    "abstract_accessed": true,
+    "descriptive_method_text_accessed": true,
+    "numerical_graph_coordinates_accessed": false,
+    "model_predictions_for_this_campaign_computed": false
+  }
+}
