@@ -1103,6 +1103,31 @@
       ],
       "result": "HIAD 2.2 remains the strongest open accident-evidence source for the SAGA response-grounding track. No new Zenodo record found in this review closes the untouched station-to-vehicle full-loop numerical gate.",
       "claim_limit": "Keep numerical full-loop validation, accident-response effectiveness, and LLM safety claims separate until each frozen gate is independently completed."
+    },
+    "h2_stations_and_static_inventory_followup": {
+      "scope": "current official open-data recheck for whether HRS availability/layout APIs or infrastructure inventories can provide an independent process time-series holdout",
+      "sources": [
+        {
+          "id": "h2_stations_api_v2_2026",
+          "url": "https://docs.h2-stations.eu/for-data-users/",
+          "finding": "The current API documents static station layout plus availability, usage, hydrogen-storage and pricing signal types. Access requires a personal token; the published sandbox returns fixed sample fixtures. The API exposes no synchronized vehicle/receptacle pressure, temperature and mass-flow trace or historical process logger.",
+          "decision": "OPERATIONS_CONTEXT_ONLY"
+        },
+        {
+          "id": "ipcei_europe_hrs_inventory_2026",
+          "url": "https://ipcei.observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations",
+          "finding": "The public May 2026 workbook is a station roster by location and dispenser type. It has no process telemetry or fill-level time series.",
+          "decision": "STATIC_INFRASTRUCTURE_CONTEXT_ONLY"
+        },
+        {
+          "id": "california_mdhd_hydrogen_infrastructure_2026",
+          "url": "https://lab.data.ca.gov/dataset/medium-and-heavy-duty-infrastructure",
+          "finding": "The California open dataset provides dispenser/nozzle counts, addresses, coordinates and funding fields under CC BY. It has no station controller, tank, vehicle or process telemetry.",
+          "decision": "STATIC_INFRASTRUCTURE_CONTEXT_ONLY"
+        }
+      ],
+      "result": "These current public inventories improve station topology and operating-context coverage but do not provide the common-time-base pressure, mass-flow and temperature traces required by the independent full-loop gate.",
+      "claim_limit": "Do not promote availability, usage, storage-status or static inventory data to numerical fueling validation or accident-response effectiveness evidence."
     }
   },
   "last_reviewed": "2026-10-04"

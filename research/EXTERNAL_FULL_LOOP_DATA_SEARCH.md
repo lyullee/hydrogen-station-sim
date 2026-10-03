@@ -501,4 +501,28 @@ NREL's retail composite data products
 aggregate safety, reliability and fueling-range context. They do not expose
 row-level pressure/temperature/flow traces or a machine-readable incident
 archive and therefore do not close the numerical full-loop gate.
+## 2026-10-04 H2-Stations and infrastructure-inventory follow-up
 
+The current official H2-Stations documentation was rechecked:
+<https://docs.h2-stations.eu/for-data-users/>. API v2 now documents static
+station layouts and four signal types (availability, usage, hydrogen storage
+and pricing), while the sandbox serves fixed sample fixtures. These are useful
+for station topology and operations context, but the API does not expose a
+common-time-base vehicle/receptacle pressure, temperature and mass-flow logger
+or historical process trajectory. It remains **operations context only**.
+
+Two additional public infrastructure inventories were screened:
+
+- The European IPCEI/European Hydrogen Observatory May 2026 workbook lists
+  public HRS locations and dispenser types but contains no process telemetry:
+  <https://ipcei.observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations>.
+- California's 2026 medium- and heavy-duty infrastructure dataset provides
+  dispenser/nozzle counts, locations and funding fields under CC BY, but no
+  tank, vehicle or controller telemetry:
+  <https://lab.data.ca.gov/dataset/medium-and-heavy-duty-infrastructure>.
+
+These sources improve static station-scale and equipment-mix context. They do
+not change the full-loop gate: no new untouched public time-series holdout was
+found, and no availability, usage, storage-status or static inventory record
+may be relabelled as numerical fueling validation or accident-response
+effectiveness evidence.
