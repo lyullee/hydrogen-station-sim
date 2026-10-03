@@ -172,7 +172,8 @@ SAGA-PY at its isolated integration endpoint and collect responses:
   --provider groq `
   --split development `
   --approved-casebook approved_development_casebook.json `
-  --repeats 3
+  --repeats 3 `
+  --include-standards-rag
 ```
 
 Only the historical observation is sent to SAGA. HIAD emergency actions,
@@ -182,7 +183,12 @@ every vignette is initially labelled `narrative_action_leakage_review=PENDING`
 and `expert_vignette_approved=NO`. A reported holdout experiment may use only
 vignettes manually reviewed and frozen before model collection.
 
-The generated `blind_expert_review.csv` hides the response variant. At least two
+This collection produces alarm-only, direct one-pass LLM, and standards-document
+RAG variants. It isolates the added value of language generation and retrieval;
+it does not claim that the HIAD narrative contains live process or consequence
+measurements. The generated `blind_expert_review.csv` hides the response variant.
+`reviewer_case_reference.csv` supplies the observation and withheld HIAD response
+fields without revealing the allocation. At least two
 independent hydrogen-safety reviewers should score situation accuracy, immediate
 action correctness, priority order, stabilization/restart criteria, prevention,
 evidence grounding and operator usability. Critical omissions and unsafe advice
@@ -199,9 +205,10 @@ marks approved casebook vignettes `YES`, analyze the locked files:
   --ratings reviewer_1.csv reviewer_2.csv
 ```
 
-The analyzer reports a paired event-level SAGA-minus-alarm difference with a
-bootstrap confidence interval and Wilcoxon test, critical-omission and unsafe-
-advice rates, and pairwise quadratic-weighted kappa for each ordinal criterion.
+The analyzer reports each model variant's paired event-level difference versus
+alarm-only with a bootstrap confidence interval and Wilcoxon test, critical-
+omission and unsafe-advice rates, and pairwise quadratic-weighted kappa for each
+ordinal criterion.
 The complete reviewer qualifications, masking, rubric, and locking procedure are
 specified in `docs/EXPERT_REVIEW_PROTOCOL.md`.
 

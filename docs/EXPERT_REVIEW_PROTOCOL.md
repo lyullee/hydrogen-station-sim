@@ -26,10 +26,20 @@ corrective measures, and references remain hidden from SAGA.
 ## Response variants and masking
 
 Each event produces a deterministic alarm-only response and three independently
-sampled SAGA responses under the same observation. The collection script assigns
+sampled direct SAGA responses under the same observation. For the evidence
+ablation, `--include-standards-rag` adds three responses from the separate SAGA
+standards-document RAG pipeline. This makes the contribution of language generation
+and document retrieval separately observable; it does not alter the digital twin's
+real-time direct-answer API. The collection script assigns
 opaque response codes and exports a randomized review sheet. Reviewers must not
 receive the allocation key, provider/model fields, or one another's ratings
 until the database is locked.
+
+Reviewers receive `blind_expert_review.csv` and `reviewer_case_reference.csv`.
+The latter contains the historical observation and the HIAD emergency-action,
+lesson and corrective fields keyed only by event ID; it contains no response
+variant or allocation. The coordinator retains `allocation_key.csv` until every
+rating is locked.
 
 ## Reviewers
 
@@ -97,7 +107,8 @@ $env:PYTHONPATH = "src"
 
 .venv\Scripts\python.exe scripts\run_hiad_decision_evaluation.py `
   --saga-url http://127.0.0.1:8090 --provider groq --split holdout `
-  --approved-casebook approved_holdout_casebook.json --repeats 3
+  --approved-casebook approved_holdout_casebook.json --repeats 3 `
+  --include-standards-rag
 
 # Each reviewer completes a separate copy of blind_expert_review.csv.
 .venv\Scripts\python.exe scripts\analyze_hiad_expert_review.py `

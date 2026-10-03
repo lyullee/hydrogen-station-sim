@@ -52,7 +52,8 @@
     "holdout_access": "freeze and approve leakage-reviewed vignettes before collecting model responses",
     "variants": [
       "deterministic alarm-only",
-      "SAGA-linked one-pass response"
+      "direct one-pass LLM response with the historical observation",
+      "SAGA standards-document RAG response with the same observation"
     ],
     "sampling": "three SAGA responses per event under a frozen provider/model configuration",
     "primary_endpoint": "paired event-level difference in mean seven-criterion expert composite score",

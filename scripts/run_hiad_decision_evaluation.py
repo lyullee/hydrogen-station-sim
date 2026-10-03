@@ -116,6 +116,33 @@ def _post(url: str, payload: dict, timeout_s: float) -> tuple[dict, float]:
     return result, (perf_counter() - started) * 1000.0
 
 
+def _response_payload(variant: str, case: dict, provider: str) -> dict:
+    if variant == "saga-linked":
+        return {
+            "question": PROMPT,
+            "context": _context(case),
+            "history": [],
+            "request_kind": "user_query",
+            "provider": provider,
+            "language": "en",
+            "max_tokens": 1200,
+        }
+    if variant == "saga-standards-rag":
+        return {
+            "message": (
+                PROMPT + "\n\nHistorical observation (JSON):\n"
+                + json.dumps(_context(case), ensure_ascii=False)
+            ),
+            "history": [],
+            "provider": provider,
+            "language": "en",
+            "answer_length": "detailed",
+            "mode": "rag",
+            "knowledge_mode": "standards",
+        }
+    raise ValueError(f"Unsupported response variant: {variant}")
+
+
 def _write_csv(path: Path, rows: list[dict], fieldnames: list[str]) -> None:
     with path.open("w", encoding="utf-8-sig", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames, extrasaction="ignore")
@@ -131,6 +158,10 @@ def main() -> int:
     parser.add_argument("--split", choices=("development", "holdout"), default="holdout")
     parser.add_argument("--repeats", type=int, default=3, choices=range(1, 11))
     parser.add_argument("--timeout-s", type=float, default=90.0)
+    parser.add_argument(
+        "--include-standards-rag", action="store_true",
+        help="Also collect a standards-document RAG response through /api/chat",
+    )
     parser.add_argument("--output", type=Path, default=Path("data/public_validation/results/hiad_decision"))
     parser.add_argument("--prepare-casebook", action="store_true")
     parser.add_argument("--approved-casebook", type=Path)
@@ -188,7 +219,11 @@ def main() -> int:
     if unknown:
         raise SystemExit("Approved casebook contains IDs outside the selected split: " + ", ".join(unknown))
     cases = [split_by_id[event_id] for event_id in approved_by_id]
-    endpoint = args.saga_url.rstrip("/") + "/api/integrations/digital-twin/main"
+    endpoints = {
+        "saga-linked": args.saga_url.rstrip("/") + "/api/integrations/digital-twin/main",
+    }
+    if args.include_standards_rag:
+        endpoints["saga-standards-rag"] = args.saga_url.rstrip("/") + "/api/chat"
     responses = []
     errors = []
     for case in cases:
@@ -197,28 +232,27 @@ def main() -> int:
             "answer": _baseline(case), "latency_ms": 0.0,
             "provider": "deterministic", "model": "alarm-only",
         })
-        for repeat in range(1, args.repeats + 1):
-            try:
-                result, latency = _post(endpoint, {
-                    "question": PROMPT,
-                    "context": _context(case),
-                    "history": [],
-                    "request_kind": "user_query",
-                    "provider": args.provider,
-                    "language": "en",
-                    "max_tokens": 1200,
-                }, args.timeout_s)
-                responses.append({
-                    "event_id": case["event_id"], "variant": "saga-linked",
-                    "repeat": repeat, "answer": str(result.get("answer") or ""),
-                    "latency_ms": latency, "provider": str(result.get("provider") or args.provider),
-                    "model": str(result.get("model") or ""),
-                })
-            except Exception as exc:  # collection must preserve per-case failures
-                errors.append({
-                    "event_id": case["event_id"], "repeat": repeat,
-                    "error": f"{type(exc).__name__}: {exc}",
-                })
+        for variant, endpoint in endpoints.items():
+            for repeat in range(1, args.repeats + 1):
+                try:
+                    payload = _response_payload(variant, case, args.provider)
+                    result, latency = _post(endpoint, payload, args.timeout_s)
+                    citations = result.get("citations") or []
+                    responses.append({
+                        "event_id": case["event_id"], "variant": variant,
+                        "repeat": repeat, "answer": str(result.get("answer") or ""),
+                        "latency_ms": latency,
+                        "provider": str(result.get("provider") or args.provider),
+                        "model": str(result.get("model") or ""),
+                        "answer_mode": str(result.get("answer_mode") or "direct"),
+                        "citation_count": len(citations),
+                    })
+                except Exception as exc:  # collection must preserve per-case failures
+                    errors.append({
+                        "event_id": case["event_id"], "variant": variant,
+                        "repeat": repeat,
+                        "error": f"{type(exc).__name__}: {exc}",
+                    })
         print(f"collected HIAD {case['event_id']}", flush=True)
 
     blinded = []
@@ -254,9 +288,29 @@ def main() -> int:
             handle.write(json.dumps(row, ensure_ascii=False) + "\n")
     _write_csv(args.output / "allocation_key.csv", allocation, [
         "response_code", "event_id", "variant", "repeat", "provider", "model",
-        "latency_ms", "answer",
+        "answer_mode", "citation_count", "latency_ms", "answer",
     ])
     _write_csv(args.output / "blind_expert_review.csv", blinded, list(blinded[0]))
+    reviewer_reference = []
+    for event_id, approved_case in approved_by_id.items():
+        reviewer_reference.append({
+            "event_id": event_id,
+            "stratum": approved_case.get("stratum", ""),
+            "historical_observation_json": json.dumps(
+                approved_case.get("input_context", {}), ensure_ascii=False
+            ),
+            "hiad_emergency_action": approved_case.get("reference_emergency_action", ""),
+            "hiad_lesson_learnt": approved_case.get("reference_lesson_learnt", ""),
+            "hiad_corrective_measures": approved_case.get("reference_corrective_measures", ""),
+            "references_json": json.dumps(
+                approved_case.get("references", []), ensure_ascii=False
+            ),
+        })
+    _write_csv(
+        args.output / "reviewer_case_reference.csv",
+        reviewer_reference,
+        list(reviewer_reference[0]),
+    )
     (args.output / "collection_errors.json").write_text(
         json.dumps(errors, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
@@ -273,13 +327,15 @@ def main() -> int:
         "prompt": PROMPT,
         "prompt_sha256": hashlib.sha256(PROMPT.encode("utf-8")).hexdigest(),
         "provider_requested": args.provider,
-        "endpoint": endpoint,
+        "endpoints": endpoints,
         "language": "en",
         "max_tokens": 1200,
         "repeats": args.repeats,
+        "response_variants": ["alarm-only", *endpoints],
         "timeout_s": args.timeout_s,
         "response_count": len(responses),
         "failed_call_count": len(errors),
+        "reviewer_reference_file": "reviewer_case_reference.csv",
     }
     (args.output / "collection_manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"

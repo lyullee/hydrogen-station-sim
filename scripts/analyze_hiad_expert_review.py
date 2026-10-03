@@ -57,6 +57,10 @@ def main() -> int:
     parser.add_argument("--ratings", type=Path, nargs="+", required=True)
     parser.add_argument("--output", type=Path, default=Path("data/public_validation/results/hiad_decision/analysis"))
     parser.add_argument("--allow-unapproved", action="store_true")
+    parser.add_argument(
+        "--primary-variant", default="saga-linked",
+        help="Non-baseline variant used for the primary paired comparison",
+    )
     args = parser.parse_args()
 
     casebook = json.loads(args.casebook.read_text(encoding="utf-8"))
@@ -103,16 +107,36 @@ def main() -> int:
     for row in ratings:
         per_event.setdefault((row["event_id"], row["variant"]), []).append(row["composite_score"])
     event_ids = sorted({key[0] for key in per_event}, key=int)
+    variants = sorted({key[1] for key in per_event})
+    comparators = [variant for variant in variants if variant != "alarm-only"]
+    if not comparators:
+        raise SystemExit("At least one non-baseline response variant is required")
+    if args.primary_variant not in comparators:
+        raise SystemExit(
+            f"Primary variant {args.primary_variant!r} is unavailable; choose one of "
+            + ", ".join(comparators)
+        )
     missing = [
         event_id for event_id in event_ids
-        if (event_id, "alarm-only") not in per_event or (event_id, "saga-linked") not in per_event
+        if any((event_id, variant) not in per_event for variant in variants)
     ]
     if missing:
         raise SystemExit("Missing paired variants for event IDs: " + ", ".join(missing))
     baseline = np.asarray([np.mean(per_event[(event_id, "alarm-only")]) for event_id in event_ids])
-    saga = np.asarray([np.mean(per_event[(event_id, "saga-linked")]) for event_id in event_ids])
-    differences = saga - baseline
-    test = wilcoxon(differences, alternative="two-sided", zero_method="zsplit")
+    paired_comparisons = {}
+    for variant in comparators:
+        candidate = np.asarray([
+            np.mean(per_event[(event_id, variant)]) for event_id in event_ids
+        ])
+        differences = candidate - baseline
+        test = wilcoxon(differences, alternative="two-sided", zero_method="zsplit")
+        paired_comparisons[variant] = {
+            "mean": float(np.mean(differences)),
+            "median": float(np.median(differences)),
+            "bootstrap_95_ci": _bootstrap_paired_ci(differences),
+            "wilcoxon_statistic": float(test.statistic),
+            "wilcoxon_p_value": float(test.pvalue),
+        }
 
     agreement = {}
     ordered_raters = sorted(rater_ids)
@@ -135,7 +159,7 @@ def main() -> int:
         }
 
     variant_summary = {}
-    for variant in ("alarm-only", "saga-linked"):
+    for variant in variants:
         rows = [row for row in ratings if row["variant"] == variant]
         variant_summary[variant] = {
             "rating_count": len(rows),
@@ -147,13 +171,8 @@ def main() -> int:
         "event_count": len(event_ids),
         "rater_count": len(rater_ids),
         "variant_summary": variant_summary,
-        "paired_composite_difference_saga_minus_alarm": {
-            "mean": float(np.mean(differences)),
-            "median": float(np.median(differences)),
-            "bootstrap_95_ci": _bootstrap_paired_ci(differences),
-            "wilcoxon_statistic": float(test.statistic),
-            "wilcoxon_p_value": float(test.pvalue),
-        },
+        "primary_variant": args.primary_variant,
+        "paired_composite_differences_vs_alarm": paired_comparisons,
         "inter_rater_agreement": agreement,
     }
     args.output.mkdir(parents=True, exist_ok=True)
@@ -172,13 +191,16 @@ def main() -> int:
             f"{100 * summary['critical_omission_rate']:.1f}% | "
             f"{100 * summary['unsafe_advice_rate']:.1f}% |"
         )
-    paired = report["paired_composite_difference_saga_minus_alarm"]
+    lines.extend(["", "## Paired comparisons versus alarm-only", ""])
+    for variant, paired in paired_comparisons.items():
+        lines.append(
+            f"- {variant}: mean {paired['mean']:.3f} "
+            f"(bootstrap 95% CI {paired['bootstrap_95_ci'][0]:.3f} to "
+            f"{paired['bootstrap_95_ci'][1]:.3f}); "
+            f"Wilcoxon p={paired['wilcoxon_p_value']:.4g}."
+        )
     lines.extend([
-        "",
-        f"Paired SAGA-minus-alarm mean: {paired['mean']:.3f} "
-        f"(bootstrap 95% CI {paired['bootstrap_95_ci'][0]:.3f} to "
-        f"{paired['bootstrap_95_ci'][1]:.3f}); Wilcoxon p={paired['wilcoxon_p_value']:.4g}.",
-        "",
+        "", "## Inter-rater agreement", "",
         "| Criterion | Mean pairwise quadratic-weighted kappa |",
         "|---|---:|",
     ])
