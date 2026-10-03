@@ -47,6 +47,7 @@ immutable digest are recorded.
 | Beijing Winter Olympics HRS Operational Data List, CSTR 16666.11.nbsdc.aI3fJrzX | National Basic Science Data Center metadata reports 2022 HRS data with dispenser monitoring, fueling records and compressor monitoring; four files, 10.22 MB. | **Access request.** The machine-readable record is marked “approval required” and the file-tree endpoint returns no files without authorization. It is a high-value candidate, not an available holdout. |
 | Hungarian HRS digital-twin validation, Hasulyó, DOI 10.32604/ee.2026.081099 | Open-access paper reports operational pressure, temperature, mass-flow and refueling comparisons from an existing Hungarian HRS. | **Request data.** The paper's data-availability statement says supporting data are unavailable because of participant consent and legal restrictions. |
 | MetHyTrucks HySaM system measurements, Zenodo DOI 10.5281/zenodo.20590842 | CC BY 4.0 record with three downloadable XLSX time series from hydrogen sampling-system experiments; the files contain 0.5 s pressure/temperature/flow-like channels. | **Measurement-system reference only.** There are no vehicle/tank/refuelling fields or station operating context, so this cannot close the station-to-vehicle full-loop gate. |
+| BAM demonstration-HRS monitoring study, DOI 10.3390/app16157856 | 2026 paper reports three days of real HRS monitoring across eight compressor/storage/dispenser safety sensors and chronological field deployment. | **Request data.** The data-availability statement directs requests to the corresponding author; no raw synchronized archive or vehicle-side full-loop data are publicly downloadable. |
 
 ## CARB artifact inspection
 
@@ -116,6 +117,15 @@ state or refuelling-protocol metadata. It is therefore retained for signal
 handling and calibration checks only and is not promoted to the HRS full-loop
 holdout.
 
+The BAM demonstration-HRS monitoring study is a high-value request lead:
+<https://doi.org/10.3390/app16157856>. It reports real station operation with
+eight safety-critical compressor, storage and dispenser sensors and a
+chronological field deployment, but its data-availability statement does not
+publish the raw trace files. The article's semi-synthetic anomaly injections
+must not be relabelled as independent incident data. Until de-identified raw
+traces, channel definitions, calibration information and reuse terms are
+received, this source supports a request for sensor/anomaly validation only.
+
 The NREL HITRF experiment reported by Kuroki et al. (DOI
 <https://doi.org/10.1002/ente.202300239>) is a strong partial-station data
 request lead: the paper gives a 6.3→73.0 MPa fill in 186 s and describes
@@ -178,22 +188,26 @@ digitising the chart.
    to the HRFF data custodian. It covers both the multi-year
    energy-performance study and the back-to-back fueling study indexed by OSTI
    record 1977265.
-6. Send the NREL HITRF/NFCTEC request in
+6. Send the BAM demonstration-HRS request in
+   `research/BAM_HRS_DATA_REQUEST_DRAFT.md` for de-identified field sensor
+   traces and any vehicle-side channels. Treat semi-synthetic anomalies as a
+   separate diagnostic unless a real incident label is supplied.
+7. Send the NREL HITRF/NFCTEC request in
    `research/NREL_HITRF_DATA_REQUEST_DRAFT.md` for de-identified full-station
    traces or an approved access route. NREL's public composite products remain
    aggregate context only.
-7. Send the Hungarian HRS request in
+8. Send the Hungarian HRS request in
    `research/HUNGARIAN_HRS_DATA_REQUEST_DRAFT.md` to the study author or data
    custodian, subject to their consent and legal restrictions.
-8. Send the NBSDC request in `research/NBSDC_HRS_DATA_REQUEST_DRAFT.md` to the
+9. Send the NBSDC request in `research/NBSDC_HRS_DATA_REQUEST_DRAFT.md` to the
    National Basic Science Data Center/Tsinghua data custodian. Request the four
    files named by the catalog, field dictionaries, timestamps, units, quality
    flags, de-identification terms and permission to publish derived metrics.
-9. On receipt, hash and quarantine the files before opening outcomes; freeze
+10. On receipt, hash and quarantine the files before opening outcomes; freeze
    case eligibility and the corrected model commit in a new protocol manifest.
-10. Evaluate the frozen model once. Retain every eligible failure and do not use
+11. Evaluate the frozen model once. Retain every eligible failure and do not use
    the new outcomes for tuning.
-11. If CARB, JRC, Cal State LA, Empa, FCH2RAIL, NREL HITRF, the Hungarian HRS study and
+12. If CARB, JRC, Cal State LA, Empa, FCH2RAIL, NREL HITRF, the BAM study, the Hungarian HRS study and
    NBSDC cannot release the traces, make an equivalent
    request to NIST. Do not substitute graph digitisation for raw data in the
    primary full-loop claim.

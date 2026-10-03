@@ -511,9 +511,40 @@
         },
         "role": "Public raw measurement reference for sensor/pressure-flow signal handling and possible calibration checks; it cannot close the station-to-vehicle full-loop validation gate."
       }
+    },
+    {
+      "id": "bam_demo_hrs_2026_sensor_monitoring",
+      "title": "Data-Driven Intelligent Analysis System for Monitoring and Anomaly Detection in Hydrogen Refueling Station",
+      "doi": "10.3390/app16157856",
+      "url": "https://www.mdpi.com/2076-3417/16/15/7856",
+      "publisher": "Applied Sciences / BAM demonstration HRS",
+      "public_raw_data": false,
+      "decision": "REQUEST_DATA_HRS_SENSOR_TRACE_NOT_FULL_LOOP",
+      "primary_source_review_2026_10_03": {
+        "data_availability": "Original contributions are included in the article; further inquiries are directed to the corresponding author.",
+        "field_scope": "Three days of representative normal operation from a BAM demonstration hydrogen refueling station with eight safety-critical sensors.",
+        "reported_channels": [
+          "low-pressure compressor inlet pressure",
+          "high-pressure compressor outlet pressure",
+          "medium-pressure storage pressure",
+          "high-pressure storage pressure",
+          "dispenser temperature",
+          "dispenser flow rate"
+        ],
+        "evaluation_scope": "Chronological train/validation/test split plus semi-synthetic spike, drift and noise injections; not a public raw incident or full vehicle-fill archive.",
+        "raw_common_timebase": false,
+        "full_loop_fields": {
+          "vehicle_or_receptacle_pressure": false,
+          "mass_flow_or_transferred_mass": "dispenser flow is reported, but raw synchronized transfer traces are not public",
+          "tank_or_fuel_temperature": "dispenser temperature is reported; raw trace not public",
+          "vehicle_capacity_and_initial_conditions": false,
+          "refuelling_protocol": false
+        },
+        "role": "Strong request lead for HRS sensor/anomaly and LLM evidence-grounding validation; cannot close the station-to-vehicle full-loop gate until de-identified raw traces, metadata and reuse terms are obtained."
+      }
     }
   ],
-  "next_action": "Request de-identified synchronized fill traces from CARB, JRC GasTeF, Cal State LA, NREL HITRF/NFCTEC, Empa, DLR/FCH2RAIL and the Hungarian HRS study author before freezing a new full-loop holdout protocol; use Grune/Sempert for the separate ventilation protocol.",
+  "next_action": "Request de-identified synchronized fill traces from CARB, JRC GasTeF, Cal State LA, BAM demonstration HRS, NREL HITRF/NFCTEC, Empa, DLR/FCH2RAIL and the Hungarian HRS study author before freezing a new full-loop holdout protocol; use Grune/Sempert for the separate ventilation protocol.",
   "claim_limit": "No new external full-loop validation claim is permitted from the screened public materials.",
   "review_log_2026_10_03": {
     "scope": "public-source recheck for an untouched independent full-loop HRS validation set",
@@ -557,10 +588,15 @@
         "id": "met_hy_trucks_hysam_2026",
         "url": "https://zenodo.org/records/20590842",
         "finding": "CC BY 4.0 Zenodo record exposes three XLSX time series from HySaM hydrogen sampling-system experiments; raw files have pressure/temperature/flow-like channels but no vehicle/tank/refuelling context, so they cannot close the HRS full-loop gate."
+      },
+      {
+        "id": "bam_demo_hrs_2026_sensor_monitoring",
+        "url": "https://doi.org/10.3390/app16157856",
+        "finding": "2026 BAM demonstration-HRS paper reports eight field safety sensors and three days of chronological monitoring, but its data-availability statement provides no raw download and directs requests to the corresponding author; no vehicle-side full-loop archive is exposed."
       }
     ],
     "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
-    "next_action": "send documented data requests (CARB, JRC GasTeF and HYTRANSFER file custodian, Cal State LA, NREL HITRF/NFCTEC, Empa, DLR/FCH2RAIL, Hungarian HRS and NBSDC) and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest"
+    "next_action": "send documented data requests (CARB, JRC GasTeF and HYTRANSFER file custodian, Cal State LA, BAM demonstration HRS, NREL HITRF/NFCTEC, Empa, DLR/FCH2RAIL, Hungarian HRS and NBSDC) and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest"
   },
   "last_reviewed": "2026-10-03"
 }
