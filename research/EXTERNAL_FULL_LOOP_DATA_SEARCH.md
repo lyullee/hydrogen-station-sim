@@ -526,3 +526,23 @@ not change the full-loop gate: no new untouched public time-series holdout was
 found, and no availability, usage, storage-status or static inventory record
 may be relabelled as numerical fueling validation or accident-response
 effectiveness evidence.
+## 2026-10-04 Grüne and GasTeF follow-up
+
+The primary Grüne et al. IJHE article confirms the pending pressure-decay
+experiment (0.37 dm³ reservoir, 3/4/10 mm nozzles and initial pressure up to
+200 bar), but the accessible publication exposes plots rather than a
+machine-readable trace: <https://doi.org/10.1016/j.ijhydene.2013.08.076>. The
+HyTunnel-CS technical report reproduces the pressure-decay figure and release
+timing, but likewise does not publish the numeric series:
+<https://hytunnel.net/wordpress/wp-content/uploads/2019/09/HyTunnel-CS_D1.2_Risks-and-Hazards.pdf>.
+The repository therefore correctly keeps the Grüne gate pending because the
+half-pressure endpoint cannot be independently traced from the available raster.
+
+JRC confirms that GasTeF performs fast-fill experiments with pressure and
+temperature instrumentation and its reference paper describes a 165-test
+archive with 0.6 s logging, but no machine-readable archive or reuse terms were
+found in the public sources. GasTeF remains a high-value raw-data request lead,
+not an available holdout: <https://joint-research-centre.ec.europa.eu/what-we-do/laboratories/high-pressure-gas-testing-facility_en>.
+
+Figures were not digitised into the primary claim, and facility descriptions
+were not treated as access to the underlying logs.

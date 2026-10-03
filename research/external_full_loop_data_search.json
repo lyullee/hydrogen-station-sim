@@ -1128,6 +1128,31 @@
       ],
       "result": "These current public inventories improve station topology and operating-context coverage but do not provide the common-time-base pressure, mass-flow and temperature traces required by the independent full-loop gate.",
       "claim_limit": "Do not promote availability, usage, storage-status or static inventory data to numerical fueling validation or accident-response effectiveness evidence."
+    },
+    "grune_and_gastef_followup": {
+      "scope": "additional primary-source search for the pending Grüne pressure-decay holdout and JRC GasTeF raw filling archive",
+      "sources": [
+        {
+          "id": "grune_2014_primary_article",
+          "url": "https://doi.org/10.1016/j.ijhydene.2013.08.076",
+          "finding": "The IJHE article confirms the 0.37 dm3 reservoir, 3/4/10 mm nozzles, pressures up to 200 bar and transient pressure-decay experiment, but the public article exposes plotted results rather than a machine-readable trace.",
+          "decision": "PLOT_CONTEXT_ONLY"
+        },
+        {
+          "id": "hytunnel_grune_2014_report",
+          "url": "https://hytunnel.net/wordpress/wp-content/uploads/2019/09/HyTunnel-CS_D1.2_Risks-and-Hazards.pdf",
+          "finding": "The public technical report reproduces the measured/calculated pressure-decay figure and release-time description, but does not publish the underlying numeric series.",
+          "decision": "PLOT_CONTEXT_ONLY"
+        },
+        {
+          "id": "jrc_gastef_facility_and_reference_data",
+          "url": "https://joint-research-centre.ec.europa.eu/what-we-do/laboratories/high-pressure-gas-testing-facility_en",
+          "finding": "JRC confirms GasTeF performs fast-fill experiments with pressure and temperature instrumentation; the open reference paper describes 165 tests and 0.6 s logging, but no machine-readable archive or reuse terms were located.",
+          "decision": "REQUEST_DATA"
+        }
+      ],
+      "result": "The Grüne source remains an eligible physical experiment but the current repository result is correctly classified as pending because the half-pressure endpoint is not traceable from the accessible raster. GasTeF remains a high-value raw-data request lead, not an available holdout.",
+      "claim_limit": "Do not digitize the figures into the primary claim or treat the published facility description as access to the underlying logs."
     }
   },
   "last_reviewed": "2026-10-04"
