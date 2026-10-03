@@ -540,7 +540,13 @@
           "vehicle_capacity_and_initial_conditions": false,
           "refuelling_protocol": false
         },
-        "role": "Strong request lead for HRS sensor/anomaly and LLM evidence-grounding validation; cannot close the station-to-vehicle full-loop gate until de-identified raw traces, metadata and reuse terms are obtained."
+        "role": "Strong request lead for HRS sensor/anomaly and LLM evidence-grounding validation; cannot close the station-to-vehicle full-loop gate until de-identified raw traces, metadata and reuse terms are obtained.",
+        "facility_data_program": {
+          "official_bam_research_station": "https://www.bam.de/Content/EN/Standard-Articles/Topics/Energy/Hydrogen/hydrogen-h2-filling-stations.html?nn=83556",
+          "official_statement": "BAM says operating data from refuelling processes are collected, enriched with metadata and made available for model and digital-twin development.",
+          "public_raw_archive_found": false,
+          "request_route": "study authors and BAM H2Safety@BAM data custodian"
+        }
       }
     }
   ],

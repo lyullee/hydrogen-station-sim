@@ -126,6 +126,12 @@ must not be relabelled as independent incident data. Until de-identified raw
 traces, channel definitions, calibration information and reuse terms are
 received, this source supports a request for sensor/anomaly validation only.
 
+BAM's facility description states that refuelling operating data are collected,
+enriched with metadata and made available for model and digital-twin
+development, which makes the BAM custodian a high-value access route even
+though no public raw archive was found:
+<https://www.bam.de/Content/EN/Standard-Articles/Topics/Energy/Hydrogen/hydrogen-h2-filling-stations.html?nn=83556>.
+
 The NREL HITRF experiment reported by Kuroki et al. (DOI
 <https://doi.org/10.1002/ente.202300239>) is a strong partial-station data
 request lead: the paper gives a 6.3→73.0 MPa fill in 186 s and describes
