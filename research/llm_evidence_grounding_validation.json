@@ -33,8 +33,20 @@
     "physics validity of the consequence model",
     "field safety or evacuation distance",
     "operator effectiveness, omission rate or unsafe-advice rate",
-    "generalization to real incident data"
+    "generalization to real incident data",
+    "response effectiveness or operator benefit from HIAD metadata coverage"
   ],
   "full_objective_gate_impact": "does_not_clear",
-  "evidence": "research/LLM_EVIDENCE_GROUNDING_VALIDATION.md"
+  "evidence": "research/LLM_EVIDENCE_GROUNDING_VALIDATION.md",
+  "public_incident_traceability": {
+    "evidence": "research/hiad_playbook_coverage.json",
+    "source": "HIAD 2.2 public HRS inventory",
+    "case_count": 34,
+    "metadata_mapped_case_count": 33,
+    "metadata_mapped_fraction": 0.9705882352941176,
+    "unmapped_event_ids": [
+      "454"
+    ],
+    "interpretation": "qualitative scenario-family coverage only; excludes HIAD response text and does not establish effectiveness or safety"
+  }
 }
