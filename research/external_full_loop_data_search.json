@@ -959,6 +959,34 @@
         "role": "Independent contextual benchmark for event-category frequencies and operating ranges; no row-level physical trace or incident narrative archive is exposed.",
         "claim_limit": "Do not use aggregate charts as external numerical validation or as a substitute for HIAD source-linked accident cases."
       }
+    },
+    {
+      "id": "nrc_bc_dispenser_reliability_2024",
+      "title": "Dispenser reliability analysis for hydrogen refuelling stations in British Columbia",
+      "doi": "10.4224/40003368",
+      "url": "https://doi.org/10.4224/40003368",
+      "publisher": "National Research Council Canada",
+      "decision": "REPORT_CONTEXT_AND_DATA_REQUEST_LEAD",
+      "public_raw_data": false,
+      "inspection": {
+        "official_record": "https://nrc-publications.canada.ca/eng/view/object/?id=19b8dc45-2084-4d87-8525-9f7e52c992ac",
+        "official_pdf": "https://nrc-publications.canada.ca/eng/view/ft/?id=19b8dc45-2084-4d87-8525-9f7e52c992ac",
+        "reported_scope": "Approximately 22,593 H70T40 fueling events at four British Columbia stations in 2022-2023.",
+        "reported_fields": "Fueling pressure, temperature and flow patterns are shown in figures; event categories and aggregate rates are reported.",
+        "reported_findings": [
+          "6.5% connection retries",
+          "69.4% normal fills, 26.6% incomplete fills, 3.9% fault fills",
+          "fault-fill sources reported as 68% station-related, 22% user-related and 10% vehicle-related",
+          "normal-fill median dispensed mass approximately 2.89 kg and normal end SOC usually at least 95%"
+        ],
+        "protocol_context": "SAE J2600/J2601/J2799 context; H70T40 dispensing; connection pulse, leak-check periods and protocol-based termination are described.",
+        "raw_common_timebase": false,
+        "machine_readable_archive": false,
+        "reuse_terms_for_underlying_logs": "not public",
+        "role": "Independent operational and fault-taxonomy benchmark; request the de-identified station-log export and reuse terms.",
+        "exclusion_reason": "The official report publishes plots, categories and aggregate statistics but no downloadable synchronized logger arrays. It cannot close the numerical full-loop validation gate."
+      },
+      "claim_limit": "Use for face-validity, fault taxonomy and test-design context only until underlying timestamped logs and reuse terms are obtained."
     }
   ],
   "next_action": "Use the NREL HDVS workbook for the frozen tank-submodel diagnostic, request permission for publication of derived values, and request synchronized station-side traces from NREL/BAM/JRC/Empa/DLR before freezing a new full-loop holdout.",
@@ -1153,6 +1181,20 @@
       ],
       "result": "The Grüne source remains an eligible physical experiment but the current repository result is correctly classified as pending because the half-pressure endpoint is not traceable from the accessible raster. GasTeF remains a high-value raw-data request lead, not an available holdout.",
       "claim_limit": "Do not digitize the figures into the primary claim or treat the published facility description as access to the underlying logs."
+    },
+    "nrc_dispenser_reliability_followup": {
+      "scope": "inspection of the official NRC Canada dispenser-reliability report for machine-readable fueling logs",
+      "sources": [
+        {
+          "id": "nrc_bc_dispenser_reliability_2024",
+          "url": "https://doi.org/10.4224/40003368",
+          "official_pdf": "https://nrc-publications.canada.ca/eng/view/ft/?id=19b8dc45-2084-4d87-8525-9f7e52c992ac",
+          "finding": "The report analyzes approximately 22,593 BC fueling events from 2022-2023 and provides protocol context, fault categories, event rates and plotted pressure/temperature/flow examples. The downloaded official PDF contains no CSV/XLSX attachment, raw logger link or machine-readable common-time-base trace.",
+          "decision": "REPORT_CONTEXT_AND_DATA_REQUEST_LEAD"
+        }
+      ],
+      "result": "NRC strengthens independent field face-validity and fault-taxonomy coverage, but it does not expose the synchronized raw logs required for a full-loop numerical holdout. The full-loop gate remains unchanged.",
+      "claim_limit": "Do not digitize the report figures for the primary claim or treat aggregate event rates as dynamic validation. Request de-identified station logs, field definitions, quality flags, protocol version and permission to publish derived metrics."
     }
   },
   "last_reviewed": "2026-10-04"

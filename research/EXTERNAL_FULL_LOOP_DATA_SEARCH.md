@@ -546,3 +546,24 @@ not an available holdout: <https://joint-research-centre.ec.europa.eu/what-we-do
 
 Figures were not digitised into the primary claim, and facility descriptions
 were not treated as access to the underlying logs.
+## 2026-10-04 NRC British Columbia dispenser-reliability follow-up
+
+The National Research Council Canada report *Dispenser reliability analysis for
+hydrogen refuelling stations in British Columbia* is a useful independent field
+benchmark (<https://doi.org/10.4224/40003368>; official PDF:
+<https://nrc-publications.canada.ca/eng/view/ft/?id=19b8dc45-2084-4d87-8525-9f7e52c992ac>).
+It analyzes approximately 22,593 H70T40 fueling events at four British Columbia
+stations in 2022--2023 and describes SAE J2600/J2601/J2799 context, connection
+pulses, leak-check periods, pressure/temperature/flow patterns and protocol-based
+termination. Reported aggregate results include 6.5% connection retries, 69.4%
+normal fills, 26.6% incomplete fills and 3.9% fault fills; the report attributes
+fault fills to station-, user- and vehicle-related causes.
+
+The official PDF was inspected for downloadable attachments and raw-data links.
+It contains figures and aggregate tables but no CSV/XLSX attachment or
+machine-readable common-time-base logger export. It is therefore classified as
+**REPORT_CONTEXT_AND_DATA_REQUEST_LEAD**: valuable for face-validity checks,
+fault-taxonomy coverage and test design, but ineligible to close the numerical
+full-loop gate. The report figures are not digitised into the primary claim. A
+follow-up request should seek de-identified station logs, field definitions,
+quality flags, protocol version and permission to publish derived metrics.
