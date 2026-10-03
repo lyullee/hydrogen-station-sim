@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-03",
+  "status": "endpoints_and_code_frozen_before_numerical_curve_access",
+  "objective": "Evaluate transfer of the locked real-gas adiabatic vessel-discharge model to an independent Sandia/SRI high-pressure vessel pressure-decay trace.",
+  "claim_boundary": "This holdout tests time-resolved vessel pressure in one 43.1 MPa hydrogen blowdown from a 1.234 m3 vessel through the published 5.08 mm restriction. It does not validate flame geometry, radiation, dispersion, mass flow instrumentation, 70-90 MPa storage, refuelling control, or a complete station loop.",
+  "source": {
+    "title": "Characterization of high-pressure, underexpanded hydrogen-jet flames",
+    "authors": [
+      "Robert W. Schefer",
+      "William G. Houf",
+      "Todd C. Williams",
+      "Benjamin Bourne",
+      "James Colton"
+    ],
+    "journal": "International Journal of Hydrogen Energy",
+    "year": 2007,
+    "doi": "10.1016/j.ijhydene.2006.08.037",
+    "experimental_institutions": [
+      "Sandia National Laboratories",
+      "SRI International"
+    ],
+    "digitization_provider": "HyRAM+ 6.1 validation repository",
+    "digitization_repository_commit": "b45abf9a6d995951311be6aad836f1874e4d420b",
+    "digitization_path": "tests/hyram/validation/data/schefer-2007-fig4.csv",
+    "digitization_sha256": "2ef47dc2ac0eb3c34f707467fb74336ca417cf66e425aa3fabfb3e4bf2554d80",
+    "digitization_license": "GNU GPL v3 as distributed with HyRAM+; publisher figure remains cited to the original DOI",
+    "redistribution_policy": "Commit a verbatim derived-data copy only with HyRAM+ attribution, GPL notice and original paper citation. Do not commit a publisher PDF."
+  },
+  "known_before_freeze": {
+    "descriptive_inputs": {
+      "initial_pressure_pa_abs": 43100000.0,
+      "initial_temperature_k": 290.0,
+      "tank_volume_m3": 1.234,
+      "restriction_diameter_m": 0.00508,
+      "ambient_pressure_pa": 101325.0
+    },
+    "numerical_curve_coordinates_accessed": false,
+    "target_model_predictions_computed": false,
+    "data_file_access_before_freeze": "The data file was cryptographically hashed but no numerical row was opened. Public HyRAM+ test setup code supplied only apparatus inputs and the x1/y1/x2/y2 structure."
+  },
+  "independence": {
+    "different_experiment_from_schefer_2006_mass_flow": true,
+    "independent_from_preslhy_facility": true,
+    "independent_from_proust_ineris_cea_facility": true,
+    "model_development_data": [
+      "PRESLHY E3.1 Part A, DOI 10.35097/1187"
+    ],
+    "limitation": "The HyRAM+ CSV is a publisher-figure digitization rather than an original logger export. The same research partnership produced the 2006 development-adjacent and 2007 holdout experiments, so this is an experiment-level rather than institution-level transfer test."
+  },
+  "locked_model": {
+    "description": "Well-mixed adiabatic rigid vessel with HEOS hydrogen properties and maximum real-gas isentropic mass flux through the published 5.08 mm restriction; Cd=1.0 from the public benchmark setup; no outcome fitting.",
+    "path": "src/h2station/schefer_2007_validation.py",
+    "sha256": "bd3f5eae66e3d8bc093ebc182fa5c9f8a308813468632c973a65f76e30f2b580",
+    "discharge_coefficient": 1.0,
+    "post_freeze_parameter_changes": "prohibited for the primary result"
+  },
+  "locked_runner": {
+    "path": "scripts/run_schefer_2007_holdout.py",
+    "sha256": "8d97f24ecdb1f235d1b42151d8fe5a8fdd07d25372cf1e495e30dd7b8270d8fb"
+  },
+  "eligibility": {
+    "minimum_unique_points": 15,
+    "requires": [
+      "non-negative strictly increasing time",
+      "finite positive measured vessel pressure",
+      "trace assembled from the two publisher Figure 4 experimental segments without extrapolation"
+    ],
+    "insufficient_data_policy": "Archive an ineligible result without substituting a plotted calculation or extrapolating beyond measured support."
+  },
+  "primary_endpoints": {
+    "pressure_nrmse_percent_initial_measured": {
+      "maximum": 10.0,
+      "support": "all retained measured coordinates"
+    },
+    "median_absolute_percentage_error_percent": {
+      "maximum": 15.0,
+      "support": "measured pressure at least 10 percent of initial measured pressure"
+    },
+    "half_pressure_time_relative_error_percent": {
+      "maximum": 20.0,
+      "role": "required timing endpoint"
+    }
+  },
+  "aggregate_decision": {
+    "claim_supported": "all three primary endpoint screens pass",
+    "retain_numerical_and_runtime_failures": true,
+    "negative_result_policy": "Any failed screen remains archived and prohibits an independent pressure-decay validation claim from this dataset."
+  }
+}
