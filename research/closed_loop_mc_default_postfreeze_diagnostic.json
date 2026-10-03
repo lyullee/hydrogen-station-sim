@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-03T09:44:00+00:00",
+  "status": "post_freeze_diagnostic_only",
+  "source_commit": "b3a1264f147a88c5013303cdb4ba293007216661",
+  "purpose": "Quantify whether the current development calibration reduces the already-consumed MC Default holdout error. This artifact is not an external validation result and does not alter the frozen 0/8 outcome.",
+  "data_source": "research/mc_default_external_holdout_protocol.json",
+  "prohibited_use": [
+    "Do not call this a clean holdout.",
+    "Do not use these outcomes for parameter fitting or IJHE validation claims.",
+    "Do not replace data/public_validation/results/closed_loop_external_holdout/validation.json."
+  ],
+  "configuration": {
+    "effective_volume_multiplier": 1.052729261198358,
+    "gas_liner_ua_multiplier": 31.460656519273492,
+    "dispenser_flow_area_multiplier": 2.0,
+    "precooler_duty_multiplier": 16.0
+  },
+  "historical_frozen_baseline": {
+    "screening_pass_count": 0,
+    "case_count": 8,
+    "pressure_rmse_mean_mpa": 15.861950187335326,
+    "temperature_rmse_mean_c": 13.2297713971845,
+    "soc_rmse_mean_percentage_points": 18.082051217903157
+  },
+  "diagnostic_aggregate": {
+    "screening_pass_count": 0,
+    "case_count": 8,
+    "screening_pass_fraction": 0.0,
+    "pressure_rmse_mean_mpa": 12.7529145501809,
+    "temperature_rmse_mean_c": 12.31128930345286,
+    "soc_rmse_mean_percentage_points": 14.571478290711209,
+    "final_stop_reason_counts": {
+      "safety-temperature": 5,
+      "none": 2,
+      "vehicle-target": 1
+    }
+  },
+  "case_summary": [
+    {"case_id": "H2P-MC-1-A", "screening_pass": false, "pressure_rmse_mpa": 12.428432157969906, "temperature_rmse_c": 12.99925239035849, "soc_final_error_percentage_points": -32.71104656813546, "final_stop_reason": "safety-temperature"},
+    {"case_id": "H2P-MC-1-B", "screening_pass": false, "pressure_rmse_mpa": 11.661774537102692, "temperature_rmse_c": 9.56671111861672, "soc_final_error_percentage_points": -18.698089162618786, "final_stop_reason": "safety-temperature"},
+    {"case_id": "H2P-MC-1-C", "screening_pass": false, "pressure_rmse_mpa": 9.402830801414717, "temperature_rmse_c": 8.80140175785919, "soc_final_error_percentage_points": -8.201481082616766, "final_stop_reason": null},
+    {"case_id": "H2P-MC-1-D", "screening_pass": false, "pressure_rmse_mpa": 9.37762680546488, "temperature_rmse_c": 9.859545318547633, "soc_final_error_percentage_points": -8.617160463089448, "final_stop_reason": null},
+    {"case_id": "H2P-MC-1-E", "screening_pass": false, "pressure_rmse_mpa": 18.767789380108173, "temperature_rmse_c": 16.030363248648413, "soc_final_error_percentage_points": -42.932652075313385, "final_stop_reason": "safety-temperature"},
+    {"case_id": "H2P-MC-1-F", "screening_pass": false, "pressure_rmse_mpa": 23.11497355373436, "temperature_rmse_c": 17.257138584503004, "soc_final_error_percentage_points": -51.60258327869449, "final_stop_reason": "safety-temperature"},
+    {"case_id": "H2P-MC-2-A", "screening_pass": false, "pressure_rmse_mpa": 6.04240077263617, "temperature_rmse_c": 18.130484680669483, "soc_final_error_percentage_points": -5.681804611134339, "final_stop_reason": "vehicle-target"},
+    {"case_id": "H2P-MC-9.8KG", "screening_pass": false, "pressure_rmse_mpa": 11.227488393016321, "temperature_rmse_c": 5.8454173284199396, "soc_final_error_percentage_points": -22.90828951843683, "final_stop_reason": "safety-temperature"}
+  ],
+  "interpretation": "The development calibration improves aggregate error but does not meet the frozen engineering screens. The dominant residual is premature thermal stopping and under-delivery at slow/warm fills. A new untouched external fill-level dataset is required before any validation claim can be reopened."
+}
