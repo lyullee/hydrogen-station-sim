@@ -594,6 +594,22 @@ def audit(root: Path) -> dict[str, object]:
         casebook_freeze or "missing",
     ))
 
+    public_evidence_path = root / "research/hiad_hrs_public_evidence.json"
+    public_evidence = _json(public_evidence_path)
+    public_evidence_pass = bool(
+        (public_evidence or {}).get("aggregate", {}).get("case_count") == 34
+        and (public_evidence or {}).get("selection", {}).get("coordinator_approval") is False
+        and (public_evidence or {}).get("source", {}).get("sha256")
+    )
+    gates.append(_gate(
+        "hiad_public_evidence_inventory",
+        "PASS" if public_evidence_pass else "PENDING",
+        "The public HIAD 2.2 HRS incident subset is hash-linked and reproducibly summarized without leaking blinded responses.",
+        str(public_evidence_path.relative_to(root)),
+        "34 public HRS rows, source digest, explicit selection rule and non-casebook claim boundary.",
+        public_evidence or "missing",
+    ))
+
     collection_path = root / "data/public_validation/results/hiad_decision/collection_manifest.json"
     collection = _json(collection_path)
     collection_pass = bool(

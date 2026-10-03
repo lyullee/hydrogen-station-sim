@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T10:45:54.892320+00:00",
+  "generated_at": "2026-10-03T10:49:09.581056+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 14,
+    "PASS": 15,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -696,6 +696,681 @@
       "evidence": "data\\public_validation\\results\\hiad_casebook_frozen\\casebook_freeze_manifest.json",
       "requirement": "24 retained and approved cases with source/submitted/frozen hashes.",
       "observed": "missing"
+    },
+    {
+      "id": "hiad_public_evidence_inventory",
+      "status": "PASS",
+      "claim": "The public HIAD 2.2 HRS incident subset is hash-linked and reproducibly summarized without leaking blinded responses.",
+      "evidence": "research\\hiad_hrs_public_evidence.json",
+      "requirement": "34 public HRS rows, source digest, explicit selection rule and non-casebook claim boundary.",
+      "observed": {
+        "schema_version": 1,
+        "source": {
+          "title": "European Hydrogen Incidents and Accidents Database HIAD 2.2",
+          "publisher": "European Commission Joint Research Centre",
+          "url": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt",
+          "file": "data/public_validation/raw/hiad_2_2/HIAD 2.2.xlsx",
+          "sha256": "295772b60a4afe5ef47a00bc314eed48b76c170be00c29952d60e50fedd6f55f",
+          "scope": "Public HRS application rows from the EVENTS/FACILITY/LESSONS/EVENT NATURE/REFERENCES sheets",
+          "reuse_note": "Free public use with required acknowledgement; source validity remains the responsibility of the original source."
+        },
+        "selection": {
+          "rule": "FACILITY.Application exactly equals 'Hydrogen refuelling station'",
+          "related_rows_not_included": true,
+          "blinded_response_text_excluded": true,
+          "coordinator_approval": false
+        },
+        "aggregate": {
+          "case_count": 34,
+          "with_emergency_action": 29,
+          "with_lesson_learnt": 24,
+          "with_corrective_measures": 25,
+          "physical_effect_counts": {
+            "Unignited Hydrogen Release": 22,
+            "No Hydrogen Release": 6,
+            "Hydrogen release and ignition": 1,
+            "Hydrogen Release and Ignition": 5
+          },
+          "consequence_counts": {
+            "Leak no ignition": 4,
+            "Near miss": 4,
+            "near miss": 3,
+            "leak no ignition": 17,
+            "Explosion": 2,
+            "fire": 2,
+            "explosion followed by a fire": 1,
+            "explosion": 1
+          },
+          "sub_application_counts": {
+            "Hydrogen dispenser": 5,
+            "HRS 35 Mpa": 1,
+            "hydrogen compression": 1,
+            "HRS": 7,
+            "HRS (70 Mpa)": 2,
+            "HRS (70 for LDV & HDV)": 1,
+            "LH2 and CGH2 HRS": 1,
+            "CGH2 storage": 2,
+            "CHG2 storage": 1,
+            "CGH2 HRS": 1,
+            "70 MPa HRS": 10,
+            "35 MPa HRS": 2
+          },
+          "stage_counts": {
+            "Hydrogen transfer": 14,
+            "Hydrogen compression": 9,
+            "Hydrogen delivery": 6,
+            "Hydrogen storage": 1,
+            "hydrogen storage": 4
+          }
+        },
+        "cases": [
+          {
+            "event_id": "396",
+            "quality": "2",
+            "title": "Detection of hydrogen release",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "Leak no ignition",
+            "sub_application": "Hydrogen dispenser",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": false,
+            "reference_count": 1,
+            "references": [
+              "Report were available & confidential, and now is lost"
+            ]
+          },
+          {
+            "event_id": "401",
+            "quality": "3",
+            "title": "Detection of hydrogen release",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "Leak no ignition",
+            "sub_application": "Hydrogen dispenser",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": false,
+            "reference_count": 1,
+            "references": [
+              "Report provided but confidential"
+            ]
+          },
+          {
+            "event_id": "402",
+            "quality": "2",
+            "title": "Cavitation in a compressor",
+            "physical_effect": "No Hydrogen Release",
+            "consequence_nature": "Near miss",
+            "sub_application": "HRS 35 Mpa",
+            "supply_chain_stage": "Hydrogen compression",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 1,
+            "references": [
+              "Report were available & confidential, and now is lost"
+            ]
+          },
+          {
+            "event_id": "403",
+            "quality": "2",
+            "title": "Hydrogen dispenser failure",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "Leak no ignition",
+            "sub_application": "Hydrogen dispenser",
+            "supply_chain_stage": "Hydrogen delivery",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": false,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": false,
+            "reference_count": 1,
+            "references": [
+              "Report were available & confidential, and now is lost"
+            ]
+          },
+          {
+            "event_id": "404",
+            "quality": "2",
+            "title": "Malfunctioning in a hydrogen refuelling station",
+            "physical_effect": "No Hydrogen Release",
+            "consequence_nature": "Near miss",
+            "sub_application": "Hydrogen dispenser",
+            "supply_chain_stage": "Hydrogen delivery",
+            "operational_condition": "ABNORMAL",
+            "has_emergency_action": false,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": true,
+            "reference_count": 1,
+            "references": [
+              "Report were available & confidential, and now is lost"
+            ]
+          },
+          {
+            "event_id": "411",
+            "quality": "2",
+            "title": "Oil leak",
+            "physical_effect": "No Hydrogen Release",
+            "consequence_nature": "Near miss",
+            "sub_application": "hydrogen compression",
+            "supply_chain_stage": "Hydrogen compression",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": false,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": true,
+            "reference_count": 1,
+            "references": [
+              "Report available but confidential"
+            ]
+          },
+          {
+            "event_id": "454",
+            "quality": "2",
+            "title": "Damage of a HRS canopy",
+            "physical_effect": "No Hydrogen Release",
+            "consequence_nature": "near miss",
+            "sub_application": "HRS",
+            "supply_chain_stage": "Hydrogen delivery",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": false,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": true,
+            "reference_count": 1,
+            "references": [
+              "Report provided but confidential"
+            ]
+          },
+          {
+            "event_id": "463",
+            "quality": "3",
+            "title": "Release at a dispenser of a HRS",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": false,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": false,
+            "reference_count": 1,
+            "references": [
+              "Report provided but confidential"
+            ]
+          },
+          {
+            "event_id": "702",
+            "quality": "5",
+            "title": "hydrogen leak in the hose of a dispenser",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "HRS (70 Mpa)",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2014-182:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "KHK accidentl database, incident 2014-182:\nEnghlish version of the Japanese original, based on Google machine translation"
+            ]
+          },
+          {
+            "event_id": "803",
+            "quality": "3",
+            "title": "Release from the dispenser of a refuelling station",
+            "physical_effect": "No Hydrogen Release",
+            "consequence_nature": "Near miss",
+            "sub_application": "HRS (70 for LDV & HDV)",
+            "supply_chain_stage": "Hydrogen delivery",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": false,
+            "reference_count": 2,
+            "references": [
+              "A. Al-Douri et al.,  Populating the Hydrogen Component Reliability Database (HyCReD) with Incident Data from Hydrogen Dispensing, paper ID232, Proceedings of ICHS 2023 \nhttps://hysafe.info/uploads/papers/2023/232.pdf\n(accessed August 2024)",
+              "A detailed analysis was presented by Clark et al. at the 2024 Center for Hydrogen Safety Americas Conference\nThe resentation is behind a paywall, but the abstract is available on line: \nhttps://proceedings.aiche.org/conferences/center-hydrogen-safety-conference/2024/proceeding/paper/lessons-learned-medium-pressure-tank-leak-nrels-hydrogen-refueling-station\n(accessed January 2025)"
+            ]
+          },
+          {
+            "event_id": "884",
+            "quality": "5",
+            "title": "Explosion in the storage of a HRS",
+            "physical_effect": "Hydrogen release and ignition",
+            "consequence_nature": "Explosion",
+            "sub_application": "HRS (70 Mpa)",
+            "supply_chain_stage": "Hydrogen storage",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 5,
+            "references": [
+              "Company investigation summary:\nhttps://nelhydrogen.com/status-and-qa-regarding-the-kjorbo-incident/\n(accessed June 2024)",
+              "Manufacturer report statement (Published: 27 June, 2019; Updated: 29 June, 2019) https://nelhydrogen.com/status-and-qa-regarding-the-kjorbo-incident/ (accessed June 2020)",
+              "FCBulletin June 2019",
+              "O. Hansen presentation at the MOZEES workshop:\nhttps://mozees.no/wp-content/uploads/2019/10/Hansen_Hydrogen-safety_Kjoerbo-incident-overview-and-perspectives.pdf\n(accessed June 2024)",
+              "ARCADIS analysis:\nhttps://www.contactgroep-gezondheid-en-chemie.nl/wp-content/uploads/2021/07/ppt4-20200116-cgc-nvt-presentatie-smit.pdf\n(accessed June 2024)"
+            ]
+          },
+          {
+            "event_id": "953",
+            "quality": "4",
+            "title": "Hydrogen release at a public hydrogen refuelling station.",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "Leak no ignition",
+            "sub_application": "LH2 and CGH2 HRS",
+            "supply_chain_stage": "Hydrogen compression",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "Event description in the French database ARIA_x000D_\nhttps://www.aria.developpement-durable.gouv.fr/accident/37528/_x000D_\n(accessed October 2020)_x000D_",
+              "Event description in the US database H2Tools/Lesson Learned_x000D_\nhttps://h2tools.org/lessons/leak-compressor-fueling-station_x000D_\n(accessed October 2020)_x000D_"
+            ]
+          },
+          {
+            "event_id": "1038",
+            "quality": "5",
+            "title": "Dispenser nozzle freezing during hydrogen refuelling",
+            "physical_effect": "No Hydrogen Release",
+            "consequence_nature": "near miss",
+            "sub_application": "Hydrogen dispenser",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 1,
+            "references": [
+              "paper 346 presented at the Int. Conference onHydrogenSafety ICHS2015"
+            ]
+          },
+          {
+            "event_id": "1062",
+            "quality": "3",
+            "title": "Leakage at a hydrogen buses refilling station",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "HRS",
+            "supply_chain_stage": "hydrogen storage",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": false,
+            "reference_count": 2,
+            "references": [
+              "Online news of allesoverwaterstof.nl\nhttps://allesoverwaterstof.nl/brandweer-heeft-waterstoflekkage-in-qbuzz-stalling-groningen-snel-onder-controle/\n(Assessed ctober 2025)",
+              "HydrogenInsight news of 21/07/2023\nhttps://www.hydrogeninsight.com/transport/shell-hydrogen-filling-station-in-the-netherlands-evacuated-after-h2-leak-discovered/2-1-1490137"
+            ]
+          },
+          {
+            "event_id": "1063",
+            "quality": "2",
+            "title": "Leakage at a hydrogen refilling station in a airport",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "HRS",
+            "supply_chain_stage": "Hydrogen delivery",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": false,
+            "reference_count": 1,
+            "references": [
+              "ARIA event\nhttps://www.aria.developpement-durable.gouv.fr/accident/59722/"
+            ]
+          },
+          {
+            "event_id": "1064",
+            "quality": "2",
+            "title": "Leakage at a hydrogen refilling station in a airport",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "near miss",
+            "sub_application": "HRS",
+            "supply_chain_stage": "Hydrogen compression",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": true,
+            "reference_count": 1,
+            "references": [
+              "ARIA event\nhttps://www.aria.developpement-durable.gouv.fr/accident/59921/"
+            ]
+          },
+          {
+            "event_id": "1106",
+            "quality": "4",
+            "title": "Fire in a hydrogen refuelling station",
+            "physical_effect": "Hydrogen Release and Ignition",
+            "consequence_nature": "Explosion",
+            "sub_application": "HRS",
+            "supply_chain_stage": "Hydrogen compression",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 3,
+            "references": [
+              "The investigation report by TÜV Süd is not publicly available. A summary was shared by NOW in a presentation of 8 Octobr 2024",
+              "PV-Magazine news of 07 July 2024: \nhttps://www.pv-magazine.de/2024/07/11/beschaedigter-kompressor-verursacht-brand-in-wasserstoff-tankstelle/ \n(accessed July 2024)",
+              "JRC discussion based on own collection of information"
+            ]
+          },
+          {
+            "event_id": "1159",
+            "quality": "3",
+            "title": "Release from a vessel at a HRS",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "HRS",
+            "supply_chain_stage": "hydrogen storage",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 1,
+            "references": [
+              "Provided to JRC by the operator of the facility"
+            ]
+          },
+          {
+            "event_id": "1161",
+            "quality": "2",
+            "title": "Release from a storage at a HRS",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "CGH2 storage",
+            "supply_chain_stage": "hydrogen storage",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": false,
+            "reference_count": 2,
+            "references": [
+              "FCHEA Hydorgen and Fuel cell update September 2022 \nhttps://www.hydrogenandfuelcellsafety.info/september-2022#Update1\n(accessed January 2025)",
+              "Kwang Seok Kim, Introduction of the Release Incident at Hydrogen Refueling Station in South Korea, presented at the CHS 2022 CHS Americas Conference, September 20-22 Ca. \n(not publicly available)"
+            ]
+          },
+          {
+            "event_id": "1163",
+            "quality": "2",
+            "title": "Fire from the storage area of a HRS",
+            "physical_effect": "Hydrogen Release and Ignition",
+            "consequence_nature": "fire",
+            "sub_application": "CHG2 storage",
+            "supply_chain_stage": "Hydrogen delivery",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": false,
+            "reference_count": 1,
+            "references": [
+              "Collection of news\nhttps://cleantechnica.com/2025/01/16/korean-hydrogen-explosions-leaks-auction-failure-impeachment-may-cause-pivot/\nhttps://www.hydrogeninsight.com/transport/safety-concerns-grow-after-two-explosions-at-south-korean-hydrogen-filling-stations-in-same-week/2-1-1759496\nhttps://m.ytn.co.kr/en/news_view.amp.php?param=0115_202412272305332906\n(accessed January 2025)"
+            ]
+          },
+          {
+            "event_id": "1173",
+            "quality": "4",
+            "title": "Explosion on a CGH2 cylinders bundle during filling",
+            "physical_effect": "Hydrogen Release and Ignition",
+            "consequence_nature": "explosion followed by a fire",
+            "sub_application": "CGH2 HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": true,
+            "reference_count": 3,
+            "references": [
+              "KHK accidentl database, incident 2023-188:\nhttps://www.khk.or.jp/Portals/0/khk/hpg/accident/2023/05_2023-188.pdf\n(accessed may 2025)",
+              "KHK accidentl database, incident 2023-188:\nEnghlish version of the Japanese original, based on Google machine translation",
+              "KHK presentation: \"Hydrogen related Accidents / Incidents in Japan & KHK Initiatives\", 20 September 2024"
+            ]
+          },
+          {
+            "event_id": "1191",
+            "quality": "4",
+            "title": "Fire at the storage of a hydrogen refuelling station",
+            "physical_effect": "Hydrogen Release and Ignition",
+            "consequence_nature": "fire",
+            "sub_application": "CGH2 storage",
+            "supply_chain_stage": "hydrogen storage",
+            "operational_condition": "REPAIR",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2014-349:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1193",
+            "quality": "5",
+            "title": "A hydrogen leak at a 70 MPa dispenser",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "STARTUP",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2015-052:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1194",
+            "quality": "4",
+            "title": "Leak in a dispenser at a mobile HRS",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2015-333:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1195",
+            "quality": "4",
+            "title": "Leak from a valve in a HRS",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen compression",
+            "operational_condition": "STARTUP",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2016-1066:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1196",
+            "quality": "5",
+            "title": "Several leaks from the hoses of a HRS",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2017-037:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1198",
+            "quality": "5",
+            "title": "Explosion at a filling hose of a hydrogen dispenser",
+            "physical_effect": "Hydrogen Release and Ignition",
+            "consequence_nature": "explosion",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2017-101:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1202",
+            "quality": "4",
+            "title": "Leak  at a filling hose of a hydrogen dispenser",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2018-705:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1203",
+            "quality": "5",
+            "title": "Leaks from a hydrogen compressor",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen compression",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2018-660 and 2018-661:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1204",
+            "quality": "5",
+            "title": "leak from a hose when refuelling a forklift",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "35 MPa HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident  2019-378:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1205",
+            "quality": "5",
+            "title": "Hydrogen accidental release into a compressor room",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen compression",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident  2020-144:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1206",
+            "quality": "4",
+            "title": "leaks from a threaded joint",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "35 MPa HRS",
+            "supply_chain_stage": "Hydrogen compression",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2022-608 (it summarises also the previous reports 2021-603, 2021-644, 2022-354).  \nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1207",
+            "quality": "4",
+            "title": "leak from a dispenser of a HRS",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident  2016-186:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "Translated version in English (by GPT@JRC)"
+            ]
+          },
+          {
+            "event_id": "1208",
+            "quality": "4",
+            "title": "leak from a dispenser of a mobile HRS",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident  2015-363:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "Translated version in English (by GPT@JRC)"
+            ]
+          }
+        ],
+        "claim_boundary": "HIAD is a public incident and near-miss evidence source. It does not provide synchronized station sensor traces, exposure denominators, or a calibrated probability model. This summary supports scenario coverage and traceable qualitative evidence only; it does not close the full-loop physics or expert-effectiveness gates."
+      }
     },
     {
       "id": "hiad_holdout_collection",
