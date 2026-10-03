@@ -18,6 +18,7 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert gates["hyram_adapter_verification"]["status"] == "PASS"
     assert gates["preoutcome_design_sensitivity"]["status"] == "PASS"
     assert gates["full_loop_external_validation"]["status"] == "FAIL"
+    assert gates["preslhy_blowdown_external_validation"]["status"] == "PENDING"
     external = gates["full_loop_external_validation"]["observed"]
     assert external["protocol_integrity"] is True
     assert external["aggregate"]["case_count"] == 8

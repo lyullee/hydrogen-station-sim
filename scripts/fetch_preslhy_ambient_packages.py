@@ -80,11 +80,14 @@ def _parse_pax(payload: bytes) -> dict[str, str]:
 
 
 def iter_tar_members(
-    fetch_range: Callable[[int, int], bytes], archive_size: int
+    fetch_range: Callable[[int, int], bytes],
+    archive_size: int,
+    *,
+    start_offset: int = 0,
 ) -> Iterator[TarMember]:
     """Yield regular TAR members using inclusive-independent byte ranges."""
 
-    offset = 0
+    offset = start_offset
     pending_name: str | None = None
     pending_pax: dict[str, str] = {}
     while offset + 512 <= archive_size:
@@ -157,6 +160,36 @@ class HttpRangeReader:
         raise RuntimeError(f"failed to fetch bytes {offset}-{end}") from last_error
 
 
+class BlockCachedRangeReader:
+    """Amortize adjacent TAR-header reads over one remote range request."""
+
+    def __init__(
+        self,
+        reader: HttpRangeReader,
+        archive_size: int,
+        block_size: int = 256 * 1024,
+    ) -> None:
+        self.reader = reader
+        self.archive_size = archive_size
+        self.block_size = block_size
+        self._offset = -1
+        self._payload = b""
+
+    def __call__(self, offset: int, length: int) -> bytes:
+        if (
+            self._offset <= offset
+            and offset + length <= self._offset + len(self._payload)
+        ):
+            start = offset - self._offset
+            return self._payload[start : start + length]
+        if length > self.block_size:
+            return self.reader(offset, length)
+        fetch_length = min(self.block_size, self.archive_size - offset)
+        self._offset = offset
+        self._payload = self.reader(offset, fetch_length)
+        return self._payload[:length]
+
+
 def _download_member(
     reader: HttpRangeReader,
     member: TarMember,
@@ -194,6 +227,7 @@ def main() -> int:
     )
     parser.add_argument("--list-only", action="store_true")
     parser.add_argument("--force", action="store_true")
+    parser.add_argument("--restart-index", action="store_true")
     args = parser.parse_args()
 
     expected = {
@@ -203,14 +237,46 @@ def main() -> int:
         "PRE3P1A_KIT_D4_300K_DATA.zip",
     }
     reader = HttpRangeReader(args.url)
-    members = []
-    for member in iter_tar_members(reader, args.archive_bytes):
+    index_reader = BlockCachedRangeReader(reader, args.archive_bytes)
+    args.output.mkdir(parents=True, exist_ok=True)
+    checkpoint_path = args.output / "tar_index_checkpoint.json"
+    if checkpoint_path.exists() and not args.restart_index:
+        checkpoint = json.loads(checkpoint_path.read_text(encoding="utf-8"))
+        if (
+            checkpoint.get("source_url") != args.url
+            or checkpoint.get("archive_bytes") != args.archive_bytes
+        ):
+            raise RuntimeError("TAR checkpoint source does not match this request")
+        start_offset = int(checkpoint["next_offset"])
+        members = [TarMember(**item) for item in checkpoint.get("targets", [])]
+        print(f"resuming TAR index at byte {start_offset}", flush=True)
+    else:
+        start_offset = 0
+        members = []
+    for member in iter_tar_members(
+        index_reader, args.archive_bytes, start_offset=start_offset
+    ):
         name = PurePosixPath(member.name).name
         if TARGET_NAME.fullmatch(name):
-            members.append(member)
-            print(f"located {name}", flush=True)
-            if {PurePosixPath(item.name).name for item in members} == expected:
-                break
+            if name not in {PurePosixPath(item.name).name for item in members}:
+                members.append(member)
+                print(f"located {name}", flush=True)
+        next_offset = member.offset + ((member.size + 511) // 512) * 512
+        checkpoint_path.write_text(
+            json.dumps(
+                {
+                    "source_url": args.url,
+                    "archive_bytes": args.archive_bytes,
+                    "next_offset": next_offset,
+                    "targets": [asdict(item) for item in members],
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        if {PurePosixPath(item.name).name for item in members} == expected:
+            break
     found = {PurePosixPath(member.name).name for member in members}
     if found != expected:
         raise RuntimeError(f"ambient package set mismatch: found {sorted(found)}")
@@ -241,7 +307,6 @@ def main() -> int:
         "range_extraction": True,
         "members": records,
     }
-    args.output.mkdir(parents=True, exist_ok=True)
     (args.output / "acquisition_preslhy.json").write_text(
         json.dumps(acquisition, indent=2) + "\n", encoding="utf-8"
     )

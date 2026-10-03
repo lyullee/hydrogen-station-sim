@@ -241,6 +241,44 @@ def audit(root: Path) -> dict[str, object]:
         geometry or "missing; FFI open-channel data are not applicable to the current outdoor free jet",
     ))
 
+    preslhy_path = (
+        root / "data/public_validation/results/preslhy_blowdown/validation.json"
+    )
+    preslhy = _json(preslhy_path)
+    preslhy_protocol_path = root / "research/preslhy_blowdown_validation_protocol.json"
+    preslhy_protocol = _json(preslhy_protocol_path)
+    preslhy_eligibility = (preslhy or {}).get("eligibility") or {}
+    preslhy_aggregate = (preslhy or {}).get("aggregate") or {}
+    preslhy_protocol_hash = (
+        _sha256(preslhy_protocol_path) if preslhy_protocol_path.is_file() else None
+    )
+    preslhy_pass = bool(
+        (preslhy_protocol or {}).get("status")
+        == "frozen_before_raw_excel_outcome_access"
+        and ((preslhy_protocol or {}).get("source") or {}).get(
+            "outcomes_accessed_before_freeze"
+        )
+        is False
+        and preslhy_eligibility.get("minimum_requirements_met") is True
+        and preslhy_aggregate.get(
+            "ambient_direct_aperture_blowdown_claim_supported"
+        )
+        is True
+        and (preslhy or {}).get("protocol_sha256") == preslhy_protocol_hash
+    )
+    gates.append(_gate(
+        "preslhy_blowdown_external_validation",
+        "PASS" if preslhy_pass else ("FAIL" if preslhy else "PENDING"),
+        "The source-depletion and direct-aperture release model meets its prospectively frozen screens on public PRESLHY ambient blowdown experiments.",
+        f"{preslhy_path.relative_to(root)}; {preslhy_protocol_path.relative_to(root)}",
+        ">=12 cases across >=3 nozzle and pressure groups, >=70% joint primary pass fraction, frozen implementation and retained failures.",
+        {
+            "eligibility": preslhy_eligibility,
+            "aggregate": preslhy_aggregate,
+            "claim_boundary": (preslhy_protocol or {}).get("claim_boundary"),
+        } if preslhy else "missing; acquisition/validation has not completed",
+    ))
+
     protocol_path = root / "research/hiad_study_protocol_manifest.json"
     protocol = _json(protocol_path)
     protocol_ok, protocol_mismatches = _protocol_integrity(root, protocol)
@@ -414,7 +452,8 @@ def audit(root: Path) -> dict[str, object]:
         "tank_external_validation", "active_fill_correction_disclosed",
         "corrected_closed_loop_internal_evidence",
         "full_loop_negative_result_disclosed",
-        "hyram_adapter_verification", "hiad_protocol_integrity",
+        "hyram_adapter_verification", "preslhy_blowdown_external_validation",
+        "hiad_protocol_integrity",
         "institutional_ethics_determination", "hiad_casebook_frozen",
         "hiad_holdout_collection", "independent_expert_review_complete",
         "preoutcome_design_sensitivity", "ijhe_format_gate",

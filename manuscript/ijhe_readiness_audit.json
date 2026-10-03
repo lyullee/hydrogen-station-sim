@@ -1,15 +1,16 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T04:53:31.285693+00:00",
+  "generated_at": "2026-10-03T05:32:56.755791+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
     "PASS": 10,
     "FAIL": 1,
-    "PENDING": 7
+    "PENDING": 8
   },
   "blocking_bounded_submission_gates": [
+    "preslhy_blowdown_external_validation",
     "institutional_ethics_determination",
     "hiad_casebook_frozen",
     "hiad_holdout_collection",
@@ -18,6 +19,7 @@
     "submission_metadata_and_declarations"
   ],
   "blocking_full_objective_gates": [
+    "preslhy_blowdown_external_validation",
     "institutional_ethics_determination",
     "hiad_casebook_frozen",
     "hiad_holdout_collection",
@@ -430,6 +432,14 @@
         ],
         "decision": "The traceability chain passes for the bounded outdoor free-jet display scope. It does not validate a specific station site or authorize a safety-distance claim."
       }
+    },
+    {
+      "id": "preslhy_blowdown_external_validation",
+      "status": "PENDING",
+      "claim": "The source-depletion and direct-aperture release model meets its prospectively frozen screens on public PRESLHY ambient blowdown experiments.",
+      "evidence": "data\\public_validation\\results\\preslhy_blowdown\\validation.json; research\\preslhy_blowdown_validation_protocol.json",
+      "requirement": ">=12 cases across >=3 nozzle and pressure groups, >=70% joint primary pass fraction, frozen implementation and retained failures.",
+      "observed": "missing; acquisition/validation has not completed"
     },
     {
       "id": "hiad_protocol_integrity",
