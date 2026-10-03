@@ -119,6 +119,17 @@
       "rights_note": "The dataset is openly licensed with attribution and share-alike requirements. Keep the raw archive under the gitignored data directory and commit only metadata, parsers and derived results.",
       "eligibility_note": "Prospectively reserved as a separate-campaign holdout for the locked non-adiabatic DisCha source-depletion model. Shared facility and investigators limit independence; combustion endpoints are outside this source-depletion claim."
     },
+    "proust_90mpa_high_pressure_fires": {
+      "title": "High pressure hydrogen fires",
+      "authors": "Christophe Proust, Didier Jamois, Etienne Studer",
+      "publisher": "International Journal of Hydrogen Energy / ICHS",
+      "doi": "10.1016/j.ijhydene.2010.04.055",
+      "landing_page": "https://doi.org/10.1016/j.ijhydene.2010.04.055",
+      "open_conference_pdf": "https://conference.ing.unipi.it/ichs2009/images/stories/papers/214.pdf",
+      "pdf_sha256": "97ee45651e62751c002ef07c7e7c404b959a899d20e5ed69d58c01d0a043046e",
+      "rights_note": "The public conference PDF has no identified data-redistribution licence and is not committed. The repository retains citation, extraction provenance and independently digitized factual coordinates with a separate rights note.",
+      "eligibility_note": "Independent INERIS/CEA 25 L Type-IV release facility near 90 MPa. Figure 5 mass-flow curves and Table 1 measured temperatures can test the local gaseous aperture relation, but not the vessel transient, 10 m line, flame or radiation."
+    },
     "hyram_validation_basis": {
       "title": "HyRAM+ Version 5.1.1 Physics Validation",
       "publisher": "Sandia National Laboratories / U.S. Department of Energy OSTI",

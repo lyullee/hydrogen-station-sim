@@ -1,0 +1,433 @@
+{
+  "schema_version": 1,
+  "source_doi": "10.1016/j.ijhydene.2010.04.055",
+  "source_pdf_sha256": "97ee45651e62751c002ef07c7e7c404b959a899d20e5ed69d58c01d0a043046e",
+  "source_pdf_committed": false,
+  "protocol_committed_before_numerical_access": true,
+  "protocol_commit": "3fb8b91",
+  "page_one_based": 5,
+  "mass_flow_source": "Figure 5",
+  "temperature_source": "Table 1",
+  "pressure_basis": "publisher reservoir-pressure axis treated as absolute; +101325 Pa sensitivity required because gauge/absolute wording is not explicit",
+  "axis_calibration": {
+    "x_left_pdf": 132.6,
+    "x_right_pdf": 515.82,
+    "x_min_bar": 0.0,
+    "x_max_bar": 1000.0,
+    "y_top_pdf": 385.56,
+    "y_bottom_pdf": 613.02,
+    "y_min_g_s": 0.0,
+    "y_max_g_s": 180.0
+  },
+  "render_scale": 4,
+  "half_pixel_y_resolution_g_s": 0.09891849116328146,
+  "primary_pressure_points_bar": [
+    100,
+    125,
+    150,
+    175,
+    200,
+    250,
+    300,
+    400,
+    500,
+    600,
+    700,
+    800,
+    900
+  ],
+  "excluded_low_plot_points_reason": "20-80 bar vector paths overlap the in-plot legend x range; prospectively frozen minimums remain satisfied without them",
+  "two_pass_details": [
+    {
+      "diameter_mm": 1.0,
+      "pressure_bar": 100,
+      "vector_pass_g_s": 5.751417831706678,
+      "raster_pass_g_s": 5.950936428382998,
+      "retained_mean_g_s": 5.851177130044838,
+      "uncertainty_g_s": 0.19867778950144155,
+      "temperature_c_from_table1": -39,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 1.0,
+      "pressure_bar": 125,
+      "vector_pass_g_s": 7.172505605381083,
+      "raster_pass_g_s": 7.335795304668939,
+      "retained_mean_g_s": 7.254150455025011,
+      "uncertainty_g_s": 0.18056334080720937,
+      "temperature_c_from_table1": -38,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 1.0,
+      "pressure_bar": 150,
+      "vector_pass_g_s": 8.404488286557525,
+      "raster_pass_g_s": 8.522817198628317,
+      "retained_mean_g_s": 8.46365274259292,
+      "uncertainty_g_s": 0.15808294719867755,
+      "temperature_c_from_table1": -37,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 1.0,
+      "pressure_bar": 175,
+      "vector_pass_g_s": 9.596945891585325,
+      "raster_pass_g_s": 9.709839092587695,
+      "retained_mean_g_s": 9.65339249208651,
+      "uncertainty_g_s": 0.15536509166446644,
+      "temperature_c_from_table1": -34,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 1.0,
+      "pressure_bar": 200,
+      "vector_pass_g_s": 10.876037868933928,
+      "raster_pass_g_s": 10.896860986547072,
+      "retained_mean_g_s": 10.8864494277405,
+      "uncertainty_g_s": 0.10933004996985353,
+      "temperature_c_from_table1": -31,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 1.0,
+      "pressure_bar": 250,
+      "vector_pass_g_s": 13.205136342653603,
+      "raster_pass_g_s": 13.270904774465828,
+      "retained_mean_g_s": 13.238020558559715,
+      "uncertainty_g_s": 0.13180270706939412,
+      "temperature_c_from_table1": -25,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 1.0,
+      "pressure_bar": 300,
+      "vector_pass_g_s": 15.527004283681531,
+      "raster_pass_g_s": 15.644948562384581,
+      "retained_mean_g_s": 15.585976423033056,
+      "uncertainty_g_s": 0.15789063051480623,
+      "temperature_c_from_table1": -18,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 1.0,
+      "pressure_bar": 400,
+      "vector_pass_g_s": 20.367779878957187,
+      "raster_pass_g_s": 20.590873120548657,
+      "retained_mean_g_s": 20.479326499752922,
+      "uncertainty_g_s": 0.21046511195901685,
+      "temperature_c_from_table1": -2,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 1.0,
+      "pressure_bar": 500,
+      "vector_pass_g_s": 25.548804336950518,
+      "raster_pass_g_s": 25.73463466103929,
+      "retained_mean_g_s": 25.641719498994902,
+      "uncertainty_g_s": 0.19183365320766788,
+      "temperature_c_from_table1": 15,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 1.0,
+      "pressure_bar": 600,
+      "vector_pass_g_s": 30.68229075793274,
+      "raster_pass_g_s": 30.878396201529927,
+      "retained_mean_g_s": 30.780343479731336,
+      "uncertainty_g_s": 0.1969712129618748,
+      "temperature_c_from_table1": 27,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 1.0,
+      "pressure_bar": 700,
+      "vector_pass_g_s": 35.752315493902266,
+      "raster_pass_g_s": 35.824320759694,
+      "retained_mean_g_s": 35.78831812679813,
+      "uncertainty_g_s": 0.1349211240591468,
+      "temperature_c_from_table1": 36,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 1.0,
+      "pressure_bar": 800,
+      "vector_pass_g_s": 40.790626868288136,
+      "raster_pass_g_s": 40.96808230018463,
+      "retained_mean_g_s": 40.87935458423638,
+      "uncertainty_g_s": 0.18764620711153013,
+      "temperature_c_from_table1": 40,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 1.0,
+      "pressure_bar": 900,
+      "vector_pass_g_s": 45.62384102041971,
+      "raster_pass_g_s": 45.71616987602214,
+      "retained_mean_g_s": 45.67000544822093,
+      "uncertainty_g_s": 0.14508291896449732,
+      "temperature_c_from_table1": 42,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 2.0,
+      "pressure_bar": 100,
+      "vector_pass_g_s": 12.838739778422617,
+      "raster_pass_g_s": 13.073067792139264,
+      "retained_mean_g_s": 12.955903785280942,
+      "uncertainty_g_s": 0.21608249802160495,
+      "temperature_c_from_table1": -62,
+      "eligible_frozen_temperature_window": false
+    },
+    {
+      "diameter_mm": 2.0,
+      "pressure_bar": 125,
+      "vector_pass_g_s": 17.150707816758928,
+      "raster_pass_g_s": 17.227644420997084,
+      "retained_mean_g_s": 17.189176118878006,
+      "uncertainty_g_s": 0.1373867932823596,
+      "temperature_c_from_table1": -58,
+      "eligible_frozen_temperature_window": false
+    },
+    {
+      "diameter_mm": 2.0,
+      "pressure_bar": 150,
+      "vector_pass_g_s": 21.55759364283828,
+      "raster_pass_g_s": 21.58005803218147,
+      "retained_mean_g_s": 21.568825837509877,
+      "uncertainty_g_s": 0.11015068583487554,
+      "temperature_c_from_table1": -54,
+      "eligible_frozen_temperature_window": false
+    },
+    {
+      "diameter_mm": 2.0,
+      "pressure_bar": 175,
+      "vector_pass_g_s": 25.706301932207914,
+      "raster_pass_g_s": 25.932471643365854,
+      "retained_mean_g_s": 25.819386787786883,
+      "uncertainty_g_s": 0.21200334674225152,
+      "temperature_c_from_table1": -47,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 2.0,
+      "pressure_bar": 200,
+      "vector_pass_g_s": 29.923192117281562,
+      "raster_pass_g_s": 30.087048272223676,
+      "retained_mean_g_s": 30.00512019475262,
+      "uncertainty_g_s": 0.18084656863433812,
+      "temperature_c_from_table1": -39,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 2.0,
+      "pressure_bar": 250,
+      "vector_pass_g_s": 38.096021003692925,
+      "raster_pass_g_s": 38.198364547612755,
+      "retained_mean_g_s": 38.14719277565284,
+      "uncertainty_g_s": 0.15009026312319618,
+      "temperature_c_from_table1": -20,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 2.0,
+      "pressure_bar": 300,
+      "vector_pass_g_s": 45.06111212248434,
+      "raster_pass_g_s": 45.12265892904246,
+      "retained_mean_g_s": 45.0918855257634,
+      "uncertainty_g_s": 0.1296918944423413,
+      "temperature_c_from_table1": -4,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 2.0,
+      "pressure_bar": 400,
+      "vector_pass_g_s": 56.30879659386021,
+      "raster_pass_g_s": 56.399366921656544,
+      "retained_mean_g_s": 56.35408175775838,
+      "uncertainty_g_s": 0.14420365506144917,
+      "temperature_c_from_table1": 15,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 2.0,
+      "pressure_bar": 500,
+      "vector_pass_g_s": 65.90944647817092,
+      "raster_pass_g_s": 66.09337905565813,
+      "retained_mean_g_s": 66.00141276691453,
+      "uncertainty_g_s": 0.19088477990688757,
+      "temperature_c_from_table1": 27,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 2.0,
+      "pressure_bar": 600,
+      "vector_pass_g_s": 73.56140859931423,
+      "raster_pass_g_s": 73.61118438406751,
+      "retained_mean_g_s": 73.58629649169087,
+      "uncertainty_g_s": 0.12380638353992125,
+      "temperature_c_from_table1": 34,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 2.0,
+      "pressure_bar": 700,
+      "vector_pass_g_s": 80.76384199419681,
+      "raster_pass_g_s": 80.93115273015034,
+      "retained_mean_g_s": 80.84749736217358,
+      "uncertainty_g_s": 0.18257385914004898,
+      "temperature_c_from_table1": 38,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 2.0,
+      "pressure_bar": 800,
+      "vector_pass_g_s": 85.85058691638089,
+      "raster_pass_g_s": 86.07491427064099,
+      "retained_mean_g_s": 85.96275059351095,
+      "uncertainty_g_s": 0.21108216829333015,
+      "temperature_c_from_table1": 40,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 2.0,
+      "pressure_bar": 900,
+      "vector_pass_g_s": 91.67915155668739,
+      "raster_pass_g_s": 91.81218675811131,
+      "retained_mean_g_s": 91.74566915739935,
+      "uncertainty_g_s": 0.16543609187524266,
+      "temperature_c_from_table1": 42,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 3.0,
+      "pressure_bar": 100,
+      "vector_pass_g_s": 27.003412687945048,
+      "raster_pass_g_s": 27.317330519651794,
+      "retained_mean_g_s": 27.16037160379842,
+      "uncertainty_g_s": 0.2558774070166545,
+      "temperature_c_from_table1": -61,
+      "eligible_frozen_temperature_window": false
+    },
+    {
+      "diameter_mm": 3.0,
+      "pressure_bar": 125,
+      "vector_pass_g_s": 34.826295007913515,
+      "raster_pass_g_s": 35.03297283038775,
+      "retained_mean_g_s": 34.92963391915063,
+      "uncertainty_g_s": 0.20225740240039825,
+      "temperature_c_from_table1": -47,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 3.0,
+      "pressure_bar": 150,
+      "vector_pass_g_s": 44.539405642957725,
+      "raster_pass_g_s": 44.72698496438933,
+      "retained_mean_g_s": 44.63319530367353,
+      "uncertainty_g_s": 0.19270815187908452,
+      "temperature_c_from_table1": -30,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 3.0,
+      "pressure_bar": 175,
+      "vector_pass_g_s": 52.02426140859938,
+      "raster_pass_g_s": 52.244790292798726,
+      "retained_mean_g_s": 52.13452585069905,
+      "uncertainty_g_s": 0.20918293326295467,
+      "temperature_c_from_table1": -20,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 3.0,
+      "pressure_bar": 200,
+      "vector_pass_g_s": 59.22556062080698,
+      "raster_pass_g_s": 59.366921656554986,
+      "retained_mean_g_s": 59.29624113868098,
+      "uncertainty_g_s": 0.1695990090372841,
+      "temperature_c_from_table1": -11,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 3.0,
+      "pressure_bar": 250,
+      "vector_pass_g_s": 72.72037391189647,
+      "raster_pass_g_s": 73.01767343708784,
+      "retained_mean_g_s": 72.86902367449215,
+      "uncertainty_g_s": 0.24756825375896296,
+      "temperature_c_from_table1": 4,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 3.0,
+      "pressure_bar": 300,
+      "vector_pass_g_s": 84.28154896140227,
+      "raster_pass_g_s": 84.49221841202848,
+      "retained_mean_g_s": 84.38688368671538,
+      "uncertainty_g_s": 0.20425321647638794,
+      "temperature_c_from_table1": 15,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 3.0,
+      "pressure_bar": 400,
+      "vector_pass_g_s": 103.40735842116804,
+      "raster_pass_g_s": 103.6824056977051,
+      "retained_mean_g_s": 103.54488205943656,
+      "uncertainty_g_s": 0.2364421294318073,
+      "temperature_c_from_table1": 28,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 3.0,
+      "pressure_bar": 500,
+      "vector_pass_g_s": 118.56878897305863,
+      "raster_pass_g_s": 118.71801635452387,
+      "retained_mean_g_s": 118.64340266379125,
+      "uncertainty_g_s": 0.17353218189590036,
+      "temperature_c_from_table1": 35,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 3.0,
+      "pressure_bar": 600,
+      "vector_pass_g_s": 130.11956878566548,
+      "raster_pass_g_s": 130.19256132946452,
+      "retained_mean_g_s": 130.156065057565,
+      "uncertainty_g_s": 0.13541476306280442,
+      "temperature_c_from_table1": 39,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 3.0,
+      "pressure_bar": 700,
+      "vector_pass_g_s": 141.72860956963984,
+      "raster_pass_g_s": 141.86494328673172,
+      "retained_mean_g_s": 141.79677642818578,
+      "uncertainty_g_s": 0.16708534970921773,
+      "temperature_c_from_table1": 42,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 3.0,
+      "pressure_bar": 800,
+      "vector_pass_g_s": 153.04225797942496,
+      "raster_pass_g_s": 153.1416512793458,
+      "retained_mean_g_s": 153.09195462938538,
+      "uncertainty_g_s": 0.14861514112370555,
+      "temperature_c_from_table1": 44,
+      "eligible_frozen_temperature_window": true
+    },
+    {
+      "diameter_mm": 3.0,
+      "pressure_bar": 900,
+      "vector_pass_g_s": 165.31499088229558,
+      "raster_pass_g_s": 165.40754418359273,
+      "retained_mean_g_s": 165.36126753294417,
+      "uncertainty_g_s": 0.14519514181186066,
+      "temperature_c_from_table1": 46,
+      "eligible_frozen_temperature_window": true
+    }
+  ],
+  "rights_note": "The public paper has no identified data-redistribution licence. These are independently digitized factual coordinates with citation; the PDF is not redistributed."
+}

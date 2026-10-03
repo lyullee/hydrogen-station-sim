@@ -29,6 +29,14 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert revised["aggregate"]["minimum_requirements_met"] is False
     assert revised["aggregate"]["claim_supported"] is False
     assert revised["protocol_hash_matches"] is True
+    assert gates["proust_independent_release_validation"]["status"] == "FAIL"
+    proust = gates["proust_independent_release_validation"]["observed"]
+    assert proust["aggregate"]["series"] == 3
+    assert proust["aggregate"]["joint_primary_passes"] == 0
+    assert proust["aggregate"]["minimum_requirements_met"] is True
+    assert proust["aggregate"]["claim_supported"] is False
+    assert proust["protocol_hash_matches"] is True
+    assert proust["data_hash_matches"] is True
     external = gates["full_loop_external_validation"]["observed"]
     assert external["protocol_integrity"] is True
     assert external["aggregate"]["case_count"] == 8

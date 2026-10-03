@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "claim_controlling": false,
+  "purpose": "Pressure-basis and effective-Cd diagnostics only; primary frozen result is unchanged.",
+  "pressure_sensitivity": "Adds 101325 Pa to every plotted source pressure.",
+  "effective_cd_warning": "Post-outcome descriptive fit; prohibited as validation or parameter selection.",
+  "series": [
+    {
+      "case_id": "proust-1mm",
+      "nozzle_diameter_mm": 1.0,
+      "gauge_to_absolute_sensitivity": {
+        "case_id": "proust-1mm",
+        "nozzle_diameter_mm": 1.0,
+        "points": 13,
+        "pressure_min_mpa_abs": 10.101325,
+        "pressure_max_mpa_abs": 90.101325,
+        "measured_peak_mass_flow_g_s": 45.67000544822093,
+        "predicted_peak_mass_flow_g_s": 30.731013651112484,
+        "mass_flow_nrmse_percent_peak_measured": 16.207293055354636,
+        "median_absolute_percentage_error_percent": 24.473970414324455,
+        "digitization_interval_coverage_fraction": 0.0,
+        "nrmse_screen_pass": false,
+        "median_ape_screen_pass": false,
+        "joint_primary_screen_pass": false
+      },
+      "descriptive_least_squares_effective_cd": 1.1405439860907107
+    },
+    {
+      "case_id": "proust-2mm",
+      "nozzle_diameter_mm": 2.0,
+      "gauge_to_absolute_sensitivity": {
+        "case_id": "proust-2mm",
+        "nozzle_diameter_mm": 2.0,
+        "points": 10,
+        "pressure_min_mpa_abs": 17.601325,
+        "pressure_max_mpa_abs": 90.101325,
+        "measured_peak_mass_flow_g_s": 91.74566915739935,
+        "predicted_peak_mass_flow_g_s": 122.92405460444994,
+        "mass_flow_nrmse_percent_peak_measured": 16.124381029077416,
+        "median_absolute_percentage_error_percent": 16.220669238122724,
+        "digitization_interval_coverage_fraction": 0.0,
+        "nrmse_screen_pass": false,
+        "median_ape_screen_pass": true,
+        "joint_primary_screen_pass": false
+      },
+      "descriptive_least_squares_effective_cd": 0.6569073668141058
+    },
+    {
+      "case_id": "proust-3mm",
+      "nozzle_diameter_mm": 3.0,
+      "gauge_to_absolute_sensitivity": {
+        "case_id": "proust-3mm",
+        "nozzle_diameter_mm": 3.0,
+        "points": 12,
+        "pressure_min_mpa_abs": 12.601325,
+        "pressure_max_mpa_abs": 90.101325,
+        "measured_peak_mass_flow_g_s": 165.36126753294417,
+        "predicted_peak_mass_flow_g_s": 275.0281074235234,
+        "mass_flow_nrmse_percent_peak_measured": 32.762252219844754,
+        "median_absolute_percentage_error_percent": 33.43555794469854,
+        "digitization_interval_coverage_fraction": 0.0,
+        "nrmse_screen_pass": false,
+        "median_ape_screen_pass": false,
+        "joint_primary_screen_pass": false
+      },
+      "descriptive_least_squares_effective_cd": 0.532862261401129
+    }
+  ]
+}

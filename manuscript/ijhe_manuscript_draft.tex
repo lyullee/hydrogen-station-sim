@@ -38,18 +38,15 @@ hydrogen refuelling station digital twin}
 This study separates evidence for process physics, consequence software and
 language-model decision support in a virtual hydrogen station. A measured-boundary
 Type-IV model was calibrated on 23 fills and evaluated on 12 frozen fills,
-yielding pressure, temperature and state-of-charge
-root-mean-square errors of 3.841 MPa, 4.833 $^{\circ}$C and 3.850 percentage
-points. These results did not transfer to the full controller loop. A prospectively
-specified 22-case PRESLHY ambient blowdown evaluation also failed: 50.0\% passed
-both primary screens versus a 70\% criterion, with six thermophysical-domain
-failures retained. A non-adiabatic revision passed 20/22
-consumed development cases, but its prospectively frozen E5.1 holdout remained
-negative and ineligible: only three runs met the frozen ambient definition and
-2/3 passed screens. The consequence adapter matched HyRAM+ 6.1 API
-calculations; identical source passed 47 tests and 803 subtests. A blinded HIAD
-protocol is specified, but expert ratings remain pending. Evidence supports a
-claim-bounded research prototype, not a
+yielding pressure, temperature and state-of-charge root-mean-square errors of
+3.841 MPa, 4.833 $^{\circ}$C and 3.850 percentage points; results did not transfer
+to the full controller. A frozen 22-case PRESLHY blowdown evaluation failed:
+50.0\% passed both screens versus 70\%, with six domain failures. A non-adiabatic
+revision passed 20/22 consumed cases, but its E5.1 holdout was ineligible and
+negative (2/3 primary passes). An independent 90 MPa campaign passed 0/3
+mass-flow series. The consequence adapter matched HyRAM+ 6.1; identical source
+passed 47 tests and 803 subtests. A blinded HIAD protocol is specified, but expert
+ratings are pending. Evidence supports a claim-bounded prototype, not a
 field-qualified controller or autonomous emergency system.
 \end{abstract}
 
@@ -247,6 +244,19 @@ groups and two pressure groups. The original two case screens and 70\% aggregate
 rule were retained. Complete source-pressure traces, including post-ignition
 samples, were evaluated; failed integrity or model evaluations were retained.
 
+A second transfer test used the independent INERIS/CEA 25 L Type-IV campaign
+near 90 MPa \cite{proust2011}. Before numerical figure values were read, the
+model, evaluator, three-series minimum and endpoints were hash-locked. Figure 5
+mass-flow curves were digitized independently from PDF vector paths and a 4x
+raster render; their mean was retained and half their difference plus half-pixel
+resolution defined digitization uncertainty. Table 1 supplied measured source
+temperature at the same pressure states. The primary window was 2--95 MPa,
+220--330 K and at least eight states in each of the 1, 2 and 3 mm series. Series
+screens were mass-flow NRMSE no greater than 15\% of measured peak and median
+absolute percentage error no greater than 20\%; at least two of all three
+eligible diameter series had to pass. The pressure axis was treated as absolute;
+adding 101.325 kPa was predeclared as a non-controlling basis sensitivity.
+
 \subsection{Consequence-model verification}
 HyRAM+ receives immutable release state and geometry from the twin. The
 production adapter reports (i) the directional centreline distance to 4 vol\%
@@ -439,6 +449,19 @@ analysis retains the measured state and separately records the nominal label.
 The eligibility minimum and performance threshold both failed, so the revised
 source-depletion claim is not supported by this holdout.
 
+\subsection{Negative independent 90 MPa mass-flow transfer}
+All three INERIS/CEA diameter series met their eligibility minima, with 13, 10
+and 12 paired states for 1, 2 and 3 mm, respectively. None passed both screens.
+Peak-normalized NRMSE was 16.27\%, 16.01\% and 32.62\%, while median absolute
+percentage error was 25.07\%, 15.85\% and 32.88\%. The 1 mm series was generally
+underpredicted, whereas overprediction increased for the 2 and 3 mm series.
+Adding 101.325 kPa to the plotted pressure did not change any decision, and no
+prediction lay inside the narrow digitization interval. Post-outcome descriptive
+least-squares effective discharge coefficients were 1.141, 0.657 and 0.533; they
+are diagnostics and were not used to rerun or tune the primary result. The 0/3
+joint pass count rejects the independently validated high-pressure aperture-flow
+claim for the fixed model.
+
 \subsection{HyRAM+ source, tests and adapter parity}
 The installed and upstream v6.1 Python sources matched over 38 files with aggregate
 SHA-256 \texttt{d5865e1ae7b5c77b985e06b45d7a5607543703c1834fc50f7c5d96f32a0c22de}.
@@ -525,6 +548,16 @@ was too small and lacked a successful high-pressure case. E5.1 also shares the
 DisCha facility and investigators with E3.1, so even a passing result would have
 been separate-campaign evidence rather than independent-laboratory replication.
 
+The independent French campaign then exposed a different limitation. A constant
+coefficient multiplying nominal aperture area cannot represent the observed
+diameter scaling across a 10 m delivery path: the fitted diagnostic coefficient
+decreased strongly as diameter increased, while exceeding unity for 1 mm. This
+does not justify three new coefficients. It requires an explicit valve--pipe--
+orifice network, geometric uncertainty and a new untouched facility for testing.
+The Proust curves are now consumed development evidence. Their plot-digitization
+uncertainty was much smaller than the discrepancies and did not determine the
+negative result.
+
 \subsection{Consequence calculations and risk communication}
 The HyRAM verification separates source identity, upstream physics tests and local
 adapter parity. The traceability chain covers three geometrically applicable public
@@ -560,8 +593,9 @@ outputs are conditional consequences, not certification; buildings, congestion,
 terrain and site-specific wind are not resolved, and no site field campaign was
 performed. The HIAD narratives are
 retrospective and may contain incomplete or heterogeneous reporting. Finally,
-both the original direct-aperture model and its prospectively evaluated
-non-adiabatic revision failed their respective PRESLHY claim rules, and the SAGA
+the original direct-aperture model and its prospectively evaluated non-adiabatic
+revision failed their respective PRESLHY claim rules. The fixed aperture relation
+also failed all three eligible independent 90 MPa mass-flow series, and the SAGA
 study has no locked expert ratings yet.
 
 \section{Conclusions}
@@ -578,7 +612,10 @@ high-pressure cases produced retained thermophysical-domain failures. Although
 the non-adiabatic revision passed 20/22 consumed development cases, its frozen
 E5.1 holdout was ineligible and negative: only three cases met the primary
 temperature window and 2/3 passed both screens. The HyRAM+ adapter reproduced the
-installed v6.1 public API while
+temperature window and 2/3 passed both screens. An independent 90 MPa Type-IV
+release campaign passed zero of three mass-flow series, exposing diameter-
+dependent network resistance absent from the aperture-only model. The HyRAM+
+adapter reproduced the installed v6.1 public API while
 the identical upstream source passed its available validation tests; a frozen
 browser contract retained the experimentally corresponding directional and radial
 geometry semantics. The incident
@@ -666,6 +703,11 @@ T. Jordan, A. Friedrich, A. Veser, N. Kotchourko, \textit{PRESLHY Experiment
 series E5.1 (Ignited Discharge) results---Benchmarking}, Karlsruhe Institute of
 Technology (2021),
 \href{https://doi.org/10.35097/1258}{doi:10.35097/1258}.
+
+\bibitem{proust2011}
+C. Proust, D. Jamois, E. Studer, High pressure hydrogen fires,
+\textit{International Journal of Hydrogen Energy} 36(3) (2011) 2367--2373,
+\href{https://doi.org/10.1016/j.ijhydene.2010.04.055}{doi:10.1016/j.ijhydene.2010.04.055}.
 
 \bibitem{han2013}
 S.H. Han, D. Chang, J.S. Kim, Release characteristics of highly pressurized

@@ -311,6 +311,45 @@ def audit(root: Path) -> dict[str, object]:
         } if e5_result else "missing; holdout evaluation has not completed",
     ))
 
+    proust_result_path = root / "research/proust_release_holdout_result.json"
+    proust_result = _json(proust_result_path)
+    proust_protocol_path = root / "research/proust_release_holdout_protocol.json"
+    proust_protocol = _json(proust_protocol_path)
+    proust_data_path = root / "data/public_validation/derived/proust_90mpa_release.csv"
+    proust_aggregate = (proust_result or {}).get("aggregate") or {}
+    proust_protocol_hash = (
+        _sha256(proust_protocol_path) if proust_protocol_path.is_file() else None
+    )
+    proust_data_hash = _sha256(proust_data_path) if proust_data_path.is_file() else None
+    proust_pass = bool(
+        (proust_protocol or {}).get("status")
+        == "fully_frozen_before_numerical_figure_outcome_access"
+        and (proust_protocol or {}).get(
+            "numerical_figure_outcomes_accessed_before_freeze"
+        ) is False
+        and proust_aggregate.get("minimum_requirements_met") is True
+        and proust_aggregate.get("claim_supported") is True
+        and (proust_result or {}).get("protocol_sha256") == proust_protocol_hash
+        and (proust_result or {}).get("data_sha256") == proust_data_hash
+    )
+    gates.append(_gate(
+        "proust_independent_release_validation",
+        "PASS" if proust_pass else ("FAIL" if proust_result else "PENDING"),
+        "The fixed high-pressure aperture relation meets its prospectively frozen rule on the independent INERIS/CEA 90 MPa campaign.",
+        f"{proust_result_path.relative_to(root)}; {proust_protocol_path.relative_to(root)}; {proust_data_path.relative_to(root)}",
+        "All 1, 2 and 3 mm series eligible; >=2/3 jointly pass <=15% peak-normalized RMSE and <=20% median absolute percentage error.",
+        {
+            "aggregate": proust_aggregate,
+            "protocol_hash_matches": (
+                (proust_result or {}).get("protocol_sha256") == proust_protocol_hash
+            ),
+            "data_hash_matches": (
+                (proust_result or {}).get("data_sha256") == proust_data_hash
+            ),
+            "claim_boundary": (proust_result or {}).get("claim_boundary"),
+        } if proust_result else "missing; independent release evaluation has not completed",
+    ))
+
     protocol_path = root / "research/hiad_study_protocol_manifest.json"
     protocol = _json(protocol_path)
     protocol_ok, protocol_mismatches = _protocol_integrity(root, protocol)
@@ -486,6 +525,7 @@ def audit(root: Path) -> dict[str, object]:
         "full_loop_negative_result_disclosed",
         "hyram_adapter_verification", "preslhy_blowdown_external_validation",
         "preslhy_revised_holdout_validation",
+        "proust_independent_release_validation",
         "hiad_protocol_integrity",
         "institutional_ethics_determination", "hiad_casebook_frozen",
         "hiad_holdout_collection", "independent_expert_review_complete",
