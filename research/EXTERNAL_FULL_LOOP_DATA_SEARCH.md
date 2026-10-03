@@ -748,3 +748,20 @@ channel definitions, time synchronisation, uncertainty/calibration records,
 protocol versions, quality flags, initial conditions and permission to publish
 derived metrics. Those files must be hashed and frozen before any scoring; no
 paper or data-gate status is changed by the facility description alone.
+
+## 2026-10-04 Canadian operational leakage-data custodian follow-up
+
+The [Government of Canada DTPR AI Register entry](https://canada.clarable.ai/technologies/5d8e9751-afa5-40d2-87bd-ce3d90a64eaf)
+identifies an NRC/HTEC system that uses anonymized operational hydrogen
+refuelling-station streams for hydrogen produced, hydrogen filled and station
+operating modes to detect losses and localize a responsible component. This is
+a promising real-world safety-data custodian, but the public register exposes no
+downloadable samples, channel dictionary, timestamps, event labels, or reuse
+terms. It is therefore classified as
+**REQUEST_DATA_OPERATIONAL_LEAKAGE_CUSTODIAN**.
+
+The request should seek de-identified produced/filled mass, pressure,
+temperature, flow, gas-detector and operating-mode streams together with
+quality flags, event labels, provenance, and permission to publish derived leak
+and decision-support metrics. The register description alone cannot support a
+leak-detection performance claim or close the physical full-loop gate.

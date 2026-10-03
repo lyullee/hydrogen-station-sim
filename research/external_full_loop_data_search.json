@@ -1449,6 +1449,23 @@
       "next_action": "Send a controlled-access request to BAM for de-identified station/dispenser/vehicle logs, channel dictionary, uncertainty and calibration metadata, protocol versions and reuse terms; preserve a pre-access scoring freeze before evaluation.",
       "claim_limit": "Do not represent a facility description, a paper's unshared normal traces or a simulated anomaly benchmark as public measured full-loop evidence."
     },
+    "canada_htec_operational_data_followup": {
+      "scope": "screening a government AI-use register entry for an operational hydrogen-station leakage dataset",
+      "sources": [
+        {
+          "id": "nrc_htec_ai_leakage_detection_register",
+          "title": "AI-Powered Hydrogen Leakage Detection for Refuelling Stations",
+          "url": "https://canada.clarable.ai/technologies/5d8e9751-afa5-40d2-87bd-ce3d90a64eaf",
+          "publisher": "National Research Council Canada / Government of Canada DTPR AI Register",
+          "finding": "The register states that the system uses anonymized real operational HTEC refuelling-station streams for hydrogen produced, hydrogen filled and station operating modes to detect losses and identify a responsible component. The public entry describes the collection but provides no downloadable samples, channel dictionary, timestamps, or access and reuse terms.",
+          "decision": "REQUEST_DATA_OPERATIONAL_LEAKAGE_CUSTODIAN",
+          "claim_limit": "This is evidence that an operational data custodian exists, not an open numerical holdout. Request de-identified streams and provenance before using it for leak or LLM-safety evaluation."
+        }
+      ],
+      "result": "The Canadian register identifies a potentially valuable operational leakage-data source, but no public files are exposed. It does not change the independent full-loop gate.",
+      "next_action": "Contact NRC/HTEC through the register or programme channels for a controlled-access export with station mode, produced/filled mass, pressure, temperature, flow, detector and event labels, plus reuse terms.",
+      "claim_limit": "Do not infer leak-detection performance or station physics from the AI-register description alone."
+    },
     "claim_limit": "Do not use article figures, aggregate event summaries or static inventories as primary full-loop numerical validation. Promote a source only after de-identified raw files, metadata, reuse terms and a pre-access freeze are recorded."
   },
   "last_reviewed": "2026-10-04"
