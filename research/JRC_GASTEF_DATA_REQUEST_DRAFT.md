@@ -22,6 +22,13 @@ public report:
 If the HYTRANSFER files have a separate custodian, please forward this request
 or identify the approved access route.
 
+I inspected the public 192-page HYTRANSFER campaign report at file level before
+using any numerical outcomes. It describes 18 recorded GasTeF files divided
+into groups of 14 and 4, but the PDF contains no embedded data files or
+machine-readable download URL. The inspection record is
+`research/hytransfer_public_report_inspection.json`; the report is therefore
+treated as a controlled-access lead, not as a validation holdout.
+
 Could you provide a de-identified subset, or identify the approved custodian
 and access route, for an independent tank-filling holdout? The minimum useful
 fields are:

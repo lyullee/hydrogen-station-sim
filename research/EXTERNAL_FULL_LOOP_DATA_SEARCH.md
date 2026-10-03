@@ -894,3 +894,6 @@ A new prospective protocol was frozen before raw outcomes were downloaded for th
 - Protocol: `research/zenodo_4106101_pressure_peaking_protocol.json`
 - Result: `research/zenodo_4106101_pressure_peaking_result.json`
 - Claim boundary: confined unignited pressure peaking only; no full HRS loop, outdoor dispersion, ignition, emergency-response or SAGA-effectiveness claim.
+## 2026-10-04 HYTRANSFER report file-level inspection
+
+The public 192-page HYTRANSFER GasTeF report was downloaded and inspected before any numerical data were used. It describes 18 recorded GasTeF files split into groups of 14 and 4 and lists tank pressure, internal/external/liner temperatures, gas-path instrumentation, mass/flow and test metadata. PDF inspection found no embedded data files or external machine-readable download URL. The inspection is recorded in `research/hytransfer_public_report_inspection.json`; the report remains a controlled-access request lead and was not treated as a validation holdout.

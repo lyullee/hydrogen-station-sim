@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "source": {
+    "title": "HYTRANSFER public GasTeF experimental filling campaign report",
+    "url": "https://s02291b7740b89df1.jimcontent.com/download/version/1493713659/module/11623534399/name/HyTransfer_Report%20on%20the%20experimental%20filling%20test%20campaign_public.pdf",
+    "sha256": "6028fa0b100ac01ead1a35956a07a7190bae02df6d720773596d7c7d9ce96cf8",
+    "bytes": 13363085,
+    "pages": 192,
+    "retrieved_at": "2026-10-04"
+  },
+  "document_findings": {
+    "reported_gastef_recorded_files": 18,
+    "reported_file_groups": {
+      "group_1": 14,
+      "group_2": 4
+    },
+    "reported_measurements": [
+      "tank pressure",
+      "internal gas temperature",
+      "external wall temperature",
+      "liner/composite temperature",
+      "gas-path pressure and temperature",
+      "mass/flow instrumentation",
+      "test metadata"
+    ],
+    "machine_readable_files_embedded": false,
+    "external_data_download_links_found": [],
+    "contact_links_found": [
+      "mailto:baptiste.ravinel@airliquide.com",
+      "mailto:beatriz.acosta-iborra@ec.europa.eu",
+      "mailto:pietro.moretto@ec.europa.eu",
+      "mailto:rafael.ortiz-cebolla@ec.europa.eu"
+    ],
+    "interpretation": "The public report documents the data files and measurement dictionary but does not expose the 18 files or a machine-readable download URL. It remains a controlled-access request lead, not an available holdout."
+  },
+  "claim_boundary": "This inspection does not validate the station model and does not authorize redistribution or publication of report-derived time series."
+}

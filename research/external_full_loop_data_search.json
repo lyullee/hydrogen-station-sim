@@ -1651,5 +1651,14 @@
     "protocol": "research/zenodo_4106101_pressure_peaking_protocol.json",
     "claim_limit": "This is exploratory evidence for an unignited confined-enclosure pressure-peaking submodel only. It does not close the independent station-to-vehicle full-loop gate or support outdoor dispersion, ignition, emergency-response or SAGA-effectiveness claims.",
     "next_action": "Retain the result transparently, seek an untouched full-loop station-to-vehicle logger archive, and do not promote this 7/10 screen to a confirmatory validation pass."
+  },
+  "hytransfer_report_file_level_inspection_2026_10_04": {
+    "scope": "file-level inspection of the public HYTRANSFER GasTeF campaign report before any data request",
+    "source": "https://s02291b7740b89df1.jimcontent.com/download/version/1493713659/module/11623534399/name/HyTransfer_Report%20on%20the%20experimental%20filling%20test%20campaign_public.pdf",
+    "inspection_artifact": "research/hytransfer_public_report_inspection.json",
+    "finding": "The 192-page report describes 18 recorded GasTeF files divided into 14 and 4 file groups, with tank pressure, internal/external/liner temperatures, gas-path instrumentation and mass/flow measurements. PDF embedded-file and external-link inspection found no machine-readable data download URL.",
+    "decision": "CONTROLLED_ACCESS_REQUEST_LEAD_NO_PUBLIC_RAW_ARCHIVE",
+    "claim_limit": "The report and its derived metadata do not validate the station model and do not authorize redistribution or publication of report-derived time series.",
+    "next_action": "Request the 18 files, measurement dictionary, calibration records, protocol metadata and reuse terms from the named JRC/HYTRANSFER custodians; hash-lock any approved subset before outcome access."
   }
 }
