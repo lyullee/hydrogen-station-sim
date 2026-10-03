@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import sys
 
@@ -104,3 +105,15 @@ def test_capacity_eos_volume_is_declared_capacity_basis(monkeypatch):
     )
 
     assert capacity_eos_volume_m3(9.8) == pytest.approx(0.245)
+
+
+def test_h2fills_package_retrieval_reconfirms_workbook_identity_without_overclaiming():
+    path = ROOT / "research" / "nrel_h2fills_package_retrieval_check.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    identity = payload["workbook_identity"]
+    interpretation = payload["interpretation"]
+    assert identity["sha256_matches"] is True
+    assert identity["downloaded_workbook_sha256"] == identity["locally_screened_workbook_sha256"]
+    assert payload["retrieval"]["package_sha256_matches_previous_record"] is False
+    assert interpretation["status"] == "workbook_identity_reconfirmed_package_container_changed"
+    assert "does not add a new validation case" in interpretation["claim_boundary"]

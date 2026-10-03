@@ -243,6 +243,40 @@ def audit(root: Path) -> dict[str, object]:
         } if external_loop else "missing; current internal comparisons pass 0/8 and 0/11",
     ))
 
+    nrel_retrieval_path = root / "research/nrel_h2fills_package_retrieval_check.json"
+    nrel_retrieval = _json(nrel_retrieval_path)
+    nrel_validation_path = root / "data/public_validation/results/nrel_h2fills_hdvs_typeiv/validation.json"
+    nrel_validation = _json(nrel_validation_path)
+    nrel_raw_path = root / "data/public_validation/raw/nrel_h2fills_2022_hdvs_typeiv.xlsx"
+    nrel_source = (nrel_validation or {}).get("source") or {}
+    nrel_identity = (nrel_retrieval or {}).get("workbook_identity") or {}
+    nrel_download = (nrel_retrieval or {}).get("retrieval") or {}
+    nrel_provenance_pass = bool(
+        nrel_identity.get("sha256_matches") is True
+        and nrel_identity.get("downloaded_workbook_sha256")
+        == nrel_identity.get("locally_screened_workbook_sha256")
+        == nrel_source.get("workbook_sha256")
+        and nrel_raw_path.is_file()
+        and _sha256(nrel_raw_path) == nrel_identity.get("locally_screened_workbook_sha256")
+        and nrel_raw_path.stat().st_size == nrel_identity.get("bytes")
+        and nrel_download.get("package_sha256_matches_previous_record") is False
+        and "does not add a new validation case" in str(
+            ((nrel_retrieval or {}).get("interpretation") or {}).get("claim_boundary")
+        )
+    )
+    gates.append(_gate(
+        "nrel_h2fills_workbook_provenance_integrity",
+        "PASS" if nrel_provenance_pass else "PENDING",
+        "The NREL HDVS tank candidate remains byte-identified after a package-container change without being overclaimed as a new full-loop holdout.",
+        f"{nrel_retrieval_path.relative_to(root)}; {nrel_validation_path.relative_to(root)}",
+        "Downloaded and locally screened workbook digests match the validation record; package drift and the no-new-holdout boundary are explicit.",
+        {
+            "workbook_sha256": nrel_identity.get("locally_screened_workbook_sha256"),
+            "package_sha256_matches_previous_record": nrel_download.get("package_sha256_matches_previous_record"),
+            "claim_boundary": ((nrel_retrieval or {}).get("interpretation") or {}).get("claim_boundary"),
+        } if nrel_retrieval else "missing",
+    ))
+
     manuscript_path = root / "manuscript/ijhe_manuscript_draft.tex"
     manuscript = manuscript_path.read_text(encoding="utf-8") if manuscript_path.is_file() else ""
     negative_transparent = (

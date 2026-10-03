@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-04",
+  "source_url": "https://www.nlr.gov/docs/libraries/hydrogen/h2fills-package.zip?sfvrsn=4ee4550e_0",
+  "retrieval": {
+    "downloaded_package_sha256": "ad908714a8533a0049e243330a02aae4d1f8921be8bffca7494e69039a1c",
+    "previously_recorded_package_sha256": "f44a079ffbd995275dd7b6e1c55b557fa1736c512b419f2a6666057b99c43ac0",
+    "package_sha256_matches_previous_record": false,
+    "downloaded_entries": 18,
+    "supplemental_workbook_entry": "h2fills-package/SupplementalData/20220816_hdvs_typeIV_test_result.xlsx"
+  },
+  "workbook_identity": {
+    "downloaded_workbook_sha256": "1a3fbe64a50c1c97266bfe0372998513ad3ccec5600fab7bc4b9fc68ad4d9d0c",
+    "locally_screened_workbook_sha256": "1a3fbe64a50c1c97266bfe0372998513ad3ccec5600fab7bc4b9fc68ad4d9d0c",
+    "sha256_matches": true,
+    "bytes": 313285
+  },
+  "interpretation": {
+    "status": "workbook_identity_reconfirmed_package_container_changed",
+    "claim_boundary": "The validation is pinned to the workbook digest, not to an immutable package-container digest. The current package download has the same screened workbook but a different archive digest; this does not add a new validation case or permit redistribution.",
+    "rights": "The H2FillS package license remains internal-use-only; the raw package and workbook are not redistributed."
+  }
+}

@@ -189,6 +189,8 @@ workbook SHA-256, source URL and rights boundary are recorded in
 receptacle and station-controller channels mean this candidate cannot close
 the station-to-vehicle full-loop gate.
 
+On 2026-10-04 the official package was downloaded again to check source stability. The archive digest was `ad908714a8533a0049e243330a02aae4d1f8921be8bffca7494e69039a1c`, which differs from the earlier recorded container digest, but the supplemental workbook digest remained `1a3fbe64a50c1c97266bfe0372998513ad3ccec5600fab7bc4b9fc68ad4d9d0c` byte-for-byte. The validation therefore remains pinned to the workbook digest and records the package-container change explicitly; it is not treated as a new holdout or as permission to redistribute the file. The check is retained in `research/nrel_h2fills_package_retrieval_check.json`.
+
 The diagnostic output also computes an EOS-equivalent volume from the measured
 mass, internal pressure and internal temperature. Across the seven tanks the
 median is 0.24388 m³ versus 0.26780 m³ for the frozen effective-volume

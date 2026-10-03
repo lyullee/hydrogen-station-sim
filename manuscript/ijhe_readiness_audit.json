@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T20:41:26.779486+00:00",
+  "generated_at": "2026-10-03T20:55:11.670814+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 19,
+    "PASS": 20,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -342,6 +342,18 @@
           "next_action": "send the prepared CARB/NRC/IJHE high-flow/FCH2RAIL/JRC/NREL/BAM/Empa/DLR data requests through approved custodians, and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest",
           "claim_limit": "The NREL candidate supports an independent tank-submodel screen only. No new external full-loop validation claim is permitted until station controller, hose/nozzle, protocol and vehicle-side traces are obtained and scored under a pre-access freeze."
         }
+      }
+    },
+    {
+      "id": "nrel_h2fills_workbook_provenance_integrity",
+      "status": "PASS",
+      "claim": "The NREL HDVS tank candidate remains byte-identified after a package-container change without being overclaimed as a new full-loop holdout.",
+      "evidence": "research\\nrel_h2fills_package_retrieval_check.json; data\\public_validation\\results\\nrel_h2fills_hdvs_typeiv\\validation.json",
+      "requirement": "Downloaded and locally screened workbook digests match the validation record; package drift and the no-new-holdout boundary are explicit.",
+      "observed": {
+        "workbook_sha256": "1a3fbe64a50c1c97266bfe0372998513ad3ccec5600fab7bc4b9fc68ad4d9d0c",
+        "package_sha256_matches_previous_record": false,
+        "claim_boundary": "The validation is pinned to the workbook digest, not to an immutable package-container digest. The current package download has the same screened workbook but a different archive digest; this does not add a new validation case or permit redistribution."
       }
     },
     {
