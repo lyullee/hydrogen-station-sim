@@ -86,6 +86,35 @@
       }
     },
     {
+      "id": "h2protocol_public_j2601_archives",
+      "title": "H2Protocol.com SAE J2601 Tables and MC Default public archives",
+      "url": "http://www.h2protocol.com/h2-fueling-data/",
+      "publisher": "H2Protocol.com / contributors to the Hydrogen Data-Sharing Site",
+      "public_raw_data": true,
+      "decision": "CONSUMED_SOURCE_NOT_INDEPENDENT_HOLDOUT",
+      "inspection": {
+        "archive_count": 6,
+        "archive_groups": [
+          "SAE J2601 Tables Validation Files 1-5.zip",
+          "SAE J2601 MC Default Bench Test Data.zip"
+        ],
+        "local_acquisition_manifest": "data/public_validation/raw/acquisition.json",
+        "archive_sha256": {
+          "tables_1": "2b7e898ca86fa010bd78d7375199e6fdc55aed9ad3e1b77270ddd528b534cbc6",
+          "tables_2": "82b989351cf17a2c49a3103164c98035015684ddd4e45eeb75925d28eca2686f",
+          "tables_3": "9f1172091295ce975574a3d52bd518c5a6895836b34c968c38591748a2663edc",
+          "tables_4": "721e28d6d6eefbd1159130941b28277ef457c9ac71f02a1065578fa335130f6d",
+          "tables_5": "da008126c286c0fff31dd86162b3f1f48cd04f7da17bafd2337211e27a23f00d",
+          "mc_default": "e029c53f95c8172be08e5dc4cc41dffb42a09ad7ecbb8b6b8d73e43a9ad210d"
+        },
+        "measured_fields": "The processed traces contain vehicle pressure, tank temperature, SOC, inlet-gas temperature and mass-flow channels on a common time base.",
+        "reuse_note": "The page presents the files as open data for fueling comparisons; cite the H2Protocol.com source and preserve archive hashes."
+      },
+      "role": "Primary open experimental benchmark already consumed by the frozen development and MC Default holdout protocols.",
+      "exclusion_reason": "Not an untouched independent holdout for the current claim: the selected Powertech archives and derived traces are already used in calibration, internal comparison, or the frozen MC Default evaluation. Reusing them for a new claim would invalidate prospective independence.",
+      "next_action": "Obtain CARB/HyStEP, NIST FTS, CEC, JRC GasTeF, or another independent logger archive before reopening the full-loop external gate."
+    },
+    {
       "id": "samcheok_hrs_sensor_table_2024",
       "title": "Samcheok HRS digital-twin sensor table and normal-operation examples",
       "url": "https://www.mdpi.com/2071-1050/16/21/9482",
@@ -732,7 +761,7 @@
         "finding": "Official CC BY 4.0 export API exposes station layout plus availability, usage, derived low-storage status, pricing, events and photos; it does not expose synchronized pressure/temperature/flow or numeric inventory traces, so it is operations context only."
       }
     ],
-    "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
+    "result": "H2Protocol raw archives are public and hash-linked, but they are already consumed Powertech data and therefore do not close the independent external holdout gate.",
     "next_action": "send documented data requests (CARB, JRC GasTeF and HYTRANSFER file custodian, Cal State LA, BAM demonstration HRS, NREL HITRF/NFCTEC, Empa, DLR/FCH2RAIL, Hungarian HRS and NBSDC) and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest"
   },
   "last_reviewed": "2026-10-03"

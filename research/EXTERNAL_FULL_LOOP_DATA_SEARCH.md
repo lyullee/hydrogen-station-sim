@@ -25,6 +25,7 @@ immutable digest are recorded.
 | CARB 2024 Existing Light-Duty HRS In-Use Study | Tests at 22 in-use stations; report figures include pressure, temperature, mass flow and SOC. Appendix A says results were tabulated in an Excel workbook. The public page links only the PDF; the PDF has no attachments or data links. | **Request data.** Strongest independent field candidate, but the published plot and summary table are not machine-readable validation data. |
 | CARB/NREL HyStEP 2015–2017 dispenser test program | CEC report documents 11 California stations, three instrumented Type IV 70 MPa test tanks, pressure/temperature and dispenser communication/fueling measurements, plus CSA HGV 4.3 / SAE J2601 protocol and fault tests. The report explicitly says station test data and results are confidential and are not included. | **Request data.** Ask CARB/NREL for de-identified test matrices, data dictionary, calibration/quality flags and reuse terms; the report itself cannot close the untouched time-series gate. |
 | Zhao et al. 35/70 MPa dispenser performance tests, DOI 10.19799/j.cnki.2095-4239.2020.0049 | A real-station study reports 35 MPa and 70 MPa vehicle fills and exposes four downloadable CSV links for initial/final tables. The files contain only summary values; the article reports that pressure/temperature/flow curves were recorded but no common-time-base trace is downloadable. | **Summary benchmark / request raw trace.** Use reported 35 MPa (8.21 kg, 470 s) and 70 MPa (5.08 kg, 276 s, 36 g/s peak) endpoints only for face-validity; request the original synchronized logger export before treating it as an untouched holdout. |
+| H2Protocol.com SAE J2601 Tables and MC Default public archives | The H2Protocol data-sharing site currently exposes five SAE J2601 Tables ZIP archives and one MC Default ZIP archive. The local acquisition manifest records six archive SHA-256 values and the processed traces contain vehicle pressure, tank temperature, SOC, inlet-gas temperature and mass-flow channels on a common clock. | **Consumed source, not an independent holdout.** These Powertech archives are already used by the frozen development/MC evaluation; reusing them for a new prospective claim would violate independence. Preserve the hashes and obtain a separate CARB/HyStEP, NIST, CEC or GasTeF logger archive before reopening the gate. |
 | NREL H2FillS | Official page says the model was validated with empirical fueling datasets. | **Not available.** The empirical validation traces are not offered as a public download on the product page. Simulator output would not be independent experimental evidence. |
 | NREL 2024 HITRF reliability/fueling report | Table 4 gives sample HITRF fill summaries with timestamp, amount, rate, start/end pressure, dispensing temperature and dispensing pressure. | **Report table only.** The PDF does not provide a common-time-base raw trace, so it is useful field context and a lead for a data request, not an untouched full-loop validation set. |
 | DOE/NREL H2IQ Hour 2024 HD fast-flow experiment | 3/12/2024 HITRF test reports 73 kg in 423.5 s, 358.9 s fueling time, 172.3 g/s average, 483.33 g/s peak, 5.5→74.6 MPa, APRR 9.9 MPa/min under SAE J2601-5 MCF-HF-G H70 FM300 T40. | **Plot/summary only.** The presentation contains charts and aggregate endpoints but no machine-readable common-time-base trace; use for face-validity and operating-range checks only. |
@@ -122,6 +123,17 @@ public sensor-schema benchmark:
 The artifact is therefore suitable for sensor naming, unit and normal-range
 cross-checks only. It is not counted as an independent vehicle-fuelling
 full-loop holdout.
+
+## H2Protocol public archive inspection
+
+The source page remains publicly reachable at
+<http://www.h2protocol.com/h2-fueling-data/> and lists five Tables validation ZIPs
+plus one MC Default ZIP. The six local SHA-256 values are recorded in
+`data/public_validation/raw/acquisition.json` and mirrored in
+`research/external_full_loop_data_search.json`. These are genuine experimental
+traces, but they are the already-consumed Powertech source family; they are
+retained as transparent benchmark evidence and explicitly excluded from the new
+untouched-independent gate.
 
 ## NREL HITRF report artifact inspection
 
