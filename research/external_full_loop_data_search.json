@@ -80,6 +80,7 @@
         ],
         "downloaded_files": "T1.csv.zip through T4.csv.zip; initial/final summary tables only",
         "raw_common_timebase": "not public",
+        "request_draft": "research/ZHAO_2020_DISPENSER_DATA_REQUEST_DRAFT.md",
         "role": "Independent operating-range and face-validity benchmark; request original synchronized logger export and reuse terms.",
         "exclusion_reason": "The article reports plotted pressure/temperature/flow curves but does not expose the underlying common-time-base arrays."
       }
