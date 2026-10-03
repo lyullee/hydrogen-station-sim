@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T22:52:41.133138+00:00",
+  "generated_at": "2026-10-03T23:23:37.062972+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 24,
+    "PASS": 25,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -372,6 +372,27 @@
           "claim_supported": false
         },
         "claim_boundary": "Post-access exploratory screen only; not a prospective validation gate, not a station full-loop result, and not an emergency-consequence validation."
+      }
+    },
+    {
+      "id": "zenodo_4106101_pressure_peaking_screen_integrity",
+      "status": "PASS",
+      "claim": "The prospective Zenodo pressure-peaking screen is reproducible and remains explicitly exploratory rather than full-loop validation.",
+      "evidence": "research\\zenodo_4106101_pressure_peaking_protocol.json; research\\zenodo_4106101_pressure_peaking_result.json",
+      "requirement": "Protocol frozen before outcomes, ten eligible cases, 7/10 joint primary passes, false confirmatory flag and explicit full-loop claim boundary.",
+      "observed": {
+        "evidence_role": "prospective_external_consequence_validation_result",
+        "aggregate": {
+          "eligible_case_count": 10,
+          "excluded_case_count": 0,
+          "excluded_cases": [],
+          "joint_primary_pass_count": 7,
+          "joint_primary_pass_fraction": 0.7,
+          "confirmatory_rule": ">=6 eligible cases and >=80% joint primary pass",
+          "confirmatory_rule_met": false,
+          "interpretation": "exploratory_submodel_screen_only"
+        },
+        "claim_boundary": "This result validates only the unignited hydrogen pressure-peaking consequence submodel for a confined, vented enclosure. It is not validation of the full HRS fueling loop, cascade/compressor control, dispenser operation, outdoor dispersion, ignition, emergency response, or SAGA effectiveness."
       }
     },
     {

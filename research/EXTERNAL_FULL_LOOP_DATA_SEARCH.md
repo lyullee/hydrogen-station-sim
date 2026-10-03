@@ -886,3 +886,11 @@ station-to-vehicle loop, dispersion, ignition or emergency response.
 
 Reproduction uses `scripts/run_byrnes_zenodo_exploratory.py`; the result is
 `research/byrnes_zenodo_exploratory_result.json`.
+
+## Zenodo 4106101 pressure-peaking follow-up (2026-10-04)
+
+A new prospective protocol was frozen before raw outcomes were downloaded for the HyTunnel-CS/Zenodo **Unignited Pressure Peaking Phenomena** release ([10.5281/zenodo.4106101](https://doi.org/10.5281/zenodo.4106101); related publication [10.1016/j.ijhydene.2020.08.221](https://doi.org/10.1016/j.ijhydene.2020.08.221)). All ten experiments with synchronized pressure and mass-flow channels and documented vent geometry were retained. The fixed enclosure pressure-peaking model passed both primary metrics in 7/10 cases, below the predeclared 80% confirmatory threshold. This remains exploratory consequence-submodel evidence and does not change the open independent station-to-vehicle full-loop gate.
+
+- Protocol: `research/zenodo_4106101_pressure_peaking_protocol.json`
+- Result: `research/zenodo_4106101_pressure_peaking_result.json`
+- Claim boundary: confined unignited pressure peaking only; no full HRS loop, outdoor dispersion, ignition, emergency-response or SAGA-effectiveness claim.

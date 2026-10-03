@@ -305,6 +305,46 @@ def audit(root: Path) -> dict[str, object]:
         } if byrnes_result else "missing",
     ))
 
+    pressure_protocol_path = root / "research/zenodo_4106101_pressure_peaking_protocol.json"
+    pressure_result_path = root / "research/zenodo_4106101_pressure_peaking_result.json"
+    pressure_protocol = _json(pressure_protocol_path)
+    pressure_result = _json(pressure_result_path)
+    pressure_aggregate = (pressure_result or {}).get("aggregate") or {}
+    pressure_screen_pass = bool(
+        (pressure_protocol or {}).get("status")
+        == "prospective_protocol_frozen_before_data_access"
+        and (pressure_protocol or {}).get("evidence_role")
+        == "prospective_external_consequence_validation_protocol"
+        and ((pressure_protocol or {}).get("freeze") or {}).get(
+            "outcomes_accessed_before_freeze"
+        ) is False
+        and ((pressure_protocol or {}).get("freeze") or {}).get(
+            "protocol_frozen_before_raw_download"
+        ) is True
+        and (pressure_result or {}).get("status")
+        == "completed_prospective_protocol_execution"
+        and (pressure_result or {}).get("evidence_role")
+        == "prospective_external_consequence_validation_result"
+        and pressure_aggregate.get("eligible_case_count") == 10
+        and pressure_aggregate.get("joint_primary_pass_count") == 7
+        and pressure_aggregate.get("confirmatory_rule_met") is False
+        and "not validation of the full HRS fueling loop" in str(
+            (pressure_result or {}).get("claim_boundary", "")
+        )
+    )
+    gates.append(_gate(
+        "zenodo_4106101_pressure_peaking_screen_integrity",
+        "PASS" if pressure_screen_pass else ("FAIL" if pressure_result else "PENDING"),
+        "The prospective Zenodo pressure-peaking screen is reproducible and remains explicitly exploratory rather than full-loop validation.",
+        f"{pressure_protocol_path.relative_to(root)}; {pressure_result_path.relative_to(root)}",
+        "Protocol frozen before outcomes, ten eligible cases, 7/10 joint primary passes, false confirmatory flag and explicit full-loop claim boundary.",
+        {
+            "evidence_role": (pressure_result or {}).get("evidence_role"),
+            "aggregate": pressure_aggregate,
+            "claim_boundary": (pressure_result or {}).get("claim_boundary"),
+        } if pressure_result else "missing",
+    ))
+
     nrel_retrieval_path = root / "research/nrel_h2fills_package_retrieval_check.json"
     nrel_retrieval = _json(nrel_retrieval_path)
     nrel_validation_path = root / "data/public_validation/results/nrel_h2fills_hdvs_typeiv/validation.json"

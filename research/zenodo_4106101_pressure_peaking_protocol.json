@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "status": "prospective_protocol_frozen_before_data_access",
+  "generated_at": "2026-10-04T00:00:00+09:00",
+  "evidence_role": "prospective_external_consequence_validation_protocol",
+  "claim_boundary": "This protocol validates only the unignited hydrogen pressure-peaking consequence submodel for a confined, vented enclosure. It does not validate station filling, cascade/compressor control, dispenser operation, outdoor dispersion, ignition, or emergency-action effectiveness.",
+  "source": {
+    "title": "Unignited Pressure Peaking Phenomena",
+    "doi": "10.5281/zenodo.4106101",
+    "related_publication_doi": "10.1016/j.ijhydene.2020.08.221",
+    "url": "https://zenodo.org/records/4106101",
+    "license": "CC BY 4.0",
+    "expected_files": [
+      {"name": "HTE242USN00011CONT.zip", "md5": "4ca1e0da35266b7899f08f2a638e4086", "role": "concentration"},
+      {"name": "HTE242USN00011MFR.zip", "md5": "e210005525700347a43d9cf352e9a39b", "role": "mass_flow"},
+      {"name": "HTE242USN00011PRESS.zip", "md5": "85f590964f3dcefba1f4b2a59916a1a3", "role": "pressure"},
+      {"name": "HTE242USN000METADATA.DOCX", "md5": "19ed05ec6b768b91a3accd61952f06ac", "role": "metadata"}
+    ]
+  },
+  "freeze": {
+    "outcomes_accessed_before_freeze": false,
+    "metadata_accessed_before_freeze": true,
+    "protocol_frozen_before_raw_download": true,
+    "raw_access_after_freeze_required": true,
+    "source_selection_rule": "Use every experiment with parseable synchronized pressure and mass-flow channels and documented vent geometry; do not select cases by observed agreement.",
+    "case_exclusion_rule": "Exclude only when the source metadata or raw file is irrecoverably missing, corrupt, or lacks the declared pressure/mass-flow/vent metadata; report every exclusion with its reason.",
+    "parameter_rule": "Use enclosure volume, vent area, release conditions, sample interval, and calibration constants from the source metadata/raw documentation. No case-specific parameter fitting is allowed.",
+    "model_rule": "Run the repository's declared pressure-peaking consequence model with a fixed ideal-gas hydrogen mass/energy balance and documented vent outflow closure; no per-case tuning after raw inspection."
+  },
+  "metrics": {
+    "primary": [
+      {"name": "peak_overpressure_abs_error_kpa", "pass": "<= 5.0 kPa per case"},
+      {"name": "peak_time_relative_error_percent", "pass": "<= 20% per case"}
+    ],
+    "secondary": [
+      {"name": "pressure_trace_nrmse_percent", "pass": "<= 20% over the measured release window"},
+      {"name": "directional_peak_bias", "pass": "report mean signed error and 95% bootstrap interval"}
+    ],
+    "aggregate_rule": "A confirmatory submodel screen requires at least 6 eligible cases, >=80% of eligible cases passing both primary metrics, and no unreported exclusion. Otherwise report exploratory or failed status.",
+    "uncertainty": "Report raw sampling interval, calibration/metadata uncertainty where supplied, and bootstrap 95% intervals over eligible cases."
+  },
+  "reproducibility": {
+    "raw_directory": "data/public_validation/raw/zenodo_4106101",
+    "result_path": "research/zenodo_4106101_pressure_peaking_result.json",
+    "runner": "scripts/run_zenodo_4106101_pressure_peaking.py",
+    "source_metadata_snapshot": "research/zenodo_4106101_metadata.json",
+    "raw_files_not_committed": true
+  }
+}

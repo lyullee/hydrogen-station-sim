@@ -1639,5 +1639,17 @@
     "result": "research/byrnes_zenodo_exploratory_result.json",
     "next_action": "Find or receive a genuinely untouched release campaign, or freeze a new approved subset before reading numerical outcomes; keep the current 2/3 result as transparent exploratory evidence.",
     "claim_limit": "Do not promote this post-access screen to a prospective validation PASS or a full-loop station claim."
+  },
+  "zenodo_4106101_pressure_peaking_followup": {
+    "scope": "prospective external consequence-submodel screen using the HyTunnel-CS unignited pressure-peaking release archive",
+    "source": "https://zenodo.org/records/4106101",
+    "doi": "10.5281/zenodo.4106101",
+    "related_publication_doi": "10.1016/j.ijhydene.2020.08.221",
+    "finding": "All ten source experiments with synchronized pressure and mass-flow channels and documented vent geometry were retained under a pre-access frozen protocol. The fixed enclosure pressure-peaking model passed both primary metrics in 7/10 cases; no case-specific fitting or outcome-based selection was used.",
+    "decision": "CONSEQUENCE_SUBMODEL_PROSPECTIVE_SCREEN_7_OF_10_NOT_CONFIRMATORY",
+    "result": "research/zenodo_4106101_pressure_peaking_result.json",
+    "protocol": "research/zenodo_4106101_pressure_peaking_protocol.json",
+    "claim_limit": "This is exploratory evidence for an unignited confined-enclosure pressure-peaking submodel only. It does not close the independent station-to-vehicle full-loop gate or support outdoor dispersion, ignition, emergency-response or SAGA-effectiveness claims.",
+    "next_action": "Retain the result transparently, seek an untouched full-loop station-to-vehicle logger archive, and do not promote this 7/10 screen to a confirmatory validation pass."
   }
 }
