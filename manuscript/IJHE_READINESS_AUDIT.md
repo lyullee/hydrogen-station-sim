@@ -14,6 +14,7 @@
 | `hyram_adapter_verification` | **PASS** | The production adapter is identical to and numerically consistent with HyRAM+ 6.1 within the tested scope. | `research\hyram_adapter_verification.json` |
 | `station_consequence_geometry_validation` | **PASS** | Displayed outdoor free-jet screening geometry is traceably checked against geometrically applicable independent data. | `research\consequence_geometry_validation.json` |
 | `preslhy_blowdown_external_validation` | **FAIL** | The source-depletion and direct-aperture release model meets its prospectively frozen screens on public PRESLHY ambient blowdown experiments. | `research\preslhy_blowdown_external_validation.json; research\preslhy_blowdown_validation_protocol.json` |
+| `preslhy_revised_holdout_validation` | **FAIL** | The revised non-adiabatic source-depletion model meets the prospectively frozen PRESLHY E5.1 holdout rule. | `research\preslhy_e5_1_holdout_result.json; research\preslhy_e5_1_holdout_protocol.json` |
 | `hiad_protocol_integrity` | **PASS** | The incident decision-support study protocol was hash-locked before outcomes. | `research\hiad_study_protocol_manifest.json` |
 | `institutional_ethics_determination` | **PENDING** | The applicable institution has recorded the human-participant determination. | `research\hiad_study_protocol_manifest.json` |
 | `hiad_casebook_frozen` | **PENDING** | All 24 holdout incident vignettes passed coordinator leakage review and were frozen. | `data\public_validation\results\hiad_casebook_frozen\casebook_freeze_manifest.json` |
@@ -29,6 +30,7 @@
 ## Blocking bounded-submission gates
 
 - `preslhy_blowdown_external_validation`
+- `preslhy_revised_holdout_validation`
 - `institutional_ethics_determination`
 - `hiad_casebook_frozen`
 - `hiad_holdout_collection`
@@ -39,6 +41,7 @@
 ## Blocking full-objective gates
 
 - `preslhy_blowdown_external_validation`
+- `preslhy_revised_holdout_validation`
 - `institutional_ethics_determination`
 - `hiad_casebook_frozen`
 - `hiad_holdout_collection`

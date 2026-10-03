@@ -22,6 +22,13 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert gates["preslhy_blowdown_external_validation"]["observed"]["aggregate"][
         "joint_primary_pass_fraction"
     ] == 0.5
+    assert gates["preslhy_revised_holdout_validation"]["status"] == "FAIL"
+    revised = gates["preslhy_revised_holdout_validation"]["observed"]
+    assert revised["primary_cases"] == 3
+    assert revised["aggregate"]["joint_primary_passes"] == 2
+    assert revised["aggregate"]["minimum_requirements_met"] is False
+    assert revised["aggregate"]["claim_supported"] is False
+    assert revised["protocol_hash_matches"] is True
     external = gates["full_loop_external_validation"]["observed"]
     assert external["protocol_integrity"] is True
     assert external["aggregate"]["case_count"] == 8

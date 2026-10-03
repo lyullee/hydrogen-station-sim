@@ -277,6 +277,40 @@ def audit(root: Path) -> dict[str, object]:
         } if preslhy else "missing; acquisition/validation has not completed",
     ))
 
+    e5_result_path = root / "research/preslhy_e5_1_holdout_result.json"
+    e5_result = _json(e5_result_path)
+    e5_protocol_path = root / "research/preslhy_e5_1_holdout_protocol.json"
+    e5_protocol = _json(e5_protocol_path)
+    e5_primary = (e5_result or {}).get("primary_ambient") or {}
+    e5_aggregate = e5_primary.get("aggregate") or {}
+    e5_protocol_hash = (
+        _sha256(e5_protocol_path) if e5_protocol_path.is_file() else None
+    )
+    e5_pass = bool(
+        (e5_protocol or {}).get("status")
+        == "fully_frozen_before_numerical_outcome_access"
+        and (e5_protocol or {}).get("outcomes_accessed_before_freeze") is False
+        and e5_aggregate.get("minimum_requirements_met") is True
+        and e5_aggregate.get("claim_supported") is True
+        and (e5_result or {}).get("protocol_sha256") == e5_protocol_hash
+    )
+    gates.append(_gate(
+        "preslhy_revised_holdout_validation",
+        "PASS" if e5_pass else ("FAIL" if e5_result else "PENDING"),
+        "The revised non-adiabatic source-depletion model meets the prospectively frozen PRESLHY E5.1 holdout rule.",
+        f"{e5_result_path.relative_to(root)}; {e5_protocol_path.relative_to(root)}",
+        ">=4 primary ambient cases across >=2 nozzle and pressure groups, >=70% joint pass fraction, frozen implementation and retained failures.",
+        {
+            "aggregate": e5_aggregate,
+            "primary_cases": len(e5_primary.get("cases") or []),
+            "retained_failures": len((e5_result or {}).get("retained_failures") or []),
+            "protocol_hash_matches": (
+                (e5_result or {}).get("protocol_sha256") == e5_protocol_hash
+            ),
+            "claim_boundary": (e5_result or {}).get("claim_boundary"),
+        } if e5_result else "missing; holdout evaluation has not completed",
+    ))
+
     protocol_path = root / "research/hiad_study_protocol_manifest.json"
     protocol = _json(protocol_path)
     protocol_ok, protocol_mismatches = _protocol_integrity(root, protocol)
@@ -451,6 +485,7 @@ def audit(root: Path) -> dict[str, object]:
         "corrected_closed_loop_internal_evidence",
         "full_loop_negative_result_disclosed",
         "hyram_adapter_verification", "preslhy_blowdown_external_validation",
+        "preslhy_revised_holdout_validation",
         "hiad_protocol_integrity",
         "institutional_ethics_determination", "hiad_casebook_frozen",
         "hiad_holdout_collection", "independent_expert_review_complete",

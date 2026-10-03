@@ -1,16 +1,17 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T06:50:41.449228+00:00",
+  "generated_at": "2026-10-03T07:37:59.422516+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
     "PASS": 10,
-    "FAIL": 2,
+    "FAIL": 3,
     "PENDING": 7
   },
   "blocking_bounded_submission_gates": [
     "preslhy_blowdown_external_validation",
+    "preslhy_revised_holdout_validation",
     "institutional_ethics_determination",
     "hiad_casebook_frozen",
     "hiad_holdout_collection",
@@ -20,6 +21,7 @@
   ],
   "blocking_full_objective_gates": [
     "preslhy_blowdown_external_validation",
+    "preslhy_revised_holdout_validation",
     "institutional_ethics_determination",
     "hiad_casebook_frozen",
     "hiad_holdout_collection",
@@ -471,6 +473,41 @@
       }
     },
     {
+      "id": "preslhy_revised_holdout_validation",
+      "status": "FAIL",
+      "claim": "The revised non-adiabatic source-depletion model meets the prospectively frozen PRESLHY E5.1 holdout rule.",
+      "evidence": "research\\preslhy_e5_1_holdout_result.json; research\\preslhy_e5_1_holdout_protocol.json",
+      "requirement": ">=4 primary ambient cases across >=2 nozzle and pressure groups, >=70% joint pass fraction, frozen implementation and retained failures.",
+      "observed": {
+        "aggregate": {
+          "cases": 3,
+          "joint_primary_passes": 2,
+          "joint_primary_pass_fraction": 0.6666666666666666,
+          "bootstrap_95_percent_ci": [
+            0.0,
+            1.0
+          ],
+          "bootstrap_replicates": 10000,
+          "bootstrap_seed": 20261003,
+          "diameter_groups": [
+            2.0,
+            4.0
+          ],
+          "pressure_groups": [
+            "low",
+            "medium"
+          ],
+          "minimum_requirements_met": false,
+          "claim_threshold": 0.7,
+          "claim_supported": false
+        },
+        "primary_cases": 3,
+        "retained_failures": 3,
+        "protocol_hash_matches": true,
+        "claim_boundary": "The holdout concerns pressure depletion of the 2.8 L DisCha source vessel during an open atmospheric jet, including the downstream-ignition condition represented in E5.1. It does not validate combustion overpressure, heat flux, flame length, cryogenic two-phase flow, a vehicle-fueling loop, or station emergency separation distance."
+      }
+    },
+    {
       "id": "hiad_protocol_integrity",
       "status": "PASS",
       "claim": "The incident decision-support study protocol was hash-locked before outcomes.",
@@ -610,7 +647,7 @@
         "manuscript": "manuscript\\ijhe_manuscript_draft.tex",
         "highlights": "manuscript\\Highlights.txt",
         "counts": {
-          "abstract_words": 131,
+          "abstract_words": 150,
           "keywords": 6,
           "highlight_bullets": 5,
           "highlight_characters": [
@@ -620,11 +657,11 @@
             75,
             75
           ],
-          "approximate_manuscript_words_before_references": 4190,
+          "approximate_manuscript_words_before_references": 4685,
           "figures": 2,
           "tables": 3,
-          "citation_keys": 14,
-          "bibliography_entries": 14,
+          "citation_keys": 15,
+          "bibliography_entries": 15,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
