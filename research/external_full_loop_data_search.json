@@ -455,6 +455,37 @@
       }
     },
     {
+      "id": "norcal_zero_oakland_hd_station_report",
+      "title": "NorCAL ZERO Oakland heavy-duty hydrogen station field report",
+      "url": "https://ww2.arb.ca.gov/sites/default/files/2025-08/NorCAL%20ZERO%20Final%20Report.pdf",
+      "publisher": "California Air Resources Board / California Energy Commission / Center for Transportation and the Environment",
+      "public_raw_data": false,
+      "decision": "REPORT_FIELD_SUMMARY_ONLY",
+      "inspection": {
+        "local_artifact": "data/public_validation/raw/norcal_zero_final_report.pdf",
+        "bytes": 5031126,
+        "sha256": "c45ddbe0c1d9c68549ebc6408f5661819b46d9b6a6d78c80235ff7d29784ff4d",
+        "reported_scope": "30 Hyundai XCIENT fuel-cell drayage trucks and the Oakland FirstElement Fuel 700 bar station; operational data collection October 2022 through September 2025.",
+        "reported_station_channels": [
+          "fueling timestamps",
+          "hydrogen quantity dispensed",
+          "fill duration",
+          "start/final pressure",
+          "final SOC and communication status",
+          "station pressure and fill-time records"
+        ],
+        "missing_or_incomplete_for_full_loop": [
+          "downloadable synchronized row-level logger export",
+          "ambient temperature",
+          "automatically recorded pre-cooling and tank temperature for all fills",
+          "complete dispenser and maintenance event linkage"
+        ],
+        "common_timebase": false,
+        "role": "High-value independent heavy-duty field context and raw-data request lead. The report includes figures and event summaries but no machine-readable station/vehicle trace, so it cannot close the untouched full-loop holdout.",
+        "request_route": "CTE/CARB/CEC project data custodians and FirstElement Fuel; request de-identified event-level and logger files with vehicle linkage, quality flags, protocol metadata and reuse terms."
+      }
+    },
+    {
       "id": "jrc_gastef_2014_reference_database",
       "title": "JRC reference data from experiments of on-board hydrogen tanks fast filling",
       "doi": "10.1016/j.ijhydene.2014.03.227",
@@ -897,6 +928,11 @@
         "finding": "CEC report describes a real Oakland/EBMUD station fuel-log export with fill time, mass, start/final pressure, SOC and calculated rate, but no downloadable synchronized logger trace; ambient, pre-cooling and tank temperatures are explicitly unavailable"
       },
       {
+        "id": "norcal_zero_oakland_hd_station_report",
+        "url": "https://ww2.arb.ca.gov/sites/default/files/2025-08/NorCAL%20ZERO%20Final%20Report.pdf",
+        "finding": "official 2025 field report covers 30 XCIENT trucks and the Oakland 700 bar station and reports fueling timestamps, quantity, duration, pressure, SOC and communication status; no machine-readable synchronized station/vehicle logger archive is released and temperature/maintenance linkage remains incomplete"
+      },
+      {
         "id": "nrel_h2fills",
         "url": "https://www.nrel.gov/hydrogen/h2fills",
         "finding": "validated software and empirical-data description; download is registration-gated and no raw independent archive exposed"
@@ -975,5 +1011,17 @@
     "result": "H2Protocol raw archives remain consumed Powertech evidence. The NREL H2FillS package adds an independent physical HDVS tank-submodel candidate with a reproducible negative screen and an EOS-implied-volume mismatch diagnostic. An exploratory capacity/EOS geometry sensitivity reduces the pressure error and gives 7/7 tank screens, but it was run after workbook access and therefore is not a confirmatory pass; the package licence and missing station-side channels still prevent a full-loop claim. DOE/NREL aggregate reporting also identifies a second October 2022 HDVS campaign; without synchronized raw traces it remains operating-range context only.",
     "next_action": "send documented data requests (Klopčič/HyCentA heavy-duty traces, CARB, JRC GasTeF and HYTRANSFER file custodian, Cal State LA, BAM demonstration HRS, NREL HITRF/NFCTEC, Empa, DLR/FCH2RAIL, Hungarian HRS and NBSDC) and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest"
   },
-  "last_reviewed": "2026-10-03"
+  "review_log_2026_10_04": {
+    "scope": "follow-up primary-source inspection for independent heavy-duty station event data",
+    "sources_checked": [
+      {
+        "id": "norcal_zero_oakland_hd_station_report",
+        "url": "https://ww2.arb.ca.gov/sites/default/files/2025-08/NorCAL%20ZERO%20Final%20Report.pdf",
+        "finding": "the official report confirms real Oakland station and XCIENT fleet event fields, but only figures and summaries are public; no synchronized machine-readable station/vehicle logger archive is exposed"
+      }
+    ],
+    "result": "NorCAL ZERO is a stronger raw-data request lead than the standalone CEC event-summary report, but it does not close the untouched full-loop gate without the underlying logs, temperature channels, vehicle linkage, provenance and reuse terms.",
+    "next_action": "request de-identified NorCAL ZERO station and vehicle logger files, freeze provenance and scoring before any evaluation"
+  },
+  "last_reviewed": "2026-10-04"
 }

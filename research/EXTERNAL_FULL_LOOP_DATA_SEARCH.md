@@ -278,6 +278,26 @@ calibration and quality flags, protocol metadata, maintenance markers and reuse
 permission. The report's stated missing temperature fields also prevent a
 defensible thermal-validation claim from the public artifact alone.
 
+## NorCAL ZERO Oakland heavy-duty field report
+
+The CARB/CEC NorCAL ZERO report covers 30 Hyundai XCIENT fuel-cell drayage
+trucks and the FirstElement Fuel Oakland 700-bar station:
+<https://ww2.arb.ca.gov/sites/default/files/2025-08/NorCAL%20ZERO%20Final%20Report.pdf>.
+It describes operational collection from October 2022 through September 2025
+and reports station event fields such as timestamps, hydrogen quantity, fill
+duration, start/final pressure, final SOC and communication status. The report
+also discusses station pressure/fill-time records and the practical problems
+linking vehicle and station logs.
+
+The public report is not a raw archive. The locally inspected PDF is 5,031,126
+bytes with SHA-256
+`c45ddbe0c1d9c68549ebc6408f5661819b46d9b6a6d78c80235ff7d29784ff4d` and does
+not expose a downloadable synchronized row-level station/vehicle logger. The
+report identifies missing or incomplete ambient-temperature, automatically
+recorded pre-cooling/tank-temperature and maintenance linkage. It is therefore
+an independent heavy-duty field benchmark and a strong data-request lead, not
+an eligible untouched full-loop holdout.
+
 ## 2026-10-03 primary-source recheck
 
 The Cal State LA back-to-back paper has a publicly reachable accepted-manuscript
