@@ -78,6 +78,31 @@ but those examples are part of a simulation package and are not independent
 experimental observations:
 <https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf?sfvrsn=b2960c3d_1>.
 
+## 2026-10-03 primary-source recheck
+
+The Cal State LA back-to-back paper has a publicly reachable accepted-manuscript
+record at the U.S. Department of Energy Office of Scientific and Technical
+Information (OSTI):
+<https://www.osti.gov/biblio/1977265>. The record exposes the manuscript PDF and
+the DOI, but it does not expose the one-year synchronized station log described
+in the paper as a downloadable raw data archive. The paper therefore remains a
+data-request lead and is not promoted to a holdout by reading values from plots
+or summary tables.
+
+NREL's infrastructure-analysis page explicitly states that industry partners'
+raw station data are secured and that public composite data products are
+aggregated so individual companies cannot be identified:
+<https://www.nrel.gov/hydrogen/hydrogen-infrastructure-analysis>. This confirms
+that the public CDP charts cannot supply the pressure/temperature/flow time
+series required by the full-loop gate.
+
+The official H2FillS page documents validation against empirical fueling data,
+but the software download is registration-gated and the product page does not
+publish an independent raw trace archive:
+<https://www.nrel.gov/hydrogen/h2fills>. H2FillS remains a reference simulator
+and a possible data-request route, not an external dataset that can be scored
+here.
+
 ## DOE/NREL H2IQ Hour experiment artifact inspection
 
 The official March 2024 presentation reports a real HITRF heavy-duty fast-flow
@@ -135,3 +160,7 @@ No newly located public source currently satisfies the full-loop eligibility
 rule. The gate therefore remains **PENDING/FAIL**, and no broad station-model
 validation claim is permitted. This search record prevents unavailable plots or
 aggregate products from being silently relabelled as independent validation.
+
+The machine-readable counterpart is
+`research/external_full_loop_data_search.json`; its `review_log_2026_10_03`
+records the URLs and the same access decisions used by the readiness audit.

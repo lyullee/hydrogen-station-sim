@@ -55,6 +55,12 @@
         "manual_url": "https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf?sfvrsn=b2960c3d_1",
         "manual_finding": "The user manual documents example supply_condition.csv and exported pressure, temperature, mass-flow and SOC fields, but the example is a simulator distribution file rather than independent measured station data.",
         "independent_raw_trace": false
+      },
+      "primary_source_review_2026_10_03": {
+        "product_page": "https://www.nrel.gov/hydrogen/h2fills",
+        "manual_url": "https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf?sfvrsn=b2960c3d_1",
+        "raw_data_access": "registration-gated software download; empirical datasets are described but not exposed as an open raw archive",
+        "decision": "NOT_AVAILABLE_FROM_PRODUCT_PAGE"
       }
     },
     {
@@ -107,7 +113,12 @@
       "title": "Retail Hydrogen Station Composite Data Products",
       "url": "https://www.nrel.gov/hydrogen/infrastructure-cdps-retail.html",
       "public_raw_data": true,
-      "decision": "AGGREGATE_CONTEXT_ONLY"
+      "decision": "AGGREGATE_CONTEXT_ONLY",
+      "primary_source_review_2026_10_03": {
+        "infrastructure_analysis": "https://www.nrel.gov/hydrogen/hydrogen-infrastructure-analysis",
+        "raw_data_statement": "NLR states that partner raw data are secured and only aggregated composite data products are public",
+        "decision": "AGGREGATE_CONTEXT_ONLY"
+      }
     },
     {
       "id": "nist_transient_flow_facility",
@@ -121,7 +132,18 @@
       "title": "Hydrogen station in situ back-to-back fueling data for design and modeling",
       "doi": "10.1016/j.jclepro.2021.129737",
       "public_raw_data": false,
-      "decision": "REQUEST_DATA"
+      "decision": "REQUEST_DATA",
+      "primary_source_review_2026_10_03": {
+        "osti_record": "https://www.osti.gov/biblio/1977265",
+        "osti_id": "1977265",
+        "accepted_manuscript_url": "https://www.osti.gov/servlets/purl/1977265",
+        "doi": "10.1016/j.jclepro.2021.129737",
+        "manuscript_access": "accepted manuscript publicly available via OSTI",
+        "raw_trace_access": "not provided in OSTI record or manuscript landing record",
+        "machine_readable_common_timebase": false,
+        "decision": "REQUEST_DATA",
+        "claim_limit": "Use only as field-context and data-request lead until synchronized trace files, metadata and reuse terms are obtained."
+      }
     },
     {
       "id": "cal_state_la_2024_multiyear_energy_performance",
@@ -361,5 +383,33 @@
     }
   ],
   "next_action": "Request de-identified synchronized fill traces from CARB, JRC GasTeF, Cal State LA, Empa, DLR/FCH2RAIL and the Hungarian HRS study author before freezing a new full-loop holdout protocol; use Grune/Sempert for the separate ventilation protocol.",
-  "claim_limit": "No new external full-loop validation claim is permitted from the screened public materials."
+  "claim_limit": "No new external full-loop validation claim is permitted from the screened public materials.",
+  "review_log_2026_10_03": {
+    "scope": "public-source recheck for an untouched independent full-loop HRS validation set",
+    "sources_checked": [
+      {
+        "id": "carb_in_use_2024",
+        "url": "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf",
+        "finding": "official field report; no machine-readable synchronized raw trace or embedded attachment"
+      },
+      {
+        "id": "cal_state_la_back_to_back",
+        "url": "https://www.osti.gov/biblio/1977265",
+        "finding": "public accepted manuscript; describes one-year station data but no downloadable synchronized raw trace"
+      },
+      {
+        "id": "nrel_h2fills",
+        "url": "https://www.nrel.gov/hydrogen/h2fills",
+        "finding": "validated software and empirical-data description; download is registration-gated and no raw independent archive exposed"
+      },
+      {
+        "id": "nrel_infrastructure_analysis",
+        "url": "https://www.nrel.gov/hydrogen/hydrogen-infrastructure-analysis",
+        "finding": "official statement that partner raw data are secured; only aggregate CDPs are public"
+      }
+    ],
+    "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
+    "next_action": "send documented data requests and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest"
+  },
+  "last_reviewed": "2026-10-03"
 }
