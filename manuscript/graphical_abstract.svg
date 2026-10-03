@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1328" height="531" viewBox="0 0 1328 531" role="img" aria-labelledby="title desc">
+  <title id="title">Evidence-gated hydrogen station digital twin validation</title>
+  <desc id="desc">Public experiments and incidents feed separately evaluated process, consequence, and decision-support layers.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f4f8fb"/><stop offset="1" stop-color="#e8f1f5"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5d7382"/>
+    </marker>
+    <style>
+      .head{font:700 30px Arial,sans-serif;fill:#12354b}.sub{font:600 19px Arial,sans-serif;fill:#234b61}
+      .txt{font:16px Arial,sans-serif;fill:#244351}.small{font:14px Arial,sans-serif;fill:#405c69}
+      .metric{font:700 19px Arial,sans-serif;fill:#12354b}.card{fill:#fff;stroke:#adc3cf;stroke-width:2}
+      .good{fill:#e5f5ef;stroke:#31866b}.bad{fill:#fff0ec;stroke:#c75f4a}.pending{fill:#fff6dc;stroke:#c88d26}
+    </style>
+  </defs>
+  <rect width="1328" height="531" fill="url(#bg)"/>
+  <text x="42" y="52" class="head">Hydrogen-station digital twin: separate evidence for separate claims</text>
+  <text x="42" y="82" class="sub">Public data → deterministic physics → bounded consequence results → expert-reviewed advice</text>
+
+  <rect x="38" y="112" width="270" height="302" rx="18" class="card"/>
+  <text x="62" y="151" class="sub">Independent evidence</text>
+  <circle cx="74" cy="191" r="9" fill="#2c7da0"/><text x="94" y="198" class="metric">36 fast-fill tests</text>
+  <text x="94" y="220" class="small">Pressure · temperature · SOC</text>
+  <circle cx="74" cy="265" r="9" fill="#2c7da0"/><text x="94" y="272" class="metric">HyRAM+ v6.1</text>
+  <text x="94" y="294" class="small">Exact source + upstream tests</text>
+  <circle cx="74" cy="339" r="9" fill="#2c7da0"/><text x="94" y="346" class="metric">34 HIAD events</text>
+  <text x="94" y="368" class="small">Response fields withheld</text>
+
+  <path d="M 322 263 L 371 263" stroke="#5d7382" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <rect x="386" y="112" width="386" height="302" rx="18" class="card"/>
+  <text x="410" y="151" class="sub">Digital-twin evidence gates</text>
+  <rect x="414" y="175" width="330" height="58" rx="12" fill="#e9f2f7"/>
+  <text x="434" y="199" class="metric">1  Type-IV tank physics</text><text x="434" y="221" class="small">Measured boundary conditions</text>
+  <rect x="414" y="243" width="330" height="58" rx="12" fill="#e9f2f7"/>
+  <text x="434" y="267" class="metric">2  Complete process loop</text><text x="434" y="289" class="small">Controller · cascade · precooler</text>
+  <rect x="414" y="311" width="330" height="58" rx="12" fill="#e9f2f7"/>
+  <text x="434" y="335" class="metric">3  Consequence + SAGA</text><text x="434" y="357" class="small">Adapter parity · blinded review</text>
+
+  <path d="M 786 263 L 835 263" stroke="#5d7382" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <rect x="850" y="112" width="440" height="302" rx="18" class="card"/>
+  <text x="874" y="151" class="sub">What the evidence currently supports</text>
+  <rect x="874" y="175" width="392" height="66" rx="12" class="good"/>
+  <text x="894" y="201" class="metric">Tank validation: supported</text>
+  <text x="894" y="225" class="txt">RMSE 3.905 MPa · 4.694 °C · 3.812 %p</text>
+  <rect x="874" y="251" width="392" height="66" rx="12" class="bad"/>
+  <text x="894" y="277" class="metric">Full loop: screens failed</text>
+  <text x="894" y="301" class="txt">0/8 development · 0/11 internal comparison</text>
+  <rect x="874" y="327" width="190" height="66" rx="12" class="good"/>
+  <text x="894" y="353" class="metric">HyRAM parity</text>
+  <text x="894" y="377" class="txt">47 tests · 803 subtests</text>
+  <rect x="1076" y="327" width="190" height="66" rx="12" class="pending"/>
+  <text x="1096" y="353" class="metric">SAGA pending</text>
+  <text x="1096" y="377" class="txt">External expert review</text>
+
+  <rect x="38" y="444" width="1252" height="55" rx="14" fill="#12354b"/>
+  <text x="664" y="478" text-anchor="middle" style="font:700 21px Arial,sans-serif;fill:#fff">Validated research components ≠ certified station control or autonomous emergency management</text>
+</svg>

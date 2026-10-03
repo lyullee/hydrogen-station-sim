@@ -11,6 +11,11 @@ license: MIT
 date-released: 2026-10-01
 repository-code: "https://github.com/lyullee/hydrogen-station-sim"
 url: "https://github.com/lyullee/hydrogen-station-sim"
+doi: "10.5281/zenodo.23084421"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.23084421"
+    description: "Archived software release"
 abstract: >-
   Physics-based dynamic simulation and safety monitoring of a gaseous hydrogen
   refueling station, including process equipment, incident scenarios, consequence

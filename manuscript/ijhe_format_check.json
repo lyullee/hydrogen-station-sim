@@ -1,0 +1,29 @@
+{
+  "manuscript": "manuscript\\ijhe_manuscript_draft.tex",
+  "highlights": "manuscript\\Highlights.txt",
+  "counts": {
+    "abstract_words": 149,
+    "keywords": 6,
+    "highlight_bullets": 5,
+    "highlight_characters": [
+      75,
+      74,
+      69,
+      75,
+      75
+    ],
+    "approximate_manuscript_words_before_references": 2817,
+    "figures": 2,
+    "tables": 3
+  },
+  "checks": {
+    "abstract_at_most_150_words": true,
+    "keywords_at_most_6": true,
+    "highlights_count_3_to_5": true,
+    "each_highlight_at_most_85_characters": true,
+    "research_paper_at_most_8000_words_approximate": true,
+    "diagrams_at_most_12": true
+  },
+  "format_gate_passed": true,
+  "scientific_readiness_assessed": false
+}

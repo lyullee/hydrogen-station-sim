@@ -1,0 +1,478 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=25mm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{caption}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{lineno}
+
+\hypersetup{colorlinks=true,linkcolor=blue!45!black,citecolor=blue!45!black,urlcolor=blue!55!black}
+\setlist{nosep}
+\linenumbers
+
+\newcommand{\workingnote}{%
+  \begin{center}
+  \fcolorbox{red!55!black}{red!4}{\parbox{0.92\linewidth}{\textbf{Working manuscript.}
+  The external expert review of SAGA decision support has not been completed.
+  The manuscript is therefore not ready for journal submission, and no placeholder
+  effectiveness result may be interpreted as evidence.}}
+  \end{center}}
+
+\title{External validation and evidence-gated decision support for a virtual
+hydrogen refuelling station digital twin}
+\author{Author names withheld in working draft\\
+\small Affiliation and corresponding-author details to be confirmed}
+\date{Working draft: 3 October 2026}
+
+\begin{document}
+\maketitle
+\workingnote
+
+\begin{abstract}
+This study separates the evidence required for process physics, consequence
+software and language-model decision support in a virtual hydrogen refuelling
+station. Public SAE J2601 Tables Method experiments supplied fast-fill traces.
+Using measured mass flow and inlet temperature as boundaries, a two-parameter
+Type-IV tank model was calibrated on 23 fills and evaluated on 12 frozen fills.
+Validation mean root-mean-square errors were 3.905 MPa for pressure, 4.694
+$^{\circ}$C for gas temperature and 3.812 percentage points for state of charge.
+These results did not transfer to the complete controller--cascade--precooler loop:
+no development or internal-comparison fill met all declared screens. The
+production consequence adapter matched independent HyRAM+ 6.1 API calculations in
+three cases, while identical upstream source passed 47 tests and 803 subtests. A
+blinded HIAD incident review protocol is specified, but qualified external ratings
+remain pending. The work supports a claim-bounded research prototype, not a
+field-qualified controller or autonomous emergency system.
+\end{abstract}
+
+\noindent\textbf{Keywords:} hydrogen refueling station; digital twin; external
+validation; HyRAM; process safety; decision support
+
+\section{Introduction}
+Hydrogen refuelling couples high-pressure storage, compression, cascade dispatch,
+pre-cooling, flow control and vehicle-tank heat transfer. A useful digital twin
+must conserve mass and energy, reproduce the fast-fill transient, expose safety
+states and distinguish measured or simulated evidence from assumed inputs.
+The physical decomposition follows the principal station elements in ISO
+19880-1, while a conforming light-duty fuelling controller would additionally
+require an authorized SAE J2601 implementation \cite{iso19880,saej2601}.
+Published models have addressed vehicle filling and partial or whole-station
+dynamics, including the H2FillS formulation \cite{kuroki2021}, optimization of
+cascade refuelling \cite{rothuizen2013}, vehicle-side pressure loss
+\cite{rothuizen2020}, and multi-zone tank heat transfer \cite{xiao2024}. These
+works also show why agreement at one component boundary cannot establish the
+accuracy of an entire station controller.
+
+Safety-oriented twins add a second model family. Release, dispersion, jet-fire,
+overpressure and quantitative-risk calculations are commonly delegated to a
+consequence package such as HyRAM+ \cite{hyram2024,hyram2025}. A third layer now
+uses large language models (LLMs) to turn process and consequence results into
+operator-facing explanations. The layers have different evidence requirements.
+Passing unit tests cannot validate thermodynamics; matching a public consequence
+API cannot validate site geometry; and fluent text cannot demonstrate safe or
+useful advice.
+
+This work asks four separate questions:
+\begin{enumerate}
+  \item How accurately does the vehicle-tank submodel reproduce public fast-fill
+  experiments when measured boundary conditions are imposed?
+  \item Does the complete controller--cascade--precooler--vehicle loop meet
+  predeclared engineering error screens?
+  \item Does the production adapter preserve the inputs and outputs of the exact
+  installed HyRAM+ package?
+  \item Can process- and evidence-linked SAGA responses improve incident decision
+  support relative to deterministic alarms without increasing unsafe advice?
+\end{enumerate}
+The first three questions have reproducible results. The fourth has a frozen
+protocol but no external expert result at the time of this draft.
+
+\section{Materials and methods}
+\subsection{Digital-twin boundary}
+The virtual station represents tube-trailer supply, a three-stage compressor,
+low-, medium- and high-pressure storage banks, two independently dispatched
+dispenser circuits, pre-cooling, hose line-pack and Type-IV vehicle vessels.
+Sampled supervisory and safety logic is coupled to continuous mass and energy
+balances. Process operations remain event-driven: the state is held when no
+transfer, compression, venting or incident request is active. The visual scene,
+simulated sensors and emergency-action interface are research and training
+components; they are not an as-built survey or a certified safety instrumented
+system.
+
+The process model owns pressure, temperature, inventory and mass flow. A release
+snapshot, including source state and explicitly selected aperture, is passed to
+the consequence layer. The LLM is called only after deterministic process,
+alarm and available consequence fields have been assembled. Sensor analysis,
+the main conversational interface and the separate SAGA retrieval service have
+isolated API contracts so that a command request is not silently replaced by a
+periodic status report.
+
+\subsection{Vehicle-tank model}
+The Type-IV surrogate uses gas, liner and composite-shell energy states. For gas
+mass $m_g$, gas internal energy $U_g$ and effective volume $V_{\mathrm{eff}}$,
+real-gas properties close the state through density and specific internal energy:
+\begin{align}
+ \rho_g &= m_g/V_{\mathrm{eff}}, & u_g &= U_g/m_g,\\
+ (p_g,T_g,h_g) &= \mathcal{P}_{\mathrm{H_2}}(\rho_g,u_g).
+\end{align}
+The property operator $\mathcal{P}_{\mathrm{H_2}}$ is implemented with CoolProp;
+no ideal-gas density substitution is used. The balances are
+\begin{align}
+ \frac{dm_g}{dt} &= \dot m_{\mathrm{in}}-\dot m_{\mathrm{out}},\\
+ \frac{dU_g}{dt} &= \dot m_{\mathrm{in}}h_{\mathrm{in}}
+ -\dot m_{\mathrm{out}}h_g-UA_{gl}(T_g-T_l),\\
+ C_l\frac{dT_l}{dt} &= UA_{gl}(T_g-T_l)-UA_{ls}(T_l-T_s),\\
+ C_s\frac{dT_s}{dt} &= UA_{ls}(T_l-T_s)-UA_{sa}(T_s-T_{\mathrm{amb}}).
+\end{align}
+The fixed volume is scaled from 0.122 m$^3$ per 4.7 kg nominal capacity because
+machine-readable vessel geometry was not present in the public overview. This is
+an explicit source of structural uncertainty.
+
+\subsection{Public fast-fill data and frozen split}
+Five checksum-verified archives from H2Protocol/Powertech Labs were normalized
+into 36 SAE J2601 Tables Method fills \cite{schneider2014}. The model uses the
+experimental clock and is interpolated to measured timestamps without dynamic
+time warping. An experiment-only mass-closure screen compares integrated measured
+flow with the nominal inventory change inferred from reported state of charge
+(SOC). The admissible ratio was fixed at 0.8--1.2; one repeat-fill case was
+excluded because its ratio was 1.428. This screen contains no model prediction.
+
+Every third laboratory test (3, 6, \ldots, 36) forms a frozen 12-fill validation
+set. The remaining 23 admissible fills estimate two global parameters: effective
+volume multiplier and gas-to-liner heat-transfer multiplier. The fitted values
+were 1.05199 and 64.43011, respectively. Optimization used bounded nonlinear
+least squares in log-parameter space. No case-specific parameter was fitted.
+Case-level uncertainty was estimated with 10,000 nonparametric bootstrap
+resamples using seed 2601.
+
+For a variable $y$ with $n$ aligned samples, the principal metric is
+\begin{equation}
+ \mathrm{RMSE}(y)=\sqrt{\frac{1}{n}\sum_{i=1}^{n}
+  (y_i^{\mathrm{model}}-y_i^{\mathrm{measured}})^2}.
+\end{equation}
+Pressure, gas temperature and density-based SOC were evaluated separately.
+
+\subsection{Complete closed-loop evaluation}
+The full loop adds a sampled pressure-ramp controller, PI flow command, cascade
+selection, finite valve motion, line-pack, precooling and station-to-vehicle
+hydraulics. The global tank parameters were frozen before this evaluation. A
+single dispenser flow-area multiplier of 1.25 was selected on eight declared
+development fills.
+
+Initial comparison exposed three structural errors: flow-limited anti-windup
+could reverse the integral while pressure error remained positive; a fixed
+$-20\,^{\circ}$C precooler trip stopped warmer delivery classes; and cascade
+selection could regress to a lower bank. The corrected implementation uses
+conditional-integration anti-windup, a delivery-class-dependent trip while
+preserving the default T40 limit, monotonic low-to-medium-to-high dispatch, and
+independent dispatch state for the two dispenser circuits. No fitted parameter
+was changed after these corrections.
+
+Engineering screens were fixed at pressure RMSE $\leq5$ MPa, temperature RMSE
+$\leq10\,^{\circ}$C and absolute final SOC error $\leq5$ percentage points. These
+are project screens, not SAE conformance limits. Eleven comparison fills had
+already been inspected before the structural repair; their later results are
+therefore internal confirmation rather than an untouched holdout.
+
+\subsection{Consequence-model verification}
+HyRAM+ receives immutable release state and geometry from the twin. The
+production adapter reports (i) the directional centreline distance to 4 vol\%
+hydrogen for an unignited jet, (ii) sampled 5 kW m$^{-2}$ jet-fire heat flux and
+(iii) sampled 5 kPa unconfined overpressure. The latter two distances are bounded
+by the configured observation coordinates and are not regulatory setbacks.
+
+Verification used the exact public HyRAM+ v6.1 tag and commit
+\texttt{b45abf9a6d995951311be6aad836f1874e4d420b}. Installed Python-source hashes
+were compared with the clone. Sandia's upstream plume, heat-flux and unconfined
+overpressure validation tests were executed unchanged. Three station-scale parity
+cases then called both the production adapter and the public HyRAM API and compared
+every translated field with relative tolerance $10^{-12}$ and absolute tolerance
+$10^{-9}$.
+
+\subsection{Incident decision-support evaluation}
+The incident study population is the hydrogen-refuelling-station subset of the
+European Commission JRC HIAD 2.2 database \cite{hiad2026}. Of 34 identified HRS events, 33 contain
+at least one emergency action, lesson or corrective field. Only a coordinator-
+approved historical observation is supplied to the system; recorded response and
+lesson fields are withheld as reviewer reference material.
+
+The frozen protocol compares a deterministic alarm, three direct one-pass SAGA
+responses and three SAGA responses with standards-document retrieval. Output is
+masked and randomized. At least two independent reviewers with documented
+hydrogen/process-safety experience score situation accuracy, immediate-action
+correctness, priority, stabilization/restart, prevention, evidence grounding and
+operator usability from 1 to 5. Critical omission and unsafe advice are separate
+binary endpoints. The event is the unit of inference. Repeats and reviewers are
+averaged within event before paired bootstrap confidence intervals and Wilcoxon
+signed-rank comparisons are calculated. No LLM-as-judge score is accepted as the
+primary endpoint. Holdout responses and ratings have not yet been collected.
+
+\section{Results}
+\subsection{Measured-boundary tank validation}
+Table~\ref{tab:tank} reports the frozen split. Validation errors were lower than
+calibration means for all three primary quantities, although uncertainty remains
+wide across heterogeneous fill conditions. Figure~\ref{fig:parity} shows aligned
+pressure and temperature predictions; Figure~\ref{fig:cases} exposes the
+case-to-case error distribution rather than only an aggregate value.
+
+\begin{table}[htbp]
+\centering
+\caption{Type-IV tank-model results. Parentheses are case-bootstrap 95\% confidence intervals for the mean.}
+\label{tab:tank}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Split & Cases & Pressure RMSE & Temperature RMSE & SOC RMSE \\
+ & & (MPa) & ($^{\circ}$C) & (percentage points) \\
+\midrule
+Calibration & 23 & 4.561 (3.242--6.219) & 7.545 (5.750--9.519) & 4.396 (3.469--5.401) \\
+Validation & 12 & 3.905 (2.572--5.877) & 4.694 (3.609--5.985) & 3.812 (2.884--4.873) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/tank_parity.png}
+\caption{Measured and predicted tank pressure and gas temperature on the
+experimental time bases. Points are semi-transparent so repeated trajectories
+remain visible. The dashed line denotes equality.}
+\label{fig:parity}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/tank_case_rmse.png}
+\caption{Case-level pressure and gas-temperature RMSE. The frozen validation
+cases are every third laboratory test; L10 was excluded by the pre-model
+mass-closure screen and therefore has no bar.}
+\label{fig:cases}
+\end{figure}
+
+The fitted gas-to-liner multiplier is large and the optimizer's reported first-
+order optimality (441.5) indicates a shallow or imperfectly resolved optimum even
+though its termination flag was successful. The fit should therefore be treated
+as an effective heat-transfer calibration, not an identified physical coefficient.
+
+\subsection{Negative full-loop validation result}
+Structural corrections improved the eleven internal comparison fills from mean
+RMSE values of 11.842 MPa, 10.292 $^{\circ}$C and 15.347 SOC percentage points to
+7.213 MPa, 9.179 $^{\circ}$C and 10.112 percentage points. Nevertheless, every
+comparison fill failed at least one project screen. The eight development fills
+also passed zero of eight screens (Table~\ref{tab:closed}).
+
+\begin{table}[htbp]
+\centering
+\caption{Closed-loop performance after structural correction. The comparison
+set is internal confirmation because it had been inspected previously.}
+\label{tab:closed}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Set & Pass/all & Pressure RMSE & Temperature RMSE & SOC RMSE \\
+ & & (MPa) & ($^{\circ}$C) & (percentage points) \\
+\midrule
+Development & 0/8 & 13.695 & 21.634 & 17.668 \\
+Internal comparison & 0/11 & 7.213 & 9.179 & 10.112 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The measured-boundary tank result therefore cannot be used as validation of the
+controller, cascade schedule, precooler or dispenser boundary. Remaining error is
+concentrated in delivery scheduling and station boundary representation, for which
+the public files do not expose the complete proprietary lookup table or every
+hardware command transition.
+
+\subsection{HyRAM+ source, tests and adapter parity}
+The installed and upstream v6.1 Python sources matched over 38 files with aggregate
+SHA-256 \texttt{d5865e1ae7b5c77b985e06b45d7a5607543703c1834fc50f7c5d96f32a0c22de}.
+All 47 selected upstream validation tests passed, comprising 803 subtests and seven
+expected physics warnings. Production-adapter outputs matched independent public-
+API calls for all three parity cases (Table~\ref{tab:hyram}).
+
+\begin{table}[htbp]
+\centering
+\caption{Station-scale HyRAM+ 6.1 adapter parity. The plume distance is directional.}
+\label{tab:hyram}
+\small
+\begin{tabular}{lrrr}
+\toprule
+Case & Modelled flow (kg s$^{-1}$) & 4 vol\% distance (m) & Visible flame (m) \\
+\midrule
+Low bank, 1 mm & 0.016613 & 4.339 & 2.326 \\
+Mid bank, 2 mm, cold & 0.108305 & 11.382 & 6.057 \\
+High bank, 3 mm, override & 0.296366 & 17.224 & 9.246 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This result verifies translation, unit handling, coordinate use, contour selection
+and output indexing for the installed package. It does not independently repeat
+the experiments underlying Sandia's validation report, validate the virtual
+station layout or establish an exclusion zone. A public 22-release open-channel
+dataset \cite{henriksen2025} was reviewed but was not force-fitted: its downward
+4.6 mm jet in a 5.8 m $\times$ 0.9 m $\times$ 0.8 m channel is not geometrically
+applicable to the current outdoor free-jet adapter.
+
+\subsection{Decision-support study status}
+The deterministic split produces a 24-case holdout casebook and nine development
+cases, but all vignettes remain unapproved until coordinator leakage review and
+qualified expert sign-off. Consequently, no SAGA effectiveness, safety, latency,
+omission-rate or inter-rater-agreement result is reported in this draft. This empty
+result is deliberate: substituting model self-assessment would violate the frozen
+protocol.
+
+\section{Discussion}
+\subsection{What is externally supported}
+The strongest independent result concerns vehicle-tank thermodynamics under
+measured inlet mass flow and temperature. It supports use of the tank submodel for
+research comparisons within the tested fast-fill envelope, subject to the
+effective geometry and heat-transfer assumptions. The result is strengthened by
+a deterministic split, experiment-only exclusion rule, global rather than case-
+specific fitting, trace alignment on the original clock and case-level bootstrap
+intervals.
+
+The complete-loop result is informative precisely because it is negative. A
+visually plausible pressure ramp and a stable numerical integration are
+insufficient evidence for a station controller. The retained failures identify
+the missing information needed for the next experiment: dispenser valve command
+and position, upstream and downstream pressure at the PCV, delivered-gas
+temperature, bank-selection state and high-rate vehicle inlet mass flow. A new
+external set must be collected after freezing the next protocol representation;
+the eleven previously inspected cases cannot regain holdout status.
+
+\subsection{Consequence calculations and risk communication}
+The HyRAM verification separates source identity, upstream physics tests and local
+adapter parity. This supports a narrow software claim. It does not justify drawing
+the 4 vol\% centreline distance as a spherical safety radius, nor interpreting the
+last sampled 5 kW m$^{-2}$/5 kPa point as a legally sufficient setback. Choked-flow
+cases may cause HyRAM to recompute mass flow from source pressure, temperature,
+aperture and discharge coefficient; both requested and modelled flows must remain
+visible in any reported result.
+
+\subsection{Evidence-gated language-model assistance}
+The LLM is positioned after deterministic calculations and receives structured
+sensor provenance, scenario status, consequence fields and uncertainty flags.
+This order prevents text generation from fabricating a missing damage radius.
+The planned three-arm incident study separates the effects of language generation
+and standards retrieval. Its primary value will depend on qualified blinded
+ratings, unsafe-advice and critical-omission rates, not stylistic preference.
+Until those data exist, SAGA remains an interface and study hypothesis.
+
+\subsection{Limitations}
+All live sensors, valves, CCTV views and operator actions are simulated. No field
+PLC, dispenser, gas detector or station historian has been connected. Vessel
+geometry is inferred from nominal capacity scaling. The tank is lumped and cannot
+resolve local hot spots. Compressor maps, valve coefficients, thermal hardware,
+weather, occupancy and site geometry are scenario assumptions. The public J2601
+archives do not supply the complete proprietary protocol implementation. HyRAM
+outputs are conditional consequences, not certification. The HIAD narratives are
+retrospective and may contain incomplete or heterogeneous reporting. Finally, the
+SAGA study has no locked expert ratings yet.
+
+\section{Conclusions}
+A hydrogen-station safety digital twin was evaluated with separate evidence gates
+for component physics, full-loop behavior, consequence-software translation and
+LLM decision support. The measured-boundary Type-IV tank model achieved validation
+mean RMSE values of 3.905 MPa, 4.694 $^{\circ}$C and 3.812 SOC percentage points.
+The complete loop did not meet the declared screens, even after structural defects
+were corrected. The HyRAM+ adapter reproduced the installed v6.1 public API while
+the identical upstream source passed its available validation tests. The incident
+decision-support experiment is specified but incomplete. These results support a
+reproducible research prototype and a disciplined validation workflow; they do
+not support claims of SAE-compliant fuelling control, field safety certification
+or autonomous emergency management.
+
+\section*{Data and code availability}
+Source code, study scripts, frozen machine-readable evidence and documentation are
+available under the MIT License at
+\url{https://github.com/lyullee/hydrogen-station-sim}; archived release DOI:
+\href{https://doi.org/10.5281/zenodo.23084421}{10.5281/zenodo.23084421}.
+Third-party raw archives are not redistributed where their terms do not provide a
+redistribution licence. The repository records landing pages, checksums, acquisition
+instructions, split rules and analysis seeds. HyRAM+ remains governed by its own
+GPL-3.0 licence. The eventual SAGA study archive must include masked responses,
+locked ratings and the allocation key without API credentials.
+
+\section*{CRediT authorship contribution statement}
+\textit{To be completed by the authors before submission.}
+
+\section*{Declaration of competing interest}
+\textit{To be completed and approved by every author before submission.}
+
+\section*{Funding}
+\textit{Funding source and grant number, or a no-specific-funding statement, must
+be confirmed before submission.}
+
+\section*{Acknowledgements}
+\textit{Institutional and technical acknowledgements to be confirmed.}
+
+\section*{Declaration of generative AI and AI-assisted technologies in the
+manuscript preparation process}
+During preparation of this working draft, the authors used OpenAI Codex to assist
+with drafting, structure and formatting. The authors must review and edit all
+content, references and claims before submission and take full responsibility for
+the final article.
+
+\begin{thebibliography}{99}
+\bibitem{schneider2014}
+J. Schneider et al., Validation and sensitivity studies for SAE J2601,
+\textit{SAE International Journal of Alternative Powertrains} 3(2) (2014),
+\href{https://doi.org/10.4271/2014-01-1990}{doi:10.4271/2014-01-1990}.
+
+\bibitem{kuroki2021}
+T. Kuroki et al., Thermodynamic modeling of hydrogen fueling process from high
+pressure storage tanks to vehicle tank, \textit{International Journal of Hydrogen
+Energy} 46 (2021) 22004--22017,
+\href{https://doi.org/10.1016/j.ijhydene.2021.04.037}{doi:10.1016/j.ijhydene.2021.04.037}.
+
+\bibitem{rothuizen2013}
+E. Rothuizen et al., Optimization of hydrogen vehicle refueling via dynamic
+simulation, \textit{International Journal of Hydrogen Energy} (2013),
+\href{https://doi.org/10.1016/j.ijhydene.2013.01.161}{doi:10.1016/j.ijhydene.2013.01.161}.
+
+\bibitem{rothuizen2020}
+E. Rothuizen et al., Dynamic simulation of the effect of vehicle-side pressure
+loss of hydrogen fueling process, \textit{International Journal of Hydrogen Energy}
+(2020), \href{https://doi.org/10.1016/j.ijhydene.2020.01.071}{doi:10.1016/j.ijhydene.2020.01.071}.
+
+\bibitem{xiao2024}
+J. Xiao et al., Thermodynamic and heat transfer models for refueling hydrogen
+vehicles: formulation, validation and application, \textit{International Journal
+of Hydrogen Energy} (2024),
+\href{https://doi.org/10.1016/j.ijhydene.2023.06.081}{doi:10.1016/j.ijhydene.2023.06.081}.
+
+\bibitem{hyram2024}
+Sandia National Laboratories, \textit{HyRAM+ Version 5.1.1 Physics Validation},
+SAND2024-14886 (2024), \url{https://www.osti.gov/biblio/2480221}.
+
+\bibitem{hyram2025}
+Sandia National Laboratories, \textit{HyRAM+ Technical Reference Manual},
+SAND2025-04942 (2025),
+\href{https://doi.org/10.2172/2563814}{doi:10.2172/2563814}.
+
+\bibitem{henriksen2025}
+M. Henriksen, H.E. Fossum, E. Akervik, D. Bjerketvedt, Experimental data of
+hydrogen dispersion in an open-ended rectangular channel, version 2 (2025),
+\href{https://doi.org/10.23642/usn.26117989.v2}{doi:10.23642/usn.26117989.v2}.
+
+\bibitem{hiad2026}
+European Commission Joint Research Centre, \textit{European Hydrogen Incidents
+and Accidents Database, HIAD 2.2}, Petten, The Netherlands (accessed 2026).
+
+\bibitem{iso19880}
+ISO, \textit{ISO 19880-1:2020 Gaseous hydrogen---Fuelling stations---Part 1:
+General requirements}, International Organization for Standardization (2020).
+
+\bibitem{saej2601}
+SAE International, \textit{SAE J2601: Fueling Protocols for Light Duty Gaseous
+Hydrogen Surface Vehicles}, 2020 edition.
+\end{thebibliography}
+
+\end{document}
