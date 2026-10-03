@@ -607,3 +607,41 @@ It is therefore registered as **REPORT_CONTEXT_AND_DATA_REQUEST_LEAD**, not as
 an eligible untouched full-loop holdout. The prepared request is
 `research/FCH2RAIL_DATA_REQUEST_DRAFT.md`. No figure digitisation is used for
 the primary validation claim.
+
+## 2026-10-04 JHFC/NEDO six-run data availability follow-up
+
+The 2012 *International Journal of Hydrogen Energy* study by Monde et al.
+reports six practical 35/70 MPa filling conditions from four vehicle tanks and
+states that complete measurements had been opened for analysis. The described
+channels include vehicle-tank pressure and hydrogen temperature plus the
+station-supplied pressure and temperature:
+<https://doi.org/10.1016/j.ijhydene.2011.12.136>.
+
+The public article, the official JHFC archive and indexed supplementary
+material were checked. They expose the paper, plots and project documents, but
+not a machine-readable six-run logger archive, a common-time-base export or
+reuse terms. The JHFC page is an archived project portal with reports and
+station specification sheets, not a raw-data catalogue:
+<https://www.jari.or.jp/jhfc/>.
+
+This source is therefore recorded as **REPORT_CONTEXT_AND_DATA_REQUEST_LEAD**.
+The historical statement that data were “made available” is a lead for the
+authors and JARI/NEDO custodians, not evidence of current public access. No
+figure digitisation is promoted to the primary claim. The independent
+full-loop gate remains open until the six raw runs, channel dictionary,
+calibration/provenance and reuse terms are received and frozen.
+
+## 2026-10-04 PRHYDE public-deliverable inspection
+
+The public PRHYDE D6.7 deliverable documents real ZBT and Nikola campaigns on
+240 L H70, 350 L H50, 322 L H35 and 165 L H70 tanks. Its test matrices and
+model-comparison figures describe pressure, temperature, flow and protocol
+conditions in detail:
+<https://lbst.de/wp-content/uploads/2023/04/PRHYDE_Deliverable-D6-7_Results_as_Input_for_Standardisation_V1-2_final_Apr_2023.pdf>.
+
+The 222-page PDF was downloaded and checked for attachments and machine-readable
+logger exports. It contains Tables 16--19, plots and aggregate error summaries,
+but no CSV/XLSX time-series file or common-time-base archive. It is therefore
+retained as **REPORT_PLOT_SUMMARY_ONLY** and a data-request lead. The report's
+figures are not digitised into the primary validation set; the full-loop gate
+remains unchanged.

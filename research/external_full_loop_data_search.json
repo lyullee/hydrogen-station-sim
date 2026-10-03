@@ -539,10 +539,14 @@
       "public_raw_data": false,
       "decision": "REPORT_PLOT_SUMMARY_ONLY",
       "inspection": {
-        "finding": "The public deliverable documents real ZBT and Nikola campaigns on 240 L H70, 350 L H50, 322 L H35 and 165 L H70 tanks, with measured pressure, temperature and flow shown in validation figures and test matrices.",
+        "finding": "The public 222-page deliverable documents real ZBT and Nikola campaigns on 240 L H70, 350 L H50, 322 L H35 and 165 L H70 tanks, with measured pressure, temperature and flow shown in validation figures and test matrices (Tables 16-19).",
+        "local_artifact": "tmp/PRHYDE_D6-7.pdf",
+        "local_artifact_sha256": "3ff0cd1a7487dc634a65dd8696cfb3572621c8edcc2e7ae4e92ed214728045ab",
+        "raw_attachment_search": "No CSV/XLSX or machine-readable logger attachment is present in the public deliverable; the model-comparison pages contain plots and aggregate error summaries.",
         "raw_common_timebase": false,
         "machine_readable_trace": false,
-        "role": "strong protocol and experiment description plus a data-request lead; digitised plots are not accepted as the primary untouched validation set"
+        "role": "strong protocol and experiment description plus a data-request lead; digitised plots are not accepted as the primary untouched validation set",
+        "claim_limit": "The public report supports protocol/test-matrix context and request targeting only; it does not close the numerical holdout gate."
       }
     },
     {
@@ -1043,6 +1047,30 @@
         "request_draft": "research/DENG_2025_HIGHFLOW_DATA_REQUEST_DRAFT.md"
       },
       "claim_limit": "Use only as independent design/operating-range context until raw timestamped flow, pressure, temperature, tank geometry and protocol metadata are received and frozen."
+    },
+    {
+      "id": "monde_2012_jhfc_open_data_claim",
+      "title": "Estimation of temperature change in practical hydrogen pressure tanks being filled at high pressures of 35 and 70 MPa",
+      "doi": "10.1016/j.ijhydene.2011.12.136",
+      "url": "https://doi.org/10.1016/j.ijhydene.2011.12.136",
+      "publisher": "International Journal of Hydrogen Energy / JHFC-NEDO-JARI",
+      "public_raw_data": false,
+      "decision": "REPORT_CONTEXT_AND_DATA_REQUEST_LEAD",
+      "inspection": {
+        "reported_scope": "Six experimental conditions from four practical vehicle tanks at 35 and 70 MPa; the article states that complete data sets had been opened for analysis.",
+        "reported_channels": [
+          "vehicle-tank pressure",
+          "vehicle-tank hydrogen temperature",
+          "station supplied pressure",
+          "station supplied temperature",
+          "fill time and initial/final conditions"
+        ],
+        "data_availability_finding": "The public article and JARI/JHFC archive were inspected, but no machine-readable six-run file, supplementary archive, common-time-base logger or reuse terms could be located. The wording that data were 'made available' is therefore treated as a lead, not as access to the underlying data.",
+        "raw_common_timebase": "not publicly located",
+        "role": "High-value independent Japanese 35/70 MPa tank-thermal data-request lead; request the six raw runs, channel dictionary, calibration/provenance and publication permission.",
+        "exclusion_reason": "Without the alleged files and an immutable pre-access manifest, the paper cannot close the independent holdout gate and its plots are not digitised into the primary claim."
+      },
+      "claim_limit": "Use only for literature context and data-request targeting until the underlying timestamped files are obtained and frozen."
     }
   ],
   "next_action": "send the prepared CARB/NRC/IJHE high-flow/FCH2RAIL/JRC/NREL/BAM/Empa/DLR data requests through approved custodians, and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest",
@@ -1270,6 +1298,26 @@
       ],
       "result": "This recent IJHE experiment is a strong request lead for independent large-tank thermal validation, but it does not close the current full-loop gate without raw logger files and provenance.",
       "claim_limit": "Do not convert article figures or summary error claims into the repository primary validation set."
+    },
+    "japanese_jhfc_open_data_followup": {
+      "scope": "follow-up on a 2012 IJHE paper's statement that complete Japanese JHFC/NEDO/JARI filling data had been opened",
+      "sources": [
+        {
+          "id": "monde_2012_jhfc_open_data_claim",
+          "url": "https://doi.org/10.1016/j.ijhydene.2011.12.136",
+          "finding": "The article reports six practical 35/70 MPa tank-filling conditions and describes vehicle-tank temperature together with station supplied pressure/temperature. The public article, JARI/JHFC archive and indexed supplementary material were checked, but no machine-readable six-run archive, common-time-base logger or reuse terms were located.",
+          "decision": "REPORT_CONTEXT_AND_DATA_REQUEST_LEAD"
+        },
+        {
+          "id": "jari_jhfc_archive",
+          "url": "https://www.jari.or.jp/jhfc/",
+          "finding": "The official JHFC page is an archived project portal with reports, brochures and station specification sheets; it does not expose the six raw filling runs or a public data catalogue link.",
+          "decision": "ARCHIVE_CONTEXT_ONLY"
+        }
+      ],
+      "result": "The paper's historical phrase that data were made available is a high-value custodian lead, but it is not evidence that a reproducible public archive is currently accessible. No figure digitisation is promoted to the primary claim.",
+      "next_action": "Request the six raw runs from the paper authors, JARI/NEDO custodians and any cited JHFC repository, with channel dictionary, calibration, protocol and reuse terms.",
+      "claim_limit": "Do not close the independent full-loop gate until the files are received, hashed and scored under a pre-access protocol freeze."
     },
     "claim_limit": "Do not use article figures, aggregate event summaries or static inventories as primary full-loop numerical validation. Promote a source only after de-identified raw files, metadata, reuse terms and a pre-access freeze are recorded."
   },
