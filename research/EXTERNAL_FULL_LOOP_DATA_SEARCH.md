@@ -50,6 +50,7 @@ immutable digest are recorded.
 | Hungarian HRS digital-twin validation, Hasulyó, DOI 10.32604/ee.2026.081099 | Open-access paper reports operational pressure, temperature, mass-flow and refueling comparisons from an existing Hungarian HRS. | **Request data.** The paper's data-availability statement says supporting data are unavailable because of participant consent and legal restrictions. |
 | MetHyTrucks HySaM system measurements, Zenodo DOI 10.5281/zenodo.20590842 | CC BY 4.0 record with three downloadable XLSX time series from hydrogen sampling-system experiments; the files contain 0.5 s pressure/temperature/flow-like channels. | **Measurement-system reference only.** There are no vehicle/tank/refuelling fields or station operating context, so this cannot close the station-to-vehicle full-loop gate. |
 | BAM demonstration-HRS monitoring study, DOI 10.3390/app16157856 | 2026 paper reports three days of real HRS monitoring across eight compressor/storage/dispenser safety sensors and chronological field deployment. | **Request data.** The data-availability statement directs requests to the corresponding author; no raw synchronized archive or vehicle-side full-loop data are publicly downloadable. |
+| An et al. Samcheok HRS digital-twin sensor table, DOI 10.3390/su16219482 | Open-access paper prints a 24-channel HRS sensor schema and 1 s normal-operation examples covering trailer, chillers, compressors and storage banks. | **Sensor benchmark only.** Vehicle/receptacle pressure and mass-flow channels are absent from the printed table; abnormal compressor/chiller/dispenser values were artificially created, so the paper cannot close the physical full-loop gate. |
 
 ## CARB artifact inspection
 
@@ -101,6 +102,24 @@ The article is a useful independent operating-range lead:
 These values are suitable for operating-range and face-validity checks only.
 The original logger export, sampling interval, calibration records and reuse
 permission must be requested before considering this source for a frozen
+full-loop holdout.
+
+## Samcheok HRS sensor-table artifact inspection
+
+The open-access paper *Digital Twin-Based Hydrogen Refueling Station (HRS)
+Safety Model: CNN-Based Decision-Making and 3D Simulation* provides a useful
+public sensor-schema benchmark:
+
+- URL: <https://www.mdpi.com/2071-1050/16/21/9482>
+- It documents 24 channels with units and equipment mapping, and prints 1 s
+  normal-operation samples for trailer, chiller, compressor and storage-bank
+  signals.
+- The paper states that abnormal compressor, chiller and dispenser data were
+  created artificially, and its printed table does not contain vehicle-side
+  pressure or mass-flow channels.
+
+The artifact is therefore suitable for sensor naming, unit and normal-range
+cross-checks only. It is not counted as an independent vehicle-fuelling
 full-loop holdout.
 
 ## NREL HITRF report artifact inspection

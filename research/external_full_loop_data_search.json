@@ -86,6 +86,22 @@
       }
     },
     {
+      "id": "samcheok_hrs_sensor_table_2024",
+      "title": "Samcheok HRS digital-twin sensor table and normal-operation examples",
+      "url": "https://www.mdpi.com/2071-1050/16/21/9482",
+      "publisher": "Sustainability / MDPI",
+      "public_raw_data": false,
+      "decision": "SENSOR_SCHEMA_BENCHMARK_ONLY",
+      "inspection": {
+        "reported_scope": "24-channel HRS sensor schema with printed 1 s normal-operation examples for trailer, chiller, compressor and storage-bank signals.",
+        "vehicle_or_receptacle_pressure": false,
+        "mass_flow_or_transferred_mass": false,
+        "abnormal_data": "Artificially created for components where field abnormal data were unavailable.",
+        "role": "Public sensor naming, units and normal-range cross-check; not a physical full-loop holdout.",
+        "exclusion_reason": "Printed data do not include vehicle-side pressure or mass flow, and abnormal conditions are not measured field observations."
+      }
+    },
+    {
       "id": "nrel_h2fills",
       "title": "H2FillS: Hydrogen Filling Simulation",
       "url": "https://www.nrel.gov/hydrogen/h2fills",
@@ -676,6 +692,11 @@
         "id": "zhao_2020_cn_35_70_mpa_dispenser",
         "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
         "finding": "Real-station 35/70 MPa fill study exposes four CSV downloads containing only initial/final summary tables; reported pressure/temperature/flow plots lack a downloadable common-time-base trace, so retain as a summary benchmark and raw-trace request lead."
+      },
+      {
+        "id": "samcheok_hrs_sensor_table_2024",
+        "url": "https://www.mdpi.com/2071-1050/16/21/9482",
+        "finding": "Open paper prints a 24-channel HRS sensor schema and 1 s normal-operation examples, but vehicle-side pressure/mass-flow channels are absent and abnormal component values were artificially created; retain as a sensor-schema benchmark only."
       },
       {
         "id": "h2_stations_export_api",
