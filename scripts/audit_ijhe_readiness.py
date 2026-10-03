@@ -648,6 +648,21 @@ def audit(root: Path) -> dict[str, object]:
         {"direct_vs_alarm": direct, "alarm": alarm_summary, "direct": direct_summary},
     ))
 
+    grounding_path = root / "research/llm_evidence_grounding_validation.json"
+    grounding = _json(grounding_path)
+    grounding_pass = bool(
+        (grounding or {}).get("status") == "software_contract_verified"
+        and ((grounding or {}).get("tests") or {}).get("full_suite", {}).get("failed") == 0
+    )
+    gates.append(_gate(
+        "llm_evidence_grounding_contract",
+        "PASS" if grounding_pass else "PENDING",
+        "Main and selected-sensor assistants receive traceable evidence with explicit calculation and uncertainty status.",
+        str(grounding_path.relative_to(root)),
+        "Manifest schema, normal/emergency distinction, contradiction guard and full regression suite.",
+        grounding or "missing",
+    ))
+
     sensitivity_path = root / "research/hiad_design_sensitivity.json"
     sensitivity = _json(sensitivity_path)
     sensitivity_pass = bool(

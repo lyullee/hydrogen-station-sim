@@ -30,6 +30,7 @@ from .operations import ProcessRuntime, RELIEF_TARGETS
 from .risk.runtime_backend import load_hyram_backend
 from .risk.sensor_assessment import assess_sensor_cases, available_sensor_inputs
 from .risk.scenario_planning import parse_saga_plan
+from .llm_grounding import build_evidence_manifest
 from .safe_operation import SafeOperationSample
 from .simulation_clock import SimulationClock
 from .virtual_safety import VALVE_LABELS, ZONES, RECOVERY_CHECKS, suggested_actions
@@ -2222,6 +2223,11 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
     impact_results = [row for row in sensor_impacts + [row for row in legacy_impacts
         if row.get("release_id") not in assessed_releases]
         if row.get("calculation_status") == "calculated"]
+    evidence_manifest = build_evidence_manifest(
+        frame, sensor_values, impact_results, show_impact_results,
+        active_conditions=matched_rules + reference_rules,
+        question=request.question,
+    )
     if request.direct:
         # Keep the live monitor on the dedicated low-latency API even for
         # alarms. Consequences are calculated first from this same snapshot;
@@ -2256,6 +2262,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
                 "output_language": request.language,
                 "impact_calculation_attempted": show_impact_results,
                 "impact_results": impact_results[:3],
+                "evidence_manifest": evidence_manifest,
                 "recent_dialogue": [{"role": turn.role, "content": turn.content[:400]}
                                     for turn in request.history[-4:]],
                 "simulation_time_s": frame.get("time_s"),
@@ -2340,11 +2347,13 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
                                 "calculated_impact_count": len(impact_results)},
             "show_impact_results": show_impact_results,
             "impact_results": impact_results,
+            "evidence_manifest": evidence_manifest,
             "hazop_direct": direct_result,
             "hazop_sop": direct_sop,
             "hazop_hit_count": len(direct_hits),
         }
     context = {"impact_results":impact_results,
+        "evidence_manifest": evidence_manifest,
         "impact_calculation_attempted":show_impact_results,
         "station":"H70 reference simulation", "time_s":frame.get("time_s"),
         "fire_detection": analysis.get("fire_detection"),
@@ -2380,6 +2389,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
            "현재 주의·경보에 대응하여 서버가 피해영향예측을 시도했지만 정량 결과가 확보되지 않았습니다. 결과 수치를 만들거나 재계산을 권하지 말고 현재 위험상태와 우선 조치를 설명하세요. "
            if emergency_context else
            "정상 운전에서는 사용자가 사고 영향을 요청한 경우에만 계산 결과를 설명하세요. 요청하지 않았다면 사고 수치를 언급하지 마세요. ") +
+        "evidence_manifest를 응답의 근거 목록으로 사용하고 evidence_digest를 임의로 바꾸지 마세요. "
         "impact_results의 계산 성공 항목만 수치 결과로 설명하세요. "
         "calculation_basis=SENSOR_BASED_HYPOTHESIS는 실제 누출이 아닌 1 mm 가정 시나리오이며, ACTIVE_RELEASE_CURRENT_SENSORS는 현재 물리 누출입니다. 둘을 혼동하지 마세요. "
         "calculation_status=calculated이면 이미 계산된 값입니다. 피해영향 계산이나 엔진 실행을 사용자에게 권하거나 요청하지 마세요. "
@@ -2437,7 +2447,8 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
                            "findings":analysis.get("findings") or [],
                            "calculated_impact_count":len(impact_results)},
         "show_impact_results":show_impact_results,
-        "impact_results":impact_results}
+        "impact_results":impact_results,
+        "evidence_manifest": evidence_manifest}
 
 
 @app.post("/api/simulations/{job_id}/saga-analysis/stream")
@@ -2945,6 +2956,13 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         assessed = await asyncio.to_thread(assess_sensor_cases, frame, catalog, backend,
                                            [payload["sensor"]["node_id"]])
         impact_results = [item for item in assessed if item.get("calculation_status") == "calculated"][:2]
+    evidence_manifest = build_evidence_manifest(
+        frame, payload["related_signals"], impact_results,
+        bool(current_triggers or _impact_requested(request.question)),
+        active_conditions=active_rules + related_rules,
+        selected_sensor=sensor_id,
+        question=request.question,
+    )
     applicable_plan_ids = dict.fromkeys(rule["response_plan_id"] for rule in active_rules)
     applicable_plan_ids.update(dict.fromkeys(rule["response_plan_id"] for rule in related_rules))
     if payload["sensor_status"] == "SIGNAL_ISSUE":
@@ -3040,6 +3058,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                 "selected_signal": signal, "sensor_status": payload["sensor_status"],
                 "equipment": label, "related_signals": payload["related_signals"],
                 "impact_results": impact_results,
+                "evidence_manifest": evidence_manifest,
                 "current_conditions": current_rules,
                 "retained_conditions": [rule for rule in active_rules + related_rules
                                          if rule.get("state") != "TRIGGER"][:4],
@@ -3085,6 +3104,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         return {"sensor_id": sensor_id, "time_s": payload["time_s"],
                 "answer": answer, "model": llm_model, "llm_error": llm_error,
                 "impact_results": impact_results,
+                "evidence_manifest": evidence_manifest,
                 "active_rule_count": len(active_rules), "related_active_count": len(related_rules),
                 "sensor_status": payload["sensor_status"], "hazop_direct": direct_result,
                 "response_guidance": response_guidance}
@@ -3114,6 +3134,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         "location": payload["sensor"].get("설치_측정위치"), "node": payload["node"].get("설비_라인"),
         "current": payload["signal"], "mapping": payload["mapping"]},
         "sensor_status": payload["sensor_status"], "impact_results": impact_results,
+        "evidence_manifest": evidence_manifest,
         "detection_summary": {"observed_hydrogen_readings": observed_gas,
                               "current_gas_alerts": current_gas_alerts,
                               "retained_gas_alarm_tags": retained_gas_alerts},
@@ -3161,6 +3182,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         "경보 시 여러 임계값 조건을 각각 독립 사고로 나열하지 말고 공통 원인과 전개가 같은 발생 가능 시나리오로 종합하세요. "
         "consolidated_response_guidance는 서버가 최종 답변 뒤에 붙이는 단일 행동계획이므로 조치 문장을 반복하지 말고 현재 판단과 근거를 설명하세요. "
         + status_instruction +
+        "evidence_manifest의 calculation_status가 not_requested이면 피해영향 계산을 했다고 말하지 마세요. "
         "실제 누출, 안전밸브 방출, 센서값 기준 가정 누출을 혼동하지 마세요. 계산된 피해영향 수치만 언급하고 안전거리를 확정하지 마세요. "
         "사용자에게 HAZOP·DB·규칙 ID나 계산 엔진 제품명을 노출하지 마세요. "
         + ("한국어 Markdown으로 '현재 상태', '관련 구역의 경보·이력', '예방·안전관리' 순서로 답하세요. "
@@ -3206,6 +3228,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
             "model": reply.get("model", ""), "impact_results": impact_results,
             "active_rule_count": len(active_rules), "related_active_count": len(related_rules),
             "sensor_status": payload["sensor_status"],
+            "evidence_manifest": evidence_manifest,
             "response_guidance": response_guidance}
 
 

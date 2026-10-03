@@ -1,0 +1,44 @@
+from h2station.llm_grounding import build_evidence_manifest
+
+
+def test_manifest_distinguishes_not_requested_from_calculated_impact():
+    frame = {"time_s": 12.5}
+    signals = {"PT-0901": {"value": 88.0, "unit": "MPa", "quality": "GOOD"}}
+
+    idle = build_evidence_manifest(frame, signals, [], False, question="현재 상태")
+    assert idle["impact"]["calculation_status"] == "not_requested"
+    assert idle["impact"]["result_count"] == 0
+    assert idle["source"]["field_measurement"] is False
+    assert idle["evidence_digest"].startswith("sha256:")
+
+    result = {"node_id": "N09", "node_name": "고압 저장뱅크",
+              "calculation_status": "calculated",
+              "calculation_basis": "SENSOR_BASED_HYPOTHESIS",
+              "pressure_sensor": "PT-0901", "current_pressure_mpa": 88.0,
+              "sampled_effect_radius_m": 3.0}
+    calculated = build_evidence_manifest(
+        frame, signals, [result], True,
+        active_conditions=[{"scenario": "고압 저장뱅크 압력 상승", "sensor_id": "PT-0901",
+                            "state": "TRIGGER"}],
+        selected_sensor="PT-0901", question="피해영향은?",
+    )
+    assert calculated["impact"]["calculation_status"] == "calculated"
+    assert calculated["impact"]["results"][0]["pressure_sensor"] == "PT-0901"
+    assert calculated["conditions"][0]["label"] == "고압 저장뱅크 압력 상승"
+    assert calculated["evidence_digest"] != idle["evidence_digest"]
+
+
+def test_manifest_marks_attempt_without_result_and_filters_nonfinite_values():
+    manifest = build_evidence_manifest(
+        {"time_s": float("nan")},
+        {"PT-0901": {"value": float("inf"), "unit": "MPa", "quality": "BAD"},
+         "TT-0901": {"value": 25.0, "unit": "C", "quality": "GOOD"}},
+        [{"node_id": "N09", "calculation_status": "failed",
+          "maximum_heat_flux_w_m2": float("nan")}],
+        True,
+    )
+    assert manifest["impact"]["calculation_status"] == "attempted_no_result"
+    assert manifest["signals"]["count"] == 1
+    assert manifest["signals"]["rows"][0]["tag"] == "TT-0901"
+    assert manifest["source"]["simulation_time_s"] is None
+

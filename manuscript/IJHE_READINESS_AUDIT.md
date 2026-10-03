@@ -27,6 +27,7 @@
 | `hiad_holdout_collection` | **PENDING** | All masked alarm/direct/RAG holdout responses were collected under the frozen protocol. | `data\public_validation\results\hiad_decision\collection_manifest.json` |
 | `independent_expert_review_complete` | **PENDING** | Three qualified independent reviewers completed the locked 24-event evaluation. | `data\public_validation\results\hiad_decision\analysis\expert_review_analysis.json` |
 | `saga_effectiveness_and_safety_supported` | **PENDING** | Direct SAGA improves expert-rated guidance without higher observed omission or unsafe-advice rates. | `data\public_validation\results\hiad_decision\analysis\expert_review_analysis.json` |
+| `llm_evidence_grounding_contract` | **PASS** | Main and selected-sensor assistants receive traceable evidence with explicit calculation and uncertainty status. | `research\llm_evidence_grounding_validation.json` |
 | `preoutcome_design_sensitivity` | **PASS** | The fixed incident-study sample limitations were quantified before outcomes. | `research\hiad_design_sensitivity.json` |
 | `ijhe_format_gate` | **PASS** | The manuscript satisfies the explicit IJHE length/front-matter limits checked locally. | `manuscript\ijhe_format_check.json` |
 | `ijhe_latex_compilation` | **PASS** | The exact submitted LaTeX source compiles successfully. | `manuscript\ijhe_compile_status.json` |

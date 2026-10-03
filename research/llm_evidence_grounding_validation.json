@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-03",
+  "status": "software_contract_verified",
+  "scope": [
+    "digital-twin main assistant",
+    "selected-sensor assistant",
+    "deterministic impact-result handoff"
+  ],
+  "manifest_schema": "h2station.llm-evidence.v1",
+  "tests": {
+    "targeted": {
+      "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_digital_twin_direct_qa.py -q",
+      "passed": 11,
+      "warnings": 2
+    },
+    "full_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest -q",
+      "passed": 376,
+      "failed": 0,
+      "warnings": 8
+    }
+  },
+  "verified_properties": [
+    "normal impact calculation is marked not_requested",
+    "emergency and explicit-impact paths preserve calculated results",
+    "sensor values, quality and calculation basis are carried into the assistant context",
+    "non-finite signal and result values are excluded",
+    "main and selected-sensor assistant routes remain isolated",
+    "contradictory LLM claims are rejected when they negate confirmed evidence"
+  ],
+  "not_established": [
+    "physics validity of the consequence model",
+    "field safety or evacuation distance",
+    "operator effectiveness, omission rate or unsafe-advice rate",
+    "generalization to real incident data"
+  ],
+  "full_objective_gate_impact": "does_not_clear",
+  "evidence": "research/LLM_EVIDENCE_GROUNDING_VALIDATION.md"
+}
