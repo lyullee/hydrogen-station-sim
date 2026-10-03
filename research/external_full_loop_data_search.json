@@ -483,6 +483,30 @@
       }
     },
     {
+      "id": "klopcic_2024_heavy_duty_precooling",
+      "title": "Klopčič et al. heavy-duty hydrogen refuelling and pre-cooling experiments",
+      "url": "https://doi.org/10.1016/j.ijhydene.2024.03.097",
+      "publisher": "International Journal of Hydrogen Energy / HyCentA / Graz University of Technology",
+      "public_raw_data": false,
+      "decision": "REQUEST_DATA_TANK_THERMAL_FULL_LOOP",
+      "inspection": {
+        "open_access_landing": "https://tugraz.elsevierpure.com/en/publications/investigation-of-pre-cooling-strategies-for-heavy-duty-hydrogen-r",
+        "reported_scope": "Experimental filling of three 350 L Type IV tank dummies at a hydrogen refuelling station with adaptable cold-fill unit; tank and aluminium-block heat-exchanger models validated against experiments.",
+        "reported_measurements": [
+          "tank pressure and temperature",
+          "dispenser/source conditions",
+          "pre-cooling strategy history",
+          "parallel-fill behaviour"
+        ],
+        "raw_common_timebase": "not exposed on the public article page; published PDF only",
+        "request_draft": "research/KLOPCIC_2024_PRECOOLING_DATA_REQUEST_DRAFT.md",
+        "author_contact_hint": "trattner@tugraz.at",
+        "role": "Strong independent heavy-duty tank-thermal/full-loop candidate because it is a different institution, tank scale and experimental campaign.",
+        "exclusion_reason": "The public record provides the article/PDF but no machine-readable synchronized logger archive; it cannot close the gate until raw files, licence/permission and an immutable digest are obtained."
+      },
+      "next_action": "Request de-identified logger traces and reuse terms before any prospective protocol freeze."
+    },
+    {
       "id": "couteau_2022_empa_tank_filling",
       "title": "Heat transfer analysis of high pressure hydrogen tank fillings",
       "doi": "10.1016/j.ijhydene.2022.05.127",
@@ -762,7 +786,7 @@
       }
     ],
     "result": "H2Protocol raw archives are public and hash-linked, but they are already consumed Powertech data and therefore do not close the independent external holdout gate.",
-    "next_action": "send documented data requests (CARB, JRC GasTeF and HYTRANSFER file custodian, Cal State LA, BAM demonstration HRS, NREL HITRF/NFCTEC, Empa, DLR/FCH2RAIL, Hungarian HRS and NBSDC) and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest"
+    "next_action": "send documented data requests (Klopčič/HyCentA heavy-duty traces, CARB, JRC GasTeF and HYTRANSFER file custodian, Cal State LA, BAM demonstration HRS, NREL HITRF/NFCTEC, Empa, DLR/FCH2RAIL, Hungarian HRS and NBSDC) and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest"
   },
   "last_reviewed": "2026-10-03"
 }
