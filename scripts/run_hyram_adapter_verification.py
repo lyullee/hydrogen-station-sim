@@ -220,6 +220,8 @@ def _run_upstream_validation(upstream_root: Path) -> dict[str, Any]:
         capture_output=True, text=True, encoding="utf-8", errors="replace",
     )
     output = "\n".join(part for part in (completed.stdout, completed.stderr) if part).strip()
+    # Keep public evidence machine-independent and avoid publishing user paths.
+    output = output.replace(str(upstream_root), "<hyram-v6.1>")
     passed_match = re.search(r"(\d+) passed", output)
     subtests_match = re.search(r"(\d+) subtests passed", output)
     warnings_match = re.search(r"(\d+) warnings?", output)
@@ -286,7 +288,7 @@ def _markdown(report: dict[str, Any]) -> str:
         ".venv\\Scripts\\python.exe scripts\\run_hyram_adapter_verification.py",
         "```",
         "",
-        "Machine-readable details, per-field errors and captured upstream test output are written beside this report as `verification.json`.",
+        "Machine-readable details, per-field errors and captured upstream test output are written to the selected output directory as `verification.json`.",
         "",
     ])
 
@@ -339,7 +341,7 @@ def main() -> int:
         "source": _git_state(repository_root),
         "hyram": {
             "installed_version": importlib.metadata.version("hyram"),
-            "installed_package_root": str(installed_root),
+            "installed_package": "site-packages/hyram",
             "upstream_repository": UPSTREAM_REPOSITORY,
             "upstream_tag": UPSTREAM_TAG,
             "upstream_commit": UPSTREAM_COMMIT,
