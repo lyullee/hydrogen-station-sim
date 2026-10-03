@@ -48,7 +48,7 @@ def _publisher_layout_workbook_bytes() -> bytes:
     pressure.append(["Zero in Line", "Unit", "bar", "bar", "Volt"])
     pressure.append([None, "dt"])
     pressure.append(["Time [s]", "X_Value", "Druck_1", "Druck_2", "Valve-Relay"])
-    for time_s in np.linspace(-0.5, 5.0, 111):
+    for time_s in np.linspace(-0.5, 6.0, 131):
         pressure.append([float(time_s), 0.0, max(0.0, 100.0 - 20.0 * max(time_s, 0.0)), 1.0, 5.0])
     temperature = workbook.create_sheet("20190523_152325-Temp")
     temperature.append([None, "Thermoelemente", None, None, None, None, None, None, "T1", "T2", "T3", "T4", "T1o", "T2o", "T3o"])
@@ -95,7 +95,7 @@ def test_preslhy_reader_joins_publisher_multirow_headers():
     assert trace.pressure_unit_interpretation == (
         "terminal_near_zero_gauge_plus_standard_ambient"
     )
-    assert len(trace.time_s) == 111
+    assert len(trace.time_s) == 131
 
 
 def test_frozen_blowdown_model_closes_mass_and_reduces_pressure():
