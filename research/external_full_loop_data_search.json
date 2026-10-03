@@ -465,6 +465,9 @@
         "local_artifact": "data/public_validation/raw/norcal_zero_final_report.pdf",
         "bytes": 5031126,
         "sha256": "c45ddbe0c1d9c68549ebc6408f5661819b46d9b6a6d78c80235ff7d29784ff4d",
+        "pdf_pages": 98,
+        "embedded_attachments": 0,
+        "external_data_links": 5,
         "reported_scope": "30 Hyundai XCIENT fuel-cell drayage trucks and the Oakland FirstElement Fuel 700 bar station; operational data collection October 2022 through September 2025.",
         "reported_station_channels": [
           "fueling timestamps",
