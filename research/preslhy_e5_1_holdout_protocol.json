@@ -1,8 +1,19 @@
 {
   "schema_version": 1,
   "frozen_at": "2026-10-03",
-  "status": "protocol_frozen_before_archive_access_model_hash_locked_evaluator_pending_structural_adapter",
+  "status": "fully_frozen_before_numerical_outcome_access",
   "outcomes_accessed_before_freeze": false,
+  "amendments": [
+    {
+      "date": "2026-10-03",
+      "archive_structure_accessed": true,
+      "descriptive_pdf_accessed": true,
+      "numerical_pressure_values_accessed": false,
+      "model_outcomes_computed": false,
+      "change": "Locked the archive acquisition, seven-case manifest, workbook header mapping, evaluator, and runner after inspecting only TAR/ZIP member names, workbook sheet/header strings, formulas, and the three-page publisher explanation.",
+      "basis": "The publisher explanation identifies five ambient and two cryogenic runs, two files per experiment, synchronized vessel pressure and three in-vessel temperature channels. The 200 bar ambient SE filename differs by two seconds from its PFast case identifier and is mapped prospectively."
+    }
+  ],
   "objective": "Independently evaluate the revised non-adiabatic source-depletion model against open-jet ignited DisCha experiments not used in model development.",
   "claim_boundary": "The holdout concerns pressure depletion of the 2.8 L DisCha source vessel during an open atmospheric jet, including the downstream-ignition condition represented in E5.1. It does not validate combustion overpressure, heat flux, flame length, cryogenic two-phase flow, a vehicle-fueling loop, or station emergency separation distance.",
   "source": {
@@ -31,6 +42,28 @@
     "discharge_coefficient": 0.8,
     "parameter_changes_after_freeze": "prohibited for the primary holdout result",
     "development_result": "research/preslhy_nonadiabatic_development_result.json"
+  },
+  "locked_evaluation_implementation": {
+    "adapter": {
+      "path": "src/h2station/preslhy_e5_validation.py",
+      "sha256": "378d5535c3a777a4bf366fcab6fd75b5e542a3714dd396e2dccd18ac6cc04354"
+    },
+    "runner": {
+      "path": "scripts/run_preslhy_e5_holdout.py",
+      "sha256": "18d2e671c68eb4dbc4007f9fc29840fd7ac123b484afb1dbd92d1064c9d7ff87"
+    },
+    "acquisition": {
+      "path": "scripts/fetch_preslhy_e5_holdout.py",
+      "sha256": "3ccfad12c4ffa0bc2daefb7171ec3e0edcfde5fc703cbd0a8b94f71c15767290"
+    },
+    "case_manifest": {
+      "ambient_cases": 5,
+      "cryogenic_transfer_cases": 2,
+      "ambient_nozzle_diameter_mm": [2.0, 4.0],
+      "ambient_nominal_pressure_bar": [50.0, 200.0],
+      "pressure_member": "SE workbook worksheet ending -presV: synchronized Time [s] and Druck_Behalter",
+      "temperature_member": "same SE workbook worksheet ending -TE: synchronized Time [s] and three Behalter temperature channels"
+    }
   },
   "eligibility": {
     "include": [

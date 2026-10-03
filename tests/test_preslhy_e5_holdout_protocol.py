@@ -22,6 +22,14 @@ def test_e5_protocol_precedes_archive_access_and_locks_model():
     assert protocol["locked_model"]["parameter_changes_after_freeze"].startswith(
         "prohibited"
     )
+    locked = protocol["locked_evaluation_implementation"]
+    for key in ("adapter", "runner", "acquisition"):
+        item = locked[key]
+        assert _sha256(ROOT / item["path"]) == item["sha256"]
+    amendment = protocol["amendments"][0]
+    assert amendment["archive_structure_accessed"] is True
+    assert amendment["numerical_pressure_values_accessed"] is False
+    assert amendment["model_outcomes_computed"] is False
 
 
 def test_e5_protocol_has_eligibility_screens_and_negative_policy():

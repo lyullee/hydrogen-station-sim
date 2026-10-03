@@ -25,8 +25,11 @@ at least 70% passing both screens. If the public benchmarking package is too
 narrow, the result is retained as supplementary evidence and is ineligible for
 the aggregate claim.
 
-The archive may be inspected only to implement a structural reader. Before any
-numerical outcome is calculated, the reader and runner hashes must be added as
-an audited amendment. No model change is allowed.
+The archive was inspected only to implement a structural reader. The publisher
+package contains five ambient and two cryogenic experiments; the ambient set
+spans 2 and 4 mm nozzles and nominal 50 and 200 bar conditions. Before any
+numerical pressure value or model outcome was read, the case manifest, reader,
+runner, acquisition code, and their hashes were recorded in the machine-readable
+protocol. No model change is allowed.
 
 Dataset: Jordan (2023), PRESLHY E5.1, DOI 10.35097/1258, CC BY-SA 4.0.

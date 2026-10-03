@@ -18,6 +18,7 @@ __pycache__/
 # Build output and local configuration
 /build/
 /dist/
+/tmp/
 .env
 .env.*
 !.env.example
