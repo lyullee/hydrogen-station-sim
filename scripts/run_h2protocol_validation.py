@@ -156,6 +156,30 @@ def run_case(
         predicted_soc_percent=predicted_soc,
     )
     metrics = agreement.to_dict()
+    predicted_flow_on_experimental_clock_g_s = 1000.0 * np.interp(
+        exp_time, trajectory.time_s, trajectory.nozzle_mass_flow_kg_s
+    )
+    flow_error_g_s = (
+        predicted_flow_on_experimental_clock_g_s - experimental_mass_flow_g_s
+    )
+    half_time = float(exp_time[0] + 0.5 * (exp_time[-1] - exp_time[0]))
+    before_half = exp_time <= half_time
+    if np.count_nonzero(before_half) < 2:
+        raise RuntimeError(f"{case_id} has insufficient samples before half time")
+    experimental_total_mass = float(np.trapezoid(
+        experimental_mass_flow_g_s / 1000.0, exp_time
+    ))
+    predicted_total_mass = float(np.trapezoid(
+        predicted_flow_on_experimental_clock_g_s / 1000.0, exp_time
+    ))
+    experimental_first_half_mass = float(np.trapezoid(
+        experimental_mass_flow_g_s[before_half] / 1000.0,
+        exp_time[before_half],
+    ))
+    predicted_first_half_mass = float(np.trapezoid(
+        predicted_flow_on_experimental_clock_g_s[before_half] / 1000.0,
+        exp_time[before_half],
+    ))
     model_time = np.asarray([sample.time_s for sample in operation_samples])
     active_mask = np.asarray([
         command.phase.value == "filling" and command.stop_reason is None
@@ -226,6 +250,19 @@ def run_case(
         "predicted_peak_temperature_c": float(np.max(trajectory.vehicle_temperature_k) - 273.15),
         "predicted_final_soc_percent": float(predicted_soc[-1]),
         "predicted_peak_mass_flow_g_s": float(1000.0 * np.max(trajectory.nozzle_mass_flow_kg_s)),
+        "mass_flow_rmse_g_s": float(np.sqrt(np.mean(flow_error_g_s ** 2))),
+        "mass_flow_peak_error_g_s": float(
+            np.max(predicted_flow_on_experimental_clock_g_s)
+            - np.max(experimental_mass_flow_g_s)
+        ),
+        "experimental_first_half_mass_fraction": (
+            experimental_first_half_mass / experimental_total_mass
+            if experimental_total_mass > 0.0 else None
+        ),
+        "predicted_first_half_mass_fraction": (
+            predicted_first_half_mass / predicted_total_mass
+            if predicted_total_mass > 0.0 else None
+        ),
         "active_fueling_duration_s": float(active_time[-1] - active_time[0]),
         "active_pressure_reference_tracking_rmse_mpa": float(
             np.sqrt(np.mean(reference_lag_mpa ** 2))
@@ -241,9 +278,7 @@ def run_case(
             str(name or "none"): int(count) for name, count in dispatch_counts.items()
         },
         "bank_pressures_at_active_end_mpa": final_bank_pressures_mpa,
-        "experimental_transferred_mass_kg": float(
-            np.trapezoid(experimental_mass_flow_g_s / 1000.0, exp_time)
-        ),
+        "experimental_transferred_mass_kg": experimental_total_mass,
         "predicted_transferred_mass_kg": float(
             np.trapezoid(trajectory.nozzle_mass_flow_kg_s, trajectory.time_s)
         ),
