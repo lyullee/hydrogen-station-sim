@@ -308,6 +308,66 @@ def _select_numeric_column(
     raise ValueError(f"None of the candidate columns is sufficiently complete: {candidates}")
 
 
+def _active_fill_bounds(
+    time_s: np.ndarray,
+    mass_flow_g_s: np.ndarray,
+    *,
+    flow_threshold_g_s: float,
+    maximum_gap_s: float = 15.0,
+    minimum_cluster_mass_kg: float = 0.005,
+) -> tuple[int, int]:
+    """Return the first and last meaningful flow cluster.
+
+    Powertech files occasionally contain a short meter pulse hundreds of seconds
+    before the actual fill. Taking the first and last above-threshold sample then
+    converts that idle interval into model fueling time. Clusters separated by a
+    long gap are therefore mass-screened: negligible leading/trailing pulses are
+    removed, while multiple material fill segments and the gaps between them are
+    retained.
+    """
+
+    active = np.flatnonzero(
+        np.isfinite(time_s)
+        & np.isfinite(mass_flow_g_s)
+        & (mass_flow_g_s > flow_threshold_g_s)
+    )
+    if active.size < 3:
+        raise ValueError("no sustained active fill")
+    split_points = np.flatnonzero(np.diff(time_s[active]) > maximum_gap_s) + 1
+    clusters = np.split(active, split_points)
+    finite_time = time_s[np.isfinite(time_s)]
+    nominal_dt = float(np.median(np.diff(finite_time)))
+    positive_flow_kg_s = np.maximum(0.0, mass_flow_g_s) / 1000.0
+
+    cluster_masses = []
+    for cluster in clusters:
+        if len(cluster) == 1:
+            mass = positive_flow_kg_s[cluster[0]] * nominal_dt
+        else:
+            mass = float(np.trapezoid(
+                positive_flow_kg_s[cluster], time_s[cluster]
+            ))
+        cluster_masses.append(float(mass))
+    total_cluster_mass = float(sum(cluster_masses))
+    meaningful_threshold = max(
+        minimum_cluster_mass_kg,
+        0.002 * total_cluster_mass,
+    )
+    meaningful = [
+        cluster for cluster, mass in zip(clusters, cluster_masses)
+        if mass >= meaningful_threshold
+    ]
+    if not meaningful:
+        meaningful = [clusters[int(np.argmax(cluster_masses))]]
+    first = int(meaningful[0][0])
+    last = int(meaningful[-1][-1])
+    if np.count_nonzero(
+        mass_flow_g_s[first:last + 1] > flow_threshold_g_s
+    ) < 3:
+        raise ValueError("no sustained active fill")
+    return first, last
+
+
 def read_h2protocol_workbook(
     content: bytes,
     *,
@@ -346,12 +406,13 @@ def read_h2protocol_workbook(
     flow_name, flow_all = _select_numeric_column(
         rows, headers, ("FM(R)", "FM"), min_finite_fraction=0.01
     )
-    active_indices = np.flatnonzero(
-        np.isfinite(time_all) & np.isfinite(flow_all) & (flow_all > flow_threshold_g_s)
-    )
-    if active_indices.size < 3:
-        raise ValueError(f"{source_member} has no sustained active fill")
-    active_rows = rows[int(active_indices[0]): int(active_indices[-1]) + 1]
+    try:
+        first_active, last_active = _active_fill_bounds(
+            time_all, flow_all, flow_threshold_g_s=flow_threshold_g_s
+        )
+    except ValueError as exc:
+        raise ValueError(f"{source_member} has no sustained active fill") from exc
+    active_rows = rows[first_active:last_active + 1]
 
     _, time = _select_numeric_column(active_rows, headers, (time_name,))
     pressure_source, pressure = _select_numeric_column(
@@ -571,12 +632,13 @@ def read_mc_default_workbook(
     flow_name, flow_all = _select_numeric_column(
         rows, headers, ("FM(R)", "FM"), min_finite_fraction=0.01
     )
-    active_indices = np.flatnonzero(
-        np.isfinite(time_all) & np.isfinite(flow_all) & (flow_all > flow_threshold_g_s)
-    )
-    if active_indices.size < 3:
-        raise ValueError(f"{source_member} has no sustained active fill")
-    active_rows = rows[int(active_indices[0]): int(active_indices[-1]) + 1]
+    try:
+        first_active, last_active = _active_fill_bounds(
+            time_all, flow_all, flow_threshold_g_s=flow_threshold_g_s
+        )
+    except ValueError as exc:
+        raise ValueError(f"{source_member} has no sustained active fill") from exc
+    active_rows = rows[first_active:last_active + 1]
     _, time = _select_numeric_column(active_rows, headers, (time_name,))
     pressure_source, pressure = _select_numeric_column(
         active_rows, headers, ("Ptank", "Pinlet", "Precep")

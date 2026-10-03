@@ -9,6 +9,7 @@ from openpyxl import Workbook
 import pytest
 
 from h2station.public_validation import (
+    _active_fill_bounds,
     compare_traces,
     iter_dispersion_experiments,
     iter_mc_default_traces,
@@ -89,6 +90,20 @@ def test_compare_traces_uses_experimental_clock_without_time_warping():
     assert agreement.pressure_rmse_mpa == pytest.approx(np.sqrt(5 / 3))
     assert agreement.temperature_mae_c == pytest.approx(1.0)
     assert agreement.soc_final_error_percentage_points == pytest.approx(5.0)
+
+
+def test_active_fill_bounds_rejects_negligible_leading_meter_pulse():
+    time_s = np.arange(0.0, 43.0)
+    flow_g_s = np.zeros_like(time_s)
+    flow_g_s[0] = 2.0
+    flow_g_s[30:43] = 10.0
+
+    first, last = _active_fill_bounds(
+        time_s, flow_g_s, flow_threshold_g_s=1.0
+    )
+
+    assert first == 30
+    assert last == 42
 
 
 def test_mc_default_reader_preserves_protocol_schedule_and_source_pressures():
