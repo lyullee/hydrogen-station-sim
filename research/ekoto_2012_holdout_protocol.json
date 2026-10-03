@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-03",
+  "status": "endpoints_and_code_frozen_before_numerical_curve_access",
+  "objective": "Evaluate transfer of the locked adiabatic real-gas vessel-discharge model to an independent scaled forklift hydrogen release mass-flow trace.",
+  "claim_boundary": "This holdout tests time-resolved source mass flow in one 13.45 MPa, 3.63 L scaled release through a 3.56 mm restriction. It does not validate enclosure dispersion, ignition, overpressure, forklift geometry, station control, or separation distance.",
+  "source": {
+    "title": "Experimental investigation of hydrogen release and ignition from fuel cell powered forklifts in enclosed spaces",
+    "authors": ["Isaac W. Ekoto", "Erik G. Merilo", "William G. Houf", "Gregory H. Evans", "Michael A. Groethe"],
+    "journal": "International Journal of Hydrogen Energy",
+    "year": 2012,
+    "doi": "10.1016/j.ijhydene.2012.03.161",
+    "open_conference_report": "https://www.osti.gov/servlets/purl/1110270",
+    "experimental_institutions": ["Sandia National Laboratories", "SRI International"],
+    "digitization_provider": "HyRAM+ 6.1 validation repository",
+    "digitization_repository_commit": "b45abf9a6d995951311be6aad836f1874e4d420b",
+    "digitization_path": "tests/hyram/validation/data/ekoto-2012-fig3.csv",
+    "digitization_sha256": "2eb04bd3907dc02a1348e080aba8ed6f6e373f150a1981009a2e556e1264f047",
+    "digitization_license": "GNU GPL v3 as distributed with HyRAM+; original article rights remain with the publisher"
+  },
+  "known_before_freeze": {
+    "descriptive_inputs": {
+      "initial_pressure_pa_abs": 13450000.0,
+      "initial_temperature_k": 297.0,
+      "tank_volume_m3": 0.00363,
+      "restriction_diameter_m": 0.00356,
+      "discharge_coefficient": 0.75,
+      "ambient_pressure_pa": 101325.0
+    },
+    "numerical_curve_coordinates_accessed": false,
+    "target_model_predictions_computed": false,
+    "data_file_access_before_freeze": "The file was cryptographically hashed but no numerical row was opened. Public report and HyRAM+ setup code supplied apparatus inputs and the x3/y3 series identity."
+  },
+  "independence": {
+    "different_experiment_from_schefer_2006_and_2007": true,
+    "independent_from_preslhy_facility": true,
+    "independent_from_proust_ineris_cea_facility": true,
+    "limitation": "The digitization is not an original logger export and the experiment shares Sandia/SRI institutions with the Schefer campaigns; this is experiment-level, not institution-level, transfer."
+  },
+  "locked_model": {
+    "description": "Existing HEOS well-mixed adiabatic rigid-vessel model with maximum real-gas isentropic mass flux and the independently published Cd=0.75.",
+    "path": "src/h2station/ekoto_2012_validation.py",
+    "sha256": "85525d3ab01a2201aba02e02dc316803f6e8094830660e4e31073c7ee6dac294",
+    "post_freeze_parameter_changes": "prohibited for the primary result"
+  },
+  "locked_runner": {
+    "path": "scripts/run_ekoto_2012_holdout.py",
+    "sha256": "2a322341d5960a914f9cb49deb47c550ed03f611ab05587f9184b4c99a3ec0c9"
+  },
+  "eligibility": {
+    "minimum_unique_points": 15,
+    "requires": ["non-negative strictly increasing time", "finite non-negative measured mass flow", "positive measured peak", "experimental x3/y3 Figure 3 series"],
+    "insufficient_data_policy": "Archive an ineligible result without extrapolation or substitution of a calculated curve."
+  },
+  "primary_endpoints": {
+    "mass_flow_nrmse_percent_peak_measured": {"maximum": 15.0, "support": "all retained coordinates"},
+    "median_absolute_percentage_error_percent": {"maximum": 20.0, "support": "measured flow at least 10 percent of peak"},
+    "half_peak_time_relative_error_percent": {"maximum": 20.0, "role": "required timing endpoint"}
+  },
+  "aggregate_decision": {
+    "claim_supported": "all three primary endpoint screens pass",
+    "retain_numerical_and_runtime_failures": true,
+    "negative_result_policy": "Any failed screen remains archived and prohibits an independent transient mass-flow validation claim from this dataset."
+  }
+}
