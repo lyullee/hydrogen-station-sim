@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "scope": "Zenodo API and public repository recheck for a new synchronized hydrogen-refuelling station-to-vehicle raw trace",
+  "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET",
+  "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+  "eligibility_rule": {
+    "required_channels": [
+      "vehicle_or_receptacle_pressure",
+      "mass_flow_or_transferred_mass"
+    ],
+    "preferred_channels": [
+      "tank_or_fuel_temperature"
+    ],
+    "required_metadata": [
+      "common_time_base",
+      "initial_conditions",
+      "tank_capacity",
+      "protocol_or_pressure_ramp_information",
+      "units",
+      "reuse_terms"
+    ]
+  },
+  "zenodo_api_recheck": {
+    "endpoint": "https://zenodo.org/api/records",
+    "queries": [
+      "hydrogen refueling station",
+      "hydrogen fueling station",
+      "hydrogen vehicle refueling",
+      "hydrogen dispenser",
+      "hydrogen tank filling",
+      "hydrogen refuelling"
+    ],
+    "retrieval": "public API best-match pages inspected at record/file metadata level; raw files were not downloaded from candidate records",
+    "api_limitations": [
+      "Zenodo type/filter query variants attempted during discovery returned HTTP 400; unfiltered records were therefore inspected and classified individually.",
+      "Search ranking is noisy and cannot establish eligibility without file-level and metadata inspection."
+    ],
+    "candidate_classifications": [
+      {
+        "record_id": "22892319",
+        "title": "Thermodynamic modeling and simulation of subcooled liquid hydrogen refueling for transport applications",
+        "doi": "10.1016/j.ijhydene.2026.157517",
+        "resource_type": "publication",
+        "file_count": 1,
+        "decision": "PUBLIC_PUBLICATION_ONLY",
+        "reason": "The record is a publication with one PDF and no synchronized station-to-vehicle raw logger archive; it is not counted as validation data.",
+        "url": "https://zenodo.org/records/22892319"
+      },
+      {
+        "record_id": "23127807",
+        "title": "HCTGS v45 Israel — The Tower That Grows Downward",
+        "resource_type": "publication",
+        "decision": "IRRELEVANT_SEARCH_HIT",
+        "reason": "No hydrogen-refuelling experiment or required process channels.",
+        "url": "https://zenodo.org/records/23127807"
+      },
+      {
+        "record_id": "22825428",
+        "title": "A generator-matrix model quantifies the limited contribution of measured biomarkers to human mortality acceleration — code and derived data",
+        "resource_type": "dataset",
+        "decision": "IRRELEVANT_SEARCH_HIT",
+        "reason": "Not hydrogen, fueling, storage, or station process data.",
+        "url": "https://zenodo.org/records/22825428"
+      }
+    ]
+  },
+  "public_repository_followups": [
+    {
+      "repository": "Mendeley Data",
+      "title": "Experimental Dataset on the Absorption-Desorption Dynamics of an AB2 Metal Hydride Hydrogen Storage Tank for a 300 Watt PEM Fuel Cell",
+      "doi": "10.17632/8km9z62tct.1",
+      "url": "https://data.mendeley.com/datasets/8km9z62tct/1",
+      "observed_content": "Three Excel files at approximately one-second intervals with flow, pressure, five temperatures, cumulative volume and absorbed/desorbed hydrogen.",
+      "license": "CC BY 4.0",
+      "decision": "COMPONENT_STORAGE_TANK_ONLY",
+      "reason": "A small AB2 metal-hydride tank experiment is not a compressed-gas HRS station-to-vehicle fill and has no dispenser, receptacle, cascade or vehicle protocol trace."
+    },
+    {
+      "repository": "University of South-Eastern Norway Figshare",
+      "title": "Experimental Data of Hydrogen Dispersion in an Open-ended Rectangular Channel",
+      "doi": "10.23642/usn.26117989.v2",
+      "url": "https://usn.figshare.com/articles/dataset/Experimental_Data_of_Hydrogen_Dispersion_in_an_Open-ended_Rectangular_Channel/26117989",
+      "observed_content": "Temporal mass flow, filling pressure and hydrogen concentration from 29 sensors; version 2, CC BY 4.0.",
+      "decision": "ALREADY_CONSUMED_CONSEQUENCE_DATA",
+      "reason": "This is dispersion/consequence evidence already represented by the repository's detector validation and does not contain vehicle fueling pressure-temperature-mass-flow traces."
+    }
+  ],
+  "claim_boundary": "Discovery evidence only. No candidate is promoted to an independent full-loop validation holdout without synchronized required channels, initial conditions, protocol metadata, file hashes and reuse terms. Publication-only, component-only and already-consumed consequence data remain outside the full-loop gate.",
+  "next_action": "Keep the independent full-loop gate open and request a de-identified logger export from NREL HITRF, JRC HYTRANSFER/GasTeF, CARB/HyStEP, NIST FTS or another custodian; freeze provenance and scoring before reading numerical outcomes."
+}
