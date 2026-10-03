@@ -91,6 +91,21 @@
       "rights_note": "The public PDF may be cited. No data redistribution licence was identified for the Appendix A workbook or underlying fill traces; request reuse terms before obtaining or republishing them.",
       "eligibility_note": "The report is field-relevant but is not itself an eligible machine-readable full-loop validation set. The public PDF has no embedded attachment or external raw-data link."
     },
+    "preslhy_e3_1_high_pressure_discharge": {
+      "title": "PRESLHY Experiment series E3.1 - Cryogenic Hydrogen Blow-down/Discharge, part A high pressure",
+      "publisher": "Karlsruhe Institute of Technology",
+      "landing_page": "https://radar.kit.edu/radar/en/dataset/vuyYifgxlfOuFrSP",
+      "doi": "10.35097/1187",
+      "archive_url": "https://www.radar-service.eu/radar-backend/archives/vuyYifgxlfOuFrSP/versions/1/content",
+      "archive_format": "application/x-tar",
+      "archive_bytes": 1313122304,
+      "archive_md5": "b4d245866b7daed5705a06415a83b013",
+      "technical_report_url": "https://preslhy.eu/wp-content/uploads/sites/3/2019/07/PRESLHY_D3_4_E3P1A_DisCha_190723.pdf",
+      "technical_report_sha256": "27872e8f8f1dc51396e8759c77b32b3799039a91d2d7172c8f6df186a6402fe8",
+      "license": "CC BY 4.0",
+      "rights_note": "The dataset is openly licensed for attribution. Keep the large raw archive under the gitignored data directory and commit only metadata, parsers and derived validation results.",
+      "eligibility_note": "Ambient-temperature direct-aperture experiments are eligible for a separately frozen blowdown/source-depletion validation. They do not validate the complete fueling loop or a site vent stack."
+    },
     "hyram_validation_basis": {
       "title": "HyRAM+ Version 5.1.1 Physics Validation",
       "publisher": "Sandia National Laboratories / U.S. Department of Energy OSTI",
