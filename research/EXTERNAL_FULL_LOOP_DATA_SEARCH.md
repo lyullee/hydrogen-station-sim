@@ -41,6 +41,7 @@ immutable digest are recorded.
 | Empa Type-IV tank-filling experiments, Couteau et al., DOI 10.1016/j.ijhydene.2022.05.127 | Open-access paper describes four HRS tank-filling experiments with measured temperature evolution and inlet conditions. | **Request data / tank-thermal candidate.** No machine-readable raw trace or supplementary file was identified in the public repository record. |
 | FCH2RAIL reference HRS and rail vehicle, Wieser et al., DOI 10.1016/j.ijhydene.2025.04.040 | Open-access paper uses real HRS and vehicle measurements for model validation and shows pressure, temperature and mass-flow behavior. | **Request data.** The DLR record exposes the paper PDF but no synchronized machine-readable measurement archive. |
 | 3Emotion operational HRS data, Caponi et al., DOI 10.1051/e3sconf/202233406008 | Multi-year operator logs from four 350-bar bus stations, reported as fill amount, duration, average flow, utilization and availability. | **Aggregate context only.** No synchronized pressure, temperature and mass-flow trace is public. |
+| Beijing Winter Olympics HRS Operational Data List, CSTR 16666.11.nbsdc.aI3fJrzX | National Basic Science Data Center metadata reports 2022 HRS data with dispenser monitoring, fueling records and compressor monitoring; four files, 10.22 MB. | **Access request.** The machine-readable record is marked “approval required” and the file-tree endpoint returns no files without authorization. It is a high-value candidate, not an available holdout. |
 | Hungarian HRS digital-twin validation, Hasulyó, DOI 10.32604/ee.2026.081099 | Open-access paper reports operational pressure, temperature, mass-flow and refueling comparisons from an existing Hungarian HRS. | **Request data.** The paper's data-availability statement says supporting data are unavailable because of participant consent and legal restrictions. |
 
 ## CARB artifact inspection
@@ -115,11 +116,16 @@ digitising the chart.
 5. Send the Hungarian HRS request in
    `research/HUNGARIAN_HRS_DATA_REQUEST_DRAFT.md` to the study author or data
    custodian, subject to their consent and legal restrictions.
-6. On receipt, hash and quarantine the files before opening outcomes; freeze
+6. Send the NBSDC request in `research/NBSDC_HRS_DATA_REQUEST_DRAFT.md` to the
+   National Basic Science Data Center/Tsinghua data custodian. Request the four
+   files named by the catalog, field dictionaries, timestamps, units, quality
+   flags, de-identification terms and permission to publish derived metrics.
+7. On receipt, hash and quarantine the files before opening outcomes; freeze
    case eligibility and the corrected model commit in a new protocol manifest.
-7. Evaluate the frozen model once. Retain every eligible failure and do not use
+8. Evaluate the frozen model once. Retain every eligible failure and do not use
    the new outcomes for tuning.
-8. If CARB, JRC, Cal State LA, Empa, FCH2RAIL and the Hungarian HRS study cannot release the traces, make an equivalent
+9. If CARB, JRC, Cal State LA, Empa, FCH2RAIL, the Hungarian HRS study and
+   NBSDC cannot release the traces, make an equivalent
    request to NIST. Do not substitute graph digitisation for raw data in the
    primary full-loop claim.
 

@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-10-03",
+  "catalog": {
+    "landing_page": "https://cstr.cn/16666.11.nbsdc.aI3fJrzX",
+    "profile_page": "https://xiaopeiwang.com/en/result/r-057159df",
+    "record_id": "64edfc52bb16e0300cd4dd38",
+    "cstr": "16666.11.nbsdc.aI3fJrzX",
+    "title": "Operational Data List of Hydrogen Refueling Stations for Beijing Winter Olympics",
+    "coverage": "2022",
+    "authors": ["Jin Zhenhua", "Wang Xiaopei"],
+    "organization": "Tsinghua University",
+    "files": 4,
+    "storage_mb": 10.22,
+    "topics": ["dispenser monitoring", "fueling records", "compressor monitoring"]
+  },
+  "access_observation": {
+    "share_range": "approval required",
+    "file_tree_endpoint": "https://www.nbsdc.cn/api/general/v1/getResourceFileTree?dataId=64edfc52bb16e0300cd4dd38&pid=0",
+    "file_tree_response": {"result": [], "code": 200, "message": "保存成功"},
+    "raw_files_obtained": false,
+    "eligible_for_full_loop_validation": false
+  },
+  "claim_boundary": "This is a high-value access candidate, not public validation evidence. No model outcome or sensor trace was obtained. The record must not be counted in the full-loop gate until the files, reuse terms, hashes, synchronized channels and a frozen holdout protocol are available."
+}
