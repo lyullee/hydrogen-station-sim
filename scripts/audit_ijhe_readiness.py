@@ -385,6 +385,27 @@ def audit(root: Path) -> dict[str, object]:
         } if playbooks else "missing; emergency playbook source unavailable",
     ))
 
+    cip_endpoint_path = root / "research/cip_dispenser_endpoint_screen.json"
+    cip_endpoint = _json(cip_endpoint_path)
+    cip_aggregate = (cip_endpoint or {}).get("aggregate") or {}
+    cip_source = (cip_endpoint or {}).get("source") or {}
+    cip_endpoint_pass = bool(
+        (cip_endpoint or {}).get("status") == "completed_endpoint_only_negative_diagnostic"
+        and cip_source.get("doi") == "10.19799/j.cnki.2095-4239.2020.0049"
+        and cip_aggregate.get("case_count") == 2
+        and cip_aggregate.get("stop_reason_counts") == {"safety-temperature": 2}
+        and all("endpoint_errors" in case for case in (cip_endpoint or {}).get("cases", []))
+        and bool(cip_aggregate.get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "public_dispenser_endpoint_diagnostic",
+        "PASS" if cip_endpoint_pass else ("FAIL" if cip_endpoint else "PENDING"),
+        "Public 35/70 MPa dispenser endpoint tables are replayed as an explicit negative diagnostic without being promoted to full-loop validation.",
+        str(cip_endpoint_path.relative_to(root)),
+        "Two public endpoint cases, source DOI and download hashes, declared 85 degC stop model, retained endpoint errors and explicit claim boundary.",
+        cip_aggregate if cip_endpoint else "missing; public endpoint diagnostic has not run",
+    ))
+
     preslhy_path = root / "research/preslhy_blowdown_external_validation.json"
     preslhy = _json(preslhy_path)
     preslhy_protocol_path = root / "research/preslhy_blowdown_validation_protocol.json"

@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T21:47:26.436168+00:00",
+  "generated_at": "2026-10-03T21:55:18.592254+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 20,
+    "PASS": 21,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -547,6 +547,20 @@
           "supply_connection"
         ],
         "claim_boundary": "Incident taxonomy and public response-field provenance only; no quantitative effectiveness or probability claim."
+      }
+    },
+    {
+      "id": "public_dispenser_endpoint_diagnostic",
+      "status": "PASS",
+      "claim": "Public 35/70 MPa dispenser endpoint tables are replayed as an explicit negative diagnostic without being promoted to full-loop validation.",
+      "evidence": "research\\cip_dispenser_endpoint_screen.json",
+      "requirement": "Two public endpoint cases, source DOI and download hashes, declared 85 degC stop model, retained endpoint errors and explicit claim boundary.",
+      "observed": {
+        "case_count": 2,
+        "stop_reason_counts": {
+          "safety-temperature": 2
+        },
+        "claim_boundary": "This diagnostic does not close the independent station-to-vehicle full-loop gate and is not a safety-distance claim."
       }
     },
     {
