@@ -1520,7 +1520,8 @@
           "publisher": "National Renewable Energy Laboratory",
           "finding": "The official HITRF description confirms an integrated production, compression, storage, chilling and H70/H35 dispensing facility. It states that an automated data-logging system collects operating and maintenance data from HITRF components and that the facility supports SAE J2601/MC Formula fueling and component reliability experiments. The public page exposes no downloadable synchronized station-to-vehicle logger, channel dictionary, uncertainty record or reuse terms.",
           "decision": "REQUEST_DATA_HIGH_VALUE_FIELD_LIVING_LAB",
-          "claim_limit": "Use as a high-value data-custodian and facility-provenance lead only; the facility description is not a public numerical holdout."
+          "claim_limit": "Use as a high-value data-custodian and facility-provenance lead only; the facility description is not a public numerical holdout.",
+          "request_draft": "research/NREL_HITRF_DATA_REQUEST_DRAFT.md"
         },
         {
           "id": "nrel_data_catalog_public_search_2026_10_04",

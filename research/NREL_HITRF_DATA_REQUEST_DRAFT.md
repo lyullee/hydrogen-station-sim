@@ -1,51 +1,65 @@
-# Draft data request to NREL HITRF / NFCTEC
+# NREL HITRF controlled-data request draft
 
-**Do not send without the project owner's review.**
+**Purpose.** Request a de-identified, reproducible subset of Hydrogen Infrastructure
+Testing and Research Facility (HITRF) records for independent validation of the
+hydrogen-station digital twin. This draft is a technical request template only; it
+does not claim that NREL has agreed to provide data.
 
-To: NREL Hydrogen Infrastructure Testing and Research Facility / NFCTEC data
-custodian
+## Requested release
 
-Subject: Request for de-identified HITRF fueling traces for independent HRS model validation
+Please provide a minimally sufficient set of complete fills, including successful
+normal fills and clearly labelled interruptions or faults where publication is
+permitted. A preferred release is one file per fill plus a machine-readable data
+dictionary and a manifest. CSV, Parquet or XLSX are acceptable if timestamps and
+units are preserved.
 
-Dear NREL HITRF/NFCTEC team,
+Required common-time-base channels, where available:
 
-I am preparing an academic validation study of a research digital twin for
-hydrogen refueling-station process and safety analysis. NREL's public HITRF and
-Hydrogen Fueling Infrastructure materials describe full-station measurement,
-validation and composite data products, but the public products do not expose
-the synchronized raw fueling traces needed for an independent controller
-evaluation.
-The HITRF 36 L experiment reported by Kuroki et al. (DOI
-10.1002/ente.202300239) is a specific priority lead: it describes a 6.3 to
-73.0 MPa fill in 186 seconds with receptacle, internal-gas and liner
-temperature measurements, while its public data-availability statement says
-that the research data are not shared. If those traces can be released under
-an approved de-identification and reuse agreement, please include that case.
+- station-side source and cascade-bank pressure, temperature, inventory or valve state;
+- dispenser inlet/outlet pressure, gas temperature, precooler outlet temperature,
+  mass flow and cumulative transferred mass;
+- vehicle/receptacle pressure, gas temperature or tank temperature and estimated SOC;
+- nozzle/receptacle connection, start/stop, abort, vent and safety-interlock events;
+- compressor, chiller and control-mode states;
+- alarm, ESD and maintenance/fault codes with event timestamps;
+- ambient temperature and any available wind/ventilation context.
 
-Could you provide a small de-identified holdout set, or identify the approved
-access route, containing the following fields where releasable?
+For every channel, request the tag name, engineering unit, sampling interval, time
+zone/reference clock, calibration or uncertainty information, missing-value code,
+quality flag and any signal filtering or resampling already applied.
 
-- common timestamp or elapsed time and units;
-- dispenser/receptacle and vehicle pressure;
-- delivered-gas, hose and vehicle temperature;
-- instantaneous mass flow or cumulative transferred mass;
-- vehicle capacity, initial condition, protocol and temperature category;
-- storage-bank, compressor and precooler state, including pressure schedules;
-- quality flags, aborted fills, maintenance intervals and alarm/ESD states.
+## Protocol and provenance
 
-Station and operator identities are not required. Please state the licence or
-written reuse terms, including whether de-identified traces and derived error
-metrics may be published in an open repository and an IJHE submission.
+For each fill, please include the target pressure class (H35/H70 or other), protocol
+version (SAE J2601/MC Formula or internal research protocol), precooling target,
+initial pressures and temperatures, vehicle/tank configuration, nozzle and hose
+configuration, source-pressure boundary, and the reason for termination. A manifest
+should include the original file digest, de-identification steps, export date,
+station/facility identifier, and any known sensor or clock changes.
 
-If raw traces cannot be released, an event-level export with a data dictionary
-and a contact for the underlying measurements would still be useful. Aggregate
-composite data products will be retained as operating-range context and will
-not be represented as time-series validation.
+## Reuse and publication terms
 
-Any received files will be quarantined and hashed before outcome inspection;
-eligibility, the holdout split and the model commit will be frozen before the
-model is run. All eligible failures will be retained.
+The request should ask whether derived metrics and anonymized plots may be published
+in an IJHE submission, whether the data may be redistributed or only inspected under
+a data-use agreement, and whether a blinded holdout can be supplied. No raw file will
+be committed to this repository without explicit permission. If access is controlled,
+we will record the agreement, hash the received files, freeze the scoring protocol
+before evaluation, and publish only permitted derived results.
 
-Sincerely,
+## Pre-registered evaluation
 
-*[name, affiliation, institutional email and project DOI to be supplied]*
+Before opening any outcome column, freeze the model version, protocol settings,
+metrics and pass thresholds. The planned primary checks are pressure RMSE/MAE, gas
+or tank-temperature RMSE/MAE, transferred-mass or SOC error, stop-reason agreement,
+and event-order agreement. Report every case, including failures, with confidence
+intervals and a case-level audit trail. Component-only or endpoint-only tables will
+be reported as contextual evidence and will not be promoted to full-loop validation.
+
+## Current evidence boundary
+
+The public [NREL HITRF description](https://www.nrel.gov/hydrogen/hitrf-animation?print=)
+confirms an integrated, instrumented research station and automated data logging.
+The NREL-hosted IJHE sample-fill table is useful for endpoint face-validity, but the
+underlying synchronized station-to-vehicle logger is not publicly released. This
+request is therefore a path to independent validation, not evidence that the gate
+has already passed.
