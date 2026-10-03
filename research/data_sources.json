@@ -408,6 +408,44 @@
       "public_raw_data": false,
       "data_availability_statement": "The paper states that supporting data are not publicly available because participants did not agree to sharing and because of legal restrictions.",
       "eligibility_note": "Strong independent field-validation and data-request lead, but not a public raw validation set until de-identified traces and reuse permission are obtained."
+    },
+    "nrel_h2fills_2022_hdvs_typeiv": {
+      "title": "NREL H2FillS 2022 HDVS Type IV sample test result",
+      "publisher": "National Renewable Energy Laboratory / National Laboratory of the Rockies",
+      "landing_page": "https://www.nrel.gov/hydrogen/h2fills",
+      "download_page": "https://www.nlr.gov/hydrogen/h2fills-download",
+      "package_url": "https://www.nlr.gov/docs/libraries/hydrogen/h2fills-package.zip?sfvrsn=4ee4550e_0",
+      "manual_url": "https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf?sfvrsn=b2960c3d_1",
+      "citation": "NREL H2FillS supplemental data, NREL Sample Test Data from 8/16/2022, 7-tank Type IV HDVS test.",
+      "package_sha256": "f44a079ffbd995275dd7b6e1c55b557fa1736c512b419f2a6666057b99c43ac0",
+      "workbook_sha256": "1a3fbe64a50c1c97266bfe0372998513ad3ccec5600fab7bc4b9fc68ad4d9d0c",
+      "workbook_bytes": 313285,
+      "license": "H2FillS package internal-use-only licence; raw package/data are not redistributed",
+      "rights_note": "The official package is downloadable for evaluation, but its LICENSE.txt prohibits redistribution. Keep the workbook under the ignored raw-data directory and request permission before publishing derived/raw values.",
+      "measured_scope": {
+        "date": "2022-08-16",
+        "tank_count": 7,
+        "tank_capacity_kg": 9.8,
+        "total_capacity_kg": 68.6,
+        "common_time_base": "1 s samples, 351 timed rows (0..350 s)",
+        "channels": [
+          "per-tank inlet pressure",
+          "per-tank inlet temperature",
+          "per-tank mass",
+          "per-tank internal pressure",
+          "per-tank internal temperature"
+        ],
+        "reported_mass_transfer_kg": 61.5,
+        "reported_fill_time_s": 279,
+        "reported_start_pressure_mpa": 1.8,
+        "reported_end_pressure_mpa": 75.8,
+        "missing_for_full_loop": [
+          "hose/nozzle/receptacle assembly",
+          "station controller/cascade state",
+          "vehicle-side protocol command trace"
+        ]
+      },
+      "eligibility_note": "Independent physical HDVS tank pressure/thermal validation candidate. It can test the frozen tank submodel with measured inlet and mass boundaries, but cannot close the station-to-vehicle full-loop gate or establish field safety performance."
     }
   }
 }

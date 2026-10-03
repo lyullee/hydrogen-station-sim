@@ -131,6 +131,56 @@
       }
     },
     {
+      "id": "nrel_h2fills_2022_hdvs_typeiv",
+      "title": "NREL H2FillS 2022 HDVS Type IV sample test result",
+      "url": "https://www.nlr.gov/docs/libraries/hydrogen/h2fills-package.zip?sfvrsn=4ee4550e_0",
+      "publisher": "National Renewable Energy Laboratory / National Laboratory of the Rockies",
+      "public_raw_data": true,
+      "access": "official package download; raw workbook retained locally because redistribution is not permitted",
+      "decision": "INDEPENDENT_TANK_SUBMODEL_SCREEN_REQUEST_REUSE_PERMISSION",
+      "inspection": {
+        "workbook": "SupplementalData/20220816_hdvs_typeIV_test_result.xlsx",
+        "package_sha256": "f44a079ffbd995275dd7b6e1c55b557fa1736c512b419f2a6666057b99c43ac0",
+        "workbook_sha256": "1a3fbe64a50c1c97266bfe0372998513ad3ccec5600fab7bc4b9fc68ad4d9d0c",
+        "workbook_bytes": 313285,
+        "sample_count": 351,
+        "sample_period_s": 1.0,
+        "tank_count": 7,
+        "capacity_per_tank_kg": 9.8,
+        "total_capacity_kg": 68.6,
+        "reported_mass_transfer_kg": 61.5,
+        "reported_fill_time_s": 279,
+        "reported_pressure_mpa": [
+          1.8,
+          75.8
+        ],
+        "channels": [
+          "per-tank inlet pressure",
+          "per-tank inlet temperature",
+          "per-tank mass",
+          "per-tank internal pressure",
+          "per-tank internal temperature"
+        ],
+        "missing_for_full_loop": [
+          "hose/nozzle/receptacle",
+          "station controller/cascade state",
+          "vehicle-side protocol command trace"
+        ],
+        "local_raw_path": "data/public_validation/raw/nrel_h2fills_2022_hdvs_typeiv.xlsx",
+        "local_screening_result": "data/public_validation/results/nrel_h2fills_hdvs_typeiv/validation.json",
+        "screening_result": {
+          "tank_count": 7,
+          "screening_pass_count": 0,
+          "screening_pass_fraction": 0.0,
+          "pressure_rmse_mpa_mean": 6.164469743688679,
+          "temperature_rmse_c_mean": 4.624745495755946,
+          "mass_final_error_kg_mean": 0.11975781835466089
+        },
+        "license_note": "H2FillS LICENSE.txt states internal-use-only and prohibits redistribution; request permission before publishing raw or derived values."
+      },
+      "role": "Independent physical HDVS tank pressure/thermal validation candidate; not a full-loop HRS holdout."
+    },
+    {
       "id": "nrel_h2fills",
       "title": "H2FillS: Hydrogen Filling Simulation",
       "url": "https://www.nrel.gov/hydrogen/h2fills",
@@ -714,8 +764,8 @@
       }
     }
   ],
-  "next_action": "Request de-identified synchronized fill traces from CARB, JRC GasTeF, Cal State LA, BAM demonstration HRS, NREL HITRF/NFCTEC, Empa, DLR/FCH2RAIL and the Hungarian HRS study author before freezing a new full-loop holdout protocol; use Grune/Sempert for the separate ventilation protocol.",
-  "claim_limit": "No new external full-loop validation claim is permitted from the screened public materials.",
+  "next_action": "Use the NREL HDVS workbook for the frozen tank-submodel diagnostic, request permission for publication of derived values, and request synchronized station-side traces from NREL/BAM/JRC/Empa/DLR before freezing a new full-loop holdout.",
+  "claim_limit": "The NREL candidate supports an independent tank-submodel screen only. No new external full-loop validation claim is permitted until station controller, hose/nozzle, protocol and vehicle-side traces are obtained and scored under a pre-access freeze.",
   "review_log_2026_10_03": {
     "scope": "public-source recheck for an untouched independent full-loop HRS validation set",
     "sources_checked": [
@@ -793,9 +843,14 @@
         "id": "fch2rail_ijhe_2025",
         "url": "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf",
         "finding": "The open IJHE paper reports real FCH2RAIL HRS/train measurements and 32 days of refuelling analysis, but explicitly says rail-vehicle refuelling measurement data were not publicly available; the DLR record and Crossref metadata expose no synchronized machine-readable archive or supplementary dataset."
+      },
+      {
+        "id": "nrel_h2fills_2022_hdvs_typeiv",
+        "url": "https://www.nlr.gov/hydrogen/h2fills-download",
+        "finding": "Official H2FillS package contains a 351-row, 1 s, 7-tank Type IV HDVS physical sample workbook. Frozen tank-submodel screening gives 0/7 joint passes (mean pressure RMSE 6.164 MPa; temperature RMSE 4.625 C); package licence blocks redistribution and the workbook lacks station-side full-loop channels."
       }
     ],
-    "result": "H2Protocol raw archives are public and hash-linked, but they are already consumed Powertech data; FCH2RAIL, Klopčič and other peer-reviewed campaigns provide strong independent request leads but no public untouched full-loop archive was identified.",
+    "result": "H2Protocol raw archives remain consumed Powertech evidence. The NREL H2FillS package adds an independent physical HDVS tank-submodel candidate with a reproducible negative screen, but its licence and missing station-side channels prevent a full-loop claim.",
     "next_action": "send documented data requests (Klopčič/HyCentA heavy-duty traces, CARB, JRC GasTeF and HYTRANSFER file custodian, Cal State LA, BAM demonstration HRS, NREL HITRF/NFCTEC, Empa, DLR/FCH2RAIL, Hungarian HRS and NBSDC) and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest"
   },
   "last_reviewed": "2026-10-03"

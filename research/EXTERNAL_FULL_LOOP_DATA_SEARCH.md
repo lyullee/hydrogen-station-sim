@@ -26,7 +26,7 @@ immutable digest are recorded.
 | CARB/NREL HyStEP 2015–2017 dispenser test program | CEC report documents 11 California stations, three instrumented Type IV 70 MPa test tanks, pressure/temperature and dispenser communication/fueling measurements, plus CSA HGV 4.3 / SAE J2601 protocol and fault tests. The report explicitly says station test data and results are confidential and are not included. | **Request data.** Ask CARB/NREL for de-identified test matrices, data dictionary, calibration/quality flags and reuse terms; the report itself cannot close the untouched time-series gate. |
 | Zhao et al. 35/70 MPa dispenser performance tests, DOI 10.19799/j.cnki.2095-4239.2020.0049 | A real-station study reports 35 MPa and 70 MPa vehicle fills and exposes four downloadable CSV links for initial/final tables. The files contain only summary values; the article reports that pressure/temperature/flow curves were recorded but no common-time-base trace is downloadable. | **Summary benchmark / request raw trace.** Use reported 35 MPa (8.21 kg, 470 s) and 70 MPa (5.08 kg, 276 s, 36 g/s peak) endpoints only for face-validity; request the original synchronized logger export before treating it as an untouched holdout. |
 | H2Protocol.com SAE J2601 Tables and MC Default public archives | The H2Protocol data-sharing site currently exposes five SAE J2601 Tables ZIP archives and one MC Default ZIP archive. The local acquisition manifest records six archive SHA-256 values and the processed traces contain vehicle pressure, tank temperature, SOC, inlet-gas temperature and mass-flow channels on a common clock. | **Consumed source, not an independent holdout.** These Powertech archives are already used by the frozen development/MC evaluation; reusing them for a new prospective claim would violate independence. Preserve the hashes and obtain a separate CARB/HyStEP, NIST, CEC or GasTeF logger archive before reopening the gate. |
-| NREL H2FillS | Official page says the model was validated with empirical fueling datasets. | **Not available.** The empirical validation traces are not offered as a public download on the product page. Simulator output would not be independent experimental evidence. |
+| NREL H2FillS | The official package includes `SupplementalData/20220816_hdvs_typeIV_test_result.xlsx`: a 351-sample, 1 s, seven-tank Type-IV HDVS test with per-tank inlet pressure/temperature, mass, internal pressure and internal temperature (61.5 kg reported transfer, 1.8→75.8 MPa). | **Independent tank-submodel candidate, not full loop.** The frozen tank model was run once without fitting on this workbook: 0/7 joint screens, mean pressure RMSE 6.164 MPa, temperature RMSE 4.625 °C and final mass error 0.120 kg. The raw package is retained locally because its internal-use-only licence does not permit redistribution; request permission before publishing derived values. Reproduction: `scripts/run_nrel_h2fills_hdvs_validation.py`. |
 | NREL 2024 HITRF reliability/fueling report | Table 4 gives sample HITRF fill summaries with timestamp, amount, rate, start/end pressure, dispensing temperature and dispensing pressure. | **Report table only.** The PDF does not provide a common-time-base raw trace, so it is useful field context and a lead for a data request, not an untouched full-loop validation set. |
 | DOE/NREL H2IQ Hour 2024 HD fast-flow experiment | 3/12/2024 HITRF test reports 73 kg in 423.5 s, 358.9 s fueling time, 172.3 g/s average, 483.33 g/s peak, 5.5→74.6 MPa, APRR 9.9 MPa/min under SAE J2601-5 MCF-HF-G H70 FM300 T40. | **Plot/summary only.** The presentation contains charts and aggregate endpoints but no machine-readable common-time-base trace; use for face-validity and operating-range checks only. |
 | NREL HITRF 36 L experiment, Kuroki et al., DOI 10.1002/ente.202300239 | Open article describes a HITRF fill from 6.3 to 73.0 MPa in 186 s with inlet pressure, receptacle-exit temperature, internal hydrogen temperature and liner measurements. | **Request data.** The paper's data-availability statement says research data are not shared; figures and boundary conditions alone cannot close the time-series gate. |
@@ -153,6 +153,37 @@ The H2FillS manual is screened separately because it documents an example
 but those examples are part of a simulation package and are not independent
 experimental observations:
 <https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf?sfvrsn=b2960c3d_1>.
+
+## NREL H2FillS HDVS supplemental workbook inspection
+
+The official NLR download page exposes the H2FillS package:
+<https://www.nlr.gov/hydrogen/h2fills-download>. Its supplemental workbook
+`20220816_hdvs_typeIV_test_result.xlsx` is a physical NREL sample test from
+2022-08-16, not a simulator-generated trace. It contains 351 one-second rows
+for seven 9.8 kg Type-IV tanks (68.6 kg total capacity), with per-tank inlet
+pressure and temperature, mass, internal pressure and internal temperature.
+The description sheet reports 61.5 kg transferred in 279 s from 1.8 to
+75.8 MPa.
+
+The workbook was read locally and evaluated against the frozen Type-IV tank
+fit from `research/tank_model_validation_v2.json`. No parameter was fitted or
+changed after accessing this candidate. The resulting independent screen is
+recorded in
+`data/public_validation/results/nrel_h2fills_hdvs_typeiv/validation.json`:
+seven tanks, zero joint screens, mean pressure RMSE 6.164 MPa, mean
+temperature RMSE 4.625 °C and mean final mass error 0.120 kg. This is a useful
+negative diagnostic: the existing tank fit is close on temperature and mass
+closure but misses this larger HDVS pressure response. It is not a reason to
+tune the model on the holdout.
+
+The H2FillS package `LICENSE.txt` states internal-use-only terms and does not
+grant raw-file redistribution. The workbook therefore remains under the
+gitignored `data/public_validation/raw/` directory. The package SHA-256,
+workbook SHA-256, source URL and rights boundary are recorded in
+`research/data_sources.json`, `data/public_validation/raw/acquisition.json` and
+`research/external_full_loop_data_search.json`. The missing hose, nozzle,
+receptacle and station-controller channels mean this candidate cannot close
+the station-to-vehicle full-loop gate.
 
 ## 2026-10-03 primary-source recheck
 
