@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-03",
+  "status": "development_data_only_no_external_claim",
+  "purpose": "Explain and correct the prospectively archived negative E3.1 Part A result without erasing or relabelling it.",
+  "data_role": {
+    "dataset": "PRESLHY E3.1 Part A ambient-temperature workbooks, DOI 10.35097/1187",
+    "status": "consumed development evidence",
+    "prohibited_use": "These 22 cases cannot be reused as independent confirmation of the revised model."
+  },
+  "model_revision": {
+    "source_volume_m3": 0.002815,
+    "vessel_internal_diameter_m": 0.160,
+    "vessel_internal_height_m": 0.140,
+    "wall_mass_kg": 28.0,
+    "wall_specific_heat_j_kg_k": 500.0,
+    "wall_conductivity_w_m_k": 16.3,
+    "external_heat_transfer_w_m2_k": 6.0,
+    "internal_heat_transfer": "Churchill-Chu all-range natural-convection correlation evaluated from HEOS hydrogen properties",
+    "gas_energy_balance": "dU/dt = Q_wall_to_gas - mass_flow * upstream_specific_enthalpy",
+    "wall_energy_balance": "lumped measured wall heat capacity with internal and external convection",
+    "mass_flow": "maximum real-gas isentropic mass flux from CoolProp HEOS",
+    "discharge_coefficient": 0.8,
+    "parameter_policy": "No experiment-specific parameter is fitted. The original global discharge coefficient 0.8 is retained."
+  },
+  "diagnostic_screens": {
+    "pressure_nrmse_percent_initial_absolute_pressure_max": 10.0,
+    "time_to_50_percent_initial_gauge_pressure_relative_error_percent_max": 20.0,
+    "minimum_joint_pass_fraction": 0.7,
+    "note": "Screens are copied from the frozen first evaluation for comparability; passing is developmental adequacy, not external validation."
+  },
+  "next_claim_gate": "Freeze the revised implementation hash and a holdout protocol before opening any holdout numerical outcome file."
+}

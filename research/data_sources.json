@@ -106,6 +106,19 @@
       "rights_note": "The dataset is openly licensed for attribution. Keep the large raw archive under the gitignored data directory and commit only metadata, parsers and derived validation results.",
       "eligibility_note": "Ambient-temperature direct-aperture experiments are eligible for a separately frozen blowdown/source-depletion validation. They do not validate the complete fueling loop or a site vent stack."
     },
+    "preslhy_e5_1_ignited_discharge_holdout": {
+      "title": "PRESLHY Experiment series E5.1 (Ignited Discharge) results - Benchmarking",
+      "publisher": "Karlsruhe Institute of Technology",
+      "landing_page": "https://radar.kit.edu/radar/en/dataset/uzDLoVtvVFILFwGQ",
+      "doi": "10.35097/1258",
+      "archive_url": "https://radar.kit.edu/radar-backend/archives/uzDLoVtvVFILFwGQ/versions/1/content",
+      "archive_format": "application/x-tar",
+      "archive_bytes": 484896768,
+      "archive_md5": "e7f7816a6d710101cb9c73694cafe899",
+      "license": "CC BY-SA 4.0",
+      "rights_note": "The dataset is openly licensed with attribution and share-alike requirements. Keep the raw archive under the gitignored data directory and commit only metadata, parsers and derived results.",
+      "eligibility_note": "Prospectively reserved as a separate-campaign holdout for the locked non-adiabatic DisCha source-depletion model. Shared facility and investigators limit independence; combustion endpoints are outside this source-depletion claim."
+    },
     "hyram_validation_basis": {
       "title": "HyRAM+ Version 5.1.1 Physics Validation",
       "publisher": "Sandia National Laboratories / U.S. Department of Energy OSTI",
