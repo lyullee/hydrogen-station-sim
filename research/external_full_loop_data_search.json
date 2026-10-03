@@ -272,8 +272,32 @@
         "role": "independent consequence and detector/visualisation evidence; not a gaseous high-pressure HRS fueling-loop validation set",
         "exclusion_reason": "phase, release geometry and pressure domain differ from this station model; no vehicle fill, cascade, compressor, precooler or dispenser control traces"
       }
+    },
+    {
+      "id": "grune_2021_mechanical_ventilation_h2_dispersion",
+      "title": "Efficiency of mechanical ventilation on H2 dispersion (PS)",
+      "doi": "10.5281/zenodo.4668554",
+      "url": "https://zenodo.org/records/4668554",
+      "publisher": "Pro-Science GmbH / HyTunnel-CS",
+      "public_raw_data": true,
+      "decision": "VENTILATION_DISPERSION_VALIDATION_ONLY",
+      "inspection": {
+        "license": "CC BY 4.0",
+        "record_id": 4668554,
+        "archive_size_bytes": 11108400,
+        "files_with_md5": 7,
+        "measured_scope": [
+          "spatial H2 concentration",
+          "flow-field measurements",
+          "wind and ventilation cases",
+          "facility CAD/drawing metadata"
+        ],
+        "raw_common_timebase": false,
+        "role": "independent ventilation, dispersion and detector-placement evidence; not a full gaseous HRS fueling-loop validation set",
+        "exclusion_reason": "No vehicle/cascade/compressor/precooler/dispenser controller time series; concentration and flow-field experiments target confined-space ventilation."
+      }
     }
   ],
-  "next_action": "Request de-identified fill-level workbooks and traces from CARB, JRC GasTeF and Cal State LA before freezing a new full-loop holdout protocol; keep the HydDown/Striednig material restricted to a separately documented tank-thermal submodel check.",
+  "next_action": "Request de-identified fill-level workbooks and traces from CARB, JRC GasTeF and Cal State LA before freezing a new full-loop holdout protocol; use the CC BY Grune/Sempert dataset to pre-register a separate ventilation, dispersion and detector-placement validation protocol.",
   "claim_limit": "No new external full-loop validation claim is permitted from the screened public materials."
 }

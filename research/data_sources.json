@@ -290,6 +290,66 @@
         "video"
       ],
       "eligibility_note": "Eligible for independent liquid-hydrogen release, dispersion and sensor/visualisation checks. Not eligible for this project’s gaseous high-pressure HRS fueling-loop gate because phase, geometry and pressure domain differ and no vehicle/cascade/compressor/precooler/dispenser controller trace is present."
+    },
+    "grune_2021_mechanical_ventilation_h2_dispersion": {
+      "title": "Efficiency of mechanical ventilation on H2 dispersion (PS)",
+      "authors": [
+        "Joachim Grune",
+        "Karsten Sempert"
+      ],
+      "publisher": "Pro-Science GmbH / HyTunnel-CS",
+      "landing_page": "https://zenodo.org/records/4668554",
+      "doi": "10.5281/zenodo.4668554",
+      "zenodo_record_id": 4668554,
+      "published": "2021-04-07",
+      "license": "CC BY 4.0",
+      "grant": "European Commission H2020 HyTunnel-CS grant 826193",
+      "archive_size_bytes": 11108400,
+      "files": [
+        {
+          "name": "HTE2440PS000MIXED_300321.pdf",
+          "bytes": 706086,
+          "md5": "d4b59189dd4017c695cc652f4f572128"
+        },
+        {
+          "name": "HTE2440PS001MIXED_300321.xlsx",
+          "bytes": 52610,
+          "md5": "da176772755b1a2449a76df9e12b9cd3"
+        },
+        {
+          "name": "HTE2440PS002MIXED_300321.xlsx",
+          "bytes": 65696,
+          "md5": "20f996be57fc3d8cf7d091d1f982bd75"
+        },
+        {
+          "name": "HTE2440PS003MIXED_300321.xlsx",
+          "bytes": 50590,
+          "md5": "953b6a033553288831b1ee02b881dbec"
+        },
+        {
+          "name": "HTE2440PS004MIXED_300321.xlsx",
+          "bytes": 81649,
+          "md5": "093d3d8e6ef030615704ee9096d3d84f"
+        },
+        {
+          "name": "HTE2440PS005FLMT00300321.xlsx",
+          "bytes": 26724,
+          "md5": "c4b9195a2bb89213eda9aa2ac9e9ec07"
+        },
+        {
+          "name": "HTE2440PS006MIXED_300321.zip",
+          "bytes": 11108400,
+          "md5": "ade3911c0df50ee70486153455f4bd12"
+        }
+      ],
+      "rights_note": "The Zenodo record and files are published under CC BY 4.0. Preserve attribution and the DOI; raw files remain external to this repository.",
+      "eligibility_note": "Eligible for an independent mechanical-ventilation, H2-dispersion and detector-placement validation protocol. It is not a full gaseous HRS fueling-loop set: no vehicle/cascade/compressor/precooler/dispenser controller time series.",
+      "measured_scope": [
+        "spatial H2 concentration",
+        "flow-field measurements",
+        "wind and ventilation cases",
+        "facility CAD/drawing metadata"
+      ]
     }
   }
 }
