@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T22:31:12.733193+00:00",
+  "generated_at": "2026-10-03T22:41:12.435680+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 22,
+    "PASS": 23,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -342,6 +342,19 @@
           "next_action": "send the prepared CARB/NRC/IJHE high-flow/FCH2RAIL/JRC/NREL/BAM/Empa/DLR data requests through approved custodians, and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest",
           "claim_limit": "The NREL candidate supports an independent tank-submodel screen only. No new external full-loop validation claim is permitted until station controller, hose/nozzle, protocol and vehicle-side traces are obtained and scored under a pre-access freeze."
         }
+      }
+    },
+    {
+      "id": "validation_data_acquisition_tracker",
+      "status": "PASS",
+      "claim": "Independent raw-data acquisition routes are recorded with acceptance, rights and claim-boundary checks without treating requests as evidence.",
+      "evidence": "research\\validation_data_acquisition_tracker.json",
+      "requirement": "At least 15 candidate routes, existing draft request for every route, source URL and explicit non-evidentiary boundary.",
+      "observed": {
+        "status": "open_data_not_yet_received",
+        "candidate_count": 19,
+        "draft_count": 17,
+        "claim_boundary": "This tracker is a data-acquisition plan. It is not evidence of validation, does not change any IJHE readiness gate, and does not authorize contact or publication."
       }
     },
     {

@@ -1,0 +1,261 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-04",
+  "purpose": "Track auditable requests for independent physical hydrogen-refuelling data without treating a request, paper, plot or simulator output as validation.",
+  "status": "open_data_not_yet_received",
+  "claim_boundary": "This tracker is a data-acquisition plan. It is not evidence of validation, does not change any IJHE readiness gate, and does not authorize contact or publication.",
+  "common_acceptance": {
+    "required_for_full_loop": [
+      "machine-readable synchronized time base",
+      "vehicle or receptacle pressure",
+      "mass flow or transferred mass",
+      "initial conditions and tank capacity",
+      "protocol or pressure-ramp metadata",
+      "units and quality flags",
+      "independent provenance and immutable file digest",
+      "written reuse terms permitting derived results in an open repository and journal"
+    ],
+    "preferred": [
+      "fuel or vehicle temperature",
+      "storage-bank, compressor, precooler and dispenser state",
+      "alarm, abort, maintenance and calibration flags"
+    ],
+    "freeze_protocol": [
+      "quarantine received files before reading outcomes",
+      "record source URL, access date, licence and SHA-256",
+      "freeze eligible cases, split, implementation commit and error screens",
+      "run once without case-specific fitting or time warping",
+      "retain every eligible failure and publish the claim boundary"
+    ]
+  },
+  "candidates": [
+    {
+      "id": "carb_2024_in_use",
+      "draft": "research/CARB_DATA_REQUEST_DRAFT.md",
+      "source": "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf",
+      "candidate_type": "independent in-use station fills",
+      "status": "request_draft_ready",
+      "requested_fields": ["pressure", "temperature", "mass_flow_or_cumulative_mass", "SOC", "protocol", "quality_flags"],
+      "minimum_acceptance": "At least eight eligible fills with common time base and vehicle/receptacle pressure plus mass flow or transferred mass.",
+      "rights": "De-identification and written reuse permission required; public report alone is context only.",
+      "next_action": "Project owner reviews and sends the draft to CARB data custodian.",
+      "claim_boundary": "No full-loop claim until raw workbook and rights are frozen."
+    },
+    {
+      "id": "nrel_hitrf_nfctec",
+      "draft": "research/NREL_HITRF_DATA_REQUEST_DRAFT.md",
+      "source": "https://www.nrel.gov/hydrogen/hydrogen-infrastructure-analysis",
+      "candidate_type": "independent HITRF/NFCTEC full-station fills",
+      "status": "request_draft_ready",
+      "requested_fields": ["vehicle_pressure", "dispenser_pressure", "fuel_temperature", "mass_flow", "SOC", "storage_state", "precooler_state", "quality_flags"],
+      "minimum_acceptance": "A de-identified holdout with common time base, tank capacity, initial conditions and protocol metadata.",
+      "rights": "NREL/NFCTEC release terms and permission for derived metrics must be documented.",
+      "next_action": "Project owner contacts the published technical-validation custodian.",
+      "claim_boundary": "Public composite products remain operating-range context only."
+    },
+    {
+      "id": "hystep_carb_nrel",
+      "draft": "research/CARB_DATA_REQUEST_DRAFT.md",
+      "source": "https://www.energy.ca.gov/sites/default/files/2021-05/CEC-600-2019-014.pdf",
+      "candidate_type": "independent dispenser/protocol tests",
+      "status": "request_lead",
+      "requested_fields": ["instrumented_tank_pressure", "instrumented_tank_temperature", "dispenser_flow", "communication_state", "fault_state"],
+      "minimum_acceptance": "De-identified synchronized test matrices for eligible stations with calibration and protocol metadata.",
+      "rights": "Report identifies station data as confidential; written release terms are mandatory.",
+      "next_action": "Route a separate request to CARB/NREL/CEC custodians identified by the report.",
+      "claim_boundary": "The public report cannot close a numerical holdout."
+    },
+    {
+      "id": "cip_2020_dispenser",
+      "draft": "research/CIP_DISPENSER_DATA_REQUEST_DRAFT.md",
+      "source": "https://doi.org/10.19799/j.cnki.2095-4239.2020.0049",
+      "candidate_type": "independent 35/70 MPa dispenser experiments",
+      "status": "request_draft_ready",
+      "requested_fields": ["pressure", "temperature", "mass_flow", "transferred_mass", "sampling_interval", "calibration"],
+      "minimum_acceptance": "Original synchronized logger exports for both pressure classes; summary CSVs are insufficient.",
+      "rights": "Author or publisher permission must cover derived error metrics and redistribution of derived tables.",
+      "next_action": "Project owner sends author request using the draft.",
+      "claim_boundary": "Published endpoints are face-validity context, not holdout evidence."
+    },
+    {
+      "id": "klopcic_2024_precooling",
+      "draft": "research/KLOPCIC_2024_PRECOOLING_DATA_REQUEST_DRAFT.md",
+      "source": "https://doi.org/10.1016/j.ijhydene.2024.03.097",
+      "candidate_type": "independent heavy-duty fill and precooling traces",
+      "status": "request_draft_ready",
+      "requested_fields": ["tank_pressure", "gas_temperature", "precooler_temperature", "mass_flow", "initial_conditions", "protocol"],
+      "minimum_acceptance": "At least four eligible fills across pressure or temperature groups with common timestamps.",
+      "rights": "Custodian must state whether anonymized traces and derived figures may be deposited and published.",
+      "next_action": "Project owner sends request to corresponding author/data custodian.",
+      "claim_boundary": "Paper-level plots remain a request lead until machine-readable files are obtained."
+    },
+    {
+      "id": "fch2rail",
+      "draft": "research/FCH2RAIL_DATA_REQUEST_DRAFT.md",
+      "source": "https://doi.org/10.1016/j.ijhydene.2025.04.040",
+      "candidate_type": "independent rail-vehicle HRS fills",
+      "status": "request_draft_ready",
+      "requested_fields": ["module_pressure", "dispenser_pressure", "temperature", "mass_flow", "train_fill_protocol", "quality_flags"],
+      "minimum_acceptance": "De-identified synchronized refuelling runs with capacity and pressure-ramp metadata.",
+      "rights": "DLR/project consortium permission and citation terms required.",
+      "next_action": "Project owner sends the prepared DLR request.",
+      "claim_boundary": "The IJHE article is independent field evidence but not a raw holdout."
+    },
+    {
+      "id": "empa_fch2rail",
+      "draft": "research/EMPA_FCH2RAIL_DATA_REQUEST_DRAFT.md",
+      "source": "https://doi.org/10.1016/j.ijhydene.2022.05.127",
+      "candidate_type": "independent Empa Type-IV and rail refuelling measurements",
+      "status": "request_draft_ready",
+      "requested_fields": ["pressure", "temperature", "flow", "tank_geometry", "protocol", "instrument_metadata"],
+      "minimum_acceptance": "Raw synchronized traces or a documented route to the underlying Empa/FCH2RAIL logger files.",
+      "rights": "Data owner must approve derived publication and repository deposition.",
+      "next_action": "Send after identifying the corresponding data custodian.",
+      "claim_boundary": "Open article access does not imply raw-data reuse permission."
+    },
+    {
+      "id": "nist_fts",
+      "draft": "research/NIST_FTS_DATA_REQUEST_DRAFT.md",
+      "source": "https://doi.org/10.1016/j.flowmeasinst.2015.10.010",
+      "candidate_type": "independent dispenser metrology and field-fill traces",
+      "status": "request_draft_ready",
+      "requested_fields": ["continuous_tank_pressure", "continuous_tank_temperature", "independent_mass", "time_base", "uncertainty"],
+      "minimum_acceptance": "Raw synchronized files with instrument calibration and test-condition metadata.",
+      "rights": "NIST/data custodian must confirm reuse and publication terms.",
+      "next_action": "Send request through NIST project contact.",
+      "claim_boundary": "Metrology evidence may validate a sub-boundary rather than a complete station loop."
+    },
+    {
+      "id": "jrc_gastef_hytransfer",
+      "draft": "research/JRC_GASTEF_DATA_REQUEST_DRAFT.md",
+      "source": "https://doi.org/10.1016/j.ijhydene.2014.03.227",
+      "candidate_type": "independent tank filling/emptying campaign",
+      "status": "request_draft_ready",
+      "requested_fields": ["gas_path_pressure", "gas_path_temperature", "internal_temperature", "mass_flow", "geometry", "run_metadata"],
+      "minimum_acceptance": "Machine-readable 18-file campaign or a defined subset with synchronized pressure and flow.",
+      "rights": "JRC/HyTransfer reuse terms and immutable source archive required.",
+      "next_action": "Send the request to the JRC/GasTeF custodian.",
+      "claim_boundary": "Campaign data can validate tank/fill submodels unless station-control channels are present."
+    },
+    {
+      "id": "hungarian_hrs",
+      "draft": "research/HUNGARIAN_HRS_DATA_REQUEST_DRAFT.md",
+      "source": "https://doi.org/10.32604/ee.2026.081099",
+      "candidate_type": "independent operational HRS digital-twin traces",
+      "status": "request_draft_ready",
+      "requested_fields": ["pressure", "temperature", "mass_flow", "fill_id", "capacity", "protocol", "quality_flags"],
+      "minimum_acceptance": "De-identified operational traces covering multiple complete fills and declared exclusion rules.",
+      "rights": "Author statement cites legal/consent restrictions; written permission is required.",
+      "next_action": "Send the prepared author request.",
+      "claim_boundary": "Published comparison figures alone cannot be scored as an untouched holdout."
+    },
+    {
+      "id": "calstate_hrff",
+      "draft": "research/CALSTATE_DATA_REQUEST_DRAFT.md",
+      "source": "https://doi.org/10.1016/j.ijhydene.2023.04.084",
+      "candidate_type": "independent multi-year HRFF station data",
+      "status": "request_draft_ready",
+      "requested_fields": ["event_id", "pressure", "temperature", "mass_flow", "storage_state", "compressor_state", "fill_outcome"],
+      "minimum_acceptance": "Event-level or time-series exports with enough common timestamps for independent replay.",
+      "rights": "Institutional custodian must approve de-identification, derived metrics and repository deposit.",
+      "next_action": "Send request to HRFF authors/data custodian.",
+      "claim_boundary": "Aggregate multi-year performance is operating context only."
+    },
+    {
+      "id": "nrc_bc_dispenser",
+      "draft": "research/NRC_BC_DISPENSER_DATA_REQUEST_DRAFT.md",
+      "source": "https://doi.org/10.4224/40003368",
+      "candidate_type": "independent British Columbia H70 dispenser events",
+      "status": "request_draft_ready",
+      "requested_fields": ["pressure", "temperature", "flow", "protocol", "fault_category", "event_timing"],
+      "minimum_acceptance": "De-identified synchronized event traces, not only aggregate plots or counts.",
+      "rights": "NRC/data owner must document licence and derived-publication permission.",
+      "next_action": "Send request to NRC report custodian.",
+      "claim_boundary": "The public report remains fault-taxonomy and operating-range context."
+    },
+    {
+      "id": "nrc_htec_leakage",
+      "draft": "research/NRC_HTEC_LEAKAGE_DATA_REQUEST_DRAFT.md",
+      "source": "https://nrc.canada.ca/en/research-development/products-services/technical-advisory-services/hydrogen-safety",
+      "candidate_type": "independent HRS leakage/safety measurements",
+      "status": "request_draft_ready",
+      "requested_fields": ["release_pressure", "orifice", "mass_flow", "gas_concentration", "wind", "detector_state", "time_base"],
+      "minimum_acceptance": "Raw synchronized release or detector traces with geometry and calibration metadata.",
+      "rights": "NRC or HTEC custodian must approve publication and redistribution terms.",
+      "next_action": "Identify the report-specific custodian, then send the draft.",
+      "claim_boundary": "Leakage data support consequence/detector submodels, not station controller validation unless station state is present."
+    },
+    {
+      "id": "bam_demonstration_hrs",
+      "draft": "research/BAM_HRS_DATA_REQUEST_DRAFT.md",
+      "source": "https://doi.org/10.3390/app16157856",
+      "candidate_type": "independent demonstration-station sensor monitoring",
+      "status": "request_draft_ready",
+      "requested_fields": ["sensor_time_series", "pressure", "temperature", "flow", "alarm_state", "calibration"],
+      "minimum_acceptance": "Chronological raw channels with sensor map, units and quality flags.",
+      "rights": "Corresponding author/data owner must confirm reuse.",
+      "next_action": "Send after confirming the corresponding author contact.",
+      "claim_boundary": "Sensor monitoring can validate signal logic; it is not automatically a full-loop fill holdout."
+    },
+    {
+      "id": "deng_2025_highflow",
+      "draft": "research/DENG_2025_HIGHFLOW_DATA_REQUEST_DRAFT.md",
+      "source": "https://doi.org/10.1016/j.ijhydene.2025.151093",
+      "candidate_type": "independent high-flow HRS/tank experiment",
+      "status": "request_draft_ready",
+      "requested_fields": ["pressure", "temperature", "mass_flow", "tank_capacity", "protocol", "instrument_uncertainty"],
+      "minimum_acceptance": "Machine-readable synchronized traces and test-condition metadata for untouched cases.",
+      "rights": "Author or publisher must permit derived metrics and repository deposit.",
+      "next_action": "Send prepared request to corresponding author.",
+      "claim_boundary": "Paper and plotted traces are not counted until raw files and rights are frozen."
+    },
+    {
+      "id": "monde_2012_jhfc",
+      "draft": "research/MONDE_2012_JHFC_DATA_REQUEST_DRAFT.md",
+      "source": "https://doi.org/10.1016/j.ijhydene.2011.12.136",
+      "candidate_type": "independent JHFC/NEDO 35/70 MPa fills",
+      "status": "request_draft_ready",
+      "requested_fields": ["pressure", "temperature", "mass_flow", "vehicle_capacity", "protocol", "run_id"],
+      "minimum_acceptance": "Six or more synchronized fills with enough metadata for no-fit replay.",
+      "rights": "JHFC/NEDO or data custodian permission required.",
+      "next_action": "Send request through JHFC/NEDO contact route.",
+      "claim_boundary": "Published article endpoints are context only."
+    },
+    {
+      "id": "nbsdc_winter_olympics",
+      "draft": "research/NBSDC_HRS_DATA_REQUEST_DRAFT.md",
+      "source": "https://cstr.cn/16666.11.nbsdc.aI3fJrzX",
+      "candidate_type": "independent operational HRS monitoring archive",
+      "status": "approval_required",
+      "requested_fields": ["dispenser_monitoring", "fueling_records", "compressor_monitoring", "timestamps", "units", "quality_flags"],
+      "minimum_acceptance": "Approved file-tree export with common timestamps and rights for derived publication.",
+      "rights": "Repository marks the files approval-required; access and reuse authorization must be recorded.",
+      "next_action": "Submit repository access request and retain approval record.",
+      "claim_boundary": "Metadata listing is not a validation dataset."
+    },
+    {
+      "id": "uci_nfcrc",
+      "draft": "research/UCI_NFCRC_DATA_REQUEST_DRAFT.md",
+      "source": "https://doi.org/10.1016/j.ijhydene.2020.08.251",
+      "candidate_type": "independent early HRS operational traces",
+      "status": "request_draft_ready",
+      "requested_fields": ["pressure", "temperature", "mass_flow", "fill_id", "station_state", "sampling_interval"],
+      "minimum_acceptance": "Row-level synchronized logger files beyond the public aggregate charts.",
+      "rights": "UCI/NFCRC data custodian must confirm reuse terms.",
+      "next_action": "Send request using the supplementary-artifact lead.",
+      "claim_boundary": "Aggregate charts are field context only."
+    },
+    {
+      "id": "zhao_2020_dispenser_authors",
+      "draft": "research/ZHAO_2020_DISPENSER_DATA_REQUEST_DRAFT.md",
+      "source": "https://doi.org/10.19799/j.cnki.2095-4239.2020.0049",
+      "candidate_type": "duplicate author route for 35/70 MPa field tests",
+      "status": "request_draft_ready",
+      "requested_fields": ["synchronized_pressure", "temperature", "mass_flow", "sampling_interval", "calibration"],
+      "minimum_acceptance": "Original logger files and rights statement; summary CSVs do not qualify.",
+      "rights": "Author/publisher permission required.",
+      "next_action": "Use one coordinated request with the CIP route to avoid duplicate outreach.",
+      "claim_boundary": "Do not double-count the same experiment under two request routes."
+    }
+  ]
+}

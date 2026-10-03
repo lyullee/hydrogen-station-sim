@@ -243,6 +243,37 @@ def audit(root: Path) -> dict[str, object]:
         } if external_loop else "missing; current internal comparisons pass 0/8 and 0/11",
     ))
 
+    acquisition_tracker_path = root / "research/validation_data_acquisition_tracker.json"
+    acquisition_tracker = _json(acquisition_tracker_path)
+    acquisition_candidates = (acquisition_tracker or {}).get("candidates") or []
+    acquisition_tracker_pass = bool(
+        (acquisition_tracker or {}).get("status") == "open_data_not_yet_received"
+        and len(acquisition_candidates) >= 15
+        and "not evidence" in str((acquisition_tracker or {}).get("claim_boundary", "")).lower()
+        and all(
+            isinstance(candidate.get("draft"), str)
+            and (root / candidate["draft"]).is_file()
+            and str(candidate.get("source", "")).startswith(("http://", "https://"))
+            for candidate in acquisition_candidates
+        )
+    )
+    gates.append(_gate(
+        "validation_data_acquisition_tracker",
+        "PASS" if acquisition_tracker_pass else ("FAIL" if acquisition_tracker else "PENDING"),
+        "Independent raw-data acquisition routes are recorded with acceptance, rights and claim-boundary checks without treating requests as evidence.",
+        str(acquisition_tracker_path.relative_to(root)),
+        "At least 15 candidate routes, existing draft request for every route, source URL and explicit non-evidentiary boundary.",
+        {
+            "status": (acquisition_tracker or {}).get("status"),
+            "candidate_count": len(acquisition_candidates),
+            "draft_count": sum(
+                1 for candidate in acquisition_candidates
+                if candidate.get("status") == "request_draft_ready"
+            ),
+            "claim_boundary": (acquisition_tracker or {}).get("claim_boundary"),
+        } if acquisition_tracker else "missing",
+    ))
+
     nrel_retrieval_path = root / "research/nrel_h2fills_package_retrieval_check.json"
     nrel_retrieval = _json(nrel_retrieval_path)
     nrel_validation_path = root / "data/public_validation/results/nrel_h2fills_hdvs_typeiv/validation.json"
