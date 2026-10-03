@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "status": "POST_OUTCOME_DIAGNOSTIC_NOT_VALIDATION",
+  "generated_at": "2026-10-03T20:18:30.936251+00:00",
+  "protocol": {
+    "path": "research/preslhy_blowdown_validation_protocol.json",
+    "sha256": "d40cc59af3a607e66870d2afb91014058c83ae96fc1ba4aeac0d8554953733af",
+    "outcomes_were_already_accessed": true
+  },
+  "baseline_frozen_result": {
+    "path": "research/preslhy_blowdown_external_validation.json",
+    "joint_primary_pass_fraction": 0.5,
+    "eligible_cases": 22,
+    "evaluation_errors": 6,
+    "decision": "FAIL",
+    "interpretation": "The frozen result remains the only prospective validation decision and its negative claim boundary is unchanged."
+  },
+  "current_revision_diagnostic": {
+    "runner_git_commit": "a3a21f0aae77a4d89f78f742f70dd6b905ddcbdc",
+    "command": ".venv\\Scripts\\python.exe scripts/run_preslhy_blowdown_validation.py --output tmp/preslhy_current_diagnostic",
+    "raw_output_sha256": "779df2575ad1da08f4efdd78e40457500668c2595046921833ccbd5c211ed639",
+    "eligible_cases": 22,
+    "excluded_workbooks": 0,
+    "joint_primary_pass_fraction": 0.7272727272727273,
+    "bootstrap_95_percent_ci": [0.5454545454545454, 0.9090909090909091],
+    "evaluation_errors": 0,
+    "numerical_observation": "The current table-boundary handling removes the six high-pressure integration failures present in the frozen run."
+  },
+  "claim_boundary": "This diagnostic is not an external-validation result. The revised implementation was run after the frozen outcomes had been inspected, so the E3.1 cases cannot be promoted to a new claim. A new independent, pre-frozen holdout is required before the 70 percent threshold can support a revised blowdown claim.",
+  "next_action": "Use the current implementation for a separately frozen independent release campaign; retain the frozen E3.1 failure as the prospective baseline."
+}
