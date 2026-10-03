@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-10-03T11:03:15.633331+00:00",
+  "protocol_id": "HIAD-SAGA-2601",
+  "readiness": {
+    "casebook_frozen": false,
+    "ethics_and_collection_permitted": false,
+    "coordinator_review_complete": false,
+    "ready_for_holdout_collection": false,
+    "ready_for_independent_review": false,
+    "independent_review_complete": false
+  },
+  "casebook": {
+    "path": "data\\public_validation\\results\\hiad_holdout_preparation\\casebook_for_approval.json",
+    "sha256": "3d02c589a67b7e1af112ffb5d58712ec366d66cddd13536ddabf5c0fd6bb226e",
+    "error": null,
+    "case_count": 24,
+    "unique_event_ids": true,
+    "all_leakage_reviews_pending": true,
+    "all_vignettes_unapproved": true,
+    "casebook_frozen": false
+  },
+  "coordinator_prescreen": {
+    "manifest_path": "data\\public_validation\\results\\hiad_coordinator_prescreen\\prescreen_manifest.json",
+    "manifest_sha256": "ebf4541a1c800aa9da46849393c6b72475c880d606d9885df105950d78752851",
+    "manifest_error": null,
+    "advisory_only_and_human_review_required": true,
+    "review_csv_path": "data\\public_validation\\results\\hiad_coordinator_prescreen\\coordinator_review.csv",
+    "review_csv_sha256": "eeafe11950d7f4ae1dfb91bf54f4cc35696e272638aa5ea66886661bbbcc2b14",
+    "file_present": true,
+    "row_count": 24,
+    "required_columns_present": true,
+    "all_required_decisions_populated": false,
+    "review_complete": false
+  },
+  "protocol": {
+    "path": "research\\hiad_study_protocol_manifest.json",
+    "sha256": "26c853d3b7d7d31db62457801ebb1ebfba7f4393792ff3dad4f8baf62e236853",
+    "error": null,
+    "ethics_status": "pending",
+    "ethics_determination_id": null,
+    "reviewer_recruitment_permitted": false,
+    "holdout_response_collection_permitted": false,
+    "unresolved_institution_fields": {
+      "research/ETHICS_DETERMINATION_REQUEST.md": 6,
+      "research/EXPERT_REVIEWER_INFORMATION_SHEET.md": 5
+    }
+  },
+  "downstream_artifacts": {
+    "casebook_freeze": {
+      "path": "data\\public_validation\\results\\hiad_casebook_frozen\\casebook_freeze_manifest.json",
+      "present": false,
+      "error": "missing"
+    },
+    "collection": {
+      "path": "data\\public_validation\\results\\hiad_decision\\collection_manifest.json",
+      "present": false,
+      "error": "missing",
+      "ready": false
+    },
+    "expert_review_analysis": {
+      "path": "data\\public_validation\\results\\hiad_decision\\analysis\\expert_review_analysis.json",
+      "present": false,
+      "error": "missing",
+      "complete": false
+    }
+  },
+  "claim_boundary": [
+    "The coordinator pre-screen is advisory and does not approve, rewrite, or freeze any case.",
+    "No holdout response or expert rating evidence is present until the collection and independent review artifacts pass their own locked checks.",
+    "This report does not authorize recruitment, response collection, or publication claims."
+  ]
+}
