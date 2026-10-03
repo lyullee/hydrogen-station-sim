@@ -1,0 +1,425 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-03T22:14:26.982726+00:00",
+  "evidence_role": "posthoc_development_diagnostic_only",
+  "status": "completed_without_modifying_frozen_results",
+  "method": {
+    "parameter": "discharge_coefficient_multiplier",
+    "grid": [
+      0.5,
+      0.75,
+      1.0,
+      1.25,
+      1.5,
+      2.0
+    ],
+    "equivalent_geometry_interpretation": "A diameter multiplier is approximately sqrt(multiplier) for the same Cd because aperture area scales with diameter squared; this is diagnostic only.",
+    "outcome_fitting": false,
+    "frozen_primary_results_rewritten": false
+  },
+  "claim_boundary": "This grid reuses digitised frozen holdout traces after outcome access to diagnose model-form sensitivity. It cannot establish an independent validation claim, select a production parameter, or change the IJHE readiness decision.",
+  "cases": [
+    {
+      "case_id": "schefer_2006_mass_flow",
+      "data_path": "data/public_validation/derived/schefer_2006_figure3b.csv",
+      "data_sha256": "f740a7db1bcd3723efa8ae4ce02114fc69d6084c937c19cf16bc3f339dfc199e",
+      "base_discharge_coefficient": 1.0,
+      "grid": [
+        0.5,
+        0.75,
+        1.0,
+        1.25,
+        1.5,
+        2.0
+      ],
+      "screen_limits": {
+        "nrmse_percent_max": 15.0,
+        "median_ape_percent_max": 20.0,
+        "half_time_error_percent_max": 20.0
+      },
+      "best_grid_point_by_normalized_score": {
+        "multiplier": 1.0,
+        "effective_discharge_coefficient": 1.0,
+        "nrmse_percent": 5.831534791930556,
+        "median_ape_percent": 22.852219829947433,
+        "experimental_half_s": 13.35459783324615,
+        "predicted_half_s": 9.575940157002748,
+        "half_time_error_percent": 28.294806952826896,
+        "screen_pass": {
+          "nrmse": true,
+          "median_ape": false,
+          "half_time": false
+        },
+        "joint_screen_pass": false,
+        "normalized_score": 2.94612032526742
+      },
+      "any_grid_point_joint_screen_pass": false,
+      "rows": [
+        {
+          "multiplier": 0.5,
+          "effective_discharge_coefficient": 0.5,
+          "nrmse_percent": 14.813436297688673,
+          "median_ape_percent": 27.858687103521984,
+          "experimental_half_s": 13.35459783324615,
+          "predicted_half_s": 2.111613876,
+          "half_time_error_percent": 84.18811331972007,
+          "screen_pass": {
+            "nrmse": true,
+            "median_ape": false,
+            "half_time": false
+          },
+          "joint_screen_pass": false,
+          "normalized_score": 6.5899024410080145
+        },
+        {
+          "multiplier": 0.75,
+          "effective_discharge_coefficient": 0.75,
+          "nrmse_percent": 9.360815526847242,
+          "median_ape_percent": 23.331459716636335,
+          "experimental_half_s": 13.35459783324615,
+          "predicted_half_s": 7.6883558410916875,
+          "half_time_error_percent": 42.429147346155226,
+          "screen_pass": {
+            "nrmse": true,
+            "median_ape": false,
+            "half_time": false
+          },
+          "joint_screen_pass": false,
+          "normalized_score": 3.9120847215960612
+        },
+        {
+          "multiplier": 1.0,
+          "effective_discharge_coefficient": 1.0,
+          "nrmse_percent": 5.831534791930556,
+          "median_ape_percent": 22.852219829947433,
+          "experimental_half_s": 13.35459783324615,
+          "predicted_half_s": 9.575940157002748,
+          "half_time_error_percent": 28.294806952826896,
+          "screen_pass": {
+            "nrmse": true,
+            "median_ape": false,
+            "half_time": false
+          },
+          "joint_screen_pass": false,
+          "normalized_score": 2.94612032526742
+        },
+        {
+          "multiplier": 1.25,
+          "effective_discharge_coefficient": 1.25,
+          "nrmse_percent": 5.449445142214561,
+          "median_ape_percent": 31.326365163196655,
+          "experimental_half_s": 13.35459783324615,
+          "predicted_half_s": 10.198099670771738,
+          "half_time_error_percent": 23.636040574852345,
+          "screen_pass": {
+            "nrmse": true,
+            "median_ape": false,
+            "half_time": false
+          },
+          "joint_screen_pass": false,
+          "normalized_score": 3.111416629716754
+        },
+        {
+          "multiplier": 1.5,
+          "effective_discharge_coefficient": 1.5,
+          "nrmse_percent": 7.5770793170257935,
+          "median_ape_percent": 37.97231425814612,
+          "experimental_half_s": 13.35459783324615,
+          "predicted_half_s": 10.342509856555571,
+          "half_time_error_percent": 22.55468876188853,
+          "screen_pass": {
+            "nrmse": true,
+            "median_ape": false,
+            "half_time": false
+          },
+          "joint_screen_pass": false,
+          "normalized_score": 3.531488772136785
+        },
+        {
+          "multiplier": 2.0,
+          "effective_discharge_coefficient": 2.0,
+          "nrmse_percent": 12.96144093478763,
+          "median_ape_percent": 52.23006226086745,
+          "experimental_half_s": 13.35459783324615,
+          "predicted_half_s": 9.9532387425185,
+          "half_time_error_percent": 25.469573349936425,
+          "screen_pass": {
+            "nrmse": true,
+            "median_ape": false,
+            "half_time": false
+          },
+          "joint_screen_pass": false,
+          "normalized_score": 4.749077842859369
+        }
+      ]
+    },
+    {
+      "case_id": "schefer_2007_pressure",
+      "data_path": "data/public_validation/derived/schefer_2007_figure4.csv",
+      "data_sha256": "2ef47dc2ac0eb3c34f707467fb74336ca417cf66e425aa3fabfb3e4bf2554d80",
+      "base_discharge_coefficient": 1.0,
+      "grid": [
+        0.5,
+        0.75,
+        1.0,
+        1.25,
+        1.5,
+        2.0
+      ],
+      "screen_limits": {
+        "nrmse_percent_max": 10.0,
+        "median_ape_percent_max": 15.0,
+        "half_time_error_percent_max": 20.0
+      },
+      "best_grid_point_by_normalized_score": {
+        "multiplier": 1.0,
+        "effective_discharge_coefficient": 1.0,
+        "nrmse_percent": 11.580711004119967,
+        "median_ape_percent": 27.46396061123326,
+        "experimental_half_s": 26.78880237652538,
+        "predicted_half_s": 28.53325636604946,
+        "half_time_error_percent": 6.511877481513398,
+        "screen_pass": {
+          "nrmse": false,
+          "median_ape": false,
+          "half_time": true
+        },
+        "joint_screen_pass": false,
+        "normalized_score": 3.3145956819032176
+      },
+      "any_grid_point_joint_screen_pass": false,
+      "rows": [
+        {
+          "multiplier": 0.5,
+          "effective_discharge_coefficient": 0.5,
+          "nrmse_percent": 15.58318399355631,
+          "median_ape_percent": 37.9430841478291,
+          "experimental_half_s": 26.78880237652538,
+          "predicted_half_s": 57.091323344989206,
+          "half_time_error_percent": 113.11637057361499,
+          "screen_pass": {
+            "nrmse": false,
+            "median_ape": false,
+            "half_time": false
+          },
+          "joint_screen_pass": false,
+          "normalized_score": 9.743675871224987
+        },
+        {
+          "multiplier": 0.75,
+          "effective_discharge_coefficient": 0.75,
+          "nrmse_percent": 12.496314306583452,
+          "median_ape_percent": 26.649242720390514,
+          "experimental_half_s": 26.78880237652538,
+          "predicted_half_s": 38.05267262980187,
+          "half_time_error_percent": 42.04693474146067,
+          "screen_pass": {
+            "nrmse": false,
+            "median_ape": false,
+            "half_time": false
+          },
+          "joint_screen_pass": false,
+          "normalized_score": 5.128594349090746
+        },
+        {
+          "multiplier": 1.0,
+          "effective_discharge_coefficient": 1.0,
+          "nrmse_percent": 11.580711004119967,
+          "median_ape_percent": 27.46396061123326,
+          "experimental_half_s": 26.78880237652538,
+          "predicted_half_s": 28.53325636604946,
+          "half_time_error_percent": 6.511877481513398,
+          "screen_pass": {
+            "nrmse": false,
+            "median_ape": false,
+            "half_time": true
+          },
+          "joint_screen_pass": false,
+          "normalized_score": 3.3145956819032176
+        },
+        {
+          "multiplier": 1.25,
+          "effective_discharge_coefficient": 1.25,
+          "nrmse_percent": 11.5181245321611,
+          "median_ape_percent": 27.150644811621078,
+          "experimental_half_s": 26.78880237652538,
+          "predicted_half_s": 22.839054800330715,
+          "half_time_error_percent": 14.744024464698608,
+          "screen_pass": {
+            "nrmse": false,
+            "median_ape": false,
+            "half_time": true
+          },
+          "joint_screen_pass": false,
+          "normalized_score": 3.6990566638924456
+        },
+        {
+          "multiplier": 1.5,
+          "effective_discharge_coefficient": 1.5,
+          "nrmse_percent": 11.80718322591421,
+          "median_ape_percent": 26.33626488372627,
+          "experimental_half_s": 26.78880237652538,
+          "predicted_half_s": 19.06607032018546,
+          "half_time_error_percent": 28.828209442864942,
+          "screen_pass": {
+            "nrmse": false,
+            "median_ape": false,
+            "half_time": false
+          },
+          "joint_screen_pass": false,
+          "normalized_score": 4.377879786983087
+        },
+        {
+          "multiplier": 2.0,
+          "effective_discharge_coefficient": 2.0,
+          "nrmse_percent": 12.754875145144428,
+          "median_ape_percent": 26.5206482772234,
+          "experimental_half_s": 26.78880237652538,
+          "predicted_half_s": 14.289226211502735,
+          "half_time_error_percent": 46.65970501158287,
+          "screen_pass": {
+            "nrmse": false,
+            "median_ape": false,
+            "half_time": false
+          },
+          "joint_screen_pass": false,
+          "normalized_score": 5.376515983575146
+        }
+      ]
+    },
+    {
+      "case_id": "grune_2014_pressure",
+      "data_path": "data/public_validation/derived/grune_2014_figure2.csv",
+      "data_sha256": "d0f1afa0fdc589a28235d12c62ddc8f9b303f63c8c229e967d8f1c758c3e3cab",
+      "base_discharge_coefficient": 0.8,
+      "grid": [
+        0.5,
+        0.75,
+        1.0,
+        1.25,
+        1.5,
+        2.0
+      ],
+      "screen_limits": {
+        "nrmse_percent_max": 10.0,
+        "median_ape_percent_max": 15.0,
+        "half_time_error_percent_max": 20.0
+      },
+      "best_grid_point_by_normalized_score": {
+        "multiplier": 0.5,
+        "effective_discharge_coefficient": 0.4,
+        "nrmse_percent": 3.3574409482794643,
+        "median_ape_percent": 3.2986768642897903,
+        "experimental_half_s": null,
+        "predicted_half_s": null,
+        "half_time_error_percent": null,
+        "screen_pass": {
+          "nrmse": true,
+          "median_ape": true,
+          "half_time": false
+        },
+        "joint_screen_pass": false,
+        "normalized_score": 99.5556558857806
+      },
+      "any_grid_point_joint_screen_pass": false,
+      "rows": [
+        {
+          "multiplier": 0.5,
+          "effective_discharge_coefficient": 0.4,
+          "nrmse_percent": 3.3574409482794643,
+          "median_ape_percent": 3.2986768642897903,
+          "experimental_half_s": null,
+          "predicted_half_s": null,
+          "half_time_error_percent": null,
+          "screen_pass": {
+            "nrmse": true,
+            "median_ape": true,
+            "half_time": false
+          },
+          "joint_screen_pass": false,
+          "normalized_score": 99.5556558857806
+        },
+        {
+          "multiplier": 0.75,
+          "effective_discharge_coefficient": 0.6000000000000001,
+          "nrmse_percent": 7.375308669303281,
+          "median_ape_percent": 7.192350192953565,
+          "experimental_half_s": null,
+          "predicted_half_s": null,
+          "half_time_error_percent": null,
+          "screen_pass": {
+            "nrmse": true,
+            "median_ape": true,
+            "half_time": false
+          },
+          "joint_screen_pass": false,
+          "normalized_score": 100.21702087979389
+        },
+        {
+          "multiplier": 1.0,
+          "effective_discharge_coefficient": 0.8,
+          "nrmse_percent": 11.11296821179252,
+          "median_ape_percent": 10.879884084275622,
+          "experimental_half_s": null,
+          "predicted_half_s": null,
+          "half_time_error_percent": null,
+          "screen_pass": {
+            "nrmse": false,
+            "median_ape": true,
+            "half_time": false
+          },
+          "joint_screen_pass": false,
+          "normalized_score": 100.83662242679763
+        },
+        {
+          "multiplier": 1.25,
+          "effective_discharge_coefficient": 1.0,
+          "nrmse_percent": 14.59009708373361,
+          "median_ape_percent": 14.357295925962399,
+          "experimental_half_s": null,
+          "predicted_half_s": null,
+          "half_time_error_percent": null,
+          "screen_pass": {
+            "nrmse": false,
+            "median_ape": true,
+            "half_time": false
+          },
+          "joint_screen_pass": false,
+          "normalized_score": 101.4161627701042
+        },
+        {
+          "multiplier": 1.5,
+          "effective_discharge_coefficient": 1.2000000000000002,
+          "nrmse_percent": 17.835242664727364,
+          "median_ape_percent": 17.71886731566962,
+          "experimental_half_s": null,
+          "predicted_half_s": null,
+          "half_time_error_percent": null,
+          "screen_pass": {
+            "nrmse": false,
+            "median_ape": false,
+            "half_time": false
+          },
+          "joint_screen_pass": false,
+          "normalized_score": 101.96478208751738
+        },
+        {
+          "multiplier": 2.0,
+          "effective_discharge_coefficient": 1.6,
+          "nrmse_percent": 23.692769682611456,
+          "median_ape_percent": 23.886565747359132,
+          "experimental_half_s": null,
+          "predicted_half_s": null,
+          "half_time_error_percent": null,
+          "screen_pass": {
+            "nrmse": false,
+            "median_ape": false,
+            "half_time": false
+          },
+          "joint_screen_pass": false,
+          "normalized_score": 102.96171468475175
+        }
+      ]
+    }
+  ]
+}

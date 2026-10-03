@@ -338,6 +338,21 @@
       }
     },
     {
+      "id": "ramea_2019_hourly_station_capacity",
+      "title": "Hourly hydrogen-station capacity dataset associated with Ramea et al.",
+      "doi": "10.1016/j.ijhydene.2019.05.053",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0360319919318841",
+      "publisher": "International Journal of Hydrogen Energy",
+      "public_raw_data": false,
+      "decision": "REQUEST_OR_LOCATE_DATASET",
+      "inspection": {
+        "finding": "The paper states that a three-month hourly station-capacity dataset for California stations was released to the research community. The article and indexed public copies identify the dataset but no working downloadable archive was located in the current repository/web search.",
+        "available_resolution": "hourly station capacity/utilization, not synchronized vehicle pressure-temperature-mass-flow",
+        "role": "Aggregate station-availability and demand context only unless the authors provide the archive and metadata.",
+        "claim_limit": "Even if recovered, this dataset cannot close the thermodynamic full-loop gate because it lacks vehicle/receptacle pressure, temperature and mass-flow traces."
+      }
+    },
+    {
       "id": "nist_transient_flow_facility",
       "title": "NIST Transient Flow Facility",
       "url": "https://www.nist.gov/programs-projects/transient-flow-facility",
