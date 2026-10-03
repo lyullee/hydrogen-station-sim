@@ -75,6 +75,7 @@ class ReferenceScenario:
     supply_pressure_profile_pa: tuple[tuple[float, float], ...] = ()
     supply_temperature_profile_k: tuple[tuple[float, float], ...] = ()
     delivery_temperature_profile_k: tuple[tuple[float, float], ...] = ()
+    pressure_reference_profile_pa: tuple[tuple[float, float], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -155,6 +156,7 @@ def build_reference_scenario(
             maximum_gas_temperature_k=config.maximum_gas_temperature_k,
             maximum_mass_flow_kg_s=config.maximum_mass_flow_kg_s,
             delivery_temperature_profile_k=config.delivery_temperature_profile_k,
+            pressure_reference_profile_pa=config.pressure_reference_profile_pa,
             nominal_working_pressure_pa=(
                 config.vehicle_nominal_working_pressure_pa
             ),
@@ -196,6 +198,7 @@ def build_reference_scenario(
             maximum_gas_temperature_k=config.maximum_gas_temperature_k,
             maximum_mass_flow_kg_s=config.maximum_mass_flow_kg_s,
             delivery_temperature_profile_k=config.delivery_temperature_profile_k,
+            pressure_reference_profile_pa=config.pressure_reference_profile_pa,
             nominal_working_pressure_pa=(
                 config.vehicle_2_nominal_working_pressure_pa
             ),

@@ -45,3 +45,32 @@ Neither diagnostic run is a release gate.  The current development results
 are retained with zero joint screen passes and show that the next model work
 is the temperature/flow protocol state and upstream boundary, rather than
 post-hoc parameter fitting to the consumed cases.
+
+The already-consumed MC Default traces can be used only as a source-boundary
+sensitivity diagnostic.  They contain a `source_pressure_1_mpa` channel, so
+the following command exercises the same partial model with that published
+profile.  It is not a new external holdout and does not change the frozen
+0/8 full-loop result:
+
+```powershell
+& .\.venv\Scripts\python.exe scripts/run_partial_station_validation.py `
+  --dataset mc_default --use-source-pressure-profile `
+  --output data/public_validation/results/partial_station_mc_source_diagnostic
+```
+
+The MC workbook also contains a publisher pressure-reference schedule.  The
+runner can apply it to the controller together with the measured source-3
+pressure profile.  This is still a consumed, development-only sensitivity:
+
+```powershell
+& .\.venv\Scripts\python.exe scripts/run_partial_station_validation.py `
+  --dataset mc_default --use-source-pressure-profile `
+  --source-pressure-column source_pressure_3_mpa `
+  --use-protocol-pressure-profile `
+  --output data/public_validation/results/partial_station_mc_protocol_source3_physics_only
+```
+
+The pressure schedule is now a first-class optional controller boundary.  An
+empty schedule preserves the constant APRR implementation, while a supplied
+schedule is linearly interpolated on the controller clock and clamped at its
+published endpoints.

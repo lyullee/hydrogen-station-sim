@@ -51,6 +51,7 @@ class FuelingSchedule:
     nominal_working_pressure_pa: float = 70.0e6
     reference_temperature_k: float = 288.15
     delivery_temperature_profile_k: tuple[tuple[float, float], ...] = ()
+    pressure_reference_profile_pa: tuple[tuple[float, float], ...] = ()
 
     def __post_init__(self) -> None:
         if self.target_pressure_pa <= 0.0:
@@ -64,6 +65,10 @@ class FuelingSchedule:
         self._validate_profile(
             self.delivery_temperature_profile_k,
             "delivery_temperature_profile_k",
+        )
+        self._validate_profile(
+            self.pressure_reference_profile_pa,
+            "pressure_reference_profile_pa",
         )
 
     @staticmethod
@@ -86,6 +91,16 @@ class FuelingSchedule:
             self.delivery_temperature_profile_k,
             time_s,
             self.delivery_temperature_k,
+        )
+
+    def pressure_reference_at(self, time_s: float) -> float:
+        """Return a supplied J2601 pressure schedule or the PI ramp fallback."""
+        if not self.pressure_reference_profile_pa:
+            raise ValueError("No pressure reference profile is configured")
+        return _profile_value(
+            self.pressure_reference_profile_pa,
+            time_s,
+            self.pressure_reference_profile_pa[0][1],
         )
 
 
@@ -177,7 +192,17 @@ class SampledFuelingController:
         elapsed_s = max(0.0, observation.time_s - self._start_time_s)
         target = target_pressure_pa or self.schedule.target_pressure_pa
         ramp_reference = self._initial_pressure_pa + self.schedule.average_pressure_ramp_rate_pa_s * elapsed_s
-        reference_pressure_pa = min(target, ramp_reference) if auto_stop else min(110e6, ramp_reference)
+        if self.schedule.pressure_reference_profile_pa:
+            scheduled_reference = max(
+                self._initial_pressure_pa,
+                self.schedule.pressure_reference_at(elapsed_s),
+            )
+            reference_pressure_pa = (
+                min(target, scheduled_reference)
+                if auto_stop else scheduled_reference
+            )
+        else:
+            reference_pressure_pa = min(target, ramp_reference) if auto_stop else min(110e6, ramp_reference)
         soc = self.soc_model.calculate(observation.density_kg_m3)
 
         if observation.temperature_k >= self.schedule.maximum_gas_temperature_k:

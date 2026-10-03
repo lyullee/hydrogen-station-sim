@@ -116,3 +116,21 @@ def test_delivery_temperature_profile_rejects_nonmonotonic_time():
             maximum_mass_flow_kg_s=0.060,
             delivery_temperature_profile_k=((1.0, 240.0), (1.0, 260.0)),
         )
+
+
+def test_pressure_reference_profile_replaces_constant_ramp():
+    schedule = FuelingSchedule(
+        target_pressure_pa=70.0e6,
+        average_pressure_ramp_rate_pa_s=1.0e5,
+        delivery_temperature_k=233.15,
+        maximum_mass_flow_kg_s=0.060,
+        pressure_reference_profile_pa=((0.0, 5.0e6), (10.0, 25.0e6)),
+    )
+    controller = SampledFuelingController(schedule)
+    at_start = controller.update(_observation(0.0), 1.0)
+    at_mid = controller.update(_observation(5.0), 1.0)
+    after_profile = controller.update(_observation(15.0), 1.0)
+
+    assert at_start.reference_pressure_pa == pytest.approx(5.0e6)
+    assert at_mid.reference_pressure_pa == pytest.approx(15.0e6)
+    assert after_profile.reference_pressure_pa == pytest.approx(25.0e6)
