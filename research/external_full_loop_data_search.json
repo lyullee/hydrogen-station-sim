@@ -422,6 +422,38 @@
       }
     },
     {
+      "id": "cec_oakland_ebmud_2025_station_logs",
+      "title": "CEC Oakland/EBMUD hydrogen station fuel-log report",
+      "url": "https://www.energy.ca.gov/sites/default/files/2025-09/CEC-600-2025-032.pdf",
+      "publisher": "California Energy Commission",
+      "public_raw_data": false,
+      "decision": "REPORT_EVENT_SUMMARY_ONLY",
+      "inspection": {
+        "local_artifact": "data/public_validation/raw/cec_600_2025_032.pdf",
+        "bytes": 5387934,
+        "sha256": "6f3c4351b15bcdda54e06daef0c8ed789e49bfbdde381a266f6e4b1640231d04",
+        "reported_fields": [
+          "fill start date/time",
+          "hydrogen filled kg",
+          "fill time s",
+          "start and final pressure bar",
+          "final state of charge",
+          "communication status",
+          "calculated fill rate kg/min"
+        ],
+        "missing_fields": [
+          "dispenser identifier",
+          "ambient temperature",
+          "pre-cooling temperature",
+          "tank temperature",
+          "maintenance-event description"
+        ],
+        "common_timebase": false,
+        "role": "Real heavy- and light-duty station event-summary benchmark and a strong data-request lead. The public report describes fuel-log fields but does not release synchronized row-level pressure/temperature/flow traces, so it cannot close the full-loop holdout.",
+        "request_route": "California Energy Commission project data custodian and Oakland/EBMUD station operator; request de-identified event log and raw logger export with calibration and reuse terms."
+      }
+    },
+    {
       "id": "jrc_gastef_2014_reference_database",
       "title": "JRC reference data from experiments of on-board hydrogen tanks fast filling",
       "doi": "10.1016/j.ijhydene.2014.03.227",
@@ -857,6 +889,11 @@
         "url": "https://doi.org/10.1016/j.ijhydene.2020.08.251",
         "supplementary_url": "https://ars.els-cdn.com/content/image/1-s2.0-S0360319920333073-mmc1.docx",
         "finding": "public supplementary DOCX was inspected; it contains four aggregate charts only, with no row-level synchronized pressure, temperature, mass-flow or vehicle/receptacle trace"
+      },
+      {
+        "id": "cec_oakland_ebmud_2025_station_logs",
+        "url": "https://www.energy.ca.gov/sites/default/files/2025-09/CEC-600-2025-032.pdf",
+        "finding": "CEC report describes a real Oakland/EBMUD station fuel-log export with fill time, mass, start/final pressure, SOC and calculated rate, but no downloadable synchronized logger trace; ambient, pre-cooling and tank temperatures are explicitly unavailable"
       },
       {
         "id": "nrel_h2fills",

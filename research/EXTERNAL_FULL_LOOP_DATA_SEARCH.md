@@ -244,6 +244,29 @@ The PDF is a plot/report artifact rather than a machine-readable logger export:
 It is retained for configuration and face-validity checks and as a request lead;
 it cannot close the independent station-to-vehicle full-loop holdout gate.
 
+## California Energy Commission Oakland/EBMUD fuel-log inspection
+
+The CEC project report for the Oakland/EBMUD hydrogen station is another useful
+field-data lead:
+<https://www.energy.ca.gov/sites/default/files/2025-09/CEC-600-2025-032.pdf>.
+The report says the commissioned station collected fuel-log data for both
+heavy- and light-duty service and describes the fields available for each fill:
+start time, hydrogen mass, fill duration, start/final pressure, final SOC,
+communication status and calculated fill rate.
+
+The same report identifies material gaps: no dispenser identifier, ambient
+temperature, pre-cooling temperature, tank temperature or maintenance-event
+description. The public PDF does not expose a synchronized row-level logger
+export. The locally inspected artifact is 5,387,934 bytes with SHA-256
+`6f3c4351b15bcdda54e06daef0c8ed789e49bfbdde381a266f6e4b1640231d04`.
+
+This is a real-station event-summary benchmark and a high-value request lead,
+not an eligible untouched full-loop holdout. The data request should seek the
+de-identified event log and station/vehicle logger files, a channel dictionary,
+calibration and quality flags, protocol metadata, maintenance markers and reuse
+permission. The report's stated missing temperature fields also prevent a
+defensible thermal-validation claim from the public artifact alone.
+
 ## 2026-10-03 primary-source recheck
 
 The Cal State LA back-to-back paper has a publicly reachable accepted-manuscript
