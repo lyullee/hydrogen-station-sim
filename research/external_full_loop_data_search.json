@@ -121,6 +121,21 @@
       "decision": "REQUEST_DATA"
     },
     {
+      "id": "cal_state_la_2024_multiyear_energy_performance",
+      "title": "Multi-year energy performance data for an electrolysis-based hydrogen refueling station",
+      "doi": "10.1016/j.ijhydene.2023.04.084",
+      "url": "https://doi.org/10.1016/j.ijhydene.2023.04.084",
+      "publisher": "International Journal of Hydrogen Energy / Cal State LA HRFF",
+      "public_raw_data": false,
+      "decision": "PAPER_AGGREGATE_ONLY",
+      "inspection": {
+        "reported_scope": "2016-2020 real HRFF operation, more than 4500 refueling events and more than 8800 kg dispensed",
+        "reported_storage_and_compressor_data": true,
+        "common_timebase_raw_trace": false,
+        "role": "peer-reviewed field context and a data-request lead; no downloadable synchronized fill trace identified"
+      }
+    },
+    {
       "id": "tessema_2026_hrs_performance",
       "title": "HRSs refueling perfromance Data sets",
       "doi": "10.17632/mnjs94yzfc.1",
