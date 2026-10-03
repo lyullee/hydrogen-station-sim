@@ -785,3 +785,20 @@ record or reuse terms were found in the article. It is therefore classified as
 full-loop numerical gate. The controlled-access request is drafted in
 [HUNGARIAN_HRS_DATA_REQUEST_DRAFT.md](HUNGARIAN_HRS_DATA_REQUEST_DRAFT.md).
 The summary table is not digitised or counted as validation.
+
+## 2026-10-04 open-repository recheck
+
+I rechecked Zenodo's public records API with searches for `hydrogen fueling
+data`, `hydrogen refuelling data`, `hydrogen refueling station time series`,
+`hydrogen dispenser data` and `SAE J2601 data`, and repeated web/GitHub searches
+for synchronized pressure, temperature and mass-flow traces. The returned
+records were protocol/model libraries, sampling or metrology documents, static
+inventories, simulation/component datasets, or the sources already recorded in
+this log. The HSR-Rig-Project release has useful laboratory storage-reactor
+logs, but no dispenser, receptacle or vehicle-side HRS loop.
+
+No new public archive met the independent full-loop eligibility rule. Search
+results are retained as discovery evidence only; none is counted as validation
+without file-level provenance, a common time base, vehicle/receptacle pressure,
+transferred mass or mass flow, initial conditions, protocol metadata and reuse
+terms.

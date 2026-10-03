@@ -1486,6 +1486,29 @@
       "next_action": "Request a de-identified 1 Hz station/vehicle export, channel dictionary, protocol and initial-condition metadata, uncertainty records and permission to publish derived metrics; hash-lock any approved subset before scoring.",
       "claim_limit": "Do not treat the paper's summary table as an independent holdout or claim reproducibility until the underlying time series and reuse terms are obtained."
     },
+    "open_repository_recheck_2026_10_04": {
+      "scope": "API and web recheck of open repositories for a new synchronized station-to-vehicle HRS trace",
+      "queries": [
+        {
+          "repository": "Zenodo",
+          "endpoint": "https://zenodo.org/api/records",
+          "queries": [
+            "hydrogen fueling data",
+            "hydrogen refuelling data",
+            "hydrogen refueling station time series",
+            "hydrogen dispenser data",
+            "SAE J2601 data"
+          ],
+          "finding": "Returned records were protocol/model libraries, reports, sampling and metrology documents, static inventories or simulation/component studies. No new open synchronized HRS vehicle/receptacle pressure-temperature-mass-flow archive was identified beyond already logged sources."
+        },
+        {
+          "repository": "public web and GitHub search",
+          "finding": "HSR-Rig-Project provides timestamped laboratory storage-reactor logs, while public HRS search results expose reports, static inventories or plot-only studies. No new station-to-vehicle logger with the required metadata and reuse terms was found."
+        }
+      ],
+      "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET",
+      "claim_limit": "Search results are discovery evidence only; no record is counted as validation without file-level provenance, synchronized required channels, initial conditions, protocol metadata and reuse terms."
+    },
     "claim_limit": "Do not use article figures, aggregate event summaries or static inventories as primary full-loop numerical validation. Promote a source only after de-identified raw files, metadata, reuse terms and a pre-access freeze are recorded."
   },
   "last_reviewed": "2026-10-04"
