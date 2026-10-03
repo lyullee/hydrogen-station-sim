@@ -36,7 +36,14 @@
       "confirmatory_lab_test_numbers": [3, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36],
       "rule": "Select one multiplier on the listed development cases and freeze it before evaluating the listed comparison cases.",
       "deviation": "The listed comparison cases were inspected before and rerun after a controller anti-windup correction. They are internal iteration evidence, not a pristine untouched external holdout. No further tuning against them is permitted.",
-      "observed_result": "The selected multiplier was 1.25. All 11 comparison cases failed the declared engineering screen; mean pressure, temperature and SOC RMSE were 11.842 MPa, 10.292 degC and 15.347 percentage points. The anti-windup correction did not change those metrics."
+      "observed_result": "The selected multiplier was 1.25. The first internal comparison failed all 11 engineering screens; mean pressure, temperature and SOC RMSE were 11.842 MPa, 10.292 degC and 15.347 percentage points.",
+      "structural_correction_result": {
+        "source_commit": "55206694bc70d61ccc7521fad563ea15e466f302",
+        "changes": "Corrected flow-limit anti-windup, temperature-class-aware precooler trip threshold, monotonic per-dispenser cascade dispatch, and line-pack continuity across bank switches. No parameter was refitted.",
+        "development_result": "0/8 passed; mean pressure, temperature and SOC RMSE were 13.695 MPa, 21.634 degC and 17.668 percentage points.",
+        "internal_confirmation_result": "0/11 passed; mean pressure, temperature and SOC RMSE were 7.213 MPa, 9.179 degC and 10.112 percentage points.",
+        "interpretation": "The structural correction materially improved the already-inspected comparison set but did not satisfy the predeclared screen. It remains internal iteration evidence and cannot be described as an untouched external holdout."
+      }
     }
   },
   "decision_support": {

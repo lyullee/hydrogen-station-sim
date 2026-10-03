@@ -126,16 +126,25 @@ declared cases:
   --jobs 6
 ```
 
-The first comparison was inspected before a controller anti-windup correction,
-and the same cases were rerun after that correction. They therefore provide
-internal confirmation and iteration evidence, not a pristine untouched external
-holdout. The corrected run selected a global flow-area multiplier of 1.25, but
-all 11 cases failed the declared engineering screen: mean pressure RMSE 11.842
-MPa, mean temperature RMSE 10.292 °C, and mean SOC RMSE 15.347 percentage
-points. The correction did not change these results, showing that the remaining
-closed-loop discrepancy lies elsewhere in the controller/dispenser/boundary
-representation. Do not tune further against these cases and describe this result
-as a negative validation finding.
+The first comparison was inspected before structural controller and cascade
+corrections, so all subsequent runs on these cases are internal iteration evidence,
+not a pristine untouched external holdout. The frozen global flow-area multiplier
+remains 1.25. A clean run from commit `55206694bc70d61ccc7521fad563ea15e466f302`
+corrected flow-limit anti-windup, a false fixed-temperature precooler trip, and
+per-dispenser cascade progression without refitting any parameter. Mean pressure,
+temperature and SOC RMSE improved from 11.842 MPa, 10.292 °C and 15.347 percentage
+points to 7.213 MPa, 9.179 °C and 10.112 percentage points. All 11 cases still
+failed at least one predeclared engineering screen. The eight development cases
+also passed 0/8 screens, with mean RMSE of 13.695 MPa, 21.634 °C and 17.668
+percentage points. Do not tune further against the 11 comparison cases. Report
+the result as a negative closed-loop validation finding and keep the stronger
+measured-boundary tank validation claim separate.
+
+The machine-readable clean-run evidence is committed as
+`research/closed_loop_development_structural_fix.json`,
+`research/closed_loop_development_structural_fix.csv`,
+`research/closed_loop_internal_confirmation_structural_fix.json`, and
+`research/closed_loop_internal_confirmation_structural_fix.csv`.
 
 Every generated JSON and Markdown report records the source commit and whether
 the worktree was dirty. Publication results must be regenerated from a clean,
