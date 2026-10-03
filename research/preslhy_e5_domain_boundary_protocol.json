@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-03",
+  "status": "post_outcome_development_diagnostic",
+  "outcomes_accessed_before_freeze": true,
+  "amendments": [
+    {
+      "date": "2026-10-03",
+      "archive_structure_accessed": true,
+      "descriptive_pdf_accessed": true,
+      "numerical_pressure_values_accessed": false,
+      "model_outcomes_computed": false,
+      "change": "Locked the archive acquisition, seven-case manifest, workbook header mapping, evaluator, and runner after inspecting only TAR/ZIP member names, workbook sheet/header strings, formulas, and the three-page publisher explanation.",
+      "basis": "The publisher explanation identifies five ambient and two cryogenic runs, two files per experiment, synchronized vessel pressure and three in-vessel temperature channels. The 200 bar ambient SE filename differs by two seconds from its PFast case identifier and is mapped prospectively."
+    },
+    {
+      "date": "2026-10-03",
+      "archive_structure_accessed": true,
+      "descriptive_pdf_accessed": true,
+      "numerical_pressure_values_accessed": true,
+      "model_outcomes_computed": true,
+      "change": "Re-run the existing E5.1 archive with the bounded hydrogen property-domain solver after the E3.1 domain diagnostic. This result is post-outcome and cannot replace the frozen holdout.",
+      "basis": "The E3.1 public run exposed a table-boundary integration failure; the E5.1 archive was already an inspected outcome and is evaluated only as a development diagnostic."
+    }
+  ],
+  "objective": "Independently evaluate the revised non-adiabatic source-depletion model against open-jet ignited DisCha experiments not used in model development.",
+  "claim_boundary": "The holdout concerns pressure depletion of the 2.8 L DisCha source vessel during an open atmospheric jet, including the downstream-ignition condition represented in E5.1. It does not validate combustion overpressure, heat flux, flame length, cryogenic two-phase flow, a vehicle-fueling loop, or station emergency separation distance.",
+  "source": {
+    "title": "PRESLHY Experiment series E5.1 (Ignited Discharge) results – Benchmarking",
+    "doi": "10.35097/1258",
+    "landing_url": "https://radar.kit.edu/radar/en/dataset/uzDLoVtvVFILFwGQ",
+    "archive_url": "https://radar.kit.edu/radar-backend/archives/uzDLoVtvVFILFwGQ/versions/1/content",
+    "archive_bytes": 484896768,
+    "archive_md5": "e7f7816a6d710101cb9c73694cafe899",
+    "license": "CC-BY-SA-4.0",
+    "facility": "KIT/Pro-Science DisCha",
+    "published_domain": "2.7-2.8 L source, 0.5-20 MPa, approximately 80 K and ambient temperature, 1-4 mm nozzles, delayed ignition",
+    "numerical_archive_accessed_before_freeze": false
+  },
+  "independence": {
+    "development_dataset": "PRESLHY E3.1 Part A, DOI 10.35097/1187",
+    "holdout_dataset": "PRESLHY E5.1, DOI 10.35097/1258",
+    "separate_experimental_campaign": true,
+    "shared_facility_disclosed": true,
+    "shared_investigators_disclosed": true,
+    "limitation": "This is external experimental-condition validation with a shared facility, not independent-laboratory replication."
+  },
+  "locked_model": {
+    "module": "src/h2station/preslhy_nonadiabatic.py",
+    "sha256": "c20c49c884f31dce7d1501a36ae0af4ba85eca3417a37079704f4e4d3d10e194",
+    "discharge_coefficient": 0.8,
+    "parameter_changes_after_freeze": "prohibited for the primary holdout result",
+    "development_result": "research/preslhy_nonadiabatic_development_result.json"
+  },
+  "locked_evaluation_implementation": {
+    "adapter": {
+      "path": "src/h2station/preslhy_e5_validation.py",
+      "sha256": "378d5535c3a777a4bf366fcab6fd75b5e542a3714dd396e2dccd18ac6cc04354"
+    },
+    "runner": {
+      "path": "scripts/run_preslhy_e5_holdout.py",
+      "sha256": "18d2e671c68eb4dbc4007f9fc29840fd7ac123b484afb1dbd92d1064c9d7ff87"
+    },
+    "acquisition": {
+      "path": "scripts/fetch_preslhy_e5_holdout.py",
+      "sha256": "3ccfad12c4ffa0bc2daefb7171ec3e0edcfde5fc703cbd0a8b94f71c15767290"
+    },
+    "case_manifest": {
+      "ambient_cases": 5,
+      "cryogenic_transfer_cases": 2,
+      "ambient_nozzle_diameter_mm": [
+        2.0,
+        4.0
+      ],
+      "ambient_nominal_pressure_bar": [
+        50.0,
+        200.0
+      ],
+      "pressure_member": "SE workbook worksheet ending -presV: synchronized Time [s] and Druck_Behalter",
+      "temperature_member": "same SE workbook worksheet ending -TE: synchronized Time [s] and three Behalter temperature channels"
+    }
+  },
+  "eligibility": {
+    "include": [
+      "published E5.1 benchmark run with finite source-vessel pressure history",
+      "initial hydrogen temperature from 280 K through 330 K for the primary ambient subset",
+      "initial absolute pressure from 0.5 MPa through 21 MPa",
+      "nominal circular nozzle diameter from 1 mm through 4 mm",
+      "at least 20 finite, strictly time-ordered source-pressure samples after release onset"
+    ],
+    "exclude": [
+      "cryogenic runs from the primary ambient decision; report separately as transfer tests",
+      "records without a recoverable source-pressure basis or release-onset signal",
+      "duplicate exports of the same physical run",
+      "files that contain only downstream combustion pressure, radiation, images, or video"
+    ],
+    "minimum_primary_cases": 4,
+    "minimum_nozzle_diameter_groups": 2,
+    "minimum_initial_pressure_groups": 2,
+    "insufficient_data_policy": "If the published benchmark archive does not meet all minimums, label the result ineligible for the aggregate claim and retain every evaluable case as supplementary transfer evidence."
+  },
+  "time_and_pressure_basis": {
+    "release_time_zero": "first sustained rise of published release-line pressure PN; use a publisher-synchronised release time only if the metadata explicitly defines the same event",
+    "evaluation_start_s": 0.1,
+    "evaluation_end": "first source-pressure sample at or below 1.05 times measured ambient absolute pressure, otherwise the finite record end",
+    "source_pressure": "published vessel/filling-line absolute pressure after unit and gauge/absolute basis verification",
+    "initial_pressure": "last valid source absolute-pressure sample before release time zero",
+    "initial_temperature": "median valid in-vessel thermocouple readings over the final 0.5 s before release; no ambient substitution in the primary holdout",
+    "ambient_pressure": "published ambient absolute pressure; if absent, 101325 Pa may be substituted only with a flag"
+  },
+  "ignition_policy": {
+    "primary_trace_window": "retain the complete eligible source-pressure depletion trace, including post-ignition samples",
+    "rationale": "The test asks whether an open downstream ignition materially invalidates source-depletion prediction. Removing post-ignition data after seeing outcomes would make that question untestable.",
+    "diagnostic_only": "Report an ignition-time split when the ignition timestamp is published, but it cannot replace the primary full-trace result."
+  },
+  "primary_endpoints": {
+    "pressure_nrmse_percent_initial_absolute_pressure": {
+      "case_screen_max": 10.0
+    },
+    "time_to_50_percent_initial_gauge_pressure_relative_error_percent": {
+      "case_screen_max": 20.0
+    }
+  },
+  "aggregate_decision": {
+    "minimum_joint_primary_screen_pass_fraction": 0.7,
+    "bootstrap_replicates": 10000,
+    "bootstrap_random_seed": 20261003,
+    "bootstrap_unit": "physical experiment",
+    "retain_all_eligible_model_and_integration_failures_as_failed_cases": true,
+    "claim_rule": "The revised source-depletion claim is supported only if all eligibility minima are met and at least 70 percent of eligible ambient cases pass both primary screens.",
+    "negative_result_policy": "A failed or ineligible result remains archived and prohibits a validated revised-model claim from this dataset."
+  },
+  "structural_adapter_policy": {
+    "allowed_before_numerical_outcome_access": "Add only file discovery, header parsing, unit conversion, time synchronisation, and immutable implementation hashes after inspecting filenames and metadata strings.",
+    "required_audit_record": "Every amendment must state whether numerical pressure or model outcomes were accessed.",
+    "model_changes": "prohibited"
+  },
+  "development_change": {
+    "reason": "Uses the same bounded table-domain handling as the E3.1 diagnostic.",
+    "claim_status": "Not eligible to support a prospective E5.1 claim.",
+    "source_of_change": "post-outcome numerical domain diagnosis"
+  }
+}
