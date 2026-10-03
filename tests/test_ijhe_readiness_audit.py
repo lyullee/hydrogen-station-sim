@@ -43,6 +43,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert partial["case_count"] == 8
     assert partial["screening_pass_count"] == 0
     assert partial["protocol"]["fresh_holdout"] is False
+    assert gates["mc_source_schedule_diagnostic_integrity"]["status"] == "PASS"
+    mc_partial = gates["mc_source_schedule_diagnostic_integrity"]["observed"]
+    assert mc_partial["case_count"] == 8
+    assert mc_partial["screening_pass_count"] == 1
+    assert mc_partial["protocol"]["fresh_holdout"] is False
     release_development = gates["release_network_development_integrity"]["observed"]
     assert release_development["evidence_role"] == "consumed_development_only"
     assert release_development["eligible_as_confirmatory_validation"] is False

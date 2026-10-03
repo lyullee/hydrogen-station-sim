@@ -159,6 +159,33 @@ def audit(root: Path) -> dict[str, object]:
         } if partial_diagnostic else "missing",
     ))
 
+    mc_partial_path = root / "data/public_validation/results/partial_station_mc_protocol_source3_physics_only/validation.json"
+    mc_partial = _json(mc_partial_path)
+    mc_partial_protocol = (mc_partial or {}).get("protocol") or {}
+    mc_partial_pass = bool(
+        (mc_partial or {}).get("evidence_role") == "development_diagnostic_only"
+        and (mc_partial or {}).get("case_count") == 8
+        and (mc_partial or {}).get("screening_pass_count") == 1
+        and mc_partial_protocol.get("fresh_holdout") is False
+        and mc_partial_protocol.get("outcomes_inspected_before_run") is True
+        and mc_partial_protocol.get("source_pressure_profile_used") is True
+        and mc_partial_protocol.get("protocol_pressure_profile_used") is True
+        and (mc_partial or {}).get("source_worktree_dirty") is False
+    )
+    gates.append(_gate(
+        "mc_source_schedule_diagnostic_integrity",
+        "PASS" if mc_partial_pass else ("FAIL" if mc_partial else "PENDING"),
+        "The consumed MC Default source-pressure and protocol-schedule sensitivity is retained as diagnostic evidence, not external confirmation.",
+        str(mc_partial_path.relative_to(root)),
+        "Eight consumed cases, measured source/schedule profiles recorded, physics-only stop declared, and no new-holdout claim.",
+        {
+            "evidence_role": (mc_partial or {}).get("evidence_role"),
+            "protocol": mc_partial_protocol,
+            "case_count": (mc_partial or {}).get("case_count"),
+            "screening_pass_count": (mc_partial or {}).get("screening_pass_count"),
+        } if mc_partial else "missing",
+    ))
+
     external_loop_path = root / "data/public_validation/results/closed_loop_external_holdout/validation.json"
     external_loop = _json(external_loop_path)
     external_protocol_path = root / "research/mc_default_external_holdout_protocol.json"

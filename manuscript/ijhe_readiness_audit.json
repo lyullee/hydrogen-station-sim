@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T11:20:11.913269+00:00",
+  "generated_at": "2026-10-03T11:35:27.470348+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 16,
+    "PASS": 17,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -244,6 +244,33 @@
         },
         "case_count": 8,
         "screening_pass_count": 0
+      }
+    },
+    {
+      "id": "mc_source_schedule_diagnostic_integrity",
+      "status": "PASS",
+      "claim": "The consumed MC Default source-pressure and protocol-schedule sensitivity is retained as diagnostic evidence, not external confirmation.",
+      "evidence": "data\\public_validation\\results\\partial_station_mc_protocol_source3_physics_only\\validation.json",
+      "requirement": "Eight consumed cases, measured source/schedule profiles recorded, physics-only stop declared, and no new-holdout claim.",
+      "observed": {
+        "evidence_role": "development_diagnostic_only",
+        "protocol": {
+          "source": "Powertech Labs SAE J2601 MC Default bench traces",
+          "fresh_holdout": false,
+          "outcomes_inspected_before_run": true,
+          "upstream_pressure_trace_available": true,
+          "boundary_assumption": "published source_pressure_3_mpa trace used as upstream boundary; inlet gas temperature profile used as delivery thermal boundary",
+          "source_pressure_profile_used": true,
+          "source_pressure_column": "source_pressure_3_mpa",
+          "source_temperature_profile_assumption": true,
+          "protocol_pressure_profile_used": true,
+          "raw_mc_archive": "data\\public_validation\\raw\\h2protocol_mc_default\\SAE J2601 MC Default Bench Test Data.zip",
+          "dataset": "mc_default",
+          "maximum_gas_temperature_c": 200.0,
+          "temperature_stop_mode": "declared_physics_only_sensitivity"
+        },
+        "case_count": 8,
+        "screening_pass_count": 1
       }
     },
     {
