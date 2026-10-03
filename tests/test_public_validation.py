@@ -140,6 +140,8 @@ def test_reference_scenario_supports_independent_experimental_tank_volumes():
         ReferenceScenario(
             vehicle_internal_volume_m3=0.060,
             vehicle_2_internal_volume_m3=0.180,
+            vehicle_effective_volume_multiplier=1.05,
+            vehicle_gas_liner_ua_multiplier=2.5,
         ),
         UnavailableHyRAMBackend(),
     )
@@ -147,6 +149,9 @@ def test_reference_scenario_supports_independent_experimental_tank_volumes():
     second = built.station.secondary_partial_station.vehicle_tank
     assert first.parameters.internal_volume_m3 == pytest.approx(0.060)
     assert second.parameters.internal_volume_m3 == pytest.approx(0.180)
+    assert first.effective_volume_m3 == pytest.approx(0.060 * 1.05)
+    assert first.fit.gas_liner_ua_multiplier == pytest.approx(2.5)
+    assert second.fit == first.fit
     assert (
         built.initial_state.secondary_partial_station.vehicle.hydrogen_mass_kg
         > built.initial_state.partial_station.vehicle.hydrogen_mass_kg
@@ -157,6 +162,14 @@ def test_reference_scenario_rejects_nonpositive_experimental_tank_volume():
     with pytest.raises(ValueError, match="tank volumes"):
         build_reference_scenario(
             ReferenceScenario(vehicle_internal_volume_m3=0.0),
+            UnavailableHyRAMBackend(),
+        )
+
+
+def test_reference_scenario_rejects_nonpositive_tank_fit_multiplier():
+    with pytest.raises(ValueError, match="fit multipliers"):
+        build_reference_scenario(
+            ReferenceScenario(vehicle_gas_liner_ua_multiplier=0.0),
             UnavailableHyRAMBackend(),
         )
 

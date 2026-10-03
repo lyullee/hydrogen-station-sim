@@ -1,8 +1,8 @@
-"""Run the uncalibrated station model against all normalized J2601 tests.
+"""Run a declared station-model configuration against normalized J2601 tests.
 
-The experiment supplies initial/boundary conditions.  No case-specific fit
-parameter is estimated here, so this is a transparent baseline validation and
-not a claim of SAE certification.
+The experiment supplies initial/boundary conditions. The report records whether
+global fitted parameters were loaded; no case-specific parameter is estimated
+here. This is a research comparison and not a claim of SAE certification.
 """
 
 from __future__ import annotations
@@ -53,6 +53,19 @@ def _git_commit() -> str:
         return "unavailable"
 
 
+def _git_worktree_dirty() -> bool | None:
+    try:
+        output = subprocess.run(
+            ["git", "status", "--porcelain"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout
+        return bool(output.strip())
+    except (OSError, subprocess.CalledProcessError):
+        return None
+
+
 def _tank_volume_from_nominal_capacity(capacity_kg: float) -> float:
     # The production demonstrator uses a 0.122 m3, 4.7 kg Type-IV surrogate.
     # Public files identify nominal capacity but not a machine-readable vessel
@@ -62,7 +75,12 @@ def _tank_volume_from_nominal_capacity(capacity_kg: float) -> float:
     return 0.122 * capacity_kg / 4.7
 
 
-def run_case(summary: dict[str, str], trace_rows: list[dict[str, str]]) -> dict:
+def run_case(
+    summary: dict[str, str],
+    trace_rows: list[dict[str, str]],
+    tank_fit: dict[str, float] | None = None,
+    dispenser_flow_area_multiplier: float = 1.0,
+) -> dict:
     case_id = summary["case_id"]
     exp_time = np.asarray([_float(row, "time_s") for row in trace_rows])
     exp_pressure = np.asarray([_float(row, "pressure_mpa") for row in trace_rows])
@@ -74,9 +92,16 @@ def run_case(summary: dict[str, str], trace_rows: list[dict[str, str]]) -> dict:
     inlet_temperature = np.asarray([
         _float(row, "inlet_gas_temperature_c") for row in trace_rows
     ])
+    experimental_mass_flow_g_s = np.asarray([
+        _float(row, "mass_flow_g_s") for row in trace_rows
+    ])
     tank_capacity = _float(summary, "tank_capacity_kg")
     scheduled_aprr = _float(summary, "scheduled_aprr_mpa_min")
     tank_volume = _tank_volume_from_nominal_capacity(tank_capacity)
+    tank_fit = tank_fit or {
+        "effective_volume_multiplier": 1.0,
+        "gas_liner_ua_multiplier": 1.0,
+    }
     dt = float(np.median(np.diff(exp_time)))
     config = ReferenceScenario(
         duration_s=float(exp_time[-1]),
@@ -85,6 +110,9 @@ def run_case(summary: dict[str, str], trace_rows: list[dict[str, str]]) -> dict:
         initial_vehicle_pressure_pa=float(exp_pressure[0] * 1.0e6),
         initial_vehicle_temperature_k=float(exp_temperature[0] + 273.15),
         vehicle_internal_volume_m3=tank_volume,
+        vehicle_effective_volume_multiplier=float(tank_fit["effective_volume_multiplier"]),
+        vehicle_gas_liner_ua_multiplier=float(tank_fit["gas_liner_ua_multiplier"]),
+        dispenser_flow_area_multiplier=dispenser_flow_area_multiplier,
         target_vehicle_pressure_pa=float(exp_pressure[-1] * 1.0e6),
         average_pressure_ramp_rate_pa_s=scheduled_aprr * 1.0e6 / 60.0,
         delivery_temperature_k=float(np.median(inlet_temperature) + 273.15),
@@ -139,6 +167,9 @@ def run_case(summary: dict[str, str], trace_rows: list[dict[str, str]]) -> dict:
         "test_code": summary["test_code"],
         "tank_capacity_kg": tank_capacity,
         "tank_volume_assumed_m3": tank_volume,
+        "effective_volume_multiplier": float(tank_fit["effective_volume_multiplier"]),
+        "gas_liner_ua_multiplier": float(tank_fit["gas_liner_ua_multiplier"]),
+        "dispenser_flow_area_multiplier": dispenser_flow_area_multiplier,
         "chamber_temperature_c": _float(summary, "chamber_temperature_c"),
         "scheduled_aprr_mpa_min": scheduled_aprr,
         "experimental_duration_s": float(exp_time[-1]),
@@ -149,6 +180,12 @@ def run_case(summary: dict[str, str], trace_rows: list[dict[str, str]]) -> dict:
         "predicted_peak_temperature_c": float(np.max(trajectory.vehicle_temperature_k) - 273.15),
         "predicted_final_soc_percent": float(predicted_soc[-1]),
         "predicted_peak_mass_flow_g_s": float(1000.0 * np.max(trajectory.nozzle_mass_flow_kg_s)),
+        "experimental_transferred_mass_kg": float(
+            np.trapezoid(experimental_mass_flow_g_s / 1000.0, exp_time)
+        ),
+        "predicted_transferred_mass_kg": float(
+            np.trapezoid(trajectory.nozzle_mass_flow_kg_s, trajectory.time_s)
+        ),
         "final_fueling_phase": final_command.phase.value,
         "final_stop_reason": process_stop_reason,
         "controller_final_stop_reason": final_command.stop_reason,
@@ -160,8 +197,15 @@ def run_case(summary: dict[str, str], trace_rows: list[dict[str, str]]) -> dict:
     }
 
 
-def _run_case_file(summary: dict[str, str], trace_path: Path) -> dict:
-    return run_case(summary, _read_csv(trace_path))
+def _run_case_file(
+    summary: dict[str, str],
+    trace_path: Path,
+    tank_fit: dict[str, float] | None,
+    dispenser_flow_area_multiplier: float,
+) -> dict:
+    return run_case(
+        summary, _read_csv(trace_path), tank_fit, dispenser_flow_area_multiplier
+    )
 
 
 def _bootstrap_ci(values: list[float], *, seed: int = 2601) -> list[float]:
@@ -210,14 +254,39 @@ def _write_csv(path: Path, rows: list[dict]) -> None:
 
 def _write_markdown(path: Path, report: dict) -> None:
     aggregate = report["aggregate"]
+    calibrated = report["tank_fit"] is not None or (
+        report["dispenser_flow_area_multiplier"] != 1.0
+    )
+    title = (
+        "SAE J2601 public-data closed-loop comparison"
+        if calibrated else "SAE J2601 public-data uncalibrated baseline"
+    )
+    worktree_state = report.get("source_worktree_dirty")
+    configuration_note = (
+        "This run uses global parameters selected on separate development cases. "
+        "It is an internal confirmation/iteration result, not a pristine external "
+        "holdout, SAE certification, or field-safety validation."
+        if calibrated else
+        "This is an uncalibrated baseline comparison. It is not SAE certification "
+        "or field-safety validation."
+    )
     lines = [
-        "# SAE J2601 public-data baseline validation",
+        f"# {title}",
         "",
         f"Generated: {report['generated_at']}",
         f"Source commit: `{report['source_commit']}`",
+        f"Source worktree dirty: `{worktree_state}`",
         f"Cases: {aggregate['case_count']}",
         "",
-        "> This is an uncalibrated baseline comparison. It is not SAE certification or field-safety validation.",
+        f"> {configuration_note}",
+        "",
+        "## Model configuration",
+        "",
+        f"- Tank fit source: `{report['tank_fit_source'] or 'none'}`",
+        f"- Tank fit: `{json.dumps(report['tank_fit'], sort_keys=True)}`",
+        f"- Dispenser flow-area multiplier: `{report['dispenser_flow_area_multiplier']}`",
+        f"- Flow calibration source: `{report['flow_calibration_source'] or 'none'}`",
+        f"- Selected laboratory tests: `{report['selected_lab_test_numbers'] or 'all 36'}`",
         "",
         "## Aggregate agreement",
         "",
@@ -294,10 +363,63 @@ def main() -> int:
     parser.add_argument("--processed", type=Path, default=Path("data/public_validation/processed"))
     parser.add_argument("--output", type=Path, default=Path("data/public_validation/results/h2protocol"))
     parser.add_argument("--jobs", type=int, default=4)
+    parser.add_argument(
+        "--tank-validation-json", type=Path,
+        help="Use the two global tank parameters fitted only on the frozen calibration set",
+    )
+    parser.add_argument("--dispenser-flow-area-multiplier", type=float, default=1.0)
+    parser.add_argument(
+        "--flow-calibration-json", type=Path,
+        help="Load the frozen selected flow-area multiplier from calibration.json",
+    )
+    parser.add_argument(
+        "--lab-test-numbers",
+        help="Optional comma-separated frozen subset, for example 3,9,12",
+    )
     args = parser.parse_args()
+    flow_calibration_source = None
+    if args.flow_calibration_json is not None:
+        if args.dispenser_flow_area_multiplier != 1.0:
+            raise SystemExit(
+                "Do not combine --flow-calibration-json with an explicit flow multiplier"
+            )
+        flow_report = json.loads(args.flow_calibration_json.read_text(encoding="utf-8"))
+        args.dispenser_flow_area_multiplier = float(
+            flow_report["selected_dispenser_flow_area_multiplier"]
+        )
+        flow_calibration_source = str(args.flow_calibration_json)
+    if args.dispenser_flow_area_multiplier <= 0.0:
+        raise SystemExit("--dispenser-flow-area-multiplier must be positive")
+    tank_fit = None
+    tank_fit_source = None
+    if args.tank_validation_json is not None:
+        tank_report = json.loads(args.tank_validation_json.read_text(encoding="utf-8"))
+        tank_fit = {
+            "effective_volume_multiplier": float(
+                tank_report["fit"]["effective_volume_multiplier"]
+            ),
+            "gas_liner_ua_multiplier": float(
+                tank_report["fit"]["gas_liner_ua_multiplier"]
+            ),
+        }
+        tank_fit_source = str(args.tank_validation_json)
     summaries = _read_csv(args.processed / "h2protocol_cases.csv")
     if len(summaries) != 36:
         raise SystemExit(f"Expected 36 normalized J2601 cases, found {len(summaries)}")
+    selected_lab_tests = None
+    if args.lab_test_numbers:
+        selected_lab_tests = {
+            int(value.strip()) for value in args.lab_test_numbers.split(",") if value.strip()
+        }
+        summaries = [
+            row for row in summaries
+            if int(float(row["lab_test_number"])) in selected_lab_tests
+        ]
+        found = {int(float(row["lab_test_number"])) for row in summaries}
+        if found != selected_lab_tests:
+            raise SystemExit(
+                f"Requested lab tests {sorted(selected_lab_tests)}, found {sorted(found)}"
+            )
     ordered_summaries = sorted(
         summaries, key=lambda row: int(float(row["lab_test_number"]))
     )
@@ -307,6 +429,8 @@ def main() -> int:
             result = _run_case_file(
                 summary,
                 args.processed / "h2protocol_traces" / f"{summary['case_id']}.csv",
+                tank_fit,
+                args.dispenser_flow_area_multiplier,
             )
             rows.append(result)
             print(f"validated {result['case_id']}", flush=True)
@@ -317,6 +441,8 @@ def main() -> int:
                     _run_case_file,
                     summary,
                     args.processed / "h2protocol_traces" / f"{summary['case_id']}.csv",
+                    tank_fit,
+                    args.dispenser_flow_area_multiplier,
                 ): summary["case_id"]
                 for summary in ordered_summaries
             }
@@ -326,11 +452,19 @@ def main() -> int:
                 print(f"validated {result['case_id']}", flush=True)
         rows.sort(key=lambda row: row["lab_test_number"])
     report = {
-        "schema_version": 1,
+        "schema_version": 2,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "source_commit": _git_commit(),
+        "source_worktree_dirty": _git_worktree_dirty(),
         "protocol_source": "Powertech Labs SAE J2601 Tables Method validation data",
         "screening_limits": SCREENING_LIMITS,
+        "tank_fit_source": tank_fit_source,
+        "tank_fit": tank_fit,
+        "dispenser_flow_area_multiplier": args.dispenser_flow_area_multiplier,
+        "flow_calibration_source": flow_calibration_source,
+        "selected_lab_test_numbers": (
+            sorted(selected_lab_tests) if selected_lab_tests is not None else None
+        ),
         "aggregate": _aggregate(rows),
         "strata": {
             field: {

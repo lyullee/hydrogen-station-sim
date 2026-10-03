@@ -104,6 +104,44 @@ report; this screen never uses a model prediction. It currently identifies the
 repeat-fuelling trial whose measured flow implies substantially more inventory
 than its nominal SOC change.
 
+The original closed-loop baseline failed its engineering screen because the
+unfitted tank overheated and the dispenser under-delivered mass. After the tank
+fit is frozen, select a single dispenser flow-area multiplier only on the eight
+development fills declared in `research/analysis_plan.json`:
+
+```powershell
+.venv\Scripts\python.exe scripts\calibrate_closed_loop_flow.py --jobs 6
+```
+
+H2P-L06 was used during exploratory diagnosis and is permanently excluded from
+the declared comparison set. Once the calibration file exists, run the eleven
+declared cases:
+
+```powershell
+.venv\Scripts\python.exe scripts\run_h2protocol_validation.py `
+  --tank-validation-json data\public_validation\results\tank_model\validation.json `
+  --flow-calibration-json data\public_validation\results\closed_loop_flow_calibration\calibration.json `
+  --lab-test-numbers 3,9,12,15,18,21,24,27,30,33,36 `
+  --output data\public_validation\results\closed_loop_confirmation_after_antiwindup `
+  --jobs 6
+```
+
+The first comparison was inspected before a controller anti-windup correction,
+and the same cases were rerun after that correction. They therefore provide
+internal confirmation and iteration evidence, not a pristine untouched external
+holdout. The corrected run selected a global flow-area multiplier of 1.25, but
+all 11 cases failed the declared engineering screen: mean pressure RMSE 11.842
+MPa, mean temperature RMSE 10.292 °C, and mean SOC RMSE 15.347 percentage
+points. The correction did not change these results, showing that the remaining
+closed-loop discrepancy lies elsewhere in the controller/dispenser/boundary
+representation. Do not tune further against these cases and describe this result
+as a negative validation finding.
+
+Every generated JSON and Markdown report records the source commit and whether
+the worktree was dirty. Publication results must be regenerated from a clean,
+immutable release commit; a commit hash alone does not identify uncommitted model
+code.
+
 ## HIAD decision-support evaluation
 
 First generate a development or untouched holdout casebook:

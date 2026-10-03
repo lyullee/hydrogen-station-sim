@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .dispenser import (
+    DispenserFitParameters,
     HoseParameters,
     PartialStationModel,
     PrecoolerParameters,
@@ -29,7 +30,11 @@ from .safety_runtime import (
     SafetyLimits,
     SafetyPLC,
 )
-from .vehicle import CompositeTankParameters, CompositeVehicleTank
+from .vehicle import (
+    CompositeTankFitParameters,
+    CompositeTankParameters,
+    CompositeVehicleTank,
+)
 
 
 BANK_REFERENCE_MAX_PRESSURE_PA = (50.0e6, 70.0e6, 100.0e6)
@@ -44,6 +49,9 @@ class ReferenceScenario:
     initial_vehicle_pressure_pa: float = 5.0e6
     initial_vehicle_temperature_k: float = 298.15
     vehicle_internal_volume_m3: float = 0.122
+    vehicle_effective_volume_multiplier: float = 1.0
+    vehicle_gas_liner_ua_multiplier: float = 1.0
+    dispenser_flow_area_multiplier: float = 1.0
     initial_vehicle_2_pressure_pa: float = 5.0e6
     initial_vehicle_2_temperature_k: float = 298.15
     vehicle_2_internal_volume_m3: float = 0.122
@@ -67,7 +75,10 @@ class BuiltScenario:
     config: ReferenceScenario
 
 
-def build_vehicle_tank(internal_volume_m3: float) -> CompositeVehicleTank:
+def build_vehicle_tank(
+    internal_volume_m3: float,
+    fit: CompositeTankFitParameters | None = None,
+) -> CompositeVehicleTank:
     """Build a Type-IV surrogate while preserving reference mass ratios."""
 
     reference_volume_m3 = 0.122
@@ -83,7 +94,8 @@ def build_vehicle_tank(internal_volume_m3: float) -> CompositeVehicleTank:
             gas_liner_ua_w_k=18.0 * area_scale,
             liner_shell_ua_w_k=35.0 * area_scale,
             shell_ambient_ua_w_k=12.0 * area_scale,
-        )
+        ),
+        fit,
     )
 
 
@@ -97,8 +109,22 @@ def build_reference_scenario(
         raise ValueError("initial_bank_fill_percent must contain three values from 1 to 100")
     if config.vehicle_internal_volume_m3 <= 0.0 or config.vehicle_2_internal_volume_m3 <= 0.0:
         raise ValueError("vehicle tank volumes must be positive")
-    vehicle = build_vehicle_tank(config.vehicle_internal_volume_m3)
-    secondary_vehicle = build_vehicle_tank(config.vehicle_2_internal_volume_m3)
+    if min(
+        config.vehicle_effective_volume_multiplier,
+        config.vehicle_gas_liner_ua_multiplier,
+        config.dispenser_flow_area_multiplier,
+    ) <= 0.0:
+        raise ValueError("vehicle tank fit multipliers must be positive")
+    vehicle_fit = CompositeTankFitParameters(
+        effective_volume_multiplier=config.vehicle_effective_volume_multiplier,
+        gas_liner_ua_multiplier=config.vehicle_gas_liner_ua_multiplier,
+    )
+    vehicle = build_vehicle_tank(config.vehicle_internal_volume_m3, vehicle_fit)
+    secondary_vehicle = build_vehicle_tank(config.vehicle_2_internal_volume_m3, vehicle_fit)
+    dispenser_fit = DispenserFitParameters(
+        pcv_area_multiplier=config.dispenser_flow_area_multiplier,
+        nozzle_area_multiplier=config.dispenser_flow_area_multiplier,
+    )
     controller = SampledFuelingController(
         FuelingSchedule(
             target_pressure_pa=config.target_vehicle_pressure_pa,
@@ -127,6 +153,7 @@ def build_reference_scenario(
             wall_ambient_ua_w_k=18.0,
             nozzle_flow_area_m2=2.0e-6,
         ),
+        fit=dispenser_fit,
         ambient_temperature_k=config.ambient_temperature_k,
     )
     secondary_controller = SampledFuelingController(
@@ -155,6 +182,7 @@ def build_reference_scenario(
             wall_ambient_ua_w_k=18.0,
             nozzle_flow_area_m2=2.0e-6,
         ),
+        fit=dispenser_fit,
         ambient_temperature_k=config.ambient_temperature_k,
     )
     banks = tuple(

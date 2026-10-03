@@ -157,29 +157,36 @@ class SampledFuelingController:
             self.parameters.proportional_gain_pa_inverse * error_pa
             + self.parameters.integral_gain_pa_inverse_s_inverse * candidate_integral
         )
-        opening = min(
+        bounded_opening = min(
             self.parameters.maximum_opening,
             max(self.parameters.minimum_opening, raw_opening),
         )
 
         if observation.measured_mass_flow_kg_s > self.schedule.maximum_mass_flow_kg_s:
-            opening *= (
+            bounded_opening *= (
                 self.schedule.maximum_mass_flow_kg_s
                 / observation.measured_mass_flow_kg_s
             )
 
         maximum_step = self.parameters.maximum_opening_slew_per_s * sample_period_s
-        opening = min(self._last_opening + maximum_step,
-                      max(self._last_opening - maximum_step, opening))
+        opening = min(
+            self._last_opening + maximum_step,
+            max(self._last_opening - maximum_step, bounded_opening),
+        )
         self._last_opening = opening
 
-        saturated = abs(opening - raw_opening) > 1.0e-12
-        if not saturated:
+        amplitude_saturated = abs(bounded_opening - raw_opening) > 1.0e-12
+        slew_limited = abs(opening - bounded_opening) > 1.0e-12
+        if not amplitude_saturated and not slew_limited:
             self._integral_error_pa_s = candidate_integral
-        else:
+        elif amplitude_saturated:
+            # Back-calculate only against the static actuator bound. Applying
+            # the same correction to a temporary slew-rate limit can move the
+            # integrator by orders of magnitude and reverse an otherwise
+            # positive pressure error on the following sample.
             self._integral_error_pa_s += (
                 self.parameters.anti_windup_gain
-                * (opening - raw_opening)
+                * (bounded_opening - raw_opening)
                 * sample_period_s
                 / max(self.parameters.integral_gain_pa_inverse_s_inverse, 1.0e-30)
             )

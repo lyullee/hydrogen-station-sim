@@ -25,6 +25,19 @@
     ],
     "uncertainty": "case-level nonparametric percentile bootstrap of each mean, 10000 replicates",
     "closed_loop_role": "uncalibrated diagnostic baseline; controller and dispenser claims require acceptable external agreement"
+    ,
+    "closed_loop_flow_area_calibration": {
+      "amendment_date": "2026-10-03",
+      "reason": "The uncalibrated closed loop failed all engineering screens after the tank-only analysis was frozen.",
+      "exploratory_case_removed_from_confirmation": "H2P-L06 was inspected at flow-area multipliers 1.25 and 1.5 and is development evidence only.",
+      "development_lab_test_numbers": [1, 4, 11, 13, 19, 22, 29, 31],
+      "candidate_flow_area_multipliers": [1.0, 1.25, 1.5, 1.75],
+      "selection_objective": "mean of squared normalized pressure RMSE/5 MPa, temperature RMSE/10 degC, and SOC RMSE/5 percentage points",
+      "confirmatory_lab_test_numbers": [3, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36],
+      "rule": "Select one multiplier on the listed development cases and freeze it before evaluating the listed comparison cases.",
+      "deviation": "The listed comparison cases were inspected before and rerun after a controller anti-windup correction. They are internal iteration evidence, not a pristine untouched external holdout. No further tuning against them is permitted.",
+      "observed_result": "The selected multiplier was 1.25. All 11 comparison cases failed the declared engineering screen; mean pressure, temperature and SOC RMSE were 11.842 MPa, 10.292 degC and 15.347 percentage points. The anti-windup correction did not change those metrics."
+    }
   },
   "decision_support": {
     "dataset": "JRC HIAD 2.2 HRS events with a response, lesson, or corrective field",
