@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T13:58:46.946716+00:00",
+  "generated_at": "2026-10-03T20:32:58.762342+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 17,
+    "PASS": 18,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -339,7 +339,7 @@
         },
         "new_external_data_search": {
           "status": "NO_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
-          "next_action": "Use the NREL HDVS workbook for the frozen tank-submodel diagnostic, request permission for publication of derived values, and request synchronized station-side traces from NREL/BAM/JRC/Empa/DLR before freezing a new full-loop holdout.",
+          "next_action": "send the prepared CARB/NRC/IJHE high-flow/FCH2RAIL/JRC/NREL/BAM/Empa/DLR data requests through approved custodians, and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest",
           "claim_limit": "The NREL candidate supports an independent tank-submodel screen only. No new external full-loop validation claim is permitted until station controller, hose/nozzle, protocol and vehicle-side traces are obtained and scored under a pre-access freeze."
         }
       }
@@ -488,6 +488,25 @@
           "The scene uses the stored release elevation angle but a schematic +X azimuth because the process model does not provide site azimuth."
         ],
         "decision": "The traceability chain passes for the bounded outdoor free-jet display scope. It does not validate a specific station site or authorize a safety-distance claim."
+      }
+    },
+    {
+      "id": "open_channel_detector_logic_evidence",
+      "status": "PASS",
+      "claim": "Measured open-channel concentration records replay the declared detector threshold and persistence logic with an explicit non-HRS claim boundary.",
+      "evidence": "research\\dispersion_detector_logic_validation.json",
+      "requirement": "22 CC BY 4.0 cases, 29 channels per case, archive hashes, exact rule parameters and bounded interpretation.",
+      "observed": {
+        "case_count": 22,
+        "sensor_count_per_case": [
+          29
+        ],
+        "cases_with_alarm_detection": 22,
+        "cases_with_trip_detection": 22,
+        "mean_alarm_sensor_coverage_fraction": 0.8871473354231975,
+        "mean_trip_sensor_coverage_fraction": 0.8087774294670846,
+        "median_first_alarm_after_fill_start_s": 10.674999999995634,
+        "median_first_trip_after_fill_start_s": 10.674999999995634
       }
     },
     {
@@ -1585,11 +1604,11 @@
             75,
             75
           ],
-          "approximate_manuscript_words_before_references": 5975,
+          "approximate_manuscript_words_before_references": 6244,
           "figures": 2,
           "tables": 3,
-          "citation_keys": 19,
-          "bibliography_entries": 19,
+          "citation_keys": 22,
+          "bibliography_entries": 22,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -1617,27 +1636,27 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-03T09:30:33.7790748Z",
-        "attempts_this_run": 2,
+        "attempted_at": "2026-10-03T20:32:33.139641+00:00",
+        "attempts_this_run": 1,
         "success": true,
         "compiler": "Tectonic 0.17.0 (x86_64-pc-windows-msvc)",
         "compiler_release": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic%400.17.0",
         "compiler_archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845f",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "553120dec1203a81016dc68a078a149fdacbf25708bdfe3264467797768f921c",
+        "source_sha256": "ee0e75b9fd8f440f1266e185dd1946ed44200de8f2de7d273e148b93114bc25a",
         "output_pages": 16,
-        "output_bytes": 605124,
-        "output_sha256": "63b745cf6bc24d7770a1ba64b634b0cf32a7c7d59985b4aa47a1a55a8f2369e3",
+        "output_bytes": 609452,
+        "output_sha256": "9898d7f3dbb7f0d994172c23463645d6810af750902d0cb9bbfb15792d202f27",
         "warnings": {
           "layout_or_package_warning_lines": 4,
           "fatal_errors": 0,
-          "summary": "PDF produced successfully. The log has three underfull bibliography lines and Tectonic reports one bundled lineno UTF-8 replacement warning; there are no overfull boxes or fatal source errors."
+          "summary": "PDF produced successfully after adding PRHYDE and JHFC/NEDO validation-context citations. Non-fatal underfull bibliography lines and bundled lineno UTF-8 replacement warning remain; no overfull boxes or fatal source errors were reported."
         },
         "built_in_compiler_attempt": {
           "success": false,
           "diagnostic": "Unable to find standard directories for platform"
         },
-        "interpretation": "The exact manuscript source compiled to a 16-page PDF with a pinned public compiler release. No content crosses the text width; the remaining warnings are non-fatal editorial spacing/package diagnostics."
+        "interpretation": "The exact current manuscript source compiled to a 16-page PDF with a pinned public compiler release. The bounded detector-logic replay is reported with explicit non-HRS limits. Remaining warnings are non-fatal underfull bibliography/package diagnostics."
       }
     },
     {

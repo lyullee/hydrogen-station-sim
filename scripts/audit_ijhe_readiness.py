@@ -295,6 +295,32 @@ def audit(root: Path) -> dict[str, object]:
         geometry or "missing; FFI open-channel data are not applicable to the current outdoor free jet",
     ))
 
+    detector_logic_path = root / "research/dispersion_detector_logic_validation.json"
+    detector_logic = _json(detector_logic_path)
+    detector_aggregate = (detector_logic or {}).get("aggregate") or {}
+    detector_source = (detector_logic or {}).get("source") or {}
+    detector_logic_pass = bool(
+        (detector_logic or {}).get("status")
+        == "completed_bounded_instrumented_detector_logic_evidence"
+        and (detector_logic or {}).get("evidence_role")
+        == "instrumented_detector_logic_evidence"
+        and detector_source.get("doi") == "10.23642/usn.26117989.v2"
+        and detector_aggregate.get("case_count") == 22
+        and detector_aggregate.get("sensor_count_per_case") == [29]
+        and detector_aggregate.get("cases_with_alarm_detection") == 22
+        and detector_aggregate.get("cases_with_trip_detection") == 22
+        and len(detector_source.get("archive_manifest") or []) == 22
+        and bool((detector_logic or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "open_channel_detector_logic_evidence",
+        "PASS" if detector_logic_pass else ("FAIL" if detector_logic else "PENDING"),
+        "Measured open-channel concentration records replay the declared detector threshold and persistence logic with an explicit non-HRS claim boundary.",
+        str(detector_logic_path.relative_to(root)),
+        "22 CC BY 4.0 cases, 29 channels per case, archive hashes, exact rule parameters and bounded interpretation.",
+        detector_aggregate if detector_logic else "missing; detector-logic replay has not completed",
+    ))
+
     preslhy_path = root / "research/preslhy_blowdown_external_validation.json"
     preslhy = _json(preslhy_path)
     preslhy_protocol_path = root / "research/preslhy_blowdown_validation_protocol.json"

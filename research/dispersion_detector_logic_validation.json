@@ -1,0 +1,3968 @@
+{
+  "schema_version": 1,
+  "status": "completed_bounded_instrumented_detector_logic_evidence",
+  "generated_at": "2026-10-03T20:35:34.842714+00:00",
+  "evidence_role": "instrumented_detector_logic_evidence",
+  "claim_boundary": "Measured concentration channels from the USN/FFI open-ended rectangular channel dataset are replayed through the declared alarm/trip threshold and persistence rule. This does not validate outdoor station dispersion, detector response dynamics, detector placement, ESD effectiveness, or the complete hydrogen-refuelling process model.",
+  "source": {
+    "dataset": "Experimental Data of Hydrogen Dispersion in an Open-ended Rectangular Channel",
+    "doi": "10.23642/usn.26117989.v2",
+    "license": "CC BY 4.0",
+    "raw_directory": "data\\public_validation\\raw\\hydrogen_dispersion_channel",
+    "archive_manifest": [
+      {
+        "name": "23_FFI_P101_T00003.zip",
+        "bytes": 2001430,
+        "sha256": "9672c49321a9619768b09aa695226ed3c7d7e2bf0210c2bf35d6d8ce88737cbb"
+      },
+      {
+        "name": "23_FFI_P101_T00004.zip",
+        "bytes": 2369546,
+        "sha256": "17e3f3e0014a7c9cefb97ba591c486feb9c734ec30a6421fbd35ceba457d74ae"
+      },
+      {
+        "name": "23_FFI_P101_T00005.zip",
+        "bytes": 1893720,
+        "sha256": "b6243a250ca5dcef7a1577132d3740af34efc0fe9baebbc02087203b23cea0d9"
+      },
+      {
+        "name": "23_FFI_P101_T00006.zip",
+        "bytes": 2060025,
+        "sha256": "42e969b035e94c1eabe74ab8da89a5b527ecc734e868b0b01e55ca4c345889c5"
+      },
+      {
+        "name": "23_FFI_P101_T00007.zip",
+        "bytes": 2116367,
+        "sha256": "fd0610fc26f8b45c81b632a18472b439d10689c57ea2643040da79315ac41c66"
+      },
+      {
+        "name": "23_FFI_P101_T00008.zip",
+        "bytes": 2183474,
+        "sha256": "eac542a8041c180f9359d9ad2f9cdfe0e7250a8c2b5c5fc78126bdbea0cb817e"
+      },
+      {
+        "name": "23_FFI_P101_T00009.zip",
+        "bytes": 2160984,
+        "sha256": "f54ecd967bdb325a10b6cdf74e5ed7edb003d2ceaed2383a326be7b57babb029"
+      },
+      {
+        "name": "23_FFI_P101_T00011.zip",
+        "bytes": 2133066,
+        "sha256": "f28bb82ee1d0f2d008670bd069e8e0a5d1ef3a29b874a822813beb778a50e9ca"
+      },
+      {
+        "name": "23_FFI_P101_T00012.zip",
+        "bytes": 2081982,
+        "sha256": "8dc8a7040b6f894c75a4aed3f8791f3e446a4512a3a3c3c04bc71a735a3a8eeb"
+      },
+      {
+        "name": "23_FFI_P101_T00013.zip",
+        "bytes": 2140030,
+        "sha256": "7812732ec04bafd18ec82cc352705814d6b60914f4a7add1fb2349b71aaefebe"
+      },
+      {
+        "name": "23_FFI_P101_T00014.zip",
+        "bytes": 2084607,
+        "sha256": "c571ba54c3d61faf467b9a85c5707b1983344335d3cd460705759c43ca2eac03"
+      },
+      {
+        "name": "23_FFI_P101_T00026.zip",
+        "bytes": 2199349,
+        "sha256": "caf1fbd8f6946380415559ebc78d3877dca6d681792bafe006c31baead818b12"
+      },
+      {
+        "name": "23_FFI_P101_T00027.zip",
+        "bytes": 2034963,
+        "sha256": "5b59ac382e0d55e68e3fd84ae7ab3fd6fb2c51b18b853b2e1cbeecf661e87d53"
+      },
+      {
+        "name": "23_FFI_P101_T00028.zip",
+        "bytes": 2045248,
+        "sha256": "146b5ed7dc2826c6564469f75ef757c9fb9bc6ff39df8c208c5f21d2211a05ce"
+      },
+      {
+        "name": "23_FFI_P101_T00029.zip",
+        "bytes": 2275908,
+        "sha256": "b243ece57613a2757239cccd38571a4170ccb063bc75ff7325348996e08f5301"
+      },
+      {
+        "name": "23_FFI_P101_T00030.zip",
+        "bytes": 2426741,
+        "sha256": "46003f0e3f7dc60f0fdf78c0705036398dcffdf39fc8840eef4212e9df16c32e"
+      },
+      {
+        "name": "23_FFI_P101_T00031.zip",
+        "bytes": 2248254,
+        "sha256": "023cba0cd4dfe1063c7145de2c14dbfe93bd7c240f4dfcda11a4d3f8f0973279"
+      },
+      {
+        "name": "23_FFI_P101_T00040.zip",
+        "bytes": 2428526,
+        "sha256": "2b0e70df3740f3ebc351e40904d5ed3a4374f72cd066e80a84ad5a55ed9f4e39"
+      },
+      {
+        "name": "23_FFI_P101_T00041.zip",
+        "bytes": 2287912,
+        "sha256": "e28dfb5854e917581f95dab4ab193012ee684dc5676725424127bf859408c949"
+      },
+      {
+        "name": "23_FFI_P101_T00042.zip",
+        "bytes": 2926567,
+        "sha256": "6d36e766fe813b9a4e081c7fa78abf8d137d7159da7a65bfc4b910d67d17b6f1"
+      },
+      {
+        "name": "23_FFI_P101_T00044.zip",
+        "bytes": 2840050,
+        "sha256": "3045f0d8cd3a7bcb18d8d5e9b35c85ec50b84d870c86a81d704725856bba3264"
+      },
+      {
+        "name": "23_FFI_P101_T00045.zip",
+        "bytes": 2302256,
+        "sha256": "81e31b7262b6f590957bce4129539376a029019c8d858bb3a52013f79dac9e07"
+      }
+    ],
+    "supporting_file_manifest": [
+      {
+        "name": "article_105669.pdf",
+        "bytes": 3378711,
+        "sha256": "9aecb3f46cb32f5516576de97bbbe9ad97664affcdc64907af02126b03e812c5"
+      },
+      {
+        "name": "article_105669.txt",
+        "bytes": 57469,
+        "sha256": "c381d96f668b5d1ef29d7c17bb45a86345ebdb740034bb7dbc6de0989090f1bb"
+      },
+      {
+        "name": "ReadMe.txt",
+        "bytes": 2499,
+        "sha256": "c474c05b9c3983c609030755c8f6e9d854fa53a8531b81425da87e206e837b04"
+      }
+    ]
+  },
+  "rule": {
+    "alarm_threshold_percent": 1.0,
+    "trip_threshold_percent": 2.0,
+    "persistence_s": 0.5,
+    "sampling_gap_reset": "gap > 1.5 * median positive sample interval"
+  },
+  "aggregate": {
+    "case_count": 22,
+    "sensor_count_per_case": [
+      29
+    ],
+    "cases_with_alarm_detection": 22,
+    "cases_with_trip_detection": 22,
+    "mean_alarm_sensor_coverage_fraction": 0.8871473354231975,
+    "mean_trip_sensor_coverage_fraction": 0.8087774294670846,
+    "median_first_alarm_after_fill_start_s": 10.674999999995634,
+    "median_first_trip_after_fill_start_s": 10.674999999995634
+  },
+  "cases": [
+    {
+      "case_id": "23_FFI_P101_T00003",
+      "article_test_id": "test-05-0A",
+      "source_archive": "23_FFI_P101_T00003.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 28,
+        "coverage_fraction": 0.9655172413793104,
+        "first_detection_s": 43.19000000000233,
+        "median_detection_s": 49.27000000000044,
+        "mean_detection_s": 54.153928571429525,
+        "first_detection_after_fill_start_s": 13.190000000002328
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 24,
+        "coverage_fraction": 0.8275862068965517,
+        "first_detection_s": 43.19000000000233,
+        "median_detection_s": 50.94000000000233,
+        "mean_detection_s": 52.31708333333336,
+        "first_detection_after_fill_start_s": 13.190000000002328
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 44.4800000000032,
+          "trip_detection_s": 44.4800000000032
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 50.62000000000262,
+          "trip_detection_s": 53.849999999998545
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 51.26000000000204,
+          "trip_detection_s": 51.87000000000262
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 50.62000000000262,
+          "trip_detection_s": 51.26000000000204
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": 55.69000000000233,
+          "trip_detection_s": 58.87000000000262
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 53.849999999998545,
+          "trip_detection_s": 55.06999999999971
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 60.81999999999971,
+          "trip_detection_s": 61.44999999999709
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 58.87000000000262,
+          "trip_detection_s": 60.19999999999709
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 63.349999999998545,
+          "trip_detection_s": 64.66000000000349
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 60.19999999999709,
+          "trip_detection_s": 61.44999999999709
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 44.4800000000032,
+          "trip_detection_s": 45.12999999999738
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 43.19000000000233,
+          "trip_detection_s": 43.19000000000233
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 43.19000000000233,
+          "trip_detection_s": 43.19000000000233
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 43.19000000000233,
+          "trip_detection_s": 43.19000000000233
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 44.4800000000032,
+          "trip_detection_s": 45.12999999999738
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": 46.61000000000058,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 43.83999999999651,
+          "trip_detection_s": 43.83999999999651
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": 87.43000000000029,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": 81.61000000000058,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": 77.66000000000349,
+          "trip_detection_s": 79.62999999999738
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 44.4800000000032,
+          "trip_detection_s": 45.12999999999738
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": 80.88999999999942,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 44.4800000000032,
+          "trip_detection_s": 44.4800000000032
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 47.919999999998254,
+          "trip_detection_s": 50.0
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 47.279999999998836,
+          "trip_detection_s": 50.0
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 47.919999999998254,
+          "trip_detection_s": 53.849999999998545
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 50.62000000000262,
+          "trip_detection_s": 55.06999999999971
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 47.279999999998836,
+          "trip_detection_s": 50.62000000000262
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00004",
+      "article_test_id": "test-05-0B",
+      "source_archive": "23_FFI_P101_T00004.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 28,
+        "coverage_fraction": 0.9655172413793104,
+        "first_detection_s": 40.68999999999505,
+        "median_detection_s": 46.32999999999811,
+        "mean_detection_s": 53.05892857142602,
+        "first_detection_after_fill_start_s": 10.689999999995052
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 26,
+        "coverage_fraction": 0.896551724137931,
+        "first_detection_s": 40.68999999999505,
+        "median_detection_s": 49.06999999999971,
+        "mean_detection_s": 59.49730769230602,
+        "first_detection_after_fill_start_s": 10.689999999995052
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 41.33999999999651,
+          "trip_detection_s": 41.33999999999651
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 48.36999999999534,
+          "trip_detection_s": 49.06999999999971
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 47.04000000000087,
+          "trip_detection_s": 49.70999999999913
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 45.61999999999534,
+          "trip_detection_s": 47.04000000000087
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": 52.25,
+          "trip_detection_s": 56.88999999999942
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 51.61000000000058,
+          "trip_detection_s": 53.65999999999622
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 58.80999999999767,
+          "trip_detection_s": 59.43999999999505
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 56.169999999998254,
+          "trip_detection_s": 56.88999999999942
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 62.65999999999622,
+          "trip_detection_s": 63.31999999999971
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 56.88999999999942,
+          "trip_detection_s": 57.54000000000087
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 41.33999999999651,
+          "trip_detection_s": 42.06999999999971
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 40.68999999999505,
+          "trip_detection_s": 40.68999999999505
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 40.68999999999505,
+          "trip_detection_s": 40.68999999999505
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 40.68999999999505,
+          "trip_detection_s": 40.68999999999505
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 42.06999999999971,
+          "trip_detection_s": 42.06999999999971
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": 84.86999999999534,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 40.68999999999505,
+          "trip_detection_s": 40.68999999999505
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": 80.13999999999942,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": 70.80999999999767,
+          "trip_detection_s": 177.97999999999593
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": 66.81999999999971,
+          "trip_detection_s": 82.18999999999505
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 41.33999999999651,
+          "trip_detection_s": 42.06999999999971
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": 106.68000000000029,
+          "trip_detection_s": 176.65000000000146
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 41.33999999999651,
+          "trip_detection_s": 41.33999999999651
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 44.229999999995925,
+          "trip_detection_s": 47.04000000000087
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 44.229999999995925,
+          "trip_detection_s": 44.93000000000029
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 45.61999999999534,
+          "trip_detection_s": 52.25
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 47.70999999999913,
+          "trip_detection_s": 51.61000000000058
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 44.93000000000029,
+          "trip_detection_s": 49.06999999999971
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00005",
+      "article_test_id": "test-05-0C",
+      "source_archive": "23_FFI_P101_T00005.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 24,
+        "coverage_fraction": 0.8275862068965517,
+        "first_detection_s": 38.70999999999913,
+        "median_detection_s": 42.87999999999738,
+        "mean_detection_s": 45.35999999999816,
+        "first_detection_after_fill_start_s": 8.709999999999127
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 23,
+        "coverage_fraction": 0.7931034482758621,
+        "first_detection_s": 38.70999999999913,
+        "median_detection_s": 47.0,
+        "mean_detection_s": 47.26043478260734,
+        "first_detection_after_fill_start_s": 8.709999999999127
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 40.11000000000058,
+          "trip_detection_s": 40.11000000000058
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 46.279999999998836,
+          "trip_detection_s": 49.75
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 45.58999999999651,
+          "trip_detection_s": 47.68000000000029
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 44.86999999999534,
+          "trip_detection_s": 47.0
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": 55.08999999999651,
+          "trip_detection_s": 56.43999999999505
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 51.7699999999968,
+          "trip_detection_s": 54.44999999999709
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 57.7699999999968,
+          "trip_detection_s": 58.419999999998254
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 55.08999999999651,
+          "trip_detection_s": 57.7699999999968
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 60.5199999999968,
+          "trip_detection_s": 61.15999999999622
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 55.720000000001164,
+          "trip_detection_s": 57.13999999999942
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 40.11000000000058,
+          "trip_detection_s": 40.11000000000058
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 38.70999999999913,
+          "trip_detection_s": 38.70999999999913
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 38.70999999999913,
+          "trip_detection_s": 38.70999999999913
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 38.70999999999913,
+          "trip_detection_s": 38.70999999999913
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 40.11000000000058,
+          "trip_detection_s": 40.79000000000087
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": 45.58999999999651,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 38.70999999999913,
+          "trip_detection_s": 39.43000000000029
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 40.11000000000058,
+          "trip_detection_s": 40.79000000000087
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 40.11000000000058,
+          "trip_detection_s": 40.11000000000058
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 42.87999999999738,
+          "trip_detection_s": 45.58999999999651
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 41.44999999999709,
+          "trip_detection_s": 42.87999999999738
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 42.87999999999738,
+          "trip_detection_s": 51.08999999999651
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 44.86999999999534,
+          "trip_detection_s": 51.7699999999968
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 42.87999999999738,
+          "trip_detection_s": 48.37999999999738
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00006",
+      "article_test_id": "test-04-0",
+      "source_archive": "23_FFI_P101_T00006.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 29,
+        "coverage_fraction": 1.0,
+        "first_detection_s": 43.38999999999942,
+        "median_detection_s": 54.98999999999796,
+        "mean_detection_s": 59.28724137930815,
+        "first_detection_after_fill_start_s": 13.389999999999418
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 24,
+        "coverage_fraction": 0.8275862068965517,
+        "first_detection_s": 43.38999999999942,
+        "median_detection_s": 55.31499999999869,
+        "mean_detection_s": 54.51874999999806,
+        "first_detection_after_fill_start_s": 13.389999999999418
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 45.44999999999709,
+          "trip_detection_s": 45.44999999999709
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 53.69999999999709,
+          "trip_detection_s": 56.330000000001746
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 54.98999999999796,
+          "trip_detection_s": 56.330000000001746
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 54.98999999999796,
+          "trip_detection_s": 56.90999999999622
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": 59.43000000000029,
+          "trip_detection_s": 61.849999999998545
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 59.43000000000029,
+          "trip_detection_s": 60.04000000000087
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 63.75999999999476,
+          "trip_detection_s": 65.00999999999476
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 63.15999999999622,
+          "trip_detection_s": 64.36999999999534
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 63.75999999999476,
+          "trip_detection_s": 67.55999999999767
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 64.36999999999534,
+          "trip_detection_s": 65.65000000000146
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 46.099999999998545,
+          "trip_detection_s": 46.729999999995925
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 43.38999999999942,
+          "trip_detection_s": 43.38999999999942
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 43.38999999999942,
+          "trip_detection_s": 43.38999999999942
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 43.38999999999942,
+          "trip_detection_s": 43.38999999999942
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 45.44999999999709,
+          "trip_detection_s": 49.36999999999534
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": 97.91999999999825,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 44.04000000000087,
+          "trip_detection_s": 44.04000000000087
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": 94.27999999999884,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": 97.27999999999884,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": 78.45999999999913,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": 76.50999999999476,
+          "trip_detection_s": 76.50999999999476
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 46.099999999998545,
+          "trip_detection_s": 46.729999999995925
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": 77.18999999999505,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 45.44999999999709,
+          "trip_detection_s": 45.44999999999709
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 46.099999999998545,
+          "trip_detection_s": 51.83999999999651
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 48.729999999995925,
+          "trip_detection_s": 49.36999999999534
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 54.98999999999796,
+          "trip_detection_s": 56.330000000001746
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 55.68000000000029,
+          "trip_detection_s": 58.11000000000058
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 51.83999999999651,
+          "trip_detection_s": 54.299999999995634
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00007",
+      "article_test_id": "test-07-0",
+      "source_archive": "23_FFI_P101_T00007.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 28,
+        "coverage_fraction": 0.9655172413793104,
+        "first_detection_s": 40.65999999999622,
+        "median_detection_s": 46.20499999999811,
+        "mean_detection_s": 52.01142857142622,
+        "first_detection_after_fill_start_s": 10.659999999996217
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 25,
+        "coverage_fraction": 0.8620689655172413,
+        "first_detection_s": 40.65999999999622,
+        "median_detection_s": 47.56999999999971,
+        "mean_detection_s": 50.56879999999801,
+        "first_detection_after_fill_start_s": 10.659999999996217
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 42.0,
+          "trip_detection_s": 42.0
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 46.90999999999622,
+          "trip_detection_s": 49.470000000001164
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 47.56999999999971,
+          "trip_detection_s": 48.81999999999971
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 46.90999999999622,
+          "trip_detection_s": 47.56999999999971
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": 54.979999999995925,
+          "trip_detection_s": 55.61999999999534
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 50.65999999999622,
+          "trip_detection_s": 51.86999999999534
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 56.919999999998254,
+          "trip_detection_s": 58.75999999999476
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 54.979999999995925,
+          "trip_detection_s": 55.61999999999534
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 60.07999999999447,
+          "trip_detection_s": 61.38999999999942
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 56.299999999995634,
+          "trip_detection_s": 57.549999999995634
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 42.0,
+          "trip_detection_s": 42.720000000001164
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 40.65999999999622,
+          "trip_detection_s": 40.65999999999622
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 40.65999999999622,
+          "trip_detection_s": 40.65999999999622
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 40.65999999999622,
+          "trip_detection_s": 40.65999999999622
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 42.720000000001164,
+          "trip_detection_s": 43.37999999999738
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": 44.799999999995634,
+          "trip_detection_s": 48.15999999999622
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 41.31999999999971,
+          "trip_detection_s": 41.31999999999971
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": 109.39999999999418,
+          "trip_detection_s": 113.11000000000058
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": 81.72000000000116,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": 65.15999999999622,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 42.0,
+          "trip_detection_s": 42.720000000001164
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": 78.47999999999593,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 42.0,
+          "trip_detection_s": 42.0
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 44.799999999995634,
+          "trip_detection_s": 46.90999999999622
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 44.05999999999767,
+          "trip_detection_s": 46.20999999999913
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 45.5,
+          "trip_detection_s": 49.470000000001164
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 47.56999999999971,
+          "trip_detection_s": 50.65999999999622
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 45.5,
+          "trip_detection_s": 46.90999999999622
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00008",
+      "article_test_id": "test-06-0A",
+      "source_archive": "23_FFI_P101_T00008.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 29,
+        "coverage_fraction": 1.0,
+        "first_detection_s": 39.21999999999389,
+        "median_detection_s": 44.50999999999476,
+        "mean_detection_s": 50.85413793103111,
+        "first_detection_after_fill_start_s": 9.219999999993888
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 29,
+        "coverage_fraction": 1.0,
+        "first_detection_s": 39.21999999999389,
+        "median_detection_s": 46.599999999998545,
+        "mean_detection_s": 53.16896551723842,
+        "first_detection_after_fill_start_s": 9.219999999993888
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 39.86999999999534,
+          "trip_detection_s": 39.86999999999534
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 45.21999999999389,
+          "trip_detection_s": 47.2699999999968
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 45.21999999999389,
+          "trip_detection_s": 46.599999999998545
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 43.849999999998545,
+          "trip_detection_s": 46.599999999998545
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": 51.7899999999936,
+          "trip_detection_s": 54.279999999998836
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 47.2699999999968,
+          "trip_detection_s": 49.96999999999389
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 54.87999999999738,
+          "trip_detection_s": 56.18000000000029
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 52.45999999999913,
+          "trip_detection_s": 53.68000000000029
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 56.81999999999971,
+          "trip_detection_s": 58.62999999999738
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 53.68000000000029,
+          "trip_detection_s": 55.50999999999476
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 39.86999999999534,
+          "trip_detection_s": 40.5199999999968
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 39.21999999999389,
+          "trip_detection_s": 39.21999999999389
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 39.21999999999389,
+          "trip_detection_s": 39.21999999999389
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 39.21999999999389,
+          "trip_detection_s": 39.21999999999389
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 40.5199999999968,
+          "trip_detection_s": 40.5199999999968
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": 43.18000000000029,
+          "trip_detection_s": 45.93000000000029
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 39.21999999999389,
+          "trip_detection_s": 39.21999999999389
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": 82.86999999999534,
+          "trip_detection_s": 92.05999999999767
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": 92.05999999999767,
+          "trip_detection_s": 104.91999999999825
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": 79.54999999999563,
+          "trip_detection_s": 81.56999999999971
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": 76.18000000000029,
+          "trip_detection_s": 76.86000000000058
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 39.86999999999534,
+          "trip_detection_s": 40.5199999999968
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": 76.18000000000029,
+          "trip_detection_s": 86.15999999999622
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 39.86999999999534,
+          "trip_detection_s": 39.86999999999534
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 41.88999999999942,
+          "trip_detection_s": 43.849999999998545
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 41.20999999999913,
+          "trip_detection_s": 42.56999999999971
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 44.50999999999476,
+          "trip_detection_s": 46.599999999998545
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 45.21999999999389,
+          "trip_detection_s": 49.96999999999389
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 43.849999999998545,
+          "trip_detection_s": 44.50999999999476
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00009",
+      "article_test_id": "test-06-0B",
+      "source_archive": "23_FFI_P101_T00009.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 29,
+        "coverage_fraction": 1.0,
+        "first_detection_s": 46.05000000000291,
+        "median_detection_s": 50.36000000000058,
+        "mean_detection_s": 58.21862068965581,
+        "first_detection_after_fill_start_s": 16.05000000000291
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 28,
+        "coverage_fraction": 0.9655172413793104,
+        "first_detection_s": 46.05000000000291,
+        "median_detection_s": 52.87000000000262,
+        "mean_detection_s": 59.951071428571595,
+        "first_detection_after_fill_start_s": 16.05000000000291
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 46.650000000001455,
+          "trip_detection_s": 46.650000000001455
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 51.580000000001746,
+          "trip_detection_s": 54.099999999998545
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 50.94999999999709,
+          "trip_detection_s": 52.87000000000262
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 49.76000000000204,
+          "trip_detection_s": 50.94999999999709
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": 59.31999999999971,
+          "trip_detection_s": 59.98999999999796
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 55.33999999999651,
+          "trip_detection_s": 56.63999999999942
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 61.220000000001164,
+          "trip_detection_s": 62.4800000000032
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 59.98999999999796,
+          "trip_detection_s": 60.599999999998545
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 63.81999999999971,
+          "trip_detection_s": 65.69999999999709
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 61.220000000001164,
+          "trip_detection_s": 63.81999999999971
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 46.650000000001455,
+          "trip_detection_s": 46.650000000001455
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 46.05000000000291,
+          "trip_detection_s": 46.05000000000291
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 46.05000000000291,
+          "trip_detection_s": 46.05000000000291
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 46.05000000000291,
+          "trip_detection_s": 46.05000000000291
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 46.650000000001455,
+          "trip_detection_s": 47.25
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": 46.650000000001455,
+          "trip_detection_s": 53.5
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 46.05000000000291,
+          "trip_detection_s": 46.650000000001455
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": 96.75,
+          "trip_detection_s": 115.09999999999854
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": 101.80999999999767,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": 91.88999999999942,
+          "trip_detection_s": 105.62000000000262
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": 81.20999999999913,
+          "trip_detection_s": 90.58999999999651
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 46.650000000001455,
+          "trip_detection_s": 47.25
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": 91.2699999999968,
+          "trip_detection_s": 109.44999999999709
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 46.650000000001455,
+          "trip_detection_s": 46.650000000001455
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 49.16000000000349,
+          "trip_detection_s": 51.580000000001746
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 47.25,
+          "trip_detection_s": 47.83999999999651
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 50.36000000000058,
+          "trip_detection_s": 52.87000000000262
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 51.580000000001746,
+          "trip_detection_s": 54.099999999998545
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 49.76000000000204,
+          "trip_detection_s": 51.580000000001746
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00011",
+      "article_test_id": "test-08-0",
+      "source_archive": "23_FFI_P101_T00011.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 29,
+        "coverage_fraction": 1.0,
+        "first_detection_s": 38.88999999999942,
+        "median_detection_s": 42.90999999999622,
+        "mean_detection_s": 49.41862068965239,
+        "first_detection_after_fill_start_s": 8.889999999999418
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 27,
+        "coverage_fraction": 0.9310344827586207,
+        "first_detection_s": 38.88999999999942,
+        "median_detection_s": 42.90999999999622,
+        "mean_detection_s": 46.56222222221954,
+        "first_detection_after_fill_start_s": 8.889999999999418
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 39.5399999999936,
+          "trip_detection_s": 40.20999999999913
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 42.90999999999622,
+          "trip_detection_s": 43.56999999999971
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 44.19999999999709,
+          "trip_detection_s": 44.86999999999534
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 44.19999999999709,
+          "trip_detection_s": 44.19999999999709
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": 48.75,
+          "trip_detection_s": 52.18999999999505
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 46.849999999998545,
+          "trip_detection_s": 47.46999999999389
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 51.44999999999709,
+          "trip_detection_s": 52.18999999999505
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 49.419999999998254,
+          "trip_detection_s": 50.7699999999968
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 54.90999999999622,
+          "trip_detection_s": 56.31999999999971
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 51.44999999999709,
+          "trip_detection_s": 52.18999999999505
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 40.20999999999913,
+          "trip_detection_s": 40.20999999999913
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 38.88999999999942,
+          "trip_detection_s": 38.88999999999942
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 38.88999999999942,
+          "trip_detection_s": 39.5399999999936
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 38.88999999999942,
+          "trip_detection_s": 38.88999999999942
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 39.5399999999936,
+          "trip_detection_s": 40.20999999999913
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": 40.88999999999942,
+          "trip_detection_s": 41.61000000000058
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 39.5399999999936,
+          "trip_detection_s": 39.5399999999936
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": 48.75,
+          "trip_detection_s": 49.419999999998254
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": 79.39999999999418,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": 68.77999999999884,
+          "trip_detection_s": 77.48999999999796
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": 64.2899999999936,
+          "trip_detection_s": 72.98999999999796
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 40.20999999999913,
+          "trip_detection_s": 40.20999999999913
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": 129.05999999999767,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 39.5399999999936,
+          "trip_detection_s": 40.20999999999913
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 41.61000000000058,
+          "trip_detection_s": 42.299999999995634
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 40.88999999999942,
+          "trip_detection_s": 41.61000000000058
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 42.90999999999622,
+          "trip_detection_s": 42.90999999999622
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 44.86999999999534,
+          "trip_detection_s": 44.86999999999534
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 42.299999999995634,
+          "trip_detection_s": 42.299999999995634
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00012",
+      "article_test_id": "test-02-0A",
+      "source_archive": "23_FFI_P101_T00012.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 25,
+        "coverage_fraction": 0.8620689655172413,
+        "first_detection_s": 44.04000000000087,
+        "median_detection_s": 47.48999999999796,
+        "mean_detection_s": 50.57799999999901,
+        "first_detection_after_fill_start_s": 14.040000000000873
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 22,
+        "coverage_fraction": 0.7586206896551724,
+        "first_detection_s": 44.04000000000087,
+        "median_detection_s": 49.45499999999811,
+        "mean_detection_s": 52.82363636363516,
+        "first_detection_after_fill_start_s": 14.040000000000873
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 44.69999999999709,
+          "trip_detection_s": 44.69999999999709
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 52.69999999999709,
+          "trip_detection_s": 52.69999999999709
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 48.12999999999738,
+          "trip_detection_s": 50.779999999998836
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 47.48999999999796,
+          "trip_detection_s": 50.779999999998836
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": 56.56999999999971,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 53.37000000000262,
+          "trip_detection_s": 53.98999999999796
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 59.729999999995925,
+          "trip_detection_s": 59.729999999995925
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 57.79000000000087,
+          "trip_detection_s": 57.79000000000087
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 65.37000000000262,
+          "trip_detection_s": 124.65000000000146
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 57.79000000000087,
+          "trip_detection_s": 58.400000000001455
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 44.69999999999709,
+          "trip_detection_s": 44.69999999999709
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 44.04000000000087,
+          "trip_detection_s": 44.04000000000087
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 44.04000000000087,
+          "trip_detection_s": 44.04000000000087
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 44.04000000000087,
+          "trip_detection_s": 44.04000000000087
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 44.69999999999709,
+          "trip_detection_s": 44.69999999999709
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": 50.18000000000029,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 44.04000000000087,
+          "trip_detection_s": 44.04000000000087
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": 70.47000000000116,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 44.69999999999709,
+          "trip_detection_s": 44.69999999999709
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 44.69999999999709,
+          "trip_detection_s": 44.69999999999709
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 47.48999999999796,
+          "trip_detection_s": 48.12999999999738
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 46.13999999999942,
+          "trip_detection_s": 46.80999999999767
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 52.69999999999709,
+          "trip_detection_s": 52.69999999999709
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 51.37999999999738,
+          "trip_detection_s": 55.220000000001164
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 47.48999999999796,
+          "trip_detection_s": 50.779999999998836
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00013",
+      "article_test_id": "test-02-0B",
+      "source_archive": "23_FFI_P101_T00013.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 23,
+        "coverage_fraction": 0.7931034482758621,
+        "first_detection_s": 44.169999999998254,
+        "median_detection_s": 47.45999999999913,
+        "mean_detection_s": 49.374782608692286,
+        "first_detection_after_fill_start_s": 14.169999999998254
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 22,
+        "coverage_fraction": 0.7586206896551724,
+        "first_detection_s": 44.169999999998254,
+        "median_detection_s": 50.359999999996944,
+        "mean_detection_s": 50.3059090909056,
+        "first_detection_after_fill_start_s": 14.169999999998254
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 44.859999999993306,
+          "trip_detection_s": 44.859999999993306
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 51.96999999999389,
+          "trip_detection_s": 53.25999999999476
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 48.099999999998545,
+          "trip_detection_s": 51.299999999995634
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 47.45999999999913,
+          "trip_detection_s": 51.299999999995634
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": 55.779999999998836,
+          "trip_detection_s": 60.799999999995634
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 53.859999999993306,
+          "trip_detection_s": 55.11999999999534
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 58.87999999999738,
+          "trip_detection_s": 59.56999999999971
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 57.0199999999968,
+          "trip_detection_s": 57.62999999999738
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 63.349999999998545,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 57.62999999999738,
+          "trip_detection_s": 58.23999999999796
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 44.859999999993306,
+          "trip_detection_s": 44.859999999993306
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 44.169999999998254,
+          "trip_detection_s": 44.169999999998254
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 44.169999999998254,
+          "trip_detection_s": 44.169999999998254
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 44.169999999998254,
+          "trip_detection_s": 44.169999999998254
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 44.859999999993306,
+          "trip_detection_s": 45.56999999999971
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 44.169999999998254,
+          "trip_detection_s": 44.169999999998254
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 44.859999999993306,
+          "trip_detection_s": 44.859999999993306
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 44.859999999993306,
+          "trip_detection_s": 44.859999999993306
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 47.45999999999913,
+          "trip_detection_s": 50.0399999999936
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 45.56999999999971,
+          "trip_detection_s": 46.849999999998545
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 49.419999999998254,
+          "trip_detection_s": 54.46999999999389
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 50.0399999999936,
+          "trip_detection_s": 55.779999999998836
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 48.099999999998545,
+          "trip_detection_s": 50.68000000000029
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00014",
+      "article_test_id": "test-01-0",
+      "source_archive": "23_FFI_P101_T00014.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 24,
+        "coverage_fraction": 0.8275862068965517,
+        "first_detection_s": 37.549999999995634,
+        "median_detection_s": 40.73999999999796,
+        "mean_detection_s": 42.939583333329516,
+        "first_detection_after_fill_start_s": 7.549999999995634
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 23,
+        "coverage_fraction": 0.7931034482758621,
+        "first_detection_s": 37.549999999995634,
+        "median_detection_s": 41.81999999999971,
+        "mean_detection_s": 43.28304347825716,
+        "first_detection_after_fill_start_s": 7.549999999995634
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 38.32999999999447,
+          "trip_detection_s": 38.32999999999447
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 42.5,
+          "trip_detection_s": 45.2899999999936
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 45.2899999999936,
+          "trip_detection_s": 45.979999999995925
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 44.58999999999651,
+          "trip_detection_s": 45.979999999995925
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": 49.33999999999651,
+          "trip_detection_s": 50.549999999995634
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 47.31999999999971,
+          "trip_detection_s": 47.979999999995925
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 52.429999999993015,
+          "trip_detection_s": 53.06999999999971
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 50.549999999995634,
+          "trip_detection_s": 51.7699999999968
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 56.90999999999622,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 51.13999999999942,
+          "trip_detection_s": 51.13999999999942
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 38.32999999999447,
+          "trip_detection_s": 38.32999999999447
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 37.549999999995634,
+          "trip_detection_s": 37.549999999995634
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 37.549999999995634,
+          "trip_detection_s": 37.549999999995634
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 37.549999999995634,
+          "trip_detection_s": 37.549999999995634
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 38.32999999999447,
+          "trip_detection_s": 38.32999999999447
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": 41.099999999998545,
+          "trip_detection_s": 41.81999999999971
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 37.549999999995634,
+          "trip_detection_s": 37.549999999995634
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 38.32999999999447,
+          "trip_detection_s": 38.32999999999447
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 38.32999999999447,
+          "trip_detection_s": 38.32999999999447
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 40.37999999999738,
+          "trip_detection_s": 41.81999999999971
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 40.37999999999738,
+          "trip_detection_s": 41.099999999998545
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 41.099999999998545,
+          "trip_detection_s": 44.58999999999651
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 45.2899999999936,
+          "trip_detection_s": 47.979999999995925
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 40.37999999999738,
+          "trip_detection_s": 44.58999999999651
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00026",
+      "article_test_id": "test-03-0",
+      "source_archive": "23_FFI_P101_T00026.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 24,
+        "coverage_fraction": 0.8275862068965517,
+        "first_detection_s": 41.13999999999942,
+        "median_detection_s": 49.69999999999709,
+        "mean_detection_s": 63.25625000000006,
+        "first_detection_after_fill_start_s": 11.139999999999418
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 19,
+        "coverage_fraction": 0.6551724137931034,
+        "first_detection_s": 41.13999999999942,
+        "median_detection_s": 50.30000000000291,
+        "mean_detection_s": 54.702105263158096,
+        "first_detection_after_fill_start_s": 11.139999999999418
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 42.48999999999796,
+          "trip_detection_s": 43.19000000000233
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 50.88999999999942,
+          "trip_detection_s": 51.529999999998836
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 50.88999999999942,
+          "trip_detection_s": 51.529999999998836
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 50.88999999999942,
+          "trip_detection_s": 51.529999999998836
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": 177.94000000000233,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 55.25,
+          "trip_detection_s": 55.25
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 59.020000000004075,
+          "trip_detection_s": 60.30000000000291
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 59.020000000004075,
+          "trip_detection_s": 59.669999999998254
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 162.72000000000116,
+          "trip_detection_s": 166.09000000000378
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 58.400000000001455,
+          "trip_detection_s": 59.020000000004075
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 42.48999999999796,
+          "trip_detection_s": 43.19000000000233
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 41.13999999999942,
+          "trip_detection_s": 41.13999999999942
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 41.13999999999942,
+          "trip_detection_s": 41.13999999999942
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 41.13999999999942,
+          "trip_detection_s": 41.13999999999942
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 44.59000000000378,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 41.13999999999942,
+          "trip_detection_s": 41.13999999999942
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": 166.72000000000116,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 43.19000000000233,
+          "trip_detection_s": 43.849999999998545
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 42.48999999999796,
+          "trip_detection_s": 42.48999999999796
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 47.80999999999767,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 45.94999999999709,
+          "trip_detection_s": 45.94999999999709
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 49.69999999999709,
+          "trip_detection_s": 50.30000000000291
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 53.44000000000233,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 49.69999999999709,
+          "trip_detection_s": 50.88999999999942
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00027",
+      "article_test_id": "test-02-1A",
+      "source_archive": "23_FFI_P101_T00027.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 22,
+        "coverage_fraction": 0.7586206896551724,
+        "first_detection_s": 40.470000000001164,
+        "median_detection_s": 46.715000000000146,
+        "mean_detection_s": 49.68590909091158,
+        "first_detection_after_fill_start_s": 10.470000000001164
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 19,
+        "coverage_fraction": 0.6551724137931034,
+        "first_detection_s": 40.470000000001164,
+        "median_detection_s": 45.38999999999942,
+        "mean_detection_s": 48.057368421055514,
+        "first_detection_after_fill_start_s": 10.470000000001164
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 41.88000000000466,
+          "trip_detection_s": 41.88000000000466
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 49.37000000000262,
+          "trip_detection_s": 49.37000000000262
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 51.19000000000233,
+          "trip_detection_s": 51.87000000000262
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 50.59000000000378,
+          "trip_detection_s": 51.19000000000233
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 54.970000000001164,
+          "trip_detection_s": 56.900000000001455
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 58.81000000000495,
+          "trip_detection_s": 59.51000000000204
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 60.13000000000466,
+          "trip_detection_s": 61.99000000000524
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 98.29000000000087,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 59.51000000000204,
+          "trip_detection_s": 61.99000000000524
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 42.56000000000495,
+          "trip_detection_s": 42.56000000000495
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 40.470000000001164,
+          "trip_detection_s": 40.470000000001164
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 40.470000000001164,
+          "trip_detection_s": 40.470000000001164
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 40.470000000001164,
+          "trip_detection_s": 40.470000000001164
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 41.88000000000466,
+          "trip_detection_s": 43.270000000004075
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 40.470000000001164,
+          "trip_detection_s": 41.19000000000233
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 42.56000000000495,
+          "trip_detection_s": 43.270000000004075
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 42.56000000000495,
+          "trip_detection_s": 42.56000000000495
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 45.38999999999942,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 45.38999999999942,
+          "trip_detection_s": 45.38999999999942
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 48.720000000001164,
+          "trip_detection_s": 49.37000000000262
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 49.37000000000262,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 48.04000000000087,
+          "trip_detection_s": 49.37000000000262
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00028",
+      "article_test_id": "test-02-1B",
+      "source_archive": "23_FFI_P101_T00028.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 22,
+        "coverage_fraction": 0.7586206896551724,
+        "first_detection_s": 44.970000000001164,
+        "median_detection_s": 53.18000000000393,
+        "mean_detection_s": 55.55136363636716,
+        "first_detection_after_fill_start_s": 14.970000000001164
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 17,
+        "coverage_fraction": 0.5862068965517241,
+        "first_detection_s": 44.970000000001164,
+        "median_detection_s": 54.140000000006694,
+        "mean_detection_s": 53.11470588235619,
+        "first_detection_after_fill_start_s": 14.970000000001164
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 46.42000000000553,
+          "trip_detection_s": 46.42000000000553
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 54.76000000000204,
+          "trip_detection_s": 55.390000000006694
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 54.76000000000204,
+          "trip_detection_s": 54.76000000000204
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 54.140000000006694,
+          "trip_detection_s": 54.140000000006694
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 58.53000000000611,
+          "trip_detection_s": 59.19000000000233
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 63.76000000000204,
+          "trip_detection_s": 65.63000000000466
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 64.38000000000466,
+          "trip_detection_s": 66.99000000000524
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 122.72000000000116,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 63.76000000000204,
+          "trip_detection_s": 65.63000000000466
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 46.42000000000553,
+          "trip_detection_s": 47.11000000000058
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 44.970000000001164,
+          "trip_detection_s": 44.970000000001164
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 44.970000000001164,
+          "trip_detection_s": 44.970000000001164
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 44.970000000001164,
+          "trip_detection_s": 44.970000000001164
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 47.11000000000058,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 44.970000000001164,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 46.42000000000553,
+          "trip_detection_s": 47.11000000000058
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 46.42000000000553,
+          "trip_detection_s": 46.42000000000553
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 52.220000000001164,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 49.7300000000032,
+          "trip_detection_s": 49.7300000000032
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 54.140000000006694,
+          "trip_detection_s": 54.76000000000204
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 62.42000000000553,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 54.140000000006694,
+          "trip_detection_s": 54.76000000000204
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00029",
+      "article_test_id": "test-05-1A",
+      "source_archive": "23_FFI_P101_T00029.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 29,
+        "coverage_fraction": 1.0,
+        "first_detection_s": 39.94999999999709,
+        "median_detection_s": 48.220000000001164,
+        "mean_detection_s": 58.63448275861974,
+        "first_detection_after_fill_start_s": 9.94999999999709
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 26,
+        "coverage_fraction": 0.896551724137931,
+        "first_detection_s": 39.94999999999709,
+        "median_detection_s": 48.88000000000102,
+        "mean_detection_s": 57.36499999999964,
+        "first_detection_after_fill_start_s": 9.94999999999709
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 40.599999999998545,
+          "trip_detection_s": 41.37000000000262
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 48.220000000001164,
+          "trip_detection_s": 49.54000000000087
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 48.88999999999942,
+          "trip_detection_s": 49.54000000000087
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 46.279999999998836,
+          "trip_detection_s": 46.93000000000029
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": 74.54000000000087,
+          "trip_detection_s": 85.13999999999942
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 53.349999999998545,
+          "trip_detection_s": 55.88999999999942
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 58.33999999999651,
+          "trip_detection_s": 60.31999999999971
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 58.979999999995925,
+          "trip_detection_s": 60.31999999999971
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 77.83000000000175,
+          "trip_detection_s": 78.45999999999913
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 57.12999999999738,
+          "trip_detection_s": 58.33999999999651
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 41.37000000000262,
+          "trip_detection_s": 41.37000000000262
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 39.94999999999709,
+          "trip_detection_s": 39.94999999999709
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 39.94999999999709,
+          "trip_detection_s": 39.94999999999709
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 39.94999999999709,
+          "trip_detection_s": 39.94999999999709
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 41.37000000000262,
+          "trip_detection_s": 42.13999999999942
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": 55.220000000001164,
+          "trip_detection_s": 99.90999999999622
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 39.94999999999709,
+          "trip_detection_s": 39.94999999999709
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": 91.15999999999622,
+          "trip_detection_s": 128.45999999999913
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": 123.40999999999622,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": 110.08999999999651,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": 90.44999999999709,
+          "trip_detection_s": 107.55000000000291
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 41.37000000000262,
+          "trip_detection_s": 41.37000000000262
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": 109.48999999999796,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 41.37000000000262,
+          "trip_detection_s": 41.37000000000262
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 44.87999999999738,
+          "trip_detection_s": 47.56999999999971
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 44.19000000000233,
+          "trip_detection_s": 46.279999999998836
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 46.93000000000029,
+          "trip_detection_s": 51.40999999999622
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 49.54000000000087,
+          "trip_detection_s": 50.19000000000233
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 45.599999999998545,
+          "trip_detection_s": 48.220000000001164
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00030",
+      "article_test_id": "test-05-1B",
+      "source_archive": "23_FFI_P101_T00030.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 27,
+        "coverage_fraction": 0.9310344827586207,
+        "first_detection_s": 42.669999999998254,
+        "median_detection_s": 48.7699999999968,
+        "mean_detection_s": 60.172962962960746,
+        "first_detection_after_fill_start_s": 12.669999999998254
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 24,
+        "coverage_fraction": 0.8275862068965517,
+        "first_detection_s": 42.669999999998254,
+        "median_detection_s": 52.23999999999796,
+        "mean_detection_s": 55.494583333331015,
+        "first_detection_after_fill_start_s": 12.669999999998254
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 43.98999999999796,
+          "trip_detection_s": 43.98999999999796
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 50.0399999999936,
+          "trip_detection_s": 53.83999999999651
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 50.65999999999622,
+          "trip_detection_s": 53.20999999999913
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 48.7699999999968,
+          "trip_detection_s": 52.56999999999971
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": 73.5,
+          "trip_detection_s": 74.80999999999767
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 55.81999999999971,
+          "trip_detection_s": 57.81999999999971
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 61.669999999998254,
+          "trip_detection_s": 63.029999999998836
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 61.669999999998254,
+          "trip_detection_s": 63.69999999999709
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 80.15999999999622,
+          "trip_detection_s": 81.50999999999476
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 61.049999999995634,
+          "trip_detection_s": 63.029999999998836
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 43.98999999999796,
+          "trip_detection_s": 43.98999999999796
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 42.669999999998254,
+          "trip_detection_s": 42.669999999998254
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 42.669999999998254,
+          "trip_detection_s": 42.669999999998254
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 42.669999999998254,
+          "trip_detection_s": 42.669999999998254
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 43.98999999999796,
+          "trip_detection_s": 45.43999999999505
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": 47.45999999999913,
+          "trip_detection_s": 118.48999999999796
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 42.669999999998254,
+          "trip_detection_s": 42.669999999998254
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": 121.66999999999825,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": 167.8199999999997,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": 110.70999999999913,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 43.98999999999796,
+          "trip_detection_s": 43.98999999999796
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 43.98999999999796,
+          "trip_detection_s": 43.98999999999796
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 46.81999999999971,
+          "trip_detection_s": 49.43999999999505
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 46.14999999999418,
+          "trip_detection_s": 48.099999999998545
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 48.7699999999968,
+          "trip_detection_s": 53.83999999999651
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 53.83999999999651,
+          "trip_detection_s": 54.48999999999796
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 47.45999999999913,
+          "trip_detection_s": 51.90999999999622
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00031",
+      "article_test_id": "test-08-1",
+      "source_archive": "23_FFI_P101_T00031.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 27,
+        "coverage_fraction": 0.9310344827586207,
+        "first_detection_s": 42.14999999999418,
+        "median_detection_s": 44.96999999999389,
+        "mean_detection_s": 49.66518518518084,
+        "first_detection_after_fill_start_s": 12.14999999999418
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 27,
+        "coverage_fraction": 0.9310344827586207,
+        "first_detection_s": 42.14999999999418,
+        "median_detection_s": 45.71999999999389,
+        "mean_detection_s": 52.98444444444073,
+        "first_detection_after_fill_start_s": 12.14999999999418
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 42.799999999995634,
+          "trip_detection_s": 42.799999999995634
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 44.96999999999389,
+          "trip_detection_s": 47.11999999999534
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 46.40999999999622,
+          "trip_detection_s": 46.40999999999622
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 45.71999999999389,
+          "trip_detection_s": 45.71999999999389
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": 57.40999999999622,
+          "trip_detection_s": 63.279999999998836
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 49.23999999999796,
+          "trip_detection_s": 50.44999999999709
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 53.62999999999738,
+          "trip_detection_s": 54.25
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 53.00999999999476,
+          "trip_detection_s": 53.62999999999738
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 60.0399999999936,
+          "trip_detection_s": 65.15999999999622
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 53.62999999999738,
+          "trip_detection_s": 54.25
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 42.799999999995634,
+          "trip_detection_s": 42.799999999995634
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 42.14999999999418,
+          "trip_detection_s": 42.14999999999418
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 42.14999999999418,
+          "trip_detection_s": 42.14999999999418
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 42.14999999999418,
+          "trip_detection_s": 42.14999999999418
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 42.799999999995634,
+          "trip_detection_s": 42.799999999995634
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": 44.23999999999796,
+          "trip_detection_s": 44.23999999999796
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 42.14999999999418,
+          "trip_detection_s": 42.14999999999418
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": 47.83999999999651,
+          "trip_detection_s": 48.55999999999767
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": 92.71999999999389,
+          "trip_detection_s": 157.0199999999968
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": 84.68999999999505,
+          "trip_detection_s": 88.75
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 42.799999999995634,
+          "trip_detection_s": 42.799999999995634
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 42.799999999995634,
+          "trip_detection_s": 42.799999999995634
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 43.5199999999968,
+          "trip_detection_s": 44.23999999999796
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 43.5199999999968,
+          "trip_detection_s": 44.96999999999389
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 44.96999999999389,
+          "trip_detection_s": 44.96999999999389
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 48.55999999999767,
+          "trip_detection_s": 49.23999999999796
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 44.23999999999796,
+          "trip_detection_s": 45.71999999999389
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00040",
+      "article_test_id": "test-02-2A",
+      "source_archive": "23_FFI_P101_T00040.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 21,
+        "coverage_fraction": 0.7241379310344828,
+        "first_detection_s": 40.15999999999622,
+        "median_detection_s": 47.06999999999971,
+        "mean_detection_s": 54.900476190472546,
+        "first_detection_after_fill_start_s": 10.159999999996217
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 19,
+        "coverage_fraction": 0.6551724137931034,
+        "first_detection_s": 40.15999999999622,
+        "median_detection_s": 44.979999999995925,
+        "mean_detection_s": 48.22894736841638,
+        "first_detection_after_fill_start_s": 10.159999999996217
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 42.299999999995634,
+          "trip_detection_s": 42.299999999995634
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 49.64999999999418,
+          "trip_detection_s": 50.2699999999968
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 50.2699999999968,
+          "trip_detection_s": 50.2699999999968
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 49.64999999999418,
+          "trip_detection_s": 50.2699999999968
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 55.33999999999651,
+          "trip_detection_s": 56.0199999999968
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 59.88999999999942,
+          "trip_detection_s": 61.75999999999476
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 60.50999999999476,
+          "trip_detection_s": 64.3599999999933
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 204.75999999999476,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 59.88999999999942,
+          "trip_detection_s": 62.40999999999622
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 42.299999999995634,
+          "trip_detection_s": 42.299999999995634
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 40.15999999999622,
+          "trip_detection_s": 40.15999999999622
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 40.15999999999622,
+          "trip_detection_s": 40.859999999993306
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 40.15999999999622,
+          "trip_detection_s": 40.15999999999622
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 42.299999999995634,
+          "trip_detection_s": 43.609999999993306
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 40.859999999993306,
+          "trip_detection_s": 40.859999999993306
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 42.299999999995634,
+          "trip_detection_s": 42.929999999993015
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 42.299999999995634,
+          "trip_detection_s": 42.299999999995634
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 47.06999999999971,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 44.979999999995925,
+          "trip_detection_s": 44.979999999995925
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 49.029999999998836,
+          "trip_detection_s": 49.64999999999418
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 49.029999999998836,
+          "trip_detection_s": 50.87999999999738
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00041",
+      "article_test_id": "test-02-2B",
+      "source_archive": "23_FFI_P101_T00041.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 22,
+        "coverage_fraction": 0.7586206896551724,
+        "first_detection_s": 39.849999999998545,
+        "median_detection_s": 45.96499999999651,
+        "mean_detection_s": 58.06090909090662,
+        "first_detection_after_fill_start_s": 9.849999999998545
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 19,
+        "coverage_fraction": 0.6551724137931034,
+        "first_detection_s": 39.849999999998545,
+        "median_detection_s": 45.299999999995634,
+        "mean_detection_s": 47.91684210526115,
+        "first_detection_after_fill_start_s": 9.849999999998545
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 41.95999999999913,
+          "trip_detection_s": 41.95999999999913
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 49.2699999999968,
+          "trip_detection_s": 51.099999999998545
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 50.48999999999796,
+          "trip_detection_s": 50.48999999999796
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 49.2699999999968,
+          "trip_detection_s": 51.75999999999476
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 54.299999999995634,
+          "trip_detection_s": 56.25
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 59.419999999998254,
+          "trip_detection_s": 61.31999999999971
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 59.419999999998254,
+          "trip_detection_s": 63.2699999999968
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 233.32999999999447,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 58.099999999998545,
+          "trip_detection_s": 60.70999999999913
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 41.95999999999913,
+          "trip_detection_s": 41.95999999999913
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 39.849999999998545,
+          "trip_detection_s": 39.849999999998545
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 39.849999999998545,
+          "trip_detection_s": 39.849999999998545
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 39.849999999998545,
+          "trip_detection_s": 39.849999999998545
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 41.95999999999913,
+          "trip_detection_s": 43.229999999995925
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 39.849999999998545,
+          "trip_detection_s": 40.5199999999968
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": 109.32999999999447,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 41.95999999999913,
+          "trip_detection_s": 41.95999999999913
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 41.95999999999913,
+          "trip_detection_s": 41.95999999999913
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 45.299999999995634,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 45.299999999995634,
+          "trip_detection_s": 45.299999999995634
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 46.62999999999738,
+          "trip_detection_s": 51.099999999998545
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 47.979999999995925,
+          "trip_detection_s": 47.979999999995925
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00042",
+      "article_test_id": "test-05-2",
+      "source_archive": "23_FFI_P101_T00042.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 29,
+        "coverage_fraction": 1.0,
+        "first_detection_s": 40.029999999998836,
+        "median_detection_s": 44.900000000001455,
+        "mean_detection_s": 54.184137931033106,
+        "first_detection_after_fill_start_s": 10.029999999998836
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 29,
+        "coverage_fraction": 1.0,
+        "first_detection_s": 40.029999999998836,
+        "median_detection_s": 49.05999999999767,
+        "mean_detection_s": 60.34551724137769,
+        "first_detection_after_fill_start_s": 10.029999999998836
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 40.720000000001164,
+          "trip_detection_s": 40.720000000001164
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 45.62999999999738,
+          "trip_detection_s": 49.05999999999767
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 47.06999999999971,
+          "trip_detection_s": 48.38999999999942
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 44.900000000001455,
+          "trip_detection_s": 49.05999999999767
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": 73.15999999999622,
+          "trip_detection_s": 77.69999999999709
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 51.5199999999968,
+          "trip_detection_s": 53.43999999999505
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 55.94999999999709,
+          "trip_detection_s": 57.83999999999651
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 57.83999999999651,
+          "trip_detection_s": 59.73999999999796
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 67.40999999999622,
+          "trip_detection_s": 71.25
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 56.61000000000058,
+          "trip_detection_s": 57.19999999999709
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 40.720000000001164,
+          "trip_detection_s": 40.720000000001164
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 40.029999999998836,
+          "trip_detection_s": 40.029999999998836
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 40.029999999998836,
+          "trip_detection_s": 40.029999999998836
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 40.029999999998836,
+          "trip_detection_s": 40.029999999998836
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 40.720000000001164,
+          "trip_detection_s": 40.720000000001164
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": 43.549999999995634,
+          "trip_detection_s": 58.43999999999505
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 40.029999999998836,
+          "trip_detection_s": 40.029999999998836
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": 77.04999999999563,
+          "trip_detection_s": 107.50999999999476
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": 108.18999999999505,
+          "trip_detection_s": 155.15999999999622
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": 85.02999999999884,
+          "trip_detection_s": 103.04999999999563
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": 66.08999999999651,
+          "trip_detection_s": 92.84999999999854
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 40.720000000001164,
+          "trip_detection_s": 40.720000000001164
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": 98.54999999999563,
+          "trip_detection_s": 104.27999999999884
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 40.720000000001164,
+          "trip_detection_s": 40.720000000001164
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 43.549999999995634,
+          "trip_detection_s": 46.36999999999534
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 42.900000000001455,
+          "trip_detection_s": 44.220000000001164
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 44.900000000001455,
+          "trip_detection_s": 47.06999999999971
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 52.81999999999971,
+          "trip_detection_s": 55.94999999999709
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 44.900000000001455,
+          "trip_detection_s": 47.720000000001164
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00044",
+      "article_test_id": "test-05-3",
+      "source_archive": "23_FFI_P101_T00044.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 26,
+        "coverage_fraction": 0.896551724137931,
+        "first_detection_s": 42.330000000001746,
+        "median_detection_s": 47.13999999999942,
+        "mean_detection_s": 55.6511538461561,
+        "first_detection_after_fill_start_s": 12.330000000001746
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 24,
+        "coverage_fraction": 0.8275862068965517,
+        "first_detection_s": 42.330000000001746,
+        "median_detection_s": 49.67000000000189,
+        "mean_detection_s": 54.69541666666828,
+        "first_detection_after_fill_start_s": 12.330000000001746
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 42.99000000000524,
+          "trip_detection_s": 42.99000000000524
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 48.450000000004366,
+          "trip_detection_s": 51.56000000000495
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 49.70999999999913,
+          "trip_detection_s": 52.25
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 47.13999999999942,
+          "trip_detection_s": 51.56000000000495
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": 88.55000000000291,
+          "trip_detection_s": 109.34999999999854
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 53.599999999998545,
+          "trip_detection_s": 56.26000000000204
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 61.31000000000495,
+          "trip_detection_s": 62.650000000001455
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 60.080000000001746,
+          "trip_detection_s": 62.650000000001455
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": 83.95999999999913,
+          "trip_detection_s": 104.95999999999913
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 60.080000000001746,
+          "trip_detection_s": 61.950000000004366
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 42.99000000000524,
+          "trip_detection_s": 43.669999999998254
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 42.330000000001746,
+          "trip_detection_s": 42.330000000001746
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 42.330000000001746,
+          "trip_detection_s": 42.330000000001746
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 42.330000000001746,
+          "trip_detection_s": 42.330000000001746
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 42.99000000000524,
+          "trip_detection_s": 43.669999999998254
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": 47.779999999998836,
+          "trip_detection_s": 56.87000000000262
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 42.330000000001746,
+          "trip_detection_s": 42.330000000001746
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": 111.87000000000262,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": 108.7300000000032,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 42.99000000000524,
+          "trip_detection_s": 43.669999999998254
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 42.99000000000524,
+          "trip_detection_s": 42.99000000000524
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 46.51000000000204,
+          "trip_detection_s": 47.779999999998836
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 44.37000000000262,
+          "trip_detection_s": 45.849999999998545
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 47.13999999999942,
+          "trip_detection_s": 54.24000000000524
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 56.87000000000262,
+          "trip_detection_s": 61.31000000000495
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 46.51000000000204,
+          "trip_detection_s": 47.13999999999942
+        }
+      ]
+    },
+    {
+      "case_id": "23_FFI_P101_T00045",
+      "article_test_id": "test-02-3",
+      "source_archive": "23_FFI_P101_T00045.zip",
+      "alarm_threshold_percent": 1.0,
+      "trip_threshold_percent": 2.0,
+      "persistence_s": 0.5,
+      "alarm": {
+        "sensor_count": 29,
+        "detected_sensor_count": 21,
+        "coverage_fraction": 0.7241379310344828,
+        "first_detection_s": 40.06999999999971,
+        "median_detection_s": 45.51000000000204,
+        "mean_detection_s": 47.3561904761889,
+        "first_detection_after_fill_start_s": 10.069999999999709
+      },
+      "trip": {
+        "sensor_count": 29,
+        "detected_sensor_count": 20,
+        "coverage_fraction": 0.6896551724137931,
+        "first_detection_s": 40.06999999999971,
+        "median_detection_s": 46.13999999999942,
+        "mean_detection_s": 47.597499999998035,
+        "first_detection_after_fill_start_s": 10.069999999999709
+      },
+      "sensor_results": [
+        {
+          "sensor_id": "1",
+          "alarm_detection_s": 40.729999999995925,
+          "trip_detection_s": 40.729999999995925
+        },
+        {
+          "sensor_id": "10",
+          "alarm_detection_s": 50.849999999998545,
+          "trip_detection_s": 51.44999999999709
+        },
+        {
+          "sensor_id": "11",
+          "alarm_detection_s": 50.220000000001164,
+          "trip_detection_s": 50.849999999998545
+        },
+        {
+          "sensor_id": "12",
+          "alarm_detection_s": 47.5,
+          "trip_detection_s": 48.83999999999651
+        },
+        {
+          "sensor_id": "13",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "14",
+          "alarm_detection_s": 53.98999999999796,
+          "trip_detection_s": 55.849999999998545
+        },
+        {
+          "sensor_id": "15",
+          "alarm_detection_s": 60.55999999999767,
+          "trip_detection_s": 61.79000000000087
+        },
+        {
+          "sensor_id": "17",
+          "alarm_detection_s": 59.080000000001746,
+          "trip_detection_s": 60.55999999999767
+        },
+        {
+          "sensor_id": "18",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "19",
+          "alarm_detection_s": 58.40999999999622,
+          "trip_detection_s": 59.86000000000058
+        },
+        {
+          "sensor_id": "2",
+          "alarm_detection_s": 41.44999999999709,
+          "trip_detection_s": 41.44999999999709
+        },
+        {
+          "sensor_id": "20",
+          "alarm_detection_s": 40.06999999999971,
+          "trip_detection_s": 40.06999999999971
+        },
+        {
+          "sensor_id": "21",
+          "alarm_detection_s": 40.06999999999971,
+          "trip_detection_s": 40.729999999995925
+        },
+        {
+          "sensor_id": "22",
+          "alarm_detection_s": 40.06999999999971,
+          "trip_detection_s": 40.06999999999971
+        },
+        {
+          "sensor_id": "23",
+          "alarm_detection_s": 41.44999999999709,
+          "trip_detection_s": 42.81999999999971
+        },
+        {
+          "sensor_id": "24",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "25",
+          "alarm_detection_s": 40.729999999995925,
+          "trip_detection_s": 40.729999999995925
+        },
+        {
+          "sensor_id": "26",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "27",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "28",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "29",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "3",
+          "alarm_detection_s": 41.44999999999709,
+          "trip_detection_s": 41.44999999999709
+        },
+        {
+          "sensor_id": "30",
+          "alarm_detection_s": null,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "4",
+          "alarm_detection_s": 41.44999999999709,
+          "trip_detection_s": 41.44999999999709
+        },
+        {
+          "sensor_id": "5",
+          "alarm_detection_s": 45.51000000000204,
+          "trip_detection_s": 47.5
+        },
+        {
+          "sensor_id": "6",
+          "alarm_detection_s": 43.44999999999709,
+          "trip_detection_s": 44.779999999998836
+        },
+        {
+          "sensor_id": "7",
+          "alarm_detection_s": 49.5199999999968,
+          "trip_detection_s": 51.44999999999709
+        },
+        {
+          "sensor_id": "8",
+          "alarm_detection_s": 59.080000000001746,
+          "trip_detection_s": null
+        },
+        {
+          "sensor_id": "9",
+          "alarm_detection_s": 48.83999999999651,
+          "trip_detection_s": 49.5199999999968
+        }
+      ]
+    }
+  ]
+}

@@ -263,6 +263,138 @@ class DispersionExperiment:
         }
 
 
+def first_persistent_threshold_time(
+    time_s: Sequence[float],
+    concentration_percent: Sequence[float],
+    threshold_percent: float,
+    persistence_s: float,
+) -> float | None:
+    """Return the first sampled time a threshold is continuously met.
+
+    This deliberately evaluates the *declared detector rule* on measured
+    concentration samples.  It is not a sensor-response or dispersion-model
+    fit.  A run is reset when a sample gap is larger than 1.5 times the median
+    sampling interval, so an interrupted record cannot satisfy persistence by
+    accident.
+    """
+
+    if threshold_percent <= 0.0:
+        raise ValueError("threshold_percent must be positive")
+    if persistence_s < 0.0:
+        raise ValueError("persistence_s cannot be negative")
+    times = np.asarray(time_s, dtype=float)
+    values = np.asarray(concentration_percent, dtype=float)
+    if times.ndim != 1 or values.ndim != 1 or len(times) != len(values):
+        raise ValueError("time and concentration samples must be one-dimensional and aligned")
+    if len(times) == 0:
+        return None
+    finite_times = times[np.isfinite(times)]
+    if len(finite_times) < 2:
+        cadence_s = 0.0
+    else:
+        intervals = np.diff(finite_times)
+        positive = intervals[intervals > 0.0]
+        cadence_s = float(np.median(positive)) if len(positive) else 0.0
+    gap_limit_s = 1.5 * cadence_s if cadence_s > 0.0 else float("inf")
+    run_start: float | None = None
+    previous_time: float | None = None
+    for current_time, current_value in zip(times, values):
+        if not (math.isfinite(float(current_time)) and math.isfinite(float(current_value))):
+            run_start = None
+            previous_time = None
+            continue
+        current_time = float(current_time)
+        active = float(current_value) >= threshold_percent
+        if not active:
+            run_start = None
+            previous_time = None
+            continue
+        if (
+            run_start is None
+            or previous_time is None
+            or current_time <= previous_time
+            or current_time - previous_time > gap_limit_s
+        ):
+            run_start = current_time
+        previous_time = current_time
+        if current_time - run_start >= persistence_s:
+            return current_time
+    return None
+
+
+def evaluate_dispersion_detector_logic(
+    experiment: DispersionExperiment,
+    *,
+    alarm_threshold_percent: float = 1.0,
+    trip_threshold_percent: float = 2.0,
+    persistence_s: float = 0.5,
+) -> dict:
+    """Evaluate alarm/trip coverage and latency on one measured experiment.
+
+    The output is bounded to concentration-threshold logic.  It must not be
+    interpreted as validation of an outdoor station detector, a detector's
+    response time, or the station process model: the source is a 29-channel
+    open-ended channel experiment with concentration probes, not a hydrogen
+    refuelling station.
+    """
+
+    if alarm_threshold_percent >= trip_threshold_percent:
+        raise ValueError("alarm threshold must be below trip threshold")
+    alarm_times = []
+    trip_times = []
+    for index, sensor_id in enumerate(experiment.sensor_ids):
+        concentrations = experiment.concentrations_percent[:, index]
+        alarm_times.append(first_persistent_threshold_time(
+            experiment.sensor_time_s, concentrations,
+            alarm_threshold_percent, persistence_s,
+        ))
+        trip_times.append(first_persistent_threshold_time(
+            experiment.sensor_time_s, concentrations,
+            trip_threshold_percent, persistence_s,
+        ))
+
+    def _aggregate(times: Sequence[float | None]) -> dict:
+        observed = [float(value) for value in times if value is not None]
+        return {
+            "sensor_count": len(times),
+            "detected_sensor_count": len(observed),
+            "coverage_fraction": (len(observed) / len(times)) if times else 0.0,
+            "first_detection_s": min(observed) if observed else None,
+            "median_detection_s": float(np.median(observed)) if observed else None,
+            "mean_detection_s": float(np.mean(observed)) if observed else None,
+        }
+
+    alarm = _aggregate(alarm_times)
+    trip = _aggregate(trip_times)
+    alarm["first_detection_after_fill_start_s"] = (
+        alarm["first_detection_s"] - experiment.baseline_duration_s
+        if alarm["first_detection_s"] is not None else None
+    )
+    trip["first_detection_after_fill_start_s"] = (
+        trip["first_detection_s"] - experiment.baseline_duration_s
+        if trip["first_detection_s"] is not None else None
+    )
+    return {
+        "case_id": experiment.case_id,
+        "article_test_id": experiment.article_test_id,
+        "source_archive": experiment.source_archive,
+        "alarm_threshold_percent": alarm_threshold_percent,
+        "trip_threshold_percent": trip_threshold_percent,
+        "persistence_s": persistence_s,
+        "alarm": alarm,
+        "trip": trip,
+        "sensor_results": [
+            {
+                "sensor_id": sensor_id,
+                "alarm_detection_s": alarm_time,
+                "trip_detection_s": trip_time,
+            }
+            for sensor_id, alarm_time, trip_time
+            in zip(experiment.sensor_ids, alarm_times, trip_times)
+        ],
+    }
+
+
 def _text(value: object) -> str:
     return "" if value is None else str(value).strip()
 

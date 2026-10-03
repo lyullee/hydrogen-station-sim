@@ -581,6 +581,17 @@ dataset \cite{henriksen2025} was reviewed but was not force-fitted: its downward
 4.6 mm jet in a 5.8 m $\times$ 0.9 m $\times$ 0.8 m channel is not geometrically
 applicable to the current outdoor free-jet adapter.
 
+The same dataset was nevertheless used for a separate, bounded detector-logic
+replay. The measured 29-channel concentration records were passed through the
+declared 1.0 vol\% alarm, 2.0 vol\% trip and 0.5 s persistence rule, with a
+record-specific sampling-gap reset. All 22 experiments produced at least one
+alarm and one trip detection; mean channel coverage was 0.887 and 0.809,
+respectively, and the median first detection occurred 10.675 s after filling
+started. This result checks deterministic threshold and persistence handling,
+not detector response dynamics, placement, ESD effectiveness or an outdoor HRS
+dispersion field. The case-level output and archive digests are retained in the
+reproducibility record \texttt{dispersion\_detector\_logic\_validation.json}.
+
 \subsection{Decision-support study status}
 The deterministic split produces a 24-case holdout casebook and nine development
 cases, but all vignettes remain unapproved until coordinator leakage review and

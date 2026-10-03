@@ -20,7 +20,7 @@ paper result from silently becoming part of the source tree.
 | Powertech Labs SAE J2601 Tables Method data | External process-physics validation | 36 fills; 2.0, 4.7, 5.9 and 9.8 kg nominal tanks | Pressure, tank-gas temperature and SOC traces on the experimental clock |
 | Powertech Labs SAE J2601 MC Default bench data | Prospectively frozen external closed-loop holdout | 8 fills; six 4.7 kg cases plus 2.0 and 9.8 kg tanks | Frozen controller, precooling and tank-response transportability |
 | HIAD 2.2, European Commission JRC | Independent real-incident decision cases | 34 HRS events; 33 with at least one response/lesson/corrective field | Development/holdout casebook and blinded expert review |
-| USN/FFI open-channel dispersion data | Consequence/detector benchmark | 22 releases, 29 concentration sensors, 0.029–1.250 g/s | Spatial/temporal hydrogen-concentration model validation after geometry mapping |
+| USN/FFI open-channel dispersion data | Bounded consequence/detector-logic benchmark | 22 releases, 29 concentration sensors, 0.029–1.250 g/s | Measured concentration replay through declared alarm/trip thresholds; not an outdoor HRS full-loop holdout |
 
 Exact URLs, attribution, rights notes and immutable file digests are in
 `research/data_sources.json`. The acquisition log records the files actually
@@ -53,6 +53,21 @@ To update only one already downloaded data product:
 ```powershell
 .venv\Scripts\python.exe scripts\prepare_public_validation_data.py --datasets dispersion
 ```
+
+To reproduce the bounded detector-logic evidence record (1.0 vol% alarm,
+2.0 vol% trip and 0.5 s persistence):
+
+```powershell
+.venv\Scripts\python.exe scripts\run_dispersion_detector_validation.py `
+  --output research/dispersion_detector_logic_validation.json
+```
+
+The replay checks deterministic threshold, persistence and sampling-gap
+handling against all 22 public experiments. It does not validate detector
+response dynamics, placement, ESD effectiveness, outdoor station dispersion or
+the complete refuelling process model. See
+[`DISPERSION_DETECTOR_LOGIC_VALIDATION.md`](../research/DISPERSION_DETECTOR_LOGIC_VALIDATION.md)
+for the exact claim boundary and archive digests.
 
 To normalize only the MC Default holdout:
 

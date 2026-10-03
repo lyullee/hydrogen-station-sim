@@ -11,6 +11,9 @@ import pytest
 from h2station.public_validation import (
     _active_fill_bounds,
     compare_traces,
+    DispersionExperiment,
+    evaluate_dispersion_detector_logic,
+    first_persistent_threshold_time,
     iter_dispersion_experiments,
     iter_mc_default_traces,
     read_mc_default_workbook,
@@ -293,3 +296,42 @@ def test_dispersion_reader_uses_declared_steady_interval_and_clips_sensor_noise(
     assert summary["steady_mean_concentration_percent"] == pytest.approx(5.0)
     assert summary["steady_peak_concentration_percent"] == pytest.approx(7.0)
     assert summary["steady_lfl_exceedance_fraction"] == pytest.approx(5 / 6)
+
+
+def test_detector_threshold_requires_declared_persistence_and_resets_on_gap():
+    times = np.asarray([0.0, 0.5, 1.0, 1.6, 3.0])
+    values = np.asarray([0.0, 1.2, 1.3, 0.0, 1.5])
+    assert first_persistent_threshold_time(times, values, 1.0, 0.5) == pytest.approx(1.0)
+    assert first_persistent_threshold_time(times, values, 1.0, 1.0) is None
+
+
+def test_dispersion_detector_logic_reports_sensor_coverage_and_latency():
+    experiment = DispersionExperiment(
+        case_id="case-1",
+        article_test_id="test-1",
+        source_archive="case-1.zip",
+        mean_mass_flow_g_s=0.5,
+        mean_filling_pressure_bar=1.0,
+        channel_temperature_c=25.0,
+        baseline_duration_s=1.0,
+        filling_duration_s=3.0,
+        sensor_ids=("1", "2"),
+        sensor_time_s=np.asarray([0.0, 1.0, 1.5, 2.0, 3.0]),
+        concentrations_percent=np.asarray([
+            [0.0, 0.0],
+            [0.0, 1.2],
+            [2.2, 2.2],
+            [2.2, 2.2],
+            [0.0, 0.0],
+        ]),
+    )
+    result = evaluate_dispersion_detector_logic(
+        experiment,
+        alarm_threshold_percent=1.0,
+        trip_threshold_percent=2.0,
+        persistence_s=0.5,
+    )
+    assert result["alarm"]["detected_sensor_count"] == 2
+    assert result["trip"]["detected_sensor_count"] == 2
+    assert result["alarm"]["first_detection_after_fill_start_s"] == pytest.approx(0.5)
+    assert result["trip"]["first_detection_after_fill_start_s"] == pytest.approx(1.0)
