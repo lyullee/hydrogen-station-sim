@@ -274,6 +274,37 @@ def audit(root: Path) -> dict[str, object]:
         } if acquisition_tracker else "missing",
     ))
 
+    byrnes_protocol_path = root / "research/byrnes_zenodo_exploratory_protocol.json"
+    byrnes_result_path = root / "research/byrnes_zenodo_exploratory_result.json"
+    byrnes_protocol = _json(byrnes_protocol_path)
+    byrnes_result = _json(byrnes_result_path)
+    byrnes_aggregate = (byrnes_result or {}).get("aggregate") or {}
+    byrnes_screen_pass = bool(
+        (byrnes_protocol or {}).get("status") == "exploratory_post_access_screen"
+        and (byrnes_protocol or {}).get("evidence_role") == "post_access_exploratory_screening"
+        and (byrnes_protocol or {}).get("outcomes_accessed_before_freeze") is True
+        and (byrnes_result or {}).get("status") == "completed_post_access_exploratory_screen"
+        and (byrnes_result or {}).get("evidence_role") == "post_access_exploratory_screening"
+        and byrnes_aggregate.get("case_count") == 3
+        and byrnes_aggregate.get("joint_screen_pass_count") == 2
+        and byrnes_aggregate.get("claim_supported") is False
+        and "not a prospective validation gate" in str(
+            (byrnes_result or {}).get("claim_boundary", "")
+        )
+    )
+    gates.append(_gate(
+        "byrnes_zenodo_exploratory_screen_integrity",
+        "PASS" if byrnes_screen_pass else ("FAIL" if byrnes_result else "PENDING"),
+        "The newly located open Byrnes hydrogen-release archive is replayed as transparent post-access exploratory evidence without being promoted to validation.",
+        f"{byrnes_protocol_path.relative_to(root)}; {byrnes_result_path.relative_to(root)}",
+        "Three retained cases, 2/3 joint screen result, explicit post-access status and false claim-supported flag.",
+        {
+            "evidence_role": (byrnes_result or {}).get("evidence_role"),
+            "aggregate": byrnes_aggregate,
+            "claim_boundary": (byrnes_result or {}).get("claim_boundary"),
+        } if byrnes_result else "missing",
+    ))
+
     nrel_retrieval_path = root / "research/nrel_h2fills_package_retrieval_check.json"
     nrel_retrieval = _json(nrel_retrieval_path)
     nrel_validation_path = root / "data/public_validation/results/nrel_h2fills_hdvs_typeiv/validation.json"

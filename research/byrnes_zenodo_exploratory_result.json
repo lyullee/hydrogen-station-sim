@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "status": "completed_post_access_exploratory_screen",
+  "evidence_role": "post_access_exploratory_screening",
+  "protocol": "research/byrnes_zenodo_exploratory_protocol.json",
+  "source": {
+    "doi": "10.5281/zenodo.20728325",
+    "landing_url": "https://zenodo.org/records/20728325",
+    "archive": "blowdown_reproducibility_archive.zip",
+    "archive_sha256": "ed9db84e1b3301d18ff70e0ca392529bbde9d30ffa3acb9ef127d5f77f2882e5",
+    "license": "CC-BY-4.0"
+  },
+  "aggregate": {
+    "case_count": 3,
+    "joint_screen_pass_count": 2,
+    "joint_screen_pass_fraction": 0.6666666666666666,
+    "claim_supported": false
+  },
+  "claim_boundary": "Post-access exploratory screen only; not a prospective validation gate, not a station full-loop result, and not an emergency-consequence validation.",
+  "cases": [
+    {
+      "case_id": "Byrnes_run7",
+      "source_file": "data/public_validation/raw/zenodo_20728325/unpacked/zenodo_archive/inputs/hyddown_validation/Byrnes_run7.yml",
+      "volume_m3": 0.05175491956252948,
+      "wall_mass_kg": 57.64367218527931,
+      "pressure_rmse_bar": 4.8524030519442345,
+      "pressure_nrmse_percent_initial_pressure": 3.5679434205472313,
+      "measured_half_pressure_s": 8.14905472636816,
+      "predicted_half_pressure_s": 6.673271037592576,
+      "half_pressure_relative_error_percent": 18.109875787192138,
+      "pressure_screen_pass": true,
+      "half_pressure_screen_pass": true,
+      "joint_screen_pass": true,
+      "predicted_final_pressure_bar_abs": 13.906376419653839,
+      "measured_final_pressure_bar_abs": 13.8,
+      "predicted_peak_mass_flow_kg_s": 0.039400680631922425
+    },
+    {
+      "case_id": "Byrnes_run8",
+      "source_file": "data/public_validation/raw/zenodo_20728325/unpacked/zenodo_archive/inputs/hyddown_validation/Byrnes_run8.yml",
+      "volume_m3": 0.05175491956252948,
+      "wall_mass_kg": 57.64367218527931,
+      "pressure_rmse_bar": 1.9690595052901347,
+      "pressure_nrmse_percent_initial_pressure": 1.4372697118906093,
+      "measured_half_pressure_s": 106.70855614973262,
+      "predicted_half_pressure_s": 102.7714590994169,
+      "half_pressure_relative_error_percent": 3.689579535488429,
+      "pressure_screen_pass": true,
+      "half_pressure_screen_pass": true,
+      "joint_screen_pass": true,
+      "predicted_final_pressure_bar_abs": 14.28132905623099,
+      "measured_final_pressure_bar_abs": 13.3,
+      "predicted_peak_mass_flow_kg_s": 0.0027045984986353963
+    },
+    {
+      "case_id": "Byrnes_run9",
+      "source_file": "data/public_validation/raw/zenodo_20728325/unpacked/zenodo_archive/inputs/hyddown_validation/Byrnes_run9.yml",
+      "volume_m3": 0.05175491956252948,
+      "wall_mass_kg": 57.64367218527931,
+      "pressure_rmse_bar": 7.026682926618765,
+      "pressure_nrmse_percent_initial_pressure": 5.019059233299118,
+      "measured_half_pressure_s": 3.790338983050848,
+      "predicted_half_pressure_s": 3.007835315493799,
+      "half_pressure_relative_error_percent": 20.644688273427484,
+      "pressure_screen_pass": true,
+      "half_pressure_screen_pass": false,
+      "joint_screen_pass": false,
+      "predicted_final_pressure_bar_abs": 12.498708084288312,
+      "measured_final_pressure_bar_abs": 14.9,
+      "predicted_peak_mass_flow_kg_s": 0.08852462454151512
+    }
+  ]
+}

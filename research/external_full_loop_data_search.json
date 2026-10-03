@@ -1086,6 +1086,27 @@
         "exclusion_reason": "Without the alleged files and an immutable pre-access manifest, the paper cannot close the independent holdout gate and its plots are not digitised into the primary claim."
       },
       "claim_limit": "Use only for literature context and data-request targeting until the underlying timestamped files are obtained and frozen."
+    },
+    {
+      "id": "zenodo_20728325_byrnes_blowdown",
+      "title": "Hydrogen blowdown validation inputs bundled with Open Source Tools reproducibility archive",
+      "doi": "10.5281/zenodo.20728325",
+      "url": "https://zenodo.org/records/20728325",
+      "archive_url": "https://zenodo.org/api/records/20728325/files/blowdown_reproducibility_archive.zip/content",
+      "license": "CC-BY-4.0",
+      "inspection": {
+        "archive_sha256": "ed9db84e1b3301d18ff70e0ca392529bbde9d30ffa3acb9ef127d5f77f2882e5",
+        "archive_bytes": 3193229,
+        "cases": [
+          "Byrnes_run7",
+          "Byrnes_run8",
+          "Byrnes_run9"
+        ]
+      },
+      "finding": "The public archive contains three embedded hydrogen blowdown validation YAMLs with geometry, initial state, orifice, back pressure and pressure/temperature validation arrays. The files were inspected before a runner/protocol was written; therefore the result is post-access exploratory evidence, not prospective validation.",
+      "decision": "POST_ACCESS_EXPLORATORY_SCREEN_2_OF_3",
+      "diagnostic": "research/byrnes_zenodo_exploratory_result.json",
+      "claim_boundary": "A 2/3 exploratory screen cannot close a validation gate and does not validate station-to-vehicle fueling, dispersion or emergency response."
     }
   ],
   "next_action": "send the prepared CARB/NRC/IJHE high-flow/FCH2RAIL/JRC/NREL/BAM/Empa/DLR data requests through approved custodians, and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest",
@@ -1609,5 +1630,14 @@
       "claim_limit": "The diagnostic does not close the independent full-loop numerical gate; observed endpoint conditions are not a replacement for time-series external validation."
     }
   },
-  "last_reviewed": "2026-10-04"
+  "last_reviewed": "2026-10-04",
+  "byrnes_zenodo_followup": {
+    "scope": "screening a newly located open hydrogen blowdown archive bundled with a reproducibility deposit",
+    "source": "https://zenodo.org/records/20728325",
+    "finding": "Three embedded Byrnes hydrogen blowdown cases were run through the research-only non-adiabatic CoolProp model using YAML geometry, back pressure and orifice settings without case-specific fitting. All three passed pressure NRMSE <=10%; two passed the <=20% half-pressure-time screen. Combined result 2/3, so no claim is supported.",
+    "decision": "POST_ACCESS_EXPLORATORY_ONLY",
+    "result": "research/byrnes_zenodo_exploratory_result.json",
+    "next_action": "Find or receive a genuinely untouched release campaign, or freeze a new approved subset before reading numerical outcomes; keep the current 2/3 result as transparent exploratory evidence.",
+    "claim_limit": "Do not promote this post-access screen to a prospective validation PASS or a full-loop station claim."
+  }
 }

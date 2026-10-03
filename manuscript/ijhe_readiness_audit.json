@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T22:41:12.435680+00:00",
+  "generated_at": "2026-10-03T22:52:41.133138+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 23,
+    "PASS": 24,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -355,6 +355,23 @@
         "candidate_count": 19,
         "draft_count": 17,
         "claim_boundary": "This tracker is a data-acquisition plan. It is not evidence of validation, does not change any IJHE readiness gate, and does not authorize contact or publication."
+      }
+    },
+    {
+      "id": "byrnes_zenodo_exploratory_screen_integrity",
+      "status": "PASS",
+      "claim": "The newly located open Byrnes hydrogen-release archive is replayed as transparent post-access exploratory evidence without being promoted to validation.",
+      "evidence": "research\\byrnes_zenodo_exploratory_protocol.json; research\\byrnes_zenodo_exploratory_result.json",
+      "requirement": "Three retained cases, 2/3 joint screen result, explicit post-access status and false claim-supported flag.",
+      "observed": {
+        "evidence_role": "post_access_exploratory_screening",
+        "aggregate": {
+          "case_count": 3,
+          "joint_screen_pass_count": 2,
+          "joint_screen_pass_fraction": 0.6666666666666666,
+          "claim_supported": false
+        },
+        "claim_boundary": "Post-access exploratory screen only; not a prospective validation gate, not a station full-loop result, and not an emergency-consequence validation."
       }
     },
     {

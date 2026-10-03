@@ -867,3 +867,22 @@ cases. It predicted 3.26 MPa versus 35.4 MPa for the 35 MPa case and 66.46 MPa
 versus 81.6 MPa for the 70 MPa case, with corresponding SOC underprediction.
 This is an independent negative diagnostic of the thermal/controller state and
 source-boundary assumptions, not a full-loop validation pass.
+
+## 2026-10-04 Byrnes/HydDown Zenodo exploratory screen
+
+The open reproducibility archive [10.5281/zenodo.20728325](https://zenodo.org/records/20728325)
+contains three embedded hydrogen blowdown validation YAML files (`Byrnes_run7`,
+`Byrnes_run8`, and `Byrnes_run9`) with vessel geometry, initial state, orifice,
+back pressure and pressure/temperature arrays. The archive is CC BY 4.0 and its
+retrieved SHA-256 is recorded in `research/byrnes_zenodo_exploratory_protocol.json`.
+
+Because the embedded validation values were visible before the runner and screen
+were written, this is explicitly a post-access exploratory result. The
+CoolProp-based non-adiabatic vessel model passes the pressure NRMSE screen in
+all three cases and the half-pressure-time screen in two cases; the combined
+result is 2/3 and `claim_supported` is false. This improves transparent
+component-level evidence but does not close the prospective gate or validate a
+station-to-vehicle loop, dispersion, ignition or emergency response.
+
+Reproduction uses `scripts/run_byrnes_zenodo_exploratory.py`; the result is
+`research/byrnes_zenodo_exploratory_result.json`.

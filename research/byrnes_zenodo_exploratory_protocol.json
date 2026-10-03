@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "status": "exploratory_post_access_screen",
+  "evidence_role": "post_access_exploratory_screening",
+  "source": {
+    "title": "Supplementary material for Open Source Tools for Pressure Vessel Thermo-Mechanical Response and Safety Analysis",
+    "doi": "10.5281/zenodo.20728325",
+    "landing_url": "https://zenodo.org/records/20728325",
+    "archive_url": "https://zenodo.org/api/records/20728325/files/blowdown_reproducibility_archive.zip/content",
+    "license": "CC-BY-4.0",
+    "archive_bytes": 3193229,
+    "archive_sha256": "ed9db84e1b3301d18ff70e0ca392529bbde9d30ffa3acb9ef127d5f77f2882e5"
+  },
+  "outcomes_accessed_before_freeze": true,
+  "claim_boundary": "This is a transparent exploratory screen after the archive and embedded validation values were inspected. It cannot close a prospective validation gate or support a validated station claim. The cases are small-vessel direct releases, not a station-to-vehicle loop, dispersion, ignition, or emergency-response evaluation.",
+  "cases": [
+    {
+      "id": "Byrnes_run7",
+      "source_file": "inputs/hyddown_validation/Byrnes_run7.yml",
+      "temperature_k": 299.0,
+      "initial_pressure_mpa": 13.8,
+      "orifice_mm": 2.7,
+      "back_pressure_kpa": 100.0,
+      "external_heat_transfer_w_m2_k": 0.0
+    },
+    {
+      "id": "Byrnes_run8",
+      "source_file": "inputs/hyddown_validation/Byrnes_run8.yml",
+      "temperature_k": 294.0,
+      "initial_pressure_mpa": 13.8,
+      "orifice_mm": 0.7,
+      "back_pressure_kpa": 1350.0,
+      "external_heat_transfer_w_m2_k": 10.0
+    },
+    {
+      "id": "Byrnes_run9",
+      "source_file": "inputs/hyddown_validation/Byrnes_run9.yml",
+      "temperature_k": 294.0,
+      "initial_pressure_mpa": 13.8,
+      "orifice_mm": 4.0,
+      "back_pressure_kpa": 100.0,
+      "external_heat_transfer_w_m2_k": 0.0
+    }
+  ],
+  "predeclared_exploratory_screens": {
+    "pressure_nrmse_percent_initial_pressure_max": 10.0,
+    "time_to_50_percent_gauge_relative_error_percent_max": 20.0,
+    "minimum_case_count_for_screen": 3,
+    "no_aggregate_claim_threshold": true
+  },
+  "model_mapping": {
+    "module": "src/h2station/preslhy_nonadiabatic.py",
+    "equation_of_state": "CoolProp HEOS Hydrogen",
+    "vessel_volume": "pi*diameter^2*length/4 from each YAML",
+    "wall_mass": "cylindrical shell plus two flat ends from YAML thickness and density",
+    "discharge_coefficient": "YAML valve.discharge_coef",
+    "back_pressure": "YAML valve.back_pressure",
+    "case_specific_fitting": false,
+    "time_warping": false
+  },
+  "next_step": "Obtain a genuinely untouched release campaign or obtain a new prospective subset with protocol freeze before numerical access; do not promote this screen to a validation PASS."
+}
