@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-03T03:45:00+00:00",
+  "status": "frozen_before_workbook_outcome_extraction",
+  "purpose": "Independent external evaluation of the frozen vehicle-fueling control, precooling and tank-response chain on an uninspected protocol family.",
+  "source": {
+    "title": "SAE J2601 MC Default Bench Test Data",
+    "publisher": "H2Protocol.com / Powertech Labs",
+    "landing_page": "http://www.h2protocol.com/h2-fueling-data/",
+    "archive_url": "http://www.h2protocol.com/app/download/761903230/SAE+J2601+MC+Default+Bench+Test+Data.zip",
+    "archive_bytes": 69849591,
+    "archive_sha256": "e029c53f95c8172be08e5dc4cc41dffb42a09ad7ecbb8b6b8d73e43a9ad210d1",
+    "redistribution": "not_permitted_without_a_separate_license; acquire from the publisher URL"
+  },
+  "selected_workbooks": [
+    "MC Default Validation Test 1-A, 2013Aug01.xlsx",
+    "MC Default Validation Test 1-B, 2013Jul31.xlsx",
+    "MC Default Validation Test 1-C, 2013Jul24.xlsx",
+    "MC Default Validation Test 1-D, 2013Jul25.xlsx",
+    "MC Default Validation Test 1-E, 2013Aug06.xlsx",
+    "MC Default Validation Test 1-F, 2013Aug07.xlsx",
+    "MC Default Validation Test 2-A, 2013Aug12.xlsx",
+    "MC Default Validation Test - 9.8kg Type IV - 2014Dec30.xlsx"
+  ],
+  "excluded_members": {
+    "reason": "lookup-table comparison files, derived comparison workbook and narrative PDFs are not independent MC Default outcome cases",
+    "patterns": [
+      "Lookup Table Validation Test",
+      "MC Default and Lookup Table Test Results - Comparison",
+      ".pdf"
+    ]
+  },
+  "frozen_model": {
+    "git_commit": "108f32553b56f151690a89ed2e0948c6f882a53e",
+    "effective_volume_multiplier": 1.0519881596076546,
+    "gas_liner_ua_multiplier": 64.43011313151457,
+    "dispenser_flow_area_multiplier": 1.25,
+    "case_specific_fitting_permitted": false,
+    "post_freeze_parameter_tuning_permitted": false
+  },
+  "primary_metrics": [
+    "pressure_rmse_mpa",
+    "temperature_rmse_c",
+    "soc_final_abs_error_percentage_points"
+  ],
+  "engineering_screens": {
+    "pressure_rmse_mpa_max": 5.0,
+    "temperature_rmse_c_max": 10.0,
+    "soc_final_abs_error_percentage_points_max": 5.0,
+    "minimum_evaluable_cases": 8,
+    "minimum_joint_screen_pass_fraction": 0.8
+  },
+  "analysis_rules": [
+    "Parse measured time, pressure, tank-gas temperature, inlet temperature, chamber temperature, mass flow and SOC without outcome-dependent smoothing or dynamic time warping.",
+    "Use the experimental clock and pre-declared active-fill detection rule; record every parser exclusion with its reason.",
+    "Do not alter model parameters, screens or selected cases after opening the selected workbook outcomes.",
+    "Report all eight cases, including failures, and retain the existing negative Tables Method full-loop result.",
+    "This dataset can test the vehicle-fueling control, precooling and tank-response chain; it cannot by itself establish field-wide station safety or observe internal bank dispatch commands that were not instrumented."
+  ],
+  "outcomes_inspected_before_freeze": false,
+  "freeze_note": "Only the publisher landing page, archive hash, archive member names and prior literature descriptions were inspected before this file was written. Selected workbook sheets and numerical outcomes were not opened."
+}

@@ -42,6 +42,21 @@
         }
       ]
     },
+    "h2protocol_mc_default": {
+      "title": "SAE J2601 MC Default Bench Test Data",
+      "publisher": "H2Protocol.com / Powertech Labs",
+      "landing_page": "http://www.h2protocol.com/h2-fueling-data/",
+      "citation": "J. Schneider et al., Validation and Sensitivity Studies for SAE J2601, SAE Int. J. Alt. Powertrains 3(2), 2014, doi:10.4271/2014-01-1990.",
+      "rights_note": "The site provides a free download but states no open-data redistribution license. Download for verification only and do not republish the archive.",
+      "files": [
+        {
+          "name": "SAE J2601 MC Default Bench Test Data.zip",
+          "url": "http://www.h2protocol.com/app/download/761903230/SAE+J2601+MC+Default+Bench+Test+Data.zip",
+          "bytes": 69849591,
+          "sha256": "e029c53f95c8172be08e5dc4cc41dffb42a09ad7ecbb8b6b8d73e43a9ad210d1"
+        }
+      ]
+    },
     "hiad_2_2": {
       "title": "European Hydrogen Incidents and Accidents Database HIAD 2.2",
       "publisher": "European Commission Joint Research Centre",

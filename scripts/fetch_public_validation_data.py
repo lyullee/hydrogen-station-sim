@@ -81,7 +81,10 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "datasets", nargs="*",
-        choices=("h2protocol_j2601_tables", "hiad_2_2", "hydrogen_dispersion_channel"),
+        choices=(
+            "h2protocol_j2601_tables", "h2protocol_mc_default", "hiad_2_2",
+            "hydrogen_dispersion_channel",
+        ),
         default=["h2protocol_j2601_tables", "hiad_2_2"],
     )
     parser.add_argument("--manifest", type=Path, default=Path("research/data_sources.json"))
