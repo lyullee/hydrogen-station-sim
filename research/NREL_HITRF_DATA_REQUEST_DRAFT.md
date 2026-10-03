@@ -15,6 +15,12 @@ Hydrogen Fueling Infrastructure materials describe full-station measurement,
 validation and composite data products, but the public products do not expose
 the synchronized raw fueling traces needed for an independent controller
 evaluation.
+The HITRF 36 L experiment reported by Kuroki et al. (DOI
+10.1002/ente.202300239) is a specific priority lead: it describes a 6.3 to
+73.0 MPa fill in 186 seconds with receptacle, internal-gas and liner
+temperature measurements, while its public data-availability statement says
+that the research data are not shared. If those traces can be released under
+an approved de-identification and reuse agreement, please include that case.
 
 Could you provide a small de-identified holdout set, or identify the approved
 access route, containing the following fields where releasable?

@@ -26,6 +26,7 @@ immutable digest are recorded.
 | NREL H2FillS | Official page says the model was validated with empirical fueling datasets. | **Not available.** The empirical validation traces are not offered as a public download on the product page. Simulator output would not be independent experimental evidence. |
 | NREL 2024 HITRF reliability/fueling report | Table 4 gives sample HITRF fill summaries with timestamp, amount, rate, start/end pressure, dispensing temperature and dispensing pressure. | **Report table only.** The PDF does not provide a common-time-base raw trace, so it is useful field context and a lead for a data request, not an untouched full-loop validation set. |
 | DOE/NREL H2IQ Hour 2024 HD fast-flow experiment | 3/12/2024 HITRF test reports 73 kg in 423.5 s, 358.9 s fueling time, 172.3 g/s average, 483.33 g/s peak, 5.5→74.6 MPa, APRR 9.9 MPa/min under SAE J2601-5 MCF-HF-G H70 FM300 T40. | **Plot/summary only.** The presentation contains charts and aggregate endpoints but no machine-readable common-time-base trace; use for face-validity and operating-range checks only. |
+| NREL HITRF 36 L experiment, Kuroki et al., DOI 10.1002/ente.202300239 | Open article describes a HITRF fill from 6.3 to 73.0 MPa in 186 s with inlet pressure, receptacle-exit temperature, internal hydrogen temperature and liner measurements. | **Request data.** The paper's data-availability statement says research data are not shared; figures and boundary conditions alone cannot close the time-series gate. |
 | NREL/NatLabRockies HDTADA | Public repository contains the analysis-tool installers and licence. | **Not available.** No sample raw fueling traces are distributed in the repository. |
 | NREL retail-station composite data products | Public aggregate statistics and histograms for station operation. | **Context only.** No fill-level pressure/temperature/flow time series. |
 | NIST Transient Flow Facility | Official page documents 100 ms or faster pressure, temperature and transient-flow measurement capability. | **Request data.** No public experiment archive was identified from the project page. |
@@ -104,6 +105,13 @@ publish an independent raw trace archive:
 <https://www.nrel.gov/hydrogen/h2fills>. H2FillS remains a reference simulator
 and a possible data-request route, not an external dataset that can be scored
 here.
+
+The NREL HITRF experiment reported by Kuroki et al. (DOI
+<https://doi.org/10.1002/ente.202300239>) is a strong partial-station data
+request lead: the paper gives a 6.3→73.0 MPa fill in 186 s and describes
+pressure, receptacle temperature, internal gas temperature and liner channels.
+The associated OSTI/NREL record states that research data are not shared, so
+the experiment remains a request candidate rather than a public holdout.
 
 The 3Emotion four-year operational study is published in the *International
 Journal of Hydrogen Energy* (DOI
