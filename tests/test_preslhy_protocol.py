@@ -43,6 +43,13 @@ def test_preslhy_protocol_keeps_claim_boundary_and_negative_results():
     assert protocol["aggregate_decision"]["bootstrap_replicates"] == 10_000
     assert protocol["eligibility"]["minimum_evaluable_cases"] >= 12
     assert protocol["time_alignment"]["evaluation_start_s"] == 0.1
+    assert "first significant pressure increase" in protocol["time_alignment"][
+        "zero"
+    ].lower()
+    assert "pnoz" in protocol["time_alignment"]["zero"].lower()
+    assert "relay transition is not used" in protocol["time_alignment"][
+        "zero"
+    ].lower()
     assert "no dynamic time warping" in protocol["time_alignment"][
         "prediction_mapping"
     ].lower()

@@ -2,6 +2,15 @@
   "schema_version": 1,
   "frozen_at": "2026-10-03",
   "status": "frozen_before_raw_excel_outcome_access",
+  "amendments": [
+    {
+      "date": "2026-10-03",
+      "outcomes_accessed": false,
+      "supersedes_git_commit": "b7cfd76",
+      "change": "Corrected time zero from the valve-relay transition to the published synchronized-time definition: first significant Pnoz increase.",
+      "basis": "PRESLHY D3.4 section 5.1 states that Pnoz, rather than the earlier relay transition, defines synchronized t = 0."
+    }
+  ],
   "objective": "Externally evaluate the digital twin's ambient-temperature high-pressure hydrogen release and inventory-depletion physics against PRESLHY E3.1 DisCha experiments.",
   "claim_boundary": "This protocol evaluates a rigid source vessel discharging through a nominal circular aperture. It does not validate a vehicle-fueling loop, cryogenic two-phase release, a site vent stack, pipe backpressure, ignition, dispersion, or emergency separation distance.",
   "source": {
@@ -40,7 +49,7 @@
     "include": [
       "Excel numerical result files from packages named PRE3P1A_KIT_D*_300K_DATA.zip",
       "nominal aperture 0.5, 1, 2 or 4 mm",
-      "measured vessel pressure and a recorded valve-opening synchronization signal",
+      "measured vessel pressure and the published synchronized-time channel based on the first significant Pnoz rise",
       "positive initial absolute pressure above ambient",
       "at least 20 pressure samples after valve opening"
     ],
@@ -48,7 +57,7 @@
       "80 K cryogenic packages",
       "photograph-only packages",
       "missing or non-finite time/pressure records",
-      "no identifiable valve opening",
+      "no identifiable published synchronized release start",
       "pressure trace increasing after the synchronized release start for more than 10 percent of usable samples",
       "documented sensor saturation or acquisition failure"
     ],
@@ -57,7 +66,7 @@
     "minimum_initial_pressure_groups": 3
   },
   "time_alignment": {
-    "zero": "first valve-relay transition identified by the source synchronized-time channel",
+    "zero": "published synchronized time zero: first significant pressure increase in the release line (Pnoz), as defined in the technical report; the earlier valve-relay transition is not used",
     "evaluation_start_s": 0.1,
     "evaluation_end": "first sample at or below 1.05 times measured ambient absolute pressure, or the last valid recorded sample",
     "prediction_mapping": "linear interpolation onto experimental timestamps; no dynamic time warping or time shift optimization"
@@ -109,4 +118,3 @@
     "claim_rule": "Only the pre-existing 0.8 result controls the primary decision; sensitivity runs cannot replace it or be selected after outcome inspection."
   }
 }
-

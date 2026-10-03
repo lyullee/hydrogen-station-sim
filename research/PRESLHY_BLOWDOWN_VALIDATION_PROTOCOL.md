@@ -3,6 +3,14 @@
 Frozen: **2026-10-03**, before any numerical Excel outcome file in the
 PRESLHY archive was opened.
 
+## Pre-outcome amendment
+
+Before any numerical Excel outcome was opened, the synchronization rule in the
+initial freeze commit `b7cfd76` was corrected. PRESLHY D3.4 section 5.1 defines
+published synchronized `t = 0` as the first significant `Pnoz` increase, not
+the earlier valve-relay transition. This correction is recorded in the JSON
+protocol amendment history and does not use model-performance information.
+
 ## Purpose
 
 This experiment evaluates the safety twin's source depletion and hydrogen
@@ -36,9 +44,11 @@ warping and optimized time shifts are prohibited.
 
 An experiment must come from a `PRE3P1A_KIT_D*_300K_DATA.zip` numerical package,
 contain a synchronized valve-opening marker and at least 20 valid post-opening
-vessel-pressure samples. Missing/non-finite signals, acquisition failure,
-sensor saturation, or a predominantly increasing post-release pressure trace
-are exclusions. Model error is never an exclusion reason.
+vessel-pressure samples. The published synchronized time is used directly: its
+zero is the first significant pressure increase in the release line (`Pnoz`),
+not the earlier valve-relay transition. Missing/non-finite signals, acquisition
+failure, sensor saturation, or a predominantly increasing post-release pressure
+trace are exclusions. Model error is never an exclusion reason.
 
 At least 12 cases spanning three aperture groups and three initial-pressure
 groups are required. All eligible failures remain in the result.
@@ -65,4 +75,3 @@ The public metadata and technical report were inspected. The 1,313,122,304-byte
 TAR advertises MD5 `b4d245866b7daed5705a06415a83b013` and CC BY 4.0. The
 repository's HTTPS endpoint was intermittent during protocol preparation. No
 numerical Excel outcome file was opened before freeze.
-
