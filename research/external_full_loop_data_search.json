@@ -212,6 +212,29 @@
       "decision": "REQUEST_DATA"
     },
     {
+      "id": "nist_fts_2015_field_dispenser",
+      "title": "NIST Hydrogen Field Test Standard: Laboratory and Field Performance",
+      "doi": "10.1016/j.flowmeasinst.2015.10.010",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4692185/",
+      "publisher": "NIST / Flow Measurement and Instrumentation",
+      "public_raw_data": false,
+      "decision": "REQUEST_RAW_TRACE_METROLOGY_CANDIDATE",
+      "inspection": {
+        "reported_scope": "35 MPa Type III approximately 1 kg H2 field-test standard at a retail dispenser; three 0.41 kg and four 0.75 kg hydrogen drafts.",
+        "reported_measurements": [
+          "continuous tank pressure and temperature",
+          "gravimetric mass",
+          "PVT mass",
+          "master-meter mass"
+        ],
+        "reported_field_agreement": "All field methods agreed within 1.53%.",
+        "raw_common_timebase": "not public",
+        "dispenser_readout": "disabled during tests; the standard measured delivered mass independently",
+        "role": "Independent metrology and partial-dispenser validation lead; request de-identified logger files, calibration records and reuse terms.",
+        "exclusion_reason": "The article provides plotted traces and endpoints but no machine-readable synchronized logger export and no vehicle-side controller channels."
+      }
+    },
+    {
       "id": "cal_state_la_back_to_back",
       "title": "Hydrogen station in situ back-to-back fueling data for design and modeling",
       "doi": "10.1016/j.jclepro.2021.129737",
@@ -697,6 +720,11 @@
         "id": "samcheok_hrs_sensor_table_2024",
         "url": "https://www.mdpi.com/2071-1050/16/21/9482",
         "finding": "Open paper prints a 24-channel HRS sensor schema and 1 s normal-operation examples, but vehicle-side pressure/mass-flow channels are absent and abnormal component values were artificially created; retain as a sensor-schema benchmark only."
+      },
+      {
+        "id": "nist_fts_2015_field_dispenser",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4692185/",
+        "finding": "NIST field-test standard reports seven H2 drafts at a retail dispenser with continuous tank pressure/temperature and independent mass methods (field agreement within 1.53%), but no machine-readable synchronized logger files are public and dispenser readout was disabled; retain as a raw-trace metrology request lead."
       },
       {
         "id": "h2_stations_export_api",

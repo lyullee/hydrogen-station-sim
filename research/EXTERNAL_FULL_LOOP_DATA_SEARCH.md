@@ -32,6 +32,7 @@ immutable digest are recorded.
 | NREL/NatLabRockies HDTADA | Public repository contains the analysis-tool installers and licence. | **Not available.** No sample raw fueling traces are distributed in the repository. |
 | NREL retail-station composite data products | Public aggregate statistics and histograms for station operation. | **Context only.** No fill-level pressure/temperature/flow time series. |
 | NIST Transient Flow Facility | Official page documents 100 ms or faster pressure, temperature and transient-flow measurement capability. | **Request data.** No public experiment archive was identified from the project page. |
+| NIST Hydrogen Field Test Standard, Pope & Wright, DOI 10.1016/j.flowmeasinst.2015.10.010 | NIST field tests used a 35 MPa Type III, 1 kg H₂ standard at a retail dispenser; three 0.41 kg and four 0.75 kg H₂ drafts were measured with continuous tank pressure/temperature and independent mass methods. | **Request raw traces.** The open article reports protocols, endpoints and uncertainty but no downloadable synchronized logger files; dispenser readout was disabled, so it is a metrology/partial-dispenser candidate rather than an available full-loop holdout. |
 | Cal State LA back-to-back fueling study, DOI 10.1016/j.jclepro.2021.129737 | Peer-reviewed analysis of one year of station operation and back-to-back fills. | **Request data.** No public supplementary raw time-series archive was indexed with the article. |
 | Cal State LA HRFF multi-year energy-performance study, DOI 10.1016/j.ijhydene.2023.04.084 | Open-access paper reports 2016–2020 operation, more than 4,500 fills, more than 8,800 kg dispensed, storage/compressor/dispensing-line performance and station data-acquisition methodology. | **Paper aggregate only.** The article does not expose a downloadable synchronized fill trace; request de-identified event-level and time-series exports from the HRFF authors. |
 | JRC GasTeF reference database, DOI 10.1016/j.ijhydene.2014.03.227 | Open-access paper describes more than 133 real tank filling/emptying entries with internal and external temperature measurements plus gas-path pressure/temperature instrumentation. | **Request data.** The public JRC record and article do not link a machine-readable database or state reuse terms for the underlying traces. |
@@ -220,6 +221,24 @@ The report itself does not publish those files or their reuse terms, so they
 have been added as a JRC/HyTransfer data-request lead rather than copied or
 treated as a validation holdout.
 
+## NIST field-test-standard artifact inspection
+
+The NIST field-test-standard paper is a strong independent metrology lead:
+
+- DOI: <https://doi.org/10.1016/j.flowmeasinst.2015.10.010>
+- NIST used a 35 MPa Type III, approximately 1 kg H₂ field-test standard at a
+  retail dispenser and performed three 0.41 kg and four 0.75 kg H₂ drafts.
+- The standard continuously monitored tank pressure and temperature and
+  compared gravimetric, PVT and master-meter mass results. The reported field
+  methods agreed within 1.53%.
+- The article provides protocol, uncertainty and plotted traces but no
+  machine-readable synchronized logger export; the dispenser readout was
+  intentionally disabled during the tests.
+
+Request the de-identified logger files, sampling interval, calibration records,
+and permission to publish derived metrics before using this source for a
+frozen validation split.
+
 ## DOE/NREL H2IQ Hour experiment artifact inspection
 
 The official March 2024 presentation reports a real HITRF heavy-duty fast-flow
@@ -281,8 +300,8 @@ digitising the chart.
    the new outcomes for tuning.
 12. If CARB, JRC, Cal State LA, Empa, FCH2RAIL, NREL HITRF, the BAM study, the Hungarian HRS study and
    NBSDC cannot release the traces, make an equivalent
-   request to NIST. Do not substitute graph digitisation for raw data in the
-   primary full-loop claim.
+   request to NIST using `research/NIST_FTS_DATA_REQUEST_DRAFT.md`. Do not
+   substitute graph digitisation for raw data in the primary full-loop claim.
 
 ## Current conclusion
 
