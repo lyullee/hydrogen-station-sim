@@ -77,14 +77,18 @@ def test_validation_and_mass_balance():
 def test_short_nominal_closed_loop():
     config = ReferenceScenario(duration_s=0.4, control_period_s=0.2)
     built = build_reference_scenario(config, UnavailableHyRAMBackend())
+    samples = []
     result = built.simulator.simulate(
         built.initial_state,
         config.duration_s,
         config.control_period_s,
+        sample_callback=samples.append,
     )
     assert len(result.time_s) == 3
     assert np.all(np.isfinite(result.states))
     assert result.vehicle_pressure_pa[-1] > 0.0
+    assert len(samples) == len(result.time_s)
+    assert all(np.isfinite(sample.precooler_outlet_temperature_k) for sample in samples)
 
 
 def test_leak_concentration_trips_esd():

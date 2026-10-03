@@ -81,6 +81,7 @@ class SafeOperationSample:
     vehicle_2_density_kg_m3: float
     hose_pressure_pa: float
     hose_temperature_k: float
+    precooler_outlet_temperature_k: float
     pcv_mass_flow_kg_s: float
     nozzle_mass_flow_kg_s: float
     pcv_1_mass_flow_kg_s: float
@@ -669,6 +670,9 @@ class SafeFullStationSimulator:
                         vehicle_2_density_kg_m3=vehicle_2_gas.density_kg_m3,
                         hose_pressure_pa=hose_gas.pressure_pa,
                         hose_temperature_k=hose_gas.temperature_k,
+                        precooler_outlet_temperature_k=(
+                            previous_precooler_temperature
+                        ),
                         pcv_mass_flow_kg_s=(
                             previous_pcv_flow + previous_pcv_2_flow
                         ),
