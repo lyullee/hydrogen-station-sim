@@ -990,6 +990,33 @@
       "claim_limit": "Use for face-validity, fault taxonomy and test-design context only until underlying timestamped logs and reuse terms are obtained."
     },
     {
+      "id": "fch2rail_ijhe_2025",
+      "title": "Development, application and optimization of hydrogen refueling processes for railway vehicles",
+      "doi": "10.1016/j.ijhydene.2025.04.040",
+      "url": "https://doi.org/10.1016/j.ijhydene.2025.04.040",
+      "publisher": "International Journal of Hydrogen Energy / DLR FCH2RAIL",
+      "public_raw_data": false,
+      "decision": "REPORT_CONTEXT_AND_DATA_REQUEST_LEAD",
+      "inspection": {
+        "reported_scope": "Open IJHE study using a transportable HRS and FCH2RAIL hydrogen train; 32 days of measured refuelling activity and station/train measurement comparison.",
+        "measured_channels_described": [
+          "dispenser pressure",
+          "dispenser temperature",
+          "dispenser mass flow",
+          "tank-module pressure",
+          "tank-module temperature",
+          "ambient temperature"
+        ],
+        "reported_configuration": "Four tank modules with eight Type-III tanks each, 35 MPa nominal pressure; station includes compressor, two storage containers and dispenser; trailer supply can be connected.",
+        "raw_common_timebase": "not publicly available",
+        "data_availability_finding": "The published article explicitly states that no measurement data of hydrogen rail-vehicle refuelling processes could be found publicly; DLR record exposes the article PDF only and no synchronized machine-readable archive or supplementary logger.",
+        "role": "Independent large-capacity, trailer/HRS/train operating-range and protocol-context request lead; request de-identified synchronized station/train logs and reuse terms.",
+        "exclusion_reason": "Open article contains measurements, figures and aggregate 32-day analysis but no downloadable raw time series; it cannot close the full-loop holdout."
+      },
+      "claim_limit": "Use for operating-range, configuration and protocol-context discussion only until timestamped raw logs, channel definitions, provenance and permission are received and frozen.",
+      "request_draft": "research/FCH2RAIL_DATA_REQUEST_DRAFT.md"
+    },
+    {
       "id": "deng_2025_highflow_35mpa",
       "title": "Experimental-numerical optimization of inlet angles for controlling temperature rise during high-flow hydrogen refueling of large-scale storage tanks",
       "doi": "10.1016/j.ijhydene.2025.151093",
@@ -1018,7 +1045,7 @@
       "claim_limit": "Use only as independent design/operating-range context until raw timestamped flow, pressure, temperature, tank geometry and protocol metadata are received and frozen."
     }
   ],
-  "next_action": "Use the NREL HDVS workbook for the frozen tank-submodel diagnostic, send the prepared CARB/NRC/IJHE high-flow/JRC/NREL/BAM/Empa/DLR data requests through approved custodians, and request synchronized station-side traces before freezing a new full-loop holdout.",
+  "next_action": "send the prepared CARB/NRC/IJHE high-flow/FCH2RAIL/JRC/NREL/BAM/Empa/DLR data requests through approved custodians, and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest",
   "claim_limit": "The NREL candidate supports an independent tank-submodel screen only. No new external full-loop validation claim is permitted until station controller, hose/nozzle, protocol and vehicle-side traces are obtained and scored under a pre-access freeze.",
   "review_log_2026_10_03": {
     "scope": "public-source recheck for an untouched independent full-loop HRS validation set",
@@ -1135,9 +1162,15 @@
         "id": "norcal_zero_oakland_hd_station_report",
         "url": "https://ww2.arb.ca.gov/sites/default/files/2025-08/NorCAL%20ZERO%20Final%20Report.pdf",
         "finding": "the official report confirms real Oakland station and XCIENT fleet event fields, but only figures and summaries are public; no synchronized machine-readable station/vehicle logger archive is exposed"
+      },
+      {
+        "id": "fch2rail_ijhe_2025",
+        "url": "https://doi.org/10.1016/j.ijhydene.2025.04.040",
+        "finding": "The published article explicitly states that no measurement data of hydrogen rail-vehicle refuelling processes could be found publicly; DLR record exposes the article PDF only and no synchronized machine-readable archive or supplementary logger.",
+        "decision": "REPORT_CONTEXT_AND_DATA_REQUEST_LEAD"
       }
     ],
-    "result": "NorCAL ZERO is a stronger raw-data request lead than the standalone CEC event-summary report, but it does not close the untouched full-loop gate without the underlying logs, temperature channels, vehicle linkage, provenance and reuse terms.",
+    "result": "No newly reviewed public source exposes an untouched synchronized station-to-vehicle full-loop logger archive. FCH2RAIL adds an independent large-capacity trailer/HRS/train request lead, while NRC and recent IJHE experiments remain context or request leads.",
     "next_action": "request de-identified NorCAL ZERO station and vehicle logger files, freeze provenance and scoring before any evaluation",
     "zenodo_and_accident_review": {
       "scope": "follow-up review of Zenodo HRS records and current public accident evidence",
@@ -1237,7 +1270,8 @@
       ],
       "result": "This recent IJHE experiment is a strong request lead for independent large-tank thermal validation, but it does not close the current full-loop gate without raw logger files and provenance.",
       "claim_limit": "Do not convert article figures or summary error claims into the repository primary validation set."
-    }
+    },
+    "claim_limit": "Do not use article figures, aggregate event summaries or static inventories as primary full-loop numerical validation. Promote a source only after de-identified raw files, metadata, reuse terms and a pre-access freeze are recorded."
   },
   "last_reviewed": "2026-10-04"
 }

@@ -588,3 +588,22 @@ independent large-tank thermal validation if the authors release de-identified
 raw logs, but its figures and summary error claims are not counted as the
 primary validation set. A prepared request is stored in
 `research/DENG_2025_HIGHFLOW_DATA_REQUEST_DRAFT.md`.
+
+## 2026-10-04 FCH2RAIL IJHE measurement-data follow-up
+
+The open *International Journal of Hydrogen Energy* paper by Wieser et al. (DOI
+<https://doi.org/10.1016/j.ijhydene.2025.04.040>) is a useful independent
+large-capacity operating-range and protocol-context source. It analyses 32 days
+of refuelling for a FCH2RAIL hydrogen train using a transportable HRS, with a
+four-module Type-III vehicle system and station/trailer/HRS measurements. The
+paper describes dispenser pressure, temperature and mass-flow channels together
+with tank-module pressure/temperature measurements and compares measured
+refuels with a model.
+
+The DLR public record and article PDF do not expose a synchronized,
+machine-readable logger archive or supplementary dataset; the article itself
+states that public rail-vehicle refuelling measurement data were not available.
+It is therefore registered as **REPORT_CONTEXT_AND_DATA_REQUEST_LEAD**, not as
+an eligible untouched full-loop holdout. The prepared request is
+`research/FCH2RAIL_DATA_REQUEST_DRAFT.md`. No figure digitisation is used for
+the primary validation claim.
