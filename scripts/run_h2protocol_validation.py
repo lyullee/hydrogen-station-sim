@@ -157,26 +157,38 @@ def run_case(
     )
     metrics = agreement.to_dict()
     model_time = np.asarray([sample.time_s for sample in operation_samples])
+    active_mask = np.asarray([
+        command.phase.value == "filling" and command.stop_reason is None
+        for command in trajectory.fueling_commands
+    ])
+    if not np.any(active_mask):
+        raise RuntimeError(f"{case_id} produced no active fueling samples")
+    active_time = model_time[active_mask]
     model_hose_temperature_c = np.asarray([
         sample.hose_temperature_k - 273.15 for sample in operation_samples
-    ])
+    ])[active_mask]
     model_precooler_temperature_c = np.asarray([
         sample.precooler_outlet_temperature_k - 273.15
         for sample in operation_samples
-    ])
+    ])[active_mask]
     experimental_inlet_on_model_clock = np.interp(
-        model_time, exp_time, inlet_temperature
+        active_time, exp_time, inlet_temperature
     )
     pressure_reference_mpa = np.asarray([
         command.reference_pressure_pa / 1.0e6
         for command in trajectory.fueling_commands
-    ])
-    vehicle_pressure_mpa = trajectory.vehicle_pressure_pa / 1.0e6
+    ])[active_mask]
+    vehicle_pressure_mpa = trajectory.vehicle_pressure_pa[active_mask] / 1.0e6
     reference_lag_mpa = pressure_reference_mpa - vehicle_pressure_mpa
-    dispatch_counts = Counter(trajectory.dispatch_bank)
+    dispatch_counts = Counter(
+        bank for bank, active in zip(trajectory.dispatch_bank, active_mask) if active
+    )
+    last_active_index = int(np.flatnonzero(active_mask)[-1])
     final_bank_pressures_mpa = {
         name: float(pressure_pa / 1.0e6)
-        for name, pressure_pa in operation_samples[-1].bank_pressure_pa.items()
+        for name, pressure_pa in operation_samples[
+            last_active_index
+        ].bank_pressure_pa.items()
     }
     final_command = trajectory.fueling_commands[-1]
     first_stopped = next(
@@ -214,20 +226,21 @@ def run_case(
         "predicted_peak_temperature_c": float(np.max(trajectory.vehicle_temperature_k) - 273.15),
         "predicted_final_soc_percent": float(predicted_soc[-1]),
         "predicted_peak_mass_flow_g_s": float(1000.0 * np.max(trajectory.nozzle_mass_flow_kg_s)),
-        "pressure_reference_tracking_rmse_mpa": float(
+        "active_fueling_duration_s": float(active_time[-1] - active_time[0]),
+        "active_pressure_reference_tracking_rmse_mpa": float(
             np.sqrt(np.mean(reference_lag_mpa ** 2))
         ),
-        "pressure_reference_final_lag_mpa": float(reference_lag_mpa[-1]),
-        "hose_inlet_temperature_rmse_c": float(np.sqrt(np.mean(
+        "active_pressure_reference_final_lag_mpa": float(reference_lag_mpa[-1]),
+        "active_hose_inlet_temperature_rmse_c": float(np.sqrt(np.mean(
             (model_hose_temperature_c - experimental_inlet_on_model_clock) ** 2
         ))),
-        "precooler_outlet_temperature_rmse_c": float(np.sqrt(np.mean(
+        "active_precooler_outlet_temperature_rmse_c": float(np.sqrt(np.mean(
             (model_precooler_temperature_c - experimental_inlet_on_model_clock) ** 2
         ))),
-        "dispatch_sample_counts": {
+        "active_dispatch_sample_counts": {
             str(name or "none"): int(count) for name, count in dispatch_counts.items()
         },
-        "final_bank_pressures_mpa": final_bank_pressures_mpa,
+        "bank_pressures_at_active_end_mpa": final_bank_pressures_mpa,
         "experimental_transferred_mass_kg": float(
             np.trapezoid(experimental_mass_flow_g_s / 1000.0, exp_time)
         ),
