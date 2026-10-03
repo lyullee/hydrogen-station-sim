@@ -91,6 +91,15 @@
       "rights_note": "The public PDF may be cited. No data redistribution licence was identified for the Appendix A workbook or underlying fill traces; request reuse terms before obtaining or republishing them.",
       "eligibility_note": "The report is field-relevant but is not itself an eligible machine-readable full-loop validation set. The public PDF has no embedded attachment or external raw-data link."
     },
+    "nrel_2024_hitrf_reliability_fueling_report": {
+      "title": "Hydrogen Station Reliability and Fueling Performance - HITRF sample fill table",
+      "publisher": "National Renewable Energy Laboratory",
+      "landing_page": "https://www.nrel.gov/hydrogen/hitrf",
+      "report_url": "https://docs.nrel.gov/docs/fy24osti/85333.pdf",
+      "citation": "National Renewable Energy Laboratory, Hydrogen Station Reliability and Fueling Performance report, FY24OSTI/85333.",
+      "rights_note": "The public report may be cited. No underlying fill-level raw-trace redistribution licence or machine-readable workbook was identified.",
+      "eligibility_note": "Table 4 provides field-relevant sample fill summary fields (timestamp, amount, rate, start/end pressure, dispensing temperature and pressure), but no common-time-base raw trace. It is report-level context and a data-request lead, not an eligible untouched full-loop validation set."
+    },
     "tessema_2026_hrs_performance_simulation": {
       "title": "HRSs refueling perfromance Data sets",
       "publisher": "Mendeley Data",

@@ -24,6 +24,7 @@ immutable digest are recorded.
 |---|---|---|
 | CARB 2024 Existing Light-Duty HRS In-Use Study | Tests at 22 in-use stations; report figures include pressure, temperature, mass flow and SOC. Appendix A says results were tabulated in an Excel workbook. The public page links only the PDF; the PDF has no attachments or data links. | **Request data.** Strongest independent field candidate, but the published plot and summary table are not machine-readable validation data. |
 | NREL H2FillS | Official page says the model was validated with empirical fueling datasets. | **Not available.** The empirical validation traces are not offered as a public download on the product page. Simulator output would not be independent experimental evidence. |
+| NREL 2024 HITRF reliability/fueling report | Table 4 gives sample HITRF fill summaries with timestamp, amount, rate, start/end pressure, dispensing temperature and dispensing pressure. | **Report table only.** The PDF does not provide a common-time-base raw trace, so it is useful field context and a lead for a data request, not an untouched full-loop validation set. |
 | NREL/NatLabRockies HDTADA | Public repository contains the analysis-tool installers and licence. | **Not available.** No sample raw fueling traces are distributed in the repository. |
 | NREL retail-station composite data products | Public aggregate statistics and histograms for station operation. | **Context only.** No fill-level pressure/temperature/flow time series. |
 | NIST Transient Flow Facility | Official page documents 100 ms or faster pressure, temperature and transient-flow measurement capability. | **Request data.** No public experiment archive was identified from the project page. |
@@ -48,6 +49,24 @@ The report states that testing occurred from October 2023 through May 2024 and
 that some older stations could not record or provide all HGV 4.3-required data.
 This limits the likely completeness of any released workbook and must be
 captured case by case if CARB supplies it.
+
+## NREL HITRF report artifact inspection
+
+The NREL report is a primary source for field-operational context:
+
+- URL: <https://docs.nrel.gov/docs/fy24osti/85333.pdf>
+- Table 4 contains sample HITRF fill-level summary fields: timestamp, amount,
+  rate, start/end pressure, dispensing temperature and dispensing pressure.
+- The published report does not expose the underlying common-time-base sensor
+  trace or a downloadable machine-readable workbook. It therefore cannot close
+  the full-loop validation gate. It is retained as a lead for requesting
+  de-identified HITRF traces from the data owner.
+
+The H2FillS manual is screened separately because it documents an example
+`supply_condition.csv` and exported pressure/temperature/mass-flow/SOC fields,
+but those examples are part of a simulation package and are not independent
+experimental observations:
+<https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf?sfvrsn=b2960c3d_1>.
 
 ## Acquisition sequence
 

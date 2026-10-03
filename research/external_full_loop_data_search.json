@@ -50,7 +50,26 @@
       "title": "H2FillS: Hydrogen Filling Simulation",
       "url": "https://www.nrel.gov/hydrogen/h2fills",
       "public_raw_data": false,
-      "decision": "NOT_AVAILABLE_FROM_PRODUCT_PAGE"
+      "decision": "NOT_AVAILABLE_FROM_PRODUCT_PAGE",
+      "inspection": {
+        "manual_url": "https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf?sfvrsn=b2960c3d_1",
+        "manual_finding": "The user manual documents example supply_condition.csv and exported pressure, temperature, mass-flow and SOC fields, but the example is a simulator distribution file rather than independent measured station data.",
+        "independent_raw_trace": false
+      }
+    },
+    {
+      "id": "nrel_2024_hitrf_fill_table",
+      "title": "Hydrogen Station Reliability and Fueling Performance: HITRF sample fill table",
+      "url": "https://docs.nrel.gov/docs/fy24osti/85333.pdf",
+      "publisher": "National Renewable Energy Laboratory",
+      "public_raw_data": false,
+      "decision": "REPORT_TABLE_ONLY",
+      "inspection": {
+        "finding": "Table 4 reports sample HITRF fill-level summary fields including timestamp, amount, rate, start/end pressure, dispensing temperature and dispensing pressure.",
+        "raw_common_timebase": false,
+        "machine_readable_trace": false,
+        "role": "field-relevant context and candidate data-request lead; not an untouched full-loop validation set"
+      }
     },
     {
       "id": "nrel_hdtada",
