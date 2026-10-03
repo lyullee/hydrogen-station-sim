@@ -37,6 +37,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert proust["aggregate"]["claim_supported"] is False
     assert proust["protocol_hash_matches"] is True
     assert proust["data_hash_matches"] is True
+    assert gates["release_network_development_integrity"]["status"] == "PASS"
+    release_development = gates["release_network_development_integrity"]["observed"]
+    assert release_development["evidence_role"] == "consumed_development_only"
+    assert release_development["eligible_as_confirmatory_validation"] is False
+    assert release_development["interpretation"]["claim_supported"] is False
     assert gates["schefer_transient_release_validation"]["status"] == "FAIL"
     schefer = gates["schefer_transient_release_validation"]["observed"]
     assert schefer["result"]["points"] == 25

@@ -1,90 +1,65 @@
-# IJHE submission readiness
+# IJHE evidence-readiness audit
 
-Target journal: *International Journal of Hydrogen Energy*
-Working title: **External validation and evidence-gated decision support for a virtual hydrogen refuelling station digital twin**
+- Bounded IJHE submission ready: **False**
+- Full user objective ready: **False**
+- Goal completion permitted: **False**
 
-## Current decision
+| Gate | Status | Claim | Evidence |
+|---|---|---|---|
+| `tank_external_validation` | **PASS** | Measured-boundary Type-IV tank model is externally evaluated on the frozen public split. | `research\tank_model_validation_v2.json` |
+| `active_fill_correction_disclosed` | **PASS** | The post-diagnostic H2P-L29 normalization correction and its downstream effect are disclosed and hash-linked. | `research\h2protocol_active_fill_correction.json` |
+| `corrected_closed_loop_internal_evidence` | **PASS** | The corrected development pipeline is retained with its low joint-screen pass fractions and internal-comparison status. | `research\closed_loop_development_v2.json; research\closed_loop_internal_comparison_v2.json` |
+| `full_loop_external_validation` | **FAIL** | The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases. | `data\public_validation\results\closed_loop_external_holdout\validation.json; research\external_full_loop_data_search.json` |
+| `full_loop_negative_result_disclosed` | **PASS** | The failed full-loop evaluation is disclosed instead of being hidden. | `manuscript\ijhe_manuscript_draft.tex` |
+| `hyram_adapter_verification` | **PASS** | The production adapter is identical to and numerically consistent with HyRAM+ 6.1 within the tested scope. | `research\hyram_adapter_verification.json` |
+| `station_consequence_geometry_validation` | **PASS** | Displayed outdoor free-jet screening geometry is traceably checked against geometrically applicable independent data. | `research\consequence_geometry_validation.json` |
+| `preslhy_blowdown_external_validation` | **FAIL** | The source-depletion and direct-aperture release model meets its prospectively frozen screens on public PRESLHY ambient blowdown experiments. | `research\preslhy_blowdown_external_validation.json; research\preslhy_blowdown_validation_protocol.json` |
+| `preslhy_revised_holdout_validation` | **FAIL** | The revised non-adiabatic source-depletion model meets the prospectively frozen PRESLHY E5.1 holdout rule. | `research\preslhy_e5_1_holdout_result.json; research\preslhy_e5_1_holdout_protocol.json` |
+| `proust_independent_release_validation` | **FAIL** | The fixed high-pressure aperture relation meets its prospectively frozen rule on the independent INERIS/CEA 90 MPa campaign. | `research\proust_release_holdout_result.json; research\proust_release_holdout_protocol.json; data\public_validation\derived\proust_90mpa_release.csv` |
+| `release_network_development_integrity` | **PASS** | The post-outcome release-network diagnostic is retained as consumed development evidence and cannot be mistaken for validation. | `research\release_network_development.json` |
+| `schefer_transient_release_validation` | **FAIL** | The locked adiabatic vessel-discharge model meets all frozen transient mass-flow screens on the independent Sandia/SRI experiment. | `research\schefer_2006_holdout_result.json; research\schefer_2006_holdout_protocol.json; data\public_validation\derived\schefer_2006_figure3b.csv` |
+| `schefer_2007_pressure_decay_validation` | **FAIL** | The locked adiabatic vessel-discharge model meets all frozen pressure-decay screens on the independent Schefer et al. 2007 experiment. | `research\schefer_2007_holdout_result.json; research\schefer_2007_holdout_protocol.json; data\public_validation\derived\schefer_2007_figure4.csv` |
+| `ekoto_transient_release_validation` | **PASS** | The locked adiabatic vessel-discharge model meets all frozen transient mass-flow screens on the independent Ekoto et al. scaled release. | `research\ekoto_2012_holdout_result.json; research\ekoto_2012_holdout_protocol.json; data\public_validation\derived\ekoto_2012_figure3.csv` |
+| `hiad_protocol_integrity` | **PASS** | The incident decision-support study protocol was hash-locked before outcomes. | `research\hiad_study_protocol_manifest.json` |
+| `institutional_ethics_determination` | **PENDING** | The applicable institution has recorded the human-participant determination. | `research\hiad_study_protocol_manifest.json` |
+| `hiad_casebook_frozen` | **PENDING** | All 24 holdout incident vignettes passed coordinator leakage review and were frozen. | `data\public_validation\results\hiad_casebook_frozen\casebook_freeze_manifest.json` |
+| `hiad_holdout_collection` | **PENDING** | All masked alarm/direct/RAG holdout responses were collected under the frozen protocol. | `data\public_validation\results\hiad_decision\collection_manifest.json` |
+| `independent_expert_review_complete` | **PENDING** | Three qualified independent reviewers completed the locked 24-event evaluation. | `data\public_validation\results\hiad_decision\analysis\expert_review_analysis.json` |
+| `saga_effectiveness_and_safety_supported` | **PENDING** | Direct SAGA improves expert-rated guidance without higher observed omission or unsafe-advice rates. | `data\public_validation\results\hiad_decision\analysis\expert_review_analysis.json` |
+| `preoutcome_design_sensitivity` | **PASS** | The fixed incident-study sample limitations were quantified before outcomes. | `research\hiad_design_sensitivity.json` |
+| `ijhe_format_gate` | **PASS** | The manuscript satisfies the explicit IJHE length/front-matter limits checked locally. | `manuscript\ijhe_format_check.json` |
+| `ijhe_latex_compilation` | **PENDING** | The exact submitted LaTeX source compiles successfully. | `manuscript\ijhe_compile_status.json` |
+| `submission_metadata_and_declarations` | **PENDING** | Every author, affiliation, institutional email and declaration is confirmed. | `manuscript\submission_metadata.json` |
+| `software_doi` | **PASS** | The reproducible software release has a persistent DOI. | `CITATION.cff` |
 
-**Not ready for submission.** The manuscript can support a bounded tank-model validation claim, a negative full-loop validation result, and a HyRAM+ adapter-verification claim. It cannot yet support an effectiveness or safety claim for SAGA decision support. The goal must remain open until the mandatory items below are complete and the resulting evidence supports the final claims.
+## Blocking bounded-submission gates
 
-The current official IJHE Guide for Authors was checked on 3 October 2026. A research paper should normally remain within 8,000 words and 12 diagrams; the abstract is limited to 150 words; no more than six keywords are allowed; and a separate Highlights file is mandatory with 3–5 bullets of at most 85 characters each. The guide recommends `elsarticle.cls`, requires CRediT roles and a competing-interest statement, and requires a generative-AI disclosure when such tools assist manuscript preparation. Since 1 July 2025, every listed author must provide a valid institutional email address. Source: <https://www.sciencedirect.com/journal/international-journal-of-hydrogen-energy/publish/guide-for-authors>.
+- `preslhy_blowdown_external_validation`
+- `preslhy_revised_holdout_validation`
+- `proust_independent_release_validation`
+- `schefer_transient_release_validation`
+- `schefer_2007_pressure_decay_validation`
+- `institutional_ethics_determination`
+- `hiad_casebook_frozen`
+- `hiad_holdout_collection`
+- `independent_expert_review_complete`
+- `ijhe_latex_compilation`
+- `submission_metadata_and_declarations`
 
-## Evidence gate
+## Blocking full-objective gates
 
-| Gate | Status | Evidence / required action |
-|---|---|---|
-| Type-IV tank external validation | Complete for measured boundaries | Corrected active-fill normalization and refit; 12 frozen validation fills; pressure 3.841 MPa, temperature 4.833 °C, SOC 3.850 %p mean RMSE |
-| Full station closed-loop validation | Failed | Corrected v2 pipeline passed 1/8 development and 2/11 already-inspected internal-comparison fills; the prospectively frozen earlier MC Default model passed 0/8 and was not reused after correction. The final model still lacks a new untouched external set |
-| HyRAM+ production adapter | Verified within stated scope | Exact v6.1 source identity, 47 upstream tests/803 subtests, three production parity cases |
-| Outdoor free-jet display geometry | Complete within bounded scope | Three applicable public experimental families (4 vol% dilution length, distance-dependent heat flux, unconfined overpressure); exact HyRAM+ source and adapter parity; separate radial/directional browser mapping. This is not site-specific validation or a safety-distance claim |
-| HIAD casebook leakage review | Pending | Advisory pre-screen flags 16 HIGH, 6 MEDIUM and 2 LOW among 24 holdout vignettes; a qualified non-rating coordinator must inspect every case, rewrite/remove hindsight actions without adding facts, then approve and freeze the complete set |
-| Human-participant ethics determination | Pending | Record institutional approval, exemption or not-required determination before reviewer recruitment/rating |
-| Blinded SAGA expert review | Pending and mandatory | Three independent qualified reviewers; lock ratings before unmasking |
-| SAGA ablation result | Pending | Alarm-only vs direct LLM vs standards-RAG, with unsafe advice, omissions, latency, failures and agreement |
-| HIAD design sensitivity | Complete before outcome collection | With 24 events, simulated Wilcoxon power is 77.7% at standardized paired effect 0.6 and 95.7% at 0.8; with zero unsafe events the exact two-sided 95% event-rate upper bound remains 14.2% |
-| New untouched full-loop set | Required after redesign for a broad control claim | The prospectively frozen MC Default set failed 0/8 and is now consumed evaluation evidence; redesign without tuning to these outcomes, then freeze and acquire a different external set |
-| Author metadata | Pending | Names, affiliations, corresponding author, ORCID |
-| Declarations | Pending | CRediT, funding, conflicts and acknowledgements; working AI-use disclosure is included |
-| IJHE length and front matter | Conforming draft | 150-word abstract, six keywords, five Highlights under 85 characters; final word/figure count still required |
-| LaTeX template and compilation | Pending | Source is structurally checked, but the built-in Windows compiler returned `Unable to find standard directories for platform`; compile with the current Elsevier template before submission |
+- `preslhy_blowdown_external_validation`
+- `preslhy_revised_holdout_validation`
+- `proust_independent_release_validation`
+- `schefer_transient_release_validation`
+- `schefer_2007_pressure_decay_validation`
+- `institutional_ethics_determination`
+- `hiad_casebook_frozen`
+- `hiad_holdout_collection`
+- `independent_expert_review_complete`
+- `ijhe_latex_compilation`
+- `submission_metadata_and_declarations`
+- `full_loop_external_validation`
+- `saga_effectiveness_and_safety_supported`
 
-## Submission package already prepared
-
-- `ijhe_manuscript_draft.tex`: English working manuscript with explicit claim limits.
-- `Highlights.txt`: five concise highlights, each under the IJHE 85-character limit.
-- `figures/tank_parity.png`: measured/predicted pressure and temperature.
-- `figures/tank_case_rmse.png`: case-level validation errors.
-- `graphical_abstract.svg` and `.png`: editable and 1328 × 531 px graphical abstract.
-- `../output/pdf/IJHE_graphical_abstract.pdf`: visually verified 13 cm submission PDF.
-- Reproduction and evidence files in `docs/` and `research/`.
-- `research/HIAD_EXPERT_STUDY_PREREGISTRATION.md`: confirmatory comparison,
-  endpoints, exclusions, missingness and analysis frozen before holdout collection.
-- `research/ETHICS_DETERMINATION_REQUEST.md`, reviewer information sheet and
-  data-management plan: institution-ready governance packet; determination pending.
-- `research/hiad_study_protocol_manifest.json`: SHA-256 manifest that keeps
-  recruitment and holdout collection disabled while governance fields are pending.
-- `research/HIAD_DESIGN_SENSITIVITY.md`: pre-outcome power sensitivity and the
-  exact zero-event upper bound for the fixed 24-event holdout.
-- `research/CONSEQUENCE_GEOMETRY_VALIDATION.md`: public experiment to HyRAM+
-  to production adapter to browser-geometry traceability, with explicit site-
-  specific and safety-distance exclusions.
-- `research/mc_default_external_holdout_protocol.json` and
-  `data/public_validation/results/closed_loop_external_holdout/`: prospectively
-  frozen protocol plus the retained 0/8 external result and case-level metrics.
-- `research/closed_loop_thermal_calibration_protocol.json` and
-  `data/public_validation/results/closed_loop_thermal_calibration/`: frozen
-  development-only candidate selection; the upper-bound winner did not produce
-  any screen pass and is not treated as validation.
-- `research/h2protocol_active_fill_correction.json`: disclosed H2P-L29
-  normalization correction, hashes, and downstream refit effect.
-- `research/closed_loop_thermal_calibration_protocol_v2.json` plus the tracked
-  `research/*_v2.json` and `research/*_v2.csv` evidence: corrected development
-  pipeline, 1/8 development and 2/11 internal-comparison passes. These are not a
-  new external validation.
-- `research/EXTERNAL_FULL_LOOP_DATA_SEARCH.md` and its JSON companion: frozen
-  screening of CARB, NREL, NIST, Cal State LA and other public candidates. No
-  newly located source exposes an eligible independent raw fueling time series;
-  the CARB in-use workbook and traces are the preferred data-request target.
-- `research/CARB_DATA_REQUEST_DRAFT.md`: a review-ready request for de-identified
-  Appendix A and fill-level data. It has not been sent.
-- `IJHE_READINESS_AUDIT.md` and `ijhe_readiness_audit.json`: machine-generated
-  claim-to-evidence gates; goal completion remains prohibited while any full-
-  objective gate is not PASS.
-
-## Finalization sequence
-
-1. Have a non-rating coordinator remove hindsight-action leakage from the 24 holdout HIAD vignettes and freeze the approved casebook.
-2. Obtain and record the applicable institutional ethics determination for the expert-review study.
-3. Collect all three response variants under frozen provider/model, prompt, sampling and token settings.
-4. Build isolated reviewer packets and obtain independent blinded ratings from three qualified hydrogen/process-safety reviewers.
-5. Lock the rating database, unmask once, and run the committed analysis script.
-6. Add the SAGA effect sizes, bootstrap confidence intervals, unsafe-advice and omission rates, latency, failures and inter-rater agreement to the Results and Abstract.
-7. Limit the current process claim to the measured-boundary tank submodel, or redesign the closed-loop protocol using development evidence and evaluate it once on a different, prospectively frozen external dataset. The MC Default outcomes may not be used for tuning.
-8. Confirm every author and declaration, regenerate all evidence from the release commit, archive the package with a DOI, and complete a final claim-to-evidence audit.
-
-## Claim language that must remain
-
-- “Measured-boundary tank-model validation,” not “full-station validation.”
-- “Public experimental validation inherited through exact HyRAM+ source plus local adapter parity,” not “a new independent field validation.”
-- “Directional 4 vol% centreline distance,” not “spherical safety distance.”
-- “Research and training prototype,” not “certified controller or autonomous emergency system.”
+Only full_user_objective_ready=true permits goal completion. A bounded paper may report negative or limited physics honestly, but it does not satisfy the full validated-digital-twin objective.

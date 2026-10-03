@@ -1,0 +1,273 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-03T08:51:14.079761+00:00",
+  "evidence_role": "consumed_development_only",
+  "eligible_as_confirmatory_validation": false,
+  "contamination_disclosure": {
+    "proust_outcomes_viewed_before_parameter_selection": true,
+    "imamura_numeric_outcomes_viewed_before_analysis_formalization": true,
+    "reason": "The equivalent restriction was selected after the Proust holdout failed, and the HyRAM Imamura arrays were inspected before this diagnostic was formalized."
+  },
+  "sources": {
+    "proust_data": "data/public_validation/derived/proust_90mpa_release.csv",
+    "proust_data_sha256": "d203ba634e64c88d1d225551d54998379c2d99f11a588b3298607208893b67c0",
+    "imamura_hyram_source": "data/public_validation/raw/hyram-v6.1/tests/hyram/validation/test_heatflux.py",
+    "imamura_hyram_source_sha256": "25cb37870fddcc1f6ebcbd190a6fee5642124d5cd25aa6711d472302b7f5209a",
+    "imamura_original_citation": "Imamura T, Mogi T, Wada Y. Sci Technol Energ Mater 2008;69(1):7-11."
+  },
+  "reference_screens_not_validation_gates": {
+    "nrmse_percent_peak_measured_max": 15.0,
+    "median_absolute_percentage_error_percent_max": 20.0
+  },
+  "models": {
+    "direct_aperture_cd_0_8": {
+      "parameters": {
+        "nozzle_cd": 0.8,
+        "supply_diameter_mm": null,
+        "supply_discharge_coefficient": 0.8
+      },
+      "proust": [
+        {
+          "series_id": "proust-1mm",
+          "diameter_mm": 1.0,
+          "points": 13,
+          "measured_peak_g_s": 45.67000544822093,
+          "predicted_peak_g_s": 30.699908644192057,
+          "nrmse_percent_peak_measured": 16.267508112675205,
+          "median_absolute_percentage_error_percent": 25.072593478656874,
+          "within_reference_screen": false
+        },
+        {
+          "series_id": "proust-2mm",
+          "diameter_mm": 2.0,
+          "points": 10,
+          "measured_peak_g_s": 91.74566915739935,
+          "predicted_peak_g_s": 122.79963457676823,
+          "nrmse_percent_peak_measured": 16.012310696868767,
+          "median_absolute_percentage_error_percent": 15.845173718452374,
+          "within_reference_screen": false
+        },
+        {
+          "series_id": "proust-3mm",
+          "diameter_mm": 3.0,
+          "points": 12,
+          "measured_peak_g_s": 165.36126753294417,
+          "predicted_peak_g_s": 274.7494191045821,
+          "nrmse_percent_peak_measured": 32.617735120944786,
+          "median_absolute_percentage_error_percent": 32.87792472494488,
+          "within_reference_screen": false
+        }
+      ],
+      "imamura": [
+        {
+          "series_id": "imamura-1mm",
+          "diameter_mm": 1.0,
+          "points": 3,
+          "measured_peak_g_s": 1.567413,
+          "predicted_peak_g_s": 1.314761953908113,
+          "nrmse_percent_peak_measured": 10.972155424900935,
+          "median_absolute_percentage_error_percent": 13.756898842874868,
+          "within_reference_screen": true
+        },
+        {
+          "series_id": "imamura-2mm",
+          "diameter_mm": 2.0,
+          "points": 6,
+          "measured_peak_g_s": 5.470301,
+          "predicted_peak_g_s": 4.541534422556358,
+          "nrmse_percent_peak_measured": 10.437067690929105,
+          "median_absolute_percentage_error_percent": 14.778495536633823,
+          "within_reference_screen": true
+        },
+        {
+          "series_id": "imamura-3mm",
+          "diameter_mm": 3.0,
+          "points": 6,
+          "measured_peak_g_s": 9.468193,
+          "predicted_peak_g_s": 8.075182587398842,
+          "nrmse_percent_peak_measured": 8.811397929783103,
+          "median_absolute_percentage_error_percent": 11.698601922176891,
+          "within_reference_screen": true
+        },
+        {
+          "series_id": "imamura-4mm",
+          "diameter_mm": 4.0,
+          "points": 6,
+          "measured_peak_g_s": 10.967246999999999,
+          "predicted_peak_g_s": 9.47661811317223,
+          "nrmse_percent_peak_measured": 7.816754919807067,
+          "median_absolute_percentage_error_percent": 11.699438324120244,
+          "within_reference_screen": true
+        }
+      ]
+    },
+    "direct_aperture_cd_1_0": {
+      "parameters": {
+        "nozzle_cd": 1.0,
+        "supply_diameter_mm": null,
+        "supply_discharge_coefficient": 0.8
+      },
+      "proust": [
+        {
+          "series_id": "proust-1mm",
+          "diameter_mm": 1.0,
+          "points": 13,
+          "measured_peak_g_s": 45.67000544822093,
+          "predicted_peak_g_s": 38.37488580524007,
+          "nrmse_percent_peak_measured": 7.142329506644378,
+          "median_absolute_percentage_error_percent": 6.340741848321104,
+          "within_reference_screen": true
+        },
+        {
+          "series_id": "proust-2mm",
+          "diameter_mm": 2.0,
+          "points": 10,
+          "measured_peak_g_s": 91.74566915739935,
+          "predicted_peak_g_s": 153.49954322096028,
+          "nrmse_percent_peak_measured": 36.463714889451424,
+          "median_absolute_percentage_error_percent": 44.806467148065465,
+          "within_reference_screen": false
+        },
+        {
+          "series_id": "proust-3mm",
+          "diameter_mm": 3.0,
+          "points": 12,
+          "measured_peak_g_s": 165.36126753294417,
+          "predicted_peak_g_s": 343.4367738807276,
+          "nrmse_percent_peak_measured": 56.2198355324581,
+          "median_absolute_percentage_error_percent": 66.0974059061811,
+          "within_reference_screen": false
+        }
+      ],
+      "imamura": [
+        {
+          "series_id": "imamura-1mm",
+          "diameter_mm": 1.0,
+          "points": 3,
+          "measured_peak_g_s": 1.567413,
+          "predicted_peak_g_s": 1.6434524423851413,
+          "nrmse_percent_peak_measured": 4.4407661044579205,
+          "median_absolute_percentage_error_percent": 7.8038764464064085,
+          "within_reference_screen": true
+        },
+        {
+          "series_id": "imamura-2mm",
+          "diameter_mm": 2.0,
+          "points": 6,
+          "measured_peak_g_s": 5.470301,
+          "predicted_peak_g_s": 5.676918028195448,
+          "nrmse_percent_peak_measured": 3.791602668310892,
+          "median_absolute_percentage_error_percent": 6.52688057920771,
+          "within_reference_screen": true
+        },
+        {
+          "series_id": "imamura-3mm",
+          "diameter_mm": 3.0,
+          "points": 6,
+          "measured_peak_g_s": 9.468193,
+          "predicted_peak_g_s": 10.093978234248553,
+          "nrmse_percent_peak_measured": 5.914640783998298,
+          "median_absolute_percentage_error_percent": 10.376747597278884,
+          "within_reference_screen": true
+        },
+        {
+          "series_id": "imamura-4mm",
+          "diameter_mm": 4.0,
+          "points": 6,
+          "measured_peak_g_s": 10.967246999999999,
+          "predicted_peak_g_s": 11.845772641465285,
+          "nrmse_percent_peak_measured": 7.59693621429973,
+          "median_absolute_percentage_error_percent": 13.33955747183711,
+          "within_reference_screen": true
+        }
+      ]
+    },
+    "proust_selected_series_restriction": {
+      "parameters": {
+        "nozzle_cd": 0.91,
+        "supply_diameter_mm": 2.62,
+        "supply_discharge_coefficient": 0.8
+      },
+      "proust": [
+        {
+          "series_id": "proust-1mm",
+          "diameter_mm": 1.0,
+          "points": 13,
+          "measured_peak_g_s": 45.67000544822093,
+          "predicted_peak_g_s": 34.45133577177364,
+          "nrmse_percent_peak_measured": 11.748498773717943,
+          "median_absolute_percentage_error_percent": 15.91671263610338,
+          "within_reference_screen": true
+        },
+        {
+          "series_id": "proust-2mm",
+          "diameter_mm": 2.0,
+          "points": 10,
+          "measured_peak_g_s": 91.74566915739935,
+          "predicted_peak_g_s": 116.42981456483126,
+          "nrmse_percent_peak_measured": 12.013544098687277,
+          "median_absolute_percentage_error_percent": 9.836093085750624,
+          "within_reference_screen": true
+        },
+        {
+          "series_id": "proust-3mm",
+          "diameter_mm": 3.0,
+          "points": 12,
+          "measured_peak_g_s": 165.36126753294417,
+          "predicted_peak_g_s": 174.05005163156014,
+          "nrmse_percent_peak_measured": 7.397916438380723,
+          "median_absolute_percentage_error_percent": 15.823626727058237,
+          "within_reference_screen": true
+        }
+      ],
+      "imamura": [
+        {
+          "series_id": "imamura-1mm",
+          "diameter_mm": 1.0,
+          "points": 3,
+          "measured_peak_g_s": 1.567413,
+          "predicted_peak_g_s": 1.4754215088718434,
+          "nrmse_percent_peak_measured": 3.6292359332842064,
+          "median_absolute_percentage_error_percent": 3.2182776047035233,
+          "within_reference_screen": true
+        },
+        {
+          "series_id": "imamura-2mm",
+          "diameter_mm": 2.0,
+          "points": 6,
+          "measured_peak_g_s": 5.470301,
+          "predicted_peak_g_s": 4.305957525691774,
+          "nrmse_percent_peak_measured": 13.244696426664179,
+          "median_absolute_percentage_error_percent": 19.19907582947472,
+          "within_reference_screen": true
+        },
+        {
+          "series_id": "imamura-3mm",
+          "diameter_mm": 3.0,
+          "points": 6,
+          "measured_peak_g_s": 9.468193,
+          "predicted_peak_g_s": 5.115519264250208,
+          "nrmse_percent_peak_measured": 29.254065337245915,
+          "median_absolute_percentage_error_percent": 44.06225518266166,
+          "within_reference_screen": false
+        },
+        {
+          "series_id": "imamura-4mm",
+          "diameter_mm": 4.0,
+          "points": 6,
+          "measured_peak_g_s": 10.967246999999999,
+          "predicted_peak_g_s": 3.8041248920892623,
+          "nrmse_percent_peak_measured": 41.809894598754525,
+          "median_absolute_percentage_error_percent": 63.60238838893804,
+          "within_reference_screen": false
+        }
+      ]
+    }
+  },
+  "interpretation": {
+    "finding": "The Proust-selected fixed supply restriction improves the consumed Proust series but transfers poorly as Imamura aperture diameter increases.",
+    "physical_inference": "The fitted restriction is apparatus-specific upstream/valve resistance, not a universal hydrogen nozzle correction.",
+    "next_model_requirement": "Represent known valve, line-pack and pipe geometry explicitly and test the locked model on a numerically untouched external campaign.",
+    "claim_supported": false
+  }
+}

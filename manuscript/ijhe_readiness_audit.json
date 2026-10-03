@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T08:42:07.823526+00:00",
+  "generated_at": "2026-10-03T08:54:59.828888+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 11,
+    "PASS": 12,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -538,6 +538,23 @@
       }
     },
     {
+      "id": "release_network_development_integrity",
+      "status": "PASS",
+      "claim": "The post-outcome release-network diagnostic is retained as consumed development evidence and cannot be mistaken for validation.",
+      "evidence": "research\\release_network_development.json",
+      "requirement": "Proust and Imamura contamination disclosed; confirmatory eligibility and claim support both false.",
+      "observed": {
+        "evidence_role": "consumed_development_only",
+        "eligible_as_confirmatory_validation": false,
+        "interpretation": {
+          "finding": "The Proust-selected fixed supply restriction improves the consumed Proust series but transfers poorly as Imamura aperture diameter increases.",
+          "physical_inference": "The fitted restriction is apparatus-specific upstream/valve resistance, not a universal hydrogen nozzle correction.",
+          "next_model_requirement": "Represent known valve, line-pack and pipe geometry explicitly and test the locked model on a numerically untouched external campaign.",
+          "claim_supported": false
+        }
+      }
+    },
+    {
       "id": "schefer_transient_release_validation",
       "status": "FAIL",
       "claim": "The locked adiabatic vessel-discharge model meets all frozen transient mass-flow screens on the independent Sandia/SRI experiment.",
@@ -766,7 +783,7 @@
             75,
             75
           ],
-          "approximate_manuscript_words_before_references": 5837,
+          "approximate_manuscript_words_before_references": 5934,
           "figures": 2,
           "tables": 3,
           "citation_keys": 19,
@@ -798,12 +815,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-03T08:42:07.7221804Z",
+        "attempted_at": "2026-10-03T08:54:59.7321513Z",
         "attempts_this_run": 1,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "24830ca1e19628468be8bbb56907a9ee2daa8b39f71ef9c2a6699b642823dd22",
+        "source_sha256": "8017b3d165d796cfebf8938efb19a669f3c66078983853c0ca01a3ad5105c100",
         "platform": "Microsoft Windows NT 10.0.26200.0",
         "diagnostic": "Unable to find standard directories for platform",
         "interpretation": "Compiler environment failure; LaTeX source compilation remains unverified."

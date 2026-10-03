@@ -350,6 +350,41 @@ def audit(root: Path) -> dict[str, object]:
         } if proust_result else "missing; independent release evaluation has not completed",
     ))
 
+    release_development_path = root / "research/release_network_development.json"
+    release_development = _json(release_development_path)
+    release_development_pass = bool(
+        (release_development or {}).get("evidence_role")
+        == "consumed_development_only"
+        and (release_development or {}).get("eligible_as_confirmatory_validation")
+        is False
+        and (((release_development or {}).get("interpretation") or {}).get(
+            "claim_supported"
+        ))
+        is False
+        and all(
+            ((release_development or {}).get("contamination_disclosure") or {}).get(key)
+            is True
+            for key in (
+                "proust_outcomes_viewed_before_parameter_selection",
+                "imamura_numeric_outcomes_viewed_before_analysis_formalization",
+            )
+        )
+    )
+    gates.append(_gate(
+        "release_network_development_integrity",
+        "PASS" if release_development_pass else "FAIL",
+        "The post-outcome release-network diagnostic is retained as consumed development evidence and cannot be mistaken for validation.",
+        str(release_development_path.relative_to(root)),
+        "Proust and Imamura contamination disclosed; confirmatory eligibility and claim support both false.",
+        {
+            "evidence_role": (release_development or {}).get("evidence_role"),
+            "eligible_as_confirmatory_validation": (release_development or {}).get(
+                "eligible_as_confirmatory_validation"
+            ),
+            "interpretation": (release_development or {}).get("interpretation"),
+        } if release_development else "missing",
+    ))
+
     schefer_result_path = root / "research/schefer_2006_holdout_result.json"
     schefer_result = _json(schefer_result_path)
     schefer_protocol_path = root / "research/schefer_2006_holdout_protocol.json"
