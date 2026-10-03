@@ -199,14 +199,26 @@ def _download_member(
     destination.parent.mkdir(parents=True, exist_ok=True)
     temporary = destination.with_suffix(destination.suffix + ".part")
     digest = hashlib.sha256()
-    written = 0
-    with temporary.open("wb") as output:
+    written = temporary.stat().st_size if temporary.exists() else 0
+    if written > member.size:
+        raise RuntimeError(f"partial download exceeds member size: {temporary}")
+    if written:
+        with temporary.open("rb") as existing:
+            for block in iter(lambda: existing.read(1024 * 1024), b""):
+                digest.update(block)
+        print(f"resuming {destination.name} at byte {written}", flush=True)
+    with temporary.open("ab") as output:
         while written < member.size:
             length = min(chunk_size, member.size - written)
             payload = reader(member.offset + written, length)
             output.write(payload)
+            output.flush()
             digest.update(payload)
             written += length
+            print(
+                f"{destination.name}: {written}/{member.size} bytes",
+                flush=True,
+            )
     if temporary.stat().st_size != member.size:
         raise RuntimeError(f"download size mismatch for {member.name}")
     with temporary.open("rb") as handle:
@@ -253,13 +265,22 @@ def main() -> int:
     else:
         start_offset = 0
         members = []
+    if not args.list_only:
+        for member in members:
+            name = PurePosixPath(member.name).name
+            destination = args.output / name
+            if not destination.exists():
+                digest = _download_member(reader, member, destination)
+                print(f"verified {name}: sha256 {digest}", flush=True)
     for member in iter_tar_members(
         index_reader, args.archive_bytes, start_offset=start_offset
     ):
         name = PurePosixPath(member.name).name
+        newly_located = False
         if TARGET_NAME.fullmatch(name):
             if name not in {PurePosixPath(item.name).name for item in members}:
                 members.append(member)
+                newly_located = True
                 print(f"located {name}", flush=True)
         next_offset = member.offset + ((member.size + 511) // 512) * 512
         checkpoint_path.write_text(
@@ -275,6 +296,11 @@ def main() -> int:
             + "\n",
             encoding="utf-8",
         )
+        if newly_located and not args.list_only:
+            destination = args.output / name
+            if not destination.exists() or args.force:
+                digest = _download_member(reader, member, destination)
+                print(f"verified {name}: sha256 {digest}", flush=True)
         if {PurePosixPath(item.name).name for item in members} == expected:
             break
     found = {PurePosixPath(member.name).name for member in members}
