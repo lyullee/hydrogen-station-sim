@@ -131,6 +131,27 @@
       "rights_note": "The open-access article may be cited. No machine-readable event-level or synchronized sensor export was identified in the public record.",
       "eligibility_note": "The paper reports real HRFF operation from 2016-2020 with more than 4500 fills and more than 8800 kg dispensed, but its aggregate figures cannot close the untouched full-loop validation gate. Request de-identified traces and reuse terms from the data owner."
     },
+    "jrc_gastef_2014_reference_database": {
+      "title": "JRC reference data from experiments of on-board hydrogen tanks fast filling",
+      "publisher": "European Commission Joint Research Centre / GasTeF",
+      "landing_page": "https://doi.org/10.1016/j.ijhydene.2014.03.227",
+      "doi": "10.1016/j.ijhydene.2014.03.227",
+      "citation": "Acosta-Iborra, B., Moretto, P., de Miguel, N., Ortiz Cebolla, R., Harskamp, F., and Bonato, C., JRC reference data from experiments of on-board hydrogen tanks fast filling, International Journal of Hydrogen Energy 39 (2014) 20531-20537.",
+      "license": "Open-access article; underlying database rights and reuse terms not specified",
+      "rights_note": "The article may be cited. The public JRC repository record exposes no machine-readable database link, so no underlying traces are downloaded or redistributed.",
+      "eligibility_note": "A strong independent tank-filling data-request lead: the paper describes more than 133 real entries and internal/external temperature plus gas-path pressure/temperature measurements. It cannot close the full-loop gate until raw files, metadata, reuse terms and an immutable digest are obtained."
+    },
+    "striednig_type_i_filling_hyddown": {
+      "title": "Thermodynamic real gas analysis of a tank filling process",
+      "publisher": "International Journal of Hydrogen Energy / HydDown validation repository",
+      "landing_page": "https://doi.org/10.1016/j.ijhydene.2014.03.028",
+      "doi": "10.1016/j.ijhydene.2014.03.028",
+      "source_repository": "https://github.com/andr1976/HydDown",
+      "source_commit": "1040d758b819533451086baa5cf2a47b4292a22f",
+      "license": "MIT for HydDown repository; original measurement rights unresolved",
+      "rights_note": "Only source metadata and hashes are recorded. The embedded arrays are a secondary transcription of the published experiment and are not copied into this repository pending provenance and reuse confirmation.",
+      "eligibility_note": "Independent physical Type-I tank filling evidence for a separately pre-registered thermal submodel screen. The YAML contains time and gas-mean-temperature measurements for 5, 10 and 30 MPa/min cases, but no measured pressure or mass-flow series and no station controller traces; it is not a full-loop validation set."
+    },
     "tessema_2026_hrs_performance_simulation": {
       "title": "HRSs refueling perfromance Data sets",
       "publisher": "Mendeley Data",

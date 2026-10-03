@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "screened_at": "2026-10-03",
+  "source": {
+    "repository": "HydDown",
+    "repository_url": "https://github.com/andr1976/HydDown",
+    "commit": "1040d758b819533451086baa5cf2a47b4292a22f",
+    "repository_license": "MIT",
+    "source_files": [
+      {
+        "path": "validation/Striednig_fillingH2_5MPa_min.yml",
+        "sha256": "64498CA6FCC5C5BDC2346B0EB1E4ED6992B9BF03EA29B860C0E8E60C60BE2D12"
+      },
+      {
+        "path": "validation/Striednig_fillingH2_10MPa_min.yml",
+        "sha256": "F3D93301FC0140FA390A12CC4ECDB74FFF10D2C2E9A2BEBA68CA359926804BD5"
+      },
+      {
+        "path": "validation/Striednig_fillingH2_30MPa_min.yml",
+        "sha256": "9957DF82F65432AAD23F4DEC012FC9DB5F650C8E8AD8F9DF884BED43BBF6801E"
+      }
+    ],
+    "paper": {
+      "title": "Thermodynamic real gas analysis of a tank filling process",
+      "authors": [
+        "Michael Striednig",
+        "Stefan Brandstätter",
+        "Markus Sartory",
+        "Manfred Klell"
+      ],
+      "journal": "International Journal of Hydrogen Energy",
+      "volume": 39,
+      "issue": 16,
+      "pages": "8495-8509",
+      "year": 2014,
+      "doi": "10.1016/j.ijhydene.2014.03.028"
+    }
+  },
+  "experimental_context_reported_by_source": {
+    "tank_type": "Type I steel",
+    "tank_volume_m3": 0.0235,
+    "upstream_reservoir_pressure_bar": 350,
+    "dispenser_control": "electronically controlled",
+    "tank_geometry_reported_in_manual": {
+      "length_m": 0.61,
+      "outer_diameter_m": 0.28,
+      "wall_thickness_m": 0.0129,
+      "density_kg_m3": 7740,
+      "heat_capacity_J_kgK": 470
+    }
+  },
+  "embedded_measurement_series": [
+    {
+      "case": "5 MPa/min",
+      "file": "validation/Striednig_fillingH2_5MPa_min.yml",
+      "points": 17,
+      "time_span_s": [0.7226, 239.7],
+      "gas_mean_temperature_K": [298.7, 323.2],
+      "measured_channels_present": ["time", "gas_mean_temperature"],
+      "model_boundary_fields_present": ["initial_pressure", "back_pressure", "end_pressure", "orifice_diameter", "ambient_temperature"]
+    },
+    {
+      "case": "10 MPa/min",
+      "file": "validation/Striednig_fillingH2_10MPa_min.yml",
+      "points": 23,
+      "time_span_s": [0.2278, 239.9],
+      "gas_mean_temperature_K": [298.7, 331.7],
+      "measured_channels_present": ["time", "gas_mean_temperature"],
+      "model_boundary_fields_present": ["initial_pressure", "back_pressure", "end_pressure", "orifice_diameter", "ambient_temperature"]
+    },
+    {
+      "case": "30 MPa/min",
+      "file": "validation/Striednig_fillingH2_30MPa_min.yml",
+      "points": 29,
+      "time_span_s": [0.2257, 239.4],
+      "gas_mean_temperature_K": [299.3, 351.5],
+      "measured_channels_present": ["time", "gas_mean_temperature"],
+      "model_boundary_fields_present": ["initial_pressure", "back_pressure", "end_pressure", "orifice_diameter", "ambient_temperature"]
+    }
+  ],
+  "eligibility_decision": {
+    "physical_experiment": true,
+    "independent_of_powertech_full_loop_data": true,
+    "common_time_base": true,
+    "measured_pressure_series_present": false,
+    "measured_mass_flow_series_present": false,
+    "full_loop_station_validation_eligible": false,
+    "eligible_role": "tank_filling_thermal_submodel_screening_only",
+    "rights_boundary": "The HydDown repository is MIT-licensed, but the embedded Striednig measurements are a secondary transcription of a publisher article. Original data-reuse permission and provenance beyond the repository transcription were not independently established.",
+    "redistribution_action": "Record hashes and metadata only; do not copy the measurement arrays into this repository until source-data reuse rights are confirmed.",
+    "claim_limit": "This source may support an independently cited tank thermal filling check after a pre-registered protocol. It cannot close the station-to-vehicle full-loop gate and cannot validate cascade control, compressor/precooler dynamics, dispenser metering, safety logic or consequence distances."
+  }
+}
