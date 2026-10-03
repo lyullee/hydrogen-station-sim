@@ -984,7 +984,8 @@
         "machine_readable_archive": false,
         "reuse_terms_for_underlying_logs": "not public",
         "role": "Independent operational and fault-taxonomy benchmark; request the de-identified station-log export and reuse terms.",
-        "exclusion_reason": "The official report publishes plots, categories and aggregate statistics but no downloadable synchronized logger arrays. It cannot close the numerical full-loop validation gate."
+        "exclusion_reason": "The official report publishes plots, categories and aggregate statistics but no downloadable synchronized logger arrays. It cannot close the numerical full-loop validation gate.",
+        "request_draft": "research/NRC_BC_DISPENSER_DATA_REQUEST_DRAFT.md"
       },
       "claim_limit": "Use for face-validity, fault taxonomy and test-design context only until underlying timestamped logs and reuse terms are obtained."
     },
@@ -1011,12 +1012,13 @@
         "raw_common_timebase": "not exposed by the public article record",
         "machine_readable_archive": false,
         "role": "High-value independent large-tank thermal and transient-flow data-request lead; request raw logger export and reuse terms.",
-        "exclusion_reason": "The public article provides experimental description, figures and summary claims, but no downloadable synchronized pressure-temperature-flow logger archive was located."
+        "exclusion_reason": "The public article provides experimental description, figures and summary claims, but no downloadable synchronized pressure-temperature-flow logger archive was located.",
+        "request_draft": "research/DENG_2025_HIGHFLOW_DATA_REQUEST_DRAFT.md"
       },
       "claim_limit": "Use only as independent design/operating-range context until raw timestamped flow, pressure, temperature, tank geometry and protocol metadata are received and frozen."
     }
   ],
-  "next_action": "Use the NREL HDVS workbook for the frozen tank-submodel diagnostic, request permission for publication of derived values, and request synchronized station-side traces from NREL/BAM/JRC/Empa/DLR before freezing a new full-loop holdout.",
+  "next_action": "Use the NREL HDVS workbook for the frozen tank-submodel diagnostic, send the prepared CARB/NRC/IJHE high-flow/JRC/NREL/BAM/Empa/DLR data requests through approved custodians, and request synchronized station-side traces before freezing a new full-loop holdout.",
   "claim_limit": "The NREL candidate supports an independent tank-submodel screen only. No new external full-loop validation claim is permitted until station controller, hose/nozzle, protocol and vehicle-side traces are obtained and scored under a pre-access freeze.",
   "review_log_2026_10_03": {
     "scope": "public-source recheck for an untouched independent full-loop HRS validation set",

@@ -567,6 +567,8 @@ fault-taxonomy coverage and test design, but ineligible to close the numerical
 full-loop gate. The report figures are not digitised into the primary claim. A
 follow-up request should seek de-identified station logs, field definitions,
 quality flags, protocol version and permission to publish derived metrics.
+The prepared request is stored in
+`research/NRC_BC_DISPENSER_DATA_REQUEST_DRAFT.md`.
 ## 2026-10-04 recent IJHE high-flow experiment follow-up
 
 A recent *International Journal of Hydrogen Energy* article reports an
@@ -584,4 +586,5 @@ terms were located. The source is therefore registered as
 **REQUEST_DATA_HIGH_VALUE_TANK_THERMAL_LEAD**: it can materially strengthen
 independent large-tank thermal validation if the authors release de-identified
 raw logs, but its figures and summary error claims are not counted as the
-primary validation set.
+primary validation set. A prepared request is stored in
+`research/DENG_2025_HIGHFLOW_DATA_REQUEST_DRAFT.md`.
