@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-03",
+  "status": "endpoints_and_code_frozen_before_numerical_curve_access",
+  "objective": "Evaluate transfer of the locked adiabatic real-gas vessel-discharge model to an independent KIT small-reservoir pressure-decay trace.",
+  "claim_boundary": "One 20 MPa, 0.37 L, 4 mm pressure-decay trace; no flame, ignition, dispersion, radiation, station control or safety-distance claim.",
+  "source": {
+    "title": "Experimental study of ignited unsteady hydrogen releases from a high pressure reservoir",
+    "authors": [
+      "Joachim Grune",
+      "Karsten Sempert",
+      "Mike Kuznetsov",
+      "Thomas Jordan"
+    ],
+    "journal": "International Journal of Hydrogen Energy",
+    "year": 2014,
+    "doi": "10.1016/j.ijhydene.2013.08.076",
+    "experimental_institution": "Karlsruhe Institute of Technology HYKA/HPHR facility",
+    "target": "Figure 2 measured reservoir pressure decay for the 4 mm, 200 bar release",
+    "publisher_pdf_redistribution": "prohibited; retain source citation and derived coordinates with extraction metadata only"
+  },
+  "known_before_freeze": {
+    "descriptive_inputs": {
+      "initial_pressure_pa_abs": 20000000.0,
+      "initial_temperature_k_assumed": 293.15,
+      "tank_volume_m3": 0.00037,
+      "restriction_diameter_m": 0.004,
+      "ambient_pressure_pa": 101325.0,
+      "valve_opening_time_description": "less than 2 ms"
+    },
+    "qualitative_article_claim": "The prose states that a Saint-Venant-Wantzel efflux relation with a linear nozzle form factor can describe the vessel pressure decay.",
+    "numerical_curve_coordinates_accessed": false,
+    "target_model_predictions_computed": false,
+    "blinding_limit": "Bibliographic metadata, apparatus description and the qualitative article claim were known; the test is prospectively numeric but not fully blinded."
+  },
+  "locked_model": {
+    "description": "Well-mixed adiabatic rigid vessel with HEOS hydrogen properties and maximum real-gas isentropic flux through a 4 mm aperture; Cd=0.8 fixed from the existing twin; no outcome fitting.",
+    "path": "src/h2station/grune_2014_validation.py",
+    "sha256": "5f264cfac51832bf1745fd730d5a7dbb23232c872ed9fe78f8a76906ba514438",
+    "discharge_coefficient": 0.8,
+    "initial_pressure_basis": "20 MPa absolute primary; a +101.325 kPa gauge-to-absolute sensitivity may be reported separately and cannot replace the primary result",
+    "post_freeze_parameter_changes": "prohibited for the primary result"
+  },
+  "locked_runner": {
+    "path": "scripts/run_grune_2014_holdout.py",
+    "sha256": "b952e980e52db7fe9ae93c41e5e9caed4193857280420b2fc78202d8c07dfb10"
+  },
+  "eligibility": {
+    "minimum_unique_points": 15,
+    "requires": [
+      "non-negative strictly increasing time",
+      "finite positive measured absolute reservoir pressure",
+      "measured Figure 2 curve only, without substituting the paper's calculated curve",
+      "documented digitization method and source checksum"
+    ],
+    "insufficient_data_policy": "Archive an ineligible result without extrapolation or substituting the published calculation."
+  },
+  "primary_endpoints": {
+    "pressure_nrmse_percent_initial_measured": {
+      "maximum": 10.0,
+      "support": "all retained measured coordinates"
+    },
+    "median_absolute_percentage_error_percent": {
+      "maximum": 15.0,
+      "support": "measured pressure at least 10 percent of initial measured pressure"
+    },
+    "half_pressure_time_relative_error_percent": {
+      "maximum": 20.0,
+      "role": "required timing endpoint"
+    }
+  },
+  "aggregate_decision": {
+    "claim_supported": "all three primary endpoint screens pass",
+    "retain_numerical_and_runtime_failures": true,
+    "negative_result_policy": "Any failed screen remains archived and prohibits a pressure-decay validation claim from this dataset."
+  }
+}
