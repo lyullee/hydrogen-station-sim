@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
-  "attempted_at": "2026-10-03T09:30:33.7790748Z",
+  "attempted_at": "2026-10-03T19:38:21.467360+00:00",
   "attempts_this_run": 2,
   "success": true,
   "compiler": "Tectonic 0.17.0 (x86_64-pc-windows-msvc)",
   "compiler_release": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic%400.17.0",
   "compiler_archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845f",
   "source": "manuscript/ijhe_manuscript_draft.tex",
-  "source_sha256": "553120dec1203a81016dc68a078a149fdacbf25708bdfe3264467797768f921c",
+  "source_sha256": "3fabf971be88411b1bda8f2ce0118eefa3642eb73c1f6cbbde2a6e4a41ad01d4",
   "output_pages": 16,
-  "output_bytes": 605124,
-  "output_sha256": "63b745cf6bc24d7770a1ba64b634b0cf32a7c7d59985b4aa47a1a55a8f2369e3",
+  "output_bytes": 606618,
+  "output_sha256": "45c0c3a47d50a937a22e9b8aa4b794b7e07f4ad6dcb637c8116e009cb1081d0b",
   "warnings": {
     "layout_or_package_warning_lines": 4,
     "fatal_errors": 0,
-    "summary": "PDF produced successfully. The log has three underfull bibliography lines and Tectonic reports one bundled lineno UTF-8 replacement warning; there are no overfull boxes or fatal source errors."
+    "summary": "PDF produced successfully after adding the NRC field-evidence citation. There are three non-fatal underfull bibliography lines and the bundled lineno UTF-8 replacement warning; no overfull boxes or fatal source errors were reported."
   },
   "built_in_compiler_attempt": {
     "success": false,
     "diagnostic": "Unable to find standard directories for platform"
   },
-  "interpretation": "The exact manuscript source compiled to a 16-page PDF with a pinned public compiler release. No content crosses the text width; the remaining warnings are non-fatal editorial spacing/package diagnostics."
+  "interpretation": "The exact current manuscript source compiled to a 16-page PDF with a pinned public compiler release. Remaining warnings are non-fatal editorial spacing/package diagnostics."
 }
