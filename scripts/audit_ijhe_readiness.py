@@ -385,6 +385,31 @@ def audit(root: Path) -> dict[str, object]:
         } if playbooks else "missing; emergency playbook source unavailable",
     ))
 
+    stage_contract_path = root / "research/hiad_response_stage_contract.json"
+    stage_contract = _json(stage_contract_path)
+    stage_aggregate = (stage_contract or {}).get("aggregate") or {}
+    stage_contract_pass = bool(
+        (stage_contract or {}).get("status")
+        == "completed_metadata_only_response_stage_contract"
+        and (stage_contract or {}).get("evidence_role")
+        == "metadata_only_response_contract"
+        and (stage_contract or {}).get("contract_pass") is True
+        and stage_aggregate.get("case_count") == 34
+        and stage_aggregate.get("mapped_case_count") == 34
+        and stage_aggregate.get("missing_stage_case_count") == 0
+        and stage_aggregate.get("normal_quiet_contract_passed") is True
+        and stage_aggregate.get("coverage_source_hash_matches") is True
+        and stage_aggregate.get("coverage_catalog_hash_matches") is True
+    )
+    gates.append(_gate(
+        "hiad_response_stage_contract",
+        "PASS" if stage_contract_pass else ("FAIL" if stage_contract else "PENDING"),
+        "Public HIAD metadata mappings carry five staged response fields and keep idle periodic monitoring quiet.",
+        str(stage_contract_path.relative_to(root)),
+        "34/34 mapped rows, no missing recognition/immediate/stabilize/restart/prevention fields, explicit metadata-only claim boundary.",
+        stage_contract or "missing; response-stage contract audit has not run",
+    ))
+
     cip_endpoint_path = root / "research/cip_dispenser_endpoint_screen.json"
     cip_endpoint = _json(cip_endpoint_path)
     cip_aggregate = (cip_endpoint or {}).get("aggregate") or {}

@@ -16,9 +16,9 @@
     },
     "full_suite": {
       "command": ".venv\\Scripts\\python.exe -m pytest -q",
-      "passed": 376,
+      "passed": 401,
       "failed": 0,
-      "warnings": 8
+      "warnings": 12
     }
   },
   "verified_properties": [
@@ -46,5 +46,15 @@
     "metadata_mapped_fraction": 1.0,
     "unmapped_event_ids": [],
     "interpretation": "qualitative scenario-family coverage only; excludes HIAD response text and does not establish effectiveness or safety"
+  },
+  "response_stage_contract": {
+    "evidence": "research/hiad_response_stage_contract.json",
+    "evidence_role": "metadata_only_response_contract",
+    "case_count": 34,
+    "mapped_case_count": 34,
+    "required_stages": ["recognition", "immediate", "stabilize", "restart", "prevention"],
+    "missing_stage_case_count": 0,
+    "normal_quiet_contract_passed": true,
+    "interpretation": "interface-stage coverage only; no correctness, safety, effectiveness, physics or operator-benefit claim"
   }
 }

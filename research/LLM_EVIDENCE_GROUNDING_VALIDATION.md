@@ -37,7 +37,7 @@ The following tests passed in the repository virtual environment:
 11 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-376 passed, 8 warnings
+401 passed, 12 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -67,6 +67,10 @@ The audit deliberately excludes HIAD emergency
 action and lesson text, so it cannot leak a response answer key.
 
 This improves provenance and scenario coverage for evidence-grounded prompts, but
-it does not establish response correctness or operator benefit. The independent
-coordinator review, holdout response collection and expert rating gates remain
-required.
+it does not establish response correctness or operator benefit. The separate
+[response-stage contract audit](HIAD_RESPONSE_STAGE_CONTRACT.md) checks that all
+34 metadata mappings carry recognition, immediate, stabilization, restart and
+prevention stages, and that idle periodic monitoring remains quiet. It is still
+an interface/traceability check: it does not read HIAD response text and does not
+validate the safety or effectiveness of any step. The independent coordinator
+review, holdout response collection and expert rating gates remain required.

@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T22:22:36.826997+00:00",
+  "generated_at": "2026-10-03T22:31:12.733193+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 21,
+    "PASS": 22,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -548,6 +548,509 @@
           "supply_connection"
         ],
         "claim_boundary": "Incident taxonomy and public response-field provenance only; no quantitative effectiveness or probability claim."
+      }
+    },
+    {
+      "id": "hiad_response_stage_contract",
+      "status": "PASS",
+      "claim": "Public HIAD metadata mappings carry five staged response fields and keep idle periodic monitoring quiet.",
+      "evidence": "research\\hiad_response_stage_contract.json",
+      "requirement": "34/34 mapped rows, no missing recognition/immediate/stabilize/restart/prevention fields, explicit metadata-only claim boundary.",
+      "observed": {
+        "schema_version": 1,
+        "generated_at_utc": "2026-10-03T22:31:12.607994+00:00",
+        "status": "completed_metadata_only_response_stage_contract",
+        "evidence_role": "metadata_only_response_contract",
+        "source": {
+          "inventory": "research/hiad_hrs_public_evidence.json",
+          "inventory_sha256": "14fa503b44ba35bee10ff214159e916934428fcec27b0c8f33295ef06ea9e2f0",
+          "coverage": "research/hiad_playbook_coverage.json",
+          "coverage_sha256": "3396032fcc08e86ce8046ac2c335da6697e6336f9b8de3579b5f4503a3f14df2",
+          "public_source": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt"
+        },
+        "catalog": {
+          "path": "src/h2station/data/emergency_playbooks.json",
+          "catalog_sha256": "21599382bacb42693d462c1d41f856693fe8c1f5790a387d522cfa0946439751",
+          "plan_count": 16,
+          "required_stages": [
+            "recognition",
+            "immediate",
+            "stabilize",
+            "restart",
+            "prevention"
+          ]
+        },
+        "aggregate": {
+          "case_count": 34,
+          "mapped_case_count": 34,
+          "plan_reference_count": 61,
+          "missing_stage_case_count": 0,
+          "invalid_plan_reference_count": 0,
+          "ignition_case_count": 6,
+          "ignition_without_hydrogen_fire_count": 0,
+          "structural_case_count": 1,
+          "structural_without_structural_plan_count": 0,
+          "no_release_with_fire_plan_count": 0,
+          "normal_quiet_contract_passed": true,
+          "coverage_source_hash_matches": true,
+          "coverage_catalog_hash_matches": true
+        },
+        "contract_pass": true,
+        "normal_quiet_contract": {
+          "periodic_selection_empty": true,
+          "structured_guidance_none": true,
+          "passed": true
+        },
+        "exception_ids": {
+          "missing_stage_cases": [],
+          "invalid_plan_references": [],
+          "ignition_without_hydrogen_fire": [],
+          "structural_without_structural_plan": [],
+          "no_release_with_fire_plan": []
+        },
+        "cases": [
+          {
+            "event_id": "396",
+            "candidate_plan_ids": [
+              "gas_release"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "401",
+            "candidate_plan_ids": [
+              "gas_release"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "402",
+            "candidate_plan_ids": [
+              "compressor_thermal"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "403",
+            "candidate_plan_ids": [
+              "gas_release",
+              "fueling_fault"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "404",
+            "candidate_plan_ids": [
+              "fueling_fault"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "411",
+            "candidate_plan_ids": [
+              "compressor_thermal"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "454",
+            "candidate_plan_ids": [
+              "structural_damage"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": true,
+            "structural_damage_present": true,
+            "missing_stages": []
+          },
+          {
+            "event_id": "463",
+            "candidate_plan_ids": [
+              "gas_release",
+              "fueling_fault"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "702",
+            "candidate_plan_ids": [
+              "gas_release",
+              "hose_connection"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "803",
+            "candidate_plan_ids": [
+              "gas_release",
+              "fueling_fault"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "884",
+            "candidate_plan_ids": [
+              "hydrogen_fire",
+              "gas_release",
+              "overpressure"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": true,
+            "hydrogen_fire_present": true,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "953",
+            "candidate_plan_ids": [
+              "gas_release"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1038",
+            "candidate_plan_ids": [
+              "hose_connection",
+              "precooling_fault"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1062",
+            "candidate_plan_ids": [
+              "gas_release",
+              "overpressure"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1063",
+            "candidate_plan_ids": [
+              "gas_release"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1064",
+            "candidate_plan_ids": [
+              "gas_release"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1106",
+            "candidate_plan_ids": [
+              "hydrogen_fire",
+              "gas_release"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": true,
+            "hydrogen_fire_present": true,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1159",
+            "candidate_plan_ids": [
+              "gas_release",
+              "overpressure"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1161",
+            "candidate_plan_ids": [
+              "gas_release",
+              "overpressure"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1163",
+            "candidate_plan_ids": [
+              "hydrogen_fire",
+              "gas_release",
+              "overpressure"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": true,
+            "hydrogen_fire_present": true,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1173",
+            "candidate_plan_ids": [
+              "hydrogen_fire",
+              "gas_release",
+              "overpressure"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": true,
+            "hydrogen_fire_present": true,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1191",
+            "candidate_plan_ids": [
+              "hydrogen_fire",
+              "gas_release",
+              "overpressure"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": true,
+            "hydrogen_fire_present": true,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1193",
+            "candidate_plan_ids": [
+              "gas_release"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1194",
+            "candidate_plan_ids": [
+              "gas_release"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1195",
+            "candidate_plan_ids": [
+              "gas_release"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1196",
+            "candidate_plan_ids": [
+              "gas_release",
+              "hose_connection"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1198",
+            "candidate_plan_ids": [
+              "hydrogen_fire",
+              "gas_release",
+              "hose_connection"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": true,
+            "hydrogen_fire_present": true,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1202",
+            "candidate_plan_ids": [
+              "gas_release",
+              "hose_connection"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1203",
+            "candidate_plan_ids": [
+              "gas_release",
+              "compressor_thermal"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1204",
+            "candidate_plan_ids": [
+              "gas_release",
+              "hose_connection"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1205",
+            "candidate_plan_ids": [
+              "gas_release",
+              "compressor_thermal"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1206",
+            "candidate_plan_ids": [
+              "gas_release",
+              "hose_connection"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1207",
+            "candidate_plan_ids": [
+              "gas_release",
+              "fueling_fault"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1208",
+            "candidate_plan_ids": [
+              "gas_release",
+              "fueling_fault"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          }
+        ],
+        "limitations": [
+          "The audit uses public HIAD metadata and the local catalogue; HIAD emergency-action and lesson text are excluded.",
+          "A complete stage contract verifies interface coverage only; it does not establish that any step is correct, safe or effective.",
+          "No accident probability, consequence-distance, physics, human-factors or operator-performance claim is made.",
+          "Independent coordinator review, blinded holdout scoring and qualified expert rating remain required."
+        ]
       }
     },
     {
@@ -1547,9 +2050,9 @@
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 376,
+            "passed": 401,
             "failed": 0,
-            "warnings": 8
+            "warnings": 12
           }
         },
         "verified_properties": [
@@ -1577,6 +2080,22 @@
           "metadata_mapped_fraction": 1.0,
           "unmapped_event_ids": [],
           "interpretation": "qualitative scenario-family coverage only; excludes HIAD response text and does not establish effectiveness or safety"
+        },
+        "response_stage_contract": {
+          "evidence": "research/hiad_response_stage_contract.json",
+          "evidence_role": "metadata_only_response_contract",
+          "case_count": 34,
+          "mapped_case_count": 34,
+          "required_stages": [
+            "recognition",
+            "immediate",
+            "stabilize",
+            "restart",
+            "prevention"
+          ],
+          "missing_stage_case_count": 0,
+          "normal_quiet_contract_passed": true,
+          "interpretation": "interface-stage coverage only; no correctness, safety, effectiveness, physics or operator-benefit claim"
         }
       }
     },
