@@ -152,6 +152,16 @@
       "rights_note": "Only source metadata and hashes are recorded. The embedded arrays are a secondary transcription of the published experiment and are not copied into this repository pending provenance and reuse confirmation.",
       "eligibility_note": "Independent physical Type-I tank filling evidence for a separately pre-registered thermal submodel screen. The YAML contains time and gas-mean-temperature measurements for 5, 10 and 30 MPa/min cases, but no measured pressure or mass-flow series and no station controller traces; it is not a full-loop validation set."
     },
+    "prhyde_d6_7_experimental_campaign": {
+      "title": "PRHYDE Results as Input for Standardisation",
+      "publisher": "PRHYDE consortium / Ludwig-Bölkow-Systemtechnik",
+      "landing_page": "https://lbst.de/prhyde/?lang=en",
+      "report_url": "https://lbst.de/wp-content/uploads/2023/04/PRHYDE_Deliverable-D6-7_Results_as_Input_for_Standardisation_V1-2_final_Apr_2023.pdf",
+      "citation": "PRHYDE consortium, PRHYDE Results as Input for Standardisation, Deliverable D6.7 Rev. 1.2, 2023.",
+      "license": "Public report; underlying experimental traces and reuse terms not identified",
+      "rights_note": "The public deliverable may be cited. It contains test matrices and plotted experimental comparisons but no machine-readable synchronized trace archive was identified.",
+      "eligibility_note": "Independent heavy-duty tank-filling campaign description and protocol context for a future data request; plot-only figures are not an untouched time-series validation set."
+    },
     "tessema_2026_hrs_performance_simulation": {
       "title": "HRSs refueling perfromance Data sets",
       "publisher": "Mendeley Data",
