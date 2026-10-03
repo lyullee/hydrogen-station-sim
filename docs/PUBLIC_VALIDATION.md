@@ -378,6 +378,18 @@ $env:PYTHONPATH = "src"
 .venv\Scripts\python.exe scripts\audit_ijhe_readiness.py
 ```
 
+If the RADAR endpoint repeatedly drops short index requests, cache the remaining
+TAR tail over a resumable long stream and perform the same header verification
+and member extraction locally:
+
+```powershell
+.venv\Scripts\python.exe scripts\fetch_preslhy_ambient_packages.py --cache-tail
+```
+
+The tail cache remains under the gitignored raw-data directory. It is an
+acquisition transport fallback only; it does not alter case eligibility,
+model inputs, endpoints or decision thresholds.
+
 The primary case screens are pressure NRMSE at most 10% of initial absolute
 pressure and time-to-50%-initial-gauge-pressure error at most 20%. At least 12
 cases across three nozzle and three pressure groups are required, and at least

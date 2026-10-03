@@ -5,6 +5,9 @@ import tarfile
 
 from scripts.fetch_preslhy_ambient_packages import (
     BlockCachedRangeReader,
+    LocalTailRangeReader,
+    TarMember,
+    _copy_member_from_local_tail,
     iter_tar_members,
 )
 
@@ -48,3 +51,23 @@ def test_block_cache_reuses_adjacent_ranges():
     assert cached(0, 512) == payload[:512]
     assert cached(512, 512) == payload[512:1024]
     assert calls == [(0, 1024)]
+
+
+def test_local_tail_reader_and_member_copy_use_absolute_offsets(tmp_path):
+    base_offset = 4096
+    payload = b"header" + b"PK\x03\x04payload" + b"tail"
+    tail = tmp_path / "tail.bin"
+    tail.write_bytes(payload)
+    reader = LocalTailRangeReader(tail, base_offset)
+    member = TarMember(
+        "root/PRE3P1A_KIT_D1_300K_DATA.zip",
+        base_offset + len(b"header"),
+        len(b"PK\x03\x04payload"),
+        "0",
+    )
+    destination = tmp_path / "member.zip"
+
+    digest = _copy_member_from_local_tail(reader, member, destination)
+
+    assert destination.read_bytes() == b"PK\x03\x04payload"
+    assert len(digest) == 64

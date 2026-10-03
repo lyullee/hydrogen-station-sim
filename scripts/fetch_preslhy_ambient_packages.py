@@ -190,6 +190,119 @@ class BlockCachedRangeReader:
         return self._payload[:length]
 
 
+class LocalTailRangeReader:
+    """Expose an absolute archive byte range backed by a local tail cache."""
+
+    def __init__(self, path: Path, base_offset: int) -> None:
+        self.path = path
+        self.base_offset = base_offset
+
+    def __call__(self, offset: int, length: int) -> bytes:
+        local_offset = offset - self.base_offset
+        if local_offset < 0:
+            raise RuntimeError(f"offset {offset} precedes cached TAR tail")
+        with self.path.open("rb") as handle:
+            handle.seek(local_offset)
+            payload = handle.read(length)
+        if len(payload) != length:
+            raise RuntimeError(
+                f"short local TAR range {offset}-{offset + length - 1}"
+            )
+        return payload
+
+
+def _stream_archive_tail(
+    reader: HttpRangeReader,
+    start_offset: int,
+    archive_size: int,
+    destination: Path,
+) -> None:
+    """Cache the remaining TAR bytes over long resumable HTTP streams."""
+
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    temporary = destination.with_suffix(destination.suffix + ".part")
+    expected = archive_size - start_offset
+    written = temporary.stat().st_size if temporary.exists() else 0
+    if written > expected:
+        raise RuntimeError(f"partial TAR tail exceeds expected size: {temporary}")
+    if written:
+        print(f"resuming TAR tail at archive byte {start_offset + written}", flush=True)
+    with temporary.open("ab") as output:
+        attempt = 0
+        report_step = 32 * 1024 * 1024
+        next_report = ((written // report_step) + 1) * report_step
+        while written < expected and attempt < reader.attempts:
+            archive_start = start_offset + written
+            archive_end = archive_size - 1
+            try:
+                request = Request(
+                    reader.url,
+                    headers={
+                        "User-Agent": USER_AGENT,
+                        "Range": f"bytes={archive_start}-{archive_end}",
+                        "Accept-Encoding": "identity",
+                    },
+                )
+                with urlopen(request, timeout=reader.timeout_s) as response:
+                    content_range = response.headers.get("Content-Range", "")
+                    if response.status != 206:
+                        raise RuntimeError(
+                            f"range request returned HTTP {response.status}"
+                        )
+                    if not content_range.startswith(
+                        f"bytes {archive_start}-{archive_end}/"
+                    ):
+                        raise RuntimeError(f"unexpected Content-Range: {content_range}")
+                    while written < expected:
+                        payload = response.read(min(1024 * 1024, expected - written))
+                        if not payload:
+                            raise RuntimeError("remote stream ended before TAR tail")
+                        output.write(payload)
+                        output.flush()
+                        written += len(payload)
+                        if written >= next_report or written == expected:
+                            print(
+                                f"TAR tail: {written}/{expected} bytes",
+                                flush=True,
+                            )
+                            next_report += report_step
+                attempt = 0
+            except Exception as exc:
+                attempt += 1
+                if attempt >= reader.attempts:
+                    raise RuntimeError(
+                        f"failed while streaming TAR tail at archive byte "
+                        f"{start_offset + written}"
+                    ) from exc
+                time.sleep(2 ** (attempt - 1))
+    if temporary.stat().st_size != expected:
+        raise RuntimeError("cached TAR tail size mismatch")
+    temporary.replace(destination)
+
+
+def _copy_member_from_local_tail(
+    reader: LocalTailRangeReader,
+    member: TarMember,
+    destination: Path,
+) -> str:
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    digest = hashlib.sha256()
+    remaining = member.size
+    offset = member.offset
+    with destination.open("wb") as output:
+        while remaining:
+            payload = reader(offset, min(1024 * 1024, remaining))
+            output.write(payload)
+            digest.update(payload)
+            offset += len(payload)
+            remaining -= len(payload)
+    with destination.open("rb") as handle:
+        if handle.read(4) != b"PK\x03\x04":
+            destination.unlink(missing_ok=True)
+            raise RuntimeError(f"cached member is not a ZIP: {member.name}")
+    return digest.hexdigest()
+
+
 def _download_member(
     reader: HttpRangeReader,
     member: TarMember,
@@ -277,6 +390,14 @@ def main() -> int:
     parser.add_argument("--list-only", action="store_true")
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--restart-index", action="store_true")
+    parser.add_argument(
+        "--cache-tail",
+        action="store_true",
+        help=(
+            "download the unindexed TAR tail over resumable long streams, then "
+            "index and extract it locally"
+        ),
+    )
     args = parser.parse_args()
 
     expected = {
@@ -309,9 +430,17 @@ def main() -> int:
             if not destination.exists():
                 digest = _download_member(reader, member, destination)
                 print(f"verified {name}: sha256 {digest}", flush=True)
-    for member in iter_tar_members(
-        index_reader, args.archive_bytes, start_offset=start_offset
-    ):
+    local_tail_reader = None
+    if args.cache_tail:
+        tail_path = args.output / f"preslhy_tar_tail_{start_offset}.bin"
+        if not tail_path.exists():
+            _stream_archive_tail(reader, start_offset, args.archive_bytes, tail_path)
+        local_tail_reader = LocalTailRangeReader(tail_path, start_offset)
+        index_reader = BlockCachedRangeReader(
+            local_tail_reader, args.archive_bytes
+        )
+
+    for member in iter_tar_members(index_reader, args.archive_bytes, start_offset=start_offset):
         name = PurePosixPath(member.name).name
         newly_located = False
         if TARGET_NAME.fullmatch(name):
@@ -336,7 +465,12 @@ def main() -> int:
         if newly_located and not args.list_only:
             destination = args.output / name
             if not destination.exists() or args.force:
-                digest = _download_member(reader, member, destination)
+                if local_tail_reader is not None:
+                    digest = _copy_member_from_local_tail(
+                        local_tail_reader, member, destination
+                    )
+                else:
+                    digest = _download_member(reader, member, destination)
                 print(f"verified {name}: sha256 {digest}", flush=True)
         if {PurePosixPath(item.name).name for item in members} == expected:
             break
