@@ -1,0 +1,528 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-03T00:44:50.842010+00:00",
+  "source": {
+    "commit": "2cef4513fed1dc2688ae55d790a3d9f1e05f41ec",
+    "dirty": false
+  },
+  "hyram": {
+    "installed_version": "6.1",
+    "installed_package": "site-packages/hyram",
+    "upstream_repository": "https://github.com/sandialabs/hyram.git",
+    "upstream_tag": "v6.1",
+    "upstream_commit": "b45abf9a6d995951311be6aad836f1874e4d420b",
+    "installed_source_digest": {
+      "python_file_count": 38,
+      "sha256": "d5865e1ae7b5c77b985e06b45d7a5607543703c1834fc50f7c5d96f32a0c22de"
+    },
+    "upstream_source_digest": {
+      "python_file_count": 38,
+      "sha256": "d5865e1ae7b5c77b985e06b45d7a5607543703c1834fc50f7c5d96f32a0c22de"
+    },
+    "source_identity_match": true
+  },
+  "unit_mapping": {
+    "pressure": "Pa",
+    "temperature": "K",
+    "orifice_diameter": "m",
+    "release_angle": "rad",
+    "locations": "m",
+    "heat_flux": "W/m2",
+    "overpressure": "Pa",
+    "impulse": "Pa s",
+    "plume_contour": "mole fraction"
+  },
+  "upstream_validation": {
+    "status": "passed",
+    "return_code": 0,
+    "upstream_commit": "b45abf9a6d995951311be6aad836f1874e4d420b",
+    "expected_commit": "b45abf9a6d995951311be6aad836f1874e4d420b",
+    "commit_match": true,
+    "test_modules": [
+      "tests/hyram/validation/test_jetplume.py",
+      "tests/hyram/validation/test_heatflux.py",
+      "tests/hyram/validation/test_unconfined_overpressure.py"
+    ],
+    "passed_test_count": 47,
+    "passed_subtest_count": 803,
+    "warning_count": 7,
+    "output_tail": "............................................... [100%]\n============================== warnings summary ===============================\ndata/public_validation/raw/hyram-v6.1/tests/hyram/validation/test_jetplume.py::Test_Molkov_2012::test_concentration\n  <hyram-v6.1>\\src\\hyram\\phys\\_therm.py:218: PhysicsWarning: PropsSI could not find a solution - estimating\n    warnings.warn('PropsSI could not find a solution - estimating', category=PhysicsWarning)\n\ndata/public_validation/raw/hyram-v6.1/tests/hyram/validation/test_jetplume.py::Test_Molkov_2012::test_concentration\n  <hyram-v6.1>\\src\\hyram\\phys\\_therm.py:82: PhysicsWarning: Assuming gas phase to calculate density.\n    warnings.warn('Assuming gas phase to calculate density.', category=PhysicsWarning)\n\ndata/public_validation/raw/hyram-v6.1/tests/hyram/validation/test_heatflux.py::Test_Proust_2011::test_flux_1\ndata/public_validation/raw/hyram-v6.1/tests/hyram/validation/test_heatflux.py::Test_Proust_2011::test_flux_2\ndata/public_validation/raw/hyram-v6.1/tests/hyram/validation/test_heatflux.py::Test_Proust_2011::test_flux_3\ndata/public_validation/raw/hyram-v6.1/tests/hyram/validation/test_heatflux.py::Test_Proust_2011::test_flux_4\ndata/public_validation/raw/hyram-v6.1/tests/hyram/validation/test_heatflux.py::Test_Proust_2011::test_flux_5\n  <hyram-v6.1>\\src\\hyram\\phys\\_comps.py:168: PhysicsWarning: Fluid unchoked. Provide a mass flow rate.\n    warnings.warn('Fluid unchoked. Provide a mass flow rate.', category=PhysicsWarning)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n47 passed, 7 warnings, 803 subtests passed in 159.21s (0:02:39)"
+  },
+  "adapter_parity_passed": true,
+  "adapter_parity_cases": [
+    {
+      "case": {
+        "case_id": "low-bank-1mm",
+        "pressure_pa": 45000000.0,
+        "temperature_k": 298.15,
+        "orifice_diameter_m": 0.001,
+        "discharge_coefficient": 0.8,
+        "release_angle_rad": 0.0,
+        "relative_humidity": 0.5,
+        "mass_flow_override_kg_s": null
+      },
+      "locations_m": [
+        [
+          1.0,
+          0.0,
+          1.0
+        ],
+        [
+          2.0,
+          0.0,
+          1.0
+        ],
+        [
+          5.0,
+          0.0,
+          1.0
+        ],
+        [
+          10.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "direct_hyram_output": {
+        "modeled_mass_flow_kg_s": 0.01661296808122911,
+        "heat_flux_w_m2": [
+          4587.866767819256,
+          4235.792713586565,
+          413.85326564202967,
+          71.0837260002081
+        ],
+        "overpressure_pa": [
+          11109.266047848154,
+          6785.1834445557115,
+          2841.7687358553976,
+          1386.794487897318
+        ],
+        "impulse_pa_s": [
+          13.27521350594929,
+          8.25671308522141,
+          3.2653884237066437,
+          1.6094340684784583
+        ],
+        "visible_flame_length_m": 2.326496954447102,
+        "radiant_fraction": 0.038969868199708414,
+        "plume_4vol_streamline_distance_m": 4.339102544599689,
+        "plume_4vol_x_extent_m": [
+          0.0,
+          4.339067938230858
+        ],
+        "plume_4vol_y_extent_m": [
+          -0.17156992138062982,
+          0.17702633574501891
+        ]
+      },
+      "adapter_output": {
+        "modeled_mass_flow_kg_s": 0.01661296808122911,
+        "heat_flux_w_m2": [
+          4587.866767819256,
+          4235.792713586565,
+          413.85326564202967,
+          71.0837260002081
+        ],
+        "overpressure_pa": [
+          11109.266047848154,
+          6785.1834445557115,
+          2841.7687358553976,
+          1386.794487897318
+        ],
+        "impulse_pa_s": [
+          13.27521350594929,
+          8.25671308522141,
+          3.2653884237066437,
+          1.6094340684784583
+        ],
+        "visible_flame_length_m": 2.326496954447102,
+        "radiant_fraction": 0.038969868199708414,
+        "plume_4vol_streamline_distance_m": 4.339102544599689,
+        "plume_4vol_x_extent_m": [
+          0.0,
+          4.339067938230858
+        ],
+        "plume_4vol_y_extent_m": [
+          -0.17156992138062982,
+          0.17702633574501891
+        ]
+      },
+      "comparison": {
+        "passed": true,
+        "fields": {
+          "modeled_mass_flow_kg_s": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "heat_flux_w_m2": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "overpressure_pa": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "impulse_pa_s": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "visible_flame_length_m": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "radiant_fraction": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "plume_4vol_streamline_distance_m": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "plume_4vol_x_extent_m": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "plume_4vol_y_extent_m": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          }
+        }
+      },
+      "status": "PASS"
+    },
+    {
+      "case": {
+        "case_id": "mid-bank-2mm-cold",
+        "pressure_pa": 70000000.0,
+        "temperature_k": 253.15,
+        "orifice_diameter_m": 0.002,
+        "discharge_coefficient": 0.8,
+        "release_angle_rad": 0.0,
+        "relative_humidity": 0.5,
+        "mass_flow_override_kg_s": null
+      },
+      "locations_m": [
+        [
+          1.0,
+          0.0,
+          1.0
+        ],
+        [
+          2.0,
+          0.0,
+          1.0
+        ],
+        [
+          5.0,
+          0.0,
+          1.0
+        ],
+        [
+          10.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "direct_hyram_output": {
+        "modeled_mass_flow_kg_s": 0.10830477562212096,
+        "heat_flux_w_m2": [
+          14216.435283591774,
+          22746.131892610014,
+          27914.312298284418,
+          1487.4253669811094
+        ],
+        "overpressure_pa": [
+          22457.34113547141,
+          20175.061369534313,
+          8653.876947275538,
+          3967.068569065564
+        ],
+        "impulse_pa_s": [
+          106.90193036111528,
+          73.813998855846,
+          28.213818072486244,
+          12.964868598665431
+        ],
+        "visible_flame_length_m": 6.056928686334976,
+        "radiant_fraction": 0.06222719439733971,
+        "plume_4vol_streamline_distance_m": 11.381980318783945,
+        "plume_4vol_x_extent_m": [
+          0.0,
+          11.381161480693738
+        ],
+        "plume_4vol_y_extent_m": [
+          -0.4648681939225028,
+          0.5085429563736048
+        ]
+      },
+      "adapter_output": {
+        "modeled_mass_flow_kg_s": 0.10830477562212096,
+        "heat_flux_w_m2": [
+          14216.435283591774,
+          22746.131892610014,
+          27914.312298284418,
+          1487.4253669811094
+        ],
+        "overpressure_pa": [
+          22457.34113547141,
+          20175.061369534313,
+          8653.876947275538,
+          3967.068569065564
+        ],
+        "impulse_pa_s": [
+          106.90193036111528,
+          73.813998855846,
+          28.213818072486244,
+          12.964868598665431
+        ],
+        "visible_flame_length_m": 6.056928686334976,
+        "radiant_fraction": 0.06222719439733971,
+        "plume_4vol_streamline_distance_m": 11.381980318783945,
+        "plume_4vol_x_extent_m": [
+          0.0,
+          11.381161480693738
+        ],
+        "plume_4vol_y_extent_m": [
+          -0.4648681939225028,
+          0.5085429563736048
+        ]
+      },
+      "comparison": {
+        "passed": true,
+        "fields": {
+          "modeled_mass_flow_kg_s": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "heat_flux_w_m2": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "overpressure_pa": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "impulse_pa_s": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "visible_flame_length_m": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "radiant_fraction": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "plume_4vol_streamline_distance_m": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "plume_4vol_x_extent_m": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "plume_4vol_y_extent_m": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          }
+        }
+      },
+      "status": "PASS"
+    },
+    {
+      "case": {
+        "case_id": "high-bank-3mm-override",
+        "pressure_pa": 100000000.0,
+        "temperature_k": 333.15,
+        "orifice_diameter_m": 0.003,
+        "discharge_coefficient": 0.8,
+        "release_angle_rad": 0.0,
+        "relative_humidity": 0.5,
+        "mass_flow_override_kg_s": 0.025
+      },
+      "locations_m": [
+        [
+          1.0,
+          0.0,
+          1.0
+        ],
+        [
+          2.0,
+          0.0,
+          1.0
+        ],
+        [
+          5.0,
+          0.0,
+          1.0
+        ],
+        [
+          10.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "direct_hyram_output": {
+        "modeled_mass_flow_kg_s": 0.29636612154492536,
+        "heat_flux_w_m2": [
+          21782.49449156908,
+          34753.4229586817,
+          73423.82463784235,
+          14447.473355810947
+        ],
+        "overpressure_pa": [
+          22727.5353074072,
+          22734.57605722822,
+          13206.28731510728,
+          5868.280432161423
+        ],
+        "impulse_pa_s": [
+          173.23008382139446,
+          177.02192467208855,
+          62.27543689844044,
+          26.847581063569756
+        ],
+        "visible_flame_length_m": 9.246035361989513,
+        "radiant_fraction": 0.07039252289727549,
+        "plume_4vol_streamline_distance_m": 17.223514004321387,
+        "plume_4vol_x_extent_m": [
+          0.0,
+          17.221992650622347
+        ],
+        "plume_4vol_y_extent_m": [
+          -0.6276250293810708,
+          0.7007874427384769
+        ]
+      },
+      "adapter_output": {
+        "modeled_mass_flow_kg_s": 0.29636612154492536,
+        "heat_flux_w_m2": [
+          21782.49449156908,
+          34753.4229586817,
+          73423.82463784235,
+          14447.473355810947
+        ],
+        "overpressure_pa": [
+          22727.5353074072,
+          22734.57605722822,
+          13206.28731510728,
+          5868.280432161423
+        ],
+        "impulse_pa_s": [
+          173.23008382139446,
+          177.02192467208855,
+          62.27543689844044,
+          26.847581063569756
+        ],
+        "visible_flame_length_m": 9.246035361989513,
+        "radiant_fraction": 0.07039252289727549,
+        "plume_4vol_streamline_distance_m": 17.223514004321387,
+        "plume_4vol_x_extent_m": [
+          0.0,
+          17.221992650622347
+        ],
+        "plume_4vol_y_extent_m": [
+          -0.6276250293810708,
+          0.7007874427384769
+        ]
+      },
+      "comparison": {
+        "passed": true,
+        "fields": {
+          "modeled_mass_flow_kg_s": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "heat_flux_w_m2": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "overpressure_pa": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "impulse_pa_s": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "visible_flame_length_m": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "radiant_fraction": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "plume_4vol_streamline_distance_m": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "plume_4vol_x_extent_m": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          },
+          "plume_4vol_y_extent_m": {
+            "match": true,
+            "shape_match": true,
+            "max_absolute_error": 0.0,
+            "max_relative_error": 0.0
+          }
+        }
+      },
+      "status": "PASS"
+    }
+  ]
+}

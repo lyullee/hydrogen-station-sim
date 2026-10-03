@@ -20,7 +20,7 @@ This is a research and monitoring prototype. It is not a certified controller, a
 Current project root:
 
 ```text
-C:\Users\lyul\Desktop\Materials\Project\hydrogen-station-sim
+C:\path\to\hydrogen-station-sim
 ```
 
 Transfer the full project folder, including `src`, `web`, `docs`, `tests`, `examples`, `scripts`, `README.md`, `pyproject.toml`, and this file.
@@ -208,4 +208,3 @@ These points are important for the next account holder:
 - New model parameters should be exposed as explicit fitting parameters rather than hard-coded hidden constants where feasible.
 - Prefer first-principles relations and literature-backed assumptions over purely data-driven behavior.
 - Keep HyRAM integration explicit and preserve the distinction between source-term physics and consequence-model assumptions.
-

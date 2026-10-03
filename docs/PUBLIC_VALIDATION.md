@@ -249,6 +249,11 @@ adapter fidelity to the installed package; it does not turn a sampled effect
 distance into a regulatory separation distance or independently validate the
 station geometry.
 
+The clean-commit result is archived in
+[`HYRAM_ADAPTER_VERIFICATION.md`](HYRAM_ADAPTER_VERIFICATION.md), with complete
+machine-readable values and per-field errors in
+[`research/hyram_adapter_verification.json`](../research/hyram_adapter_verification.json).
+
 ## Publication-readiness gate
 
 Treat an IJHE-level submission as ready only when all of the following evidence
