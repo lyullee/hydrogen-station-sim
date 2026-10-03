@@ -20,7 +20,7 @@ from .full_station import (
     FullStationState,
     MultistageHydrogenCompressor,
 )
-from .protocol import FuelingSchedule, SampledFuelingController
+from .protocol import FuelingSchedule, SampledFuelingController, _profile_value
 from .risk.live import DynamicRiskMonitor, HyRAMConsequenceBackend
 from .safe_operation import SafeFullStationSimulator
 from .safety_runtime import (
@@ -62,6 +62,7 @@ class ReferenceScenario:
     target_vehicle_2_pressure_pa: float = 70.0e6
     average_pressure_ramp_rate_pa_s: float = 2.0e5
     delivery_temperature_k: float = 233.15
+    maximum_gas_temperature_k: float = 358.15
     maximum_precooler_temperature_deviation_k: float = 15.0
     maximum_mass_flow_kg_s: float = 0.060
     risk_update_period_s: float = 1.0
@@ -69,6 +70,11 @@ class ReferenceScenario:
     compressor_suction_temperature_k: float = 298.15
     initial_bank_fill_percent: tuple[float, float, float] = DEFAULT_BANK_INITIAL_FILL_PERCENT
     fault_events: tuple[FaultEvent, ...] = ()
+    # Optional time-dependent boundary traces used by partial-station validation.
+    # Empty profiles retain the original constant-boundary behavior.
+    supply_pressure_profile_pa: tuple[tuple[float, float], ...] = ()
+    supply_temperature_profile_k: tuple[tuple[float, float], ...] = ()
+    delivery_temperature_profile_k: tuple[tuple[float, float], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -123,6 +129,7 @@ def build_reference_scenario(
         config.vehicle_gas_liner_ua_multiplier,
         config.dispenser_flow_area_multiplier,
         config.precooler_duty_multiplier,
+        config.maximum_gas_temperature_k,
         config.maximum_precooler_temperature_deviation_k,
     ) <= 0.0:
         raise ValueError("fit multipliers and precooler tolerance must be positive")
@@ -145,7 +152,9 @@ def build_reference_scenario(
                 config.average_pressure_ramp_rate_pa_s
             ),
             delivery_temperature_k=config.delivery_temperature_k,
+            maximum_gas_temperature_k=config.maximum_gas_temperature_k,
             maximum_mass_flow_kg_s=config.maximum_mass_flow_kg_s,
+            delivery_temperature_profile_k=config.delivery_temperature_profile_k,
             nominal_working_pressure_pa=(
                 config.vehicle_nominal_working_pressure_pa
             ),
@@ -154,7 +163,14 @@ def build_reference_scenario(
     partial = PartialStationModel(
         vehicle_tank=vehicle,
         controller=controller,
-        supply=lambda time_s: SupplyState(90.0e6, config.ambient_temperature_k),
+        supply=lambda time_s: SupplyState(
+            _profile_value(config.supply_pressure_profile_pa, time_s, 90.0e6),
+            _profile_value(
+                config.supply_temperature_profile_k,
+                time_s,
+                config.ambient_temperature_k,
+            ),
+        ),
         pcv=RestrictionParameters(flow_area_m2=1.5e-6),
         precooler=PrecoolerParameters(
             hydrogen_coolant_ua_w_k=2200.0,
@@ -177,7 +193,9 @@ def build_reference_scenario(
             target_pressure_pa=config.target_vehicle_2_pressure_pa,
             average_pressure_ramp_rate_pa_s=config.average_pressure_ramp_rate_pa_s,
             delivery_temperature_k=config.delivery_temperature_k,
+            maximum_gas_temperature_k=config.maximum_gas_temperature_k,
             maximum_mass_flow_kg_s=config.maximum_mass_flow_kg_s,
+            delivery_temperature_profile_k=config.delivery_temperature_profile_k,
             nominal_working_pressure_pa=(
                 config.vehicle_2_nominal_working_pressure_pa
             ),
@@ -186,7 +204,14 @@ def build_reference_scenario(
     secondary_partial = PartialStationModel(
         vehicle_tank=secondary_vehicle,
         controller=secondary_controller,
-        supply=lambda time_s: SupplyState(90.0e6, config.ambient_temperature_k),
+        supply=lambda time_s: SupplyState(
+            _profile_value(config.supply_pressure_profile_pa, time_s, 90.0e6),
+            _profile_value(
+                config.supply_temperature_profile_k,
+                time_s,
+                config.ambient_temperature_k,
+            ),
+        ),
         pcv=RestrictionParameters(flow_area_m2=1.5e-6),
         precooler=PrecoolerParameters(
             hydrogen_coolant_ua_w_k=2200.0,

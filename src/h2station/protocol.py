@@ -9,8 +9,26 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
+import math
 
 from .tabulated import PropsSI
+
+
+def _profile_value(
+    profile: tuple[tuple[float, float], ...], time_s: float, fallback: float
+) -> float:
+    """Linearly interpolate a frozen boundary profile without extrapolation."""
+    if not profile:
+        return float(fallback)
+    if time_s <= profile[0][0]:
+        return float(profile[0][1])
+    if time_s >= profile[-1][0]:
+        return float(profile[-1][1])
+    for (left_time, left_value), (right_time, right_value) in zip(profile, profile[1:]):
+        if time_s <= right_time:
+            fraction = (time_s - left_time) / (right_time - left_time)
+            return float(left_value + fraction * (right_value - left_value))
+    return float(profile[-1][1])
 
 
 class FuelingPhase(str, Enum):
@@ -32,6 +50,7 @@ class FuelingSchedule:
     target_soc: float = 1.0
     nominal_working_pressure_pa: float = 70.0e6
     reference_temperature_k: float = 288.15
+    delivery_temperature_profile_k: tuple[tuple[float, float], ...] = ()
 
     def __post_init__(self) -> None:
         if self.target_pressure_pa <= 0.0:
@@ -42,6 +61,32 @@ class FuelingSchedule:
             raise ValueError("maximum_mass_flow_kg_s must be positive")
         if not 0.0 < self.target_soc <= 1.2:
             raise ValueError("target_soc must be in (0, 1.2]")
+        self._validate_profile(
+            self.delivery_temperature_profile_k,
+            "delivery_temperature_profile_k",
+        )
+
+    @staticmethod
+    def _validate_profile(
+        profile: tuple[tuple[float, float], ...], name: str
+    ) -> None:
+        previous_time = None
+        for point in profile:
+            if len(point) != 2:
+                raise ValueError(f"{name} points must contain (time_s, value)")
+            time_s, value = (float(item) for item in point)
+            if time_s < 0.0 or not math.isfinite(time_s) or not math.isfinite(value):
+                raise ValueError(f"{name} points must be finite and non-negative in time")
+            if previous_time is not None and time_s <= previous_time:
+                raise ValueError(f"{name} times must be strictly increasing")
+            previous_time = time_s
+
+    def delivery_temperature_at(self, time_s: float) -> float:
+        return _profile_value(
+            self.delivery_temperature_profile_k,
+            time_s,
+            self.delivery_temperature_k,
+        )
 
 
 @dataclass(frozen=True)
@@ -192,7 +237,9 @@ class SampledFuelingController:
             phase=self._phase,
             valve_opening=opening,
             reference_pressure_pa=reference_pressure_pa,
-            delivery_temperature_target_k=self.schedule.delivery_temperature_k,
+            delivery_temperature_target_k=self.schedule.delivery_temperature_at(
+                observation.time_s
+            ),
             state_of_charge=soc,
         )
 
@@ -207,7 +254,9 @@ class SampledFuelingController:
             phase=self._phase,
             valve_opening=0.0,
             reference_pressure_pa=reference_pressure_pa,
-            delivery_temperature_target_k=self.schedule.delivery_temperature_k,
+            delivery_temperature_target_k=self.schedule.delivery_temperature_at(
+                self._start_time_s
+            ),
             state_of_charge=soc,
             stop_reason=reason,
         )

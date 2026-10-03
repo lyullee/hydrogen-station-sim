@@ -185,3 +185,8 @@ scenario dimensions and thermal parameters are illustrative until calibrated aga
 traceable equipment and test data. SAE J2601 tables remain licensed external inputs.
 The complete modeling basis, literature, limitations, and validation plan are in
 `docs/`.
+
+The partial-station boundary experiment is documented in
+[`docs/PARTIAL_STATION_VALIDATION.md`](docs/PARTIAL_STATION_VALIDATION.md).
+It is a development diagnostic with an explicit upstream-pressure assumption;
+it does not upgrade the full-station validation claim.
