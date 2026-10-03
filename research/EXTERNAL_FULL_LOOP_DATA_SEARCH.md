@@ -117,6 +117,15 @@ state or refuelling-protocol metadata. It is therefore retained for signal
 handling and calibration checks only and is not promoted to the HRS full-loop
 holdout.
 
+The Clean Hydrogen Partnership's H2-Stations export API is open under CC BY
+4.0 and is useful for station inventory, layout, availability, usage status,
+derived low-storage status, pricing, events and photographs:
+<https://docs.h2-stations.eu/for-data-users/api-v2/>. It deliberately does not
+publish synchronized pressure, temperature and mass-flow traces, numeric
+storage inventory, or vehicle-side fill state. It is therefore operations
+context and face-validity evidence only; it cannot close the untouched
+full-loop fueling-validation gate.
+
 The BAM demonstration-HRS monitoring study is a high-value request lead:
 <https://doi.org/10.3390/app16157856>. It reports real station operation with
 eight safety-critical compressor, storage and dispenser sensors and a

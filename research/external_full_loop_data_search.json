@@ -264,7 +264,32 @@
       "title": "H2-Stations Export API",
       "url": "https://docs.h2-stations.eu/for-data-users/api-v2/",
       "public_raw_data": true,
-      "decision": "OPERATIONS_EVIDENCE_ONLY"
+      "decision": "OPERATIONS_EVIDENCE_ONLY",
+      "primary_source_review_2026_10_03": {
+        "official_docs": "https://docs.h2-stations.eu/for-data-users/",
+        "api_v2_docs": "https://docs.h2-stations.eu/for-data-users/api-v2/",
+        "license": "CC BY 4.0",
+        "exposed_fields": [
+          "static station details",
+          "availability",
+          "usage status",
+          "derived low_h2_storage boolean",
+          "pricing",
+          "events",
+          "photos"
+        ],
+        "not_exposed_fields": [
+          "numeric storage inventory",
+          "vehicle or receptacle pressure",
+          "vehicle or fuel temperature",
+          "mass flow or transferred mass time series",
+          "tank capacity initial state paired with a fill trace",
+          "refuelling protocol time series"
+        ],
+        "raw_common_timebase": false,
+        "decision": "OPERATIONS_EVIDENCE_ONLY",
+        "role": "Useful open station-inventory and availability context for site metadata and face-validity checks; it cannot close the untouched full-loop fueling validation gate because the public API does not expose synchronized process telemetry."
+      }
     },
     {
       "id": "preslhy_e3_1",
@@ -599,6 +624,11 @@
         "id": "bam_demo_hrs_2026_sensor_monitoring",
         "url": "https://doi.org/10.3390/app16157856",
         "finding": "2026 BAM demonstration-HRS paper reports eight field safety sensors and three days of chronological monitoring, but its data-availability statement provides no raw download and directs requests to the corresponding author; no vehicle-side full-loop archive is exposed."
+      },
+      {
+        "id": "h2_stations_export_api",
+        "url": "https://docs.h2-stations.eu/for-data-users/api-v2/",
+        "finding": "Official CC BY 4.0 export API exposes station layout plus availability, usage, derived low-storage status, pricing, events and photos; it does not expose synchronized pressure/temperature/flow or numeric inventory traces, so it is operations context only."
       }
     ],
     "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
