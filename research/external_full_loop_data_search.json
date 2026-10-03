@@ -534,7 +534,12 @@
         "reported_scope": "Reference HRS and vehicle measurement data used for model validation",
         "raw_common_timebase": false,
         "role": "independent heavy-duty/rail full-loop data-request lead",
-        "exclusion_reason": "DLR record exposes the paper PDF but no synchronized machine-readable measurement archive or supplementary trace."
+        "exclusion_reason": "DLR record exposes the paper PDF but no synchronized machine-readable measurement archive or supplementary trace.",
+        "dlr_pdf": "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf",
+        "author_contact_hint": "Steffen.Wieser@dlr.de",
+        "article_public_data_statement": "The open article states that no measurement data of hydrogen refuelling processes in rail vehicles could be found publicly available (Section 1).",
+        "article_measurement_scope": "32 days of refuellings; an exemplary 28 November 2023 event includes vehicle tank-module pressure, dispenser pressure, temperature and mass-flow plots; the paper also reports a 5–10 min receptacle move interruption.",
+        "public_archive_check": "Crossref relation metadata exposes no dataset/supplement relation; DLR record exposes the published PDF only."
       }
     },
     {
@@ -783,9 +788,14 @@
         "id": "h2_stations_export_api",
         "url": "https://docs.h2-stations.eu/for-data-users/api-v2/",
         "finding": "Official CC BY 4.0 export API exposes station layout plus availability, usage, derived low-storage status, pricing, events and photos; it does not expose synchronized pressure/temperature/flow or numeric inventory traces, so it is operations context only."
+      },
+      {
+        "id": "fch2rail_ijhe_2025",
+        "url": "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf",
+        "finding": "The open IJHE paper reports real FCH2RAIL HRS/train measurements and 32 days of refuelling analysis, but explicitly says rail-vehicle refuelling measurement data were not publicly available; the DLR record and Crossref metadata expose no synchronized machine-readable archive or supplementary dataset."
       }
     ],
-    "result": "H2Protocol raw archives are public and hash-linked, but they are already consumed Powertech data and therefore do not close the independent external holdout gate.",
+    "result": "H2Protocol raw archives are public and hash-linked, but they are already consumed Powertech data; FCH2RAIL, Klopčič and other peer-reviewed campaigns provide strong independent request leads but no public untouched full-loop archive was identified.",
     "next_action": "send documented data requests (Klopčič/HyCentA heavy-duty traces, CARB, JRC GasTeF and HYTRANSFER file custodian, Cal State LA, BAM demonstration HRS, NREL HITRF/NFCTEC, Empa, DLR/FCH2RAIL, Hungarian HRS and NBSDC) and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest"
   },
   "last_reviewed": "2026-10-03"
