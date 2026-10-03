@@ -268,6 +268,28 @@
       "commit": "b45abf9a6d995951311be6aad836f1874e4d420b",
       "license": "GPL-3.0",
       "rights_note": "Clone locally under the gitignored data directory. Do not vendor or redistribute the GPL source in this MIT repository. The local verification hashes the installed package against this exact source and executes the upstream validation tests in place."
+    },
+    "preslhy_e3_5_lh2_rainout": {
+      "title": "Fuel Cells and Hydrogen Joint Undertaking (FCH JU); Summary of experiment series E3.5",
+      "publisher": "Karlsruhe Institute of Technology / HSE Science and Research Centre",
+      "landing_page": "https://doi.org/10.35097/1481",
+      "doi": "10.35097/1481",
+      "archive_url": "https://radar.kit.edu/radar-backend/archives/nWczysTWjmuzgFKm/versions/1/content",
+      "archive_size": "11.3 GB",
+      "archive_md5": "aa89132abb34eff9b2b4ce40a6e2975f",
+      "license": "CC BY-SA 4.0",
+      "rights_note": "The public dataset is licensed CC BY-SA 4.0; do not vendor the 11.3 GB archive. Download only under data/public_validation/raw when a local analysis requires it.",
+      "reported_measurements": [
+        "near-field and far-field thermocouples",
+        "pipe and tank pressure",
+        "mass flow",
+        "H2 concentration",
+        "H2 PPM",
+        "O2 depletion",
+        "weather/wind/humidity",
+        "video"
+      ],
+      "eligibility_note": "Eligible for independent liquid-hydrogen release, dispersion and sensor/visualisation checks. Not eligible for this project’s gaseous high-pressure HRS fueling-loop gate because phase, geometry and pressure domain differ and no vehicle/cascade/compressor/precooler/dispenser controller trace is present."
     }
   }
 }

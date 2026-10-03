@@ -85,7 +85,10 @@
         "reported_fueling_time_s": 358.9,
         "reported_average_mass_flow_g_s": 172.3,
         "reported_peak_mass_flow_g_s": 483.33,
-        "reported_start_end_pressure_mpa": [5.5, 74.6],
+        "reported_start_end_pressure_mpa": [
+          5.5,
+          74.6
+        ],
         "reported_aprr_mpa_min": 9.9,
         "protocol": "SAE J2601-5 MCF-HF-G H70 FM300 T40",
         "raw_common_timebase": false,
@@ -160,9 +163,20 @@
       "public_raw_data": "secondary transcription embedded in a public MIT repository",
       "decision": "TANK_THERMAL_SUBMODEL_ONLY",
       "inspection": {
-        "cases": ["5 MPa/min", "10 MPa/min", "30 MPa/min"],
-        "measured_channels": ["time", "gas_mean_temperature"],
-        "missing_for_full_loop": ["measured pressure series", "measured mass-flow series", "cascade/compressor/precooler/dispenser controller traces"],
+        "cases": [
+          "5 MPa/min",
+          "10 MPa/min",
+          "30 MPa/min"
+        ],
+        "measured_channels": [
+          "time",
+          "gas_mean_temperature"
+        ],
+        "missing_for_full_loop": [
+          "measured pressure series",
+          "measured mass-flow series",
+          "cascade/compressor/precooler/dispenser controller traces"
+        ],
         "role": "independent physical tank thermal evidence; suitable only for a separately pre-registered tank-filling submodel check",
         "rights_note": "HydDown is MIT-licensed, but reuse rights for the original article measurements transcribed in YAML were not independently established; metadata and hashes are recorded without copying the arrays."
       }
@@ -217,6 +231,47 @@
       "license": "CC BY 4.0",
       "public_raw_data": true,
       "decision": "ALREADY_USED_FOR_CONSEQUENCE_VALIDATION"
+    },
+    {
+      "id": "preslhy_e3_5_lh2_rainout",
+      "title": "Fuel Cells and Hydrogen Joint Undertaking (FCH JU); Summary of experiment series E3.5",
+      "doi": "10.35097/1481",
+      "url": "https://doi.org/10.35097/1481",
+      "publisher": "Karlsruhe Institute of Technology / HSE Science and Research Centre",
+      "public_raw_data": true,
+      "decision": "LIQUID_HYDROGEN_RELEASE_CONSEQUENCE_ONLY",
+      "inspection": {
+        "archive_size": "11.3 GB",
+        "archive_md5": "aa89132abb34eff9b2b4ce40a6e2975f",
+        "license": "CC BY-SA 4.0",
+        "experiments": 25,
+        "release_nozzles_mm": [
+          6,
+          12,
+          25.4
+        ],
+        "source_pressures_barg": [
+          1,
+          5
+        ],
+        "measured_channels": [
+          "near-field thermocouples",
+          "far-field thermocouples",
+          "pipe pressure",
+          "tank pressure",
+          "mass flow",
+          "H2 concentration",
+          "H2 PPM",
+          "O2 depletion",
+          "near/far weather and wind",
+          "humidity"
+        ],
+        "video_available": true,
+        "raw_common_timebase": true,
+        "scope": "liquid-hydrogen elevated-spill release, rainout and dispersion",
+        "role": "independent consequence and detector/visualisation evidence; not a gaseous high-pressure HRS fueling-loop validation set",
+        "exclusion_reason": "phase, release geometry and pressure domain differ from this station model; no vehicle fill, cascade, compressor, precooler or dispenser control traces"
+      }
     }
   ],
   "next_action": "Request de-identified fill-level workbooks and traces from CARB, JRC GasTeF and Cal State LA before freezing a new full-loop holdout protocol; keep the HydDown/Striednig material restricted to a separately documented tank-thermal submodel check.",
