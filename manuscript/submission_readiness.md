@@ -17,7 +17,7 @@ The current official IJHE Guide for Authors was checked on 3 October 2026. A res
 | Full station closed-loop validation | Failed | 0/8 development and 0/11 internal-comparison fills met all project screens; report as a negative result |
 | HyRAM+ production adapter | Verified within stated scope | Exact v6.1 source identity, 47 upstream tests/803 subtests, three production parity cases |
 | Outdoor station plume geometry | Not independently validated | The open-channel experiment is not geometrically applicable to the outdoor free jet |
-| HIAD casebook leakage review | Pending | Qualified coordinator must approve and freeze all reported vignettes |
+| HIAD casebook leakage review | Pending | Advisory pre-screen flags 16 HIGH, 6 MEDIUM and 2 LOW among 24 holdout vignettes; a qualified non-rating coordinator must inspect every case, rewrite/remove hindsight actions without adding facts, then approve and freeze the complete set |
 | Human-participant ethics determination | Pending | Record institutional approval, exemption or not-required determination before reviewer recruitment/rating |
 | Blinded SAGA expert review | Pending and mandatory | At least two independent qualified reviewers; lock ratings before unmasking |
 | SAGA ablation result | Pending | Alarm-only vs direct LLM vs standards-RAG, with unsafe advice, omissions, latency, failures and agreement |

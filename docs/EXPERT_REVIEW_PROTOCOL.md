@@ -28,6 +28,11 @@ without adding facts. The coordinator records `PASS` and `YES` in the two
 approval fields and hashes the final casebook. Emergency actions, lessons,
 corrective measures, and references remain hidden from SAGA.
 
+The optional coordinator pre-screen highlights exact phrase overlap with the
+withheld HIAD action/lesson fields and sentences that may disclose a completed
+response. Its tiers are advisory only: the coordinator must inspect every case,
+including cases marked LOW, and the tool cannot write `PASS` or `YES`.
+
 The collection script constructs every model-visible field from the approved
 `input_context`; it never falls back to the original HIAD narrative after review.
 The approved casebook must contain every event in the frozen selected split
@@ -129,6 +134,11 @@ $env:PYTHONPATH = "src"
   --split holdout --prepare-casebook
 
 # Coordinator reviews and freezes an approved copy.
+
+# Optional advisory pre-screen; open coordinator_review.html locally.
+.venv\Scripts\python.exe scripts\prepare_hiad_coordinator_review.py `
+  --casebook data\public_validation\results\hiad_holdout_preparation\casebook_for_approval.json `
+  --output data\public_validation\results\hiad_coordinator_prescreen
 
 .venv\Scripts\python.exe scripts\run_hiad_decision_evaluation.py `
   --saga-url http://127.0.0.1:8090 --provider groq --split holdout `
