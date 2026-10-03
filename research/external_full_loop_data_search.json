@@ -72,6 +72,27 @@
       }
     },
     {
+      "id": "nrel_2024_h2iq_hd_fast_flow_summary",
+      "title": "H2IQ Hour: Hydrogen Fuel Dispensing for Medium- and Heavy-Duty Vehicles",
+      "url": "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
+      "publisher": "U.S. Department of Energy / National Renewable Energy Laboratory",
+      "public_raw_data": false,
+      "decision": "REPORT_PLOT_SUMMARY_ONLY",
+      "inspection": {
+        "experiment_date": "2024-03-12",
+        "reported_mass_transfer_kg": 73.0,
+        "reported_total_fill_time_s": 423.5,
+        "reported_fueling_time_s": 358.9,
+        "reported_average_mass_flow_g_s": 172.3,
+        "reported_peak_mass_flow_g_s": 483.33,
+        "reported_start_end_pressure_mpa": [5.5, 74.6],
+        "reported_aprr_mpa_min": 9.9,
+        "protocol": "SAE J2601-5 MCF-HF-G H70 FM300 T40",
+        "raw_common_timebase": false,
+        "role": "real HITRF experiment summary for face-validity and operating-range checks; plot-only data cannot close the primary full-loop gate"
+      }
+    },
+    {
       "id": "nrel_hdtada",
       "title": "Hydrogen Dispenser Testing and Analysis Tool",
       "url": "https://github.com/NatLabRockies/HDTADA",

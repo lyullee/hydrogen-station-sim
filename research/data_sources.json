@@ -100,6 +100,27 @@
       "rights_note": "The public report may be cited. No underlying fill-level raw-trace redistribution licence or machine-readable workbook was identified.",
       "eligibility_note": "Table 4 provides field-relevant sample fill summary fields (timestamp, amount, rate, start/end pressure, dispensing temperature and pressure), but no common-time-base raw trace. It is report-level context and a data-request lead, not an eligible untouched full-loop validation set."
     },
+    "nrel_2024_h2iq_hd_fast_flow_summary": {
+      "title": "H2IQ Hour: Hydrogen Fuel Dispensing for Medium- and Heavy-Duty Vehicles",
+      "publisher": "U.S. Department of Energy / National Renewable Energy Laboratory",
+      "landing_page": "https://www.energy.gov/eere/fuelcells/hydrogen-and-fuel-cell-technologies-office-news",
+      "report_url": "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
+      "citation": "U.S. Department of Energy and National Renewable Energy Laboratory, H2IQ Hour: Hydrogen Fuel Dispensing for Medium- and Heavy-Duty Vehicles, 26 March 2024.",
+      "rights_note": "The public presentation may be cited. No underlying synchronized HITRF trace or data-redistribution licence was identified.",
+      "reported_experiment": {
+        "date": "2024-03-12",
+        "mass_transfer_kg": 73.0,
+        "total_fill_time_s": 423.5,
+        "fueling_time_s": 358.9,
+        "average_mass_flow_g_s": 172.3,
+        "peak_mass_flow_g_s": 483.33,
+        "start_pressure_mpa": 5.5,
+        "end_pressure_mpa": 74.6,
+        "aprr_mpa_min": 9.9,
+        "protocol": "SAE J2601-5 MCF-HF-G H70 FM300 T40"
+      },
+      "eligibility_note": "Real HITRF experiment summary suitable for face-validity and operating-range checks, but plot/aggregate-only publication without a common-time-base raw trace. It cannot close the primary untouched full-loop validation gate."
+    },
     "tessema_2026_hrs_performance_simulation": {
       "title": "HRSs refueling perfromance Data sets",
       "publisher": "Mendeley Data",
