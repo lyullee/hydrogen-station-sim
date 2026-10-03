@@ -20,6 +20,7 @@ from h2station.public_validation import (
 )
 from h2station.risk.runtime_backend import UnavailableHyRAMBackend
 from h2station.scenario import ReferenceScenario, build_reference_scenario
+from h2station.tabulated import PropsSI
 
 
 def _workbook_bytes(workbook: Workbook) -> bytes:
@@ -250,6 +251,21 @@ def test_reference_scenario_rejects_nonpositive_precooler_duty_multiplier():
             ReferenceScenario(precooler_duty_multiplier=0.0),
             UnavailableHyRAMBackend(),
         )
+
+
+def test_reference_scenario_uses_vehicle_specific_nominal_pressure_for_soc():
+    built = build_reference_scenario(
+        ReferenceScenario(vehicle_nominal_working_pressure_pa=35.0e6),
+        UnavailableHyRAMBackend(),
+    )
+    schedule = built.station.partial_station.controller.schedule
+    reference_density = built.station.partial_station.controller.soc_model.reference_density_kg_m3
+    expected_density = float(PropsSI(
+        "Dmass", "P", 35.0e6, "T", schedule.reference_temperature_k,
+        "Hydrogen",
+    ))
+    assert schedule.nominal_working_pressure_pa == pytest.approx(35.0e6)
+    assert reference_density == pytest.approx(expected_density)
 
 
 def test_dispersion_reader_uses_declared_steady_interval_and_clips_sensor_noise(tmp_path):

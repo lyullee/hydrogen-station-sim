@@ -49,6 +49,7 @@ class ReferenceScenario:
     initial_vehicle_pressure_pa: float = 5.0e6
     initial_vehicle_temperature_k: float = 298.15
     vehicle_internal_volume_m3: float = 0.122
+    vehicle_nominal_working_pressure_pa: float = 70.0e6
     vehicle_effective_volume_multiplier: float = 1.0
     vehicle_gas_liner_ua_multiplier: float = 1.0
     dispenser_flow_area_multiplier: float = 1.0
@@ -56,6 +57,7 @@ class ReferenceScenario:
     initial_vehicle_2_pressure_pa: float = 5.0e6
     initial_vehicle_2_temperature_k: float = 298.15
     vehicle_2_internal_volume_m3: float = 0.122
+    vehicle_2_nominal_working_pressure_pa: float = 70.0e6
     target_vehicle_pressure_pa: float = 70.0e6
     target_vehicle_2_pressure_pa: float = 70.0e6
     average_pressure_ramp_rate_pa_s: float = 2.0e5
@@ -112,6 +114,11 @@ def build_reference_scenario(
     if config.vehicle_internal_volume_m3 <= 0.0 or config.vehicle_2_internal_volume_m3 <= 0.0:
         raise ValueError("vehicle tank volumes must be positive")
     if min(
+        config.vehicle_nominal_working_pressure_pa,
+        config.vehicle_2_nominal_working_pressure_pa,
+    ) <= 0.0:
+        raise ValueError("vehicle nominal working pressures must be positive")
+    if min(
         config.vehicle_effective_volume_multiplier,
         config.vehicle_gas_liner_ua_multiplier,
         config.dispenser_flow_area_multiplier,
@@ -139,6 +146,9 @@ def build_reference_scenario(
             ),
             delivery_temperature_k=config.delivery_temperature_k,
             maximum_mass_flow_kg_s=config.maximum_mass_flow_kg_s,
+            nominal_working_pressure_pa=(
+                config.vehicle_nominal_working_pressure_pa
+            ),
         )
     )
     partial = PartialStationModel(
@@ -168,6 +178,9 @@ def build_reference_scenario(
             average_pressure_ramp_rate_pa_s=config.average_pressure_ramp_rate_pa_s,
             delivery_temperature_k=config.delivery_temperature_k,
             maximum_mass_flow_kg_s=config.maximum_mass_flow_kg_s,
+            nominal_working_pressure_pa=(
+                config.vehicle_2_nominal_working_pressure_pa
+            ),
         )
     )
     secondary_partial = PartialStationModel(

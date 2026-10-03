@@ -98,6 +98,7 @@ def run_case(
     ])
     tank_capacity = _float(summary, "tank_capacity_kg")
     scheduled_aprr = _float(summary, "scheduled_aprr_mpa_min")
+    nominal_pressure_mpa = _float(summary, "nominal_pressure_mpa")
     tank_volume = _tank_volume_from_nominal_capacity(tank_capacity)
     tank_fit = tank_fit or {
         "effective_volume_multiplier": 1.0,
@@ -114,6 +115,7 @@ def run_case(
         initial_vehicle_pressure_pa=float(exp_pressure[0] * 1.0e6),
         initial_vehicle_temperature_k=float(exp_temperature[0] + 273.15),
         vehicle_internal_volume_m3=tank_volume,
+        vehicle_nominal_working_pressure_pa=nominal_pressure_mpa * 1.0e6,
         vehicle_effective_volume_multiplier=float(tank_fit["effective_volume_multiplier"]),
         vehicle_gas_liner_ua_multiplier=float(tank_fit["gas_liner_ua_multiplier"]),
         dispenser_flow_area_multiplier=dispenser_flow_area_multiplier,
@@ -234,6 +236,7 @@ def run_case(
         "lab_test_number": int(float(summary["lab_test_number"])),
         "test_code": summary["test_code"],
         "tank_capacity_kg": tank_capacity,
+        "nominal_working_pressure_mpa": nominal_pressure_mpa,
         "tank_volume_assumed_m3": tank_volume,
         "effective_volume_multiplier": float(tank_fit["effective_volume_multiplier"]),
         "gas_liner_ua_multiplier": float(tank_fit["gas_liner_ua_multiplier"]),
