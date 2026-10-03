@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "checked_at": "2026-10-02",
+  "checked_at": "2026-10-03",
   "policy": "Raw third-party files are downloaded under data/public_validation/raw and are not committed or redistributed.",
   "sources": {
     "h2protocol_j2601_tables": {
@@ -73,6 +73,16 @@
       "report_url": "https://www.osti.gov/servlets/purl/2480221/",
       "citation": "SAND2024-14886, HyRAM+ Version 5.1.1 Physics Validation, Sandia National Laboratories, 2024.",
       "rights_note": "Authoritative model-validation basis for tank blowdown, unignited jet dispersion, jet flames, accumulation and overpressure. The application adapter still requires local verification against the installed HyRAM 6.1 package."
+    },
+    "hyram_6_1_source_and_validation_tests": {
+      "title": "HyRAM+ v6.1 source and physics-validation tests",
+      "publisher": "Sandia National Laboratories",
+      "landing_page": "https://github.com/sandialabs/hyram/tree/v6.1",
+      "repository": "https://github.com/sandialabs/hyram.git",
+      "tag": "v6.1",
+      "commit": "b45abf9a6d995951311be6aad836f1874e4d420b",
+      "license": "GPL-3.0",
+      "rights_note": "Clone locally under the gitignored data directory. Do not vendor or redistribute the GPL source in this MIT repository. The local verification hashes the installed package against this exact source and executes the upstream validation tests in place."
     }
   }
 }

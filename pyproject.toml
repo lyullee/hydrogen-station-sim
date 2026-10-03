@@ -33,3 +33,6 @@ h2station = "h2station.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/h2station"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

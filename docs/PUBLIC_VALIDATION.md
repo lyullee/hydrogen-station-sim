@@ -230,6 +230,25 @@ manuscript must additionally verify this repository's adapter inputs and outputs
 against the installed HyRAM version and disclose the version gap between the
 published validation report and HyRAM 6.1.
 
+The adapter verification is reproducible from the exact upstream `v6.1` tag:
+
+```powershell
+git clone --depth 1 --branch v6.1 `
+  https://github.com/sandialabs/hyram.git `
+  data\public_validation\raw\hyram-v6.1
+$env:PYTHONPATH = "src"
+.venv\Scripts\python.exe scripts\run_hyram_adapter_verification.py
+```
+
+The script hashes every installed HyRAM Python source file and compares it with
+the upstream tag. It runs Sandia's plume, heat-flux and unconfined-overpressure
+validation modules, followed by station-scale parity cases that call the
+production adapter and public HyRAM API independently. The report keeps the SI
+unit mapping and per-field numerical errors. Passing this check establishes
+adapter fidelity to the installed package; it does not turn a sampled effect
+distance into a regulatory separation distance or independently validate the
+station geometry.
+
 ## Publication-readiness gate
 
 Treat an IJHE-level submission as ready only when all of the following evidence
