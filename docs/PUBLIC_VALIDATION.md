@@ -356,6 +356,40 @@ Its pass applies only to outdoor unconfined free-jet screening. It explicitly
 excludes site-specific wind, buildings, congestion, terrain, certified safety
 boundaries and regulatory separation distances.
 
+## PRESLHY ambient blowdown validation
+
+PRESLHY E3.1 supplies independent high-pressure hydrogen discharge records for
+a 2.815 L vessel and 0.5, 1, 2 and 4 mm apertures. The prospective protocol in
+`research/preslhy_blowdown_validation_protocol.json` was frozen before any
+numerical Excel outcome was opened. It fixes the source/model hashes, data
+eligibility, time synchronization, pressure interpretation, error screens,
+bootstrap seed and negative-result policy.
+
+The official RADAR TAR is about 1.3 GB and includes photographs and 80 K data.
+The acquisition utility reads TAR headers with verified HTTP byte ranges and
+downloads only the four `300K_DATA` ZIP members. Its index and partial-download
+checkpoints are stored under the gitignored raw-data directory, so an
+intermittent repository connection can be resumed without restarting:
+
+```powershell
+.venv\Scripts\python.exe scripts\fetch_preslhy_ambient_packages.py
+$env:PYTHONPATH = "src"
+.venv\Scripts\python.exe scripts\run_preslhy_blowdown_validation.py
+.venv\Scripts\python.exe scripts\audit_ijhe_readiness.py
+```
+
+The primary case screens are pressure NRMSE at most 10% of initial absolute
+pressure and time-to-50%-initial-gauge-pressure error at most 20%. At least 12
+cases across three nozzle and three pressure groups are required, and at least
+70% must pass both screens. An eligible integration failure remains a failed
+case. Sensitivity at discharge coefficients 0.7 and 0.9 cannot replace the
+frozen primary result at 0.8.
+
+This test can support only the ambient direct-aperture source-depletion claim.
+It does not validate the complete fueling loop, cryogenic two-phase release,
+site vent-stack hydraulics, pipe backpressure, ignition, dispersion, emergency
+separation distance or regulatory safety distance.
+
 ## Publication-readiness gate
 
 Treat an IJHE-level submission as ready only when all of the following evidence
@@ -365,10 +399,10 @@ exists and the results support the stated claims:
    errors, confidence intervals, environmental strata, capacity strata and
    residual plots are reported. Calibration and validation cases are separated
    if any parameter fitting is introduced.
-2. **Release/consequence physics:** the production consequence path is validated
-   against an applicable public experiment or the exact HyRAM+ validation basis
-   is documented. The open-channel data cannot validate an outdoor station model
-   until release and sensor geometry are mapped explicitly.
+2. **Release/consequence physics:** the frozen PRESLHY ambient blowdown test
+   meets its direct-aperture screens, and the production consequence path is
+   traceable to the exact HyRAM+ validation basis and adapter-parity evidence.
+   These remain separate source-depletion and free-jet consequence claims.
 3. **Incident decision support:** the holdout vignettes are checked for response
    leakage; three qualified reviewers complete blinded ratings; agreement,
    unsafe-advice rate, critical-omission rate, response latency and failed-call
