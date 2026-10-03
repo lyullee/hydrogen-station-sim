@@ -145,6 +145,7 @@ class SafeFullStationSimulator:
         reset_runtime: bool = True,
         stop_callback: Callable[[], bool] | None = None,
         runtime_command_callback: Callable[[float], None] | None = None,
+        pace_idle: bool = True,
     ) -> SafeOperationTrajectory:
         if duration_s <= 0.0 or control_period_s <= 0.0:
             raise ValueError("Simulation duration and control period must be positive")
@@ -156,6 +157,7 @@ class SafeFullStationSimulator:
         if reset_runtime:
             self.fault_injector.reset()
             self.risk_monitor.reset()
+            self.station.supervisor.reset()
             self.station.valve_sequencer.reset()
             self.station.secondary_valve_sequencer.reset()
             self._last_vehicle_requested = (False, False)
@@ -298,6 +300,7 @@ class SafeFullStationSimulator:
                     self.station.partial_station.controller.soc_model.calculate(vehicle_gas.density_kg_m3), "operator-idle")
             else:
                 if process is not None and not self._last_vehicle_requested[0]:
+                    self.station.supervisor.reset_dispatch("primary")
                     self.station.partial_station.controller.start(time_s, vehicle_gas.pressure_pa)
                 fueling_command = self.station.partial_station.controller.update(
                     observation, control_period_s,
@@ -320,6 +323,7 @@ class SafeFullStationSimulator:
                     self.station.secondary_partial_station.controller.soc_model.calculate(vehicle_2_gas.density_kg_m3), "operator-idle")
             else:
                 if process is not None and not self._last_vehicle_requested[1]:
+                    self.station.supervisor.reset_dispatch("secondary")
                     self.station.secondary_partial_station.controller.start(time_s, vehicle_2_gas.pressure_pa)
                 fueling_command_2 = self.station.secondary_partial_station.controller.update(
                     observation_2, control_period_s,
@@ -391,6 +395,7 @@ class SafeFullStationSimulator:
                     bank_gases,
                     hose_2_gas.pressure_pa,
                     excluded_indices=blocked_outlets,
+                    circuit_id="secondary",
                 )
             )
             dispatch_2_index, dispatch_2_opening, _ = (
@@ -452,23 +457,18 @@ class SafeFullStationSimulator:
                 bank_gases[supply_index].pressure_pa,
                 bank_gases[supply_index].temperature_k,
             )
-            effective_command = (
-                fueling_command
-                if dispatch_index is not None
-                else replace(fueling_command, valve_opening=0.0)
+            effective_command = fueling_command
+            effective_primary_pcv_multiplier = (
+                self._flow_multipliers(override, "dispenser")[0] * dispatch_opening
+                if dispatch_index is not None else 0.0
             )
             instantaneous = self.station.partial_station._flow_and_thermal_states(
                 time_s,
                 current.partial_station,
-                replace(
-                    effective_command,
-                    valve_opening=(
-                        effective_command.valve_opening * dispatch_opening
-                    ),
-                ),
+                effective_command,
                 supply,
                 override.precooler_capacity_multiplier,
-                self._flow_multipliers(override, "dispenser")[0],
+                effective_primary_pcv_multiplier,
                 (self._flow_multipliers(override, "dispenser")[1] *
                  (virtual_safety.opening("dispenser.1") if virtual_safety is not None else 1.0)) if requested_1 and not safety_command.esd_latched else 0.0,
                 self._allow_reverse_flow(override, "dispenser"),
@@ -480,25 +480,19 @@ class SafeFullStationSimulator:
                 bank_gases[supply_2_index].pressure_pa,
                 bank_gases[supply_2_index].temperature_k,
             )
-            effective_command_2 = (
-                fueling_command_2
-                if dispatch_2_index is not None
-                else replace(fueling_command_2, valve_opening=0.0)
+            effective_command_2 = fueling_command_2
+            effective_secondary_pcv_multiplier = (
+                self._flow_multipliers(override, "dispenser_2")[0] * dispatch_2_opening
+                if dispatch_2_index is not None else 0.0
             )
             instantaneous_2 = (
                 self.station.secondary_partial_station._flow_and_thermal_states(
                     time_s,
                     current.secondary_partial_station,
-                    replace(
-                        effective_command_2,
-                        valve_opening=(
-                            effective_command_2.valve_opening
-                            * dispatch_2_opening
-                        ),
-                    ),
+                    effective_command_2,
                     supply_2,
                     override.precooler_capacity_multiplier,
-                    self._flow_multipliers(override, "dispenser_2")[0],
+                    effective_secondary_pcv_multiplier,
                     (self._flow_multipliers(override, "dispenser_2")[1] *
                      (virtual_safety.opening("dispenser.2") if virtual_safety is not None else 1.0)) if requested_2 and not safety_command.esd_latched else 0.0,
                     self._allow_reverse_flow(override, "dispenser_2"),
@@ -737,7 +731,8 @@ class SafeFullStationSimulator:
             if process is not None and not process.any_requested() and not active_events and not cooling_events:
                 # Idle monitoring keeps all process inventories exactly unchanged.
                 # The controller scans at wall-clock pace until an operator request.
-                sleep(min(control_period_s, 0.25))
+                if pace_idle:
+                    sleep(min(control_period_s, 0.25))
                 time_s = end_s
                 if progress_callback is not None:
                     progress_callback(time_s, end_time_s)

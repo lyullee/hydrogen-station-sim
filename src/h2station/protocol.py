@@ -157,11 +157,12 @@ class SampledFuelingController:
             self.parameters.proportional_gain_pa_inverse * error_pa
             + self.parameters.integral_gain_pa_inverse_s_inverse * candidate_integral
         )
-        bounded_opening = min(
+        amplitude_bounded_opening = min(
             self.parameters.maximum_opening,
             max(self.parameters.minimum_opening, raw_opening),
         )
 
+        bounded_opening = amplitude_bounded_opening
         if observation.measured_mass_flow_kg_s > self.schedule.maximum_mass_flow_kg_s:
             bounded_opening *= (
                 self.schedule.maximum_mass_flow_kg_s
@@ -175,21 +176,17 @@ class SampledFuelingController:
         )
         self._last_opening = opening
 
-        amplitude_saturated = abs(bounded_opening - raw_opening) > 1.0e-12
-        slew_limited = abs(opening - bounded_opening) > 1.0e-12
-        if not amplitude_saturated and not slew_limited:
+        actuator_limited = abs(opening - raw_opening) > 1.0e-12
+        integration_drives_toward_available_range = (
+            (opening < raw_opening and error_pa < 0.0)
+            or (opening > raw_opening and error_pa > 0.0)
+        )
+        if not actuator_limited or integration_drives_toward_available_range:
             self._integral_error_pa_s = candidate_integral
-        elif amplitude_saturated:
-            # Back-calculate only against the static actuator bound. Applying
-            # the same correction to a temporary slew-rate limit can move the
-            # integrator by orders of magnitude and reverse an otherwise
-            # positive pressure error on the following sample.
-            self._integral_error_pa_s += (
-                self.parameters.anti_windup_gain
-                * (bounded_opening - raw_opening)
-                * sample_period_s
-                / max(self.parameters.integral_gain_pa_inverse_s_inverse, 1.0e-30)
-            )
+        # Otherwise hold the integrator. Flow limiting, static valve bounds,
+        # and slew limiting are all actuator constraints. Back-calculating a
+        # flow-limited opening through the integral gain can reverse the stored
+        # error and latch the valve shut while pressure error is still positive.
 
         return FuelingCommand(
             phase=self._phase,

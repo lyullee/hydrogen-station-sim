@@ -118,7 +118,7 @@ def run_protocol_case(duration_s: float, control_period_s: float) -> dict:
         ProcessSettings(vehicle_1=True).model_dump()
     )
     trajectory = built.simulator.simulate(
-        built.initial_state, duration_s, control_period_s
+        built.initial_state, duration_s, control_period_s, pace_idle=False
     )
     commands = trajectory.fueling_commands
     completion = next((

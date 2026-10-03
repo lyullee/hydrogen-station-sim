@@ -127,7 +127,7 @@ def run_case(
     ).model_dump()
     built.simulator.process_runtime = ProcessRuntime(settings)
     trajectory = built.simulator.simulate(
-        built.initial_state, float(exp_time[-1]), dt
+        built.initial_state, float(exp_time[-1]), dt, pace_idle=False
     )
     runtime_snapshot = built.simulator.process_runtime.snapshot()
     process_stop_reason = runtime_snapshot["stop_reason"]["vehicle_1"]
@@ -294,9 +294,14 @@ def _write_markdown(path: Path, report: dict) -> None:
         "|---|---:|---:|---:|---:|",
     ]
     for name, stats in aggregate["metrics"].items():
+        standard_deviation = stats["standard_deviation"]
+        standard_deviation_text = (
+            f"{standard_deviation:.3f}"
+            if standard_deviation is not None else "n/a"
+        )
         lines.append(
             f"| {name} | {stats['mean']:.3f} | {stats['median']:.3f} | "
-            f"{stats['standard_deviation']:.3f} | {stats['mean_bootstrap_95_ci'][0]:.3f}–"
+            f"{standard_deviation_text} | {stats['mean_bootstrap_95_ci'][0]:.3f}–"
             f"{stats['mean_bootstrap_95_ci'][1]:.3f} |"
         )
     lines.extend([

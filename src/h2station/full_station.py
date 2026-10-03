@@ -352,8 +352,15 @@ class CascadeSupervisor:
 
     def __init__(self, parameters: CascadeSupervisorParameters | None = None) -> None:
         self.parameters = parameters or CascadeSupervisorParameters()
+        self.reset()
+
+    def reset(self) -> None:
+        self._dispatch_indices: dict[str, int] = {}
         self._recharge_index: int | None = None
         self._recharge_armed: list[bool] = []
+
+    def reset_dispatch(self, circuit_id: str = "primary") -> None:
+        self._dispatch_indices.pop(circuit_id, None)
 
     def select_dispatch_bank(
         self,
@@ -361,6 +368,8 @@ class CascadeSupervisor:
         gas_states: tuple[CompositeTankGasState, ...],
         downstream_pressure_pa: float,
         excluded_indices: frozenset[int] = frozenset(),
+        *,
+        circuit_id: str = "primary",
     ) -> int | None:
         minimum_pressure = (
             downstream_pressure_pa
@@ -373,10 +382,27 @@ class CascadeSupervisor:
         ]
         if not available:
             return None
-        return min(
+        previous = self._dispatch_indices.get(circuit_id)
+        if previous in available:
+            return previous
+        if previous is not None:
+            previous_target = banks[previous].parameters.target_pressure_pa
+            # A cascade fill advances from low to high pressure. Do not return
+            # to a lower bank when hose pressure falls during break-before-make;
+            # that feedback otherwise causes rapid bank-switch oscillation and
+            # can suppress nearly all delivered flow.
+            higher = [
+                index for index in available
+                if banks[index].parameters.target_pressure_pa >= previous_target
+            ]
+            if higher:
+                available = higher
+        selected = min(
             available,
             key=lambda index: banks[index].parameters.target_pressure_pa,
         )
+        self._dispatch_indices[circuit_id] = selected
+        return selected
 
     def select_recharge_bank(
         self,
@@ -635,13 +661,16 @@ class FullStationModel:
         )
         if dispatch_index is None:
             supply_index = int(np.argmax([gas.pressure_pa for gas in bank_gases]))
-            effective_command = replace(command, valve_opening=0.0)
         else:
             supply_index = dispatch_index
-            effective_command = replace(
-                command,
-                valve_opening=command.valve_opening * dispatch_valve_opening,
-            )
+        # The cascade outlet valve acts upstream of the hose. The dispenser
+        # nozzle remains controlled by the fueling command so trapped line-pack
+        # can discharge into the vehicle while banks switch.
+        effective_command = command
+        effective_primary_pcv_multiplier = (
+            primary_pcv_area_multiplier * dispatch_valve_opening
+            if dispatch_index is not None else 0.0
+        )
         dispatch_supply = SupplyState(
             bank_gases[supply_index].pressure_pa,
             bank_gases[supply_index].temperature_k,
@@ -652,7 +681,7 @@ class FullStationModel:
             effective_command,
             dispatch_supply,
             precooler_effectiveness_multiplier,
-            primary_pcv_area_multiplier,
+            effective_primary_pcv_multiplier,
             primary_nozzle_area_multiplier,
             primary_allow_reverse_flow,
         )
@@ -662,7 +691,7 @@ class FullStationModel:
             effective_command,
             dispatch_supply,
             precooler_effectiveness_multiplier,
-            primary_pcv_area_multiplier,
+            effective_primary_pcv_multiplier,
             primary_nozzle_area_multiplier,
             primary_allow_reverse_flow,
         )
@@ -681,13 +710,10 @@ class FullStationModel:
                 bank_gases[secondary_supply_index].pressure_pa,
                 bank_gases[secondary_supply_index].temperature_k,
             )
-            secondary_effective_command = replace(
-                secondary_command,
-                valve_opening=(
-                    secondary_command.valve_opening
-                    * secondary_dispatch_valve_opening
-                    if secondary_dispatch_index is not None else 0.0
-                ),
+            secondary_effective_command = secondary_command
+            effective_secondary_pcv_multiplier = (
+                secondary_pcv_area_multiplier * secondary_dispatch_valve_opening
+                if secondary_dispatch_index is not None else 0.0
             )
             secondary_instantaneous = (
                 self.secondary_partial_station._flow_and_thermal_states(
@@ -696,7 +722,7 @@ class FullStationModel:
                     secondary_effective_command,
                     secondary_supply,
                     precooler_effectiveness_multiplier,
-                    secondary_pcv_area_multiplier,
+                    effective_secondary_pcv_multiplier,
                     secondary_nozzle_area_multiplier,
                     secondary_allow_reverse_flow,
                 )
@@ -707,7 +733,7 @@ class FullStationModel:
                 secondary_effective_command,
                 secondary_supply,
                 precooler_effectiveness_multiplier,
-                secondary_pcv_area_multiplier,
+                effective_secondary_pcv_multiplier,
                 secondary_nozzle_area_multiplier,
                 secondary_allow_reverse_flow,
             )
@@ -783,6 +809,7 @@ class FullStationModel:
         measured_mass_flow = 0.0
         stop_reason = None
         self.valve_sequencer.reset()
+        self.supervisor.reset()
 
         while time_s <= duration_s:
             bank_gases = tuple(

@@ -59,6 +59,7 @@ class ReferenceScenario:
     target_vehicle_2_pressure_pa: float = 70.0e6
     average_pressure_ramp_rate_pa_s: float = 2.0e5
     delivery_temperature_k: float = 233.15
+    maximum_precooler_temperature_deviation_k: float = 15.0
     maximum_mass_flow_kg_s: float = 0.060
     risk_update_period_s: float = 1.0
     compressor_suction_pressure_pa: float = 20.0e6
@@ -113,8 +114,9 @@ def build_reference_scenario(
         config.vehicle_effective_volume_multiplier,
         config.vehicle_gas_liner_ua_multiplier,
         config.dispenser_flow_area_multiplier,
+        config.maximum_precooler_temperature_deviation_k,
     ) <= 0.0:
-        raise ValueError("vehicle tank fit multipliers must be positive")
+        raise ValueError("fit multipliers and precooler tolerance must be positive")
     vehicle_fit = CompositeTankFitParameters(
         effective_volume_multiplier=config.vehicle_effective_volume_multiplier,
         gas_liner_ua_multiplier=config.vehicle_gas_liner_ua_multiplier,
@@ -264,7 +266,14 @@ def build_reference_scenario(
         SafetyLimits(
             maximum_vehicle_pressure_pa=87.5e6,
             maximum_vehicle_temperature_k=358.15,
-            maximum_precooler_outlet_temperature_k=253.15,
+            # A fixed -20 °C trip is only appropriate for a T40-class request.
+            # Warm/slow public fills legitimately command warmer delivery gas;
+            # their safety limit must follow the requested temperature class.
+            maximum_precooler_outlet_temperature_k=max(
+                253.15,
+                config.delivery_temperature_k
+                + config.maximum_precooler_temperature_deviation_k,
+            ),
             maximum_flow_imbalance_kg_s=0.050,
             detector_alarm_volume_fraction=0.01,
             detector_trip_volume_fraction=0.02,
