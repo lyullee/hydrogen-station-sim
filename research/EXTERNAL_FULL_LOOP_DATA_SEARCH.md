@@ -659,6 +659,15 @@ time base, or a downloadable HRS fill trace in the inspected page. It is
 therefore retained as **VALUE_CHAIN_KPI_CONTEXT_ONLY** until the historical
 repository exposes the required channel-level records and reuse terms.
 
+The two linked report exports were also retrieved and inspected directly:
+[daily report 38](https://enagasrenovable.idboxrt.com/reports/api/ReportViewer/exportOpenPermalink/38?op=uBIKdfHvI&sg=3)
+(SHA-256 `06269271d5f954b7090d1522034c8fbaf982dc43d1b1f99e626dfc2b6b998e7a`)
+and [historical report 46](https://enagasrenovable.idboxrt.com/reports/api/ReportViewer/exportOpenPermalink/46?op=KvUKXujUk&sg=3)
+(SHA-256 `f8b089f25a73e775819b24ae428882f9a958d889b7ea0c515536d78265c57e00`).
+They contain H2-plant and tube-trailer KPI fields, while the HRS Provisional
+section has no populated pressure, dispenser, nozzle, vehicle, refuelling-time
+or SOC observations. The reports therefore cannot close the full-loop gate.
+
 ENDA describes an H2 MOBILITY monitoring deployment that records approximately
 75--400 technical parameters at 90 German stations and stores short-interval
 signals in time-series databases:

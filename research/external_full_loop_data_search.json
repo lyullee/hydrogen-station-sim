@@ -1325,7 +1325,21 @@
         {
           "id": "greenhysland_historical_data_repository",
           "url": "https://greenhysland.eu/data-collection-system/",
-          "finding": "The project page advertises historical standardised time-series downloads for assets across an island hydrogen value chain, but the inspected public page exposes no vehicle/receptacle refuelling logger, common pressure-temperature-mass-flow trace or reuse terms.",
+          "finding": "The project page advertises historical standardised time-series downloads for assets across an island hydrogen value chain. The linked report exports were retrieved as PDFs; they contain H2-plant and tube-trailer KPI fields, while the HRS Provisional section has no populated pressure, dispenser, nozzle, vehicle, refuelling-time or SOC observations.",
+          "report_exports": [
+            {
+              "url": "https://enagasrenovable.idboxrt.com/reports/api/ReportViewer/exportOpenPermalink/38?op=uBIKdfHvI&sg=3",
+              "sha256": "06269271d5f954b7090d1522034c8fbaf982dc43d1b1f99e626dfc2b6b998e7a",
+              "format": "PDF",
+              "bytes": 109778
+            },
+            {
+              "url": "https://enagasrenovable.idboxrt.com/reports/api/ReportViewer/exportOpenPermalink/46?op=KvUKXujUk&sg=3",
+              "sha256": "f8b089f25a73e775819b24ae428882f9a958d889b7ea0c515536d78265c57e00",
+              "format": "PDF",
+              "bytes": 131659
+            }
+          ],
           "decision": "VALUE_CHAIN_KPI_CONTEXT_ONLY"
         },
         {
