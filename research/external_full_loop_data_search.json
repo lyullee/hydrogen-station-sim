@@ -342,8 +342,24 @@
         "role": "external operating-range context",
         "exclusion_reason": "No synchronized pressure, temperature and mass-flow trace available from the public record."
       }
+    },
+    {
+      "id": "hasulyo_2026_hungarian_hrs_digital_twin",
+      "title": "Dynamic Digital Twin Network for Real-Time Safety Monitoring and Predictive Risk Assessment of Hydrogen Refueling Infrastructure",
+      "doi": "10.32604/ee.2026.081099",
+      "url": "https://doi.org/10.32604/ee.2026.081099",
+      "publisher": "University of Miskolc / Tech Science Press Energy Engineering",
+      "public_raw_data": false,
+      "decision": "REQUEST_DATA_LEGAL_RESTRICTION",
+      "inspection": {
+        "reported_scope": "Operational Hungarian HRS data with pressure, temperature, mass-flow and refueling comparisons",
+        "data_availability": "Supporting data not publicly available; paper cites participant agreement and legal restrictions",
+        "raw_common_timebase": false,
+        "role": "strong independent field-validation and data-request lead",
+        "exclusion_reason": "The published article explicitly states that supporting data are unavailable for legal and consent reasons."
+      }
     }
   ],
-  "next_action": "Request de-identified synchronized fill traces from CARB, JRC GasTeF, Cal State LA, Empa and DLR/FCH2RAIL before freezing a new full-loop holdout protocol; use Grune/Sempert for the separate ventilation protocol.",
+  "next_action": "Request de-identified synchronized fill traces from CARB, JRC GasTeF, Cal State LA, Empa, DLR/FCH2RAIL and the Hungarian HRS study author before freezing a new full-loop holdout protocol; use Grune/Sempert for the separate ventilation protocol.",
   "claim_limit": "No new external full-loop validation claim is permitted from the screened public materials."
 }

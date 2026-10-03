@@ -395,6 +395,19 @@
       "public_raw_data": false,
       "reported_scope": "Three years of operator logs from four 350-bar bus HRS, summarized as fill amount, duration, average flow, daily profile, utilization and availability.",
       "eligibility_note": "Useful external operating-range context, but aggregate station indicators lack the common-time-base pressure, temperature and mass-flow trace required for the full-loop gate."
+    },
+    "hasulyo_2026_hungarian_hrs_digital_twin": {
+      "title": "Dynamic Digital Twin Network for Real-Time Safety Monitoring and Predictive Risk Assessment of Hydrogen Refueling Infrastructure",
+      "author": "Gábor Hasulyó",
+      "publisher": "University of Miskolc / Tech Science Press Energy Engineering",
+      "landing_page": "https://doi.org/10.32604/ee.2026.081099",
+      "open_pdf": "https://file.techscience.com/files/onlinefirst/2026/5.21/TSP_EE_81099/TSP_EE_81099.pdf",
+      "doi": "10.32604/ee.2026.081099",
+      "license": "CC BY 4.0 article",
+      "reported_scope": "Operational data from an existing Hungarian HRS; pressure, temperature, mass-flow and refueling performance comparisons.",
+      "public_raw_data": false,
+      "data_availability_statement": "The paper states that supporting data are not publicly available because participants did not agree to sharing and because of legal restrictions.",
+      "eligibility_note": "Strong independent field-validation and data-request lead, but not a public raw validation set until de-identified traces and reuse permission are obtained."
     }
   }
 }
