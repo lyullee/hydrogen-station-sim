@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T20:32:58.762342+00:00",
+  "generated_at": "2026-10-03T20:41:26.779486+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 18,
+    "PASS": 19,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -507,6 +507,34 @@
         "mean_trip_sensor_coverage_fraction": 0.8087774294670846,
         "median_first_alarm_after_fill_start_s": 10.674999999995634,
         "median_first_trip_after_fill_start_s": 10.674999999995634
+      }
+    },
+    {
+      "id": "incident_playbook_public_evidence",
+      "status": "PASS",
+      "claim": "High-consequence playbooks expose the public HIAD 2.2 accident/near-miss source alongside standards guidance.",
+      "evidence": "src\\h2station\\data\\emergency_playbooks.json",
+      "requirement": "HIAD source URL and links on gas release, fire, overpressure, relief, fueling and hose response families; no efficacy claim.",
+      "observed": {
+        "hiad_source": {
+          "title": "European Commission JRC, European Hydrogen Incidents and Accidents Database (HIAD 2.2)",
+          "url": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt"
+        },
+        "linked_plan_ids": [
+          "compressor_thermal",
+          "external_fire",
+          "flow_anomaly",
+          "fueling_fault",
+          "gas_release",
+          "hose_connection",
+          "hydrogen_fire",
+          "isolation_failure",
+          "overpressure",
+          "precooling_fault",
+          "relief_discharge",
+          "supply_connection"
+        ],
+        "claim_boundary": "Incident taxonomy and public response-field provenance only; no quantitative effectiveness or probability claim."
       }
     },
     {

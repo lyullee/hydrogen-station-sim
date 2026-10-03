@@ -11,7 +11,8 @@ from h2station.hazop.response import (classify_rule, load_playbooks, prompt_guid
 
 def test_all_registered_sensor_rules_have_a_complete_response_plan():
     catalog = load_catalog()
-    plans = {plan["id"] for plan in load_playbooks()["plans"]}
+    playbooks = load_playbooks()
+    plans = {plan["id"] for plan in playbooks["plans"]}
     assert len(catalog["rules"]) == 214
     assert all(classify_rule(rule) in plans for rule in catalog["rules"])
     named = {rule["시나리오명"]: classify_rule(rule) for rule in catalog["rules"]}
@@ -26,6 +27,15 @@ def test_all_registered_sensor_rules_have_a_complete_response_plan():
     assert len(linked["plans"]) == 15
     assert len(linked["rule_mappings"]) == 214
     assert all(row["response_plan_id"] in plans for row in linked["rule_mappings"])
+
+
+def test_high_consequence_playbooks_link_public_incident_evidence():
+    playbooks = load_playbooks()
+    assert playbooks["sources"]["HIAD2026"]["url"].startswith("https://minerva.jrc.ec.europa.eu/")
+    by_id = {plan["id"]: plan for plan in playbooks["plans"]}
+    for plan_id in ("gas_release", "hydrogen_fire", "external_fire", "overpressure",
+                    "relief_discharge", "fueling_fault", "hose_connection"):
+        assert "HIAD2026" in by_id[plan_id]["sources"]
 
 
 def test_fire_selection_uses_actual_event_and_healthy_periodic_is_quiet():

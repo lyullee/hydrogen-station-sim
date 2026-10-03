@@ -28,6 +28,8 @@
 
 각 절차는 **판단 신호 → 즉시 조치 → 안정화 확인 → 복귀 조건 → 예방·안전관리** 구조다. `src/h2station/data/hazop.sqlite3`의 각 `rules.payload`에 `대응유형`, `비상대응_단계`, `안전관리_방안`, `대응근거_출처`를 추가했고 `response_actions` 테이블에서도 규칙 ID로 조회할 수 있다. `GET /api/hazop/emergency-responses`는 15개 공통 절차와 214개 규칙별 단계·출처를 반환한다. 센서 임계값과 운전 게이트는 변경하지 않았다.
 
+누출·화재·과압·충전·호스 대응 절차에는 유럽연합 JRC의 공개 **HIAD 2.2 실제 수소사고·준사고 데이터베이스** 링크도 근거 자료로 연결했다. HIAD는 34개 HRS 사건의 유형·설비·운전단계와 공개된 조치/교훈/개선조치 존재 여부를 제공하지만, 동기화된 센서 시계열이나 대응 효과의 정량적 검증 자료는 제공하지 않는다. 따라서 이 링크는 사고 유형과 대응 항목의 실제 발생 근거를 보여주는 용도이며, 특정 현장 조치의 유효성이나 사고확률을 의미하지 않는다.
+
 `PYTHONPATH=src python scripts/enrich_hazop_responses.py`로 원본 규칙 정의를 보존한 채 대응 단계만 재생성할 수 있다. 규칙별 문장은 공통 절차에 설비 위치, 센서 태그, 비교식, 지속시간, 복귀조건과 누출·화재·과압 등 유형별 확인 항목을 결합한다. 같은 대응 유형에 속한 여러 시나리오도 별도의 규칙 ID와 단계로 남는다.
 
 ## SAGA 연동
@@ -48,5 +50,6 @@
 - [US DOE 안전 운전](https://www.energy.gov/cmei/fuels/current-safe-operating-practices)은 불활성 퍼지, 환기, 화염 검지 등의 원칙에 참고했다.
 - [US DOT/PHMSA ERG 2024 Guide 115](https://www.phmsa.dot.gov/sites/phmsa.dot.gov/files/2024-04/ERG2024-Eng-Web-a.pdf)는 운송 중 가연성 가스 비상대응 자료다. 고정 충전소의 격리거리나 법적 요구사항으로 전용하지 않았다.
 - [H2Tools 충전소 안전 실무](https://h2tools.org/bestpractices/gaseous-gh2-and-liquid-hydrogen-lh2-fueling-stations), [기체 수소 화재](https://h2tools.org/bestpractices/dealing-with-incidents/fire-protection-and-suppression/gaseous-hydrogen-fires), [화염검지](https://h2tools.org/bestpractices/hydrogen-properties-and-leak-detection-considerations/flame-detection)는 트레일러·저장·디스펜서의 격리와 화염 확인 단계에 반영했다.
+- [JRC HIAD 2.2](https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt)는 실제 HRS 사고·준사고 유형, 운전단계와 공개된 조치·교훈·개선조치의 존재 여부를 확인하는 사고 근거로 연결했다. 원자료의 사건 서술은 전문가 평가용 holdout에 누출되지 않도록 별도로 관리한다.
 
 개별 절차의 문장은 위 자료의 원칙을 설비·신호 맥락에 맞게 작성한 **프로젝트 운영안**이다. 특정 압력 설정값, 법정 이격거리, 수동 밸브 조작 순서 등을 새로운 표준 요구사항처럼 제시하지 않는다. 실제 적용 전 현장 책임자, 설비 제작사, 안전관리자 및 관할 소방과 대조·승인해야 한다.

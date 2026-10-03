@@ -321,6 +321,36 @@ def audit(root: Path) -> dict[str, object]:
         detector_aggregate if detector_logic else "missing; detector-logic replay has not completed",
     ))
 
+    playbook_path = root / "src/h2station/data/emergency_playbooks.json"
+    playbooks = _json(playbook_path)
+    playbook_sources = (playbooks or {}).get("sources") or {}
+    incident_plan_ids = {
+        "gas_release", "hydrogen_fire", "external_fire", "overpressure",
+        "relief_discharge", "fueling_fault", "hose_connection",
+    }
+    linked_plan_ids = {
+        str(plan.get("id")) for plan in (playbooks or {}).get("plans", [])
+        if "HIAD2026" in (plan.get("sources") or [])
+    }
+    incident_grounding_pass = bool(
+        playbook_sources.get("HIAD2026", {}).get("url")
+        == "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt"
+        and incident_plan_ids.issubset(linked_plan_ids)
+        and len((playbooks or {}).get("plans", [])) == 15
+    )
+    gates.append(_gate(
+        "incident_playbook_public_evidence",
+        "PASS" if incident_grounding_pass else ("FAIL" if playbooks else "PENDING"),
+        "High-consequence playbooks expose the public HIAD 2.2 accident/near-miss source alongside standards guidance.",
+        str(playbook_path.relative_to(root)),
+        "HIAD source URL and links on gas release, fire, overpressure, relief, fueling and hose response families; no efficacy claim.",
+        {
+            "hiad_source": playbook_sources.get("HIAD2026"),
+            "linked_plan_ids": sorted(linked_plan_ids),
+            "claim_boundary": "Incident taxonomy and public response-field provenance only; no quantitative effectiveness or probability claim.",
+        } if playbooks else "missing; emergency playbook source unavailable",
+    ))
+
     preslhy_path = root / "research/preslhy_blowdown_external_validation.json"
     preslhy = _json(preslhy_path)
     preslhy_protocol_path = root / "research/preslhy_blowdown_validation_protocol.json"
