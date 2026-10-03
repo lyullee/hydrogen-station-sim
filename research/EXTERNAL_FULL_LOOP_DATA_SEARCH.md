@@ -680,3 +680,42 @@ alone.
 
 The new search did not identify a downloadable untouched full-loop HRS archive;
 the numerical validation gate and the associated request list remain open.
+
+## 2026-10-04 component datasets and station-protocol follow-up
+
+The newly located [MHC Dataset](https://github.com/LukasFleming/MHC-Dataset)
+and its [Zenodo record](https://zenodo.org/records/19036733) provide 29
+two-stage metal-hydride compressor experiments under CC BY 4.0. The workbooks
+contain raw and processed pressure, temperature and hydrogen mass-flow channels.
+They are useful for a separately scoped compressor-component screen, but the
+apparatus is not the positive-displacement/cascade HRS model in this repository
+and has no dispenser, receptacle, vehicle tank or J2601 transaction trace. It is
+therefore classified as **COMPRESSOR_COMPONENT_CONTEXT_ONLY** and is not added
+to the full-loop holdout.
+
+The public [HSR-Rig-Project](https://github.com/gadoseb/HSR-Rig-Project) also
+describes timestamped laboratory logs with hydrogen flow, temperature, pressure,
+cumulative hydrogen and absorption/desorption markers. Its metal-hydride
+storage-reactor scope does not include station dispensing or a vehicle-side
+receptacle, so it is retained as **STORAGE_REACTOR_CONTEXT_ONLY**.
+
+The Zenodo PDF for the South African metal-hydride station
+([Lototskyy et al., DOI 10.1016/j.ijhydene.2019.05.133](https://doi.org/10.1016/j.ijhydene.2019.05.133))
+reports 50--60 bar feed, a 200 bar compressor, 6--15 minute dispensing and
+13--28 kg/day throughput. The public item is a report with plots and summary
+values, not a synchronized machine-readable logger, so it is recorded as
+**REPORT_CONTEXT_AND_DATA_REQUEST_LEAD**; figures are not digitised for the
+primary claim.
+
+The official [Cal State LA operating sequence](https://www.calstatela.edu/ecst/h2station/operation)
+documents storage-equilibrium compressor start, periodic 3000 psi leak-test
+pauses and chilled dispensing targets near −17 to −20 °C. It is retained as
+**OPERATING_PROTOCOL_CONTEXT_ONLY** because no downloadable synchronized
+pressure--temperature--mass-flow archive is exposed.
+
+These sources improve component and operating-procedure coverage but do not
+close the independent station-to-vehicle full-loop gate. The repository keeps
+that numerical claim open until an untouched raw archive with common time base,
+vehicle/receptacle pressure, transferred mass or mass flow, units, initial
+conditions, protocol metadata, provenance and reuse terms is received and
+frozen before scoring.

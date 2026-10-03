@@ -1353,6 +1353,68 @@
       "next_action": "Request de-identified station and vehicle logger exports, channel dictionary, quality flags, protocol version, provenance and permission to publish derived metrics.",
       "claim_limit": "Do not promote value-chain KPI descriptions or a monitoring-system description to numerical fueling validation or accident-response effectiveness evidence."
     },
+    "component_dataset_and_station_protocol_followup": {
+      "scope": "screening newly located public component datasets and official station operating documentation for validation value without misclassifying them as full-loop HRS holdouts",
+      "sources": [
+        {
+          "id": "mhc_dataset_zenodo_19036733",
+          "title": "MHC Dataset: experimental two-stage metal-hydride compressor measurements",
+          "url": "https://zenodo.org/records/19036733",
+          "repository": "https://github.com/LukasFleming/MHC-Dataset",
+          "doi": "10.5281/zenodo.19036733",
+          "license": "CC BY 4.0",
+          "inspection": {
+            "experiment_workbook_count": 29,
+            "sample_workbook": "Dataset/Experiment 1.xlsx",
+            "sample_workbook_sha256": "350af6df65d7fa97b94be527ad174f2bf52a1dc33a4dc35c2696a1a8eef4b9fe",
+            "sample_workbook_bytes": 12528398,
+            "sheets": [
+              "Sensor Overview",
+              "Cycle Definition Exp.1",
+              "Cycle Data Exp.1",
+              "Heat Balance Exp.1",
+              "Summary Exp.1"
+            ],
+            "measured_channels": [
+              "stage pressure",
+              "stage temperature",
+              "hydrogen mass flow"
+            ]
+          },
+          "finding": "The public release contains 29 experiment workbooks with raw and processed temperature, pressure and hydrogen mass-flow measurements for a two-stage metal-hydride compressor. The files are component experiments, not a positive-displacement/cascade HRS connected to a dispenser and vehicle.",
+          "decision": "COMPRESSOR_COMPONENT_CONTEXT_ONLY",
+          "claim_limit": "Use for compressor heat/pressure response design checks or a separately adapted component model only; do not score it as station-to-vehicle fueling validation."
+        },
+        {
+          "id": "hsr_rig_project_github",
+          "title": "HSR-Rig-Project public metal-hydride storage reactor logs",
+          "url": "https://github.com/gadoseb/HSR-Rig-Project",
+          "finding": "The repository documents text logs with timestamps, hydrogen flow, temperature, pressure, cumulative transferred hydrogen and absorption/desorption markers. The apparatus is a laboratory metal-hydride storage reactor and has no HRS dispenser, receptacle, vehicle tank or SAE J2601 transaction trace.",
+          "decision": "STORAGE_REACTOR_CONTEXT_ONLY",
+          "claim_limit": "Use only for storage-reactor state and sensor-schema context; do not treat it as an independent HRS full-loop holdout."
+        },
+        {
+          "id": "lototskyy_2020_mh_hrs_zenodo_pdf",
+          "title": "Hydrogen refuelling station with integrated metal hydride compressor",
+          "url": "https://zenodo.org/record/3582985/files/Hydrogen%20refuelling%20station%20with%20integrated%20metal.pdf",
+          "doi": "10.1016/j.ijhydene.2019.05.133",
+          "finding": "The paper describes an operating South African HRS with 50–60 bar feed, a 200 bar compressor, 6–15 minute dispensing and 13–28 kg/day throughput. The public Zenodo item is a PDF with plots and operating summaries; no synchronized machine-readable station-to-vehicle logger was located.",
+          "decision": "REPORT_CONTEXT_AND_DATA_REQUEST_LEAD",
+          "claim_limit": "Use for face-validity and data-request targeting only; do not digitize plots into the primary validation claim."
+        },
+        {
+          "id": "cal_state_la_operation_protocol",
+          "title": "Cal State LA hydrogen station operating sequence",
+          "url": "https://www.calstatela.edu/ecst/h2station/operation",
+          "finding": "The official operating page documents storage-equilibrium compressor start, periodic 3000 psi leak-test pauses and chilled dispensing targets near −17 to −20 °C. It is an operating-procedure reference without a downloadable synchronized pressure, temperature and mass-flow archive.",
+          "decision": "OPERATING_PROTOCOL_CONTEXT_ONLY",
+          "claim_limit": "Use to cross-check scenario sequencing and test design; do not treat the page as numerical external validation."
+        }
+      ],
+      "result": "The newly located public releases improve component-level and protocol-context coverage, but none provides an untouched station-to-vehicle pressure–temperature–mass-flow time series. The independent full-loop numerical gate remains open.",
+      "next_action": "Request the MHC raw-workbook reuse metadata for a separately scoped compressor component screen, and request the Lototskyy, Cal State LA and HSR-Rig custodians for synchronized station or component logger exports before any new holdout is frozen.",
+      "claim_limit": "Keep component validation, operating-procedure context and full-loop HRS validation as separate claims. No source in this review closes the full-loop gate or supports an effectiveness claim for SAGA responses."
+    },
     "claim_limit": "Do not use article figures, aggregate event summaries or static inventories as primary full-loop numerical validation. Promote a source only after de-identified raw files, metadata, reuse terms and a pre-access freeze are recorded."
   },
   "last_reviewed": "2026-10-04"
