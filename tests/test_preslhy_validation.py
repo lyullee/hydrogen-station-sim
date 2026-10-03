@@ -29,6 +29,10 @@ def _workbook_bytes() -> bytes:
     temperature.append(["Synchronized Time [s]", "T1 [degC]", "T2 [degC]", "T3 [degC]"])
     for time_s in np.linspace(-0.5, 1.0, 31):
         temperature.append([float(time_s), 20.0, 21.0, 22.0])
+    ambient = workbook.create_sheet("20190101_010101-cH2-Amb")
+    ambient.append(["Synchronized Time [s]", "Ambient pressure [hPa]"])
+    for time_s in np.linspace(-5.0, 1.0, 13):
+        ambient.append([float(time_s), 1005.0])
     output = BytesIO()
     workbook.save(output)
     return output.getvalue()
@@ -44,6 +48,8 @@ def test_preslhy_reader_uses_synchronised_pves_and_internal_temperature():
     assert trace.case_id == "20190101_010101"
     assert trace.initial_temperature_k == pytest.approx(294.15)
     assert trace.temperature_substituted is False
+    assert trace.ambient_pressure_pa == pytest.approx(100_500.0)
+    assert trace.ambient_pressure_substituted is False
     assert trace.pressure_unit_interpretation == "header_gauge_plus_standard_ambient"
     assert trace.initial_pressure_pa == pytest.approx(101.01325e5)
     time_s, pressure = eligible_pressure_window(trace)

@@ -167,6 +167,62 @@ def _initial_temperature(workbook, case_prefix: str) -> tuple[float, bool]:
     return 293.15, True
 
 
+def _ambient_pressure(workbook, case_prefix: str) -> tuple[float, bool]:
+    candidates = [
+        sheet for sheet in workbook.worksheets
+        if case_prefix in sheet.title and (
+            "amb" in sheet.title.lower() or "ch2" in sheet.title.lower()
+        )
+    ]
+    for sheet in candidates:
+        try:
+            header_row, headers, normalised = _find_header(
+                sheet, ("synchronizedtime",)
+            )
+        except ValueError:
+            continue
+        time_column = _column_containing(normalised, "synchronizedtime")
+        pressure_columns = [
+            index for index, header in enumerate(normalised)
+            if (
+                ("ambient" in header or "pamb" in header or "airpressure" in header)
+                and ("pressure" in header or "pamb" in header)
+            )
+        ]
+        for pressure_column in pressure_columns:
+            samples = [
+                pressure
+                for time_s, pressure in _numeric_rows(
+                    sheet, header_row, (time_column, pressure_column)
+                )
+                if -5.0 <= time_s < 0.0
+            ]
+            if not samples:
+                continue
+            value = float(np.median(samples))
+            header = str(headers[pressure_column] or "").lower()
+            normal = _normalise(header)
+            if "hpa" in normal or "mbar" in normal:
+                pressure_pa = value * 100.0
+            elif "kpa" in normal:
+                pressure_pa = value * 1000.0
+            elif "bar" in normal:
+                pressure_pa = value * 1.0e5
+            elif re.search(r"(?:^|[^a-z])pa(?:[^a-z]|$)", header):
+                pressure_pa = value
+            elif 800.0 <= value <= 1200.0:
+                pressure_pa = value * 100.0
+            elif 80.0 <= value <= 120.0:
+                pressure_pa = value * 1000.0
+            elif 0.8 <= value <= 1.2:
+                pressure_pa = value * 1.0e5
+            else:
+                continue
+            if 80_000.0 <= pressure_pa <= 120_000.0:
+                return pressure_pa, False
+    return 101_325.0, True
+
+
 def read_preslhy_workbook(
     payload: bytes,
     *,
@@ -198,6 +254,9 @@ def read_preslhy_workbook(
             raise ValueError("fewer than 20 unique pressure timestamps")
         case_prefix = PurePosixPath(source_member).stem.split("-")[0]
         temperature_k, substituted = _initial_temperature(workbook, case_prefix)
+        ambient_pressure_pa, ambient_substituted = _ambient_pressure(
+            workbook, case_prefix
+        )
         return PreslhyTrace(
             case_id=PurePosixPath(source_member).stem,
             source_package=source_package,
@@ -206,10 +265,10 @@ def read_preslhy_workbook(
             time_s=time_s,
             pressure_bar_abs=pressure,
             initial_temperature_k=temperature_k,
-            ambient_pressure_pa=101_325.0,
+            ambient_pressure_pa=ambient_pressure_pa,
             pressure_unit_interpretation=unit,
             temperature_substituted=substituted,
-            ambient_pressure_substituted=True,
+            ambient_pressure_substituted=ambient_substituted,
         )
     finally:
         workbook.close()
@@ -281,10 +340,7 @@ def simulate_preslhy_blowdown(
     )
     ambient = trace.ambient_pressure_pa
 
-    peak_flow = 0.0
-
     def derivative(_time, vector):
-        nonlocal peak_flow
         state = CascadeBankState.from_vector(vector)
         gas = bank.gas_state(state)
         if gas.pressure_pa <= ambient * 1.000001:
@@ -294,7 +350,6 @@ def simulate_preslhy_blowdown(
             LeakSourceState(gas.pressure_pa, gas.temperature_k, ambient),
         )
         flow = min(flow, state.hydrogen_mass_kg / 1.0e-3)
-        peak_flow = max(peak_flow, flow)
         return np.asarray([-flow, -flow * gas.specific_enthalpy_j_kg, 0.0])
 
     end_time = float(evaluation_time_s[-1])
@@ -309,13 +364,23 @@ def simulate_preslhy_blowdown(
     )
     if not solution.success:
         raise RuntimeError(f"PRESLHY integration failed: {solution.message}")
-    pressure_nodes = np.asarray([
-        bank.gas_state(CascadeBankState.from_vector(solution.y[:, index])).pressure_pa
+    node_states = [
+        bank.gas_state(CascadeBankState.from_vector(solution.y[:, index]))
         for index in range(solution.y.shape[1])
-    ])
+    ]
+    pressure_nodes = np.asarray([state.pressure_pa for state in node_states])
+    node_flows = [
+        leak.mass_flow_kg_s(
+            scenario,
+            LeakSourceState(state.pressure_pa, state.temperature_k, ambient),
+        )
+        if state.pressure_pa > ambient * 1.000001
+        else 0.0
+        for state in node_states
+    ]
     predicted = np.interp(evaluation_time_s, solution.t, pressure_nodes)
     mass = np.interp(evaluation_time_s, solution.t, solution.y[0])
-    return predicted, mass, np.asarray([peak_flow])
+    return predicted, mass, np.asarray([max(node_flows, default=0.0)])
 
 
 def _crossing_time(time_s: np.ndarray, pressure_pa: np.ndarray, target_pa: float) -> float:

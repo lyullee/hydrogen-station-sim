@@ -26,6 +26,12 @@ JSON protocol before numerical workbook access. Eligible cases that encounter
 a model/integration error are retained as primary-screen failures; they are not
 converted into data exclusions.
 
+A second pre-outcome code review corrected two implementation details without
+changing the primary screens: measured ambient pressure in `cH2-Amb` is used
+when available, and the secondary peak-flow value is calculated from accepted
+integration states rather than rejected solver trial states. Revision 2 hashes
+are the operative validation implementation.
+
 ## Purpose
 
 This experiment evaluates the safety twin's source depletion and hydrogen

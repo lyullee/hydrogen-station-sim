@@ -15,6 +15,12 @@
       "outcomes_accessed": false,
       "change": "Fixed pressure-basis inference, significant-increase tolerance, pressure strata and bootstrap seed before numerical workbook access.",
       "basis": "The technical report specifies a 250 bar WIKA S-20 pressure sensor with less than 0.125 percent full-scale non-linearity; the workbook structure, but no numerical outcome, was available from the report."
+    },
+    {
+      "date": "2026-10-03",
+      "outcomes_accessed": false,
+      "change": "Implemented the protocol's measured-ambient-pressure preference and calculated peak flow only from accepted integration states.",
+      "basis": "Pre-outcome code review found that the first adapter revision always substituted standard atmosphere and allowed rejected solver trial states to influence a secondary peak-flow value."
     }
   ],
   "objective": "Externally evaluate the digital twin's ambient-temperature high-pressure hydrogen release and inventory-depletion physics against PRESLHY E3.1 DisCha experiments.",
@@ -52,8 +58,9 @@
     "case_specific_fitting_permitted": false
   },
   "validation_implementation_pre_outcome": {
+    "revision": 2,
     "files_sha256": {
-      "src/h2station/preslhy_validation.py": "43fa30e271360f44ca3047d19b84dcf0a5e12b56f27e135af74716eccc886f48",
+      "src/h2station/preslhy_validation.py": "80ed6c8df8f1b6aabb70db9551b73fb31784ee520b61d2f7e91a75e3f48c280c",
       "scripts/run_preslhy_blowdown_validation.py": "da31f4518bab4f8e271ddce5b43a754df9f04da1525d6f4dc080d2ed1ecf5631"
     },
     "outcomes_accessed_when_hashed": false
