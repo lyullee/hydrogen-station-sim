@@ -66,6 +66,25 @@
       }
     },
     {
+      "id": "zhao_2020_cn_35_70_mpa_dispenser",
+      "title": "35 MPa/70 MPa hydrogen dispenser field performance tests",
+      "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
+      "publisher": "Energy Storage Science and Technology",
+      "public_raw_data": false,
+      "decision": "SUMMARY_BENCHMARK_REQUEST_RAW_TRACE",
+      "inspection": {
+        "reported_scope": "Real-station 35 MPa logistics-vehicle and 70 MPa passenger-vehicle refuelling tests.",
+        "reported_endpoints": [
+          "35 MPa: 8.21 kg in 470 s",
+          "70 MPa: 5.08 kg in 276 s, reported peak mass flow 36 g/s"
+        ],
+        "downloaded_files": "T1.csv.zip through T4.csv.zip; initial/final summary tables only",
+        "raw_common_timebase": "not public",
+        "role": "Independent operating-range and face-validity benchmark; request original synchronized logger export and reuse terms.",
+        "exclusion_reason": "The article reports plotted pressure/temperature/flow curves but does not expose the underlying common-time-base arrays."
+      }
+    },
+    {
       "id": "nrel_h2fills",
       "title": "H2FillS: Hydrogen Filling Simulation",
       "url": "https://www.nrel.gov/hydrogen/h2fills",
@@ -651,6 +670,11 @@
         "id": "carb_hystep_2015_2017",
         "url": "https://www.energy.ca.gov/sites/default/files/2021-05/CEC-600-2019-014.pdf",
         "finding": "CEC HyStEP report documents 11 station campaigns with three instrumented Type IV 70 MPa tanks, protocol/fault/communication tests and pressure/temperature/fueling measurements; it explicitly states station test data and results are confidential and not included, so retain as a data-request lead only."
+      },
+      {
+        "id": "zhao_2020_cn_35_70_mpa_dispenser",
+        "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
+        "finding": "Real-station 35/70 MPa fill study exposes four CSV downloads containing only initial/final summary tables; reported pressure/temperature/flow plots lack a downloadable common-time-base trace, so retain as a summary benchmark and raw-trace request lead."
       },
       {
         "id": "h2_stations_export_api",
