@@ -1415,6 +1415,40 @@
       "next_action": "Request the MHC raw-workbook reuse metadata for a separately scoped compressor component screen, and request the Lototskyy, Cal State LA and HSR-Rig custodians for synchronized station or component logger exports before any new holdout is frozen.",
       "claim_limit": "Keep component validation, operating-procedure context and full-loop HRS validation as separate claims. No source in this review closes the full-loop gate or supports an effectiveness claim for SAGA responses."
     },
+    "bam_and_synthetic_anomaly_followup": {
+      "scope": "screening the BAM research station data programme and newly published anomaly-detection datasets for accessible raw field traces",
+      "sources": [
+        {
+          "id": "bam_h2safety_living_lab_data_programme",
+          "title": "BAM H2Safety@BAM digitally monitored research refuelling station",
+          "url": "https://www.bam.de/Content/EN/Standard-Articles/Topics/Energy/Hydrogen/hydrogen-h2-filling-stations.html?nn=83556",
+          "finding": "BAM states that its living lab records compressor, buffer-storage, gas-cooler and dispenser operating data with sensor uncertainty and metadata for model and digital-twin development. The public page exposes the facility and intended data infrastructure, but no downloadable synchronized station-to-vehicle logger or reuse terms.",
+          "decision": "REQUEST_DATA_HIGH_VALUE_FIELD_LIVING_LAB",
+          "claim_limit": "Use as a named custodian and data-request lead only; the programme description is not a public numerical holdout."
+        },
+        {
+          "id": "kim_2026_bam_anomaly_platform",
+          "title": "Data-Driven Intelligent Analysis System for Monitoring and Anomaly Detection in Hydrogen Refueling Station",
+          "doi": "10.3390/app16157856",
+          "url": "https://www.mdpi.com/2076-3417/16/15/7856",
+          "finding": "The paper reports three days of one-second BAM demonstration-station normal data downsampled to one minute, plus semi-synthetic spike, drift and noise injections. The article does not expose the underlying sensor files or an open synchronized logger archive.",
+          "decision": "REPORT_CONTEXT_AND_DATA_REQUEST_LEAD",
+          "claim_limit": "It is useful for anomaly-detection protocol comparison and a BAM data request, but the reported normal traces and injected faults cannot be counted as an independent raw full-loop validation set."
+        },
+        {
+          "id": "h2_simnet_zenodo_17871393",
+          "title": "H2-SimNet Dataset: simulation-based hydrogen-blend transport anomaly data",
+          "url": "https://zenodo.org/records/17871393",
+          "doi": "10.5281/zenodo.17871393",
+          "finding": "The open 509 MB release contains multivariate simulation time series for hydrogen-blend transport networks with leak, compressor-fault and overlapping-anomaly labels. It is explicitly generated from a MATLAB/Simscape model and is not measured HRS data.",
+          "decision": "SIMULATION_CONTEXT_ONLY",
+          "claim_limit": "Permitted for software pipeline or anomaly-method stress tests only; simulator-generated traces cannot close the independent physical full-loop gate."
+        }
+      ],
+      "result": "BAM is a credible high-value field-data custodian, but the public pages and paper do not release the synchronized files needed for an independent HRS holdout. The newly identified anomaly dataset is explicitly simulated and remains outside the physical-validation claim.",
+      "next_action": "Send a controlled-access request to BAM for de-identified station/dispenser/vehicle logs, channel dictionary, uncertainty and calibration metadata, protocol versions and reuse terms; preserve a pre-access scoring freeze before evaluation.",
+      "claim_limit": "Do not represent a facility description, a paper's unshared normal traces or a simulated anomaly benchmark as public measured full-loop evidence."
+    },
     "claim_limit": "Do not use article figures, aggregate event summaries or static inventories as primary full-loop numerical validation. Promote a source only after de-identified raw files, metadata, reuse terms and a pre-access freeze are recorded."
   },
   "last_reviewed": "2026-10-04"
