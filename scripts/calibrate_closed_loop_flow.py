@@ -20,7 +20,10 @@ from run_h2protocol_validation import _read_csv, _run_case_file
 
 
 DEVELOPMENT_LAB_TESTS = frozenset((1, 4, 11, 13, 19, 22, 29, 31))
-CANDIDATES = (1.0, 1.25, 1.5, 1.75)
+# The original 1.0--1.75 grid improved monotonically and selected its upper
+# bound after the active-fill parser correction. The extended values are an
+# explicitly adaptive development search; they are not confirmatory evidence.
+CANDIDATES = (1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5)
 
 
 def _score(rows: list[dict]) -> float:
@@ -119,6 +122,10 @@ def main() -> int:
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "development_lab_test_numbers": sorted(DEVELOPMENT_LAB_TESTS),
         "exploratory_case_excluded": "H2P-L06",
+        "selection_timing": (
+            "adaptive development search after the original grid selected its "
+            "upper bound; not external validation"
+        ),
         "confirmatory_lab_test_numbers": [3, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36],
         "tank_fit_source": str(args.tank_validation_json),
         "tank_fit": tank_fit,
