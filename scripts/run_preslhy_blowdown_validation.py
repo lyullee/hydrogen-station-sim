@@ -60,6 +60,45 @@ def _json_safe(value):
     return value
 
 
+def _evaluate_or_retain_failure(trace) -> dict[str, object]:
+    """Evaluate one eligible trace without dropping negative model outcomes."""
+    try:
+        result = evaluate_preslhy_trace(trace)
+    except Exception as exc:
+        record: dict[str, object] = {
+            "case_id": trace.case_id,
+            "nozzle_diameter_mm": trace.nozzle_diameter_mm,
+            "initial_pressure_bar_abs": trace.initial_pressure_pa / 1.0e5,
+            "samples": None,
+            "pressure_rmse_bar": None,
+            "pressure_mae_bar": None,
+            "pressure_nrmse_percent_initial_absolute_pressure": None,
+            "experimental_time_to_50_percent_gauge_s": None,
+            "predicted_time_to_50_percent_gauge_s": None,
+            "time_to_50_percent_gauge_relative_error_percent": None,
+            "pressure_screen_pass": False,
+            "half_time_screen_pass": False,
+            "joint_primary_screen_pass": False,
+            "peak_mass_flow_kg_s": None,
+            "cumulative_released_mass_kg": None,
+            "evaluation_error": f"{type(exc).__name__}: {exc}",
+        }
+    else:
+        record = asdict(result)
+    record.update({
+        "source_package": trace.source_package,
+        "source_member": trace.source_member,
+        "initial_temperature_k": trace.initial_temperature_k,
+        "temperature_substituted": trace.temperature_substituted,
+        "ambient_pressure_substituted": trace.ambient_pressure_substituted,
+        "pressure_unit_interpretation": trace.pressure_unit_interpretation,
+        "pressure_group": _pressure_group(
+            float(record["initial_pressure_bar_abs"])
+        ),
+    })
+    return record
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -118,39 +157,7 @@ def main() -> int:
                         "reason": f"{type(exc).__name__}: {exc}",
                     })
                     continue
-                try:
-                    result = evaluate_preslhy_trace(trace)
-                except Exception as exc:
-                    record = {
-                        "case_id": trace.case_id,
-                        "nozzle_diameter_mm": trace.nozzle_diameter_mm,
-                        "initial_pressure_bar_abs": trace.initial_pressure_pa / 1.0e5,
-                        "samples": None,
-                        "pressure_rmse_bar": None,
-                        "pressure_mae_bar": None,
-                        "pressure_nrmse_percent_initial_absolute_pressure": None,
-                        "experimental_time_to_50_percent_gauge_s": None,
-                        "predicted_time_to_50_percent_gauge_s": None,
-                        "time_to_50_percent_gauge_relative_error_percent": None,
-                        "pressure_screen_pass": False,
-                        "half_time_screen_pass": False,
-                        "joint_primary_screen_pass": False,
-                        "peak_mass_flow_kg_s": None,
-                        "cumulative_released_mass_kg": None,
-                        "evaluation_error": f"{type(exc).__name__}: {exc}",
-                    }
-                else:
-                    record = asdict(result)
-                record.update({
-                    "source_package": trace.source_package,
-                    "source_member": trace.source_member,
-                    "initial_temperature_k": trace.initial_temperature_k,
-                    "temperature_substituted": trace.temperature_substituted,
-                    "ambient_pressure_substituted": trace.ambient_pressure_substituted,
-                    "pressure_unit_interpretation": trace.pressure_unit_interpretation,
-                    "pressure_group": _pressure_group(result.initial_pressure_bar_abs),
-                })
-                cases.append(record)
+                cases.append(_evaluate_or_retain_failure(trace))
 
     diameter_groups = {case["nozzle_diameter_mm"] for case in cases}
     pressure_groups = {case["pressure_group"] for case in cases}

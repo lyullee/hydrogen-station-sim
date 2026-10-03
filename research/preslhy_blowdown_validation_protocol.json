@@ -28,6 +28,13 @@
       "numerical_model_outcomes_computed": false,
       "change": "Corrected header discovery to join the publisher's row 1 sensor labels with row 4 units and row 6 synchronized data-column labels.",
       "basis": "All four D05 workbooks failed structural parsing because Pves and Time [s] occupy different header rows. Only sheet names and string-valued cells in rows 1-15 were printed; no pressure values, error metrics or model predictions were reviewed."
+    },
+    {
+      "date": "2026-10-03",
+      "raw_workbook_structure_accessed": true,
+      "numerical_model_outcomes_computed": false,
+      "change": "Corrected the negative-result retention path so an eligible model or integration failure is recorded as a failed case instead of aborting the validation run.",
+      "basis": "Pre-outcome failure-path review found a reference to an unset successful-result object after an evaluation exception. The fixed record derives the pressure group from the retained case pressure and leaves all primary screens false."
     }
   ],
   "objective": "Externally evaluate the digital twin's ambient-temperature high-pressure hydrogen release and inventory-depletion physics against PRESLHY E3.1 DisCha experiments.",
@@ -44,8 +51,16 @@
     "technical_report_url": "https://preslhy.eu/wp-content/uploads/sites/3/2019/07/PRESLHY_D3_4_E3P1A_DisCha_190723.pdf",
     "technical_report_sha256": "27872e8f8f1dc51396e8759c77b32b3799039a91d2d7172c8f6df186a6402fe8",
     "facility_internal_volume_m3": 0.002815,
-    "published_nozzle_diameters_mm": [0.5, 1.0, 2.0, 4.0],
-    "published_initial_pressure_range_bar": [5, 200],
+    "published_nozzle_diameters_mm": [
+      0.5,
+      1.0,
+      2.0,
+      4.0
+    ],
+    "published_initial_pressure_range_bar": [
+      5,
+      200
+    ],
     "outcomes_accessed_before_freeze": false,
     "prior_information_seen": "The public technical report, its summary plots and experiment matrices were inspected. No numerical Excel outcome file from the archive was opened before this protocol was frozen."
   },
@@ -65,10 +80,10 @@
     "case_specific_fitting_permitted": false
   },
   "validation_implementation_pre_outcome": {
-    "revision": 3,
+    "revision": 4,
     "files_sha256": {
       "src/h2station/preslhy_validation.py": "3b5fe2149c1f5374e89cdabfed90074d0b9b0b2c33aa091526615d8d4f094673",
-      "scripts/run_preslhy_blowdown_validation.py": "da31f4518bab4f8e271ddce5b43a754df9f04da1525d6f4dc080d2ed1ecf5631"
+      "scripts/run_preslhy_blowdown_validation.py": "3271de0a656bb6b586ff4a1a861ea15071feaa429c51b43df8192221be265924"
     },
     "raw_workbook_structure_accessed_when_hashed": true,
     "numerical_model_outcomes_computed_when_hashed": false
@@ -155,7 +170,11 @@
     "negative_result_policy": "A failed screen remains a publishable model-development result and prohibits a validated blowdown/vent claim."
   },
   "sensitivity_only_not_calibration": {
-    "discharge_coefficient_values": [0.7, 0.8, 0.9],
+    "discharge_coefficient_values": [
+      0.7,
+      0.8,
+      0.9
+    ],
     "claim_rule": "Only the pre-existing 0.8 result controls the primary decision; sensitivity runs cannot replace it or be selected after outcome inspection."
   }
 }
