@@ -91,6 +91,17 @@
       "rights_note": "The public PDF may be cited. No data redistribution licence was identified for the Appendix A workbook or underlying fill traces; request reuse terms before obtaining or republishing them.",
       "eligibility_note": "The report is field-relevant but is not itself an eligible machine-readable full-loop validation set. The public PDF has no embedded attachment or external raw-data link."
     },
+    "tessema_2026_hrs_performance_simulation": {
+      "title": "HRSs refueling perfromance Data sets",
+      "publisher": "Mendeley Data",
+      "landing_page": "https://data.mendeley.com/datasets/mnjs94yzfc/1",
+      "doi": "10.17632/mnjs94yzfc.1",
+      "published": "2026-07-17",
+      "license": "CC BY 4.0",
+      "metadata_source": "https://api.datacite.org/dois/10.17632%2Fmnjs94yzfc.1",
+      "rights_note": "The record is openly licensed, but no file was downloaded because its own description establishes that the time series are model and simulation outputs.",
+      "eligibility_note": "Ineligible for experimental external validation. It can support simulation-to-simulation comparison only and must not be described as measured station evidence."
+    },
     "preslhy_e3_1_high_pressure_discharge": {
       "title": "PRESLHY Experiment series E3.1 - Cryogenic Hydrogen Blow-down/Discharge, part A high pressure",
       "publisher": "Karlsruhe Institute of Technology",

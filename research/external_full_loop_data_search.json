@@ -81,6 +81,20 @@
       "decision": "REQUEST_DATA"
     },
     {
+      "id": "tessema_2026_hrs_performance",
+      "title": "HRSs refueling perfromance Data sets",
+      "doi": "10.17632/mnjs94yzfc.1",
+      "publisher": "Mendeley Data",
+      "license": "CC BY 4.0",
+      "public_raw_data": true,
+      "decision": "SIMULATOR_OUTPUT_ONLY",
+      "inspection": {
+        "datacite_metadata_checked": "2026-10-03",
+        "published": "2026-07-17",
+        "description_classification": "HRS performance modeling and simulation results plus input parameters"
+      }
+    },
+    {
       "id": "h2_stations_export_api",
       "title": "H2-Stations Export API",
       "url": "https://docs.h2-stations.eu/for-data-users/api-v2/",
@@ -107,4 +121,3 @@
   "next_action": "Request de-identified fill-level workbook and traces from CARB before freezing a new holdout protocol.",
   "claim_limit": "No new external full-loop validation claim is permitted from the screened public materials."
 }
-

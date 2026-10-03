@@ -14,6 +14,7 @@
 
 \hypersetup{colorlinks=true,linkcolor=blue!45!black,citecolor=blue!45!black,urlcolor=blue!55!black}
 \setlist{nosep}
+\emergencystretch=2em
 \linenumbers
 
 \newcommand{\workingnote}{%
@@ -295,7 +296,8 @@ hydrogen for an unignited jet, (ii) sampled 5 kW m$^{-2}$ jet-fire heat flux and
 by the configured observation coordinates and are not regulatory setbacks.
 
 Verification used the exact public HyRAM+ v6.1 tag and commit
-\texttt{b45abf9a6d995951311be6aad836f1874e4d420b}. Installed Python-source hashes
+\texttt{b45abf9a6d99\allowbreak 5951311be6aa\allowbreak d836f1874e4d\allowbreak 420b}.
+Installed Python-source hashes
 were compared with the clone. Sandia's upstream plume, heat-flux and unconfined
 overpressure validation tests were executed unchanged. Three station-scale parity
 cases then called both the production adapter and the public HyRAM API and compared
@@ -348,6 +350,7 @@ case-to-case error distribution rather than only an aggregate value.
 \caption{Type-IV tank-model results. Parentheses are case-bootstrap 95\% confidence intervals for the mean.}
 \label{tab:tank}
 \small
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lrrrr}
 \toprule
 Split & Cases & Pressure RMSE & Temperature RMSE & SOC RMSE \\
@@ -357,6 +360,7 @@ Calibration & 23 & 4.529 (3.237--6.126) & 7.889 (6.072--9.870) & 4.455 (3.517--5
 Validation & 12 & 3.841 (2.507--5.835) & 4.833 (3.707--6.113) & 3.850 (2.921--4.909) \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
 \begin{figure}[htbp]
@@ -407,6 +411,7 @@ sets use the corrected v2 pipeline; the MC Default set reports its prospectively
 frozen historical model and was not reused after correction.}
 \label{tab:closed}
 \small
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lrrrr}
 \toprule
 Set & Pass/all & Pressure RMSE & Temperature RMSE & SOC RMSE \\
@@ -417,6 +422,7 @@ Corrected internal comparison & 2/11 & 4.530 & 7.819 & 4.625 \\
 Prospective MC Default, frozen earlier model & 0/8 & 15.862 & 13.230 & 18.082 \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
 The measured-boundary tank result therefore cannot be used as validation of the
@@ -535,6 +541,7 @@ API calls for all three parity cases (Table~\ref{tab:hyram}).
 \caption{Station-scale HyRAM+ 6.1 adapter parity. The plume distance is directional.}
 \label{tab:hyram}
 \small
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lrrr}
 \toprule
 Case & Modelled flow (kg s$^{-1}$) & 4 vol\% distance (m) & Visible flame (m) \\
@@ -544,6 +551,7 @@ Mid bank, 2 mm, cold & 0.108305 & 11.382 & 6.057 \\
 High bank, 3 mm, override & 0.296366 & 17.224 & 9.246 \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
 This result verifies translation, unit handling, coordinate use, contour selection

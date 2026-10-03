@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T09:25:45.511613+00:00",
+  "generated_at": "2026-10-03T09:30:33.920288+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
@@ -814,7 +814,7 @@
             75,
             75
           ],
-          "approximate_manuscript_words_before_references": 5968,
+          "approximate_manuscript_words_before_references": 5975,
           "figures": 2,
           "tables": 3,
           "citation_keys": 19,
@@ -846,27 +846,27 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-03T09:24:20.4493811Z",
+        "attempted_at": "2026-10-03T09:30:33.7790748Z",
         "attempts_this_run": 2,
         "success": true,
         "compiler": "Tectonic 0.17.0 (x86_64-pc-windows-msvc)",
         "compiler_release": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic%400.17.0",
         "compiler_archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845f",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "efceccd2110453420c0450afe8a765435f5fcf8635479792da1437d61c646bda",
+        "source_sha256": "553120dec1203a81016dc68a078a149fdacbf25708bdfe3264467797768f921c",
         "output_pages": 16,
-        "output_bytes": 605117,
-        "output_sha256": "21c11d1f4a21a2f3f75e7407354b5e0496ebc186fbde9dd7e444255a796165fe",
+        "output_bytes": 605124,
+        "output_sha256": "63b745cf6bc24d7770a1ba64b634b0cf32a7c7d59985b4aa47a1a55a8f2369e3",
         "warnings": {
-          "layout_or_package_warning_lines": 9,
+          "layout_or_package_warning_lines": 4,
           "fatal_errors": 0,
-          "summary": "PDF produced successfully. The log contains overfull/underfull box warnings and one lineno package UTF-8 replacement warning; no source compilation error occurred."
+          "summary": "PDF produced successfully. The log has three underfull bibliography lines and Tectonic reports one bundled lineno UTF-8 replacement warning; there are no overfull boxes or fatal source errors."
         },
         "built_in_compiler_attempt": {
           "success": false,
           "diagnostic": "Unable to find standard directories for platform"
         },
-        "interpretation": "The exact manuscript source compiled to a 16-page PDF with a pinned public compiler release. Layout warnings remain editorial work but do not invalidate compilation."
+        "interpretation": "The exact manuscript source compiled to a 16-page PDF with a pinned public compiler release. No content crosses the text width; the remaining warnings are non-fatal editorial spacing/package diagnostics."
       }
     },
     {
