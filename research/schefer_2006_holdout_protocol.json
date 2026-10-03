@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-03",
+  "status": "endpoints_and_code_frozen_before_numerical_curve_access_with_aggregate_duration_known",
+  "objective": "Evaluate transfer of the locked real-gas adiabatic vessel-discharge model to an independent Sandia/SRI hydrogen blowdown mass-flow trace.",
+  "claim_boundary": "This holdout tests the time-resolved gaseous-hydrogen mass flow of one 15.5 MPa blowdown through the published 3.175 mm controlling manifold restriction. It does not validate the downstream flame, radiation, dispersion, 7.94 mm tube pressure field, 70-90 MPa storage, refuelling control, or a complete station loop.",
+  "source": {
+    "title": "Spatial and radiative properties of an open-flame hydrogen plume",
+    "authors": [
+      "Robert W. Schefer",
+      "William G. Houf",
+      "Benjamin Bourne",
+      "James D. Colton"
+    ],
+    "journal": "International Journal of Hydrogen Energy",
+    "year": 2006,
+    "doi": "10.1016/j.ijhydene.2005.11.020",
+    "experimental_institutions": [
+      "Sandia National Laboratories",
+      "SRI International"
+    ],
+    "digitization_provider": "HyRAM+ 6.1 validation repository",
+    "digitization_repository_commit": "b45abf9a6d995951311be6aad836f1874e4d420b",
+    "digitization_path": "tests/hyram/validation/data/schefer-2006-fig3b.csv",
+    "digitization_sha256": "f740a7db1bcd3723efa8ae4ce02114fc69d6084c937c19cf16bc3f339dfc199e",
+    "digitization_license": "GNU GPL v3 as distributed with HyRAM+; publisher figure remains cited to the original DOI",
+    "redistribution_policy": "Commit a verbatim derived-data copy only with HyRAM+ attribution, GPL notice and original paper citation. Do not commit a publisher PDF."
+  },
+  "known_before_freeze": {
+    "descriptive_inputs": {
+      "initial_pressure_pa_abs": 15513000.0,
+      "initial_temperature_k": 315.15,
+      "combined_tank_volume_m3": 0.098,
+      "controlling_manifold_restriction_diameter_m": 0.003175,
+      "downstream_tube_length_m": 7.6,
+      "downstream_tube_diameter_m": 0.00794,
+      "ambient_pressure_pa": 101325.0
+    },
+    "approximate_total_blowdown_duration_from_secondary_descriptions": "about 100 s",
+    "numerical_curve_coordinates_accessed": false,
+    "target_model_predictions_computed": false,
+    "data_file_access_before_freeze": "Only the two provenance comments and x1/y1/x2/y2 header were read; no numerical rows were opened."
+  },
+  "independence": {
+    "independent_from_preslhy_facility": true,
+    "independent_from_proust_ineris_cea_facility": true,
+    "model_development_data": [
+      "PRESLHY E3.1 Part A, DOI 10.35097/1187"
+    ],
+    "limitation": "The HyRAM+ CSV is a publisher-figure digitization rather than an original logger export. Approximate overall duration was known before freezing, so half-peak time is corroborative and the result is not described as fully blinded."
+  },
+  "locked_model": {
+    "description": "Well-mixed adiabatic rigid vessel with HEOS hydrogen properties and maximum real-gas isentropic mass flux through the published 3.175 mm controlling restriction; Cd=1.0 from the public HyRAM+ benchmark setup; no outcome fitting.",
+    "path": "src/h2station/schefer_2006_validation.py",
+    "sha256": "426cfb93cd8b6bf3b5e452a575ae259a7c662d04eee51fe52010ddf1b21804f8",
+    "discharge_coefficient": 1.0,
+    "post_freeze_parameter_changes": "prohibited for the primary result"
+  },
+  "locked_runner": {
+    "path": "scripts/run_schefer_2006_holdout.py",
+    "sha256": "e37da19cb68a42f4d3995e0cb919081248a9c895d3ec9ed8e9ddd524d782fe84"
+  },
+  "eligibility": {
+    "minimum_unique_points": 15,
+    "requires": [
+      "non-negative strictly increasing time",
+      "finite non-negative measured mass flow",
+      "positive measured peak",
+      "trace from publisher Figure 3b data series rather than the plotted fit"
+    ],
+    "insufficient_data_policy": "Archive an ineligible result without substituting the plotted fit or interpolating beyond measured support."
+  },
+  "primary_endpoints": {
+    "mass_flow_nrmse_percent_peak_measured": {
+      "maximum": 15.0,
+      "support": "all retained measured coordinates"
+    },
+    "median_absolute_percentage_error_percent": {
+      "maximum": 20.0,
+      "support": "measured mass flow at least 10 percent of measured peak"
+    },
+    "half_peak_time_relative_error_percent": {
+      "maximum": 20.0,
+      "role": "required but interpreted with the disclosed prior knowledge of approximate total duration"
+    }
+  },
+  "aggregate_decision": {
+    "claim_supported": "all three primary endpoint screens pass",
+    "retain_numerical_and_runtime_failures": true,
+    "negative_result_policy": "Any failed screen remains archived and prohibits an independent transient mass-flow validation claim from this dataset."
+  }
+}
