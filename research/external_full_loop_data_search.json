@@ -237,6 +237,36 @@
       }
     },
     {
+      "id": "nrel_2022_hdvs_two_campaign_summary",
+      "title": "NREL HDVS high-flow fueling campaigns (August and October 2022)",
+      "url": "https://www.hydrogen.energy.gov/docs/hydrogenprogramlibraries/pdfs/review23/scs031_onorato_2023_o-pdf.pdf?Status=Master",
+      "publisher": "U.S. Department of Energy / National Renewable Energy Laboratory",
+      "public_raw_data": false,
+      "decision": "REPORT_AGGREGATE_FACE_VALIDITY_ONLY",
+      "inspection": {
+        "reported_campaigns": [
+          {
+            "date": "2022-08",
+            "mass_transfer_kg": 61.5,
+            "fill_time_min": 4.7,
+            "average_mass_flow_kg_min": 13.2,
+            "peak_mass_flow_kg_min": 18.7,
+            "tank_configuration": "Type IV only"
+          },
+          {
+            "date": "2022-10",
+            "mass_transfer_kg": 82.3,
+            "fill_time_min": 6.6,
+            "average_mass_flow_kg_min": 12.6,
+            "peak_mass_flow_kg_min": 23.0,
+            "tank_configuration": "complete HDVS"
+          }
+        ],
+        "raw_common_timebase": false,
+        "role": "Independent heavy-duty operating-range context and a request lead for the second campaign; the public report has aggregate endpoints only and cannot close the full-loop validation gate."
+      }
+    },
+    {
       "id": "nrel_kuroki_2023_hitrf_36l_fill",
       "title": "Temperature Rise on Liner Surfaces of Fuel Cell Electric Vehicle Tanks during Fueling Process",
       "doi": "10.1002/ente.202300239",
@@ -850,7 +880,7 @@
         "finding": "Official H2FillS package contains a 351-row, 1 s, 7-tank Type IV HDVS physical sample workbook. Frozen tank-submodel screening gives 0/7 joint passes (mean pressure RMSE 6.164 MPa; temperature RMSE 4.625 C); package licence blocks redistribution and the workbook lacks station-side full-loop channels."
       }
     ],
-    "result": "H2Protocol raw archives remain consumed Powertech evidence. The NREL H2FillS package adds an independent physical HDVS tank-submodel candidate with a reproducible negative screen, but its licence and missing station-side channels prevent a full-loop claim.",
+    "result": "H2Protocol raw archives remain consumed Powertech evidence. The NREL H2FillS package adds an independent physical HDVS tank-submodel candidate with a reproducible negative screen and an EOS-implied-volume mismatch diagnostic, but its licence and missing station-side channels prevent a full-loop claim. DOE/NREL aggregate reporting also identifies a second October 2022 HDVS campaign; without synchronized raw traces it remains operating-range context only.",
     "next_action": "send documented data requests (Klopčič/HyCentA heavy-duty traces, CARB, JRC GasTeF and HYTRANSFER file custodian, Cal State LA, BAM demonstration HRS, NREL HITRF/NFCTEC, Empa, DLR/FCH2RAIL, Hungarian HRS and NBSDC) and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest"
   },
   "last_reviewed": "2026-10-03"

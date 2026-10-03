@@ -106,6 +106,89 @@ class NrelDataset:
         }
 
 
+def _implied_volume_m3(trace: TankTrace) -> np.ndarray:
+    """Infer the EOS-equivalent gas volume from measured tank states.
+
+    This is a diagnostic only.  It does not change the frozen model, fit any
+    parameter, or establish vessel geometry: a time-varying value can also
+    reflect measurement bias, non-equilibrium temperature, or an unmodelled
+    boundary volume.  The calculation is retained to distinguish a geometry
+    mismatch from an integrator failure when an independent tank test is
+    screened.
+    """
+
+    volumes: list[float] = []
+    for pressure_mpa, temperature_c, mass_kg in zip(
+        trace.pressure_mpa, trace.temperature_c, trace.mass_kg
+    ):
+        if mass_kg <= 0.0:
+            volumes.append(float("nan"))
+            continue
+        density = float(
+            PropsSI(
+                "Dmass",
+                "P",
+                max(2.0e5, float(pressure_mpa) * 1.0e6),
+                "T",
+                float(temperature_c) + 273.15,
+                "Hydrogen",
+            )
+        )
+        volumes.append(float(mass_kg) / density)
+    return np.asarray(volumes, dtype=float)
+
+
+def _geometry_diagnostic(
+    traces: tuple[TankTrace, ...],
+    *,
+    capacity_kg: float,
+    effective_volume_multiplier: float,
+) -> dict[str, Any]:
+    """Report observed EOS-implied volume against the frozen geometry assumption."""
+
+    nominal_volume_m3 = 0.122 * capacity_kg / 4.7
+    frozen_volume_m3 = nominal_volume_m3 * effective_volume_multiplier
+    rows: list[dict[str, Any]] = []
+    for trace in traces:
+        implied = _implied_volume_m3(trace)
+        finite = implied[np.isfinite(implied)]
+        if finite.size == 0:
+            raise ValueError(f"Tank {trace.tank_id} has no positive-mass state")
+        median = float(np.median(finite))
+        rows.append(
+            {
+                "tank_id": trace.tank_id,
+                "implied_volume_m3_median": median,
+                "implied_volume_m3_final": float(implied[-1]),
+                "implied_volume_m3_min": float(np.min(finite)),
+                "implied_volume_m3_max": float(np.max(finite)),
+                "ratio_to_frozen_effective_volume": median / frozen_volume_m3,
+                "difference_from_frozen_effective_volume_m3": median - frozen_volume_m3,
+            }
+        )
+    medians = np.asarray([row["implied_volume_m3_median"] for row in rows])
+    return {
+        "status": "diagnostic_only_no_parameter_update",
+        "method": (
+            "EOS-equivalent volume = measured hydrogen mass / CoolProp-tabulated "
+            "density at measured internal pressure and temperature"
+        ),
+        "nominal_volume_assumption_m3": nominal_volume_m3,
+        "frozen_effective_volume_m3": frozen_volume_m3,
+        "implied_volume_m3_median_across_tanks": float(np.median(medians)),
+        "ratio_to_frozen_effective_volume_median": float(
+            np.median(medians) / frozen_volume_m3
+        ),
+        "rows": rows,
+        "interpretation": (
+            "A systematic ratio below one is consistent with a geometry or state-"
+            "definition mismatch, but is not sufficient to identify vessel volume. "
+            "It must not be fitted on this external screen or presented as an "
+            "independent validation pass."
+        ),
+    }
+
+
 def _sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -264,6 +347,8 @@ def _simulate_tank(
     predicted_pressure = np.asarray([state.pressure_pa / 1e6 for state in gas])
     predicted_temperature = np.asarray([state.temperature_k - 273.15 for state in gas])
     predicted_mass = np.asarray([state.hydrogen_mass_kg for state in states])
+    implied_volume = _implied_volume_m3(trace)
+    finite_implied_volume = implied_volume[np.isfinite(implied_volume)]
     return {
         "tank_id": trace.tank_id,
         "sample_count": int(len(trace.time_s)),
@@ -283,6 +368,13 @@ def _simulate_tank(
             and abs(predicted_mass[-1] - trace.mass_kg[-1])
             <= SCREENING_LIMITS["mass_final_abs_error_kg_max"]
         ),
+        "geometry_diagnostic": {
+            "nominal_volume_m3": 0.122 * capacity_kg / 4.7,
+            "frozen_effective_volume_m3": (
+                0.122 * capacity_kg / 4.7 * fit.effective_volume_multiplier
+            ),
+            "implied_volume_m3_median": float(np.median(finite_implied_volume)),
+        },
     }
 
 
@@ -318,6 +410,11 @@ def run(workbook_path: Path, output_path: Path, fit_path: Path) -> dict[str, Any
         _simulate_tank(trace, fit)
         for trace in dataset.traces
     ]
+    geometry_diagnostic = _geometry_diagnostic(
+        dataset.traces,
+        capacity_kg=9.8,
+        effective_volume_multiplier=fit.effective_volume_multiplier,
+    )
     aggregate = {
         "tank_count": len(rows),
         "sample_count_per_tank": dataset.sample_count,
@@ -367,6 +464,7 @@ def run(workbook_path: Path, output_path: Path, fit_path: Path) -> dict[str, Any
         },
         "screening_limits": SCREENING_LIMITS,
         "aggregate": aggregate,
+        "geometry_diagnostic": geometry_diagnostic,
         "tanks": rows,
         "source_commit": _git_commit(),
         "source_worktree_dirty": _git_dirty(),
@@ -395,6 +493,10 @@ def run(workbook_path: Path, output_path: Path, fit_path: Path) -> dict[str, Any
         f"- Temperature RMSE: {aggregate['temperature_rmse_c']:.3f} °C",
         f"- Mean final mass error: {aggregate['mass_final_error_kg']:.3f} kg",
         f"- Joint tank screen: {aggregate['screening_pass_count']}/{aggregate['tank_count']}",
+        f"- EOS-implied volume median: {geometry_diagnostic['implied_volume_m3_median_across_tanks']:.5f} m³",
+        f"- Ratio to frozen effective volume: {geometry_diagnostic['ratio_to_frozen_effective_volume_median']:.3f}",
+        "",
+        "The EOS-implied volume comparison is a diagnostic only. It does not fit or replace the frozen geometry and cannot be used as a validation pass.",
         "",
         "The raw workbook remains in the ignored data directory because the H2FillS package licence does not grant redistribution rights.",
     ]

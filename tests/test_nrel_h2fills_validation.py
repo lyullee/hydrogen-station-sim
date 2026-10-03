@@ -3,13 +3,15 @@ from __future__ import annotations
 from pathlib import Path
 import sys
 
+import numpy as np
 import pytest
 from openpyxl import Workbook
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from run_nrel_h2fills_hdvs_validation import TANK_IDS, read_nrel_workbook  # noqa: E402
+import run_nrel_h2fills_hdvs_validation as nrel  # noqa: E402
+from run_nrel_h2fills_hdvs_validation import TANK_IDS, TankTrace, read_nrel_workbook  # noqa: E402
 
 
 def _make_workbook(path: Path) -> None:
@@ -75,3 +77,20 @@ def test_nrel_reader_rejects_missing_required_channel(tmp_path):
         assert "missing columns" in str(exc)
     else:
         raise AssertionError("reader accepted a workbook with a missing channel")
+
+
+def test_implied_volume_is_diagnostic_eos_mass_over_density(monkeypatch):
+    trace = TankTrace(
+        tank_id=1,
+        time_s=np.array([0.0, 1.0]),
+        inlet_pressure_mpa=np.array([10.0, 10.0]),
+        inlet_temperature_c=np.array([20.0, 20.0]),
+        mass_kg=np.array([2.0, 4.0]),
+        pressure_mpa=np.array([10.0, 10.0]),
+        temperature_c=np.array([20.0, 20.0]),
+    )
+    monkeypatch.setattr(nrel, "PropsSI", lambda *args: 20.0)
+
+    volume = nrel._implied_volume_m3(trace)
+
+    assert volume.tolist() == [0.1, 0.2]

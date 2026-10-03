@@ -29,6 +29,7 @@ immutable digest are recorded.
 | NREL H2FillS | The official package includes `SupplementalData/20220816_hdvs_typeIV_test_result.xlsx`: a 351-sample, 1 s, seven-tank Type-IV HDVS test with per-tank inlet pressure/temperature, mass, internal pressure and internal temperature (61.5 kg reported transfer, 1.8→75.8 MPa). | **Independent tank-submodel candidate, not full loop.** The frozen tank model was run once without fitting on this workbook: 0/7 joint screens, mean pressure RMSE 6.164 MPa, temperature RMSE 4.625 °C and final mass error 0.120 kg. The raw package is retained locally because its internal-use-only licence does not permit redistribution; request permission before publishing derived values. Reproduction: `scripts/run_nrel_h2fills_hdvs_validation.py`. |
 | NREL 2024 HITRF reliability/fueling report | Table 4 gives sample HITRF fill summaries with timestamp, amount, rate, start/end pressure, dispensing temperature and dispensing pressure. | **Report table only.** The PDF does not provide a common-time-base raw trace, so it is useful field context and a lead for a data request, not an untouched full-loop validation set. |
 | DOE/NREL H2IQ Hour 2024 HD fast-flow experiment | 3/12/2024 HITRF test reports 73 kg in 423.5 s, 358.9 s fueling time, 172.3 g/s average, 483.33 g/s peak, 5.5→74.6 MPa, APRR 9.9 MPa/min under SAE J2601-5 MCF-HF-G H70 FM300 T40. | **Plot/summary only.** The presentation contains charts and aggregate endpoints but no machine-readable common-time-base trace; use for face-validity and operating-range checks only. |
+| NREL HDVS August/October 2022 campaign summaries | DOE/NREL performance reporting gives 61.5 kg in 4.7 min (13.2 kg/min average, 18.7 kg/min peak) for the August Type-IV-only campaign and 82.3 kg in 6.6 min (12.6 kg/min average, 23 kg/min peak) for the October complete-HDVS campaign. | **Aggregate context only.** These independent heavy-duty endpoints are useful for operating-range checks and a raw-trace request, but the public report has no synchronized station/vehicle time series. |
 | NREL HITRF 36 L experiment, Kuroki et al., DOI 10.1002/ente.202300239 | Open article describes a HITRF fill from 6.3 to 73.0 MPa in 186 s with inlet pressure, receptacle-exit temperature, internal hydrogen temperature and liner measurements. | **Request data.** The paper's data-availability statement says research data are not shared; figures and boundary conditions alone cannot close the time-series gate. |
 | NREL/NatLabRockies HDTADA | Public repository contains the analysis-tool installers and licence. | **Not available.** No sample raw fueling traces are distributed in the repository. |
 | NREL retail-station composite data products | Public aggregate statistics and histograms for station operation. | **Context only.** No fill-level pressure/temperature/flow time series. |
@@ -184,6 +185,26 @@ workbook SHA-256, source URL and rights boundary are recorded in
 `research/external_full_loop_data_search.json`. The missing hose, nozzle,
 receptacle and station-controller channels mean this candidate cannot close
 the station-to-vehicle full-loop gate.
+
+The diagnostic output also computes an EOS-equivalent volume from the measured
+mass, internal pressure and internal temperature. Across the seven tanks the
+median is 0.24388 m³ versus 0.26780 m³ for the frozen effective-volume
+assumption (ratio 0.91071). This is retained in
+`data/public_validation/results/nrel_h2fills_hdvs_typeiv/validation.json` as
+`geometry_diagnostic.status=diagnostic_only_no_parameter_update`. It explains
+why a larger pressure error is plausible without silently fitting the external
+screen; it is not a vessel-geometry identification or a validation pass.
+
+## NREL HDVS aggregate campaign context
+
+The DOE/NREL performance report records a second, October 2022 complete-HDVS
+campaign in addition to the August Type-IV-only sample:
+<https://www.hydrogen.energy.gov/docs/hydrogenprogramlibraries/pdfs/review23/scs031_onorato_2023_o-pdf.pdf?Status=Master>.
+The public aggregate values are 61.5 kg in 4.7 minutes (13.2 kg/min average,
+18.7 kg/min peak) and 82.3 kg in 6.6 minutes (12.6 kg/min average, 23 kg/min
+peak). They are useful operating-range context and a request lead for the
+second raw trace, but no synchronized station/vehicle time series are exposed,
+so neither campaign closes the full-loop holdout gate by itself.
 
 ## 2026-10-03 primary-source recheck
 
