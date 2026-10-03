@@ -56,7 +56,7 @@ def audit(root: Path) -> dict[str, object]:
     root = root.resolve()
     gates: list[dict[str, object]] = []
 
-    tank_path = root / "data/public_validation/results/tank_model/validation.json"
+    tank_path = root / "research/tank_model_validation_v2.json"
     tank = _json(tank_path)
     tank_validation = (tank or {}).get("validation") or {}
     tank_observed = {
@@ -83,6 +83,53 @@ def audit(root: Path) -> dict[str, object]:
         str(tank_path.relative_to(root)),
         "12 untouched validation fills, three primary errors and 10,000 case-level bootstrap replicates.",
         tank_observed,
+    ))
+
+    correction_path = root / "research/h2protocol_active_fill_correction.json"
+    correction = _json(correction_path)
+    corrected_trace = (correction or {}).get("h2p_l29") or {}
+    correction_hashes = (correction or {}).get("processed_artifact_hashes") or {}
+    correction_pass = bool(
+        (correction or {}).get("status")
+        == "post-diagnostic preprocessing correction disclosed"
+        and corrected_trace.get("old_normalized_sample_count") == 1143
+        and corrected_trace.get("corrected_normalized_sample_count") == 399
+        and correction_hashes.get("h2protocol_cases_csv_sha256")
+        and correction_hashes.get("h2p_l29_trace_csv_sha256")
+    )
+    gates.append(_gate(
+        "active_fill_correction_disclosed",
+        "PASS" if correction_pass else "FAIL",
+        "The post-diagnostic H2P-L29 normalization correction and its downstream effect are disclosed and hash-linked.",
+        str(correction_path.relative_to(root)),
+        "Old/new interval evidence, algorithm, processed hashes and downstream claim limit.",
+        correction or "missing",
+    ))
+
+    development_v2_path = root / "research/closed_loop_development_v2.json"
+    internal_v2_path = root / "research/closed_loop_internal_comparison_v2.json"
+    development_v2 = _json(development_v2_path)
+    internal_v2 = _json(internal_v2_path)
+    development_aggregate = (development_v2 or {}).get("aggregate") or {}
+    internal_aggregate = (internal_v2 or {}).get("aggregate") or {}
+    corrected_pipeline_pass = bool(
+        development_aggregate.get("case_count") == 8
+        and development_aggregate.get("screening_pass_count") == 1
+        and internal_aggregate.get("case_count") == 11
+        and internal_aggregate.get("screening_pass_count") == 2
+        and (development_v2 or {}).get("dispenser_flow_area_multiplier") == 2.0
+        and (development_v2 or {}).get("precooler_duty_multiplier") == 16.0
+    )
+    gates.append(_gate(
+        "corrected_closed_loop_internal_evidence",
+        "PASS" if corrected_pipeline_pass else "FAIL",
+        "The corrected development pipeline is retained with its low joint-screen pass fractions and internal-comparison status.",
+        f"{development_v2_path.relative_to(root)}; {internal_v2_path.relative_to(root)}",
+        "8 development and 11 already-inspected comparison cases with selected global parameters and retained failures.",
+        {
+            "development": development_aggregate,
+            "internal_comparison": internal_aggregate,
+        },
     ))
 
     external_loop_path = root / "data/public_validation/results/closed_loop_external_holdout/validation.json"
@@ -357,7 +404,9 @@ def audit(root: Path) -> dict[str, object]:
 
     by_id = {item["id"]: item for item in gates}
     bounded_required = (
-        "tank_external_validation", "full_loop_negative_result_disclosed",
+        "tank_external_validation", "active_fill_correction_disclosed",
+        "corrected_closed_loop_internal_evidence",
+        "full_loop_negative_result_disclosed",
         "hyram_adapter_verification", "hiad_protocol_integrity",
         "institutional_ethics_determination", "hiad_casebook_frozen",
         "hiad_holdout_collection", "independent_expert_review_complete",

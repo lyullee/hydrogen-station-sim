@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T03:45:34.655227+00:00",
+  "generated_at": "2026-10-03T04:42:14.156127+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 8,
+    "PASS": 10,
     "FAIL": 1,
     "PENDING": 7
   },
@@ -32,14 +32,186 @@
       "id": "tank_external_validation",
       "status": "PASS",
       "claim": "Measured-boundary Type-IV tank model is externally evaluated on the frozen public split.",
-      "evidence": "data\\public_validation\\results\\tank_model\\validation.json",
+      "evidence": "research\\tank_model_validation_v2.json",
       "requirement": "12 untouched validation fills, three primary errors and 10,000 case-level bootstrap replicates.",
       "observed": {
         "case_count": 12,
-        "pressure_rmse_mpa": 3.9054261838156847,
-        "temperature_rmse_c": 4.694112786526112,
-        "soc_rmse_percentage_points": 3.812450347822269,
+        "pressure_rmse_mpa": 3.8413052037435977,
+        "temperature_rmse_c": 4.832748408545587,
+        "soc_rmse_percentage_points": 3.8495521984109318,
         "bootstrap_replicates": 10000
+      }
+    },
+    {
+      "id": "active_fill_correction_disclosed",
+      "status": "PASS",
+      "claim": "The post-diagnostic H2P-L29 normalization correction and its downstream effect are disclosed and hash-linked.",
+      "evidence": "research\\h2protocol_active_fill_correction.json",
+      "requirement": "Old/new interval evidence, algorithm, processed hashes and downstream claim limit.",
+      "observed": {
+        "schema_version": 1,
+        "recorded_at": "2026-10-03",
+        "status": "post-diagnostic preprocessing correction disclosed",
+        "scope": "SAE J2601 Tables Method normalization and downstream development analyses",
+        "trigger": "Closed-loop mass-flow timing diagnostics showed that H2P-L29 delivered essentially none of its measured mass during the first half of the old normalized interval while the simulated fill began immediately.",
+        "root_cause": "The former parser selected the first and last above-threshold sample. A negligible isolated 1.526 g/s pulse at workbook time zero therefore pulled the start 369.5 s ahead of the sustained fill.",
+        "correction": {
+          "algorithm": "Cluster above-threshold flow samples using a 15 s maximum gap, discard leading or trailing clusters below max(0.005 kg, 0.2% of total cluster mass), and retain meaningful multi-segment fills including their internal gaps.",
+          "source_commit": "74baec4",
+          "tests": "A regression test rejects a negligible leading pulse while existing meaningful multi-segment cases remain intact."
+        },
+        "h2p_l29": {
+          "old_normalized_sample_count": 1143,
+          "old_duration_s": 571.0000002058223,
+          "raw_leading_pulse_g_s": 1.526,
+          "gap_before_sustained_fill_s": 369.5,
+          "corrected_normalized_sample_count": 399,
+          "corrected_duration_s": 198.99999999906868,
+          "corrected_first_flow_g_s": 1.073
+        },
+        "processed_artifact_hashes": {
+          "h2protocol_cases_csv_sha256": "f6bcc9a29da4e86f8376f14832192666002d7a9fb046ff00a3eb05d364c3e3ec",
+          "h2p_l29_trace_csv_sha256": "5ec4a91b567e69dcc6f2759b6adb8d7b8682ad438578d9d74b218b7f3fcc012a"
+        },
+        "downstream_effect": {
+          "tank_fit_before": {
+            "effective_volume_multiplier": 1.0519881596076546,
+            "gas_liner_ua_multiplier": 64.43011313151457
+          },
+          "tank_fit_after": {
+            "effective_volume_multiplier": 1.052729261198358,
+            "gas_liner_ua_multiplier": 31.460656519273492
+          },
+          "validation_mean_rmse_after": {
+            "pressure_mpa": 3.8413052037435977,
+            "temperature_c": 4.832748408545587,
+            "soc_percentage_points": 3.8495521984109318
+          }
+        },
+        "evidence_role": "The corrected tank and development results supersede the old Tables Method normalization. The eight MC Default workbooks use a separate parser and remain a consumed historical external failure of their frozen model; they were not rerun or used for tuning."
+      }
+    },
+    {
+      "id": "corrected_closed_loop_internal_evidence",
+      "status": "PASS",
+      "claim": "The corrected development pipeline is retained with its low joint-screen pass fractions and internal-comparison status.",
+      "evidence": "research\\closed_loop_development_v2.json; research\\closed_loop_internal_comparison_v2.json",
+      "requirement": "8 development and 11 already-inspected comparison cases with selected global parameters and retained failures.",
+      "observed": {
+        "development": {
+          "case_count": 8,
+          "screening_pass_count": 1,
+          "screening_pass_fraction": 0.125,
+          "final_stop_reason_counts": {
+            "none": 2,
+            "safety-temperature": 4,
+            "vehicle-target": 2
+          },
+          "metrics": {
+            "pressure_rmse_mpa": {
+              "mean": 6.601693364975364,
+              "median": 3.53262048436679,
+              "standard_deviation": 8.371709382192886,
+              "mean_bootstrap_95_ci": [
+                2.977433015770652,
+                12.666113179042638
+              ]
+            },
+            "pressure_mae_mpa": {
+              "mean": 4.793203646900297,
+              "median": 2.398112717925975,
+              "standard_deviation": 6.247277790864674,
+              "mean_bootstrap_95_ci": [
+                2.194864560195743,
+                9.3078449266566
+              ]
+            },
+            "temperature_rmse_c": {
+              "mean": 11.427575890283551,
+              "median": 8.70416109828929,
+              "standard_deviation": 6.805273061710801,
+              "mean_bootstrap_95_ci": [
+                7.430931396606547,
+                16.06181333629293
+              ]
+            },
+            "temperature_mae_c": {
+              "mean": 9.982226583807169,
+              "median": 7.509901617490252,
+              "standard_deviation": 6.085008642612459,
+              "mean_bootstrap_95_ci": [
+                6.332942682079824,
+                14.07457525590758
+              ]
+            },
+            "soc_rmse_percentage_points": {
+              "mean": 7.297254987401889,
+              "median": 3.650922417110336,
+              "standard_deviation": 9.152242396587623,
+              "mean_bootstrap_95_ci": [
+                3.3784428017087857,
+                13.90475600151661
+              ]
+            }
+          }
+        },
+        "internal_comparison": {
+          "case_count": 11,
+          "screening_pass_count": 2,
+          "screening_pass_fraction": 0.18181818181818182,
+          "final_stop_reason_counts": {
+            "none": 8,
+            "safety-temperature": 1,
+            "vehicle-target": 2
+          },
+          "metrics": {
+            "pressure_rmse_mpa": {
+              "mean": 4.529542460901498,
+              "median": 3.947204993770827,
+              "standard_deviation": 2.0895425645528776,
+              "mean_bootstrap_95_ci": [
+                3.449458376952485,
+                5.814893979278572
+              ]
+            },
+            "pressure_mae_mpa": {
+              "mean": 3.2862521500434143,
+              "median": 2.7684583881062723,
+              "standard_deviation": 1.4924915688256155,
+              "mean_bootstrap_95_ci": [
+                2.529528712647087,
+                4.208092234227254
+              ]
+            },
+            "temperature_rmse_c": {
+              "mean": 7.819001473367806,
+              "median": 6.637171555225489,
+              "standard_deviation": 3.2826778241316106,
+              "mean_bootstrap_95_ci": [
+                6.196523084674497,
+                9.884715458924044
+              ]
+            },
+            "temperature_mae_c": {
+              "mean": 6.751224178815355,
+              "median": 5.7359080998938765,
+              "standard_deviation": 2.997699993476782,
+              "mean_bootstrap_95_ci": [
+                5.284928033167485,
+                8.63648877715047
+              ]
+            },
+            "soc_rmse_percentage_points": {
+              "mean": 4.625272093704332,
+              "median": 3.7206386251458707,
+              "standard_deviation": 2.2676649312610766,
+              "mean_bootstrap_95_ci": [
+                3.379624739392875,
+                5.959683963636555
+              ]
+            }
+          }
+        }
       }
     },
     {
@@ -394,7 +566,7 @@
         "manuscript": "manuscript\\ijhe_manuscript_draft.tex",
         "highlights": "manuscript\\Highlights.txt",
         "counts": {
-          "abstract_words": 149,
+          "abstract_words": 150,
           "keywords": 6,
           "highlight_bullets": 5,
           "highlight_characters": [
@@ -404,7 +576,7 @@
             75,
             75
           ],
-          "approximate_manuscript_words_before_references": 3436,
+          "approximate_manuscript_words_before_references": 3654,
           "figures": 2,
           "tables": 3,
           "citation_keys": 13,
@@ -436,12 +608,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-03T03:45:34.464071+00:00",
+        "attempted_at": "2026-10-03T04:42:13.998347+00:00",
         "attempts_this_run": 1,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "aed00431a3fa351da309b5676001f9e37f7b99707bbc74efd30fd48462f0dd48",
+        "source_sha256": "54b9f43f49834ff5aaa4fbb6112e9bb60d25afbc1b6299761a8a978162249fe6",
         "platform": "Windows-11-10.0.26200-SP0",
         "diagnostic": "Unable to find standard directories for platform",
         "interpretation": "Compiler environment failure; LaTeX source compilation remains unverified."

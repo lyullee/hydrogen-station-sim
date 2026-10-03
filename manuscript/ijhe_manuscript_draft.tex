@@ -37,16 +37,17 @@ hydrogen refuelling station digital twin}
 \begin{abstract}
 This study separates the evidence required for process physics, consequence
 software and language-model decision support in a virtual hydrogen refuelling
-station. Public SAE J2601 Tables Method experiments supplied fast-fill traces.
+station. SAE J2601 experiments supplied traces.
 Using measured mass flow and inlet temperature as boundaries, a two-parameter
 Type-IV tank model was calibrated on 23 fills and evaluated on 12 frozen fills.
-Validation mean root-mean-square errors were 3.905 MPa for pressure, 4.694
-$^{\circ}$C for gas temperature and 3.812 percentage points for state of charge.
+Validation mean root-mean-square errors were 3.841 MPa for pressure, 4.833
+$^{\circ}$C for gas temperature and 3.850 percentage points for state of charge.
 These results did not transfer to the complete controller--cascade--precooler loop:
-no development or internal-comparison fill met all declared screens. The
+only one of eight development and two of eleven internal-comparison fills met all
+declared screens. The
 production consequence adapter matched independent HyRAM+ 6.1 API calculations in
 three cases, while identical upstream source passed 47 tests and 803 subtests. A
-blinded HIAD incident review protocol is specified, but qualified external ratings
+blinded HIAD incident review protocol is specified, but external ratings
 remain pending. The work supports a claim-bounded research prototype, not a
 field-qualified controller or autonomous emergency system.
 \end{abstract}
@@ -142,10 +143,20 @@ flow with the nominal inventory change inferred from reported state of charge
 (SOC). The admissible ratio was fixed at 0.8--1.2; one repeat-fill case was
 excluded because its ratio was 1.428. This screen contains no model prediction.
 
+Closed-loop mass-flow timing diagnostics subsequently exposed a normalization
+error in development case H2P-L29. An isolated 1.526 g s$^{-1}$ pulse at workbook
+time zero caused the former first/last-threshold rule to prepend 369.5 s of idle
+data to the sustained fill. A disclosed amendment clusters above-threshold samples
+using a 15 s maximum gap, discards terminal clusters below the larger of 0.005 kg
+or 0.2\% of clustered mass, and preserves meaningful multi-segment fills and their
+internal gaps. The corrected H2P-L29 trace contains 399 samples over 199 s instead
+of 1,143 samples over 571 s. All tank results below were regenerated after this
+correction; the earlier normalization is superseded.
+
 Every third laboratory test (3, 6, \ldots, 36) forms a frozen 12-fill validation
 set. The remaining 23 admissible fills estimate two global parameters: effective
 volume multiplier and gas-to-liner heat-transfer multiplier. The fitted values
-were 1.05199 and 64.43011, respectively. Optimization used bounded nonlinear
+were 1.05273 and 31.46066, respectively. Optimization used bounded nonlinear
 least squares in log-parameter space. No case-specific parameter was fitted.
 Case-level uncertainty was estimated with 10,000 nonparametric bootstrap
 resamples using seed 2601.
@@ -161,8 +172,10 @@ Pressure, gas temperature and density-based SOC were evaluated separately.
 The full loop adds a sampled pressure-ramp controller, PI flow command, cascade
 selection, finite valve motion, line-pack, precooling and station-to-vehicle
 hydraulics. The global tank parameters were frozen before this evaluation. A
-single dispenser flow-area multiplier of 1.25 was selected on eight declared
-development fills.
+development-only adaptive search selected one dispenser flow-area multiplier of
+2.0 on eight declared development fills; the initial grid was extended only after
+its optimum fell at the upper bound. Density-based SOC used each experiment's
+nominal 35 or 70 MPa working pressure.
 
 Initial comparison exposed three structural errors: flow-limited anti-windup
 could reverse the integral while pressure error remained positive; a fixed
@@ -257,8 +270,8 @@ case-to-case error distribution rather than only an aggregate value.
 Split & Cases & Pressure RMSE & Temperature RMSE & SOC RMSE \\
  & & (MPa) & ($^{\circ}$C) & (percentage points) \\
 \midrule
-Calibration & 23 & 4.561 (3.242--6.219) & 7.545 (5.750--9.519) & 4.396 (3.469--5.401) \\
-Validation & 12 & 3.905 (2.572--5.877) & 4.694 (3.609--5.985) & 3.812 (2.884--4.873) \\
+Calibration & 23 & 4.529 (3.237--6.126) & 7.889 (6.072--9.870) & 4.455 (3.517--5.455) \\
+Validation & 12 & 3.841 (2.507--5.835) & 4.833 (3.707--6.113) & 3.850 (2.921--4.909) \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -282,27 +295,33 @@ mass-closure screen and therefore has no bar.}
 \end{figure}
 
 The fitted gas-to-liner multiplier is large and the optimizer's reported first-
-order optimality (441.5) indicates a shallow or imperfectly resolved optimum even
+order optimality (3115.9) indicates a shallow or imperfectly resolved optimum even
 though its termination flag was successful. The fit should therefore be treated
 as an effective heat-transfer calibration, not an identified physical coefficient.
 
 \subsection{Negative full-loop validation result}
-Structural corrections improved the eleven internal comparison fills from mean
-RMSE values of 11.842 MPa, 10.292 $^{\circ}$C and 15.347 SOC percentage points to
-7.213 MPa, 9.179 $^{\circ}$C and 10.112 percentage points. Nevertheless, every
-comparison fill failed at least one project screen. The eight development fills
-also passed zero of eight screens. The prospectively frozen MC Default holdout
-likewise passed zero of eight screens (Table~\ref{tab:closed}). Mean pressure,
-temperature and SOC RMSE were 15.862 MPa, 13.230 $^{\circ}$C and 18.082
-percentage points, respectively. Five runs terminated on the model's temperature
-safety logic; final SOC error was negative in all eight cases and ranged from
-$-8.42$ to $-50.79$ percentage points.
+After the preprocessing and nominal-pressure corrections, refitted tank, flow-area
+calibration and frozen v2 cooling sensitivity, one of eight development fills and
+two of eleven internal-comparison fills met all three project screens. Their mean
+errors improved to 6.602 MPa, 11.428 $^{\circ}$C and 7.297 SOC percentage points
+for development, and 4.530 MPa, 7.819 $^{\circ}$C and 4.625 percentage points for
+internal comparison. The low joint pass fractions still constitute a negative
+full-loop result.
+
+The prospectively frozen MC Default holdout had already been evaluated with its
+pre-correction frozen model and passed zero of eight screens
+(Table~\ref{tab:closed}). Mean pressure, temperature and SOC RMSE were 15.862 MPa,
+13.230 $^{\circ}$C and 18.082 percentage points, respectively. Five runs terminated
+on the model's temperature safety logic; final SOC error was negative in all eight
+cases and ranged from $-8.42$ to $-50.79$ percentage points. These outcomes were
+not rerun or used to tune the corrected model, so they remain historical external
+failure evidence rather than validation of the final configuration.
 
 \begin{table}[htbp]
 \centering
-\caption{Closed-loop performance after structural correction. The comparison
-set is internal confirmation because it had been inspected previously; the MC
-Default set was prospectively frozen before outcome access.}
+\caption{Closed-loop performance. The development and already-inspected comparison
+sets use the corrected v2 pipeline; the MC Default set reports its prospectively
+frozen historical model and was not reused after correction.}
 \label{tab:closed}
 \small
 \begin{tabular}{lrrrr}
@@ -310,9 +329,9 @@ Default set was prospectively frozen before outcome access.}
 Set & Pass/all & Pressure RMSE & Temperature RMSE & SOC RMSE \\
  & & (MPa) & ($^{\circ}$C) & (percentage points) \\
 \midrule
-Development & 0/8 & 13.695 & 21.634 & 17.668 \\
-Internal comparison & 0/11 & 7.213 & 9.179 & 10.112 \\
-Prospective MC Default holdout & 0/8 & 15.862 & 13.230 & 18.082 \\
+Corrected development & 1/8 & 6.602 & 11.428 & 7.297 \\
+Corrected internal comparison & 2/11 & 4.530 & 7.819 & 4.625 \\
+Prospective MC Default, frozen earlier model & 0/8 & 15.862 & 13.230 & 18.082 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -326,14 +345,16 @@ as redesign targets. The bench files observe vehicle and source pressures, flow,
 inlet temperature and SOC, but do not expose every internal three-bank valve
 command; they therefore cannot by themselves validate all cascade dispatch states.
 
-A development-only sensitivity, frozen after the MC Default result had been
-consumed, scaled hydrogen--coolant and chiller conductance together by factors of
-1, 2, 4 and 8. The predeclared objective selected the upper-bound factor 8, yet
-the eight development fills and eleven internal comparison fills still passed
-zero screens. Internal-comparison mean errors changed only from 7.213 to 6.790 MPa,
-9.179 to 8.570 $^{\circ}$C and 10.112 to 9.540 SOC percentage points. This
-diagnostic was not applied to the consumed external holdout and indicates that
-cooling duty alone does not explain the closed-loop error.
+A superseded development-only sensitivity first scaled hydrogen--coolant and
+chiller conductance by factors 1, 2, 4 and 8 and selected its upper bound. After
+the parser, tank-fit, flow and nominal-pressure corrections, a replacement
+protocol was frozen before evaluating factors 1, 2, 4, 8, 12 and 16. It again
+selected the upper bound, but the normalized objective decreased only from 11.051
+at 8 to 10.969 at 16. The retained factor 16 produced the corrected results in
+Table~\ref{tab:closed}; larger values were not searched. The upper-bound optimum,
+diminishing improvement and remaining case-level failures indicate that cooling
+duty alone does not explain the closed-loop error. Neither sensitivity was applied
+to the consumed external holdout.
 
 \subsection{HyRAM+ source, tests and adapter parity}
 The installed and upstream v6.1 Python sources matched over 38 files with aggregate
@@ -441,10 +462,11 @@ SAGA study has no locked expert ratings yet.
 A hydrogen-station safety digital twin was evaluated with separate evidence gates
 for component physics, full-loop behavior, consequence-software translation and
 LLM decision support. The measured-boundary Type-IV tank model achieved validation
-mean RMSE values of 3.905 MPa, 4.694 $^{\circ}$C and 3.812 SOC percentage points.
+mean RMSE values of 3.841 MPa, 4.833 $^{\circ}$C and 3.850 SOC percentage points.
 The complete loop did not meet the declared screens, even after structural defects
-were corrected, and a prospectively frozen eight-case external holdout passed zero
-screens. The HyRAM+ adapter reproduced the installed v6.1 public API while
+and preprocessing errors were corrected; only 1/8 development and 2/11 internal
+comparison fills passed, and a prospectively frozen earlier eight-case external
+holdout passed zero screens. The HyRAM+ adapter reproduced the installed v6.1 public API while
 the identical upstream source passed its available validation tests; a frozen
 browser contract retained the experimentally corresponding directional and radial
 geometry semantics. The incident

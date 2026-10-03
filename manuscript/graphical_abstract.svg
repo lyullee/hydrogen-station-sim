@@ -45,10 +45,10 @@
   <text x="874" y="151" class="sub">What the evidence currently supports</text>
   <rect x="874" y="175" width="392" height="66" rx="12" class="good"/>
   <text x="894" y="201" class="metric">Tank validation: supported</text>
-  <text x="894" y="225" class="txt">RMSE 3.905 MPa · 4.694 °C · 3.812 %p</text>
+  <text x="894" y="225" class="txt">RMSE 3.841 MPa · 4.833 °C · 3.850 %p</text>
   <rect x="874" y="251" width="392" height="66" rx="12" class="bad"/>
   <text x="894" y="277" class="metric">Full loop: screens failed</text>
-  <text x="894" y="301" class="txt">0/8 development · 0/11 internal comparison</text>
+  <text x="894" y="301" class="txt">1/8 development · 2/11 internal comparison</text>
   <rect x="874" y="327" width="190" height="66" rx="12" class="good"/>
   <text x="894" y="353" class="metric">HyRAM parity</text>
   <text x="894" y="377" class="txt">47 tests · 803 subtests</text>

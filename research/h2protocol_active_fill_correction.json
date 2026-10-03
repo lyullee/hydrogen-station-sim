@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-03",
+  "status": "post-diagnostic preprocessing correction disclosed",
+  "scope": "SAE J2601 Tables Method normalization and downstream development analyses",
+  "trigger": "Closed-loop mass-flow timing diagnostics showed that H2P-L29 delivered essentially none of its measured mass during the first half of the old normalized interval while the simulated fill began immediately.",
+  "root_cause": "The former parser selected the first and last above-threshold sample. A negligible isolated 1.526 g/s pulse at workbook time zero therefore pulled the start 369.5 s ahead of the sustained fill.",
+  "correction": {
+    "algorithm": "Cluster above-threshold flow samples using a 15 s maximum gap, discard leading or trailing clusters below max(0.005 kg, 0.2% of total cluster mass), and retain meaningful multi-segment fills including their internal gaps.",
+    "source_commit": "74baec4",
+    "tests": "A regression test rejects a negligible leading pulse while existing meaningful multi-segment cases remain intact."
+  },
+  "h2p_l29": {
+    "old_normalized_sample_count": 1143,
+    "old_duration_s": 571.0000002058223,
+    "raw_leading_pulse_g_s": 1.526,
+    "gap_before_sustained_fill_s": 369.5,
+    "corrected_normalized_sample_count": 399,
+    "corrected_duration_s": 198.99999999906868,
+    "corrected_first_flow_g_s": 1.073
+  },
+  "processed_artifact_hashes": {
+    "h2protocol_cases_csv_sha256": "f6bcc9a29da4e86f8376f14832192666002d7a9fb046ff00a3eb05d364c3e3ec",
+    "h2p_l29_trace_csv_sha256": "5ec4a91b567e69dcc6f2759b6adb8d7b8682ad438578d9d74b218b7f3fcc012a"
+  },
+  "downstream_effect": {
+    "tank_fit_before": {
+      "effective_volume_multiplier": 1.0519881596076546,
+      "gas_liner_ua_multiplier": 64.43011313151457
+    },
+    "tank_fit_after": {
+      "effective_volume_multiplier": 1.052729261198358,
+      "gas_liner_ua_multiplier": 31.460656519273492
+    },
+    "validation_mean_rmse_after": {
+      "pressure_mpa": 3.8413052037435977,
+      "temperature_c": 4.832748408545587,
+      "soc_percentage_points": 3.8495521984109318
+    }
+  },
+  "evidence_role": "The corrected tank and development results supersede the old Tables Method normalization. The eight MC Default workbooks use a separate parser and remain a consumed historical external failure of their frozen model; they were not rerun or used for tuning."
+}

@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-03T04:23:23.673364+00:00",
+  "frozen_model_commit": "5977d0be8efb5f57746e7e3cb2e3b9cdb842abcf",
+  "protocol": "research\\closed_loop_thermal_calibration_protocol_v2.json",
+  "development_lab_test_numbers": [
+    1,
+    4,
+    11,
+    13,
+    19,
+    22,
+    29,
+    31
+  ],
+  "prohibited_evaluation_inputs": [
+    "the 11 previously inspected internal-comparison fills",
+    "the eight consumed MC Default external holdout fills"
+  ],
+  "objective": "mean((pressure_RMSE/5 MPa)^2 + (tank_temperature_RMSE/10 degC)^2 + (SOC_RMSE/5 percentage points)^2)",
+  "candidate_results": [
+    {
+      "multiplier": 1.0,
+      "score": 12.519150385912496,
+      "screening_pass_count": 1,
+      "pressure_rmse_mean_mpa": 7.832800481155872,
+      "temperature_rmse_mean_c": 12.105533775470528,
+      "soc_rmse_mean_percentage_points": 8.629878128697445
+    },
+    {
+      "multiplier": 2.0,
+      "score": 11.50108638212469,
+      "screening_pass_count": 1,
+      "pressure_rmse_mean_mpa": 6.991552493653104,
+      "temperature_rmse_mean_c": 11.701842993311107,
+      "soc_rmse_mean_percentage_points": 7.725446417519091
+    },
+    {
+      "multiplier": 4.0,
+      "score": 11.221009188600583,
+      "screening_pass_count": 1,
+      "pressure_rmse_mean_mpa": 6.783999326685944,
+      "temperature_rmse_mean_c": 11.545837379658064,
+      "soc_rmse_mean_percentage_points": 7.501521243851012
+    },
+    {
+      "multiplier": 8.0,
+      "score": 11.051159818367582,
+      "screening_pass_count": 1,
+      "pressure_rmse_mean_mpa": 6.665674671769689,
+      "temperature_rmse_mean_c": 11.46990783811994,
+      "soc_rmse_mean_percentage_points": 7.369536792714975
+    },
+    {
+      "multiplier": 12.0,
+      "score": 11.014694057528565,
+      "screening_pass_count": 1,
+      "pressure_rmse_mean_mpa": 6.634162489032238,
+      "temperature_rmse_mean_c": 11.439135686175929,
+      "soc_rmse_mean_percentage_points": 7.331661440613936
+    },
+    {
+      "multiplier": 16.0,
+      "score": 10.969131130676399,
+      "screening_pass_count": 1,
+      "pressure_rmse_mean_mpa": 6.601693364975364,
+      "temperature_rmse_mean_c": 11.427575890283551,
+      "soc_rmse_mean_percentage_points": 7.297254987401889
+    }
+  ],
+  "selected_precooler_duty_multiplier": 16.0,
+  "selection_is_validation": false
+}

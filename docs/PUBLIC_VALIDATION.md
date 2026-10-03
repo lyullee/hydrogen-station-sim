@@ -112,40 +112,59 @@ repeat-fuelling trial whose measured flow implies substantially more inventory
 than its nominal SOC change.
 
 The original closed-loop baseline failed its engineering screen because the
-unfitted tank overheated and the dispenser under-delivered mass. After the tank
-fit is frozen, select a single dispenser flow-area multiplier only on the eight
-development fills declared in `research/analysis_plan.json`:
+unfitted tank overheated and the dispenser under-delivered mass. Mass-flow timing
+diagnostics then exposed a preprocessing error in H2P-L29: an isolated 1.526 g/s
+pulse at workbook time zero pulled the old normalized start 369.5 s ahead of the
+sustained fill. The corrected parser clusters above-threshold samples, removes
+negligible leading/trailing clusters by integrated mass, and preserves meaningful
+multi-segment fills. The correction, hashes and downstream effect are recorded in
+`research/h2protocol_active_fill_correction.json`. H2P-L29 now contains 399 samples
+over 199 s instead of 1,143 samples over 571 s.
+
+The tank model was refitted after this correction. Its global effective-volume
+and gas-to-liner-UA multipliers are 1.052729 and 31.460657. The 12 frozen
+measured-boundary validation fills have mean pressure, temperature and SOC RMSE
+of 3.841 MPa, 4.833 °C and 3.850 percentage points. After freezing that fit,
+select a single dispenser flow-area multiplier only on the eight development
+fills declared in `research/analysis_plan.json`:
 
 ```powershell
 .venv\Scripts\python.exe scripts\calibrate_closed_loop_flow.py --jobs 6
 ```
 
 H2P-L06 was used during exploratory diagnosis and is permanently excluded from
-the declared comparison set. Once the calibration file exists, run the eleven
-declared cases:
+the declared comparison set. The initial candidate grid ended at its best value,
+so the development-only search was extended to 2.5 before evaluating the eleven
+comparison fills. It selected a flow-area multiplier of 2.0. Density-based SOC
+also now uses each experiment's nominal working pressure; this corrects the 35 MPa
+H2P-L19 experiment without changing the default 70 MPa station configuration.
+Once the calibration file exists, run the eleven declared cases:
 
 ```powershell
 .venv\Scripts\python.exe scripts\run_h2protocol_validation.py `
   --tank-validation-json data\public_validation\results\tank_model\validation.json `
   --flow-calibration-json data\public_validation\results\closed_loop_flow_calibration\calibration.json `
   --lab-test-numbers 3,9,12,15,18,21,24,27,30,33,36 `
-  --output data\public_validation\results\closed_loop_confirmation_after_antiwindup `
+  --thermal-calibration-json data\public_validation\results\closed_loop_thermal_calibration_v2\calibration.json `
+  --output data\public_validation\results\closed_loop_internal_comparison_v2 `
   --jobs 6
 ```
 
 The first comparison was inspected before structural controller and cascade
-corrections, so all subsequent runs on these cases are internal iteration evidence,
-not a pristine untouched external holdout. The frozen global flow-area multiplier
-remains 1.25. A clean run from commit `55206694bc70d61ccc7521fad563ea15e466f302`
-corrected flow-limit anti-windup, a false fixed-temperature precooler trip, and
-per-dispenser cascade progression without refitting any parameter. Mean pressure,
-temperature and SOC RMSE improved from 11.842 MPa, 10.292 °C and 15.347 percentage
-points to 7.213 MPa, 9.179 °C and 10.112 percentage points. All 11 cases still
-failed at least one predeclared engineering screen. The eight development cases
-also passed 0/8 screens, with mean RMSE of 13.695 MPa, 21.634 °C and 17.668
-percentage points. Do not tune further against the 11 comparison cases. Report
-the result as a negative closed-loop validation finding and keep the stronger
-measured-boundary tank validation claim separate.
+corrections, so every later run on these cases is internal iteration evidence,
+not a pristine untouched external holdout. The corrected v2 pipeline uses the
+refitted tank, flow-area multiplier 2.0 and effective precooler-duty multiplier
+16. The latter was selected from a protocol frozen before evaluation; it again
+fell at the candidate upper bound, while improvement from 8 to 16 was small.
+Larger values were not searched because the remaining error is not defensibly
+identifiable as cooling duty alone.
+
+With this final development configuration, 1/8 development fills passed all
+screens (mean RMSE 6.602 MPa, 11.428 °C and 7.297 percentage points). The already-
+inspected internal comparison passed 2/11 (4.530 MPa, 7.819 °C and 4.625
+percentage points). This is a material improvement but still a negative full-loop
+result. Do not tune against the 11 comparison cases. Keep the measured-boundary
+tank claim separate from controller, cascade, dispenser and precooler claims.
 
 ### Prospectively frozen MC Default external holdout
 
@@ -184,23 +203,20 @@ The machine-readable clean-run evidence is committed as
 `research/closed_loop_internal_confirmation_structural_fix.json`, and
 `research/closed_loop_internal_confirmation_structural_fix.csv`.
 
-After the prospective MC Default result was consumed, a separate development-
-only thermal calibration was predeclared in
-`research/closed_loop_thermal_calibration_protocol.json`. It evaluated one global
-effective duty multiplier (1, 2, 4 or 8) on the original eight development cases
-only. The multiplier scales hydrogen-to-coolant and chiller UA together while
-leaving coolant thermal capacity unchanged. The predeclared objective selected
-8, but the development result remained 0/8 passes; mean pressure, temperature
-and SOC RMSE changed only to 13.176 MPa, 21.515 °C and 17.070 percentage points.
-On the already-inspected 11-case internal comparison, errors changed to 6.790 MPa,
-8.570 °C and 9.540 percentage points and the result remained 0/11. The optimum
-at the candidate upper bound and the small improvement show that effective
-cooling duty is not the principal structural limitation. This calibration is
-development evidence, not a new validation result, and was never rerun against
-the consumed MC Default outcomes.
+The first thermal calibration in
+`research/closed_loop_thermal_calibration_protocol.json` is retained as historical
+development evidence and is superseded by the corrected parser/tank/SOC pipeline.
+The replacement protocol is
+`research/closed_loop_thermal_calibration_protocol_v2.json`; its machine-readable
+candidate, development and internal-comparison results are committed under
+`research/*_v2.json` and `research/*_v2.csv`. Neither calibration was rerun against
+the consumed MC Default outcomes. The external 0/8 result remains an honest
+historical failure of its frozen pre-correction model and cannot validate the
+corrected model.
 
-Every generated JSON and Markdown report records the source commit and whether
-the worktree was dirty. Publication results must be regenerated from a clean,
+Each final comparison JSON and Markdown report records the source commit and
+whether the worktree was dirty; calibration reports link to their frozen model
+commit and protocol. Publication results must be regenerated from a clean,
 immutable release commit; a commit hash alone does not identify uncommitted model
 code.
 
