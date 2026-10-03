@@ -184,6 +184,21 @@ The machine-readable clean-run evidence is committed as
 `research/closed_loop_internal_confirmation_structural_fix.json`, and
 `research/closed_loop_internal_confirmation_structural_fix.csv`.
 
+After the prospective MC Default result was consumed, a separate development-
+only thermal calibration was predeclared in
+`research/closed_loop_thermal_calibration_protocol.json`. It evaluated one global
+effective duty multiplier (1, 2, 4 or 8) on the original eight development cases
+only. The multiplier scales hydrogen-to-coolant and chiller UA together while
+leaving coolant thermal capacity unchanged. The predeclared objective selected
+8, but the development result remained 0/8 passes; mean pressure, temperature
+and SOC RMSE changed only to 13.176 MPa, 21.515 °C and 17.070 percentage points.
+On the already-inspected 11-case internal comparison, errors changed to 6.790 MPa,
+8.570 °C and 9.540 percentage points and the result remained 0/11. The optimum
+at the candidate upper bound and the small improvement show that effective
+cooling duty is not the principal structural limitation. This calibration is
+development evidence, not a new validation result, and was never rerun against
+the consumed MC Default outcomes.
+
 Every generated JSON and Markdown report records the source commit and whether
 the worktree was dirty. Publication results must be regenerated from a clean,
 immutable release commit; a commit hash alone does not identify uncommitted model

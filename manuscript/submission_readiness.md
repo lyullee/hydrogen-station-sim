@@ -14,7 +14,7 @@ The current official IJHE Guide for Authors was checked on 3 October 2026. A res
 | Gate | Status | Evidence / required action |
 |---|---|---|
 | Type-IV tank external validation | Complete for measured boundaries | 12 frozen validation fills; pressure 3.905 MPa, temperature 4.694 °C, SOC 3.812 %p mean RMSE |
-| Full station closed-loop validation | Failed | 0/8 development, 0/11 internal-comparison and 0/8 prospectively frozen MC Default holdout fills met all project screens; external holdout mean RMSE 15.862 MPa, 13.230 °C and 18.082 SOC %p |
+| Full station closed-loop validation | Failed | 0/8 development, 0/11 internal-comparison and 0/8 prospectively frozen MC Default holdout fills met all project screens; a predeclared development-only cooling-duty calibration also remained 0/8 and 0/11, so the error is structural rather than a missing cooling multiplier |
 | HyRAM+ production adapter | Verified within stated scope | Exact v6.1 source identity, 47 upstream tests/803 subtests, three production parity cases |
 | Outdoor free-jet display geometry | Complete within bounded scope | Three applicable public experimental families (4 vol% dilution length, distance-dependent heat flux, unconfined overpressure); exact HyRAM+ source and adapter parity; separate radial/directional browser mapping. This is not site-specific validation or a safety-distance claim |
 | HIAD casebook leakage review | Pending | Advisory pre-screen flags 16 HIGH, 6 MEDIUM and 2 LOW among 24 holdout vignettes; a qualified non-rating coordinator must inspect every case, rewrite/remove hindsight actions without adding facts, then approve and freeze the complete set |
@@ -51,6 +51,10 @@ The current official IJHE Guide for Authors was checked on 3 October 2026. A res
 - `research/mc_default_external_holdout_protocol.json` and
   `data/public_validation/results/closed_loop_external_holdout/`: prospectively
   frozen protocol plus the retained 0/8 external result and case-level metrics.
+- `research/closed_loop_thermal_calibration_protocol.json` and
+  `data/public_validation/results/closed_loop_thermal_calibration/`: frozen
+  development-only candidate selection; the upper-bound winner did not produce
+  any screen pass and is not treated as validation.
 - `IJHE_READINESS_AUDIT.md` and `ijhe_readiness_audit.json`: machine-generated
   claim-to-evidence gates; goal completion remains prohibited while any full-
   objective gate is not PASS.

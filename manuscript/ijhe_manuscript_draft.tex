@@ -326,6 +326,15 @@ as redesign targets. The bench files observe vehicle and source pressures, flow,
 inlet temperature and SOC, but do not expose every internal three-bank valve
 command; they therefore cannot by themselves validate all cascade dispatch states.
 
+A development-only sensitivity, frozen after the MC Default result had been
+consumed, scaled hydrogen--coolant and chiller conductance together by factors of
+1, 2, 4 and 8. The predeclared objective selected the upper-bound factor 8, yet
+the eight development fills and eleven internal comparison fills still passed
+zero screens. Internal-comparison mean errors changed only from 7.213 to 6.790 MPa,
+9.179 to 8.570 $^{\circ}$C and 10.112 to 9.540 SOC percentage points. This
+diagnostic was not applied to the consumed external holdout and indicates that
+cooling duty alone does not explain the closed-loop error.
+
 \subsection{HyRAM+ source, tests and adapter parity}
 The installed and upstream v6.1 Python sources matched over 38 files with aggregate
 SHA-256 \texttt{d5865e1ae7b5c77b985e06b45d7a5607543703c1834fc50f7c5d96f32a0c22de}.

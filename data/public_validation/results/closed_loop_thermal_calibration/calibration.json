@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-03T03:37:33.908336+00:00",
+  "frozen_model_commit": "a449233bda642c78ee3928412131a71c2b9b544d",
+  "protocol": "research\\closed_loop_thermal_calibration_protocol.json",
+  "development_lab_test_numbers": [
+    1,
+    4,
+    11,
+    13,
+    19,
+    22,
+    29,
+    31
+  ],
+  "prohibited_evaluation_inputs": [
+    "the 11 previously inspected internal-comparison fills",
+    "the eight consumed MC Default external holdout fills"
+  ],
+  "objective": "mean((pressure_RMSE/5 MPa)^2 + (tank_temperature_RMSE/10 degC)^2 + (SOC_RMSE/5 percentage points)^2)",
+  "candidate_results": [
+    {
+      "multiplier": 1.0,
+      "score": 44.89052498692547,
+      "screening_pass_count": 0,
+      "pressure_rmse_mean_mpa": 13.695355169819074,
+      "temperature_rmse_mean_c": 21.63409015762153,
+      "soc_rmse_mean_percentage_points": 17.6684368978197
+    },
+    {
+      "multiplier": 2.0,
+      "score": 44.28718428150745,
+      "screening_pass_count": 0,
+      "pressure_rmse_mean_mpa": 13.374391820986618,
+      "temperature_rmse_mean_c": 21.552268399004234,
+      "soc_rmse_mean_percentage_points": 17.297904299404873
+    },
+    {
+      "multiplier": 4.0,
+      "score": 44.04513046884532,
+      "screening_pass_count": 0,
+      "pressure_rmse_mean_mpa": 13.247176199183931,
+      "temperature_rmse_mean_c": 21.52195691832319,
+      "soc_rmse_mean_percentage_points": 17.14591971692397
+    },
+    {
+      "multiplier": 8.0,
+      "score": 43.91432730088445,
+      "screening_pass_count": 0,
+      "pressure_rmse_mean_mpa": 13.175761010999148,
+      "temperature_rmse_mean_c": 21.514811365338275,
+      "soc_rmse_mean_percentage_points": 17.0703717849942
+    }
+  ],
+  "selected_precooler_duty_multiplier": 8.0,
+  "selection_is_validation": false
+}
