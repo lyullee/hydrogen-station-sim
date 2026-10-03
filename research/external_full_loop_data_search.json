@@ -1590,7 +1590,7 @@
         }
       ],
       "result": "The endpoint screen is a useful independent negative diagnostic: the current model reaches the 85 degC safety stop in both cases and underpredicts final pressure and SOC. This corroborates the need to resolve the gas-temperature state, thermal model and boundary assumptions before claiming full-loop validity.",
-      "next_action": "Obtain the article authors' raw time-series export or a permitted digitised series with timestamps, dispenser and vehicle channels, then rerun under a pre-registered holdout freeze.",
+      "next_action": "Request the authors' synchronized pressure, temperature and mass-flow export using research/CIP_DISPENSER_DATA_REQUEST_DRAFT.md, then freeze provenance and scoring before evaluation.",
       "claim_limit": "The diagnostic does not close the independent full-loop numerical gate; observed endpoint conditions are not a replacement for time-series external validation."
     }
   },
