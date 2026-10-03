@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-10-03T21:53:59.201558+00:00",
+  "status": "completed_endpoint_only_negative_diagnostic",
+  "source": {
+    "title": "Study on comprehensive evaluation of 35 MPa/70 MPa hydrogen dispenser refueling performance",
+    "doi": "10.19799/j.cnki.2095-4239.2020.0049",
+    "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
+    "publisher": "Energy Storage Science and Technology",
+    "table_downloads": [
+      {
+        "table": "T1",
+        "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T1.csv.zip",
+        "sha256": "b98ac67fcf751801a86228dd8ee8779e50c2832ba5a78ed3c187654dc7725ac3"
+      },
+      {
+        "table": "T2",
+        "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T2.csv.zip",
+        "sha256": "06beb809e4021e3aee9e641e07ac4cdef98a9ae71a2abfa2ab7009a8ae28ecd0"
+      },
+      {
+        "table": "T4",
+        "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T4.csv.zip",
+        "sha256": "44c6fc612715ef018ecde9e4a734eee86fa75640b5b91614e21b2bd035537a2e"
+      }
+    ],
+    "reuse_status": "public_download; article copyright and derived-data reuse terms require citation/permission review"
+  },
+  "model": {
+    "script": "scripts/run_cip_dispenser_endpoint_screen.py",
+    "git_commit": "runtime",
+    "maximum_gas_temperature_c": 85.0,
+    "source_pressure_boundary": "constant published source pressure per case",
+    "hyraM_backend": "unavailable_backend_for_process_screen"
+  },
+  "aggregate": {
+    "case_count": 2,
+    "stop_reason_counts": {
+      "safety-temperature": 2
+    },
+    "claim_boundary": "This diagnostic does not close the independent station-to-vehicle full-loop gate and is not a safety-distance claim."
+  },
+  "cases": [
+    {
+      "case_id": "cip-35mpa-logistics",
+      "observed": {
+        "final_pressure_mpa": 35.4,
+        "final_temperature_c": 64.0,
+        "soc_percent": 88.0,
+        "duration_s": 470.0,
+        "mass_kg": 8.21
+      },
+      "predicted": {
+        "final_pressure_mpa": 3.2610094469489295,
+        "final_temperature_c": 85.1192476715745,
+        "final_soc_percent": 9.044249865654129,
+        "stop_reason": "safety-temperature",
+        "peak_temperature_c": 85.1192476715745
+      },
+      "endpoint_errors": {
+        "pressure_mpa": -32.138990553051066,
+        "temperature_c": 21.1192476715745,
+        "soc_percentage_points": -78.95575013434588
+      },
+      "claim_boundary": "endpoint-only public-table diagnostic; no synchronized time-series or full-loop validation claim"
+    },
+    {
+      "case_id": "cip-70mpa-passenger",
+      "observed": {
+        "final_pressure_mpa": 81.6,
+        "final_temperature_c": 65.8,
+        "soc_percent": 99.0,
+        "duration_s": 276.0,
+        "mass_kg": 5.08
+      },
+      "predicted": {
+        "final_pressure_mpa": 66.46092542199194,
+        "final_temperature_c": 85.06777253465157,
+        "final_soc_percent": 82.37547182068904,
+        "stop_reason": "safety-temperature",
+        "peak_temperature_c": 85.06777253465157
+      },
+      "endpoint_errors": {
+        "pressure_mpa": -15.13907457800805,
+        "temperature_c": 19.26777253465157,
+        "soc_percentage_points": -16.624528179310957
+      },
+      "claim_boundary": "endpoint-only public-table diagnostic; no synchronized time-series or full-loop validation claim"
+    }
+  ]
+}

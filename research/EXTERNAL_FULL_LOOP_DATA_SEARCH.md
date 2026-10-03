@@ -843,3 +843,26 @@ flow or transferred mass, source/cascade states, initial conditions, protocol
 version, quality/calibration metadata and permission to publish derived metrics.
 Any approved subset must be hashed and frozen before scoring. The independent
 full-loop numerical gate remains open.
+
+## 2026-10-04 Chinese 35/70 MPa dispenser endpoint-table follow-up
+
+The public article [Study on comprehensive evaluation of 35 MPa/70 MPa hydrogen
+dispenser refueling performance](https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml)
+(DOI [10.19799/j.cnki.2095-4239.2020.0049](https://doi.org/10.19799/j.cnki.2095-4239.2020.0049))
+reports two real dispenser tests and provides CSV downloads for endpoint tables.
+The 35 MPa test ends at 35.4 MPa, 64 °C, 8.21 kg and 470 s after a 2.2 MPa
+start; the 70 MPa test ends at 81.6 MPa, 65.8 °C, 5.08 kg and 276 s after a
+1.7 MPa start. The paper also describes pressure, temperature and mass-flow
+curves, but the downloaded T1/T2/T4 files are endpoint tables rather than a
+common-time-base raw station/vehicle logger. They are classified as
+**PUBLIC_ENDPOINT_TABLE_DIAGNOSTIC**, with reuse terms requiring citation and
+permission review.
+
+The reproducible screen is stored in
+[cip_dispenser_endpoint_screen.json](cip_dispenser_endpoint_screen.json) and is
+run by `scripts/run_cip_dispenser_endpoint_screen.py`. Under the declared
+85 °C safety limit, the current model stopped on `safety-temperature` in both
+cases. It predicted 3.26 MPa versus 35.4 MPa for the 35 MPa case and 66.46 MPa
+versus 81.6 MPa for the 70 MPa case, with corresponding SOC underprediction.
+This is an independent negative diagnostic of the thermal/controller state and
+source-boundary assumptions, not a full-loop validation pass.

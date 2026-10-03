@@ -1554,6 +1554,44 @@
       "result": "NREL HITRF is the strongest newly confirmed high-value data custodian and the IJHE sample-fill table offers a useful endpoint benchmark. No public file-level synchronized station-to-vehicle raw archive was located, so the independent full-loop numerical gate remains open.",
       "next_action": "Request a de-identified HITRF export with common timestamps, vehicle/receptacle pressure, gas and tank temperature, mass flow or transferred mass, source/cascade states, initial conditions, protocol version, quality/calibration metadata and permission to publish derived metrics; hash-lock any approved subset before scoring.",
       "claim_limit": "Do not promote facility descriptions, dissertation statements or article tables to raw validation. Keep endpoint context, component reliability and full-loop time-series validation as separate claims."
+    },
+    "cip_dispenser_endpoint_table_followup": {
+      "scope": "screening a public 35 MPa/70 MPa Chinese dispenser experiment with downloadable endpoint tables",
+      "sources": [
+        {
+          "id": "cip_35_70_mpa_dispenser_endpoint_tables",
+          "title": "Study on comprehensive evaluation of 35 MPa/70 MPa hydrogen dispenser refueling performance",
+          "doi": "10.19799/j.cnki.2095-4239.2020.0049",
+          "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
+          "publisher": "Energy Storage Science and Technology",
+          "finding": "The public article reports two real dispenser tests and exposes CSV downloads for endpoint tables. The 35 MPa case reports 2.2 MPa initial vehicle pressure, 64 degC initial/final tank temperature, 43 MPa source pressure, 26 degC source temperature, 35.4 MPa final pressure, 8.21 kg and 470 s. The 70 MPa case reports 1.7 MPa initial pressure, 2 degC initial temperature, 85 MPa/-40 degC source conditions, 81.6 MPa final pressure, 65.8 degC final temperature, 5.08 kg and 276 s. The article describes plotted pressure/temperature/flow curves, but the downloaded CSVs are endpoint tables rather than a common-time-base raw logger.",
+          "table_downloads": [
+            {
+              "table": "T1",
+              "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T1.csv.zip",
+              "sha256": "b98ac67fcf751801a86228dd8ee8779e50c2832ba5a78ed3c187654dc7725ac3"
+            },
+            {
+              "table": "T2",
+              "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T2.csv.zip",
+              "sha256": "06beb809e4021e3aee9e641e07ac4cdef98a9ae71a2abfa2ab7009a8ae28ecd0"
+            },
+            {
+              "table": "T4",
+              "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T4.csv.zip",
+              "sha256": "44c6fc612715ef018ecde9e4a734eee86fa75640b5b91614e21b2bd035537a2e"
+            }
+          ],
+          "decision": "PUBLIC_ENDPOINT_TABLE_DIAGNOSTIC",
+          "raw_common_timebase": false,
+          "reuse_status": "public_download; article copyright and derived-data reuse terms require citation/permission review",
+          "diagnostic": "research/cip_dispenser_endpoint_screen.json",
+          "claim_limit": "Use for a reproducible endpoint/stop-behaviour diagnostic only. Do not promote table values to synchronized full-loop validation or a safety-distance claim."
+        }
+      ],
+      "result": "The endpoint screen is a useful independent negative diagnostic: the current model reaches the 85 degC safety stop in both cases and underpredicts final pressure and SOC. This corroborates the need to resolve the gas-temperature state, thermal model and boundary assumptions before claiming full-loop validity.",
+      "next_action": "Obtain the article authors' raw time-series export or a permitted digitised series with timestamps, dispenser and vehicle channels, then rerun under a pre-registered holdout freeze.",
+      "claim_limit": "The diagnostic does not close the independent full-loop numerical gate; observed endpoint conditions are not a replacement for time-series external validation."
     }
   },
   "last_reviewed": "2026-10-04"
