@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T08:24:25.972812+00:00",
+  "generated_at": "2026-10-03T08:34:07.513551+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
     "PASS": 10,
-    "FAIL": 5,
+    "FAIL": 6,
     "PENDING": 7
   },
   "blocking_bounded_submission_gates": [
@@ -14,6 +14,7 @@
     "preslhy_revised_holdout_validation",
     "proust_independent_release_validation",
     "schefer_transient_release_validation",
+    "schefer_2007_pressure_decay_validation",
     "institutional_ethics_determination",
     "hiad_casebook_frozen",
     "hiad_holdout_collection",
@@ -26,6 +27,7 @@
     "preslhy_revised_holdout_validation",
     "proust_independent_release_validation",
     "schefer_transient_release_validation",
+    "schefer_2007_pressure_decay_validation",
     "institutional_ethics_determination",
     "hiad_casebook_frozen",
     "hiad_holdout_collection",
@@ -563,6 +565,32 @@
       }
     },
     {
+      "id": "schefer_2007_pressure_decay_validation",
+      "status": "FAIL",
+      "claim": "The locked adiabatic vessel-discharge model meets all frozen pressure-decay screens on the independent Schefer et al. 2007 experiment.",
+      "evidence": "research\\schefer_2007_holdout_result.json; research\\schefer_2007_holdout_protocol.json; data\\public_validation\\derived\\schefer_2007_figure4.csv",
+      "requirement": "At least 15 points; <=10% initial-pressure-normalized RMSE, <=15% median absolute percentage error and <=20% half-pressure-time error; all screens required.",
+      "observed": {
+        "result": {
+          "points": 222,
+          "measured_initial_pressure_psi": 6244.751381,
+          "predicted_initial_pressure_psi": 6247.098339931793,
+          "pressure_nrmse_percent_initial_measured": 11.580711004119967,
+          "median_absolute_percentage_error_percent": 27.46396061123326,
+          "experimental_half_pressure_time_s": 26.78880237652538,
+          "predicted_half_pressure_time_s": 28.53325636604946,
+          "half_pressure_time_relative_error_percent": 6.511877481513398,
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "half_pressure_time_screen_pass": true,
+          "joint_primary_screen_pass": false
+        },
+        "protocol_hash_matches": true,
+        "data_hash_matches": true,
+        "claim_boundary": "This holdout tests time-resolved vessel pressure in one 43.1 MPa hydrogen blowdown from a 1.234 m3 vessel through the published 5.08 mm restriction. It does not validate flame geometry, radiation, dispersion, mass flow instrumentation, 70-90 MPa storage, refuelling control, or a complete station loop."
+      }
+    },
+    {
       "id": "hiad_protocol_integrity",
       "status": "PASS",
       "claim": "The incident decision-support study protocol was hash-locked before outcomes.",
@@ -702,7 +730,7 @@
         "manuscript": "manuscript\\ijhe_manuscript_draft.tex",
         "highlights": "manuscript\\Highlights.txt",
         "counts": {
-          "abstract_words": 144,
+          "abstract_words": 141,
           "keywords": 6,
           "highlight_bullets": 5,
           "highlight_characters": [
@@ -712,11 +740,11 @@
             75,
             75
           ],
-          "approximate_manuscript_words_before_references": 5359,
+          "approximate_manuscript_words_before_references": 5582,
           "figures": 2,
           "tables": 3,
-          "citation_keys": 17,
-          "bibliography_entries": 17,
+          "citation_keys": 18,
+          "bibliography_entries": 18,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -744,12 +772,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-03T08:23:26.1428253Z",
+        "attempted_at": "2026-10-03T08:34:07.4194168Z",
         "attempts_this_run": 1,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "e87ca75bf2be2370ecf52301b401c06453e37037ad81086807003c52c65dfb8d",
+        "source_sha256": "ccf2a2278cf27f9013beddbd55c1ffb3ce448909f7f89349ac9814dc5df51c29",
         "platform": "Microsoft Windows NT 10.0.26200.0",
         "diagnostic": "Unable to find standard directories for platform",
         "interpretation": "Compiler environment failure; LaTeX source compilation remains unverified."

@@ -393,6 +393,48 @@ def audit(root: Path) -> dict[str, object]:
         } if schefer_result else "missing; transient release holdout has not completed",
     ))
 
+    schefer_2007_result_path = root / "research/schefer_2007_holdout_result.json"
+    schefer_2007_result = _json(schefer_2007_result_path)
+    schefer_2007_protocol_path = root / "research/schefer_2007_holdout_protocol.json"
+    schefer_2007_protocol = _json(schefer_2007_protocol_path)
+    schefer_2007_data_path = root / "data/public_validation/derived/schefer_2007_figure4.csv"
+    schefer_2007_observed = (schefer_2007_result or {}).get("result") or {}
+    schefer_2007_protocol_hash = (
+        _sha256(schefer_2007_protocol_path) if schefer_2007_protocol_path.is_file() else None
+    )
+    schefer_2007_data_hash = (
+        _sha256(schefer_2007_data_path) if schefer_2007_data_path.is_file() else None
+    )
+    schefer_2007_pass = bool(
+        (schefer_2007_protocol or {}).get("status")
+        == "endpoints_and_code_frozen_before_numerical_curve_access"
+        and ((schefer_2007_protocol or {}).get("known_before_freeze") or {}).get(
+            "numerical_curve_coordinates_accessed"
+        ) is False
+        and schefer_2007_observed.get("joint_primary_screen_pass") is True
+        and (schefer_2007_result or {}).get("protocol_sha256")
+        == schefer_2007_protocol_hash
+        and (schefer_2007_result or {}).get("data_sha256") == schefer_2007_data_hash
+    )
+    gates.append(_gate(
+        "schefer_2007_pressure_decay_validation",
+        "PASS" if schefer_2007_pass else ("FAIL" if schefer_2007_result else "PENDING"),
+        "The locked adiabatic vessel-discharge model meets all frozen pressure-decay screens on the independent Schefer et al. 2007 experiment.",
+        f"{schefer_2007_result_path.relative_to(root)}; {schefer_2007_protocol_path.relative_to(root)}; {schefer_2007_data_path.relative_to(root)}",
+        "At least 15 points; <=10% initial-pressure-normalized RMSE, <=15% median absolute percentage error and <=20% half-pressure-time error; all screens required.",
+        {
+            "result": schefer_2007_observed,
+            "protocol_hash_matches": (
+                (schefer_2007_result or {}).get("protocol_sha256")
+                == schefer_2007_protocol_hash
+            ),
+            "data_hash_matches": (
+                (schefer_2007_result or {}).get("data_sha256") == schefer_2007_data_hash
+            ),
+            "claim_boundary": (schefer_2007_protocol or {}).get("claim_boundary"),
+        } if schefer_2007_result else "missing; pressure-decay holdout has not completed",
+    ))
+
     protocol_path = root / "research/hiad_study_protocol_manifest.json"
     protocol = _json(protocol_path)
     protocol_ok, protocol_mismatches = _protocol_integrity(root, protocol)
@@ -570,6 +612,7 @@ def audit(root: Path) -> dict[str, object]:
         "preslhy_revised_holdout_validation",
         "proust_independent_release_validation",
         "schefer_transient_release_validation",
+        "schefer_2007_pressure_decay_validation",
         "hiad_protocol_integrity",
         "institutional_ethics_determination", "hiad_casebook_frozen",
         "hiad_holdout_collection", "independent_expert_review_complete",

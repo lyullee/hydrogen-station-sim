@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-03T08:30:02.962993+00:00",
+  "protocol_sha256": "d119b331332a2f8df6df09ebb8eda6b2bb3d457a0fe488db205366d320f83453",
+  "data_sha256": "2ef47dc2ac0eb3c34f707467fb74336ca417cf66e425aa3fabfb3e4bf2554d80",
+  "result": {
+    "points": 222,
+    "measured_initial_pressure_psi": 6244.751381,
+    "predicted_initial_pressure_psi": 6247.098339931793,
+    "pressure_nrmse_percent_initial_measured": 11.580711004119967,
+    "median_absolute_percentage_error_percent": 27.46396061123326,
+    "experimental_half_pressure_time_s": 26.78880237652538,
+    "predicted_half_pressure_time_s": 28.53325636604946,
+    "half_pressure_time_relative_error_percent": 6.511877481513398,
+    "nrmse_screen_pass": false,
+    "median_ape_screen_pass": false,
+    "half_pressure_time_screen_pass": true,
+    "joint_primary_screen_pass": false
+  },
+  "claim_supported": false
+}

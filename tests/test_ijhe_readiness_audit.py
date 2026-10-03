@@ -45,6 +45,14 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert schefer["result"]["half_peak_time_screen_pass"] is False
     assert schefer["protocol_hash_matches"] is True
     assert schefer["data_hash_matches"] is True
+    assert gates["schefer_2007_pressure_decay_validation"]["status"] == "FAIL"
+    schefer_2007 = gates["schefer_2007_pressure_decay_validation"]["observed"]
+    assert schefer_2007["result"]["points"] == 222
+    assert schefer_2007["result"]["nrmse_screen_pass"] is False
+    assert schefer_2007["result"]["median_ape_screen_pass"] is False
+    assert schefer_2007["result"]["half_pressure_time_screen_pass"] is True
+    assert schefer_2007["protocol_hash_matches"] is True
+    assert schefer_2007["data_hash_matches"] is True
     external = gates["full_loop_external_validation"]["observed"]
     assert external["protocol_integrity"] is True
     assert external["aggregate"]["case_count"] == 8

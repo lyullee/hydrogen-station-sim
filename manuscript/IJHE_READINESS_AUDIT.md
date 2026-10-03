@@ -17,6 +17,7 @@
 | `preslhy_revised_holdout_validation` | **FAIL** | The revised non-adiabatic source-depletion model meets the prospectively frozen PRESLHY E5.1 holdout rule. | `research\preslhy_e5_1_holdout_result.json; research\preslhy_e5_1_holdout_protocol.json` |
 | `proust_independent_release_validation` | **FAIL** | The fixed high-pressure aperture relation meets its prospectively frozen rule on the independent INERIS/CEA 90 MPa campaign. | `research\proust_release_holdout_result.json; research\proust_release_holdout_protocol.json; data\public_validation\derived\proust_90mpa_release.csv` |
 | `schefer_transient_release_validation` | **FAIL** | The locked adiabatic vessel-discharge model meets all frozen transient mass-flow screens on the independent Sandia/SRI experiment. | `research\schefer_2006_holdout_result.json; research\schefer_2006_holdout_protocol.json; data\public_validation\derived\schefer_2006_figure3b.csv` |
+| `schefer_2007_pressure_decay_validation` | **FAIL** | The locked adiabatic vessel-discharge model meets all frozen pressure-decay screens on the independent Schefer et al. 2007 experiment. | `research\schefer_2007_holdout_result.json; research\schefer_2007_holdout_protocol.json; data\public_validation\derived\schefer_2007_figure4.csv` |
 | `hiad_protocol_integrity` | **PASS** | The incident decision-support study protocol was hash-locked before outcomes. | `research\hiad_study_protocol_manifest.json` |
 | `institutional_ethics_determination` | **PENDING** | The applicable institution has recorded the human-participant determination. | `research\hiad_study_protocol_manifest.json` |
 | `hiad_casebook_frozen` | **PENDING** | All 24 holdout incident vignettes passed coordinator leakage review and were frozen. | `data\public_validation\results\hiad_casebook_frozen\casebook_freeze_manifest.json` |
@@ -35,6 +36,7 @@
 - `preslhy_revised_holdout_validation`
 - `proust_independent_release_validation`
 - `schefer_transient_release_validation`
+- `schefer_2007_pressure_decay_validation`
 - `institutional_ethics_determination`
 - `hiad_casebook_frozen`
 - `hiad_holdout_collection`
@@ -48,6 +50,7 @@
 - `preslhy_revised_holdout_validation`
 - `proust_independent_release_validation`
 - `schefer_transient_release_validation`
+- `schefer_2007_pressure_decay_validation`
 - `institutional_ethics_determination`
 - `hiad_casebook_frozen`
 - `hiad_holdout_collection`
