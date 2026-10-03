@@ -46,6 +46,7 @@ immutable digest are recorded.
 | HYTRANSFER public GasTeF filling-campaign report | Public report describes 13 filling and 5 emptying tests and 18 recorded-data files with pressure, temperature, gas-path and flow measurements. | **Request files.** The public PDF does not expose the 18 machine-readable files or reuse terms; request them before treating the campaign as an untouched holdout. |
 | Beijing Winter Olympics HRS Operational Data List, CSTR 16666.11.nbsdc.aI3fJrzX | National Basic Science Data Center metadata reports 2022 HRS data with dispenser monitoring, fueling records and compressor monitoring; four files, 10.22 MB. | **Access request.** The machine-readable record is marked “approval required” and the file-tree endpoint returns no files without authorization. It is a high-value candidate, not an available holdout. |
 | Hungarian HRS digital-twin validation, Hasulyó, DOI 10.32604/ee.2026.081099 | Open-access paper reports operational pressure, temperature, mass-flow and refueling comparisons from an existing Hungarian HRS. | **Request data.** The paper's data-availability statement says supporting data are unavailable because of participant consent and legal restrictions. |
+| MetHyTrucks HySaM system measurements, Zenodo DOI 10.5281/zenodo.20590842 | CC BY 4.0 record with three downloadable XLSX time series from hydrogen sampling-system experiments; the files contain 0.5 s pressure/temperature/flow-like channels. | **Measurement-system reference only.** There are no vehicle/tank/refuelling fields or station operating context, so this cannot close the station-to-vehicle full-loop gate. |
 
 ## CARB artifact inspection
 
@@ -105,6 +106,15 @@ publish an independent raw trace archive:
 <https://www.nrel.gov/hydrogen/h2fills>. H2FillS remains a reference simulator
 and a possible data-request route, not an external dataset that can be scored
 here.
+
+The MetHyTrucks HySaM record is a genuine open raw-data lead, but its scope is
+hydrogen sampling-system metrology rather than a vehicle refuelling event:
+<https://zenodo.org/records/20590842>. The three CC BY 4.0 XLSX files have
+sub-second time-of-day samples and pressure/temperature/flow-like channels, but
+no vehicle or receptacle pressure, tank capacity, vehicle temperature, initial
+state or refuelling-protocol metadata. It is therefore retained for signal
+handling and calibration checks only and is not promoted to the HRS full-loop
+holdout.
 
 The NREL HITRF experiment reported by Kuroki et al. (DOI
 <https://doi.org/10.1002/ente.202300239>) is a strong partial-station data

@@ -457,6 +457,60 @@
         "role": "strong independent field-validation and data-request lead",
         "exclusion_reason": "The published article explicitly states that supporting data are unavailable for legal and consent reasons."
       }
+    },
+    {
+      "id": "met_hy_trucks_hysam_2026",
+      "title": "Group B -- HySam system measurement data",
+      "doi": "10.5281/zenodo.20590842",
+      "url": "https://zenodo.org/records/20590842",
+      "publisher": "Zenodo / MetHyTrucks 22NRM03",
+      "license": "CC BY 4.0",
+      "public_raw_data": true,
+      "decision": "MEASUREMENT_SYSTEM_ONLY_NOT_HRS_FULL_LOOP",
+      "primary_source_review_2026_10_03": {
+        "description": "Three openly downloadable XLSX files record HySaM hydrogen sampling-system experiments, not vehicle refuelling or station operation.",
+        "files": [
+          {
+            "name": "20241023_Test_1_HySaM.xlsx",
+            "bytes": 663869,
+            "md5": "8eb7c14218ae25d4ffe410cbf440484f",
+            "rows": 6601,
+            "columns": 23
+          },
+          {
+            "name": "20241023_Test_4_HySaM_CESAME.xlsx",
+            "bytes": 75292,
+            "md5": "ce0f85c5b12f55300bf8a5792e9221c8",
+            "rows": 721,
+            "columns": 14
+          },
+          {
+            "name": "20241024_Test_9_HySaM.xlsx",
+            "bytes": 283636,
+            "md5": "9cb74d5b885ebfcf90589bfe41bbc806",
+            "rows": 2161,
+            "columns": 21
+          }
+        ],
+        "observed_channels": [
+          "Zeit",
+          "PTX05 ValueY",
+          "PT03 ValueY",
+          "QT_D02 ValueY",
+          "FWg35_Masse ValueY",
+          "TT_D04 ValueY",
+          "TEX01 ValueY"
+        ],
+        "common_timebase": "0.5 s samples with time-of-day column",
+        "full_loop_fields": {
+          "vehicle_or_receptacle_pressure": false,
+          "mass_flow_or_transferred_mass": "sampling-system channel present but station/vehicle transfer semantics are not established",
+          "tank_or_fuel_temperature": false,
+          "vehicle_capacity_and_initial_conditions": false,
+          "refuelling_protocol": false
+        },
+        "role": "Public raw measurement reference for sensor/pressure-flow signal handling and possible calibration checks; it cannot close the station-to-vehicle full-loop validation gate."
+      }
     }
   ],
   "next_action": "Request de-identified synchronized fill traces from CARB, JRC GasTeF, Cal State LA, NREL HITRF/NFCTEC, Empa, DLR/FCH2RAIL and the Hungarian HRS study author before freezing a new full-loop holdout protocol; use Grune/Sempert for the separate ventilation protocol.",
@@ -498,6 +552,11 @@
         "id": "nrel_kuroki_2023_hitrf_36l_fill",
         "url": "https://doi.org/10.1002/ente.202300239",
         "finding": "NREL HITRF 36 L fill is described with 6.3 to 73.0 MPa and 186 s boundaries, but the paper states that research data are not shared"
+      },
+      {
+        "id": "met_hy_trucks_hysam_2026",
+        "url": "https://zenodo.org/records/20590842",
+        "finding": "CC BY 4.0 Zenodo record exposes three XLSX time series from HySaM hydrogen sampling-system experiments; raw files have pressure/temperature/flow-like channels but no vehicle/tank/refuelling context, so they cannot close the HRS full-loop gate."
       }
     ],
     "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
