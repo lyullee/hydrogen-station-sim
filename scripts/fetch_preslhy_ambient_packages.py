@@ -194,7 +194,6 @@ def _download_member(
     reader: HttpRangeReader,
     member: TarMember,
     destination: Path,
-    *, chunk_size: int = 8 * 1024 * 1024,
 ) -> str:
     destination.parent.mkdir(parents=True, exist_ok=True)
     temporary = destination.with_suffix(destination.suffix + ".part")
@@ -208,17 +207,55 @@ def _download_member(
                 digest.update(block)
         print(f"resuming {destination.name} at byte {written}", flush=True)
     with temporary.open("ab") as output:
-        while written < member.size:
-            length = min(chunk_size, member.size - written)
-            payload = reader(member.offset + written, length)
-            output.write(payload)
-            output.flush()
-            digest.update(payload)
-            written += length
-            print(
-                f"{destination.name}: {written}/{member.size} bytes",
-                flush=True,
-            )
+        attempt = 0
+        report_step = 8 * 1024 * 1024
+        next_report = ((written // report_step) + 1) * report_step
+        while written < member.size and attempt < reader.attempts:
+            archive_start = member.offset + written
+            archive_end = member.offset + member.size - 1
+            try:
+                request = Request(
+                    reader.url,
+                    headers={
+                        "User-Agent": USER_AGENT,
+                        "Range": f"bytes={archive_start}-{archive_end}",
+                        "Accept-Encoding": "identity",
+                    },
+                )
+                with urlopen(request, timeout=reader.timeout_s) as response:
+                    content_range = response.headers.get("Content-Range", "")
+                    if response.status != 206:
+                        raise RuntimeError(
+                            f"range request returned HTTP {response.status}"
+                        )
+                    if not content_range.startswith(
+                        f"bytes {archive_start}-{archive_end}/"
+                    ):
+                        raise RuntimeError(f"unexpected Content-Range: {content_range}")
+                    while written < member.size:
+                        payload = response.read(
+                            min(1024 * 1024, member.size - written)
+                        )
+                        if not payload:
+                            raise RuntimeError("remote stream ended before TAR member")
+                        output.write(payload)
+                        output.flush()
+                        digest.update(payload)
+                        written += len(payload)
+                        if written >= next_report or written == member.size:
+                            print(
+                                f"{destination.name}: {written}/{member.size} bytes",
+                                flush=True,
+                            )
+                            next_report += report_step
+                attempt = 0
+            except Exception as exc:
+                attempt += 1
+                if attempt >= reader.attempts:
+                    raise RuntimeError(
+                        f"failed while streaming {destination.name} at byte {written}"
+                    ) from exc
+                time.sleep(2 ** (attempt - 1))
     if temporary.stat().st_size != member.size:
         raise RuntimeError(f"download size mismatch for {member.name}")
     with temporary.open("rb") as handle:
