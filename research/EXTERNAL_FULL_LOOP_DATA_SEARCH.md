@@ -206,6 +206,44 @@ peak). They are useful operating-range context and a request lead for the
 second raw trace, but no synchronized station/vehicle time series are exposed,
 so neither campaign closes the full-loop holdout gate by itself.
 
+## UCI early HRS supplementary-artifact inspection
+
+The UCI early HRS paper is an IJHE field-data lead:
+<https://doi.org/10.1016/j.ijhydene.2020.08.251>. The publicly reachable
+supplementary DOCX was downloaded from the article asset URL:
+<https://ars.els-cdn.com/content/image/1-s2.0-S0360319920333073-mmc1.docx>.
+
+- Local artifact: `data/public_validation/raw/uci_early_hrs/supplementary_mmc1.docx`
+- Size: 66,116 bytes
+- SHA-256: `a927984e5b9200cca68c1f559768758b2563fde8d2e8f70d9045136d8c6deaf8`
+- Content: four aggregate operational charts; no row-level synchronized
+  pressure, temperature, mass-flow or vehicle/receptacle trace.
+
+This is therefore independent field context and a data-request lead only. The
+charts were not digitized for the primary claim. The required request is a
+de-identified event-level/logger export with a common clock, channel dictionary,
+calibration and quality flags, initial conditions, protocol metadata and reuse
+permission from the UCI NFCRC/CEC data custodian.
+
+## NREL H2IQ December 2022 artifact inspection
+
+The DOE/NREL briefing
+<https://www.energy.gov/sites/default/files/2022-12/h2iq-121922.pdf> confirms
+the HDVS configuration used in the heavy-duty demonstrations: nine configurable
+tanks, including seven Type-IV tanks for the 60+ kg fill and two Type-III tanks
+for the remaining capacity. It labels tank-by-tank internal pressure and
+temperature channels and mass-flow context, which is useful for checking the
+model's equipment map and operating-range assumptions.
+
+The PDF is a plot/report artifact rather than a machine-readable logger export:
+
+- Local artifact: `data/public_validation/raw/nrel_h2iq_2022/h2iq-121922.pdf`
+- SHA-256: `73ee453a4efbdd76fa993df549c9d673b1a65fdf963593906985c4fd30660fc`
+- Common time base: not publicly available.
+
+It is retained for configuration and face-validity checks and as a request lead;
+it cannot close the independent station-to-vehicle full-loop holdout gate.
+
 ## 2026-10-03 primary-source recheck
 
 The Cal State LA back-to-back paper has a publicly reachable accepted-manuscript

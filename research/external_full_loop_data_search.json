@@ -267,6 +267,29 @@
       }
     },
     {
+      "id": "nrel_h2iq_2022_hdvs_plot_summary",
+      "title": "NREL H2IQ Hour December 2022 heavy-duty vehicle station briefing",
+      "url": "https://www.energy.gov/sites/default/files/2022-12/h2iq-121922.pdf",
+      "publisher": "U.S. Department of Energy / National Renewable Energy Laboratory",
+      "public_raw_data": false,
+      "public_plot_artifact": true,
+      "decision": "REPORT_PLOT_SUMMARY_ONLY",
+      "inspection": {
+        "local_artifact": "data/public_validation/raw/nrel_h2iq_2022/h2iq-121922.pdf",
+        "sha256": "73ee453a4efbdd76fa993df549c9d673b1a65fdf963593906985c4fd30660fc",
+        "reported_configuration": "9 total tanks, configurable; seven Type IV tanks for the 60+ kg fill and two Type III tanks for the remaining capacity",
+        "reported_channels": [
+          "HDVS tank internal pressure (Tank 1 through Tank 9)",
+          "HDVS tank internal temperature (Tank 1 through Tank 9)",
+          "mass flow",
+          "hydrogen supply and dispensing context"
+        ],
+        "common_timebase": false,
+        "role": "Independent heavy-duty operating-range and instrumentation-context source. The public PDF contains plots and configuration facts but no machine-readable common-time-base logger export, so it cannot close the full-loop holdout.",
+        "claim_limit": "Use for configuration/face-validity checks and a data-request lead only; do not treat plotted traces as primary validation data."
+      }
+    },
+    {
       "id": "nrel_kuroki_2023_hitrf_36l_fill",
       "title": "Temperature Rise on Liner Surfaces of Fuel Cell Electric Vehicle Tanks during Fueling Process",
       "doi": "10.1002/ente.202300239",
@@ -361,6 +384,26 @@
         "machine_readable_common_timebase": false,
         "decision": "REQUEST_DATA",
         "claim_limit": "Use only as field-context and data-request lead until synchronized trace files, metadata and reuse terms are obtained."
+      }
+    },
+    {
+      "id": "uci_early_hrs_supplementary_charts",
+      "title": "University of California Irvine early HRS operational data supplementary file",
+      "doi": "10.1016/j.ijhydene.2020.08.251",
+      "url": "https://doi.org/10.1016/j.ijhydene.2020.08.251",
+      "supplementary_url": "https://ars.els-cdn.com/content/image/1-s2.0-S0360319920333073-mmc1.docx",
+      "publisher": "International Journal of Hydrogen Energy / University of California Irvine",
+      "public_raw_data": false,
+      "public_aggregate_artifact": true,
+      "decision": "PUBLIC_SUPPLEMENT_AGGREGATE_ONLY",
+      "inspection": {
+        "local_artifact": "data/public_validation/raw/uci_early_hrs/supplementary_mmc1.docx",
+        "bytes": 66116,
+        "sha256": "a927984e5b9200cca68c1f559768758b2563fde8d2e8f70d9045136d8c6deaf8",
+        "contents": "Four aggregate operational charts; no row-level synchronized pressure, temperature, mass-flow or vehicle/receptacle trace",
+        "common_timebase": false,
+        "role": "Independent field-context and data-request lead only. Aggregate charts are not eligible for the untouched full-loop holdout and were not digitized for the primary claim.",
+        "request_route": "UCI NFCRC / California Energy Commission data custodian; request de-identified event-level and synchronized logger export, metadata, calibration records and reuse terms."
       }
     },
     {
@@ -810,6 +853,12 @@
         "finding": "public accepted manuscript; describes one-year station data but no downloadable synchronized raw trace"
       },
       {
+        "id": "uci_early_hrs_supplementary_charts",
+        "url": "https://doi.org/10.1016/j.ijhydene.2020.08.251",
+        "supplementary_url": "https://ars.els-cdn.com/content/image/1-s2.0-S0360319920333073-mmc1.docx",
+        "finding": "public supplementary DOCX was inspected; it contains four aggregate charts only, with no row-level synchronized pressure, temperature, mass-flow or vehicle/receptacle trace"
+      },
+      {
         "id": "nrel_h2fills",
         "url": "https://www.nrel.gov/hydrogen/h2fills",
         "finding": "validated software and empirical-data description; download is registration-gated and no raw independent archive exposed"
@@ -878,6 +927,11 @@
         "id": "nrel_h2fills_2022_hdvs_typeiv",
         "url": "https://www.nlr.gov/hydrogen/h2fills-download",
         "finding": "Official H2FillS package contains a 351-row, 1 s, 7-tank Type IV HDVS physical sample workbook. Frozen tank-submodel screening gives 0/7 joint passes (mean pressure RMSE 6.164 MPa; temperature RMSE 4.625 C); package licence blocks redistribution and the workbook lacks station-side full-loop channels."
+      },
+      {
+        "id": "nrel_h2iq_2022_hdvs_plot_summary",
+        "url": "https://www.energy.gov/sites/default/files/2022-12/h2iq-121922.pdf",
+        "finding": "public H2IQ briefing was inspected; it confirms a configurable nine-tank HDVS with seven Type IV tanks and shows tank pressure/temperature and mass-flow plots, but no machine-readable synchronized logger export is public"
       }
     ],
     "result": "H2Protocol raw archives remain consumed Powertech evidence. The NREL H2FillS package adds an independent physical HDVS tank-submodel candidate with a reproducible negative screen and an EOS-implied-volume mismatch diagnostic, but its licence and missing station-side channels prevent a full-loop claim. DOE/NREL aggregate reporting also identifies a second October 2022 HDVS campaign; without synchronized raw traces it remains operating-range context only.",
