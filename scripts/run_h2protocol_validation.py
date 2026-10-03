@@ -103,6 +103,9 @@ def run_case(
         "gas_liner_ua_multiplier": 1.0,
     }
     dt = float(np.median(np.diff(exp_time)))
+    model_target_pressure_mpa = float(
+        summary.get("target_vehicle_pressure_mpa") or exp_pressure[-1]
+    )
     config = ReferenceScenario(
         duration_s=float(exp_time[-1]),
         control_period_s=dt,
@@ -113,7 +116,7 @@ def run_case(
         vehicle_effective_volume_multiplier=float(tank_fit["effective_volume_multiplier"]),
         vehicle_gas_liner_ua_multiplier=float(tank_fit["gas_liner_ua_multiplier"]),
         dispenser_flow_area_multiplier=dispenser_flow_area_multiplier,
-        target_vehicle_pressure_pa=float(exp_pressure[-1] * 1.0e6),
+        target_vehicle_pressure_pa=model_target_pressure_mpa * 1.0e6,
         average_pressure_ramp_rate_pa_s=scheduled_aprr * 1.0e6 / 60.0,
         delivery_temperature_k=float(np.median(inlet_temperature) + 273.15),
         maximum_mass_flow_kg_s=0.060,
@@ -174,6 +177,7 @@ def run_case(
         "scheduled_aprr_mpa_min": scheduled_aprr,
         "experimental_duration_s": float(exp_time[-1]),
         "experimental_final_pressure_mpa": float(exp_pressure[-1]),
+        "model_target_pressure_mpa": model_target_pressure_mpa,
         "experimental_peak_temperature_c": float(np.max(exp_temperature)),
         "experimental_final_soc_percent": float(exp_soc[-1]),
         "predicted_final_pressure_mpa": float(trajectory.vehicle_pressure_pa[-1] / 1.0e6),

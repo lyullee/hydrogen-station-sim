@@ -50,6 +50,10 @@ class H2ProtocolTrace:
     tank_temperature_max_c: np.ndarray
     inlet_gas_temperature_c: np.ndarray
     chamber_temperature_c: np.ndarray
+    source_pressure_1_mpa: np.ndarray | None = None
+    source_pressure_3_mpa: np.ndarray | None = None
+    protocol_pressure_time_s: np.ndarray | None = None
+    protocol_pressure_mpa: np.ndarray | None = None
 
     def summary(self) -> dict:
         integrated_mass_kg = float(np.trapezoid(self.mass_flow_g_s / 1000.0, self.time_s))
@@ -58,7 +62,7 @@ class H2ProtocolTrace:
             * float(self.soc_percent[-1] - self.soc_percent[0]) / 100.0
             if self.metadata.tank_capacity_kg is not None else None
         )
-        return {
+        summary = {
             "case_id": self.case_id,
             **asdict(self.metadata),
             "source_archive": self.source_archive,
@@ -83,6 +87,40 @@ class H2ProtocolTrace:
                 if nominal_soc_mass_change_kg not in (None, 0.0) else None
             ),
         }
+        if (
+            self.protocol_pressure_time_s is not None
+            and self.protocol_pressure_mpa is not None
+            and len(self.protocol_pressure_time_s) >= 2
+        ):
+            duration_s = float(
+                self.protocol_pressure_time_s[-1] - self.protocol_pressure_time_s[0]
+            )
+            summary.update({
+                "protocol_initial_pressure_mpa": float(self.protocol_pressure_mpa[0]),
+                "protocol_target_pressure_mpa": float(self.protocol_pressure_mpa[-1]),
+                "protocol_duration_s": duration_s,
+                "protocol_effective_aprr_mpa_min": (
+                    60.0
+                    * float(self.protocol_pressure_mpa[-1] - self.protocol_pressure_mpa[0])
+                    / duration_s
+                    if duration_s > 0.0 else None
+                ),
+            })
+        if self.source_pressure_1_mpa is not None:
+            summary["source_pressure_1_initial_mpa"] = float(
+                self.source_pressure_1_mpa[0]
+            )
+            summary["source_pressure_1_final_mpa"] = float(
+                self.source_pressure_1_mpa[-1]
+            )
+        if self.source_pressure_3_mpa is not None:
+            summary["source_pressure_3_initial_mpa"] = float(
+                self.source_pressure_3_mpa[0]
+            )
+            summary["source_pressure_3_final_mpa"] = float(
+                self.source_pressure_3_mpa[-1]
+            )
+        return summary
 
 
 @dataclass(frozen=True)
@@ -456,6 +494,190 @@ def iter_h2protocol_traces(raw_directory: Path) -> Iterable[H2ProtocolTrace]:
                 if metadata.lab_test_number is not None:
                     used_lab_tests.add(metadata.lab_test_number)
                 yield trace
+
+
+def _mc_default_case_code(source_member: str) -> tuple[str, float]:
+    name = Path(source_member).name
+    if "9.8kg" in name:
+        return "9.8KG", 9.8
+    match = re.search(r"Validation Test\s+(\d-[A-Z])", name, re.IGNORECASE)
+    if match is None:
+        raise ValueError(f"Cannot identify MC Default case from {source_member}")
+    return match.group(1).upper(), 4.7
+
+
+def _protocol_pressure_profile(workbook) -> tuple[np.ndarray, np.ndarray]:
+    """Read the publisher-supplied pressure schedule from the small Sheet1 table."""
+
+    worksheet = next(
+        (sheet for sheet in workbook.worksheets if sheet.title.lower() == "sheet1"),
+        None,
+    )
+    if worksheet is None:
+        raise ValueError("MC Default workbook has no Sheet1 protocol schedule")
+    points: list[tuple[float, float]] = []
+    for row in worksheet.iter_rows(min_row=2, values_only=True):
+        if (
+            len(row) >= 2
+            and isinstance(row[0], (int, float))
+            and isinstance(row[1], (int, float))
+        ):
+            points.append((float(row[0]), float(row[1])))
+    if len(points) < 2:
+        raise ValueError("MC Default protocol schedule has fewer than two points")
+    points.sort()
+    time = np.asarray([item[0] for item in points], dtype=float)
+    pressure = np.asarray([item[1] for item in points], dtype=float)
+    if np.any(np.diff(time) <= 0.0) or np.any(np.diff(pressure) < 0.0):
+        raise ValueError("MC Default protocol schedule is not monotonic")
+    return time - time[0], pressure
+
+
+def read_mc_default_workbook(
+    content: bytes,
+    *,
+    source_archive: str,
+    source_member: str,
+    flow_threshold_g_s: float = 1.0,
+) -> H2ProtocolTrace:
+    """Normalize one prospectively frozen Powertech MC Default bench test."""
+
+    load_workbook = _require_openpyxl()
+    workbook = load_workbook(BytesIO(content), read_only=True, data_only=True)
+    worksheet = next(
+        (
+            sheet for sheet in workbook.worksheets
+            if any(
+                _text(value) in {"FM", "FM(R)"}
+                for value in next(sheet.iter_rows(values_only=True))
+            )
+        ),
+        None,
+    )
+    if worksheet is None:
+        raise ValueError(f"{source_member} has no measurement worksheet")
+    header_values = next(worksheet.iter_rows(values_only=True))
+    headers = {_text(value): index for index, value in enumerate(header_values) if _text(value)}
+    time_name = next(
+        (name for name in ("Time (s)", "Elapsed") if name in headers), None
+    )
+    if time_name is None:
+        raise ValueError(f"{source_member} is missing an elapsed-time column")
+    rows = [
+        row for row in worksheet.iter_rows(min_row=2, values_only=True)
+        if isinstance(row[headers[time_name]], (int, float))
+    ]
+    _, time_all = _select_numeric_column(rows, headers, (time_name,))
+    flow_name, flow_all = _select_numeric_column(
+        rows, headers, ("FM(R)", "FM"), min_finite_fraction=0.01
+    )
+    active_indices = np.flatnonzero(
+        np.isfinite(time_all) & np.isfinite(flow_all) & (flow_all > flow_threshold_g_s)
+    )
+    if active_indices.size < 3:
+        raise ValueError(f"{source_member} has no sustained active fill")
+    active_rows = rows[int(active_indices[0]): int(active_indices[-1]) + 1]
+    _, time = _select_numeric_column(active_rows, headers, (time_name,))
+    pressure_source, pressure = _select_numeric_column(
+        active_rows, headers, ("Ptank", "Pinlet", "Precep")
+    )
+    soc_source, soc = _select_numeric_column(
+        active_rows, headers, ("SOC (%)", "SOC %", "SOC")
+    )
+    _, flow = _select_numeric_column(active_rows, headers, (flow_name,))
+    _, inlet_temperature = _select_numeric_column(
+        active_rows, headers, ("Tinlet_G", "Trecep_G", "Tpc_out")
+    )
+    _, chamber = _select_numeric_column(
+        active_rows, headers, ("Tchamber", "Tchamb")
+    )
+    tank_columns = []
+    for name in headers:
+        if not re.match(r"^Ttank\d*_G(?:\s|\(|$)", name):
+            continue
+        values = np.asarray([
+            float(row[headers[name]])
+            if isinstance(row[headers[name]], (int, float)) else np.nan
+            for row in active_rows
+        ])
+        if np.isfinite(values).mean() >= 0.95:
+            tank_columns.append(values)
+    if not tank_columns:
+        raise ValueError(f"{source_member} has no complete tank-temperature channel")
+    tank_stack = np.vstack(tank_columns)
+
+    optional_pressures: dict[str, np.ndarray | None] = {}
+    for name in ("875PT1", "875PT3"):
+        try:
+            _, values = _select_numeric_column(active_rows, headers, (name,))
+        except ValueError:
+            values = None
+        optional_pressures[name] = values
+    valid = (
+        np.isfinite(time) & np.isfinite(pressure) & np.isfinite(soc)
+        & np.isfinite(flow) & np.isfinite(inlet_temperature) & np.isfinite(chamber)
+        & np.all(np.isfinite(tank_stack), axis=0)
+    )
+    time = time[valid]
+    if len(time) < 3 or np.any(np.diff(time) <= 0.0):
+        raise ValueError(f"{source_member} has invalid active-fill timestamps")
+    case_code, tank_capacity_kg = _mc_default_case_code(source_member)
+    protocol_time, protocol_pressure = _protocol_pressure_profile(workbook)
+    metadata = H2ProtocolMetadata(
+        fill_number="",
+        lab_test_number=None,
+        test_code=case_code,
+        nominal_pressure_mpa=70.0,
+        tank_capacity_kg=tank_capacity_kg,
+        chamber_temperature_c=float(np.median(chamber[valid])),
+        scheduled_aprr_mpa_min=None,
+        notes="Powertech Labs MC Default bench test",
+    )
+    return H2ProtocolTrace(
+        case_id=f"H2P-MC-{case_code}",
+        metadata=metadata,
+        source_archive=source_archive,
+        source_member=source_member,
+        pressure_source=pressure_source,
+        soc_source=soc_source,
+        time_s=time - time[0],
+        pressure_mpa=pressure[valid],
+        soc_percent=soc[valid],
+        mass_flow_g_s=flow[valid],
+        tank_temperature_mean_c=np.mean(tank_stack[:, valid], axis=0),
+        tank_temperature_max_c=np.max(tank_stack[:, valid], axis=0),
+        inlet_gas_temperature_c=inlet_temperature[valid],
+        chamber_temperature_c=chamber[valid],
+        source_pressure_1_mpa=(
+            optional_pressures["875PT1"][valid]
+            if optional_pressures["875PT1"] is not None else None
+        ),
+        source_pressure_3_mpa=(
+            optional_pressures["875PT3"][valid]
+            if optional_pressures["875PT3"] is not None else None
+        ),
+        protocol_pressure_time_s=protocol_time,
+        protocol_pressure_mpa=protocol_pressure,
+    )
+
+
+def iter_mc_default_traces(
+    archive: Path,
+    selected_members: Sequence[str],
+) -> Iterable[H2ProtocolTrace]:
+    """Yield exactly the prospectively selected MC Default workbooks."""
+
+    with zipfile.ZipFile(archive) as bundle:
+        available = set(bundle.namelist())
+        missing = set(selected_members) - available
+        if missing:
+            raise ValueError(f"MC Default archive is missing: {sorted(missing)}")
+        for member in selected_members:
+            yield read_mc_default_workbook(
+                bundle.read(member),
+                source_archive=archive.name,
+                source_member=member,
+            )
 
 
 def compare_traces(

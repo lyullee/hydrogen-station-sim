@@ -11,6 +11,8 @@ import pytest
 from h2station.public_validation import (
     compare_traces,
     iter_dispersion_experiments,
+    iter_mc_default_traces,
+    read_mc_default_workbook,
     read_h2protocol_overview,
     read_h2protocol_workbook,
     read_hiad_hrs_cases,
@@ -87,6 +89,46 @@ def test_compare_traces_uses_experimental_clock_without_time_warping():
     assert agreement.pressure_rmse_mpa == pytest.approx(np.sqrt(5 / 3))
     assert agreement.temperature_mae_c == pytest.approx(1.0)
     assert agreement.soc_final_error_percentage_points == pytest.approx(5.0)
+
+
+def test_mc_default_reader_preserves_protocol_schedule_and_source_pressures():
+    workbook = Workbook()
+    measurement = workbook.active
+    measurement.title = "MC Validation Test 1-A"
+    measurement.append([
+        "Time (s)", "SOC (%)", "875PT1", "875PT3", "Pinlet", "FM",
+        "Tinlet_G", "Ttank1_G", "Ttank2_G", "Ttank3_G", "Tchamber",
+    ])
+    for index, flow in enumerate((0.0, 2.0, 3.0, 4.0, 0.0)):
+        measurement.append([
+            float(index), 5.0 + index, 88.0 - index, 89.0 - index,
+            2.0 + index, flow, -35.0, 20.0 + index, 21.0 + index,
+            22.0 + index, 40.0,
+        ])
+    schedule = workbook.create_sheet("Sheet1")
+    schedule.append(["Time", "Pressure"])
+    schedule.append([0.0, 2.0])
+    schedule.append([300.0, 82.0])
+
+    trace = read_mc_default_workbook(
+        _workbook_bytes(workbook),
+        source_archive="mc.zip",
+        source_member="MC Default Validation Test 1-A, 2013Aug01.xlsx",
+    )
+    assert trace.case_id == "H2P-MC-1-A"
+    assert trace.metadata.tank_capacity_kg == pytest.approx(4.7)
+    assert trace.time_s.tolist() == pytest.approx([0.0, 1.0, 2.0])
+    assert trace.source_pressure_1_mpa.tolist() == pytest.approx([87.0, 86.0, 85.0])
+    assert trace.protocol_pressure_mpa.tolist() == pytest.approx([2.0, 82.0])
+    assert trace.summary()["protocol_effective_aprr_mpa_min"] == pytest.approx(16.0)
+
+
+def test_mc_default_iterator_requires_every_frozen_member(tmp_path):
+    archive = tmp_path / "mc.zip"
+    with zipfile.ZipFile(archive, "w") as bundle:
+        bundle.writestr("unrelated.txt", "data")
+    with pytest.raises(ValueError, match="archive is missing"):
+        list(iter_mc_default_traces(archive, ["frozen.xlsx"]))
 
 
 def test_hiad_reader_joins_sheets_and_filters_core_hrs_cases(tmp_path):

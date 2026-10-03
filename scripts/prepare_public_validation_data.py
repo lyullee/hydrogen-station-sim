@@ -10,6 +10,7 @@ from pathlib import Path
 from h2station.public_validation import (
     iter_dispersion_experiments,
     iter_h2protocol_traces,
+    iter_mc_default_traces,
     read_hiad_hrs_cases,
 )
 
@@ -18,6 +19,10 @@ TRACE_FIELDS = (
     "time_s", "pressure_mpa", "soc_percent", "mass_flow_g_s",
     "tank_temperature_mean_c", "tank_temperature_max_c",
     "inlet_gas_temperature_c", "chamber_temperature_c",
+)
+
+MC_TRACE_FIELDS = TRACE_FIELDS + (
+    "source_pressure_1_mpa", "source_pressure_3_mpa",
 )
 
 
@@ -49,6 +54,31 @@ def prepare_h2protocol(raw: Path, output: Path) -> dict:
         key = str(item["tank_capacity_kg"])
         capacities[key] = capacities.get(key, 0) + 1
     return {"case_count": len(summaries), "tank_capacity_counts": capacities}
+
+
+def prepare_mc_default(raw: Path, output: Path, protocol: Path) -> dict:
+    frozen = json.loads(protocol.read_text(encoding="utf-8"))
+    archive = raw / "SAE J2601 MC Default Bench Test Data.zip"
+    summaries = []
+    trace_root = output / "mc_default_traces"
+    trace_root.mkdir(parents=True, exist_ok=True)
+    for trace in iter_mc_default_traces(archive, frozen["selected_workbooks"]):
+        summaries.append(trace.summary())
+        rows = []
+        for index in range(len(trace.time_s)):
+            row = {}
+            for name in MC_TRACE_FIELDS:
+                values = getattr(trace, name)
+                row[name] = "" if values is None else float(values[index])
+            rows.append(row)
+        _write_csv(trace_root / f"{trace.case_id}.csv", rows)
+        print(f"prepared {trace.case_id}: {trace.metadata.test_code}", flush=True)
+    _write_csv(output / "mc_default_cases.csv", summaries)
+    return {
+        "case_count": len(summaries),
+        "protocol": str(protocol),
+        "selected_workbooks": frozen["selected_workbooks"],
+    }
 
 
 def prepare_hiad(path: Path, output: Path) -> dict:
@@ -84,8 +114,12 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=Path("data/public_validation/processed"))
     parser.add_argument(
         "--datasets", nargs="+",
-        choices=("h2protocol", "hiad", "dispersion"),
+        choices=("h2protocol", "mc_default", "hiad", "dispersion"),
         default=("h2protocol", "hiad", "dispersion"),
+    )
+    parser.add_argument(
+        "--mc-default-protocol", type=Path,
+        default=Path("research/mc_default_external_holdout_protocol.json"),
     )
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
@@ -101,6 +135,11 @@ def main() -> int:
     if "hiad" in args.datasets:
         inventory["hiad"] = prepare_hiad(
             args.raw / "hiad_2_2" / "HIAD 2.2.xlsx", args.output
+        )
+    if "mc_default" in args.datasets:
+        inventory["mc_default"] = prepare_mc_default(
+            args.raw / "h2protocol_mc_default", args.output,
+            args.mc_default_protocol,
         )
     if "dispersion" in args.datasets:
         inventory["dispersion_channel"] = prepare_dispersion(
