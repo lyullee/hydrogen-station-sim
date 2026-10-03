@@ -38,6 +38,9 @@ immutable digest are recorded.
 | H2-Stations.eu Export API | Open station metadata and live/historical availability information; newer API describes usage and storage signals. | **Operations evidence only.** It does not expose the vehicle-fill thermodynamic traces needed for this gate, and live access requires a token. |
 | PRESLHY E3.1 high-pressure discharge, DOI 10.35097/1187 | CC BY 4.0 experimental blowdown/discharge files. | **Eligible for a separate blowdown/vent submodel**, not for the station-to-vehicle closed loop. |
 | USN open-channel dispersion, DOI 10.23642/USN.26117989 | CC BY 4.0 concentration, pressure and temporal mass-flow measurements. | **Already used for consequence validation**, not for vehicle fueling. |
+| Empa Type-IV tank-filling experiments, Couteau et al., DOI 10.1016/j.ijhydene.2022.05.127 | Open-access paper describes four HRS tank-filling experiments with measured temperature evolution and inlet conditions. | **Request data / tank-thermal candidate.** No machine-readable raw trace or supplementary file was identified in the public repository record. |
+| FCH2RAIL reference HRS and rail vehicle, Wieser et al., DOI 10.1016/j.ijhydene.2025.04.040 | Open-access paper uses real HRS and vehicle measurements for model validation and shows pressure, temperature and mass-flow behavior. | **Request data.** The DLR record exposes the paper PDF but no synchronized machine-readable measurement archive. |
+| 3Emotion operational HRS data, Caponi et al., DOI 10.1051/e3sconf/202233406008 | Multi-year operator logs from four 350-bar bus stations, reported as fill amount, duration, average flow, utilization and availability. | **Aggregate context only.** No synchronized pressure, temperature and mass-flow trace is public. |
 
 ## CARB artifact inspection
 
@@ -103,11 +106,16 @@ digitising the chart.
    asks for the database described by the 2014 paper, including internal
    thermocouple, tank pressure, inlet pressure, inlet temperature, flow and
    test metadata, with permission to publish derived metrics.
-4. On receipt, hash and quarantine the files before opening outcomes; freeze
+4. Send the Empa/FCH2RAIL draft in
+   `research/EMPA_FCH2RAIL_DATA_REQUEST_DRAFT.md` to the corresponding data
+   custodians. Request de-identified synchronized traces and reuse terms;
+   publication of the open articles alone is not treated as permission to
+   redistribute measurements.
+5. On receipt, hash and quarantine the files before opening outcomes; freeze
    case eligibility and the corrected model commit in a new protocol manifest.
-5. Evaluate the frozen model once. Retain every eligible failure and do not use
+6. Evaluate the frozen model once. Retain every eligible failure and do not use
    the new outcomes for tuning.
-6. If CARB, JRC and Cal State LA cannot release the traces, make an equivalent
+7. If CARB, JRC, Cal State LA, Empa and FCH2RAIL cannot release the traces, make an equivalent
    request to NIST. Do not substitute graph digitisation for raw data in the
    primary full-loop claim.
 

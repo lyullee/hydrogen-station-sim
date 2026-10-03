@@ -296,8 +296,54 @@
         "role": "independent ventilation, dispersion and detector-placement evidence; not a full gaseous HRS fueling-loop validation set",
         "exclusion_reason": "No vehicle/cascade/compressor/precooler/dispenser controller time series; concentration and flow-field experiments target confined-space ventilation."
       }
+    },
+    {
+      "id": "couteau_2022_empa_tank_filling",
+      "title": "Heat transfer analysis of high pressure hydrogen tank fillings",
+      "doi": "10.1016/j.ijhydene.2022.05.127",
+      "url": "https://doi.org/10.1016/j.ijhydene.2022.05.127",
+      "publisher": "ETH Zurich / Empa / International Journal of Hydrogen Energy",
+      "public_raw_data": false,
+      "decision": "REQUEST_DATA_TANK_THERMAL_ONLY",
+      "inspection": {
+        "reported_experiment_count": 4,
+        "license": "CC BY 4.0 article",
+        "raw_common_timebase": false,
+        "role": "independent tank-thermal submodel candidate and data-request lead",
+        "exclusion_reason": "No machine-readable raw pressure/temperature/flow trace or supplementary data file identified in the public repository record."
+      }
+    },
+    {
+      "id": "wieser_2025_fch2rail_refueling",
+      "title": "Development, application and optimization of hydrogen refueling processes for railway vehicles",
+      "doi": "10.1016/j.ijhydene.2025.04.040",
+      "url": "https://elib.dlr.de/213625/",
+      "publisher": "DLR / FCH2RAIL / International Journal of Hydrogen Energy",
+      "public_raw_data": false,
+      "decision": "REQUEST_DATA_HEAVY_DUTY_FULL_LOOP",
+      "inspection": {
+        "reported_scope": "Reference HRS and vehicle measurement data used for model validation",
+        "raw_common_timebase": false,
+        "role": "independent heavy-duty/rail full-loop data-request lead",
+        "exclusion_reason": "DLR record exposes the paper PDF but no synchronized machine-readable measurement archive or supplementary trace."
+      }
+    },
+    {
+      "id": "caponi_2022_3emotion_operational_hrs",
+      "title": "Four years of operational data for five hydrogen refueling stations",
+      "doi": "10.1051/e3sconf/202233406008",
+      "url": "https://doi.org/10.1051/e3sconf/202233406008",
+      "publisher": "3Emotion / E3S Web of Conferences",
+      "public_raw_data": false,
+      "decision": "AGGREGATE_OPERATING_CONTEXT_ONLY",
+      "inspection": {
+        "reported_scope": "Multi-year operator logs summarized as fill amount, duration, average flow, daily profile, utilization and availability",
+        "raw_common_timebase": false,
+        "role": "external operating-range context",
+        "exclusion_reason": "No synchronized pressure, temperature and mass-flow trace available from the public record."
+      }
     }
   ],
-  "next_action": "Request de-identified fill-level workbooks and traces from CARB, JRC GasTeF and Cal State LA before freezing a new full-loop holdout protocol; use the CC BY Grune/Sempert dataset to pre-register a separate ventilation, dispersion and detector-placement validation protocol.",
+  "next_action": "Request de-identified synchronized fill traces from CARB, JRC GasTeF, Cal State LA, Empa and DLR/FCH2RAIL before freezing a new full-loop holdout protocol; use Grune/Sempert for the separate ventilation protocol.",
   "claim_limit": "No new external full-loop validation claim is permitted from the screened public materials."
 }

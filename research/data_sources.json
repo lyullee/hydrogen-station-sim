@@ -350,6 +350,51 @@
         "wind and ventilation cases",
         "facility CAD/drawing metadata"
       ]
+    },
+    "couteau_2022_empa_tank_filling": {
+      "title": "Heat transfer analysis of high pressure hydrogen tank fillings",
+      "authors": [
+        "Arthur Couteau",
+        "Panayotis Dimopoulos Eggenschwiler",
+        "Patrick Jenny"
+      ],
+      "publisher": "ETH Zurich / Empa / International Journal of Hydrogen Energy",
+      "landing_page": "https://doi.org/10.1016/j.ijhydene.2022.05.127",
+      "repository_page": "https://www.research-collection.ethz.ch/entities/publication/8f96f8b4-89f5-4617-bbc9-2dccd7fa731f",
+      "doi": "10.1016/j.ijhydene.2022.05.127",
+      "license": "CC BY 4.0 for the open article",
+      "reported_experiment_count": 4,
+      "public_raw_data": false,
+      "rights_note": "The open article is CC BY 4.0. The article describes four Empa HRS Type-IV tank-filling experiments and measured temperature evolution, but no machine-readable raw trace or supplementary data file was identified in the public repository record.",
+      "eligibility_note": "Strong independent tank-thermal submodel and data-request lead; not an eligible full-loop HRS holdout until synchronized pressure, temperature, flow and initial-condition files are obtained."
+    },
+    "wieser_2025_fch2rail_refueling": {
+      "title": "Development, application and optimization of hydrogen refueling processes for railway vehicles",
+      "authors": [
+        "Steffen Wieser",
+        "Linus Brünner",
+        "Mathias Boehm",
+        "Marta Soto",
+        "Esteban José Rodríguez"
+      ],
+      "publisher": "DLR / FCH2RAIL / International Journal of Hydrogen Energy",
+      "landing_page": "https://doi.org/10.1016/j.ijhydene.2025.04.040",
+      "repository_page": "https://elib.dlr.de/213625/",
+      "doi": "10.1016/j.ijhydene.2025.04.040",
+      "license": "CC BY 4.0 for the open article",
+      "public_raw_data": false,
+      "reported_scope": "Reference HRS and vehicle measurements used to validate a railway refueling model; pressure, temperature and mass-flow behavior are shown in the article.",
+      "rights_note": "The DLR repository exposes the published PDF but no machine-readable synchronized measurement archive or supplementary trace was linked from the record.",
+      "eligibility_note": "High-value independent data-request lead for a heavy-duty/rail refueling holdout; not eligible for the current full-loop gate until raw trace access and reuse terms are established."
+    },
+    "caponi_2022_3emotion_operational_hrs": {
+      "title": "Four years of operational data for five hydrogen refueling stations",
+      "publisher": "3Emotion / E3S Web of Conferences",
+      "landing_page": "https://doi.org/10.1051/e3sconf/202233406008",
+      "doi": "10.1051/e3sconf/202233406008",
+      "public_raw_data": false,
+      "reported_scope": "Three years of operator logs from four 350-bar bus HRS, summarized as fill amount, duration, average flow, daily profile, utilization and availability.",
+      "eligibility_note": "Useful external operating-range context, but aggregate station indicators lack the common-time-base pressure, temperature and mass-flow trace required for the full-loop gate."
     }
   }
 }
