@@ -98,6 +98,14 @@ Agreement is reported for every reviewer pair and criterion. Standards-RAG versu
 alarm and standards-RAG versus direct SAGA are secondary. Any analysis not named
 here is labelled exploratory.
 
+The holdout size is fixed by the eligible public incident population and frozen
+split rather than selected to reach a desired result. A seeded pre-outcome design
+sensitivity simulation reports two-sided Wilcoxon power across standardized
+paired effects. Repeats and reviewers improve measurement stability but do not
+increase the inferential event count above 24. If no event is marked unsafe, the
+exact two-sided 95% upper confidence bound for the event-level rate is still
+reported; zero observations are not interpreted as zero risk.
+
 ## Missingness, deviations and stopping
 
 - Failed provider calls are observed failures and stay in the randomized sheet.
@@ -125,5 +133,6 @@ score is used as a primary or safety endpoint.
 
 The protocol manifest hashes this document, the analysis plan, expert-review
 protocol, casebook preparation/collection code, reviewer packet builder and
-analysis code. After response collection starts, amendments require a dated
+analysis code, including the pre-outcome design-sensitivity calculation. After
+response collection starts, amendments require a dated
 version, rationale and explicit classification as prospective or post hoc.

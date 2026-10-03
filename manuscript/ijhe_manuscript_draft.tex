@@ -215,6 +215,10 @@ binary endpoints. The event is the unit of inference. Repeats and reviewers are
 averaged within event before paired bootstrap confidence intervals and Wilcoxon
 signed-rank comparisons are calculated. Failed provider calls remain as masked
 failure responses for scoring rather than being removed or silently retried.
+Because the 24-event holdout is fixed by the eligible public-incident population,
+a seeded pre-outcome sensitivity simulation reports Wilcoxon power over standardized
+paired effects. Repeats do not increase the inferential event count, and a zero-event
+exact upper confidence bound is retained for unsafe-advice outcomes.
 No LLM-as-judge score is accepted as the
 primary endpoint. Holdout responses and ratings have not yet been collected.
 The applicable institutional ethics determination for expert-participant research
@@ -332,6 +336,9 @@ applicable to the current outdoor free-jet adapter.
 The deterministic split produces a 24-case holdout casebook and nine development
 cases, but all vignettes remain unapproved until coordinator leakage review and
 qualified expert sign-off; the institutional ethics determination is also pending.
+The pre-outcome sensitivity simulation estimated 77.7\% power at a standardized
+paired effect of 0.6 and 95.7\% at 0.8. Even with zero unsafe-advice events among
+24 events, the exact two-sided 95\% upper event-rate bound would remain 14.2\%.
 Consequently, no SAGA effectiveness, safety, latency,
 omission-rate or inter-rater-agreement result is reported in this draft. This empty
 result is deliberate: substituting model self-assessment would violate the frozen

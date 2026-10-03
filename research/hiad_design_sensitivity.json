@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-03T02:32:52.111058+00:00",
+  "analysis_timing": "before holdout response collection and expert rating",
+  "event_count": 24,
+  "simulations_per_effect": 20000,
+  "seed": 2601,
+  "alpha_two_sided": 0.05,
+  "data_generating_assumption": "independent normally distributed paired event differences with unit standard deviation; Wilcoxon signed-rank test using normal approximation",
+  "power_by_standardized_paired_effect": [
+    {
+      "standardized_paired_effect": 0.0,
+      "estimated_power": 0.04875,
+      "monte_carlo_se": 0.0015227185803686773
+    },
+    {
+      "standardized_paired_effect": 0.2,
+      "estimated_power": 0.1504,
+      "monte_carlo_se": 0.0025276455447708645
+    },
+    {
+      "standardized_paired_effect": 0.3,
+      "estimated_power": 0.27705,
+      "monte_carlo_se": 0.003164595531027622
+    },
+    {
+      "standardized_paired_effect": 0.4,
+      "estimated_power": 0.4411,
+      "monte_carlo_se": 0.003510917187858466
+    },
+    {
+      "standardized_paired_effect": 0.5,
+      "estimated_power": 0.62745,
+      "monte_carlo_se": 0.003418746096889911
+    },
+    {
+      "standardized_paired_effect": 0.6,
+      "estimated_power": 0.7768,
+      "monte_carlo_se": 0.002944331503075019
+    },
+    {
+      "standardized_paired_effect": 0.8,
+      "estimated_power": 0.9574,
+      "monte_carlo_se": 0.0014280273106632095
+    },
+    {
+      "standardized_paired_effect": 1.0,
+      "estimated_power": 0.9953,
+      "monte_carlo_se": 0.0004836274392546414
+    }
+  ],
+  "smallest_grid_effect_with_at_least_80_percent_power": 0.8,
+  "zero_unsafe_event_exact_two_sided_95_percent_upper_bound": 0.14247359772258134,
+  "zero_event_bound_unit": "event-level Bernoulli rate",
+  "interpretation_limits": [
+    "This is a design sensitivity analysis, not an observed effect estimate.",
+    "The 24-event holdout is fixed by the eligible public incident population and frozen split.",
+    "Normal paired differences are a transparent assumption; bounded and tied expert scores may yield different power.",
+    "Repeated generations and reviewer scores are averaged within event; they do not increase the inferential event count.",
+    "Even zero unsafe events cannot establish zero risk; the exact upper confidence bound must be reported."
+  ]
+}

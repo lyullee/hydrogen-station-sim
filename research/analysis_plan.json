@@ -70,7 +70,8 @@
     "reviewers": "three independent qualified hydrogen/process-safety reviewers, blinded to allocation; one complete locked file per coded reviewer",
     "human_participant_governance": "record the applicable institutional approval, exemption, or not-required determination before recruiting reviewers or collecting ratings",
     "integrity_checks": "hash-locked casebook, allocation and blank form; reject incomplete forms, changed response text, duplicate codes, invalid scores, and unexplained binary safety marks",
-    "inference": "case-level bootstrap 95 percent CI and paired two-sided Wilcoxon signed-rank test"
+    "inference": "case-level bootstrap 95 percent CI and paired two-sided Wilcoxon signed-rank test",
+    "design_sensitivity": "before outcome collection, 20000 seeded simulations at 24 events across standardized paired effects; exact two-sided 95 percent event-rate bound when zero unsafe events are observed"
   },
   "consequence_physics": {
     "dataset": "USN/FFI open-ended rectangular-channel hydrogen dispersion experiments",

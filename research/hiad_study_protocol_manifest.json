@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "protocol_id": "HIAD-SAGA-2601",
-  "frozen_at_utc": "2026-10-03T02:25:41.997079+00:00",
-  "source_commit": "f7eaf9cb4ec974c65e310f56b8fc9334b87ac2ef",
+  "frozen_at_utc": "2026-10-03T02:32:52.223862+00:00",
+  "source_commit": "b532be4642804aa29cb6af7a0b90e48b82e3cf6f",
   "ethics_status": "pending",
   "ethics_determination_id": null,
   "reviewer_recruitment_permitted": false,
@@ -13,17 +13,20 @@
     "research/EXPERT_REVIEWER_INFORMATION_SHEET.md": 5
   },
   "required_file_sha256": {
-    "research/HIAD_EXPERT_STUDY_PREREGISTRATION.md": "1d6607289cd93286755fbe884d970324dd7a2b95ec1c02ad9a41b429814e4bde",
+    "research/HIAD_EXPERT_STUDY_PREREGISTRATION.md": "fea883af559973835cf6d11cb38c2c46f66925dd7e4f568b8c3181e739a5a47c",
     "research/ETHICS_DETERMINATION_REQUEST.md": "cec63631cf77442262930bb6676c70ff2d84ce08429eba01d577ddcc099a169b",
     "research/EXPERT_REVIEWER_INFORMATION_SHEET.md": "82320f5dc6854cbce4a176e659fe36172e7515e8d1c5dd59cd4c78f3b128ac47",
     "research/HIAD_DATA_MANAGEMENT_PLAN.md": "04541862053d593f705bcc34e61be9d0b1576864b2657053ece018c5e4928e80",
-    "research/analysis_plan.json": "a10d80806eb10d71f52542c0e7b097f2aed858e2fc126ef1254cad694606fe7a",
+    "research/HIAD_DESIGN_SENSITIVITY.md": "3e89f930c67777cce72abb19a38b2bf45e902a74cf82790f44bd55234c81bebf",
+    "research/hiad_design_sensitivity.json": "8f8e8cf8a1a015fa245a9341636ab6717f82488780252f5195239953eab4c1f6",
+    "research/analysis_plan.json": "b7426273dcde99b78d176d89825680c20cb05108e17b79416dc642634f6eb55f",
     "docs/EXPERT_REVIEW_PROTOCOL.md": "deb43874207f353fe8300efaa14cbd8ac219c4fcad6d1ac3f768e7015b795107",
     "scripts/prepare_hiad_coordinator_review.py": "a9d734870444c9f6df6c7d4bf66fa01c3cbf2279042fe00a9cb2a07128283e1e",
     "scripts/freeze_hiad_approved_casebook.py": "86bd7afda8577124776a7d3ab755b2ea553bbf0878abb96cc544562d90a99994",
     "scripts/run_hiad_decision_evaluation.py": "cdea510796c63be8d3d741ab6fda8d86351dae39278c8ba100cca929a35ee4af",
     "scripts/package_hiad_expert_review.py": "e4c4d8a9fef273cad43df91d812a793c98f457a1228014abed71be73f30d41d2",
-    "scripts/analyze_hiad_expert_review.py": "06447b72249db253e9bb1abf2bc33c09c4440bef1ef974b81beb92366cbc020a"
+    "scripts/analyze_hiad_expert_review.py": "06447b72249db253e9bb1abf2bc33c09c4440bef1ef974b81beb92366cbc020a",
+    "scripts/analyze_hiad_design_sensitivity.py": "750aa183b8c2b79e39ae518f69061380075d71e1898ef8ebf24a4ee46514ad1f"
   },
   "amendment_rule": "After holdout collection starts, changes require a dated version, rationale, new manifest, and prospective/post-hoc classification."
 }

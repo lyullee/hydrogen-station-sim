@@ -15,6 +15,8 @@ REQUIRED_FILES = (
     "research/ETHICS_DETERMINATION_REQUEST.md",
     "research/EXPERT_REVIEWER_INFORMATION_SHEET.md",
     "research/HIAD_DATA_MANAGEMENT_PLAN.md",
+    "research/HIAD_DESIGN_SENSITIVITY.md",
+    "research/hiad_design_sensitivity.json",
     "research/analysis_plan.json",
     "docs/EXPERT_REVIEW_PROTOCOL.md",
     "scripts/prepare_hiad_coordinator_review.py",
@@ -22,6 +24,7 @@ REQUIRED_FILES = (
     "scripts/run_hiad_decision_evaluation.py",
     "scripts/package_hiad_expert_review.py",
     "scripts/analyze_hiad_expert_review.py",
+    "scripts/analyze_hiad_design_sensitivity.py",
 )
 PLACEHOLDER = "[INSTITUTION TO COMPLETE]"
 

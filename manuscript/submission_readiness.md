@@ -21,6 +21,7 @@ The current official IJHE Guide for Authors was checked on 3 October 2026. A res
 | Human-participant ethics determination | Pending | Record institutional approval, exemption or not-required determination before reviewer recruitment/rating |
 | Blinded SAGA expert review | Pending and mandatory | Three independent qualified reviewers; lock ratings before unmasking |
 | SAGA ablation result | Pending | Alarm-only vs direct LLM vs standards-RAG, with unsafe advice, omissions, latency, failures and agreement |
+| HIAD design sensitivity | Complete before outcome collection | With 24 events, simulated Wilcoxon power is 77.7% at standardized paired effect 0.6 and 95.7% at 0.8; with zero unsafe events the exact two-sided 95% event-rate upper bound remains 14.2% |
 | New untouched full-loop set | Recommended for a broad control claim | Freeze the next protocol representation before collecting or obtaining new cases |
 | Author metadata | Pending | Names, affiliations, corresponding author, ORCID |
 | Declarations | Pending | CRediT, funding, conflicts and acknowledgements; working AI-use disclosure is included |
@@ -42,6 +43,8 @@ The current official IJHE Guide for Authors was checked on 3 October 2026. A res
   data-management plan: institution-ready governance packet; determination pending.
 - `research/hiad_study_protocol_manifest.json`: SHA-256 manifest that keeps
   recruitment and holdout collection disabled while governance fields are pending.
+- `research/HIAD_DESIGN_SENSITIVITY.md`: pre-outcome power sensitivity and the
+  exact zero-event upper bound for the fixed 24-event holdout.
 
 ## Finalization sequence
 
