@@ -41,6 +41,8 @@ immutable digest are recorded.
 | Empa Type-IV tank-filling experiments, Couteau et al., DOI 10.1016/j.ijhydene.2022.05.127 | Open-access paper describes four HRS tank-filling experiments with measured temperature evolution and inlet conditions. | **Request data / tank-thermal candidate.** No machine-readable raw trace or supplementary file was identified in the public repository record. |
 | FCH2RAIL reference HRS and rail vehicle, Wieser et al., DOI 10.1016/j.ijhydene.2025.04.040 | Open-access paper uses real HRS and vehicle measurements for model validation and shows pressure, temperature and mass-flow behavior. | **Request data.** The DLR record exposes the paper PDF but no synchronized machine-readable measurement archive. |
 | 3Emotion operational HRS data, Caponi et al., DOI 10.1051/e3sconf/202233406008 | Multi-year operator logs from four 350-bar bus stations, reported as fill amount, duration, average flow, utilization and availability. | **Aggregate context only.** No synchronized pressure, temperature and mass-flow trace is public. |
+| 3Emotion four-year operational analysis, Caponi et al., DOI 10.1016/j.ijhydene.2022.10.093 | Peer-reviewed analysis of four years of operator logbooks for five 350-bar stations and 34 buses; reports 14.62 kg/fill and 10.28 min overall means plus demand, utilization and availability. | **Aggregate operating-range benchmark only.** The article does not expose synchronized pressure/temperature/flow files or a machine-readable supplementary archive. |
+| HYTRANSFER public GasTeF filling-campaign report | Public report describes 13 filling and 5 emptying tests and 18 recorded-data files with pressure, temperature, gas-path and flow measurements. | **Request files.** The public PDF does not expose the 18 machine-readable files or reuse terms; request them before treating the campaign as an untouched holdout. |
 | Beijing Winter Olympics HRS Operational Data List, CSTR 16666.11.nbsdc.aI3fJrzX | National Basic Science Data Center metadata reports 2022 HRS data with dispenser monitoring, fueling records and compressor monitoring; four files, 10.22 MB. | **Access request.** The machine-readable record is marked “approval required” and the file-tree endpoint returns no files without authorization. It is a high-value candidate, not an available holdout. |
 | Hungarian HRS digital-twin validation, Hasulyó, DOI 10.32604/ee.2026.081099 | Open-access paper reports operational pressure, temperature, mass-flow and refueling comparisons from an existing Hungarian HRS. | **Request data.** The paper's data-availability statement says supporting data are unavailable because of participant consent and legal restrictions. |
 
@@ -103,6 +105,21 @@ publish an independent raw trace archive:
 and a possible data-request route, not an external dataset that can be scored
 here.
 
+The 3Emotion four-year operational study is published in the *International
+Journal of Hydrogen Energy* (DOI
+<https://doi.org/10.1016/j.ijhydene.2022.10.093>). Its public article reports
+operator-logbook aggregates, including 14.62 kg per fill and 10.28 minutes
+average refuelling time, for five stations and 34 buses, but does not provide
+the synchronized pressure, temperature and flow files required by the primary
+full-loop gate. It is retained as an external operating-range benchmark only.
+
+The public HYTRANSFER GasTeF campaign report describes 18 recorded-data files
+from filling and emptying tests:
+<https://s02291b7740b89df1.jimcontent.com/download/version/1493713659/module/11623534399/name/HyTransfer_Report%20on%20the%20experimental%20filling%20test%20campaign_public.pdf>.
+The report itself does not publish those files or their reuse terms, so they
+have been added as a JRC/HyTransfer data-request lead rather than copied or
+treated as a validation holdout.
+
 ## DOE/NREL H2IQ Hour experiment artifact inspection
 
 The official March 2024 presentation reports a real HITRF heavy-duty fast-flow
@@ -127,7 +144,8 @@ digitising the chart.
 2. Ask for timestamps, units, variable definitions, CHSS capacity, initial
    state, protocol version, temperature category and any quality/exclusion
    flags, together with reuse terms.
-3. Send equivalent non-publishing requests to JRC GasTeF, PRHYDE data custodians
+3. Send equivalent non-publishing requests to JRC GasTeF, the HYTRANSFER
+   GasTeF file custodian, PRHYDE data custodians
    and the Cal State LA authors. The JRC draft is
    `research/JRC_GASTEF_DATA_REQUEST_DRAFT.md` and
    asks for the database described by the 2014 paper, including internal

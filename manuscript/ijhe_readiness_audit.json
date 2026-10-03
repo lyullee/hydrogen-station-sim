@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T11:42:12.232363+00:00",
+  "generated_at": "2026-10-03T11:51:45.119877+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
@@ -339,7 +339,7 @@
         },
         "new_external_data_search": {
           "status": "NO_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
-          "next_action": "Request de-identified synchronized fill traces from CARB, JRC GasTeF, Cal State LA, Empa, DLR/FCH2RAIL and the Hungarian HRS study author before freezing a new full-loop holdout protocol; use Grune/Sempert for the separate ventilation protocol.",
+          "next_action": "Request de-identified synchronized fill traces from CARB, JRC GasTeF, Cal State LA, NREL HITRF/NFCTEC, Empa, DLR/FCH2RAIL and the Hungarian HRS study author before freezing a new full-loop holdout protocol; use Grune/Sempert for the separate ventilation protocol.",
           "claim_limit": "No new external full-loop validation claim is permitted from the screened public materials."
         }
       }

@@ -15,6 +15,13 @@ twin for hydrogen refuelling-station safety. Your open-access article,
 (DOI 10.1016/j.ijhydene.2014.03.227), describes a GasTeF database with more
 than 133 filling and emptying entries from commercial high-pressure tanks.
 
+The public HYTRANSFER campaign report also describes 18 recorded-data files
+from GasTeF filling and emptying tests, but those files are not linked from the
+public report:
+<https://s02291b7740b89df1.jimcontent.com/download/version/1493713659/module/11623534399/name/HyTransfer_Report%20on%20the%20experimental%20filling%20test%20campaign_public.pdf>.
+If the HYTRANSFER files have a separate custodian, please forward this request
+or identify the approved access route.
+
 Could you provide a de-identified subset, or identify the approved custodian
 and access route, for an independent tank-filling holdout? The minimum useful
 fields are:

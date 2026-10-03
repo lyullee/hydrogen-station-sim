@@ -366,6 +366,55 @@
       }
     },
     {
+      "id": "caponi_2023_3emotion_operational_hrs",
+      "title": "Hydrogen refueling stations and fuel cell buses four year operational analysis under real-world conditions",
+      "doi": "10.1016/j.ijhydene.2022.10.093",
+      "url": "https://doi.org/10.1016/j.ijhydene.2022.10.093",
+      "publisher": "3Emotion / International Journal of Hydrogen Energy",
+      "public_raw_data": false,
+      "decision": "AGGREGATE_OPERATING_CONTEXT_ONLY",
+      "inspection": {
+        "reported_scope": "Four years of operator logbooks for five 350-bar bus HRS and 34 fuel-cell buses",
+        "reported_metrics": [
+          "mass per fill",
+          "refueling duration",
+          "average mass flow",
+          "daily demand profile",
+          "station utilization",
+          "availability"
+        ],
+        "reported_overall_means": {
+          "mass_per_fill_kg": 14.62,
+          "refueling_duration_min": 10.28,
+          "consumption_kg_per_100_km": 7.0
+        },
+        "raw_common_timebase": false,
+        "role": "peer-reviewed external operating-range benchmark",
+        "exclusion_reason": "The article states that site-operator logbooks were analyzed, but no synchronized pressure/temperature/flow files or supplementary machine-readable archive is exposed."
+      }
+    },
+    {
+      "id": "hytransfer_gastef_public_campaign_report",
+      "title": "HYTRANSFER public GasTeF experimental filling campaign report",
+      "url": "https://s02291b7740b89df1.jimcontent.com/download/version/1493713659/module/11623534399/name/HyTransfer_Report%20on%20the%20experimental%20filling%20test%20campaign_public.pdf",
+      "publisher": "HYTRANSFER consortium / European Commission JRC GasTeF",
+      "public_raw_data": false,
+      "decision": "REQUEST_DATA_REPORT_DOCUMENTS_EXPERIMENTS",
+      "inspection": {
+        "reported_scope": "Public report describing 13 filling and 5 emptying tests plus operational repetitions at GasTeF",
+        "reported_measurements": [
+          "tank pressure",
+          "internal and external temperatures",
+          "gas-path instrumentation",
+          "flow and test metadata"
+        ],
+        "raw_files_described": "The report states that 18 recorded-data files were divided into two folders, but the public PDF landing resource does not expose those files or a machine-readable download link.",
+        "raw_common_timebase": "described but not obtained",
+        "role": "high-value independent tank/thermal and protocol data-request lead",
+        "exclusion_reason": "Report-only access cannot close the untouched full-loop gate; request the 18 files, data dictionary, licence and immutable archive digest before use."
+      }
+    },
+    {
       "id": "hasulyo_2026_hungarian_hrs_digital_twin",
       "title": "Dynamic Digital Twin Network for Real-Time Safety Monitoring and Predictive Risk Assessment of Hydrogen Refueling Infrastructure",
       "doi": "10.32604/ee.2026.081099",
@@ -406,10 +455,20 @@
         "id": "nrel_infrastructure_analysis",
         "url": "https://www.nrel.gov/hydrogen/hydrogen-infrastructure-analysis",
         "finding": "official statement that partner raw data are secured; only aggregate CDPs are public"
+      },
+      {
+        "id": "caponi_2023_3emotion_operational_hrs",
+        "url": "https://doi.org/10.1016/j.ijhydene.2022.10.093",
+        "finding": "peer-reviewed four-year 3Emotion HRS/bus operational analysis; reports aggregate fill mass and duration but no synchronized raw trace"
+      },
+      {
+        "id": "hytransfer_gastef_public_campaign_report",
+        "url": "https://s02291b7740b89df1.jimcontent.com/download/version/1493713659/module/11623534399/name/HyTransfer_Report%20on%20the%20experimental%20filling%20test%20campaign_public.pdf",
+        "finding": "public report describes 18 GasTeF recorded-data files, but the files and reuse terms are not exposed by the public resource"
       }
     ],
     "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
-    "next_action": "send documented data requests (CARB, JRC GasTeF, Cal State LA, NREL HITRF/NFCTEC, Empa, DLR/FCH2RAIL, Hungarian HRS and NBSDC) and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest"
+    "next_action": "send documented data requests (CARB, JRC GasTeF and HYTRANSFER file custodian, Cal State LA, NREL HITRF/NFCTEC, Empa, DLR/FCH2RAIL, Hungarian HRS and NBSDC) and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest"
   },
   "last_reviewed": "2026-10-03"
 }
