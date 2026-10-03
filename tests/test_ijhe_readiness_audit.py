@@ -38,6 +38,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert proust["protocol_hash_matches"] is True
     assert proust["data_hash_matches"] is True
     assert gates["release_network_development_integrity"]["status"] == "PASS"
+    assert gates["partial_station_profile_diagnostic_integrity"]["status"] == "PASS"
+    partial = gates["partial_station_profile_diagnostic_integrity"]["observed"]
+    assert partial["case_count"] == 8
+    assert partial["screening_pass_count"] == 0
+    assert partial["protocol"]["fresh_holdout"] is False
     release_development = gates["release_network_development_integrity"]["observed"]
     assert release_development["evidence_role"] == "consumed_development_only"
     assert release_development["eligible_as_confirmatory_validation"] is False

@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T10:49:09.581056+00:00",
+  "generated_at": "2026-10-03T11:20:11.913269+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 15,
+    "PASS": 16,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -222,6 +222,28 @@
             }
           }
         }
+      }
+    },
+    {
+      "id": "partial_station_profile_diagnostic_integrity",
+      "status": "PASS",
+      "claim": "The profiled partial-station experiment is retained as a bounded diagnostic and cannot be mistaken for full-station validation.",
+      "evidence": "data\\public_validation\\results\\partial_station_profile_diagnostic\\validation.json",
+      "requirement": "Eight declared development cases, explicit missing upstream boundary, no fresh-holdout claim, and retained zero screen passes.",
+      "observed": {
+        "evidence_role": "development_diagnostic_only",
+        "protocol": {
+          "source": "Powertech Labs SAE J2601 Tables Method validation traces already in repository",
+          "fresh_holdout": false,
+          "outcomes_inspected_before_run": true,
+          "upstream_pressure_trace_available": false,
+          "boundary_assumption": "constant 90 MPa upstream source pressure; inlet gas temperature profile used as delivery thermal boundary",
+          "source_temperature_profile_assumption": true,
+          "maximum_gas_temperature_c": 85.0,
+          "temperature_stop_mode": "safety_aware_controller"
+        },
+        "case_count": 8,
+        "screening_pass_count": 0
       }
     },
     {

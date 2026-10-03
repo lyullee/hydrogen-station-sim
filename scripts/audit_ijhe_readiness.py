@@ -132,6 +132,33 @@ def audit(root: Path) -> dict[str, object]:
         },
     ))
 
+    partial_diagnostic_path = root / "data/public_validation/results/partial_station_profile_diagnostic/validation.json"
+    partial_diagnostic = _json(partial_diagnostic_path)
+    partial_protocol = (partial_diagnostic or {}).get("protocol") or {}
+    partial_diagnostic_pass = bool(
+        (partial_diagnostic or {}).get("evidence_role") == "development_diagnostic_only"
+        and (partial_diagnostic or {}).get("claim_boundary")
+        and partial_diagnostic.get("case_count") == 8
+        and partial_diagnostic.get("screening_pass_count") == 0
+        and partial_protocol.get("fresh_holdout") is False
+        and partial_protocol.get("upstream_pressure_trace_available") is False
+        and partial_protocol.get("outcomes_inspected_before_run") is True
+        and (partial_diagnostic or {}).get("source_worktree_dirty") is False
+    )
+    gates.append(_gate(
+        "partial_station_profile_diagnostic_integrity",
+        "PASS" if partial_diagnostic_pass else ("FAIL" if partial_diagnostic else "PENDING"),
+        "The profiled partial-station experiment is retained as a bounded diagnostic and cannot be mistaken for full-station validation.",
+        str(partial_diagnostic_path.relative_to(root)),
+        "Eight declared development cases, explicit missing upstream boundary, no fresh-holdout claim, and retained zero screen passes.",
+        {
+            "evidence_role": (partial_diagnostic or {}).get("evidence_role"),
+            "protocol": partial_protocol,
+            "case_count": (partial_diagnostic or {}).get("case_count"),
+            "screening_pass_count": (partial_diagnostic or {}).get("screening_pass_count"),
+        } if partial_diagnostic else "missing",
+    ))
+
     external_loop_path = root / "data/public_validation/results/closed_loop_external_holdout/validation.json"
     external_loop = _json(external_loop_path)
     external_protocol_path = root / "research/mc_default_external_holdout_protocol.json"
