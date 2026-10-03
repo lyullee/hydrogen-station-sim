@@ -1,20 +1,20 @@
 {
   "schema_version": 1,
-  "attempted_at": "2026-10-03T19:38:21.467360+00:00",
-  "attempts_this_run": 2,
+  "attempted_at": "2026-10-03T20:07:07.671087+00:00",
+  "attempts_this_run": 1,
   "success": true,
   "compiler": "Tectonic 0.17.0 (x86_64-pc-windows-msvc)",
   "compiler_release": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic%400.17.0",
   "compiler_archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845f",
   "source": "manuscript/ijhe_manuscript_draft.tex",
-  "source_sha256": "3fabf971be88411b1bda8f2ce0118eefa3642eb73c1f6cbbde2a6e4a41ad01d4",
+  "source_sha256": "2f3db700881d61a56e89ddccd20c4ed7b14393edb1a61360a414b7f103de1f1a",
   "output_pages": 16,
-  "output_bytes": 606618,
-  "output_sha256": "45c0c3a47d50a937a22e9b8aa4b794b7e07f4ad6dcb637c8116e009cb1081d0b",
+  "output_bytes": 608487,
+  "output_sha256": "1a456c063b5b38f682d798134a37e7c352caa93529fc95f1a4cda982dfb35508",
   "warnings": {
     "layout_or_package_warning_lines": 4,
     "fatal_errors": 0,
-    "summary": "PDF produced successfully after adding the NRC field-evidence citation. There are three non-fatal underfull bibliography lines and the bundled lineno UTF-8 replacement warning; no overfull boxes or fatal source errors were reported."
+    "summary": "PDF produced successfully after adding PRHYDE and JHFC/NEDO validation-context citations. Non-fatal underfull bibliography lines and bundled lineno UTF-8 replacement warning remain; no overfull boxes or fatal source errors were reported."
   },
   "built_in_compiler_attempt": {
     "success": false,

@@ -78,6 +78,18 @@ categories and plotted pressure, temperature and flow patterns
 so we use it for operating-range and fault-taxonomy context rather than as a
 numerical full-loop holdout.
 
+The public PRHYDE deliverable provides a broader protocol and experiment
+context: four instrumented tanks (240 L H70, 350 L H50, 322 L H35 and 165 L
+H70) were tested at ZBT and Nikola across pressure-ramp and delivery-
+temperature conditions \\cite{prhyde2023}. Its public artifact contains test
+matrices, plots and aggregate model errors, but not the synchronized logger
+arrays needed for an untouched numerical holdout. An earlier JHFC/NEDO study
+likewise reports six practical 35/70 MPa filling conditions and station-supplied
+pressure/temperature measurements \\cite{monde2012}; the current public article
+and project archive do not expose the underlying machine-readable runs. These
+sources therefore support operating-range context and data-request targeting,
+not a new external pass claim.
+
 Safety-oriented twins add a second model family. Release, dispersion, jet-fire,
 overpressure and quantitative-risk calculations are commonly delegated to a
 consequence package such as HyRAM+ \cite{hyram2024,hyram2025}. A third layer now
@@ -885,6 +897,19 @@ L. Zhang, Y. Wang, C. Dec\'es-Petit, \textit{Dispenser reliability analysis for
 hydrogen refuelling stations in British Columbia}, National Research Council
 Canada, Report 56628 (2024),
 \href{https://doi.org/10.4224/40003368}{doi:10.4224/40003368}.
+
+\bibitem{prhyde2023}
+PRHYDE Consortium, \textit{PRHYDE Results as Input for Standardisation},
+Deliverable D6.7 Rev. 1.2 (2023),
+\href{https://lbst.de/wp-content/uploads/2023/04/PRHYDE_Deliverable-D6-7_Results_as_Input_for_Standardisation_V1-2_final_Apr_2023.pdf}{public
+deliverable}.
+
+\bibitem{monde2012}
+M. Monde, P. Woodfield, T. Takahashi, M. Ishimoto, Estimation of temperature
+change in practical hydrogen pressure tanks being filled at high pressures of
+35 and 70 MPa, \textit{International Journal of Hydrogen Energy} 37 (2012)
+5723--5734,
+\href{https://doi.org/10.1016/j.ijhydene.2011.12.136}{doi:10.1016/j.ijhydene.2011.12.136}.
 \end{thebibliography}
 
 \end{document}
