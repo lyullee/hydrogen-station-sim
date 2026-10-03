@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "status": "PROTOCOL_FROZEN_NOT_EXECUTED",
+  "dataset": {
+    "title": "Efficiency of mechanical ventilation on H2 dispersion (PS)",
+    "doi": "10.5281/zenodo.4668554",
+    "license": "CC BY 4.0",
+    "source_record": "https://zenodo.org/records/4668554"
+  },
+  "reader": {
+    "module": "h2station.public_validation.read_grune_ventilation_workbook",
+    "layout_rule": "Locate Pu/mbar, x/ mm and the average/maximum/minimum concentration blocks from the workbook headers; do not assume rows are time samples.",
+    "output_unit": "hydrogen concentration in vol percent, spatial coordinates in mm, flow in g/s"
+  },
+  "candidate_scope": {
+    "release_diameters_mm": [1.0, 4.0],
+    "ventilation_modes": ["no-wind", "co-flow", "counter-flow", "cross-flow"],
+    "measured_channels": [
+      "upstream pressure",
+      "upstream temperature",
+      "release mass flow",
+      "downstream pressure",
+      "spatial average concentration",
+      "spatial maximum concentration",
+      "spatial minimum concentration",
+      "flow-field measurements"
+    ]
+  },
+  "confirmatory_plan": {
+    "case_selection": "Freeze the workbook and sheet identifiers before numerical model output is inspected; retain at least one no-wind, co-flow, counter-flow and cross-flow case for each release diameter.",
+    "primary_endpoint": "Spatial concentration-field error at the declared x/y sampling points.",
+    "secondary_endpoints": [
+      "maximum concentration location error",
+      "extent above 4 vol percent",
+      "ventilation-direction classification",
+      "detector-zone coverage classification"
+    ],
+    "metrics": ["RMSE vol%", "MAE vol%", "maximum absolute error vol%", "binary 4 vol% classification accuracy"],
+    "negative_result_policy": "A failed case remains archived and does not support a validated ventilation or detector-placement claim. This dataset cannot close the gaseous HRS full-loop gate."
+  },
+  "claim_boundary": "This protocol evaluates confined-space mechanical-ventilation and hydrogen-dispersion behavior only. It does not validate vehicle filling, cascade dispatch, compressor or precooler control, dispenser protocol, SOC, or full-station pressure dynamics."
+}

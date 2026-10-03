@@ -40,6 +40,15 @@ The data can support a pre-registered check of:
 3. the direction and persistence of accumulation under different ventilation and wind cases;
 4. the digital twin's visualization and consequence-layer behavior for a confined-space release.
 
+The repository now includes a layout-aware reader at
+`h2station.public_validation.read_grune_ventilation_workbook`. A local
+structure check over the four concentration workbooks found 42 sheets and
+5,256 spatial points. The check used the committed MD5 values and did not
+copy the source workbooks into Git. The machine-readable protocol is
+`research/grune_ventilation_validation_protocol.json`; it is frozen as a
+protocol only and has not been presented as a completed model-validation
+result.
+
 It cannot support claims about vehicle filling, cascade pressure management, compressor/precooler dynamics, dispenser control, SOC, or the full SAE J2601 station loop. Those claims still require de-identified synchronized station traces from CARB, JRC GasTeF, Cal State LA, or another independent provider.
 
 ## Reproducibility plan

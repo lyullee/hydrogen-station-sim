@@ -35,6 +35,64 @@ class H2ProtocolMetadata:
 
 
 @dataclass(frozen=True)
+class GruneVentilationPoint:
+    """One spatial concentration point from the Grune/Sempert workbooks."""
+
+    x_mm: float
+    y_mm: float
+    concentration_average_pct: float | None
+    concentration_maximum_pct: float | None
+    concentration_minimum_pct: float | None
+    upstream_pressure_mbar: float
+    upstream_temperature_c: float
+    release_mass_flow_g_s: float
+    downstream_pressure_bar: float
+
+
+@dataclass(frozen=True)
+class GruneVentilationProfile:
+    """A single workbook sheet and its measured spatial concentration field.
+
+    The source dataset is intentionally represented as a spatial snapshot.  It
+    has no common time base, so this reader does not manufacture a transient
+    trace or silently treat rows as time samples.
+    """
+
+    source_workbook: str
+    sheet_name: str
+    release_diameter_mm: float
+    nominal_release_g_s: float
+    wind_speed_m_s: float
+    wind_mode: str
+    points: tuple[GruneVentilationPoint, ...]
+
+    def summary(self) -> dict:
+        concentrations = np.asarray(
+            [
+                point.concentration_average_pct
+                for point in self.points
+                if point.concentration_average_pct is not None
+            ],
+            dtype=float,
+        )
+        return {
+            "source_workbook": self.source_workbook,
+            "sheet_name": self.sheet_name,
+            "release_diameter_mm": self.release_diameter_mm,
+            "nominal_release_g_s": self.nominal_release_g_s,
+            "wind_speed_m_s": self.wind_speed_m_s,
+            "wind_mode": self.wind_mode,
+            "point_count": len(self.points),
+            "concentration_average_max_pct": (
+                float(np.max(concentrations)) if concentrations.size else None
+            ),
+            "concentration_average_mean_pct": (
+                float(np.mean(concentrations)) if concentrations.size else None
+            ),
+        }
+
+
+@dataclass(frozen=True)
 class H2ProtocolTrace:
     case_id: str
     metadata: H2ProtocolMetadata
@@ -932,3 +990,141 @@ def iter_dispersion_experiments(raw_directory: Path) -> Iterable[DispersionExper
             sensor_time_s=np.asarray([item[0] for item in sensor_records]),
             concentrations_percent=np.asarray([item[1] for item in sensor_records]),
         )
+
+
+def _grune_number(value: object) -> float | None:
+    if isinstance(value, bool) or value is None:
+        return None
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return None
+    return number if math.isfinite(number) else None
+
+
+def _grune_sheet_metadata(sheet_name: str) -> tuple[float, float, float, str]:
+    lowered = sheet_name.lower().replace("−", "-")
+    diameter_match = re.search(r"(\d+(?:\.\d+)?)\s*mm", lowered)
+    if diameter_match is None:
+        raise ValueError(f"Cannot identify release diameter in sheet {sheet_name!r}")
+    release_match = re.search(r"(\d+(?:\.\d+)?)\s*g\s*(?:h2|he)", lowered)
+    nominal_release = float(release_match.group(1)) if release_match else math.nan
+    wind_match = re.search(r"w\s*=\s*(\d+(?:\.\d+)?)", lowered)
+    if wind_match is None:
+        wind_match = re.search(r"(?:w\s+|\()?(\d+(?:\.\d+)?)\s*(?:m\s*)?s", lowered)
+    wind_speed = float(wind_match.group(1)) if wind_match else 0.0
+    if "counter" in lowered:
+        wind_mode = "counter-flow"
+    elif "cross" in lowered:
+        wind_mode = "cross-flow"
+    elif "co-flow" in lowered or "co flow" in lowered:
+        wind_mode = "co-flow"
+    else:
+        wind_mode = "no-wind"
+    return float(diameter_match.group(1)), nominal_release, wind_speed, wind_mode
+
+
+def read_grune_ventilation_workbook(path: Path) -> list[GruneVentilationProfile]:
+    """Read Grune/Sempert CC BY 4.0 spatial concentration workbooks.
+
+    The workbook layout has a small number of header rows, followed by upstream
+    pressure, upstream temperature, measured release flow and downstream
+    pressure, a streamwise ``x`` coordinate, and three nine-column blocks for
+    average, maximum and minimum concentration.  The reader locates these
+    labels instead of assuming a fixed row or column offset because the
+    published workbook families use both layouts.  It uses the declared
+    spatial headers rather than assuming that a row is a time sample.
+    """
+
+    load_workbook = _require_openpyxl()
+    workbook = load_workbook(path, read_only=True, data_only=True)
+    profiles: list[GruneVentilationProfile] = []
+    try:
+        for worksheet in workbook.worksheets:
+            if worksheet.max_row < 2:
+                continue
+            header_row = None
+            pressure_column = None
+            x_columns: list[int] = []
+            for row_number in range(1, min(12, worksheet.max_row) + 1):
+                values = [worksheet.cell(row=row_number, column=column).value for column in range(1, worksheet.max_column + 1)]
+                pressure_candidate = next(
+                    (
+                        column + 1 for column, value in enumerate(values)
+                        if isinstance(value, str) and "pu/mbar" in value.lower()
+                    ),
+                    None,
+                )
+                x_candidates = [
+                    column + 1 for column, value in enumerate(values)
+                    if isinstance(value, str) and value.strip().lower() == "x/ mm"
+                ]
+                if pressure_candidate is not None and x_candidates:
+                    header_row = row_number
+                    pressure_column = pressure_candidate
+                    x_columns = x_candidates
+                    break
+            if header_row is None or pressure_column is None:
+                continue
+            if len(x_columns) == 1:
+                x_columns = [x_columns[0], x_columns[0] + 12, x_columns[0] + 24]
+            if len(x_columns) < 3:
+                continue
+            average_start, maximum_start, minimum_start = (
+                x_columns[0] + 1,
+                x_columns[1] + 1,
+                x_columns[2] + 1,
+            )
+            diameter_mm, nominal_release, wind_speed, wind_mode = _grune_sheet_metadata(
+                worksheet.title
+            )
+            y_values = [
+                _grune_number(worksheet.cell(row=header_row, column=column).value)
+                for column in range(average_start, average_start + 9)
+            ]
+            rows: list[GruneVentilationPoint] = []
+            x_column = x_columns[0]
+            for row_number in range(header_row + 1, worksheet.max_row + 1):
+                x_mm = _grune_number(worksheet.cell(row=row_number, column=x_column).value)
+                pressure_mbar = _grune_number(worksheet.cell(row=row_number, column=pressure_column).value)
+                temperature_c = _grune_number(worksheet.cell(row=row_number, column=pressure_column + 1).value)
+                release_flow = _grune_number(worksheet.cell(row=row_number, column=pressure_column + 2).value)
+                downstream_bar = _grune_number(worksheet.cell(row=row_number, column=pressure_column + 3).value)
+                if None in (x_mm, pressure_mbar, temperature_c, release_flow, downstream_bar):
+                    continue
+                for offset, y_mm in enumerate(y_values):
+                    if y_mm is None:
+                        continue
+                    average = _grune_number(worksheet.cell(row=row_number, column=average_start + offset).value)
+                    maximum = _grune_number(worksheet.cell(row=row_number, column=maximum_start + offset).value)
+                    minimum = _grune_number(worksheet.cell(row=row_number, column=minimum_start + offset).value)
+                    if average is None and maximum is None and minimum is None:
+                        continue
+                    rows.append(GruneVentilationPoint(
+                        x_mm=float(x_mm),
+                        y_mm=float(y_mm),
+                        concentration_average_pct=average,
+                        concentration_maximum_pct=maximum,
+                        concentration_minimum_pct=minimum,
+                        upstream_pressure_mbar=float(pressure_mbar),
+                        upstream_temperature_c=float(temperature_c),
+                        release_mass_flow_g_s=float(release_flow),
+                        downstream_pressure_bar=float(downstream_bar),
+                    ))
+            if not rows:
+                continue
+            measured_nominal = float(np.median([point.release_mass_flow_g_s for point in rows]))
+            profiles.append(GruneVentilationProfile(
+                source_workbook=path.name,
+                sheet_name=worksheet.title,
+                release_diameter_mm=diameter_mm,
+                nominal_release_g_s=(
+                    measured_nominal if not math.isfinite(nominal_release) else nominal_release
+                ),
+                wind_speed_m_s=wind_speed,
+                wind_mode=wind_mode,
+                points=tuple(rows),
+            ))
+    finally:
+        workbook.close()
+    return profiles
