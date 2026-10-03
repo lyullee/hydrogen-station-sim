@@ -209,8 +209,12 @@ correctness, priority, stabilization/restart, prevention, evidence grounding and
 operator usability from 1 to 5. Critical omission and unsafe advice are separate
 binary endpoints. The event is the unit of inference. Repeats and reviewers are
 averaged within event before paired bootstrap confidence intervals and Wilcoxon
-signed-rank comparisons are calculated. No LLM-as-judge score is accepted as the
+signed-rank comparisons are calculated. Failed provider calls remain as masked
+failure responses for scoring rather than being removed or silently retried.
+No LLM-as-judge score is accepted as the
 primary endpoint. Holdout responses and ratings have not yet been collected.
+The applicable institutional ethics determination for expert-participant research
+must be recorded before reviewer recruitment or rating collection.
 
 \section{Results}
 \subsection{Measured-boundary tank validation}
@@ -323,7 +327,8 @@ applicable to the current outdoor free-jet adapter.
 \subsection{Decision-support study status}
 The deterministic split produces a 24-case holdout casebook and nine development
 cases, but all vignettes remain unapproved until coordinator leakage review and
-qualified expert sign-off. Consequently, no SAGA effectiveness, safety, latency,
+qualified expert sign-off; the institutional ethics determination is also pending.
+Consequently, no SAGA effectiveness, safety, latency,
 omission-rate or inter-rater-agreement result is reported in this draft. This empty
 result is deliberate: substituting model self-assessment would violate the frozen
 protocol.

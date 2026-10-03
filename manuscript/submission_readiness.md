@@ -18,6 +18,7 @@ The current official IJHE Guide for Authors was checked on 3 October 2026. A res
 | HyRAM+ production adapter | Verified within stated scope | Exact v6.1 source identity, 47 upstream tests/803 subtests, three production parity cases |
 | Outdoor station plume geometry | Not independently validated | The open-channel experiment is not geometrically applicable to the outdoor free jet |
 | HIAD casebook leakage review | Pending | Qualified coordinator must approve and freeze all reported vignettes |
+| Human-participant ethics determination | Pending | Record institutional approval, exemption or not-required determination before reviewer recruitment/rating |
 | Blinded SAGA expert review | Pending and mandatory | At least two independent qualified reviewers; lock ratings before unmasking |
 | SAGA ablation result | Pending | Alarm-only vs direct LLM vs standards-RAG, with unsafe advice, omissions, latency, failures and agreement |
 | New untouched full-loop set | Recommended for a broad control claim | Freeze the next protocol representation before collecting or obtaining new cases |
@@ -39,12 +40,13 @@ The current official IJHE Guide for Authors was checked on 3 October 2026. A res
 ## Finalization sequence
 
 1. Have a non-rating coordinator remove hindsight-action leakage from the 24 holdout HIAD vignettes and freeze the approved casebook.
-2. Collect all three response variants under frozen provider/model, prompt, sampling and token settings.
-3. Obtain independent blinded ratings from at least two qualified hydrogen/process-safety reviewers.
-4. Lock the rating database, unmask once, and run the committed analysis script.
-5. Add the SAGA effect sizes, bootstrap confidence intervals, unsafe-advice and omission rates, latency, failures and inter-rater agreement to the Results and Abstract.
-6. Decide whether the paper limits the process claim to the tank submodel or adds a new untouched full-loop dataset.
-7. Confirm every author and declaration, regenerate all evidence from the release commit, archive the package with a DOI, and complete a final claim-to-evidence audit.
+2. Obtain and record the applicable institutional ethics determination for the expert-review study.
+3. Collect all three response variants under frozen provider/model, prompt, sampling and token settings.
+4. Build isolated reviewer packets and obtain independent blinded ratings from at least two qualified hydrogen/process-safety reviewers.
+5. Lock the rating database, unmask once, and run the committed analysis script.
+6. Add the SAGA effect sizes, bootstrap confidence intervals, unsafe-advice and omission rates, latency, failures and inter-rater agreement to the Results and Abstract.
+7. Decide whether the paper limits the process claim to the tank submodel or adds a new untouched full-loop dataset.
+8. Confirm every author and declaration, regenerate all evidence from the release commit, archive the package with a DOI, and complete a final claim-to-evidence audit.
 
 ## Claim language that must remain
 

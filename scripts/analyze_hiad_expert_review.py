@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 from pathlib import Path
 
@@ -26,6 +27,18 @@ BINARY_FIELDS = ("critical_omission_0_1", "unsafe_advice_0_1")
 def _read_csv(path: Path) -> list[dict[str, str]]:
     with path.open(encoding="utf-8-sig", newline="") as handle:
         return list(csv.DictReader(handle))
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _as_bool(value: object) -> bool:
+    return str(value).strip().lower() in {"1", "true", "yes", "y"}
 
 
 def _quadratic_weighted_kappa(first: list[int], second: list[int]) -> float:
@@ -55,6 +68,14 @@ def main() -> int:
     parser.add_argument("--allocation", type=Path, required=True)
     parser.add_argument("--casebook", type=Path, required=True)
     parser.add_argument("--ratings", type=Path, nargs="+", required=True)
+    parser.add_argument(
+        "--manifest", type=Path,
+        help="Collection manifest; defaults to collection_manifest.json beside allocation",
+    )
+    parser.add_argument(
+        "--blind-template", type=Path,
+        help="Locked blank rating form; defaults to blind_expert_review.csv beside allocation",
+    )
     parser.add_argument("--output", type=Path, default=Path("data/public_validation/results/hiad_decision/analysis"))
     parser.add_argument("--allow-unapproved", action="store_true")
     parser.add_argument(
@@ -65,21 +86,87 @@ def main() -> int:
 
     casebook = json.loads(args.casebook.read_text(encoding="utf-8"))
     unapproved = [
-        case["event_id"] for case in casebook["cases"]
+        str(case["event_id"]) for case in casebook["cases"]
         if str(case.get("expert_vignette_approved", "NO")).upper() != "YES"
+        or str(case.get("narrative_action_leakage_review", "")).upper() != "PASS"
     ]
     if unapproved and not args.allow_unapproved:
         raise SystemExit(
             "Expert vignette approval is incomplete for event IDs: " + ", ".join(unapproved)
         )
-    allocation = {row["response_code"]: row for row in _read_csv(args.allocation)}
+    allocation_rows = _read_csv(args.allocation)
+    allocation_codes = [row["response_code"] for row in allocation_rows]
+    if len(allocation_codes) != len(set(allocation_codes)):
+        raise SystemExit("Duplicate response_code rows are not allowed in allocation")
+    allocation = {row["response_code"]: row for row in allocation_rows}
+    casebook_ids = {str(case["event_id"]) for case in casebook["cases"]}
+    allocation_event_ids = {str(row["event_id"]) for row in allocation_rows}
+    if allocation_event_ids != casebook_ids:
+        missing = sorted(casebook_ids - allocation_event_ids, key=int)
+        extra = sorted(allocation_event_ids - casebook_ids, key=int)
+        raise SystemExit(
+            f"Allocation/casebook event mismatch; missing={missing}, extra={extra}"
+        )
+
+    manifest_path = args.manifest or args.allocation.with_name("collection_manifest.json")
+    manifest = None
+    if manifest_path.exists():
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        expected_hashes = manifest.get("file_sha256") or {}
+        for name, path in (
+            ("allocation_key.csv", args.allocation),
+            ("casebook_snapshot.json", args.casebook),
+        ):
+            expected = expected_hashes.get(name)
+            if expected and _sha256_file(path) != expected:
+                raise SystemExit(f"Locked file hash mismatch: {name}")
+        if int(manifest.get("response_count", len(allocation_rows))) != len(allocation_rows):
+            raise SystemExit("Allocation row count differs from collection manifest")
+
+    blind_path = args.blind_template or args.allocation.with_name("blind_expert_review.csv")
+    blind_template = None
+    if blind_path.exists():
+        blind_rows = _read_csv(blind_path)
+        blind_template = {row["response_code"]: row for row in blind_rows}
+        if len(blind_template) != len(blind_rows) or set(blind_template) != set(allocation):
+            raise SystemExit("Blind template does not match allocation response codes")
+        expected = (manifest or {}).get("file_sha256", {}).get("blind_expert_review.csv")
+        if expected and _sha256_file(blind_path) != expected:
+            raise SystemExit("Locked file hash mismatch: blind_expert_review.csv")
+
     ratings = []
     rater_ids = set()
+    rating_file_hashes = []
     for path in args.ratings:
-        for row in _read_csv(path):
+        file_rows = _read_csv(path)
+        if not file_rows:
+            raise SystemExit(f"Rating file is empty: {path}")
+        file_rater_ids = {row.get("rater_id", "").strip() for row in file_rows}
+        if "" in file_rater_ids or len(file_rater_ids) != 1:
+            raise SystemExit(
+                f"Each rating file must contain exactly one non-empty rater_id: {path}"
+            )
+        file_codes = [row.get("response_code", "").strip() for row in file_rows]
+        if len(file_codes) != len(set(file_codes)):
+            raise SystemExit(f"Duplicate response_code rows in {path}")
+        missing_codes = sorted(set(allocation) - set(file_codes))
+        extra_codes = sorted(set(file_codes) - set(allocation))
+        if missing_codes or extra_codes:
+            raise SystemExit(
+                f"Incomplete rating file {path}; missing={missing_codes}, extra={extra_codes}"
+            )
+        rating_file_hashes.append({"file": path.name, "sha256": _sha256_file(path)})
+        for row in file_rows:
             code = row["response_code"]
             if code not in allocation:
                 raise SystemExit(f"Unknown response code {code} in {path}")
+            if blind_template is not None:
+                locked = blind_template[code]
+                for field in ("event_id", "response_text"):
+                    if row.get(field, "") != locked.get(field, ""):
+                        raise SystemExit(
+                            f"Locked {field} was changed for {code} in {path}"
+                        )
             rater_id = row.get("rater_id", "").strip()
             if not rater_id:
                 raise SystemExit(f"Missing rater_id for {code} in {path}")
@@ -94,6 +181,12 @@ def main() -> int:
                 if value not in (0, 1):
                     raise SystemExit(f"{field} outside 0..1 for {code}")
                 parsed[field] = value
+            if any(parsed[field] == 1 for field in BINARY_FIELDS) and not row.get(
+                "comments", ""
+            ).strip():
+                raise SystemExit(
+                    f"A comment is required for omission/unsafe mark on {code}"
+                )
             parsed["composite_score"] = float(np.mean([parsed[field] for field in SCORE_FIELDS]))
             ratings.append(parsed)
             rater_ids.add(rater_id)
@@ -102,6 +195,25 @@ def main() -> int:
         raise SystemExit("Duplicate (rater_id, response_code) rows are not allowed")
     if len(rater_ids) < 2:
         raise SystemExit("At least two independent raters are required")
+
+    design_counts: dict[tuple[str, str], int] = {}
+    for row in allocation_rows:
+        design_counts[(str(row["event_id"]), row["variant"])] = (
+            design_counts.get((str(row["event_id"]), row["variant"]), 0) + 1
+        )
+    design_variants = sorted({variant for _, variant in design_counts})
+    for event_id in sorted(casebook_ids, key=int):
+        for variant in design_variants:
+            count = design_counts.get((event_id, variant), 0)
+            expected = 1 if variant == "alarm-only" else None
+            if expected is not None and count != expected:
+                raise SystemExit(
+                    f"Expected one alarm-only response for event {event_id}; got {count}"
+                )
+    for variant in (item for item in design_variants if item != "alarm-only"):
+        counts = {design_counts.get((event_id, variant), 0) for event_id in casebook_ids}
+        if len(counts) != 1 or next(iter(counts)) < 1:
+            raise SystemExit(f"Inconsistent repeat count for variant {variant}: {sorted(counts)}")
 
     per_event: dict[tuple[str, str], list[float]] = {}
     for row in ratings:
@@ -161,11 +273,20 @@ def main() -> int:
     variant_summary = {}
     for variant in variants:
         rows = [row for row in ratings if row["variant"] == variant]
+        calls = [row for row in allocation_rows if row["variant"] == variant]
+        latencies = [
+            float(row.get("latency_ms") or 0.0) for row in calls
+        ]
         variant_summary[variant] = {
             "rating_count": len(rows),
+            "response_call_count": len(calls),
             "composite_mean": float(np.mean([row["composite_score"] for row in rows])),
             "critical_omission_rate": float(np.mean([row["critical_omission_0_1"] for row in rows])),
             "unsafe_advice_rate": float(np.mean([row["unsafe_advice_0_1"] for row in rows])),
+            "failed_call_rate": float(np.mean([
+                _as_bool(row.get("call_failed", False)) for row in calls
+            ])),
+            "latency_ms_mean": float(np.mean(latencies)),
         }
     report = {
         "event_count": len(event_ids),
@@ -174,6 +295,15 @@ def main() -> int:
         "primary_variant": args.primary_variant,
         "paired_composite_differences_vs_alarm": paired_comparisons,
         "inter_rater_agreement": agreement,
+        "lock": {
+            "allocation_sha256": _sha256_file(args.allocation),
+            "casebook_sha256": _sha256_file(args.casebook),
+            "blind_template_sha256": (
+                _sha256_file(blind_path) if blind_template is not None else None
+            ),
+            "manifest": manifest_path.name if manifest is not None else None,
+            "rating_files": rating_file_hashes,
+        },
     }
     args.output.mkdir(parents=True, exist_ok=True)
     (args.output / "expert_review_analysis.json").write_text(
@@ -182,14 +312,16 @@ def main() -> int:
     lines = [
         "# HIAD blinded expert-review analysis", "",
         f"Events: {len(event_ids)}; raters: {len(rater_ids)}", "",
-        "| Variant | Composite mean | Critical omission | Unsafe advice |",
-        "|---|---:|---:|---:|",
+        "| Variant | Composite mean | Critical omission | Unsafe advice | Failed calls | Mean latency (ms) |",
+        "|---|---:|---:|---:|---:|---:|",
     ]
     for variant, summary in variant_summary.items():
         lines.append(
             f"| {variant} | {summary['composite_mean']:.3f} | "
             f"{100 * summary['critical_omission_rate']:.1f}% | "
-            f"{100 * summary['unsafe_advice_rate']:.1f}% |"
+            f"{100 * summary['unsafe_advice_rate']:.1f}% | "
+            f"{100 * summary['failed_call_rate']:.1f}% | "
+            f"{summary['latency_ms_mean']:.1f} |"
         )
     lines.extend(["", "## Paired comparisons versus alarm-only", ""])
     for variant, paired in paired_comparisons.items():

@@ -56,6 +56,7 @@
       "SAGA standards-document RAG response with the same observation"
     ],
     "sampling": "three SAGA responses per event under a frozen provider/model configuration",
+    "failed_call_rule": "retain every failed provider call as a masked failure response for blinded scoring; do not silently retry or exclude it",
     "primary_endpoint": "paired event-level difference in mean seven-criterion expert composite score",
     "safety_endpoints": [
       "critical-omission rate",
@@ -66,7 +67,9 @@
       "failed-call rate",
       "criterion-level pairwise quadratic-weighted kappa"
     ],
-    "reviewers": "at least two independent qualified hydrogen/process-safety reviewers, blinded to allocation",
+    "reviewers": "at least two independent qualified hydrogen/process-safety reviewers, blinded to allocation; one complete locked file per coded reviewer",
+    "human_participant_governance": "record the applicable institutional approval, exemption, or not-required determination before recruiting reviewers or collecting ratings",
+    "integrity_checks": "hash-locked casebook, allocation and blank form; reject incomplete forms, changed response text, duplicate codes, invalid scores, and unexplained binary safety marks",
     "inference": "case-level bootstrap 95 percent CI and paired two-sided Wilcoxon signed-rank test"
   },
   "consequence_physics": {

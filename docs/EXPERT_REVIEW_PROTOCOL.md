@@ -9,6 +9,11 @@ message, without increasing unsafe advice or critical omissions?
 This protocol evaluates decision-support text. It does not test operator
 performance in a live emergency and does not establish regulatory approval.
 
+Before recruiting reviewers or collecting ratings, obtain and record the
+applicable institutional determination for research involving expert human
+participants (for example, approval, exemption, or a documented determination
+that review is not required). The software cannot make that determination.
+
 ## Cases and freezing
 
 The source population is the HRS subset of JRC HIAD 2.2 with at least one
@@ -23,6 +28,12 @@ without adding facts. The coordinator records `PASS` and `YES` in the two
 approval fields and hashes the final casebook. Emergency actions, lessons,
 corrective measures, and references remain hidden from SAGA.
 
+The collection script constructs every model-visible field from the approved
+`input_context`; it never falls back to the original HIAD narrative after review.
+The approved casebook must contain every event in the frozen selected split
+exactly once. Collection stops if an ID is missing, duplicated, or outside the
+split, preventing post-freeze case selection and accidental leakage.
+
 ## Response variants and masking
 
 Each event produces a deterministic alarm-only response and three independently
@@ -34,6 +45,10 @@ real-time direct-answer API. The collection script assigns
 opaque response codes and exports a randomized review sheet. Reviewers must not
 receive the allocation key, provider/model fields, or one another's ratings
 until the database is locked.
+
+A provider failure is retained as a masked failure response and scored in the
+same randomized sheet. It is never deleted, silently retried, or replaced by a
+successful answer. This prevents conditioning the study on successful calls.
 
 Reviewers receive `blind_expert_review.csv` and `reviewer_case_reference.csv`.
 The latter contains the historical observation and the HIAD emergency-action,
@@ -49,6 +64,11 @@ professional role, relevant years of experience, applicable qualifications,
 prior familiarity with the system, and conflicts of interest in the study log.
 These details should be reported in aggregate when individual identification is
 not permitted.
+
+Use coded reviewer identifiers in analysis files. Keep any identity/contact key
+under the institution's approved data-management procedure and outside the
+repository. One rating file must contain one reviewer code and every locked
+response exactly once.
 
 Before scoring the holdout set, reviewers jointly score only development cases
 to align the meaning of the rubric. They may clarify the rubric, but they may not
@@ -96,6 +116,11 @@ p-value. Treat missing provider calls as failures; do not replace them with a
 successful retry unless the replacement rule was frozen in advance. Report any
 post-hoc analysis as exploratory.
 
+The analyzer verifies the casebook, allocation and blank-form hashes when a
+collection manifest is present. It rejects incomplete reviewer files, multiple
+reviewer IDs in one file, modified response text, duplicate codes, scores outside
+the rubric, and binary safety marks without an explanation.
+
 ## Reproduction sequence
 
 ```powershell
@@ -110,11 +135,19 @@ $env:PYTHONPATH = "src"
   --approved-casebook approved_holdout_casebook.json --repeats 3 `
   --include-standards-rag
 
-# Each reviewer completes a separate copy of blind_expert_review.csv.
+# After the institutional ethics determination, build isolated R1/R2 packets.
+.venv\Scripts\python.exe scripts\package_hiad_expert_review.py `
+  --collection data\public_validation\results\hiad_decision `
+  --output data\public_validation\results\hiad_review_package `
+  --reviewer-codes R1 R2 --ethics-status exempt
+
+# Each reviewer completes only their own ratings_R*.csv.
 .venv\Scripts\python.exe scripts\analyze_hiad_expert_review.py `
   --allocation data\public_validation\results\hiad_decision\allocation_key.csv `
   --casebook data\public_validation\results\hiad_decision\casebook_snapshot.json `
-  --ratings reviewer_1.csv reviewer_2.csv
+  --ratings `
+    data\public_validation\results\hiad_review_package\reviewers\R1\ratings_R1.csv `
+    data\public_validation\results\hiad_review_package\reviewers\R2\ratings_R2.csv
 ```
 
 Archive the collection manifest, approved casebook, raw responses, blinded

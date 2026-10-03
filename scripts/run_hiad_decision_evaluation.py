@@ -22,6 +22,17 @@ from urllib.request import Request, urlopen
 PROMPT = """Assess this historical hydrogen-refuelling-station observation using only the supplied facts.
 Give one concise integrated response with: (1) situation and plausible scenario(s), clearly marking uncertainty; (2) immediately executable actions in priority order; (3) stabilization and restart criteria; and (4) prevention and follow-up controls. Do not invent measurements, distances, causes, or completed actions. Make the ordering clear enough for an operator to act without choosing among duplicate scenario lists."""
 
+CONTEXT_FIELDS = (
+    "title",
+    "description",
+    "initiating_system",
+    "physical_effect",
+    "consequence_nature",
+    "sub_application",
+    "supply_chain_stage",
+    "operational_condition",
+)
+
 
 def _git_commit() -> str:
     try:
@@ -95,6 +106,24 @@ def _context(case: dict) -> dict:
     }
 
 
+def _apply_approved_vignette(raw_case: dict, approved_case: dict) -> dict:
+    """Return a case whose model-visible fields come only from coordinator approval."""
+    approved_context = approved_case.get("input_context")
+    if not isinstance(approved_context, dict):
+        raise SystemExit(
+            f"Approved casebook event {raw_case['event_id']} has no input_context object"
+        )
+    missing = [field for field in CONTEXT_FIELDS if field not in approved_context]
+    if missing:
+        raise SystemExit(
+            f"Approved casebook event {raw_case['event_id']} is missing input_context fields: "
+            + ", ".join(missing)
+        )
+    sanitized = dict(raw_case)
+    sanitized.update({field: approved_context[field] for field in CONTEXT_FIELDS})
+    return sanitized
+
+
 def _baseline(case: dict) -> str:
     return (
         f"Incident reported: {case['title']}. Observed physical effect: "
@@ -150,6 +179,14 @@ def _write_csv(path: Path, rows: list[dict], fieldnames: list[str]) -> None:
         writer.writerows(rows)
 
 
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--cases", type=Path, default=Path("data/public_validation/processed/hiad_hrs_cases.jsonl"))
@@ -203,7 +240,12 @@ def main() -> int:
     if not args.saga_url:
         raise SystemExit("--saga-url is required during response collection")
     approved = json.loads(args.approved_casebook.read_text(encoding="utf-8"))
-    approved_by_id = {str(case["event_id"]): case for case in approved["cases"]}
+    approved_ids = [str(case["event_id"]) for case in approved["cases"]]
+    if len(approved_ids) != len(set(approved_ids)):
+        raise SystemExit("Approved casebook contains duplicate event IDs")
+    approved_by_id = {
+        str(case["event_id"]): case for case in approved["cases"]
+    }
     invalid = [
         event_id for event_id, case in approved_by_id.items()
         if str(case.get("expert_vignette_approved", "NO")).upper() != "YES"
@@ -218,7 +260,15 @@ def main() -> int:
     unknown = sorted(set(approved_by_id) - set(split_by_id), key=int)
     if unknown:
         raise SystemExit("Approved casebook contains IDs outside the selected split: " + ", ".join(unknown))
-    cases = [split_by_id[event_id] for event_id in approved_by_id]
+    missing = sorted(set(split_by_id) - set(approved_by_id), key=int)
+    if missing:
+        raise SystemExit(
+            "Approved casebook omitted frozen split IDs: " + ", ".join(missing)
+        )
+    cases = [
+        _apply_approved_vignette(split_by_id[event_id], approved_by_id[event_id])
+        for event_id in approved_by_id
+    ]
     endpoints = {
         "saga-linked": args.saga_url.rstrip("/") + "/api/integrations/digital-twin/main",
     }
@@ -231,9 +281,12 @@ def main() -> int:
             "event_id": case["event_id"], "variant": "alarm-only", "repeat": 1,
             "answer": _baseline(case), "latency_ms": 0.0,
             "provider": "deterministic", "model": "alarm-only",
+            "answer_mode": "deterministic", "citation_count": 0,
+            "call_failed": False, "error": "",
         })
         for variant, endpoint in endpoints.items():
             for repeat in range(1, args.repeats + 1):
+                started = perf_counter()
                 try:
                     payload = _response_payload(variant, case, args.provider)
                     result, latency = _post(endpoint, payload, args.timeout_s)
@@ -246,12 +299,33 @@ def main() -> int:
                         "model": str(result.get("model") or ""),
                         "answer_mode": str(result.get("answer_mode") or "direct"),
                         "citation_count": len(citations),
+                        "call_failed": False,
+                        "error": "",
                     })
                 except Exception as exc:  # collection must preserve per-case failures
-                    errors.append({
+                    failure = {
                         "event_id": case["event_id"], "variant": variant,
                         "repeat": repeat,
                         "error": f"{type(exc).__name__}: {exc}",
+                    }
+                    errors.append(failure)
+                    # A failed call remains in the blinded experiment. Omitting it
+                    # would condition the analysis on successful provider calls
+                    # and bias usability/safety results upward.
+                    responses.append({
+                        "event_id": case["event_id"], "variant": variant,
+                        "repeat": repeat,
+                        "answer": (
+                            "[PROVIDER CALL FAILED: no decision-support response "
+                            "was returned.]"
+                        ),
+                        "latency_ms": (perf_counter() - started) * 1000.0,
+                        "provider": args.provider,
+                        "model": "",
+                        "answer_mode": "failed-call",
+                        "citation_count": 0,
+                        "call_failed": True,
+                        "error": failure["error"],
                     })
         print(f"collected HIAD {case['event_id']}", flush=True)
 
@@ -288,7 +362,8 @@ def main() -> int:
             handle.write(json.dumps(row, ensure_ascii=False) + "\n")
     _write_csv(args.output / "allocation_key.csv", allocation, [
         "response_code", "event_id", "variant", "repeat", "provider", "model",
-        "answer_mode", "citation_count", "latency_ms", "answer",
+        "answer_mode", "citation_count", "latency_ms", "call_failed", "error",
+        "answer",
     ])
     _write_csv(args.output / "blind_expert_review.csv", blinded, list(blinded[0]))
     reviewer_reference = []
@@ -334,8 +409,24 @@ def main() -> int:
         "response_variants": ["alarm-only", *endpoints],
         "timeout_s": args.timeout_s,
         "response_count": len(responses),
+        "expected_response_count": len(cases) * (
+            1 + args.repeats * len(endpoints)
+        ),
         "failed_call_count": len(errors),
+        "failed_calls_retained_for_blinded_scoring": True,
         "reviewer_reference_file": "reviewer_case_reference.csv",
+        "file_sha256": {
+            "casebook_snapshot.json": _sha256_file(args.output / "casebook_snapshot.json"),
+            "raw_responses.jsonl": _sha256_file(args.output / "raw_responses.jsonl"),
+            "allocation_key.csv": _sha256_file(args.output / "allocation_key.csv"),
+            "blind_expert_review.csv": _sha256_file(args.output / "blind_expert_review.csv"),
+            "reviewer_case_reference.csv": _sha256_file(
+                args.output / "reviewer_case_reference.csv"
+            ),
+            "collection_errors.json": _sha256_file(
+                args.output / "collection_errors.json"
+            ),
+        },
     }
     (args.output / "collection_manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
