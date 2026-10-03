@@ -55,3 +55,17 @@ operator performance. Those require an independently frozen casebook and
 qualified expert review, which remain pending in
 `manuscript/ijhe_readiness_audit.json`.
 
+
+## Public incident traceability follow-up
+
+The reproducible [HIAD-to-playbook coverage audit](HIAD_PLAYBOOK_COVERAGE.md)
+links 34 public HRS incident/near-miss metadata rows to the current emergency
+response families. The current metadata-only mapping covers 33 rows (97.1%);
+case 454, a canopy-damage near miss without hydrogen release, remains unmapped
+and is retained as a catalog gap. The audit deliberately excludes HIAD emergency
+action and lesson text, so it cannot leak a response answer key.
+
+This improves provenance and scenario coverage for evidence-grounded prompts, but
+it does not establish response correctness or operator benefit. The independent
+coordinator review, holdout response collection and expert rating gates remain
+required.
