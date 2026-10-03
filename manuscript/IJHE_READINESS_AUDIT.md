@@ -16,8 +16,10 @@
 | `preslhy_blowdown_external_validation` | **FAIL** | The source-depletion and direct-aperture release model meets its prospectively frozen screens on public PRESLHY ambient blowdown experiments. | `research\preslhy_blowdown_external_validation.json; research\preslhy_blowdown_validation_protocol.json` |
 | `preslhy_revised_holdout_validation` | **FAIL** | The revised non-adiabatic source-depletion model meets the prospectively frozen PRESLHY E5.1 holdout rule. | `research\preslhy_e5_1_holdout_result.json; research\preslhy_e5_1_holdout_protocol.json` |
 | `proust_independent_release_validation` | **FAIL** | The fixed high-pressure aperture relation meets its prospectively frozen rule on the independent INERIS/CEA 90 MPa campaign. | `research\proust_release_holdout_result.json; research\proust_release_holdout_protocol.json; data\public_validation\derived\proust_90mpa_release.csv` |
+| `release_network_development_integrity` | **PASS** | The post-outcome release-network diagnostic is retained as consumed development evidence and cannot be mistaken for validation. | `research\release_network_development.json` |
 | `schefer_transient_release_validation` | **FAIL** | The locked adiabatic vessel-discharge model meets all frozen transient mass-flow screens on the independent Sandia/SRI experiment. | `research\schefer_2006_holdout_result.json; research\schefer_2006_holdout_protocol.json; data\public_validation\derived\schefer_2006_figure3b.csv` |
 | `schefer_2007_pressure_decay_validation` | **FAIL** | The locked adiabatic vessel-discharge model meets all frozen pressure-decay screens on the independent Schefer et al. 2007 experiment. | `research\schefer_2007_holdout_result.json; research\schefer_2007_holdout_protocol.json; data\public_validation\derived\schefer_2007_figure4.csv` |
+| `grune_2014_pressure_decay_validation` | **PENDING** | The locked source model meets all pressure-decay screens on the independent KIT small-reservoir release. | `research\grune_2014_holdout_result.json; research\grune_2014_holdout_protocol.json; data\public_validation\derived\grune_2014_figure2.csv` |
 | `ekoto_transient_release_validation` | **PASS** | The locked adiabatic vessel-discharge model meets all frozen transient mass-flow screens on the independent Ekoto et al. scaled release. | `research\ekoto_2012_holdout_result.json; research\ekoto_2012_holdout_protocol.json; data\public_validation\derived\ekoto_2012_figure3.csv` |
 | `hiad_protocol_integrity` | **PASS** | The incident decision-support study protocol was hash-locked before outcomes. | `research\hiad_study_protocol_manifest.json` |
 | `institutional_ethics_determination` | **PENDING** | The applicable institution has recorded the human-participant determination. | `research\hiad_study_protocol_manifest.json` |
@@ -27,7 +29,7 @@
 | `saga_effectiveness_and_safety_supported` | **PENDING** | Direct SAGA improves expert-rated guidance without higher observed omission or unsafe-advice rates. | `data\public_validation\results\hiad_decision\analysis\expert_review_analysis.json` |
 | `preoutcome_design_sensitivity` | **PASS** | The fixed incident-study sample limitations were quantified before outcomes. | `research\hiad_design_sensitivity.json` |
 | `ijhe_format_gate` | **PASS** | The manuscript satisfies the explicit IJHE length/front-matter limits checked locally. | `manuscript\ijhe_format_check.json` |
-| `ijhe_latex_compilation` | **PENDING** | The exact submitted LaTeX source compiles successfully. | `manuscript\ijhe_compile_status.json` |
+| `ijhe_latex_compilation` | **PASS** | The exact submitted LaTeX source compiles successfully. | `manuscript\ijhe_compile_status.json` |
 | `submission_metadata_and_declarations` | **PENDING** | Every author, affiliation, institutional email and declaration is confirmed. | `manuscript\submission_metadata.json` |
 | `software_doi` | **PASS** | The reproducible software release has a persistent DOI. | `CITATION.cff` |
 
@@ -38,11 +40,11 @@
 - `proust_independent_release_validation`
 - `schefer_transient_release_validation`
 - `schefer_2007_pressure_decay_validation`
+- `grune_2014_pressure_decay_validation`
 - `institutional_ethics_determination`
 - `hiad_casebook_frozen`
 - `hiad_holdout_collection`
 - `independent_expert_review_complete`
-- `ijhe_latex_compilation`
 - `submission_metadata_and_declarations`
 
 ## Blocking full-objective gates
@@ -52,11 +54,11 @@
 - `proust_independent_release_validation`
 - `schefer_transient_release_validation`
 - `schefer_2007_pressure_decay_validation`
+- `grune_2014_pressure_decay_validation`
 - `institutional_ethics_determination`
 - `hiad_casebook_frozen`
 - `hiad_holdout_collection`
 - `independent_expert_review_complete`
-- `ijhe_latex_compilation`
 - `submission_metadata_and_declarations`
 - `full_loop_external_validation`
 - `saga_effectiveness_and_safety_supported`
