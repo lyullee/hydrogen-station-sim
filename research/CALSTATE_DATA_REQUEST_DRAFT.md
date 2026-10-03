@@ -3,7 +3,8 @@
 **Do not send without the project owner's review.**
 
 To: Cal State LA HRFF research/data custodian (for example, the corresponding
-author of DOI 10.1016/j.ijhydene.2023.04.084)
+authors of DOI 10.1016/j.ijhydene.2023.04.084 and DOI
+10.1016/j.jclepro.2021.129737)
 
 Subject: Request for de-identified HRS fill-level traces for independent model validation
 
@@ -13,7 +14,11 @@ I am preparing an academic validation study of a research and training digital
 twin for hydrogen refuelling-station safety. Your open-access study,
 *Multi-year energy performance data for an electrolysis-based hydrogen
 refueling station* (DOI 10.1016/j.ijhydene.2023.04.084), describes real HRFF
-operation from 2016–2020 and more than 4,500 refueling events.
+operation from 2016–2020 and more than 4,500 refueling events. The related
+back-to-back fueling study (DOI 10.1016/j.jclepro.2021.129737) describes a
+one-year event and station behavior dataset; its accepted manuscript is
+available from OSTI (record 1977265). I am contacting the data custodian
+because the public records do not include synchronized raw traces.
 
 Could you provide a de-identified event-level export, or identify the approved
 custodian and access route, for a small independent holdout? The minimum useful
@@ -41,4 +46,3 @@ and eligibility criteria would be frozen before evaluation.
 Sincerely,
 
 *[name, affiliation, institutional email and project DOI to be supplied]*
-

@@ -138,18 +138,26 @@ digitising the chart.
    custodians. Request de-identified synchronized traces and reuse terms;
    publication of the open articles alone is not treated as permission to
    redistribute measurements.
-5. Send the Hungarian HRS request in
+5. Send the Cal State LA request in `research/CALSTATE_DATA_REQUEST_DRAFT.md`
+   to the HRFF data custodian. It covers both the multi-year
+   energy-performance study and the back-to-back fueling study indexed by OSTI
+   record 1977265.
+6. Send the NREL HITRF/NFCTEC request in
+   `research/NREL_HITRF_DATA_REQUEST_DRAFT.md` for de-identified full-station
+   traces or an approved access route. NREL's public composite products remain
+   aggregate context only.
+7. Send the Hungarian HRS request in
    `research/HUNGARIAN_HRS_DATA_REQUEST_DRAFT.md` to the study author or data
    custodian, subject to their consent and legal restrictions.
-6. Send the NBSDC request in `research/NBSDC_HRS_DATA_REQUEST_DRAFT.md` to the
+8. Send the NBSDC request in `research/NBSDC_HRS_DATA_REQUEST_DRAFT.md` to the
    National Basic Science Data Center/Tsinghua data custodian. Request the four
    files named by the catalog, field dictionaries, timestamps, units, quality
    flags, de-identification terms and permission to publish derived metrics.
-7. On receipt, hash and quarantine the files before opening outcomes; freeze
+9. On receipt, hash and quarantine the files before opening outcomes; freeze
    case eligibility and the corrected model commit in a new protocol manifest.
-8. Evaluate the frozen model once. Retain every eligible failure and do not use
+10. Evaluate the frozen model once. Retain every eligible failure and do not use
    the new outcomes for tuning.
-9. If CARB, JRC, Cal State LA, Empa, FCH2RAIL, the Hungarian HRS study and
+11. If CARB, JRC, Cal State LA, Empa, FCH2RAIL, NREL HITRF, the Hungarian HRS study and
    NBSDC cannot release the traces, make an equivalent
    request to NIST. Do not substitute graph digitisation for raw data in the
    primary full-loop claim.
