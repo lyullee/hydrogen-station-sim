@@ -71,3 +71,7 @@ def test_cli_writes_auditable_advisory_package(tmp_path: Path):
     html = (output / "coordinator_review.html").read_text(encoding="utf-8")
     assert "Automated flags cannot approve" in html
     assert "Coordinator-only reference" in html
+    assert "downloadApprovedCasebook" in html
+    assert "Every frozen case must be retained and reviewed" in html
+    assert "approved_holdout_casebook.json" in html
+    assert "expert_vignette_approved = 'YES'" in html

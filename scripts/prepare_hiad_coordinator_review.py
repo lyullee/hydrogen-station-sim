@@ -164,31 +164,107 @@ def _write_html(path: Path, casebook: dict, rows: list[dict[str, object]]) -> No
             for item in row["possible_completed_action_sentences"]
         ) or "<li>None detected</li>"
         sections.append(f"""
-<section class="case {row['advisory_tier'].lower()}">
+<section class="case {row['advisory_tier'].lower()}" data-event="{html.escape(row['event_id'])}">
   <h2>Event {html.escape(row['event_id'])} · {html.escape(row['advisory_tier'])} advisory flag</h2>
   <div class="grid"><article><h3>Model-visible vignette</h3>
-  <p><strong>{html.escape(_clean(context.get('title')))}</strong></p>
-  <p>{html.escape(_clean(context.get('description')))}</p></article>
+  <label>Title<textarea class="review-title">{html.escape(_clean(context.get('title')))}</textarea></label>
+  <label>Description<textarea class="review-description tall">{html.escape(_clean(context.get('description')))}</textarea></label></article>
   <article><h3>Coordinator-only reference</h3>{references}</article></div>
   <h3>Exact overlap candidates</h3><ul>{overlap_items}</ul>
   <h3>Possible completed-action sentences</h3><ul>{action_items}</ul>
-  <p class="decision">Coordinator decision: ☐ PASS unchanged ☐ REWRITE then PASS ☐ EXCLUDE<br>
-  Notes: ____________________________________________________________________</p>
+  <div class="decision"><label>Decision
+    <select class="review-decision"><option value="">Unresolved</option>
+      <option value="KEEP">Keep after full review</option>
+      <option value="REWRITE">Rewritten to remove hindsight action leakage</option>
+    </select></label>
+    <label>Coordinator notes<textarea class="review-notes"></textarea></label>
+    <label><input type="checkbox" class="review-confirm"> I inspected this complete case,
+    retained only contemporaneously observable facts, removed response/lesson leakage,
+    and added no facts.</label></div>
 </section>""")
+    safe_casebook_json = json.dumps(casebook, ensure_ascii=False).replace("<", "\\u003c")
+    application_script = r"""
+const sourceCasebook = JSON.parse(document.getElementById('casebook-data').textContent);
+function downloadApprovedCasebook() {
+  const coordinatorCode = document.getElementById('coordinator-code').value.trim();
+  const qualified = document.getElementById('coordinator-qualified').checked;
+  if (!coordinatorCode || !qualified) {
+    alert('Enter a coded coordinator ID and confirm the qualification/independence declaration.');
+    return;
+  }
+  const approved = JSON.parse(JSON.stringify(sourceCasebook));
+  const caseById = new Map(approved.cases.map(item => [String(item.event_id), item]));
+  for (const section of document.querySelectorAll('section.case')) {
+    const eventId = section.dataset.event;
+    const decision = section.querySelector('.review-decision').value;
+    const confirmed = section.querySelector('.review-confirm').checked;
+    const title = section.querySelector('.review-title').value.trim();
+    const description = section.querySelector('.review-description').value.trim();
+    const notes = section.querySelector('.review-notes').value.trim();
+    const item = caseById.get(eventId);
+    if (!item || !decision || !confirmed || !title || !description) {
+      alert(`Event ${eventId} is unresolved, unconfirmed, or empty. Every frozen case must be retained and reviewed.`);
+      section.scrollIntoView({behavior: 'smooth', block: 'center'});
+      return;
+    }
+    const unchanged = title === String(item.input_context.title).trim()
+      && description === String(item.input_context.description).replace(/_x000D_/g, ' ').replace(/\\n/g, ' ').replace(/\s+/g, ' ').trim();
+    if ((decision === 'KEEP' && !unchanged) || (decision === 'REWRITE' && unchanged)) {
+      alert(`Event ${eventId}: choose KEEP only for unchanged text and REWRITE only after editing.`);
+      section.scrollIntoView({behavior: 'smooth', block: 'center'});
+      return;
+    }
+    item.input_context.title = title;
+    item.input_context.description = description;
+    item.narrative_action_leakage_review = 'PASS';
+    item.expert_vignette_approved = 'YES';
+    item.coordinator_review = {
+      coordinator_code: coordinatorCode,
+      decision,
+      notes,
+      reviewed_at_utc: new Date().toISOString(),
+      confirmation: 'response/lesson leakage removed without adding facts'
+    };
+  }
+  approved.coordinator_review_metadata = {
+    coordinator_code: coordinatorCode,
+    completed_at_utc: new Date().toISOString(),
+    all_frozen_cases_retained: approved.cases.length === document.querySelectorAll('section.case').length,
+    generated_by: 'prepare_hiad_coordinator_review.py interactive review'
+  };
+  const blob = new Blob([JSON.stringify(approved, null, 2) + '\n'], {type: 'application/json'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'approved_holdout_casebook.json';
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+document.getElementById('export-approved').addEventListener('click', downloadApprovedCasebook);
+"""
     path.write_text(f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
 <title>HIAD coordinator leakage review</title><style>
 body{{font:15px/1.5 Arial,sans-serif;max-width:1200px;margin:2rem auto;color:#18324a}}
 .notice{{background:#fff4d6;border-left:5px solid #b36b00;padding:1rem}}
+.toolbar{{position:sticky;top:0;background:#eaf2f7;border:1px solid #b8cad7;padding:1rem;z-index:5}}
 .case{{border:1px solid #ccd9e3;border-left:6px solid #6b7c8f;padding:1rem;margin:1rem 0;break-inside:avoid}}
 .case.high{{border-left-color:#b42318}}.case.medium{{border-left-color:#b36b00}}
 .case.low{{border-left-color:#138a72}}.grid{{display:grid;grid-template-columns:1fr 1fr;gap:1rem}}
 article{{background:#f5f8fa;padding:.8rem}}.decision{{background:#eef4f8;padding:.8rem}}
+label{{display:block;margin:.5rem 0}}textarea,select,input[type=text]{{box-sizing:border-box;width:100%;padding:.55rem}}
+textarea{{min-height:3.5rem}}textarea.tall{{min-height:10rem}}input[type=checkbox]{{width:auto}}
+button{{background:#075985;color:white;border:0;border-radius:4px;padding:.65rem 1rem;font-weight:bold;cursor:pointer}}
 @media(max-width:800px){{.grid{{grid-template-columns:1fr}}}}
 </style></head><body><h1>HIAD vignette leakage review</h1>
 <p class="notice"><strong>Advisory pre-screen only.</strong> Automated flags cannot approve,
 rewrite or exclude a case. A qualified non-rating coordinator must inspect every case,
 remove hindsight response information without adding facts, and record the final decision.</p>
-{''.join(sections)}</body></html>""", encoding="utf-8")
+<div class="toolbar"><label>Coded coordinator ID<input id="coordinator-code" type="text"></label>
+<label><input id="coordinator-qualified" type="checkbox"> I am a qualified, non-rating
+coordinator and will review every case independently of the response raters.</label>
+<button id="export-approved" type="button">Validate all cases and export approved JSON</button></div>
+{''.join(sections)}
+<script id="casebook-data" type="application/json">{safe_casebook_json}</script>
+<script>{application_script}</script></body></html>""", encoding="utf-8")
 
 
 def main() -> int:

@@ -32,6 +32,10 @@ The optional coordinator pre-screen highlights exact phrase overlap with the
 withheld HIAD action/lesson fields and sentences that may disclose a completed
 response. Its tiers are advisory only: the coordinator must inspect every case,
 including cases marked LOW, and the tool cannot write `PASS` or `YES`.
+The generated local HTML provides editable title/description fields and exports
+an approved JSON only after every frozen case has a KEEP or REWRITE decision, an
+individual confirmation, and a coded qualified-coordinator declaration. The
+export retains all split IDs; it does not offer case exclusion.
 
 The collection script constructs every model-visible field from the approved
 `input_context`; it never falls back to the original HIAD narrative after review.
