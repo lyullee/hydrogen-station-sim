@@ -37,6 +37,14 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert proust["aggregate"]["claim_supported"] is False
     assert proust["protocol_hash_matches"] is True
     assert proust["data_hash_matches"] is True
+    assert gates["schefer_transient_release_validation"]["status"] == "FAIL"
+    schefer = gates["schefer_transient_release_validation"]["observed"]
+    assert schefer["result"]["points"] == 25
+    assert schefer["result"]["nrmse_screen_pass"] is True
+    assert schefer["result"]["median_ape_screen_pass"] is False
+    assert schefer["result"]["half_peak_time_screen_pass"] is False
+    assert schefer["protocol_hash_matches"] is True
+    assert schefer["data_hash_matches"] is True
     external = gates["full_loop_external_validation"]["observed"]
     assert external["protocol_integrity"] is True
     assert external["aggregate"]["case_count"] == 8

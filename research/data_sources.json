@@ -130,6 +130,19 @@
       "rights_note": "The public conference PDF has no identified data-redistribution licence and is not committed. The repository retains citation, extraction provenance and independently digitized factual coordinates with a separate rights note.",
       "eligibility_note": "Independent INERIS/CEA 25 L Type-IV release facility near 90 MPa. Figure 5 mass-flow curves and Table 1 measured temperatures can test the local gaseous aperture relation, but not the vessel transient, 10 m line, flame or radiation."
     },
+    "schefer_2006_transient_mass_flow": {
+      "title": "Spatial and radiative properties of an open-flame hydrogen plume",
+      "authors": "Robert W. Schefer, William G. Houf, Benjamin Bourne, James D. Colton",
+      "publisher": "International Journal of Hydrogen Energy / Sandia National Laboratories / SRI International",
+      "doi": "10.1016/j.ijhydene.2005.11.020",
+      "landing_page": "https://doi.org/10.1016/j.ijhydene.2005.11.020",
+      "digitization_repository": "https://github.com/sandialabs/hyram/tree/v6.1",
+      "digitization_commit": "b45abf9a6d995951311be6aad836f1874e4d420b",
+      "digitization_sha256": "f740a7db1bcd3723efa8ae4ce02114fc69d6084c937c19cf16bc3f339dfc199e",
+      "license": "GPL-3.0 for the HyRAM+ validation digitization; original article rights remain with the publisher",
+      "rights_note": "The derived CSV is a verbatim HyRAM+ validation-data copy with GPL attribution and original DOI. No publisher PDF or figure is redistributed.",
+      "eligibility_note": "Independent Sandia/SRI 15.5 MPa transient mass-flow experiment. The endpoints and evaluator were frozen before numerical coordinate access, but an approximate overall duration from secondary literature was already known and is disclosed."
+    },
     "hyram_validation_basis": {
       "title": "HyRAM+ Version 5.1.1 Physics Validation",
       "publisher": "Sandia National Laboratories / U.S. Department of Energy OSTI",

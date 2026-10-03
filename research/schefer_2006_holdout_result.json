@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-03T08:16:12.049367+00:00",
+  "protocol_sha256": "354f92e29be885416ddc827fef82bf6a473a7be2ad878be1e3a9202141369066",
+  "data_sha256": "f740a7db1bcd3723efa8ae4ce02114fc69d6084c937c19cf16bc3f339dfc199e",
+  "result": {
+    "points": 25,
+    "measured_peak_mass_flow_g_s": 68.38466373,
+    "predicted_peak_mass_flow_g_s": 60.66607024400885,
+    "mass_flow_nrmse_percent_peak_measured": 5.831534791930556,
+    "median_absolute_percentage_error_percent": 22.852219829947433,
+    "experimental_half_peak_time_s": 13.35459783324615,
+    "predicted_half_peak_time_s": 9.575940157002748,
+    "half_peak_time_relative_error_percent": 28.294806952826896,
+    "nrmse_screen_pass": true,
+    "median_ape_screen_pass": false,
+    "half_peak_time_screen_pass": false,
+    "joint_primary_screen_pass": false
+  },
+  "claim_supported": false
+}

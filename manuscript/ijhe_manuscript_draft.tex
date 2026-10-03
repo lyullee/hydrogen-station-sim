@@ -44,7 +44,8 @@ to the full controller. A frozen 22-case PRESLHY blowdown evaluation failed:
 50.0\% passed both screens versus 70\%, with six domain failures. A non-adiabatic
 revision passed 20/22 consumed cases, but its E5.1 holdout was ineligible and
 negative (2/3 primary passes). An independent 90 MPa campaign passed 0/3
-mass-flow series. The consequence adapter matched HyRAM+ 6.1; identical source
+mass-flow series. A separately frozen Sandia/SRI transient passed its NRMSE
+screen but failed median-error and timing screens. The consequence adapter matched HyRAM+ 6.1; identical source
 passed 47 tests and 803 subtests. A blinded HIAD protocol is specified, but expert
 ratings are pending. Evidence supports a claim-bounded prototype, not a
 field-qualified controller or autonomous emergency system.
@@ -257,6 +258,18 @@ absolute percentage error no greater than 20\%; at least two of all three
 eligible diameter series had to pass. The pressure axis was treated as absolute;
 adding 101.325 kPa was predeclared as a non-controlling basis sensitivity.
 
+A third transfer test used the independent Sandia/SRI blowdown reported by
+Schefer et al. \cite{schefer2006} and the experimental Figure 3b coordinates
+distributed with HyRAM+ 6.1. The evaluator and endpoints were committed before
+any numerical coordinate was opened, although an approximate 100 s total
+duration was already visible in secondary descriptions and was disclosed. The
+locked model was a well-mixed adiabatic 0.098 m$^3$ vessel, initially at
+15.513 MPa and 315.15 K, discharging through the published 3.175 mm controlling
+manifold restriction with the public HyRAM+ benchmark value $C_d=1.0$. At least
+15 points were required. All three screens had to pass: peak-normalized mass-flow
+NRMSE $\leq15\%$, median absolute percentage error $\leq20\%$ above 10\% of
+measured peak, and half-peak-time error $\leq20\%$.
+
 \subsection{Consequence-model verification}
 HyRAM+ receives immutable release state and geometry from the twin. The
 production adapter reports (i) the directional centreline distance to 4 vol\%
@@ -462,6 +475,17 @@ are diagnostics and were not used to rerun or tune the primary result. The 0/3
 joint pass count rejects the independently validated high-pressure aperture-flow
 claim for the fixed model.
 
+\subsection{Negative Sandia/SRI transient mass-flow transfer}
+The Figure 3b digitization supplied 25 unique experimental coordinates. The
+locked model passed the NRMSE screen at 5.83\% of measured peak, but median
+absolute percentage error was 22.85\% and half-peak-time error was 28.29\%.
+Measured and predicted peak flows were 68.38 and 60.67 g s$^{-1}$; measured and
+predicted half-peak times were 13.35 and 9.58 s. Because all three screens were
+required, the external transient claim is not supported. The lower predicted
+peak followed by faster decay is consistent with omitted vessel-wall heat input
+and downstream-tube inventory, but that interpretation is diagnostic and no
+post-hoc parameter change enters the primary result.
+
 \subsection{HyRAM+ source, tests and adapter parity}
 The installed and upstream v6.1 Python sources matched over 38 files with aggregate
 SHA-256 \texttt{d5865e1ae7b5c77b985e06b45d7a5607543703c1834fc50f7c5d96f32a0c22de}.
@@ -558,6 +582,14 @@ The Proust curves are now consumed development evidence. Their plot-digitization
 uncertainty was much smaller than the discrepancies and did not determine the
 negative result.
 
+The separate Sandia/SRI transient reinforces the thermal limitation without
+sharing the PRESLHY or INERIS/CEA facilities. Its low aggregate NRMSE can obscure
+the operationally relevant timing error: the adiabatic vessel model depleted the
+flow too quickly. A non-adiabatic two-cylinder wall model and explicit 7.6 m tube
+line-pack are therefore development priorities. The Figure 3b trace is now
+consumed evidence, and the known approximate duration prevents describing this
+test as fully blinded.
+
 \subsection{Consequence calculations and risk communication}
 The HyRAM verification separates source identity, upstream physics tests and local
 adapter parity. The traceability chain covers three geometrically applicable public
@@ -596,7 +628,8 @@ retrospective and may contain incomplete or heterogeneous reporting. Finally,
 the original direct-aperture model and its prospectively evaluated non-adiabatic
 revision failed their respective PRESLHY claim rules. The fixed aperture relation
 also failed all three eligible independent 90 MPa mass-flow series, and the SAGA
-study has no locked expert ratings yet.
+study has no locked expert ratings yet. The independent Sandia/SRI transient
+passed only one of three required mass-flow screens.
 
 \section{Conclusions}
 A hydrogen-station safety digital twin was evaluated with separate evidence gates
@@ -611,11 +644,13 @@ prospective external test: 11/22 cases passed both screens and six eligible
 high-pressure cases produced retained thermophysical-domain failures. Although
 the non-adiabatic revision passed 20/22 consumed development cases, its frozen
 E5.1 holdout was ineligible and negative: only three cases met the primary
-temperature window and 2/3 passed both screens. The HyRAM+ adapter reproduced the
 temperature window and 2/3 passed both screens. An independent 90 MPa Type-IV
 release campaign passed zero of three mass-flow series, exposing diameter-
-dependent network resistance absent from the aperture-only model. The HyRAM+
-adapter reproduced the installed v6.1 public API while
+dependent network resistance absent from the aperture-only model. The separate
+25-point Sandia/SRI transient passed its 5.83\% NRMSE screen but failed median-
+error (22.85\%) and half-peak-time (28.29\%) screens, independently showing that
+the adiabatic source depletes too quickly. The HyRAM+ adapter reproduced the
+installed v6.1 public API while
 the identical upstream source passed its available validation tests; a frozen
 browser contract retained the experimentally corresponding directional and radial
 geometry semantics. The incident
@@ -708,6 +743,12 @@ Technology (2021),
 C. Proust, D. Jamois, E. Studer, High pressure hydrogen fires,
 \textit{International Journal of Hydrogen Energy} 36(3) (2011) 2367--2373,
 \href{https://doi.org/10.1016/j.ijhydene.2010.04.055}{doi:10.1016/j.ijhydene.2010.04.055}.
+
+\bibitem{schefer2006}
+R.W. Schefer, W.G. Houf, B. Bourne, J.D. Colton, Spatial and radiative properties
+of an open-flame hydrogen plume, \textit{International Journal of Hydrogen
+Energy} 31(10) (2006) 1332--1340,
+\href{https://doi.org/10.1016/j.ijhydene.2005.11.020}{doi:10.1016/j.ijhydene.2005.11.020}.
 
 \bibitem{han2013}
 S.H. Han, D. Chang, J.S. Kim, Release characteristics of highly pressurized
