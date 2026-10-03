@@ -765,3 +765,23 @@ temperature, flow, gas-detector and operating-mode streams together with
 quality flags, event labels, provenance, and permission to publish derived leak
 and decision-support metrics. The register description alone cannot support a
 leak-detection performance claim or close the physical full-loop gate.
+
+## 2026-10-04 Hungarian HRS digital-twin paper follow-up
+
+The 2026 paper by Hasulyó, [*Dynamic Digital Twin Network for Real-Time Safety
+Monitoring and Predictive Risk Assessment of Hydrogen Refueling
+Infrastructure*](https://doi.org/10.32604/ee.2026.081099), is a useful methodological
+analogue and a high-value data-request lead. It reports operational-data
+comparisons for a Hungarian HRS: final pressure 948 versus 955 bar, peak tank
+temperature 59.8 versus 61.5 °C, delivered mass 6.12 versus 6.20 kg, and average
+mass flow 0.0171 versus 0.0178 kg/s. The paper describes 1 Hz PLC/Modbus data
+integration and a ±5% acceptance threshold.
+
+The paper's data-availability statement explicitly says that supporting data are
+not publicly available because of participant consent and legal restrictions.
+No machine-readable station/vehicle logger, channel dictionary, uncertainty
+record or reuse terms were found in the article. It is therefore classified as
+**REPORT_CONTEXT_AND_DATA_REQUEST_LEAD** and cannot close the independent
+full-loop numerical gate. The controlled-access request is drafted in
+[HUNGARIAN_HRS_DATA_REQUEST_DRAFT.md](HUNGARIAN_HRS_DATA_REQUEST_DRAFT.md).
+The summary table is not digitised or counted as validation.

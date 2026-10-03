@@ -1466,6 +1466,26 @@
       "next_action": "Contact NRC/HTEC through the register or programme channels for a controlled-access export with station mode, produced/filled mass, pressure, temperature, flow, detector and event labels, plus reuse terms.",
       "claim_limit": "Do not infer leak-detection performance or station physics from the AI-register description alone."
     },
+    "hungarian_hrs_digital_twin_followup": {
+      "scope": "screening a 2026 Hungarian HRS digital-twin paper for an independent operational-data holdout and reproducibility metadata",
+      "sources": [
+        {
+          "id": "hasulyo_2026_hungarian_hrs_dynamic_digital_twin",
+          "title": "Dynamic Digital Twin Network for Real-Time Safety Monitoring and Predictive Risk Assessment of Hydrogen Refueling Infrastructure",
+          "doi": "10.32604/ee.2026.081099",
+          "url": "https://file.techscience.com/files/onlinefirst/2026/5.21/TSP_EE_81099/TSP_EE_81099.pdf",
+          "publisher": "Tech Science Press / Energy Engineering",
+          "finding": "The paper reports operational-data comparison for a Hungarian HRS and gives a 948 versus 955 bar final-pressure comparison, 59.8 versus 61.5 degC peak temperature, 6.12 versus 6.20 kg delivered mass and 0.0171 versus 0.0178 kg/s average flow. It states 1 Hz Modbus/PLC integration and a ±5% acceptance threshold, but the data-availability statement says supporting data are not publicly available because of participant consent and legal restrictions.",
+          "decision": "REPORT_CONTEXT_AND_DATA_REQUEST_LEAD",
+          "raw_common_timebase": false,
+          "request_draft": "research/HUNGARIAN_HRS_DATA_REQUEST_DRAFT.md",
+          "claim_limit": "The published endpoints are useful for face-validity and a controlled data request, but the unshared operational traces cannot close the independent full-loop validation gate or be reconstructed from the paper figures."
+        }
+      ],
+      "result": "The Hungarian paper is a close methodological analogue and a high-value data-request lead, but its raw station measurements are unavailable. It does not change the independent numerical gate.",
+      "next_action": "Request a de-identified 1 Hz station/vehicle export, channel dictionary, protocol and initial-condition metadata, uncertainty records and permission to publish derived metrics; hash-lock any approved subset before scoring.",
+      "claim_limit": "Do not treat the paper's summary table as an independent holdout or claim reproducibility until the underlying time series and reuse terms are obtained."
+    },
     "claim_limit": "Do not use article figures, aggregate event summaries or static inventories as primary full-loop numerical validation. Promote a source only after de-identified raw files, metadata, reuse terms and a pre-access freeze are recorded."
   },
   "last_reviewed": "2026-10-04"
