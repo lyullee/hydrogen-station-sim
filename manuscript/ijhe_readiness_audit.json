@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T04:42:14.156127+00:00",
+  "generated_at": "2026-10-03T04:53:31.285693+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
@@ -218,7 +218,7 @@
       "id": "full_loop_external_validation",
       "status": "FAIL",
       "claim": "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
-      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json",
+      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json",
       "requirement": "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
       "observed": {
         "protocol_integrity": true,
@@ -277,6 +277,11 @@
               ]
             }
           }
+        },
+        "new_external_data_search": {
+          "status": "NO_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
+          "next_action": "Request de-identified fill-level workbook and traces from CARB before freezing a new holdout protocol.",
+          "claim_limit": "No new external full-loop validation claim is permitted from the screened public materials."
         }
       }
     },

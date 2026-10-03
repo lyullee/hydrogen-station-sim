@@ -61,6 +61,12 @@ The current official IJHE Guide for Authors was checked on 3 October 2026. A res
   `research/*_v2.json` and `research/*_v2.csv` evidence: corrected development
   pipeline, 1/8 development and 2/11 internal-comparison passes. These are not a
   new external validation.
+- `research/EXTERNAL_FULL_LOOP_DATA_SEARCH.md` and its JSON companion: frozen
+  screening of CARB, NREL, NIST, Cal State LA and other public candidates. No
+  newly located source exposes an eligible independent raw fueling time series;
+  the CARB in-use workbook and traces are the preferred data-request target.
+- `research/CARB_DATA_REQUEST_DRAFT.md`: a review-ready request for de-identified
+  Appendix A and fill-level data. It has not been sent.
 - `IJHE_READINESS_AUDIT.md` and `ijhe_readiness_audit.json`: machine-generated
   claim-to-evidence gates; goal completion remains prohibited while any full-
   objective gate is not PASS.

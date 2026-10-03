@@ -136,6 +136,8 @@ def audit(root: Path) -> dict[str, object]:
     external_loop = _json(external_loop_path)
     external_protocol_path = root / "research/mc_default_external_holdout_protocol.json"
     external_protocol = _json(external_protocol_path)
+    external_search_path = root / "research/external_full_loop_data_search.json"
+    external_search = _json(external_search_path)
     aggregate = (external_loop or {}).get("aggregate") or {}
     protocol_source = (external_protocol or {}).get("source") or {}
     frozen_model = (external_protocol or {}).get("frozen_model") or {}
@@ -174,11 +176,16 @@ def audit(root: Path) -> dict[str, object]:
         "full_loop_external_validation",
         "PASS" if external_loop_pass else "FAIL",
         "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
-        str(external_loop_path.relative_to(root)),
+        f"{external_loop_path.relative_to(root)}; {external_search_path.relative_to(root)}",
         "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
         {
             "protocol_integrity": protocol_integrity,
             "aggregate": aggregate,
+            "new_external_data_search": {
+                "status": (external_search or {}).get("status"),
+                "next_action": (external_search or {}).get("next_action"),
+                "claim_limit": (external_search or {}).get("claim_limit"),
+            },
         } if external_loop else "missing; current internal comparisons pass 0/8 and 0/11",
     ))
 

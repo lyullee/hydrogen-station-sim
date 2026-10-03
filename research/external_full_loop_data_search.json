@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "search_frozen_at": "2026-10-03",
+  "gate": "new untouched external full-loop fueling validation",
+  "status": "NO_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
+  "eligibility": {
+    "independent_of_consumed_powertech_data": true,
+    "physical_experiment_or_in_use_fill": true,
+    "required_time_series": [
+      "vehicle_or_receptacle_pressure",
+      "mass_flow_or_transferred_mass"
+    ],
+    "preferred_time_series": [
+      "tank_or_fuel_temperature"
+    ],
+    "required_metadata": [
+      "common_time_base",
+      "initial_conditions",
+      "tank_capacity",
+      "protocol_or_pressure_ramp_information",
+      "units"
+    ],
+    "prohibited_substitutes": [
+      "plot-only digitisation for the primary claim",
+      "aggregate histograms",
+      "station availability status",
+      "simulator-generated traces"
+    ]
+  },
+  "candidates": [
+    {
+      "id": "carb_2024_in_use",
+      "title": "Existing Light-Duty Hydrogen Refueling Stations In-Use Study Report",
+      "url": "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf",
+      "role": "preferred independent field candidate",
+      "public_raw_data": false,
+      "decision": "REQUEST_DATA",
+      "inspection": {
+        "bytes": 1090711,
+        "sha256": "a49e46baa1151847b0d786d0a40c2cc08928e28043152e64ae95a22a06784766",
+        "pdf_pages": 29,
+        "embedded_attachments": 0,
+        "external_data_links": 0,
+        "reported_station_count": 22,
+        "reported_test_period": "2023-10 to 2024-05"
+      }
+    },
+    {
+      "id": "nrel_h2fills",
+      "title": "H2FillS: Hydrogen Filling Simulation",
+      "url": "https://www.nrel.gov/hydrogen/h2fills",
+      "public_raw_data": false,
+      "decision": "NOT_AVAILABLE_FROM_PRODUCT_PAGE"
+    },
+    {
+      "id": "nrel_hdtada",
+      "title": "Hydrogen Dispenser Testing and Analysis Tool",
+      "url": "https://github.com/NatLabRockies/HDTADA",
+      "public_raw_data": false,
+      "decision": "INSTALLERS_ONLY_NO_SAMPLE_TRACES"
+    },
+    {
+      "id": "nrel_retail_cdps",
+      "title": "Retail Hydrogen Station Composite Data Products",
+      "url": "https://www.nrel.gov/hydrogen/infrastructure-cdps-retail.html",
+      "public_raw_data": true,
+      "decision": "AGGREGATE_CONTEXT_ONLY"
+    },
+    {
+      "id": "nist_transient_flow_facility",
+      "title": "NIST Transient Flow Facility",
+      "url": "https://www.nist.gov/programs-projects/transient-flow-facility",
+      "public_raw_data": false,
+      "decision": "REQUEST_DATA"
+    },
+    {
+      "id": "cal_state_la_back_to_back",
+      "title": "Hydrogen station in situ back-to-back fueling data for design and modeling",
+      "doi": "10.1016/j.jclepro.2021.129737",
+      "public_raw_data": false,
+      "decision": "REQUEST_DATA"
+    },
+    {
+      "id": "h2_stations_export_api",
+      "title": "H2-Stations Export API",
+      "url": "https://docs.h2-stations.eu/for-data-users/api-v2/",
+      "public_raw_data": true,
+      "decision": "OPERATIONS_EVIDENCE_ONLY"
+    },
+    {
+      "id": "preslhy_e3_1",
+      "title": "PRESLHY Experiment series E3.1 high-pressure discharge",
+      "doi": "10.35097/1187",
+      "license": "CC BY 4.0",
+      "public_raw_data": true,
+      "decision": "BLOWDOWN_SUBMODEL_ONLY"
+    },
+    {
+      "id": "usn_open_channel_dispersion",
+      "title": "Experimental Data of Hydrogen Dispersion in an Open-ended Rectangular Channel",
+      "doi": "10.23642/USN.26117989",
+      "license": "CC BY 4.0",
+      "public_raw_data": true,
+      "decision": "ALREADY_USED_FOR_CONSEQUENCE_VALIDATION"
+    }
+  ],
+  "next_action": "Request de-identified fill-level workbook and traces from CARB before freezing a new holdout protocol.",
+  "claim_limit": "No new external full-loop validation claim is permitted from the screened public materials."
+}
+

@@ -23,6 +23,10 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert external["aggregate"]["case_count"] == 8
     assert external["aggregate"]["screening_pass_count"] == 0
     assert external["aggregate"]["screening_pass_fraction"] == 0.0
+    assert (
+        external["new_external_data_search"]["status"]
+        == "NO_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED"
+    )
     assert gates["institutional_ethics_determination"]["status"] == "PENDING"
     assert gates["independent_expert_review_complete"]["status"] == "PENDING"
     assert report["bounded_ijhe_submission_ready"] is False

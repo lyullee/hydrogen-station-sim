@@ -81,6 +81,16 @@
       "license": "CC BY 4.0",
       "rights_note": "Download metadata and files from the Figshare API and retain the supplied MD5 values."
     },
+    "carb_2024_hydrogen_station_in_use_study": {
+      "title": "Existing Light-Duty Hydrogen Refueling Stations In-Use Study Report",
+      "publisher": "California Air Resources Board",
+      "landing_page": "https://ww2.arb.ca.gov/our-work/programs/hydrogen-fueling-infrastructure",
+      "report_url": "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf",
+      "citation": "California Air Resources Board, Existing Light-Duty Hydrogen Refueling Stations In-Use Study Report, 22 November 2024.",
+      "report_sha256": "a49e46baa1151847b0d786d0a40c2cc08928e28043152e64ae95a22a06784766",
+      "rights_note": "The public PDF may be cited. No data redistribution licence was identified for the Appendix A workbook or underlying fill traces; request reuse terms before obtaining or republishing them.",
+      "eligibility_note": "The report is field-relevant but is not itself an eligible machine-readable full-loop validation set. The public PDF has no embedded attachment or external raw-data link."
+    },
     "hyram_validation_basis": {
       "title": "HyRAM+ Version 5.1.1 Physics Validation",
       "publisher": "Sandia National Laboratories / U.S. Department of Energy OSTI",
