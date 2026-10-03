@@ -1319,6 +1319,26 @@
       "next_action": "Request the six raw runs from the paper authors, JARI/NEDO custodians and any cited JHFC repository, with channel dictionary, calibration, protocol and reuse terms.",
       "claim_limit": "Do not close the independent full-loop gate until the files are received, hashed and scored under a pre-access protocol freeze."
     },
+    "greenhysland_and_enda_monitoring_followup": {
+      "scope": "screening public value-chain and field-monitoring descriptions for a downloadable independent HRS full-loop logger",
+      "sources": [
+        {
+          "id": "greenhysland_historical_data_repository",
+          "url": "https://greenhysland.eu/data-collection-system/",
+          "finding": "The project page advertises historical standardised time-series downloads for assets across an island hydrogen value chain, but the inspected public page exposes no vehicle/receptacle refuelling logger, common pressure-temperature-mass-flow trace or reuse terms.",
+          "decision": "VALUE_CHAIN_KPI_CONTEXT_ONLY"
+        },
+        {
+          "id": "enda_h2_mobility_monitoring_deployment",
+          "url": "https://enda.eu/en/h2_monitoring",
+          "finding": "ENDA describes short-interval monitoring of approximately 75-400 parameters at 90 German H2 MOBILITY stations, but the public description exposes no export, logger schema, access terms or synchronized vehicle-side trace.",
+          "decision": "REQUEST_DATA_FIELD_MONITORING_LEAD"
+        }
+      ],
+      "result": "These sources identify high-value custodians and field-monitoring scope but do not provide a downloadable untouched common-time-base HRS full-loop archive.",
+      "next_action": "Request de-identified station and vehicle logger exports, channel dictionary, quality flags, protocol version, provenance and permission to publish derived metrics.",
+      "claim_limit": "Do not promote value-chain KPI descriptions or a monitoring-system description to numerical fueling validation or accident-response effectiveness evidence."
+    },
     "claim_limit": "Do not use article figures, aggregate event summaries or static inventories as primary full-loop numerical validation. Promote a source only after de-identified raw files, metadata, reuse terms and a pre-access freeze are recorded."
   },
   "last_reviewed": "2026-10-04"

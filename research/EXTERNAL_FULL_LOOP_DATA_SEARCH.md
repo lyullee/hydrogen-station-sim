@@ -647,3 +647,27 @@ but no CSV/XLSX time-series file or common-time-base archive. It is therefore
 retained as **REPORT_PLOT_SUMMARY_ONLY** and a data-request lead. The report's
 figures are not digitised into the primary validation set; the full-loop gate
 remains unchanged.
+
+## 2026-10-04 Green Hysland and H2 MOBILITY monitoring follow-up
+
+The Green Hysland data-collection page advertises historical, standardised
+time-series downloads for assets across its island hydrogen value chain:
+<https://greenhysland.eu/data-collection-system/>. The public description is
+useful as a reproducibility and data-catalogue lead, but it does not expose a
+vehicle/receptacle refuelling logger, a common pressure--temperature--mass-flow
+time base, or a downloadable HRS fill trace in the inspected page. It is
+therefore retained as **VALUE_CHAIN_KPI_CONTEXT_ONLY** until the historical
+repository exposes the required channel-level records and reuse terms.
+
+ENDA describes an H2 MOBILITY monitoring deployment that records approximately
+75--400 technical parameters at 90 German stations and stores short-interval
+signals in time-series databases:
+<https://enda.eu/en/h2_monitoring>. This is a strong custodian lead for a
+large independent field archive, but the public page provides no export,
+station logger schema, access terms or synchronized vehicle-side traces. It is
+therefore classified as **REQUEST_DATA_FIELD_MONITORING_LEAD**, not as an
+available holdout. No claim is made from the monitoring-system description
+alone.
+
+The new search did not identify a downloadable untouched full-loop HRS archive;
+the numerical validation gate and the associated request list remain open.
