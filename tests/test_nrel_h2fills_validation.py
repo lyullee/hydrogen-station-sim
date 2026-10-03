@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import run_nrel_h2fills_hdvs_validation as nrel  # noqa: E402
+from run_nrel_h2fills_geometry_sensitivity import capacity_eos_volume_m3  # noqa: E402
 from run_nrel_h2fills_hdvs_validation import TANK_IDS, TankTrace, read_nrel_workbook  # noqa: E402
 
 
@@ -94,3 +95,12 @@ def test_implied_volume_is_diagnostic_eos_mass_over_density(monkeypatch):
     volume = nrel._implied_volume_m3(trace)
 
     assert volume.tolist() == [0.1, 0.2]
+
+
+def test_capacity_eos_volume_is_declared_capacity_basis(monkeypatch):
+    monkeypatch.setattr(
+        "run_nrel_h2fills_geometry_sensitivity.PropsSI",
+        lambda *args: 40.0,
+    )
+
+    assert capacity_eos_volume_m3(9.8) == pytest.approx(0.245)

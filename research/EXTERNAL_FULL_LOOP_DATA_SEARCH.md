@@ -195,6 +195,17 @@ assumption (ratio 0.91071). This is retained in
 why a larger pressure error is plausible without silently fitting the external
 screen; it is not a vessel-geometry identification or a validation pass.
 
+The follow-up geometry sensitivity is recorded in
+`research/nrel_h2fills_geometry_sensitivity.json` and
+`research/NREL_H2FILLS_GEOMETRY_SENSITIVITY.md`. It computes a declared-capacity
+volume from the hydrogen EOS (9.8 kg at 70 MPa and 15 °C: 0.243943 m³) and
+compares it with the legacy 0.254383 m³ assumption. The exploratory
+capacity/EOS variants reduce the mean pressure error and pass the local 7-tank
+screen, but the comparison was performed after the workbook was opened. It is
+therefore a structural diagnostic only; a new frozen protocol and untouched
+holdout are required before changing the default or claiming independent
+validation.
+
 ## NREL HDVS aggregate campaign context
 
 The DOE/NREL performance report records a second, October 2022 complete-HDVS

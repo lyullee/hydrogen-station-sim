@@ -168,6 +168,7 @@
         ],
         "local_raw_path": "data/public_validation/raw/nrel_h2fills_2022_hdvs_typeiv.xlsx",
         "local_screening_result": "data/public_validation/results/nrel_h2fills_hdvs_typeiv/validation.json",
+        "geometry_sensitivity": "research/nrel_h2fills_geometry_sensitivity.json",
         "screening_result": {
           "tank_count": 7,
           "screening_pass_count": 0,
@@ -971,7 +972,7 @@
         "finding": "public H2IQ briefing was inspected; it confirms a configurable nine-tank HDVS with seven Type IV tanks and shows tank pressure/temperature and mass-flow plots, but no machine-readable synchronized logger export is public"
       }
     ],
-    "result": "H2Protocol raw archives remain consumed Powertech evidence. The NREL H2FillS package adds an independent physical HDVS tank-submodel candidate with a reproducible negative screen and an EOS-implied-volume mismatch diagnostic, but its licence and missing station-side channels prevent a full-loop claim. DOE/NREL aggregate reporting also identifies a second October 2022 HDVS campaign; without synchronized raw traces it remains operating-range context only.",
+    "result": "H2Protocol raw archives remain consumed Powertech evidence. The NREL H2FillS package adds an independent physical HDVS tank-submodel candidate with a reproducible negative screen and an EOS-implied-volume mismatch diagnostic. An exploratory capacity/EOS geometry sensitivity reduces the pressure error and gives 7/7 tank screens, but it was run after workbook access and therefore is not a confirmatory pass; the package licence and missing station-side channels still prevent a full-loop claim. DOE/NREL aggregate reporting also identifies a second October 2022 HDVS campaign; without synchronized raw traces it remains operating-range context only.",
     "next_action": "send documented data requests (Klopčič/HyCentA heavy-duty traces, CARB, JRC GasTeF and HYTRANSFER file custodian, Cal State LA, BAM demonstration HRS, NREL HITRF/NFCTEC, Empa, DLR/FCH2RAIL, Hungarian HRS and NBSDC) and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest"
   },
   "last_reviewed": "2026-10-03"

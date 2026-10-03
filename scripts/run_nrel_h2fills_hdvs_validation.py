@@ -292,10 +292,15 @@ def _simulate_tank(
     *,
     capacity_kg: float = 9.8,
     ambient_temperature_c: float = 15.0,
+    base_volume_m3: float | None = None,
 ) -> dict[str, Any]:
     """Run the frozen tank model using measured mass and inlet conditions."""
 
-    tank = build_vehicle_tank(0.122 * capacity_kg / 4.7, fit)
+    if base_volume_m3 is None:
+        base_volume_m3 = 0.122 * capacity_kg / 4.7
+    if base_volume_m3 <= 0.0:
+        raise ValueError("base_volume_m3 must be positive")
+    tank = build_vehicle_tank(base_volume_m3, fit)
     initial = tank.initial_state(
         trace.pressure_mpa[0] * 1e6,
         trace.temperature_c[0] + 273.15,
@@ -369,9 +374,9 @@ def _simulate_tank(
             <= SCREENING_LIMITS["mass_final_abs_error_kg_max"]
         ),
         "geometry_diagnostic": {
-            "nominal_volume_m3": 0.122 * capacity_kg / 4.7,
+            "nominal_volume_m3": float(base_volume_m3),
             "frozen_effective_volume_m3": (
-                0.122 * capacity_kg / 4.7 * fit.effective_volume_multiplier
+                float(base_volume_m3) * fit.effective_volume_multiplier
             ),
             "implied_volume_m3_median": float(np.median(finite_implied_volume)),
         },

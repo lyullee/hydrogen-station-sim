@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "status": "exploratory_geometry_sensitivity_only",
+  "source": {
+    "workbook": "data/public_validation/raw/nrel_h2fills_2022_hdvs_typeiv.xlsx",
+    "workbook_sha256": "1a3fbe64a50c1c97266bfe0372998513ad3ccec5600fab7bc4b9fc68ad4d9d0c",
+    "fit_source": "research/tank_model_validation_v2.json",
+    "script": "scripts/run_nrel_h2fills_geometry_sensitivity.py",
+    "script_sha256": "28ff53a29b234ad8ac1a84e940ed80edbd5f02cc36c627465513ef811c8e34b3",
+    "tank_count": 7,
+    "capacity_per_tank_kg": 9.8,
+    "reference_pressure_mpa": 70.0,
+    "reference_temperature_c": 15.0,
+    "capacity_eos_volume_m3": 0.24394320094584823
+  },
+  "screening_limits": {
+    "pressure_rmse_mpa_max": 5.0,
+    "temperature_rmse_c_max": 10.0,
+    "mass_final_abs_error_kg_max": 0.5
+  },
+  "variants": {
+    "legacy_frozen": {
+      "base_volume_m3": 0.25438297872340426,
+      "effective_volume_multiplier": 1.052729261198358,
+      "gas_liner_ua_multiplier": 31.460656519273492,
+      "screening_pass_count": 0,
+      "pressure_rmse_mean_mpa": 6.164469743688679,
+      "temperature_rmse_mean_c": 4.624745495755946,
+      "mass_final_error_mean_kg": 0.11975781835466089,
+      "pressure_final_error_mean_mpa": -8.680787636562084
+    },
+    "capacity_eos_with_frozen_fit": {
+      "base_volume_m3": 0.24394320094584823,
+      "effective_volume_multiplier": 1.052729261198358,
+      "gas_liner_ua_multiplier": 31.460656519273492,
+      "screening_pass_count": 7,
+      "pressure_rmse_mean_mpa": 3.5380890196945884,
+      "temperature_rmse_mean_c": 4.254560578225422,
+      "mass_final_error_mean_kg": 0.10160237053011123,
+      "pressure_final_error_mean_mpa": -4.647884020564888
+    },
+    "capacity_eos_no_volume_fit": {
+      "base_volume_m3": 0.24394320094584823,
+      "effective_volume_multiplier": 1.0,
+      "gas_liner_ua_multiplier": 31.460656519273492,
+      "screening_pass_count": 7,
+      "pressure_rmse_mean_mpa": 0.49577782245171065,
+      "temperature_rmse_mean_c": 4.184657066054932,
+      "mass_final_error_mean_kg": 0.07981887127262155,
+      "pressure_final_error_mean_mpa": 0.5688184212173013
+    }
+  },
+  "interpretation": {
+    "finding": "The legacy volume scaling is inconsistent with the NREL workbook's declared 9.8 kg per tank when converted with the tabulated hydrogen EOS at the declared 70 MPa and 15 C reference state.",
+    "claim_limit": "These variants were compared after access to the NREL workbook. The 7/7 results are exploratory sensitivity evidence, not an independent confirmatory validation pass.",
+    "required_next_step": "Freeze a capacity/EOS geometry rule and all fit parameters before re-running the existing H2Protocol calibration/holdout split, then evaluate the frozen model on an untouched external source. Do not change the published default from this report alone."
+  }
+}
