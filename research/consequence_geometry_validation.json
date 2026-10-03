@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-03T02:55:02.750089+00:00",
+  "status": "passed",
+  "validation_scope": "outdoor unconfined hydrogen free-jet consequence display mapping",
+  "independent_case_count": 3,
+  "independent_dataset_family_count": 3,
+  "site_specific_validation": false,
+  "site_specific_claim_permitted": false,
+  "safety_distance_claim_permitted": false,
+  "upstream_validation": {
+    "software": "HyRAM+ 6.1",
+    "commit": "b45abf9a6d995951311be6aad836f1874e4d420b",
+    "passed_test_count": 47,
+    "passed_subtest_count": 803,
+    "primary_report": "https://doi.org/10.2172/2480221",
+    "official_software_page": "https://energy.sandia.gov/programs/sustainable-transportation/hydrogen/hydrogen-safety-codes-and-standards/hyram/"
+  },
+  "evidence_families": [
+    {
+      "id": "four_percent_unignited_plume",
+      "independent_source": "Han et al. (2013), Figure 6",
+      "experimental_quantity": "4 vol% H2 (LFL) dilution length versus pressure",
+      "production_quantity": "flammable_plume_streamline_distance_m",
+      "applicable_geometry": "directional free-jet centerline length",
+      "source_file": "tests/hyram/validation/test_jetplume.py",
+      "data_files": [
+        "han-2013-fig6a.csv",
+        "han-2013-fig6b.csv",
+        "han-2013-fig6c.csv"
+      ],
+      "coverage": "0.5, 0.7 and 1.0 mm orifices; 100-400 bar; LFL=0.04",
+      "frozen_limits_at_lfl": {
+        "max_absolute_error_m": 0.19,
+        "max_percent_error": 6,
+        "minimum_r_squared": 0.996
+      },
+      "markers_present": true,
+      "data_sha256": {
+        "han-2013-fig6a.csv": "dac5f9ae694cc0a11ff6bcf012bf3ad91715bfde9abf40f70698ab01ca7e52b4",
+        "han-2013-fig6b.csv": "fd5f78e218f83fe10bb7284a0edfa501b505c1d8713b18101c9a333c66f54105",
+        "han-2013-fig6c.csv": "30cc0cea4bdd4f752ecdd7853ed19dbb9bdb65041fed4036074d62b4c2cbfa8e"
+      }
+    },
+    {
+      "id": "ignited_jet_radiation",
+      "independent_source": "Schefer et al. (2006), Figure 8; Houf and Schefer (2007), Figure 6",
+      "experimental_quantity": "radiative heat flux versus distance",
+      "production_quantity": "heat_fluxes and sampled 5 kW/m2 threshold bracket",
+      "applicable_geometry": "sampled radial screening distance",
+      "source_file": "tests/hyram/validation/test_heatflux.py",
+      "data_files": [
+        "schefer-2006-fig8.csv",
+        "houfschefer-2007-fig6.csv"
+      ],
+      "coverage": "five transient flow states plus an independent normalized-distance series",
+      "markers_present": true,
+      "data_sha256": {
+        "schefer-2006-fig8.csv": "cea34ab5c876259361990a1a1ac60a57f783d596e7fe5173aaf29deb6e11e6fc",
+        "houfschefer-2007-fig6.csv": "85cd271923475ab62536e2972a19704fa728ce4bf4646622603590da266934e0"
+      }
+    },
+    {
+      "id": "unconfined_overpressure",
+      "independent_source": "Bauwens and Dorofeev (2019), Figure 9; additional published sets in the same suite",
+      "experimental_quantity": "peak unconfined overpressure versus distance",
+      "production_quantity": "overpressures and sampled 5 kPa threshold bracket",
+      "applicable_geometry": "sampled radial screening distance",
+      "source_file": "tests/hyram/validation/test_unconfined_overpressure.py",
+      "data_files": [
+        "unconfined_overpressure_data.py"
+      ],
+      "coverage": "BST plus three sensitivity models across published free-jet experiments",
+      "markers_present": true,
+      "data_sha256": {
+        "unconfined_overpressure_data.py": "4595fedf8c1314f4ab8cf60f80b5396404d0ffe1ebaab2ef682f239b9d04ed0f"
+      }
+    }
+  ],
+  "chain_checks": {
+    "exact_hyram_source_identity": true,
+    "upstream_validation_passed": true,
+    "required_upstream_modules_executed": true,
+    "production_adapter_parity_passed": true,
+    "production_contract_preserves_geometry_inputs": true,
+    "display_separates_radial_and_directional_geometry": true,
+    "browser_mapping_regression_passed": true,
+    "all_evidence_markers_and_data_present": true
+  },
+  "browser_mapping_test": {
+    "command": "node --test tests/risk_range_state.test.mjs",
+    "status": "passed",
+    "return_code": 0,
+    "output_tail": "✔ hypothetical cases follow the current assessment, not a past peak (0.1388ms)\n✔ the overlay includes a longer four-percent flammable plume (0.1039ms)\n✔ radial screening and directional plume geometry remain distinct (0.1176ms)\n✔ active releases retain separate peak radial and plume distances (0.125ms)\nℹ tests 6\nℹ suites 0\nℹ pass 6\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 59.6493"
+  },
+  "artifact_hashes": {
+    "research/hyram_adapter_verification.json": "df4839072814155d0eee55204e6f5b9bfd3522c2151d77007c4c0ee1e2efaa12",
+    "src/h2station/risk/runtime_backend.py": "b57cfb49f702206b2f0cf69f7cd854851c4216d0b950cbe4b0070559b244d41e",
+    "web/consequence-geometry.mjs": "b600257851a0f11da7abcffc6f87e45fde001a3e0141fa6e93f308c45e33ca0b",
+    "web/risk-range-state.mjs": "75741914b107614f8cf42082c76036d1ca3335b6e9f8ece3f932560840e9238a",
+    "web/station3d.js": "55608891bcdd05bae9666f6f982b948680b308c3b59499a5b9d12c32c0c30bdf"
+  },
+  "display_contract": {
+    "thermal_and_overpressure": "equipment-footprint-centred radial screening band using sampled_effect_radius_m",
+    "dispersion": "directional tapered plume using the 4 vol% centerline distance, contour width and release angle",
+    "persistence": "active releases retain separate peak radial and plume extents; ended releases have a three-second display grace",
+    "units": "metres and radians without display-side conversion",
+    "scene_azimuth": "schematic +X axis; the process state carries elevation angle but no site azimuth"
+  },
+  "limitations": [
+    "The independent measurements are published data digitized and regression-tested by HyRAM+, not measurements produced by this project.",
+    "The display is a screening visualization, not a regulatory separation distance, evacuation radius, or certified safety boundary.",
+    "Buildings, congestion, terrain and site-specific wind are not resolved; no site-specific CFD or outdoor field campaign has been performed.",
+    "The 5 kW/m2 and 5 kPa radial result is a discrete observation-point bracket and must not be interpolated as an exact contour.",
+    "Unconfined overpressure depends on the selected BST flame-speed assumption; alternate methods remain a model-form sensitivity.",
+    "The scene uses the stored release elevation angle but a schematic +X azimuth because the process model does not provide site azimuth."
+  ],
+  "decision": "The traceability chain passes for the bounded outdoor free-jet display scope. It does not validate a specific station site or authorize a safety-distance claim."
+}

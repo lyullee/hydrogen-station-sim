@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
+import sys
 from typing import Any
 
 
@@ -137,16 +138,20 @@ def audit(root: Path) -> dict[str, object]:
 
     geometry_path = root / "research/consequence_geometry_validation.json"
     geometry = _json(geometry_path)
+    geometry_checks = (geometry or {}).get("chain_checks") or {}
     geometry_pass = bool(
         (geometry or {}).get("status") == "passed"
-        and (geometry or {}).get("independent_case_count", 0) >= 3
+        and (geometry or {}).get("independent_dataset_family_count", 0) >= 3
+        and geometry_checks and all(geometry_checks.values())
+        and (geometry or {}).get("site_specific_claim_permitted") is False
+        and (geometry or {}).get("safety_distance_claim_permitted") is False
     )
     gates.append(_gate(
         "station_consequence_geometry_validation",
         "PASS" if geometry_pass else "PENDING",
-        "Displayed outdoor station consequence geometry is checked against geometrically applicable independent data.",
+        "Displayed outdoor free-jet screening geometry is traceably checked against geometrically applicable independent data.",
         str(geometry_path.relative_to(root)),
-        "At least three independent applicable release/geometry cases with frozen mapping.",
+        "At least three independent applicable evidence families, frozen mapping tests, and explicit non-site-specific limits.",
         geometry or "missing; FFI open-channel data are not applicable to the current outdoor free jet",
     ))
 
@@ -409,6 +414,8 @@ def main() -> int:
         encoding="utf-8", newline="\n",
     )
     report_output.write_text(_markdown(report), encoding="utf-8", newline="\n")
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     print(json.dumps(report, ensure_ascii=False, indent=2))
     if args.require_ready == "bounded" and not report["bounded_ijhe_submission_ready"]:
         return 2

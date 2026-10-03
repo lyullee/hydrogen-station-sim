@@ -749,7 +749,7 @@ function buildStation() {
     if(!showRiskDistance)for(const group of effectDomes.values())group.userData.distanceLabel.hidden=true;
     const labels=new Map(),unplaced=[];
     if(showRiskDistance)for(const row of valid){
-      const radius=row.radius,anchor=accidentAnchors[row.component];
+      const radius=row.radius,anchor=accidentAnchors[row.component],geometry=row.geometry;
       let group=effectDomes.get(row.id);
       if(!group){
         group=new THREE.Group();group.name=`sampled-effect-plume-${row.id}`;
@@ -761,29 +761,39 @@ function buildStation() {
           blending:THREE.NormalBlending,depthWrite:false,depthTest:false});
         const groundMaterial=new THREE.MeshBasicMaterial({color,transparent:true,opacity:.38,
           side:THREE.DoubleSide,blending:THREE.NormalBlending,depthWrite:false,depthTest:false});
+        const radialGroup=new THREE.Group();radialGroup.name='sampled-thermal-blast-radius';group.add(radialGroup);
         const groundContour=new THREE.Mesh(new THREE.RingGeometry(.984,1.016,96),groundMaterial);
-        groundContour.rotation.x=-Math.PI/2;groundContour.position.y=.015;group.add(groundContour);
+        groundContour.rotation.x=-Math.PI/2;groundContour.position.y=.015;radialGroup.add(groundContour);
         // A thin vertical energy curtain leaves the equipment visible. Its
         // rising rays replace the former opaque-looking hemispherical shell.
         const curtain=new THREE.Mesh(new THREE.CylinderGeometry(.72,.84,1,48,1,true),luminous);
-        curtain.position.y=.5;group.add(curtain);
+        curtain.position.y=.5;radialGroup.add(curtain);
         const contour=(level,scale,material)=>new THREE.LineLoop(
           new THREE.BufferGeometry().setFromPoints(Array.from({length:96},(_,index)=>{
             const angle=index*Math.PI*2/96;
             return new THREE.Vector3(Math.cos(angle)*scale,level,Math.sin(angle)*scale);
           })),material);
-        group.add(contour(.006,1,edgeMaterial));
-        group.add(contour(.44,.94,rayMaterial));
-        group.add(contour(.87,.74,rayMaterial));
+        radialGroup.add(contour(.006,1,edgeMaterial));
+        radialGroup.add(contour(.44,.94,rayMaterial));
+        radialGroup.add(contour(.87,.74,rayMaterial));
         const rays=[];
         for(let index=0;index<24;index++){
           const angle=index*Math.PI*2/24,x=Math.cos(angle),z=Math.sin(angle);
           rays.push(new THREE.Vector3(x*.84,.015,z*.84),new THREE.Vector3(x*.96,.34,z*.96),
             new THREE.Vector3(x*.96,.34,z*.96),new THREE.Vector3(x*.74,.97,z*.74));
         }
-        group.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(rays),rayMaterial));
+        radialGroup.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(rays),rayMaterial));
         const beacon=new THREE.Mesh(new THREE.CylinderGeometry(.07,.22,1,16,1,true),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.30,depthWrite:false,depthTest:false,blending:THREE.NormalBlending}));
-        beacon.position.y=.5;group.add(beacon);
+        beacon.position.y=.5;radialGroup.add(beacon);
+        const plumeMaterial=new THREE.MeshBasicMaterial({color,transparent:true,opacity:.075,
+          side:THREE.DoubleSide,blending:THREE.NormalBlending,depthWrite:false,depthTest:false});
+        const plumeEdgeMaterial=new THREE.LineBasicMaterial({color,transparent:true,opacity:.48,
+          depthWrite:false,depthTest:false});
+        const plume=new THREE.Mesh(new THREE.CylinderGeometry(1,.08,1,32,1,true),plumeMaterial);
+        plume.name='directional-four-percent-plume';group.add(plume);
+        const plumeEdge=new THREE.LineSegments(new THREE.EdgesGeometry(plume.geometry),plumeEdgeMaterial);
+        plume.add(plumeEdge);
+        group.userData.radialGroup=radialGroup;group.userData.plume=plume;
         group.userData.pulseMaterial=luminous;
         group.renderOrder=20;
         const distanceLabel=document.createElement('div');distanceLabel.className=`s3-risk-distance-label${row.hypothetical?' hypothetical':''}`;
@@ -791,16 +801,33 @@ function buildStation() {
         effectLayer.add(group);effectDomes.set(row.id,group);
       }
       const footprint=effectFootprints[row.component]||[1.2,1.2];
-      const height=Math.max(3,Math.min(18,radius*.75+2));
+      const radialRadius=geometry.thermalBlastRadiusM;
+      const height=Math.max(3,Math.min(18,radialRadius*.75+2));
        group.position.set(anchor[0],.09,anchor[2]);
-       const targetScale=new THREE.Vector3(footprint[0]+radius,height,footprint[1]+radius);
-       if(!group.userData.targetScale)group.scale.copy(targetScale);
-       group.userData.targetScale=targetScale;
+       group.scale.set(1,1,1);
+       group.userData.radialGroup.visible=geometry.hasRadialEffect;
+       group.userData.radialGroup.scale.set(
+         footprint[0]+radialRadius,height,footprint[1]+radialRadius,
+       );
+       const plume=group.userData.plume,plumeLength=geometry.flammablePlumeLengthM;
+       plume.visible=geometry.hasFlammablePlume;
+       if(plume.visible){
+         const axis=new THREE.Vector3(Math.cos(geometry.releaseAngleRad),
+           Math.sin(geometry.releaseAngleRad),0).normalize();
+         plume.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),axis);
+         plume.position.set(axis.x*plumeLength/2,anchor[1]-.09+axis.y*plumeLength/2,0);
+         plume.scale.set(geometry.flammablePlumeHalfWidthM,plumeLength,
+           geometry.flammablePlumeHalfWidthM);
+       }
+       group.userData.labelHeight=Math.max(height,anchor[1]+Math.sin(geometry.releaseAngleRad)*plumeLength);
       const selector=riskTargets[row.component],node=selector?document.querySelector(`.flow-map ${selector}`):null;
       const context=row.hypothetical?'가정 · ':row.displayState==='RECENTLY_ENDED'?'최근 방출 최대 · ':row.displayState==='PEAK_HELD'?'사고 중 최대 · ':'';
       const nextDistance=Number(row.consequence.sampled_next_distance_m);
-      const sampledRange=nextDistance>radius?`${radius.toFixed(1)}–${nextDistance.toFixed(1)} m 표본구간`:`${radius.toFixed(1)} m${row.consequence.effect_range_status==='BEYOND_SAMPLED_POINTS'?' 이상':''} 표본점`;
-      const caption=`${context}${row.label||accidentNames[row.component]||row.component} ${sampledRange}`;
+      const radialText=geometry.hasRadialEffect
+        ?`열·과압 ${nextDistance>radialRadius?`${radialRadius.toFixed(1)}–${nextDistance.toFixed(1)} m 표본구간`:`${radialRadius.toFixed(1)} m${row.consequence.effect_range_status==='BEYOND_SAMPLED_POINTS'?' 이상':''} 표본점`}`:'';
+      const plumeText=geometry.hasFlammablePlume
+        ?`4 vol% 방향성 플룸 ${plumeLength.toFixed(1)} m`:'';
+      const caption=`${context}${row.label||accidentNames[row.component]||row.component} · ${[radialText,plumeText].filter(Boolean).join(' · ')}`;
       group.userData.distanceLabel.textContent=caption;
       if(node){const items=labels.get(node)||[];items.push(caption);labels.set(node,items);}else unplaced.push(caption);
     }
@@ -808,7 +835,7 @@ function buildStation() {
     for(const [node,items] of labels){const badge=document.createElement('span');badge.className='flow-risk-distance';badge.textContent=items.join(' / ');node.append(badge);}
     let other=document.querySelector('#flowRiskOther');if(!other){other=document.createElement('span');other.id='flowRiskOther';document.querySelector('.flow-status')?.append(other);}other.textContent=unplaced.join(' / ');other.hidden=!unplaced.length;
     rangeBadge.hidden=!showRiskDistance;
-    if(!rangeBadge.hidden)rangeBadge.textContent=valid.length?`표본 영향거리 ${valid.length}건 · 설비 주변 상승 띠는 개념도 · 5 kW/m² 또는 5 kPa · 실제 전방위 경계·안전거리 아님`:cases.length?'계산 사례는 있으나 5 kW/m²·5 kPa 기준을 넘는 표본 거리가 없어 경계를 그리지 않습니다.':'현재 계산된 피해영향 거리가 없습니다. 사고·경보 또는 분석 요청 시 계산 결과가 생기면 표시됩니다.';
+    if(!rangeBadge.hidden)rangeBadge.textContent=valid.length?`피해영향 ${valid.length}건 · 설비 주변 띠: 5 kW/m² 또는 5 kPa 표본 반경 · 원뿔: 4 vol% 방향성 플룸 · 안전거리 아님`:cases.length?'계산 사례는 있으나 표시 가능한 5 kW/m²·5 kPa 표본 반경 또는 4 vol% 플룸이 없습니다.':'현재 계산된 피해영향 거리가 없습니다. 사고·경보 또는 분석 요청 시 계산 결과가 생기면 표시됩니다.';
     $('s3RiskToggle').textContent=showRiskDistance?`위험거리 숨기기${valid.length?` · ${valid.length}건`:''}`:'위험거리 표시';
   }
   $('s3RiskToggle').addEventListener('click',()=>{showRiskDistance=!showRiskDistance;$('s3RiskToggle').setAttribute('aria-pressed',String(showRiskDistance));const runtime=window.getStation3DState?.();updateEffectRanges(runtime?.result?.hazop?.frames?.[runtime?.index]);});
@@ -820,7 +847,7 @@ function buildStation() {
     for(const group of showRiskDistance?effectDomes.values():[]){
       const label=group.userData.distanceLabel;
       const base=group.position.clone().project(camera);
-      const projected=group.position.clone().add(new THREE.Vector3(0,group.scale.y,0)).project(camera);
+      const projected=group.position.clone().add(new THREE.Vector3(0,group.userData.labelHeight||3,0)).project(camera);
       const visible=base.z>-1&&base.z<1&&Math.abs(base.x)<1.1&&Math.abs(base.y)<1.1;
       label.hidden=!visible;
       if(visible){const x=THREE.MathUtils.clamp(projected.x,-.88,.88),y=THREE.MathUtils.clamp(projected.y,-.82,.82);

@@ -271,6 +271,22 @@ The clean-commit result is archived in
 machine-readable values and per-field errors in
 [`research/hyram_adapter_verification.json`](../research/hyram_adapter_verification.json).
 
+The remaining display transformation is frozen and checked with:
+
+```powershell
+$env:PYTHONPATH = "src;."
+.venv\Scripts\python.exe scripts\validate_consequence_geometry.py
+```
+
+This links three geometrically applicable public evidence families to the exact
+HyRAM+ source, production adapter and browser contract. The browser keeps the
+sampled 5 kW/m² or 5 kPa radial band separate from the directional 4 vol% plume,
+retains metres and release angle, and regression-tests the mapping. The report is
+[`CONSEQUENCE_GEOMETRY_VALIDATION.md`](../research/CONSEQUENCE_GEOMETRY_VALIDATION.md).
+Its pass applies only to outdoor unconfined free-jet screening. It explicitly
+excludes site-specific wind, buildings, congestion, terrain, certified safety
+boundaries and regulatory separation distances.
+
 ## Publication-readiness gate
 
 Treat an IJHE-level submission as ready only when all of the following evidence

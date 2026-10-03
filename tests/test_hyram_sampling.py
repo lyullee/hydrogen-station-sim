@@ -43,6 +43,8 @@ def test_default_samples_resolve_the_old_one_metre_artifact(monkeypatch):
     assert result["sampled_effect_radius_m"] == pytest.approx(2.5)
     assert result["sampled_next_distance_m"] == pytest.approx(3.0)
     assert result["effect_range_status"] == "WITHIN_SAMPLED_POINTS"
+    assert result["release_angle_rad"] == pytest.approx(0.0)
+    assert result["observation_locations_m"] == backend.observation_locations
     assert result["observation_point_count"] == len(backend.observation_locations)
 
 

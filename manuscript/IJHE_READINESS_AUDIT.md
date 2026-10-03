@@ -10,7 +10,7 @@
 | `full_loop_external_validation` | **FAIL** | The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases. | `data\public_validation\results\closed_loop_external_holdout\validation.json` |
 | `full_loop_negative_result_disclosed` | **PASS** | The failed full-loop evaluation is disclosed instead of being hidden. | `manuscript\ijhe_manuscript_draft.tex` |
 | `hyram_adapter_verification` | **PASS** | The production adapter is identical to and numerically consistent with HyRAM+ 6.1 within the tested scope. | `research\hyram_adapter_verification.json` |
-| `station_consequence_geometry_validation` | **PENDING** | Displayed outdoor station consequence geometry is checked against geometrically applicable independent data. | `research\consequence_geometry_validation.json` |
+| `station_consequence_geometry_validation` | **PASS** | Displayed outdoor free-jet screening geometry is traceably checked against geometrically applicable independent data. | `research\consequence_geometry_validation.json` |
 | `hiad_protocol_integrity` | **PASS** | The incident decision-support study protocol was hash-locked before outcomes. | `research\hiad_study_protocol_manifest.json` |
 | `institutional_ethics_determination` | **PENDING** | The applicable institution has recorded the human-participant determination. | `research\hiad_study_protocol_manifest.json` |
 | `hiad_casebook_frozen` | **PENDING** | All 24 holdout incident vignettes passed coordinator leakage review and were frozen. | `data\public_validation\results\hiad_casebook_frozen\casebook_freeze_manifest.json` |
@@ -41,7 +41,6 @@
 - `ijhe_latex_compilation`
 - `submission_metadata_and_declarations`
 - `full_loop_external_validation`
-- `station_consequence_geometry_validation`
 - `saga_effectiveness_and_safety_supported`
 
 Only full_user_objective_ready=true permits goal completion. A bounded paper may report negative or limited physics honestly, but it does not satisfy the full validated-digital-twin objective.

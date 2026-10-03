@@ -1,3 +1,5 @@
+import { consequenceDisplayGeometry, mergePeakGeometry } from './consequence-geometry.mjs';
+
 // Keep the largest calculated sampling extent visible for the life of one release.
 // A zero/missing update is not evidence that the earlier affected area vanished.
 export function reconcileRiskRanges(previous, cases, nowMs, graceMs=3000){
@@ -5,17 +7,18 @@ export function reconcileRiskRanges(previous, cases, nowMs, graceMs=3000){
   for(const row of cases){
     if(!row?.id)continue;
     seen.add(row.id);
-    const thermalBlast=Number(row.consequence?.sampled_effect_radius_m)||0;
-    const flammablePlume=Number(row.consequence?.flammable_plume_streamline_distance_m)||0;
-    const radius=Math.max(thermalBlast,flammablePlume);
+    const currentGeometry=consequenceDisplayGeometry(row.consequence);
+    const radius=currentGeometry.maxDisplayDistanceM;
     const prior=previous.get(row.id);
     if(Number.isFinite(radius)&&radius>0){
-      const peak=row.actual?Math.max(radius,prior?.radius||0):radius;
-      next.set(row.id,{...row,consequence:peak>radius&&prior?prior.consequence:row.consequence,
-        radius:peak,currentRadius:radius,lastPresentMs:nowMs,
-        displayState:peak>radius?'PEAK_HELD':'CURRENT'});
+      const geometry=row.actual
+        ?mergePeakGeometry(prior?.geometry,currentGeometry):currentGeometry;
+      next.set(row.id,{...row,geometry,currentGeometry,
+        radius:geometry.maxDisplayDistanceM,currentRadius:radius,lastPresentMs:nowMs,
+        displayState:geometry.heldFromPrevious?'PEAK_HELD':'CURRENT'});
     }else if(row.actual&&prior){
-      next.set(row.id,{...prior,currentRadius:0,lastPresentMs:nowMs,displayState:'PEAK_HELD'});
+      next.set(row.id,{...prior,currentGeometry,currentRadius:0,lastPresentMs:nowMs,
+        displayState:'PEAK_HELD'});
     }
   }
   for(const [id,prior] of previous){

@@ -16,7 +16,7 @@ The current official IJHE Guide for Authors was checked on 3 October 2026. A res
 | Type-IV tank external validation | Complete for measured boundaries | 12 frozen validation fills; pressure 3.905 MPa, temperature 4.694 °C, SOC 3.812 %p mean RMSE |
 | Full station closed-loop validation | Failed | 0/8 development and 0/11 internal-comparison fills met all project screens; report as a negative result |
 | HyRAM+ production adapter | Verified within stated scope | Exact v6.1 source identity, 47 upstream tests/803 subtests, three production parity cases |
-| Outdoor station plume geometry | Not independently validated | The open-channel experiment is not geometrically applicable to the outdoor free jet |
+| Outdoor free-jet display geometry | Complete within bounded scope | Three applicable public experimental families (4 vol% dilution length, distance-dependent heat flux, unconfined overpressure); exact HyRAM+ source and adapter parity; separate radial/directional browser mapping. This is not site-specific validation or a safety-distance claim |
 | HIAD casebook leakage review | Pending | Advisory pre-screen flags 16 HIGH, 6 MEDIUM and 2 LOW among 24 holdout vignettes; a qualified non-rating coordinator must inspect every case, rewrite/remove hindsight actions without adding facts, then approve and freeze the complete set |
 | Human-participant ethics determination | Pending | Record institutional approval, exemption or not-required determination before reviewer recruitment/rating |
 | Blinded SAGA expert review | Pending and mandatory | Three independent qualified reviewers; lock ratings before unmasking |
@@ -45,6 +45,9 @@ The current official IJHE Guide for Authors was checked on 3 October 2026. A res
   recruitment and holdout collection disabled while governance fields are pending.
 - `research/HIAD_DESIGN_SENSITIVITY.md`: pre-outcome power sensitivity and the
   exact zero-event upper bound for the fixed 24-event holdout.
+- `research/CONSEQUENCE_GEOMETRY_VALIDATION.md`: public experiment to HyRAM+
+  to production adapter to browser-geometry traceability, with explicit site-
+  specific and safety-distance exclusions.
 - `IJHE_READINESS_AUDIT.md` and `ijhe_readiness_audit.json`: machine-generated
   claim-to-evidence gates; goal completion remains prohibited while any full-
   objective gate is not PASS.
@@ -63,6 +66,6 @@ The current official IJHE Guide for Authors was checked on 3 October 2026. A res
 ## Claim language that must remain
 
 - “Measured-boundary tank-model validation,” not “full-station validation.”
-- “Adapter parity with the installed HyRAM+ API,” not “independent HyRAM physics validation.”
+- “Public experimental validation inherited through exact HyRAM+ source plus local adapter parity,” not “a new independent field validation.”
 - “Directional 4 vol% centreline distance,” not “spherical safety distance.”
 - “Research and training prototype,” not “certified controller or autonomous emergency system.”

@@ -192,7 +192,10 @@ were compared with the clone. Sandia's upstream plume, heat-flux and unconfined
 overpressure validation tests were executed unchanged. Three station-scale parity
 cases then called both the production adapter and the public HyRAM API and compared
 every translated field with relative tolerance $10^{-12}$ and absolute tolerance
-$10^{-9}$.
+$10^{-9}$. A separate display contract preserves the sampled thermal/blast radius,
+the directional 4 vol\% plume length and width, and the release angle without unit
+conversion. Browser regression tests prevent these physically different quantities
+from being collapsed into one spherical extent.
 
 \subsection{Incident decision-support evaluation}
 The incident study population is the hydrogen-refuelling-station subset of the
@@ -365,12 +368,18 @@ the eleven previously inspected cases cannot regain holdout status.
 
 \subsection{Consequence calculations and risk communication}
 The HyRAM verification separates source identity, upstream physics tests and local
-adapter parity. This supports a narrow software claim. It does not justify drawing
-the 4 vol\% centreline distance as a spherical safety radius, nor interpreting the
-last sampled 5 kW m$^{-2}$/5 kPa point as a legally sufficient setback. Choked-flow
-cases may cause HyRAM to recompute mass flow from source pressure, temperature,
-aperture and discharge coefficient; both requested and modelled flows must remain
-visible in any reported result.
+adapter parity. The traceability chain covers three geometrically applicable public
+experimental families: Han et al.'s 4 vol\% dilution length \cite{han2013},
+Schefer--Houf distance-dependent heat flux \cite{houf2007}, and published
+unconfined-overpressure distance series summarized in the HyRAM validation report
+\cite{hyram2024}. The
+browser now renders the first as a directional tapered plume and the latter two as
+an equipment-footprint-centred sampled screening band. This supports a bounded
+outdoor free-jet display claim. It does not establish a site-specific contour or
+justify interpreting the last sampled 5 kW m$^{-2}$/5 kPa point as a legally
+sufficient setback. Choked-flow cases may cause HyRAM to recompute mass flow from
+source pressure, temperature, aperture and discharge coefficient; both requested
+and modelled flows must remain visible in any reported result.
 
 \subsection{Evidence-gated language-model assistance}
 The LLM is positioned after deterministic calculations and receives structured
@@ -388,7 +397,9 @@ geometry is inferred from nominal capacity scaling. The tank is lumped and canno
 resolve local hot spots. Compressor maps, valve coefficients, thermal hardware,
 weather, occupancy and site geometry are scenario assumptions. The public J2601
 archives do not supply the complete proprietary protocol implementation. HyRAM
-outputs are conditional consequences, not certification. The HIAD narratives are
+outputs are conditional consequences, not certification; buildings, congestion,
+terrain and site-specific wind are not resolved, and no site field campaign was
+performed. The HIAD narratives are
 retrospective and may contain incomplete or heterogeneous reporting. Finally, the
 SAGA study has no locked expert ratings yet.
 
@@ -399,7 +410,9 @@ LLM decision support. The measured-boundary Type-IV tank model achieved validati
 mean RMSE values of 3.905 MPa, 4.694 $^{\circ}$C and 3.812 SOC percentage points.
 The complete loop did not meet the declared screens, even after structural defects
 were corrected. The HyRAM+ adapter reproduced the installed v6.1 public API while
-the identical upstream source passed its available validation tests. The incident
+the identical upstream source passed its available validation tests; a frozen
+browser contract retained the experimentally corresponding directional and radial
+geometry semantics. The incident
 decision-support experiment is specified but incomplete. These results support a
 reproducible research prototype and a disciplined validation workflow; they do
 not support claims of SAE-compliant fuelling control, field safety certification
@@ -472,6 +485,18 @@ SAND2024-14886 (2024), \url{https://www.osti.gov/biblio/2480221}.
 Sandia National Laboratories, \textit{HyRAM+ Technical Reference Manual},
 SAND2025-04942 (2025),
 \href{https://doi.org/10.2172/2563814}{doi:10.2172/2563814}.
+
+\bibitem{han2013}
+S.H. Han, D. Chang, J.S. Kim, Release characteristics of highly pressurized
+hydrogen through a small hole, \textit{International Journal of Hydrogen Energy}
+38(8) (2013) 3503--3512,
+\href{https://doi.org/10.1016/j.ijhydene.2012.11.071}{doi:10.1016/j.ijhydene.2012.11.071}.
+
+\bibitem{houf2007}
+W.G. Houf, R.W. Schefer, Predicting radiative heat fluxes and flammability
+envelopes from unintended releases of hydrogen, \textit{International Journal of
+Hydrogen Energy} 32(1) (2007) 136--151,
+\href{https://doi.org/10.1016/j.ijhydene.2006.04.009}{doi:10.1016/j.ijhydene.2006.04.009}.
 
 \bibitem{henriksen2025}
 M. Henriksen, H.E. Fossum, E. Akervik, D. Bjerketvedt, Experimental data of

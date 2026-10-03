@@ -31,5 +31,9 @@ def test_full_objective_gate_is_stricter_than_bounded_submission_gate():
     full = set(report["blocking_full_objective_gates"])
     assert bounded < full
     assert "full_loop_external_validation" in full - bounded
-    assert "station_consequence_geometry_validation" in full - bounded
     assert "saga_effectiveness_and_safety_supported" in full - bounded
+    geometry = next(
+        gate for gate in report["gates"]
+        if gate["id"] == "station_consequence_geometry_validation"
+    )
+    assert geometry["status"] == "PASS"

@@ -154,6 +154,8 @@ class NativeHyRAMBackend:
             "flammable_plume_streamline_distance_m": result.flammable_streamline_distance,
             "flammable_plume_x_extent_m": result.flammable_x_extent,
             "flammable_plume_y_extent_m": result.flammable_y_extent,
+            "release_angle_rad": request.release_angle_rad,
+            "observation_locations_m": self.observation_locations,
         }
         # Report only the sampled extent. Three observation points cannot
         # establish a validated safe boundary beyond the farthest point.
