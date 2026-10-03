@@ -567,3 +567,21 @@ fault-taxonomy coverage and test design, but ineligible to close the numerical
 full-loop gate. The report figures are not digitised into the primary claim. A
 follow-up request should seek de-identified station logs, field definitions,
 quality flags, protocol version and permission to publish derived metrics.
+## 2026-10-04 recent IJHE high-flow experiment follow-up
+
+A recent *International Journal of Hydrogen Energy* article reports an
+independent 35 MPa high-flow hydrogen refuelling platform with large-scale
+Type-IV storage, measured transient mass-flow boundaries and tank-temperature
+responses (<https://doi.org/10.1016/j.ijhydene.2025.151093>). The paper reports
+that measured transient flow improves peak-temperature agreement to within 3 K,
+that a constant-flow assumption can overpredict the early peak by more than
+10 K, and that 15--30 degree inlet angles reduce peak gas temperature by up to
+12 K.
+
+The public article record was screened for a machine-readable data archive. No
+downloadable synchronized pressure--temperature--flow logger files or reuse
+terms were located. The source is therefore registered as
+**REQUEST_DATA_HIGH_VALUE_TANK_THERMAL_LEAD**: it can materially strengthen
+independent large-tank thermal validation if the authors release de-identified
+raw logs, but its figures and summary error claims are not counted as the
+primary validation set.

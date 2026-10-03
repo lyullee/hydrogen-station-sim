@@ -987,6 +987,33 @@
         "exclusion_reason": "The official report publishes plots, categories and aggregate statistics but no downloadable synchronized logger arrays. It cannot close the numerical full-loop validation gate."
       },
       "claim_limit": "Use for face-validity, fault taxonomy and test-design context only until underlying timestamped logs and reuse terms are obtained."
+    },
+    {
+      "id": "deng_2025_highflow_35mpa",
+      "title": "Experimental-numerical optimization of inlet angles for controlling temperature rise during high-flow hydrogen refueling of large-scale storage tanks",
+      "doi": "10.1016/j.ijhydene.2025.151093",
+      "url": "https://doi.org/10.1016/j.ijhydene.2025.151093",
+      "publisher": "International Journal of Hydrogen Energy / Elsevier",
+      "decision": "REQUEST_DATA_HIGH_VALUE_TANK_THERMAL_LEAD",
+      "public_raw_data": false,
+      "inspection": {
+        "reported_scope": "35 MPa high-flow hydrogen refuelling platform with large-scale Type-IV storage tank; precooled and non-precooled conditions.",
+        "reported_channels": [
+          "time-resolved mass-flow boundary",
+          "tank temperature response",
+          "pressure and thermal field outputs"
+        ],
+        "reported_claims": [
+          "measured transient flow improves peak-temperature error to within 3 K",
+          "constant-flow assumption overpredicts early peak by more than 10 K",
+          "15-30 degree inlet angle lowers peak gas temperature by up to 12 K"
+        ],
+        "raw_common_timebase": "not exposed by the public article record",
+        "machine_readable_archive": false,
+        "role": "High-value independent large-tank thermal and transient-flow data-request lead; request raw logger export and reuse terms.",
+        "exclusion_reason": "The public article provides experimental description, figures and summary claims, but no downloadable synchronized pressure-temperature-flow logger archive was located."
+      },
+      "claim_limit": "Use only as independent design/operating-range context until raw timestamped flow, pressure, temperature, tank geometry and protocol metadata are received and frozen."
     }
   ],
   "next_action": "Use the NREL HDVS workbook for the frozen tank-submodel diagnostic, request permission for publication of derived values, and request synchronized station-side traces from NREL/BAM/JRC/Empa/DLR before freezing a new full-loop holdout.",
@@ -1195,6 +1222,19 @@
       ],
       "result": "NRC strengthens independent field face-validity and fault-taxonomy coverage, but it does not expose the synchronized raw logs required for a full-loop numerical holdout. The full-loop gate remains unchanged.",
       "claim_limit": "Do not digitize the report figures for the primary claim or treat aggregate event rates as dynamic validation. Request de-identified station logs, field definitions, quality flags, protocol version and permission to publish derived metrics."
+    },
+    "highflow_ijhe_2025_followup": {
+      "scope": "screening a recent IJHE large-tank high-flow experiment for an open raw archive",
+      "sources": [
+        {
+          "id": "deng_2025_highflow_35mpa",
+          "url": "https://doi.org/10.1016/j.ijhydene.2025.151093",
+          "finding": "The article reports measured transient mass-flow data from a 35 MPa high-flow platform and compares tank temperature responses, but the public article record exposes no downloadable synchronized logger archive or reuse terms.",
+          "decision": "REQUEST_DATA_HIGH_VALUE_TANK_THERMAL_LEAD"
+        }
+      ],
+      "result": "This recent IJHE experiment is a strong request lead for independent large-tank thermal validation, but it does not close the current full-loop gate without raw logger files and provenance.",
+      "claim_limit": "Do not convert article figures or summary error claims into the repository primary validation set."
     }
   },
   "last_reviewed": "2026-10-04"
