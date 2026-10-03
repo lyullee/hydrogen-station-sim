@@ -45,6 +45,9 @@ The current official IJHE Guide for Authors was checked on 3 October 2026. A res
   recruitment and holdout collection disabled while governance fields are pending.
 - `research/HIAD_DESIGN_SENSITIVITY.md`: pre-outcome power sensitivity and the
   exact zero-event upper bound for the fixed 24-event holdout.
+- `IJHE_READINESS_AUDIT.md` and `ijhe_readiness_audit.json`: machine-generated
+  claim-to-evidence gates; goal completion remains prohibited while any full-
+  objective gate is not PASS.
 
 ## Finalization sequence
 

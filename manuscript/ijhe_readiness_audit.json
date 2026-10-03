@@ -1,0 +1,274 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-03T02:37:38.825829+00:00",
+  "bounded_ijhe_submission_ready": false,
+  "full_user_objective_ready": false,
+  "goal_completion_permitted": false,
+  "gate_counts": {
+    "PASS": 7,
+    "FAIL": 1,
+    "PENDING": 8
+  },
+  "blocking_bounded_submission_gates": [
+    "institutional_ethics_determination",
+    "hiad_casebook_frozen",
+    "hiad_holdout_collection",
+    "independent_expert_review_complete",
+    "ijhe_latex_compilation",
+    "submission_metadata_and_declarations"
+  ],
+  "blocking_full_objective_gates": [
+    "institutional_ethics_determination",
+    "hiad_casebook_frozen",
+    "hiad_holdout_collection",
+    "independent_expert_review_complete",
+    "ijhe_latex_compilation",
+    "submission_metadata_and_declarations",
+    "full_loop_external_validation",
+    "station_consequence_geometry_validation",
+    "saga_effectiveness_and_safety_supported"
+  ],
+  "gates": [
+    {
+      "id": "tank_external_validation",
+      "status": "PASS",
+      "claim": "Measured-boundary Type-IV tank model is externally evaluated on the frozen public split.",
+      "evidence": "data\\public_validation\\results\\tank_model\\validation.json",
+      "requirement": "12 untouched validation fills, three primary errors and 10,000 case-level bootstrap replicates.",
+      "observed": {
+        "case_count": 12,
+        "pressure_rmse_mpa": 3.9054261838156847,
+        "temperature_rmse_c": 4.694112786526112,
+        "soc_rmse_percentage_points": 3.812450347822269,
+        "bootstrap_replicates": 10000
+      }
+    },
+    {
+      "id": "full_loop_external_validation",
+      "status": "FAIL",
+      "claim": "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
+      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json",
+      "requirement": "Prospectively frozen, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
+      "observed": "missing; current internal comparisons pass 0/8 and 0/11"
+    },
+    {
+      "id": "full_loop_negative_result_disclosed",
+      "status": "PASS",
+      "claim": "The failed full-loop evaluation is disclosed instead of being hidden.",
+      "evidence": "manuscript\\ijhe_manuscript_draft.tex",
+      "requirement": "Explicit negative result and bounded tank-model claim.",
+      "observed": null
+    },
+    {
+      "id": "hyram_adapter_verification",
+      "status": "PASS",
+      "claim": "The production adapter is identical to and numerically consistent with HyRAM+ 6.1 within the tested scope.",
+      "evidence": "research\\hyram_adapter_verification.json",
+      "requirement": "Source identity, upstream validation suite and production-adapter parity pass.",
+      "observed": {
+        "source_identity_match": true,
+        "upstream_status": "passed",
+        "adapter_parity_passed": true
+      }
+    },
+    {
+      "id": "station_consequence_geometry_validation",
+      "status": "PENDING",
+      "claim": "Displayed outdoor station consequence geometry is checked against geometrically applicable independent data.",
+      "evidence": "research\\consequence_geometry_validation.json",
+      "requirement": "At least three independent applicable release/geometry cases with frozen mapping.",
+      "observed": "missing; FFI open-channel data are not applicable to the current outdoor free jet"
+    },
+    {
+      "id": "hiad_protocol_integrity",
+      "status": "PASS",
+      "claim": "The incident decision-support study protocol was hash-locked before outcomes.",
+      "evidence": "research\\hiad_study_protocol_manifest.json",
+      "requirement": "Every required protocol/code hash matches the current file.",
+      "observed": {
+        "mismatches": []
+      }
+    },
+    {
+      "id": "institutional_ethics_determination",
+      "status": "PENDING",
+      "claim": "The applicable institution has recorded the human-participant determination.",
+      "evidence": "research\\hiad_study_protocol_manifest.json",
+      "requirement": "Approved, exempt or not-required status, identifier and completed institutional fields.",
+      "observed": {
+        "status": "pending",
+        "determination_id": null,
+        "unresolved_fields": {
+          "research/ETHICS_DETERMINATION_REQUEST.md": 6,
+          "research/EXPERT_REVIEWER_INFORMATION_SHEET.md": 5
+        }
+      }
+    },
+    {
+      "id": "hiad_casebook_frozen",
+      "status": "PENDING",
+      "claim": "All 24 holdout incident vignettes passed coordinator leakage review and were frozen.",
+      "evidence": "data\\public_validation\\results\\hiad_casebook_frozen\\casebook_freeze_manifest.json",
+      "requirement": "24 retained and approved cases with source/submitted/frozen hashes.",
+      "observed": "missing"
+    },
+    {
+      "id": "hiad_holdout_collection",
+      "status": "PENDING",
+      "claim": "All masked alarm/direct/RAG holdout responses were collected under the frozen protocol.",
+      "evidence": "data\\public_validation\\results\\hiad_decision\\collection_manifest.json",
+      "requirement": "24 × (1 alarm + 3 direct + 3 RAG) = 168 retained responses with freeze linkage.",
+      "observed": "missing"
+    },
+    {
+      "id": "independent_expert_review_complete",
+      "status": "PENDING",
+      "claim": "Three qualified independent reviewers completed the locked 24-event evaluation.",
+      "evidence": "data\\public_validation\\results\\hiad_decision\\analysis\\expert_review_analysis.json",
+      "requirement": "24 events, 3 raters, all three variants, qualification summary and lock hashes.",
+      "observed": "missing"
+    },
+    {
+      "id": "saga_effectiveness_and_safety_supported",
+      "status": "PENDING",
+      "claim": "Direct SAGA improves expert-rated guidance without higher observed omission or unsafe-advice rates.",
+      "evidence": "data\\public_validation\\results\\hiad_decision\\analysis\\expert_review_analysis.json",
+      "requirement": "Paired bootstrap CI lower bound >0 and omission/unsafe rates no higher than alarm-only.",
+      "observed": {
+        "direct_vs_alarm": {},
+        "alarm": {},
+        "direct": {}
+      }
+    },
+    {
+      "id": "preoutcome_design_sensitivity",
+      "status": "PASS",
+      "claim": "The fixed incident-study sample limitations were quantified before outcomes.",
+      "evidence": "research\\hiad_design_sensitivity.json",
+      "requirement": "24 events, >=20,000 simulations/effect and explicit pre-outcome timing.",
+      "observed": {
+        "schema_version": 1,
+        "generated_at": "2026-10-03T02:32:52.111058+00:00",
+        "analysis_timing": "before holdout response collection and expert rating",
+        "event_count": 24,
+        "simulations_per_effect": 20000,
+        "seed": 2601,
+        "alpha_two_sided": 0.05,
+        "data_generating_assumption": "independent normally distributed paired event differences with unit standard deviation; Wilcoxon signed-rank test using normal approximation",
+        "power_by_standardized_paired_effect": [
+          {
+            "standardized_paired_effect": 0.0,
+            "estimated_power": 0.04875,
+            "monte_carlo_se": 0.0015227185803686773
+          },
+          {
+            "standardized_paired_effect": 0.2,
+            "estimated_power": 0.1504,
+            "monte_carlo_se": 0.0025276455447708645
+          },
+          {
+            "standardized_paired_effect": 0.3,
+            "estimated_power": 0.27705,
+            "monte_carlo_se": 0.003164595531027622
+          },
+          {
+            "standardized_paired_effect": 0.4,
+            "estimated_power": 0.4411,
+            "monte_carlo_se": 0.003510917187858466
+          },
+          {
+            "standardized_paired_effect": 0.5,
+            "estimated_power": 0.62745,
+            "monte_carlo_se": 0.003418746096889911
+          },
+          {
+            "standardized_paired_effect": 0.6,
+            "estimated_power": 0.7768,
+            "monte_carlo_se": 0.002944331503075019
+          },
+          {
+            "standardized_paired_effect": 0.8,
+            "estimated_power": 0.9574,
+            "monte_carlo_se": 0.0014280273106632095
+          },
+          {
+            "standardized_paired_effect": 1.0,
+            "estimated_power": 0.9953,
+            "monte_carlo_se": 0.0004836274392546414
+          }
+        ],
+        "smallest_grid_effect_with_at_least_80_percent_power": 0.8,
+        "zero_unsafe_event_exact_two_sided_95_percent_upper_bound": 0.14247359772258134,
+        "zero_event_bound_unit": "event-level Bernoulli rate",
+        "interpretation_limits": [
+          "This is a design sensitivity analysis, not an observed effect estimate.",
+          "The 24-event holdout is fixed by the eligible public incident population and frozen split.",
+          "Normal paired differences are a transparent assumption; bounded and tied expert scores may yield different power.",
+          "Repeated generations and reviewer scores are averaged within event; they do not increase the inferential event count.",
+          "Even zero unsafe events cannot establish zero risk; the exact upper confidence bound must be reported."
+        ]
+      }
+    },
+    {
+      "id": "ijhe_format_gate",
+      "status": "PASS",
+      "claim": "The manuscript satisfies the explicit IJHE length/front-matter limits checked locally.",
+      "evidence": "manuscript\\ijhe_format_check.json",
+      "requirement": "All format checks true; this is not a scientific-readiness decision.",
+      "observed": {
+        "manuscript": "manuscript\\ijhe_manuscript_draft.tex",
+        "highlights": "manuscript\\Highlights.txt",
+        "counts": {
+          "abstract_words": 149,
+          "keywords": 6,
+          "highlight_bullets": 5,
+          "highlight_characters": [
+            75,
+            74,
+            69,
+            75,
+            75
+          ],
+          "approximate_manuscript_words_before_references": 2958,
+          "figures": 2,
+          "tables": 3
+        },
+        "checks": {
+          "abstract_at_most_150_words": true,
+          "keywords_at_most_6": true,
+          "highlights_count_3_to_5": true,
+          "each_highlight_at_most_85_characters": true,
+          "research_paper_at_most_8000_words_approximate": true,
+          "diagrams_at_most_12": true
+        },
+        "format_gate_passed": true,
+        "scientific_readiness_assessed": false
+      }
+    },
+    {
+      "id": "ijhe_latex_compilation",
+      "status": "PENDING",
+      "claim": "The exact submitted LaTeX source compiles successfully.",
+      "evidence": "manuscript\\ijhe_compile_status.json",
+      "requirement": "Compiler success with source hash and no unresolved errors.",
+      "observed": "missing; built-in compiler previously unavailable on Windows"
+    },
+    {
+      "id": "submission_metadata_and_declarations",
+      "status": "PENDING",
+      "claim": "Every author, affiliation, institutional email and declaration is confirmed.",
+      "evidence": "manuscript\\submission_metadata.json",
+      "requirement": "All author/CRediT/conflict/funding/AI-disclosure confirmations true.",
+      "observed": "missing"
+    },
+    {
+      "id": "software_doi",
+      "status": "PASS",
+      "claim": "The reproducible software release has a persistent DOI.",
+      "evidence": "CITATION.cff",
+      "requirement": "Repository citation metadata contains the released Zenodo DOI.",
+      "observed": "10.5281/zenodo.23084421"
+    }
+  ],
+  "decision_rule": "Only full_user_objective_ready=true permits goal completion. A bounded paper may report negative or limited physics honestly, but it does not satisfy the full validated-digital-twin objective."
+}

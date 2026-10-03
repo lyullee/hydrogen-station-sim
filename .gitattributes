@@ -18,3 +18,6 @@ scripts/package_hiad_expert_review.py text eol=lf
 scripts/analyze_hiad_expert_review.py text eol=lf
 scripts/freeze_hiad_study_protocol.py text eol=lf
 scripts/analyze_hiad_design_sensitivity.py text eol=lf
+scripts/audit_ijhe_readiness.py text eol=lf
+manuscript/ijhe_readiness_audit.json text eol=lf
+manuscript/IJHE_READINESS_AUDIT.md text eol=lf
