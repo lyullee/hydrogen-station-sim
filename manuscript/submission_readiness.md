@@ -14,7 +14,7 @@ The current official IJHE Guide for Authors was checked on 3 October 2026. A res
 | Gate | Status | Evidence / required action |
 |---|---|---|
 | Type-IV tank external validation | Complete for measured boundaries | 12 frozen validation fills; pressure 3.905 MPa, temperature 4.694 °C, SOC 3.812 %p mean RMSE |
-| Full station closed-loop validation | Failed | 0/8 development and 0/11 internal-comparison fills met all project screens; report as a negative result |
+| Full station closed-loop validation | Failed | 0/8 development, 0/11 internal-comparison and 0/8 prospectively frozen MC Default holdout fills met all project screens; external holdout mean RMSE 15.862 MPa, 13.230 °C and 18.082 SOC %p |
 | HyRAM+ production adapter | Verified within stated scope | Exact v6.1 source identity, 47 upstream tests/803 subtests, three production parity cases |
 | Outdoor free-jet display geometry | Complete within bounded scope | Three applicable public experimental families (4 vol% dilution length, distance-dependent heat flux, unconfined overpressure); exact HyRAM+ source and adapter parity; separate radial/directional browser mapping. This is not site-specific validation or a safety-distance claim |
 | HIAD casebook leakage review | Pending | Advisory pre-screen flags 16 HIGH, 6 MEDIUM and 2 LOW among 24 holdout vignettes; a qualified non-rating coordinator must inspect every case, rewrite/remove hindsight actions without adding facts, then approve and freeze the complete set |
@@ -22,7 +22,7 @@ The current official IJHE Guide for Authors was checked on 3 October 2026. A res
 | Blinded SAGA expert review | Pending and mandatory | Three independent qualified reviewers; lock ratings before unmasking |
 | SAGA ablation result | Pending | Alarm-only vs direct LLM vs standards-RAG, with unsafe advice, omissions, latency, failures and agreement |
 | HIAD design sensitivity | Complete before outcome collection | With 24 events, simulated Wilcoxon power is 77.7% at standardized paired effect 0.6 and 95.7% at 0.8; with zero unsafe events the exact two-sided 95% event-rate upper bound remains 14.2% |
-| New untouched full-loop set | Recommended for a broad control claim | Freeze the next protocol representation before collecting or obtaining new cases |
+| New untouched full-loop set | Required after redesign for a broad control claim | The prospectively frozen MC Default set failed 0/8 and is now consumed evaluation evidence; redesign without tuning to these outcomes, then freeze and acquire a different external set |
 | Author metadata | Pending | Names, affiliations, corresponding author, ORCID |
 | Declarations | Pending | CRediT, funding, conflicts and acknowledgements; working AI-use disclosure is included |
 | IJHE length and front matter | Conforming draft | 150-word abstract, six keywords, five Highlights under 85 characters; final word/figure count still required |
@@ -48,6 +48,9 @@ The current official IJHE Guide for Authors was checked on 3 October 2026. A res
 - `research/CONSEQUENCE_GEOMETRY_VALIDATION.md`: public experiment to HyRAM+
   to production adapter to browser-geometry traceability, with explicit site-
   specific and safety-distance exclusions.
+- `research/mc_default_external_holdout_protocol.json` and
+  `data/public_validation/results/closed_loop_external_holdout/`: prospectively
+  frozen protocol plus the retained 0/8 external result and case-level metrics.
 - `IJHE_READINESS_AUDIT.md` and `ijhe_readiness_audit.json`: machine-generated
   claim-to-evidence gates; goal completion remains prohibited while any full-
   objective gate is not PASS.
@@ -60,7 +63,7 @@ The current official IJHE Guide for Authors was checked on 3 October 2026. A res
 4. Build isolated reviewer packets and obtain independent blinded ratings from three qualified hydrogen/process-safety reviewers.
 5. Lock the rating database, unmask once, and run the committed analysis script.
 6. Add the SAGA effect sizes, bootstrap confidence intervals, unsafe-advice and omission rates, latency, failures and inter-rater agreement to the Results and Abstract.
-7. Decide whether the paper limits the process claim to the tank submodel or adds a new untouched full-loop dataset.
+7. Limit the current process claim to the measured-boundary tank submodel, or redesign the closed-loop protocol using development evidence and evaluate it once on a different, prospectively frozen external dataset. The MC Default outcomes may not be used for tuning.
 8. Confirm every author and declaration, regenerate all evidence from the release commit, archive the package with a DOI, and complete a final claim-to-evidence audit.
 
 ## Claim language that must remain

@@ -18,6 +18,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert gates["hyram_adapter_verification"]["status"] == "PASS"
     assert gates["preoutcome_design_sensitivity"]["status"] == "PASS"
     assert gates["full_loop_external_validation"]["status"] == "FAIL"
+    external = gates["full_loop_external_validation"]["observed"]
+    assert external["protocol_integrity"] is True
+    assert external["aggregate"]["case_count"] == 8
+    assert external["aggregate"]["screening_pass_count"] == 0
+    assert external["aggregate"]["screening_pass_fraction"] == 0.0
     assert gates["institutional_ethics_determination"]["status"] == "PENDING"
     assert gates["independent_expert_review_complete"]["status"] == "PENDING"
     assert report["bounded_ijhe_submission_ready"] is False

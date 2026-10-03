@@ -179,6 +179,18 @@ are project screens, not SAE conformance limits. Eleven comparison fills had
 already been inspected before the structural repair; their later results are
 therefore internal confirmation rather than an untouched holdout.
 
+An additional Powertech Labs MC Default bench-test archive was then used as a
+prospective external holdout. Before any selected workbook outcome was opened,
+the archive SHA-256, eight eligible workbook paths, model commit, fitted tank
+parameters, dispenser multiplier, exclusion rules and the three engineering
+screens were committed. The frozen controller accepts one constant APRR, whereas
+the publisher supplies a pressure--time schedule. We therefore mapped each
+schedule to its endpoint-equivalent average pressure ramp. This disclosed
+approximation tests transportability of the frozen implementation; it is not an
+implementation or certification of the proprietary MC Formula. No case-specific
+fit, post-freeze tuning, dynamic time warping or failed-case exclusion was
+permitted.
+
 \subsection{Consequence-model verification}
 HyRAM+ receives immutable release state and geometry from the twin. The
 production adapter reports (i) the directional centreline distance to 4 vol\%
@@ -279,12 +291,18 @@ Structural corrections improved the eleven internal comparison fills from mean
 RMSE values of 11.842 MPa, 10.292 $^{\circ}$C and 15.347 SOC percentage points to
 7.213 MPa, 9.179 $^{\circ}$C and 10.112 percentage points. Nevertheless, every
 comparison fill failed at least one project screen. The eight development fills
-also passed zero of eight screens (Table~\ref{tab:closed}).
+also passed zero of eight screens. The prospectively frozen MC Default holdout
+likewise passed zero of eight screens (Table~\ref{tab:closed}). Mean pressure,
+temperature and SOC RMSE were 15.862 MPa, 13.230 $^{\circ}$C and 18.082
+percentage points, respectively. Five runs terminated on the model's temperature
+safety logic; final SOC error was negative in all eight cases and ranged from
+$-8.42$ to $-50.79$ percentage points.
 
 \begin{table}[htbp]
 \centering
 \caption{Closed-loop performance after structural correction. The comparison
-set is internal confirmation because it had been inspected previously.}
+set is internal confirmation because it had been inspected previously; the MC
+Default set was prospectively frozen before outcome access.}
 \label{tab:closed}
 \small
 \begin{tabular}{lrrrr}
@@ -294,15 +312,19 @@ Set & Pass/all & Pressure RMSE & Temperature RMSE & SOC RMSE \\
 \midrule
 Development & 0/8 & 13.695 & 21.634 & 17.668 \\
 Internal comparison & 0/11 & 7.213 & 9.179 & 10.112 \\
+Prospective MC Default holdout & 0/8 & 15.862 & 13.230 & 18.082 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 The measured-boundary tank result therefore cannot be used as validation of the
-controller, cascade schedule, precooler or dispenser boundary. Remaining error is
-concentrated in delivery scheduling and station boundary representation, for which
-the public files do not expose the complete proprietary lookup table or every
-hardware command transition.
+controller, cascade schedule, precooler or dispenser boundary. The independent
+holdout demonstrates that the failure is not confined to the previously inspected
+comparison set. Systematic underdelivery and false temperature stops identify the
+constant-ramp protocol representation, source hydraulics and precooling boundary
+as redesign targets. The bench files observe vehicle and source pressures, flow,
+inlet temperature and SOC, but do not expose every internal three-bank valve
+command; they therefore cannot by themselves validate all cascade dispatch states.
 
 \subsection{HyRAM+ source, tests and adapter parity}
 The installed and upstream v6.1 Python sources matched over 38 files with aggregate
@@ -359,12 +381,15 @@ intervals.
 
 The complete-loop result is informative precisely because it is negative. A
 visually plausible pressure ramp and a stable numerical integration are
-insufficient evidence for a station controller. The retained failures identify
-the missing information needed for the next experiment: dispenser valve command
-and position, upstream and downstream pressure at the PCV, delivered-gas
-temperature, bank-selection state and high-rate vehicle inlet mass flow. A new
-external set must be collected after freezing the next protocol representation;
-the eleven previously inspected cases cannot regain holdout status.
+insufficient evidence for a station controller. The prospective MC Default result
+also shows that freezing the analysis alone cannot rescue a structurally inadequate
+protocol representation. The retained failures identify the missing information
+needed for the next experiment: dispenser valve command and position, upstream
+and downstream pressure at the PCV, delivered-gas temperature, bank-selection
+state and high-rate vehicle inlet mass flow. The eight MC Default and eleven
+previously inspected comparison cases are now consumed evaluation evidence and
+cannot be used as a new holdout. Model redesign must use development evidence or
+physical invariants, followed by a separately acquired and pre-frozen external set.
 
 \subsection{Consequence calculations and risk communication}
 The HyRAM verification separates source identity, upstream physics tests and local
@@ -409,7 +434,8 @@ for component physics, full-loop behavior, consequence-software translation and
 LLM decision support. The measured-boundary Type-IV tank model achieved validation
 mean RMSE values of 3.905 MPa, 4.694 $^{\circ}$C and 3.812 SOC percentage points.
 The complete loop did not meet the declared screens, even after structural defects
-were corrected. The HyRAM+ adapter reproduced the installed v6.1 public API while
+were corrected, and a prospectively frozen eight-case external holdout passed zero
+screens. The HyRAM+ adapter reproduced the installed v6.1 public API while
 the identical upstream source passed its available validation tests; a frozen
 browser contract retained the experimentally corresponding directional and radial
 geometry semantics. The incident

@@ -87,11 +87,40 @@ def audit(root: Path) -> dict[str, object]:
 
     external_loop_path = root / "data/public_validation/results/closed_loop_external_holdout/validation.json"
     external_loop = _json(external_loop_path)
+    external_protocol_path = root / "research/mc_default_external_holdout_protocol.json"
+    external_protocol = _json(external_protocol_path)
     aggregate = (external_loop or {}).get("aggregate") or {}
+    protocol_source = (external_protocol or {}).get("source") or {}
+    frozen_model = (external_protocol or {}).get("frozen_model") or {}
+    protocol_screens = (external_protocol or {}).get("engineering_screens") or {}
+    result_screens = (external_loop or {}).get("screening_limits") or {}
+    selected_cases = (external_protocol or {}).get("selected_workbooks") or []
+    protocol_integrity = bool(
+        (external_protocol or {}).get("status")
+        == "frozen_before_workbook_outcome_extraction"
+        and (external_protocol or {}).get("outcomes_inspected_before_freeze") is False
+        and len(selected_cases) == 8
+        and (external_loop or {}).get("archive_sha256")
+        == protocol_source.get("archive_sha256")
+        and (external_loop or {}).get("frozen_model_commit")
+        == frozen_model.get("git_commit")
+        and (external_loop or {}).get("post_freeze_parameter_tuning") is False
+        and (external_loop or {}).get("schedule_mapping")
+        == "publisher pressure-schedule endpoint-equivalent constant APRR"
+        and result_screens.get("pressure_rmse_mpa")
+        == protocol_screens.get("pressure_rmse_mpa_max")
+        and result_screens.get("temperature_rmse_c")
+        == protocol_screens.get("temperature_rmse_c_max")
+        and result_screens.get("soc_final_abs_error_percentage_points")
+        == protocol_screens.get("soc_final_abs_error_percentage_points_max")
+    )
     external_loop_pass = (
-        (external_loop or {}).get("protocol_frozen_before_data_access") is True
-        and aggregate.get("case_count", 0) >= 8
-        and aggregate.get("screening_pass_fraction", 0.0) >= 0.80
+        protocol_integrity
+        and (external_loop or {}).get("protocol_frozen_before_data_access") is True
+        and aggregate.get("case_count", 0)
+        >= protocol_screens.get("minimum_evaluable_cases", 8)
+        and aggregate.get("screening_pass_fraction", 0.0)
+        >= protocol_screens.get("minimum_joint_screen_pass_fraction", 0.80)
         and (external_loop or {}).get("source_worktree_dirty") is False
     )
     gates.append(_gate(
@@ -99,8 +128,11 @@ def audit(root: Path) -> dict[str, object]:
         "PASS" if external_loop_pass else "FAIL",
         "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
         str(external_loop_path.relative_to(root)),
-        "Prospectively frozen, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
-        aggregate if external_loop else "missing; current internal comparisons pass 0/8 and 0/11",
+        "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
+        {
+            "protocol_integrity": protocol_integrity,
+            "aggregate": aggregate,
+        } if external_loop else "missing; current internal comparisons pass 0/8 and 0/11",
     ))
 
     manuscript_path = root / "manuscript/ijhe_manuscript_draft.tex"

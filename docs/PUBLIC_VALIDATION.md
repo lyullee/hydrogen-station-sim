@@ -18,6 +18,7 @@ paper result from silently becoming part of the source tree.
 | Evidence | Role | Current normalized scope | Use in the study |
 |---|---|---:|---|
 | Powertech Labs SAE J2601 Tables Method data | External process-physics validation | 36 fills; 2.0, 4.7, 5.9 and 9.8 kg nominal tanks | Pressure, tank-gas temperature and SOC traces on the experimental clock |
+| Powertech Labs SAE J2601 MC Default bench data | Prospectively frozen external closed-loop holdout | 8 fills; six 4.7 kg cases plus 2.0 and 9.8 kg tanks | Frozen controller, precooling and tank-response transportability |
 | HIAD 2.2, European Commission JRC | Independent real-incident decision cases | 34 HRS events; 33 with at least one response/lesson/corrective field | Development/holdout casebook and blinded expert review |
 | USN/FFI open-channel dispersion data | Consequence/detector benchmark | 22 releases, 29 concentration sensors, 0.029–1.250 g/s | Spatial/temporal hydrogen-concentration model validation after geometry mapping |
 
@@ -36,7 +37,7 @@ Install the research and test dependencies, fetch the sources, and prepare them:
 $env:PYTHONPATH = "src"
 .venv\Scripts\python.exe -m pip install -e ".[research,test]"
 .venv\Scripts\python.exe scripts\fetch_public_validation_data.py `
-  h2protocol_j2601_tables hiad_2_2 hydrogen_dispersion_channel
+  h2protocol_j2601_tables h2protocol_mc_default hiad_2_2 hydrogen_dispersion_channel
 .venv\Scripts\python.exe scripts\prepare_public_validation_data.py
 ```
 
@@ -51,6 +52,12 @@ To update only one already downloaded data product:
 
 ```powershell
 .venv\Scripts\python.exe scripts\prepare_public_validation_data.py --datasets dispersion
+```
+
+To normalize only the MC Default holdout:
+
+```powershell
+.venv\Scripts\python.exe scripts\prepare_public_validation_data.py --datasets mc_default
 ```
 
 ## J2601 baseline validation
@@ -139,6 +146,37 @@ also passed 0/8 screens, with mean RMSE of 13.695 MPa, 21.634 °C and 17.668
 percentage points. Do not tune further against the 11 comparison cases. Report
 the result as a negative closed-loop validation finding and keep the stronger
 measured-boundary tank validation claim separate.
+
+### Prospectively frozen MC Default external holdout
+
+The separate MC Default archive was acquired from the same publisher only after
+the exact archive SHA-256, eight eligible workbook paths, frozen model commit,
+global tank and dispenser parameters, exclusion rules, schedule mapping and
+engineering screens were committed in
+`research/mc_default_external_holdout_protocol.json`. The selected workbook
+outcomes were unopened at protocol freeze. Reproduce the evaluation with:
+
+```powershell
+.venv\Scripts\python.exe scripts\fetch_public_validation_data.py h2protocol_mc_default
+.venv\Scripts\python.exe scripts\prepare_public_validation_data.py --datasets mc_default
+.venv\Scripts\python.exe scripts\run_mc_default_holdout.py --jobs 4
+```
+
+The frozen implementation accepts one constant APRR, so each published MC
+pressure--time schedule is represented by its endpoint-equivalent average ramp.
+This is an explicit model approximation, not an implementation or certification
+of the proprietary MC Formula. No case-specific fitting, post-freeze parameter
+tuning, dynamic time warping or failed-case exclusion was allowed.
+
+The prospective result was **0/8 joint engineering-screen passes**. Aggregate
+mean RMSE was 15.862 MPa for pressure, 13.230 °C for tank temperature and 18.082
+percentage points for SOC. Five cases stopped on the model's temperature safety
+logic, and all eight final SOC errors were negative. The machine-readable result,
+case table and report are committed under
+`data/public_validation/results/closed_loop_external_holdout/`. These eight cases
+are now consumed external evaluation evidence and must not be used to tune the
+next model. The bench data do not expose every internal three-bank valve command,
+so even a passing result would not alone validate every cascade dispatch state.
 
 The machine-readable clean-run evidence is committed as
 `research/closed_loop_development_structural_fix.json`,
