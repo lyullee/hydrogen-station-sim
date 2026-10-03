@@ -14,6 +14,7 @@ Original project software and associated documentation are available under the [
 - [Public-data validation](docs/PUBLIC_VALIDATION.md): checksum-verified SAE J2601 experiments, HIAD incidents, dispersion data, and the publication-readiness gate.
 - [HyRAM adapter verification](docs/HYRAM_ADAPTER_VERIFICATION.md): exact v6.1 source identity, upstream experimental validation-suite execution, and field-by-field production-adapter parity.
 - [Consequence geometry validation](research/CONSEQUENCE_GEOMETRY_VALIDATION.md): bounded public-experiment-to-browser traceability for directional plume and sampled radial effects.
+- [PRESLHY blowdown validation](research/PRESLHY_BLOWDOWN_EXTERNAL_VALIDATION.md): prospectively specified 22-case external result, including retained negative cases and claim boundary.
 - [HIAD expert-review protocol](docs/EXPERT_REVIEW_PROTOCOL.md): frozen casebook, masking, reviewer rubric, endpoints, and analysis plan.
 - [IJHE working manuscript](manuscript/ijhe_manuscript_draft.tex): claim-bounded English draft, journal-format checks, figures, graphical abstract and the remaining submission gates.
 

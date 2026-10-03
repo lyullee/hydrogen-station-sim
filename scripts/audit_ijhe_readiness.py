@@ -241,9 +241,7 @@ def audit(root: Path) -> dict[str, object]:
         geometry or "missing; FFI open-channel data are not applicable to the current outdoor free jet",
     ))
 
-    preslhy_path = (
-        root / "data/public_validation/results/preslhy_blowdown/validation.json"
-    )
+    preslhy_path = root / "research/preslhy_blowdown_external_validation.json"
     preslhy = _json(preslhy_path)
     preslhy_protocol_path = root / "research/preslhy_blowdown_validation_protocol.json"
     preslhy_protocol = _json(preslhy_protocol_path)

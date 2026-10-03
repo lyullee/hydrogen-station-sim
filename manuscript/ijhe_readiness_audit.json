@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T05:32:56.755791+00:00",
+  "generated_at": "2026-10-03T06:50:41.449228+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
     "PASS": 10,
-    "FAIL": 1,
-    "PENDING": 8
+    "FAIL": 2,
+    "PENDING": 7
   },
   "blocking_bounded_submission_gates": [
     "preslhy_blowdown_external_validation",
@@ -435,11 +435,40 @@
     },
     {
       "id": "preslhy_blowdown_external_validation",
-      "status": "PENDING",
+      "status": "FAIL",
       "claim": "The source-depletion and direct-aperture release model meets its prospectively frozen screens on public PRESLHY ambient blowdown experiments.",
-      "evidence": "data\\public_validation\\results\\preslhy_blowdown\\validation.json; research\\preslhy_blowdown_validation_protocol.json",
+      "evidence": "research\\preslhy_blowdown_external_validation.json; research\\preslhy_blowdown_validation_protocol.json",
       "requirement": ">=12 cases across >=3 nozzle and pressure groups, >=70% joint primary pass fraction, frozen implementation and retained failures.",
-      "observed": "missing; acquisition/validation has not completed"
+      "observed": {
+        "eligibility": {
+          "eligible_cases": 22,
+          "excluded_workbooks": 0,
+          "diameter_groups": [
+            0.5,
+            1.0,
+            2.0,
+            4.0
+          ],
+          "pressure_groups": [
+            "high",
+            "low",
+            "medium"
+          ],
+          "minimum_requirements_met": true
+        },
+        "aggregate": {
+          "joint_primary_pass_fraction": 0.5,
+          "bootstrap_95_percent_ci": [
+            0.3181818181818182,
+            0.7272727272727273
+          ],
+          "bootstrap_replicates": 10000,
+          "bootstrap_seed": 20261003,
+          "claim_threshold": 0.7,
+          "ambient_direct_aperture_blowdown_claim_supported": false
+        },
+        "claim_boundary": "This protocol evaluates a rigid source vessel discharging through a nominal circular aperture. It does not validate a vehicle-fueling loop, cryogenic two-phase release, a site vent stack, pipe backpressure, ignition, dispersion, or emergency separation distance."
+      }
     },
     {
       "id": "hiad_protocol_integrity",
@@ -581,7 +610,7 @@
         "manuscript": "manuscript\\ijhe_manuscript_draft.tex",
         "highlights": "manuscript\\Highlights.txt",
         "counts": {
-          "abstract_words": 150,
+          "abstract_words": 131,
           "keywords": 6,
           "highlight_bullets": 5,
           "highlight_characters": [
@@ -591,11 +620,11 @@
             75,
             75
           ],
-          "approximate_manuscript_words_before_references": 3654,
+          "approximate_manuscript_words_before_references": 4190,
           "figures": 2,
           "tables": 3,
-          "citation_keys": 13,
-          "bibliography_entries": 13,
+          "citation_keys": 14,
+          "bibliography_entries": 14,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -623,12 +652,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-03T04:42:13.998347+00:00",
+        "attempted_at": "2026-10-03T06:49:45.563623+00:00",
         "attempts_this_run": 1,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "54b9f43f49834ff5aaa4fbb6112e9bb60d25afbc1b6299761a8a978162249fe6",
+        "source_sha256": "d50d42bc1f6361afb1eca9cf8f67e62ec7c5750246f0f3e7334362a10784523d",
         "platform": "Windows-11-10.0.26200-SP0",
         "diagnostic": "Unable to find standard directories for platform",
         "interpretation": "Compiler environment failure; LaTeX source compilation remains unverified."

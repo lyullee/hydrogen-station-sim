@@ -402,6 +402,17 @@ It does not validate the complete fueling loop, cryogenic two-phase release,
 site vent-stack hydraulics, pipe backpressure, ignition, dispersion, emergency
 separation distance or regulatory safety distance.
 
+The completed frozen evaluation retained all 22 eligible cases and excluded
+none. Eleven cases passed both primary screens: 50.0% (case-bootstrap 95% CI
+31.8–72.7%), below the predeclared 70% criterion. Six high-pressure cases had
+thermophysical-domain failures and were counted as failures. The direct-aperture
+source-depletion claim is therefore **not supported** for this model revision.
+The case-level and stratified evidence is archived in
+[`PRESLHY_BLOWDOWN_EXTERNAL_VALIDATION.md`](../research/PRESLHY_BLOWDOWN_EXTERNAL_VALIDATION.md).
+These cases are now consumed development evidence; any revised heat-transfer,
+property-domain or valve/line model requires a separately frozen external
+holdout.
+
 ## Publication-readiness gate
 
 Treat an IJHE-level submission as ready only when all of the following evidence

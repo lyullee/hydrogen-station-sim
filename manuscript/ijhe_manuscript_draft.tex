@@ -37,18 +37,16 @@ hydrogen refuelling station digital twin}
 \begin{abstract}
 This study separates the evidence required for process physics, consequence
 software and language-model decision support in a virtual hydrogen refuelling
-station. SAE J2601 experiments supplied traces.
-Using measured mass flow and inlet temperature as boundaries, a two-parameter
-Type-IV tank model was calibrated on 23 fills and evaluated on 12 frozen fills.
-Validation mean root-mean-square errors were 3.841 MPa for pressure, 4.833
-$^{\circ}$C for gas temperature and 3.850 percentage points for state of charge.
-These results did not transfer to the complete controller--cascade--precooler loop:
-only one of eight development and two of eleven internal-comparison fills met all
-declared screens. The
-production consequence adapter matched independent HyRAM+ 6.1 API calculations in
-three cases, while identical upstream source passed 47 tests and 803 subtests. A
-blinded HIAD incident review protocol is specified, but external ratings
-remain pending. The work supports a claim-bounded research prototype, not a
+station. A measured-boundary Type-IV model was calibrated on 23 public fills and
+evaluated on 12 frozen fills, yielding mean pressure, temperature and state-of-charge
+root-mean-square errors of 3.841 MPa, 4.833 $^{\circ}$C and 3.850 percentage
+points. These results did not transfer to the full controller loop. A prospectively
+specified 22-case PRESLHY ambient blowdown evaluation also failed: 50.0\% passed
+both primary screens versus a 70\% criterion, with six thermophysical-domain
+failures retained. The production consequence adapter matched independent HyRAM+
+6.1 API calculations, while the identical source passed 47 tests and 803 subtests.
+A blinded HIAD decision-support protocol is specified, but expert ratings remain
+pending. The evidence supports a claim-bounded research prototype, not a
 field-qualified controller or autonomous emergency system.
 \end{abstract}
 
@@ -79,18 +77,20 @@ Passing unit tests cannot validate thermodynamics; matching a public consequence
 API cannot validate site geometry; and fluent text cannot demonstrate safe or
 useful advice.
 
-This work asks four separate questions:
+This work asks five separate questions:
 \begin{enumerate}
   \item How accurately does the vehicle-tank submodel reproduce public fast-fill
   experiments when measured boundary conditions are imposed?
   \item Does the complete controller--cascade--precooler--vehicle loop meet
   predeclared engineering error screens?
+  \item Does the source-depletion and direct-aperture model meet prospectively
+  specified screens on independent ambient hydrogen blowdown experiments?
   \item Does the production adapter preserve the inputs and outputs of the exact
   installed HyRAM+ package?
   \item Can process- and evidence-linked SAGA responses improve incident decision
   support relative to deterministic alarms without increasing unsafe advice?
 \end{enumerate}
-The first three questions have reproducible results. The fourth has a frozen
+The first four questions have reproducible results. The fifth has a frozen
 protocol but no external expert result at the time of this draft.
 
 \section{Materials and methods}
@@ -203,6 +203,32 @@ approximation tests transportability of the frozen implementation; it is not an
 implementation or certification of the proprietary MC Formula. No case-specific
 fit, post-freeze tuning, dynamic time warping or failed-case exclusion was
 permitted.
+
+\subsection{Prospective ambient blowdown validation}
+The source-depletion and direct-aperture release model was independently evaluated
+with the PRESLHY E3.1 DisCha dataset \cite{preslhy2023}. Before any numerical Excel
+outcome was opened, the protocol and implementation hashes, inclusion rules,
+pressure interpretation, time alignment, endpoints, thresholds, bootstrap seed
+and negative-result policy were committed. The evaluation included all eligible
+300 K workbooks from the 0.5, 1, 2 and 4 mm packages. The facility has a 2.815 L
+stainless-steel vessel; initial absolute pressure and internal gas temperature
+were taken from measured channels. Because the selected workbooks contain no
+ambient-pressure channel, 101.325 kPa was substituted and flagged. A terminal
+near-zero vessel-pressure signal was interpreted as gauge pressure. Published
+synchronized time, whose zero is the first significant nozzle-line pressure rise,
+was retained without fitted shift or time warping.
+
+The frozen model used a rigid adiabatic 2.815 L control volume, instantaneous full
+opening, nominal circular aperture and pre-existing discharge coefficient 0.8.
+It did not model vessel-wall heat transfer, valve travel, release-line inventory,
+pipe backpressure or two-phase flow. Evaluation began at 0.1 s and ended at the
+first measured pressure at or below 1.05 times ambient or the record end. The two
+case screens were pressure NRMSE no greater than 10\% of initial absolute pressure
+and time-to-50\%-initial-gauge-pressure relative error no greater than 20\%.
+At least 12 cases spanning three nozzle and three pressure groups were required;
+the aggregate claim required at least 70\% to pass both screens. The case was the
+unit for 10,000 bootstrap resamples with seed 20261003. Eligible integration or
+property-domain failures were retained as failed cases.
 
 \subsection{Consequence-model verification}
 HyRAM+ receives immutable release state and geometry from the twin. The
@@ -356,6 +382,23 @@ diminishing improvement and remaining case-level failures indicate that cooling
 duty alone does not explain the closed-loop error. Neither sensitivity was applied
 to the consumed external holdout.
 
+\subsection{Negative ambient blowdown validation result}
+All 22 PRESLHY workbooks were eligible, spanning four nozzle diameters and low,
+medium and high initial-pressure groups. Eleven cases passed both primary screens,
+giving a joint pass fraction of 50.0\% (case-bootstrap 95\% CI 31.8--72.7\%), below
+the predeclared 70\% criterion. The direct-aperture source-depletion claim is
+therefore not supported for this model revision.
+
+Six eligible cases, all in the high-pressure group and initiated at approximately
+150 or 200 bar, encountered a retained thermophysical-domain error when the
+calculated restriction choking state left the single-phase hydrogen table. They
+were counted as failures. Among the 16 numerically completed cases, 11 passed both
+screens (68.8\%); this post hoc descriptive fraction does not replace the primary
+decision. Joint pass counts were 2/9 at high pressure, 6/7 at medium pressure and
+3/6 at low pressure. By aperture they were 2/4, 0/4, 4/7 and 5/7 for 0.5, 1, 2
+and 4 mm, respectively. These strata indicate both a runtime-domain limitation
+and model-form error rather than one isolated failed workbook.
+
 \subsection{HyRAM+ source, tests and adapter parity}
 The installed and upstream v6.1 Python sources matched over 38 files with aggregate
 SHA-256 \texttt{d5865e1ae7b5c77b985e06b45d7a5607543703c1834fc50f7c5d96f32a0c22de}.
@@ -421,6 +464,18 @@ previously inspected comparison cases are now consumed evaluation evidence and
 cannot be used as a new holdout. Model redesign must use development evidence or
 physical invariants, followed by a separately acquired and pre-frozen external set.
 
+The negative PRESLHY result places an additional boundary on the release path.
+The published DisCha vessel weighs about 28 kg, whereas the frozen validation
+model deliberately imposed an adiabatic gas control volume with no wall heat
+transfer. Deep calculated cooling ultimately left the available restriction-state
+domain in six high-pressure cases, and several lower-pressure cases completed but
+missed the half-time or pressure screen. A revised model should represent the
+documented vessel thermal mass and physically justified gas--wall transfer, extend
+the thermophysical domain only where single-phase assumptions remain valid, and
+test valve/line dynamics as a separate effect. The 22 cases now constitute consumed
+development evidence. Any improved version requires a new hash-locked external
+holdout rather than rerating these cases as independent validation.
+
 \subsection{Consequence calculations and risk communication}
 The HyRAM verification separates source identity, upstream physics tests and local
 adapter parity. The traceability chain covers three geometrically applicable public
@@ -456,7 +511,8 @@ outputs are conditional consequences, not certification; buildings, congestion,
 terrain and site-specific wind are not resolved, and no site field campaign was
 performed. The HIAD narratives are
 retrospective and may contain incomplete or heterogeneous reporting. Finally, the
-SAGA study has no locked expert ratings yet.
+frozen direct-aperture model failed its PRESLHY decision rule, and the SAGA study
+has no locked expert ratings yet.
 
 \section{Conclusions}
 A hydrogen-station safety digital twin was evaluated with separate evidence gates
@@ -466,7 +522,10 @@ mean RMSE values of 3.841 MPa, 4.833 $^{\circ}$C and 3.850 SOC percentage points
 The complete loop did not meet the declared screens, even after structural defects
 and preprocessing errors were corrected; only 1/8 development and 2/11 internal
 comparison fills passed, and a prospectively frozen earlier eight-case external
-holdout passed zero screens. The HyRAM+ adapter reproduced the installed v6.1 public API while
+holdout passed zero screens. The frozen ambient blowdown model also failed its
+prospective external test: 11/22 cases passed both screens and six eligible
+high-pressure cases produced retained thermophysical-domain failures. The HyRAM+
+adapter reproduced the installed v6.1 public API while
 the identical upstream source passed its available validation tests; a frozen
 browser contract retained the experimentally corresponding directional and radial
 geometry semantics. The incident
@@ -542,6 +601,12 @@ SAND2024-14886 (2024), \url{https://www.osti.gov/biblio/2480221}.
 Sandia National Laboratories, \textit{HyRAM+ Technical Reference Manual},
 SAND2025-04942 (2025),
 \href{https://doi.org/10.2172/2563814}{doi:10.2172/2563814}.
+
+\bibitem{preslhy2023}
+T. Jordan, A. Friedrich, A. Veser, N. Kotchourko, \textit{PRESLHY Experiment
+series E3.1 (Cryogenic Hydrogen Blow-down/Discharge) results--part A high
+pressure}, Karlsruhe Institute of Technology (2023),
+\href{https://doi.org/10.35097/1187}{doi:10.35097/1187}.
 
 \bibitem{han2013}
 S.H. Han, D. Chang, J.S. Kim, Release characteristics of highly pressurized
