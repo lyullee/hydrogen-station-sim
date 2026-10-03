@@ -216,6 +216,27 @@ def test_reference_scenario_rejects_nonpositive_tank_fit_multiplier():
         )
 
 
+def test_reference_scenario_applies_one_global_precooler_duty_multiplier():
+    built = build_reference_scenario(
+        ReferenceScenario(precooler_duty_multiplier=3.0),
+        UnavailableHyRAMBackend(),
+    )
+    first = built.station.partial_station.fit
+    second = built.station.secondary_partial_station.fit
+    assert first.precooler_ua_multiplier == pytest.approx(3.0)
+    assert first.chiller_ua_multiplier == pytest.approx(3.0)
+    assert first.precooler_capacity_multiplier == pytest.approx(1.0)
+    assert second == first
+
+
+def test_reference_scenario_rejects_nonpositive_precooler_duty_multiplier():
+    with pytest.raises(ValueError, match="fit multipliers"):
+        build_reference_scenario(
+            ReferenceScenario(precooler_duty_multiplier=0.0),
+            UnavailableHyRAMBackend(),
+        )
+
+
 def test_dispersion_reader_uses_declared_steady_interval_and_clips_sensor_noise(tmp_path):
     (tmp_path / "ReadMe.txt").write_text(
         "23_FFI_P101_T00001 - test-01-0\n", encoding="utf-8"

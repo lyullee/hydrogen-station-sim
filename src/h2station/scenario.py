@@ -52,6 +52,7 @@ class ReferenceScenario:
     vehicle_effective_volume_multiplier: float = 1.0
     vehicle_gas_liner_ua_multiplier: float = 1.0
     dispenser_flow_area_multiplier: float = 1.0
+    precooler_duty_multiplier: float = 1.0
     initial_vehicle_2_pressure_pa: float = 5.0e6
     initial_vehicle_2_temperature_k: float = 298.15
     vehicle_2_internal_volume_m3: float = 0.122
@@ -114,6 +115,7 @@ def build_reference_scenario(
         config.vehicle_effective_volume_multiplier,
         config.vehicle_gas_liner_ua_multiplier,
         config.dispenser_flow_area_multiplier,
+        config.precooler_duty_multiplier,
         config.maximum_precooler_temperature_deviation_k,
     ) <= 0.0:
         raise ValueError("fit multipliers and precooler tolerance must be positive")
@@ -126,6 +128,8 @@ def build_reference_scenario(
     dispenser_fit = DispenserFitParameters(
         pcv_area_multiplier=config.dispenser_flow_area_multiplier,
         nozzle_area_multiplier=config.dispenser_flow_area_multiplier,
+        precooler_ua_multiplier=config.precooler_duty_multiplier,
+        chiller_ua_multiplier=config.precooler_duty_multiplier,
     )
     controller = SampledFuelingController(
         FuelingSchedule(

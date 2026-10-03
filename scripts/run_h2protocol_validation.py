@@ -80,6 +80,7 @@ def run_case(
     trace_rows: list[dict[str, str]],
     tank_fit: dict[str, float] | None = None,
     dispenser_flow_area_multiplier: float = 1.0,
+    precooler_duty_multiplier: float = 1.0,
 ) -> dict:
     case_id = summary["case_id"]
     exp_time = np.asarray([_float(row, "time_s") for row in trace_rows])
@@ -116,6 +117,7 @@ def run_case(
         vehicle_effective_volume_multiplier=float(tank_fit["effective_volume_multiplier"]),
         vehicle_gas_liner_ua_multiplier=float(tank_fit["gas_liner_ua_multiplier"]),
         dispenser_flow_area_multiplier=dispenser_flow_area_multiplier,
+        precooler_duty_multiplier=precooler_duty_multiplier,
         target_vehicle_pressure_pa=model_target_pressure_mpa * 1.0e6,
         average_pressure_ramp_rate_pa_s=scheduled_aprr * 1.0e6 / 60.0,
         delivery_temperature_k=float(np.median(inlet_temperature) + 273.15),
@@ -173,6 +175,7 @@ def run_case(
         "effective_volume_multiplier": float(tank_fit["effective_volume_multiplier"]),
         "gas_liner_ua_multiplier": float(tank_fit["gas_liner_ua_multiplier"]),
         "dispenser_flow_area_multiplier": dispenser_flow_area_multiplier,
+        "precooler_duty_multiplier": precooler_duty_multiplier,
         "chamber_temperature_c": _float(summary, "chamber_temperature_c"),
         "scheduled_aprr_mpa_min": scheduled_aprr,
         "experimental_duration_s": float(exp_time[-1]),
@@ -206,9 +209,14 @@ def _run_case_file(
     trace_path: Path,
     tank_fit: dict[str, float] | None,
     dispenser_flow_area_multiplier: float,
+    precooler_duty_multiplier: float = 1.0,
 ) -> dict:
     return run_case(
-        summary, _read_csv(trace_path), tank_fit, dispenser_flow_area_multiplier
+        summary,
+        _read_csv(trace_path),
+        tank_fit,
+        dispenser_flow_area_multiplier,
+        precooler_duty_multiplier,
     )
 
 
@@ -258,8 +266,10 @@ def _write_csv(path: Path, rows: list[dict]) -> None:
 
 def _write_markdown(path: Path, report: dict) -> None:
     aggregate = report["aggregate"]
-    calibrated = report["tank_fit"] is not None or (
-        report["dispenser_flow_area_multiplier"] != 1.0
+    calibrated = (
+        report["tank_fit"] is not None
+        or report["dispenser_flow_area_multiplier"] != 1.0
+        or report["precooler_duty_multiplier"] != 1.0
     )
     title = (
         "SAE J2601 public-data closed-loop comparison"
@@ -290,6 +300,8 @@ def _write_markdown(path: Path, report: dict) -> None:
         f"- Tank fit: `{json.dumps(report['tank_fit'], sort_keys=True)}`",
         f"- Dispenser flow-area multiplier: `{report['dispenser_flow_area_multiplier']}`",
         f"- Flow calibration source: `{report['flow_calibration_source'] or 'none'}`",
+        f"- Precooler duty multiplier: `{report['precooler_duty_multiplier']}`",
+        f"- Thermal calibration source: `{report['thermal_calibration_source'] or 'none'}`",
         f"- Selected laboratory tests: `{report['selected_lab_test_numbers'] or 'all 36'}`",
         "",
         "## Aggregate agreement",
@@ -381,6 +393,11 @@ def main() -> int:
         "--flow-calibration-json", type=Path,
         help="Load the frozen selected flow-area multiplier from calibration.json",
     )
+    parser.add_argument("--precooler-duty-multiplier", type=float, default=1.0)
+    parser.add_argument(
+        "--thermal-calibration-json", type=Path,
+        help="Load the selected global precooler-duty multiplier from calibration.json",
+    )
     parser.add_argument(
         "--lab-test-numbers",
         help="Optional comma-separated frozen subset, for example 3,9,12",
@@ -399,6 +416,21 @@ def main() -> int:
         flow_calibration_source = str(args.flow_calibration_json)
     if args.dispenser_flow_area_multiplier <= 0.0:
         raise SystemExit("--dispenser-flow-area-multiplier must be positive")
+    thermal_calibration_source = None
+    if args.thermal_calibration_json is not None:
+        if args.precooler_duty_multiplier != 1.0:
+            raise SystemExit(
+                "Do not combine --thermal-calibration-json with an explicit thermal multiplier"
+            )
+        thermal_report = json.loads(
+            args.thermal_calibration_json.read_text(encoding="utf-8")
+        )
+        args.precooler_duty_multiplier = float(
+            thermal_report["selected_precooler_duty_multiplier"]
+        )
+        thermal_calibration_source = str(args.thermal_calibration_json)
+    if args.precooler_duty_multiplier <= 0.0:
+        raise SystemExit("--precooler-duty-multiplier must be positive")
     tank_fit = None
     tank_fit_source = None
     if args.tank_validation_json is not None:
@@ -440,6 +472,7 @@ def main() -> int:
                 args.processed / "h2protocol_traces" / f"{summary['case_id']}.csv",
                 tank_fit,
                 args.dispenser_flow_area_multiplier,
+                args.precooler_duty_multiplier,
             )
             rows.append(result)
             print(f"validated {result['case_id']}", flush=True)
@@ -452,6 +485,7 @@ def main() -> int:
                     args.processed / "h2protocol_traces" / f"{summary['case_id']}.csv",
                     tank_fit,
                     args.dispenser_flow_area_multiplier,
+                    args.precooler_duty_multiplier,
                 ): summary["case_id"]
                 for summary in ordered_summaries
             }
@@ -471,6 +505,8 @@ def main() -> int:
         "tank_fit": tank_fit,
         "dispenser_flow_area_multiplier": args.dispenser_flow_area_multiplier,
         "flow_calibration_source": flow_calibration_source,
+        "precooler_duty_multiplier": args.precooler_duty_multiplier,
+        "thermal_calibration_source": thermal_calibration_source,
         "selected_lab_test_numbers": (
             sorted(selected_lab_tests) if selected_lab_tests is not None else None
         ),

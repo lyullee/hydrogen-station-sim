@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-03",
+  "status": "planned_before_candidate_evaluation",
+  "purpose": "Select one global effective precooler-duty multiplier using only the previously declared Tables Method development cases.",
+  "frozen_model_commit": null,
+  "development_lab_test_numbers": [1, 4, 11, 13, 19, 22, 29, 31],
+  "prohibited_evaluation_inputs": [
+    "the 11 previously inspected internal-comparison fills",
+    "the eight consumed MC Default external holdout fills"
+  ],
+  "fixed_parameters": {
+    "effective_volume_multiplier": 1.0519881596076546,
+    "gas_liner_ua_multiplier": 64.43011313151457,
+    "dispenser_flow_area_multiplier": 1.25
+  },
+  "candidate_precooler_duty_multipliers": [1.0, 2.0, 4.0, 8.0],
+  "parameter_mapping": "Multiply hydrogen-to-coolant UA and chiller UA by the same global factor; retain coolant thermal capacity.",
+  "selection_objective": "mean((pressure_RMSE/5 MPa)^2 + (tank_temperature_RMSE/10 degC)^2 + (SOC_RMSE/5 percentage points)^2)",
+  "tie_break_rule": "Choose the smaller multiplier when objective scores are equal within 1e-12.",
+  "post_selection_rule": "The selected multiplier may be used for model development and internal comparison only. It cannot rehabilitate or be retested as a new validation result on the consumed MC Default holdout.",
+  "claim_limit": "An effective duty multiplier is a global calibration parameter, not identification of physical heat-exchanger or chiller hardware."
+}
