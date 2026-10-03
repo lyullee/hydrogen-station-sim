@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T08:34:07.513551+00:00",
+  "generated_at": "2026-10-03T08:42:07.823526+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 10,
+    "PASS": 11,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -591,6 +591,32 @@
       }
     },
     {
+      "id": "ekoto_transient_release_validation",
+      "status": "PASS",
+      "claim": "The locked adiabatic vessel-discharge model meets all frozen transient mass-flow screens on the independent Ekoto et al. scaled release.",
+      "evidence": "research\\ekoto_2012_holdout_result.json; research\\ekoto_2012_holdout_protocol.json; data\\public_validation\\derived\\ekoto_2012_figure3.csv",
+      "requirement": "At least 15 points; <=15% peak-normalized RMSE, <=20% median absolute percentage error and <=20% half-peak-time error; all screens required.",
+      "observed": {
+        "result": {
+          "points": 39,
+          "measured_peak_mass_flow_kg_s": 0.044829756,
+          "predicted_peak_mass_flow_kg_s": 0.05123824764768229,
+          "mass_flow_nrmse_percent_peak_measured": 3.844753606590915,
+          "median_absolute_percentage_error_percent": 12.791380149762766,
+          "experimental_half_peak_time_s": 0.5064080367346502,
+          "predicted_half_peak_time_s": 0.5371374225147105,
+          "half_peak_time_relative_error_percent": 6.068107840113536,
+          "nrmse_screen_pass": true,
+          "median_ape_screen_pass": true,
+          "half_peak_time_screen_pass": true,
+          "joint_primary_screen_pass": true
+        },
+        "protocol_hash_matches": true,
+        "data_hash_matches": true,
+        "claim_boundary": "This holdout tests time-resolved source mass flow in one 13.45 MPa, 3.63 L scaled release through a 3.56 mm restriction. It does not validate enclosure dispersion, ignition, overpressure, forklift geometry, station control, or separation distance."
+      }
+    },
+    {
       "id": "hiad_protocol_integrity",
       "status": "PASS",
       "claim": "The incident decision-support study protocol was hash-locked before outcomes.",
@@ -730,7 +756,7 @@
         "manuscript": "manuscript\\ijhe_manuscript_draft.tex",
         "highlights": "manuscript\\Highlights.txt",
         "counts": {
-          "abstract_words": 141,
+          "abstract_words": 148,
           "keywords": 6,
           "highlight_bullets": 5,
           "highlight_characters": [
@@ -740,11 +766,11 @@
             75,
             75
           ],
-          "approximate_manuscript_words_before_references": 5582,
+          "approximate_manuscript_words_before_references": 5837,
           "figures": 2,
           "tables": 3,
-          "citation_keys": 18,
-          "bibliography_entries": 18,
+          "citation_keys": 19,
+          "bibliography_entries": 19,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -772,12 +798,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-03T08:34:07.4194168Z",
+        "attempted_at": "2026-10-03T08:42:07.7221804Z",
         "attempts_this_run": 1,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "ccf2a2278cf27f9013beddbd55c1ffb3ce448909f7f89349ac9814dc5df51c29",
+        "source_sha256": "24830ca1e19628468be8bbb56907a9ee2daa8b39f71ef9c2a6699b642823dd22",
         "platform": "Microsoft Windows NT 10.0.26200.0",
         "diagnostic": "Unable to find standard directories for platform",
         "interpretation": "Compiler environment failure; LaTeX source compilation remains unverified."

@@ -435,6 +435,42 @@ def audit(root: Path) -> dict[str, object]:
         } if schefer_2007_result else "missing; pressure-decay holdout has not completed",
     ))
 
+    ekoto_result_path = root / "research/ekoto_2012_holdout_result.json"
+    ekoto_result = _json(ekoto_result_path)
+    ekoto_protocol_path = root / "research/ekoto_2012_holdout_protocol.json"
+    ekoto_protocol = _json(ekoto_protocol_path)
+    ekoto_data_path = root / "data/public_validation/derived/ekoto_2012_figure3.csv"
+    ekoto_observed = (ekoto_result or {}).get("result") or {}
+    ekoto_protocol_hash = _sha256(ekoto_protocol_path) if ekoto_protocol_path.is_file() else None
+    ekoto_data_hash = _sha256(ekoto_data_path) if ekoto_data_path.is_file() else None
+    ekoto_pass = bool(
+        (ekoto_protocol or {}).get("status")
+        == "endpoints_and_code_frozen_before_numerical_curve_access"
+        and ((ekoto_protocol or {}).get("known_before_freeze") or {}).get(
+            "numerical_curve_coordinates_accessed"
+        ) is False
+        and ekoto_observed.get("joint_primary_screen_pass") is True
+        and (ekoto_result or {}).get("protocol_sha256") == ekoto_protocol_hash
+        and (ekoto_result or {}).get("data_sha256") == ekoto_data_hash
+    )
+    gates.append(_gate(
+        "ekoto_transient_release_validation",
+        "PASS" if ekoto_pass else ("FAIL" if ekoto_result else "PENDING"),
+        "The locked adiabatic vessel-discharge model meets all frozen transient mass-flow screens on the independent Ekoto et al. scaled release.",
+        f"{ekoto_result_path.relative_to(root)}; {ekoto_protocol_path.relative_to(root)}; {ekoto_data_path.relative_to(root)}",
+        "At least 15 points; <=15% peak-normalized RMSE, <=20% median absolute percentage error and <=20% half-peak-time error; all screens required.",
+        {
+            "result": ekoto_observed,
+            "protocol_hash_matches": (
+                (ekoto_result or {}).get("protocol_sha256") == ekoto_protocol_hash
+            ),
+            "data_hash_matches": (
+                (ekoto_result or {}).get("data_sha256") == ekoto_data_hash
+            ),
+            "claim_boundary": (ekoto_protocol or {}).get("claim_boundary"),
+        } if ekoto_result else "missing; Ekoto holdout has not completed",
+    ))
+
     protocol_path = root / "research/hiad_study_protocol_manifest.json"
     protocol = _json(protocol_path)
     protocol_ok, protocol_mismatches = _protocol_integrity(root, protocol)
@@ -613,6 +649,7 @@ def audit(root: Path) -> dict[str, object]:
         "proust_independent_release_validation",
         "schefer_transient_release_validation",
         "schefer_2007_pressure_decay_validation",
+        "ekoto_transient_release_validation",
         "hiad_protocol_integrity",
         "institutional_ethics_determination", "hiad_casebook_frozen",
         "hiad_holdout_collection", "independent_expert_review_complete",

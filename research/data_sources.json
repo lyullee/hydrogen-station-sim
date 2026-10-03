@@ -156,6 +156,19 @@
       "rights_note": "The derived CSV is a verbatim HyRAM+ validation-data copy with GPL attribution and original DOI. No publisher PDF or figure is redistributed.",
       "eligibility_note": "Experiment-level independent Sandia/SRI 43.1 MPa pressure-decay test. The evaluator, thresholds and code were committed before any numerical curve row was accessed."
     },
+    "ekoto_2012_scaled_release": {
+      "title": "Experimental investigation of hydrogen release and ignition from fuel cell powered forklifts in enclosed spaces",
+      "authors": "Isaac W. Ekoto, Erik G. Merilo, William G. Houf, Gregory H. Evans, Michael A. Groethe",
+      "publisher": "International Journal of Hydrogen Energy / Sandia National Laboratories / SRI International",
+      "doi": "10.1016/j.ijhydene.2012.03.161",
+      "landing_page": "https://www.osti.gov/biblio/1110270",
+      "digitization_repository": "https://github.com/sandialabs/hyram/tree/v6.1",
+      "digitization_commit": "b45abf9a6d995951311be6aad836f1874e4d420b",
+      "digitization_sha256": "2eb04bd3907dc02a1348e080aba8ed6f6e373f150a1981009a2e556e1264f047",
+      "license": "GPL-3.0 for the HyRAM+ validation digitization; original article rights remain with the publisher",
+      "rights_note": "The derived CSV is a verbatim HyRAM+ validation-data copy with GPL attribution and original DOI. No publisher PDF or figure is redistributed.",
+      "eligibility_note": "Experiment-level independent 13.45 MPa scaled-release mass-flow test. Evaluator, thresholds and code were committed before any numerical curve row was accessed."
+    },
     "hyram_validation_basis": {
       "title": "HyRAM+ Version 5.1.1 Physics Validation",
       "publisher": "Sandia National Laboratories / U.S. Department of Energy OSTI",

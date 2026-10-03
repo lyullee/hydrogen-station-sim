@@ -53,6 +53,14 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert schefer_2007["result"]["half_pressure_time_screen_pass"] is True
     assert schefer_2007["protocol_hash_matches"] is True
     assert schefer_2007["data_hash_matches"] is True
+    assert gates["ekoto_transient_release_validation"]["status"] == "PASS"
+    ekoto = gates["ekoto_transient_release_validation"]["observed"]
+    assert ekoto["result"]["points"] == 39
+    assert ekoto["result"]["nrmse_screen_pass"] is True
+    assert ekoto["result"]["median_ape_screen_pass"] is True
+    assert ekoto["result"]["half_peak_time_screen_pass"] is True
+    assert ekoto["protocol_hash_matches"] is True
+    assert ekoto["data_hash_matches"] is True
     external = gates["full_loop_external_validation"]["observed"]
     assert external["protocol_integrity"] is True
     assert external["aggregate"]["case_count"] == 8
