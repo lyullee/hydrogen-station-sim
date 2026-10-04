@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "search_scope": "Independent public station-to-vehicle HRS raw logger archives",
+  "eligibility": {
+    "required_channels": [
+      "common_time_base",
+      "vehicle_or_receptacle_pressure",
+      "vehicle_or_tank_temperature",
+      "mass_flow_or_transferred_mass"
+    ],
+    "required_metadata": [
+      "initial_conditions",
+      "tank_capacity_or_geometry",
+      "protocol_or_pressure_ramp",
+      "units_and_sampling",
+      "reuse_terms"
+    ]
+  },
+  "sources_checked": [
+    {
+      "id": "oh_kgs_2025",
+      "doi": "10.1007/s11814-025-00551-9",
+      "real_hrs_provenance": true,
+      "reported_scenarios": 6,
+      "public_synchronized_raw_logger": false,
+      "classification": "DATA_REQUEST_LEAD"
+    },
+    {
+      "id": "hysam_zenodo_20590842",
+      "doi": "10.5281/zenodo.20590842",
+      "public_synchronized_raw_logger": true,
+      "scope": "hydrogen sampling-system measurement experiments",
+      "vehicle_or_receptacle_pressure": false,
+      "mass_flow_or_transferred_mass": false,
+      "classification": "COMPONENT_SAMPLING_ONLY"
+    },
+    {
+      "id": "dataverseno_hydrogen_dispersion",
+      "doi": "10.23642/USN.26117989",
+      "public_synchronized_raw_logger": true,
+      "scope": "open-ended-channel hydrogen release and dispersion",
+      "vehicle_or_receptacle_pressure": false,
+      "classification": "CONSEQUENCE_SUBMODEL_ONLY"
+    },
+    {
+      "id": "h2stations_api",
+      "license": "CC BY 4.0",
+      "public_synchronized_raw_logger": false,
+      "scope": "station inventory, availability and status export",
+      "classification": "STATION_STATUS_ONLY"
+    },
+    {
+      "id": "nrel_h2iq_2024",
+      "public_synchronized_raw_logger": false,
+      "scope": "real high-flow experiment summary and plots",
+      "classification": "PLOT_AGGREGATE_ONLY"
+    }
+  ],
+  "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET",
+  "gate_impact": "independent_full_loop_gate_remains_open",
+  "claim_boundary": "No source in this addendum is promoted to full-loop validation."
+}
