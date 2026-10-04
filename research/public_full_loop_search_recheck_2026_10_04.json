@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "record": "research/public_full_loop_search_recheck_2026_10_04.json",
+  "gate": "independent synchronized station-to-vehicle raw fueling holdout",
+  "eligibility": {
+    "required_channels": [
+      "common elapsed time or timestamp",
+      "vehicle or receptacle pressure",
+      "mass flow or transferred mass"
+    ],
+    "preferred_channels": [
+      "vehicle or tank temperature",
+      "station source pressure",
+      "dispenser/controller state",
+      "protocol and initial-condition metadata"
+    ],
+    "required_rights": "explicit public reuse or written permission for derived metrics and journal publication",
+    "excluded_substitutes": [
+      "aggregate composite products",
+      "plot-only traces",
+      "registration-gated simulator examples",
+      "component-only or unrelated experiments",
+      "simulator-generated traces"
+    ]
+  },
+  "candidates": [
+    {
+      "id": "nrel_h2fills_product_recheck_2026_10_04",
+      "title": "NREL H2FillS product and manual",
+      "url": "https://www.nrel.gov/hydrogen/h2fills",
+      "manual_url": "https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf?sfvrsn=b2960c3d_1",
+      "decision": "NOT_ELIGIBLE_PUBLIC_RAW_HOLDOUT",
+      "finding": "The manual documents simulator inputs and output fields; the product download is registration-gated and does not expose an independent measured station-to-vehicle archive on the public product page.",
+      "reuse_status": "software license is internal-use-only; no public raw empirical archive identified"
+    },
+    {
+      "id": "nrel_retail_composite_recheck_2026_10_04",
+      "title": "NREL/NLR retail hydrogen station composite data products",
+      "url": "https://www.nrel.gov/hydrogen/infrastructure-cdps-retail.html",
+      "decision": "AGGREGATE_CONTEXT_ONLY",
+      "finding": "Public products provide distributions and aggregate station-use summaries, not synchronized station-to-vehicle pressure, temperature and mass-flow rows.",
+      "reuse_status": "public report context; insufficient for numerical full-loop holdout"
+    },
+    {
+      "id": "met_hytrucks_hysam_recheck_2026_10_04",
+      "title": "MetHyTrucks HySam system measurement data",
+      "doi": "10.5281/zenodo.20590842",
+      "url": "https://zenodo.org/records/20590842",
+      "decision": "AUXILIARY_SAMPLING_SYSTEM_DATA",
+      "finding": "Open spreadsheets contain experimental pressure/temperature conditions for hydrogen sampling systems, but no vehicle-fueling station loop, dispenser mass-transfer trace or vehicle-side protocol record.",
+      "reuse_status": "Zenodo dataset is open; scope remains auxiliary and cannot clear the full-loop gate"
+    },
+    {
+      "id": "usn_open_channel_recheck_2026_10_04",
+      "title": "USN/FFI open-ended rectangular-channel hydrogen dispersion experiments",
+      "doi": "10.23642/USN.26117989",
+      "url": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.23642/USN.26117989",
+      "decision": "CONSEQUENCE_DETECTOR_AUXILIARY",
+      "finding": "CC BY 4.0 data provide temporal mass flow, filling pressure and 29 concentration channels for open-channel releases; they are not a station-to-vehicle fill trace.",
+      "reuse_status": "CC BY 4.0; already bounded to detector/consequence auxiliary evidence"
+    },
+    {
+      "id": "h2_rig_project_recheck_2026_10_04",
+      "title": "HSR-Rig-Project public hydrogen storage reactor logs",
+      "url": "https://github.com/gadoseb/HSR-Rig-Project",
+      "decision": "UNRELATED_COMPONENT_EXPERIMENT",
+      "finding": "The repository contains metal-hydride reactor absorption/desorption logs and is not a gaseous H70 station-to-vehicle fueling campaign.",
+      "reuse_status": "public repository; excluded by apparatus and process scope"
+    }
+  ],
+  "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+  "gate_impact": "full_loop_external_validation_remains_open",
+  "next_action": "Request a de-identified synchronized logger export and written reuse terms from CARB/HyStEP, NIST FTS, NREL/NLR HITRF, JRC GasTeF, FCH2RAIL, or an HRS operator; freeze the protocol and model before inspecting outcomes.",
+  "claim_boundary": "This search record does not convert public summaries, simulator examples or component experiments into full-loop validation evidence."
+}

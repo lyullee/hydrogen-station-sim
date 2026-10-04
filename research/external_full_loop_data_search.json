@@ -2288,6 +2288,13 @@
     "full_loop_holdout_eligible": false,
     "finding": "NIST and NREL sources materially strengthen protocol, metrology and high-flow provenance, but none supplies the independently accessible synchronized station-to-vehicle raw archive required to clear the full-loop IJHE gate. Published figures and aggregate values are not converted into pseudo-raw validation data."
   },
+  "public_full_loop_search_recheck_2026_10_04": {
+    "record": "research/public_full_loop_search_recheck_2026_10_04.json",
+    "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+    "gate_impact": "full_loop_external_validation_remains_open",
+    "finding": "A current search of H2FillS, NREL composite products, MetHyTrucks, USN/FFI and a public hydrogen reactor repository found no new independent synchronized station-to-vehicle raw fueling archive with publication rights. USN/FFI remains auxiliary detector/consequence evidence only.",
+    "next_action": "Request a de-identified synchronized logger export and written reuse terms from approved custodians before a pre-access protocol freeze."
+  },
   "khk_public_incident_access_2026_10_04": {
     "record": "research/khk_public_incident_access_2026_10_04.json",
     "decision": "LOCAL_ONLY_ACCIDENT_CASEBOOK_CANDIDATE",
