@@ -149,6 +149,28 @@
         "full_loop_holdout_eligible": false
       },
       "reuse_status": "Cite as an open modelling reference only; simulation outputs cannot replace an independent measured holdout or be used as external physical validation."
+    },
+    {
+      "id": "calstate_hrff_official_data_custodian_recheck_2026",
+      "title": "Cal State LA Hydrogen Research and Fueling Facility official data-custodian route",
+      "url": "https://www.calstatela.edu/ecst/h2station/people-involved",
+      "facility_url": "https://www.calstatela.edu/ecst/h2station",
+      "operation_url": "https://www.calstatela.edu/ecst/h2station/operation",
+      "license": "No public raw-logger reuse terms identified",
+      "decision": "REAL_STATION_DATA_REQUEST_LEAD_NO_RAW_ARCHIVE",
+      "finding": "The official HRFF pages identify the station technical director and technician, describe the real HRS production/storage/350-700 bar dispensing system, and explain pressure-controlled filling with vehicle pressure/temperature feedback. They do not publish a synchronized station-to-vehicle pressure, temperature and mass-flow logger export.",
+      "observed_scope": {
+        "real_station_documented": true,
+        "reported_instrumented_channels": [
+          "vehicle pressure",
+          "vehicle temperature",
+          "station/dispenser pressure",
+          "mass flow"
+        ],
+        "public_raw_logger_retrieved": false,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "Use the official pages to identify the custodian and request a de-identified synchronized export, channel dictionary, calibration metadata and written permission for derived metrics and open-repository or IJHE publication. Do not treat the facility description as numerical validation."
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",

@@ -532,6 +532,22 @@ def test_zenodo_high_flow_record_is_simulation_only_and_not_promoted():
     assert item["observed_scope"]["full_loop_holdout_eligible"] is False
 
 
+def test_calstate_hrff_custodian_lead_is_not_promoted_without_raw_logger():
+    record = json.loads(
+        (ROOT / "research/public_full_loop_search_recheck_2026_10_05.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    item = next(
+        source for source in record["candidates"]
+        if source["id"] == "calstate_hrff_official_data_custodian_recheck_2026"
+    )
+    assert item["observed_scope"]["real_station_documented"] is True
+    assert item["observed_scope"]["public_raw_logger_retrieved"] is False
+    assert item["observed_scope"]["full_loop_holdout_eligible"] is False
+    assert item["decision"] == "REAL_STATION_DATA_REQUEST_LEAD_NO_RAW_ARCHIVE"
+
+
 def test_khk_local_casebook_pipeline_is_not_promoted_or_committed():
     mirror = json.loads(
         (ROOT / "research/external_full_loop_data_search.json").read_text(
