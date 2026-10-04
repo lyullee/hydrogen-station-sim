@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T21:45:41.374225+00:00",
+  "generated_at": "2026-10-04T21:49:59.318234+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -108,7 +108,7 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "2c26f974f8a9e8012c27b5b1d548d18bf6184957226a2d88f73ed10dd31134d5",
+    "audit_sha256": "0b81ae7c8e421e76f30fe61a156c220089abe94b05fdb32e72c62f8d1766717b",
     "hiad_readiness_sha256": "e028c9a9b71ecbac658a66d1421834025e2708e07383a21f82b413abfe5fdb86",
     "acquisition_tracker_sha256": "a68bf9882cdfe3418bce0b683c132b7d2c9cb7849372d26345fb3e9371f5eb52",
     "full_loop_search_sha256": "045db9ea958c4fbc24a4af0f9cc7845c749d143f20350fde770131f9fa8c5fad",
