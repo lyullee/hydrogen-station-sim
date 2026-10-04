@@ -10,6 +10,13 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert idle["impact"]["result_count"] == 0
     assert idle["source"]["field_measurement"] is False
     assert idle["evidence_digest"].startswith("sha256:")
+    traceability = idle["response_evidence"]["public_incident_traceability"]
+    assert traceability["category_count"] == 8
+    assert traceability["covered_category_count"] == 8
+    assert traceability["case_count"] == 34
+    assert traceability["covered_case_count"] == 34
+    assert traceability["contract_pass"] is True
+    assert "does not judge incident actions" in traceability["claim_limit"]
 
     result = {"node_id": "N09", "node_name": "고압 저장뱅크",
               "calculation_status": "calculated",

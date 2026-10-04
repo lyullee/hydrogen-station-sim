@@ -10,7 +10,36 @@ from __future__ import annotations
 from hashlib import sha256
 import json
 import math
+from pathlib import Path
 from typing import Any, Iterable
+
+
+def _public_incident_traceability() -> dict[str, Any] | None:
+    """Return the committed HIAD-to-playbook coverage summary when available.
+
+    The artifact is provenance metadata only.  It is intentionally loaded
+    once per request path and never exposes the incident workbook's raw prose.
+    A source checkout without the research artifact simply omits the optional
+    section rather than making runtime decision support unavailable.
+    """
+    path = Path(__file__).resolve().parents[2] / "research/hiad_action_playbook_coverage.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    aggregate = record.get("aggregate") or {}
+    if record.get("status") != "completed_public_action_to_playbook_traceability_audit":
+        return None
+    return {
+        "artifact": "research/hiad_action_playbook_coverage.json",
+        "evidence_role": str(record.get("evidence_role") or ""),
+        "category_count": aggregate.get("category_count"),
+        "covered_category_count": aggregate.get("covered_category_count"),
+        "case_count": aggregate.get("case_count"),
+        "covered_case_count": aggregate.get("covered_case_count"),
+        "contract_pass": aggregate.get("contract_pass") is True,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
 
 
 def _finite_number(value: Any) -> int | float | None:
@@ -149,6 +178,9 @@ def build_evidence_manifest(
             "uncalculated_values_must_not_be_invented": True,
         },
     }
+    traceability = _public_incident_traceability()
+    if traceability is not None:
+        envelope["response_evidence"]["public_incident_traceability"] = traceability
     canonical = json.dumps(envelope, ensure_ascii=False, sort_keys=True,
                            separators=(",", ":"), default=str).encode("utf-8")
     envelope["evidence_digest"] = "sha256:" + sha256(canonical).hexdigest()
