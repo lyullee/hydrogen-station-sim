@@ -251,7 +251,7 @@ def audit(root: Path) -> dict[str, object]:
     external_protocol = _json(external_protocol_path)
     external_search_path = root / "research/external_full_loop_data_search.json"
     external_search = _json(external_search_path)
-    external_search_recheck_path = root / "research/public_full_loop_search_recheck_2026_10_04.json"
+    external_search_recheck_path = root / "research/public_full_loop_search_recheck_2026_10_05.json"
     external_search_recheck = _json(external_search_recheck_path)
     external_operational_recheck_path = root / "research/public_operational_benchmark_recheck_2026_10_05.json"
     external_operational_recheck = _json(external_operational_recheck_path)

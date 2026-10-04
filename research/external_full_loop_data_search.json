@@ -2202,7 +2202,6 @@
       "zenodo_20590842_hysam_system_measurement"
     ],
     "finding": "Thirteen CC BY 4.0 XLSX workbooks expose 0.5 s timestamped pressure/temperature and flow-or-mass-like tags for HRS sampling-system experiments. Public metadata do not establish vehicle/receptacle pressure, transferred mass, protocol semantics or calibration metadata.",
-    "full_loop_holdout_eligible": false,
     "station_measurement_auxiliary_eligible": true,
     "claim_boundary": "Use only as independent HRS instrumentation/timing context until a custodian supplies the channel dictionary and vehicle/receptacle mapping; do not score as station-to-vehicle full-loop validation."
   },
@@ -2264,7 +2263,7 @@
     "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
     "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
     "full_loop_holdout_eligible": false,
-      "source_ids": [
+    "source_ids": [
       "nbsdc_beijing_winter_olympics_hrs_operational_addendum",
       "nbsdc_70mpa_hydrogenation_port_test_addendum",
       "deng_2025_high_flow_refueling_tank_addendum",
@@ -2300,7 +2299,9 @@
     "record": "research/khk_public_incident_access_2026_10_04.json",
     "decision": "LOCAL_ONLY_ACCIDENT_CASEBOOK_CANDIDATE",
     "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
-    "source_ids": ["khk_hpg_incident_database_r7"],
+    "source_ids": [
+      "khk_hpg_incident_database_r7"
+    ],
     "full_loop_holdout_eligible": false,
     "public_dataset_for_ijhe_submission": false,
     "finding": "The current KHK/METI FY2025 workbook is locally readable and contains hydrogen-station-relevant high-pressure-gas accident cases. KHK terms prohibit transfer, distribution and public posting of all or part of the database, so no raw rows or derived counts are committed. Written permission is required before a de-identified casebook or aggregate results can be published.",
@@ -2310,7 +2311,9 @@
     "record": "research/elvhys_public_consequence_dataset_2026_10_04.json",
     "decision": "PUBLIC_CC0_CRYOGENIC_CONSEQUENCE_AUXILIARY",
     "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
-    "source_ids": ["elvhys_4_2_cryo_connection_space"],
+    "source_ids": [
+      "elvhys_4_2_cryo_connection_space"
+    ],
     "full_loop_holdout_eligible": false,
     "public_consequence_auxiliary_eligible": true,
     "finding": "The CC0 record exposes 48 cryogenic hydrogen transfer-connection-space experiments in 198 files covering dispersion, pressure peaking and deliberate ignition. It is a useful consequence-model extension source, but it is not a gaseous H70 station-to-vehicle fill trace.",
@@ -2321,12 +2324,21 @@
     "record": "research/khk_local_casebook_pipeline_2026_10_04.json",
     "decision": "LOCAL_ONLY_ACTUAL_ACCIDENT_GROUNDING_CANDIDATE",
     "gate_impact": "unchanged_expert_effectiveness_and_full_loop_gates_remain_open",
-    "source_ids": ["khk_hpg_incident_database_r7"],
+    "source_ids": [
+      "khk_hpg_incident_database_r7"
+    ],
     "raw_or_derived_casebook_committed": false,
     "expert_holdout_ready": false,
     "full_loop_holdout_eligible": false,
     "finding": "A local-only pipeline now selects hydrogen HRS-boundary records from the KHK/METI workbook and maps compound events to the existing response families. The workbook and generated casebook remain ignored and are not redistributed.",
     "claim_boundary": "Local scenario mapping is not expert-reviewed response validation, an incident probability model, or station-to-vehicle physics evidence. Written permission and a blinded coordinator/expert protocol are required before public use.",
     "next_action": "Obtain written KHK/METI permission, then freeze a de-identified casebook and collect independent expert ratings under the existing HIAD study protocol."
+  },
+  "public_full_loop_search_recheck_2026_10_05": {
+    "record": "research/public_full_loop_search_recheck_2026_10_05.json",
+    "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+    "candidate_count": 19,
+    "scope": "KGS/Oh appendix and current public full-loop candidate recheck",
+    "appendix_recheck": "research/kgs_oh_preprint_appendix_recheck_2026_10_05.json"
   }
 }

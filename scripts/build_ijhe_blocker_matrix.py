@@ -29,7 +29,7 @@ def build(root: Path) -> dict[str, Any]:
     audit_path = root / "manuscript/ijhe_readiness_audit.json"
     hiad_path = root / "research/hiad_evaluation_readiness.json"
     tracker_path = root / "research/validation_data_acquisition_tracker.json"
-    search_path = root / "research/public_full_loop_search_recheck_2026_10_04.json"
+    search_path = root / "research/public_full_loop_search_recheck_2026_10_05.json"
     operational_search_path = root / "research/public_operational_benchmark_recheck_2026_10_05.json"
     audit = load_json(audit_path)
     hiad = load_json(hiad_path)

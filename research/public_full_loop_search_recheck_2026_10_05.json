@@ -100,18 +100,28 @@
       "claimed_code_url": "https://drive.google.com/drive/folders/1l_rKzlKZaxSVIyFwNkbVX0r2JLnRtosp",
       "license": "CC BY 4.0 preprint; linked code-folder access unverified",
       "decision": "REAL_STATION_DATA_REQUEST_LEAD_ACCESS_UNVERIFIED",
-      "finding": "The study reports six real HRS scenarios with vehicle pressure, temperature and mass-flow measurements. Anonymous access to the cited Google Drive folder redirected to Google sign-in and returned no files, so no raw synchronized archive or reuse terms were available for a frozen holdout.",
+      "finding": "The study reports six real HRS scenarios with vehicle pressure, temperature and mass-flow measurements. Anonymous access to the cited Google Drive folder redirected to Google sign-in and returned no files, so no raw synchronized archive or reuse terms were available for a frozen holdout. The supplement recheck found only a two-page Appendix with Tables A.1-A.3; the appendix hash and no-raw-logger boundary are frozen in the linked recheck artifact.",
       "observed_scope": {
         "reported_scenarios": 6,
-        "reported_measurements": ["vehicle pressure", "vehicle temperature", "mass flow"],
+        "reported_measurements": [
+          "vehicle pressure",
+          "vehicle temperature",
+          "mass flow"
+        ],
         "public_raw_logger_retrieved": false,
         "full_loop_holdout_eligible": false
       },
-      "reuse_status": "Request the de-identified logger export, channel/calibration metadata and written IJHE reuse terms from the KGS data custodian before outcome access."
+      "reuse_status": "Request the de-identified logger export, channel/calibration metadata and written IJHE reuse terms from the KGS data custodian before outcome access.",
+      "appendix_access_recheck": "research/kgs_oh_preprint_appendix_recheck_2026_10_05.json",
+      "appendix_public_parameter_only": true,
+      "raw_synchronized_logger_retrieved": false
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
   "gate_impact": "full_loop_external_validation_remains_open",
   "next_action": "Obtain a de-identified synchronized logger export and written reuse terms from a custodian such as Cal State LA HRFF, NREL/NLR HITRF, CARB/HyStEP, JRC GasTeF, FCH2RAIL or an HRS operator; freeze model, inclusion criteria and scoring before reading numerical outcomes.",
-  "claim_boundary": "This record documents a search and exclusion decision. It does not add validation evidence, change frozen results or permit a publication-readiness claim."
+  "claim_boundary": "This record documents a search and exclusion decision. It does not add validation evidence, change frozen results or permit a publication-readiness claim.",
+  "recheck_links": [
+    "research/kgs_oh_preprint_appendix_recheck_2026_10_05.json"
+  ]
 }
