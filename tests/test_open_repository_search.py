@@ -62,3 +62,17 @@ def test_external_search_mirror_contains_preslhy_e3_5_recheck():
     assert item["decision"] == "PUBLIC_RAW_CONSEQUENCE_CANDIDATE_METADATA_VERIFIED"
     assert item["archive_not_vendored"] is True
     assert item["archive_size_bytes"] == 11341115392
+
+
+def test_external_search_mirror_contains_hrs_public_data_recheck():
+    mirror = json.loads(
+        (ROOT / "research/external_full_loop_data_search.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    item = mirror["hrs_public_data_recheck_2026_10_04"]
+    assert item["decision"] == (
+        "PUBLIC_AGGREGATE_AND_EXPERIMENT_SUMMARIES_CONFIRMED_NO_NEW_FULL_LOOP_RAW"
+    )
+    assert item["source_count"] == 4
+    assert item["gate_impact"] == "unchanged_independent_full_loop_gate_remains_open"

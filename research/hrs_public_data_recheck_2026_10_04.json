@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "scope": "Public HRS operation and experiment sources rechecked for an untouched station-to-vehicle full-loop holdout",
+  "decision": "PUBLIC_AGGREGATE_AND_EXPERIMENT_SUMMARIES_CONFIRMED_NO_NEW_FULL_LOOP_RAW",
+  "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+  "eligibility_rule": {
+    "required_channels": [
+      "vehicle_or_receptacle_pressure",
+      "mass_flow_or_transferred_mass"
+    ],
+    "preferred_channels": [
+      "vehicle_or_tank_temperature",
+      "hose_temperature",
+      "storage_bank_pressure",
+      "protocol_and_valve_state"
+    ],
+    "required_metadata": [
+      "common_time_base",
+      "initial_conditions",
+      "tank_capacity",
+      "protocol_or_pressure_ramp_information",
+      "units",
+      "reuse_terms"
+    ]
+  },
+  "sources": [
+    {
+      "id": "doe_h2iq_2024_hd_fast_flow",
+      "title": "H2IQ Hour: Hydrogen Fuel Dispensing for Medium- and Heavy-Duty Vehicles",
+      "publisher": "U.S. Department of Energy / National Renewable Energy Laboratory",
+      "doi": null,
+      "urls": {
+        "report": "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf"
+      },
+      "real_experiment": true,
+      "reported_measurements": {
+        "date": "2024-03-12",
+        "mass_transfer_kg": 73.0,
+        "total_fill_time_s": 423.5,
+        "fueling_time_s": 358.9,
+        "average_mass_flow_g_s": 172.3,
+        "peak_mass_flow_g_s": 483.33,
+        "start_pressure_mpa": 5.5,
+        "end_pressure_mpa": 74.6,
+        "aprr_mpa_min": 9.9,
+        "protocol": "SAE J2601-5 MCF-HF-G H70 FM300 T40"
+      },
+      "raw_common_timebase": false,
+      "classification": "PUBLIC_REAL_EXPERIMENT_AGGREGATE_BENCHMARK",
+      "full_loop_holdout_eligible": false,
+      "finding": "The public presentation provides an important high-flow operating-range benchmark, but no downloadable synchronized pressure-temperature-flow trace, valve-state log or reuse terms for the underlying test."
+    },
+    {
+      "id": "csic_onsite_hrs_supplement",
+      "title": "Supplementary Material for Modelling and operation strategy approaches for on-site Hydrogen Refuelling Stations",
+      "publisher": "Agencia Estatal Consejo Superior de Investigaciones Científicas / Digital.CSIC",
+      "doi": null,
+      "urls": {
+        "catalogue": "https://datos.gob.es/ca/catalogo/ea0041268-supplementary-material-for-modelling-and-operation-strategy-approaches-for-on-site-hydrogen-refuelling-stations-dataset",
+        "pdf": "https://digital.csic.es/bitstream/10261/334805/1/1-s2.0-S0360319923042167-mmc1.pdf",
+        "readme": "https://digital.csic.es/bitstream/10261/334805/2/README%20.txt"
+      },
+      "real_experiment": false,
+      "reported_scope": "Finite-state operational-flow diagrams and one-day/one-year simulation results for an on-site HRS configuration.",
+      "license": "CC BY-NC-ND 4.0",
+      "raw_common_timebase": false,
+      "classification": "PUBLIC_SIMULATION_SUPPLEMENT_ONLY",
+      "full_loop_holdout_eligible": false,
+      "finding": "The public distribution contains a PDF and README, not measured station logger data. It is useful for model-structure comparison but cannot serve as an independent physical holdout."
+    },
+    {
+      "id": "caponi_3emotion_2022_operational_hrs",
+      "title": "Four years of operational data for five hydrogen refueling stations",
+      "publisher": "3Emotion / E3S Web of Conferences",
+      "doi": "10.1051/e3sconf/202233406008",
+      "urls": {
+        "doi": "https://doi.org/10.1051/e3sconf/202233406008",
+        "repository": "https://iris.unimarconi.it/handle/20.500.14241/4999",
+        "article": "https://www.e3s-conferences.org/articles/e3sconf/pdf/2022/01/e3sconf_efc2022_06008.pdf"
+      },
+      "real_experiment": true,
+      "reported_scope": "Operator logs from four 350-bar bus stations summarized as fill amount, duration, average flow, daily profile, utilization and availability.",
+      "raw_common_timebase": false,
+      "classification": "PUBLIC_REAL_STATION_AGGREGATE_CONTEXT",
+      "full_loop_holdout_eligible": false,
+      "finding": "The record confirms real multi-station operational provenance but exposes aggregate indicators rather than synchronized pressure, temperature and mass-flow rows."
+    },
+    {
+      "id": "dlr_fch2rail_2025_refueling",
+      "title": "Development, application and optimization of hydrogen refueling processes for railway vehicles",
+      "publisher": "DLR / FCH2RAIL / International Journal of Hydrogen Energy",
+      "doi": "10.1016/j.ijhydene.2025.04.040",
+      "urls": {
+        "doi": "https://doi.org/10.1016/j.ijhydene.2025.04.040",
+        "repository": "https://elib.dlr.de/213625/",
+        "pdf": "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf"
+      },
+      "real_experiment": true,
+      "reported_scope": "Reference-station and railway-vehicle measurements used to validate a refueling-process model.",
+      "raw_common_timebase": false,
+      "classification": "PUBLIC_REAL_HEAVY_DUTY_DATA_REQUEST_LEAD",
+      "full_loop_holdout_eligible": false,
+      "finding": "The repository provides the open article and confirms measured station/vehicle behavior, but no machine-readable synchronized raw archive or reuse terms were linked."
+    }
+  ],
+  "recommended_next_step": {
+    "action": "Request de-identified synchronized traces and reuse terms from DOE/NREL HITRF, DLR/FCH2RAIL, Cal State LA and 3Emotion operators.",
+    "freeze_rule": "If a raw file is received, quarantine it, hash it, freeze the model commit and scoring protocol before opening numerical outcomes."
+  },
+  "claim_boundary": "These sources support operating-range, real-station provenance and model-structure context. None closes the project's untouched full-loop external-validation gate; do not present an aggregate or simulation-only source as synchronized measured HRS validation."
+}

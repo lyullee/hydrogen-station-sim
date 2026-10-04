@@ -1923,5 +1923,18 @@
     "scope": "Independent liquid-hydrogen release, dispersion, detector and incident-replay evidence; not gaseous station-to-vehicle full-loop validation.",
     "archive_not_vendored": true,
     "claim_boundary": "Metadata and archive access are verified, but no numerical outcomes were read and the primary full-loop validation gate remains open."
+  },
+  "hrs_public_data_recheck_2026_10_04": {
+    "record": "research/hrs_public_data_recheck_2026_10_04.json",
+    "decision": "PUBLIC_AGGREGATE_AND_EXPERIMENT_SUMMARIES_CONFIRMED_NO_NEW_FULL_LOOP_RAW",
+    "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+    "source_count": 4,
+    "source_ids": [
+      "doe_h2iq_2024_hd_fast_flow",
+      "csic_onsite_hrs_supplement",
+      "caponi_3emotion_2022_operational_hrs",
+      "dlr_fch2rail_2025_refueling"
+    ],
+    "claim_boundary": "The sources support operating-range and real-station provenance context, but none provides a new eligible synchronized raw full-loop holdout."
   }
 }

@@ -1,0 +1,20 @@
+import json
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_public_hrs_recheck_preserves_full_loop_boundary():
+    record = json.loads(
+        (ROOT / "research/hrs_public_data_recheck_2026_10_04.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert record["decision"] == (
+        "PUBLIC_AGGREGATE_AND_EXPERIMENT_SUMMARIES_CONFIRMED_NO_NEW_FULL_LOOP_RAW"
+    )
+    assert record["gate_impact"] == "unchanged_independent_full_loop_gate_remains_open"
+    assert len(record["sources"]) == 4
+    assert all(source["full_loop_holdout_eligible"] is False for source in record["sources"])
+    assert "None closes" in record["claim_boundary"]
