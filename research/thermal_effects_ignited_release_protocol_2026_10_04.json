@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "protocol_id": "THERMAL-EFFECTS-IGNITED-2601",
+  "frozen_at_utc": "2026-10-04T12:30:00+00:00",
+  "status": "frozen_before_raw_outcome_access",
+  "purpose": "Independent public-data screen of the consequence-model thermal-effect boundary for an ignited high-pressure hydrogen release.",
+  "source": {
+    "title": "Experimental data- hydrogen safety, thermal effects",
+    "publisher": "University of South-Eastern Norway / Figshare",
+    "doi": "10.23642/usn.17695082.v1",
+    "landing_page": "https://doi.org/10.23642/usn.17695082.v1",
+    "api_record": "https://api.figshare.com/v2/articles/17695082",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "authors": ["Agnieszka Lach", "Andre Vagner Gaathaug"],
+    "scope_note": "Ignited high-pressure hydrogen releases in a semi-confined space; this is a consequence-model source, not a gaseous H70 station-to-vehicle fill trace."
+  },
+  "selected_files": [
+    "Exp_00001.mat",
+    "Exp_00002.mat",
+    "Exp_00003.mat",
+    "Exp_00004.mat",
+    "Exp_00005.mat",
+    "Exp_00006.mat",
+    "Exp_00007.mat",
+    "Exp_00008.mat"
+  ],
+  "selection_rule": "Retain every public MAT experiment file in the Figshare record; do not select or exclude cases after inspecting numerical outcomes.",
+  "predeclared_analysis": {
+    "primary_observables": [
+      "time-resolved thermal sensor channels that can be mapped to distance/location",
+      "peak and time-to-peak temperature or heat-flux observables when present",
+      "release/ignition timing fields when explicitly provided by the source"
+    ],
+    "primary_screen": "For each eligible sensor channel, compare model and measured peak thermal effect and event-time error using source-reported units; retain all eligible channels and report missing mappings rather than imputing them.",
+    "eligibility": "A file is eligible only when its metadata expose a time base and at least one numeric thermal/consequence measurement with a documented unit or sensor label.",
+    "exclusions": [
+      "No post-outcome case deletion, parameter fitting, dynamic time warping or undocumented smoothing.",
+      "Non-thermal channels may support timing/context but cannot be silently treated as temperature or heat flux.",
+      "A consequence screen cannot validate the station controller, fueling protocol, field safety distance or LLM effectiveness."
+    ],
+    "claim_boundary": "Independent consequence-model evidence only; it does not close the full-loop external validation gate or establish legal separation distances."
+  },
+  "raw_outcomes_accessed_before_freeze": false,
+  "data_redistribution": "The source remains external; retain metadata, hashes and derived summary only unless the CC BY terms and repository policy permit a copy."
+}

@@ -711,6 +711,41 @@ def audit(root: Path) -> dict[str, object]:
         } if accidental_ignition else "missing; public accidental-release evidence record has not been captured",
     ))
 
+    thermal_protocol_path = root / "research/thermal_effects_ignited_release_protocol_2026_10_04.json"
+    thermal_protocol = _json(thermal_protocol_path)
+    thermal_source = (thermal_protocol or {}).get("source") or {}
+    thermal_analysis = (thermal_protocol or {}).get("predeclared_analysis") or {}
+    thermal_files = (thermal_protocol or {}).get("selected_files") or []
+    expected_thermal_files = [f"Exp_{index:05d}.mat" for index in range(1, 9)]
+    thermal_protocol_pass = bool(
+        (thermal_protocol or {}).get("status") == "frozen_before_raw_outcome_access"
+        and (thermal_protocol or {}).get("protocol_id") == "THERMAL-EFFECTS-IGNITED-2601"
+        and thermal_source.get("doi") == "10.23642/usn.17695082.v1"
+        and thermal_source.get("license") == "CC BY 4.0"
+        and thermal_files == expected_thermal_files
+        and (thermal_protocol or {}).get("selection_rule")
+        and (thermal_protocol or {}).get("raw_outcomes_accessed_before_freeze") is False
+        and thermal_analysis.get("primary_observables")
+        and thermal_analysis.get("eligibility")
+        and thermal_analysis.get("claim_boundary")
+        and (thermal_protocol or {}).get("data_redistribution")
+    )
+    gates.append(_gate(
+        "thermal_effects_public_protocol_integrity",
+        "PASS" if thermal_protocol_pass else ("FAIL" if thermal_protocol else "PENDING"),
+        "The independent public ignited-release thermal-effects archive is prospectively frozen as a consequence-only screen.",
+        str(thermal_protocol_path.relative_to(root)),
+        "DOI and CC BY rights, all eight public MAT experiments, predeclared observables/eligibility, no pre-freeze outcome access and an explicit exclusion from full-loop or legal-distance claims.",
+        {
+            "doi": thermal_source.get("doi"),
+            "license": thermal_source.get("license"),
+            "file_count": len(thermal_files),
+            "selected_files": thermal_files,
+            "raw_outcomes_accessed_before_freeze": (thermal_protocol or {}).get("raw_outcomes_accessed_before_freeze"),
+            "claim_boundary": thermal_analysis.get("claim_boundary"),
+        } if thermal_protocol else "missing; thermal-effects protocol has not been frozen",
+    ))
+
     khk_public_path = root / "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json"
     khk_public = _json(khk_public_path)
     khk_source = (khk_public or {}).get("source_page") or {}

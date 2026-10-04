@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T11:47:55.043913+00:00",
+  "generated_at": "2026-10-04T12:45:27.007507+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 30,
+    "PASS": 32,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -357,6 +357,73 @@
           "gate_impact": "full_loop_external_validation_remains_open",
           "candidate_count": 17
         }
+      }
+    },
+    {
+      "id": "closed_loop_temperature_stop_diagnostic",
+      "status": "PASS",
+      "claim": "The post-outcome temperature-stop sensitivity is archived without changing the frozen external validation decision.",
+      "evidence": "research\\closed_loop_temperature_stop_diagnostic_2026_10_04.json",
+      "requirement": "Eight identical MC Default traces, 95 °C counterfactual, no parameter fitting, no screening pass and no temperature-stop termination.",
+      "observed": {
+        "diagnostic_type": "post-outcome temperature-stop sensitivity",
+        "post_outcome": true,
+        "aggregate": {
+          "case_count": 8,
+          "screening_pass_count": 0,
+          "screening_pass_fraction": 0.0,
+          "final_stop_reason_counts": {
+            "none": 8
+          },
+          "metrics": {
+            "pressure_rmse_mpa": {
+              "mean": 10.217206686917415,
+              "median": 11.937577548643803,
+              "standard_deviation": 4.709280273885993,
+              "mean_bootstrap_95_ci": [
+                6.864424468399368,
+                12.931736597195066
+              ]
+            },
+            "pressure_mae_mpa": {
+              "mean": 8.54304803878847,
+              "median": 9.918660365645815,
+              "standard_deviation": 4.050564890540836,
+              "mean_bootstrap_95_ci": [
+                5.742962711247886,
+                10.908022462989013
+              ]
+            },
+            "temperature_rmse_c": {
+              "mean": 14.301028885284389,
+              "median": 13.963452240865706,
+              "standard_deviation": 4.162604177741973,
+              "mean_bootstrap_95_ci": [
+                11.71881041835803,
+                17.05735551310788
+              ]
+            },
+            "temperature_mae_c": {
+              "mean": 12.742551406193686,
+              "median": 12.125790975246918,
+              "standard_deviation": 3.9461025093200615,
+              "mean_bootstrap_95_ci": [
+                10.349581927784111,
+                15.41201626847927
+              ]
+            },
+            "soc_rmse_percentage_points": {
+              "mean": 12.605456644129966,
+              "median": 14.297527925815341,
+              "standard_deviation": 4.652406040236191,
+              "mean_bootstrap_95_ci": [
+                9.352060616652984,
+                15.308919410848398
+              ]
+            }
+          }
+        },
+        "claim_limit": "none; this artifact cannot change the frozen external holdout decision"
       }
     },
     {
@@ -1221,6 +1288,30 @@
           "reason_not_full_loop": "The experiment is a controlled cylinder breach rather than a station-to-vehicle fueling event; breach geometry, discharge coefficient and complete calibration metadata are not supplied in the dataset record."
         },
         "claim_boundary": "This record establishes openly licensed experimental evidence and provenance for accidental high-pressure hydrogen release and ignition. It does not close the independent station-to-vehicle full-loop gate, prove an ignition probability, or validate the digital twin without a preregistered apparatus mapping and holdout protocol."
+      }
+    },
+    {
+      "id": "thermal_effects_public_protocol_integrity",
+      "status": "PASS",
+      "claim": "The independent public ignited-release thermal-effects archive is prospectively frozen as a consequence-only screen.",
+      "evidence": "research\\thermal_effects_ignited_release_protocol_2026_10_04.json",
+      "requirement": "DOI and CC BY rights, all eight public MAT experiments, predeclared observables/eligibility, no pre-freeze outcome access and an explicit exclusion from full-loop or legal-distance claims.",
+      "observed": {
+        "doi": "10.23642/usn.17695082.v1",
+        "license": "CC BY 4.0",
+        "file_count": 8,
+        "selected_files": [
+          "Exp_00001.mat",
+          "Exp_00002.mat",
+          "Exp_00003.mat",
+          "Exp_00004.mat",
+          "Exp_00005.mat",
+          "Exp_00006.mat",
+          "Exp_00007.mat",
+          "Exp_00008.mat"
+        ],
+        "raw_outcomes_accessed_before_freeze": false,
+        "claim_boundary": "Independent consequence-model evidence only; it does not close the full-loop external validation gate or establish legal separation distances."
       }
     },
     {
@@ -2477,11 +2568,11 @@
             75,
             75
           ],
-          "approximate_manuscript_words_before_references": 6521,
+          "approximate_manuscript_words_before_references": 6772,
           "figures": 2,
           "tables": 3,
-          "citation_keys": 25,
-          "bibliography_entries": 25,
+          "citation_keys": 26,
+          "bibliography_entries": 26,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -2509,27 +2600,27 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-04T11:47:44.636479+00:00",
+        "attempted_at": "2026-10-04T12:45:00+00:00",
         "attempts_this_run": 1,
         "success": true,
         "compiler": "Tectonic 0.17.0 (x86_64-pc-windows-msvc)",
         "compiler_release": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic%400.17.0",
         "compiler_archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845f",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "e33fe9abf83a31a1f14d0da628d43912f4ea4635c0a4bba7f1c0d2f86b527c7d",
+        "source_sha256": "e82a9d04e260a96ad4260034b48d367b9912f60bf8bb901bb2fac3b5967e7109",
         "output_pages": 18,
-        "output_bytes": 614087,
-        "output_sha256": "40e97929129723f2b05042da43321245aca9e4899e04e02861b403b21d739887",
+        "output_bytes": 617322,
+        "output_sha256": "60e1e80239cf72c5fb3162e9296ebd5bc8525540dfb1a6d67171632ab43d8266",
         "warnings": {
           "layout_or_package_warning_lines": 5,
           "fatal_errors": 0,
-          "summary": "PDF produced successfully after adding the bounded 3Emotion aggregate operating-range benchmark. Non-fatal underfull boxes and the bundled lineno UTF-8 replacement warning remain; no fatal errors were reported."
+          "summary": "PDF produced successfully after adding the prospectively frozen public ignited-release thermal-effects screen. Non-fatal underfull boxes and the bundled lineno UTF-8 replacement warning remain; no fatal errors were reported."
         },
         "built_in_compiler_attempt": {
           "success": false,
           "diagnostic": "Unable to find standard directories for platform"
         },
-        "interpretation": "The exact current manuscript source compiled to an 18-page PDF with the pinned Tectonic release. Public 3Emotion station logs are cited as aggregate operating-range context only; no full-loop or synchronized raw-trace validation claim is made."
+        "interpretation": "The exact current manuscript source compiled successfully with the pinned Tectonic release. The Figshare thermal-effects archive is cited as an independent consequence-only screen protocol; no station full-loop or legal separation-distance claim is made."
       }
     },
     {

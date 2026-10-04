@@ -550,6 +550,75 @@
       "evidence_role": "qualitative actual-accident scenario and response/prevention grounding",
       "eligibility_note": "Not synchronized process traces, not a full-loop station-to-vehicle holdout, not a frequency/probability dataset, and not physics-model validation evidence.",
       "record": "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json"
+    },
+    "figshare_thermal_effects_ignited_release_2022": {
+      "title": "Experimental data - hydrogen safety, thermal effects",
+      "authors": [
+        "Agnieszka Lach",
+        "Andre Vagner Gaathaug"
+      ],
+      "publisher": "University of South-Eastern Norway / Figshare",
+      "landing_page": "https://doi.org/10.23642/usn.17695082.v1",
+      "api_url": "https://api.figshare.com/v2/articles/17695082",
+      "doi": "10.23642/usn.17695082.v1",
+      "published": "2022-01-25",
+      "license": "CC BY 4.0",
+      "public_raw_data": true,
+      "file_count": 8,
+      "file_manifest": [
+        {
+          "name": "Exp_00001.mat",
+          "figshare_file_id": 32386853,
+          "bytes": 87145920
+        },
+        {
+          "name": "Exp_00002.mat",
+          "figshare_file_id": 32386856,
+          "bytes": 57386217
+        },
+        {
+          "name": "Exp_00003.mat",
+          "figshare_file_id": 32386859,
+          "bytes": 91100499
+        },
+        {
+          "name": "Exp_00004.mat",
+          "figshare_file_id": 32386862,
+          "bytes": 93199247
+        },
+        {
+          "name": "Exp_00005.mat",
+          "figshare_file_id": 32386868,
+          "bytes": 83233774
+        },
+        {
+          "name": "Exp_00006.mat",
+          "figshare_file_id": 32386871,
+          "bytes": 93423140
+        },
+        {
+          "name": "Exp_00007.mat",
+          "figshare_file_id": 32386874,
+          "bytes": 92771285
+        },
+        {
+          "name": "Exp_00008.mat",
+          "figshare_file_id": 32386850,
+          "bytes": 95007689
+        }
+      ],
+      "reported_scope": "Real-scale ignited high-pressure hydrogen releases in a semi-confined car-park-like space, with 350/700 bar storage, 0.5/1.0 mm TPRD outlets and forced-ventilation measurements.",
+      "measured_channels": [
+        "mass flow",
+        "source pressure and temperature",
+        "ceiling/wall/under-vehicle thermocouples",
+        "radiative/convective heat flux",
+        "ventilation ACH/velocity/temperature"
+      ],
+      "rights_note": "The source record is CC BY 4.0. Raw MAT files remain external and are not mirrored in this repository; retain the DOI, API record and the prospectively frozen file-selection protocol.",
+      "evidence_role": "Independent consequence-model thermal-effect screen only.",
+      "eligibility_note": "Relevant to ignited-release thermal consequences and timing, but not a gaseous H70 station-to-vehicle full-loop holdout; it cannot establish site-specific separation distances, controller performance or emergency-response effectiveness.",
+      "protocol": "research/thermal_effects_ignited_release_protocol_2026_10_04.json"
     }
   }
 }
