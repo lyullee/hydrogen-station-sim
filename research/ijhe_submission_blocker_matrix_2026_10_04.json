@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-04T13:57:11.530387+00:00",
+  "target_journal": {
+    "title": "International Journal of Hydrogen Energy",
+    "issn": "0360-3199",
+    "publisher_scope_url": "https://shop.elsevier.com/journals/international-journal-of-hydrogen-energy/0360-3199",
+    "guide_for_authors_url": "https://www.elsevier.com/journals/international-journal-of-hydrogen-energy/0360-3199/guide-for-authors",
+    "data_statement_guidance_url": "https://www.elsevier.com/researcher/author/tools-and-resources/research-data/data-statement",
+    "readiness_interpretation": "A local gate is an evidence-readiness decision, not an acceptance or peer-review prediction."
+  },
+  "decision": {
+    "bounded_ijhe_submission_ready": false,
+    "full_user_objective_ready": false,
+    "goal_completion_permitted": false,
+    "interpretation": "A bounded manuscript may be drafted around model-level and qualitative evidence, but the validated full-station digital-twin objective cannot be declared complete."
+  },
+  "gate_counts": {
+    "PASS": 34,
+    "FAIL": 7,
+    "PENDING": 7
+  },
+  "evidence_snapshot": {
+    "tank_model": {
+      "gate": "PASS",
+      "evidence": "research/tank_model_validation_v2.json",
+      "claim_boundary": "Type-IV tank submodel only; not a full station or safety-distance validation."
+    },
+    "llm_grounding": {
+      "gate": "PASS",
+      "evidence": "research/llm_evidence_grounding_validation.json",
+      "claim_boundary": "Software evidence/contradiction contract only; no operator-effectiveness or safety claim."
+    },
+    "public_incident_traceability": {
+      "gate": "PASS",
+      "evidence": "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
+      "claim_boundary": "Qualitative scenario and response grounding; no frequency or calibrated probability claim."
+    },
+    "real_station_candidate": {
+      "status": "ACCESS_REQUEST_ONLY",
+      "evidence": "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
+      "claim_boundary": "Pucheng HRS description and file inventory are verified; raw workbooks remain application-controlled and cannot be used as validation evidence yet."
+    }
+  },
+  "blocking_matrix": [
+    {
+      "id": "full_loop_external_validation",
+      "status": "FAIL",
+      "why_blocked": "The frozen external station-loop holdout has 0/8 engineering-screen passes, and the public search found no new eligible synchronized station/controller/vehicle raw set.",
+      "evidence": [
+        "data/public_validation/results/closed_loop_external_holdout/validation.json",
+        "research/public_full_loop_search_recheck_2026_10_04.json",
+        "research/nbsdc_hrss_operational_access_verification_2026_10_04.json"
+      ],
+      "unblock_criterion": "Obtain a clean, rights-cleared, pre-access frozen external dataset with synchronized station pressure/temperature/mass-flow, protocol/controller, dispenser/nozzle, and vehicle/receptacle channels; score >=8 cases with >=80% screen pass fraction.",
+      "next_action": "Submit the prepared NBSDC Pucheng request and other custodian requests through an approved institutional channel; do not treat request approval or metadata as validation."
+    },
+    {
+      "id": "consequence_model_external_validation",
+      "status": "FAIL_OR_PENDING",
+      "why_blocked": "Several release/blowdown datasets are useful component tests, but the retained joint screens do not meet the predeclared threshold or lack an observable decay feature.",
+      "evidence": [
+        "research/ijhe_readiness_audit.json",
+        "research/preslhy_blowdown_validation.json",
+        "research/proust_independent_release_validation.json",
+        "research/schefer_transient_release_validation.json",
+        "research/grune_2014_pressure_decay_validation.json"
+      ],
+      "unblock_criterion": "Either improve the declared model against a pre-access untouched component holdout without post-outcome tuning, or narrow the manuscript claim to the observed component-test scope.",
+      "next_action": "Keep all failures and confidence intervals in the manuscript; do not convert a partial component screen into a station consequence claim."
+    },
+    {
+      "id": "saga_human_effectiveness",
+      "status": "PENDING",
+      "why_blocked": "The HIAD casebook is not frozen, ethics/collection permission is unresolved, no masked holdout responses are present, and no independent expert ratings exist.",
+      "evidence": [
+        "research/hiad_evaluation_readiness.json",
+        "research/HIAD_EXPERT_STUDY_PREREGISTRATION.md",
+        "research/ETHICS_DETERMINATION_REQUEST.md"
+      ],
+      "unblock_criterion": "Institutional determination, coordinator leakage review, frozen 24-event casebook, 168 masked responses, and three qualified independent raters with locked analysis.",
+      "next_action": "Obtain the institutional determination and complete the pre-registered human-evaluation workflow before making an effectiveness or safety claim about SAGA."
+    },
+    {
+      "id": "submission_declarations",
+      "status": "PENDING",
+      "why_blocked": "Author, affiliation, CRediT, conflict, funding and AI-use declarations are not confirmed in the repository.",
+      "evidence": [
+        "manuscript/submission_metadata.json"
+      ],
+      "unblock_criterion": "All author and declaration fields completed and independently checked before submission.",
+      "next_action": "Complete the metadata file with the actual author team; do not invent names, affiliations or declarations."
+    }
+  ],
+  "reproducibility": {
+    "audit_sha256": "a4ad53cc9991573056034812b0a9c75100e95ea4bd914bec4e17ffdf17998e4d",
+    "hiad_readiness_sha256": "e028c9a9b71ecbac658a66d1421834025e2708e07383a21f82b413abfe5fdb86",
+    "acquisition_tracker_sha256": "8c974956ea544c331aff4ea0730999ea3345cc0585e2dc8399502d0eb24ca411",
+    "full_loop_search_sha256": "79d18295081f388d541a386d69f9d64e636a59ffb3061d0f7d139d184dda59a2",
+    "candidate_route_count": 26,
+    "public_full_loop_search_candidate_count": 18
+  },
+  "claim_policy": [
+    "Never present a request, metadata page, or public station inventory as raw validation evidence.",
+    "Keep component-test failures and model limitations visible in the paper and supplement.",
+    "Do not mark the user goal complete until full_loop_external_validation and saga_effectiveness_and_safety_supported are supported and all pending human/submission gates are closed."
+  ]
+}
