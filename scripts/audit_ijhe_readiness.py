@@ -674,6 +674,57 @@ def audit(root: Path) -> dict[str, object]:
         } if accidental_ignition else "missing; public accidental-release evidence record has not been captured",
     ))
 
+    khk_public_path = root / "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json"
+    khk_public = _json(khk_public_path)
+    khk_source = (khk_public or {}).get("source_page") or {}
+    khk_rights = (khk_public or {}).get("rights_and_mirroring") or {}
+    khk_coverage = (khk_public or {}).get("coverage") or {}
+    khk_eligibility = (khk_public or {}).get("eligibility") or {}
+    khk_public_pass = bool(
+        (khk_public or {}).get("status")
+        == "public_khk_accident_report_inventory_captured"
+        and khk_source.get("institution")
+        == "High Pressure Gas Safety Institute of Japan (KHK)"
+        and khk_source.get("url")
+        == "https://www.khk.or.jp/hydrogen/accident_information.html"
+        and khk_rights.get("landing_page_public") is True
+        and khk_rights.get("raw_pdf_mirrored") is False
+        and khk_rights.get("rights_status") == "public_report_citation_only"
+        and khk_coverage.get("pdf_report_count") == 23
+        and khk_coverage.get("incident_code_count") == 26
+        and khk_coverage.get("precaution_report_count") == 8
+        and len((khk_public or {}).get("accident_reports") or []) == 23
+        and len((khk_public or {}).get("precaution_reports") or []) == 8
+        and all(
+            item.get("url") and item.get("incident_codes")
+            for item in ((khk_public or {}).get("accident_reports") or [])
+        )
+        and all(
+            item.get("url") and item.get("year")
+            for item in ((khk_public or {}).get("precaution_reports") or [])
+        )
+        and khk_eligibility.get("public_actual_accident_evidence") is True
+        and khk_eligibility.get("qualitative_scenario_grounding_eligible") is True
+        and khk_eligibility.get("synchronized_process_trace_eligible") is False
+        and khk_eligibility.get("full_loop_station_vehicle_holdout_eligible") is False
+        and khk_eligibility.get("physics_model_validation_eligible") is False
+        and bool((khk_public or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "khk_public_accident_report_inventory",
+        "PASS" if khk_public_pass else ("FAIL" if khk_public else "PENDING"),
+        "Public KHK hydrogen accident reports are inventoried for traceable qualitative scenario and response grounding without being misrepresented as numerical validation data.",
+        str(khk_public_path.relative_to(root)),
+        "23 linked PDF reports covering 26 incident codes, 8 precaution reports, public citation links, no PDF mirroring, and explicit exclusion from synchronized physics/full-loop claims.",
+        {
+            "source_page": khk_source,
+            "coverage": khk_coverage,
+            "rights_and_mirroring": khk_rights,
+            "eligibility": khk_eligibility,
+            "claim_boundary": (khk_public or {}).get("claim_boundary"),
+        } if khk_public else "missing; KHK public report inventory has not been captured",
+    ))
+
     preslhy_path = root / "research/preslhy_blowdown_external_validation.json"
     preslhy = _json(preslhy_path)
     preslhy_protocol_path = root / "research/preslhy_blowdown_validation_protocol.json"

@@ -34,6 +34,13 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert accidental["license"] == "CC BY 4.0"
     assert accidental["file_count"] == 3
     assert accidental["eligibility"]["full_loop_station_vehicle_holdout_eligible"] is False
+    assert gates["khk_public_accident_report_inventory"]["status"] == "PASS"
+    khk = gates["khk_public_accident_report_inventory"]["observed"]
+    assert khk["coverage"]["pdf_report_count"] == 23
+    assert khk["coverage"]["incident_code_count"] == 26
+    assert khk["coverage"]["precaution_report_count"] == 8
+    assert khk["rights_and_mirroring"]["raw_pdf_mirrored"] is False
+    assert khk["eligibility"]["full_loop_station_vehicle_holdout_eligible"] is False
     assert gates["preslhy_blowdown_external_validation"]["status"] == "FAIL"
     assert gates["preslhy_blowdown_external_validation"]["observed"]["aggregate"][
         "joint_primary_pass_fraction"

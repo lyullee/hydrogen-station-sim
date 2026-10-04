@@ -537,6 +537,19 @@
       "rights_note": "Zenodo record states CC BY 4.0; preserve attribution and DOI for derived summaries.",
       "eligibility_note": "Eligible as openly licensed accident-like experimental consequence/ignition evidence. It is not a station-to-vehicle full-loop holdout because breach geometry and complete calibration metadata are not supplied.",
       "record": "research/accidental_self_ignition_public_evidence_2026_10_04.json"
+    },
+    "khk_hydrogen_station_public_reports": {
+      "title": "KHK public hydrogen-related accident summaries and hydrogen-station precaution reports",
+      "publisher": "High Pressure Gas Safety Institute of Japan (KHK)",
+      "landing_page": "https://www.khk.or.jp/hydrogen/accident_information.html",
+      "public_report_count": 23,
+      "incident_code_count": 26,
+      "precaution_report_count": 8,
+      "public_raw_data": false,
+      "rights_note": "The public landing page links individual PDF reports. This repository stores citation inventory and stable links only; it does not mirror the PDFs. Verify KHK terms before redistribution or derived-table publication.",
+      "evidence_role": "qualitative actual-accident scenario and response/prevention grounding",
+      "eligibility_note": "Not synchronized process traces, not a full-loop station-to-vehicle holdout, not a frequency/probability dataset, and not physics-model validation evidence.",
+      "record": "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json"
     }
   }
 }
