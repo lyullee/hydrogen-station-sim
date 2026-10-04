@@ -1098,3 +1098,5 @@ larger back-to-back fueling data set, but neither public artifact exposes a
 synchronized logger archive or written reuse terms. This is now a documented
 high-value data-request lead, not a holdout. Details are in
 [`research/calstate_la_public_data_leads_2026_10_04.json`](calstate_la_public_data_leads_2026_10_04.json).
+The 2017 PDF itself was inspected and contains no embedded files or external
+links; the cited raw dataset therefore requires a custodian export.

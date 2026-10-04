@@ -198,6 +198,8 @@ def test_calstate_public_data_lead_requires_custodian_export():
         and item["decision"] == "DATA_REQUEST_LEAD"
         for item in record["sources"]
     )
+    assert record["pdf_file_level_inspection"]["embedded_files"] == []
+    assert record["pdf_file_level_inspection"]["external_links"] == []
     assert all(
         item.get("decision") != "NEW_INDEPENDENT_FULL_LOOP_HOLDOUT"
         for item in record["sources"]

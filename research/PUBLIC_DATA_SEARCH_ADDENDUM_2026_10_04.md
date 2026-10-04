@@ -196,3 +196,7 @@ CSV/XLSX logger archive, a channel dictionary or written raw-data reuse terms.
 They are therefore high-value custodian-request leads rather than validation
 data. The exact source-level findings and acceptance rule are recorded in
 [`research/calstate_la_public_data_leads_2026_10_04.json`](calstate_la_public_data_leads_2026_10_04.json).
+
+The 2017 PDF was additionally inspected as a file: it has six pages, no
+embedded files and no external links. Its SHA-256 is recorded in the JSON
+record, and the cited raw dataset is not recoverable from the public PDF.

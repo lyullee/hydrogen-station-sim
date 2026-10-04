@@ -4,6 +4,14 @@
   "scope": "Cal State LA HRFF public-data lead inspection",
   "decision": "HIGH_VALUE_DATA_REQUEST_LEAD_NO_PUBLIC_RAW_ARCHIVE",
   "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+  "pdf_file_level_inspection": {
+    "file": "kscifall2017hydrogenbigdataanalysis.pdf",
+    "sha256": "8097a96921230aa22630170e59be1a5093fd02d254fdbd2a960382dc3df3a521",
+    "page_count": 6,
+    "embedded_files": [],
+    "external_links": [],
+    "result": "no_raw_dataset_attached_to_public_pdf"
+  },
   "sources": [
     {
       "id": "calstate_2017_hydrogen_big_data_paper",
