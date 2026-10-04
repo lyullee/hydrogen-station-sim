@@ -549,7 +549,8 @@
       "rights_note": "The public landing page links individual PDF reports. This repository stores citation inventory and stable links only; it does not mirror the PDFs. Verify KHK terms before redistribution or derived-table publication.",
       "evidence_role": "qualitative actual-accident scenario and response/prevention grounding",
       "eligibility_note": "Not synchronized process traces, not a full-loop station-to-vehicle holdout, not a frequency/probability dataset, and not physics-model validation evidence.",
-      "record": "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json"
+      "record": "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
+      "access_verification": "research/khk_public_reports_access_verification_2026_10_04.json"
     },
     "figshare_thermal_effects_ignited_release_2022": {
       "title": "Experimental data - hydrogen safety, thermal effects",

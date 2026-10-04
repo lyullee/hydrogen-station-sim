@@ -832,6 +832,41 @@ def audit(root: Path) -> dict[str, object]:
         } if khk_public else "missing; KHK public report inventory has not been captured",
     ))
 
+    khk_access_path = root / "research/khk_public_reports_access_verification_2026_10_04.json"
+    khk_access = _json(khk_access_path)
+    khk_access_records = (khk_access or {}).get("records") or []
+    khk_access_pass = bool(
+        (khk_access or {}).get("status") == "public_khk_accident_report_access_verified"
+        and (khk_access or {}).get("report_count") == 23
+        and (khk_access or {}).get("verified_report_count") == 23
+        and len(khk_access_records) == 23
+        and all(
+            record.get("http_status") == 200
+            and record.get("content_type", "").lower().startswith("application/pdf")
+            and record.get("bytes", 0) > 0
+            and record.get("pdf_magic") is True
+            and len(record.get("sha256") or "") == 64
+            and record.get("page_count", 0) > 0
+            for record in khk_access_records
+        )
+        and "not redistributed" in ((khk_access or {}).get("rights_boundary") or "").lower()
+        and bool((khk_access or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "khk_public_accident_report_access_verification",
+        "PASS" if khk_access_pass else ("FAIL" if khk_access else "PENDING"),
+        "All inventoried KHK accident-report links resolve to PDF files whose provenance is hash-locked without redistributing the reports.",
+        str(khk_access_path.relative_to(root)),
+        "23/23 public report URLs return PDF content with non-empty SHA-256 records and page counts; only metadata is committed.",
+        {
+            "report_count": (khk_access or {}).get("report_count"),
+            "verified_report_count": (khk_access or {}).get("verified_report_count"),
+            "page_counts": [record.get("page_count") for record in khk_access_records],
+            "rights_boundary": (khk_access or {}).get("rights_boundary"),
+            "claim_boundary": (khk_access or {}).get("claim_boundary"),
+        } if khk_access else "missing; KHK public report access verification has not been run",
+    ))
+
     preslhy_path = root / "research/preslhy_blowdown_external_validation.json"
     preslhy = _json(preslhy_path)
     preslhy_protocol_path = root / "research/preslhy_blowdown_validation_protocol.json"

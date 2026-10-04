@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T13:17:23.136557+00:00",
+  "generated_at": "2026-10-04T13:22:01.949210+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 33,
+    "PASS": 34,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -1396,6 +1396,44 @@
           "physics_model_validation_eligible": false
         },
         "claim_boundary": "These public KHK reports establish traceable real hydrogen-related accident scenarios and response/prevention context. They do not provide synchronized station process traces, complete boundary conditions, exposure denominators, probabilities, or a prospective numerical holdout. They must not be used alone to claim physics validation, accident frequency, or risk probability."
+      }
+    },
+    {
+      "id": "khk_public_accident_report_access_verification",
+      "status": "PASS",
+      "claim": "All inventoried KHK accident-report links resolve to PDF files whose provenance is hash-locked without redistributing the reports.",
+      "evidence": "research\\khk_public_reports_access_verification_2026_10_04.json",
+      "requirement": "23/23 public report URLs return PDF content with non-empty SHA-256 records and page counts; only metadata is committed.",
+      "observed": {
+        "report_count": 23,
+        "verified_report_count": 23,
+        "page_counts": [
+          6,
+          5,
+          4,
+          7,
+          4,
+          5,
+          5,
+          7,
+          5,
+          3,
+          6,
+          8,
+          3,
+          6,
+          3,
+          3,
+          3,
+          4,
+          3,
+          4,
+          7,
+          5,
+          11
+        ],
+        "rights_boundary": "Report PDFs remain local and gitignored. Only URL provenance, hashes, byte counts and page counts are committed; report text and files are not redistributed.",
+        "claim_boundary": "This verifies access and provenance of public accident reports for qualitative scenario grounding. It does not provide synchronized process traces, event frequencies, causal inference or physics validation."
       }
     },
     {

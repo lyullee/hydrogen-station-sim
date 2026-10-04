@@ -1,0 +1,413 @@
+{
+  "schema_version": 1,
+  "status": "public_khk_accident_report_access_verified",
+  "source_inventory": "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
+  "source_page": {
+    "title": "Hydrogen-related accident information",
+    "institution": "High Pressure Gas Safety Institute of Japan (KHK)",
+    "url": "https://www.khk.or.jp/hydrogen/accident_information.html",
+    "accessed_at": "2026-10-04",
+    "page_scope": "KHK accident investigation committee hydrogen-related accident summaries and hydrogen-station high-pressure-gas accident precaution reports"
+  },
+  "raw_directory": "tmp/khk_public_reports_2026_10_04",
+  "report_count": 23,
+  "verified_report_count": 23,
+  "records": [
+    {
+      "incident_codes": [
+        "2024-349"
+      ],
+      "date": "2024/05/12",
+      "title": "KOH electrolyte leak from hydrogen generator",
+      "equipment_class": "hydrogen_generation",
+      "url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2025/13_2024-349.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2025/13_2024-349.pdf",
+      "attempts": 1,
+      "bytes": 543922,
+      "sha256": "aae8e8c4cb5acdc1486c70f42647ec0587b1460359da6dadbff890e6679bb849",
+      "pdf_magic": true,
+      "page_count": 6
+    },
+    {
+      "incident_codes": [
+        "2023-434"
+      ],
+      "date": "2023/08/22",
+      "title": "Hydrogen ignition at compressed-hydrogen production dehumidifier",
+      "equipment_class": "dehumidifier_ignition",
+      "url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2024/10_2023-%20434.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2024/10_2023-%20434.pdf",
+      "attempts": 1,
+      "bytes": 260218,
+      "sha256": "037eb7eb06369b9a4dc7752f1b2d025df59662ff36d068a6c8ed46bc5f5f3419",
+      "pdf_magic": true,
+      "page_count": 5
+    },
+    {
+      "incident_codes": [
+        "2023-330"
+      ],
+      "date": "2023/06/20",
+      "title": "Hydrogen-gas explosion",
+      "equipment_class": "explosion",
+      "url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2024/06_2023-330.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2024/06_2023-330.pdf",
+      "attempts": 1,
+      "bytes": 262518,
+      "sha256": "342f30751d50483656213138f4e877478cb73101b4b757e102b9c150686f3df3",
+      "pdf_magic": true,
+      "page_count": 4
+    },
+    {
+      "incident_codes": [
+        "2023-188"
+      ],
+      "date": "2023/05/15",
+      "title": "Hydrogen filling-equipment explosion",
+      "equipment_class": "filling_equipment_explosion",
+      "url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2023/05_2023-188.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2023/05_2023-188.pdf",
+      "attempts": 1,
+      "bytes": 754362,
+      "sha256": "8a88afe5022ddc1a44e5bdfc4937a773065c69df7ad5b5aa67fe0134ba822318",
+      "pdf_magic": true,
+      "page_count": 7
+    },
+    {
+      "incident_codes": [
+        "2023-100"
+      ],
+      "date": "2023/03/08",
+      "title": "Liquid-hydrogen vehicle leak and engine-room fire",
+      "equipment_class": "vehicle_fire",
+      "url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2023/13_2023-100.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2023/13_2023-100.pdf",
+      "attempts": 1,
+      "bytes": 784249,
+      "sha256": "abb7ed2183adf5002de9690a93a0d778a03ab7dc7b43e06dfef6875877915c7c",
+      "pdf_magic": true,
+      "page_count": 4
+    },
+    {
+      "incident_codes": [
+        "2022-608"
+      ],
+      "date": "2022/06/04",
+      "title": "Trace hydrogen leak from fitting in 40 MPa storage-gas unit",
+      "equipment_class": "storage_fitting_leak",
+      "url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2023/15_2022-608.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2023/15_2022-608.pdf",
+      "attempts": 1,
+      "bytes": 993463,
+      "sha256": "5df472029ca4e5e4870576a48cc8c61d157c298b4012db5a6d32c31cbde99674",
+      "pdf_magic": true,
+      "page_count": 5
+    },
+    {
+      "incident_codes": [
+        "2022-030"
+      ],
+      "date": "2022/02/07",
+      "title": "Fitting damage and hydrogen leak",
+      "equipment_class": "fitting_leak",
+      "url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2023/10_2022-030.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2023/10_2022-030.pdf",
+      "attempts": 1,
+      "bytes": 651351,
+      "sha256": "fb8fb5b76dd2e18b72ee304eaaca29fc2fde019f7ff2d2629e88f793819fa985",
+      "pdf_magic": true,
+      "page_count": 5
+    },
+    {
+      "incident_codes": [
+        "2021-552"
+      ],
+      "date": "2021/12/10",
+      "title": "Hydrogen leak and electrostatic ignition at hydrogen production equipment",
+      "equipment_class": "leak_static_ignition",
+      "url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2022/14_2021-552c.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2022/14_2021-552c.pdf",
+      "attempts": 1,
+      "bytes": 583876,
+      "sha256": "49939621da4f86c755e990712f6c25b442e007d69f54a47fed935e9ac3f0a590",
+      "pdf_magic": true,
+      "page_count": 7
+    },
+    {
+      "incident_codes": [
+        "2020-144"
+      ],
+      "date": "2020/04/19-20",
+      "title": "Hydrogen-gas leak",
+      "equipment_class": "hydrogen_leak",
+      "url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/jikogaiyouhoukoku/2020-144.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/jikogaiyouhoukoku/2020-144.pdf",
+      "attempts": 1,
+      "bytes": 303888,
+      "sha256": "2fb1913e7a0bee4695e1275bd45a8af9ae96b67b3ca4dbdd1f0c3e5871f0aa40",
+      "pdf_magic": true,
+      "page_count": 5
+    },
+    {
+      "incident_codes": [
+        "2019-378"
+      ],
+      "date": "2019/09/12",
+      "title": "Filling-hose damage during FC forklift hydrogen filling",
+      "equipment_class": "filling_hose_damage",
+      "url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/jikogaiyouhoukoku/2019-378r%20.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/jikogaiyouhoukoku/2019-378r%20.pdf",
+      "attempts": 1,
+      "bytes": 394987,
+      "sha256": "acd2d6fa922ec0188aa3bb81b892578dbb2daa16184bc696efd79a0a29593878",
+      "pdf_magic": true,
+      "page_count": 3
+    },
+    {
+      "incident_codes": [
+        "2018-660",
+        "2018-661"
+      ],
+      "date": "2018/10/24, 2018/10/31",
+      "title": "Hydrogen leaks from compressors at compressed-hydrogen stations",
+      "equipment_class": "compressor_leak",
+      "url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/jikogaiyouhoukoku/02-12_2018-660%2C661.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/jikogaiyouhoukoku/02-12_2018-660%2C661.pdf",
+      "attempts": 1,
+      "bytes": 353406,
+      "sha256": "1816ee6d71d5a447b29010e5eea9051b58af16dd075f393465a5d36c6a39561c",
+      "pdf_magic": true,
+      "page_count": 6
+    },
+    {
+      "incident_codes": [
+        "2018-705"
+      ],
+      "date": "2018/08/10",
+      "title": "Filling-hose leak and fixed gas-detector alarm at hydrogen station",
+      "equipment_class": "hose_leak_detector_alarm",
+      "url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/jikogaiyouhoukoku/2018-705.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/jikogaiyouhoukoku/2018-705.pdf",
+      "attempts": 1,
+      "bytes": 602351,
+      "sha256": "ce978b45f564e9363c32ec3040525b1b808975e6160f922b248fdd9d7c0ecbc5",
+      "pdf_magic": true,
+      "page_count": 8
+    },
+    {
+      "incident_codes": [
+        "2017-101"
+      ],
+      "date": "2017/01/31",
+      "title": "Compressed-hydrogen station filling-hose rupture",
+      "equipment_class": "filling_hose_rupture",
+      "url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/ippan_soku/2017-101.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/ippan_soku/2017-101.pdf",
+      "attempts": 1,
+      "bytes": 205018,
+      "sha256": "37095f31943b765eeabc529702fb0900e541a614e953240073114a01cd7cc1b6",
+      "pdf_magic": true,
+      "page_count": 3
+    },
+    {
+      "incident_codes": [
+        "2017-037",
+        "2017-094",
+        "2017-119"
+      ],
+      "date": "2017/01/29, 2017/03/24, 2017/04/14",
+      "title": "Hydrogen leaks from compressed-hydrogen station dispensers",
+      "equipment_class": "dispenser_leak",
+      "url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/ippan_soku/2017-037_2017-094_2017-119.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/ippan_soku/2017-037_2017-094_2017-119.pdf",
+      "attempts": 1,
+      "bytes": 285529,
+      "sha256": "99efeaa2ba0219d14ccd302888861aaa009d976443c8f55941b921ec44a978bf",
+      "pdf_magic": true,
+      "page_count": 6
+    },
+    {
+      "incident_codes": [
+        "2016-1066"
+      ],
+      "date": "2016/12/26",
+      "title": "Hydrogen leak from isolation valve at compressed-hydrogen station",
+      "equipment_class": "isolation_valve_leak",
+      "url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/ippan_soku/2016-1066.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/ippan_soku/2016-1066.pdf",
+      "attempts": 1,
+      "bytes": 293901,
+      "sha256": "0b20b29f407163740ea9e2f7af0ab46556e51ec2c80f76bca051bca3e6320398",
+      "pdf_magic": true,
+      "page_count": 3
+    },
+    {
+      "incident_codes": [
+        "2016-186"
+      ],
+      "date": "2016/05/23",
+      "title": "Hydrogen leak from emergency breakaway coupling",
+      "equipment_class": "breakaway_coupling_leak",
+      "url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/ippan_soku/2016-186.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/ippan_soku/2016-186.pdf",
+      "attempts": 1,
+      "bytes": 329669,
+      "sha256": "14912ea7bae1ab940bd874a115d1536701be7a8eb14f5749a6ddaa6377c4e64f",
+      "pdf_magic": true,
+      "page_count": 3
+    },
+    {
+      "incident_codes": [
+        "2016-082"
+      ],
+      "date": "2016/03/08",
+      "title": "Hydrogen leak at compressed-hydrogen station",
+      "equipment_class": "station_hydrogen_leak",
+      "url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/ippan_soku/2016-082.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/ippan_soku/2016-082.pdf",
+      "attempts": 1,
+      "bytes": 398922,
+      "sha256": "7b8797db5041ad64546fc5134ec35e425ea66ceb91283162bc81306264ae7687",
+      "pdf_magic": true,
+      "page_count": 3
+    },
+    {
+      "incident_codes": [
+        "2015-363"
+      ],
+      "date": "2015/10/06",
+      "title": "Mobile-station emergency breakaway-coupler hydrogen leak",
+      "equipment_class": "mobile_breakaway_leak",
+      "url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/ippan_soku/2015-363.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/ippan_soku/2015-363.pdf",
+      "attempts": 1,
+      "bytes": 233246,
+      "sha256": "2c493d0c8f26e4b845e3734ab145785bfc4356b675b687c9334400c6caf7c9e7",
+      "pdf_magic": true,
+      "page_count": 4
+    },
+    {
+      "incident_codes": [
+        "2015-333"
+      ],
+      "date": "2015/10/05",
+      "title": "Hydrogen leak from dispenser isolation valve during filling",
+      "equipment_class": "dispenser_isolation_valve_leak",
+      "url": "https://www.khk.or.jp/Portals/0/resources/activities/incident_investigation/hpg_incident/pdf/2015-333.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/resources/activities/incident_investigation/hpg_incident/pdf/2015-333.pdf",
+      "attempts": 1,
+      "bytes": 267418,
+      "sha256": "a7117a846b29122ecd68666a21a721c7c330735afeafb3f1dcec9c7f47371cc9",
+      "pdf_magic": true,
+      "page_count": 3
+    },
+    {
+      "incident_codes": [
+        "2015-052"
+      ],
+      "date": "2015/03/03",
+      "title": "Hydrogen leak from dispenser fitting",
+      "equipment_class": "dispenser_fitting_leak",
+      "url": "https://www.khk.or.jp/Portals/0/resources/activities/incident_investigation/hpg_incident/pdf/2015-052.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/resources/activities/incident_investigation/hpg_incident/pdf/2015-052.pdf",
+      "attempts": 1,
+      "bytes": 857235,
+      "sha256": "93260262525b0f040b7f45a540eb27df4aedf6ad51d59896827c534f74ebdd61",
+      "pdf_magic": true,
+      "page_count": 4
+    },
+    {
+      "incident_codes": [
+        "2014-349"
+      ],
+      "date": "2014/12/09",
+      "title": "Fire during accumulator cleaning at hydrogen station",
+      "equipment_class": "accumulator_fire",
+      "url": "https://www.khk.or.jp/Portals/0/resources/activities/incident_investigation/hpg_incident/pdf/2014-349.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/resources/activities/incident_investigation/hpg_incident/pdf/2014-349.pdf",
+      "attempts": 1,
+      "bytes": 396512,
+      "sha256": "cf03992c3c88649e6aab44ec3e2d331967d8ec7b4711712768078f2598d33fb5",
+      "pdf_magic": true,
+      "page_count": 7
+    },
+    {
+      "incident_codes": [
+        "2014-182"
+      ],
+      "date": "2014/07/17",
+      "title": "Hydrogen-gas leak from compressed-hydrogen station filling hose",
+      "equipment_class": "filling_hose_leak",
+      "url": "https://www.khk.or.jp/Portals/0/resources/activities/incident_investigation/hpg_incident/pdf/2014-182.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/resources/activities/incident_investigation/hpg_incident/pdf/2014-182.pdf",
+      "attempts": 1,
+      "bytes": 348524,
+      "sha256": "c856fc2f3aebd4bf4e977d5bb31c6f08d0899d3371efbaab391121804d2c09cc",
+      "pdf_magic": true,
+      "page_count": 5
+    },
+    {
+      "incident_codes": [
+        "2005-415"
+      ],
+      "date": "2005/12/07",
+      "title": "Explosion at hydrogen-station demonstration test equipment",
+      "equipment_class": "station_explosion",
+      "url": "https://www.khk.or.jp/Portals/0/resources/activities/incident_investigation/hpg_incident/pdf/2005-415.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "final_url": "https://www.khk.or.jp/Portals/0/resources/activities/incident_investigation/hpg_incident/pdf/2005-415.pdf",
+      "attempts": 1,
+      "bytes": 1146758,
+      "sha256": "9216d0eeded918439091954f36bcce4351715f47e5387fd182e031a674988809",
+      "pdf_magic": true,
+      "page_count": 11
+    }
+  ],
+  "rights_boundary": "Report PDFs remain local and gitignored. Only URL provenance, hashes, byte counts and page counts are committed; report text and files are not redistributed.",
+  "claim_boundary": "This verifies access and provenance of public accident reports for qualitative scenario grounding. It does not provide synchronized process traces, event frequencies, causal inference or physics validation."
+}
