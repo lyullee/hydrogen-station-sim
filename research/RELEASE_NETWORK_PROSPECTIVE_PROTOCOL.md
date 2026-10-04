@@ -11,7 +11,9 @@ The model contains two finite control volumes: a source vessel and a supply
 line. A time-dependent valve opening fraction connects the source to the line;
 the line discharges through a terminal restriction to ambient. Each volume
 has a gas mass and internal-energy state. Optional lumped wall states exchange
-heat with the gas and ambient. The model returns source and line pressures,
+heat with the gas and ambient; internal gas/wall area and external
+wall/ambient area are separate geometry inputs. The model returns source and
+line pressures,
 temperatures, inventories, upstream flow and terminal flow on one clock.
 
 No fitted discharge coefficient, opening time, line volume, time shift or

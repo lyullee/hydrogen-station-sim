@@ -59,9 +59,40 @@ def test_zero_thermal_capacity_keeps_wall_temperature_fixed():
             line_wall_mass_kg=0.0,
             source_internal_area_m2=1.0,
             line_internal_area_m2=1.0,
+            source_external_area_m2=1.0,
+            line_external_area_m2=1.0,
             internal_heat_transfer_w_m2_k=100.0,
             external_heat_transfer_w_m2_k=100.0,
         ),
     )
     assert np.all(result.source_wall_temperature_k == pytest.approx(315.15))
     assert np.all(result.line_wall_temperature_k == pytest.approx(293.15))
+
+
+def test_external_heat_transfer_uses_external_area():
+    time = np.linspace(0.0, 0.2, 21)
+    common = dict(
+        source_wall_mass_kg=2.0,
+        line_wall_mass_kg=1.0,
+        source_internal_area_m2=0.0,
+        line_internal_area_m2=0.0,
+        external_heat_transfer_w_m2_k=250.0,
+        ambient_temperature_k=293.15,
+        source_wall_temperature_k=380.0,
+        line_wall_temperature_k=380.0,
+    )
+    without_external_area = simulate_release_network(
+        time, inputs=_inputs(**common, source_external_area_m2=0.0, line_external_area_m2=0.0)
+    )
+    with_external_area = simulate_release_network(
+        time, inputs=_inputs(**common, source_external_area_m2=4.0, line_external_area_m2=2.0)
+    )
+
+    assert (
+        with_external_area.source_wall_temperature_k[-1]
+        < without_external_area.source_wall_temperature_k[-1]
+    )
+    assert (
+        with_external_area.line_wall_temperature_k[-1]
+        < without_external_area.line_wall_temperature_k[-1]
+    )

@@ -45,6 +45,8 @@ class ReleaseNetworkInputs:
     wall_specific_heat_j_kg_k: float = 500.0
     source_internal_area_m2: float = 0.0
     line_internal_area_m2: float = 0.0
+    source_external_area_m2: float = 0.0
+    line_external_area_m2: float = 0.0
     source_wall_temperature_k: float | None = None
     line_wall_temperature_k: float | None = None
     internal_heat_transfer_w_m2_k: float = 0.0
@@ -76,6 +78,8 @@ class ReleaseNetworkInputs:
             "line_wall_mass_kg": self.line_wall_mass_kg,
             "source_internal_area_m2": self.source_internal_area_m2,
             "line_internal_area_m2": self.line_internal_area_m2,
+            "source_external_area_m2": self.source_external_area_m2,
+            "line_external_area_m2": self.line_external_area_m2,
             "internal_heat_transfer_w_m2_k": self.internal_heat_transfer_w_m2_k,
             "external_heat_transfer_w_m2_k": self.external_heat_transfer_w_m2_k,
         }
@@ -218,10 +222,10 @@ def simulate_release_network(
 
     def derivative(time_s: float, vector: np.ndarray) -> np.ndarray:
         source_p, source_t, source_h, line_p, line_t, line_h, upstream, terminal, source_wall_q, line_wall_q, _source_state, _line_state = quantities(time_s, vector)
-        source_external_q = inputs.external_heat_transfer_w_m2_k * inputs.source_internal_area_m2 * (
+        source_external_q = inputs.external_heat_transfer_w_m2_k * inputs.source_external_area_m2 * (
             inputs.ambient_temperature_k - float(vector[4])
         )
-        line_external_q = inputs.external_heat_transfer_w_m2_k * inputs.line_internal_area_m2 * (
+        line_external_q = inputs.external_heat_transfer_w_m2_k * inputs.line_external_area_m2 * (
             inputs.ambient_temperature_k - float(vector[5])
         )
         source_wall_derivative = 0.0
