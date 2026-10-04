@@ -721,6 +721,21 @@
       "evidence_role": "independent confined-enclosure pressure-peaking consequence component archive",
       "eligibility_note": "Ten cases expose pressure and Coriolis mass-flow channels. Vent geometry and initial conditions require mapping to the associated open publication. This is not a station-to-vehicle full-loop holdout.",
       "manifest_recheck": "research/mendeley_usn_pressure_peaking_manifest_2026_10_05.json"
+    },
+    "kgs_oh_real_hrs_appendix_recheck_2026_10_05": {
+      "title": "KGS/Oh real-HRS fueling study public appendix and code-access recheck",
+      "publisher": "Korea Gas Safety Corporation / Research Square",
+      "landing_page": "https://www.researchsquare.com/article/rs-6248350/v1",
+      "published_doi": "10.1007/s11814-025-00551-9",
+      "preprint_doi": "10.21203/rs.3.rs-6248350/v1",
+      "license": "CC BY 4.0 preprint; appendix access recorded; code-folder access requires sign-in",
+      "public_raw_data": false,
+      "reported_scope": "Six real HRS fueling scenarios with vehicle pressure, vehicle temperature and mass-flow measurements.",
+      "appendix_url": "https://assets-eu.researchsquare.com/files/rs-6248350/v1/6179b5ddc5929c6c28b2e5d4.pdf",
+      "appendix_sha256": "f70ec03b33da8caf1d7b9ee8b082e661a6e57b4115b6ffa3fe5d57364dbbd628",
+      "rights_note": "The public appendix is a two-page parameter/constant table and does not release synchronized logger rows. The linked code folder redirected to Google sign-in during anonymous recheck.",
+      "eligibility_note": "High-value real-HRS acquisition lead; not an eligible raw full-loop holdout.",
+      "access_recheck": "research/kgs_oh_preprint_appendix_recheck_2026_10_05.json"
     }
   }
 }

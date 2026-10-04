@@ -384,6 +384,41 @@ def audit(root: Path) -> dict[str, object]:
         } if kgs_access else "missing",
     ))
 
+    kgs_appendix_path = root / "research/kgs_oh_preprint_appendix_recheck_2026_10_05.json"
+    kgs_appendix = _json(kgs_appendix_path)
+    kgs_appendix_source = (kgs_appendix or {}).get("source") or {}
+    kgs_appendix_access = (kgs_appendix or {}).get("appendix_access") or {}
+    kgs_appendix_code = (kgs_appendix or {}).get("code_access") or {}
+    kgs_appendix_classification = (kgs_appendix or {}).get("classification") or {}
+    kgs_appendix_pass = bool(
+        (kgs_appendix or {}).get("schema_version") == 1
+        and kgs_appendix_source.get("published_doi") == "10.1007/s11814-025-00551-9"
+        and kgs_appendix_source.get("reported_real_hrs_scenarios") == 6
+        and kgs_appendix_access.get("pdf_pages") == 2
+        and kgs_appendix_access.get("appendix_sha256_matches_expected") is True
+        and all((kgs_appendix_access.get("required_table_terms_present") or {}).values())
+        and kgs_appendix_access.get("raw_synchronized_logger_present") is False
+        and kgs_appendix_code.get("result") == "REDIRECTED_TO_SIGN_IN"
+        and kgs_appendix_code.get("files_retrieved") == 0
+        and kgs_appendix_classification.get("full_loop_station_vehicle_holdout_eligible") is False
+        and kgs_appendix_classification.get("goal_completion_permitted") is False
+        and (kgs_appendix or {}).get("claim_boundary")
+    )
+    gates.append(_gate(
+        "kgs_preprint_appendix_access_boundary_integrity",
+        "PASS" if kgs_appendix_pass else ("FAIL" if kgs_appendix else "PENDING"),
+        "The public KGS/Oh supplement and code link are rechecked and retained without promoting parameter tables to a raw full-loop holdout.",
+        str(kgs_appendix_path.relative_to(root)),
+        "Two-page appendix hash, Table A.1/A.2/A.3 terms, no synchronized logger rows, sign-in redirect and false eligibility/completion flags.",
+        {
+            "published_doi": kgs_appendix_source.get("published_doi"),
+            "pdf_pages": kgs_appendix_access.get("pdf_pages"),
+            "appendix_sha256_matches_expected": kgs_appendix_access.get("appendix_sha256_matches_expected"),
+            "code_access_result": kgs_appendix_code.get("result"),
+            "full_loop_station_vehicle_holdout_eligible": kgs_appendix_classification.get("full_loop_station_vehicle_holdout_eligible"),
+        } if kgs_appendix else "missing",
+    ))
+
     nbsdc_recheck_path = root / "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json"
     nbsdc_recheck = _json(nbsdc_recheck_path)
     nbsdc_source = (nbsdc_recheck or {}).get("source") or {}

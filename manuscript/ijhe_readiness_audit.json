@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T21:30:24.211080+00:00",
+  "generated_at": "2026-10-04T21:39:42.068433+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 52,
+    "PASS": 53,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -443,6 +443,20 @@
         "reported_real_hrs_scenarios": 6,
         "access_result": "REDIRECTED_TO_SIGN_IN",
         "files_retrieved": 0,
+        "full_loop_station_vehicle_holdout_eligible": false
+      }
+    },
+    {
+      "id": "kgs_preprint_appendix_access_boundary_integrity",
+      "status": "PASS",
+      "claim": "The public KGS/Oh supplement and code link are rechecked and retained without promoting parameter tables to a raw full-loop holdout.",
+      "evidence": "research\\kgs_oh_preprint_appendix_recheck_2026_10_05.json",
+      "requirement": "Two-page appendix hash, Table A.1/A.2/A.3 terms, no synchronized logger rows, sign-in redirect and false eligibility/completion flags.",
+      "observed": {
+        "published_doi": "10.1007/s11814-025-00551-9",
+        "pdf_pages": 2,
+        "appendix_sha256_matches_expected": true,
+        "code_access_result": "REDIRECTED_TO_SIGN_IN",
         "full_loop_station_vehicle_holdout_eligible": false
       }
     },
