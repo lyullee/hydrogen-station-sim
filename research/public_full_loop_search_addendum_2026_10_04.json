@@ -74,6 +74,21 @@
       "request_draft": "research/BAM_HRS_DATA_REQUEST_DRAFT.md",
       "classification": "HIGH_VALUE_DATA_REQUEST_LEAD",
       "next_action": "Request de-identified synchronized raw sensor and controller logs, channel dictionary, quality flags, calibration records, event labels and reuse permission."
+    },
+    {
+      "id": "threeemotion_2022_operational_addendum",
+      "title": "Hydrogen refueling stations and fuel cell buses four year operational analysis under real-world conditions",
+      "doi": "10.1016/j.ijhydene.2022.10.093",
+      "url": "https://doi.org/10.1016/j.ijhydene.2022.10.093",
+      "reported_coverage": "Four-year operation of five 350 bar bus HRSs in the 3Emotion project, with event quantity, duration, average flow, utilization and availability summaries.",
+      "real_station_data": true,
+      "public_raw_data": false,
+      "raw_common_timebase_verified": false,
+      "aggregation_level": "daily/event log summaries",
+      "full_loop_holdout_eligible": false,
+      "request_draft": "research/3EMOTION_DATA_REQUEST_DRAFT.md",
+      "classification": "AGGREGATED_OPERATIONAL_DATA_REQUEST_LEAD",
+      "next_action": "Request the underlying operator spreadsheets and synchronized pressure, temperature, flow and controller channels with reuse terms; the published aggregates cannot score the dynamic station loop."
     }
   ],
   "claim_boundary": "A public catalog record, paper statement or component test is not promoted to numerical full-loop validation without downloadable synchronized raw files, immutable hashes, independent protocol freeze and written reuse rights."

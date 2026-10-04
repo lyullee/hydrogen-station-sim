@@ -2268,9 +2268,10 @@
       "nbsdc_70mpa_hydrogenation_port_test_addendum",
       "deng_2025_high_flow_refueling_tank_addendum",
       "calstate_genovese_2021_in_situ_fueling_addendum",
-      "bam_kim_2026_field_monitoring_addendum"
+      "bam_kim_2026_field_monitoring_addendum",
+      "threeemotion_2022_operational_addendum"
     ],
-    "finding": "The NBSDC HRS record is approval-gated, the 70 MPa port record is component-only, the 2025 IJHE high-flow tank experiment has no verified downloadable raw archive, the Cal State LA one-year operation study does not expose its logger files, and the BAM field-monitoring paper directs raw-data inquiries to the authors. None is promoted to full-loop validation.",
+    "finding": "The NBSDC HRS record is approval-gated, the 70 MPa port record is component-only, the 2025 IJHE high-flow tank experiment has no verified downloadable raw archive, the Cal State LA one-year operation study does not expose its logger files, the BAM field-monitoring paper directs raw-data inquiries to the authors, and the 3Emotion result is aggregated event-level operation rather than synchronized station traces. None is promoted to full-loop validation.",
     "claim_boundary": "No public catalog metadata or paper-only result can replace a hashed synchronized raw archive, frozen no-fitting protocol and written reuse rights."
   }
 }
