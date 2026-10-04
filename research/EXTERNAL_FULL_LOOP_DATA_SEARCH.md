@@ -1252,6 +1252,12 @@ The [ELVHYS 4.2 Dataverse record](https://dataverse.no/dataset.xhtml?persistentI
 
 The metadata CSV dates the experiments 5–28 November 2025, while the README says “Autumn 2024”. The discrepancy is recorded for custodian clarification. The source remains **component-only**: it is cryogenic transfer-space evidence, not a gaseous H70 station-to-vehicle fueling archive, and therefore does not change the full-loop gate or goal-completion rule.
 
+## 2026-10-05 KGS real-station data access recheck
+
+The KGS-linked thermofluidic study reports six real HRS fueling scenarios with vehicle pressure, vehicle temperature and mass flow. The published article is [10.1007/s11814-025-00551-9](https://doi.org/10.1007/s11814-025-00551-9), with open preprint [10.21203/rs.3.rs-6248350/v1](https://doi.org/10.21203/rs.3.rs-6248350/v1). Its cited Google Drive code folder redirected an anonymous request to Google sign-in and yielded no files. The exact access result is recorded in [`kgs_hrs_code_access_recheck_2026_10_05.json`](kgs_hrs_code_access_recheck_2026_10_05.json).
+
+This is a high-value real-station acquisition lead, but not a public raw holdout. The six synchronized scenarios, channel dictionary, calibration metadata, protocol states and written reuse terms still need to be obtained and frozen before numerical validation.
+
 The UPC/Digital.CSIC supplementary artifact for the on-site HRS modelling paper
 (DOI [10.1016/j.ijhydene.2023.08.192](https://doi.org/10.1016/j.ijhydene.2023.08.192))
 was also checked. It is openly reachable and useful for comparing operating

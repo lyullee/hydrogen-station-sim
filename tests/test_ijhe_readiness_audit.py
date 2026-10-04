@@ -32,6 +32,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     field_article = gates["real_station_article_boundary_integrity"]["observed"]
     assert field_article["reported_sensor_count"] == 8
     assert field_article["full_loop_external_holdout_eligible"] is False
+    assert gates["kgs_real_station_access_boundary_integrity"]["status"] == "PASS"
+    kgs_access = gates["kgs_real_station_access_boundary_integrity"]["observed"]
+    assert kgs_access["reported_real_hrs_scenarios"] == 6
+    assert kgs_access["access_result"] == "REDIRECTED_TO_SIGN_IN"
+    assert kgs_access["full_loop_station_vehicle_holdout_eligible"] is False
     assert gates["jetfire_supplement_rights_boundary_integrity"]["status"] == "PASS"
     jetfire = gates["jetfire_supplement_rights_boundary_integrity"]["observed"]
     assert jetfire["reported_test_count"] == 17

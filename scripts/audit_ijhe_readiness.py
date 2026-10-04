@@ -290,6 +290,41 @@ def audit(root: Path) -> dict[str, object]:
         } if field_article else "missing; public field article boundary record has not been captured",
     ))
 
+    kgs_access_path = root / "research/kgs_hrs_code_access_recheck_2026_10_05.json"
+    kgs_access = _json(kgs_access_path)
+    kgs_access_source = (kgs_access or {}).get("source") or {}
+    kgs_access_check = (kgs_access or {}).get("anonymous_access_check") or {}
+    kgs_access_classification = (kgs_access or {}).get("classification") or {}
+    kgs_access_pass = bool(
+        (kgs_access or {}).get("schema_version") == 1
+        and kgs_access_source.get("published_doi") == "10.1007/s11814-025-00551-9"
+        and kgs_access_source.get("preprint_doi") == "10.21203/rs.3.rs-6248350/v1"
+        and kgs_access_source.get("reported_real_hrs_scenarios") == 6
+        and kgs_access_source.get("reported_measurements")
+        and kgs_access_check.get("result") == "REDIRECTED_TO_SIGN_IN"
+        and kgs_access_check.get("files_retrieved") == 0
+        and kgs_access_classification.get("real_station_provenance") is True
+        and kgs_access_classification.get("public_raw_logger_available") is False
+        and kgs_access_classification.get("full_loop_station_vehicle_holdout_eligible") is False
+        and kgs_access_classification.get("goal_completion_permitted") is False
+        and len((kgs_access or {}).get("minimum_requested_package") or []) >= 7
+        and (kgs_access or {}).get("claim_boundary")
+    )
+    gates.append(_gate(
+        "kgs_real_station_access_boundary_integrity",
+        "PASS" if kgs_access_pass else ("FAIL" if kgs_access else "PENDING"),
+        "The KGS-linked real-station fueling study is retained as a high-value acquisition lead with an independently recorded anonymous-access boundary.",
+        str(kgs_access_path.relative_to(root)),
+        "Published/preprint DOI, six reported scenarios, measured channels, sign-in redirect result, requested raw package and false full-loop/goal flags.",
+        {
+            "published_doi": kgs_access_source.get("published_doi"),
+            "reported_real_hrs_scenarios": kgs_access_source.get("reported_real_hrs_scenarios"),
+            "access_result": kgs_access_check.get("result"),
+            "files_retrieved": kgs_access_check.get("files_retrieved"),
+            "full_loop_station_vehicle_holdout_eligible": kgs_access_classification.get("full_loop_station_vehicle_holdout_eligible"),
+        } if kgs_access else "missing",
+    ))
+
     jetfire_path = root / "research/carboni_2022_jetfire_supplement_data_boundary_2026_10_05.json"
     jetfire = _json(jetfire_path)
     jetfire_source = (jetfire or {}).get("source") or {}

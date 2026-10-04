@@ -90,6 +90,24 @@
         "date_metadata_conflict": true
       },
       "reuse_status": "CC0 permits reuse; cite the metadata/readme date discrepancy and keep the source in a declared cryogenic domain-transfer protocol. It cannot close the station full-loop gate."
+    },
+    {
+      "id": "kgs_oh_hrs_real_station_scenarios_2026_10_05",
+      "title": "Enhanced Thermofluidic Modeling and Open Source Rigorous Simulation of Hydrogen Fueling Systems Validated with Real-world Data",
+      "doi": "10.1007/s11814-025-00551-9",
+      "preprint_doi": "10.21203/rs.3.rs-6248350/v1",
+      "url": "https://doi.org/10.1007/s11814-025-00551-9",
+      "claimed_code_url": "https://drive.google.com/drive/folders/1l_rKzlKZaxSVIyFwNkbVX0r2JLnRtosp",
+      "license": "CC BY 4.0 preprint; linked code-folder access unverified",
+      "decision": "REAL_STATION_DATA_REQUEST_LEAD_ACCESS_UNVERIFIED",
+      "finding": "The study reports six real HRS scenarios with vehicle pressure, temperature and mass-flow measurements. Anonymous access to the cited Google Drive folder redirected to Google sign-in and returned no files, so no raw synchronized archive or reuse terms were available for a frozen holdout.",
+      "observed_scope": {
+        "reported_scenarios": 6,
+        "reported_measurements": ["vehicle pressure", "vehicle temperature", "mass flow"],
+        "public_raw_logger_retrieved": false,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "Request the de-identified logger export, channel/calibration metadata and written IJHE reuse terms from the KGS data custodian before outcome access."
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",

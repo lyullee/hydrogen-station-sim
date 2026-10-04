@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T17:32:39.627018+00:00",
+  "generated_at": "2026-10-04T17:41:06.708485+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 39,
+    "PASS": 40,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -376,6 +376,20 @@
         "reported_sensor_count": 8,
         "full_loop_external_holdout_eligible": false,
         "claim_boundary": "This record strengthens source accounting only. It is not raw validation evidence and does not change the IJHE or full-objective completion gates."
+      }
+    },
+    {
+      "id": "kgs_real_station_access_boundary_integrity",
+      "status": "PASS",
+      "claim": "The KGS-linked real-station fueling study is retained as a high-value acquisition lead with an independently recorded anonymous-access boundary.",
+      "evidence": "research\\kgs_hrs_code_access_recheck_2026_10_05.json",
+      "requirement": "Published/preprint DOI, six reported scenarios, measured channels, sign-in redirect result, requested raw package and false full-loop/goal flags.",
+      "observed": {
+        "published_doi": "10.1007/s11814-025-00551-9",
+        "reported_real_hrs_scenarios": 6,
+        "access_result": "REDIRECTED_TO_SIGN_IN",
+        "files_retrieved": 0,
+        "full_loop_station_vehicle_holdout_eligible": false
       }
     },
     {

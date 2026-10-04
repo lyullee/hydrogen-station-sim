@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "source": {
+    "title": "Enhanced Thermofluidic Modeling and Open Source Rigorous Simulation of Hydrogen Fueling Systems Validated with Real-world Data",
+    "published_doi": "10.1007/s11814-025-00551-9",
+    "preprint_doi": "10.21203/rs.3.rs-6248350/v1",
+    "institutional_data_provider": "Korea Gas Safety Corporation",
+    "reported_real_hrs_scenarios": 6,
+    "reported_measurements": ["vehicle pressure", "vehicle temperature", "mass flow"],
+    "claimed_code_url": "https://drive.google.com/drive/folders/1l_rKzlKZaxSVIyFwNkbVX0r2JLnRtosp"
+  },
+  "anonymous_access_check": {
+    "method": "HTTP GET without credentials, followed redirects",
+    "initial_status": 200,
+    "final_url_host": "accounts.google.com",
+    "result": "REDIRECTED_TO_SIGN_IN",
+    "files_retrieved": 0,
+    "interpretation": "The paper's public code claim is recorded, but the linked folder was not anonymously downloadable during this recheck. This is an access/rights boundary, not evidence that the authors do not possess the code or measurements."
+  },
+  "classification": {
+    "real_station_provenance": true,
+    "public_raw_logger_available": false,
+    "full_loop_station_vehicle_holdout_eligible": false,
+    "goal_completion_permitted": false
+  },
+  "minimum_requested_package": [
+    "six de-identified complete fills with a common time base",
+    "vehicle/receptacle pressure and temperature",
+    "station/hose pressure and temperature",
+    "instantaneous mass flow or cumulative transferred mass",
+    "storage cascade, compressor, precooler, valve and stop/fault states",
+    "tank geometry, initial conditions, protocol/APRR settings, calibration and uncertainty",
+    "written reuse terms for derived metrics and IJHE publication"
+  ],
+  "claim_boundary": "The peer-reviewed paper and preprint establish a high-value real-station data-request lead. They do not supply an independently downloadable raw archive in this recheck, so no full-loop validation score or completion claim is made."
+}
