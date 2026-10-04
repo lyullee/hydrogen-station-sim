@@ -354,7 +354,8 @@
         }
       ],
       "rights_note": "The Zenodo record and files are published under CC BY 4.0. Preserve attribution and the DOI; raw files remain external to this repository.",
-      "eligibility_note": "Eligible for an independent mechanical-ventilation, H2-dispersion and detector-placement validation protocol. It is not a full gaseous HRS fueling-loop set: no vehicle/cascade/compressor/precooler/dispenser controller time series.",
+      "eligibility_note": "Eligible for an independent mechanical-ventilation, H2-dispersion and detector-placement validation protocol. A 2026-10-05 file-level recheck found no trace-specific reservoir pressure-time series in the complete archive, so it is not eligible for the Grune pressure-decay holdout or a full gaseous HRS fueling-loop claim.",
+      "archive_access_recheck": "research/grune_2014_archive_access_recheck_2026_10_05.json",
       "measured_scope": [
         "spatial H2 concentration",
         "flow-field measurements",

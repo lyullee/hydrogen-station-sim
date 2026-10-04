@@ -1750,7 +1750,7 @@ def audit(root: Path) -> dict[str, object]:
         "grune_2014_pressure_decay_validation",
         grune_status,
         "The locked source model meets all pressure-decay screens on the independent KIT small-reservoir release.",
-        f"{grune_result_path.relative_to(root)}; {grune_protocol_path.relative_to(root)}; {grune_data_path.relative_to(root)}",
+        f"{grune_result_path.relative_to(root)}; {grune_protocol_path.relative_to(root)}; {grune_data_path.relative_to(root)}; research/grune_2014_archive_access_recheck_2026_10_05.json",
         "At least 15 points plus an observable half-pressure crossing; <=10% NRMSE, <=15% median error and <=20% half-time error.",
         {
             "eligibility": grune_eligibility,

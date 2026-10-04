@@ -1350,3 +1350,16 @@ Neither record is a synchronized gaseous-H70 station-to-vehicle fueling loop;
 the inventory is not a model comparison and cannot close the full-loop gate or
 the SAGA effectiveness gate. A consequence-model protocol must be frozen
 before raw traces are used for any confirmatory score.
+
+## 2026-10-05 Grune/Zenodo archive access recheck
+
+The complete seven-file archive for [10.5281/zenodo.4668554](https://doi.org/10.5281/zenodo.4668554)
+was rechecked against the Zenodo API byte counts and MD5 identities. The five
+XLSX files are spatial concentration/flow-field summaries, the PDF is source
+documentation, and the ZIP is an Inventor CAD project. No file contains a
+trace-specific measured reservoir-pressure time series or a half-pressure
+crossing. The negative result and file hashes are retained in
+[`grune_2014_archive_access_recheck_2026_10_05.json`](grune_2014_archive_access_recheck_2026_10_05.json)
+and [`GRUNE_2014_ARCHIVE_ACCESS_RECHECK_2026_10_05.md`](GRUNE_2014_ARCHIVE_ACCESS_RECHECK_2026_10_05.md).
+The Grune pressure-decay gate therefore remains pending and no validation
+claim or model parameter was changed.

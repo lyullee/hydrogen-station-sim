@@ -1,0 +1,2371 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-04T20:45:13.505735+00:00",
+  "status": "completed_archive_access_recheck",
+  "source": {
+    "record": "https://zenodo.org/records/4668554",
+    "api": "https://zenodo.org/api/records/4668554",
+    "doi": "10.5281/zenodo.4668554",
+    "title": "Efficiency of mechanical ventilation on H2 dispersion (PS)",
+    "license": "CC BY 4.0"
+  },
+  "api_observation": {
+    "record_id": 4668554,
+    "doi": "10.5281/zenodo.4668554",
+    "title": "Efficiency of mechanical ventilation on H2 dispersion (PS)",
+    "license": "cc-by-4.0",
+    "version": null,
+    "publication_date": "2021-04-07",
+    "files": [
+      {
+        "key": "HTE2440PS000MIXED_300321.pdf",
+        "size": 706086,
+        "checksum": "md5:d4b59189dd4017c695cc652f4f572128"
+      },
+      {
+        "key": "HTE2440PS001MIXED_300321.xlsx",
+        "size": 52610,
+        "checksum": "md5:da176772755b1a2449a76df9e12b9cd3"
+      },
+      {
+        "key": "HTE2440PS002MIXED_300321.xlsx",
+        "size": 65696,
+        "checksum": "md5:20f996be57fc3d8cf7d091d1f982bd75"
+      },
+      {
+        "key": "HTE2440PS003MIXED_300321.xlsx",
+        "size": 50590,
+        "checksum": "md5:953b6a033553288831b1ee02b881dbec"
+      },
+      {
+        "key": "HTE2440PS004MIXED_300321.xlsx",
+        "size": 81649,
+        "checksum": "md5:093d3d8e6ef030615704ee9096d3d84f"
+      },
+      {
+        "key": "HTE2440PS005FLMT00300321.xlsx",
+        "size": 26724,
+        "checksum": "md5:c4b9195a2bb89213eda9aa2ac9e9ec07"
+      },
+      {
+        "key": "HTE2440PS006MIXED_300321.zip",
+        "size": 11108400,
+        "checksum": "md5:ade3911c0df50ee70486153455f4bd12"
+      }
+    ]
+  },
+  "api_error": null,
+  "local_archive": {
+    "directory": "data/public_validation/raw/zenodo_4668554",
+    "file_count": 7,
+    "files": [
+      {
+        "name": "HTE2440PS000MIXED_300321.pdf",
+        "present": true,
+        "expected": {
+          "bytes": 706086,
+          "md5": "d4b59189dd4017c695cc652f4f572128"
+        },
+        "observed": {
+          "bytes": 706086,
+          "md5": "d4b59189dd4017c695cc652f4f572128",
+          "sha256": "3bb5f88b7363f671b50bd50765ec2e4b7fcdde61c2819409b1841d452d9861b1"
+        },
+        "identity_match": true,
+        "classification": "documentation_pdf",
+        "inspection": {
+          "kind": "documentation_pdf",
+          "pressure_time_trace_extracted": false,
+          "reason": "PDF is retained as source documentation; no trace extraction is used for the eligibility decision."
+        }
+      },
+      {
+        "name": "HTE2440PS001MIXED_300321.xlsx",
+        "present": true,
+        "expected": {
+          "bytes": 52610,
+          "md5": "da176772755b1a2449a76df9e12b9cd3"
+        },
+        "observed": {
+          "bytes": 52610,
+          "md5": "da176772755b1a2449a76df9e12b9cd3",
+          "sha256": "9f4020c343e95e6488040a4910cab4bc4827f1c4d0d87e702708bdba219d5d4d"
+        },
+        "identity_match": true,
+        "classification": "spatial_or_flow_field_summary_workbook",
+        "inspection": {
+          "kind": "spatial_or_flow_field_summary_workbook",
+          "sheet_count": 10,
+          "sheet_names": [
+            "1 mm 1g H2 W = 0",
+            "1 mm 1g H2 W = 1.5 co-flow",
+            "1 mm 1g H2 W = 1.5 counter-flow",
+            "1 mm 1g H2 W = 3.5 co-flow",
+            "1 mm 1g H2 W = 3.5 counter-flow",
+            "1 mm 1g H2 W = 5 co-flow",
+            "1 mm 1g H2 W = 5 counter-flow",
+            "1 mm 1g H2 W = 1.5 cross-flow",
+            "1 mm 1g H2 W = 3.5 cross-flow",
+            "1 mm 1g H2 W = 5 cross-flow"
+          ],
+          "sheet_rows": {
+            "1 mm 1g H2 W = 0": 20,
+            "1 mm 1g H2 W = 1.5 co-flow": 19,
+            "1 mm 1g H2 W = 1.5 counter-flow": 19,
+            "1 mm 1g H2 W = 3.5 co-flow": 19,
+            "1 mm 1g H2 W = 3.5 counter-flow": 15,
+            "1 mm 1g H2 W = 5 co-flow": 19,
+            "1 mm 1g H2 W = 5 counter-flow": 16,
+            "1 mm 1g H2 W = 1.5 cross-flow": 31,
+            "1 mm 1g H2 W = 3.5 cross-flow": 27,
+            "1 mm 1g H2 W = 5 cross-flow": 25
+          },
+          "leading_cells": {
+            "1 mm 1g H2 W = 0": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 0",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 1g H2 W = 1.5 co-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 1.5 m/s co-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 1g H2 W = 1.5 counter-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 1.5 m/s counter-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 1g H2 W = 3.5 co-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 3.5 m/s co-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 1g H2 W = 3.5 counter-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 3.5 m/s counter-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 1g H2 W = 5 co-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 5 m/s co-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 1g H2 W = 5 counter-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 5 m/s counter-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 1g H2 W = 1.5 cross-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 1.5 m/s cross-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 1g H2 W = 3.5 cross-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 3.5 m/s cross-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 1g H2 W = 5 cross-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 5 m/s cross-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ]
+          },
+          "pressure_time_columns_found": false,
+          "reason": "Sheets contain named wind/concentration cases and spatial grid summaries; no common elapsed-time plus pressure measurement column was found."
+        }
+      },
+      {
+        "name": "HTE2440PS002MIXED_300321.xlsx",
+        "present": true,
+        "expected": {
+          "bytes": 65696,
+          "md5": "20f996be57fc3d8cf7d091d1f982bd75"
+        },
+        "observed": {
+          "bytes": 65696,
+          "md5": "20f996be57fc3d8cf7d091d1f982bd75",
+          "sha256": "2963211747ef6c5fec33d1b850ea249eb0aa69ed7c09f730d9a8613d3206fcd6"
+        },
+        "identity_match": true,
+        "classification": "spatial_or_flow_field_summary_workbook",
+        "inspection": {
+          "kind": "spatial_or_flow_field_summary_workbook",
+          "sheet_count": 11,
+          "sheet_names": [
+            "1 mm 5g H2 W = 0",
+            "1 mm 5g H2 W = 1.5 co-flow",
+            "1 mm 5g H2 W = 1.5 counter-flow",
+            "1 mm 5g H2 W = 3.5 co-flow",
+            "1 mm 5g H2 W = 3.5 counter-flow",
+            "1 mm 5g H2 W = 5 co-flow",
+            "1 mm 5g H2 = 5 counter-flow",
+            "1 mm 1.5g H2 W = 0",
+            "1 mm 1.5g H2 W = 1.5 cross-flo",
+            "1 mm 1.5g He W = 3.5 cross-flow",
+            "1 mm 1.5g H2 W = 5 cross-flow"
+          ],
+          "sheet_rows": {
+            "1 mm 5g H2 W = 0": 24,
+            "1 mm 5g H2 W = 1.5 co-flow": 23,
+            "1 mm 5g H2 W = 1.5 counter-flow": 23,
+            "1 mm 5g H2 W = 3.5 co-flow": 23,
+            "1 mm 5g H2 W = 3.5 counter-flow": 23,
+            "1 mm 5g H2 W = 5 co-flow": 23,
+            "1 mm 5g H2 = 5 counter-flow": 21,
+            "1 mm 1.5g H2 W = 0": 19,
+            "1 mm 1.5g H2 W = 1.5 cross-flo": 25,
+            "1 mm 1.5g He W = 3.5 cross-flow": 25,
+            "1 mm 1.5g H2 W = 5 cross-flow": 26
+          },
+          "leading_cells": {
+            "1 mm 5g H2 W = 0": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 0",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 5g H2 W = 1.5 co-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                "W = 1.5 m/s co-flow",
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 5g H2 W = 1.5 counter-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 1.5 m/s counter-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 5g H2 W = 3.5 co-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 3.5 m/s co-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 5g H2 W = 3.5 counter-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 3.5 m/s counter-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 5g H2 W = 5 co-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 5 m/s co-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 5g H2 = 5 counter-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 5 m/s counter-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 1.5g H2 W = 0": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 0",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 1.5g H2 W = 1.5 cross-flo": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 1.5 m/s cross-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 1.5g He W = 3.5 cross-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 3.5 m/s cross-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "1 mm 1.5g H2 W = 5 cross-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 5 m/s cross-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ]
+          },
+          "pressure_time_columns_found": false,
+          "reason": "Sheets contain named wind/concentration cases and spatial grid summaries; no common elapsed-time plus pressure measurement column was found."
+        }
+      },
+      {
+        "name": "HTE2440PS003MIXED_300321.xlsx",
+        "present": true,
+        "expected": {
+          "bytes": 50590,
+          "md5": "953b6a033553288831b1ee02b881dbec"
+        },
+        "observed": {
+          "bytes": 50590,
+          "md5": "953b6a033553288831b1ee02b881dbec",
+          "sha256": "3da08f225b7de2febe9e1772ebd25bc76716d857896cc7c3704644fcc9e43a5d"
+        },
+        "identity_match": true,
+        "classification": "spatial_or_flow_field_summary_workbook",
+        "inspection": {
+          "kind": "spatial_or_flow_field_summary_workbook",
+          "sheet_count": 10,
+          "sheet_names": [
+            "4 mm 1g H2 W=0",
+            "4 mm 1g H2 W = 1.5 co-flow",
+            "4 mm 1g H2 W = 1.5 counter-flow",
+            "4 mm 1g H2 W = 3.5 co-flow",
+            "4 mm 1g H2 W = 3.5 counter-flow",
+            "4 mm 1g H2 W = 5 co-flow",
+            "4 mm 1g H2 W = 5 counter-flow",
+            "4 mm 1g H2 W = 1.5 cross-flow",
+            "4 mm 1g H2 W = 3.5 cross-flow",
+            "4 mm 1 g H2 W = 5 cross-flow"
+          ],
+          "sheet_rows": {
+            "4 mm 1g H2 W=0": 24,
+            "4 mm 1g H2 W = 1.5 co-flow": 17,
+            "4 mm 1g H2 W = 1.5 counter-flow": 19,
+            "4 mm 1g H2 W = 3.5 co-flow": 17,
+            "4 mm 1g H2 W = 3.5 counter-flow": 13,
+            "4 mm 1g H2 W = 5 co-flow": 17,
+            "4 mm 1g H2 W = 5 counter-flow": 14,
+            "4 mm 1g H2 W = 1.5 cross-flow": 28,
+            "4 mm 1g H2 W = 3.5 cross-flow": 24,
+            "4 mm 1 g H2 W = 5 cross-flow": 24
+          },
+          "leading_cells": {
+            "4 mm 1g H2 W=0": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 0",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "4 mm 1g H2 W = 1.5 co-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 1.5 m/s co-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "4 mm 1g H2 W = 1.5 counter-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 1.5 m/s counter-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "4 mm 1g H2 W = 3.5 co-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 3.5 m/s co-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "4 mm 1g H2 W = 3.5 counter-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 3.5 m/s counter-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "4 mm 1g H2 W = 5 co-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 5 m/s co-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "4 mm 1g H2 W = 5 counter-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 5 m/s counter-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "4 mm 1g H2 W = 1.5 cross-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 1.5 m/s cross-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "4 mm 1g H2 W = 3.5 cross-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 3.5 m/s cross-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "4 mm 1 g H2 W = 5 cross-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 5 m/s cross-flow",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ]
+          },
+          "pressure_time_columns_found": false,
+          "reason": "Sheets contain named wind/concentration cases and spatial grid summaries; no common elapsed-time plus pressure measurement column was found."
+        }
+      },
+      {
+        "name": "HTE2440PS004MIXED_300321.xlsx",
+        "present": true,
+        "expected": {
+          "bytes": 81649,
+          "md5": "093d3d8e6ef030615704ee9096d3d84f"
+        },
+        "observed": {
+          "bytes": 81649,
+          "md5": "093d3d8e6ef030615704ee9096d3d84f",
+          "sha256": "4229ebb875b70ab08a08456ad465cb286bda6a559a4df984979531f7637a954f"
+        },
+        "identity_match": true,
+        "classification": "spatial_or_flow_field_summary_workbook",
+        "inspection": {
+          "kind": "spatial_or_flow_field_summary_workbook",
+          "sheet_count": 11,
+          "sheet_names": [
+            "4 mm 5g H2 W = 0",
+            "4 mm 5g H2 W = 1.5 m s co-flow",
+            "4 mm 5g H2 W = 1.5 m s counter ",
+            "4 mm 5g H2 W = 3.5 m s co-flow",
+            "4 mm 5g H2 W = 3.5 m s counter",
+            "4 mm 5g H2 W = 5 m s co-flow",
+            "4 mm 5g H2 W = 5 m s counter",
+            "4 mm 2.5g H2 W = 0",
+            "4 mm 2.5 g H2 W = 1.5 m s cross",
+            "4 mm 2.5g H2 W = 3.5 m s cross",
+            "4 mm 2.5g H2 W = 5 m s cross"
+          ],
+          "sheet_rows": {
+            "4 mm 5g H2 W = 0": 28,
+            "4 mm 5g H2 W = 1.5 m s co-flow": 22,
+            "4 mm 5g H2 W = 1.5 m s counter ": 21,
+            "4 mm 5g H2 W = 3.5 m s co-flow": 19,
+            "4 mm 5g H2 W = 3.5 m s counter": 21,
+            "4 mm 5g H2 W = 5 m s co-flow": 19,
+            "4 mm 5g H2 W = 5 m s counter": 19,
+            "4 mm 2.5g H2 W = 0": 19,
+            "4 mm 2.5 g H2 W = 1.5 m s cross": 27,
+            "4 mm 2.5g H2 W = 3.5 m s cross": 22,
+            "4 mm 2.5g H2 W = 5 m s cross": 22
+          },
+          "leading_cells": {
+            "4 mm 5g H2 W = 0": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                "W = 0",
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "4 mm 5g H2 W = 1.5 m s co-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                "W = 1.5 m co-flow",
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                "W = 1.5 m/s co-flow",
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "H2 ",
+                "Pressure P2"
+              ]
+            ],
+            "4 mm 5g H2 W = 1.5 m s counter ": [
+              [
+                null,
+                null,
+                null,
+                null,
+                "W = 1.5 m/s counter-flow",
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "H2 ",
+                "Pressure P2"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                "Pu/mbar",
+                "Tu / °C",
+                "[g/s]",
+                "nach V [bar]"
+              ]
+            ],
+            "4 mm 5g H2 W = 3.5 m s co-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                "W = 3.5 m/s co-flow",
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "H2 ",
+                "Pressure P2"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                "Pu/mbar",
+                "Tu / °C",
+                "[g/s]",
+                "nach V [bar]"
+              ]
+            ],
+            "4 mm 5g H2 W = 3.5 m s counter": [
+              [
+                null,
+                null,
+                null,
+                null,
+                "W = 3.5 m/s counter-flow",
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "H2 ",
+                "Pressure P2"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                "Pu/mbar",
+                "Tu / °C",
+                "[g/s]",
+                "nach V [bar]"
+              ]
+            ],
+            "4 mm 5g H2 W = 5 m s co-flow": [
+              [
+                null,
+                null,
+                null,
+                null,
+                "W = 5 m/s co-flow",
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "H2 ",
+                "Pressure P2"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                "Pu/mbar",
+                "Tu / °C",
+                "[g/s]",
+                "nach V [bar]"
+              ]
+            ],
+            "4 mm 5g H2 W = 5 m s counter": [
+              [
+                null,
+                null,
+                null,
+                null,
+                "W = 5 m/s counter-flow",
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "H2 ",
+                "Pressure P2"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                "Pu/mbar",
+                "Tu / °C",
+                "[g/s]",
+                "nach V [bar]"
+              ]
+            ],
+            "4 mm 2.5g H2 W = 0": [
+              [
+                null,
+                null,
+                null,
+                null,
+                "W = 0",
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "H2 ",
+                "Pressure P2"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                "Pu/mbar",
+                "Tu / °C",
+                "[g/s]",
+                "nach V [bar]"
+              ]
+            ],
+            "4 mm 2.5 g H2 W = 1.5 m s cross": [
+              [
+                null,
+                null,
+                null,
+                null,
+                "W = 1.5 m/s cross-flow",
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "H2 ",
+                "Pressure P2"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                "Pu/mbar",
+                "Tu / °C",
+                "[g/s]",
+                "nach V [bar]"
+              ]
+            ],
+            "4 mm 2.5g H2 W = 3.5 m s cross": [
+              [
+                null,
+                null,
+                null,
+                null,
+                "W = 3.5 m/s cross-flow",
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "H2 ",
+                "Pressure P2"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                "Pu/mbar",
+                "Tu / °C",
+                "[g/s]",
+                "nach V [bar]"
+              ]
+            ],
+            "4 mm 2.5g H2 W = 5 m s cross": [
+              [
+                null,
+                null,
+                null,
+                null,
+                "W = 5 m/s cross-flow",
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "H2 ",
+                "Pressure P2"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                "Pu/mbar",
+                "Tu / °C",
+                "[g/s]",
+                "nach V [bar]"
+              ]
+            ]
+          },
+          "pressure_time_columns_found": false,
+          "reason": "Sheets contain named wind/concentration cases and spatial grid summaries; no common elapsed-time plus pressure measurement column was found."
+        }
+      },
+      {
+        "name": "HTE2440PS005FLMT00300321.xlsx",
+        "present": true,
+        "expected": {
+          "bytes": 26724,
+          "md5": "c4b9195a2bb89213eda9aa2ac9e9ec07"
+        },
+        "observed": {
+          "bytes": 26724,
+          "md5": "c4b9195a2bb89213eda9aa2ac9e9ec07",
+          "sha256": "bdb623e84b3cdc9d67884703762051d40c42e02bbe294df3de97ea062c45cc8a"
+        },
+        "identity_match": true,
+        "classification": "spatial_or_flow_field_summary_workbook",
+        "inspection": {
+          "kind": "spatial_or_flow_field_summary_workbook",
+          "sheet_count": 6,
+          "sheet_names": [
+            "3.5 m pro s co-flow",
+            "3.5 m pro s counter-flow",
+            "(5) m pro s co-flow",
+            "(5) m pro s counter-flow ",
+            "(1.5) m pro s co-flow",
+            "(1.5) m pro s counter-flow"
+          ],
+          "sheet_rows": {
+            "3.5 m pro s co-flow": 28,
+            "3.5 m pro s counter-flow": 19,
+            "(5) m pro s co-flow": 19,
+            "(5) m pro s counter-flow ": 19,
+            "(1.5) m pro s co-flow": 19,
+            "(1.5) m pro s counter-flow": 19
+          },
+          "leading_cells": {
+            "3.5 m pro s co-flow": [
+              [
+                null,
+                "average value m/s (1 min duration)",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                "W 1 / m/s",
+                "An (I) X/  m /s",
+                "W 2 / m/s",
+                "An (II) X/  m /s",
+                "W 3 / m/s",
+                null
+              ],
+              [
+                null,
+                "y / mm",
+                -500,
+                -250,
+                0,
+                250,
+                500,
+                null
+              ],
+              [
+                null,
+                "x / mm",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "3.5 m pro s counter-flow": [
+              [
+                null,
+                "average value m/s (1 min duration)",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                "W 1 / m/s",
+                "An (I) X/  m /s",
+                "W 2 / m/s",
+                "An (II) X/  m /s",
+                "W 3 / m/s",
+                null
+              ],
+              [
+                null,
+                "y / mm",
+                -500,
+                -250,
+                0,
+                250,
+                500,
+                null
+              ],
+              [
+                null,
+                "x / mm",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "(5) m pro s co-flow": [
+              [
+                null,
+                "average value m/s (1 min duration)",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                "W 1 / m/s",
+                "An (I) X/  m /s",
+                "W 2 / m/s",
+                "An (II) X/  m /s",
+                "W 3 / m/s",
+                null
+              ],
+              [
+                null,
+                "y / mm",
+                -500,
+                -250,
+                0,
+                250,
+                500,
+                null
+              ],
+              [
+                null,
+                "x / mm",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "(5) m pro s counter-flow ": [
+              [
+                null,
+                "average value m/s (1 min duration)",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                "W 1 / m/s",
+                "An (I) X/  m /s",
+                "W 2 / m/s",
+                "An (II) X/  m /s",
+                "W 3 / m/s",
+                null
+              ],
+              [
+                null,
+                "y / mm",
+                -500,
+                -250,
+                0,
+                250,
+                500,
+                null
+              ],
+              [
+                null,
+                "x / mm",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "(1.5) m pro s co-flow": [
+              [
+                null,
+                "average value m/s (1 min duration)",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                "W 1 / m/s",
+                "An (I) X/  m /s",
+                "W 2 / m/s",
+                "An (II) X/  m /s",
+                "W 3 / m/s",
+                null
+              ],
+              [
+                null,
+                "y / mm",
+                -500,
+                -250,
+                0,
+                250,
+                500,
+                null
+              ],
+              [
+                null,
+                "x / mm",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ],
+            "(1.5) m pro s counter-flow": [
+              [
+                null,
+                "average value m/s (1 min duration)",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              [
+                null,
+                null,
+                "W 1 / m/s",
+                "An (I) X/  m /s",
+                "W 2 / m/s",
+                "An (II) X/  m /s",
+                "W 3 / m/s",
+                null
+              ],
+              [
+                null,
+                "y / mm",
+                -500,
+                -250,
+                0,
+                250,
+                500,
+                null
+              ],
+              [
+                null,
+                "x / mm",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            ]
+          },
+          "pressure_time_columns_found": false,
+          "reason": "Sheets contain named wind/concentration cases and spatial grid summaries; no common elapsed-time plus pressure measurement column was found."
+        }
+      },
+      {
+        "name": "HTE2440PS006MIXED_300321.zip",
+        "present": true,
+        "expected": {
+          "bytes": 11108400,
+          "md5": "ade3911c0df50ee70486153455f4bd12"
+        },
+        "observed": {
+          "bytes": 11108400,
+          "md5": "ade3911c0df50ee70486153455f4bd12",
+          "sha256": "af40c6259b93c78b3db9ce2de4041136a09a094b389362b596591b592f94abee"
+        },
+        "identity_match": true,
+        "classification": "cad_geometry_archive",
+        "inspection": {
+          "kind": "cad_geometry_archive",
+          "member_count": 41,
+          "extension_counts": {
+            ".1": 1,
+            ".ipt": 20,
+            ".ipj": 1,
+            ".lck": 3,
+            "<directory>": 5,
+            ".bak": 1,
+            ".iam": 10
+          },
+          "pressure_time_trace_members": [],
+          "reason": "Archive members are Inventor CAD project/part/assembly files and lockfiles, not measured pressure-time rows."
+        }
+      }
+    ],
+    "archive_complete": true,
+    "archive_identity_verified": true
+  },
+  "eligibility": {
+    "pressure_time_trace_present": false,
+    "measured_half_pressure_time_observed": false,
+    "minimum_requirements_met": false,
+    "decision": "ARCHIVE_RECHECK_INELIGIBLE_FOR_GRUNE_PRESSURE_DECAY_HOLDOUT",
+    "reason": "The complete hash-verified archive contains spatial/flow-field summary workbooks, documentation and CAD geometry; it does not contain a trace-specific measured pressure-time series or half-pressure endpoint."
+  },
+  "claim_boundary": "The archive supports ventilation/concentration and geometry provenance only. It does not validate pressure decay, ignition, dispersion distance, radiation, station controls or SAGA effectiveness."
+}
