@@ -5,6 +5,7 @@ import pytest
 from h2station.protocol import (
     FuelingControllerParameters,
     FuelingObservation,
+    FuelingPhase,
     FuelingSchedule,
     SampledFuelingController,
 )
@@ -134,3 +135,68 @@ def test_pressure_reference_profile_replaces_constant_ramp():
     assert at_start.reference_pressure_pa == pytest.approx(5.0e6)
     assert at_mid.reference_pressure_pa == pytest.approx(15.0e6)
     assert after_profile.reference_pressure_pa == pytest.approx(25.0e6)
+
+
+def test_optional_pressure_hold_leak_check_pauses_and_resumes_without_decay():
+    schedule = FuelingSchedule(
+        target_pressure_pa=70.0e6,
+        average_pressure_ramp_rate_pa_s=5.0e6,
+        delivery_temperature_k=233.15,
+        maximum_mass_flow_kg_s=0.060,
+        leak_check_pressure_interval_pa=2.0e6,
+        leak_check_pause_s=5.0,
+    )
+    controller = SampledFuelingController(schedule)
+
+    filling = controller.update(_observation(0.0, 5.0e6), 1.0)
+    paused = controller.update(_observation(1.0, 7.1e6), 1.0)
+    waiting = controller.update(_observation(3.0, 7.1e6), 1.0)
+    resumed = controller.update(_observation(6.0, 7.1e6), 1.0)
+
+    assert filling.phase is FuelingPhase.FILLING
+    assert paused.phase is FuelingPhase.LEAK_CHECK
+    assert paused.valve_opening == 0.0
+    assert paused.stop_reason == "leak-check-pause"
+    assert waiting.phase is FuelingPhase.LEAK_CHECK
+    assert resumed.phase is FuelingPhase.FILLING
+    assert resumed.valve_opening > 0.0
+
+
+def test_pressure_hold_leak_check_aborts_when_pressure_decays():
+    schedule = FuelingSchedule(
+        target_pressure_pa=70.0e6,
+        average_pressure_ramp_rate_pa_s=5.0e6,
+        delivery_temperature_k=233.15,
+        maximum_mass_flow_kg_s=0.060,
+        leak_check_pressure_interval_pa=2.0e6,
+        leak_check_pause_s=5.0,
+        leak_check_pressure_drop_tolerance_pa=10_000.0,
+    )
+    controller = SampledFuelingController(schedule)
+
+    controller.update(_observation(0.0, 5.0e6), 1.0)
+    controller.update(_observation(1.0, 7.1e6), 1.0)
+    failed = controller.update(_observation(6.0, 7.0e6), 1.0)
+
+    assert failed.phase is FuelingPhase.ABORTED
+    assert failed.valve_opening == 0.0
+    assert failed.stop_reason == "leak-test-pressure-drop"
+
+
+def test_pressure_hold_leak_check_parameters_are_validated():
+    with pytest.raises(ValueError, match="interval"):
+        FuelingSchedule(
+            target_pressure_pa=70.0e6,
+            average_pressure_ramp_rate_pa_s=1.0e5,
+            delivery_temperature_k=233.15,
+            maximum_mass_flow_kg_s=0.060,
+            leak_check_pressure_interval_pa=0.0,
+        )
+    with pytest.raises(ValueError, match="pause"):
+        FuelingSchedule(
+            target_pressure_pa=70.0e6,
+            average_pressure_ramp_rate_pa_s=1.0e5,
+            delivery_temperature_k=233.15,
+            maximum_mass_flow_kg_s=0.060,
+            leak_check_pause_s=0.0,
+        )

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "source": {
+    "title": "Cal State LA hydrogen station operation and safety overview",
+    "url": "https://www.calstatela.edu/ecst/hydrogen-station",
+    "source_type": "institutional_operational_description",
+    "accessed_for": "publicly documented operational procedure"
+  },
+  "procedure": {
+    "trigger": "after each 3000 psi pressure increase",
+    "action": "pause filling and close the inlet valve for 5 seconds",
+    "acceptance": "resume only when no measurable pressure drop is observed",
+    "claim_boundary": "This is an operational description, not a complete SAE J2601 fueling-table specification or a universal leak-test acceptance limit."
+  },
+  "implementation": {
+    "module": "src/h2station/protocol.py",
+    "schedule_fields": {
+      "leak_check_pressure_interval_pa": "optional pressure interval; None keeps continuous fill",
+      "leak_check_pause_s": "hold duration, default 5 s",
+      "leak_check_pressure_drop_tolerance_pa": "operator-configured acceptance tolerance"
+    },
+    "observable_states": ["filling", "leak_check", "aborted"],
+    "failure_reason": "leak-test-pressure-drop",
+    "default_behavior_changed": false
+  },
+  "verification": {
+    "tests": [
+      "tests/test_protocol_controller.py::test_optional_pressure_hold_leak_check_pauses_and_resumes_without_decay",
+      "tests/test_protocol_controller.py::test_pressure_hold_leak_check_aborts_when_pressure_decays",
+      "tests/test_protocol_controller.py::test_pressure_hold_leak_check_parameters_are_validated"
+    ],
+    "external_validation_status": "not_claimed",
+    "note": "The procedure is implemented as an opt-in control behavior. It does not constitute independent experimental validation of the station thermodynamics."
+  }
+}

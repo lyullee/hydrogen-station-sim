@@ -34,6 +34,7 @@ def _profile_value(
 class FuelingPhase(str, Enum):
     IDLE = "idle"
     FILLING = "filling"
+    LEAK_CHECK = "leak_check"
     COMPLETE = "complete"
     ABORTED = "aborted"
 
@@ -52,6 +53,12 @@ class FuelingSchedule:
     reference_temperature_k: float = 288.15
     delivery_temperature_profile_k: tuple[tuple[float, float], ...] = ()
     pressure_reference_profile_pa: tuple[tuple[float, float], ...] = ()
+    # Optional field-procedure pause.  When set, the controller pauses at each
+    # pressure increment and checks for an observable pressure decay before
+    # resuming.  None preserves the historical continuous-fill behavior.
+    leak_check_pressure_interval_pa: float | None = None
+    leak_check_pause_s: float = 5.0
+    leak_check_pressure_drop_tolerance_pa: float = 10_000.0
 
     def __post_init__(self) -> None:
         if self.target_pressure_pa <= 0.0:
@@ -60,6 +67,12 @@ class FuelingSchedule:
             raise ValueError("average_pressure_ramp_rate_pa_s must be positive")
         if self.maximum_mass_flow_kg_s <= 0.0:
             raise ValueError("maximum_mass_flow_kg_s must be positive")
+        if self.leak_check_pressure_interval_pa is not None and self.leak_check_pressure_interval_pa <= 0.0:
+            raise ValueError("leak_check_pressure_interval_pa must be positive when configured")
+        if self.leak_check_pause_s <= 0.0:
+            raise ValueError("leak_check_pause_s must be positive")
+        if self.leak_check_pressure_drop_tolerance_pa < 0.0:
+            raise ValueError("leak_check_pressure_drop_tolerance_pa must be non-negative")
         if not 0.0 < self.target_soc <= 1.2:
             raise ValueError("target_soc must be in (0, 1.2]")
         self._validate_profile(
@@ -170,6 +183,9 @@ class SampledFuelingController:
         self._initial_pressure_pa = 0.0
         self._integral_error_pa_s = 0.0
         self._last_opening = 0.0
+        self._next_leak_check_pressure_pa: float | None = None
+        self._leak_check_until_s: float | None = None
+        self._leak_check_reference_pressure_pa: float | None = None
 
     def start(self, time_s: float, initial_pressure_pa: float) -> None:
         self._phase = FuelingPhase.FILLING
@@ -177,12 +193,22 @@ class SampledFuelingController:
         self._initial_pressure_pa = initial_pressure_pa
         self._integral_error_pa_s = 0.0
         self._last_opening = 0.0
+        self._next_leak_check_pressure_pa = (
+            initial_pressure_pa + self.schedule.leak_check_pressure_interval_pa
+            if self.schedule.leak_check_pressure_interval_pa is not None
+            else None
+        )
+        self._leak_check_until_s = None
+        self._leak_check_reference_pressure_pa = None
 
     def reset(self) -> None:
         """Return the controller to idle before a separate operator fill request."""
         self._phase = FuelingPhase.IDLE
         self._integral_error_pa_s = 0.0
         self._last_opening = 0.0
+        self._next_leak_check_pressure_pa = None
+        self._leak_check_until_s = None
+        self._leak_check_reference_pressure_pa = None
 
     def update(self, observation: FuelingObservation, sample_period_s: float,
                *, auto_stop: bool = True, target_pressure_pa: float | None = None) -> FuelingCommand:
@@ -217,6 +243,56 @@ class SampledFuelingController:
             self._phase = FuelingPhase.COMPLETE
             reason = "target-pressure" if pressure_complete else "target-soc"
             return self._stopped_command(reference_pressure_pa, soc, reason)
+
+        # Optional pressure-hold leak check.  This follows the publicly
+        # documented station procedure of pausing after a pressure increment,
+        # closing the inlet, and accepting the fill only when the measured
+        # pressure does not decay beyond the configured tolerance.  The feature
+        # is opt-in so existing continuous-fill studies remain unchanged.
+        if self._phase is FuelingPhase.LEAK_CHECK:
+            if self._leak_check_until_s is None or self._leak_check_reference_pressure_pa is None:
+                self._phase = FuelingPhase.ABORTED
+                return self._stopped_command(reference_pressure_pa, soc, "leak-test-state-error")
+            if observation.time_s < self._leak_check_until_s:
+                return self._paused_command(
+                    reference_pressure_pa,
+                    soc,
+                    "leak-check-pause",
+                    observation.time_s,
+                )
+            pressure_drop_pa = (
+                self._leak_check_reference_pressure_pa - observation.pressure_pa
+            )
+            if pressure_drop_pa > self.schedule.leak_check_pressure_drop_tolerance_pa:
+                self._phase = FuelingPhase.ABORTED
+                return self._stopped_command(
+                    reference_pressure_pa,
+                    soc,
+                    "leak-test-pressure-drop",
+                )
+            self._phase = FuelingPhase.FILLING
+            self._leak_check_until_s = None
+            self._leak_check_reference_pressure_pa = None
+            if self.schedule.leak_check_pressure_interval_pa is not None:
+                self._next_leak_check_pressure_pa = (
+                    observation.pressure_pa
+                    + self.schedule.leak_check_pressure_interval_pa
+                )
+
+        if (
+            self._phase is FuelingPhase.FILLING
+            and self._next_leak_check_pressure_pa is not None
+            and observation.pressure_pa >= self._next_leak_check_pressure_pa
+        ):
+            self._phase = FuelingPhase.LEAK_CHECK
+            self._leak_check_until_s = observation.time_s + self.schedule.leak_check_pause_s
+            self._leak_check_reference_pressure_pa = observation.pressure_pa
+            return self._paused_command(
+                reference_pressure_pa,
+                soc,
+                "leak-check-pause",
+                observation.time_s,
+            )
 
         if self._phase is not FuelingPhase.FILLING:
             return self._stopped_command(reference_pressure_pa, soc, "controller-not-filling")
@@ -282,6 +358,23 @@ class SampledFuelingController:
             delivery_temperature_target_k=self.schedule.delivery_temperature_at(
                 self._start_time_s
             ),
+            state_of_charge=soc,
+            stop_reason=reason,
+        )
+
+    def _paused_command(
+        self,
+        reference_pressure_pa: float,
+        soc: float,
+        reason: str,
+        time_s: float,
+    ) -> FuelingCommand:
+        self._last_opening = 0.0
+        return FuelingCommand(
+            phase=self._phase,
+            valve_opening=0.0,
+            reference_pressure_pa=reference_pressure_pa,
+            delivery_temperature_target_k=self.schedule.delivery_temperature_at(time_s),
             state_of_charge=soc,
             stop_reason=reason,
         )
