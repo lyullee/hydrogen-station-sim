@@ -2248,6 +2248,18 @@
     "claim_boundary": "This is a boundary sensitivity diagnostic, not independent full-station validation. It uses outcome-known traces and a physics-only 200 C controller limit.",
     "next_action": "Acquire an independent synchronized station/vehicle archive or pre-register a measured-boundary protocol before fitting."
   },
+  "mc_measured_boundary_diagnostic_2026_10_05": {
+    "record": "research/mc_measured_boundary_diagnostic_2026_10_05.json",
+    "decision": "DEVELOPMENT_DIAGNOSTIC_ONLY",
+    "gate_impact": "does_not_clear_full_loop_or_goal_completion",
+    "case_count": 8,
+    "run_count": 4,
+    "best_screening_pass_count": 1,
+    "full_loop_holdout_eligible": false,
+    "finding": "Measured source-pressure replay reduces some pressure error, but the four post-outcome boundary/schedule sensitivity runs retain joint temperature and final-SOC failures; increasing the gas-temperature stop limit does not rescue the screen.",
+    "claim_boundary": "This is a development diagnostic only. It does not modify the frozen MC Default holdout and cannot support an IJHE full-loop or field-safety claim.",
+    "next_action": "Pre-register an independent synchronized measured-boundary evaluation with station topology and valve-state logs before scoring."
+  },
   "release_validation_failure_diagnosis_2026_10_04": {
     "record": "research/release_validation_failure_diagnosis_2026_10_04.json",
     "decision": "DEVELOPMENT_DIAGNOSTIC_ONLY",

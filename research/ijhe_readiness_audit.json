@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T12:23:29.526906+00:00",
+  "generated_at": "2026-10-04T22:32:28.637493+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,12 +13,11 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 31,
-    "FAIL": 7,
+    "PASS": 54,
+    "FAIL": 6,
     "PENDING": 7
   },
   "blocking_bounded_submission_gates": [
-    "preslhy_blowdown_external_validation",
     "preslhy_partb_ambient_external_validation",
     "preslhy_revised_holdout_validation",
     "proust_independent_release_validation",
@@ -32,7 +31,6 @@
     "submission_metadata_and_declarations"
   ],
   "blocking_full_objective_gates": [
-    "preslhy_blowdown_external_validation",
     "preslhy_partb_ambient_external_validation",
     "preslhy_revised_holdout_validation",
     "proust_independent_release_validation",
@@ -284,10 +282,114 @@
       }
     },
     {
+      "id": "mc_tank_boundary_diagnostic_integrity",
+      "status": "PASS",
+      "claim": "The MC Default measured-boundary replay isolates vehicle-tank thermodynamics from station control without being promoted to full-loop validation.",
+      "evidence": "research\\mc_tank_boundary_diagnostic_2026_10_05.json",
+      "requirement": "Eight consumed cases, measured flow/temperature/source-pressure boundaries, no fitting, explicit post-outcome diagnostic role and claim boundary.",
+      "observed": {
+        "evidence_role": "development_diagnostic_only",
+        "post_outcome": true,
+        "parameter_fitting": false,
+        "boundary_conditions": [
+          "measured mass_flow_g_s",
+          "measured inlet_gas_temperature_c",
+          "measured source_pressure_3_mpa"
+        ],
+        "aggregate": {
+          "case_count": 8,
+          "pressure_rmse_mpa_mean": 1.8156882965866448,
+          "temperature_rmse_c_mean": 25.884020539463037,
+          "soc_rmse_percentage_points_mean": 5.581868463392878
+        }
+      }
+    },
+    {
+      "id": "mc_enthalpy_pressure_sensitivity_integrity",
+      "status": "PASS",
+      "claim": "The MC inlet enthalpy pressure-basis ambiguity is quantified without selecting a production boundary or claiming validation.",
+      "evidence": "research\\mc_enthalpy_pressure_sensitivity_2026_10_05.json",
+      "requirement": "Three fixed-boundary sensitivity runs, eight cases each, no fitting, post-outcome diagnostic role and explicit missing nozzle-upstream pressure boundary.",
+      "observed": {
+        "evidence_role": "development_diagnostic_only",
+        "run_count": 3,
+        "case_counts": [
+          8,
+          8,
+          8
+        ],
+        "aggregates": [
+          {
+            "pressure_rmse_mpa_mean": 2.1920961990250705,
+            "temperature_rmse_c_mean": 23.27982147421733,
+            "soc_rmse_percentage_points_mean": 5.581601238498376
+          },
+          {
+            "pressure_rmse_mpa_mean": 1.8156882965866448,
+            "temperature_rmse_c_mean": 25.884020539463037,
+            "soc_rmse_percentage_points_mean": 5.581868463392878
+          },
+          {
+            "pressure_rmse_mpa_mean": 4.375541156305331,
+            "temperature_rmse_c_mean": 9.052443267854247,
+            "soc_rmse_percentage_points_mean": 5.5833493152424865
+          }
+        ]
+      }
+    },
+    {
+      "id": "mc_measured_boundary_diagnostic_integrity",
+      "status": "PASS",
+      "claim": "The measured MC source-boundary/protocol sensitivity replay is retained as negative development evidence and cannot be promoted to full-loop validation.",
+      "evidence": "research\\mc_measured_boundary_diagnostic_2026_10_05.json",
+      "requirement": "Four post-outcome runs over eight consumed cases, no fitting, retained joint temperature failures, and explicit false full-loop/goal flags.",
+      "observed": {
+        "run_count": 4,
+        "case_count": 8,
+        "screening_pass_counts": [
+          0,
+          1,
+          1,
+          1
+        ],
+        "aggregate": [
+          {
+            "pressure_rmse_mpa": 6.04458586770003,
+            "temperature_rmse_c": 14.323669259998223,
+            "soc_rmse_percentage_points": 7.960985696082141,
+            "simulation_coverage_fraction": 0.9541886809026745,
+            "screening_pass_count": 0
+          },
+          {
+            "pressure_rmse_mpa": 5.55982864,
+            "temperature_rmse_c": 14.52485874,
+            "soc_rmse_percentage_points": 7.48803485,
+            "simulation_coverage_fraction": 0.9494038,
+            "screening_pass_count": 1
+          },
+          {
+            "pressure_rmse_mpa": 5.85656262,
+            "temperature_rmse_c": 15.07452054,
+            "soc_rmse_percentage_points": 7.88010393,
+            "simulation_coverage_fraction": 0.9997905,
+            "screening_pass_count": 1
+          },
+          {
+            "pressure_rmse_mpa": 4.907741042568065,
+            "temperature_rmse_c": 14.755705497264525,
+            "soc_rmse_percentage_points": 5.91416567793112,
+            "simulation_coverage_fraction": 0.8813796480420657,
+            "screening_pass_count": 1
+          }
+        ],
+        "goal_completion_permitted": false
+      }
+    },
+    {
       "id": "full_loop_external_validation",
       "status": "FAIL",
       "claim": "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
-      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_04.json",
+      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json",
       "requirement": "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
       "observed": {
         "protocol_integrity": true,
@@ -355,8 +457,103 @@
         "search_recheck_2026_10_04": {
           "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
           "gate_impact": "full_loop_external_validation_remains_open",
-          "candidate_count": 17
+          "candidate_count": 7
+        },
+        "operational_benchmark_recheck_2026_10_05": {
+          "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+          "gate_impact": "full_loop_external_validation_remains_open",
+          "candidate_count": 13
         }
+      }
+    },
+    {
+      "id": "real_station_article_boundary_integrity",
+      "status": "PASS",
+      "claim": "The public BAM/KETI field-validation article is recorded as an auditable real-station context and data-request lead without being promoted to raw full-loop validation.",
+      "evidence": "research\\keti_bam_hrs_article_data_boundary_2026_10_05.json",
+      "requirement": "DOI/licence, reported field channels and integration, explicit missing raw-log boundary, and a false full-loop eligibility flag.",
+      "observed": {
+        "doi": "10.3390/app16157856",
+        "facility": "BAM demonstration hydrogen refueling station, Germany",
+        "reported_sensor_count": 8,
+        "full_loop_external_holdout_eligible": false,
+        "claim_boundary": "This record strengthens source accounting only. It is not raw validation evidence and does not change the IJHE or full-objective completion gates."
+      }
+    },
+    {
+      "id": "kgs_real_station_access_boundary_integrity",
+      "status": "PASS",
+      "claim": "The KGS-linked real-station fueling study is retained as a high-value acquisition lead with an independently recorded anonymous-access boundary.",
+      "evidence": "research\\kgs_hrs_code_access_recheck_2026_10_05.json",
+      "requirement": "Published/preprint DOI, six reported scenarios, measured channels, sign-in redirect result, requested raw package and false full-loop/goal flags.",
+      "observed": {
+        "published_doi": "10.1007/s11814-025-00551-9",
+        "reported_real_hrs_scenarios": 6,
+        "access_result": "REDIRECTED_TO_SIGN_IN",
+        "files_retrieved": 0,
+        "full_loop_station_vehicle_holdout_eligible": false
+      }
+    },
+    {
+      "id": "kgs_preprint_appendix_access_boundary_integrity",
+      "status": "PASS",
+      "claim": "The public KGS/Oh supplement and code link are rechecked and retained without promoting parameter tables to a raw full-loop holdout.",
+      "evidence": "research\\kgs_oh_preprint_appendix_recheck_2026_10_05.json",
+      "requirement": "Two-page appendix hash, Table A.1/A.2/A.3 terms, no synchronized logger rows, sign-in redirect and false eligibility/completion flags.",
+      "observed": {
+        "published_doi": "10.1007/s11814-025-00551-9",
+        "pdf_pages": 2,
+        "appendix_sha256_matches_expected": true,
+        "code_access_result": "REDIRECTED_TO_SIGN_IN",
+        "full_loop_station_vehicle_holdout_eligible": false
+      }
+    },
+    {
+      "id": "nbsdc_current_access_recheck_integrity",
+      "status": "PASS",
+      "claim": "The current NBSDC HRS operational archive metadata and raw-file access boundary are reproducibly recorded without treating gated files as validation data.",
+      "evidence": "research\\nbsdc_winter_olympics_access_recheck_2026_10_05.json",
+      "requirement": "CSTR, approval-required sharing range, three-file inventory, three application-required probes, false holdout eligibility and claim boundary.",
+      "observed": {
+        "cstr": "CSTR:16666.11.nbsdc.aI3fJrzX",
+        "share_range": "审批后共享",
+        "file_count": 3,
+        "raw_probe_codes": [
+          403,
+          403,
+          403
+        ],
+        "full_loop_public_holdout": false
+      }
+    },
+    {
+      "id": "jetfire_supplement_rights_boundary_integrity",
+      "status": "PASS",
+      "claim": "The publicly reachable IJHE jet-fire supplement is traceable without treating a rights-uncleared plot artifact as validation data.",
+      "evidence": "research\\carboni_2022_jetfire_supplement_data_boundary_2026_10_05.json",
+      "requirement": "DOI/URL, artifact hash and scope, article rights boundary, non-machine-readable limitation, and explicit false eligibility flags.",
+      "observed": {
+        "doi": "10.1016/j.ijhydene.2022.05.010",
+        "sha256": "06849c623b3114475eae49b87f506dd482dfcc63e89245b2daaa62b515a5f4ca",
+        "reported_test_count": 17,
+        "article_open_access": false,
+        "full_loop_external_holdout_eligible": false,
+        "claim_boundary": "This record documents a publicly reachable but rights-uncleared supplementary artifact. It does not add validation evidence and does not change IJHE or full-objective completion gates."
+      }
+    },
+    {
+      "id": "calstate_back_to_back_article_boundary_integrity",
+      "status": "PASS",
+      "claim": "The Cal State LA back-to-back fueling article is recorded as real-station context without promoting non-public operator logs to validation data.",
+      "evidence": "research\\calstate_la_back_to_back_article_data_boundary_2026_10_05.json",
+      "requirement": "DOI/rights boundary, facility and field scope, explicit missing raw synchronized rows, and a false full-loop eligibility flag.",
+      "observed": {
+        "doi": "10.1016/j.jclepro.2021.129737",
+        "facility": "Cal State LA Hydrogen Research and Fueling Facility, California, USA",
+        "article_open_access": false,
+        "public_raw_synchronized_rows": false,
+        "full_loop_external_holdout_eligible": false,
+        "claim_boundary": "This record strengthens real-station source accounting only. It is not raw validation evidence and does not change the IJHE or full-objective completion gates."
       }
     },
     {
@@ -434,7 +631,7 @@
       "requirement": "At least 15 candidate routes, existing draft request for every route, source URL and explicit non-evidentiary boundary.",
       "observed": {
         "status": "open_data_not_yet_received",
-        "candidate_count": 25,
+        "candidate_count": 26,
         "draft_count": 22,
         "claim_boundary": "This tracker is a data-acquisition plan. It is not evidence of validation, does not change any IJHE readiness gate, and does not authorize contact or publication."
       }
@@ -478,6 +675,21 @@
       }
     },
     {
+      "id": "mendeley_usn_pressure_peaking_manifest_integrity",
+      "status": "PASS",
+      "claim": "The CC BY 4.0 Mendeley mirror of the USN pressure-peaking campaign has ten raw pressure/mass-flow cases in its public manifest and remains a consequence-component archive only.",
+      "evidence": "research\\mendeley_usn_pressure_peaking_manifest_2026_10_05.json",
+      "requirement": "Ten case identities, CC BY 4.0 provenance, raw pressure and mass-flow channels, and an explicit non-full-loop boundary.",
+      "observed": {
+        "doi": "10.17632/pmk59x4hvc.1",
+        "license": "CC BY 4.0",
+        "case_count": 10,
+        "component_consequence_holdout_eligible": true,
+        "full_loop_external_holdout_eligible": false,
+        "claim_boundary": "This CC BY 4.0 archive provides raw pressure and Coriolis mass-flow channels for ten confined-enclosure experiments and is suitable for reproducible pressure-peaking consequence checks. It is not a gaseous H70 station-to-vehicle fueling loop, does not include station control or dispenser logs, and cannot establish full-loop digital-twin or SAGA effectiveness."
+      }
+    },
+    {
       "id": "elvhys_auxiliary_replay_integrity",
       "status": "PASS",
       "claim": "The public ELVHYS cryogenic pressure-peaking subset is hash-identified and replayed with a strict non-validation claim boundary.",
@@ -489,6 +701,21 @@
         "file_count": 9,
         "predictive_model_validation_permitted": false,
         "full_loop_station_vehicle_validation_permitted": false
+      }
+    },
+    {
+      "id": "elvhys_dataverse_metadata_integrity",
+      "status": "PASS",
+      "claim": "The CC0 ELVHYS consequence archive has a file-level manifest, channel/timebase checks and an explicit cryogenic component-only boundary.",
+      "evidence": "research\\elvhys_dataverse_metadata_audit_2026_10_05.json",
+      "requirement": "198-file API manifest, exact category counts, four sampled files with rows/hashes, recorded date conflict and false full-loop/goal flags.",
+      "observed": {
+        "file_count": 198,
+        "reported_test_count": 48,
+        "sample_file_count": 4,
+        "public_consequence_component_eligible": true,
+        "full_loop_station_vehicle_holdout_eligible": false,
+        "date_consistency": "CONFLICT_REQUIRES_CITATION_CLARIFICATION"
       }
     },
     {
@@ -666,6 +893,1414 @@
         "mean_trip_sensor_coverage_fraction": 0.8087774294670846,
         "median_first_alarm_after_fill_start_s": 10.674999999995634,
         "median_first_trip_after_fill_start_s": 10.674999999995634
+      }
+    },
+    {
+      "id": "grune_ventilation_measurement_inventory",
+      "status": "PASS",
+      "claim": "The public Grune/Sempert confined-space ventilation fields are hash-verified and inventoried without being promoted to model validation.",
+      "evidence": "research\\grune_ventilation_dataset_inventory_2026_10_05.json",
+      "requirement": "Four CC BY 4.0 workbooks, 42 spatial profiles, 5,256 points and an explicit no-model-comparison boundary.",
+      "observed": {
+        "source_identity_all_match": true,
+        "workbook_count": 4,
+        "profile_count": 42,
+        "spatial_point_count": 5256,
+        "workbook_errors": [],
+        "release_diameters_mm": [
+          1.0,
+          4.0
+        ],
+        "wind_modes": [
+          "co-flow",
+          "counter-flow",
+          "cross-flow",
+          "no-wind"
+        ],
+        "release_flow_values_g_s": [
+          1.0,
+          1.5,
+          2.5,
+          5.0
+        ],
+        "profiles": [
+          {
+            "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+            "sheet_name": "1 mm 1g H2 W = 0",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 0.0,
+            "wind_mode": "no-wind",
+            "point_count": 117,
+            "x_range_mm": [
+              125.0,
+              2000.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 32.9678,
+            "average_concentration_mean_pct": 3.2195954943303473,
+            "points_at_or_above_4_vol_pct": 30,
+            "fraction_at_or_above_4_vol_pct": 0.2564102564102564,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              0.9871698113207542,
+              1.0385636363636361
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+            "sheet_name": "1 mm 1g H2 W = 1.5 co-flow",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 1.5,
+            "wind_mode": "co-flow",
+            "point_count": 117,
+            "x_range_mm": [
+              125.0,
+              2000.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 32.4475,
+            "average_concentration_mean_pct": 2.7737539671958236,
+            "points_at_or_above_4_vol_pct": 23,
+            "fraction_at_or_above_4_vol_pct": 0.19658119658119658,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              1.0032857142857141,
+              1.0428113207547165
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+            "sheet_name": "1 mm 1g H2 W = 1.5 counter-flow",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 1.5,
+            "wind_mode": "counter-flow",
+            "point_count": 117,
+            "x_range_mm": [
+              125.0,
+              2000.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 31.608431372549024,
+            "average_concentration_mean_pct": 3.502045625284655,
+            "points_at_or_above_4_vol_pct": 31,
+            "fraction_at_or_above_4_vol_pct": 0.26495726495726496,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              1.0076346153846154,
+              1.02811320754717
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+            "sheet_name": "1 mm 1g H2 W = 3.5 co-flow",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 3.5,
+            "wind_mode": "co-flow",
+            "point_count": 117,
+            "x_range_mm": [
+              125.0,
+              2000.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 32.13700000000001,
+            "average_concentration_mean_pct": 2.2258467541188405,
+            "points_at_or_above_4_vol_pct": 19,
+            "fraction_at_or_above_4_vol_pct": 0.1623931623931624,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              0.991806451612903,
+              1.037862745098039
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+            "sheet_name": "1 mm 1g H2 W = 3.5 counter-flow",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 3.5,
+            "wind_mode": "counter-flow",
+            "point_count": 81,
+            "x_range_mm": [
+              125.0,
+              1000.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 31.6892156862745,
+            "average_concentration_mean_pct": 3.3459284706355876,
+            "points_at_or_above_4_vol_pct": 19,
+            "fraction_at_or_above_4_vol_pct": 0.2345679012345679,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              1.0111176470588235,
+              1.036557692307692
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+            "sheet_name": "1 mm 1g H2 W = 5 co-flow",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 5.0,
+            "wind_mode": "co-flow",
+            "point_count": 117,
+            "x_range_mm": [
+              125.0,
+              2000.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 31.615576923076926,
+            "average_concentration_mean_pct": 2.111039890518431,
+            "points_at_or_above_4_vol_pct": 16,
+            "fraction_at_or_above_4_vol_pct": 0.13675213675213677,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              0.9915961538461536,
+              1.0393396226415088
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+            "sheet_name": "1 mm 1g H2 W = 5 counter-flow",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 5.0,
+            "wind_mode": "counter-flow",
+            "point_count": 90,
+            "x_range_mm": [
+              125.0,
+              875.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 31.360816326530614,
+            "average_concentration_mean_pct": 3.545615695650015,
+            "points_at_or_above_4_vol_pct": 25,
+            "fraction_at_or_above_4_vol_pct": 0.2777777777777778,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              1.0082653061224494,
+              1.0253846153846156
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+            "sheet_name": "1 mm 1g H2 W = 1.5 cross-flow",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 1.5,
+            "wind_mode": "cross-flow",
+            "point_count": 162,
+            "x_range_mm": [
+              125.0,
+              1250.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 32.20774193548387,
+            "average_concentration_mean_pct": 2.737853466763579,
+            "points_at_or_above_4_vol_pct": 27,
+            "fraction_at_or_above_4_vol_pct": 0.16666666666666666,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              0.9915999999999997,
+              1.0292333333333334
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+            "sheet_name": "1 mm 1g H2 W = 3.5 cross-flow",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 3.5,
+            "wind_mode": "cross-flow",
+            "point_count": 108,
+            "x_range_mm": [
+              125.0,
+              750.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 28.826,
+            "average_concentration_mean_pct": 2.7010581366231006,
+            "points_at_or_above_4_vol_pct": 15,
+            "fraction_at_or_above_4_vol_pct": 0.1388888888888889,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 175.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              0.9978,
+              1.0205483870967738
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+            "sheet_name": "1 mm 1g H2 W = 5 cross-flow",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 5.0,
+            "wind_mode": "cross-flow",
+            "point_count": 108,
+            "x_range_mm": [
+              125.0,
+              750.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 29.445999999999998,
+            "average_concentration_mean_pct": 2.4816216076970687,
+            "points_at_or_above_4_vol_pct": 15,
+            "fraction_at_or_above_4_vol_pct": 0.1388888888888889,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              0.997096774193548,
+              1.028742857142857
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+            "sheet_name": "1 mm 5g H2 W = 0",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 5.0,
+            "wind_speed_m_s": 0.0,
+            "wind_mode": "no-wind",
+            "point_count": 153,
+            "x_range_mm": [
+              125.0,
+              3500.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 56.13090909090909,
+            "average_concentration_mean_pct": 5.771070900318025,
+            "points_at_or_above_4_vol_pct": 72,
+            "fraction_at_or_above_4_vol_pct": 0.47058823529411764,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              4.99596,
+              5.122842105263158
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+            "sheet_name": "1 mm 5g H2 W = 1.5 co-flow",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 5.0,
+            "wind_speed_m_s": 1.5,
+            "wind_mode": "co-flow",
+            "point_count": 153,
+            "x_range_mm": [
+              125.0,
+              3500.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 55.43047619047618,
+            "average_concentration_mean_pct": 5.304787364880076,
+            "points_at_or_above_4_vol_pct": 56,
+            "fraction_at_or_above_4_vol_pct": 0.3660130718954248,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              4.989863636363636,
+              5.108190476190476
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+            "sheet_name": "1 mm 5g H2 W = 1.5 counter-flow",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 5.0,
+            "wind_speed_m_s": 1.5,
+            "wind_mode": "counter-flow",
+            "point_count": 153,
+            "x_range_mm": [
+              125.0,
+              3500.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.3395238095238095,
+            "average_concentration_max_pct": 56.67809523809525,
+            "average_concentration_mean_pct": 6.3874568759177395,
+            "points_at_or_above_4_vol_pct": 87,
+            "fraction_at_or_above_4_vol_pct": 0.5686274509803921,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              4.98752380952381,
+              5.059695652173914
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+            "sheet_name": "1 mm 5g H2 W = 3.5 co-flow",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 5.0,
+            "wind_speed_m_s": 3.5,
+            "wind_mode": "co-flow",
+            "point_count": 153,
+            "x_range_mm": [
+              125.0,
+              3500.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 55.700476190476195,
+            "average_concentration_mean_pct": 4.2362097320790415,
+            "points_at_or_above_4_vol_pct": 42,
+            "fraction_at_or_above_4_vol_pct": 0.27450980392156865,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              4.994291666666666,
+              5.165681818181818
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+            "sheet_name": "1 mm 5g H2 W = 3.5 counter-flow",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 5.0,
+            "wind_speed_m_s": 3.5,
+            "wind_mode": "counter-flow",
+            "point_count": 153,
+            "x_range_mm": [
+              125.0,
+              3500.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.5335,
+            "average_concentration_max_pct": 56.373809523809506,
+            "average_concentration_mean_pct": 6.41267096930337,
+            "points_at_or_above_4_vol_pct": 86,
+            "fraction_at_or_above_4_vol_pct": 0.5620915032679739,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              5.005000000000001,
+              5.08190476190476
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+            "sheet_name": "1 mm 5g H2 W = 5 co-flow",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 5.0,
+            "wind_speed_m_s": 5.0,
+            "wind_mode": "co-flow",
+            "point_count": 153,
+            "x_range_mm": [
+              125.0,
+              3500.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 55.337142857142865,
+            "average_concentration_mean_pct": 4.187095986579578,
+            "points_at_or_above_4_vol_pct": 34,
+            "fraction_at_or_above_4_vol_pct": 0.2222222222222222,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              4.936916666666668,
+              5.059696969696969
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+            "sheet_name": "1 mm 5g H2 = 5 counter-flow",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 5.0,
+            "wind_speed_m_s": 0.0,
+            "wind_mode": "counter-flow",
+            "point_count": 135,
+            "x_range_mm": [
+              125.0,
+              2500.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.41555555555555557,
+            "average_concentration_max_pct": 56.462222222222216,
+            "average_concentration_mean_pct": 6.576473577662273,
+            "points_at_or_above_4_vol_pct": 71,
+            "fraction_at_or_above_4_vol_pct": 0.5259259259259259,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              4.985892857142857,
+              5.13823076923077
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+            "sheet_name": "1 mm 1.5g H2 W = 0",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 1.5,
+            "wind_speed_m_s": 0.0,
+            "wind_mode": "no-wind",
+            "point_count": 117,
+            "x_range_mm": [
+              125.0,
+              2000.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 39.27428571428572,
+            "average_concentration_mean_pct": 4.281076699129331,
+            "points_at_or_above_4_vol_pct": 40,
+            "fraction_at_or_above_4_vol_pct": 0.3418803418803419,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              1.4897142857142858,
+              1.5725714285714285
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+            "sheet_name": "1 mm 1.5g H2 W = 1.5 cross-flo",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 1.5,
+            "wind_speed_m_s": 1.5,
+            "wind_mode": "cross-flow",
+            "point_count": 126,
+            "x_range_mm": [
+              125.0,
+              1250.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": -0.07200000000000001,
+            "average_concentration_max_pct": 38.2957894736842,
+            "average_concentration_mean_pct": 3.228955201353606,
+            "points_at_or_above_4_vol_pct": 27,
+            "fraction_at_or_above_4_vol_pct": 0.21428571428571427,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              1.48415,
+              1.52385
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+            "sheet_name": "1 mm 1.5g He W = 3.5 cross-flow",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 1.5,
+            "wind_speed_m_s": 3.5,
+            "wind_mode": "cross-flow",
+            "point_count": 108,
+            "x_range_mm": [
+              125.0,
+              875.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 36.24476190476191,
+            "average_concentration_mean_pct": 2.812674329562011,
+            "points_at_or_above_4_vol_pct": 17,
+            "fraction_at_or_above_4_vol_pct": 0.1574074074074074,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              1.4939523809523803,
+              1.5190999999999997
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+            "sheet_name": "1 mm 1.5g H2 W = 5 cross-flow",
+            "release_diameter_mm": 1.0,
+            "nominal_release_g_s": 1.5,
+            "wind_speed_m_s": 5.0,
+            "wind_mode": "cross-flow",
+            "point_count": 99,
+            "x_range_mm": [
+              125.0,
+              875.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 36.65761904761904,
+            "average_concentration_mean_pct": 2.8022860602726216,
+            "points_at_or_above_4_vol_pct": 16,
+            "fraction_at_or_above_4_vol_pct": 0.16161616161616163,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              1.4899499999999999,
+              1.523952380952381
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+            "sheet_name": "4 mm 1g H2 W=0",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 0.0,
+            "wind_mode": "no-wind",
+            "point_count": 117,
+            "x_range_mm": [
+              125.0,
+              2000.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 44.683461538461565,
+            "average_concentration_mean_pct": 4.817137726111183,
+            "points_at_or_above_4_vol_pct": 45,
+            "fraction_at_or_above_4_vol_pct": 0.38461538461538464,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              0.9926585365853658,
+              1.045945945945946
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+            "sheet_name": "4 mm 1g H2 W = 1.5 co-flow",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 1.5,
+            "wind_mode": "co-flow",
+            "point_count": 99,
+            "x_range_mm": [
+              250.0,
+              2000.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 24.204000000000004,
+            "average_concentration_mean_pct": 3.150333203302647,
+            "points_at_or_above_4_vol_pct": 24,
+            "fraction_at_or_above_4_vol_pct": 0.24242424242424243,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 250.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              1.0052978723404256,
+              1.0395799999999997
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+            "sheet_name": "4 mm 1g H2 W = 1.5 counter-flow",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 1.5,
+            "wind_mode": "counter-flow",
+            "point_count": 117,
+            "x_range_mm": [
+              125.0,
+              2000.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": -0.08511111111111112,
+            "average_concentration_max_pct": 44.13541666666668,
+            "average_concentration_mean_pct": 4.483417094861705,
+            "points_at_or_above_4_vol_pct": 40,
+            "fraction_at_or_above_4_vol_pct": 0.3418803418803419,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              0.9969508196721312,
+              1.0277111111111115
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+            "sheet_name": "4 mm 1g H2 W = 3.5 co-flow",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 3.5,
+            "wind_mode": "co-flow",
+            "point_count": 99,
+            "x_range_mm": [
+              250.0,
+              2000.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 20.975555555555555,
+            "average_concentration_mean_pct": 1.9342668160387784,
+            "points_at_or_above_4_vol_pct": 12,
+            "fraction_at_or_above_4_vol_pct": 0.12121212121212122,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 250.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              1.002230769230769,
+              1.035705882352941
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+            "sheet_name": "4 mm 1g H2 W = 3.5 counter-flow",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 3.5,
+            "wind_mode": "counter-flow",
+            "point_count": 63,
+            "x_range_mm": [
+              125.0,
+              750.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": -0.09704545454545453,
+            "average_concentration_max_pct": 40.700408163265315,
+            "average_concentration_mean_pct": 4.7325431886329845,
+            "points_at_or_above_4_vol_pct": 19,
+            "fraction_at_or_above_4_vol_pct": 0.30158730158730157,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              0.9934693877551019,
+              1.0330454545454546
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+            "sheet_name": "4 mm 1g H2 W = 5 co-flow",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 5.0,
+            "wind_mode": "co-flow",
+            "point_count": 99,
+            "x_range_mm": [
+              250.0,
+              2000.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 20.856734693877545,
+            "average_concentration_mean_pct": 1.5784446380370891,
+            "points_at_or_above_4_vol_pct": 9,
+            "fraction_at_or_above_4_vol_pct": 0.09090909090909091,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 250.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              1.0135849056603774,
+              1.0388148148148149
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+            "sheet_name": "4 mm 1g H2 W = 5 counter-flow",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 5.0,
+            "wind_mode": "counter-flow",
+            "point_count": 72,
+            "x_range_mm": [
+              125.0,
+              625.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.08421052631578939,
+            "average_concentration_max_pct": 39.46461538461539,
+            "average_concentration_mean_pct": 4.74656335994348,
+            "points_at_or_above_4_vol_pct": 23,
+            "fraction_at_or_above_4_vol_pct": 0.3194444444444444,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              1.0002115384615384,
+              1.035509433962264
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+            "sheet_name": "4 mm 1g H2 W = 1.5 cross-flow",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 1.5,
+            "wind_mode": "cross-flow",
+            "point_count": 144,
+            "x_range_mm": [
+              125.0,
+              875.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": -0.033200000000000035,
+            "average_concentration_max_pct": 41.67509803921569,
+            "average_concentration_mean_pct": 3.647681950766917,
+            "points_at_or_above_4_vol_pct": 33,
+            "fraction_at_or_above_4_vol_pct": 0.22916666666666666,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              0.996086956521739,
+              1.0266862745098042
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+            "sheet_name": "4 mm 1g H2 W = 3.5 cross-flow",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 3.5,
+            "wind_mode": "cross-flow",
+            "point_count": 108,
+            "x_range_mm": [
+              125.0,
+              625.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 40.19608695652173,
+            "average_concentration_mean_pct": 3.0282232667967963,
+            "points_at_or_above_4_vol_pct": 21,
+            "fraction_at_or_above_4_vol_pct": 0.19444444444444445,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              0.9894583333333333,
+              1.0228695652173914
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+            "sheet_name": "4 mm 1 g H2 W = 5 cross-flow",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 1.0,
+            "wind_speed_m_s": 5.0,
+            "wind_mode": "cross-flow",
+            "point_count": 108,
+            "x_range_mm": [
+              125.0,
+              625.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": -0.02795918367346938,
+            "average_concentration_max_pct": 36.12479166666667,
+            "average_concentration_mean_pct": 2.7939946117520296,
+            "points_at_or_above_4_vol_pct": 17,
+            "fraction_at_or_above_4_vol_pct": 0.1574074074074074,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              0.9995833333333334,
+              1.040909090909091
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+            "sheet_name": "4 mm 5g H2 W = 0",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 5.0,
+            "wind_speed_m_s": 0.0,
+            "wind_mode": "no-wind",
+            "point_count": 198,
+            "x_range_mm": [
+              125.0,
+              3500.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 61.906363636363636,
+            "average_concentration_mean_pct": 6.826569871974023,
+            "points_at_or_above_4_vol_pct": 97,
+            "fraction_at_or_above_4_vol_pct": 0.4898989898989899,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              4.942363636363637,
+              5.011782608695653
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+            "sheet_name": "4 mm 5g H2 W = 1.5 m s co-flow",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 5.0,
+            "wind_speed_m_s": 1.5,
+            "wind_mode": "co-flow",
+            "point_count": 153,
+            "x_range_mm": [
+              125.0,
+              3500.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 60.202857142857155,
+            "average_concentration_mean_pct": 5.956926116603865,
+            "points_at_or_above_4_vol_pct": 69,
+            "fraction_at_or_above_4_vol_pct": 0.45098039215686275,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              4.94747619047619,
+              5.045000000000001
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+            "sheet_name": "4 mm 5g H2 W = 1.5 m s counter ",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 5.0,
+            "wind_speed_m_s": 1.5,
+            "wind_mode": "counter-flow",
+            "point_count": 153,
+            "x_range_mm": [
+              125.0,
+              3500.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.20619047619047623,
+            "average_concentration_max_pct": 60.730000000000004,
+            "average_concentration_mean_pct": 7.044518703336916,
+            "points_at_or_above_4_vol_pct": 95,
+            "fraction_at_or_above_4_vol_pct": 0.6209150326797386,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              4.938611111111112,
+              5.0257
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+            "sheet_name": "4 mm 5g H2 W = 3.5 m s co-flow",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 5.0,
+            "wind_speed_m_s": 3.5,
+            "wind_mode": "co-flow",
+            "point_count": 135,
+            "x_range_mm": [
+              125.0,
+              2500.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 59.727619047619044,
+            "average_concentration_mean_pct": 5.362245545517284,
+            "points_at_or_above_4_vol_pct": 46,
+            "fraction_at_or_above_4_vol_pct": 0.34074074074074073,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              4.955130434782609,
+              4.991958333333332
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+            "sheet_name": "4 mm 5g H2 W = 3.5 m s counter",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 5.0,
+            "wind_speed_m_s": 3.5,
+            "wind_mode": "counter-flow",
+            "point_count": 153,
+            "x_range_mm": [
+              125.0,
+              3500.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.25411764705882356,
+            "average_concentration_max_pct": 60.67227272727271,
+            "average_concentration_mean_pct": 6.5949362485401535,
+            "points_at_or_above_4_vol_pct": 85,
+            "fraction_at_or_above_4_vol_pct": 0.5555555555555556,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              4.949045454545453,
+              5.028454545454546
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+            "sheet_name": "4 mm 5g H2 W = 5 m s co-flow",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 5.0,
+            "wind_speed_m_s": 5.0,
+            "wind_mode": "co-flow",
+            "point_count": 135,
+            "x_range_mm": [
+              125.0,
+              2500.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 59.94809523809524,
+            "average_concentration_mean_pct": 5.16006300537001,
+            "points_at_or_above_4_vol_pct": 43,
+            "fraction_at_or_above_4_vol_pct": 0.31851851851851853,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              4.950391304347825,
+              5.037227272727273
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+            "sheet_name": "4 mm 5g H2 W = 5 m s counter",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 5.0,
+            "wind_speed_m_s": 5.0,
+            "wind_mode": "counter-flow",
+            "point_count": 135,
+            "x_range_mm": [
+              125.0,
+              2500.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.26375000000000004,
+            "average_concentration_max_pct": 61.040952380952376,
+            "average_concentration_mean_pct": 6.983207483162514,
+            "points_at_or_above_4_vol_pct": 74,
+            "fraction_at_or_above_4_vol_pct": 0.5481481481481482,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              4.929727272727273,
+              5.011818181818182
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+            "sheet_name": "4 mm 2.5g H2 W = 0",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 2.5,
+            "wind_speed_m_s": 0.0,
+            "wind_mode": "no-wind",
+            "point_count": 135,
+            "x_range_mm": [
+              125.0,
+              2500.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 52.9052380952381,
+            "average_concentration_mean_pct": 5.757361840628508,
+            "points_at_or_above_4_vol_pct": 61,
+            "fraction_at_or_above_4_vol_pct": 0.45185185185185184,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              2.480285714285714,
+              2.51552
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+            "sheet_name": "4 mm 2.5 g H2 W = 1.5 m s cross",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 2.5,
+            "wind_speed_m_s": 1.5,
+            "wind_mode": "cross-flow",
+            "point_count": 162,
+            "x_range_mm": [
+              125.0,
+              1500.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 51.42571428571428,
+            "average_concentration_mean_pct": 4.980878209491108,
+            "points_at_or_above_4_vol_pct": 62,
+            "fraction_at_or_above_4_vol_pct": 0.38271604938271603,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              2.457047619047619,
+              2.509363636363636
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+            "sheet_name": "4 mm 2.5g H2 W = 3.5 m s cross",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 2.5,
+            "wind_speed_m_s": 3.5,
+            "wind_mode": "cross-flow",
+            "point_count": 117,
+            "x_range_mm": [
+              125.0,
+              1000.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 47.49090909090909,
+            "average_concentration_mean_pct": 4.517038896257057,
+            "points_at_or_above_4_vol_pct": 35,
+            "fraction_at_or_above_4_vol_pct": 0.29914529914529914,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              2.471399999999999,
+              2.512208333333334
+            ]
+          },
+          {
+            "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+            "sheet_name": "4 mm 2.5g H2 W = 5 m s cross",
+            "release_diameter_mm": 4.0,
+            "nominal_release_g_s": 2.5,
+            "wind_speed_m_s": 5.0,
+            "wind_mode": "cross-flow",
+            "point_count": 117,
+            "x_range_mm": [
+              125.0,
+              1000.0
+            ],
+            "y_range_mm": [
+              -175.0,
+              175.0
+            ],
+            "average_concentration_min_pct": 0.0,
+            "average_concentration_max_pct": 48.35363636363636,
+            "average_concentration_mean_pct": 4.24818909086596,
+            "points_at_or_above_4_vol_pct": 30,
+            "fraction_at_or_above_4_vol_pct": 0.2564102564102564,
+            "maximum_average_concentration_locations": [
+              {
+                "x_mm": 125.0,
+                "y_mm": 0.0
+              }
+            ],
+            "measured_release_flow_range_g_s": [
+              2.469916666666666,
+              2.5210909090909097
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "dataverse_hydrogen_explosion_component_inventory",
+      "status": "PASS",
+      "claim": "Two CC0 DataverseNO release/ignition archives are provenance-checked as independent consequence-component evidence without being promoted to HRS full-loop or model validation.",
+      "evidence": "research\\dataverse_hydrogen_explosion_dataset_inventory_2026_10_05.json; research\\usn_17934047_raw_subset_replay_2026_10_05.json",
+      "requirement": "WSKBIJ and X044QK API manifests, summary-workbook hashes, 51/40 experiment counts, a three-file CC BY raw-channel replay and explicit false model/full-loop flags.",
+      "observed": {
+        "dois": [
+          "10.18710/WSKBIJ",
+          "10.18710/X044QK",
+          "10.23642/USN.17934047"
+        ],
+        "experiment_counts": {
+          "10.18710/WSKBIJ": 51,
+          "10.18710/X044QK": 40,
+          "10.23642/USN.17934047": null
+        },
+        "ignited_sample_sigma_shape": [
+          999999,
+          7
+        ],
+        "license_set": [
+          "CC BY 4.0",
+          "CC0 1.0"
+        ],
+        "model_comparison_performed": false,
+        "full_loop_external_validation_supported": false,
+        "raw_subset_file_count": 3,
+        "raw_subset_channel_replay_valid": true,
+        "raw_subset_model_comparison_performed": false
       }
     },
     {
@@ -1255,6 +2890,110 @@
       }
     },
     {
+      "id": "hiad_accident_response_coverage_evaluation",
+      "status": "PASS",
+      "claim": "Public HIAD action categories are routed case-by-case to staged response plans with an explicit non-evaluative boundary.",
+      "evidence": "research\\hiad_accident_response_coverage_evaluation_2026_10_05.json",
+      "requirement": "34 cases, 33 cases with public action categories, 8/8 categories covered with zero uncovered case-category pairs, current input hashes, no raw action text or holdout use.",
+      "observed": {
+        "aggregate": {
+          "case_count": 34,
+          "public_action_category_case_count": 33,
+          "no_public_action_category_case_count": 1,
+          "covered_action_category_case_count": 33,
+          "category_count": 8,
+          "covered_category_count": 8,
+          "uncovered_case_category_count": 0,
+          "category_counts": {
+            "shutdown_isolation_depressurization": 22,
+            "detection_alarm_monitoring": 14,
+            "fire_response_cooling": 6,
+            "evacuation_perimeter_access": 6,
+            "emergency_communication_coordination": 17,
+            "inspection_leak_test_repair": 21,
+            "procedure_interlock_training_design": 23,
+            "ventilation_purge": 21
+          },
+          "contract_pass": true
+        },
+        "contract": {
+          "required_stage_names": [
+            "recognition",
+            "immediate",
+            "stabilize",
+            "restart",
+            "prevention"
+          ],
+          "category_required_stages": {
+            "inspection_leak_test_repair": {
+              "required_stages": [
+                "restart",
+                "prevention"
+              ],
+              "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+            },
+            "procedure_interlock_training_design": {
+              "required_stages": [
+                "prevention"
+              ],
+              "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+            },
+            "shutdown_isolation_depressurization": {
+              "required_stages": [
+                "immediate",
+                "stabilize",
+                "restart"
+              ],
+              "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+            },
+            "detection_alarm_monitoring": {
+              "required_stages": [
+                "recognition",
+                "stabilize",
+                "prevention"
+              ],
+              "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+            },
+            "ventilation_purge": {
+              "required_stages": [
+                "immediate",
+                "stabilize",
+                "prevention"
+              ],
+              "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+            },
+            "emergency_communication_coordination": {
+              "required_stages": [
+                "immediate",
+                "prevention"
+              ],
+              "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+            },
+            "fire_response_cooling": {
+              "required_stages": [
+                "immediate",
+                "stabilize",
+                "prevention"
+              ],
+              "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+            },
+            "evacuation_perimeter_access": {
+              "required_stages": [
+                "immediate",
+                "stabilize"
+              ],
+              "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+            }
+          },
+          "raw_action_text_used": false,
+          "effectiveness_claimed": false,
+          "safety_claimed": false,
+          "holdout_use": false
+        },
+        "source_hashes_match": true
+      }
+    },
+    {
       "id": "public_dispenser_endpoint_diagnostic",
       "status": "PASS",
       "claim": "Public 35/70 MPa dispenser endpoint tables are replayed as an explicit negative diagnostic without being promoted to full-loop validation.",
@@ -1266,6 +3005,71 @@
           "safety-temperature": 2
         },
         "claim_boundary": "This diagnostic does not close the independent station-to-vehicle full-loop gate and is not a safety-distance claim."
+      }
+    },
+    {
+      "id": "public_dispenser_table_download_integrity",
+      "status": "PASS",
+      "claim": "The four current public CIP dispenser table links are byte-checked and retained as endpoint-only evidence without promoting them to synchronized full-loop validation.",
+      "evidence": "research\\cip_2020_live_download_recheck_2026_10_05.json",
+      "requirement": "T1-T4 returned HTTP 200, matched recorded SHA-256 values, each contained three rows, and none exposed a sampled time axis; full-loop eligibility remains false.",
+      "observed": {
+        "tables": [
+          "T1",
+          "T2",
+          "T3",
+          "T4"
+        ],
+        "sha256_matches": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "full_loop_external_holdout_eligible": false
+      }
+    },
+    {
+      "id": "green_hysland_trailer_context_integrity",
+      "status": "PASS",
+      "claim": "The live Green Hysland report provides traceable tube-trailer operating context while explicitly excluding its empty HRS provisional section from full-loop validation.",
+      "evidence": "research\\green_hysland_trailer_report_recheck_2026_10_05.json",
+      "requirement": "HTTP 200 PDF with digest, required trailer KPI rows, component-context eligibility, and an explicit false full-loop flag.",
+      "observed": {
+        "pdf_sha256": "f3281b6f38bfe62dff79677590c9099fe55bdd17adcec3f4243af1028ce1a7a2",
+        "required_trailer_rows": true,
+        "hrs_provisional_populated": false,
+        "full_loop_external_holdout_eligible": false
+      }
+    },
+    {
+      "id": "mendeley_hrs_simulation_dataset_boundary_integrity",
+      "status": "PASS",
+      "claim": "The openly licensed Mendeley HRS dataset is retained as simulation provenance and explicitly excluded from independent full-loop validation.",
+      "evidence": "research\\hrs_mendeley_simulation_dataset_boundary_2026_10_05.json",
+      "requirement": "DataCite metadata, DOI, CC BY 4.0, simulation-only characterization, and an explicit false full-loop eligibility decision.",
+      "observed": {
+        "doi": "10.17632/mnjs94yzfc.1",
+        "cc_by_4_present": true,
+        "simulation_only": true,
+        "full_loop_external_holdout_eligible": false
+      }
+    },
+    {
+      "id": "multhyfuel_d24_public_experiment_integrity",
+      "status": "PASS",
+      "claim": "The public MultHyFuel D2.4 mock-up dispenser experiments provide traceable consequence benchmarks without being misrepresented as full-loop or SAGA validation.",
+      "evidence": "research\\multhyfuel_d24_public_experiment_recheck_2026_10_05.json",
+      "requirement": "HTTP 200 PDF digest, 25-page source, experimental setup/page anchors, measured jet-fire/internal-cloud values and explicit full-loop/SAGA exclusions.",
+      "observed": {
+        "pdf_sha256": "30765fd1512a8a6faadaa098d373417efd0519362487f14d29ccd6626b2bee7c",
+        "pdf_pages": 25,
+        "jetfire_700bar_measured_flow_g_s": 40.0,
+        "jetfire_700bar_flame_length_m_min": 5.0,
+        "internal_700bar_0_2mm_flow_g_s": 9.0,
+        "consequence_benchmark_eligible": true,
+        "full_loop_station_vehicle_holdout_eligible": false,
+        "saga_effectiveness_eligible": false
       }
     },
     {
@@ -1288,6 +3092,64 @@
           "reason_not_full_loop": "The experiment is a controlled cylinder breach rather than a station-to-vehicle fueling event; breach geometry, discharge coefficient and complete calibration metadata are not supplied in the dataset record."
         },
         "claim_boundary": "This record establishes openly licensed experimental evidence and provenance for accidental high-pressure hydrogen release and ignition. It does not close the independent station-to-vehicle full-loop gate, prove an ignition probability, or validate the digital twin without a preregistered apparatus mapping and holdout protocol."
+      }
+    },
+    {
+      "id": "thermal_effects_public_protocol_integrity",
+      "status": "PASS",
+      "claim": "The independent public ignited-release thermal-effects archive is prospectively frozen as a consequence-only screen.",
+      "evidence": "research\\thermal_effects_ignited_release_protocol_2026_10_04.json",
+      "requirement": "DOI and CC BY rights, all eight public MAT experiments, predeclared observables/eligibility, no pre-freeze outcome access and an explicit exclusion from full-loop or legal-distance claims.",
+      "observed": {
+        "doi": "10.23642/usn.17695082.v1",
+        "license": "CC BY 4.0",
+        "file_count": 8,
+        "selected_files": [
+          "Exp_00001.mat",
+          "Exp_00002.mat",
+          "Exp_00003.mat",
+          "Exp_00004.mat",
+          "Exp_00005.mat",
+          "Exp_00006.mat",
+          "Exp_00007.mat",
+          "Exp_00008.mat"
+        ],
+        "raw_outcomes_accessed_before_freeze": false,
+        "claim_boundary": "Independent consequence-model evidence only; it does not close the full-loop external validation gate or establish legal separation distances."
+      }
+    },
+    {
+      "id": "thermal_effects_public_archive_replay",
+      "status": "PASS",
+      "claim": "All eight public ignited-release MAT files were parsed under one deterministic descriptive extraction rule.",
+      "evidence": "research\\thermal_effects_archive_replay_2026_10_04.json",
+      "requirement": "Eight source files, non-empty SHA-256-linked artifacts, consistent mass-flow release-window rule and an explicit non-validation claim boundary.",
+      "observed": {
+        "case_count": 8,
+        "files": [
+          "Exp_00001.mat",
+          "Exp_00002.mat",
+          "Exp_00003.mat",
+          "Exp_00004.mat",
+          "Exp_00005.mat",
+          "Exp_00006.mat",
+          "Exp_00007.mat",
+          "Exp_00008.mat"
+        ],
+        "release_window_threshold_g_s": 0.5,
+        "claim_boundary": "Descriptive consequence-data replay only. No case-specific fitting, CFD calibration, station full-loop validation, controller validation, LLM effectiveness claim or legal separation-distance claim is made."
+      }
+    },
+    {
+      "id": "thermal_effects_postfreeze_integrity_replay",
+      "status": "PASS",
+      "claim": "The post-freeze thermal archive audit verifies every public case, time base, channel inventory and claim boundary without promoting it to predictive station validation.",
+      "evidence": "research\\thermal_effects_ignited_release_result_2026_10_05.json",
+      "requirement": "Eight SHA-256-linked cases, deterministic release-window rule, monotonic source time bases and explicit non-predictive/full-loop exclusions.",
+      "observed": {
+        "case_count": 8,
+        "missing_files": [],
+        "claim_boundary": "Descriptive, post-freeze consequence-data replay only. The public record does not expose a frozen case-to-case nozzle/geometry mapping sufficient for an untouched predictive HyRAM comparison; this is not predictive validation. No parameter fitting, CFD calibration, station full-loop validation, controller validation, LLM effectiveness claim or legal separation-distance claim is made."
       }
     },
     {
@@ -1353,8 +3215,46 @@
       }
     },
     {
+      "id": "khk_public_accident_report_access_verification",
+      "status": "PASS",
+      "claim": "All inventoried KHK accident-report links resolve to PDF files whose provenance is hash-locked without redistributing the reports.",
+      "evidence": "research\\khk_public_reports_access_verification_2026_10_04.json",
+      "requirement": "23/23 public report URLs return PDF content with non-empty SHA-256 records and page counts; only metadata is committed.",
+      "observed": {
+        "report_count": 23,
+        "verified_report_count": 23,
+        "page_counts": [
+          6,
+          5,
+          4,
+          7,
+          4,
+          5,
+          5,
+          7,
+          5,
+          3,
+          6,
+          8,
+          3,
+          6,
+          3,
+          3,
+          3,
+          4,
+          3,
+          4,
+          7,
+          5,
+          11
+        ],
+        "rights_boundary": "Report PDFs remain local and gitignored. Only URL provenance, hashes, byte counts and page counts are committed; report text and files are not redistributed.",
+        "claim_boundary": "This verifies access and provenance of public accident reports for qualitative scenario grounding. It does not provide synchronized process traces, event frequencies, causal inference or physics validation."
+      }
+    },
+    {
       "id": "preslhy_blowdown_external_validation",
-      "status": "FAIL",
+      "status": "PASS",
       "claim": "The source-depletion and direct-aperture release model meets its prospectively frozen screens on public PRESLHY ambient blowdown experiments.",
       "evidence": "research\\preslhy_blowdown_external_validation.json; research\\preslhy_blowdown_validation_protocol.json",
       "requirement": ">=12 cases across >=3 nozzle and pressure groups, >=70% joint primary pass fraction, frozen implementation and retained failures.",
@@ -1376,15 +3276,15 @@
           "minimum_requirements_met": true
         },
         "aggregate": {
-          "joint_primary_pass_fraction": 0.5,
+          "joint_primary_pass_fraction": 0.7272727272727273,
           "bootstrap_95_percent_ci": [
-            0.3181818181818182,
-            0.7272727272727273
+            0.5454545454545454,
+            0.9090909090909091
           ],
           "bootstrap_replicates": 10000,
           "bootstrap_seed": 20261003,
           "claim_threshold": 0.7,
-          "ambient_direct_aperture_blowdown_claim_supported": false
+          "ambient_direct_aperture_blowdown_claim_supported": true
         },
         "claim_boundary": "This protocol evaluates a rigid source vessel discharging through a nominal circular aperture. It does not validate a vehicle-fueling loop, cryogenic two-phase release, a site vent stack, pipe backpressure, ignition, dispersion, or emergency separation distance."
       }
@@ -1558,7 +3458,7 @@
       "id": "grune_2014_pressure_decay_validation",
       "status": "PENDING",
       "claim": "The locked source model meets all pressure-decay screens on the independent KIT small-reservoir release.",
-      "evidence": "research\\grune_2014_holdout_result.json; research\\grune_2014_holdout_protocol.json; data\\public_validation\\derived\\grune_2014_figure2.csv",
+      "evidence": "research\\grune_2014_holdout_result.json; research\\grune_2014_holdout_protocol.json; data\\public_validation\\derived\\grune_2014_figure2.csv; research/grune_2014_archive_access_recheck_2026_10_05.json",
       "requirement": "At least 15 points plus an observable half-pressure crossing; <=10% NRMSE, <=15% median error and <=20% half-time error.",
       "observed": {
         "eligibility": {
@@ -2361,7 +4261,7 @@
       "requirement": "Manifest schema, normal/emergency distinction, contradiction guard and full regression suite.",
       "observed": {
         "schema_version": 1,
-        "recorded_at": "2026-10-04T11:38:24.104809+00:00",
+        "recorded_at": "2026-10-04T19:21:38.052365+00:00",
         "status": "software_contract_verified",
         "scope": [
           "digital-twin main assistant",
@@ -2372,12 +4272,12 @@
         "tests": {
           "targeted": {
             "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_digital_twin_direct_qa.py -q",
-            "passed": 11,
-            "warnings": 2
+            "passed": 18,
+            "warnings": 4
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 472,
+            "passed": 509,
             "failed": 0,
             "warnings": 16
           }
@@ -2392,7 +4292,9 @@
           "response evidence source identifiers are carried into the hashed manifest",
           "public HIAD action-to-playbook traceability metadata is carried into the response evidence envelope",
           "public KHK accident-report inventory and citation link are carried into the evidence envelope without mirrored report text",
-          "public KHK scenario-precedent map links all 23 citation records to conservative response families without exposing report text or frequency claims"
+          "public KHK scenario-precedent map links all 23 citation records to conservative response families without exposing report text or frequency claims",
+          "consequence flow-boundary mismatches are exposed when HyRAM recomputes a high-pressure choked flow instead of silently presenting it as the supplied process flow",
+          "public HIAD action categories are evaluated case-by-case against required staged response plans without using raw action text or making an effectiveness claim"
         ],
         "not_established": [
           "physics validity of the consequence model",
@@ -2413,7 +4315,21 @@
           "action_category_count": 8,
           "covered_action_category_count": 8,
           "action_playbook_contract_pass": true,
-          "interpretation": "qualitative scenario-family and action-to-playbook traceability only; excludes HIAD response text and does not establish effectiveness or safety"
+          "interpretation": "qualitative scenario-family and action-to-playbook traceability only; excludes HIAD response text and does not establish effectiveness or safety",
+          "accident_response_coverage_evaluation": {
+            "evidence": "research/hiad_accident_response_coverage_evaluation_2026_10_05.json",
+            "case_count": 34,
+            "public_action_category_case_count": 33,
+            "no_public_action_category_case_count": 1,
+            "covered_category_count": 8,
+            "category_count": 8,
+            "uncovered_case_category_count": 0,
+            "raw_action_text_used": false,
+            "effectiveness_claimed": false,
+            "safety_claimed": false,
+            "holdout_use": false,
+            "interpretation": "public accident action-category to staged-plan interface coverage only; cases without a recorded category are not treated as having no response"
+          }
         },
         "response_stage_contract": {
           "evidence": "research/hiad_response_stage_contract.json",
@@ -2544,11 +4460,11 @@
             75,
             75
           ],
-          "approximate_manuscript_words_before_references": 6646,
+          "approximate_manuscript_words_before_references": 7333,
           "figures": 2,
           "tables": 3,
-          "citation_keys": 25,
-          "bibliography_entries": 25,
+          "citation_keys": 29,
+          "bibliography_entries": 30,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -2576,27 +4492,27 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-04T12:20:14.341730+00:00",
+        "attempted_at": "2026-10-04T19:27:58.486116+00:00",
         "attempts_this_run": 1,
         "success": true,
         "compiler": "Tectonic 0.17.0 (x86_64-pc-windows-msvc)",
         "compiler_release": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic%400.17.0",
         "compiler_archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845f",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "b8d4c6a0aeeab4d1248ce42ca5652d306daf1f2db357182fb5b4324080dfbd9a",
-        "output_pages": 18,
-        "output_bytes": 615197,
-        "output_sha256": "21b97b7348b0bc96d358fd3b23fd0fe88265e21655c43da580ef3daa43daa448",
+        "source_sha256": "fd45d325a39849413d3a129f2a650a4e07cb7a16f235693a1118fba79cb08978",
+        "output_pages": 20,
+        "output_bytes": 624155,
+        "output_sha256": "694307f6dec2fb49ef941aa5bc1e5da3a01a8c665516119d0901a96f542d51c4",
         "warnings": {
           "layout_or_package_warning_lines": 5,
           "fatal_errors": 0,
-          "summary": "PDF produced successfully after adding the bounded 3Emotion aggregate operating-range benchmark and post-outcome temperature-stop sensitivity diagnostic. Non-fatal underfull boxes and the bundled lineno UTF-8 replacement warning remain; no fatal errors were reported."
+          "summary": "PDF produced successfully with the current HIAD incident-response traceability text. Non-fatal underfull boxes and the bundled lineno UTF-8 replacement warning remain; no fatal errors were reported."
         },
         "built_in_compiler_attempt": {
           "success": false,
           "diagnostic": "Unable to find standard directories for platform"
         },
-        "interpretation": "The exact current manuscript source compiled to an 18-page PDF with the pinned Tectonic release. Public 3Emotion station logs are cited as aggregate operating-range context only; no full-loop or synchronized raw-trace validation claim is made."
+        "interpretation": "The exact current manuscript source compiled successfully with the pinned Tectonic release. The source-boundary diagnostic is explicitly non-fitted and does not close station full-loop or SAGA effectiveness gates."
       }
     },
     {

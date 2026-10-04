@@ -245,6 +245,45 @@ def audit(root: Path) -> dict[str, object]:
         } if mc_enthalpy else "missing",
     ))
 
+    mc_measured_boundary_path = root / "research/mc_measured_boundary_diagnostic_2026_10_05.json"
+    mc_measured_boundary = _json(mc_measured_boundary_path)
+    mc_measured_runs = (mc_measured_boundary or {}).get("runs") or []
+    mc_measured_boundary_pass = bool(
+        (mc_measured_boundary or {}).get("schema_version") == 1
+        and (mc_measured_boundary or {}).get("diagnostic_type")
+        == "MC Default measured source-boundary and protocol-schedule replay"
+        and (mc_measured_boundary or {}).get("evidence_role")
+        == "DEVELOPMENT_DIAGNOSTIC_ONLY"
+        and (mc_measured_boundary or {}).get("post_outcome") is True
+        and (mc_measured_boundary or {}).get("parameter_fitting") is False
+        and (mc_measured_boundary or {}).get("case_count") == 8
+        and len(mc_measured_runs) == 4
+        and all(
+            run.get("aggregate", {}).get("screening_pass_count", 0) <= 1
+            and run.get("aggregate", {}).get("temperature_rmse_c", 0.0)
+            > (mc_measured_boundary.get("protocol", {}).get("screening_limits", {}).get("temperature_rmse_c", 10.0))
+            for run in mc_measured_runs
+        )
+        and (mc_measured_boundary or {}).get("validation_boundary", {}).get("full_loop_holdout_eligible") is False
+        and (mc_measured_boundary or {}).get("validation_boundary", {}).get("goal_completion_permitted") is False
+        and (mc_measured_boundary or {}).get("source_commit")
+        and (mc_measured_boundary or {}).get("interpretation", {}).get("claim_boundary")
+    )
+    gates.append(_gate(
+        "mc_measured_boundary_diagnostic_integrity",
+        "PASS" if mc_measured_boundary_pass else ("FAIL" if mc_measured_boundary else "PENDING"),
+        "The measured MC source-boundary/protocol sensitivity replay is retained as negative development evidence and cannot be promoted to full-loop validation.",
+        str(mc_measured_boundary_path.relative_to(root)),
+        "Four post-outcome runs over eight consumed cases, no fitting, retained joint temperature failures, and explicit false full-loop/goal flags.",
+        {
+            "run_count": len(mc_measured_runs),
+            "case_count": (mc_measured_boundary or {}).get("case_count"),
+            "screening_pass_counts": [run.get("aggregate", {}).get("screening_pass_count") for run in mc_measured_runs],
+            "aggregate": [run.get("aggregate") for run in mc_measured_runs],
+            "goal_completion_permitted": (mc_measured_boundary or {}).get("validation_boundary", {}).get("goal_completion_permitted"),
+        } if mc_measured_boundary else "missing",
+    ))
+
     external_loop_path = root / "data/public_validation/results/closed_loop_external_holdout/validation.json"
     external_loop = _json(external_loop_path)
     external_protocol_path = root / "research/mc_default_external_holdout_protocol.json"

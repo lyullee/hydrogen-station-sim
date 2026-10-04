@@ -302,6 +302,39 @@ def test_external_search_mirror_contains_source_boundary_diagnostic():
     assert item["full_loop_holdout_eligible"] is False
 
 
+def test_measured_boundary_diagnostic_retains_negative_joint_screen():
+    record = json.loads(
+        (ROOT / "research/mc_measured_boundary_diagnostic_2026_10_05.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert record["evidence_role"] == "DEVELOPMENT_DIAGNOSTIC_ONLY"
+    assert record["post_outcome"] is True
+    assert record["parameter_fitting"] is False
+    assert record["case_count"] == 8
+    assert len(record["runs"]) == 4
+    assert record["validation_boundary"]["full_loop_holdout_eligible"] is False
+    assert record["validation_boundary"]["goal_completion_permitted"] is False
+    assert max(run["aggregate"]["screening_pass_count"] for run in record["runs"]) == 1
+    assert all(
+        run["aggregate"]["temperature_rmse_c"] > record["protocol"]["screening_limits"]["temperature_rmse_c"]
+        for run in record["runs"]
+    )
+
+
+def test_external_search_mirror_contains_measured_boundary_diagnostic():
+    mirror = json.loads(
+        (ROOT / "research/external_full_loop_data_search.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    item = mirror["mc_measured_boundary_diagnostic_2026_10_05"]
+    assert item["decision"] == "DEVELOPMENT_DIAGNOSTIC_ONLY"
+    assert item["case_count"] == 8
+    assert item["best_screening_pass_count"] == 1
+    assert item["full_loop_holdout_eligible"] is False
+
+
 def test_frozen_boundary_vehicle_diagnostic_retains_negative_screen():
     record = json.loads(
         (

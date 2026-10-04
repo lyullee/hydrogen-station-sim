@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "source_commit": "19df50bf4404d44cf21fa548b785c1158bb06034",
+  "diagnostic_type": "MC Default measured source-boundary and protocol-schedule replay",
+  "evidence_role": "DEVELOPMENT_DIAGNOSTIC_ONLY",
+  "post_outcome": true,
+  "parameter_fitting": false,
+  "case_count": 8,
+  "protocol": {
+    "source": "Powertech Labs SAE J2601 MC Default bench traces",
+    "dataset": "mc_default",
+    "outcomes_inspected_before_run": true,
+    "frozen_holdout_modified": false,
+    "raw_archive": "data/public_validation/raw/h2protocol_mc_default/SAE J2601 MC Default Bench Test Data.zip",
+    "runner": "scripts/run_partial_station_validation.py",
+    "screening_limits": {
+      "pressure_rmse_mpa": 5.0,
+      "temperature_rmse_c": 10.0,
+      "soc_final_abs_error_percentage_points": 5.0
+    }
+  },
+  "runs": [
+    {
+      "id": "source_pressure_1_mpa_95c",
+      "source_pressure_column": "source_pressure_1_mpa",
+      "protocol_pressure_profile_used": false,
+      "maximum_gas_temperature_c": 95.0,
+      "result_path": "data/public_validation/results/mc_source_boundary_current_diagnostic_95/validation.json",
+      "aggregate": {
+        "pressure_rmse_mpa": 6.04458586770003,
+        "temperature_rmse_c": 14.323669259998223,
+        "soc_rmse_percentage_points": 7.960985696082141,
+        "simulation_coverage_fraction": 0.9541886809026745,
+        "screening_pass_count": 0
+      }
+    },
+    {
+      "id": "source_pressure_3_mpa_95c",
+      "source_pressure_column": "source_pressure_3_mpa",
+      "protocol_pressure_profile_used": false,
+      "maximum_gas_temperature_c": 95.0,
+      "result_path": "data/public_validation/results/mc_source_boundary_current_diagnostic_95_source3/validation.json",
+      "aggregate": {
+        "pressure_rmse_mpa": 5.5598286400000005,
+        "temperature_rmse_c": 14.52485874,
+        "soc_rmse_percentage_points": 7.48803485,
+        "simulation_coverage_fraction": 0.9494038,
+        "screening_pass_count": 1
+      }
+    },
+    {
+      "id": "source_pressure_3_mpa_200c",
+      "source_pressure_column": "source_pressure_3_mpa",
+      "protocol_pressure_profile_used": false,
+      "maximum_gas_temperature_c": 200.0,
+      "result_path": "data/public_validation/results/mc_source_boundary_current_diagnostic_200_source3/validation.json",
+      "aggregate": {
+        "pressure_rmse_mpa": 5.85656262,
+        "temperature_rmse_c": 15.07452054,
+        "soc_rmse_percentage_points": 7.88010393,
+        "simulation_coverage_fraction": 0.9997905,
+        "screening_pass_count": 1
+      }
+    },
+    {
+      "id": "source_pressure_3_mpa_plus_protocol_95c",
+      "source_pressure_column": "source_pressure_3_mpa",
+      "protocol_pressure_profile_used": true,
+      "maximum_gas_temperature_c": 95.0,
+      "result_path": "data/public_validation/results/mc_source_protocol_boundary_diagnostic_95_source3/validation.json",
+      "aggregate": {
+        "pressure_rmse_mpa": 4.907741042568065,
+        "temperature_rmse_c": 14.755705497264525,
+        "soc_rmse_percentage_points": 5.91416567793112,
+        "simulation_coverage_fraction": 0.8813796480420657,
+        "screening_pass_count": 1
+      }
+    }
+  ],
+  "interpretation": {
+    "finding": "Measured source-pressure replay improves pressure agreement in some configurations, but no run satisfies the joint pressure, temperature and final-SOC screen across the eight consumed cases.",
+    "structural_evidence": "Source-boundary choice is material, yet source-pressure replay alone does not identify the current station topology, controller/dispatch behavior, thermal boundary or vehicle-tank representation.",
+    "negative_control": "Increasing the gas-temperature stop sensitivity from 95 C to 200 C raises coverage but does not improve the joint screen; the safety limit must not be tuned to manufacture agreement.",
+    "screening_summary": "Best run passes 1/8 cases; the protocol-profile run has pressure RMSE below 5 MPa but temperature and SOC remain above their limits.",
+    "claim_boundary": "This post-outcome development diagnostic cannot be promoted to independent external full-loop validation, cannot modify the frozen MC Default holdout result, and cannot support an IJHE full digital-twin performance or field-safety claim."
+  },
+  "validation_boundary": {
+    "full_loop_holdout_eligible": false,
+    "goal_completion_permitted": false,
+    "next_required_protocol": "Pre-register an independent measured-boundary evaluation with synchronized source pressure, source/inlet temperature, dispenser flow, vehicle pressure and SOC, plus station topology and valve-state logs before scoring.",
+    "required_external_evidence": [
+      "independent synchronized station-to-vehicle raw archive",
+      "written reuse rights and immutable file hashes",
+      "frozen no-fitting scoring script",
+      "independent expert review and SAGA effectiveness/safety study"
+    ]
+  }
+}
