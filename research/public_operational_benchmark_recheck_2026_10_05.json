@@ -73,6 +73,33 @@
       "use": "Independent face-validity benchmark and high-priority request for de-identified event-level exports; not a full-loop holdout until the raw archive, channel dictionary, calibration metadata and reuse permission are received and frozen before outcome access."
     },
     {
+      "id": "calstate_la_back_to_back_jclepro_2021",
+      "title": "Hydrogen station in situ back-to-back fueling data for design and modeling",
+      "doi": "10.1016/j.jclepro.2021.129737",
+      "url": "https://doi.org/10.1016/j.jclepro.2021.129737",
+      "license": "Elsevier article record is not open access; the underlying operator logs are not distributed as a rights-cleared raw archive",
+      "decision": "REAL_STATION_AGGREGATE_AND_DATA_REQUEST_LEAD",
+      "observed_scope": {
+        "facility": "Cal State LA Hydrogen Research and Fueling Facility, California, USA",
+        "reported_period": "one year of station operation",
+        "reported_scenarios": [
+          "multiple daily refueling",
+          "back-to-back fueling with less than five minutes between fills",
+          "station response under increased demand"
+        ],
+        "reported_channels_or_outputs": [
+          "storage pressure levels",
+          "dynamic cooling response and temperature",
+          "fueling thermodynamics",
+          "vehicle state of charge",
+          "fueling-event frequency and duration"
+        ],
+        "raw_synchronized_rows": false
+      },
+      "finding": "The article describes a valuable real-station operating campaign and calls the measurements a comprehensive dataset, but the public record exposes the paper rather than a downloadable synchronized station, dispenser and vehicle logger archive.",
+      "use": "Independent operating-context citation and high-priority author/data-custodian request; not a full-loop holdout until de-identified event-level files, channel definitions, calibration metadata and reuse permission are received and frozen before outcome access."
+    },
+    {
       "id": "uci_nfcrc_early_hrs_ijhe_2020",
       "title": "Performance of a hydrogen refueling station in the early years of commercial fuel cell vehicle deployment",
       "doi": "10.1016/j.ijhydene.2020.08.251",

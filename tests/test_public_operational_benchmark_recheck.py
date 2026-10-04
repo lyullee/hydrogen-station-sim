@@ -12,7 +12,7 @@ def test_operational_benchmark_recheck_preserves_raw_trace_boundary():
     )
     assert record["result"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
     assert record["gate_impact"] == "full_loop_external_validation_remains_open"
-    assert len(record["candidates"]) == 7
+    assert len(record["candidates"]) == 8
     assert all(
         item["decision"] != "FULL_LOOP_HOLDOUT" for item in record["candidates"]
     )
@@ -31,9 +31,13 @@ def test_recheck_explicitly_contains_real_station_but_non_raw_sources():
     )
     real_station = [
         item for item in record["candidates"]
-        if item["id"] in {"calstate_la_multi_year_ijhe_2023", "uci_nfcrc_early_hrs_ijhe_2020"}
+        if item["id"] in {
+            "calstate_la_multi_year_ijhe_2023",
+            "calstate_la_back_to_back_jclepro_2021",
+            "uci_nfcrc_early_hrs_ijhe_2020",
+        }
     ]
-    assert len(real_station) == 2
+    assert len(real_station) == 3
     assert all("request" in item["use"].lower() for item in real_station)
 
 
@@ -62,6 +66,20 @@ def test_recheck_records_bam_keti_field_article_without_promoting_it_to_raw_hold
     assert item["decision"] == "REAL_STATION_FIELD_VALIDATION_AND_DATA_REQUEST_LEAD"
     assert item["observed_scope"]["reported_sensor_count"] == 8
     assert "raw logger" in item["finding"]
+
+
+def test_recheck_records_calstate_back_to_back_campaign_without_promoting_it_to_raw_holdout():
+    record = json.loads(
+        (ROOT / "research/public_operational_benchmark_recheck_2026_10_05.json")
+        .read_text(encoding="utf-8")
+    )
+    item = next(
+        candidate for candidate in record["candidates"]
+        if candidate["id"] == "calstate_la_back_to_back_jclepro_2021"
+    )
+    assert item["decision"] == "REAL_STATION_AGGREGATE_AND_DATA_REQUEST_LEAD"
+    assert item["observed_scope"]["raw_synchronized_rows"] is False
+    assert "logger archive" in item["finding"]
 
 
 def test_recheck_records_carb_field_report_without_promoting_it_to_raw_holdout():
