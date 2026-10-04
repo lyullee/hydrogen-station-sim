@@ -22,7 +22,14 @@ public report:
 If the HYTRANSFER files have a separate custodian, please forward this request
 or identify the approved access route.
 
-I inspected the public 192-page HYTRANSFER campaign report at file level before
+The official JRC publication record is <https://publications.jrc.ec.europa.eu/repository/handle/JRC76380>.
+Its current public view describes the reference-data work but leaves the
+Datasets, Dataset collections, scripts/source-code and supporting-file tables
+without a public data URL. The GasTeF facility page is
+<https://joint-research-centre.ec.europa.eu/what-we-do/laboratories/high-pressure-gas-testing-facility_en>.
+
+I inspected the public JRC record and the 192-page HYTRANSFER campaign report at
+file level before
 using any numerical outcomes. It describes 18 recorded GasTeF files divided
 into groups of 14 and 4, but the PDF contains no embedded data files or
 machine-readable download URL. The inspection record is
