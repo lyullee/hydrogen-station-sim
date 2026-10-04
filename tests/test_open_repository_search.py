@@ -516,6 +516,22 @@ def test_dlr_fch2rail_measurement_lead_is_not_promoted_without_raw_logger():
     assert item["decision"] == "REAL_STATION_DATA_REQUEST_LEAD_NO_RAW_ARCHIVE"
 
 
+def test_zenodo_high_flow_record_is_simulation_only_and_not_promoted():
+    record = json.loads(
+        (ROOT / "research/public_full_loop_search_recheck_2026_10_05.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    item = next(
+        source for source in record["candidates"]
+        if source["id"] == "zenodo_high_flow_pressure_loss_simulation_2026"
+    )
+    assert item["license"] == "CC BY 4.0"
+    assert item["decision"] == "OPEN_SIMULATION_SOFTWARE_ONLY"
+    assert item["observed_scope"]["public_measured_logger_retrieved"] is False
+    assert item["observed_scope"]["full_loop_holdout_eligible"] is False
+
+
 def test_khk_local_casebook_pipeline_is_not_promoted_or_committed():
     mirror = json.loads(
         (ROOT / "research/external_full_loop_data_search.json").read_text(

@@ -135,6 +135,20 @@
         "full_loop_holdout_eligible": false
       },
       "reuse_status": "Request a de-identified synchronized export, channel dictionary, calibration metadata and written permission for derived metrics and repository deposit from DLR/FCH2RAIL custodians before any outcome access."
+    },
+    {
+      "id": "zenodo_high_flow_pressure_loss_simulation_2026",
+      "title": "Enhancing High-Flow Hydrogen Refueling: Mitigation of Pressure Losses in Storage and Delivery Systems",
+      "doi": "10.5281/zenodo.17098699",
+      "url": "https://doi.org/10.5281/zenodo.17098699",
+      "license": "CC BY 4.0",
+      "decision": "OPEN_SIMULATION_SOFTWARE_ONLY",
+      "finding": "The Zenodo record provides a GT-Suite/GEM-3D one-dimensional simulation study and presentation files for a Czech-republic station model. It does not provide measured station-to-vehicle pressure, temperature and mass-flow observations.",
+      "observed_scope": {
+        "public_measured_logger_retrieved": false,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "Cite as an open modelling reference only; simulation outputs cannot replace an independent measured holdout or be used as external physical validation."
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
