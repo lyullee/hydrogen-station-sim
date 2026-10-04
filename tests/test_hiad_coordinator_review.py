@@ -75,3 +75,24 @@ def test_cli_writes_auditable_advisory_package(tmp_path: Path):
     assert "Every frozen case must be retained and reviewed" in html
     assert "approved_holdout_casebook.json" in html
     assert "expert_vignette_approved = 'YES'" in html
+
+
+def test_committed_hiad_prescreen_keeps_all_cases_advisory_only():
+    """The checked-in reviewer handoff must never masquerade as approval."""
+    output = ROOT / "data/public_validation/results/hiad_coordinator_prescreen"
+    manifest = json.loads((output / "prescreen_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["case_count"] == 24
+    assert manifest["advisory_only"] is True
+    assert manifest["human_review_required_for_every_case"] is True
+
+    with (output / "coordinator_review.csv").open(
+        encoding="utf-8-sig", newline=""
+    ) as handle:
+        rows = list(csv.DictReader(handle))
+    assert len(rows) == 24
+    assert all(row["coordinator_leakage_decision"] == "" for row in rows)
+    assert all(row["rewrite_required_yes_no"] == "" for row in rows)
+
+    html = (output / "coordinator_review.html").read_text(encoding="utf-8")
+    assert "Automated flags cannot approve" in html
+    assert "qualified, non-rating" in html
