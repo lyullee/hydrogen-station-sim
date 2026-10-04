@@ -134,3 +134,18 @@ the event-level export, coding dictionary or reuse terms, so it is recorded as
 an accident-evidence request lead rather than as a completed SAGA evaluation
 dataset. The prepared request is
 [`research/HRS_INCIDENT_DATA_REQUEST_DRAFT.md`](HRS_INCIDENT_DATA_REQUEST_DRAFT.md).
+
+## 2026-10-04 H2Protocol live-catalog recheck
+
+The live [H2Protocol fueling-data page](http://www.h2protocol.com/h2-fueling-data/)
+was checked without re-downloading the archives. It still exposes the same six
+archive links: five SAE J2601 Tables archives and one SAE J2601 MC Default
+archive. These Powertech records are already present in the repository's frozen
+validation history, so this recheck does not create an independent holdout. The
+page requests source citation but also displays an all-rights-reserved notice;
+the page alone does not grant raw-archive redistribution rights.
+
+The page digest and exact links are recorded in
+[`research/h2protocol_live_catalog_2026_10_04.json`](h2protocol_live_catalog_2026_10_04.json).
+The full-loop gate therefore remains open pending a separately licensed,
+synchronized station-to-vehicle export from an independent custodian.

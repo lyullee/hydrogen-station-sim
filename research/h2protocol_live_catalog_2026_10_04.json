@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-04",
+  "source_url": "http://www.h2protocol.com/h2-fueling-data/",
+  "retrieval": "HTTP GET; page only, no archive re-download",
+  "page_sha256": "77eede4872faa77da1249ed222c9c40755d0081f3a83223dc1917ee1997ac566",
+  "archive_links": [
+    "http://www.h2protocol.com/app/download/760831988/SAE+J2601+Tables+Validation+Files+1.zip",
+    "http://www.h2protocol.com/app/download/760832063/SAE+J2601+Tables+Validation+Files+2.zip",
+    "http://www.h2protocol.com/app/download/760832250/SAE+J2601+Tables+Validation+Files+3.zip",
+    "http://www.h2protocol.com/app/download/760832455/SAE+J2601+Tables+Validation+Files+4.zip",
+    "http://www.h2protocol.com/app/download/760832510/SAE+J2601+Tables+Validation+Files+5.zip",
+    "http://www.h2protocol.com/app/download/761903230/SAE+J2601+MC+Default+Bench+Test+Data.zip"
+  ],
+  "archive_count": 6,
+  "catalog_observation": "The live page still lists five SAE J2601 Tables archives and one SAE J2601 MC Default archive; no new independent station-to-vehicle archive was exposed.",
+  "rights_observation": "The page asks users to cite the source and displays a copyright/all-rights-reserved notice; redistribution or republication rights for raw archives are not granted by the page.",
+  "decision": "CONSUMED_SOURCE_NO_NEW_HOLDOUT",
+  "claim_boundary": "This live-catalog check confirms provenance and availability only. It does not create a new validation holdout and cannot clear the full-loop gate.",
+  "next_action": "Retain the existing frozen hashes and request a separately licensed, synchronized station-to-vehicle export from an independent custodian."
+}
