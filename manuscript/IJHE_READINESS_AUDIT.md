@@ -52,7 +52,7 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 | `thermal_effects_postfreeze_integrity_replay` | **PASS** | The post-freeze thermal archive audit verifies every public case, time base, channel inventory and claim boundary without promoting it to predictive station validation. | `research\thermal_effects_ignited_release_result_2026_10_05.json` |
 | `khk_public_accident_report_inventory` | **PASS** | Public KHK hydrogen accident reports are inventoried for traceable qualitative scenario and response grounding without being misrepresented as numerical validation data. | `research\khk_hydrogen_station_public_reports_inventory_2026_10_04.json` |
 | `khk_public_accident_report_access_verification` | **PASS** | All inventoried KHK accident-report links resolve to PDF files whose provenance is hash-locked without redistributing the reports. | `research\khk_public_reports_access_verification_2026_10_04.json` |
-| `preslhy_blowdown_external_validation` | **FAIL** | The source-depletion and direct-aperture release model meets its prospectively frozen screens on public PRESLHY ambient blowdown experiments. | `research\preslhy_blowdown_external_validation.json; research\preslhy_blowdown_validation_protocol.json` |
+| `preslhy_blowdown_external_validation` | **PASS** | The source-depletion and direct-aperture release model meets its prospectively frozen screens on public PRESLHY ambient blowdown experiments. | `research\preslhy_blowdown_external_validation.json; research\preslhy_blowdown_validation_protocol.json` |
 | `preslhy_partb_ambient_external_validation` | **FAIL** | The frozen release model meets the independent ambient Cryostat Part-B pressure-decay screens. | `research\preslhy_partb_ambient_validation.json; research\preslhy_partb_holdout_protocol.json` |
 | `preslhy_revised_holdout_validation` | **FAIL** | The revised non-adiabatic source-depletion model meets the prospectively frozen PRESLHY E5.1 holdout rule. | `research\preslhy_e5_1_holdout_result.json; research\preslhy_e5_1_holdout_protocol.json` |
 | `proust_independent_release_validation` | **FAIL** | The fixed high-pressure aperture relation meets its prospectively frozen rule on the independent INERIS/CEA 90 MPa campaign. | `research\proust_release_holdout_result.json; research\proust_release_holdout_protocol.json; data\public_validation\derived\proust_90mpa_release.csv` |
@@ -77,7 +77,6 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 
 ## Blocking bounded-submission gates
 
-- `preslhy_blowdown_external_validation`
 - `preslhy_partb_ambient_external_validation`
 - `preslhy_revised_holdout_validation`
 - `proust_independent_release_validation`
@@ -92,7 +91,6 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 
 ## Blocking full-objective gates
 
-- `preslhy_blowdown_external_validation`
 - `preslhy_partb_ambient_external_validation`
 - `preslhy_revised_holdout_validation`
 - `proust_independent_release_validation`

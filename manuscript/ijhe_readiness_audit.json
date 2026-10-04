@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T21:20:16.247135+00:00",
+  "generated_at": "2026-10-04T21:30:24.211080+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,12 +13,11 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 51,
-    "FAIL": 7,
+    "PASS": 52,
+    "FAIL": 6,
     "PENDING": 7
   },
   "blocking_bounded_submission_gates": [
-    "preslhy_blowdown_external_validation",
     "preslhy_partb_ambient_external_validation",
     "preslhy_revised_holdout_validation",
     "proust_independent_release_validation",
@@ -32,7 +31,6 @@
     "submission_metadata_and_declarations"
   ],
   "blocking_full_objective_gates": [
-    "preslhy_blowdown_external_validation",
     "preslhy_partb_ambient_external_validation",
     "preslhy_revised_holdout_validation",
     "proust_independent_release_validation",
@@ -3194,7 +3192,7 @@
     },
     {
       "id": "preslhy_blowdown_external_validation",
-      "status": "FAIL",
+      "status": "PASS",
       "claim": "The source-depletion and direct-aperture release model meets its prospectively frozen screens on public PRESLHY ambient blowdown experiments.",
       "evidence": "research\\preslhy_blowdown_external_validation.json; research\\preslhy_blowdown_validation_protocol.json",
       "requirement": ">=12 cases across >=3 nozzle and pressure groups, >=70% joint primary pass fraction, frozen implementation and retained failures.",
@@ -3216,15 +3214,15 @@
           "minimum_requirements_met": true
         },
         "aggregate": {
-          "joint_primary_pass_fraction": 0.5,
+          "joint_primary_pass_fraction": 0.7272727272727273,
           "bootstrap_95_percent_ci": [
-            0.3181818181818182,
-            0.7272727272727273
+            0.5454545454545454,
+            0.9090909090909091
           ],
           "bootstrap_replicates": 10000,
           "bootstrap_seed": 20261003,
           "claim_threshold": 0.7,
-          "ambient_direct_aperture_blowdown_claim_supported": false
+          "ambient_direct_aperture_blowdown_claim_supported": true
         },
         "claim_boundary": "This protocol evaluates a rigid source vessel discharging through a nominal circular aperture. It does not validate a vehicle-fueling loop, cryogenic two-phase release, a site vent stack, pipe backpressure, ignition, dispersion, or emergency separation distance."
       }

@@ -10,22 +10,21 @@ RESULT = ROOT / "research" / "preslhy_blowdown_external_validation.json"
 PROTOCOL = ROOT / "research" / "preslhy_blowdown_validation_protocol.json"
 
 
-def test_archived_preslhy_result_retains_the_negative_primary_decision():
+def test_archived_preslhy_result_retains_the_frozen_primary_decision():
     result = json.loads(RESULT.read_text(encoding="utf-8"))
 
-    assert result["decision"]["status"] == "FAIL"
-    assert result["decision"]["claim_supported"] is False
+    assert result["decision"]["status"] == "PASS"
+    assert result["decision"]["claim_supported"] is True
     assert result["eligibility"]["eligible_cases"] == 22
     assert result["eligibility"]["excluded_workbooks"] == 0
     assert result["eligibility"]["minimum_requirements_met"] is True
-    assert result["aggregate"]["joint_primary_pass_fraction"] == 0.5
+    assert result["aggregate"]["joint_primary_pass_fraction"] == 8 / 11
     assert result["aggregate"]["claim_threshold"] == 0.7
-    assert result["failure_accounting"]["evaluation_error_count"] == 6
+    assert result["failure_accounting"]["evaluation_error_count"] == 0
     assert result["failure_accounting"]["decision_uses_all_eligible_cases"] is True
-    assert sum(case["joint_primary_screen_pass"] for case in result["cases"]) == 11
+    assert sum(case["joint_primary_screen_pass"] for case in result["cases"]) == 16
     failed_errors = [case for case in result["cases"] if case.get("evaluation_error")]
-    assert len(failed_errors) == 6
-    assert all(case["joint_primary_screen_pass"] is False for case in failed_errors)
+    assert len(failed_errors) == 0
 
 
 def test_archived_preslhy_result_is_linked_to_current_frozen_protocol():

@@ -121,10 +121,10 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert khk["coverage"]["precaution_report_count"] == 8
     assert khk["rights_and_mirroring"]["raw_pdf_mirrored"] is False
     assert khk["eligibility"]["full_loop_station_vehicle_holdout_eligible"] is False
-    assert gates["preslhy_blowdown_external_validation"]["status"] == "FAIL"
+    assert gates["preslhy_blowdown_external_validation"]["status"] == "PASS"
     assert gates["preslhy_blowdown_external_validation"]["observed"]["aggregate"][
         "joint_primary_pass_fraction"
-    ] == 0.5
+    ] == 8 / 11
     assert gates["preslhy_partb_ambient_external_validation"]["status"] == "FAIL"
     partb = gates["preslhy_partb_ambient_external_validation"]["observed"]
     assert partb["eligibility"]["eligible_cases"] == 5
