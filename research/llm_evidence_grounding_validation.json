@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "recorded_at": "2026-10-03",
+  "recorded_at": "2026-10-04",
   "status": "software_contract_verified",
   "scope": [
     "digital-twin main assistant",
@@ -16,7 +16,7 @@
     },
     "full_suite": {
       "command": ".venv\\Scripts\\python.exe -m pytest -q",
-      "passed": 401,
+      "passed": 441,
       "failed": 0,
       "warnings": 12
     }
@@ -27,7 +27,8 @@
     "sensor values, quality and calculation basis are carried into the assistant context",
     "non-finite signal and result values are excluded",
     "main and selected-sensor assistant routes remain isolated",
-    "contradictory LLM claims are rejected when they negate confirmed evidence"
+    "contradictory LLM claims are rejected when they negate confirmed evidence",
+    "response evidence source identifiers are carried into the hashed manifest"
   ],
   "not_established": [
     "physics validity of the consequence model",

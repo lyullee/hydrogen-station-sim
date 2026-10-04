@@ -19,12 +19,14 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     calculated = build_evidence_manifest(
         frame, signals, [result], True,
         active_conditions=[{"scenario": "고압 저장뱅크 압력 상승", "sensor_id": "PT-0901",
-                            "state": "TRIGGER"}],
+                            "state": "TRIGGER", "response_source_ids": ["HIAD2026", "H2_INCIDENT"]}],
         selected_sensor="PT-0901", question="피해영향은?",
     )
     assert calculated["impact"]["calculation_status"] == "calculated"
     assert calculated["impact"]["results"][0]["pressure_sensor"] == "PT-0901"
     assert calculated["conditions"][0]["label"] == "고압 저장뱅크 압력 상승"
+    assert calculated["conditions"][0]["response_source_ids"] == ["H2_INCIDENT", "HIAD2026"]
+    assert calculated["response_evidence"]["source_ids"] == ["H2_INCIDENT", "HIAD2026"]
     assert calculated["evidence_digest"] != idle["evidence_digest"]
 
 
@@ -41,4 +43,3 @@ def test_manifest_marks_attempt_without_result_and_filters_nonfinite_values():
     assert manifest["signals"]["count"] == 1
     assert manifest["signals"]["rows"][0]["tag"] == "TT-0901"
     assert manifest["source"]["simulation_time_s"] is None
-

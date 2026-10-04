@@ -1,6 +1,6 @@
 # LLM evidence-grounding validation
 
-**Recorded:** 2026-10-03  
+**Recorded:** 2026-10-04  
 **Scope:** digital-twin main assistant and selected-sensor assistant routes
 
 This record documents a software-level grounding check. It is not a human
@@ -17,6 +17,8 @@ contains:
 - sensor tags, values, units and quality status (with a bounded prompt view and
   an omitted-row count);
 - active condition labels and associated sensor tags;
+- response evidence identifiers (for example HIAD, H2Tools and ISO mappings)
+  included per condition and in an aggregate source list;
 - impact calculation state: `not_requested`, `attempted_no_result`, or
   `calculated`;
 - calculated impact basis, input sensor tags, model outputs and threshold
@@ -37,7 +39,7 @@ The following tests passed in the repository virtual environment:
 11 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-401 passed, 12 warnings
+441 passed, 16 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -45,6 +47,8 @@ The tests verify that normal monitoring keeps impact calculation marked as
 results and input tags, non-finite values are discarded, the main and sensor
 assistant routes remain isolated, and a generated answer cannot negate a
 confirmed alarm, gas observation, physical leak or calculated impact.
+The manifest digest now also covers the public response-source identifiers used
+to ground the staged action plan.
 
 ## Claim boundary
 

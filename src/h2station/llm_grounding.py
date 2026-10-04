@@ -95,16 +95,23 @@ def build_evidence_manifest(
         impact_status = "attempted_no_result"
 
     conditions = []
+    response_source_ids: set[str] = set()
     for condition in active_conditions or []:
         if not isinstance(condition, dict):
             continue
         label = condition.get("scenario") or condition.get("시나리오명") or condition.get("condition_status")
         if label:
+            raw_source_ids = condition.get("response_source_ids") or condition.get("source_ids") or condition.get("sources") or []
+            if isinstance(raw_source_ids, str):
+                raw_source_ids = [raw_source_ids]
+            source_ids = sorted({str(value) for value in raw_source_ids if value})
+            response_source_ids.update(source_ids)
             conditions.append({
                 "label": str(label),
                 "sensor": str(condition.get("sensor_id") or ""),
                 "severity": str(condition.get("severity") or condition.get("등급") or ""),
                 "state": str(condition.get("state") or ""),
+                "response_source_ids": source_ids,
             })
 
     envelope: dict[str, Any] = {
@@ -125,6 +132,10 @@ def build_evidence_manifest(
             "good_quality_count": sum(row["quality"] == "GOOD" for row in all_signals),
         },
         "conditions": conditions,
+        "response_evidence": {
+            "source_ids": sorted(response_source_ids),
+            "claim_limit": "대응 절차의 공개 근거 식별자이며, 현장 절차 승인·효과·법적 적합성을 자동으로 보증하지 않음",
+        },
         "impact": {
             "calculation_attempted": bool(impact_calculation_attempted),
             "calculation_status": impact_status,
