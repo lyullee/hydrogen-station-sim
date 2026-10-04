@@ -519,6 +519,24 @@
       "eligibility_note": "Public consequence auxiliary only. It is not gaseous H70 station-to-vehicle full-loop validation; domain transfer must be pre-registered before use.",
       "record": "research/elvhys_public_consequence_dataset_2026_10_04.json",
       "auxiliary_replay_record": "research/elvhys_auxiliary_replay.json"
+    },
+    "zenodo_accidental_self_ignition_2025": {
+      "title": "Accidental self-ignition of hydrogen released from pressurized cylinder (Figures 7–9)",
+      "authors": "Jankuj, Lepik, Salzano and Mynarz",
+      "publisher": "Journal of Electrostatics / Zenodo",
+      "article_doi": "10.1016/j.elstat.2025.104222",
+      "dataset_doi": "10.5281/zenodo.17913628",
+      "landing_page": "https://zenodo.org/records/17913628",
+      "article_page": "https://www.sciencedirect.com/science/article/pii/S0304388625001949",
+      "license": "CC BY 4.0",
+      "public_raw_data": true,
+      "raw_archive_downloaded": true,
+      "raw_archive_sha256": "0a44613734bb2da4d9ea4a4e84fd438ff2a87916b8f9c91d55e9e37c9d8de804",
+      "reported_scope": "Controlled 50 L, approximately 200 bar cylinder penetration with pressure, thermocouple and ignition/no-ignition observations.",
+      "evidence_role": "public accidental-release and ignition scenario grounding",
+      "rights_note": "Zenodo record states CC BY 4.0; preserve attribution and DOI for derived summaries.",
+      "eligibility_note": "Eligible as openly licensed accident-like experimental consequence/ignition evidence. It is not a station-to-vehicle full-loop holdout because breach geometry and complete calibration metadata are not supplied.",
+      "record": "research/accidental_self_ignition_public_evidence_2026_10_04.json"
     }
   }
 }

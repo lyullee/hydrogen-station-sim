@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T10:41:47.848097+00:00",
+  "generated_at": "2026-10-04T10:54:29.674430+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 28,
+    "PASS": 29,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -1199,6 +1199,28 @@
           "safety-temperature": 2
         },
         "claim_boundary": "This diagnostic does not close the independent station-to-vehicle full-loop gate and is not a safety-distance claim."
+      }
+    },
+    {
+      "id": "accidental_release_ignition_public_evidence",
+      "status": "PASS",
+      "claim": "An openly licensed controlled high-pressure hydrogen breach experiment is captured for accident-like consequence and ignition scenario grounding without being misrepresented as station validation.",
+      "evidence": "research\\accidental_self_ignition_public_evidence_2026_10_04.json",
+      "requirement": "Zenodo and article DOI, CC BY rights, archive/file hashes, pressure plus paired ignition/no-ignition traces, and an explicit full-loop exclusion.",
+      "observed": {
+        "zenodo_doi": "10.5281/zenodo.17913628",
+        "article_doi": "10.1016/j.elstat.2025.104222",
+        "license": "CC BY 4.0",
+        "file_count": 3,
+        "archive_sha256": "0a44613734bb2da4d9ea4a4e84fd438ff2a87916b8f9c91d55e9e37c9d8de804",
+        "eligibility": {
+          "public_accident_or_experiment_evidence": true,
+          "consequence_and_ignition_grounding_eligible": true,
+          "full_loop_station_vehicle_holdout_eligible": false,
+          "numerical_release_model_validation_claimed": false,
+          "reason_not_full_loop": "The experiment is a controlled cylinder breach rather than a station-to-vehicle fueling event; breach geometry, discharge coefficient and complete calibration metadata are not supplied in the dataset record."
+        },
+        "claim_boundary": "This record establishes openly licensed experimental evidence and provenance for accidental high-pressure hydrogen release and ignition. It does not close the independent station-to-vehicle full-loop gate, prove an ignition probability, or validate the digital twin without a preregistered apparatus mapping and holdout protocol."
       }
     },
     {

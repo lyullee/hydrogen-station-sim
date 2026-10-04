@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "status": "public_accidental_release_ignition_evidence_captured",
+  "evidence_role": "public_accidental_release_ignition_experiment",
+  "source": {
+    "title": "Accidental self-ignition of hydrogen released from pressurized cylinder",
+    "article_doi": "10.1016/j.elstat.2025.104222",
+    "article_url": "https://www.sciencedirect.com/science/article/pii/S0304388625001949",
+    "zenodo_doi": "10.5281/zenodo.17913628",
+    "zenodo_record_url": "https://zenodo.org/records/17913628",
+    "zenodo_api_url": "https://zenodo.org/api/records/17913628",
+    "publication_date": "2025-12-12",
+    "authors": [
+      "Vojtěch Jankuj",
+      "Petr Lepik",
+      "Ernesto Salzano",
+      "Miroslav Mynarz"
+    ],
+    "license": "CC BY 4.0",
+    "access_right": "open",
+    "reported_apparatus": "50 L steel hydrogen cylinder at approximately 200 bar; controlled penetration used to emulate accidental breach",
+    "reported_instrumentation": "internal pressure transducer at 0.2 s logging period; thermocouples at multiple distances/heights; high-speed and thermal imaging"
+  },
+  "archive": {
+    "filename": "fig_7-9_Accidental self-ignition of hydrogen_VJ.7z",
+    "download_url": "https://zenodo.org/api/records/17913628/files/fig_7-9_Accidental%20self-ignition%20of%20hydrogen_VJ.7z/content",
+    "bytes": 119376,
+    "sha256": "0a44613734bb2da4d9ea4a4e84fd438ff2a87916b8f9c91d55e9e37c9d8de804"
+  },
+  "files": [
+    {
+      "name": "Figure 7. Pressure drop during hydrogen release.xlsx",
+      "sha256": "f53f88169d8673dc99b4fd49d77575d41d3a3314826d76fca4883395cdb7686c",
+      "channels": [
+        "Time [s]",
+        "Pressure n.1 [bar]",
+        "Pressure n.2 [bar]"
+      ],
+      "numeric_rows": 2754,
+      "time_range_s": [
+        0.002,
+        5.508
+      ],
+      "notes": "The workbook contains trailing rows with missing time and negative/near-zero pressure values; no filtering or model fit is claimed here."
+    },
+    {
+      "name": "Figure 8. Hydrogen release and subsequent spark ignition.xlsx",
+      "sha256": "a580eedff2847f3f89d860cedeb99263e005e3f898606b23dd27c2d427c11a5",
+      "channels": [
+        "time index [s]",
+        "six thermocouple temperature channels [degC]"
+      ],
+      "numeric_rows": 116,
+      "time_range_s": [
+        1.0,
+        116.0
+      ],
+      "max_temperature_c": 1148.1,
+      "notes": "The archive provides six temperature columns but does not provide a machine-readable sensor-position mapping beyond the column labels."
+    },
+    {
+      "name": "Figure 9. Hydrogen release without ignition.xlsx",
+      "sha256": "895b3ccb02fb0831dbd05f6e32507b4b9ba41323aa232c265646dd5d6546d88c",
+      "channels": [
+        "time index [s]",
+        "six thermocouple temperature channels [degC]"
+      ],
+      "numeric_rows": 113,
+      "time_range_s": [
+        1.0,
+        113.0
+      ],
+      "max_temperature_c": 4.0,
+      "min_temperature_c": -67.0,
+      "notes": "The no-ignition trace is retained as a qualitative paired condition; the source reports sensor and environment limitations."
+    }
+  ],
+  "eligibility": {
+    "public_accident_or_experiment_evidence": true,
+    "consequence_and_ignition_grounding_eligible": true,
+    "full_loop_station_vehicle_holdout_eligible": false,
+    "numerical_release_model_validation_claimed": false,
+    "reason_not_full_loop": "The experiment is a controlled cylinder breach rather than a station-to-vehicle fueling event; breach geometry, discharge coefficient and complete calibration metadata are not supplied in the dataset record."
+  },
+  "findings": [
+    "The open archive provides pressure and paired ignition/no-ignition temperature traces for a high-pressure accidental-release experiment.",
+    "The parent article reports ignition variability and delayed ignition several metres from the release point, making the data relevant to consequence and ignition scenario coverage.",
+    "The record is suitable for traceable safety-scenario grounding and future release/ignition model evaluation, but it must not be presented as a station full-loop validation set or as an ignition-probability estimate."
+  ],
+  "claim_boundary": "This record establishes openly licensed experimental evidence and provenance for accidental high-pressure hydrogen release and ignition. It does not close the independent station-to-vehicle full-loop gate, prove an ignition probability, or validate the digital twin without a preregistered apparatus mapping and holdout protocol."
+}

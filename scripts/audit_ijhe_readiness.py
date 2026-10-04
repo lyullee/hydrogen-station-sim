@@ -634,6 +634,46 @@ def audit(root: Path) -> dict[str, object]:
         cip_aggregate if cip_endpoint else "missing; public endpoint diagnostic has not run",
     ))
 
+    accidental_ignition_path = root / "research/accidental_self_ignition_public_evidence_2026_10_04.json"
+    accidental_ignition = _json(accidental_ignition_path)
+    accidental_source = (accidental_ignition or {}).get("source") or {}
+    accidental_archive = (accidental_ignition or {}).get("archive") or {}
+    accidental_eligibility = (accidental_ignition or {}).get("eligibility") or {}
+    accidental_files = (accidental_ignition or {}).get("files") or []
+    accidental_ignition_pass = bool(
+        (accidental_ignition or {}).get("status")
+        == "public_accidental_release_ignition_evidence_captured"
+        and (accidental_ignition or {}).get("evidence_role")
+        == "public_accidental_release_ignition_experiment"
+        and accidental_source.get("zenodo_doi") == "10.5281/zenodo.17913628"
+        and accidental_source.get("article_doi") == "10.1016/j.elstat.2025.104222"
+        and accidental_source.get("license") == "CC BY 4.0"
+        and accidental_archive.get("sha256")
+        and len(accidental_files) == 3
+        and all(item.get("sha256") and item.get("numeric_rows", 0) > 0 for item in accidental_files)
+        and accidental_eligibility.get("public_accident_or_experiment_evidence") is True
+        and accidental_eligibility.get("consequence_and_ignition_grounding_eligible") is True
+        and accidental_eligibility.get("full_loop_station_vehicle_holdout_eligible") is False
+        and accidental_eligibility.get("numerical_release_model_validation_claimed") is False
+        and bool((accidental_ignition or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "accidental_release_ignition_public_evidence",
+        "PASS" if accidental_ignition_pass else ("FAIL" if accidental_ignition else "PENDING"),
+        "An openly licensed controlled high-pressure hydrogen breach experiment is captured for accident-like consequence and ignition scenario grounding without being misrepresented as station validation.",
+        str(accidental_ignition_path.relative_to(root)),
+        "Zenodo and article DOI, CC BY rights, archive/file hashes, pressure plus paired ignition/no-ignition traces, and an explicit full-loop exclusion.",
+        {
+            "zenodo_doi": accidental_source.get("zenodo_doi"),
+            "article_doi": accidental_source.get("article_doi"),
+            "license": accidental_source.get("license"),
+            "file_count": len(accidental_files),
+            "archive_sha256": accidental_archive.get("sha256"),
+            "eligibility": accidental_eligibility,
+            "claim_boundary": (accidental_ignition or {}).get("claim_boundary"),
+        } if accidental_ignition else "missing; public accidental-release evidence record has not been captured",
+    ))
+
     preslhy_path = root / "research/preslhy_blowdown_external_validation.json"
     preslhy = _json(preslhy_path)
     preslhy_protocol_path = root / "research/preslhy_blowdown_validation_protocol.json"

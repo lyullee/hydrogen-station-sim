@@ -28,6 +28,12 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert gates["hiad_action_evidence_integrity"]["status"] == "PASS"
     assert gates["hiad_action_evidence_integrity"]["observed"]["case_count"] == 34
     assert gates["public_dispenser_endpoint_diagnostic"]["observed"]["stop_reason_counts"] == {"safety-temperature": 2}
+    assert gates["accidental_release_ignition_public_evidence"]["status"] == "PASS"
+    accidental = gates["accidental_release_ignition_public_evidence"]["observed"]
+    assert accidental["zenodo_doi"] == "10.5281/zenodo.17913628"
+    assert accidental["license"] == "CC BY 4.0"
+    assert accidental["file_count"] == 3
+    assert accidental["eligibility"]["full_loop_station_vehicle_holdout_eligible"] is False
     assert gates["preslhy_blowdown_external_validation"]["status"] == "FAIL"
     assert gates["preslhy_blowdown_external_validation"]["observed"]["aggregate"][
         "joint_primary_pass_fraction"
