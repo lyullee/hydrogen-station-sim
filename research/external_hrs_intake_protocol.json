@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "protocol_id": "HRS-EXTERNAL-INTAKE-2601",
+  "status": "prospective_intake_contract",
+  "frozen_at": "2026-10-04",
+  "outcomes_accessed_before_freeze": false,
+  "intake_scope": "Independent station-to-vehicle HRS logger packages received from a public archive or an approved controlled-access custodian.",
+  "required_channels": [
+    "common_time_base",
+    "vehicle_or_receptacle_pressure",
+    "gas_or_tank_temperature",
+    "mass_flow_or_transferred_mass"
+  ],
+  "required_metadata": [
+    "initial_conditions",
+    "tank_capacity_or_geometry",
+    "protocol_mode_or_pressure_ramp",
+    "units_and_sampling_interval",
+    "source_cascade_state",
+    "compressor_state",
+    "precooler_state",
+    "stop_abort_fault_markers",
+    "quality_and_calibration_metadata",
+    "reuse_terms"
+  ],
+  "intake_rule": "Hash and quarantine files before numerical values are inspected. Never impute a missing required channel for the primary claim.",
+  "claim_boundary": "An intake manifest proves provenance and file integrity only; it is not a validation result and cannot close the IJHE readiness gate."
+}
