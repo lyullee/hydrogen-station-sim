@@ -3,6 +3,8 @@
   "recorded_at": "2026-10-04",
   "record": "research/KHK_LOCAL_CASEBOOK_PROTOCOL.md",
   "pipeline": "scripts/prepare_khk_local_casebook.py",
+  "coverage_audit": "scripts/audit_khk_local_casebook_playbook_coverage.py",
+  "coverage_output_local_only": true,
   "source": "research/khk_public_incident_access_2026_10_04.json",
   "execution_status": "LOCAL_ONLY_PIPELINE_READY",
   "raw_or_derived_casebook_committed": false,
@@ -12,5 +14,5 @@
     "full_loop_station_vehicle_holdout_eligible": false,
     "goal_completion_permitted": false
   },
-  "claim_boundary": "The pipeline can create a local KHK HRS candidate casebook and map compound incidents to response families, but it cannot establish response correctness, operator benefit, safety or full-loop physics. Public use requires written permission and a frozen blinded review protocol."
+  "claim_boundary": "The pipeline can create a local KHK HRS candidate casebook and map compound incidents to response families with a five-stage catalogue contract, but it cannot establish response correctness, operator benefit, safety or full-loop physics. Public use requires written permission and a frozen blinded review protocol."
 }
