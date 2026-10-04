@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T17:05:02.236251+00:00",
+  "generated_at": "2026-10-04T17:08:23.001407+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 37,
+    "PASS": 38,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -391,6 +391,21 @@
         "article_open_access": false,
         "full_loop_external_holdout_eligible": false,
         "claim_boundary": "This record documents a publicly reachable but rights-uncleared supplementary artifact. It does not add validation evidence and does not change IJHE or full-objective completion gates."
+      }
+    },
+    {
+      "id": "calstate_back_to_back_article_boundary_integrity",
+      "status": "PASS",
+      "claim": "The Cal State LA back-to-back fueling article is recorded as real-station context without promoting non-public operator logs to validation data.",
+      "evidence": "research\\calstate_la_back_to_back_article_data_boundary_2026_10_05.json",
+      "requirement": "DOI/rights boundary, facility and field scope, explicit missing raw synchronized rows, and a false full-loop eligibility flag.",
+      "observed": {
+        "doi": "10.1016/j.jclepro.2021.129737",
+        "facility": "Cal State LA Hydrogen Research and Fueling Facility, California, USA",
+        "article_open_access": false,
+        "public_raw_synchronized_rows": false,
+        "full_loop_external_holdout_eligible": false,
+        "claim_boundary": "This record strengthens real-station source accounting only. It is not raw validation evidence and does not change the IJHE or full-objective completion gates."
       }
     },
     {

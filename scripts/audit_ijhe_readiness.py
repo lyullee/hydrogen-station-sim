@@ -326,6 +326,38 @@ def audit(root: Path) -> dict[str, object]:
         } if jetfire else "missing; supplement rights/data-boundary record has not been captured",
     ))
 
+    calstate_b2b_path = root / "research/calstate_la_back_to_back_article_data_boundary_2026_10_05.json"
+    calstate_b2b = _json(calstate_b2b_path)
+    calstate_b2b_source = (calstate_b2b or {}).get("source") or {}
+    calstate_b2b_evidence = (calstate_b2b or {}).get("observed_evidence") or {}
+    calstate_b2b_decision = (calstate_b2b or {}).get("eligibility_decision") or {}
+    calstate_b2b_pass = bool(
+        (calstate_b2b or {}).get("schema_version") == 1
+        and calstate_b2b_source.get("doi") == "10.1016/j.jclepro.2021.129737"
+        and calstate_b2b_source.get("article_open_access") is False
+        and calstate_b2b_source.get("reuse_license") == "not established for the operator logs"
+        and calstate_b2b_evidence.get("facility")
+        and calstate_b2b_evidence.get("field_integration") is True
+        and calstate_b2b_evidence.get("public_raw_synchronized_rows") is False
+        and calstate_b2b_decision.get("full_loop_external_holdout_eligible") is False
+        and (calstate_b2b or {}).get("claim_boundary")
+    )
+    gates.append(_gate(
+        "calstate_back_to_back_article_boundary_integrity",
+        "PASS" if calstate_b2b_pass else ("FAIL" if calstate_b2b else "PENDING"),
+        "The Cal State LA back-to-back fueling article is recorded as real-station context without promoting non-public operator logs to validation data.",
+        str(calstate_b2b_path.relative_to(root)),
+        "DOI/rights boundary, facility and field scope, explicit missing raw synchronized rows, and a false full-loop eligibility flag.",
+        {
+            "doi": calstate_b2b_source.get("doi"),
+            "facility": calstate_b2b_evidence.get("facility"),
+            "article_open_access": calstate_b2b_source.get("article_open_access"),
+            "public_raw_synchronized_rows": calstate_b2b_evidence.get("public_raw_synchronized_rows"),
+            "full_loop_external_holdout_eligible": calstate_b2b_decision.get("full_loop_external_holdout_eligible"),
+            "claim_boundary": (calstate_b2b or {}).get("claim_boundary"),
+        } if calstate_b2b else "missing; Cal State LA back-to-back data-boundary record has not been captured",
+    ))
+
     temperature_diagnostic_path = root / "research/closed_loop_temperature_stop_diagnostic_2026_10_04.json"
     temperature_diagnostic = _json(temperature_diagnostic_path)
     temperature_runs = (temperature_diagnostic or {}).get("runs") or []

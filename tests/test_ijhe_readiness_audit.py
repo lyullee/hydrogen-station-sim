@@ -32,6 +32,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert jetfire["reported_test_count"] == 17
     assert jetfire["article_open_access"] is False
     assert jetfire["full_loop_external_holdout_eligible"] is False
+    assert gates["calstate_back_to_back_article_boundary_integrity"]["status"] == "PASS"
+    calstate_b2b = gates["calstate_back_to_back_article_boundary_integrity"]["observed"]
+    assert calstate_b2b["article_open_access"] is False
+    assert calstate_b2b["public_raw_synchronized_rows"] is False
+    assert calstate_b2b["full_loop_external_holdout_eligible"] is False
     assert gates["nrel_h2fills_workbook_provenance_integrity"]["status"] == "PASS"
     assert gates["public_dispenser_endpoint_diagnostic"]["status"] == "PASS"
     assert gates["hiad_action_evidence_integrity"]["status"] == "PASS"

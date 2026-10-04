@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "source": {
+    "title": "Hydrogen station in situ back-to-back fueling data for design and modeling",
+    "doi": "10.1016/j.jclepro.2021.129737",
+    "url": "https://doi.org/10.1016/j.jclepro.2021.129737",
+    "publisher": "Journal of Cleaner Production / Elsevier",
+    "article_open_access": false,
+    "reuse_license": "not established for the operator logs"
+  },
+  "observed_evidence": {
+    "facility": "Cal State LA Hydrogen Research and Fueling Facility, California, USA",
+    "reported_campaign": "one year of fueling-event and station-response measurements",
+    "reported_scenarios": [
+      "multiple daily refueling",
+      "back-to-back fueling defined as less than five minutes between fills",
+      "increased-demand station response"
+    ],
+    "reported_channels_or_outputs": [
+      "storage pressure levels",
+      "dynamic cooling response and temperature",
+      "fueling thermodynamics",
+      "vehicle state of charge",
+      "fueling frequency and duration"
+    ],
+    "field_integration": true,
+    "public_raw_synchronized_rows": false
+  },
+  "eligibility_decision": {
+    "full_loop_external_holdout_eligible": false,
+    "reason": "The public article record provides field operating context and aggregate/performance analyses, but no downloadable synchronized station, dispenser and vehicle logger archive with channel definitions, calibration uncertainty or reuse permission.",
+    "allowed_use": [
+      "independent real-station operating-context citation",
+      "data-request lead for de-identified event-level exports",
+      "face-validity comparison for back-to-back fueling behavior"
+    ],
+    "prohibited_use": [
+      "numerical full-loop holdout score",
+      "parameter tuning of the locked model",
+      "claim of raw-log or vehicle-level validation"
+    ]
+  },
+  "next_action": "Request de-identified event-level pressure, temperature, mass-flow, storage state, compressor/controller state, vehicle/receptacle state and calibration metadata from the HRFF custodians; freeze model and scoring before numerical outcomes are accessed.",
+  "claim_boundary": "This record strengthens real-station source accounting only. It is not raw validation evidence and does not change the IJHE or full-objective completion gates."
+}
