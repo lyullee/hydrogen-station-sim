@@ -1107,6 +1107,34 @@
       "decision": "POST_ACCESS_EXPLORATORY_SCREEN_2_OF_3",
       "diagnostic": "research/byrnes_zenodo_exploratory_result.json",
       "claim_boundary": "A 2/3 exploratory screen cannot close a validation gate and does not validate station-to-vehicle fueling, dispersion or emergency response."
+    },
+    {
+      "id": "gti_hydrogen_station_performance_evaluation_2020",
+      "title": "Hydrogen Station Performance Evaluation (Final Report)",
+      "doi": "10.2172/1824631",
+      "url": "https://www.osti.gov/biblio/1824631",
+      "publisher": "Gas Technology Institute / U.S. DOE EERE",
+      "public_raw_data": false,
+      "decision": "REQUEST_DATA_HIGH_VALUE_REAL_STATION_CANDIDATE",
+      "inspection": {
+        "pdf_url": "https://www.osti.gov/servlets/purl/1824631",
+        "pdf_bytes": 1133755,
+        "pdf_sha256": "fd972ff4a9fb5dd0a9669ceb473b39a80e5c4b622abbc02a7adaa6a275839d00",
+        "reported_station_count": 5,
+        "reported_monitoring_period": "approximately four years",
+        "reported_fields": [
+          "LH2 tank level",
+          "compressor inlet flow",
+          "compressor/dispenser temperatures",
+          "station power",
+          "storage-bank pressures",
+          "fueling event fields including fill class, starting vehicle pressure and temperature, ending vehicle pressure and mass dispensed",
+          "maintenance and hydrogen quality context"
+        ],
+        "raw_common_timebase": "described but no downloadable export",
+        "full_loop_holdout_eligible": false,
+        "role": "High-value real-station logger request lead; report-only public artifact cannot close the primary gate."
+      }
     }
   ],
   "next_action": "send the prepared CARB/NRC/IJHE high-flow/FCH2RAIL/JRC/NREL/BAM/Empa/DLR data requests through approved custodians, and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest",
@@ -1628,6 +1656,14 @@
       "result": "The endpoint screen is a useful independent negative diagnostic: the current model reaches the 85 degC safety stop in both cases and underpredicts final pressure and SOC. This corroborates the need to resolve the gas-temperature state, thermal model and boundary assumptions before claiming full-loop validity.",
       "next_action": "Request the authors' synchronized pressure, temperature and mass-flow export using research/CIP_DISPENSER_DATA_REQUEST_DRAFT.md, then freeze provenance and scoring before evaluation.",
       "claim_limit": "The diagnostic does not close the independent full-loop numerical gate; observed endpoint conditions are not a replacement for time-series external validation."
+    },
+    "gti_public_report_followup": {
+      "source": "https://www.osti.gov/biblio/1824631",
+      "finding": "The final report documents a custom data-acquisition campaign at five California stations and lists vehicle pressure/temperature, mass dispensed, flow, storage pressure and other channels. The public artifact is a report PDF; no raw synchronized logger export or reuse terms were found.",
+      "decision": "REQUEST_DATA_HIGH_VALUE_REAL_STATION_CANDIDATE",
+      "gate_impact": "independent_full_loop_gate_remains_open",
+      "claim_limit": "This report strengthens provenance and the controlled-access data request. It cannot support a numerical full-loop validation claim from the public PDF alone.",
+      "next_action": "Request a de-identified station-by-fill export with timestamps, vehicle/receptacle pressure and temperature, mass flow or transferred mass, storage/cascade states, protocol mode, quality/calibration metadata, aborted-fill labels and permission to publish derived metrics. Freeze hashes and the evaluation protocol before inspecting outcomes."
     }
   },
   "last_reviewed": "2026-10-04",

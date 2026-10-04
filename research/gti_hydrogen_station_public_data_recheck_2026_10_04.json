@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "scope": "Public-source recheck for independent real-station full-loop validation candidates.",
+  "source": {
+    "id": "gti_hydrogen_station_performance_evaluation_2020",
+    "title": "Hydrogen Station Performance Evaluation (Final Report)",
+    "doi": "10.2172/1824631",
+    "url": "https://www.osti.gov/biblio/1824631",
+    "pdf_url": "https://www.osti.gov/servlets/purl/1824631",
+    "publisher": "Gas Technology Institute / U.S. DOE EERE",
+    "retrieved_pdf_bytes": 1133755,
+    "retrieved_pdf_sha256": "fd972ff4a9fb5dd0a9669ceb473b39a80e5c4b622abbc02a7adaa6a275839d00",
+    "reported_scope": "Custom data-acquisition systems deployed at five California hydrogen fueling stations with monitoring over approximately four years.",
+    "reported_measurements": [
+      "LH2 tank level",
+      "compressor inlet flow",
+      "compressor/dispenser temperatures",
+      "station power",
+      "storage-bank pressures",
+      "fueling event fields including fill class, starting vehicle pressure and temperature, ending vehicle pressure and mass dispensed",
+      "maintenance and hydrogen quality context"
+    ],
+    "raw_common_timebase_indicated": true,
+    "machine_readable_raw_data_public": false,
+    "public_artifacts": [
+      "nine-page final report PDF"
+    ],
+    "embedded_attachments": false,
+    "data_access_statement": "The report describes the collected data and station instrumentation but exposes no downloadable station logger export, data dictionary, calibration package, or reuse license for raw traces."
+  },
+  "decision": "REQUEST_DATA_HIGH_VALUE_REAL_STATION_CANDIDATE",
+  "eligibility": {
+    "physical_experiment_or_in_use_fill": true,
+    "vehicle_or_receptacle_pressure": "reported as a collected field but no raw array public",
+    "mass_flow_or_transferred_mass": "reported as a collected field but no raw array public",
+    "tank_or_fuel_temperature": "reported",
+    "common_time_base": "described for the custom acquisition campaign but not publicly downloadable",
+    "initial_conditions": "partially described; raw metadata not public",
+    "protocol_metadata": "partially described; raw protocol/version records not public",
+    "reuse_terms": "not supplied for a raw logger release",
+    "full_loop_holdout_eligible": false
+  },
+  "gate_impact": "independent_full_loop_gate_remains_open",
+  "next_action": "Request a de-identified station-by-fill export with timestamps, vehicle/receptacle pressure and temperature, mass flow or transferred mass, storage/cascade states, protocol mode, quality/calibration metadata, aborted-fill labels and permission to publish derived metrics. Freeze hashes and the evaluation protocol before inspecting outcomes.",
+  "claim_boundary": "This report strengthens provenance and the controlled-access data request. It cannot support a numerical full-loop validation claim from the public PDF alone."
+}

@@ -1027,3 +1027,25 @@ the 72.7% result is explicitly exploratory and does not reopen the failed
 PRESLHY gate. The repaired implementation must be frozen and evaluated on a
 new untouched campaign. Full details are in
 `research/preslhy_table_boundary_repair_diagnostic_2026_10_04.json`.
+
+## 2026-10-04 GTI California station performance report follow-up
+
+The public [GTI Hydrogen Station Performance Evaluation final report](https://doi.org/10.2172/1824631)
+documents a custom data-acquisition campaign deployed at five California
+hydrogen stations over approximately four years. The report lists the
+high-value channels needed for a controlled-access check, including vehicle
+starting pressure and temperature, ending vehicle pressure, mass dispensed,
+compressor flow, storage-bank pressure, station temperatures, fill mode and
+maintenance context. The public OSTI artifact is only a nine-page report PDF;
+its retrieved SHA-256 is recorded in
+`research/gti_hydrogen_station_public_data_recheck_2026_10_04.json`.
+
+No machine-readable logger export, channel dictionary, calibration/uncertainty
+package or raw-data reuse terms were found in the public record. The source is
+therefore classified as **REQUEST_DATA_HIGH_VALUE_REAL_STATION_CANDIDATE** and
+does not close the independent full-loop gate. A data request should seek a
+de-identified station-by-fill export with common timestamps, vehicle or
+receptacle pressure and temperature, mass flow or transferred mass,
+storage/cascade state, protocol mode, quality flags, aborted-fill labels and
+permission to publish derived metrics. Any approved files must be hashed and
+quarantined before numerical outcomes are inspected.
