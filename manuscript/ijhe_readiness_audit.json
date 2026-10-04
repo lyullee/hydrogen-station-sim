@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T10:19:50.945144+00:00",
+  "generated_at": "2026-10-04T10:24:19.826378+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -2210,7 +2210,7 @@
       "requirement": "Manifest schema, normal/emergency distinction, contradiction guard and full regression suite.",
       "observed": {
         "schema_version": 1,
-        "recorded_at": "2026-10-04T09:31:00+00:00",
+        "recorded_at": "2026-10-04T10:22:00+00:00",
         "status": "software_contract_verified",
         "scope": [
           "digital-twin main assistant",
@@ -2226,7 +2226,7 @@
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 470,
+            "passed": 472,
             "failed": 0,
             "warnings": 16
           }

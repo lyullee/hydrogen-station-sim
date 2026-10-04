@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "recorded_at": "2026-10-04T09:31:00+00:00",
+  "recorded_at": "2026-10-04T10:22:00+00:00",
   "status": "software_contract_verified",
   "scope": [
     "digital-twin main assistant",
@@ -16,7 +16,7 @@
     },
     "full_suite": {
       "command": ".venv\\Scripts\\python.exe -m pytest -q",
-      "passed": 470,
+      "passed": 472,
       "failed": 0,
       "warnings": 16
     }
