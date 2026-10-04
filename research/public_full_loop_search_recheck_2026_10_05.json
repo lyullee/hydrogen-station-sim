@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "scope": "Follow-up public-data search for an independent synchronized station-to-vehicle fueling holdout",
+  "gate": "full_loop_external_validation",
+  "eligibility_rule": {
+    "required_channels": [
+      "common elapsed time or timestamp",
+      "vehicle or receptacle pressure",
+      "mass flow or transferred mass"
+    ],
+    "preferred_channels": [
+      "vehicle or tank temperature",
+      "station source pressure",
+      "dispenser/controller state",
+      "protocol and initial-condition metadata"
+    ],
+    "required_rights": "explicit public reuse or written permission for derived metrics and journal publication",
+    "excluded_substitutes": [
+      "aggregate or static operational products",
+      "plot-only traces",
+      "simulator-generated traces",
+      "component-only experiments",
+      "software packages without measured observations"
+    ]
+  },
+  "candidates": [
+    {
+      "id": "mendeley_hrs_refueling_performance_2026_10_05",
+      "title": "HRSs refueling perfromance Data sets",
+      "doi": "10.17632/mnjs94yzfc.1",
+      "url": "https://data.mendeley.com/datasets/mnjs94yzfc/1",
+      "metadata_url": "https://data.mendeley.com/public-api/datasets/mnjs94yzfc",
+      "license": "CC BY 4.0",
+      "decision": "SIMULATION_OUTPUTS_ONLY",
+      "finding": "The public description identifies modeling and simulation results plus input parameters and time-resolved simulated outputs. It is not an independent measured station or vehicle experiment.",
+      "reuse_status": "Open metadata and CC BY record; excluded from physical external validation and cannot be used to claim field agreement."
+    },
+    {
+      "id": "h2_stations_export_api_2026_10_05",
+      "title": "European H2-Stations export API",
+      "url": "https://docs.h2-stations.eu/for-data-users/",
+      "license": "CC BY 4.0",
+      "decision": "STATIC_OPERATIONAL_CONTEXT_ONLY",
+      "finding": "The API exposes station metadata, availability, events, usage, hydrogen storage and pricing signals. It does not expose a synchronized pressure-temperature-mass-flow trace for a vehicle-fueling event.",
+      "reuse_status": "Open CC BY station-context data; not eligible for the numerical full-loop holdout."
+    },
+    {
+      "id": "utexas_california_hrs_lessons_2026_10_05",
+      "title": "California Hydrogen Refueling Stations – Lessons for Texas",
+      "doi": "10.26153/tsw/64797",
+      "url": "https://repositories.lib.utexas.edu/handle/2152/137506",
+      "license": "Open report",
+      "decision": "PUBLIC_REPORT_NO_RAW_LOGGER",
+      "finding": "The repository record is a technical report about deployment lessons and infrastructure status. It does not provide synchronized station-to-vehicle pressure, temperature and mass-flow rows.",
+      "reuse_status": "The report may support contextual citation; no raw numerical holdout is available from the record."
+    },
+    {
+      "id": "zbt_hrs_model_2026_10_05",
+      "title": "HRS-Modell free simulation model",
+      "url": "https://hrs-modell.de/en/home-pre-en/",
+      "decision": "OPEN_SIMULATION_SOFTWARE_ONLY",
+      "finding": "The public page describes a MATLAB/Simulink model validated by the developers with their own measurements. It provides a simulator, not an independently released measured station-to-vehicle trace archive.",
+      "reuse_status": "Useful model-comparison lead only; simulator outputs cannot be promoted to a physical external holdout."
+    }
+  ],
+  "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+  "gate_impact": "full_loop_external_validation_remains_open",
+  "next_action": "Obtain a de-identified synchronized logger export and written reuse terms from a custodian such as Cal State LA HRFF, NREL/NLR HITRF, CARB/HyStEP, JRC GasTeF, FCH2RAIL or an HRS operator; freeze model, inclusion criteria and scoring before reading numerical outcomes.",
+  "claim_boundary": "This record documents a search and exclusion decision. It does not add validation evidence, change frozen results or permit a publication-readiness claim."
+}

@@ -1199,3 +1199,25 @@ The result therefore does not change the external-validation gate or permit
 an IJHE-level full-loop claim. A future independent archive must include the
 same source-pressure and source-temperature boundary channels, or the station
 bank topology and valve-state log needed to reconstruct them.
+
+## 2026-10-05 public-data follow-up recheck
+
+The follow-up search inspected four additional public routes and preserved
+their exclusion decisions in
+[`research/public_full_loop_search_recheck_2026_10_05.json`](public_full_loop_search_recheck_2026_10_05.json):
+
+* Mendeley Data DOI `10.17632/mnjs94yzfc.1` is openly licensed, but its
+  description identifies model and simulation outputs rather than measured
+  station observations.
+* The European H2-Stations export API is CC BY 4.0 and useful for station
+  context, availability, usage, storage and pricing, but it does not expose
+  synchronized pressure-temperature-mass-flow fueling traces.
+* The University of Texas report DOI `10.26153/tsw/64797` is an open
+  technical report about California deployment lessons, without a
+  machine-readable station logger archive.
+* The public ZBT HRS-Modell page describes a simulator and developer-side
+  validation, not an independently released measured holdout.
+
+None meets the frozen full-loop eligibility rule. These sources are retained
+as contextual or acquisition leads only; no gate is promoted and no model
+parameter is changed.
