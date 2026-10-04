@@ -356,6 +356,26 @@
       "claim_boundary": "Metadata listing is not a validation dataset."
     },
     {
+      "id": "nbsdc_pucheng_engineering_demonstration",
+      "draft": "research/NBSDC_PUCHENG_HRS_DATA_REQUEST_DRAFT.md",
+      "source": "https://www.nbsdc.cn/general/dataDetail?id=67fb63bb195d26544804482c&type=1",
+      "candidate_type": "independent real-station monitoring and dispenser archive",
+      "status": "approval_required",
+      "requested_fields": [
+        "dispenser_pressure_flow_temperature_mass",
+        "vehicle_or_receptacle_channels",
+        "storage_bank_pressure_temperature_volume",
+        "compressor_and_valve_states",
+        "hydrogen_flame_oxygen_detectors",
+        "alarms_esd_quality_flags",
+        "timestamps_units_and_protocol_metadata"
+      ],
+      "minimum_acceptance": "De-identified synchronized export with a documented 10-second clock, eligible vehicle/receptacle pressure plus transferred mass, initial conditions and written reuse terms; station-only files remain a bounded monitoring dataset.",
+      "rights": "The portal exposes a public description and file manifest but requires a data application for monitoring workbooks. Custodian permission for derived metrics and journal publication must be recorded.",
+      "next_action": "Submit the prepared request through the NBSDC data-application route and retain approval, file hashes and access terms.",
+      "claim_boundary": "The catalog and description document are provenance/access evidence only; no numerical validation claim is allowed until files are received, frozen and scored without fitting."
+    },
+    {
       "id": "uci_nfcrc",
       "draft": "research/UCI_NFCRC_DATA_REQUEST_DRAFT.md",
       "source": "https://doi.org/10.1016/j.ijhydene.2020.08.251",

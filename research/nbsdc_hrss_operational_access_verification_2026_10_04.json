@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "dataset": {
+    "title_zh": "氢燃爆事故智慧应急决策平台工程示范",
+    "title_en": "Engineering Demonstration of Smart Emergency Decision-Making Platform for Hydrogen Fire and Explosion Accident",
+    "cstr": "CSTR:16666.11.nbsdc.wvSgtxVy",
+    "nbsdc_data_id": "67fb63bb195d26544804482c",
+    "metadata_url": "https://www.nbsdc.cn/general/dataDetail?id=67fb63bb195d26544804482c&type=1",
+    "metadata_claim": "The public metadata describes Pucheng operational monitoring; the downloadable description specifies a 2024-11-23 through 2024-11-27 collection at 10-second sampling, including hydrogen dispenser, compressor, storage-cylinder, unloading-column, alarm and other process channels.",
+    "metadata_license_or_access": "Metadata is publicly viewable; the center requires a registered data application for data files."
+  },
+  "public_access_verification": {
+    "metadata_endpoint": "https://www.nbsdc.cn/api/general/searchDataDetail",
+    "file_tree_endpoints": [
+      "https://www.nbsdc.cn/api/general/v1/getFileTree?dataId=67fb63bb195d26544804482c&pid=0&pageOffset=0&pageSize=50",
+      "https://www.nbsdc.cn/api/general/v1/getFileTree?dataId=67fb63bb195d26544804482c&pid=1&pageOffset=0&pageSize=50",
+      "https://www.nbsdc.cn/api/general/v1/getFileTree?dataId=67fb63bb195d26544804482c&pid=2&pageOffset=0&pageSize=50"
+    ],
+    "listed_file_count": 17,
+    "listed_storage_mb": 30.07,
+    "download_probe": {
+      "endpoint_template": "https://www.nbsdc.cn/api/general/v1/checkAndDownloadFile?dataId=67fb63bb195d26544804482c&id=67cfa5f334eb4074639cbddb&pid=1&pageOffset=0&pageSize=20",
+      "http_status": 200,
+      "content_type": "application/json;charset=UTF-8",
+      "body_code": 403,
+      "body_message": "目前只支持部分数据集的说明文件下载，数据文件请通过数据申请获取。",
+      "interpretation": "File inventory is public, but the process-channel workbook requires an approved data application; no raw file was downloaded or inspected."
+    },
+    "response_hashes": [
+      {
+        "endpoint": "POST https://www.nbsdc.cn/api/general/searchDataDetail",
+        "response_utf8_bytes": 2202,
+        "response_sha256": "c484170b42fb59bf1c80a8954f1d24abf0fdaa95f689d595b4b79a1196ae39c0"
+      },
+      {
+        "endpoint": "GET https://www.nbsdc.cn/api/general/v1/getFileTree?dataId=67fb63bb195d26544804482c&pid=0&pageOffset=0&pageSize=50",
+        "response_utf8_bytes": 1677,
+        "response_sha256": "81abbec5717569baf6b5111f450c156f3eb1567a85ad3bdf4f74dc651b78f952"
+      },
+      {
+        "endpoint": "GET https://www.nbsdc.cn/api/general/v1/getFileTree?dataId=67fb63bb195d26544804482c&pid=1&pageOffset=0&pageSize=50",
+        "response_utf8_bytes": 3110,
+        "response_sha256": "01cfd643f9e0b113f9a6b2551ef67508e38a98f58ef4bb4c947731e9359f3198"
+      },
+      {
+        "endpoint": "GET https://www.nbsdc.cn/api/general/v1/getFileTree?dataId=67fb63bb195d26544804482c&pid=2&pageOffset=0&pageSize=50",
+        "response_utf8_bytes": 332,
+        "response_sha256": "608435f1816053461ed319557f5042f1bcddead5dfa55b465922456bda65dd1d"
+      },
+      {
+        "endpoint": "GET https://www.nbsdc.cn/api/general/v1/checkAndDownloadFile?dataId=67fb63bb195d26544804482c&id=67cfa5f334eb4074639cbddb&pid=1&pageOffset=0&pageSize=20",
+        "response_utf8_bytes": 121,
+        "response_sha256": "3dc242b38b1d0017e43b33734ca67e875ea6280f7a1f23089f721d7662c54ec1"
+      }
+    ]
+  },
+  "description_file_verification": {
+    "file_name": "2021YFB4000905-003-氢燃爆事故智慧应急决策平台工程示范数据集-数据说明.docx",
+    "file_id": "67cfa5f334eb4074639cbde9",
+    "download_endpoint": "https://www.nbsdc.cn/api/general/v1/checkAndDownloadFile?dataId=67fb63bb195d26544804482c&id=67cfa5f334eb4074639cbde9&pid=0&pageOffset=0&pageSize=20",
+    "http_status": 200,
+    "content_type": "application/octet-stream",
+    "bytes": 69172,
+    "sha256": "e013dbbe3700679b228025beefdb741a1ebcfc2a5629c33a00dea74ccdb15e1f",
+    "interpretation": "The public description file was downloadable and was inspected for schema/provenance only; raw monitoring workbooks remain application-controlled.",
+    "declared_scope": {
+      "station": "Pucheng demonstration station, 1000 kg/d class",
+      "collection_window": "2024-11-23 through 2024-11-27",
+      "sampling_interval": "10 s",
+      "equipment_channels": [
+        "90 MPa liquid-driven compressor",
+        "45 MPa diaphragm compressor",
+        "35 MPa dispenser",
+        "20 MPa unloading column",
+        "45 MPa storage-cylinder groups",
+        "alarm, hydrogen, flame and oxygen detection"
+      ],
+      "dispenser_schema_examples": [
+        "nozzle flow rate",
+        "nozzle pressure",
+        "inlet-gas temperature",
+        "ambient temperature",
+        "real-time and cumulative dispensed mass",
+        "start/end pressure and mass",
+        "vehicle cylinder volume",
+        "fill start/end timestamps",
+        "dispenser state"
+      ],
+      "storage_schema_examples": [
+        "storage-cylinder pressure",
+        "storage-cylinder temperature",
+        "storage-cylinder volume",
+        "storage-cylinder fault"
+      ],
+      "safety_schema_examples": [
+        "high/high, high, low, low/low pressure alarms",
+        "emergency-stop states",
+        "hydrogen, flame and oxygen detector channels",
+        "valve position and compressor fault states"
+      ]
+    },
+    "rights_statement_in_description": "The description states that the dataset is fully shared, while the portal currently requires a data application for the monitoring workbooks. Written reuse terms for derived journal metrics still need to be recorded."
+  },
+  "file_manifest": [
+    {
+      "directory": "data content 1 - 1000kg/d hydrogen station production and operation data",
+      "file_name": "UPS电能数据【工艺】监测采集数据.xlsx",
+      "bytes": 621580
+    },
+    {
+      "directory": "data content 1 - 1000kg/d hydrogen station production and operation data",
+      "file_name": "储气瓶【工艺】监测采集数据.xlsx",
+      "bytes": 96628
+    },
+    {
+      "directory": "data content 1 - 1000kg/d hydrogen station production and operation data",
+      "file_name": "冷水机【工艺】监测采集数据.xlsx",
+      "bytes": 6913658
+    },
+    {
+      "directory": "data content 1 - 1000kg/d hydrogen station production and operation data",
+      "file_name": "加氢机仪表仪器【工艺】监测采集数据.xlsx",
+      "bytes": 1609376
+    },
+    {
+      "directory": "data content 1 - 1000kg/d hydrogen station production and operation data",
+      "file_name": "加氢机运行状态【工艺】监测采集数据.xlsx",
+      "bytes": 1893436
+    },
+    {
+      "directory": "data content 1 - 1000kg/d hydrogen station production and operation data",
+      "file_name": "卸氢柱仪表仪器【工艺】监测采集数据.xlsx",
+      "bytes": 514646
+    },
+    {
+      "directory": "data content 1 - 1000kg/d hydrogen station production and operation data",
+      "file_name": "卸氢柱运行状态【工艺】监测采集数据.xlsx",
+      "bytes": 747580
+    },
+    {
+      "directory": "data content 1 - 1000kg/d hydrogen station production and operation data",
+      "file_name": "场站其他【工艺】监测采集数据.xlsx",
+      "bytes": 1131828
+    },
+    {
+      "directory": "data content 1 - 1000kg/d hydrogen station production and operation data",
+      "file_name": "场站报警【工艺】监测采集数据.xlsx",
+      "bytes": 1459063
+    },
+    {
+      "directory": "data content 1 - 1000kg/d hydrogen station production and operation data",
+      "file_name": "液驱压缩机【工艺】监测采集数据.xlsx",
+      "bytes": 3796665
+    },
+    {
+      "directory": "data content 1 - 1000kg/d hydrogen station production and operation data",
+      "file_name": "隔膜压缩机【工艺】监测采集数据.xlsx",
+      "bytes": 3936223
+    },
+    {
+      "directory": "data content 1 - 1000kg/d hydrogen station production and operation data",
+      "file_name": "顺序控制盘【工艺】监测采集数据.xlsx",
+      "bytes": 702742
+    },
+    {
+      "directory": "data content 2 - 1000 Nm3/h hydrogen production operation data",
+      "file_name": "制氢装置运行监测数据.xlsx",
+      "bytes": 254457
+    }
+  ],
+  "eligibility": {
+    "decision": "ACCESS_REQUEST_HIGH_VALUE_REAL_HRS_CANDIDATE_NOT_PUBLIC_HOLDOUT",
+    "why_not_full_loop_holdout": [
+      "The public listing does not establish that vehicle/receptacle pressure and transferred-mass traces share a common clock.",
+      "The raw workbooks are not downloadable without an approved application, so no outcomes were inspected and no frozen pre-access protocol can yet be scored.",
+      "The metadata advertises station process channels and alarms, but a vehicle-side channel dictionary, calibration package and reuse terms remain unverified."
+    ],
+    "next_action": "Request a de-identified export of the dispenser, storage, compressor, alarm and sequence-control workbooks with timestamps, units, quality flags, calibration metadata, vehicle/receptacle channels, protocol/initial conditions and written permission for derived metrics and journal publication. Freeze the model and scoring protocol before opening any approved files.",
+    "claim_boundary": "This record proves a high-value real-station data route and its access restriction only. It does not count as numerical validation, does not close the full-loop gate and does not support a frequency, safety-distance or SAGA-effectiveness claim."
+  }
+}
