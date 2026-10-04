@@ -400,3 +400,37 @@ def test_external_search_mirror_contains_public_full_loop_search_addendum():
     assert "calstate_genovese_2021_in_situ_fueling_addendum" in item["source_ids"]
     assert "bam_kim_2026_field_monitoring_addendum" in item["source_ids"]
     assert "threeemotion_2022_operational_addendum" in item["source_ids"]
+
+
+def test_fts_recheck_records_public_traces_without_promoting_pseudo_raw_data():
+    record = json.loads(
+        (
+            ROOT
+            / "research/public_full_loop_search_fts_recheck_2026_10_04.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert record["decision"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
+    assert record["gate_impact"] == "unchanged_independent_full_loop_gate_remains_open"
+    assert len(record["sources"]) == 5
+    assert all(source["full_loop_holdout_eligible"] is False for source in record["sources"])
+    nist = next(source for source in record["sources"] if source["id"] == "nist_fts_tn1888_public_artifact_check")
+    assert nist["public_artifact_inspection"]["published_pdf_found"] is True
+    assert nist["public_artifact_inspection"]["machine_readable_logger_archive_found"] is False
+    nrel = next(source for source in record["sources"] if source["id"] == "nrel_h2iq_2024_heavy_duty_public_trace_check")
+    assert nrel["public_artifact_inspection"]["public_raw_logger_found"] is False
+    mc = next(source for source in record["sources"] if source["id"] == "h2protocol_mc_default_public_archive_rights_recheck")
+    assert mc["public_artifact_inspection"]["machine_readable_bench_archive_found"] is True
+    assert mc["public_artifact_inspection"]["written_open_data_license_found"] is False
+
+
+def test_external_search_mirror_contains_fts_recheck():
+    mirror = json.loads(
+        (ROOT / "research/external_full_loop_data_search.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    item = mirror["public_full_loop_search_fts_recheck_2026_10_04"]
+    assert item["decision"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
+    assert item["full_loop_holdout_eligible"] is False
+    assert "nist_fts_tn1888_public_artifact_check" in item["source_ids"]
+    assert "nrel_h2iq_2024_heavy_duty_public_trace_check" in item["source_ids"]

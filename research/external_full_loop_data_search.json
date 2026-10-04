@@ -2273,5 +2273,19 @@
     ],
     "finding": "The NBSDC HRS record is approval-gated, the 70 MPa port record is component-only, the 2025 IJHE high-flow tank experiment has no verified downloadable raw archive, the Cal State LA one-year operation study does not expose its logger files, the BAM field-monitoring paper directs raw-data inquiries to the authors, and the 3Emotion result is aggregated event-level operation rather than synchronized station traces. None is promoted to full-loop validation.",
     "claim_boundary": "No public catalog metadata or paper-only result can replace a hashed synchronized raw archive, frozen no-fitting protocol and written reuse rights."
+  },
+  "public_full_loop_search_fts_recheck_2026_10_04": {
+    "record": "research/public_full_loop_search_fts_recheck_2026_10_04.json",
+    "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+    "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+    "source_ids": [
+      "nist_fts_tn1888_public_artifact_check",
+      "nist_fts_pmc_public_trace_check",
+      "nrel_h2iq_2022_high_flow_public_trace_check",
+      "nrel_h2iq_2024_heavy_duty_public_trace_check",
+      "h2protocol_mc_default_public_archive_rights_recheck"
+    ],
+    "full_loop_holdout_eligible": false,
+    "finding": "NIST and NREL sources materially strengthen protocol, metrology and high-flow provenance, but none supplies the independently accessible synchronized station-to-vehicle raw archive required to clear the full-loop IJHE gate. Published figures and aggregate values are not converted into pseudo-raw validation data."
   }
 }

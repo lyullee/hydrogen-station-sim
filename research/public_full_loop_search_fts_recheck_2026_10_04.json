@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "scope": "Primary-source artifact check for NIST hydrogen field-test standard and public NREL high-flow fueling evidence",
+  "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+  "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+  "eligibility_rule": {
+    "required_for_station_vehicle_holdout": [
+      "machine_readable synchronized time series",
+      "vehicle_or_receptacle_pressure",
+      "vehicle_or_tank_temperature",
+      "mass_flow_or_transferred_mass",
+      "station_source_pressure_or_bank_state"
+    ],
+    "required_rights": [
+      "immutable archive hash",
+      "written reuse and publication terms"
+    ]
+  },
+  "sources": [
+    {
+      "id": "nist_fts_tn1888_public_artifact_check",
+      "title": "Hydrogen Field Test Standard Design, Operating Instructions, & Specifications",
+      "publisher": "National Institute of Standards and Technology",
+      "doi": "10.6028/NIST.TN.1888",
+      "url": "https://nvlpubs.nist.gov/nistpubs/TechnicalNotes/NIST.TN.1888.pdf",
+      "alternate_url": "https://www.govinfo.gov/app/details/GOVPUB-C13-d78764a5ca341f80d320f6caf20629de",
+      "real_experiment": true,
+      "reported_channels": [
+        "FTS tank pressure",
+        "two tank thermocouples",
+        "master-meter totalized mass",
+        "gravimetric mass",
+        "DAQ time series"
+      ],
+      "reported_protocol": [
+        "laboratory helium transient-flow-facility tests",
+        "field hydrogen dispenser test drafts",
+        "fill and blow-down traces"
+      ],
+      "public_artifact_inspection": {
+        "published_pdf_found": true,
+        "machine_readable_logger_archive_found": false,
+        "reduction_workbook_download_found": false,
+        "embedded_file_inventory": [],
+        "finding": "The public 28-page technical note describes a local H2 FTS laptop reduction workbook and text DAQ files on the test computer, but the GovInfo/NIST public record exposes the PDF rendition only; no CSV/XLSX/logger archive or written reuse terms were found."
+      },
+      "classification": "PUBLIC_REAL_DISPENSER_METROLOGY_DATA_REQUEST_LEAD",
+      "full_loop_holdout_eligible": false,
+      "partial_measurement_eligible": true,
+      "request_draft": "research/NIST_FTS_DATA_REQUEST_DRAFT.md"
+    },
+    {
+      "id": "nist_fts_pmc_public_trace_check",
+      "title": "Hydrogen Field Test Standard: Laboratory and Field Performance",
+      "publisher": "NIST / Flow Measurement and Instrumentation",
+      "doi": "10.1016/j.flowmeasinst.2015.10.010",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4692185/",
+      "real_experiment": true,
+      "reported_channels": [
+        "continuous FTS pressure",
+        "continuous FTS temperature",
+        "Coriolis master meter",
+        "gravimetric/PVT comparisons"
+      ],
+      "reported_results": [
+        "three 0.41 kg and four 0.75 kg hydrogen field drafts",
+        "laboratory and field method agreement reported as aggregate percentages"
+      ],
+      "public_artifact_inspection": {
+        "full_text_available": true,
+        "supplementary_raw_logger_found": false,
+        "figure_only_or_table_only": true,
+        "finding": "The open full text contains protocol, aggregate results and plotted profiles, but no downloadable synchronized logger values or reuse terms."
+      },
+      "classification": "PUBLIC_REAL_DISPENSER_TRACE_REPORT_ONLY",
+      "full_loop_holdout_eligible": false,
+      "partial_measurement_eligible": true
+    },
+    {
+      "id": "nrel_h2iq_2022_high_flow_public_trace_check",
+      "title": "Overview of Record-Setting High-Throughput Hydrogen Fueling at NREL",
+      "publisher": "U.S. Department of Energy / NREL",
+      "url": "https://www.energy.gov/cmei/fuels/december-h2iq-hour-overview-record-setting-high-throughput-hydrogen-fueling-nrel",
+      "slide_url": "https://www.energy.gov/sites/default/files/2022-12/h2iq-121922.pdf",
+      "real_experiment": true,
+      "reported_channels": [
+        "dispenser/vehicle pressure traces in presentation figure",
+        "high-flow rate and fill mass summary"
+      ],
+      "public_artifact_inspection": {
+        "public_raw_logger_found": false,
+        "figure_or_summary_only": true,
+        "finding": "The public H2IQ slide deck reports an 82.3 kg, 6 min 33 s high-throughput test with pressure and flow plots, but does not expose a machine-readable synchronized logger export."
+      },
+      "classification": "PUBLIC_HIGH_FLOW_EXPERIMENT_SUMMARY_ONLY",
+      "full_loop_holdout_eligible": false
+    },
+    {
+      "id": "nrel_h2iq_2024_heavy_duty_public_trace_check",
+      "title": "Hydrogen Fuel Dispensing for Medium- and Heavy-Duty Vehicles",
+      "publisher": "U.S. Department of Energy / NREL",
+      "url": "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
+      "real_experiment": true,
+      "reported_channels": [
+        "station/vehicle pressure traces in presentation figure",
+        "multiple temperature traces in presentation figure",
+        "mass-flow summary"
+      ],
+      "public_artifact_inspection": {
+        "public_raw_logger_found": false,
+        "figure_or_summary_only": true,
+        "finding": "The public deck reports a 73 kg, 423.5 s heavy-duty fill and plots pressure, temperature and mass-flow channels, but no raw synchronized archive or written reuse terms were found."
+      },
+      "classification": "PUBLIC_HIGH_FLOW_EXPERIMENT_SUMMARY_ONLY",
+      "full_loop_holdout_eligible": false
+    },
+    {
+      "id": "h2protocol_mc_default_public_archive_rights_recheck",
+      "title": "SAE J2601 MC Default Bench Test Data",
+      "publisher": "H2Protocol.com / Powertech Labs contributors",
+      "doi": "10.4271/2015-01-1177",
+      "url": "http://www.h2protocol.com/h2-fueling-data/",
+      "real_experiment": true,
+      "reported_channels": [
+        "bench pressure/temperature/flow traces in workbook files"
+      ],
+      "public_artifact_inspection": {
+        "machine_readable_bench_archive_found": true,
+        "archive_sha256": "e029c53f95c8172be08e5dc4cc41dffb42a09ad7ecbb8b6b8d73e43a9ad210d1",
+        "written_open_data_license_found": false,
+        "finding": "The archive is downloadable and already quarantined locally for the consumed benchmark, but the landing page does not grant an open-data redistribution licence; it is not a new independent holdout and cannot be republished."
+      },
+      "classification": "PUBLIC_MACHINE_READABLE_BENCH_DATA_CONSUMED",
+      "full_loop_holdout_eligible": false,
+      "station_measurement_auxiliary_eligible": true
+    }
+  ],
+  "claim_boundary": "NIST and NREL sources materially strengthen protocol, metrology and high-flow provenance, but none supplies the independently accessible synchronized station-to-vehicle raw archive required to clear the full-loop IJHE gate. Published figures and aggregate values are not converted into pseudo-raw validation data."
+}
