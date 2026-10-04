@@ -826,6 +826,34 @@ def audit(root: Path) -> dict[str, object]:
         detector_aggregate if detector_logic else "missing; detector-logic replay has not completed",
     ))
 
+    grune_inventory_path = root / "research/grune_ventilation_dataset_inventory_2026_10_05.json"
+    grune_inventory = _json(grune_inventory_path)
+    grune_source = (grune_inventory or {}).get("source") or {}
+    grune_measurements = (grune_inventory or {}).get("inventory") or {}
+    grune_validation = (grune_inventory or {}).get("validation_status") or {}
+    grune_inventory_pass = bool(
+        (grune_inventory or {}).get("status")
+        == "completed_provenance_and_measurement_inventory"
+        and grune_source.get("doi") == "10.5281/zenodo.4668554"
+        and grune_source.get("license") == "CC BY 4.0"
+        and grune_measurements.get("source_identity_all_match") is True
+        and grune_measurements.get("workbook_count") == 4
+        and grune_measurements.get("profile_count") == 42
+        and grune_measurements.get("spatial_point_count") == 5256
+        and not grune_measurements.get("workbook_errors")
+        and grune_validation.get("model_comparison_performed") is False
+        and grune_validation.get("numeric_validation_gate_closed") is False
+        and bool((grune_inventory or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "grune_ventilation_measurement_inventory",
+        "PASS" if grune_inventory_pass else ("FAIL" if grune_inventory else "PENDING"),
+        "The public Grune/Sempert confined-space ventilation fields are hash-verified and inventoried without being promoted to model validation.",
+        str(grune_inventory_path.relative_to(root)),
+        "Four CC BY 4.0 workbooks, 42 spatial profiles, 5,256 points and an explicit no-model-comparison boundary.",
+        grune_measurements if grune_inventory else "missing; Grune measurement inventory has not run",
+    ))
+
     playbook_path = root / "src/h2station/data/emergency_playbooks.json"
     playbooks = _json(playbook_path)
     playbook_sources = (playbooks or {}).get("sources") or {}

@@ -80,6 +80,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert calstate_b2b["full_loop_external_holdout_eligible"] is False
     assert gates["nrel_h2fills_workbook_provenance_integrity"]["status"] == "PASS"
     assert gates["public_dispenser_endpoint_diagnostic"]["status"] == "PASS"
+    assert gates["grune_ventilation_measurement_inventory"]["status"] == "PASS"
+    grune_inventory = gates["grune_ventilation_measurement_inventory"]["observed"]
+    assert grune_inventory["profile_count"] == 42
+    assert grune_inventory["spatial_point_count"] == 5256
+    assert grune_inventory["source_identity_all_match"] is True
     assert gates["hiad_action_evidence_integrity"]["status"] == "PASS"
     assert gates["hiad_action_evidence_integrity"]["observed"]["case_count"] == 34
     assert gates["hiad_accident_response_coverage_evaluation"]["status"] == "PASS"

@@ -49,10 +49,17 @@ copy the source workbooks into Git. The machine-readable protocol is
 protocol only and has not been presented as a completed model-validation
 result.
 
+The downloaded, hash-verified source files were rechecked on 2026-10-05 by
+`scripts/inventory_grune_ventilation_dataset.py`. The resulting
+`research/grune_ventilation_dataset_inventory_2026_10_05.json` records all
+seven Zenodo files, 42 decoded concentration profiles, coordinate ranges,
+release-flow ranges and the number of measured points at or above 4 vol% H2.
+The inventory is intentionally a pre-analysis measurement boundary: it reports
+what is in the public archive but does not compare a digital-twin prediction
+with those fields and does not close a numeric validation gate.
+
 It cannot support claims about vehicle filling, cascade pressure management, compressor/precooler dynamics, dispenser control, SOC, or the full SAE J2601 station loop. Those claims still require de-identified synchronized station traces from CARB, JRC GasTeF, Cal State LA, or another independent provider.
 
 ## Reproducibility plan
 
 Before using the dataset in a confirmatory result, freeze a parser and protocol that specify workbook, sheet, release diameter/rate, ventilation case, concentration units, spatial coordinate convention, interpolation rule, error metric, and pass thresholds. Store only derived summaries and source hashes in the repository. Keep the original files under the ignored public-validation data directory.
-
-This record therefore improves the independent consequence-validation coverage without changing the current conclusion that the IJHE full-loop gate remains open.

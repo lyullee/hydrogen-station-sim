@@ -73,6 +73,11 @@ def build(root: Path) -> dict[str, Any]:
                 ],
                 "claim_boundary": "Qualitative scenario and response grounding; HIAD action-category routing is structural only, with no frequency, calibrated probability, response-effectiveness or safety claim.",
             },
+            "confined_space_consequence_measurements": {
+                "gate": gate("grune_ventilation_measurement_inventory")["status"],
+                "evidence": "research/grune_ventilation_dataset_inventory_2026_10_05.json",
+                "claim_boundary": "Hash-verified CC BY 4.0 concentration/ventilation measurements only; no model comparison, outdoor separation-distance claim or full-loop validation claim.",
+            },
             "real_station_candidate": {
                 "status": "ACCESS_REQUEST_ONLY",
                 "evidence": [
