@@ -569,6 +569,45 @@ def audit(root: Path) -> dict[str, object]:
         } if preslhy else "missing; acquisition/validation has not completed",
     ))
 
+    preslhy_partb_path = root / "data/public_validation/results/preslhy_partb/validation.json"
+    preslhy_partb = _json(preslhy_partb_path)
+    preslhy_partb_protocol_path = root / "research/preslhy_partb_holdout_protocol.json"
+    preslhy_partb_protocol = _json(preslhy_partb_protocol_path)
+    preslhy_partb_eligibility = (preslhy_partb or {}).get("eligibility") or {}
+    preslhy_partb_aggregate = (preslhy_partb or {}).get("aggregate") or {}
+    preslhy_partb_protocol_hash = (
+        _sha256(preslhy_partb_protocol_path)
+        if preslhy_partb_protocol_path.is_file()
+        else None
+    )
+    preslhy_partb_pass = bool(
+        (preslhy_partb_protocol or {}).get("status")
+        == "frozen_before_part_b_archive_download_and_numerical_outcome_access"
+        and (preslhy_partb_protocol or {}).get("outcomes_accessed_before_freeze") is False
+        and preslhy_partb_eligibility.get("minimum_requirements_met") is True
+        and preslhy_partb_aggregate.get(
+            "ambient_cryostat_part_b_claim_supported"
+        ) is True
+        and (preslhy_partb or {}).get("protocol_sha256") == preslhy_partb_protocol_hash
+    )
+    gates.append(_gate(
+        "preslhy_partb_ambient_external_validation",
+        "PASS" if preslhy_partb_pass else ("FAIL" if preslhy_partb else "PENDING"),
+        "The frozen release model meets the independent ambient Cryostat Part-B pressure-decay screens.",
+        f"{preslhy_partb_path.relative_to(root)}; {preslhy_partb_protocol_path.relative_to(root)}",
+        "Five public ambient cases across two nozzle and two pressure groups, >=70% joint primary pass fraction, no post-freeze fitting.",
+        {
+            "eligibility": preslhy_partb_eligibility,
+            "aggregate": preslhy_partb_aggregate,
+            "archive_sha256": (preslhy_partb or {}).get("archive_sha256"),
+            "claim_boundary": (preslhy_partb or {}).get("claim_boundary"),
+            "protocol_hash_matches": (
+                (preslhy_partb or {}).get("protocol_sha256")
+                == preslhy_partb_protocol_hash
+            ),
+        } if preslhy_partb else "missing; Part-B archive evaluation has not completed",
+    ))
+
     e5_result_path = root / "research/preslhy_e5_1_holdout_result.json"
     e5_result = _json(e5_result_path)
     e5_protocol_path = root / "research/preslhy_e5_1_holdout_protocol.json"
@@ -1045,6 +1084,7 @@ def audit(root: Path) -> dict[str, object]:
         "corrected_closed_loop_internal_evidence",
         "full_loop_negative_result_disclosed",
         "hyram_adapter_verification", "preslhy_blowdown_external_validation",
+        "preslhy_partb_ambient_external_validation",
         "preslhy_revised_holdout_validation",
         "proust_independent_release_validation",
         "schefer_transient_release_validation",
