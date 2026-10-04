@@ -2116,6 +2116,30 @@
         "classification": "PUBLIC_REAL_STATION_METHOD_AND_DATA_REQUEST_LEAD",
         "full_loop_holdout_eligible": false,
         "next_action": "Request a de-identified raw channel export, sensor dictionary, calibration/quality flags and permission for derived publication from the corresponding author or BAM custodian."
+      },
+      {
+        "id": "zenodo_chillerless_20183753_embedded_digitized_fills",
+        "title": "Chillerless 700-bar H2 Tank Retrofit: Computational Validation v3.3",
+        "publisher": "Zenodo software deposit",
+        "doi": "10.5281/zenodo.20183753",
+        "url": "https://zenodo.org/records/20183753",
+        "accessed": "2026-10-04",
+        "archive_sha256": "7400914FE78D265D1D91AADF7CE3C9197E7A4EC4CC879B90E4F9698623CB9E49",
+        "reported_scope": "Reproducible computational tank-thermal validation code with nine embedded literature-digitized temperature fills from Bourgeois, Kim, Dicken and Galassi.",
+        "public_artifact_inspection": {
+          "archive_files": [
+            "code/chillerless_h2_validation.py",
+            "code/sample_results_quick.json",
+            "README.md"
+          ],
+          "embedded_fill_count": 9,
+          "embedded_raw_data_flags": "Each embedded case declares raw_data_available=false and a manual figure-digitization method.",
+          "synchronized_station_to_vehicle_logger_found": false,
+          "finding": "The deposit is valuable reproducible model and derived-digitization context, but it is not a new station-to-vehicle raw archive. Its embedded arrays cannot close the full-loop gate and require citation of the original papers."
+        },
+        "classification": "PUBLIC_DERIVED_TANK_TEMPERATURE_CONTEXT_ONLY",
+        "full_loop_holdout_eligible": false,
+        "next_action": "Keep as a traceable literature-derived sensitivity lead; do not merge into the independent station holdout without separate provenance and a frozen non-fitting protocol."
       }
     ],
     "claim_boundary": "Neither source closes the independent full-loop numerical gate. A report-referenced workbook, aggregate logbook, plot or paper is not promoted to validation until synchronized raw files, immutable hashes, frozen scoring protocol and written reuse rights are available."

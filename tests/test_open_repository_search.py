@@ -127,7 +127,7 @@ def test_public_data_access_refresh_keeps_carb_and_3emotion_out_of_holdout():
     )
     assert record["decision"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
     assert record["gate_impact"] == "unchanged_independent_full_loop_gate_remains_open"
-    assert len(record["sources"]) == 3
+    assert len(record["sources"]) == 4
     carb = next(source for source in record["sources"] if source["id"].startswith("carb_"))
     threeemotion = next(
         source for source in record["sources"] if source["id"] == "threeemotion_operator_logbooks"
@@ -139,5 +139,12 @@ def test_public_data_access_refresh_keeps_carb_and_3emotion_out_of_holdout():
     bam = next(source for source in record["sources"] if source["id"] == "bam_2026_data_driven_station")
     assert bam["public_artifact_inspection"]["public_csv_xlsx_sql_found"] is False
     assert bam["full_loop_holdout_eligible"] is False
+    zenodo = next(
+        source
+        for source in record["sources"]
+        if source["id"] == "zenodo_chillerless_20183753_embedded_digitized_fills"
+    )
+    assert zenodo["public_artifact_inspection"]["embedded_fill_count"] == 9
+    assert zenodo["full_loop_holdout_eligible"] is False
     assert (ROOT / "research/3EMOTION_DATA_REQUEST_DRAFT.md").exists()
     assert "written reuse rights" in record["claim_boundary"]
