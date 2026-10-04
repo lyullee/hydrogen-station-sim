@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
-  "attempted_at": "2026-10-04T14:10:00+00:00",
+  "attempted_at": "2026-10-04T13:34:07+00:00",
   "attempts_this_run": 1,
   "success": true,
   "compiler": "Tectonic 0.17.0 (x86_64-pc-windows-msvc)",
   "compiler_release": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic%400.17.0",
   "compiler_archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845f",
   "source": "manuscript/ijhe_manuscript_draft.tex",
-  "source_sha256": "014d6ae312211d1b0a993ccb2823dc1599481be648697c269fd45277a3a88f14",
-  "output_pages": 18,
-  "output_bytes": 618684,
-  "output_sha256": "47daad55d90b99f948b1966d62ac0b36f48ad544d9856f4e9da472a2f9df7c00",
+  "source_sha256": "b47c21c7a0f694528b5afbbf06ee89089439e1cd52b8b2d722cdff86f8279c60",
+  "output_pages": 20,
+  "output_bytes": 619671,
+  "output_sha256": "4c6fab144749f927686117e1527447bb26cafeb2e1c9d5c69638c990aae65be6",
   "warnings": {
     "layout_or_package_warning_lines": 5,
     "fatal_errors": 0,
-    "summary": "PDF produced successfully after adding the replayed eight-case public ignited-release thermal-effects descriptive summary. Non-fatal underfull boxes and the bundled lineno UTF-8 replacement warning remain; no fatal errors were reported."
+    "summary": "PDF produced successfully after adding URL-level verification of 23 public KHK accident reports. Non-fatal underfull boxes and bundled lineno UTF-8 replacement warning remain; no fatal errors were reported."
   },
   "built_in_compiler_attempt": {
     "success": false,
     "diagnostic": "Unable to find standard directories for platform"
   },
-  "interpretation": "The exact current manuscript source compiled successfully with the pinned Tectonic release. The Figshare thermal-effects archive was replayed descriptively under a deterministic extractor; it remains consequence-only and does not close the station full-loop or legal-distance gates."
+  "interpretation": "The exact current manuscript source compiled successfully with the pinned Tectonic release. Public KHK accident-report URLs were verified and hash-locked without mirroring report text; the evidence remains qualitative scenario grounding and does not close station full-loop or SAGA effectiveness gates."
 }
