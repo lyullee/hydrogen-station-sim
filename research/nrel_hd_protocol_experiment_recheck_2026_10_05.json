@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "source": {
+    "title": "March H2IQ Hour: Hydrogen Fuel Dispensing for Medium- and Heavy-Duty Vehicles",
+    "url": "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
+    "publisher": "U.S. Department of Energy Hydrogen and Fuel Cell Technologies Office / NREL",
+    "public_artifact": "webinar PDF, 26 pages",
+    "retrieval": "public PDF text and figure captions inspected; no downloadable row-level logger archive found"
+  },
+  "reported_experiment": {
+    "date": "2024-03-12",
+    "facility": "NREL Heavy-Duty Hydrogen Fast-Flow Research Facility",
+    "mass_transfer_kg": 73.0,
+    "total_fill_time_s": 423.5,
+    "fueling_time_s": 358.9,
+    "average_mass_flow_g_s": 172.3,
+    "peak_mass_flow_g_s": 483.33,
+    "protocol": "SAE J2601-5 MCF-HF-G H70 FM300 T40",
+    "tank_configuration": "9 tanks: 7 Type IV and 2 Type III",
+    "starting_pressure_mpa": 5.5,
+    "ending_pressure_mpa": 74.6,
+    "aprr_mpa_min": 9.9,
+    "ending_soc": "92% Type IV; approximately 100% Type III",
+    "ambient_temperature_c": 13.0,
+    "reported_plot_channels": [
+      "station pressure",
+      "hose target pressure",
+      "hose pressure",
+      "receptacle pressure",
+      "vehicle manifold pressure",
+      "vehicle tank pressure",
+      "mass flow",
+      "fuel-cell vehicle simulator temperatures"
+    ]
+  },
+  "decision": "REAL_HD_EXPERIMENT_PLOT_ONLY",
+  "raw_time_series": false,
+  "full_loop_holdout_eligible": false,
+  "finding": "The public NREL/DOE artifact reports a real heavy-duty fast-fill experiment with station, dispenser and vehicle-side pressure/temperature channels shown in plots, but it does not publish synchronized row-level logger files, controller-state metadata or an explicit raw-data reuse licence.",
+  "use": "High-value operating-range and protocol face-validity citation, and a data-request lead. Digitized plot points must not be presented as an untouched full-loop holdout.",
+  "requested_package": [
+    "original synchronized station, hose, receptacle and vehicle logger rows",
+    "mass-flow and cumulative-mass channels with units",
+    "tank geometry, sensor locations and calibration/uncertainty",
+    "bank-switching, valve, precooler, stop and fault states",
+    "SAE J2601-5 table/MCF inputs and controller configuration",
+    "written permission for derived metrics and journal publication"
+  ],
+  "gate_impact": "independent_full_loop_gate_remains_open",
+  "claim_boundary": "This public report supports real-test context only. It does not establish digital-twin accuracy or safety-distance validity without the raw synchronized package and a pre-outcome frozen holdout protocol."
+}
