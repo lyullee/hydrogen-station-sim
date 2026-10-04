@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T04:13:17.154607+00:00",
+  "generated_at": "2026-10-04T04:37:07.954435+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
@@ -354,8 +354,8 @@
       "requirement": "At least 15 candidate routes, existing draft request for every route, source URL and explicit non-evidentiary boundary.",
       "observed": {
         "status": "open_data_not_yet_received",
-        "candidate_count": 22,
-        "draft_count": 19,
+        "candidate_count": 24,
+        "draft_count": 21,
         "claim_boundary": "This tracker is a data-acquisition plan. It is not evidence of validation, does not change any IJHE readiness gate, and does not authorize contact or publication."
       }
     },

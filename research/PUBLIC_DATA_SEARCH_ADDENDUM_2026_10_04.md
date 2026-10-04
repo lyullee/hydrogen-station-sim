@@ -99,3 +99,15 @@ availability statement is not a licence for raw-data redistribution.
 The Zenodo tank deposit was also quarantined and inspected by archive hash; its
 embedded digitizations remain derivative context and are not counted as a new
 independent measured dataset.
+
+
+## 2026-10-04 Cal State LA experiment and SunHydro/HSDC follow-up
+
+Two additional real-world routes were registered after a source-level review:
+
+| Source | Evidence and limitation | Acquisition route |
+| --- | --- | --- |
+| [Cal State LA HRFF cascade/directly-pressurized experiments](https://doi.org/10.3390/en16155749) | Three real heavy-duty refuelling experiments are reported, including cascade/direct pressure endpoints and chiller/nozzle comparisons. The public article provides summaries and figures, not synchronized logger files or reuse terms. | [`research/CALSTATE_CASCADE_EXPERIMENT_DATA_REQUEST_DRAFT.md`](CALSTATE_CASCADE_EXPERIMENT_DATA_REQUEST_DRAFT.md) |
+| [DOE SunHydro final report](https://www.osti.gov/servlets/purl/1783792), [2015 AMR report](https://www.hydrogen.energy.gov/docs/hydrogenprogramlibraries/pdfs/review15/tv020_moulthrop_2015_o.pdf) and [NREL HSDC overview](https://www.nrel.gov/docs/fy12osti/54860.pdf) | Real SunHydro station operating data were collected and exported to HSDC, but detailed partner records are controlled and public products are aggregate. No synchronized station-to-vehicle raw archive is public. | [`research/SUNHYDRO_DATA_REQUEST_DRAFT.md`](SUNHYDRO_DATA_REQUEST_DRAFT.md) |
+
+Both routes are real-data acquisition leads. They do not close the independent full-loop gate until de-identified synchronized files, hashes, written reuse terms and the frozen no-fitting scoring protocol are available.

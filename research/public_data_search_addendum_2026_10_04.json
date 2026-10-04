@@ -88,9 +88,24 @@
       "scope": "real ZBT test-HRS sampling experiments; logged dispenser/tank channels reported and raw data available by author request",
       "raw_data_request_lead": "research/ZBT_METHYTRUCKS_DATA_REQUEST_DRAFT.md",
       "classification": "DATA_REQUEST_LEAD"
+    },
+    {
+        "id": "cal_state_la_cascade_2023_experiments",
+        "doi": "10.3390/en16155749",
+        "public_synchronized_raw_logger": false,
+        "scope": "three real Cal State LA HRFF cascade/directly-pressurized heavy-duty experiments with published endpoint and energy summaries",
+        "raw_data_request_lead": "research/CALSTATE_CASCADE_EXPERIMENT_DATA_REQUEST_DRAFT.md",
+        "classification": "DATA_REQUEST_LEAD"
+    },
+    {
+        "id": "sunhydro_hsdc_operating_data",
+        "public_synchronized_raw_logger": false,
+        "scope": "real SunHydro station operating-data programme exported to DOE/NREL HSDC; detailed partner data controlled",
+        "raw_data_request_lead": "research/SUNHYDRO_DATA_REQUEST_DRAFT.md",
+        "classification": "DATA_REQUEST_LEAD"
     }
   ],
   "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET",
   "gate_impact": "independent_full_loop_gate_remains_open",
-  "claim_boundary": "No source in this addendum is promoted to full-loop validation."
+  "claim_boundary": "Public reports and real-experiment summaries add credible provenance and request routes, but no synchronized station-to-vehicle raw archive with frozen reuse terms has been located; the independent full-loop gate remains open."
 }

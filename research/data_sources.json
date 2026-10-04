@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "checked_at": "2026-10-03",
+  "checked_at": "2026-10-04",
   "policy": "Raw third-party files are downloaded under data/public_validation/raw and are not committed or redistributed.",
   "sources": {
     "h2protocol_j2601_tables": {
@@ -457,6 +457,29 @@
         ]
       },
       "eligibility_note": "Independent physical HDVS tank pressure/thermal validation candidate. It can test the frozen tank submodel with measured inlet and mass boundaries, but cannot close the station-to-vehicle full-loop gate or establish field safety performance."
+    },
+    "calstate_la_cascade_direct_pressurized_2023": {
+      "title": "Experimental Comparison of Directly-Pressurized and Cascade H2 Refueling Methods for Heavy-Duty Applications",
+      "authors": "Cal State LA HRFF authors",
+      "publisher": "Energies / MDPI",
+      "landing_page": "https://www.mdpi.com/1996-1073/16/15/5749",
+      "doi": "10.3390/en16155749",
+      "license": "article access; raw-data reuse terms not identified",
+      "reported_experiment_count": 3,
+      "public_raw_data": false,
+      "reported_scope": "Real HRFF heavy-duty cascade and directly-pressurized experiments with pressure, fill amount, nozzle-temperature and chiller-energy summaries.",
+      "rights_note": "Request raw synchronized traces and written permission before derived publication or repository deposit.",
+      "eligibility_note": "Real experiment provenance and data-request lead only; not a full-loop holdout until raw traces and rights are frozen."
+    },
+    "sunhydro_hsdc_operating_archive": {
+      "title": "SunHydro station operating data exported to the DOE Hydrogen Secure Data Center",
+      "publisher": "U.S. DOE HFTO / SunHydro / NREL HSDC",
+      "landing_page": "https://www.osti.gov/servlets/purl/1783792",
+      "repository_page": "https://www.nrel.gov/docs/fy12osti/54860.pdf",
+      "public_raw_data": false,
+      "reported_scope": "Real station data acquisition and HSDC export covering production, storage, dispensing, energy, maintenance, reliability and safety/incident fields.",
+      "rights_note": "Detailed partner data are controlled; request a de-identified station-by-fill export and reuse terms.",
+      "eligibility_note": "Real station provenance and data-request route only; aggregate public products do not close the synchronized full-loop gate."
     }
   }
 }

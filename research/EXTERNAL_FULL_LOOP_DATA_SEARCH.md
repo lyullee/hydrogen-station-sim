@@ -1057,3 +1057,13 @@ receptacle pressure and temperature, mass flow or transferred mass,
 storage/cascade state, protocol mode, quality flags, aborted-fill labels and
 permission to publish derived metrics. Any approved files must be hashed and
 quarantined before numerical outcomes are inspected.
+
+
+## 2026-10-04 Cal State LA and SunHydro follow-up
+
+The follow-up register now includes two credible acquisition routes that remain outside the numerical holdout gate:
+
+- Cal State LA HRFF cascade/directly-pressurized experiments (DOI [10.3390/en16155749](https://doi.org/10.3390/en16155749)) provide three real heavy-duty events and endpoint/energy comparisons. The public article has no synchronized logger export or reuse terms. The request draft is [`research/CALSTATE_CASCADE_EXPERIMENT_DATA_REQUEST_DRAFT.md`](CALSTATE_CASCADE_EXPERIMENT_DATA_REQUEST_DRAFT.md).
+- DOE SunHydro reports ([final report](https://www.osti.gov/servlets/purl/1783792), [2015 AMR](https://www.hydrogen.energy.gov/docs/hydrogenprogramlibraries/pdfs/review15/tv020_moulthrop_2015_o.pdf)) document real station data exported to the NREL Hydrogen Secure Data Center. The HSDC overview ([NREL](https://www.nrel.gov/docs/fy12osti/54860.pdf)) states detailed partner data are controlled; public aggregate products are not synchronized station-to-vehicle raw traces. The request draft is [`research/SUNHYDRO_DATA_REQUEST_DRAFT.md`](SUNHYDRO_DATA_REQUEST_DRAFT.md).
+
+These additions improve provenance and acquisition coverage only. The independent full-loop gate remains open until a de-identified synchronized export, immutable hash, written reuse terms and frozen no-fitting scoring protocol are available.

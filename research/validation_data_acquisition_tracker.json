@@ -461,6 +461,60 @@
       "rights": "Record states CC BY-SA 4.0; verify derived-figure and repository-deposit scope before use.",
       "next_action": "Quarantine the archive, record its immutable digest, and prepare a consequence-only pre-outcome protocol before numerical inspection.",
       "claim_boundary": "This candidate can support release, detector or consequence submodels only; it cannot establish station controller or vehicle-fueling full-loop validity."
-    }
+    },
+{
+    "id": "calstate_la_cascade_direct_pressurized_experiments",
+    "draft": "research/CALSTATE_CASCADE_EXPERIMENT_DATA_REQUEST_DRAFT.md",
+    "source": "https://doi.org/10.3390/en16155749",
+    "candidate_type": "independent real HRFF cascade and directly-pressurized experiments",
+    "status": "request_draft_ready",
+    "requested_fields": [
+        "common_timestamp",
+        "vehicle_or_receptacle_pressure",
+        "dispenser_pressure",
+        "storage_bank_pressure",
+        "vehicle_and_gas_temperature",
+        "mass_flow_or_transferred_mass",
+        "initial_conditions",
+        "tank_capacity",
+        "cascade_selection",
+        "compressor_booster_state",
+        "precooler_state",
+        "valve_state",
+        "stop_abort_fault_markers",
+        "quality_calibration_metadata"
+    ],
+    "minimum_acceptance": "Raw synchronized traces for at least one cascade and one directly-pressurized run with run identifiers, initial conditions, capacity, protocol metadata and untouched holdout eligibility.",
+    "rights": "Cal State LA/author custodian must grant written permission for derived metrics, open-repository deposition and journal publication.",
+    "next_action": "Project owner reviews research/CALSTATE_CASCADE_EXPERIMENT_DATA_REQUEST_DRAFT.md, then contacts the HRFF custodian if authorised.",
+    "claim_boundary": "The paper confirms real experiments and reported endpoint/energy values, but no numerical validation claim is made until raw traces and reuse terms are frozen."
+},
+{
+    "id": "sunhydro_hsdc_operating_archive",
+    "draft": "research/SUNHYDRO_DATA_REQUEST_DRAFT.md",
+    "source": "https://www.osti.gov/servlets/purl/1783792",
+    "candidate_type": "real SunHydro station logger archive via DOE/NREL HSDC controlled access",
+    "status": "request_draft_ready",
+    "requested_fields": [
+        "common_timestamp",
+        "vehicle_or_receptacle_pressure",
+        "station_pressure",
+        "vehicle_tank_and_gas_temperature",
+        "mass_flow_or_transferred_mass",
+        "initial_conditions",
+        "tank_capacity",
+        "storage_bank_state",
+        "compressor_state",
+        "precooler_state",
+        "valve_state",
+        "stop_abort_fault_markers",
+        "maintenance_safety_incident_flags",
+        "quality_calibration_metadata"
+    ],
+    "minimum_acceptance": "A de-identified station-by-fill export with common time base, pressure, temperature and mass/flow channels plus initial conditions, capacity, protocol metadata, quality flags and provenance.",
+    "rights": "DOE/NREL HSDC or contributing SunHydro partner must document access, derived-publication and repository-deposition terms; public aggregate CDPs are insufficient.",
+    "next_action": "Project owner reviews research/SUNHYDRO_DATA_REQUEST_DRAFT.md and identifies the approved HSDC/SunHydro custodian before any contact.",
+    "claim_boundary": "DOE reports establish a real station data programme and HSDC deposit route, not an available public raw holdout; no validation claim changes until a frozen export is received."
+}
   ]
 }

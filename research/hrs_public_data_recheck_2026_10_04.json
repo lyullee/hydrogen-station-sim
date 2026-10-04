@@ -155,11 +155,62 @@
       "classification": "PUBLIC_REAL_HRS_DATA_REQUEST_LEAD",
       "full_loop_holdout_eligible": false,
       "finding": "The article says all dispenser and tank data were logged and its data-availability statement offers raw data on request; no public machine-readable trace or reuse terms were found. If released, this is a strong independent station-to-receptacle holdout candidate."
+    },
+    {
+        "id": "cal_state_la_cascade_2023_experiments",
+        "title": "Experimental Comparison of Directly-Pressurized and Cascade H2 Refueling Methods for Heavy-Duty Applications",
+        "publisher": "Cal State LA HRFF / Energies",
+        "doi": "10.3390/en16155749",
+        "urls": {
+            "article": "https://www.mdpi.com/1996-1073/16/15/5749",
+            "doi": "https://doi.org/10.3390/en16155749"
+        },
+        "real_experiment": true,
+        "reported_scope": "Three real HRFF heavy-duty refuelling experiments: approximately 1.6 kg per event, two directly-pressurized events near 550 and 710 bar, and one cascade event with storage near 800 bar and a vehicle near 55 bar.",
+        "reported_channels": [
+            "vehicle_pressure",
+            "storage_pressure",
+            "nozzle_temperature",
+            "ambient_temperature",
+            "mass_or_fill_amount",
+            "chiller_energy",
+            "cascade_or_direct_mode"
+        ],
+        "data_availability": "summary_and_figures_only",
+        "raw_common_timebase": false,
+        "classification": "PUBLIC_REAL_EXPERIMENT_SUMMARY_DATA_REQUEST_LEAD",
+        "full_loop_holdout_eligible": false,
+        "finding": "The article supplies credible real-experiment endpoints and energy/temperature comparisons, but its data-availability statement does not expose synchronized logger files, a channel dictionary or reuse terms. A dedicated raw-trace request is required before independent replay."
+    },
+    {
+        "id": "sunhydro_hsdc_operating_data",
+        "title": "SunHydro station operating data exported to the DOE Hydrogen Secure Data Center",
+        "publisher": "U.S. DOE Hydrogen and Fuel Cell Technologies Office / SunHydro",
+        "urls": {
+            "final_report": "https://www.osti.gov/servlets/purl/1783792",
+            "2015_amr_report": "https://www.hydrogen.energy.gov/docs/hydrogenprogramlibraries/pdfs/review15/tv020_moulthrop_2015_o.pdf",
+            "hsdc_overview": "https://www.nrel.gov/docs/fy12osti/54860.pdf"
+        },
+        "real_experiment": true,
+        "reported_scope": "SunHydro #1/#2 station data acquisition and export to the NREL Hydrogen Secure Data Center, including production, storage, dispensing, energy, maintenance, reliability and safety/incident fields.",
+        "reported_channels": [
+            "station_production",
+            "storage_and_dispensing",
+            "energy",
+            "maintenance",
+            "reliability",
+            "safety_incidents_or_leaks"
+        ],
+        "data_availability": "controlled_partner_access_or_aggregate_products",
+        "raw_common_timebase": false,
+        "classification": "PUBLIC_REAL_STATION_DATA_REQUEST_LEAD",
+        "full_loop_holdout_eligible": false,
+        "finding": "DOE reports establish real station logger provenance and an HSDC route, while the HSDC overview states detailed partner data are controlled and public products are aggregate. A de-identified synchronized station-by-fill export and written reuse terms are still required."
     }
   ],
   "recommended_next_step": {
-    "action": "Request de-identified synchronized traces and reuse terms from the ZBT/MetHyTrucks authors, DOE/NREL HITRF, DLR/FCH2RAIL, Cal State LA and 3Emotion operators.",
+    "action": "Request the Cal State LA experiment traces and the approved SunHydro/HSDC export route, together with ZBT/MetHyTrucks, DOE/NREL HITRF, DLR/FCH2RAIL and 3Emotion routes.",
     "freeze_rule": "If a raw file is received, quarantine it, hash it, freeze the model commit and scoring protocol before opening numerical outcomes."
   },
-  "claim_boundary": "These sources support operating-range, real-station provenance and model-structure context. None closes the project's untouched full-loop external-validation gate; do not present an aggregate, table-only CSV, author-request-only source or simulation-only source as synchronized measured HRS validation."
+  "claim_boundary": "These eight sources support operating-range, real-station and real-experiment provenance. The author-request-only source and controlled-access routes are not public holdouts; none closes the project's untouched full-loop external-validation gate."
 }

@@ -1964,14 +1964,16 @@
     "record": "research/hrs_public_data_recheck_2026_10_04.json",
     "decision": "PUBLIC_AGGREGATE_AND_EXPERIMENT_SUMMARIES_CONFIRMED_NO_NEW_FULL_LOOP_RAW",
     "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
-    "source_count": 6,
+    "source_count": 8,
     "source_ids": [
       "doe_h2iq_2024_hd_fast_flow",
       "csic_onsite_hrs_supplement",
       "caponi_3emotion_2022_operational_hrs",
       "dlr_fch2rail_2025_refueling",
       "cip_2020_35_70mpa_performance",
-      "zbt_methytrucks_2026_sampling_intercomparison"
+      "zbt_methytrucks_2026_sampling_intercomparison",
+      "cal_state_la_cascade_2023_experiments",
+      "sunhydro_hsdc_operating_data"
     ],
     "cip_2020_35_70mpa_performance": {
       "article": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
@@ -1989,7 +1991,21 @@
       "full_loop_holdout_eligible": false,
       "finding": "The article reports logged dispenser/tank data and raw data on request, but no public machine-readable archive or reuse terms were found."
     },
-    "claim_boundary": "The sources support operating-range and real-station provenance context, but none provides a new eligible synchronized raw full-loop holdout. The CIP table CSVs are summary exports rather than logger traces, and ZBT raw data are author-request-only."
+    "cal_state_la_cascade_2023_experiments": {
+      "doi": "10.3390/en16155749",
+      "classification": "PUBLIC_REAL_EXPERIMENT_SUMMARY_DATA_REQUEST_LEAD",
+      "full_loop_holdout_eligible": false,
+      "finding": "Three real HRFF cascade/directly-pressurized experiments are reported with endpoint and energy summaries; synchronized logger files and reuse terms are not publicly attached.",
+      "request_draft": "research/CALSTATE_CASCADE_EXPERIMENT_DATA_REQUEST_DRAFT.md"
+    },
+    "sunhydro_hsdc_operating_data": {
+      "url": "https://www.osti.gov/servlets/purl/1783792",
+      "classification": "PUBLIC_REAL_STATION_DATA_REQUEST_LEAD",
+      "full_loop_holdout_eligible": false,
+      "finding": "DOE reports real SunHydro station data acquisition and HSDC export, while detailed partner data are controlled and public products are aggregate; no public synchronized station-to-vehicle archive was found.",
+      "request_draft": "research/SUNHYDRO_DATA_REQUEST_DRAFT.md"
+    },
+    "claim_boundary": "The eight sources support real-station and real-experiment provenance context, but none provides a new eligible synchronized raw full-loop holdout; the gate remains open."
   },
   "public_station_context_refresh_2026_10_04": {
     "scope": "primary-source refresh for frequently cited public HRS data and model repositories",
@@ -2145,6 +2161,32 @@
         "classification": "PUBLIC_DERIVED_TANK_TEMPERATURE_CONTEXT_ONLY",
         "full_loop_holdout_eligible": false,
         "next_action": "Keep as a traceable literature-derived sensitivity lead; do not merge into the independent station holdout without separate provenance and a frozen non-fitting protocol."
+      },
+      {
+        "id": "cal_state_la_cascade_2023_experiments",
+        "title": "Experimental Comparison of Directly-Pressurized and Cascade H2 Refueling Methods for Heavy-Duty Applications",
+        "url": "https://www.mdpi.com/1996-1073/16/15/5749",
+        "reported_scope": "Three real HRFF heavy-duty refuelling experiments with endpoint and energy summaries.",
+        "public_artifact_inspection": {
+          "raw_logger_file_found": false,
+          "finding": "Summary and figures are public; synchronized logger files and reuse terms were not found."
+        },
+        "classification": "PUBLIC_REAL_EXPERIMENT_SUMMARY_DATA_REQUEST_LEAD",
+        "full_loop_holdout_eligible": false,
+        "request_draft": "research/CALSTATE_CASCADE_EXPERIMENT_DATA_REQUEST_DRAFT.md"
+      },
+      {
+        "id": "sunhydro_hsdc_operating_data",
+        "title": "SunHydro station operating data exported to DOE/NREL HSDC",
+        "url": "https://www.osti.gov/servlets/purl/1783792",
+        "reported_scope": "Real station data acquisition/export programme covering production, storage, dispensing and safety fields.",
+        "public_artifact_inspection": {
+          "raw_logger_file_found": false,
+          "finding": "Detailed partner data are controlled; public reports and HSDC products do not expose a synchronized station-to-vehicle raw archive."
+        },
+        "classification": "PUBLIC_REAL_STATION_DATA_REQUEST_LEAD",
+        "full_loop_holdout_eligible": false,
+        "request_draft": "research/SUNHYDRO_DATA_REQUEST_DRAFT.md"
       }
     ],
     "claim_boundary": "Neither source closes the independent full-loop numerical gate. A report-referenced workbook, aggregate logbook, plot or paper is not promoted to validation until synchronized raw files, immutable hashes, frozen scoring protocol and written reuse rights are available."
