@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "status": "public_article_checked_no_external_raw_dataset",
+  "source": {
+    "id": "hysafe_volume_estimation_2026_10_05",
+    "title": "Experimental Investigation of Volume Estimation Methods for Hydrogen Refueling Stations",
+    "doi": "10.58895/hysafe.59",
+    "url": "https://reference-global.com/article/10.58895/hysafe.59?tab=article",
+    "pdf": "https://reference-global.com/download/article/10.58895/hysafe.59.pdf",
+    "license": "CC BY 4.0 article; the article explicitly states that no additional external datasets are publicly available",
+    "decision": "REAL_STATION_EXPERIMENT_FIGURE_ONLY_DATA_REQUEST_LEAD",
+    "observed_scope": {
+      "facility": "Air Liquide Innovation Campus Delaware experimental HRS",
+      "reported_tests": 14,
+      "tank_cases": [
+        "Type IV 243.6 L, 700 bar, eight tests",
+        "Type IV 1520 L, 250 bar, six tests"
+      ],
+      "reported_channels": [
+        "dispenser pressure",
+        "dispenser temperature",
+        "mass flow",
+        "tank pressure",
+        "tank average temperature",
+        "ambient temperature"
+      ],
+      "raw_synchronized_rows": false,
+      "data_availability_statement": "The datasets generated and analyzed during the current study are available within the manuscript and its associated figures. No additional external datasets are publicly available.",
+      "article_pdf_sha256": "9cb50e20cb7ef41a8b3965a00ae94ebc224ceefd896d32483f2ddbe7e3ae9a9e"
+    },
+    "finding": "This is a high-value real HRS experiment and a strong acquisition lead, but the public article exposes figure/table data only and explicitly reports that no additional external datasets are publicly available.",
+    "use": "Cite for protocol and operating-range face validity; request the underlying synchronized logger export and written reuse terms before using any case as a frozen full-loop holdout."
+  },
+  "reproduction": {
+    "pdf_sha256": "9cb50e20cb7ef41a8b3965a00ae94ebc224ceefd896d32483f2ddbe7e3ae9a9e",
+    "local_reference": "tmp/hysafe59.pdf",
+    "text_reference": "tmp/hysafe59.txt",
+    "data_availability_match": true,
+    "note": "The data-availability sentence was extracted from the public PDF; no raw logger files were downloaded or treated as validation data."
+  },
+  "claim_boundary": "The source supports real-HRS experiment provenance and protocol/operating-range context only. It does not supply a public synchronized full-loop raw holdout and cannot close full_loop_external_validation."
+}

@@ -622,6 +622,26 @@
       "evidence_role": "Independent consequence-model thermal-effect screen only.",
       "eligibility_note": "Relevant to ignited-release thermal consequences and timing, but not a gaseous H70 station-to-vehicle full-loop holdout; it cannot establish site-specific separation distances, controller performance or emergency-response effectiveness.",
       "protocol": "research/thermal_effects_ignited_release_protocol_2026_10_04.json"
+    },
+    "hysafe_volume_estimation_2026": {
+      "title": "Experimental Investigation of Volume Estimation Methods for Hydrogen Refueling Stations",
+      "authors": [
+        "Rémi Gonin",
+        "Fouad Ammouri",
+        "David Vempaire",
+        "Bikram Roy Chowdhury",
+        "Bo Lu"
+      ],
+      "publisher": "Hydrogen Safety / KIT Scientific Publishing",
+      "landing_page": "https://reference-global.com/article/10.58895/hysafe.59?tab=article",
+      "doi": "10.58895/hysafe.59",
+      "report_url": "https://reference-global.com/download/article/10.58895/hysafe.59.pdf",
+      "license": "CC BY 4.0 article",
+      "public_raw_data": false,
+      "reported_scope": "Fourteen real HRS refueling tests at the Air Liquide Innovation Campus Delaware: eight Type IV 243.6 L/700 bar tests and six Type IV 1520 L/250 bar tests, with dispenser and tank pressure/temperature and mass-flow measurements.",
+      "rights_note": "The article states that the datasets are available within the manuscript and associated figures and that no additional external datasets are publicly available.",
+      "eligibility_note": "High-value real-HRS experiment and data-request lead; figure/table values are not a synchronized machine-readable holdout and cannot close full-loop validation.",
+      "access_record": "research/hysafe59_data_access_recheck_2026_10_05.json"
     }
   }
 }

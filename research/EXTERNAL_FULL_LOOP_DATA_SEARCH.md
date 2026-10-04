@@ -1268,6 +1268,12 @@ fitting. The exclusion is recorded alongside the five-candidate recheck in
 [`public_operational_benchmark_recheck_2026_10_05.json`](public_operational_benchmark_recheck_2026_10_05.json).
 
 
+## 2026-10-05 Air Liquide HRS volume-estimation experiment recheck
+
+The open-access Hydrogen Safety article [10.58895/hysafe.59](https://doi.org/10.58895/hysafe.59) reports fourteen real refueling tests at the Air Liquide Innovation Campus Delaware: eight tests on a 243.6 L/700 bar Type IV tank and six on a 1520 L/250 bar Type IV tank. The paper describes dispenser pressure/temperature, mass flow, tank pressure and tank-temperature measurements, so it is a high-value physical face-validity and acquisition lead.
+
+The public PDF was downloaded and hash recorded in [`research/hysafe59_data_access_recheck_2026_10_05.json`](hysafe59_data_access_recheck_2026_10_05.json). Its data-availability statement says that the data are available only within the manuscript and associated figures and that no additional external datasets are publicly available. Therefore it is not an eligible machine-readable synchronized holdout; request the logger export and written reuse terms before any confirmatory use.
+
 ## 2026-10-05 Ramea capacity archive recovered
 
 A file-level inspection located the public [Ramea hydrogen-station capacity repository](https://github.com/kramea/h2_station_capacity_data), associated with [DOI 10.1016/j.ijhydene.2019.05.053](https://doi.org/10.1016/j.ijhydene.2019.05.053). It contains 2,563 CSV files for 36 California stations from 2018-09-27 through 2018-12-18, with `Time`, `H35`, and `H70` capacity indicators at approximately 30-minute intervals. The repository has no explicit license field and no vehicle/receptacle pressure, temperature, mass-flow or protocol trace. It is therefore recorded as aggregate capacity/demand context only in [`ramea_station_capacity_repository_boundary_2026_10_05.json`](ramea_station_capacity_repository_boundary_2026_10_05.json); the independent full-loop validation gate remains open.
