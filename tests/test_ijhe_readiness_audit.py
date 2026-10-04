@@ -40,6 +40,14 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert mendeley["cc_by_4_present"] is True
     assert mendeley["simulation_only"] is True
     assert mendeley["full_loop_external_holdout_eligible"] is False
+    assert gates["multhyfuel_d24_public_experiment_integrity"]["status"] == "PASS"
+    multhyfuel = gates["multhyfuel_d24_public_experiment_integrity"]["observed"]
+    assert multhyfuel["pdf_pages"] >= 25
+    assert multhyfuel["jetfire_700bar_measured_flow_g_s"] == 40.0
+    assert multhyfuel["internal_700bar_0_2mm_flow_g_s"] == 9.0
+    assert multhyfuel["consequence_benchmark_eligible"] is True
+    assert multhyfuel["full_loop_station_vehicle_holdout_eligible"] is False
+    assert multhyfuel["saga_effectiveness_eligible"] is False
     assert gates["real_station_article_boundary_integrity"]["status"] == "PASS"
     field_article = gates["real_station_article_boundary_integrity"]["observed"]
     assert field_article["reported_sensor_count"] == 8

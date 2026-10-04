@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T18:44:44.241359+00:00",
+  "generated_at": "2026-10-04T19:01:05.786429+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 46,
+    "PASS": 47,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -1466,6 +1466,23 @@
         "cc_by_4_present": true,
         "simulation_only": true,
         "full_loop_external_holdout_eligible": false
+      }
+    },
+    {
+      "id": "multhyfuel_d24_public_experiment_integrity",
+      "status": "PASS",
+      "claim": "The public MultHyFuel D2.4 mock-up dispenser experiments provide traceable consequence benchmarks without being misrepresented as full-loop or SAGA validation.",
+      "evidence": "research\\multhyfuel_d24_public_experiment_recheck_2026_10_05.json",
+      "requirement": "HTTP 200 PDF digest, 25-page source, experimental setup/page anchors, measured jet-fire/internal-cloud values and explicit full-loop/SAGA exclusions.",
+      "observed": {
+        "pdf_sha256": "30765fd1512a8a6faadaa098d373417efd0519362487f14d29ccd6626b2bee7c",
+        "pdf_pages": 25,
+        "jetfire_700bar_measured_flow_g_s": 40.0,
+        "jetfire_700bar_flame_length_m_min": 5.0,
+        "internal_700bar_0_2mm_flow_g_s": 9.0,
+        "consequence_benchmark_eligible": true,
+        "full_loop_station_vehicle_holdout_eligible": false,
+        "saga_effectiveness_eligible": false
       }
     },
     {

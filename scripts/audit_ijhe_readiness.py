@@ -1057,6 +1057,49 @@ def audit(root: Path) -> dict[str, object]:
         } if mendeley else "missing; Mendeley HRS metadata boundary recheck has not run",
     ))
 
+    multhyfuel_path = root / "research/multhyfuel_d24_public_experiment_recheck_2026_10_05.json"
+    multhyfuel = _json(multhyfuel_path)
+    multhyfuel_download = (multhyfuel or {}).get("download") or {}
+    multhyfuel_measurements = (multhyfuel or {}).get("reported_measurements") or {}
+    multhyfuel_anchors = (multhyfuel or {}).get("page_anchors") or {}
+    multhyfuel_eligibility = (multhyfuel or {}).get("eligibility_decision") or {}
+    multhyfuel_pass = bool(
+        (multhyfuel or {}).get("schema_version") == 1
+        and (multhyfuel or {}).get("status") == "PUBLIC_MULTHYFUEL_D24_EXPERIMENT_RECHECKED"
+        and (multhyfuel or {}).get("evidence_role") == "public_dispenser_consequence_experiment"
+        and multhyfuel_download.get("http_status") == 200
+        and multhyfuel_download.get("content_type") == "application/pdf"
+        and multhyfuel_download.get("sha256_matches_expected") is True
+        and multhyfuel_download.get("pdf_pages", 0) >= 25
+        and all(multhyfuel_anchors.values())
+        and multhyfuel_measurements.get("jetfire_700bar_measured_flow_g_s") == 40.0
+        and multhyfuel_measurements.get("jetfire_700bar_measured_flame_length_m_min") >= 5.0
+        and multhyfuel_measurements.get("internal_700bar_0_2mm_flow_g_s") == 9.0
+        and multhyfuel_measurements.get("internal_700bar_0_2mm_max_h2_percent") == 25.0
+        and multhyfuel_eligibility.get("public_experiment_verified") is True
+        and multhyfuel_eligibility.get("consequence_benchmark_eligible") is True
+        and multhyfuel_eligibility.get("full_loop_station_vehicle_holdout_eligible") is False
+        and multhyfuel_eligibility.get("saga_effectiveness_eligible") is False
+        and bool((multhyfuel or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "multhyfuel_d24_public_experiment_integrity",
+        "PASS" if multhyfuel_pass else ("FAIL" if multhyfuel else "PENDING"),
+        "The public MultHyFuel D2.4 mock-up dispenser experiments provide traceable consequence benchmarks without being misrepresented as full-loop or SAGA validation.",
+        str(multhyfuel_path.relative_to(root)),
+        "HTTP 200 PDF digest, 25-page source, experimental setup/page anchors, measured jet-fire/internal-cloud values and explicit full-loop/SAGA exclusions.",
+        {
+            "pdf_sha256": multhyfuel_download.get("sha256"),
+            "pdf_pages": multhyfuel_download.get("pdf_pages"),
+            "jetfire_700bar_measured_flow_g_s": multhyfuel_measurements.get("jetfire_700bar_measured_flow_g_s"),
+            "jetfire_700bar_flame_length_m_min": multhyfuel_measurements.get("jetfire_700bar_measured_flame_length_m_min"),
+            "internal_700bar_0_2mm_flow_g_s": multhyfuel_measurements.get("internal_700bar_0_2mm_flow_g_s"),
+            "consequence_benchmark_eligible": multhyfuel_eligibility.get("consequence_benchmark_eligible"),
+            "full_loop_station_vehicle_holdout_eligible": multhyfuel_eligibility.get("full_loop_station_vehicle_holdout_eligible"),
+            "saga_effectiveness_eligible": multhyfuel_eligibility.get("saga_effectiveness_eligible"),
+        } if multhyfuel else "missing; MultHyFuel public experiment recheck has not run",
+    ))
+
     accidental_ignition_path = root / "research/accidental_self_ignition_public_evidence_2026_10_04.json"
     accidental_ignition = _json(accidental_ignition_path)
     accidental_source = (accidental_ignition or {}).get("source") or {}

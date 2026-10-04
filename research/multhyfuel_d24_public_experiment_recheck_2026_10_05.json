@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "rechecked_at_utc": "2026-10-04T19:01:05.658232+00:00",
+  "status": "PUBLIC_MULTHYFUEL_D24_EXPERIMENT_RECHECKED",
+  "source": {
+    "title": "MultHyFuel D2.4 Fire and explosion hazard assessment summary report",
+    "url": "https://multhyfuel.eu/images/event-documents/deliverables/MultHyFuel%20D2.4%20-%20Fire%20and%20explosion%20hazard%20assessment%20summary%20report%20-%20Final.pdf",
+    "publisher": "MultHyFuel / Clean Hydrogen Partnership",
+    "deliverable": "D2.4",
+    "public_report": true
+  },
+  "download": {
+    "http_status": 200,
+    "content_type": "application/pdf",
+    "bytes": 1491375,
+    "sha256": "30765fd1512a8a6faadaa098d373417efd0519362487f14d29ccd6626b2bee7c",
+    "expected_sha256": "30765fd1512a8a6faadaa098d373417efd0519362487f14d29ccd6626b2bee7c",
+    "sha256_matches_expected": true,
+    "pdf_pages": 25
+  },
+  "evidence_role": "public_dispenser_consequence_experiment",
+  "experimental_setup": {
+    "device": "mock-up high-pressure H2 dispenser",
+    "reservoir": "two 50 L cylinders at 350/700 bar",
+    "instrumentation": [
+      "pressure transducers",
+      "thermocouples",
+      "heat-flux gauges",
+      "standard/IR/high-speed cameras",
+      "hydrogen concentration measurements"
+    ],
+    "reported_scenarios": [
+      "TT1-TT3",
+      "TT4-TT13",
+      "TT18",
+      "TT20",
+      "TT22"
+    ]
+  },
+  "reported_measurements": {
+    "component_leak_range_g_s": [
+      1.0,
+      30.0
+    ],
+    "broken_hose_order_of_magnitude_g_s": 100.0,
+    "jetfire_700bar_measured_flow_g_s": 40.0,
+    "jetfire_300bar_measured_flow_g_s": 20.0,
+    "jetfire_700bar_measured_flame_length_m_min": 5.0,
+    "jetfire_300bar_measured_flame_length_m": 4.0,
+    "jetfire_measured_temperature_c": 1200.0,
+    "internal_700bar_0_2mm_flow_g_s": 9.0,
+    "internal_700bar_0_2mm_max_h2_percent": 25.0,
+    "internal_350bar_0_2mm_flow_g_s": 4.5,
+    "internal_350bar_0_2mm_max_h2_percent": 20.0,
+    "internal_700bar_0_5mm_flow_g_s": 16.0,
+    "internal_700bar_0_5mm_max_h2_percent": 50.0,
+    "inside_ignition_overpressure_mbar": {
+      "inside": 626.0,
+      "1_2m": 134.0,
+      "2_4m": 85.0,
+      "5m": 20.0
+    },
+    "outside_ignition_overpressure_mbar": {
+      "inside": 50.0,
+      "1_2m": 1.0,
+      "2_4m": 7.0,
+      "5m": 4.0
+    },
+    "external_fire_duration_min": 15.0
+  },
+  "page_anchors": {
+    "executive_summary_page_2": true,
+    "experimental_setup_page_11": true,
+    "jetfire_results_page_13": true,
+    "internal_release_results_page_14": true,
+    "overpressure_results_page_15": true,
+    "safety_barrier_timing_page_18": true,
+    "scenario_matrix_present": true
+  },
+  "eligibility_decision": {
+    "public_experiment_verified": true,
+    "consequence_benchmark_eligible": true,
+    "full_loop_station_vehicle_holdout_eligible": false,
+    "saga_effectiveness_eligible": false,
+    "allowed_use": [
+      "external HRS dispenser release/jet-fire benchmark",
+      "internal-cloud overpressure and concentration scenario grounding",
+      "independent safety-barrier timing and venting context"
+    ],
+    "prohibited_use": [
+      "station-to-vehicle transaction validation",
+      "SAGA effectiveness or operator-outcome validation",
+      "post-hoc parameter fitting",
+      "site-specific safety-distance certification"
+    ]
+  },
+  "claim_boundary": "The public report provides measured mock-up dispenser release, jet-fire, internal concentration and overpressure evidence. It supports an external consequence benchmark, but contains no synchronized real-station/vehicle transaction trace and cannot close the full-loop or SAGA-effectiveness gates."
+}
