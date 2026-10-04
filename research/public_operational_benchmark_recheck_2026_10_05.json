@@ -26,6 +26,24 @@
   },
   "candidates": [
     {
+      "id": "ramea_2019_public_capacity_repository_2026",
+      "title": "Hydrogen Refueling Station Capacity Dataset for California",
+      "doi": "10.1016/j.ijhydene.2019.05.053",
+      "url": "https://github.com/kramea/h2_station_capacity_data",
+      "license": "No explicit repository license field observed; reuse permission unresolved",
+      "decision": "PUBLIC_AGGREGATE_STATION_CAPACITY_CONTEXT_ONLY",
+      "observed_scope": {
+        "station_directories": 36,
+        "csv_files": 2563,
+        "date_range": "2018-09-27 through 2018-12-18",
+        "nominal_sampling": "approximately 30-minute intervals (README)",
+        "columns": ["Time", "H35", "H70"],
+        "raw_synchronized_vehicle_trace": false
+      },
+      "finding": "The public repository contains real California station capacity/availability indicator files, but no synchronized vehicle/receptacle pressure, temperature or mass-flow rows, protocol metadata or explicit reuse license.",
+      "use": "Aggregate demand and capacity face-validity context plus a data-request lead; do not use as a full-loop holdout, calibration source or redistributable dataset until rights are clarified."
+    },
+    {
       "id": "bam_keti_hrs_anomaly_platform_2026",
       "title": "Data-Driven Intelligent Analysis System for Monitoring and Anomaly Detection in Hydrogen Refueling Station",
       "doi": "10.3390/app16157856",

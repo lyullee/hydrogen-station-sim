@@ -26,6 +26,16 @@
   },
   "candidates": [
     {
+      "id": "ramea_2019_public_capacity_repository_2026",
+      "title": "Hydrogen Refueling Station Capacity Dataset for California",
+      "doi": "10.1016/j.ijhydene.2019.05.053",
+      "url": "https://github.com/kramea/h2_station_capacity_data",
+      "license": "No explicit repository license field observed",
+      "decision": "PUBLIC_AGGREGATE_STATION_CAPACITY_CONTEXT_ONLY",
+      "finding": "File-level inspection found 2,563 CSV files for 36 California stations, 2018-09-27 through 2018-12-18, with approximately 30-minute Time/H35/H70 capacity indicators. No synchronized vehicle pressure, temperature, mass flow or protocol trace is public.",
+      "reuse_status": "Cite and link only until data dictionary and written reuse terms are clarified; excluded from physical full-loop validation."
+    },
+    {
       "id": "mendeley_hrs_refueling_performance_2026_10_05",
       "title": "HRSs refueling perfromance Data sets",
       "doi": "10.17632/mnjs94yzfc.1",

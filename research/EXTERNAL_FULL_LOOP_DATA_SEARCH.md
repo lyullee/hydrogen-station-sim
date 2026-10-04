@@ -1254,3 +1254,8 @@ supplement rather than a measured station logger archive. It therefore remains
 explicitly excluded from the physical holdout and cannot be used for parameter
 fitting. The exclusion is recorded alongside the five-candidate recheck in
 [`public_operational_benchmark_recheck_2026_10_05.json`](public_operational_benchmark_recheck_2026_10_05.json).
+
+
+## 2026-10-05 Ramea capacity archive recovered
+
+A file-level inspection located the public [Ramea hydrogen-station capacity repository](https://github.com/kramea/h2_station_capacity_data), associated with [DOI 10.1016/j.ijhydene.2019.05.053](https://doi.org/10.1016/j.ijhydene.2019.05.053). It contains 2,563 CSV files for 36 California stations from 2018-09-27 through 2018-12-18, with `Time`, `H35`, and `H70` capacity indicators at approximately 30-minute intervals. The repository has no explicit license field and no vehicle/receptacle pressure, temperature, mass-flow or protocol trace. It is therefore recorded as aggregate capacity/demand context only in [`ramea_station_capacity_repository_boundary_2026_10_05.json`](ramea_station_capacity_repository_boundary_2026_10_05.json); the independent full-loop validation gate remains open.

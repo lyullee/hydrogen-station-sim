@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "scope": "File-level inspection of the public Ramea hydrogen-station capacity repository",
+  "source": {
+    "repository": "https://github.com/kramea/h2_station_capacity_data",
+    "description": "Hydrogen Refueling Station Capacity Dataset for California",
+    "author": "Kalai Ramea / Palo Alto Research Center",
+    "head_commit": "ef8ed86a650a8c9bed0719fda01bafaa8811111e",
+    "head_commit_date": "2019-01-30T21:24:29Z",
+    "repository_updated": "2019-01-31T04:04:47Z",
+    "citation": "https://doi.org/10.1016/j.ijhydene.2019.05.053",
+    "sample_file": "data/anaheim/anaheim_09-27-2018.csv",
+    "sample_blob_sha": "e3315f34acc59f15ee7b96c99ecb5ed0971dddcc",
+    "sample_download": "https://raw.githubusercontent.com/kramea/h2_station_capacity_data/master/data/anaheim/anaheim_09-27-2018.csv"
+  },
+  "observed_archive": {
+    "csv_file_count": 2563,
+    "station_directory_count": 36,
+    "date_min": "2018-09-27",
+    "date_max": "2018-12-18",
+    "nominal_sampling": "approximately 30-minute intervals (README); repository description says hourly",
+    "columns": [
+      "Time",
+      "H35",
+      "H70"
+    ],
+    "observed_signal": "remaining/available station capacity percentage or capacity indicator; no direct mass-flow channel",
+    "station_directories": [
+      "anaheim",
+      "campbell",
+      "costa-mesa",
+      "del-mar",
+      "diamond-bar",
+      "emeryville-upgrade",
+      "fairfax-la",
+      "fremont",
+      "harris-ranch",
+      "hayward",
+      "hollywood",
+      "la-canada-flintridge",
+      "lake-forest",
+      "lake-tahoe-truckee",
+      "lawndale",
+      "long-beach",
+      "mill-valley",
+      "mountain-view",
+      "newport-beach",
+      "ontario",
+      "playa-del-rey",
+      "riverside-0",
+      "san-jose",
+      "san-juan-capistrano",
+      "san-ramon",
+      "santa-barbara",
+      "santa-monica-0",
+      "saratoga",
+      "south-pasadena",
+      "south-san-francisco",
+      "thousand-oaks",
+      "torrance-0",
+      "uc-irvine",
+      "west-la",
+      "west-sacramento",
+      "woodland-hills"
+    ]
+  },
+  "rights": {
+    "repository_license_field": null,
+    "observed_license_notice": false,
+    "decision": "Do not redistribute the CSV archive inside this project; cite/link the public repository and request written reuse terms before derived-publication redistribution."
+  },
+  "eligibility_decision": {
+    "decision": "PUBLIC_AGGREGATE_STATION_CAPACITY_CONTEXT_ONLY",
+    "full_loop_holdout": false,
+    "reason": "The archive has no common station-to-vehicle event time base, vehicle/receptacle pressure, vehicle/tank temperature or mass-flow/transferred-mass trace, protocol metadata or explicit repository reuse license.",
+    "valid_uses": [
+      "aggregate demand and availability face-validity context",
+      "capacity depletion/recovery scenario envelope",
+      "data-request lead to the original custodian"
+    ],
+    "excluded_uses": [
+      "independent thermodynamic full-loop validation",
+      "calibration or tuning of the production fueling model",
+      "claim of real-station pressure/temperature/mass-flow agreement"
+    ]
+  },
+  "claim_boundary": "This is a real-station aggregate capacity resource and improves operating-context evidence, but it does not close the independent full-loop validation gate or support an IJHE-level validation claim by itself.",
+  "next_action": "Retain the source link and citation, ask the custodian for the data dictionary, exact capacity semantics, station metadata and reuse terms, and keep the frozen full-loop holdout protocol unchanged."
+}

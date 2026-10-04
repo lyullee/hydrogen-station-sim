@@ -12,7 +12,7 @@ def test_operational_benchmark_recheck_preserves_raw_trace_boundary():
     )
     assert record["result"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
     assert record["gate_impact"] == "full_loop_external_validation_remains_open"
-    assert len(record["candidates"]) == 8
+    assert len(record["candidates"]) == 9
     assert all(
         item["decision"] != "FULL_LOOP_HOLDOUT" for item in record["candidates"]
     )
@@ -94,3 +94,19 @@ def test_recheck_records_carb_field_report_without_promoting_it_to_raw_holdout()
     assert item["decision"] == "REAL_STATION_TEST_REPORT_ONLY"
     assert item["observed_scope"]["raw_synchronized_rows"] is False
     assert "dispenser data logs" in item["finding"]
+
+
+def test_recheck_records_ramea_capacity_archive_as_aggregate_only():
+    record = json.loads(
+        (ROOT / "research/public_operational_benchmark_recheck_2026_10_05.json")
+        .read_text(encoding="utf-8")
+    )
+    item = next(
+        candidate for candidate in record["candidates"]
+        if candidate["id"] == "ramea_2019_public_capacity_repository_2026"
+    )
+    assert item["decision"] == "PUBLIC_AGGREGATE_STATION_CAPACITY_CONTEXT_ONLY"
+    assert item["observed_scope"]["station_directories"] == 36
+    assert item["observed_scope"]["csv_files"] == 2563
+    assert item["observed_scope"]["raw_synchronized_vehicle_trace"] is False
+    assert "explicit reuse license" in item["finding"]

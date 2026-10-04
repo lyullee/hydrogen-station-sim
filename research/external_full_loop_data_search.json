@@ -343,13 +343,14 @@
       "doi": "10.1016/j.ijhydene.2019.05.053",
       "url": "https://www.sciencedirect.com/science/article/pii/S0360319919318841",
       "publisher": "International Journal of Hydrogen Energy",
-      "public_raw_data": false,
-      "decision": "REQUEST_OR_LOCATE_DATASET",
+      "public_raw_data": true,
+      "public_repository": "https://github.com/kramea/h2_station_capacity_data",
+      "decision": "PUBLIC_AGGREGATE_DATASET_COMPONENT_ONLY",
       "inspection": {
-        "finding": "The paper states that a three-month hourly station-capacity dataset for California stations was released to the research community. The article and indexed public copies identify the dataset but no working downloadable archive was located in the current repository/web search.",
-        "available_resolution": "hourly station capacity/utilization, not synchronized vehicle pressure-temperature-mass-flow",
-        "role": "Aggregate station-availability and demand context only unless the authors provide the archive and metadata.",
-        "claim_limit": "Even if recovered, this dataset cannot close the thermodynamic full-loop gate because it lacks vehicle/receptacle pressure, temperature and mass-flow traces."
+        "finding": "A public GitHub archive was located with 2,563 CSV files for 36 California stations spanning 2018-09-27 through 2018-12-18. The README describes approximately 30-minute H35/H70 capacity indicators; the repository has no explicit license field.",
+        "available_resolution": "approximately 30-minute station capacity/availability indicators, not synchronized vehicle pressure-temperature-mass-flow",
+        "role": "Aggregate station-availability, demand and capacity-depletion context only; request data dictionary and reuse permission.",
+        "claim_limit": "This archive cannot close the thermodynamic full-loop gate because it lacks common station-to-vehicle event time, vehicle/receptacle pressure, temperature and mass-flow traces, protocol metadata and explicit reuse terms."
       }
     },
     {
