@@ -11,6 +11,6 @@ from audit_validation_data_acquisition_tracker import audit  # noqa: E402
 def test_external_data_tracker_is_complete_and_non_evidentiary():
     report = audit(ROOT / "research/validation_data_acquisition_tracker.json")
     assert report["status"] == "PASS"
-    assert report["candidate_count"] == 20
-    assert report["request_draft_count"] >= 18
+    assert report["candidate_count"] == 21
+    assert report["request_draft_count"] >= 19
     assert "not evidence" in report["claim_boundary"].lower()

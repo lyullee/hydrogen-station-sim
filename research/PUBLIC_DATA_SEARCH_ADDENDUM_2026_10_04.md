@@ -16,6 +16,7 @@ that rule.
 | [Hydrogen dispersion experiment, DOI 10.23642/USN.26117989](https://doi.org/10.23642/USN.26117989) | Release mass flow, filling pressure and 29 hydrogen-concentration channels | Consequence-model candidate, not HRS full loop |
 | [H2-Stations API](https://docs.h2-stations.eu/for-data-users/) | Licensed station inventory, availability and selected storage/usage status | Station status data, not synchronized transient logger data |
 | [NREL H2IQ high-flow experiment](https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf) | Real high-flow operating-range plots and summary values | Plot/aggregate benchmark; raw trace request required |
+| [PRHYDE/ZBT D6.7](https://lbst.de/wp-content/uploads/2023/04/PRHYDE_Deliverable-D6-7_Results_as_Input_for_Standardisation_V1-2_final_Apr_2023.pdf) | Public report tables for 35/50/70 MPa ZBT tests and a stated 2 Hz PLC logger | Public report/data-request lead; raw synchronized export and reuse terms still required |
 
 ## Decision
 

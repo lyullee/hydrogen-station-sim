@@ -418,6 +418,28 @@
       "rights": "No public raw-data licence identified; require written permission for derived metrics and figures.",
       "next_action": "Project-owner review of research/GTI_DATA_REQUEST_DRAFT.md, then contact the custodian if authorised.",
       "claim_boundary": "Report provenance and a data-request lead only until an untouched export is received and prospectively scored."
+    },
+    {
+      "id": "prhyde_zbt_h70_h35_tests",
+      "draft": "research/PRHYDE_DATA_REQUEST_DRAFT.md",
+      "source": "https://lbst.de/wp-content/uploads/2023/04/PRHYDE_Deliverable-D6-7_Results_as_Input_for_Standardisation_V1-2_final_Apr_2023.pdf",
+      "candidate_type": "independent ZBT PRHYDE 35/50/70 MPa refuelling tests",
+      "status": "request_draft_ready",
+      "requested_fields": [
+        "common_timestamp",
+        "vehicle_or_receptacle_pressure",
+        "tank_temperature",
+        "dispenser_pressure",
+        "delivery_temperature",
+        "mass_flow_or_transferred_mass",
+        "tank_geometry",
+        "protocol_and_stop_state",
+        "calibration_and_quality_flags"
+      ],
+      "minimum_acceptance": "De-identified machine-readable synchronized logger files for complete fills with tank capacity, initial conditions, protocol metadata and at least one independent pressure/temperature/flow boundary.",
+      "rights": "PRHYDE/ZBT data custodian must confirm research reuse, derived-publication and repository-deposit terms.",
+      "next_action": "Send the prepared request to the PRHYDE/ZBT test-field data custodian identified from the D6.7 report.",
+      "claim_boundary": "The public D6.7 report and tables are provenance and request evidence only; no full-loop validation claim is allowed until raw files pass the prospective intake and scoring gates."
     }
   ]
 }

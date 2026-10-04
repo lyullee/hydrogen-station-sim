@@ -55,6 +55,14 @@
       "public_synchronized_raw_logger": false,
       "scope": "real high-flow experiment summary and plots",
       "classification": "PLOT_AGGREGATE_ONLY"
+    },
+    {
+      "id": "prhyde_zbt_d67",
+      "doi": null,
+      "public_synchronized_raw_logger": false,
+      "scope": "PRHYDE D6.7 report with ZBT 35/50/70 MPa test tables and stated 2 Hz PLC logging",
+      "raw_data_request_lead": "research/PRHYDE_DATA_REQUEST_DRAFT.md",
+      "classification": "PUBLIC_REPORT_DATA_REQUEST_LEAD"
     }
   ],
   "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET",
