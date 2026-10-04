@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from io import BytesIO
+import hashlib
+import json
 from pathlib import Path
 import zipfile
 
@@ -335,3 +337,46 @@ def test_dispersion_detector_logic_reports_sensor_coverage_and_latency():
     assert result["trip"]["detected_sensor_count"] == 2
     assert result["alarm"]["first_detection_after_fill_start_s"] == pytest.approx(0.5)
     assert result["trip"]["first_detection_after_fill_start_s"] == pytest.approx(1.0)
+
+
+def test_frozen_dispersion_detector_artifact_matches_the_public_archives():
+    """Keep the published detector-logic evidence tied to the checked-in bytes.
+
+    This is deliberately a bounded integrity check: it verifies that the
+    aggregate reported in the frozen artifact is reproducible from the public
+    archives, but it does not promote the open-channel experiment to a full
+    hydrogen-refuelling-station validation set.
+    """
+    root = Path(__file__).resolve().parents[1]
+    artifact = json.loads(
+        (root / "research/dispersion_detector_logic_validation.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    raw = root / "data/public_validation/raw/hydrogen_dispersion_channel"
+    archives = sorted(raw.glob("*.zip"))
+    manifest = artifact["source"]["archive_manifest"]
+
+    assert artifact["status"] == "completed_bounded_instrumented_detector_logic_evidence"
+    assert artifact["evidence_role"] == "instrumented_detector_logic_evidence"
+    assert artifact["aggregate"] == {
+        "case_count": 22,
+        "sensor_count_per_case": [29],
+        "cases_with_alarm_detection": 22,
+        "cases_with_trip_detection": 22,
+        "mean_alarm_sensor_coverage_fraction": pytest.approx(0.8871473354231975),
+        "mean_trip_sensor_coverage_fraction": pytest.approx(0.8087774294670846),
+        "median_first_alarm_after_fill_start_s": pytest.approx(10.674999999995634),
+        "median_first_trip_after_fill_start_s": pytest.approx(10.674999999995634),
+    }
+    assert len(archives) == len(manifest) == 22
+
+    actual = []
+    for archive in archives:
+        digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+        actual.append({
+            "name": archive.name,
+            "bytes": archive.stat().st_size,
+            "sha256": digest,
+        })
+    assert actual == manifest
