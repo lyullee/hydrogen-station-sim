@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-10-04T04:45:37.160500+00:00",
+  "generated_at_utc": "2026-10-04T11:15:26.235344+00:00",
   "status": "qualitative_traceability_only",
   "source": {
     "inventory": "research/hiad_hrs_public_evidence.json",
@@ -11,7 +11,7 @@
   },
   "playbook_catalog": {
     "path": "src/h2station/data/emergency_playbooks.json",
-    "catalog_sha256": "21599382bacb42693d462c1d41f856693fe8c1f5790a387d522cfa0946439751",
+    "catalog_sha256": "68a2a847ae4d7c2ce1aab10d626ffd7595457231f182e3d2bb8b5a2fb73592b0",
     "plan_count": 16,
     "candidate_rule_version": "metadata-keyword-v2-positive-effect"
   },

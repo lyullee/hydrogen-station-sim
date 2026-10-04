@@ -17,6 +17,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert traceability["covered_case_count"] == 34
     assert traceability["contract_pass"] is True
     assert "does not judge incident actions" in traceability["claim_limit"]
+    accident_inventory = idle["response_evidence"]["public_accident_report_inventory"]
+    assert accident_inventory["public_report_count"] == 23
+    assert accident_inventory["incident_code_count"] == 26
+    assert accident_inventory["precaution_report_count"] == 8
+    assert accident_inventory["raw_pdf_mirrored"] is False
+    assert accident_inventory["qualitative_scenario_grounding"] is True
 
     result = {"node_id": "N09", "node_name": "고압 저장뱅크",
               "calculation_status": "calculated",

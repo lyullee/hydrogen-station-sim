@@ -49,6 +49,10 @@
     "HIAD2026": {
       "title": "European Commission JRC, European Hydrogen Incidents and Accidents Database (HIAD 2.2)",
       "url": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt"
+    },
+    "KHK_PUBLIC": {
+      "title": "KHK, Hydrogen-related accident information and hydrogen-station high-pressure-gas precautions",
+      "url": "https://www.khk.or.jp/hydrogen/accident_information.html"
     }
   },
   "common_response": [
@@ -91,7 +95,8 @@
         "H2_STATION",
         "EIGA2024",
         "H2_PLAN",
-        "HIAD2026"
+        "HIAD2026",
+        "KHK_PUBLIC"
       ]
     },
     {
@@ -126,7 +131,8 @@
         "H2_INCIDENT",
         "ERG115",
         "EIGA2024",
-        "HIAD2026"
+        "HIAD2026",
+        "KHK_PUBLIC"
       ]
     },
     {
@@ -161,7 +167,8 @@
         "EIGA2024",
         "ERG115",
         "H2_PLAN",
-        "HIAD2026"
+        "HIAD2026",
+        "KHK_PUBLIC"
       ]
     },
     {
@@ -194,7 +201,8 @@
         "H2_STATION",
         "H2_PLAN",
         "H2_OPS",
-        "HIAD2026"
+        "HIAD2026",
+        "KHK_PUBLIC"
       ]
     },
     {
@@ -228,7 +236,8 @@
         "H2_PLAN",
         "EIGA2024",
         "ERG115",
-        "HIAD2026"
+        "HIAD2026",
+        "KHK_PUBLIC"
       ]
     },
     {
@@ -260,7 +269,8 @@
       "sources": [
         "H2_PLAN",
         "H2_LEAK",
-        "HIAD2026"
+        "HIAD2026",
+        "KHK_PUBLIC"
       ]
     },
     {
@@ -291,7 +301,8 @@
       "sources": [
         "H2_PLAN",
         "H2_LEAK",
-        "HIAD2026"
+        "HIAD2026",
+        "KHK_PUBLIC"
       ]
     },
     {
@@ -322,7 +333,8 @@
       "sources": [
         "H2_PLAN",
         "H2_LEAK",
-        "HIAD2026"
+        "HIAD2026",
+        "KHK_PUBLIC"
       ]
     },
     {
@@ -385,7 +397,8 @@
       "sources": [
         "H2_PLAN",
         "H2_STATION",
-        "HIAD2026"
+        "HIAD2026",
+        "KHK_PUBLIC"
       ]
     },
     {
@@ -472,7 +485,8 @@
       "sources": [
         "H2_PLAN",
         "EIGA2024",
-        "ERG115"
+        "ERG115",
+        "KHK_PUBLIC"
       ]
     },
     {
@@ -532,7 +546,8 @@
       "sources": [
         "H2_PLAN",
         "H2_LEAK",
-        "HIAD2026"
+        "HIAD2026",
+        "KHK_PUBLIC"
       ]
     },
     {
@@ -562,7 +577,8 @@
       "sources": [
         "H2_PLAN",
         "EIGA2024",
-        "HIAD2026"
+        "HIAD2026",
+        "KHK_PUBLIC"
       ]
     }
   ]

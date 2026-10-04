@@ -21,6 +21,9 @@ contains:
   included per condition and in an aggregate source list;
 - public HIAD action-to-playbook traceability metadata with an explicit
   non-efficacy claim boundary;
+- public KHK accident-report inventory metadata (23 linked reports, 26 incident
+  codes and 8 precaution reports) with citation-only rights and no mirrored PDF
+  text;
 - impact calculation state: `not_requested`, `attempted_no_result`, or
   `calculated`;
 - calculated impact basis, input sensor tags, model outputs and threshold
@@ -49,9 +52,9 @@ The tests verify that normal monitoring keeps impact calculation marked as
 results and input tags, non-finite values are discarded, the main and sensor
 assistant routes remain isolated, and a generated answer cannot negate a
 confirmed alarm, gas observation, physical leak or calculated impact.
-The manifest digest now also covers the public response-source identifiers and
-the HIAD action-to-playbook traceability metadata used to ground the staged
-action plan.
+The manifest digest now also covers the public response-source identifiers, the
+HIAD action-to-playbook traceability metadata, and the KHK citation inventory
+used to ground the staged action plan.
 
 ## Claim boundary
 
@@ -82,3 +85,5 @@ prevention stages, and that idle periodic monitoring remains quiet. It is still
 an interface/traceability check: it does not read HIAD response text and does not
 validate the safety or effectiveness of any step. The independent coordinator
 review, holdout response collection and expert rating gates remain required.
+
+The [KHK public-report inventory](khk_hydrogen_station_public_reports_inventory_2026_10_04.json) adds official accident and precaution report links for qualitative scenario and response grounding. It is deliberately excluded from numerical model validation, accident-frequency estimation and the station-to-vehicle full-loop holdout because the public reports do not provide synchronized process traces or complete boundary conditions.

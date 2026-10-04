@@ -42,6 +42,44 @@ def _public_incident_traceability() -> dict[str, Any] | None:
     }
 
 
+def _khk_public_accident_inventory() -> dict[str, Any] | None:
+    """Expose KHK's public accident-report inventory as response provenance.
+
+    The inventory contains citation links and scenario classifications, not
+    copied report text or process traces.  Keeping it in the evidence envelope
+    lets a response show which public accident source family grounds the
+    playbook while preserving the separate numerical-validation boundary.
+    """
+    path = Path(__file__).resolve().parents[2] / (
+        "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    coverage = record.get("coverage") or {}
+    source_page = record.get("source_page") or {}
+    rights = record.get("rights_and_mirroring") or {}
+    eligibility = record.get("eligibility") or {}
+    if record.get("status") != "public_khk_accident_report_inventory_captured":
+        return None
+    if rights.get("raw_pdf_mirrored") is not False:
+        return None
+    return {
+        "artifact": "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
+        "source_page": source_page.get("url"),
+        "institution": source_page.get("institution"),
+        "public_report_count": coverage.get("pdf_report_count"),
+        "incident_code_count": coverage.get("incident_code_count"),
+        "precaution_report_count": coverage.get("precaution_report_count"),
+        "raw_pdf_mirrored": False,
+        "qualitative_scenario_grounding": eligibility.get(
+            "qualitative_scenario_grounding_eligible"
+        ) is True,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _finite_number(value: Any) -> int | float | None:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         return None
@@ -181,6 +219,9 @@ def build_evidence_manifest(
     traceability = _public_incident_traceability()
     if traceability is not None:
         envelope["response_evidence"]["public_incident_traceability"] = traceability
+    khk_inventory = _khk_public_accident_inventory()
+    if khk_inventory is not None:
+        envelope["response_evidence"]["public_accident_report_inventory"] = khk_inventory
     canonical = json.dumps(envelope, ensure_ascii=False, sort_keys=True,
                            separators=(",", ":"), default=str).encode("utf-8")
     envelope["evidence_digest"] = "sha256:" + sha256(canonical).hexdigest()

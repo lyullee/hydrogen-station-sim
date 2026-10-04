@@ -2353,6 +2353,11 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
             "hazop_hit_count": len(direct_hits),
         }
     context = {"impact_results":impact_results,
+        # Keep the active-condition summary adjacent to deterministic impact
+        # results.  The prompt has a bounded serialized context; placing these
+        # fields before the larger provenance/sensor payload prevents a large
+        # sensor frame from truncating the condition evidence.
+        "hazop_active":active, "hazop_rules":matched_rules,
         "evidence_manifest": evidence_manifest,
         "impact_calculation_attempted":show_impact_results,
         "station":"H70 reference simulation", "time_s":frame.get("time_s"),
@@ -2371,7 +2376,6 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "relief_valve_settings":{key: value for key, value in
             (((frame.get("process_operations") or {}).get("settings") or {}).get("relief_valves") or {}).items()
             if key in (frame.get("relief_valves_open") or [])},
-        "hazop_active":active, "hazop_rules":matched_rules,
         "hazop_reference_rules":reference_rules,
         "reference_sensor_values":{tag: value for tag, value in sensor_values.items() if tag in reference_tags},
         "sensor_values":sensor_values,

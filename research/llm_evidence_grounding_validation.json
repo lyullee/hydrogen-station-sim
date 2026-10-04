@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "recorded_at": "2026-10-04T10:22:00+00:00",
+  "recorded_at": "2026-10-04T11:17:29.351097+00:00",
   "status": "software_contract_verified",
   "scope": [
     "digital-twin main assistant",
@@ -29,7 +29,8 @@
     "main and selected-sensor assistant routes remain isolated",
     "contradictory LLM claims are rejected when they negate confirmed evidence",
     "response evidence source identifiers are carried into the hashed manifest",
-    "public HIAD action-to-playbook traceability metadata is carried into the response evidence envelope"
+    "public HIAD action-to-playbook traceability metadata is carried into the response evidence envelope",
+    "public KHK accident-report inventory and citation link are carried into the evidence envelope without mirrored report text"
   ],
   "not_established": [
     "physics validity of the consequence model",
@@ -57,9 +58,24 @@
     "evidence_role": "metadata_only_response_contract",
     "case_count": 34,
     "mapped_case_count": 34,
-    "required_stages": ["recognition", "immediate", "stabilize", "restart", "prevention"],
+    "required_stages": [
+      "recognition",
+      "immediate",
+      "stabilize",
+      "restart",
+      "prevention"
+    ],
     "missing_stage_case_count": 0,
     "normal_quiet_contract_passed": true,
     "interpretation": "interface-stage coverage only; no correctness, safety, effectiveness, physics or operator-benefit claim"
+  },
+  "public_accident_report_grounding": {
+    "evidence": "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
+    "source_page": "https://www.khk.or.jp/hydrogen/accident_information.html",
+    "public_report_count": 23,
+    "incident_code_count": 26,
+    "precaution_report_count": 8,
+    "raw_pdf_mirrored": false,
+    "interpretation": "qualitative actual-accident scenario and response/prevention grounding only; no synchronized process trace, frequency, probability or physics-validation claim"
   }
 }
