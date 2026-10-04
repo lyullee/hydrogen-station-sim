@@ -300,3 +300,21 @@ def test_external_search_mirror_contains_source_boundary_diagnostic():
     assert item["decision"] == "DEVELOPMENT_DIAGNOSTIC_ONLY"
     assert item["cases"] == 8
     assert item["full_loop_holdout_eligible"] is False
+
+
+def test_frozen_boundary_vehicle_diagnostic_retains_negative_screen():
+    record = json.loads(
+        (
+            ROOT
+            / "research/mc_default_frozen_boundary_vehicle_diagnostic_2026_10_04.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert record["status"] == "DEVELOPMENT_DIAGNOSTIC_ONLY"
+    assert record["protocol"]["fresh_holdout"] is False
+    assert record["protocol"]["source_pressure_boundary"] == "published source_pressure_3_mpa trace"
+    assert record["protocol"]["case_count"] == 8
+    assert record["validation_boundary"]["full_loop_holdout_eligible"] is False
+    assert record["validation_boundary"]["goal_completion_permitted"] is False
+    assert sum(bool(row["screening_pass"]) for row in record["cases"]) == 1
+    assert record["aggregate"]["temperature_rmse_c"] > record["screening_limits"]["temperature_rmse_c"]
+    assert record["aggregate"]["soc_rmse_percentage_points"] > record["screening_limits"]["soc_final_abs_error_percentage_points"]

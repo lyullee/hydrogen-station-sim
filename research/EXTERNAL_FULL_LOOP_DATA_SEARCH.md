@@ -1164,3 +1164,16 @@ internal bank state from the public protocol alone. It does not rescue the
 failed external screen. A future protocol must either provide measured source
 pressure/temperature as a declared boundary trace or obtain bank topology and
 valve-state logs before scoring internal-bank pressure.
+
+The corresponding vehicle-side sensitivity was run with the frozen vehicle and
+dispenser parameters, the published `source_pressure_3_mpa` trace as the
+upstream boundary, the measured inlet-temperature profile and the published
+protocol pressure reference. The result is recorded in
+[`research/mc_default_frozen_boundary_vehicle_diagnostic_2026_10_04.json`](mc_default_frozen_boundary_vehicle_diagnostic_2026_10_04.json).
+Only 1 of 8 already-consumed cases passed; aggregate pressure RMSE was 5.850
+MPa, temperature RMSE 17.029 °C and SOC RMSE 7.370 percentage points. This
+shows that the source-boundary mismatch is a genuine confounder but not the
+sole cause of the full-loop discrepancy. Because the run uses outcome-known
+traces and a physics-only 200 °C controller limit, it remains a development
+diagnostic and does not change the external-validation or goal-completion
+decision.

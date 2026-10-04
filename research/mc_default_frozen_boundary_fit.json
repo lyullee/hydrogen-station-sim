@@ -1,0 +1,8 @@
+{
+  "tank_fit": {
+    "effective_volume_multiplier": 1.0519881596076546,
+    "gas_liner_ua_multiplier": 64.43011313151457
+  },
+  "dispenser_flow_area_multiplier": 1.25,
+  "precooler_duty_multiplier": 1.0
+}

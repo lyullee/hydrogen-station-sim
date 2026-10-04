@@ -2230,5 +2230,21 @@
     "finding": "Measured source_pressure_3 endpoints imply conditional isothermal effective volumes of 2.737-8.697 m3, while the current 0.35 m3 high-bank boundary predicts 30.734-58.621 MPa drops for the same transferred masses. Source topology, regulator/dispatch behavior and channel temperature are not published.",
     "claim_boundary": "Diagnostic only; do not insert conditional volumes into the production model or claim the failed full-loop validation passes.",
     "next_action": "Pre-register a partial-station/station-boundary protocol with measured source pressure and temperature, or obtain bank topology and valve-state logs."
+  },
+  "mc_default_frozen_boundary_vehicle_diagnostic_2026_10_04": {
+    "record": "research/mc_default_frozen_boundary_vehicle_diagnostic_2026_10_04.json",
+    "decision": "DEVELOPMENT_DIAGNOSTIC_ONLY",
+    "gate_impact": "does_not_clear_full_loop_or_goal_completion",
+    "case_count": 8,
+    "screening_pass_count": 1,
+    "aggregate": {
+      "pressure_rmse_mpa": 5.85009410433296,
+      "temperature_rmse_c": 17.02896939224688,
+      "soc_rmse_percentage_points": 7.3700229725833655
+    },
+    "full_loop_holdout_eligible": false,
+    "finding": "Supplying the published source_pressure_3 trace as an upstream boundary with frozen vehicle/dispenser parameters still passes only 1/8 already-consumed cases; temperature and SOC aggregate errors remain above screens.",
+    "claim_boundary": "This is a boundary sensitivity diagnostic, not independent full-station validation. It uses outcome-known traces and a physics-only 200 C controller limit.",
+    "next_action": "Acquire an independent synchronized station/vehicle archive or pre-register a measured-boundary protocol before fitting."
   }
 }

@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "status": "DEVELOPMENT_DIAGNOSTIC_ONLY",
+  "purpose": "Evaluate the frozen vehicle/dispenser fit when the published MC Default source_pressure_3 trace is supplied as a measured upstream boundary.",
+  "evidence_role": "bounded partial-station boundary sensitivity; not independent full-station validation",
+  "command": "PYTHONPATH=src .venv/Scripts/python.exe scripts/run_partial_station_validation.py --dataset mc_default --fit research/mc_default_frozen_boundary_fit.json --use-source-pressure-profile --source-pressure-column source_pressure_3_mpa --use-protocol-pressure-profile --maximum-gas-temperature-c 200",
+  "protocol": {
+    "dataset": "Powertech Labs SAE J2601 MC Default bench traces",
+    "fresh_holdout": false,
+    "outcomes_inspected_before_run": true,
+    "source_pressure_boundary": "published source_pressure_3_mpa trace",
+    "delivery_temperature_boundary": "measured inlet_gas_temperature_c profile",
+    "protocol_pressure_reference": true,
+    "maximum_gas_temperature_c": 200.0,
+    "temperature_stop_mode": "declared_physics_only_sensitivity",
+    "case_count": 8
+  },
+  "fit": {
+    "effective_volume_multiplier": 1.0519881596076546,
+    "gas_liner_ua_multiplier": 64.43011313151457,
+    "dispenser_flow_area_multiplier": 1.25,
+    "precooler_duty_multiplier": 1.0
+  },
+  "screening_limits": {
+    "pressure_rmse_mpa": 5.0,
+    "temperature_rmse_c": 10.0,
+    "soc_final_abs_error_percentage_points": 5.0
+  },
+  "aggregate": {
+    "pressure_rmse_mpa": 5.85009410433296,
+    "temperature_rmse_c": 17.02896939224688,
+    "soc_rmse_percentage_points": 7.3700229725833655,
+    "simulation_coverage_fraction": 1.0
+  },
+  "cases": [
+    {
+      "case_id": "H2P-MC-1-A",
+      "pressure_rmse_mpa": 11.57587431703691,
+      "temperature_rmse_c": 22.10781312106561,
+      "soc_final_error_percentage_points": -29.89292641801319,
+      "screening_pass": false,
+      "stop_reason": null
+    },
+    {
+      "case_id": "H2P-MC-1-B",
+      "pressure_rmse_mpa": 10.9408222212176,
+      "temperature_rmse_c": 12.270850523926816,
+      "soc_final_error_percentage_points": -15.65182378865623,
+      "screening_pass": false,
+      "stop_reason": null
+    },
+    {
+      "case_id": "H2P-MC-1-C",
+      "pressure_rmse_mpa": 8.183529510715536,
+      "temperature_rmse_c": 8.665681518268663,
+      "soc_final_error_percentage_points": -11.110726171379824,
+      "screening_pass": false,
+      "stop_reason": null
+    },
+    {
+      "case_id": "H2P-MC-1-D",
+      "pressure_rmse_mpa": 4.028823343254202,
+      "temperature_rmse_c": 14.112339078194381,
+      "soc_final_error_percentage_points": -4.627262746986446,
+      "screening_pass": false,
+      "stop_reason": null
+    },
+    {
+      "case_id": "H2P-MC-1-E",
+      "pressure_rmse_mpa": 0.9556121669293133,
+      "temperature_rmse_c": 24.7186671617432,
+      "soc_final_error_percentage_points": -7.620389740843763,
+      "screening_pass": false,
+      "stop_reason": null
+    },
+    {
+      "case_id": "H2P-MC-1-F",
+      "pressure_rmse_mpa": 4.500469100223522,
+      "temperature_rmse_c": 25.196672016969043,
+      "soc_final_error_percentage_points": -5.402295978399508,
+      "screening_pass": false,
+      "stop_reason": null
+    },
+    {
+      "case_id": "H2P-MC-2-A",
+      "pressure_rmse_mpa": 2.185703602864914,
+      "temperature_rmse_c": 19.61423046612184,
+      "soc_final_error_percentage_points": -7.4671383876101345,
+      "screening_pass": false,
+      "stop_reason": null
+    },
+    {
+      "case_id": "H2P-MC-9.8KG",
+      "pressure_rmse_mpa": 4.429918572421695,
+      "temperature_rmse_c": 9.545501251685463,
+      "soc_final_error_percentage_points": -3.479692805862001,
+      "screening_pass": true,
+      "stop_reason": null
+    }
+  ],
+  "interpretation": {
+    "finding": "Measured source-pressure boundary removes the single-0.35 m3 source-boundary assumption, but the frozen vehicle/dispenser fit still passes only 1 of 8 cases and has aggregate temperature and SOC errors above the declared screens.",
+    "meaning": "Source-boundary mismatch is a real confounder, but it is not the sole cause of the MC Default full-loop discrepancy.",
+    "limitation": "This run uses already-consumed cases, an outcome-known boundary trace and a physics-only 200 C controller limit. It cannot support an IJHE external-validation claim.",
+    "next_action": "Obtain an independent synchronized station/vehicle archive or a prospectively frozen measured-boundary protocol before any new fitting."
+  },
+  "validation_boundary": {
+    "full_loop_holdout_eligible": false,
+    "frozen_holdout_modified": false,
+    "post_outcome_tuning": false,
+    "goal_completion_permitted": false
+  }
+}
