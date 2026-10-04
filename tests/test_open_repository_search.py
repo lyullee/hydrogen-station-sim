@@ -348,7 +348,7 @@ def test_public_full_loop_search_addendum_keeps_new_leads_quarantined():
     )
     assert record["decision"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
     assert record["gate_impact"] == "unchanged_independent_full_loop_gate_remains_open"
-    assert len(record["sources"]) == 3
+    assert len(record["sources"]) == 5
     assert all(source["full_loop_holdout_eligible"] is False for source in record["sources"])
     nbsdc = next(
         source
@@ -364,6 +364,20 @@ def test_public_full_loop_search_addendum_keeps_new_leads_quarantined():
     )
     assert deng["raw_common_timebase_found"] is False
     assert (ROOT / "research/DENG_2025_HIGH_FLOW_DATA_REQUEST_DRAFT.md").exists()
+    calstate = next(
+        source
+        for source in record["sources"]
+        if source["id"] == "calstate_genovese_2021_in_situ_fueling_addendum"
+    )
+    assert calstate["public_raw_data"] is False
+    assert (ROOT / "research/CALSTATE_DATA_REQUEST_DRAFT.md").exists()
+    bam = next(
+        source
+        for source in record["sources"]
+        if source["id"] == "bam_kim_2026_field_monitoring_addendum"
+    )
+    assert bam["public_raw_data"] is False
+    assert (ROOT / "research/BAM_HRS_DATA_REQUEST_DRAFT.md").exists()
 
 
 def test_external_search_mirror_contains_public_full_loop_search_addendum():
@@ -375,4 +389,6 @@ def test_external_search_mirror_contains_public_full_loop_search_addendum():
     item = mirror["public_full_loop_search_addendum_2026_10_04"]
     assert item["decision"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
     assert item["full_loop_holdout_eligible"] is False
-    assert len(item["source_ids"]) == 3
+    assert len(item["source_ids"]) == 5
+    assert "calstate_genovese_2021_in_situ_fueling_addendum" in item["source_ids"]
+    assert "bam_kim_2026_field_monitoring_addendum" in item["source_ids"]

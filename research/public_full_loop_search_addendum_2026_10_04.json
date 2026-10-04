@@ -46,6 +46,34 @@
       "classification": "INDEPENDENT_TANK_THERMAL_DATA_REQUEST_LEAD",
       "request_draft": "research/DENG_2025_HIGH_FLOW_DATA_REQUEST_DRAFT.md",
       "next_action": "Request de-identified synchronized mass-flow, pressure, gas-temperature and wall/thermocouple files, geometry, calibration metadata and reuse permission."
+    },
+    {
+      "id": "calstate_genovese_2021_in_situ_fueling_addendum",
+      "title": "Hydrogen station in situ back-to-back fueling data for design and modeling",
+      "doi": "10.1016/j.jclepro.2021.129737",
+      "url": "https://doi.org/10.1016/j.jclepro.2021.129737",
+      "reported_coverage": "One year of Cal State LA Hydrogen Research and Fueling Facility operation, including back-to-back events, storage pressure, cooling response, thermodynamics and vehicle SOC.",
+      "real_station_data": true,
+      "public_raw_data": false,
+      "data_availability_verified": false,
+      "full_loop_holdout_eligible": false,
+      "request_draft": "research/CALSTATE_DATA_REQUEST_DRAFT.md",
+      "classification": "HIGH_VALUE_DATA_REQUEST_LEAD",
+      "next_action": "Request the synchronized logger export, vehicle/receptacle pressure and temperature channels, station control states, calibration metadata, event identifiers and written reuse terms before protocol freeze."
+    },
+    {
+      "id": "bam_kim_2026_field_monitoring_addendum",
+      "title": "Data-Driven Intelligent Analysis System for Monitoring and Anomaly Detection in Hydrogen Refueling Station",
+      "doi": "10.3390/app16157856",
+      "url": "https://doi.org/10.3390/app16157856",
+      "reported_coverage": "BAM demonstration HRS monitoring with pressure, temperature and flow-rate sensors, field integration and performance testing.",
+      "real_station_data": true,
+      "public_raw_data": false,
+      "data_availability_statement": "Original contributions are included in the article; further inquiries are directed to the corresponding author.",
+      "full_loop_holdout_eligible": false,
+      "request_draft": "research/BAM_HRS_DATA_REQUEST_DRAFT.md",
+      "classification": "HIGH_VALUE_DATA_REQUEST_LEAD",
+      "next_action": "Request de-identified synchronized raw sensor and controller logs, channel dictionary, quality flags, calibration records, event labels and reuse permission."
     }
   ],
   "claim_boundary": "A public catalog record, paper statement or component test is not promoted to numerical full-loop validation without downloadable synchronized raw files, immutable hashes, independent protocol freeze and written reuse rights."

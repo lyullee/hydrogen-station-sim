@@ -2263,12 +2263,14 @@
     "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
     "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
     "full_loop_holdout_eligible": false,
-    "source_ids": [
+      "source_ids": [
       "nbsdc_beijing_winter_olympics_hrs_operational_addendum",
       "nbsdc_70mpa_hydrogenation_port_test_addendum",
-      "deng_2025_high_flow_refueling_tank_addendum"
+      "deng_2025_high_flow_refueling_tank_addendum",
+      "calstate_genovese_2021_in_situ_fueling_addendum",
+      "bam_kim_2026_field_monitoring_addendum"
     ],
-    "finding": "The NBSDC HRS record is a high-value approval-gated request lead, the 70 MPa port record is component-only, and the 2025 IJHE high-flow tank experiment has no verified downloadable raw archive. None is promoted to full-loop validation.",
+    "finding": "The NBSDC HRS record is approval-gated, the 70 MPa port record is component-only, the 2025 IJHE high-flow tank experiment has no verified downloadable raw archive, the Cal State LA one-year operation study does not expose its logger files, and the BAM field-monitoring paper directs raw-data inquiries to the authors. None is promoted to full-loop validation.",
     "claim_boundary": "No public catalog metadata or paper-only result can replace a hashed synchronized raw archive, frozen no-fitting protocol and written reuse rights."
   }
 }
