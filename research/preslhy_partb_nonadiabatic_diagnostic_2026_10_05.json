@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "source_commit": "419e3a8",
+  "status": "POST_OUTCOME_DEVELOPMENT_DIAGNOSTIC_ONLY",
+  "protocol": {
+    "source_protocol": "research/preslhy_partb_holdout_protocol.json",
+    "archive_sha256": "2d4fbc6b3d2996a40629c71c6a33a6fdec3fde246ee4cee23de12c86672cd4ff",
+    "outcomes_were_already_accessed": true,
+    "case_count": 5,
+    "model": "src/h2station/preslhy_nonadiabatic.py",
+    "parameters": {
+      "internal_volume_m3": 0.225,
+      "wall_mass_kg": 28.0,
+      "wall_specific_heat_j_kg_k": 500.0,
+      "external_heat_transfer_w_m2_k": 6.0,
+      "discharge_coefficient": 0.8,
+      "geometry_note": "The public Part-B files provide vessel volume but not a complete wall geometry/thermal inventory. Default DisCha geometry is retained for a sensitivity diagnostic and is not a production Part-B parameterization."
+    },
+    "screening_limits": {
+      "pressure_nrmse_percent_initial_absolute_pressure": 10.0,
+      "time_to_50_percent_initial_gauge_pressure_relative_error_percent": 20.0
+    }
+  },
+  "baseline_frozen_result": {
+    "record": "research/preslhy_partb_ambient_validation.json",
+    "joint_primary_passes": 3,
+    "joint_primary_pass_fraction": 0.6
+  },
+  "diagnostic_result": {
+    "joint_primary_passes": 3,
+    "joint_primary_pass_fraction": 0.6,
+    "mean_pressure_nrmse_percent": 7.443001558832141,
+    "mean_half_time_error_percent": 19.100688389637803,
+    "cases": [
+      {
+        "case_id": "20200520-143038_290K-2mm-5bar_W01-Final",
+        "pressure_nrmse_percent": 6.501462794204032,
+        "half_time_error_percent": 25.276383697810022,
+        "joint_primary_screen_pass": false
+      },
+      {
+        "case_id": "20200520-144544_290K-2mm-3bar2_W02-Final",
+        "pressure_nrmse_percent": 7.46104893677481,
+        "half_time_error_percent": 25.295123198346303,
+        "joint_primary_screen_pass": false
+      },
+      {
+        "case_id": "20200520-145506_290K-4mm-5bar_W03-Final",
+        "pressure_nrmse_percent": 7.389836868668074,
+        "half_time_error_percent": 15.319866083127328,
+        "joint_primary_screen_pass": true
+      },
+      {
+        "case_id": "20200520-150010_290K-4mm-3bar2_W04-Final",
+        "pressure_nrmse_percent": 8.554253594770685,
+        "half_time_error_percent": 15.260930108996734,
+        "joint_primary_screen_pass": true
+      },
+      {
+        "case_id": "20200520-150332_290K-4mm-4bar8_W05-Final",
+        "pressure_nrmse_percent": 7.3084055997431046,
+        "half_time_error_percent": 14.351138859908627,
+        "joint_primary_screen_pass": true
+      }
+    ]
+  },
+  "interpretation": {
+    "finding": "The revised non-adiabatic model lowers pressure NRMSE relative to the frozen Part-B run, but the joint pass count remains 3/5 because both 2 mm low/high pressure cases retain approximately 25.3% half-time error.",
+    "structural_implication": "The remaining error is diameter/regime dependent and is not resolved by adding the consumed DisCha wall-thermal sensitivity. A nozzle/discharge-regime or Part-B geometry characterization is required before any new holdout protocol.",
+    "claim_boundary": "This post-outcome diagnostic cannot replace the frozen Part-B result, cannot support a revised external-validation claim, and cannot be used to tune a discharge coefficient or geometry to these five cases."
+  },
+  "next_required_evidence": "Freeze an untouched release campaign with measured aperture/manifold geometry, upstream pressure/temperature and a predeclared discharge-regime model before reading outcomes."
+}
