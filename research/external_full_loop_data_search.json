@@ -2065,6 +2065,9 @@
           "appendix_a_workbook_linked_from_report": false,
           "public_workbook_or_raw_logger_found": false,
           "website_checked": "https://ww2.arb.ca.gov/our-work/programs/hydrogen-fueling-infrastructure",
+          "visible_data_file_links_on_website": [
+            "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf"
+          ],
           "website_workbook_link_found": false,
           "finding": "The report exposes pass/fail matrices, protocol context and selected plots, but the referenced Excel workbook and synchronized station-to-vehicle rows were not publicly linked or downloadable from the report page during the file-level recheck."
         },
@@ -2089,6 +2092,8 @@
         "public_artifact_inspection": {
           "operator_log_detail": "The E3S paper describes daily/monthly logbook fields such as date/time, kilograms per fill and duration; dynamic pressure-temperature-flow rows are not published.",
           "project_documentation": "The public 3Emotion Description of Work assigns predefined Excel sheets and refilled-hydrogen information to bus/station operators; it does not release the operator workbooks.",
+          "official_project_page": "https://3emotion.eu/",
+          "official_project_page_machine_file_links_found": false,
           "raw_common_timebase_found": false,
           "public_csv_xlsx_sql_found": false,
           "reuse_terms_for_raw_logs_found": false,
