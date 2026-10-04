@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "scope": "Public operational HRS benchmark recheck for an IJHE evidence package",
+  "purpose": "Record real-station sources that can support face validity or a data request without being misclassified as synchronized full-loop validation.",
+  "eligibility_boundary": {
+    "full_loop_required_channels": [
+      "common elapsed time or timestamp",
+      "vehicle or receptacle pressure",
+      "mass flow or transferred mass"
+    ],
+    "preferred_channels": [
+      "vehicle or tank temperature",
+      "station source pressure",
+      "dispenser/controller state",
+      "SAE J2601 protocol and initial-condition metadata"
+    ],
+    "required_rights": "explicit public reuse or written permission for derived metrics and journal publication",
+    "excluded_substitutes": [
+      "aggregate KPI tables",
+      "plot-only traces",
+      "station availability or infrastructure inventories",
+      "simulator-generated traces",
+      "component-only experiments"
+    ]
+  },
+  "candidates": [
+    {
+      "id": "calstate_la_multi_year_ijhe_2023",
+      "title": "Multi-year energy performance data for an electrolysis-based hydrogen refueling station",
+      "doi": "10.1016/j.ijhydene.2023.04.084",
+      "url": "https://doi.org/10.1016/j.ijhydene.2023.04.084",
+      "open_copy": "https://www.osti.gov/pages/servlets/purl/2576693",
+      "license": "CC BY 4.0 for the article version; raw station logs are not released by the article",
+      "decision": "REAL_STATION_AGGREGATE_AND_DATA_REQUEST_LEAD",
+      "observed_scope": {
+        "period": "2016-2020 Q2",
+        "refueling_events": 4500,
+        "dispensed_hydrogen_kg": 8800,
+        "station_sections": [
+          "electrolyzer",
+          "storage compressor",
+          "booster compressors",
+          "350/700 bar dispensing line",
+          "station overall"
+        ],
+        "data_system": [
+          "1sData",
+          "10sData",
+          "MinuteData",
+          "FuelingData",
+          "FuelingReport"
+        ]
+      },
+      "finding": "The open article describes real operation and the acquisition architecture, but publishes KPI tables/figures rather than a downloadable synchronized vehicle-pressure, temperature and mass-flow logger archive.",
+      "use": "Independent face-validity benchmark and high-priority request for de-identified event-level exports; not a full-loop holdout until the raw archive, channel dictionary, calibration metadata and reuse permission are received and frozen before outcome access."
+    },
+    {
+      "id": "uci_nfcrc_early_hrs_ijhe_2020",
+      "title": "Performance of a hydrogen refueling station in the early years of commercial fuel cell vehicle deployment",
+      "doi": "10.1016/j.ijhydene.2020.08.251",
+      "url": "https://doi.org/10.1016/j.ijhydene.2020.08.251",
+      "license": "Article and supplementary chart artifact are publicly reachable; raw operator logs are not released",
+      "decision": "REAL_STATION_AGGREGATE_AND_DATA_REQUEST_LEAD",
+      "observed_scope": {
+        "facility": "University of California, Irvine NFCRC HRS",
+        "reported_period": "first five years of FCEV commercialization",
+        "reported_outputs": [
+          "daily and monthly dispensing profiles",
+          "fill amount and fueling-time summaries",
+          "compressor/dispenser reliability context"
+        ]
+      },
+      "finding": "The public article and supplementary material provide aggregate operational charts and field context, not synchronized pressure-temperature-mass-flow rows for individual fills.",
+      "use": "Independent operating-range and reliability context; request de-identified event-level logger data before treating the source as validation."
+    },
+    {
+      "id": "nrel_h2_station_cdp_retail_2020",
+      "title": "Next Generation Hydrogen Station Composite Data Products: Retail Stations",
+      "url": "https://www.nrel.gov/hydrogen/infrastructure-cdps-retail.html",
+      "license": "Public composite products; partner raw data are not exposed",
+      "decision": "AGGREGATE_CONTEXT_ONLY",
+      "observed_scope": {
+        "reported_products": [
+          "station availability",
+          "fueling counts and amounts",
+          "fill-rate and final-pressure distributions",
+          "back-to-back timing distributions"
+        ],
+        "raw_time_series": false
+      },
+      "finding": "The public NREL products are aggregate composite statistics and do not expose row-level synchronized vehicle-side pressure, temperature and mass-flow traces.",
+      "use": "Population-level face-validity checks and operating-context citation only; cannot close the full-loop gate."
+    },
+    {
+      "id": "h2_stations_eu_api_v2_2026",
+      "title": "European H2-Stations export API v2",
+      "url": "https://docs.h2-stations.eu/for-data-users/api-v2/",
+      "license": "CC BY 4.0",
+      "decision": "STATIC_AND_OPERATIONAL_CONTEXT_ONLY",
+      "observed_scope": {
+        "signals": [
+          "availability",
+          "usage",
+          "hydrogen storage",
+          "pricing",
+          "events"
+        ],
+        "vehicle_fill_thermodynamic_trace": false
+      },
+      "finding": "The API provides station layout and operational signals but not a synchronized vehicle-fueling pressure-temperature-mass-flow trace.",
+      "use": "Station inventory and availability context only; not an experimental validation set."
+    }
+  ],
+  "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+  "gate_impact": "full_loop_external_validation_remains_open",
+  "next_action": "Request a de-identified synchronized logger export and written reuse terms from Cal State LA HRFF, UCI NFCRC, NREL/NLR HITRF, CARB/HyStEP, JRC GasTeF, FCH2RAIL or an HRS operator; freeze the model, inclusion criteria and scoring before reading numerical outcomes.",
+  "claim_boundary": "This record strengthens source accounting and face-validity context. It adds no full-loop validation result and does not permit the IJHE/full-objective completion gate to pass."
+}

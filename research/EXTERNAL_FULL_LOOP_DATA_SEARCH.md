@@ -1221,3 +1221,27 @@ their exclusion decisions in
 None meets the frozen full-loop eligibility rule. These sources are retained
 as contextual or acquisition leads only; no gate is promoted and no model
 parameter is changed.
+
+## 2026-10-05 real-station operational benchmark recheck
+
+The Cal State LA HRFF multi-year study (DOI
+`10.1016/j.ijhydene.2023.04.084`) and the UCI NFCRC early-commercial-operation
+study (DOI `10.1016/j.ijhydene.2020.08.251`) are genuine field-operation
+sources and are stronger face-validity references than a simulator-only
+dataset. The Cal State LA paper describes more than 4,500 refuelling events,
+8,800 kg dispensed, five SQL logging databases and separate storage,
+compressor, dispensing and station reports. The UCI paper reports multi-year
+station performance and fill profiles. Neither public record releases the
+individual synchronized pressure-temperature-mass-flow rows needed for the
+full-loop holdout.
+
+NREL's retail composite products and the European H2-Stations API add useful
+population-level operating context, but remain aggregate or availability/
+usage/storage products. They cannot replace a vehicle-side logger. The
+source-by-source decision, observed fields and reuse boundary are frozen in
+[`research/public_operational_benchmark_recheck_2026_10_05.json`](public_operational_benchmark_recheck_2026_10_05.json).
+
+This recheck adds a prioritized data-request route without changing the
+production model or treating field summaries as validation. Until a custodian
+provides a de-identified synchronized export with reuse permission, the
+full-loop external gate and the full IJHE objective remain open.

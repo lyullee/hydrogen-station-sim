@@ -194,6 +194,8 @@ def audit(root: Path) -> dict[str, object]:
     external_search = _json(external_search_path)
     external_search_recheck_path = root / "research/public_full_loop_search_recheck_2026_10_04.json"
     external_search_recheck = _json(external_search_recheck_path)
+    external_operational_recheck_path = root / "research/public_operational_benchmark_recheck_2026_10_05.json"
+    external_operational_recheck = _json(external_operational_recheck_path)
     aggregate = (external_loop or {}).get("aggregate") or {}
     protocol_source = (external_protocol or {}).get("source") or {}
     frozen_model = (external_protocol or {}).get("frozen_model") or {}
@@ -232,7 +234,8 @@ def audit(root: Path) -> dict[str, object]:
         "full_loop_external_validation",
         "PASS" if external_loop_pass else "FAIL",
         "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
-        f"{external_loop_path.relative_to(root)}; {external_search_path.relative_to(root)}; {external_search_recheck_path.relative_to(root)}",
+        f"{external_loop_path.relative_to(root)}; {external_search_path.relative_to(root)}; "
+        f"{external_search_recheck_path.relative_to(root)}; {external_operational_recheck_path.relative_to(root)}",
         "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
         {
             "protocol_integrity": protocol_integrity,
@@ -246,6 +249,11 @@ def audit(root: Path) -> dict[str, object]:
                 "result": (external_search_recheck or {}).get("result"),
                 "gate_impact": (external_search_recheck or {}).get("gate_impact"),
                 "candidate_count": len((external_search_recheck or {}).get("candidates") or []),
+            },
+            "operational_benchmark_recheck_2026_10_05": {
+                "result": (external_operational_recheck or {}).get("result"),
+                "gate_impact": (external_operational_recheck or {}).get("gate_impact"),
+                "candidate_count": len((external_operational_recheck or {}).get("candidates") or []),
             },
         } if external_loop else "missing; current internal comparisons pass 0/8 and 0/11",
     ))
