@@ -2349,8 +2349,8 @@
   "public_full_loop_search_recheck_2026_10_05": {
     "record": "research/public_full_loop_search_recheck_2026_10_05.json",
     "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
-    "candidate_count": 22,
-    "scope": "KGS/Oh appendix, DLR/FCH2RAIL item, Zenodo high-flow simulation, Cal State LA HRFF custodian recheck and current public full-loop candidate recheck",
+    "candidate_count": 23,
+    "scope": "KGS/Oh appendix, DLR/FCH2RAIL item, Zenodo high-flow simulation, Cal State LA HRFF and NLR HITRF custodian rechecks and current public full-loop candidate recheck",
     "appendix_recheck": "research/kgs_oh_preprint_appendix_recheck_2026_10_05.json"
   }
 }

@@ -171,6 +171,27 @@
         "full_loop_holdout_eligible": false
       },
       "reuse_status": "Use the official pages to identify the custodian and request a de-identified synchronized export, channel dictionary, calibration metadata and written permission for derived metrics and open-repository or IJHE publication. Do not treat the facility description as numerical validation."
+    },
+    {
+      "id": "nrel_hitrf_official_custodian_route_recheck_2026",
+      "title": "NLR Hydrogen Infrastructure Testing and Research Facility data-custodian route",
+      "url": "https://www.nlr.gov/hydrogen/hitrf-animation",
+      "data_program_url": "https://www.nlr.gov/hydrogen/hydrogen-infrastructure-analysis",
+      "license": "No public synchronized logger reuse terms identified",
+      "decision": "REAL_STATION_DATA_REQUEST_LEAD_NO_RAW_ARCHIVE",
+      "finding": "The official NLR facility page describes a research H70/H35 dispenser, adjustable experimental fills, component cycling and an automated logging system covering HITRF components and maintenance data. The public pages expose facility scope and contact routes, but no machine-readable synchronized station-to-vehicle fueling trace archive.",
+      "observed_scope": {
+        "real_station_documented": true,
+        "reported_instrumented_channels": [
+          "pressure",
+          "temperature",
+          "mass flow",
+          "dispenser/controller state"
+        ],
+        "public_raw_logger_retrieved": false,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "Use the NLR Technology Validation/HITRF route in research/NREL_HITRF_DATA_REQUEST_DRAFT.md to request a de-identified synchronized export, channel dictionary, calibration metadata and written permission for derived metrics and open-repository or IJHE publication. Facility and program descriptions remain provenance only."
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
