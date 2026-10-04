@@ -164,8 +164,9 @@
       "title": "RHeaDHy Mid Flow Twin heavy-duty fueling campaign summary",
       "url": "https://www.clean-hydrogen.europa.eu/projects-dashboard/projects-repository/rheadhy_en",
       "supplementary_summary_url": "https://ebs.publicnow.com/view/2BE56BA08C750B576B05A61FFB967F70AFFEEC55",
+      "cordis_results_url": "https://cordis.europa.eu/project/id/101101443/results",
       "decision": "PUBLIC_CAMPAIGN_SUMMARY_NO_RAW_LOGGER",
-      "finding": "The 2026 public campaign summary reports 18 tests over six days, 60–300 bar initial pressure, ambient temperatures of 15–40 °C, more than 400 kg transferred and greater than 95% SOC, but no synchronized station/vehicle pressure-temperature-flow files or reuse terms are published.",
+      "finding": "The 2026 public campaign summary reports 18 tests over six days, 60–300 bar initial pressure, ambient temperatures of 15–40 °C, more than 400 kg transferred and greater than 95% SOC, but no synchronized station/vehicle pressure-temperature-flow files or reuse terms are published. The European Commission CORDIS results page currently lists one public standardization deliverable and no dataset attachment.",
       "reuse_status": "real campaign summary useful for face-validity bounds; raw logger release or custodian permission remains necessary"
     }
   ],
