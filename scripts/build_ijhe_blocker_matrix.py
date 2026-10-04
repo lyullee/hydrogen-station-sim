@@ -81,11 +81,12 @@ def build(root: Path) -> dict[str, Any]:
                 "why_blocked": "The frozen external station-loop holdout has 0/8 engineering-screen passes, and the public search found no new eligible synchronized station/controller/vehicle raw set.",
                 "evidence": [
                     "data/public_validation/results/closed_loop_external_holdout/validation.json",
+                    "research/mc_default_source_boundary_identifiability_2026_10_04.json",
                     "research/public_full_loop_search_recheck_2026_10_04.json",
                     "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
                 ],
-                "unblock_criterion": "Obtain a clean, rights-cleared, pre-access frozen external dataset with synchronized station pressure/temperature/mass-flow, protocol/controller, dispenser/nozzle, and vehicle/receptacle channels; score >=8 cases with >=80% screen pass fraction.",
-                "next_action": "Submit the prepared NBSDC Pucheng request and other custodian requests through an approved institutional channel; do not treat request approval or metadata as validation.",
+                "unblock_criterion": "Obtain a clean, rights-cleared, pre-access frozen external dataset with synchronized station pressure/temperature/mass-flow, protocol/controller, dispenser/nozzle, and vehicle/receptacle channels; resolve the source-boundary/topology ambiguity; then score >=8 cases with >=80% screen pass fraction.",
+                "next_action": "Submit the prepared NBSDC Pucheng request and other custodian requests through an approved institutional channel; require source pressure/temperature, bank topology and valve-state metadata; do not treat request approval or metadata as validation.",
             },
             {
                 "id": "consequence_model_external_validation",
