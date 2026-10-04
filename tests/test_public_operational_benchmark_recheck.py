@@ -12,7 +12,7 @@ def test_operational_benchmark_recheck_preserves_raw_trace_boundary():
     )
     assert record["result"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
     assert record["gate_impact"] == "full_loop_external_validation_remains_open"
-    assert len(record["candidates"]) == 10
+    assert len(record["candidates"]) == 11
     assert all(
         item["decision"] != "FULL_LOOP_HOLDOUT" for item in record["candidates"]
     )
@@ -125,3 +125,18 @@ def test_recheck_records_hysafe_real_experiment_as_figure_only_data_request_lead
     assert item["observed_scope"]["reported_tests"] == 14
     assert item["observed_scope"]["raw_synchronized_rows"] is False
     assert "no additional external datasets" in item["observed_scope"]["data_availability_statement"].lower()
+
+
+def test_recheck_records_chinese_35_70_mpa_field_experiments_as_table_only_lead():
+    record = json.loads(
+        (ROOT / "research/public_operational_benchmark_recheck_2026_10_05.json")
+        .read_text(encoding="utf-8")
+    )
+    item = next(
+        candidate for candidate in record["candidates"]
+        if candidate["id"] == "cip_chinese_35_70mpa_station_experiments_2020"
+    )
+    assert item["decision"] == "REAL_STATION_EXPERIMENT_TABLE_ONLY_DATA_REQUEST_LEAD"
+    assert item["observed_scope"]["reported_cases"] == 2
+    assert item["observed_scope"]["raw_synchronized_rows"] is False
+    assert item["observed_scope"]["case_70_mpa"]["peak_mass_flow_g_s"] == 36.0

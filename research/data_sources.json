@@ -643,6 +643,19 @@
       "eligibility_note": "High-value real-HRS experiment and data-request lead; figure/table values are not a synchronized machine-readable holdout and cannot close full-loop validation.",
       "access_record": "research/hysafe59_data_access_recheck_2026_10_05.json"
     },
+    "cip_chinese_35_70mpa_station_experiments_2020": {
+      "title": "35 MPa/70 MPa hydrogen dispenser refueling performance evaluation experiments",
+      "publisher": "储能科学与技术 / Chinese Institute of Process Engineering",
+      "landing_page": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
+      "doi": "10.19799/j.cnki.2095-4239.2020.0049",
+      "license": "No explicit open-data licence identified",
+      "public_raw_data": false,
+      "reported_scope": "Two real station field tests covering 35 MPa logistics vehicle and 70 MPa passenger vehicle filling, with pressure, temperature, flow, mass and timing observations.",
+      "downloadable_table_artifacts": ["T1.csv.zip", "T2.csv.zip", "T3.csv.zip", "T4.csv.zip"],
+      "rights_note": "The article page serves small table CSVs but does not identify a data-redistribution licence; cite the article and request raw-log reuse terms.",
+      "eligibility_note": "High-value face-validity and data-request lead, not a synchronized raw full-loop holdout.",
+      "record": "research/public_operational_benchmark_recheck_2026_10_05.json"
+    },
     "dataverseno_wskbij_large_scale_hydrogen_explosions": {
       "title": "Replication dataset for: Large-Scale Hydrogen Explosion Experiments: Obstructed Releases in open atmosphere",
       "publisher": "University of South-Eastern Norway / DataverseNO",

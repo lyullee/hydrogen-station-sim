@@ -1241,6 +1241,13 @@ usage/storage products. They cannot replace a vehicle-side logger. The
 source-by-source decision, observed fields and reuse boundary are frozen in
 [`research/public_operational_benchmark_recheck_2026_10_05.json`](public_operational_benchmark_recheck_2026_10_05.json).
 
+The Chinese field study [10.19799/j.cnki.2095-4239.2020.0049](https://doi.org/10.19799/j.cnki.2095-4239.2020.0049)
+adds two real 35/70 MPa dispenser tests. Its public page exposes small table
+CSV files and reports vehicle pressure, temperature, mass, elapsed time and a
+70 MPa peak flow of 36 g/s. It does not expose the synchronized raw trace or an
+explicit reuse licence, so it is recorded as a table-only face-validity and
+data-request lead rather than a full-loop holdout.
+
 This recheck adds a prioritized data-request route without changing the
 production model or treating field summaries as validation. Until a custodian
 provides a de-identified synchronized export with reuse permission, the

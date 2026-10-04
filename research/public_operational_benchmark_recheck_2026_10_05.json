@@ -250,6 +250,40 @@
       },
       "finding": "This is a high-value real HRS experiment and a strong acquisition lead, but the public article exposes figure/table data only and explicitly reports that no additional external datasets are publicly available.",
       "use": "Cite for protocol and operating-range face validity; request the underlying synchronized logger export and written reuse terms before using any case as a frozen full-loop holdout."
+    },
+    {
+      "id": "cip_chinese_35_70mpa_station_experiments_2020",
+      "title": "35 MPa/70 MPa hydrogen dispenser refueling performance evaluation experiments",
+      "doi": "10.19799/j.cnki.2095-4239.2020.0049",
+      "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
+      "license": "No explicit open-data licence identified; cite and request reuse terms",
+      "decision": "REAL_STATION_EXPERIMENT_TABLE_ONLY_DATA_REQUEST_LEAD",
+      "observed_scope": {
+        "facility": "Chinese 35 MPa/70 MPa hydrogen dispenser field tests",
+        "reported_cases": 2,
+        "case_35_mpa": {
+          "vehicle_storage": "3 x 140 L Type III",
+          "initial_pressure_mpa": 2.2,
+          "final_pressure_mpa": 35.4,
+          "final_temperature_c": 64.0,
+          "mass_kg": 8.21,
+          "time_s": 470
+        },
+        "case_70_mpa": {
+          "vehicle_storage": "122.4 L Type IV",
+          "initial_pressure_mpa": 1.7,
+          "final_pressure_mpa": 81.6,
+          "final_temperature_c": 65.8,
+          "peak_mass_flow_g_s": 36.0,
+          "mass_kg": 5.08,
+          "time_s": 276
+        },
+        "downloadable_table_csv": ["T1.csv.zip", "T2.csv.zip", "T3.csv.zip", "T4.csv.zip"],
+        "raw_synchronized_rows": false,
+        "protocol": "field dispenser tests with leak-check pauses and pressure/temperature/flow recording"
+      },
+      "finding": "The public article exposes small table CSVs and describes real station tests with pressure, temperature, mass and flow observations, but no synchronized raw time-series archive or explicit reuse licence was found.",
+      "use": "High-value face-validity and data-request lead for 35/70 MPa vehicle-filling behaviour; do not use the table summaries as a full-loop holdout or tune the model from them."
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
