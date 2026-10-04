@@ -1989,6 +1989,27 @@ def audit(root: Path) -> dict[str, object]:
         {"mismatches": protocol_mismatches},
     ))
 
+    machine_preflight_path = root / "research/hiad_casebook_machine_preflight_2026_10_05.json"
+    machine_preflight = _json(machine_preflight_path)
+    machine_preflight_pass = bool(
+        (machine_preflight or {}).get("kind") == "machine_preflight_only"
+        and (machine_preflight or {}).get("machine_preflight_pass") is True
+        and (machine_preflight or {}).get("case_count") == 24
+        and all(
+            check.get("status") == "PASS"
+            for check in (machine_preflight or {}).get("checks", [])
+        )
+        and len((machine_preflight or {}).get("claim_boundary", [])) >= 3
+    )
+    gates.append(_gate(
+        "hiad_casebook_machine_preflight_integrity",
+        "PASS" if machine_preflight_pass else "PENDING",
+        "The prepared HIAD casebook passes machine-only structural checks while all human gates remain unresolved.",
+        str(machine_preflight_path.relative_to(root)),
+        "24 cases, required context/provenance fields, unique IDs, and explicit pending human-review markers.",
+        machine_preflight or "missing",
+    ))
+
     ethics_pass = bool(
         protocol_ok and (protocol or {}).get("ethics_status") in {
             "approved", "exempt", "not-required"

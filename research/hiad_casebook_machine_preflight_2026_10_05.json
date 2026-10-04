@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "kind": "machine_preflight_only",
+  "generated_at_utc": "2026-10-04T23:07:01.081916+00:00",
+  "machine_preflight_pass": true,
+  "case_count": 24,
+  "checks": [
+    {
+      "id": "holdout_split_declared",
+      "status": "PASS",
+      "observed": "holdout",
+      "requirement": "The approval input must explicitly declare the holdout split."
+    },
+    {
+      "id": "declared_count_matches_cases",
+      "status": "PASS",
+      "observed": {
+        "declared": 24,
+        "actual": 24
+      },
+      "requirement": "The prepared HIAD holdout must contain exactly 24 cases."
+    },
+    {
+      "id": "event_ids_unique_and_nonempty",
+      "status": "PASS",
+      "observed": {
+        "count": 24,
+        "unique": 24,
+        "empty_ids": 0
+      },
+      "requirement": "Every case must have one non-empty unique event identifier."
+    },
+    {
+      "id": "required_case_fields_present",
+      "status": "PASS",
+      "observed": {
+        "required": [
+          "event_id",
+          "quality",
+          "stratum",
+          "input_context",
+          "references",
+          "narrative_action_leakage_review",
+          "expert_vignette_approved"
+        ],
+        "case_count": 24
+      },
+      "requirement": "Every case must retain the fields needed for later human review."
+    },
+    {
+      "id": "required_context_fields_nonempty",
+      "status": "PASS",
+      "observed": {
+        "required": [
+          "title",
+          "description",
+          "physical_effect",
+          "consequence_nature",
+          "sub_application",
+          "supply_chain_stage",
+          "operational_condition"
+        ]
+      },
+      "requirement": "Every case must contain a non-empty incident context for coordinator review."
+    },
+    {
+      "id": "references_present",
+      "status": "PASS",
+      "observed": {
+        "case_count": 24
+      },
+      "requirement": "Every case must retain at least one provenance/reference entry."
+    },
+    {
+      "id": "human_gates_remain_unresolved",
+      "status": "PASS",
+      "observed": {
+        "leakage_review": "PENDING",
+        "expert_vignette_approved": "NO"
+      },
+      "requirement": "Machine preflight must never silently approve or freeze a vignette."
+    }
+  ],
+  "claim_boundary": [
+    "This report checks file structure and unresolved human-review markers only.",
+    "It is not a leakage review, ethics determination, expert rating, casebook freeze, or holdout collection.",
+    "No effectiveness, safety, or publication claim may use this preflight as outcome evidence."
+  ],
+  "required_human_gates": [
+    "coordinator leakage review for every vignette",
+    "institutional ethics or exemption determination",
+    "hash-locked approved casebook freeze",
+    "masked holdout response collection",
+    "independent expert review and safety assessment"
+  ],
+  "casebook": {
+    "path": "data\\public_validation\\results\\hiad_holdout_preparation\\casebook_for_approval.json",
+    "sha256": "3d02c589a67b7e1af112ffb5d58712ec366d66cddd13536ddabf5c0fd6bb226e"
+  }
+}

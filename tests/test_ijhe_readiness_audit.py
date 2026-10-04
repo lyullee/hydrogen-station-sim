@@ -217,6 +217,7 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
         == "NO_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED"
     )
     assert gates["institutional_ethics_determination"]["status"] == "PENDING"
+    assert gates["hiad_casebook_machine_preflight_integrity"]["status"] == "PASS"
     assert gates["independent_expert_review_complete"]["status"] == "PENDING"
     assert report["bounded_ijhe_submission_ready"] is False
     assert report["full_user_objective_ready"] is False
