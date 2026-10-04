@@ -30,10 +30,12 @@ def build(root: Path) -> dict[str, Any]:
     hiad_path = root / "research/hiad_evaluation_readiness.json"
     tracker_path = root / "research/validation_data_acquisition_tracker.json"
     search_path = root / "research/public_full_loop_search_recheck_2026_10_04.json"
+    operational_search_path = root / "research/public_operational_benchmark_recheck_2026_10_05.json"
     audit = load_json(audit_path)
     hiad = load_json(hiad_path)
     tracker = load_json(tracker_path)
     search = load_json(search_path)
+    operational_search = load_json(operational_search_path)
 
     status_by_id = {g["id"]: g for g in audit.get("gates", [])}
     gate = lambda gate_id: status_by_id.get(gate_id, {"status": "MISSING"})
@@ -83,6 +85,7 @@ def build(root: Path) -> dict[str, Any]:
                     "data/public_validation/results/closed_loop_external_holdout/validation.json",
                     "research/mc_default_source_boundary_identifiability_2026_10_04.json",
                     "research/public_full_loop_search_recheck_2026_10_04.json",
+                    "research/public_operational_benchmark_recheck_2026_10_05.json",
                     "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
                 ],
                 "unblock_criterion": "Obtain a clean, rights-cleared, pre-access frozen external dataset with synchronized station pressure/temperature/mass-flow, protocol/controller, dispenser/nozzle, and vehicle/receptacle channels; resolve the source-boundary/topology ambiguity; then score >=8 cases with >=80% screen pass fraction.",
@@ -128,8 +131,10 @@ def build(root: Path) -> dict[str, Any]:
             "hiad_readiness_sha256": sha256(hiad_path),
             "acquisition_tracker_sha256": sha256(tracker_path),
             "full_loop_search_sha256": sha256(search_path),
+            "operational_benchmark_recheck_sha256": sha256(operational_search_path),
             "candidate_route_count": len(tracker.get("candidates") or []),
             "public_full_loop_search_candidate_count": search.get("candidate_count"),
+            "public_operational_benchmark_candidate_count": len(operational_search.get("candidates") or []),
         },
         "claim_policy": [
             "Never present a request, metadata page, or public station inventory as raw validation evidence.",

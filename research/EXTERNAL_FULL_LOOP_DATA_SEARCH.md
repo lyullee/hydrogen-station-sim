@@ -1245,3 +1245,12 @@ This recheck adds a prioritized data-request route without changing the
 production model or treating field summaries as validation. Until a custodian
 provides a de-identified synchronized export with reuse permission, the
 full-loop external gate and the full IJHE objective remain open.
+
+The UPC/Digital.CSIC supplementary artifact for the on-site HRS modelling paper
+(DOI [10.1016/j.ijhydene.2023.08.192](https://doi.org/10.1016/j.ijhydene.2023.08.192))
+was also checked. It is openly reachable and useful for comparing operating
+strategy diagrams and modelled compressor/energy plots, but it is a simulation
+supplement rather than a measured station logger archive. It therefore remains
+explicitly excluded from the physical holdout and cannot be used for parameter
+fitting. The exclusion is recorded alongside the five-candidate recheck in
+[`public_operational_benchmark_recheck_2026_10_05.json`](public_operational_benchmark_recheck_2026_10_05.json).

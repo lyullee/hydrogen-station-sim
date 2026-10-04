@@ -78,6 +78,20 @@ categories and plotted pressure, temperature and flow patterns
 so we use it for operating-range and fault-taxonomy context rather than as a
 numerical full-loop holdout.
 
+Two additional real-station studies provide useful independent operating
+context. Genovese et al. report more than 4,500 Cal State LA HRFF refuelling
+events and over 8,800 kg dispensed, with one-second, ten-second and minute
+station databases described in the acquisition architecture
+\cite{genovese2024}. Samuelsen et al. analyse the UCI NFCRC station during the
+first five years of commercial FCEV deployment and report fill-level start/end
+pressure and temperature, dispensed mass and refuelling-time summaries
+\cite{samuelsen2020}. The public records expose the field provenance and
+aggregate or endpoint results, but not the synchronized raw pressure,
+temperature and mass-flow rows with a reuse statement required for an
+untouched full-loop holdout. We therefore use both studies to bound plausible
+operating ranges and to identify data-acquisition requests, not as numerical
+validation evidence.
+
 The public PRHYDE deliverable provides a broader protocol and experiment
 context: four instrumented tanks (240 L H70, 350 L H50, 322 L H35 and 165 L
 H70) were tested at ZBT and Nikola across pressure-ramp and delivery-
@@ -1046,6 +1060,19 @@ change in practical hydrogen pressure tanks being filled at high pressures of
 35 and 70 MPa, \textit{International Journal of Hydrogen Energy} 37 (2012)
 5723--5734,
 \href{https://doi.org/10.1016/j.ijhydene.2011.12.136}{doi:10.1016/j.ijhydene.2011.12.136}.
+
+\bibitem{genovese2024}
+M. Genovese, D. Blekhman, M. Dray, P. Fragiacomo, Multi-year energy
+performance data for an electrolysis-based hydrogen refueling station,
+\textit{International Journal of Hydrogen Energy} 52 (2024) 688--704,
+\href{https://doi.org/10.1016/j.ijhydene.2023.04.084}{doi:10.1016/j.ijhydene.2023.04.084}.
+
+\bibitem{samuelsen2020}
+S. Samuelsen, B. Shaffer, J. Grigg, B. Lane, J. Reed et al., Performance of a
+hydrogen refueling station in the early years of commercial fuel cell vehicle
+deployment, \textit{International Journal of Hydrogen Energy} 45 (2020)
+31341--31352,
+\href{https://doi.org/10.1016/j.ijhydene.2020.08.251}{doi:10.1016/j.ijhydene.2020.08.251}.
 \end{thebibliography}
 
 \end{document}

@@ -110,6 +110,26 @@
       },
       "finding": "The API provides station layout and operational signals but not a synchronized vehicle-fueling pressure-temperature-mass-flow trace.",
       "use": "Station inventory and availability context only; not an experimental validation set."
+    },
+    {
+      "id": "upc_onsite_hrs_supplementary_simulation_2024",
+      "title": "Supplementary Material for: Modelling and operation strategy approaches for on-site Hydrogen Refuelling Stations",
+      "doi": "10.1016/j.ijhydene.2023.08.192",
+      "url": "https://hdl.handle.net/10261/334805",
+      "download": "https://digital.csic.es/bitstream/10261/334805/1/1-s2.0-S0360319923042167-mmc1.pdf",
+      "license": "CC BY-NC-ND 4.0 for the supplementary article artifact",
+      "decision": "SIMULATION_SUPPLEMENTARY_EXCLUDED",
+      "observed_scope": {
+        "publisher": "Agencia Estatal Consejo Superior de Investigaciones Cient\u00edficas / Digital.CSIC",
+        "contents": [
+          "operational-strategy flow diagram",
+          "one-day compressor and energy simulation plots",
+          "annual modelled operating results"
+        ],
+        "measured_station_logger_rows": false
+      },
+      "finding": "The public supplementary artifact belongs to a modelling study and contains simulation plots and strategy descriptions, not measured synchronized station-to-vehicle pressure, temperature and mass-flow rows.",
+      "use": "Retain as a model-comparison and protocol-context citation only; it cannot be promoted to an external physical holdout or used to tune the production model."
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
