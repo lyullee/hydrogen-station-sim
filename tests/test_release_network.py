@@ -1,0 +1,67 @@
+from __future__ import annotations
+
+import numpy as np
+import pytest
+
+from h2station.release_network import ReleaseNetworkInputs, simulate_release_network
+
+
+def _inputs(**overrides):
+    values = dict(
+        source_volume_m3=0.098,
+        source_pressure_pa_abs=15.513e6,
+        source_temperature_k=315.15,
+        line_volume_m3=3.8e-4,
+        line_initial_pressure_pa_abs=101_325.0,
+        line_initial_temperature_k=293.15,
+        upstream_diameter_m=0.003175,
+        terminal_diameter_m=0.00794,
+        valve_opening_time_s=0.05,
+    )
+    values.update(overrides)
+    return ReleaseNetworkInputs(**values)
+
+
+def test_release_network_has_finite_opening_and_distinct_line_state():
+    time = np.linspace(0.0, 0.25, 51)
+    result = simulate_release_network(time, inputs=_inputs())
+
+    assert np.all(np.isfinite(result.line_pressure_pa_abs))
+    assert result.line_pressure_pa_abs[1] > result.line_pressure_pa_abs[0]
+    assert result.terminal_mass_flow_kg_s[0] == pytest.approx(0.0, abs=1.0e-9)
+    assert result.terminal_mass_flow_kg_s[-1] > 0.0
+    assert result.upstream_mass_flow_kg_s[1] < result.upstream_mass_flow_kg_s[-1]
+
+
+def test_release_network_mass_closure_is_explicit():
+    time = np.linspace(0.0, 0.5, 101)
+    result = simulate_release_network(time, inputs=_inputs())
+    source_loss = result.source_mass_kg[0] - result.source_mass_kg[-1]
+    line_accumulation = result.line_mass_kg[-1] - result.line_mass_kg[0]
+    terminal_release = np.trapezoid(result.terminal_mass_flow_kg_s, result.time_s)
+
+    assert source_loss == pytest.approx(line_accumulation + terminal_release, rel=2.0e-4)
+
+
+def test_release_network_rejects_nonphysical_inputs():
+    with pytest.raises(ValueError, match="line_volume_m3"):
+        _inputs(line_volume_m3=0.0)
+    with pytest.raises(ValueError, match="discharge coefficients"):
+        _inputs(upstream_discharge_coefficient=1.1)
+
+
+def test_zero_thermal_capacity_keeps_wall_temperature_fixed():
+    time = np.linspace(0.0, 0.1, 11)
+    result = simulate_release_network(
+        time,
+        inputs=_inputs(
+            source_wall_mass_kg=0.0,
+            line_wall_mass_kg=0.0,
+            source_internal_area_m2=1.0,
+            line_internal_area_m2=1.0,
+            internal_heat_transfer_w_m2_k=100.0,
+            external_heat_transfer_w_m2_k=100.0,
+        ),
+    )
+    assert np.all(result.source_wall_temperature_k == pytest.approx(315.15))
+    assert np.all(result.line_wall_temperature_k == pytest.approx(293.15))

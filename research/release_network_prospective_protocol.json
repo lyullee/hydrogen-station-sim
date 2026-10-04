@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "status": "prospective_model_only_no_holdout_received",
+  "model": "src/h2station/release_network.py",
+  "evidence_role": "future_validation_protocol",
+  "model_boundary": {
+    "control_volumes": ["source_vessel", "supply_line"],
+    "boundaries": ["finite_valve_opening", "terminal_restriction_to_ambient"],
+    "states": ["mass", "internal_energy", "source_wall_temperature", "line_wall_temperature"],
+    "outputs": ["source_pressure", "line_pressure", "source_temperature", "line_temperature", "upstream_mass_flow", "terminal_mass_flow"]
+  },
+  "required_channels": [
+    "common_timestamp",
+    "source_pressure",
+    "source_temperature",
+    "line_or_manifold_pressure",
+    "line_or_manifold_temperature",
+    "terminal_mass_flow_or_transferred_mass",
+    "valve_command_or_position",
+    "ambient_pressure",
+    "ambient_temperature",
+    "source_and_line_geometry",
+    "units_calibration_uncertainty_and_quality_flags"
+  ],
+  "minimum_cases": 8,
+  "coverage": {
+    "source_pressure_groups": 2,
+    "line_or_restriction_geometry_groups": 2,
+    "valve_opening_conditions": 2
+  },
+  "frozen_primary_screens": {
+    "mass_flow_nrmse_percent_peak_max": 15.0,
+    "mass_flow_median_ape_percent_max": 20.0,
+    "pressure_nrmse_percent_initial_max": 10.0,
+    "half_time_relative_error_percent_max": 20.0,
+    "aggregate_joint_pass_fraction_min": 0.7
+  },
+  "prohibited_after_outcome_access": [
+    "case_specific_parameter_fit",
+    "discharge_coefficient_fit",
+    "valve_opening_time_fit",
+    "line_volume_or_diameter_fit",
+    "time_shift_or_dynamic_time_warping",
+    "failed_case_exclusion"
+  ],
+  "current_result": {
+    "raw_campaign_received": false,
+    "numerical_holdout_run": false,
+    "ijhe_gate_impact": "no_change",
+    "full_user_objective_ready": false
+  },
+  "claim_boundary": "Implementation and mass-closure tests only; no external physical validation, station safety, consequence-distance or SAGA-effectiveness claim."
+}
