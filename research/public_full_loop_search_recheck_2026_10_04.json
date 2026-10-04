@@ -107,11 +107,35 @@
       "decision": "AGGREGATE_OR_ACCESS_RESTRICTED",
       "finding": "The publications describe large real-world operational collections and aggregate KPIs, but a public, machine-readable synchronized station-to-vehicle raw logger archive with reuse terms was not located.",
       "reuse_status": "publication/aggregate evidence only; custodial data request remains necessary"
+    },
+    {
+      "id": "csula_doe_tv024_secure_data_recheck_2026_10_04",
+      "title": "DOE TV024 CSULA Hydrogen Refueling Facility Performance Evaluation and Optimization",
+      "url": "https://www.hydrogen.energy.gov/docs/hydrogenprogramlibraries/pdfs/progress16/vii_b_4_blekhman_2016.pdf?sfvrsn=d501ab4e_1",
+      "decision": "SECURE_NREL_DATA_NOT_PUBLIC_RAW",
+      "finding": "DOE material confirms continuous station data collection and submission to the NREL Hydrogen Secure Data Center, while the public deliverable exposes summaries and instrumentation descriptions only; no synchronized raw logger export and reuse terms are published.",
+      "reuse_status": "public project report; raw data custodial/secure and not eligible without release"
+    },
+    {
+      "id": "csula_big_data_paper_recheck_2026_10_04",
+      "title": "Big Data Prediction in Hydrogen Gas Power Plant using Apache Spark",
+      "url": "https://www.calstatela.edu/sites/default/files/kscifall2017hydrogenbigdataanalysis.pdf",
+      "decision": "PUBLIC_PAPER_NO_ATTACHED_RAW_ARCHIVE",
+      "finding": "The paper describes a facility-provided fueling dataset and predictive analysis, but the public PDF contains no machine-readable synchronized raw file, cryptographic archive or reuse terms for independent replay.",
+      "reuse_status": "publication-only; raw dataset provenance/reuse remains unresolved"
+    },
+    {
+      "id": "gti_delivered_station_data_recheck_2026_10_04",
+      "title": "DOE/GTI delivered hydrogen fueling station performance project",
+      "url": "https://www.osti.gov/servlets/purl/1824631",
+      "decision": "AGGREGATED_CONFIDENTIAL_DATA",
+      "finding": "The public final report states that detailed station data were reported to NREL and aggregated because of confidentiality concerns; it does not release synchronized station-to-vehicle raw logs.",
+      "reuse_status": "public report only; excluded from holdout"
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
   "gate_impact": "full_loop_external_validation_remains_open",
   "next_action": "Request a de-identified synchronized logger export and written reuse terms from CARB/HyStEP, NIST FTS, NREL/NLR HITRF, JRC GasTeF, FCH2RAIL, or an HRS operator; freeze the protocol and model before inspecting outcomes.",
   "claim_boundary": "This search record does not convert public summaries, simulator examples or component experiments into full-loop validation evidence.",
-  "candidate_count": 10
+  "candidate_count": 13
 }
