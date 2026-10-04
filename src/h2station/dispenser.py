@@ -287,12 +287,42 @@ class IsentropicRealGasRestriction:
             velocity = np.sqrt(max(0.0, 2.0 * (stagnation_enthalpy - enthalpy)))
             return density * velocity
 
+        def bounded_mass_flux(pressure_pa: float) -> float:
+            """Evaluate a flux without leaving the tabulated isentrope.
+
+            At deep expansion the interpolated critical point can be below the
+            entropy range represented by the runtime property table.  The
+            physical model is then still usable, but the table cannot support
+            the requested point.  Search upward for the lowest admissible
+            pressure and use that boundary value instead of aborting the
+            process integration.  This is a bounded table result, not an
+            extrapolation or a fitted correction.
+            """
+            try:
+                return mass_flux(pressure_pa)
+            except ThermoDomainError:
+                invalid = max(table.pressure_grid[0], min(pressure_pa, upstream_pressure_pa))
+                valid = upstream_pressure_pa * (1.0 - 1.0e-10)
+                try:
+                    mass_flux(valid)
+                except ThermoDomainError:
+                    raise
+                for _ in range(48):
+                    candidate = np.sqrt(invalid * valid)
+                    try:
+                        mass_flux(candidate)
+                    except ThermoDomainError:
+                        invalid = candidate
+                    else:
+                        valid = candidate
+                return mass_flux(valid)
+
         critical_ratio = self._critical_ratio(upstream_pressure_pa, upstream_temperature_k)
         if critical_ratio is not None:
             critical_pressure = upstream_pressure_pa * critical_ratio
             # A subcritical restriction is controlled by its downstream state;
             # a choked one is controlled by the interpolated sonic state.
-            maximum_flux = mass_flux(max(lower_pressure, critical_pressure))
+            maximum_flux = bounded_mass_flux(max(lower_pressure, critical_pressure))
             return (
                 self.parameters.discharge_coefficient
                 * self.parameters.flow_area_m2

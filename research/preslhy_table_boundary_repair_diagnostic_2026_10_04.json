@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "evidence_role": "post_access_development_repair_diagnostic",
+  "source_protocol": "research/preslhy_blowdown_validation_protocol.json",
+  "protocol_sha256": "d40cc59af3a607e66870d2afb91014058c83ae96fc1ba4aeac0d8554953733af",
+  "raw_outcomes_accessed_before_repair": true,
+  "primary_validation_claim_supported": false,
+  "gate_impact": "no_change_preslhy_primary_gate_remains_failed",
+  "repair": {
+    "file": "src/h2station/dispenser.py",
+    "sha256_after_repair": "0652987a6ebc2f987e04698bba07d770db71ee93fb6995f29b91bb87967bf545",
+    "description": "When the interpolated sonic point leaves the tabulated entropy domain during deep expansion, locate the lowest admissible isentrope pressure and use its bounded flux instead of aborting the integration.",
+    "safety_property": "No extrapolation, parameter fitting or outcome-dependent coefficient change is introduced; the fallback remains inside the property-table domain.",
+    "regression_tests": "tests/test_restriction_table_boundary.py"
+  },
+  "comparison": {
+    "frozen_primary_result": {
+      "eligible_cases": 22,
+      "joint_primary_passes": 11,
+      "joint_primary_pass_fraction": 0.5,
+      "claim_supported": false
+    },
+    "repaired_post_access_replay": {
+      "eligible_cases": 22,
+      "joint_primary_passes": 16,
+      "joint_primary_pass_fraction": 0.7272727272727273,
+      "protocol_claim_threshold": 0.7,
+      "runner_output_sha256": "3e386306039c2159e456c07a6f8518c077df9de707fe819c847c0c78596fdae7",
+      "claim_supported": false,
+      "interpretation": "Exploratory only because the model was repaired after the original outcomes were accessed."
+    }
+  },
+  "retained_failures": [
+    "20190523_155208",
+    "20190523_144939",
+    "20190523_150133",
+    "20190523_151013",
+    "20190523_151618",
+    "20190523_144219"
+  ],
+  "next_step": "Freeze the repaired implementation and score it on a new untouched campaign, such as an independent PRESLHY series or controlled-access release dataset, before making any validation claim.",
+  "claim_boundary": "This repair removes a table-domain integration failure and demonstrates development improvement. It does not validate the full HRS fueling loop, a site vent stack, two-phase release, ignition, dispersion, emergency separation distance or SAGA effectiveness."
+}

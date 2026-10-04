@@ -1012,3 +1012,18 @@ distributed resistance rather than a justified global parameter correction.
 The post-access diagnostic is stored in
 `research/schefer_release_postaccess_residual_diagnostic_2026_10_04.json`; both
 validation gates remain failed.
+
+## 2026-10-04 PRESLHY table-domain repair diagnostic
+
+The original PRESLHY E3.1 result retained six high/deep-expansion integration
+failures caused by the choked-point search leaving the tabulated isentrope
+domain. A bounded fallback was added to the restriction model: it searches for
+the lowest admissible pressure on the same tabulated isentrope and never
+extrapolates. A post-access replay then produced 16/22 joint passes (72.7%),
+up from 11/22 (50.0%).
+
+Because the repair was made after the original numerical outcomes were read,
+the 72.7% result is explicitly exploratory and does not reopen the failed
+PRESLHY gate. The repaired implementation must be frozen and evaluated on a
+new untouched campaign. Full details are in
+`research/preslhy_table_boundary_repair_diagnostic_2026_10_04.json`.
