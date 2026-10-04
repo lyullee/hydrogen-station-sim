@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "source_id": "khk_hpg_incident_database_r7",
+  "title": "KHK high-pressure-gas accident case database (FY2025 edition)",
+  "publisher": "High Pressure Gas Safety Institute of Japan (KHK) / Ministry of Economy, Trade and Industry (METI)",
+  "landing_page": "https://www.khk.or.jp/public_information/incident_investigation/hpg_incident/incident_db.html",
+  "download_url": "https://khk.box.com/shared/static/sbe4936kflh2n2ksis7tgbwpvwvq5sdi.xlsm",
+  "version_label": "事故事例データベース（令和7年度版）",
+  "access_status": "LOCAL_ARCHIVE_READABLE",
+  "local_archive": {
+    "relative_path": "data/public_validation/raw/khk_hpg_incident_db_r7.xlsm",
+    "bytes": 8769723,
+    "sha256": "b256702ac6c97155430858a2647370e4a7d4d7930361c3e436d6a80ce3de0bfa",
+    "gitignored": true,
+    "committed_or_redistributed": false
+  },
+  "local_inspection": {
+    "workbook_opened": true,
+    "primary_case_sheet_found": true,
+    "primary_case_sheet": "高圧ガス保安法事故",
+    "structured_incident_fields_observed": true,
+    "hydrogen_station_relevant_cases_observed": true,
+    "row_level_text_or_counts_committed": false
+  },
+  "rights_and_restrictions": {
+    "copyright_holder": "METI",
+    "free_download_from_khk": true,
+    "commercial_use_requires_meti_permission": true,
+    "whole_or_partial_transfer_distribution_or_lending_prohibited": true,
+    "public_posting_or_public_download_mirror_prohibited": true,
+    "derived_publication_permission_status": "not_obtained"
+  },
+  "validation_classification": {
+    "full_loop_station_vehicle_holdout_eligible": false,
+    "accident_casebook_candidate_for_local_saga_grounding": true,
+    "public_dataset_for_ijhe_submission": false,
+    "goal_completion_permitted": false
+  },
+  "claim_boundary": "The workbook is an authoritative local accident-case source and contains hydrogen-station-relevant records, but its terms prohibit redistribution and public posting. It cannot be represented as an openly deposited dataset or as independent synchronized station-to-vehicle numerical validation.",
+  "next_action": "Request written permission for a de-identified hydrogen-station subset and derived aggregate publication before extracting any casebook material for the blinded SAGA expert study."
+}

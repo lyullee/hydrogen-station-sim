@@ -434,3 +434,19 @@ def test_external_search_mirror_contains_fts_recheck():
     assert item["full_loop_holdout_eligible"] is False
     assert "nist_fts_tn1888_public_artifact_check" in item["source_ids"]
     assert "nrel_h2iq_2024_heavy_duty_public_trace_check" in item["source_ids"]
+
+
+def test_khk_incident_database_access_is_local_only_and_not_promoted():
+    record = json.loads(
+        (ROOT / "research/khk_public_incident_access_2026_10_04.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert record["access_status"] == "LOCAL_ARCHIVE_READABLE"
+    assert record["local_archive"]["gitignored"] is True
+    assert record["local_archive"]["committed_or_redistributed"] is False
+    assert record["rights_and_restrictions"]["public_posting_or_public_download_mirror_prohibited"] is True
+    assert record["validation_classification"]["accident_casebook_candidate_for_local_saga_grounding"] is True
+    assert record["validation_classification"]["full_loop_station_vehicle_holdout_eligible"] is False
+    assert record["validation_classification"]["goal_completion_permitted"] is False
+    assert (ROOT / "research/KHK_DATA_PERMISSION_REQUEST_DRAFT.md").exists()

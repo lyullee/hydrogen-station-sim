@@ -2287,5 +2287,15 @@
     ],
     "full_loop_holdout_eligible": false,
     "finding": "NIST and NREL sources materially strengthen protocol, metrology and high-flow provenance, but none supplies the independently accessible synchronized station-to-vehicle raw archive required to clear the full-loop IJHE gate. Published figures and aggregate values are not converted into pseudo-raw validation data."
+  },
+  "khk_public_incident_access_2026_10_04": {
+    "record": "research/khk_public_incident_access_2026_10_04.json",
+    "decision": "LOCAL_ONLY_ACCIDENT_CASEBOOK_CANDIDATE",
+    "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+    "source_ids": ["khk_hpg_incident_database_r7"],
+    "full_loop_holdout_eligible": false,
+    "public_dataset_for_ijhe_submission": false,
+    "finding": "The current KHK/METI FY2025 workbook is locally readable and contains hydrogen-station-relevant high-pressure-gas accident cases. KHK terms prohibit transfer, distribution and public posting of all or part of the database, so no raw rows or derived counts are committed. Written permission is required before a de-identified casebook or aggregate results can be published.",
+    "claim_boundary": "Authoritative local accident evidence can support a future blinded SAGA casebook after permission, but it does not close the synchronized station-to-vehicle numerical validation gate or permit automatic IJHE goal completion."
   }
 }

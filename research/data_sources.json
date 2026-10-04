@@ -480,6 +480,20 @@
       "reported_scope": "Real station data acquisition and HSDC export covering production, storage, dispensing, energy, maintenance, reliability and safety/incident fields.",
       "rights_note": "Detailed partner data are controlled; request a de-identified station-by-fill export and reuse terms.",
       "eligibility_note": "Real station provenance and data-request route only; aggregate public products do not close the synchronized full-loop gate."
+    },
+    "khk_hpg_incident_database_r7": {
+      "title": "KHK high-pressure-gas accident case database (FY2025 edition)",
+      "publisher": "High Pressure Gas Safety Institute of Japan / METI",
+      "landing_page": "https://www.khk.or.jp/public_information/incident_investigation/hpg_incident/incident_db.html",
+      "download_url": "https://khk.box.com/shared/static/sbe4936kflh2n2ksis7tgbwpvwvq5sdi.xlsm",
+      "version_label": "事故事例データベース（令和7年度版）",
+      "access_status": "LOCAL_ARCHIVE_READABLE",
+      "local_archive": "data/public_validation/raw/khk_hpg_incident_db_r7.xlsm",
+      "sha256": "b256702ac6c97155430858a2647370e4a7d4d7930361c3e436d6a80ce3de0bfa",
+      "public_raw_data": false,
+      "rights_note": "METI copyright; KHK terms require permission for commercial use and prohibit transfer, distribution, public posting or mirroring of all or part of the database.",
+      "eligibility_note": "Local accident-casebook candidate for SAGA grounding after permission; not a public dataset and not a synchronized station-to-vehicle numerical holdout.",
+      "request_draft": "research/KHK_DATA_PERMISSION_REQUEST_DRAFT.md"
     }
   }
 }
