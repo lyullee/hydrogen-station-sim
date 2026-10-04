@@ -1083,3 +1083,11 @@ None contains the required licensed station-to-vehicle pressure, mass-flow and
 preferably temperature channels on a common time base with initial conditions
 and protocol metadata. This discovery recheck therefore does not add a new
 independent holdout or change the full-loop gate.
+
+The 2020 Chinese 35/70 MPa dispenser performance article was separately
+checked at file level. Its four linked CSV ZIPs contain only initial/final
+summary tables, while the article reports a 70 MPa fill endpoint (276 s,
+5.08 kg, 81.6 MPa, 65.8 °C and 36 g/s peak). Since no synchronized raw trace
+or explicit reuse licence is supplied, this remains contextual evidence and
+not a full-loop holdout. The file hashes and decision are recorded in
+[`research/chinese_hrs_performance_article_recheck_2026_10_04.json`](chinese_hrs_performance_article_recheck_2026_10_04.json).

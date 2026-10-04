@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "source": {
+    "title": "35 MPa/70 MPa hydrogen dispenser refuelling performance evaluation",
+    "article_url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
+    "doi": "10.19799/j.cnki.2095-4239.2020.0049",
+    "publisher": "Energy Storage Science and Technology",
+    "retrieval": "article HTML and linked CSV ZIPs inspected at file level"
+  },
+  "linked_files": [
+    {"name": "T1.csv.zip", "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T1.csv.zip", "sha256": "b98ac67fcf751801a86228dd8ee8779e50c2832ba5a78ed3c187654dc7725ac3", "content": "35 MPa initial-condition table", "time_series": false},
+    {"name": "T2.csv.zip", "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T2.csv.zip", "sha256": "06beb809e4021e3aee9e641e07ac4cdef98a9ae71a2abfa2ab7009a8ae28ecd0", "content": "35 MPa final-condition table", "time_series": false},
+    {"name": "T3.csv.zip", "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T3.csv.zip", "sha256": "33d2eeddd627260044b1be28f209372bd4283058afd5837ec95a029ce6bdde02", "content": "70 MPa initial-condition table", "time_series": false},
+    {"name": "T4.csv.zip", "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T4.csv.zip", "sha256": "44c6fc612715ef018ecde9e4a734eee86fa75640b5b91614e21b2bd035537a2e", "content": "70 MPa final-condition table", "time_series": false}
+  ],
+  "reported_experiments": [
+    {"pressure_class": "35 MPa", "vehicle_volume_l": 420, "initial_pressure_mpa": 2.2, "source_pressure_mpa": 43, "duration_s": 470, "dispensed_mass_kg": 8.21, "final_pressure_mpa": 35.4},
+    {"pressure_class": "70 MPa", "vehicle_volume_l": 122.4, "initial_pressure_mpa": 1.7, "source_pressure_mpa": 85, "duration_s": 276, "dispensed_mass_kg": 5.08, "final_pressure_mpa": 81.6, "final_temperature_c": 65.8, "peak_mass_flow_g_s": 36}
+  ],
+  "decision": "PUBLIC_SUMMARY_AND_TABLES_ONLY",
+  "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+  "reason": "The linked CSV ZIPs contain only four initial/final summary tables, not synchronized pressure-temperature-mass-flow traces. The article page does not state a machine-readable raw-data reuse licence. Reported endpoints may support contextual sanity checks or a future data request, but cannot be scored as an untouched full-loop holdout.",
+  "claim_boundary": "Do not treat the reported endpoints or table files as independent validation of the digital twin. A raw time series with protocol metadata, calibration/uncertainty and written reuse terms is still required."
+}

@@ -170,3 +170,18 @@ and mirrored in
 [`research/open_repository_search_2026_10_04.json`](open_repository_search_2026_10_04.json).
 This is a discovery recheck only; it does not add a new validation holdout or
 change the independent full-loop gate.
+
+## 2026-10-04 35/70 MPa dispenser article file check
+
+The public article [35 MPa/70 MPa hydrogen dispenser refuelling performance
+evaluation](https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml)
+reports real-station endpoint values and exposes four linked CSV ZIPs. The
+files are initial/final condition tables only; they do not contain synchronized
+pressure-temperature-mass-flow traces, calibration metadata or a stated raw-data
+reuse licence. The 70 MPa experiment reports a 276 s fill, 5.08 kg dispensed,
+81.6 MPa final pressure, 65.8 °C final temperature and 36 g/s peak flow, which
+is useful as contextual plausibility evidence but cannot be scored as an
+untouched full-loop holdout.
+
+The downloaded file digests and the eligibility decision are frozen in
+[`research/chinese_hrs_performance_article_recheck_2026_10_04.json`](chinese_hrs_performance_article_recheck_2026_10_04.json).

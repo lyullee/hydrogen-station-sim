@@ -169,3 +169,17 @@ def test_figshare_recheck_keeps_station_full_loop_gate_open():
         item["decision"] != "NEW_INDEPENDENT_FULL_LOOP_HOLDOUT"
         for item in record["candidate_classifications"]
     )
+
+
+def test_chinese_dispenser_article_tables_are_not_promoted_to_holdout():
+    record = json.loads(
+        (
+            ROOT
+            / "research/chinese_hrs_performance_article_recheck_2026_10_04.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert record["decision"] == "PUBLIC_SUMMARY_AND_TABLES_ONLY"
+    assert record["gate_impact"] == "unchanged_independent_full_loop_gate_remains_open"
+    assert len(record["linked_files"]) == 4
+    assert all(item["time_series"] is False for item in record["linked_files"])
+    assert record["reported_experiments"][1]["duration_s"] == 276
