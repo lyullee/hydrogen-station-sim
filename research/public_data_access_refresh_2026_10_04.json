@@ -69,7 +69,26 @@
       },
       "classification": "PUBLIC_REAL_STATION_AGGREGATE_DATA_REQUEST_LEAD",
       "full_loop_holdout_eligible": false,
+      "request_draft": "research/3EMOTION_DATA_REQUEST_DRAFT.md",
       "next_action": "Request de-identified event/time-series exports from the 3Emotion station operators or authors with channel definitions, capacity/protocol metadata and reuse terms."
+    },
+    {
+      "id": "bam_2026_data_driven_station",
+      "title": "Data-Driven Intelligent Analysis System for Monitoring and Anomaly Detection in Hydrogen Refueling Station",
+      "publisher": "BAM / KETI, Applied Sciences",
+      "doi": "10.3390/app16157856",
+      "url": "https://www.mdpi.com/2076-3417/16/15/7856",
+      "accessed": "2026-10-04",
+      "reported_scope": "BAM demonstration HRS with continuous pressure, temperature and flow-rate monitoring, anomaly detection and remote safety monitoring.",
+      "public_artifact_inspection": {
+        "data_availability_statement": "The original contributions are included in the article; further inquiries are directed to the corresponding author.",
+        "raw_common_timebase_found": false,
+        "public_csv_xlsx_sql_found": false,
+        "finding": "The article confirms a highly relevant instrumented demonstration station and a real deployment, but its public artifact does not release the underlying synchronized logger archive or reuse terms."
+      },
+      "classification": "PUBLIC_REAL_STATION_METHOD_AND_DATA_REQUEST_LEAD",
+      "full_loop_holdout_eligible": false,
+      "next_action": "Request a de-identified raw channel export, sensor dictionary, calibration/quality flags and permission for derived publication from the corresponding author or BAM custodian."
     }
   ],
   "claim_boundary": "Neither source closes the independent full-loop numerical gate. A report-referenced workbook, aggregate logbook, plot or paper is not promoted to validation until synchronized raw files, immutable hashes, frozen scoring protocol and written reuse rights are available."

@@ -112,6 +112,11 @@ def test_external_search_mirror_contains_public_access_refresh():
         and source["full_loop_holdout_eligible"] is False
         for source in item["sources"]
     )
+    assert any(
+        source["id"] == "bam_2026_data_driven_station"
+        and source["public_artifact_inspection"]["raw_common_timebase_found"] is False
+        for source in item["sources"]
+    )
 
 
 def test_public_data_access_refresh_keeps_carb_and_3emotion_out_of_holdout():
@@ -122,7 +127,7 @@ def test_public_data_access_refresh_keeps_carb_and_3emotion_out_of_holdout():
     )
     assert record["decision"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
     assert record["gate_impact"] == "unchanged_independent_full_loop_gate_remains_open"
-    assert len(record["sources"]) == 2
+    assert len(record["sources"]) == 3
     carb = next(source for source in record["sources"] if source["id"].startswith("carb_"))
     threeemotion = next(
         source for source in record["sources"] if source["id"] == "threeemotion_operator_logbooks"
@@ -131,4 +136,8 @@ def test_public_data_access_refresh_keeps_carb_and_3emotion_out_of_holdout():
     assert carb["full_loop_holdout_eligible"] is False
     assert threeemotion["public_artifact_inspection"]["raw_common_timebase_found"] is False
     assert threeemotion["full_loop_holdout_eligible"] is False
+    bam = next(source for source in record["sources"] if source["id"] == "bam_2026_data_driven_station")
+    assert bam["public_artifact_inspection"]["public_csv_xlsx_sql_found"] is False
+    assert bam["full_loop_holdout_eligible"] is False
+    assert (ROOT / "research/3EMOTION_DATA_REQUEST_DRAFT.md").exists()
     assert "written reuse rights" in record["claim_boundary"]
