@@ -218,6 +218,33 @@ def audit(root: Path) -> dict[str, object]:
         } if mc_tank_boundary else "missing",
     ))
 
+    mc_enthalpy_path = root / "research/mc_enthalpy_pressure_sensitivity_2026_10_05.json"
+    mc_enthalpy = _json(mc_enthalpy_path)
+    mc_enthalpy_pass = bool(
+        (mc_enthalpy or {}).get("schema_version") == 1
+        and (mc_enthalpy or {}).get("diagnostic_type")
+        == "MC inlet enthalpy pressure-basis sensitivity"
+        and (mc_enthalpy or {}).get("evidence_role") == "development_diagnostic_only"
+        and (mc_enthalpy or {}).get("post_outcome") is True
+        and (mc_enthalpy or {}).get("parameter_fitting") is False
+        and len((mc_enthalpy or {}).get("runs") or []) == 3
+        and all(run.get("case_count") == 8 for run in (mc_enthalpy or {}).get("runs", []))
+        and (mc_enthalpy or {}).get("claim_boundary")
+    )
+    gates.append(_gate(
+        "mc_enthalpy_pressure_sensitivity_integrity",
+        "PASS" if mc_enthalpy_pass else ("FAIL" if mc_enthalpy else "PENDING"),
+        "The MC inlet enthalpy pressure-basis ambiguity is quantified without selecting a production boundary or claiming validation.",
+        str(mc_enthalpy_path.relative_to(root)),
+        "Three fixed-boundary sensitivity runs, eight cases each, no fitting, post-outcome diagnostic role and explicit missing nozzle-upstream pressure boundary.",
+        {
+            "evidence_role": (mc_enthalpy or {}).get("evidence_role"),
+            "run_count": len((mc_enthalpy or {}).get("runs") or []),
+            "case_counts": [run.get("case_count") for run in (mc_enthalpy or {}).get("runs", [])],
+            "aggregates": [run.get("aggregate") for run in (mc_enthalpy or {}).get("runs", [])],
+        } if mc_enthalpy else "missing",
+    ))
+
     external_loop_path = root / "data/public_validation/results/closed_loop_external_holdout/validation.json"
     external_loop = _json(external_loop_path)
     external_protocol_path = root / "research/mc_default_external_holdout_protocol.json"

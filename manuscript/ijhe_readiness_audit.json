@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T17:49:30.195555+00:00",
+  "generated_at": "2026-10-04T17:54:26.409788+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 41,
+    "PASS": 42,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -304,6 +304,39 @@
           "temperature_rmse_c_mean": 25.884020539463037,
           "soc_rmse_percentage_points_mean": 5.581868463392878
         }
+      }
+    },
+    {
+      "id": "mc_enthalpy_pressure_sensitivity_integrity",
+      "status": "PASS",
+      "claim": "The MC inlet enthalpy pressure-basis ambiguity is quantified without selecting a production boundary or claiming validation.",
+      "evidence": "research\\mc_enthalpy_pressure_sensitivity_2026_10_05.json",
+      "requirement": "Three fixed-boundary sensitivity runs, eight cases each, no fitting, post-outcome diagnostic role and explicit missing nozzle-upstream pressure boundary.",
+      "observed": {
+        "evidence_role": "development_diagnostic_only",
+        "run_count": 3,
+        "case_counts": [
+          8,
+          8,
+          8
+        ],
+        "aggregates": [
+          {
+            "pressure_rmse_mpa_mean": 2.1920961990250705,
+            "temperature_rmse_c_mean": 23.27982147421733,
+            "soc_rmse_percentage_points_mean": 5.581601238498376
+          },
+          {
+            "pressure_rmse_mpa_mean": 1.8156882965866448,
+            "temperature_rmse_c_mean": 25.884020539463037,
+            "soc_rmse_percentage_points_mean": 5.581868463392878
+          },
+          {
+            "pressure_rmse_mpa_mean": 4.375541156305331,
+            "temperature_rmse_c_mean": 9.052443267854247,
+            "soc_rmse_percentage_points_mean": 5.5833493152424865
+          }
+        ]
       }
     },
     {

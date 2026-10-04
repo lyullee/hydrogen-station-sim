@@ -107,6 +107,10 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert mc_tank["evidence_role"] == "development_diagnostic_only"
     assert mc_tank["post_outcome"] is True
     assert mc_tank["parameter_fitting"] is False
+    assert gates["mc_enthalpy_pressure_sensitivity_integrity"]["status"] == "PASS"
+    mc_enthalpy = gates["mc_enthalpy_pressure_sensitivity_integrity"]["observed"]
+    assert mc_enthalpy["run_count"] == 3
+    assert mc_enthalpy["case_counts"] == [8, 8, 8]
     release_development = gates["release_network_development_integrity"]["observed"]
     assert release_development["evidence_role"] == "consumed_development_only"
     assert release_development["eligible_as_confirmatory_validation"] is False
