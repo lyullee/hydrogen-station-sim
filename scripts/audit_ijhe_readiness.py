@@ -854,6 +854,42 @@ def audit(root: Path) -> dict[str, object]:
         grune_measurements if grune_inventory else "missing; Grune measurement inventory has not run",
     ))
 
+    explosion_inventory_path = root / "research/dataverse_hydrogen_explosion_dataset_inventory_2026_10_05.json"
+    explosion_inventory = _json(explosion_inventory_path)
+    explosion_sources = (explosion_inventory or {}).get("sources") or []
+    explosion_by_doi = {item.get("doi"): item for item in explosion_sources}
+    explosion_validation = (explosion_inventory or {}).get("validation_status") or {}
+    explosion_inventory_pass = bool(
+        (explosion_inventory or {}).get("status")
+        == "completed_dataverse_provenance_and_summary_inventory"
+        and set(explosion_by_doi) == {"10.18710/WSKBIJ", "10.18710/X044QK"}
+        and all(item.get("license") == "CC0 1.0" for item in explosion_sources)
+        and all(item.get("summary_file_identity_match") is True for item in explosion_sources)
+        and explosion_by_doi["10.18710/WSKBIJ"].get("published_summary", {}).get("experiment_count") == 51
+        and explosion_by_doi["10.18710/X044QK"].get("published_summary", {}).get("experiment_count") == 40
+        and explosion_validation.get("model_comparison_performed") is False
+        and explosion_validation.get("numeric_validation_gate_closed") is False
+        and explosion_validation.get("full_loop_external_validation_supported") is False
+        and bool((explosion_inventory or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "dataverse_hydrogen_explosion_component_inventory",
+        "PASS" if explosion_inventory_pass else ("FAIL" if explosion_inventory else "PENDING"),
+        "Two CC0 DataverseNO release/ignition archives are provenance-checked as independent consequence-component evidence without being promoted to HRS full-loop or model validation.",
+        str(explosion_inventory_path.relative_to(root)),
+        "WSKBIJ and X044QK API manifests, summary-workbook hashes, 51/40 experiment counts and explicit false model/full-loop flags.",
+        {
+            "dois": sorted(explosion_by_doi),
+            "experiment_counts": {
+                doi: item.get("published_summary", {}).get("experiment_count")
+                for doi, item in explosion_by_doi.items()
+            },
+            "license_all_cc0": all(item.get("license") == "CC0 1.0" for item in explosion_sources),
+            "model_comparison_performed": explosion_validation.get("model_comparison_performed"),
+            "full_loop_external_validation_supported": explosion_validation.get("full_loop_external_validation_supported"),
+        } if explosion_inventory else "missing; DataverseNO explosion inventory has not run",
+    ))
+
     playbook_path = root / "src/h2station/data/emergency_playbooks.json"
     playbooks = _json(playbook_path)
     playbook_sources = (playbooks or {}).get("sources") or {}

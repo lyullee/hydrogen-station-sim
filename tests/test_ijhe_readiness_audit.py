@@ -85,6 +85,13 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert grune_inventory["profile_count"] == 42
     assert grune_inventory["spatial_point_count"] == 5256
     assert grune_inventory["source_identity_all_match"] is True
+    assert gates["dataverse_hydrogen_explosion_component_inventory"]["status"] == "PASS"
+    explosion_inventory = gates["dataverse_hydrogen_explosion_component_inventory"]["observed"]
+    assert explosion_inventory["dois"] == ["10.18710/WSKBIJ", "10.18710/X044QK"]
+    assert explosion_inventory["experiment_counts"] == {
+        "10.18710/WSKBIJ": 51,
+        "10.18710/X044QK": 40,
+    }
     assert gates["hiad_action_evidence_integrity"]["status"] == "PASS"
     assert gates["hiad_action_evidence_integrity"]["observed"]["case_count"] == 34
     assert gates["hiad_accident_response_coverage_evaluation"]["status"] == "PASS"
