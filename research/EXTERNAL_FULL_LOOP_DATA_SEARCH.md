@@ -1136,3 +1136,31 @@ The file-level classifications and claim boundaries are frozen in
 `research/public_full_loop_search_refresh_2026_10_04.json`. None of these
 sources satisfies the untouched full-loop eligibility rule, so the numerical
 gate remains open and no IJHE-level validation claim is permitted.
+
+## 2026-10-04 MC Default source-boundary identifiability diagnostic
+
+The frozen MC Default holdout also exposes `source_pressure_3` endpoints, but
+the public protocol does not identify the connected storage volume, bank
+dispatch, regulator behavior or source-channel temperature. To separate that
+boundary uncertainty from the vehicle model, the diagnostic
+[`scripts/diagnose_mc_default_source_boundary.py`](../scripts/diagnose_mc_default_source_boundary.py)
+was run against all eight frozen cases. It uses only the tabulated hydrogen
+density relation, a 298.15 K isothermal mass balance and binary pressure
+inversion; it does not fit a volume, modify the production model or reopen the
+holdout.
+
+The resulting artifact is
+[`research/mc_default_source_boundary_identifiability_2026_10_04.json`](mc_default_source_boundary_identifiability_2026_10_04.json).
+The observed source-pressure drops are 2.255--4.914 MPa for 3.984--8.738 kg
+transferred. If that channel were a single 0.35 m³ bank starting at 90 MPa,
+the same simplified estimate would predict 30.734--58.621 MPa drops. Under the
+conditional isothermal interpretation, the observed endpoints imply effective
+constant volumes of 2.737--8.697 m³. These values are diagnostics, not fitted
+parameters: the channel may represent a larger connected inventory, regulated
+upstream boundary, multiple-bank dispatch or different thermal behavior.
+
+This finding explains why the current full-loop comparison cannot identify an
+internal bank state from the public protocol alone. It does not rescue the
+failed external screen. A future protocol must either provide measured source
+pressure/temperature as a declared boundary trace or obtain bank topology and
+valve-state logs before scoring internal-bank pressure.

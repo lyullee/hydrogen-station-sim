@@ -266,3 +266,37 @@ def test_external_search_mirror_contains_primary_source_search_refresh():
     assert item["full_loop_holdout_eligible"] is False
     assert len(item["source_ids"]) == 5
     assert "nist_transient_flow_facility_refresh" in item["source_ids"]
+
+
+def test_mc_default_source_boundary_diagnostic_is_explicitly_non_validating():
+    record = json.loads(
+        (
+            ROOT
+            / "research/mc_default_source_boundary_identifiability_2026_10_04.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert record["status"] == "DEVELOPMENT_DIAGNOSTIC_ONLY"
+    assert len(record["cases"]) == 8
+    assert record["validation_boundary"]["full_loop_holdout_eligible"] is False
+    assert record["validation_boundary"]["frozen_holdout_modified"] is False
+    assert record["validation_boundary"]["post_outcome_tuning"] is False
+    assert all(
+        row["observed_source_pressure_drop_mpa"] > 0.0
+        and row["conditional_implied_constant_volume_m3"] > 0.0
+        for row in record["cases"]
+    )
+    assert min(
+        row["conditional_implied_constant_volume_m3"] for row in record["cases"]
+    ) > record["method"]["reference_volume_m3"]
+
+
+def test_external_search_mirror_contains_source_boundary_diagnostic():
+    mirror = json.loads(
+        (ROOT / "research/external_full_loop_data_search.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    item = mirror["mc_default_source_boundary_identifiability_2026_10_04"]
+    assert item["decision"] == "DEVELOPMENT_DIAGNOSTIC_ONLY"
+    assert item["cases"] == 8
+    assert item["full_loop_holdout_eligible"] is False

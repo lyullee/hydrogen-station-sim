@@ -2218,5 +2218,17 @@
     "finding": "A primary-source refresh confirms real HITRF tank-temperature evidence, the NLR secured-data route, H2FillS registration-gated empirical validation context, the Ramea aggregate capacity claim and NIST transient-flow metrology. No new licensed synchronized station-to-vehicle raw archive was found.",
     "full_loop_holdout_eligible": false,
     "claim_boundary": "The independent station-to-vehicle full-loop numerical gate remains open until a raw synchronized export, hash, reuse terms and prospective scoring are available."
+  },
+  "mc_default_source_boundary_identifiability_2026_10_04": {
+    "record": "research/mc_default_source_boundary_identifiability_2026_10_04.json",
+    "decision": "DEVELOPMENT_DIAGNOSTIC_ONLY",
+    "gate_impact": "unchanged_mc_default_full_loop_gate_remains_open",
+    "cases": 8,
+    "full_loop_holdout_eligible": false,
+    "frozen_holdout_modified": false,
+    "post_outcome_tuning": false,
+    "finding": "Measured source_pressure_3 endpoints imply conditional isothermal effective volumes of 2.737-8.697 m3, while the current 0.35 m3 high-bank boundary predicts 30.734-58.621 MPa drops for the same transferred masses. Source topology, regulator/dispatch behavior and channel temperature are not published.",
+    "claim_boundary": "Diagnostic only; do not insert conditional volumes into the production model or claim the failed full-loop validation passes.",
+    "next_action": "Pre-register a partial-station/station-boundary protocol with measured source pressure and temperature, or obtain bank topology and valve-state logs."
   }
 }

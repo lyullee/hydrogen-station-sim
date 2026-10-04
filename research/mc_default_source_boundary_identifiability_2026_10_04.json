@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "status": "DEVELOPMENT_DIAGNOSTIC_ONLY",
+  "purpose": "Separate source-boundary/topology mismatch from vehicle-model error before any future validation redesign.",
+  "input": "data/public_validation/processed/mc_default_cases.csv",
+  "cases": [
+    {
+      "case_id": "H2P-MC-1-A",
+      "transferred_mass_kg": 4.406525999550114,
+      "observed_source_pressure_initial_mpa": 87.834,
+      "observed_source_pressure_final_mpa": 85.579,
+      "observed_source_pressure_drop_mpa": 2.2550000000000097,
+      "reference_high_bank_volume_m3": 0.35,
+      "reference_high_bank_pressure_mpa": 90.0,
+      "isothermal_reference_final_pressure_mpa": 56.440673773390756,
+      "isothermal_reference_pressure_drop_mpa": 33.559326226609244,
+      "conditional_implied_constant_volume_m3": 5.851243406182967
+    },
+    {
+      "case_id": "H2P-MC-1-B",
+      "transferred_mass_kg": 4.24888400147158,
+      "observed_source_pressure_initial_mpa": 87.535,
+      "observed_source_pressure_final_mpa": 84.022,
+      "observed_source_pressure_drop_mpa": 3.512999999999991,
+      "reference_high_bank_volume_m3": 0.35,
+      "reference_high_bank_pressure_mpa": 90.0,
+      "isothermal_reference_final_pressure_mpa": 57.48542054502395,
+      "isothermal_reference_pressure_drop_mpa": 32.51457945497605,
+      "conditional_implied_constant_volume_m3": 3.5940411162573054
+    },
+    {
+      "case_id": "H2P-MC-1-C",
+      "transferred_mass_kg": 4.210265500310564,
+      "observed_source_pressure_initial_mpa": 87.84,
+      "observed_source_pressure_final_mpa": 83.276,
+      "observed_source_pressure_drop_mpa": 4.564000000000007,
+      "reference_high_bank_volume_m3": 0.35,
+      "reference_high_bank_pressure_mpa": 90.0,
+      "isothermal_reference_final_pressure_mpa": 57.74250922263352,
+      "isothermal_reference_pressure_drop_mpa": 32.25749077736648,
+      "conditional_implied_constant_volume_m3": 2.7371376091133026
+    },
+    {
+      "case_id": "H2P-MC-1-D",
+      "transferred_mass_kg": 4.719497496336512,
+      "observed_source_pressure_initial_mpa": 88.212,
+      "observed_source_pressure_final_mpa": 84.456,
+      "observed_source_pressure_drop_mpa": 3.7560000000000002,
+      "reference_high_bank_volume_m3": 0.35,
+      "reference_high_bank_pressure_mpa": 90.0,
+      "isothermal_reference_final_pressure_mpa": 54.40187645309524,
+      "isothermal_reference_pressure_drop_mpa": 35.59812354690476,
+      "conditional_implied_constant_volume_m3": 3.748329832667272
+    },
+    {
+      "case_id": "H2P-MC-1-E",
+      "transferred_mass_kg": 4.333660498781176,
+      "observed_source_pressure_initial_mpa": 87.981,
+      "observed_source_pressure_final_mpa": 84.887,
+      "observed_source_pressure_drop_mpa": 3.093999999999994,
+      "reference_high_bank_volume_m3": 0.35,
+      "reference_high_bank_pressure_mpa": 90.0,
+      "isothermal_reference_final_pressure_mpa": 56.92119705024281,
+      "isothermal_reference_pressure_drop_mpa": 33.07880294975719,
+      "conditional_implied_constant_volume_m3": 4.183312909790033
+    },
+    {
+      "case_id": "H2P-MC-1-F",
+      "transferred_mass_kg": 4.021765500131982,
+      "observed_source_pressure_initial_mpa": 88.486,
+      "observed_source_pressure_final_mpa": 85.355,
+      "observed_source_pressure_drop_mpa": 3.1310000000000002,
+      "reference_high_bank_volume_m3": 0.35,
+      "reference_high_bank_pressure_mpa": 90.0,
+      "isothermal_reference_final_pressure_mpa": 59.005746627694634,
+      "isothermal_reference_pressure_drop_mpa": 30.994253372305366,
+      "conditional_implied_constant_volume_m3": 3.852229161718712
+    },
+    {
+      "case_id": "H2P-MC-2-A",
+      "transferred_mass_kg": 3.9835000031201755,
+      "observed_source_pressure_initial_mpa": 86.253,
+      "observed_source_pressure_final_mpa": 84.894,
+      "observed_source_pressure_drop_mpa": 1.3589999999999947,
+      "reference_high_bank_volume_m3": 0.35,
+      "reference_high_bank_pressure_mpa": 90.0,
+      "isothermal_reference_final_pressure_mpa": 59.2655388514037,
+      "isothermal_reference_pressure_drop_mpa": 30.734461148596303,
+      "conditional_implied_constant_volume_m3": 8.696862728897074
+    },
+    {
+      "case_id": "H2P-MC-9.8KG",
+      "transferred_mass_kg": 8.738148004936427,
+      "observed_source_pressure_initial_mpa": 88.087,
+      "observed_source_pressure_final_mpa": 83.173,
+      "observed_source_pressure_drop_mpa": 4.9140000000000015,
+      "reference_high_bank_volume_m3": 0.35,
+      "reference_high_bank_pressure_mpa": 90.0,
+      "isothermal_reference_final_pressure_mpa": 31.379028249495626,
+      "isothermal_reference_pressure_drop_mpa": 58.620971750504374,
+      "conditional_implied_constant_volume_m3": 5.278875180353343
+    }
+  ],
+  "method": {
+    "temperature_k": 298.15,
+    "equation": "tabulated Hydrogen density(P,T), isothermal mass balance, binary pressure inversion",
+    "reference_volume_m3": 0.35,
+    "reference_initial_pressure_mpa": 90.0,
+    "observed_channel": "source_pressure_3_initial_mpa/source_pressure_3_final_mpa",
+    "conditional_volume_definition": "transferred_mass / (rho(observed_initial)-rho(observed_final))"
+  },
+  "interpretation": {
+    "finding": "The observed 2.255-4.914 MPa source-pressure drops imply conditional constant volumes of 2.737-8.697 m3, while the current reference high-bank boundary is 0.35 m3 and predicts 30.734-58.621 MPa drops under the same simplified isothermal estimate.",
+    "meaning": "This is evidence that source_pressure_3 is not identifiable as the current single 0.35 m3 high-bank state from the public protocol alone. It may represent a larger connected inventory, pressure-regulated upstream boundary, multiple banks, or different thermal/valve behavior.",
+    "limitation": "The source channel temperature, internal topology, valve dispatch and regulator logic are not published; the conditional volumes are not fitted parameters and must not be inserted into the production model."
+  },
+  "validation_boundary": {
+    "full_loop_holdout_eligible": false,
+    "frozen_holdout_modified": false,
+    "post_outcome_tuning": false,
+    "recommended_next_protocol": "Pre-register a partial-station or station-boundary evaluation that supplies source pressure and temperature as measured boundary traces, or obtain bank topology/valve-state logs before comparing internal-bank pressure."
+  }
+}
