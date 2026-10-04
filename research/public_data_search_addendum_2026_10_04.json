@@ -101,6 +101,9 @@
       "public_synchronized_raw_logger": false,
       "scope": "real ZBT test-HRS sampling experiments; logged dispenser/tank channels reported and raw data available by author request",
       "raw_data_request_lead": "research/ZBT_METHYTRUCKS_DATA_REQUEST_DRAFT.md",
+      "supplementary_url": "https://www.mdpi.com/article/10.3390/cleantech8030091/s1",
+      "supplementary_contents": "tables describing storage-bank sampling conditions and contaminant measurements; no synchronized pressure-temperature-flow logger export",
+      "data_availability_statement": "raw data supporting the conclusions are available from the authors on request",
       "classification": "DATA_REQUEST_LEAD"
     },
     {
