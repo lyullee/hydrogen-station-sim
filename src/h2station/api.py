@@ -2352,12 +2352,13 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
             "hazop_sop": direct_sop,
             "hazop_hit_count": len(direct_hits),
         }
-    context = {"impact_results":impact_results,
-        # Keep the active-condition summary adjacent to deterministic impact
-        # results.  The prompt has a bounded serialized context; placing these
-        # fields before the larger provenance/sensor payload prevents a large
-        # sensor frame from truncating the condition evidence.
+    context = {
+        # Keep actionable response steps and active rule facts at the very
+        # front of the bounded prompt.  Impact results can contain large
+        # per-sample arrays and must not crowd out the immediate actions.
+        "emergency_response_guidance":prompt_guidance(response_plans),
         "hazop_active":active, "hazop_rules":matched_rules,
+        "impact_results":impact_results,
         "evidence_manifest": evidence_manifest,
         "impact_calculation_attempted":show_impact_results,
         "station":"H70 reference simulation", "time_s":frame.get("time_s"),
@@ -2371,7 +2372,6 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "virtual_safety_state": {key: virtual_safety.get(key) for key in
             ("ventilation", "cooling", "personnel", "evacuated", "access_restricted",
              "power_isolated", "recovery_approved")},
-        "emergency_response_guidance":prompt_guidance(response_plans),
         "relief_valves_open":frame.get("relief_valves_open") or [],
         "relief_valve_settings":{key: value for key, value in
             (((frame.get("process_operations") or {}).get("settings") or {}).get("relief_valves") or {}).items()
@@ -3133,12 +3133,16 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
     retained_gas_alerts = sorted({rule["sensor_id"] for rule in active_rules + related_rules
                                   if rule.get("sensor_id", "").startswith("GD-")
                                   and rule.get("state") in {"LATCHED", "ALARM_HOLD"}})
-    context = {"time_s": payload["time_s"], "sensor": {
-        "tag": sensor_id, "type": payload["sensor"].get("종류"),
-        "location": payload["sensor"].get("설치_측정위치"), "node": payload["node"].get("설비_라인"),
-        "current": payload["signal"], "mapping": payload["mapping"]},
-        "sensor_status": payload["sensor_status"], "impact_results": impact_results,
-        "evidence_manifest": evidence_manifest,
+    context = {
+        # Put compact, deterministic facts and the consolidated action plan
+        # before large provenance/impact payloads so the bounded prompt keeps
+        # the live readings, active rules and immediate response field.
+        "consolidated_response_guidance": response_guidance,
+        "time_s": payload["time_s"], "sensor": {
+            "tag": sensor_id, "type": payload["sensor"].get("종류"),
+            "location": payload["sensor"].get("설치_측정위치"), "node": payload["node"].get("설비_라인"),
+            "current": payload["signal"], "mapping": payload["mapping"]},
+        "sensor_status": payload["sensor_status"],
         "detection_summary": {"observed_hydrogen_readings": observed_gas,
                               "current_gas_alerts": current_gas_alerts,
                               "retained_gas_alarm_tags": retained_gas_alerts},
@@ -3147,7 +3151,6 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         "active_scenarios": compact_rules(active_rules),
         "same_equipment_active_signals": compact_rules(related_rules),
         "related_signals": payload["related_signals"],
-        "consolidated_response_guidance": response_guidance,
         "monitored_scenarios": [{"scenario": rule["scenario"], "sensor_id": sensor_id,
                                   "threshold": rule["threshold"], "unit": rule["unit"],
                                   "state": rule["state"]} for rule in payload["rules"]],
@@ -3158,7 +3161,9 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         "applicable_guidance": [{"situation": plan["situation"],
                                  "prevention": (plan.get("prevention") or [])[:2]}
                                 for plan in plan_context] if not alert else [],
-        "station_status": payload["station_status"]}
+        "station_status": payload["station_status"],
+        "impact_results": impact_results,
+        "evidence_manifest": evidence_manifest}
     if alert:
         retained_only = not any(rule.get("state") == "TRIGGER" for rule in active_rules)
         status_instruction = (("선택 센서의 경보 임계값은 현재 재초과되지 않았고 이전 경보가 유지 중입니다. 현재 경보와 경보 이력을 구분하되, 비영점 가스 농도나 모의 누출을 부정하지 마세요. "

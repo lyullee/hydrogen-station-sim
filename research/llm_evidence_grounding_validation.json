@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "recorded_at": "2026-10-04T11:17:29.351097+00:00",
+  "recorded_at": "2026-10-04T11:38:24.104809+00:00",
   "status": "software_contract_verified",
   "scope": [
     "digital-twin main assistant",
@@ -30,7 +30,8 @@
     "contradictory LLM claims are rejected when they negate confirmed evidence",
     "response evidence source identifiers are carried into the hashed manifest",
     "public HIAD action-to-playbook traceability metadata is carried into the response evidence envelope",
-    "public KHK accident-report inventory and citation link are carried into the evidence envelope without mirrored report text"
+    "public KHK accident-report inventory and citation link are carried into the evidence envelope without mirrored report text",
+    "public KHK scenario-precedent map links all 23 citation records to conservative response families without exposing report text or frequency claims"
   ],
   "not_established": [
     "physics validity of the consequence model",
@@ -76,6 +77,19 @@
     "incident_code_count": 26,
     "precaution_report_count": 8,
     "raw_pdf_mirrored": false,
-    "interpretation": "qualitative actual-accident scenario and response/prevention grounding only; no synchronized process trace, frequency, probability or physics-validation claim"
+    "interpretation": "qualitative actual-accident scenario and response/prevention grounding only; map uses public equipment classes/titles and citation links, not report text, frequencies, causal inference or physics-validation claims",
+    "scenario_precedent_map": "research/khk_scenario_precedent_map_2026_10_04.json",
+    "mapped_report_count": 23,
+    "unmapped_report_count": 0,
+    "playbook_case_counts": {
+      "compressor_thermal": 1,
+      "external_fire": 3,
+      "fueling_fault": 3,
+      "gas_release": 16,
+      "hose_connection": 8,
+      "hydrogen_fire": 6,
+      "isolation_failure": 2,
+      "overpressure": 3
+    }
   }
 }

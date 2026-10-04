@@ -23,6 +23,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert accident_inventory["precaution_report_count"] == 8
     assert accident_inventory["raw_pdf_mirrored"] is False
     assert accident_inventory["qualitative_scenario_grounding"] is True
+    precedent_map = accident_inventory["scenario_precedent_map"]
+    assert precedent_map["mapped_report_count"] == 23
+    assert precedent_map["unmapped_report_count"] == 0
+    assert precedent_map["citation_only"] is True
+    assert "playbook_case_counts" not in precedent_map
+    assert "representative_precedents" not in precedent_map
 
     result = {"node_id": "N09", "node_name": "고압 저장뱅크",
               "calculation_status": "calculated",

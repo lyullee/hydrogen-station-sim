@@ -24,6 +24,8 @@ contains:
 - public KHK accident-report inventory metadata (23 linked reports, 26 incident
   codes and 8 precaution reports) with citation-only rights and no mirrored PDF
   text;
+- a derived KHK scenario-precedent map linking all 23 report records to
+  conservative response families with counts and representative citations;
 - impact calculation state: `not_requested`, `attempted_no_result`, or
   `calculated`;
 - calculated impact basis, input sensor tags, model outputs and threshold
@@ -86,4 +88,4 @@ an interface/traceability check: it does not read HIAD response text and does no
 validate the safety or effectiveness of any step. The independent coordinator
 review, holdout response collection and expert rating gates remain required.
 
-The [KHK public-report inventory](khk_hydrogen_station_public_reports_inventory_2026_10_04.json) adds official accident and precaution report links for qualitative scenario and response grounding. It is deliberately excluded from numerical model validation, accident-frequency estimation and the station-to-vehicle full-loop holdout because the public reports do not provide synchronized process traces or complete boundary conditions.
+The [KHK public-report inventory](khk_hydrogen_station_public_reports_inventory_2026_10_04.json) adds official accident and precaution report links for qualitative scenario and response grounding. The [scenario-precedent map](khk_scenario_precedent_map_2026_10_04.json) links the inventory's equipment classes to conservative response families and exposes only counts plus representative citation links to the assistant. It is deliberately excluded from numerical model validation, accident-frequency estimation and the station-to-vehicle full-loop holdout because the public reports do not provide synchronized process traces or complete boundary conditions.

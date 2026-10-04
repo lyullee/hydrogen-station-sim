@@ -65,7 +65,7 @@ def _khk_public_accident_inventory() -> dict[str, Any] | None:
         return None
     if rights.get("raw_pdf_mirrored") is not False:
         return None
-    return {
+    result: dict[str, Any] = {
         "artifact": "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
         "source_page": source_page.get("url"),
         "institution": source_page.get("institution"),
@@ -78,6 +78,40 @@ def _khk_public_accident_inventory() -> dict[str, Any] | None:
         ) is True,
         "claim_limit": str(record.get("claim_boundary") or ""),
     }
+    # The compact map is derived only from the inventory's public equipment
+    # classes and titles.  Include it when its source digest matches so the
+    # assistant can distinguish relevant accident precedent without receiving
+    # copied report text or treating counts as frequencies.
+    map_path = Path(__file__).resolve().parents[2] / (
+        "research/khk_scenario_precedent_map_2026_10_04.json"
+    )
+    try:
+        scenario_map = json.loads(map_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        scenario_map = None
+    map_source = (scenario_map or {}).get("source_inventory") or {}
+    inventory_digest = sha256(path.read_bytes()).hexdigest()
+    if (
+        isinstance(scenario_map, dict)
+        and scenario_map.get("status") == "citation_only_khk_scenario_precedent_map"
+        and map_source.get("sha256") == inventory_digest
+        and map_source.get("incident_report_count") == result["public_report_count"]
+        and map_source.get("incident_code_count") == result["incident_code_count"]
+    ):
+        mapping = scenario_map.get("mapping") or {}
+        # Keep the runtime manifest intentionally small.  The full map is
+        # preserved as a research artifact, while prompt context receives
+        # provenance and coverage only.  Internal playbook IDs and long
+        # representative citation lists would crowd out live sensor and
+        # HAZOP facts and are not user-facing evidence.
+        result["scenario_precedent_map"] = {
+            "artifact": "research/khk_scenario_precedent_map_2026_10_04.json",
+            "mapped_report_count": mapping.get("mapped_report_count"),
+            "unmapped_report_count": mapping.get("unmapped_report_count"),
+            "citation_only": True,
+            "claim_limit": str(scenario_map.get("claim_boundary") or ""),
+        }
+    return result
 
 
 def _finite_number(value: Any) -> int | float | None:
