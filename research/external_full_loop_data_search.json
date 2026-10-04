@@ -2352,5 +2352,12 @@
     "candidate_count": 26,
     "scope": "KGS/Oh appendix, DLR/FCH2RAIL item, Zenodo high-flow simulation, Cal State LA HRFF, NLR HITRF, NLR catalog/policy, CARB HyStEP report and NLR HDTADA software-only recheck",
     "appendix_recheck": "research/kgs_oh_preprint_appendix_recheck_2026_10_05.json"
+  },
+  "datacite_h2_full_loop_recheck_2026_10_05": {
+    "record": "research/datacite_h2_full_loop_recheck_2026_10_05.json",
+    "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+    "gate_impact": "full_loop_external_validation_remains_open",
+    "candidate_count": 3,
+    "finding": "DataCite metadata recheck classified a GIS corridor dataset, NLR HDTADA software and an NRC dispenser-reliability report as context/software/report-only; no new synchronized station-to-vehicle raw archive was identified."
   }
 }

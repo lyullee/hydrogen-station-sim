@@ -615,6 +615,23 @@ def test_hdtada_software_is_not_promoted_without_measurement_archive():
     assert item["observed_scope"]["full_loop_holdout_eligible"] is False
     assert item["decision"] == "OPEN_ANALYSIS_SOFTWARE_ONLY"
 
+
+def test_datacite_recheck_keeps_context_and_software_out_of_holdout():
+    record = json.loads(
+        (ROOT / "research/datacite_h2_full_loop_recheck_2026_10_05.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert record["result"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
+    assert len(record["candidate_classifications"]) == 3
+    assert all(item["full_loop_holdout_eligible"] is False for item in record["candidate_classifications"])
+    mirror = json.loads(
+        (ROOT / "research/external_full_loop_data_search.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert mirror["datacite_h2_full_loop_recheck_2026_10_05"]["candidate_count"] == 3
+
 def test_khk_local_casebook_pipeline_is_not_promoted_or_committed():
     mirror = json.loads(
         (ROOT / "research/external_full_loop_data_search.json").read_text(

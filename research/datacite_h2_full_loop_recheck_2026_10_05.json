@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "source": "DataCite REST API",
+  "endpoint": "https://api.datacite.org/dois",
+  "scope": "Recheck for a new public synchronized station-to-vehicle hydrogen-refuelling holdout",
+  "eligibility_rule": {
+    "required": [
+      "common timestamp",
+      "vehicle or receptacle pressure",
+      "mass flow or transferred mass",
+      "initial conditions and protocol metadata",
+      "rights for derived publication"
+    ],
+    "excluded": [
+      "GIS/station inventory",
+      "reports without raw logger",
+      "analysis software without observations",
+      "simulation-only outputs"
+    ]
+  },
+  "queries": [
+    {
+      "query": "hydrogen refueling",
+      "total_hits": 260,
+      "page_size": 50
+    },
+    {
+      "query": "hydrogen fueling",
+      "total_hits": 521732,
+      "page_size": 50
+    },
+    {
+      "query": "hydrogen dispenser",
+      "total_hits": 10,
+      "page_size": 50
+    },
+    {
+      "query": "H70 fueling",
+      "total_hits": 0,
+      "page_size": 50
+    }
+  ],
+  "candidate_classifications": [
+    {
+      "doi": "10.3886/e252294v2",
+      "title": "National Transportation Atlas Database (NTAD) — Alternative Fuel Corridors 2021-Present",
+      "url": "https://www.datalumos.org/datalumos/project/252294/version/V2/view",
+      "decision": "GIS_STATION_CONTEXT_ONLY",
+      "finding": "The record is a USDOT/BTS alternative-fuel corridor GIS dataset. It contains corridor and facility context, not synchronized HRS pressure, temperature, mass-flow or vehicle-fill traces.",
+      "full_loop_holdout_eligible": false
+    },
+    {
+      "doi": "10.11578/dc.20190204.1",
+      "title": "DEPRECATED HDTADA (Hydrogen Dispenser Test Apparatus Data Analyzer)",
+      "url": "https://www.osti.gov/doecode/biblio/23314",
+      "decision": "SOFTWARE_ONLY_NO_MEASUREMENTS",
+      "finding": "The NLR record describes software that analyzes HDTA data against CSA HGV4.3 and SAE J2601. It does not publish measured HDTA logger files.",
+      "full_loop_holdout_eligible": false
+    },
+    {
+      "doi": "10.4224/40003368",
+      "title": "Dispenser reliability analysis for hydrogen refuelling stations in British Columbia",
+      "url": "https://nrc-publications.canada.ca/eng/view/object/?id=19b8dc45-2084-4d87-8525-9f7e52c992ac",
+      "decision": "REPORT_CONTEXT_NO_RAW_LOGGER",
+      "finding": "The NRC record is a technical report on dispenser reliability and fault categorisation. The public metadata expose no synchronized pressure, temperature and mass-flow logger archive or reuse terms.",
+      "full_loop_holdout_eligible": false
+    }
+  ],
+  "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+  "gate_impact": "full_loop_external_validation_remains_open",
+  "claim_boundary": "This is a metadata search and exclusion record. It adds no validation evidence and does not change the frozen model or scoring protocol."
+}
