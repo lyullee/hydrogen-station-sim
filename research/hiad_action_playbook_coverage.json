@@ -1,0 +1,458 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-04T09:25:05.994529+00:00",
+  "status": "completed_public_action_to_playbook_traceability_audit",
+  "evidence_role": "public_incident_grounding_traceability_only",
+  "source": {
+    "action_evidence_path": "research\\hiad_action_evidence.json",
+    "action_evidence_sha256": "72f2550eabea6a4207a5d59c98bd99520e217fd2d4f8597e5d1d72f2ef87e1dd",
+    "playbook_path": "src\\h2station\\data\\emergency_playbooks.json",
+    "playbook_sha256": "21599382bacb42693d462c1d41f856693fe8c1f5790a387d522cfa0946439751",
+    "case_count": 34,
+    "category_count": 8
+  },
+  "aggregate": {
+    "category_count": 8,
+    "covered_category_count": 8,
+    "category_coverage_fraction": 1.0,
+    "case_count": 34,
+    "covered_case_count": 34,
+    "case_coverage_fraction": 1.0,
+    "missing_plan_ids": [],
+    "incomplete_plan_ids": [],
+    "contract_pass": true
+  },
+  "categories": [
+    {
+      "category": "detection_alarm_monitoring",
+      "incident_count": 14,
+      "mapped_plan_ids": [
+        "gas_release",
+        "hydrogen_fire",
+        "external_fire",
+        "overpressure",
+        "relief_discharge",
+        "flow_anomaly",
+        "sensor_fault"
+      ],
+      "mapped_plan_count": 7,
+      "missing_plan_ids": [],
+      "all_mapped_plans_have_five_stages": true,
+      "covered": true
+    },
+    {
+      "category": "emergency_communication_coordination",
+      "incident_count": 17,
+      "mapped_plan_ids": [
+        "gas_release",
+        "hydrogen_fire",
+        "external_fire",
+        "overpressure",
+        "relief_discharge",
+        "fueling_fault",
+        "hose_connection"
+      ],
+      "mapped_plan_count": 7,
+      "missing_plan_ids": [],
+      "all_mapped_plans_have_five_stages": true,
+      "covered": true
+    },
+    {
+      "category": "evacuation_perimeter_access",
+      "incident_count": 6,
+      "mapped_plan_ids": [
+        "gas_release",
+        "hydrogen_fire",
+        "external_fire",
+        "relief_discharge",
+        "overpressure"
+      ],
+      "mapped_plan_count": 5,
+      "missing_plan_ids": [],
+      "all_mapped_plans_have_five_stages": true,
+      "covered": true
+    },
+    {
+      "category": "fire_response_cooling",
+      "incident_count": 6,
+      "mapped_plan_ids": [
+        "hydrogen_fire",
+        "external_fire"
+      ],
+      "mapped_plan_count": 2,
+      "missing_plan_ids": [],
+      "all_mapped_plans_have_five_stages": true,
+      "covered": true
+    },
+    {
+      "category": "inspection_leak_test_repair",
+      "incident_count": 21,
+      "mapped_plan_ids": [
+        "gas_release",
+        "relief_discharge",
+        "hose_connection",
+        "sensor_fault",
+        "isolation_failure",
+        "supply_connection",
+        "structural_damage",
+        "compressor_thermal",
+        "precooling_fault"
+      ],
+      "mapped_plan_count": 9,
+      "missing_plan_ids": [],
+      "all_mapped_plans_have_five_stages": true,
+      "covered": true
+    },
+    {
+      "category": "procedure_interlock_training_design",
+      "incident_count": 23,
+      "mapped_plan_ids": [
+        "gas_release",
+        "hydrogen_fire",
+        "external_fire",
+        "overpressure",
+        "relief_discharge",
+        "fueling_fault",
+        "hose_connection",
+        "compressor_thermal",
+        "precooling_fault",
+        "structural_damage",
+        "flow_anomaly",
+        "low_supply_or_blockage",
+        "vent_fault",
+        "sensor_fault",
+        "isolation_failure",
+        "supply_connection"
+      ],
+      "mapped_plan_count": 16,
+      "missing_plan_ids": [],
+      "all_mapped_plans_have_five_stages": true,
+      "covered": true
+    },
+    {
+      "category": "shutdown_isolation_depressurization",
+      "incident_count": 22,
+      "mapped_plan_ids": [
+        "gas_release",
+        "hydrogen_fire",
+        "external_fire",
+        "overpressure",
+        "relief_discharge",
+        "fueling_fault",
+        "hose_connection",
+        "compressor_thermal",
+        "precooling_fault",
+        "flow_anomaly",
+        "isolation_failure",
+        "supply_connection"
+      ],
+      "mapped_plan_count": 12,
+      "missing_plan_ids": [],
+      "all_mapped_plans_have_five_stages": true,
+      "covered": true
+    },
+    {
+      "category": "ventilation_purge",
+      "incident_count": 21,
+      "mapped_plan_ids": [
+        "gas_release",
+        "hydrogen_fire",
+        "relief_discharge",
+        "low_supply_or_blockage",
+        "vent_fault"
+      ],
+      "mapped_plan_count": 5,
+      "missing_plan_ids": [],
+      "all_mapped_plans_have_five_stages": true,
+      "covered": true
+    }
+  ],
+  "cases": [
+    {
+      "event_id": "396",
+      "action_category_count": 1,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "401",
+      "action_category_count": 2,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "402",
+      "action_category_count": 5,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "403",
+      "action_category_count": 0,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "404",
+      "action_category_count": 2,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "411",
+      "action_category_count": 1,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "454",
+      "action_category_count": 2,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "463",
+      "action_category_count": 3,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "702",
+      "action_category_count": 4,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "803",
+      "action_category_count": 1,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "884",
+      "action_category_count": 5,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "953",
+      "action_category_count": 5,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1038",
+      "action_category_count": 1,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1062",
+      "action_category_count": 4,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1063",
+      "action_category_count": 5,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1064",
+      "action_category_count": 4,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1106",
+      "action_category_count": 5,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1159",
+      "action_category_count": 4,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1161",
+      "action_category_count": 3,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1163",
+      "action_category_count": 2,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1173",
+      "action_category_count": 8,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1191",
+      "action_category_count": 4,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1193",
+      "action_category_count": 5,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1194",
+      "action_category_count": 2,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1195",
+      "action_category_count": 5,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1196",
+      "action_category_count": 6,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1198",
+      "action_category_count": 6,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1202",
+      "action_category_count": 5,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1203",
+      "action_category_count": 6,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1204",
+      "action_category_count": 5,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1205",
+      "action_category_count": 5,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1206",
+      "action_category_count": 4,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1207",
+      "action_category_count": 5,
+      "unresolved_categories": [],
+      "covered": true
+    },
+    {
+      "event_id": "1208",
+      "action_category_count": 5,
+      "unresolved_categories": [],
+      "covered": true
+    }
+  ],
+  "crosswalk": {
+    "shutdown_isolation_depressurization": [
+      "gas_release",
+      "hydrogen_fire",
+      "external_fire",
+      "overpressure",
+      "relief_discharge",
+      "fueling_fault",
+      "hose_connection",
+      "compressor_thermal",
+      "precooling_fault",
+      "flow_anomaly",
+      "isolation_failure",
+      "supply_connection"
+    ],
+    "detection_alarm_monitoring": [
+      "gas_release",
+      "hydrogen_fire",
+      "external_fire",
+      "overpressure",
+      "relief_discharge",
+      "flow_anomaly",
+      "sensor_fault"
+    ],
+    "fire_response_cooling": [
+      "hydrogen_fire",
+      "external_fire"
+    ],
+    "evacuation_perimeter_access": [
+      "gas_release",
+      "hydrogen_fire",
+      "external_fire",
+      "relief_discharge",
+      "overpressure"
+    ],
+    "emergency_communication_coordination": [
+      "gas_release",
+      "hydrogen_fire",
+      "external_fire",
+      "overpressure",
+      "relief_discharge",
+      "fueling_fault",
+      "hose_connection"
+    ],
+    "inspection_leak_test_repair": [
+      "gas_release",
+      "relief_discharge",
+      "hose_connection",
+      "sensor_fault",
+      "isolation_failure",
+      "supply_connection",
+      "structural_damage",
+      "compressor_thermal",
+      "precooling_fault"
+    ],
+    "procedure_interlock_training_design": [
+      "gas_release",
+      "hydrogen_fire",
+      "external_fire",
+      "overpressure",
+      "relief_discharge",
+      "fueling_fault",
+      "hose_connection",
+      "compressor_thermal",
+      "precooling_fault",
+      "structural_damage",
+      "flow_anomaly",
+      "low_supply_or_blockage",
+      "vent_fault",
+      "sensor_fault",
+      "isolation_failure",
+      "supply_connection"
+    ],
+    "ventilation_purge": [
+      "gas_release",
+      "hydrogen_fire",
+      "relief_discharge",
+      "low_supply_or_blockage",
+      "vent_fault"
+    ]
+  },
+  "claim_boundary": "This audit verifies only that public HIAD action categories have a traceable five-stage response plan in the simulator. It does not judge incident actions, validate physics, estimate probabilities, or evaluate SAGA/LLM effectiveness or safety. The records remain excluded from the blinded HIAD holdout."
+}

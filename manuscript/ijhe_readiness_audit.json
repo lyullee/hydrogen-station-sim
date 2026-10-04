@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T09:11:51.285568+00:00",
+  "generated_at": "2026-10-04T09:25:27.179794+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 26,
+    "PASS": 27,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -1145,6 +1145,24 @@
           "holdout_use": false
         },
         "claim_boundary": "This artifact counts controlled action categories derived from HIAD HRS records. It does not judge whether an action was correct or safe, estimate incident probability, validate physics, or evaluate SAGA effectiveness."
+      }
+    },
+    {
+      "id": "hiad_action_playbook_traceability",
+      "status": "PASS",
+      "claim": "All public HIAD action categories are traceably connected to complete staged response plans without claiming efficacy.",
+      "evidence": "research\\hiad_action_playbook_coverage.json",
+      "requirement": "8/8 categories and 34/34 cases mapped; every mapped plan exposes recognition, immediate, stabilize, restart and prevention stages.",
+      "observed": {
+        "category_count": 8,
+        "covered_category_count": 8,
+        "category_coverage_fraction": 1.0,
+        "case_count": 34,
+        "covered_case_count": 34,
+        "case_coverage_fraction": 1.0,
+        "missing_plan_ids": [],
+        "incomplete_plan_ids": [],
+        "contract_pass": true
       }
     },
     {

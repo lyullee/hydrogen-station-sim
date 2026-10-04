@@ -549,6 +549,34 @@ def audit(root: Path) -> dict[str, object]:
         } if action_evidence else "missing; HIAD action evidence summary has not been built",
     ))
 
+    action_playbook_path = root / "research/hiad_action_playbook_coverage.json"
+    action_playbook = _json(action_playbook_path)
+    action_playbook_aggregate = (action_playbook or {}).get("aggregate") or {}
+    action_playbook_pass = bool(
+        (action_playbook or {}).get("status")
+        == "completed_public_action_to_playbook_traceability_audit"
+        and (action_playbook or {}).get("evidence_role")
+        == "public_incident_grounding_traceability_only"
+        and action_playbook_aggregate.get("category_count") == 8
+        and action_playbook_aggregate.get("covered_category_count") == 8
+        and action_playbook_aggregate.get("case_count") == 34
+        and action_playbook_aggregate.get("covered_case_count") == 34
+        and action_playbook_aggregate.get("contract_pass") is True
+        and action_playbook_aggregate.get("missing_plan_ids") == []
+        and action_playbook_aggregate.get("incomplete_plan_ids") == []
+        and "does not judge incident actions" in str(
+            (action_playbook or {}).get("claim_boundary")
+        )
+    )
+    gates.append(_gate(
+        "hiad_action_playbook_traceability",
+        "PASS" if action_playbook_pass else ("FAIL" if action_playbook else "PENDING"),
+        "All public HIAD action categories are traceably connected to complete staged response plans without claiming efficacy.",
+        str(action_playbook_path.relative_to(root)),
+        "8/8 categories and 34/34 cases mapped; every mapped plan exposes recognition, immediate, stabilize, restart and prevention stages.",
+        action_playbook_aggregate if action_playbook else "missing; HIAD action-to-playbook coverage audit has not run",
+    ))
+
     cip_endpoint_path = root / "research/cip_dispenser_endpoint_screen.json"
     cip_endpoint = _json(cip_endpoint_path)
     cip_aggregate = (cip_endpoint or {}).get("aggregate") or {}
