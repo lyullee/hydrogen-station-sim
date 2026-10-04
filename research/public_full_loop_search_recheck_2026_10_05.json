@@ -208,6 +208,22 @@
         "full_loop_holdout_eligible": false
       },
       "reuse_status": "Retain public composite products for operating-range context only. Request an approved NLR/HITRF de-identified logger export and written reuse terms before numerical holdout evaluation."
+    },
+    {
+      "id": "carb_2024_hystep_in_use_report_recheck_2026",
+      "title": "CARB 2024 Existing Light-Duty Hydrogen Refueling Stations In-Use Study",
+      "url": "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf",
+      "license": "Public report; no raw-log or workbook reuse terms identified",
+      "decision": "PUBLIC_REPORT_APPENDIX_WORKBOOK_NOT_RETRIEVED",
+      "finding": "The CARB report documents 22 in-use California station tests with a HyStEP device and states that Appendix A results were tabulated in an Excel workbook. The public agency page exposes the PDF report but no linked workbook, station data logs or synchronized pressure-temperature-mass-flow archive; the report also notes that some stations could not provide required dispenser logs.",
+      "observed_scope": {
+        "station_test_count": 22,
+        "public_report_retrieved": true,
+        "appendix_workbook_retrieved": false,
+        "synchronized_raw_logger_retrieved": false,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "Use the report for protocol, fault-test and field-performance context only. Request the Appendix A workbook and de-identified HyStEP/station logs from CARB before considering any numerical holdout; do not digitize report plots as primary validation."
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
