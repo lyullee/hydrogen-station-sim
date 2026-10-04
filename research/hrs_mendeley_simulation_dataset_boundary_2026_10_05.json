@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "rechecked_at_utc": "2026-10-04T18:44:44.114667+00:00",
+  "status": "PUBLIC_MENDELEY_HRS_METADATA_RECHECKED",
+  "source": {
+    "doi": "10.17632/mnjs94yzfc.1",
+    "title": "HRSs refueling perfromance Data sets",
+    "url": "https://data.mendeley.com/datasets/mnjs94yzfc/1",
+    "api_url": "https://api.datacite.org/dois/10.17632/mnjs94yzfc.1",
+    "publisher": "Mendeley Data",
+    "publication_year": 2026,
+    "creators": [
+      "Tessema, tegen",
+      "Argilaguet, Juan Carlos Bruno ",
+      "Coronas, Alberto"
+    ],
+    "rights": [
+      "",
+      "Creative Commons Attribution 4.0 International"
+    ]
+  },
+  "metadata_integrity": {
+    "http_status": 200,
+    "abstract_sha256": "f2fddab8d39048c1eeccaaf9a6c826130d6e6dc241fb4050be854700ecdd2825",
+    "abstract_present": true,
+    "simulation_language_present": true,
+    "cc_by_4_present": true
+  },
+  "dataset_characterization": {
+    "simulation_only": true,
+    "time_resolved_simulation_outputs": true,
+    "experimental_logger_archive": false,
+    "real_station_full_loop": false,
+    "public_metadata_only_rechecked": true
+  },
+  "eligibility_decision": {
+    "public_metadata_verified": true,
+    "full_loop_external_holdout_eligible": false,
+    "allowed_use": [
+      "simulation benchmark provenance",
+      "model-comparison context",
+      "reproducibility and scenario-design reference"
+    ],
+    "prohibited_use": [
+      "independent physical validation",
+      "station-to-vehicle full-loop score",
+      "post-hoc parameter fitting"
+    ]
+  },
+  "claim_boundary": "The DOI metadata verifies an openly licensed HRS simulation dataset. It does not provide synchronized real-station logger data and remains ineligible for independent full-loop validation.",
+  "recheck_assertions": {
+    "simulation_only": true,
+    "no_experimental_claim_in_abstract": true
+  }
+}

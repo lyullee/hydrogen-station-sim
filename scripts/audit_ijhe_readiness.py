@@ -1023,6 +1023,40 @@ def audit(root: Path) -> dict[str, object]:
         } if green_hysland else "missing; Green Hysland report recheck has not run",
     ))
 
+    mendeley_path = root / "research/hrs_mendeley_simulation_dataset_boundary_2026_10_05.json"
+    mendeley = _json(mendeley_path)
+    mendeley_source = (mendeley or {}).get("source") or {}
+    mendeley_meta = (mendeley or {}).get("metadata_integrity") or {}
+    mendeley_characterization = (mendeley or {}).get("dataset_characterization") or {}
+    mendeley_eligibility = (mendeley or {}).get("eligibility_decision") or {}
+    mendeley_pass = bool(
+        (mendeley or {}).get("schema_version") == 1
+        and (mendeley or {}).get("status") == "PUBLIC_MENDELEY_HRS_METADATA_RECHECKED"
+        and mendeley_source.get("doi") == "10.17632/mnjs94yzfc.1"
+        and mendeley_meta.get("http_status") == 200
+        and mendeley_meta.get("abstract_present") is True
+        and mendeley_meta.get("simulation_language_present") is True
+        and mendeley_meta.get("cc_by_4_present") is True
+        and mendeley_characterization.get("simulation_only") is True
+        and mendeley_characterization.get("experimental_logger_archive") is False
+        and mendeley_characterization.get("real_station_full_loop") is False
+        and mendeley_eligibility.get("full_loop_external_holdout_eligible") is False
+        and (mendeley or {}).get("claim_boundary")
+    )
+    gates.append(_gate(
+        "mendeley_hrs_simulation_dataset_boundary_integrity",
+        "PASS" if mendeley_pass else ("FAIL" if mendeley else "PENDING"),
+        "The openly licensed Mendeley HRS dataset is retained as simulation provenance and explicitly excluded from independent full-loop validation.",
+        str(mendeley_path.relative_to(root)),
+        "DataCite metadata, DOI, CC BY 4.0, simulation-only characterization, and an explicit false full-loop eligibility decision.",
+        {
+            "doi": mendeley_source.get("doi"),
+            "cc_by_4_present": mendeley_meta.get("cc_by_4_present"),
+            "simulation_only": mendeley_characterization.get("simulation_only"),
+            "full_loop_external_holdout_eligible": mendeley_eligibility.get("full_loop_external_holdout_eligible"),
+        } if mendeley else "missing; Mendeley HRS metadata boundary recheck has not run",
+    ))
+
     accidental_ignition_path = root / "research/accidental_self_ignition_public_evidence_2026_10_04.json"
     accidental_ignition = _json(accidental_ignition_path)
     accidental_source = (accidental_ignition or {}).get("source") or {}

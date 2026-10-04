@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T18:36:58.578503+00:00",
+  "generated_at": "2026-10-04T18:44:44.241359+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 45,
+    "PASS": 46,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -1452,6 +1452,19 @@
         "pdf_sha256": "f3281b6f38bfe62dff79677590c9099fe55bdd17adcec3f4243af1028ce1a7a2",
         "required_trailer_rows": true,
         "hrs_provisional_populated": false,
+        "full_loop_external_holdout_eligible": false
+      }
+    },
+    {
+      "id": "mendeley_hrs_simulation_dataset_boundary_integrity",
+      "status": "PASS",
+      "claim": "The openly licensed Mendeley HRS dataset is retained as simulation provenance and explicitly excluded from independent full-loop validation.",
+      "evidence": "research\\hrs_mendeley_simulation_dataset_boundary_2026_10_05.json",
+      "requirement": "DataCite metadata, DOI, CC BY 4.0, simulation-only characterization, and an explicit false full-loop eligibility decision.",
+      "observed": {
+        "doi": "10.17632/mnjs94yzfc.1",
+        "cc_by_4_present": true,
+        "simulation_only": true,
         "full_loop_external_holdout_eligible": false
       }
     },

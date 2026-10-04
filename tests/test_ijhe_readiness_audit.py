@@ -34,6 +34,12 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert green["required_trailer_rows"] is True
     assert green["hrs_provisional_populated"] is False
     assert green["full_loop_external_holdout_eligible"] is False
+    assert gates["mendeley_hrs_simulation_dataset_boundary_integrity"]["status"] == "PASS"
+    mendeley = gates["mendeley_hrs_simulation_dataset_boundary_integrity"]["observed"]
+    assert mendeley["doi"] == "10.17632/mnjs94yzfc.1"
+    assert mendeley["cc_by_4_present"] is True
+    assert mendeley["simulation_only"] is True
+    assert mendeley["full_loop_external_holdout_eligible"] is False
     assert gates["real_station_article_boundary_integrity"]["status"] == "PASS"
     field_article = gates["real_station_article_boundary_integrity"]["observed"]
     assert field_article["reported_sensor_count"] == 8
