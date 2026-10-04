@@ -150,3 +150,22 @@ def test_public_data_access_refresh_keeps_carb_and_3emotion_out_of_holdout():
     assert zenodo["full_loop_holdout_eligible"] is False
     assert (ROOT / "research/3EMOTION_DATA_REQUEST_DRAFT.md").exists()
     assert "written reuse rights" in record["claim_boundary"]
+
+
+def test_figshare_recheck_keeps_station_full_loop_gate_open():
+    record = json.loads(
+        (ROOT / "research/figshare_h2_hrs_recheck_2026_10_04.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert record["decision"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET"
+    assert record["gate_impact"] == "unchanged_independent_full_loop_gate_remains_open"
+    candidate = next(
+        item for item in record["candidate_classifications"] if item["article_id"] == 27581394
+    )
+    assert candidate["license"] == "All rights reserved"
+    assert candidate["decision"] == "PUBLIC_PUBLICATION_ONLY"
+    assert all(
+        item["decision"] != "NEW_INDEPENDENT_FULL_LOOP_HOLDOUT"
+        for item in record["candidate_classifications"]
+    )

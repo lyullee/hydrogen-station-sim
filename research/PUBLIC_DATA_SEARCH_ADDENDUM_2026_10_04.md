@@ -149,3 +149,24 @@ The page digest and exact links are recorded in
 [`research/h2protocol_live_catalog_2026_10_04.json`](h2protocol_live_catalog_2026_10_04.json).
 The full-loop gate therefore remains open pending a separately licensed,
 synchronized station-to-vehicle export from an independent custodian.
+
+## 2026-10-04 Figshare API file-level recheck
+
+The public Figshare API was queried for hydrogen refuelling, fueling-station,
+dispenser, vehicle-fueling, pressure/temperature/flow and tank-filling terms.
+The most plausible station-performance hit,
+`Automotive solar hydrogen fuelling stations: Concept design, performance
+testing and evaluation`, exposes one PDF and is marked **All rights reserved**;
+it does not expose a synchronized logger archive or reuse terms. Other inspected
+hits were a residential CFD thesis, a cryogenic-spray paper and a numerical
+explosion paper (with no data files). None contains the required
+station-to-vehicle pressure, mass-flow and preferably temperature channels on a
+common time base with initial conditions and protocol metadata.
+
+The exact API responses, file names, rights statements and eligibility decisions
+are frozen in
+[`research/figshare_h2_hrs_recheck_2026_10_04.json`](figshare_h2_hrs_recheck_2026_10_04.json)
+and mirrored in
+[`research/open_repository_search_2026_10_04.json`](open_repository_search_2026_10_04.json).
+This is a discovery recheck only; it does not add a new validation holdout or
+change the independent full-loop gate.

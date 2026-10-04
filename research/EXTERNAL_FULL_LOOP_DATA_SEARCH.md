@@ -1067,3 +1067,19 @@ The follow-up register now includes two credible acquisition routes that remain 
 - DOE SunHydro reports ([final report](https://www.osti.gov/servlets/purl/1783792), [2015 AMR](https://www.hydrogen.energy.gov/docs/hydrogenprogramlibraries/pdfs/review15/tv020_moulthrop_2015_o.pdf)) document real station data exported to the NREL Hydrogen Secure Data Center. The HSDC overview ([NREL](https://www.nrel.gov/docs/fy12osti/54860.pdf)) states detailed partner data are controlled; public aggregate products are not synchronized station-to-vehicle raw traces. The request draft is [`research/SUNHYDRO_DATA_REQUEST_DRAFT.md`](SUNHYDRO_DATA_REQUEST_DRAFT.md).
 
 These additions improve provenance and acquisition coverage only. The independent full-loop gate remains open until a de-identified synchronized export, immutable hash, written reuse terms and frozen no-fitting scoring protocol are available.
+
+## 2026-10-04 Figshare API file-level recheck
+
+The public Figshare API was queried for hydrogen refuelling, fueling-station,
+dispenser, vehicle-fueling, pressure/temperature/flow and tank-filling terms.
+The most plausible station-performance record exposes one PDF and is marked
+**All rights reserved**; it does not expose a synchronized logger archive or
+reuse terms. Other inspected hits were a residential CFD thesis, cryogenic
+spray work and a numerical explosion paper with no downloadable data files.
+
+The exact API responses and file-level classifications are frozen in
+[`research/figshare_h2_hrs_recheck_2026_10_04.json`](figshare_h2_hrs_recheck_2026_10_04.json).
+None contains the required licensed station-to-vehicle pressure, mass-flow and
+preferably temperature channels on a common time base with initial conditions
+and protocol metadata. This discovery recheck therefore does not add a new
+independent holdout or change the full-loop gate.

@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "scope": "Figshare API file-level recheck for a new synchronized hydrogen-refuelling station-to-vehicle raw trace",
+  "endpoint": "https://api.figshare.com/v2/articles/{id}",
+  "queries": [
+    "hydrogen refueling",
+    "hydrogen fueling station",
+    "hydrogen dispenser",
+    "hydrogen vehicle fueling",
+    "HRS pressure temperature flow",
+    "hydrogen refueling data",
+    "hydrogen fueling experimental data",
+    "hydrogen dispenser pressure temperature",
+    "hydrogen station monitoring",
+    "hydrogen tank filling experiment"
+  ],
+  "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET",
+  "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+  "eligibility_rule": {
+    "required_channels": [
+      "vehicle_or_receptacle_pressure",
+      "mass_flow_or_transferred_mass"
+    ],
+    "preferred_channels": ["tank_or_fuel_temperature"],
+    "required_metadata": [
+      "common_time_base",
+      "initial_conditions",
+      "tank_capacity",
+      "protocol_or_pressure_ramp_information",
+      "units",
+      "reuse_terms"
+    ]
+  },
+  "candidate_classifications": [
+    {
+      "article_id": 27581394,
+      "title": "Automotive solar hydrogen fuelling stations: Concept design, performance testing and evaluation",
+      "doi": "10.25439/rmt.27581394",
+      "license": "All rights reserved",
+      "files": [{"name": "Alazemi.pdf", "size_bytes": 17689135}],
+      "decision": "PUBLIC_PUBLICATION_ONLY",
+      "reason": "The record exposes one PDF and no synchronized logger files; its rights statement does not grant raw-data reuse or redistribution.",
+      "url": "https://figshare.com/articles/journal_contribution/Automotive_solar_hydrogen_fuelling_stations_Concept_design_performance_testing_and_evaluation/27581394"
+    },
+    {
+      "article_id": 9524984,
+      "title": "CFD modelling of hydrogen safety aspects for a residential refuelling system",
+      "license": "CC BY-NC-ND 4.0",
+      "files": [{"name": "Thesis-2017-Beard.pdf", "size_bytes": 9427233}],
+      "decision": "PUBLIC_PUBLICATION_ONLY",
+      "reason": "The public artifact is a thesis PDF for a residential CFD study, not a station-to-vehicle synchronized pressure-temperature-flow logger archive.",
+      "url": "https://figshare.com/articles/thesis/CFD_modelling_of_hydrogen_safety_aspects_for_a_residential_refuelling_system/9524984"
+    },
+    {
+      "article_id": 30317632,
+      "title": "Experimental and numerical investigations of supercritical cryogenic sprays",
+      "license": "CC BY 4.0",
+      "files": [{"name": "2025 Marlow-Eastwood ILASS.pdf", "size_bytes": 8237691}],
+      "decision": "IRRELEVANT_SEARCH_HIT",
+      "reason": "The record contains a cryogenic spray paper only; it does not provide compressed-gas HRS station-to-vehicle process traces.",
+      "url": "https://figshare.com/articles/journal_contribution/Experimental_and_numerical_investigations_of_supercritical_cryogenic_sprays/30317632"
+    },
+    {
+      "article_id": 33621103,
+      "title": "Numerical study of hydrogen explosions in a refuelling environment and in a model storage room",
+      "doi": "10.1016/j.ijhydene.2009.10.052",
+      "license": "CC BY 4.0",
+      "files": [],
+      "decision": "PUBLIC_PUBLICATION_ONLY",
+      "reason": "The record has no downloadable data files and describes numerical explosion scenarios rather than synchronized station-to-vehicle measurements.",
+      "url": "https://figshare.com/articles/journal_contribution/Numerical_study_of_hydrogen_explosions_in_a_refuelling_environment_and_in_a_model_storage_room/33621103"
+    }
+  ],
+  "claim_boundary": "Discovery evidence only. No candidate is promoted to an independent full-loop validation holdout without synchronized required channels, initial conditions, protocol metadata, file hashes and reuse terms.",
+  "next_action": "Keep the independent full-loop gate open and request a de-identified logger export from a station-data custodian; freeze provenance and scoring before reading numerical outcomes."
+}
