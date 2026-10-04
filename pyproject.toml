@@ -43,3 +43,4 @@ packages = ["src/h2station"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]
