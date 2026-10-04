@@ -224,6 +224,21 @@
         "full_loop_holdout_eligible": false
       },
       "reuse_status": "Use the report for protocol, fault-test and field-performance context only. Request the Appendix A workbook and de-identified HyStEP/station logs from CARB before considering any numerical holdout; do not digitize report plots as primary validation."
+    },
+    {
+      "id": "nlr_hdtada_software_only_recheck_2026",
+      "title": "HDTADA Hydrogen Dispenser Test Apparatus",
+      "url": "https://github.com/NatLabRockies/HDTADA",
+      "source_url": "https://www.nlr.gov/research/software/hdtada-hydrogen-dispenser-test-apparatus",
+      "license": "DOE/NLR software license; no measurement archive license identified",
+      "decision": "OPEN_ANALYSIS_SOFTWARE_ONLY",
+      "finding": "The official NLR page describes HDTADA as an analysis tool that consumes Hydrogen Dispenser Test Apparatus data, compares fueling performance with CSA HGV4.3 and SAE J2601, and reports pressure, temperature and infrared metrics. The archived public GitHub repository contains installers and a license file but no sample measured HDTA logs or synchronized station-to-vehicle observations.",
+      "observed_scope": {
+        "public_analysis_software": true,
+        "public_measured_logger_retrieved": false,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "Cite or reuse the analysis software under its stated terms only; obtain HDTA measured files, channel definitions and publication permission from NLR before any validation."
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",

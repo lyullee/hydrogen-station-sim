@@ -1,6 +1,6 @@
 # IJHE objective blocker matrix
 
-Generated: `2026-10-04T23:40:21.698835+00:00`
+Generated: `2026-10-04T23:45:15.522937+00:00`
 
 This is an evidence-readiness record, not a prediction of journal acceptance.
 
