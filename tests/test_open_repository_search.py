@@ -92,3 +92,43 @@ def test_external_search_mirror_contains_primary_source_context_refresh():
         for source in item["sources"]
     )
     assert "full-loop numerical gate remains open" in item["result"]
+
+
+def test_external_search_mirror_contains_public_access_refresh():
+    mirror = json.loads(
+        (ROOT / "research/external_full_loop_data_search.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    item = mirror["public_data_access_refresh_2026_10_04"]
+    assert item["decision"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
+    assert any(
+        source["id"] == "carb_2024_in_use_appendix_a_workbook"
+        and source["public_artifact_inspection"]["public_workbook_or_raw_logger_found"] is False
+        for source in item["sources"]
+    )
+    assert any(
+        source["id"] == "threeemotion_operator_logbooks"
+        and source["full_loop_holdout_eligible"] is False
+        for source in item["sources"]
+    )
+
+
+def test_public_data_access_refresh_keeps_carb_and_3emotion_out_of_holdout():
+    record = json.loads(
+        (ROOT / "research/public_data_access_refresh_2026_10_04.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert record["decision"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
+    assert record["gate_impact"] == "unchanged_independent_full_loop_gate_remains_open"
+    assert len(record["sources"]) == 2
+    carb = next(source for source in record["sources"] if source["id"].startswith("carb_"))
+    threeemotion = next(
+        source for source in record["sources"] if source["id"] == "threeemotion_operator_logbooks"
+    )
+    assert carb["public_artifact_inspection"]["appendix_a_workbook_linked_from_report"] is False
+    assert carb["full_loop_holdout_eligible"] is False
+    assert threeemotion["public_artifact_inspection"]["raw_common_timebase_found"] is False
+    assert threeemotion["full_loop_holdout_eligible"] is False
+    assert "written reuse rights" in record["claim_boundary"]

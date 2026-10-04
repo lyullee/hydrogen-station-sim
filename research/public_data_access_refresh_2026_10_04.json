@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "scope": "File-level recheck of two frequently cited real-world HRS sources for an independent station-to-vehicle holdout",
+  "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+  "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+  "eligibility_rule": {
+    "required_channels": [
+      "vehicle_or_receptacle_pressure",
+      "mass_flow_or_transferred_mass"
+    ],
+    "preferred_channels": [
+      "vehicle_or_tank_temperature",
+      "storage_bank_pressure",
+      "protocol_and_valve_state"
+    ],
+    "required_metadata": [
+      "common_time_base",
+      "initial_conditions",
+      "tank_capacity",
+      "protocol_or_pressure_ramp_information",
+      "units",
+      "quality_or_calibration_flags",
+      "written_reuse_terms"
+    ]
+  },
+  "sources": [
+    {
+      "id": "carb_2024_in_use_appendix_a_workbook",
+      "title": "Existing Light-Duty Hydrogen Refueling Stations In-Use Study Report",
+      "publisher": "California Air Resources Board",
+      "url": "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf",
+      "accessed": "2026-10-04",
+      "downloaded_pdf_sha256": "CF3A55683450559171BD1ECEE57838077A8F95291F4DB28559AA7A5BD208CD1D",
+      "reported_scope": "HyStEP in-use performance and fault/communication tests at 22 California light-duty HRS sites; Appendix A states that study results were tabulated in an Excel workbook.",
+      "public_artifact_inspection": {
+        "report_public": true,
+        "appendix_a_workbook_linked_from_report": false,
+        "public_workbook_or_raw_logger_found": false,
+        "website_checked": "https://ww2.arb.ca.gov/our-work/programs/hydrogen-fueling-infrastructure",
+        "website_workbook_link_found": false,
+        "finding": "The report exposes pass/fail matrices, protocol context and selected plots, but the referenced Excel workbook and synchronized station-to-vehicle rows were not publicly linked or downloadable from the report page during the file-level recheck."
+      },
+      "classification": "PUBLIC_REAL_STATION_TEST_REPORT_DATA_REQUEST_LEAD",
+      "full_loop_holdout_eligible": false,
+      "next_action": "Request the Appendix A workbook plus raw HyStEP channels, units, calibration/quality flags and written permission for derived publication."
+    },
+    {
+      "id": "threeemotion_operator_logbooks",
+      "title": "Hydrogen refueling stations and fuel cell buses four year operational analysis under real-world conditions",
+      "publisher": "3Emotion / E3S Web of Conferences",
+      "doi": "10.1051/e3sconf/202233406008",
+      "urls": {
+        "article": "https://www.e3s-conferences.org/articles/e3sconf/pdf/2022/01/e3sconf_efc2022_06008.pdf",
+        "repository": "https://iris.unimarconi.it/handle/20.500.14241/4999",
+        "project_dow": "https://3emotion.eu/sites/default/files/documents/3EMOTION_DOW.pdf",
+        "related_ijhydene_article": "https://doi.org/10.1016/j.ijhydene.2022.10.093"
+      },
+      "accessed": "2026-10-04",
+      "downloaded_project_dow_sha256": "A49E46BAA1151847B0D786D0A40C2CC08928E28043152E64AE95A22A06784766",
+      "reported_scope": "Five European 350-bar bus HRS sites, with multi-year operator logs summarized by filling amount, duration, average flow, daily profile, utilization and availability.",
+      "public_artifact_inspection": {
+        "operator_log_detail": "The E3S paper describes daily/monthly logbook fields such as date/time, kilograms per fill and duration; dynamic pressure-temperature-flow rows are not published.",
+        "project_documentation": "The public 3Emotion Description of Work assigns predefined Excel sheets and refilled-hydrogen information to bus/station operators; it does not release the operator workbooks.",
+        "raw_common_timebase_found": false,
+        "public_csv_xlsx_sql_found": false,
+        "reuse_terms_for_raw_logs_found": false,
+        "finding": "This is credible real-station operational provenance and an actionable data-request route, but the public artifacts contain aggregate logbook results rather than an untouched synchronized station-to-vehicle pressure/temperature/mass-flow archive."
+      },
+      "classification": "PUBLIC_REAL_STATION_AGGREGATE_DATA_REQUEST_LEAD",
+      "full_loop_holdout_eligible": false,
+      "next_action": "Request de-identified event/time-series exports from the 3Emotion station operators or authors with channel definitions, capacity/protocol metadata and reuse terms."
+    }
+  ],
+  "claim_boundary": "Neither source closes the independent full-loop numerical gate. A report-referenced workbook, aggregate logbook, plot or paper is not promoted to validation until synchronized raw files, immutable hashes, frozen scoring protocol and written reuse rights are available."
+}

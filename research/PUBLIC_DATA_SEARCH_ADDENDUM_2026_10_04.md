@@ -74,3 +74,21 @@ These sources are useful for station topology, equipment mix and operating
 context, but none meets the required station-to-vehicle pressure/temperature/
 mass-flow time-series rule. They therefore do not change the independent
 full-loop gate or justify a publication claim of validated station control.
+
+## 2026-10-04 file-level access refresh: CARB and 3Emotion
+
+Two high-value real-world sources were checked again at the file level because
+both are sometimes described as if their underlying logger files were openly
+downloadable:
+
+| Source | File-level finding | Decision |
+| --- | --- | --- |
+| [CARB 2024 Existing Light-Duty Hydrogen Refueling Stations In-Use Study](https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf) | Appendix A says the 22-station study results were tabulated in an Excel workbook. The report PDF is public, but the workbook was not linked from the report or the CARB hydrogen-infrastructure page during the recheck. | Public real-station test report and workbook-request lead; no untouched holdout |
+| [3Emotion four-year operational analysis](https://doi.org/10.1051/e3sconf/202233406008) and [project Description of Work](https://3emotion.eu/sites/default/files/documents/3EMOTION_DOW.pdf) | The paper describes operator logbooks and aggregate fill amount/duration/flow results. The project document assigns predefined Excel sheets to operators, but no operator workbook or synchronized pressure/temperature/mass-flow archive is public. | Public real-station aggregate context and data-request lead; no untouched holdout |
+
+The machine-readable inspection record, including source hashes and the exact
+eligibility boundary, is in
+[`research/public_data_access_refresh_2026_10_04.json`](public_data_access_refresh_2026_10_04.json).
+Neither source changes the independent full-loop gate. If a custodian releases
+the CARB workbook or 3Emotion event logs, the files must be quarantined,
+hash-locked and scored under the frozen protocol before any outcome is read.
