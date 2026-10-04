@@ -29,6 +29,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert gates["preoutcome_design_sensitivity"]["status"] == "PASS"
     assert gates["full_loop_external_validation"]["status"] == "FAIL"
     assert gates["public_dispenser_table_download_integrity"]["status"] == "PASS"
+    assert gates["green_hysland_trailer_context_integrity"]["status"] == "PASS"
+    green = gates["green_hysland_trailer_context_integrity"]["observed"]
+    assert green["required_trailer_rows"] is True
+    assert green["hrs_provisional_populated"] is False
+    assert green["full_loop_external_holdout_eligible"] is False
     assert gates["real_station_article_boundary_integrity"]["status"] == "PASS"
     field_article = gates["real_station_article_boundary_integrity"]["observed"]
     assert field_article["reported_sensor_count"] == 8

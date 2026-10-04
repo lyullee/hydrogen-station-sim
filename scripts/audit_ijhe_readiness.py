@@ -991,6 +991,38 @@ def audit(root: Path) -> dict[str, object]:
         } if cip_live else "missing; live CIP table recheck has not run",
     ))
 
+    green_hysland_path = root / "research/green_hysland_trailer_report_recheck_2026_10_05.json"
+    green_hysland = _json(green_hysland_path)
+    green_download = (green_hysland or {}).get("download") or {}
+    green_trailer = (green_hysland or {}).get("tube_trailer_context") or {}
+    green_hrs = (green_hysland or {}).get("hrs_provisional_boundary") or {}
+    green_eligibility = (green_hysland or {}).get("eligibility_decision") or {}
+    green_hysland_pass = bool(
+        (green_hysland or {}).get("schema_version") == 1
+        and (green_hysland or {}).get("status") == "PUBLIC_GREENHYSLAND_REPORT_RECHECKED"
+        and green_download.get("http_status") == 200
+        and len(str(green_download.get("sha256", ""))) == 64
+        and green_download.get("pdf_pages", 0) >= 1
+        and green_trailer.get("all_required_rows_present") is True
+        and green_eligibility.get("component_boundary_context_eligible") is True
+        and green_eligibility.get("full_loop_external_holdout_eligible") is False
+        and green_hrs.get("populated_transaction_values") is False
+        and (green_hysland or {}).get("claim_boundary")
+    )
+    gates.append(_gate(
+        "green_hysland_trailer_context_integrity",
+        "PASS" if green_hysland_pass else ("FAIL" if green_hysland else "PENDING"),
+        "The live Green Hysland report provides traceable tube-trailer operating context while explicitly excluding its empty HRS provisional section from full-loop validation.",
+        str(green_hysland_path.relative_to(root)),
+        "HTTP 200 PDF with digest, required trailer KPI rows, component-context eligibility, and an explicit false full-loop flag.",
+        {
+            "pdf_sha256": green_download.get("sha256"),
+            "required_trailer_rows": green_trailer.get("all_required_rows_present"),
+            "hrs_provisional_populated": green_hrs.get("populated_transaction_values"),
+            "full_loop_external_holdout_eligible": green_eligibility.get("full_loop_external_holdout_eligible"),
+        } if green_hysland else "missing; Green Hysland report recheck has not run",
+    ))
+
     accidental_ignition_path = root / "research/accidental_self_ignition_public_evidence_2026_10_04.json"
     accidental_ignition = _json(accidental_ignition_path)
     accidental_source = (accidental_ignition or {}).get("source") or {}

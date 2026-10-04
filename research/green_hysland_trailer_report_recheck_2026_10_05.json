@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "rechecked_at_utc": "2026-10-04T18:36:30.082518+00:00",
+  "status": "PUBLIC_GREENHYSLAND_REPORT_RECHECKED",
+  "source": {
+    "title": "Green Hysland historical data repository report",
+    "url": "https://greenhysland.eu/data-collection-system/",
+    "report_url": "https://enagasrenovable.idboxrt.com/reports/api/ReportViewer/exportOpenPermalink/46?op=KvUKXujUk&sg=3",
+    "publisher": "Green Hysland / Enagás Renovable"
+  },
+  "download": {
+    "http_status": 200,
+    "content_type": "application/pdf",
+    "bytes": 131660,
+    "sha256": "f3281b6f38bfe62dff79677590c9099fe55bdd17adcec3f4243af1028ce1a7a2",
+    "pdf_pages": 5
+  },
+  "tube_trailer_context": {
+    "required_rows_present": {
+      "Tube Trailers - Operation frequency": true,
+      "Tube Trailers - Total storage capacity kg": true,
+      "Tube Trailers - Usable storage capacity kg": true,
+      "Tube Trailers - Storage pressure bar": true,
+      "Tube Trailers - Peak hydrogen charging rate": true
+    },
+    "all_required_rows_present": true,
+    "row_text": {
+      "Tube Trailers - Operation frequency": "Tube Trailers - Operation frequency 10 11 7 4 7 5 1",
+      "Tube Trailers - Total storage capacity kg": "Tube Trailers - Total storage capacity kg 930 930 930 930 930 930 930",
+      "Tube Trailers - Usable storage capacity kg": "Tube Trailers - Usable storage capacity kg 890 890 890 890 890 890 890",
+      "Tube Trailers - Storage pressure bar": "Tube Trailers - Storage pressure bar 300 300 300 300 300 300 300",
+      "Tube Trailers - Peak hydrogen charging rate": "Tube Trailers - Peak hydrogen charging rate 36 36 36 36 36 36 36"
+    }
+  },
+  "hrs_provisional_boundary": {
+    "field_row_count": 25,
+    "field_rows": [
+      "HRS Provisional - H2 pressure bar",
+      "HRS Provisional - Type",
+      "HRS Provisional - Units",
+      "HRS Provisional - Affected bus lines",
+      "HRS Provisional - Circulation frequency",
+      "HRS Provisional - Daily driven distance",
+      "HRS Provisional - H2 consumption kgH2/100km",
+      "HRS Provisional - On-site tank pressures",
+      "HRS Provisional - H2 consumption based on vehicle registration number",
+      "HRS Provisional - Refueling frequency",
+      "HRS Provisional - Refueling time min",
+      "HRS Provisional - H2 lower SOC %",
+      "HRS Provisional - Bus H2 capacity kg",
+      "HRS Provisional - Bus H2 usable capacity kg",
+      "HRS Provisional - Bus H2 pressure bar",
+      "HRS Provisional - HRS manufacturer",
+      "HRS Provisional - Operator",
+      "HRS Provisional - Station setting",
+      "HRS Provisional - Hydrogen supply logistics",
+      "HRS Provisional - Dispensing pressure",
+      "HRS Provisional - Number of dispensers",
+      "HRS Provisional - Number of nozzles",
+      "HRS Provisional - Price of hydrogen €/kg",
+      "HRS Provisional - Number of buses",
+      "HRS Provisional - Bus H2 Pressure (initial) bar"
+    ],
+    "populated_transaction_values": false,
+    "required_missing_channels": [
+      "station/dispenser pressure trace",
+      "vehicle/receptacle pressure trace",
+      "temperature trace",
+      "mass-flow or transferred-mass trace",
+      "common time base"
+    ]
+  },
+  "eligibility_decision": {
+    "component_boundary_context_eligible": true,
+    "full_loop_external_holdout_eligible": false,
+    "allowed_use": [
+      "tube-trailer operating-range context",
+      "data-request lead",
+      "station inventory and KPI face-validity context"
+    ],
+    "prohibited_use": [
+      "station-to-vehicle full-loop score",
+      "controller or protocol validation",
+      "post-hoc parameter fitting",
+      "site safety-distance validation"
+    ]
+  },
+  "claim_boundary": "The live report verifies public tube-trailer KPI context, but its HRS provisional section has no populated synchronized transaction trace; the independent full-loop gate remains open."
+}
