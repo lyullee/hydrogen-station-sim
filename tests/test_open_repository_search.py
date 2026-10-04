@@ -337,3 +337,42 @@ def test_release_validation_failure_diagnosis_keeps_negative_claim_boundary():
     assert record["frozen_results"]["schefer_2006"]["joint_primary_pass"] is False
     assert record["frozen_results"]["schefer_2007"]["joint_primary_pass"] is False
     assert record["development_only_evidence"]["promotion_blocked"] is True
+
+
+def test_public_full_loop_search_addendum_keeps_new_leads_quarantined():
+    record = json.loads(
+        (
+            ROOT
+            / "research/public_full_loop_search_addendum_2026_10_04.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert record["decision"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
+    assert record["gate_impact"] == "unchanged_independent_full_loop_gate_remains_open"
+    assert len(record["sources"]) == 3
+    assert all(source["full_loop_holdout_eligible"] is False for source in record["sources"])
+    nbsdc = next(
+        source
+        for source in record["sources"]
+        if source["id"] == "nbsdc_beijing_winter_olympics_hrs_operational_addendum"
+    )
+    assert nbsdc["raw_file_access"] == "approval_required"
+    assert nbsdc["common_timebase_and_vehicle_mapping_verified"] is False
+    deng = next(
+        source
+        for source in record["sources"]
+        if source["id"] == "deng_2025_high_flow_refueling_tank_addendum"
+    )
+    assert deng["raw_common_timebase_found"] is False
+    assert (ROOT / "research/DENG_2025_HIGH_FLOW_DATA_REQUEST_DRAFT.md").exists()
+
+
+def test_external_search_mirror_contains_public_full_loop_search_addendum():
+    mirror = json.loads(
+        (ROOT / "research/external_full_loop_data_search.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    item = mirror["public_full_loop_search_addendum_2026_10_04"]
+    assert item["decision"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
+    assert item["full_loop_holdout_eligible"] is False
+    assert len(item["source_ids"]) == 3

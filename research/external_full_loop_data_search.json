@@ -2195,6 +2195,7 @@
     "record": "research/metHyTrucks_public_measurement_recheck_2026_10_04.json",
     "decision": "PUBLIC_RAW_HRS_SAMPLING_TIME_SERIES_AUXILIARY_ONLY",
     "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+    "full_loop_holdout_eligible": false,
     "source_ids": [
       "zenodo_20590761_npl_system_measurement",
       "zenodo_20590842_hysam_system_measurement"
@@ -2256,5 +2257,18 @@
     "clear_unit_or_initial_condition_bug_found": false,
     "finding": "Proust local-aperture results remain negative across all three diameters; Schefer 2006 and 2007 retain joint-screen failures. The record separates apparatus-scope limitations from code-defect evidence and blocks promotion of post-hoc restriction fits.",
     "claim_boundary": "No production model change or validation rescue is claimed. A new prospective apparatus-resolved protocol or independent logger archive is required."
+  },
+  "public_full_loop_search_addendum_2026_10_04": {
+    "record": "research/public_full_loop_search_addendum_2026_10_04.json",
+    "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+    "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+    "full_loop_holdout_eligible": false,
+    "source_ids": [
+      "nbsdc_beijing_winter_olympics_hrs_operational_addendum",
+      "nbsdc_70mpa_hydrogenation_port_test_addendum",
+      "deng_2025_high_flow_refueling_tank_addendum"
+    ],
+    "finding": "The NBSDC HRS record is a high-value approval-gated request lead, the 70 MPa port record is component-only, and the 2025 IJHE high-flow tank experiment has no verified downloadable raw archive. None is promoted to full-loop validation.",
+    "claim_boundary": "No public catalog metadata or paper-only result can replace a hashed synchronized raw archive, frozen no-fitting protocol and written reuse rights."
   }
 }

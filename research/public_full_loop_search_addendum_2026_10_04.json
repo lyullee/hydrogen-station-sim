@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "scope": "Additional public-data leads found after the primary-source refresh",
+  "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+  "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+  "sources": [
+    {
+      "id": "nbsdc_beijing_winter_olympics_hrs_operational_addendum",
+      "title": "Operational Data List of Hydrogen Refueling Stations for Beijing Winter Olympics",
+      "cstr": "16666.11.nbsdc.aI3fJrzX",
+      "catalog_url": "https://cstr.cn/16666.11.nbsdc.aI3fJrzX",
+      "curator_page": "https://xiaopeiwang.com/en/result/r-057159df",
+      "reported_coverage": "2022 HRS monitoring, fueling records and compressor monitoring; catalog metadata reports four files and approximately 10.22 MB.",
+      "real_station_data": true,
+      "public_metadata": true,
+      "raw_file_access": "approval_required",
+      "common_timebase_and_vehicle_mapping_verified": false,
+      "full_loop_holdout_eligible": false,
+      "classification": "HIGH_VALUE_DATA_REQUEST_LEAD",
+      "next_action": "Request the four files, channel dictionary, timestamp synchronization, vehicle/receptacle pressure and temperature mapping, calibration/quality flags and written reuse terms before protocol freeze."
+    },
+    {
+      "id": "nbsdc_70mpa_hydrogenation_port_test_addendum",
+      "title": "70 MPa hydrogenation-port test dataset",
+      "cstr": "16666.11.nbsdc.ZjzPghqx",
+      "catalog_url": "https://nbsdc.cn/general/dataLinks/16666.11.nbsdc.ZjzPghqx",
+      "reported_coverage": "Component test data for a 70 MPa vehicle hydrogenation port; catalog metadata reports 15 files and 73.94 MB.",
+      "real_experiment": true,
+      "access": "login_or_permission_required",
+      "vehicle_or_station_full_loop": false,
+      "full_loop_holdout_eligible": false,
+      "classification": "COMPONENT_VALIDATION_AUXILIARY_ONLY",
+      "finding": "Useful for connector/seal/port boundary checks, but it does not represent a complete station-to-vehicle fueling trajectory."
+    },
+    {
+      "id": "deng_2025_high_flow_refueling_tank_addendum",
+      "title": "Experimental–numerical optimization of inlet angles for controlling temperature rise during high-flow hydrogen refueling of large-scale storage tanks",
+      "doi": "10.1016/j.ijhydene.2025.151093",
+      "url": "https://doi.org/10.1016/j.ijhydene.2025.151093",
+      "reported_coverage": "35 MPa high-flow tank experiments with time-resolved mass-flow boundary data and thermocouple temperature measurements.",
+      "real_experiment": true,
+      "raw_common_timebase_found": false,
+      "data_availability_verified": false,
+      "full_loop_holdout_eligible": false,
+      "classification": "INDEPENDENT_TANK_THERMAL_DATA_REQUEST_LEAD",
+      "request_draft": "research/DENG_2025_HIGH_FLOW_DATA_REQUEST_DRAFT.md",
+      "next_action": "Request de-identified synchronized mass-flow, pressure, gas-temperature and wall/thermocouple files, geometry, calibration metadata and reuse permission."
+    }
+  ],
+  "claim_boundary": "A public catalog record, paper statement or component test is not promoted to numerical full-loop validation without downloadable synchronized raw files, immutable hashes, independent protocol freeze and written reuse rights."
+}
