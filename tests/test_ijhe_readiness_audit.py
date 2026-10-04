@@ -87,11 +87,16 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert grune_inventory["source_identity_all_match"] is True
     assert gates["dataverse_hydrogen_explosion_component_inventory"]["status"] == "PASS"
     explosion_inventory = gates["dataverse_hydrogen_explosion_component_inventory"]["observed"]
-    assert explosion_inventory["dois"] == ["10.18710/WSKBIJ", "10.18710/X044QK"]
+    assert explosion_inventory["dois"] == [
+        "10.18710/WSKBIJ", "10.18710/X044QK", "10.23642/USN.17934047"
+    ]
     assert explosion_inventory["experiment_counts"] == {
         "10.18710/WSKBIJ": 51,
         "10.18710/X044QK": 40,
+        "10.23642/USN.17934047": None,
     }
+    assert explosion_inventory["license_set"] == ["CC BY 4.0", "CC0 1.0"]
+    assert explosion_inventory["ignited_sample_sigma_shape"] == [999999, 7]
     assert gates["hiad_action_evidence_integrity"]["status"] == "PASS"
     assert gates["hiad_action_evidence_integrity"]["observed"]["case_count"] == 34
     assert gates["hiad_accident_response_coverage_evaluation"]["status"] == "PASS"

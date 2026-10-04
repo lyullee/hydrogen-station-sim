@@ -1,15 +1,16 @@
 # DataverseNO hydrogen explosion dataset inventory
 
-Generated: `2026-10-04T20:11:21.166637+00:00`
+Generated: `2026-10-04T20:23:53.270001+00:00`
 
-This report fixes the public provenance and summary-workbook boundary. It is not a model-validation result.
+This report fixes the public provenance, summary-workbook and one raw-MAT channel boundary. It is not a model-validation result.
 
 ## Public sources
 
 | Dataset | DOI | License | Files | Trace groups | Summary identity |
 |---|---|---|---:|---|---|
-| [Replication dataset for: Large-Scale Hydrogen Explosion Experiments: Obstructed Releases in open atmosphere](https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/WSKBIJ) | `10.18710/WSKBIJ` | `CC0 1.0` | 59 | text_trace_files=52, csv_trace_files=0, video_or_archive_files=6, workbook_files=1 | **True** |
-| [Replication data for: Laboratory-Scale Experiments on Ignited Hydrogen Jets: Flame Acceleration and Overpressure Analysis](https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/X044QK) | `10.18710/X044QK` | `CC0 1.0` | 47 | text_trace_files=1, csv_trace_files=39, video_or_archive_files=6, workbook_files=1 | **True** |
+| [Replication dataset for: Large-Scale Hydrogen Explosion Experiments: Obstructed Releases in open atmosphere](https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/WSKBIJ) | `10.18710/WSKBIJ` | `CC0 1.0` | 59 | text_trace_files=52, csv_trace_files=0, mat_trace_files=0, video_or_archive_files=6, workbook_files=1 | **True** |
+| [Replication data for: Laboratory-Scale Experiments on Ignited Hydrogen Jets: Flame Acceleration and Overpressure Analysis](https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/X044QK) | `10.18710/X044QK` | `CC0 1.0` | 47 | text_trace_files=1, csv_trace_files=39, mat_trace_files=0, video_or_archive_files=6, workbook_files=1 | **True** |
+| [Hydrogen Safety: Pressure Peaking Phenomena-ignited releases](https://dataverse.no/dataset.xhtml?persistentId=doi:10.23642/USN.17934047) | `10.23642/USN.17934047` | `CC BY 4.0` | 33 | text_trace_files=0, csv_trace_files=0, mat_trace_files=31, video_or_archive_files=0, workbook_files=0 | **True** |
 
 ## Published summary coverage
 
@@ -38,6 +39,22 @@ This report fixes the public provenance and summary-workbook boundary. It is not
 - **commented_experiments:** `['did not ignited', 'did not ignited', 'no data', 'no data fra pressure sensors. Movie er uten 10% pretrigger', 'spark was not generated -> no ignition', 'did not ignited']`
 - Workbook reports pressure and mass-flow summaries for 40 numbered experiments; CSV files contain the large raw traces.
 - The README describes four high-frequency piezoelectric pressure sensors and an upstream pressure transmitter.
+
+### Hydrogen Safety: Pressure Peaking Phenomena-ignited releases
+
+- **summary_kind:** `raw_mat_channel_smoke_test`
+- **mat_keys:** `['GEN3i', 'GENdimensions', 'GENunits', 'SIGMA', 'SIGMAdimensions', 'SIGMAunits', 'Tavg']`
+- **sigma_shape:** `[999999, 7]`
+- **gen3i_shape:** `[119594, 3]`
+- **sigma_dimensions:** `['[s]', '[g/s]', '[bar]', '[oC]', '[oC]', '[oC]', '[oC]']`
+- **sigma_units:** `['time', 'Mass Flow', 'Pressure at Coriolis', 'Temperature', 'Temperature', 'Temperature', 'Temperature']`
+- **time_range_s:** `[5e-05, 49.999950000000005]`
+- **mass_flow_g_s_range:** `[-6.224986975, 1.4590886999999997]`
+- **coriolis_pressure_bar_range:** `[-62.159310000000005, 26.623043250000144]`
+- **temperature_channel_count:** `4`
+- **overpressure_kpa_range:** `[-0.09807768400000003, 4.8190998]`
+- The source file-handling guide identifies SIGMA time, mass flow, Coriolis pressure and four thermocouples plus GEN3i overpressure.
+- This is a channel and time-base smoke test for one source file; no model comparison was run.
 
 ## Claim boundary
 

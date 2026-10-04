@@ -1298,8 +1298,9 @@ and confirms reuse terms for derived results and journal publication.
 
 ## 2026-10-05 DataverseNO hydrogen-explosion consequence archives
 
-Two newly released DataverseNO records are openly reusable under CC0 1.0 and
-provide useful independent consequence-component evidence:
+Two newly released DataverseNO records are openly reusable under CC0 1.0, and
+one earlier CC BY 4.0 record was rechecked at the same API, providing useful
+independent consequence-component evidence:
 
 * [10.18710/WSKBIJ](https://doi.org/10.18710/WSKBIJ) contains 2024–2025
   large-scale open-atmosphere delayed-ignition releases. The API manifest has
@@ -1313,6 +1314,11 @@ provide useful independent consequence-component evidence:
   workbook reports pressure and mass-flow summaries, obstacle spacing and
   ignition delay; the README identifies four high-frequency pressure sensors
   and an upstream pressure transmitter.
+* [10.23642/USN.17934047](https://doi.org/10.23642/USN.17934047) is the
+  ignited-release companion archive (CC BY 4.0). Its file-handling guide and
+  a hash-checked sample MAT file expose synchronized SIGMA time, mass flow,
+  Coriolis pressure, four thermocouples and GEN3i overpressure channels. The
+  sample is a channel/time-base smoke test only; it is not a model comparison.
 
 The file counts, CC0 declarations, summary-workbook hashes and coverage are
 fixed in

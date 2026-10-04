@@ -10,10 +10,16 @@ REPORT = ROOT / "research/DATAVERSE_HYDROGEN_EXPLOSION_DATASET_INVENTORY_2026_10
 def test_dataverse_explosion_inventory_is_public_and_bounded():
     result = json.loads(RESULT.read_text(encoding="utf-8"))
     assert result["status"] == "completed_dataverse_provenance_and_summary_inventory"
-    assert len(result["sources"]) == 2
-    assert {item["doi"] for item in result["sources"]} == {"10.18710/WSKBIJ", "10.18710/X044QK"}
-    assert all(item["license"] == "CC0 1.0" for item in result["sources"])
-    assert all(item["summary_file_identity_match"] for item in result["sources"])
+    assert len(result["sources"]) == 3
+    assert {item["doi"] for item in result["sources"]} == {
+        "10.18710/WSKBIJ", "10.18710/X044QK", "10.23642/USN.17934047"
+    }
+    assert {item["license"] for item in result["sources"]} == {"CC0 1.0", "CC BY 4.0"}
+    assert all(
+        item.get("summary_file_identity_match") is True
+        or item.get("sample_file_identity_match") is True
+        for item in result["sources"]
+    )
     assert result["validation_status"]["model_comparison_performed"] is False
     assert result["validation_status"]["numeric_validation_gate_closed"] is False
     assert result["validation_status"]["full_loop_external_validation_supported"] is False
@@ -27,6 +33,18 @@ def test_dataverse_summary_workbooks_have_expected_experiment_coverage():
     assert wsk["published_summary"]["explosion_pressure_sensor_count"] == 4
     assert x044["published_summary"]["experiment_count"] == 40
     assert x044["published_summary"]["commented_experiments"]
+
+
+def test_ignited_pressure_peaking_sample_exposes_synchronized_channels():
+    result = json.loads(RESULT.read_text(encoding="utf-8"))
+    ignited = next(item for item in result["sources"] if item["doi"] == "10.23642/USN.17934047")
+    sample = ignited["raw_sample"]
+    assert ignited["sample_file_identity_match"] is True
+    assert sample["sigma_shape"] == [999999, 7]
+    assert sample["gen3i_shape"][1] == 3
+    assert sample["sigma_dimensions"] == ["[s]", "[g/s]", "[bar]", "[oC]", "[oC]", "[oC]", "[oC]"]
+    assert sample["time_range_s"][1] > 20
+    assert sample["temperature_channel_count"] == 4
 
 
 def test_dataverse_report_preserves_claim_boundary():

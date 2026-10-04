@@ -42,6 +42,17 @@ SOURCES: tuple[dict[str, Any], ...] = (
         "summary_file": "x_results.xlsx",
         "expected_summary_md5": "6c929ee530ac393ee8e76f6db2eff05c",
     },
+    {
+        "id": "usn_17934047_ignited_pressure_peaking",
+        "doi": "10.23642/USN.17934047",
+        "title": "Hydrogen Safety: Pressure Peaking Phenomena-ignited releases",
+        "record": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.23642/USN.17934047",
+        "api": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi%3A10.23642%2FUSN.17934047",
+        "license": "CC BY 4.0",
+        "sample_file": "pp_ignited_sample.mat",
+        "sample_datafile_id": 266047,
+        "expected_sample_md5": "6f7b90c22d1ba4f34056e8dd14df4e98",
+    },
 )
 
 
@@ -65,6 +76,7 @@ def _api_summary(payload: dict[str, Any]) -> dict[str, Any]:
     files = [item.get("dataFile", item) for item in version.get("files", [])]
     text_files = [item for item in files if str(item.get("filename", "")).lower().endswith(".txt")]
     csv_files = [item for item in files if str(item.get("filename", "")).lower().endswith(".csv")]
+    mat_files = [item for item in files if str(item.get("filename", "")).lower().endswith(".mat")]
     video_files = [item for item in files if str(item.get("filename", "")).lower().endswith((".cine", ".zip"))]
     workbook_files = [item for item in files if str(item.get("filename", "")).lower().endswith(".xlsx")]
     return {
@@ -76,6 +88,7 @@ def _api_summary(payload: dict[str, Any]) -> dict[str, Any]:
         "file_groups": {
             "text_trace_files": len(text_files),
             "csv_trace_files": len(csv_files),
+            "mat_trace_files": len(mat_files),
             "video_or_archive_files": len(video_files),
             "workbook_files": len(workbook_files),
         },
@@ -158,6 +171,33 @@ def _x044_workbook(path: Path) -> dict[str, Any]:
     }
 
 
+def _ignited_mat_sample(path: Path) -> dict[str, Any]:
+    from scipy.io import loadmat
+
+    data = loadmat(path, squeeze_me=True, struct_as_record=False)
+    sigma = data["SIGMA"]
+    gen3i = data["GEN3i"]
+    dimensions = [str(value) for value in data["SIGMAdimensions"].tolist()]
+    units = [str(value) for value in data["SIGMAunits"].tolist()]
+    return {
+        "summary_kind": "raw_mat_channel_smoke_test",
+        "mat_keys": sorted(key for key in data if not key.startswith("__")),
+        "sigma_shape": list(sigma.shape),
+        "gen3i_shape": list(gen3i.shape),
+        "sigma_dimensions": dimensions,
+        "sigma_units": units,
+        "time_range_s": [float(sigma[0, 0]), float(sigma[-1, 0])],
+        "mass_flow_g_s_range": [float(sigma[:, 1].min()), float(sigma[:, 1].max())],
+        "coriolis_pressure_bar_range": [float(sigma[:, 2].min()), float(sigma[:, 2].max())],
+        "temperature_channel_count": int(sigma.shape[1] - 3),
+        "overpressure_kpa_range": [float(gen3i[:, 2].min()), float(gen3i[:, 2].max())],
+        "source_notes": [
+            "The source file-handling guide identifies SIGMA time, mass flow, Coriolis pressure and four thermocouples plus GEN3i overpressure.",
+            "This is a channel and time-base smoke test for one source file; no model comparison was run.",
+        ],
+    }
+
+
 def build(raw_directory: Path, fetch_api: bool = True) -> dict[str, Any]:
     sources: list[dict[str, Any]] = []
     for source in SOURCES:
@@ -169,18 +209,32 @@ def build(raw_directory: Path, fetch_api: bool = True) -> dict[str, Any]:
                 item["api_observation"] = _api_summary(_fetch_json(source["api"]))
             except Exception as exc:  # preserve availability failure in the record
                 item["api_error"] = str(exc)
-        summary_path = raw_directory / source["summary_file"]
-        item["summary_file_present"] = summary_path.is_file()
-        item["summary_file_identity_match"] = False
+        item["summary_file_present"] = None
+        item["summary_file_identity_match"] = None
         item["summary_file_hashes"] = None
         item["published_summary"] = None
-        if summary_path.is_file():
-            hashes = _hashes(summary_path)
-            item["summary_file_hashes"] = hashes
-            item["summary_file_identity_match"] = hashes["md5"] == source["expected_summary_md5"]
-            item["published_summary"] = (
-                _wsk_workbook(summary_path) if source["id"].startswith("wskbij") else _x044_workbook(summary_path)
-            )
+        if "summary_file" in source:
+            summary_path = raw_directory / source["summary_file"]
+            item["summary_file_present"] = summary_path.is_file()
+            item["summary_file_identity_match"] = False
+            if summary_path.is_file():
+                hashes = _hashes(summary_path)
+                item["summary_file_hashes"] = hashes
+                item["summary_file_identity_match"] = hashes["md5"] == source["expected_summary_md5"]
+                item["published_summary"] = (
+                    _wsk_workbook(summary_path) if source["id"].startswith("wskbij") else _x044_workbook(summary_path)
+                )
+        if "sample_file" in source:
+            sample_path = raw_directory / source["sample_file"]
+            item["sample_file_present"] = sample_path.is_file()
+            item["sample_file_identity_match"] = False
+            item["sample_file_hashes"] = None
+            item["raw_sample"] = None
+            if sample_path.is_file():
+                hashes = _hashes(sample_path)
+                item["sample_file_hashes"] = hashes
+                item["sample_file_identity_match"] = hashes["md5"] == source["expected_sample_md5"]
+                item["raw_sample"] = _ignited_mat_sample(sample_path)
         sources.append(item)
     return {
         "schema_version": 1,
@@ -210,7 +264,7 @@ def markdown(result: dict[str, Any]) -> str:
         "",
         f"Generated: `{result['generated_at']}`",
         "",
-        "This report fixes the public provenance and summary-workbook boundary. It is not a model-validation result.",
+        "This report fixes the public provenance, summary-workbook and one raw-MAT channel boundary. It is not a model-validation result.",
         "",
         "## Public sources",
         "",
@@ -221,14 +275,17 @@ def markdown(result: dict[str, Any]) -> str:
         api = source.get("api_observation") or {}
         groups = api.get("file_groups", {})
         trace_groups = ", ".join(f"{key}={value}" for key, value in groups.items()) or "unavailable"
+        identity = source.get("summary_file_identity_match")
+        if identity is None:
+            identity = source.get("sample_file_identity_match")
         lines.append(
             f"| [{source['title']}]({source['record']}) | `{source['doi']}` | `{source['license']}` | "
-            f"{api.get('file_count', 'n/a')} | {trace_groups} | **{source['summary_file_identity_match']}** |"
+            f"{api.get('file_count', 'n/a')} | {trace_groups} | **{identity}** |"
         )
     lines += ["", "## Published summary coverage", ""]
     for source in result["sources"]:
         lines += [f"### {source['title']}", ""]
-        summary = source.get("published_summary")
+        summary = source.get("published_summary") or source.get("raw_sample")
         if summary is None:
             lines.append("The local summary workbook is unavailable; no numerical summary was reproduced.")
             continue
@@ -263,9 +320,17 @@ def main() -> int:
     result = build(args.raw_directory, fetch_api=not args.no_api)
     args.json_output.parent.mkdir(parents=True, exist_ok=True)
     args.report_output.parent.mkdir(parents=True, exist_ok=True)
-    args.json_output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    args.report_output.write_text(markdown(result), encoding="utf-8")
-    print(json.dumps({"sources": len(result["sources"]), "api_ok": sum(item["api_observation"] is not None for item in result["sources"]), "summary_ok": sum(item["summary_file_identity_match"] for item in result["sources"])}))
+    args.json_output.write_bytes((json.dumps(result, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
+    args.report_output.write_bytes(markdown(result).encode("utf-8"))
+    print(json.dumps({
+        "sources": len(result["sources"]),
+        "api_ok": sum(item["api_observation"] is not None for item in result["sources"]),
+        "identity_ok": sum(
+            (item.get("summary_file_identity_match") is True)
+            or (item.get("sample_file_identity_match") is True)
+            for item in result["sources"]
+        ),
+    }))
     return 0
 
 

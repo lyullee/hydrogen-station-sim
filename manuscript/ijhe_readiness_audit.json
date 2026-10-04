@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T20:15:36.518586+00:00",
+  "generated_at": "2026-10-04T20:23:18.293303+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -2205,13 +2205,22 @@
       "observed": {
         "dois": [
           "10.18710/WSKBIJ",
-          "10.18710/X044QK"
+          "10.18710/X044QK",
+          "10.23642/USN.17934047"
         ],
         "experiment_counts": {
           "10.18710/WSKBIJ": 51,
-          "10.18710/X044QK": 40
+          "10.18710/X044QK": 40,
+          "10.23642/USN.17934047": null
         },
-        "license_all_cc0": true,
+        "ignited_sample_sigma_shape": [
+          999999,
+          7
+        ],
+        "license_set": [
+          "CC BY 4.0",
+          "CC0 1.0"
+        ],
         "model_comparison_performed": false,
         "full_loop_external_validation_supported": false
       }

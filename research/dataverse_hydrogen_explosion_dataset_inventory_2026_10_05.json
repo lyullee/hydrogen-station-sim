@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T20:11:21.166637+00:00",
+  "generated_at": "2026-10-04T20:23:53.270001+00:00",
   "status": "completed_dataverse_provenance_and_summary_inventory",
   "evidence_role": "independent_hydrogen_release_ignition_overpressure_component_evidence",
   "claim_boundary": "These CC0 datasets provide independent release, ignition, pressure and mass-flow evidence for consequence-component checks. They do not contain a synchronized gaseous H70 station-to-vehicle fueling loop, and this inventory does not perform a model comparison. They therefore cannot close the full-loop external-validation gate or establish SAGA effectiveness.",
@@ -23,6 +23,7 @@
         "file_groups": {
           "text_trace_files": 52,
           "csv_trace_files": 0,
+          "mat_trace_files": 0,
           "video_or_archive_files": 6,
           "workbook_files": 1
         },
@@ -90,6 +91,7 @@
         "file_groups": {
           "text_trace_files": 1,
           "csv_trace_files": 39,
+          "mat_trace_files": 0,
           "video_or_archive_files": 6,
           "workbook_files": 1
         },
@@ -149,6 +151,108 @@
         "source_notes": [
           "Workbook reports pressure and mass-flow summaries for 40 numbered experiments; CSV files contain the large raw traces.",
           "The README describes four high-frequency piezoelectric pressure sensors and an upstream pressure transmitter."
+        ]
+      }
+    },
+    {
+      "id": "usn_17934047_ignited_pressure_peaking",
+      "doi": "10.23642/USN.17934047",
+      "title": "Hydrogen Safety: Pressure Peaking Phenomena-ignited releases",
+      "record": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.23642/USN.17934047",
+      "api": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi%3A10.23642%2FUSN.17934047",
+      "license": "CC BY 4.0",
+      "sample_file": "pp_ignited_sample.mat",
+      "sample_datafile_id": 266047,
+      "expected_sample_md5": "6f7b90c22d1ba4f34056e8dd14df4e98",
+      "api_observation": {
+        "identifier": "USN.17934047",
+        "publication_date": "2022-01-25",
+        "version": 1,
+        "license": "CC BY 4.0",
+        "file_count": 33,
+        "file_groups": {
+          "text_trace_files": 0,
+          "csv_trace_files": 0,
+          "mat_trace_files": 31,
+          "video_or_archive_files": 0,
+          "workbook_files": 0
+        },
+        "total_bytes": 1302092394,
+        "largest_file_bytes": 43807775,
+        "readme_files": [
+          "Readme_Hydrogen safety- Pressure Peaking Phenomena-ignited releases.docx"
+        ],
+        "summary_workbooks": []
+      },
+      "api_error": null,
+      "summary_file_present": null,
+      "summary_file_identity_match": null,
+      "summary_file_hashes": null,
+      "published_summary": null,
+      "sample_file_present": true,
+      "sample_file_identity_match": true,
+      "sample_file_hashes": {
+        "bytes": 42685282,
+        "md5": "6f7b90c22d1ba4f34056e8dd14df4e98",
+        "sha256": "f84de87b9ff01f4388e3d5392537a1ac263b58db49d509cc1056377df718b5d0"
+      },
+      "raw_sample": {
+        "summary_kind": "raw_mat_channel_smoke_test",
+        "mat_keys": [
+          "GEN3i",
+          "GENdimensions",
+          "GENunits",
+          "SIGMA",
+          "SIGMAdimensions",
+          "SIGMAunits",
+          "Tavg"
+        ],
+        "sigma_shape": [
+          999999,
+          7
+        ],
+        "gen3i_shape": [
+          119594,
+          3
+        ],
+        "sigma_dimensions": [
+          "[s]",
+          "[g/s]",
+          "[bar]",
+          "[oC]",
+          "[oC]",
+          "[oC]",
+          "[oC]"
+        ],
+        "sigma_units": [
+          "time",
+          "Mass Flow",
+          "Pressure at Coriolis",
+          "Temperature",
+          "Temperature",
+          "Temperature",
+          "Temperature"
+        ],
+        "time_range_s": [
+          5e-05,
+          49.999950000000005
+        ],
+        "mass_flow_g_s_range": [
+          -6.224986975,
+          1.4590886999999997
+        ],
+        "coriolis_pressure_bar_range": [
+          -62.159310000000005,
+          26.623043250000144
+        ],
+        "temperature_channel_count": 4,
+        "overpressure_kpa_range": [
+          -0.09807768400000003,
+          4.8190998
+        ],
+        "source_notes": [
+          "The source file-handling guide identifies SIGMA time, mass flow, Coriolis pressure and four thermocouples plus GEN3i overpressure.",
+          "This is a channel and time-base smoke test for one source file; no model comparison was run."
         ]
       }
     }

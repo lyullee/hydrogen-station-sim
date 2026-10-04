@@ -672,6 +672,22 @@
       "rights_note": "DataverseNO marks the record CC0 1.0. Preserve the DOI and source attribution; do not mirror multi-gigabyte raw traces in this repository.",
       "eligibility_note": "Not a synchronized gaseous H70 station-to-vehicle loop and not a SAGA effectiveness dataset. Exclude non-ignition/no-data rows according to a frozen protocol before model comparison.",
       "inventory": "research/dataverse_hydrogen_explosion_dataset_inventory_2026_10_05.json"
+    },
+    "usn_17934047_ignited_pressure_peaking": {
+      "title": "Hydrogen Safety: Pressure Peaking Phenomena-ignited releases",
+      "publisher": "University of South-Eastern Norway / DataverseNO",
+      "landing_page": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.23642/USN.17934047",
+      "api_record": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi%3A10.23642%2FUSN.17934047",
+      "doi": "10.23642/USN.17934047",
+      "related_publication_doi": "10.1016/j.ijhydene.2020.12.015",
+      "license": "CC BY 4.0",
+      "public_raw_data": true,
+      "reported_scope": "Large-scale confined ignited hydrogen releases with synchronized Coriolis mass flow, upstream pressure, four thermocouples and GEN3i overpressure channels.",
+      "file_manifest_scope": "33 files, including 31 MATLAB MAT traces, a file-handling guide and metadata; raw files remain external to this repository.",
+      "evidence_role": "Independent ignited pressure-peaking consequence-component evidence.",
+      "rights_note": "DataverseNO marks the record CC BY 4.0. Preserve attribution and both dataset and publication DOIs; do not mirror multi-gigabyte raw traces in this repository.",
+      "eligibility_note": "Not a synchronized gaseous H70 station-to-vehicle loop and not a SAGA effectiveness dataset. Ignition/combustion model comparison must use a separately frozen protocol.",
+      "inventory": "research/dataverse_hydrogen_explosion_dataset_inventory_2026_10_05.json"
     }
   }
 }

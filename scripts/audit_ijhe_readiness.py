@@ -862,11 +862,19 @@ def audit(root: Path) -> dict[str, object]:
     explosion_inventory_pass = bool(
         (explosion_inventory or {}).get("status")
         == "completed_dataverse_provenance_and_summary_inventory"
-        and set(explosion_by_doi) == {"10.18710/WSKBIJ", "10.18710/X044QK"}
-        and all(item.get("license") == "CC0 1.0" for item in explosion_sources)
-        and all(item.get("summary_file_identity_match") is True for item in explosion_sources)
+        and set(explosion_by_doi) == {
+            "10.18710/WSKBIJ", "10.18710/X044QK", "10.23642/USN.17934047"
+        }
+        and all(item.get("license") in {"CC0 1.0", "CC BY 4.0"} for item in explosion_sources)
+        and all(
+            item.get("summary_file_identity_match") is True
+            or item.get("sample_file_identity_match") is True
+            for item in explosion_sources
+        )
         and explosion_by_doi["10.18710/WSKBIJ"].get("published_summary", {}).get("experiment_count") == 51
         and explosion_by_doi["10.18710/X044QK"].get("published_summary", {}).get("experiment_count") == 40
+        and explosion_by_doi["10.23642/USN.17934047"].get("raw_sample", {}).get("sigma_shape") == [999999, 7]
+        and explosion_by_doi["10.23642/USN.17934047"].get("raw_sample", {}).get("temperature_channel_count") == 4
         and explosion_validation.get("model_comparison_performed") is False
         and explosion_validation.get("numeric_validation_gate_closed") is False
         and explosion_validation.get("full_loop_external_validation_supported") is False
@@ -881,10 +889,11 @@ def audit(root: Path) -> dict[str, object]:
         {
             "dois": sorted(explosion_by_doi),
             "experiment_counts": {
-                doi: item.get("published_summary", {}).get("experiment_count")
+                doi: (item.get("published_summary") or {}).get("experiment_count")
                 for doi, item in explosion_by_doi.items()
             },
-            "license_all_cc0": all(item.get("license") == "CC0 1.0" for item in explosion_sources),
+            "ignited_sample_sigma_shape": explosion_by_doi.get("10.23642/USN.17934047", {}).get("raw_sample", {}).get("sigma_shape"),
+            "license_set": sorted({item.get("license") for item in explosion_sources}),
             "model_comparison_performed": explosion_validation.get("model_comparison_performed"),
             "full_loop_external_validation_supported": explosion_validation.get("full_loop_external_validation_supported"),
         } if explosion_inventory else "missing; DataverseNO explosion inventory has not run",
