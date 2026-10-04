@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "status": "pending_coordinator_approval_and_ethics_determination",
+  "casebook": {
+    "path": "data/public_validation/results/hiad_holdout_preparation/casebook_for_approval.json",
+    "case_count": 24,
+    "sha256": "3d02c589a67b7e1af112ffb5d58712ec366d66cddd13536ddabf5c0fd6bb226e"
+  },
+  "prescreen": {
+    "manifest": "data/public_validation/results/hiad_coordinator_prescreen/prescreen_manifest.json",
+    "manifest_sha256": "ebf4541a1c800aa9da46849393c6b72475c880d606d9885df105950d78752851",
+    "review_csv_sha256": "eeafe11950d7f4ae1dfb91bf54f4cc35696e272638aa5ea66886661bbbcc2b14",
+    "review_html_sha256": "36e4ff5c73ec5f0ea3077388101ef99815be1351f9fdc90108e23f2bd4b5a614",
+    "advisory_only": true,
+    "human_review_required_for_every_case": true
+  },
+  "protocol_files": {
+    "research/HIAD_EXPERT_STUDY_PREREGISTRATION.md": "fea883af559973835cf6d11cb38c2c46f66925dd7e4f568b8c3181e739a5a47c",
+    "research/ETHICS_DETERMINATION_REQUEST.md": "cec63631cf77442262930bb6676c70ff2d84ce08429eba01d577ddcc099a169b",
+    "research/EXPERT_REVIEWER_INFORMATION_SHEET.md": "82320f5dc6854cbce4a176e659fe36172e7515e8d1c5dd59cd4c78f3b128ac47"
+  },
+  "next_required_evidence": [
+    "institutional ethics or quality determination",
+    "coordinator-approved frozen casebook manifest",
+    "168 retained blinded responses",
+    "three independent qualified reviewer ratings per event and variant",
+    "locked expert-review analysis"
+  ],
+  "gate_impact": "hiad_casebook_and_expert_effectiveness_gates_remain_pending",
+  "claim_boundary": "This handoff proves package readiness and file integrity only; it is not a casebook approval, response collection, expert review or SAGA effectiveness result."
+}
