@@ -388,6 +388,42 @@ def audit(root: Path) -> dict[str, object]:
         } if field_article else "missing; public field article boundary record has not been captured",
     ))
 
+    zbt_article_path = root / "research/zbt_hrs_sampling_article_data_boundary_2026_10_05.json"
+    zbt_article = _json(zbt_article_path)
+    zbt_source = (zbt_article or {}).get("source") or {}
+    zbt_evidence = (zbt_article or {}).get("observed_evidence") or {}
+    zbt_config = zbt_evidence.get("station_configuration") or {}
+    zbt_decision = (zbt_article or {}).get("eligibility_decision") or {}
+    zbt_article_pass = bool(
+        (zbt_article or {}).get("schema_version") == 1
+        and zbt_source.get("doi") == "10.3390/cleantechnol8030091"
+        and "raw measurements" in str(zbt_source.get("license") or "")
+        and zbt_evidence.get("facility")
+        and zbt_config.get("storage_banks") == 7
+        and zbt_config.get("dispensing_pressure_classes_mpa") == [35, 70]
+        and zbt_evidence.get("reported_measurements")
+        and zbt_evidence.get("raw_synchronized_rows_public") is False
+        and zbt_decision.get("full_loop_external_holdout_eligible") is False
+        and zbt_decision.get("reason")
+        and zbt_article.get("claim_boundary")
+    )
+    gates.append(_gate(
+        "zbt_hrs_sampling_article_boundary_integrity",
+        "PASS" if zbt_article_pass else ("FAIL" if zbt_article else "PENDING"),
+        "The public ZBT HRS sampling article is recorded as a real multi-bank station data-request lead without being promoted to raw full-loop validation.",
+        str(zbt_article_path.relative_to(root)),
+        "DOI, real station configuration, logged dispenser/tank evidence, author-request-only raw-data boundary and false full-loop eligibility flag.",
+        {
+            "doi": zbt_source.get("doi"),
+            "facility": zbt_evidence.get("facility"),
+            "storage_banks": zbt_config.get("storage_banks"),
+            "dispensing_pressure_classes_mpa": zbt_config.get("dispensing_pressure_classes_mpa"),
+            "raw_synchronized_rows_public": zbt_evidence.get("raw_synchronized_rows_public"),
+            "full_loop_external_holdout_eligible": zbt_decision.get("full_loop_external_holdout_eligible"),
+            "claim_boundary": (zbt_article or {}).get("claim_boundary"),
+        } if zbt_article else "missing; ZBT HRS sampling article boundary record has not been captured",
+    ))
+
     kgs_access_path = root / "research/kgs_hrs_code_access_recheck_2026_10_05.json"
     kgs_access = _json(kgs_access_path)
     kgs_access_source = (kgs_access or {}).get("source") or {}

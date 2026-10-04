@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "source": {
+    "title": "Representative Hydrogen Sampling at Hydrogen Refuelling Stations: Interplay of Sampling Strategy and Station Parameters",
+    "doi": "10.3390/cleantechnol8030091",
+    "url": "https://doi.org/10.3390/cleantechnol8030091",
+    "publisher": "MDPI Clean Technologies",
+    "publication_date": "2026-06-10",
+    "license": "CC BY 4.0 article; raw measurements available from authors on request"
+  },
+  "observed_evidence": {
+    "facility": "ZBT hydrogen test field, Duisburg, Germany",
+    "station_configuration": {
+      "storage_banks": 7,
+      "approximate_total_capacity_kg": 500,
+      "storage_pressure_classes_mpa": [48, 50, 100],
+      "dispensing_pressure_classes_mpa": [35, 70],
+      "maximum_reported_mass_flow_g_s": 120
+    },
+    "reported_measurements": [
+      "dispenser data",
+      "storage-bank/tank data",
+      "sampling-device pressure and temperature conditions",
+      "hydrogen contaminant measurements"
+    ],
+    "reported_protocols": ["SAE J2601", "MC-Formula", "PHRYDE", "operator-configurable"],
+    "raw_synchronized_rows_public": false,
+    "data_availability_statement": "The raw data supporting the conclusions will be made available by the authors on request."
+  },
+  "eligibility_decision": {
+    "full_loop_external_holdout_eligible": false,
+    "reason": "The public article documents a real multi-bank HRS and states that dispenser and tank data were logged, but it does not publish a downloadable synchronized station-to-vehicle logger archive, channel dictionary, calibration package or written raw-data reuse terms.",
+    "allowed_use": [
+      "independent HRS configuration and operating-range context",
+      "high-priority request for de-identified synchronized station/dispenser/sink logger data",
+      "protocol and sampling-boundary comparison"
+    ],
+    "prohibited_use": [
+      "numerical full-loop holdout score",
+      "parameter tuning of the frozen production model",
+      "claim of station-to-vehicle validation from published figures"
+    ]
+  },
+  "next_action": "Request de-identified elapsed-time rows for source pressure/temperature, dispenser pressure/temperature/mass flow, sink pressure/temperature/mass, protocol state, calibration metadata and publication reuse terms; freeze model, inclusion criteria and scoring before accessing numerical outcomes.",
+  "claim_boundary": "This record strengthens public-source accounting and identifies a high-value acquisition lead. It is not raw validation evidence and does not change the IJHE or full-objective completion gates."
+}

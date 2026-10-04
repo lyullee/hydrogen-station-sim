@@ -52,6 +52,12 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     field_article = gates["real_station_article_boundary_integrity"]["observed"]
     assert field_article["reported_sensor_count"] == 8
     assert field_article["full_loop_external_holdout_eligible"] is False
+    assert gates["zbt_hrs_sampling_article_boundary_integrity"]["status"] == "PASS"
+    zbt_article = gates["zbt_hrs_sampling_article_boundary_integrity"]["observed"]
+    assert zbt_article["storage_banks"] == 7
+    assert zbt_article["dispensing_pressure_classes_mpa"] == [35, 70]
+    assert zbt_article["raw_synchronized_rows_public"] is False
+    assert zbt_article["full_loop_external_holdout_eligible"] is False
     assert gates["llm_evidence_grounding_contract"]["status"] == "PASS"
     assert any(
         "flow-boundary mismatches" in item

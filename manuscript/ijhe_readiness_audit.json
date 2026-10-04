@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T22:48:40.753538+00:00",
+  "generated_at": "2026-10-04T22:58:22.343087+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 55,
+    "PASS": 56,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -478,6 +478,25 @@
         "reported_sensor_count": 8,
         "full_loop_external_holdout_eligible": false,
         "claim_boundary": "This record strengthens source accounting only. It is not raw validation evidence and does not change the IJHE or full-objective completion gates."
+      }
+    },
+    {
+      "id": "zbt_hrs_sampling_article_boundary_integrity",
+      "status": "PASS",
+      "claim": "The public ZBT HRS sampling article is recorded as a real multi-bank station data-request lead without being promoted to raw full-loop validation.",
+      "evidence": "research\\zbt_hrs_sampling_article_data_boundary_2026_10_05.json",
+      "requirement": "DOI, real station configuration, logged dispenser/tank evidence, author-request-only raw-data boundary and false full-loop eligibility flag.",
+      "observed": {
+        "doi": "10.3390/cleantechnol8030091",
+        "facility": "ZBT hydrogen test field, Duisburg, Germany",
+        "storage_banks": 7,
+        "dispensing_pressure_classes_mpa": [
+          35,
+          70
+        ],
+        "raw_synchronized_rows_public": false,
+        "full_loop_external_holdout_eligible": false,
+        "claim_boundary": "This record strengthens public-source accounting and identifies a high-value acquisition lead. It is not raw validation evidence and does not change the IJHE or full-objective completion gates."
       }
     },
     {
