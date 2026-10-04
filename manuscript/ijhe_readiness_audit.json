@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T16:46:17.258056+00:00",
+  "generated_at": "2026-10-04T16:58:25.018429+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 36,
+    "PASS": 37,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -376,6 +376,21 @@
         "reported_sensor_count": 8,
         "full_loop_external_holdout_eligible": false,
         "claim_boundary": "This record strengthens source accounting only. It is not raw validation evidence and does not change the IJHE or full-objective completion gates."
+      }
+    },
+    {
+      "id": "jetfire_supplement_rights_boundary_integrity",
+      "status": "PASS",
+      "claim": "The publicly reachable IJHE jet-fire supplement is traceable without treating a rights-uncleared plot artifact as validation data.",
+      "evidence": "research\\carboni_2022_jetfire_supplement_data_boundary_2026_10_05.json",
+      "requirement": "DOI/URL, artifact hash and scope, article rights boundary, non-machine-readable limitation, and explicit false eligibility flags.",
+      "observed": {
+        "doi": "10.1016/j.ijhydene.2022.05.010",
+        "sha256": "06849c623b3114475eae49b87f506dd482dfcc63e89245b2daaa62b515a5f4ca",
+        "reported_test_count": 17,
+        "article_open_access": false,
+        "full_loop_external_holdout_eligible": false,
+        "claim_boundary": "This record documents a publicly reachable but rights-uncleared supplementary artifact. It does not add validation evidence and does not change IJHE or full-objective completion gates."
       }
     },
     {

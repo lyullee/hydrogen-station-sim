@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "source": {
+    "title": "Experimental and numerical investigation of horizontal hydrogen jet fires",
+    "doi": "10.1016/j.ijhydene.2022.05.010",
+    "article_url": "https://doi.org/10.1016/j.ijhydene.2022.05.010",
+    "supplement_url": "https://ars.els-cdn.com/content/image/1-s2.0-S0360319922019814-mmc1.docx",
+    "publisher": "International Journal of Hydrogen Energy / Elsevier",
+    "article_open_access": false,
+    "reuse_license": "not established"
+  },
+  "artifact_integrity": {
+    "filename": "1-s2.0-S0360319922019814-mmc1.docx",
+    "sha256": "06849c623b3114475eae49b87f506dd482dfcc63e89245b2daaa62b515a5f4ca",
+    "bytes": 21579714,
+    "observed_format": "DOCX supplementary material; plots and embedded figures rather than a tabular raw-log archive"
+  },
+  "observed_evidence": {
+    "experiment_scope": "horizontal hydrogen releases approximately 1 m above ground",
+    "reported_test_count": 17,
+    "reported_pressure_range_bar": [90, 450],
+    "reported_nozzle_diameter_range_mm": [1, 5],
+    "supplement_tables_observed": ["Table S1 ANSYS Fluent settings", "Table S2 experimental and calculated flame length/heat power"],
+    "complete_measurements_claimed_by_article": true,
+    "machine_readable_synchronized_time_series": false
+  },
+  "eligibility_decision": {
+    "full_loop_external_holdout_eligible": false,
+    "consequence_component_context_eligible": false,
+    "reason": "The article is not open access, the supplementary artifact has no verified reuse licence, and the public DOCX is plot/figure based rather than a rights-cleared machine-readable synchronized station/vehicle log.",
+    "allowed_use": [
+      "bibliographic and experiment-scope traceability",
+      "a reproducibility/data-request lead after rights clearance",
+      "qualitative context for horizontal jet-fire consequence modelling"
+    ],
+    "prohibited_use": [
+      "redistribution of the downloaded DOCX or embedded figures",
+      "new numerical validation score in the repository",
+      "parameter tuning of the locked production model",
+      "claim of full-loop station, dispenser or vehicle validation"
+    ]
+  },
+  "next_action": "Request author/publisher permission for derived values or a rights-cleared machine-readable export; freeze model and scoring before any numerical outcomes are transcribed or used.",
+  "claim_boundary": "This record documents a publicly reachable but rights-uncleared supplementary artifact. It does not add validation evidence and does not change IJHE or full-objective completion gates."
+}

@@ -290,6 +290,42 @@ def audit(root: Path) -> dict[str, object]:
         } if field_article else "missing; public field article boundary record has not been captured",
     ))
 
+    jetfire_path = root / "research/carboni_2022_jetfire_supplement_data_boundary_2026_10_05.json"
+    jetfire = _json(jetfire_path)
+    jetfire_source = (jetfire or {}).get("source") or {}
+    jetfire_artifact = (jetfire or {}).get("artifact_integrity") or {}
+    jetfire_evidence = (jetfire or {}).get("observed_evidence") or {}
+    jetfire_decision = (jetfire or {}).get("eligibility_decision") or {}
+    jetfire_boundary_pass = bool(
+        (jetfire or {}).get("schema_version") == 1
+        and jetfire_source.get("doi") == "10.1016/j.ijhydene.2022.05.010"
+        and jetfire_source.get("supplement_url", "").startswith("https://")
+        and jetfire_source.get("article_open_access") is False
+        and jetfire_source.get("reuse_license") == "not established"
+        and len(jetfire_artifact.get("sha256", "")) == 64
+        and jetfire_artifact.get("bytes") == 21579714
+        and jetfire_evidence.get("reported_test_count") == 17
+        and jetfire_evidence.get("machine_readable_synchronized_time_series") is False
+        and jetfire_decision.get("full_loop_external_holdout_eligible") is False
+        and jetfire_decision.get("consequence_component_context_eligible") is False
+        and (jetfire or {}).get("claim_boundary")
+    )
+    gates.append(_gate(
+        "jetfire_supplement_rights_boundary_integrity",
+        "PASS" if jetfire_boundary_pass else ("FAIL" if jetfire else "PENDING"),
+        "The publicly reachable IJHE jet-fire supplement is traceable without treating a rights-uncleared plot artifact as validation data.",
+        str(jetfire_path.relative_to(root)),
+        "DOI/URL, artifact hash and scope, article rights boundary, non-machine-readable limitation, and explicit false eligibility flags.",
+        {
+            "doi": jetfire_source.get("doi"),
+            "sha256": jetfire_artifact.get("sha256"),
+            "reported_test_count": jetfire_evidence.get("reported_test_count"),
+            "article_open_access": jetfire_source.get("article_open_access"),
+            "full_loop_external_holdout_eligible": jetfire_decision.get("full_loop_external_holdout_eligible"),
+            "claim_boundary": (jetfire or {}).get("claim_boundary"),
+        } if jetfire else "missing; supplement rights/data-boundary record has not been captured",
+    ))
+
     temperature_diagnostic_path = root / "research/closed_loop_temperature_stop_diagnostic_2026_10_04.json"
     temperature_diagnostic = _json(temperature_diagnostic_path)
     temperature_runs = (temperature_diagnostic or {}).get("runs") or []
