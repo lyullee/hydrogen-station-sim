@@ -1,20 +1,20 @@
 {
   "schema_version": 1,
-  "attempted_at": "2026-10-05T00:00:00+00:00",
+  "attempted_at": "2026-10-04T19:27:58.486116+00:00",
   "attempts_this_run": 1,
   "success": true,
   "compiler": "Tectonic 0.17.0 (x86_64-pc-windows-msvc)",
   "compiler_release": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic%400.17.0",
   "compiler_archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845f",
   "source": "manuscript/ijhe_manuscript_draft.tex",
-  "source_sha256": "beddc6a8a288ce2223213fb4db8c7e03ea2b05f2399b07e851621a98022a374f",
+  "source_sha256": "fd45d325a39849413d3a129f2a650a4e07cb7a16f235693a1118fba79cb08978",
   "output_pages": 20,
-  "output_bytes": 622837,
-  "output_sha256": "f710893480d298076ad0ba0f9a26e79f7a1c5f4aa71ab0ace890c61fe9f84b0d",
+  "output_bytes": 624155,
+  "output_sha256": "694307f6dec2fb49ef941aa5bc1e5da3a01a8c665516119d0901a96f542d51c4",
   "warnings": {
     "layout_or_package_warning_lines": 5,
     "fatal_errors": 0,
-    "summary": "PDF produced successfully after adding the Cal State LA and UCI real-station operating-context references. Non-fatal underfull boxes and the bundled lineno UTF-8 replacement warning remain; no fatal errors were reported."
+    "summary": "PDF produced successfully with the current HIAD incident-response traceability text. Non-fatal underfull boxes and the bundled lineno UTF-8 replacement warning remain; no fatal errors were reported."
   },
   "built_in_compiler_attempt": {
     "success": false,
