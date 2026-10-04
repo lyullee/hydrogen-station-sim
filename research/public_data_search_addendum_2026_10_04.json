@@ -76,6 +76,15 @@
       "classification": "SOFTWARE_ONLY"
     },
     {
+      "id": "nlr_data_catalog_2026_10_04",
+      "public_synchronized_raw_logger": false,
+      "scope": "NLR public data catalog browse listing and hydrogen/HDTA keyword review",
+      "official_url": "https://data.nlr.gov/submissions",
+      "catalog_pages_inspected": 5,
+      "observed_result": "No HRS, HDTA, HITRF, or vehicle-fueling raw logger submission identified in the public catalog listing",
+      "classification": "CATALOG_NEGATIVE_SEARCH"
+    },
+    {
       "id": "enda_h2_mobility_monitoring",
       "public_synchronized_raw_logger": false,
       "scope": "H2 MOBILITY monitoring deployment recording approximately 75-400 technical parameters per station at short intervals",
