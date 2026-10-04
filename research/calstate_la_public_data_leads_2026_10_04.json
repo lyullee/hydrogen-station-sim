@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "scope": "Cal State LA HRFF public-data lead inspection",
+  "decision": "HIGH_VALUE_DATA_REQUEST_LEAD_NO_PUBLIC_RAW_ARCHIVE",
+  "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+  "sources": [
+    {
+      "id": "calstate_2017_hydrogen_big_data_paper",
+      "title": "Big Data Prediction in Hydrogen Gas Power Plant using Apache Spark",
+      "url": "https://www.calstatela.edu/sites/default/files/kscifall2017hydrogenbigdataanalysis.pdf",
+      "evidence": "The paper states that fueling details were recorded for each fill and that a raw dataset was used for prediction.",
+      "public_artifact_inspection": {
+        "machine_readable_file_link_in_pdf": false,
+        "raw_archive_publicly_linked": false,
+        "common_timebase_proven": false,
+        "reuse_terms_proven": false
+      },
+      "decision": "DATA_REQUEST_LEAD",
+      "reason": "The PDF is a publication, not a downloadable synchronized logger archive. A custodian request is required before any numerical outcome can be inspected."
+    },
+    {
+      "id": "calstate_2021_back_to_back_article",
+      "title": "Hydrogen station in situ back-to-back fueling data for design and modeling",
+      "doi": "10.1016/j.jclepro.2021.129737",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0959652621039135",
+      "evidence": "The article describes a comprehensive one-year HRFF data set with pressure, thermodynamics, cooling response and vehicle SOC analyses.",
+      "public_artifact_inspection": {
+        "machine_readable_raw_archive_attached": false,
+        "event_level_summary_public": true,
+        "common_timebase_public": false,
+        "reuse_terms_proven": false
+      },
+      "decision": "DATA_REQUEST_LEAD",
+      "reason": "The public article and figures do not expose the synchronized logger export or written reuse terms required for a frozen independent holdout."
+    },
+    {
+      "id": "calstate_official_hrff_facility",
+      "title": "Cal State LA Hydrogen Research and Fueling Facility",
+      "url": "https://www.calstatela.edu/ecst/h2station",
+      "evidence": "The official page confirms the real station and its research/data-collection role.",
+      "decision": "PROVENANCE_CONTEXT_ONLY",
+      "reason": "Facility context supports a credible data-custodian route but is not a process-data file."
+    }
+  ],
+  "eligibility_rule": {
+    "required_channels": [
+      "vehicle_or_receptacle_pressure",
+      "mass_flow_or_transferred_mass"
+    ],
+    "preferred_channels": ["tank_or_fuel_temperature"],
+    "required_metadata": [
+      "common_time_base",
+      "initial_conditions",
+      "tank_capacity",
+      "protocol_or_pressure_ramp_information",
+      "units",
+      "reuse_terms"
+    ]
+  },
+  "next_action": "Use the prepared Cal State LA data-request draft; if files are released, hash-lock them and freeze the no-fitting split before reading outcomes."
+}

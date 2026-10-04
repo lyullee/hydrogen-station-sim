@@ -185,3 +185,14 @@ untouched full-loop holdout.
 
 The downloaded file digests and the eligibility decision are frozen in
 [`research/chinese_hrs_performance_article_recheck_2026_10_04.json`](chinese_hrs_performance_article_recheck_2026_10_04.json).
+
+## 2026-10-04 Cal State LA public-data lead inspection
+
+The Cal State LA 2017 paper says that per-fill fueling details and a raw dataset
+were used for its prediction study, and the 2021 back-to-back paper describes a
+larger HRFF data set covering pressure, thermodynamics, cooling response and
+vehicle SOC. The public PDFs and facility pages do not expose a synchronized
+CSV/XLSX logger archive, a channel dictionary or written raw-data reuse terms.
+They are therefore high-value custodian-request leads rather than validation
+data. The exact source-level findings and acceptance rule are recorded in
+[`research/calstate_la_public_data_leads_2026_10_04.json`](calstate_la_public_data_leads_2026_10_04.json).

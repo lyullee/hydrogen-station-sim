@@ -183,3 +183,22 @@ def test_chinese_dispenser_article_tables_are_not_promoted_to_holdout():
     assert len(record["linked_files"]) == 4
     assert all(item["time_series"] is False for item in record["linked_files"])
     assert record["reported_experiments"][1]["duration_s"] == 276
+
+
+def test_calstate_public_data_lead_requires_custodian_export():
+    record = json.loads(
+        (ROOT / "research/calstate_la_public_data_leads_2026_10_04.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert record["decision"] == "HIGH_VALUE_DATA_REQUEST_LEAD_NO_PUBLIC_RAW_ARCHIVE"
+    assert record["gate_impact"] == "unchanged_independent_full_loop_gate_remains_open"
+    assert any(
+        item["id"] == "calstate_2021_back_to_back_article"
+        and item["decision"] == "DATA_REQUEST_LEAD"
+        for item in record["sources"]
+    )
+    assert all(
+        item.get("decision") != "NEW_INDEPENDENT_FULL_LOOP_HOLDOUT"
+        for item in record["sources"]
+    )

@@ -1091,3 +1091,10 @@ summary tables, while the article reports a 70 MPa fill endpoint (276 s,
 or explicit reuse licence is supplied, this remains contextual evidence and
 not a full-loop holdout. The file hashes and decision are recorded in
 [`research/chinese_hrs_performance_article_recheck_2026_10_04.json`](chinese_hrs_performance_article_recheck_2026_10_04.json).
+
+The Cal State LA HRFF public-data route was also inspected. The 2017 paper
+states that a raw per-fill data set was used, and the 2021 paper describes a
+larger back-to-back fueling data set, but neither public artifact exposes a
+synchronized logger archive or written reuse terms. This is now a documented
+high-value data-request lead, not a holdout. Details are in
+[`research/calstate_la_public_data_leads_2026_10_04.json`](calstate_la_public_data_leads_2026_10_04.json).
