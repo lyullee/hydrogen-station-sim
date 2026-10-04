@@ -204,3 +204,30 @@ def test_calstate_public_data_lead_requires_custodian_export():
         item.get("decision") != "NEW_INDEPENDENT_FULL_LOOP_HOLDOUT"
         for item in record["sources"]
     )
+
+
+def test_methytrucks_public_workbooks_are_quarantined_as_auxiliary_only():
+    record = json.loads(
+        (
+            ROOT
+            / "research/metHyTrucks_public_measurement_recheck_2026_10_04.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert record["decision"] == "PUBLIC_RAW_HRS_SAMPLING_TIME_SERIES_AUXILIARY_ONLY"
+    assert record["gate_impact"] == "unchanged_independent_full_loop_gate_remains_open"
+    assert record["file_level_inspection"]["file_count"] == 13
+    assert record["classification"]["full_loop_holdout_eligible"] is False
+    assert record["classification"]["station_measurement_auxiliary_eligible"] is True
+    assert all(item["sampling_interval_observed_s"] == 0.5 for item in record["file_level_inspection"]["files"])
+    assert "vehicle/receptacle loop" in record["claim_boundary"]
+
+
+def test_external_search_mirror_contains_methytrucks_recheck():
+    mirror = json.loads(
+        (ROOT / "research/external_full_loop_data_search.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    item = mirror["methytrucks_zenodo_measurement_recheck_2026_10_04"]
+    assert item["full_loop_holdout_eligible"] is False
+    assert item["station_measurement_auxiliary_eligible"] is True

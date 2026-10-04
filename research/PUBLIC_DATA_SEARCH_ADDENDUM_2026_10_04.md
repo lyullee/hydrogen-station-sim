@@ -200,3 +200,28 @@ data. The exact source-level findings and acceptance rule are recorded in
 The 2017 PDF was additionally inspected as a file: it has six pages, no
 embedded files and no external links. Its SHA-256 is recorded in the JSON
 record, and the cited raw dataset is not recoverable from the public PDF.
+
+## 2026-10-04 MetHyTrucks Zenodo measurement-workbook inspection
+
+The newly indexed [Group A NPL system measurement data](https://zenodo.org/records/20590761)
+and [Group B HySam system measurement data](https://zenodo.org/records/20590842)
+were inspected through the Zenodo record API. Both records are public datasets
+under CC BY 4.0 and expose 13 XLSX workbooks. Each workbook contains a single
+`Tabelle1` sheet with a time column; the inspected rows are spaced at 0.5 s and
+the sheets include pressure/temperature tags plus flow or mass-like tags in
+some files. This is useful independent instrumentation context for HRS
+sampling experiments.
+
+The public record descriptions do not provide a channel dictionary, protocol
+command trace, tank-capacity/initial-condition metadata, calibration flags, or
+an explicit mapping to vehicle/receptacle pressure and transferred mass. The
+workbooks are therefore classified as **auxiliary HRS sampling-system time
+series**, not as station-to-vehicle full-loop validation. No numerical outcome
+was used for fitting or gate scoring. File sizes, source checksums, workbook
+dimensions and header rows are frozen in
+[`research/metHyTrucks_public_measurement_recheck_2026_10_04.json`](metHyTrucks_public_measurement_recheck_2026_10_04.json).
+
+The independent full-loop gate remains open. A custodian response with the
+channel dictionary, protocol semantics, quality/calibration fields and explicit
+vehicle/receptacle mapping is required before these files can support even an
+auxiliary prospective diagnostic.

@@ -329,14 +329,17 @@ publish an independent raw trace archive:
 and a possible data-request route, not an external dataset that can be scored
 here.
 
-The MetHyTrucks HySaM record is a genuine open raw-data lead, but its scope is
-hydrogen sampling-system metrology rather than a vehicle refuelling event:
-<https://zenodo.org/records/20590842>. The three CC BY 4.0 XLSX files have
-sub-second time-of-day samples and pressure/temperature/flow-like channels, but
-no vehicle or receptacle pressure, tank capacity, vehicle temperature, initial
-state or refuelling-protocol metadata. It is therefore retained for signal
-handling and calibration checks only and is not promoted to the HRS full-loop
-holdout.
+The MetHyTrucks HySaM and NPL records are genuine open raw-data leads, but their
+scope is hydrogen sampling-system metrology rather than a vehicle refuelling
+event: <https://zenodo.org/records/20590842> and
+<https://zenodo.org/records/20590761>. The 13 CC BY 4.0 XLSX files have
+0.5-second time-of-day samples and pressure/temperature/flow-like channels,
+but no public channel dictionary establishing vehicle or receptacle pressure,
+transferred mass, tank capacity, vehicle temperature, initial state or
+refuelling-protocol metadata. File hashes and workbook headers are frozen in
+`research/metHyTrucks_public_measurement_recheck_2026_10_04.json`. They are
+therefore retained for signal-handling and calibration context only and are not
+promoted to the HRS full-loop holdout.
 
 The Clean Hydrogen Partnership's H2-Stations export API is open under CC BY
 4.0 and is useful for station inventory, layout, availability, usage status,

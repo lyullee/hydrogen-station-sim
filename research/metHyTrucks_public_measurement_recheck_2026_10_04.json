@@ -1,0 +1,480 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "scope": "file-level inspection of newly found MetHyTrucks public sampling-system measurement workbooks",
+  "decision": "PUBLIC_RAW_HRS_SAMPLING_TIME_SERIES_AUXILIARY_ONLY",
+  "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+  "eligibility_rule": {
+    "required_channels": [
+      "vehicle_or_receptacle_pressure",
+      "mass_flow_or_transferred_mass"
+    ],
+    "preferred_channels": [
+      "vehicle_or_tank_temperature",
+      "station_storage_pressure",
+      "protocol_and_valve_state"
+    ],
+    "required_metadata": [
+      "common_time_base",
+      "initial_conditions",
+      "tank_capacity",
+      "protocol_or_pressure_ramp_information",
+      "units",
+      "quality_or_calibration_flags",
+      "written_reuse_terms"
+    ]
+  },
+  "sources": [
+    {
+      "record_id": "20590761",
+      "doi": "10.5281/zenodo.20590761",
+      "title": "Group A -- NPL system measurement data",
+      "landing_page": "https://zenodo.org/records/20590761",
+      "creator": "National Physical Laboratory",
+      "license": "CC BY 4.0",
+      "resource_type": "dataset",
+      "published": "2026-06-08",
+      "description": "Experimental condition datasets for hydrogen sampling systems.",
+      "observed_file_count": 10
+    },
+    {
+      "record_id": "20590842",
+      "doi": "10.5281/zenodo.20590842",
+      "title": "Group B -- HySam system measurement data",
+      "landing_page": "https://zenodo.org/records/20590842",
+      "creator": "The Hydrogen and Fuel Cell Center",
+      "license": "CC BY 4.0",
+      "resource_type": "dataset",
+      "published": "2026-06-08",
+      "description": "Experimental condition datasets for hydrogen sampling systems.",
+      "observed_file_count": 3
+    }
+  ],
+  "file_level_inspection": {
+    "inspection_method": "Download each public XLSX through the Zenodo record API into a quarantine temp directory; record SHA-256, workbook dimensions, header row and first timestamps without using values for model fitting.",
+    "file_count": 13,
+    "files": [
+      {
+        "record_id": "20590842",
+        "doi": "10.5281/zenodo.20590842",
+        "file": "20241023_Test_1_HySaM.xlsx",
+        "bytes": 663869,
+        "sha256": "fbdd81a7ec9c1191d69322f06087e8b30a33acc8b340b861a636173c08d9913a",
+        "rows_including_header": 6601,
+        "columns": 23,
+        "headers": [
+          "Zeit",
+          "TT_D04 ValueY",
+          "PTX05 ValueY",
+          "PT03 ValueY",
+          "TEX01 ValueY",
+          "TT24 ValueY",
+          "QT_D02 ValueY",
+          "PTD10 ValueY",
+          "PTD11 ValueY",
+          "fwg1 ValueY",
+          "fwg2 ValueY",
+          "FWg35_Masse ValueY",
+          "TE_D22 ValueY",
+          "11TT150A ValueY",
+          "PT01 ValueY",
+          "TT01 ValueY",
+          "TT08 ValueY",
+          "TT09 ValueY",
+          "TT10 ValueY",
+          "TT11 ValueY"
+        ],
+        "sample_timestamp_values": [
+          "11:25:00.120000",
+          "11:25:00.620000",
+          "11:25:01.120000"
+        ],
+        "sampling_interval_observed_s": 0.5
+      },
+      {
+        "record_id": "20590761",
+        "doi": "10.5281/zenodo.20590761",
+        "file": "20241023_Test_3_NPL.xlsx",
+        "bytes": 777723,
+        "sha256": "273592792c1c7a1f9fd8b99c113bc1287a728dcf43adef93cc0ea6c1a9aaa707",
+        "rows_including_header": 10801,
+        "columns": 13,
+        "headers": [
+          "Zeit",
+          "TT_D04 ValueY",
+          "PTX05 ValueY",
+          "PT03 ValueY",
+          "TEX01 ValueY",
+          "TT24 ValueY",
+          "QT_D02 ValueY",
+          "PTD10 ValueY",
+          "PTD11 ValueY",
+          "fwg1 ValueY",
+          "fwg2 ValueY",
+          "TE_D22 ValueY",
+          "11TT150A ValueY"
+        ],
+        "sample_timestamp_values": [
+          "15:05:00.120000",
+          "15:05:00.620000",
+          "15:05:01.120000"
+        ],
+        "sampling_interval_observed_s": 0.5
+      },
+      {
+        "record_id": "20590842",
+        "doi": "10.5281/zenodo.20590842",
+        "file": "20241023_Test_4_HySaM_CESAME.xlsx",
+        "bytes": 75292,
+        "sha256": "bc9e5cbd23350b7320a96d627854cc5154f1b92ff987e087c957b1da691ea4aa",
+        "rows_including_header": 721,
+        "columns": 14,
+        "headers": [
+          "Zeit",
+          "TT_D04 ValueY",
+          "PTX05 ValueY",
+          "PT03 ValueY",
+          "TEX01 ValueY",
+          "TT24 ValueY",
+          "QT_D02 ValueY",
+          "PTD10 ValueY",
+          "PTD11 ValueY",
+          "fwg1 ValueY",
+          "fwg2 ValueY",
+          "FWg35_Masse ValueY",
+          "TE_D22 ValueY",
+          "11TT150A ValueY"
+        ],
+        "sample_timestamp_values": [
+          "18:02:00.120000",
+          "18:02:00.620000",
+          "18:02:01.120000"
+        ],
+        "sampling_interval_observed_s": 0.5
+      },
+      {
+        "record_id": "20590761",
+        "doi": "10.5281/zenodo.20590761",
+        "file": "20241024_Test_7_NPL_DirSam_CESAME.xlsx",
+        "bytes": 414449,
+        "sha256": "ebea50c7d3a4182e6cf16c535c566b66eda213b57c914ebe9acd4af5cba22ed8",
+        "rows_including_header": 5401,
+        "columns": 14,
+        "headers": [
+          "Zeit",
+          "TT_D04 ValueY",
+          "PTX05 ValueY",
+          "PT03 ValueY",
+          "TEX01 ValueY",
+          "TT24 ValueY",
+          "QT_D02 ValueY",
+          "PTD10 ValueY",
+          "PTD11 ValueY",
+          "fwg1 ValueY",
+          "fwg2 ValueY",
+          "FWg35_Masse ValueY",
+          "TE_D22 ValueY",
+          "11TT150A ValueY"
+        ],
+        "sample_timestamp_values": [
+          "11:25:00.120000",
+          "11:25:00.620000",
+          "11:25:01.120000"
+        ],
+        "sampling_interval_observed_s": 0.5
+      },
+      {
+        "record_id": "20590842",
+        "doi": "10.5281/zenodo.20590842",
+        "file": "20241024_Test_9_HySaM.xlsx",
+        "bytes": 283636,
+        "sha256": "f33d3e451b42b1d3aff905cc5deb1e9a2ed11eeaf7d4f0d559446a609bdc7563",
+        "rows_including_header": 2161,
+        "columns": 21,
+        "headers": [
+          "Zeit",
+          "TT_D04 ValueY",
+          "PTX05 ValueY",
+          "PT03 ValueY",
+          "TEX01 ValueY",
+          "TT24 ValueY",
+          "QT_D02 ValueY",
+          "PTD10 ValueY",
+          "PTD11 ValueY",
+          "fwg1 ValueY",
+          "fwg2 ValueY",
+          "FWg35_Masse ValueY",
+          "TE_D22 ValueY",
+          "11TT150A ValueY",
+          "PT01 ValueY",
+          "TT01 ValueY",
+          "TT08 ValueY",
+          "TT09 ValueY",
+          "TT10 ValueY",
+          "TT11 ValueY"
+        ],
+        "sample_timestamp_values": [
+          "15:40:00.120000",
+          "15:40:00.620000",
+          "15:40:01.120000"
+        ],
+        "sampling_interval_observed_s": 0.5
+      },
+      {
+        "record_id": "20590761",
+        "doi": "10.5281/zenodo.20590761",
+        "file": "20241025_Test_11_NPL.xlsx",
+        "bytes": 323484,
+        "sha256": "742fab05c78c3658301990ded9f71d38e1fd4a58f6485aaf91e8feb2902a072d",
+        "rows_including_header": 4561,
+        "columns": 13,
+        "headers": [
+          "Zeit",
+          "TT_D04 ValueY",
+          "PTX05 ValueY",
+          "PT03 ValueY",
+          "TEX01 ValueY",
+          "TT24 ValueY",
+          "QT_D02 ValueY",
+          "PTD10 ValueY",
+          "PTD11 ValueY",
+          "fwg1 ValueY",
+          "fwg2 ValueY",
+          "TE_D22 ValueY",
+          "11TT150A ValueY"
+        ],
+        "sample_timestamp_values": [
+          "08:48:00.120000",
+          "08:48:00.620000",
+          "08:48:01.120000"
+        ],
+        "sampling_interval_observed_s": 0.5
+      },
+      {
+        "record_id": "20590761",
+        "doi": "10.5281/zenodo.20590761",
+        "file": "20241025_Test_12_NPL.xlsx",
+        "bytes": 279188,
+        "sha256": "b465a5d809c67e3eb3d86d7d8bbcf86f59efb39e44335e3a0367624b6bcd6411",
+        "rows_including_header": 3841,
+        "columns": 13,
+        "headers": [
+          "Zeit",
+          "TT_D04 ValueY",
+          "PTX05 ValueY",
+          "PT03 ValueY",
+          "TEX01 ValueY",
+          "TT24 ValueY",
+          "QT_D02 ValueY",
+          "PTD10 ValueY",
+          "PTD11 ValueY",
+          "fwg1 ValueY",
+          "fwg2 ValueY",
+          "TE_D22 ValueY",
+          "11TT150A ValueY"
+        ],
+        "sample_timestamp_values": [
+          "09:34:00.120000",
+          "09:34:00.620000",
+          "09:34:01.120000"
+        ],
+        "sampling_interval_observed_s": 0.5
+      },
+      {
+        "record_id": "20590761",
+        "doi": "10.5281/zenodo.20590761",
+        "file": "20241025_Test_13_NPL.xlsx",
+        "bytes": 205103,
+        "sha256": "a62b17f4a63a37f3847795f5d2a884aba0fa8330172469c329015ebcc4f80cc7",
+        "rows_including_header": 2761,
+        "columns": 13,
+        "headers": [
+          "Zeit",
+          "TT_D04 ValueY",
+          "PTX05 ValueY",
+          "PT03 ValueY",
+          "TEX01 ValueY",
+          "TT24 ValueY",
+          "QT_D02 ValueY",
+          "PTD10 ValueY",
+          "PTD11 ValueY",
+          "fwg1 ValueY",
+          "fwg2 ValueY",
+          "TE_D22 ValueY",
+          "11TT150A ValueY"
+        ],
+        "sample_timestamp_values": [
+          "10:10:00.120000",
+          "10:10:00.620000",
+          "10:10:01.120000"
+        ],
+        "sampling_interval_observed_s": 0.5
+      },
+      {
+        "record_id": "20590761",
+        "doi": "10.5281/zenodo.20590761",
+        "file": "20241025_Test_14_NPL.xlsx",
+        "bytes": 269687,
+        "sha256": "efc51cec996c23bc459f81e32e564d74a810b405ccbebc7b7a95125fe587db6b",
+        "rows_including_header": 3721,
+        "columns": 13,
+        "headers": [
+          "Zeit",
+          "TT_D04 ValueY",
+          "PTX05 ValueY",
+          "PT03 ValueY",
+          "TEX01 ValueY",
+          "TT24 ValueY",
+          "QT_D02 ValueY",
+          "PTD10 ValueY",
+          "PTD11 ValueY",
+          "fwg1 ValueY",
+          "fwg2 ValueY",
+          "TE_D22 ValueY",
+          "11TT150A ValueY"
+        ],
+        "sample_timestamp_values": [
+          "10:40:00.120000",
+          "10:40:00.620000",
+          "10:40:01.120000"
+        ],
+        "sampling_interval_observed_s": 0.5
+      },
+      {
+        "record_id": "20590761",
+        "doi": "10.5281/zenodo.20590761",
+        "file": "20241025_Test_15_NPL.xlsx",
+        "bytes": 192940,
+        "sha256": "bcca83c1e56bbc616a734bd0b6f15acd56d648db576b7f574ff7a8ac434b3488",
+        "rows_including_header": 2641,
+        "columns": 13,
+        "headers": [
+          "Zeit",
+          "TT_D04 ValueY",
+          "PTX05 ValueY",
+          "PT03 ValueY",
+          "TEX01 ValueY",
+          "TT24 ValueY",
+          "QT_D02 ValueY",
+          "PTD10 ValueY",
+          "PTD11 ValueY",
+          "fwg1 ValueY",
+          "fwg2 ValueY",
+          "TE_D22 ValueY",
+          "11TT150A ValueY"
+        ],
+        "sample_timestamp_values": [
+          "11:15:00.120000",
+          "11:15:00.620000",
+          "11:15:01.120000"
+        ],
+        "sampling_interval_observed_s": 0.5
+      },
+      {
+        "record_id": "20590761",
+        "doi": "10.5281/zenodo.20590761",
+        "file": "20241025_Test_17_NPL.xlsx",
+        "bytes": 341889,
+        "sha256": "c4cf8c1ca14312d99846b42f05a7f9c56779c90731e70a91573d668cd1059995",
+        "rows_including_header": 4801,
+        "columns": 13,
+        "headers": [
+          "Zeit",
+          "TT_D04 ValueY",
+          "PTX05 ValueY",
+          "PT03 ValueY",
+          "TEX01 ValueY",
+          "TT24 ValueY",
+          "QT_D02 ValueY",
+          "PTD10 ValueY",
+          "PTD11 ValueY",
+          "fwg1 ValueY",
+          "fwg2 ValueY",
+          "TE_D22 ValueY",
+          "11TT150A ValueY"
+        ],
+        "sample_timestamp_values": [
+          "13:20:00.120000",
+          "13:20:00.620000",
+          "13:20:01.120000"
+        ],
+        "sampling_interval_observed_s": 0.5
+      },
+      {
+        "record_id": "20590761",
+        "doi": "10.5281/zenodo.20590761",
+        "file": "20241025_Test_18_NPL.xlsx",
+        "bytes": 382098,
+        "sha256": "f021c298fe6591e77e52e8b4f486a85278d3de9332939f7b157120dca431f0fb",
+        "rows_including_header": 5401,
+        "columns": 13,
+        "headers": [
+          "Zeit",
+          "TT_D04 ValueY",
+          "PTX05 ValueY",
+          "PT03 ValueY",
+          "TEX01 ValueY",
+          "TT24 ValueY",
+          "QT_D02 ValueY",
+          "PTD10 ValueY",
+          "PTD11 ValueY",
+          "fwg1 ValueY",
+          "fwg2 ValueY",
+          "TE_D22 ValueY",
+          "11TT150A ValueY"
+        ],
+        "sample_timestamp_values": [
+          "14:05:00.120000",
+          "14:05:00.620000",
+          "14:05:01.120000"
+        ],
+        "sampling_interval_observed_s": 0.5
+      },
+      {
+        "record_id": "20590761",
+        "doi": "10.5281/zenodo.20590761",
+        "file": "20241025_Test_19_NPL.xlsx",
+        "bytes": 248702,
+        "sha256": "de63f5bf6521cf884971aa93057144bb327115fb0c3b1822660d1e7ee4f646a6",
+        "rows_including_header": 3361,
+        "columns": 13,
+        "headers": [
+          "Zeit",
+          "TT_D04 ValueY",
+          "PTX05 ValueY",
+          "PT03 ValueY",
+          "TEX01 ValueY",
+          "TT24 ValueY",
+          "QT_D02 ValueY",
+          "PTD10 ValueY",
+          "PTD11 ValueY",
+          "fwg1 ValueY",
+          "fwg2 ValueY",
+          "TE_D22 ValueY",
+          "11TT150A ValueY"
+        ],
+        "sample_timestamp_values": [
+          "15:05:00.120000",
+          "15:05:00.620000",
+          "15:05:01.120000"
+        ],
+        "sampling_interval_observed_s": 0.5
+      }
+    ],
+    "common_observations": [
+      "Each workbook has one sheet named Tabelle1.",
+      "Time column is present; first timestamps are spaced by 0.5 s in the inspected rows.",
+      "Pressure and temperature tag columns are present; several flow/mass-like tags are present in some workbooks.",
+      "The public record provides no channel dictionary linking tags to a vehicle/receptacle pressure or transferred-mass signal.",
+      "No vehicle tank pressure, vehicle tank temperature, protocol command trace, tank capacity or calibration/quality metadata were found in the record-level description."
+    ]
+  },
+  "classification": {
+    "full_loop_holdout_eligible": false,
+    "station_measurement_auxiliary_eligible": true,
+    "recommended_use": "cite as independent HRS sampling-system instrumentation and timing context; use only after channel dictionary and protocol semantics are obtained from custodians",
+    "prohibited_use": "do not score as station-to-vehicle full-loop validation, do not infer vehicle pressure or transferred mass from tag names, and do not use endpoint outcomes to tune the model"
+  },
+  "claim_boundary": "These are openly licensed raw measurement workbooks from HRS sampling-system experiments, but their public metadata do not establish the vehicle/receptacle loop required by the frozen validation protocol. They strengthen provenance and instrumentation context only; the independent full-loop gate stays open.",
+  "next_action": "Request channel dictionary, station configuration, sampling protocol, calibration/quality fields and explicit confirmation of any vehicle/receptacle pressure and transferred-mass tags before considering a prospective auxiliary diagnostic."
+}

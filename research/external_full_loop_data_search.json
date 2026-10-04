@@ -2190,5 +2190,18 @@
       }
     ],
     "claim_boundary": "Neither source closes the independent full-loop numerical gate. A report-referenced workbook, aggregate logbook, plot or paper is not promoted to validation until synchronized raw files, immutable hashes, frozen scoring protocol and written reuse rights are available."
+  },
+  "methytrucks_zenodo_measurement_recheck_2026_10_04": {
+    "record": "research/metHyTrucks_public_measurement_recheck_2026_10_04.json",
+    "decision": "PUBLIC_RAW_HRS_SAMPLING_TIME_SERIES_AUXILIARY_ONLY",
+    "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+    "source_ids": [
+      "zenodo_20590761_npl_system_measurement",
+      "zenodo_20590842_hysam_system_measurement"
+    ],
+    "finding": "Thirteen CC BY 4.0 XLSX workbooks expose 0.5 s timestamped pressure/temperature and flow-or-mass-like tags for HRS sampling-system experiments. Public metadata do not establish vehicle/receptacle pressure, transferred mass, protocol semantics or calibration metadata.",
+    "full_loop_holdout_eligible": false,
+    "station_measurement_auxiliary_eligible": true,
+    "claim_boundary": "Use only as independent HRS instrumentation/timing context until a custodian supplies the channel dictionary and vehicle/receptacle mapping; do not score as station-to-vehicle full-loop validation."
   }
 }
