@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T17:41:06.708485+00:00",
+  "generated_at": "2026-10-04T17:49:30.195555+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 40,
+    "PASS": 41,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -281,6 +281,29 @@
         },
         "case_count": 8,
         "screening_pass_count": 1
+      }
+    },
+    {
+      "id": "mc_tank_boundary_diagnostic_integrity",
+      "status": "PASS",
+      "claim": "The MC Default measured-boundary replay isolates vehicle-tank thermodynamics from station control without being promoted to full-loop validation.",
+      "evidence": "research\\mc_tank_boundary_diagnostic_2026_10_05.json",
+      "requirement": "Eight consumed cases, measured flow/temperature/source-pressure boundaries, no fitting, explicit post-outcome diagnostic role and claim boundary.",
+      "observed": {
+        "evidence_role": "development_diagnostic_only",
+        "post_outcome": true,
+        "parameter_fitting": false,
+        "boundary_conditions": [
+          "measured mass_flow_g_s",
+          "measured inlet_gas_temperature_c",
+          "measured source_pressure_3_mpa"
+        ],
+        "aggregate": {
+          "case_count": 8,
+          "pressure_rmse_mpa_mean": 1.8156882965866448,
+          "temperature_rmse_c_mean": 25.884020539463037,
+          "soc_rmse_percentage_points_mean": 5.581868463392878
+        }
       }
     },
     {

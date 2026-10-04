@@ -101,6 +101,12 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert mc_partial["case_count"] == 8
     assert mc_partial["screening_pass_count"] == 1
     assert mc_partial["protocol"]["fresh_holdout"] is False
+    assert gates["mc_tank_boundary_diagnostic_integrity"]["status"] == "PASS"
+    mc_tank = gates["mc_tank_boundary_diagnostic_integrity"]["observed"]
+    assert mc_tank["aggregate"]["case_count"] == 8
+    assert mc_tank["evidence_role"] == "development_diagnostic_only"
+    assert mc_tank["post_outcome"] is True
+    assert mc_tank["parameter_fitting"] is False
     release_development = gates["release_network_development_integrity"]["observed"]
     assert release_development["evidence_role"] == "consumed_development_only"
     assert release_development["eligible_as_confirmatory_validation"] is False

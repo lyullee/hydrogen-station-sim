@@ -186,6 +186,38 @@ def audit(root: Path) -> dict[str, object]:
         } if mc_partial else "missing",
     ))
 
+    mc_tank_boundary_path = root / "research/mc_tank_boundary_diagnostic_2026_10_05.json"
+    mc_tank_boundary = _json(mc_tank_boundary_path)
+    mc_tank_aggregate = (mc_tank_boundary or {}).get("aggregate") or {}
+    mc_tank_boundary_pass = bool(
+        (mc_tank_boundary or {}).get("schema_version") == 1
+        and (mc_tank_boundary or {}).get("diagnostic_type")
+        == "MC Default measured-boundary vehicle-tank replay"
+        and (mc_tank_boundary or {}).get("evidence_role")
+        == "development_diagnostic_only"
+        and (mc_tank_boundary or {}).get("post_outcome") is True
+        and (mc_tank_boundary or {}).get("parameter_fitting") is False
+        and len((mc_tank_boundary or {}).get("cases") or []) == 8
+        and mc_tank_aggregate.get("case_count") == 8
+        and len((mc_tank_boundary or {}).get("boundary_conditions") or []) == 3
+        and (mc_tank_boundary or {}).get("claim_boundary")
+        and (mc_tank_boundary or {}).get("source_commit")
+    )
+    gates.append(_gate(
+        "mc_tank_boundary_diagnostic_integrity",
+        "PASS" if mc_tank_boundary_pass else ("FAIL" if mc_tank_boundary else "PENDING"),
+        "The MC Default measured-boundary replay isolates vehicle-tank thermodynamics from station control without being promoted to full-loop validation.",
+        str(mc_tank_boundary_path.relative_to(root)),
+        "Eight consumed cases, measured flow/temperature/source-pressure boundaries, no fitting, explicit post-outcome diagnostic role and claim boundary.",
+        {
+            "evidence_role": (mc_tank_boundary or {}).get("evidence_role"),
+            "post_outcome": (mc_tank_boundary or {}).get("post_outcome"),
+            "parameter_fitting": (mc_tank_boundary or {}).get("parameter_fitting"),
+            "boundary_conditions": (mc_tank_boundary or {}).get("boundary_conditions"),
+            "aggregate": mc_tank_aggregate,
+        } if mc_tank_boundary else "missing",
+    ))
+
     external_loop_path = root / "data/public_validation/results/closed_loop_external_holdout/validation.json"
     external_loop = _json(external_loop_path)
     external_protocol_path = root / "research/mc_default_external_holdout_protocol.json"
