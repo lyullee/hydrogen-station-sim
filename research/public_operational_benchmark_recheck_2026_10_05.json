@@ -26,6 +26,23 @@
   },
   "candidates": [
     {
+      "id": "bam_keti_hrs_anomaly_platform_2026",
+      "title": "Data-Driven Intelligent Analysis System for Monitoring and Anomaly Detection in Hydrogen Refueling Station",
+      "doi": "10.3390/app16157856",
+      "url": "https://doi.org/10.3390/app16157856",
+      "license": "CC BY 4.0 for the article; raw station logs are not released with the public record",
+      "decision": "REAL_STATION_FIELD_VALIDATION_AND_DATA_REQUEST_LEAD",
+      "observed_scope": {
+        "facility": "BAM demonstration hydrogen refueling station, Germany",
+        "reported_channels": ["pressure", "temperature", "flow rate"],
+        "reported_sensor_count": 8,
+        "reported_sampling": "one-second acquisition with one-minute downsampling",
+        "field_integration": true
+      },
+      "finding": "The article reports field deployment and validation of a safety-monitoring platform, but the public data-availability statement does not provide a downloadable synchronized station-to-vehicle raw logger archive with channel, calibration and reuse metadata.",
+      "use": "Independent face-validity and architecture context plus a high-priority author data request; not a full-loop holdout until raw data and rights are received and frozen before outcome access."
+    },
+    {
       "id": "calstate_la_multi_year_ijhe_2023",
       "title": "Multi-year energy performance data for an electrolysis-based hydrogen refueling station",
       "doi": "10.1016/j.ijhydene.2023.04.084",

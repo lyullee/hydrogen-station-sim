@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T16:35:01.904270+00:00",
+  "generated_at": "2026-10-04T16:46:17.258056+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 35,
+    "PASS": 36,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -360,8 +360,22 @@
         "operational_benchmark_recheck_2026_10_05": {
           "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
           "gate_impact": "full_loop_external_validation_remains_open",
-          "candidate_count": 6
+          "candidate_count": 7
         }
+      }
+    },
+    {
+      "id": "real_station_article_boundary_integrity",
+      "status": "PASS",
+      "claim": "The public BAM/KETI field-validation article is recorded as an auditable real-station context and data-request lead without being promoted to raw full-loop validation.",
+      "evidence": "research\\keti_bam_hrs_article_data_boundary_2026_10_05.json",
+      "requirement": "DOI/licence, reported field channels and integration, explicit missing raw-log boundary, and a false full-loop eligibility flag.",
+      "observed": {
+        "doi": "10.3390/app16157856",
+        "facility": "BAM demonstration hydrogen refueling station, Germany",
+        "reported_sensor_count": 8,
+        "full_loop_external_holdout_eligible": false,
+        "claim_boundary": "This record strengthens source accounting only. It is not raw validation evidence and does not change the IJHE or full-objective completion gates."
       }
     },
     {

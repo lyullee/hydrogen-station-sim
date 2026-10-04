@@ -23,6 +23,10 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     ] is False
     assert gates["preoutcome_design_sensitivity"]["status"] == "PASS"
     assert gates["full_loop_external_validation"]["status"] == "FAIL"
+    assert gates["real_station_article_boundary_integrity"]["status"] == "PASS"
+    field_article = gates["real_station_article_boundary_integrity"]["observed"]
+    assert field_article["reported_sensor_count"] == 8
+    assert field_article["full_loop_external_holdout_eligible"] is False
     assert gates["nrel_h2fills_workbook_provenance_integrity"]["status"] == "PASS"
     assert gates["public_dispenser_endpoint_diagnostic"]["status"] == "PASS"
     assert gates["hiad_action_evidence_integrity"]["status"] == "PASS"

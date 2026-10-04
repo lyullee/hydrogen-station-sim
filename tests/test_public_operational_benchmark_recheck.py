@@ -12,7 +12,7 @@ def test_operational_benchmark_recheck_preserves_raw_trace_boundary():
     )
     assert record["result"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
     assert record["gate_impact"] == "full_loop_external_validation_remains_open"
-    assert len(record["candidates"]) == 6
+    assert len(record["candidates"]) == 7
     assert all(
         item["decision"] != "FULL_LOOP_HOLDOUT" for item in record["candidates"]
     )
@@ -48,6 +48,20 @@ def test_recheck_excludes_public_simulation_supplement_from_physical_holdout():
     )
     assert item["decision"] == "SIMULATION_SUPPLEMENTARY_EXCLUDED"
     assert item["observed_scope"]["measured_station_logger_rows"] is False
+
+
+def test_recheck_records_bam_keti_field_article_without_promoting_it_to_raw_holdout():
+    record = json.loads(
+        (ROOT / "research/public_operational_benchmark_recheck_2026_10_05.json")
+        .read_text(encoding="utf-8")
+    )
+    item = next(
+        candidate for candidate in record["candidates"]
+        if candidate["id"] == "bam_keti_hrs_anomaly_platform_2026"
+    )
+    assert item["decision"] == "REAL_STATION_FIELD_VALIDATION_AND_DATA_REQUEST_LEAD"
+    assert item["observed_scope"]["reported_sensor_count"] == 8
+    assert "raw logger" in item["finding"]
 
 
 def test_recheck_records_carb_field_report_without_promoting_it_to_raw_holdout():

@@ -258,6 +258,38 @@ def audit(root: Path) -> dict[str, object]:
         } if external_loop else "missing; current internal comparisons pass 0/8 and 0/11",
     ))
 
+    field_article_path = root / "research/keti_bam_hrs_article_data_boundary_2026_10_05.json"
+    field_article = _json(field_article_path)
+    field_source = (field_article or {}).get("source") or {}
+    field_evidence = (field_article or {}).get("observed_evidence") or {}
+    field_decision = (field_article or {}).get("eligibility_decision") or {}
+    field_article_pass = bool(
+        (field_article or {}).get("schema_version") == 1
+        and field_source.get("doi") == "10.3390/app16157856"
+        and field_source.get("license") == "CC BY 4.0"
+        and field_evidence.get("facility")
+        and field_evidence.get("reported_sensor_count") == 8
+        and field_evidence.get("reported_measurements")
+        and field_evidence.get("field_integration") is True
+        and field_decision.get("full_loop_external_holdout_eligible") is False
+        and field_decision.get("reason")
+        and field_article.get("claim_boundary")
+    )
+    gates.append(_gate(
+        "real_station_article_boundary_integrity",
+        "PASS" if field_article_pass else ("FAIL" if field_article else "PENDING"),
+        "The public BAM/KETI field-validation article is recorded as an auditable real-station context and data-request lead without being promoted to raw full-loop validation.",
+        str(field_article_path.relative_to(root)),
+        "DOI/licence, reported field channels and integration, explicit missing raw-log boundary, and a false full-loop eligibility flag.",
+        {
+            "doi": field_source.get("doi"),
+            "facility": field_evidence.get("facility"),
+            "reported_sensor_count": field_evidence.get("reported_sensor_count"),
+            "full_loop_external_holdout_eligible": field_decision.get("full_loop_external_holdout_eligible"),
+            "claim_boundary": (field_article or {}).get("claim_boundary"),
+        } if field_article else "missing; public field article boundary record has not been captured",
+    ))
+
     temperature_diagnostic_path = root / "research/closed_loop_temperature_stop_diagnostic_2026_10_04.json"
     temperature_diagnostic = _json(temperature_diagnostic_path)
     temperature_runs = (temperature_diagnostic or {}).get("runs") or []

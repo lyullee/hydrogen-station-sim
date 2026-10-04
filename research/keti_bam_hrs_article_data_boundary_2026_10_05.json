@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "source": {
+    "title": "Data-Driven Intelligent Analysis System for Monitoring and Anomaly Detection in Hydrogen Refueling Station",
+    "doi": "10.3390/app16157856",
+    "url": "https://doi.org/10.3390/app16157856",
+    "publisher": "MDPI Applied Sciences",
+    "publication_date": "2026-08-06",
+    "license": "CC BY 4.0"
+  },
+  "observed_evidence": {
+    "facility": "BAM demonstration hydrogen refueling station, Germany",
+    "reported_measurements": ["pressure", "temperature", "flow rate"],
+    "reported_sensor_count": 8,
+    "reported_sampling": "one-second acquisition with one-minute downsampling",
+    "field_integration": true,
+    "data_availability_statement": "Original contributions are included in the article; further inquiries are directed to the authors."
+  },
+  "eligibility_decision": {
+    "full_loop_external_holdout_eligible": false,
+    "reason": "The public article provides field-validation description and figures, but no downloadable synchronized station-to-vehicle raw logger archive, channel dictionary, calibration uncertainty package or explicit raw-data reuse terms.",
+    "allowed_use": [
+      "independent face-validity and operating-context citation",
+      "data-request lead for a de-identified event-level export",
+      "architecture comparison for HRS safety monitoring"
+    ],
+    "prohibited_use": [
+      "numerical holdout score",
+      "parameter tuning of the locked production model",
+      "claim of full-loop station/vehicle validation"
+    ]
+  },
+  "next_action": "Request de-identified event-level pressure, temperature, mass-flow, controller/protocol, receptacle and calibration metadata from the authors through an approved institutional channel; freeze model and scoring before any numerical outcomes are accessed.",
+  "claim_boundary": "This record strengthens source accounting only. It is not raw validation evidence and does not change the IJHE or full-objective completion gates."
+}
