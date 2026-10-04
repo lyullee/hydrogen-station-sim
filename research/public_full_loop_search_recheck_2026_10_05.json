@@ -192,6 +192,22 @@
         "full_loop_holdout_eligible": false
       },
       "reuse_status": "Use the NLR Technology Validation/HITRF route in research/NREL_HITRF_DATA_REQUEST_DRAFT.md to request a de-identified synchronized export, channel dictionary, calibration metadata and written permission for derived metrics and open-repository or IJHE publication. Facility and program descriptions remain provenance only."
+    },
+    {
+      "id": "nlr_data_catalog_h2_validation_recheck_2026",
+      "title": "NLR public data catalog and hydrogen technology-validation access policy",
+      "url": "https://data.nlr.gov/submissions",
+      "policy_url": "https://www.nlr.gov/hydrogen/technology-validation",
+      "license": "Public catalog entries have record-specific terms; raw HRS validation data are not publicly licensed on the inspected pages",
+      "decision": "PUBLIC_CATALOG_NO_HRS_RAW_LOGGER",
+      "finding": "The NLR catalog is publicly searchable, but the hydrogen technology-validation policy states that raw data are protected and that public outputs are aggregated composite products. The inspected catalog and infrastructure pages did not expose a synchronized HRS station-to-vehicle pressure, temperature and mass-flow archive.",
+      "observed_scope": {
+        "catalog_search_completed": true,
+        "hrs_raw_logger_found": false,
+        "public_aggregate_products_found": true,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "Retain public composite products for operating-range context only. Request an approved NLR/HITRF de-identified logger export and written reuse terms before numerical holdout evaluation."
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
