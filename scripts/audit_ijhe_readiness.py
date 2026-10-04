@@ -250,6 +250,43 @@ def audit(root: Path) -> dict[str, object]:
         } if external_loop else "missing; current internal comparisons pass 0/8 and 0/11",
     ))
 
+    temperature_diagnostic_path = root / "research/closed_loop_temperature_stop_diagnostic_2026_10_04.json"
+    temperature_diagnostic = _json(temperature_diagnostic_path)
+    temperature_runs = (temperature_diagnostic or {}).get("runs") or []
+    temperature_run = next(
+        (run for run in temperature_runs if run.get("temperature_limit_c") == 95.0),
+        None,
+    )
+    temperature_aggregate = (temperature_run or {}).get("aggregate") or {}
+    temperature_metrics = temperature_aggregate.get("metrics") or {}
+    temperature_diagnostic_pass = bool(
+        (temperature_diagnostic or {}).get("diagnostic_type")
+        == "post-outcome temperature-stop sensitivity"
+        and (temperature_diagnostic or {}).get("post_outcome") is True
+        and "none" in str((temperature_diagnostic or {}).get("validation_gate_effect", "")).lower()
+        and (temperature_diagnostic or {}).get("parameter_fitting") is False
+        and temperature_aggregate.get("case_count") == 8
+        and temperature_aggregate.get("screening_pass_count") == 0
+        and temperature_aggregate.get("final_stop_reason_counts") == {"none": 8}
+        and len((temperature_run or {}).get("cases") or []) == 8
+        and abs(float((temperature_metrics.get("pressure_rmse_mpa") or {}).get("mean", 0.0)) - 10.217206686917415) < 1e-9
+        and abs(float((temperature_metrics.get("temperature_rmse_c") or {}).get("mean", 0.0)) - 14.301028885284389) < 1e-9
+        and abs(float((temperature_metrics.get("soc_rmse_percentage_points") or {}).get("mean", 0.0)) - 12.605456644129966) < 1e-9
+    )
+    gates.append(_gate(
+        "closed_loop_temperature_stop_diagnostic",
+        "PASS" if temperature_diagnostic_pass else ("FAIL" if temperature_diagnostic else "PENDING"),
+        "The post-outcome temperature-stop sensitivity is archived without changing the frozen external validation decision.",
+        str(temperature_diagnostic_path.relative_to(root)),
+        "Eight identical MC Default traces, 95 °C counterfactual, no parameter fitting, no screening pass and no temperature-stop termination.",
+        {
+            "diagnostic_type": (temperature_diagnostic or {}).get("diagnostic_type"),
+            "post_outcome": (temperature_diagnostic or {}).get("post_outcome"),
+            "aggregate": temperature_aggregate,
+            "claim_limit": (temperature_diagnostic or {}).get("validation_gate_effect"),
+        } if temperature_diagnostic else "missing",
+    ))
+
     acquisition_tracker_path = root / "research/validation_data_acquisition_tracker.json"
     acquisition_tracker = _json(acquisition_tracker_path)
     acquisition_candidates = (acquisition_tracker or {}).get("candidates") or []
