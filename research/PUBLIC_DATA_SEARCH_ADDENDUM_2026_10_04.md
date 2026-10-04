@@ -115,3 +115,14 @@ Two additional real-world routes were registered after a source-level review:
 | [DOE SunHydro final report](https://www.osti.gov/servlets/purl/1783792), [2015 AMR report](https://www.hydrogen.energy.gov/docs/hydrogenprogramlibraries/pdfs/review15/tv020_moulthrop_2015_o.pdf) and [NREL HSDC overview](https://www.nrel.gov/docs/fy12osti/54860.pdf) | Real SunHydro station operating data were collected and exported to HSDC, but detailed partner records are controlled and public products are aggregate. No synchronized station-to-vehicle raw archive is public. | [`research/SUNHYDRO_DATA_REQUEST_DRAFT.md`](SUNHYDRO_DATA_REQUEST_DRAFT.md) |
 
 Both routes are real-data acquisition leads. They do not close the independent full-loop gate until de-identified synchronized files, hashes, written reuse terms and the frozen no-fitting scoring protocol are available.
+
+## 2026-10-04 BAM research-station route
+
+The official [BAM H2Safety@BAM station description](https://www.bam.de/Content/EN/Standard-Articles/Topics/Energy/Hydrogen/hydrogen-h2-filling-stations.html)
+confirms a real, digitally networked research refuelling station containing an
+electrolyser, compressor, buffer storage, gas cooler and dispenser. BAM states
+that operating data, measurement uncertainties, sensor histories and procedures
+are collected for digital-twin and safety research. The public page does not
+provide a synchronized station-to-vehicle logger archive or reuse terms, so the
+route is recorded as a controlled-data request lead only. The prepared request
+is [`research/BAM_HRS_DATA_REQUEST_DRAFT.md`](BAM_HRS_DATA_REQUEST_DRAFT.md).

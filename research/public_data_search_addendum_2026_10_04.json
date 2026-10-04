@@ -138,11 +138,20 @@
         "classification": "DATA_REQUEST_LEAD"
     },
     {
-        "id": "sunhydro_hsdc_operating_data",
-        "public_synchronized_raw_logger": false,
-        "scope": "real SunHydro station operating-data programme exported to DOE/NREL HSDC; detailed partner data controlled",
-        "raw_data_request_lead": "research/SUNHYDRO_DATA_REQUEST_DRAFT.md",
-        "classification": "DATA_REQUEST_LEAD"
+      "id": "sunhydro_hsdc_operating_data",
+      "public_synchronized_raw_logger": false,
+      "scope": "real SunHydro station operating-data programme exported to DOE/NREL HSDC; detailed partner data controlled",
+      "raw_data_request_lead": "research/SUNHYDRO_DATA_REQUEST_DRAFT.md",
+      "classification": "DATA_REQUEST_LEAD"
+    },
+    {
+      "id": "bam_h2safety_research_station_2026",
+      "public_synchronized_raw_logger": false,
+      "scope": "BAM H2Safety@BAM digitally networked research refuelling station with compressor, storage, cooling, dispenser and sensor-based process monitoring",
+      "official_url": "https://www.bam.de/Content/EN/Standard-Articles/Topics/Energy/Hydrogen/hydrogen-h2-filling-stations.html",
+      "reported_data_scope": "BAM states that operating data, measurement uncertainty, sensor histories and procedures are collected for digital-twin and safety research; the public page exposes the facility description but not a downloadable raw logger archive",
+      "raw_data_request_lead": "research/BAM_HRS_DATA_REQUEST_DRAFT.md",
+      "classification": "CONTROLLED_DATA_REQUEST_LEAD"
     }
   ],
   "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET",

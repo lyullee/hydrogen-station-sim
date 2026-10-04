@@ -31,3 +31,5 @@ def test_public_data_addendum_keeps_full_loop_gate_open():
     assert by_id["nlr_data_catalog_2026_10_04"]["catalog_pages_inspected"] == 5
     assert by_id["enda_h2_mobility_monitoring"]["classification"] == "CONTROLLED_DATA_REQUEST_LEAD"
     assert "synchronized" in by_id["zbt_methytrucks_2026_sampling_intercomparison"]["supplementary_contents"]
+    assert by_id["bam_h2safety_research_station_2026"]["classification"] == "CONTROLLED_DATA_REQUEST_LEAD"
+    assert by_id["bam_h2safety_research_station_2026"]["public_synchronized_raw_logger"] is False
