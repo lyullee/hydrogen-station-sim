@@ -939,6 +939,55 @@ def audit(root: Path) -> dict[str, object]:
         action_playbook_aggregate if action_playbook else "missing; HIAD action-to-playbook coverage audit has not run",
     ))
 
+    accident_response_path = root / "research/hiad_accident_response_coverage_evaluation_2026_10_05.json"
+    accident_response = _json(accident_response_path)
+    accident_aggregate = (accident_response or {}).get("aggregate") or {}
+    accident_source = (accident_response or {}).get("source") or {}
+    accident_contract = (accident_response or {}).get("contract") or {}
+    accident_hashes = accident_source.get("hashes") or {}
+    accident_expected_hashes = {
+        "action_evidence_sha256": root / "research/hiad_action_evidence.json",
+        "response_stage_contract_sha256": root / "research/hiad_response_stage_contract.json",
+        "action_playbook_coverage_sha256": root / "research/hiad_action_playbook_coverage.json",
+        "playbook_catalog_sha256": root / "src/h2station/data/emergency_playbooks.json",
+    }
+    accident_hashes_match = bool(accident_hashes) and all(
+        accident_hashes.get(key) == _sha256(path)
+        for key, path in accident_expected_hashes.items()
+    )
+    accident_response_pass = bool(
+        (accident_response or {}).get("status")
+        == "completed_public_accident_response_coverage_evaluation"
+        and (accident_response or {}).get("evidence_role")
+        == "public_accident_grounded_interface_evaluation"
+        and accident_aggregate.get("case_count") == 34
+        and accident_aggregate.get("public_action_category_case_count") == 33
+        and accident_aggregate.get("no_public_action_category_case_count") == 1
+        and accident_aggregate.get("category_count") == 8
+        and accident_aggregate.get("covered_category_count") == 8
+        and accident_aggregate.get("uncovered_case_category_count") == 0
+        and accident_aggregate.get("contract_pass") is True
+        and accident_contract.get("raw_action_text_used") is False
+        and accident_contract.get("effectiveness_claimed") is False
+        and accident_contract.get("safety_claimed") is False
+        and accident_contract.get("holdout_use") is False
+        and accident_source.get("action_evidence_source_hash_matches") is True
+        and accident_hashes_match
+        and "does not judge source actions" in str((accident_response or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "hiad_accident_response_coverage_evaluation",
+        "PASS" if accident_response_pass else ("FAIL" if accident_response else "PENDING"),
+        "Public HIAD action categories are routed case-by-case to staged response plans with an explicit non-evaluative boundary.",
+        str(accident_response_path.relative_to(root)),
+        "34 cases, 33 cases with public action categories, 8/8 categories covered with zero uncovered case-category pairs, current input hashes, no raw action text or holdout use.",
+        {
+            "aggregate": accident_aggregate,
+            "contract": accident_contract,
+            "source_hashes_match": accident_hashes_match,
+        } if accident_response else "missing; accident-response coverage evaluation has not run",
+    ))
+
     cip_endpoint_path = root / "research/cip_dispenser_endpoint_screen.json"
     cip_endpoint = _json(cip_endpoint_path)
     cip_aggregate = (cip_endpoint or {}).get("aggregate") or {}

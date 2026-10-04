@@ -49,7 +49,7 @@ The following tests passed in the repository virtual environment:
 11 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-507 passed, 16 warnings
+509 passed, 16 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -95,5 +95,7 @@ prevention stages, and that idle periodic monitoring remains quiet. It is still
 an interface/traceability check: it does not read HIAD response text and does not
 validate the safety or effectiveness of any step. The independent coordinator
 review, holdout response collection and expert rating gates remain required.
+
+The [HIAD accident-response coverage evaluation](HIAD_ACCIDENT_RESPONSE_COVERAGE_EVALUATION.md) additionally checks the 34 public metadata cases one by one: 33 cases with recorded action categories route to staged plans, all 8 categories have zero uncovered case-category pairs, and one case with no recorded category is explicitly marked as not assessed rather than treated as no response. This is structural traceability only; raw action prose is excluded and no effectiveness or safety claim is made.
 
 The [KHK public-report inventory](khk_hydrogen_station_public_reports_inventory_2026_10_04.json) adds official accident and precaution report links for qualitative scenario and response grounding. The [scenario-precedent map](khk_scenario_precedent_map_2026_10_04.json) links the inventory's equipment classes to conservative response families and exposes only counts plus representative citation links to the assistant. It is deliberately excluded from numerical model validation, accident-frequency estimation and the station-to-vehicle full-loop holdout because the public reports do not provide synchronized process traces or complete boundary conditions.

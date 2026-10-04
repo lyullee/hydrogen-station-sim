@@ -82,6 +82,14 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert gates["public_dispenser_endpoint_diagnostic"]["status"] == "PASS"
     assert gates["hiad_action_evidence_integrity"]["status"] == "PASS"
     assert gates["hiad_action_evidence_integrity"]["observed"]["case_count"] == 34
+    assert gates["hiad_accident_response_coverage_evaluation"]["status"] == "PASS"
+    accident_response = gates["hiad_accident_response_coverage_evaluation"]["observed"]
+    assert accident_response["aggregate"]["case_count"] == 34
+    assert accident_response["aggregate"]["covered_category_count"] == 8
+    assert accident_response["aggregate"]["uncovered_case_category_count"] == 0
+    assert accident_response["contract"]["raw_action_text_used"] is False
+    assert accident_response["contract"]["effectiveness_claimed"] is False
+    assert accident_response["source_hashes_match"] is True
     assert gates["public_dispenser_endpoint_diagnostic"]["observed"]["stop_reason_counts"] == {"safety-temperature": 2}
     assert gates["accidental_release_ignition_public_evidence"]["status"] == "PASS"
     accidental = gates["accidental_release_ignition_public_evidence"]["observed"]

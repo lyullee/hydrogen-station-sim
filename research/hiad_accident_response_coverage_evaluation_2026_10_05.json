@@ -1,0 +1,2708 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-10-04T19:16:43.241256+00:00",
+  "status": "completed_public_accident_response_coverage_evaluation",
+  "evidence_role": "public_accident_grounded_interface_evaluation",
+  "source": {
+    "action_evidence": "research/hiad_action_evidence.json",
+    "response_stage_contract": "research/hiad_response_stage_contract.json",
+    "action_playbook_coverage": "research/hiad_action_playbook_coverage.json",
+    "playbook_catalog": "src/h2station/data/emergency_playbooks.json",
+    "hashes": {
+      "action_evidence_sha256": "72f2550eabea6a4207a5d59c98bd99520e217fd2d4f8597e5d1d72f2ef87e1dd",
+      "response_stage_contract_sha256": "5e8dc02a1a0ad74e54eac99c4c61eccf84778bfd285db897502a1a2c2c535ea1",
+      "action_playbook_coverage_sha256": "97e74620c58157cc94a096591438f4d4d072230b77cd5f0418824012eae7fccc",
+      "playbook_catalog_sha256": "68a2a847ae4d7c2ce1aab10d626ffd7595457231f182e3d2bb8b5a2fb73592b0"
+    },
+    "action_evidence_source_hash_matches": true
+  },
+  "contract": {
+    "required_stage_names": [
+      "recognition",
+      "immediate",
+      "stabilize",
+      "restart",
+      "prevention"
+    ],
+    "category_required_stages": {
+      "inspection_leak_test_repair": {
+        "required_stages": [
+          "restart",
+          "prevention"
+        ],
+        "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+      },
+      "procedure_interlock_training_design": {
+        "required_stages": [
+          "prevention"
+        ],
+        "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+      },
+      "shutdown_isolation_depressurization": {
+        "required_stages": [
+          "immediate",
+          "stabilize",
+          "restart"
+        ],
+        "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+      },
+      "detection_alarm_monitoring": {
+        "required_stages": [
+          "recognition",
+          "stabilize",
+          "prevention"
+        ],
+        "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+      },
+      "ventilation_purge": {
+        "required_stages": [
+          "immediate",
+          "stabilize",
+          "prevention"
+        ],
+        "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+      },
+      "emergency_communication_coordination": {
+        "required_stages": [
+          "immediate",
+          "prevention"
+        ],
+        "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+      },
+      "fire_response_cooling": {
+        "required_stages": [
+          "immediate",
+          "stabilize",
+          "prevention"
+        ],
+        "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+      },
+      "evacuation_perimeter_access": {
+        "required_stages": [
+          "immediate",
+          "stabilize"
+        ],
+        "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+      }
+    },
+    "raw_action_text_used": false,
+    "effectiveness_claimed": false,
+    "safety_claimed": false,
+    "holdout_use": false
+  },
+  "aggregate": {
+    "case_count": 34,
+    "public_action_category_case_count": 33,
+    "no_public_action_category_case_count": 1,
+    "covered_action_category_case_count": 33,
+    "category_count": 8,
+    "covered_category_count": 8,
+    "uncovered_case_category_count": 0,
+    "category_counts": {
+      "shutdown_isolation_depressurization": 22,
+      "detection_alarm_monitoring": 14,
+      "fire_response_cooling": 6,
+      "evacuation_perimeter_access": 6,
+      "emergency_communication_coordination": 17,
+      "inspection_leak_test_repair": 21,
+      "procedure_interlock_training_design": 23,
+      "ventilation_purge": 21
+    },
+    "contract_pass": true
+  },
+  "categories": [
+    {
+      "category": "detection_alarm_monitoring",
+      "public_case_count": 14,
+      "assessed_case_count": 14,
+      "covered_case_count": 14,
+      "uncovered_case_count": 0,
+      "required_stages": [
+        "recognition",
+        "stabilize",
+        "prevention"
+      ],
+      "coverage_fraction": 1.0,
+      "category_present_in_source_taxonomy": true
+    },
+    {
+      "category": "emergency_communication_coordination",
+      "public_case_count": 17,
+      "assessed_case_count": 17,
+      "covered_case_count": 17,
+      "uncovered_case_count": 0,
+      "required_stages": [
+        "immediate",
+        "prevention"
+      ],
+      "coverage_fraction": 1.0,
+      "category_present_in_source_taxonomy": true
+    },
+    {
+      "category": "evacuation_perimeter_access",
+      "public_case_count": 6,
+      "assessed_case_count": 6,
+      "covered_case_count": 6,
+      "uncovered_case_count": 0,
+      "required_stages": [
+        "immediate",
+        "stabilize"
+      ],
+      "coverage_fraction": 1.0,
+      "category_present_in_source_taxonomy": true
+    },
+    {
+      "category": "fire_response_cooling",
+      "public_case_count": 6,
+      "assessed_case_count": 6,
+      "covered_case_count": 6,
+      "uncovered_case_count": 0,
+      "required_stages": [
+        "immediate",
+        "stabilize",
+        "prevention"
+      ],
+      "coverage_fraction": 1.0,
+      "category_present_in_source_taxonomy": true
+    },
+    {
+      "category": "inspection_leak_test_repair",
+      "public_case_count": 21,
+      "assessed_case_count": 21,
+      "covered_case_count": 21,
+      "uncovered_case_count": 0,
+      "required_stages": [
+        "restart",
+        "prevention"
+      ],
+      "coverage_fraction": 1.0,
+      "category_present_in_source_taxonomy": true
+    },
+    {
+      "category": "procedure_interlock_training_design",
+      "public_case_count": 23,
+      "assessed_case_count": 23,
+      "covered_case_count": 23,
+      "uncovered_case_count": 0,
+      "required_stages": [
+        "prevention"
+      ],
+      "coverage_fraction": 1.0,
+      "category_present_in_source_taxonomy": true
+    },
+    {
+      "category": "shutdown_isolation_depressurization",
+      "public_case_count": 22,
+      "assessed_case_count": 22,
+      "covered_case_count": 22,
+      "uncovered_case_count": 0,
+      "required_stages": [
+        "immediate",
+        "stabilize",
+        "restart"
+      ],
+      "coverage_fraction": 1.0,
+      "category_present_in_source_taxonomy": true
+    },
+    {
+      "category": "ventilation_purge",
+      "public_case_count": 21,
+      "assessed_case_count": 21,
+      "covered_case_count": 21,
+      "uncovered_case_count": 0,
+      "required_stages": [
+        "immediate",
+        "stabilize",
+        "prevention"
+      ],
+      "coverage_fraction": 1.0,
+      "category_present_in_source_taxonomy": true
+    }
+  ],
+  "cases": [
+    {
+      "event_id": "396",
+      "title": "Detection of hydrogen release",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 1,
+      "action_categories": [
+        "inspection_leak_test_repair"
+      ],
+      "candidate_plan_ids": [
+        "gas_release"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "401",
+      "title": "Detection of hydrogen release",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 2,
+      "action_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "candidate_plan_ids": [
+        "gas_release"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "402",
+      "title": "Cavitation in a compressor",
+      "physical_effect": "No Hydrogen Release",
+      "action_category_count": 5,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "compressor_thermal"
+      ],
+      "registered_candidate_plan_ids": [
+        "compressor_thermal"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "compressor_thermal"
+          ],
+          "covered": true
+        },
+        {
+          "category": "detection_alarm_monitoring",
+          "required_stages": [
+            "recognition",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "compressor_thermal"
+          ],
+          "covered": true
+        },
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "compressor_thermal"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "compressor_thermal"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "compressor_thermal"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "403",
+      "title": "Hydrogen dispenser failure",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 0,
+      "action_categories": [],
+      "candidate_plan_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "not_assessed_no_public_category",
+      "category_results": [],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "404",
+      "title": "Malfunctioning in a hydrogen refuelling station",
+      "physical_effect": "No Hydrogen Release",
+      "action_category_count": 2,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "fueling_fault"
+      ],
+      "registered_candidate_plan_ids": [
+        "fueling_fault"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "fueling_fault"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "fueling_fault"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "411",
+      "title": "Oil leak",
+      "physical_effect": "No Hydrogen Release",
+      "action_category_count": 1,
+      "action_categories": [
+        "detection_alarm_monitoring"
+      ],
+      "candidate_plan_ids": [
+        "compressor_thermal"
+      ],
+      "registered_candidate_plan_ids": [
+        "compressor_thermal"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "detection_alarm_monitoring",
+          "required_stages": [
+            "recognition",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "compressor_thermal"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "454",
+      "title": "Damage of a HRS canopy",
+      "physical_effect": "No Hydrogen Release",
+      "action_category_count": 2,
+      "action_categories": [
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair"
+      ],
+      "candidate_plan_ids": [
+        "structural_damage"
+      ],
+      "registered_candidate_plan_ids": [
+        "structural_damage"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "emergency_communication_coordination",
+          "required_stages": [
+            "immediate",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "structural_damage"
+          ],
+          "covered": true
+        },
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "structural_damage"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "463",
+      "title": "Release at a dispenser of a HRS",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 3,
+      "action_categories": [
+        "fire_response_cooling",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "candidate_plan_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "fire_response_cooling",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "covered": true
+        },
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "702",
+      "title": "hydrogen leak in the hose of a dispenser",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 4,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "candidate_plan_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "detection_alarm_monitoring",
+          "required_stages": [
+            "recognition",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "803",
+      "title": "Release from the dispenser of a refuelling station",
+      "physical_effect": "No Hydrogen Release",
+      "action_category_count": 1,
+      "action_categories": [
+        "shutdown_isolation_depressurization"
+      ],
+      "candidate_plan_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "884",
+      "title": "Explosion in the storage of a HRS",
+      "physical_effect": "Hydrogen release and ignition",
+      "action_category_count": 5,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "fire_response_cooling",
+        "evacuation_perimeter_access",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "candidate_plan_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "registered_candidate_plan_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "fire_response_cooling",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "evacuation_perimeter_access",
+          "required_stages": [
+            "immediate",
+            "stabilize"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "953",
+      "title": "Hydrogen release at a public hydrogen refuelling station.",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 5,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "gas_release"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "detection_alarm_monitoring",
+          "required_stages": [
+            "recognition",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "emergency_communication_coordination",
+          "required_stages": [
+            "immediate",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1038",
+      "title": "Dispenser nozzle freezing during hydrogen refuelling",
+      "physical_effect": "No Hydrogen Release",
+      "action_category_count": 1,
+      "action_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "candidate_plan_ids": [
+        "hose_connection",
+        "precooling_fault"
+      ],
+      "registered_candidate_plan_ids": [
+        "hose_connection",
+        "precooling_fault"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hose_connection",
+            "precooling_fault"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1062",
+      "title": "Leakage at a hydrogen buses refilling station",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 4,
+      "action_categories": [
+        "fire_response_cooling",
+        "evacuation_perimeter_access",
+        "emergency_communication_coordination",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "gas_release",
+        "overpressure"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release",
+        "overpressure"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "fire_response_cooling",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "evacuation_perimeter_access",
+          "required_stages": [
+            "immediate",
+            "stabilize"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "emergency_communication_coordination",
+          "required_stages": [
+            "immediate",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1063",
+      "title": "Leakage at a hydrogen refilling station in a airport",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 5,
+      "action_categories": [
+        "detection_alarm_monitoring",
+        "evacuation_perimeter_access",
+        "emergency_communication_coordination",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "gas_release"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "detection_alarm_monitoring",
+          "required_stages": [
+            "recognition",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "evacuation_perimeter_access",
+          "required_stages": [
+            "immediate",
+            "stabilize"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "emergency_communication_coordination",
+          "required_stages": [
+            "immediate",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1064",
+      "title": "Leakage at a hydrogen refilling station in a airport",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 4,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "gas_release"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "detection_alarm_monitoring",
+          "required_stages": [
+            "recognition",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "emergency_communication_coordination",
+          "required_stages": [
+            "immediate",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1106",
+      "title": "Fire in a hydrogen refuelling station",
+      "physical_effect": "Hydrogen Release and Ignition",
+      "action_category_count": 5,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "fire_response_cooling",
+        "evacuation_perimeter_access",
+        "emergency_communication_coordination",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "hydrogen_fire",
+        "gas_release"
+      ],
+      "registered_candidate_plan_ids": [
+        "hydrogen_fire",
+        "gas_release"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "fire_response_cooling",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "evacuation_perimeter_access",
+          "required_stages": [
+            "immediate",
+            "stabilize"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "emergency_communication_coordination",
+          "required_stages": [
+            "immediate",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1159",
+      "title": "Release from a vessel at a HRS",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 4,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "emergency_communication_coordination",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "gas_release",
+        "overpressure"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release",
+        "overpressure"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "emergency_communication_coordination",
+          "required_stages": [
+            "immediate",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1161",
+      "title": "Release from a storage at a HRS",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 3,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "gas_release",
+        "overpressure"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release",
+        "overpressure"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1163",
+      "title": "Fire from the storage area of a HRS",
+      "physical_effect": "Hydrogen Release and Ignition",
+      "action_category_count": 2,
+      "action_categories": [
+        "fire_response_cooling",
+        "emergency_communication_coordination"
+      ],
+      "candidate_plan_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "registered_candidate_plan_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "fire_response_cooling",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "emergency_communication_coordination",
+          "required_stages": [
+            "immediate",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1173",
+      "title": "Explosion on a CGH2 cylinders bundle during filling",
+      "physical_effect": "Hydrogen Release and Ignition",
+      "action_category_count": 8,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "fire_response_cooling",
+        "evacuation_perimeter_access",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "registered_candidate_plan_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "detection_alarm_monitoring",
+          "required_stages": [
+            "recognition",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "fire_response_cooling",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "evacuation_perimeter_access",
+          "required_stages": [
+            "immediate",
+            "stabilize"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "emergency_communication_coordination",
+          "required_stages": [
+            "immediate",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1191",
+      "title": "Fire at the storage of a hydrogen refuelling station",
+      "physical_effect": "Hydrogen Release and Ignition",
+      "action_category_count": 4,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "registered_candidate_plan_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1193",
+      "title": "A hydrogen leak at a 70 MPa dispenser",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 5,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "gas_release"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "emergency_communication_coordination",
+          "required_stages": [
+            "immediate",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1194",
+      "title": "Leak in a dispenser at a mobile HRS",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 2,
+      "action_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "candidate_plan_ids": [
+        "gas_release"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1195",
+      "title": "Leak from a valve in a HRS",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 5,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "gas_release"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "emergency_communication_coordination",
+          "required_stages": [
+            "immediate",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1196",
+      "title": "Several leaks from the hoses of a HRS",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 6,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "detection_alarm_monitoring",
+          "required_stages": [
+            "recognition",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "emergency_communication_coordination",
+          "required_stages": [
+            "immediate",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1198",
+      "title": "Explosion at a filling hose of a hydrogen dispenser",
+      "physical_effect": "Hydrogen Release and Ignition",
+      "action_category_count": 6,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "hose_connection"
+      ],
+      "registered_candidate_plan_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "hose_connection"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "detection_alarm_monitoring",
+          "required_stages": [
+            "recognition",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "emergency_communication_coordination",
+          "required_stages": [
+            "immediate",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1202",
+      "title": "Leak  at a filling hose of a hydrogen dispenser",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 5,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "detection_alarm_monitoring",
+          "required_stages": [
+            "recognition",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1203",
+      "title": "Leaks from a hydrogen compressor",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 6,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "gas_release",
+        "compressor_thermal"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release",
+        "compressor_thermal"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "compressor_thermal"
+          ],
+          "covered": true
+        },
+        {
+          "category": "detection_alarm_monitoring",
+          "required_stages": [
+            "recognition",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "compressor_thermal"
+          ],
+          "covered": true
+        },
+        {
+          "category": "emergency_communication_coordination",
+          "required_stages": [
+            "immediate",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "compressor_thermal"
+          ],
+          "covered": true
+        },
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "compressor_thermal"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "compressor_thermal"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "compressor_thermal"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1204",
+      "title": "leak from a hose when refuelling a forklift",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 5,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "emergency_communication_coordination",
+          "required_stages": [
+            "immediate",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1205",
+      "title": "Hydrogen accidental release into a compressor room",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 5,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "gas_release",
+        "compressor_thermal"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release",
+        "compressor_thermal"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "compressor_thermal"
+          ],
+          "covered": true
+        },
+        {
+          "category": "emergency_communication_coordination",
+          "required_stages": [
+            "immediate",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "compressor_thermal"
+          ],
+          "covered": true
+        },
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "compressor_thermal"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "compressor_thermal"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "compressor_thermal"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1206",
+      "title": "leaks from a threaded joint",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 4,
+      "action_categories": [
+        "detection_alarm_monitoring",
+        "evacuation_perimeter_access",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair"
+      ],
+      "candidate_plan_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "detection_alarm_monitoring",
+          "required_stages": [
+            "recognition",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "evacuation_perimeter_access",
+          "required_stages": [
+            "immediate",
+            "stabilize"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "emergency_communication_coordination",
+          "required_stages": [
+            "immediate",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        },
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1207",
+      "title": "leak from a dispenser of a HRS",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 5,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "covered": true
+        },
+        {
+          "category": "detection_alarm_monitoring",
+          "required_stages": [
+            "recognition",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "covered": true
+        },
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    },
+    {
+      "event_id": "1208",
+      "title": "leak from a dispenser of a mobile HRS",
+      "physical_effect": "Unignited Hydrogen Release",
+      "action_category_count": 5,
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "candidate_plan_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "registered_candidate_plan_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "stage_contract": "pass",
+      "action_traceability_status": "covered",
+      "category_results": [
+        {
+          "category": "shutdown_isolation_depressurization",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "restart"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "covered": true
+        },
+        {
+          "category": "detection_alarm_monitoring",
+          "required_stages": [
+            "recognition",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "covered": true
+        },
+        {
+          "category": "inspection_leak_test_repair",
+          "required_stages": [
+            "restart",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "covered": true
+        },
+        {
+          "category": "procedure_interlock_training_design",
+          "required_stages": [
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "covered": true
+        },
+        {
+          "category": "ventilation_purge",
+          "required_stages": [
+            "immediate",
+            "stabilize",
+            "prevention"
+          ],
+          "covering_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "covered": true
+        }
+      ],
+      "public_category_text_used": false,
+      "holdout_use": false,
+      "coverage_source_row_status": null
+    }
+  ],
+  "uncovered": [],
+  "claim_boundary": "This artifact shows only that action categories derived from public HIAD metadata can be routed to registered staged response plans. A case with no recorded public category is not treated as having no response. The result does not judge source actions, validate physics, estimate risk, or demonstrate SAGA/LLM/operator effectiveness or safety. Independent expert review and blinded holdout testing remain required."
+}

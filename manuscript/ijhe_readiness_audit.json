@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T19:12:55.193517+00:00",
+  "generated_at": "2026-10-04T19:21:46.963527+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 47,
+    "PASS": 48,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -1407,6 +1407,110 @@
       }
     },
     {
+      "id": "hiad_accident_response_coverage_evaluation",
+      "status": "PASS",
+      "claim": "Public HIAD action categories are routed case-by-case to staged response plans with an explicit non-evaluative boundary.",
+      "evidence": "research\\hiad_accident_response_coverage_evaluation_2026_10_05.json",
+      "requirement": "34 cases, 33 cases with public action categories, 8/8 categories covered with zero uncovered case-category pairs, current input hashes, no raw action text or holdout use.",
+      "observed": {
+        "aggregate": {
+          "case_count": 34,
+          "public_action_category_case_count": 33,
+          "no_public_action_category_case_count": 1,
+          "covered_action_category_case_count": 33,
+          "category_count": 8,
+          "covered_category_count": 8,
+          "uncovered_case_category_count": 0,
+          "category_counts": {
+            "shutdown_isolation_depressurization": 22,
+            "detection_alarm_monitoring": 14,
+            "fire_response_cooling": 6,
+            "evacuation_perimeter_access": 6,
+            "emergency_communication_coordination": 17,
+            "inspection_leak_test_repair": 21,
+            "procedure_interlock_training_design": 23,
+            "ventilation_purge": 21
+          },
+          "contract_pass": true
+        },
+        "contract": {
+          "required_stage_names": [
+            "recognition",
+            "immediate",
+            "stabilize",
+            "restart",
+            "prevention"
+          ],
+          "category_required_stages": {
+            "inspection_leak_test_repair": {
+              "required_stages": [
+                "restart",
+                "prevention"
+              ],
+              "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+            },
+            "procedure_interlock_training_design": {
+              "required_stages": [
+                "prevention"
+              ],
+              "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+            },
+            "shutdown_isolation_depressurization": {
+              "required_stages": [
+                "immediate",
+                "stabilize",
+                "restart"
+              ],
+              "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+            },
+            "detection_alarm_monitoring": {
+              "required_stages": [
+                "recognition",
+                "stabilize",
+                "prevention"
+              ],
+              "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+            },
+            "ventilation_purge": {
+              "required_stages": [
+                "immediate",
+                "stabilize",
+                "prevention"
+              ],
+              "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+            },
+            "emergency_communication_coordination": {
+              "required_stages": [
+                "immediate",
+                "prevention"
+              ],
+              "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+            },
+            "fire_response_cooling": {
+              "required_stages": [
+                "immediate",
+                "stabilize",
+                "prevention"
+              ],
+              "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+            },
+            "evacuation_perimeter_access": {
+              "required_stages": [
+                "immediate",
+                "stabilize"
+              ],
+              "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
+            }
+          },
+          "raw_action_text_used": false,
+          "effectiveness_claimed": false,
+          "safety_claimed": false,
+          "holdout_use": false
+        },
+        "source_hashes_match": true
+      }
+    },
+    {
       "id": "public_dispenser_endpoint_diagnostic",
       "status": "PASS",
       "claim": "Public 35/70 MPa dispenser endpoint tables are replayed as an explicit negative diagnostic without being promoted to full-loop validation.",
@@ -2674,7 +2778,7 @@
       "requirement": "Manifest schema, normal/emergency distinction, contradiction guard and full regression suite.",
       "observed": {
         "schema_version": 1,
-        "recorded_at": "2026-10-04T11:38:24.104809+00:00",
+        "recorded_at": "2026-10-04T19:21:38.052365+00:00",
         "status": "software_contract_verified",
         "scope": [
           "digital-twin main assistant",
@@ -2690,7 +2794,7 @@
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 507,
+            "passed": 509,
             "failed": 0,
             "warnings": 16
           }
@@ -2706,7 +2810,8 @@
           "public HIAD action-to-playbook traceability metadata is carried into the response evidence envelope",
           "public KHK accident-report inventory and citation link are carried into the evidence envelope without mirrored report text",
           "public KHK scenario-precedent map links all 23 citation records to conservative response families without exposing report text or frequency claims",
-          "consequence flow-boundary mismatches are exposed when HyRAM recomputes a high-pressure choked flow instead of silently presenting it as the supplied process flow"
+          "consequence flow-boundary mismatches are exposed when HyRAM recomputes a high-pressure choked flow instead of silently presenting it as the supplied process flow",
+          "public HIAD action categories are evaluated case-by-case against required staged response plans without using raw action text or making an effectiveness claim"
         ],
         "not_established": [
           "physics validity of the consequence model",
@@ -2727,7 +2832,21 @@
           "action_category_count": 8,
           "covered_action_category_count": 8,
           "action_playbook_contract_pass": true,
-          "interpretation": "qualitative scenario-family and action-to-playbook traceability only; excludes HIAD response text and does not establish effectiveness or safety"
+          "interpretation": "qualitative scenario-family and action-to-playbook traceability only; excludes HIAD response text and does not establish effectiveness or safety",
+          "accident_response_coverage_evaluation": {
+            "evidence": "research/hiad_accident_response_coverage_evaluation_2026_10_05.json",
+            "case_count": 34,
+            "public_action_category_case_count": 33,
+            "no_public_action_category_case_count": 1,
+            "covered_category_count": 8,
+            "category_count": 8,
+            "uncovered_case_category_count": 0,
+            "raw_action_text_used": false,
+            "effectiveness_claimed": false,
+            "safety_claimed": false,
+            "holdout_use": false,
+            "interpretation": "public accident action-category to staged-plan interface coverage only; cases without a recorded category are not treated as having no response"
+          }
         },
         "response_stage_contract": {
           "evidence": "research/hiad_response_stage_contract.json",
