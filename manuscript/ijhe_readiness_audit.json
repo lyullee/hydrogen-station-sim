@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T20:45:50.924329+00:00",
+  "generated_at": "2026-10-04T21:01:31.905975+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -2200,8 +2200,8 @@
       "id": "dataverse_hydrogen_explosion_component_inventory",
       "status": "PASS",
       "claim": "Two CC0 DataverseNO release/ignition archives are provenance-checked as independent consequence-component evidence without being promoted to HRS full-loop or model validation.",
-      "evidence": "research\\dataverse_hydrogen_explosion_dataset_inventory_2026_10_05.json",
-      "requirement": "WSKBIJ and X044QK API manifests, summary-workbook hashes, 51/40 experiment counts and explicit false model/full-loop flags.",
+      "evidence": "research\\dataverse_hydrogen_explosion_dataset_inventory_2026_10_05.json; research\\usn_17934047_raw_subset_replay_2026_10_05.json",
+      "requirement": "WSKBIJ and X044QK API manifests, summary-workbook hashes, 51/40 experiment counts, a three-file CC BY raw-channel replay and explicit false model/full-loop flags.",
       "observed": {
         "dois": [
           "10.18710/WSKBIJ",
@@ -2222,7 +2222,10 @@
           "CC0 1.0"
         ],
         "model_comparison_performed": false,
-        "full_loop_external_validation_supported": false
+        "full_loop_external_validation_supported": false,
+        "raw_subset_file_count": 3,
+        "raw_subset_channel_replay_valid": true,
+        "raw_subset_model_comparison_performed": false
       }
     },
     {

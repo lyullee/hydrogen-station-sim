@@ -859,6 +859,9 @@ def audit(root: Path) -> dict[str, object]:
     explosion_sources = (explosion_inventory or {}).get("sources") or []
     explosion_by_doi = {item.get("doi"): item for item in explosion_sources}
     explosion_validation = (explosion_inventory or {}).get("validation_status") or {}
+    explosion_subset_path = root / "research/usn_17934047_raw_subset_replay_2026_10_05.json"
+    explosion_subset = _json(explosion_subset_path)
+    explosion_subset_integrity = (explosion_subset or {}).get("replay_integrity") or {}
     explosion_inventory_pass = bool(
         (explosion_inventory or {}).get("status")
         == "completed_dataverse_provenance_and_summary_inventory"
@@ -879,13 +882,19 @@ def audit(root: Path) -> dict[str, object]:
         and explosion_validation.get("numeric_validation_gate_closed") is False
         and explosion_validation.get("full_loop_external_validation_supported") is False
         and bool((explosion_inventory or {}).get("claim_boundary"))
+        and (explosion_subset or {}).get("status") == "completed_raw_channel_timebase_replay"
+        and explosion_subset_integrity.get("file_count") == 3
+        and explosion_subset_integrity.get("all_files_present") is True
+        and explosion_subset_integrity.get("all_file_identities_match") is True
+        and explosion_subset_integrity.get("all_channel_replays_valid") is True
+        and explosion_subset_integrity.get("model_comparison_performed") is False
     )
     gates.append(_gate(
         "dataverse_hydrogen_explosion_component_inventory",
         "PASS" if explosion_inventory_pass else ("FAIL" if explosion_inventory else "PENDING"),
         "Two CC0 DataverseNO release/ignition archives are provenance-checked as independent consequence-component evidence without being promoted to HRS full-loop or model validation.",
-        str(explosion_inventory_path.relative_to(root)),
-        "WSKBIJ and X044QK API manifests, summary-workbook hashes, 51/40 experiment counts and explicit false model/full-loop flags.",
+        f"{explosion_inventory_path.relative_to(root)}; {explosion_subset_path.relative_to(root)}",
+        "WSKBIJ and X044QK API manifests, summary-workbook hashes, 51/40 experiment counts, a three-file CC BY raw-channel replay and explicit false model/full-loop flags.",
         {
             "dois": sorted(explosion_by_doi),
             "experiment_counts": {
@@ -896,6 +905,9 @@ def audit(root: Path) -> dict[str, object]:
             "license_set": sorted({item.get("license") for item in explosion_sources}),
             "model_comparison_performed": explosion_validation.get("model_comparison_performed"),
             "full_loop_external_validation_supported": explosion_validation.get("full_loop_external_validation_supported"),
+            "raw_subset_file_count": explosion_subset_integrity.get("file_count"),
+            "raw_subset_channel_replay_valid": explosion_subset_integrity.get("all_channel_replays_valid"),
+            "raw_subset_model_comparison_performed": explosion_subset_integrity.get("model_comparison_performed"),
         } if explosion_inventory else "missing; DataverseNO explosion inventory has not run",
     ))
 

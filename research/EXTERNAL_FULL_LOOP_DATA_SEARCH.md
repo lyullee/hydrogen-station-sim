@@ -1351,6 +1351,21 @@ the inventory is not a model comparison and cannot close the full-loop gate or
 the SAGA effectiveness gate. A consequence-model protocol must be frozen
 before raw traces are used for any confirmatory score.
 
+## 2026-10-05 USN ignited raw-channel subset replay
+
+Three CC BY 4.0 MATLAB files from [10.23642/USN.17934047](https://doi.org/10.23642/USN.17934047)
+were downloaded from the Dataverse API and replayed from the ignored local raw
+directory. The subset covers Dataverse file IDs 266075–266077. Each file has
+the documented 999,999-row `SIGMA` mass-flow/pressure/temperature array and a
+three-column `GEN3i` overpressure array; file identities, finite values and
+strictly increasing time bases all pass. The file-level result is frozen in
+[`usn_17934047_raw_subset_replay_2026_10_05.json`](usn_17934047_raw_subset_replay_2026_10_05.json).
+
+This strengthens independent accident-like consequence provenance but is not a
+model comparison. The experiments do not contain the H70 station controller,
+dispenser protocol or vehicle-side loop, so the full-loop and SAGA gates remain
+open.
+
 ## 2026-10-05 Grune/Zenodo archive access recheck
 
 The complete seven-file archive for [10.5281/zenodo.4668554](https://doi.org/10.5281/zenodo.4668554)

@@ -1,0 +1,240 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-04T21:00:55.403567+00:00",
+  "status": "completed_raw_channel_timebase_replay",
+  "source": {
+    "doi": "10.23642/USN.17934047",
+    "record": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.23642/USN.17934047",
+    "api": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi%3A10.23642%2FUSN.17934047",
+    "license": "CC BY 4.0",
+    "scope": "confined ignited hydrogen releases with Coriolis mass flow, upstream pressure, four thermocouples and GEN3i overpressure"
+  },
+  "raw_directory": "tmp/usn_17934047",
+  "files": [
+    {
+      "datafile_id": 266075,
+      "name": "HTE341USN0029READ191111.mat",
+      "bytes": 42508034,
+      "md5": "d93dab6ece1ea477825d35de4ff56344",
+      "present": true,
+      "observed_file": {
+        "bytes": 42508034,
+        "md5": "d93dab6ece1ea477825d35de4ff56344",
+        "sha256": "a91adbf96cc426d9ca64d4800631df7c39a742f5f527503f8e314ba814b24d8b"
+      },
+      "identity_match": true,
+      "channel_replay": {
+        "sigma_shape": [
+          999999,
+          7
+        ],
+        "gen3i_shape": [
+          250460,
+          3
+        ],
+        "sigma_columns": [
+          "time_s",
+          "mass_flow_g_s",
+          "coriolis_pressure_bar",
+          "T1_C",
+          "T2_C",
+          "T3_C",
+          "T4_C"
+        ],
+        "gen3i_columns": [
+          "time_s",
+          "unused_channel",
+          "overpressure_kpa"
+        ],
+        "sigma_time_range_s": [
+          0.0001,
+          99.99990000000001
+        ],
+        "gen3i_time_range_s": [
+          0.0,
+          50.0918
+        ],
+        "sigma_time_monotonic": true,
+        "gen3i_time_monotonic": true,
+        "sigma_finite": true,
+        "gen3i_finite": true,
+        "mass_flow_g_s_range": [
+          -6.2254948,
+          6.66994789999999
+        ],
+        "coriolis_pressure_bar_range": [
+          -62.007487,
+          70.10741675000028
+        ],
+        "temperature_c_range": [
+          -199.1754168,
+          578.3377336
+        ],
+        "overpressure_kpa_range": [
+          -8.6581638,
+          16.754126000000007
+        ],
+        "peak_mass_flow_g_s": 6.66994789999999,
+        "peak_mass_flow_time_s": 5.805000000000001,
+        "peak_overpressure_kpa": 16.754126000000007,
+        "peak_overpressure_time_s": 4.7646
+      }
+    },
+    {
+      "datafile_id": 266076,
+      "name": "HTE341USN0030READ191111.mat",
+      "bytes": 43239997,
+      "md5": "6012e3a7e92c43dced63312288f46425",
+      "present": true,
+      "observed_file": {
+        "bytes": 43239997,
+        "md5": "6012e3a7e92c43dced63312288f46425",
+        "sha256": "914581adfec7a939a5dd6bafca510c1d8ef7667df573129b95abfa50c1604300"
+      },
+      "identity_match": true,
+      "channel_replay": {
+        "sigma_shape": [
+          999999,
+          7
+        ],
+        "gen3i_shape": [
+          268675,
+          3
+        ],
+        "sigma_columns": [
+          "time_s",
+          "mass_flow_g_s",
+          "coriolis_pressure_bar",
+          "T1_C",
+          "T2_C",
+          "T3_C",
+          "T4_C"
+        ],
+        "gen3i_columns": [
+          "time_s",
+          "unused_channel",
+          "overpressure_kpa"
+        ],
+        "sigma_time_range_s": [
+          0.0001,
+          99.99990000000001
+        ],
+        "gen3i_time_range_s": [
+          0.0,
+          53.7348
+        ],
+        "sigma_time_monotonic": true,
+        "gen3i_time_monotonic": true,
+        "sigma_finite": true,
+        "gen3i_finite": true,
+        "mass_flow_g_s_range": [
+          -6.22502605,
+          6.694479024999983
+        ],
+        "coriolis_pressure_bar_range": [
+          -62.0090495,
+          70.31470950000015
+        ],
+        "temperature_c_range": [
+          -199.16874959999998,
+          391.8344008
+        ],
+        "overpressure_kpa_range": [
+          -14.059625999999998,
+          35.894141999999995
+        ],
+        "peak_mass_flow_g_s": 6.694479024999983,
+        "peak_mass_flow_time_s": 4.9541,
+        "peak_overpressure_kpa": 35.894141999999995,
+        "peak_overpressure_time_s": 7.129
+      }
+    },
+    {
+      "datafile_id": 266077,
+      "name": "HTE341USN0031READ191111.mat",
+      "bytes": 43807775,
+      "md5": "62d0637fe5ed0710589bb5b0482f82bd",
+      "present": true,
+      "observed_file": {
+        "bytes": 43807775,
+        "md5": "62d0637fe5ed0710589bb5b0482f82bd",
+        "sha256": "13c3a989e79f5ee0225e9ab6edaef99515234276745ca35b17baa5e18030e5a9"
+      },
+      "identity_match": true,
+      "channel_replay": {
+        "sigma_shape": [
+          999999,
+          7
+        ],
+        "gen3i_shape": [
+          318669,
+          3
+        ],
+        "sigma_columns": [
+          "time_s",
+          "mass_flow_g_s",
+          "coriolis_pressure_bar",
+          "T1_C",
+          "T2_C",
+          "T3_C",
+          "T4_C"
+        ],
+        "gen3i_columns": [
+          "time_s",
+          "unused_channel",
+          "overpressure_kpa"
+        ],
+        "sigma_time_range_s": [
+          0.0001,
+          99.99990000000001
+        ],
+        "gen3i_time_range_s": [
+          0.0,
+          63.733599999999996
+        ],
+        "sigma_time_monotonic": true,
+        "gen3i_time_monotonic": true,
+        "sigma_finite": true,
+        "gen3i_finite": true,
+        "mass_flow_g_s_range": [
+          -6.225546875,
+          6.6560938249999815
+        ],
+        "coriolis_pressure_bar_range": [
+          -61.995507749999994,
+          69.75012350000034
+        ],
+        "temperature_c_range": [
+          -199.17437520000001,
+          556.3527303999987
+        ],
+        "overpressure_kpa_range": [
+          -25.330717999999994,
+          35.27455400000001
+        ],
+        "peak_mass_flow_g_s": 6.6560938249999815,
+        "peak_mass_flow_time_s": 5.5722000000000005,
+        "peak_overpressure_kpa": 35.27455400000001,
+        "peak_overpressure_time_s": 6.8246
+      }
+    }
+  ],
+  "replay_integrity": {
+    "file_count": 3,
+    "all_files_present": true,
+    "all_file_identities_match": true,
+    "all_channel_replays_valid": true,
+    "common_sigma_time_basis_s": [
+      0.0001,
+      99.9999
+    ],
+    "model_comparison_performed": false
+  },
+  "eligibility": {
+    "consequence_component_evidence": true,
+    "full_loop_station_vehicle_holdout_eligible": false,
+    "saga_effectiveness_eligible": false,
+    "reason": "This subset has release/overpressure channels but no gaseous H70 station controller, cascade, dispenser protocol or vehicle-side fueling loop."
+  },
+  "claim_boundary": "The replay establishes provenance and synchronized channel integrity for three public ignited-release experiments. It does not validate the production consequence model, flame/radiation distance, station controls, emergency separation distance or SAGA effectiveness."
+}
