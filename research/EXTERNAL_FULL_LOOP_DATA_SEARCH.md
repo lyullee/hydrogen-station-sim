@@ -958,3 +958,27 @@ Therefore it remains consequence-only evidence and does not close the primary
 full-loop gate. The exact metadata recheck, range-probe evidence and claim
 boundary are frozen in
 [`preslhy_e3_5_public_data_recheck_2026_10_04.json`](preslhy_e3_5_public_data_recheck_2026_10_04.json).
+
+## 2026-10-04 HRS aggregate and experiment-summary recheck
+
+The public-data search was extended to four current, high-value sources:
+
+* The DOE/NREL H2IQ Hour presentation reports a real 73 kg heavy-duty fill
+  (5.5 to 74.6 MPa, 172.3 g/s average and 483.33 g/s peak) under SAE J2601-5
+  MCF-HF-G H70 FM300 T40, but publishes summary values rather than a
+  synchronized logger export.
+* The Digital.CSIC distribution for on-site HRS operation provides a PDF and
+  README under CC BY-NC-ND 4.0; its figures are simulation results, not a
+  measured station holdout.
+* The 3Emotion/E3S record reports real multi-station 350-bar bus operation from
+  operator logs, but only aggregate fill amount, duration, average flow and
+  utilization indicators are available publicly.
+* The DLR/FCH2RAIL article confirms reference-station and railway-vehicle
+  measurements, while the repository exposes no synchronized machine-readable
+  trace or reuse terms.
+
+These sources are useful for operating-range and provenance context, but none
+meets the frozen eligibility rule for an untouched station-to-vehicle
+pressure/temperature/mass-flow holdout. The detailed record is
+`research/hrs_public_data_recheck_2026_10_04.json`; the independent full-loop
+gate therefore remains open.
