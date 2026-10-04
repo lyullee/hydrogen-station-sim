@@ -1255,6 +1255,16 @@ trends, including a 5 s leak-check pause and a 1.6 kg comparison window. The
 public article provides figures and aggregate values, but not a reusable
 synchronized logger archive, so it remains a figure-only data-request lead.
 
+The current NIST Transient Flow Facility description confirms a 70 MPa loop
+that reproduces refuelling pressure, temperature and flow transients and uses
+calibrated fast sensors, but the public project page exposes facility scope
+and method information rather than a machine-readable synchronized logger
+archive. It is therefore useful as a metrology/protocol reference and a
+custodian lead, while the existing NIST FTS boundary record remains excluded
+from the full-loop holdout until raw files and reuse terms are obtained. See
+the [NIST facility description](https://www.nist.gov/programs-projects/transient-flow-facility)
+and [NIST TN 1888](https://doi.org/10.6028/NIST.TN.1888).
+
 The FCH2RAIL demonstrator study [10.1016/j.ijhydene.2025.04.040](https://doi.org/10.1016/j.ijhydene.2025.04.040)
 is a particularly relevant IJHE precedent: the project recorded train-module
 pressure/temperature together with dispenser pressure, temperature and mass
