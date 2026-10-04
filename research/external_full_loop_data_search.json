@@ -2203,5 +2203,20 @@
     "full_loop_holdout_eligible": false,
     "station_measurement_auxiliary_eligible": true,
     "claim_boundary": "Use only as independent HRS instrumentation/timing context until a custodian supplies the channel dictionary and vehicle/receptacle mapping; do not score as station-to-vehicle full-loop validation."
+  },
+  "public_full_loop_search_refresh_2026_10_04": {
+    "record": "research/public_full_loop_search_refresh_2026_10_04.json",
+    "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+    "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+    "source_ids": [
+      "kuroki_2023_hitrf_liner_temperature",
+      "nrel_nfctec_secure_data_center",
+      "nrel_h2fills_product_page_refresh",
+      "ramea_2019_hourly_station_capacity_refresh",
+      "nist_transient_flow_facility_refresh"
+    ],
+    "finding": "A primary-source refresh confirms real HITRF tank-temperature evidence, the NLR secured-data route, H2FillS registration-gated empirical validation context, the Ramea aggregate capacity claim and NIST transient-flow metrology. No new licensed synchronized station-to-vehicle raw archive was found.",
+    "full_loop_holdout_eligible": false,
+    "claim_boundary": "The independent station-to-vehicle full-loop numerical gate remains open until a raw synchronized export, hash, reuse terms and prospective scoring are available."
   }
 }

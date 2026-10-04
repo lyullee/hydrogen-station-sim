@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "scope": "Additional primary-source search for an untouched public station-to-vehicle HRS full-loop holdout",
+  "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+  "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+  "eligibility_rule": {
+    "required_channels": [
+      "vehicle_or_receptacle_pressure",
+      "mass_flow_or_transferred_mass"
+    ],
+    "preferred_channels": [
+      "vehicle_or_tank_temperature",
+      "station_pressure",
+      "protocol_or_valve_state"
+    ],
+    "required_metadata": [
+      "common_time_base",
+      "initial_conditions",
+      "tank_capacity",
+      "protocol_or_pressure_ramp_information",
+      "units",
+      "quality_or_calibration_flags",
+      "written_reuse_terms"
+    ]
+  },
+  "sources": [
+    {
+      "id": "kuroki_2023_hitrf_liner_temperature",
+      "title": "Temperature Rise on Liner Surfaces of Fuel Cell Electric Vehicle Tanks during Fueling Process",
+      "doi": "10.1002/ente.202300239",
+      "url": "https://docs.nlr.gov/docs/fy23osti/85029.pdf",
+      "real_experiment": true,
+      "reported_scope": "NREL HITRF fueling experiment with a 108 L vehicle surrogate, 6.3 to 73.0 MPa pressure rise over 186 s and measured gas/liner temperatures.",
+      "raw_common_timebase_found": false,
+      "data_availability": "Research data are not shared",
+      "classification": "PUBLIC_REAL_TANK_THERMAL_DATA_REQUEST_LEAD",
+      "full_loop_holdout_eligible": false,
+      "finding": "The public manuscript provides figures and boundary conditions but no downloadable synchronized logger export, channel dictionary or reuse terms."
+    },
+    {
+      "id": "nrel_nfctec_secure_data_center",
+      "title": "National Fuel Cell Technology Evaluation Center",
+      "url": "https://www.nlr.gov/hydrogen/nfctec",
+      "real_experiment": true,
+      "reported_scope": "NLR/NREL processing of detailed operational, maintenance and safety data contributed by hydrogen technology partners.",
+      "raw_common_timebase_found": false,
+      "public_access_boundary": "Raw partner data are secured; public products are aggregated composite data products.",
+      "classification": "PUBLIC_REAL_STATION_DATA_REQUEST_ROUTE",
+      "full_loop_holdout_eligible": false,
+      "finding": "The facility confirms a credible data custodian and request route, but it does not publish the synchronized station-to-vehicle logger files required by the frozen holdout rule."
+    },
+    {
+      "id": "nrel_h2fills_product_page_refresh",
+      "title": "H2FillS: Hydrogen Filling Simulation",
+      "url": "https://www.nrel.gov/hydrogen/h2fills",
+      "real_experiment": false,
+      "reported_scope": "Full-station and partial-station simulation software for vehicle pressure, temperature and mass-flow trajectories validated against empirical fueling data.",
+      "raw_common_timebase_found": false,
+      "public_access_boundary": "Software download requires registration; the product page does not expose an independent raw empirical archive.",
+      "classification": "SIMULATOR_AND_DATA_REQUEST_CONTEXT_ONLY",
+      "full_loop_holdout_eligible": false,
+      "finding": "The simulator is useful for method comparison but its generated traces cannot serve as an independent measured holdout."
+    },
+    {
+      "id": "ramea_2019_hourly_station_capacity_refresh",
+      "title": "Hourly hydrogen-station capacity dataset associated with Ramea et al.",
+      "doi": "10.1016/j.ijhydene.2019.05.053",
+      "url": "https://doi.org/10.1016/j.ijhydene.2019.05.053",
+      "real_experiment": true,
+      "reported_scope": "Three months of hourly California station-capacity/utilization observations.",
+      "raw_common_timebase_found": false,
+      "public_access_boundary": "The article states that a dataset was released, but no working downloadable archive was located in the current repository/web search.",
+      "classification": "PUBLIC_AGGREGATE_STATION_CONTEXT_OR_DATA_REQUEST_LEAD",
+      "full_loop_holdout_eligible": false,
+      "finding": "Even if recovered, hourly station capacity lacks vehicle/receptacle pressure, temperature and mass-flow traces and cannot close the thermodynamic full-loop gate."
+    },
+    {
+      "id": "nist_transient_flow_facility_refresh",
+      "title": "NIST Transient Flow Facility",
+      "url": "https://www.nist.gov/programs-projects/transient-flow-facility",
+      "real_experiment": true,
+      "reported_scope": "A metrology facility reproducing hydrogen dispenser pressure, temperature and flow transients for flow-meter testing.",
+      "raw_common_timebase_found": false,
+      "public_access_boundary": "The public project page describes the facility and objectives but does not provide a downloadable station-to-vehicle logger archive.",
+      "classification": "PUBLIC_METROLOGY_DATA_REQUEST_LEAD",
+      "full_loop_holdout_eligible": false,
+      "finding": "This is a strong metrology request lead for flow uncertainty, but no public synchronized raw archive or reuse terms were found."
+    }
+  ],
+  "claim_boundary": "These sources strengthen independent provenance and data-request coverage only. No source is promoted to numerical validation without a machine-readable synchronized export, immutable hash, frozen no-fitting scoring protocol and written reuse rights."
+}

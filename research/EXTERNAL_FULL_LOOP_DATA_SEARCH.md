@@ -1103,3 +1103,36 @@ high-value data-request lead, not a holdout. Details are in
 [`research/calstate_la_public_data_leads_2026_10_04.json`](calstate_la_public_data_leads_2026_10_04.json).
 The 2017 PDF itself was inspected and contains no embedded files or external
 links; the cited raw dataset therefore requires a custodian export.
+
+## 2026-10-04 Additional primary-source full-loop search refresh
+
+An additional search checked primary pages and public manuscripts for five
+frequently cited routes:
+
+* The NREL HITRF liner-temperature experiment (Kuroki et al., DOI
+  [10.1002/ente.202300239](https://doi.org/10.1002/ente.202300239)) reports a
+  108 L vehicle surrogate, a 6.3 to 73.0 MPa fill over 186 s and multiple
+  temperature channels. The public OSTI manuscript states that research data
+  are not shared, so the source remains a tank-thermal data-request lead.
+* The [National Fuel Cell Technology Evaluation Center](https://www.nlr.gov/hydrogen/nfctec)
+  confirms that detailed partner station data are stored in a secured center
+  and that public products are aggregated. It is a credible custodian route,
+  not an open raw holdout.
+* The official [H2FillS page](https://www.nrel.gov/hydrogen/h2fills) documents
+  full-station simulation and empirical fueling validation, but the package is
+  registration-gated and no independent measured archive is exposed on the
+  public page.
+* Ramea et al. (DOI
+  [10.1016/j.ijhydene.2019.05.053](https://doi.org/10.1016/j.ijhydene.2019.05.053))
+  states that an hourly California station-capacity dataset was released. No
+  working downloadable archive was located in this recheck; even if recovered,
+  hourly capacity lacks vehicle pressure, temperature and mass-flow channels.
+* The [NIST Transient Flow Facility](https://www.nist.gov/programs-projects/transient-flow-facility)
+  provides a high-value metrology request route for dispenser transients, but
+  its public page does not publish a synchronized station-to-vehicle logger
+  export.
+
+The file-level classifications and claim boundaries are frozen in
+`research/public_full_loop_search_refresh_2026_10_04.json`. None of these
+sources satisfies the untouched full-loop eligibility rule, so the numerical
+gate remains open and no IJHE-level validation claim is permitted.

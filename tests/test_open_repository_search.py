@@ -231,3 +231,38 @@ def test_external_search_mirror_contains_methytrucks_recheck():
     item = mirror["methytrucks_zenodo_measurement_recheck_2026_10_04"]
     assert item["full_loop_holdout_eligible"] is False
     assert item["station_measurement_auxiliary_eligible"] is True
+
+
+def test_primary_source_search_refresh_keeps_full_loop_gate_open():
+    record = json.loads(
+        (
+            ROOT
+            / "research/public_full_loop_search_refresh_2026_10_04.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert record["decision"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
+    assert record["gate_impact"] == "unchanged_independent_full_loop_gate_remains_open"
+    assert len(record["sources"]) == 5
+    assert all(source["full_loop_holdout_eligible"] is False for source in record["sources"])
+    assert any(
+        source["id"] == "kuroki_2023_hitrf_liner_temperature"
+        and source["data_availability"] == "Research data are not shared"
+        for source in record["sources"]
+    )
+    assert any(
+        source["id"] == "nrel_nfctec_secure_data_center"
+        and source["raw_common_timebase_found"] is False
+        for source in record["sources"]
+    )
+
+
+def test_external_search_mirror_contains_primary_source_search_refresh():
+    mirror = json.loads(
+        (ROOT / "research/external_full_loop_data_search.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    item = mirror["public_full_loop_search_refresh_2026_10_04"]
+    assert item["full_loop_holdout_eligible"] is False
+    assert len(item["source_ids"]) == 5
+    assert "nist_transient_flow_facility_refresh" in item["source_ids"]
