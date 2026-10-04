@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04T14:08:57.654136+00:00",
+  "status": "ACCESS_REQUEST_ONLY_REAL_HRS_CANDIDATE",
+  "source": {
+    "title": "Operational Data List of Hydrogen Refueling Stations for Beijing Winter Olympics",
+    "cstr": "CSTR:16666.11.nbsdc.aI3fJrzX",
+    "public_landing": "https://cstr.cn/16666.11.nbsdc.aI3fJrzX",
+    "internal_data_id": "64edfc52bb16e0300cd4dd38",
+    "catalog_update_time": "2023-03-21T23:28:20.000+0000",
+    "share_range": "审批后共享",
+    "data_storage": {
+      "filesNum": "4",
+      "storageCapacity": "10.22",
+      "storageCapacityUnit": "MB",
+      "recordsNum": null
+    },
+    "metadata_sha256": "586d3e2909ccad157b0112bebf20f075b68f27f1f132c6dd736f67f261623dce"
+  },
+  "api_evidence": {
+    "metadata": {
+      "url": "https://www.nbsdc.cn/api/general/searchDataDetail?id=64edfc52bb16e0300cd4dd38",
+      "status": 200,
+      "content_type": "application/json;charset=UTF-8",
+      "bytes": 1911,
+      "sha256": "586d3e2909ccad157b0112bebf20f075b68f27f1f132c6dd736f67f261623dce"
+    },
+    "root_tree": {
+      "url": "https://www.nbsdc.cn/api/general/v1/getFileTree?dataId=64edfc52bb16e0300cd4dd38&pid=0&pageOffset=0&pageSize=50",
+      "status": 200,
+      "content_type": "application/json;charset=UTF-8",
+      "bytes": 353,
+      "sha256": "15a8fa0e1c8a385cc7d849b551651c9f4c7723ae10b5b5761a2e9ddb54143c95"
+    },
+    "pid_1_tree": {
+      "url": "https://www.nbsdc.cn/api/general/v1/getFileTree?dataId=64edfc52bb16e0300cd4dd38&pid=1&pageOffset=0&pageSize=50",
+      "status": 200,
+      "content_type": "application/json;charset=UTF-8",
+      "bytes": 561,
+      "sha256": "7ae43e2d7efa78bfbae86a3065d6d0a8e91ed23aa71214fcd9e4962cc1627ee2"
+    },
+    "pid_11_tree": {
+      "url": "https://www.nbsdc.cn/api/general/v1/getFileTree?dataId=64edfc52bb16e0300cd4dd38&pid=11&pageOffset=0&pageSize=50",
+      "status": 200,
+      "content_type": "application/json;charset=UTF-8",
+      "bytes": 760,
+      "sha256": "1433bdb9de45dcb96cd3507d5de006b1b6cd56e4e881617e5c0a70a7dac825e1"
+    },
+    "description_download": {
+      "url": "https://www.nbsdc.cn/api/general/v1/checkAndDownloadFile?dataId=64edfc52bb16e0300cd4dd38&id=641874c7e39c3b0b8e3274ab&pid=1&pageOffset=0&pageSize=20",
+      "status": 200,
+      "content_type": "application/octet-stream",
+      "content_disposition": "attachment; filename=\"002-%E6%95%B0%E6%8D%AE%E8%AF%B4%E6%98%8E%E6%96%87%E4%BB%B6.docx\"",
+      "bytes": 23420,
+      "sha256": "7f7523c7d2dfde9207eab06e6af99eeb0ffaf1885bbc223bf0637f2de6ba1ddd"
+    },
+    "raw_file_download_probes": [
+      {
+        "url": "https://www.nbsdc.cn/api/general/v1/checkAndDownloadFile?dataId=64edfc52bb16e0300cd4dd38&id=641874c7e39c3b0b8e3274a8&pid=11&pageOffset=0&pageSize=20",
+        "status": 200,
+        "content_type": "application/json;charset=UTF-8",
+        "content_disposition": null,
+        "bytes": 121,
+        "sha256": "3dc242b38b1d0017e43b33734ca67e875ea6280f7a1f23089f721d7662c54ec1"
+      },
+      {
+        "url": "https://www.nbsdc.cn/api/general/v1/checkAndDownloadFile?dataId=64edfc52bb16e0300cd4dd38&id=641874c7e39c3b0b8e3274a9&pid=11&pageOffset=0&pageSize=20",
+        "status": 200,
+        "content_type": "application/json;charset=UTF-8",
+        "content_disposition": null,
+        "bytes": 121,
+        "sha256": "3dc242b38b1d0017e43b33734ca67e875ea6280f7a1f23089f721d7662c54ec1"
+      },
+      {
+        "url": "https://www.nbsdc.cn/api/general/v1/checkAndDownloadFile?dataId=64edfc52bb16e0300cd4dd38&id=641874c7e39c3b0b8e3274aa&pid=11&pageOffset=0&pageSize=20",
+        "status": 200,
+        "content_type": "application/json;charset=UTF-8",
+        "content_disposition": null,
+        "bytes": 121,
+        "sha256": "3dc242b38b1d0017e43b33734ca67e875ea6280f7a1f23089f721d7662c54ec1"
+      }
+    ]
+  },
+  "public_file_inventory": [
+    {
+      "id": "641874c7e39c3b0b8e3274a8",
+      "tree_id": 111,
+      "file_name": "交易数据.xlsx",
+      "size_bytes": 91765,
+      "pid": 11,
+      "is_file": true
+    },
+    {
+      "id": "641874c7e39c3b0b8e3274a9",
+      "tree_id": 112,
+      "file_name": "加氢枪数据.xlsx",
+      "size_bytes": 36807,
+      "pid": 11,
+      "is_file": true
+    },
+    {
+      "id": "641874c7e39c3b0b8e3274aa",
+      "tree_id": 113,
+      "file_name": "压缩机数据.xlsx",
+      "size_bytes": 10560560,
+      "pid": 11,
+      "is_file": true
+    }
+  ],
+  "declared_description_scope": {
+    "file_count": 3,
+    "formats": [
+      "xlsx"
+    ],
+    "contents": [
+      "hydrogen station compressor monitoring",
+      "station operation data",
+      "dispenser monitoring",
+      "vehicle telemetry fields including H2 maximum pressure and temperature, SOC, status and timestamps"
+    ],
+    "row_semantics": "first row field names; rows 2..n real-time data",
+    "reuse_statement": "The description states that data involving other organizations is commercial-confidential and requires approval before sharing.",
+    "description_sha256": "7f7523c7d2dfde9207eab06e6af99eeb0ffaf1885bbc223bf0637f2de6ba1ddd"
+  },
+  "eligibility_decision": {
+    "full_loop_public_holdout": false,
+    "reason": "The catalog and file tree are public, but all three raw XLSX download probes return HTTP 403 requiring a data application. No raw row was inspected.",
+    "high_value_request_candidate": true,
+    "required_before_validation": [
+      "approved data access",
+      "written reuse terms for derived metrics and journal publication",
+      "pre-access protocol and case freeze",
+      "file hashes and channel dictionary",
+      "quality/calibration and station/vehicle time-base confirmation"
+    ]
+  },
+  "claim_boundary": "This record proves a credible real-HRS data access route and declared channel scope only. It is not numerical validation and does not close the full-loop gate."
+}

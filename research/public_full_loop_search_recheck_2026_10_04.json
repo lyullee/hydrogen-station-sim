@@ -185,11 +185,22 @@
       "reuse_status": "public metadata and file manifest only; application, channel dictionary, calibration/quality metadata and written reuse terms remain necessary",
       "file_level_evidence": "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
       "claim_boundary": "This is a high-value real-station acquisition route, not a numerical holdout. The public listing does not establish a synchronized vehicle/receptacle pressure and transferred-mass trace, and access was not granted."
+    },
+    {
+      "id": "nbsdc_winter_olympics_hrss_recheck_2026_10_04",
+      "title": "National Basic Science Data Center Beijing Winter Olympics HRS operational-data list",
+      "cstr": "CSTR:16666.11.nbsdc.aI3fJrzX",
+      "url": "https://cstr.cn/16666.11.nbsdc.aI3fJrzX",
+      "decision": "ACCESS_REQUEST_HIGH_VALUE_REAL_HRS_CANDIDATE_NOT_PUBLIC_HOLDOUT",
+      "finding": "Public metadata and file-tree APIs expose three XLSX files (transaction/operation, dispenser monitoring, compressor monitoring) totaling 10.22 MB. The downloadable description lists vehicle hydrogen maximum pressure/temperature, SOC, timestamps, dispenser and compressor channels. Each raw-file download probe returns an HTTP 200 JSON response with code 403 stating that data files require a data application; no raw row was inspected.",
+      "reuse_status": "Catalog declares approval-controlled sharing because of other organizations commercial-confidential data; written reuse terms remain required.",
+      "file_level_evidence": "research/nbsdc_winter_olympics_operational_access_verification_2026_10_04.json",
+      "claim_boundary": "Credible real-HRS acquisition route and declared channel scope only; not numerical validation and does not close the synchronized full-loop gate."
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
   "gate_impact": "full_loop_external_validation_remains_open",
   "next_action": "Request a de-identified synchronized logger export and written reuse terms from CARB/HyStEP, NIST FTS, NREL/NLR HITRF, JRC GasTeF, FCH2RAIL, or an HRS operator; freeze the protocol and model before inspecting outcomes.",
   "claim_boundary": "This search record does not convert public summaries, simulator examples or component experiments into full-loop validation evidence.",
-  "candidate_count": 18
+  "candidate_count": 19
 }

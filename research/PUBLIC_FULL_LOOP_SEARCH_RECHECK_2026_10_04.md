@@ -38,3 +38,21 @@ description hash, endpoint hashes and full file manifest are retained in
 `nbsdc_hrss_operational_access_verification_2026_10_04.json`; a future request
 must obtain a de-identified export, freeze the protocol/model before opening
 outcomes, and record written permission for derived metrics and publication.
+
+## National Basic Science Data Center — Beijing Winter Olympics HRS
+
+The public [NBSDC CSTR record](https://cstr.cn/16666.11.nbsdc.aI3fJrzX) was
+also resolved to its internal catalogue record and checked through the file
+tree. It lists three XLSX files for transaction/operation data, dispenser
+monitoring and compressor monitoring (10.22 MB total). The downloadable
+description declares vehicle hydrogen maximum pressure/temperature, SOC,
+timestamps and station-side channels, so it is a stronger full-loop acquisition
+lead than an aggregate station report.
+
+The raw-file probes returned an HTTP 200 JSON envelope with application error
+code 403: the data files require a data application. Only the description
+document was downloaded; no raw row was inspected. Endpoint and description
+hashes are retained in
+`nbsdc_winter_olympics_operational_access_verification_2026_10_04.json`.
+This remains an access-request candidate and does not change the full-loop
+validation decision.

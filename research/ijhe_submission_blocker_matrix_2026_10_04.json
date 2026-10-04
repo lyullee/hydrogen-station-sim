@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T13:57:11.530387+00:00",
+  "generated_at": "2026-10-04T14:09:56.045972+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -93,12 +93,12 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "a4ad53cc9991573056034812b0a9c75100e95ea4bd914bec4e17ffdf17998e4d",
+    "audit_sha256": "3cd81722a5bcc66d768aba63b1b381db37455f991e9eb649bdde792066456140",
     "hiad_readiness_sha256": "e028c9a9b71ecbac658a66d1421834025e2708e07383a21f82b413abfe5fdb86",
-    "acquisition_tracker_sha256": "8c974956ea544c331aff4ea0730999ea3345cc0585e2dc8399502d0eb24ca411",
-    "full_loop_search_sha256": "79d18295081f388d541a386d69f9d64e636a59ffb3061d0f7d139d184dda59a2",
+    "acquisition_tracker_sha256": "d922dc23d6e56ccb62adb5e23fc5c332a60c0f8cf34fcba10cd0d84d024c92ca",
+    "full_loop_search_sha256": "bd9a10b52c52217194af7b9e065840c8b78a935f4d5980894966ff1faae41146",
     "candidate_route_count": 26,
-    "public_full_loop_search_candidate_count": 18
+    "public_full_loop_search_candidate_count": 19
   },
   "claim_policy": [
     "Never present a request, metadata page, or public station inventory as raw validation evidence.",
