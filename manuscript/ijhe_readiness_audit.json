@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T05:10:55.446632+00:00",
+  "generated_at": "2026-10-04T05:46:40.210792+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 25,
+    "PASS": 26,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -354,8 +354,8 @@
       "requirement": "At least 15 candidate routes, existing draft request for every route, source URL and explicit non-evidentiary boundary.",
       "observed": {
         "status": "open_data_not_yet_received",
-        "candidate_count": 24,
-        "draft_count": 21,
+        "candidate_count": 25,
+        "draft_count": 22,
         "claim_boundary": "This tracker is a data-acquisition plan. It is not evidence of validation, does not change any IJHE readiness gate, and does not authorize contact or publication."
       }
     },
@@ -1104,6 +1104,42 @@
           "No accident probability, consequence-distance, physics, human-factors or operator-performance claim is made.",
           "Independent coordinator review, blinded holdout scoring and qualified expert rating remain required."
         ]
+      }
+    },
+    {
+      "id": "hiad_action_evidence_integrity",
+      "status": "PASS",
+      "claim": "The public HIAD HRS action fields are summarized into a non-evaluative, traceable action taxonomy for evidence-grounded guidance.",
+      "evidence": "research\\hiad_action_evidence.json",
+      "requirement": "34 HRS cases, source digest, controlled action categories, no copied raw prose and explicit exclusion from the SAGA holdout.",
+      "observed": {
+        "case_count": 34,
+        "taxonomy": {
+          "category_patterns_version": "hiad-action-taxonomy-v1",
+          "category_counts": {
+            "shutdown_isolation_depressurization": 22,
+            "detection_alarm_monitoring": 14,
+            "fire_response_cooling": 6,
+            "evacuation_perimeter_access": 6,
+            "emergency_communication_coordination": 17,
+            "inspection_leak_test_repair": 21,
+            "procedure_interlock_training_design": 23,
+            "ventilation_purge": 21
+          },
+          "field_presence_counts": {
+            "emergency_action": 29,
+            "lesson_learnt": 24,
+            "corrective_measures": 25
+          }
+        },
+        "source": {
+          "path": "data\\public_validation\\raw\\hiad_2_2\\HIAD 2.2.xlsx",
+          "sha256": "295772b60a4afe5ef47a00bc314eed48b76c170be00c29952d60e50fedd6f55f",
+          "public_use_note": "HIAD 2.2 workbook states that the database is intended for public use; verify permission before redistributing raw prose.",
+          "raw_text_retained": false,
+          "holdout_use": false
+        },
+        "claim_boundary": "This artifact counts controlled action categories derived from HIAD HRS records. It does not judge whether an action was correct or safe, estimate incident probability, validate physics, or evaluate SAGA effectiveness."
       }
     },
     {
