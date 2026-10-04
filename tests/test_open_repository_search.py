@@ -318,3 +318,22 @@ def test_frozen_boundary_vehicle_diagnostic_retains_negative_screen():
     assert sum(bool(row["screening_pass"]) for row in record["cases"]) == 1
     assert record["aggregate"]["temperature_rmse_c"] > record["screening_limits"]["temperature_rmse_c"]
     assert record["aggregate"]["soc_rmse_percentage_points"] > record["screening_limits"]["soc_final_abs_error_percentage_points"]
+
+
+def test_release_validation_failure_diagnosis_keeps_negative_claim_boundary():
+    record = json.loads(
+        (
+            ROOT
+            / "research/release_validation_failure_diagnosis_2026_10_04.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert record["status"] == "DEVELOPMENT_DIAGNOSTIC_ONLY"
+    assert record["validation_boundary"]["frozen_holdouts_modified"] is False
+    assert record["validation_boundary"]["post_outcome_parameter_fitting"] is False
+    assert record["validation_boundary"]["goal_completion_permitted"] is False
+    assert record["validation_boundary"]["claim_supported"] is False
+    assert record["implementation_review"]["clear_unit_or_initial_condition_bug_found"] is False
+    assert record["frozen_results"]["proust"]["joint_primary_pass_fraction"] == 0.0
+    assert record["frozen_results"]["schefer_2006"]["joint_primary_pass"] is False
+    assert record["frozen_results"]["schefer_2007"]["joint_primary_pass"] is False
+    assert record["development_only_evidence"]["promotion_blocked"] is True

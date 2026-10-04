@@ -2246,5 +2246,15 @@
     "finding": "Supplying the published source_pressure_3 trace as an upstream boundary with frozen vehicle/dispenser parameters still passes only 1/8 already-consumed cases; temperature and SOC aggregate errors remain above screens.",
     "claim_boundary": "This is a boundary sensitivity diagnostic, not independent full-station validation. It uses outcome-known traces and a physics-only 200 C controller limit.",
     "next_action": "Acquire an independent synchronized station/vehicle archive or pre-register a measured-boundary protocol before fitting."
+  },
+  "release_validation_failure_diagnosis_2026_10_04": {
+    "record": "research/release_validation_failure_diagnosis_2026_10_04.json",
+    "decision": "DEVELOPMENT_DIAGNOSTIC_ONLY",
+    "gate_impact": "does_not_clear_release_or_goal_completion_gates",
+    "frozen_holdouts_modified": false,
+    "post_outcome_parameter_fitting": false,
+    "clear_unit_or_initial_condition_bug_found": false,
+    "finding": "Proust local-aperture results remain negative across all three diameters; Schefer 2006 and 2007 retain joint-screen failures. The record separates apparatus-scope limitations from code-defect evidence and blocks promotion of post-hoc restriction fits.",
+    "claim_boundary": "No production model change or validation rescue is claimed. A new prospective apparatus-resolved protocol or independent logger archive is required."
   }
 }

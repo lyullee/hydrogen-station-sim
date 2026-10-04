@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "status": "DEVELOPMENT_DIAGNOSTIC_ONLY",
+  "purpose": "Separate reproducible implementation checks from model-scope limitations in the frozen public release screens.",
+  "decision": "NO_PRODUCTION_MODEL_CHANGE_AND_NO_VALIDATION_RESQUE",
+  "validation_boundary": {
+    "frozen_holdouts_modified": false,
+    "post_outcome_parameter_fitting": false,
+    "goal_completion_permitted": false,
+    "claim_supported": false
+  },
+  "implementation_review": {
+    "proust_path": "src/h2station/proust_release_validation.py",
+    "proust_relation": "CoolProp HEOS hydrogen, measured source pressure/temperature, nominal circular terminal area, fixed discharge coefficient 0.8, ambient downstream pressure 101325 Pa",
+    "proust_scope_disclosed_by_code": [
+      "local terminal aperture relation",
+      "does not resolve 25 L vessel-wall transient",
+      "does not resolve the published 10 m by 10 mm supply-line inventory",
+      "does not resolve valve opening, flame, radiation, dispersion, or station separation"
+    ],
+    "schefer_path": "src/h2station/preslhy_nonadiabatic.py",
+    "schefer_relation": "measured vessel geometry with CoolProp HEOS storage state, gas-wall heat transfer and a resolved aperture discharge relation",
+    "checks_completed": [
+      "pressure and temperature units are converted explicitly to SI before CoolProp calls",
+      "mass-flow units are converted explicitly between g/s and kg/s",
+      "ambient pressure is taken from the frozen trace metadata",
+      "no code path was changed to improve the observed holdout outcomes"
+    ],
+    "clear_unit_or_initial_condition_bug_found": false
+  },
+  "frozen_results": {
+    "proust": {
+      "artifact": "research/proust_release_holdout_result.json",
+      "joint_primary_pass_fraction": 0.0,
+      "series": [
+        {"case_id": "proust-1mm", "nrmse_percent": 16.267508112675205, "median_ape_percent": 25.072593478656874, "predicted_peak_g_s": 30.699908644192057, "measured_peak_g_s": 45.67000544822093},
+        {"case_id": "proust-2mm", "nrmse_percent": 16.012310696868767, "median_ape_percent": 15.845173718452374, "predicted_peak_g_s": 122.79963457676823, "measured_peak_g_s": 91.74566915739935},
+        {"case_id": "proust-3mm", "nrmse_percent": 32.617735120944786, "median_ape_percent": 32.87792472494488, "predicted_peak_g_s": 274.7494191045821, "measured_peak_g_s": 165.36126753294417}
+      ],
+      "interpretation": "The diameter-dependent residual pattern is consistent with the local-aperture-only scope being insufficient for the published apparatus, which also contains a long supply line and valve system. This is a scope limitation to test prospectively, not evidence that the frozen code should be tuned."
+    },
+    "schefer_2006": {
+      "artifact": "research/schefer_2006_holdout_result.json",
+      "joint_primary_pass": false,
+      "nrmse_percent": 5.831534791930556,
+      "median_ape_percent": 22.852219829947433,
+      "half_peak_time_error_percent": 28.294806952826896,
+      "interpretation": "Peak-flow magnitude screens pass, but pointwise error and transient timing do not; the result does not support a validated blowdown claim."
+    },
+    "schefer_2007": {
+      "artifact": "research/schefer_2007_holdout_result.json",
+      "joint_primary_pass": false,
+      "pressure_nrmse_percent": 11.580711004119967,
+      "median_ape_percent": 27.46396061123326,
+      "half_pressure_time_error_percent": 6.511877481513398,
+      "interpretation": "Transient half-time is within screen, but pressure trajectory error remains above the frozen limits; this cannot be promoted as external validation."
+    }
+  },
+  "development_only_evidence": {
+    "artifact": "research/release_network_development.json",
+    "finding": "A fitted upstream restriction can improve the consumed Proust series but transfers poorly to Imamura diameters, indicating apparatus-specific line/valve resistance rather than a universal nozzle correction.",
+    "contamination_disclosed": true,
+    "promotion_blocked": true
+  },
+  "next_valid_step": "Freeze a new prospective apparatus-resolved release protocol with explicit valve and line geometry, or obtain an independent logger archive containing those boundary states. Do not retrofit the production model or reopen the existing holdout after inspecting its outcomes."
+}
