@@ -565,6 +565,27 @@
       "rights": "Written permission must cover masked vignettes, derived statistics, model-comparison metrics and open repository deposition.",
       "next_action": "Project owner reviews research/HRS_INCIDENT_DATA_REQUEST_DRAFT.md and identifies the corresponding author or data custodian before any contact.",
       "claim_boundary": "The published 211-event analysis is incident-context evidence only; no SAGA effectiveness or incident-probability claim changes until the requested records and rights are received and frozen."
+    },
+    {
+      "id": "zbt_hrs_sampling_2026",
+      "draft": "research/ZBT_HRS_DATA_REQUEST_DRAFT.md",
+      "source": "https://doi.org/10.3390/cleantechnol8030091",
+      "candidate_type": "real ZBT multi-bank HRS sampling and dispenser logger archive",
+      "status": "request_draft_ready",
+      "requested_fields": [
+        "common_timestamp",
+        "storage_bank_pressure_and_temperature",
+        "dispenser_pressure_and_delivery_temperature",
+        "mass_flow_or_transferred_mass",
+        "sink_or_vehicle_pressure_and_temperature",
+        "protocol_and_initial_conditions",
+        "bank_selection_and_valve_state",
+        "quality_calibration_metadata"
+      ],
+      "minimum_acceptance": "A de-identified synchronized export with at least eight eligible events or a justified smaller protocol-defined subset, plus channel definitions, calibration data and immutable provenance.",
+      "rights": "Authors or ZBT custodian must confirm written permission for derived metrics, open repository deposition and journal publication; the article states raw data are available on request.",
+      "next_action": "Project owner reviews research/ZBT_HRS_DATA_REQUEST_DRAFT.md and contacts the corresponding author through an approved institutional channel.",
+      "claim_boundary": "The article establishes real multi-bank HRS operating context and a high-value acquisition lead; it is not a full-loop holdout until raw data and reuse terms are received, frozen and scored without tuning."
     }
   ]
 }
