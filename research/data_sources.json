@@ -561,6 +561,8 @@
       "landing_page": "https://doi.org/10.23642/usn.17695082.v1",
       "api_url": "https://api.figshare.com/v2/articles/17695082",
       "doi": "10.23642/usn.17695082.v1",
+      "article_doi": "10.1016/j.ijhydene.2025.03.121",
+      "article_landing_page": "https://doi.org/10.1016/j.ijhydene.2025.03.121",
       "published": "2022-01-25",
       "license": "CC BY 4.0",
       "public_raw_data": true,

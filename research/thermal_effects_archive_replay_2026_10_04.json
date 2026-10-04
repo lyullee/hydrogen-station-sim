@@ -1,0 +1,624 @@
+{
+  "schema_version": 1,
+  "status": "descriptive_public_archive_replay_complete",
+  "source_doi": "10.23642/usn.17695082.v1",
+  "source_landing_page": "https://doi.org/10.23642/usn.17695082.v1",
+  "license": "CC BY 4.0",
+  "raw_directory": "tmp\\thermal_effects_17695082",
+  "file_selection": "All eight public MAT experiments in the source record, ordered by filename.",
+  "release_window_rule": "Use the longest contiguous MFM interval with mass flow >= 0.5 g/s; the threshold is a deterministic instrument-noise boundary, not a fitted event cutoff.",
+  "cases": [
+    {
+      "file": "Exp_00001.mat",
+      "bytes": 87145920,
+      "sha256": "535b0af2beabb1c25b726f55a2d0faeb77ac990c733fc1312bc604c1d4e6bf75",
+      "groups": {
+        "MFM": [
+          "P",
+          "T",
+          "mfr",
+          "time"
+        ],
+        "HF": [
+          "RHF1",
+          "RHF2",
+          "RHF3",
+          "RHF4",
+          "THF1",
+          "THF2",
+          "temp1",
+          "temp2",
+          "time",
+          "timech7"
+        ],
+        "Tank": [
+          "P",
+          "T",
+          "time"
+        ],
+        "Vent": [
+          "ACH",
+          "T",
+          "time",
+          "vfr"
+        ],
+        "TS": [
+          "TT1",
+          "TT2",
+          "TT3",
+          "TT4",
+          "TT5",
+          "TT6",
+          "TT7",
+          "TT8",
+          "TT9",
+          "time",
+          "trig"
+        ]
+      },
+      "mfm_time_end_s": 999.999,
+      "mass_flow_max_g_s": 7.346953275,
+      "active_release_window": {
+        "threshold_g_s": 0.5,
+        "start_s": 5.304,
+        "end_s": 454.416,
+        "sample_count": 449113
+      },
+      "integrated_positive_mass_kg": 1.1934051555190877,
+      "initial_tank_pressure_bar": 702.9622699999993,
+      "initial_tank_temperature_c": 43.94179356250011,
+      "heat_flux_peaks": {
+        "RHF1": 1.6252861695999987,
+        "RHF2": 1.9694987999999995,
+        "RHF3": 0.019523815937629755,
+        "RHF4": 12.011647800000002,
+        "THF1": 0.17208142234729593,
+        "THF2": -0.003925584638122415
+      },
+      "temperature_peaks_c": {
+        "TT1": 201.873779296875,
+        "TT2": 222.625732421875,
+        "TT3": 218.5821533203125,
+        "TT4": 210.0372314453125,
+        "TT5": 20.44677734375,
+        "TT6": 494.7662353515625,
+        "TT7": 770.4925537109375,
+        "TT8": 20.0653076171875,
+        "TT9": 20.3704833984375
+      }
+    },
+    {
+      "file": "Exp_00002.mat",
+      "bytes": 57386217,
+      "sha256": "71edba106de628e04005304ba20536c61228f4d73b57938b56bdc09f8358ec8c",
+      "groups": {
+        "MFM": [
+          "P",
+          "T",
+          "mfr",
+          "time"
+        ],
+        "HF": [
+          "RHF1",
+          "RHF2",
+          "RHF3",
+          "RHF4",
+          "THF1",
+          "THF2",
+          "temp1",
+          "temp2",
+          "time",
+          "timech7"
+        ],
+        "Tank": [
+          "P",
+          "T",
+          "time"
+        ],
+        "Vent": [
+          "ACH",
+          "T",
+          "time",
+          "vfr"
+        ],
+        "TS": [
+          "TT1",
+          "TT2",
+          "TT3",
+          "TT4",
+          "TT5",
+          "TT6",
+          "TT7",
+          "TT8",
+          "TT9",
+          "time",
+          "trig"
+        ]
+      },
+      "mfm_time_end_s": 499.90000000000003,
+      "mass_flow_max_g_s": 7.530761250000003,
+      "active_release_window": {
+        "threshold_g_s": 0.5,
+        "start_s": 0.30000000000000004,
+        "end_s": 82.80000000000001,
+        "sample_count": 826
+      },
+      "integrated_positive_mass_kg": 0.4694393675625002,
+      "initial_tank_pressure_bar": 692.8711250000003,
+      "initial_tank_temperature_c": 34.42871875000003,
+      "heat_flux_peaks": {
+        "RHF1": 1.2625634732000066,
+        "RHF2": 11.899690439999995,
+        "RHF3": 0.38163305681433796,
+        "RHF4": 12.672942059999992,
+        "THF1": 1.5075074410590656,
+        "THF2": -0.035247607649266065
+      },
+      "temperature_peaks_c": {
+        "TT1": 204.8492431640625,
+        "TT2": 221.6339111328125,
+        "TT3": 204.4677734375,
+        "TT4": 190.3533935546875,
+        "TT5": 20.5230712890625,
+        "TT6": 493.3929443359375,
+        "TT7": 271.6827392578125,
+        "TT8": 328.826904296875,
+        "TT9": 160.064697265625
+      }
+    },
+    {
+      "file": "Exp_00003.mat",
+      "bytes": 91100499,
+      "sha256": "1435e5426e5f0439bd7936cf24b9da0fa2af857cb2961849890dcd47e2d2f8ba",
+      "groups": {
+        "MFM": [
+          "P",
+          "T",
+          "mfr",
+          "time"
+        ],
+        "HF": [
+          "RHF1",
+          "RHF2",
+          "RHF3",
+          "RHF4",
+          "THF1",
+          "THF2",
+          "temp1",
+          "temp2",
+          "time",
+          "timech7"
+        ],
+        "Tank": [
+          "P",
+          "T",
+          "time"
+        ],
+        "Vent": [
+          "ACH",
+          "T",
+          "time",
+          "vfr"
+        ]
+      },
+      "mfm_time_end_s": 499.9995,
+      "mass_flow_max_g_s": 4.036367250000006,
+      "active_release_window": {
+        "threshold_g_s": 0.5,
+        "start_s": 0.334,
+        "end_s": 499.9995,
+        "sample_count": 999332
+      },
+      "integrated_positive_mass_kg": 0.7604112580074333,
+      "initial_tank_pressure_bar": 357.118505625,
+      "initial_tank_temperature_c": 42.40801243750002,
+      "heat_flux_peaks": {
+        "RHF1": 0.3132616639000007,
+        "RHF2": 11.508044580000051,
+        "RHF3": 0.30600287616604865,
+        "RHF4": 13.85083020000001,
+        "THF1": 0.6229638425462884,
+        "THF2": 1.653536149601168
+      },
+      "temperature_peaks_c": {}
+    },
+    {
+      "file": "Exp_00004.mat",
+      "bytes": 93199247,
+      "sha256": "a6d1394979677e736677b2250b7d7b2c56fb6ee2b0cc0e2de87e2c9a32cbcfaa",
+      "groups": {
+        "MFM": [
+          "P",
+          "T",
+          "mfr",
+          "time"
+        ],
+        "HF": [
+          "RHF1",
+          "RHF2",
+          "RHF3",
+          "RHF4",
+          "THF1",
+          "THF2",
+          "temp1",
+          "temp2",
+          "time",
+          "timech7"
+        ],
+        "Tank": [
+          "P",
+          "T",
+          "time"
+        ],
+        "Vent": [
+          "ACH",
+          "T",
+          "time",
+          "vfr"
+        ],
+        "TS": [
+          "TT1",
+          "TT2",
+          "TT3",
+          "TT4",
+          "TT5",
+          "TT6",
+          "TT7",
+          "TT8",
+          "TT9",
+          "time",
+          "trig"
+        ]
+      },
+      "mfm_time_end_s": 499.9995,
+      "mass_flow_max_g_s": 7.368066900000004,
+      "active_release_window": {
+        "threshold_g_s": 0.5,
+        "start_s": 0.3005,
+        "end_s": 499.9995,
+        "sample_count": 999399
+      },
+      "integrated_positive_mass_kg": 1.2460467824015955,
+      "initial_tank_pressure_bar": 697.3359449999999,
+      "initial_tank_temperature_c": 45.25643940625001,
+      "heat_flux_peaks": {
+        "RHF1": 0.46924731950000004,
+        "RHF2": 1.6547314199999965,
+        "RHF3": 0.45253262964043023,
+        "RHF4": 11.065337639999974,
+        "THF1": 1.6177416677596421,
+        "THF2": 3.1094523001777175
+      },
+      "temperature_peaks_c": {
+        "TT1": 181.9610595703125,
+        "TT2": 202.178955078125,
+        "TT3": 211.944580078125,
+        "TT4": 203.857421875,
+        "TT5": 47.454833984375,
+        "TT6": 48.2940673828125,
+        "TT7": 119.4000244140625,
+        "TT8": 391.2353515625,
+        "TT9": 240.2496337890625
+      }
+    },
+    {
+      "file": "Exp_00005.mat",
+      "bytes": 83233774,
+      "sha256": "a6b87028127b1cae7d2ea0297f62d6e0183ee93c1834885bed253b82f88e3df3",
+      "groups": {
+        "MFM": [
+          "P",
+          "T",
+          "mfr",
+          "time"
+        ],
+        "HF": [
+          "RHF1",
+          "RHF2",
+          "RHF3",
+          "RHF4",
+          "THF1",
+          "THF2",
+          "temp1",
+          "temp2",
+          "time",
+          "timech7"
+        ],
+        "Tank": [
+          "P",
+          "T",
+          "time"
+        ],
+        "Vent": [
+          "ACH",
+          "T",
+          "time",
+          "vfr"
+        ],
+        "TS": [
+          "TT1",
+          "TT2",
+          "TT3",
+          "TT4",
+          "TT5",
+          "TT6",
+          "TT7",
+          "TT8",
+          "TT9",
+          "time",
+          "trig"
+        ]
+      },
+      "mfm_time_end_s": 499.9995,
+      "mass_flow_max_g_s": 7.252734768749996,
+      "active_release_window": {
+        "threshold_g_s": 0.5,
+        "start_s": 0.3055,
+        "end_s": 499.9995,
+        "sample_count": 999389
+      },
+      "integrated_positive_mass_kg": 1.2125337136761845,
+      "initial_tank_pressure_bar": 689.8958512500012,
+      "initial_tank_temperature_c": 39.005658812499924,
+      "heat_flux_peaks": {
+        "RHF1": 0.46871968539999886,
+        "RHF2": 8.613955020000002,
+        "RHF3": 0.5043486552165253,
+        "RHF4": 0.0,
+        "THF1": 2.2301313434326393,
+        "THF2": 3.4098220259580385
+      },
+      "temperature_peaks_c": {
+        "TT1": 198.2879638671875,
+        "TT2": 217.0562744140625,
+        "TT3": 225.982666015625,
+        "TT4": 230.0262451171875,
+        "TT5": 29.8309326171875,
+        "TT6": 29.8309326171875,
+        "TT7": 113.7542724609375,
+        "TT8": 405.2734375,
+        "TT9": 245.66650390625
+      }
+    },
+    {
+      "file": "Exp_00006.mat",
+      "bytes": 93423140,
+      "sha256": "d98beedf7fbff9d0859b751b2e112428090a60144e4bdf62a35653b469f8782d",
+      "groups": {
+        "MFM": [
+          "P",
+          "T",
+          "mfr",
+          "time"
+        ],
+        "HF": [
+          "RHF1",
+          "RHF2",
+          "RHF3",
+          "RHF4",
+          "THF1",
+          "THF2",
+          "temp1",
+          "temp2",
+          "time",
+          "timech7"
+        ],
+        "Tank": [
+          "P",
+          "T",
+          "time"
+        ],
+        "Vent": [
+          "ACH",
+          "T",
+          "time",
+          "vfr"
+        ],
+        "TS": [
+          "TT1",
+          "TT2",
+          "TT3",
+          "TT4",
+          "TT5",
+          "TT6",
+          "TT7",
+          "TT8",
+          "TT9",
+          "time",
+          "trig"
+        ]
+      },
+      "mfm_time_end_s": 499.9995,
+      "mass_flow_max_g_s": 4.106875331249997,
+      "active_release_window": {
+        "threshold_g_s": 0.5,
+        "start_s": 0.337,
+        "end_s": 499.9995,
+        "sample_count": 999326
+      },
+      "integrated_positive_mass_kg": 0.8240156060250939,
+      "initial_tank_pressure_bar": 356.2095993750004,
+      "initial_tank_temperature_c": 35.62714628125007,
+      "heat_flux_peaks": {
+        "RHF1": 0.2976035436000015,
+        "RHF2": 2.4862156200000007,
+        "RHF3": 0.2285775635166313,
+        "RHF4": 11.239338719999987,
+        "THF1": 0.5296057885537736,
+        "THF2": 2.058183050418902
+      },
+      "temperature_peaks_c": {
+        "TT1": 121.5362548828125,
+        "TT2": 619.964599609375,
+        "TT3": 140.380859375,
+        "TT4": 138.4735107421875,
+        "TT5": 29.2205810546875,
+        "TT6": 29.3731689453125,
+        "TT7": 107.9559326171875,
+        "TT8": 271.453857421875,
+        "TT9": 141.143798828125
+      }
+    },
+    {
+      "file": "Exp_00007.mat",
+      "bytes": 92771285,
+      "sha256": "9fecf52f40a5c90d15d2686944896587953cd31de7547267a2eed900dd2eec8a",
+      "groups": {
+        "MFM": [
+          "P",
+          "T",
+          "mfr",
+          "time"
+        ],
+        "HF": [
+          "RHF1",
+          "RHF2",
+          "RHF3",
+          "RHF4",
+          "THF1",
+          "THF2",
+          "temp1",
+          "temp2",
+          "time",
+          "timech7"
+        ],
+        "Tank": [
+          "P",
+          "T",
+          "time"
+        ],
+        "Vent": [
+          "ACH",
+          "T",
+          "time",
+          "vfr"
+        ],
+        "TS": [
+          "TT1",
+          "TT2",
+          "TT3",
+          "TT4",
+          "TT5",
+          "TT6",
+          "TT7",
+          "TT8",
+          "TT9",
+          "time",
+          "trig"
+        ]
+      },
+      "mfm_time_end_s": 499.9995,
+      "mass_flow_max_g_s": 4.048125243749999,
+      "active_release_window": {
+        "threshold_g_s": 0.5,
+        "start_s": 0.338,
+        "end_s": 499.9995,
+        "sample_count": 999324
+      },
+      "integrated_positive_mass_kg": 0.762252917485022,
+      "initial_tank_pressure_bar": 359.54945875000027,
+      "initial_tank_temperature_c": 37.67812150000006,
+      "heat_flux_peaks": {
+        "RHF1": 0.3081211495000012,
+        "RHF2": 0.21838242,
+        "RHF3": 0.2056380992326423,
+        "RHF4": 3.8859285000000012,
+        "THF1": 0.5645881304286964,
+        "THF2": 2.298922228095024
+      },
+      "temperature_peaks_c": {
+        "TT1": 125.732421875,
+        "TT2": 640.4876708984375,
+        "TT3": 142.822265625,
+        "TT4": 144.195556640625,
+        "TT5": 34.5611572265625,
+        "TT6": 32.8826904296875,
+        "TT7": 120.0103759765625,
+        "TT8": 281.06689453125,
+        "TT9": 149.1546630859375
+      }
+    },
+    {
+      "file": "Exp_00008.mat",
+      "bytes": 95007689,
+      "sha256": "7f66421f5f0f01cd9fc907dc61c522db67ba84496fa01e4edde71cff48ae000b",
+      "groups": {
+        "MFM": [
+          "P",
+          "T",
+          "mfr",
+          "time"
+        ],
+        "HF": [
+          "RHF1",
+          "RHF2",
+          "RHF3",
+          "RHF4",
+          "THF1",
+          "THF2",
+          "temp1",
+          "temp2",
+          "time",
+          "timech7"
+        ],
+        "Tank": [
+          "P",
+          "T",
+          "time"
+        ],
+        "Vent": [
+          "ACH",
+          "T",
+          "time",
+          "vfr"
+        ],
+        "TS": [
+          "TT1",
+          "TT2",
+          "TT3",
+          "TT4",
+          "TT5",
+          "TT6",
+          "TT7",
+          "TT8",
+          "TT9",
+          "time",
+          "trig"
+        ]
+      },
+      "mfm_time_end_s": 499.9995,
+      "mass_flow_max_g_s": 13.003847137500008,
+      "active_release_window": {
+        "threshold_g_s": 0.5,
+        "start_s": 0.316,
+        "end_s": 265.6065,
+        "sample_count": 530582
+      },
+      "integrated_positive_mass_kg": 0.8630427212885204,
+      "initial_tank_pressure_bar": 354.9570218749997,
+      "initial_tank_temperature_c": 33.324996343749945,
+      "heat_flux_peaks": {
+        "RHF1": 0.6282920588000005,
+        "RHF2": 7.49405358000001,
+        "RHF3": 0.9575762944381229,
+        "RHF4": 57.29192507999995,
+        "THF1": 2.6303963405391015,
+        "THF2": 5.247067680781448
+      },
+      "temperature_peaks_c": {
+        "TT1": 262.14599609375,
+        "TT2": 1058.65478515625,
+        "TT3": 324.249267578125,
+        "TT4": 314.178466796875,
+        "TT5": 26.7791748046875,
+        "TT6": 28.1524658203125,
+        "TT7": 226.3641357421875,
+        "TT8": 330.8868408203125,
+        "TT9": 533.9813232421875
+      }
+    }
+  ],
+  "case_count": 8,
+  "claim_boundary": "Descriptive consequence-data replay only. No case-specific fitting, CFD calibration, station full-loop validation, controller validation, LLM effectiveness claim or legal separation-distance claim is made.",
+  "raw_redistribution": "Raw MAT files remain external to the repository; only hashes and derived summaries are committed."
+}

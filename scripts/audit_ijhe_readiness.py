@@ -746,6 +746,41 @@ def audit(root: Path) -> dict[str, object]:
         } if thermal_protocol else "missing; thermal-effects protocol has not been frozen",
     ))
 
+    thermal_replay_path = root / "research/thermal_effects_archive_replay_2026_10_04.json"
+    thermal_replay = _json(thermal_replay_path)
+    thermal_cases = (thermal_replay or {}).get("cases") or []
+    thermal_replay_pass = bool(
+        (thermal_replay or {}).get("status") == "descriptive_public_archive_replay_complete"
+        and (thermal_replay or {}).get("source_doi") == "10.23642/usn.17695082.v1"
+        and (thermal_replay or {}).get("license") == "CC BY 4.0"
+        and (thermal_replay or {}).get("case_count") == 8
+        and len(thermal_cases) == 8
+        and [case.get("file") for case in thermal_cases] == expected_thermal_files
+        and all(
+            case.get("bytes", 0) > 0
+            and len(case.get("sha256", "")) == 64
+            and case.get("active_release_window", {}).get("threshold_g_s") == 0.5
+            for case in thermal_cases
+        )
+        and "descriptive" in ((thermal_replay or {}).get("claim_boundary") or "").lower()
+    )
+    gates.append(_gate(
+        "thermal_effects_public_archive_replay",
+        "PASS" if thermal_replay_pass else ("FAIL" if thermal_replay else "PENDING"),
+        "All eight public ignited-release MAT files were parsed under one deterministic descriptive extraction rule.",
+        str(thermal_replay_path.relative_to(root)),
+        "Eight source files, non-empty SHA-256-linked artifacts, consistent mass-flow release-window rule and an explicit non-validation claim boundary.",
+        {
+            "case_count": len(thermal_cases),
+            "files": [case.get("file") for case in thermal_cases],
+            "release_window_threshold_g_s": (
+                thermal_cases[0].get("active_release_window", {}).get("threshold_g_s")
+                if thermal_cases else None
+            ),
+            "claim_boundary": (thermal_replay or {}).get("claim_boundary"),
+        } if thermal_replay else "missing; thermal-effects archive replay has not been run",
+    ))
+
     khk_public_path = root / "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json"
     khk_public = _json(khk_public_path)
     khk_source = (khk_public or {}).get("source_page") or {}
