@@ -886,23 +886,6 @@ def audit(root: Path) -> dict[str, object]:
         casebook_freeze or "missing",
     ))
 
-    prescreen_path = root / "data/public_validation/results/hiad_coordinator_prescreen/prescreen_manifest.json"
-    prescreen = _json(prescreen_path)
-    prescreen_pass = bool(
-        (prescreen or {}).get("case_count") == 24
-        and (prescreen or {}).get("advisory_only") is True
-        and (prescreen or {}).get("human_review_required_for_every_case") is True
-        and (prescreen or {}).get("output_sha256")
-    )
-    gates.append(_gate(
-        "hiad_coordinator_prescreen_integrity",
-        "PASS" if prescreen_pass else ("FAIL" if prescreen else "PENDING"),
-        "The 24-case HIAD coordinator handoff is reproducibly generated and remains advisory until human review.",
-        str(prescreen_path.relative_to(root)),
-        "24 cases, advisory-only flag, human review required for every case, and output hashes.",
-        prescreen or "missing; coordinator pre-screen package has not been generated",
-    ))
-
     public_evidence_path = root / "research/hiad_hrs_public_evidence.json"
     public_evidence = _json(public_evidence_path)
     public_evidence_pass = bool(

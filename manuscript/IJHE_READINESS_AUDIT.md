@@ -34,7 +34,6 @@
 | `hiad_protocol_integrity` | **PASS** | The incident decision-support study protocol was hash-locked before outcomes. | `research\hiad_study_protocol_manifest.json` |
 | `institutional_ethics_determination` | **PENDING** | The applicable institution has recorded the human-participant determination. | `research\hiad_study_protocol_manifest.json` |
 | `hiad_casebook_frozen` | **PENDING** | All 24 holdout incident vignettes passed coordinator leakage review and were frozen. | `data\public_validation\results\hiad_casebook_frozen\casebook_freeze_manifest.json` |
-| `hiad_coordinator_prescreen_integrity` | **PASS** | The 24-case HIAD coordinator handoff is reproducibly generated and remains advisory until human review. | `data\public_validation\results\hiad_coordinator_prescreen\prescreen_manifest.json` |
 | `hiad_public_evidence_inventory` | **PASS** | The public HIAD 2.2 HRS incident subset is hash-linked and reproducibly summarized without leaking blinded responses. | `research\hiad_hrs_public_evidence.json` |
 | `hiad_holdout_collection` | **PENDING** | All masked alarm/direct/RAG holdout responses were collected under the frozen protocol. | `data\public_validation\results\hiad_decision\collection_manifest.json` |
 | `independent_expert_review_complete` | **PENDING** | Three qualified independent reviewers completed the locked 24-event evaluation. | `data\public_validation\results\hiad_decision\analysis\expert_review_analysis.json` |

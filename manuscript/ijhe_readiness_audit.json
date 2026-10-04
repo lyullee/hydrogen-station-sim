@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T02:11:05.013963+00:00",
+  "generated_at": "2026-10-04T02:12:16.189288+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 26,
+    "PASS": 25,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -1373,32 +1373,6 @@
       "evidence": "data\\public_validation\\results\\hiad_casebook_frozen\\casebook_freeze_manifest.json",
       "requirement": "24 retained and approved cases with source/submitted/frozen hashes.",
       "observed": "missing"
-    },
-    {
-      "id": "hiad_coordinator_prescreen_integrity",
-      "status": "PASS",
-      "claim": "The 24-case HIAD coordinator handoff is reproducibly generated and remains advisory until human review.",
-      "evidence": "data\\public_validation\\results\\hiad_coordinator_prescreen\\prescreen_manifest.json",
-      "requirement": "24 cases, advisory-only flag, human review required for every case, and output hashes.",
-      "observed": {
-        "schema_version": 1,
-        "generated_at": "2026-10-04T02:09:07.216941+00:00",
-        "casebook": "casebook_for_approval.json",
-        "casebook_sha256": "3d02c589a67b7e1af112ffb5d58712ec366d66cddd13536ddabf5c0fd6bb226e",
-        "case_count": 24,
-        "advisory_only": true,
-        "human_review_required_for_every_case": true,
-        "min_overlap_tokens": 4,
-        "tier_counts": {
-          "HIGH": 16,
-          "MEDIUM": 6,
-          "LOW": 2
-        },
-        "output_sha256": {
-          "coordinator_review.csv": "eeafe11950d7f4ae1dfb91bf54f4cc35696e272638aa5ea66886661bbbcc2b14",
-          "coordinator_review.html": "36e4ff5c73ec5f0ea3077388101ef99815be1351f9fdc90108e23f2bd4b5a614"
-        }
-      }
     },
     {
       "id": "hiad_public_evidence_inventory",
