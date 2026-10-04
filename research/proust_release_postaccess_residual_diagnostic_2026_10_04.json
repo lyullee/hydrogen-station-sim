@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "evidence_role": "post_access_exploratory_diagnostic",
+  "source": "data/public_validation/derived/proust_90mpa_release.csv",
+  "protocol": "research/proust_release_holdout_protocol.json",
+  "model": {
+    "locked_discharge_coefficient": 0.8,
+    "implementation": "src/h2station/preslhy_nonadiabatic.py",
+    "interpretation": "The frozen primary result is unchanged; this diagnostic only quantifies residual structure after the result was already observed."
+  },
+  "observed_primary_result": {
+    "series": 3,
+    "joint_primary_passes": 0,
+    "joint_primary_pass_fraction": 0.0,
+    "claim_supported": false
+  },
+  "inferred_local_discharge_coefficient": [
+    {
+      "case_id": "proust-1mm",
+      "nominal_diameter_mm": 1.0,
+      "point_count": 13,
+      "median": 1.0677001075329087,
+      "mean": 1.0845156031249588,
+      "range": [1.018342514930015, 1.19010140329811]
+    },
+    {
+      "case_id": "proust-2mm",
+      "nominal_diameter_mm": 2.0,
+      "point_count": 10,
+      "median": 0.6947686771445076,
+      "mean": 0.6894463669321802,
+      "range": [0.5976934343402758, 0.758841951407477]
+    },
+    {
+      "case_id": "proust-3mm",
+      "nominal_diameter_mm": 3.0,
+      "point_count": 12,
+      "median": 0.6210990408533391,
+      "mean": 0.5851190729738275,
+      "range": [0.48148969507375056, 0.6597745149231544]
+    }
+  ],
+  "interpretation": [
+    "The fixed global coefficient 0.8 underpredicts the 1 mm series and overpredicts the 2 mm and 3 mm series.",
+    "The 1 mm inferred values above one are physically incompatible with treating the published nominal aperture as a calibrated effective orifice, so they must not be used as a fitted correction.",
+    "Diameter-specific fitting would use the same holdout outcomes and is therefore prohibited for the primary claim.",
+    "The residual pattern is evidence that terminal aperture geometry, supply-line losses, valve opening and/or measurement interpretation must be represented before a transferable high-pressure release claim can be made."
+  ],
+  "gate_impact": "no_change_proust_gate_remains_failed",
+  "claim_boundary": "This post-access diagnostic does not establish a new validation result, does not fit parameters, and does not validate a station fueling loop, vessel transient, flame, radiation, dispersion or emergency response."
+}

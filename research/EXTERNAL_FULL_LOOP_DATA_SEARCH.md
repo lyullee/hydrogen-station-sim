@@ -982,3 +982,16 @@ meets the frozen eligibility rule for an untouched station-to-vehicle
 pressure/temperature/mass-flow holdout. The detailed record is
 `research/hrs_public_data_recheck_2026_10_04.json`; the independent full-loop
 gate therefore remains open.
+
+## 2026-10-04 Proust residual-structure diagnostic
+
+The frozen Proust 90 MPa local-release result remains negative (0/3 joint
+series screens). A post-access diagnostic shows that the fixed global discharge
+coefficient of 0.8 underpredicts the nominal 1 mm series while overpredicting
+the 2 mm and 3 mm series. The corresponding median local coefficients are
+approximately 1.07, 0.69 and 0.62. This pattern is consistent with unresolved
+effective aperture, valve-opening and supply-line-loss effects, but it is not a
+license to fit diameter-specific coefficients to the holdout. The diagnostic is
+stored in
+`research/proust_release_postaccess_residual_diagnostic_2026_10_04.json` and
+does not change the failed gate.
