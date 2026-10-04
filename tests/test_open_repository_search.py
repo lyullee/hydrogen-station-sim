@@ -50,3 +50,15 @@ def test_external_search_mirror_contains_cal_state_la_recheck():
         "HIGH_VALUE_REAL_HRS_CANDIDATES_NO_PUBLIC_RAW_LOGGER_FOUND"
     )
     assert item["sources"][1]["full_loop_holdout_eligible"] is False
+
+
+def test_external_search_mirror_contains_preslhy_e3_5_recheck():
+    mirror = json.loads(
+        (ROOT / "research/external_full_loop_data_search.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    item = mirror["preslhy_e3_5_public_data_recheck_2026_10_04"]
+    assert item["decision"] == "PUBLIC_RAW_CONSEQUENCE_CANDIDATE_METADATA_VERIFIED"
+    assert item["archive_not_vendored"] is True
+    assert item["archive_size_bytes"] == 11341115392

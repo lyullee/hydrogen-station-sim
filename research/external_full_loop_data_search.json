@@ -1908,5 +1908,20 @@
       "freeze_rule": "Hash and quarantine any received files; freeze the model commit, inclusion criteria and scoring before reading numerical outcomes."
     },
     "claim_boundary": "The Cal State LA material proves access to credible real-station provenance and a detailed event-level schema, but it does not by itself validate this digital twin. Do not claim IJHE-level independent full-loop validation until a raw synchronized holdout and reuse terms are obtained and the frozen protocol passes."
+  },
+  "preslhy_e3_5_public_data_recheck_2026_10_04": {
+    "record": "research/preslhy_e3_5_public_data_recheck_2026_10_04.json",
+    "decision": "PUBLIC_RAW_CONSEQUENCE_CANDIDATE_METADATA_VERIFIED",
+    "gate_impact": "independent_full_loop_gate_remains_open",
+    "doi": "10.35097/1481",
+    "landing_page": "https://doi.org/10.35097/1481",
+    "repository_page": "https://radar.kit.edu/radar/en/dataset/nWczysTWjmuzgFKm",
+    "archive_url": "https://radar.kit.edu/radar-backend/archives/nWczysTWjmuzgFKm/versions/1/content",
+    "license": "CC BY-SA 4.0",
+    "archive_size_bytes": 11341115392,
+    "archive_md5": "aa89132abb34eff9b2b4ce40a6e2975f",
+    "scope": "Independent liquid-hydrogen release, dispersion, detector and incident-replay evidence; not gaseous station-to-vehicle full-loop validation.",
+    "archive_not_vendored": true,
+    "claim_boundary": "Metadata and archive access are verified, but no numerical outcomes were read and the primary full-loop validation gate remains open."
   }
 }

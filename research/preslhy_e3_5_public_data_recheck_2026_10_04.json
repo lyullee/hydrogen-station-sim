@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "record_id": "preslhy_e3_5_public_data_recheck_2026_10_04",
+  "reviewed_at": "2026-10-04",
+  "decision": "PUBLIC_RAW_CONSEQUENCE_CANDIDATE_METADATA_VERIFIED",
+  "gate_impact": "independent_full_loop_gate_remains_open",
+  "source": {
+    "title": "Fuel Cells and Hydrogen Joint Undertaking (FCH JU); Summary of experiment series E3.5",
+    "doi": "10.35097/1481",
+    "alternate_doi": "10.5445/IR/1000136281",
+    "landing_page": "https://doi.org/10.35097/1481",
+    "repository_page": "https://radar.kit.edu/radar/en/dataset/nWczysTWjmuzgFKm",
+    "publisher": "Karlsruhe Institute of Technology",
+    "created": "2020",
+    "issued": "2023",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode",
+    "archive_url": "https://radar.kit.edu/radar-backend/archives/nWczysTWjmuzgFKm/versions/1/content",
+    "archive_format": "application/x-tar",
+    "archive_size_bytes": 11341115392,
+    "archive_md5": "aa89132abb34eff9b2b4ce40a6e2975f"
+  },
+  "metadata_verification": {
+    "datacite_api": "https://api.datacite.org/dois/10.35097/1481",
+    "api_status": 200,
+    "metadata_fields_confirmed": [
+      "title",
+      "publisher",
+      "publication year",
+      "CC BY-SA 4.0 rights",
+      "11.3 GB archive size",
+      "application/x-tar format",
+      "technical description"
+    ],
+    "http_range_probe": {
+      "status": 206,
+      "content_range": "bytes 0-1023/11341115392",
+      "content_type": "application/x-tar; charset=UTF-8",
+      "note": "Only archive metadata and the first tar headers were probed; the 11.3 GB archive was not downloaded."
+    },
+    "archive_not_vendored": true,
+    "numerical_outcomes_read_before_protocol_freeze": false
+  },
+  "reported_experiment_scope": {
+    "experiment_count": 25,
+    "release_nozzles_mm": [
+      6,
+      12,
+      25.4
+    ],
+    "indicated_tanker_pressures_barg": [
+      1,
+      5
+    ],
+    "measured_channels": [
+      "near-field thermocouples",
+      "far-field thermocouples",
+      "pipe pressure",
+      "tank pressure",
+      "mass flow",
+      "H2 concentration",
+      "H2 PPM",
+      "O2 depletion",
+      "near/far weather and wind",
+      "humidity"
+    ],
+    "video_available": true,
+    "reported_common_time_base": true,
+    "physical_scope": "elevated liquid-hydrogen spill/release, rainout and dispersion at the HSE Science and Research Centre Frith Valley site"
+  },
+  "eligibility_assessment": {
+    "eligible_for": [
+      "independent liquid-hydrogen release source characterization",
+      "dispersion and detector-logic checks",
+      "thermal/concentration visualization and incident replay"
+    ],
+    "not_eligible_for": [
+      "gaseous high-pressure HRS station-to-vehicle full-loop validation",
+      "cascade/compressor/precooler/dispenser controller validation",
+      "SAE J2601 vehicle-fill validation"
+    ],
+    "exclusion_reason": "The dataset uses liquid hydrogen release geometry and pressures outside the gaseous HRS fueling-loop domain and does not provide vehicle fill, cascade, compressor, precooler or dispenser-controller traces."
+  },
+  "reproducible_next_step": {
+    "protocol_requirement": "Freeze the liquid-release model, inclusion criteria, channel mapping, unit conversions and primary metrics before opening numerical files.",
+    "file_requirement": "Download only a documented subset under data/public_validation/raw, retain the archive MD5, record the selected member-file hashes and preserve the CC BY-SA attribution.",
+    "claim_boundary": "Do not promote this record to the full-loop gate or report it as validation of the HRS controller."
+  },
+  "claim_boundary": "This recheck verifies that an independent public raw-data archive exists for liquid-hydrogen consequence and detector research. It does not close the independent gaseous station-to-vehicle validation gate and does not permit IJHE-level readiness claims by itself."
+}

@@ -936,3 +936,25 @@ sources support a controlled-access request, but they do not close the
 independent full-loop validation gate. Use
 [`CALSTATE_DATA_REQUEST_DRAFT.md`](CALSTATE_DATA_REQUEST_DRAFT.md), and hash and
 quarantine any approved export before reading outcomes or scoring the model.
+
+## 2026-10-04 PRESLHY E3.5 RADAR/KIT metadata recheck
+
+The RADAR/KIT record for the PRESLHY E3.5 liquid-hydrogen release experiments
+was rechecked through the [DataCite metadata API](https://api.datacite.org/dois/10.35097/1481)
+and the [RADAR landing page](https://radar.kit.edu/radar/en/dataset/nWczysTWjmuzgFKm).
+The record is CC BY-SA 4.0, describes 25 elevated releases through 6, 12 and
+25.4 mm nozzles at indicated tanker pressures of 1 or 5 barg, and exposes an
+11.3 GB `application/x-tar` archive with a published MD5. The archive endpoint
+also returned a metadata-only HTTP range response; the large archive was not
+downloaded or mined for outcomes.
+
+The record describes pressure, tank pressure, mass flow, near/far thermal,
+hydrogen concentration, oxygen depletion, weather and video channels. It is a
+strong independent raw-data candidate for liquid-release source,
+dispersion/detector and incident-replay checks. Its phase, release geometry and
+pressure domain do not match the gaseous station-to-vehicle loop, and it has no
+vehicle-fill, cascade, compressor, precooler or dispenser-controller traces.
+Therefore it remains consequence-only evidence and does not close the primary
+full-loop gate. The exact metadata recheck, range-probe evidence and claim
+boundary are frozen in
+[`preslhy_e3_5_public_data_recheck_2026_10_04.json`](preslhy_e3_5_public_data_recheck_2026_10_04.json).
