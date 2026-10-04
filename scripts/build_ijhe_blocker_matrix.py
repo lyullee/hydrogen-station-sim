@@ -72,8 +72,11 @@ def build(root: Path) -> dict[str, Any]:
             },
             "real_station_candidate": {
                 "status": "ACCESS_REQUEST_ONLY",
-                "evidence": "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
-                "claim_boundary": "Pucheng HRS description and file inventory are verified; raw workbooks remain application-controlled and cannot be used as validation evidence yet.",
+                "evidence": [
+                    "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
+                    "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json",
+                ],
+                "claim_boundary": "NBSDC HRS descriptions and file inventories are verified; raw workbooks remain application-controlled and cannot be used as validation evidence yet.",
             },
         },
         "blocking_matrix": [
@@ -87,6 +90,7 @@ def build(root: Path) -> dict[str, Any]:
                     "research/public_full_loop_search_recheck_2026_10_04.json",
                     "research/public_operational_benchmark_recheck_2026_10_05.json",
                     "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
+                    "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json",
                 ],
                 "unblock_criterion": "Obtain a clean, rights-cleared, pre-access frozen external dataset with synchronized station pressure/temperature/mass-flow, protocol/controller, dispenser/nozzle, and vehicle/receptacle channels; resolve the source-boundary/topology ambiguity; then score >=8 cases with >=80% screen pass fraction.",
                 "next_action": "Submit the prepared NBSDC Pucheng request and other custodian requests through an approved institutional channel; require source pressure/temperature, bank topology and valve-state metadata; do not treat request approval or metadata as validation.",

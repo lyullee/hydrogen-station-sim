@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T18:03:04.490335+00:00",
+  "generated_at": "2026-10-04T18:09:13.443501+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 42,
+    "PASS": 43,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -446,6 +446,24 @@
         "access_result": "REDIRECTED_TO_SIGN_IN",
         "files_retrieved": 0,
         "full_loop_station_vehicle_holdout_eligible": false
+      }
+    },
+    {
+      "id": "nbsdc_current_access_recheck_integrity",
+      "status": "PASS",
+      "claim": "The current NBSDC HRS operational archive metadata and raw-file access boundary are reproducibly recorded without treating gated files as validation data.",
+      "evidence": "research\\nbsdc_winter_olympics_access_recheck_2026_10_05.json",
+      "requirement": "CSTR, approval-required sharing range, three-file inventory, three application-required probes, false holdout eligibility and claim boundary.",
+      "observed": {
+        "cstr": "CSTR:16666.11.nbsdc.aI3fJrzX",
+        "share_range": "审批后共享",
+        "file_count": 3,
+        "raw_probe_codes": [
+          403,
+          403,
+          403
+        ],
+        "full_loop_public_holdout": false
       }
     },
     {

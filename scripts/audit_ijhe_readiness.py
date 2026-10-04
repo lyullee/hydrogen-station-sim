@@ -384,6 +384,37 @@ def audit(root: Path) -> dict[str, object]:
         } if kgs_access else "missing",
     ))
 
+    nbsdc_recheck_path = root / "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json"
+    nbsdc_recheck = _json(nbsdc_recheck_path)
+    nbsdc_source = (nbsdc_recheck or {}).get("source") or {}
+    nbsdc_decision = (nbsdc_recheck or {}).get("eligibility_decision") or {}
+    nbsdc_probes = ((nbsdc_recheck or {}).get("api_evidence") or {}).get("raw_file_probes") or []
+    nbsdc_recheck_pass = bool(
+        (nbsdc_recheck or {}).get("schema_version") == 1
+        and nbsdc_source.get("cstr") == "CSTR:16666.11.nbsdc.aI3fJrzX"
+        and nbsdc_source.get("share_range") == "审批后共享"
+        and len((nbsdc_recheck or {}).get("public_file_inventory") or []) == 3
+        and len(nbsdc_probes) == 3
+        and all((probe.get("response") or {}).get("code") == 403 for probe in nbsdc_probes)
+        and nbsdc_decision.get("full_loop_public_holdout") is False
+        and nbsdc_decision.get("high_value_request_candidate") is True
+        and (nbsdc_recheck or {}).get("claim_boundary")
+    )
+    gates.append(_gate(
+        "nbsdc_current_access_recheck_integrity",
+        "PASS" if nbsdc_recheck_pass else ("FAIL" if nbsdc_recheck else "PENDING"),
+        "The current NBSDC HRS operational archive metadata and raw-file access boundary are reproducibly recorded without treating gated files as validation data.",
+        str(nbsdc_recheck_path.relative_to(root)),
+        "CSTR, approval-required sharing range, three-file inventory, three application-required probes, false holdout eligibility and claim boundary.",
+        {
+            "cstr": nbsdc_source.get("cstr"),
+            "share_range": nbsdc_source.get("share_range"),
+            "file_count": len((nbsdc_recheck or {}).get("public_file_inventory") or []),
+            "raw_probe_codes": [(probe.get("response") or {}).get("code") for probe in nbsdc_probes],
+            "full_loop_public_holdout": nbsdc_decision.get("full_loop_public_holdout"),
+        } if nbsdc_recheck else "missing",
+    ))
+
     jetfire_path = root / "research/carboni_2022_jetfire_supplement_data_boundary_2026_10_05.json"
     jetfire = _json(jetfire_path)
     jetfire_source = (jetfire or {}).get("source") or {}

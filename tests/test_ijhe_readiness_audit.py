@@ -37,6 +37,12 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert kgs_access["reported_real_hrs_scenarios"] == 6
     assert kgs_access["access_result"] == "REDIRECTED_TO_SIGN_IN"
     assert kgs_access["full_loop_station_vehicle_holdout_eligible"] is False
+    assert gates["nbsdc_current_access_recheck_integrity"]["status"] == "PASS"
+    nbsdc = gates["nbsdc_current_access_recheck_integrity"]["observed"]
+    assert nbsdc["cstr"] == "CSTR:16666.11.nbsdc.aI3fJrzX"
+    assert nbsdc["file_count"] == 3
+    assert nbsdc["raw_probe_codes"] == [403, 403, 403]
+    assert nbsdc["full_loop_public_holdout"] is False
     assert gates["jetfire_supplement_rights_boundary_integrity"]["status"] == "PASS"
     jetfire = gates["jetfire_supplement_rights_boundary_integrity"]["observed"]
     assert jetfire["reported_test_count"] == 17

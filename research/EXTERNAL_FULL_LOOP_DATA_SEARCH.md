@@ -1271,3 +1271,21 @@ fitting. The exclusion is recorded alongside the five-candidate recheck in
 ## 2026-10-05 Ramea capacity archive recovered
 
 A file-level inspection located the public [Ramea hydrogen-station capacity repository](https://github.com/kramea/h2_station_capacity_data), associated with [DOI 10.1016/j.ijhydene.2019.05.053](https://doi.org/10.1016/j.ijhydene.2019.05.053). It contains 2,563 CSV files for 36 California stations from 2018-09-27 through 2018-12-18, with `Time`, `H35`, and `H70` capacity indicators at approximately 30-minute intervals. The repository has no explicit license field and no vehicle/receptacle pressure, temperature, mass-flow or protocol trace. It is therefore recorded as aggregate capacity/demand context only in [`ramea_station_capacity_repository_boundary_2026_10_05.json`](ramea_station_capacity_repository_boundary_2026_10_05.json); the independent full-loop validation gate remains open.
+
+## 2026-10-05 NBSDC Winter Olympics HRS access recheck
+
+The National Basic Science Data Center (NBSDC) catalog was rechecked through
+its public metadata and file-tree APIs for CSTR
+`16666.11.nbsdc.aI3fJrzX`. The catalog still exposes three operational
+workbooks—transaction data, dispenser/nozzle data and compressor data—with a
+declared approval-required sharing range. Direct probes of all three workbook
+IDs returned the portal's application-required response; no raw row was
+inspected. The current response bodies, file names, sizes and hashes are
+recorded in
+[`research/nbsdc_winter_olympics_access_recheck_2026_10_05.json`](nbsdc_winter_olympics_access_recheck_2026_10_05.json).
+
+This is a stronger, current acquisition lead because the file inventory and
+access boundary are independently reproducible, but it is not an open
+validation holdout. The full-loop gate stays closed until the custodian grants
+access, provides the channel dictionary and time-base/calibration metadata,
+and confirms reuse terms for derived results and journal publication.

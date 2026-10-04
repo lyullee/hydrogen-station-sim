@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T17:20:28.861534+00:00",
+  "generated_at": "2026-10-04T18:10:16.451631+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -16,7 +16,7 @@
     "interpretation": "A bounded manuscript may be drafted around model-level and qualitative evidence, but the validated full-station digital-twin objective cannot be declared complete."
   },
   "gate_counts": {
-    "PASS": 38,
+    "PASS": 43,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -38,8 +38,11 @@
     },
     "real_station_candidate": {
       "status": "ACCESS_REQUEST_ONLY",
-      "evidence": "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
-      "claim_boundary": "Pucheng HRS description and file inventory are verified; raw workbooks remain application-controlled and cannot be used as validation evidence yet."
+      "evidence": [
+        "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
+        "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json"
+      ],
+      "claim_boundary": "NBSDC HRS descriptions and file inventories are verified; raw workbooks remain application-controlled and cannot be used as validation evidence yet."
     }
   },
   "blocking_matrix": [
@@ -52,7 +55,8 @@
         "research/mc_default_source_boundary_identifiability_2026_10_04.json",
         "research/public_full_loop_search_recheck_2026_10_04.json",
         "research/public_operational_benchmark_recheck_2026_10_05.json",
-        "research/nbsdc_hrss_operational_access_verification_2026_10_04.json"
+        "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
+        "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json"
       ],
       "unblock_criterion": "Obtain a clean, rights-cleared, pre-access frozen external dataset with synchronized station pressure/temperature/mass-flow, protocol/controller, dispenser/nozzle, and vehicle/receptacle channels; resolve the source-boundary/topology ambiguity; then score >=8 cases with >=80% screen pass fraction.",
       "next_action": "Submit the prepared NBSDC Pucheng request and other custodian requests through an approved institutional channel; require source pressure/temperature, bank topology and valve-state metadata; do not treat request approval or metadata as validation."
@@ -95,9 +99,9 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "4b9019faa34a4174c44eecb8deffdf8059fc83fdcd4f785c0fb65105bb9f3f6c",
+    "audit_sha256": "37c879f853979d665497bf9102dd0ac695108384e39856f50100cc7665db8310",
     "hiad_readiness_sha256": "e028c9a9b71ecbac658a66d1421834025e2708e07383a21f82b413abfe5fdb86",
-    "acquisition_tracker_sha256": "58b2f48e1c6496bddddb17602d67dd53bbfb8fbbccbec55a1279317461d402b6",
+    "acquisition_tracker_sha256": "a68bf9882cdfe3418bce0b683c132b7d2c9cb7849372d26345fb3e9371f5eb52",
     "full_loop_search_sha256": "045db9ea958c4fbc24a4af0f9cc7845c749d143f20350fde770131f9fa8c5fad",
     "operational_benchmark_recheck_sha256": "5048ca878a5e41aac5bed26e596e8ea60dbe21ba6c6c3ee6017d4fcc20d90679",
     "candidate_route_count": 26,

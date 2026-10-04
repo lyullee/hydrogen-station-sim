@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "rechecked_at_utc": "2026-10-04T18:08:27.101542+00:00",
+  "status": "ACCESS_REQUEST_ONLY_REAL_HRS_CANDIDATE",
+  "source": {
+    "title": "Operational Data List of Hydrogen Refueling Stations for Beijing Winter Olympics",
+    "cstr": "CSTR:16666.11.nbsdc.aI3fJrzX",
+    "public_landing": "https://cstr.cn/16666.11.nbsdc.aI3fJrzX",
+    "internal_data_id": "64edfc52bb16e0300cd4dd38",
+    "share_range": "审批后共享",
+    "files_declared": "4"
+  },
+  "api_evidence": {
+    "metadata": {
+      "url": "https://www.nbsdc.cn/api/general/searchDataDetail?id=64edfc52bb16e0300cd4dd38",
+      "http_status": 200,
+      "content_type": "application/json;charset=UTF-8",
+      "bytes": 1911,
+      "sha256": "ea2af5cff8c93cd121712612e4b43f22df64d98e0ca4c2c9b079a0a6ecfe47b2"
+    },
+    "file_tree": {
+      "url": "https://www.nbsdc.cn/api/general/v1/getFileTree?dataId=64edfc52bb16e0300cd4dd38&pid=11&pageOffset=0&pageSize=50",
+      "http_status": 200,
+      "content_type": "application/json;charset=UTF-8",
+      "bytes": 760,
+      "sha256": "1433bdb9de45dcb96cd3507d5de006b1b6cd56e4e881617e5c0a70a7dac825e1"
+    },
+    "raw_file_probes": [
+      {
+        "file_id": "641874c7e39c3b0b8e3274a8",
+        "url": "https://www.nbsdc.cn/api/general/v1/checkAndDownloadFile?dataId=64edfc52bb16e0300cd4dd38&id=641874c7e39c3b0b8e3274a8&pid=11&pageOffset=0&pageSize=20",
+        "http_status": 200,
+        "content_type": "application/json;charset=UTF-8",
+        "bytes": 121,
+        "sha256": "3dc242b38b1d0017e43b33734ca67e875ea6280f7a1f23089f721d7662c54ec1",
+        "response": {
+          "code": 403,
+          "message": "目前只支持部分数据集的说明文件下载，数据文件请通过数据申请获取。"
+        }
+      },
+      {
+        "file_id": "641874c7e39c3b0b8e3274a9",
+        "url": "https://www.nbsdc.cn/api/general/v1/checkAndDownloadFile?dataId=64edfc52bb16e0300cd4dd38&id=641874c7e39c3b0b8e3274a9&pid=11&pageOffset=0&pageSize=20",
+        "http_status": 200,
+        "content_type": "application/json;charset=UTF-8",
+        "bytes": 121,
+        "sha256": "3dc242b38b1d0017e43b33734ca67e875ea6280f7a1f23089f721d7662c54ec1",
+        "response": {
+          "code": 403,
+          "message": "目前只支持部分数据集的说明文件下载，数据文件请通过数据申请获取。"
+        }
+      },
+      {
+        "file_id": "641874c7e39c3b0b8e3274aa",
+        "url": "https://www.nbsdc.cn/api/general/v1/checkAndDownloadFile?dataId=64edfc52bb16e0300cd4dd38&id=641874c7e39c3b0b8e3274aa&pid=11&pageOffset=0&pageSize=20",
+        "http_status": 200,
+        "content_type": "application/json;charset=UTF-8",
+        "bytes": 121,
+        "sha256": "3dc242b38b1d0017e43b33734ca67e875ea6280f7a1f23089f721d7662c54ec1",
+        "response": {
+          "code": 403,
+          "message": "目前只支持部分数据集的说明文件下载，数据文件请通过数据申请获取。"
+        }
+      }
+    ]
+  },
+  "public_file_inventory": [
+    {
+      "id": "641874c7e39c3b0b8e3274a8",
+      "file_name": "交易数据.xlsx",
+      "size_bytes": 91765,
+      "is_file": true
+    },
+    {
+      "id": "641874c7e39c3b0b8e3274a9",
+      "file_name": "加氢枪数据.xlsx",
+      "size_bytes": 36807,
+      "is_file": true
+    },
+    {
+      "id": "641874c7e39c3b0b8e3274aa",
+      "file_name": "压缩机数据.xlsx",
+      "size_bytes": 10560560,
+      "is_file": true
+    }
+  ],
+  "eligibility_decision": {
+    "full_loop_public_holdout": false,
+    "reason": "Metadata and the three-workbook file tree are public, but raw download probes return the portal's application-required response; no raw row was inspected.",
+    "high_value_request_candidate": true,
+    "required_before_validation": [
+      "approved data access",
+      "written reuse terms for derived metrics and journal publication",
+      "pre-access protocol and case freeze",
+      "file hashes and channel dictionary",
+      "quality/calibration and station/vehicle time-base confirmation"
+    ]
+  },
+  "claim_boundary": "This recheck proves a current real-HRS access route and declared file inventory only. It is not numerical validation and does not close the full-loop gate."
+}
