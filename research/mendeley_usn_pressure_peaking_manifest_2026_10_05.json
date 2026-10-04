@@ -1,0 +1,353 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-04T21:13:18.053127+00:00",
+  "status": "completed_public_manifest_recheck",
+  "source": {
+    "dataset_id": "pmk59x4hvc",
+    "version": 1,
+    "doi": "10.17632/pmk59x4hvc.1",
+    "title": "Pressure Peaking Phenomena: Unignited hydrogen releases in confined spaces – large-scale experiments",
+    "landing_page": "https://data.mendeley.com/datasets/pmk59x4hvc/1",
+    "snapshot_api": "https://data.mendeley.com/public-api/datasets/pmk59x4hvc/snapshot/1",
+    "license": "CC BY 4.0",
+    "publisher_institution": [
+      "Universitetet i Sorost-Norge"
+    ],
+    "raw_files_not_committed": true
+  },
+  "public_manifest": {
+    "folder_count": 15,
+    "root_description_present": true,
+    "root_description_sha256": "2757f87873de3a20feef797a1973a652a78d00a6c5e04af43add6550dd985478",
+    "case_count_expected": 10,
+    "case_count_with_pressure_and_mass_flow": 10,
+    "all_case_identities_present": true,
+    "case_records": [
+      {
+        "case": 2,
+        "mfr_folder": "HTE242USN00002MFR190621",
+        "mfr_folder_present": true,
+        "channels": {
+          "CH1_01h.TXT": {
+            "id": "d871d905-19d2-49da-8e31-889f53627393",
+            "size": 10000177,
+            "sha256": "d3987883bb6dbcda5a35909b9c237c92177690b8d616143b68e839846224a831",
+            "content_type": "text/plain"
+          },
+          "CH2_02h.TXT": {
+            "id": "e2e62143-dee7-4d17-ab7c-515a39f5eadf",
+            "size": 10000177,
+            "sha256": "60e1faf86d767b1e3c47fdbd28da971699b5fa599711752ffb08cac4475a3514",
+            "content_type": "text/plain"
+          }
+        },
+        "pressure_trace": {
+          "filename": "HTE242USN00002PRESS190621.txt",
+          "id": "cda18724-f0e4-4595-9245-2cd9d880d7df",
+          "size": 313015072,
+          "sha256": "7c121decb3a107cfc381fc7dcd2b4a4ad5db9893ef507f20f0c789abb01fda6e",
+          "content_type": "text/plain"
+        }
+      },
+      {
+        "case": 3,
+        "mfr_folder": "HTE242USN00003MFR190621",
+        "mfr_folder_present": true,
+        "channels": {
+          "CH1_01h.TXT": {
+            "id": "2576159c-59c9-4a27-b226-d802499b3400",
+            "size": 10000177,
+            "sha256": "4a638cedb98a3fe1e3d12225c2382f191f870f7bd51312c83e265d12b4c1b765",
+            "content_type": "text/plain"
+          },
+          "CH2_02h.TXT": {
+            "id": "e960a626-7b6f-408a-a509-29509d5c3efa",
+            "size": 10000177,
+            "sha256": "571cd30a600d8d7aea2e142a1063b0cc38734ac8723e798d3a32d5e341d842ef",
+            "content_type": "text/plain"
+          },
+          "CH3_03h.TXT": {
+            "id": "723ec960-098e-4ca5-8cf2-f9a4076c71a1",
+            "size": 10000177,
+            "sha256": "34e2a815199645d0d55233921d7c59e7d1eeb0eb3317a352143cee125c18a9e1",
+            "content_type": "text/plain"
+          }
+        },
+        "pressure_trace": {
+          "filename": "HTE242USN00003PRESS190621.txt",
+          "id": "a5f7aefe-cd2a-47b4-92ed-ce382669b9b0",
+          "size": 142135455,
+          "sha256": "3434dc330680d31d2ed82178b9406b716682f9ea2eec0989c409f430b8ac9e1d",
+          "content_type": "text/plain"
+        }
+      },
+      {
+        "case": 4,
+        "mfr_folder": "HTE242USN00004MFR190621",
+        "mfr_folder_present": true,
+        "channels": {
+          "CH1_01h.TXT": {
+            "id": "5db22c5d-7fec-49f8-8e55-741169600f3c",
+            "size": 10000177,
+            "sha256": "b60b430e1bc2c680266dfc07a6e6bd1f6c7f0a045ee0e0f41767a5314f7a1bf4",
+            "content_type": "text/plain"
+          },
+          "CH2_02h.TXT": {
+            "id": "d885e64a-c362-4552-befa-c0b17b2a0b58",
+            "size": 10000177,
+            "sha256": "83bdf12b6b2c3c54e9ab6ec59ebe0602abfdf70285b0dbe8a67f2b51128b2921",
+            "content_type": "text/plain"
+          },
+          "CH3_03h.TXT": {
+            "id": "fd94f293-a8f5-4c8e-8c02-6d1499d5c7e1",
+            "size": 10000177,
+            "sha256": "9869c3e717b0bfcff8aab7f146401cd77ef15e9c165ce374df374d66f9b2e3ae",
+            "content_type": "text/plain"
+          }
+        },
+        "pressure_trace": {
+          "filename": "HTE242USN00004PRESS190621.txt",
+          "id": "a7e42ee1-d017-495e-8323-6ce310eaa87a",
+          "size": 251627441,
+          "sha256": "5d28d0af872a822da4768dba24cffeeb62d2713876f4ba3c35ec38ac033f4879",
+          "content_type": "text/plain"
+        }
+      },
+      {
+        "case": 5,
+        "mfr_folder": "HTE242USN00005MFR190621",
+        "mfr_folder_present": true,
+        "channels": {
+          "CH1_01h.TXT": {
+            "id": "98d7be29-57a7-4aae-8fc5-4d95f92bc9cf",
+            "size": 10000177,
+            "sha256": "95b5495c3e970ae34dfcb7cf23eaced299ca2ca2353fabba1169a27feb9c966a",
+            "content_type": "text/plain"
+          },
+          "CH2_02h.TXT": {
+            "id": "0ee8d28f-741f-46f8-93be-07199784ffe4",
+            "size": 10000177,
+            "sha256": "6f651a33ec1a814b05e48b90f1a576da924ec666cef0b20b2e4c33644957cc22",
+            "content_type": "text/plain"
+          },
+          "CH3_03h.TXT": {
+            "id": "ce055005-61e1-42d5-b44b-bdfd0fd71d21",
+            "size": 10000177,
+            "sha256": "d8811e67714a939251d6a2a4adcf847cfe812dbb1873162e190a761bc18fa280",
+            "content_type": "text/plain"
+          }
+        },
+        "pressure_trace": {
+          "filename": "HTE242USN00005PRESS190621.txt",
+          "id": "41a22ad5-2359-486a-8a03-61f7739ee041",
+          "size": 242487310,
+          "sha256": "b704c3199d971069bde1879f437f786bf3e032f7794c5d3410abdc5c840f1d3c",
+          "content_type": "text/plain"
+        }
+      },
+      {
+        "case": 6,
+        "mfr_folder": "HTE242USN00006MFR190621",
+        "mfr_folder_present": true,
+        "channels": {
+          "CH1_01h.TXT": {
+            "id": "1a5d10c9-9f29-4149-90c9-3f08d8a4ee0c",
+            "size": 10000177,
+            "sha256": "df87db2584b1084b338cf4d6e1effdff2bfb7a115c513f885b5ac926a7193eee",
+            "content_type": "text/plain"
+          },
+          "CH2_02h.TXT": {
+            "id": "5c734b92-5455-4a82-bd6f-4ab778be69b7",
+            "size": 10000177,
+            "sha256": "e3e066ec34be2aa0ed1b97fa12c66e2dc4506b75d5d7dbd6f7d15c6e80dc8935",
+            "content_type": "text/plain"
+          },
+          "CH3_03h.TXT": {
+            "id": "fbab811f-5c19-42e6-9536-951a038f0826",
+            "size": 10000177,
+            "sha256": "3191ff56e4f6e8f5cf87901c33adce6041c9ae08cd88b9fe865da36b6b533305",
+            "content_type": "text/plain"
+          }
+        },
+        "pressure_trace": {
+          "filename": "HTE242USN00006PRESS190621.txt",
+          "id": "494e49fc-891a-4e9c-a9e7-7641afb17c28",
+          "size": 260402398,
+          "sha256": "097f838f56073b9a043d8ef1341700aabdce7d1891b1294dcc39eceb098ea9d3",
+          "content_type": "text/plain"
+        }
+      },
+      {
+        "case": 7,
+        "mfr_folder": "HTE242USN00007MFR190621",
+        "mfr_folder_present": true,
+        "channels": {
+          "CH1_01h.TXT": {
+            "id": "6ff4a993-0c9c-4269-8511-5fd92a4d1574",
+            "size": 10000177,
+            "sha256": "2e0bafdc663eecd749a3905c65b0ba172b1c58ce9353ea053b152253f918598a",
+            "content_type": "text/plain"
+          },
+          "CH2_02h.TXT": {
+            "id": "fc61a5c8-54ca-49f7-98b0-cce2aed8f0c7",
+            "size": 10000177,
+            "sha256": "4943db2881ac80e58016ae958878b8b4bfcad6f1e63128eafc32488f5518164b",
+            "content_type": "text/plain"
+          },
+          "CH3_03h.TXT": {
+            "id": "2a692c30-b064-4e4b-a623-0fc89cf836b0",
+            "size": 10000177,
+            "sha256": "a0e09e43103f82384cd4584b47dde596dfdea23496e77a5551ad8a513d82fe20",
+            "content_type": "text/plain"
+          }
+        },
+        "pressure_trace": {
+          "filename": "HTE242USN00007PRESS190621.txt",
+          "id": "97a139a2-80a2-47d0-b3cd-b3d88536f424",
+          "size": 392715864,
+          "sha256": "bf063dc036b0c3a49cac2dab37e2d0190b0198e7dcf004716b9414668d79f281",
+          "content_type": "text/plain"
+        }
+      },
+      {
+        "case": 8,
+        "mfr_folder": "HTE242USN00008MFR190621",
+        "mfr_folder_present": true,
+        "channels": {
+          "CH1_01h.TXT": {
+            "id": "fee223b7-d52e-4be1-bd26-3e2e531ae8a2",
+            "size": 10000177,
+            "sha256": "84c937ee10e0deccdfea9a871e4cb0daa3f72e682990f0ed3444293f1755a716",
+            "content_type": "text/plain"
+          },
+          "CH2_02h.TXT": {
+            "id": "3b1c5ede-e993-4cdb-84d3-805114759e72",
+            "size": 10000177,
+            "sha256": "909a7ee71f9bc075e7ad18ca01b7e9f1053f4c8018e0ccc5a571edad773c6993",
+            "content_type": "text/plain"
+          },
+          "CH3_03h.TXT": {
+            "id": "3d6ebaa1-813b-4282-bc7b-d160103dc6c8",
+            "size": 10000177,
+            "sha256": "d9c33245dcb8be3488c2c90cd81306e8e8f7f751d82fc65eb6182500b3906d91",
+            "content_type": "text/plain"
+          }
+        },
+        "pressure_trace": {
+          "filename": "HTE242USN00008PRESS190621.txt",
+          "id": "3bd1d9a3-d5b9-4575-aaf5-75c65ad51057",
+          "size": 408988245,
+          "sha256": "c56be9ca941c05179db744a72fbf7e783690bcba7ac3edb130e406b2993905b6",
+          "content_type": "text/plain"
+        }
+      },
+      {
+        "case": 9,
+        "mfr_folder": "HTE242USN00009MFR190621",
+        "mfr_folder_present": true,
+        "channels": {
+          "CH1_01h.TXT": {
+            "id": "2863b854-18a8-4f10-a86d-b1d8c18b4968",
+            "size": 10000177,
+            "sha256": "c003864958f10bbfc67462b423da504749a7c09d8a85d0005277568cb5734a75",
+            "content_type": "text/plain"
+          },
+          "CH2_02h.TXT": {
+            "id": "433f87aa-a14a-41cd-9114-57ad29a9038e",
+            "size": 10000177,
+            "sha256": "1ad58360a7450f2fa6a0d9b1d73a7b5c8109fb96a0ffbd9d2effe3c953da5466",
+            "content_type": "text/plain"
+          },
+          "CH3_03h.TXT": {
+            "id": "a9f5265c-00d8-41f9-9068-ad02711232d1",
+            "size": 10000177,
+            "sha256": "e8c2b2b72eb5292a10aaa7d2c4025a0081cbe614d08f2edd0d08af6e646cd226",
+            "content_type": "text/plain"
+          }
+        },
+        "pressure_trace": {
+          "filename": "HTE242USN00009PRESS190621.txt",
+          "id": "b0543f9f-1dc5-4569-8bc7-6ae0e0cd508b",
+          "size": 411604397,
+          "sha256": "5e6755d031d8f1bab269b20d2746ca266eb915d33a0f9ff793353f474c1b93f7",
+          "content_type": "text/plain"
+        }
+      },
+      {
+        "case": 10,
+        "mfr_folder": "HTE242USN00010MFR190621",
+        "mfr_folder_present": true,
+        "channels": {
+          "CH1_01h.TXT": {
+            "id": "33b7cbd4-774d-4235-ade8-e17b7aaa5940",
+            "size": 10000177,
+            "sha256": "dab10cada418588d597b251139984288b6d0b3626db28eb24f534aa7437b7da3",
+            "content_type": "text/plain"
+          },
+          "CH2_02h.TXT": {
+            "id": "ae399e1c-ee81-4340-8a5f-9b48af6a43ed",
+            "size": 10000177,
+            "sha256": "006c6a83b8b7b5af21ffddb18c908398f313747e37cf3ce82364281319c6f0c9",
+            "content_type": "text/plain"
+          },
+          "CH3_03h.TXT": {
+            "id": "8124f247-e487-4ba8-8003-3f91700d58f8",
+            "size": 10000177,
+            "sha256": "6d919180be1870916a730427bdee8409fd6389044eceab131dff93b32c190e09",
+            "content_type": "text/plain"
+          }
+        },
+        "pressure_trace": {
+          "filename": "HTE242USN00010PRESS190621.txt",
+          "id": "73a25d6c-e9d0-4863-b28f-7306788f236f",
+          "size": 384078243,
+          "sha256": "c8c966776c8c151b89bd1025c452d535781d698fcbaa254134e606fc75372f80",
+          "content_type": "text/plain"
+        }
+      },
+      {
+        "case": 11,
+        "mfr_folder": "HTE242USN0011MFR190621",
+        "mfr_folder_present": true,
+        "channels": {
+          "CH1_01h.TXT": {
+            "id": "30a49a83-421e-4e20-8f06-837eea5f1876",
+            "size": 10000176,
+            "sha256": "b2d1d6e0e467af283d8b2437659d1e824433d4e77cf4a9161680c44127cb3472",
+            "content_type": "text/plain"
+          },
+          "CH2_02h.TXT": {
+            "id": "c038b939-f707-4902-a97d-ae1abd8b38c2",
+            "size": 10000176,
+            "sha256": "7fc6846787c58032b6042ab5b8fb5de5f08ad29f311faf6ea23cdb34da0ccf65",
+            "content_type": "text/plain"
+          },
+          "CH3_03h.TXT": {
+            "id": "59d87ebd-a5bd-4376-b89b-3c13c539b8c2",
+            "size": 10000176,
+            "sha256": "31c521cd6fad66019b9d535e8fe84f7a55ee16fbf0d39cfc738771792eeeb744",
+            "content_type": "text/plain"
+          }
+        },
+        "pressure_trace": {
+          "filename": "HTE242USN00011PRESS190621.txt",
+          "id": "3c4033ba-9f51-49d7-8194-1208c669ea7a",
+          "size": 62276855,
+          "sha256": "e54634734f12831f4a2b93b1c3c1886e1e14fa5b362c6b3adf467b8682a40586",
+          "content_type": "text/plain"
+        }
+      }
+    ],
+    "manifest_sha256": "6973ccbf80126111c1dfe5e6f1108cadf4e7034b36bae3f21d340a7f14b68c31"
+  },
+  "eligibility": {
+    "raw_pressure_time_series_present": true,
+    "raw_mass_flow_channel_present": true,
+    "vent_geometry_and_initial_conditions_in_dataset_manifest": false,
+    "requires_associated_publication_for_setup_mapping": true,
+    "component_consequence_holdout_eligible": true,
+    "full_loop_external_holdout_eligible": false,
+    "decision": "CONSEQUENCE_COMPONENT_ARCHIVE_ONLY"
+  },
+  "claim_boundary": "This CC BY 4.0 archive provides raw pressure and Coriolis mass-flow channels for ten confined-enclosure experiments and is suitable for reproducible pressure-peaking consequence checks. It is not a gaseous H70 station-to-vehicle fueling loop, does not include station control or dispenser logs, and cannot establish full-loop digital-twin or SAGA effectiveness."
+}

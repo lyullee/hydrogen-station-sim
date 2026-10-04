@@ -1378,3 +1378,21 @@ crossing. The negative result and file hashes are retained in
 and [`GRUNE_2014_ARCHIVE_ACCESS_RECHECK_2026_10_05.md`](GRUNE_2014_ARCHIVE_ACCESS_RECHECK_2026_10_05.md).
 The Grune pressure-decay gate therefore remains pending and no validation
 claim or model parameter was changed.
+
+## Mendeley USN pressure-peaking raw-channel mirror (2026-10-05)
+
+The public Mendeley record [10.17632/pmk59x4hvc.1](https://doi.org/10.17632/pmk59x4hvc.1)
+was rechecked through its public API. It is CC BY 4.0 and exposes ten eligible
+confined-enclosure cases with pressure traces and Coriolis mass-flow channels.
+The manifest and channel identities are frozen in
+`research/mendeley_usn_pressure_peaking_manifest_2026_10_05.json`; the raw
+files remain outside git. The associated open IJHE paper is
+[10.1016/j.ijhydene.2020.08.221](https://doi.org/10.1016/j.ijhydene.2020.08.221).
+
+This is valuable independent consequence-component evidence, not a full H70
+station-to-vehicle logger archive. The Mendeley manifest does not contain the
+complete vent-geometry/initial-condition mapping, and the record has no
+compressor, cascade-bank, dispenser, vehicle, protocol-controller, or
+station-level emergency-response channels. It therefore cannot close the
+full-loop external-validation or SAGA-effectiveness gates. See the detailed
+boundary in `research/MENDELEY_USN_PRESSURE_PEAKING_MANIFEST_2026_10_05.md`.

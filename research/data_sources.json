@@ -652,7 +652,12 @@
       "license": "No explicit open-data licence identified",
       "public_raw_data": false,
       "reported_scope": "Two real station field tests covering 35 MPa logistics vehicle and 70 MPa passenger vehicle filling, with pressure, temperature, flow, mass and timing observations.",
-      "downloadable_table_artifacts": ["T1.csv.zip", "T2.csv.zip", "T3.csv.zip", "T4.csv.zip"],
+      "downloadable_table_artifacts": [
+        "T1.csv.zip",
+        "T2.csv.zip",
+        "T3.csv.zip",
+        "T4.csv.zip"
+      ],
       "rights_note": "The article page serves small table CSVs but does not identify a data-redistribution licence; cite the article and request raw-log reuse terms.",
       "eligibility_note": "High-value face-validity and data-request lead, not a synchronized raw full-loop holdout.",
       "record": "research/public_operational_benchmark_recheck_2026_10_05.json"
@@ -703,6 +708,19 @@
       "eligibility_note": "Not a synchronized gaseous H70 station-to-vehicle loop and not a SAGA effectiveness dataset. Ignition/combustion model comparison must use a separately frozen protocol.",
       "inventory": "research/dataverse_hydrogen_explosion_dataset_inventory_2026_10_05.json",
       "raw_subset_replay": "research/usn_17934047_raw_subset_replay_2026_10_05.json"
+    },
+    "usn_pressure_peaking_mendeley_2020": {
+      "title": "Pressure Peaking Phenomena: Unignited hydrogen releases in confined spaces – large-scale experiments",
+      "publisher": "Universitetet i Sorost-Norge / Mendeley Data",
+      "landing_page": "https://data.mendeley.com/datasets/pmk59x4hvc/1",
+      "api_snapshot": "https://data.mendeley.com/public-api/datasets/pmk59x4hvc/snapshot/1",
+      "doi": "10.17632/pmk59x4hvc.1",
+      "citation": "A. Lach, Pressure Peaking Phenomena: Unignited hydrogen releases in confined spaces – large-scale experiments, Mendeley Data, 2020, doi:10.17632/pmk59x4hvc.1.",
+      "license": "CC BY 4.0",
+      "rights_note": "Public manifest and file identities are recorded; raw files remain outside version control and are not redistributed by this repository.",
+      "evidence_role": "independent confined-enclosure pressure-peaking consequence component archive",
+      "eligibility_note": "Ten cases expose pressure and Coriolis mass-flow channels. Vent geometry and initial conditions require mapping to the associated open publication. This is not a station-to-vehicle full-loop holdout.",
+      "manifest_recheck": "research/mendeley_usn_pressure_peaking_manifest_2026_10_05.json"
     }
   }
 }

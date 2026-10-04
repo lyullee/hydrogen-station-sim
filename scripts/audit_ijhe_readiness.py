@@ -622,6 +622,39 @@ def audit(root: Path) -> dict[str, object]:
         } if pressure_result else "missing",
     ))
 
+    mendeley_manifest_path = root / "research/mendeley_usn_pressure_peaking_manifest_2026_10_05.json"
+    mendeley_manifest = _json(mendeley_manifest_path)
+    mendeley_public = (mendeley_manifest or {}).get("public_manifest") or {}
+    mendeley_eligibility = (mendeley_manifest or {}).get("eligibility") or {}
+    mendeley_manifest_pass = bool(
+        (mendeley_manifest or {}).get("status") == "completed_public_manifest_recheck"
+        and ((mendeley_manifest or {}).get("source") or {}).get("doi") == "10.17632/pmk59x4hvc.1"
+        and ((mendeley_manifest or {}).get("source") or {}).get("license") == "CC BY 4.0"
+        and mendeley_public.get("case_count_expected") == 10
+        and mendeley_public.get("case_count_with_pressure_and_mass_flow") == 10
+        and mendeley_public.get("all_case_identities_present") is True
+        and mendeley_eligibility.get("component_consequence_holdout_eligible") is True
+        and mendeley_eligibility.get("full_loop_external_holdout_eligible") is False
+        and "not a gaseous H70 station-to-vehicle" in str(
+            (mendeley_manifest or {}).get("claim_boundary", "")
+        )
+    )
+    gates.append(_gate(
+        "mendeley_usn_pressure_peaking_manifest_integrity",
+        "PASS" if mendeley_manifest_pass else ("FAIL" if mendeley_manifest else "PENDING"),
+        "The CC BY 4.0 Mendeley mirror of the USN pressure-peaking campaign has ten raw pressure/mass-flow cases in its public manifest and remains a consequence-component archive only.",
+        str(mendeley_manifest_path.relative_to(root)),
+        "Ten case identities, CC BY 4.0 provenance, raw pressure and mass-flow channels, and an explicit non-full-loop boundary.",
+        {
+            "doi": ((mendeley_manifest or {}).get("source") or {}).get("doi"),
+            "license": ((mendeley_manifest or {}).get("source") or {}).get("license"),
+            "case_count": mendeley_public.get("case_count_with_pressure_and_mass_flow"),
+            "component_consequence_holdout_eligible": mendeley_eligibility.get("component_consequence_holdout_eligible"),
+            "full_loop_external_holdout_eligible": mendeley_eligibility.get("full_loop_external_holdout_eligible"),
+            "claim_boundary": (mendeley_manifest or {}).get("claim_boundary"),
+        } if mendeley_manifest else "missing",
+    ))
+
     elvhys_replay_path = root / "research/elvhys_auxiliary_replay.json"
     elvhys_replay = _json(elvhys_replay_path)
     elvhys_claims = (elvhys_replay or {}).get("claims") or {}

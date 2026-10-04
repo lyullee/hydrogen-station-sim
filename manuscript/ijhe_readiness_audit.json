@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T21:01:31.905975+00:00",
+  "generated_at": "2026-10-04T21:20:16.247135+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 50,
+    "PASS": 51,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -612,6 +612,21 @@
           "interpretation": "exploratory_submodel_screen_only"
         },
         "claim_boundary": "This result validates only the unignited hydrogen pressure-peaking consequence submodel for a confined, vented enclosure. It is not validation of the full HRS fueling loop, cascade/compressor control, dispenser operation, outdoor dispersion, ignition, emergency response, or SAGA effectiveness."
+      }
+    },
+    {
+      "id": "mendeley_usn_pressure_peaking_manifest_integrity",
+      "status": "PASS",
+      "claim": "The CC BY 4.0 Mendeley mirror of the USN pressure-peaking campaign has ten raw pressure/mass-flow cases in its public manifest and remains a consequence-component archive only.",
+      "evidence": "research\\mendeley_usn_pressure_peaking_manifest_2026_10_05.json",
+      "requirement": "Ten case identities, CC BY 4.0 provenance, raw pressure and mass-flow channels, and an explicit non-full-loop boundary.",
+      "observed": {
+        "doi": "10.17632/pmk59x4hvc.1",
+        "license": "CC BY 4.0",
+        "case_count": 10,
+        "component_consequence_holdout_eligible": true,
+        "full_loop_external_holdout_eligible": false,
+        "claim_boundary": "This CC BY 4.0 archive provides raw pressure and Coriolis mass-flow channels for ten confined-enclosure experiments and is suitable for reproducible pressure-peaking consequence checks. It is not a gaseous H70 station-to-vehicle fueling loop, does not include station control or dispenser logs, and cannot establish full-loop digital-twin or SAGA effectiveness."
       }
     },
     {
