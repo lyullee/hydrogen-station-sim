@@ -47,14 +47,28 @@
       "id": "h2stations_api",
       "license": "CC BY 4.0",
       "public_synchronized_raw_logger": false,
-      "scope": "station inventory, availability and status export",
+      "scope": "station inventory, layout, availability, usage, hydrogen-storage and pricing status export",
+      "official_url": "https://docs.h2-stations.eu/for-data-users/api-v2/",
+      "thermodynamic_fill_trace": false,
       "classification": "STATION_STATUS_ONLY"
     },
     {
       "id": "nrel_h2iq_2024",
       "public_synchronized_raw_logger": false,
       "scope": "real high-flow experiment summary and plots",
+      "official_url": "https://www.energy.gov/cmei/fuels/march-h2iq-hour-text-version",
+      "reported_experiment": "73 kg in approximately 7 min; 172.3 g/s average; 29 kg/min peak; H70 SAE J2601-5 evaluation",
+      "thermodynamic_fill_trace": false,
       "classification": "PLOT_AGGREGATE_ONLY"
+    },
+    {
+      "id": "enda_h2_mobility_monitoring",
+      "public_synchronized_raw_logger": false,
+      "scope": "H2 MOBILITY monitoring deployment recording approximately 75-400 technical parameters per station at short intervals",
+      "official_url": "https://enda.eu/en/h2_monitoring",
+      "access_condition": "operator monitoring service; no public machine-readable logger archive or reuse terms identified",
+      "thermodynamic_fill_trace": "not publicly downloadable",
+      "classification": "CONTROLLED_DATA_REQUEST_LEAD"
     },
     {
       "id": "prhyde_zbt_d67",

@@ -23,3 +23,7 @@ def test_public_data_addendum_keeps_full_loop_gate_open():
         item["classification"] != "FULL_LOOP_HOLDOUT"
         for item in record["sources_checked"]
     )
+    by_id = {item["id"]: item for item in record["sources_checked"]}
+    assert by_id["h2stations_api"]["thermodynamic_fill_trace"] is False
+    assert by_id["nrel_h2iq_2024"]["thermodynamic_fill_trace"] is False
+    assert by_id["enda_h2_mobility_monitoring"]["classification"] == "CONTROLLED_DATA_REQUEST_LEAD"
