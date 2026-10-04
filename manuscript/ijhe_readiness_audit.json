@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T09:43:01.017739+00:00",
+  "generated_at": "2026-10-04T09:52:30.498261+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
@@ -407,10 +407,11 @@
       "status": "PASS",
       "claim": "The public ELVHYS cryogenic pressure-peaking subset is hash-identified and replayed with a strict non-validation claim boundary.",
       "evidence": "research\\elvhys_auxiliary_replay.json",
-      "requirement": "Three pressure-peaking tests, six source files, monotonic common time bases and explicit prohibition on predictive/full-loop claims.",
+      "requirement": "Three pressure-peaking tests plus one vertical dispersion concentration test, nine source files, monotonic common time bases and explicit prohibition on predictive/full-loop claims.",
       "observed": {
         "case_count": 3,
-        "file_count": 6,
+        "concentration_case_count": 1,
+        "file_count": 9,
         "predictive_model_validation_permitted": false,
         "full_loop_station_vehicle_validation_permitted": false
       }

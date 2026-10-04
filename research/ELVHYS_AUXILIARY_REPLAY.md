@@ -1,7 +1,9 @@
 # ELVHYS 4.2 auxiliary replay
 
 This record freezes a small, auditable subset of the public ELVHYS 4.2 data: all
-three pressure-peaking tests (29–31), each with its pressure and flow-meter CSV.
+three pressure-peaking tests (29–31), each with its pressure and flow-meter CSV,
+and vertical dispersion test 45 with its 16-channel concentration, pressure and
+ventilation CSVs.
 The raw CSV files remain outside Git because the repository stores provenance and
 hashes rather than redistributing the source archive.
 
@@ -12,12 +14,14 @@ hashes rather than redistributing the source archive.
 - Files: six Dataverse file IDs, SHA-256 digests, timebase checks and channel
   summaries are in [`elvhys_auxiliary_replay.json`](elvhys_auxiliary_replay.json).
 
-The replay confirms that the selected pressure and flow files are readable, have
-strictly increasing common time bases, and contain the documented pressure-
-peaking channels. The measured TCS pressure peaks increase across the three
-vent configurations (approximately 6.2, 12.4 and 34.5 mbar on the higher
-pressure channel). These are observations from the source data, not predictions
-from the H70 model.
+The replay confirms that the selected files are readable, have strictly
+increasing common time bases, and contain the documented pressure-peaking and
+hydrogen-concentration channels. The measured TCS pressure peaks increase
+across the three vent configurations (approximately 6.2, 12.4 and 34.5 mbar on
+the higher pressure channel). Test 45 contains 16 vertical-dispersion H2
+channels with threshold crossings that can be used to exercise detector-event
+mapping. These are observations from the source data, not predictions from the
+H70 model.
 
 This is deliberately **not** a predictive validation gate. The outcomes were
 accessed before this auxiliary record was frozen, no cryogenic enclosure model

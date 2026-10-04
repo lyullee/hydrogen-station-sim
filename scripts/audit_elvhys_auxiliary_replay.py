@@ -54,6 +54,20 @@ TESTS = {
     },
 }
 
+CONCENTRATION_TEST = {
+    "test_no": "045",
+    "concentration_file_id": 254344,
+    "concentration_file": "ELE402HSE045CONC20251128.csv",
+    "pressure_file_id": 254277,
+    "pressure_file": "ELE402HSE045PRES20251128.csv",
+    "flow_file_id": 254224,
+    "flow_file": "ELE402HSE045FLMT20251128.csv",
+    "nominal_source_pressure_barg": 8.0,
+    "nozzle_diameter_mm": 1.0,
+    "orientation": "upwards (500, 93, 250)",
+    "ventilation": "Passive",
+}
+
 
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
@@ -91,6 +105,13 @@ def _time_stats(rows: list[dict[str, str]]) -> dict[str, float | int | bool | No
         "monotonic_strict": bool(times) and all(b > a for a, b in zip(times, times[1:])),
         "median_sample_interval_s": sorted(deltas)[len(deltas) // 2] if deltas else None,
     }
+
+
+def _threshold_first_time(rows: list[dict[str, str]], column: str, threshold: float) -> float | None:
+    for row in rows:
+        if float(row[column]) >= threshold:
+            return float(row["Time"])
+    return None
 
 
 def run(raw_dir: Path, output: Path) -> dict[str, object]:
@@ -149,6 +170,44 @@ def run(raw_dir: Path, output: Path) -> dict[str, object]:
             }
         )
 
+    concentration_path = raw_dir / CONCENTRATION_TEST["concentration_file"]
+    concentration_pressure_path = raw_dir / CONCENTRATION_TEST["pressure_file"]
+    concentration_flow_path = raw_dir / CONCENTRATION_TEST["flow_file"]
+    if not all(path.is_file() for path in (concentration_path, concentration_pressure_path, concentration_flow_path)):
+        raise FileNotFoundError("missing frozen ELVHYS concentration test files")
+    concentration_fields, concentration_rows = read_csv(concentration_path)
+    pressure_fields, pressure_rows = read_csv(concentration_pressure_path)
+    flow_fields, flow_rows = read_csv(concentration_flow_path)
+    concentration_channels = [field for field in concentration_fields if field.startswith("H2")]
+    if not concentration_channels or "Time" not in concentration_fields:
+        raise ValueError("unexpected ELVHYS concentration columns")
+    concentration_time = _time_stats(concentration_rows)
+    if not concentration_time["monotonic_strict"]:
+        raise ValueError("non-monotonic concentration timebase in test 045")
+    if _time_stats(pressure_rows)["row_count"] != concentration_time["row_count"] or _time_stats(flow_rows)["row_count"] != concentration_time["row_count"]:
+        raise ValueError("ELVHYS test 045 channels are not aligned")
+    concentration_summary = {}
+    for channel in concentration_channels:
+        stats = _stats(concentration_rows, channel)
+        stats["first_at_or_above_0_2_vol_percent_s"] = _threshold_first_time(concentration_rows, channel, 0.2)
+        stats["first_at_or_above_4_vol_percent_s"] = _threshold_first_time(concentration_rows, channel, 4.0)
+        concentration_summary[channel] = stats
+    concentration_files = []
+    for role, file_id, path in (
+        ("concentration", CONCENTRATION_TEST["concentration_file_id"], concentration_path),
+        ("pressure", CONCENTRATION_TEST["pressure_file_id"], concentration_pressure_path),
+        ("flow", CONCENTRATION_TEST["flow_file_id"], concentration_flow_path),
+    ):
+        record = {
+            "role": role,
+            "dataverse_file_id": file_id,
+            "name": path.name,
+            "bytes": path.stat().st_size,
+            "sha256": sha256(path),
+        }
+        concentration_files.append(record)
+        all_files.append(record)
+
     result = {
         "schema_version": 1,
         "status": "completed_post_access_auxiliary_replay",
@@ -156,7 +215,7 @@ def run(raw_dir: Path, output: Path) -> dict[str, object]:
         "evidence_role": "public_consequence_auxiliary_provenance_and_replay",
         "source": SOURCE,
         "selection": {
-            "rule": "All three ELVHYS 4.2 pressure-peaking tests (29-31), selected by test type before interpreting the replay statistics.",
+            "rule": "All three ELVHYS 4.2 pressure-peaking tests (29-31) plus vertical dispersion test 45, selected by test type before interpreting the replay statistics.",
             "raw_files_committed": False,
             "local_raw_directory": "data/public_validation/raw/elvhys_4_2",
             "outcomes_accessed_before_freeze": True,
@@ -168,6 +227,19 @@ def run(raw_dir: Path, output: Path) -> dict[str, object]:
             "units": "PT1/PT2 barg, TCS pressure Var4/Var5 mbar, ventilation flow channel as recorded",
         },
         "cases": cases,
+        "concentration_cases": [
+            {
+                "test_no": CONCENTRATION_TEST["test_no"],
+                "source_conditions": {
+                    key: CONCENTRATION_TEST[key]
+                    for key in ("nominal_source_pressure_barg", "nozzle_diameter_mm", "orientation", "ventilation")
+                },
+                "time": concentration_time,
+                "channel_count": len(concentration_channels),
+                "channels": concentration_summary,
+                "files": concentration_files,
+            }
+        ],
         "file_manifest": all_files,
         "claims": {
             "provenance_integrity_pass": True,

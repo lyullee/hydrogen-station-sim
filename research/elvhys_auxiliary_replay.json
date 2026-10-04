@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "status": "completed_post_access_auxiliary_replay",
-  "generated_at": "2026-10-04T09:38:51.115561+00:00",
+  "generated_at": "2026-10-04T09:52:20.853808+00:00",
   "evidence_role": "public_consequence_auxiliary_provenance_and_replay",
   "source": {
     "doi": "10.18710/JXJP0H",
@@ -10,7 +10,7 @@
     "license": "CC0 1.0"
   },
   "selection": {
-    "rule": "All three ELVHYS 4.2 pressure-peaking tests (29-31), selected by test type before interpreting the replay statistics.",
+    "rule": "All three ELVHYS 4.2 pressure-peaking tests (29-31) plus vertical dispersion test 45, selected by test type before interpreting the replay statistics.",
     "raw_files_committed": false,
     "local_raw_directory": "data/public_validation/raw/elvhys_4_2",
     "outcomes_accessed_before_freeze": true
@@ -239,6 +239,178 @@
       ]
     }
   ],
+  "concentration_cases": [
+    {
+      "test_no": "045",
+      "source_conditions": {
+        "nominal_source_pressure_barg": 8.0,
+        "nozzle_diameter_mm": 1.0,
+        "orientation": "upwards (500, 93, 250)",
+        "ventilation": "Passive"
+      },
+      "time": {
+        "row_count": 20414,
+        "start_s": 0.0,
+        "end_s": 1020.64999999962,
+        "monotonic_strict": true,
+        "median_sample_interval_s": 0.05000000000000071
+      },
+      "channel_count": 16,
+      "channels": {
+        "H2Bottom1": {
+          "count": 20414,
+          "min": -0.760261592981326,
+          "max": 22.5952950651806,
+          "mean": 13.380632377874608,
+          "first_at_or_above_0_2_vol_percent_s": 113.549999999996,
+          "first_at_or_above_4_vol_percent_s": 120.199999999995
+        },
+        "H2Bottom2": {
+          "count": 20414,
+          "min": -0.382765130791874,
+          "max": 12.9445061256997,
+          "mean": 1.1979055998550345,
+          "first_at_or_above_0_2_vol_percent_s": 0.0,
+          "first_at_or_above_4_vol_percent_s": 0.0
+        },
+        "H2Bottom3": {
+          "count": 20414,
+          "min": -1.58090605102305,
+          "max": 48.6918463644551,
+          "mean": 26.59076397773214,
+          "first_at_or_above_0_2_vol_percent_s": 88.1999999999971,
+          "first_at_or_above_4_vol_percent_s": 92.1499999999969
+        },
+        "H2Bottom5": {
+          "count": 20414,
+          "min": -1.00645493397963,
+          "max": 16.7522997380181,
+          "mean": 8.223472744129143,
+          "first_at_or_above_0_2_vol_percent_s": 112.649999999996,
+          "first_at_or_above_4_vol_percent_s": 123.199999999995
+        },
+        "H2Bottom7": {
+          "count": 20414,
+          "min": -1.44960294002807,
+          "max": 21.9551915428468,
+          "mean": 9.575801382717678,
+          "first_at_or_above_0_2_vol_percent_s": 76.5999999999978,
+          "first_at_or_above_4_vol_percent_s": 82.3999999999975
+        },
+        "H2Bottom9": {
+          "count": 20414,
+          "min": 0.174173718396894,
+          "max": 0.814275126896526,
+          "mean": 0.35435334230254567,
+          "first_at_or_above_0_2_vol_percent_s": 0.0,
+          "first_at_or_above_4_vol_percent_s": null
+        },
+        "H2ChimneyBottom": {
+          "count": 20414,
+          "min": -1.18699671542256,
+          "max": -0.514068248899143,
+          "mean": -0.8378606146024685,
+          "first_at_or_above_0_2_vol_percent_s": null,
+          "first_at_or_above_4_vol_percent_s": null
+        },
+        "H2ChimneyTop": {
+          "count": 20414,
+          "min": -0.90797759794992,
+          "max": 0.798962971918083,
+          "mean": -0.7252481244555736,
+          "first_at_or_above_0_2_vol_percent_s": 398.850000000056,
+          "first_at_or_above_4_vol_percent_s": null
+        },
+        "H2Side1": {
+          "count": 20414,
+          "min": -1.03928071254679,
+          "max": 27.2401495997337,
+          "mean": 15.743576003531528,
+          "first_at_or_above_0_2_vol_percent_s": 76.6999999999978,
+          "first_at_or_above_4_vol_percent_s": 83.5999999999974
+        },
+        "H2Side3": {
+          "count": 20414,
+          "min": -1.03928071254679,
+          "max": 26.9611300306953,
+          "mean": 15.06081724671522,
+          "first_at_or_above_0_2_vol_percent_s": 77.3999999999977,
+          "first_at_or_above_4_vol_percent_s": 84.2999999999974
+        },
+        "H2Side5": {
+          "count": 20414,
+          "min": -0.90797759794992,
+          "max": 24.9915802731247,
+          "mean": 14.172870995845189,
+          "first_at_or_above_0_2_vol_percent_s": 81.6499999999975,
+          "first_at_or_above_4_vol_percent_s": 88.2499999999971
+        },
+        "H2Side6": {
+          "count": 20414,
+          "min": -0.0720191338520628,
+          "max": 24.6785622481231,
+          "mean": 13.576529671921497,
+          "first_at_or_above_0_2_vol_percent_s": 0.05,
+          "first_at_or_above_4_vol_percent_s": 82.5499999999975
+        },
+        "H2Side7": {
+          "count": 20414,
+          "min": -1.13775804792024,
+          "max": -0.694610034861238,
+          "mean": -0.9157297816004455,
+          "first_at_or_above_0_2_vol_percent_s": null,
+          "first_at_or_above_4_vol_percent_s": null
+        },
+        "H2Side8": {
+          "count": 20414,
+          "min": -0.743848703471873,
+          "max": 20.084119853011,
+          "mean": 9.855115687811367,
+          "first_at_or_above_0_2_vol_percent_s": 79.9999999999976,
+          "first_at_or_above_4_vol_percent_s": 86.8999999999972
+        },
+        "H2VentBottom": {
+          "count": 20414,
+          "min": -2.12253137468887,
+          "max": 26.9283041993725,
+          "mean": 9.415615677766917,
+          "first_at_or_above_0_2_vol_percent_s": 0.1,
+          "first_at_or_above_4_vol_percent_s": 80.5999999999976
+        },
+        "H2VentTop": {
+          "count": 20414,
+          "min": -1.79427360453397,
+          "max": 27.748950003231,
+          "mean": 15.531534848040122,
+          "first_at_or_above_0_2_vol_percent_s": 74.1499999999979,
+          "first_at_or_above_4_vol_percent_s": 80.6999999999976
+        }
+      },
+      "files": [
+        {
+          "role": "concentration",
+          "dataverse_file_id": 254344,
+          "name": "ELE402HSE045CONC20251128.csv",
+          "bytes": 6150960,
+          "sha256": "6eb1dc800a6a32612536f496bb2da9b206c12b2fcf28acf2a84e559dcc2b23fb"
+        },
+        {
+          "role": "pressure",
+          "dataverse_file_id": 254277,
+          "name": "ELE402HSE045PRES20251128.csv",
+          "bytes": 1807468,
+          "sha256": "2523f0008932a55ae73311687e9984c446dbdad8150d01e8ee67b5db914230fe"
+        },
+        {
+          "role": "flow",
+          "dataverse_file_id": 254224,
+          "name": "ELE402HSE045FLMT20251128.csv",
+          "bytes": 362212,
+          "sha256": "ae15a55f08b817fc75996b5cb11a5adf192593e3ce33ff9d2a8cf86b083d10b6"
+        }
+      ]
+    }
+  ],
   "file_manifest": [
     {
       "role": "pressure",
@@ -281,6 +453,27 @@
       "name": "ELE402HSE031FLMT20251118.csv",
       "bytes": 19305346,
       "sha256": "cd3e53bcbcbe08ecd52de21baa6bd1aa1d79391c914d08f900a2b4f6c537e4be"
+    },
+    {
+      "role": "concentration",
+      "dataverse_file_id": 254344,
+      "name": "ELE402HSE045CONC20251128.csv",
+      "bytes": 6150960,
+      "sha256": "6eb1dc800a6a32612536f496bb2da9b206c12b2fcf28acf2a84e559dcc2b23fb"
+    },
+    {
+      "role": "pressure",
+      "dataverse_file_id": 254277,
+      "name": "ELE402HSE045PRES20251128.csv",
+      "bytes": 1807468,
+      "sha256": "2523f0008932a55ae73311687e9984c446dbdad8150d01e8ee67b5db914230fe"
+    },
+    {
+      "role": "flow",
+      "dataverse_file_id": 254224,
+      "name": "ELE402HSE045FLMT20251128.csv",
+      "bytes": 362212,
+      "sha256": "ae15a55f08b817fc75996b5cb11a5adf192593e3ce33ff9d2a8cf86b083d10b6"
     }
   ],
   "claims": {

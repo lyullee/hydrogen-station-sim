@@ -356,13 +356,16 @@ def audit(root: Path) -> dict[str, object]:
     elvhys_replay = _json(elvhys_replay_path)
     elvhys_claims = (elvhys_replay or {}).get("claims") or {}
     elvhys_cases = (elvhys_replay or {}).get("cases") or []
+    elvhys_concentration_cases = (elvhys_replay or {}).get("concentration_cases") or []
     elvhys_files = (elvhys_replay or {}).get("file_manifest") or []
     elvhys_replay_pass = bool(
         (elvhys_replay or {}).get("status") == "completed_post_access_auxiliary_replay"
         and (elvhys_replay or {}).get("evidence_role")
         == "public_consequence_auxiliary_provenance_and_replay"
         and len(elvhys_cases) == 3
-        and len(elvhys_files) == 6
+        and len(elvhys_concentration_cases) == 1
+        and (elvhys_concentration_cases[0].get("channel_count") == 16)
+        and len(elvhys_files) == 9
         and all((case.get("pressure_time") or {}).get("monotonic_strict") is True for case in elvhys_cases)
         and all((case.get("flow_time") or {}).get("monotonic_strict") is True for case in elvhys_cases)
         and elvhys_claims.get("provenance_integrity_pass") is True
@@ -375,9 +378,10 @@ def audit(root: Path) -> dict[str, object]:
         "PASS" if elvhys_replay_pass else ("FAIL" if elvhys_replay else "PENDING"),
         "The public ELVHYS cryogenic pressure-peaking subset is hash-identified and replayed with a strict non-validation claim boundary.",
         str(elvhys_replay_path.relative_to(root)),
-        "Three pressure-peaking tests, six source files, monotonic common time bases and explicit prohibition on predictive/full-loop claims.",
+        "Three pressure-peaking tests plus one vertical dispersion concentration test, nine source files, monotonic common time bases and explicit prohibition on predictive/full-loop claims.",
         {
             "case_count": len(elvhys_cases),
+            "concentration_case_count": len(elvhys_concentration_cases),
             "file_count": len(elvhys_files),
             "predictive_model_validation_permitted": elvhys_claims.get("predictive_model_validation_permitted"),
             "full_loop_station_vehicle_validation_permitted": elvhys_claims.get("full_loop_station_vehicle_validation_permitted"),

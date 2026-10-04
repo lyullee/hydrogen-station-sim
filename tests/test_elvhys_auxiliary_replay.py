@@ -21,7 +21,9 @@ def test_elvhys_pressure_peaking_subset_is_reproducible_and_bounded(tmp_path):
     assert result["status"] == "completed_post_access_auxiliary_replay"
     assert result["evidence_role"] == "public_consequence_auxiliary_provenance_and_replay"
     assert len(result["cases"]) == 3
-    assert len(result["file_manifest"]) == 6
+    assert len(result["concentration_cases"]) == 1
+    assert result["concentration_cases"][0]["channel_count"] == 16
+    assert len(result["file_manifest"]) == 9
     assert all(case["pressure_time"]["monotonic_strict"] for case in result["cases"])
     assert all(case["flow_time"]["monotonic_strict"] for case in result["cases"])
     assert result["claims"]["provenance_integrity_pass"] is True
