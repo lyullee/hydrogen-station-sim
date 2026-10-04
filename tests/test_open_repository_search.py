@@ -501,6 +501,21 @@ def test_elvhys_dataset_is_cc0_consequence_auxiliary_only():
     assert (ROOT / "research/ELVHYS_PUBLIC_CONSEQUENCE_DATASET.md").exists()
 
 
+def test_dlr_fch2rail_measurement_lead_is_not_promoted_without_raw_logger():
+    record = json.loads(
+        (ROOT / "research/public_full_loop_search_recheck_2026_10_05.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    item = next(
+        source for source in record["candidates"]
+        if source["id"] == "fch2rail_dlr_ijhe_2025_raw_check"
+    )
+    assert item["observed_scope"]["public_raw_logger_retrieved"] is False
+    assert item["observed_scope"]["full_loop_holdout_eligible"] is False
+    assert item["decision"] == "REAL_STATION_DATA_REQUEST_LEAD_NO_RAW_ARCHIVE"
+
+
 def test_khk_local_casebook_pipeline_is_not_promoted_or_committed():
     mirror = json.loads(
         (ROOT / "research/external_full_loop_data_search.json").read_text(

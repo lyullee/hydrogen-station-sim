@@ -115,6 +115,26 @@
       "appendix_access_recheck": "research/kgs_oh_preprint_appendix_recheck_2026_10_05.json",
       "appendix_public_parameter_only": true,
       "raw_synchronized_logger_retrieved": false
+    },
+    {
+      "id": "fch2rail_dlr_ijhe_2025_raw_check",
+      "title": "Development, Application and Optimization of Hydrogen Refueling Processes for Railway Vehicles",
+      "doi": "10.1016/j.ijhydene.2025.04.040",
+      "url": "https://elib.dlr.de/213625/",
+      "license": "Open-access article; no raw-logger reuse licence identified on the repository item",
+      "decision": "REAL_STATION_DATA_REQUEST_LEAD_NO_RAW_ARCHIVE",
+      "finding": "The DLR item states that FCH2RAIL station and vehicle measurements were analyzed for model validation, but the repository exposes the article PDF only and no machine-readable synchronized logger archive. It therefore cannot be scored as an untouched holdout from the public item.",
+      "observed_scope": {
+        "reported_measurements": [
+          "vehicle/tank pressure",
+          "vehicle/tank temperature",
+          "dispenser pressure",
+          "mass flow"
+        ],
+        "public_raw_logger_retrieved": false,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "Request a de-identified synchronized export, channel dictionary, calibration metadata and written permission for derived metrics and repository deposit from DLR/FCH2RAIL custodians before any outcome access."
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
