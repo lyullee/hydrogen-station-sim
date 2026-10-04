@@ -1964,13 +1964,31 @@
     "record": "research/hrs_public_data_recheck_2026_10_04.json",
     "decision": "PUBLIC_AGGREGATE_AND_EXPERIMENT_SUMMARIES_CONFIRMED_NO_NEW_FULL_LOOP_RAW",
     "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
-    "source_count": 4,
+    "source_count": 6,
     "source_ids": [
       "doe_h2iq_2024_hd_fast_flow",
       "csic_onsite_hrs_supplement",
       "caponi_3emotion_2022_operational_hrs",
-      "dlr_fch2rail_2025_refueling"
+      "dlr_fch2rail_2025_refueling",
+      "cip_2020_35_70mpa_performance",
+      "zbt_methytrucks_2026_sampling_intercomparison"
     ],
-    "claim_boundary": "The sources support operating-range and real-station provenance context, but none provides a new eligible synchronized raw full-loop holdout."
+    "cip_2020_35_70mpa_performance": {
+      "article": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
+      "table_csv_links": [
+        "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T3.csv.zip",
+        "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T4.csv.zip"
+      ],
+      "classification": "PUBLIC_REAL_EXPERIMENT_AGGREGATE_AND_TABLE_CSV_ONLY",
+      "full_loop_holdout_eligible": false,
+      "finding": "Linked CSV ZIPs contain initial/final summary-table rows; synchronized pressure-temperature-flow traces remain figure-only."
+    },
+    "zbt_methytrucks_2026_sampling_intercomparison": {
+      "article": "https://doi.org/10.3390/cleantechnol8030091",
+      "classification": "PUBLIC_REAL_HRS_DATA_REQUEST_LEAD",
+      "full_loop_holdout_eligible": false,
+      "finding": "The article reports logged dispenser/tank data and raw data on request, but no public machine-readable archive or reuse terms were found."
+    },
+    "claim_boundary": "The sources support operating-range and real-station provenance context, but none provides a new eligible synchronized raw full-loop holdout. The CIP table CSVs are summary exports rather than logger traces, and ZBT raw data are author-request-only."
   }
 }

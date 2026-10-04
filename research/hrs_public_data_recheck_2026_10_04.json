@@ -102,11 +102,64 @@
       "classification": "PUBLIC_REAL_HEAVY_DUTY_DATA_REQUEST_LEAD",
       "full_loop_holdout_eligible": false,
       "finding": "The repository provides the open article and confirms measured station/vehicle behavior, but no machine-readable synchronized raw archive or reuse terms were linked."
+    },
+    {
+      "id": "cip_2020_35_70mpa_performance",
+      "title": "35 MPa/70 MPa加氢机加注性能综合评价研究",
+      "publisher": "石油和化工工业出版社 / 储能科学与技术",
+      "doi": null,
+      "urls": {
+        "article": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
+        "table_3_csv_zip": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T3.csv.zip",
+        "table_4_csv_zip": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T4.csv.zip"
+      },
+      "real_experiment": true,
+      "reported_measurements": {
+        "35_mpa_case": {
+          "vehicle_storage_volume_l": 420,
+          "initial_pressure_mpa": 2.2,
+          "source_pressure_mpa": 43,
+          "duration_s": 470,
+          "final_pressure_mpa": 35.4,
+          "transferred_mass_kg": 8.21
+        },
+        "70_mpa_case": {
+          "vehicle_storage_volume_l": 122.4,
+          "initial_pressure_mpa": 1.7,
+          "source_pressure_mpa": 85,
+          "duration_s": 276,
+          "final_pressure_mpa": 81.6,
+          "peak_mass_flow_g_s": 36,
+          "transferred_mass_kg": 5.08
+        }
+      },
+      "raw_common_timebase": false,
+      "classification": "PUBLIC_REAL_EXPERIMENT_AGGREGATE_AND_TABLE_CSV_ONLY",
+      "full_loop_holdout_eligible": false,
+      "finding": "The article reports measured pressure, temperature and flow curves for 35 MPa and 70 MPa fueling, but the linked CSV downloads are only HTML table exports (initial/final summary tables), not synchronized time-series logger rows. Figure ZIPs are plots only; no raw trace, valve-state log or reuse terms were found."
+    },
+    {
+      "id": "zbt_methytrucks_2026_sampling_intercomparison",
+      "title": "Representative Hydrogen Sampling at Hydrogen Refuelling Stations: Interplay of Sampling Strategy and Station Parameters",
+      "publisher": "ZBT / NPL / ENGIE / Clean Technologies",
+      "doi": "10.3390/cleantechnol8030091",
+      "urls": {
+        "article": "https://www.mdpi.com/2571-8797/8/3/91",
+        "doi": "https://doi.org/10.3390/cleantechnol8030091"
+      },
+      "real_experiment": true,
+      "reported_scope": "ZBT test HRS sampling experiments using 35/70 MPa receptacles, a 244 L Type-IV sink, seven storage banks and logged dispenser/tank data.",
+      "reported_channels": ["dispenser_pressure", "dispenser_temperature", "mass_flow", "sink_tank_pressure", "sink_tank_temperature", "storage_bank_state"],
+      "data_availability": "raw_data_available_by_author_request",
+      "raw_common_timebase": false,
+      "classification": "PUBLIC_REAL_HRS_DATA_REQUEST_LEAD",
+      "full_loop_holdout_eligible": false,
+      "finding": "The article says all dispenser and tank data were logged and its data-availability statement offers raw data on request; no public machine-readable trace or reuse terms were found. If released, this is a strong independent station-to-receptacle holdout candidate."
     }
   ],
   "recommended_next_step": {
-    "action": "Request de-identified synchronized traces and reuse terms from DOE/NREL HITRF, DLR/FCH2RAIL, Cal State LA and 3Emotion operators.",
+    "action": "Request de-identified synchronized traces and reuse terms from the ZBT/MetHyTrucks authors, DOE/NREL HITRF, DLR/FCH2RAIL, Cal State LA and 3Emotion operators.",
     "freeze_rule": "If a raw file is received, quarantine it, hash it, freeze the model commit and scoring protocol before opening numerical outcomes."
   },
-  "claim_boundary": "These sources support operating-range, real-station provenance and model-structure context. None closes the project's untouched full-loop external-validation gate; do not present an aggregate or simulation-only source as synchronized measured HRS validation."
+  "claim_boundary": "These sources support operating-range, real-station provenance and model-structure context. None closes the project's untouched full-loop external-validation gate; do not present an aggregate, table-only CSV, author-request-only source or simulation-only source as synchronized measured HRS validation."
 }

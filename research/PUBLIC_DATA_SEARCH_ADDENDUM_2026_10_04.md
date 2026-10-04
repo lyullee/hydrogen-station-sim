@@ -18,10 +18,16 @@ that rule.
 | [NREL H2IQ high-flow experiment](https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf) | Real high-flow operating-range plots and summary values | Plot/aggregate benchmark; raw trace request required |
 | [PRHYDE/ZBT D6.7](https://lbst.de/wp-content/uploads/2023/04/PRHYDE_Deliverable-D6-7_Results_as_Input_for_Standardisation_V1-2_final_Apr_2023.pdf) | Public report tables for 35/50/70 MPa ZBT tests and a stated 2 Hz PLC logger | Public report/data-request lead; raw synchronized export and reuse terms still required |
 | [KIT H2 release archive, DOI 10.35097/1483](https://doi.org/10.35097/1483) | Public 5 GB experiment metadata lists pressure, mass flow, heat flux, thermocouples, weather and video; CC BY-SA 4.0 | Consequence/detector submodel candidate; not vehicle-fueling full loop |
+| [CIP 35/70 MPa fueling study](https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml) | Measured 35/70 MPa fueling pressure, temperature and flow curves; linked T3/T4 CSV ZIPs are summary-table exports, not synchronized logger rows | Real experiment aggregate/table-only; raw trace request required |
+| [ZBT/MetHyTrucks sampling intercomparison](https://doi.org/10.3390/cleantechnol8030091) | Real test-HRS experiments report logged dispenser/tank channels; raw data are available from authors on request | Strong station-to-receptacle data-request lead; not public raw data |
 
 ## Decision
 
-No new eligible public raw full-loop set was found. Existing H2Protocol and
+No new eligible public raw full-loop set was found. The CIP article was checked
+directly: its T3/T4 “CSV” downloads contain only table rows, while the
+pressure/temperature/flow time histories remain figures. The ZBT/MetHyTrucks
+article states that raw logged dispenser/tank data are available on request, but
+no public machine-readable archive or reuse terms were found. Existing H2Protocol and
 NREL files remain governed by their already-frozen roles; they cannot be
 reused as a new untouched holdout. The independent full-loop validation gate
 therefore remains open. Any future file must be quarantined and hashed with

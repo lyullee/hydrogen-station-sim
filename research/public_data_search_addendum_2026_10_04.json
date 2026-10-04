@@ -72,6 +72,22 @@
       "scope": "hydrogen release/dispersion consequence experiment with pressure, mass flow, heat flux, thermocouples, weather and video metadata",
       "reuse_note": "research/KIT_H2_RELEASE_DATA_REUSE_NOTE.md",
       "classification": "CONSEQUENCE_RAW_DATA_CANDIDATE"
+    },
+    {
+      "id": "cip_2020_35_70mpa_performance",
+      "doi": null,
+      "public_synchronized_raw_logger": false,
+      "scope": "real 35/70 MPa fueling pressure, temperature and flow curves with endpoint-table CSV exports",
+      "raw_data_request_lead": "research/CIP_DISPENSER_DATA_REQUEST_DRAFT.md",
+      "classification": "PUBLIC_REAL_EXPERIMENT_AGGREGATE_TABLE_ONLY"
+    },
+    {
+      "id": "zbt_methytrucks_2026_sampling_intercomparison",
+      "doi": "10.3390/cleantechnol8030091",
+      "public_synchronized_raw_logger": false,
+      "scope": "real ZBT test-HRS sampling experiments; logged dispenser/tank channels reported and raw data available by author request",
+      "raw_data_request_lead": "research/ZBT_METHYTRUCKS_DATA_REQUEST_DRAFT.md",
+      "classification": "DATA_REQUEST_LEAD"
     }
   ],
   "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET",

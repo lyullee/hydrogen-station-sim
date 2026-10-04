@@ -976,6 +976,14 @@ The public-data search was extended to four current, high-value sources:
 * The DLR/FCH2RAIL article confirms reference-station and railway-vehicle
   measurements, while the repository exposes no synchronized machine-readable
   trace or reuse terms.
+* The ZBT/MetHyTrucks sampling-intercomparison article reports real 35/70 MPa
+  test-HRS experiments with logged dispenser and sink-tank channels. Its data
+  availability statement offers the raw records by author request, but no
+  public machine-readable archive or reuse terms were found. A request draft
+  is retained in `research/ZBT_METHYTRUCKS_DATA_REQUEST_DRAFT.md`.
+* The CIP 35/70 MPa dispenser study links T3/T4 “CSV” downloads, but direct
+  inspection shows they are endpoint summary-table rows; the synchronized
+  pressure/temperature/flow histories remain figure-only.
 
 These sources are useful for operating-range and provenance context, but none
 meets the frozen eligibility rule for an untouched station-to-vehicle
