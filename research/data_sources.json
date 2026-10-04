@@ -642,6 +642,36 @@
       "rights_note": "The article states that the datasets are available within the manuscript and associated figures and that no additional external datasets are publicly available.",
       "eligibility_note": "High-value real-HRS experiment and data-request lead; figure/table values are not a synchronized machine-readable holdout and cannot close full-loop validation.",
       "access_record": "research/hysafe59_data_access_recheck_2026_10_05.json"
+    },
+    "dataverseno_wskbij_large_scale_hydrogen_explosions": {
+      "title": "Replication dataset for: Large-Scale Hydrogen Explosion Experiments: Obstructed Releases in open atmosphere",
+      "publisher": "University of South-Eastern Norway / DataverseNO",
+      "landing_page": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/WSKBIJ",
+      "api_record": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi%3A10.18710%2FWSKBIJ",
+      "doi": "10.18710/WSKBIJ",
+      "license": "CC0 1.0",
+      "public_raw_data": true,
+      "reported_scope": "2024-2025 large-scale open-atmosphere delayed-ignition releases with nozzle, reservoir-pressure, mass-flow, high-frequency pressure and high-speed-camera measurements.",
+      "file_manifest_scope": "59 files; 52 text traces, 6 high-speed-camera/archive files, and one summary workbook; raw files remain external to this repository.",
+      "evidence_role": "Independent release, ignition and overpressure consequence-component evidence.",
+      "rights_note": "DataverseNO marks the record CC0 1.0. Preserve the DOI and source attribution; do not mirror multi-gigabyte raw traces in this repository.",
+      "eligibility_note": "Not a synchronized gaseous H70 station-to-vehicle loop and not a SAGA effectiveness dataset. Use only under a frozen consequence-model protocol.",
+      "inventory": "research/dataverse_hydrogen_explosion_dataset_inventory_2026_10_05.json"
+    },
+    "dataverseno_x044qk_ignited_hydrogen_jets": {
+      "title": "Replication data for: Laboratory-Scale Experiments on Ignited Hydrogen Jets: Flame Acceleration and Overpressure Analysis",
+      "publisher": "University of South-Eastern Norway / DataverseNO",
+      "landing_page": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/X044QK",
+      "api_record": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi%3A10.18710%2FX044QK",
+      "doi": "10.18710/X044QK",
+      "license": "CC0 1.0",
+      "public_raw_data": true,
+      "reported_scope": "40 laboratory-scale delayed-ignition jet experiments with four high-frequency pressure sensors, upstream pressure and mass-flow-derived summaries, obstacle spacing and high-speed video.",
+      "file_manifest_scope": "47 files; 39 CSV traces, six video archives, one README and one summary workbook; raw files remain external to this repository.",
+      "evidence_role": "Independent ignited-release, flame-acceleration and overpressure consequence-component evidence.",
+      "rights_note": "DataverseNO marks the record CC0 1.0. Preserve the DOI and source attribution; do not mirror multi-gigabyte raw traces in this repository.",
+      "eligibility_note": "Not a synchronized gaseous H70 station-to-vehicle loop and not a SAGA effectiveness dataset. Exclude non-ignition/no-data rows according to a frozen protocol before model comparison.",
+      "inventory": "research/dataverse_hydrogen_explosion_dataset_inventory_2026_10_05.json"
     }
   }
 }

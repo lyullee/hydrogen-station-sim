@@ -1295,3 +1295,31 @@ access boundary are independently reproducible, but it is not an open
 validation holdout. The full-loop gate stays closed until the custodian grants
 access, provides the channel dictionary and time-base/calibration metadata,
 and confirms reuse terms for derived results and journal publication.
+
+## 2026-10-05 DataverseNO hydrogen-explosion consequence archives
+
+Two newly released DataverseNO records are openly reusable under CC0 1.0 and
+provide useful independent consequence-component evidence:
+
+* [10.18710/WSKBIJ](https://doi.org/10.18710/WSKBIJ) contains 2024–2025
+  large-scale open-atmosphere delayed-ignition releases. The API manifest has
+  59 files: 52 text traces, six high-speed-camera/archive files and a summary
+  workbook. The README identifies reservoir and upstream pressure, mass flow
+  for experiments 1–27, four transient explosion-pressure sensors and camera
+  trigger synchronisation. Ambient weather was not documented.
+* [10.18710/X044QK](https://doi.org/10.18710/X044QK) contains 40 laboratory
+  delayed-ignition jet experiments. The API manifest has 47 files: 39 large
+  CSV traces, six video archives, a README and a summary workbook. The
+  workbook reports pressure and mass-flow summaries, obstacle spacing and
+  ignition delay; the README identifies four high-frequency pressure sensors
+  and an upstream pressure transmitter.
+
+The file counts, CC0 declarations, summary-workbook hashes and coverage are
+fixed in
+[`research/dataverse_hydrogen_explosion_dataset_inventory_2026_10_05.json`](dataverse_hydrogen_explosion_dataset_inventory_2026_10_05.json),
+with a human-readable report in
+[`research/DATAVERSE_HYDROGEN_EXPLOSION_DATASET_INVENTORY_2026_10_05.md`](DATAVERSE_HYDROGEN_EXPLOSION_DATASET_INVENTORY_2026_10_05.md).
+Neither record is a synchronized gaseous-H70 station-to-vehicle fueling loop;
+the inventory is not a model comparison and cannot close the full-loop gate or
+the SAGA effectiveness gate. A consequence-model protocol must be frozen
+before raw traces are used for any confirmatory score.

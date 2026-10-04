@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-04T20:11:21.166637+00:00",
+  "status": "completed_dataverse_provenance_and_summary_inventory",
+  "evidence_role": "independent_hydrogen_release_ignition_overpressure_component_evidence",
+  "claim_boundary": "These CC0 datasets provide independent release, ignition, pressure and mass-flow evidence for consequence-component checks. They do not contain a synchronized gaseous H70 station-to-vehicle fueling loop, and this inventory does not perform a model comparison. They therefore cannot close the full-loop external-validation gate or establish SAGA effectiveness.",
+  "sources": [
+    {
+      "id": "wskbij_large_scale_obstructed_releases",
+      "doi": "10.18710/WSKBIJ",
+      "title": "Replication dataset for: Large-Scale Hydrogen Explosion Experiments: Obstructed Releases in open atmosphere",
+      "record": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/WSKBIJ",
+      "api": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi%3A10.18710%2FWSKBIJ",
+      "license": "CC0 1.0",
+      "summary_file": "wsk_results.xlsx",
+      "expected_summary_md5": "73ee4f29ca08612f46b7a37980cbe4df",
+      "api_observation": {
+        "identifier": "WSKBIJ",
+        "publication_date": "2026-02-06",
+        "version": 1,
+        "license": "CC0 1.0",
+        "file_count": 59,
+        "file_groups": {
+          "text_trace_files": 52,
+          "csv_trace_files": 0,
+          "video_or_archive_files": 6,
+          "workbook_files": 1
+        },
+        "total_bytes": 96861179314,
+        "largest_file_bytes": 23656356112,
+        "readme_files": [
+          "00_Readme.txt"
+        ],
+        "summary_workbooks": [
+          {
+            "filename": "Experimental_results_.xlsx",
+            "id": 268155,
+            "bytes": 21165,
+            "md5": "73ee4f29ca08612f46b7a37980cbe4df"
+          }
+        ]
+      },
+      "api_error": null,
+      "summary_file_present": true,
+      "summary_file_identity_match": true,
+      "summary_file_hashes": {
+        "bytes": 21165,
+        "md5": "73ee4f29ca08612f46b7a37980cbe4df",
+        "sha256": "5ca3813fd7e9ade6c0d1aa623d2a7f5346760334b1c8b014a4ea3235ae5dbd34"
+      },
+      "published_summary": {
+        "summary_kind": "published_experiment_summary",
+        "experiment_count": 51,
+        "nozzle_diameter_mm_range": [
+          4.8,
+          9.4
+        ],
+        "reservoir_pressure_bar_range": [
+          0.36,
+          221.52
+        ],
+        "explosion_pressure_sensor_count": 4,
+        "explosion_pressure_kpa_range": [
+          -10.39,
+          235.39
+        ],
+        "experiments_with_numeric_pressure_sensor": 45,
+        "rows_with_missing_explosion_pressure": 12,
+        "source_notes": [
+          "Summary workbook contains pressure peaks by experiment; raw text traces and selected high-speed camera files are separate API files.",
+          "The README states that mass-flow instrumentation was available for experiments 1-27 only and ambient weather was not documented."
+        ]
+      }
+    },
+    {
+      "id": "x044qk_ignited_jets_overpressure",
+      "doi": "10.18710/X044QK",
+      "title": "Replication data for: Laboratory-Scale Experiments on Ignited Hydrogen Jets: Flame Acceleration and Overpressure Analysis",
+      "record": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/X044QK",
+      "api": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi%3A10.18710%2FX044QK",
+      "license": "CC0 1.0",
+      "summary_file": "x_results.xlsx",
+      "expected_summary_md5": "6c929ee530ac393ee8e76f6db2eff05c",
+      "api_observation": {
+        "identifier": "X044QK",
+        "publication_date": "2026-02-12",
+        "version": 1,
+        "license": "CC0 1.0",
+        "file_count": 47,
+        "file_groups": {
+          "text_trace_files": 1,
+          "csv_trace_files": 39,
+          "video_or_archive_files": 6,
+          "workbook_files": 1
+        },
+        "total_bytes": 101923431640,
+        "largest_file_bytes": 19509942142,
+        "readme_files": [
+          "00_Readme.txt"
+        ],
+        "summary_workbooks": [
+          {
+            "filename": "Matrix and H2 flow results.xlsx",
+            "id": 268340,
+            "bytes": 14199,
+            "md5": "6c929ee530ac393ee8e76f6db2eff05c"
+          }
+        ]
+      },
+      "api_error": null,
+      "summary_file_present": true,
+      "summary_file_identity_match": true,
+      "summary_file_hashes": {
+        "bytes": 14199,
+        "md5": "6c929ee530ac393ee8e76f6db2eff05c",
+        "sha256": "c50162c995c01bb37c407e7ce0f132301297bf3b2562518c86940fb758ae2557"
+      },
+      "published_summary": {
+        "summary_kind": "published_experiment_summary",
+        "experiment_count": 40,
+        "max_pressure_bar_range": [
+          0.0,
+          97.3553237915039
+        ],
+        "max_mass_flow_kg_s_range": [
+          0.0,
+          0.013603470288217068
+        ],
+        "average_pressure_bar_range": [
+          0.0,
+          71.24088287353516
+        ],
+        "average_mass_flow_kg_s_range": [
+          0.0,
+          0.009954497218132019
+        ],
+        "obstacle_distance_cm_range": [
+          29.0,
+          54.0
+        ],
+        "commented_experiments": [
+          "did not ignited",
+          "did not ignited",
+          "no data",
+          "no data fra pressure sensors. Movie er uten 10% pretrigger",
+          "spark was not generated -> no ignition",
+          "did not ignited"
+        ],
+        "source_notes": [
+          "Workbook reports pressure and mass-flow summaries for 40 numbered experiments; CSV files contain the large raw traces.",
+          "The README describes four high-frequency piezoelectric pressure sensors and an upstream pressure transmitter."
+        ]
+      }
+    }
+  ],
+  "validation_status": {
+    "model_comparison_performed": false,
+    "numeric_validation_gate_closed": false,
+    "full_loop_external_validation_supported": false,
+    "next_step": "Freeze a consequence-model protocol and inclusion criteria, then run the locked model against raw traces without changing parameters after reading outcomes."
+  }
+}
