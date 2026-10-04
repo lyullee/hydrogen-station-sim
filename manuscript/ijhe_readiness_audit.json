@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T21:52:34.503707+00:00",
+  "generated_at": "2026-10-04T22:48:40.753538+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 53,
+    "PASS": 55,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -335,6 +335,54 @@
             "soc_rmse_percentage_points_mean": 5.5833493152424865
           }
         ]
+      }
+    },
+    {
+      "id": "mc_measured_boundary_diagnostic_integrity",
+      "status": "PASS",
+      "claim": "The measured MC source-boundary/protocol sensitivity replay is retained as negative development evidence and cannot be promoted to full-loop validation.",
+      "evidence": "research\\mc_measured_boundary_diagnostic_2026_10_05.json",
+      "requirement": "Four post-outcome runs over eight consumed cases, no fitting, retained joint temperature failures, and explicit false full-loop/goal flags.",
+      "observed": {
+        "run_count": 4,
+        "case_count": 8,
+        "screening_pass_counts": [
+          0,
+          1,
+          1,
+          1
+        ],
+        "aggregate": [
+          {
+            "pressure_rmse_mpa": 6.04458586770003,
+            "temperature_rmse_c": 14.323669259998223,
+            "soc_rmse_percentage_points": 7.960985696082141,
+            "simulation_coverage_fraction": 0.9541886809026745,
+            "screening_pass_count": 0
+          },
+          {
+            "pressure_rmse_mpa": 5.55982864,
+            "temperature_rmse_c": 14.52485874,
+            "soc_rmse_percentage_points": 7.48803485,
+            "simulation_coverage_fraction": 0.9494038,
+            "screening_pass_count": 1
+          },
+          {
+            "pressure_rmse_mpa": 5.85656262,
+            "temperature_rmse_c": 15.07452054,
+            "soc_rmse_percentage_points": 7.88010393,
+            "simulation_coverage_fraction": 0.9997905,
+            "screening_pass_count": 1
+          },
+          {
+            "pressure_rmse_mpa": 4.907741042568065,
+            "temperature_rmse_c": 14.755705497264525,
+            "soc_rmse_percentage_points": 5.91416567793112,
+            "simulation_coverage_fraction": 0.8813796480420657,
+            "screening_pass_count": 1
+          }
+        ],
+        "goal_completion_permitted": false
       }
     },
     {
@@ -3275,6 +3323,19 @@
         "archive_sha256": "2d4fbc6b3d2996a40629c71c6a33a6fdec3fde246ee4cee23de12c86672cd4ff",
         "claim_boundary": "This protocol evaluates rigid-source discharge and transient jet characteristics for the published ambient-temperature subset of the Cryostat part-B experiments. It does not validate cryogenic two-phase flow, ignition, dispersion, flame/radiation, station control, refuelling, or emergency separation distance.",
         "protocol_hash_matches": true
+      }
+    },
+    {
+      "id": "preslhy_partb_nonadiabatic_diagnostic_integrity",
+      "status": "PASS",
+      "claim": "The revised non-adiabatic model is replayed on the consumed Part-B cases as a negative development diagnostic without replacing the frozen result.",
+      "evidence": "research\\preslhy_partb_nonadiabatic_diagnostic_2026_10_05.json",
+      "requirement": "Five post-outcome cases, unchanged 3/5 joint result, explicit geometry limitation and non-validation claim boundary.",
+      "observed": {
+        "status": "POST_OUTCOME_DEVELOPMENT_DIAGNOSTIC_ONLY",
+        "joint_primary_passes": 3,
+        "baseline_joint_primary_passes": 3,
+        "claim_boundary": "This post-outcome diagnostic cannot replace the frozen Part-B result, cannot support a revised external-validation claim, and cannot be used to tune a discharge coefficient or geometry to these five cases."
       }
     },
     {
