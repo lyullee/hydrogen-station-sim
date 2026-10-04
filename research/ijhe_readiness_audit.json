@@ -1,0 +1,2553 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-04T12:20:26.107850+00:00",
+  "target_journal": {
+    "title": "International Journal of Hydrogen Energy",
+    "issn": "0360-3199",
+    "publisher_scope_url": "https://shop.elsevier.com/journals/international-journal-of-hydrogen-energy/0360-3199",
+    "guide_for_authors_url": "https://www.elsevier.com/journals/international-journal-of-hydrogen-energy/0360-3199/guide-for-authors",
+    "data_statement_guidance_url": "https://www.elsevier.com/researcher/author/tools-and-resources/research-data/data-statement",
+    "readiness_interpretation": "A local gate is an evidence-readiness decision, not an acceptance or peer-review prediction."
+  },
+  "bounded_ijhe_submission_ready": false,
+  "full_user_objective_ready": false,
+  "goal_completion_permitted": false,
+  "gate_counts": {
+    "PASS": 30,
+    "FAIL": 7,
+    "PENDING": 7
+  },
+  "blocking_bounded_submission_gates": [
+    "preslhy_blowdown_external_validation",
+    "preslhy_partb_ambient_external_validation",
+    "preslhy_revised_holdout_validation",
+    "proust_independent_release_validation",
+    "schefer_transient_release_validation",
+    "schefer_2007_pressure_decay_validation",
+    "grune_2014_pressure_decay_validation",
+    "institutional_ethics_determination",
+    "hiad_casebook_frozen",
+    "hiad_holdout_collection",
+    "independent_expert_review_complete",
+    "submission_metadata_and_declarations"
+  ],
+  "blocking_full_objective_gates": [
+    "preslhy_blowdown_external_validation",
+    "preslhy_partb_ambient_external_validation",
+    "preslhy_revised_holdout_validation",
+    "proust_independent_release_validation",
+    "schefer_transient_release_validation",
+    "schefer_2007_pressure_decay_validation",
+    "grune_2014_pressure_decay_validation",
+    "institutional_ethics_determination",
+    "hiad_casebook_frozen",
+    "hiad_holdout_collection",
+    "independent_expert_review_complete",
+    "submission_metadata_and_declarations",
+    "full_loop_external_validation",
+    "saga_effectiveness_and_safety_supported"
+  ],
+  "gates": [
+    {
+      "id": "tank_external_validation",
+      "status": "PASS",
+      "claim": "Measured-boundary Type-IV tank model is externally evaluated on the frozen public split.",
+      "evidence": "research\\tank_model_validation_v2.json",
+      "requirement": "12 untouched validation fills, three primary errors and 10,000 case-level bootstrap replicates.",
+      "observed": {
+        "case_count": 12,
+        "pressure_rmse_mpa": 3.8413052037435977,
+        "temperature_rmse_c": 4.832748408545587,
+        "soc_rmse_percentage_points": 3.8495521984109318,
+        "bootstrap_replicates": 10000
+      }
+    },
+    {
+      "id": "active_fill_correction_disclosed",
+      "status": "PASS",
+      "claim": "The post-diagnostic H2P-L29 normalization correction and its downstream effect are disclosed and hash-linked.",
+      "evidence": "research\\h2protocol_active_fill_correction.json",
+      "requirement": "Old/new interval evidence, algorithm, processed hashes and downstream claim limit.",
+      "observed": {
+        "schema_version": 1,
+        "recorded_at": "2026-10-03",
+        "status": "post-diagnostic preprocessing correction disclosed",
+        "scope": "SAE J2601 Tables Method normalization and downstream development analyses",
+        "trigger": "Closed-loop mass-flow timing diagnostics showed that H2P-L29 delivered essentially none of its measured mass during the first half of the old normalized interval while the simulated fill began immediately.",
+        "root_cause": "The former parser selected the first and last above-threshold sample. A negligible isolated 1.526 g/s pulse at workbook time zero therefore pulled the start 369.5 s ahead of the sustained fill.",
+        "correction": {
+          "algorithm": "Cluster above-threshold flow samples using a 15 s maximum gap, discard leading or trailing clusters below max(0.005 kg, 0.2% of total cluster mass), and retain meaningful multi-segment fills including their internal gaps.",
+          "source_commit": "74baec4",
+          "tests": "A regression test rejects a negligible leading pulse while existing meaningful multi-segment cases remain intact."
+        },
+        "h2p_l29": {
+          "old_normalized_sample_count": 1143,
+          "old_duration_s": 571.0000002058223,
+          "raw_leading_pulse_g_s": 1.526,
+          "gap_before_sustained_fill_s": 369.5,
+          "corrected_normalized_sample_count": 399,
+          "corrected_duration_s": 198.99999999906868,
+          "corrected_first_flow_g_s": 1.073
+        },
+        "processed_artifact_hashes": {
+          "h2protocol_cases_csv_sha256": "f6bcc9a29da4e86f8376f14832192666002d7a9fb046ff00a3eb05d364c3e3ec",
+          "h2p_l29_trace_csv_sha256": "5ec4a91b567e69dcc6f2759b6adb8d7b8682ad438578d9d74b218b7f3fcc012a"
+        },
+        "downstream_effect": {
+          "tank_fit_before": {
+            "effective_volume_multiplier": 1.0519881596076546,
+            "gas_liner_ua_multiplier": 64.43011313151457
+          },
+          "tank_fit_after": {
+            "effective_volume_multiplier": 1.052729261198358,
+            "gas_liner_ua_multiplier": 31.460656519273492
+          },
+          "validation_mean_rmse_after": {
+            "pressure_mpa": 3.8413052037435977,
+            "temperature_c": 4.832748408545587,
+            "soc_percentage_points": 3.8495521984109318
+          }
+        },
+        "evidence_role": "The corrected tank and development results supersede the old Tables Method normalization. The eight MC Default workbooks use a separate parser and remain a consumed historical external failure of their frozen model; they were not rerun or used for tuning."
+      }
+    },
+    {
+      "id": "corrected_closed_loop_internal_evidence",
+      "status": "PASS",
+      "claim": "The corrected development pipeline is retained with its low joint-screen pass fractions and internal-comparison status.",
+      "evidence": "research\\closed_loop_development_v2.json; research\\closed_loop_internal_comparison_v2.json",
+      "requirement": "8 development and 11 already-inspected comparison cases with selected global parameters and retained failures.",
+      "observed": {
+        "development": {
+          "case_count": 8,
+          "screening_pass_count": 1,
+          "screening_pass_fraction": 0.125,
+          "final_stop_reason_counts": {
+            "none": 2,
+            "safety-temperature": 4,
+            "vehicle-target": 2
+          },
+          "metrics": {
+            "pressure_rmse_mpa": {
+              "mean": 6.601693364975364,
+              "median": 3.53262048436679,
+              "standard_deviation": 8.371709382192886,
+              "mean_bootstrap_95_ci": [
+                2.977433015770652,
+                12.666113179042638
+              ]
+            },
+            "pressure_mae_mpa": {
+              "mean": 4.793203646900297,
+              "median": 2.398112717925975,
+              "standard_deviation": 6.247277790864674,
+              "mean_bootstrap_95_ci": [
+                2.194864560195743,
+                9.3078449266566
+              ]
+            },
+            "temperature_rmse_c": {
+              "mean": 11.427575890283551,
+              "median": 8.70416109828929,
+              "standard_deviation": 6.805273061710801,
+              "mean_bootstrap_95_ci": [
+                7.430931396606547,
+                16.06181333629293
+              ]
+            },
+            "temperature_mae_c": {
+              "mean": 9.982226583807169,
+              "median": 7.509901617490252,
+              "standard_deviation": 6.085008642612459,
+              "mean_bootstrap_95_ci": [
+                6.332942682079824,
+                14.07457525590758
+              ]
+            },
+            "soc_rmse_percentage_points": {
+              "mean": 7.297254987401889,
+              "median": 3.650922417110336,
+              "standard_deviation": 9.152242396587623,
+              "mean_bootstrap_95_ci": [
+                3.3784428017087857,
+                13.90475600151661
+              ]
+            }
+          }
+        },
+        "internal_comparison": {
+          "case_count": 11,
+          "screening_pass_count": 2,
+          "screening_pass_fraction": 0.18181818181818182,
+          "final_stop_reason_counts": {
+            "none": 8,
+            "safety-temperature": 1,
+            "vehicle-target": 2
+          },
+          "metrics": {
+            "pressure_rmse_mpa": {
+              "mean": 4.529542460901498,
+              "median": 3.947204993770827,
+              "standard_deviation": 2.0895425645528776,
+              "mean_bootstrap_95_ci": [
+                3.449458376952485,
+                5.814893979278572
+              ]
+            },
+            "pressure_mae_mpa": {
+              "mean": 3.2862521500434143,
+              "median": 2.7684583881062723,
+              "standard_deviation": 1.4924915688256155,
+              "mean_bootstrap_95_ci": [
+                2.529528712647087,
+                4.208092234227254
+              ]
+            },
+            "temperature_rmse_c": {
+              "mean": 7.819001473367806,
+              "median": 6.637171555225489,
+              "standard_deviation": 3.2826778241316106,
+              "mean_bootstrap_95_ci": [
+                6.196523084674497,
+                9.884715458924044
+              ]
+            },
+            "temperature_mae_c": {
+              "mean": 6.751224178815355,
+              "median": 5.7359080998938765,
+              "standard_deviation": 2.997699993476782,
+              "mean_bootstrap_95_ci": [
+                5.284928033167485,
+                8.63648877715047
+              ]
+            },
+            "soc_rmse_percentage_points": {
+              "mean": 4.625272093704332,
+              "median": 3.7206386251458707,
+              "standard_deviation": 2.2676649312610766,
+              "mean_bootstrap_95_ci": [
+                3.379624739392875,
+                5.959683963636555
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "partial_station_profile_diagnostic_integrity",
+      "status": "PASS",
+      "claim": "The profiled partial-station experiment is retained as a bounded diagnostic and cannot be mistaken for full-station validation.",
+      "evidence": "data\\public_validation\\results\\partial_station_profile_diagnostic\\validation.json",
+      "requirement": "Eight declared development cases, explicit missing upstream boundary, no fresh-holdout claim, and retained zero screen passes.",
+      "observed": {
+        "evidence_role": "development_diagnostic_only",
+        "protocol": {
+          "source": "Powertech Labs SAE J2601 Tables Method validation traces already in repository",
+          "fresh_holdout": false,
+          "outcomes_inspected_before_run": true,
+          "upstream_pressure_trace_available": false,
+          "boundary_assumption": "constant 90 MPa upstream source pressure; inlet gas temperature profile used as delivery thermal boundary",
+          "source_temperature_profile_assumption": true,
+          "maximum_gas_temperature_c": 85.0,
+          "temperature_stop_mode": "safety_aware_controller"
+        },
+        "case_count": 8,
+        "screening_pass_count": 0
+      }
+    },
+    {
+      "id": "mc_source_schedule_diagnostic_integrity",
+      "status": "PASS",
+      "claim": "The consumed MC Default source-pressure and protocol-schedule sensitivity is retained as diagnostic evidence, not external confirmation.",
+      "evidence": "data\\public_validation\\results\\partial_station_mc_protocol_source3_physics_only\\validation.json",
+      "requirement": "Eight consumed cases, measured source/schedule profiles recorded, physics-only stop declared, and no new-holdout claim.",
+      "observed": {
+        "evidence_role": "development_diagnostic_only",
+        "protocol": {
+          "source": "Powertech Labs SAE J2601 MC Default bench traces",
+          "fresh_holdout": false,
+          "outcomes_inspected_before_run": true,
+          "upstream_pressure_trace_available": true,
+          "boundary_assumption": "published source_pressure_3_mpa trace used as upstream boundary; inlet gas temperature profile used as delivery thermal boundary",
+          "source_pressure_profile_used": true,
+          "source_pressure_column": "source_pressure_3_mpa",
+          "source_temperature_profile_assumption": true,
+          "protocol_pressure_profile_used": true,
+          "raw_mc_archive": "data\\public_validation\\raw\\h2protocol_mc_default\\SAE J2601 MC Default Bench Test Data.zip",
+          "dataset": "mc_default",
+          "maximum_gas_temperature_c": 200.0,
+          "temperature_stop_mode": "declared_physics_only_sensitivity"
+        },
+        "case_count": 8,
+        "screening_pass_count": 1
+      }
+    },
+    {
+      "id": "full_loop_external_validation",
+      "status": "FAIL",
+      "claim": "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
+      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_04.json",
+      "requirement": "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
+      "observed": {
+        "protocol_integrity": true,
+        "aggregate": {
+          "case_count": 8,
+          "screening_pass_count": 0,
+          "screening_pass_fraction": 0.0,
+          "final_stop_reason_counts": {
+            "safety-temperature": 5,
+            "none": 3
+          },
+          "metrics": {
+            "pressure_rmse_mpa": {
+              "mean": 15.861950187335326,
+              "median": 14.49675836414942,
+              "standard_deviation": 3.7476895068277076,
+              "mean_bootstrap_95_ci": [
+                13.637430363691749,
+                18.430827353918872
+              ]
+            },
+            "pressure_mae_mpa": {
+              "mean": 12.590152944442048,
+              "median": 12.590039935822876,
+              "standard_deviation": 2.460904030004179,
+              "mean_bootstrap_95_ci": [
+                10.971963265030352,
+                14.130201668196316
+              ]
+            },
+            "temperature_rmse_c": {
+              "mean": 13.2297713971845,
+              "median": 13.928934952073663,
+              "standard_deviation": 3.3457636590763014,
+              "mean_bootstrap_95_ci": [
+                10.968645460206826,
+                15.25100417461277
+              ]
+            },
+            "temperature_mae_c": {
+              "mean": 11.84433108555098,
+              "median": 12.105033636019115,
+              "standard_deviation": 3.162512329995514,
+              "mean_bootstrap_95_ci": [
+                9.781595031463121,
+                13.84424239055918
+              ]
+            },
+            "soc_rmse_percentage_points": {
+              "mean": 18.082051217903157,
+              "median": 16.836987442919003,
+              "standard_deviation": 3.783989559346659,
+              "mean_bootstrap_95_ci": [
+                15.896878511704957,
+                20.72305267897957
+              ]
+            }
+          }
+        },
+        "new_external_data_search": {
+          "status": "NO_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
+          "next_action": "send the prepared CARB/NRC/IJHE high-flow/FCH2RAIL/JRC/NREL/BAM/Empa/DLR data requests through approved custodians, and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest",
+          "claim_limit": "The NREL candidate supports an independent tank-submodel screen only. No new external full-loop validation claim is permitted until station controller, hose/nozzle, protocol and vehicle-side traces are obtained and scored under a pre-access freeze."
+        },
+        "search_recheck_2026_10_04": {
+          "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+          "gate_impact": "full_loop_external_validation_remains_open",
+          "candidate_count": 17
+        }
+      }
+    },
+    {
+      "id": "validation_data_acquisition_tracker",
+      "status": "PASS",
+      "claim": "Independent raw-data acquisition routes are recorded with acceptance, rights and claim-boundary checks without treating requests as evidence.",
+      "evidence": "research\\validation_data_acquisition_tracker.json",
+      "requirement": "At least 15 candidate routes, existing draft request for every route, source URL and explicit non-evidentiary boundary.",
+      "observed": {
+        "status": "open_data_not_yet_received",
+        "candidate_count": 25,
+        "draft_count": 22,
+        "claim_boundary": "This tracker is a data-acquisition plan. It is not evidence of validation, does not change any IJHE readiness gate, and does not authorize contact or publication."
+      }
+    },
+    {
+      "id": "byrnes_zenodo_exploratory_screen_integrity",
+      "status": "PASS",
+      "claim": "The newly located open Byrnes hydrogen-release archive is replayed as transparent post-access exploratory evidence without being promoted to validation.",
+      "evidence": "research\\byrnes_zenodo_exploratory_protocol.json; research\\byrnes_zenodo_exploratory_result.json",
+      "requirement": "Three retained cases, 2/3 joint screen result, explicit post-access status and false claim-supported flag.",
+      "observed": {
+        "evidence_role": "post_access_exploratory_screening",
+        "aggregate": {
+          "case_count": 3,
+          "joint_screen_pass_count": 2,
+          "joint_screen_pass_fraction": 0.6666666666666666,
+          "claim_supported": false
+        },
+        "claim_boundary": "Post-access exploratory screen only; not a prospective validation gate, not a station full-loop result, and not an emergency-consequence validation."
+      }
+    },
+    {
+      "id": "zenodo_4106101_pressure_peaking_screen_integrity",
+      "status": "PASS",
+      "claim": "The prospective Zenodo pressure-peaking screen is reproducible and remains explicitly exploratory rather than full-loop validation.",
+      "evidence": "research\\zenodo_4106101_pressure_peaking_protocol.json; research\\zenodo_4106101_pressure_peaking_result.json",
+      "requirement": "Protocol frozen before outcomes, ten eligible cases, 7/10 joint primary passes, false confirmatory flag and explicit full-loop claim boundary.",
+      "observed": {
+        "evidence_role": "prospective_external_consequence_validation_result",
+        "aggregate": {
+          "eligible_case_count": 10,
+          "excluded_case_count": 0,
+          "excluded_cases": [],
+          "joint_primary_pass_count": 7,
+          "joint_primary_pass_fraction": 0.7,
+          "confirmatory_rule": ">=6 eligible cases and >=80% joint primary pass",
+          "confirmatory_rule_met": false,
+          "interpretation": "exploratory_submodel_screen_only"
+        },
+        "claim_boundary": "This result validates only the unignited hydrogen pressure-peaking consequence submodel for a confined, vented enclosure. It is not validation of the full HRS fueling loop, cascade/compressor control, dispenser operation, outdoor dispersion, ignition, emergency response, or SAGA effectiveness."
+      }
+    },
+    {
+      "id": "elvhys_auxiliary_replay_integrity",
+      "status": "PASS",
+      "claim": "The public ELVHYS cryogenic pressure-peaking subset is hash-identified and replayed with a strict non-validation claim boundary.",
+      "evidence": "research\\elvhys_auxiliary_replay.json",
+      "requirement": "Three pressure-peaking tests plus one vertical dispersion concentration test, nine source files, monotonic common time bases and explicit prohibition on predictive/full-loop claims.",
+      "observed": {
+        "case_count": 3,
+        "concentration_case_count": 1,
+        "file_count": 9,
+        "predictive_model_validation_permitted": false,
+        "full_loop_station_vehicle_validation_permitted": false
+      }
+    },
+    {
+      "id": "nrel_h2fills_workbook_provenance_integrity",
+      "status": "PASS",
+      "claim": "The NREL HDVS tank candidate remains byte-identified after a package-container change without being overclaimed as a new full-loop holdout.",
+      "evidence": "research\\nrel_h2fills_package_retrieval_check.json; data\\public_validation\\results\\nrel_h2fills_hdvs_typeiv\\validation.json",
+      "requirement": "Downloaded and locally screened workbook digests match the validation record; package drift and the no-new-holdout boundary are explicit.",
+      "observed": {
+        "workbook_sha256": "1a3fbe64a50c1c97266bfe0372998513ad3ccec5600fab7bc4b9fc68ad4d9d0c",
+        "package_sha256_matches_previous_record": false,
+        "claim_boundary": "The validation is pinned to the workbook digest, not to an immutable package-container digest. The current package download has the same screened workbook but a different archive digest; this does not add a new validation case or permit redistribution."
+      }
+    },
+    {
+      "id": "full_loop_negative_result_disclosed",
+      "status": "PASS",
+      "claim": "The failed full-loop evaluation is disclosed instead of being hidden.",
+      "evidence": "manuscript\\ijhe_manuscript_draft.tex",
+      "requirement": "Explicit negative result and bounded tank-model claim.",
+      "observed": null
+    },
+    {
+      "id": "hyram_adapter_verification",
+      "status": "PASS",
+      "claim": "The production adapter is identical to and numerically consistent with HyRAM+ 6.1 within the tested scope.",
+      "evidence": "research\\hyram_adapter_verification.json",
+      "requirement": "Source identity, upstream validation suite and production-adapter parity pass.",
+      "observed": {
+        "source_identity_match": true,
+        "upstream_status": "passed",
+        "adapter_parity_passed": true
+      }
+    },
+    {
+      "id": "station_consequence_geometry_validation",
+      "status": "PASS",
+      "claim": "Displayed outdoor free-jet screening geometry is traceably checked against geometrically applicable independent data.",
+      "evidence": "research\\consequence_geometry_validation.json",
+      "requirement": "At least three independent applicable evidence families, frozen mapping tests, and explicit non-site-specific limits.",
+      "observed": {
+        "schema_version": 1,
+        "generated_at": "2026-10-03T02:55:02.750089+00:00",
+        "status": "passed",
+        "validation_scope": "outdoor unconfined hydrogen free-jet consequence display mapping",
+        "independent_case_count": 3,
+        "independent_dataset_family_count": 3,
+        "site_specific_validation": false,
+        "site_specific_claim_permitted": false,
+        "safety_distance_claim_permitted": false,
+        "upstream_validation": {
+          "software": "HyRAM+ 6.1",
+          "commit": "b45abf9a6d995951311be6aad836f1874e4d420b",
+          "passed_test_count": 47,
+          "passed_subtest_count": 803,
+          "primary_report": "https://doi.org/10.2172/2480221",
+          "official_software_page": "https://energy.sandia.gov/programs/sustainable-transportation/hydrogen/hydrogen-safety-codes-and-standards/hyram/"
+        },
+        "evidence_families": [
+          {
+            "id": "four_percent_unignited_plume",
+            "independent_source": "Han et al. (2013), Figure 6",
+            "experimental_quantity": "4 vol% H2 (LFL) dilution length versus pressure",
+            "production_quantity": "flammable_plume_streamline_distance_m",
+            "applicable_geometry": "directional free-jet centerline length",
+            "source_file": "tests/hyram/validation/test_jetplume.py",
+            "data_files": [
+              "han-2013-fig6a.csv",
+              "han-2013-fig6b.csv",
+              "han-2013-fig6c.csv"
+            ],
+            "coverage": "0.5, 0.7 and 1.0 mm orifices; 100-400 bar; LFL=0.04",
+            "frozen_limits_at_lfl": {
+              "max_absolute_error_m": 0.19,
+              "max_percent_error": 6,
+              "minimum_r_squared": 0.996
+            },
+            "markers_present": true,
+            "data_sha256": {
+              "han-2013-fig6a.csv": "dac5f9ae694cc0a11ff6bcf012bf3ad91715bfde9abf40f70698ab01ca7e52b4",
+              "han-2013-fig6b.csv": "fd5f78e218f83fe10bb7284a0edfa501b505c1d8713b18101c9a333c66f54105",
+              "han-2013-fig6c.csv": "30cc0cea4bdd4f752ecdd7853ed19dbb9bdb65041fed4036074d62b4c2cbfa8e"
+            }
+          },
+          {
+            "id": "ignited_jet_radiation",
+            "independent_source": "Schefer et al. (2006), Figure 8; Houf and Schefer (2007), Figure 6",
+            "experimental_quantity": "radiative heat flux versus distance",
+            "production_quantity": "heat_fluxes and sampled 5 kW/m2 threshold bracket",
+            "applicable_geometry": "sampled radial screening distance",
+            "source_file": "tests/hyram/validation/test_heatflux.py",
+            "data_files": [
+              "schefer-2006-fig8.csv",
+              "houfschefer-2007-fig6.csv"
+            ],
+            "coverage": "five transient flow states plus an independent normalized-distance series",
+            "markers_present": true,
+            "data_sha256": {
+              "schefer-2006-fig8.csv": "cea34ab5c876259361990a1a1ac60a57f783d596e7fe5173aaf29deb6e11e6fc",
+              "houfschefer-2007-fig6.csv": "85cd271923475ab62536e2972a19704fa728ce4bf4646622603590da266934e0"
+            }
+          },
+          {
+            "id": "unconfined_overpressure",
+            "independent_source": "Bauwens and Dorofeev (2019), Figure 9; additional published sets in the same suite",
+            "experimental_quantity": "peak unconfined overpressure versus distance",
+            "production_quantity": "overpressures and sampled 5 kPa threshold bracket",
+            "applicable_geometry": "sampled radial screening distance",
+            "source_file": "tests/hyram/validation/test_unconfined_overpressure.py",
+            "data_files": [
+              "unconfined_overpressure_data.py"
+            ],
+            "coverage": "BST plus three sensitivity models across published free-jet experiments",
+            "markers_present": true,
+            "data_sha256": {
+              "unconfined_overpressure_data.py": "4595fedf8c1314f4ab8cf60f80b5396404d0ffe1ebaab2ef682f239b9d04ed0f"
+            }
+          }
+        ],
+        "chain_checks": {
+          "exact_hyram_source_identity": true,
+          "upstream_validation_passed": true,
+          "required_upstream_modules_executed": true,
+          "production_adapter_parity_passed": true,
+          "production_contract_preserves_geometry_inputs": true,
+          "display_separates_radial_and_directional_geometry": true,
+          "browser_mapping_regression_passed": true,
+          "all_evidence_markers_and_data_present": true
+        },
+        "browser_mapping_test": {
+          "command": "node --test tests/risk_range_state.test.mjs",
+          "status": "passed",
+          "return_code": 0,
+          "output_tail": "✔ hypothetical cases follow the current assessment, not a past peak (0.1388ms)\n✔ the overlay includes a longer four-percent flammable plume (0.1039ms)\n✔ radial screening and directional plume geometry remain distinct (0.1176ms)\n✔ active releases retain separate peak radial and plume distances (0.125ms)\nℹ tests 6\nℹ suites 0\nℹ pass 6\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 59.6493"
+        },
+        "artifact_hashes": {
+          "research/hyram_adapter_verification.json": "df4839072814155d0eee55204e6f5b9bfd3522c2151d77007c4c0ee1e2efaa12",
+          "src/h2station/risk/runtime_backend.py": "b57cfb49f702206b2f0cf69f7cd854851c4216d0b950cbe4b0070559b244d41e",
+          "web/consequence-geometry.mjs": "b600257851a0f11da7abcffc6f87e45fde001a3e0141fa6e93f308c45e33ca0b",
+          "web/risk-range-state.mjs": "75741914b107614f8cf42082c76036d1ca3335b6e9f8ece3f932560840e9238a",
+          "web/station3d.js": "55608891bcdd05bae9666f6f982b948680b308c3b59499a5b9d12c32c0c30bdf"
+        },
+        "display_contract": {
+          "thermal_and_overpressure": "equipment-footprint-centred radial screening band using sampled_effect_radius_m",
+          "dispersion": "directional tapered plume using the 4 vol% centerline distance, contour width and release angle",
+          "persistence": "active releases retain separate peak radial and plume extents; ended releases have a three-second display grace",
+          "units": "metres and radians without display-side conversion",
+          "scene_azimuth": "schematic +X axis; the process state carries elevation angle but no site azimuth"
+        },
+        "limitations": [
+          "The independent measurements are published data digitized and regression-tested by HyRAM+, not measurements produced by this project.",
+          "The display is a screening visualization, not a regulatory separation distance, evacuation radius, or certified safety boundary.",
+          "Buildings, congestion, terrain and site-specific wind are not resolved; no site-specific CFD or outdoor field campaign has been performed.",
+          "The 5 kW/m2 and 5 kPa radial result is a discrete observation-point bracket and must not be interpolated as an exact contour.",
+          "Unconfined overpressure depends on the selected BST flame-speed assumption; alternate methods remain a model-form sensitivity.",
+          "The scene uses the stored release elevation angle but a schematic +X azimuth because the process model does not provide site azimuth."
+        ],
+        "decision": "The traceability chain passes for the bounded outdoor free-jet display scope. It does not validate a specific station site or authorize a safety-distance claim."
+      }
+    },
+    {
+      "id": "open_channel_detector_logic_evidence",
+      "status": "PASS",
+      "claim": "Measured open-channel concentration records replay the declared detector threshold and persistence logic with an explicit non-HRS claim boundary.",
+      "evidence": "research\\dispersion_detector_logic_validation.json",
+      "requirement": "22 CC BY 4.0 cases, 29 channels per case, archive hashes, exact rule parameters and bounded interpretation.",
+      "observed": {
+        "case_count": 22,
+        "sensor_count_per_case": [
+          29
+        ],
+        "cases_with_alarm_detection": 22,
+        "cases_with_trip_detection": 22,
+        "mean_alarm_sensor_coverage_fraction": 0.8871473354231975,
+        "mean_trip_sensor_coverage_fraction": 0.8087774294670846,
+        "median_first_alarm_after_fill_start_s": 10.674999999995634,
+        "median_first_trip_after_fill_start_s": 10.674999999995634
+      }
+    },
+    {
+      "id": "incident_playbook_public_evidence",
+      "status": "PASS",
+      "claim": "High-consequence playbooks expose the public HIAD 2.2 accident/near-miss source alongside standards guidance.",
+      "evidence": "src\\h2station\\data\\emergency_playbooks.json",
+      "requirement": "HIAD source URL and links on gas release, fire, overpressure, relief, fueling and hose response families; no efficacy claim.",
+      "observed": {
+        "hiad_source": {
+          "title": "European Commission JRC, European Hydrogen Incidents and Accidents Database (HIAD 2.2)",
+          "url": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt"
+        },
+        "linked_plan_ids": [
+          "compressor_thermal",
+          "external_fire",
+          "flow_anomaly",
+          "fueling_fault",
+          "gas_release",
+          "hose_connection",
+          "hydrogen_fire",
+          "isolation_failure",
+          "overpressure",
+          "precooling_fault",
+          "relief_discharge",
+          "structural_damage",
+          "supply_connection"
+        ],
+        "claim_boundary": "Incident taxonomy and public response-field provenance only; no quantitative effectiveness or probability claim."
+      }
+    },
+    {
+      "id": "hiad_response_stage_contract",
+      "status": "PASS",
+      "claim": "Public HIAD metadata mappings carry five staged response fields and keep idle periodic monitoring quiet.",
+      "evidence": "research\\hiad_response_stage_contract.json",
+      "requirement": "34/34 mapped rows, no missing recognition/immediate/stabilize/restart/prevention fields, explicit metadata-only claim boundary.",
+      "observed": {
+        "schema_version": 1,
+        "generated_at_utc": "2026-10-04T11:15:26.741528+00:00",
+        "status": "completed_metadata_only_response_stage_contract",
+        "evidence_role": "metadata_only_response_contract",
+        "source": {
+          "inventory": "research/hiad_hrs_public_evidence.json",
+          "inventory_sha256": "27b7fc752fe7ad706eb48854447bb203605be30b745515a259fad89325cc2536",
+          "coverage": "research/hiad_playbook_coverage.json",
+          "coverage_sha256": "09f9de219440aa73816f08984e5a2a4107052241f9a65a711292a1fa5e85eeff",
+          "public_source": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt"
+        },
+        "catalog": {
+          "path": "src/h2station/data/emergency_playbooks.json",
+          "catalog_sha256": "68a2a847ae4d7c2ce1aab10d626ffd7595457231f182e3d2bb8b5a2fb73592b0",
+          "plan_count": 16,
+          "required_stages": [
+            "recognition",
+            "immediate",
+            "stabilize",
+            "restart",
+            "prevention"
+          ]
+        },
+        "aggregate": {
+          "case_count": 34,
+          "mapped_case_count": 34,
+          "plan_reference_count": 61,
+          "missing_stage_case_count": 0,
+          "invalid_plan_reference_count": 0,
+          "ignition_case_count": 6,
+          "ignition_without_hydrogen_fire_count": 0,
+          "structural_case_count": 1,
+          "structural_without_structural_plan_count": 0,
+          "no_release_with_fire_plan_count": 0,
+          "normal_quiet_contract_passed": true,
+          "coverage_source_hash_matches": true,
+          "coverage_catalog_hash_matches": true
+        },
+        "contract_pass": true,
+        "normal_quiet_contract": {
+          "periodic_selection_empty": true,
+          "structured_guidance_none": true,
+          "passed": true
+        },
+        "exception_ids": {
+          "missing_stage_cases": [],
+          "invalid_plan_references": [],
+          "ignition_without_hydrogen_fire": [],
+          "structural_without_structural_plan": [],
+          "no_release_with_fire_plan": []
+        },
+        "cases": [
+          {
+            "event_id": "396",
+            "candidate_plan_ids": [
+              "gas_release"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "401",
+            "candidate_plan_ids": [
+              "gas_release"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "402",
+            "candidate_plan_ids": [
+              "compressor_thermal"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "403",
+            "candidate_plan_ids": [
+              "gas_release",
+              "fueling_fault"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "404",
+            "candidate_plan_ids": [
+              "fueling_fault"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "411",
+            "candidate_plan_ids": [
+              "compressor_thermal"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "454",
+            "candidate_plan_ids": [
+              "structural_damage"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": true,
+            "structural_damage_present": true,
+            "missing_stages": []
+          },
+          {
+            "event_id": "463",
+            "candidate_plan_ids": [
+              "gas_release",
+              "fueling_fault"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "702",
+            "candidate_plan_ids": [
+              "gas_release",
+              "hose_connection"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "803",
+            "candidate_plan_ids": [
+              "gas_release",
+              "fueling_fault"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "884",
+            "candidate_plan_ids": [
+              "hydrogen_fire",
+              "gas_release",
+              "overpressure"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": true,
+            "hydrogen_fire_present": true,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "953",
+            "candidate_plan_ids": [
+              "gas_release"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1038",
+            "candidate_plan_ids": [
+              "hose_connection",
+              "precooling_fault"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1062",
+            "candidate_plan_ids": [
+              "gas_release",
+              "overpressure"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1063",
+            "candidate_plan_ids": [
+              "gas_release"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1064",
+            "candidate_plan_ids": [
+              "gas_release"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1106",
+            "candidate_plan_ids": [
+              "hydrogen_fire",
+              "gas_release"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": true,
+            "hydrogen_fire_present": true,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1159",
+            "candidate_plan_ids": [
+              "gas_release",
+              "overpressure"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1161",
+            "candidate_plan_ids": [
+              "gas_release",
+              "overpressure"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1163",
+            "candidate_plan_ids": [
+              "hydrogen_fire",
+              "gas_release",
+              "overpressure"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": true,
+            "hydrogen_fire_present": true,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1173",
+            "candidate_plan_ids": [
+              "hydrogen_fire",
+              "gas_release",
+              "overpressure"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": true,
+            "hydrogen_fire_present": true,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1191",
+            "candidate_plan_ids": [
+              "hydrogen_fire",
+              "gas_release",
+              "overpressure"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": true,
+            "hydrogen_fire_present": true,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1193",
+            "candidate_plan_ids": [
+              "gas_release"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1194",
+            "candidate_plan_ids": [
+              "gas_release"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1195",
+            "candidate_plan_ids": [
+              "gas_release"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1196",
+            "candidate_plan_ids": [
+              "gas_release",
+              "hose_connection"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1198",
+            "candidate_plan_ids": [
+              "hydrogen_fire",
+              "gas_release",
+              "hose_connection"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": true,
+            "hydrogen_fire_present": true,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1202",
+            "candidate_plan_ids": [
+              "gas_release",
+              "hose_connection"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1203",
+            "candidate_plan_ids": [
+              "gas_release",
+              "compressor_thermal"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1204",
+            "candidate_plan_ids": [
+              "gas_release",
+              "hose_connection"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1205",
+            "candidate_plan_ids": [
+              "gas_release",
+              "compressor_thermal"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1206",
+            "candidate_plan_ids": [
+              "gas_release",
+              "hose_connection"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1207",
+            "candidate_plan_ids": [
+              "gas_release",
+              "fueling_fault"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          },
+          {
+            "event_id": "1208",
+            "candidate_plan_ids": [
+              "gas_release",
+              "fueling_fault"
+            ],
+            "stage_contract": "pass",
+            "ignition_metadata_requires_hydrogen_fire": false,
+            "hydrogen_fire_present": false,
+            "structural_damage_metadata_requires_structural_plan": false,
+            "structural_damage_present": false,
+            "missing_stages": []
+          }
+        ],
+        "limitations": [
+          "The audit uses public HIAD metadata and the local catalogue; HIAD emergency-action and lesson text are excluded.",
+          "A complete stage contract verifies interface coverage only; it does not establish that any step is correct, safe or effective.",
+          "No accident probability, consequence-distance, physics, human-factors or operator-performance claim is made.",
+          "Independent coordinator review, blinded holdout scoring and qualified expert rating remain required."
+        ]
+      }
+    },
+    {
+      "id": "hiad_action_evidence_integrity",
+      "status": "PASS",
+      "claim": "The public HIAD HRS action fields are summarized into a non-evaluative, traceable action taxonomy for evidence-grounded guidance.",
+      "evidence": "research\\hiad_action_evidence.json",
+      "requirement": "34 HRS cases, source digest, controlled action categories, no copied raw prose and explicit exclusion from the SAGA holdout.",
+      "observed": {
+        "case_count": 34,
+        "taxonomy": {
+          "category_patterns_version": "hiad-action-taxonomy-v1",
+          "category_counts": {
+            "shutdown_isolation_depressurization": 22,
+            "detection_alarm_monitoring": 14,
+            "fire_response_cooling": 6,
+            "evacuation_perimeter_access": 6,
+            "emergency_communication_coordination": 17,
+            "inspection_leak_test_repair": 21,
+            "procedure_interlock_training_design": 23,
+            "ventilation_purge": 21
+          },
+          "field_presence_counts": {
+            "emergency_action": 29,
+            "lesson_learnt": 24,
+            "corrective_measures": 25
+          }
+        },
+        "source": {
+          "path": "data\\public_validation\\raw\\hiad_2_2\\HIAD 2.2.xlsx",
+          "sha256": "295772b60a4afe5ef47a00bc314eed48b76c170be00c29952d60e50fedd6f55f",
+          "public_use_note": "HIAD 2.2 workbook states that the database is intended for public use; verify permission before redistributing raw prose.",
+          "raw_text_retained": false,
+          "holdout_use": false
+        },
+        "claim_boundary": "This artifact counts controlled action categories derived from HIAD HRS records. It does not judge whether an action was correct or safe, estimate incident probability, validate physics, or evaluate SAGA effectiveness."
+      }
+    },
+    {
+      "id": "hiad_action_playbook_traceability",
+      "status": "PASS",
+      "claim": "All public HIAD action categories are traceably connected to complete staged response plans without claiming efficacy.",
+      "evidence": "research\\hiad_action_playbook_coverage.json",
+      "requirement": "8/8 categories and 34/34 cases mapped; every mapped plan exposes recognition, immediate, stabilize, restart and prevention stages.",
+      "observed": {
+        "category_count": 8,
+        "covered_category_count": 8,
+        "category_coverage_fraction": 1.0,
+        "case_count": 34,
+        "covered_case_count": 34,
+        "case_coverage_fraction": 1.0,
+        "missing_plan_ids": [],
+        "incomplete_plan_ids": [],
+        "contract_pass": true
+      }
+    },
+    {
+      "id": "public_dispenser_endpoint_diagnostic",
+      "status": "PASS",
+      "claim": "Public 35/70 MPa dispenser endpoint tables are replayed as an explicit negative diagnostic without being promoted to full-loop validation.",
+      "evidence": "research\\cip_dispenser_endpoint_screen.json",
+      "requirement": "Two public endpoint cases, source DOI and download hashes, declared 85 degC stop model, retained endpoint errors and explicit claim boundary.",
+      "observed": {
+        "case_count": 2,
+        "stop_reason_counts": {
+          "safety-temperature": 2
+        },
+        "claim_boundary": "This diagnostic does not close the independent station-to-vehicle full-loop gate and is not a safety-distance claim."
+      }
+    },
+    {
+      "id": "accidental_release_ignition_public_evidence",
+      "status": "PASS",
+      "claim": "An openly licensed controlled high-pressure hydrogen breach experiment is captured for accident-like consequence and ignition scenario grounding without being misrepresented as station validation.",
+      "evidence": "research\\accidental_self_ignition_public_evidence_2026_10_04.json",
+      "requirement": "Zenodo and article DOI, CC BY rights, archive/file hashes, pressure plus paired ignition/no-ignition traces, and an explicit full-loop exclusion.",
+      "observed": {
+        "zenodo_doi": "10.5281/zenodo.17913628",
+        "article_doi": "10.1016/j.elstat.2025.104222",
+        "license": "CC BY 4.0",
+        "file_count": 3,
+        "archive_sha256": "0a44613734bb2da4d9ea4a4e84fd438ff2a87916b8f9c91d55e9e37c9d8de804",
+        "eligibility": {
+          "public_accident_or_experiment_evidence": true,
+          "consequence_and_ignition_grounding_eligible": true,
+          "full_loop_station_vehicle_holdout_eligible": false,
+          "numerical_release_model_validation_claimed": false,
+          "reason_not_full_loop": "The experiment is a controlled cylinder breach rather than a station-to-vehicle fueling event; breach geometry, discharge coefficient and complete calibration metadata are not supplied in the dataset record."
+        },
+        "claim_boundary": "This record establishes openly licensed experimental evidence and provenance for accidental high-pressure hydrogen release and ignition. It does not close the independent station-to-vehicle full-loop gate, prove an ignition probability, or validate the digital twin without a preregistered apparatus mapping and holdout protocol."
+      }
+    },
+    {
+      "id": "khk_public_accident_report_inventory",
+      "status": "PASS",
+      "claim": "Public KHK hydrogen accident reports are inventoried for traceable qualitative scenario and response grounding without being misrepresented as numerical validation data.",
+      "evidence": "research\\khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
+      "requirement": "23 linked PDF reports covering 26 incident codes, 8 precaution reports, public citation links, no PDF mirroring, and explicit exclusion from synchronized physics/full-loop claims.",
+      "observed": {
+        "source_page": {
+          "title": "Hydrogen-related accident information",
+          "institution": "High Pressure Gas Safety Institute of Japan (KHK)",
+          "url": "https://www.khk.or.jp/hydrogen/accident_information.html",
+          "accessed_at": "2026-10-04",
+          "page_scope": "KHK accident investigation committee hydrogen-related accident summaries and hydrogen-station high-pressure-gas accident precaution reports"
+        },
+        "coverage": {
+          "pdf_report_count": 23,
+          "incident_code_count": 26,
+          "precaution_report_count": 8,
+          "equipment_class_counts": {
+            "accumulator_fire": 1,
+            "breakaway_coupling_leak": 1,
+            "compressor_leak": 1,
+            "dehumidifier_ignition": 1,
+            "dispenser_fitting_leak": 1,
+            "dispenser_isolation_valve_leak": 1,
+            "dispenser_leak": 1,
+            "explosion": 1,
+            "filling_equipment_explosion": 1,
+            "filling_hose_damage": 1,
+            "filling_hose_leak": 1,
+            "filling_hose_rupture": 1,
+            "fitting_leak": 1,
+            "hose_leak_detector_alarm": 1,
+            "hydrogen_generation": 1,
+            "hydrogen_leak": 1,
+            "isolation_valve_leak": 1,
+            "leak_static_ignition": 1,
+            "mobile_breakaway_leak": 1,
+            "station_explosion": 1,
+            "station_hydrogen_leak": 1,
+            "storage_fitting_leak": 1,
+            "vehicle_fire": 1
+          },
+          "station_relevant_incident_code_count": 18
+        },
+        "rights_and_mirroring": {
+          "landing_page_public": true,
+          "raw_pdf_mirrored": false,
+          "rights_status": "public_report_citation_only",
+          "note": "The repository stores stable source links and bibliographic inventory only; it does not mirror the linked PDFs. Verify KHK terms before redistributing reports or derived tables."
+        },
+        "eligibility": {
+          "public_actual_accident_evidence": true,
+          "qualitative_scenario_grounding_eligible": true,
+          "synchronized_process_trace_eligible": false,
+          "full_loop_station_vehicle_holdout_eligible": false,
+          "frequency_or_probability_estimation_eligible": false,
+          "physics_model_validation_eligible": false
+        },
+        "claim_boundary": "These public KHK reports establish traceable real hydrogen-related accident scenarios and response/prevention context. They do not provide synchronized station process traces, complete boundary conditions, exposure denominators, probabilities, or a prospective numerical holdout. They must not be used alone to claim physics validation, accident frequency, or risk probability."
+      }
+    },
+    {
+      "id": "preslhy_blowdown_external_validation",
+      "status": "FAIL",
+      "claim": "The source-depletion and direct-aperture release model meets its prospectively frozen screens on public PRESLHY ambient blowdown experiments.",
+      "evidence": "research\\preslhy_blowdown_external_validation.json; research\\preslhy_blowdown_validation_protocol.json",
+      "requirement": ">=12 cases across >=3 nozzle and pressure groups, >=70% joint primary pass fraction, frozen implementation and retained failures.",
+      "observed": {
+        "eligibility": {
+          "eligible_cases": 22,
+          "excluded_workbooks": 0,
+          "diameter_groups": [
+            0.5,
+            1.0,
+            2.0,
+            4.0
+          ],
+          "pressure_groups": [
+            "high",
+            "low",
+            "medium"
+          ],
+          "minimum_requirements_met": true
+        },
+        "aggregate": {
+          "joint_primary_pass_fraction": 0.5,
+          "bootstrap_95_percent_ci": [
+            0.3181818181818182,
+            0.7272727272727273
+          ],
+          "bootstrap_replicates": 10000,
+          "bootstrap_seed": 20261003,
+          "claim_threshold": 0.7,
+          "ambient_direct_aperture_blowdown_claim_supported": false
+        },
+        "claim_boundary": "This protocol evaluates a rigid source vessel discharging through a nominal circular aperture. It does not validate a vehicle-fueling loop, cryogenic two-phase release, a site vent stack, pipe backpressure, ignition, dispersion, or emergency separation distance."
+      }
+    },
+    {
+      "id": "preslhy_partb_ambient_external_validation",
+      "status": "FAIL",
+      "claim": "The frozen release model meets the independent ambient Cryostat Part-B pressure-decay screens.",
+      "evidence": "research\\preslhy_partb_ambient_validation.json; research\\preslhy_partb_holdout_protocol.json",
+      "requirement": "Five public ambient cases across two nozzle and two pressure groups, >=70% joint primary pass fraction, no post-freeze fitting.",
+      "observed": {
+        "eligibility": {
+          "eligible_cases": 5,
+          "excluded_cases": 0,
+          "diameter_groups": [
+            2.0,
+            4.0
+          ],
+          "pressure_groups": [
+            "high",
+            "low"
+          ],
+          "minimum_requirements_met": true
+        },
+        "aggregate": {
+          "joint_primary_pass_fraction": 0.6,
+          "bootstrap_95_percent_ci": [
+            0.2,
+            1.0
+          ],
+          "bootstrap_replicates": 10000,
+          "bootstrap_seed": 20261004,
+          "claim_threshold": 0.7,
+          "ambient_cryostat_part_b_claim_supported": false
+        },
+        "archive_sha256": "2d4fbc6b3d2996a40629c71c6a33a6fdec3fde246ee4cee23de12c86672cd4ff",
+        "claim_boundary": "This protocol evaluates rigid-source discharge and transient jet characteristics for the published ambient-temperature subset of the Cryostat part-B experiments. It does not validate cryogenic two-phase flow, ignition, dispersion, flame/radiation, station control, refuelling, or emergency separation distance.",
+        "protocol_hash_matches": true
+      }
+    },
+    {
+      "id": "preslhy_revised_holdout_validation",
+      "status": "FAIL",
+      "claim": "The revised non-adiabatic source-depletion model meets the prospectively frozen PRESLHY E5.1 holdout rule.",
+      "evidence": "research\\preslhy_e5_1_holdout_result.json; research\\preslhy_e5_1_holdout_protocol.json",
+      "requirement": ">=4 primary ambient cases across >=2 nozzle and pressure groups, >=70% joint pass fraction, frozen implementation and retained failures.",
+      "observed": {
+        "aggregate": {
+          "cases": 3,
+          "joint_primary_passes": 2,
+          "joint_primary_pass_fraction": 0.6666666666666666,
+          "bootstrap_95_percent_ci": [
+            0.0,
+            1.0
+          ],
+          "bootstrap_replicates": 10000,
+          "bootstrap_seed": 20261003,
+          "diameter_groups": [
+            2.0,
+            4.0
+          ],
+          "pressure_groups": [
+            "low",
+            "medium"
+          ],
+          "minimum_requirements_met": false,
+          "claim_threshold": 0.7,
+          "claim_supported": false
+        },
+        "primary_cases": 3,
+        "retained_failures": 3,
+        "protocol_hash_matches": true,
+        "claim_boundary": "The holdout concerns pressure depletion of the 2.8 L DisCha source vessel during an open atmospheric jet, including the downstream-ignition condition represented in E5.1. It does not validate combustion overpressure, heat flux, flame length, cryogenic two-phase flow, a vehicle-fueling loop, or station emergency separation distance."
+      }
+    },
+    {
+      "id": "proust_independent_release_validation",
+      "status": "FAIL",
+      "claim": "The fixed high-pressure aperture relation meets its prospectively frozen rule on the independent INERIS/CEA 90 MPa campaign.",
+      "evidence": "research\\proust_release_holdout_result.json; research\\proust_release_holdout_protocol.json; data\\public_validation\\derived\\proust_90mpa_release.csv",
+      "requirement": "All 1, 2 and 3 mm series eligible; >=2/3 jointly pass <=15% peak-normalized RMSE and <=20% median absolute percentage error.",
+      "observed": {
+        "aggregate": {
+          "series": 3,
+          "diameter_groups": [
+            1.0,
+            2.0,
+            3.0
+          ],
+          "joint_primary_passes": 0,
+          "joint_primary_pass_fraction": 0.0,
+          "minimum_requirements_met": true,
+          "claim_supported": false
+        },
+        "protocol_hash_matches": true,
+        "data_hash_matches": true,
+        "claim_boundary": "This holdout concerns local gaseous-hydrogen mass flow from measured source pressure and temperature through nominal 1-3 mm terminal orifices. It does not validate the 25 L vessel thermal transient, the 10 m supply-line inventory, valve opening, flame geometry, radiation, dispersion, station separation distance, or a vehicle-fuelling controller."
+      }
+    },
+    {
+      "id": "release_network_development_integrity",
+      "status": "PASS",
+      "claim": "The post-outcome release-network diagnostic is retained as consumed development evidence and cannot be mistaken for validation.",
+      "evidence": "research\\release_network_development.json",
+      "requirement": "Proust and Imamura contamination disclosed; confirmatory eligibility and claim support both false.",
+      "observed": {
+        "evidence_role": "consumed_development_only",
+        "eligible_as_confirmatory_validation": false,
+        "interpretation": {
+          "finding": "The Proust-selected fixed supply restriction improves the consumed Proust series but transfers poorly as Imamura aperture diameter increases.",
+          "physical_inference": "The fitted restriction is apparatus-specific upstream/valve resistance, not a universal hydrogen nozzle correction.",
+          "next_model_requirement": "Represent known valve, line-pack and pipe geometry explicitly and test the locked model on a numerically untouched external campaign.",
+          "claim_supported": false
+        }
+      }
+    },
+    {
+      "id": "schefer_transient_release_validation",
+      "status": "FAIL",
+      "claim": "The locked adiabatic vessel-discharge model meets all frozen transient mass-flow screens on the independent Sandia/SRI experiment.",
+      "evidence": "research\\schefer_2006_holdout_result.json; research\\schefer_2006_holdout_protocol.json; data\\public_validation\\derived\\schefer_2006_figure3b.csv",
+      "requirement": "At least 15 points; <=15% peak-normalized RMSE, <=20% median absolute percentage error and <=20% half-peak-time error; all screens required.",
+      "observed": {
+        "result": {
+          "points": 25,
+          "measured_peak_mass_flow_g_s": 68.38466373,
+          "predicted_peak_mass_flow_g_s": 60.66607024400885,
+          "mass_flow_nrmse_percent_peak_measured": 5.831534791930556,
+          "median_absolute_percentage_error_percent": 22.852219829947433,
+          "experimental_half_peak_time_s": 13.35459783324615,
+          "predicted_half_peak_time_s": 9.575940157002748,
+          "half_peak_time_relative_error_percent": 28.294806952826896,
+          "nrmse_screen_pass": true,
+          "median_ape_screen_pass": false,
+          "half_peak_time_screen_pass": false,
+          "joint_primary_screen_pass": false
+        },
+        "protocol_hash_matches": true,
+        "data_hash_matches": true,
+        "prior_aggregate_duration_known": true,
+        "claim_boundary": "This holdout tests the time-resolved gaseous-hydrogen mass flow of one 15.5 MPa blowdown through the published 3.175 mm controlling manifold restriction. It does not validate the downstream flame, radiation, dispersion, 7.94 mm tube pressure field, 70-90 MPa storage, refuelling control, or a complete station loop."
+      }
+    },
+    {
+      "id": "schefer_2007_pressure_decay_validation",
+      "status": "FAIL",
+      "claim": "The locked adiabatic vessel-discharge model meets all frozen pressure-decay screens on the independent Schefer et al. 2007 experiment.",
+      "evidence": "research\\schefer_2007_holdout_result.json; research\\schefer_2007_holdout_protocol.json; data\\public_validation\\derived\\schefer_2007_figure4.csv",
+      "requirement": "At least 15 points; <=10% initial-pressure-normalized RMSE, <=15% median absolute percentage error and <=20% half-pressure-time error; all screens required.",
+      "observed": {
+        "result": {
+          "points": 222,
+          "measured_initial_pressure_psi": 6244.751381,
+          "predicted_initial_pressure_psi": 6247.098339931793,
+          "pressure_nrmse_percent_initial_measured": 11.580711004119967,
+          "median_absolute_percentage_error_percent": 27.46396061123326,
+          "experimental_half_pressure_time_s": 26.78880237652538,
+          "predicted_half_pressure_time_s": 28.53325636604946,
+          "half_pressure_time_relative_error_percent": 6.511877481513398,
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "half_pressure_time_screen_pass": true,
+          "joint_primary_screen_pass": false
+        },
+        "protocol_hash_matches": true,
+        "data_hash_matches": true,
+        "claim_boundary": "This holdout tests time-resolved vessel pressure in one 43.1 MPa hydrogen blowdown from a 1.234 m3 vessel through the published 5.08 mm restriction. It does not validate flame geometry, radiation, dispersion, mass flow instrumentation, 70-90 MPa storage, refuelling control, or a complete station loop."
+      }
+    },
+    {
+      "id": "grune_2014_pressure_decay_validation",
+      "status": "PENDING",
+      "claim": "The locked source model meets all pressure-decay screens on the independent KIT small-reservoir release.",
+      "evidence": "research\\grune_2014_holdout_result.json; research\\grune_2014_holdout_protocol.json; data\\public_validation\\derived\\grune_2014_figure2.csv",
+      "requirement": "At least 15 points plus an observable half-pressure crossing; <=10% NRMSE, <=15% median error and <=20% half-time error.",
+      "observed": {
+        "eligibility": {
+          "minimum_unique_points_met": true,
+          "measured_half_pressure_time_observed": false,
+          "minimum_requirements_met": false,
+          "reason": "The accessible publisher raster separates the valve trace only in the 0-0.01 s startup panel; the overlapping inset does not support a trace-specific half-pressure time."
+        },
+        "result": {
+          "points": 51,
+          "measured_initial_pressure_bar_abs": 199.843137,
+          "predicted_initial_pressure_bar_abs": 199.77756474266994,
+          "pressure_nrmse_percent_initial_measured": 11.11296821179252,
+          "median_absolute_percentage_error_percent": 10.879884084275622,
+          "experimental_half_pressure_time_s": null,
+          "predicted_half_pressure_time_s": null,
+          "half_pressure_time_relative_error_percent": null,
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": true,
+          "half_pressure_time_screen_pass": false,
+          "joint_primary_screen_pass": false
+        },
+        "hashes_match": true,
+        "claim_boundary": "One 20 MPa, 0.37 L, 4 mm pressure-decay trace; no flame, ignition, dispersion, radiation, station control or safety-distance claim."
+      }
+    },
+    {
+      "id": "ekoto_transient_release_validation",
+      "status": "PASS",
+      "claim": "The locked adiabatic vessel-discharge model meets all frozen transient mass-flow screens on the independent Ekoto et al. scaled release.",
+      "evidence": "research\\ekoto_2012_holdout_result.json; research\\ekoto_2012_holdout_protocol.json; data\\public_validation\\derived\\ekoto_2012_figure3.csv",
+      "requirement": "At least 15 points; <=15% peak-normalized RMSE, <=20% median absolute percentage error and <=20% half-peak-time error; all screens required.",
+      "observed": {
+        "result": {
+          "points": 39,
+          "measured_peak_mass_flow_kg_s": 0.044829756,
+          "predicted_peak_mass_flow_kg_s": 0.05123824764768229,
+          "mass_flow_nrmse_percent_peak_measured": 3.844753606590915,
+          "median_absolute_percentage_error_percent": 12.791380149762766,
+          "experimental_half_peak_time_s": 0.5064080367346502,
+          "predicted_half_peak_time_s": 0.5371374225147105,
+          "half_peak_time_relative_error_percent": 6.068107840113536,
+          "nrmse_screen_pass": true,
+          "median_ape_screen_pass": true,
+          "half_peak_time_screen_pass": true,
+          "joint_primary_screen_pass": true
+        },
+        "protocol_hash_matches": true,
+        "data_hash_matches": true,
+        "claim_boundary": "This holdout tests time-resolved source mass flow in one 13.45 MPa, 3.63 L scaled release through a 3.56 mm restriction. It does not validate enclosure dispersion, ignition, overpressure, forklift geometry, station control, or separation distance."
+      }
+    },
+    {
+      "id": "hiad_protocol_integrity",
+      "status": "PASS",
+      "claim": "The incident decision-support study protocol was hash-locked before outcomes.",
+      "evidence": "research\\hiad_study_protocol_manifest.json",
+      "requirement": "Every required protocol/code hash matches the current file.",
+      "observed": {
+        "mismatches": []
+      }
+    },
+    {
+      "id": "institutional_ethics_determination",
+      "status": "PENDING",
+      "claim": "The applicable institution has recorded the human-participant determination.",
+      "evidence": "research\\hiad_study_protocol_manifest.json",
+      "requirement": "Approved, exempt or not-required status, identifier and completed institutional fields.",
+      "observed": {
+        "status": "pending",
+        "determination_id": null,
+        "unresolved_fields": {
+          "research/ETHICS_DETERMINATION_REQUEST.md": 6,
+          "research/EXPERT_REVIEWER_INFORMATION_SHEET.md": 5
+        }
+      }
+    },
+    {
+      "id": "hiad_casebook_frozen",
+      "status": "PENDING",
+      "claim": "All 24 holdout incident vignettes passed coordinator leakage review and were frozen.",
+      "evidence": "data\\public_validation\\results\\hiad_casebook_frozen\\casebook_freeze_manifest.json",
+      "requirement": "24 retained and approved cases with source/submitted/frozen hashes.",
+      "observed": "missing"
+    },
+    {
+      "id": "hiad_public_evidence_inventory",
+      "status": "PASS",
+      "claim": "The public HIAD 2.2 HRS incident subset is hash-linked and reproducibly summarized without leaking blinded responses.",
+      "evidence": "research\\hiad_hrs_public_evidence.json",
+      "requirement": "34 public HRS rows, source digest, explicit selection rule and non-casebook claim boundary.",
+      "observed": {
+        "schema_version": 1,
+        "source": {
+          "title": "European Hydrogen Incidents and Accidents Database HIAD 2.2",
+          "publisher": "European Commission Joint Research Centre",
+          "url": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt",
+          "download_url": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiad_22_export_for_users_2026_01_01xlsx",
+          "file": "data/public_validation/raw/hiad_2_2/HIAD 2.2.xlsx",
+          "sha256": "295772b60a4afe5ef47a00bc314eed48b76c170be00c29952d60e50fedd6f55f",
+          "version": "HIAD 2.2",
+          "event_cutoff": "2025-12-31",
+          "verified_on": "2026-10-04",
+          "workbook_size_bytes": 1482278,
+          "source_verification": "research/hiad_2_2_source_verification_2026_10_04.json",
+          "scope": "Public HRS application rows from the EVENTS/FACILITY/LESSONS/EVENT NATURE/REFERENCES sheets",
+          "reuse_note": "Free public use with required acknowledgement; source validity remains the responsibility of the original source."
+        },
+        "selection": {
+          "rule": "FACILITY.Application exactly equals 'Hydrogen refuelling station'",
+          "related_rows_not_included": true,
+          "blinded_response_text_excluded": true,
+          "coordinator_approval": false
+        },
+        "aggregate": {
+          "case_count": 34,
+          "with_emergency_action": 29,
+          "with_lesson_learnt": 24,
+          "with_corrective_measures": 25,
+          "physical_effect_counts": {
+            "Unignited Hydrogen Release": 22,
+            "No Hydrogen Release": 6,
+            "Hydrogen release and ignition": 1,
+            "Hydrogen Release and Ignition": 5
+          },
+          "consequence_counts": {
+            "Leak no ignition": 4,
+            "Near miss": 4,
+            "near miss": 3,
+            "leak no ignition": 17,
+            "Explosion": 2,
+            "fire": 2,
+            "explosion followed by a fire": 1,
+            "explosion": 1
+          },
+          "sub_application_counts": {
+            "Hydrogen dispenser": 5,
+            "HRS 35 Mpa": 1,
+            "hydrogen compression": 1,
+            "HRS": 7,
+            "HRS (70 Mpa)": 2,
+            "HRS (70 for LDV & HDV)": 1,
+            "LH2 and CGH2 HRS": 1,
+            "CGH2 storage": 2,
+            "CHG2 storage": 1,
+            "CGH2 HRS": 1,
+            "70 MPa HRS": 10,
+            "35 MPa HRS": 2
+          },
+          "stage_counts": {
+            "Hydrogen transfer": 14,
+            "Hydrogen compression": 9,
+            "Hydrogen delivery": 6,
+            "Hydrogen storage": 1,
+            "hydrogen storage": 4
+          }
+        },
+        "cases": [
+          {
+            "event_id": "396",
+            "quality": "2",
+            "title": "Detection of hydrogen release",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "Leak no ignition",
+            "sub_application": "Hydrogen dispenser",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": false,
+            "reference_count": 1,
+            "references": [
+              "Report were available & confidential, and now is lost"
+            ]
+          },
+          {
+            "event_id": "401",
+            "quality": "3",
+            "title": "Detection of hydrogen release",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "Leak no ignition",
+            "sub_application": "Hydrogen dispenser",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": false,
+            "reference_count": 1,
+            "references": [
+              "Report provided but confidential"
+            ]
+          },
+          {
+            "event_id": "402",
+            "quality": "2",
+            "title": "Cavitation in a compressor",
+            "physical_effect": "No Hydrogen Release",
+            "consequence_nature": "Near miss",
+            "sub_application": "HRS 35 Mpa",
+            "supply_chain_stage": "Hydrogen compression",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 1,
+            "references": [
+              "Report were available & confidential, and now is lost"
+            ]
+          },
+          {
+            "event_id": "403",
+            "quality": "2",
+            "title": "Hydrogen dispenser failure",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "Leak no ignition",
+            "sub_application": "Hydrogen dispenser",
+            "supply_chain_stage": "Hydrogen delivery",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": false,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": false,
+            "reference_count": 1,
+            "references": [
+              "Report were available & confidential, and now is lost"
+            ]
+          },
+          {
+            "event_id": "404",
+            "quality": "2",
+            "title": "Malfunctioning in a hydrogen refuelling station",
+            "physical_effect": "No Hydrogen Release",
+            "consequence_nature": "Near miss",
+            "sub_application": "Hydrogen dispenser",
+            "supply_chain_stage": "Hydrogen delivery",
+            "operational_condition": "ABNORMAL",
+            "has_emergency_action": false,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": true,
+            "reference_count": 1,
+            "references": [
+              "Report were available & confidential, and now is lost"
+            ]
+          },
+          {
+            "event_id": "411",
+            "quality": "2",
+            "title": "Oil leak",
+            "physical_effect": "No Hydrogen Release",
+            "consequence_nature": "Near miss",
+            "sub_application": "hydrogen compression",
+            "supply_chain_stage": "Hydrogen compression",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": false,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": true,
+            "reference_count": 1,
+            "references": [
+              "Report available but confidential"
+            ]
+          },
+          {
+            "event_id": "454",
+            "quality": "2",
+            "title": "Damage of a HRS canopy",
+            "physical_effect": "No Hydrogen Release",
+            "consequence_nature": "near miss",
+            "sub_application": "HRS",
+            "supply_chain_stage": "Hydrogen delivery",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": false,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": true,
+            "reference_count": 1,
+            "references": [
+              "Report provided but confidential"
+            ]
+          },
+          {
+            "event_id": "463",
+            "quality": "3",
+            "title": "Release at a dispenser of a HRS",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": false,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": false,
+            "reference_count": 1,
+            "references": [
+              "Report provided but confidential"
+            ]
+          },
+          {
+            "event_id": "702",
+            "quality": "5",
+            "title": "hydrogen leak in the hose of a dispenser",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "HRS (70 Mpa)",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2014-182:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "KHK accidentl database, incident 2014-182:\nEnghlish version of the Japanese original, based on Google machine translation"
+            ]
+          },
+          {
+            "event_id": "803",
+            "quality": "3",
+            "title": "Release from the dispenser of a refuelling station",
+            "physical_effect": "No Hydrogen Release",
+            "consequence_nature": "Near miss",
+            "sub_application": "HRS (70 for LDV & HDV)",
+            "supply_chain_stage": "Hydrogen delivery",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": false,
+            "reference_count": 2,
+            "references": [
+              "A. Al-Douri et al.,  Populating the Hydrogen Component Reliability Database (HyCReD) with Incident Data from Hydrogen Dispensing, paper ID232, Proceedings of ICHS 2023 \nhttps://hysafe.info/uploads/papers/2023/232.pdf\n(accessed August 2024)",
+              "A detailed analysis was presented by Clark et al. at the 2024 Center for Hydrogen Safety Americas Conference\nThe resentation is behind a paywall, but the abstract is available on line: \nhttps://proceedings.aiche.org/conferences/center-hydrogen-safety-conference/2024/proceeding/paper/lessons-learned-medium-pressure-tank-leak-nrels-hydrogen-refueling-station\n(accessed January 2025)"
+            ]
+          },
+          {
+            "event_id": "884",
+            "quality": "5",
+            "title": "Explosion in the storage of a HRS",
+            "physical_effect": "Hydrogen release and ignition",
+            "consequence_nature": "Explosion",
+            "sub_application": "HRS (70 Mpa)",
+            "supply_chain_stage": "Hydrogen storage",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 5,
+            "references": [
+              "Company investigation summary:\nhttps://nelhydrogen.com/status-and-qa-regarding-the-kjorbo-incident/\n(accessed June 2024)",
+              "Manufacturer report statement (Published: 27 June, 2019; Updated: 29 June, 2019) https://nelhydrogen.com/status-and-qa-regarding-the-kjorbo-incident/ (accessed June 2020)",
+              "FCBulletin June 2019",
+              "O. Hansen presentation at the MOZEES workshop:\nhttps://mozees.no/wp-content/uploads/2019/10/Hansen_Hydrogen-safety_Kjoerbo-incident-overview-and-perspectives.pdf\n(accessed June 2024)",
+              "ARCADIS analysis:\nhttps://www.contactgroep-gezondheid-en-chemie.nl/wp-content/uploads/2021/07/ppt4-20200116-cgc-nvt-presentatie-smit.pdf\n(accessed June 2024)"
+            ]
+          },
+          {
+            "event_id": "953",
+            "quality": "4",
+            "title": "Hydrogen release at a public hydrogen refuelling station.",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "Leak no ignition",
+            "sub_application": "LH2 and CGH2 HRS",
+            "supply_chain_stage": "Hydrogen compression",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "Event description in the French database ARIA_x000D_\nhttps://www.aria.developpement-durable.gouv.fr/accident/37528/_x000D_\n(accessed October 2020)_x000D_",
+              "Event description in the US database H2Tools/Lesson Learned_x000D_\nhttps://h2tools.org/lessons/leak-compressor-fueling-station_x000D_\n(accessed October 2020)_x000D_"
+            ]
+          },
+          {
+            "event_id": "1038",
+            "quality": "5",
+            "title": "Dispenser nozzle freezing during hydrogen refuelling",
+            "physical_effect": "No Hydrogen Release",
+            "consequence_nature": "near miss",
+            "sub_application": "Hydrogen dispenser",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 1,
+            "references": [
+              "paper 346 presented at the Int. Conference onHydrogenSafety ICHS2015"
+            ]
+          },
+          {
+            "event_id": "1062",
+            "quality": "3",
+            "title": "Leakage at a hydrogen buses refilling station",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "HRS",
+            "supply_chain_stage": "hydrogen storage",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": false,
+            "reference_count": 2,
+            "references": [
+              "Online news of allesoverwaterstof.nl\nhttps://allesoverwaterstof.nl/brandweer-heeft-waterstoflekkage-in-qbuzz-stalling-groningen-snel-onder-controle/\n(Assessed ctober 2025)",
+              "HydrogenInsight news of 21/07/2023\nhttps://www.hydrogeninsight.com/transport/shell-hydrogen-filling-station-in-the-netherlands-evacuated-after-h2-leak-discovered/2-1-1490137"
+            ]
+          },
+          {
+            "event_id": "1063",
+            "quality": "2",
+            "title": "Leakage at a hydrogen refilling station in a airport",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "HRS",
+            "supply_chain_stage": "Hydrogen delivery",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": false,
+            "reference_count": 1,
+            "references": [
+              "ARIA event\nhttps://www.aria.developpement-durable.gouv.fr/accident/59722/"
+            ]
+          },
+          {
+            "event_id": "1064",
+            "quality": "2",
+            "title": "Leakage at a hydrogen refilling station in a airport",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "near miss",
+            "sub_application": "HRS",
+            "supply_chain_stage": "Hydrogen compression",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": true,
+            "reference_count": 1,
+            "references": [
+              "ARIA event\nhttps://www.aria.developpement-durable.gouv.fr/accident/59921/"
+            ]
+          },
+          {
+            "event_id": "1106",
+            "quality": "4",
+            "title": "Fire in a hydrogen refuelling station",
+            "physical_effect": "Hydrogen Release and Ignition",
+            "consequence_nature": "Explosion",
+            "sub_application": "HRS",
+            "supply_chain_stage": "Hydrogen compression",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 3,
+            "references": [
+              "The investigation report by TÜV Süd is not publicly available. A summary was shared by NOW in a presentation of 8 Octobr 2024",
+              "PV-Magazine news of 07 July 2024: \nhttps://www.pv-magazine.de/2024/07/11/beschaedigter-kompressor-verursacht-brand-in-wasserstoff-tankstelle/ \n(accessed July 2024)",
+              "JRC discussion based on own collection of information"
+            ]
+          },
+          {
+            "event_id": "1159",
+            "quality": "3",
+            "title": "Release from a vessel at a HRS",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "HRS",
+            "supply_chain_stage": "hydrogen storage",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 1,
+            "references": [
+              "Provided to JRC by the operator of the facility"
+            ]
+          },
+          {
+            "event_id": "1161",
+            "quality": "2",
+            "title": "Release from a storage at a HRS",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "CGH2 storage",
+            "supply_chain_stage": "hydrogen storage",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": false,
+            "reference_count": 2,
+            "references": [
+              "FCHEA Hydorgen and Fuel cell update September 2022 \nhttps://www.hydrogenandfuelcellsafety.info/september-2022#Update1\n(accessed January 2025)",
+              "Kwang Seok Kim, Introduction of the Release Incident at Hydrogen Refueling Station in South Korea, presented at the CHS 2022 CHS Americas Conference, September 20-22 Ca. \n(not publicly available)"
+            ]
+          },
+          {
+            "event_id": "1163",
+            "quality": "2",
+            "title": "Fire from the storage area of a HRS",
+            "physical_effect": "Hydrogen Release and Ignition",
+            "consequence_nature": "fire",
+            "sub_application": "CHG2 storage",
+            "supply_chain_stage": "Hydrogen delivery",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": false,
+            "reference_count": 1,
+            "references": [
+              "Collection of news\nhttps://cleantechnica.com/2025/01/16/korean-hydrogen-explosions-leaks-auction-failure-impeachment-may-cause-pivot/\nhttps://www.hydrogeninsight.com/transport/safety-concerns-grow-after-two-explosions-at-south-korean-hydrogen-filling-stations-in-same-week/2-1-1759496\nhttps://m.ytn.co.kr/en/news_view.amp.php?param=0115_202412272305332906\n(accessed January 2025)"
+            ]
+          },
+          {
+            "event_id": "1173",
+            "quality": "4",
+            "title": "Explosion on a CGH2 cylinders bundle during filling",
+            "physical_effect": "Hydrogen Release and Ignition",
+            "consequence_nature": "explosion followed by a fire",
+            "sub_application": "CGH2 HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": false,
+            "has_corrective_measures": true,
+            "reference_count": 3,
+            "references": [
+              "KHK accidentl database, incident 2023-188:\nhttps://www.khk.or.jp/Portals/0/khk/hpg/accident/2023/05_2023-188.pdf\n(accessed may 2025)",
+              "KHK accidentl database, incident 2023-188:\nEnghlish version of the Japanese original, based on Google machine translation",
+              "KHK presentation: \"Hydrogen related Accidents / Incidents in Japan & KHK Initiatives\", 20 September 2024"
+            ]
+          },
+          {
+            "event_id": "1191",
+            "quality": "4",
+            "title": "Fire at the storage of a hydrogen refuelling station",
+            "physical_effect": "Hydrogen Release and Ignition",
+            "consequence_nature": "fire",
+            "sub_application": "CGH2 storage",
+            "supply_chain_stage": "hydrogen storage",
+            "operational_condition": "REPAIR",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2014-349:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1193",
+            "quality": "5",
+            "title": "A hydrogen leak at a 70 MPa dispenser",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "STARTUP",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2015-052:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1194",
+            "quality": "4",
+            "title": "Leak in a dispenser at a mobile HRS",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2015-333:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1195",
+            "quality": "4",
+            "title": "Leak from a valve in a HRS",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen compression",
+            "operational_condition": "STARTUP",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2016-1066:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1196",
+            "quality": "5",
+            "title": "Several leaks from the hoses of a HRS",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2017-037:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1198",
+            "quality": "5",
+            "title": "Explosion at a filling hose of a hydrogen dispenser",
+            "physical_effect": "Hydrogen Release and Ignition",
+            "consequence_nature": "explosion",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2017-101:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1202",
+            "quality": "4",
+            "title": "Leak  at a filling hose of a hydrogen dispenser",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2018-705:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1203",
+            "quality": "5",
+            "title": "Leaks from a hydrogen compressor",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen compression",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2018-660 and 2018-661:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1204",
+            "quality": "5",
+            "title": "leak from a hose when refuelling a forklift",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "35 MPa HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident  2019-378:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1205",
+            "quality": "5",
+            "title": "Hydrogen accidental release into a compressor room",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen compression",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident  2020-144:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1206",
+            "quality": "4",
+            "title": "leaks from a threaded joint",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "35 MPa HRS",
+            "supply_chain_stage": "Hydrogen compression",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident 2022-608 (it summarises also the previous reports 2021-603, 2021-644, 2022-354).  \nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "English translated version (by Google)"
+            ]
+          },
+          {
+            "event_id": "1207",
+            "quality": "4",
+            "title": "leak from a dispenser of a HRS",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident  2016-186:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "Translated version in English (by GPT@JRC)"
+            ]
+          },
+          {
+            "event_id": "1208",
+            "quality": "4",
+            "title": "leak from a dispenser of a mobile HRS",
+            "physical_effect": "Unignited Hydrogen Release",
+            "consequence_nature": "leak no ignition",
+            "sub_application": "70 MPa HRS",
+            "supply_chain_stage": "Hydrogen transfer",
+            "operational_condition": "NORMAL",
+            "has_emergency_action": true,
+            "has_lesson_learnt": true,
+            "has_corrective_measures": true,
+            "reference_count": 2,
+            "references": [
+              "KHK accidentl database, incident  2015-363:\nhttps://www.khk.or.jp/public_information/incident_investigation/hpg_incident/gen_lp.html\n(accessed august 2024)",
+              "Translated version in English (by GPT@JRC)"
+            ]
+          }
+        ],
+        "claim_boundary": "HIAD is a public incident and near-miss evidence source. It does not provide synchronized station sensor traces, exposure denominators, or a calibrated probability model. This summary supports scenario coverage and traceable qualitative evidence only; it does not close the full-loop physics or expert-effectiveness gates."
+      }
+    },
+    {
+      "id": "hiad_holdout_collection",
+      "status": "PENDING",
+      "claim": "All masked alarm/direct/RAG holdout responses were collected under the frozen protocol.",
+      "evidence": "data\\public_validation\\results\\hiad_decision\\collection_manifest.json",
+      "requirement": "24 × (1 alarm + 3 direct + 3 RAG) = 168 retained responses with freeze linkage.",
+      "observed": "missing"
+    },
+    {
+      "id": "independent_expert_review_complete",
+      "status": "PENDING",
+      "claim": "Three qualified independent reviewers completed the locked 24-event evaluation.",
+      "evidence": "data\\public_validation\\results\\hiad_decision\\analysis\\expert_review_analysis.json",
+      "requirement": "24 events, 3 raters, all three variants, qualification summary and lock hashes.",
+      "observed": "missing"
+    },
+    {
+      "id": "saga_effectiveness_and_safety_supported",
+      "status": "PENDING",
+      "claim": "Direct SAGA improves expert-rated guidance without higher observed omission or unsafe-advice rates.",
+      "evidence": "data\\public_validation\\results\\hiad_decision\\analysis\\expert_review_analysis.json",
+      "requirement": "Paired bootstrap CI lower bound >0 and omission/unsafe rates no higher than alarm-only.",
+      "observed": {
+        "direct_vs_alarm": {},
+        "alarm": {},
+        "direct": {}
+      }
+    },
+    {
+      "id": "llm_evidence_grounding_contract",
+      "status": "PASS",
+      "claim": "Main and selected-sensor assistants receive traceable evidence with explicit calculation and uncertainty status.",
+      "evidence": "research\\llm_evidence_grounding_validation.json",
+      "requirement": "Manifest schema, normal/emergency distinction, contradiction guard and full regression suite.",
+      "observed": {
+        "schema_version": 1,
+        "recorded_at": "2026-10-04T11:38:24.104809+00:00",
+        "status": "software_contract_verified",
+        "scope": [
+          "digital-twin main assistant",
+          "selected-sensor assistant",
+          "deterministic impact-result handoff"
+        ],
+        "manifest_schema": "h2station.llm-evidence.v1",
+        "tests": {
+          "targeted": {
+            "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_digital_twin_direct_qa.py -q",
+            "passed": 11,
+            "warnings": 2
+          },
+          "full_suite": {
+            "command": ".venv\\Scripts\\python.exe -m pytest -q",
+            "passed": 472,
+            "failed": 0,
+            "warnings": 16
+          }
+        },
+        "verified_properties": [
+          "normal impact calculation is marked not_requested",
+          "emergency and explicit-impact paths preserve calculated results",
+          "sensor values, quality and calculation basis are carried into the assistant context",
+          "non-finite signal and result values are excluded",
+          "main and selected-sensor assistant routes remain isolated",
+          "contradictory LLM claims are rejected when they negate confirmed evidence",
+          "response evidence source identifiers are carried into the hashed manifest",
+          "public HIAD action-to-playbook traceability metadata is carried into the response evidence envelope",
+          "public KHK accident-report inventory and citation link are carried into the evidence envelope without mirrored report text",
+          "public KHK scenario-precedent map links all 23 citation records to conservative response families without exposing report text or frequency claims"
+        ],
+        "not_established": [
+          "physics validity of the consequence model",
+          "field safety or evacuation distance",
+          "operator effectiveness, omission rate or unsafe-advice rate",
+          "generalization to real incident data",
+          "response effectiveness or operator benefit from HIAD metadata coverage"
+        ],
+        "full_objective_gate_impact": "does_not_clear",
+        "evidence": "research/LLM_EVIDENCE_GROUNDING_VALIDATION.md",
+        "public_incident_traceability": {
+          "evidence": "research/hiad_action_playbook_coverage.json",
+          "source": "HIAD 2.2 public HRS inventory",
+          "case_count": 34,
+          "metadata_mapped_case_count": 34,
+          "metadata_mapped_fraction": 1.0,
+          "unmapped_event_ids": [],
+          "action_category_count": 8,
+          "covered_action_category_count": 8,
+          "action_playbook_contract_pass": true,
+          "interpretation": "qualitative scenario-family and action-to-playbook traceability only; excludes HIAD response text and does not establish effectiveness or safety"
+        },
+        "response_stage_contract": {
+          "evidence": "research/hiad_response_stage_contract.json",
+          "evidence_role": "metadata_only_response_contract",
+          "case_count": 34,
+          "mapped_case_count": 34,
+          "required_stages": [
+            "recognition",
+            "immediate",
+            "stabilize",
+            "restart",
+            "prevention"
+          ],
+          "missing_stage_case_count": 0,
+          "normal_quiet_contract_passed": true,
+          "interpretation": "interface-stage coverage only; no correctness, safety, effectiveness, physics or operator-benefit claim"
+        },
+        "public_accident_report_grounding": {
+          "evidence": "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
+          "source_page": "https://www.khk.or.jp/hydrogen/accident_information.html",
+          "public_report_count": 23,
+          "incident_code_count": 26,
+          "precaution_report_count": 8,
+          "raw_pdf_mirrored": false,
+          "interpretation": "qualitative actual-accident scenario and response/prevention grounding only; map uses public equipment classes/titles and citation links, not report text, frequencies, causal inference or physics-validation claims",
+          "scenario_precedent_map": "research/khk_scenario_precedent_map_2026_10_04.json",
+          "mapped_report_count": 23,
+          "unmapped_report_count": 0,
+          "playbook_case_counts": {
+            "compressor_thermal": 1,
+            "external_fire": 3,
+            "fueling_fault": 3,
+            "gas_release": 16,
+            "hose_connection": 8,
+            "hydrogen_fire": 6,
+            "isolation_failure": 2,
+            "overpressure": 3
+          }
+        }
+      }
+    },
+    {
+      "id": "preoutcome_design_sensitivity",
+      "status": "PASS",
+      "claim": "The fixed incident-study sample limitations were quantified before outcomes.",
+      "evidence": "research\\hiad_design_sensitivity.json",
+      "requirement": "24 events, >=20,000 simulations/effect and explicit pre-outcome timing.",
+      "observed": {
+        "schema_version": 1,
+        "generated_at": "2026-10-03T02:32:52.111058+00:00",
+        "analysis_timing": "before holdout response collection and expert rating",
+        "event_count": 24,
+        "simulations_per_effect": 20000,
+        "seed": 2601,
+        "alpha_two_sided": 0.05,
+        "data_generating_assumption": "independent normally distributed paired event differences with unit standard deviation; Wilcoxon signed-rank test using normal approximation",
+        "power_by_standardized_paired_effect": [
+          {
+            "standardized_paired_effect": 0.0,
+            "estimated_power": 0.04875,
+            "monte_carlo_se": 0.0015227185803686773
+          },
+          {
+            "standardized_paired_effect": 0.2,
+            "estimated_power": 0.1504,
+            "monte_carlo_se": 0.0025276455447708645
+          },
+          {
+            "standardized_paired_effect": 0.3,
+            "estimated_power": 0.27705,
+            "monte_carlo_se": 0.003164595531027622
+          },
+          {
+            "standardized_paired_effect": 0.4,
+            "estimated_power": 0.4411,
+            "monte_carlo_se": 0.003510917187858466
+          },
+          {
+            "standardized_paired_effect": 0.5,
+            "estimated_power": 0.62745,
+            "monte_carlo_se": 0.003418746096889911
+          },
+          {
+            "standardized_paired_effect": 0.6,
+            "estimated_power": 0.7768,
+            "monte_carlo_se": 0.002944331503075019
+          },
+          {
+            "standardized_paired_effect": 0.8,
+            "estimated_power": 0.9574,
+            "monte_carlo_se": 0.0014280273106632095
+          },
+          {
+            "standardized_paired_effect": 1.0,
+            "estimated_power": 0.9953,
+            "monte_carlo_se": 0.0004836274392546414
+          }
+        ],
+        "smallest_grid_effect_with_at_least_80_percent_power": 0.8,
+        "zero_unsafe_event_exact_two_sided_95_percent_upper_bound": 0.14247359772258134,
+        "zero_event_bound_unit": "event-level Bernoulli rate",
+        "interpretation_limits": [
+          "This is a design sensitivity analysis, not an observed effect estimate.",
+          "The 24-event holdout is fixed by the eligible public incident population and frozen split.",
+          "Normal paired differences are a transparent assumption; bounded and tied expert scores may yield different power.",
+          "Repeated generations and reviewer scores are averaged within event; they do not increase the inferential event count.",
+          "Even zero unsafe events cannot establish zero risk; the exact upper confidence bound must be reported."
+        ]
+      }
+    },
+    {
+      "id": "ijhe_format_gate",
+      "status": "PASS",
+      "claim": "The manuscript satisfies the explicit IJHE length/front-matter limits checked locally.",
+      "evidence": "manuscript\\ijhe_format_check.json",
+      "requirement": "All format checks true; this is not a scientific-readiness decision.",
+      "observed": {
+        "manuscript": "manuscript\\ijhe_manuscript_draft.tex",
+        "highlights": "manuscript\\Highlights.txt",
+        "counts": {
+          "abstract_words": 148,
+          "keywords": 6,
+          "highlight_bullets": 5,
+          "highlight_characters": [
+            75,
+            74,
+            69,
+            75,
+            75
+          ],
+          "approximate_manuscript_words_before_references": 6646,
+          "figures": 2,
+          "tables": 3,
+          "citation_keys": 25,
+          "bibliography_entries": 25,
+          "unresolved_citations": [],
+          "missing_figure_assets": []
+        },
+        "checks": {
+          "abstract_at_most_150_words": true,
+          "keywords_at_most_6": true,
+          "highlights_count_3_to_5": true,
+          "each_highlight_at_most_85_characters": true,
+          "research_paper_at_most_8000_words_approximate": true,
+          "diagrams_at_most_12": true,
+          "all_citations_resolved": true,
+          "all_figure_assets_present": true,
+          "balanced_braces": true,
+          "document_environment_present": true
+        },
+        "format_gate_passed": true,
+        "scientific_readiness_assessed": false
+      }
+    },
+    {
+      "id": "ijhe_latex_compilation",
+      "status": "PASS",
+      "claim": "The exact submitted LaTeX source compiles successfully.",
+      "evidence": "manuscript\\ijhe_compile_status.json",
+      "requirement": "Compiler success with source hash and no unresolved errors.",
+      "observed": {
+        "schema_version": 1,
+        "attempted_at": "2026-10-04T12:20:14.341730+00:00",
+        "attempts_this_run": 1,
+        "success": true,
+        "compiler": "Tectonic 0.17.0 (x86_64-pc-windows-msvc)",
+        "compiler_release": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic%400.17.0",
+        "compiler_archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845f",
+        "source": "manuscript/ijhe_manuscript_draft.tex",
+        "source_sha256": "b8d4c6a0aeeab4d1248ce42ca5652d306daf1f2db357182fb5b4324080dfbd9a",
+        "output_pages": 18,
+        "output_bytes": 615197,
+        "output_sha256": "21b97b7348b0bc96d358fd3b23fd0fe88265e21655c43da580ef3daa43daa448",
+        "warnings": {
+          "layout_or_package_warning_lines": 5,
+          "fatal_errors": 0,
+          "summary": "PDF produced successfully after adding the bounded 3Emotion aggregate operating-range benchmark and post-outcome temperature-stop sensitivity diagnostic. Non-fatal underfull boxes and the bundled lineno UTF-8 replacement warning remain; no fatal errors were reported."
+        },
+        "built_in_compiler_attempt": {
+          "success": false,
+          "diagnostic": "Unable to find standard directories for platform"
+        },
+        "interpretation": "The exact current manuscript source compiled to an 18-page PDF with the pinned Tectonic release. Public 3Emotion station logs are cited as aggregate operating-range context only; no full-loop or synchronized raw-trace validation claim is made."
+      }
+    },
+    {
+      "id": "submission_metadata_and_declarations",
+      "status": "PENDING",
+      "claim": "Every author, affiliation, institutional email and declaration is confirmed.",
+      "evidence": "manuscript\\submission_metadata.json",
+      "requirement": "All author/CRediT/conflict/funding/AI-disclosure confirmations true.",
+      "observed": "missing"
+    },
+    {
+      "id": "software_doi",
+      "status": "PASS",
+      "claim": "The reproducible software release has a persistent DOI.",
+      "evidence": "CITATION.cff",
+      "requirement": "Repository citation metadata contains the released Zenodo DOI.",
+      "observed": "10.5281/zenodo.23084421"
+    }
+  ],
+  "decision_rule": "Only full_user_objective_ready=true permits goal completion. A bounded paper may report negative or limited physics honestly, but it does not satisfy the full validated-digital-twin objective."
+}

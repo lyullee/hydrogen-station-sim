@@ -475,6 +475,19 @@ diminishing improvement and remaining case-level failures indicate that cooling
 duty alone does not explain the closed-loop error. Neither sensitivity was applied
 to the consumed external holdout.
 
+To separate the protection logic from the underlying boundary-model error, a
+post-outcome sensitivity reran the same eight traces with both the controller
+and safety-PLC vehicle-gas temperature trip raised from 85 to 95~$^{\circ}$C.
+This counterfactual produced no screening passes; mean pressure, gas-temperature
+and final-SOC RMSE were 10.217~MPa, 14.301~$^{\circ}$C and 12.605 percentage
+points, respectively, and none of the cases stopped on the temperature limit.
+The diagnostic is therefore evidence that the negative holdout is not explained
+solely by premature temperature shutdown. It is explicitly post-outcome,
+does not change the frozen decision, and cannot substitute for a new
+prospectively frozen holdout with an independently justified safety limit.
+The complete run metadata are archived in
+\texttt{research/closed\_loop\_temperature\_stop\_diagnostic\_2026\_10\_04.json}.
+
 \subsection{Prospective confined pressure-peaking screen}
 To test a separate consequence boundary without presenting it as station-loop
 validation, a second prospective protocol was frozen before accessing the raw

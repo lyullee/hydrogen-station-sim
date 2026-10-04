@@ -1,20 +1,20 @@
 {
   "schema_version": 1,
-  "attempted_at": "2026-10-04T11:47:44.636479+00:00",
+  "attempted_at": "2026-10-04T12:20:14.341730+00:00",
   "attempts_this_run": 1,
   "success": true,
   "compiler": "Tectonic 0.17.0 (x86_64-pc-windows-msvc)",
   "compiler_release": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic%400.17.0",
   "compiler_archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845f",
   "source": "manuscript/ijhe_manuscript_draft.tex",
-  "source_sha256": "e33fe9abf83a31a1f14d0da628d43912f4ea4635c0a4bba7f1c0d2f86b527c7d",
+  "source_sha256": "b8d4c6a0aeeab4d1248ce42ca5652d306daf1f2db357182fb5b4324080dfbd9a",
   "output_pages": 18,
-  "output_bytes": 614087,
-  "output_sha256": "40e97929129723f2b05042da43321245aca9e4899e04e02861b403b21d739887",
+  "output_bytes": 615197,
+  "output_sha256": "21b97b7348b0bc96d358fd3b23fd0fe88265e21655c43da580ef3daa43daa448",
   "warnings": {
     "layout_or_package_warning_lines": 5,
     "fatal_errors": 0,
-    "summary": "PDF produced successfully after adding the bounded 3Emotion aggregate operating-range benchmark. Non-fatal underfull boxes and the bundled lineno UTF-8 replacement warning remain; no fatal errors were reported."
+    "summary": "PDF produced successfully after adding the bounded 3Emotion aggregate operating-range benchmark and post-outcome temperature-stop sensitivity diagnostic. Non-fatal underfull boxes and the bundled lineno UTF-8 replacement warning remain; no fatal errors were reported."
   },
   "built_in_compiler_attempt": {
     "success": false,
