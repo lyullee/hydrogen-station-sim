@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "source_id": "elvhys_4_2_cryo_connection_space",
+  "title": "ELVHYS 4.2 - Leakage into cold room/tank connection space considering barriers and obstacles",
+  "publisher": "HSE / NTNU DataverseNO",
+  "doi": "10.18710/JXJP0H",
+  "landing_page": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/JXJP0H",
+  "api_record": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi%3A10.18710%2FJXJP0H",
+  "license": "CC0 1.0",
+  "public_access": true,
+  "dataset_version": "1.0",
+  "file_count": 198,
+  "reported_test_count": 48,
+  "facility": "1 m3 transfer connection space, HSE Science & Research Centre, Buxton, UK",
+  "reported_campaign": "Autumn 2024",
+  "scope": [
+    "cryogenic hydrogen/LH2 leak dispersion",
+    "pressure peaking",
+    "deliberate ignition"
+  ],
+  "raw_archive_downloaded": false,
+  "classification": {
+    "full_loop_station_vehicle_holdout_eligible": false,
+    "public_consequence_auxiliary_eligible": true,
+    "goal_completion_permitted": false
+  },
+  "claim_boundary": "This CC0 cryogenic consequence dataset can support a bounded leak, pressure-peaking or ignition extension, but it is not gaseous H70 station-to-vehicle filling validation. Direct transfer to the H70 model requires a declared domain-transfer protocol and a frozen subset with hashes.",
+  "next_action": "If the model scope is explicitly extended to cryogenic transfer spaces, download a frozen subset, retain file hashes and preregister a no-fitting consequence-validation protocol."
+}

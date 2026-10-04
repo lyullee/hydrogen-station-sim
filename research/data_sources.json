@@ -494,6 +494,29 @@
       "rights_note": "METI copyright; KHK terms require permission for commercial use and prohibit transfer, distribution, public posting or mirroring of all or part of the database.",
       "eligibility_note": "Local accident-casebook candidate for SAGA grounding after permission; not a public dataset and not a synchronized station-to-vehicle numerical holdout.",
       "request_draft": "research/KHK_DATA_PERMISSION_REQUEST_DRAFT.md"
+    },
+    "elvhys_4_2_cryo_connection_space": {
+      "title": "ELVHYS 4.2 - Leakage into cold room/tank connection space considering barriers and obstacles",
+      "publisher": "HSE / NTNU DataverseNO",
+      "landing_page": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/JXJP0H",
+      "api_record": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi%3A10.18710%2FJXJP0H",
+      "doi": "10.18710/JXJP0H",
+      "license": "CC0 1.0",
+      "dataset_version": "1.0",
+      "reported_test_count": 48,
+      "file_count": 198,
+      "facility": "1 m3 transfer connection space, HSE Science & Research Centre, Buxton, UK",
+      "reported_campaign": "Autumn 2024",
+      "scope": [
+        "cryogenic hydrogen/LH2 leak dispersion",
+        "pressure peaking",
+        "deliberate ignition"
+      ],
+      "public_raw_data": true,
+      "raw_archive_downloaded": false,
+      "rights_note": "CC0 1.0. The raw archive is not mirrored in this repository.",
+      "eligibility_note": "Public consequence auxiliary only. It is not gaseous H70 station-to-vehicle full-loop validation; domain transfer must be pre-registered before use.",
+      "record": "research/elvhys_public_consequence_dataset_2026_10_04.json"
     }
   }
 }

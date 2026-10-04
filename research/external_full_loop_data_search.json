@@ -2297,5 +2297,16 @@
     "public_dataset_for_ijhe_submission": false,
     "finding": "The current KHK/METI FY2025 workbook is locally readable and contains hydrogen-station-relevant high-pressure-gas accident cases. KHK terms prohibit transfer, distribution and public posting of all or part of the database, so no raw rows or derived counts are committed. Written permission is required before a de-identified casebook or aggregate results can be published.",
     "claim_boundary": "Authoritative local accident evidence can support a future blinded SAGA casebook after permission, but it does not close the synchronized station-to-vehicle numerical validation gate or permit automatic IJHE goal completion."
+  },
+  "elvhys_public_consequence_dataset_2026_10_04": {
+    "record": "research/elvhys_public_consequence_dataset_2026_10_04.json",
+    "decision": "PUBLIC_CC0_CRYOGENIC_CONSEQUENCE_AUXILIARY",
+    "gate_impact": "unchanged_independent_full_loop_gate_remains_open",
+    "source_ids": ["elvhys_4_2_cryo_connection_space"],
+    "full_loop_holdout_eligible": false,
+    "public_consequence_auxiliary_eligible": true,
+    "finding": "The CC0 record exposes 48 cryogenic hydrogen transfer-connection-space experiments in 198 files covering dispersion, pressure peaking and deliberate ignition. It is a useful consequence-model extension source, but it is not a gaseous H70 station-to-vehicle fill trace.",
+    "claim_boundary": "Do not score this record as full-loop H70 validation or infer direct applicability without a declared cryogenic domain-transfer protocol, frozen file subset and hashes.",
+    "next_action": "If cryogenic transfer-space scope is explicitly added, freeze a subset and preregister no-fitting endpoint scoring before inspecting outcomes."
   }
 }

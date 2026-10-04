@@ -450,3 +450,19 @@ def test_khk_incident_database_access_is_local_only_and_not_promoted():
     assert record["validation_classification"]["full_loop_station_vehicle_holdout_eligible"] is False
     assert record["validation_classification"]["goal_completion_permitted"] is False
     assert (ROOT / "research/KHK_DATA_PERMISSION_REQUEST_DRAFT.md").exists()
+
+
+def test_elvhys_dataset_is_cc0_consequence_auxiliary_only():
+    record = json.loads(
+        (
+            ROOT
+            / "research/elvhys_public_consequence_dataset_2026_10_04.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert record["license"] == "CC0 1.0"
+    assert record["reported_test_count"] == 48
+    assert record["file_count"] == 198
+    assert record["classification"]["public_consequence_auxiliary_eligible"] is True
+    assert record["classification"]["full_loop_station_vehicle_holdout_eligible"] is False
+    assert record["classification"]["goal_completion_permitted"] is False
+    assert (ROOT / "research/ELVHYS_PUBLIC_CONSEQUENCE_DATASET.md").exists()
