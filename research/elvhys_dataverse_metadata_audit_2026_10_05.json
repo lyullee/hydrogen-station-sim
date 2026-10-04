@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "source_id": "elvhys_4_2_cryo_connection_space",
+  "title": "ELVHYS 4.2 - Leakage into cold room/tank connection space considering barriers and obstacles",
+  "source": {
+    "publisher": "HSE / DataverseNO",
+    "doi": "10.18710/JXJP0H",
+    "landing_page": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/JXJP0H",
+    "api_record": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi%3A10.18710%2FJXJP0H",
+    "dataset_id": 254214,
+    "version_id": 4753,
+    "version": 1,
+    "license": "CC0 1.0",
+    "rights_identifier": "CC0-1.0",
+    "public_access": true
+  },
+  "archive_manifest": {
+    "file_count": 198,
+    "category_counts": {
+      "CONC": 40,
+      "FLMT": 35,
+      "PRES": 40,
+      "TEMP": 40,
+      "MISC": 40,
+      "README": 1,
+      "META": 1,
+      "SENSOR_DETAILS_PDF": 1
+    },
+    "metadata_file": {
+      "id": 254386,
+      "name": "ELE402HSEMETA.csv",
+      "bytes": 2325,
+      "md5": "f6e1a4c245d0fef8f5864d32274c6f82"
+    },
+    "readme_file": {
+      "id": 254380,
+      "name": "00_ELVHYSWP4_2 README.txt",
+      "bytes": 11305,
+      "md5": "e90a73473c7ab834ad1b9d438da96056"
+    },
+    "sensor_details_file": {
+      "id": 254561,
+      "name": "ELVHYS WP4.2 TCS Sensor Details.pdf",
+      "bytes": 158331,
+      "md5": "a88016b559a202f8bf34b551b175eb16"
+    }
+  },
+  "experimental_scope": {
+    "reported_test_count": 48,
+    "facility": "1 m3 cryogenic hydrogen transfer-connection space, HSE Science & Research Centre, Buxton, UK",
+    "metadata_experimental_dates": "05-Nov-2025 to 28-Nov-2025",
+    "readme_campaign_label": "Autumn 2024",
+    "date_consistency": "CONFLICT_REQUIRES_CITATION_CLARIFICATION",
+    "test_families": {
+      "horizontal_dispersion": "tests 1-28; README flags 27-28 invalid",
+      "pressure_peaking": "tests 29-31",
+      "ignition": "tests 32-42; README flags 32-35, 37 and 39 invalid",
+      "vertical_dispersion": "tests 43-48"
+    },
+    "source_pressure_barg": [2, 8],
+    "nozzle_diameter_mm": [0.2, 25.4],
+    "ventilation": ["active", "natural/passive"],
+    "measurement_sampling": "majority 20 Hz; test 30 100 Hz; test 31 500 Hz; ignited blast pressure up to 100 kHz",
+    "channels": [
+      "hydrogen concentration (0-100 vol% H2, +/-1 vol%)",
+      "release/nozzle pressure (0-10 barg, +/-0.025 bar)",
+      "transfer-connection-space pressure (0-100 mbarg, +/-0.5 mbar)",
+      "temperature (77-400 K, +/-1 K)",
+      "ventilation flow (0-5976 L/min, +/-2% reading)",
+      "blast overpressure (-1 to 1 barg, +/-0.01 bar)",
+      "weather indication"
+    ],
+    "processing_note": "Concentration channels are normalized and delay-aligned; nozzle temperature is converted with a custom calibration curve. These operations must be preserved in any downstream replay."
+  },
+  "file_level_checks": {
+    "sample_files_downloaded_locally": true,
+    "sample_file_manifest": [
+      {
+        "id": 254252,
+        "name": "ELE402HSE0024FLMT20251114.csv",
+        "bytes": 1000975,
+        "md5": "db1574f6a3af475abe5f87373d785a06",
+        "columns": ["Time", "FanFlowMeter", "DPT"],
+        "rows": 18746,
+        "end_time_s": 937.25,
+        "nominal_sample_interval_s": 0.05
+      },
+      {
+        "id": 254266,
+        "name": "ELE402HSE0024PRES20251114.csv",
+        "bytes": 1658947,
+        "md5": "5843a5e45da823606d9d69b23f40ca87",
+        "columns": ["Time", "PT1ReleaseRig", "PT2Nozzle", "Var4", "Var5"],
+        "rows": 18746,
+        "end_time_s": 937.25,
+        "nominal_sample_interval_s": 0.05
+      },
+      {
+        "id": 254249,
+        "name": "ELE402HSE0024TEMP20251114.csv",
+        "bytes": 8879680,
+        "md5": "bf685496d7fd4bd034cd83930cfba4dd",
+        "columns": ["Time", "thermocouple channels (26)"],
+        "rows": 18746,
+        "end_time_s": 937.25,
+        "nominal_sample_interval_s": 0.05
+      },
+      {
+        "id": 254233,
+        "name": "ELE402HSE003CONC2025118.csv",
+        "bytes": 7578570,
+        "md5": "2a3f01fc8107fd38a980ffb5ef48230a",
+        "columns": ["Time", "16 hydrogen concentration channels"],
+        "rows": 26457,
+        "end_time_s": 1322.8,
+        "nominal_sample_interval_s": 0.05
+      }
+    ],
+    "replay_manifest": "research/elvhys_auxiliary_replay.json",
+    "replay_claim_boundary": "Provenance and timebase replay only; no predictive model validation or full-loop station-vehicle claim."
+  },
+  "eligibility": {
+    "public_consequence_component_eligible": true,
+    "full_loop_station_vehicle_holdout_eligible": false,
+    "gaseous_h70_station_transfer_eligible": false,
+    "goal_completion_permitted": false,
+    "reason": "The archive is a CC0 cryogenic transfer-connection-space experiment set. It lacks a synchronized gaseous H70 station-to-vehicle fueling loop, and its domain differs from the outdoor gaseous HRS model."
+  },
+  "required_follow_up": [
+    "Resolve the README Autumn 2024 versus metadata November 2025 date discrepancy with the data custodian before manuscript citation.",
+    "Freeze a pre-outcome cryogenic domain-transfer protocol before using any unconsumed files for predictive scoring.",
+    "Keep the nine-file auxiliary replay and its post-access status separate from prospective validation evidence.",
+    "Do not use this source to close the full-loop external-validation gate."
+  ]
+}

@@ -21,6 +21,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert gates["elvhys_auxiliary_replay_integrity"]["observed"][
         "predictive_model_validation_permitted"
     ] is False
+    assert gates["elvhys_dataverse_metadata_integrity"]["status"] == "PASS"
+    assert gates["elvhys_dataverse_metadata_integrity"]["observed"]["file_count"] == 198
+    assert gates["elvhys_dataverse_metadata_integrity"]["observed"][
+        "full_loop_station_vehicle_holdout_eligible"
+    ] is False
     assert gates["preoutcome_design_sensitivity"]["status"] == "PASS"
     assert gates["full_loop_external_validation"]["status"] == "FAIL"
     assert gates["real_station_article_boundary_integrity"]["status"] == "PASS"

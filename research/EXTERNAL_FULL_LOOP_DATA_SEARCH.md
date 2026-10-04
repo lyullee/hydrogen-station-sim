@@ -1246,6 +1246,12 @@ production model or treating field summaries as validation. Until a custodian
 provides a de-identified synchronized export with reuse permission, the
 full-loop external gate and the full IJHE objective remain open.
 
+## 2026-10-05 ELVHYS consequence archive file audit
+
+The [ELVHYS 4.2 Dataverse record](https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/JXJP0H) (DOI [10.18710/JXJP0H](https://doi.org/10.18710/JXJP0H)) was rechecked at the API and file level. It declares CC0 1.0 and exposes 198 files for 48 cryogenic-hydrogen transfer-connection-space tests. The archive has synchronized concentration, release/nozzle pressure, enclosure pressure, temperature, ventilation and ignition/overpressure measurements, so it is useful consequence-component evidence. A sample manifest, headers, byte counts and hashes are retained in [`elvhys_dataverse_metadata_audit_2026_10_05.json`](elvhys_dataverse_metadata_audit_2026_10_05.json).
+
+The metadata CSV dates the experiments 5–28 November 2025, while the README says “Autumn 2024”. The discrepancy is recorded for custodian clarification. The source remains **component-only**: it is cryogenic transfer-space evidence, not a gaseous H70 station-to-vehicle fueling archive, and therefore does not change the full-loop gate or goal-completion rule.
+
 The UPC/Digital.CSIC supplementary artifact for the on-site HRS modelling paper
 (DOI [10.1016/j.ijhydene.2023.08.192](https://doi.org/10.1016/j.ijhydene.2023.08.192))
 was also checked. It is openly reachable and useful for comparing operating

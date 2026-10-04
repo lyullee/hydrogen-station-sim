@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T17:20:28.782299+00:00",
+  "generated_at": "2026-10-04T17:32:39.627018+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 38,
+    "PASS": 39,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -538,6 +538,21 @@
         "file_count": 9,
         "predictive_model_validation_permitted": false,
         "full_loop_station_vehicle_validation_permitted": false
+      }
+    },
+    {
+      "id": "elvhys_dataverse_metadata_integrity",
+      "status": "PASS",
+      "claim": "The CC0 ELVHYS consequence archive has a file-level manifest, channel/timebase checks and an explicit cryogenic component-only boundary.",
+      "evidence": "research\\elvhys_dataverse_metadata_audit_2026_10_05.json",
+      "requirement": "198-file API manifest, exact category counts, four sampled files with rows/hashes, recorded date conflict and false full-loop/goal flags.",
+      "observed": {
+        "file_count": 198,
+        "reported_test_count": 48,
+        "sample_file_count": 4,
+        "public_consequence_component_eligible": true,
+        "full_loop_station_vehicle_holdout_eligible": false,
+        "date_consistency": "CONFLICT_REQUIRES_CITATION_CLARIFICATION"
       }
     },
     {

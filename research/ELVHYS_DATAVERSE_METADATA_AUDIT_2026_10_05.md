@@ -1,0 +1,9 @@
+# ELVHYS Dataverse metadata and file audit (2026-10-05)
+
+The public [ELVHYS 4.2 Dataverse record](https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/JXJP0H) is identified by DOI [10.18710/JXJP0H](https://doi.org/10.18710/JXJP0H) and declares **CC0 1.0**. The API version inspected was dataset 254214, version 1 (version id 4753). Its manifest contains 198 files: 40 concentration, 35 flow, 40 pressure, 40 temperature, 40 weather/miscellaneous, a README, a metadata CSV and a sensor-location PDF.
+
+The archive contains 48 cryogenic-hydrogen experiments in a 1 m³ transfer-connection space: small horizontal and vertical leaks, large-release pressure-peaking tests, and deliberate ignition tests. It records concentration, release/nozzle pressure, enclosure pressure, temperature, ventilation flow, blast overpressure and weather. Most channels are sampled at 20 Hz, with higher-rate pressure/ignition tests. A downloaded sample was checked at file level for IDs, byte counts, MD5 values, headers, row counts and common time axes. The existing nine-file replay is retained in [`elvhys_auxiliary_replay.json`](elvhys_auxiliary_replay.json), but it is explicitly post-access provenance replay and does not claim prediction.
+
+The metadata CSV dates the experiments to 5–28 November 2025, while the README calls the campaign “Autumn 2024”. This conflict is recorded rather than silently resolved; the custodian must clarify it before a paper cites a campaign date.
+
+This is strong, openly reusable **consequence-component evidence** for dispersion, pressure-peaking and ignition extensions. It is not a gaseous H70 station-to-vehicle fueling trace and does not contain the synchronized vehicle/receptacle pressure, temperature, transferred mass, controller state and J2601 initial-condition fields required by the full-loop gate. It therefore does not permit the IJHE/full-objective completion rule to pass.

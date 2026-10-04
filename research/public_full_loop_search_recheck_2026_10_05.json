@@ -72,6 +72,24 @@
       "decision": "OPEN_SIMULATION_SOFTWARE_ONLY",
       "finding": "The public page describes a MATLAB/Simulink model validated by the developers with their own measurements. It provides a simulator, not an independently released measured station-to-vehicle trace archive.",
       "reuse_status": "Useful model-comparison lead only; simulator outputs cannot be promoted to a physical external holdout."
+    },
+    {
+      "id": "elvhys_4_2_cryo_connection_space_2026_10_05",
+      "title": "ELVHYS 4.2 - Leakage into cold room/tank connection space considering barriers and obstacles",
+      "doi": "10.18710/JXJP0H",
+      "url": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/JXJP0H",
+      "license": "CC0 1.0",
+      "decision": "CRYOGENIC_CONSEQUENCE_COMPONENT_ONLY",
+      "finding": "The Dataverse manifest exposes 198 files from 48 cryogenic hydrogen transfer-connection-space experiments covering concentration, pressure, temperature, ventilation flow, pressure peaking and deliberate ignition. It is openly reusable and has synchronized time-series files, but it is not a gaseous H70 station-to-vehicle fueling trace.",
+      "observed_scope": {
+        "facility": "1 m3 transfer-connection space at HSE Science & Research Centre, Buxton, UK",
+        "reported_file_count": 198,
+        "reported_test_count": 48,
+        "required_full_loop_channels_present": false,
+        "consequence_component_channels_present": true,
+        "date_metadata_conflict": true
+      },
+      "reuse_status": "CC0 permits reuse; cite the metadata/readme date discrepancy and keep the source in a declared cryogenic domain-transfer protocol. It cannot close the station full-loop gate."
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",

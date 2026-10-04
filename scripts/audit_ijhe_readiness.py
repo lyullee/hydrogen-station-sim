@@ -533,6 +533,62 @@ def audit(root: Path) -> dict[str, object]:
         } if elvhys_replay else "missing",
     ))
 
+    elvhys_metadata_path = root / "research/elvhys_dataverse_metadata_audit_2026_10_05.json"
+    elvhys_metadata = _json(elvhys_metadata_path)
+    elvhys_metadata_source = (elvhys_metadata or {}).get("source") or {}
+    elvhys_manifest = (elvhys_metadata or {}).get("archive_manifest") or {}
+    elvhys_metadata_scope = (elvhys_metadata or {}).get("experimental_scope") or {}
+    elvhys_metadata_eligibility = (elvhys_metadata or {}).get("eligibility") or {}
+    elvhys_metadata_files = ((elvhys_metadata or {}).get("file_level_checks") or {}).get(
+        "sample_file_manifest", []
+    )
+    elvhys_metadata_pass = bool(
+        (elvhys_metadata or {}).get("schema_version") == 1
+        and elvhys_metadata_source.get("doi") == "10.18710/JXJP0H"
+        and elvhys_metadata_source.get("license") == "CC0 1.0"
+        and elvhys_metadata_source.get("public_access") is True
+        and elvhys_manifest.get("file_count") == 198
+        and elvhys_manifest.get("category_counts") == {
+            "CONC": 40,
+            "FLMT": 35,
+            "PRES": 40,
+            "TEMP": 40,
+            "MISC": 40,
+            "README": 1,
+            "META": 1,
+            "SENSOR_DETAILS_PDF": 1,
+        }
+        and elvhys_metadata_scope.get("reported_test_count") == 48
+        and elvhys_metadata_scope.get("date_consistency")
+        == "CONFLICT_REQUIRES_CITATION_CLARIFICATION"
+        and len(elvhys_metadata_files) == 4
+        and all(
+            item.get("bytes", 0) > 0
+            and item.get("md5")
+            and item.get("rows", 0) > 0
+            and item.get("end_time_s", 0) > 0
+            for item in elvhys_metadata_files
+        )
+        and elvhys_metadata_eligibility.get("public_consequence_component_eligible") is True
+        and elvhys_metadata_eligibility.get("full_loop_station_vehicle_holdout_eligible") is False
+        and elvhys_metadata_eligibility.get("goal_completion_permitted") is False
+    )
+    gates.append(_gate(
+        "elvhys_dataverse_metadata_integrity",
+        "PASS" if elvhys_metadata_pass else ("FAIL" if elvhys_metadata else "PENDING"),
+        "The CC0 ELVHYS consequence archive has a file-level manifest, channel/timebase checks and an explicit cryogenic component-only boundary.",
+        str(elvhys_metadata_path.relative_to(root)),
+        "198-file API manifest, exact category counts, four sampled files with rows/hashes, recorded date conflict and false full-loop/goal flags.",
+        {
+            "file_count": elvhys_manifest.get("file_count"),
+            "reported_test_count": elvhys_metadata_scope.get("reported_test_count"),
+            "sample_file_count": len(elvhys_metadata_files),
+            "public_consequence_component_eligible": elvhys_metadata_eligibility.get("public_consequence_component_eligible"),
+            "full_loop_station_vehicle_holdout_eligible": elvhys_metadata_eligibility.get("full_loop_station_vehicle_holdout_eligible"),
+            "date_consistency": elvhys_metadata_scope.get("date_consistency"),
+        } if elvhys_metadata else "missing",
+    ))
+
     nrel_retrieval_path = root / "research/nrel_h2fills_package_retrieval_check.json"
     nrel_retrieval = _json(nrel_retrieval_path)
     nrel_validation_path = root / "data/public_validation/results/nrel_h2fills_hdvs_typeiv/validation.json"
