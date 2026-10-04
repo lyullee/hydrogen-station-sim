@@ -19,6 +19,8 @@ contains:
 - active condition labels and associated sensor tags;
 - response evidence identifiers (for example HIAD, H2Tools and ISO mappings)
   included per condition and in an aggregate source list;
+- public HIAD action-to-playbook traceability metadata with an explicit
+  non-efficacy claim boundary;
 - impact calculation state: `not_requested`, `attempted_no_result`, or
   `calculated`;
 - calculated impact basis, input sensor tags, model outputs and threshold
@@ -39,7 +41,7 @@ The following tests passed in the repository virtual environment:
 11 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-441 passed, 16 warnings
+470 passed, 16 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -47,8 +49,9 @@ The tests verify that normal monitoring keeps impact calculation marked as
 results and input tags, non-finite values are discarded, the main and sensor
 assistant routes remain isolated, and a generated answer cannot negate a
 confirmed alarm, gas observation, physical leak or calculated impact.
-The manifest digest now also covers the public response-source identifiers used
-to ground the staged action plan.
+The manifest digest now also covers the public response-source identifiers and
+the HIAD action-to-playbook traceability metadata used to ground the staged
+action plan.
 
 ## Claim boundary
 
@@ -62,9 +65,10 @@ qualified expert review, which remain pending in
 
 ## Public incident traceability follow-up
 
-The reproducible [HIAD-to-playbook coverage audit](HIAD_PLAYBOOK_COVERAGE.md)
+The reproducible [HIAD-to-playbook coverage audit](HIAD_ACTION_PLAYBOOK_COVERAGE.md)
 links 34 public HRS incident/near-miss metadata rows to the current emergency
-response families. The current metadata-only mapping covers all 34 rows (100.0%);
+response families. The current metadata-only mapping covers all 34 rows (100.0%)
+and all 8 controlled action categories;
 case 454, a canopy-damage near miss without hydrogen release, is linked to a
 dedicated structural-damage response family without inferring a hydrogen release.
 The audit deliberately excludes HIAD emergency

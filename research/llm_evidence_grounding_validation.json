@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "recorded_at": "2026-10-04",
+  "recorded_at": "2026-10-04T09:31:00+00:00",
   "status": "software_contract_verified",
   "scope": [
     "digital-twin main assistant",
@@ -16,9 +16,9 @@
     },
     "full_suite": {
       "command": ".venv\\Scripts\\python.exe -m pytest -q",
-      "passed": 441,
+      "passed": 470,
       "failed": 0,
-      "warnings": 12
+      "warnings": 16
     }
   },
   "verified_properties": [
@@ -28,7 +28,8 @@
     "non-finite signal and result values are excluded",
     "main and selected-sensor assistant routes remain isolated",
     "contradictory LLM claims are rejected when they negate confirmed evidence",
-    "response evidence source identifiers are carried into the hashed manifest"
+    "response evidence source identifiers are carried into the hashed manifest",
+    "public HIAD action-to-playbook traceability metadata is carried into the response evidence envelope"
   ],
   "not_established": [
     "physics validity of the consequence model",
@@ -40,13 +41,16 @@
   "full_objective_gate_impact": "does_not_clear",
   "evidence": "research/LLM_EVIDENCE_GROUNDING_VALIDATION.md",
   "public_incident_traceability": {
-    "evidence": "research/hiad_playbook_coverage.json",
+    "evidence": "research/hiad_action_playbook_coverage.json",
     "source": "HIAD 2.2 public HRS inventory",
     "case_count": 34,
     "metadata_mapped_case_count": 34,
     "metadata_mapped_fraction": 1.0,
     "unmapped_event_ids": [],
-    "interpretation": "qualitative scenario-family coverage only; excludes HIAD response text and does not establish effectiveness or safety"
+    "action_category_count": 8,
+    "covered_action_category_count": 8,
+    "action_playbook_contract_pass": true,
+    "interpretation": "qualitative scenario-family and action-to-playbook traceability only; excludes HIAD response text and does not establish effectiveness or safety"
   },
   "response_stage_contract": {
     "evidence": "research/hiad_response_stage_contract.json",
