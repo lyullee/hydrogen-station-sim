@@ -75,6 +75,26 @@
       "use": "Independent operating-range and reliability context; request de-identified event-level logger data before treating the source as validation."
     },
     {
+      "id": "carb_2024_light_duty_in_use_study",
+      "title": "California Air Resources Board Existing Light-Duty Hydrogen Refueling Stations In-Use Study Report",
+      "url": "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf",
+      "license": "Public agency report; no raw logger reuse licence or raw archive is provided with the report",
+      "decision": "REAL_STATION_TEST_REPORT_ONLY",
+      "observed_scope": {
+        "report_date": "2024-11-22",
+        "testing_basis": "adapted HGV 4.3:22 in-use station tests",
+        "reported_channels": [
+          "test-device data log",
+          "dispenser data log when supplied",
+          "field notes"
+        ],
+        "raw_synchronized_rows": false,
+        "report_sha256": "a49e46baa1151847b0d786d0a40c2cc08928e28043152e64ae95a22a06784766"
+      },
+      "finding": "The public report states that some stations did not supply dispenser data logs and that missing logs caused tests to be marked undetermined. It contains reported test results and plotted examples, but no downloadable synchronized station-to-vehicle pressure-temperature-mass-flow row archive.",
+      "use": "Independent field-operation and protocol-context citation only; request a de-identified raw log export and written reuse terms before considering any case for a frozen full-loop holdout."
+    },
+    {
       "id": "nrel_h2_station_cdp_retail_2020",
       "title": "Next Generation Hydrogen Station Composite Data Products: Retail Stations",
       "url": "https://www.nrel.gov/hydrogen/infrastructure-cdps-retail.html",
