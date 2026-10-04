@@ -1644,6 +1644,33 @@ def audit(root: Path) -> dict[str, object]:
         } if preslhy_partb else "missing; Part-B archive evaluation has not completed",
     ))
 
+    preslhy_partb_nonadiabatic_path = root / "research/preslhy_partb_nonadiabatic_diagnostic_2026_10_05.json"
+    preslhy_partb_nonadiabatic = _json(preslhy_partb_nonadiabatic_path)
+    preslhy_partb_nonadiabatic_result = (preslhy_partb_nonadiabatic or {}).get("diagnostic_result") or {}
+    preslhy_partb_nonadiabatic_pass = bool(
+        (preslhy_partb_nonadiabatic or {}).get("schema_version") == 1
+        and (preslhy_partb_nonadiabatic or {}).get("status")
+        == "POST_OUTCOME_DEVELOPMENT_DIAGNOSTIC_ONLY"
+        and (preslhy_partb_nonadiabatic or {}).get("protocol", {}).get("outcomes_were_already_accessed") is True
+        and (preslhy_partb_nonadiabatic or {}).get("protocol", {}).get("case_count") == 5
+        and preslhy_partb_nonadiabatic_result.get("joint_primary_passes") == 3
+        and (preslhy_partb_nonadiabatic or {}).get("baseline_frozen_result", {}).get("joint_primary_passes") == 3
+        and (preslhy_partb_nonadiabatic or {}).get("interpretation", {}).get("claim_boundary")
+    )
+    gates.append(_gate(
+        "preslhy_partb_nonadiabatic_diagnostic_integrity",
+        "PASS" if preslhy_partb_nonadiabatic_pass else ("FAIL" if preslhy_partb_nonadiabatic else "PENDING"),
+        "The revised non-adiabatic model is replayed on the consumed Part-B cases as a negative development diagnostic without replacing the frozen result.",
+        str(preslhy_partb_nonadiabatic_path.relative_to(root)),
+        "Five post-outcome cases, unchanged 3/5 joint result, explicit geometry limitation and non-validation claim boundary.",
+        {
+            "status": (preslhy_partb_nonadiabatic or {}).get("status"),
+            "joint_primary_passes": preslhy_partb_nonadiabatic_result.get("joint_primary_passes"),
+            "baseline_joint_primary_passes": (preslhy_partb_nonadiabatic or {}).get("baseline_frozen_result", {}).get("joint_primary_passes"),
+            "claim_boundary": (preslhy_partb_nonadiabatic or {}).get("interpretation", {}).get("claim_boundary"),
+        } if preslhy_partb_nonadiabatic else "missing; Part-B revised-model diagnostic has not been recorded",
+    ))
+
     e5_result_path = root / "research/preslhy_e5_1_holdout_result.json"
     e5_result = _json(e5_result_path)
     e5_protocol_path = root / "research/preslhy_e5_1_holdout_protocol.json"
