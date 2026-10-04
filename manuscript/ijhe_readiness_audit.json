@@ -1,6 +1,14 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T09:52:30.498261+00:00",
+  "generated_at": "2026-10-04T10:01:29.765040+00:00",
+  "target_journal": {
+    "title": "International Journal of Hydrogen Energy",
+    "issn": "0360-3199",
+    "publisher_scope_url": "https://shop.elsevier.com/journals/international-journal-of-hydrogen-energy/0360-3199",
+    "guide_for_authors_url": "https://www.elsevier.com/journals/international-journal-of-hydrogen-energy/0360-3199/guide-for-authors",
+    "data_statement_guidance_url": "https://www.elsevier.com/researcher/author/tools-and-resources/research-data/data-statement",
+    "readiness_interpretation": "A local gate is an evidence-readiness decision, not an acceptance or peer-review prediction."
+  },
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,

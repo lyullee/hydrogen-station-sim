@@ -1,5 +1,8 @@
 # IJHE evidence-readiness audit
 
+Target journal: **International Journal of Hydrogen Energy** (ISSN 0360-3199). See the [publisher scope](https://shop.elsevier.com/journals/international-journal-of-hydrogen-energy/0360-3199), [Guide for Authors](https://www.elsevier.com/journals/international-journal-of-hydrogen-energy/0360-3199/guide-for-authors) and [Elsevier data-statement guidance](https://www.elsevier.com/researcher/author/tools-and-resources/research-data/data-statement).
+The local result is an evidence-readiness gate, not a guarantee of editorial acceptance.
+
 - Bounded IJHE submission ready: **False**
 - Full user objective ready: **False**
 - Goal completion permitted: **False**
