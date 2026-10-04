@@ -1248,6 +1248,20 @@ CSV files and reports vehicle pressure, temperature, mass, elapsed time and a
 explicit reuse licence, so it is recorded as a table-only face-validity and
 data-request lead rather than a full-loop holdout.
 
+The Cal State LA HRFF comparison [10.3390/en16155749](https://doi.org/10.3390/en16155749)
+adds three real experiments contrasting booster-driven and cascade refueling.
+The paper reports pressure, mass flow, nozzle temperature and chiller-power
+trends, including a 5 s leak-check pause and a 1.6 kg comparison window. The
+public article provides figures and aggregate values, but not a reusable
+synchronized logger archive, so it remains a figure-only data-request lead.
+
+The FCH2RAIL demonstrator study [10.1016/j.ijhydene.2025.04.040](https://doi.org/10.1016/j.ijhydene.2025.04.040)
+is a particularly relevant IJHE precedent: the project recorded train-module
+pressure/temperature together with dispenser pressure, temperature and mass
+flow. The open paper shows an exemplary synchronized refueling trace, but no
+raw row archive or reuse terms are released with it. It is therefore retained
+as an independent face-validity and acquisition lead, not a full-loop holdout.
+
 This recheck adds a prioritized data-request route without changing the
 production model or treating field summaries as validation. Until a custodian
 provides a de-identified synchronized export with reuse permission, the

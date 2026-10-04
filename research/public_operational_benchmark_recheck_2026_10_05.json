@@ -284,6 +284,61 @@
       },
       "finding": "The public article exposes small table CSVs and describes real station tests with pressure, temperature, mass and flow observations, but no synchronized raw time-series archive or explicit reuse licence was found.",
       "use": "High-value face-validity and data-request lead for 35/70 MPa vehicle-filling behaviour; do not use the table summaries as a full-loop holdout or tune the model from them."
+    },
+    {
+      "id": "calstate_la_cascade_direct_energies_2023",
+      "title": "Experimental Comparison of Hydrogen Refueling with Directly Pressurized vs. Cascade Method",
+      "doi": "10.3390/en16155749",
+      "url": "https://doi.org/10.3390/en16155749",
+      "open_copy": "https://par.nsf.gov/servlets/purl/10528220",
+      "license": "CC BY 4.0 article; no machine-readable synchronized logger archive is attached to the public record",
+      "decision": "REAL_STATION_EXPERIMENT_FIGURE_ONLY_DATA_REQUEST_LEAD",
+      "observed_scope": {
+        "facility": "Cal State LA Hydrogen Research and Fueling Facility, California, USA",
+        "reported_cases": 3,
+        "cases": [
+          "BT cascade with booster compressors disabled",
+          "directly pressurized refueling with booster compressors (scenario 1)",
+          "directly pressurized refueling with booster compressors (scenario 2)"
+        ],
+        "vehicle_capacity_kg": 5.0,
+        "reported_channels": [
+          "vehicle/dispenser pressure",
+          "mass flow",
+          "nozzle outlet temperature",
+          "hydrogen chiller power"
+        ],
+        "protocol": "SAE J2601-conforming station operation; cascade test included 5 s leak-check pauses and up to 30 s checks depending on conditions",
+        "raw_synchronized_rows": false,
+        "reported_dispensed_mass_kg": 1.6
+      },
+      "finding": "The open article reports three real HRFF experiments and comparative pressure, mass-flow, nozzle-temperature and chiller-power trends, but the public record exposes figures and aggregate values rather than a downloadable synchronized logger archive.",
+      "use": "High-value independent face-validity and data-request lead for cascade/direct refueling behaviour; request the event-level logger export, channel dictionary, calibration metadata and written reuse terms before using any case as a frozen full-loop holdout."
+    },
+    {
+      "id": "fch2rail_hrs_train_refueling_ijhe_2025",
+      "title": "Development, application and optimization of hydrogen refueling processes for railway vehicles",
+      "doi": "10.1016/j.ijhydene.2025.04.040",
+      "url": "https://doi.org/10.1016/j.ijhydene.2025.04.040",
+      "open_copy": "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf",
+      "license": "CC BY 4.0 article; raw station/vehicle logger files are not released with the public article",
+      "decision": "REAL_STATION_EXPERIMENT_FIGURE_ONLY_DATA_REQUEST_LEAD",
+      "observed_scope": {
+        "facility": "FCH2RAIL transportable HRS and demonstrator train, Spain",
+        "reported_cases": 1,
+        "reported_channels": [
+          "train tank-module pressure",
+          "train tank temperature",
+          "dispenser pressure",
+          "dispenser temperature",
+          "dispenser mass flow"
+        ],
+        "sampling_description": "flow values registered at 5 or 10 s intervals in the project data treatment",
+        "raw_synchronized_rows": false,
+        "protocol_context": "300 bar tube trailer supply, ambient-temperature prototype operation; state-of-the-art SAE J2601/J2601-5 boundary discussion"
+      },
+      "finding": "The IJHE article explicitly describes synchronized dispenser and train measurements and presents an exemplary refueling trace, but the public paper provides plotted/processed examples rather than a reusable raw row archive.",
+      "use": "Strong independent face-validity and acquisition lead for multi-module storage and station/vehicle synchronization; request the raw export and reuse terms before any numerical holdout evaluation."
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",

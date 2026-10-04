@@ -12,7 +12,7 @@ def test_operational_benchmark_recheck_preserves_raw_trace_boundary():
     )
     assert record["result"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
     assert record["gate_impact"] == "full_loop_external_validation_remains_open"
-    assert len(record["candidates"]) == 11
+    assert len(record["candidates"]) == 13
     assert all(
         item["decision"] != "FULL_LOOP_HOLDOUT" for item in record["candidates"]
     )
@@ -140,3 +140,26 @@ def test_recheck_records_chinese_35_70_mpa_field_experiments_as_table_only_lead(
     assert item["observed_scope"]["reported_cases"] == 2
     assert item["observed_scope"]["raw_synchronized_rows"] is False
     assert item["observed_scope"]["case_70_mpa"]["peak_mass_flow_g_s"] == 36.0
+
+
+def test_recheck_records_calstate_experimental_comparison_without_raw_holdout():
+    record = json.loads(
+        (ROOT / "research/public_operational_benchmark_recheck_2026_10_05.json")
+        .read_text(encoding="utf-8")
+    )
+    item = next(candidate for candidate in record["candidates"] if candidate["id"] == "calstate_la_cascade_direct_energies_2023")
+    assert item["decision"] == "REAL_STATION_EXPERIMENT_FIGURE_ONLY_DATA_REQUEST_LEAD"
+    assert item["observed_scope"]["reported_cases"] == 3
+    assert item["observed_scope"]["raw_synchronized_rows"] is False
+    assert "logger archive" in item["finding"]
+
+
+def test_recheck_records_fch2rail_synchronized_channel_boundary():
+    record = json.loads(
+        (ROOT / "research/public_operational_benchmark_recheck_2026_10_05.json")
+        .read_text(encoding="utf-8")
+    )
+    item = next(candidate for candidate in record["candidates"] if candidate["id"] == "fch2rail_hrs_train_refueling_ijhe_2025")
+    assert item["doi"] == "10.1016/j.ijhydene.2025.04.040"
+    assert item["observed_scope"]["raw_synchronized_rows"] is False
+    assert "raw export" in item["use"]
