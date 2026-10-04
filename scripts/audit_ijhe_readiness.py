@@ -789,6 +789,38 @@ def audit(root: Path) -> dict[str, object]:
         } if thermal_replay else "missing; thermal-effects archive replay has not been run",
     ))
 
+    thermal_result_path = root / "research/thermal_effects_ignited_release_result_2026_10_05.json"
+    thermal_result = _json(thermal_result_path)
+    thermal_result_cases = (thermal_result or {}).get("cases") or []
+    thermal_result_pass = bool(
+        (thermal_result or {}).get("status") == "postfreeze_descriptive_consequence_replay_complete"
+        and (thermal_result or {}).get("source", {}).get("doi") == "10.23642/usn.17695082.v1"
+        and (thermal_result or {}).get("source", {}).get("license") == "CC BY 4.0"
+        and (thermal_result or {}).get("case_count") == 8
+        and len(thermal_result_cases) == 8
+        and [case.get("file") for case in thermal_result_cases] == expected_thermal_files
+        and not (thermal_result or {}).get("missing_files")
+        and all(
+            len(case.get("sha256", "")) == 64
+            and not case.get("required_channel_missing")
+            and case.get("timebase", {}).get("MFM", {}).get("monotonic_strict") is True
+            for case in thermal_result_cases
+        )
+        and "not predictive" in ((thermal_result or {}).get("claim_boundary") or "").lower()
+    )
+    gates.append(_gate(
+        "thermal_effects_postfreeze_integrity_replay",
+        "PASS" if thermal_result_pass else ("FAIL" if thermal_result else "PENDING"),
+        "The post-freeze thermal archive audit verifies every public case, time base, channel inventory and claim boundary without promoting it to predictive station validation.",
+        str(thermal_result_path.relative_to(root)),
+        "Eight SHA-256-linked cases, deterministic release-window rule, monotonic source time bases and explicit non-predictive/full-loop exclusions.",
+        {
+            "case_count": len(thermal_result_cases),
+            "missing_files": (thermal_result or {}).get("missing_files"),
+            "claim_boundary": (thermal_result or {}).get("claim_boundary"),
+        } if thermal_result else "missing; post-freeze thermal audit has not been run",
+    ))
+
     khk_public_path = root / "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json"
     khk_public = _json(khk_public_path)
     khk_source = (khk_public or {}).get("source_page") or {}

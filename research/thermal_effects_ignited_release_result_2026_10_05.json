@@ -1,0 +1,1556 @@
+{
+  "schema_version": 1,
+  "status": "postfreeze_descriptive_consequence_replay_complete",
+  "generated_at_utc": "2026-10-04T16:34:50.252789+00:00",
+  "source": {
+    "doi": "10.23642/usn.17695082.v1",
+    "landing_page": "https://doi.org/10.23642/usn.17695082.v1",
+    "api_record": "https://api.figshare.com/v2/articles/17695082",
+    "license": "CC BY 4.0"
+  },
+  "raw_directory": "tmp\\thermal_probe",
+  "file_selection": "All eight public MAT experiment files, ordered by source filename; no outcome-based exclusion.",
+  "case_count": 8,
+  "expected_case_count": 8,
+  "missing_files": [],
+  "cases": [
+    {
+      "file": "Exp_00001.mat",
+      "bytes": 87145920,
+      "sha256": "535b0af2beabb1c25b726f55a2d0faeb77ac990c733fc1312bc604c1d4e6bf75",
+      "groups": {
+        "HF": [
+          "RHF1",
+          "RHF2",
+          "RHF3",
+          "RHF4",
+          "THF1",
+          "THF2",
+          "temp1",
+          "temp2",
+          "time",
+          "timech7"
+        ],
+        "MFM": [
+          "P",
+          "T",
+          "mfr",
+          "time"
+        ],
+        "TS": [
+          "TT1",
+          "TT2",
+          "TT3",
+          "TT4",
+          "TT5",
+          "TT6",
+          "TT7",
+          "TT8",
+          "TT9",
+          "time",
+          "trig"
+        ],
+        "Tank": [
+          "P",
+          "T",
+          "time"
+        ],
+        "Vent": [
+          "ACH",
+          "T",
+          "time",
+          "vfr"
+        ]
+      },
+      "required_channel_missing": {},
+      "timebase": {
+        "MFM": {
+          "count": 999999,
+          "start_s": 0.001,
+          "end_s": 999.999,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0009999999999763531
+        },
+        "Tank": {
+          "count": 999999,
+          "start_s": 0.001,
+          "end_s": 999.999,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0009999999999763531
+        },
+        "Vent": {
+          "count": 999999,
+          "start_s": 0.001,
+          "end_s": 999.999,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0009999999999763531
+        },
+        "HF": {
+          "count": 999999,
+          "start_s": 0.001,
+          "end_s": 999.999,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0009999999999763531
+        }
+      },
+      "release_window": {
+        "threshold_g_s": 0.5,
+        "sample_count": 449113,
+        "start_s": 5.304,
+        "end_s": 454.416,
+        "integrated_positive_mass_kg": 1.1934051555190877
+      },
+      "mass_flow_g_s": {
+        "count": 999999,
+        "min": -3.7124609250000002,
+        "max": 7.346953275,
+        "peak_nonnegative": 7.346953275
+      },
+      "tank_pressure_bar": {
+        "count": 999999,
+        "min": -240.3460275,
+        "max": 710.0794549999999,
+        "peak_nonnegative": null
+      },
+      "tank_temperature_c": {
+        "count": 999999,
+        "min": -86.183496125,
+        "max": 44.23085612500009,
+        "peak_nonnegative": null
+      },
+      "heat_flux_kw_m2": {
+        "RHF1": {
+          "count": 999999,
+          "min": -0.009543684399999993,
+          "max": 1.6252861695999987,
+          "peak_nonnegative": 1.6252861695999987
+        },
+        "RHF2": {
+          "count": 999999,
+          "min": -20.81054556000001,
+          "max": 1.9694987999999995,
+          "peak_nonnegative": 1.9694987999999995
+        },
+        "RHF3": {
+          "count": 10000,
+          "min": -0.008532060037131264,
+          "max": 0.019523815937629755,
+          "peak_nonnegative": 0.019523815937629755
+        },
+        "RHF4": {
+          "count": 999999,
+          "min": -2.5967386799999996,
+          "max": 12.011647800000002,
+          "peak_nonnegative": 12.011647800000002
+        },
+        "THF1": {
+          "count": 999999,
+          "min": -0.8242328890929308,
+          "max": 0.17208142234729593,
+          "peak_nonnegative": 0.17208142234729593
+        },
+        "THF2": {
+          "count": 999999,
+          "min": -0.24891851230866568,
+          "max": -0.003925584638122415,
+          "peak_nonnegative": 0.0
+        }
+      },
+      "temperature_c": {
+        "TT1": {
+          "count": 45000,
+          "min": 18.9208984375,
+          "max": 201.873779296875,
+          "peak_nonnegative": null
+        },
+        "TT2": {
+          "count": 45000,
+          "min": 19.3023681640625,
+          "max": 222.625732421875,
+          "peak_nonnegative": null
+        },
+        "TT3": {
+          "count": 45000,
+          "min": 19.7601318359375,
+          "max": 218.5821533203125,
+          "peak_nonnegative": null
+        },
+        "TT4": {
+          "count": 45000,
+          "min": 19.3023681640625,
+          "max": 210.0372314453125,
+          "peak_nonnegative": null
+        },
+        "TT5": {
+          "count": 45000,
+          "min": 18.310546875,
+          "max": 20.44677734375,
+          "peak_nonnegative": null
+        },
+        "TT6": {
+          "count": 45000,
+          "min": 17.08984375,
+          "max": 494.7662353515625,
+          "peak_nonnegative": null
+        },
+        "TT7": {
+          "count": 45000,
+          "min": 19.3023681640625,
+          "max": 770.4925537109375,
+          "peak_nonnegative": null
+        },
+        "TT8": {
+          "count": 45000,
+          "min": 18.2342529296875,
+          "max": 20.0653076171875,
+          "peak_nonnegative": null
+        },
+        "TT9": {
+          "count": 45000,
+          "min": 18.5394287109375,
+          "max": 20.3704833984375,
+          "peak_nonnegative": null
+        }
+      }
+    },
+    {
+      "file": "Exp_00002.mat",
+      "bytes": 57386217,
+      "sha256": "71edba106de628e04005304ba20536c61228f4d73b57938b56bdc09f8358ec8c",
+      "groups": {
+        "HF": [
+          "RHF1",
+          "RHF2",
+          "RHF3",
+          "RHF4",
+          "THF1",
+          "THF2",
+          "temp1",
+          "temp2",
+          "time",
+          "timech7"
+        ],
+        "MFM": [
+          "P",
+          "T",
+          "mfr",
+          "time"
+        ],
+        "TS": [
+          "TT1",
+          "TT2",
+          "TT3",
+          "TT4",
+          "TT5",
+          "TT6",
+          "TT7",
+          "TT8",
+          "TT9",
+          "time",
+          "trig"
+        ],
+        "Tank": [
+          "P",
+          "T",
+          "time"
+        ],
+        "Vent": [
+          "ACH",
+          "T",
+          "time",
+          "vfr"
+        ]
+      },
+      "required_channel_missing": {},
+      "timebase": {
+        "MFM": {
+          "count": 4999,
+          "start_s": 0.1,
+          "end_s": 499.90000000000003,
+          "monotonic_strict": true,
+          "median_interval_s": 0.09999999999999787
+        },
+        "Tank": {
+          "count": 4999,
+          "start_s": 0.1,
+          "end_s": 499.90000000000003,
+          "monotonic_strict": true,
+          "median_interval_s": 0.09999999999999787
+        },
+        "Vent": {
+          "count": 4999,
+          "start_s": 0.1,
+          "end_s": 499.90000000000003,
+          "monotonic_strict": true,
+          "median_interval_s": 0.09999999999999787
+        },
+        "HF": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        }
+      },
+      "release_window": {
+        "threshold_g_s": 0.5,
+        "sample_count": 826,
+        "start_s": 0.30000000000000004,
+        "end_s": 82.80000000000001,
+        "integrated_positive_mass_kg": 0.4694393675625002
+      },
+      "mass_flow_g_s": {
+        "count": 4999,
+        "min": -12.312990000000001,
+        "max": 7.530761250000003,
+        "peak_nonnegative": 7.530761250000003
+      },
+      "tank_pressure_bar": {
+        "count": 4999,
+        "min": -822.2330000000001,
+        "max": 699.6420000000002,
+        "peak_nonnegative": null
+      },
+      "tank_temperature_c": {
+        "count": 4999,
+        "min": -97.87598750000001,
+        "max": 34.93652500000003,
+        "peak_nonnegative": null
+      },
+      "heat_flux_kw_m2": {
+        "RHF1": {
+          "count": 999999,
+          "min": -2.3881600000000026e-05,
+          "max": 1.2625634732000066,
+          "peak_nonnegative": 1.2625634732000066
+        },
+        "RHF2": {
+          "count": 999999,
+          "min": -9.910849079999984,
+          "max": 11.899690439999995,
+          "peak_nonnegative": 11.899690439999995
+        },
+        "RHF3": {
+          "count": 1000000,
+          "min": 1.9725075277221426e-05,
+          "max": 0.38163305681433796,
+          "peak_nonnegative": 0.38163305681433796
+        },
+        "RHF4": {
+          "count": 999999,
+          "min": 0.0036472200000000053,
+          "max": 12.672942059999992,
+          "peak_nonnegative": 12.672942059999992
+        },
+        "THF1": {
+          "count": 999999,
+          "min": -1.0922459056925335,
+          "max": 1.5075074410590656,
+          "peak_nonnegative": 1.5075074410590656
+        },
+        "THF2": {
+          "count": 999999,
+          "min": -0.180680039165914,
+          "max": -0.035247607649266065,
+          "peak_nonnegative": 0.0
+        }
+      },
+      "temperature_c": {
+        "TT1": {
+          "count": 25000,
+          "min": 27.618408203125,
+          "max": 204.8492431640625,
+          "peak_nonnegative": null
+        },
+        "TT2": {
+          "count": 25000,
+          "min": 27.618408203125,
+          "max": 221.6339111328125,
+          "peak_nonnegative": null
+        },
+        "TT3": {
+          "count": 25000,
+          "min": 29.60205078125,
+          "max": 204.4677734375,
+          "peak_nonnegative": null
+        },
+        "TT4": {
+          "count": 25000,
+          "min": 28.4576416015625,
+          "max": 190.3533935546875,
+          "peak_nonnegative": null
+        },
+        "TT5": {
+          "count": 25000,
+          "min": 18.2342529296875,
+          "max": 20.5230712890625,
+          "peak_nonnegative": null
+        },
+        "TT6": {
+          "count": 25000,
+          "min": 21.3623046875,
+          "max": 493.3929443359375,
+          "peak_nonnegative": null
+        },
+        "TT7": {
+          "count": 25000,
+          "min": 54.2449951171875,
+          "max": 271.6827392578125,
+          "peak_nonnegative": null
+        },
+        "TT8": {
+          "count": 25000,
+          "min": -284.5001220703125,
+          "max": 328.826904296875,
+          "peak_nonnegative": null
+        },
+        "TT9": {
+          "count": 25000,
+          "min": 23.040771484375,
+          "max": 160.064697265625,
+          "peak_nonnegative": null
+        }
+      }
+    },
+    {
+      "file": "Exp_00003.mat",
+      "bytes": 91100499,
+      "sha256": "1435e5426e5f0439bd7936cf24b9da0fa2af857cb2961849890dcd47e2d2f8ba",
+      "groups": {
+        "HF": [
+          "RHF1",
+          "RHF2",
+          "RHF3",
+          "RHF4",
+          "THF1",
+          "THF2",
+          "temp1",
+          "temp2",
+          "time",
+          "timech7"
+        ],
+        "MFM": [
+          "P",
+          "T",
+          "mfr",
+          "time"
+        ],
+        "Tank": [
+          "P",
+          "T",
+          "time"
+        ],
+        "Vent": [
+          "ACH",
+          "T",
+          "time",
+          "vfr"
+        ]
+      },
+      "required_channel_missing": {},
+      "timebase": {
+        "MFM": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        },
+        "Tank": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        },
+        "Vent": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        },
+        "HF": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        }
+      },
+      "release_window": {
+        "threshold_g_s": 0.5,
+        "sample_count": 999332,
+        "start_s": 0.334,
+        "end_s": 499.9995,
+        "integrated_positive_mass_kg": 0.7604112580074333
+      },
+      "mass_flow_g_s": {
+        "count": 999999,
+        "min": -3.7312207125000003,
+        "max": 4.036367250000006,
+        "peak_nonnegative": 4.036367250000006
+      },
+      "tank_pressure_bar": {
+        "count": 999999,
+        "min": -246.9300125,
+        "max": 357.54429624999995,
+        "peak_nonnegative": null
+      },
+      "tank_temperature_c": {
+        "count": 999999,
+        "min": -86.84919425,
+        "max": 42.60605893749991,
+        "peak_nonnegative": null
+      },
+      "heat_flux_kw_m2": {
+        "RHF1": {
+          "count": 999999,
+          "min": 6.34355e-05,
+          "max": 0.3132616639000007,
+          "peak_nonnegative": 0.3132616639000007
+        },
+        "RHF2": {
+          "count": 999999,
+          "min": 0.0075813,
+          "max": 11.508044580000051,
+          "peak_nonnegative": 11.508044580000051
+        },
+        "RHF3": {
+          "count": 1000000,
+          "min": 2.5195290184320365e-05,
+          "max": 0.30600287616604865,
+          "peak_nonnegative": 0.30600287616604865
+        },
+        "RHF4": {
+          "count": 999999,
+          "min": -1.557362940000004,
+          "max": 13.85083020000001,
+          "peak_nonnegative": 13.85083020000001
+        },
+        "THF1": {
+          "count": 999999,
+          "min": -0.17635321881932597,
+          "max": 0.6229638425462884,
+          "peak_nonnegative": 0.6229638425462884
+        },
+        "THF2": {
+          "count": 999999,
+          "min": -0.24464490224114846,
+          "max": 1.653536149601168,
+          "peak_nonnegative": 1.653536149601168
+        }
+      },
+      "temperature_c": {}
+    },
+    {
+      "file": "Exp_00004.mat",
+      "bytes": 93199247,
+      "sha256": "a6d1394979677e736677b2250b7d7b2c56fb6ee2b0cc0e2de87e2c9a32cbcfaa",
+      "groups": {
+        "HF": [
+          "RHF1",
+          "RHF2",
+          "RHF3",
+          "RHF4",
+          "THF1",
+          "THF2",
+          "temp1",
+          "temp2",
+          "time",
+          "timech7"
+        ],
+        "MFM": [
+          "P",
+          "T",
+          "mfr",
+          "time"
+        ],
+        "TS": [
+          "TT1",
+          "TT2",
+          "TT3",
+          "TT4",
+          "TT5",
+          "TT6",
+          "TT7",
+          "TT8",
+          "TT9",
+          "time",
+          "trig"
+        ],
+        "Tank": [
+          "P",
+          "T",
+          "time"
+        ],
+        "Vent": [
+          "ACH",
+          "T",
+          "time",
+          "vfr"
+        ]
+      },
+      "required_channel_missing": {},
+      "timebase": {
+        "MFM": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        },
+        "Tank": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        },
+        "Vent": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        },
+        "HF": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        }
+      },
+      "release_window": {
+        "threshold_g_s": 0.5,
+        "sample_count": 999399,
+        "start_s": 0.3005,
+        "end_s": 499.9995,
+        "integrated_positive_mass_kg": 1.2460467824015955
+      },
+      "mass_flow_g_s": {
+        "count": 999999,
+        "min": -3.7310522437499998,
+        "max": 7.368066900000004,
+        "peak_nonnegative": 7.368066900000004
+      },
+      "tank_pressure_bar": {
+        "count": 999999,
+        "min": -245.25130249999998,
+        "max": 697.83072875,
+        "peak_nonnegative": null
+      },
+      "tank_temperature_c": {
+        "count": 999999,
+        "min": -86.8354491875,
+        "max": 45.55233737499995,
+        "peak_nonnegative": null
+      },
+      "heat_flux_kw_m2": {
+        "RHF1": {
+          "count": 999999,
+          "min": -6.34355e-05,
+          "max": 0.46924731950000004,
+          "peak_nonnegative": 0.46924731950000004
+        },
+        "RHF2": {
+          "count": 999999,
+          "min": -4.858260959999995,
+          "max": 1.6547314199999965,
+          "peak_nonnegative": 1.6547314199999965
+        },
+        "RHF3": {
+          "count": 1000000,
+          "min": 1.95663292358946e-06,
+          "max": 0.45253262964043023,
+          "peak_nonnegative": 0.45253262964043023
+        },
+        "RHF4": {
+          "count": 999999,
+          "min": -1.16825784,
+          "max": 11.065337639999974,
+          "peak_nonnegative": 11.065337639999974
+        },
+        "THF1": {
+          "count": 999999,
+          "min": -0.1591833234071153,
+          "max": 1.6177416677596421,
+          "peak_nonnegative": 1.6177416677596421
+        },
+        "THF2": {
+          "count": 999999,
+          "min": -0.3358623726758832,
+          "max": 3.1094523001777175,
+          "peak_nonnegative": 3.1094523001777175
+        }
+      },
+      "temperature_c": {
+        "TT1": {
+          "count": 25000,
+          "min": 21.05712890625,
+          "max": 181.9610595703125,
+          "peak_nonnegative": null
+        },
+        "TT2": {
+          "count": 25000,
+          "min": 21.5911865234375,
+          "max": 202.178955078125,
+          "peak_nonnegative": null
+        },
+        "TT3": {
+          "count": 25000,
+          "min": 21.3623046875,
+          "max": 211.944580078125,
+          "peak_nonnegative": null
+        },
+        "TT4": {
+          "count": 25000,
+          "min": 21.66748046875,
+          "max": 203.857421875,
+          "peak_nonnegative": null
+        },
+        "TT5": {
+          "count": 25000,
+          "min": 20.44677734375,
+          "max": 47.454833984375,
+          "peak_nonnegative": null
+        },
+        "TT6": {
+          "count": 25000,
+          "min": 20.44677734375,
+          "max": 48.2940673828125,
+          "peak_nonnegative": null
+        },
+        "TT7": {
+          "count": 25000,
+          "min": 28.38134765625,
+          "max": 119.4000244140625,
+          "peak_nonnegative": null
+        },
+        "TT8": {
+          "count": 25000,
+          "min": 19.683837890625,
+          "max": 391.2353515625,
+          "peak_nonnegative": null
+        },
+        "TT9": {
+          "count": 25000,
+          "min": 20.3704833984375,
+          "max": 240.2496337890625,
+          "peak_nonnegative": null
+        }
+      }
+    },
+    {
+      "file": "Exp_00005.mat",
+      "bytes": 83233774,
+      "sha256": "a6b87028127b1cae7d2ea0297f62d6e0183ee93c1834885bed253b82f88e3df3",
+      "groups": {
+        "HF": [
+          "RHF1",
+          "RHF2",
+          "RHF3",
+          "RHF4",
+          "THF1",
+          "THF2",
+          "temp1",
+          "temp2",
+          "time",
+          "timech7"
+        ],
+        "MFM": [
+          "P",
+          "T",
+          "mfr",
+          "time"
+        ],
+        "TS": [
+          "TT1",
+          "TT2",
+          "TT3",
+          "TT4",
+          "TT5",
+          "TT6",
+          "TT7",
+          "TT8",
+          "TT9",
+          "time",
+          "trig"
+        ],
+        "Tank": [
+          "P",
+          "T",
+          "time"
+        ],
+        "Vent": [
+          "ACH",
+          "T",
+          "time",
+          "vfr"
+        ]
+      },
+      "required_channel_missing": {},
+      "timebase": {
+        "MFM": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        },
+        "Tank": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        },
+        "Vent": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        },
+        "HF": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        }
+      },
+      "release_window": {
+        "threshold_g_s": 0.5,
+        "sample_count": 999389,
+        "start_s": 0.3055,
+        "end_s": 499.9995,
+        "integrated_positive_mass_kg": 1.2125337136761845
+      },
+      "mass_flow_g_s": {
+        "count": 999999,
+        "min": -3.73123535625,
+        "max": 7.252734768749996,
+        "peak_nonnegative": 7.252734768749996
+      },
+      "tank_pressure_bar": {
+        "count": 999999,
+        "min": -245.28206375,
+        "max": 690.5013137500003,
+        "peak_nonnegative": null
+      },
+      "tank_temperature_c": {
+        "count": 999999,
+        "min": -86.866503875,
+        "max": 39.316409875000005,
+        "peak_nonnegative": null
+      },
+      "heat_flux_kw_m2": {
+        "RHF1": {
+          "count": 999999,
+          "min": 3.65687e-05,
+          "max": 0.46871968539999886,
+          "peak_nonnegative": 0.46871968539999886
+        },
+        "RHF2": {
+          "count": 999999,
+          "min": 0.014138099999999997,
+          "max": 8.613955020000002,
+          "peak_nonnegative": 8.613955020000002
+        },
+        "RHF3": {
+          "count": 764577,
+          "min": 2.0934317714916848e-05,
+          "max": 0.5043486552165253,
+          "peak_nonnegative": 0.5043486552165253
+        },
+        "RHF4": {
+          "count": 999999,
+          "min": 0.0,
+          "max": 0.0,
+          "peak_nonnegative": 0.0
+        },
+        "THF1": {
+          "count": 999999,
+          "min": -0.15096227458826508,
+          "max": 2.2301313434326393,
+          "peak_nonnegative": 2.2301313434326393
+        },
+        "THF2": {
+          "count": 999999,
+          "min": -0.39415913443718814,
+          "max": 3.4098220259580385,
+          "peak_nonnegative": 3.4098220259580385
+        }
+      },
+      "temperature_c": {
+        "TT1": {
+          "count": 30000,
+          "min": 20.751953125,
+          "max": 198.2879638671875,
+          "peak_nonnegative": null
+        },
+        "TT2": {
+          "count": 30000,
+          "min": 20.9808349609375,
+          "max": 217.0562744140625,
+          "peak_nonnegative": null
+        },
+        "TT3": {
+          "count": 30000,
+          "min": 20.9808349609375,
+          "max": 225.982666015625,
+          "peak_nonnegative": null
+        },
+        "TT4": {
+          "count": 30000,
+          "min": 20.5230712890625,
+          "max": 230.0262451171875,
+          "peak_nonnegative": null
+        },
+        "TT5": {
+          "count": 30000,
+          "min": 19.4549560546875,
+          "max": 29.8309326171875,
+          "peak_nonnegative": null
+        },
+        "TT6": {
+          "count": 30000,
+          "min": 19.7601318359375,
+          "max": 29.8309326171875,
+          "peak_nonnegative": null
+        },
+        "TT7": {
+          "count": 30000,
+          "min": 26.55029296875,
+          "max": 113.7542724609375,
+          "peak_nonnegative": null
+        },
+        "TT8": {
+          "count": 30000,
+          "min": 19.378662109375,
+          "max": 405.2734375,
+          "peak_nonnegative": null
+        },
+        "TT9": {
+          "count": 30000,
+          "min": 19.378662109375,
+          "max": 245.66650390625,
+          "peak_nonnegative": null
+        }
+      }
+    },
+    {
+      "file": "Exp_00006.mat",
+      "bytes": 93423140,
+      "sha256": "d98beedf7fbff9d0859b751b2e112428090a60144e4bdf62a35653b469f8782d",
+      "groups": {
+        "HF": [
+          "RHF1",
+          "RHF2",
+          "RHF3",
+          "RHF4",
+          "THF1",
+          "THF2",
+          "temp1",
+          "temp2",
+          "time",
+          "timech7"
+        ],
+        "MFM": [
+          "P",
+          "T",
+          "mfr",
+          "time"
+        ],
+        "TS": [
+          "TT1",
+          "TT2",
+          "TT3",
+          "TT4",
+          "TT5",
+          "TT6",
+          "TT7",
+          "TT8",
+          "TT9",
+          "time",
+          "trig"
+        ],
+        "Tank": [
+          "P",
+          "T",
+          "time"
+        ],
+        "Vent": [
+          "ACH",
+          "T",
+          "time",
+          "vfr"
+        ]
+      },
+      "required_channel_missing": {},
+      "timebase": {
+        "MFM": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        },
+        "Tank": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        },
+        "Vent": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        },
+        "HF": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        }
+      },
+      "release_window": {
+        "threshold_g_s": 0.5,
+        "sample_count": 999326,
+        "start_s": 0.337,
+        "end_s": 499.9995,
+        "integrated_positive_mass_kg": 0.8240156060250939
+      },
+      "mass_flow_g_s": {
+        "count": 999999,
+        "min": -3.731254875,
+        "max": 4.106875331249997,
+        "peak_nonnegative": 4.106875331249997
+      },
+      "tank_pressure_bar": {
+        "count": 999999,
+        "min": -246.9936525,
+        "max": 356.76168375,
+        "peak_nonnegative": null
+      },
+      "tank_temperature_c": {
+        "count": 999999,
+        "min": -86.8839355625,
+        "max": 35.98359062499996,
+        "peak_nonnegative": null
+      },
+      "heat_flux_kw_m2": {
+        "RHF1": {
+          "count": 999999,
+          "min": 4.40317e-05,
+          "max": 0.2976035436000015,
+          "peak_nonnegative": 0.2976035436000015
+        },
+        "RHF2": {
+          "count": 999999,
+          "min": -5.654666279999997,
+          "max": 2.4862156200000007,
+          "peak_nonnegative": 2.4862156200000007
+        },
+        "RHF3": {
+          "count": 1000000,
+          "min": 7.334273197361336e-07,
+          "max": 0.2285775635166313,
+          "peak_nonnegative": 0.2285775635166313
+        },
+        "RHF4": {
+          "count": 999999,
+          "min": -0.20371157999999995,
+          "max": 11.239338719999987,
+          "peak_nonnegative": 11.239338719999987
+        },
+        "THF1": {
+          "count": 999999,
+          "min": -0.09114735972013227,
+          "max": 0.5296057885537736,
+          "peak_nonnegative": 0.5296057885537736
+        },
+        "THF2": {
+          "count": 999999,
+          "min": -0.24569654721929937,
+          "max": 2.058183050418902,
+          "peak_nonnegative": 2.058183050418902
+        }
+      },
+      "temperature_c": {
+        "TT1": {
+          "count": 30000,
+          "min": 21.97265625,
+          "max": 121.5362548828125,
+          "peak_nonnegative": null
+        },
+        "TT2": {
+          "count": 30000,
+          "min": -598.907470703125,
+          "max": 619.964599609375,
+          "peak_nonnegative": null
+        },
+        "TT3": {
+          "count": 30000,
+          "min": 23.1170654296875,
+          "max": 140.380859375,
+          "peak_nonnegative": null
+        },
+        "TT4": {
+          "count": 30000,
+          "min": 22.8118896484375,
+          "max": 138.4735107421875,
+          "peak_nonnegative": null
+        },
+        "TT5": {
+          "count": 30000,
+          "min": 20.6756591796875,
+          "max": 29.2205810546875,
+          "peak_nonnegative": null
+        },
+        "TT6": {
+          "count": 30000,
+          "min": 20.1416015625,
+          "max": 29.3731689453125,
+          "peak_nonnegative": null
+        },
+        "TT7": {
+          "count": 30000,
+          "min": 25.0244140625,
+          "max": 107.9559326171875,
+          "peak_nonnegative": null
+        },
+        "TT8": {
+          "count": 30000,
+          "min": 20.5230712890625,
+          "max": 271.453857421875,
+          "peak_nonnegative": null
+        },
+        "TT9": {
+          "count": 30000,
+          "min": 21.3623046875,
+          "max": 141.143798828125,
+          "peak_nonnegative": null
+        }
+      }
+    },
+    {
+      "file": "Exp_00007.mat",
+      "bytes": 92771285,
+      "sha256": "9fecf52f40a5c90d15d2686944896587953cd31de7547267a2eed900dd2eec8a",
+      "groups": {
+        "HF": [
+          "RHF1",
+          "RHF2",
+          "RHF3",
+          "RHF4",
+          "THF1",
+          "THF2",
+          "temp1",
+          "temp2",
+          "time",
+          "timech7"
+        ],
+        "MFM": [
+          "P",
+          "T",
+          "mfr",
+          "time"
+        ],
+        "TS": [
+          "TT1",
+          "TT2",
+          "TT3",
+          "TT4",
+          "TT5",
+          "TT6",
+          "TT7",
+          "TT8",
+          "TT9",
+          "time",
+          "trig"
+        ],
+        "Tank": [
+          "P",
+          "T",
+          "time"
+        ],
+        "Vent": [
+          "ACH",
+          "T",
+          "time",
+          "vfr"
+        ]
+      },
+      "required_channel_missing": {},
+      "timebase": {
+        "MFM": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        },
+        "Tank": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        },
+        "Vent": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        },
+        "HF": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        }
+      },
+      "release_window": {
+        "threshold_g_s": 0.5,
+        "sample_count": 999324,
+        "start_s": 0.338,
+        "end_s": 499.9995,
+        "integrated_positive_mass_kg": 0.762252917485022
+      },
+      "mass_flow_g_s": {
+        "count": 999999,
+        "min": -3.7318408124999998,
+        "max": 4.048125243749999,
+        "peak_nonnegative": 4.048125243749999
+      },
+      "tank_pressure_bar": {
+        "count": 999999,
+        "min": -246.92334,
+        "max": 359.91794500000054,
+        "peak_nonnegative": null
+      },
+      "tank_temperature_c": {
+        "count": 999999,
+        "min": -86.8769043125,
+        "max": 37.890620687500174,
+        "peak_nonnegative": null
+      },
+      "heat_flux_kw_m2": {
+        "RHF1": {
+          "count": 999999,
+          "min": 1.41797e-05,
+          "max": 0.3081211495000012,
+          "peak_nonnegative": 0.3081211495000012
+        },
+        "RHF2": {
+          "count": 999999,
+          "min": -7.6229766600000035,
+          "max": 0.21838242,
+          "peak_nonnegative": 0.21838242
+        },
+        "RHF3": {
+          "count": 1000000,
+          "min": -0.00033221104077766435,
+          "max": 0.2056380992326423,
+          "peak_nonnegative": 0.2056380992326423
+        },
+        "RHF4": {
+          "count": 999999,
+          "min": -9.577312859999992,
+          "max": 3.8859285000000012,
+          "peak_nonnegative": 3.8859285000000012
+        },
+        "THF1": {
+          "count": 999999,
+          "min": -0.12365112766863762,
+          "max": 0.5645881304286964,
+          "peak_nonnegative": 0.5645881304286964
+        },
+        "THF2": {
+          "count": 999999,
+          "min": -0.28730690301305617,
+          "max": 2.298922228095024,
+          "peak_nonnegative": 2.298922228095024
+        }
+      },
+      "temperature_c": {
+        "TT1": {
+          "count": 30000,
+          "min": 20.1416015625,
+          "max": 125.732421875,
+          "peak_nonnegative": null
+        },
+        "TT2": {
+          "count": 30000,
+          "min": -344.8486328125,
+          "max": 640.4876708984375,
+          "peak_nonnegative": null
+        },
+        "TT3": {
+          "count": 30000,
+          "min": 20.5230712890625,
+          "max": 142.822265625,
+          "peak_nonnegative": null
+        },
+        "TT4": {
+          "count": 30000,
+          "min": 20.2178955078125,
+          "max": 144.195556640625,
+          "peak_nonnegative": null
+        },
+        "TT5": {
+          "count": 30000,
+          "min": 18.9208984375,
+          "max": 34.5611572265625,
+          "peak_nonnegative": null
+        },
+        "TT6": {
+          "count": 30000,
+          "min": 19.073486328125,
+          "max": 32.8826904296875,
+          "peak_nonnegative": null
+        },
+        "TT7": {
+          "count": 30000,
+          "min": 30.4412841796875,
+          "max": 120.0103759765625,
+          "peak_nonnegative": null
+        },
+        "TT8": {
+          "count": 30000,
+          "min": 19.4549560546875,
+          "max": 281.06689453125,
+          "peak_nonnegative": null
+        },
+        "TT9": {
+          "count": 30000,
+          "min": 19.6075439453125,
+          "max": 149.1546630859375,
+          "peak_nonnegative": null
+        }
+      }
+    },
+    {
+      "file": "Exp_00008.mat",
+      "bytes": 95007689,
+      "sha256": "7f66421f5f0f01cd9fc907dc61c522db67ba84496fa01e4edde71cff48ae000b",
+      "groups": {
+        "HF": [
+          "RHF1",
+          "RHF2",
+          "RHF3",
+          "RHF4",
+          "THF1",
+          "THF2",
+          "temp1",
+          "temp2",
+          "time",
+          "timech7"
+        ],
+        "MFM": [
+          "P",
+          "T",
+          "mfr",
+          "time"
+        ],
+        "TS": [
+          "TT1",
+          "TT2",
+          "TT3",
+          "TT4",
+          "TT5",
+          "TT6",
+          "TT7",
+          "TT8",
+          "TT9",
+          "time",
+          "trig"
+        ],
+        "Tank": [
+          "P",
+          "T",
+          "time"
+        ],
+        "Vent": [
+          "ACH",
+          "T",
+          "time",
+          "vfr"
+        ]
+      },
+      "required_channel_missing": {},
+      "timebase": {
+        "MFM": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        },
+        "Tank": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        },
+        "Vent": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        },
+        "HF": {
+          "count": 999999,
+          "start_s": 0.0005,
+          "end_s": 499.9995,
+          "monotonic_strict": true,
+          "median_interval_s": 0.0004999999999881766
+        }
+      },
+      "release_window": {
+        "threshold_g_s": 0.5,
+        "sample_count": 530582,
+        "start_s": 0.316,
+        "end_s": 265.6065,
+        "integrated_positive_mass_kg": 0.8630427212885204
+      },
+      "mass_flow_g_s": {
+        "count": 999999,
+        "min": -3.73121338125,
+        "max": 13.003847137500008,
+        "peak_nonnegative": 13.003847137500008
+      },
+      "tank_pressure_bar": {
+        "count": 999999,
+        "min": -246.95100875,
+        "max": 355.8424349999998,
+        "peak_nonnegative": null
+      },
+      "tank_temperature_c": {
+        "count": 999999,
+        "min": -86.89553225,
+        "max": 33.48495475,
+        "peak_nonnegative": null
+      },
+      "heat_flux_kw_m2": {
+        "RHF1": {
+          "count": 999999,
+          "min": 3.95539e-05,
+          "max": 0.6282920588000005,
+          "peak_nonnegative": 0.6282920588000005
+        },
+        "RHF2": {
+          "count": 999999,
+          "min": -1.1869037400000007,
+          "max": 7.49405358000001,
+          "peak_nonnegative": 7.49405358000001
+        },
+        "RHF3": {
+          "count": 1000000,
+          "min": 0.00019766245859154463,
+          "max": 0.9575762944381229,
+          "peak_nonnegative": 0.9575762944381229
+        },
+        "RHF4": {
+          "count": 999999,
+          "min": 0.03151362,
+          "max": 57.29192507999995,
+          "peak_nonnegative": 57.29192507999995
+        },
+        "THF1": {
+          "count": 999999,
+          "min": -0.3112398648521958,
+          "max": 2.6303963405391015,
+          "peak_nonnegative": 2.6303963405391015
+        },
+        "THF2": {
+          "count": 999999,
+          "min": -0.436064720887973,
+          "max": 5.247067680781448,
+          "peak_nonnegative": 5.247067680781448
+        }
+      },
+      "temperature_c": {
+        "TT1": {
+          "count": 30000,
+          "min": 18.768310546875,
+          "max": 262.14599609375,
+          "peak_nonnegative": null
+        },
+        "TT2": {
+          "count": 30000,
+          "min": -588.4552001953125,
+          "max": 1058.65478515625,
+          "peak_nonnegative": null
+        },
+        "TT3": {
+          "count": 30000,
+          "min": 18.3868408203125,
+          "max": 324.249267578125,
+          "peak_nonnegative": null
+        },
+        "TT4": {
+          "count": 30000,
+          "min": 18.6920166015625,
+          "max": 314.178466796875,
+          "peak_nonnegative": null
+        },
+        "TT5": {
+          "count": 30000,
+          "min": 17.0135498046875,
+          "max": 26.7791748046875,
+          "peak_nonnegative": null
+        },
+        "TT6": {
+          "count": 30000,
+          "min": 17.6239013671875,
+          "max": 28.1524658203125,
+          "peak_nonnegative": null
+        },
+        "TT7": {
+          "count": 30000,
+          "min": 22.430419921875,
+          "max": 226.3641357421875,
+          "peak_nonnegative": null
+        },
+        "TT8": {
+          "count": 30000,
+          "min": 16.8609619140625,
+          "max": 330.8868408203125,
+          "peak_nonnegative": null
+        },
+        "TT9": {
+          "count": 30000,
+          "min": 16.17431640625,
+          "max": 533.9813232421875,
+          "peak_nonnegative": null
+        }
+      }
+    }
+  ],
+  "documented_units": {
+    "MFM/mfr": "g/s",
+    "MFM/P": "bar",
+    "MFM/T": "degC",
+    "Tank/P": "bar",
+    "Tank/T": "degC",
+    "HF/RHF*": "kW/m2",
+    "HF/THF*": "kW/m2",
+    "TS/TT*": "degC",
+    "Vent/ACH": "1/h",
+    "Vent/vfr": "m3/h"
+  },
+  "claim_boundary": "Descriptive, post-freeze consequence-data replay only. The public record does not expose a frozen case-to-case nozzle/geometry mapping sufficient for an untouched predictive HyRAM comparison; this is not predictive validation. No parameter fitting, CFD calibration, station full-loop validation, controller validation, LLM effectiveness claim or legal separation-distance claim is made.",
+  "raw_redistribution": "Raw MAT files remain external to the repository; only hashes and derived summaries are committed."
+}
