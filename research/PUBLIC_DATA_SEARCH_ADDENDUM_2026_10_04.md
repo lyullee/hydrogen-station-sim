@@ -32,3 +32,19 @@ NREL files remain governed by their already-frozen roles; they cannot be
 reused as a new untouched holdout. The independent full-loop validation gate
 therefore remains open. Any future file must be quarantined and hashed with
 `scripts/intake_external_hrs_bundle.py` before numerical values are opened.
+## 2026-10-04 discovery refresh
+
+The official public inventories found in a second repository search were also
+checked against the same intake rule:
+
+| Source | Observed fields | Decision |
+| --- | --- | --- |
+| [European Hydrogen Observatory HRS workbook](https://observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations) | Station location and dispenser type; no vehicle pressure, gas temperature or mass-flow logger | Static infrastructure context only |
+| [California MDHD infrastructure dataset](https://lab.data.ca.gov/dataset/medium-and-heavy-duty-infrastructure) | Station coordinates, dispenser/nozzle counts and funding fields under CC BY | Static infrastructure context only |
+| [H2-Stations API v2 documentation](https://docs.h2-stations.eu/for-data-users/) | Static layout plus availability, usage, hydrogen-storage and pricing signals | Operations context only; no synchronized transient fill trace |
+| [NREL H2FillS user manual](https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf?sfvrsn=b2960c3d_1) | Simulator result channels and example output schema | Software documentation, not independent measured station data |
+
+These sources are useful for station topology, equipment mix and operating
+context, but none meets the required station-to-vehicle pressure/temperature/
+mass-flow time-series rule. They therefore do not change the independent
+full-loop gate or justify a publication claim of validated station control.
