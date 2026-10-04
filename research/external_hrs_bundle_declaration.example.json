@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "declaration_type": "external_hrs_bundle_metadata",
+  "outcomes_accessed_before_freeze": false,
+  "channels": {
+    "common_time_base": {
+      "present": true,
+      "description": "UTC or monotonic logger time shared by all measured channels"
+    },
+    "vehicle_or_receptacle_pressure": {
+      "present": true,
+      "unit": "MPa_abs",
+      "source": "vehicle or receptacle pressure transducer"
+    },
+    "gas_or_tank_temperature": {
+      "present": true,
+      "unit": "degC",
+      "source": "gas or vehicle tank temperature transducer"
+    },
+    "mass_flow_or_transferred_mass": {
+      "present": true,
+      "unit": "g/s",
+      "source": "station mass-flow meter or integrated transferred mass"
+    }
+  },
+  "metadata": {
+    "initial_conditions": true,
+    "tank_capacity_or_geometry": true,
+    "protocol_mode_or_pressure_ramp": true,
+    "source_cascade_state": true,
+    "compressor_state": true,
+    "precooler_state": true,
+    "stop_abort_fault_markers": true,
+    "quality_and_calibration_metadata": true,
+    "reuse_terms": "Custodian confirms research reuse and redistribution terms.",
+    "units_and_sampling_interval": "Sampling interval and units are declared per channel."
+  }
+}

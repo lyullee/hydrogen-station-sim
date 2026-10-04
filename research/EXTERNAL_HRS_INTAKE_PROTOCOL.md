@@ -20,3 +20,15 @@ The manifest produced by `scripts/intake_external_hrs_bundle.py` is provenance
 evidence only. It does not promote a dataset to a validation holdout. A later
 evaluation must reference the manifest hash and a new, explicit prospective
 protocol.
+
+## Eligibility check after intake
+
+The custodian may provide a separate metadata-only declaration based on the
+template `research/external_hrs_bundle_declaration.example.json`. Run
+`scripts/validate_external_hrs_manifest.py` with the intake manifest,
+declaration and this protocol. The checker verifies the required channel names,
+units, common time base, protocol metadata, freeze declaration and hash links;
+it does not open the data files or inspect a single measured value. A passing
+decision means `ELIGIBLE_FOR_PROSPECTIVE_MAPPING` only. Numerical evaluation
+still requires a separately frozen runner, untouched cases, locked scoring and
+retention of every failed case.
