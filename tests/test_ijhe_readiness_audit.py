@@ -20,6 +20,8 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert gates["full_loop_external_validation"]["status"] == "FAIL"
     assert gates["nrel_h2fills_workbook_provenance_integrity"]["status"] == "PASS"
     assert gates["public_dispenser_endpoint_diagnostic"]["status"] == "PASS"
+    assert gates["hiad_action_evidence_integrity"]["status"] == "PASS"
+    assert gates["hiad_action_evidence_integrity"]["observed"]["case_count"] == 34
     assert gates["public_dispenser_endpoint_diagnostic"]["observed"]["stop_reason_counts"] == {"safety-temperature": 2}
     assert gates["preslhy_blowdown_external_validation"]["status"] == "FAIL"
     assert gates["preslhy_blowdown_external_validation"]["observed"]["aggregate"][

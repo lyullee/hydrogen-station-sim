@@ -512,6 +512,36 @@ def audit(root: Path) -> dict[str, object]:
         stage_contract or "missing; response-stage contract audit has not run",
     ))
 
+    action_evidence_path = root / "research/hiad_action_evidence.json"
+    action_evidence = _json(action_evidence_path)
+    action_taxonomy = (action_evidence or {}).get("taxonomy") or {}
+    action_source = (action_evidence or {}).get("source") or {}
+    action_evidence_pass = bool(
+        (action_evidence or {}).get("status")
+        == "derived_non_evaluative_action_taxonomy"
+        and (action_evidence or {}).get("evidence_role")
+        == "public_incident_grounding_summary"
+        and (action_evidence or {}).get("case_count") == 34
+        and action_source.get("raw_text_retained") is False
+        and action_source.get("holdout_use") is False
+        and bool(action_taxonomy.get("category_counts"))
+        and bool(action_taxonomy.get("field_presence_counts"))
+        and bool((action_evidence or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "hiad_action_evidence_integrity",
+        "PASS" if action_evidence_pass else ("FAIL" if action_evidence else "PENDING"),
+        "The public HIAD HRS action fields are summarized into a non-evaluative, traceable action taxonomy for evidence-grounded guidance.",
+        str(action_evidence_path.relative_to(root)),
+        "34 HRS cases, source digest, controlled action categories, no copied raw prose and explicit exclusion from the SAGA holdout.",
+        {
+            "case_count": (action_evidence or {}).get("case_count"),
+            "taxonomy": action_taxonomy,
+            "source": action_source,
+            "claim_boundary": (action_evidence or {}).get("claim_boundary"),
+        } if action_evidence else "missing; HIAD action evidence summary has not been built",
+    ))
+
     cip_endpoint_path = root / "research/cip_dispenser_endpoint_screen.json"
     cip_endpoint = _json(cip_endpoint_path)
     cip_aggregate = (cip_endpoint or {}).get("aggregate") or {}
