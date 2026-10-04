@@ -960,6 +960,37 @@ def audit(root: Path) -> dict[str, object]:
         cip_aggregate if cip_endpoint else "missing; public endpoint diagnostic has not run",
     ))
 
+    cip_live_path = root / "research/cip_2020_live_download_recheck_2026_10_05.json"
+    cip_live = _json(cip_live_path)
+    cip_live_source = (cip_live or {}).get("source") or {}
+    cip_live_decision = (cip_live or {}).get("eligibility_decision") or {}
+    cip_live_tables = (cip_live or {}).get("tables") or []
+    cip_live_pass = bool(
+        (cip_live or {}).get("schema_version") == 1
+        and (cip_live or {}).get("status") == "PUBLIC_ENDPOINT_TABLES_RECHECKED"
+        and cip_live_source.get("doi") == "10.19799/j.cnki.2095-4239.2020.0049"
+        and len(cip_live_tables) == 4
+        and [row.get("table") for row in cip_live_tables] == ["T1", "T2", "T3", "T4"]
+        and all(row.get("http_status") == 200 for row in cip_live_tables)
+        and all(row.get("sha256_matches_expected") is True for row in cip_live_tables)
+        and all((row.get("inspection") or {}).get("rows") == 3 for row in cip_live_tables)
+        and all((row.get("inspection") or {}).get("has_time_axis") is False for row in cip_live_tables)
+        and cip_live_decision.get("full_loop_external_holdout_eligible") is False
+        and (cip_live or {}).get("claim_boundary")
+    )
+    gates.append(_gate(
+        "public_dispenser_table_download_integrity",
+        "PASS" if cip_live_pass else ("FAIL" if cip_live else "PENDING"),
+        "The four current public CIP dispenser table links are byte-checked and retained as endpoint-only evidence without promoting them to synchronized full-loop validation.",
+        str(cip_live_path.relative_to(root)),
+        "T1-T4 returned HTTP 200, matched recorded SHA-256 values, each contained three rows, and none exposed a sampled time axis; full-loop eligibility remains false.",
+        {
+            "tables": [row.get("table") for row in cip_live_tables],
+            "sha256_matches": [row.get("sha256_matches_expected") for row in cip_live_tables],
+            "full_loop_external_holdout_eligible": cip_live_decision.get("full_loop_external_holdout_eligible"),
+        } if cip_live else "missing; live CIP table recheck has not run",
+    ))
+
     accidental_ignition_path = root / "research/accidental_self_ignition_public_evidence_2026_10_04.json"
     accidental_ignition = _json(accidental_ignition_path)
     accidental_source = (accidental_ignition or {}).get("source") or {}

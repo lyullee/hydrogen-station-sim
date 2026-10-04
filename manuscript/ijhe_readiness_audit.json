@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T18:09:13.443501+00:00",
+  "generated_at": "2026-10-04T18:21:34.676101+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 43,
+    "PASS": 44,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -1418,6 +1418,28 @@
           "safety-temperature": 2
         },
         "claim_boundary": "This diagnostic does not close the independent station-to-vehicle full-loop gate and is not a safety-distance claim."
+      }
+    },
+    {
+      "id": "public_dispenser_table_download_integrity",
+      "status": "PASS",
+      "claim": "The four current public CIP dispenser table links are byte-checked and retained as endpoint-only evidence without promoting them to synchronized full-loop validation.",
+      "evidence": "research\\cip_2020_live_download_recheck_2026_10_05.json",
+      "requirement": "T1-T4 returned HTTP 200, matched recorded SHA-256 values, each contained three rows, and none exposed a sampled time axis; full-loop eligibility remains false.",
+      "observed": {
+        "tables": [
+          "T1",
+          "T2",
+          "T3",
+          "T4"
+        ],
+        "sha256_matches": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "full_loop_external_holdout_eligible": false
       }
     },
     {

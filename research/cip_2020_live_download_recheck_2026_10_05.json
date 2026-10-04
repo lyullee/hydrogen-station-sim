@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "rechecked_at_utc": "2026-10-04T18:20:46.750117+00:00",
+  "status": "PUBLIC_ENDPOINT_TABLES_RECHECKED",
+  "source": {
+    "title": "35 MPa/70 MPa hydrogen dispenser refuelling performance evaluation",
+    "doi": "10.19799/j.cnki.2095-4239.2020.0049",
+    "article_url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
+    "publisher": "Energy Storage Science and Technology"
+  },
+  "tables": [
+    {
+      "table": "T1",
+      "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T1.csv.zip",
+      "http_status": 200,
+      "content_type": "application/zip;charset=UTF-8",
+      "download_bytes": 250,
+      "sha256": "b98ac67fcf751801a86228dd8ee8779e50c2832ba5a78ed3c187654dc7725ac3",
+      "expected_sha256": "b98ac67fcf751801a86228dd8ee8779e50c2832ba5a78ed3c187654dc7725ac3",
+      "sha256_matches_expected": true,
+      "description": "35 MPa initial-condition table",
+      "inspection": {
+        "members": [
+          "T1.csv"
+        ],
+        "csv_bytes": 158,
+        "rows": 3,
+        "columns": [
+          "<tr><th align='center'>车载储氢瓶体积",
+          "初始压力",
+          "初始温度",
+          "气源压力",
+          "气源温度"
+        ],
+        "has_time_axis": false,
+        "table_text_sha256": "5cb2d0260e32f0abb9d6a3e1a390dc4c28f34d4f787daf293db94f950f02d6a9"
+      }
+    },
+    {
+      "table": "T2",
+      "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T2.csv.zip",
+      "http_status": 200,
+      "content_type": "application/zip;charset=UTF-8",
+      "download_bytes": 262,
+      "sha256": "06beb809e4021e3aee9e641e07ac4cdef98a9ae71a2abfa2ab7009a8ae28ecd0",
+      "expected_sha256": "06beb809e4021e3aee9e641e07ac4cdef98a9ae71a2abfa2ab7009a8ae28ecd0",
+      "sha256_matches_expected": true,
+      "description": "35 MPa final-condition table",
+      "inspection": {
+        "members": [
+          "T2.csv"
+        ],
+        "csv_bytes": 170,
+        "rows": 3,
+        "columns": [
+          "<tr><th align='center'>车载储氢压力",
+          "车载储氢瓶体积",
+          "车载储氢瓶温度",
+          "加注质量",
+          "加注时间"
+        ],
+        "has_time_axis": false,
+        "table_text_sha256": "3676cac76a9279f8bc4127016262531e22b0847a1e129a265556f236d4c3ca58"
+      }
+    },
+    {
+      "table": "T3",
+      "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T3.csv.zip",
+      "http_status": 200,
+      "content_type": "application/zip;charset=UTF-8",
+      "download_bytes": 246,
+      "sha256": "33d2eeddd627260044b1be28f209372bd4283058afd5837ec95a029ce6bdde02",
+      "expected_sha256": "33d2eeddd627260044b1be28f209372bd4283058afd5837ec95a029ce6bdde02",
+      "sha256_matches_expected": true,
+      "description": "70 MPa initial-condition table",
+      "inspection": {
+        "members": [
+          "T3.csv"
+        ],
+        "csv_bytes": 167,
+        "rows": 3,
+        "columns": [
+          "<tr><th align='center'>车载储氢压力",
+          "车载储氢瓶体积",
+          "车载储氢瓶温度",
+          "气源压力",
+          "气源温度"
+        ],
+        "has_time_axis": false,
+        "table_text_sha256": "0bc1b7853ba3b0925466a9679a19fc066cbf8b9138ce762986ef2f5af375fcbc"
+      }
+    },
+    {
+      "table": "T4",
+      "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T4.csv.zip",
+      "http_status": 200,
+      "content_type": "application/zip;charset=UTF-8",
+      "download_bytes": 247,
+      "sha256": "44c6fc612715ef018ecde9e4a734eee86fa75640b5b91614e21b2bd035537a2e",
+      "expected_sha256": "44c6fc612715ef018ecde9e4a734eee86fa75640b5b91614e21b2bd035537a2e",
+      "sha256_matches_expected": true,
+      "description": "70 MPa final-condition table",
+      "inspection": {
+        "members": [
+          "T4.csv"
+        ],
+        "csv_bytes": 140,
+        "rows": 3,
+        "columns": [
+          "<tr><th align='center'>车载储氢压力",
+          "车载储氢瓶温度",
+          "加注质量",
+          "加注时间"
+        ],
+        "has_time_axis": false,
+        "table_text_sha256": "d746af783049e2a4ed72edc82d6489927bf4847a4f88e93b1a037951a191c285"
+      }
+    }
+  ],
+  "eligibility_decision": {
+    "public_endpoint_tables": true,
+    "full_loop_external_holdout_eligible": false,
+    "reason": "All four public artifacts are endpoint tables with no synchronized time column or raw station-to-vehicle pressure-temperature-mass-flow trace.",
+    "allowed_use": [
+      "contextual operating-range check",
+      "data-request lead"
+    ],
+    "prohibited_use": [
+      "full-loop holdout score",
+      "post-hoc parameter fitting",
+      "site safety-distance validation"
+    ]
+  },
+  "claim_boundary": "The live URLs and byte-level payloads are reproducibly verified, but the source remains endpoint-only evidence and does not close the independent full-loop gate."
+}
