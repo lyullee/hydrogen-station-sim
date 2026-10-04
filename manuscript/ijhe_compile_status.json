@@ -1,16 +1,16 @@
 {
   "schema_version": 1,
-  "attempted_at": "2026-10-03T23:36:00.000961+00:00",
+  "attempted_at": "2026-10-04T09:42:00+00:00",
   "attempts_this_run": 1,
   "success": true,
   "compiler": "Tectonic 0.17.0 (x86_64-pc-windows-msvc)",
   "compiler_release": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic%400.17.0",
   "compiler_archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845f",
   "source": "manuscript/ijhe_manuscript_draft.tex",
-  "source_sha256": "b0ddc01381bc1e64fabb42886d8dfcdfe528c5c388dfc53667f9e7b415b3951f",
+  "source_sha256": "903b3f3cd5454cc320b9cf27b63d6093e67573c9f0b2e9ac4dabd283535246c1",
   "output_pages": 16,
-  "output_bytes": 611695,
-  "output_sha256": "88e19410646f99aa4602b8d1d9135d7f59f1bfcfcc0e08638e321b765afc7b29",
+  "output_bytes": 612815,
+  "output_sha256": "1d5a59d8658803cdc66b36360d1e91f3f29f537b31183588c8a3b6c63da76edb",
   "warnings": {
     "layout_or_package_warning_lines": 4,
     "fatal_errors": 0,
@@ -20,5 +20,5 @@
     "success": false,
     "diagnostic": "Unable to find standard directories for platform"
   },
-  "interpretation": "The exact current manuscript source compiled to a 16-page PDF with the pinned Tectonic release. The new pressure-peaking screen is explicitly bounded to a confined unignited consequence submodel and does not change the negative full-loop or incomplete expert-review conclusions."
+  "interpretation": "The exact current manuscript source compiled to a 16-page PDF with the pinned Tectonic release. ELVHYS 4.2 is cited only as post-access auxiliary cryogenic evidence; no predictive or full-loop validation claim is made."
 }

@@ -1,0 +1,293 @@
+{
+  "schema_version": 1,
+  "status": "completed_post_access_auxiliary_replay",
+  "generated_at": "2026-10-04T09:38:51.115561+00:00",
+  "evidence_role": "public_consequence_auxiliary_provenance_and_replay",
+  "source": {
+    "doi": "10.18710/JXJP0H",
+    "landing_page": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/JXJP0H",
+    "api_record": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi%3A10.18710%2FJXJP0H",
+    "license": "CC0 1.0"
+  },
+  "selection": {
+    "rule": "All three ELVHYS 4.2 pressure-peaking tests (29-31), selected by test type before interpreting the replay statistics.",
+    "raw_files_committed": false,
+    "local_raw_directory": "data/public_validation/raw/elvhys_4_2",
+    "outcomes_accessed_before_freeze": true
+  },
+  "dataset_scope": {
+    "facility": "1 m3 cryogenic hydrogen transfer-connection space",
+    "experiment_type": "unignited pressure peaking",
+    "source_reported_campaign": "ELVHYS WP4.2",
+    "units": "PT1/PT2 barg, TCS pressure Var4/Var5 mbar, ventilation flow channel as recorded"
+  },
+  "cases": [
+    {
+      "test_no": "029",
+      "source_conditions": {
+        "nominal_source_pressure_barg": 2.0,
+        "nozzle_diameter_mm": 25.4,
+        "vent_configuration": "4 VAV plates"
+      },
+      "pressure_file": "ELE402HSE029PRES20251115.csv",
+      "flow_file": "ELE402HSE029FLMT20251115.csv",
+      "pressure_time": {
+        "row_count": 18764,
+        "start_s": 0.0,
+        "end_s": 938.149999999695,
+        "monotonic_strict": true,
+        "median_sample_interval_s": 0.05000000000000071
+      },
+      "flow_time": {
+        "row_count": 18764,
+        "start_s": 0.0,
+        "end_s": 938.149999999695,
+        "monotonic_strict": true,
+        "median_sample_interval_s": 0.05000000000000071
+      },
+      "pressure_channels": {
+        "release_rig_barg": {
+          "count": 18764,
+          "min": -0.0444680279363383,
+          "max": 3.26932239971166,
+          "mean": 0.4419438131133874
+        },
+        "nozzle_barg": {
+          "count": 18764,
+          "min": -0.05521119623709,
+          "max": 0.425809097213815,
+          "mean": 0.003947047462469419
+        },
+        "tcs_pressure_1_mbar": {
+          "count": 18764,
+          "min": -2.26697525525147,
+          "max": 3.93867882694335,
+          "mean": 0.7280100766762865
+        },
+        "tcs_pressure_2_mbar": {
+          "count": 18764,
+          "min": -0.576016861556248,
+          "max": 6.22065283064747,
+          "mean": 0.5874749709242244
+        }
+      },
+      "ventilation_flow_channel": {
+        "count": 18764,
+        "min": 0.0369138560838564,
+        "max": 0.122675715248306,
+        "mean": 0.0780752069827618
+      },
+      "files": [
+        {
+          "role": "pressure",
+          "dataverse_file_id": 254217,
+          "name": "ELE402HSE029PRES20251115.csv",
+          "bytes": 1723565,
+          "sha256": "3142b9ea12847b8befe8d9d305787f3c25832ea9f49928adbbb6227f640ff00c"
+        },
+        {
+          "role": "flow",
+          "dataverse_file_id": 254364,
+          "name": "ELE402HSE029FLMT20251115.csv",
+          "bytes": 685343,
+          "sha256": "34e71f75d3c2ee295bac9fc6a3e10b1cd0530a71b5b1fe5a1c3d7e9f704f48dc"
+        }
+      ]
+    },
+    {
+      "test_no": "030",
+      "source_conditions": {
+        "nominal_source_pressure_barg": 2.0,
+        "nozzle_diameter_mm": 25.4,
+        "vent_configuration": "2 blanks, 2 VAV plates (top)"
+      },
+      "pressure_file": "ELE402HSE030PRES20251118.csv",
+      "flow_file": "ELE402HSE030FLMT20251118.csv",
+      "pressure_time": {
+        "row_count": 100001,
+        "start_s": 0.0,
+        "end_s": 999.999999999236,
+        "monotonic_strict": true,
+        "median_sample_interval_s": 0.009999999999990905
+      },
+      "flow_time": {
+        "row_count": 100001,
+        "start_s": 0.0,
+        "end_s": 999.999999999236,
+        "monotonic_strict": true,
+        "median_sample_interval_s": 0.009999999999990905
+      },
+      "pressure_channels": {
+        "release_rig_barg": {
+          "count": 100001,
+          "min": -0.0764813196442073,
+          "max": 3.70683869588107,
+          "mean": 0.49605322654208944
+        },
+        "nozzle_barg": {
+          "count": 100001,
+          "min": -0.069986561128855,
+          "max": 0.284622236852415,
+          "mean": 0.0008014399888295675
+        },
+        "tcs_pressure_1_mbar": {
+          "count": 100001,
+          "min": -1.80729726392955,
+          "max": 11.5069538111944,
+          "mean": 0.03619235949860747
+        },
+        "tcs_pressure_2_mbar": {
+          "count": 100001,
+          "min": -7.33164080642891,
+          "max": 12.3934765473316,
+          "mean": -0.6471230292534602
+        }
+      },
+      "ventilation_flow_channel": {
+        "count": 100001,
+        "min": 0.0122696436803835,
+        "max": 0.109860724798637,
+        "mean": 0.06294042739915505
+      },
+      "files": [
+        {
+          "role": "pressure",
+          "dataverse_file_id": 254355,
+          "name": "ELE402HSE030PRES20251118.csv",
+          "bytes": 9227061,
+          "sha256": "8c01c2f543e719d043ea2950b305962414b7f2f65a87fceb80e9df31c658db9b"
+        },
+        {
+          "role": "flow",
+          "dataverse_file_id": 254251,
+          "name": "ELE402HSE030FLMT20251118.csv",
+          "bytes": 7048666,
+          "sha256": "a92eeb79e36516bf4ce229527113da810a5ef726a6eacbf44aae2d12d70df65f"
+        }
+      ]
+    },
+    {
+      "test_no": "031",
+      "source_conditions": {
+        "nominal_source_pressure_barg": 2.0,
+        "nozzle_diameter_mm": 25.4,
+        "vent_configuration": "3 blanks, 1 VAV plate (top left)"
+      },
+      "pressure_file": "ELE402HSE031PRES20251118.csv",
+      "flow_file": "ELE402HSE031FLMT20251118.csv",
+      "pressure_time": {
+        "row_count": 273649,
+        "start_s": 0.0,
+        "end_s": 547.296000000882,
+        "monotonic_strict": true,
+        "median_sample_interval_s": 0.0020000000000095497
+      },
+      "flow_time": {
+        "row_count": 273649,
+        "start_s": 0.0,
+        "end_s": 547.296000000882,
+        "monotonic_strict": true,
+        "median_sample_interval_s": 0.0020000000000095497
+      },
+      "pressure_channels": {
+        "release_rig_barg": {
+          "count": 273649,
+          "min": -0.092898392050115,
+          "max": 3.46058184478624,
+          "mean": 0.9884735484494517
+        },
+        "nozzle_barg": {
+          "count": 273649,
+          "min": -0.0683448539257934,
+          "max": 0.548116330708891,
+          "mean": 0.020173085216594718
+        },
+        "tcs_pressure_1_mbar": {
+          "count": 273649,
+          "min": -1.81550579960999,
+          "max": 34.458064356957,
+          "mean": 1.3912710734506855
+        },
+        "tcs_pressure_2_mbar": {
+          "count": 273649,
+          "min": -1.61029240627322,
+          "max": 34.5319414021325,
+          "mean": 1.2584887349630147
+        }
+      },
+      "ventilation_flow_channel": {
+        "count": 273649,
+        "min": 0.0240988656339596,
+        "max": 0.118732641263705,
+        "mean": 0.07661672882720294
+      },
+      "files": [
+        {
+          "role": "pressure",
+          "dataverse_file_id": 254246,
+          "name": "ELE402HSE031PRES20251118.csv",
+          "bytes": 24795352,
+          "sha256": "ebfe71240f150c695187cfa5d902eeb386b1936a5a47ea7b329f17986af06346"
+        },
+        {
+          "role": "flow",
+          "dataverse_file_id": 254255,
+          "name": "ELE402HSE031FLMT20251118.csv",
+          "bytes": 19305346,
+          "sha256": "cd3e53bcbcbe08ecd52de21baa6bd1aa1d79391c914d08f900a2b4f6c537e4be"
+        }
+      ]
+    }
+  ],
+  "file_manifest": [
+    {
+      "role": "pressure",
+      "dataverse_file_id": 254217,
+      "name": "ELE402HSE029PRES20251115.csv",
+      "bytes": 1723565,
+      "sha256": "3142b9ea12847b8befe8d9d305787f3c25832ea9f49928adbbb6227f640ff00c"
+    },
+    {
+      "role": "flow",
+      "dataverse_file_id": 254364,
+      "name": "ELE402HSE029FLMT20251115.csv",
+      "bytes": 685343,
+      "sha256": "34e71f75d3c2ee295bac9fc6a3e10b1cd0530a71b5b1fe5a1c3d7e9f704f48dc"
+    },
+    {
+      "role": "pressure",
+      "dataverse_file_id": 254355,
+      "name": "ELE402HSE030PRES20251118.csv",
+      "bytes": 9227061,
+      "sha256": "8c01c2f543e719d043ea2950b305962414b7f2f65a87fceb80e9df31c658db9b"
+    },
+    {
+      "role": "flow",
+      "dataverse_file_id": 254251,
+      "name": "ELE402HSE030FLMT20251118.csv",
+      "bytes": 7048666,
+      "sha256": "a92eeb79e36516bf4ce229527113da810a5ef726a6eacbf44aae2d12d70df65f"
+    },
+    {
+      "role": "pressure",
+      "dataverse_file_id": 254246,
+      "name": "ELE402HSE031PRES20251118.csv",
+      "bytes": 24795352,
+      "sha256": "ebfe71240f150c695187cfa5d902eeb386b1936a5a47ea7b329f17986af06346"
+    },
+    {
+      "role": "flow",
+      "dataverse_file_id": 254255,
+      "name": "ELE402HSE031FLMT20251118.csv",
+      "bytes": 19305346,
+      "sha256": "cd3e53bcbcbe08ecd52de21baa6bd1aa1d79391c914d08f900a2b4f6c537e4be"
+    }
+  ],
+  "claims": {
+    "provenance_integrity_pass": true,
+    "predictive_model_validation_permitted": false,
+    "full_loop_station_vehicle_validation_permitted": false,
+    "claim_boundary": "The replay verifies accessible source files, timebase integrity and pressure-peaking observations only. It does not validate the H70 station fueling loop, gaseous outdoor dispersion, HyRAM distances, ignition, emergency response or SAGA effectiveness.",
+    "reason_predictive_validation_not_claimed": "The repository has no pre-access frozen cryogenic enclosure model and the raw outcomes were inspected before this replay record was frozen."
+  }
+}

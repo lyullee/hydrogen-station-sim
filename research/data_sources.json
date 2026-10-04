@@ -514,9 +514,11 @@
       ],
       "public_raw_data": true,
       "raw_archive_downloaded": false,
+      "raw_subset_downloaded": true,
       "rights_note": "CC0 1.0. The raw archive is not mirrored in this repository.",
       "eligibility_note": "Public consequence auxiliary only. It is not gaseous H70 station-to-vehicle full-loop validation; domain transfer must be pre-registered before use.",
-      "record": "research/elvhys_public_consequence_dataset_2026_10_04.json"
+      "record": "research/elvhys_public_consequence_dataset_2026_10_04.json",
+      "auxiliary_replay_record": "research/elvhys_auxiliary_replay.json"
     }
   }
 }

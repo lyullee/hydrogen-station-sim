@@ -352,6 +352,38 @@ def audit(root: Path) -> dict[str, object]:
         } if pressure_result else "missing",
     ))
 
+    elvhys_replay_path = root / "research/elvhys_auxiliary_replay.json"
+    elvhys_replay = _json(elvhys_replay_path)
+    elvhys_claims = (elvhys_replay or {}).get("claims") or {}
+    elvhys_cases = (elvhys_replay or {}).get("cases") or []
+    elvhys_files = (elvhys_replay or {}).get("file_manifest") or []
+    elvhys_replay_pass = bool(
+        (elvhys_replay or {}).get("status") == "completed_post_access_auxiliary_replay"
+        and (elvhys_replay or {}).get("evidence_role")
+        == "public_consequence_auxiliary_provenance_and_replay"
+        and len(elvhys_cases) == 3
+        and len(elvhys_files) == 6
+        and all((case.get("pressure_time") or {}).get("monotonic_strict") is True for case in elvhys_cases)
+        and all((case.get("flow_time") or {}).get("monotonic_strict") is True for case in elvhys_cases)
+        and elvhys_claims.get("provenance_integrity_pass") is True
+        and elvhys_claims.get("predictive_model_validation_permitted") is False
+        and elvhys_claims.get("full_loop_station_vehicle_validation_permitted") is False
+        and ((elvhys_replay or {}).get("selection") or {}).get("outcomes_accessed_before_freeze") is True
+    )
+    gates.append(_gate(
+        "elvhys_auxiliary_replay_integrity",
+        "PASS" if elvhys_replay_pass else ("FAIL" if elvhys_replay else "PENDING"),
+        "The public ELVHYS cryogenic pressure-peaking subset is hash-identified and replayed with a strict non-validation claim boundary.",
+        str(elvhys_replay_path.relative_to(root)),
+        "Three pressure-peaking tests, six source files, monotonic common time bases and explicit prohibition on predictive/full-loop claims.",
+        {
+            "case_count": len(elvhys_cases),
+            "file_count": len(elvhys_files),
+            "predictive_model_validation_permitted": elvhys_claims.get("predictive_model_validation_permitted"),
+            "full_loop_station_vehicle_validation_permitted": elvhys_claims.get("full_loop_station_vehicle_validation_permitted"),
+        } if elvhys_replay else "missing",
+    ))
+
     nrel_retrieval_path = root / "research/nrel_h2fills_package_retrieval_check.json"
     nrel_retrieval = _json(nrel_retrieval_path)
     nrel_validation_path = root / "data/public_validation/results/nrel_h2fills_hdvs_typeiv/validation.json"

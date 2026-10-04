@@ -16,6 +16,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
 
     assert gates["tank_external_validation"]["status"] == "PASS"
     assert gates["hyram_adapter_verification"]["status"] == "PASS"
+    assert gates["elvhys_auxiliary_replay_integrity"]["status"] == "PASS"
+    assert gates["elvhys_auxiliary_replay_integrity"]["observed"]["case_count"] == 3
+    assert gates["elvhys_auxiliary_replay_integrity"]["observed"][
+        "predictive_model_validation_permitted"
+    ] is False
     assert gates["preoutcome_design_sensitivity"]["status"] == "PASS"
     assert gates["full_loop_external_validation"]["status"] == "FAIL"
     assert gates["nrel_h2fills_workbook_provenance_integrity"]["status"] == "PASS"

@@ -20,11 +20,13 @@
     "deliberate ignition"
   ],
   "raw_archive_downloaded": false,
+  "raw_subset_downloaded": true,
+  "raw_subset_record": "research/elvhys_auxiliary_replay.json",
   "classification": {
     "full_loop_station_vehicle_holdout_eligible": false,
     "public_consequence_auxiliary_eligible": true,
     "goal_completion_permitted": false
   },
   "claim_boundary": "This CC0 cryogenic consequence dataset can support a bounded leak, pressure-peaking or ignition extension, but it is not gaseous H70 station-to-vehicle filling validation. Direct transfer to the H70 model requires a declared domain-transfer protocol and a frozen subset with hashes.",
-  "next_action": "If the model scope is explicitly extended to cryogenic transfer spaces, download a frozen subset, retain file hashes and preregister a no-fitting consequence-validation protocol."
+  "next_action": "The selected pressure-peaking subset is now replayed for provenance only; a prospective no-fitting cryogenic model protocol would still be required before any predictive validation claim."
 }

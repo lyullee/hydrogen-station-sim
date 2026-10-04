@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T09:31:10.891823+00:00",
+  "generated_at": "2026-10-04T09:43:01.017739+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 27,
+    "PASS": 28,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -400,6 +400,19 @@
           "interpretation": "exploratory_submodel_screen_only"
         },
         "claim_boundary": "This result validates only the unignited hydrogen pressure-peaking consequence submodel for a confined, vented enclosure. It is not validation of the full HRS fueling loop, cascade/compressor control, dispenser operation, outdoor dispersion, ignition, emergency response, or SAGA effectiveness."
+      }
+    },
+    {
+      "id": "elvhys_auxiliary_replay_integrity",
+      "status": "PASS",
+      "claim": "The public ELVHYS cryogenic pressure-peaking subset is hash-identified and replayed with a strict non-validation claim boundary.",
+      "evidence": "research\\elvhys_auxiliary_replay.json",
+      "requirement": "Three pressure-peaking tests, six source files, monotonic common time bases and explicit prohibition on predictive/full-loop claims.",
+      "observed": {
+        "case_count": 3,
+        "file_count": 6,
+        "predictive_model_validation_permitted": false,
+        "full_loop_station_vehicle_validation_permitted": false
       }
     },
     {
@@ -2347,11 +2360,11 @@
             75,
             75
           ],
-          "approximate_manuscript_words_before_references": 6385,
+          "approximate_manuscript_words_before_references": 6430,
           "figures": 2,
           "tables": 3,
-          "citation_keys": 23,
-          "bibliography_entries": 23,
+          "citation_keys": 24,
+          "bibliography_entries": 24,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -2379,17 +2392,17 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-03T23:36:00.000961+00:00",
+        "attempted_at": "2026-10-04T09:42:00+00:00",
         "attempts_this_run": 1,
         "success": true,
         "compiler": "Tectonic 0.17.0 (x86_64-pc-windows-msvc)",
         "compiler_release": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic%400.17.0",
         "compiler_archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845f",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "b0ddc01381bc1e64fabb42886d8dfcdfe528c5c388dfc53667f9e7b415b3951f",
+        "source_sha256": "903b3f3cd5454cc320b9cf27b63d6093e67573c9f0b2e9ac4dabd283535246c1",
         "output_pages": 16,
-        "output_bytes": 611695,
-        "output_sha256": "88e19410646f99aa4602b8d1d9135d7f59f1bfcfcc0e08638e321b765afc7b29",
+        "output_bytes": 612815,
+        "output_sha256": "1d5a59d8658803cdc66b36360d1e91f3f29f537b31183588c8a3b6c63da76edb",
         "warnings": {
           "layout_or_package_warning_lines": 4,
           "fatal_errors": 0,
@@ -2399,7 +2412,7 @@
           "success": false,
           "diagnostic": "Unable to find standard directories for platform"
         },
-        "interpretation": "The exact current manuscript source compiled to a 16-page PDF with the pinned Tectonic release. The new pressure-peaking screen is explicitly bounded to a confined unignited consequence submodel and does not change the negative full-loop or incomplete expert-review conclusions."
+        "interpretation": "The exact current manuscript source compiled to a 16-page PDF with the pinned Tectonic release. ELVHYS 4.2 is cited only as post-access auxiliary cryogenic evidence; no predictive or full-loop validation claim is made."
       }
     },
     {
