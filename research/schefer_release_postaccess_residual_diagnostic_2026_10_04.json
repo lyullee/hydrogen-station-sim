@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "evidence_role": "post_access_exploratory_diagnostic",
+  "claim_boundary": "This record explains the already-failed Schefer holdouts. It does not alter the frozen primary result, fit parameters, or validate a hydrogen-refuelling station loop.",
+  "schefer_2006_transient_mass_flow": {
+    "result": {
+      "points": 25,
+      "measured_peak_mass_flow_g_s": 68.38466373,
+      "predicted_peak_mass_flow_g_s": 60.66607024400885,
+      "mass_flow_nrmse_percent_peak_measured": 5.831534791930556,
+      "median_absolute_percentage_error_percent": 22.852219829947433,
+      "experimental_half_peak_time_s": 13.35459783324615,
+      "predicted_half_peak_time_s": 9.575940157002748,
+      "half_peak_time_relative_error_percent": 28.294806952826896,
+      "joint_primary_screen_pass": false
+    },
+    "residual_pattern": [
+      "The frozen adiabatic vessel model underpredicts the first measured peak by about 11.3%.",
+      "The predicted decay reaches half peak about 28.3% earlier than the digitized experiment, so increasing the aperture alone would worsen the timing error.",
+      "The published downstream tube and manifold inventory are outside the locked local-aperture claim; their omitted resistance/inventory and valve-opening dynamics are plausible contributors, but cannot be fitted from this holdout."
+    ],
+    "gate_impact": "no_change_schefer_2006_gate_remains_failed"
+  },
+  "schefer_2007_pressure_decay": {
+    "result": {
+      "points": 222,
+      "measured_initial_pressure_psi": 6244.751381,
+      "predicted_initial_pressure_psi": 6247.098339931793,
+      "pressure_nrmse_percent_initial_measured": 11.580711004119967,
+      "median_absolute_percentage_error_percent": 27.46396061123326,
+      "experimental_half_pressure_time_s": 26.78880237652538,
+      "predicted_half_pressure_time_s": 28.53325636604946,
+      "half_pressure_time_relative_error_percent": 6.511877481513398,
+      "joint_primary_screen_pass": false
+    },
+    "residual_pattern": [
+      "The initial pressure is reproduced, but the measured trace falls sharply during the first sub-second samples while the well-mixed model decays smoothly.",
+      "The half-pressure timing is close, yet the pointwise median error remains high, indicating an early valve/transient mismatch rather than a simple global time-scale error.",
+      "The evaluator does not model valve opening, line compressibility or measurement response; changing the vessel volume or restriction to fit this curve would violate the frozen transfer test."
+    ],
+    "gate_impact": "no_change_schefer_2007_gate_remains_failed"
+  },
+  "next_model_requirement": "A transferable release model needs an explicit valve-opening law and distributed supply-line inventory/resistance, validated on a new untouched campaign before any parameter fitting is considered."
+}

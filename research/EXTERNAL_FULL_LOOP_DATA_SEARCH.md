@@ -995,3 +995,20 @@ license to fit diameter-specific coefficients to the holdout. The diagnostic is
 stored in
 `research/proust_release_postaccess_residual_diagnostic_2026_10_04.json` and
 does not change the failed gate.
+
+## 2026-10-04 Schefer transient and pressure residual diagnostic
+
+The two independent Schefer holdouts were rerun from the frozen evaluators.
+For the 2006 mass-flow trace, the model's peak is 60.67 g/s versus 68.38 g/s
+measured, while the predicted half-peak time is 9.58 s versus 13.35 s. The
+model therefore decays too quickly even though its normalized RMSE passes; a
+simple aperture multiplier cannot correct both effects. For the 2007 pressure
+trace, the initial pressure is reproduced and the half-pressure time is within
+6.5%, but the early sub-second drop is not captured and the pointwise median
+error is 27.5%.
+
+These patterns point to omitted valve-opening dynamics, line inventory and
+distributed resistance rather than a justified global parameter correction.
+The post-access diagnostic is stored in
+`research/schefer_release_postaccess_residual_diagnostic_2026_10_04.json`; both
+validation gates remain failed.
