@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T19:12:55.269119+00:00",
+  "generated_at": "2026-10-04T19:25:39.776721+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -16,7 +16,7 @@
     "interpretation": "A bounded manuscript may be drafted around model-level and qualitative evidence, but the validated full-station digital-twin objective cannot be declared complete."
   },
   "gate_counts": {
-    "PASS": 47,
+    "PASS": 48,
     "FAIL": 7,
     "PENDING": 7
   },
@@ -33,8 +33,11 @@
     },
     "public_incident_traceability": {
       "gate": "PASS",
-      "evidence": "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
-      "claim_boundary": "Qualitative scenario and response grounding; no frequency or calibrated probability claim."
+      "evidence": [
+        "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
+        "research/hiad_accident_response_coverage_evaluation_2026_10_05.json"
+      ],
+      "claim_boundary": "Qualitative scenario and response grounding; HIAD action-category routing is structural only, with no frequency, calibrated probability, response-effectiveness or safety claim."
     },
     "real_station_candidate": {
       "status": "ACCESS_REQUEST_ONLY",
@@ -82,7 +85,8 @@
       "evidence": [
         "research/hiad_evaluation_readiness.json",
         "research/HIAD_EXPERT_STUDY_PREREGISTRATION.md",
-        "research/ETHICS_DETERMINATION_REQUEST.md"
+        "research/ETHICS_DETERMINATION_REQUEST.md",
+        "research/hiad_accident_response_coverage_evaluation_2026_10_05.json"
       ],
       "unblock_criterion": "Institutional determination, coordinator leakage review, frozen 24-event casebook, 168 masked responses, and three qualified independent raters with locked analysis.",
       "next_action": "Obtain the institutional determination and complete the pre-registered human-evaluation workflow before making an effectiveness or safety claim about SAGA."
@@ -99,7 +103,7 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "8879df2cfe4befb51a528a3a1161f8cb05ff72dd12bd3227ee8ec772fa08d07d",
+    "audit_sha256": "de54b3e590cd3fd50d2555a215f24c5f5efe2dcc7a69b3b4264058280a2f021a",
     "hiad_readiness_sha256": "e028c9a9b71ecbac658a66d1421834025e2708e07383a21f82b413abfe5fdb86",
     "acquisition_tracker_sha256": "a68bf9882cdfe3418bce0b683c132b7d2c9cb7849372d26345fb3e9371f5eb52",
     "full_loop_search_sha256": "045db9ea958c4fbc24a4af0f9cc7845c749d143f20350fde770131f9fa8c5fad",

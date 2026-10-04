@@ -67,8 +67,11 @@ def build(root: Path) -> dict[str, Any]:
             },
             "public_incident_traceability": {
                 "gate": gate("khk_public_accident_report_access_verification")["status"],
-                "evidence": "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
-                "claim_boundary": "Qualitative scenario and response grounding; no frequency or calibrated probability claim.",
+                "evidence": [
+                    "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
+                    "research/hiad_accident_response_coverage_evaluation_2026_10_05.json",
+                ],
+                "claim_boundary": "Qualitative scenario and response grounding; HIAD action-category routing is structural only, with no frequency, calibrated probability, response-effectiveness or safety claim.",
             },
             "real_station_candidate": {
                 "status": "ACCESS_REQUEST_ONLY",
@@ -117,6 +120,7 @@ def build(root: Path) -> dict[str, Any]:
                     "research/hiad_evaluation_readiness.json",
                     "research/HIAD_EXPERT_STUDY_PREREGISTRATION.md",
                     "research/ETHICS_DETERMINATION_REQUEST.md",
+                    "research/hiad_accident_response_coverage_evaluation_2026_10_05.json",
                 ],
                 "unblock_criterion": "Institutional determination, coordinator leakage review, frozen 24-event casebook, 168 masked responses, and three qualified independent raters with locked analysis.",
                 "next_action": "Obtain the institutional determination and complete the pre-registered human-evaluation workflow before making an effectiveness or safety claim about SAGA.",
