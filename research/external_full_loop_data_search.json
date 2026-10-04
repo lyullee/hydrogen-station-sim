@@ -1990,5 +1990,39 @@
       "finding": "The article reports logged dispenser/tank data and raw data on request, but no public machine-readable archive or reuse terms were found."
     },
     "claim_boundary": "The sources support operating-range and real-station provenance context, but none provides a new eligible synchronized raw full-loop holdout. The CIP table CSVs are summary exports rather than logger traces, and ZBT raw data are author-request-only."
+  },
+  "public_station_context_refresh_2026_10_04": {
+    "scope": "primary-source refresh for frequently cited public HRS data and model repositories",
+    "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+    "sources": [
+      {
+        "id": "cal_state_la_back_to_back_accepted_manuscript",
+        "doi": "10.1016/j.jclepro.2021.129737",
+        "url": "https://www.osti.gov/servlets/purl/1977265",
+        "finding": "The public accepted manuscript describes one-second real HRFF station/vehicle records, including pressure, temperature, flow, valve and compressor/chiller states, but no public CSV/XLSX/SQL export or reuse terms were located.",
+        "decision": "HIGH_VALUE_DATA_REQUEST_LEAD"
+      },
+      {
+        "id": "nrel_nfctec_reliability_public_material",
+        "url": "https://api.mountainscholar.org/server/api/core/bitstreams/474f5f0b-4d5d-417a-a2c8-71633293835d/content",
+        "finding": "The public dissertation and NREL accepted manuscript report large real-world fill and maintenance samples, but explain that detailed station data are secured and expose only sample tables, figures and aggregate products.",
+        "decision": "FIELD_RELIABILITY_CONTEXT_ONLY"
+      },
+      {
+        "id": "csic_hrs_modelling_supplement",
+        "url": "https://digital.csic.es/bitstream/10261/334805/1/1-s2.0-S0360319923042167-mmc1.pdf",
+        "finding": "The public CC BY-NC-ND supplement contains operational-logic material and simulated one-day/one-year traces, not a measured station-to-vehicle logger.",
+        "decision": "SIMULATION_CONTEXT_ONLY"
+      },
+      {
+        "id": "dtu_hydrogen_fuelling_station_library",
+        "url": "https://github.com/DTU-TES/Hydrogen-Fuelling-Station",
+        "finding": "The public Modelica library and coefficient tables support open model/protocol context; the associated real H2Logic test remains confidential and no raw fill trace is in the repository.",
+        "decision": "OPEN_MODEL_CONTEXT_ONLY"
+      }
+    ],
+    "result": "No new public synchronized station-to-vehicle pressure-temperature-mass-flow archive was found. The full-loop numerical gate remains open.",
+    "claim_boundary": "Do not convert public papers, aggregate NFCTEC tables, plots, simulations or open model coefficients into independent transient validation evidence.",
+    "next_action": "Request de-identified Cal State LA and NREL/HITRF logger exports with channel definitions, calibration/quality flags and reuse terms; freeze protocol before reading any received outcomes."
   }
 }

@@ -76,3 +76,19 @@ def test_external_search_mirror_contains_hrs_public_data_recheck():
     )
     assert item["source_count"] == 6
     assert item["gate_impact"] == "unchanged_independent_full_loop_gate_remains_open"
+
+
+def test_external_search_mirror_contains_primary_source_context_refresh():
+    mirror = json.loads(
+        (ROOT / "research/external_full_loop_data_search.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    item = mirror["public_station_context_refresh_2026_10_04"]
+    assert item["decision"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
+    assert any(
+        source["id"] == "cal_state_la_back_to_back_accepted_manuscript"
+        and source["decision"] == "HIGH_VALUE_DATA_REQUEST_LEAD"
+        for source in item["sources"]
+    )
+    assert "full-loop numerical gate remains open" in item["result"]

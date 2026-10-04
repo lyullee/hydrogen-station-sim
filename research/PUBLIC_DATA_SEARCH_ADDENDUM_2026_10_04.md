@@ -44,6 +44,32 @@ checked against the same intake rule:
 | [H2-Stations API v2 documentation](https://docs.h2-stations.eu/for-data-users/) | Static layout plus availability, usage, hydrogen-storage and pricing signals | Operations context only; no synchronized transient fill trace |
 | [NREL H2FillS user manual](https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf?sfvrsn=b2960c3d_1) | Simulator result channels and example output schema | Software documentation, not independent measured station data |
 
+## 2026-10-04 primary-source refresh: public context and data-access limits
+
+Two additional primary sources were checked because they are frequently cited as
+if they were downloadable full-loop validation sets:
+
+| Source | What is actually public | Decision |
+| --- | --- | --- |
+| [Genovese et al., *Hydrogen station in situ back-to-back fueling data for design and modeling*, DOI 10.1016/j.jclepro.2021.129737](https://doi.org/10.1016/j.jclepro.2021.129737) and its [OSTI accepted manuscript](https://www.osti.gov/servlets/purl/1977265) | Cal State LA HRFF operator logs are described as one-second station/vehicle records with pressure, temperature, flow, valve and compressor/chiller states; the public record exposes the manuscript and figures, not a CSV/XLSX/SQL export or reuse terms | High-value real-station data-request lead; not a scorable holdout |
+| [Kurtz, *Hydrogen Station Reliability Status and Advances* dissertation](https://api.mountainscholar.org/server/api/core/bitstreams/474f5f0b-4d5d-417a-a2c8-71633293835d/content) and [NREL/NFCTEC report](https://www.osti.gov/servlets/purl/1603259) | NREL reports large real-world samples (fill date/amount/rate/start/end pressure and maintenance events) and explains that detailed raw data are secured; the public releases provide tables, aggregate CDPs and examples, not an untouched synchronized p/T/flow logger archive | Field face-validity and reliability context; not full-loop transient validation |
+| [CSIC supplementary material for on-site HRS modelling](https://digital.csic.es/bitstream/10261/334805/1/1-s2.0-S0360319923042167-mmc1.pdf) ([README](https://digital.csic.es/bitstream/10261/334805/2/README%20.txt)) | Public CC BY-NC-ND supplementary PDF/README with operational-logic diagrams and simulated one-day/one-year traces; no measured station-to-vehicle logger | Simulation/protocol reproducibility context only |
+| [DTU Hydrogen-Fuelling-Station library](https://github.com/DTU-TES/Hydrogen-Fuelling-Station) | Public Modelica library and `.mat` coefficient tables; the associated thesis describes a confidential 2011 H2Logic test and compares it with the model, but the repository contains no raw fill trace | Open model/protocol context; not raw-data validation |
+
+The refresh confirms a recurring limitation: high-quality papers often describe
+real station logs, while public artifacts stop at aggregate tables, plots,
+software or secured operator data. The Cal State LA and NREL sources are still
+the best acquisition routes, but they cannot be promoted to the untouched
+full-loop gate until a custodian supplies de-identified synchronized files,
+channel definitions, calibration/quality flags and written reuse terms.
+
+The [NREL HITRF description](https://www.nrel.gov/hydrogen/hitrf-animation?print=)
+also confirms that automated logging exists for the integrated station, while
+the public [holistic validation report](https://www.nrel.gov/docs/fy21osti/79223.pdf)
+states that a public holistic station-to-vehicle dataset was not available and
+that HITRF hardware data were used instead. This supports a data-request route,
+not a claim that the public report itself is a validation dataset.
+
 These sources are useful for station topology, equipment mix and operating
 context, but none meets the required station-to-vehicle pressure/temperature/
 mass-flow time-series rule. They therefore do not change the independent
