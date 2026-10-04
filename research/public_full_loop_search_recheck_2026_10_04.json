@@ -195,6 +195,7 @@
       "finding": "Public metadata and file-tree APIs expose three XLSX files (transaction/operation, dispenser monitoring, compressor monitoring) totaling 10.22 MB. The downloadable description lists vehicle hydrogen maximum pressure/temperature, SOC, timestamps, dispenser and compressor channels. Each raw-file download probe returns an HTTP 200 JSON response with code 403 stating that data files require a data application; no raw row was inspected.",
       "reuse_status": "Catalog declares approval-controlled sharing because of other organizations commercial-confidential data; written reuse terms remain required.",
       "file_level_evidence": "research/nbsdc_winter_olympics_operational_access_verification_2026_10_04.json",
+      "intake_protocol": "research/nbsdc_winter_olympics_intake_protocol_2026_10_04.json",
       "claim_boundary": "Credible real-HRS acquisition route and declared channel scope only; not numerical validation and does not close the synchronized full-loop gate."
     }
   ],

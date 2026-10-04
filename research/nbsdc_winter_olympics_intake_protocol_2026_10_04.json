@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "protocol_id": "NBSDC-WINTER-OLYMPICS-HRS-INTAKE-2601",
+  "status": "prospective_intake_contract",
+  "frozen_at": "2026-10-04",
+  "outcomes_accessed_before_freeze": false,
+  "source": {
+    "title": "Operational Data List of Hydrogen Refueling Stations for Beijing Winter Olympics",
+    "cstr": "CSTR:16666.11.nbsdc.aI3fJrzX",
+    "internal_data_id": "64edfc52bb16e0300cd4dd38",
+    "public_landing": "https://cstr.cn/16666.11.nbsdc.aI3fJrzX",
+    "share_range": "审批后共享"
+  },
+  "known_public_file_roles": [
+    {
+      "role": "description_document",
+      "public_name": "002-数据说明文件.docx",
+      "source_file_id": "641874c7e39c3b0b8e3274ab",
+      "numerical_input": false
+    },
+    {
+      "role": "transaction_records",
+      "public_name": "交易数据.xlsx",
+      "source_file_id": "641874c7e39c3b0b8e3274a8",
+      "numerical_input": true
+    },
+    {
+      "role": "dispenser_records",
+      "public_name": "加氢枪数据.xlsx",
+      "source_file_id": "641874c7e39c3b0b8e3274a9",
+      "numerical_input": true
+    },
+    {
+      "role": "compressor_records",
+      "public_name": "压缩机数据.xlsx",
+      "source_file_id": "641874c7e39c3b0b8e3274aa",
+      "numerical_input": true
+    }
+  ],
+  "required_file_roles_before_channel_mapping": [
+    "description_document",
+    "transaction_records",
+    "dispenser_records",
+    "compressor_records"
+  ],
+  "required_metadata": [
+    "common_time_base_and_timezone",
+    "sampling_interval_and_aggregation_rule",
+    "units_and_missing_value_codes",
+    "vehicle_or_receptacle_pressure_definition",
+    "mass_flow_or_transferred_mass_definition",
+    "vehicle_or_gas_temperature_definition",
+    "initial_conditions_and_tank_capacity",
+    "protocol_or_pressure_ramp",
+    "station_topology_and_channel_map",
+    "quality_calibration_and_clock_correction",
+    "abort_alarm_esd_and_maintenance_flags",
+    "research_reuse_and_journal_publication_terms"
+  ],
+  "full_loop_channel_groups": {
+    "time": ["common_time_base_and_timezone", "sampling_interval_and_aggregation_rule"],
+    "vehicle_or_receptacle": ["vehicle_or_receptacle_pressure_definition", "vehicle_or_gas_temperature_definition"],
+    "mass": ["mass_flow_or_transferred_mass_definition"],
+    "station_boundary": ["station_topology_and_channel_map", "protocol_or_pressure_ramp"],
+    "initial_state": ["initial_conditions_and_tank_capacity"],
+    "data_quality": ["units_and_missing_value_codes", "quality_calibration_and_clock_correction", "abort_alarm_esd_and_maintenance_flags"]
+  },
+  "intake_sequence": [
+    "Record the custodian decision and written reuse terms before opening numerical cells.",
+    "Copy the received files into gitignored quarantine and compute SHA-256 digests byte-for-byte.",
+    "Verify the four expected file roles and retain the original source-file identifiers.",
+    "Freeze the model commit, engineering screens, eligible-case rule and holdout split.",
+    "Read the data dictionary and map aliases to the locked channel groups without fitting parameters.",
+    "Run the numerical evaluation once on untouched eligible fills; retain every failure and missing-channel case.",
+    "Publish only de-identified derived traces, file digests and case metrics allowed by the custodian."
+  ],
+  "promotion_rules": {
+    "inventory_ready": "All four file roles are present, each file has an immutable SHA-256, and the description/data dictionary is retained.",
+    "eligible_for_channel_mapping": "Inventory is ready and every required metadata item is declared with units, definitions or an explicit not-available value.",
+    "eligible_for_full_loop_validation": "Channel groups contain synchronized vehicle/receptacle pressure, temperature, mass/flow, initial conditions, capacity and protocol metadata for untouched fills, with written publication/reuse terms.",
+    "reject_primary_claim_if": [
+      "Vehicle/receptacle pressure or transferred mass is absent.",
+      "The station and vehicle clocks cannot be aligned or the sampling rule is unknown.",
+      "The tank capacity or initial state is unavailable.",
+      "The protocol/pressure-ramp and stop/abort semantics cannot be identified.",
+      "Outcome values were used to tune the model or choose the holdout split.",
+      "Written terms do not permit derived metrics in the manuscript and repository."
+    ]
+  },
+  "claim_boundary": "This protocol and any byte-level inventory prove acquisition integrity and prospective eligibility only. They are not numerical validation, safety certification, field-distance evidence, or proof of SAGA effectiveness. The IJHE/full-objective gate remains closed until an untouched numerical evaluation and independent effectiveness review are complete."
+}

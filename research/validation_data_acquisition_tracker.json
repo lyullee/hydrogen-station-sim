@@ -355,6 +355,9 @@
       "next_action": "Submit repository access request and retain approval record.",
       "claim_boundary": "Metadata listing is not a validation dataset.",
       "access_verification": "research/nbsdc_winter_olympics_operational_access_verification_2026_10_04.json",
+      "intake_protocol": "research/nbsdc_winter_olympics_intake_protocol_2026_10_04.json",
+      "intake_protocol_report": "research/NBSDC_WINTER_OLYMPICS_INTAKE_PROTOCOL_2026_10_04.md",
+      "inventory_checker": "scripts/validate_nbsdc_winter_olympics_inventory.py",
       "observed_public_scope": "3 XLSX files: transaction/operation, dispenser monitoring, compressor monitoring; description declares vehicle H2 pressure/temperature/SOC and timestamps.",
       "observed_access_boundary": "Raw data-file probes return JSON code 403 and require data application; description file only was downloaded; no raw row inspected."
     },

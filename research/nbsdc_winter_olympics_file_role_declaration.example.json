@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "declaration_type": "nbsdc_winter_olympics_file_roles",
+  "custodian_confirmed_original_ids": false,
+  "roles": {
+    "description_document": {
+      "source_file_id": "641874c7e39c3b0b8e3274ab",
+      "relative_paths": ["<received-description-file>"]
+    },
+    "transaction_records": {
+      "source_file_id": "641874c7e39c3b0b8e3274a8",
+      "relative_paths": ["<received-transaction-workbook>"]
+    },
+    "dispenser_records": {
+      "source_file_id": "641874c7e39c3b0b8e3274a9",
+      "relative_paths": ["<received-dispenser-workbook>"]
+    },
+    "compressor_records": {
+      "source_file_id": "641874c7e39c3b0b8e3274aa",
+      "relative_paths": ["<received-compressor-workbook>"]
+    }
+  },
+  "note": "Replace placeholders only after the approved files are quarantined and hashed. This declaration is not evidence that the files have been received."
+}
