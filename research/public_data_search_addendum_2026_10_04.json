@@ -63,6 +63,15 @@
       "scope": "PRHYDE D6.7 report with ZBT 35/50/70 MPa test tables and stated 2 Hz PLC logging",
       "raw_data_request_lead": "research/PRHYDE_DATA_REQUEST_DRAFT.md",
       "classification": "PUBLIC_REPORT_DATA_REQUEST_LEAD"
+    },
+    {
+      "id": "kit_h2_release_2023",
+      "doi": "10.35097/1483",
+      "license": "CC BY-SA 4.0",
+      "public_synchronized_raw_logger": true,
+      "scope": "hydrogen release/dispersion consequence experiment with pressure, mass flow, heat flux, thermocouples, weather and video metadata",
+      "reuse_note": "research/KIT_H2_RELEASE_DATA_REUSE_NOTE.md",
+      "classification": "CONSEQUENCE_RAW_DATA_CANDIDATE"
     }
   ],
   "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET",

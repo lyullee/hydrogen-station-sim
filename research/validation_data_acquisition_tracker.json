@@ -440,6 +440,27 @@
       "rights": "PRHYDE/ZBT data custodian must confirm research reuse, derived-publication and repository-deposit terms.",
       "next_action": "Send the prepared request to the PRHYDE/ZBT test-field data custodian identified from the D6.7 report.",
       "claim_boundary": "The public D6.7 report and tables are provenance and request evidence only; no full-loop validation claim is allowed until raw files pass the prospective intake and scoring gates."
+    },
+    {
+      "id": "kit_h2_release_consequence",
+      "draft": "research/KIT_H2_RELEASE_DATA_REUSE_NOTE.md",
+      "source": "https://doi.org/10.35097/1483",
+      "candidate_type": "independent hydrogen release and consequence experiment",
+      "status": "public_consequence_candidate",
+      "requested_fields": [
+        "common_time_base",
+        "release_pressure",
+        "mass_flow",
+        "heat_flux",
+        "pipework_temperature",
+        "weather_and_wind",
+        "video_or_flame_observation",
+        "geometry_and_orifice_metadata"
+      ],
+      "minimum_acceptance": "Archive metadata and digest retained; consequence cases have synchronized pressure/flow/effect channels, geometry and calibration information.",
+      "rights": "Record states CC BY-SA 4.0; verify derived-figure and repository-deposit scope before use.",
+      "next_action": "Quarantine the archive, record its immutable digest, and prepare a consequence-only pre-outcome protocol before numerical inspection.",
+      "claim_boundary": "This candidate can support release, detector or consequence submodels only; it cannot establish station controller or vehicle-fueling full-loop validity."
     }
   ]
 }
