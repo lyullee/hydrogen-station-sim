@@ -569,7 +569,7 @@ def audit(root: Path) -> dict[str, object]:
         } if preslhy else "missing; acquisition/validation has not completed",
     ))
 
-    preslhy_partb_path = root / "data/public_validation/results/preslhy_partb/validation.json"
+    preslhy_partb_path = root / "research/preslhy_partb_ambient_validation.json"
     preslhy_partb = _json(preslhy_partb_path)
     preslhy_partb_protocol_path = root / "research/preslhy_partb_holdout_protocol.json"
     preslhy_partb_protocol = _json(preslhy_partb_protocol_path)

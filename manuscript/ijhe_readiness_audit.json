@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T03:07:03.232658+00:00",
+  "generated_at": "2026-10-04T03:15:51.139622+00:00",
   "bounded_ijhe_submission_ready": false,
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
@@ -1161,7 +1161,7 @@
       "id": "preslhy_partb_ambient_external_validation",
       "status": "FAIL",
       "claim": "The frozen release model meets the independent ambient Cryostat Part-B pressure-decay screens.",
-      "evidence": "data\\public_validation\\results\\preslhy_partb\\validation.json; research\\preslhy_partb_holdout_protocol.json",
+      "evidence": "research\\preslhy_partb_ambient_validation.json; research\\preslhy_partb_holdout_protocol.json",
       "requirement": "Five public ambient cases across two nozzle and two pressure groups, >=70% joint primary pass fraction, no post-freeze fitting.",
       "observed": {
         "eligibility": {
