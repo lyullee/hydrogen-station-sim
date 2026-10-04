@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "scope": "Public-data and provenance recheck for the California State University Los Angeles Hydrogen Research and Fueling Facility (HRFF)",
+  "decision": "HIGH_VALUE_REAL_HRS_CANDIDATES_NO_PUBLIC_RAW_LOGGER_FOUND",
+  "gate_impact": "independent_full_loop_gate_remains_open",
+  "eligibility_rule": {
+    "required_channels": [
+      "vehicle_or_receptacle_pressure",
+      "mass_flow_or_transferred_mass"
+    ],
+    "preferred_channels": [
+      "vehicle_or_tank_temperature",
+      "hose_temperature",
+      "storage_bank_pressure",
+      "protocol_and_valve_state"
+    ],
+    "required_metadata": [
+      "common_time_base",
+      "initial_conditions",
+      "tank_capacity",
+      "protocol_or_pressure_ramp_information",
+      "units",
+      "quality_or_calibration_flags",
+      "reuse_terms"
+    ]
+  },
+  "sources": [
+    {
+      "id": "calstate_ijhe_2024_multi_year",
+      "title": "Multi-year energy performance data for an electrolysis-based hydrogen refueling station",
+      "doi": "10.1016/j.ijhydene.2023.04.084",
+      "urls": {
+        "doi": "https://doi.org/10.1016/j.ijhydene.2023.04.084",
+        "public_pdf": "https://www.osti.gov/pages/servlets/purl/2576693",
+        "openaire_record": "https://oamonitor.ireland.openaire.eu/national/search/publication?pid=10.1016%2Fj.ijhydene.2023.04.084"
+      },
+      "real_world_provenance": true,
+      "reported_scope": {
+        "period": "2016-Q1 through 2020-Q2",
+        "refueling_events": ">4500",
+        "hydrogen_dispensed_kg": ">8800",
+        "equipment": [
+          "alkaline electrolyzer",
+          "storage compressor",
+          "three 20 kg ground-storage vessels",
+          "two booster compressors",
+          "350/700 bar dispensing line"
+        ]
+      },
+      "public_artifact_inspection": {
+        "pdf_sha256": "70F9C48AE3878D33D95CB9848B6EFF4053B859ED1E345533A97B20333933D17D",
+        "raw_logger_file_found": false,
+        "machine_readable_full_loop_archive_found": false,
+        "finding": "The open article reports real station records and aggregate KPIs, but the public article and indexed records expose no downloadable synchronized station-to-vehicle logger, channel dictionary or reuse terms for the underlying rows."
+      },
+      "classification": "PUBLIC_REAL_STATION_AGGREGATE_AND_KPI_CONTEXT",
+      "full_loop_holdout_eligible": false
+    },
+    {
+      "id": "calstate_jclepro_2021_back_to_back",
+      "title": "Hydrogen station in situ back-to-back fueling data for design and modeling",
+      "doi": "10.1016/j.jclepro.2021.129737",
+      "osti_id": "1977265",
+      "urls": {
+        "doi": "https://doi.org/10.1016/j.jclepro.2021.129737",
+        "accepted_manuscript": "https://www.osti.gov/servlets/purl/1977265",
+        "osti_record": "https://www.osti.gov/biblio/1977265",
+        "institutional_record": "https://iris.unical.it/handle/20.500.11770/326609"
+      },
+      "real_world_provenance": true,
+      "reported_scope": {
+        "period": "one year of Cal State LA HRFF operation",
+        "event_data": "vehicle fueling reports and dynamic refueling trends",
+        "sampling_statement": "the accepted manuscript states that process parameters were recorded every second",
+        "reported_initial_final_fields": [
+          "vehicle pressure",
+          "average fill rate",
+          "amount dispensed",
+          "ambient temperature",
+          "vehicle tank temperature",
+          "final pressure",
+          "receptacle type",
+          "fueling command"
+        ],
+        "reported_dynamic_fields": [
+          "storage tank pressures",
+          "vehicle pressure",
+          "35 MPa and 70 MPa hose pressure",
+          "35 MPa and 70 MPa hose temperature",
+          "flow rate",
+          "vehicle temperature",
+          "density",
+          "ramp rate",
+          "ambient temperature",
+          "chiller coil temperature",
+          "APRR corridor values",
+          "time",
+          "tank, hose and blowdown valve states",
+          "booster and chiller command states"
+        ]
+      },
+      "public_artifact_inspection": {
+        "accepted_manuscript_sha256": "00DAC7C132A1AA42DECEB64108B90BEE291C7AC17FE4814A38244A1EBE6631C5",
+        "raw_logger_file_found": false,
+        "machine_readable_full_loop_archive_found": false,
+        "finding": "The accepted manuscript documents a high-value one-second station/vehicle data schema and real back-to-back operation, but the OSTI record supplies the manuscript only. No public CSV/XLSX/SQL export, channel dictionary, calibration package or reuse permission for raw traces was found."
+      },
+      "classification": "PUBLIC_REAL_STATION_EVENT_SCHEMA_AND_DATA_REQUEST_LEAD",
+      "full_loop_holdout_eligible": false,
+      "request_draft": "research/CALSTATE_DATA_REQUEST_DRAFT.md"
+    },
+    {
+      "id": "calstate_doe_data_collection_2012_2015",
+      "title": "Hydrogen Station Data Collection and Analysis / Cal State LA HRFF",
+      "urls": {
+        "facility": "https://www.calstatela.edu/ecst/h2station",
+        "data_collection_context": "https://www.osti.gov/servlets/purl/1436732",
+        "institutional_news": "https://www.calstatela.edu/univ/ppa/newsrel/DOEgrant-hydrogendata.htm"
+      },
+      "real_world_provenance": true,
+      "reported_scope": "The facility used SQL-backed data acquisition and generated station performance reports for DOE/NREL; the public materials describe the data program but do not publish the underlying logger export.",
+      "classification": "PUBLIC_DATA_PROGRAM_PROVENANCE_ONLY",
+      "full_loop_holdout_eligible": false
+    }
+  ],
+  "public_search": {
+    "queries": [
+      "10.1016/j.jclepro.2021.129737 csv xlsx dataset",
+      "10.1016/j.ijhydene.2023.04.084 csv xlsx dataset",
+      "Cal State LA Hydrogen Research and Fueling Facility csv",
+      "Hydrogen station back-to-back fueling data download"
+    ],
+    "repositories_and_pages_checked": [
+      "OSTI",
+      "Crossref metadata",
+      "OpenAIRE",
+      "Cal State LA HRFF pages",
+      "public web and GitHub search"
+    ],
+    "finding": "No public synchronized station-to-vehicle raw export meeting the frozen eligibility rule was located. The two Cal State LA articles are high-value real-world provenance and data-request leads, not independently scorable holdouts."
+  },
+  "recommended_next_step": {
+    "action": "Send the prepared Cal State LA request only after the project owner supplies name, affiliation and institutional contact.",
+    "minimum_request": [
+      "de-identified CSV/XLSX export with common timestamps",
+      "vehicle/receptacle and station/hose pressure",
+      "vehicle/tank and delivered-gas temperature",
+      "instantaneous flow or cumulative delivered mass",
+      "storage, compressor, chiller and valve states",
+      "initial conditions, tank capacity and protocol version",
+      "quality/calibration metadata and written reuse terms"
+    ],
+    "freeze_rule": "Hash and quarantine any received files; freeze the model commit, inclusion criteria and scoring before reading numerical outcomes."
+  },
+  "claim_boundary": "The Cal State LA material proves access to credible real-station provenance and a detailed event-level schema, but it does not by itself validate this digital twin. Do not claim IJHE-level independent full-loop validation until a raw synchronized holdout and reuse terms are obtained and the frozen protocol passes."
+}

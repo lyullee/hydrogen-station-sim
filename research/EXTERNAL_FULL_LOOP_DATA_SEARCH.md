@@ -905,3 +905,34 @@ The Zenodo API was rechecked for `hydrogen refueling station`, `hydrogen fueling
 The Mendeley record [10.17632/8km9z62tct.1](https://data.mendeley.com/datasets/8km9z62tct/1) is a CC BY 4.0, approximately one-second AB2 metal-hydride storage-tank experiment with pressure, flow, temperature and cumulative hydrogen channels. It is useful component storage evidence but has no compressed-gas dispenser, receptacle, cascade or vehicle protocol trace. The Figshare record [10.23642/usn.26117989.v2](https://doi.org/10.23642/usn.26117989.v2) contains mass-flow, filling-pressure and 29-sensor concentration measurements for open-channel hydrogen dispersion; it is already consumed in the repository's consequence validation and is not a new full-loop fueling holdout.
 
 Decision: **NO_NEW_ELIGIBLE_PUBLIC_RAW_SET**. These are discovery classifications only; no publication, component experiment or already-consumed dispersion archive is promoted to the independent full-loop gate. The next request remains a de-identified NREL HITRF, JRC HYTRANSFER/GasTeF, CARB/HyStEP or NIST FTS logger export with hashes, metadata and reuse terms frozen before outcome access.
+
+## 2026-10-04 Cal State LA HRFF public-data recheck
+
+The Cal State LA Hydrogen Research and Fueling Facility is the strongest public
+real-station lead found in this search. The open-access *International Journal
+of Hydrogen Energy* article [10.1016/j.ijhydene.2023.04.084](https://doi.org/10.1016/j.ijhydene.2023.04.084)
+reports 2016--2020 HRFF operation, more than 4,500 refueling events and more
+than 8,800 kg dispensed. Its public PDF describes the station equipment and
+multi-year KPI processing, but no downloadable synchronized station-to-vehicle
+logger or data dictionary was located.
+
+The accepted manuscript for the related *Journal of Cleaner Production* paper
+[10.1016/j.jclepro.2021.129737](https://doi.org/10.1016/j.jclepro.2021.129737)
+is publicly available through [OSTI record 1977265](https://www.osti.gov/biblio/1977265).
+It is unusually valuable for a data request: it states that each fueling report
+contains one-second dynamic trends including vehicle and hose pressure and
+temperature, flow rate, storage pressure, density, APRR, valve states and
+booster/chiller commands. The public record still provides the manuscript only;
+no CSV/XLSX/SQL export, calibration package or raw-data reuse terms were found.
+
+The [Cal State LA facility page](https://www.calstatela.edu/ecst/h2station) and
+the DOE data-program materials corroborate real station provenance and SQL-backed
+data acquisition. They are not a numerical holdout. The detailed recheck and
+file hashes are stored in
+[`cal_state_la_hrff_public_data_recheck_2026_10_04.json`](cal_state_la_hrff_public_data_recheck_2026_10_04.json).
+
+Decision: **HIGH_VALUE_REAL_HRS_CANDIDATES_NO_PUBLIC_RAW_LOGGER_FOUND**. These
+sources support a controlled-access request, but they do not close the
+independent full-loop validation gate. Use
+[`CALSTATE_DATA_REQUEST_DRAFT.md`](CALSTATE_DATA_REQUEST_DRAFT.md), and hash and
+quarantine any approved export before reading outcomes or scoring the model.
