@@ -466,3 +466,16 @@ def test_elvhys_dataset_is_cc0_consequence_auxiliary_only():
     assert record["classification"]["full_loop_station_vehicle_holdout_eligible"] is False
     assert record["classification"]["goal_completion_permitted"] is False
     assert (ROOT / "research/ELVHYS_PUBLIC_CONSEQUENCE_DATASET.md").exists()
+
+
+def test_khk_local_casebook_pipeline_is_not_promoted_or_committed():
+    mirror = json.loads(
+        (ROOT / "research/external_full_loop_data_search.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    item = mirror["khk_local_casebook_pipeline_2026_10_04"]
+    assert item["raw_or_derived_casebook_committed"] is False
+    assert item["expert_holdout_ready"] is False
+    assert item["full_loop_holdout_eligible"] is False
+    assert (ROOT / "research/KHK_LOCAL_CASEBOOK_PROTOCOL.md").exists()

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "record": "research/KHK_LOCAL_CASEBOOK_PROTOCOL.md",
+  "pipeline": "scripts/prepare_khk_local_casebook.py",
+  "source": "research/khk_public_incident_access_2026_10_04.json",
+  "execution_status": "LOCAL_ONLY_PIPELINE_READY",
+  "raw_or_derived_casebook_committed": false,
+  "validation_classification": {
+    "actual_accident_data_grounding_candidate": true,
+    "expert_holdout_ready": false,
+    "full_loop_station_vehicle_holdout_eligible": false,
+    "goal_completion_permitted": false
+  },
+  "claim_boundary": "The pipeline can create a local KHK HRS candidate casebook and map compound incidents to response families, but it cannot establish response correctness, operator benefit, safety or full-loop physics. Public use requires written permission and a frozen blinded review protocol."
+}
