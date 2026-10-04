@@ -1177,3 +1177,25 @@ sole cause of the full-loop discrepancy. Because the run uses outcome-known
 traces and a physics-only 200 °C controller limit, it remains a development
 diagnostic and does not change the external-validation or goal-completion
 decision.
+
+## 2026-10-04 H2Protocol upstream-pressure profile screen
+
+The H2Protocol workbooks expose a `Psupply` channel in addition to the
+vehicle-side pressure, temperature, SOC and mass-flow channels. The baseline
+J2601 runner deliberately uses a constant 90 MPa upstream boundary, so a
+small, outcome-known screen was added to test whether that declared boundary
+is responsible for part of the residual. The runner is
+[`scripts/run_h2protocol_source_boundary_screen.py`](../scripts/run_h2protocol_source_boundary_screen.py)
+and the machine-readable result is
+[`research/h2protocol_source_boundary_screen_2026_10_04.json`](h2protocol_source_boundary_screen_2026_10_04.json).
+
+For three already-consumed cases (H2P-L01, H2P-L06 and H2P-L10), forcing the
+published `Psupply` trace reduced mean pressure RMSE from 21.28 MPa to 4.16
+MPa and produced two screening passes under the declared physics-only
+temperature-stop sensitivity. This is evidence that the upstream boundary is
+material; it is not a new independent holdout, because the same H2Protocol
+source family is already present in the frozen development and MC evaluation.
+The result therefore does not change the external-validation gate or permit
+an IJHE-level full-loop claim. A future independent archive must include the
+same source-pressure and source-temperature boundary channels, or the station
+bank topology and valve-state log needed to reconstruct them.

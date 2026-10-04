@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-04T14:58:53.341544+00:00",
+  "evidence_role": "post_outcome_boundary_diagnostic",
+  "claim_boundary": "The H2Protocol archive is already used by the frozen development and MC evaluations. This screen diagnoses a missing upstream boundary condition and is not an independent holdout, field validation, SAE certification, or safety claim.",
+  "source": {
+    "landing_page": "http://www.h2protocol.com/h2-fueling-data/",
+    "publisher": "H2Protocol.com / Powertech Labs",
+    "archive_sha256": {
+      "SAE J2601 Tables Validation Files 1.zip": "2b7e898ca86fa010bd78d7375199e6fdc55aed9ad3e1b77270ddd528b534cbc6"
+    },
+    "source_channels": {
+      "preferred": "Psupply",
+      "fallback": "Pinlet",
+      "units": "MPa gauge-equivalent as recorded by the workbook"
+    }
+  },
+  "model": {
+    "fit_source": "research\\closed_loop_development_v2.json",
+    "fit": {
+      "effective_volume_multiplier": 1.052729261198358,
+      "gas_liner_ua_multiplier": 31.460656519273492,
+      "dispenser_flow_area_multiplier": 2.0,
+      "precooler_duty_multiplier": 16.0
+    },
+    "constant_boundary_mpa": 90.0,
+    "temperature_stop_c": 2000.0,
+    "temperature_stop_mode": "declared_physics_only_sensitivity"
+  },
+  "cases": [
+    {
+      "case_id": "H2P-L01",
+      "source_archive": "SAE J2601 Tables Validation Files 1.zip",
+      "source_member": "BMW J2601-Tables Validation Test (2).xlsx",
+      "source_pressure_column": "Psupply",
+      "source_pressure_initial_mpa": 1.973,
+      "source_pressure_final_mpa": 78.115,
+      "constant_boundary": {
+        "supply_pressure_mpa": 90.0,
+        "pressure_rmse_mpa": 5.1733834997678425,
+        "temperature_rmse_c": 14.340550416700014,
+        "soc_final_error_percentage_points": -0.2943483170224397,
+        "screening_pass": false
+      },
+      "measured_boundary_profile": {
+        "pressure_rmse_mpa": 2.740420534166312,
+        "temperature_rmse_c": 9.792911902893353,
+        "soc_final_error_percentage_points": -3.4332896188084447,
+        "screening_pass": true
+      },
+      "improvement": {
+        "pressure_rmse_mpa": 2.4329629656015306,
+        "temperature_rmse_c": 4.54763851380666,
+        "abs_soc_final_error_percentage_points": -3.138941301786005
+      }
+    },
+    {
+      "case_id": "H2P-L06",
+      "source_archive": "SAE J2601 Tables Validation Files 1.zip",
+      "source_member": "BMW J2601-Tables Validation Test (1).xlsx",
+      "source_pressure_column": "Psupply",
+      "source_pressure_initial_mpa": 2.371,
+      "source_pressure_final_mpa": 80.84,
+      "constant_boundary": {
+        "supply_pressure_mpa": 90.0,
+        "pressure_rmse_mpa": 13.291964071813961,
+        "temperature_rmse_c": 19.65314418688063,
+        "soc_final_error_percentage_points": 12.07494148237862,
+        "screening_pass": false
+      },
+      "measured_boundary_profile": {
+        "pressure_rmse_mpa": 3.0247046057936773,
+        "temperature_rmse_c": 6.953632713378609,
+        "soc_final_error_percentage_points": -1.9511712473036198,
+        "screening_pass": true
+      },
+      "improvement": {
+        "pressure_rmse_mpa": 10.267259466020285,
+        "temperature_rmse_c": 12.699511473502021,
+        "abs_soc_final_error_percentage_points": 10.123770235075
+      }
+    },
+    {
+      "case_id": "H2P-L10",
+      "source_archive": "SAE J2601 Tables Validation Files 1.zip",
+      "source_member": "BMW J2601-Tables Validation Test (10).xlsx",
+      "source_pressure_column": "Psupply",
+      "source_pressure_initial_mpa": 1.126,
+      "source_pressure_final_mpa": 81.448,
+      "constant_boundary": {
+        "supply_pressure_mpa": 90.0,
+        "pressure_rmse_mpa": 45.37566579239393,
+        "temperature_rmse_c": 80.17459466065367,
+        "soc_final_error_percentage_points": 83.86497581171749,
+        "screening_pass": false
+      },
+      "measured_boundary_profile": {
+        "pressure_rmse_mpa": 6.7064215878335665,
+        "temperature_rmse_c": 26.570935024463,
+        "soc_final_error_percentage_points": -3.460313720427763,
+        "screening_pass": false
+      },
+      "improvement": {
+        "pressure_rmse_mpa": 38.669244204560364,
+        "temperature_rmse_c": 53.60365963619067,
+        "abs_soc_final_error_percentage_points": 80.40466209128972
+      }
+    }
+  ],
+  "aggregate": {
+    "case_count": 3,
+    "constant_boundary_pressure_rmse_mean_mpa": 21.28033778799191,
+    "measured_boundary_pressure_rmse_mean_mpa": 4.157182242597852,
+    "measured_boundary_screening_pass_count": 2
+  }
+}
