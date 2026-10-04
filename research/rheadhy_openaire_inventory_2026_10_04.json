@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04",
+  "project_id": "101101443",
+  "project": "RHeaDHy",
+  "endpoint": "https://api.openaire.eu/search/researchProducts?projectID=101101443&format=json&size=100",
+  "query_total": 7,
+  "returned_count": 7,
+  "products": [
+    {
+      "title": "Betrieb von H 2 Speichern und Herausforderungen für Heavy Duty Anwendungen - Erfahrungen aus der Praxis",
+      "pids": [
+        "10.5281/zenodo.14720544",
+        "10.5281/zenodo.14720545"
+      ],
+      "resulttype": "publication",
+      "resourcetype": "UNKNOWN",
+      "urls": [],
+      "licenses": [],
+      "access": []
+    },
+    {
+      "title": "HDV Refuelling infrastructure technology",
+      "pids": [
+        "10.5281/zenodo.14720574",
+        "10.5281/zenodo.14720573"
+      ],
+      "resulttype": "publication",
+      "resourcetype": "Presentation",
+      "urls": [],
+      "licenses": [],
+      "access": []
+    },
+    {
+      "title": "RHeaDHy Introduction to test matrix (Public)",
+      "pids": [
+        "10.5281/zenodo.16992588",
+        "10.5281/zenodo.16992589"
+      ],
+      "resulttype": "publication",
+      "resourcetype": "UNKNOWN",
+      "urls": [],
+      "licenses": [],
+      "access": []
+    },
+    {
+      "title": "D6.6 - Recommendations for standardization – M24",
+      "pids": [
+        "10.5281/zenodo.15016444",
+        "10.5281/zenodo.15016443"
+      ],
+      "resulttype": "publication",
+      "resourcetype": "Project deliverable",
+      "urls": [],
+      "licenses": [],
+      "access": []
+    },
+    {
+      "title": "RHeaDHy Project and operation of hydrogen storage - Temperature stratification and the subject of Simulation",
+      "pids": [
+        "10.5281/zenodo.14720513",
+        "10.5281/zenodo.14720512"
+      ],
+      "resulttype": "publication",
+      "resourcetype": "Presentation",
+      "urls": [],
+      "licenses": [],
+      "access": []
+    },
+    {
+      "title": "RHeaDHy - Flyer HRS - 2024",
+      "pids": [
+        "10.5281/zenodo.14701089",
+        "10.5281/zenodo.14701088"
+      ],
+      "resulttype": "publication",
+      "resourcetype": "Poster",
+      "urls": [],
+      "licenses": [],
+      "access": []
+    },
+    {
+      "title": "RHeaDHy - Establishing protocol for refuelling heavy duty with very high flow hydrogen",
+      "pids": [
+        "10.5281/zenodo.14703065",
+        "10.5281/zenodo.14703064"
+      ],
+      "resulttype": "publication",
+      "resourcetype": "Presentation",
+      "urls": [],
+      "licenses": [],
+      "access": []
+    }
+  ],
+  "classification": {
+    "publication_count": 7,
+    "dataset_count": 0,
+    "software_count": 0,
+    "raw_synchronized_station_to_vehicle_count": 0,
+    "finding": "All 7 OpenAIRE research products linked to project 101101443 are indexed as publications (presentations, poster, project deliverable, or an unknown publication type). No dataset or software research product, synchronized station-to-vehicle logger archive, or explicit raw-data reuse record was returned by this project-scoped inventory."
+  },
+  "claim_boundary": "OpenAIRE indexing is a discovery/provenance check; absence from this response is not proof that custodial or embargoed data do not exist. Public summaries and presentations remain ineligible as numerical full-loop holdout evidence."
+}

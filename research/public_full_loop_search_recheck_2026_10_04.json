@@ -166,8 +166,14 @@
       "supplementary_summary_url": "https://ebs.publicnow.com/view/2BE56BA08C750B576B05A61FFB967F70AFFEEC55",
       "cordis_results_url": "https://cordis.europa.eu/project/id/101101443/results",
       "decision": "PUBLIC_CAMPAIGN_SUMMARY_NO_RAW_LOGGER",
-      "finding": "The 2026 public campaign summary reports 18 tests over six days, 60–300 bar initial pressure, ambient temperatures of 15–40 °C, more than 400 kg transferred and greater than 95% SOC, but no synchronized station/vehicle pressure-temperature-flow files or reuse terms are published. The European Commission CORDIS results page currently lists one public standardization deliverable and no dataset attachment.",
-      "reuse_status": "real campaign summary useful for face-validity bounds; raw logger release or custodian permission remains necessary"
+      "finding": "The 2026 public campaign summary reports 18 tests over six days, 60–300 bar initial pressure, ambient temperatures of 15–40 °C, more than 400 kg transferred and greater than 95% SOC, but no synchronized station/vehicle pressure-temperature-flow files or reuse terms are published. The European Commission CORDIS results page currently lists one public standardization deliverable and no dataset attachment. A project-scoped OpenAIRE inventory returned 7 products, all indexed as publications (presentations, poster, deliverable, or unknown publication type), with zero dataset and zero software research products; no raw synchronized logger archive was identified.",
+      "reuse_status": "real campaign summary useful for face-validity bounds; OpenAIRE/CORDIS public inventory contains no raw dataset or software attachment; raw logger release or custodian permission remains necessary",
+      "openaire_endpoint": "https://api.openaire.eu/search/researchProducts?projectID=101101443&format=json&size=100",
+      "openaire_inventory": "research/rheadhy_openaire_inventory_2026_10_04.json",
+      "openaire_total": 7,
+      "openaire_result_count": 7,
+      "openaire_dataset_count": 0,
+      "openaire_software_count": 0
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
