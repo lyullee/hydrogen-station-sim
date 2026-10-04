@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T22:45:45.792629+00:00",
+  "generated_at": "2026-10-04T23:45:15.426877+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 55,
+    "PASS": 57,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -457,7 +457,7 @@
         "search_recheck_2026_10_04": {
           "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
           "gate_impact": "full_loop_external_validation_remains_open",
-          "candidate_count": 7
+          "candidate_count": 14
         },
         "operational_benchmark_recheck_2026_10_05": {
           "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
@@ -478,6 +478,25 @@
         "reported_sensor_count": 8,
         "full_loop_external_holdout_eligible": false,
         "claim_boundary": "This record strengthens source accounting only. It is not raw validation evidence and does not change the IJHE or full-objective completion gates."
+      }
+    },
+    {
+      "id": "zbt_hrs_sampling_article_boundary_integrity",
+      "status": "PASS",
+      "claim": "The public ZBT HRS sampling article is recorded as a real multi-bank station data-request lead without being promoted to raw full-loop validation.",
+      "evidence": "research\\zbt_hrs_sampling_article_data_boundary_2026_10_05.json",
+      "requirement": "DOI, real station configuration, logged dispenser/tank evidence, author-request-only raw-data boundary and false full-loop eligibility flag.",
+      "observed": {
+        "doi": "10.3390/cleantechnol8030091",
+        "facility": "ZBT hydrogen test field, Duisburg, Germany",
+        "storage_banks": 7,
+        "dispensing_pressure_classes_mpa": [
+          35,
+          70
+        ],
+        "raw_synchronized_rows_public": false,
+        "full_loop_external_holdout_eligible": false,
+        "claim_boundary": "This record strengthens public-source accounting and identifies a high-value acquisition lead. It is not raw validation evidence and does not change the IJHE or full-objective completion gates."
       }
     },
     {
@@ -631,8 +650,8 @@
       "requirement": "At least 15 candidate routes, existing draft request for every route, source URL and explicit non-evidentiary boundary.",
       "observed": {
         "status": "open_data_not_yet_received",
-        "candidate_count": 26,
-        "draft_count": 22,
+        "candidate_count": 27,
+        "draft_count": 23,
         "claim_boundary": "This tracker is a data-acquisition plan. It is not evidence of validation, does not change any IJHE readiness gate, and does not authorize contact or publication."
       }
     },
@@ -3532,6 +3551,113 @@
       "requirement": "Every required protocol/code hash matches the current file.",
       "observed": {
         "mismatches": []
+      }
+    },
+    {
+      "id": "hiad_casebook_machine_preflight_integrity",
+      "status": "PASS",
+      "claim": "The prepared HIAD casebook passes machine-only structural checks while all human gates remain unresolved.",
+      "evidence": "research\\hiad_casebook_machine_preflight_2026_10_05.json",
+      "requirement": "24 cases, required context/provenance fields, unique IDs, and explicit pending human-review markers.",
+      "observed": {
+        "schema_version": 1,
+        "kind": "machine_preflight_only",
+        "generated_at_utc": "2026-10-04T23:07:01.081916+00:00",
+        "machine_preflight_pass": true,
+        "case_count": 24,
+        "checks": [
+          {
+            "id": "holdout_split_declared",
+            "status": "PASS",
+            "observed": "holdout",
+            "requirement": "The approval input must explicitly declare the holdout split."
+          },
+          {
+            "id": "declared_count_matches_cases",
+            "status": "PASS",
+            "observed": {
+              "declared": 24,
+              "actual": 24
+            },
+            "requirement": "The prepared HIAD holdout must contain exactly 24 cases."
+          },
+          {
+            "id": "event_ids_unique_and_nonempty",
+            "status": "PASS",
+            "observed": {
+              "count": 24,
+              "unique": 24,
+              "empty_ids": 0
+            },
+            "requirement": "Every case must have one non-empty unique event identifier."
+          },
+          {
+            "id": "required_case_fields_present",
+            "status": "PASS",
+            "observed": {
+              "required": [
+                "event_id",
+                "quality",
+                "stratum",
+                "input_context",
+                "references",
+                "narrative_action_leakage_review",
+                "expert_vignette_approved"
+              ],
+              "case_count": 24
+            },
+            "requirement": "Every case must retain the fields needed for later human review."
+          },
+          {
+            "id": "required_context_fields_nonempty",
+            "status": "PASS",
+            "observed": {
+              "required": [
+                "title",
+                "description",
+                "physical_effect",
+                "consequence_nature",
+                "sub_application",
+                "supply_chain_stage",
+                "operational_condition"
+              ]
+            },
+            "requirement": "Every case must contain a non-empty incident context for coordinator review."
+          },
+          {
+            "id": "references_present",
+            "status": "PASS",
+            "observed": {
+              "case_count": 24
+            },
+            "requirement": "Every case must retain at least one provenance/reference entry."
+          },
+          {
+            "id": "human_gates_remain_unresolved",
+            "status": "PASS",
+            "observed": {
+              "leakage_review": "PENDING",
+              "expert_vignette_approved": "NO"
+            },
+            "requirement": "Machine preflight must never silently approve or freeze a vignette."
+          }
+        ],
+        "claim_boundary": [
+          "This report checks file structure and unresolved human-review markers only.",
+          "It is not a leakage review, ethics determination, expert rating, casebook freeze, or holdout collection.",
+          "No effectiveness, safety, or publication claim may use this preflight as outcome evidence."
+        ],
+        "required_human_gates": [
+          "coordinator leakage review for every vignette",
+          "institutional ethics or exemption determination",
+          "hash-locked approved casebook freeze",
+          "masked holdout response collection",
+          "independent expert review and safety assessment"
+        ],
+        "casebook": {
+          "path": "data\\public_validation\\results\\hiad_holdout_preparation\\casebook_for_approval.json",
+          "sha256": "3d02c589a67b7e1af112ffb5d58712ec366d66cddd13536ddabf5c0fd6bb226e"
+        }
       }
     },
     {

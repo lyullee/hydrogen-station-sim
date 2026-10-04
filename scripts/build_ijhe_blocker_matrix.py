@@ -108,7 +108,7 @@ def build(root: Path) -> dict[str, Any]:
                 "status": "FAIL_OR_PENDING",
                 "why_blocked": "Several release/blowdown datasets are useful component tests, but the retained joint screens do not meet the predeclared threshold or lack an observable decay feature.",
                 "evidence": [
-                    "research/ijhe_readiness_audit.json",
+                    "manuscript/ijhe_readiness_audit.json",
                     "research/preslhy_blowdown_validation.json",
                     "research/proust_independent_release_validation.json",
                     "research/schefer_transient_release_validation.json",
