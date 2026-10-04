@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-04T02:46:00+00:00",
+  "status": "frozen_before_part_b_archive_download_and_numerical_outcome_access",
+  "objective": "Independent external evaluation of the current hydrogen release/inventory-depletion physics against a separate PRESLHY Cryostat part-B experiment archive.",
+  "claim_boundary": "This protocol evaluates rigid-source discharge and transient jet characteristics for the published ambient-temperature subset of the Cryostat part-B experiments. It does not validate cryogenic two-phase flow, ignition, dispersion, flame/radiation, station control, refuelling, or emergency separation distance.",
+  "source": {
+    "title": "PRESLHY Experiment series 3.1, part B",
+    "creators": [
+      "Friedrich, A.",
+      "Veser, A.",
+      "Jordan, T."
+    ],
+    "doi": "10.35097/1317",
+    "kitopen_doi": "10.5445/IR/1000145859",
+    "landing_page": "https://publikationen.bibliothek.kit.edu/1000145859",
+    "repository_page": "https://www.radar-service.eu/radar/en/dataset/OnGtSzjcAENtrgAJ",
+    "archive_url": "https://www.radar-service.eu/radar-backend/archives/OnGtSzjcAENtrgAJ/versions/1/content",
+    "archive_format": "application/x-tar",
+    "archive_bytes": 1059447296,
+    "license": "CC BY-SA 4.0",
+    "public_data_description": "12 free-field Cryostat hydrogen blow-down experiments; ambient-temperature and cryogenic tests; pressure, discharge and transient-jet/electrostatic measurements."
+  },
+  "eligibility": {
+    "include": [
+      "numerical time-series files from the part-B archive",
+      "ambient-temperature experiments only when the recorded gas temperature and release conditions are usable",
+      "positive initial absolute pressure",
+      "at least 20 synchronized pressure samples after release start"
+    ],
+    "exclude": [
+      "cryogenic liquid-hydrogen tests from the primary ambient claim",
+      "metadata-only or figure-only files",
+      "missing/non-finite pressure/time records",
+      "files with no identifiable release start"
+    ],
+    "minimum_evaluable_cases": 5,
+    "minimum_pressure_groups": 2,
+    "minimum_nozzle_groups": 2
+  },
+  "frozen_model": {
+    "git_commit": "0caf0ab95d19660ee8c94840f67da3d162f10a66",
+    "files_sha256": {
+      "src/h2station/risk/live.py": "112b630ad7be4bfcbc49e23015a30cc50ef28a3746019709c8cd8c4fce8f75ca",
+      "src/h2station/dispenser.py": "0652987a6ebc2f987e04698bba07d770db71ee93fb6995f29b91bb87967bf545",
+      "src/h2station/full_station.py": "f4d03624a5128f780a0e138213ded13d0f0eed0d48aeb02ec62de53de2c3fa22",
+      "src/h2station/tabulated.py": "234ab980758e41551d58ef5d104306131ce0824784092279e1d92dc742feb721",
+      "src/h2station/data/hydrogen_properties_v1.npz": "7ee25c94cdba920398679d9eb5c2828460fe58bba32595bcff076adc4d2d2433"
+    },
+    "discharge_coefficient": 0.8,
+    "parameter_fitting_permitted": false,
+    "case_specific_fitting_permitted": false,
+    "post_freeze_parameter_tuning_permitted": false
+  },
+  "primary_metrics": [
+    "pressure_nrmse_percent_initial_absolute_pressure",
+    "time_to_50_percent_initial_gauge_pressure_relative_error_percent"
+  ],
+  "engineering_screens": {
+    "pressure_nrmse_percent_initial_absolute_pressure_max": 10.0,
+    "time_to_50_percent_initial_gauge_pressure_relative_error_percent_max": 20.0,
+    "minimum_joint_screen_pass_fraction": 0.7
+  },
+  "analysis_rules": [
+    "Freeze the archive URL, metadata, model commit and inclusion rules before downloading or opening numerical files.",
+    "Do not tune parameters, thresholds, source selection or time alignment after numerical outcomes are opened.",
+    "Report every eligible case and every failure.",
+    "If the archive lacks usable ambient synchronized traces, retain a negative data-availability result rather than substituting plot digitization."
+  ],
+  "outcomes_accessed_before_freeze": false,
+  "next_action": "Download and inspect only after this protocol is committed; if eligible ambient cases are found, run the frozen current model and retain a signed result."
+}
