@@ -1795,6 +1795,10 @@ def audit(root: Path) -> dict[str, object]:
     grounding_pass = bool(
         (grounding or {}).get("status") == "software_contract_verified"
         and ((grounding or {}).get("tests") or {}).get("full_suite", {}).get("failed") == 0
+        and any(
+            "flow-boundary mismatches" in str(item)
+            for item in (grounding or {}).get("verified_properties", [])
+        )
     )
     gates.append(_gate(
         "llm_evidence_grounding_contract",

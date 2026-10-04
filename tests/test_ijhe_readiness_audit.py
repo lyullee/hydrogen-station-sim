@@ -52,6 +52,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     field_article = gates["real_station_article_boundary_integrity"]["observed"]
     assert field_article["reported_sensor_count"] == 8
     assert field_article["full_loop_external_holdout_eligible"] is False
+    assert gates["llm_evidence_grounding_contract"]["status"] == "PASS"
+    assert any(
+        "flow-boundary mismatches" in item
+        for item in gates["llm_evidence_grounding_contract"]["observed"]["verified_properties"]
+    )
     assert gates["kgs_real_station_access_boundary_integrity"]["status"] == "PASS"
     kgs_access = gates["kgs_real_station_access_boundary_integrity"]["observed"]
     assert kgs_access["reported_real_hrs_scenarios"] == 6

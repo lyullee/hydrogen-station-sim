@@ -148,6 +148,9 @@ def _impact_rows(results: Iterable[dict[str, Any]] | None) -> list[dict[str, Any
         "maximum_heat_flux_w_m2", "maximum_overpressure_pa",
         "sampled_effect_radius_m", "sampled_next_distance_m",
         "flammable_plume_streamline_distance_m", "effect_range_status",
+        "modeled_consequence_mass_flow_kg_s", "mass_flow_override_requested",
+        "mass_flow_override_status", "mass_flow_override_ratio",
+        "mass_flow_override_claim_limit",
     )
     rows: list[dict[str, Any]] = []
     for result in results or []:

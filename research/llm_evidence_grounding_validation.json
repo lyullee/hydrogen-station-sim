@@ -11,12 +11,12 @@
   "tests": {
     "targeted": {
       "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_digital_twin_direct_qa.py -q",
-      "passed": 11,
-      "warnings": 2
+      "passed": 18,
+      "warnings": 4
     },
     "full_suite": {
       "command": ".venv\\Scripts\\python.exe -m pytest -q",
-      "passed": 472,
+      "passed": 507,
       "failed": 0,
       "warnings": 16
     }
@@ -31,7 +31,8 @@
     "response evidence source identifiers are carried into the hashed manifest",
     "public HIAD action-to-playbook traceability metadata is carried into the response evidence envelope",
     "public KHK accident-report inventory and citation link are carried into the evidence envelope without mirrored report text",
-    "public KHK scenario-precedent map links all 23 citation records to conservative response families without exposing report text or frequency claims"
+    "public KHK scenario-precedent map links all 23 citation records to conservative response families without exposing report text or frequency claims",
+    "consequence flow-boundary mismatches are exposed when HyRAM recomputes a high-pressure choked flow instead of silently presenting it as the supplied process flow"
   ],
   "not_established": [
     "physics validity of the consequence model",

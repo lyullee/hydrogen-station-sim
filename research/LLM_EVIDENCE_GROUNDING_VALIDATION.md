@@ -30,6 +30,9 @@ contains:
   `calculated`;
 - calculated impact basis, input sensor tags, model outputs and threshold
   interpretation limits;
+- consequence flow-boundary status, requested process flow, HyRAM modeled flow,
+  and an explicit mismatch claim limit when high-pressure choked flow causes
+  the physics adapter to recompute the release rate;
 - a SHA-256 digest over the canonical manifest contents.
 
 The manifest explicitly states that simulated signals are not field
@@ -46,7 +49,7 @@ The following tests passed in the repository virtual environment:
 11 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-472 passed, 16 warnings
+507 passed, 16 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -57,6 +60,11 @@ confirmed alarm, gas observation, physical leak or calculated impact.
 The manifest digest now also covers the public response-source identifiers, the
 HIAD action-to-playbook traceability metadata, and the KHK citation inventory
 used to ground the staged action plan.
+
+The consequence handoff also records whether a supplied process-flow boundary
+was retained.  If HyRAM's high-pressure choked-flow path recomputes a different
+release rate, the status and ratio are carried into the impact record and LLM
+evidence envelope; the result is explicitly limited to model-bound screening.
 
 ## Claim boundary
 

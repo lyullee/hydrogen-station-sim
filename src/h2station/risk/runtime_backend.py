@@ -54,6 +54,57 @@ def consequence_risk_summary(consequence: Mapping[str, float | str | bool | None
             "risk_basis": "CONSEQUENCE_SCREENING_NO_FREQUENCY"}
 
 
+def mass_flow_override_metadata(
+    requested_mass_flow_kg_s: float | None,
+    modeled_mass_flow_kg_s: float | None,
+) -> dict[str, float | str | bool | None]:
+    """Expose whether HyRAM retained a process-flow boundary.
+
+    HyRAM's high-pressure choked-flow path can recompute an orifice flow even
+    when the digital twin supplies a measured/process flow override.  The
+    consequence result remains useful as a model-bound screening result, but
+    the distinction must be visible to operators and to the LLM instead of
+    being silently treated as a measured release.
+    """
+    if requested_mass_flow_kg_s is None:
+        return {
+            "mass_flow_override_requested": False,
+            "mass_flow_override_status": "MODEL_CALCULATED",
+            "mass_flow_override_ratio": None,
+            "mass_flow_override_claim_limit": "HyRAM orifice/model flow; no process-flow override supplied",
+        }
+    requested = max(0.0, float(requested_mass_flow_kg_s))
+    modeled = None if modeled_mass_flow_kg_s is None else max(0.0, float(modeled_mass_flow_kg_s))
+    if modeled is None:
+        return {
+            "mass_flow_override_requested": True,
+            "mass_flow_override_status": "NO_MODELED_FLOW",
+            "mass_flow_override_ratio": None,
+            "mass_flow_override_claim_limit": "Process-flow override supplied, but no modeled consequence flow is available",
+        }
+    if requested <= 1.0e-12:
+        # A ratio against zero is undefined; keep the field JSON-safe and use
+        # the explicit status to describe the mismatch.
+        ratio = None
+        status = "OVERRIDE_ZERO_REQUESTED" if modeled <= 1.0e-12 else "HYRAM_FLOW_EXCEEDS_ZERO_REQUEST"
+    else:
+        ratio = modeled / requested
+        status = "OVERRIDE_RETAINED" if abs(ratio - 1.0) <= 0.05 else (
+            "HYRAM_CHOKED_MODEL_EXCEEDS_REQUEST" if ratio > 1.05 else "HYRAM_MODEL_BELOW_REQUEST"
+        )
+    return {
+        "mass_flow_override_requested": True,
+        "mass_flow_override_status": status,
+        "mass_flow_override_ratio": ratio,
+        "mass_flow_override_claim_limit": (
+            "Modeled consequence flow differs from the process-flow boundary; "
+            "screening results must not be described as a measured release consequence"
+            if status not in {"OVERRIDE_RETAINED", "OVERRIDE_ZERO_REQUESTED"}
+            else "Modeled consequence flow is within 5% of the supplied process-flow boundary"
+        ),
+    }
+
+
 class UnavailableHyRAMBackend:
     """Honest fallback that preserves source terms without inventing consequences."""
 
@@ -157,6 +208,9 @@ class NativeHyRAMBackend:
             "release_angle_rad": request.release_angle_rad,
             "observation_locations_m": self.observation_locations,
         }
+        output.update(mass_flow_override_metadata(
+            result.requested_mass_flow_rate, result.mass_flow_rate,
+        ))
         # Report only the sampled extent. Three observation points cannot
         # establish a validated safe boundary beyond the farthest point.
         thermal_points = [
