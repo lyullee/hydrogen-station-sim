@@ -1,0 +1,707 @@
+{
+  "schema_version": 1,
+  "status": "derived_non_evaluative_action_taxonomy",
+  "evidence_role": "public_incident_grounding_summary",
+  "source": {
+    "path": "data\\public_validation\\raw\\hiad_2_2\\HIAD 2.2.xlsx",
+    "sha256": "295772b60a4afe5ef47a00bc314eed48b76c170be00c29952d60e50fedd6f55f",
+    "public_use_note": "HIAD 2.2 workbook states that the database is intended for public use; verify permission before redistributing raw prose.",
+    "raw_text_retained": false,
+    "holdout_use": false
+  },
+  "claim_boundary": "This artifact counts controlled action categories derived from HIAD HRS records. It does not judge whether an action was correct or safe, estimate incident probability, validate physics, or evaluate SAGA effectiveness.",
+  "taxonomy": {
+    "category_patterns_version": "hiad-action-taxonomy-v1",
+    "category_counts": {
+      "shutdown_isolation_depressurization": 22,
+      "detection_alarm_monitoring": 14,
+      "fire_response_cooling": 6,
+      "evacuation_perimeter_access": 6,
+      "emergency_communication_coordination": 17,
+      "inspection_leak_test_repair": 21,
+      "procedure_interlock_training_design": 23,
+      "ventilation_purge": 21
+    },
+    "field_presence_counts": {
+      "emergency_action": 29,
+      "lesson_learnt": 24,
+      "corrective_measures": 25
+    }
+  },
+  "case_count": 34,
+  "cases": [
+    {
+      "event_id": "396",
+      "title": "Detection of hydrogen release",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "Leak no ignition",
+      "supply_chain_stage": "Hydrogen transfer",
+      "operational_condition": "NORMAL",
+      "source_quality": "2",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": false,
+        "corrective_measures": false
+      },
+      "action_categories": [
+        "inspection_leak_test_repair"
+      ]
+    },
+    {
+      "event_id": "401",
+      "title": "Detection of hydrogen release",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "Leak no ignition",
+      "supply_chain_stage": "Hydrogen transfer",
+      "operational_condition": "NORMAL",
+      "source_quality": "3",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": false
+      },
+      "action_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ]
+    },
+    {
+      "event_id": "402",
+      "title": "Cavitation in a compressor",
+      "physical_effect": "No Hydrogen Release",
+      "consequence_nature": "Near miss",
+      "supply_chain_stage": "Hydrogen compression",
+      "operational_condition": "NORMAL",
+      "source_quality": "2",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "403",
+      "title": "Hydrogen dispenser failure",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "Leak no ignition",
+      "supply_chain_stage": "Hydrogen delivery",
+      "operational_condition": "NORMAL",
+      "source_quality": "2",
+      "source_fields_present": {
+        "emergency_action": false,
+        "lesson_learnt": false,
+        "corrective_measures": false
+      },
+      "action_categories": []
+    },
+    {
+      "event_id": "404",
+      "title": "Malfunctioning in a hydrogen refuelling station",
+      "physical_effect": "No Hydrogen Release",
+      "consequence_nature": "Near miss",
+      "supply_chain_stage": "Hydrogen delivery",
+      "operational_condition": "ABNORMAL",
+      "source_quality": "2",
+      "source_fields_present": {
+        "emergency_action": false,
+        "lesson_learnt": false,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "411",
+      "title": "Oil leak",
+      "physical_effect": "No Hydrogen Release",
+      "consequence_nature": "Near miss",
+      "supply_chain_stage": "Hydrogen compression",
+      "operational_condition": "NORMAL",
+      "source_quality": "2",
+      "source_fields_present": {
+        "emergency_action": false,
+        "lesson_learnt": false,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "detection_alarm_monitoring"
+      ]
+    },
+    {
+      "event_id": "454",
+      "title": "Damage of a HRS canopy",
+      "physical_effect": "No Hydrogen Release",
+      "consequence_nature": "near miss",
+      "supply_chain_stage": "Hydrogen delivery",
+      "operational_condition": "NORMAL",
+      "source_quality": "2",
+      "source_fields_present": {
+        "emergency_action": false,
+        "lesson_learnt": false,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair"
+      ]
+    },
+    {
+      "event_id": "463",
+      "title": "Release at a dispenser of a HRS",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "leak no ignition",
+      "supply_chain_stage": "Hydrogen transfer",
+      "operational_condition": "NORMAL",
+      "source_quality": "3",
+      "source_fields_present": {
+        "emergency_action": false,
+        "lesson_learnt": true,
+        "corrective_measures": false
+      },
+      "action_categories": [
+        "fire_response_cooling",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ]
+    },
+    {
+      "event_id": "702",
+      "title": "hydrogen leak in the hose of a dispenser",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "leak no ignition",
+      "supply_chain_stage": "Hydrogen transfer",
+      "operational_condition": "NORMAL",
+      "source_quality": "5",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ]
+    },
+    {
+      "event_id": "803",
+      "title": "Release from the dispenser of a refuelling station",
+      "physical_effect": "No Hydrogen Release",
+      "consequence_nature": "Near miss",
+      "supply_chain_stage": "Hydrogen delivery",
+      "operational_condition": "NORMAL",
+      "source_quality": "3",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": false
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization"
+      ]
+    },
+    {
+      "event_id": "884",
+      "title": "Explosion in the storage of a HRS",
+      "physical_effect": "Hydrogen release and ignition",
+      "consequence_nature": "Explosion",
+      "supply_chain_stage": "Hydrogen storage",
+      "operational_condition": "NORMAL",
+      "source_quality": "5",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "fire_response_cooling",
+        "evacuation_perimeter_access",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ]
+    },
+    {
+      "event_id": "953",
+      "title": "Hydrogen release at a public hydrogen refuelling station.",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "Leak no ignition",
+      "supply_chain_stage": "Hydrogen compression",
+      "operational_condition": "NORMAL",
+      "source_quality": "4",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": false,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "1038",
+      "title": "Dispenser nozzle freezing during hydrogen refuelling",
+      "physical_effect": "No Hydrogen Release",
+      "consequence_nature": "near miss",
+      "supply_chain_stage": "Hydrogen transfer",
+      "operational_condition": "NORMAL",
+      "source_quality": "5",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "procedure_interlock_training_design"
+      ]
+    },
+    {
+      "event_id": "1062",
+      "title": "Leakage at a hydrogen buses refilling station",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "leak no ignition",
+      "supply_chain_stage": "hydrogen storage",
+      "operational_condition": "NORMAL",
+      "source_quality": "3",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": false,
+        "corrective_measures": false
+      },
+      "action_categories": [
+        "fire_response_cooling",
+        "evacuation_perimeter_access",
+        "emergency_communication_coordination",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "1063",
+      "title": "Leakage at a hydrogen refilling station in a airport",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "leak no ignition",
+      "supply_chain_stage": "Hydrogen delivery",
+      "operational_condition": "NORMAL",
+      "source_quality": "2",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": false
+      },
+      "action_categories": [
+        "detection_alarm_monitoring",
+        "evacuation_perimeter_access",
+        "emergency_communication_coordination",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "1064",
+      "title": "Leakage at a hydrogen refilling station in a airport",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "near miss",
+      "supply_chain_stage": "Hydrogen compression",
+      "operational_condition": "NORMAL",
+      "source_quality": "2",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": false,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "1106",
+      "title": "Fire in a hydrogen refuelling station",
+      "physical_effect": "Hydrogen Release and Ignition",
+      "consequence_nature": "Explosion",
+      "supply_chain_stage": "Hydrogen compression",
+      "operational_condition": "NORMAL",
+      "source_quality": "4",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "fire_response_cooling",
+        "evacuation_perimeter_access",
+        "emergency_communication_coordination",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "1159",
+      "title": "Release from a vessel at a HRS",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "leak no ignition",
+      "supply_chain_stage": "hydrogen storage",
+      "operational_condition": "NORMAL",
+      "source_quality": "3",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "emergency_communication_coordination",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "1161",
+      "title": "Release from a storage at a HRS",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "leak no ignition",
+      "supply_chain_stage": "hydrogen storage",
+      "operational_condition": "NORMAL",
+      "source_quality": "2",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": false
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "1163",
+      "title": "Fire from the storage area of a HRS",
+      "physical_effect": "Hydrogen Release and Ignition",
+      "consequence_nature": "fire",
+      "supply_chain_stage": "Hydrogen delivery",
+      "operational_condition": "NORMAL",
+      "source_quality": "2",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": false,
+        "corrective_measures": false
+      },
+      "action_categories": [
+        "fire_response_cooling",
+        "emergency_communication_coordination"
+      ]
+    },
+    {
+      "event_id": "1173",
+      "title": "Explosion on a CGH2 cylinders bundle during filling",
+      "physical_effect": "Hydrogen Release and Ignition",
+      "consequence_nature": "explosion followed by a fire",
+      "supply_chain_stage": "Hydrogen transfer",
+      "operational_condition": "NORMAL",
+      "source_quality": "4",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": false,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "fire_response_cooling",
+        "evacuation_perimeter_access",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "1191",
+      "title": "Fire at the storage of a hydrogen refuelling station",
+      "physical_effect": "Hydrogen Release and Ignition",
+      "consequence_nature": "fire",
+      "supply_chain_stage": "hydrogen storage",
+      "operational_condition": "REPAIR",
+      "source_quality": "4",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "1193",
+      "title": "A hydrogen leak at a 70 MPa dispenser",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "leak no ignition",
+      "supply_chain_stage": "Hydrogen transfer",
+      "operational_condition": "STARTUP",
+      "source_quality": "5",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "1194",
+      "title": "Leak in a dispenser at a mobile HRS",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "leak no ignition",
+      "supply_chain_stage": "Hydrogen transfer",
+      "operational_condition": "NORMAL",
+      "source_quality": "4",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ]
+    },
+    {
+      "event_id": "1195",
+      "title": "Leak from a valve in a HRS",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "leak no ignition",
+      "supply_chain_stage": "Hydrogen compression",
+      "operational_condition": "STARTUP",
+      "source_quality": "4",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "1196",
+      "title": "Several leaks from the hoses of a HRS",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "leak no ignition",
+      "supply_chain_stage": "Hydrogen transfer",
+      "operational_condition": "NORMAL",
+      "source_quality": "5",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "1198",
+      "title": "Explosion at a filling hose of a hydrogen dispenser",
+      "physical_effect": "Hydrogen Release and Ignition",
+      "consequence_nature": "explosion",
+      "supply_chain_stage": "Hydrogen transfer",
+      "operational_condition": "NORMAL",
+      "source_quality": "5",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "1202",
+      "title": "Leak  at a filling hose of a hydrogen dispenser",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "leak no ignition",
+      "supply_chain_stage": "Hydrogen transfer",
+      "operational_condition": "NORMAL",
+      "source_quality": "4",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "1203",
+      "title": "Leaks from a hydrogen compressor",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "leak no ignition",
+      "supply_chain_stage": "Hydrogen compression",
+      "operational_condition": "NORMAL",
+      "source_quality": "5",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "1204",
+      "title": "leak from a hose when refuelling a forklift",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "leak no ignition",
+      "supply_chain_stage": "Hydrogen transfer",
+      "operational_condition": "NORMAL",
+      "source_quality": "5",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "1205",
+      "title": "Hydrogen accidental release into a compressor room",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "leak no ignition",
+      "supply_chain_stage": "Hydrogen compression",
+      "operational_condition": "NORMAL",
+      "source_quality": "5",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "1206",
+      "title": "leaks from a threaded joint",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "leak no ignition",
+      "supply_chain_stage": "Hydrogen compression",
+      "operational_condition": "NORMAL",
+      "source_quality": "4",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "detection_alarm_monitoring",
+        "evacuation_perimeter_access",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair"
+      ]
+    },
+    {
+      "event_id": "1207",
+      "title": "leak from a dispenser of a HRS",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "leak no ignition",
+      "supply_chain_stage": "Hydrogen transfer",
+      "operational_condition": "NORMAL",
+      "source_quality": "4",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ]
+    },
+    {
+      "event_id": "1208",
+      "title": "leak from a dispenser of a mobile HRS",
+      "physical_effect": "Unignited Hydrogen Release",
+      "consequence_nature": "leak no ignition",
+      "supply_chain_stage": "Hydrogen transfer",
+      "operational_condition": "NORMAL",
+      "source_quality": "4",
+      "source_fields_present": {
+        "emergency_action": true,
+        "lesson_learnt": true,
+        "corrective_measures": true
+      },
+      "action_categories": [
+        "shutdown_isolation_depressurization",
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ]
+    }
+  ]
+}
