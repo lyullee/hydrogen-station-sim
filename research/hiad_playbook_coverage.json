@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-10-03T22:21:49.186310+00:00",
+  "generated_at_utc": "2026-10-04T04:45:37.160500+00:00",
   "status": "qualitative_traceability_only",
   "source": {
     "inventory": "research/hiad_hrs_public_evidence.json",
-    "inventory_sha256": "14fa503b44ba35bee10ff214159e916934428fcec27b0c8f33295ef06ea9e2f0",
+    "inventory_sha256": "27b7fc752fe7ad706eb48854447bb203605be30b745515a259fad89325cc2536",
     "public_source": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt",
     "case_count": 34,
     "response_text_excluded": true

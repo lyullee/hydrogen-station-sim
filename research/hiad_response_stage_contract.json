@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-10-03T22:31:12.607994+00:00",
+  "generated_at_utc": "2026-10-04T04:45:37.612018+00:00",
   "status": "completed_metadata_only_response_stage_contract",
   "evidence_role": "metadata_only_response_contract",
   "source": {
     "inventory": "research/hiad_hrs_public_evidence.json",
-    "inventory_sha256": "14fa503b44ba35bee10ff214159e916934428fcec27b0c8f33295ef06ea9e2f0",
+    "inventory_sha256": "27b7fc752fe7ad706eb48854447bb203605be30b745515a259fad89325cc2536",
     "coverage": "research/hiad_playbook_coverage.json",
-    "coverage_sha256": "3396032fcc08e86ce8046ac2c335da6697e6336f9b8de3579b5f4503a3f14df2",
+    "coverage_sha256": "b3191cd52799d48084d79e700e0a97a615a29ed6fe277d02d98c4fe7d9d820f1",
     "public_source": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt"
   },
   "catalog": {

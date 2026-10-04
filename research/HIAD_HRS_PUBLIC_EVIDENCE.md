@@ -11,6 +11,19 @@ validation set.
 .venv\Scripts\python.exe scripts/summarize_hiad_hrs_evidence.py
 ```
 
+The downloaded workbook can be provenance-checked without reading the response
+text with:
+
+```text
+.venv\Scripts\python.exe scripts/verify_hiad_2_2_source.py
+```
+
+The verification record is
+`research/hiad_2_2_source_verification_2026_10_04.json`. It records the direct
+JRC download URL, SHA-256 digest, workbook sheet dimensions, the 34-row HRS
+selection and the fact that coordinator approval and response-text access are
+both false.
+
 The current output is stored in
 `research/hiad_hrs_public_evidence.json`. The extractor joins the workbook's
 `EVENTS`, `FACILITY`, `LESSONS LEARNT`, `EVENT NATURE`, and `REFERENCES` sheets

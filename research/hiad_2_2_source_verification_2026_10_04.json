@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-10-04",
+  "source": {
+    "title": "European Hydrogen Incidents and Accidents Database HIAD 2.2",
+    "publisher": "European Commission Joint Research Centre",
+    "landing_page": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt",
+    "download_url": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiad_22_export_for_users_2026_01_01xlsx",
+    "local_file": "data/public_validation/raw/hiad_2_2/HIAD 2.2.xlsx",
+    "sha256": "295772b60a4afe5ef47a00bc314eed48b76c170be00c29952d60e50fedd6f55f",
+    "size_bytes": 1482278,
+    "version": "HIAD 2.2",
+    "event_cutoff": "2025-12-31"
+  },
+  "workbook": {
+    "sheet_count": 10,
+    "sheet_dimensions": {
+      "READ THIS FIRST": {
+        "rows": 16,
+        "columns": 3
+      },
+      "EVENTS": {
+        "rows": 1143,
+        "columns": 20
+      },
+      "FACILITY": {
+        "rows": 1143,
+        "columns": 17
+      },
+      "CONSEQUENCES": {
+        "rows": 1602,
+        "columns": 13
+      },
+      "LESSONS LEARNT": {
+        "rows": 1143,
+        "columns": 6
+      },
+      "EVENT NATURE": {
+        "rows": 1143,
+        "columns": 19
+      },
+      "REFERENCES": {
+        "rows": 1143,
+        "columns": 13
+      },
+      "Classes for EVENTS": {
+        "rows": 253,
+        "columns": 5
+      },
+      "Classes for FACILITY": {
+        "rows": 54,
+        "columns": 11
+      },
+      "Classes for EVENT NATURE": {
+        "rows": 51,
+        "columns": 3
+      }
+    }
+  },
+  "selection": {
+    "rule": "FACILITY.Application exactly equals 'Hydrogen refuelling station'",
+    "case_count": 34,
+    "unique_event_ids": true,
+    "event_ids_sha256": "00e4f04b15aba2026c2aa2a368d191449fe945913153e5ad46cccc533ec49c60",
+    "response_text_read": false,
+    "coordinator_approval": false
+  },
+  "claim_boundary": "This verifies provenance and deterministic extraction of public HIAD HRS metadata. It is not a frozen casebook, does not approve response collection, and does not establish accident probabilities, consequence physics or SAGA effectiveness."
+}
