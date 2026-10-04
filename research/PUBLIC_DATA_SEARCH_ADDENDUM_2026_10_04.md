@@ -126,3 +126,11 @@ are collected for digital-twin and safety research. The public page does not
 provide a synchronized station-to-vehicle logger archive or reuse terms, so the
 route is recorded as a controlled-data request lead only. The prepared request
 is [`research/BAM_HRS_DATA_REQUEST_DRAFT.md`](BAM_HRS_DATA_REQUEST_DRAFT.md).
+
+The 2025 *International Journal of Hydrogen Energy* incident-analysis study
+reports 211 international hydrogen-refuelling-station events and states that
+its data can be made available on request. The public article does not expose
+the event-level export, coding dictionary or reuse terms, so it is recorded as
+an accident-evidence request lead rather than as a completed SAGA evaluation
+dataset. The prepared request is
+[`research/HRS_INCIDENT_DATA_REQUEST_DRAFT.md`](HRS_INCIDENT_DATA_REQUEST_DRAFT.md).

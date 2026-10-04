@@ -515,6 +515,29 @@
     "rights": "DOE/NREL HSDC or contributing SunHydro partner must document access, derived-publication and repository-deposition terms; public aggregate CDPs are insufficient.",
     "next_action": "Project owner reviews research/SUNHYDRO_DATA_REQUEST_DRAFT.md and identifies the approved HSDC/SunHydro custodian before any contact.",
     "claim_boundary": "DOE reports establish a real station data programme and HSDC deposit route, not an available public raw holdout; no validation claim changes until a frozen export is received."
-}
+},
+    {
+      "id": "hrs_incident_contributing_factors_2025",
+      "draft": "research/HRS_INCIDENT_DATA_REQUEST_DRAFT.md",
+      "source": "https://www.sciencedirect.com/science/article/pii/S0950423025001561",
+      "candidate_type": "international HRS incident and contributing-factor event records",
+      "status": "request_draft_ready",
+      "requested_fields": [
+        "event_identifier_or_interval",
+        "station_process_stage",
+        "equipment_class",
+        "initiating_event",
+        "failure_mode",
+        "outcome_and_severity",
+        "detection_isolation_esd_evacuation_actions",
+        "causal_factor_coding",
+        "source_provenance",
+        "missingness_uncertainty_flags"
+      ],
+      "minimum_acceptance": "De-identified event-level records and coding dictionary with source provenance, stable event identifiers, and an untouched holdout for masked SAGA scenario evaluation.",
+      "rights": "Written permission must cover masked vignettes, derived statistics, model-comparison metrics and open repository deposition.",
+      "next_action": "Project owner reviews research/HRS_INCIDENT_DATA_REQUEST_DRAFT.md and identifies the corresponding author or data custodian before any contact.",
+      "claim_boundary": "The published 211-event analysis is incident-context evidence only; no SAGA effectiveness or incident-probability claim changes until the requested records and rights are received and frozen."
+    }
   ]
 }
