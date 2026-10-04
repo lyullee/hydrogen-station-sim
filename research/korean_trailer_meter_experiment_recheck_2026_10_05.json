@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "source": {
+    "title": "수소충전소 계량 정확도 향상을 위한 거래량 산출 모델 연구",
+    "article_url": "https://journal.hydrogen.or.kr/_common/do.php?a=full&aidx=35162&b=52&bidx=3154",
+    "doi": "10.7316/KHNES.2022.33.6.692",
+    "publisher": "한국수소및신에너지학회논문집",
+    "institutional_context": "Korea Gas Safety Corporation-linked hydrogen station metering experiment",
+    "retrieval": "public article HTML inspected; no downloadable raw logger archive found"
+  },
+  "observed_experiment": {
+    "scope": "component-level tube-trailer hydrogen supply and transaction-volume metering",
+    "channels": [
+      "pressure",
+      "temperature",
+      "Coriolis mass flow",
+      "reference mass measurement"
+    ],
+    "sampling": "1 Hz data acquisition is reported",
+    "calibration_flow_range_kg_min": [0.0, 5.17],
+    "reported_model_average_errors_percent": {
+      "model_1": 19.84,
+      "model_2": 5.38,
+      "model_3": 2.10
+    },
+    "reported_meter_calibration_errors_percent": {
+      "case_1": -0.010,
+      "case_2": 0.013,
+      "case_3": 0.058,
+      "case_4": -0.010
+    },
+    "raw_time_series": false,
+    "full_station_controller_vehicle_channels": false
+  },
+  "decision": "KOREAN_COMPONENT_EXPERIMENT_DATA_REQUEST_LEAD",
+  "full_loop_holdout_eligible": false,
+  "finding": "The public article supplies provenance, instrumentation scope, sampling rate and reported error summaries for a real component experiment, but it does not publish synchronized row-level pressure-temperature-mass-flow files with station/controller state and reuse terms.",
+  "use": "Independent component-level metering evidence and a high-priority request lead; it may support face-validity discussion but must not be scored as an untouched full-loop digital-twin holdout.",
+  "requested_package": [
+    "de-identified 1 Hz pressure-temperature-mass-flow rows",
+    "tube-trailer geometry and boundary conditions",
+    "reference-scale readings and calibration certificates",
+    "valve/controller state and stop/fault markers",
+    "units, clock definition, quality flags and missing-value rules",
+    "written permission for derived metrics and journal publication"
+  ],
+  "gate_impact": "independent_full_loop_gate_remains_open",
+  "claim_boundary": "Do not claim full-station validation from this component study. A raw, synchronized package must be quarantined, hashed and frozen before numerical outcomes are opened or used in an IJHE submission."
+}
