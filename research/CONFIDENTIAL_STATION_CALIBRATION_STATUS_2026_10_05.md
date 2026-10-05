@@ -58,6 +58,14 @@ short horizon, so the measured recharge hysteresis is now testable without
 embedding the value in public defaults. It remains an operator-selected
 calibration input; it is not silently applied to ordinary simulations.
 
+The synchronized replay initially used the dual-dispenser reference mode and
+correctly latched on a flow-imbalance caused by the single measured boundary
+being applied to two virtual circuits. The runner now defaults to one explicit
+active vehicle circuit for partial-station data, while retaining an opt-in
+`both` mode for a genuinely dual-channel trace. Replaying the same private
+window with one active circuit completed without that spurious ESD. This is a
+boundary-coverage correction, not a relaxation of the safety trip.
+
 The first pressure/equipment synchronization attempt was intentionally rejected
 because the two supplied sample windows did not overlap on their absolute time
 axes. No rows were shifted to manufacture an overlap, and no scenario
