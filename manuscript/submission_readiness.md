@@ -12,7 +12,7 @@ evidence-readiness decision; it is not a prediction of editorial acceptance.
 
 ## Current decision
 
-Audit snapshot: **2026-10-05 11:22 UTC**
+Audit snapshot: **2026-10-05 17:58 UTC**
 
 | Decision | Result |
 |---|---|

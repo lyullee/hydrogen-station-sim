@@ -13,6 +13,10 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert idle["impact"]["calculation_status"] == "not_requested"
     assert idle["impact"]["result_count"] == 0
     assert idle["source"]["field_measurement"] is False
+    assert idle["runtime_calibration"]["status"] == "reference_defaults"
+    assert prompt_evidence_header(idle)["runtime_calibration"]["profile_id"] == (
+        "reference_defaults"
+    )
     assert idle["evidence_digest"].startswith("sha256:")
     traceability = idle["response_evidence"]["public_incident_traceability"]
     assert traceability["category_count"] == 8
@@ -125,6 +129,25 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert calculated["conditions"][0]["response_source_ids"] == ["H2_INCIDENT", "HIAD2026"]
     assert calculated["response_evidence"]["source_ids"] == ["H2_INCIDENT", "HIAD2026"]
     assert calculated["evidence_digest"] != idle["evidence_digest"]
+
+
+def test_manifest_records_opt_in_measured_boundary_profile():
+    frame = {
+        "time_s": 12.5,
+        "process_operations": {
+            "settings": {"measured_boundary_calibration": True},
+        },
+    }
+    manifest = build_evidence_manifest(frame, {}, [], False, question="현재 상태")
+    profile = manifest["runtime_calibration"]
+    assert profile["status"] == "active"
+    assert profile["requested"] is True
+    assert profile["profile_id"] == "owner_measured_station_boundary_v1"
+    assert profile["recharge_restart_margin_pa"] == 250000.0
+    assert prompt_evidence_summary(manifest)["runtime_calibration"]["status"] == "active"
+    assert prompt_evidence_header(manifest)["runtime_calibration"]["profile_id"] == (
+        "owner_measured_station_boundary_v1"
+    )
 
 
 def test_manifest_marks_attempt_without_result_and_filters_nonfinite_values():

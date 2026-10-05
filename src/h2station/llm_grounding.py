@@ -13,6 +13,49 @@ import math
 from pathlib import Path
 from typing import Any, Iterable
 
+from .calibration_profiles import load_measured_boundary_calibration
+
+
+def _runtime_calibration_profile(frame: dict[str, Any]) -> dict[str, Any]:
+    """Describe the measured-boundary profile used by this simulator frame.
+
+    The profile is opt-in and only changes the station-boundary recharge
+    hysteresis.  Keeping the status in the evidence envelope prevents a
+    response from presenting a calibrated run and a reference-default run as
+    if they were the same experiment.  Only the sanitized artifact metadata
+    is exposed; raw rows and private identifiers never enter the prompt.
+    """
+
+    operations = frame.get("process_operations") or {}
+    settings = operations.get("settings") or {}
+    requested = settings.get("measured_boundary_calibration") is True
+    profile = load_measured_boundary_calibration() if requested else None
+    if profile is not None:
+        return {
+            "status": "active",
+            "requested": True,
+            "profile_id": profile.profile_id,
+            "evidence_artifact": profile.evidence_artifact,
+            "sampled_rows": profile.sampled_rows,
+            "recharge_restart_margin_pa": profile.recharge_restart_margin_pa,
+            "claim_limit": profile.claim_boundary,
+        }
+    if requested:
+        return {
+            "status": "requested_unavailable",
+            "requested": True,
+            "profile_id": "reference_defaults",
+            "evidence_artifact": None,
+            "claim_limit": "실측 경계 보정 artifact를 읽지 못해 기준값으로 실행됨",
+        }
+    return {
+        "status": "reference_defaults",
+        "requested": False,
+        "profile_id": "reference_defaults",
+        "evidence_artifact": None,
+        "claim_limit": "실측 경계 보정은 선택 적용되지 않음",
+    }
+
 
 def _public_incident_traceability() -> dict[str, Any] | None:
     """Return the committed HIAD-to-playbook coverage summary when available.
@@ -593,6 +636,7 @@ def build_evidence_manifest(
             "field_measurement": False,
             "claim_limit": "모의 계측과 모델 계산이며 현장 안전거리·실측 사고를 확정하지 않음",
         },
+        "runtime_calibration": _runtime_calibration_profile(frame),
         "selected_sensor": selected_sensor,
         "question": question[:1200],
         "signals": {
@@ -666,7 +710,10 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         text = str(value or "")
         return text if len(text) <= limit else text[: limit - 1] + "…"
 
-    summary: dict[str, Any] = {"claim_limit": short(evidence.get("claim_limit"))}
+    summary: dict[str, Any] = {
+        "claim_limit": short(evidence.get("claim_limit")),
+        "runtime_calibration": manifest.get("runtime_calibration") or {},
+    }
     benchmarks = evidence.get("public_experimental_benchmarks")
     if isinstance(benchmarks, dict):
         rows = []
@@ -790,6 +837,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     accident_inventory = evidence.get("public_accident_report_inventory") or {}
     accidental_release = evidence.get("public_accidental_release_evidence") or {}
     return {
+        "runtime_calibration": manifest.get("runtime_calibration") or {},
         "public_experiment_sources": benchmark_ids,
         "public_detector_replay_cases": detector_aggregate.get("case_count"),
         "public_detector_trip_coverage": detector_aggregate.get(
