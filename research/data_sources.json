@@ -722,6 +722,22 @@
       "eligibility_note": "Ten cases expose pressure and Coriolis mass-flow channels. Vent geometry and initial conditions require mapping to the associated open publication. This is not a station-to-vehicle full-loop holdout.",
       "manifest_recheck": "research/mendeley_usn_pressure_peaking_manifest_2026_10_05.json"
     },
+    "metrohyve_gravimetric_hrs_calibration_2020": {
+      "title": "Hydrogen refuelling station calibration with a traceable gravimetric standard",
+      "publisher": "Flow Measurement and Instrumentation / Elsevier / EURAMET MetroHyVe",
+      "landing_page": "https://doi.org/10.1016/j.flowmeasinst.2020.101743",
+      "doi": "10.1016/j.flowmeasinst.2020.101743",
+      "project_url": "https://www.euramet.org/project-16eng01",
+      "citation": "Maury, R., Auclercq, C., Devilliers, C., de Huu, M., Büker, O., and MacDonald, M., Hydrogen refuelling station calibration with a traceable gravimetric standard, Flow Measurement and Instrumentation 74 (2020) 101743.",
+      "license": "CC BY-NC-ND 4.0 article license; raw station-data license not identified",
+      "rights_note": "The article may be cited under its stated license. No machine-readable station logger archive or raw-data reuse terms were identified, so no raw files are copied or redistributed.",
+      "reported_scope": "Real HRS field metrology tests in France, the Netherlands and Germany, covering up to 875 bar and -40 to 85 °C with a traceable gravimetric standard for flow-meter comparison.",
+      "evidence_role": "independent component flow-metrology and uncertainty-boundary evidence",
+      "full_loop_holdout_eligible": false,
+      "component_flow_metrology_eligible": true,
+      "eligibility_note": "Use for meter-bias, dead-volume, pressure-drop and operating-range sanity checks only. It does not expose synchronized vehicle/receptacle channels, station controller state or ESD transitions.",
+      "boundary_record": "research/metrohyve_gravimetric_hrs_calibration_boundary_2026_10_05.json"
+    },
     "kgs_oh_real_hrs_appendix_recheck_2026_10_05": {
       "title": "KGS/Oh real-HRS fueling study public appendix and code-access recheck",
       "publisher": "Korea Gas Safety Corporation / Research Square",

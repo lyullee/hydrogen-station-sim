@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-05T00:00:00Z",
+  "status": "PUBLIC_ARTICLE_COMPONENT_METROLOGY_RECHECKED",
+  "source": {
+    "doi": "10.1016/j.flowmeasinst.2020.101743",
+    "title": "Hydrogen refuelling station calibration with a traceable gravimetric standard",
+    "authors": [
+      "R. Maury",
+      "C. Auclercq",
+      "C. Devilliers",
+      "M. de Huu",
+      "O. Büker",
+      "M. MacDonald"
+    ],
+    "publisher": "Flow Measurement and Instrumentation / Elsevier",
+    "publication_year": 2020,
+    "landing_page": "https://doi.org/10.1016/j.flowmeasinst.2020.101743",
+    "open_article_url": "https://www.sciencedirect.com/science/article/pii/S0955598620300911",
+    "project_url": "https://www.euramet.org/project-16eng01",
+    "license": "CC BY-NC-ND 4.0 (article license observed in Crossref/Elsevier metadata)",
+    "license_source": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+  },
+  "access_recheck": {
+    "crossref_metadata_http_status": 200,
+    "elsevier_metadata_http_status": 200,
+    "open_access_article": true,
+    "raw_machine_readable_station_logger_found": false,
+    "raw_data_license_identified": false,
+    "recheck_note": "The public article and project pages expose methods, ranges and aggregate accuracy findings; no downloadable synchronized station-to-vehicle logger archive was identified."
+  },
+  "observed_scope": {
+    "real_hrs_field_tests": true,
+    "test_regions": [
+      "France",
+      "Netherlands",
+      "Germany"
+    ],
+    "maximum_pressure_bar": 875,
+    "temperature_range_c": [
+      -40,
+      85
+    ],
+    "protocol_context": "SAE J2601 fuelling conditions are referenced for 700 bar HRS operation.",
+    "reference_standard": "Traceable gravimetric standard used for on-site comparison/calibration of HRS flow metering.",
+    "reported_findings": [
+      "Repeatability was reported for the tested HRS configurations.",
+      "Systematic mass-measurement errors can arise from pressure differences and dead volume between the Coriolis flow meter and the dispenser transfer point.",
+      "The flow-meter installation configuration and ambient conditions affect measurement stability and uncertainty."
+    ],
+    "publicly_observable_fields": [
+      "flow-meter/gravimetric comparison results",
+      "pressure and temperature operating ranges",
+      "uncertainty-source descriptions and configuration effects"
+    ],
+    "missing_full_loop_channels": [
+      "machine-readable synchronized vehicle/receptacle pressure and temperature rows",
+      "station controller/PLC state and valve/ESD transitions",
+      "cascade-bank, compressor and dispenser state timeline",
+      "reusable event-level logger archive with a frozen channel dictionary"
+    ]
+  },
+  "eligibility": {
+    "component_flow_metrology_eligible": true,
+    "protocol_operating_range_context_eligible": true,
+    "full_loop_external_holdout_eligible": false,
+    "independent_qra_context_eligible": false,
+    "allowed_use": [
+      "mass-flow meter bias and uncertainty sanity checks",
+      "dead-volume and pressure-drop sensitivity justification",
+      "SAE J2601 operating-range and pre-cooling boundary context",
+      "pre-registration of a station metrology sub-analysis"
+    ],
+    "prohibited_use": [
+      "station-to-vehicle full-loop accuracy score",
+      "vehicle tank thermal validation",
+      "ESD/HAZOP/SAGA effectiveness validation",
+      "reconstruction of raw time-series rows from article figures"
+    ]
+  },
+  "claim_boundary": "This is real HRS field metrology evidence for the flow-measurement component. It strengthens calibration and uncertainty provenance but does not provide an independent synchronized station-to-vehicle logger archive and cannot close the IJHE full-loop or SAGA-effectiveness gates.",
+  "goal_completion_permitted": false
+}

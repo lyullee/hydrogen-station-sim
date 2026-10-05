@@ -1425,3 +1425,9 @@ recorded as `mountain_view_cec_linde_2022` in
 as face-validity context and a data-request lead only. It does not change the
 full-loop validation decision, and no model parameter was fitted to these
 statistics.
+
+## 2026-10-05 MetroHyVe gravimetric HRS calibration boundary
+
+The open-access paper [10.1016/j.flowmeasinst.2020.101743](https://doi.org/10.1016/j.flowmeasinst.2020.101743) reports real HRS field metrology tests in France, the Netherlands and Germany, with a traceable gravimetric standard, 700-bar SAE J2601 context, pressures up to 875 bar and temperatures from -40 to 85 °C. It is a useful independent flow-meter/dead-volume and uncertainty reference.
+
+The public record contains methods, ranges and aggregate findings, but no machine-readable synchronized station-to-vehicle logger archive, vehicle-side channels, controller/ESD transitions or raw-data reuse terms. It is therefore frozen as a component-only lead in [`metrohyve_gravimetric_hrs_calibration_boundary_2026_10_05.json`](metrohyve_gravimetric_hrs_calibration_boundary_2026_10_05.json), with `component_flow_metrology_eligible=true` and `full_loop_external_holdout_eligible=false`. The independent full-loop gate remains open.

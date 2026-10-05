@@ -1,0 +1,7 @@
+# MetroHyVe gravimetric HRS calibration boundary (2026-10-05)
+
+The public article [10.1016/j.flowmeasinst.2020.101743](https://doi.org/10.1016/j.flowmeasinst.2020.101743) reports real hydrogen-refuelling-station field tests in France, the Netherlands and Germany. It covers the 700-bar operating context up to 875 bar and from -40 to 85 °C, and compares dispenser flow-meter readings with a traceable gravimetric standard. The EURAMET MetroHyVe project page describes the same project’s objective: traceable flow metering and calibration facilities for hydrogen refuelling stations ([project page](https://www.euramet.org/project-16eng01)).
+
+The article is open access under CC BY-NC-ND 4.0. The public record exposes methods, operating ranges, uncertainty sources and aggregate comparison findings, but no downloadable synchronized station-to-vehicle logger archive or raw-data reuse terms. The evidence is therefore frozen as **component flow-metrology evidence**. It can justify a pre-registered meter-bias/dead-volume sensitivity check, but it is excluded from the independent full-loop score.
+
+It does not contain the vehicle/receptacle pressure-temperature time series, cascade/compressor/ESD state transitions, or a controller channel dictionary needed to validate the digital twin’s complete fueling loop. It also cannot support a claim about SAGA effectiveness. The machine-readable boundary is in [`metrohyve_gravimetric_hrs_calibration_boundary_2026_10_05.json`](metrohyve_gravimetric_hrs_calibration_boundary_2026_10_05.json).
