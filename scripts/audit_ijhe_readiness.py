@@ -290,8 +290,12 @@ def audit(root: Path) -> dict[str, object]:
     operational_replay_path = root / (
         "research/confidential_operational_envelope_replay_2026_10_06.json"
     )
+    operational_holdout_path = root / (
+        "research/confidential_operational_envelope_holdout_replay_2026_10_06.json"
+    )
     operational_calibration = _json(operational_calibration_path)
     operational_replay = _json(operational_replay_path)
+    operational_holdout = _json(operational_holdout_path)
     operational_eligibility = (operational_calibration or {}).get("eligibility") or {}
     operational_replay_eligibility = (operational_replay or {}).get("eligibility") or {}
     operational_calibration_pass = bool(
@@ -322,6 +326,20 @@ def audit(root: Path) -> dict[str, object]:
         and (operational_replay or {}).get("replay", {}).get("esd_triggered") is False
         and operational_replay_eligibility.get("station_boundary_integration_check") is True
         and operational_replay_eligibility.get("independent_full_station_vehicle_validation") is False
+        and (operational_holdout or {}).get("schema_version") == 1
+        and (operational_holdout or {}).get("artifact_type")
+        == "confidential_operational_envelope_holdout_replay"
+        and (operational_holdout or {}).get("source_identifiers_published") is False
+        and (operational_holdout or {}).get("raw_rows_persisted") is False
+        and (operational_holdout or {}).get("split", {}).get("fit_used_holdout") is False
+        and (operational_holdout or {}).get("split", {}).get("outcome_used_for_fit") is False
+        and (operational_holdout or {}).get("replay", {}).get("trajectory_completed") is True
+        and (operational_holdout or {}).get("eligibility", {}).get(
+            "time_ordered_measured_boundary_holdout_supported"
+        ) is True
+        and (operational_holdout or {}).get("eligibility", {}).get(
+            "independent_full_loop_validation_supported"
+        ) is False
     )
     gates.append(_gate(
         "confidential_operational_envelope_calibration_integrity",
@@ -329,8 +347,8 @@ def audit(root: Path) -> dict[str, object]:
             "FAIL" if operational_calibration or operational_replay else "PENDING"
         ),
         "The owner-controlled operational-envelope aggregate is privacy-bounded and passes through a measured-boundary runtime replay without being promoted to full-loop validation.",
-        f"{operational_calibration_path.relative_to(root)}; {operational_replay_path.relative_to(root)}",
-        "De-identified aggregate, retained quality boundary, explicit missing vehicle/flow semantics, opt-in profile linkage and a completed protection-aware replay.",
+        f"{operational_calibration_path.relative_to(root)}; {operational_replay_path.relative_to(root)}; {operational_holdout_path.relative_to(root)}",
+        "De-identified aggregate, retained quality boundary, explicit missing vehicle/flow semantics, opt-in profile linkage, a completed protection-aware replay and an untouched chronological suffix holdout.",
         {
             "files_read": (operational_calibration or {}).get("files_read"),
             "sampled_rows": (operational_calibration or {}).get("sampled_rows"),
@@ -339,6 +357,11 @@ def audit(root: Path) -> dict[str, object]:
             "simulated_samples": (operational_replay or {}).get("replay", {}).get("simulated_samples"),
             "esd_triggered": (operational_replay or {}).get("replay", {}).get("esd_triggered"),
             "full_station_vehicle_validation": operational_eligibility.get("full_station_vehicle_validation"),
+            "holdout_calibration_points": (operational_holdout or {}).get("split", {}).get("calibration_points"),
+            "holdout_points": (operational_holdout or {}).get("split", {}).get("holdout_points"),
+            "holdout_trajectory_completed": (operational_holdout or {}).get("replay", {}).get("trajectory_completed"),
+            "holdout_fit_used": (operational_holdout or {}).get("split", {}).get("fit_used_holdout"),
+            "holdout_full_loop_validation": (operational_holdout or {}).get("eligibility", {}).get("independent_full_loop_validation_supported"),
         } if operational_calibration and operational_replay else "missing",
     ))
 

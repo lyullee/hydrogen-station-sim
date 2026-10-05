@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_operational_envelope_holdout_replay",
+  "recorded_at": "2026-10-06",
+  "source_scope": "confidential owner-controlled station logger; de-identified single trace slice",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "provenance_boundary": {
+    "operator_published": false,
+    "site_published": false,
+    "exact_source_dates_published": false,
+    "manufacturer_or_model_published": false,
+    "tag_names_published": false,
+    "raw_archive_in_repository": false
+  },
+  "split": {
+    "calibration_fraction": 0.7,
+    "calibration_points": 998,
+    "holdout_points": 30,
+    "calibration_duration_s": 60432.0,
+    "holdout_duration_s": 1755.0,
+    "calibration_window": "chronological prefix",
+    "holdout_window": "later untouched suffix",
+    "fit_used_holdout": false,
+    "outcome_used_for_fit": false
+  },
+  "calibration": {
+    "recharge_restart_margin_pa": 490000.0,
+    "source_window": "chronological_prefix_only"
+  },
+  "replay": {
+    "trajectory_completed": true,
+    "simulated_duration_s": 1755.0,
+    "simulated_samples": 1756,
+    "active_vehicle": "vehicle_1",
+    "control_period_s": 1.0,
+    "esd_triggered": false
+  },
+  "eligibility": {
+    "time_ordered_measured_boundary_holdout_supported": true,
+    "independent_full_loop_validation_supported": false,
+    "vehicle_receptacle_channels_present": false,
+    "dispenser_protocol_channels_present": false,
+    "temperature_boundary_role_attested": false,
+    "mass_flow_units_attested": false
+  },
+  "claim_boundary": "This artifact documents a time-ordered measured operational-envelope boundary replay. It is not an accuracy result for the complete station-to-vehicle loop, an accident-frequency estimate, or a safety certification."
+}

@@ -420,6 +420,47 @@ def _confidential_measured_boundary_evidence() -> dict[str, Any] | None:
             ) is True,
             "claim_limit": str(holdout.get("claim_boundary") or ""),
         }
+    operational_holdout_path = Path(__file__).resolve().parents[2] / (
+        "research/confidential_operational_envelope_holdout_replay_2026_10_06.json"
+    )
+    try:
+        operational_holdout = json.loads(
+            operational_holdout_path.read_text(encoding="utf-8")
+        )
+    except (OSError, ValueError):
+        operational_holdout = None
+    if (
+        isinstance(operational_holdout, dict)
+        and operational_holdout.get("artifact_type")
+        == "confidential_operational_envelope_holdout_replay"
+        and operational_holdout.get("source_identifiers_published") is False
+        and operational_holdout.get("raw_rows_persisted") is False
+    ):
+        split = operational_holdout.get("split") or {}
+        calibration = operational_holdout.get("calibration") or {}
+        replay = operational_holdout.get("replay") or {}
+        eligibility = operational_holdout.get("eligibility") or {}
+        result["operational_envelope_holdout"] = {
+            "artifact": (
+                "research/confidential_operational_envelope_holdout_replay_2026_10_06.json"
+            ),
+            "calibration_points": split.get("calibration_points"),
+            "holdout_points": split.get("holdout_points"),
+            "fit_used_holdout": split.get("fit_used_holdout") is True,
+            "outcome_used_for_fit": split.get("outcome_used_for_fit") is True,
+            "calibration_restart_margin_pa": calibration.get(
+                "recharge_restart_margin_pa"
+            ),
+            "trajectory_completed": replay.get("trajectory_completed") is True,
+            "esd_triggered": replay.get("esd_triggered") is True,
+            "time_ordered_holdout_supported": eligibility.get(
+                "time_ordered_measured_boundary_holdout_supported"
+            ) is True,
+            "independent_full_loop_validation_supported": eligibility.get(
+                "independent_full_loop_validation_supported"
+            ) is True,
+            "claim_limit": str(operational_holdout.get("claim_boundary") or ""),
+        }
     return result
 
 
@@ -866,6 +907,21 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                     "independent_full_loop_validation_supported",
                 ) if holdout.get(key) is not None
             }
+        operational_holdout = confidential.get("operational_envelope_holdout")
+        if isinstance(operational_holdout, dict):
+            summary["confidential_measured_boundary_replay"][
+                "operational_envelope_holdout"
+            ] = {
+                key: operational_holdout.get(key)
+                for key in (
+                    "calibration_points", "holdout_points", "fit_used_holdout",
+                    "outcome_used_for_fit", "calibration_restart_margin_pa",
+                    "trajectory_completed", "esd_triggered",
+                    "time_ordered_holdout_supported",
+                    "independent_full_loop_validation_supported",
+                )
+                if operational_holdout.get(key) is not None
+            }
     lifecycle = evidence.get("confidential_lifecycle_counter_summary")
     if isinstance(lifecycle, dict):
         summary["confidential_lifecycle_counter_summary"] = {
@@ -916,6 +972,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     detector_aggregate = detector.get("aggregate") or {}
     confidential = evidence.get("confidential_measured_boundary_replay") or {}
     holdout = confidential.get("temporal_holdout") or {}
+    operational_holdout = confidential.get("operational_envelope_holdout") or {}
     lifecycle = evidence.get("confidential_lifecycle_counter_summary") or {}
     station_calibration = evidence.get("confidential_station_boundary_calibration") or {}
     incident = evidence.get("public_incident_traceability") or {}
@@ -960,6 +1017,20 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         "confidential_boundary_holdout": holdout.get(
             "time_ordered_holdout_supported"
         ) is True,
+        "confidential_operational_envelope_holdout": {
+            "calibration_points": operational_holdout.get("calibration_points"),
+            "holdout_points": operational_holdout.get("holdout_points"),
+            "trajectory_completed": operational_holdout.get(
+                "trajectory_completed"
+            ) is True,
+            "fit_used_holdout": operational_holdout.get("fit_used_holdout") is True,
+            "outcome_used_for_fit": operational_holdout.get(
+                "outcome_used_for_fit"
+            ) is True,
+            "independent_full_loop_validation_supported": operational_holdout.get(
+                "independent_full_loop_validation_supported"
+            ) is True,
+        },
         "full_loop_validation_supported": confidential.get(
             "independent_full_loop_validation_supported"
         ) is True,

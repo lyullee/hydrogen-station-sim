@@ -127,6 +127,16 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert holdout["outcome_used_for_fit"] is False
     assert holdout["time_ordered_holdout_supported"] is True
     assert holdout["independent_full_loop_validation_supported"] is False
+    operational_holdout = confidential["operational_envelope_holdout"]
+    assert operational_holdout["calibration_points"] == 998
+    assert operational_holdout["holdout_points"] == 30
+    assert operational_holdout["fit_used_holdout"] is False
+    assert operational_holdout["outcome_used_for_fit"] is False
+    assert operational_holdout["trajectory_completed"] is True
+    assert operational_holdout["independent_full_loop_validation_supported"] is False
+    assert prompt_evidence_header(idle)["confidential_operational_envelope_holdout"][
+        "trajectory_completed"
+    ] is True
     benchmarks = idle["response_evidence"]["public_experimental_benchmarks"]
     assert len(benchmarks["sources"]) == 2
     nrel_trace = next(item for item in benchmarks["sources"] if item["id"] == "NREL_HDVS_2022_TANK_HOSE_TRACE")
