@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "recorded_at": "2026-10-04T19:21:38.052365+00:00",
+  "recorded_at": "2026-10-05",
   "status": "software_contract_verified",
   "scope": [
     "digital-twin main assistant",
@@ -10,13 +10,13 @@
   "manifest_schema": "h2station.llm-evidence.v1",
   "tests": {
     "targeted": {
-      "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_digital_twin_direct_qa.py -q",
-      "passed": 18,
-      "warnings": 4
+      "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_digital_twin_direct_qa.py tests/test_hiad_action_playbook_coverage.py tests/test_hiad_accident_response_coverage_evaluation.py -q",
+      "passed": 14,
+      "warnings": 2
     },
     "full_suite": {
       "command": ".venv\\Scripts\\python.exe -m pytest -q",
-      "passed": 509,
+      "passed": 555,
       "failed": 0,
       "warnings": 16
     }
@@ -33,7 +33,8 @@
     "public KHK accident-report inventory and citation link are carried into the evidence envelope without mirrored report text",
     "public KHK scenario-precedent map links all 23 citation records to conservative response families without exposing report text or frequency claims",
     "consequence flow-boundary mismatches are exposed when HyRAM recomputes a high-pressure choked flow instead of silently presenting it as the supplied process flow",
-    "public HIAD action categories are evaluated case-by-case against required staged response plans without using raw action text or making an effectiveness claim"
+    "public HIAD action categories are evaluated case-by-case against required staged response plans without using raw action text or making an effectiveness claim",
+    "derived HIAD action-category counts and the action-evidence artifact digest are carried into the hashed runtime envelope without raw incident prose"
   ],
   "not_established": [
     "physics validity of the consequence model",
@@ -107,5 +108,14 @@
       "isolation_failure": 2,
       "overpressure": 3
     }
+  },
+  "runtime_action_taxonomy": {
+    "manifest_field": "response_evidence.public_incident_traceability.action_taxonomy",
+    "artifact": "research/hiad_action_evidence.json",
+    "artifact_sha256": "72f2550eabea6a4207a5d59c98bd99520e217fd2d4f8597e5d1d72f2ef87e1dd",
+    "raw_text_retained": false,
+    "holdout_use": false,
+    "category_count": 8,
+    "interpretation": "compact public-incident grounding metadata only; no correctness, safety, effectiveness or probability claim"
   }
 }

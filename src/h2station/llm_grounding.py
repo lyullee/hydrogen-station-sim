@@ -30,7 +30,7 @@ def _public_incident_traceability() -> dict[str, Any] | None:
     aggregate = record.get("aggregate") or {}
     if record.get("status") != "completed_public_action_to_playbook_traceability_audit":
         return None
-    return {
+    result: dict[str, Any] = {
         "artifact": "research/hiad_action_playbook_coverage.json",
         "evidence_role": str(record.get("evidence_role") or ""),
         "category_count": aggregate.get("category_count"),
@@ -40,6 +40,38 @@ def _public_incident_traceability() -> dict[str, Any] | None:
         "contract_pass": aggregate.get("contract_pass") is True,
         "claim_limit": str(record.get("claim_boundary") or ""),
     }
+    # Pass only the compact, derived action taxonomy to the model.  The raw
+    # HIAD narrative remains outside the prompt; the digest links the
+    # category counts back to the public workbook without implying that the
+    # observed actions were safe, effective or statistically representative.
+    action_path = path.parent / "hiad_action_evidence.json"
+    try:
+        action_record = json.loads(action_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        action_record = None
+    action_source = (action_record or {}).get("source") or {}
+    action_taxonomy = (action_record or {}).get("taxonomy") or {}
+    action_status = (action_record or {}).get("status")
+    expected_digest = (record.get("source") or {}).get("action_evidence_sha256")
+    if (
+        isinstance(action_record, dict)
+        and action_status == "derived_non_evaluative_action_taxonomy"
+        and sha256(action_path.read_bytes()).hexdigest() == expected_digest
+        and action_record.get("case_count") == aggregate.get("case_count")
+        and action_record.get("source", {}).get("raw_text_retained") is False
+        and action_record.get("source", {}).get("holdout_use") is False
+    ):
+        result["action_taxonomy"] = {
+            "artifact": "research/hiad_action_evidence.json",
+            "artifact_sha256": expected_digest,
+            "source_sha256": action_source.get("sha256"),
+            "category_patterns_version": action_taxonomy.get("category_patterns_version"),
+            "category_counts": dict(sorted((action_taxonomy.get("category_counts") or {}).items())),
+            "raw_text_retained": False,
+            "holdout_use": False,
+            "claim_limit": str(action_record.get("claim_boundary") or ""),
+        }
+    return result
 
 
 def _khk_public_accident_inventory() -> dict[str, Any] | None:

@@ -17,6 +17,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert traceability["covered_case_count"] == 34
     assert traceability["contract_pass"] is True
     assert "does not judge incident actions" in traceability["claim_limit"]
+    taxonomy = traceability["action_taxonomy"]
+    assert taxonomy["raw_text_retained"] is False
+    assert taxonomy["holdout_use"] is False
+    assert taxonomy["category_patterns_version"] == "hiad-action-taxonomy-v1"
+    assert sum(taxonomy["category_counts"].values()) > 0
+    assert "does not judge whether an action was correct or safe" in taxonomy["claim_limit"]
     accident_inventory = idle["response_evidence"]["public_accident_report_inventory"]
     assert accident_inventory["public_report_count"] == 23
     assert accident_inventory["incident_code_count"] == 26

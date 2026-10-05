@@ -1,6 +1,6 @@
 # LLM evidence-grounding validation
 
-**Recorded:** 2026-10-04  
+**Recorded:** 2026-10-05
 **Scope:** digital-twin main assistant and selected-sensor assistant routes
 
 This record documents a software-level grounding check. It is not a human
@@ -21,6 +21,8 @@ contains:
   included per condition and in an aggregate source list;
 - public HIAD action-to-playbook traceability metadata with an explicit
   non-efficacy claim boundary;
+- a compact HIAD action taxonomy (eight derived action categories, category
+  counts and the action-evidence artifact digest) without raw incident prose;
 - public KHK accident-report inventory metadata (23 linked reports, 26 incident
   codes and 8 precaution reports) with citation-only rights and no mirrored PDF
   text;
@@ -45,11 +47,11 @@ distances. An LLM response is not allowed to turn `not_requested` or
 The following tests passed in the repository virtual environment:
 
 ```text
-.venv\Scripts\python.exe -m pytest tests/test_llm_grounding.py tests/test_digital_twin_direct_qa.py -q
-11 passed, 2 warnings
+.venv\Scripts\python.exe -m pytest tests/test_llm_grounding.py tests/test_digital_twin_direct_qa.py tests/test_hiad_action_playbook_coverage.py tests/test_hiad_accident_response_coverage_evaluation.py -q
+14 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-509 passed, 16 warnings
+555 passed, 16 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -58,8 +60,10 @@ results and input tags, non-finite values are discarded, the main and sensor
 assistant routes remain isolated, and a generated answer cannot negate a
 confirmed alarm, gas observation, physical leak or calculated impact.
 The manifest digest now also covers the public response-source identifiers, the
-HIAD action-to-playbook traceability metadata, and the KHK citation inventory
-used to ground the staged action plan.
+HIAD action-to-playbook traceability metadata, the derived HIAD action-category
+counts and their artifact digest, and the KHK citation inventory used to ground
+the staged action plan. Raw HIAD action prose is never inserted into the live
+prompt.
 
 The consequence handoff also records whether a supplied process-flow boundary
 was retained.  If HyRAM's high-pressure choked-flow path recomputes a different
