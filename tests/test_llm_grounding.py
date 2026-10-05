@@ -71,6 +71,16 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     early = prompt_evidence_summary(idle)
     assert early["impact_status"] == "not_requested"
     assert early["public_experimental_benchmarks"]["sources"]
+    hitrf = idle["response_evidence"]["public_hitrf_operational_reference"]
+    assert hitrf["source"]["raw_synchronized_logger_public"] is False
+    assert hitrf["storage"]["low_pressure"]["maximum_pressure_mpa"] == 20.0
+    assert hitrf["storage"]["medium_pressure"]["tank_count"] == 6
+    assert hitrf["storage"]["high_pressure"]["maximum_pressure_mpa"] == 90.0
+    assert len(hitrf["compression_stages"]) == 4
+    assert hitrf["dispensing_and_thermal"]["chiller_target_temperature_c"] == -40
+    assert early["public_hitrf_operational_reference"]["source"][
+        "raw_synchronized_logger_public"
+    ] is False
     assert early["public_detector_logic_evidence"]["aggregate"]["case_count"] == 22
     assert early["confidential_local_accident_response_coverage"][
         "case_with_missing_stage_count"
@@ -88,6 +98,11 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert header["public_accident_evidence"]["action_category_counts"][
         "shutdown_isolation_depressurization"
     ] == 22
+    assert header["public_hitrf_operational_reference"]["raw_synchronized_logger_public"] is False
+    assert header["public_hitrf_operational_reference"]["storage_tiers"] == [
+        "high_pressure", "low_pressure", "medium_pressure"
+    ]
+    assert header["public_hitrf_operational_reference"]["compression_stage_count"] == 4
     assert header["confidential_local_accident_response_coverage"][
         "case_count"
     ] == 322

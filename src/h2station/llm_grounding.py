@@ -565,6 +565,83 @@ def _public_experimental_benchmarks() -> dict[str, Any] | None:
     }
 
 
+def _public_hitrf_operational_reference() -> dict[str, Any] | None:
+    """Expose a public facility envelope without treating it as raw validation.
+
+    The HITRF page describes real storage, compression and thermal equipment,
+    but it does not publish synchronized logger rows.  Keeping this reference
+    separate from experimental benchmarks lets the assistant explain scale and
+    operating-envelope differences while preserving the full-loop validation
+    boundary.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/nlr_hitrf_public_operational_reference_2026_10_06.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    runtime = record.get("runtime_use") or {}
+    if (
+        record.get("artifact_type") != "public_facility_operational_reference"
+        or record.get("status") != "public_facility_operational_reference"
+        or source.get("raw_synchronized_logger_public") is not False
+        or not source.get("url")
+        or not runtime.get("claim_boundary")
+    ):
+        return None
+
+    def compact_equipment(value: Any) -> dict[str, Any]:
+        return {
+            str(key): item
+            for key, item in (value or {}).items()
+            if isinstance(item, (str, int, float, bool))
+            and not (isinstance(item, float) and not math.isfinite(item))
+        }
+
+    storage = record.get("storage") or {}
+    storage_rows = {
+        str(tier): compact_equipment(values)
+        for tier, values in storage.items()
+        if isinstance(values, dict)
+    }
+    compression_rows = [
+        compact_equipment(values)
+        for values in record.get("compression", {}).get("stages") or []
+        if isinstance(values, dict)
+    ]
+    thermal = record.get("dispensing_and_thermal") or {}
+    return {
+        "artifact": "research/nlr_hitrf_public_operational_reference_2026_10_06.json",
+        "evidence_role": str(record.get("evidence_role") or ""),
+        "source": {
+            "title": str(source.get("title") or ""),
+            "institution": str(source.get("institution") or ""),
+            "url": str(source.get("url") or ""),
+            "public_page_describes_automated_logging": (
+                source.get("public_page_describes_automated_logging") is True
+            ),
+            "raw_synchronized_logger_public": False,
+        },
+        "storage": storage_rows,
+        "compression_stages": compression_rows,
+        "dispensing_and_thermal": {
+            key: thermal.get(key)
+            for key in (
+                "dispensing_pressures", "chiller_target_temperature_c",
+                "chiller_idle_energy_kwh_per_day", "chiller_recovery_energy_kwh_per_fill",
+                "research_dispenser_adjustable_fields",
+            )
+            if thermal.get(key) is not None
+        },
+        "eligible_for": [str(value) for value in runtime.get("eligible_for") or []],
+        "not_eligible_for": [str(value) for value in runtime.get("not_eligible_for") or []],
+        "claim_limit": str(runtime.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_lifecycle_evidence() -> dict[str, Any] | None:
     """Expose only de-identified lifecycle-counter calibration context."""
 
@@ -837,6 +914,11 @@ def build_evidence_manifest(
     public_benchmarks = _public_experimental_benchmarks()
     if public_benchmarks is not None:
         envelope["response_evidence"]["public_experimental_benchmarks"] = public_benchmarks
+    hitrf_reference = _public_hitrf_operational_reference()
+    if hitrf_reference is not None:
+        envelope["response_evidence"][
+            "public_hitrf_operational_reference"
+        ] = hitrf_reference
     lifecycle = _confidential_lifecycle_evidence()
     if lifecycle is not None:
         envelope["response_evidence"]["confidential_lifecycle_counter_summary"] = lifecycle
@@ -894,6 +976,19 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "sources": rows,
                 "claim_limit": short(benchmarks.get("claim_limit")),
             }
+    hitrf_reference = evidence.get("public_hitrf_operational_reference")
+    if isinstance(hitrf_reference, dict):
+        summary["public_hitrf_operational_reference"] = {
+            "source": hitrf_reference.get("source") or {},
+            "storage": hitrf_reference.get("storage") or {},
+            "compression_stages": hitrf_reference.get("compression_stages") or [],
+            "dispensing_and_thermal": hitrf_reference.get(
+                "dispensing_and_thermal"
+            ) or {},
+            "eligible_for": hitrf_reference.get("eligible_for") or [],
+            "not_eligible_for": hitrf_reference.get("not_eligible_for") or [],
+            "claim_limit": short(hitrf_reference.get("claim_limit")),
+        }
     detector = evidence.get("public_detector_logic_evidence")
     if isinstance(detector, dict):
         aggregate = detector.get("aggregate") or {}
@@ -1024,6 +1119,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
 
     evidence = manifest.get("response_evidence") or {}
     benchmarks = evidence.get("public_experimental_benchmarks") or {}
+    hitrf_reference = evidence.get("public_hitrf_operational_reference") or {}
     benchmark_ids = [
         str(source.get("id"))
         for source in benchmarks.get("sources") or []
@@ -1047,6 +1143,19 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     return {
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "public_experiment_sources": benchmark_ids,
+        "public_hitrf_operational_reference": {
+            "source_url": (hitrf_reference.get("source") or {}).get("url"),
+            "raw_synchronized_logger_public": (
+                (hitrf_reference.get("source") or {}).get(
+                    "raw_synchronized_logger_public"
+                ) is True
+            ),
+            "storage_tiers": sorted((hitrf_reference.get("storage") or {}).keys()),
+            "compression_stage_count": len(
+                hitrf_reference.get("compression_stages") or []
+            ),
+            "claim_limit": hitrf_reference.get("claim_limit"),
+        },
         "public_detector_replay_cases": detector_aggregate.get("case_count"),
         "public_detector_trip_coverage": detector_aggregate.get(
             "mean_trip_sensor_coverage_fraction"

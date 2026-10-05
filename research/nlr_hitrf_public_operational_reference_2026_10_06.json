@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_facility_operational_reference",
+  "recorded_at": "2026-10-06",
+  "status": "public_facility_operational_reference",
+  "evidence_role": "public real-facility envelope for face-validity and operator-language grounding",
+  "source": {
+    "title": "Hydrogen Infrastructure Testing and Research Facility (HITRF)",
+    "institution": "National Laboratory of the Rockies",
+    "url": "https://www.nlr.gov/hydrogen/hitrf-animation",
+    "public_page_describes_automated_logging": true,
+    "raw_synchronized_logger_public": false,
+    "source_scope": "facility description and stated equipment ratings; no raw time-series rows"
+  },
+  "storage": {
+    "low_pressure": {
+      "tank_count": 11,
+      "maximum_pressure_bar": 200,
+      "maximum_pressure_mpa": 20.0,
+      "reported_capacity_kg": 190
+    },
+    "medium_pressure": {
+      "tank_count": 6,
+      "maximum_pressure_bar": 415,
+      "maximum_pressure_mpa": 41.5,
+      "reported_capacity_kg": 85
+    },
+    "high_pressure": {
+      "tank_count": 6,
+      "tank_type": "Type II",
+      "maximum_pressure_bar": 900,
+      "maximum_pressure_mpa": 90.0,
+      "reported_capacity_kg": 90
+    }
+  },
+  "compression": {
+    "stages": [
+      {
+        "inlet_pressure_bar": 7,
+        "outlet_pressure_bar": 415,
+        "capacity_kg_per_day": 50,
+        "technology": "diaphragm"
+      },
+      {
+        "inlet_pressure_bar": 415,
+        "outlet_pressure_bar": 900,
+        "capacity_kg_per_day": 480,
+        "technology": "hydraulic piston"
+      },
+      {
+        "inlet_pressure_bar": 20,
+        "outlet_pressure_bar": 478,
+        "capacity_kg_per_hour": 60,
+        "technology": "diaphragm"
+      },
+      {
+        "inlet_pressure_bar": 478,
+        "outlet_pressure_bar": 930,
+        "capacity_kg_per_hour": 60,
+        "technology": "diaphragm"
+      }
+    ]
+  },
+  "dispensing_and_thermal": {
+    "dispensing_pressures": ["H70", "H35"],
+    "chiller_target_temperature_c": -40,
+    "chiller_idle_energy_kwh_per_day": 44,
+    "chiller_recovery_energy_kwh_per_fill": 4,
+    "research_dispenser_adjustable_fields": [
+      "gas_temperature",
+      "pressure_ramp",
+      "mass_flow"
+    ]
+  },
+  "runtime_use": {
+    "eligible_for": [
+      "public real-facility operating-envelope comparison",
+      "LLM explanation of why storage pressure tiers and compressor stages differ",
+      "sanity checks for simulated compressor and precooler settings"
+    ],
+    "not_eligible_for": [
+      "station-to-vehicle row-level validation",
+      "ESD, valve-feedback or protocol conformance validation",
+      "generic design certification or safety-distance determination",
+      "replacement of the private de-identified calibration artifacts"
+    ],
+    "claim_boundary": "This is a citation-bounded facility reference, not a raw dataset or a validation result. Do not infer unreported transients, uncertainties, control logic or accident performance."
+  }
+}
