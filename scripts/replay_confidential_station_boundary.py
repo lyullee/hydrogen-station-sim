@@ -191,9 +191,15 @@ def main() -> int:
     calibrated_hysteresis_pa: float | None = None
     if args.calibration is not None:
         calibration = json.loads(args.calibration.read_text(encoding="utf-8"))
-        if calibration.get("artifact_type") != "confidential_station_boundary_calibration":
+        if calibration.get("artifact_type") == "confidential_station_boundary_calibration":
+            value = calibration.get("calibration", {}).get("recharge_restart_margin_pa")
+        elif calibration.get("artifact_type") in {
+            "confidential_station_boundary_calibration_summary",
+            "confidential_operational_envelope_calibration_summary",
+        }:
+            value = calibration.get("recommended_recharge_restart_margin_pa")
+        else:
             raise ValueError("--calibration is not a station boundary calibration artifact")
-        value = calibration.get("calibration", {}).get("recharge_restart_margin_pa")
         if value is not None:
             calibrated_hysteresis_pa = float(value)
             if calibrated_hysteresis_pa <= 0.0:

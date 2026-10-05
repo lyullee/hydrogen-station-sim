@@ -104,9 +104,10 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     station_calibration = idle["response_evidence"][
         "confidential_station_boundary_calibration"
     ]
-    assert station_calibration["sampled_rows"] == 2000
-    assert station_calibration["boundary_pressure_mpa"]["min"] == 51.95075
-    assert station_calibration["recommended_recharge_restart_margin_pa"] == 250000.0
+    assert station_calibration["sampled_rows"] == 10896
+    assert station_calibration["boundary_pressure_mpa"]["min"] == 56.295
+    assert station_calibration["recommended_recharge_restart_margin_pa"] == 540000.0
+    assert station_calibration["state_transition_count"] == 274
     assert station_calibration["full_station_vehicle_validation"] is False
     confidential = idle["response_evidence"]["confidential_measured_boundary_replay"]
     assert confidential["trajectory_completed"] is True
@@ -159,11 +160,11 @@ def test_manifest_records_opt_in_measured_boundary_profile():
     profile = manifest["runtime_calibration"]
     assert profile["status"] == "active"
     assert profile["requested"] is True
-    assert profile["profile_id"] == "owner_measured_station_boundary_v1"
-    assert profile["recharge_restart_margin_pa"] == 250000.0
+    assert profile["profile_id"] == "owner_measured_operational_envelope_v1"
+    assert profile["recharge_restart_margin_pa"] == 540000.0
     assert prompt_evidence_summary(manifest)["runtime_calibration"]["status"] == "active"
     assert prompt_evidence_header(manifest)["runtime_calibration"]["profile_id"] == (
-        "owner_measured_station_boundary_v1"
+        "owner_measured_operational_envelope_v1"
     )
 
 

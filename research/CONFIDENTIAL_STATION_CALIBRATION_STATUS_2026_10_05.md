@@ -116,3 +116,20 @@ For a time-ordered private holdout, use
 alignment quality and protection outcome to the output path outside the
 repository. The approved aggregate result is summarized in
 `research/confidential_measured_boundary_holdout_2026_10_06.json`.
+
+## Follow-up aggregate (2026-10-06)
+
+An additional owner-controlled equipment/bank-boundary logger aggregate was
+processed without persisting raw rows. It covers eight de-identified files and
+10,896 sampled rows with a 61-second median sample period, no quality warnings,
+and 274 discrete-state transitions. Its observed boundary pressure aggregate
+was 56.295–63.360 MPa and its conservative restart margin estimate was
+0.540 MPa. The sanitized result is
+`research/confidential_operational_envelope_calibration_summary_2026_10_06.json`.
+
+The opt-in measured-boundary profile now prefers this broader aggregate. It
+changes only the virtual station recharge hysteresis when the operator checks
+`실측 경계 보정`; reference-default runs remain unchanged. The logger still
+does not provide vehicle-side pressure/SOC, dispenser protocol state, or an
+attested flow unit, so this is a station-boundary operating-envelope
+calibration and not a full-loop validation.

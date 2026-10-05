@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_operational_envelope_replay",
+  "recorded_at": "2026-10-06",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "exact_source_dates_published": false,
+  "input_boundary": {
+    "source_mode": "owner-controlled pressure boundary",
+    "mapped_profile_points": 1426,
+    "profile_duration_s": 86357.0,
+    "pressure_profile_used": true,
+    "temperature_profile_used": false
+  },
+  "calibration": {
+    "profile_id": "owner_measured_operational_envelope_v1",
+    "aggregate_margin_applied": true,
+    "recharge_restart_margin_pa": 540000.0
+  },
+  "replay": {
+    "requested_duration_s": 120.0,
+    "simulated_duration_s": 120.0,
+    "simulated_samples": 121,
+    "esd_triggered": false,
+    "control_period_s": 1.0
+  },
+  "eligibility": {
+    "station_boundary_integration_check": true,
+    "independent_full_station_vehicle_validation": false
+  },
+  "claim_boundary": "Controlled measured-boundary integration replay only. It demonstrates that an owner-approved pressure boundary and the opt-in operational-envelope margin pass through the protection-aware runtime; it is not an accuracy, safety-distance, or certification result."
+}

@@ -527,23 +527,30 @@ def _confidential_lifecycle_evidence() -> dict[str, Any] | None:
 def _confidential_station_calibration_evidence() -> dict[str, Any] | None:
     """Expose bounded pressure-log calibration context to the assistant."""
 
-    path = Path(__file__).resolve().parents[2] / (
-        "research/confidential_station_boundary_calibration_summary_2026_10_06.json"
-    )
+    profile = load_measured_boundary_calibration()
+    if profile is None:
+        return None
+    path = Path(__file__).resolve().parents[2] / profile.evidence_artifact
     try:
         record = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
+    except (OSError, ValueError, json.JSONDecodeError):
         return None
     if (
-        record.get("artifact_type") != "confidential_station_boundary_calibration_summary"
+        record.get("artifact_type") not in {
+            "confidential_station_boundary_calibration_summary",
+            "confidential_operational_envelope_calibration_summary",
+        }
         or record.get("source_identifiers_published") is not False
         or record.get("raw_rows_persisted") is not False
     ):
         return None
     pressure = record.get("boundary_pressure_mpa") or {}
     return {
-        "artifact": "research/confidential_station_boundary_calibration_summary_2026_10_06.json",
+        "artifact": profile.evidence_artifact,
         "evidence_role": "confidential measured station-boundary calibration",
+        "profile_id": profile.profile_id,
+        "source_scope": profile.source_scope,
+        "files_read": record.get("files_read"),
         "sampled_rows": record.get("sampled_rows"),
         "duration_s": record.get("duration_s"),
         "boundary_pressure_mpa": {
@@ -557,6 +564,8 @@ def _confidential_station_calibration_evidence() -> dict[str, Any] | None:
         "recommended_recharge_restart_margin_pa": record.get(
             "recommended_recharge_restart_margin_pa"
         ),
+        "state_transition_count": record.get("state_transition_count"),
+        "channel_roles": list(record.get("channel_roles") or []),
         "station_boundary_calibration_supported": (
             record.get("eligibility", {}).get("station_boundary_calibration_supported")
             is True
@@ -863,9 +872,11 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         summary["confidential_station_boundary_calibration"] = {
             key: station_calibration.get(key)
             for key in (
-                "evidence_role", "sampled_rows", "duration_s",
+                "evidence_role", "profile_id", "source_scope", "files_read",
+                "sampled_rows", "duration_s",
                 "boundary_pressure_mpa", "positive_pressure_ramp_p95_pa_s",
                 "recommended_recharge_restart_margin_pa",
+                "state_transition_count", "channel_roles",
                 "station_boundary_calibration_supported",
                 "full_station_vehicle_validation", "claim_limit",
             )
@@ -947,11 +958,15 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             ) is True,
         },
         "confidential_station_boundary_calibration": {
+            "profile_id": station_calibration.get("profile_id"),
+            "evidence_artifact": station_calibration.get("artifact"),
+            "files_read": station_calibration.get("files_read"),
             "sampled_rows": station_calibration.get("sampled_rows"),
             "pressure_range_mpa": station_calibration.get("boundary_pressure_mpa"),
             "recharge_restart_margin_pa": station_calibration.get(
                 "recommended_recharge_restart_margin_pa"
             ),
+            "state_transition_count": station_calibration.get("state_transition_count"),
             "full_station_vehicle_validation": station_calibration.get(
                 "full_station_vehicle_validation"
             ) is True,

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_operational_envelope_calibration_summary",
+  "profile_id": "owner_measured_operational_envelope_v1",
+  "recorded_at": "2026-10-06",
+  "source_scope": "confidential owner-controlled station equipment and bank-boundary logger aggregate",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "exact_source_dates_published": false,
+  "files_read": 8,
+  "sampled_rows": 10896,
+  "duration_s": 659751.0,
+  "median_sample_period_s": 61.0,
+  "maximum_gap_s": 64.0,
+  "boundary_pressure_mpa": {
+    "min": 56.295,
+    "median": 62.5,
+    "max": 63.36
+  },
+  "pressure_noise_sigma_pa": 310462.0,
+  "positive_pressure_ramp_p95_pa_s": 15409.836,
+  "state_transition_count": 274,
+  "recommended_recharge_hysteresis_pa": 540000.0,
+  "recommended_recharge_restart_margin_pa": 540000.0,
+  "channel_roles": ["station_pressure", "discrete_state"],
+  "quality_warnings": [],
+  "eligibility": {
+    "station_boundary_calibration_supported": true,
+    "full_station_vehicle_validation": false,
+    "default_model_parameters_changed": false,
+    "vehicle_side_channels_present": false,
+    "flow_units_attested": false
+  },
+  "claim_boundary": "De-identified operational-envelope calibration only. The aggregate supports a conservative recharge hysteresis reference for the virtual station boundary; it does not establish vehicle-side accuracy, field safety distance, failure frequency, equipment identity, or a universal operating limit."
+}

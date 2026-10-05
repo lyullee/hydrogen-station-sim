@@ -27,7 +27,10 @@ class MeasuredBoundaryCalibrationProfile:
 
 
 _ROOT = Path(__file__).resolve().parents[2]
-_PROFILE_PATH = _ROOT / "research" / "confidential_station_boundary_calibration_summary_2026_10_06.json"
+_PROFILE_PATHS = (
+    _ROOT / "research" / "confidential_operational_envelope_calibration_summary_2026_10_06.json",
+    _ROOT / "research" / "confidential_station_boundary_calibration_summary_2026_10_06.json",
+)
 
 
 def load_measured_boundary_calibration(
@@ -35,15 +38,30 @@ def load_measured_boundary_calibration(
 ) -> MeasuredBoundaryCalibrationProfile | None:
     """Load the sanitized owner-controlled profile after integrity checks."""
 
-    profile_path = path or _PROFILE_PATH
+    profile_paths = (path,) if path is not None else _PROFILE_PATHS
+    record: dict[str, object] | None = None
+    profile_path: Path | None = None
+    for candidate in profile_paths:
+        try:
+            candidate_record = json.loads(candidate.read_text(encoding="utf-8"))
+        except (OSError, ValueError, json.JSONDecodeError):
+            continue
+        if isinstance(candidate_record, dict):
+            record = candidate_record
+            profile_path = candidate
+            break
+    if record is None or profile_path is None:
+        return None
     try:
-        record = json.loads(profile_path.read_text(encoding="utf-8"))
         eligibility = record["eligibility"]
         hysteresis = float(record["recommended_recharge_hysteresis_pa"])
         restart_margin = float(record["recommended_recharge_restart_margin_pa"])
         sampled_rows = int(record["sampled_rows"])
         if (
-            record.get("artifact_type") != "confidential_station_boundary_calibration_summary"
+            record.get("artifact_type") not in {
+                "confidential_station_boundary_calibration_summary",
+                "confidential_operational_envelope_calibration_summary",
+            }
             or record.get("source_identifiers_published") is not False
             or record.get("raw_rows_persisted") is not False
             or record.get("exact_source_dates_published") is not False
@@ -54,14 +72,17 @@ def load_measured_boundary_calibration(
             or sampled_rows < 1
         ):
             return None
-    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+    except (KeyError, TypeError, ValueError):
         return None
     try:
         artifact = profile_path.relative_to(_ROOT).as_posix()
     except ValueError:
         artifact = profile_path.name
     return MeasuredBoundaryCalibrationProfile(
-        profile_id="owner_measured_station_boundary_v1",
+        profile_id=str(
+            record.get("profile_id")
+            or "owner_measured_station_boundary_v1"
+        ),
         evidence_artifact=artifact,
         recharge_hysteresis_pa=hysteresis,
         recharge_restart_margin_pa=restart_margin,
