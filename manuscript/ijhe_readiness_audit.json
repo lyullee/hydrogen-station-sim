@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T06:50:15.420310+00:00",
+  "generated_at": "2026-10-05T07:00:27.773403+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 63,
+    "PASS": 64,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -464,6 +464,21 @@
           "gate_impact": "full_loop_external_validation_remains_open",
           "candidate_count": 17
         }
+      }
+    },
+    {
+      "id": "full_loop_raw_data_request_package_integrity",
+      "status": "PASS",
+      "claim": "The full-loop acquisition request specifies required channels, reuse rights and a pre-outcome freeze without claiming access or validation.",
+      "evidence": "research\\full_loop_raw_data_request_package_2026_10_05.json",
+      "requirement": "At least ten required channel/metadata fields, four rights requirements, six custodian routes and an explicit non-claiming evaluation guard.",
+      "observed": {
+        "minimum_channel_count": 11,
+        "rights_requirement_count": 4,
+        "custodian_route_count": 7,
+        "freeze_before_outcome_access": true,
+        "post_freeze_parameter_tuning": false,
+        "goal_completion_permitted": false
       }
     },
     {

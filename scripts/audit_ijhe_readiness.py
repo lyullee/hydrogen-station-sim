@@ -356,6 +356,38 @@ def audit(root: Path) -> dict[str, object]:
         } if external_loop else "missing; current internal comparisons pass 0/8 and 0/11",
     ))
 
+    request_package_path = root / "research/full_loop_raw_data_request_package_2026_10_05.json"
+    request_package = _json(request_package_path)
+    request_channels = (request_package or {}).get("minimum_channels") or []
+    request_rights = (request_package or {}).get("rights_requirements") or []
+    request_guard = (request_package or {}).get("evaluation_guard") or {}
+    request_package_pass = bool(
+        (request_package or {}).get("schema_version") == 1
+        and (request_package or {}).get("status") == "REQUEST_SPECIFICATION_ONLY"
+        and len(request_channels) >= 10
+        and len(request_rights) >= 4
+        and len((request_package or {}).get("custodian_routes") or []) >= 6
+        and request_guard.get("freeze_before_outcome_access") is True
+        and request_guard.get("post_freeze_parameter_tuning") is False
+        and request_guard.get("goal_completion_permitted") is False
+        and "not evidence" in str((request_package or {}).get("claim_boundary", "")).lower()
+    )
+    gates.append(_gate(
+        "full_loop_raw_data_request_package_integrity",
+        "PASS" if request_package_pass else ("FAIL" if request_package else "PENDING"),
+        "The full-loop acquisition request specifies required channels, reuse rights and a pre-outcome freeze without claiming access or validation.",
+        str(request_package_path.relative_to(root)),
+        "At least ten required channel/metadata fields, four rights requirements, six custodian routes and an explicit non-claiming evaluation guard.",
+        {
+            "minimum_channel_count": len(request_channels),
+            "rights_requirement_count": len(request_rights),
+            "custodian_route_count": len((request_package or {}).get("custodian_routes") or []),
+            "freeze_before_outcome_access": request_guard.get("freeze_before_outcome_access"),
+            "post_freeze_parameter_tuning": request_guard.get("post_freeze_parameter_tuning"),
+            "goal_completion_permitted": request_guard.get("goal_completion_permitted"),
+        } if request_package else "missing; full-loop raw-data request package has not been created",
+    ))
+
     field_article_path = root / "research/keti_bam_hrs_article_data_boundary_2026_10_05.json"
     field_article = _json(field_article_path)
     field_source = (field_article or {}).get("source") or {}

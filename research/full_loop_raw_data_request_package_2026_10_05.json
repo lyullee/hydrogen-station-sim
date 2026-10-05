@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "status": "REQUEST_SPECIFICATION_ONLY",
+  "purpose": "Prepare a custodian request for an independently reusable synchronized HRS station-to-vehicle holdout.",
+  "minimum_channels": [
+    "common elapsed time or timestamp",
+    "vehicle_or_receptacle_pressure",
+    "vehicle_or_receptacle_temperature",
+    "station_or_dispenser_pressure",
+    "delivered_gas_temperature",
+    "mass_flow_or_transferred_mass",
+    "cascade_source_pressure_and_selected_bank",
+    "precooler_and_compressor_state",
+    "leak_check_vent_fault_and_esd_state",
+    "protocol_initial_conditions_and_tank_geometry",
+    "calibration_sampling_and_uncertainty_metadata"
+  ],
+  "rights_requirements": [
+    "derived_metrics_permitted",
+    "IJHE_manuscript_use_permitted",
+    "reproducibility_deposit_or_reviewer_package_permitted",
+    "source_version_and_file_hashes_provided"
+  ],
+  "custodian_routes": [
+    {
+      "id": "nrel_hitrf",
+      "url": "https://www.nrel.gov/hydrogen/hitrf-animation",
+      "requested_scope": "H70/H35 station, dispenser, protocol and vehicle logger rows"
+    },
+    {
+      "id": "cal_state_la_hrff",
+      "url": "https://www.calstatela.edu/ecst/h2station/operation",
+      "requested_scope": "Light-duty station events with vehicle pressure/temperature/mass-flow channels"
+    },
+    {
+      "id": "kgs_oh",
+      "url": "https://doi.org/10.1007/s11814-025-00551-9",
+      "requested_scope": "Six reported real-HRS scenarios and their synchronized logger export"
+    },
+    {
+      "id": "fch2rail_dlr",
+      "url": "https://elib.dlr.de/213625/",
+      "requested_scope": "Railway HRS and vehicle pressure/temperature/flow logger rows"
+    },
+    {
+      "id": "jrc_gastef",
+      "url": "https://publications.jrc.ec.europa.eu/repository/handle/JRC76380",
+      "requested_scope": "Fast-fill gas-path and tank traces with calibration metadata"
+    },
+    {
+      "id": "carb_hystep",
+      "url": "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf",
+      "requested_scope": "Station test logs and Appendix A workbook"
+    },
+    {
+      "id": "prhyde",
+      "url": "https://lbst.de/prhyde/",
+      "requested_scope": "Instrumented heavy-duty fill logs and controller/protocol states"
+    }
+  ],
+  "evaluation_guard": {
+    "freeze_before_outcome_access": true,
+    "post_freeze_parameter_tuning": false,
+    "event_level_metrics_required": true,
+    "bootstrap_intervals_required": true,
+    "goal_completion_permitted": false
+  },
+  "claim_boundary": "This is a request specification, not evidence of access, validation, safety or IJHE readiness."
+}
