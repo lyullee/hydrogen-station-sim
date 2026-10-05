@@ -38,6 +38,11 @@ def _mapping(path: Path) -> TraceMapping:
             str(value["temperature_boundary_role"])
             if value.get("temperature_boundary_role") is not None else None
         ),
+        authorized_boundary_roles=tuple(
+            str(role) for role in value.get(
+                "authorized_boundary_roles", ["station_pressure"]
+            )
+        ),
         pressure_scale_pa_per_unit=float(value.get("pressure_scale_pa_per_unit", 1.0e6)),
         temperature_scale_k_per_unit=float(value.get("temperature_scale_k_per_unit", 1.0)),
         temperature_offset_k=float(value.get("temperature_offset_k", 273.15)),

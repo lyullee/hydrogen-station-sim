@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_authorized_channel_contract",
+  "as_of": "2026-10-06",
+  "raw_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "absolute_timestamps_published": false,
+  "default_authorized_boundary_roles": [
+    "station_pressure"
+  ],
+  "conditional_boundary_roles": [
+    {
+      "role": "station_temperature",
+      "requirements": [
+        "custodian role and unit attestation",
+        "calibration metadata",
+        "absolute-time overlap and nearest-match quality check"
+      ]
+    },
+    {
+      "role": "equipment_temperature",
+      "requirements": [
+        "exact generic role in authorized_boundary_roles",
+        "matching temperature_boundary_role",
+        "custodian approval for supply-boundary use"
+      ]
+    }
+  ],
+  "diagnostic_only_by_default": [
+    "equipment_temperature",
+    "mass_flow",
+    "valve_state",
+    "lifecycle_state",
+    "unclassified_channel"
+  ],
+  "enforcement": {
+    "trace_mapping_default": "station_pressure only",
+    "unattested_equipment_temperature": "reject boundary injection",
+    "unattested_numeric_channel": "retain diagnostic value in memory only",
+    "holdout_outcomes_used_for_fit": false
+  },
+  "claim_boundary": "Provenance guard for partial station-boundary replay; not independent station-to-vehicle validation."
+}

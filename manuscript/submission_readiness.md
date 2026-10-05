@@ -51,6 +51,12 @@ temporal integration evidence while leaving the full station-to-vehicle gate
 open because the private export does not contain synchronized vehicle,
 receptacle and dispenser-protocol channels.
 
+The channel-use boundary is frozen in
+[`confidential_authorized_channel_contract_2026_10_06.json`](../research/confidential_authorized_channel_contract_2026_10_06.json).
+The replay adapter accepts station pressure by default; temperatures and
+equipment channels require an explicit custodian attestation, while
+unattested channels remain diagnostic only.
+
 Published operating-range evidence is summarized in
 [`public_experimental_benchmarks_2026_10_06.json`](../research/public_experimental_benchmarks_2026_10_06.json)
 and is exposed to the bounded LLM context. The NREL tank/hose trace and the

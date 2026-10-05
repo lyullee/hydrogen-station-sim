@@ -39,6 +39,11 @@ class TraceMapping:
     # as the measured supply-gas boundary.  Other temperatures remain
     # diagnostic channels and are never silently treated as inlet gas.
     temperature_boundary_role: str | None = None
+    # Boundary injection is an explicit custodian attestation, not an
+    # inference from a column name. Pressure is the only role approved by
+    # default. A station or equipment temperature must be listed here before
+    # it can influence a replay profile.
+    authorized_boundary_roles: tuple[str, ...] = ("station_pressure",)
     pressure_scale_pa_per_unit: float = 1.0e6
     temperature_scale_k_per_unit: float = 1.0
     temperature_offset_k: float = 273.15
@@ -62,6 +67,23 @@ class TraceMapping:
             raise ValueError("flow scale must be positive")
         if self.temperature_boundary_role is not None and not self.temperature_boundary_role:
             raise ValueError("temperature_boundary_role cannot be empty")
+        allowed_roles = {
+            "station_pressure",
+            "station_temperature",
+            *(role for role, _ in self.temperature_columns),
+        }
+        unknown_roles = set(self.authorized_boundary_roles) - allowed_roles
+        if unknown_roles:
+            raise ValueError(
+                "authorized boundary roles must match generic mapped roles: "
+                + ", ".join(sorted(unknown_roles))
+            )
+        if self.temperature_boundary_role is not None and (
+            self.temperature_boundary_role not in self.authorized_boundary_roles
+        ):
+            raise ValueError(
+                "temperature_boundary_role requires explicit authorized_boundary_roles"
+            )
 
 
 @dataclass(frozen=True)
@@ -242,6 +264,21 @@ def _finite(value: object) -> float | None:
     except (TypeError, ValueError):
         return None
     return result if math.isfinite(result) else None
+
+
+def _temperature_role_authorized(mapping: TraceMapping, role: str) -> bool:
+    """Return whether a mapped temperature is approved for boundary use.
+
+    ``station_temperature`` is the generic station-level attestation. An
+    equipment logger must instead list its exact generic role (for example,
+    ``compressor_discharge_temperature``) so a diagnostic channel cannot be
+    promoted accidentally.
+    """
+
+    return (
+        "station_temperature" in mapping.authorized_boundary_roles
+        or role in mapping.authorized_boundary_roles
+    )
 
 
 def _time_seconds(value: object, mapping: TraceMapping, fallback: float) -> float:
@@ -596,8 +633,9 @@ def read_boundary_profile(
             continue
         temperature_values = [
             value * mapping.temperature_scale_k_per_unit + mapping.temperature_offset_k
-            for _, column in mapping.temperature_columns
-            if (value := _finite(row.get(column))) is not None
+            for role, column in mapping.temperature_columns
+            if _temperature_role_authorized(mapping, role)
+            and (value := _finite(row.get(column))) is not None
         ]
         rows.append((time_value, float(median(values)), median(temperature_values) if temperature_values else None))
     if not rows:
@@ -663,7 +701,9 @@ def fit_station_boundary(
             flow = _finite(row.get(mapping.flow_column))
             if flow is not None:
                 flows.append(max(0.0, flow * mapping.flow_scale_kg_s_per_unit))
-        for _, column in mapping.temperature_columns:
+        for role, column in mapping.temperature_columns:
+            if not _temperature_role_authorized(mapping, role):
+                continue
             value = _finite(row.get(column))
             if value is not None:
                 temperatures.append(
@@ -743,7 +783,14 @@ def fit_station_boundary(
         channel_roles=tuple(
             role for role, enabled in (
                 ("station_pressure", bool(mapping.pressure_columns)),
-                ("station_temperature", bool(mapping.temperature_columns)),
+                (
+                    "station_temperature",
+                    bool(mapping.temperature_columns)
+                    and any(
+                        _temperature_role_authorized(mapping, role)
+                        for role, _ in mapping.temperature_columns
+                    ),
+                ),
                 ("mass_flow", mapping.flow_column is not None),
                 ("discrete_state", bool(mapping.state_columns)),
             ) if enabled

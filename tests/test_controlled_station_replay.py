@@ -31,6 +31,7 @@ def test_private_mapping_produces_deidentified_aggregate(tmp_path: Path):
             time_column="time",
             pressure_columns=(("storage", "pressure"),),
             temperature_columns=(("storage_temperature", "temp"),),
+            authorized_boundary_roles=("station_pressure", "station_temperature"),
             flow_column="flow",
             state_columns=(("esd", "state"),),
         ),
@@ -74,6 +75,7 @@ def test_time_column_index_supports_corrupted_export_header(tmp_path: Path):
             time_column_index=0,
             pressure_columns=(("storage", "pressure"),),
             temperature_columns=(("storage_temperature", "temp"),),
+            authorized_boundary_roles=("station_pressure", "station_temperature"),
             state_columns=(("esd", "state"),),
         ),
         stride=1,
@@ -98,11 +100,25 @@ def test_boundary_profile_normalizes_newest_first_trace_in_memory(tmp_path: Path
             time_column="time",
             pressure_columns=(("storage", "pressure"),),
             temperature_columns=(("storage_temperature", "temp"),),
+            authorized_boundary_roles=("station_pressure", "station_temperature"),
         ),
     )
     assert profile.time_s == (0.0, 1.0, 2.0)
     assert profile.pressure_pa == (40.0e6, 41.0e6, 42.0e6)
     assert profile.reference_scenario_kwargs()["supply_pressure_profile_pa"][0] == (0.0, 40.0e6)
+
+
+def test_equipment_temperature_requires_explicit_boundary_attestation():
+    try:
+        TraceMapping(
+            time_column="time",
+            temperature_columns=(("compressor", "temp"),),
+            temperature_boundary_role="compressor",
+        )
+    except ValueError as exc:
+        assert "authorized_boundary_roles" in str(exc)
+    else:
+        raise AssertionError("unattested equipment temperatures must remain diagnostic")
 
 
 def test_station_calibration_margin_is_explicitly_injected():
@@ -161,6 +177,7 @@ def test_synchronization_requires_real_overlap_and_keeps_states_discrete(tmp_pat
             temperature_columns=(("compressor", "temp"),),
             state_columns=(("load", "state"),),
             temperature_boundary_role="compressor",
+            authorized_boundary_roles=("compressor",),
             time_format="%Y-%m-%dT%H:%M:%SZ",
         ),
         max_match_gap_s=0.1,
