@@ -8,6 +8,7 @@
     "Review each draft and confirm the named custodian/recipient before sending.",
     "Keep the frozen acceptance criteria and no-fitting scoring protocol unchanged before any received file is opened."
   ],
+  "public_contact_hints": "research/validation_data_contact_hints_2026_10_05.json",
   "selection_rule": "Prioritize independent station-to-vehicle or real-station logger candidates that can close the full-loop gate; incident/release candidates are auxiliary safety/LLM evidence and do not replace physics validation.",
   "common_acceptance": {
     "required_for_full_loop": [
