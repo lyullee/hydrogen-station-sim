@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T00:04:13.269585+00:00",
+  "generated_at": "2026-10-05T08:50:04.528720+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 58,
+    "PASS": 68,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -457,13 +457,28 @@
         "search_recheck_2026_10_04": {
           "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
           "gate_impact": "full_loop_external_validation_remains_open",
-          "candidate_count": 14
+          "candidate_count": 17
         },
         "operational_benchmark_recheck_2026_10_05": {
           "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
           "gate_impact": "full_loop_external_validation_remains_open",
-          "candidate_count": 13
+          "candidate_count": 17
         }
+      }
+    },
+    {
+      "id": "full_loop_raw_data_request_package_integrity",
+      "status": "PASS",
+      "claim": "The full-loop acquisition request specifies required channels, reuse rights and a pre-outcome freeze without claiming access or validation.",
+      "evidence": "research\\full_loop_raw_data_request_package_2026_10_05.json",
+      "requirement": "At least ten required channel/metadata fields, four rights requirements, six custodian routes and an explicit non-claiming evaluation guard.",
+      "observed": {
+        "minimum_channel_count": 11,
+        "rights_requirement_count": 4,
+        "custodian_route_count": 7,
+        "freeze_before_outcome_access": true,
+        "post_freeze_parameter_tuning": false,
+        "goal_completion_permitted": false
       }
     },
     {
@@ -576,6 +591,21 @@
       }
     },
     {
+      "id": "rheadhy_campaign_boundary_integrity",
+      "status": "PASS",
+      "claim": "The public RHeaDHy heavy-duty campaign is recorded as real-station face-validity context without promoting aggregate press-release results to a synchronized full-loop holdout.",
+      "evidence": "research\\rheadhy_2026_campaign_data_boundary_2026_10_05.json",
+      "requirement": "Operator and EU source links, project DOI, campaign scope, explicit missing raw rows, and a false full-loop eligibility flag.",
+      "observed": {
+        "project_doi": "10.3030/101101443",
+        "facility": "Hydrogen Refueling Solutions test area, Champagnier, France",
+        "campaign": "18 refuelling tests over six days",
+        "raw_synchronized_rows": false,
+        "full_loop_external_holdout_eligible": false,
+        "claim_boundary": "This record confirms public reporting of a real RHeaDHy heavy-duty refuelling campaign and preserves a reproducible acquisition boundary. It adds no synchronized full-loop validation result and does not close the IJHE or full-objective gate."
+      }
+    },
+    {
       "id": "closed_loop_temperature_stop_diagnostic",
       "status": "PASS",
       "claim": "The post-outcome temperature-stop sensitivity is archived without changing the frozen external validation decision.",
@@ -650,9 +680,40 @@
       "requirement": "At least 15 candidate routes, existing draft request for every route, source URL and explicit non-evidentiary boundary.",
       "observed": {
         "status": "open_data_not_yet_received",
-        "candidate_count": 27,
-        "draft_count": 23,
+        "candidate_count": 30,
+        "draft_count": 25,
         "claim_boundary": "This tracker is a data-acquisition plan. It is not evidence of validation, does not change any IJHE readiness gate, and does not authorize contact or publication."
+      }
+    },
+    {
+      "id": "external_hrs_intake_integrity_contract",
+      "status": "PASS",
+      "claim": "The prospective external HRS intake contract rechecks quarantine-file integrity without parsing measurements and records source/reuse provenance.",
+      "evidence": "research\\external_hrs_intake_protocol.json; scripts\\validate_external_hrs_manifest.py; tests\\test_external_hrs_eligibility.py",
+      "requirement": "Frozen protocol, required provenance fields, safe paths, byte counts, SHA-256 verification and regression tests that never inspect numeric values.",
+      "observed": {
+        "required_provenance_fields": [
+          "acquired_at_utc",
+          "custodian_or_archive",
+          "license_or_reuse_reference",
+          "source_identity"
+        ],
+        "validator_present": true,
+        "regression_test_present": true
+      }
+    },
+    {
+      "id": "external_hrs_trace_quality_contract",
+      "status": "PASS",
+      "claim": "The post-intake external HRS trace-quality screen is frozen for time-base, missingness and range checks without imputation or model scoring.",
+      "evidence": "research\\external_hrs_intake_protocol.json; scripts\\validate_external_hrs_trace.py; tests\\test_external_hrs_trace_quality.py",
+      "requirement": "Predeclared minimum rows, missingness and gap/range limits with regression tests for valid, non-monotonic and incomplete traces.",
+      "observed": {
+        "minimum_rows": 20,
+        "max_missing_fraction": 0.01,
+        "max_gap_s": 60.0,
+        "validator_present": true,
+        "regression_test_present": true
       }
     },
     {
@@ -747,6 +808,79 @@
         "workbook_sha256": "1a3fbe64a50c1c97266bfe0372998513ad3ccec5600fab7bc4b9fc68ad4d9d0c",
         "package_sha256_matches_previous_record": false,
         "claim_boundary": "The validation is pinned to the workbook digest, not to an immutable package-container digest. The current package download has the same screened workbook but a different archive digest; this does not add a new validation case or permit redistribution."
+      }
+    },
+    {
+      "id": "nrel_hdvs_raw_trace_boundary_integrity",
+      "status": "PASS",
+      "claim": "The NREL HDVS workbook is schema-checked as a real hose/tank boundary while its missing station and vehicle channels remain explicit.",
+      "evidence": "research\\nrel_hdvs_raw_trace_boundary_2026_10_05.json",
+      "requirement": "Hash-verified workbook, 351 timed rows, seven tank IDs, required hose/tank channels and explicit exclusion of controller/ESD/nozzle/receptacle/vehicle traces.",
+      "observed": {
+        "workbook_present": true,
+        "sha256_matches_record": true,
+        "data_sheet_max_row": 445,
+        "data_sheet_max_column": 42,
+        "nonempty_timed_row_count": 351,
+        "tank_ids": [
+          1,
+          2,
+          3,
+          5,
+          7,
+          8,
+          9
+        ],
+        "required_channels_present": true,
+        "partial_station_to_tank_boundary_eligible": true,
+        "full_loop_external_holdout_eligible": false
+      }
+    },
+    {
+      "id": "fch2rail_d61_operating_range_boundary_integrity",
+      "status": "PASS",
+      "claim": "The public FCH2Rail D6.1 report is hash-locked as independent real-HRS operating-range context without being promoted to a raw full-loop holdout.",
+      "evidence": "research\\fch2rail_d61_operating_range_boundary_2026_10_05.json",
+      "requirement": "Verified report digest/page count, 300-bar trailer/no-chiller/10-m hose boundary, 5/10-s reporting cadence, measured flow/speed ranges and false full-loop eligibility.",
+      "observed": {
+        "pdf_sha256": "d55d8d27096e8bcf9529f32a27beb797bff9634f5cfca9c53bdae6914ae27dd2c",
+        "average_flow_range_g_s": [
+          11.54,
+          19.44
+        ],
+        "average_refuelling_speed_range_kg_min": [
+          0.69,
+          1.17
+        ],
+        "real_hrs_operating_range_context_eligible": true,
+        "synchronized_raw_full_loop_holdout_eligible": false
+      }
+    },
+    {
+      "id": "fch2rail_ijhe_measurement_access_boundary_integrity",
+      "status": "PASS",
+      "claim": "The open FCH2Rail IJHE article is hash-locked as real station-to-vehicle measurement context while its missing raw archive and reuse terms remain explicit.",
+      "evidence": "research\\fch2rail_ijhe_measurement_access_recheck_2026_10_05.json",
+      "requirement": "Verified article digest/page count, measured channel boundary, explicit no-public-raw statement and false raw-holdout eligibility.",
+      "observed": {
+        "doi": "10.1016/j.ijhydene.2025.04.040",
+        "pdf_sha256": "462b57007a42e0a0b359d104d621c4e63f788dcd51b4fe6d995032261cd482b3",
+        "machine_readable_rows_publicly_linked": false,
+        "synchronized_raw_full_loop_holdout_eligible": false
+      }
+    },
+    {
+      "id": "nbsdc_liquid_hrs_public_access_boundary_integrity",
+      "status": "PASS",
+      "claim": "The public NBSDC liquid-HRS candidate is recorded with its description hash and application-controlled numerical-file boundary without being overclaimed as validation.",
+      "evidence": "research\\nbsdc_liquid_hrs_public_access_recheck_2026_10_05.json; research\\nbsdc_liquid_hrs_intake_protocol_2026_10_05.json",
+      "requirement": "Seven-file inventory, description-only hash, 403 raw-file probe, prospective intake contract and explicit full-loop exclusion are consistent.",
+      "observed": {
+        "data_id": "67d50e37195d260905af9869",
+        "file_count": 7,
+        "description_sha256": "669bf3487f07714da3ed08f7d891077841c39ef38497dc2abb307a5877954142",
+        "portal_body_code": 403,
+        "full_loop_holdout_eligible": false
       }
     },
     {
@@ -3075,6 +3209,36 @@
       }
     },
     {
+      "id": "metrohyve_gravimetric_hrs_metrology_boundary_integrity",
+      "status": "PASS",
+      "claim": "The open MetroHyVe HRS calibration paper provides independent flow-meter and uncertainty context without being misrepresented as a station-to-vehicle holdout.",
+      "evidence": "research\\metrohyve_gravimetric_hrs_calibration_boundary_2026_10_05.json",
+      "requirement": "DOI/licence metadata, open-article access, real-HRS scope, 875-bar range, component-only eligibility and explicit full-loop exclusion.",
+      "observed": {
+        "doi": "10.1016/j.flowmeasinst.2020.101743",
+        "real_hrs_field_tests": true,
+        "maximum_pressure_bar": 875,
+        "component_flow_metrology_eligible": true,
+        "full_loop_external_holdout_eligible": false
+      }
+    },
+    {
+      "id": "hytf_public_tank_trace_boundary_integrity",
+      "status": "PASS",
+      "claim": "The public HyTF raw tank trace is pinned as a component-level thermal boundary without being promoted to an HRS full-loop holdout.",
+      "evidence": "research\\hytf_open_tank_trace_boundary_2026_10_05.json",
+      "requirement": "Pinned repository commit and file digest, 2,536 samples at 0.1 s, fourteen thermocouples, explicit missing mass-flow/station channels and false full-loop eligibility.",
+      "observed": {
+        "repository_commit": "4482486fa9ab02360af364f3d1dad5ea48eabaf8",
+        "dataset_sha256": "3f11f75afec75e71fa18893e0a351966467a436f569e8349065e06c1649673a0",
+        "sample_count": 2536,
+        "sample_period_s": 0.1,
+        "tank_thermocouple_count": 14,
+        "component_tank_screen_eligible_after_protocol_freeze": true,
+        "full_loop_external_holdout_eligible": false
+      }
+    },
+    {
       "id": "multhyfuel_d24_public_experiment_integrity",
       "status": "PASS",
       "claim": "The public MultHyFuel D2.4 mock-up dispenser experiments provide traceable consequence benchmarks without being misrepresented as full-loop or SAGA validation.",
@@ -3581,7 +3745,7 @@
       "observed": {
         "schema_version": 1,
         "kind": "machine_preflight_only",
-        "generated_at_utc": "2026-10-04T23:07:01.081916+00:00",
+        "generated_at_utc": "2026-10-05T01:11:23.747964+00:00",
         "machine_preflight_pass": true,
         "case_count": 24,
         "checks": [
@@ -3659,8 +3823,208 @@
               "expert_vignette_approved": "NO"
             },
             "requirement": "Machine preflight must never silently approve or freeze a vignette."
+          },
+          {
+            "id": "model_visible_context_has_no_reserved_outcome_fields",
+            "status": "PASS",
+            "observed": {
+              "forbidden_keys": [
+                "corrective_measures",
+                "emergency_action",
+                "lesson_learnt",
+                "outcome",
+                "reference_corrective_measures",
+                "reference_emergency_action",
+                "reference_lesson_learnt",
+                "response"
+              ],
+              "cases_with_forbidden_keys": []
+            },
+            "requirement": "Model-visible input_context must not contain coordinator-only reference/outcome fields."
           }
         ],
+        "leakage_advisory": {
+          "case_count": 24,
+          "tier_counts": {
+            "HIGH": 16,
+            "MEDIUM": 6,
+            "LOW": 2
+          },
+          "cases_with_completed_action_language": 19,
+          "cases_with_reference_overlap": 14,
+          "cases_with_forbidden_model_input_keys": [],
+          "per_case": [
+            {
+              "event_id": "401",
+              "advisory_tier": "HIGH",
+              "completed_action_term_count": 5,
+              "longest_reference_overlap_tokens": 0,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "402",
+              "advisory_tier": "HIGH",
+              "completed_action_term_count": 3,
+              "longest_reference_overlap_tokens": 8,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "404",
+              "advisory_tier": "HIGH",
+              "completed_action_term_count": 2,
+              "longest_reference_overlap_tokens": 0,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "411",
+              "advisory_tier": "LOW",
+              "completed_action_term_count": 0,
+              "longest_reference_overlap_tokens": 0,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "463",
+              "advisory_tier": "HIGH",
+              "completed_action_term_count": 5,
+              "longest_reference_overlap_tokens": 0,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "702",
+              "advisory_tier": "HIGH",
+              "completed_action_term_count": 2,
+              "longest_reference_overlap_tokens": 6,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "803",
+              "advisory_tier": "HIGH",
+              "completed_action_term_count": 3,
+              "longest_reference_overlap_tokens": 0,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "884",
+              "advisory_tier": "HIGH",
+              "completed_action_term_count": 2,
+              "longest_reference_overlap_tokens": 11,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "953",
+              "advisory_tier": "HIGH",
+              "completed_action_term_count": 3,
+              "longest_reference_overlap_tokens": 7,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "1038",
+              "advisory_tier": "LOW",
+              "completed_action_term_count": 0,
+              "longest_reference_overlap_tokens": 0,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "1062",
+              "advisory_tier": "MEDIUM",
+              "completed_action_term_count": 0,
+              "longest_reference_overlap_tokens": 4,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "1063",
+              "advisory_tier": "HIGH",
+              "completed_action_term_count": 1,
+              "longest_reference_overlap_tokens": 15,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "1106",
+              "advisory_tier": "HIGH",
+              "completed_action_term_count": 2,
+              "longest_reference_overlap_tokens": 0,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "1159",
+              "advisory_tier": "HIGH",
+              "completed_action_term_count": 0,
+              "longest_reference_overlap_tokens": 14,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "1161",
+              "advisory_tier": "MEDIUM",
+              "completed_action_term_count": 1,
+              "longest_reference_overlap_tokens": 0,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "1163",
+              "advisory_tier": "MEDIUM",
+              "completed_action_term_count": 0,
+              "longest_reference_overlap_tokens": 4,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "1173",
+              "advisory_tier": "HIGH",
+              "completed_action_term_count": 2,
+              "longest_reference_overlap_tokens": 11,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "1194",
+              "advisory_tier": "MEDIUM",
+              "completed_action_term_count": 1,
+              "longest_reference_overlap_tokens": 4,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "1196",
+              "advisory_tier": "MEDIUM",
+              "completed_action_term_count": 1,
+              "longest_reference_overlap_tokens": 0,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "1202",
+              "advisory_tier": "HIGH",
+              "completed_action_term_count": 2,
+              "longest_reference_overlap_tokens": 11,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "1205",
+              "advisory_tier": "HIGH",
+              "completed_action_term_count": 2,
+              "longest_reference_overlap_tokens": 4,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "1206",
+              "advisory_tier": "MEDIUM",
+              "completed_action_term_count": 1,
+              "longest_reference_overlap_tokens": 0,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "1207",
+              "advisory_tier": "HIGH",
+              "completed_action_term_count": 3,
+              "longest_reference_overlap_tokens": 20,
+              "forbidden_model_input_keys": []
+            },
+            {
+              "event_id": "1208",
+              "advisory_tier": "HIGH",
+              "completed_action_term_count": 3,
+              "longest_reference_overlap_tokens": 10,
+              "forbidden_model_input_keys": []
+            }
+          ],
+          "interpretation": "Advisory machine flags only; a qualified non-rating coordinator must decide KEEP or REWRITE for every case."
+        },
         "claim_boundary": [
           "This report checks file structure and unresolved human-review markers only.",
           "It is not a leakage review, ethics determination, expert rating, casebook freeze, or holdout collection.",
@@ -4419,7 +4783,7 @@
       "requirement": "Manifest schema, normal/emergency distinction, contradiction guard and full regression suite.",
       "observed": {
         "schema_version": 1,
-        "recorded_at": "2026-10-04T19:21:38.052365+00:00",
+        "recorded_at": "2026-10-05",
         "status": "software_contract_verified",
         "scope": [
           "digital-twin main assistant",
@@ -4429,13 +4793,13 @@
         "manifest_schema": "h2station.llm-evidence.v1",
         "tests": {
           "targeted": {
-            "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_digital_twin_direct_qa.py -q",
-            "passed": 18,
-            "warnings": 4
+            "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_digital_twin_direct_qa.py tests/test_hiad_action_playbook_coverage.py tests/test_hiad_accident_response_coverage_evaluation.py -q",
+            "passed": 14,
+            "warnings": 2
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 509,
+            "passed": 574,
             "failed": 0,
             "warnings": 16
           }
@@ -4452,7 +4816,8 @@
           "public KHK accident-report inventory and citation link are carried into the evidence envelope without mirrored report text",
           "public KHK scenario-precedent map links all 23 citation records to conservative response families without exposing report text or frequency claims",
           "consequence flow-boundary mismatches are exposed when HyRAM recomputes a high-pressure choked flow instead of silently presenting it as the supplied process flow",
-          "public HIAD action categories are evaluated case-by-case against required staged response plans without using raw action text or making an effectiveness claim"
+          "public HIAD action categories are evaluated case-by-case against required staged response plans without using raw action text or making an effectiveness claim",
+          "derived HIAD action-category counts and the action-evidence artifact digest are carried into the hashed runtime envelope without raw incident prose"
         ],
         "not_established": [
           "physics validity of the consequence model",
@@ -4526,6 +4891,15 @@
             "isolation_failure": 2,
             "overpressure": 3
           }
+        },
+        "runtime_action_taxonomy": {
+          "manifest_field": "response_evidence.public_incident_traceability.action_taxonomy",
+          "artifact": "research/hiad_action_evidence.json",
+          "artifact_sha256": "72f2550eabea6a4207a5d59c98bd99520e217fd2d4f8597e5d1d72f2ef87e1dd",
+          "raw_text_retained": false,
+          "holdout_use": false,
+          "category_count": 8,
+          "interpretation": "compact public-incident grounding metadata only; no correctness, safety, effectiveness or probability claim"
         }
       }
     },
