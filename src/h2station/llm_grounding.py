@@ -394,6 +394,49 @@ def _public_experimental_benchmarks() -> dict[str, Any] | None:
     }
 
 
+def _confidential_lifecycle_evidence() -> dict[str, Any] | None:
+    """Expose only de-identified lifecycle-counter calibration context."""
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/confidential_lifecycle_counter_summary_2026_10_06.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if (
+        record.get("artifact_type") != "confidential_lifecycle_counter_summary"
+        or record.get("source_identifiers_published") is not False
+        or record.get("raw_rows_persisted") is not False
+    ):
+        return None
+    counters: dict[str, dict[str, Any]] = {}
+    for role, values in (record.get("counters") or {}).items():
+        if not isinstance(values, dict):
+            continue
+        counters[str(role)] = {
+            key: values.get(key)
+            for key in (
+                "sample_count", "observed_min", "observed_max",
+                "positive_increment_count", "total_positive_increment",
+                "maximum_single_increment",
+            )
+            if values.get(key) is not None
+        }
+    return {
+        "artifact": "research/confidential_lifecycle_counter_summary_2026_10_06.json",
+        "evidence_role": "confidential de-identified lifecycle history",
+        "counter_semantics": str(record.get("counter_semantics") or ""),
+        "files_read": record.get("files_read"),
+        "sampled_rows": record.get("sampled_rows"),
+        "counters": counters,
+        "cycle_aware_degradation_fit": (
+            record.get("eligibility", {}).get("cycle_aware_degradation_fit") is True
+        ),
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _finite_number(value: Any) -> int | float | None:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         return None
@@ -551,6 +594,9 @@ def build_evidence_manifest(
     public_benchmarks = _public_experimental_benchmarks()
     if public_benchmarks is not None:
         envelope["response_evidence"]["public_experimental_benchmarks"] = public_benchmarks
+    lifecycle = _confidential_lifecycle_evidence()
+    if lifecycle is not None:
+        envelope["response_evidence"]["confidential_lifecycle_counter_summary"] = lifecycle
     canonical = json.dumps(envelope, ensure_ascii=False, sort_keys=True,
                            separators=(",", ":"), default=str).encode("utf-8")
     envelope["evidence_digest"] = "sha256:" + sha256(canonical).hexdigest()
@@ -642,6 +688,18 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                     "independent_full_loop_validation_supported",
                 ) if holdout.get(key) is not None
             }
+    lifecycle = evidence.get("confidential_lifecycle_counter_summary")
+    if isinstance(lifecycle, dict):
+        summary["confidential_lifecycle_counter_summary"] = {
+            "evidence_role": lifecycle.get("evidence_role"),
+            "counter_semantics": lifecycle.get("counter_semantics"),
+            "sampled_rows": lifecycle.get("sampled_rows"),
+            "counters": lifecycle.get("counters"),
+            "cycle_aware_degradation_fit": lifecycle.get(
+                "cycle_aware_degradation_fit"
+            ),
+            "claim_limit": short(lifecycle.get("claim_limit")),
+        }
     impact = manifest.get("impact") or {}
     summary["impact_status"] = impact.get("calculation_status")
     summary["impact_result_count"] = impact.get("result_count", 0)
@@ -663,6 +721,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     detector_aggregate = detector.get("aggregate") or {}
     confidential = evidence.get("confidential_measured_boundary_replay") or {}
     holdout = confidential.get("temporal_holdout") or {}
+    lifecycle = evidence.get("confidential_lifecycle_counter_summary") or {}
     incident = evidence.get("public_incident_traceability") or {}
     accident_inventory = evidence.get("public_accident_report_inventory") or {}
     accidental_release = evidence.get("public_accidental_release_evidence") or {}
@@ -690,6 +749,13 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         "full_loop_validation_supported": confidential.get(
             "independent_full_loop_validation_supported"
         ) is True,
+        "confidential_lifecycle_evidence": {
+            "sampled_rows": lifecycle.get("sampled_rows"),
+            "counter_roles": sorted((lifecycle.get("counters") or {}).keys()),
+            "cycle_aware_degradation_fit": lifecycle.get(
+                "cycle_aware_degradation_fit"
+            ) is True,
+        },
         "impact_status": (manifest.get("impact") or {}).get("calculation_status"),
         "evidence_digest": manifest.get("evidence_digest"),
     }

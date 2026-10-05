@@ -67,6 +67,7 @@ from .vehicle import (
 )
 from .scenario import BuiltScenario, ReferenceScenario, build_reference_scenario
 from .controlled_station_replay import (
+    LifecycleCalibrationSummary,
     StationCalibrationSummary,
     StationBoundaryProfile,
     SynchronizedStationProfile,
@@ -75,6 +76,7 @@ from .controlled_station_replay import (
     apply_recharge_hysteresis,
     fit_station_boundary,
     read_boundary_profile,
+    summarize_lifecycle_counters,
     synchronize_station_traces,
 )
 from .safe_operation import SafeFullStationSimulator, SafeOperationTrajectory
@@ -135,6 +137,7 @@ __all__ = [
     "VentConnection",
     "DynamicSensor",
     "BuiltScenario",
+    "LifecycleCalibrationSummary",
     "StationCalibrationSummary",
     "StationBoundaryProfile",
     "SynchronizedStationProfile",
@@ -166,5 +169,6 @@ __all__ = [
     "build_reference_scenario",
     "fit_station_boundary",
     "read_boundary_profile",
+    "summarize_lifecycle_counters",
     "synchronize_station_traces",
 ]

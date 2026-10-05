@@ -9,6 +9,7 @@ from h2station.controlled_station_replay import (
     fit_station_boundary,
     fit_station_boundary_profile,
     read_boundary_profile,
+    summarize_lifecycle_counters,
     synchronize_station_traces,
 )
 from h2station.risk.runtime_backend import UnavailableHyRAMBackend
@@ -119,6 +120,32 @@ def test_equipment_temperature_requires_explicit_boundary_attestation():
         assert "authorized_boundary_roles" in str(exc)
     else:
         raise AssertionError("unattested equipment temperatures must remain diagnostic")
+
+
+def test_lifecycle_summary_is_aggregate_and_does_not_imply_operating_hours(tmp_path: Path):
+    trace = tmp_path / "lifecycle.csv"
+    trace.write_text(
+        "time,hp,mp,temp\n"
+        "0,10,20,25\n"
+        "1,10,21,26\n"
+        "2,11,21,27\n"
+        "3,11,20,28\n",
+        encoding="utf-8",
+    )
+    summary = summarize_lifecycle_counters(
+        trace,
+        TraceMapping(
+            time_column="time",
+            lifecycle_columns=(("high_bank_cycles", "hp"), ("medium_bank_cycles", "mp")),
+        ),
+        stride=1,
+    )
+    public = summary.to_public_dict()
+    assert public["raw_rows_persisted"] is False
+    assert "lifecycle.csv" not in json.dumps(public)
+    assert public["counters"]["high_bank_cycles"]["positive_increment_count"] == 1
+    assert public["counters"]["medium_bank_cycles"]["negative_increment_count"] == 1
+    assert "operating-hour" in public["claim_boundary"]
 
 
 def test_station_calibration_margin_is_explicitly_injected():

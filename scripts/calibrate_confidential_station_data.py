@@ -15,6 +15,7 @@ from pathlib import Path
 from h2station.controlled_station_replay import (
     TraceMapping,
     fit_station_boundary,
+    summarize_lifecycle_counters,
     synchronize_station_traces,
 )
 
@@ -34,6 +35,9 @@ def _mapping(path: Path) -> TraceMapping:
         state_columns=tuple(
             (str(item[0]), str(item[1])) for item in value.get("state_columns", [])
         ),
+        lifecycle_columns=tuple(
+            (str(item[0]), str(item[1])) for item in value.get("lifecycle_columns", [])
+        ),
         temperature_boundary_role=(
             str(value["temperature_boundary_role"])
             if value.get("temperature_boundary_role") is not None else None
@@ -47,6 +51,7 @@ def _mapping(path: Path) -> TraceMapping:
         temperature_scale_k_per_unit=float(value.get("temperature_scale_k_per_unit", 1.0)),
         temperature_offset_k=float(value.get("temperature_offset_k", 273.15)),
         flow_scale_kg_s_per_unit=float(value.get("flow_scale_kg_s_per_unit", 1.0)),
+        lifecycle_scale_per_unit=float(value.get("lifecycle_scale_per_unit", 1.0)),
         time_format=value.get("time_format"),
         time_is_absolute=bool(value.get("time_is_absolute", False)),
         encoding=str(value.get("encoding", "utf-8-sig")),
@@ -70,10 +75,22 @@ def main() -> int:
         type=Path,
         help="mapping for --equipment-input",
     )
+    parser.add_argument(
+        "--lifecycle-input",
+        type=Path,
+        help="optional restricted lifecycle-counter logger",
+    )
+    parser.add_argument(
+        "--lifecycle-mapping",
+        type=Path,
+        help="mapping for --lifecycle-input",
+    )
     parser.add_argument("--max-match-gap-s", type=float, default=2.0)
     args = parser.parse_args()
     if bool(args.equipment_input) != bool(args.equipment_mapping):
         parser.error("--equipment-input and --equipment-mapping must be supplied together")
+    if bool(args.lifecycle_input) != bool(args.lifecycle_mapping):
+        parser.error("--lifecycle-input and --lifecycle-mapping must be supplied together")
     mapping = _mapping(args.mapping)
     summary = fit_station_boundary(
         args.input,
@@ -104,6 +121,13 @@ def main() -> int:
         )
         result["synchronized_alignment"] = alignment.alignment.to_public_dict()
         result["synchronized_alignment"]["max_match_gap_s"] = args.max_match_gap_s
+    if args.lifecycle_input:
+        result["lifecycle"] = summarize_lifecycle_counters(
+            args.lifecycle_input,
+            _mapping(args.lifecycle_mapping),
+            stride=args.stride,
+            max_rows_per_file=args.max_rows_per_file,
+        ).to_public_dict()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(args.output)

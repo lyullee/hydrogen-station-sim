@@ -34,6 +34,7 @@ class TraceMapping:
     temperature_columns: tuple[tuple[str, str], ...] = ()
     flow_column: str | None = None
     state_columns: tuple[tuple[str, str], ...] = ()
+    lifecycle_columns: tuple[tuple[str, str], ...] = ()
     # For a synchronized equipment logger, a temperature is injected into the
     # station boundary only when the custodian explicitly identifies its role
     # as the measured supply-gas boundary.  Other temperatures remain
@@ -48,6 +49,7 @@ class TraceMapping:
     temperature_scale_k_per_unit: float = 1.0
     temperature_offset_k: float = 273.15
     flow_scale_kg_s_per_unit: float = 1.0
+    lifecycle_scale_per_unit: float = 1.0
     time_format: str | None = None
     # A caller may explicitly attest that numeric timestamps are absolute
     # epochs.  Relative counters are rejected by the two-logger synchronizer.
@@ -65,6 +67,8 @@ class TraceMapping:
             raise ValueError("temperature scale must be positive")
         if self.flow_scale_kg_s_per_unit <= 0.0:
             raise ValueError("flow scale must be positive")
+        if self.lifecycle_scale_per_unit <= 0.0:
+            raise ValueError("lifecycle scale must be positive")
         if self.temperature_boundary_role is not None and not self.temperature_boundary_role:
             raise ValueError("temperature_boundary_role cannot be empty")
         allowed_roles = {
@@ -78,6 +82,11 @@ class TraceMapping:
                 "authorized boundary roles must match generic mapped roles: "
                 + ", ".join(sorted(unknown_roles))
             )
+        lifecycle_roles = [role for role, _ in self.lifecycle_columns]
+        if any(not role for role in lifecycle_roles):
+            raise ValueError("lifecycle roles cannot be empty")
+        if len(set(lifecycle_roles)) != len(lifecycle_roles):
+            raise ValueError("lifecycle roles must be unique")
         if self.temperature_boundary_role is not None and (
             self.temperature_boundary_role not in self.authorized_boundary_roles
         ):
@@ -168,6 +177,38 @@ class StationCalibrationSummary:
             "claim_boundary": (
                 "Aggregate station-boundary calibration only; this is not a "
                 "full station-to-vehicle validation result."
+            ),
+        }
+
+
+@dataclass(frozen=True)
+class LifecycleCalibrationSummary:
+    """Aggregate owner-defined storage-cycle counters without exporting rows."""
+
+    files_read: int
+    sampled_rows: int
+    counters: tuple[tuple[str, Mapping[str, float | int]], ...]
+    quality_warnings: tuple[str, ...]
+
+    def to_public_dict(self) -> dict[str, object]:
+        return {
+            "schema_version": 1,
+            "raw_rows_persisted": False,
+            "source_identifiers_published": False,
+            "files_read": self.files_read,
+            "sampled_rows": self.sampled_rows,
+            "counters": {
+                role: {
+                    key: round(float(value), 6)
+                    if isinstance(value, float) else value
+                    for key, value in values.items()
+                }
+                for role, values in self.counters
+            },
+            "quality_warnings": list(self.quality_warnings),
+            "claim_boundary": (
+                "Owner-defined lifecycle counter summary only; it is not an "
+                "equivalent operating-hour measure or a validated degradation law."
             ),
         }
 
@@ -800,6 +841,110 @@ def fit_station_boundary(
         temperature_median_deg_c=median(temperatures) if temperatures else None,
         temperature_max_deg_c=max(temperatures) if temperatures else None,
         state_transition_count=state_transition_count,
+    )
+
+
+def summarize_lifecycle_counters(
+    input_path: Path,
+    mapping: TraceMapping,
+    *,
+    stride: int = 60,
+    max_rows_per_file: int | None = 250_000,
+) -> LifecycleCalibrationSummary:
+    """Summarize owner-defined cycle counters as de-identified aggregates.
+
+    Lifecycle counters are intentionally not folded into pressure or thermal
+    calibration automatically. Their semantics are owner-defined (for
+    example, a full-bank recharge rather than operating hours), so the result
+    is evidence for a later aging model and a data-quality check only.
+    """
+
+    if not mapping.lifecycle_columns:
+        raise ValueError("lifecycle_columns are required for a lifecycle summary")
+    paths = _paths(input_path)
+    if not paths:
+        raise ValueError("no lifecycle trace files found")
+    roles = tuple(role for role, _ in mapping.lifecycle_columns)
+    by_role: dict[str, dict[str, float | int | None]] = {
+        role: {
+            "sample_count": 0,
+            "min": None,
+            "max": None,
+            "first": None,
+            "last": None,
+            "positive_increment_count": 0,
+            "negative_increment_count": 0,
+            "zero_increment_count": 0,
+            "total_positive_increment": 0.0,
+            "max_positive_increment": 0.0,
+        }
+        for role in roles
+    }
+    files: set[Path] = set()
+    sampled_rows = 0
+    observations_by_file: dict[Path, list[tuple[float, dict[str, float]]]] = {}
+    warnings: set[str] = set()
+    for path, time_value, row in _sampled_rows(
+        input_path, mapping, stride=stride, max_rows_per_file=max_rows_per_file
+    ):
+        files.add(path)
+        sampled_rows += 1
+        observed: dict[str, float] = {}
+        for role, column in mapping.lifecycle_columns:
+            value = _finite(row.get(column))
+            if value is None:
+                continue
+            observed[role] = value * mapping.lifecycle_scale_per_unit
+        observations_by_file.setdefault(path, []).append((time_value, observed))
+
+    for path, observations in observations_by_file.items():
+        # Controller exports may be newest-first. Sorting is confined to
+        # memory so counter increments are evaluated in chronological order.
+        observations.sort(key=lambda item: item[0])
+        previous: dict[str, float] = {}
+        for _, observed in observations:
+            for role, value in observed.items():
+                summary = by_role[role]
+                summary["sample_count"] = int(summary["sample_count"] or 0) + 1
+                summary["min"] = value if summary["min"] is None else min(float(summary["min"]), value)
+                summary["max"] = value if summary["max"] is None else max(float(summary["max"]), value)
+                if summary["first"] is None:
+                    summary["first"] = value
+                summary["last"] = value
+                if role in previous:
+                    increment = value - previous[role]
+                    if increment > 0.0:
+                        summary["positive_increment_count"] = int(summary["positive_increment_count"] or 0) + 1
+                        summary["total_positive_increment"] = float(summary["total_positive_increment"] or 0.0) + increment
+                        summary["max_positive_increment"] = max(float(summary["max_positive_increment"] or 0.0), increment)
+                    elif increment < 0.0:
+                        summary["negative_increment_count"] = int(summary["negative_increment_count"] or 0) + 1
+                    else:
+                        summary["zero_increment_count"] = int(summary["zero_increment_count"] or 0) + 1
+                previous[role] = value
+    if sampled_rows == 0:
+        raise ValueError("no lifecycle rows matched the mapping")
+    counters: list[tuple[str, Mapping[str, float | int]]] = []
+    for role in roles:
+        values = by_role[role]
+        if int(values["sample_count"] or 0) == 0:
+            warnings.add(f"no_finite_values:{role}")
+            continue
+        counters.append(
+            (
+                role,
+                {
+                    key: value
+                    for key, value in values.items()
+                    if value is not None
+                },
+            )
+        )
+    return LifecycleCalibrationSummary(
+        files_read=len(files),
+        sampled_rows=sampled_rows,
+        counters=tuple(counters),
+        quality_warnings=tuple(sorted(warnings)),
     )
 
 

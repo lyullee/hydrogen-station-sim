@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_lifecycle_counter_summary",
+  "recorded_at": "2026-10-06",
+  "source_scope": "confidential owner-controlled storage lifecycle logger",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "exact_source_dates_published": false,
+  "files_read": 1,
+  "sampled_rows": 41752,
+  "counter_semantics": "owner-defined full-bank recharge counter; not operating hours",
+  "counters": {
+    "high_bank_cycles": {
+      "sample_count": 41752,
+      "observed_min": 5149,
+      "observed_max": 6332,
+      "first_observed": 5149,
+      "last_observed": 6332,
+      "positive_increment_count": 965,
+      "negative_increment_count": 0,
+      "zero_increment_count": 40786,
+      "total_positive_increment": 1183,
+      "maximum_single_increment": 2
+    },
+    "medium_bank_cycles": {
+      "sample_count": 41752,
+      "observed_min": 3887,
+      "observed_max": 4738,
+      "first_observed": 3887,
+      "last_observed": 4738,
+      "positive_increment_count": 630,
+      "negative_increment_count": 0,
+      "zero_increment_count": 41121,
+      "total_positive_increment": 851,
+      "maximum_single_increment": 2
+    }
+  },
+  "quality_warnings": [],
+  "eligibility": {
+    "station_operating_history_evidence": true,
+    "cycle_aware_degradation_fit": false,
+    "full_station_vehicle_validation": false
+  },
+  "claim_boundary": "De-identified lifecycle-counter summary for future aging-state calibration. It does not establish a degradation law, failure rate, or station-to-vehicle validation."
+}

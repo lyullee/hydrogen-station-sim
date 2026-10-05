@@ -57,6 +57,12 @@ The replay adapter accepts station pressure by default; temperatures and
 equipment channels require an explicit custodian attestation, while
 unattested channels remain diagnostic only.
 
+The documented storage lifecycle counters are summarized in
+[`confidential_lifecycle_counter_summary_2026_10_06.json`](../research/confidential_lifecycle_counter_summary_2026_10_06.json)
+and are available to the LLM only as de-identified operating-history context.
+They are not converted into an aging or failure law until a frozen, untouched
+validation window supports that relationship.
+
 Published operating-range evidence is summarized in
 [`public_experimental_benchmarks_2026_10_06.json`](../research/public_experimental_benchmarks_2026_10_06.json)
 and is exposed to the bounded LLM context. The NREL tank/hose trace and the

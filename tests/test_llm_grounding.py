@@ -70,6 +70,13 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "10.5281/zenodo.17913628"
     )
     assert header["public_accident_evidence"]["accidental_release_full_loop"] is False
+    assert header["confidential_lifecycle_evidence"]["sampled_rows"] == 41752
+    assert header["confidential_lifecycle_evidence"]["counter_roles"] == [
+        "high_bank_cycles", "medium_bank_cycles"
+    ]
+    lifecycle = idle["response_evidence"]["confidential_lifecycle_counter_summary"]
+    assert lifecycle["cycle_aware_degradation_fit"] is False
+    assert lifecycle["counters"]["high_bank_cycles"]["total_positive_increment"] == 1183
     confidential = idle["response_evidence"]["confidential_measured_boundary_replay"]
     assert confidential["trajectory_completed"] is True
     assert confidential["station_boundary_calibration_supported"] is True
