@@ -27,6 +27,14 @@
     "acquired_at_utc",
     "license_or_reuse_reference"
   ],
+  "trace_quality": {
+    "minimum_rows": 20,
+    "max_missing_fraction": 0.01,
+    "max_gap_s": 60.0,
+    "pressure_range_mpa_abs": [0.0, 150.0],
+    "temperature_range_degC": [-100.0, 250.0],
+    "mass_flow_range_g_s": [-1000.0, 1000.0]
+  },
   "intake_rule": "Hash and quarantine files before numerical values are inspected. Never impute a missing required channel for the primary claim.",
-  "claim_boundary": "An intake manifest proves provenance and file integrity only; it is not a validation result and cannot close the IJHE readiness gate."
+  "claim_boundary": "An intake manifest and trace-quality screen prove provenance and data usability only; they are not a model-validation result and cannot close the IJHE readiness gate."
 }

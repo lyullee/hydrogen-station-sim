@@ -697,6 +697,34 @@ def audit(root: Path) -> dict[str, object]:
         },
     ))
 
+    trace_validator_path = root / "scripts/validate_external_hrs_trace.py"
+    trace_test_path = root / "tests/test_external_hrs_trace_quality.py"
+    trace_quality = (intake_protocol or {}).get("trace_quality") or {}
+    trace_contract_pass = bool(
+        isinstance(trace_quality, dict)
+        and trace_quality.get("minimum_rows", 0) >= 20
+        and 0.0 < trace_quality.get("max_missing_fraction", 0.0) <= 0.01
+        and trace_quality.get("max_gap_s", 0.0) > 0.0
+        and trace_validator_path.is_file()
+        and trace_test_path.is_file()
+        and "QUALITY_SCREEN_PASS" in trace_validator_path.read_text(encoding="utf-8")
+        and "does not impute" in trace_validator_path.read_text(encoding="utf-8")
+    )
+    gates.append(_gate(
+        "external_hrs_trace_quality_contract",
+        "PASS" if trace_contract_pass else "FAIL",
+        "The post-intake external HRS trace-quality screen is frozen for time-base, missingness and range checks without imputation or model scoring.",
+        f"{intake_protocol_path.relative_to(root)}; {trace_validator_path.relative_to(root)}; {trace_test_path.relative_to(root)}",
+        "Predeclared minimum rows, missingness and gap/range limits with regression tests for valid, non-monotonic and incomplete traces.",
+        {
+            "minimum_rows": trace_quality.get("minimum_rows"),
+            "max_missing_fraction": trace_quality.get("max_missing_fraction"),
+            "max_gap_s": trace_quality.get("max_gap_s"),
+            "validator_present": trace_validator_path.is_file(),
+            "regression_test_present": trace_test_path.is_file(),
+        },
+    ))
+
     byrnes_protocol_path = root / "research/byrnes_zenodo_exploratory_protocol.json"
     byrnes_result_path = root / "research/byrnes_zenodo_exploratory_result.json"
     byrnes_protocol = _json(byrnes_protocol_path)
@@ -2279,6 +2307,7 @@ def audit(root: Path) -> dict[str, object]:
         "ekoto_transient_release_validation",
         "hiad_protocol_integrity",
         "external_hrs_intake_integrity_contract",
+        "external_hrs_trace_quality_contract",
         "institutional_ethics_determination", "hiad_casebook_frozen",
         "hiad_holdout_collection", "independent_expert_review_complete",
         "preoutcome_design_sensitivity", "ijhe_format_gate",

@@ -23,6 +23,16 @@ evidence only. It does not promote a dataset to a validation holdout. A later
 evaluation must reference the manifest hash and a new, explicit prospective
 protocol.
 
+## Numerical trace-quality screen
+
+After the metadata gate passes, `scripts/validate_external_hrs_trace.py` may
+read only the explicitly mapped CSV trace. It applies the frozen row count,
+missingness, monotonic-time, maximum-gap and physical-range checks in the
+protocol. It performs no imputation, resampling, smoothing, model fitting or
+outcome scoring. A quality-screen pass means that the trace is usable as an
+input to the separately frozen numerical evaluator; it is not evidence that
+the digital twin is accurate.
+
 ## Eligibility check after intake
 
 The custodian may provide a separate metadata-only declaration based on the

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T01:32:33.065884+00:00",
+  "generated_at": "2026-10-05T01:42:49.423596+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 59,
+    "PASS": 60,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -668,6 +668,20 @@
           "license_or_reuse_reference",
           "source_identity"
         ],
+        "validator_present": true,
+        "regression_test_present": true
+      }
+    },
+    {
+      "id": "external_hrs_trace_quality_contract",
+      "status": "PASS",
+      "claim": "The post-intake external HRS trace-quality screen is frozen for time-base, missingness and range checks without imputation or model scoring.",
+      "evidence": "research\\external_hrs_intake_protocol.json; scripts\\validate_external_hrs_trace.py; tests\\test_external_hrs_trace_quality.py",
+      "requirement": "Predeclared minimum rows, missingness and gap/range limits with regression tests for valid, non-monotonic and incomplete traces.",
+      "observed": {
+        "minimum_rows": 20,
+        "max_missing_fraction": 0.01,
+        "max_gap_s": 60.0,
         "validator_present": true,
         "regression_test_present": true
       }
