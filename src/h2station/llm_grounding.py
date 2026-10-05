@@ -786,6 +786,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     lifecycle = evidence.get("confidential_lifecycle_counter_summary") or {}
     station_calibration = evidence.get("confidential_station_boundary_calibration") or {}
     incident = evidence.get("public_incident_traceability") or {}
+    action_taxonomy = incident.get("action_taxonomy") or {}
     accident_inventory = evidence.get("public_accident_report_inventory") or {}
     accidental_release = evidence.get("public_accidental_release_evidence") or {}
     return {
@@ -805,6 +806,11 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "accidental_release_full_loop": accidental_release.get(
                 "full_loop_station_vehicle_holdout_eligible"
             ),
+            "action_category_counts": {
+                str(key): value
+                for key, value in (action_taxonomy.get("category_counts") or {}).items()
+                if isinstance(value, int)
+            },
         },
         "confidential_boundary_holdout": holdout.get(
             "time_ordered_holdout_supported"

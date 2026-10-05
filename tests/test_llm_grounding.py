@@ -70,6 +70,9 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "10.5281/zenodo.17913628"
     )
     assert header["public_accident_evidence"]["accidental_release_full_loop"] is False
+    assert header["public_accident_evidence"]["action_category_counts"][
+        "shutdown_isolation_depressurization"
+    ] == 22
     assert header["confidential_lifecycle_evidence"]["sampled_rows"] == 41752
     assert header["confidential_lifecycle_evidence"]["counter_roles"] == [
         "high_bank_cycles", "medium_bank_cycles"
