@@ -33,7 +33,7 @@ def test_external_search_mirror_contains_same_recheck_decision():
             encoding="utf-8"
         )
     )
-    assert mirror["last_reviewed"] == "2026-10-04"
+    assert mirror["last_reviewed"] == "2026-10-05"
     assert mirror["zenodo_api_and_mendeley_recheck_2026_10_04"]["decision"] == (
         "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET"
     )

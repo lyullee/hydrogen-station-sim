@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-05",
+  "record": {
+    "id": "zenodo_19601306_urban_hydrogen_transition",
+    "title": "Datasets and code for: Governing the urban hydrogen transition: policy-aware planning of refueling infrastructure",
+    "doi": "10.5281/zenodo.19601306",
+    "url": "https://zenodo.org/records/19601306",
+    "publisher": "Zenodo / JAdE-Wang66",
+    "public_raw_data": true,
+    "decision": "PLANNING_AND_SIMULATION_DATA_NOT_FULL_LOOP_VALIDATION",
+    "inspection": {
+      "checked_at": "2026-10-05",
+      "api_record": "https://zenodo.org/api/records/19601306",
+      "version": "v1.0.1",
+      "files": [
+        "raw_data.zip",
+        "intermediate_data.zip",
+        "curated_data.zip",
+        "raw_code.zip",
+        "figures.zip",
+        "docs.zip"
+      ],
+      "description_scope": "urban hydrogen transition policy-aware planning; raw and curated planning inputs, intermediate processing, simulation/analysis code and figures",
+      "github_repository": "https://github.com/JAdE-Wang66/h2-infrastructure-review-materials",
+      "synchronized_station_to_vehicle_logger": false,
+      "vehicle_or_receptacle_pressure": false,
+      "mass_flow_or_transferred_mass": false,
+      "tank_temperature": false,
+      "protocol_metadata": false,
+      "conclusion": "Files are planning/model inputs and analysis outputs, not synchronized physical HRS fueling logger traces. No file was downloaded or inspected as a validation trace."
+    },
+    "role": "Infrastructure planning context only; cannot close the prospective full-loop thermodynamic holdout gate.",
+    "exclusion_reason": "The record documents policy-aware planning and simulation materials. It does not expose the station-to-vehicle pressure/temperature/mass-flow time series and protocol metadata required by the frozen acceptance criteria.",
+    "next_action": "No acquisition request for this record; retain DOI as excluded context and avoid scoring it as validation data."
+  },
+  "gate_effect": "No change to frozen validation gates; excluded from primary validation."
+}

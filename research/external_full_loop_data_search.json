@@ -1136,6 +1136,39 @@
         "full_loop_holdout_eligible": false,
         "role": "High-value real-station logger request lead; report-only public artifact cannot close the primary gate."
       }
+    },
+    {
+      "id": "zenodo_19601306_urban_hydrogen_transition",
+      "title": "Datasets and code for: Governing the urban hydrogen transition: policy-aware planning of refueling infrastructure",
+      "doi": "10.5281/zenodo.19601306",
+      "url": "https://zenodo.org/records/19601306",
+      "publisher": "Zenodo / JAdE-Wang66",
+      "public_raw_data": true,
+      "decision": "PLANNING_AND_SIMULATION_DATA_NOT_FULL_LOOP_VALIDATION",
+      "inspection": {
+        "checked_at": "2026-10-05",
+        "api_record": "https://zenodo.org/api/records/19601306",
+        "version": "v1.0.1",
+        "files": [
+          "raw_data.zip",
+          "intermediate_data.zip",
+          "curated_data.zip",
+          "raw_code.zip",
+          "figures.zip",
+          "docs.zip"
+        ],
+        "description_scope": "urban hydrogen transition policy-aware planning; raw and curated planning inputs, intermediate processing, simulation/analysis code and figures",
+        "github_repository": "https://github.com/JAdE-Wang66/h2-infrastructure-review-materials",
+        "synchronized_station_to_vehicle_logger": false,
+        "vehicle_or_receptacle_pressure": false,
+        "mass_flow_or_transferred_mass": false,
+        "tank_temperature": false,
+        "protocol_metadata": false,
+        "conclusion": "Files are planning/model inputs and analysis outputs, not synchronized physical HRS fueling logger traces. No file was downloaded or inspected as a validation trace."
+      },
+      "role": "Infrastructure planning context only; cannot close the prospective full-loop thermodynamic holdout gate.",
+      "exclusion_reason": "The record documents policy-aware planning and simulation materials. It does not expose the station-to-vehicle pressure/temperature/mass-flow time series and protocol metadata required by the frozen acceptance criteria.",
+      "next_action": "No acquisition request for this record; retain DOI as excluded context and avoid scoring it as validation data."
     }
   ],
   "next_action": "send the prepared CARB/NRC/IJHE high-flow/FCH2RAIL/JRC/NREL/BAM/Empa/DLR data requests through approved custodians, and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest",
@@ -1667,7 +1700,7 @@
       "next_action": "Request a de-identified station-by-fill export with timestamps, vehicle/receptacle pressure and temperature, mass flow or transferred mass, storage/cascade states, protocol mode, quality/calibration metadata, aborted-fill labels and permission to publish derived metrics. Freeze hashes and the evaluation protocol before inspecting outcomes."
     }
   },
-  "last_reviewed": "2026-10-04",
+  "last_reviewed": "2026-10-05",
   "byrnes_zenodo_followup": {
     "scope": "screening a newly located open hydrogen blowdown archive bundled with a reproducibility deposit",
     "source": "https://zenodo.org/records/20728325",
@@ -2359,5 +2392,12 @@
     "gate_impact": "full_loop_external_validation_remains_open",
     "candidate_count": 3,
     "finding": "DataCite metadata recheck classified a GIS corridor dataset, NLR HDTADA software and an NRC dispenser-reliability report as context/software/report-only; no new synchronized station-to-vehicle raw archive was identified."
+  },
+  "zenodo_19601306_recheck_2026_10_05": {
+    "record": "research/zenodo_h2_refueling_recheck_2026_10_05.json",
+    "decision": "EXCLUDED_PLANNING_SIMULATION_CONTEXT",
+    "gate_impact": "full_loop_external_validation_remains_open",
+    "source": "https://zenodo.org/records/19601306",
+    "finding": "The open record contains raw/intermediate/curated planning datasets, code and figures for urban hydrogen infrastructure planning; it does not expose synchronized station-to-vehicle pressure, temperature and mass-flow logger traces or protocol metadata."
   }
 }

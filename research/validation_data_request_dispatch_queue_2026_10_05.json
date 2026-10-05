@@ -1,0 +1,300 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-05",
+  "status": "NOT_SENT_GMAIL_NOT_CONNECTED",
+  "purpose": "Prioritized outbound requests required to obtain independent raw data for the IJHE validation objective.",
+  "dispatch_prerequisites": [
+    "Connect an approved Gmail account or provide another authorized institutional mail channel.",
+    "Review each draft and confirm the named custodian/recipient before sending.",
+    "Keep the frozen acceptance criteria and no-fitting scoring protocol unchanged before any received file is opened."
+  ],
+  "selection_rule": "Prioritize independent station-to-vehicle or real-station logger candidates that can close the full-loop gate; incident/release candidates are auxiliary safety/LLM evidence and do not replace physics validation.",
+  "common_acceptance": {
+    "required_for_full_loop": [
+      "machine-readable synchronized time base",
+      "vehicle or receptacle pressure",
+      "mass flow or transferred mass",
+      "initial conditions and tank capacity",
+      "protocol or pressure-ramp metadata",
+      "units and quality flags",
+      "independent provenance and immutable file digest",
+      "written reuse terms permitting derived results in an open repository and journal"
+    ],
+    "preferred": [
+      "fuel or vehicle temperature",
+      "storage-bank, compressor, precooler and dispenser state",
+      "alarm, abort, maintenance and calibration flags"
+    ],
+    "freeze_protocol": [
+      "quarantine received files before reading outcomes",
+      "record source URL, access date, licence and SHA-256",
+      "freeze eligible cases, split, implementation commit and error screens",
+      "run once without case-specific fitting or time warping",
+      "retain every eligible failure and publish the claim boundary"
+    ]
+  },
+  "queue": [
+    {
+      "rank": 1,
+      "id": "carb_2024_in_use",
+      "draft": "research/CARB_DATA_REQUEST_DRAFT.md",
+      "status": "request_draft_ready",
+      "source": "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf",
+      "candidate_type": "independent in-use station fills",
+      "requested_fields": [
+        "pressure",
+        "temperature",
+        "mass_flow_or_cumulative_mass",
+        "SOC",
+        "protocol",
+        "quality_flags"
+      ],
+      "minimum_acceptance": "At least eight eligible fills with common time base and vehicle/receptacle pressure plus mass flow or transferred mass.",
+      "rights": "De-identification and written reuse permission required; public report alone is context only.",
+      "next_action": "Project owner reviews and sends the draft to CARB data custodian."
+    },
+    {
+      "rank": 2,
+      "id": "nrel_hitrf_nfctec",
+      "draft": "research/NREL_HITRF_DATA_REQUEST_DRAFT.md",
+      "status": "request_draft_ready",
+      "source": "https://www.nrel.gov/hydrogen/hydrogen-infrastructure-analysis",
+      "candidate_type": "independent HITRF/NFCTEC full-station fills",
+      "requested_fields": [
+        "vehicle_pressure",
+        "dispenser_pressure",
+        "fuel_temperature",
+        "mass_flow",
+        "SOC",
+        "storage_state",
+        "precooler_state",
+        "quality_flags"
+      ],
+      "minimum_acceptance": "A de-identified holdout with common time base, tank capacity, initial conditions and protocol metadata.",
+      "rights": "NREL/NFCTEC release terms and permission for derived metrics must be documented.",
+      "next_action": "Project owner contacts the published technical-validation custodian."
+    },
+    {
+      "rank": 3,
+      "id": "calstate_la_cascade_direct_pressurized_experiments",
+      "draft": "research/CALSTATE_CASCADE_EXPERIMENT_DATA_REQUEST_DRAFT.md",
+      "status": "request_draft_ready",
+      "source": "https://doi.org/10.3390/en16155749",
+      "candidate_type": "independent real HRFF cascade and directly-pressurized experiments",
+      "requested_fields": [
+        "common_timestamp",
+        "vehicle_or_receptacle_pressure",
+        "dispenser_pressure",
+        "storage_bank_pressure",
+        "vehicle_and_gas_temperature",
+        "mass_flow_or_transferred_mass",
+        "initial_conditions",
+        "tank_capacity",
+        "cascade_selection",
+        "compressor_booster_state",
+        "precooler_state",
+        "valve_state",
+        "stop_abort_fault_markers",
+        "quality_calibration_metadata"
+      ],
+      "minimum_acceptance": "Raw synchronized traces for at least one cascade and one directly-pressurized run with run identifiers, initial conditions, capacity, protocol metadata and untouched holdout eligibility.",
+      "rights": "Cal State LA/author custodian must grant written permission for derived metrics, open-repository deposition and journal publication.",
+      "next_action": "Project owner reviews research/CALSTATE_CASCADE_EXPERIMENT_DATA_REQUEST_DRAFT.md, then contacts the HRFF custodian if authorised."
+    },
+    {
+      "rank": 4,
+      "id": "zbt_hrs_sampling_2026",
+      "draft": "research/ZBT_HRS_DATA_REQUEST_DRAFT.md",
+      "status": "request_draft_ready",
+      "source": "https://doi.org/10.3390/cleantechnol8030091",
+      "candidate_type": "real ZBT multi-bank HRS sampling and dispenser logger archive",
+      "requested_fields": [
+        "common_timestamp",
+        "storage_bank_pressure_and_temperature",
+        "dispenser_pressure_and_delivery_temperature",
+        "mass_flow_or_transferred_mass",
+        "sink_or_vehicle_pressure_and_temperature",
+        "protocol_and_initial_conditions",
+        "bank_selection_and_valve_state",
+        "quality_calibration_metadata"
+      ],
+      "minimum_acceptance": "A de-identified synchronized export with at least eight eligible events or a justified smaller protocol-defined subset, plus channel definitions, calibration data and immutable provenance.",
+      "rights": "Authors or ZBT custodian must confirm written permission for derived metrics, open repository deposition and journal publication; the article states raw data are available on request.",
+      "next_action": "Project owner reviews research/ZBT_HRS_DATA_REQUEST_DRAFT.md and contacts the corresponding author through an approved institutional channel."
+    },
+    {
+      "rank": 5,
+      "id": "prhyde_zbt_h70_h35_tests",
+      "draft": "research/PRHYDE_DATA_REQUEST_DRAFT.md",
+      "status": "request_draft_ready",
+      "source": "https://lbst.de/wp-content/uploads/2023/04/PRHYDE_Deliverable-D6-7_Results_as_Input_for_Standardisation_V1-2_final_Apr_2023.pdf",
+      "candidate_type": "independent ZBT PRHYDE 35/50/70 MPa refuelling tests",
+      "requested_fields": [
+        "common_timestamp",
+        "vehicle_or_receptacle_pressure",
+        "tank_temperature",
+        "dispenser_pressure",
+        "delivery_temperature",
+        "mass_flow_or_transferred_mass",
+        "tank_geometry",
+        "protocol_and_stop_state",
+        "calibration_and_quality_flags"
+      ],
+      "minimum_acceptance": "De-identified machine-readable synchronized logger files for complete fills with tank capacity, initial conditions, protocol metadata and at least one independent pressure/temperature/flow boundary.",
+      "rights": "PRHYDE/ZBT data custodian must confirm research reuse, derived-publication and repository-deposit terms.",
+      "next_action": "Send the prepared request to the PRHYDE/ZBT test-field data custodian identified from the D6.7 report."
+    },
+    {
+      "rank": 6,
+      "id": "gti_hydrogen_station_performance_evaluation_2020",
+      "draft": "research/GTI_DATA_REQUEST_DRAFT.md",
+      "status": "request_draft_ready",
+      "source": "https://doi.org/10.2172/1824631",
+      "candidate_type": "real_station_logger_controlled_access",
+      "requested_fields": [
+        "timestamp",
+        "vehicle_or_receptacle_pressure",
+        "station_pressure",
+        "gas_temperature",
+        "vehicle_temperature",
+        "mass_flow_or_transferred_mass",
+        "initial_conditions",
+        "tank_capacity",
+        "cascade_state",
+        "compressor_state",
+        "precooler_state",
+        "protocol_mode",
+        "stop_abort_fault_markers",
+        "quality_calibration_metadata"
+      ],
+      "minimum_acceptance": "De-identified synchronized traces with units, initial conditions, provenance, quality flags and written reuse terms; freeze hash and protocol before numerical scoring.",
+      "rights": "No public raw-data licence identified; require written permission for derived metrics and figures.",
+      "next_action": "Project-owner review of research/GTI_DATA_REQUEST_DRAFT.md, then contact the custodian if authorised."
+    },
+    {
+      "rank": 7,
+      "id": "sunhydro_hsdc_operating_archive",
+      "draft": "research/SUNHYDRO_DATA_REQUEST_DRAFT.md",
+      "status": "request_draft_ready",
+      "source": "https://www.osti.gov/servlets/purl/1783792",
+      "candidate_type": "real SunHydro station logger archive via DOE/NREL HSDC controlled access",
+      "requested_fields": [
+        "common_timestamp",
+        "vehicle_or_receptacle_pressure",
+        "station_pressure",
+        "vehicle_tank_and_gas_temperature",
+        "mass_flow_or_transferred_mass",
+        "initial_conditions",
+        "tank_capacity",
+        "storage_bank_state",
+        "compressor_state",
+        "precooler_state",
+        "valve_state",
+        "stop_abort_fault_markers",
+        "maintenance_safety_incident_flags",
+        "quality_calibration_metadata"
+      ],
+      "minimum_acceptance": "A de-identified station-by-fill export with common time base, pressure, temperature and mass/flow channels plus initial conditions, capacity, protocol metadata, quality flags and provenance.",
+      "rights": "DOE/NREL HSDC or contributing SunHydro partner must document access, derived-publication and repository-deposition terms; public aggregate CDPs are insufficient.",
+      "next_action": "Project owner reviews research/SUNHYDRO_DATA_REQUEST_DRAFT.md and identifies the approved HSDC/SunHydro custodian before any contact."
+    },
+    {
+      "rank": 8,
+      "id": "fch2rail",
+      "draft": "research/FCH2RAIL_DATA_REQUEST_DRAFT.md",
+      "status": "request_draft_ready",
+      "source": "https://doi.org/10.1016/j.ijhydene.2025.04.040",
+      "candidate_type": "independent rail-vehicle HRS fills",
+      "requested_fields": [
+        "module_pressure",
+        "dispenser_pressure",
+        "temperature",
+        "mass_flow",
+        "train_fill_protocol",
+        "quality_flags"
+      ],
+      "minimum_acceptance": "De-identified synchronized refuelling runs with capacity and pressure-ramp metadata.",
+      "rights": "DLR/project consortium permission and citation terms required.",
+      "next_action": "Project owner sends the prepared DLR request."
+    },
+    {
+      "rank": 9,
+      "id": "nist_fts",
+      "draft": "research/NIST_FTS_DATA_REQUEST_DRAFT.md",
+      "status": "request_draft_ready",
+      "source": "https://doi.org/10.1016/j.flowmeasinst.2015.10.010",
+      "candidate_type": "independent dispenser metrology and field-fill traces",
+      "requested_fields": [
+        "continuous_tank_pressure",
+        "continuous_tank_temperature",
+        "independent_mass",
+        "time_base",
+        "uncertainty"
+      ],
+      "minimum_acceptance": "Raw synchronized files with instrument calibration and test-condition metadata.",
+      "rights": "NIST/data custodian must confirm reuse and publication terms.",
+      "next_action": "Send request through NIST project contact."
+    },
+    {
+      "rank": 10,
+      "id": "jrc_gastef_hytransfer",
+      "draft": "research/JRC_GASTEF_DATA_REQUEST_DRAFT.md",
+      "status": "request_draft_ready",
+      "source": "https://doi.org/10.1016/j.ijhydene.2014.03.227",
+      "candidate_type": "independent tank filling/emptying campaign",
+      "requested_fields": [
+        "gas_path_pressure",
+        "gas_path_temperature",
+        "internal_temperature",
+        "mass_flow",
+        "geometry",
+        "run_metadata"
+      ],
+      "minimum_acceptance": "Machine-readable 18-file campaign or a defined subset with synchronized pressure and flow.",
+      "rights": "JRC/HyTransfer reuse terms and immutable source archive required.",
+      "next_action": "Send the request to the JRC/GasTeF custodian."
+    },
+    {
+      "rank": 11,
+      "id": "deng_2025_highflow",
+      "draft": "research/DENG_2025_HIGHFLOW_DATA_REQUEST_DRAFT.md",
+      "status": "request_draft_ready",
+      "source": "https://doi.org/10.1016/j.ijhydene.2025.151093",
+      "candidate_type": "independent high-flow HRS/tank experiment",
+      "requested_fields": [
+        "pressure",
+        "temperature",
+        "mass_flow",
+        "tank_capacity",
+        "protocol",
+        "instrument_uncertainty"
+      ],
+      "minimum_acceptance": "Machine-readable synchronized traces and test-condition metadata for untouched cases.",
+      "rights": "Author or publisher must permit derived metrics and repository deposit.",
+      "next_action": "Send prepared request to corresponding author."
+    },
+    {
+      "rank": 12,
+      "id": "hrs_incident_contributing_factors_2025",
+      "draft": "research/HRS_INCIDENT_DATA_REQUEST_DRAFT.md",
+      "status": "request_draft_ready",
+      "source": "https://www.sciencedirect.com/science/article/pii/S0950423025001561",
+      "candidate_type": "international HRS incident and contributing-factor event records",
+      "requested_fields": [
+        "event_identifier_or_interval",
+        "station_process_stage",
+        "equipment_class",
+        "initiating_event",
+        "failure_mode",
+        "outcome_and_severity",
+        "detection_isolation_esd_evacuation_actions",
+        "causal_factor_coding",
+        "source_provenance",
+        "missingness_uncertainty_flags"
+      ],
+      "minimum_acceptance": "De-identified event-level records and coding dictionary with source provenance, stable event identifiers, and an untouched holdout for masked SAGA scenario evaluation.",
+      "rights": "Written permission must cover masked vignettes, derived statistics, model-comparison metrics and open repository deposition.",
+      "next_action": "Project owner reviews research/HRS_INCIDENT_DATA_REQUEST_DRAFT.md and identifies the corresponding author or data custodian before any contact."
+    }
+  ]
+}
