@@ -41,6 +41,7 @@ def build(root: Path) -> dict[str, Any]:
     tracker_path = root / "research/validation_data_acquisition_tracker.json"
     search_path = root / "research/public_full_loop_search_recheck_2026_10_05.json"
     operational_search_path = root / "research/public_operational_benchmark_recheck_2026_10_05.json"
+    operational_face_path = root / "research/public_operational_benchmark_face_validity_2026_10_05.json"
     audit = load_json(audit_path)
     hiad = load_json(hiad_path)
     tracker = load_json(tracker_path)
@@ -107,6 +108,7 @@ def build(root: Path) -> dict[str, Any]:
                     "research/mc_default_source_boundary_identifiability_2026_10_04.json",
                     "research/public_full_loop_search_recheck_2026_10_04.json",
                     "research/public_operational_benchmark_recheck_2026_10_05.json",
+                    "research/public_operational_benchmark_face_validity_2026_10_05.json",
                     "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
                     "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json",
                 ],
@@ -155,6 +157,7 @@ def build(root: Path) -> dict[str, Any]:
             "acquisition_tracker_sha256": sha256(tracker_path),
             "full_loop_search_sha256": sha256(search_path),
             "operational_benchmark_recheck_sha256": sha256(operational_search_path),
+            "operational_benchmark_face_validity_sha256": sha256(operational_face_path),
             "candidate_route_count": len(tracker.get("candidates") or []),
             "public_full_loop_search_candidate_count": candidate_count(search),
             "public_operational_benchmark_candidate_count": candidate_count(operational_search),

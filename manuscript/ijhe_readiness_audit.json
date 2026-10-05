@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T09:39:46.939467+00:00",
+  "generated_at": "2026-10-05T09:52:24.164252+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -463,6 +463,12 @@
           "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
           "gate_impact": "full_loop_external_validation_remains_open",
           "candidate_count": 17
+        },
+        "operational_benchmark_face_validity_2026_10_05": {
+          "result": "NOMINAL_LIGHT_DUTY_FACE_VALIDITY_CONTEXT_ONLY",
+          "external_validation_status": "NOT_ESTABLISHED",
+          "goal_completion_permitted": false,
+          "claim_boundary": "Nominal operating-range context only; no synchronized full-loop validation claim."
         }
       }
     },
@@ -4799,7 +4805,7 @@
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 580,
+            "passed": 582,
             "failed": 0,
             "warnings": 16
           }

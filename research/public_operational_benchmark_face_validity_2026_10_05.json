@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "scope": "Public aggregate and endpoint benchmark screen for light-duty and heavy-duty HRS operating-range face validity",
+  "purpose": "Check whether the locked simulator's nominal pressure and flow envelope is visibly compatible with reported public HRS operating points without treating aggregate or figure-only evidence as synchronized full-loop validation.",
+  "source_manifest": {
+    "path": "research/public_operational_benchmark_recheck_2026_10_05.json",
+    "sha256": "614db5c0dc832512b8e6967a44990bf9a5297f4fca2ba9740d452a92af5cab7e",
+    "candidate_count": 17,
+    "rights_and_trace_boundary": "Only source-reported endpoint, aggregate or figure-level values are used. No public source supplies a rights-cleared common-time-base station-to-vehicle pressure-temperature-mass-flow archive in this screen."
+  },
+  "locked_model_reference": {
+    "default_vehicle_target_pressure_mpa": 70.0,
+    "cascade_bank_target_pressures_mpa": [45.0, 65.0, 95.0],
+    "compressor_maximum_mass_flow_g_s": 35.0,
+    "dispenser_maximum_mass_flow_g_s": 60.0,
+    "compressor_maximum_discharge_pressure_mpa": 100.0,
+    "reference_vehicle_internal_volume_m3": 0.122,
+    "interpretation": "These are locked reference-scenario values, not parameters fitted to the public sources in this screen."
+  },
+  "source_metrics": [
+    {
+      "source_id": "cip_chinese_35_70mpa_station_experiments_2020",
+      "doi": "10.19799/j.cnki.2095-4239.2020.0049",
+      "reported_cases": [
+        {
+          "label": "35 MPa field test",
+          "initial_pressure_mpa": 2.2,
+          "final_pressure_mpa": 35.4,
+          "transferred_mass_kg": 8.21,
+          "elapsed_time_s": 470,
+          "derived_mean_mass_flow_g_s": 17.4680851064
+        },
+        {
+          "label": "70 MPa field test",
+          "initial_pressure_mpa": 1.7,
+          "final_pressure_mpa": 81.6,
+          "transferred_mass_kg": 5.08,
+          "elapsed_time_s": 276,
+          "reported_peak_mass_flow_g_s": 36.0,
+          "derived_mean_mass_flow_g_s": 18.4057971014
+        }
+      ],
+      "evidence_class": "endpoint_table_only",
+      "use_boundary": "face-validity context and acquisition lead; not a time-series holdout"
+    },
+    {
+      "source_id": "nrel_doe_hdiq_hd_fueling_experiment_2024",
+      "url": "https://www.energy.gov/cmei/fuels/march-h2iq-hour-hydrogen-fuel-dispensing-medium-and-heavy-duty-vehicles-text-version",
+      "reported_case": {
+        "protocol": "SAE J2601-5 MCF-HF-G H70 FM300 T40",
+        "initial_pressure_mpa": 5.5,
+        "ending_pressure_mpa": 74.6,
+        "transferred_mass_kg": 73.0,
+        "total_fill_time_s": 423.5,
+        "fueling_time_s": 358.9,
+        "reported_average_mass_flow_g_s": 172.3,
+        "reported_peak_mass_flow_g_s": 483.33
+      },
+      "evidence_class": "heavy_duty_figure_and_report_summary",
+      "use_boundary": "high-flow heavy-duty context and acquisition lead; outside the locked light-duty default flow envelope and not a raw holdout"
+    },
+    {
+      "source_id": "mountain_view_cec_linde_2022",
+      "url": "https://www.energy.ca.gov/sites/default/files/2022-01/CEC-600-2022-004.pdf",
+      "reported_case": {
+        "dispensing_pressures_bar": [350, 700],
+        "reported_fill_time_min": [3, 4],
+        "average_fill_kg": 3.43,
+        "transactions": 3119,
+        "average_daily_dispensed_kg": 58
+      },
+      "evidence_class": "station_aggregate",
+      "use_boundary": "station-scale operating context only; no event-level synchronous trace"
+    }
+  ],
+  "derived_checks": [
+    {
+      "id": "default_target_pressure_inside_public_light_duty_endpoint_span",
+      "formula": "35.4 MPa <= 70.0 MPa <= 81.6 MPa",
+      "status": "PASS",
+      "meaning": "The default 70 MPa vehicle target lies between the two public CIP endpoint cases.",
+      "claim_limit": "Endpoint compatibility only; it does not validate pressure trajectory, temperature or controller timing."
+    },
+    {
+      "id": "default_dispenser_flow_covers_cip_reported_peak",
+      "formula": "60.0 g/s >= 36.0 g/s",
+      "status": "PASS",
+      "meaning": "The default dispenser flow ceiling is above the reported 70 MPa CIP peak.",
+      "claim_limit": "A peak value is not a synchronized trace and does not validate flow regulation or measurement uncertainty."
+    },
+    {
+      "id": "default_compressor_flow_is_near_cip_peak",
+      "formula": "35.0 g/s / 36.0 g/s = 0.9722",
+      "status": "CONTEXT",
+      "meaning": "The reference compressor ceiling is close to the reported CIP peak, so the compressor/dispenser distinction must remain explicit in interpretation.",
+      "claim_limit": "The public source does not expose the compressor state or station-side flow split for that case."
+    },
+    {
+      "id": "heavy_duty_peak_flow_is_outside_default_dispenser_envelope",
+      "formula": "60.0 g/s < 483.33 g/s",
+      "status": "NOT_COVERED",
+      "meaning": "The locked reference scenario does not claim to reproduce the NREL heavy-duty high-flow case.",
+      "claim_limit": "This is an explicit scope boundary, not a model failure against a raw holdout. A separate heavy-duty configuration and raw synchronized validation set are required."
+    },
+    {
+      "id": "station_pressure_service_context",
+      "formula": "350/700 bar public service context includes the 70 MPa reference target",
+      "status": "CONTEXT",
+      "meaning": "The public Mountain View station report is consistent with the reference station's 35/70 MPa service context.",
+      "claim_limit": "Aggregate station throughput and fill-time statistics do not validate the simulated transient."
+    }
+  ],
+  "result": "NOMINAL_LIGHT_DUTY_FACE_VALIDITY_CONTEXT_ONLY",
+  "external_validation_status": "NOT_ESTABLISHED",
+  "full_loop_holdout_eligible": false,
+  "goal_completion_permitted": false,
+  "limitations": [
+    "No synchronized public station/controller/vehicle row-level archive with explicit reuse rights was available in the source manifest.",
+    "The screen does not fit or change simulator parameters.",
+    "Endpoint and aggregate compatibility cannot establish physics validity, safety distance, operator effectiveness or SAGA benefit.",
+    "Heavy-duty high-flow behaviour remains outside the default reference configuration and requires a separately frozen validation plan."
+  ],
+  "next_action": "Use this screen as a transparent operating-range appendix, then obtain a rights-cleared synchronized full-loop archive and score it under the already frozen pre-access protocol."
+}
