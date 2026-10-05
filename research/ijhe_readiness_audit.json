@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T20:29:05.512911+00:00",
+  "generated_at": "2026-10-05T21:30:11.323601+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 69,
+    "PASS": 71,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -411,6 +411,33 @@
         },
         "cross_station_pressure_plausibility": true,
         "cross_station_full_loop_validation": false
+      }
+    },
+    {
+      "id": "confidential_station_schema_intake_integrity",
+      "status": "PASS",
+      "claim": "The restricted station archive has a de-identified channel-presence inventory that identifies station-side calibration candidates without treating unconfirmed units as measurements.",
+      "evidence": "research\\confidential_station_schema_audit_2026_10.json",
+      "requirement": "At least two source bundles, pressure/state channel candidates, no raw rows or source identifiers, and an explicit unit-attestation hold.",
+      "observed": {
+        "source_bundle_count": 2,
+        "file_count": 33,
+        "tagged_channel_counts": {
+          "pressure": 136,
+          "temperature": 64,
+          "flow": 64,
+          "discrete_state": 216,
+          "lifecycle": 34
+        },
+        "unit_attestation": {
+          "machine_readable_unit_dictionary_found": false,
+          "pressure_units_attested": false,
+          "temperature_units_attested": false,
+          "flow_units_attested": false,
+          "state_semantics_attested": false,
+          "action": "Require custodian unit and tag-semantics confirmation before fitting untrusted channels."
+        },
+        "full_loop_holdout_eligible": false
       }
     },
     {
@@ -3719,7 +3746,7 @@
       "id": "grune_2014_pressure_decay_validation",
       "status": "PENDING",
       "claim": "The locked source model meets all pressure-decay screens on the independent KIT small-reservoir release.",
-      "evidence": "research\\grune_2014_holdout_result.json; research\\grune_2014_holdout_protocol.json; data\\public_validation\\derived\\grune_2014_figure2.csv; research/grune_2014_archive_access_recheck_2026_10_05.json",
+      "evidence": "research\\grune_2014_holdout_result.json; research\\grune_2014_holdout_protocol.json; data\\public_validation\\derived\\grune_2014_figure2.csv; research\\grune_2014_publisher_access_recheck_2026_10_06.json; research/grune_2014_archive_access_recheck_2026_10_05.json",
       "requirement": "At least 15 points plus an observable half-pressure crossing; <=10% NRMSE, <=15% median error and <=20% half-time error.",
       "observed": {
         "eligibility": {
@@ -3743,6 +3770,11 @@
           "joint_primary_screen_pass": false
         },
         "hashes_match": true,
+        "publisher_access_recheck": {
+          "status": "publisher_access_recheck_completed",
+          "raw_trace_found": false,
+          "full_raw_holdout_eligible": false
+        },
         "claim_boundary": "One 20 MPa, 0.37 L, 4 mm pressure-decay trace; no flame, ignition, dispersion, radiation, station control or safety-distance claim."
       }
     },
@@ -4961,6 +4993,25 @@
           "interpretation": "public accidental-release/ignition provenance and qualitative scenario grounding only; no ignition probability or station full-loop claim",
           "all_local_file_hashes_match": true
         }
+      }
+    },
+    {
+      "id": "public_hitrf_operational_reference_integrity",
+      "status": "PASS",
+      "claim": "The public HITRF facility envelope is available to LLM grounding without being presented as raw full-loop validation.",
+      "evidence": "research\\nlr_hitrf_public_operational_reference_2026_10_06.json",
+      "requirement": "Storage tiers, compression stages, thermal boundary and an explicit no-raw-logger claim boundary.",
+      "observed": {
+        "source_url": "https://www.nlr.gov/hydrogen/hitrf-animation",
+        "raw_synchronized_logger_public": false,
+        "storage_tiers": [
+          "high_pressure",
+          "low_pressure",
+          "medium_pressure"
+        ],
+        "compression_stage_count": 4,
+        "chiller_target_temperature_c": -40,
+        "claim_boundary": "This is a citation-bounded facility reference, not a raw dataset or a validation result. Do not infer unreported transients, uncertainties, control logic or accident performance."
       }
     },
     {
