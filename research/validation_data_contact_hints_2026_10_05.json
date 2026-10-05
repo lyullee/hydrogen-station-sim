@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-05",
+  "status": "PUBLIC_CONTACT_HINTS_ONLY_NOT_SENT",
+  "claim_boundary": "These are public institutional contact routes for data requests. They do not prove data availability, permission, or validation eligibility.",
+  "contacts": [
+    {
+      "candidate_id": "calstate_la_cascade_direct_pressurized_experiments",
+      "contact": "David Blekhman",
+      "email": "blekhman@calstatela.edu",
+      "role": "Cal State LA HRFF technical director and professor",
+      "source": "https://www.calstatela.edu/ecst/h2station/people-involved",
+      "source_note": "Official Cal State LA HRFF people page lists the technical director contact.",
+      "request_draft": "research/CALSTATE_CASCADE_EXPERIMENT_DATA_REQUEST_DRAFT.md"
+    },
+    {
+      "candidate_id": "zbt_hrs_sampling_2026",
+      "contact": "Christian Spitta",
+      "email": "c.spitta@zbt.de",
+      "role": "ZBT hydrogen infrastructure contact",
+      "source": "https://monitor-industrial-ecosystems.ec.europa.eu/technology-centre/hydrogen-and-fuel-cell-center-zbt",
+      "source_note": "European Commission technology-centre page lists the ZBT hydrogen infrastructure contact.",
+      "request_draft": "research/ZBT_HRS_DATA_REQUEST_DRAFT.md"
+    },
+    {
+      "candidate_id": "fch2rail",
+      "contact": "Holger Dittus",
+      "email": "holger.dittus@dlr.de",
+      "role": "FCH2RAIL project contact, DLR Institute of Vehicle Concepts",
+      "source": "https://fch2rail.eu/project-results/",
+      "source_note": "Official FCH2RAIL project page lists the DLR contact.",
+      "request_draft": "research/FCH2RAIL_DATA_REQUEST_DRAFT.md"
+    },
+    {
+      "candidate_id": "hiad_public_accident_casebook",
+      "contact": "JRC PTT H2 Safety",
+      "email": "JRC-PTT-H2SAFETY@ec.europa.eu",
+      "role": "HIAD collaboration and feedback route",
+      "source": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt",
+      "source_note": "JRC HIAD page lists this address for enquiries and collaboration.",
+      "request_draft": "research/HRS_INCIDENT_DATA_REQUEST_DRAFT.md"
+    },
+    {
+      "candidate_id": "carb_2024_in_use",
+      "contact": "CARB Vapor Recovery and Fuel Transfer Branch",
+      "email": "vapor@arb.ca.gov",
+      "role": "California Air Resources Board data-request route",
+      "source": "https://ww2.arb.ca.gov/",
+      "source_note": "The prepared CARB draft identifies the public branch mailbox.",
+      "request_draft": "research/CARB_DATA_REQUEST_DRAFT.md"
+    }
+  ]
+}
