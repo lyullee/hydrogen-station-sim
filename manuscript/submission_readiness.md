@@ -73,6 +73,13 @@ and is exposed to the bounded LLM context. The NREL tank/hose trace and the
 DOE/NREL high-flow report support partial-boundary and face-validity checks;
 neither is treated as a complete station-to-vehicle holdout.
 
+The capacity/EOS geometry sensitivity was also replayed on the public
+H2Protocol cases with the effective-volume multiplier removed. It retained only
+6/36 engineering-screen passes, so the production geometry and published
+validation defaults remain unchanged. The aggregate is archived in
+[`h2protocol_capacity_geometry_no_volume_fit_diagnostic_2026_10_06.json`](../research/h2protocol_capacity_geometry_no_volume_fit_diagnostic_2026_10_06.json)
+as negative development evidence rather than a new validation claim.
+
 ## Publication-format checks
 
 The local format gate currently passes:

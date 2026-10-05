@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_h2protocol_capacity_geometry_sensitivity",
+  "generated_at": "2026-10-05T18:42:54.799360+00:00",
+  "status": "exploratory_no_volume_fit_diagnostic_only",
+  "evidence_role": "negative_model_development_evidence",
+  "claim_boundary": "This result is a post-access sensitivity replay of the public H2Protocol cases. It is not a fresh holdout, does not change production defaults, and cannot close the station-to-vehicle validation gate.",
+  "geometry_rule": {
+    "formula": "V = declared_capacity_kg / rho(P_nominal, 288.15 K)",
+    "density_source": "h2station.tabulated.PropsSI Hydrogen EOS table",
+    "effective_volume_multiplier": 1.0,
+    "gas_liner_ua_multiplier": 31.460656519273492,
+    "dispenser_flow_area_multiplier": 2.0,
+    "precooler_duty_multiplier": 16.0
+  },
+  "source": {
+    "public_processed_dataset": "data/public_validation/processed/h2protocol_cases.csv and h2protocol_traces/",
+    "tank_fit_source": "research/tank_model_validation_v2.json",
+    "flow_fit_source": "research/closed_loop_flow_calibration_v2.json",
+    "thermal_fit_source": "research/closed_loop_thermal_calibration_v2.json",
+    "runner": "scripts/run_h2protocol_capacity_geometry_diagnostic.py",
+    "runner_sha256": "b0e427ed8a00ea5834d6a2a21230f285073163b2c5e2593c88184751f30ea402",
+    "tank_fit_sha256": "4480505cd2e094f64c03421545bfb2a0235a7f58b66e2a5cb5ed529d4d669840",
+    "flow_fit_sha256": "79c87a7a153958e32a477d96dc18cd2184efa92b5267b5b0df0d168602d2097e",
+    "thermal_fit_sha256": "4a3692dd0739d51f5fc958f14bd6ef1a76cb3cfa75224a7196f8aedadccbff8e",
+    "source_commit": "04db44368c2e337c170ca3ab9e474be00c8575474",
+    "temporary_harness_used": true,
+    "temporary_harness_note": "The aggregate was captured from the same runner with the effective-volume override; the committed runner now exposes that override as an explicit CLI option."
+  },
+  "screening_limits": {
+    "pressure_rmse_mpa_max": 5.0,
+    "temperature_rmse_c_max": 10.0,
+    "soc_final_abs_error_percentage_points_max": 5.0
+  },
+  "aggregate": {
+    "case_count": 36,
+    "screening_pass_count": 6,
+    "screening_pass_fraction": 0.16666666666666666,
+    "final_stop_reason_counts": {
+      "none": 19,
+      "safety-temperature": 11,
+      "vehicle-target": 6
+    },
+    "metrics": {
+      "pressure_rmse_mpa": {
+        "mean": 5.746925585990609,
+        "median": 3.862133332990457,
+        "standard_deviation": 5.846312057223289,
+        "mean_bootstrap_95_ci": [4.058548723584702, 7.8126409189688655]
+      },
+      "pressure_mae_mpa": {
+        "mean": 4.2493265115819945,
+        "median": 2.9801913757407075,
+        "standard_deviation": 4.408730035391095,
+        "mean_bootstrap_95_ci": [2.987076853641149, 5.813531366664081]
+      },
+      "temperature_rmse_c": {
+        "mean": 10.615328901020515,
+        "median": 7.901410177930787,
+        "standard_deviation": 8.28450636732821,
+        "mean_bootstrap_95_ci": [8.254264982697721, 13.540168687276076]
+      },
+      "temperature_mae_c": {
+        "mean": 9.227487897312749,
+        "median": 6.496440697610533,
+        "standard_deviation": 7.557884749379877,
+        "mean_bootstrap_95_ci": [7.0723064289464554, 11.887341998263878]
+      },
+      "soc_rmse_percentage_points": {
+        "mean": 6.211182859963806,
+        "median": 3.850381521612249,
+        "standard_deviation": 6.7572790578700515,
+        "mean_bootstrap_95_ci": [4.286483944899913, 8.597149986211747]
+      }
+    }
+  },
+  "interpretation": {
+    "finding": "Removing the effective-volume multiplier did not increase the closed-loop screening pass count relative to the frozen capacity/EOS sensitivity (6/36 in both runs).",
+    "decision": "retain_production_defaults",
+    "next_required_evidence": "A new pre-access frozen protocol and untouched synchronized station-to-vehicle dataset are required before promoting this geometry rule."
+  }
+}

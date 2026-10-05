@@ -79,12 +79,19 @@ def run(
     flow_calibration: Path = ROOT / "research/closed_loop_flow_calibration_v2.json",
     thermal_calibration: Path = ROOT / "research/closed_loop_thermal_calibration_v2.json",
     jobs: int = 4,
+    effective_volume_multiplier_override: float | None = None,
 ) -> dict:
     tank_report = json.loads(tank_validation.read_text(encoding="utf-8"))
     tank_fit = {
         "effective_volume_multiplier": float(tank_report["fit"]["effective_volume_multiplier"]),
         "gas_liner_ua_multiplier": float(tank_report["fit"]["gas_liner_ua_multiplier"]),
     }
+    if effective_volume_multiplier_override is not None:
+        if effective_volume_multiplier_override <= 0.0:
+            raise ValueError("effective_volume_multiplier_override must be positive")
+        tank_fit["effective_volume_multiplier"] = float(
+            effective_volume_multiplier_override
+        )
     flow_report = json.loads(flow_calibration.read_text(encoding="utf-8"))
     thermal_report = json.loads(thermal_calibration.read_text(encoding="utf-8"))
     flow_multiplier = float(flow_report["selected_dispenser_flow_area_multiplier"])
@@ -136,6 +143,10 @@ def run(
             "gas_liner_ua_multiplier": tank_fit["gas_liner_ua_multiplier"],
             "dispenser_flow_area_multiplier": flow_multiplier,
             "precooler_duty_multiplier": thermal_multiplier,
+            "effective_volume_multiplier_override": (
+                float(effective_volume_multiplier_override)
+                if effective_volume_multiplier_override is not None else None
+            ),
         },
         "aggregate": runner._aggregate(cases),
         "cases": cases,
@@ -152,8 +163,19 @@ def main() -> int:
     parser.add_argument("--processed", type=Path, default=ROOT / "data/public_validation/processed")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--jobs", type=int, default=4)
+    parser.add_argument(
+        "--effective-volume-multiplier",
+        type=float,
+        default=None,
+        help="Exploratory override; does not change production defaults or validation claims",
+    )
     args = parser.parse_args()
-    report = run(args.processed, args.output, jobs=args.jobs)
+    report = run(
+        args.processed,
+        args.output,
+        jobs=args.jobs,
+        effective_volume_multiplier_override=args.effective_volume_multiplier,
+    )
     print(json.dumps(report["aggregate"], ensure_ascii=False, indent=2))
     return 0
 
