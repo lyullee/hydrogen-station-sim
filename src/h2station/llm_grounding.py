@@ -663,12 +663,27 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     detector_aggregate = detector.get("aggregate") or {}
     confidential = evidence.get("confidential_measured_boundary_replay") or {}
     holdout = confidential.get("temporal_holdout") or {}
+    incident = evidence.get("public_incident_traceability") or {}
+    accident_inventory = evidence.get("public_accident_report_inventory") or {}
+    accidental_release = evidence.get("public_accidental_release_evidence") or {}
     return {
         "public_experiment_sources": benchmark_ids,
         "public_detector_replay_cases": detector_aggregate.get("case_count"),
         "public_detector_trip_coverage": detector_aggregate.get(
             "mean_trip_sensor_coverage_fraction"
         ),
+        "public_accident_evidence": {
+            "hiad_case_count": incident.get("case_count"),
+            "hiad_action_taxonomy": incident.get("action_taxonomy", {}).get(
+                "category_patterns_version"
+            ) if isinstance(incident.get("action_taxonomy"), dict) else None,
+            "public_report_count": accident_inventory.get("public_report_count"),
+            "incident_code_count": accident_inventory.get("incident_code_count"),
+            "accidental_release_zenodo_doi": accidental_release.get("zenodo_doi"),
+            "accidental_release_full_loop": accidental_release.get(
+                "full_loop_station_vehicle_holdout_eligible"
+            ),
+        },
         "confidential_boundary_holdout": holdout.get(
             "time_ordered_holdout_supported"
         ) is True,

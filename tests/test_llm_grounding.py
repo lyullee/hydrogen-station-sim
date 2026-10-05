@@ -1,4 +1,8 @@
-from h2station.llm_grounding import build_evidence_manifest, prompt_evidence_summary
+from h2station.llm_grounding import (
+    build_evidence_manifest,
+    prompt_evidence_header,
+    prompt_evidence_summary,
+)
 
 
 def test_manifest_distinguishes_not_requested_from_calculated_impact():
@@ -60,6 +64,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "time_ordered_holdout_supported"
     ] is True
     assert early["evidence_digest"] == idle["evidence_digest"]
+    header = prompt_evidence_header(idle)
+    assert header["public_accident_evidence"]["public_report_count"] == 23
+    assert header["public_accident_evidence"]["accidental_release_zenodo_doi"] == (
+        "10.5281/zenodo.17913628"
+    )
+    assert header["public_accident_evidence"]["accidental_release_full_loop"] is False
     confidential = idle["response_evidence"]["confidential_measured_boundary_replay"]
     assert confidential["trajectory_completed"] is True
     assert confidential["station_boundary_calibration_supported"] is True
