@@ -497,6 +497,75 @@ def _quantile(values: Sequence[float], fraction: float) -> float | None:
     return float(quantiles(values, n=100, method="inclusive")[max(0, min(99, int(fraction * 100) - 1))])
 
 
+def fit_station_boundary_profile(
+    profile: StationBoundaryProfile,
+    *,
+    quality_warnings: Sequence[str] = (),
+) -> StationCalibrationSummary:
+    """Fit aggregate boundary calibration from an in-memory time slice.
+
+    This helper is used by the private holdout runner.  The caller decides
+    the calibration slice before the untouched replay slice is evaluated, so
+    the fit cannot inspect a later model outcome.  Only aggregate statistics
+    are returned; timestamps and samples remain in memory.
+    """
+
+    if len(profile.time_s) < 2:
+        raise ValueError("boundary profile requires at least two points")
+    intervals: list[float] = []
+    pressure_steps: list[float] = []
+    positive_ramps: list[float] = []
+    for previous_time, time_s, previous_pressure, pressure in zip(
+        profile.time_s,
+        profile.time_s[1:],
+        profile.pressure_pa,
+        profile.pressure_pa[1:],
+    ):
+        dt = float(time_s - previous_time)
+        if dt <= 0.0:
+            raise ValueError("boundary profile time must be strictly increasing")
+        step = float(pressure - previous_pressure)
+        intervals.append(dt)
+        pressure_steps.append(step)
+        if step > 0.0:
+            positive_ramps.append(step / dt)
+    absolute_steps = [abs(value) for value in pressure_steps if abs(value) > 0.0]
+    centered = [value - median(pressure_steps) for value in pressure_steps]
+    noise_sigma = math.sqrt(sum(value * value for value in centered) / len(centered))
+    stable_deltas = [
+        value for value in absolute_steps
+        if value <= (_quantile(absolute_steps, 0.75) or value)
+    ]
+    hysteresis = max(
+        0.25e6,
+        min(2.0e6, (_quantile(stable_deltas, 0.95) or 0.0) * 2.0),
+    )
+    temperatures = [value - 273.15 for value in profile.temperature_k if math.isfinite(value)]
+    return StationCalibrationSummary(
+        files_read=1,
+        sampled_rows=len(profile.time_s),
+        finite_rows=len(profile.pressure_pa),
+        duration_s=float(profile.time_s[-1] - profile.time_s[0]),
+        median_sample_period_s=median(intervals),
+        maximum_gap_s=max(intervals),
+        pressure_min_pa=min(profile.pressure_pa),
+        pressure_median_pa=median(profile.pressure_pa),
+        pressure_max_pa=max(profile.pressure_pa),
+        pressure_noise_sigma_pa=noise_sigma,
+        pressure_ramp_p95_pa_s=_quantile(positive_ramps, 0.95),
+        flow_p95_kg_s=None,
+        recommended_recharge_hysteresis_pa=hysteresis,
+        recommended_recharge_restart_margin_pa=hysteresis,
+        channel_roles=("station_pressure", "station_temperature")
+        if temperatures else ("station_pressure",),
+        quality_warnings=tuple(sorted(set(quality_warnings))),
+        temperature_min_deg_c=min(temperatures) if temperatures else None,
+        temperature_median_deg_c=median(temperatures) if temperatures else None,
+        temperature_max_deg_c=max(temperatures) if temperatures else None,
+        state_transition_count=0,
+    )
+
+
 def read_boundary_profile(
     input_path: Path,
     mapping: TraceMapping,

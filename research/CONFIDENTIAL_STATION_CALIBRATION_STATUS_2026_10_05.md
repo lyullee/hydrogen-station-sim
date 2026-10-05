@@ -75,6 +75,14 @@ trajectory is evaluated. This avoids choosing a window by looking at the
 simulated outcome; the selection rule and its claim limit are retained in the
 sanitized evidence artifact.
 
+The same adapter now has a chronological holdout runner. It derives the
+recharge restart margin from the earlier measured prefix only, then replays a
+later untouched suffix through the protection-aware runtime. The holdout
+trajectory completed without an ESD trip, and the report records that neither
+the holdout outcome nor its samples were used for fitting. This is a temporal
+integration check; it is not promoted to station-to-vehicle accuracy because
+vehicle, receptacle and dispenser-protocol channels are still absent.
+
 The first pressure/equipment synchronization attempt was intentionally rejected
 because the two supplied sample windows did not overlap on their absolute time
 axes. No rows were shifted to manufacture an overlap, and no scenario
@@ -102,3 +110,9 @@ and mapping and an output path outside the repository. An owner-approved
 aggregate calibration JSON may be supplied with `--calibration`; this changes
 only that replay invocation. Do not commit the mapping, raw files, raw hashes,
 filenames, or unapproved derived metrics to GitHub or Zenodo.
+
+For a time-ordered private holdout, use
+`scripts/replay_confidential_station_holdout.py`. It writes only the split,
+alignment quality and protection outcome to the output path outside the
+repository. The approved aggregate result is summarized in
+`research/confidential_measured_boundary_holdout_2026_10_06.json`.

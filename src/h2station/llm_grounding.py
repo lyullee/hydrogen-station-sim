@@ -245,7 +245,7 @@ def _confidential_measured_boundary_evidence() -> dict[str, Any] | None:
         return None
     eligibility = record.get("eligibility") or {}
     replay = record.get("controlled_replay") or {}
-    return {
+    result = {
         "artifact": "research/confidential_measured_boundary_replay_2026_10_06.json",
         "evidence_role": "confidential measured-boundary integration only",
         "trajectory_completed": replay.get("trajectory_completed") is True,
@@ -259,6 +259,36 @@ def _confidential_measured_boundary_evidence() -> dict[str, Any] | None:
         "source_identifiers_published": False,
         "claim_limit": str(record.get("claim_boundary") or ""),
     }
+    holdout_path = Path(__file__).resolve().parents[2] / (
+        "research/confidential_measured_boundary_holdout_2026_10_06.json"
+    )
+    try:
+        holdout = json.loads(holdout_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        holdout = None
+    if (
+        isinstance(holdout, dict)
+        and holdout.get("artifact_type") == "confidential_measured_boundary_holdout_replay"
+        and holdout.get("source_identifiers_published") is False
+        and holdout.get("raw_rows_persisted") is False
+    ):
+        split = holdout.get("split") or {}
+        holdout_replay = holdout.get("controlled_replay") or {}
+        holdout_eligibility = holdout.get("eligibility") or {}
+        result["temporal_holdout"] = {
+            "artifact": "research/confidential_measured_boundary_holdout_2026_10_06.json",
+            "trajectory_completed": holdout_replay.get("holdout_trajectory_completed") is True,
+            "fit_used_holdout": split.get("fit_used_holdout") is True,
+            "outcome_used_for_fit": split.get("outcome_used_for_fit") is True,
+            "time_ordered_holdout_supported": holdout_eligibility.get(
+                "time_ordered_measured_boundary_holdout_supported"
+            ) is True,
+            "independent_full_loop_validation_supported": holdout_eligibility.get(
+                "independent_full_loop_validation_supported"
+            ) is True,
+            "claim_limit": str(holdout.get("claim_boundary") or ""),
+        }
+    return result
 
 
 def _finite_number(value: Any) -> int | float | None:

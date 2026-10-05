@@ -7,6 +7,7 @@ from h2station.controlled_station_replay import (
     TraceMapping,
     apply_recharge_hysteresis,
     fit_station_boundary,
+    fit_station_boundary_profile,
     read_boundary_profile,
     synchronize_station_traces,
 )
@@ -114,6 +115,20 @@ def test_station_calibration_margin_is_explicitly_injected():
     )
     assert built.station.supervisor.parameters.minimum_dispatch_pressure_margin_pa == 1.4e6
     assert built.station.supervisor.parameters.recharge_pressure_hysteresis_pa == 1.8e6
+
+
+def test_profile_calibration_can_be_fitted_from_a_calibration_slice_only(tmp_path: Path):
+    trace = tmp_path / "boundary_profile.csv"
+    trace.write_text("time,pressure\n0,40\n1,40.5\n2,41.0\n", encoding="utf-8")
+    profile = read_boundary_profile(
+        trace,
+        TraceMapping(time_column="time", pressure_columns=(("bank", "pressure"),)),
+    )
+    summary = fit_station_boundary_profile(profile)
+    assert summary.sampled_rows == 3
+    assert summary.duration_s == 2.0
+    assert summary.recommended_recharge_restart_margin_pa is not None
+    assert summary.channel_roles == ("station_pressure",)
 
 
 def test_synchronization_requires_real_overlap_and_keeps_states_discrete(tmp_path: Path):

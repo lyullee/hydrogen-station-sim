@@ -51,6 +51,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert confidential["independent_full_loop_validation_supported"] is False
     assert confidential["raw_rows_persisted"] is False
     assert confidential["source_identifiers_published"] is False
+    holdout = confidential["temporal_holdout"]
+    assert holdout["trajectory_completed"] is True
+    assert holdout["fit_used_holdout"] is False
+    assert holdout["outcome_used_for_fit"] is False
+    assert holdout["time_ordered_holdout_supported"] is True
+    assert holdout["independent_full_loop_validation_supported"] is False
 
     result = {"node_id": "N09", "node_name": "고압 저장뱅크",
               "calculation_status": "calculated",

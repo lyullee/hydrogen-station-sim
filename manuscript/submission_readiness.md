@@ -43,6 +43,14 @@ The current controlled measured-boundary replay is recorded in
 It supports station-boundary integration and calibration checks only; it does
 not close the independent station-to-vehicle holdout gate.
 
+A time-ordered private holdout replay is recorded in
+[`confidential_measured_boundary_holdout_2026_10_06.json`](../research/confidential_measured_boundary_holdout_2026_10_06.json).
+Its calibration margin is derived from an earlier measured prefix and the
+later suffix is replayed without using its outcome for fitting. This adds
+temporal integration evidence while leaving the full station-to-vehicle gate
+open because the private export does not contain synchronized vehicle,
+receptacle and dispenser-protocol channels.
+
 ## Publication-format checks
 
 The local format gate currently passes:
