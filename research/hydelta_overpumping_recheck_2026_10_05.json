@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-05",
+  "source": {
+    "title": "Experimentally obtained hydrogen overpumping data for validation of mathematical models",
+    "url": "https://starfos.tacr.cz/en/vysledky-vyzkumu/RIV%2F25870807%3A_____%2F23%3AN0000009",
+    "result_code": "RIV/25870807:_____/23:N0000009",
+    "publisher": "Technology Agency of the Czech Republic STARFOS",
+    "year": 2023
+  },
+  "reported_scope": {
+    "experiment_count": 4,
+    "configuration": "high-pressure cylinder bundle, receiving pressure cylinder, transfer hose and transfer valves",
+    "channels": [
+      "pressure",
+      "temperature at multiple locations including inside/on the receiving cylinder",
+      "flow",
+      "downstream temperature"
+    ]
+  },
+  "access_finding": {
+    "machine_readable_raw_trace": false,
+    "common_time_base": false,
+    "reuse_terms": false,
+    "public_record_confidentiality": "The result is marked as subject to trade secrecy; the public page exposes a summary only."
+  },
+  "decision": "REQUEST_RAW_TRACE_PARTIAL_TRANSFER_CANDIDATE",
+  "claim_boundary": "This is an independent data-acquisition lead for pressure-temperature-flow transfer physics. It is not a full-loop station-to-vehicle holdout and does not change any validation score.",
+  "request_draft": "research/CZECH_OVERPUMPING_DATA_REQUEST_DRAFT.md"
+}

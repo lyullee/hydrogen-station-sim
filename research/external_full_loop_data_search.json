@@ -1169,6 +1169,31 @@
       "role": "Infrastructure planning context only; cannot close the prospective full-loop thermodynamic holdout gate.",
       "exclusion_reason": "The record documents policy-aware planning and simulation materials. It does not expose the station-to-vehicle pressure/temperature/mass-flow time series and protocol metadata required by the frozen acceptance criteria.",
       "next_action": "No acquisition request for this record; retain DOI as excluded context and avoid scoring it as validation data."
+    },
+    {
+      "id": "hydelta_overpumping_2023",
+      "title": "Experimentally obtained hydrogen overpumping data for validation of mathematical models",
+      "url": "https://starfos.tacr.cz/en/vysledky-vyzkumu/RIV%2F25870807%3A_____%2F23%3AN0000009",
+      "publisher": "Technology Agency of the Czech Republic STARFOS; Kiwa Technology / Výzkumný a zkušební ústav Plzeň",
+      "public_raw_data": false,
+      "decision": "REQUEST_RAW_TRACE_PARTIAL_TRANSFER_CANDIDATE",
+      "inspection": {
+        "checked_at": "2026-10-05",
+        "reported_experiments": 4,
+        "reported_configuration": "high-pressure cylinder bundle, receiving pressure cylinder, transfer hose and transfer valves",
+        "reported_channels": [
+          "pressure",
+          "temperature at multiple locations including inside/on the receiving cylinder",
+          "flow",
+          "downstream temperature"
+        ],
+        "raw_common_timebase": "not public",
+        "confidentiality": "STARFOS record marks the result as subject to trade secrecy; no raw files or reuse terms are exposed.",
+        "role": "Independent transfer/overpumping physics candidate for pressure-temperature-flow submodel screening; not a complete station-to-vehicle holdout."
+      },
+      "role": "Request lead for an independent hydrogen transfer experiment.",
+      "exclusion_reason": "The public record is report-level provenance only and contains no machine-readable raw traces. It cannot close the full-loop gate until a custodian provides an eligible export and written reuse terms.",
+      "next_action": "Review research/CZECH_OVERPUMPING_DATA_REQUEST_DRAFT.md and identify the approved custodian before contact."
     }
   ],
   "next_action": "send the prepared CARB/NRC/IJHE high-flow/FCH2RAIL/JRC/NREL/BAM/Empa/DLR data requests through approved custodians, and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest",
@@ -2399,5 +2424,12 @@
     "gate_impact": "full_loop_external_validation_remains_open",
     "source": "https://zenodo.org/records/19601306",
     "finding": "The open record contains raw/intermediate/curated planning datasets, code and figures for urban hydrogen infrastructure planning; it does not expose synchronized station-to-vehicle pressure, temperature and mass-flow logger traces or protocol metadata."
+  },
+  "hydelta_overpumping_recheck_2026_10_05": {
+    "record": "research/hydelta_overpumping_recheck_2026_10_05.json",
+    "decision": "REQUEST_RAW_TRACE_PARTIAL_TRANSFER_CANDIDATE",
+    "gate_impact": "full_loop_external_validation_remains_open",
+    "source": "https://starfos.tacr.cz/en/vysledky-vyzkumu/RIV%2F25870807%3A_____%2F23:N0000009",
+    "finding": "The public STARFOS record describes four independent hydrogen transfer experiments with pressure, temperature and flow measurements, but the raw traces and reuse terms are not public and the result is marked trade-secret. A custodian request draft was added; no validation score was produced."
   }
 }

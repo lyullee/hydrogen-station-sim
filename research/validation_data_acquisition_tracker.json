@@ -586,6 +586,30 @@
       "rights": "Authors or ZBT custodian must confirm written permission for derived metrics, open repository deposition and journal publication; the article states raw data are available on request.",
       "next_action": "Project owner reviews research/ZBT_HRS_DATA_REQUEST_DRAFT.md and contacts the corresponding author through an approved institutional channel.",
       "claim_boundary": "The article establishes real multi-bank HRS operating context and a high-value acquisition lead; it is not a full-loop holdout until raw data and reuse terms are received, frozen and scored without tuning."
+    },
+    {
+      "id": "hydelta_overpumping_2023",
+      "draft": "research/CZECH_OVERPUMPING_DATA_REQUEST_DRAFT.md",
+      "source": "https://starfos.tacr.cz/en/vysledky-vyzkumu/RIV%2F25870807%3A_____%2F23%3AN0000009",
+      "candidate_type": "independent hydrogen transfer and overpumping experiment",
+      "status": "request_draft_ready",
+      "requested_fields": [
+        "common_timestamp",
+        "source_bundle_pressure",
+        "receiving_cylinder_pressure",
+        "transfer_flow",
+        "receiving_cylinder_gas_or_wall_temperature",
+        "downstream_temperature",
+        "cylinder_geometry_and_volume",
+        "initial_conditions",
+        "valve_and_hose_configuration",
+        "stop_relief_markers",
+        "quality_calibration_metadata"
+      ],
+      "minimum_acceptance": "Machine-readable synchronized traces for the four experiments with pressure, temperature and flow channels plus geometry, operating-step and calibration metadata.",
+      "rights": "Kiwa Technology / Výzkumný a zkušební ústav Plzeň or the project custodian must grant written permission for derived metrics, open-repository deposition and journal publication.",
+      "next_action": "Project owner reviews research/CZECH_OVERPUMPING_DATA_REQUEST_DRAFT.md and identifies the approved custodian before any contact.",
+      "claim_boundary": "The public STARFOS record is a report-level provenance lead; it does not expose raw traces and cannot close the station-to-vehicle full-loop gate by itself."
     }
   ]
 }

@@ -295,6 +295,30 @@
       "minimum_acceptance": "De-identified event-level records and coding dictionary with source provenance, stable event identifiers, and an untouched holdout for masked SAGA scenario evaluation.",
       "rights": "Written permission must cover masked vignettes, derived statistics, model-comparison metrics and open repository deposition.",
       "next_action": "Project owner reviews research/HRS_INCIDENT_DATA_REQUEST_DRAFT.md and identifies the corresponding author or data custodian before any contact."
+    },
+    {
+      "rank": 13,
+      "id": "hydelta_overpumping_2023",
+      "draft": "research/CZECH_OVERPUMPING_DATA_REQUEST_DRAFT.md",
+      "status": "request_draft_ready",
+      "source": "https://starfos.tacr.cz/en/vysledky-vyzkumu/RIV%2F25870807%3A_____%2F23%3AN0000009",
+      "candidate_type": "independent hydrogen transfer and overpumping experiment",
+      "requested_fields": [
+        "common_timestamp",
+        "source_bundle_pressure",
+        "receiving_cylinder_pressure",
+        "transfer_flow",
+        "receiving_cylinder_gas_or_wall_temperature",
+        "downstream_temperature",
+        "cylinder_geometry_and_volume",
+        "initial_conditions",
+        "valve_and_hose_configuration",
+        "stop_relief_markers",
+        "quality_calibration_metadata"
+      ],
+      "minimum_acceptance": "Machine-readable synchronized traces for the four experiments with pressure, temperature and flow channels plus geometry, operating-step and calibration metadata.",
+      "rights": "Kiwa Technology / Výzkumný a zkušební ústav Plzeň or the project custodian must grant written permission for derived metrics, open-repository deposition and journal publication.",
+      "next_action": "Project owner reviews research/CZECH_OVERPUMPING_DATA_REQUEST_DRAFT.md and identifies the approved custodian before any contact."
     }
   ]
 }

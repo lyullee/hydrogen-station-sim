@@ -643,3 +643,22 @@ def test_khk_local_casebook_pipeline_is_not_promoted_or_committed():
     assert item["expert_holdout_ready"] is False
     assert item["full_loop_holdout_eligible"] is False
     assert (ROOT / "research/KHK_LOCAL_CASEBOOK_PROTOCOL.md").exists()
+
+
+def test_hydelta_overpumping_record_is_request_lead_without_public_raw_trace():
+    record = json.loads(
+        (ROOT / "research/hydelta_overpumping_recheck_2026_10_05.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert record["reported_scope"]["experiment_count"] == 4
+    assert record["access_finding"]["machine_readable_raw_trace"] is False
+    assert record["decision"] == "REQUEST_RAW_TRACE_PARTIAL_TRANSFER_CANDIDATE"
+    mirror = json.loads(
+        (ROOT / "research/external_full_loop_data_search.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    item = next(source for source in mirror["candidates"] if source["id"] == "hydelta_overpumping_2023")
+    assert item["public_raw_data"] is False
+    assert item["decision"] == "REQUEST_RAW_TRACE_PARTIAL_TRANSFER_CANDIDATE"
