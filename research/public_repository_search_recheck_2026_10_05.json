@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "scope": "Public repository search for an independent synchronized HRS station-to-vehicle holdout",
+  "purpose": "Recheck public Zenodo and GitHub discovery routes without promoting software, reports, aggregate data or simulation output to validation.",
+  "eligibility_contract": {
+    "required_channels": [
+      "common timestamp or elapsed time",
+      "vehicle or receptacle pressure",
+      "vehicle or receptacle temperature",
+      "station/dispenser pressure",
+      "delivered-gas temperature",
+      "mass flow or transferred mass"
+    ],
+    "required_metadata": [
+      "tank capacity and initial conditions",
+      "protocol or pressure-ramp metadata",
+      "units and quality flags",
+      "immutable provenance",
+      "written reuse permission for derived metrics and journal publication"
+    ],
+    "excluded_substitutes": [
+      "simulation libraries",
+      "protocol or review reports",
+      "plot-only experiments",
+      "station location/capacity inventories",
+      "aggregate operational summaries"
+    ]
+  },
+  "searches": [
+    {
+      "source": "Zenodo Records API",
+      "url": "https://zenodo.org/api/records",
+      "queries": [
+        "title:\"hydrogen refueling\"",
+        "title:(hydrogen AND refueling)",
+        "title:(hydrogen AND fueling)",
+        "title:(hydrogen AND refuelling)"
+      ],
+      "retrieval": "2026-10-05",
+      "result_summary": "No title-matched record exposed a synchronized station-to-vehicle raw logger archive with reuse terms."
+    },
+    {
+      "source": "GitHub Repository Search API",
+      "url": "https://api.github.com/search/repositories",
+      "queries": [
+        "hydrogen refueling station data",
+        "hydrogen fueling station dataset",
+        "hydrogen station logger"
+      ],
+      "retrieval": "2026-10-05",
+      "result_summary": "No public repository matching the queries exposed a synchronized HRS logger dataset."
+    }
+  ],
+  "candidates": [
+    {
+      "id": "zenodo_4436147_dtu_tes_library",
+      "doi": "10.5281/zenodo.4436147",
+      "url": "https://zenodo.org/records/4436147",
+      "title": "DTU-TES/Hydrogen-Fuelling-Station: Hydrogen Fueling Station Library",
+      "observed_files": [
+        "DTU-TES/Hydrogen-Fuelling-Station-V2.1.zip"
+      ],
+      "decision": "SIMULATION_LIBRARY_EXCLUDED",
+      "reason": "Model/library release with MATLAB tables and graphics; no measured station or vehicle logger rows."
+    },
+    {
+      "id": "zenodo_14703065_rheadhy_report",
+      "doi": "10.5281/zenodo.14703065",
+      "url": "https://zenodo.org/records/14703065",
+      "title": "RHeaDHy - Establishing protocol for refuelling heavy duty with very high flow hydrogen",
+      "observed_files": [
+        "RheadHy - Establishing protocol for refuelling heavy duty with very high flow hydrogen.pdf"
+      ],
+      "decision": "REPORT_ONLY_EXCLUDED",
+      "reason": "CC BY protocol report; no machine-readable synchronized measurements."
+    },
+    {
+      "id": "zenodo_17098699_highflow_simulation",
+      "doi": "10.5281/zenodo.17098699",
+      "url": "https://zenodo.org/records/17098699",
+      "title": "Enhancing high-flow hydrogen refueling: mitigation of pressure losses in storage and delivery systems",
+      "observed_files": [
+        "Bohm_KOKA2025.pdf",
+        "Presentation_KOKA25_Bohm.pdf"
+      ],
+      "decision": "SIMULATION_REPORT_EXCLUDED",
+      "reason": "GT-Suite/GEM-3D simulation study; no measured station-to-vehicle holdout."
+    },
+    {
+      "id": "zenodo_3583016_impala_station_report",
+      "doi": "10.5281/zenodo.3583016",
+      "url": "https://zenodo.org/records/3583016",
+      "title": "Hydrogen refuelling station with integrated metal hydride compressor: two-year operation",
+      "observed_files": [
+        "WHEC2018-368.pdf"
+      ],
+      "decision": "STATION_REPORT_EXCLUDED",
+      "reason": "Real 185–200 bar station description and operation report, but no row-level synchronized logger archive or full-loop reuse package."
+    },
+    {
+      "id": "zenodo_3582985_impala_station_article",
+      "doi": "10.1016/j.ijhydene.2019.05.133",
+      "url": "https://zenodo.org/records/3582985",
+      "title": "Hydrogen refuelling station with integrated metal hydride compressor: three-year operation",
+      "observed_files": [
+        "Hydrogen refuelling station with integrated metal.pdf"
+      ],
+      "decision": "STATION_ARTICLE_EXCLUDED",
+      "reason": "Open article/report with station context, but no synchronized pressure-temperature-flow logger rows."
+    },
+    {
+      "id": "github_optimizing_h2_infrastructure",
+      "url": "https://github.com/Samiurr129/-Optimizing-Hydrogen-Refueling-Infrastructure-for-Transportation",
+      "title": "Optimizing Hydrogen Refueling Infrastructure for Transportation",
+      "decision": "GEOSPATIAL_OPTIMIZATION_EXCLUDED",
+      "reason": "Geospatial station-location optimization repository; no process logger data."
+    }
+  ],
+  "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+  "full_loop_holdout_eligible": false,
+  "gate_impact": "full_loop_external_validation_remains_open",
+  "next_action": "Use the prepared custodian requests for NREL/HITRF, CARB/HyStEP, Cal State LA, ZBT/PRHYDE, FCH2RAIL, JRC GasTeF, NBS DC and HRS operators; freeze the acceptance and scoring protocol before any numerical outcomes are opened.",
+  "claim_boundary": "This is a discovery and exclusion record. It is not validation evidence, does not change frozen negative results and does not permit goal completion."
+}
