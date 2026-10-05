@@ -661,6 +661,42 @@ def audit(root: Path) -> dict[str, object]:
         } if acquisition_tracker else "missing",
     ))
 
+    intake_protocol_path = root / "research/external_hrs_intake_protocol.json"
+    intake_validator_path = root / "scripts/validate_external_hrs_manifest.py"
+    intake_test_path = root / "tests/test_external_hrs_eligibility.py"
+    intake_protocol = _json(intake_protocol_path)
+    required_metadata = set((intake_protocol or {}).get("required_metadata") or [])
+    provenance_fields = {
+        "source_identity", "custodian_or_archive", "acquired_at_utc",
+        "license_or_reuse_reference",
+    }
+    validator_text = (
+        intake_validator_path.read_text(encoding="utf-8")
+        if intake_validator_path.is_file() else ""
+    )
+    intake_contract_pass = bool(
+        (intake_protocol or {}).get("status") == "prospective_intake_contract"
+        and (intake_protocol or {}).get("outcomes_accessed_before_freeze") is False
+        and provenance_fields.issubset(required_metadata)
+        and intake_validator_path.is_file()
+        and intake_test_path.is_file()
+        and "SHA-256" in validator_text
+        and "CSV/XLSX/Parquet" in validator_text
+        and "never opens" in validator_text
+    )
+    gates.append(_gate(
+        "external_hrs_intake_integrity_contract",
+        "PASS" if intake_contract_pass else "FAIL",
+        "The prospective external HRS intake contract rechecks quarantine-file integrity without parsing measurements and records source/reuse provenance.",
+        f"{intake_protocol_path.relative_to(root)}; {intake_validator_path.relative_to(root)}; {intake_test_path.relative_to(root)}",
+        "Frozen protocol, required provenance fields, safe paths, byte counts, SHA-256 verification and regression tests that never inspect numeric values.",
+        {
+            "required_provenance_fields": sorted(provenance_fields),
+            "validator_present": intake_validator_path.is_file(),
+            "regression_test_present": intake_test_path.is_file(),
+        },
+    ))
+
     byrnes_protocol_path = root / "research/byrnes_zenodo_exploratory_protocol.json"
     byrnes_result_path = root / "research/byrnes_zenodo_exploratory_result.json"
     byrnes_protocol = _json(byrnes_protocol_path)
@@ -2242,6 +2278,7 @@ def audit(root: Path) -> dict[str, object]:
         "grune_2014_pressure_decay_validation",
         "ekoto_transient_release_validation",
         "hiad_protocol_integrity",
+        "external_hrs_intake_integrity_contract",
         "institutional_ethics_determination", "hiad_casebook_frozen",
         "hiad_holdout_collection", "independent_expert_review_complete",
         "preoutcome_design_sensitivity", "ijhe_format_gate",

@@ -21,7 +21,11 @@
     "precooler_state",
     "stop_abort_fault_markers",
     "quality_and_calibration_metadata",
-    "reuse_terms"
+    "reuse_terms",
+    "source_identity",
+    "custodian_or_archive",
+    "acquired_at_utc",
+    "license_or_reuse_reference"
   ],
   "intake_rule": "Hash and quarantine files before numerical values are inspected. Never impute a missing required channel for the primary claim.",
   "claim_boundary": "An intake manifest proves provenance and file integrity only; it is not a validation result and cannot close the IJHE readiness gate."

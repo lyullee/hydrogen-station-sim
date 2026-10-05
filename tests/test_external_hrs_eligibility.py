@@ -29,6 +29,10 @@ REQUIRED_METADATA = {
     "quality_and_calibration_metadata": True,
     "reuse_terms": "research reuse permitted",
     "units_and_sampling_interval": "declared",
+    "source_identity": "dataset-id",
+    "custodian_or_archive": "custodian",
+    "acquired_at_utc": "2026-10-05T00:00:00Z",
+    "license_or_reuse_reference": "license-url",
 }
 
 
@@ -81,3 +85,27 @@ def test_metadata_gate_rejects_outcome_access_before_freeze(tmp_path):
     report = validate(manifest, declaration, protocol)
     assert report["eligible_for_numerical_evaluation"] is False
     assert "metadata declaration does not prove pre-outcome freezing" in report["reasons"]
+
+
+def test_metadata_gate_rechecks_quarantined_bytes_without_parsing_trace(tmp_path):
+    manifest, declaration, protocol = _write_inputs(tmp_path)
+    trace = tmp_path / "bundle" / "trace.csv"
+    trace.write_text("time,pressure\n0,123\n", encoding="utf-8")
+    report = validate(manifest, declaration, protocol)
+    assert report["eligible_for_numerical_evaluation"] is False
+    assert report["integrity"]["records_hash_verified"] == 0
+    assert any(
+        "byte count does not match" in reason
+        or "SHA-256 does not match" in reason
+        for reason in report["reasons"]
+    )
+
+
+def test_metadata_gate_rejects_manifest_path_traversal(tmp_path):
+    manifest, declaration, protocol = _write_inputs(tmp_path)
+    value = json.loads(manifest.read_text(encoding="utf-8"))
+    value["files"][0]["relative_path"] = "../trace.csv"
+    manifest.write_text(json.dumps(value), encoding="utf-8")
+    report = validate(manifest, declaration, protocol)
+    assert report["eligible_for_numerical_evaluation"] is False
+    assert "intake file record 0 has an unsafe relative_path" in report["reasons"]

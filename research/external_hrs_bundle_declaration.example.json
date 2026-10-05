@@ -33,6 +33,10 @@
     "stop_abort_fault_markers": true,
     "quality_and_calibration_metadata": true,
     "reuse_terms": "Custodian confirms research reuse and redistribution terms.",
-    "units_and_sampling_interval": "Sampling interval and units are declared per channel."
+    "units_and_sampling_interval": "Sampling interval and units are declared per channel.",
+    "source_identity": "Dataset title, DOI or stable archive identifier",
+    "custodian_or_archive": "Archive, laboratory or data custodian contact",
+    "acquired_at_utc": "2026-10-05T00:00:00Z",
+    "license_or_reuse_reference": "License URL or written permission identifier"
   }
 }

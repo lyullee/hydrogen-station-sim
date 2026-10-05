@@ -13,8 +13,10 @@ The minimum useful package must contain a common time base, vehicle or
 receptacle pressure, gas/tank temperature, mass flow or transferred mass,
 initial conditions, tank capacity, protocol mode, source/cascade state,
 compressor and precooler state, stop/abort markers, units, quality flags and
-calibration or uncertainty metadata. Missing fields are retained as an
-ineligibility reason rather than silently imputed.
+calibration or uncertainty metadata. The declaration must also identify the
+source, custodian/archive, UTC acquisition time and the licence or written
+reuse reference. Missing fields are retained as an ineligibility reason rather
+than silently imputed.
 
 The manifest produced by `scripts/intake_external_hrs_bundle.py` is provenance
 evidence only. It does not promote a dataset to a validation holdout. A later
@@ -27,8 +29,9 @@ The custodian may provide a separate metadata-only declaration based on the
 template `research/external_hrs_bundle_declaration.example.json`. Run
 `scripts/validate_external_hrs_manifest.py` with the intake manifest,
 declaration and this protocol. The checker verifies the required channel names,
-units, common time base, protocol metadata, freeze declaration and hash links;
-it does not open the data files or inspect a single measured value. A passing
+units, common time base, protocol metadata, freeze declaration, safe relative
+paths, declared byte counts and SHA-256 values. It hashes quarantined bytes but
+does not parse the data format or inspect a single measured value. A passing
 decision means `ELIGIBLE_FOR_PROSPECTIVE_MAPPING` only. Numerical evaluation
 still requires a separately frozen runner, untouched cases, locked scoring and
 retention of every failed case.

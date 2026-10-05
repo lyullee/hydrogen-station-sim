@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T01:15:43.156347+00:00",
+  "generated_at": "2026-10-05T01:32:33.065884+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 58,
+    "PASS": 59,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -653,6 +653,23 @@
         "candidate_count": 28,
         "draft_count": 24,
         "claim_boundary": "This tracker is a data-acquisition plan. It is not evidence of validation, does not change any IJHE readiness gate, and does not authorize contact or publication."
+      }
+    },
+    {
+      "id": "external_hrs_intake_integrity_contract",
+      "status": "PASS",
+      "claim": "The prospective external HRS intake contract rechecks quarantine-file integrity without parsing measurements and records source/reuse provenance.",
+      "evidence": "research\\external_hrs_intake_protocol.json; scripts\\validate_external_hrs_manifest.py; tests\\test_external_hrs_eligibility.py",
+      "requirement": "Frozen protocol, required provenance fields, safe paths, byte counts, SHA-256 verification and regression tests that never inspect numeric values.",
+      "observed": {
+        "required_provenance_fields": [
+          "acquired_at_utc",
+          "custodian_or_archive",
+          "license_or_reuse_reference",
+          "source_identity"
+        ],
+        "validator_present": true,
+        "regression_test_present": true
       }
     },
     {
