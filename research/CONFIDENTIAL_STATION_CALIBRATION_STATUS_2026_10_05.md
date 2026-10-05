@@ -23,6 +23,10 @@ the custodian mapping remain outside the repository.
   combining a pressure logger with an equipment logger. It uses nearest-time
   matching for numeric channels and discrete carry-forward semantics for
   states, while retaining only a de-identified alignment summary for review.
+- `scripts/replay_confidential_station_boundary.py` now provides a bounded
+  measured-boundary replay. It injects an approved pressure (and, when
+  available, temperature) profile into the reference station and writes only
+  profile/sample counts, replay duration, and protection status.
 
 ## Preliminary result and limits
 
@@ -40,6 +44,13 @@ scenario using a short relative profile. The simulator produced a normal
 trajectory with the measured boundary supplied explicitly; no raw profile,
 calendar timestamp, or fitted parameter was persisted, and the production
 defaults remain unchanged.
+
+The new bounded replay runner was then exercised with a de-identified private
+pressure sample. It completed the requested short horizon and produced three
+simulator samples without an ESD trigger. This confirms that the measured
+boundary can pass through the complete protection-aware runtime path; it does
+not establish independent predictive accuracy or justify changing a frozen
+model parameter.
 
 The first pressure/equipment synchronization attempt was intentionally rejected
 because the two supplied sample windows did not overlap on their absolute time
@@ -62,5 +73,8 @@ Run `scripts/calibrate_confidential_station_data.py` only in an access-
 controlled environment with a private mapping JSON. Supplying the optional
 equipment input and mapping also runs the absolute-time overlap gate and emits
 only its aggregate alignment result. The output is an aggregate review
-artifact; do not commit the mapping, raw files, raw hashes, filenames, or
-unapproved derived metrics to GitHub or Zenodo.
+artifact. For a controlled partial replay, run
+`scripts/replay_confidential_station_boundary.py` with the same private input
+and mapping and an output path outside the repository. Do not commit the
+mapping, raw files, raw hashes, filenames, or unapproved derived metrics to
+GitHub or Zenodo.
