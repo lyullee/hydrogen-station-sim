@@ -12,6 +12,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 import csv
+from bisect import bisect_left, bisect_right
 import math
 from pathlib import Path
 from statistics import median, quantiles
@@ -38,6 +39,9 @@ class TraceMapping:
     temperature_offset_k: float = 273.15
     flow_scale_kg_s_per_unit: float = 1.0
     time_format: str | None = None
+    # A caller may explicitly attest that numeric timestamps are absolute
+    # epochs.  Relative counters are rejected by the two-logger synchronizer.
+    time_is_absolute: bool = False
     encoding: str = "utf-8-sig"
 
     def __post_init__(self) -> None:
@@ -166,6 +170,65 @@ class StationBoundaryProfile:
         return result
 
 
+@dataclass(frozen=True)
+class TraceAlignmentSummary:
+    """De-identified quality summary for a two-logger alignment attempt."""
+
+    pressure_rows: int
+    equipment_rows: int
+    synchronized_rows: int
+    overlap_duration_s: float
+    median_nearest_gap_s: float | None
+    maximum_nearest_gap_s: float | None
+    state_transition_count: int
+    quality_warnings: tuple[str, ...]
+
+    def to_public_dict(self) -> dict[str, object]:
+        """Expose alignment quality without paths, tags, timestamps, or rows."""
+
+        return {
+            "schema_version": 1,
+            "raw_rows_persisted": False,
+            "source_identifiers_published": False,
+            "pressure_rows": self.pressure_rows,
+            "equipment_rows": self.equipment_rows,
+            "synchronized_rows": self.synchronized_rows,
+            "overlap_duration_s": round(self.overlap_duration_s, 3),
+            "median_nearest_gap_s": (
+                round(self.median_nearest_gap_s, 3)
+                if self.median_nearest_gap_s is not None else None
+            ),
+            "maximum_nearest_gap_s": (
+                round(self.maximum_nearest_gap_s, 3)
+                if self.maximum_nearest_gap_s is not None else None
+            ),
+            "state_transition_count": self.state_transition_count,
+            "quality_warnings": list(self.quality_warnings),
+            "claim_boundary": (
+                "Controlled logger alignment summary only; this is not a "
+                "full station-to-vehicle validation result."
+            ),
+        }
+
+
+@dataclass(frozen=True)
+class SynchronizedStationProfile:
+    """Pressure boundary plus nearest-time equipment observations.
+
+    The object is intentionally in-memory only.  Equipment and state channels
+    are kept as generic role/value tuples so a caller can feed an approved
+    subset into a model without publishing proprietary tag names.
+    """
+
+    boundary: StationBoundaryProfile
+    equipment_values: tuple[tuple[str, tuple[float, ...]], ...]
+    state_values: tuple[tuple[str, tuple[str, ...]], ...]
+    alignment: TraceAlignmentSummary
+
+    def reference_scenario_kwargs(self) -> dict[str, tuple[tuple[float, float], ...]]:
+        return self.boundary.reference_scenario_kwargs()
+
+
 def _finite(value: object) -> float | None:
     try:
         result = float(str(value).strip())
@@ -230,6 +293,195 @@ def _sampled_rows(
                 yield path, _time_seconds(row.get(time_column), mapping, fallback), row
                 emitted += 1
                 fallback += float(stride)
+
+
+def _collect_trace_points(
+    input_path: Path,
+    mapping: TraceMapping,
+    *,
+    stride: int,
+    max_rows: int | None,
+) -> list[tuple[float, float | None, dict[str, float], dict[str, str]]]:
+    """Collect only mapped numeric/state values for one controlled trace."""
+
+    paths = _paths(input_path)
+    if len(paths) != 1:
+        raise ValueError("trace synchronization requires exactly one private trace file per logger")
+    points: list[tuple[float, float | None, dict[str, float], dict[str, str]]] = []
+    for _, time_value, row in _sampled_rows(
+        paths[0], mapping, stride=stride, max_rows_per_file=max_rows
+    ):
+        pressure_values = [
+            value * mapping.pressure_scale_pa_per_unit
+            for _, column in mapping.pressure_columns
+            if (value := _finite(row.get(column))) is not None
+        ]
+        temperature_values: dict[str, float] = {}
+        for role, column in mapping.temperature_columns:
+            value = _finite(row.get(column))
+            if value is not None:
+                temperature_values[role] = (
+                    value * mapping.temperature_scale_k_per_unit
+                    + mapping.temperature_offset_k
+                )
+        state_values = {
+            role: str(row.get(column, "")).strip()
+            for role, column in mapping.state_columns
+            if str(row.get(column, "")).strip()
+        }
+        if pressure_values or temperature_values or state_values:
+            points.append(
+                (
+                    time_value,
+                    float(median(pressure_values)) if pressure_values else None,
+                    temperature_values,
+                    state_values,
+                )
+            )
+    points.sort(key=lambda item: item[0])
+    return points
+
+
+def synchronize_station_traces(
+    pressure_input_path: Path,
+    pressure_mapping: TraceMapping,
+    equipment_input_path: Path,
+    equipment_mapping: TraceMapping,
+    *,
+    stride: int = 1,
+    max_rows: int | None = 100_000,
+    max_match_gap_s: float = 2.0,
+) -> SynchronizedStationProfile:
+    """Align two owner-approved logger files on a relative time axis.
+
+    The function requires an actual absolute-time overlap.  It never aligns
+    unrelated campaigns by resetting both starts to zero, which would create
+    a false synchronized validation set.  Numeric channels use nearest-time
+    matching; discrete states are carried from the nearest observed sample
+    and are never linearly interpolated.  Raw rows and absolute timestamps
+    remain in memory only.
+    """
+
+    if max_match_gap_s <= 0.0:
+        raise ValueError("max_match_gap_s must be positive")
+    if not (pressure_mapping.time_format or pressure_mapping.time_is_absolute):
+        raise ValueError("pressure mapping requires an absolute time format or attestation")
+    if not (equipment_mapping.time_format or equipment_mapping.time_is_absolute):
+        raise ValueError("equipment mapping requires an absolute time format or attestation")
+    pressure_points = _collect_trace_points(
+        pressure_input_path, pressure_mapping, stride=stride, max_rows=max_rows
+    )
+    equipment_points = _collect_trace_points(
+        equipment_input_path, equipment_mapping, stride=stride, max_rows=max_rows
+    )
+    if not pressure_points or not equipment_points:
+        raise ValueError("both logger traces require finite mapped observations")
+    pressure_times = [item[0] for item in pressure_points]
+    equipment_times = [item[0] for item in equipment_points]
+    overlap_start = max(pressure_times[0], equipment_times[0])
+    overlap_end = min(pressure_times[-1], equipment_times[-1])
+    if overlap_end <= overlap_start:
+        raise ValueError("logger time windows do not overlap")
+
+    pressure_in_overlap = [
+        item for item in pressure_points if overlap_start <= item[0] <= overlap_end
+    ]
+    if not pressure_in_overlap:
+        raise ValueError("no pressure observations fall inside the logger overlap")
+    equipment_roles = tuple(
+        sorted({role for _, _, values, _ in equipment_points for role in values})
+    )
+    state_roles = tuple(
+        sorted({role for _, _, _, values in equipment_points for role in values})
+    )
+    aligned_times: list[float] = []
+    aligned_pressure: list[float] = []
+    aligned_temperature: dict[str, list[float]] = {role: [] for role in equipment_roles}
+    aligned_states: dict[str, list[str]] = {role: [] for role in state_roles}
+    nearest_gaps: list[float] = []
+    duplicate_time = False
+    for pressure_time, pressure, _, _ in pressure_in_overlap:
+        if pressure is None:
+            continue
+        position = bisect_left(equipment_times, pressure_time)
+        candidates = []
+        if position < len(equipment_points):
+            candidates.append(equipment_points[position])
+        if position:
+            candidates.append(equipment_points[position - 1])
+        nearest = min(candidates, key=lambda item: abs(item[0] - pressure_time))
+        gap = abs(nearest[0] - pressure_time)
+        if gap > max_match_gap_s:
+            continue
+        relative_time = float(pressure_time - overlap_start)
+        if aligned_times and relative_time <= aligned_times[-1]:
+            # Duplicate logger timestamps do not define a unique replay point.
+            # Keep the first observation and record the quality issue.
+            duplicate_time = True
+            continue
+        nearest_gaps.append(gap)
+        aligned_times.append(relative_time)
+        aligned_pressure.append(float(pressure))
+        for role in equipment_roles:
+            aligned_temperature[role].append(nearest[2].get(role, math.nan))
+        state_position = bisect_right(equipment_times, pressure_time) - 1
+        if state_position < 0:
+            state_position = 0
+        state_source = equipment_points[state_position]
+        for role in state_roles:
+            # Discrete controls use the most recent observed state; unlike
+            # numeric channels they are never interpolated or averaged.
+            aligned_states[role].append(state_source[3].get(role, ""))
+    if not aligned_pressure:
+        raise ValueError("no logger samples are within max_match_gap_s")
+
+    warnings: set[str] = set()
+    if duplicate_time:
+        warnings.add("duplicate_or_nonmonotonic_pressure_time")
+    coverage = len(aligned_pressure) / max(1, len(pressure_in_overlap))
+    if coverage < 0.9:
+        warnings.add("synchronization_coverage_below_90_percent")
+    transition_count = 0
+    for values in aligned_states.values():
+        previous = None
+        for value in values:
+            if previous is not None and value != previous:
+                transition_count += 1
+            previous = value
+    # A missing channel is not fabricated.  Only a complete temperature role
+    # becomes a scenario profile; callers may still inspect its alignment data.
+    complete_temperature = next(
+        (
+            tuple(values)
+            for values in aligned_temperature.values()
+            if values and all(math.isfinite(value) for value in values)
+        ),
+        (),
+    )
+    boundary = StationBoundaryProfile(
+        tuple(aligned_times), tuple(aligned_pressure), complete_temperature
+    )
+    alignment = TraceAlignmentSummary(
+        pressure_rows=len(pressure_points),
+        equipment_rows=len(equipment_points),
+        synchronized_rows=len(aligned_pressure),
+        overlap_duration_s=overlap_end - overlap_start,
+        median_nearest_gap_s=median(nearest_gaps) if nearest_gaps else None,
+        maximum_nearest_gap_s=max(nearest_gaps) if nearest_gaps else None,
+        state_transition_count=transition_count,
+        quality_warnings=tuple(sorted(warnings)),
+    )
+    numeric_values = tuple(
+        (role, tuple(values))
+        for role, values in aligned_temperature.items()
+        if any(math.isfinite(value) for value in values)
+    )
+    discrete_values = tuple(
+        (role, tuple(values))
+        for role, values in aligned_states.items()
+        if any(values)
+    )
+    return SynchronizedStationProfile(boundary, numeric_values, discrete_values, alignment)
 
 
 def _quantile(values: Sequence[float], fraction: float) -> float | None:

@@ -12,7 +12,11 @@ import argparse
 import json
 from pathlib import Path
 
-from h2station.controlled_station_replay import TraceMapping, fit_station_boundary
+from h2station.controlled_station_replay import (
+    TraceMapping,
+    fit_station_boundary,
+    synchronize_station_traces,
+)
 
 
 def _mapping(path: Path) -> TraceMapping:
@@ -35,6 +39,7 @@ def _mapping(path: Path) -> TraceMapping:
         temperature_offset_k=float(value.get("temperature_offset_k", 273.15)),
         flow_scale_kg_s_per_unit=float(value.get("flow_scale_kg_s_per_unit", 1.0)),
         time_format=value.get("time_format"),
+        time_is_absolute=bool(value.get("time_is_absolute", False)),
         encoding=str(value.get("encoding", "utf-8-sig")),
     )
 
@@ -46,10 +51,24 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True, help="aggregate result JSON")
     parser.add_argument("--stride", type=int, default=60)
     parser.add_argument("--max-rows-per-file", type=int, default=250_000)
+    parser.add_argument(
+        "--equipment-input",
+        type=Path,
+        help="optional restricted equipment logger for an absolute-time overlap check",
+    )
+    parser.add_argument(
+        "--equipment-mapping",
+        type=Path,
+        help="mapping for --equipment-input",
+    )
+    parser.add_argument("--max-match-gap-s", type=float, default=2.0)
     args = parser.parse_args()
+    if bool(args.equipment_input) != bool(args.equipment_mapping):
+        parser.error("--equipment-input and --equipment-mapping must be supplied together")
+    mapping = _mapping(args.mapping)
     summary = fit_station_boundary(
         args.input,
-        _mapping(args.mapping),
+        mapping,
         stride=args.stride,
         max_rows_per_file=args.max_rows_per_file,
     )
@@ -64,6 +83,18 @@ def main() -> int:
         },
         "calibration": summary.to_public_dict(),
     }
+    if args.equipment_input:
+        alignment = synchronize_station_traces(
+            args.input,
+            mapping,
+            args.equipment_input,
+            _mapping(args.equipment_mapping),
+            stride=args.stride,
+            max_rows=args.max_rows_per_file,
+            max_match_gap_s=args.max_match_gap_s,
+        )
+        result["synchronized_alignment"] = alignment.alignment.to_public_dict()
+        result["synchronized_alignment"]["max_match_gap_s"] = args.max_match_gap_s
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(args.output)

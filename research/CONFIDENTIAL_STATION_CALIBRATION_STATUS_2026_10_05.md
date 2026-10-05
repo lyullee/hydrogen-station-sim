@@ -19,6 +19,10 @@ the custodian mapping remain outside the repository.
 - `ReferenceScenario` accepts an owner-approved dispatch margin and recharge
   hysteresis margin. The default reference behavior is unchanged; measured
   margins are injected only when a controlled replay supplies them explicitly.
+- `synchronize_station_traces` now requires a real absolute-time overlap before
+  combining a pressure logger with an equipment logger. It uses nearest-time
+  matching for numeric channels and discrete carry-forward semantics for
+  states, while retaining only a de-identified alignment summary for review.
 
 ## Preliminary result and limits
 
@@ -31,6 +35,13 @@ dispenser protocol state, or a confirmed unit and calibration dictionary. The
 preliminary robust margin stayed at the simulator's existing conservative
 floor, so it was **not** applied as a hidden default.
 
+The first pressure/equipment synchronization attempt was intentionally rejected
+because the two supplied sample windows did not overlap on their absolute time
+axes. No rows were shifted to manufacture an overlap, and no scenario
+parameter was changed as a result. A future same-window export must pass the
+overlap and nearest-sample-gap checks before it can be used for boundary
+replay.
+
 The next approved calibration pass must combine the equipment logger with the
 pressure trace, confirm units and timestamp semantics with the custodian, and
 freeze an untouched event window before fitting compressor, precooler, valve,
@@ -42,6 +53,8 @@ aggregates for publication.
 ## Reproduction boundary
 
 Run `scripts/calibrate_confidential_station_data.py` only in an access-
-controlled environment with a private mapping JSON. The output is an aggregate
-review artifact; do not commit the mapping, raw files, raw hashes, filenames,
-or unapproved derived metrics to GitHub or Zenodo.
+controlled environment with a private mapping JSON. Supplying the optional
+equipment input and mapping also runs the absolute-time overlap gate and emits
+only its aggregate alignment result. The output is an aggregate review
+artifact; do not commit the mapping, raw files, raw hashes, filenames, or
+unapproved derived metrics to GitHub or Zenodo.
