@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "protocol_id": "NBSDC-LHRS-FULL-LOOP-INTAKE-2601",
+  "frozen_at": "2026-10-05",
+  "status": "prospective_intake_contract",
+  "source": {
+    "title": "Operating Dataset of Liquid Hydrogen Refueling Station",
+    "title_zh": "液氢加氢站运行数据集",
+    "data_id": "67d50e37195d260905af9869",
+    "cstr": "CSTR:16666.11.nbsdc.nlMxRHct",
+    "landing_url": "https://www.nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1",
+    "metadata_endpoint": "https://www.nbsdc.cn/api/general/searchDataDetail?id=67d50e37195d260905af9869",
+    "share_range_observed": "完全共享",
+    "provider": "Tongji University",
+    "data_format": ["xlsx", "csv", "docx"]
+  },
+  "outcomes_accessed_before_freeze": false,
+  "required_channels": {
+    "time": ["common timestamp or elapsed time", "timezone or time-base rule", "sampling/aggregation rule"],
+    "vehicle_or_receptacle": ["vehicle/receptacle pressure", "vehicle/receptacle or gas temperature", "tank capacity or inventory"],
+    "mass": ["mass flow or transferred mass", "start/end mass or an auditable integration rule"],
+    "station_boundary": ["dispenser/source pressure", "storage or compressor pressure", "station topology and valve/controller state"],
+    "protocol": ["target pressure or pressure ramp", "stop/abort semantics", "initial conditions"],
+    "safety": ["alarm/ESD state", "hydrogen/flame/oxygen detection or explicit not-available"],
+    "quality": ["units", "missing-value codes", "calibration or quality flags", "clock corrections"]
+  },
+  "expected_files": [
+    {"role": "dispenser_35mpa_1", "name": "35MPa加氢机1.xlsx", "source_file_id": "67bc96ed34eb407463579069"},
+    {"role": "dispenser_35mpa_2", "name": "35MPa加氢机2.xlsx", "source_file_id": "67bc96ed34eb40746357906a"},
+    {"role": "dispenser_70mpa", "name": "70MPa加氢机.csv", "source_file_id": "67bc96ed34eb40746357906b"},
+    {"role": "compressor_90mpa", "name": "90MPa压缩机.xlsx", "source_file_id": "67bc96ed34eb40746357906c"},
+    {"role": "description", "name": "液氢加氢站运行数据集数据说明 .docx", "source_file_id": "67bc96ed34eb40746357906d"},
+    {"role": "liquid_pump_tank", "name": "液氢泵-液氢储罐.xlsx", "source_file_id": "67bc96ed34eb40746357906e"},
+    {"role": "high_pressure_storage", "name": "高压储氢瓶组.xlsx", "source_file_id": "67bc96ed34eb40746357906f"}
+  ],
+  "eligibility_rule": {
+    "full_loop_case": "An untouched fueling event with a common time base, vehicle/receptacle pressure and temperature, transferred mass or mass flow, station-side source/dispenser channels, initial state, protocol/stop semantics, and rights for derived journal metrics.",
+    "minimum_case_count": 3,
+    "screening_limits": {
+      "pressure_rmse_mpa": 5.0,
+      "temperature_rmse_c": 10.0,
+      "transferred_mass_relative_error": 0.10
+    },
+    "holdout_rule": "All eligible fills are scored once with the frozen model; no parameter fitting, time warping, case selection, or threshold changes after numerical outcomes are opened.",
+    "promotion_rule": "Promote only if the source file hashes, channel dictionary, rights statement, case mapping and common time-base audit all pass. Missing vehicle-side or protocol channels remain an explicit ineligibility result."
+  },
+  "quarantine_plan": [
+    "Download the listed original files only after this protocol is committed.",
+    "Store bytes outside Git under data/public_validation/raw/nbsdc_liquid_hrs_2025/.",
+    "Compute SHA-256 and retain file sizes and source IDs before opening numerical cells.",
+    "Read the description and headers for schema/provenance; do not tune the model from outcomes.",
+    "Freeze eligible-event mapping and score the locked model once on untouched cases.",
+    "Publish only de-identified derived traces, hashes, case metrics, and rights-permitted metadata."
+  ],
+  "claim_boundary": "This protocol is prospective intake control. It is not evidence that the dataset contains a synchronized vehicle-side full-loop trace, and it does not by itself support safety-distance, HRS certification, or SAGA-effectiveness claims."
+}
