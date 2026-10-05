@@ -1,7 +1,7 @@
 # NBSDC liquid-HRS public-access recheck (2026-10-05)
 
 The National Basic Science Data Center record **Operating Dataset of Liquid
-Hydrogen Refueling Station** (`CSTR:16666.11.nbsdc.nlMxRHct`, data id
+Hydrogen Refueling Station** (`CSTR:16666.11.nbsdc.aI3fJrzX`, data id
 `67d50e37195d260905af9869`) is a high-value real-station data lead. Its public
 metadata reports `完全共享`, seven original XLSX/CSV/DOCX files, and a
 concentrated 16-hour real monitoring window with one-second precision covering

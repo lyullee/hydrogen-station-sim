@@ -2,7 +2,7 @@
 
 This is a prospective, no-fitting intake contract for the publicly listed
 **Operating Dataset of Liquid Hydrogen Refueling Station** from Tongji
-University (`CSTR:16666.11.nbsdc.nlMxRHct`, data id
+University (`CSTR:16666.11.nbsdc.aI3fJrzX`, data id
 `67d50e37195d260905af9869`). The current portal metadata reports `完全共享`
 and exposes seven original XLSX/CSV/DOCX files. The model outcome must remain
 unopened until this contract and its file-role manifest are committed.
