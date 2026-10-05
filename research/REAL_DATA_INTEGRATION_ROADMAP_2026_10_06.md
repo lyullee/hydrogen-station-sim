@@ -18,6 +18,13 @@
 
 공개 HITRF 기준선은 `research/nlr_hitrf_public_operational_reference_2026_10_06.json`에 정적 정격과 명시적 주장 경계를 기록하고, LLM 근거 envelope에만 연결한다. 이 기준선으로 기본 시뮬레이션 파라미터를 자동 변경하지 않는다. 공개 페이지에는 자동 로깅이 설명되어 있지만 동기화된 원시 logger archive가 제공되지 않으므로 full-loop 검증 gate의 증거로 세지 않는다.
 
+LLM 근거 봉투에는 이제 `public_source_links`와 현재 모의 노즐 유량을
+NREL 고유량 실험의 집계 평균·최대값과 비교하는
+`public_operating_envelope_screen`이 포함된다. 이는 공개 출처를 운영자에게
+추적 가능하게 하고 운전범위 맥락을 제공하지만, 모델 정확도·프로토콜 적합성·
+안전 인증을 판정하지 않는다. 원시 시계열이 공개되지 않은 출처는 반드시 그
+한계를 함께 표시한다.
+
 ## 다음 단계의 승인 조건
 
 ### 1. 온도·유량 경계 채널 attestation
