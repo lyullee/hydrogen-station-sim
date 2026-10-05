@@ -18,6 +18,9 @@ def test_nrel_report_preserves_real_experiment_but_not_raw_holdout_status():
     assert record["raw_time_series"] is False
     assert record["full_loop_holdout_eligible"] is False
     assert record["gate_impact"] == "independent_full_loop_gate_remains_open"
+    assert record["source"]["sha256"] == "32204900c67fccfebc868d7d78235db5f2d1a3b10371b3ffce78581c6e586ba6"
+    assert record["source"]["byte_count"] == 5632458
+    assert record["source"]["text_version_url"].endswith("text-version")
 
 
 def test_nrel_reported_fill_values_are_traceable():

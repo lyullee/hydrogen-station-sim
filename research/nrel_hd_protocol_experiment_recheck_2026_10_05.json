@@ -6,7 +6,11 @@
     "url": "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
     "publisher": "U.S. Department of Energy Hydrogen and Fuel Cell Technologies Office / NREL",
     "public_artifact": "webinar PDF, 26 pages",
-    "retrieval": "public PDF text and figure captions inspected; no downloadable row-level logger archive found"
+    "retrieval": "Official PDF was retrieved from the source URL and SHA-256 locked; the official text version was cross-checked. No downloadable row-level logger archive was found.",
+    "text_version_url": "https://www.energy.gov/cmei/fuels/march-h2iq-hour-hydrogen-fuel-dispensing-medium-and-heavy-duty-vehicles-text-version",
+    "retrieved_at": "2026-10-05",
+    "sha256": "32204900c67fccfebc868d7d78235db5f2d1a3b10371b3ffce78581c6e586ba6",
+    "byte_count": 5632458
   },
   "reported_experiment": {
     "date": "2024-03-12",
