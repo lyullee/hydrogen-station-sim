@@ -78,7 +78,31 @@
       "next_action": "Submit the NBSDC/Tongji data application; quarantine, hash and rights-check any received files before opening numerical outcomes."
     },
     {
-      "rank": 2,
+      "rank": 3,
+      "id": "hyfill_hd_hrs_experiments_2026",
+      "draft": "research/HYFILL_HD_HRS_DATA_REQUEST_DRAFT.md",
+      "status": "request_draft_ready",
+      "source": "https://doi.org/10.1016/j.ijhydene.2026.153374",
+      "candidate_type": "real heavy-duty HRS refuelling and defuelling experiments",
+      "reported_scope": ">50 measured tests across 350/700 bar test rigs; published channels include dispenser pressure/temperature/mass flow, tank pressure, injection temperature and average gas temperature",
+      "requested_fields": [
+        "common_timestamp",
+        "dispenser_pressure_and_temperature",
+        "mass_flow_or_transferred_mass",
+        "tank_pressure_and_gas_temperature",
+        "tank_injection_temperature",
+        "tank_geometry_and_capacity",
+        "protocol_and_initial_conditions",
+        "cascade_compressor_precooler_and_valve_state",
+        "stop_abort_fault_and_calibration_flags"
+      ],
+      "minimum_acceptance": "A de-identified synchronized export for an untouched subset of reported tests with common time base, pressure, mass/flow, tank capacity and protocol metadata.",
+      "rights": "Corresponding author or ENGIE/IMT Mines Albi custodian must grant written permission for derived metrics, open-repository deposition and IJHE publication.",
+      "evidence": "research/hyfill_hd_hrs_data_lead_2026_10_05.json",
+      "next_action": "Project owner reviews research/HYFILL_HD_HRS_DATA_REQUEST_DRAFT.md and contacts the corresponding author through an approved institutional channel."
+    },
+    {
+      "rank": 4,
       "id": "nrel_hitrf_nfctec",
       "draft": "research/NREL_HITRF_DATA_REQUEST_DRAFT.md",
       "status": "request_draft_ready",
@@ -99,7 +123,7 @@
       "next_action": "Project owner contacts the published technical-validation custodian."
     },
     {
-      "rank": 3,
+      "rank": 5,
       "id": "calstate_la_cascade_direct_pressurized_experiments",
       "draft": "research/CALSTATE_CASCADE_EXPERIMENT_DATA_REQUEST_DRAFT.md",
       "status": "request_draft_ready",
@@ -126,7 +150,7 @@
       "next_action": "Project owner reviews research/CALSTATE_CASCADE_EXPERIMENT_DATA_REQUEST_DRAFT.md, then contacts the HRFF custodian if authorised."
     },
     {
-      "rank": 4,
+      "rank": 6,
       "id": "zbt_hrs_sampling_2026",
       "draft": "research/ZBT_HRS_DATA_REQUEST_DRAFT.md",
       "status": "request_draft_ready",
@@ -147,7 +171,7 @@
       "next_action": "Project owner reviews research/ZBT_HRS_DATA_REQUEST_DRAFT.md and contacts the corresponding author through an approved institutional channel."
     },
     {
-      "rank": 5,
+      "rank": 7,
       "id": "prhyde_zbt_h70_h35_tests",
       "draft": "research/PRHYDE_DATA_REQUEST_DRAFT.md",
       "status": "request_draft_ready",
@@ -169,7 +193,7 @@
       "next_action": "Send the prepared request to the PRHYDE/ZBT test-field data custodian identified from the D6.7 report."
     },
     {
-      "rank": 6,
+      "rank": 8,
       "id": "gti_hydrogen_station_performance_evaluation_2020",
       "draft": "research/GTI_DATA_REQUEST_DRAFT.md",
       "status": "request_draft_ready",
@@ -196,7 +220,7 @@
       "next_action": "Project-owner review of research/GTI_DATA_REQUEST_DRAFT.md, then contact the custodian if authorised."
     },
     {
-      "rank": 7,
+      "rank": 9,
       "id": "sunhydro_hsdc_operating_archive",
       "draft": "research/SUNHYDRO_DATA_REQUEST_DRAFT.md",
       "status": "request_draft_ready",
@@ -223,7 +247,7 @@
       "next_action": "Project owner reviews research/SUNHYDRO_DATA_REQUEST_DRAFT.md and identifies the approved HSDC/SunHydro custodian before any contact."
     },
     {
-      "rank": 8,
+      "rank": 10,
       "id": "fch2rail",
       "draft": "research/FCH2RAIL_DATA_REQUEST_DRAFT.md",
       "status": "request_draft_ready",
@@ -242,7 +266,7 @@
       "next_action": "Project owner sends the prepared DLR request."
     },
     {
-      "rank": 9,
+      "rank": 11,
       "id": "nist_fts",
       "draft": "research/NIST_FTS_DATA_REQUEST_DRAFT.md",
       "status": "request_draft_ready",
@@ -260,7 +284,7 @@
       "next_action": "Send request through NIST project contact."
     },
     {
-      "rank": 10,
+      "rank": 12,
       "id": "jrc_gastef_hytransfer",
       "draft": "research/JRC_GASTEF_DATA_REQUEST_DRAFT.md",
       "status": "request_draft_ready",
@@ -279,7 +303,7 @@
       "next_action": "Send the request to the JRC/GasTeF custodian."
     },
     {
-      "rank": 11,
+      "rank": 13,
       "id": "deng_2025_highflow",
       "draft": "research/DENG_2025_HIGHFLOW_DATA_REQUEST_DRAFT.md",
       "status": "request_draft_ready",
@@ -298,7 +322,7 @@
       "next_action": "Send prepared request to corresponding author."
     },
     {
-      "rank": 12,
+      "rank": 14,
       "id": "hrs_incident_contributing_factors_2025",
       "draft": "research/HRS_INCIDENT_DATA_REQUEST_DRAFT.md",
       "status": "request_draft_ready",
@@ -321,7 +345,7 @@
       "next_action": "Project owner reviews research/HRS_INCIDENT_DATA_REQUEST_DRAFT.md and identifies the corresponding author or data custodian before any contact."
     },
     {
-      "rank": 13,
+      "rank": 15,
       "id": "hydelta_overpumping_2023",
       "draft": "research/CZECH_OVERPUMPING_DATA_REQUEST_DRAFT.md",
       "status": "request_draft_ready",

@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / "research/nbsdc_lh2_hrs_dataset_access_recheck_2026_10_05.json"
 QUEUE = ROOT / "research/validation_data_request_dispatch_queue_2026_10_05.json"
+HYFILL = ROOT / "research/hyfill_hd_hrs_data_lead_2026_10_05.json"
 
 
 def test_nbsdc_record_preserves_access_boundary_and_candidate_scope() -> None:
@@ -40,4 +41,17 @@ def test_nbsdc_data_request_is_queued_without_automatic_dispatch() -> None:
     )
     assert item["status"] == "request_draft_ready_access_application_required"
     assert item["evidence"] == "research/nbsdc_lh2_hrs_dataset_access_recheck_2026_10_05.json"
+    assert (ROOT / item["draft"]).is_file()
+
+
+def test_hyfill_is_recorded_as_a_real_station_data_lead_only() -> None:
+    record = json.loads(HYFILL.read_text(encoding="utf-8"))
+    assert record["status"] == "REAL_HRS_DATA_REQUEST_LEAD_NO_RAW_ARCHIVE"
+    assert record["reported_experiment"]["reported_test_count"] == ">50 refuelling and defuelling tests"
+    assert record["access_boundary"]["raw_synchronized_logger_retrieved"] is False
+    assert record["eligibility"]["candidate_for_full_loop_validation"] is True
+    assert record["access_boundary"]["full_loop_holdout_eligible_now"] is False
+    queue = json.loads(QUEUE.read_text(encoding="utf-8"))
+    item = next(item for item in queue["queue"] if item["id"] == "hyfill_hd_hrs_experiments_2026")
+    assert item["status"] == "request_draft_ready"
     assert (ROOT / item["draft"]).is_file()

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "status": "REAL_HRS_DATA_REQUEST_LEAD_NO_RAW_ARCHIVE",
+  "source": {
+    "title": "Levelized cost of hydrogen: A dynamic simulation-based methodology for heavy-duty refuelling stations",
+    "doi": "10.1016/j.ijhydene.2026.153374",
+    "article_url": "https://doi.org/10.1016/j.ijhydene.2026.153374",
+    "open_manuscript_url": "https://hal.science/hal-05452471v1/file/Tech-Eco_paper_ar_CLEAN.pdf",
+    "corresponding_author": "Thomas Guewouo",
+    "contact_hint": "thomas.guewouo@engie.com",
+    "institutions": ["ENGIE Lab CRIGEN", "IMT Mines Albi"],
+    "access_checked_at": "2026-10-05"
+  },
+  "reported_experiment": {
+    "reported_test_count": ">50 refuelling and defuelling tests",
+    "application": "heavy-duty hydrogen refuelling station",
+    "pressure_classes_bar": [350, 700],
+    "reported_measured_channels": [
+      "dispenser mass flow",
+      "dispenser pressure",
+      "dispenser temperature",
+      "tank injection temperature",
+      "tank pressure",
+      "average tank-gas temperature"
+    ],
+    "reported_validation_scope": "tank and fuelling-line thermodynamic model; compressor model was not experimentally validated"
+  },
+  "access_boundary": {
+    "raw_synchronized_logger_retrieved": false,
+    "public_item_contains_machine_readable_trace": false,
+    "full_loop_holdout_eligible_now": false,
+    "reason": "The open article reports measured experiments and aggregate/figure results, but no raw synchronized logger archive or reuse terms for derived holdout data were found in the inspected public record."
+  },
+  "eligibility": {
+    "candidate_for_full_loop_validation": true,
+    "blocking_requirements": [
+      "obtain de-identified synchronized traces",
+      "verify units, calibration, tank geometry and protocol metadata",
+      "obtain written permission for derived metrics, repository deposition and IJHE publication",
+      "freeze the untouched holdout and scoring protocol before numerical outcome inspection"
+    ],
+    "minimum_channels": ["common timestamp", "pressure", "mass flow or transferred mass"],
+    "preferred_channels": ["temperature", "cascade state", "compressor/precooler state", "stop/abort flags"]
+  },
+  "request_draft": "research/HYFILL_HD_HRS_DATA_REQUEST_DRAFT.md",
+  "claim_boundary": "This record is a data-acquisition lead, not a validation result and not evidence that the reported model or the present digital twin agrees with the raw tests."
+}
