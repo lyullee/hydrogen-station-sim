@@ -751,6 +751,52 @@ def _confidential_station_calibration_evidence() -> dict[str, Any] | None:
     }
 
 
+def _confidential_station_schema_evidence() -> dict[str, Any] | None:
+    """Expose only the de-identified private-channel intake boundary."""
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/confidential_station_schema_audit_2026_10.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    if (
+        record.get("artifact_type") != "confidential_station_schema_audit"
+        or record.get("source_identifiers_published") is not False
+        or record.get("raw_rows_persisted") is not False
+        or record.get("exact_source_dates_published") is not False
+    ):
+        return None
+    inventory = record.get("signal_inventory") or {}
+    units = record.get("unit_attestation") or {}
+    eligibility = record.get("eligibility") or {}
+    return {
+        "artifact": "research/confidential_station_schema_audit_2026_10.json",
+        "evidence_role": "confidential de-identified station schema intake",
+        "source_bundle_count": record.get("source_bundle_count"),
+        "file_count": record.get("file_count"),
+        "tagged_channel_counts": dict(inventory.get("tagged_channel_counts") or {}),
+        "unit_attestation": {
+            key: units.get(key)
+            for key in (
+                "machine_readable_unit_dictionary_found",
+                "pressure_units_attested",
+                "temperature_units_attested",
+                "flow_units_attested",
+                "state_semantics_attested",
+            )
+        },
+        "station_side_schema_intake_supported": (
+            eligibility.get("station_side_schema_intake_supported") is True
+        ),
+        "full_loop_holdout_eligible": (
+            eligibility.get("full_loop_holdout_eligible") is True
+        ),
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _finite_number(value: Any) -> int | float | None:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         return None
@@ -927,6 +973,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_station_boundary_calibration"
         ] = station_calibration
+    station_schema = _confidential_station_schema_evidence()
+    if station_schema is not None:
+        envelope["response_evidence"][
+            "confidential_station_schema_intake"
+        ] = station_schema
     canonical = json.dumps(envelope, ensure_ascii=False, sort_keys=True,
                            separators=(",", ":"), default=str).encode("utf-8")
     envelope["evidence_digest"] = "sha256:" + sha256(canonical).hexdigest()
@@ -1107,6 +1158,18 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if station_calibration.get(key) is not None
         }
+    station_schema = evidence.get("confidential_station_schema_intake")
+    if isinstance(station_schema, dict):
+        summary["confidential_station_schema_intake"] = {
+            key: station_schema.get(key)
+            for key in (
+                "evidence_role", "source_bundle_count", "file_count",
+                "tagged_channel_counts", "unit_attestation",
+                "station_side_schema_intake_supported",
+                "full_loop_holdout_eligible", "claim_limit",
+            )
+            if station_schema.get(key) is not None
+        }
     impact = manifest.get("impact") or {}
     summary["impact_status"] = impact.get("calculation_status")
     summary["impact_result_count"] = impact.get("result_count", 0)
@@ -1133,6 +1196,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     cross_station = confidential.get("cross_station_pressure_envelope") or {}
     lifecycle = evidence.get("confidential_lifecycle_counter_summary") or {}
     station_calibration = evidence.get("confidential_station_boundary_calibration") or {}
+    station_schema = evidence.get("confidential_station_schema_intake") or {}
     incident = evidence.get("public_incident_traceability") or {}
     action_taxonomy = incident.get("action_taxonomy") or {}
     accident_inventory = evidence.get("public_accident_report_inventory") or {}
@@ -1269,6 +1333,21 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "full_station_vehicle_validation": station_calibration.get(
                 "full_station_vehicle_validation"
             ) is True,
+        },
+        "confidential_station_schema_intake": {
+            "source_bundle_count": station_schema.get("source_bundle_count"),
+            "file_count": station_schema.get("file_count"),
+            "tagged_channel_counts": station_schema.get("tagged_channel_counts"),
+            "pressure_units_attested": (
+                station_schema.get("unit_attestation", {}).get("pressure_units_attested")
+                is True
+            ),
+            "station_side_schema_intake_supported": (
+                station_schema.get("station_side_schema_intake_supported") is True
+            ),
+            "full_loop_holdout_eligible": (
+                station_schema.get("full_loop_holdout_eligible") is True
+            ),
         },
         "impact_status": (manifest.get("impact") or {}).get("calculation_status"),
         "evidence_digest": manifest.get("evidence_digest"),

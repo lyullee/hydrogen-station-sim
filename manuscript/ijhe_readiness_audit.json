@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T21:10:03.266419+00:00",
+  "generated_at": "2026-10-05T21:30:11.323601+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 70,
+    "PASS": 71,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -411,6 +411,33 @@
         },
         "cross_station_pressure_plausibility": true,
         "cross_station_full_loop_validation": false
+      }
+    },
+    {
+      "id": "confidential_station_schema_intake_integrity",
+      "status": "PASS",
+      "claim": "The restricted station archive has a de-identified channel-presence inventory that identifies station-side calibration candidates without treating unconfirmed units as measurements.",
+      "evidence": "research\\confidential_station_schema_audit_2026_10.json",
+      "requirement": "At least two source bundles, pressure/state channel candidates, no raw rows or source identifiers, and an explicit unit-attestation hold.",
+      "observed": {
+        "source_bundle_count": 2,
+        "file_count": 33,
+        "tagged_channel_counts": {
+          "pressure": 136,
+          "temperature": 64,
+          "flow": 64,
+          "discrete_state": 216,
+          "lifecycle": 34
+        },
+        "unit_attestation": {
+          "machine_readable_unit_dictionary_found": false,
+          "pressure_units_attested": false,
+          "temperature_units_attested": false,
+          "flow_units_attested": false,
+          "state_semantics_attested": false,
+          "action": "Require custodian unit and tag-semantics confirmation before fitting untrusted channels."
+        },
+        "full_loop_holdout_eligible": false
       }
     },
     {

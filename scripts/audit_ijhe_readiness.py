@@ -393,6 +393,43 @@ def audit(root: Path) -> dict[str, object]:
         } if operational_calibration and operational_replay else "missing",
     ))
 
+    schema_audit_path = root / "research/confidential_station_schema_audit_2026_10.json"
+    schema_audit = _json(schema_audit_path)
+    schema_inventory = (schema_audit or {}).get("signal_inventory") or {}
+    schema_eligibility = (schema_audit or {}).get("eligibility") or {}
+    schema_units = (schema_audit or {}).get("unit_attestation") or {}
+    schema_audit_pass = bool(
+        (schema_audit or {}).get("schema_version") == 1
+        and (schema_audit or {}).get("artifact_type") == "confidential_station_schema_audit"
+        and (schema_audit or {}).get("source_identifiers_published") is False
+        and (schema_audit or {}).get("raw_rows_persisted") is False
+        and (schema_audit or {}).get("exact_source_dates_published") is False
+        and (schema_audit or {}).get("source_bundle_count") >= 2
+        and (schema_audit or {}).get("file_count") > 0
+        and (schema_inventory.get("tagged_channel_counts") or {}).get("pressure", 0) > 0
+        and schema_eligibility.get("station_side_schema_intake_supported") is True
+        and schema_eligibility.get("full_station_vehicle_validation") is False
+        and schema_eligibility.get("full_loop_holdout_eligible") is False
+        and schema_units.get("machine_readable_unit_dictionary_found") is False
+        and schema_units.get("pressure_units_attested") is False
+        and schema_units.get("temperature_units_attested") is False
+        and schema_units.get("flow_units_attested") is False
+    )
+    gates.append(_gate(
+        "confidential_station_schema_intake_integrity",
+        "PASS" if schema_audit_pass else ("FAIL" if schema_audit else "PENDING"),
+        "The restricted station archive has a de-identified channel-presence inventory that identifies station-side calibration candidates without treating unconfirmed units as measurements.",
+        str(schema_audit_path.relative_to(root)),
+        "At least two source bundles, pressure/state channel candidates, no raw rows or source identifiers, and an explicit unit-attestation hold.",
+        {
+            "source_bundle_count": (schema_audit or {}).get("source_bundle_count"),
+            "file_count": (schema_audit or {}).get("file_count"),
+            "tagged_channel_counts": schema_inventory.get("tagged_channel_counts"),
+            "unit_attestation": schema_units,
+            "full_loop_holdout_eligible": schema_eligibility.get("full_loop_holdout_eligible"),
+        } if schema_audit else "missing; confidential schema intake has not completed",
+    ))
+
     external_loop_path = root / "data/public_validation/results/closed_loop_external_holdout/validation.json"
     external_loop = _json(external_loop_path)
     external_protocol_path = root / "research/mc_default_external_holdout_protocol.json"

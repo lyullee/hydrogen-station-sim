@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_station_schema_audit",
+  "recorded_at": "2026-10",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "exact_source_dates_published": false,
+  "file_count": 33,
+  "source_bundle_count": 2,
+  "size_buckets": {
+    "<1MiB": 0,
+    "1-100MiB": 9,
+    "100-500MiB": 24,
+    ">=500MiB": 0
+  },
+  "bundles": {
+    "source_bundle_1": {
+      "file_count": 25,
+      "size_buckets": {
+        "<1MiB": 0,
+        "1-100MiB": 1,
+        "100-500MiB": 24,
+        ">=500MiB": 0
+      },
+      "role_file_counts": {
+        "pressure": 12,
+        "temperature": 0,
+        "flow": 12,
+        "discrete_state": 0,
+        "lifecycle": 13
+      }
+    },
+    "source_bundle_2": {
+      "file_count": 8,
+      "size_buckets": {
+        "<1MiB": 0,
+        "1-100MiB": 8,
+        "100-500MiB": 0,
+        ">=500MiB": 0
+      },
+      "role_file_counts": {
+        "pressure": 8,
+        "temperature": 8,
+        "flow": 8,
+        "discrete_state": 8,
+        "lifecycle": 8
+      }
+    }
+  },
+  "signal_inventory": {
+    "tagged_channel_counts": {
+      "pressure": 136,
+      "temperature": 64,
+      "flow": 64,
+      "discrete_state": 216,
+      "lifecycle": 34
+    },
+    "files_with_tagged_roles": {
+      "pressure": 20,
+      "temperature": 8,
+      "flow": 20,
+      "discrete_state": 8,
+      "lifecycle": 21
+    }
+  },
+  "timestamp_screen": {
+    "files_with_detectable_timestamp": 33,
+    "files_with_parseable_timestamp_sample": 33,
+    "calendar_values_persisted": false
+  },
+  "unit_attestation": {
+    "machine_readable_unit_dictionary_found": false,
+    "pressure_units_attested": false,
+    "temperature_units_attested": false,
+    "flow_units_attested": false,
+    "state_semantics_attested": false,
+    "action": "Require custodian unit and tag-semantics confirmation before fitting untrusted channels."
+  },
+  "eligibility": {
+    "station_side_schema_intake_supported": true,
+    "station_pressure_calibration_candidate": true,
+    "equipment_state_model_candidate": true,
+    "temperature_or_flow_parameter_fit_deferred": true,
+    "full_station_vehicle_validation": false,
+    "full_loop_holdout_eligible": false
+  },
+  "claim_boundary": "Schema and channel-presence intake only. This audit does not attest units, calibration, physical correctness, station safety, vehicle-side accuracy or full-loop validation."
+}

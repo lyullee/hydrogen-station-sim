@@ -218,6 +218,12 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     }
     assert operational["cross_station_pressure_plausibility"] is True
     assert operational["cross_station_full_loop_validation"] is False
+    assert gates["confidential_station_schema_intake_integrity"]["status"] == "PASS"
+    schema = gates["confidential_station_schema_intake_integrity"]["observed"]
+    assert schema["source_bundle_count"] == 2
+    assert schema["tagged_channel_counts"]["pressure"] > 0
+    assert schema["unit_attestation"]["pressure_units_attested"] is False
+    assert schema["full_loop_holdout_eligible"] is False
     release_development = gates["release_network_development_integrity"]["observed"]
     assert release_development["evidence_role"] == "consumed_development_only"
     assert release_development["eligible_as_confirmatory_validation"] is False
