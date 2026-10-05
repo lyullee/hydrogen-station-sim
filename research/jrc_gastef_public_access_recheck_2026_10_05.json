@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "source": {
+    "title": "JRC Reference Data from Experiments on Onboard Hydrogen Tanks Fast Filling",
+    "jrc_record": "https://publications.jrc.ec.europa.eu/repository/handle/JRC76380",
+    "ijhe_article": "https://doi.org/10.1016/j.ijhydene.2014.03.227",
+    "facility_record": "https://publications.jrc.ec.europa.eu/repository/handle/JRC52074",
+    "article_license": "CC BY 3.0 (article record; raw trace reuse terms not established)"
+  },
+  "access_observation": {
+    "record_retrieved": true,
+    "record_resource_type": "Scientific paper",
+    "datasets_table_has_public_url": false,
+    "dataset_collections_table_has_public_url": false,
+    "machine_readable_raw_trace_retrieved": false,
+    "public_attachments_include_raw_traces": false,
+    "record_abstract_claims_public_experimental_data": true,
+    "observation": "The current JRC record exposes bibliographic metadata and paper links, but no dataset identifier, download URL, or raw pressure-temperature-time files."
+  },
+  "eligibility_decision": "CONTROLLED_ACCESS_LEAD_NO_PUBLIC_RAW_ARCHIVE",
+  "full_loop_holdout_eligible": false,
+  "reason": "The record concerns onboard-tank experiments rather than a synchronized station-controller-vehicle fueling trace, and no machine-readable data archive or raw-trace reuse terms are linked from the official record.",
+  "claim_boundary": "This recheck is provenance/access evidence only. It does not add a numerical validation case, permit figure digitization as primary validation, or change frozen model outcomes.",
+  "next_action": "Use research/JRC_GASTEF_DATA_REQUEST_DRAFT.md to request a de-identified GasTeF/HYTRANSFER trace export, channel dictionary, calibration metadata, and written permission for derived metrics and IJHE publication before outcome access."
+}

@@ -14,7 +14,10 @@ def test_public_full_loop_recheck_preserves_strict_eligibility_boundary():
     kgs = next(item for item in record["candidates"] if item["id"] == "kgs_oh_hrs_real_station_scenarios_2026_10_05")
     assert kgs["appendix_public_parameter_only"] is True
     assert kgs["raw_synchronized_logger_retrieved"] is False
-    assert record["recheck_links"] == ["research/kgs_oh_preprint_appendix_recheck_2026_10_05.json"]
+    assert record["recheck_links"] == [
+        "research/kgs_oh_preprint_appendix_recheck_2026_10_05.json",
+        "research/jrc_gastef_public_access_recheck_2026_10_05.json",
+    ]
 
 
 def test_external_search_index_references_recheck():
@@ -24,3 +27,28 @@ def test_external_search_index_references_recheck():
     current = index["public_full_loop_search_recheck_2026_10_05"]
     assert current["record"] == "research/public_full_loop_search_recheck_2026_10_05.json"
     assert current["appendix_recheck"] == "research/kgs_oh_preprint_appendix_recheck_2026_10_05.json"
+
+
+def test_jrc_gastef_access_recheck_does_not_promote_missing_raw_archive():
+    record = json.loads(
+        (ROOT / "research/jrc_gastef_public_access_recheck_2026_10_05.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert record["eligibility_decision"] == "CONTROLLED_ACCESS_LEAD_NO_PUBLIC_RAW_ARCHIVE"
+    assert record["access_observation"]["datasets_table_has_public_url"] is False
+    assert record["access_observation"]["machine_readable_raw_trace_retrieved"] is False
+    assert record["full_loop_holdout_eligible"] is False
+
+    current = json.loads(
+        (ROOT / "research/public_full_loop_search_recheck_2026_10_05.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    jrc = next(
+        item
+        for item in current["candidates"]
+        if item["id"] == "jrc_gastef_reference_data_public_access_recheck_2026_10_05"
+    )
+    assert jrc["decision"] == "CONTROLLED_ACCESS_LEAD_NO_PUBLIC_RAW_ARCHIVE"
+    assert jrc["observed_scope"]["full_loop_holdout_eligible"] is False

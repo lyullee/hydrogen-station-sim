@@ -239,6 +239,24 @@
         "full_loop_holdout_eligible": false
       },
       "reuse_status": "Cite or reuse the analysis software under its stated terms only; obtain HDTA measured files, channel definitions and publication permission from NLR before any validation."
+    },
+    {
+      "id": "jrc_gastef_reference_data_public_access_recheck_2026_10_05",
+      "title": "JRC GasTeF reference data from onboard hydrogen-tank fast-filling experiments",
+      "doi": "10.1016/j.ijhydene.2014.03.227",
+      "url": "https://publications.jrc.ec.europa.eu/repository/handle/JRC76380",
+      "facility_url": "https://publications.jrc.ec.europa.eu/repository/handle/JRC52074",
+      "license": "CC BY 3.0 article; raw-trace reuse terms not established",
+      "decision": "CONTROLLED_ACCESS_LEAD_NO_PUBLIC_RAW_ARCHIVE",
+      "finding": "The official JRC record describes GasTeF fast-filling experiments and the article states that experimental data were intended for public reference, but the current record exposes no dataset identifier, download URL or machine-readable pressure-temperature-time archive. The work is onboard-tank/component evidence rather than a synchronized station-controller-vehicle fueling trace.",
+      "observed_scope": {
+        "official_record_retrieved": true,
+        "datasets_table_has_public_url": false,
+        "machine_readable_raw_trace_retrieved": false,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "Request the de-identified GasTeF/HYTRANSFER export, data dictionary, calibration metadata and written permission for derived metrics and IJHE publication before outcome access.",
+      "access_recheck": "research/jrc_gastef_public_access_recheck_2026_10_05.json"
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
@@ -246,6 +264,7 @@
   "next_action": "Obtain a de-identified synchronized logger export and written reuse terms from a custodian such as Cal State LA HRFF, NREL/NLR HITRF, CARB/HyStEP, JRC GasTeF, FCH2RAIL or an HRS operator; freeze model, inclusion criteria and scoring before reading numerical outcomes.",
   "claim_boundary": "This record documents a search and exclusion decision. It does not add validation evidence, change frozen results or permit a publication-readiness claim.",
   "recheck_links": [
-    "research/kgs_oh_preprint_appendix_recheck_2026_10_05.json"
+    "research/kgs_oh_preprint_appendix_recheck_2026_10_05.json",
+    "research/jrc_gastef_public_access_recheck_2026_10_05.json"
   ]
 }
