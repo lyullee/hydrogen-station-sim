@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "source_url": "https://kigas.or.kr/homepage/boardMedia/94986",
+  "source_title": "2024 한국가스학회 춘계학술대회 논문집",
+  "source_sha256": "2a1c52bfbf5d67a8a3d6141b2a7186c582fa53182931cd31e5f4f0c18de29663",
+  "source_access": "public proceedings PDF; page 146 of the proceedings",
+  "paper": {
+    "title_ko": "수소충전소 실시간 진단을 위한 디지털 트윈 개발",
+    "title_en": "Development of Digital Twin for Real-Time Diagnosis of Hydrogen Refueling Stations",
+    "authors": [
+      "Jinwoo Lee",
+      "Songsoo Park",
+      "Jinwon Min",
+      "Jongil Han"
+    ],
+    "affiliation": "Korea Gas Technology Corporation",
+    "proceedings_page": 146,
+    "acknowledged_project": "MOTIE/KETEP No. 20227310100060"
+  },
+  "reported_scope": {
+    "facility": "A hydrogen refueling station in Seosan, Republic of Korea",
+    "operating_periods": [
+      "normal operation used for process-model validation",
+      "a period when hydrogen leakage occurred used to demonstrate diagnostic robustness"
+    ],
+    "reported_channels_or_signals": [
+      "temperature",
+      "pressure",
+      "flow",
+      "hydrogen leakage / abnormal-state signals"
+    ],
+    "architecture": [
+      "MATLAB Simscape process model",
+      "AWS Lambda",
+      "AWS S3",
+      "AWS IoT Core",
+      "SNS notification"
+    ],
+    "method_claimed": "residual-based diagnosis comparing real sensor data with a virtual process model"
+  },
+  "data_boundary": {
+    "public_machine_readable_raw_rows": false,
+    "public_synchronized_pressure_temperature_flow_leak_archive": false,
+    "public_artifact_is_proceedings_text_only": true,
+    "full_loop_holdout_eligible": false,
+    "rights_for_derived_metrics_and_open_deposition": "unresolved",
+    "corresponding_author_contact_found_in_public_artifact": false
+  },
+  "decision": "REAL_STATION_NORMAL_AND_LEAK_REPORT_DATA_REQUEST_LEAD",
+  "use": "Provenance and acquisition lead for an independent Korean HRS normal/leak validation set; do not claim model validation, calibration, or incident-data access until synchronized raw data, metadata, rights, and an immutable hash are received and frozen.",
+  "next_action": "Send the prepared KGS/author request only after project-owner review and an authorized institutional contact channel is available."
+}

@@ -373,6 +373,31 @@
       "minimum_acceptance": "Machine-readable synchronized traces for the four experiments with pressure, temperature and flow channels plus geometry, operating-step and calibration metadata.",
       "rights": "Kiwa Technology / Výzkumný a zkušební ústav Plzeň or the project custodian must grant written permission for derived metrics, open-repository deposition and journal publication.",
       "next_action": "Project owner reviews research/CZECH_OVERPUMPING_DATA_REQUEST_DRAFT.md and identifies the approved custodian before any contact."
+    },
+    {
+      "rank": 16,
+      "id": "kgs_seosan_digital_twin_2024",
+      "draft": "research/KGS_SEOSAN_DATA_REQUEST_DRAFT.md",
+      "status": "request_draft_ready",
+      "source": "https://kigas.or.kr/homepage/boardMedia/94986",
+      "candidate_type": "real Korean HRS normal-operation and hydrogen-leak diagnostic study",
+      "requested_fields": [
+        "common_timestamp",
+        "station/storage/compressor/dispenser pressure",
+        "temperature",
+        "mass_flow_or_transferred_mass",
+        "hydrogen_detector_or_leak_signal",
+        "fire_gas_detector_state",
+        "valve_esd_controller_state",
+        "initial_conditions_and_capacity",
+        "protocol",
+        "quality_calibration_metadata",
+        "incident_annotations"
+      ],
+      "minimum_acceptance": "A de-identified synchronized export containing pressure, temperature and mass/flow plus leak/detector and equipment-state channels for untouched normal and leak-period segments, with data dictionary and provenance.",
+      "rights": "KGS/Korea Gas Technology Corporation or the study authors must grant written permission for derived metrics, masked event summaries, open-repository deposition and journal publication.",
+      "evidence": "research/kgs_seosan_digital_twin_data_boundary_2026_10_05.json",
+      "next_action": "Project owner reviews research/KGS_SEOSAN_DATA_REQUEST_DRAFT.md and identifies an authorized KGS/KGT custodian before any contact."
     }
   ]
 }

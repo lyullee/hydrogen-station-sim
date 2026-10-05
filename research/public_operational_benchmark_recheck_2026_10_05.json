@@ -478,12 +478,51 @@
         "usage_statistics": 16,
         "technical_requirements": 18
       }
+    },
+    {
+      "id": "kgs_seosan_digital_twin_2024",
+      "title": "Development of Digital Twin for Real-Time Diagnosis of Hydrogen Refueling Stations",
+      "url": "https://kigas.or.kr/homepage/boardMedia/94986",
+      "license": "Public proceedings artifact; raw station data and reuse terms are not released with the proceedings",
+      "decision": "REAL_STATION_NORMAL_AND_LEAK_REPORT_DATA_REQUEST_LEAD",
+      "observed_scope": {
+        "facility": "Hydrogen refueling station in Seosan, Republic of Korea",
+        "paper_page": 146,
+        "authors": [
+          "Jinwoo Lee",
+          "Songsoo Park",
+          "Jinwon Min",
+          "Jongil Han"
+        ],
+        "reported_periods": [
+          "normal operation for process-model validation",
+          "hydrogen-leak period for diagnostic robustness demonstration"
+        ],
+        "reported_channels": [
+          "temperature",
+          "pressure",
+          "flow",
+          "hydrogen leakage / abnormal-state signals"
+        ],
+        "architecture": [
+          "MATLAB Simscape",
+          "AWS Lambda",
+          "AWS S3",
+          "AWS IoT Core",
+          "SNS"
+        ],
+        "public_synchronized_rows": false
+      },
+      "finding": "The KGS proceedings describe real Seosan-station normal data and a hydrogen-leak period, but the public record is a text-only proceedings paper and does not provide synchronized raw rows, channel metadata, calibration information or reuse terms.",
+      "use": "High-priority Korean real-station provenance and data-request lead. Do not count it as an external full-loop holdout, calibration source or incident-data validation until raw files, provenance, rights and immutable hashes are received and frozen.",
+      "evidence": "research/kgs_seosan_digital_twin_data_boundary_2026_10_05.json",
+      "source_sha256": "2a1c52bfbf5d67a8a3d6141b2a7186c582fa53182931cd31e5f4f0c18de29663"
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
   "gate_impact": "full_loop_external_validation_remains_open",
-  "next_action": "Request a de-identified synchronized logger export and written reuse terms from Cal State LA HRFF, UCI NFCRC, NREL/NLR HITRF, CARB/HyStEP, JRC GasTeF, FCH2RAIL, RHeaDHy or an HRS operator; freeze the model, inclusion criteria and scoring before reading numerical outcomes.",
-  "claim_boundary": "This record strengthens source accounting and station-scale face-validity context. It adds no full-loop validation result and does not permit the IJHE/full-objective completion gate to pass.",
+  "next_action": "Request a de-identified synchronized logger export and written reuse terms from KGS/Korea Gas Technology Corporation for the Seosan normal/leak study, alongside the existing independent station leads; freeze the model, inclusion criteria and scoring before reading numerical outcomes.",
+  "claim_boundary": "This record adds a Korean real-station normal/leak provenance lead and a concrete data request. It adds no full-loop validation result and does not permit the IJHE/full-objective completion gate to pass.",
   "recheck_links": [
     "https://www.energy.gov/cmei/fuels/march-h2iq-hour-hydrogen-fuel-dispensing-medium-and-heavy-duty-vehicles-text-version",
     "https://zenodo.org/records/20590842"
