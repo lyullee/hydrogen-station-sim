@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "source": {
+    "title": "PRHYDE Protocol for Heavy-Duty Hydrogen Refuelling",
+    "project_page": "https://lbst.de/prhyde/",
+    "deliverable": "https://lbst.de/wp-content/uploads/2023/04/PRHYDE_Deliverable-D6-7_Results_as_Input_for_Standardisation_V1-2_final_Apr_2023.pdf",
+    "cordis_results": "https://cordis.europa.eu/project/id/874997/results"
+  },
+  "access_observation": {
+    "official_project_page_retrieved": true,
+    "public_deliverables_listed": true,
+    "public_raw_experimental_archive_linked": false,
+    "machine_readable_time_series_retrieved": false,
+    "reported_campaign_scope": "ZBT and Nikola tank campaigns; four instrumented tanks; reports describe 2 Hz PLC logging and pressure, temperature and mass-flow channels",
+    "observation": "The public PRHYDE page exposes reports and presentations. The reports describe experimental campaigns and results, but the project page does not link a raw CSV/Excel time-series archive or reuse terms for the underlying logger export."
+  },
+  "eligibility_decision": "PUBLIC_EXPERIMENTAL_REPORT_DATA_REQUEST_LEAD_NO_RAW_ARCHIVE",
+  "full_loop_holdout_eligible": false,
+  "allowed_use": [
+    "protocol and experiment-design provenance",
+    "reported operating-range context",
+    "data-custodian request lead"
+  ],
+  "prohibited_use": [
+    "numerical frozen holdout score from report plots or summary tables",
+    "claim of raw station-to-vehicle validation",
+    "parameter tuning using published outcomes"
+  ],
+  "next_action": "Request a de-identified PRHYDE/ZBT/Nikola logger export with written permission; use research/PRHYDE_DATA_REQUEST_DRAFT.md."
+}

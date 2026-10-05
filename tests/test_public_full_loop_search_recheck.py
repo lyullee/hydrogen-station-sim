@@ -17,6 +17,7 @@ def test_public_full_loop_recheck_preserves_strict_eligibility_boundary():
     assert record["recheck_links"] == [
         "research/kgs_oh_preprint_appendix_recheck_2026_10_05.json",
         "research/jrc_gastef_public_access_recheck_2026_10_05.json",
+        "research/prhyde_public_access_recheck_2026_10_05.json",
     ]
 
 
@@ -52,3 +53,28 @@ def test_jrc_gastef_access_recheck_does_not_promote_missing_raw_archive():
     )
     assert jrc["decision"] == "CONTROLLED_ACCESS_LEAD_NO_PUBLIC_RAW_ARCHIVE"
     assert jrc["observed_scope"]["full_loop_holdout_eligible"] is False
+
+
+def test_prhyde_public_report_recheck_keeps_raw_logger_access_open():
+    record = json.loads(
+        (ROOT / "research/prhyde_public_access_recheck_2026_10_05.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert record["eligibility_decision"] == "PUBLIC_EXPERIMENTAL_REPORT_DATA_REQUEST_LEAD_NO_RAW_ARCHIVE"
+    assert record["access_observation"]["public_raw_experimental_archive_linked"] is False
+    assert record["access_observation"]["machine_readable_time_series_retrieved"] is False
+    assert record["full_loop_holdout_eligible"] is False
+
+    current = json.loads(
+        (ROOT / "research/public_full_loop_search_recheck_2026_10_05.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    prhyde = next(
+        item
+        for item in current["candidates"]
+        if item["id"] == "prhyde_public_experimental_report_access_recheck_2026_10_05"
+    )
+    assert prhyde["decision"] == "PUBLIC_EXPERIMENTAL_REPORT_DATA_REQUEST_LEAD_NO_RAW_ARCHIVE"
+    assert prhyde["observed_scope"]["raw_logger_archive_retrieved"] is False

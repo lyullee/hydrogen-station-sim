@@ -257,6 +257,23 @@
       },
       "reuse_status": "Request the de-identified GasTeF/HYTRANSFER export, data dictionary, calibration metadata and written permission for derived metrics and IJHE publication before outcome access.",
       "access_recheck": "research/jrc_gastef_public_access_recheck_2026_10_05.json"
+    },
+    {
+      "id": "prhyde_public_experimental_report_access_recheck_2026_10_05",
+      "title": "PRHYDE heavy-duty hydrogen refuelling experimental campaigns",
+      "url": "https://lbst.de/prhyde/",
+      "deliverable_url": "https://lbst.de/wp-content/uploads/2023/04/PRHYDE_Deliverable-D6-7_Results_as_Input_for_Standardisation_V1-2_final_Apr_2023.pdf",
+      "license": "Public reports; raw logger reuse terms not identified",
+      "decision": "PUBLIC_EXPERIMENTAL_REPORT_DATA_REQUEST_LEAD_NO_RAW_ARCHIVE",
+      "finding": "The official PRHYDE page and D6.7 deliverable describe ZBT/Nikola experimental campaigns with instrumented tanks and 2 Hz PLC logging, but expose no machine-readable raw pressure-temperature-mass-flow archive or reuse permission. Published plots and summary tables are not treated as a frozen holdout.",
+      "observed_scope": {
+        "public_project_page_retrieved": true,
+        "public_deliverables_retrieved": true,
+        "raw_logger_archive_retrieved": false,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "Use for experiment/protocol provenance only; request a de-identified logger export and written permission before any numerical validation.",
+      "access_recheck": "research/prhyde_public_access_recheck_2026_10_05.json"
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
@@ -265,6 +282,7 @@
   "claim_boundary": "This record documents a search and exclusion decision. It does not add validation evidence, change frozen results or permit a publication-readiness claim.",
   "recheck_links": [
     "research/kgs_oh_preprint_appendix_recheck_2026_10_05.json",
-    "research/jrc_gastef_public_access_recheck_2026_10_05.json"
+    "research/jrc_gastef_public_access_recheck_2026_10_05.json",
+    "research/prhyde_public_access_recheck_2026_10_05.json"
   ]
 }
