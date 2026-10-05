@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "declaration_type": "external_hrs_bundle_metadata",
+  "outcomes_accessed_before_freeze": false,
+  "channels": {
+    "common_time_base": {"present": true, "description": "Article describes time-resolved pressure/temperature/flow curves; exact time base to be checked after metadata gate."},
+    "vehicle_or_receptacle_pressure": {"present": true, "unit": "MPa_abs", "source": "article reports vehicle pressure during 35/70 MPa refueling tests"},
+    "gas_or_tank_temperature": {"present": true, "unit": "degC", "source": "article reports vehicle/tank temperature during 70 MPa test"},
+    "mass_flow_or_transferred_mass": {"present": true, "unit": "g/s", "source": "article reports mass-flow curve and transferred mass"}
+  },
+  "metadata": {
+    "initial_conditions": "Article tables report initial pressure, temperature, source pressure and source temperature.",
+    "tank_capacity_or_geometry": "Article reports 3 x 140 L Type III for 35 MPa and 122.4 L Type IV for 70 MPa.",
+    "protocol_mode_or_pressure_ramp": "Article reports leak-check stages and pressure rise; exact protocol field to be checked after metadata gate.",
+    "source_cascade_state": "Article describes high/low pressure switching; exact state encoding to be checked after metadata gate.",
+    "compressor_state": "Declared by article context; exact trace field to be checked after metadata gate.",
+    "precooler_state": "70 MPa test reports -40 degC source temperature; exact trace field to be checked after metadata gate.",
+    "stop_abort_fault_markers": "Article reports automatic stop and leak-check pauses; exact trace field to be checked after metadata gate.",
+    "quality_and_calibration_metadata": "Not confirmed from article page; eligibility should remain provisional until archive metadata is inspected after this gate.",
+    "reuse_terms": "Article-linked CSV archives are publicly downloadable; no separate data licence identified.",
+    "units_and_sampling_interval": "Article reports MPa, degC and g/s; exact archive units and sampling interval to be checked after metadata gate.",
+    "source_identity": "Zhao et al. 2020, DOI 10.19799/j.cnki.2095-4239.2020.0049, article-linked T1-T4 CSV ZIP files.",
+    "custodian_or_archive": "储能科学与技术 article archive, esst.cip.com.cn",
+    "acquired_at_utc": "2026-10-05T02:02:27Z",
+    "license_or_reuse_reference": "Article page and DOI; separate raw-data redistribution permission not identified."
+  }
+}
