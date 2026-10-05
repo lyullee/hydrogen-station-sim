@@ -33,6 +33,8 @@ New input fields:
 - initial_vehicle_2_pressure_mpa
 - initial_vehicle_2_temperature_c
 - target_vehicle_2_pressure_mpa
+- vehicle_geometry_basis (`reference` by default or opt-in `capacity_eos`)
+- vehicle_capacity_kg and vehicle_2_capacity_kg when `capacity_eos` is selected
 
 ## Monitoring and 3D
 
