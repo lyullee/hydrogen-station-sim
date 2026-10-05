@@ -35,6 +35,12 @@ dispenser protocol state, or a confirmed unit and calibration dictionary. The
 preliminary robust margin stayed at the simulator's existing conservative
 floor, so it was **not** applied as a hidden default.
 
+An in-memory pressure-boundary replay was also executed against the reference
+scenario using a short relative profile. The simulator produced a normal
+trajectory with the measured boundary supplied explicitly; no raw profile,
+calendar timestamp, or fitted parameter was persisted, and the production
+defaults remain unchanged.
+
 The first pressure/equipment synchronization attempt was intentionally rejected
 because the two supplied sample windows did not overlap on their absolute time
 axes. No rows were shifted to manufacture an overlap, and no scenario
