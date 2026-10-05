@@ -222,6 +222,53 @@ def _public_accidental_release_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_detector_logic_evidence() -> dict[str, Any] | None:
+    """Expose the public concentration-detector replay as bounded evidence.
+
+    The replay checks the declared alarm/trip persistence rule against measured
+    concentration channels from an open-ended channel experiment.  It is
+    relevant to detector wording and response sequencing, but it is not a
+    station-dispersion or ESD-effectiveness validation.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/dispersion_detector_logic_validation.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    source = record.get("source") or {}
+    rule = record.get("rule") or {}
+    aggregate = record.get("aggregate") or {}
+    if (
+        record.get("status") != "completed_bounded_instrumented_detector_logic_evidence"
+        or source.get("license") != "CC BY 4.0"
+        or not aggregate.get("case_count")
+    ):
+        return None
+    numeric_aggregate = {
+        str(key): value
+        for key, value in aggregate.items()
+        if isinstance(value, (str, int, float, bool))
+        and not (isinstance(value, float) and not math.isfinite(value))
+    }
+    return {
+        "artifact": "research/dispersion_detector_logic_validation.json",
+        "doi": str(source.get("doi") or ""),
+        "license": str(source.get("license") or ""),
+        "evidence_role": str(record.get("evidence_role") or ""),
+        "rule": {
+            "alarm_threshold_percent": rule.get("alarm_threshold_percent"),
+            "trip_threshold_percent": rule.get("trip_threshold_percent"),
+            "persistence_s": rule.get("persistence_s"),
+            "sampling_gap_reset": str(rule.get("sampling_gap_reset") or ""),
+        },
+        "aggregate": numeric_aggregate,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_measured_boundary_evidence() -> dict[str, Any] | None:
     """Expose only the claim-bounded status of the private-data replay.
 
@@ -495,6 +542,9 @@ def build_evidence_manifest(
     accidental_release = _public_accidental_release_evidence()
     if accidental_release is not None:
         envelope["response_evidence"]["public_accidental_release_evidence"] = accidental_release
+    detector_logic = _public_detector_logic_evidence()
+    if detector_logic is not None:
+        envelope["response_evidence"]["public_detector_logic_evidence"] = detector_logic
     confidential_boundary = _confidential_measured_boundary_evidence()
     if confidential_boundary is not None:
         envelope["response_evidence"]["confidential_measured_boundary_replay"] = confidential_boundary

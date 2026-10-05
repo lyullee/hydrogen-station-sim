@@ -45,6 +45,13 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert "ignition probability" in accidental["claim_limit"]
     assert all(row["local_sha256_match"] for row in accidental["files"])
     assert "raw_text" not in accidental
+    detector = idle["response_evidence"]["public_detector_logic_evidence"]
+    assert detector["doi"] == "10.23642/usn.26117989.v2"
+    assert detector["rule"]["alarm_threshold_percent"] == 1.0
+    assert detector["rule"]["trip_threshold_percent"] == 2.0
+    assert detector["aggregate"]["case_count"] == 22
+    assert detector["aggregate"]["cases_with_trip_detection"] == 22
+    assert "outdoor station dispersion" in detector["claim_limit"]
     confidential = idle["response_evidence"]["confidential_measured_boundary_replay"]
     assert confidential["trajectory_completed"] is True
     assert confidential["station_boundary_calibration_supported"] is True
