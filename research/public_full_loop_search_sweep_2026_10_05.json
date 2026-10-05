@@ -28,6 +28,20 @@
       "channels": [
         "web search"
       ]
+    },
+    {
+      "query": "site:energy.gov/sites/default/files H2IQ heavy-duty hydrogen fast flow experimental results pressure mass flow HDVS",
+      "channels": [
+        "DOE/NLR official web pages",
+        "official slide PDFs"
+      ]
+    },
+    {
+      "query": "site:nlr.gov/docs hydrogen high-flow fueling HDVS experimental data NREL",
+      "channels": [
+        "NLR official web pages",
+        "official slide PDFs"
+      ]
     }
   ],
   "eligibility_rule": {
@@ -112,10 +126,41 @@
       "observed_scope": "The public record contains an article describing a liquid-hydrogen refueling model and simulation scenarios; it does not expose measured station-to-vehicle logger rows.",
       "full_loop_holdout_eligible": false,
       "claim_boundary": "Model-comparison and liquid-HRS context only."
+    },
+    {
+      "id": "nrel_h2iq_2022_hd_fast_flow_slide_boundary_2026_10_05",
+      "title": "DOE/NLR December 2022 H2IQ Hour high-throughput hydrogen fueling slides",
+      "url": "https://www.energy.gov/sites/default/files/2022-12/h2iq-121922.pdf",
+      "related_url": "https://www.nlr.gov/news/program/2022/fast-flow-future-heavy-duty-hydrogen-trucks.html",
+      "retrieval_sha256": "73ee4534a6efbdd76fa993df549c9d673b1a65fdf963593906985c4fd30660fc",
+      "decision": "PUBLIC_CHART_ONLY_NO_MACHINE_READABLE_TRACE",
+      "observed_scope": "Official slides report 2022 HDVS fast-flow demonstrations and show time-series pressure, temperature and mass-flow charts. The public artifact exposes chart graphics and summary values (including 61.5 kg and 82.3 kg demonstrations) but no machine-readable synchronized logger rows, calibration file or full controller-state export.",
+      "full_loop_holdout_eligible": false,
+      "claim_boundary": "Useful independent operating-range and face-validity context. Chart digitization would be a derived benchmark with reading uncertainty, not a clean raw holdout; it cannot close the frozen full-loop gate without custodian confirmation and raw channel release."
+    },
+    {
+      "id": "nrel_h2iq_2024_hd_protocol_slide_boundary_2026_10_05",
+      "title": "DOE/NLR March 2024 H2IQ Hour HD fueling protocol experimental results",
+      "url": "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
+      "related_url": "https://www.energy.gov/cmei/fuels/march-h2iq-hour-hydrogen-fuel-dispensing-medium-and-heavy-duty-vehicles-text-version",
+      "retrieval_sha256": "32204900c67fccfebc868d7d78235db5f2d1a3b10371b3ffce78581c6e586ba6",
+      "decision": "PUBLIC_CHART_ONLY_NO_MACHINE_READABLE_TRACE",
+      "observed_scope": "Official slides/text report an SAE J2601-5 HD protocol test with station/hose/vehicle pressures, valve position, mass flow and temperature plots and summary values (73 kg, 423.5 s, 172.3 g/s average, 483.33 g/s peak). Public access is presentation graphics and prose, not an event-level raw trace with channel dictionary and calibration metadata.",
+      "full_loop_holdout_eligible": false,
+      "claim_boundary": "Strong independent protocol and operating-range context. It is not promoted to full-loop validation; a raw NLR release or approved de-identified export is still required."
+    },
+    {
+      "id": "nrel_2024_annual_review_hd_protocol_slide_boundary_2026_10_05",
+      "title": "DOE 2024 Annual Merit Review heavy-duty fueling protocol slide",
+      "url": "https://www.hydrogen.energy.gov/docs/hydrogenprogramlibraries/pdfs/review24/in000_stetson_2024_o0e018332-9871-45a3-9c2c-67686e3fadab.pdf",
+      "decision": "PUBLIC_CHART_ONLY_NO_MACHINE_READABLE_TRACE",
+      "observed_scope": "The official review slide states a 70.5 kg seven-minute HDVS fill and shows pressure/flow protocol charts, but does not provide synchronized raw event rows or reuse metadata for a numerical holdout.",
+      "full_loop_holdout_eligible": false,
+      "claim_boundary": "Independent public performance context only; do not count it as a separate raw validation case."
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
   "gate_impact": "full_loop_external_validation_remains_open",
-  "next_action": "Prioritize approved data requests to NLR NFCTEC/HITRF and Cal State LA HRFF; require a de-identified synchronized export, channel dictionary, calibration metadata, protocol/controller states and written publication rights before outcome access.",
+  "next_action": "Prioritize approved data requests to NLR NFCTEC/HITRF and Cal State LA HRFF; the DOE/NLR slide records are now retained as independent chart-only leads. Require a de-identified synchronized export, channel dictionary, calibration metadata, protocol/controller states and written publication rights before outcome access.",
   "claim_boundary": "This sweep records discovery and exclusion decisions. It adds no numerical validation, does not alter frozen holdout results and does not permit IJHE or full-objective completion."
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T12:04:25.104580+00:00",
+  "generated_at": "2026-10-05T12:13:55.306403+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -462,7 +462,7 @@
         "live_public_search_sweep_2026_10_05": {
           "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
           "gate_impact": "full_loop_external_validation_remains_open",
-          "candidate_count": 6,
+          "candidate_count": 9,
           "claim_boundary": "This sweep records discovery and exclusion decisions. It adds no numerical validation, does not alter frozen holdout results and does not permit IJHE or full-objective completion."
         },
         "operational_benchmark_recheck_2026_10_05": {
