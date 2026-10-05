@@ -51,13 +51,48 @@
     "root_id": "67bc96ed34eb407463579068",
     "file_count": 7,
     "files": [
-      {"name": "35MPa加氢机1.xlsx", "id": "67bc96ed34eb407463579069", "bytes": 3605593, "role": "dispenser operational log candidate"},
-      {"name": "35MPa加氢机2.xlsx", "id": "67bc96ed34eb40746357906a", "bytes": 5700855, "role": "dispenser operational log candidate"},
-      {"name": "70MPa加氢机.csv", "id": "67bc96ed34eb40746357906b", "bytes": 5974368, "role": "dispenser operational log candidate"},
-      {"name": "90MPa压缩机.xlsx", "id": "67bc96ed34eb40746357906c", "bytes": 3922132, "role": "compressor operational log candidate"},
-      {"name": "液氢加氢站运行数据集数据说明 .docx", "id": "67bc96ed34eb40746357906d", "bytes": 15673, "role": "metadata and use instructions"},
-      {"name": "液氢泵-液氢储罐.xlsx", "id": "67bc96ed34eb40746357906e", "bytes": 15458212, "role": "liquid-hydrogen pump and tank log candidate"},
-      {"name": "高压储氢瓶组.xlsx", "id": "67bc96ed34eb40746357906f", "bytes": 9423277, "role": "high-pressure storage-bank log candidate"}
+      {
+        "name": "35MPa加氢机1.xlsx",
+        "id": "67bc96ed34eb407463579069",
+        "bytes": 3605593,
+        "role": "dispenser operational log candidate"
+      },
+      {
+        "name": "35MPa加氢机2.xlsx",
+        "id": "67bc96ed34eb40746357906a",
+        "bytes": 5700855,
+        "role": "dispenser operational log candidate"
+      },
+      {
+        "name": "70MPa加氢机.csv",
+        "id": "67bc96ed34eb40746357906b",
+        "bytes": 5974368,
+        "role": "dispenser operational log candidate"
+      },
+      {
+        "name": "90MPa压缩机.xlsx",
+        "id": "67bc96ed34eb40746357906c",
+        "bytes": 3922132,
+        "role": "compressor operational log candidate"
+      },
+      {
+        "name": "液氢加氢站运行数据集数据说明 .docx",
+        "id": "67bc96ed34eb40746357906d",
+        "bytes": 15673,
+        "role": "metadata and use instructions"
+      },
+      {
+        "name": "液氢泵-液氢储罐.xlsx",
+        "id": "67bc96ed34eb40746357906e",
+        "bytes": 15458212,
+        "role": "liquid-hydrogen pump and tank log candidate"
+      },
+      {
+        "name": "高压储氢瓶组.xlsx",
+        "id": "67bc96ed34eb40746357906f",
+        "bytes": 9423277,
+        "role": "high-pressure storage-bank log candidate"
+      }
     ]
   },
   "eligibility": {
@@ -84,5 +119,42 @@
     ]
   },
   "claim_boundary": "This access recheck establishes a credible real-station data lead and records the access barrier. It does not validate the digital twin, close the full-loop gate, or support a numerical accuracy claim.",
-  "next_action": "Submit a formal NBSDC/Tongji data request for the six operational files and written reuse terms; quarantine any received files, hash them, freeze the scoring protocol, then run an untouched holdout evaluation."
+  "next_action": "Submit a formal NBSDC/Tongji data request for the six operational files and written reuse terms; quarantine any received files, hash them, freeze the scoring protocol, then run an untouched holdout evaluation.",
+  "api_probe_recheck": {
+    "observed_at_utc": "2026-10-05T12:15:00Z",
+    "file_tree": {
+      "endpoint": "https://www.nbsdc.cn/api/general/v1/getFileTree?dataId=67d50e37195d260905af9869&pid=1&pageOffset=0&pageSize=20",
+      "http_status": 200,
+      "portal_code": 200,
+      "reported_total": 7,
+      "numeric_file_ids": [
+        "67bc96ed34eb407463579069",
+        "67bc96ed34eb40746357906a",
+        "67bc96ed34eb40746357906b",
+        "67bc96ed34eb40746357906c",
+        "67bc96ed34eb40746357906e",
+        "67bc96ed34eb40746357906f"
+      ],
+      "description_file_id": "67bc96ed34eb40746357906d"
+    },
+    "description_download_probe": {
+      "http_status": 200,
+      "content_type": "application/octet-stream",
+      "bytes": 15673,
+      "result": "downloaded"
+    },
+    "numeric_download_probe": {
+      "http_status": 200,
+      "application_code": 403,
+      "message": "目前只支持部分数据集的说明文件下载，数据文件请通过数据申请获取。",
+      "result": "application_required"
+    },
+    "login_status_probe": {
+      "endpoint": "https://www.nbsdc.cn/api/isChickNsLoginStatus",
+      "http_status": 200,
+      "code": 400,
+      "message": "token失效，请重新登录",
+      "interpretation": "Unauthenticated public session; no login bypass was attempted."
+    }
+  }
 }
