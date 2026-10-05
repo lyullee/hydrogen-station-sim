@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Literal
 
 from .dispenser import (
     DispenserFitParameters,
@@ -32,6 +33,7 @@ from .safety_runtime import (
     SafetyLimits,
     SafetyPLC,
 )
+from .tabulated import PropsSI
 from .vehicle import (
     CompositeTankFitParameters,
     CompositeTankParameters,
@@ -41,6 +43,7 @@ from .vehicle import (
 
 BANK_REFERENCE_MAX_PRESSURE_PA = (50.0e6, 70.0e6, 100.0e6)
 DEFAULT_BANK_INITIAL_FILL_PERCENT = (90.0, 100.0 * 65.0 / 70.0, 90.0)
+CAPACITY_EOS_REFERENCE_TEMPERATURE_K = 288.15
 
 
 @dataclass(frozen=True)
@@ -52,6 +55,12 @@ class ReferenceScenario:
     initial_vehicle_temperature_k: float = 298.15
     vehicle_internal_volume_m3: float = 0.122
     vehicle_nominal_working_pressure_pa: float = 70.0e6
+    # ``reference`` preserves the historical 0.122 m³ geometry.  The
+    # capacity-EOS option derives the tank volume from its declared capacity
+    # and the hydrogen property table at the public 15 °C reference state.
+    # It remains opt-in until a frozen external holdout is re-run.
+    vehicle_geometry_basis: Literal["reference", "capacity_eos"] = "reference"
+    vehicle_capacity_kg: float | None = None
     vehicle_effective_volume_multiplier: float = 1.0
     vehicle_gas_liner_ua_multiplier: float = 1.0
     dispenser_flow_area_multiplier: float = 1.0
@@ -60,6 +69,7 @@ class ReferenceScenario:
     initial_vehicle_2_temperature_k: float = 298.15
     vehicle_2_internal_volume_m3: float = 0.122
     vehicle_2_nominal_working_pressure_pa: float = 70.0e6
+    vehicle_2_capacity_kg: float | None = None
     target_vehicle_pressure_pa: float = 70.0e6
     target_vehicle_2_pressure_pa: float = 70.0e6
     average_pressure_ramp_rate_pa_s: float = 2.0e5
@@ -117,6 +127,28 @@ def build_vehicle_tank(
     )
 
 
+def capacity_eos_volume_m3(
+    capacity_kg: float,
+    nominal_working_pressure_pa: float,
+    reference_temperature_k: float = CAPACITY_EOS_REFERENCE_TEMPERATURE_K,
+) -> float:
+    """Convert a declared gas capacity to volume using the runtime H2 EOS."""
+
+    if capacity_kg <= 0.0:
+        raise ValueError("capacity_kg must be positive")
+    if nominal_working_pressure_pa <= 0.0 or reference_temperature_k <= 0.0:
+        raise ValueError("reference pressure and temperature must be positive")
+    density = float(
+        PropsSI(
+            "Dmass", "P", nominal_working_pressure_pa,
+            "T", reference_temperature_k, "Hydrogen",
+        )
+    )
+    if density <= 0.0:
+        raise ValueError("hydrogen EOS returned a non-positive density")
+    return capacity_kg / density
+
+
 def build_reference_scenario(
     config: ReferenceScenario,
     hyram_backend: HyRAMConsequenceBackend,
@@ -141,6 +173,25 @@ def build_reference_scenario(
         config.maximum_precooler_temperature_deviation_k,
     ) <= 0.0:
         raise ValueError("fit multipliers and precooler tolerance must be positive")
+    if config.vehicle_geometry_basis not in {"reference", "capacity_eos"}:
+        raise ValueError("vehicle_geometry_basis must be 'reference' or 'capacity_eos'")
+    if any(
+        value is not None and value <= 0.0
+        for value in (config.vehicle_capacity_kg, config.vehicle_2_capacity_kg)
+    ):
+        raise ValueError("vehicle capacities must be positive when provided")
+    if config.vehicle_geometry_basis == "capacity_eos":
+        if config.vehicle_capacity_kg is None or config.vehicle_2_capacity_kg is None:
+            raise ValueError("capacity_eos geometry requires both vehicle capacities")
+        vehicle_volume_m3 = capacity_eos_volume_m3(
+            config.vehicle_capacity_kg, config.vehicle_nominal_working_pressure_pa
+        )
+        vehicle_2_volume_m3 = capacity_eos_volume_m3(
+            config.vehicle_2_capacity_kg, config.vehicle_2_nominal_working_pressure_pa
+        )
+    else:
+        vehicle_volume_m3 = config.vehicle_internal_volume_m3
+        vehicle_2_volume_m3 = config.vehicle_2_internal_volume_m3
     if any(
         value is not None and value <= 0.0
         for value in (
@@ -153,8 +204,8 @@ def build_reference_scenario(
         effective_volume_multiplier=config.vehicle_effective_volume_multiplier,
         gas_liner_ua_multiplier=config.vehicle_gas_liner_ua_multiplier,
     )
-    vehicle = build_vehicle_tank(config.vehicle_internal_volume_m3, vehicle_fit)
-    secondary_vehicle = build_vehicle_tank(config.vehicle_2_internal_volume_m3, vehicle_fit)
+    vehicle = build_vehicle_tank(vehicle_volume_m3, vehicle_fit)
+    secondary_vehicle = build_vehicle_tank(vehicle_2_volume_m3, vehicle_fit)
     dispenser_fit = DispenserFitParameters(
         pcv_area_multiplier=config.dispenser_flow_area_multiplier,
         nozzle_area_multiplier=config.dispenser_flow_area_multiplier,

@@ -24,7 +24,11 @@ from h2station.public_validation import (
     read_hiad_hrs_cases,
 )
 from h2station.risk.runtime_backend import UnavailableHyRAMBackend
-from h2station.scenario import ReferenceScenario, build_reference_scenario
+from h2station.scenario import (
+    ReferenceScenario,
+    build_reference_scenario,
+    capacity_eos_volume_m3,
+)
 from h2station.tabulated import PropsSI
 
 
@@ -219,6 +223,37 @@ def test_reference_scenario_supports_independent_experimental_tank_volumes():
         built.initial_state.secondary_partial_station.vehicle.hydrogen_mass_kg
         > built.initial_state.partial_station.vehicle.hydrogen_mass_kg
     )
+
+
+def test_capacity_eos_geometry_uses_declared_public_capacity_for_both_vehicles():
+    built = build_reference_scenario(
+        ReferenceScenario(
+            vehicle_geometry_basis="capacity_eos",
+            vehicle_capacity_kg=9.8,
+            vehicle_2_capacity_kg=5.0,
+        ),
+        UnavailableHyRAMBackend(),
+    )
+    first = built.station.partial_station.vehicle_tank
+    second = built.station.secondary_partial_station.vehicle_tank
+    assert first.parameters.internal_volume_m3 == pytest.approx(
+        capacity_eos_volume_m3(9.8, 70.0e6), rel=1e-10
+    )
+    assert second.parameters.internal_volume_m3 == pytest.approx(
+        capacity_eos_volume_m3(5.0, 70.0e6), rel=1e-10
+    )
+    assert first.parameters.internal_volume_m3 != pytest.approx(0.122)
+
+
+def test_capacity_eos_geometry_requires_both_declared_capacities():
+    with pytest.raises(ValueError, match="both vehicle capacities"):
+        build_reference_scenario(
+            ReferenceScenario(
+                vehicle_geometry_basis="capacity_eos",
+                vehicle_capacity_kg=9.8,
+            ),
+            UnavailableHyRAMBackend(),
+        )
 
 
 def test_reference_scenario_rejects_nonpositive_experimental_tank_volume():

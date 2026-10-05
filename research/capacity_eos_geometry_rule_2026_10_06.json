@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "status": "opt_in_runtime_geometry_rule",
+  "rule": {
+    "basis": "declared hydrogen capacity divided by tabulated density",
+    "fluid": "Hydrogen",
+    "reference_pressure_mpa": 70.0,
+    "reference_temperature_c": 15.0,
+    "runtime_table": "src/h2station/data/hydrogen_properties_v1.npz",
+    "api_fields": [
+      "vehicle_geometry_basis",
+      "vehicle_capacity_kg",
+      "vehicle_2_capacity_kg"
+    ],
+    "default_basis": "reference",
+    "default_changed": false
+  },
+  "public_evidence": {
+    "source_artifact": "research/nrel_h2fills_geometry_sensitivity.json",
+    "source_workbook": "data/public_validation/raw/nrel_h2fills_2022_hdvs_typeiv.xlsx",
+    "source_workbook_sha256": "1a3fbe64a50c1c97266bfe0372998513ad3ccec5600fab7bc4b9fc68ad4d9d0c",
+    "declared_capacity_kg": 9.8,
+    "capacity_eos_volume_m3": 0.24394320094584823,
+    "legacy_volume_m3": 0.25438297872340426,
+    "exploratory_screening": {
+      "capacity_eos_with_frozen_fit_screening_pass_count": 7,
+      "capacity_eos_no_volume_fit_screening_pass_count": 7,
+      "screening_case_count": 7
+    }
+  },
+  "claim_boundary": {
+    "independent_confirmatory_validation": false,
+    "reason": "The public workbook was already accessed during geometry sensitivity analysis.",
+    "required_before_default": "Freeze geometry and fit parameters, then rerun an untouched external holdout and retain the result without tuning."
+  },
+  "privacy": {
+    "private_station_rows_embedded": false,
+    "operator_identity_embedded": false,
+    "site_identity_embedded": false,
+    "manufacturer_identity_embedded": false
+  }
+}

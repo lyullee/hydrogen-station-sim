@@ -160,8 +160,13 @@ class SimulationInput(BaseModel):
     ambient_temperature_c: float = Field(default=25.0, ge=-40.0, le=50.0)
     initial_vehicle_pressure_mpa: float = Field(default=5.0, gt=0.0, le=70.0)
     initial_vehicle_temperature_c: float = Field(default=25.0, ge=-40.0, le=85.0)
+    # Optional public-capacity geometry.  The default keeps the historical
+    # reference volume; capacity_eos uses the tabulated hydrogen EOS.
+    vehicle_geometry_basis: Literal["reference", "capacity_eos"] = "reference"
+    vehicle_capacity_kg: float | None = Field(default=None, gt=0.1, le=100.0)
     initial_vehicle_2_pressure_mpa: float = Field(default=8.0, gt=0.0, le=70.0)
     initial_vehicle_2_temperature_c: float = Field(default=25.0, ge=-40.0, le=85.0)
+    vehicle_2_capacity_kg: float | None = Field(default=None, gt=0.1, le=100.0)
     initial_bank_low_fill_percent: float = Field(default=90.0, ge=1.0, le=100.0)
     initial_bank_medium_fill_percent: float = Field(default=100.0 * 65.0 / 70.0, ge=1.0, le=100.0)
     initial_bank_high_fill_percent: float = Field(default=90.0, ge=1.0, le=100.0)
@@ -412,12 +417,15 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             initial_vehicle_temperature_k=(
                 request.initial_vehicle_temperature_c + 273.15
             ),
+            vehicle_geometry_basis=request.vehicle_geometry_basis,
+            vehicle_capacity_kg=request.vehicle_capacity_kg,
             initial_vehicle_2_pressure_pa=(
                 request.initial_vehicle_2_pressure_mpa * 1.0e6
             ),
             initial_vehicle_2_temperature_k=(
                 request.initial_vehicle_2_temperature_c + 273.15
             ),
+            vehicle_2_capacity_kg=request.vehicle_2_capacity_kg,
             initial_bank_fill_percent=(
                 request.initial_bank_low_fill_percent,
                 request.initial_bank_medium_fill_percent,
