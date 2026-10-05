@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "record_type": "open_qra_simulation_boundary",
+  "source": {
+    "doi": "10.34810/DATA3632",
+    "title": "Simulation dataset for benchmarking quantitative risk analysis methodologies for hydrogen refuelling stations",
+    "landing_url": "https://doi.org/10.34810/DATA3632",
+    "dataverse_landing_url": "https://dataverse.csuc.cat/citation?persistentId=doi:10.34810/DATA3632",
+    "datacite_api_url": "https://api.datacite.org/dois/10.34810/data3632",
+    "publisher": "CORA.Repositori de Dades de Recerca",
+    "publication_year": 2026,
+    "authors": [
+      "Jairo Andrés Meneses Gelves",
+      "Lorenza Saturnino",
+      "Pascale Vacca",
+      "Eulalia Planas",
+      "Elsa Pastor"
+    ]
+  },
+  "license": {
+    "spdx": "CC-BY-4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/legalcode"
+  },
+  "dataset_description": {
+    "resource_type": "Simulation data",
+    "reported_file_count": 279,
+    "reported_formats": [
+      "text/tab-separated-values",
+      "image/png",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/shp",
+      "application/dbf",
+      "application/shx",
+      "text/xml"
+    ],
+    "content": "Simulation files and exported consequence, societal-risk and individual-risk results for seven QRA methodologies applied to an idealised hydrogen refuelling station."
+  },
+  "access_observation": {
+    "metadata_retrieved": true,
+    "file_content_retrieved": false,
+    "dataverse_api_observation": "The public landing page and dataset/file API routes returned an anti-bot challenge during this review, so no file was parsed or transformed.",
+    "measured_station_logger": false,
+    "station_to_vehicle_synchronized_trace": false,
+    "accident_observation": false
+  },
+  "eligibility": {
+    "full_loop_external_holdout_eligible": false,
+    "experimental_validation_eligible": false,
+    "independent_qra_context_eligible": true,
+    "decision": "OPEN_QRA_SIMULATION_CONTEXT_ONLY"
+  },
+  "claim_boundary": "This is an independently published, openly licensed simulation/QRA benchmark. It can support comparison of risk-method outputs and visualization context, but it does not validate a station-to-vehicle dynamic model, measured thermodynamics, accident frequencies or LLM recommendations. It must not be used as a measured holdout or as evidence for IJHE readiness.",
+  "goal_completion_permitted": false,
+  "next_action": "If the custodian exposes the underlying files, inspect their schema and license-compatible use separately; retain the full-loop gate as open until a synchronized measured station-to-vehicle logger is obtained and frozen before scoring."
+}

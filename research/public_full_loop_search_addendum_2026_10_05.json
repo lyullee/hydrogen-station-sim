@@ -134,6 +134,21 @@
       "observed_scope": "Three years of operator-provided 350 bar bus-station logs are summarized as totals, duration, average flow and utilization; no downloadable synchronized pressure-temperature-mass-flow event archive was found.",
       "full_loop_holdout_eligible": false,
       "request_lead": "Request the de-identified event-level logs and operator permission; do not reconstruct a holdout from aggregate tables."
+    },
+    {
+      "id": "datacite_open_qra_benchmark_2026_10_05",
+      "title": "Simulation dataset for benchmarking quantitative risk analysis methodologies for hydrogen refuelling stations",
+      "doi": "10.34810/DATA3632",
+      "url": "https://doi.org/10.34810/DATA3632",
+      "license": "CC BY 4.0",
+      "decision": "OPEN_QRA_SIMULATION_CONTEXT_ONLY",
+      "observed_scope": "Openly licensed simulation/QRA benchmark for an idealised hydrogen refuelling station; metadata reports 279 files with TSV, spreadsheet, GIS and image outputs covering seven QRA methodologies.",
+      "full_loop_holdout_eligible": false,
+      "measured_station_logger": false,
+      "station_to_vehicle_synchronized_trace": false,
+      "boundary_record": "research/open_qra_benchmark_boundary_2026_10_05.json",
+      "access_boundary": "DataCite metadata was retrieved. The public Dataverse landing/API routes returned an anti-bot challenge during this review, so no file content was parsed.",
+      "prospective_use": "Independent QRA/risk-visualization context only; do not merge into experimental/full-loop validation scores."
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
