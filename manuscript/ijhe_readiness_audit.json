@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T19:15:58.755603+00:00",
+  "generated_at": "2026-10-05T20:41:37.269229+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -389,8 +389,8 @@
       "id": "confidential_operational_envelope_calibration_integrity",
       "status": "PASS",
       "claim": "The owner-controlled operational-envelope aggregate is privacy-bounded and passes through a measured-boundary runtime replay without being promoted to full-loop validation.",
-      "evidence": "research\\confidential_operational_envelope_calibration_summary_2026_10_06.json; research\\confidential_operational_envelope_replay_2026_10_06.json",
-      "requirement": "De-identified aggregate, retained quality boundary, explicit missing vehicle/flow semantics, opt-in profile linkage and a completed protection-aware replay.",
+      "evidence": "research\\confidential_operational_envelope_calibration_summary_2026_10_06.json; research\\confidential_operational_envelope_replay_2026_10_06.json; research\\confidential_operational_envelope_holdout_replay_2026_10_06.json; research\\confidential_cross_station_pressure_envelope_2026_10_06.json",
+      "requirement": "De-identified aggregate, retained quality boundary, explicit missing vehicle/flow semantics, opt-in profile linkage, a completed protection-aware replay, an untouched chronological suffix holdout and a pressure-only cross-station plausibility check.",
       "observed": {
         "files_read": 8,
         "sampled_rows": 10896,
@@ -398,7 +398,19 @@
         "recharge_restart_margin_pa": 540000.0,
         "simulated_samples": 121,
         "esd_triggered": false,
-        "full_station_vehicle_validation": false
+        "full_station_vehicle_validation": false,
+        "holdout_calibration_points": 998,
+        "holdout_points": 30,
+        "holdout_trajectory_completed": true,
+        "holdout_fit_used": false,
+        "holdout_full_loop_validation": false,
+        "cross_station_profile_count": 2,
+        "cross_station_pressure_overlap_mpa": {
+          "min": 56.295,
+          "max": 63.36
+        },
+        "cross_station_pressure_plausibility": true,
+        "cross_station_full_loop_validation": false
       }
     },
     {
