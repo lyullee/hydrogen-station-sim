@@ -62,6 +62,65 @@ def test_hysteresis_never_reduces_operator_margin(tmp_path: Path):
     assert apply_recharge_hysteresis(2.0e6, summary) >= 2.0e6
 
 
+def test_nonpositive_pressure_sentinels_are_excluded_from_calibration(tmp_path: Path):
+    trace = tmp_path / "pressure_sentinel.csv"
+    trace.write_text(
+        "time,pressure\n"
+        "0,-0.020289\n"
+        "1,40.0\n"
+        "2,40.5\n",
+        encoding="utf-8",
+    )
+    summary = fit_station_boundary(
+        trace,
+        TraceMapping(
+            time_column="time",
+            pressure_columns=(("storage", "pressure"),),
+        ),
+        stride=1,
+    )
+    assert summary.pressure_min_pa == 40.0e6
+    assert "nonpositive_pressure_excluded" in summary.quality_warnings
+
+
+def test_synchronized_replay_reports_excluded_pressure_sentinels(tmp_path: Path):
+    pressure_trace = tmp_path / "pressure.csv"
+    pressure_trace.write_text(
+        "time,pressure\n"
+        "0,-0.020289\n"
+        "1,40.0\n"
+        "2,40.5\n",
+        encoding="utf-8",
+    )
+    equipment_trace = tmp_path / "equipment.csv"
+    equipment_trace.write_text(
+        "time,temperature\n"
+        "0,20.0\n"
+        "1,20.5\n"
+        "2,21.0\n",
+        encoding="utf-8",
+    )
+    pressure = TraceMapping(
+        time_column="time",
+        pressure_columns=(("station", "pressure"),),
+        time_is_absolute=True,
+    )
+    equipment = TraceMapping(
+        time_column="time",
+        temperature_columns=(("diagnostic", "temperature"),),
+        time_is_absolute=True,
+    )
+    alignment = synchronize_station_traces(
+        pressure_trace,
+        pressure,
+        equipment_trace,
+        equipment,
+        max_match_gap_s=1.0,
+    ).alignment
+    assert alignment.synchronized_rows == 2
+    assert "nonpositive_pressure_excluded" in alignment.quality_warnings
+
+
 def test_time_column_index_supports_corrupted_export_header(tmp_path: Path):
     trace = tmp_path / "index_time.csv"
     trace.write_text(

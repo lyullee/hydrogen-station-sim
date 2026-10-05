@@ -307,6 +307,28 @@ def _finite(value: object) -> float | None:
     return result if math.isfinite(result) else None
 
 
+def _mapped_pressure_values(
+    row: Mapping[str, object],
+    mapping: TraceMapping,
+) -> tuple[list[float], int]:
+    """Return physical pressure values and the count of non-positive sentinels.
+
+    Owner-controlled logger exports occasionally encode a missing pressure as a
+    negative numeric sentinel.  Such values are finite, but cannot represent an
+    absolute hydrogen pressure and must never influence calibration or alignment.
+    The second return value lets aggregate callers retain a quality warning
+    without persisting the source row.
+    """
+
+    raw = [
+        value * mapping.pressure_scale_pa_per_unit
+        for _, column in mapping.pressure_columns
+        if (value := _finite(row.get(column))) is not None
+    ]
+    valid = [value for value in raw if value > 0.0]
+    return valid, len(raw) - len(valid)
+
+
 def _temperature_role_authorized(mapping: TraceMapping, role: str) -> bool:
     """Return whether a mapped temperature is approved for boundary use.
 
@@ -386,21 +408,23 @@ def _collect_trace_points(
     *,
     stride: int,
     max_rows: int | None,
-) -> list[tuple[float, float | None, dict[str, float], dict[str, str]]]:
+) -> tuple[
+    list[tuple[float, float | None, dict[str, float], dict[str, str]]],
+    set[str],
+]:
     """Collect only mapped numeric/state values for one controlled trace."""
 
     paths = _paths(input_path)
     if len(paths) != 1:
         raise ValueError("trace synchronization requires exactly one private trace file per logger")
     points: list[tuple[float, float | None, dict[str, float], dict[str, str]]] = []
+    warnings: set[str] = set()
     for _, time_value, row in _sampled_rows(
         paths[0], mapping, stride=stride, max_rows_per_file=max_rows
     ):
-        pressure_values = [
-            value * mapping.pressure_scale_pa_per_unit
-            for _, column in mapping.pressure_columns
-            if (value := _finite(row.get(column))) is not None
-        ]
+        pressure_values, excluded_pressure_values = _mapped_pressure_values(row, mapping)
+        if excluded_pressure_values:
+            warnings.add("nonpositive_pressure_excluded")
         temperature_values: dict[str, float] = {}
         for role, column in mapping.temperature_columns:
             value = _finite(row.get(column))
@@ -424,7 +448,7 @@ def _collect_trace_points(
                 )
             )
     points.sort(key=lambda item: item[0])
-    return points
+    return points, warnings
 
 
 def synchronize_station_traces(
@@ -453,10 +477,10 @@ def synchronize_station_traces(
         raise ValueError("pressure mapping requires an absolute time format or attestation")
     if not (equipment_mapping.time_format or equipment_mapping.time_is_absolute):
         raise ValueError("equipment mapping requires an absolute time format or attestation")
-    pressure_points = _collect_trace_points(
+    pressure_points, pressure_warnings = _collect_trace_points(
         pressure_input_path, pressure_mapping, stride=stride, max_rows=max_rows
     )
-    equipment_points = _collect_trace_points(
+    equipment_points, equipment_warnings = _collect_trace_points(
         equipment_input_path, equipment_mapping, stride=stride, max_rows=max_rows
     )
     if not pressure_points or not equipment_points:
@@ -520,7 +544,7 @@ def synchronize_station_traces(
     if not aligned_pressure:
         raise ValueError("no logger samples are within max_match_gap_s")
 
-    warnings: set[str] = set()
+    warnings: set[str] = set(pressure_warnings) | set(equipment_warnings)
     if duplicate_time:
         warnings.add("duplicate_or_nonmonotonic_pressure_time")
     coverage = len(aligned_pressure) / max(1, len(pressure_in_overlap))
@@ -665,11 +689,7 @@ def read_boundary_profile(
     for path, time_value, row in _sampled_rows(
         paths[0], mapping, stride=stride, max_rows_per_file=max_rows
     ):
-        values = [
-            value * mapping.pressure_scale_pa_per_unit
-            for _, column in mapping.pressure_columns
-            if (value := _finite(row.get(column))) is not None
-        ]
+        values, _ = _mapped_pressure_values(row, mapping)
         if not values:
             continue
         temperature_values = [
@@ -727,13 +747,11 @@ def fit_station_boundary(
         input_path, mapping, stride=stride, max_rows_per_file=max_rows_per_file
     ):
         files.add(path)
-        pressure_values = [
-            value * mapping.pressure_scale_pa_per_unit
-            for _, column in mapping.pressure_columns
-            if (value := _finite(row.get(column))) is not None
-        ]
+        pressure_values, excluded_pressure_values = _mapped_pressure_values(row, mapping)
+        if excluded_pressure_values:
+            warnings.add("nonpositive_pressure_excluded")
         if not pressure_values:
-            warnings.add("rows_without_finite_pressure")
+            warnings.add("rows_without_positive_pressure")
             continue
         pressure = float(median(pressure_values))
         times.append(time_value)

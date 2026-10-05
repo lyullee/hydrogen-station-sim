@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_pressure_quality_recheck",
+  "recorded_at": "2026-10-06",
+  "source_scope": "one de-identified owner-controlled pressure logger bundle",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "exact_source_dates_published": false,
+  "sampling": {
+    "stride": 1200,
+    "files_read": 12,
+    "sampled_rows": 24473
+  },
+  "recheck": {
+    "nonpositive_pressure_observation_detected": true,
+    "nonpositive_pressure_excluded_before_aggregation": true,
+    "quality_warning": "nonpositive_pressure_excluded",
+    "positive_pressure_median_mpa": 63.059,
+    "positive_pressure_max_mpa": 64.829,
+    "calibration_profile_replaced": false
+  },
+  "runtime_behavior": {
+    "station_boundary_fit": "reject non-positive mapped pressure values and retain a quality warning",
+    "boundary_profile_reader": "skip rows without a positive mapped pressure",
+    "synchronized_replay": "exclude non-positive pressure values and propagate the warning to alignment metadata",
+    "measured_boundary_calibration_default": false
+  },
+  "claim_boundary": "This artifact records a private-data quality correction and a bounded pressure-envelope recheck. It does not establish full station-to-vehicle validation, universal operating limits, safety distances, failure frequencies, or equipment identity."
+}
