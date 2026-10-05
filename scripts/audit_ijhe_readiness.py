@@ -292,6 +292,8 @@ def audit(root: Path) -> dict[str, object]:
     external_search = _json(external_search_path)
     external_search_recheck_path = root / "research/public_full_loop_search_recheck_2026_10_05.json"
     external_search_recheck = _json(external_search_recheck_path)
+    external_search_sweep_path = root / "research/public_full_loop_search_sweep_2026_10_05.json"
+    external_search_sweep = _json(external_search_sweep_path)
     external_operational_recheck_path = root / "research/public_operational_benchmark_recheck_2026_10_05.json"
     external_operational_recheck = _json(external_operational_recheck_path)
     external_operational_face_path = root / "research/public_operational_benchmark_face_validity_2026_10_05.json"
@@ -338,7 +340,7 @@ def audit(root: Path) -> dict[str, object]:
         "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
         f"{external_loop_path.relative_to(root)}; {external_search_path.relative_to(root)}; "
         f"{external_search_recheck_path.relative_to(root)}; {external_operational_recheck_path.relative_to(root)}; "
-        f"{prospective_release_protocol_path.relative_to(root)}",
+        f"{external_search_sweep_path.relative_to(root)}; {prospective_release_protocol_path.relative_to(root)}",
         "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
         {
             "protocol_integrity": protocol_integrity,
@@ -352,6 +354,12 @@ def audit(root: Path) -> dict[str, object]:
                 "result": (external_search_recheck or {}).get("result"),
                 "gate_impact": (external_search_recheck or {}).get("gate_impact"),
                 "candidate_count": len((external_search_recheck or {}).get("candidates") or []),
+            },
+            "live_public_search_sweep_2026_10_05": {
+                "result": (external_search_sweep or {}).get("result"),
+                "gate_impact": (external_search_sweep or {}).get("gate_impact"),
+                "candidate_count": len((external_search_sweep or {}).get("candidates") or []),
+                "claim_boundary": (external_search_sweep or {}).get("claim_boundary"),
             },
             "operational_benchmark_recheck_2026_10_05": {
                 "result": (external_operational_recheck or {}).get("result"),
