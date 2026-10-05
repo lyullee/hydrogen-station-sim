@@ -77,6 +77,13 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     lifecycle = idle["response_evidence"]["confidential_lifecycle_counter_summary"]
     assert lifecycle["cycle_aware_degradation_fit"] is False
     assert lifecycle["counters"]["high_bank_cycles"]["total_positive_increment"] == 1183
+    station_calibration = idle["response_evidence"][
+        "confidential_station_boundary_calibration"
+    ]
+    assert station_calibration["sampled_rows"] == 2000
+    assert station_calibration["boundary_pressure_mpa"]["min"] == 51.95075
+    assert station_calibration["recommended_recharge_restart_margin_pa"] == 250000.0
+    assert station_calibration["full_station_vehicle_validation"] is False
     confidential = idle["response_evidence"]["confidential_measured_boundary_replay"]
     assert confidential["trajectory_completed"] is True
     assert confidential["station_boundary_calibration_supported"] is True

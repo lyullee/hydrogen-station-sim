@@ -63,6 +63,10 @@ and are available to the LLM only as de-identified operating-history context.
 They are not converted into an aging or failure law until a frozen, untouched
 validation window supports that relationship.
 
+The corresponding measured pressure envelope and replay margin are recorded in
+[`confidential_station_boundary_calibration_summary_2026_10_06.json`](../research/confidential_station_boundary_calibration_summary_2026_10_06.json)
+and are provided to the LLM as station-boundary calibration context only.
+
 Published operating-range evidence is summarized in
 [`public_experimental_benchmarks_2026_10_06.json`](../research/public_experimental_benchmarks_2026_10_06.json)
 and is exposed to the bounded LLM context. The NREL tank/hose trace and the

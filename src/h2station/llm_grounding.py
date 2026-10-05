@@ -437,6 +437,50 @@ def _confidential_lifecycle_evidence() -> dict[str, Any] | None:
     }
 
 
+def _confidential_station_calibration_evidence() -> dict[str, Any] | None:
+    """Expose bounded pressure-log calibration context to the assistant."""
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/confidential_station_boundary_calibration_summary_2026_10_06.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if (
+        record.get("artifact_type") != "confidential_station_boundary_calibration_summary"
+        or record.get("source_identifiers_published") is not False
+        or record.get("raw_rows_persisted") is not False
+    ):
+        return None
+    pressure = record.get("boundary_pressure_mpa") or {}
+    return {
+        "artifact": "research/confidential_station_boundary_calibration_summary_2026_10_06.json",
+        "evidence_role": "confidential measured station-boundary calibration",
+        "sampled_rows": record.get("sampled_rows"),
+        "duration_s": record.get("duration_s"),
+        "boundary_pressure_mpa": {
+            key: pressure.get(key)
+            for key in ("min", "median", "max")
+            if pressure.get(key) is not None
+        },
+        "positive_pressure_ramp_p95_pa_s": record.get(
+            "positive_pressure_ramp_p95_pa_s"
+        ),
+        "recommended_recharge_restart_margin_pa": record.get(
+            "recommended_recharge_restart_margin_pa"
+        ),
+        "station_boundary_calibration_supported": (
+            record.get("eligibility", {}).get("station_boundary_calibration_supported")
+            is True
+        ),
+        "full_station_vehicle_validation": (
+            record.get("eligibility", {}).get("full_station_vehicle_validation") is True
+        ),
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _finite_number(value: Any) -> int | float | None:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         return None
@@ -597,6 +641,11 @@ def build_evidence_manifest(
     lifecycle = _confidential_lifecycle_evidence()
     if lifecycle is not None:
         envelope["response_evidence"]["confidential_lifecycle_counter_summary"] = lifecycle
+    station_calibration = _confidential_station_calibration_evidence()
+    if station_calibration is not None:
+        envelope["response_evidence"][
+            "confidential_station_boundary_calibration"
+        ] = station_calibration
     canonical = json.dumps(envelope, ensure_ascii=False, sort_keys=True,
                            separators=(",", ":"), default=str).encode("utf-8")
     envelope["evidence_digest"] = "sha256:" + sha256(canonical).hexdigest()
@@ -700,6 +749,19 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             ),
             "claim_limit": short(lifecycle.get("claim_limit")),
         }
+    station_calibration = evidence.get("confidential_station_boundary_calibration")
+    if isinstance(station_calibration, dict):
+        summary["confidential_station_boundary_calibration"] = {
+            key: station_calibration.get(key)
+            for key in (
+                "evidence_role", "sampled_rows", "duration_s",
+                "boundary_pressure_mpa", "positive_pressure_ramp_p95_pa_s",
+                "recommended_recharge_restart_margin_pa",
+                "station_boundary_calibration_supported",
+                "full_station_vehicle_validation", "claim_limit",
+            )
+            if station_calibration.get(key) is not None
+        }
     impact = manifest.get("impact") or {}
     summary["impact_status"] = impact.get("calculation_status")
     summary["impact_result_count"] = impact.get("result_count", 0)
@@ -722,6 +784,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     confidential = evidence.get("confidential_measured_boundary_replay") or {}
     holdout = confidential.get("temporal_holdout") or {}
     lifecycle = evidence.get("confidential_lifecycle_counter_summary") or {}
+    station_calibration = evidence.get("confidential_station_boundary_calibration") or {}
     incident = evidence.get("public_incident_traceability") or {}
     accident_inventory = evidence.get("public_accident_report_inventory") or {}
     accidental_release = evidence.get("public_accidental_release_evidence") or {}
@@ -754,6 +817,16 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "counter_roles": sorted((lifecycle.get("counters") or {}).keys()),
             "cycle_aware_degradation_fit": lifecycle.get(
                 "cycle_aware_degradation_fit"
+            ) is True,
+        },
+        "confidential_station_boundary_calibration": {
+            "sampled_rows": station_calibration.get("sampled_rows"),
+            "pressure_range_mpa": station_calibration.get("boundary_pressure_mpa"),
+            "recharge_restart_margin_pa": station_calibration.get(
+                "recommended_recharge_restart_margin_pa"
+            ),
+            "full_station_vehicle_validation": station_calibration.get(
+                "full_station_vehicle_validation"
             ) is True,
         },
         "impact_status": (manifest.get("impact") or {}).get("calculation_status"),
