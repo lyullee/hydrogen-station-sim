@@ -293,9 +293,13 @@ def audit(root: Path) -> dict[str, object]:
     operational_holdout_path = root / (
         "research/confidential_operational_envelope_holdout_replay_2026_10_06.json"
     )
+    cross_station_path = root / (
+        "research/confidential_cross_station_pressure_envelope_2026_10_06.json"
+    )
     operational_calibration = _json(operational_calibration_path)
     operational_replay = _json(operational_replay_path)
     operational_holdout = _json(operational_holdout_path)
+    cross_station = _json(cross_station_path)
     operational_eligibility = (operational_calibration or {}).get("eligibility") or {}
     operational_replay_eligibility = (operational_replay or {}).get("eligibility") or {}
     operational_calibration_pass = bool(
@@ -340,6 +344,26 @@ def audit(root: Path) -> dict[str, object]:
         and (operational_holdout or {}).get("eligibility", {}).get(
             "independent_full_loop_validation_supported"
         ) is False
+        and (cross_station or {}).get("schema_version") == 1
+        and (cross_station or {}).get("artifact_type")
+        == "confidential_cross_station_pressure_envelope"
+        and (cross_station or {}).get("source_identifiers_published") is False
+        and (cross_station or {}).get("raw_rows_persisted") is False
+        and (cross_station or {}).get("comparison", {}).get(
+            "profiles_with_pressure_semantics_attestation"
+        ) == 2
+        and (cross_station or {}).get("comparison", {}).get(
+            "profiles_with_temperature_boundary_attestation"
+        ) == 0
+        and (cross_station or {}).get("comparison", {}).get(
+            "profiles_with_mass_flow_units_attestation"
+        ) == 0
+        and (cross_station or {}).get("eligibility", {}).get(
+            "cross_station_pressure_plausibility_supported"
+        ) is True
+        and (cross_station or {}).get("eligibility", {}).get(
+            "station_to_vehicle_validation_supported"
+        ) is False
     )
     gates.append(_gate(
         "confidential_operational_envelope_calibration_integrity",
@@ -347,8 +371,8 @@ def audit(root: Path) -> dict[str, object]:
             "FAIL" if operational_calibration or operational_replay else "PENDING"
         ),
         "The owner-controlled operational-envelope aggregate is privacy-bounded and passes through a measured-boundary runtime replay without being promoted to full-loop validation.",
-        f"{operational_calibration_path.relative_to(root)}; {operational_replay_path.relative_to(root)}; {operational_holdout_path.relative_to(root)}",
-        "De-identified aggregate, retained quality boundary, explicit missing vehicle/flow semantics, opt-in profile linkage, a completed protection-aware replay and an untouched chronological suffix holdout.",
+        f"{operational_calibration_path.relative_to(root)}; {operational_replay_path.relative_to(root)}; {operational_holdout_path.relative_to(root)}; {cross_station_path.relative_to(root)}",
+        "De-identified aggregate, retained quality boundary, explicit missing vehicle/flow semantics, opt-in profile linkage, a completed protection-aware replay, an untouched chronological suffix holdout and a pressure-only cross-station plausibility check.",
         {
             "files_read": (operational_calibration or {}).get("files_read"),
             "sampled_rows": (operational_calibration or {}).get("sampled_rows"),
@@ -362,6 +386,10 @@ def audit(root: Path) -> dict[str, object]:
             "holdout_trajectory_completed": (operational_holdout or {}).get("replay", {}).get("trajectory_completed"),
             "holdout_fit_used": (operational_holdout or {}).get("split", {}).get("fit_used_holdout"),
             "holdout_full_loop_validation": (operational_holdout or {}).get("eligibility", {}).get("independent_full_loop_validation_supported"),
+            "cross_station_profile_count": len((cross_station or {}).get("profiles") or []),
+            "cross_station_pressure_overlap_mpa": (cross_station or {}).get("comparison", {}).get("observed_pressure_overlap_mpa"),
+            "cross_station_pressure_plausibility": (cross_station or {}).get("eligibility", {}).get("cross_station_pressure_plausibility_supported"),
+            "cross_station_full_loop_validation": (cross_station or {}).get("eligibility", {}).get("station_to_vehicle_validation_supported"),
         } if operational_calibration and operational_replay else "missing",
     ))
 

@@ -55,3 +55,20 @@ def test_operational_envelope_holdout_is_deidentified_and_not_full_loop_validati
     assert record["replay"]["trajectory_completed"] is True
     assert record["eligibility"]["time_ordered_measured_boundary_holdout_supported"] is True
     assert record["eligibility"]["independent_full_loop_validation_supported"] is False
+
+
+def test_cross_station_pressure_envelope_is_claim_bounded():
+    record = json.loads(
+        (
+            ROOT
+            / "research/confidential_cross_station_pressure_envelope_2026_10_06.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert record["source_identifiers_published"] is False
+    assert record["raw_rows_persisted"] is False
+    assert record["comparison"]["profiles_with_pressure_semantics_attestation"] == 2
+    assert record["comparison"]["profiles_with_temperature_boundary_attestation"] == 0
+    assert record["comparison"]["profiles_with_mass_flow_units_attestation"] == 0
+    assert record["eligibility"]["cross_station_pressure_plausibility_supported"] is True
+    assert record["eligibility"]["station_to_vehicle_validation_supported"] is False
+    assert record["eligibility"]["default_model_parameters_changed"] is False

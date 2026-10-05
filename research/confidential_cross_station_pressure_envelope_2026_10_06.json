@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_cross_station_pressure_envelope",
+  "recorded_at": "2026-10-06",
+  "source_scope": "two de-identified owner-controlled station pressure logger aggregates",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "exact_source_dates_published": false,
+  "manufacturer_or_model_published": false,
+  "tag_names_published": false,
+  "profiles": [
+    {
+      "id": "pressure_boundary_profile_a",
+      "files_read": 1,
+      "sampled_rows": 2000,
+      "pressure_range_mpa": {
+        "min": 51.95075,
+        "median": 62.543775,
+        "max": 63.94585
+      },
+      "positive_pressure_ramp_p95_pa_s": 26160.292,
+      "recharge_restart_margin_pa": 250000.0,
+      "pressure_boundary_semantics_attested": true,
+      "quality_warnings": []
+    },
+    {
+      "id": "pressure_boundary_profile_b",
+      "files_read": 8,
+      "sampled_rows": 10896,
+      "pressure_range_mpa": {
+        "min": 56.295,
+        "median": 62.5,
+        "max": 63.36
+      },
+      "positive_pressure_ramp_p95_pa_s": 15409.836,
+      "recharge_restart_margin_pa": 540000.0,
+      "pressure_boundary_semantics_attested": true,
+      "quality_warnings": []
+    }
+  ],
+  "comparison": {
+    "observed_pressure_overlap_mpa": {
+      "min": 56.295,
+      "max": 63.36
+    },
+    "profiles_with_pressure_semantics_attestation": 2,
+    "profiles_with_temperature_boundary_attestation": 0,
+    "profiles_with_mass_flow_units_attestation": 0,
+    "pressure_only_cross_station_plausibility_supported": true
+  },
+  "eligibility": {
+    "cross_station_pressure_plausibility_supported": true,
+    "station_to_vehicle_validation_supported": false,
+    "full_loop_validation_supported": false,
+    "default_model_parameters_changed": false
+  },
+  "claim_boundary": "De-identified cross-station pressure-envelope plausibility only. The comparison does not establish a universal operating limit, vehicle-side accuracy, mass-flow or temperature accuracy, field safety distance, failure frequency, or safety certification."
+}

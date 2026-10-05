@@ -461,6 +461,51 @@ def _confidential_measured_boundary_evidence() -> dict[str, Any] | None:
             ) is True,
             "claim_limit": str(operational_holdout.get("claim_boundary") or ""),
         }
+    cross_station_path = Path(__file__).resolve().parents[2] / (
+        "research/confidential_cross_station_pressure_envelope_2026_10_06.json"
+    )
+    try:
+        cross_station = json.loads(cross_station_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        cross_station = None
+    if (
+        isinstance(cross_station, dict)
+        and cross_station.get("artifact_type")
+        == "confidential_cross_station_pressure_envelope"
+        and cross_station.get("source_identifiers_published") is False
+        and cross_station.get("raw_rows_persisted") is False
+        and cross_station.get("eligibility", {}).get(
+            "cross_station_pressure_plausibility_supported"
+        ) is True
+        and cross_station.get("eligibility", {}).get(
+            "station_to_vehicle_validation_supported"
+        ) is False
+    ):
+        comparison = cross_station.get("comparison") or {}
+        result["cross_station_pressure_envelope"] = {
+            "artifact": (
+                "research/confidential_cross_station_pressure_envelope_2026_10_06.json"
+            ),
+            "profile_count": len(
+                [item for item in cross_station.get("profiles") or []
+                 if isinstance(item, dict)]
+            ),
+            "observed_pressure_overlap_mpa": comparison.get(
+                "observed_pressure_overlap_mpa"
+            ),
+            "pressure_semantics_attested_profiles": comparison.get(
+                "profiles_with_pressure_semantics_attestation"
+            ),
+            "temperature_boundary_attested_profiles": comparison.get(
+                "profiles_with_temperature_boundary_attestation"
+            ),
+            "mass_flow_units_attested_profiles": comparison.get(
+                "profiles_with_mass_flow_units_attestation"
+            ),
+            "cross_station_pressure_plausibility_supported": True,
+            "station_to_vehicle_validation_supported": False,
+            "claim_limit": str(cross_station.get("claim_boundary") or ""),
+        }
     return result
 
 
@@ -922,6 +967,22 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 )
                 if operational_holdout.get(key) is not None
             }
+        cross_station = confidential.get("cross_station_pressure_envelope")
+        if isinstance(cross_station, dict):
+            summary["confidential_measured_boundary_replay"][
+                "cross_station_pressure_envelope"
+            ] = {
+                key: cross_station.get(key)
+                for key in (
+                    "profile_count", "observed_pressure_overlap_mpa",
+                    "pressure_semantics_attested_profiles",
+                    "temperature_boundary_attested_profiles",
+                    "mass_flow_units_attested_profiles",
+                    "cross_station_pressure_plausibility_supported",
+                    "station_to_vehicle_validation_supported",
+                )
+                if cross_station.get(key) is not None
+            }
     lifecycle = evidence.get("confidential_lifecycle_counter_summary")
     if isinstance(lifecycle, dict):
         summary["confidential_lifecycle_counter_summary"] = {
@@ -973,6 +1034,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     confidential = evidence.get("confidential_measured_boundary_replay") or {}
     holdout = confidential.get("temporal_holdout") or {}
     operational_holdout = confidential.get("operational_envelope_holdout") or {}
+    cross_station = confidential.get("cross_station_pressure_envelope") or {}
     lifecycle = evidence.get("confidential_lifecycle_counter_summary") or {}
     station_calibration = evidence.get("confidential_station_boundary_calibration") or {}
     incident = evidence.get("public_incident_traceability") or {}
@@ -1029,6 +1091,21 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             ) is True,
             "independent_full_loop_validation_supported": operational_holdout.get(
                 "independent_full_loop_validation_supported"
+            ) is True,
+        },
+        "confidential_cross_station_pressure_envelope": {
+            "profile_count": cross_station.get("profile_count"),
+            "observed_pressure_overlap_mpa": cross_station.get(
+                "observed_pressure_overlap_mpa"
+            ),
+            "pressure_semantics_attested_profiles": cross_station.get(
+                "pressure_semantics_attested_profiles"
+            ),
+            "cross_station_pressure_plausibility_supported": cross_station.get(
+                "cross_station_pressure_plausibility_supported"
+            ) is True,
+            "station_to_vehicle_validation_supported": cross_station.get(
+                "station_to_vehicle_validation_supported"
             ) is True,
         },
         "full_loop_validation_supported": confidential.get(

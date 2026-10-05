@@ -206,6 +206,13 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert operational["holdout_trajectory_completed"] is True
     assert operational["holdout_fit_used"] is False
     assert operational["holdout_full_loop_validation"] is False
+    assert operational["cross_station_profile_count"] == 2
+    assert operational["cross_station_pressure_overlap_mpa"] == {
+        "min": 56.295,
+        "max": 63.36,
+    }
+    assert operational["cross_station_pressure_plausibility"] is True
+    assert operational["cross_station_full_loop_validation"] is False
     release_development = gates["release_network_development_integrity"]["observed"]
     assert release_development["evidence_role"] == "consumed_development_only"
     assert release_development["eligible_as_confirmatory_validation"] is False

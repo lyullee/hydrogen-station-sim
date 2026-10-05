@@ -137,6 +137,19 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert prompt_evidence_header(idle)["confidential_operational_envelope_holdout"][
         "trajectory_completed"
     ] is True
+    cross_station = confidential["cross_station_pressure_envelope"]
+    assert cross_station["profile_count"] == 2
+    assert cross_station["observed_pressure_overlap_mpa"] == {
+        "min": 56.295,
+        "max": 63.36,
+    }
+    assert cross_station["pressure_semantics_attested_profiles"] == 2
+    assert cross_station["temperature_boundary_attested_profiles"] == 0
+    assert cross_station["mass_flow_units_attested_profiles"] == 0
+    assert cross_station["station_to_vehicle_validation_supported"] is False
+    assert prompt_evidence_header(idle)["confidential_cross_station_pressure_envelope"][
+        "cross_station_pressure_plausibility_supported"
+    ] is True
     benchmarks = idle["response_evidence"]["public_experimental_benchmarks"]
     assert len(benchmarks["sources"]) == 2
     nrel_trace = next(item for item in benchmarks["sources"] if item["id"] == "NREL_HDVS_2022_TANK_HOSE_TRACE")
