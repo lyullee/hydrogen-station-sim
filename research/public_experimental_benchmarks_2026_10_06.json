@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_experimental_operating_benchmarks",
+  "recorded_at": "2026-10-06",
+  "status": "citation_bounded_aggregate_benchmarks",
+  "evidence_role": "real hydrogen fueling experiment operating-range context",
+  "sources": [
+    {
+      "id": "NREL_HDVS_2022_TANK_HOSE_TRACE",
+      "title": "NREL H2FillS supplemental HDVS Type-IV sample test",
+      "url": "https://www.nrel.gov/hydrogen/h2fills",
+      "raw_rows_public": false,
+      "local_rights": "internal-use-only package; raw workbook is not redistributed",
+      "measured_boundary": [
+        "common-time hose pressure and temperature",
+        "seven tank pressure, temperature and mass channels"
+      ],
+      "aggregate": {
+        "sample_count": 351,
+        "duration_s": 350,
+        "tank_count": 7,
+        "reported_transfer_kg": 61.5,
+        "reported_start_pressure_mpa": 1.8,
+        "reported_end_pressure_mpa": 75.8,
+        "ambient_temperature_c": 15.0
+      },
+      "eligible_for": [
+        "tank and hose boundary plausibility screen",
+        "pressure-temperature trajectory regression after protocol freeze"
+      ],
+      "not_eligible_for": [
+        "station controller or cascade validation",
+        "ESD and safety-interlock validation",
+        "vehicle receptacle or dispenser protocol validation",
+        "full-loop holdout accuracy"
+      ]
+    },
+    {
+      "id": "NREL_HD_FAST_FLOW_2024_REPORT",
+      "title": "DOE/NREL heavy-duty hydrogen fast-flow experiment report",
+      "url": "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
+      "raw_rows_public": false,
+      "measured_boundary": [
+        "reported station, hose, receptacle and vehicle pressure channels",
+        "reported mass-flow and temperature plots"
+      ],
+      "aggregate": {
+        "mass_transfer_kg": 73.0,
+        "total_fill_time_s": 423.5,
+        "fueling_time_s": 358.9,
+        "average_mass_flow_g_s": 172.3,
+        "peak_mass_flow_g_s": 483.33,
+        "aprr_mpa_min": 9.9,
+        "starting_pressure_mpa": 5.5,
+        "ending_pressure_mpa": 74.6,
+        "ambient_temperature_c": 13.0,
+        "protocol": "SAE J2601-5 MCF-HF-G H70 FM300 T40"
+      },
+      "eligible_for": [
+        "high-flow operating-envelope checks",
+        "protocol-facing response wording",
+        "sanity checks for simulated fill duration and ramp rate"
+      ],
+      "not_eligible_for": [
+        "untouched row-level full-loop holdout",
+        "controller, valve or ESD fault replay",
+        "consequence-distance or risk-model validation"
+      ]
+    }
+  ],
+  "claim_boundary": "These are aggregate public experimental benchmarks and a separately controlled tank/hose trace. They provide real operating-range context and partial-boundary evidence; they do not establish complete station-to-vehicle digital-twin accuracy, accident frequency, safety distance, or field certification."
+}

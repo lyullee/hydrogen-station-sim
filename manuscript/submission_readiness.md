@@ -51,6 +51,12 @@ temporal integration evidence while leaving the full station-to-vehicle gate
 open because the private export does not contain synchronized vehicle,
 receptacle and dispenser-protocol channels.
 
+Published operating-range evidence is summarized in
+[`public_experimental_benchmarks_2026_10_06.json`](../research/public_experimental_benchmarks_2026_10_06.json)
+and is exposed to the bounded LLM context. The NREL tank/hose trace and the
+DOE/NREL high-flow report support partial-boundary and face-validity checks;
+neither is treated as a complete station-to-vehicle holdout.
+
 ## Publication-format checks
 
 The local format gate currently passes:

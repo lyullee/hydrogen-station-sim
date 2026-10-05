@@ -291,6 +291,62 @@ def _confidential_measured_boundary_evidence() -> dict[str, Any] | None:
     return result
 
 
+def _public_experimental_benchmarks() -> dict[str, Any] | None:
+    """Expose aggregate public fueling benchmarks with an explicit claim boundary.
+
+    The benchmarks are useful for answering whether a simulated fill rate,
+    pressure ramp or duration is within a published experimental envelope.
+    They are deliberately kept separate from live sensor values and from the
+    numerical validation gate: the public fast-flow report has no row-level
+    logger archive, while the NREL tank/hose trace does not contain station
+    controller, ESD, receptacle or vehicle-protocol states.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/public_experimental_benchmarks_2026_10_06.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if (
+        record.get("artifact_type") != "public_experimental_operating_benchmarks"
+        or record.get("status") != "citation_bounded_aggregate_benchmarks"
+    ):
+        return None
+    sources: list[dict[str, Any]] = []
+    for source in record.get("sources") or []:
+        if not isinstance(source, dict) or not source.get("id"):
+            continue
+        aggregate = source.get("aggregate")
+        if not isinstance(aggregate, dict):
+            continue
+        sources.append({
+            "id": str(source["id"]),
+            "title": str(source.get("title") or ""),
+            "url": str(source.get("url") or ""),
+            "raw_rows_public": source.get("raw_rows_public") is True,
+            "aggregate": {
+                str(key): value
+                for key, value in aggregate.items()
+                if isinstance(value, (str, int, float, bool))
+                and not (isinstance(value, float) and not math.isfinite(value))
+            },
+            "eligible_for": [str(value) for value in source.get("eligible_for") or []],
+            "not_eligible_for": [
+                str(value) for value in source.get("not_eligible_for") or []
+            ],
+        })
+    if not sources:
+        return None
+    return {
+        "artifact": "research/public_experimental_benchmarks_2026_10_06.json",
+        "evidence_role": str(record.get("evidence_role") or ""),
+        "sources": sources,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _finite_number(value: Any) -> int | float | None:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         return None
@@ -442,6 +498,9 @@ def build_evidence_manifest(
     confidential_boundary = _confidential_measured_boundary_evidence()
     if confidential_boundary is not None:
         envelope["response_evidence"]["confidential_measured_boundary_replay"] = confidential_boundary
+    public_benchmarks = _public_experimental_benchmarks()
+    if public_benchmarks is not None:
+        envelope["response_evidence"]["public_experimental_benchmarks"] = public_benchmarks
     canonical = json.dumps(envelope, ensure_ascii=False, sort_keys=True,
                            separators=(",", ":"), default=str).encode("utf-8")
     envelope["evidence_digest"] = "sha256:" + sha256(canonical).hexdigest()

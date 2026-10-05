@@ -57,6 +57,14 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert holdout["outcome_used_for_fit"] is False
     assert holdout["time_ordered_holdout_supported"] is True
     assert holdout["independent_full_loop_validation_supported"] is False
+    benchmarks = idle["response_evidence"]["public_experimental_benchmarks"]
+    assert len(benchmarks["sources"]) == 2
+    nrel_trace = next(item for item in benchmarks["sources"] if item["id"] == "NREL_HDVS_2022_TANK_HOSE_TRACE")
+    assert nrel_trace["aggregate"]["sample_count"] == 351
+    assert nrel_trace["raw_rows_public"] is False
+    fast_flow = next(item for item in benchmarks["sources"] if item["id"] == "NREL_HD_FAST_FLOW_2024_REPORT")
+    assert fast_flow["aggregate"]["peak_mass_flow_g_s"] == 483.33
+    assert "untouched row-level full-loop holdout" in fast_flow["not_eligible_for"]
 
     result = {"node_id": "N09", "node_name": "고압 저장뱅크",
               "calculation_status": "calculated",
