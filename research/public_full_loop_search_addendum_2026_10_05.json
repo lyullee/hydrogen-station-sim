@@ -149,6 +149,22 @@
       "boundary_record": "research/open_qra_benchmark_boundary_2026_10_05.json",
       "access_boundary": "DataCite metadata was retrieved. The public Dataverse landing/API routes returned an anti-bot challenge during this review, so no file content was parsed.",
       "prospective_use": "Independent QRA/risk-visualization context only; do not merge into experimental/full-loop validation scores."
+    },
+    {
+      "id": "nbsdc_liquid_hrs_operating_dataset_access_recheck_2026_10_05",
+      "title": "Operating Dataset of Liquid Hydrogen Refueling Station (Tongji University)",
+      "cstr": "CSTR:16666.11.nbsdc.nlMxRHct",
+      "data_id": "67d50e37195d260905af9869",
+      "url": "https://www.nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1",
+      "license": "Portal metadata reports 完全共享; written derived-metric and journal-publication terms remain to be recorded",
+      "decision": "REAL_LHRS_ACCESS_BOUNDARY_NO_RAW_NUMERICAL_HOLDOUT",
+      "observed_scope": "Public metadata and a downloadable DOCX describe 16 hours of real liquid-HRS monitoring at one-second precision, including 35 MPa dispenser mass/flow/temperature/pressure, compressor, storage-cylinder and liquid-pump/tank channels. The seven listed numerical XLSX/CSV files return the portal's application-required 403 response; no numerical cell was opened.",
+      "public_file_inventory": 7,
+      "raw_files_downloaded": false,
+      "full_loop_holdout_eligible": false,
+      "access_boundary_record": "research/nbsdc_liquid_hrs_public_access_recheck_2026_10_05.json",
+      "intake_protocol": "research/nbsdc_liquid_hrs_intake_protocol_2026_10_05.json",
+      "prospective_use": "If the custodian grants the listed files and rights, quarantine and hash them, then test whether common-clock vehicle/receptacle channels and protocol semantics exist. Until then, retain as a high-value request lead only."
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",

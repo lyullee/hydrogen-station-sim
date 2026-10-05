@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T07:32:09.092307+00:00",
+  "generated_at": "2026-10-05T07:47:17.953042+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 66,
+    "PASS": 67,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -854,6 +854,20 @@
         ],
         "real_hrs_operating_range_context_eligible": true,
         "synchronized_raw_full_loop_holdout_eligible": false
+      }
+    },
+    {
+      "id": "nbsdc_liquid_hrs_public_access_boundary_integrity",
+      "status": "PASS",
+      "claim": "The public NBSDC liquid-HRS candidate is recorded with its description hash and application-controlled numerical-file boundary without being overclaimed as validation.",
+      "evidence": "research\\nbsdc_liquid_hrs_public_access_recheck_2026_10_05.json; research\\nbsdc_liquid_hrs_intake_protocol_2026_10_05.json",
+      "requirement": "Seven-file inventory, description-only hash, 403 raw-file probe, prospective intake contract and explicit full-loop exclusion are consistent.",
+      "observed": {
+        "data_id": "67d50e37195d260905af9869",
+        "file_count": 7,
+        "description_sha256": "669bf3487f07714da3ed08f7d891077841c39ef38497dc2abb307a5877954142",
+        "portal_body_code": 403,
+        "full_loop_holdout_eligible": false
       }
     },
     {

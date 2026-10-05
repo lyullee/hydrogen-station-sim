@@ -767,6 +767,21 @@
       "boundary_record": "research/hytf_open_tank_trace_boundary_2026_10_05.json",
       "rights_note": "Reference and hash-lock only until dataset-specific reuse terms for derived journal metrics are confirmed.",
       "eligibility_note": "Real machine-readable 36 L tank pressure/thermal trace suitable for a separately frozen tank-thermal screen; no mass-flow, vehicle/receptacle or station-controller channels, so it cannot close the full-loop gate."
+    },
+    "nbsdc_liquid_hrs_operating_dataset_2026_10_05": {
+      "title": "Operating Dataset of Liquid Hydrogen Refueling Station",
+      "publisher": "Tongji University / National Basic Science Data Center",
+      "landing_page": "https://www.nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1",
+      "cstr": "CSTR:16666.11.nbsdc.nlMxRHct",
+      "data_id": "67d50e37195d260905af9869",
+      "license": "Portal metadata reports 完全共享; written derived-metric and journal-publication terms remain to be recorded",
+      "public_raw_data": false,
+      "description_sha256": "669bf3487f07714da3ed08f7d891077841c39ef38497dc2abb307a5877954142",
+      "reported_scope": "Real liquid-HRS monitoring over a concentrated 16-hour window at one-second precision, covering 35 MPa dispensers, a 90 MPa compressor, high-pressure storage cylinders, and a liquid-pump/tank system.",
+      "file_count": 7,
+      "access_recheck": "research/nbsdc_liquid_hrs_public_access_recheck_2026_10_05.json",
+      "intake_protocol": "research/nbsdc_liquid_hrs_intake_protocol_2026_10_05.json",
+      "eligibility_note": "High-value real-station acquisition lead; numerical files return the portal application-required 403 response, so no synchronized vehicle/receptacle full-loop holdout is currently available."
     }
   }
 }

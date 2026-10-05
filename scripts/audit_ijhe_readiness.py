@@ -1142,6 +1142,44 @@ def audit(root: Path) -> dict[str, object]:
         } if fch2rail_boundary else "missing; FCH2Rail D6.1 operating-range boundary recheck has not run",
     ))
 
+    nbsdc_liquid_recheck_path = root / "research/nbsdc_liquid_hrs_public_access_recheck_2026_10_05.json"
+    nbsdc_liquid_recheck = _json(nbsdc_liquid_recheck_path)
+    nbsdc_liquid_protocol_path = root / "research/nbsdc_liquid_hrs_intake_protocol_2026_10_05.json"
+    nbsdc_liquid_protocol = _json(nbsdc_liquid_protocol_path)
+    nbsdc_liquid_description = root / "data/public_validation/raw/nbsdc_liquid_hrs_2025/液氢加氢站运行数据集数据说明 .docx"
+    nbsdc_liquid_source = (nbsdc_liquid_recheck or {}).get("source") or {}
+    nbsdc_liquid_probe = (nbsdc_liquid_recheck or {}).get("raw_download_probes") or {}
+    nbsdc_liquid_eligibility = (nbsdc_liquid_recheck or {}).get("eligibility") or {}
+    nbsdc_liquid_pass = bool(
+        (nbsdc_liquid_recheck or {}).get("schema_version") == 1
+        and (nbsdc_liquid_recheck or {}).get("status") == "REAL_LHRS_ACCESS_BOUNDARY_NO_RAW_NUMERICAL_HOLDOUT"
+        and nbsdc_liquid_source.get("data_id") == "67d50e37195d260905af9869"
+        and nbsdc_liquid_source.get("share_range") == "完全共享"
+        and (nbsdc_liquid_recheck or {}).get("metadata_observation", {}).get("file_count") == 7
+        and len((nbsdc_liquid_recheck or {}).get("public_file_inventory") or []) == 7
+        and nbsdc_liquid_description.is_file()
+        and _sha256(nbsdc_liquid_description) == ((nbsdc_liquid_recheck or {}).get("description_file") or {}).get("sha256")
+        and nbsdc_liquid_probe.get("portal_body_code") == 403
+        and nbsdc_liquid_probe.get("raw_numerical_files_obtained") is False
+        and nbsdc_liquid_eligibility.get("full_loop_holdout_eligible") is False
+        and (nbsdc_liquid_protocol or {}).get("outcomes_accessed_before_freeze") is False
+        and bool((nbsdc_liquid_recheck or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "nbsdc_liquid_hrs_public_access_boundary_integrity",
+        "PASS" if nbsdc_liquid_pass else ("FAIL" if nbsdc_liquid_recheck else "PENDING"),
+        "The public NBSDC liquid-HRS candidate is recorded with its description hash and application-controlled numerical-file boundary without being overclaimed as validation.",
+        f"{nbsdc_liquid_recheck_path.relative_to(root)}; {nbsdc_liquid_protocol_path.relative_to(root)}",
+        "Seven-file inventory, description-only hash, 403 raw-file probe, prospective intake contract and explicit full-loop exclusion are consistent.",
+        {
+            "data_id": nbsdc_liquid_source.get("data_id"),
+            "file_count": (nbsdc_liquid_recheck or {}).get("metadata_observation", {}).get("file_count"),
+            "description_sha256": ((nbsdc_liquid_recheck or {}).get("description_file") or {}).get("sha256"),
+            "portal_body_code": nbsdc_liquid_probe.get("portal_body_code"),
+            "full_loop_holdout_eligible": nbsdc_liquid_eligibility.get("full_loop_holdout_eligible"),
+        } if nbsdc_liquid_recheck else "missing; NBSDC liquid-HRS access recheck has not run",
+    ))
+
     manuscript_path = root / "manuscript/ijhe_manuscript_draft.tex"
     manuscript = manuscript_path.read_text(encoding="utf-8") if manuscript_path.is_file() else ""
     negative_transparent = (

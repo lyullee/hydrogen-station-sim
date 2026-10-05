@@ -13,7 +13,7 @@ def test_public_search_addendum_keeps_all_new_leads_out_of_full_loop_gate():
     )
     assert record["result"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
     assert record["gate_impact"] == "full_loop_external_validation_remains_open"
-    assert len(record["candidates"]) == 13
+    assert len(record["candidates"]) == 14
     qra = next(
         item
         for item in record["candidates"]
@@ -21,6 +21,14 @@ def test_public_search_addendum_keeps_all_new_leads_out_of_full_loop_gate():
     )
     assert qra["decision"] == "OPEN_QRA_SIMULATION_CONTEXT_ONLY"
     assert qra["full_loop_holdout_eligible"] is False
+    lhrs = next(
+        item
+        for item in record["candidates"]
+        if item["id"] == "nbsdc_liquid_hrs_operating_dataset_access_recheck_2026_10_05"
+    )
+    assert lhrs["decision"] == "REAL_LHRS_ACCESS_BOUNDARY_NO_RAW_NUMERICAL_HOLDOUT"
+    assert lhrs["raw_files_downloaded"] is False
+    assert lhrs["full_loop_holdout_eligible"] is False
     assert all(item["full_loop_holdout_eligible"] is False for item in record["candidates"])
     assert "common time base" in record["eligibility_rule"]["required"]
 

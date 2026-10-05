@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "rechecked_at_utc": "2026-10-05T07:47:00Z",
+  "status": "REAL_LHRS_ACCESS_BOUNDARY_NO_RAW_NUMERICAL_HOLDOUT",
+  "source": {
+    "title": "Operating Dataset of Liquid Hydrogen Refueling Station",
+    "title_zh": "液氢加氢站运行数据集",
+    "cstr": "CSTR:16666.11.nbsdc.nlMxRHct",
+    "data_id": "67d50e37195d260905af9869",
+    "landing_url": "https://www.nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1",
+    "metadata_endpoint": "https://www.nbsdc.cn/api/general/searchDataDetail?id=67d50e37195d260905af9869",
+    "provider": "Tongji University",
+    "share_range": "完全共享"
+  },
+  "metadata_observation": {
+    "http_status": 200,
+    "file_count": 7,
+    "storage_mb": 42.06,
+    "declared_scope": "Real liquid-HRS operating monitoring over a concentrated 16-hour window at one-second precision; 35 MPa dispensers, 90 MPa compressor, high-pressure storage-cylinder groups, and liquid-pump/tank system.",
+    "declared_channels": ["pressure", "temperature", "flow rate", "dispensed mass", "current", "frequency", "liquid level", "volume"]
+  },
+  "public_file_inventory": [
+    {"id": "67bc96ed34eb407463579069", "name": "35MPa加氢机1.xlsx", "size_bytes": 3605593, "role": "dispenser_35mpa_1"},
+    {"id": "67bc96ed34eb40746357906a", "name": "35MPa加氢机2.xlsx", "size_bytes": 5700855, "role": "dispenser_35mpa_2"},
+    {"id": "67bc96ed34eb40746357906b", "name": "70MPa加氢机.csv", "size_bytes": 5974368, "role": "dispenser_70mpa"},
+    {"id": "67bc96ed34eb40746357906c", "name": "90MPa压缩机.xlsx", "size_bytes": 3922132, "role": "compressor_90mpa"},
+    {"id": "67bc96ed34eb40746357906d", "name": "液氢加氢站运行数据集数据说明 .docx", "size_bytes": 15673, "role": "description"},
+    {"id": "67bc96ed34eb40746357906e", "name": "液氢泵-液氢储罐.xlsx", "size_bytes": 15458212, "role": "liquid_pump_tank"},
+    {"id": "67bc96ed34eb40746357906f", "name": "高压储氢瓶组.xlsx", "size_bytes": 9423277, "role": "high_pressure_storage"}
+  ],
+  "description_file": {
+    "downloaded": true,
+    "path": "data/public_validation/raw/nbsdc_liquid_hrs_2025/液氢加氢站运行数据集数据说明 .docx",
+    "sha256": "669bf3487f07714da3ed08f7d891077841c39ef38497dc2abb307a5877954142",
+    "interpretation": "Description-only provenance/schema evidence; no numerical cell was opened."
+  },
+  "raw_download_probes": {
+    "endpoint_template": "https://www.nbsdc.cn/api/general/v1/checkAndDownloadFile?dataId=67d50e37195d260905af9869&id={file_id}&pid=1&pageOffset=0&pageSize=20",
+    "non_description_file_count": 6,
+    "http_status": 200,
+    "portal_body_code": 403,
+    "portal_message": "目前只支持部分数据集的说明文件下载，数据文件请通过数据申请获取。",
+    "response_sha256": "3dc242b38b1d0017e43b33734ca67e875ea6280f7a1f23089f721d7662c54ec1",
+    "raw_numerical_files_obtained": false
+  },
+  "eligibility": {
+    "full_loop_holdout_eligible": false,
+    "reason": "The numerical workbooks/CSV remain application-controlled despite the metadata share-range label. Vehicle/receptacle channels, common clock, protocol semantics and written reuse terms cannot be inspected before access.",
+    "high_value_request_candidate": true,
+    "required_before_validation": [
+      "custodian-approved numerical files",
+      "source-file hashes and channel dictionary",
+      "common time base and timezone",
+      "vehicle/receptacle pressure and temperature definitions",
+      "mass-flow or transferred-mass semantics",
+      "initial state, tank capacity and pressure-ramp/stop semantics",
+      "calibration/quality and alarm/ESD metadata",
+      "written permission for derived metrics and IJHE publication"
+    ]
+  },
+  "claim_boundary": "This recheck proves a high-value real-liquid-HRS access route, the public file inventory, and the current application boundary. It is not numerical validation, does not establish a gaseous H70 station-to-vehicle holdout, and does not permit IJHE/full-objective completion."
+}
