@@ -66,6 +66,12 @@ from .vehicle import (
     CompositeVehicleTank,
 )
 from .scenario import BuiltScenario, ReferenceScenario, build_reference_scenario
+from .controlled_station_replay import (
+    StationCalibrationSummary,
+    TraceMapping,
+    apply_recharge_hysteresis,
+    fit_station_boundary,
+)
 from .safe_operation import SafeFullStationSimulator, SafeOperationTrajectory
 from .safety_runtime import (
     FaultEvent,
@@ -124,6 +130,9 @@ __all__ = [
     "VentConnection",
     "DynamicSensor",
     "BuiltScenario",
+    "StationCalibrationSummary",
+    "TraceMapping",
+    "apply_recharge_hysteresis",
     "CompositeTankFitParameters",
     "CompositeTankParameters",
     "CompositeTankState",
@@ -147,4 +156,5 @@ __all__ = [
     "StationMeasurements",
     "VehicleStateOfCharge",
     "build_reference_scenario",
+    "fit_station_boundary",
 ]

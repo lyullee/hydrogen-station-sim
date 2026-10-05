@@ -1,0 +1,322 @@
+"""Privacy-preserving replay helpers for owner-controlled station traces.
+
+The adapter deliberately keeps the raw archive outside the repository.  A
+custodian-supplied mapping is required at runtime, and the public result is a
+set of aggregate boundary parameters rather than a copy of the trace.  Numeric
+channels are resampled only when the caller asks for it; discrete valve/ESD
+states use forward fill and are never linearly interpolated.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from datetime import datetime
+import csv
+import math
+from pathlib import Path
+from statistics import median, quantiles
+from typing import Iterable, Iterator, Mapping, Sequence
+
+
+@dataclass(frozen=True)
+class TraceMapping:
+    """Map owner-approved source columns to generic station signals.
+
+    The source column names are intentionally supplied by the caller instead
+    of being embedded in the package.  This prevents proprietary tag names
+    from becoming public code or documentation.
+    """
+
+    time_column: str
+    pressure_columns: tuple[tuple[str, str], ...] = ()
+    temperature_columns: tuple[tuple[str, str], ...] = ()
+    flow_column: str | None = None
+    state_columns: tuple[tuple[str, str], ...] = ()
+    pressure_scale_pa_per_unit: float = 1.0e6
+    temperature_scale_k_per_unit: float = 1.0
+    temperature_offset_k: float = 273.15
+    flow_scale_kg_s_per_unit: float = 1.0
+    time_format: str | None = None
+    encoding: str = "utf-8-sig"
+
+    def __post_init__(self) -> None:
+        if not self.time_column:
+            raise ValueError("time_column is required")
+        if self.pressure_scale_pa_per_unit <= 0.0:
+            raise ValueError("pressure scale must be positive")
+        if self.temperature_scale_k_per_unit <= 0.0:
+            raise ValueError("temperature scale must be positive")
+        if self.flow_scale_kg_s_per_unit <= 0.0:
+            raise ValueError("flow scale must be positive")
+
+
+@dataclass(frozen=True)
+class StationCalibrationSummary:
+    """Aggregates safe to review without exporting raw trace rows."""
+
+    files_read: int
+    sampled_rows: int
+    finite_rows: int
+    duration_s: float
+    median_sample_period_s: float | None
+    maximum_gap_s: float | None
+    pressure_min_pa: float | None
+    pressure_median_pa: float | None
+    pressure_max_pa: float | None
+    pressure_noise_sigma_pa: float | None
+    pressure_ramp_p95_pa_s: float | None
+    flow_p95_kg_s: float | None
+    recommended_recharge_hysteresis_pa: float | None
+    recommended_recharge_restart_margin_pa: float | None
+    channel_roles: tuple[str, ...]
+    quality_warnings: tuple[str, ...]
+
+    def to_public_dict(self) -> dict[str, object]:
+        """Return only de-identified aggregate calibration information."""
+
+        return {
+            "schema_version": 1,
+            "raw_rows_persisted": False,
+            "source_identifiers_published": False,
+            "files_read": self.files_read,
+            "sampled_rows": self.sampled_rows,
+            "finite_rows": self.finite_rows,
+            "duration_s": round(self.duration_s, 3),
+            "median_sample_period_s": (
+                round(self.median_sample_period_s, 3)
+                if self.median_sample_period_s is not None else None
+            ),
+            "maximum_gap_s": (
+                round(self.maximum_gap_s, 3)
+                if self.maximum_gap_s is not None else None
+            ),
+            "boundary_pressure_pa": {
+                "min": round(self.pressure_min_pa, 1)
+                if self.pressure_min_pa is not None else None,
+                "median": round(self.pressure_median_pa, 1)
+                if self.pressure_median_pa is not None else None,
+                "max": round(self.pressure_max_pa, 1)
+                if self.pressure_max_pa is not None else None,
+                "noise_sigma": round(self.pressure_noise_sigma_pa, 1)
+                if self.pressure_noise_sigma_pa is not None else None,
+                "positive_ramp_p95": round(self.pressure_ramp_p95_pa_s, 3)
+                if self.pressure_ramp_p95_pa_s is not None else None,
+            },
+            "flow_p95_kg_s": (
+                round(self.flow_p95_kg_s, 6)
+                if self.flow_p95_kg_s is not None else None
+            ),
+            "recharge_hysteresis_pa": (
+                round(self.recommended_recharge_hysteresis_pa, 1)
+                if self.recommended_recharge_hysteresis_pa is not None else None
+            ),
+            "recharge_restart_margin_pa": (
+                round(self.recommended_recharge_restart_margin_pa, 1)
+                if self.recommended_recharge_restart_margin_pa is not None else None
+            ),
+            "channel_roles": list(self.channel_roles),
+            "quality_warnings": list(self.quality_warnings),
+            "claim_boundary": (
+                "Aggregate station-boundary calibration only; this is not a "
+                "full station-to-vehicle validation result."
+            ),
+        }
+
+
+def _finite(value: object) -> float | None:
+    try:
+        result = float(str(value).strip())
+    except (TypeError, ValueError):
+        return None
+    return result if math.isfinite(result) else None
+
+
+def _time_seconds(value: object, mapping: TraceMapping, fallback: float) -> float:
+    numeric = _finite(value)
+    if numeric is not None:
+        return numeric
+    text = str(value).strip()
+    if mapping.time_format:
+        return datetime.strptime(text, mapping.time_format).timestamp()
+    try:
+        return datetime.fromisoformat(text.replace("Z", "+00:00")).timestamp()
+    except ValueError:
+        return fallback
+
+
+def _paths(input_path: Path) -> list[Path]:
+    if input_path.is_file():
+        return [input_path]
+    if input_path.is_dir():
+        return sorted(
+            path for path in input_path.rglob("*")
+            if path.is_file() and path.suffix.lower() in {".csv", ".txt"}
+        )
+    raise FileNotFoundError(input_path)
+
+
+def _sampled_rows(
+    input_path: Path,
+    mapping: TraceMapping,
+    *,
+    stride: int = 1,
+    max_rows_per_file: int | None = None,
+) -> Iterator[tuple[Path, float, dict[str, str]]]:
+    if stride < 1:
+        raise ValueError("stride must be at least one")
+    for path in _paths(input_path):
+        with path.open("r", encoding=mapping.encoding, errors="replace", newline="") as handle:
+            reader = csv.DictReader(handle)
+            if not reader.fieldnames or mapping.time_column not in reader.fieldnames:
+                raise ValueError(f"mapped time column is absent from {path.name}")
+            emitted = 0
+            fallback = 0.0
+            for row_index, row in enumerate(reader):
+                if row_index % stride:
+                    fallback += 1.0
+                    continue
+                if max_rows_per_file is not None and emitted >= max_rows_per_file:
+                    break
+                yield path, _time_seconds(row.get(mapping.time_column), mapping, fallback), row
+                emitted += 1
+                fallback += float(stride)
+
+
+def _quantile(values: Sequence[float], fraction: float) -> float | None:
+    if not values:
+        return None
+    if len(values) == 1:
+        return float(values[0])
+    return float(quantiles(values, n=100, method="inclusive")[max(0, min(99, int(fraction * 100) - 1))])
+
+
+def fit_station_boundary(
+    input_path: Path,
+    mapping: TraceMapping,
+    *,
+    stride: int = 60,
+    max_rows_per_file: int | None = 250_000,
+) -> StationCalibrationSummary:
+    """Fit global station-boundary aggregates from a private trace bundle.
+
+    The function reads rows in a streaming fashion and retains only numeric
+    aggregates and a bounded sampled derivative history.  It never writes the
+    input path, filenames, timestamps, or source column names to its result.
+    """
+
+    files: set[Path] = set()
+    times: list[float] = []
+    pressures: list[float] = []
+    flows: list[float] = []
+    pressure_steps: list[float] = []
+    positive_ramps: list[float] = []
+    intervals: list[float] = []
+    previous_by_file: dict[Path, tuple[float, float]] = {}
+    direction_by_file: dict[Path, int] = {}
+    warnings: set[str] = set()
+
+    for path, time_value, row in _sampled_rows(
+        input_path, mapping, stride=stride, max_rows_per_file=max_rows_per_file
+    ):
+        files.add(path)
+        pressure_values = [
+            value * mapping.pressure_scale_pa_per_unit
+            for _, column in mapping.pressure_columns
+            if (value := _finite(row.get(column))) is not None
+        ]
+        if not pressure_values:
+            warnings.add("rows_without_finite_pressure")
+            continue
+        pressure = float(median(pressure_values))
+        times.append(time_value)
+        pressures.append(pressure)
+        if mapping.flow_column:
+            flow = _finite(row.get(mapping.flow_column))
+            if flow is not None:
+                flows.append(max(0.0, flow * mapping.flow_scale_kg_s_per_unit))
+        previous = previous_by_file.get(path)
+        if previous is not None:
+            previous_time, previous_pressure = previous
+            dt = time_value - previous_time
+            if dt > 0.0:
+                direction = direction_by_file.setdefault(path, 1)
+                if direction != 1:
+                    warnings.add("time_direction_changed")
+                step = pressure - previous_pressure
+                pressure_steps.append(step)
+                if step > 0.0:
+                    positive_ramps.append(step / dt)
+                intervals.append(dt)
+            elif dt < 0.0:
+                direction = direction_by_file.setdefault(path, -1)
+                if direction != -1:
+                    warnings.add("time_direction_changed")
+                # Some controller exports are newest-first.  Convert each
+                # adjacent pair into chronological order without rewriting
+                # the source file or exposing its timestamps.
+                chronological_dt = -dt
+                chronological_step = previous_pressure - pressure
+                pressure_steps.append(chronological_step)
+                if chronological_step > 0.0:
+                    positive_ramps.append(chronological_step / chronological_dt)
+                intervals.append(chronological_dt)
+            else:
+                warnings.add("duplicate_time")
+        previous_by_file[path] = (time_value, pressure)
+
+    if not pressures:
+        raise ValueError("no finite pressure rows matched the mapping")
+    positive_deltas = [abs(value) for value in pressure_steps if abs(value) > 0.0]
+    noise_sigma = None
+    if pressure_steps:
+        centered = [value - median(pressure_steps) for value in pressure_steps]
+        noise_sigma = math.sqrt(sum(value * value for value in centered) / len(centered))
+    # Large pressure moves are operating events, not controller chatter.  Use
+    # only the lower three quartiles to estimate a restart margin and cap the
+    # result so a single trip or long logger gap cannot suppress recharge.
+    stable_deltas = [
+        value for value in positive_deltas
+        if value <= (_quantile(positive_deltas, 0.75) or value)
+    ]
+    hysteresis = max(
+        0.25e6,
+        min(2.0e6, (_quantile(stable_deltas, 0.95) or 0.0) * 2.0),
+    )
+    return StationCalibrationSummary(
+        files_read=len(files),
+        sampled_rows=len(times),
+        finite_rows=len(pressures),
+        duration_s=max(times) - min(times) if len(times) > 1 else 0.0,
+        median_sample_period_s=median(intervals) if intervals else None,
+        maximum_gap_s=max(intervals) if intervals else None,
+        pressure_min_pa=min(pressures),
+        pressure_median_pa=median(pressures),
+        pressure_max_pa=max(pressures),
+        pressure_noise_sigma_pa=noise_sigma,
+        pressure_ramp_p95_pa_s=_quantile(positive_ramps, 0.95),
+        flow_p95_kg_s=_quantile(flows, 0.95),
+        recommended_recharge_hysteresis_pa=hysteresis,
+        recommended_recharge_restart_margin_pa=hysteresis,
+        channel_roles=tuple(
+            role for role, enabled in (
+                ("station_pressure", bool(mapping.pressure_columns)),
+                ("station_temperature", bool(mapping.temperature_columns)),
+                ("mass_flow", mapping.flow_column is not None),
+                ("discrete_state", bool(mapping.state_columns)),
+            ) if enabled
+        ),
+        quality_warnings=tuple(sorted(warnings)),
+    )
+
+
+def apply_recharge_hysteresis(
+    configured_margin_pa: float,
+    calibration: StationCalibrationSummary,
+) -> float:
+    """Return a safe runtime margin without mutating caller configuration."""
+
+    if configured_margin_pa <= 0.0:
+        raise ValueError("configured_margin_pa must be positive")
+    if calibration.recommended_recharge_restart_margin_pa is None:
+        return configured_margin_pa
+    return max(configured_margin_pa, calibration.recommended_recharge_restart_margin_pa)

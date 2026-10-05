@@ -34,7 +34,9 @@ outcome access, retain failed cases, publish only approved aggregates, and make
 raw files available to the editor or reviewers through an approved controlled
 inspection path when permitted. Confidential data are not automatically
 validation evidence; provenance, synchronized channels, independent cases and
-reviewer verification remain necessary.
+The public manuscript should report the source only as a confidential,
+owner-controlled operational dataset and should omit the operator, location,
+exact dates, manufacturer, model numbers, tag names and detailed geometry.
 
 ## Publication-format checks
 

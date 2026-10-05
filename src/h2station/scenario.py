@@ -15,6 +15,8 @@ from .dispenser import (
 from .full_station import (
     CascadeBank,
     CascadeBankParameters,
+    CascadeSupervisor,
+    CascadeSupervisorParameters,
     CompressorParameters,
     FullStationModel,
     FullStationState,
@@ -68,6 +70,11 @@ class ReferenceScenario:
     risk_update_period_s: float = 1.0
     compressor_suction_pressure_pa: float = 20.0e6
     compressor_suction_temperature_k: float = 298.15
+    # Optional owner-approved station calibration.  None preserves the
+    # conservative reference defaults; a controlled replay may provide a
+    # measured restart margin without embedding raw station data.
+    station_dispatch_pressure_margin_pa: float | None = None
+    station_recharge_hysteresis_pa: float | None = None
     initial_bank_fill_percent: tuple[float, float, float] = DEFAULT_BANK_INITIAL_FILL_PERCENT
     fault_events: tuple[FaultEvent, ...] = ()
     # Optional time-dependent boundary traces used by partial-station validation.
@@ -134,6 +141,14 @@ def build_reference_scenario(
         config.maximum_precooler_temperature_deviation_k,
     ) <= 0.0:
         raise ValueError("fit multipliers and precooler tolerance must be positive")
+    if any(
+        value is not None and value <= 0.0
+        for value in (
+            config.station_dispatch_pressure_margin_pa,
+            config.station_recharge_hysteresis_pa,
+        )
+    ):
+        raise ValueError("station calibration margins must be positive when provided")
     vehicle_fit = CompositeTankFitParameters(
         effective_volume_multiplier=config.vehicle_effective_volume_multiplier,
         gas_liner_ua_multiplier=config.vehicle_gas_liner_ua_multiplier,
@@ -272,6 +287,20 @@ def build_reference_scenario(
         ),
         partial_station=partial,
         secondary_partial_station=secondary_partial,
+        supervisor=CascadeSupervisor(
+            CascadeSupervisorParameters(
+                minimum_dispatch_pressure_margin_pa=(
+                    config.station_dispatch_pressure_margin_pa
+                    if config.station_dispatch_pressure_margin_pa is not None
+                    else 1.0e6
+                ),
+                recharge_pressure_hysteresis_pa=(
+                    config.station_recharge_hysteresis_pa
+                    if config.station_recharge_hysteresis_pa is not None
+                    else 1.0e6
+                ),
+            )
+        ),
         ambient_temperature_k=config.ambient_temperature_k,
     )
     initial_vehicle = vehicle.initial_state(

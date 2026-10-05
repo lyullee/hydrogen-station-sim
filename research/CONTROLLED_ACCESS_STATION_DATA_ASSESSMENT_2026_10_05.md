@@ -1,52 +1,53 @@
 # Controlled-access station data assessment
 
-The local source folder `Desktop/DocuData/수소충전소 데이터` was inspected in
-place. Raw files were not copied into this repository, parsed values were not
-published, and the audit artifacts remain outside the public worktree.
+An owner-controlled source folder was inspected in place. Raw files were not
+copied into this repository, parsed values were not published, and the audit
+artifacts remain outside the public worktree. The public record deliberately
+omits the operator, site, country, exact dates, manufacturer, model numbers,
+tag names, dimensions and other re-identifying details.
 
 ## Inventory and usefulness
 
 | Source | Local coverage | Signals | Model value | Boundary |
 |---|---|---|---|---|
-| Korean HRS A / pressure logger | 12 monthly CSV segments from May 2024 to April 2025, nominal 1 s rows | two flow accumulator/rate pairs, two auxiliary pressures, medium-bank pressure `PI_2005`, high-bank pressure `PI_3002_XQ` | fit pressure noise, cascade-bank boundary conditions, recharge/dispensing event segmentation and flow-rate plausibility | no vehicle pressure, SOC, nozzle temperature or complete valve/controller state |
-| Korean HRS A / life-cycle logger | 12 distinct monthly segments plus one byte-identical duplicate | HP/MP bank cycle counters and five bank temperature channels | add cycle-based degradation and thermal aging state; test pressure–temperature–cycle relationships | cycle definition is full-charge based; no per-event vehicle/fueling labels |
-| Korean HRS B / compressor and station logger | 8 daily CSV files, 21–28 April 2025, mostly 1 s rows | 64 channels: compressor pressures/temperatures, HP/MP pressure, chiller temperatures, mass-flow meter fields, valve states, loads, alarms and oil-pressure status | calibrate compressor, precooler, valve-transition and ESD/abnormal-state logic; derive station operating-mode labels | no explicit vehicle tank/SOC or dispenser protocol trace; first timestamp header is encoding-corrupted and must be mapped manually |
+| Confidential station dataset A / pressure logger | Multi-month interval, approximately one-second sampling | several storage-pressure and flow-related signals | fit pressure noise, cascade-bank boundary conditions, recharge/dispensing event segmentation and flow-rate plausibility | no vehicle pressure, SOC, nozzle temperature or complete valve/controller state |
+| Confidential station dataset A / life-cycle logger | Multi-month interval with a repeated archival segment | storage-bank cycle counters and several temperature channels | add cycle-based degradation and thermal-aging state; test pressure–temperature–cycle relationships | cycle definition is owner-specific and must be confirmed; no per-event vehicle/fueling labels |
+| Confidential station dataset B / equipment logger | Multi-day interval, approximately one-second sampling | dozens of channels covering compressor pressures/temperatures, storage pressure, cooling, flow-related signals, valve states, loads and alarms | calibrate compressor, precooler, valve-transition and ESD/abnormal-state logic; derive station operating-mode labels | no explicit vehicle tank/SOC or dispenser protocol trace; one timestamp field requires owner-confirmed decoding |
 
-The supplied description identifies the tags but does not provide a complete
+The supplied metadata include signal names but do not provide a complete
 machine-readable unit dictionary. The apparent pressure ranges are physically
 plausible for bar-scaled MP/HP instrumentation, but the implementation must not
 silently assume bar or MPa. Unit, scaling, calibration, quality flags and tag
 semantics must be confirmed with the custodian before fitting or validating the
-model. The same applies to `MFM`, `MFM_F`, timer-like fields and the first
-timestamp header in the HRS B files.
+model. The same applies to flow-meter fields, timer-like fields and one
+timestamp field that requires custodian-confirmed decoding.
 
-The files contain roughly **33 file entries and 5.1 GB** of raw CSV data,
-including one exact duplicate life-cycle segment. The local metadata audit
-records file hashes, row counts, channel names and time coverage without
-retaining raw rows in the repository:
+The files comprise several gigabytes of raw time-series data. The local
+metadata audit records file hashes, row counts and broad time coverage without
+retaining raw rows in the repository. The public project intentionally does
+not reproduce those hashes, filenames or exact counts.
 
-`C:\Users\lyul\Desktop\ProjectData\external_hrs_quarantine\kohygen_hwasung_metadata_2026_10_05.json`
+The owner-controlled metadata audit is stored outside the public worktree.
 
-The channel-level assessment is kept at:
-
-`C:\Users\lyul\Desktop\ProjectData\external_hrs_quarantine\kohygen_hwasung_channel_audit_2026_10_05.json`
+The channel-level assessment is also stored outside the public worktree.
 
 ## Recommended model extensions
 
 1. **Station-side boundary replay.** Add a controlled-access adapter that maps
-   Korean HRS B pressure, temperature, chiller, valve and compressor fields to
-   the virtual compressor/cascade/header states. Resample short 2–3 s logger
-   gaps explicitly; never silently interpolate alarm or valve states.
-2. **Cascade dispatch calibration.** Use Korean HRS A `PI_2005` and
-   `PI_3002_XQ` with the two flow-rate fields to estimate bank-switch hysteresis,
-   pressure-drop dynamics and flow-unit conversion. The current model should
-   expose these as measured-boundary or station-controller tests, not overwrite
-   vehicle-side validation results.
-3. **Precooler and compressor transients.** Use HRS B chiller inlet/outlet
+   confidential equipment pressure, temperature, cooling, valve and compressor fields to
+   the virtual compressor/cascade/header states. The initial adapter now lives
+   in `src/h2station/controlled_station_replay.py`; resample short logger gaps
+   explicitly and never silently interpolate alarm or valve states.
+2. **Cascade dispatch calibration.** Use the confidential storage-pressure and
+   flow-related signals to estimate bank-switch hysteresis,
+   pressure-drop dynamics and flow-unit conversion. The current model exposes
+   the resulting margin as an explicit `ReferenceScenario` option; it must not
+   overwrite vehicle-side validation results or silently change the default.
+3. **Precooler and compressor transients.** Use the confidential cooling
    temperatures, compressor discharge pressures and load flags to identify
    start-up, steady, recharge and trip modes. Fit only global parameters on a
    development split; reserve untouched event windows for validation.
-4. **Aging state.** Treat HP/MP life-cycle counters as an optional slow state
+4. **Aging state.** Treat owner-defined storage-cycle counters as an optional slow state
    affecting capacity, heat transfer and leak/relief thresholds. The source
    description defines a cycle as a full charge, so it must not be treated as
    an equivalent operating-hour counter.

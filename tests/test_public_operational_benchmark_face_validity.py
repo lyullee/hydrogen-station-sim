@@ -16,7 +16,7 @@ def test_face_validity_screen_is_hash_linked_and_claim_bounded():
         (ROOT / "research/public_operational_benchmark_recheck_2026_10_05.json")
         .read_text(encoding="utf-8")
     )
-    assert record["source_manifest"]["candidate_count"] == len(source["candidates"]) == 17
+    assert record["source_manifest"]["candidate_count"] == len(source["candidates"]) == 18
     assert record["external_validation_status"] == "NOT_ESTABLISHED"
     assert record["full_loop_holdout_eligible"] is False
     assert record["goal_completion_permitted"] is False

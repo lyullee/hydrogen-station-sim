@@ -5,8 +5,8 @@
   "purpose": "Check whether the locked simulator's nominal pressure and flow envelope is visibly compatible with reported public HRS operating points without treating aggregate or figure-only evidence as synchronized full-loop validation.",
   "source_manifest": {
     "path": "research/public_operational_benchmark_recheck_2026_10_05.json",
-    "sha256": "614db5c0dc832512b8e6967a44990bf9a5297f4fca2ba9740d452a92af5cab7e",
-    "candidate_count": 17,
+    "sha256": "80e865de45384c7bd48c721125e440f482343c2420095f56f6866390db842e81",
+    "candidate_count": 18,
     "rights_and_trace_boundary": "Only source-reported endpoint, aggregate or figure-level values are used. No public source supplies a rights-cleared common-time-base station-to-vehicle pressure-temperature-mass-flow archive in this screen."
   },
   "locked_model_reference": {
