@@ -90,6 +90,20 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     ] is True
     assert early["evidence_digest"] == idle["evidence_digest"]
     header = prompt_evidence_header(idle)
+    public_links = header["public_source_links"]
+    public_link_ids = {row["id"] for row in public_links}
+    assert {
+        "NREL_HDVS_2022_TANK_HOSE_TRACE",
+        "NREL_HD_FAST_FLOW_2024_REPORT",
+        "PUBLIC_HITRF_OPERATIONAL_REFERENCE",
+        "KHK_PUBLIC_ACCIDENT_REPORTS",
+        "PUBLIC_ACCIDENTAL_RELEASE_ARTICLE",
+        "PUBLIC_ACCIDENTAL_RELEASE_DATASET",
+        "PUBLIC_DETECTOR_LOGIC_DATASET",
+    } <= public_link_ids
+    assert all(row["url"].startswith(("https://", "http://")) for row in public_links)
+    assert not any("confidential" in row["id"].lower() for row in public_links)
+    assert prompt_evidence_summary(idle)["public_source_links"] == public_links
     assert header["public_accident_evidence"]["public_report_count"] == 23
     assert header["public_accident_evidence"]["accidental_release_zenodo_doi"] == (
         "10.5281/zenodo.17913628"

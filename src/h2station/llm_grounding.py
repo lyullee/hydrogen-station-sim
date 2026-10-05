@@ -642,6 +642,87 @@ def _public_hitrf_operational_reference() -> dict[str, Any] | None:
     }
 
 
+def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return a tiny, inspectable index of public sources used for grounding.
+
+    The live prompt needs enough provenance for an operator to follow a claim
+    back to its public source, but it must not receive raw private rows or
+    internal file paths.  Only URLs/DOIs already admitted by the bounded
+    evidence readers are copied here; private evidence is intentionally
+    excluded.
+    """
+
+    links: list[dict[str, Any]] = []
+    seen: set[tuple[str, str]] = set()
+
+    def add(source_id: str, title: str, url: str, role: str) -> None:
+        if not isinstance(url, str) or not url.startswith(("https://", "http://")):
+            return
+        key = (source_id, url)
+        if key in seen:
+            return
+        seen.add(key)
+        links.append({
+            "id": source_id,
+            "title": title,
+            "url": url,
+            "role": role,
+        })
+
+    benchmarks = evidence.get("public_experimental_benchmarks") or {}
+    for source in benchmarks.get("sources") or []:
+        if not isinstance(source, dict):
+            continue
+        add(
+            str(source.get("id") or "public_experiment"),
+            str(source.get("title") or "Public hydrogen experiment"),
+            str(source.get("url") or ""),
+            "실제 충전 실험 운전범위·부분 경계 근거",
+        )
+
+    hitrf = evidence.get("public_hitrf_operational_reference") or {}
+    hitrf_source = hitrf.get("source") or {}
+    add(
+        "PUBLIC_HITRF_OPERATIONAL_REFERENCE",
+        str(hitrf_source.get("title") or "Public HRS facility reference"),
+        str(hitrf_source.get("url") or ""),
+        "실설비 규모·압력 tier·압축/예냉 운전범위 참고",
+    )
+
+    khk = evidence.get("public_accident_report_inventory") or {}
+    add(
+        "KHK_PUBLIC_ACCIDENT_REPORTS",
+        str(khk.get("institution") or "Public hydrogen accident reports"),
+        str(khk.get("source_page") or ""),
+        "공개 사고사례 분류·대응절차 근거",
+    )
+
+    accidental = evidence.get("public_accidental_release_evidence") or {}
+    add(
+        "PUBLIC_ACCIDENTAL_RELEASE_ARTICLE",
+        "Accidental self-ignition of hydrogen released from pressurized cylinder",
+        str(accidental.get("article_url") or ""),
+        "방출·점화 현상 참고자료(충전소 full-loop 검증 아님)",
+    )
+    add(
+        "PUBLIC_ACCIDENTAL_RELEASE_DATASET",
+        "Accidental release temperature/pressure dataset",
+        str(accidental.get("dataset_url") or ""),
+        "공개 실험 원자료 출처(방출모델 검증 주장 아님)",
+    )
+
+    detector = evidence.get("public_detector_logic_evidence") or {}
+    detector_doi = str(detector.get("doi") or "")
+    if detector_doi:
+        add(
+            "PUBLIC_DETECTOR_LOGIC_DATASET",
+            "Experimental hydrogen dispersion detector dataset",
+            f"https://doi.org/{detector_doi}",
+            "검지기 alarm/trip persistence 재현 근거",
+        )
+    return links
+
+
 def _confidential_lifecycle_evidence() -> dict[str, Any] | None:
     """Expose only de-identified lifecycle-counter calibration context."""
 
@@ -1228,6 +1309,9 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if station_schema.get(key) is not None
         }
+    public_source_links = _public_source_links(evidence)
+    if public_source_links:
+        summary["public_source_links"] = public_source_links
     impact = manifest.get("impact") or {}
     summary["impact_status"] = impact.get("calculation_status")
     summary["impact_result_count"] = impact.get("result_count", 0)
@@ -1267,6 +1351,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     hitrf_thermal = hitrf_reference.get("dispensing_and_thermal") or {}
     return {
         "runtime_calibration": manifest.get("runtime_calibration") or {},
+        "public_source_links": _public_source_links(evidence),
         "public_experiment_sources": benchmark_ids,
         "public_hitrf_operational_reference": {
             "source_url": (hitrf_reference.get("source") or {}).get("url"),
