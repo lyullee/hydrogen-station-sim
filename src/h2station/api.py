@@ -2353,12 +2353,14 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
             "hazop_hit_count": len(direct_hits),
         }
     context = {
-        # Keep actionable response steps and active rule facts at the very
-        # front of the bounded prompt.  Impact results can contain large
-        # per-sample arrays and must not crowd out the immediate actions.
-        "emergency_response_guidance":prompt_guidance(response_plans),
-        "hazop_active":active, "hazop_rules":matched_rules,
+        # Keep the compact, safety-critical facts at the front of the bounded
+        # prompt.  The serialized context is deliberately capped below, so
+        # bulky evidence/telemetry must not crowd out the registered HAZOP
+        # rules that explain the current alarm.
         "impact_results":impact_results,
+        "hazop_reference_rules":reference_rules,
+        "hazop_active":active, "hazop_rules":matched_rules,
+        "emergency_response_guidance":prompt_guidance(response_plans),
         "evidence_manifest": evidence_manifest,
         "impact_calculation_attempted":show_impact_results,
         "station":"H70 reference simulation", "time_s":frame.get("time_s"),
@@ -2376,7 +2378,6 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "relief_valve_settings":{key: value for key, value in
             (((frame.get("process_operations") or {}).get("settings") or {}).get("relief_valves") or {}).items()
             if key in (frame.get("relief_valves_open") or [])},
-        "hazop_reference_rules":reference_rules,
         "reference_sensor_values":{tag: value for tag, value in sensor_values.items() if tag in reference_tags},
         "sensor_values":sensor_values,
         "hazop_nodes":[{"node_id": node["node_id"], "name": node.get("설비_라인")} for node in catalog["nodes"]],
