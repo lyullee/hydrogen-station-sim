@@ -195,6 +195,12 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     mc_enthalpy = gates["mc_enthalpy_pressure_sensitivity_integrity"]["observed"]
     assert mc_enthalpy["run_count"] == 3
     assert mc_enthalpy["case_counts"] == [8, 8, 8]
+    assert gates["confidential_operational_envelope_calibration_integrity"]["status"] == "PASS"
+    operational = gates["confidential_operational_envelope_calibration_integrity"]["observed"]
+    assert operational["sampled_rows"] == 10896
+    assert operational["recharge_restart_margin_pa"] == 540000.0
+    assert operational["simulated_samples"] == 121
+    assert operational["esd_triggered"] is False
     release_development = gates["release_network_development_integrity"]["observed"]
     assert release_development["evidence_role"] == "consumed_development_only"
     assert release_development["eligible_as_confirmatory_validation"] is False

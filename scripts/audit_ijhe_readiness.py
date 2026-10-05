@@ -284,6 +284,64 @@ def audit(root: Path) -> dict[str, object]:
         } if mc_measured_boundary else "missing",
     ))
 
+    operational_calibration_path = root / (
+        "research/confidential_operational_envelope_calibration_summary_2026_10_06.json"
+    )
+    operational_replay_path = root / (
+        "research/confidential_operational_envelope_replay_2026_10_06.json"
+    )
+    operational_calibration = _json(operational_calibration_path)
+    operational_replay = _json(operational_replay_path)
+    operational_eligibility = (operational_calibration or {}).get("eligibility") or {}
+    operational_replay_eligibility = (operational_replay or {}).get("eligibility") or {}
+    operational_calibration_pass = bool(
+        (operational_calibration or {}).get("schema_version") == 1
+        and (operational_calibration or {}).get("artifact_type")
+        == "confidential_operational_envelope_calibration_summary"
+        and (operational_calibration or {}).get("source_identifiers_published") is False
+        and (operational_calibration or {}).get("raw_rows_persisted") is False
+        and (operational_calibration or {}).get("exact_source_dates_published") is False
+        and (operational_calibration or {}).get("files_read") == 8
+        and (operational_calibration or {}).get("sampled_rows") == 10896
+        and (operational_calibration or {}).get("state_transition_count") == 274
+        and (operational_calibration or {}).get("recommended_recharge_restart_margin_pa") == 540000.0
+        and operational_eligibility.get("station_boundary_calibration_supported") is True
+        and operational_eligibility.get("full_station_vehicle_validation") is False
+        and operational_eligibility.get("vehicle_side_channels_present") is False
+        and operational_eligibility.get("flow_units_attested") is False
+        and (operational_replay or {}).get("schema_version") == 1
+        and (operational_replay or {}).get("artifact_type")
+        == "confidential_operational_envelope_replay"
+        and (operational_replay or {}).get("source_identifiers_published") is False
+        and (operational_replay or {}).get("raw_rows_persisted") is False
+        and (operational_replay or {}).get("exact_source_dates_published") is False
+        and (operational_replay or {}).get("calibration", {}).get("profile_id")
+        == (operational_calibration or {}).get("profile_id")
+        and (operational_replay or {}).get("calibration", {}).get("aggregate_margin_applied") is True
+        and (operational_replay or {}).get("replay", {}).get("simulated_samples") == 121
+        and (operational_replay or {}).get("replay", {}).get("esd_triggered") is False
+        and operational_replay_eligibility.get("station_boundary_integration_check") is True
+        and operational_replay_eligibility.get("independent_full_station_vehicle_validation") is False
+    )
+    gates.append(_gate(
+        "confidential_operational_envelope_calibration_integrity",
+        "PASS" if operational_calibration_pass else (
+            "FAIL" if operational_calibration or operational_replay else "PENDING"
+        ),
+        "The owner-controlled operational-envelope aggregate is privacy-bounded and passes through a measured-boundary runtime replay without being promoted to full-loop validation.",
+        f"{operational_calibration_path.relative_to(root)}; {operational_replay_path.relative_to(root)}",
+        "De-identified aggregate, retained quality boundary, explicit missing vehicle/flow semantics, opt-in profile linkage and a completed protection-aware replay.",
+        {
+            "files_read": (operational_calibration or {}).get("files_read"),
+            "sampled_rows": (operational_calibration or {}).get("sampled_rows"),
+            "state_transition_count": (operational_calibration or {}).get("state_transition_count"),
+            "recharge_restart_margin_pa": (operational_calibration or {}).get("recommended_recharge_restart_margin_pa"),
+            "simulated_samples": (operational_replay or {}).get("replay", {}).get("simulated_samples"),
+            "esd_triggered": (operational_replay or {}).get("replay", {}).get("esd_triggered"),
+            "full_station_vehicle_validation": operational_eligibility.get("full_station_vehicle_validation"),
+        } if operational_calibration and operational_replay else "missing",
+    ))
+
     external_loop_path = root / "data/public_validation/results/closed_loop_external_holdout/validation.json"
     external_loop = _json(external_loop_path)
     external_protocol_path = root / "research/mc_default_external_holdout_protocol.json"

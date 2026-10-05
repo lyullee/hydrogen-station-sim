@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T17:58:42.107593+00:00",
+  "generated_at": "2026-10-05T19:15:58.755603+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 68,
+    "PASS": 69,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -383,6 +383,22 @@
           }
         ],
         "goal_completion_permitted": false
+      }
+    },
+    {
+      "id": "confidential_operational_envelope_calibration_integrity",
+      "status": "PASS",
+      "claim": "The owner-controlled operational-envelope aggregate is privacy-bounded and passes through a measured-boundary runtime replay without being promoted to full-loop validation.",
+      "evidence": "research\\confidential_operational_envelope_calibration_summary_2026_10_06.json; research\\confidential_operational_envelope_replay_2026_10_06.json",
+      "requirement": "De-identified aggregate, retained quality boundary, explicit missing vehicle/flow semantics, opt-in profile linkage and a completed protection-aware replay.",
+      "observed": {
+        "files_read": 8,
+        "sampled_rows": 10896,
+        "state_transition_count": 274,
+        "recharge_restart_margin_pa": 540000.0,
+        "simulated_samples": 121,
+        "esd_triggered": false,
+        "full_station_vehicle_validation": false
       }
     },
     {

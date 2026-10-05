@@ -12,7 +12,7 @@ evidence-readiness decision; it is not a prediction of editorial acceptance.
 
 ## Current decision
 
-Audit snapshot: **2026-10-05 17:58 UTC**
+Audit snapshot: **2026-10-05 19:15 UTC**
 
 | Decision | Result |
 |---|---|
@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-05 17:58 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **68 PASS · 6 FAIL · 7 PENDING**.
+Gate counts: **69 PASS · 6 FAIL · 7 PENDING**.
 
 The manuscript is therefore kept claim-bounded. The current full-loop negative
 result, component-level evidence and all unresolved gates remain disclosed; no
@@ -66,6 +66,14 @@ validation window supports that relationship.
 The corresponding measured pressure envelope and replay margin are recorded in
 [`confidential_station_boundary_calibration_summary_2026_10_06.json`](../research/confidential_station_boundary_calibration_summary_2026_10_06.json)
 and are provided to the LLM as station-boundary calibration context only.
+
+The broader de-identified operational-envelope aggregate and its protection-
+aware measured-boundary replay are recorded in
+[`confidential_operational_envelope_calibration_summary_2026_10_06.json`](../research/confidential_operational_envelope_calibration_summary_2026_10_06.json)
+and
+[`confidential_operational_envelope_replay_2026_10_06.json`](../research/confidential_operational_envelope_replay_2026_10_06.json).
+This adds a verified station-boundary integration gate and remains opt-in; it
+does not close the full-loop or SAGA effectiveness gates.
 
 Published operating-range evidence is summarized in
 [`public_experimental_benchmarks_2026_10_06.json`](../research/public_experimental_benchmarks_2026_10_06.json)
