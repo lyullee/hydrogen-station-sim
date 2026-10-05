@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "source_id": "cip_chinese_35_70mpa_station_experiments_2020",
+  "source": {
+    "title": "35 MPa/70 MPa hydrogen dispenser refueling performance evaluation experiments",
+    "doi": "10.19799/j.cnki.2095-4239.2020.0049",
+    "article_url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
+    "download_base_url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/"
+  },
+  "intake": {
+    "manifest": "tmp/cip_2020_hrs_manifest.json",
+    "eligibility": "tmp/cip_2020_hrs_eligibility.json",
+    "eligibility_decision": "ELIGIBLE_FOR_PROSPECTIVE_MAPPING",
+    "manifest_sha256": "7700b8cbeb01516b2c7e6b118e11444ffac4a87627ef9445fa805c9f8b6de346",
+    "numerical_values_inspected_before_intake": false,
+    "quarantined_zip_root": "C:/Users/lyul/Desktop/ProjectData/external_hrs_quarantine/cip_2020_35_70mpa",
+    "zip_file_count": 4,
+    "zip_sha256_verified": true
+  },
+  "post_intake_trace_check": {
+    "extraction_root": "C:/Users/lyul/Desktop/ProjectData/external_hrs_quarantine/cip_2020_35_70mpa_extracted_v1",
+    "numerical_values_inspected_after_gate": true,
+    "files": [
+      {"member": "T1.csv", "bytes": 158, "sha256": "5cb2d0260e32f0abb9d6a3e1a390dc4c28f34d4f787daf293db94f950f02d6a9", "rows_including_header": 3, "trace_channels": false},
+      {"member": "T2.csv", "bytes": 170, "sha256": "3676cac76a9279f8bc4127016262531e22b0847a1e129a265556f236d4c3ca58", "rows_including_header": 3, "trace_channels": false},
+      {"member": "T3.csv", "bytes": 167, "sha256": "0bc1b7853ba3b0925466a9679a19fc066cbf8b9138ce762986ef2f5af375fcbc", "rows_including_header": 3, "trace_channels": false},
+      {"member": "T4.csv", "bytes": 140, "sha256": "d746af783049e2a4ed72edc82d6489927bf4847a4f88e93b1a037951a191c285", "rows_including_header": 3, "trace_channels": false}
+    ],
+    "observed_structure": "Each member is an HTML-like table export containing headers and summary values; no elapsed-time column or row-wise synchronized pressure, temperature and mass-flow channels are present.",
+    "quality_decision": "INELIGIBLE_TRACE_CHANNELS",
+    "missing_required_trace_channels": ["common_time_base", "vehicle_or_receptacle_pressure", "gas_or_tank_temperature", "mass_flow_or_transferred_mass"]
+  },
+  "full_loop_holdout_eligible": false,
+  "reuse_boundary": "The article-linked files are publicly downloadable, but no separate raw-data licence or redistribution permission was identified. The table summaries are retained for face-validity context and a custodian data request only; they are not used for model tuning or IJHE physical validation.",
+  "claim_boundary": "This recheck excludes the source from the station-to-vehicle full-loop validation gate. It does not invalidate the reported experiment or claim that the article's plotted curves are incorrect."
+}

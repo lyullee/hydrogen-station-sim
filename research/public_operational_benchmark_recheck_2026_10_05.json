@@ -257,7 +257,7 @@
       "doi": "10.19799/j.cnki.2095-4239.2020.0049",
       "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
       "license": "No explicit open-data licence identified; cite and request reuse terms",
-      "decision": "REAL_STATION_EXPERIMENT_TABLE_ONLY_DATA_REQUEST_LEAD",
+      "decision": "PUBLIC_TABLE_ONLY_CONFIRMED_NO_TIME_SERIES",
       "observed_scope": {
         "facility": "Chinese 35 MPa/70 MPa hydrogen dispenser field tests",
         "reported_cases": 2,
@@ -287,8 +287,17 @@
         "raw_synchronized_rows": false,
         "protocol": "field dispenser tests with leak-check pauses and pressure/temperature/flow recording"
       },
-      "finding": "The public article exposes small table CSVs and describes real station tests with pressure, temperature, mass and flow observations, but no synchronized raw time-series archive or explicit reuse licence was found.",
-      "use": "High-value face-validity and data-request lead for 35/70 MPa vehicle-filling behaviour; do not use the table summaries as a full-loop holdout or tune the model from them."
+      "finding": "The article-linked T1-T4 ZIP files were downloaded and hash-verified after the metadata intake gate. Each archive contains only a three-row HTML-like initial/final-condition table; no elapsed-time or synchronized pressure-temperature-mass-flow trace is present.",
+      "use": "Retain the article and table summaries for face-validity context and a custodian data request only; exclude from full-loop validation, calibration and model tuning.",
+      "archive_recheck": {
+        "evidence": "research/cip_2020_35_70mpa_data_boundary_2026_10_05.json",
+        "intake_manifest": "tmp/cip_2020_hrs_manifest.json",
+        "zip_members_verified": 4,
+        "extracted_members_verified": 4,
+        "rows_including_header_per_member": 3,
+        "trace_channels_present": false,
+        "full_loop_holdout_eligible": false
+      }
     },
     {
       "id": "calstate_la_cascade_direct_energies_2023",

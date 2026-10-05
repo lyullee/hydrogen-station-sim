@@ -136,7 +136,9 @@ def test_recheck_records_chinese_35_70_mpa_field_experiments_as_table_only_lead(
         candidate for candidate in record["candidates"]
         if candidate["id"] == "cip_chinese_35_70mpa_station_experiments_2020"
     )
-    assert item["decision"] == "REAL_STATION_EXPERIMENT_TABLE_ONLY_DATA_REQUEST_LEAD"
+    assert item["decision"] == "PUBLIC_TABLE_ONLY_CONFIRMED_NO_TIME_SERIES"
+    assert item["archive_recheck"]["zip_members_verified"] == 4
+    assert item["archive_recheck"]["trace_channels_present"] is False
     assert item["observed_scope"]["reported_cases"] == 2
     assert item["observed_scope"]["raw_synchronized_rows"] is False
     assert item["observed_scope"]["case_70_mpa"]["peak_mass_flow_g_s"] == 36.0
