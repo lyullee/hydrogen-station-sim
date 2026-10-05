@@ -11,6 +11,17 @@
     "gas_or_tank_temperature",
     "mass_flow_or_transferred_mass"
   ],
+  "accepted_units": {
+    "vehicle_or_receptacle_pressure": [
+      "MPa_abs"
+    ],
+    "gas_or_tank_temperature": [
+      "degC"
+    ],
+    "mass_flow_or_transferred_mass": [
+      "g/s"
+    ]
+  },
   "required_metadata": [
     "initial_conditions",
     "tank_capacity_or_geometry",

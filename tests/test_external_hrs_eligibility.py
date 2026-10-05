@@ -109,3 +109,13 @@ def test_metadata_gate_rejects_manifest_path_traversal(tmp_path):
     report = validate(manifest, declaration, protocol)
     assert report["eligible_for_numerical_evaluation"] is False
     assert "intake file record 0 has an unsafe relative_path" in report["reasons"]
+
+
+def test_metadata_gate_rejects_ambiguous_pressure_unit(tmp_path):
+    manifest, declaration, protocol = _write_inputs(tmp_path)
+    value = json.loads(declaration.read_text(encoding="utf-8"))
+    value["channels"]["vehicle_or_receptacle_pressure"]["unit"] = "MPa_gauge"
+    declaration.write_text(json.dumps(value), encoding="utf-8")
+    report = validate(manifest, declaration, protocol)
+    assert report["eligible_for_numerical_evaluation"] is False
+    assert any("unsupported unit for vehicle_or_receptacle_pressure" in reason for reason in report["reasons"])

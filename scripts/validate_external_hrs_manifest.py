@@ -39,18 +39,36 @@ def _present(value: Any) -> bool:
     return value is True
 
 
-def _channel_ok(channels: dict[str, Any], name: str) -> bool:
+def _channel_error(
+    channels: dict[str, Any],
+    name: str,
+    accepted_units: dict[str, Any] | None = None,
+) -> str | None:
     value = channels.get(name)
     if not _present(value):
-        return False
+        return f"missing required channel or unit: {name}"
     if isinstance(value, dict):
         if name == "common_time_base":
-            return True
+            return None
         unit = value.get("unit")
-        return isinstance(unit, str) and bool(unit.strip())
+        if not isinstance(unit, str) or not unit.strip():
+            return f"missing required channel or unit: {name}"
+        allowed = (accepted_units or {}).get(name)
+        if isinstance(allowed, list) and allowed and unit not in allowed:
+            allowed_text = ", ".join(str(item) for item in allowed)
+            return f"unsupported unit for {name}: {unit} (accepted: {allowed_text})"
+        return None
     # A boolean declaration is accepted only for common_time_base, whose unit
     # is not applicable.  All measured channels must declare their units.
-    return name == "common_time_base"
+    return None if name == "common_time_base" else f"missing required channel or unit: {name}"
+
+
+def _channel_ok(
+    channels: dict[str, Any],
+    name: str,
+    accepted_units: dict[str, Any] | None = None,
+) -> bool:
+    return _channel_error(channels, name, accepted_units) is None
 
 
 def _bundle_root(manifest: dict[str, Any], override: Path | None) -> Path | None:
@@ -165,9 +183,14 @@ def validate(
     if not isinstance(channels, dict):
         reasons.append("metadata declaration has no channels object")
         channels = {}
+    accepted_units = protocol.get("accepted_units")
+    if not isinstance(accepted_units, dict):
+        reasons.append("protocol has no accepted_units contract")
+        accepted_units = {}
     for required in protocol.get("required_channels") or []:
-        if not _channel_ok(channels, required):
-            reasons.append(f"missing required channel or unit: {required}")
+        error = _channel_error(channels, required, accepted_units)
+        if error:
+            reasons.append(error)
 
     metadata = declaration.get("metadata")
     if not isinstance(metadata, dict):

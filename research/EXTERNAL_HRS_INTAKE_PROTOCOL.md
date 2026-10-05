@@ -25,6 +25,13 @@ protocol.
 
 ## Numerical trace-quality screen
 
+The metadata contract requires the canonical units used by the frozen trace
+screen: absolute pressure in `MPa_abs`, temperature in `degC`, and mass flow
+in `g/s`. Gauge pressure or an unconverted alternate unit is rejected at
+intake; conversion must be performed and documented before a new manifest is
+created. This prevents a numerically plausible but physically mis-scaled trace
+from entering the validation holdout.
+
 After the metadata gate passes, `scripts/validate_external_hrs_trace.py` may
 read only the explicitly mapped CSV trace. It applies the frozen row count,
 missingness, monotonic-time, maximum-gap and physical-range checks in the
