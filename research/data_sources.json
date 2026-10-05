@@ -457,7 +457,8 @@
           "vehicle-side protocol command trace"
         ]
       },
-      "eligibility_note": "Independent physical HDVS tank pressure/thermal validation candidate. It can test the frozen tank submodel with measured inlet and mass boundaries, but cannot close the station-to-vehicle full-loop gate or establish field safety performance."
+      "eligibility_note": "Independent physical HDVS tank pressure/thermal validation candidate. It can test the frozen tank submodel with measured inlet and mass boundaries, but cannot close the station-to-vehicle full-loop gate or establish field safety performance.",
+      "boundary_record": "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json"
     },
     "calstate_la_cascade_direct_pressurized_2023": {
       "title": "Experimental Comparison of Directly-Pressurized and Cascade H2 Refueling Methods for Heavy-Duty Applications",

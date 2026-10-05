@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T07:04:49.884484+00:00",
+  "generated_at": "2026-10-05T07:15:09.187427+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 64,
+    "PASS": 65,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -808,6 +808,32 @@
         "workbook_sha256": "1a3fbe64a50c1c97266bfe0372998513ad3ccec5600fab7bc4b9fc68ad4d9d0c",
         "package_sha256_matches_previous_record": false,
         "claim_boundary": "The validation is pinned to the workbook digest, not to an immutable package-container digest. The current package download has the same screened workbook but a different archive digest; this does not add a new validation case or permit redistribution."
+      }
+    },
+    {
+      "id": "nrel_hdvs_raw_trace_boundary_integrity",
+      "status": "PASS",
+      "claim": "The NREL HDVS workbook is schema-checked as a real hose/tank boundary while its missing station and vehicle channels remain explicit.",
+      "evidence": "research\\nrel_hdvs_raw_trace_boundary_2026_10_05.json",
+      "requirement": "Hash-verified workbook, 351 timed rows, seven tank IDs, required hose/tank channels and explicit exclusion of controller/ESD/nozzle/receptacle/vehicle traces.",
+      "observed": {
+        "workbook_present": true,
+        "sha256_matches_record": true,
+        "data_sheet_max_row": 445,
+        "data_sheet_max_column": 42,
+        "nonempty_timed_row_count": 351,
+        "tank_ids": [
+          1,
+          2,
+          3,
+          5,
+          7,
+          8,
+          9
+        ],
+        "required_channels_present": true,
+        "partial_station_to_tank_boundary_eligible": true,
+        "full_loop_external_holdout_eligible": false
       }
     },
     {

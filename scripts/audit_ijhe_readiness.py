@@ -1019,6 +1019,93 @@ def audit(root: Path) -> dict[str, object]:
         } if nrel_retrieval else "missing",
     ))
 
+    nrel_boundary_path = root / "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json"
+    nrel_boundary = _json(nrel_boundary_path)
+    nrel_boundary_source = (nrel_boundary or {}).get("source") or {}
+    nrel_boundary_experiment = (nrel_boundary or {}).get("experiment") or {}
+    nrel_boundary_check = (nrel_boundary or {}).get("boundary_check") or {}
+    nrel_boundary_eligibility = (nrel_boundary or {}).get("eligibility") or {}
+    nrel_schema_observed: dict[str, Any] = {
+        "workbook_present": nrel_raw_path.is_file(),
+        "sha256_matches_record": False,
+        "data_sheet_max_row": None,
+        "data_sheet_max_column": None,
+        "nonempty_timed_row_count": None,
+        "tank_ids": [],
+        "required_channels_present": False,
+    }
+    if nrel_raw_path.is_file():
+        nrel_schema_observed["sha256_matches_record"] = (
+            _sha256(nrel_raw_path) == nrel_boundary_source.get("workbook_sha256")
+        )
+        try:
+            import re
+            import openpyxl
+
+            workbook = openpyxl.load_workbook(nrel_raw_path, read_only=True, data_only=True)
+            data_sheet = workbook["Data"]
+            nrel_schema_observed["data_sheet_max_row"] = data_sheet.max_row
+            nrel_schema_observed["data_sheet_max_column"] = data_sheet.max_column
+            headers = [
+                value for value in next(
+                    data_sheet.iter_rows(min_row=1, max_row=1, values_only=True)
+                ) if value is not None
+            ]
+            timed_rows = [
+                row for row in data_sheet.iter_rows(min_row=2, values_only=True)
+                if row and row[0] is not None
+            ]
+            nrel_schema_observed["nonempty_timed_row_count"] = len(timed_rows)
+            nrel_schema_observed["tank_ids"] = sorted({
+                int(match.group(1))
+                for header in headers
+                if (match := re.search(r"tank#(\d+)", str(header)))
+            })
+            required = {"Time [s]", "P_hose [MPa]", "T_hose [degC]"}
+            required.update(
+                template.format(id=tank_id)
+                for tank_id in nrel_boundary_experiment.get("tank_ids", [])
+                for template in nrel_boundary_experiment.get("per_tank_channel_templates", [])
+            )
+            nrel_schema_observed["required_channels_present"] = required.issubset(set(headers))
+            workbook.close()
+        except (ImportError, KeyError, OSError, ValueError, StopIteration):
+            pass
+    nrel_boundary_pass = bool(
+        (nrel_boundary or {}).get("schema_version") == 1
+        and (nrel_boundary or {}).get("status") == "NREL_HDVS_RAW_TRACE_BOUNDARY_RECHECKED"
+        and nrel_boundary_source.get("workbook_sha256") == nrel_source.get("workbook_sha256")
+        and nrel_boundary_source.get("workbook_bytes") == nrel_identity.get("bytes")
+        and nrel_schema_observed["workbook_present"] is True
+        and nrel_schema_observed["sha256_matches_record"] is True
+        and nrel_schema_observed["data_sheet_max_row"] == 445
+        and nrel_schema_observed["data_sheet_max_column"] == 42
+        and nrel_schema_observed["nonempty_timed_row_count"] == 351
+        and nrel_schema_observed["tank_ids"] == [1, 2, 3, 5, 7, 8, 9]
+        and nrel_schema_observed["required_channels_present"] is True
+        and nrel_boundary_check.get("physical_measurement_trace") is True
+        and nrel_boundary_check.get("station_controller_or_cascade_state_present") is False
+        and nrel_boundary_check.get("esd_or_safety_interlock_trace_present") is False
+        and nrel_boundary_check.get("breakaway_hose_nozzle_receptacle_trace_present") is False
+        and nrel_boundary_check.get("vehicle_side_protocol_trace_present") is False
+        and nrel_boundary_check.get("full_loop_external_holdout_eligible") is False
+        and nrel_boundary_eligibility.get("partial_station_to_tank_boundary_eligible") is True
+        and nrel_boundary_eligibility.get("goal_completion_permitted") is False
+        and bool((nrel_boundary or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "nrel_hdvs_raw_trace_boundary_integrity",
+        "PASS" if nrel_boundary_pass else ("FAIL" if nrel_boundary else "PENDING"),
+        "The NREL HDVS workbook is schema-checked as a real hose/tank boundary while its missing station and vehicle channels remain explicit.",
+        str(nrel_boundary_path.relative_to(root)),
+        "Hash-verified workbook, 351 timed rows, seven tank IDs, required hose/tank channels and explicit exclusion of controller/ESD/nozzle/receptacle/vehicle traces.",
+        {
+            **nrel_schema_observed,
+            "partial_station_to_tank_boundary_eligible": nrel_boundary_eligibility.get("partial_station_to_tank_boundary_eligible"),
+            "full_loop_external_holdout_eligible": nrel_boundary_eligibility.get("full_loop_external_holdout_eligible"),
+        } if nrel_boundary else "missing; NREL HDVS raw trace boundary recheck has not run",
+    ))
+
     manuscript_path = root / "manuscript/ijhe_manuscript_draft.tex"
     manuscript = manuscript_path.read_text(encoding="utf-8") if manuscript_path.is_file() else ""
     negative_transparent = (

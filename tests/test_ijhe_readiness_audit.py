@@ -90,6 +90,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert calstate_b2b["public_raw_synchronized_rows"] is False
     assert calstate_b2b["full_loop_external_holdout_eligible"] is False
     assert gates["nrel_h2fills_workbook_provenance_integrity"]["status"] == "PASS"
+    assert gates["nrel_hdvs_raw_trace_boundary_integrity"]["status"] == "PASS"
+    nrel_boundary = gates["nrel_hdvs_raw_trace_boundary_integrity"]["observed"]
+    assert nrel_boundary["nonempty_timed_row_count"] == 351
+    assert nrel_boundary["tank_ids"] == [1, 2, 3, 5, 7, 8, 9]
+    assert nrel_boundary["full_loop_external_holdout_eligible"] is False
     assert gates["public_dispenser_endpoint_diagnostic"]["status"] == "PASS"
     assert gates["grune_ventilation_measurement_inventory"]["status"] == "PASS"
     grune_inventory = gates["grune_ventilation_measurement_inventory"]["observed"]

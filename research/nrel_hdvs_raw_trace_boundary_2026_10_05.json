@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "status": "NREL_HDVS_RAW_TRACE_BOUNDARY_RECHECKED",
+  "evidence_role": "independent_physical_tank_and_hose_boundary",
+  "source": {
+    "title": "NREL H2FillS supplemental HDVS Type-IV sample test",
+    "publisher": "National Renewable Energy Laboratory / National Laboratory of the Rockies",
+    "landing_page": "https://www.nrel.gov/hydrogen/h2fills",
+    "download_page": "https://www.nlr.gov/hydrogen/h2fills-download",
+    "workbook_path": "data/public_validation/raw/nrel_h2fills_2022_hdvs_typeiv.xlsx",
+    "workbook_sha256": "1a3fbe64a50c1c97266bfe0372998513ad3ccec5600fab7bc4b9fc68ad4d9d0c",
+    "workbook_bytes": 313285,
+    "license": "H2FillS package internal-use-only licence; raw package/data are not redistributed",
+    "rights_observation": "The workbook is retained locally for evaluation only; derived publication requires permission from the data owner."
+  },
+  "experiment": {
+    "date": "2022-08-16",
+    "description_sheet_title": "NREL Sample Test Data from 8/16/2022",
+    "data_sheet": "Data",
+    "data_sheet_max_row": 445,
+    "data_sheet_max_column": 42,
+    "nonempty_timed_row_count": 351,
+    "time_range_s": [0, 350],
+    "sample_period_s": 1,
+    "reported_transfer_kg": 61.5,
+    "reported_fill_time_s": 279,
+    "reported_start_pressure_mpa": 1.8,
+    "reported_end_pressure_mpa": 75.8,
+    "ambient_temperature_c": 15,
+    "tank_ids": [1, 2, 3, 5, 7, 8, 9],
+    "tank_capacity_kg_each": 9.8,
+    "total_capacity_kg": 68.6,
+    "required_common_time_channels": ["Time [s]", "P_hose [MPa]", "T_hose [degC]"],
+    "per_tank_channel_templates": [
+      "HDVS_ tank#{id}_inlet_press [MPa]",
+      "HDVS_ tank#{id}_inlet_temp [degC]",
+      "HDVS_ tank#{id}_mass [kg]",
+      "HDVS_ tank#{id}_internal_press [MPa]",
+      "HDVS_ tank#{id}_internal_temp [degC]"
+    ]
+  },
+  "boundary_check": {
+    "workbook_present_and_hash_verified": true,
+    "physical_measurement_trace": true,
+    "hose_pressure_and_temperature_present": true,
+    "tank_pressure_temperature_mass_present": true,
+    "station_controller_or_cascade_state_present": false,
+    "esd_or_safety_interlock_trace_present": false,
+    "breakaway_hose_nozzle_receptacle_trace_present": false,
+    "vehicle_side_protocol_trace_present": false,
+    "full_loop_external_holdout_eligible": false
+  },
+  "eligibility": {
+    "independent_tank_boundary_screen_eligible_after_protocol_freeze": true,
+    "partial_station_to_tank_boundary_eligible": true,
+    "full_loop_external_holdout_eligible": false,
+    "saga_effectiveness_eligible": false,
+    "goal_completion_permitted": false
+  },
+  "claim_boundary": "This locally hash-verified workbook contains a real common-time-base hose and seven-tank physical trace, so it supports an independent tank and hose-boundary screen. Its internal-use-only terms prevent raw redistribution, and missing station controller, cascade, ESD, nozzle/receptacle, vehicle and protocol channels prevent a complete HRS station-to-vehicle validation or SAGA effectiveness claim."
+}

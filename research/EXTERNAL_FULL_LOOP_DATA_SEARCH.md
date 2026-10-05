@@ -213,6 +213,14 @@ therefore a structural diagnostic only; a new frozen protocol and untouched
 holdout are required before changing the default or claiming independent
 validation.
 
+The raw-trace boundary was rechecked separately in
+`research/nrel_hdvs_raw_trace_boundary_2026_10_05.json`. This confirms the
+351 non-empty common-time rows and the exact seven-tank/hose channel inventory
+without copying the internal-use-only workbook into the repository. It is
+useful evidence for a pre-registered tank/hose boundary screen, but the
+explicit controller/ESD/nozzle/receptacle/vehicle exclusions keep it outside
+the full-loop gate.
+
 ## NREL HDVS aggregate campaign context
 
 The DOE/NREL performance report records a second, October 2022 complete-HDVS
