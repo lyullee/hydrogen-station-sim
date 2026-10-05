@@ -18,6 +18,13 @@
 
 공개 HITRF 기준선은 `research/nlr_hitrf_public_operational_reference_2026_10_06.json`에 정적 정격과 명시적 주장 경계를 기록하고, LLM 근거 envelope에만 연결한다. 이 기준선으로 기본 시뮬레이션 파라미터를 자동 변경하지 않는다. 공개 페이지에는 자동 로깅이 설명되어 있지만 동기화된 원시 logger archive가 제공되지 않으므로 full-loop 검증 gate의 증거로 세지 않는다.
 
+차량 용기 형상은 `capacity_eos` 선택지로 선언 용량과 공칭 압력에서 표 형상방정식
+밀도로 체적을 계산할 수 있게 했다. 2026-10-06에 이미 열어본 공개 개발 케이스
+8건을 재생한 결과는 0/8 screening pass로, 기존 `capacity_scaled`의 1/8보다
+좋아지지 않았다. 따라서 생산 기본값은 유지하며, 이 결과는 새 holdout이나
+프로토콜 검증으로 승격하지 않는다. 세부값은
+`research/h2protocol_capacity_eos_diagnostic_2026_10_06.json`에 고정한다.
+
 LLM 근거 봉투에는 이제 `public_source_links`와 현재 모의 노즐 유량을
 NREL 고유량 실험의 집계 평균·최대값과 비교하는
 `public_operating_envelope_screen`이 포함된다. 이는 공개 출처를 운영자에게

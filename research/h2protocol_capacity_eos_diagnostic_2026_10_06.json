@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_h2protocol_capacity_eos_geometry_diagnostic",
+  "generated_at": "2026-10-06T08:46:39+09:00",
+  "status": "development_only_post_access_diagnostic",
+  "evidence_role": "negative_model_development_evidence",
+  "claim_boundary": "This is a post-access replay of eight previously inspected public H2Protocol development cases. It is not a fresh holdout, does not validate a station or fueling protocol, does not change production defaults, and cannot close the IJHE validation gate.",
+  "geometry_rule": {
+    "name": "capacity_eos",
+    "formula": "V = declared_capacity_kg / rho_H2(P_nominal, 288.15 K)",
+    "density_source": "h2station.tabulated.PropsSI Hydrogen",
+    "effective_volume_multiplier": 1.052729261198358,
+    "gas_liner_ua_multiplier": 31.460656519273492,
+    "dispenser_flow_area_multiplier": 2.0,
+    "precooler_duty_multiplier": 16.0,
+    "production_default_changed": false
+  },
+  "source": {
+    "public_processed_dataset": "data/public_validation/processed/h2protocol_cases.csv and h2protocol_traces/",
+    "runner": "scripts/run_h2protocol_validation.py",
+    "runner_sha256": "094f932a8102bfde5631ff78ed21f0949f84abca668bd297e05521f2e8f19d",
+    "source_commit": "e798345585f463c3aa15648d0df5377544e6644c",
+    "source_worktree_dirty_at_generation": true,
+    "selected_lab_test_numbers": [1, 4, 11, 13, 19, 22, 29, 31],
+    "baseline_report": "data/public_validation/results/closed_loop_development_v2/validation.json",
+    "diagnostic_report": "data/public_validation/results/geometry_capacity_eos_diagnostic_2026_10_06/validation.json"
+  },
+  "screening_limits": {
+    "pressure_rmse_mpa_max": 5.0,
+    "temperature_rmse_c_max": 10.0,
+    "soc_final_abs_error_percentage_points_max": 5.0
+  },
+  "comparison": {
+    "baseline_capacity_scaled": {
+      "case_count": 8,
+      "screening_pass_count": 1,
+      "screening_pass_fraction": 0.125,
+      "metrics": {
+        "pressure_rmse_mpa_mean": 6.601693364975364,
+        "pressure_rmse_mpa_median": 3.53262048436679,
+        "temperature_rmse_c_mean": 11.427575890283551,
+        "temperature_rmse_c_median": 8.70416109828929,
+        "soc_rmse_percentage_points_mean": 7.297254987401889,
+        "soc_rmse_percentage_points_median": 3.650922417110336
+      }
+    },
+    "capacity_eos": {
+      "case_count": 8,
+      "screening_pass_count": 0,
+      "screening_pass_fraction": 0.0,
+      "final_stop_reason_counts": {
+        "none": 3,
+        "safety-temperature": 4,
+        "vehicle-target": 1
+      },
+      "metrics": {
+        "pressure_rmse_mpa_mean": 6.695958576591353,
+        "pressure_rmse_mpa_median": 3.6814354970500016,
+        "temperature_rmse_c_mean": 11.534617475355166,
+        "temperature_rmse_c_median": 8.578132906024274,
+        "soc_rmse_percentage_points_mean": 7.342574910805911,
+        "soc_rmse_percentage_points_median": 3.853230795705396
+      }
+    }
+  },
+  "interpretation": {
+    "finding": "The capacity-EOS geometry changes the aggregate metrics only slightly: median temperature RMSE decreases while pressure and SOC medians increase. The engineering-screen pass count decreases from 1/8 to 0/8, so the diagnostic does not support promoting this geometry as a validated default.",
+    "decision": "retain_capacity_scaled_production_default",
+    "next_required_evidence": "Freeze the geometry rule before access to an untouched, synchronized station-to-vehicle dataset; report vessel geometry uncertainty and repeat the external evaluation without case-specific fitting."
+  }
+}

@@ -136,6 +136,32 @@ multi-segment fills. The correction, hashes and downstream effect are recorded i
 `research/h2protocol_active_fill_correction.json`. H2P-L29 now contains 399 samples
 over 199 s instead of 1,143 samples over 571 s.
 
+### Optional capacity-EOS geometry diagnostic
+
+The validation runner exposes an opt-in geometry sensitivity for cases that
+declare nominal capacity and working pressure:
+
+```powershell
+.venv\Scripts\python.exe scripts\run_h2protocol_validation.py `
+  --lab-test-numbers 1,4,11,13,19,22,29,31 `
+  --geometry-basis capacity_eos `
+  --tank-validation-json data\public_validation\results\tank_model\validation.json `
+  --flow-calibration-json data\public_validation\results\closed_loop_flow_calibration\calibration.json `
+  --thermal-calibration-json data\public_validation\results\closed_loop_thermal_calibration_v2\calibration.json `
+  --output data\public_validation\results\geometry_capacity_eos_diagnostic_2026_10_06
+```
+
+`capacity_eos` derives vessel volume from declared hydrogen capacity divided by
+the tabulated hydrogen density at the case nominal pressure and 15 °C. The
+default `capacity_scaled` rule is unchanged. The first eight-case replay was a
+post-access development diagnostic: it passed 0/8 screens, compared with 1/8
+for the historical linear-capacity surrogate. Median temperature error moved
+slightly down, while pressure and SOC medians moved slightly up. This result is
+recorded in
+`research/h2protocol_capacity_eos_diagnostic_2026_10_06.json`; it is negative
+development evidence and must not be described as an external holdout or as a
+validated production geometry.
+
 The tank model was refitted after this correction. Its global effective-volume
 and gas-to-liner-UA multipliers are 1.052729 and 31.460657. The 12 frozen
 measured-boundary validation fills have mean pressure, temperature and SOC RMSE

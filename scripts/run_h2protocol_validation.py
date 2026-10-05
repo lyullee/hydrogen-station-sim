@@ -22,7 +22,11 @@ from h2station.api import ProcessSettings
 from h2station.operations import ProcessRuntime
 from h2station.public_validation import compare_traces
 from h2station.risk.runtime_backend import UnavailableHyRAMBackend
-from h2station.scenario import ReferenceScenario, build_reference_scenario
+from h2station.scenario import (
+    ReferenceScenario,
+    build_reference_scenario,
+    capacity_eos_volume_m3,
+)
 
 
 SCREENING_LIMITS = {
@@ -81,6 +85,7 @@ def run_case(
     tank_fit: dict[str, float] | None = None,
     dispenser_flow_area_multiplier: float = 1.0,
     precooler_duty_multiplier: float = 1.0,
+    geometry_basis: str = "capacity_scaled",
 ) -> dict:
     case_id = summary["case_id"]
     exp_time = np.asarray([_float(row, "time_s") for row in trace_rows])
@@ -99,7 +104,17 @@ def run_case(
     tank_capacity = _float(summary, "tank_capacity_kg")
     scheduled_aprr = _float(summary, "scheduled_aprr_mpa_min")
     nominal_pressure_mpa = _float(summary, "nominal_pressure_mpa")
-    tank_volume = _tank_volume_from_nominal_capacity(tank_capacity)
+    if geometry_basis == "capacity_scaled":
+        tank_volume = _tank_volume_from_nominal_capacity(tank_capacity)
+    elif geometry_basis == "capacity_eos":
+        tank_volume = capacity_eos_volume_m3(
+            tank_capacity,
+            nominal_pressure_mpa * 1.0e6,
+        )
+    else:
+        raise ValueError(
+            "geometry_basis must be 'capacity_scaled' or 'capacity_eos'"
+        )
     tank_fit = tank_fit or {
         "effective_volume_multiplier": 1.0,
         "gas_liner_ua_multiplier": 1.0,
@@ -238,6 +253,7 @@ def run_case(
         "tank_capacity_kg": tank_capacity,
         "nominal_working_pressure_mpa": nominal_pressure_mpa,
         "tank_volume_assumed_m3": tank_volume,
+        "geometry_basis": geometry_basis,
         "effective_volume_multiplier": float(tank_fit["effective_volume_multiplier"]),
         "gas_liner_ua_multiplier": float(tank_fit["gas_liner_ua_multiplier"]),
         "dispenser_flow_area_multiplier": dispenser_flow_area_multiplier,
@@ -292,7 +308,11 @@ def run_case(
         "first_stop_reason": first_stopped[1],
         **metrics,
         "screening_pass": screening_pass,
-        "volume_assumption": "0.122 m3 per 4.7 kg nominal capacity, linearly scaled",
+        "volume_assumption": (
+            "hydrogen EOS density at declared nominal working pressure and 15 °C"
+            if geometry_basis == "capacity_eos"
+            else "0.122 m3 per 4.7 kg nominal capacity, linearly scaled"
+        ),
     }
 
 
@@ -302,6 +322,7 @@ def _run_case_file(
     tank_fit: dict[str, float] | None,
     dispenser_flow_area_multiplier: float,
     precooler_duty_multiplier: float = 1.0,
+    geometry_basis: str = "capacity_scaled",
 ) -> dict:
     return run_case(
         summary,
@@ -309,6 +330,7 @@ def _run_case_file(
         tank_fit,
         dispenser_flow_area_multiplier,
         precooler_duty_multiplier,
+        geometry_basis,
     )
 
 
@@ -394,6 +416,7 @@ def _write_markdown(path: Path, report: dict) -> None:
         f"- Flow calibration source: `{report['flow_calibration_source'] or 'none'}`",
         f"- Precooler duty multiplier: `{report['precooler_duty_multiplier']}`",
         f"- Thermal calibration source: `{report['thermal_calibration_source'] or 'none'}`",
+        f"- Vehicle geometry basis: `{report.get('geometry_basis', 'capacity_scaled')}`",
         f"- Selected laboratory tests: `{report['selected_lab_test_numbers'] or 'all 36'}`",
         "",
         "## Aggregate agreement",
@@ -487,6 +510,16 @@ def main() -> int:
     )
     parser.add_argument("--precooler-duty-multiplier", type=float, default=1.0)
     parser.add_argument(
+        "--geometry-basis",
+        choices=("capacity_scaled", "capacity_eos"),
+        default="capacity_scaled",
+        help=(
+            "Vehicle-volume rule. capacity_scaled preserves the historical "
+            "0.122 m3/4.7 kg surrogate; capacity_eos derives volume from "
+            "declared capacity and the tabulated H2 EOS at 15 °C."
+        ),
+    )
+    parser.add_argument(
         "--thermal-calibration-json", type=Path,
         help="Load the selected global precooler-duty multiplier from calibration.json",
     )
@@ -565,6 +598,7 @@ def main() -> int:
                 tank_fit,
                 args.dispenser_flow_area_multiplier,
                 args.precooler_duty_multiplier,
+                args.geometry_basis,
             )
             rows.append(result)
             print(f"validated {result['case_id']}", flush=True)
@@ -578,6 +612,7 @@ def main() -> int:
                     tank_fit,
                     args.dispenser_flow_area_multiplier,
                     args.precooler_duty_multiplier,
+                    args.geometry_basis,
                 ): summary["case_id"]
                 for summary in ordered_summaries
             }
@@ -598,6 +633,7 @@ def main() -> int:
         "dispenser_flow_area_multiplier": args.dispenser_flow_area_multiplier,
         "flow_calibration_source": flow_calibration_source,
         "precooler_duty_multiplier": args.precooler_duty_multiplier,
+        "geometry_basis": args.geometry_basis,
         "thermal_calibration_source": thermal_calibration_source,
         "selected_lab_test_numbers": (
             sorted(selected_lab_tests) if selected_lab_tests is not None else None
