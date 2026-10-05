@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T11:01:34.128278+00:00",
+  "generated_at": "2026-10-05T11:22:11.313421+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -4811,7 +4811,7 @@
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 586,
+            "passed": 590,
             "failed": 0,
             "warnings": 16
           }

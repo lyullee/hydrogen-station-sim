@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T09:52:24.164252+00:00",
+  "generated_at": "2026-10-05T11:22:11.313421+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -389,7 +389,7 @@
       "id": "full_loop_external_validation",
       "status": "FAIL",
       "claim": "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
-      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json",
+      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json; research\\apparatus_resolved_release_protocol.json",
       "requirement": "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
       "observed": {
         "protocol_integrity": true,
@@ -469,6 +469,12 @@
           "external_validation_status": "NOT_ESTABLISHED",
           "goal_completion_permitted": false,
           "claim_boundary": "Nominal operating-range context only; no synchronized full-loop validation claim."
+        },
+        "prospective_apparatus_resolved_release_protocol": {
+          "status": "PROSPECTIVE_PROTOCOL_SPECIFICATION_ONLY",
+          "external_validation_status": "NOT_ESTABLISHED",
+          "full_loop_holdout_eligible": false,
+          "goal_completion_permitted": false
         }
       }
     },
@@ -2499,19 +2505,19 @@
       "requirement": "34/34 mapped rows, no missing recognition/immediate/stabilize/restart/prevention fields, explicit metadata-only claim boundary.",
       "observed": {
         "schema_version": 1,
-        "generated_at_utc": "2026-10-04T11:15:26.741528+00:00",
+        "generated_at_utc": "2026-10-05T10:22:13.477919+00:00",
         "status": "completed_metadata_only_response_stage_contract",
         "evidence_role": "metadata_only_response_contract",
         "source": {
           "inventory": "research/hiad_hrs_public_evidence.json",
           "inventory_sha256": "27b7fc752fe7ad706eb48854447bb203605be30b745515a259fad89325cc2536",
           "coverage": "research/hiad_playbook_coverage.json",
-          "coverage_sha256": "09f9de219440aa73816f08984e5a2a4107052241f9a65a711292a1fa5e85eeff",
+          "coverage_sha256": "879d5d87ef76b8657483fba8ae3f8963183ea1f716342b13d0669f8f4bc42b29",
           "public_source": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt"
         },
         "catalog": {
           "path": "src/h2station/data/emergency_playbooks.json",
-          "catalog_sha256": "68a2a847ae4d7c2ce1aab10d626ffd7595457231f182e3d2bb8b5a2fb73592b0",
+          "catalog_sha256": "b7d64103d9c4d3a322edd2c97b3800b5a796385e4ec25a588a252d288aad8bba",
           "plan_count": 16,
           "required_stages": [
             "recognition",
@@ -4805,7 +4811,7 @@
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 582,
+            "passed": 590,
             "failed": 0,
             "warnings": 16
           }
@@ -4823,7 +4829,8 @@
           "public KHK scenario-precedent map links all 23 citation records to conservative response families without exposing report text or frequency claims",
           "consequence flow-boundary mismatches are exposed when HyRAM recomputes a high-pressure choked flow instead of silently presenting it as the supplied process flow",
           "public HIAD action categories are evaluated case-by-case against required staged response plans without using raw action text or making an effectiveness claim",
-          "derived HIAD action-category counts and the action-evidence artifact digest are carried into the hashed runtime envelope without raw incident prose"
+          "derived HIAD action-category counts and the action-evidence artifact digest are carried into the hashed runtime envelope without raw incident prose",
+          "public CC BY accidental-release/ignition archive metadata is carried into the hashed envelope without raw traces, ignition-probability claims or full-loop validation claims"
         ],
         "not_established": [
           "physics validity of the consequence model",
@@ -4906,6 +4913,19 @@
           "holdout_use": false,
           "category_count": 8,
           "interpretation": "compact public-incident grounding metadata only; no correctness, safety, effectiveness or probability claim"
+        },
+        "public_accidental_release_evidence": {
+          "evidence": "research/accidental_self_ignition_public_evidence_2026_10_04.json",
+          "article_doi": "10.1016/j.elstat.2025.104222",
+          "zenodo_doi": "10.5281/zenodo.17913628",
+          "license": "CC BY 4.0",
+          "local_file_hashes_checked": true,
+          "raw_trace_values_in_prompt": false,
+          "consequence_and_ignition_grounding_eligible": true,
+          "full_loop_station_vehicle_holdout_eligible": false,
+          "numerical_release_model_validation_claimed": false,
+          "interpretation": "public accidental-release/ignition provenance and qualitative scenario grounding only; no ignition probability or station full-loop claim",
+          "all_local_file_hashes_match": true
         }
       }
     },
