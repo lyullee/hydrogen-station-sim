@@ -57,6 +57,50 @@ def test_operational_envelope_requires_pressure_semantics_attestation(tmp_path):
     assert load_measured_boundary_calibration(path) is None
 
 
+def test_quality_warnings_disable_profile_application(tmp_path):
+    source = {
+        "artifact_type": "confidential_station_boundary_calibration_summary",
+        "source_identifiers_published": False,
+        "raw_rows_persisted": False,
+        "exact_source_dates_published": False,
+        "sampled_rows": 100,
+        "median_sample_period_s": 60.0,
+        "maximum_gap_s": 3600.0,
+        "quality_warnings": ["nonpositive_pressure_excluded"],
+        "recommended_recharge_hysteresis_pa": 500000.0,
+        "recommended_recharge_restart_margin_pa": 500000.0,
+        "eligibility": {
+            "station_boundary_calibration_supported": True,
+            "full_station_vehicle_validation": False,
+        },
+    }
+    path = tmp_path / "suspect-profile.json"
+    path.write_text(json.dumps(source), encoding="utf-8")
+    assert load_measured_boundary_calibration(path) is None
+
+
+def test_sparse_profile_is_not_applied_even_without_explicit_warning(tmp_path):
+    source = {
+        "artifact_type": "confidential_station_boundary_calibration_summary",
+        "source_identifiers_published": False,
+        "raw_rows_persisted": False,
+        "exact_source_dates_published": False,
+        "sampled_rows": 100,
+        "median_sample_period_s": 120.0,
+        "maximum_gap_s": 2000.0,
+        "quality_warnings": [],
+        "recommended_recharge_hysteresis_pa": 500000.0,
+        "recommended_recharge_restart_margin_pa": 500000.0,
+        "eligibility": {
+            "station_boundary_calibration_supported": True,
+            "full_station_vehicle_validation": False,
+        },
+    }
+    path = tmp_path / "sparse-profile.json"
+    path.write_text(json.dumps(source), encoding="utf-8")
+    assert load_measured_boundary_calibration(path) is None
+
+
 def test_default_profile_prefers_deidentified_operational_envelope():
     profile = load_measured_boundary_calibration()
     assert profile is not None

@@ -141,6 +141,25 @@ def load_measured_boundary_calibration(
         ):
             return None
         attestation = record.get("channel_attestation") or {}
+        quality_warnings = tuple(
+            str(item) for item in (record.get("quality_warnings") or [])
+        )
+        median_period = numeric_values[5]
+        maximum_gap = numeric_values[6]
+        # A calibration profile is a control-boundary input, so silently
+        # accepting a profile with sentinel exclusions or a sparse logger gap
+        # would turn missing data into an operating margin.  Keep the runtime
+        # conservative: such files remain available for offline review but are
+        # never applied through the opt-in switch.
+        if "nonpositive_pressure_excluded" in quality_warnings:
+            return None
+        if (
+            median_period is not None
+            and maximum_gap is not None
+            and median_period > 0.0
+            and maximum_gap > max(10.0 * median_period, median_period + 600.0)
+        ):
+            return None
         if (
             record.get("artifact_type") not in {
                 "confidential_station_boundary_calibration_summary",
@@ -201,7 +220,7 @@ def load_measured_boundary_calibration(
             int(record["state_transition_count"])
             if record.get("state_transition_count") is not None else None
         ),
-        quality_warnings=tuple(str(item) for item in (record.get("quality_warnings") or [])),
+        quality_warnings=quality_warnings,
         pressure_semantics_attested=attestation.get(
             "pressure_boundary_semantics_attested") is True,
         lifecycle_counter_semantics_attested=attestation.get(

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_pressure_recheck_decision",
+  "recorded_at": "2026-10-06",
+  "source_scope": "confidential owner-controlled pressure-boundary recheck",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "provenance_boundary": {
+    "operator_published": false,
+    "site_published": false,
+    "exact_source_dates_published": false,
+    "manufacturer_or_model_published": false,
+    "tag_names_published": false,
+    "raw_archive_in_repository": false
+  },
+  "recheck": {
+    "files_read": 12,
+    "sampled_rows": 24473,
+    "sampling_stride_s": 1200,
+    "median_sample_period_s": 1200.0,
+    "maximum_gap_s": 22036.0,
+    "pressure_min_mpa_after_sentinel_exclusion": 0.0051928,
+    "pressure_median_mpa": 63.05915,
+    "pressure_max_mpa": 64.82875,
+    "candidate_restart_margin_mpa": 1.7325,
+    "quality_warnings": [
+      "nonpositive_pressure_excluded",
+      "sparse_sampling_gap"
+    ]
+  },
+  "decision": {
+    "candidate_applied_to_runtime": false,
+    "production_profile_retained": "owner_measured_operational_envelope_v1",
+    "retained_restart_margin_mpa": 0.54,
+    "reason": "The sparse recheck contains sentinel exclusions and a gap materially larger than the sampling period; its larger margin is treated as a data-quality artifact rather than a station operating limit.",
+    "runtime_guard": "Calibration profiles with nonpositive-pressure exclusions or a gap above 10x the median period (and above 600 s) are rejected by the opt-in loader."
+  },
+  "claim_boundary": "This is a privacy-safe calibration quality decision. It does not establish vehicle-side accuracy, a universal operating limit, field safety distance, failure frequency, or safety certification."
+}
