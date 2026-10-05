@@ -28,7 +28,9 @@
   "dataset_description_evidence": {
     "description_file": "液氢加氢站运行数据集数据说明 .docx",
     "description_downloaded": true,
-    "description_file_sha256": "not_committed_local_download_only",
+    "description_file_sha256": "669bf3487f07714da3ed08f7d891077841c39ef38497dc2abb307a5877954142",
+    "description_file_local_path": "tmp/nbsdc_lh2_description.docx",
+    "description_file_download_note": "The description file is retained in the local ignored quarantine directory; the six numerical data files were not downloaded.",
     "reported_time_window": "16 hours",
     "reported_time_resolution": "1 second",
     "reported_data_origin": "actual station equipment monitoring with some explicitly identified physical conversions",
