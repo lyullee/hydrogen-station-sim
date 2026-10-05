@@ -33,3 +33,9 @@ Please confirm in writing whether the received files may be used for derived met
 ## Contact route
 
 Use the NBSDC data-application route associated with record ID `67d50e37195d260905af9869`. Do not send this draft automatically; the project owner should confirm the institutional identity and the requested rights before dispatch.
+
+## Public record recheck (2026-10-05)
+
+The official record is [NBSDC dataset 67d50e37195d260905af9869](https://nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1), CSTR `16666.11.nbsdc.aI3fJrzX`, released 2023-03-21. Its public file tree lists six station data files: two 35 MPa dispenser workbooks, one 70 MPa dispenser CSV, a 90 MPa compressor workbook, a liquid-hydrogen pump/tank workbook, and a high-pressure storage-bank workbook. The downloadable description states that the records cover 16 hours at one-second resolution and are collected from actual station operation; it also states that the dataset is completely shared.
+
+At the time of recheck, the six data-file endpoints returned an application-required response, while the description file was downloadable without login. Please provide the six original files or the authorized application route, preserving the native timestamps and all columns.

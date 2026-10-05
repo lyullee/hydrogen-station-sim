@@ -521,7 +521,7 @@
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
   "gate_impact": "full_loop_external_validation_remains_open",
-  "next_action": "Request a de-identified synchronized logger export and written reuse terms from KGS/Korea Gas Technology Corporation for the Seosan normal/leak study, alongside the existing independent station leads; freeze the model, inclusion criteria and scoring before reading numerical outcomes.",
+  "next_action": "Submit the official NBSDC/Tongji application first, then pursue KGS/KGT Seosan normal/leak traces and the other independent station leads; freeze the model, inclusion criteria and scoring before reading numerical outcomes.",
   "claim_boundary": "This record adds a Korean real-station normal/leak provenance lead and a concrete data request. It adds no full-loop validation result and does not permit the IJHE/full-objective completion gate to pass.",
   "recheck_links": [
     "https://www.energy.gov/cmei/fuels/march-h2iq-hour-hydrogen-fuel-dispensing-medium-and-heavy-duty-vehicles-text-version",
