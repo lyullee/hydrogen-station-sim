@@ -1,0 +1,21 @@
+{
+  "artifact_type": "confidential_local_accident_response_coverage",
+  "generated_at": "2026-10-06",
+  "status": "local_restricted_metadata_stage_contract",
+  "evidence_role": "confidential_actual_accident_response_traceability",
+  "source_scope": "owner-controlled local hydrogen-station accident casebook",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "raw_descriptions_persisted": false,
+  "aggregate": {
+    "case_count": 322,
+    "mapped_case_count": 322,
+    "unmapped_case_count": 0,
+    "unknown_plan_reference_count": 0,
+    "case_with_missing_stage_count": 0,
+    "required_stage_count": 5,
+    "stage_contract_pass": true,
+    "contract_pass": true
+  },
+  "claim_boundary": "This de-identified aggregate proves only that local actual-accident metadata had a candidate response family with five non-empty simulator stages. It does not publish incident narratives, identify an operator or site, estimate incident probability, validate physics or consequence distances, or demonstrate response effectiveness or safety."
+}

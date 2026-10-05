@@ -43,6 +43,14 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert precedent_map["citation_only"] is True
     assert "playbook_case_counts" not in precedent_map
     assert "representative_precedents" not in precedent_map
+    local_accident = idle["response_evidence"][
+        "confidential_local_accident_response_coverage"
+    ]
+    assert local_accident["case_count"] == 322
+    assert local_accident["mapped_case_count"] == 322
+    assert local_accident["required_stage_count"] == 5
+    assert local_accident["contract_pass"] is True
+    assert local_accident["raw_rows_persisted"] is False
     accidental = idle["response_evidence"]["public_accidental_release_evidence"]
     assert accidental["zenodo_doi"] == "10.5281/zenodo.17913628"
     assert accidental["article_doi"] == "10.1016/j.elstat.2025.104222"
@@ -64,6 +72,9 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert early["impact_status"] == "not_requested"
     assert early["public_experimental_benchmarks"]["sources"]
     assert early["public_detector_logic_evidence"]["aggregate"]["case_count"] == 22
+    assert early["confidential_local_accident_response_coverage"][
+        "case_with_missing_stage_count"
+    ] == 0
     assert early["confidential_measured_boundary_replay"]["temporal_holdout"][
         "time_ordered_holdout_supported"
     ] is True
@@ -77,6 +88,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert header["public_accident_evidence"]["action_category_counts"][
         "shutdown_isolation_depressurization"
     ] == 22
+    assert header["confidential_local_accident_response_coverage"][
+        "case_count"
+    ] == 322
+    assert header["confidential_local_accident_response_coverage"][
+        "contract_pass"
+    ] is True
     assert header["confidential_lifecycle_evidence"]["sampled_rows"] == 41752
     assert header["confidential_lifecycle_evidence"]["counter_roles"] == [
         "high_bank_cycles", "medium_bank_cycles"

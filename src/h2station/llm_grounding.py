@@ -189,6 +189,50 @@ def _khk_public_accident_inventory() -> dict[str, Any] | None:
     return result
 
 
+def _confidential_local_accident_response_coverage() -> dict[str, Any] | None:
+    """Expose only aggregate response-plan traceability for restricted incidents.
+
+    The local owner-controlled casebook is never read by the runtime.  A
+    sanitized aggregate can still tell the assistant that the response
+    catalogue was checked against actual-incident metadata, while preventing
+    operator, site, date, equipment and narrative leakage.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/confidential_local_accident_response_coverage_2026_10_06.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    aggregate = record.get("aggregate") or {}
+    if (
+        record.get("artifact_type") != "confidential_local_accident_response_coverage"
+        or record.get("status") != "local_restricted_metadata_stage_contract"
+        or record.get("source_identifiers_published") is not False
+        or record.get("raw_rows_persisted") is not False
+        or record.get("raw_descriptions_persisted") is not False
+        or aggregate.get("contract_pass") is not True
+    ):
+        return None
+    return {
+        "artifact": (
+            "research/confidential_local_accident_response_coverage_2026_10_06.json"
+        ),
+        "evidence_role": str(record.get("evidence_role") or ""),
+        "case_count": aggregate.get("case_count"),
+        "mapped_case_count": aggregate.get("mapped_case_count"),
+        "unmapped_case_count": aggregate.get("unmapped_case_count"),
+        "unknown_plan_reference_count": aggregate.get("unknown_plan_reference_count"),
+        "case_with_missing_stage_count": aggregate.get("case_with_missing_stage_count"),
+        "required_stage_count": aggregate.get("required_stage_count"),
+        "contract_pass": True,
+        "source_identifiers_published": False,
+        "raw_rows_persisted": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_accidental_release_evidence() -> dict[str, Any] | None:
     """Expose the licensed accidental-release archive without overclaiming it.
 
@@ -670,6 +714,11 @@ def build_evidence_manifest(
     khk_inventory = _khk_public_accident_inventory()
     if khk_inventory is not None:
         envelope["response_evidence"]["public_accident_report_inventory"] = khk_inventory
+    local_accident_coverage = _confidential_local_accident_response_coverage()
+    if local_accident_coverage is not None:
+        envelope["response_evidence"][
+            "confidential_local_accident_response_coverage"
+        ] = local_accident_coverage
     accidental_release = _public_accidental_release_evidence()
     if accidental_release is not None:
         envelope["response_evidence"]["public_accidental_release_evidence"] = accidental_release
@@ -754,6 +803,19 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             },
             "claim_limit": short(detector.get("claim_limit")),
         }
+    local_accident_coverage = evidence.get(
+        "confidential_local_accident_response_coverage"
+    )
+    if isinstance(local_accident_coverage, dict):
+        summary["confidential_local_accident_response_coverage"] = {
+            key: local_accident_coverage.get(key)
+            for key in (
+                "evidence_role", "case_count", "mapped_case_count",
+                "unmapped_case_count", "case_with_missing_stage_count",
+                "required_stage_count", "contract_pass", "claim_limit",
+            )
+            if local_accident_coverage.get(key) is not None
+        }
     accidental = evidence.get("public_accidental_release_evidence")
     if isinstance(accidental, dict):
         summary["public_accidental_release_evidence"] = {
@@ -836,6 +898,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     action_taxonomy = incident.get("action_taxonomy") or {}
     accident_inventory = evidence.get("public_accident_report_inventory") or {}
     accidental_release = evidence.get("public_accidental_release_evidence") or {}
+    local_accident_coverage = evidence.get(
+        "confidential_local_accident_response_coverage"
+    ) or {}
     return {
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "public_experiment_sources": benchmark_ids,
@@ -859,6 +924,14 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 for key, value in (action_taxonomy.get("category_counts") or {}).items()
                 if isinstance(value, int)
             },
+        },
+        "confidential_local_accident_response_coverage": {
+            "case_count": local_accident_coverage.get("case_count"),
+            "mapped_case_count": local_accident_coverage.get("mapped_case_count"),
+            "required_stage_count": local_accident_coverage.get(
+                "required_stage_count"
+            ),
+            "contract_pass": local_accident_coverage.get("contract_pass") is True,
         },
         "confidential_boundary_holdout": holdout.get(
             "time_ordered_holdout_supported"

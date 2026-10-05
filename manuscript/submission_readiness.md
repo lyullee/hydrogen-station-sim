@@ -73,6 +73,13 @@ and is exposed to the bounded LLM context. The NREL tank/hose trace and the
 DOE/NREL high-flow report support partial-boundary and face-validity checks;
 neither is treated as a complete station-to-vehicle holdout.
 
+The restricted local accident casebook also has a de-identified response-stage
+coverage summary: 322/322 cases map to a candidate plan with all five stages.
+Only this aggregate is exposed to the LLM; incident narratives and identifiers
+remain outside the repository. The summary is structural traceability evidence,
+not a response-effectiveness or safety claim, and is recorded in
+[`confidential_local_accident_response_coverage_2026_10_06.json`](../research/confidential_local_accident_response_coverage_2026_10_06.json).
+
 The capacity/EOS geometry sensitivity was also replayed on the public
 H2Protocol cases with the effective-volume multiplier removed. It retained only
 6/36 engineering-screen passes, so the production geometry and published
