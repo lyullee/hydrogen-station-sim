@@ -86,6 +86,7 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 | `independent_expert_review_complete` | **PENDING** | Three qualified independent reviewers completed the locked 24-event evaluation. | `data\public_validation\results\hiad_decision\analysis\expert_review_analysis.json` |
 | `saga_effectiveness_and_safety_supported` | **PENDING** | Direct SAGA improves expert-rated guidance without higher observed omission or unsafe-advice rates. | `data\public_validation\results\hiad_decision\analysis\expert_review_analysis.json` |
 | `llm_evidence_grounding_contract` | **PASS** | Main and selected-sensor assistants receive traceable evidence with explicit calculation and uncertainty status. | `research\llm_evidence_grounding_validation.json` |
+| `public_hitrf_operational_reference_integrity` | **PASS** | The public HITRF facility envelope is available to LLM grounding without being presented as raw full-loop validation. | `research\nlr_hitrf_public_operational_reference_2026_10_06.json` |
 | `preoutcome_design_sensitivity` | **PASS** | The fixed incident-study sample limitations were quantified before outcomes. | `research\hiad_design_sensitivity.json` |
 | `ijhe_format_gate` | **PASS** | The manuscript satisfies the explicit IJHE length/front-matter limits checked locally. | `manuscript\ijhe_format_check.json` |
 | `ijhe_latex_compilation` | **PASS** | The exact submitted LaTeX source compiles successfully. | `manuscript\ijhe_compile_status.json` |

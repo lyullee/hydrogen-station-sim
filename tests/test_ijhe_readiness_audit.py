@@ -68,6 +68,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
         "flow-boundary mismatches" in item
         for item in gates["llm_evidence_grounding_contract"]["observed"]["verified_properties"]
     )
+    assert gates["public_hitrf_operational_reference_integrity"]["status"] == "PASS"
+    hitrf = gates["public_hitrf_operational_reference_integrity"]["observed"]
+    assert hitrf["raw_synchronized_logger_public"] is False
+    assert hitrf["storage_tiers"] == ["high_pressure", "low_pressure", "medium_pressure"]
+    assert hitrf["compression_stage_count"] == 4
     assert gates["kgs_real_station_access_boundary_integrity"]["status"] == "PASS"
     kgs_access = gates["kgs_real_station_access_boundary_integrity"]["observed"]
     assert kgs_access["reported_real_hrs_scenarios"] == 6

@@ -2694,6 +2694,38 @@ def audit(root: Path) -> dict[str, object]:
         grounding or "missing",
     ))
 
+    hitrf_path = root / "research/nlr_hitrf_public_operational_reference_2026_10_06.json"
+    hitrf = _json(hitrf_path)
+    hitrf_source = (hitrf or {}).get("source") or {}
+    hitrf_storage = (hitrf or {}).get("storage") or {}
+    hitrf_stages = ((hitrf or {}).get("compression") or {}).get("stages") or []
+    hitrf_thermal = (hitrf or {}).get("dispensing_and_thermal") or {}
+    hitrf_reference_pass = bool(
+        (hitrf or {}).get("artifact_type") == "public_facility_operational_reference"
+        and (hitrf or {}).get("status") == "public_facility_operational_reference"
+        and hitrf_source.get("url")
+        and hitrf_source.get("raw_synchronized_logger_public") is False
+        and all(key in hitrf_storage for key in ("low_pressure", "medium_pressure", "high_pressure"))
+        and len(hitrf_stages) >= 3
+        and hitrf_thermal.get("chiller_target_temperature_c") is not None
+        and "claim_boundary" in ((hitrf or {}).get("runtime_use") or {})
+    )
+    gates.append(_gate(
+        "public_hitrf_operational_reference_integrity",
+        "PASS" if hitrf_reference_pass else ("PENDING" if hitrf else "FAIL"),
+        "The public HITRF facility envelope is available to LLM grounding without being presented as raw full-loop validation.",
+        str(hitrf_path.relative_to(root)),
+        "Storage tiers, compression stages, thermal boundary and an explicit no-raw-logger claim boundary.",
+        {
+            "source_url": hitrf_source.get("url"),
+            "raw_synchronized_logger_public": hitrf_source.get("raw_synchronized_logger_public"),
+            "storage_tiers": sorted(hitrf_storage),
+            "compression_stage_count": len(hitrf_stages),
+            "chiller_target_temperature_c": hitrf_thermal.get("chiller_target_temperature_c"),
+            "claim_boundary": ((hitrf or {}).get("runtime_use") or {}).get("claim_boundary"),
+        } if hitrf else "missing",
+    ))
+
     sensitivity_path = root / "research/hiad_design_sensitivity.json"
     sensitivity = _json(sensitivity_path)
     sensitivity_pass = bool(

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T20:52:33.718058+00:00",
+  "generated_at": "2026-10-05T21:04:41.496260+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 69,
+    "PASS": 70,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -4961,6 +4961,25 @@
           "interpretation": "public accidental-release/ignition provenance and qualitative scenario grounding only; no ignition probability or station full-loop claim",
           "all_local_file_hashes_match": true
         }
+      }
+    },
+    {
+      "id": "public_hitrf_operational_reference_integrity",
+      "status": "PASS",
+      "claim": "The public HITRF facility envelope is available to LLM grounding without being presented as raw full-loop validation.",
+      "evidence": "research\\nlr_hitrf_public_operational_reference_2026_10_06.json",
+      "requirement": "Storage tiers, compression stages, thermal boundary and an explicit no-raw-logger claim boundary.",
+      "observed": {
+        "source_url": "https://www.nlr.gov/hydrogen/hitrf-animation",
+        "raw_synchronized_logger_public": false,
+        "storage_tiers": [
+          "high_pressure",
+          "low_pressure",
+          "medium_pressure"
+        ],
+        "compression_stage_count": 4,
+        "chiller_target_temperature_c": -40,
+        "claim_boundary": "This is a citation-bounded facility reference, not a raw dataset or a validation result. Do not infer unreported transients, uncertainties, control logic or accident performance."
       }
     },
     {
