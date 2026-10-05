@@ -752,6 +752,19 @@
       "rights_note": "The public appendix is a two-page parameter/constant table and does not release synchronized logger rows. The linked code folder redirected to Google sign-in during anonymous recheck.",
       "eligibility_note": "High-value real-HRS acquisition lead; not an eligible raw full-loop holdout.",
       "access_recheck": "research/kgs_oh_preprint_appendix_recheck_2026_10_05.json"
+    },
+    "hytf_190821_public_tank_trace": {
+      "title": "HyTF 190821_f70MPa_01 public Type-IV tank filling trace",
+      "publisher": "ArtCouteau/HyTF GitHub repository",
+      "landing_page": "https://github.com/ArtCouteau/HyTF",
+      "source_repository": "https://github.com/ArtCouteau/HyTF",
+      "source_commit": "4482486fa9ab02360af364f3d1dad5ea48eabaf8",
+      "raw_url": "https://raw.githubusercontent.com/ArtCouteau/HyTF/4482486fa9ab02360af364f3d1dad5ea48eabaf8/input/sensorData/190821_f70MPa_01.txt",
+      "license": "GPL-3.0 repository; dataset-specific licence not separately stated",
+      "sha256": "3f11f75afec75e71fa18893e0a351966467a436f569e8349065e06c1649673a0",
+      "boundary_record": "research/hytf_open_tank_trace_boundary_2026_10_05.json",
+      "rights_note": "Reference and hash-lock only until dataset-specific reuse terms for derived journal metrics are confirmed.",
+      "eligibility_note": "Real machine-readable 36 L tank pressure/thermal trace suitable for a separately frozen tank-thermal screen; no mass-flow, vehicle/receptacle or station-controller channels, so it cannot close the full-loop gate."
     }
   }
 }

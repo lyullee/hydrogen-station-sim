@@ -1431,3 +1431,9 @@ statistics.
 The open-access paper [10.1016/j.flowmeasinst.2020.101743](https://doi.org/10.1016/j.flowmeasinst.2020.101743) reports real HRS field metrology tests in France, the Netherlands and Germany, with a traceable gravimetric standard, 700-bar SAE J2601 context, pressures up to 875 bar and temperatures from -40 to 85 °C. It is a useful independent flow-meter/dead-volume and uncertainty reference.
 
 The public record contains methods, ranges and aggregate findings, but no machine-readable synchronized station-to-vehicle logger archive, vehicle-side channels, controller/ESD transitions or raw-data reuse terms. It is therefore frozen as a component-only lead in [`metrohyve_gravimetric_hrs_calibration_boundary_2026_10_05.json`](metrohyve_gravimetric_hrs_calibration_boundary_2026_10_05.json), with `component_flow_metrology_eligible=true` and `full_loop_external_holdout_eligible=false`. The independent full-loop gate remains open.
+
+## 2026-10-05 HyTF public raw tank trace
+
+The public [HyTF repository](https://github.com/ArtCouteau/HyTF) exposes the pinned raw file [`190821_f70MPa_01.txt`](https://github.com/ArtCouteau/HyTF/blob/4482486fa9ab02360af364f3d1dad5ea48eabaf8/input/sensorData/190821_f70MPa_01.txt). It contains 2,536 samples at 0.1 s spacing, two pressure channels, fourteen tank thermocouples and a 36 L geometry. The repository licence is GPL-3.0, but no separate data licence was identified.
+
+Decision: **COMPONENT_TANK_THERMAL_BOUNDARY_ONLY**. The file has no mass-flow/transferred-mass, vehicle/receptacle, station cascade/controller/ESD or journal-reuse terms. It is recorded in [`hytf_open_tank_trace_boundary_2026_10_05.json`](hytf_open_tank_trace_boundary_2026_10_05.json) with a SHA-256 digest and remains ineligible for complete HRS full-loop validation or goal completion.

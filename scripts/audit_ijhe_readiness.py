@@ -1467,6 +1467,45 @@ def audit(root: Path) -> dict[str, object]:
         } if metrohyve else "missing; MetroHyVe boundary recheck has not run",
     ))
 
+    hytf_path = root / "research/hytf_open_tank_trace_boundary_2026_10_05.json"
+    hytf = _json(hytf_path)
+    hytf_source = (hytf or {}).get("source") or {}
+    hytf_experiment = (hytf or {}).get("experiment") or {}
+    hytf_channels = hytf_experiment.get("channels") or {}
+    hytf_access = (hytf or {}).get("access_observation") or {}
+    hytf_eligibility = (hytf or {}).get("eligibility") or {}
+    hytf_pass = bool(
+        (hytf or {}).get("schema_version") == 1
+        and (hytf or {}).get("status") == "PUBLIC_RAW_TANK_TRACE_BOUNDARY_RECHECKED"
+        and hytf_source.get("repository_commit") == "4482486fa9ab02360af364f3d1dad5ea48eabaf8"
+        and hytf_source.get("dataset_sha256") == "3f11f75afec75e71fa18893e0a351966467a436f569e8349065e06c1649673a0"
+        and hytf_experiment.get("sample_count") == 2536
+        and hytf_experiment.get("sample_period_s") == 0.1
+        and len(hytf_channels.get("tank_thermocouples") or []) == 14
+        and hytf_access.get("raw_machine_readable_trace_retrieved") is True
+        and hytf_access.get("mass_flow_or_transferred_mass_trace") is False
+        and hytf_access.get("full_loop_external_holdout_eligible") is False
+        and hytf_eligibility.get("component_tank_screen_eligible_after_protocol_freeze") is True
+        and hytf_eligibility.get("full_loop_external_holdout_eligible") is False
+        and (hytf or {}).get("claim_boundary")
+    )
+    gates.append(_gate(
+        "hytf_public_tank_trace_boundary_integrity",
+        "PASS" if hytf_pass else ("FAIL" if hytf else "PENDING"),
+        "The public HyTF raw tank trace is pinned as a component-level thermal boundary without being promoted to an HRS full-loop holdout.",
+        str(hytf_path.relative_to(root)),
+        "Pinned repository commit and file digest, 2,536 samples at 0.1 s, fourteen thermocouples, explicit missing mass-flow/station channels and false full-loop eligibility.",
+        {
+            "repository_commit": hytf_source.get("repository_commit"),
+            "dataset_sha256": hytf_source.get("dataset_sha256"),
+            "sample_count": hytf_experiment.get("sample_count"),
+            "sample_period_s": hytf_experiment.get("sample_period_s"),
+            "tank_thermocouple_count": len(hytf_channels.get("tank_thermocouples") or []),
+            "component_tank_screen_eligible_after_protocol_freeze": hytf_eligibility.get("component_tank_screen_eligible_after_protocol_freeze"),
+            "full_loop_external_holdout_eligible": hytf_eligibility.get("full_loop_external_holdout_eligible"),
+        } if hytf else "missing; HyTF public tank trace boundary recheck has not run",
+    ))
+
     multhyfuel_path = root / "research/multhyfuel_d24_public_experiment_recheck_2026_10_05.json"
     multhyfuel = _json(multhyfuel_path)
     multhyfuel_download = (multhyfuel or {}).get("download") or {}

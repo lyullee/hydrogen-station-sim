@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "status": "PUBLIC_RAW_TANK_TRACE_BOUNDARY_RECHECKED",
+  "source": {
+    "title": "HyTF high-pressure hydrogen tank filling solver and public sensor trace",
+    "repository": "ArtCouteau/HyTF",
+    "repository_url": "https://github.com/ArtCouteau/HyTF",
+    "repository_commit": "4482486fa9ab02360af364f3d1dad5ea48eabaf8",
+    "dataset_path": "input/sensorData/190821_f70MPa_01.txt",
+    "raw_url": "https://raw.githubusercontent.com/ArtCouteau/HyTF/4482486fa9ab02360af364f3d1dad5ea48eabaf8/input/sensorData/190821_f70MPa_01.txt",
+    "repository_license": "GPL-3.0",
+    "dataset_specific_license_identified": false,
+    "dataset_sha256": "3f11f75afec75e71fa18893e0a351966467a436f569e8349065e06c1649673a0"
+  },
+  "experiment": {
+    "dataset_id": "190821_f70MPa_01",
+    "machine_readable_public": true,
+    "sample_count": 2536,
+    "sample_period_s": 0.1,
+    "duration_s": 253.5,
+    "geometry": {
+      "internal_volume_m3": 0.036,
+      "internal_diameter_m": 0.2588,
+      "inlet_area_m2": 0.61,
+      "external_diameter_m": 0.3208,
+      "liner_thickness_m": 0.0015
+    },
+    "control_metadata": {
+      "declared_dt_s": 0.5,
+      "declared_end_s": 250.0,
+      "n_cells": 60,
+      "nominal_start_pressure_pa": 10000000.0,
+      "nominal_end_pressure_pa": 70000000.0,
+      "nominal_fill_time_s": 180.0,
+      "ambient_temperature_k": 290.0,
+      "coolant_temperature_k": 245.0
+    },
+    "channels": {
+      "pressure_channels": [
+        "p_1 [bar]",
+        "p_2 [bar]"
+      ],
+      "tank_thermocouples": [
+        "TT1 [degC]",
+        "TT2 [degC]",
+        "TT3 [degC]",
+        "TT4 [degC]",
+        "TT5 [degC]",
+        "TT6 [degC]",
+        "TT7 [degC]",
+        "TT8 [degC]",
+        "TT21 [degC]",
+        "TT22 [degC]",
+        "TT23 [degC]",
+        "TT24 [degC]",
+        "TT25 [degC]",
+        "TT26 [degC]"
+      ],
+      "auxiliary_channels": [
+        "T TestRig [degC]",
+        "h TestRig [%]",
+        "TT31 [degC]"
+      ],
+      "mass_flow_channel_present": false,
+      "vehicle_receptacle_channel_present": false,
+      "station_controller_or_esd_channel_present": false
+    },
+    "observed_ranges": {
+      "p_1_bar": [
+        292.121913,
+        694.616597
+      ],
+      "p_2_bar": [
+        295.443726,
+        699.553778
+      ],
+      "tank_thermocouple_min_degC": 15.693689,
+      "tank_thermocouple_max_degC": 50.906107,
+      "tank_thermocouple_count": 14
+    }
+  },
+  "access_observation": {
+    "raw_machine_readable_trace_retrieved": true,
+    "repository_commit_pinned": true,
+    "raw_file_hash_verified": true,
+    "vehicle_or_receptacle_pressure_temperature_trace": false,
+    "mass_flow_or_transferred_mass_trace": false,
+    "station_controller_cascade_precooler_trace": false,
+    "written_terms_for_derived_journal_metrics": false,
+    "full_loop_external_holdout_eligible": false
+  },
+  "eligibility": {
+    "real_tank_filling_experiment": true,
+    "tank_thermal_boundary_candidate": true,
+    "component_tank_screen_eligible_after_protocol_freeze": true,
+    "full_loop_external_holdout_eligible": false,
+    "goal_completion_permitted": false
+  },
+  "claim_boundary": "This public file is a real, machine-readable tank-filling trace with pressure, thermal channels and geometry. It is suitable for a separately frozen tank-thermal boundary screen or reproducibility check, but it does not contain mass flow, a vehicle/receptacle boundary, station cascade/controller/ESD transitions or journal-reuse terms. It cannot validate the complete HRS digital twin, accident consequence model or SAGA effectiveness, and it does not permit goal completion."
+}

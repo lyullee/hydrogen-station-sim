@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T06:20:53.265340+00:00",
+  "generated_at": "2026-10-05T06:50:15.420310+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 62,
+    "PASS": 63,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -3131,6 +3131,22 @@
         "real_hrs_field_tests": true,
         "maximum_pressure_bar": 875,
         "component_flow_metrology_eligible": true,
+        "full_loop_external_holdout_eligible": false
+      }
+    },
+    {
+      "id": "hytf_public_tank_trace_boundary_integrity",
+      "status": "PASS",
+      "claim": "The public HyTF raw tank trace is pinned as a component-level thermal boundary without being promoted to an HRS full-loop holdout.",
+      "evidence": "research\\hytf_open_tank_trace_boundary_2026_10_05.json",
+      "requirement": "Pinned repository commit and file digest, 2,536 samples at 0.1 s, fourteen thermocouples, explicit missing mass-flow/station channels and false full-loop eligibility.",
+      "observed": {
+        "repository_commit": "4482486fa9ab02360af364f3d1dad5ea48eabaf8",
+        "dataset_sha256": "3f11f75afec75e71fa18893e0a351966467a436f569e8349065e06c1649673a0",
+        "sample_count": 2536,
+        "sample_period_s": 0.1,
+        "tank_thermocouple_count": 14,
+        "component_tank_screen_eligible_after_protocol_freeze": true,
         "full_loop_external_holdout_eligible": false
       }
     },
