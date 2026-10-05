@@ -12,7 +12,7 @@ def test_operational_benchmark_recheck_preserves_raw_trace_boundary():
     )
     assert record["result"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
     assert record["gate_impact"] == "full_loop_external_validation_remains_open"
-    assert len(record["candidates"]) == 15
+    assert len(record["candidates"]) == 16
     assert all(
         item["decision"] != "FULL_LOOP_HOLDOUT" for item in record["candidates"]
     )
@@ -165,3 +165,19 @@ def test_recheck_records_fch2rail_synchronized_channel_boundary():
     assert item["doi"] == "10.1016/j.ijhydene.2025.04.040"
     assert item["observed_scope"]["raw_synchronized_rows"] is False
     assert "raw export" in item["use"]
+
+
+def test_recheck_records_rheadhy_real_campaign_without_raw_holdout():
+    record = json.loads(
+        (ROOT / "research/public_operational_benchmark_recheck_2026_10_05.json")
+        .read_text(encoding="utf-8")
+    )
+    item = next(
+        candidate for candidate in record["candidates"]
+        if candidate["id"] == "rheadhy_2026_mid_flow_twin_campaign"
+    )
+    assert item["decision"] == "REAL_STATION_CAMPAIGN_AGGREGATE_AND_DATA_REQUEST_LEAD"
+    assert item["observed_scope"]["reported_campaign"] == "18 refuelling tests over six days"
+    assert item["observed_scope"]["raw_synchronized_rows"] is False
+    assert item["project_url"].startswith("https://cordis.europa.eu/project/")
+    assert "logger archive" in item["finding"]

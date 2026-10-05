@@ -13,7 +13,7 @@ def test_current_blocker_matrix_tracks_the_readiness_audit():
     )
     assert matrix["gate_counts"] == audit["gate_counts"]
     assert matrix["reproducibility"]["public_full_loop_search_candidate_count"] == 14
-    assert matrix["reproducibility"]["public_operational_benchmark_candidate_count"] == 15
+    assert matrix["reproducibility"]["public_operational_benchmark_candidate_count"] == 16
     assert matrix["decision"]["goal_completion_permitted"] is False
     assert matrix["decision"]["full_user_objective_ready"] is False
     ids = {item["id"] for item in matrix["blocking_matrix"]}

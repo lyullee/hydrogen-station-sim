@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "source": {
+    "title": "RHeaDHy Mid Flow Twin heavy-duty hydrogen refuelling campaign",
+    "operator_source": "https://www.hydrogen-refueling-solutions.fr/en/news/hydrogen-very-high-flow-refueling/",
+    "independent_public_copy": "https://ebs.publicnow.com/view/2BE56BA08C750B576B05A61FFB967F70AFFEEC55",
+    "project_reporting": "https://cordis.europa.eu/project/id/101101443/reporting",
+    "project_doi": "10.3030/101101443",
+    "accessed_on": "2026-10-05"
+  },
+  "observed_evidence": {
+    "facility": "Hydrogen Refueling Solutions test area, Champagnier, France",
+    "campaign": "18 refuelling tests over six days",
+    "hydrogen_used_kg": ">400",
+    "ambient_temperature_c": [15, 40],
+    "initial_tank_pressure_bar": [60, 300],
+    "example_total_duration_min": 6,
+    "reported_soc": ">95%",
+    "reported_protocol": "ISO 19885-3 Mid Flow Twin",
+    "reported_fields": [
+      "dispensed hydrogen amount",
+      "initial tank pressure",
+      "ambient temperature",
+      "total refuelling duration",
+      "state of charge"
+    ],
+    "raw_synchronized_rows": false
+  },
+  "eligibility_decision": {
+    "full_loop_external_holdout_eligible": false,
+    "decision": "REAL_STATION_CAMPAIGN_AGGREGATE_AND_DATA_REQUEST_LEAD",
+    "reason": "The public campaign report contains aggregate operating ranges and outcomes but no synchronized station/dispenser/vehicle pressure-temperature-mass-flow row archive, channel dictionary, calibration metadata or explicit raw-data reuse terms.",
+    "permitted_use": [
+      "real-station high-flow face-validity context",
+      "protocol and operating-range citation",
+      "custodian data-request lead"
+    ],
+    "prohibited_use": [
+      "full-loop holdout score",
+      "model calibration",
+      "digitized plot or press-release values treated as synchronized raw traces",
+      "claim of safety or response effectiveness"
+    ]
+  },
+  "claim_boundary": "This record confirms public reporting of a real RHeaDHy heavy-duty refuelling campaign and preserves a reproducible acquisition boundary. It adds no synchronized full-loop validation result and does not close the IJHE or full-objective gate.",
+  "next_action": "Request a de-identified event-level export with common timestamps, station/dispenser/vehicle pressure and temperature, mass flow or transferred mass, protocol/controller state, calibration metadata and written permission to publish derived metrics; freeze model and scoring before numerical outcomes are accessed."
+}

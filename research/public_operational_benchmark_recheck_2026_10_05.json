@@ -406,11 +406,50 @@
       },
       "finding": "The record exposes public XLSX measurements for hydrogen sampling systems. It is not a station-to-vehicle fueling trace with the required pressure, temperature and mass-transfer semantics, so it cannot validate this digital twin as an HRS full-loop holdout.",
       "use": "Component-level sensor/system context only; retain the CC BY/record terms and domain distinction, but exclude from station full-loop validation and model tuning."
+    },
+    {
+      "id": "rheadhy_2026_mid_flow_twin_campaign",
+      "title": "RHeaDHy Mid Flow Twin heavy-duty hydrogen refuelling campaign",
+      "url": "https://www.hydrogen-refueling-solutions.fr/en/news/hydrogen-very-high-flow-refueling/",
+      "project_url": "https://cordis.europa.eu/project/id/101101443/reporting",
+      "license": "Public operator press release and EU project reporting; no machine-readable logger archive or explicit raw-data reuse terms identified",
+      "decision": "REAL_STATION_CAMPAIGN_AGGREGATE_AND_DATA_REQUEST_LEAD",
+      "observed_scope": {
+        "facility": "Hydrogen Refueling Solutions test area, Champagnier, France",
+        "reported_campaign": "18 refuelling tests over six days",
+        "reported_hydrogen_used_kg": ">400",
+        "ambient_temperature_c": [
+          15,
+          40
+        ],
+        "initial_tank_pressure_bar": [
+          60,
+          300
+        ],
+        "example_total_duration_min": 6,
+        "reported_soc": "more than 95%",
+        "reported_protocol": "ISO 19885-3 Mid Flow Twin",
+        "raw_synchronized_rows": false,
+        "reported_channels": [
+          "dispensed hydrogen amount",
+          "initial tank pressure",
+          "ambient temperature",
+          "total refuelling duration",
+          "state of charge"
+        ]
+      },
+      "finding": "The public HRS operator announcement documents a real six-day, 18-test heavy-duty campaign and reports operating ranges and aggregate outcomes. It does not publish the synchronized pressure-temperature-mass-flow logger archive, channel dictionary, calibration metadata or rights needed for a frozen full-loop holdout.",
+      "use": "Independent real-station campaign and high-flow protocol face-validity context plus a high-priority custodian data request; do not digitize the press-release summary as a full-loop holdout.",
+      "recheck_links": [
+        "https://www.hydrogen-refueling-solutions.fr/en/news/hydrogen-very-high-flow-refueling/",
+        "https://ebs.publicnow.com/view/2BE56BA08C750B576B05A61FFB967F70AFFEEC55",
+        "https://cordis.europa.eu/project/id/101101443/reporting"
+      ]
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
   "gate_impact": "full_loop_external_validation_remains_open",
-  "next_action": "Request a de-identified synchronized logger export and written reuse terms from Cal State LA HRFF, UCI NFCRC, NREL/NLR HITRF, CARB/HyStEP, JRC GasTeF, FCH2RAIL or an HRS operator; freeze the model, inclusion criteria and scoring before reading numerical outcomes.",
+  "next_action": "Request a de-identified synchronized logger export and written reuse terms from Cal State LA HRFF, UCI NFCRC, NREL/NLR HITRF, CARB/HyStEP, JRC GasTeF, FCH2RAIL, RHeaDHy or an HRS operator; freeze the model, inclusion criteria and scoring before reading numerical outcomes.",
   "claim_boundary": "This record strengthens source accounting and face-validity context. It adds no full-loop validation result and does not permit the IJHE/full-objective completion gate to pass.",
   "recheck_links": [
     "https://www.energy.gov/cmei/fuels/march-h2iq-hour-hydrogen-fuel-dispensing-medium-and-heavy-duty-vehicles-text-version",

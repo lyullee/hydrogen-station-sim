@@ -593,6 +593,38 @@ def audit(root: Path) -> dict[str, object]:
         } if calstate_b2b else "missing; Cal State LA back-to-back data-boundary record has not been captured",
     ))
 
+    rheadhy_path = root / "research/rheadhy_2026_campaign_data_boundary_2026_10_05.json"
+    rheadhy = _json(rheadhy_path)
+    rheadhy_source = (rheadhy or {}).get("source") or {}
+    rheadhy_evidence = (rheadhy or {}).get("observed_evidence") or {}
+    rheadhy_decision = (rheadhy or {}).get("eligibility_decision") or {}
+    rheadhy_pass = bool(
+        (rheadhy or {}).get("schema_version") == 1
+        and rheadhy_source.get("operator_source")
+        and rheadhy_source.get("project_reporting")
+        and rheadhy_source.get("project_doi") == "10.3030/101101443"
+        and rheadhy_evidence.get("facility")
+        and rheadhy_evidence.get("campaign") == "18 refuelling tests over six days"
+        and rheadhy_evidence.get("raw_synchronized_rows") is False
+        and rheadhy_decision.get("full_loop_external_holdout_eligible") is False
+        and (rheadhy or {}).get("claim_boundary")
+    )
+    gates.append(_gate(
+        "rheadhy_campaign_boundary_integrity",
+        "PASS" if rheadhy_pass else ("FAIL" if rheadhy else "PENDING"),
+        "The public RHeaDHy heavy-duty campaign is recorded as real-station face-validity context without promoting aggregate press-release results to a synchronized full-loop holdout.",
+        str(rheadhy_path.relative_to(root)),
+        "Operator and EU source links, project DOI, campaign scope, explicit missing raw rows, and a false full-loop eligibility flag.",
+        {
+            "project_doi": rheadhy_source.get("project_doi"),
+            "facility": rheadhy_evidence.get("facility"),
+            "campaign": rheadhy_evidence.get("campaign"),
+            "raw_synchronized_rows": rheadhy_evidence.get("raw_synchronized_rows"),
+            "full_loop_external_holdout_eligible": rheadhy_decision.get("full_loop_external_holdout_eligible"),
+            "claim_boundary": (rheadhy or {}).get("claim_boundary"),
+        } if rheadhy else "missing; RHeaDHy campaign data-boundary record has not been captured",
+    ))
+
     temperature_diagnostic_path = root / "research/closed_loop_temperature_stop_diagnostic_2026_10_04.json"
     temperature_diagnostic = _json(temperature_diagnostic_path)
     temperature_runs = (temperature_diagnostic or {}).get("runs") or []

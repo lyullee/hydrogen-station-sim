@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T02:04:40.641667+00:00",
+  "generated_at": "2026-10-05T02:26:04.742701+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 60,
+    "PASS": 61,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -462,7 +462,7 @@
         "operational_benchmark_recheck_2026_10_05": {
           "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
           "gate_impact": "full_loop_external_validation_remains_open",
-          "candidate_count": 15
+          "candidate_count": 16
         }
       }
     },
@@ -573,6 +573,21 @@
         "public_raw_synchronized_rows": false,
         "full_loop_external_holdout_eligible": false,
         "claim_boundary": "This record strengthens real-station source accounting only. It is not raw validation evidence and does not change the IJHE or full-objective completion gates."
+      }
+    },
+    {
+      "id": "rheadhy_campaign_boundary_integrity",
+      "status": "PASS",
+      "claim": "The public RHeaDHy heavy-duty campaign is recorded as real-station face-validity context without promoting aggregate press-release results to a synchronized full-loop holdout.",
+      "evidence": "research\\rheadhy_2026_campaign_data_boundary_2026_10_05.json",
+      "requirement": "Operator and EU source links, project DOI, campaign scope, explicit missing raw rows, and a false full-loop eligibility flag.",
+      "observed": {
+        "project_doi": "10.3030/101101443",
+        "facility": "Hydrogen Refueling Solutions test area, Champagnier, France",
+        "campaign": "18 refuelling tests over six days",
+        "raw_synchronized_rows": false,
+        "full_loop_external_holdout_eligible": false,
+        "claim_boundary": "This record confirms public reporting of a real RHeaDHy heavy-duty refuelling campaign and preserves a reproducible acquisition boundary. It adds no synchronized full-loop validation result and does not close the IJHE or full-objective gate."
       }
     },
     {
