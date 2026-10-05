@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "status": "PUBLIC_FCH2RAIL_OPERATING_RANGE_BOUNDARY_RECHECKED",
+  "evidence_role": "independent_real_hrs_operating_range_context",
+  "source": {
+    "title": "FCH2Rail D6.1 Report on KPI assessment",
+    "publisher": "DLR / FCH2RAIL / Clean Hydrogen Partnership",
+    "repository_page": "https://elib.dlr.de/212669/",
+    "pdf_url": "https://elib.dlr.de/212669/1/FCH2RAIL_D6.1_Report-on-KPI-assessment.pdf",
+    "pdf_sha256": "d55d8d27096e8bcf9529f32a27beb797bff9634f5cfca9c53bdae6914ae27dd2c",
+    "pdf_bytes": 1582483,
+    "pdf_page_count": 41,
+    "reported_section": "3.7.1 Demonstrator train's refuelling times",
+    "reported_pdf_page": 21,
+    "rights_boundary": "Public report access is verified; the report does not release synchronized raw logger rows or derived-metric reuse terms."
+  },
+  "experiment": {
+    "facility": "Transportable FCH2Rail HRS and demonstrator train",
+    "locations": ["Zaragoza", "El Goloso near Madrid", "Vigo, Pontevedra"],
+    "vehicle_storage": "Two independent 80 kg, 350 bar modules; each module has sixteen 205 L Type-III cylinders",
+    "supply_boundary": "300 bar tube-trailer storage, no chiller, 10 m hose",
+    "operating_modes": ["manual", "automatic"],
+    "sampling_interval_reported_s": [5, 10],
+    "average_flow_range_g_s": [11.54, 19.44],
+    "example_first_dispensing_flow_g_s": 18.34,
+    "example_second_dispensing_flow_g_s": 13.87,
+    "average_refuelling_speed_range_kg_min": [0.69, 1.17],
+    "theoretical_160kg_fill_time_range_min": [137, 231],
+    "reported_pressure_and_temperature_effects": true
+  },
+  "eligibility": {
+    "real_hrs_operating_range_context_eligible": true,
+    "trailer_supply_and_large_vehicle_context_eligible": true,
+    "synchronized_raw_full_loop_holdout_eligible": false,
+    "saga_effectiveness_eligible": false,
+    "goal_completion_permitted": false
+  },
+  "claim_boundary": "This public report supplies independently reported operating-range and topology context for a transportable HRS refuelling a large vehicle. It supports face-validity checks for the simulator's flow-rate and trailer-supply ranges, but the absence of synchronized raw station/vehicle rows, controller states, calibration metadata and reuse terms prevents numerical full-loop validation or a SAGA effectiveness claim."
+}

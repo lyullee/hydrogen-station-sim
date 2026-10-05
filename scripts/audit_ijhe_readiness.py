@@ -1106,6 +1106,42 @@ def audit(root: Path) -> dict[str, object]:
         } if nrel_boundary else "missing; NREL HDVS raw trace boundary recheck has not run",
     ))
 
+    fch2rail_boundary_path = root / "research/fch2rail_d61_operating_range_boundary_2026_10_05.json"
+    fch2rail_boundary = _json(fch2rail_boundary_path)
+    fch2rail_source = (fch2rail_boundary or {}).get("source") or {}
+    fch2rail_experiment = (fch2rail_boundary or {}).get("experiment") or {}
+    fch2rail_eligibility = (fch2rail_boundary or {}).get("eligibility") or {}
+    fch2rail_pass = bool(
+        (fch2rail_boundary or {}).get("schema_version") == 1
+        and (fch2rail_boundary or {}).get("status") == "PUBLIC_FCH2RAIL_OPERATING_RANGE_BOUNDARY_RECHECKED"
+        and fch2rail_source.get("pdf_sha256") == "d55d8d27096e8bcf9529f32a27beb797bff9634f5cfca9c53bdae6914ae27dd2c"
+        and fch2rail_source.get("pdf_bytes") == 1582483
+        and fch2rail_source.get("pdf_page_count") == 41
+        and fch2rail_experiment.get("supply_boundary") == "300 bar tube-trailer storage, no chiller, 10 m hose"
+        and fch2rail_experiment.get("sampling_interval_reported_s") == [5, 10]
+        and fch2rail_experiment.get("average_flow_range_g_s") == [11.54, 19.44]
+        and fch2rail_experiment.get("average_refuelling_speed_range_kg_min") == [0.69, 1.17]
+        and fch2rail_eligibility.get("real_hrs_operating_range_context_eligible") is True
+        and fch2rail_eligibility.get("trailer_supply_and_large_vehicle_context_eligible") is True
+        and fch2rail_eligibility.get("synchronized_raw_full_loop_holdout_eligible") is False
+        and fch2rail_eligibility.get("goal_completion_permitted") is False
+        and bool((fch2rail_boundary or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "fch2rail_d61_operating_range_boundary_integrity",
+        "PASS" if fch2rail_pass else ("FAIL" if fch2rail_boundary else "PENDING"),
+        "The public FCH2Rail D6.1 report is hash-locked as independent real-HRS operating-range context without being promoted to a raw full-loop holdout.",
+        str(fch2rail_boundary_path.relative_to(root)),
+        "Verified report digest/page count, 300-bar trailer/no-chiller/10-m hose boundary, 5/10-s reporting cadence, measured flow/speed ranges and false full-loop eligibility.",
+        {
+            "pdf_sha256": fch2rail_source.get("pdf_sha256"),
+            "average_flow_range_g_s": fch2rail_experiment.get("average_flow_range_g_s"),
+            "average_refuelling_speed_range_kg_min": fch2rail_experiment.get("average_refuelling_speed_range_kg_min"),
+            "real_hrs_operating_range_context_eligible": fch2rail_eligibility.get("real_hrs_operating_range_context_eligible"),
+            "synchronized_raw_full_loop_holdout_eligible": fch2rail_eligibility.get("synchronized_raw_full_loop_holdout_eligible"),
+        } if fch2rail_boundary else "missing; FCH2Rail D6.1 operating-range boundary recheck has not run",
+    ))
+
     manuscript_path = root / "manuscript/ijhe_manuscript_draft.tex"
     manuscript = manuscript_path.read_text(encoding="utf-8") if manuscript_path.is_file() else ""
     negative_transparent = (

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T07:15:09.187427+00:00",
+  "generated_at": "2026-10-05T07:32:09.092307+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 65,
+    "PASS": 66,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -834,6 +834,26 @@
         "required_channels_present": true,
         "partial_station_to_tank_boundary_eligible": true,
         "full_loop_external_holdout_eligible": false
+      }
+    },
+    {
+      "id": "fch2rail_d61_operating_range_boundary_integrity",
+      "status": "PASS",
+      "claim": "The public FCH2Rail D6.1 report is hash-locked as independent real-HRS operating-range context without being promoted to a raw full-loop holdout.",
+      "evidence": "research\\fch2rail_d61_operating_range_boundary_2026_10_05.json",
+      "requirement": "Verified report digest/page count, 300-bar trailer/no-chiller/10-m hose boundary, 5/10-s reporting cadence, measured flow/speed ranges and false full-loop eligibility.",
+      "observed": {
+        "pdf_sha256": "d55d8d27096e8bcf9529f32a27beb797bff9634f5cfca9c53bdae6914ae27dd2c",
+        "average_flow_range_g_s": [
+          11.54,
+          19.44
+        ],
+        "average_refuelling_speed_range_kg_min": [
+          0.69,
+          1.17
+        ],
+        "real_hrs_operating_range_context_eligible": true,
+        "synchronized_raw_full_loop_holdout_eligible": false
       }
     },
     {

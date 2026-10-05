@@ -95,6 +95,10 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert nrel_boundary["nonempty_timed_row_count"] == 351
     assert nrel_boundary["tank_ids"] == [1, 2, 3, 5, 7, 8, 9]
     assert nrel_boundary["full_loop_external_holdout_eligible"] is False
+    assert gates["fch2rail_d61_operating_range_boundary_integrity"]["status"] == "PASS"
+    fch2rail = gates["fch2rail_d61_operating_range_boundary_integrity"]["observed"]
+    assert fch2rail["average_flow_range_g_s"] == [11.54, 19.44]
+    assert fch2rail["synchronized_raw_full_loop_holdout_eligible"] is False
     assert gates["public_dispenser_endpoint_diagnostic"]["status"] == "PASS"
     assert gates["grune_ventilation_measurement_inventory"]["status"] == "PASS"
     grune_inventory = gates["grune_ventilation_measurement_inventory"]["observed"]

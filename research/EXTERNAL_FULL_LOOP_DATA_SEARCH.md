@@ -623,6 +623,14 @@ an eligible untouched full-loop holdout. The prepared request is
 `research/FCH2RAIL_DATA_REQUEST_DRAFT.md`. No figure digitisation is used for
 the primary validation claim.
 
+The related public D6.1 KPI report was downloaded and hash-checked separately
+as an operating-range boundary in
+`research/fch2rail_d61_operating_range_boundary_2026_10_05.json`. It reports
+real 300 bar tube-trailer/no-chiller/10 m-hose refuelling, 11.54–19.44 g/s
+average flow and 0.69–1.17 kg/min average speed. These values can check the
+simulator's declared operating range, but the report has no synchronized raw
+station/vehicle logger archive; it does not close the full-loop gate.
+
 ## 2026-10-04 JHFC/NEDO six-run data availability follow-up
 
 The 2012 *International Journal of Hydrogen Energy* study by Monde et al.
