@@ -14,6 +14,7 @@
     "raw_archive_in_repository": false
   },
   "measured_boundary": {
+    "channel_authorization": "station pressure authorized; equipment temperature diagnostic only",
     "absolute_time_overlap_check": "passed for the selected owner-approved logger pair",
     "channels_used": [
       "station pressure boundary",

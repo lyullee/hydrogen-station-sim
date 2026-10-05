@@ -14,6 +14,7 @@
     "raw_archive_in_repository": false
   },
   "alignment": {
+    "channel_authorization": "station pressure authorized; equipment temperature and lifecycle channels diagnostic only",
     "absolute_time_alignment": "passed",
     "synchronized_profile_points": 1426,
     "maximum_nearest_gap_s": 0.0,
