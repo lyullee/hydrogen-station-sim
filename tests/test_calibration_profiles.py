@@ -35,6 +35,28 @@ def test_unsafe_profile_is_disabled(tmp_path):
     assert load_measured_boundary_calibration(path) is None
 
 
+def test_operational_envelope_requires_pressure_semantics_attestation(tmp_path):
+    source = {
+        "artifact_type": "confidential_operational_envelope_calibration_summary",
+        "source_identifiers_published": False,
+        "raw_rows_persisted": False,
+        "exact_source_dates_published": False,
+        "sampled_rows": 10,
+        "recommended_recharge_hysteresis_pa": 250000.0,
+        "recommended_recharge_restart_margin_pa": 250000.0,
+        "eligibility": {
+            "station_boundary_calibration_supported": True,
+            "full_station_vehicle_validation": False,
+        },
+        "channel_attestation": {
+            "pressure_boundary_semantics_attested": False,
+        },
+    }
+    path = tmp_path / "unattested-operational-profile.json"
+    path.write_text(json.dumps(source), encoding="utf-8")
+    assert load_measured_boundary_calibration(path) is None
+
+
 def test_default_profile_prefers_deidentified_operational_envelope():
     profile = load_measured_boundary_calibration()
     assert profile is not None

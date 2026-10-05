@@ -154,6 +154,11 @@ def load_measured_boundary_calibration(
             or not 0.0 < hysteresis <= 20.0e6
             or not 0.0 < restart_margin <= 20.0e6
             or sampled_rows < 1
+            or (
+                record.get("artifact_type")
+                == "confidential_operational_envelope_calibration_summary"
+                and attestation.get("pressure_boundary_semantics_attested") is not True
+            )
         ):
             return None
     except (KeyError, TypeError, ValueError):
