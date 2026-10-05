@@ -398,7 +398,8 @@
       "reported_scope": "Reference HRS and vehicle measurements used to validate a railway refueling model; pressure, temperature and mass-flow behavior are shown in the article.",
       "rights_note": "The DLR repository exposes the published PDF but no machine-readable synchronized measurement archive or supplementary trace was linked from the record.",
       "eligibility_note": "High-value independent data-request lead for a heavy-duty/rail refueling holdout; not eligible for the current full-loop gate until raw trace access and reuse terms are established.",
-      "boundary_record": "research/fch2rail_d61_operating_range_boundary_2026_10_05.json"
+      "boundary_record": "research/fch2rail_d61_operating_range_boundary_2026_10_05.json",
+      "access_recheck_record": "research/fch2rail_ijhe_measurement_access_recheck_2026_10_05.json"
     },
     "caponi_2022_3emotion_operational_hrs": {
       "title": "Four years of operational data for five hydrogen refueling stations",

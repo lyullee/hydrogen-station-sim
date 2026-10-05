@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "status": "PUBLIC_FCH2RAIL_IJHE_MEASUREMENT_ACCESS_RECHECKED",
+  "evidence_role": "real_full_loop_public_access_boundary",
+  "source": {
+    "title": "Development, application and optimization of hydrogen refueling processes for railway vehicles",
+    "doi": "10.1016/j.ijhydene.2025.04.040",
+    "repository_page": "https://elib.dlr.de/213625/",
+    "pdf_url": "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf",
+    "pdf_sha256": "462b57007a42e0a0b359d104d621c4e63f788dcd51b4fe6d995032261cd482b3",
+    "pdf_bytes": 3752323,
+    "pdf_page_count": 14,
+    "license": "CC BY 4.0 article; raw-log reuse terms are not stated",
+    "accessed_sections": {
+      "no_public_measurement_archive": "PDF page 2 states that no measurement data for hydrogen-rail refuelling could be found publicly available.",
+      "measured_channels": "PDF pages 3-4 describe train tank pressure/temperature and HRS dispenser pressure, temperature and mass-flow measurements.",
+      "station_boundary": "PDF page 3 describes a transportable HRS with compressor, two storage containers and dispenser/PLC; 45/50 MPa storage was used for the 35 MPa train fill."
+    }
+  },
+  "observed_measurement_boundary": {
+    "vehicle_tank_pressure_and_temperature": true,
+    "dispenser_pressure_temperature_mass_flow": true,
+    "common_time_base_demonstrated_in_figure": true,
+    "machine_readable_rows_publicly_linked": false,
+    "channel_dictionary_publicly_linked": false,
+    "calibration_metadata_publicly_linked": false,
+    "station_controller_and_cascade_state_rows": false,
+    "written_derived_metric_reuse_terms": false
+  },
+  "eligibility": {
+    "real_full_loop_operating_context_eligible": true,
+    "synchronized_raw_full_loop_holdout_eligible": false,
+    "saga_effectiveness_eligible": false,
+    "goal_completion_permitted": false
+  },
+  "next_action": "Request a de-identified train/HRS logger export, channel dictionary, calibration metadata and permission for derived metrics; freeze the model and scoring protocol before numerical outcomes are accessed.",
+  "claim_boundary": "The article establishes that a real FCH2Rail station-to-vehicle measurement campaign exists and identifies the relevant channels, but its published figure is not a downloadable raw logger archive. It cannot close the numerical full-loop validation or SAGA effectiveness gates."
+}

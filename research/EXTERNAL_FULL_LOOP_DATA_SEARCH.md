@@ -631,6 +631,16 @@ average flow and 0.69–1.17 kg/min average speed. These values can check the
 simulator's declared operating range, but the report has no synchronized raw
 station/vehicle logger archive; it does not close the full-loop gate.
 
+The open 2025 IJHE FCH2Rail article (DOI
+`10.1016/j.ijhydene.2025.04.040`) was also downloaded and hash-checked in
+`research/fch2rail_ijhe_measurement_access_recheck_2026_10_05.json`. It
+confirms train-tank pressure/temperature and dispenser pressure/temperature/
+mass-flow measurements and a real transportable HRS boundary, but explicitly
+states that no rail-refuelling measurement data were publicly available. The
+published figure is therefore a provenance and channel-definition source, not
+a machine-readable holdout; the raw archive and derived-metric permissions
+must be requested from DLR/FCH2Rail custodians before numerical evaluation.
+
 ## 2026-10-04 JHFC/NEDO six-run data availability follow-up
 
 The 2012 *International Journal of Hydrogen Energy* study by Monde et al.

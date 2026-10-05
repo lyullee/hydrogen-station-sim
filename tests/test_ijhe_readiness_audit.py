@@ -99,6 +99,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     fch2rail = gates["fch2rail_d61_operating_range_boundary_integrity"]["observed"]
     assert fch2rail["average_flow_range_g_s"] == [11.54, 19.44]
     assert fch2rail["synchronized_raw_full_loop_holdout_eligible"] is False
+    assert gates["fch2rail_ijhe_measurement_access_boundary_integrity"]["status"] == "PASS"
+    fch2rail_ijhe = gates["fch2rail_ijhe_measurement_access_boundary_integrity"]["observed"]
+    assert fch2rail_ijhe["doi"] == "10.1016/j.ijhydene.2025.04.040"
+    assert fch2rail_ijhe["machine_readable_rows_publicly_linked"] is False
+    assert fch2rail_ijhe["synchronized_raw_full_loop_holdout_eligible"] is False
     assert gates["public_dispenser_endpoint_diagnostic"]["status"] == "PASS"
     assert gates["grune_ventilation_measurement_inventory"]["status"] == "PASS"
     grune_inventory = gates["grune_ventilation_measurement_inventory"]["observed"]

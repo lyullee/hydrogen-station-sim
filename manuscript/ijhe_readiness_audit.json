@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T07:57:14.624419+00:00",
+  "generated_at": "2026-10-05T08:14:32.421225+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 67,
+    "PASS": 68,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -853,6 +853,19 @@
           1.17
         ],
         "real_hrs_operating_range_context_eligible": true,
+        "synchronized_raw_full_loop_holdout_eligible": false
+      }
+    },
+    {
+      "id": "fch2rail_ijhe_measurement_access_boundary_integrity",
+      "status": "PASS",
+      "claim": "The open FCH2Rail IJHE article is hash-locked as real station-to-vehicle measurement context while its missing raw archive and reuse terms remain explicit.",
+      "evidence": "research\\fch2rail_ijhe_measurement_access_recheck_2026_10_05.json",
+      "requirement": "Verified article digest/page count, measured channel boundary, explicit no-public-raw statement and false raw-holdout eligibility.",
+      "observed": {
+        "doi": "10.1016/j.ijhydene.2025.04.040",
+        "pdf_sha256": "462b57007a42e0a0b359d104d621c4e63f788dcd51b4fe6d995032261cd482b3",
+        "machine_readable_rows_publicly_linked": false,
         "synchronized_raw_full_loop_holdout_eligible": false
       }
     },

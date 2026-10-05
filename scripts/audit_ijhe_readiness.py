@@ -1142,6 +1142,41 @@ def audit(root: Path) -> dict[str, object]:
         } if fch2rail_boundary else "missing; FCH2Rail D6.1 operating-range boundary recheck has not run",
     ))
 
+    fch2rail_ijhe_path = root / "research/fch2rail_ijhe_measurement_access_recheck_2026_10_05.json"
+    fch2rail_ijhe = _json(fch2rail_ijhe_path)
+    fch2rail_ijhe_source = (fch2rail_ijhe or {}).get("source") or {}
+    fch2rail_ijhe_boundary = (fch2rail_ijhe or {}).get("observed_measurement_boundary") or {}
+    fch2rail_ijhe_eligibility = (fch2rail_ijhe or {}).get("eligibility") or {}
+    fch2rail_ijhe_pass = bool(
+        (fch2rail_ijhe or {}).get("schema_version") == 1
+        and (fch2rail_ijhe or {}).get("status") == "PUBLIC_FCH2RAIL_IJHE_MEASUREMENT_ACCESS_RECHECKED"
+        and fch2rail_ijhe_source.get("doi") == "10.1016/j.ijhydene.2025.04.040"
+        and fch2rail_ijhe_source.get("pdf_sha256") == "462b57007a42e0a0b359d104d621c4e63f788dcd51b4fe6d995032261cd482b3"
+        and fch2rail_ijhe_source.get("pdf_bytes") == 3752323
+        and fch2rail_ijhe_source.get("pdf_page_count") == 14
+        and fch2rail_ijhe_boundary.get("vehicle_tank_pressure_and_temperature") is True
+        and fch2rail_ijhe_boundary.get("dispenser_pressure_temperature_mass_flow") is True
+        and fch2rail_ijhe_boundary.get("machine_readable_rows_publicly_linked") is False
+        and fch2rail_ijhe_boundary.get("written_derived_metric_reuse_terms") is False
+        and fch2rail_ijhe_eligibility.get("real_full_loop_operating_context_eligible") is True
+        and fch2rail_ijhe_eligibility.get("synchronized_raw_full_loop_holdout_eligible") is False
+        and fch2rail_ijhe_eligibility.get("goal_completion_permitted") is False
+        and bool((fch2rail_ijhe or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "fch2rail_ijhe_measurement_access_boundary_integrity",
+        "PASS" if fch2rail_ijhe_pass else ("FAIL" if fch2rail_ijhe else "PENDING"),
+        "The open FCH2Rail IJHE article is hash-locked as real station-to-vehicle measurement context while its missing raw archive and reuse terms remain explicit.",
+        str(fch2rail_ijhe_path.relative_to(root)),
+        "Verified article digest/page count, measured channel boundary, explicit no-public-raw statement and false raw-holdout eligibility.",
+        {
+            "doi": fch2rail_ijhe_source.get("doi"),
+            "pdf_sha256": fch2rail_ijhe_source.get("pdf_sha256"),
+            "machine_readable_rows_publicly_linked": fch2rail_ijhe_boundary.get("machine_readable_rows_publicly_linked"),
+            "synchronized_raw_full_loop_holdout_eligible": fch2rail_ijhe_eligibility.get("synchronized_raw_full_loop_holdout_eligible"),
+        } if fch2rail_ijhe else "missing; FCH2Rail IJHE measurement-access recheck has not run",
+    ))
+
     nbsdc_liquid_recheck_path = root / "research/nbsdc_liquid_hrs_public_access_recheck_2026_10_05.json"
     nbsdc_liquid_recheck = _json(nbsdc_liquid_recheck_path)
     nbsdc_liquid_protocol_path = root / "research/nbsdc_liquid_hrs_intake_protocol_2026_10_05.json"

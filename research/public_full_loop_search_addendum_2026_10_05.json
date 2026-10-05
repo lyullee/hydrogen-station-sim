@@ -122,7 +122,8 @@
       "decision": "REAL_FULL_LOOP_REPORT_NO_RAW_ARCHIVE",
       "observed_scope": "Peer-reviewed FCH2RAIL paper reports synchronized train-tank and dispenser pressure/temperature/mass-flow measurements for an exemplary refueling, but exposes a figure/report rather than machine-readable raw logger rows and publication reuse terms for derived metrics.",
       "full_loop_holdout_eligible": false,
-      "request_lead": "Request the de-identified train/HRS logger export, channel dictionary, calibration metadata and permission before any numerical holdout use."
+      "request_lead": "Request the de-identified train/HRS logger export, channel dictionary, calibration metadata and permission before any numerical holdout use.",
+      "access_recheck_record": "research/fch2rail_ijhe_measurement_access_recheck_2026_10_05.json"
     },
     {
       "id": "threeemotion_hrs_operations_2022",
