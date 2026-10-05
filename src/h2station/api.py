@@ -30,7 +30,7 @@ from .operations import ProcessRuntime, RELIEF_TARGETS
 from .risk.runtime_backend import load_hyram_backend
 from .risk.sensor_assessment import assess_sensor_cases, available_sensor_inputs
 from .risk.scenario_planning import parse_saga_plan
-from .llm_grounding import build_evidence_manifest, prompt_evidence_summary
+from .llm_grounding import build_evidence_manifest, prompt_evidence_header
 from .safe_operation import SafeOperationSample
 from .simulation_clock import SimulationClock
 from .virtual_safety import VALVE_LABELS, ZONES, RECOVERY_CHECKS, suggested_actions
@@ -2358,7 +2358,6 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         # bulky evidence/telemetry must not crowd out the registered HAZOP
         # rules that explain the current alarm.
         "impact_results":impact_results,
-        "evidence_basis": prompt_evidence_summary(evidence_manifest),
         "hazop_reference_rules":reference_rules,
         "hazop_active":active, "hazop_rules":matched_rules,
         "emergency_response_guidance":prompt_guidance(response_plans),
@@ -2384,7 +2383,8 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "hazop_nodes":[{"node_id": node["node_id"], "name": node.get("설비_라인")} for node in catalog["nodes"]],
         "impact_backend_available":bool(getattr(backend,"available",False)),
         "current_alert_status":alert_status,
-        "active_hazop_rule_count":len(active)}
+        "active_hazop_rule_count":len(active),
+        "evidence_basis": prompt_evidence_header(evidence_manifest)}
     history = "\n".join(f"{turn.role}: {turn.content}" for turn in request.history)[-1800:]
     prompt = ("당신은 H70 수소충전소 운전 분석 보조자입니다. 아래 데이터는 실제 현장 계측이 아닌 시뮬레이터 신호입니다. "
         "HAZOP 센서 임계값과 현재 신호 품질, 물리 누출 및 피해영향예측 계산 상태를 구분하세요. "
@@ -3140,7 +3140,6 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         # before large provenance/impact payloads so the bounded prompt keeps
         # the live readings, active rules and immediate response field.
         "consolidated_response_guidance": response_guidance,
-        "evidence_basis": prompt_evidence_summary(evidence_manifest),
         "time_s": payload["time_s"], "sensor": {
             "tag": sensor_id, "type": payload["sensor"].get("종류"),
             "location": payload["sensor"].get("설치_측정위치"), "node": payload["node"].get("설비_라인"),
@@ -3166,6 +3165,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                                 for plan in plan_context] if not alert else [],
         "station_status": payload["station_status"],
         "impact_results": impact_results,
+        "evidence_basis": prompt_evidence_header(evidence_manifest),
         "evidence_manifest": evidence_manifest}
     if alert:
         retained_only = not any(rule.get("state") == "TRIGGER" for rule in active_rules)

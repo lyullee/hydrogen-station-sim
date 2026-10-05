@@ -567,20 +567,114 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
     """
 
     evidence = manifest.get("response_evidence") or {}
-    summary: dict[str, Any] = {
-        "claim_limit": str(evidence.get("claim_limit") or ""),
-    }
-    for key in (
-        "public_experimental_benchmarks",
-        "public_detector_logic_evidence",
-        "public_accidental_release_evidence",
-        "confidential_measured_boundary_replay",
-    ):
-        value = evidence.get(key)
-        if isinstance(value, dict):
-            summary[key] = value
+    def short(value: Any, limit: int = 240) -> str:
+        text = str(value or "")
+        return text if len(text) <= limit else text[: limit - 1] + "…"
+
+    summary: dict[str, Any] = {"claim_limit": short(evidence.get("claim_limit"))}
+    benchmarks = evidence.get("public_experimental_benchmarks")
+    if isinstance(benchmarks, dict):
+        rows = []
+        for source in benchmarks.get("sources") or []:
+            if not isinstance(source, dict):
+                continue
+            aggregate = source.get("aggregate") or {}
+            # Keep only values used for a live operating-envelope comparison.
+            keys = (
+                "sample_count", "duration_s", "tank_count", "reported_transfer_kg",
+                "reported_start_pressure_mpa", "reported_end_pressure_mpa",
+                "mass_transfer_kg", "total_fill_time_s", "fueling_time_s",
+                "average_mass_flow_g_s", "peak_mass_flow_g_s", "aprr_mpa_min",
+                "starting_pressure_mpa", "ending_pressure_mpa",
+            )
+            rows.append({
+                "id": source.get("id"),
+                "aggregate": {key: aggregate[key] for key in keys if key in aggregate},
+                "raw_rows_public": source.get("raw_rows_public") is True,
+            })
+        if rows:
+            summary["public_experimental_benchmarks"] = {
+                "sources": rows,
+                "claim_limit": short(benchmarks.get("claim_limit")),
+            }
+    detector = evidence.get("public_detector_logic_evidence")
+    if isinstance(detector, dict):
+        aggregate = detector.get("aggregate") or {}
+        summary["public_detector_logic_evidence"] = {
+            "doi": detector.get("doi"),
+            "rule": detector.get("rule"),
+            "aggregate": {
+                key: aggregate[key] for key in (
+                    "case_count", "cases_with_alarm_detection",
+                    "cases_with_trip_detection", "mean_alarm_sensor_coverage_fraction",
+                    "mean_trip_sensor_coverage_fraction",
+                ) if key in aggregate
+            },
+            "claim_limit": short(detector.get("claim_limit")),
+        }
+    accidental = evidence.get("public_accidental_release_evidence")
+    if isinstance(accidental, dict):
+        summary["public_accidental_release_evidence"] = {
+            key: accidental.get(key) for key in (
+                "article_doi", "zenodo_doi", "license", "evidence_role",
+                "consequence_and_ignition_grounding_eligible",
+                "full_loop_station_vehicle_holdout_eligible",
+            ) if accidental.get(key) is not None
+        }
+        summary["public_accidental_release_evidence"]["claim_limit"] = short(
+            accidental.get("claim_limit")
+        )
+    confidential = evidence.get("confidential_measured_boundary_replay")
+    if isinstance(confidential, dict):
+        summary["confidential_measured_boundary_replay"] = {
+            key: confidential.get(key) for key in (
+                "evidence_role", "trajectory_completed",
+                "station_boundary_calibration_supported",
+                "independent_full_loop_validation_supported",
+            ) if confidential.get(key) is not None
+        }
+        holdout = confidential.get("temporal_holdout")
+        if isinstance(holdout, dict):
+            summary["confidential_measured_boundary_replay"]["temporal_holdout"] = {
+                key: holdout.get(key) for key in (
+                    "trajectory_completed", "fit_used_holdout",
+                    "outcome_used_for_fit", "time_ordered_holdout_supported",
+                    "independent_full_loop_validation_supported",
+                ) if holdout.get(key) is not None
+            }
     impact = manifest.get("impact") or {}
     summary["impact_status"] = impact.get("calculation_status")
     summary["impact_result_count"] = impact.get("result_count", 0)
     summary["evidence_digest"] = manifest.get("evidence_digest")
     return summary
+
+
+def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
+    """Return a very small provenance header that survives prompt caps."""
+
+    evidence = manifest.get("response_evidence") or {}
+    benchmarks = evidence.get("public_experimental_benchmarks") or {}
+    benchmark_ids = [
+        str(source.get("id"))
+        for source in benchmarks.get("sources") or []
+        if isinstance(source, dict) and source.get("id")
+    ]
+    detector = evidence.get("public_detector_logic_evidence") or {}
+    detector_aggregate = detector.get("aggregate") or {}
+    confidential = evidence.get("confidential_measured_boundary_replay") or {}
+    holdout = confidential.get("temporal_holdout") or {}
+    return {
+        "public_experiment_sources": benchmark_ids,
+        "public_detector_replay_cases": detector_aggregate.get("case_count"),
+        "public_detector_trip_coverage": detector_aggregate.get(
+            "mean_trip_sensor_coverage_fraction"
+        ),
+        "confidential_boundary_holdout": holdout.get(
+            "time_ordered_holdout_supported"
+        ) is True,
+        "full_loop_validation_supported": confidential.get(
+            "independent_full_loop_validation_supported"
+        ) is True,
+        "impact_status": (manifest.get("impact") or {}).get("calculation_status"),
+        "evidence_digest": manifest.get("evidence_digest"),
+    }
