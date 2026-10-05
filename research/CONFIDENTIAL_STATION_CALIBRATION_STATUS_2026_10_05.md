@@ -69,6 +69,12 @@ active vehicle circuit for partial-station data, while retaining an opt-in
 window with one active circuit completed without that spurious ESD. This is a
 boundary-coverage correction, not a relaxation of the safety trip.
 
+The bounded event replay also supports a deterministic maximum absolute
+pressure-ramp window selected from the measured boundary before the model
+trajectory is evaluated. This avoids choosing a window by looking at the
+simulated outcome; the selection rule and its claim limit are retained in the
+sanitized evidence artifact.
+
 The first pressure/equipment synchronization attempt was intentionally rejected
 because the two supplied sample windows did not overlap on their absolute time
 axes. No rows were shifted to manufacture an overlap, and no scenario

@@ -28,6 +28,8 @@
     "injected_boundary": "station pressure only; equipment temperature was not attested as supply gas",
     "active_virtual_circuit": "single fueling circuit",
     "aggregate_calibration_input": "explicit owner-approved recharge margin",
+    "window_selection": "deterministic maximum absolute pressure-ramp window",
+    "window_selection_uses_outcomes": false,
     "simulated_horizon": "bounded measured window",
     "trajectory_completed": true,
     "esd_triggered": false,

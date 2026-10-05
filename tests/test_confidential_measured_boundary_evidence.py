@@ -17,6 +17,7 @@ def test_confidential_boundary_evidence_is_deidentified_and_claim_bounded():
     assert record["provenance_boundary"]["raw_archive_in_repository"] is False
     assert record["controlled_replay"]["trajectory_completed"] is True
     assert record["controlled_replay"]["default_model_parameters_changed"] is False
+    assert record["controlled_replay"]["window_selection_uses_outcomes"] is False
     assert record["diagnostic_correction"]["safety_trip_relaxed"] is False
     assert record["eligibility"]["independent_full_loop_validation_supported"] is False
     assert record["eligibility"]["prospective_holdout"] is False

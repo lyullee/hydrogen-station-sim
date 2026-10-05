@@ -12,6 +12,7 @@ full-station validation.
 from __future__ import annotations
 
 import argparse
+from bisect import bisect_right
 import json
 from pathlib import Path
 import sys
@@ -76,6 +77,28 @@ def _slice_profile(
     )
 
 
+def _max_ramp_start(profile: StationBoundaryProfile, duration_s: float) -> float:
+    """Select a deterministic high-ramp window without inspecting outcomes."""
+
+    best_rate = -1.0
+    best_start = 0.0
+    for index, start_s in enumerate(profile.time_s):
+        end_index = bisect_right(profile.time_s, start_s + duration_s) - 1
+        if end_index <= index:
+            continue
+        elapsed = profile.time_s[end_index] - start_s
+        if elapsed <= 0.0:
+            continue
+        rate = abs(profile.pressure_pa[end_index] - profile.pressure_pa[index]) / elapsed
+        # Retain the earliest window on ties for deterministic replay.
+        if rate > best_rate:
+            best_rate = rate
+            best_start = float(start_s)
+    if best_rate < 0.0:
+        raise ValueError("the measured boundary has no complete pressure-ramp window")
+    return best_start
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Replay a private measured station boundary without exporting raw data."
@@ -97,6 +120,10 @@ def main() -> int:
     )
     parser.add_argument("--max-match-gap-s", type=_positive, default=2.0)
     parser.add_argument("--window-start-s", type=float, default=0.0)
+    parser.add_argument(
+        "--window-selection", choices=("fixed", "max_abs_pressure_ramp"), default="fixed",
+        help="fixed uses --window-start-s; max_abs_pressure_ramp selects a deterministic signal-only window",
+    )
     parser.add_argument(
         "--active-vehicle", choices=("vehicle_1", "vehicle_2", "both"),
         default="vehicle_1",
@@ -144,8 +171,17 @@ def main() -> int:
     requested_duration = (
         args.duration_s if args.duration_s is not None else min(300.0, available_duration - args.window_start_s)
     )
-    duration_s = min(requested_duration, available_duration - args.window_start_s)
-    window_profile = _slice_profile(profile, args.window_start_s, duration_s)
+    if requested_duration <= 0.0:
+        raise ValueError("requested replay duration must be positive")
+    selected_start_s = (
+        _max_ramp_start(profile, requested_duration)
+        if args.window_selection == "max_abs_pressure_ramp"
+        else args.window_start_s
+    )
+    if selected_start_s >= available_duration:
+        raise ValueError("selected replay window starts beyond the measured boundary")
+    duration_s = min(requested_duration, available_duration - selected_start_s)
+    window_profile = _slice_profile(profile, selected_start_s, duration_s)
     scenario_profile = tuple(zip(window_profile.time_s, window_profile.pressure_pa))
     temperature_profile = (
         tuple(zip(window_profile.time_s, window_profile.temperature_k))
@@ -198,10 +234,11 @@ def main() -> int:
         },
         "alignment": alignment,
         "window": {
-            "start_s": round(args.window_start_s, 3),
+            "start_s": round(selected_start_s, 3),
             "duration_s": round(duration_s, 3),
             "replayed_profile_points": len(window_profile.time_s),
             "active_vehicle": args.active_vehicle,
+            "selection_method": args.window_selection,
         },
         "calibration": {
             "aggregate_margin_applied": calibrated_hysteresis_pa is not None,
