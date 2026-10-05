@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "status": "OUTCOME_INFORMED_MEASUREMENT_NOISE_DIAGNOSTIC_NOT_VALIDATION",
+  "purpose": "Quantify whether the unusually early half-pressure crossing in one PRESLHY E5.1 ambient trace is caused by high-frequency pressure noise; do not replace the frozen primary result.",
+  "source": {
+    "archive": "data/public_validation/raw/preslhy_e5_1/10.35097-1258/data/dataset/E5.1_Benchmark.zip",
+    "protocol": "research/preslhy_e5_1_holdout_protocol.json",
+    "model": "src/h2station/preslhy_nonadiabatic.py",
+    "model_sha256": "c20c49c884f31dce7d1501a36ae0af4ba85eca3417a37079704f4e4d3d10e194"
+  },
+  "method": {
+    "trace_selection": "The three primary ambient E5.1 cases already selected by the frozen protocol.",
+    "filter": "Centered odd-window median filter applied only to the measured source-pressure trace.",
+    "window_samples": 201,
+    "observed_sample_interval_s": 0.0005,
+    "window_duration_s": 0.1005,
+    "model_refit": false,
+    "time_warping": false,
+    "primary_result_replaced": false,
+    "outcome_access_before_diagnostic": true
+  },
+  "cases": [
+    {
+      "case_id": "20200130-144119",
+      "raw_half_time_s": 0.1513824794713473,
+      "filtered_half_time_s": 0.5868697759376549,
+      "model_half_time_s": 0.6141142946484761,
+      "raw_half_time_relative_error_percent": 305.6706540896046,
+      "filtered_half_time_relative_error_percent": 4.642344831490437,
+      "raw_pressure_nrmse_percent": 9.042149243089598,
+      "filtered_pressure_nrmse_percent": 3.82210985097036,
+      "raw_joint_screen_pass": false,
+      "filtered_diagnostic_joint_screen_pass": true
+    },
+    {
+      "case_id": "20200122-144854",
+      "raw_half_time_s": 0.19017260098825337,
+      "filtered_half_time_s": 0.20020063128633744,
+      "model_half_time_s": 0.18032609406354486,
+      "raw_half_time_relative_error_percent": 5.177668535603986,
+      "filtered_half_time_relative_error_percent": 9.927309966553993,
+      "raw_pressure_nrmse_percent": 2.5676922747814355,
+      "filtered_pressure_nrmse_percent": 2.3375710517517705,
+      "raw_joint_screen_pass": true,
+      "filtered_diagnostic_joint_screen_pass": true
+    },
+    {
+      "case_id": "20200130-133910",
+      "raw_half_time_s": 0.18733490383671303,
+      "filtered_half_time_s": 0.1989297446638074,
+      "model_half_time_s": 0.17752359602233275,
+      "raw_half_time_relative_error_percent": 5.237309019002737,
+      "filtered_half_time_relative_error_percent": 10.760657576699337,
+      "raw_pressure_nrmse_percent": 2.676893591178265,
+      "filtered_pressure_nrmse_percent": 2.49921958241065,
+      "raw_joint_screen_pass": true,
+      "filtered_diagnostic_joint_screen_pass": true
+    }
+  ],
+  "interpretation": {
+    "observation": "A 100 ms median filter removes sub-window pressure oscillations in all three traces; the first case changes from an apparent 0.151 s half crossing to 0.587 s, close to the 0.614 s model prediction.",
+    "limitation": "The filter window was chosen after the frozen raw outcome was observed. This is not an amended validation result and cannot close the PRESLHY E5.1 gate.",
+    "future_protocol_action": "If retained, pre-register an instrument-bandwidth-based pressure preprocessing rule before opening a new holdout and report raw and filtered endpoints separately."
+  },
+  "claim_boundary": "Diagnostic evidence about measurement noise only; it does not establish model accuracy, permit case exclusion, or support an IJHE validation claim."
+}
