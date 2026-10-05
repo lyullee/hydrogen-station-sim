@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "eligibility_contract": {
+    "required_channels": [
+      "common timestamp",
+      "vehicle_or_receptacle pressure",
+      "vehicle_or_receptacle temperature",
+      "station_or_dispenser pressure",
+      "delivered_gas_temperature",
+      "mass_flow_or_transferred_mass",
+      "protocol and initial-condition metadata",
+      "calibration and quality metadata",
+      "written reuse permission"
+    ],
+    "excluded_substitutes": [
+      "plots or summary tables without row-level traces",
+      "aggregate KPI reports",
+      "station metadata or availability data",
+      "screenshots of SQL-backed workbooks without the source export"
+    ]
+  },
+  "candidates": [
+    {
+      "id": "carb_2024_hystep_in_use",
+      "source_url": "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf",
+      "observed": "CARB reports HyStEP testing at 22 in-use stations and states that Appendix A results were tabulated in an Excel workbook.",
+      "missing_for_holdout": [
+        "public workbook attachment or row-level export",
+        "channel dictionary and calibration metadata",
+        "reuse permission for derived validation results"
+      ],
+      "decision": "REQUEST_DATA_NOT_ELIGIBLE_PUBLIC_HOLDOUT"
+    },
+    {
+      "id": "cal_state_la_hrff_back_to_back",
+      "source_url": "https://doi.org/10.1016/j.jclepro.2021.129737",
+      "observed": "The real HRFF study describes one-second fueling trends including vehicle/hose pressure and temperature, flow, storage pressure, density, APRR, valve states and booster/chiller commands.",
+      "missing_for_holdout": [
+        "downloadable synchronized logger export",
+        "data dictionary and calibration/quality fields",
+        "written permission to publish derived metrics"
+      ],
+      "decision": "REQUEST_DATA_NOT_ELIGIBLE_PUBLIC_HOLDOUT"
+    },
+    {
+      "id": "cal_state_la_hrff_multiyear",
+      "source_url": "https://doi.org/10.1016/j.ijhydene.2023.04.084",
+      "observed": "The open IJHE study reports more than 4,500 refueling events and more than 8,800 kg dispensed from 2016–2020 operational data.",
+      "missing_for_holdout": [
+        "event-level synchronized pressure/temperature/mass-flow rows",
+        "raw-data reuse terms"
+      ],
+      "decision": "AGGREGATE_CONTEXT_ONLY"
+    },
+    {
+      "id": "cal_state_la_doe_sql_reporting",
+      "source_url": "https://www.hydrogen.energy.gov/docs/hydrogenprogramlibraries/pdfs/review15/tv024_blekhman_2015_p.pdf",
+      "observed": "DOE material documents SQL-backed station acquisition and automatically generated quarterly workbooks.",
+      "missing_for_holdout": [
+        "public SQL/workbook source export",
+        "row-level synchronized fill traces",
+        "reuse permission"
+      ],
+      "decision": "REQUEST_DATA_NOT_ELIGIBLE_PUBLIC_HOLDOUT"
+    }
+  ],
+  "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+  "full_loop_holdout_eligible": false,
+  "gate_impact": "full_loop_external_validation_remains_open",
+  "next_action": "Use the prepared CARB, Cal State LA and NREL custodian requests; freeze hashes, eligibility and scoring before opening any numerical outcomes.",
+  "claim_boundary": "This is a source-access and eligibility recheck. It is not a validation result, safety certification, SAGA-effectiveness result, or IJHE acceptance prediction; the project goal must remain incomplete."
+}
