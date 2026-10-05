@@ -156,5 +156,27 @@
       "message": "token失效，请重新登录",
       "interpretation": "Unauthenticated public session; no login bypass was attempted."
     }
+  },
+  "description_semantics_audit": {
+    "parsed_source": "description_file_only_no_numerical_cells_opened",
+    "observed_equipment_scope": [
+      "35 MPa dispenser",
+      "90 MPa compressor",
+      "high-pressure storage-cylinder groups",
+      "liquid-hydrogen pump and tank"
+    ],
+    "observed_channel_families": [
+      "pressure",
+      "temperature",
+      "flow rate",
+      "dispensed mass",
+      "current",
+      "frequency",
+      "liquid level",
+      "volume"
+    ],
+    "vehicle_or_receptacle_channels_explicitly_described": false,
+    "station_to_vehicle_common_clock_explicitly_described": false,
+    "interpretation": "The description is station-equipment operational provenance. The six numerical files must be application-approved and inspected for any vehicle/receptacle boundary before they can be classified; metadata alone cannot close the full-loop gate."
   }
 }
