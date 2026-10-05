@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "scope": "Live follow-up sweep of public repositories and publisher records for an independent synchronized HRS station-to-vehicle holdout",
+  "search_sources": [
+    {
+      "query": "hydrogen refueling station raw data pressure temperature mass flow dataset csv",
+      "channels": [
+        "web search",
+        "Zenodo API"
+      ]
+    },
+    {
+      "query": "hydrogen fueling station experimental data supplementary csv pressure temperature flow",
+      "channels": [
+        "web search"
+      ]
+    },
+    {
+      "query": "site:zenodo.org hydrogen refueling station fueling data pressure temperature",
+      "channels": [
+        "web search",
+        "Zenodo API"
+      ]
+    },
+    {
+      "query": "site:github.com hydrogen refueling station measured data csv",
+      "channels": [
+        "web search"
+      ]
+    }
+  ],
+  "eligibility_rule": {
+    "required_channels": [
+      "common timestamp or elapsed time",
+      "vehicle or receptacle pressure",
+      "mass flow or transferred mass"
+    ],
+    "preferred_channels": [
+      "vehicle or tank temperature",
+      "station/dispenser pressure",
+      "controller/protocol state",
+      "initial conditions"
+    ],
+    "required_rights": "explicit reuse permission or public terms covering derived metrics and journal publication",
+    "excluded": [
+      "simulator output",
+      "plot-only/aggregate report",
+      "component-only experiment",
+      "static station inventory",
+      "software without measured observations"
+    ]
+  },
+  "candidates": [
+    {
+      "id": "nlr_nfctec_secure_raw_boundary_2026_10_05",
+      "title": "National Fuel Cell Technology Evaluation Center (NFCTEC)",
+      "url": "https://www.nlr.gov/hydrogen/nfctec",
+      "decision": "CONTROLLED_RAW_DATA_PUBLIC_COMPOSITES_ONLY",
+      "observed_scope": "NLR describes operational, maintenance and safety data processed on an off-network system; raw partner data are secured and individualized results are shared with partners, while public outputs are aggregated composite data products.",
+      "full_loop_holdout_eligible": false,
+      "request_route": "Technology Validation Team, techval@nlr.gov",
+      "claim_boundary": "Public CDPs may support operating-range context only; no synchronized raw station-to-vehicle trace was obtained."
+    },
+    {
+      "id": "nrel_h2fills_empirical_dataset_boundary_2026_10_05",
+      "title": "H2FillS Hydrogen Filling Simulation",
+      "url": "https://www.nrel.gov/hydrogen/h2fills",
+      "manual_url": "https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf",
+      "decision": "SIMULATOR_AND_EMPIRICAL_REFERENCE_ONLY",
+      "observed_scope": "The official page describes a station-to-FCEV thermodynamic simulator validated with empirical fueling datasets and requiring registration for download; no independent raw measurement archive was publicly retrieved.",
+      "full_loop_holdout_eligible": false,
+      "claim_boundary": "Useful protocol/model comparison reference; simulator or bundled empirical profiles cannot be counted as an untouched measured holdout."
+    },
+    {
+      "id": "kuroki_hitrf_liner_temperature_data_boundary_2026_10_05",
+      "title": "Temperature Rise on Liner Surfaces of Fuel Cell Electric Vehicle Tanks during Fueling Process",
+      "doi": "10.1002/ente.202300239",
+      "url": "https://docs.nlr.gov/docs/fy23osti/85029.pdf",
+      "decision": "MEASURED_TANK_BOUNDARY_NO_RAW_ARCHIVE",
+      "observed_scope": "The paper reports NREL HITRF and Powertech fueling experiments with pressure/temperature boundary observations, but its data-availability statement says research data are not shared. It lacks a public synchronized station controller/dispenser/vehicle archive.",
+      "full_loop_holdout_eligible": false,
+      "claim_boundary": "May support tank-boundary face validity and a data-request lead only; not full-loop validation."
+    },
+    {
+      "id": "calstate_back_to_back_jcp_public_record_recheck_2026_10_05",
+      "title": "Hydrogen station in situ back-to-back fueling data for design and modeling",
+      "doi": "10.1016/j.jclepro.2021.129737",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0959652621039135",
+      "decision": "REAL_STATION_REPORT_NO_PUBLIC_EVENT_LOG",
+      "observed_scope": "The article describes one year of Cal State LA station data and back-to-back fueling behavior, including pressure, thermodynamics and vehicle SOC, but the public record exposes no machine-readable synchronized event-level logger or reuse terms for derived metrics.",
+      "full_loop_holdout_eligible": false,
+      "request_route": "Cal State LA HRFF data custodian route retained in the acquisition queue.",
+      "claim_boundary": "Real-station provenance and request lead only."
+    },
+    {
+      "id": "metrohyve_uncertainty_tool_record_recheck_2026_10_05",
+      "title": "Measurement uncertainty tool for HRS dispensers",
+      "doi": "10.21014/tc9-2022.158",
+      "url": "https://zenodo.org/records/10982951",
+      "decision": "METROLOGY_TOOL_NO_MEASURED_HRS_TRACE",
+      "observed_scope": "The public Zenodo record contains a PDF describing a dispenser measurement-uncertainty tool; no synchronized station-to-vehicle measurement rows are included.",
+      "full_loop_holdout_eligible": false,
+      "claim_boundary": "Metrology/uncertainty context only."
+    },
+    {
+      "id": "zenodo_lh2_refueling_simulation_record_recheck_2026_10_05",
+      "title": "Thermodynamic modeling and simulation of subcooled liquid hydrogen refueling for transport applications",
+      "doi": "10.1016/j.ijhydene.2026.157517",
+      "url": "https://zenodo.org/records/22892319",
+      "decision": "OPEN_SIMULATION_ARTICLE_ONLY",
+      "observed_scope": "The public record contains an article describing a liquid-hydrogen refueling model and simulation scenarios; it does not expose measured station-to-vehicle logger rows.",
+      "full_loop_holdout_eligible": false,
+      "claim_boundary": "Model-comparison and liquid-HRS context only."
+    }
+  ],
+  "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+  "gate_impact": "full_loop_external_validation_remains_open",
+  "next_action": "Prioritize approved data requests to NLR NFCTEC/HITRF and Cal State LA HRFF; require a de-identified synchronized export, channel dictionary, calibration metadata, protocol/controller states and written publication rights before outcome access.",
+  "claim_boundary": "This sweep records discovery and exclusion decisions. It adds no numerical validation, does not alter frozen holdout results and does not permit IJHE or full-objective completion."
+}
