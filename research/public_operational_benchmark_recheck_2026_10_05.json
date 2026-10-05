@@ -445,12 +445,45 @@
         "https://ebs.publicnow.com/view/2BE56BA08C750B576B05A61FFB967F70AFFEEC55",
         "https://cordis.europa.eu/project/id/101101443/reporting"
       ]
+    },
+    {
+      "id": "mountain_view_cec_linde_2022",
+      "title": "Mountain View Hydrogen Fueling Station final project report",
+      "url": "https://www.energy.ca.gov/sites/default/files/2022-01/CEC-600-2022-004.pdf",
+      "license": "Public California Energy Commission final report; no machine-readable raw logger archive or separate raw-data reuse terms are supplied",
+      "decision": "REAL_STATION_AGGREGATE_AND_DATA_REQUEST_LEAD",
+      "observed_scope": {
+        "facility": "Linde Mountain View Hydrogen Fueling Station, California, USA",
+        "report_date": "2022-01",
+        "operational_window": "2018-03-01 through 2018-08-31",
+        "dispensing_pressures_bar": [
+          350,
+          700
+        ],
+        "reported_fill_time": "about 3-4 minutes",
+        "liquid_hydrogen_storage_kg": 720,
+        "compressor": "Linde IC90 ionic compressor",
+        "total_dispensed_kg": 10685,
+        "average_daily_dispensed_kg": 58,
+        "transactions": 3119,
+        "average_fill_kg": 3.43,
+        "reported_70_mpa_fraction": 0.996,
+        "raw_synchronized_rows": false
+      },
+      "finding": "The CEC final report documents a real public station, equipment layout and six months of operating statistics, including 350/700 bar service, fill-time, storage and throughput benchmarks. It reports aggregate tables only; no synchronized vehicle or dispenser pressure-temperature-mass-flow logger archive, channel dictionary or raw-data reuse package is published.",
+      "use": "Independent station-scale face-validity context and a high-priority custodian data-request lead; do not use the aggregate values as a full-loop holdout, calibration source or redistributable raw dataset until event-level logs and rights are received and frozen before outcome access.",
+      "source_pages": {
+        "abstract_and_fill_time": 4,
+        "station_storage_and_compressor": 10,
+        "usage_statistics": 16,
+        "technical_requirements": 18
+      }
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
   "gate_impact": "full_loop_external_validation_remains_open",
   "next_action": "Request a de-identified synchronized logger export and written reuse terms from Cal State LA HRFF, UCI NFCRC, NREL/NLR HITRF, CARB/HyStEP, JRC GasTeF, FCH2RAIL, RHeaDHy or an HRS operator; freeze the model, inclusion criteria and scoring before reading numerical outcomes.",
-  "claim_boundary": "This record strengthens source accounting and face-validity context. It adds no full-loop validation result and does not permit the IJHE/full-objective completion gate to pass.",
+  "claim_boundary": "This record strengthens source accounting and station-scale face-validity context. It adds no full-loop validation result and does not permit the IJHE/full-objective completion gate to pass.",
   "recheck_links": [
     "https://www.energy.gov/cmei/fuels/march-h2iq-hour-hydrogen-fuel-dispensing-medium-and-heavy-duty-vehicles-text-version",
     "https://zenodo.org/records/20590842"

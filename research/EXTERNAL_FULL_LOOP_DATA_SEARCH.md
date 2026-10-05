@@ -1406,3 +1406,21 @@ compressor, cascade-bank, dispenser, vehicle, protocol-controller, or
 station-level emergency-response channels. It therefore cannot close the
 full-loop external-validation or SAGA-effectiveness gates. See the detailed
 boundary in `research/MENDELEY_USN_PRESSURE_PEAKING_MANIFEST_2026_10_05.md`.
+
+## 2026-10-05 Mountain View CEC real-station benchmark
+
+The California Energy Commission final report for the Linde Mountain View
+Hydrogen Fueling Station ([CEC-600-2022-004](https://www.energy.ca.gov/sites/default/files/2022-01/CEC-600-2022-004.pdf))
+adds a useful station-scale operating benchmark. The report describes 350/700
+bar service with approximately three-to-four-minute fills, a 720 kg liquid-
+hydrogen store and an IC90 compressor. For 1 March–31 August 2018 it reports
+10,685 kg dispensed over 3,119 transactions, 58 kg/day on average, a 3.43 kg
+average fill and approximately 99.6% 70 MPa dispensing.
+
+These are public aggregate project statistics, not a synchronized vehicle/
+dispenser pressure-temperature-mass-flow logger archive. The source is therefore
+recorded as `mountain_view_cec_linde_2022` in
+[`public_operational_benchmark_recheck_2026_10_05.json`](public_operational_benchmark_recheck_2026_10_05.json)
+as face-validity context and a data-request lead only. It does not change the
+full-loop validation decision, and no model parameter was fitted to these
+statistics.
