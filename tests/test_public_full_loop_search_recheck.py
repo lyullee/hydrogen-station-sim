@@ -28,7 +28,7 @@ def test_public_full_loop_recheck_preserves_strict_eligibility_boundary():
     }
     assert record["supplemental_search_addendum"] == {
         "record": "research/public_full_loop_search_addendum_2026_10_05.json",
-        "new_candidate_count": 8,
+        "new_candidate_count": 12,
         "eligible_count": 0,
     }
 

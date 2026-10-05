@@ -13,6 +13,6 @@ def test_public_search_addendum_keeps_all_new_leads_out_of_full_loop_gate():
     )
     assert record["result"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
     assert record["gate_impact"] == "full_loop_external_validation_remains_open"
-    assert len(record["candidates"]) == 8
+    assert len(record["candidates"]) == 12
     assert all(item["full_loop_holdout_eligible"] is False for item in record["candidates"])
     assert "common time base" in record["eligibility_rule"]["required"]
