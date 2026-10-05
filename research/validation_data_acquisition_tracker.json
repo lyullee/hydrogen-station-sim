@@ -635,6 +635,26 @@
       "rights": "RHeaDHy/HRS data custodian must grant written permission for derived metrics, open-repository deposition and journal publication; public campaign summaries alone do not grant raw-data reuse.",
       "next_action": "Project owner reviews research/RHEADHY_DATA_REQUEST_DRAFT.md and contacts the project or test-field custodian only through an approved institutional channel.",
       "claim_boundary": "The public RHeaDHy campaign reports real tests and operating bounds but no synchronized raw archive; it is a high-priority acquisition lead and cannot close full-loop validation until the raw files and rights are frozen."
+    },
+    {
+      "id": "hiad_2_2_public_station_incidents",
+      "draft": "research/HIAD_2_2_DATA_USE_NOTE.md",
+      "source": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt",
+      "candidate_type": "public reviewed hydrogen incident and accident casebook",
+      "status": "public_downloaded_provenance_recorded",
+      "requested_fields": [
+        "event description",
+        "initiating system",
+        "physical effect",
+        "consequence nature",
+        "emergency action",
+        "lesson learnt",
+        "traceable primary reference"
+      ],
+      "minimum_acceptance": "Retain the official workbook digest, source attribution and event-field mapping; coordinator review must remove hindsight leakage before casebook freeze.",
+      "rights": "JRC states use is free of charge subject to HIAD 2.2 download conditions and required acknowledgement; preserve original-source uncertainty and do not imply incident statistics are complete.",
+      "next_action": "Use the 34 hydrogen-refuelling-station records as candidate cases for the existing coordinator-review and ethics-controlled SAGA casebook.",
+      "claim_boundary": "Actual-incident evidence for scenario and response grounding only; no synchronized station-to-vehicle time-series and no numerical full-loop validation claim."
     }
   ]
 }
