@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "target_journal": {
+    "title": "International Journal of Hydrogen Energy",
+    "issn": "0360-3199",
+    "scope_compatible_with_project": true,
+    "scope_basis": "The publisher describes original analytical and experimental research across hydrogen production, storage, transmission, utilization and enabling technologies; a safety digital twin for hydrogen refuelling is within that scope.",
+    "official_landing_page": "https://shop.elsevier.com/journals/international-journal-of-hydrogen-energy/0360-3199"
+  },
+  "research_data_policy": {
+    "publisher": "Elsevier",
+    "policy_page": "https://www-prod.elsevier.com/researcher/author/tools-and-resources/research-data/data-guidelines",
+    "observed_policy": "Elsevier describes repository deposit, dataset citation/linking and a Research Data Availability Statement as journal-dependent options; the target journal's Guide for Authors must control the final submission choice.",
+    "project_implications": [
+      "Freeze raw-data provenance, hashes, preprocessing and reuse rights before manuscript submission.",
+      "Deposit reusable data and code where permission allows, or provide a precise access restriction statement.",
+      "Do not describe simulated, digitized or aggregate records as synchronized station logger data."
+    ]
+  },
+  "status": "POLICY_CONTEXT_ONLY",
+  "readiness_impact": "submission_metadata_and_declarations_remains_pending",
+  "claim_boundary": "This record establishes journal-scope and publisher-policy context only. It does not establish external validation, scientific validity, safety certification, editorial acceptance or goal completion. Journal-specific instructions must be checked again at submission time."
+}
