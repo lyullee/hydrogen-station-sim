@@ -2431,5 +2431,12 @@
     "gate_impact": "full_loop_external_validation_remains_open",
     "source": "https://starfos.tacr.cz/en/vysledky-vyzkumu/RIV%2F25870807%3A_____%2F23:N0000009",
     "finding": "The public STARFOS record describes four independent hydrogen transfer experiments with pressure, temperature and flow measurements, but the raw traces and reuse terms are not public and the result is marked trade-secret. A custodian request draft was added; no validation score was produced."
+  },
+  "h2protocol_case_inventory_recheck_2026_10_05": {
+    "record": "research/h2protocol_case_inventory_recheck_2026_10_05.json",
+    "decision": "NO_UNUSED_PUBLIC_H2PROTOCOL_CASE_FOR_FRESH_FULL_LOOP_HOLDOUT",
+    "gate_impact": "full_loop_external_validation_remains_open",
+    "fresh_holdout_eligible_case_count": 0,
+    "claim_boundary": "Inventory only; no validation or publication-readiness claim."
   }
 }

@@ -18,7 +18,13 @@ def test_public_full_loop_recheck_preserves_strict_eligibility_boundary():
         "research/kgs_oh_preprint_appendix_recheck_2026_10_05.json",
         "research/jrc_gastef_public_access_recheck_2026_10_05.json",
         "research/prhyde_public_access_recheck_2026_10_05.json",
+        "research/h2protocol_case_inventory_recheck_2026_10_05.json",
     ]
+    assert record["case_inventory_recheck"] == {
+        "record": "research/h2protocol_case_inventory_recheck_2026_10_05.json",
+        "fresh_holdout_eligible_case_count": 0,
+        "decision": "NO_UNUSED_PUBLIC_H2PROTOCOL_CASE_FOR_FRESH_FULL_LOOP_HOLDOUT",
+    }
 
 
 def test_external_search_index_references_recheck():
