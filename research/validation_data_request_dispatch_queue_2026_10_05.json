@@ -56,6 +56,29 @@
     },
     {
       "rank": 2,
+      "id": "nbsdc_tongji_lh2_hrs_operational_dataset",
+      "draft": "research/NBSDC_TONGJI_HRS_DATA_REQUEST_DRAFT.md",
+      "status": "request_draft_ready_access_application_required",
+      "source": "https://nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1",
+      "candidate_type": "real liquid-hydrogen station operational logger archive",
+      "reported_scope": "16 hours at one-second resolution; 35 MPa dispensers, 70 MPa dispenser, 90 MPa compressor, high-pressure storage and liquid-hydrogen pump/tank",
+      "requested_fields": [
+        "timestamp",
+        "dispenser_pressure",
+        "dispensed_mass_or_mass_flow",
+        "dispenser_temperature",
+        "storage_bank_pressure_and_temperature",
+        "compressor_state",
+        "pump_and_tank_state",
+        "units_quality_flags_and_calibration_metadata"
+      ],
+      "minimum_acceptance": "Receive the six operational files, verify a common time base and pressure/mass channels, then freeze untouched station events before scoring.",
+      "rights": "The record reports complete sharing, but written permission for derived metrics, open-repository deposition and IJHE publication must be confirmed; raw download currently requires a data application.",
+      "evidence": "research/nbsdc_lh2_hrs_dataset_access_recheck_2026_10_05.json",
+      "next_action": "Submit the NBSDC/Tongji data application; quarantine, hash and rights-check any received files before opening numerical outcomes."
+    },
+    {
+      "rank": 2,
       "id": "nrel_hitrf_nfctec",
       "draft": "research/NREL_HITRF_DATA_REQUEST_DRAFT.md",
       "status": "request_draft_ready",

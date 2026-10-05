@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "status": "ACCESS_RESTRICTED_RAW_CANDIDATE_RECHECKED",
+  "purpose": "Record a newly located real liquid-hydrogen refuelling-station operational dataset without promoting it to validation before raw-file access, rights confirmation and protocol freeze.",
+  "source": {
+    "title_cn": "液氢加氢站运行数据集",
+    "title_en": "Operating Dataset of Liquid Hydrogen Refueling Station",
+    "publisher": "National Basic Science Data Center (NBSDC)",
+    "institution": "Tongji University",
+    "project": "液氢制取、储运与加注关键装备及安全性研究",
+    "record_url": "https://nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1",
+    "detail_api": "https://www.nbsdc.cn/api/general/searchDataDetail?id=67d50e37195d260905af9869",
+    "file_tree_api": "https://www.nbsdc.cn/api/general/v1/getFileTree?dataId=67d50e37195d260905af9869&pid=1&pageOffset=0&pageSize=100",
+    "data_id": "67d50e37195d260905af9869",
+    "record_id": "67bc96ed34eb407463579068",
+    "record_updated": "2025-03-03T23:36:16+0000",
+    "reported_sharing": "完全共享",
+    "access_observed_at": "2026-10-05",
+    "access_observation": "The public metadata and file tree are readable without an account. The file-download endpoint returns HTTP 200 with JSON code 403 and states that data files require a data application; only the description file is directly downloadable.",
+    "raw_file_download_response": {
+      "endpoint": "https://www.nbsdc.cn/api/general/v1/checkAndDownloadFile?dataId=67d50e37195d260905af9869&id=67bc96ed34eb40746357906b&pid=1&pageOffset=0&pageSize=12",
+      "http_status": 200,
+      "application_code": 403,
+      "message": "目前只支持部分数据集的说明文件下载，数据文件请通过数据申请获取。"
+    }
+  },
+  "dataset_description_evidence": {
+    "description_file": "液氢加氢站运行数据集数据说明 .docx",
+    "description_downloaded": true,
+    "description_file_sha256": "not_committed_local_download_only",
+    "reported_time_window": "16 hours",
+    "reported_time_resolution": "1 second",
+    "reported_data_origin": "actual station equipment monitoring with some explicitly identified physical conversions",
+    "reported_channels": [
+      "pressure",
+      "temperature",
+      "flow rate",
+      "dispensed mass",
+      "current",
+      "frequency",
+      "liquid level",
+      "volume"
+    ],
+    "reported_units_and_layout": "Each parameter is represented with Time and ValueY columns in the dispenser workbooks; raw units and channel dictionaries must be checked after data access."
+  },
+  "file_tree_observation": {
+    "root_folder": "2020YFB1506204-003 液氢加氢站运行数据集",
+    "root_id": "67bc96ed34eb407463579068",
+    "file_count": 7,
+    "files": [
+      {"name": "35MPa加氢机1.xlsx", "id": "67bc96ed34eb407463579069", "bytes": 3605593, "role": "dispenser operational log candidate"},
+      {"name": "35MPa加氢机2.xlsx", "id": "67bc96ed34eb40746357906a", "bytes": 5700855, "role": "dispenser operational log candidate"},
+      {"name": "70MPa加氢机.csv", "id": "67bc96ed34eb40746357906b", "bytes": 5974368, "role": "dispenser operational log candidate"},
+      {"name": "90MPa压缩机.xlsx", "id": "67bc96ed34eb40746357906c", "bytes": 3922132, "role": "compressor operational log candidate"},
+      {"name": "液氢加氢站运行数据集数据说明 .docx", "id": "67bc96ed34eb40746357906d", "bytes": 15673, "role": "metadata and use instructions"},
+      {"name": "液氢泵-液氢储罐.xlsx", "id": "67bc96ed34eb40746357906e", "bytes": 15458212, "role": "liquid-hydrogen pump and tank log candidate"},
+      {"name": "高压储氢瓶组.xlsx", "id": "67bc96ed34eb40746357906f", "bytes": 9423277, "role": "high-pressure storage-bank log candidate"}
+    ]
+  },
+  "eligibility": {
+    "candidate_for_full_loop_validation": true,
+    "current_eligible": false,
+    "blocking_requirements": [
+      "obtain the six data files through the NBSDC application route",
+      "verify common timestamps and station-to-vehicle or dispenser pressure/mass channels",
+      "verify tank capacity, initial conditions, protocol and unit metadata",
+      "record immutable SHA-256 hashes for every received file",
+      "obtain written permission for derived metrics, repository deposition and journal publication",
+      "freeze the holdout split and scoring implementation before reading numerical outcomes"
+    ],
+    "full_loop_required_channels": [
+      "common elapsed time or timestamp",
+      "vehicle/receptacle or dispenser pressure",
+      "mass flow or transferred mass"
+    ],
+    "preferred_channels": [
+      "vehicle or gas temperature",
+      "storage-bank and compressor state",
+      "valve/abort/fault markers",
+      "calibration and quality flags"
+    ]
+  },
+  "claim_boundary": "This access recheck establishes a credible real-station data lead and records the access barrier. It does not validate the digital twin, close the full-loop gate, or support a numerical accuracy claim.",
+  "next_action": "Submit a formal NBSDC/Tongji data request for the six operational files and written reuse terms; quarantine any received files, hash them, freeze the scoring protocol, then run an untouched holdout evaluation."
+}
