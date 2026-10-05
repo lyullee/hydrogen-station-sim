@@ -40,6 +40,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert mendeley["cc_by_4_present"] is True
     assert mendeley["simulation_only"] is True
     assert mendeley["full_loop_external_holdout_eligible"] is False
+    assert gates["metrohyve_gravimetric_hrs_metrology_boundary_integrity"]["status"] == "PASS"
+    metrohyve = gates["metrohyve_gravimetric_hrs_metrology_boundary_integrity"]["observed"]
+    assert metrohyve["doi"] == "10.1016/j.flowmeasinst.2020.101743"
+    assert metrohyve["component_flow_metrology_eligible"] is True
+    assert metrohyve["full_loop_external_holdout_eligible"] is False
     assert gates["multhyfuel_d24_public_experiment_integrity"]["status"] == "PASS"
     multhyfuel = gates["multhyfuel_d24_public_experiment_integrity"]["observed"]
     assert multhyfuel["pdf_pages"] >= 25

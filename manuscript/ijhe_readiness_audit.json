@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T05:41:01.932479+00:00",
+  "generated_at": "2026-10-05T06:20:53.265340+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 61,
+    "PASS": 62,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -3117,6 +3117,20 @@
         "doi": "10.17632/mnjs94yzfc.1",
         "cc_by_4_present": true,
         "simulation_only": true,
+        "full_loop_external_holdout_eligible": false
+      }
+    },
+    {
+      "id": "metrohyve_gravimetric_hrs_metrology_boundary_integrity",
+      "status": "PASS",
+      "claim": "The open MetroHyVe HRS calibration paper provides independent flow-meter and uncertainty context without being misrepresented as a station-to-vehicle holdout.",
+      "evidence": "research\\metrohyve_gravimetric_hrs_calibration_boundary_2026_10_05.json",
+      "requirement": "DOI/licence metadata, open-article access, real-HRS scope, 875-bar range, component-only eligibility and explicit full-loop exclusion.",
+      "observed": {
+        "doi": "10.1016/j.flowmeasinst.2020.101743",
+        "real_hrs_field_tests": true,
+        "maximum_pressure_bar": 875,
+        "component_flow_metrology_eligible": true,
         "full_loop_external_holdout_eligible": false
       }
     },

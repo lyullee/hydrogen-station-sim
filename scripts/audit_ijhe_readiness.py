@@ -1430,6 +1430,43 @@ def audit(root: Path) -> dict[str, object]:
         } if mendeley else "missing; Mendeley HRS metadata boundary recheck has not run",
     ))
 
+    metrohyve_path = root / "research/metrohyve_gravimetric_hrs_calibration_boundary_2026_10_05.json"
+    metrohyve = _json(metrohyve_path)
+    metrohyve_source = (metrohyve or {}).get("source") or {}
+    metrohyve_access = (metrohyve or {}).get("access_recheck") or {}
+    metrohyve_scope = (metrohyve or {}).get("observed_scope") or {}
+    metrohyve_eligibility = (metrohyve or {}).get("eligibility") or {}
+    metrohyve_pass = bool(
+        (metrohyve or {}).get("schema_version") == 1
+        and (metrohyve or {}).get("status") == "PUBLIC_ARTICLE_COMPONENT_METROLOGY_RECHECKED"
+        and metrohyve_source.get("doi") == "10.1016/j.flowmeasinst.2020.101743"
+        and "CC BY-NC-ND 4.0" in str(metrohyve_source.get("license"))
+        and metrohyve_access.get("crossref_metadata_http_status") == 200
+        and metrohyve_access.get("elsevier_metadata_http_status") == 200
+        and metrohyve_access.get("open_access_article") is True
+        and metrohyve_access.get("raw_machine_readable_station_logger_found") is False
+        and metrohyve_scope.get("real_hrs_field_tests") is True
+        and metrohyve_scope.get("maximum_pressure_bar") == 875
+        and metrohyve_eligibility.get("component_flow_metrology_eligible") is True
+        and metrohyve_eligibility.get("full_loop_external_holdout_eligible") is False
+        and (metrohyve or {}).get("goal_completion_permitted") is False
+        and bool((metrohyve or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "metrohyve_gravimetric_hrs_metrology_boundary_integrity",
+        "PASS" if metrohyve_pass else ("FAIL" if metrohyve else "PENDING"),
+        "The open MetroHyVe HRS calibration paper provides independent flow-meter and uncertainty context without being misrepresented as a station-to-vehicle holdout.",
+        str(metrohyve_path.relative_to(root)),
+        "DOI/licence metadata, open-article access, real-HRS scope, 875-bar range, component-only eligibility and explicit full-loop exclusion.",
+        {
+            "doi": metrohyve_source.get("doi"),
+            "real_hrs_field_tests": metrohyve_scope.get("real_hrs_field_tests"),
+            "maximum_pressure_bar": metrohyve_scope.get("maximum_pressure_bar"),
+            "component_flow_metrology_eligible": metrohyve_eligibility.get("component_flow_metrology_eligible"),
+            "full_loop_external_holdout_eligible": metrohyve_eligibility.get("full_loop_external_holdout_eligible"),
+        } if metrohyve else "missing; MetroHyVe boundary recheck has not run",
+    ))
+
     multhyfuel_path = root / "research/multhyfuel_d24_public_experiment_recheck_2026_10_05.json"
     multhyfuel = _json(multhyfuel_path)
     multhyfuel_download = (multhyfuel or {}).get("download") or {}
