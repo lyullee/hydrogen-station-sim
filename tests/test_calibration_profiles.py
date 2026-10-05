@@ -44,3 +44,10 @@ def test_default_profile_prefers_deidentified_operational_envelope():
     assert profile.evidence_artifact.endswith(
         "confidential_operational_envelope_calibration_summary_2026_10_06.json"
     )
+    metadata = profile.runtime_metadata()
+    assert metadata["observed_pressure_range_mpa"] == {
+        "min_mpa": 56.295,
+        "median_mpa": 62.5,
+        "max_mpa": 63.36,
+    }
+    assert metadata["state_transition_count"] == 274

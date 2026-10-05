@@ -34,10 +34,8 @@ def _runtime_calibration_profile(frame: dict[str, Any]) -> dict[str, Any]:
         return {
             "status": "active",
             "requested": True,
+            **profile.runtime_metadata(),
             "profile_id": profile.profile_id,
-            "evidence_artifact": profile.evidence_artifact,
-            "sampled_rows": profile.sampled_rows,
-            "recharge_restart_margin_pa": profile.recharge_restart_margin_pa,
             "claim_limit": profile.claim_boundary,
         }
     if requested:
@@ -553,6 +551,8 @@ def _confidential_station_calibration_evidence() -> dict[str, Any] | None:
         "files_read": record.get("files_read"),
         "sampled_rows": record.get("sampled_rows"),
         "duration_s": record.get("duration_s"),
+        "median_sample_period_s": record.get("median_sample_period_s"),
+        "maximum_gap_s": record.get("maximum_gap_s"),
         "boundary_pressure_mpa": {
             key: pressure.get(key)
             for key in ("min", "median", "max")
@@ -561,6 +561,7 @@ def _confidential_station_calibration_evidence() -> dict[str, Any] | None:
         "positive_pressure_ramp_p95_pa_s": record.get(
             "positive_pressure_ramp_p95_pa_s"
         ),
+        "pressure_noise_sigma_pa": record.get("pressure_noise_sigma_pa"),
         "recommended_recharge_restart_margin_pa": record.get(
             "recommended_recharge_restart_margin_pa"
         ),
@@ -875,6 +876,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "evidence_role", "profile_id", "source_scope", "files_read",
                 "sampled_rows", "duration_s",
                 "boundary_pressure_mpa", "positive_pressure_ramp_p95_pa_s",
+                "median_sample_period_s", "maximum_gap_s", "pressure_noise_sigma_pa",
                 "recommended_recharge_restart_margin_pa",
                 "state_transition_count", "channel_roles",
                 "station_boundary_calibration_supported",

@@ -45,6 +45,14 @@ from .hazop.response import (classify_rule, load_playbooks, response_selection,
                              prompt_guidance, render_guidance, structured_guidance)
 
 
+def _runtime_calibration_payload(profile: Any | None) -> dict[str, Any]:
+    """Serialize sanitized calibration provenance for jobs and operator views."""
+
+    if profile is None:
+        return {"id": "reference_defaults", "evidence_artifact": None}
+    return profile.runtime_metadata()
+
+
 class FaultInput(BaseModel):
     model_config = ConfigDict(allow_inf_nan=False)
     event_id: str
@@ -471,17 +479,7 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             simulated_time_s=0.0,
             duration_s=config.duration_s,
             hyram_backend=backend.name,
-            calibration_profile=(
-                {
-                    "id": measured_profile.profile_id,
-                    "evidence_artifact": measured_profile.evidence_artifact,
-                    "sampled_rows": measured_profile.sampled_rows,
-                    "recharge_hysteresis_pa": measured_profile.recharge_hysteresis_pa,
-                    "claim_boundary": measured_profile.claim_boundary,
-                }
-                if measured_profile is not None
-                else {"id": "reference_defaults", "evidence_artifact": None}
-            ),
+            calibration_profile=_runtime_calibration_payload(measured_profile),
             updated_at=_utc_now(),
         )
 
@@ -995,17 +993,7 @@ def create_simulation(request: SimulationInput) -> dict[str, Any]:
             "fault_registry": {fault.event_id: fault.to_event() for fault in request.faults},
             "auto_resolved_fault_ids": [],
             "operations": process_runtime.snapshot() if process_runtime is not None else None,
-            "calibration_profile": (
-                {
-                    "id": measured_profile.profile_id,
-                    "evidence_artifact": measured_profile.evidence_artifact,
-                    "sampled_rows": measured_profile.sampled_rows,
-                    "recharge_hysteresis_pa": measured_profile.recharge_hysteresis_pa,
-                    "claim_boundary": measured_profile.claim_boundary,
-                }
-                if measured_profile is not None
-                else {"id": "reference_defaults", "evidence_artifact": None},
-            ),
+            "calibration_profile": _runtime_calibration_payload(measured_profile),
         }
     _executor.submit(_execute_simulation, job_id, request)
     return {"id": job_id, "status": "queued"}
@@ -1162,13 +1150,7 @@ def set_process_operations(job_id: str, settings: ProcessSettings) -> dict[str, 
                 settings_dict[f"recharge_restart_margin_{bank}_mpa"] = (
                     measured_profile.recharge_restart_margin_pa / 1.0e6
                 )
-            job["calibration_profile"] = {
-                "id": measured_profile.profile_id,
-                "evidence_artifact": measured_profile.evidence_artifact,
-                "sampled_rows": measured_profile.sampled_rows,
-                "recharge_hysteresis_pa": measured_profile.recharge_hysteresis_pa,
-                "claim_boundary": measured_profile.claim_boundary,
-            }
+            job["calibration_profile"] = _runtime_calibration_payload(measured_profile)
         else:
             job["calibration_profile"] = {
                 "id": "reference_defaults",
