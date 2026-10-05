@@ -1,6 +1,6 @@
 # IJHE objective blocker matrix
 
-Generated: `2026-10-05T02:35:38.838305+00:00`
+Generated: `2026-10-05T02:54:53.935234+00:00`
 
 This is an evidence-readiness record, not a prediction of journal acceptance.
 
@@ -26,6 +26,6 @@ This is an evidence-readiness record, not a prediction of journal acceptance.
 
 ## Reproducibility
 
-- Acquisition routes tracked: `29`
+- Acquisition routes tracked: `30`
 - Full-loop search candidates: `14`
 - Source hashes are recorded in the JSON companion.
