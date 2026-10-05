@@ -783,6 +783,19 @@
       "access_recheck": "research/nbsdc_liquid_hrs_public_access_recheck_2026_10_05.json",
       "intake_protocol": "research/nbsdc_liquid_hrs_intake_protocol_2026_10_05.json",
       "eligibility_note": "High-value real-station acquisition lead; numerical files return the portal application-required 403 response, so no synchronized vehicle/receptacle full-loop holdout is currently available."
+    },
+    "nbsdc_gaseous_hrs_operational_dataset_2026_10_06": {
+      "title": "Hydrogen Refuelling Station Operational Dataset",
+      "publisher": "National Basic Science Data Center catalogue",
+      "landing_page": "https://xiaopeiwang.com/en/result/r-057159df",
+      "custodian_catalogue": "https://www.nbsdc.cn/general/openAPI",
+      "cstr": "CSTR:16666.11.nbsdc.aI3fJrzX",
+      "public_release": "2023-03-21",
+      "reported_coverage": "2022",
+      "public_raw_data": false,
+      "access_recheck": "research/nbsdc_hrs_operational_dataset_recheck_2026_10_06.json",
+      "request_draft": "research/NBSDC_HRS_OPERATIONAL_DATASET_DATA_REQUEST_DRAFT_2026_10_06.md",
+      "eligibility_note": "Metadata-only candidate in the current recheck; raw files, machine-readable schema and reuse terms were not obtained, so it cannot close full_loop_external_validation."
     }
   }
 }

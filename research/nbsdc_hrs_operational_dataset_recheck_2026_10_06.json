@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_hrs_operational_dataset_access_recheck",
+  "recorded_at": "2026-10-06",
+  "status": "PUBLIC_METADATA_CANDIDATE_ACCESS_LIMITED",
+  "source": {
+    "title": "Hydrogen Refuelling Station Operational Dataset",
+    "cstr": "16666.11.nbsdc.aI3fJrzX",
+    "landing_page": "https://xiaopeiwang.com/en/result/r-057159df",
+    "custodian_catalogue": "https://www.nbsdc.cn/general/openAPI",
+    "public_release": "2023-03-21",
+    "reported_coverage": "2022"
+  },
+  "access_result": {
+    "metadata_found": true,
+    "landing_page_retrieved_in_current_recheck": false,
+    "raw_files_obtained": false,
+    "machine_readable_schema_obtained": false,
+    "license_terms_obtained": false,
+    "observation": "Search-index metadata identifies an operational monitoring/supply dataset; the custodian API describes metadata discovery, not an unrestricted numerical-file download."
+  },
+  "required_intake": [
+    "station pressure, temperature and mass-flow channels",
+    "vehicle or receptacle pressure and temperature, if present",
+    "common timestamp, timezone and missing-value rules",
+    "initial conditions, capacity and protocol/controller state",
+    "sensor calibration and quality flags",
+    "written reuse and derived-metric publication terms"
+  ],
+  "eligibility": {
+    "full_loop_external_holdout_eligible": false,
+    "station_boundary_component_candidate": false,
+    "decision": "REQUEST_CUSTODIAN_DATA_AND_REUSE_TERMS"
+  },
+  "claim_boundary": "Metadata lead only. No raw-data access, model validation, station-safety conclusion, or SAGA-effectiveness claim is made from this record.",
+  "gate_impact": "full_loop_external_validation_remains_open"
+}
