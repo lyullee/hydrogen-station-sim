@@ -139,6 +139,33 @@ class StationCalibrationSummary:
         }
 
 
+@dataclass(frozen=True)
+class StationBoundaryProfile:
+    """In-memory measured boundary profile for a controlled partial replay."""
+
+    time_s: tuple[float, ...]
+    pressure_pa: tuple[float, ...]
+    temperature_k: tuple[float, ...] = ()
+
+    def __post_init__(self) -> None:
+        if len(self.time_s) != len(self.pressure_pa) or not self.time_s:
+            raise ValueError("boundary profile requires equal non-empty time and pressure arrays")
+        if self.temperature_k and len(self.temperature_k) != len(self.time_s):
+            raise ValueError("temperature profile length must match time profile")
+        if any(right <= left for left, right in zip(self.time_s, self.time_s[1:])):
+            raise ValueError("boundary profile time must be strictly increasing")
+
+    def reference_scenario_kwargs(self) -> dict[str, tuple[tuple[float, float], ...]]:
+        """Return only the profile fields accepted by ``ReferenceScenario``."""
+
+        result: dict[str, tuple[tuple[float, float], ...]] = {
+            "supply_pressure_profile_pa": tuple(zip(self.time_s, self.pressure_pa)),
+        }
+        if self.temperature_k:
+            result["supply_temperature_profile_k"] = tuple(zip(self.time_s, self.temperature_k))
+        return result
+
+
 def _finite(value: object) -> float | None:
     try:
         result = float(str(value).strip())
@@ -211,6 +238,56 @@ def _quantile(values: Sequence[float], fraction: float) -> float | None:
     if len(values) == 1:
         return float(values[0])
     return float(quantiles(values, n=100, method="inclusive")[max(0, min(99, int(fraction * 100) - 1))])
+
+
+def read_boundary_profile(
+    input_path: Path,
+    mapping: TraceMapping,
+    *,
+    stride: int = 1,
+    max_rows: int | None = 100_000,
+) -> StationBoundaryProfile:
+    """Load one private trace into an in-memory relative-time profile.
+
+    This helper is intended for a controlled partial-station replay. It does
+    not write rows or timestamps to disk and rejects multi-file bundles so a
+    caller cannot silently splice unrelated campaigns together.
+    """
+
+    paths = _paths(input_path)
+    if len(paths) != 1:
+        raise ValueError("read_boundary_profile requires exactly one private trace file")
+    rows: list[tuple[float, float, float | None]] = []
+    for path, time_value, row in _sampled_rows(
+        paths[0], mapping, stride=stride, max_rows_per_file=max_rows
+    ):
+        values = [
+            value * mapping.pressure_scale_pa_per_unit
+            for _, column in mapping.pressure_columns
+            if (value := _finite(row.get(column))) is not None
+        ]
+        if not values:
+            continue
+        temperature_values = [
+            value * mapping.temperature_scale_k_per_unit + mapping.temperature_offset_k
+            for _, column in mapping.temperature_columns
+            if (value := _finite(row.get(column))) is not None
+        ]
+        rows.append((time_value, float(median(values)), median(temperature_values) if temperature_values else None))
+    if not rows:
+        raise ValueError("no finite pressure rows matched the mapping")
+    # Source exports may be newest-first. Sorting occurs only in memory and
+    # preserves a relative time axis with no identifying calendar timestamps.
+    rows.sort(key=lambda item: item[0])
+    origin = rows[0][0]
+    times = tuple(float(time - origin) for time, _, _ in rows)
+    pressures = tuple(float(pressure) for _, pressure, _ in rows)
+    temperatures = tuple(
+        float(value) if value is not None else math.nan for _, _, value in rows
+    )
+    if any(not math.isfinite(value) for value in temperatures):
+        temperatures = ()
+    return StationBoundaryProfile(times, pressures, temperatures)
 
 
 def fit_station_boundary(

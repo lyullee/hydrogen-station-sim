@@ -7,6 +7,7 @@ from h2station.controlled_station_replay import (
     TraceMapping,
     apply_recharge_hysteresis,
     fit_station_boundary,
+    read_boundary_profile,
 )
 from h2station.risk.runtime_backend import UnavailableHyRAMBackend
 from h2station.scenario import ReferenceScenario, build_reference_scenario
@@ -78,6 +79,28 @@ def test_time_column_index_supports_corrupted_export_header(tmp_path: Path):
     assert summary.median_sample_period_s == 1.0
     assert summary.temperature_median_deg_c == 20.5
     assert summary.state_transition_count == 1
+
+
+def test_boundary_profile_normalizes_newest_first_trace_in_memory(tmp_path: Path):
+    trace = tmp_path / "reverse.csv"
+    trace.write_text(
+        "time,pressure,temp\n"
+        "2,42,22\n"
+        "1,41,21\n"
+        "0,40,20\n",
+        encoding="utf-8",
+    )
+    profile = read_boundary_profile(
+        trace,
+        TraceMapping(
+            time_column="time",
+            pressure_columns=(("storage", "pressure"),),
+            temperature_columns=(("storage_temperature", "temp"),),
+        ),
+    )
+    assert profile.time_s == (0.0, 1.0, 2.0)
+    assert profile.pressure_pa == (40.0e6, 41.0e6, 42.0e6)
+    assert profile.reference_scenario_kwargs()["supply_pressure_profile_pa"][0] == (0.0, 40.0e6)
 
 
 def test_station_calibration_margin_is_explicitly_injected():

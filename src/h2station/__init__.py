@@ -68,9 +68,11 @@ from .vehicle import (
 from .scenario import BuiltScenario, ReferenceScenario, build_reference_scenario
 from .controlled_station_replay import (
     StationCalibrationSummary,
+    StationBoundaryProfile,
     TraceMapping,
     apply_recharge_hysteresis,
     fit_station_boundary,
+    read_boundary_profile,
 )
 from .safe_operation import SafeFullStationSimulator, SafeOperationTrajectory
 from .safety_runtime import (
@@ -131,6 +133,7 @@ __all__ = [
     "DynamicSensor",
     "BuiltScenario",
     "StationCalibrationSummary",
+    "StationBoundaryProfile",
     "TraceMapping",
     "apply_recharge_hysteresis",
     "CompositeTankFitParameters",
@@ -157,4 +160,5 @@ __all__ = [
     "VehicleStateOfCharge",
     "build_reference_scenario",
     "fit_station_boundary",
+    "read_boundary_profile",
 ]
