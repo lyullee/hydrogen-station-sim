@@ -222,6 +222,45 @@ def _public_accidental_release_evidence() -> dict[str, Any] | None:
     }
 
 
+def _confidential_measured_boundary_evidence() -> dict[str, Any] | None:
+    """Expose only the claim-bounded status of the private-data replay.
+
+    The raw station archive and its mappings never enter the LLM prompt.  This
+    compact status lets the assistant distinguish a measured-boundary
+    integration check from an independent station-to-vehicle validation claim.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/confidential_measured_boundary_replay_2026_10_06.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if (
+        record.get("artifact_type") != "confidential_measured_boundary_replay"
+        or record.get("source_identifiers_published") is not False
+        or record.get("raw_rows_persisted") is not False
+    ):
+        return None
+    eligibility = record.get("eligibility") or {}
+    replay = record.get("controlled_replay") or {}
+    return {
+        "artifact": "research/confidential_measured_boundary_replay_2026_10_06.json",
+        "evidence_role": "confidential measured-boundary integration only",
+        "trajectory_completed": replay.get("trajectory_completed") is True,
+        "station_boundary_calibration_supported": eligibility.get(
+            "station_boundary_calibration_supported"
+        ) is True,
+        "independent_full_loop_validation_supported": eligibility.get(
+            "independent_full_loop_validation_supported"
+        ) is True,
+        "raw_rows_persisted": False,
+        "source_identifiers_published": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _finite_number(value: Any) -> int | float | None:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         return None
@@ -370,6 +409,9 @@ def build_evidence_manifest(
     accidental_release = _public_accidental_release_evidence()
     if accidental_release is not None:
         envelope["response_evidence"]["public_accidental_release_evidence"] = accidental_release
+    confidential_boundary = _confidential_measured_boundary_evidence()
+    if confidential_boundary is not None:
+        envelope["response_evidence"]["confidential_measured_boundary_replay"] = confidential_boundary
     canonical = json.dumps(envelope, ensure_ascii=False, sort_keys=True,
                            separators=(",", ":"), default=str).encode("utf-8")
     envelope["evidence_digest"] = "sha256:" + sha256(canonical).hexdigest()

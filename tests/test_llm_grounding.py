@@ -45,6 +45,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert "ignition probability" in accidental["claim_limit"]
     assert all(row["local_sha256_match"] for row in accidental["files"])
     assert "raw_text" not in accidental
+    confidential = idle["response_evidence"]["confidential_measured_boundary_replay"]
+    assert confidential["trajectory_completed"] is True
+    assert confidential["station_boundary_calibration_supported"] is True
+    assert confidential["independent_full_loop_validation_supported"] is False
+    assert confidential["raw_rows_persisted"] is False
+    assert confidential["source_identifiers_published"] is False
 
     result = {"node_id": "N09", "node_name": "고압 저장뱅크",
               "calculation_status": "calculated",
