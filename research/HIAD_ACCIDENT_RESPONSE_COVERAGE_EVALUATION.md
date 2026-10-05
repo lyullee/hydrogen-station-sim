@@ -30,6 +30,6 @@ This artifact shows only that action categories derived from public HIAD metadat
 입력 해시:
 
 - `action_evidence_sha256`: `72f2550eabea6a4207a5d59c98bd99520e217fd2d4f8597e5d1d72f2ef87e1dd`
-- `response_stage_contract_sha256`: `5e8dc02a1a0ad74e54eac99c4c61eccf84778bfd285db897502a1a2c2c535ea1`
-- `action_playbook_coverage_sha256`: `97e74620c58157cc94a096591438f4d4d072230b77cd5f0418824012eae7fccc`
-- `playbook_catalog_sha256`: `68a2a847ae4d7c2ce1aab10d626ffd7595457231f182e3d2bb8b5a2fb73592b0`
+- `response_stage_contract_sha256`: `3b4b0de8bb20af9aede25adecc22f0d0e3fb8a69c94bf2fdfd2940f265f9bee7`
+- `action_playbook_coverage_sha256`: `f1e05a07f3f68d449163f48355c210c1b47c3006c9e22d42b107b329cf4f4810`
+- `playbook_catalog_sha256`: `b7d64103d9c4d3a322edd2c97b3800b5a796385e4ec25a588a252d288aad8bba`

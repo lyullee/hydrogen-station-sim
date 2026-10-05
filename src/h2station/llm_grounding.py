@@ -146,6 +146,82 @@ def _khk_public_accident_inventory() -> dict[str, Any] | None:
     return result
 
 
+def _public_accidental_release_evidence() -> dict[str, Any] | None:
+    """Expose the licensed accidental-release archive without overclaiming it.
+
+    The archive contains pressure and paired ignition/no-ignition temperature
+    traces from a controlled cylinder breach.  It is useful provenance for
+    release/ignition scenario wording, but it is not a station fueling trace
+    and must never be presented as an ignition probability or a numerical
+    validation of the digital-twin release model.
+    """
+    root = Path(__file__).resolve().parents[2]
+    path = root / "research/accidental_self_ignition_public_evidence_2026_10_04.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    source = record.get("source") or {}
+    archive = record.get("archive") or {}
+    eligibility = record.get("eligibility") or {}
+    if record.get("status") != "public_accidental_release_ignition_evidence_captured":
+        return None
+    if source.get("license") != "CC BY 4.0" or not eligibility.get(
+        "public_accident_or_experiment_evidence"
+    ):
+        return None
+
+    files: list[dict[str, Any]] = []
+    raw_dir = root / "data/public_validation/raw/zenodo_17913628_accidental_self_ignition"
+    for item in record.get("files") or []:
+        if not isinstance(item, dict):
+            continue
+        name = str(item.get("name") or "")
+        local_path = raw_dir / name
+        # The runtime envelope exposes only compact metadata.  A local digest
+        # check prevents a stale or edited workbook from silently being used
+        # as provenance, while no raw trace values enter the prompt.
+        local_match = False
+        try:
+            local_match = sha256(local_path.read_bytes()).hexdigest() == item.get("sha256")
+        except OSError:
+            local_match = False
+        files.append({
+            "name": name,
+            "numeric_rows": item.get("numeric_rows"),
+            "time_range_s": item.get("time_range_s"),
+            "channels": list(item.get("channels") or []),
+            "local_sha256_match": local_match,
+        })
+        if "max_temperature_c" in item:
+            files[-1]["max_temperature_c"] = item["max_temperature_c"]
+        if "min_temperature_c" in item:
+            files[-1]["min_temperature_c"] = item["min_temperature_c"]
+    return {
+        "artifact": "research/accidental_self_ignition_public_evidence_2026_10_04.json",
+        "article_doi": source.get("article_doi"),
+        "article_url": source.get("article_url"),
+        "zenodo_doi": source.get("zenodo_doi"),
+        "dataset_url": source.get("zenodo_record_url"),
+        "license": source.get("license"),
+        "evidence_role": record.get("evidence_role"),
+        "reported_apparatus": source.get("reported_apparatus"),
+        "reported_instrumentation": source.get("reported_instrumentation"),
+        "archive_sha256": archive.get("sha256"),
+        "files": files,
+        "consequence_and_ignition_grounding_eligible": eligibility.get(
+            "consequence_and_ignition_grounding_eligible"
+        ) is True,
+        "full_loop_station_vehicle_holdout_eligible": eligibility.get(
+            "full_loop_station_vehicle_holdout_eligible"
+        ) is True,
+        "numerical_release_model_validation_claimed": eligibility.get(
+            "numerical_release_model_validation_claimed"
+        ) is True,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _finite_number(value: Any) -> int | float | None:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         return None
@@ -291,6 +367,9 @@ def build_evidence_manifest(
     khk_inventory = _khk_public_accident_inventory()
     if khk_inventory is not None:
         envelope["response_evidence"]["public_accident_report_inventory"] = khk_inventory
+    accidental_release = _public_accidental_release_evidence()
+    if accidental_release is not None:
+        envelope["response_evidence"]["public_accidental_release_evidence"] = accidental_release
     canonical = json.dumps(envelope, ensure_ascii=False, sort_keys=True,
                            separators=(",", ":"), default=str).encode("utf-8")
     envelope["evidence_digest"] = "sha256:" + sha256(canonical).hexdigest()

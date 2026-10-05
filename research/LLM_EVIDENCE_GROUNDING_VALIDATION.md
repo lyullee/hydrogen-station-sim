@@ -51,7 +51,7 @@ The following tests passed in the repository virtual environment:
 14 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-582 passed, 16 warnings
+586 passed, 16 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -64,6 +64,12 @@ HIAD action-to-playbook traceability metadata, the derived HIAD action-category
 counts and their artifact digest, and the KHK citation inventory used to ground
 the staged action plan. Raw HIAD action prose is never inserted into the live
 prompt.
+
+The accidental-release evidence envelope links the open Zenodo archive and
+its parent article to qualitative release/ignition scenario grounding. It exposes
+only compact channel, row-count, time-range and local-hash metadata; the raw
+workbooks are never copied into the prompt, and the record remains ineligible
+for a station-to-vehicle full-loop holdout or ignition-probability claim.
 
 The consequence handoff also records whether a supplied process-flow boundary
 was retained.  If HyRAM's high-pressure choked-flow path recomputes a different

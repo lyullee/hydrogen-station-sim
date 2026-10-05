@@ -1,18 +1,18 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-10-04T11:15:26.741528+00:00",
+  "generated_at_utc": "2026-10-05T10:22:13.477919+00:00",
   "status": "completed_metadata_only_response_stage_contract",
   "evidence_role": "metadata_only_response_contract",
   "source": {
     "inventory": "research/hiad_hrs_public_evidence.json",
     "inventory_sha256": "27b7fc752fe7ad706eb48854447bb203605be30b745515a259fad89325cc2536",
     "coverage": "research/hiad_playbook_coverage.json",
-    "coverage_sha256": "09f9de219440aa73816f08984e5a2a4107052241f9a65a711292a1fa5e85eeff",
+    "coverage_sha256": "879d5d87ef76b8657483fba8ae3f8963183ea1f716342b13d0669f8f4bc42b29",
     "public_source": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt"
   },
   "catalog": {
     "path": "src/h2station/data/emergency_playbooks.json",
-    "catalog_sha256": "68a2a847ae4d7c2ce1aab10d626ffd7595457231f182e3d2bb8b5a2fb73592b0",
+    "catalog_sha256": "b7d64103d9c4d3a322edd2c97b3800b5a796385e4ec25a588a252d288aad8bba",
     "plan_count": 16,
     "required_stages": [
       "recognition",

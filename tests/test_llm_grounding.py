@@ -35,6 +35,16 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert precedent_map["citation_only"] is True
     assert "playbook_case_counts" not in precedent_map
     assert "representative_precedents" not in precedent_map
+    accidental = idle["response_evidence"]["public_accidental_release_evidence"]
+    assert accidental["zenodo_doi"] == "10.5281/zenodo.17913628"
+    assert accidental["article_doi"] == "10.1016/j.elstat.2025.104222"
+    assert accidental["license"] == "CC BY 4.0"
+    assert accidental["consequence_and_ignition_grounding_eligible"] is True
+    assert accidental["full_loop_station_vehicle_holdout_eligible"] is False
+    assert accidental["numerical_release_model_validation_claimed"] is False
+    assert "ignition probability" in accidental["claim_limit"]
+    assert all(row["local_sha256_match"] for row in accidental["files"])
+    assert "raw_text" not in accidental
 
     result = {"node_id": "N09", "node_name": "고압 저장뱅크",
               "calculation_status": "calculated",

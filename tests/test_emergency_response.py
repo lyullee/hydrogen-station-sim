@@ -33,11 +33,17 @@ def test_high_consequence_playbooks_link_public_incident_evidence():
     playbooks = load_playbooks()
     assert playbooks["sources"]["HIAD2026"]["url"].startswith("https://minerva.jrc.ec.europa.eu/")
     assert playbooks["sources"]["KHK_PUBLIC"]["url"] == "https://www.khk.or.jp/hydrogen/accident_information.html"
+    accidental = playbooks["sources"]["ACCIDENTAL_RELEASE_2025"]
+    assert accidental["url"] == "https://doi.org/10.1016/j.elstat.2025.104222"
+    assert accidental["dataset_url"] == "https://doi.org/10.5281/zenodo.17913628"
+    assert accidental["license"] == "CC BY 4.0"
     by_id = {plan["id"]: plan for plan in playbooks["plans"]}
     for plan_id in ("gas_release", "hydrogen_fire", "external_fire", "overpressure",
                     "relief_discharge", "fueling_fault", "hose_connection", "structural_damage"):
         assert "HIAD2026" in by_id[plan_id]["sources"]
         assert "KHK_PUBLIC" in by_id[plan_id]["sources"]
+    assert "ACCIDENTAL_RELEASE_2025" in by_id["gas_release"]["sources"]
+    assert "ACCIDENTAL_RELEASE_2025" in by_id["hydrogen_fire"]["sources"]
 
 
 def test_fire_selection_uses_actual_event_and_healthy_periodic_is_quiet():

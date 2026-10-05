@@ -53,6 +53,13 @@
     "KHK_PUBLIC": {
       "title": "KHK, Hydrogen-related accident information and hydrogen-station high-pressure-gas precautions",
       "url": "https://www.khk.or.jp/hydrogen/accident_information.html"
+    },
+    "ACCIDENTAL_RELEASE_2025": {
+      "title": "Jankuj et al., Accidental self-ignition of hydrogen released from pressurized cylinder",
+      "url": "https://doi.org/10.1016/j.elstat.2025.104222",
+      "dataset_url": "https://doi.org/10.5281/zenodo.17913628",
+      "license": "CC BY 4.0",
+      "claim_limit": "정성적 고압 방출·점화 근거이며 점화확률·충전소 전체 루프·현장 안전거리를 검증하지 않음"
     }
   },
   "common_response": [
@@ -96,7 +103,8 @@
         "EIGA2024",
         "H2_PLAN",
         "HIAD2026",
-        "KHK_PUBLIC"
+        "KHK_PUBLIC",
+        "ACCIDENTAL_RELEASE_2025"
       ]
     },
     {
@@ -132,7 +140,8 @@
         "ERG115",
         "EIGA2024",
         "HIAD2026",
-        "KHK_PUBLIC"
+        "KHK_PUBLIC",
+        "ACCIDENTAL_RELEASE_2025"
       ]
     },
     {
