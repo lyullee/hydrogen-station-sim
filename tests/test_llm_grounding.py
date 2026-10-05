@@ -99,6 +99,28 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "shutdown_isolation_depressurization"
     ] == 22
     assert header["public_hitrf_operational_reference"]["raw_synchronized_logger_public"] is False
+    assert header["public_hitrf_operational_reference"]["available"] is True
+    assert header["public_hitrf_operational_reference"]["storage_pressure_mpa"] == {
+        "high_pressure": 90.0,
+        "low_pressure": 20.0,
+        "medium_pressure": 41.5,
+    }
+    assert header["public_hitrf_operational_reference"]["storage_capacity_kg"] == {
+        "high_pressure": 90,
+        "low_pressure": 190,
+        "medium_pressure": 85,
+    }
+    assert header["public_hitrf_operational_reference"][
+        "compression_stages"
+    ][0] == {
+        "inlet_pressure_bar": 7,
+        "outlet_pressure_bar": 415,
+        "capacity_kg_per_day": 50,
+        "capacity_kg_per_hour": None,
+    }
+    assert header["public_hitrf_operational_reference"][
+        "chiller_target_temperature_c"
+    ] == -40
     assert header["public_hitrf_operational_reference"]["storage_tiers"] == [
         "high_pressure", "low_pressure", "medium_pressure"
     ]

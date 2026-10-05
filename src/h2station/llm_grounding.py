@@ -1140,19 +1140,47 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     local_accident_coverage = evidence.get(
         "confidential_local_accident_response_coverage"
     ) or {}
+    hitrf_storage = hitrf_reference.get("storage") or {}
+    hitrf_thermal = hitrf_reference.get("dispensing_and_thermal") or {}
     return {
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "public_experiment_sources": benchmark_ids,
         "public_hitrf_operational_reference": {
             "source_url": (hitrf_reference.get("source") or {}).get("url"),
+            "available": bool(hitrf_reference),
             "raw_synchronized_logger_public": (
                 (hitrf_reference.get("source") or {}).get(
                     "raw_synchronized_logger_public"
                 ) is True
             ),
             "storage_tiers": sorted((hitrf_reference.get("storage") or {}).keys()),
+            "storage_pressure_mpa": {
+                str(tier): values.get("maximum_pressure_mpa")
+                for tier, values in hitrf_storage.items()
+                if isinstance(values, dict)
+                and values.get("maximum_pressure_mpa") is not None
+            },
+            "storage_capacity_kg": {
+                str(tier): values.get("reported_capacity_kg")
+                for tier, values in hitrf_storage.items()
+                if isinstance(values, dict)
+                and values.get("reported_capacity_kg") is not None
+            },
             "compression_stage_count": len(
                 hitrf_reference.get("compression_stages") or []
+            ),
+            "compression_stages": [
+                {
+                    "inlet_pressure_bar": stage.get("inlet_pressure_bar"),
+                    "outlet_pressure_bar": stage.get("outlet_pressure_bar"),
+                    "capacity_kg_per_day": stage.get("capacity_kg_per_day"),
+                    "capacity_kg_per_hour": stage.get("capacity_kg_per_hour"),
+                }
+                for stage in hitrf_reference.get("compression_stages") or []
+                if isinstance(stage, dict)
+            ],
+            "chiller_target_temperature_c": hitrf_thermal.get(
+                "chiller_target_temperature_c"
             ),
             "claim_limit": hitrf_reference.get("claim_limit"),
         },
