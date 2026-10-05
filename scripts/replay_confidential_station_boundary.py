@@ -40,6 +40,10 @@ def main() -> int:
     parser.add_argument("--input", type=Path, required=True, help="restricted raw trace")
     parser.add_argument("--mapping", type=Path, required=True, help="restricted custodian mapping JSON")
     parser.add_argument("--output", type=Path, required=True, help="aggregate replay report JSON")
+    parser.add_argument(
+        "--calibration", type=Path,
+        help="optional owner-approved aggregate calibration JSON; no raw trace is read from it",
+    )
     parser.add_argument("--stride", type=int, default=60)
     parser.add_argument("--max-rows", type=int, default=25_000)
     parser.add_argument(
@@ -81,9 +85,21 @@ def main() -> int:
         if time_s <= duration_s
     ) if profile.temperature_k else ()
 
+    calibrated_hysteresis_pa: float | None = None
+    if args.calibration is not None:
+        calibration = json.loads(args.calibration.read_text(encoding="utf-8"))
+        if calibration.get("artifact_type") != "confidential_station_boundary_calibration":
+            raise ValueError("--calibration is not a station boundary calibration artifact")
+        value = calibration.get("calibration", {}).get("recharge_restart_margin_pa")
+        if value is not None:
+            calibrated_hysteresis_pa = float(value)
+            if calibrated_hysteresis_pa <= 0.0:
+                raise ValueError("calibration recharge margin must be positive")
+
     config = ReferenceScenario(
         duration_s=duration_s,
         control_period_s=args.control_period_s,
+        station_recharge_hysteresis_pa=calibrated_hysteresis_pa,
         supply_pressure_profile_pa=scenario_profile,
         supply_temperature_profile_k=temperature_profile,
     )
@@ -104,6 +120,11 @@ def main() -> int:
             "profile_duration_s": round(available_duration, 3),
             "pressure_profile_used": True,
             "temperature_profile_used": bool(profile.temperature_k),
+        },
+        "calibration": {
+            "aggregate_margin_applied": calibrated_hysteresis_pa is not None,
+            "raw_rows_persisted": False,
+            "source_identifiers_published": False,
         },
         "replay": {
             "requested_duration_s": round(duration_s, 3),

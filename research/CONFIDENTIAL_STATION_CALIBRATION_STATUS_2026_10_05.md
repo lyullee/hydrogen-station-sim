@@ -52,6 +52,12 @@ boundary can pass through the complete protection-aware runtime path; it does
 not establish independent predictive accuracy or justify changing a frozen
 model parameter.
 
+The same runner also accepts the aggregate calibration artifact as an explicit
+runtime input. A private replay with that margin enabled completed the same
+short horizon, so the measured recharge hysteresis is now testable without
+embedding the value in public defaults. It remains an operator-selected
+calibration input; it is not silently applied to ordinary simulations.
+
 The first pressure/equipment synchronization attempt was intentionally rejected
 because the two supplied sample windows did not overlap on their absolute time
 axes. No rows were shifted to manufacture an overlap, and no scenario
@@ -75,6 +81,7 @@ equipment input and mapping also runs the absolute-time overlap gate and emits
 only its aggregate alignment result. The output is an aggregate review
 artifact. For a controlled partial replay, run
 `scripts/replay_confidential_station_boundary.py` with the same private input
-and mapping and an output path outside the repository. Do not commit the
-mapping, raw files, raw hashes, filenames, or unapproved derived metrics to
-GitHub or Zenodo.
+and mapping and an output path outside the repository. An owner-approved
+aggregate calibration JSON may be supplied with `--calibration`; this changes
+only that replay invocation. Do not commit the mapping, raw files, raw hashes,
+filenames, or unapproved derived metrics to GitHub or Zenodo.
