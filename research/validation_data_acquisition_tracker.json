@@ -610,6 +610,31 @@
       "rights": "Kiwa Technology / Výzkumný a zkušební ústav Plzeň or the project custodian must grant written permission for derived metrics, open-repository deposition and journal publication.",
       "next_action": "Project owner reviews research/CZECH_OVERPUMPING_DATA_REQUEST_DRAFT.md and identifies the approved custodian before any contact.",
       "claim_boundary": "The public STARFOS record is a report-level provenance lead; it does not expose raw traces and cannot close the station-to-vehicle full-loop gate by itself."
+    },
+    {
+      "id": "rheadhy_2026_mid_flow_twin_campaign",
+      "draft": "research/RHEADHY_DATA_REQUEST_DRAFT.md",
+      "source": "https://cordis.europa.eu/project/id/101101443/reporting",
+      "candidate_type": "real heavy-duty HRS Mid Flow Twin campaign logger archive",
+      "status": "request_draft_ready",
+      "requested_fields": [
+        "common_timestamp",
+        "vehicle_or_receptacle_pressure",
+        "station_and_dispenser_pressure",
+        "vehicle_and_gas_temperature",
+        "mass_flow_or_transferred_mass",
+        "initial_conditions",
+        "tank_capacity_and_SOC",
+        "ISO_19885_3_protocol_and_pressure_ramp",
+        "storage_bank_selection_and_valve_state",
+        "compressor_and_precooler_state",
+        "stop_abort_fault_markers",
+        "calibration_and_quality_metadata"
+      ],
+      "minimum_acceptance": "De-identified machine-readable synchronized logger files for at least eight complete or protocol-defined eligible heavy-duty fills, with channel definitions, tank capacity, initial conditions, protocol metadata, quality/calibration fields and untouched holdout eligibility.",
+      "rights": "RHeaDHy/HRS data custodian must grant written permission for derived metrics, open-repository deposition and journal publication; public campaign summaries alone do not grant raw-data reuse.",
+      "next_action": "Project owner reviews research/RHEADHY_DATA_REQUEST_DRAFT.md and contacts the project or test-field custodian only through an approved institutional channel.",
+      "claim_boundary": "The public RHeaDHy campaign reports real tests and operating bounds but no synchronized raw archive; it is a high-priority acquisition lead and cannot close full-loop validation until the raw files and rights are frozen."
     }
   ]
 }
