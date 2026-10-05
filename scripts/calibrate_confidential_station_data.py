@@ -34,6 +34,10 @@ def _mapping(path: Path) -> TraceMapping:
         state_columns=tuple(
             (str(item[0]), str(item[1])) for item in value.get("state_columns", [])
         ),
+        temperature_boundary_role=(
+            str(value["temperature_boundary_role"])
+            if value.get("temperature_boundary_role") is not None else None
+        ),
         pressure_scale_pa_per_unit=float(value.get("pressure_scale_pa_per_unit", 1.0e6)),
         temperature_scale_k_per_unit=float(value.get("temperature_scale_k_per_unit", 1.0)),
         temperature_offset_k=float(value.get("temperature_offset_k", 273.15)),

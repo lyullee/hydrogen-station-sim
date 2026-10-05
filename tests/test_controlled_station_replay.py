@@ -145,6 +145,7 @@ def test_synchronization_requires_real_overlap_and_keeps_states_discrete(tmp_pat
             time_column="time",
             temperature_columns=(("compressor", "temp"),),
             state_columns=(("load", "state"),),
+            temperature_boundary_role="compressor",
             time_format="%Y-%m-%dT%H:%M:%SZ",
         ),
         max_match_gap_s=0.1,
@@ -155,6 +156,24 @@ def test_synchronization_requires_real_overlap_and_keeps_states_discrete(tmp_pat
     public = profile.alignment.to_public_dict()
     assert public["raw_rows_persisted"] is False
     assert public["source_identifiers_published"] is False
+
+    diagnostic_only = synchronize_station_traces(
+        pressure,
+        TraceMapping(
+            time_column="time",
+            pressure_columns=(("bank", "pressure"),),
+            time_format="%Y-%m-%dT%H:%M:%SZ",
+        ),
+        equipment,
+        TraceMapping(
+            time_column="time",
+            temperature_columns=(("compressor", "temp"),),
+            state_columns=(("load", "state"),),
+            time_format="%Y-%m-%dT%H:%M:%SZ",
+        ),
+        max_match_gap_s=0.1,
+    )
+    assert diagnostic_only.boundary.temperature_k == ()
 
 
 def test_synchronization_rejects_nonoverlapping_campaigns(tmp_path: Path):

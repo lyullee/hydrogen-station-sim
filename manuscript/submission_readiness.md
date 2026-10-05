@@ -38,6 +38,11 @@ The public manuscript should report the source only as a confidential,
 owner-controlled operational dataset and should omit the operator, location,
 exact dates, manufacturer, model numbers, tag names and detailed geometry.
 
+The current controlled measured-boundary replay is recorded in
+[`confidential_measured_boundary_replay_2026_10_06.json`](../research/confidential_measured_boundary_replay_2026_10_06.json).
+It supports station-boundary integration and calibration checks only; it does
+not close the independent station-to-vehicle holdout gate.
+
 ## Publication-format checks
 
 The local format gate currently passes:

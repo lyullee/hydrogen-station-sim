@@ -34,6 +34,11 @@ class TraceMapping:
     temperature_columns: tuple[tuple[str, str], ...] = ()
     flow_column: str | None = None
     state_columns: tuple[tuple[str, str], ...] = ()
+    # For a synchronized equipment logger, a temperature is injected into the
+    # station boundary only when the custodian explicitly identifies its role
+    # as the measured supply-gas boundary.  Other temperatures remain
+    # diagnostic channels and are never silently treated as inlet gas.
+    temperature_boundary_role: str | None = None
     pressure_scale_pa_per_unit: float = 1.0e6
     temperature_scale_k_per_unit: float = 1.0
     temperature_offset_k: float = 273.15
@@ -55,6 +60,8 @@ class TraceMapping:
             raise ValueError("temperature scale must be positive")
         if self.flow_scale_kg_s_per_unit <= 0.0:
             raise ValueError("flow scale must be positive")
+        if self.temperature_boundary_role is not None and not self.temperature_boundary_role:
+            raise ValueError("temperature_boundary_role cannot be empty")
 
 
 @dataclass(frozen=True)
@@ -448,16 +455,14 @@ def synchronize_station_traces(
             if previous is not None and value != previous:
                 transition_count += 1
             previous = value
-    # A missing channel is not fabricated.  Only a complete temperature role
-    # becomes a scenario profile; callers may still inspect its alignment data.
-    complete_temperature = next(
-        (
-            tuple(values)
-            for values in aligned_temperature.values()
-            if values and all(math.isfinite(value) for value in values)
-        ),
-        (),
-    )
+    # A missing or unclassified channel is not fabricated.  Only a role
+    # explicitly attested as the supply-gas boundary becomes a scenario
+    # temperature profile; equipment temperatures remain diagnostic values.
+    complete_temperature = ()
+    if equipment_mapping.temperature_boundary_role is not None:
+        candidate = aligned_temperature.get(equipment_mapping.temperature_boundary_role, [])
+        if candidate and all(math.isfinite(value) for value in candidate):
+            complete_temperature = tuple(candidate)
     boundary = StationBoundaryProfile(
         tuple(aligned_times), tuple(aligned_pressure), complete_temperature
     )

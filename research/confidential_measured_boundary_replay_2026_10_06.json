@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_measured_boundary_replay",
+  "recorded_at": "2026-10-06",
+  "source_scope": "confidential owner-controlled station operational traces",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "provenance_boundary": {
+    "operator_published": false,
+    "site_published": false,
+    "exact_source_dates_published": false,
+    "manufacturer_or_model_published": false,
+    "tag_names_published": false,
+    "raw_archive_in_repository": false
+  },
+  "measured_boundary": {
+    "absolute_time_overlap_check": "passed for the selected owner-approved logger pair",
+    "channels_used": [
+      "station pressure boundary",
+      "equipment temperature channel (diagnostic only; not injected without explicit attestation)"
+    ],
+    "numeric_matching": "nearest timestamp",
+    "discrete_matching": "forward fill only",
+    "raw_alignment_rows_published": false
+  },
+  "controlled_replay": {
+    "reference_runtime_path": "protection-aware full-station runtime",
+    "injected_boundary": "station pressure only; equipment temperature was not attested as supply gas",
+    "active_virtual_circuit": "single fueling circuit",
+    "aggregate_calibration_input": "explicit owner-approved recharge margin",
+    "simulated_horizon": "bounded measured window",
+    "trajectory_completed": true,
+    "esd_triggered": false,
+    "default_model_parameters_changed": false
+  },
+  "diagnostic_correction": {
+    "dual_circuit_boundary_mismatch_detected": true,
+    "correction": "partial station replay defaults to one explicit active circuit; dual mode requires dual-channel evidence",
+    "safety_trip_relaxed": false
+  },
+  "eligibility": {
+    "station_boundary_calibration_supported": true,
+    "independent_full_loop_validation_supported": false,
+    "vehicle_receptacle_channels_present": false,
+    "dispenser_protocol_channels_present": false,
+    "prospective_holdout": false
+  },
+  "gate_impact": "adds confidential measured-boundary integration evidence; full_loop_external_validation remains open",
+  "claim_boundary": "This artifact documents a controlled replay and integration check. It is not a full station-to-vehicle accuracy result, an accident-frequency estimate, or a safety certification."
+}

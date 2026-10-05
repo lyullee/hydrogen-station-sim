@@ -23,6 +23,9 @@ the custodian mapping remain outside the repository.
   combining a pressure logger with an equipment logger. It uses nearest-time
   matching for numeric channels and discrete carry-forward semantics for
   states, while retaining only a de-identified alignment summary for review.
+  An equipment temperature is injected as a supply-gas boundary only when the
+  custodian mapping explicitly sets `temperature_boundary_role`; otherwise it
+  remains diagnostic and is not used to change the thermal model.
 - `scripts/replay_confidential_station_boundary.py` now provides a bounded
   measured-boundary replay. It injects an approved pressure (and, when
   available, temperature) profile into the reference station and writes only
