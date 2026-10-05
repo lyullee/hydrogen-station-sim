@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "status": "public_article_curve_reproduction_only",
+  "source": {
+    "title": "CFD model of refuelling through the entire equipment of a hydrogen refuelling station",
+    "doi": "10.1016/j.ijhydene.2023.12.056",
+    "url": "https://doi.org/10.1016/j.ijhydene.2023.12.056",
+    "open_pdf": "https://pure.ulster.ac.uk/ws/portalfiles/portal/132479424/1-s2.0-S0360319923063565-main.pdf",
+    "license": "CC BY-NC-ND 4.0 article",
+    "pdf_sha256": "137b2e5b661563c3150d881dde013e12f45a10c8cb90dd9b303274cfc88b0de9"
+  },
+  "reported_experiment": {
+    "facility": "NREL Hydrogen Infrastructure Testing and Research Facility (HITRF)",
+    "test_id": "NREL Test No.1",
+    "duration_s": 195,
+    "equipment_scope": [
+      "high-pressure station tank",
+      "piping and valves",
+      "mass-flow meter",
+      "pressure-control valve",
+      "heat exchanger",
+      "breakaway",
+      "hose and nozzle",
+      "three onboard tanks"
+    ],
+    "reported_measured_channels": [
+      "onboard-tank pressure",
+      "onboard-tank temperature",
+      "mass-flow dynamics",
+      "post-pre-cooler temperature"
+    ]
+  },
+  "access_observation": {
+    "raw_nrel_logger_retrieved": false,
+    "paper_experiment_data_representation": "The authors state that the experimental data for Test No.1 were digitized from graphs in the earlier NREL study.",
+    "machine_readable_synchronized_rows_public": false,
+    "source_conditions_and_figures_public": true,
+    "independent_holdout_permitted": false
+  },
+  "classification": {
+    "real_station_provenance": true,
+    "full_loop_station_vehicle_holdout_eligible": false,
+    "claim_role": "published real-station face-validity and acquisition lead",
+    "goal_completion_permitted": false
+  },
+  "claim_boundary": "The open IJHE paper is strong evidence that a complete HRS-to-three-tank experiment exists and reports the relevant channels, but its comparison uses digitized curves and does not release the synchronized NREL logger rows. It may support protocol and operating-range context and a data request; it cannot close the untouched full-loop external-validation gate or the validated-digital-twin completion rule.",
+  "minimum_requested_package": [
+    "de-identified synchronized NREL Test No.1 logger rows",
+    "station and vehicle pressure/temperature channels",
+    "mass-flow or transferred-mass channel",
+    "initial conditions, tank capacity and protocol metadata",
+    "calibration and uncertainty metadata",
+    "written reuse terms for derived metrics, open deposition and IJHE publication"
+  ]
+}

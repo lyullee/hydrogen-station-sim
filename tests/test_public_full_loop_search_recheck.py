@@ -20,6 +20,7 @@ def test_public_full_loop_recheck_preserves_strict_eligibility_boundary():
         "research/prhyde_public_access_recheck_2026_10_05.json",
         "research/h2protocol_case_inventory_recheck_2026_10_05.json",
         "research/public_full_loop_search_addendum_2026_10_05.json",
+        "research/nrel_hitrf_ijhe_published_curve_boundary_recheck_2026_10_05.json",
     ]
     assert record["case_inventory_recheck"] == {
         "record": "research/h2protocol_case_inventory_recheck_2026_10_05.json",
@@ -31,6 +32,23 @@ def test_public_full_loop_recheck_preserves_strict_eligibility_boundary():
         "new_candidate_count": 12,
         "eligible_count": 0,
     }
+
+
+def test_nrel_hitrf_published_curve_candidate_remains_ineligible_for_raw_holdout():
+    record = json.loads(
+        (ROOT / "research/public_full_loop_search_recheck_2026_10_05.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    candidate = next(
+        item
+        for item in record["candidates"]
+        if item["id"] == "nrel_hitrf_ijhe_test1_published_curve_boundary_recheck_2026_10_05"
+    )
+    assert candidate["decision"] == "REAL_STATION_PUBLISHED_CURVE_ONLY_NO_RAW_ARCHIVE"
+    assert candidate["observed_scope"]["raw_nrel_logger_retrieved"] is False
+    assert candidate["observed_scope"]["machine_readable_synchronized_rows_public"] is False
+    assert candidate["observed_scope"]["full_loop_holdout_eligible"] is False
 
 
 def test_external_search_index_references_recheck():

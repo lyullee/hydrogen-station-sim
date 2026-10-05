@@ -274,6 +274,30 @@
       },
       "reuse_status": "Use for experiment/protocol provenance only; request a de-identified logger export and written permission before any numerical validation.",
       "access_recheck": "research/prhyde_public_access_recheck_2026_10_05.json"
+    },
+    {
+      "id": "nrel_hitrf_ijhe_test1_published_curve_boundary_recheck_2026_10_05",
+      "title": "NREL HITRF Test No.1 as reproduced in Ebne-Abbasi et al., IJHE 53 (2024)",
+      "doi": "10.1016/j.ijhydene.2023.12.056",
+      "url": "https://doi.org/10.1016/j.ijhydene.2023.12.056",
+      "license": "CC BY-NC-ND 4.0 article; no raw logger reuse terms identified",
+      "decision": "REAL_STATION_PUBLISHED_CURVE_ONLY_NO_RAW_ARCHIVE",
+      "finding": "The open IJHE paper reports a complete 195 s NREL HITRF Test No.1 through the station and three onboard tanks with pressure, temperature and mass-flow comparisons, but states that the experimental curves were digitized from graphs in the earlier NREL study. No synchronized machine-readable NREL logger rows are released.",
+      "observed_scope": {
+        "facility": "NREL Hydrogen Infrastructure Testing and Research Facility",
+        "duration_s": 195,
+        "reported_channels": [
+          "onboard-tank pressure",
+          "onboard-tank temperature",
+          "mass-flow dynamics",
+          "post-pre-cooler temperature"
+        ],
+        "raw_nrel_logger_retrieved": false,
+        "machine_readable_synchronized_rows_public": false,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "Use for real-station provenance and protocol/operating-range face validity only. Request de-identified synchronized rows, metadata and written reuse terms before numerical scoring.",
+      "boundary_record": "research/nrel_hitrf_ijhe_published_curve_boundary_recheck_2026_10_05.json"
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
@@ -285,7 +309,8 @@
     "research/jrc_gastef_public_access_recheck_2026_10_05.json",
     "research/prhyde_public_access_recheck_2026_10_05.json",
     "research/h2protocol_case_inventory_recheck_2026_10_05.json",
-    "research/public_full_loop_search_addendum_2026_10_05.json"
+    "research/public_full_loop_search_addendum_2026_10_05.json",
+    "research/nrel_hitrf_ijhe_published_curve_boundary_recheck_2026_10_05.json"
   ],
   "case_inventory_recheck": {
     "record": "research/h2protocol_case_inventory_recheck_2026_10_05.json",
