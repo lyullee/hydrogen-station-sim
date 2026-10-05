@@ -49,6 +49,7 @@
           <label>기본 비교 방식<select id="riskDisplayMode"><option value="relative" selected>상대 위험도 · 현재 설비 간</option><option value="absolute">절대 위험도 · 고정 기준</option></select></label>
           <label>갱신 주기<select id="riskUpdateInterval"><option value="15">15초 · 부하 높음</option><option value="30" selected>30초 · 권장</option><option value="60">60초 · 부하 낮음</option><option value="120">120초 · 최소 부하</option></select></label>
         </div></details>
+        <details class="measured-calibration-settings"><summary>실측 경계 보정 · 선택 적용</summary><p class="hint">비식별화된 소유자 실측 압력 경계에서 산출한 재충전 히스테리시스만 적용합니다. 차량·디스펜서 전체 검증이나 인증을 의미하지 않으며 기본값은 꺼져 있습니다.</p><label class="switch-label"><input id="measuredBoundaryCalibration" type="checkbox"> 실측 경계 보정 사용</label></details>
         <p class="hint">초기 조건은 새 실행에 적용됩니다. 운전 중 안전밸브 설정은 값을 바꾼 뒤 공정 조작의 ‘설정 적용’을 누르세요.</p>
       </section>
       <section class="remote-panel process-panel" data-remote-pane="operations" aria-label="공정 요청">

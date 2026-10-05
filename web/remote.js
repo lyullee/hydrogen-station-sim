@@ -73,7 +73,7 @@ function readProcessSettings(){
     recharge_auto_stop:$('rechargeAutoStop').checked,recharge_target_low_mpa:value('rechargeTargetLow'),
     recharge_target_medium_mpa:value('rechargeTargetMedium'),recharge_target_high_mpa:value('rechargeTargetHigh'),
     recharge_restart_margin_low_mpa:value('rechargeMarginLow'),recharge_restart_margin_medium_mpa:value('rechargeMarginMedium'),recharge_restart_margin_high_mpa:value('rechargeMarginHigh'),
-    risk_overlay_enabled:$('riskOverlayEnabled').checked,risk_display_mode:$('riskDisplayMode').value,risk_update_interval_s:Number($('riskUpdateInterval').value),
+    risk_overlay_enabled:$('riskOverlayEnabled').checked,risk_display_mode:$('riskDisplayMode').value,risk_update_interval_s:Number($('riskUpdateInterval').value),measured_boundary_calibration:$('measuredBoundaryCalibration').checked,
     vehicle_1_auto_stop:$('vehicle1AutoStop').checked,vehicle_1_target_pressure_mpa:value('vehicle1TargetPressure'),
     vehicle_2_auto_stop:$('vehicle2AutoStop').checked,vehicle_2_target_pressure_mpa:value('vehicle2TargetPressure'),relief_valves};
 }
@@ -91,6 +91,7 @@ function hydrateProcessSettings(settings){
   if(settings.risk_overlay_enabled!==undefined)$('riskOverlayEnabled').checked=Boolean(settings.risk_overlay_enabled);
   if(settings.risk_display_mode)$('riskDisplayMode').value=settings.risk_display_mode;
   if(settings.risk_update_interval_s)$('riskUpdateInterval').value=String(settings.risk_update_interval_s);
+  if(settings.measured_boundary_calibration!==undefined)$('measuredBoundaryCalibration').checked=Boolean(settings.measured_boundary_calibration);
   for(const row of $('reliefRows').children){const valve=settings.relief_valves?.[row.dataset.relief];if(!valve)continue;
     row.querySelector('.relief-enabled').checked=Boolean(valve.enabled);
     row.querySelector('.relief-open').value=valve.open_mpa;

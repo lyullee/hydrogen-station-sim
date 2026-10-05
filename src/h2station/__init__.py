@@ -79,6 +79,10 @@ from .controlled_station_replay import (
     summarize_lifecycle_counters,
     synchronize_station_traces,
 )
+from .calibration_profiles import (
+    MeasuredBoundaryCalibrationProfile,
+    load_measured_boundary_calibration,
+)
 from .safe_operation import SafeFullStationSimulator, SafeOperationTrajectory
 from .safety_runtime import (
     FaultEvent,
@@ -168,6 +172,8 @@ __all__ = [
     "VehicleStateOfCharge",
     "build_reference_scenario",
     "fit_station_boundary",
+    "MeasuredBoundaryCalibrationProfile",
+    "load_measured_boundary_calibration",
     "read_boundary_profile",
     "summarize_lifecycle_counters",
     "synchronize_station_traces",
