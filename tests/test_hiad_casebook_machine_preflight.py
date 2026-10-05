@@ -34,6 +34,8 @@ def test_machine_preflight_passes_without_approving_cases():
     assert report["machine_preflight_pass"] is True
     assert all(check["status"] == "PASS" for check in report["checks"])
     assert report["claim_boundary"]
+    assert report["leakage_advisory"]["tier_counts"]["LOW"] == 24
+    assert report["leakage_advisory"]["cases_with_forbidden_model_input_keys"] == []
 
 
 def test_machine_preflight_rejects_approval_marker_or_missing_context():
@@ -45,3 +47,14 @@ def test_machine_preflight_rejects_approval_marker_or_missing_context():
     assert report["machine_preflight_pass"] is False
     assert statuses["human_gates_remain_unresolved"] == "FAIL"
     assert statuses["required_context_fields_nonempty"] == "FAIL"
+
+
+def test_machine_preflight_flags_reserved_outcome_fields_without_approving_case():
+    case = _case()
+    case["input_context"]["response"] = "The system was shut down."
+    report = preflight({"split": "holdout", "holdout_count": 24, "cases": [case] * 24})
+    statuses = {check["id"]: check["status"] for check in report["checks"]}
+    assert report["machine_preflight_pass"] is False
+    assert statuses["model_visible_context_has_no_reserved_outcome_fields"] == "FAIL"
+    assert report["leakage_advisory"]["cases_with_forbidden_model_input_keys"] == ["1"] * 24
+    assert report["leakage_advisory"]["tier_counts"]["HIGH"] == 24

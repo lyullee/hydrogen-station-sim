@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
+import re
 from typing import Any
 
 
@@ -35,6 +36,31 @@ REQUIRED_CASE_FIELDS = (
     "expert_vignette_approved",
 )
 
+# These keys contain coordinator-only outcome information.  They must never
+# be copied into the model-visible input_context during casebook preparation.
+FORBIDDEN_MODEL_INPUT_KEYS = {
+    "reference_emergency_action",
+    "reference_lesson_learnt",
+    "reference_corrective_measures",
+    "emergency_action",
+    "lesson_learnt",
+    "corrective_measures",
+    "response",
+    "outcome",
+}
+
+# This is an advisory screen only.  It deliberately does not approve or
+# rewrite a vignette; it highlights language a coordinator must inspect.
+COMPLETED_ACTION_PATTERN = re.compile(
+    r"\b(?:shut(?:down|\s+down)|stopp?ed|isolat(?:ed|ion)|evacuat(?:ed|ion)|"
+    r"taken\s+out\s+of\s+(?:service|operation)|replac(?:ed|ement)|repair(?:ed)?|"
+    r"install(?:ed|ation)|investigat(?:ed|ion)|inspect(?:ed|ion)|called|"
+    r"followed\s+up|remained\s+operational|safety\s+(?:equipment|system)\s+"
+    r"(?:operated|performed)|corrective\s+action|returned\s+to\s+service)\b",
+    flags=re.IGNORECASE,
+)
+TOKEN_PATTERN = re.compile(r"[a-z0-9]+(?:'[a-z0-9]+)?", flags=re.IGNORECASE)
+
 
 def _sha256(path: Path) -> str:
     digest = hashlib.sha256()
@@ -50,6 +76,83 @@ def _check(check_id: str, passed: bool, observed: Any, requirement: str) -> dict
         "status": "PASS" if passed else "FAIL",
         "observed": observed,
         "requirement": requirement,
+    }
+
+
+def _clean(value: object) -> str:
+    return re.sub(r"\s+", " ", str(value or "").replace("_x000D_", " ").replace("\\n", " ")).strip()
+
+
+def _tokens(value: object) -> list[str]:
+    return [token.lower() for token in TOKEN_PATTERN.findall(_clean(value))]
+
+
+def _exact_overlap_tokens(left: object, right: object, minimum: int = 4) -> int:
+    """Return the longest exact token span shared by two texts."""
+    source = _tokens(left)
+    reference = _tokens(right)
+    if len(source) < minimum or len(reference) < minimum:
+        return 0
+    best = 0
+    for start in range(len(source) - minimum + 1):
+        for ref_start in range(len(reference) - minimum + 1):
+            length = 0
+            while (
+                start + length < len(source)
+                and ref_start + length < len(reference)
+                and source[start + length] == reference[ref_start + length]
+            ):
+                length += 1
+            if length >= minimum:
+                best = max(best, length)
+    return best
+
+
+def _leakage_advisory(cases: list[dict[str, Any]]) -> dict[str, Any]:
+    """Build a coordinator-facing advisory without changing human gates."""
+    tiers = {"HIGH": 0, "MEDIUM": 0, "LOW": 0}
+    cases_with_action_language = 0
+    cases_with_reference_overlap = 0
+    forbidden_key_cases: list[str] = []
+    per_case: list[dict[str, Any]] = []
+    for case in cases:
+        context = case.get("input_context") if isinstance(case.get("input_context"), dict) else {}
+        description = _clean(context.get("description"))
+        action_matches = COMPLETED_ACTION_PATTERN.findall(description)
+        forbidden_keys = sorted(FORBIDDEN_MODEL_INPUT_KEYS.intersection(context))
+        references = " ".join(
+            _clean(case.get(field))
+            for field in ("reference_emergency_action", "reference_lesson_learnt", "reference_corrective_measures")
+        )
+        overlap = _exact_overlap_tokens(description, references)
+        if forbidden_keys:
+            forbidden_key_cases.append(str(case.get("event_id", "")))
+        if action_matches:
+            cases_with_action_language += 1
+        if overlap:
+            cases_with_reference_overlap += 1
+        if forbidden_keys or overlap >= 8 or len(action_matches) >= 2:
+            tier = "HIGH"
+        elif overlap or action_matches:
+            tier = "MEDIUM"
+        else:
+            tier = "LOW"
+        tiers[tier] += 1
+        per_case.append({
+            "event_id": str(case.get("event_id", "")),
+            "advisory_tier": tier,
+            "completed_action_term_count": len(action_matches),
+            "longest_reference_overlap_tokens": overlap,
+            "forbidden_model_input_keys": forbidden_keys,
+        })
+    return {
+        "case_count": len(cases),
+        "tier_counts": tiers,
+        "cases_with_completed_action_language": cases_with_action_language,
+        "cases_with_reference_overlap": cases_with_reference_overlap,
+        "cases_with_forbidden_model_input_keys": forbidden_key_cases,
+        "per_case": per_case,
+        "interpretation": "Advisory machine flags only; a qualified non-rating coordinator must decide KEEP or REWRITE for every case.",
     }
 
 
@@ -79,6 +182,12 @@ def preflight(casebook: dict[str, Any]) -> dict[str, Any]:
         and str(item.get("expert_vignette_approved", "")).upper() == "NO"
         for item in cases
         if isinstance(item, dict)
+    )
+    model_input_keys_ok = bool(cases) and all(
+        isinstance(item, dict)
+        and isinstance(item.get("input_context"), dict)
+        and not FORBIDDEN_MODEL_INPUT_KEYS.intersection(item["input_context"])
+        for item in cases
     )
 
     checks = [
@@ -124,6 +233,21 @@ def preflight(casebook: dict[str, Any]) -> dict[str, Any]:
             {"leakage_review": "PENDING", "expert_vignette_approved": "NO"},
             "Machine preflight must never silently approve or freeze a vignette.",
         ),
+        _check(
+            "model_visible_context_has_no_reserved_outcome_fields",
+            model_input_keys_ok,
+            {
+                "forbidden_keys": sorted(FORBIDDEN_MODEL_INPUT_KEYS),
+                "cases_with_forbidden_keys": [
+                    str(item.get("event_id", ""))
+                    for item in cases
+                    if isinstance(item, dict)
+                    and isinstance(item.get("input_context"), dict)
+                    and FORBIDDEN_MODEL_INPUT_KEYS.intersection(item["input_context"])
+                ],
+            },
+            "Model-visible input_context must not contain coordinator-only reference/outcome fields.",
+        ),
     ]
     return {
         "schema_version": 1,
@@ -132,6 +256,7 @@ def preflight(casebook: dict[str, Any]) -> dict[str, Any]:
         "machine_preflight_pass": all(item["status"] == "PASS" for item in checks),
         "case_count": len(cases),
         "checks": checks,
+        "leakage_advisory": _leakage_advisory(cases),
         "claim_boundary": [
             "This report checks file structure and unresolved human-review markers only.",
             "It is not a leakage review, ethics determination, expert rating, casebook freeze, or holdout collection.",
