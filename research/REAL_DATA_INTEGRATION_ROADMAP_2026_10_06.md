@@ -32,6 +32,13 @@
 
 모델·파라미터·전처리·점수 기준은 원자료를 열기 전에 고정한다. 최소 8개 이상의 독립 실행과 사전 정의된 합격률을 사용하며, 실패 케이스도 모두 보존한다.
 
+입수 후에는 `scripts/validate_external_hrs_full_loop.py`로 동일 시간축,
+유한값·결측률·최대 간격, 차량/디스펜서/캐스케이드 압력, 공급가스 온도,
+압축기·프리쿨러·누출·벤트·고장·ESD 상태를 먼저 검사한다. 이 결과는
+`FULL_LOOP_TRACE_READY_FOR_EVALUATION`인 경우에만 별도 동결 평가기에 넘기며,
+보간·재표본화·누락값 대체를 하지 않는다. 입력 화면을 통과해도 모델 검증이나
+안전성 입증으로 승격하지 않는다.
+
 ### 3. 피해영향 모델의 component 범위 확장
 
 현재 실패한 PRESLHY·Proust·Schefer holdout은 재튜닝하지 않는다. 새 장치의 line volume, valve law, terminal restriction, wall heat transfer가 공개되거나 검토 가능한 데이터로 확보될 때만 apparatus-resolved 모델을 새 프로토콜로 동결한다.
