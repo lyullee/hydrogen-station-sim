@@ -137,6 +137,9 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert partb["aggregate"]["joint_primary_pass_fraction"] == 0.6
     assert partb["aggregate"]["ambient_cryostat_part_b_claim_supported"] is False
     assert partb["protocol_hash_matches"] is True
+    assert gates["preslhy_partb_input_interpretation_audit"]["status"] == "PASS"
+    partb_input = gates["preslhy_partb_input_interpretation_audit"]["observed"]
+    assert partb_input["checks"]["all_checks_pass"] is True
     assert gates["preslhy_revised_holdout_validation"]["status"] == "FAIL"
     revised = gates["preslhy_revised_holdout_validation"]["observed"]
     assert revised["primary_cases"] == 3

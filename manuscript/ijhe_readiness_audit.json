@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T23:55:12.608852+00:00",
+  "generated_at": "2026-10-05T00:04:13.269585+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 57,
+    "PASS": 58,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -3355,6 +3355,25 @@
         "joint_primary_passes": 3,
         "baseline_joint_primary_passes": 3,
         "claim_boundary": "This post-outcome diagnostic cannot replace the frozen Part-B result, cannot support a revised external-validation claim, and cannot be used to tune a discharge coefficient or geometry to these five cases."
+      }
+    },
+    {
+      "id": "preslhy_partb_input_interpretation_audit",
+      "status": "PASS",
+      "claim": "The PRESLHY Part-B workbook labels, units, time base and release marker are independently checked without changing the frozen validation result.",
+      "evidence": "research\\preslhy_partb_input_audit_2026_10_05.json",
+      "requirement": "Five Final workbooks, bar units, finite monotonic samples, nominal-pressure agreement and release-marker alignment.",
+      "observed": {
+        "checks": {
+          "expected_case_count": 5,
+          "observed_case_count": 5,
+          "case_count_ok": true,
+          "pressure_and_nozzle_units_are_bar": true,
+          "monotonic_finite_time_pressure_nozzle_samples": true,
+          "all_checks_pass": true
+        },
+        "finding": "No workbook label, unit, time-base, release-marker or nominal-pressure parsing defect was found.",
+        "claim_boundary": "This record cannot replace the frozen Part-B external-validation result or clear an IJHE/full-objective gate."
       }
     },
     {

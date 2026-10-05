@@ -1707,6 +1707,32 @@ def audit(root: Path) -> dict[str, object]:
         } if preslhy_partb_nonadiabatic else "missing; Part-B revised-model diagnostic has not been recorded",
     ))
 
+    preslhy_partb_input_audit_path = root / "research/preslhy_partb_input_audit_2026_10_05.json"
+    preslhy_partb_input_audit = _json(preslhy_partb_input_audit_path)
+    preslhy_partb_input_checks = (preslhy_partb_input_audit or {}).get("checks") or {}
+    preslhy_partb_input_audit_pass = bool(
+        (preslhy_partb_input_audit or {}).get("schema_version") == 1
+        and (preslhy_partb_input_audit or {}).get("status")
+        == "completed_frozen_input_interpretation_audit"
+        and (preslhy_partb_input_audit or {}).get("evidence_role")
+        == "parser_and_unit_diagnostic_only"
+        and preslhy_partb_input_audit.get("frozen_validation_result_unchanged") is True
+        and preslhy_partb_input_checks.get("all_checks_pass") is True
+        and (preslhy_partb_input_audit or {}).get("interpretation", {}).get("claim_boundary")
+    )
+    gates.append(_gate(
+        "preslhy_partb_input_interpretation_audit",
+        "PASS" if preslhy_partb_input_audit_pass else ("FAIL" if preslhy_partb_input_audit else "PENDING"),
+        "The PRESLHY Part-B workbook labels, units, time base and release marker are independently checked without changing the frozen validation result.",
+        str(preslhy_partb_input_audit_path.relative_to(root)),
+        "Five Final workbooks, bar units, finite monotonic samples, nominal-pressure agreement and release-marker alignment.",
+        {
+            "checks": preslhy_partb_input_checks,
+            "finding": (preslhy_partb_input_audit or {}).get("interpretation", {}).get("finding"),
+            "claim_boundary": (preslhy_partb_input_audit or {}).get("interpretation", {}).get("claim_boundary"),
+        } if preslhy_partb_input_audit else "missing; Part-B input interpretation audit has not been recorded",
+    ))
+
     e5_result_path = root / "research/preslhy_e5_1_holdout_result.json"
     e5_result = _json(e5_result_path)
     e5_protocol_path = root / "research/preslhy_e5_1_holdout_protocol.json"
