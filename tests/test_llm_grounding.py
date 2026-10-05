@@ -152,6 +152,22 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "mass_flow_units_attested"
     ] is False
     assert station_calibration["full_station_vehicle_validation"] is False
+    recheck = idle["response_evidence"][
+        "confidential_pressure_recheck_decision"
+    ]
+    assert recheck["candidate_applied_to_runtime"] is False
+    assert recheck["production_profile_retained"] == (
+        "owner_measured_operational_envelope_v1"
+    )
+    assert recheck["retained_restart_margin_mpa"] == 0.54
+    assert recheck["candidate_restart_margin_mpa"] == 1.7325
+    assert "sparse_sampling_gap" in recheck["quality_warnings"]
+    assert prompt_evidence_summary(idle)[
+        "confidential_pressure_recheck_decision"
+    ]["candidate_applied_to_runtime"] is False
+    assert prompt_evidence_header(idle)[
+        "confidential_pressure_recheck_decision"
+    ]["candidate_applied_to_runtime"] is False
     schema = idle["response_evidence"]["confidential_station_schema_intake"]
     assert schema["source_bundle_count"] == 2
     assert schema["tagged_channel_counts"]["pressure"] > 0

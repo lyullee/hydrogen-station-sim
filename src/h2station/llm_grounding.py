@@ -751,6 +751,48 @@ def _confidential_station_calibration_evidence() -> dict[str, Any] | None:
     }
 
 
+def _confidential_pressure_recheck_decision() -> dict[str, Any] | None:
+    """Expose the privacy-safe decision on a rejected pressure recheck.
+
+    The candidate margin is kept separate from the active calibration profile.
+    Including that distinction in the evidence envelope prevents an LLM from
+    presenting a sparse or sentinel-contaminated recheck as an applied model
+    parameter.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/confidential_pressure_recheck_decision_2026_10_06.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    decision = record.get("decision") or {}
+    recheck = record.get("recheck") or {}
+    provenance = record.get("provenance_boundary") or {}
+    if (
+        record.get("artifact_type") != "confidential_pressure_recheck_decision"
+        or record.get("source_identifiers_published") is not False
+        or record.get("raw_rows_persisted") is not False
+        or provenance.get("operator_published") is not False
+        or provenance.get("site_published") is not False
+        or provenance.get("exact_source_dates_published") is not False
+        or decision.get("candidate_applied_to_runtime") is not False
+        or not decision.get("production_profile_retained")
+    ):
+        return None
+    return {
+        "artifact": "research/confidential_pressure_recheck_decision_2026_10_06.json",
+        "evidence_role": "confidential calibration quality decision",
+        "candidate_applied_to_runtime": False,
+        "production_profile_retained": decision.get("production_profile_retained"),
+        "retained_restart_margin_mpa": decision.get("retained_restart_margin_mpa"),
+        "candidate_restart_margin_mpa": recheck.get("candidate_restart_margin_mpa"),
+        "quality_warnings": list(recheck.get("quality_warnings") or []),
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_station_schema_evidence() -> dict[str, Any] | None:
     """Expose only the de-identified private-channel intake boundary."""
 
@@ -973,6 +1015,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_station_boundary_calibration"
         ] = station_calibration
+    pressure_recheck = _confidential_pressure_recheck_decision()
+    if pressure_recheck is not None:
+        envelope["response_evidence"][
+            "confidential_pressure_recheck_decision"
+        ] = pressure_recheck
     station_schema = _confidential_station_schema_evidence()
     if station_schema is not None:
         envelope["response_evidence"][
@@ -1158,6 +1205,17 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if station_calibration.get(key) is not None
         }
+    pressure_recheck = evidence.get("confidential_pressure_recheck_decision")
+    if isinstance(pressure_recheck, dict):
+        summary["confidential_pressure_recheck_decision"] = {
+            key: pressure_recheck.get(key)
+            for key in (
+                "evidence_role", "candidate_applied_to_runtime",
+                "production_profile_retained", "retained_restart_margin_mpa",
+                "candidate_restart_margin_mpa", "quality_warnings", "claim_limit",
+            )
+            if pressure_recheck.get(key) is not None
+        }
     station_schema = evidence.get("confidential_station_schema_intake")
     if isinstance(station_schema, dict):
         summary["confidential_station_schema_intake"] = {
@@ -1196,6 +1254,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     cross_station = confidential.get("cross_station_pressure_envelope") or {}
     lifecycle = evidence.get("confidential_lifecycle_counter_summary") or {}
     station_calibration = evidence.get("confidential_station_boundary_calibration") or {}
+    pressure_recheck = evidence.get("confidential_pressure_recheck_decision") or {}
     station_schema = evidence.get("confidential_station_schema_intake") or {}
     incident = evidence.get("public_incident_traceability") or {}
     action_taxonomy = incident.get("action_taxonomy") or {}
@@ -1333,6 +1392,21 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "full_station_vehicle_validation": station_calibration.get(
                 "full_station_vehicle_validation"
             ) is True,
+        },
+        "confidential_pressure_recheck_decision": {
+            "candidate_applied_to_runtime": pressure_recheck.get(
+                "candidate_applied_to_runtime"
+            ) is True,
+            "production_profile_retained": pressure_recheck.get(
+                "production_profile_retained"
+            ),
+            "retained_restart_margin_mpa": pressure_recheck.get(
+                "retained_restart_margin_mpa"
+            ),
+            "candidate_restart_margin_mpa": pressure_recheck.get(
+                "candidate_restart_margin_mpa"
+            ),
+            "quality_warnings": pressure_recheck.get("quality_warnings") or [],
         },
         "confidential_station_schema_intake": {
             "source_bundle_count": station_schema.get("source_bundle_count"),
