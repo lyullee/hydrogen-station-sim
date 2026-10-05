@@ -51,3 +51,9 @@ def test_default_profile_prefers_deidentified_operational_envelope():
         "max_mpa": 63.36,
     }
     assert metadata["state_transition_count"] == 274
+    assert metadata["channel_attestation"] == {
+        "pressure_boundary_semantics_attested": True,
+        "lifecycle_counter_semantics_attested": False,
+        "temperature_boundary_role_attested": False,
+        "mass_flow_units_attested": False,
+    }

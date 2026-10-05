@@ -34,6 +34,10 @@ class MeasuredBoundaryCalibrationProfile:
     maximum_gap_s: float | None = None
     state_transition_count: int | None = None
     quality_warnings: tuple[str, ...] = ()
+    pressure_semantics_attested: bool = False
+    lifecycle_counter_semantics_attested: bool = False
+    temperature_boundary_role_attested: bool = False
+    mass_flow_units_attested: bool = False
 
     def runtime_metadata(self) -> dict[str, object]:
         """Return bounded provenance metadata safe to expose to the runtime/UI."""
@@ -59,6 +63,12 @@ class MeasuredBoundaryCalibrationProfile:
             "maximum_gap_s": self.maximum_gap_s,
             "state_transition_count": self.state_transition_count,
             "quality_warnings": list(self.quality_warnings),
+            "channel_attestation": {
+                "pressure_boundary_semantics_attested": self.pressure_semantics_attested,
+                "lifecycle_counter_semantics_attested": self.lifecycle_counter_semantics_attested,
+                "temperature_boundary_role_attested": self.temperature_boundary_role_attested,
+                "mass_flow_units_attested": self.mass_flow_units_attested,
+            },
             "claim_boundary": self.claim_boundary,
         }
 
@@ -130,6 +140,7 @@ def load_measured_boundary_calibration(
             for value in numeric_values[3:]
         ):
             return None
+        attestation = record.get("channel_attestation") or {}
         if (
             record.get("artifact_type") not in {
                 "confidential_station_boundary_calibration_summary",
@@ -186,4 +197,12 @@ def load_measured_boundary_calibration(
             if record.get("state_transition_count") is not None else None
         ),
         quality_warnings=tuple(str(item) for item in (record.get("quality_warnings") or [])),
+        pressure_semantics_attested=attestation.get(
+            "pressure_boundary_semantics_attested") is True,
+        lifecycle_counter_semantics_attested=attestation.get(
+            "lifecycle_counter_semantics_attested") is True,
+        temperature_boundary_role_attested=attestation.get(
+            "temperature_boundary_role_attested") is True,
+        mass_flow_units_attested=attestation.get(
+            "mass_flow_units_attested") is True,
     )

@@ -567,6 +567,16 @@ def _confidential_station_calibration_evidence() -> dict[str, Any] | None:
         ),
         "state_transition_count": record.get("state_transition_count"),
         "channel_roles": list(record.get("channel_roles") or []),
+        "channel_attestation": {
+            key: bool(value)
+            for key, value in (record.get("channel_attestation") or {}).items()
+            if key in {
+                "pressure_boundary_semantics_attested",
+                "lifecycle_counter_semantics_attested",
+                "temperature_boundary_role_attested",
+                "mass_flow_units_attested",
+            }
+        },
         "station_boundary_calibration_supported": (
             record.get("eligibility", {}).get("station_boundary_calibration_supported")
             is True
@@ -879,6 +889,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "median_sample_period_s", "maximum_gap_s", "pressure_noise_sigma_pa",
                 "recommended_recharge_restart_margin_pa",
                 "state_transition_count", "channel_roles",
+                "channel_attestation",
                 "station_boundary_calibration_supported",
                 "full_station_vehicle_validation", "claim_limit",
             )
@@ -965,6 +976,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "files_read": station_calibration.get("files_read"),
             "sampled_rows": station_calibration.get("sampled_rows"),
             "pressure_range_mpa": station_calibration.get("boundary_pressure_mpa"),
+            "channel_attestation": station_calibration.get("channel_attestation") or {},
             "recharge_restart_margin_pa": station_calibration.get(
                 "recommended_recharge_restart_margin_pa"
             ),

@@ -23,6 +23,12 @@
   "recommended_recharge_hysteresis_pa": 540000.0,
   "recommended_recharge_restart_margin_pa": 540000.0,
   "channel_roles": ["station_pressure", "discrete_state"],
+  "channel_attestation": {
+    "pressure_boundary_semantics_attested": true,
+    "lifecycle_counter_semantics_attested": false,
+    "temperature_boundary_role_attested": false,
+    "mass_flow_units_attested": false
+  },
   "quality_warnings": [],
   "eligibility": {
     "station_boundary_calibration_supported": true,
