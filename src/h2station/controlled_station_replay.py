@@ -27,7 +27,8 @@ class TraceMapping:
     from becoming public code or documentation.
     """
 
-    time_column: str
+    time_column: str | None = None
+    time_column_index: int | None = None
     pressure_columns: tuple[tuple[str, str], ...] = ()
     temperature_columns: tuple[tuple[str, str], ...] = ()
     flow_column: str | None = None
@@ -40,8 +41,10 @@ class TraceMapping:
     encoding: str = "utf-8-sig"
 
     def __post_init__(self) -> None:
-        if not self.time_column:
-            raise ValueError("time_column is required")
+        if not self.time_column and self.time_column_index is None:
+            raise ValueError("time_column or time_column_index is required")
+        if self.time_column_index is not None and self.time_column_index < 0:
+            raise ValueError("time_column_index cannot be negative")
         if self.pressure_scale_pa_per_unit <= 0.0:
             raise ValueError("pressure scale must be positive")
         if self.temperature_scale_k_per_unit <= 0.0:
@@ -70,6 +73,10 @@ class StationCalibrationSummary:
     recommended_recharge_restart_margin_pa: float | None
     channel_roles: tuple[str, ...]
     quality_warnings: tuple[str, ...]
+    temperature_min_deg_c: float | None = None
+    temperature_median_deg_c: float | None = None
+    temperature_max_deg_c: float | None = None
+    state_transition_count: int = 0
 
     def to_public_dict(self) -> dict[str, object]:
         """Return only de-identified aggregate calibration information."""
@@ -106,6 +113,15 @@ class StationCalibrationSummary:
                 round(self.flow_p95_kg_s, 6)
                 if self.flow_p95_kg_s is not None else None
             ),
+            "boundary_temperature_degC": {
+                "min": round(self.temperature_min_deg_c, 3)
+                if self.temperature_min_deg_c is not None else None,
+                "median": round(self.temperature_median_deg_c, 3)
+                if self.temperature_median_deg_c is not None else None,
+                "max": round(self.temperature_max_deg_c, 3)
+                if self.temperature_max_deg_c is not None else None,
+            },
+            "state_transition_count": self.state_transition_count,
             "recharge_hysteresis_pa": (
                 round(self.recommended_recharge_hysteresis_pa, 1)
                 if self.recommended_recharge_hysteresis_pa is not None else None
@@ -167,7 +183,14 @@ def _sampled_rows(
     for path in _paths(input_path):
         with path.open("r", encoding=mapping.encoding, errors="replace", newline="") as handle:
             reader = csv.DictReader(handle)
-            if not reader.fieldnames or mapping.time_column not in reader.fieldnames:
+            fieldnames = tuple(reader.fieldnames or ())
+            if mapping.time_column_index is not None:
+                if mapping.time_column_index >= len(fieldnames):
+                    raise ValueError(f"mapped time column index is absent from {path.name}")
+                time_column = fieldnames[mapping.time_column_index]
+            elif mapping.time_column in fieldnames:
+                time_column = mapping.time_column
+            else:
                 raise ValueError(f"mapped time column is absent from {path.name}")
             emitted = 0
             fallback = 0.0
@@ -177,7 +200,7 @@ def _sampled_rows(
                     continue
                 if max_rows_per_file is not None and emitted >= max_rows_per_file:
                     break
-                yield path, _time_seconds(row.get(mapping.time_column), mapping, fallback), row
+                yield path, _time_seconds(row.get(time_column), mapping, fallback), row
                 emitted += 1
                 fallback += float(stride)
 
@@ -210,9 +233,12 @@ def fit_station_boundary(
     flows: list[float] = []
     pressure_steps: list[float] = []
     positive_ramps: list[float] = []
+    temperatures: list[float] = []
     intervals: list[float] = []
     previous_by_file: dict[Path, tuple[float, float]] = {}
     direction_by_file: dict[Path, int] = {}
+    previous_states_by_file: dict[Path, dict[str, str]] = {}
+    state_transition_count = 0
     warnings: set[str] = set()
 
     for path, time_value, row in _sampled_rows(
@@ -234,6 +260,20 @@ def fit_station_boundary(
             flow = _finite(row.get(mapping.flow_column))
             if flow is not None:
                 flows.append(max(0.0, flow * mapping.flow_scale_kg_s_per_unit))
+        for _, column in mapping.temperature_columns:
+            value = _finite(row.get(column))
+            if value is not None:
+                temperatures.append(
+                    value * mapping.temperature_scale_k_per_unit
+                    + mapping.temperature_offset_k - 273.15
+                )
+        if mapping.state_columns:
+            previous_states = previous_states_by_file.setdefault(path, {})
+            for role, column in mapping.state_columns:
+                value = str(row.get(column, "")).strip()
+                if role in previous_states and value != previous_states[role]:
+                    state_transition_count += 1
+                previous_states[role] = value
         previous = previous_by_file.get(path)
         if previous is not None:
             previous_time, previous_pressure = previous
@@ -306,6 +346,10 @@ def fit_station_boundary(
             ) if enabled
         ),
         quality_warnings=tuple(sorted(warnings)),
+        temperature_min_deg_c=min(temperatures) if temperatures else None,
+        temperature_median_deg_c=median(temperatures) if temperatures else None,
+        temperature_max_deg_c=max(temperatures) if temperatures else None,
+        state_transition_count=state_transition_count,
     )
 
 

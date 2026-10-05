@@ -18,7 +18,8 @@ from h2station.controlled_station_replay import TraceMapping, fit_station_bounda
 def _mapping(path: Path) -> TraceMapping:
     value = json.loads(path.read_text(encoding="utf-8"))
     return TraceMapping(
-        time_column=str(value["time_column"]),
+        time_column=(str(value["time_column"]) if value.get("time_column") else None),
+        time_column_index=(int(value["time_column_index"]) if value.get("time_column_index") is not None else None),
         pressure_columns=tuple(
             (str(item[0]), str(item[1])) for item in value.get("pressure_columns", [])
         ),
@@ -71,4 +72,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

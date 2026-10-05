@@ -23,17 +23,21 @@ the custodian mapping remain outside the repository.
 ## Preliminary result and limits
 
 The pressure-only replay is usable for station-boundary plausibility and for
-checking the anti-chatter logic. It is not sufficient to refit the complete
-station model: the pressure export does not carry synchronized vehicle-side
-pressure/temperature/SOC, dispenser protocol state, or a confirmed unit and
-calibration dictionary. The preliminary robust margin stayed at the simulator's
-existing conservative floor, so it was **not** applied as a hidden default.
+checking the anti-chatter logic. A second private replay also exercised
+equipment-side pressure, temperature and discrete-state channels through the
+same adapter. It is not sufficient to refit the complete station model: the
+exports do not carry synchronized vehicle-side pressure/temperature/SOC,
+dispenser protocol state, or a confirmed unit and calibration dictionary. The
+preliminary robust margin stayed at the simulator's existing conservative
+floor, so it was **not** applied as a hidden default.
 
 The next approved calibration pass must combine the equipment logger with the
 pressure trace, confirm units and timestamp semantics with the custodian, and
 freeze an untouched event window before fitting compressor, precooler, valve,
 and ESD parameters. A full-loop claim still requires vehicle/receptacle
-channels or a separately approved synchronized source.
+channels or a separately approved synchronized source. The private replay
+outputs remain outside the repository until the owner approves their derived
+aggregates for publication.
 
 ## Reproduction boundary
 
@@ -41,4 +45,3 @@ Run `scripts/calibrate_confidential_station_data.py` only in an access-
 controlled environment with a private mapping JSON. The output is an aggregate
 review artifact; do not commit the mapping, raw files, raw hashes, filenames,
 or unapproved derived metrics to GitHub or Zenodo.
-

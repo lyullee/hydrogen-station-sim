@@ -57,6 +57,29 @@ def test_hysteresis_never_reduces_operator_margin(tmp_path: Path):
     assert apply_recharge_hysteresis(2.0e6, summary) >= 2.0e6
 
 
+def test_time_column_index_supports_corrupted_export_header(tmp_path: Path):
+    trace = tmp_path / "index_time.csv"
+    trace.write_text(
+        "unreadable_time,pressure,temp,state\n"
+        "0,40,20,0\n"
+        "1,40.1,21,1\n",
+        encoding="utf-8",
+    )
+    summary = fit_station_boundary(
+        trace,
+        TraceMapping(
+            time_column_index=0,
+            pressure_columns=(("storage", "pressure"),),
+            temperature_columns=(("storage_temperature", "temp"),),
+            state_columns=(("esd", "state"),),
+        ),
+        stride=1,
+    )
+    assert summary.median_sample_period_s == 1.0
+    assert summary.temperature_median_deg_c == 20.5
+    assert summary.state_transition_count == 1
+
+
 def test_station_calibration_margin_is_explicitly_injected():
     built = build_reference_scenario(
         ReferenceScenario(
