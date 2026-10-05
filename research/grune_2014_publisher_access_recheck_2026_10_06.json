@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-06",
+  "status": "publisher_access_recheck_completed",
+  "source": {
+    "official_repository": "https://publikationen.bibliothek.kit.edu/110097219",
+    "publisher_article": "https://www.sciencedirect.com/science/article/pii/S0360319913020521",
+    "doi": "10.1016/j.ijhydene.2013.08.076",
+    "title": "Experimental study of ignited unsteady hydrogen releases from a high pressure reservoir",
+    "institution": "Karlsruhe Institute of Technology",
+    "reported_target": "Figure 2 pressure-decay comparison for the 4 mm, 200 bar release"
+  },
+  "access_result": {
+    "official_metadata_found": true,
+    "machine_readable_pressure_time_trace_found": false,
+    "raw_reuse_terms_for_trace_found": false,
+    "publisher_curve_is_measured_and_calculated_overlay": true,
+    "trace_specific_half_pressure_endpoint_verified": false
+  },
+  "eligibility": {
+    "full_raw_holdout_eligible": false,
+    "grune_2014_pressure_decay_gate_closed": false,
+    "reason": "The official pages expose publication metadata and figure-level descriptions, not a raw pressure-time archive; the digitized measured trace cannot support a trace-specific half-pressure endpoint."
+  },
+  "claim_boundary": "This recheck records public source access only; it does not validate the release model, replace the measured curve with the published calculated curve, or support safety-distance or ignition claims."
+}

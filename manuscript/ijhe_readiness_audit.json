@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T21:04:41.496260+00:00",
+  "generated_at": "2026-10-05T21:10:03.266419+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -3719,7 +3719,7 @@
       "id": "grune_2014_pressure_decay_validation",
       "status": "PENDING",
       "claim": "The locked source model meets all pressure-decay screens on the independent KIT small-reservoir release.",
-      "evidence": "research\\grune_2014_holdout_result.json; research\\grune_2014_holdout_protocol.json; data\\public_validation\\derived\\grune_2014_figure2.csv; research/grune_2014_archive_access_recheck_2026_10_05.json",
+      "evidence": "research\\grune_2014_holdout_result.json; research\\grune_2014_holdout_protocol.json; data\\public_validation\\derived\\grune_2014_figure2.csv; research\\grune_2014_publisher_access_recheck_2026_10_06.json; research/grune_2014_archive_access_recheck_2026_10_05.json",
       "requirement": "At least 15 points plus an observable half-pressure crossing; <=10% NRMSE, <=15% median error and <=20% half-time error.",
       "observed": {
         "eligibility": {
@@ -3743,6 +3743,11 @@
           "joint_primary_screen_pass": false
         },
         "hashes_match": true,
+        "publisher_access_recheck": {
+          "status": "publisher_access_recheck_completed",
+          "raw_trace_found": false,
+          "full_raw_holdout_eligible": false
+        },
         "claim_boundary": "One 20 MPa, 0.37 L, 4 mm pressure-decay trace; no flame, ignition, dispersion, radiation, station control or safety-distance claim."
       }
     },
