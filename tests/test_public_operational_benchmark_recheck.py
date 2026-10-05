@@ -12,7 +12,7 @@ def test_operational_benchmark_recheck_preserves_raw_trace_boundary():
     )
     assert record["result"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
     assert record["gate_impact"] == "full_loop_external_validation_remains_open"
-    assert len(record["candidates"]) == 13
+    assert len(record["candidates"]) == 15
     assert all(
         item["decision"] != "FULL_LOOP_HOLDOUT" for item in record["candidates"]
     )

@@ -278,7 +278,12 @@
           "mass_kg": 5.08,
           "time_s": 276
         },
-        "downloadable_table_csv": ["T1.csv.zip", "T2.csv.zip", "T3.csv.zip", "T4.csv.zip"],
+        "downloadable_table_csv": [
+          "T1.csv.zip",
+          "T2.csv.zip",
+          "T3.csv.zip",
+          "T4.csv.zip"
+        ],
         "raw_synchronized_rows": false,
         "protocol": "field dispenser tests with leak-check pauses and pressure/temperature/flow recording"
       },
@@ -339,10 +344,67 @@
       },
       "finding": "The IJHE article explicitly describes synchronized dispenser and train measurements and presents an exemplary refueling trace, but the public paper provides plotted/processed examples rather than a reusable raw row archive.",
       "use": "Strong independent face-validity and acquisition lead for multi-module storage and station/vehicle synchronization; request the raw export and reuse terms before any numerical holdout evaluation."
+    },
+    {
+      "id": "nrel_doe_hdiq_hd_fueling_experiment_2024",
+      "title": "DOE/NREL H2IQ Hour heavy-duty hydrogen fueling protocol experiment",
+      "url": "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
+      "open_text": "https://www.energy.gov/cmei/fuels/march-h2iq-hour-hydrogen-fuel-dispensing-medium-and-heavy-duty-vehicles-text-version",
+      "license": "Public DOE presentation/report; no machine-readable logger archive or separate raw-data reuse terms identified",
+      "decision": "REAL_HD_EXPERIMENT_FIGURE_ONLY_DATA_REQUEST_LEAD",
+      "observed_scope": {
+        "facility": "NREL heavy-duty vehicle simulator and industry-supplied fueling hardware",
+        "protocol": "SAE J2601-5 MCF-HF-G H70 FM300 T40",
+        "mass_transfer_kg": 73.0,
+        "total_fill_time_s": 423.5,
+        "fueling_time_s": 358.9,
+        "average_mass_flow_g_s": 172.3,
+        "peak_mass_flow_g_s": 483.33,
+        "starting_ending_pressure_mpa": [
+          5.5,
+          74.6
+        ],
+        "reported_channels": [
+          "station/dispenser pressure",
+          "receptacle and tank pressure",
+          "mass flow",
+          "vehicle/tank temperature"
+        ],
+        "raw_synchronized_rows": false
+      },
+      "finding": "The public DOE/NREL material reports a real high-flow fueling experiment with synchronized-looking pressure, temperature and mass-flow plots and detailed operating points, but the inspected public record does not provide the underlying row-level logger archive, channel dictionary or publication reuse package.",
+      "use": "Independent heavy-duty operating-range and protocol face-validity context plus a high-priority data request; do not use plotted values as a frozen full-loop holdout or digitize them without an explicit uncertainty protocol and rights review."
+    },
+    {
+      "id": "met_hytrucks_hysam_zenodo_2026",
+      "title": "MetHyTrucks Group B HySam system measurement data",
+      "doi": "10.5281/zenodo.20590842",
+      "url": "https://zenodo.org/records/20590842",
+      "license": "Zenodo public dataset; record does not establish station-to-vehicle fueling semantics for the files",
+      "decision": "COMPONENT_SAMPLING_SYSTEM_EXPERIMENT_ONLY",
+      "observed_scope": {
+        "files": [
+          "20241023_Test_1_HySaM.xlsx",
+          "20241023_Test_4_HySaM_CESAME.xlsx",
+          "20241024_Test_9_HySaM.xlsx"
+        ],
+        "reported_measurements": [
+          "experimental sampling-system temperature",
+          "experimental sampling-system pressure"
+        ],
+        "station_to_vehicle_full_loop": false,
+        "mass_flow_channel_for_vehicle_fill": false
+      },
+      "finding": "The record exposes public XLSX measurements for hydrogen sampling systems. It is not a station-to-vehicle fueling trace with the required pressure, temperature and mass-transfer semantics, so it cannot validate this digital twin as an HRS full-loop holdout.",
+      "use": "Component-level sensor/system context only; retain the CC BY/record terms and domain distinction, but exclude from station full-loop validation and model tuning."
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
   "gate_impact": "full_loop_external_validation_remains_open",
   "next_action": "Request a de-identified synchronized logger export and written reuse terms from Cal State LA HRFF, UCI NFCRC, NREL/NLR HITRF, CARB/HyStEP, JRC GasTeF, FCH2RAIL or an HRS operator; freeze the model, inclusion criteria and scoring before reading numerical outcomes.",
-  "claim_boundary": "This record strengthens source accounting and face-validity context. It adds no full-loop validation result and does not permit the IJHE/full-objective completion gate to pass."
+  "claim_boundary": "This record strengthens source accounting and face-validity context. It adds no full-loop validation result and does not permit the IJHE/full-objective completion gate to pass.",
+  "recheck_links": [
+    "https://www.energy.gov/cmei/fuels/march-h2iq-hour-hydrogen-fuel-dispensing-medium-and-heavy-duty-vehicles-text-version",
+    "https://zenodo.org/records/20590842"
+  ]
 }
