@@ -182,6 +182,13 @@ class SimulationInput(BaseModel):
     def unique_fault_ids(self):
         if len({f.event_id for f in self.faults}) != len(self.faults):
             raise ValueError("Fault event IDs must be unique")
+        if self.vehicle_geometry_basis == "capacity_eos" and (
+            self.vehicle_capacity_kg is None or self.vehicle_2_capacity_kg is None
+        ):
+            raise ValueError(
+                "capacity_eos geometry requires vehicle_capacity_kg and "
+                "vehicle_2_capacity_kg"
+            )
         return self
 
 

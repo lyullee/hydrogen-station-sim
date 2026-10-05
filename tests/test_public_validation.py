@@ -23,6 +23,7 @@ from h2station.public_validation import (
     read_h2protocol_workbook,
     read_hiad_hrs_cases,
 )
+from h2station.api import SimulationInput
 from h2station.risk.runtime_backend import UnavailableHyRAMBackend
 from h2station.scenario import (
     ReferenceScenario,
@@ -253,6 +254,14 @@ def test_capacity_eos_geometry_requires_both_declared_capacities():
                 vehicle_capacity_kg=9.8,
             ),
             UnavailableHyRAMBackend(),
+        )
+
+
+def test_api_rejects_capacity_eos_without_both_vehicle_capacities():
+    with pytest.raises(ValueError, match="vehicle_capacity_kg"):
+        SimulationInput(
+            vehicle_geometry_basis="capacity_eos",
+            vehicle_capacity_kg=9.8,
         )
 
 
