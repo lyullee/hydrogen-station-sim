@@ -25,6 +25,16 @@ def load_json(path: Path) -> dict[str, Any]:
     return value
 
 
+def candidate_count(record: dict[str, Any]) -> int:
+    """Read an explicit count or derive it from the canonical candidates list."""
+
+    declared = record.get("candidate_count")
+    if isinstance(declared, int) and declared >= 0:
+        return declared
+    candidates = record.get("candidates")
+    return len(candidates) if isinstance(candidates, list) else 0
+
+
 def build(root: Path) -> dict[str, Any]:
     audit_path = root / "manuscript/ijhe_readiness_audit.json"
     hiad_path = root / "research/hiad_evaluation_readiness.json"
@@ -146,8 +156,8 @@ def build(root: Path) -> dict[str, Any]:
             "full_loop_search_sha256": sha256(search_path),
             "operational_benchmark_recheck_sha256": sha256(operational_search_path),
             "candidate_route_count": len(tracker.get("candidates") or []),
-            "public_full_loop_search_candidate_count": search.get("candidate_count"),
-            "public_operational_benchmark_candidate_count": len(operational_search.get("candidates") or []),
+            "public_full_loop_search_candidate_count": candidate_count(search),
+            "public_operational_benchmark_candidate_count": candidate_count(operational_search),
         },
         "claim_policy": [
             "Never present a request, metadata page, or public station inventory as raw validation evidence.",
