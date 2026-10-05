@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "status": "CONTROLLED_ACCESS_REQUIRED",
+  "raw_data_public": false,
+  "raw_data_repository": "institution-approved restricted storage only",
+  "public_repository_policy": "No confidential raw rows, credentials, station identifiers, exact coordinates, calendar timestamps, or security-sensitive topology",
+  "permitted_public_artifacts": [
+    "measurement schema and units",
+    "custodian and permission boundary",
+    "optional archive SHA-256 digest",
+    "de-identified relative-time case identifiers",
+    "aggregate errors and uncertainty intervals",
+    "frozen scoring code and model commit",
+    "synthetic traces with the same schema"
+  ],
+  "minimum_full_loop_channels": [
+    "relative_time_s",
+    "station_pressure_temperature_mass_flow",
+    "source_bank_pressure_and_temperature",
+    "dispenser_nozzle_or_hose_state",
+    "vehicle_or_receptacle_pressure_temperature_soc",
+    "protocol_or_controller_state",
+    "valve_and_esd_state",
+    "calibration_and_uncertainty_metadata"
+  ],
+  "pre_outcome_freeze": {
+    "manifest_and_digest_before_outcome_access": true,
+    "model_commit_before_outcome_access": true,
+    "scoring_protocol_before_outcome_access": true,
+    "case_selection_before_outcome_access": true,
+    "case_specific_fitting_forbidden": true,
+    "failed_cases_retained": true
+  },
+  "reviewer_access": {
+    "preferred": "institution-approved controlled inspection or secure transfer to the editor/reviewers",
+    "fallback": "publish approved aggregates and synthetic traces while narrowing claims if raw inspection cannot be arranged",
+    "nda_or_data_use_agreement": "required when imposed by the custodian"
+  },
+  "claim_boundary": "Confidential raw data may support external validation only when provenance, independent cases, pre-outcome freezing, fixed scoring, and reviewer verification are documented; confidentiality alone is not validation."
+}

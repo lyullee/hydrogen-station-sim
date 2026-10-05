@@ -26,6 +26,16 @@ The manuscript is therefore kept claim-bounded. The current full-loop negative
 result, component-level evidence and all unresolved gates remain disclosed; no
 failed holdout is silently promoted to validation.
 
+Confidential real-station data may be used without public redistribution. The
+required route is documented in
+[`confidential_real_data_validation_protocol_2026_10_05.json`](../research/confidential_real_data_validation_protocol_2026_10_05.json):
+quarantine and hash the archive, freeze the model and scoring protocol before
+outcome access, retain failed cases, publish only approved aggregates, and make
+raw files available to the editor or reviewers through an approved controlled
+inspection path when permitted. Confidential data are not automatically
+validation evidence; provenance, synchronized channels, independent cases and
+reviewer verification remain necessary.
+
 ## Publication-format checks
 
 The local format gate currently passes:
