@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "rechecked_at_utc": "2026-10-05T04:29:27.583812+00:00",
+  "source_commit": "f1beacbaab200d4d28402f0bc2e918d2fac0e547",
+  "status": "PENDING_COORDINATOR_APPROVAL_AND_ETHICS_DETERMINATION",
+  "machine_preflight": {
+    "pass": true,
+    "case_count": 24,
+    "record": "research/hiad_casebook_machine_preflight_2026_10_05.json",
+    "sha256": "83b9194c4e83676044bd7a31fb0d600d0743e0c66a2489b833912a623f6074ee"
+  },
+  "review_package": {
+    "casebook": {
+      "path": "data/public_validation/results/hiad_holdout_preparation/casebook_for_approval.json",
+      "sha256": "3d02c589a67b7e1af112ffb5d58712ec366d66cddd13536ddabf5c0fd6bb226e",
+      "case_count": 24
+    },
+    "prescreen_manifest": {
+      "path": "data/public_validation/results/hiad_coordinator_prescreen/prescreen_manifest.json",
+      "sha256": "57fd0aceb308761dad834109c3b2f05b610b1e7e1e94aac17142049e199557f8",
+      "advisory_only": true
+    },
+    "review_csv": {
+      "path": "data/public_validation/results/hiad_coordinator_prescreen/coordinator_review.csv",
+      "sha256": "eeafe11950d7f4ae1dfb91bf54f4cc35696e272638aa5ea66886661bbbcc2b14"
+    },
+    "review_html": {
+      "path": "data/public_validation/results/hiad_coordinator_prescreen/coordinator_review.html",
+      "sha256": "36e4ff5c73ec5f0ea3077388101ef99815be1351f9fdc90108e23f2bd4b5a614"
+    },
+    "protocol_manifest": {
+      "path": "research/hiad_study_protocol_manifest.json",
+      "sha256": "26c853d3b7d7d31db62457801ebb1ebfba7f4393792ff3dad4f8baf62e236853"
+    }
+  },
+  "current_readiness": {
+    "casebook_frozen": false,
+    "ethics_and_collection_permitted": false,
+    "coordinator_review_complete": false,
+    "independent_review_complete": false,
+    "readiness_record": "data/public_validation/results/hiad_holdout_preparation/readiness_audit.json",
+    "readiness_sha256": "82b1b1ee5b14ffe66cabcd67fe3a3e41a0a86cd1295458f92ae90803661bdece"
+  },
+  "required_next_evidence": [
+    "institutional ethics, exemption or not-required determination with identifier",
+    "qualified non-rating coordinator KEEP/REWRITE decision for all 24 cases",
+    "hash-locked approved casebook freeze manifest",
+    "168 retained masked responses",
+    "three independent qualified reviewer rating files and locked analysis"
+  ],
+  "claim_boundary": "This recheck proves package integrity and machine preflight only. It is not casebook approval, ethics approval, response collection, expert review, SAGA effectiveness, or safety evidence."
+}
