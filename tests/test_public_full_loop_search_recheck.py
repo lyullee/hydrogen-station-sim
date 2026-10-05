@@ -19,11 +19,17 @@ def test_public_full_loop_recheck_preserves_strict_eligibility_boundary():
         "research/jrc_gastef_public_access_recheck_2026_10_05.json",
         "research/prhyde_public_access_recheck_2026_10_05.json",
         "research/h2protocol_case_inventory_recheck_2026_10_05.json",
+        "research/public_full_loop_search_addendum_2026_10_05.json",
     ]
     assert record["case_inventory_recheck"] == {
         "record": "research/h2protocol_case_inventory_recheck_2026_10_05.json",
         "fresh_holdout_eligible_case_count": 0,
         "decision": "NO_UNUSED_PUBLIC_H2PROTOCOL_CASE_FOR_FRESH_FULL_LOOP_HOLDOUT",
+    }
+    assert record["supplemental_search_addendum"] == {
+        "record": "research/public_full_loop_search_addendum_2026_10_05.json",
+        "new_candidate_count": 8,
+        "eligible_count": 0,
     }
 
 

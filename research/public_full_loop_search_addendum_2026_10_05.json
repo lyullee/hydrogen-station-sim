@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "scope": "Additional public-data search for an independent synchronized HRS station-to-vehicle holdout",
+  "eligibility_rule": {
+    "required": [
+      "common time base",
+      "vehicle or receptacle pressure",
+      "mass flow or transferred mass",
+      "written reuse terms for derived metrics and journal publication"
+    ],
+    "excluded": [
+      "component-only experiments",
+      "plot-only or aggregate reports",
+      "simulator outputs",
+      "static infrastructure or availability records"
+    ]
+  },
+  "candidates": [
+    {
+      "id": "mendeley_ab2_metal_hydride_tank_2026",
+      "title": "Experimental Dataset on the Absorption-Desorption Dynamics of an AB2 Metal Hydride Hydrogen Storage Tank",
+      "doi": "10.17632/8km9z62tct.1",
+      "url": "https://data.mendeley.com/datasets/8km9z62tct/1",
+      "license": "CC BY 4.0",
+      "decision": "COMPONENT_STORAGE_TANK_ONLY",
+      "observed_scope": "One storage tank with approximately 1 s pressure, flow and wall-temperature logs; no HRS dispenser, vehicle/receptacle, station controller or J2601 fill trace.",
+      "full_loop_holdout_eligible": false
+    },
+    {
+      "id": "mendeley_pressure_peaking_2020",
+      "title": "Pressure Peaking Phenomena: Unignited hydrogen releases in confined spaces",
+      "doi": "10.17632/pmk59x4hvc.1",
+      "url": "https://data.mendeley.com/datasets/pmk59x4hvc/1",
+      "license": "CC BY 4.0",
+      "decision": "CONSEQUENCE_RELEASE_COMPONENT_ONLY",
+      "observed_scope": "Continuous inflow, pressure and hydrogen-concentration measurements in a confined-space release experiment; no station-to-vehicle fueling channels.",
+      "full_loop_holdout_eligible": false
+    },
+    {
+      "id": "zenodo_d6b_hydrogen_pressure_reduction_2023",
+      "title": "D6B.1A & D6B.1B Inventory, modeling and experiments related to ventilation in pressure-reducing stations",
+      "url": "https://zenodo.org/record/8164602",
+      "license": "Zenodo record terms; station-to-vehicle reuse semantics not established",
+      "decision": "PRESSURE_REDUCTION_COMPONENT_ONLY",
+      "observed_scope": "Hydrogen/natural-gas pressure-reducing-station experiments with controlled flow and pressure; no vehicle/receptacle fill or synchronized HRS full-loop trace.",
+      "full_loop_holdout_eligible": false
+    },
+    {
+      "id": "h2stations_api_2026",
+      "title": "European H2-Stations export API",
+      "url": "https://docs.h2-stations.eu/for-data-users/",
+      "license": "CC BY 4.0",
+      "decision": "STATIC_AND_AVAILABILITY_CONTEXT_ONLY",
+      "observed_scope": "Station metadata, availability, events, usage and storage signals; no synchronized pressure-temperature-mass-flow event logger.",
+      "full_loop_holdout_eligible": false
+    },
+    {
+      "id": "caltrans_hydrogen_storage_2026",
+      "title": "Hydrogen Fueling Network On Site Storage",
+      "url": "https://devodp.technology.ca.gov/dataset/hydrogen-fueling-network-on-site-storage",
+      "license": "No restrictions on public use",
+      "decision": "STATIC_INFRASTRUCTURE_CONTEXT_ONLY",
+      "observed_scope": "California station/storage infrastructure inventory; no time-series fueling logger.",
+      "full_loop_holdout_eligible": false
+    },
+    {
+      "id": "carb_in_use_report_addendum_2026",
+      "title": "California Existing Light-Duty Hydrogen Refueling Stations In-Use Study Report",
+      "url": "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf",
+      "license": "Public report; raw-log reuse terms not identified",
+      "decision": "PUBLIC_REPORT_NO_RAW_ARCHIVE",
+      "observed_scope": "Plots and reported station/HyStEP measurements are public, but no downloadable synchronized raw logger archive was identified.",
+      "full_loop_holdout_eligible": false
+    },
+    {
+      "id": "dtu_hydrogen_fuelling_station_pdf_2026",
+      "title": "Hydrogen Fuelling Stations",
+      "url": "https://orbit.dtu.dk/files/108702334/Hydrogen_Fuelling_Stations.pdf",
+      "license": "Paper/report access; raw logger reuse terms not identified",
+      "decision": "REAL_FILL_REPORT_NO_RAW_ARCHIVE",
+      "observed_scope": "A real 350 bar fueling case and station mass-flow/pressure-loss discussion are reported, but the public item does not expose synchronized row-level station-to-vehicle logs.",
+      "full_loop_holdout_eligible": false
+    },
+    {
+      "id": "nrel_h2fills_simulator_addendum_2026",
+      "title": "H2FillS Hydrogen Filling Simulation",
+      "url": "https://www.nrel.gov/hydrogen/H2FillS",
+      "license": "Software/data terms are record-specific",
+      "decision": "SIMULATOR_REFERENCE_ONLY",
+      "observed_scope": "Thermodynamic station-to-FCEV simulator with empirical datasets; it is not an independent measured holdout for this implementation.",
+      "full_loop_holdout_eligible": false
+    }
+  ],
+  "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+  "gate_impact": "full_loop_external_validation_remains_open",
+  "claim_boundary": "This addendum records source classification only. It adds no numerical validation and does not permit IJHE or goal completion.",
+  "next_action": "Obtain a custodian-approved synchronized station-to-vehicle logger export, written reuse terms and a frozen no-fitting scoring protocol before reading outcomes."
+}
