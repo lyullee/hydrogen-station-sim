@@ -106,7 +106,7 @@
       "id": "nrel_hitrf_nfctec",
       "draft": "research/NREL_HITRF_DATA_REQUEST_DRAFT.md",
       "status": "request_draft_ready",
-      "source": "https://www.nrel.gov/hydrogen/hydrogen-infrastructure-analysis",
+      "source": "https://www.nlr.gov/hydrogen/nfctec",
       "candidate_type": "independent HITRF/NFCTEC full-station fills",
       "requested_fields": [
         "vehicle_pressure",
@@ -120,7 +120,13 @@
       ],
       "minimum_acceptance": "A de-identified holdout with common time base, tank capacity, initial conditions and protocol metadata.",
       "rights": "NREL/NFCTEC release terms and permission for derived metrics must be documented.",
-      "next_action": "Project owner contacts the published technical-validation custodian."
+      "next_action": "Project owner reviews the expanded NREL draft and contacts the published technical-validation custodian through an approved institutional channel.",
+      "public_leads": [
+        "https://www.energy.gov/sites/default/files/2022-12/h2iq-121922.pdf",
+        "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
+        "https://www.energy.gov/cmei/fuels/march-h2iq-hour-hydrogen-fuel-dispensing-medium-and-heavy-duty-vehicles-text-version"
+      ],
+      "public_lead_boundary": "DOE/NLR slides expose chart-only summaries and are not counted as raw holdout; request underlying synchronized traces for their 2022/2024 HDVS tests."
     },
     {
       "rank": 5,
