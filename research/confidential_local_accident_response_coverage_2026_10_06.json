@@ -7,6 +7,13 @@
   "source_identifiers_published": false,
   "raw_rows_persisted": false,
   "raw_descriptions_persisted": false,
+  "local_contract_run": {
+    "casebook_generated_with_descriptions": false,
+    "casebook_sha256": "5787d04676640bc40f9dd07c9d6482c2aa25dcbd80a920c254cc9181eaa5d609",
+    "response_catalog_sha256": "b7d64103d9c4d3a322edd2c97b3800b5a796385e4ec25a588a252d288aad8bba",
+    "casebook_and_source_not_committed": true,
+    "pipeline": "scripts/prepare_khk_local_casebook.py + scripts/audit_khk_local_casebook_playbook_coverage.py"
+  },
   "aggregate": {
     "case_count": 322,
     "mapped_case_count": 322,

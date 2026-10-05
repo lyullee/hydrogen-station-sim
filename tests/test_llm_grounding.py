@@ -51,6 +51,14 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert local_accident["required_stage_count"] == 5
     assert local_accident["contract_pass"] is True
     assert local_accident["raw_rows_persisted"] is False
+    assert local_accident["local_contract_run"][
+        "casebook_generated_with_descriptions"
+    ] is False
+    assert len(local_accident["local_contract_run"]["casebook_sha256"]) == 64
+    assert len(local_accident["local_contract_run"]["response_catalog_sha256"]) == 64
+    assert local_accident["local_contract_run"][
+        "casebook_and_source_not_committed"
+    ] is True
     accidental = idle["response_evidence"]["public_accidental_release_evidence"]
     assert accidental["zenodo_doi"] == "10.5281/zenodo.17913628"
     assert accidental["article_doi"] == "10.1016/j.elstat.2025.104222"

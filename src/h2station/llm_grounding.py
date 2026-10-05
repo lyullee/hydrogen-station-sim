@@ -204,6 +204,7 @@ def _confidential_local_accident_response_coverage() -> dict[str, Any] | None:
     except (OSError, ValueError):
         return None
     aggregate = record.get("aggregate") or {}
+    local_contract_run = record.get("local_contract_run") or {}
     if (
         record.get("artifact_type") != "confidential_local_accident_response_coverage"
         or record.get("status") != "local_restricted_metadata_stage_contract"
@@ -225,6 +226,19 @@ def _confidential_local_accident_response_coverage() -> dict[str, Any] | None:
         "case_with_missing_stage_count": aggregate.get("case_with_missing_stage_count"),
         "required_stage_count": aggregate.get("required_stage_count"),
         "contract_pass": True,
+        "local_contract_run": {
+            "casebook_generated_with_descriptions": local_contract_run.get(
+                "casebook_generated_with_descriptions"
+            ),
+            "casebook_sha256": local_contract_run.get("casebook_sha256"),
+            "response_catalog_sha256": local_contract_run.get(
+                "response_catalog_sha256"
+            ),
+            "casebook_and_source_not_committed": local_contract_run.get(
+                "casebook_and_source_not_committed"
+            ),
+            "pipeline": local_contract_run.get("pipeline"),
+        },
         "source_identifiers_published": False,
         "raw_rows_persisted": False,
         "claim_limit": str(record.get("claim_boundary") or ""),
