@@ -296,6 +296,8 @@ def audit(root: Path) -> dict[str, object]:
     external_operational_recheck = _json(external_operational_recheck_path)
     external_operational_face_path = root / "research/public_operational_benchmark_face_validity_2026_10_05.json"
     external_operational_face = _json(external_operational_face_path)
+    prospective_release_protocol_path = root / "research/apparatus_resolved_release_protocol.json"
+    prospective_release_protocol = _json(prospective_release_protocol_path)
     aggregate = (external_loop or {}).get("aggregate") or {}
     protocol_source = (external_protocol or {}).get("source") or {}
     frozen_model = (external_protocol or {}).get("frozen_model") or {}
@@ -335,7 +337,8 @@ def audit(root: Path) -> dict[str, object]:
         "PASS" if external_loop_pass else "FAIL",
         "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
         f"{external_loop_path.relative_to(root)}; {external_search_path.relative_to(root)}; "
-        f"{external_search_recheck_path.relative_to(root)}; {external_operational_recheck_path.relative_to(root)}",
+        f"{external_search_recheck_path.relative_to(root)}; {external_operational_recheck_path.relative_to(root)}; "
+        f"{prospective_release_protocol_path.relative_to(root)}",
         "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
         {
             "protocol_integrity": protocol_integrity,
@@ -360,6 +363,12 @@ def audit(root: Path) -> dict[str, object]:
                 "external_validation_status": (external_operational_face or {}).get("external_validation_status"),
                 "goal_completion_permitted": (external_operational_face or {}).get("goal_completion_permitted"),
                 "claim_boundary": "Nominal operating-range context only; no synchronized full-loop validation claim.",
+            },
+            "prospective_apparatus_resolved_release_protocol": {
+                "status": (prospective_release_protocol or {}).get("status"),
+                "external_validation_status": (prospective_release_protocol or {}).get("promotion_gate", {}).get("external_validation_status"),
+                "full_loop_holdout_eligible": (prospective_release_protocol or {}).get("promotion_gate", {}).get("full_loop_holdout_eligible"),
+                "goal_completion_permitted": (prospective_release_protocol or {}).get("promotion_gate", {}).get("goal_completion_permitted"),
             },
         } if external_loop else "missing; current internal comparisons pass 0/8 and 0/11",
     ))

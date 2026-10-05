@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-05",
+  "status": "PROSPECTIVE_PROTOCOL_SPECIFICATION_ONLY",
+  "purpose": "Freeze an apparatus-resolved source-line-valve-terminal release model and its data contract before opening an independent facility logger archive.",
+  "claim_boundary": "This artifact is a reproducibility and data-acquisition protocol. It is not external validation, does not repair the frozen Proust holdout, and does not support a safety-distance or controller claim.",
+  "source_target": {
+    "title": "High pressure hydrogen fires",
+    "authors": ["Christophe Proust", "Didier Jamois", "Etienne Studer"],
+    "doi": "10.1016/j.ijhydene.2010.04.055",
+    "open_conference_pdf": "https://conference.ing.unipi.it/ichs2009/images/stories/papers/214.pdf",
+    "published_apparatus_description": {
+      "source_vessel": "25 L Type-IV hydrogen vessel, initially near 90 MPa",
+      "supply_line": "10 m line with nominal 10 mm diameter",
+      "terminal_orifices": "1 mm, 2 mm and 3 mm nominal diameters",
+      "valve_opening": "approximately 0.1 s",
+      "reported_observations": [
+        "continuous source-vessel weighing",
+        "source pressure",
+        "temperature immediately upstream of the terminal restriction"
+      ]
+    },
+    "derived_geometry": {
+      "line_internal_volume_m3": 0.0007853981633974483,
+      "derivation": "pi * (0.010 m)^2 / 4 * 10 m",
+      "status": "derived_from_nominal_dimensions_only",
+      "use_rule": "Do not treat this value as a measured logger channel or as a confirmatory calibration target; replace it with as-built bore and measured dead volume when available."
+    },
+    "rights_note": "The conference PDF is publicly readable, but no data-redistribution licence was identified. Store citation, extraction metadata and derived metrics only; do not commit the PDF or redistribute publisher figures."
+  },
+  "locked_model": {
+    "path": "src/h2station/release_network.py",
+    "sha256": "AD2CFBEF164999813184FE66A620F2CC301339CDD09C61741455F0B3E68AC5C0",
+    "state_description": [
+      "source vessel mass and internal energy",
+      "finite line mass and internal energy",
+      "source and line wall temperatures",
+      "upstream valve/restriction flow",
+      "terminal restriction flow"
+    ],
+    "parameter_policy": "Freeze geometry, valve opening law, discharge coefficients, heat-transfer terms, solver tolerances and boundary semantics before any target-campaign numerical result is inspected.",
+    "production_status": "development_only_not_wired_into_station_runtime"
+  },
+  "required_channels": [
+    {
+      "name": "source_pressure_pa_abs",
+      "role": "source boundary state",
+      "required": true,
+      "minimum_sampling_hz": 20
+    },
+    {
+      "name": "source_temperature_k",
+      "role": "source thermodynamic state",
+      "required": true,
+      "minimum_sampling_hz": 20
+    },
+    {
+      "name": "line_pressure_pa_abs",
+      "role": "line inventory and valve transient state",
+      "required": true,
+      "minimum_sampling_hz": 100
+    },
+    {
+      "name": "line_temperature_k",
+      "role": "line thermodynamic state",
+      "required": true,
+      "minimum_sampling_hz": 100
+    },
+    {
+      "name": "terminal_mass_flow_kg_s",
+      "role": "terminal boundary response",
+      "required": true,
+      "minimum_sampling_hz": 100
+    },
+    {
+      "name": "valve_position_fraction",
+      "role": "opening law and command feedback",
+      "required": true,
+      "minimum_sampling_hz": 500
+    },
+    {
+      "name": "source_mass_kg",
+      "role": "independent inventory check",
+      "required": true,
+      "minimum_sampling_hz": 20
+    },
+    {
+      "name": "ambient_pressure_pa",
+      "role": "downstream boundary",
+      "required": true,
+      "minimum_sampling_hz": 1
+    }
+  ],
+  "known_source_gap": {
+    "published_paper_channels": [
+      "source pressure",
+      "source or upstream temperature",
+      "source mass inferred from weighing"
+    ],
+    "not_reported_as_primary_channels": [
+      "line pressure",
+      "line temperature",
+      "valve position trace",
+      "direct terminal mass-flow logger"
+    ],
+    "decision": "The published Proust curves remain a local-aperture supplementary holdout. A future apparatus-resolved confirmatory run requires a new rights-cleared logger archive or a new experiment containing the full required channel contract."
+  },
+  "freeze_sequence": [
+    "Register as-built source volume, line bore, line length, dead volume, valve Cv or equivalent opening law, terminal bore and sensor calibration certificates.",
+    "Hash the model source, configuration, solver version and raw logger archive before numerical rows are opened.",
+    "Define time synchronization, missing-data, sensor-quality and uncertainty rules without inspecting model residuals.",
+    "Pre-register primary endpoints, thresholds and a minimum number of complete runs.",
+    "Run the frozen model once on the locked archive; no case-specific coefficient, time shift, cropping or diameter-specific fitting is allowed.",
+    "Archive every failed run and report channel-level reasons for ineligibility."
+  ],
+  "quality_controls": {
+    "mass_closure_relative_tolerance": 0.002,
+    "source_line_terminal_time_alignment_tolerance_s": 0.002,
+    "minimum_complete_runs": 3,
+    "minimum_points_per_run": 200,
+    "uncertainty_policy": "Report logger calibration uncertainty and digitization uncertainty separately; propagate both to endpoint intervals without using intervals to override a failed primary screen."
+  },
+  "primary_endpoints": {
+    "source_pressure_nrmse_percent": {"maximum": 15.0},
+    "terminal_mass_flow_nrmse_percent_peak_measured": {"maximum": 15.0},
+    "terminal_mass_flow_median_absolute_percentage_error_percent": {"maximum": 20.0},
+    "mass_closure": {"maximum_relative_error": 0.002},
+    "aggregate_rule": "At least two of three independent complete runs must pass every primary endpoint, with no required channel missing."
+  },
+  "promotion_gate": {
+    "full_loop_holdout_eligible": false,
+    "external_validation_status": "NOT_ESTABLISHED",
+    "current_proust_holdout_reused": false,
+    "current_ijhe_submission_readiness": "This protocol alone cannot make the manuscript submission-ready.",
+    "goal_completion_permitted": false
+  }
+}

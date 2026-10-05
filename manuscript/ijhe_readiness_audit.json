@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T09:52:24.164252+00:00",
+  "generated_at": "2026-10-05T10:07:40.700578+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -389,7 +389,7 @@
       "id": "full_loop_external_validation",
       "status": "FAIL",
       "claim": "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
-      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json",
+      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json; research\\apparatus_resolved_release_protocol.json",
       "requirement": "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
       "observed": {
         "protocol_integrity": true,
@@ -469,6 +469,12 @@
           "external_validation_status": "NOT_ESTABLISHED",
           "goal_completion_permitted": false,
           "claim_boundary": "Nominal operating-range context only; no synchronized full-loop validation claim."
+        },
+        "prospective_apparatus_resolved_release_protocol": {
+          "status": "PROSPECTIVE_PROTOCOL_SPECIFICATION_ONLY",
+          "external_validation_status": "NOT_ESTABLISHED",
+          "full_loop_holdout_eligible": false,
+          "goal_completion_permitted": false
         }
       }
     },

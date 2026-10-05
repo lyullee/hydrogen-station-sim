@@ -63,5 +63,12 @@
     "contamination_disclosed": true,
     "promotion_blocked": true
   },
-  "next_valid_step": "Freeze a new prospective apparatus-resolved release protocol with explicit valve and line geometry, or obtain an independent logger archive containing those boundary states. Do not retrofit the production model or reopen the existing holdout after inspecting its outcomes."
+  "next_valid_step": "Freeze a new prospective apparatus-resolved release protocol with explicit valve and line geometry, or obtain an independent logger archive containing those boundary states. Do not retrofit the production model or reopen the existing holdout after inspecting its outcomes.",
+  "prospective_protocol": {
+    "artifact": "research/apparatus_resolved_release_protocol.json",
+    "status": "PROSPECTIVE_PROTOCOL_SPECIFICATION_ONLY",
+    "model_path": "src/h2station/release_network.py",
+    "full_loop_holdout_eligible": false,
+    "external_validation_status": "NOT_ESTABLISHED"
+  }
 }
