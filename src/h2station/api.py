@@ -30,7 +30,7 @@ from .operations import ProcessRuntime, RELIEF_TARGETS
 from .risk.runtime_backend import load_hyram_backend
 from .risk.sensor_assessment import assess_sensor_cases, available_sensor_inputs
 from .risk.scenario_planning import parse_saga_plan
-from .llm_grounding import build_evidence_manifest
+from .llm_grounding import build_evidence_manifest, prompt_evidence_summary
 from .safe_operation import SafeOperationSample
 from .simulation_clock import SimulationClock
 from .virtual_safety import VALVE_LABELS, ZONES, RECOVERY_CHECKS, suggested_actions
@@ -2358,6 +2358,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         # bulky evidence/telemetry must not crowd out the registered HAZOP
         # rules that explain the current alarm.
         "impact_results":impact_results,
+        "evidence_basis": prompt_evidence_summary(evidence_manifest),
         "hazop_reference_rules":reference_rules,
         "hazop_active":active, "hazop_rules":matched_rules,
         "emergency_response_guidance":prompt_guidance(response_plans),
@@ -3139,6 +3140,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         # before large provenance/impact payloads so the bounded prompt keeps
         # the live readings, active rules and immediate response field.
         "consolidated_response_guidance": response_guidance,
+        "evidence_basis": prompt_evidence_summary(evidence_manifest),
         "time_s": payload["time_s"], "sensor": {
             "tag": sensor_id, "type": payload["sensor"].get("종류"),
             "location": payload["sensor"].get("설치_측정위치"), "node": payload["node"].get("설비_라인"),

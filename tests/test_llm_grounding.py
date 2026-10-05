@@ -1,4 +1,4 @@
-from h2station.llm_grounding import build_evidence_manifest
+from h2station.llm_grounding import build_evidence_manifest, prompt_evidence_summary
 
 
 def test_manifest_distinguishes_not_requested_from_calculated_impact():
@@ -52,6 +52,14 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert detector["aggregate"]["case_count"] == 22
     assert detector["aggregate"]["cases_with_trip_detection"] == 22
     assert "outdoor station dispersion" in detector["claim_limit"]
+    early = prompt_evidence_summary(idle)
+    assert early["impact_status"] == "not_requested"
+    assert early["public_experimental_benchmarks"]["sources"]
+    assert early["public_detector_logic_evidence"]["aggregate"]["case_count"] == 22
+    assert early["confidential_measured_boundary_replay"]["temporal_holdout"][
+        "time_ordered_holdout_supported"
+    ] is True
+    assert early["evidence_digest"] == idle["evidence_digest"]
     confidential = idle["response_evidence"]["confidential_measured_boundary_replay"]
     assert confidential["trajectory_completed"] is True
     assert confidential["station_boundary_calibration_supported"] is True

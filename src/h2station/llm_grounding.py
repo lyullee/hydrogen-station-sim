@@ -555,3 +555,32 @@ def build_evidence_manifest(
                            separators=(",", ":"), default=str).encode("utf-8")
     envelope["evidence_digest"] = "sha256:" + sha256(canonical).hexdigest()
     return envelope
+
+
+def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
+    """Return a bounded evidence slice that is safe to place early in prompts.
+
+    Live telemetry and registered response rules can be large enough to push
+    provenance to the end of a provider's context cap.  This compact view keeps
+    the public experiment, detector replay and confidential measured-boundary
+    claim limits visible without copying raw rows or the full signal set.
+    """
+
+    evidence = manifest.get("response_evidence") or {}
+    summary: dict[str, Any] = {
+        "claim_limit": str(evidence.get("claim_limit") or ""),
+    }
+    for key in (
+        "public_experimental_benchmarks",
+        "public_detector_logic_evidence",
+        "public_accidental_release_evidence",
+        "confidential_measured_boundary_replay",
+    ):
+        value = evidence.get(key)
+        if isinstance(value, dict):
+            summary[key] = value
+    impact = manifest.get("impact") or {}
+    summary["impact_status"] = impact.get("calculation_status")
+    summary["impact_result_count"] = impact.get("result_count", 0)
+    summary["evidence_digest"] = manifest.get("evidence_digest")
+    return summary
