@@ -723,6 +723,65 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
     return links
 
 
+def _public_operating_envelope_screen(
+    frame: dict[str, Any],
+    benchmarks: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    """Compare live simulated flow with public aggregate experiment context.
+
+    This is deliberately a descriptive screen, not a validation score.  The
+    public heavy-duty reports do not provide an untouched station-to-vehicle
+    row-level holdout, so the result may only say whether the current simulated
+    flow is below, within, or above the published operating context.
+    """
+
+    if not isinstance(benchmarks, dict):
+        return None
+    sources = [item for item in benchmarks.get("sources") or [] if isinstance(item, dict)]
+    fast_flow = next(
+        (item for item in sources if item.get("id") == "NREL_HD_FAST_FLOW_2024_REPORT"),
+        None,
+    )
+    if not isinstance(fast_flow, dict):
+        return None
+    aggregate = fast_flow.get("aggregate") or {}
+    current = _finite_number(frame.get("nozzle_flow_g_s"))
+    pressure = _finite_number(frame.get("vehicle_pressure_mpa"))
+    if current is None:
+        return None
+    peak = _finite_number(aggregate.get("peak_mass_flow_g_s"))
+    average = _finite_number(aggregate.get("average_mass_flow_g_s"))
+    if current <= 1.0e-9:
+        flow_context = "idle"
+    elif peak is not None and current > peak:
+        flow_context = "above_public_fast_flow_peak_context"
+    elif average is not None and current >= average:
+        flow_context = "within_public_fast_flow_context"
+    else:
+        flow_context = "below_public_heavy_duty_average_context"
+    endpoint_pressure = {
+        "reported_start_mpa": _finite_number(aggregate.get("starting_pressure_mpa")),
+        "reported_end_mpa": _finite_number(aggregate.get("ending_pressure_mpa")),
+    }
+    return {
+        "status": "screened",
+        "source_id": str(fast_flow.get("id") or ""),
+        "source_url": str(fast_flow.get("url") or ""),
+        "current_simulated_nozzle_flow_g_s": current,
+        "public_average_flow_g_s": average,
+        "public_peak_flow_g_s": peak,
+        "flow_context": flow_context,
+        "current_simulated_vehicle_pressure_mpa": pressure,
+        "public_reported_pressure_context_mpa": endpoint_pressure,
+        "raw_rows_public": fast_flow.get("raw_rows_public") is True,
+        "validation_claim": False,
+        "claim_limit": (
+            "공개 고유량 실험의 집계 운전범위와 비교한 설명용 screen이다. "
+            "충전소-차량 full-loop 정확도·프로토콜 적합성·안전 인증을 검증하지 않는다."
+        ),
+    }
+
+
 def _confidential_lifecycle_evidence() -> dict[str, Any] | None:
     """Expose only de-identified lifecycle-counter calibration context."""
 
@@ -1083,6 +1142,9 @@ def build_evidence_manifest(
     public_benchmarks = _public_experimental_benchmarks()
     if public_benchmarks is not None:
         envelope["response_evidence"]["public_experimental_benchmarks"] = public_benchmarks
+        envelope_screen = _public_operating_envelope_screen(frame, public_benchmarks)
+        if envelope_screen is not None:
+            envelope["response_evidence"]["public_operating_envelope_screen"] = envelope_screen
     hitrf_reference = _public_hitrf_operational_reference()
     if hitrf_reference is not None:
         envelope["response_evidence"][
@@ -1155,6 +1217,19 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "sources": rows,
                 "claim_limit": short(benchmarks.get("claim_limit")),
             }
+    envelope_screen = evidence.get("public_operating_envelope_screen")
+    if isinstance(envelope_screen, dict):
+        summary["public_operating_envelope_screen"] = {
+            key: envelope_screen.get(key)
+            for key in (
+                "status", "source_id", "current_simulated_nozzle_flow_g_s",
+                "public_average_flow_g_s", "public_peak_flow_g_s", "flow_context",
+                "current_simulated_vehicle_pressure_mpa",
+                "public_reported_pressure_context_mpa", "raw_rows_public",
+                "validation_claim", "claim_limit",
+            )
+            if envelope_screen.get(key) is not None
+        }
     hitrf_reference = evidence.get("public_hitrf_operational_reference")
     if isinstance(hitrf_reference, dict):
         summary["public_hitrf_operational_reference"] = {
@@ -1349,10 +1424,25 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     hitrf_storage = hitrf_reference.get("storage") or {}
     hitrf_thermal = hitrf_reference.get("dispensing_and_thermal") or {}
+    envelope_screen = evidence.get("public_operating_envelope_screen") or {}
     return {
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "public_source_links": _public_source_links(evidence),
         "public_experiment_sources": benchmark_ids,
+        "public_operating_envelope_screen": {
+            "status": envelope_screen.get("status"),
+            "source_id": envelope_screen.get("source_id"),
+            "source_url": envelope_screen.get("source_url"),
+            "current_simulated_nozzle_flow_g_s": envelope_screen.get(
+                "current_simulated_nozzle_flow_g_s"
+            ),
+            "public_average_flow_g_s": envelope_screen.get("public_average_flow_g_s"),
+            "public_peak_flow_g_s": envelope_screen.get("public_peak_flow_g_s"),
+            "flow_context": envelope_screen.get("flow_context"),
+            "raw_rows_public": envelope_screen.get("raw_rows_public"),
+            "validation_claim": envelope_screen.get("validation_claim"),
+            "claim_limit": envelope_screen.get("claim_limit"),
+        },
         "public_hitrf_operational_reference": {
             "source_url": (hitrf_reference.get("source") or {}).get("url"),
             "available": bool(hitrf_reference),

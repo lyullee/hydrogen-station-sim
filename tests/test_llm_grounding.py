@@ -6,7 +6,7 @@ from h2station.llm_grounding import (
 
 
 def test_manifest_distinguishes_not_requested_from_calculated_impact():
-    frame = {"time_s": 12.5}
+    frame = {"time_s": 12.5, "nozzle_flow_g_s": 0.0}
     signals = {"PT-0901": {"value": 88.0, "unit": "MPa", "quality": "GOOD"}}
 
     idle = build_evidence_manifest(frame, signals, [], False, question="현재 상태")
@@ -71,6 +71,11 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     early = prompt_evidence_summary(idle)
     assert early["impact_status"] == "not_requested"
     assert early["public_experimental_benchmarks"]["sources"]
+    screen = early["public_operating_envelope_screen"]
+    assert screen["status"] == "screened"
+    assert screen["flow_context"] == "idle"
+    assert screen["validation_claim"] is False
+    assert screen["raw_rows_public"] is False
     hitrf = idle["response_evidence"]["public_hitrf_operational_reference"]
     assert hitrf["source"]["raw_synchronized_logger_public"] is False
     assert hitrf["storage"]["low_pressure"]["maximum_pressure_mpa"] == 20.0
@@ -250,6 +255,31 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert calculated["conditions"][0]["response_source_ids"] == ["H2_INCIDENT", "HIAD2026"]
     assert calculated["response_evidence"]["source_ids"] == ["H2_INCIDENT", "HIAD2026"]
     assert calculated["evidence_digest"] != idle["evidence_digest"]
+
+
+def test_public_operating_envelope_screen_is_descriptive_only():
+    manifest = build_evidence_manifest(
+        {
+            "time_s": 120.0,
+            "nozzle_flow_g_s": 200.0,
+            "vehicle_pressure_mpa": 52.0,
+        },
+        {},
+        [],
+        False,
+    )
+    screen = manifest["response_evidence"]["public_operating_envelope_screen"]
+    assert screen["source_id"] == "NREL_HD_FAST_FLOW_2024_REPORT"
+    assert screen["flow_context"] == "within_public_fast_flow_context"
+    assert screen["current_simulated_nozzle_flow_g_s"] == 200.0
+    assert screen["public_average_flow_g_s"] == 172.3
+    assert screen["public_peak_flow_g_s"] == 483.33
+    assert screen["validation_claim"] is False
+    assert "full-loop" in screen["claim_limit"]
+    header = prompt_evidence_header(manifest)
+    assert header["public_operating_envelope_screen"]["source_url"].endswith(
+        "h2iqhour-03262024.pdf"
+    )
 
 
 def test_manifest_records_opt_in_measured_boundary_profile():

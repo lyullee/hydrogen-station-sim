@@ -21,6 +21,13 @@ the prompt. Private station logs remain represented only by de-identified
 quality and calibration metadata; no operator, site, date, manufacturer,
 tag, or raw row is exposed.
 
+When a live frame contains a nozzle flow, the evidence envelope also adds
+`public_operating_envelope_screen`. It compares the simulated flow with the
+published high-flow experiment's aggregate average and peak and labels the
+context as idle, below the heavy-duty average, within the reported context, or
+above the reported peak. This label is explanatory only and is never used as
+an accuracy score or as an automatic controller limit.
+
 The source index does not change the numerical model or turn aggregate public
 results into a holdout. The runtime must continue to describe the following
 boundaries explicitly:

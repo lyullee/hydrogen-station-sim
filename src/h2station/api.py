@@ -2460,6 +2460,8 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
            if emergency_context else
            "정상 운전에서는 사용자가 사고 영향을 요청한 경우에만 계산 결과를 설명하세요. 요청하지 않았다면 사고 수치를 언급하지 마세요. ") +
         "evidence_manifest를 응답의 근거 목록으로 사용하고 evidence_digest를 임의로 바꾸지 마세요. "
+        "public_operating_envelope_screen이 있으면 현재 모의 노즐 유량을 공개 고유량 실험의 집계 평균·최대값과 비교한 보조 screen으로만 설명하세요. "
+        "이 screen을 모델 검증 통과, 실제 충전소 성능, 프로토콜 적합성 또는 안전 인증으로 표현하지 마세요. raw_rows_public=false이면 공개 원시 시계열이 없다는 한계를 함께 밝히세요. "
         "runtime_calibration.status=active이면 비식별 실측 저장 뱅크 경계 보정이 이번 실행에 적용된 것이며, 재충전 여유폭 해석에만 사용하세요. "
         "status가 reference_defaults이면 기준 모델이고, requested_unavailable이면 보정을 적용하지 못한 기준 모델입니다. 어느 상태도 차량·디스펜서·전체 충전루프 검증을 뜻하지 않습니다. "
         "public accident action category counts는 대응계획의 근거 범위만 나타내며, 조치의 효과나 사고확률을 의미하지 않습니다. "
@@ -3263,6 +3265,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         "consolidated_response_guidance는 서버가 최종 답변 뒤에 붙이는 단일 행동계획이므로 조치 문장을 반복하지 말고 현재 판단과 근거를 설명하세요. "
         + status_instruction +
         "evidence_manifest의 calculation_status가 not_requested이면 피해영향 계산을 했다고 말하지 마세요. "
+        "public_operating_envelope_screen은 공개 실험 운전범위의 설명용 비교이며 모델 정확도 판정이 아닙니다. flow_context의 의미를 바꾸거나 없는 유량을 만들지 마세요. "
         "runtime_calibration.status=active는 저장 뱅크 경계 보정이 적용되었다는 뜻일 뿐 차량·디스펜서·전체 충전루프 실측 검증을 뜻하지 않습니다. reference_defaults와 requested_unavailable은 기준값 실행으로 설명하세요. "
         "public accident action category counts는 대응계획의 근거 범위만 나타내며, 조치의 효과나 사고확률을 의미하지 않습니다. "
         "confidential_local_accident_response_coverage는 비식별 실제 사고 메타데이터의 대응계획 연결성만 나타내며, 사고 원문·효과성·확률·물리 검증으로 확대하지 마세요. "
