@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_owner_data_intake_recheck",
+  "recorded_at": "2026-10-06",
+  "source_scope": "owner-supplied multi-station hydrogen-refuelling logger exports",
+  "privacy": {
+    "source_identifiers_published": false,
+    "site_names_published": false,
+    "operator_names_published": false,
+    "manufacturer_details_published": false,
+    "exact_dates_published": false,
+    "raw_rows_persisted": false,
+    "raw_files_outside_repository": true
+  },
+  "inventory_recheck": {
+    "pressure_logger_files": 12,
+    "lifecycle_counter_files": 13,
+    "independent_pressure_logger_files": 8,
+    "description_file_present": true,
+    "headers_verified": true,
+    "pressure_channels_verified": [
+      "medium_storage_boundary",
+      "high_storage_boundary"
+    ],
+    "lifecycle_channels_verified": [
+      "medium_storage_cycle_counter",
+      "high_storage_cycle_counter"
+    ],
+    "vehicle_pressure_temperature_flow_channels": false,
+    "synchronized_vehicle_fill_cases": false
+  },
+  "model_use": {
+    "current_profile": "research/confidential_operational_envelope_calibration_summary_2026_10_06.json",
+    "allowed_role": "opt-in station-boundary operating-envelope calibration",
+    "default_model_parameters_changed": false,
+    "vehicle_side_validation_claim": false,
+    "safety_distance_claim": false,
+    "recharge_hysteresis_is_universal_limit": false,
+    "quality_controls": [
+      "positive-pressure filtering",
+      "relative-time conversion",
+      "per-file ordering and gap checks",
+      "aggregate-only output",
+      "chronological holdout replay before runtime use"
+    ]
+  },
+  "next_data_based_step": {
+    "implemented": "rights-gated workbook loader for the public heavy-vehicle refuelling candidate",
+    "module": "src/h2station/nbsdc_ingest.py",
+    "required_before_vehicle_side_fit": [
+      "approved de-identified vehicle/test-cylinder export",
+      "channel units and calibration records",
+      "protocol phase and stop-reason mapping",
+      "written permission for derived metrics",
+      "frozen external holdout and no case-specific fitting"
+    ]
+  },
+  "claim_boundary": "The private logs support a de-identified station-boundary calibration and data-quality audit. They do not close the independent station-to-vehicle validation gate or support publication of site, operator, manufacturer or exact-date information."
+}

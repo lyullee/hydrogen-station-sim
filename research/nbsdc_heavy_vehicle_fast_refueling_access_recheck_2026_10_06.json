@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_heavy_vehicle_refueling_dataset_access_recheck",
+  "recorded_at": "2026-10-06",
+  "source": {
+    "catalogue": "National Basic Science Data Center",
+    "dataset_id": "69a705c7195d2650b5d79a06",
+    "cstr": "16666.11.nbsdc.n8sPBSHX",
+    "landing_page": "https://www.nbsdc.cn/general/dataDetail?id=69a705c7195d2650b5d79a06&type=1",
+    "public_title": "Fuel-cell heavy-vehicle hydrogen fast-refueling technology dataset",
+    "provenance_identifiers_in_repository": false
+  },
+  "public_metadata_observation": {
+    "reported_content": [
+      "large-flow dispenser online monitoring design data",
+      "high-pressure hydrogen test-cylinder refueling traces with flow and cylinder temperature",
+      "average single-cylinder refueling-rate tests",
+      "maximum dispenser flow-capacity tests",
+      "low-pressure nitrogen test traces with initial pressure and pressure-rise cases",
+      "protocol and safety-operation documentation"
+    ],
+    "reported_sampling": "low-pressure trace description states 100 ms recording; high-pressure workbook sampling must be verified from the approved file",
+    "reported_protocol_context": [
+      "SAE J2601-5 referenced in the data description",
+      "hydrogen test stop criteria include cylinder temperature and target-pressure limits",
+      "test-cylinder pressure is reduced before the next run"
+    ],
+    "file_tree_observed": {
+      "numeric_high_pressure_workbooks": 5,
+      "numeric_low_pressure_text_exports": 4,
+      "average_rate_temperature_workbooks": 2,
+      "protocol_or_test_reports": 6,
+      "design_and_media_files_present": true
+    }
+  },
+  "access_boundary": {
+    "login_status_without_session": "not_authenticated",
+    "metadata_and_file_tree": "available",
+    "description_file": "downloadable without login",
+    "numeric_data_download_without_login": false,
+    "numeric_download_response": "HTTP 200 with JSON code 403: data files require a data application",
+    "raw_files_obtained": false,
+    "rights_terms_for_derived_metrics": "not yet documented for this project",
+    "raw_rows_written_to_repository": false
+  },
+  "validation_decision": {
+    "full_loop_external_holdout_eligible": false,
+    "component_or_protocol_candidate": true,
+    "current_use": "acquisition lead and schema/protocol grounding only",
+    "why_not_scored": [
+      "the numerical workbooks were not accessible through the unauthenticated download boundary",
+      "test-cylinder channels are not yet mapped to the station-to-vehicle validation contract",
+      "a rights-cleared file hash, channel dictionary, calibration information and frozen case split are missing"
+    ],
+    "claim_boundary": "This record does not validate the digital twin, establish a safety distance, or support an IJHE full-loop claim. No model parameter was fitted from this candidate."
+  },
+  "custodian_request": {
+    "preferred_export": "de-identified CSV, Parquet or workbook for an approved subset",
+    "minimum_channels": [
+      "elapsed time with timezone/clock rule",
+      "test-cylinder or receptacle pressure",
+      "test-cylinder gas temperature",
+      "dispenser mass flow or cumulative transferred mass",
+      "initial pressure, capacity/volume and gas identity",
+      "protocol phase, target pressure and stop reason",
+      "sensor units, calibration/quality flags and missing-value rules"
+    ],
+    "required_rights": [
+      "permission to compute and publish derived error metrics",
+      "permission to deposit de-identified derived tables or a reproducibility manifest",
+      "confirmation that the export omits operator, site, manufacturer and exact-date identifiers"
+    ],
+    "intake_rule": "Freeze the implementation and acceptance screen before reading outcome columns; preserve every eligible failure and keep the candidate separate from the existing station-to-vehicle holdout."
+  },
+  "claim_boundary": "Public metadata strengthens the real-test provenance and acquisition plan only. It is not raw validation evidence and does not change the closed-loop gate."
+}

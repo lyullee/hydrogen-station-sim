@@ -84,6 +84,7 @@ from .calibration_profiles import (
     load_measured_boundary_calibration,
 )
 from .safe_operation import SafeFullStationSimulator, SafeOperationTrajectory
+from .nbsdc_ingest import NbsdcColumnMap, NbsdcRefuelTrace, read_nbsdc_workbook
 from .safety_runtime import (
     FaultEvent,
     FaultInjector,
@@ -164,6 +165,9 @@ __all__ = [
     "ReferenceScenario",
     "SafeFullStationSimulator",
     "SafeOperationTrajectory",
+    "NbsdcColumnMap",
+    "NbsdcRefuelTrace",
+    "read_nbsdc_workbook",
     "SafetyCommand",
     "SafetyLimits",
     "SafetyPLC",
