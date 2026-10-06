@@ -1,0 +1,384 @@
+{
+  "schema_version": 1,
+  "artifact_type": "proust_discharge_coefficient_sensitivity_diagnostic",
+  "recorded_at": "2026-10-06",
+  "evidence_role": "post_outcome_diagnostic_only",
+  "protocol_sha256": "6f52a2b72215121276949db4c4ed06b479fde9dc71d7feb4440cbad97f46d5db",
+  "data_sha256": "d203ba634e64c88d1d225551d54998379c2d99f11a588b3298607208893b67c0",
+  "locked_implementation_hashes": {
+    "evaluator": {
+      "path": "src/h2station/proust_release_validation.py",
+      "sha256": "e6f71a29e02f5ecd088dbb0f190eeff06fba2485d19281f42dce9d376a5a9078"
+    },
+    "runner": {
+      "path": "scripts/run_proust_release_holdout.py",
+      "sha256": "d2f00f9b8298f2b4ed101f02664e238bc1277e4794adec8845b185affad8c365"
+    }
+  },
+  "baseline_discharge_coefficient": 0.8,
+  "parameter_fitting": false,
+  "production_model_parameter_changed": false,
+  "effective_coefficient_by_diameter": [
+    {
+      "case_id": "proust-1mm",
+      "nozzle_diameter_mm": 1.0,
+      "points": 13,
+      "effective_cd_median": 1.0677001075329087,
+      "effective_cd_mean": 1.0845156031249585,
+      "effective_cd_p10": 1.0217752369302118,
+      "effective_cd_p90": 1.1776503580201678
+    },
+    {
+      "case_id": "proust-2mm",
+      "nozzle_diameter_mm": 2.0,
+      "points": 10,
+      "effective_cd_median": 0.6906020306827607,
+      "effective_cd_mean": 0.6894463669321803,
+      "effective_cd_p10": 0.6188402262344721,
+      "effective_cd_p90": 0.7470895354225713
+    },
+    {
+      "case_id": "proust-3mm",
+      "nozzle_diameter_mm": 3.0,
+      "points": 12,
+      "effective_cd_median": 0.6026228363188266,
+      "effective_cd_mean": 0.5851190729738275,
+      "effective_cd_p10": 0.49668176848127416,
+      "effective_cd_p90": 0.6530014904476614
+    }
+  ],
+  "sensitivity_grid": [
+    {
+      "discharge_coefficient": 0.5,
+      "joint_primary_pass_count": 1,
+      "series": [
+        {
+          "case_id": "proust-1mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 30.299917754498264,
+          "median_ape_percent": 53.17037092416055
+        },
+        {
+          "case_id": "proust-2mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 17.382065138553887,
+          "median_ape_percent": 27.596766425967267
+        },
+        {
+          "case_id": "proust-3mm",
+          "nrmse_screen_pass": true,
+          "median_ape_screen_pass": true,
+          "joint_primary_screen_pass": true,
+          "nrmse_percent": 7.774446767224815,
+          "median_ape_percent": 16.951297046909445
+        }
+      ]
+    },
+    {
+      "discharge_coefficient": 0.55,
+      "joint_primary_pass_count": 1,
+      "series": [
+        {
+          "case_id": "proust-1mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 27.953963684472665,
+          "median_ape_percent": 48.4874080165766
+        },
+        {
+          "case_id": "proust-2mm",
+          "nrmse_screen_pass": true,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 12.511978804857135,
+          "median_ape_percent": 20.35644306856399
+        },
+        {
+          "case_id": "proust-3mm",
+          "nrmse_screen_pass": true,
+          "median_ape_screen_pass": true,
+          "joint_primary_screen_pass": true,
+          "nrmse_percent": 7.0154486775809834,
+          "median_ape_percent": 11.549530759191057
+        }
+      ]
+    },
+    {
+      "discharge_coefficient": 0.6,
+      "joint_primary_pass_count": 2,
+      "series": [
+        {
+          "case_id": "proust-1mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 25.60984148987776,
+          "median_ape_percent": 43.80444510899266
+        },
+        {
+          "case_id": "proust-2mm",
+          "nrmse_screen_pass": true,
+          "median_ape_screen_pass": true,
+          "joint_primary_screen_pass": true,
+          "nrmse_percent": 8.13315410633299,
+          "median_ape_percent": 13.116119711160735
+        },
+        {
+          "case_id": "proust-3mm",
+          "nrmse_screen_pass": true,
+          "median_ape_screen_pass": true,
+          "joint_primary_screen_pass": true,
+          "nrmse_percent": 10.458466753791837,
+          "median_ape_percent": 7.797306461660424
+        }
+      ]
+    },
+    {
+      "discharge_coefficient": 0.65,
+      "joint_primary_pass_count": 1,
+      "series": [
+        {
+          "case_id": "proust-1mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 23.26810482873286,
+          "median_ape_percent": 39.1214822014087
+        },
+        {
+          "case_id": "proust-2mm",
+          "nrmse_screen_pass": true,
+          "median_ape_screen_pass": true,
+          "joint_primary_screen_pass": true,
+          "nrmse_percent": 5.561648567954541,
+          "median_ape_percent": 7.597542370694987
+        },
+        {
+          "case_id": "proust-3mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": true,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 15.521953569496382,
+          "median_ape_percent": 7.963313839017713
+        }
+      ]
+    },
+    {
+      "discharge_coefficient": 0.7,
+      "joint_primary_pass_count": 1,
+      "series": [
+        {
+          "case_id": "proust-1mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 20.92955444402792,
+          "median_ape_percent": 34.43851929382477
+        },
+        {
+          "case_id": "proust-2mm",
+          "nrmse_screen_pass": true,
+          "median_ape_screen_pass": true,
+          "joint_primary_screen_pass": true,
+          "nrmse_percent": 7.13448182010463,
+          "median_ape_percent": 5.859657690072197
+        },
+        {
+          "case_id": "proust-3mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": true,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 21.06824784997722,
+          "median_ape_percent": 16.268184134326763
+        }
+      ]
+    },
+    {
+      "discharge_coefficient": 0.75,
+      "joint_primary_pass_count": 1,
+      "series": [
+        {
+          "case_id": "proust-1mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 18.595392489822483,
+          "median_ape_percent": 29.755556386240823
+        },
+        {
+          "case_id": "proust-2mm",
+          "nrmse_screen_pass": true,
+          "median_ape_screen_pass": true,
+          "joint_primary_screen_pass": true,
+          "nrmse_percent": 11.22741661564579,
+          "median_ape_percent": 8.604850361049108
+        },
+        {
+          "case_id": "proust-3mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 26.799246284244166,
+          "median_ape_percent": 24.573054429635828
+        }
+      ]
+    },
+    {
+      "discharge_coefficient": 0.8,
+      "joint_primary_pass_count": 0,
+      "series": [
+        {
+          "case_id": "proust-1mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 16.267508112675205,
+          "median_ape_percent": 25.072593478656874
+        },
+        {
+          "case_id": "proust-2mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": true,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 16.012310696868767,
+          "median_ape_percent": 15.845173718452374
+        },
+        {
+          "case_id": "proust-3mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 32.617735120944786,
+          "median_ape_percent": 32.87792472494488
+        }
+      ]
+    },
+    {
+      "discharge_coefficient": 0.85,
+      "joint_primary_pass_count": 0,
+      "series": [
+        {
+          "case_id": "proust-1mm",
+          "nrmse_screen_pass": true,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 13.949044564476493,
+          "median_ape_percent": 20.38963057107293
+        },
+        {
+          "case_id": "proust-2mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 21.021856740467506,
+          "median_ape_percent": 23.085497075855642
+        },
+        {
+          "case_id": "proust-3mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 38.48405119679698,
+          "median_ape_percent": 41.182795020253934
+        }
+      ]
+    },
+    {
+      "discharge_coefficient": 0.9,
+      "joint_primary_pass_count": 1,
+      "series": [
+        {
+          "case_id": "proust-1mm",
+          "nrmse_screen_pass": true,
+          "median_ape_screen_pass": true,
+          "joint_primary_screen_pass": true,
+          "nrmse_percent": 11.645629826159617,
+          "median_ape_percent": 15.706667663488986
+        },
+        {
+          "case_id": "proust-2mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 26.127150337385125,
+          "median_ape_percent": 30.325820433258922
+        },
+        {
+          "case_id": "proust-3mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 44.37923227925765,
+          "median_ape_percent": 49.487665315563
+        }
+      ]
+    },
+    {
+      "discharge_coefficient": 0.95,
+      "joint_primary_pass_count": 1,
+      "series": [
+        {
+          "case_id": "proust-1mm",
+          "nrmse_screen_pass": true,
+          "median_ape_screen_pass": true,
+          "joint_primary_screen_pass": true,
+          "nrmse_percent": 9.36837069903384,
+          "median_ape_percent": 11.023704755905051
+        },
+        {
+          "case_id": "proust-2mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 31.28134692847817,
+          "median_ape_percent": 37.566143790662174
+        },
+        {
+          "case_id": "proust-3mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 50.29312903325812,
+          "median_ape_percent": 57.79253561087203
+        }
+      ]
+    },
+    {
+      "discharge_coefficient": 1.0,
+      "joint_primary_pass_count": 1,
+      "series": [
+        {
+          "case_id": "proust-1mm",
+          "nrmse_screen_pass": true,
+          "median_ape_screen_pass": true,
+          "joint_primary_screen_pass": true,
+          "nrmse_percent": 7.142329506644378,
+          "median_ape_percent": 6.340741848321104
+        },
+        {
+          "case_id": "proust-2mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 36.463714889451424,
+          "median_ape_percent": 44.806467148065465
+        },
+        {
+          "case_id": "proust-3mm",
+          "nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "joint_primary_screen_pass": false,
+          "nrmse_percent": 56.2198355324581,
+          "median_ape_percent": 66.0974059061811
+        }
+      ]
+    }
+  ],
+  "interpretation": "The measured-to-unit-coefficient ratios differ strongly by nominal aperture. A single global coefficient cannot represent the campaign: the 1 mm series implies an effective coefficient above one while the 2 mm and 3 mm series imply lower values. This points to omitted upstream line/valve/restriction geometry or digitization/systematic effects; it is not a license to fit the holdout or change production.",
+  "claim_boundary": "Post-outcome diagnostic only. It does not establish a corrected discharge law, validate line/valve physics, or support station safety-distance or full-loop claims."
+}
