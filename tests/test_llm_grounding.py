@@ -69,6 +69,18 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert "ignition probability" in accidental["claim_limit"]
     assert all(row["local_sha256_match"] for row in accidental["files"])
     assert "raw_text" not in accidental
+    release_boundary = idle["response_evidence"][
+        "proust_release_model_validation_boundary"
+    ]
+    assert release_boundary["evidence_role"] == "post_outcome_diagnostic_only"
+    assert release_boundary["baseline_discharge_coefficient"] == 0.8
+    assert release_boundary["baseline_joint_primary_pass_count"] == 0
+    assert release_boundary["parameter_fitting"] is False
+    assert release_boundary["production_model_parameter_changed"] is False
+    assert [row["nozzle_diameter_mm"] for row in release_boundary[
+        "effective_coefficient_by_diameter"
+    ]] == [1.0, 2.0, 3.0]
+    assert "corrected discharge law" in release_boundary["claim_limit"]
     detector = idle["response_evidence"]["public_detector_logic_evidence"]
     assert detector["doi"] == "10.23642/usn.26117989.v2"
     assert detector["rule"]["alarm_threshold_percent"] == 1.0
@@ -98,6 +110,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert early["confidential_local_accident_response_coverage"][
         "case_with_missing_stage_count"
     ] == 0
+    assert early["proust_release_model_validation_boundary"][
+        "baseline_joint_primary_pass_count"
+    ] == 0
+    assert early["proust_release_model_validation_boundary"][
+        "parameter_fitting"
+    ] is False
     assert early["confidential_measured_boundary_replay"]["temporal_holdout"][
         "time_ordered_holdout_supported"
     ] is True
@@ -125,6 +143,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert header["public_accident_evidence"]["action_category_counts"][
         "shutdown_isolation_depressurization"
     ] == 22
+    assert header["proust_release_model_validation_boundary"][
+        "baseline_joint_primary_pass_count"
+    ] == 0
+    assert header["proust_release_model_validation_boundary"][
+        "production_model_parameter_changed"
+    ] is False
     assert header["public_hitrf_operational_reference"]["raw_synchronized_logger_public"] is False
     assert header["public_hitrf_operational_reference"]["available"] is True
     assert header["public_hitrf_operational_reference"]["storage_pressure_mpa"] == {

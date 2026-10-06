@@ -579,6 +579,77 @@ def _public_experimental_benchmarks() -> dict[str, Any] | None:
     }
 
 
+def _release_model_validation_boundary() -> dict[str, Any] | None:
+    """Expose the locked component-release limitation to decision support.
+
+    The Proust result is a post-outcome diagnostic, not a calibration target.
+    Carrying that distinction into the evidence envelope prevents an assistant
+    from presenting a release-distance result as if the underlying aperture
+    law had passed an independent campaign.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/proust_discharge_coefficient_sensitivity_2026_10_06.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    if (
+        record.get("artifact_type")
+        != "proust_discharge_coefficient_sensitivity_diagnostic"
+        or record.get("evidence_role") != "post_outcome_diagnostic_only"
+        or record.get("parameter_fitting") is not False
+        or record.get("production_model_parameter_changed") is not False
+        or not isinstance(record.get("claim_boundary"), str)
+    ):
+        return None
+    rows: list[dict[str, Any]] = []
+    for item in record.get("effective_coefficient_by_diameter") or []:
+        if not isinstance(item, dict):
+            continue
+        diameter = item.get("nozzle_diameter_mm")
+        median = item.get("effective_cd_median")
+        if not isinstance(diameter, (int, float)) or not isinstance(median, (int, float)):
+            continue
+        if not math.isfinite(float(diameter)) or not math.isfinite(float(median)):
+            continue
+        rows.append({
+            "nozzle_diameter_mm": float(diameter),
+            "effective_cd_median": float(median),
+        })
+    baseline = record.get("baseline_discharge_coefficient")
+    if (
+        not isinstance(baseline, (int, float))
+        or not math.isfinite(float(baseline))
+        or len(rows) != 3
+    ):
+        return None
+    baseline_series = next(
+        (
+            item for item in record.get("sensitivity_grid") or []
+            if isinstance(item, dict)
+            and item.get("discharge_coefficient") == baseline
+        ),
+        None,
+    )
+    return {
+        "artifact": "research/proust_discharge_coefficient_sensitivity_2026_10_06.json",
+        "evidence_role": "post_outcome_diagnostic_only",
+        "baseline_discharge_coefficient": float(baseline),
+        "baseline_joint_primary_pass_count": (
+            baseline_series.get("joint_primary_pass_count")
+            if isinstance(baseline_series, dict) else None
+        ),
+        "effective_coefficient_by_diameter": sorted(
+            rows, key=lambda item: item["nozzle_diameter_mm"]
+        ),
+        "parameter_fitting": False,
+        "production_model_parameter_changed": False,
+        "claim_limit": str(record.get("claim_boundary")),
+    }
+
+
 def _public_hitrf_operational_reference() -> dict[str, Any] | None:
     """Expose a public facility envelope without treating it as raw validation.
 
@@ -1170,6 +1241,11 @@ def build_evidence_manifest(
         envelope_screen = _public_operating_envelope_screen(frame, public_benchmarks)
         if envelope_screen is not None:
             envelope["response_evidence"]["public_operating_envelope_screen"] = envelope_screen
+    release_boundary = _release_model_validation_boundary()
+    if release_boundary is not None:
+        envelope["response_evidence"][
+            "proust_release_model_validation_boundary"
+        ] = release_boundary
     hitrf_reference = _public_hitrf_operational_reference()
     if hitrf_reference is not None:
         envelope["response_evidence"][
@@ -1254,6 +1330,18 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "validation_claim", "claim_limit",
             )
             if envelope_screen.get(key) is not None
+        }
+    release_boundary = evidence.get("proust_release_model_validation_boundary")
+    if isinstance(release_boundary, dict):
+        summary["proust_release_model_validation_boundary"] = {
+            key: release_boundary.get(key)
+            for key in (
+                "evidence_role", "baseline_discharge_coefficient",
+                "baseline_joint_primary_pass_count",
+                "effective_coefficient_by_diameter", "parameter_fitting",
+                "production_model_parameter_changed", "claim_limit",
+            )
+            if release_boundary.get(key) is not None
         }
     hitrf_reference = evidence.get("public_hitrf_operational_reference")
     if isinstance(hitrf_reference, dict):
@@ -1453,6 +1541,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     hitrf_storage = hitrf_reference.get("storage") or {}
     hitrf_thermal = hitrf_reference.get("dispensing_and_thermal") or {}
     envelope_screen = evidence.get("public_operating_envelope_screen") or {}
+    release_boundary = evidence.get("proust_release_model_validation_boundary") or {}
     return {
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "public_source_links": _public_source_links(evidence),
@@ -1470,6 +1559,20 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "raw_rows_public": envelope_screen.get("raw_rows_public"),
             "validation_claim": envelope_screen.get("validation_claim"),
             "claim_limit": envelope_screen.get("claim_limit"),
+        },
+        "proust_release_model_validation_boundary": {
+            "evidence_role": release_boundary.get("evidence_role"),
+            "baseline_discharge_coefficient": release_boundary.get(
+                "baseline_discharge_coefficient"
+            ),
+            "baseline_joint_primary_pass_count": release_boundary.get(
+                "baseline_joint_primary_pass_count"
+            ),
+            "parameter_fitting": release_boundary.get("parameter_fitting") is True,
+            "production_model_parameter_changed": release_boundary.get(
+                "production_model_parameter_changed"
+            ) is True,
+            "claim_limit": release_boundary.get("claim_limit"),
         },
         "public_hitrf_operational_reference": {
             "source_url": (hitrf_reference.get("source") or {}).get("url"),
