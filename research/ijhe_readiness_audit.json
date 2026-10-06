@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-06T04:29:01.880396+00:00",
+  "generated_at": "2026-10-06T04:40:03.335113+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -4913,12 +4913,12 @@
         "tests": {
           "targeted": {
             "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_digital_twin_direct_qa.py tests/test_hiad_action_playbook_coverage.py tests/test_hiad_accident_response_coverage_evaluation.py -q",
-            "passed": 16,
+            "passed": 17,
             "warnings": 2
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 648,
+            "passed": 649,
             "failed": 0,
             "warnings": 16
           }
@@ -4949,7 +4949,9 @@
           "public NREL HDVS tank boundary screen is carried with failed pressure screening and a non-promoted geometry diagnostic",
           "public Grune/Sempert ventilation factors are carried into the evidence envelope and applied only to the virtual detector proxy",
           "active releases use the measured upper spatial ventilation envelope by default while median mode remains available for sensitivity analysis",
-          "opt-in measured station-boundary pressure scope status is carried in operator frames and evidence envelopes without becoming a safety limit"
+          "opt-in measured station-boundary pressure scope status is carried in operator frames and evidence envelopes without becoming a safety limit",
+          "post-access public capacity/EOS geometry sensitivity is exposed as diagnostic-only evidence while the reference default remains unchanged",
+          "runtime evidence preserves reference versus capacity/EOS geometry basis and capacities for each simulation snapshot"
         ],
         "not_established": [
           "physics validity of the consequence model",
@@ -5164,6 +5166,21 @@
           "runtime_parameter_application": "virtual_detector_proxy_only",
           "raw_rows_committed": false,
           "claim_limit": "not CFD, not detector certification, not outdoor HRS or full-loop validation"
+        },
+        "public_geometry_sensitivity": {
+          "evidence": "research/nrel_h2fills_geometry_sensitivity.json",
+          "evidence_role": "post_access_public_geometry_sensitivity_diagnostic",
+          "tank_count": 7,
+          "capacity_eos_with_frozen_fit_screening_passes": 7,
+          "capacity_eos_no_volume_fit_screening_passes": 7,
+          "capacity_eos_with_frozen_fit_pressure_rmse_mpa": 3.5380890196945884,
+          "capacity_eos_no_volume_fit_pressure_rmse_mpa": 0.49577782245171065,
+          "capacity_eos_with_frozen_fit_temperature_rmse_c": 4.254560578225422,
+          "capacity_eos_no_volume_fit_temperature_rmse_c": 4.184657066054932,
+          "runtime_default_basis": "reference",
+          "runtime_default_changed": false,
+          "claim_supported": false,
+          "interpretation": "post-access sensitivity only; capacity/EOS remains explicit opt-in and requires a frozen prospective external holdout before any default change"
         }
       }
     },
