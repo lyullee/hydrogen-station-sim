@@ -126,6 +126,11 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert detector["aggregate"]["case_count"] == 22
     assert detector["aggregate"]["cases_with_trip_detection"] == 22
     assert "outdoor station dispersion" in detector["claim_limit"]
+    dispersion_proxy = idle["response_evidence"]["public_dispersion_proxy_evidence"]
+    assert dispersion_proxy["doi"] == "10.23642/usn.26117989.v2"
+    assert dispersion_proxy["method"]["case_count"] == 22
+    assert dispersion_proxy["method"]["coefficient_volpct_per_g_s"] == 28.449493830243835
+    assert "does not validate outdoor station dispersion" in dispersion_proxy["claim_limit"]
     ventilation = idle["response_evidence"]["public_grune_ventilation_evidence"]
     assert ventilation["doi"] == "10.5281/zenodo.4668554"
     assert ventilation["profiles_used"] == 42
@@ -168,6 +173,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert early["impact_status"] == "not_requested"
     assert early["public_experimental_benchmarks"]["sources"]
     assert early["public_grune_ventilation_evidence"]["factor_count"] == 42
+    assert early["public_dispersion_proxy_evidence"]["method"]["case_count"] == 22
     assert early["public_tank_validation_boundary"]["aggregate"][
         "pressure_rmse_mpa"
     ] == 6.164469743688679

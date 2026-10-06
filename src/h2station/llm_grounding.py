@@ -404,6 +404,45 @@ def _public_detector_logic_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_dispersion_proxy_evidence() -> dict[str, Any] | None:
+    """Expose the concentration scale used by the virtual detector proxy."""
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/dispersion_concentration_proxy_calibration_2026_10_06.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    method = record.get("method") or {}
+    runtime = record.get("runtime_application") or {}
+    coefficient = method.get("coefficient_volpct_per_g_s")
+    if (
+        record.get("status") != "derived_bounded_dispersion_concentration_proxy"
+        or source.get("license") != "CC BY 4.0"
+        or source.get("doi") != "10.23642/usn.26117989.v2"
+        or not isinstance(coefficient, (int, float))
+        or not math.isfinite(float(coefficient))
+    ):
+        return None
+    return {
+        "artifact": "research/dispersion_concentration_proxy_calibration_2026_10_06.json",
+        "doi": str(source.get("doi") or ""),
+        "license": str(source.get("license") or ""),
+        "evidence_role": "public measured concentration scale for advisory virtual detector proxy",
+        "method": {
+            "statistic": method.get("statistic"),
+            "case_count": method.get("case_count"),
+            "coefficient_volpct_per_g_s": coefficient,
+            "coefficient_p25_volpct_per_g_s": method.get("coefficient_p25_volpct_per_g_s"),
+            "coefficient_p75_volpct_per_g_s": method.get("coefficient_p75_volpct_per_g_s"),
+        },
+        "runtime_application": runtime,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_grune_ventilation_evidence() -> dict[str, Any] | None:
     """Expose the measured ventilation envelope used by the virtual proxy.
 
@@ -1441,6 +1480,15 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             f"https://doi.org/{detector_doi}",
             "검지기 alarm/trip persistence 재현 근거",
         )
+    proxy = evidence.get("public_dispersion_proxy_evidence") or {}
+    proxy_doi = str(proxy.get("doi") or "")
+    if proxy_doi:
+        add(
+            "PUBLIC_DISPERSION_PROXY_CALIBRATION",
+            "Experimental hydrogen dispersion concentration scale",
+            f"https://doi.org/{proxy_doi}",
+            "공개 농도·방출량 통계 기반 가상 검지기 농도 스케일",
+        )
     ventilation = evidence.get("public_grune_ventilation_evidence") or {}
     ventilation_doi = str(ventilation.get("doi") or "")
     if ventilation_doi:
@@ -1946,6 +1994,7 @@ def build_evidence_manifest(
         },
         "runtime_calibration": _runtime_calibration_profile(frame),
         "runtime_geometry": _runtime_geometry_profile(frame),
+        "virtual_detector_proxy": frame.get("virtual_detector_proxy") or {},
         "detector_policy": {
             key: frame.get("detector_policy", {}).get(key)
             for key in (
@@ -2000,6 +2049,9 @@ def build_evidence_manifest(
     detector_logic = _public_detector_logic_evidence()
     if detector_logic is not None:
         envelope["response_evidence"]["public_detector_logic_evidence"] = detector_logic
+    dispersion_proxy = _public_dispersion_proxy_evidence()
+    if dispersion_proxy is not None:
+        envelope["response_evidence"]["public_dispersion_proxy_evidence"] = dispersion_proxy
     grune_ventilation = _public_grune_ventilation_evidence()
     if grune_ventilation is not None:
         envelope["response_evidence"][
@@ -2109,6 +2161,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         "claim_limit": short(evidence.get("claim_limit")),
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "runtime_geometry": manifest.get("runtime_geometry") or {},
+        "virtual_detector_proxy": manifest.get("virtual_detector_proxy") or {},
         "detector_policy": manifest.get("detector_policy") or {},
     }
     benchmarks = evidence.get("public_experimental_benchmarks")
@@ -2285,6 +2338,13 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 ) if key in aggregate
             },
             "claim_limit": short(detector.get("claim_limit")),
+        }
+    dispersion_proxy = evidence.get("public_dispersion_proxy_evidence")
+    if isinstance(dispersion_proxy, dict):
+        summary["public_dispersion_proxy_evidence"] = {
+            key: dispersion_proxy.get(key)
+            for key in ("doi", "evidence_role", "method", "runtime_application", "claim_limit")
+            if dispersion_proxy.get(key) is not None
         }
     grune_ventilation = evidence.get("public_grune_ventilation_evidence")
     if isinstance(grune_ventilation, dict):
@@ -2479,6 +2539,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     ]
     detector = evidence.get("public_detector_logic_evidence") or {}
     detector_aggregate = detector.get("aggregate") or {}
+    dispersion_proxy = evidence.get("public_dispersion_proxy_evidence") or {}
     grune_ventilation = evidence.get("public_grune_ventilation_evidence") or {}
     confidential = evidence.get("confidential_measured_boundary_replay") or {}
     holdout = confidential.get("temporal_holdout") or {}
@@ -2511,7 +2572,14 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     return {
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "runtime_geometry": manifest.get("runtime_geometry") or {},
+        "virtual_detector_proxy": manifest.get("virtual_detector_proxy") or {},
         "detector_policy": manifest.get("detector_policy") or {},
+        "public_dispersion_proxy_evidence": {
+            "doi": dispersion_proxy.get("doi"),
+            "method": dispersion_proxy.get("method") or {},
+            "runtime_application": dispersion_proxy.get("runtime_application") or {},
+            "claim_limit": dispersion_proxy.get("claim_limit"),
+        },
         "public_source_links": _public_source_links(evidence),
         "public_experiment_sources": benchmark_ids,
         "public_real_station_context": {

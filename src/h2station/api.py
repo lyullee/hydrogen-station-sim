@@ -554,6 +554,7 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                         "hose_2_pressure_mpa": sample.hose_2_pressure_pa / 1.0e6,
                         "hose_2_temperature_c": sample.hose_2_temperature_k - 273.15,
                         "hazop": sample.hazop,
+                        "virtual_detector_proxy": (sample.hazop or {}).get("virtual_detector_proxy"),
                         "bank_pressure_mpa": {
                             name: pressure / 1.0e6
                             for name, pressure in sample.bank_pressure_pa.items()

@@ -1475,6 +1475,43 @@ def audit(root: Path) -> dict[str, object]:
         detector_aggregate if detector_logic else "missing; detector-logic replay has not completed",
     ))
 
+    dispersion_proxy_path = root / (
+        "research/dispersion_concentration_proxy_calibration_2026_10_06.json"
+    )
+    dispersion_proxy = _json(dispersion_proxy_path)
+    dispersion_proxy_source = (dispersion_proxy or {}).get("source") or {}
+    dispersion_proxy_method = (dispersion_proxy or {}).get("method") or {}
+    dispersion_proxy_runtime = (dispersion_proxy or {}).get("runtime_application") or {}
+    dispersion_proxy_pass = bool(
+        (dispersion_proxy or {}).get("status")
+        == "derived_bounded_dispersion_concentration_proxy"
+        and dispersion_proxy_source.get("doi") == "10.23642/usn.26117989.v2"
+        and dispersion_proxy_source.get("license") == "CC BY 4.0"
+        and dispersion_proxy_method.get("case_count") == 22
+        and isinstance(dispersion_proxy_method.get("coefficient_volpct_per_g_s"), (int, float))
+        and 20.0 <= float(dispersion_proxy_method["coefficient_volpct_per_g_s"]) <= 40.0
+        and "clip(" in str(dispersion_proxy_runtime.get("formula") or "")
+        and "does not validate outdoor station dispersion" in str(
+            (dispersion_proxy or {}).get("claim_boundary") or ""
+        )
+        and len((dispersion_proxy or {}).get("cases") or []) == 22
+    )
+    gates.append(_gate(
+        "open_channel_concentration_proxy_integrity",
+        "PASS" if dispersion_proxy_pass else ("FAIL" if dispersion_proxy else "PENDING"),
+        "The virtual detector concentration scale is derived from public measured concentration/flow traces instead of an unexplained saturation constant.",
+        str(dispersion_proxy_path.relative_to(root)),
+        "22 CC BY 4.0 cases, robust per-case P90/flow statistic, bounded runtime formula and explicit open-channel claim boundary.",
+        {
+            "doi": dispersion_proxy_source.get("doi"),
+            "license": dispersion_proxy_source.get("license"),
+            "case_count": dispersion_proxy_method.get("case_count"),
+            "coefficient_volpct_per_g_s": dispersion_proxy_method.get("coefficient_volpct_per_g_s"),
+            "runtime_formula": dispersion_proxy_runtime.get("formula"),
+            "claim_boundary": (dispersion_proxy or {}).get("claim_boundary"),
+        } if dispersion_proxy else "missing; public concentration proxy artifact has not been built",
+    ))
+
     grune_inventory_path = root / "research/grune_ventilation_dataset_inventory_2026_10_05.json"
     grune_inventory = _json(grune_inventory_path)
     grune_source = (grune_inventory or {}).get("source") or {}

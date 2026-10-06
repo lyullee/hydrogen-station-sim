@@ -6,6 +6,7 @@ from .database import EventStore, load_catalog
 from .engine import RuleEngine
 from .mapping import GD_SENSOR_ZONES, ModelMapper, coverage
 from .flame import FLAME_DETECTORS, FLAME_RESPONSE_DELAY_S, sees_target
+from ..dispersion_proxy import PUBLIC_DISPERSION_PROXY, concentration_volpct
 
 
 class HazopMonitor:
@@ -101,7 +102,15 @@ class HazopMonitor:
                     # Preserve compatibility with external callbacks that still
                     # implement the pre-calibration one-argument contract.
                     dilution = float(detector_multiplier(target))
-            near_value = min(100.0, mass_flow * 10000.0 * dilution)
+            # The concentration scale is derived from 22 public USN/FFI
+            # concentration traces.  It remains an advisory virtual sensor:
+            # the measured ventilation envelope and this coefficient do not
+            # replace site CFD or detector calibration.
+            near_value = concentration_volpct(
+                mass_flow * 1000.0,
+                multiplier=dilution,
+                policy=PUBLIC_DISPERSION_PROXY,
+            )
             for tag, multiplier in ((near_tag, 1.0), (far_tag, 0.45)):
                 if tag not in self.mapper.specs or self.mapper.specs[tag]["종류"] != "G":
                     continue
@@ -111,7 +120,9 @@ class HazopMonitor:
                     continue
                 if old is None or value > float(old.get("value", 0.0)):
                     frame["signals"][tag] = {"value": value, "unit": "vol%_H2", "quality": "GOOD",
-                                               "time_s": t, "origin": "VIRTUAL_DETECTOR_PROXY", "zone": GD_SENSOR_ZONES[tag]}
+                                               "time_s": t, "origin": "VIRTUAL_DETECTOR_PROXY", "zone": GD_SENSOR_ZONES[tag],
+                                               "calibration_artifact": PUBLIC_DISPERSION_PROXY.source_artifact,
+                                               "calibration_status": PUBLIC_DISPERSION_PROXY.status}
         for event in model.get("fault_events", ()):
             if not event.target.startswith(("GD-", "FD-")) or event.target not in frame["signals"]:
                 continue
@@ -160,6 +171,7 @@ class HazopMonitor:
             groups[key]["rule_ids"].append(alarm["rule_id"])
             if alarm["severity"] == "TRIP": groups[key]["severity"] = "TRIP"
         result.update({"groups":list(groups.values()),"releases":releases,
+                       "virtual_detector_proxy": PUBLIC_DISPERSION_PROXY.metadata(),
                        "mapped_sensor_count":sum(k in self.mapper.specs for k in frame["signals"]),
                        "sensor_total":len(self.mapper.specs),"source_sha256":self.catalog["metadata"]["source_sha256"],
                        "legacy_plc_sensor_faults":frame["legacy_plc_sensor_faults"]})

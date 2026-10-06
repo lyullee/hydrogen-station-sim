@@ -39,6 +39,10 @@ contains:
 - the detector alarm/trip policy loaded from the public concentration replay
   record (1.0 vol% H₂ alarm, 2.0 vol% H₂ trip, 0.5 s persistence) together
   with its DOI and explicit outdoor-dispersion/ESD claim boundary;
+- the public concentration-scale coefficient used by the virtual detector
+  proxy (22 cases, median final-third sensor-grid P90 concentration divided by
+  measured mean release flow), together with its DOI, formula and explicit
+  open-channel-only claim boundary;
 - an opt-in, de-identified station-boundary pressure scope diagnostic in each
   operator frame and evidence envelope. It reports whether the simulated
   source pressure is inside the observed range, without turning that range
@@ -64,7 +68,7 @@ The following tests passed in the repository virtual environment:
 17 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-651 passed, 16 warnings
+654 passed, 16 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -136,6 +140,14 @@ record instead of remaining an unexplained pair of constants in scenario
 assembly. This is a logic/provenance change only: the concentration proxy,
 detector placement, outdoor dispersion and ESD effectiveness are still outside
 the record's claim boundary.
+
+The concentration proxy scale is now derived from the same public traces rather
+than an arbitrary `mass_flow × 10000` factor. The recorded median coefficient
+is applied before the measured ventilation/wind envelope and is bounded at
+100 vol% H₂. This reduces instant saturation for small leaks while retaining a
+clear advisory boundary: the open-ended channel data do not validate an
+outdoor station plume, detector placement, ESD effectiveness, or consequence
+distance.
 
 The frozen station-to-vehicle external holdout is also carried as a hard claim
 boundary. Eight public MC-default cases were evaluated under a protocol frozen

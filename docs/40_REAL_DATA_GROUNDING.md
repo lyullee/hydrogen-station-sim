@@ -18,6 +18,14 @@ purpose for which the source may be used. Current entries cover:
   flow and wind mode. These factors are applied only to the virtual detector
   proxy; they are not used as a CFD field, detector-placement certification or
   station-scale validation.
+- The same USN/FFI concentration traces are also reduced to a robust
+  22-case scale coefficient (`28.4495 vol% H₂ per g/s`). It replaces the old
+  arbitrary `mass_flow × 10000` conversion in the advisory virtual detector.
+  The coefficient is the median of each case's final-third, sensor-grid P90
+  concentration divided by its measured mean release flow. Ventilation and
+  wind factors remain separate, and concentrations are clipped to 100 vol%.
+  This is a bounded open-channel proxy only; it is not an outdoor dispersion,
+  detector-placement, ESD, or consequence-distance validation.
 
 The links are placed in `prompt_evidence_header()` and
 `prompt_evidence_summary()` as `public_source_links`. This makes the sources
@@ -70,6 +78,14 @@ policy DOI, thresholds and claim boundary, so the LLM can distinguish a
 publicly replayed detector rule from an outdoor detector-placement or ESD
 validation. If the record is unavailable, the same values remain an explicit
 fallback and the frame reports that provenance status.
+
+The concentration scale is loaded from
+`dispersion_concentration_proxy_calibration_2026_10_06.json`. Every HAZOP
+frame exposes the artifact, DOI, coefficient, case count, formula and claim
+boundary under `virtual_detector_proxy`; the LLM evidence manifest carries the
+same record. If the derived artifact is missing, the recorded coefficient is
+used only as a deterministic fallback and the status changes to
+`PUBLIC_DISPERSION_PROXY_FALLBACK`.
 
 The public Cal State LA back-to-back fueling article is also included as
 real-station operating context. It reports multiple daily and back-to-back
