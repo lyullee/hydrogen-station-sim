@@ -40,12 +40,14 @@ def build(root: Path) -> dict[str, Any]:
     hiad_path = root / "research/hiad_evaluation_readiness.json"
     tracker_path = root / "research/validation_data_acquisition_tracker.json"
     search_path = root / "research/public_full_loop_search_recheck_2026_10_05.json"
+    latest_search_path = root / "research/public_full_loop_search_recheck_2026_10_06.json"
     operational_search_path = root / "research/public_operational_benchmark_recheck_2026_10_05.json"
     operational_face_path = root / "research/public_operational_benchmark_face_validity_2026_10_05.json"
     audit = load_json(audit_path)
     hiad = load_json(hiad_path)
     tracker = load_json(tracker_path)
     search = load_json(search_path)
+    latest_search = load_json(latest_search_path) if latest_search_path.is_file() else {}
     operational_search = load_json(operational_search_path)
 
     status_by_id = {g["id"]: g for g in audit.get("gates", [])}
@@ -107,6 +109,7 @@ def build(root: Path) -> dict[str, Any]:
                     "data/public_validation/results/closed_loop_external_holdout/validation.json",
                     "research/mc_default_source_boundary_identifiability_2026_10_04.json",
                     "research/public_full_loop_search_recheck_2026_10_04.json",
+                    "research/public_full_loop_search_recheck_2026_10_06.json",
                     "research/public_operational_benchmark_recheck_2026_10_05.json",
                     "research/public_operational_benchmark_face_validity_2026_10_05.json",
                     "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
@@ -156,10 +159,13 @@ def build(root: Path) -> dict[str, Any]:
             "hiad_readiness_sha256": sha256(hiad_path),
             "acquisition_tracker_sha256": sha256(tracker_path),
             "full_loop_search_sha256": sha256(search_path),
+            "latest_full_loop_search_sha256": sha256(latest_search_path)
+            if latest_search_path.is_file() else None,
             "operational_benchmark_recheck_sha256": sha256(operational_search_path),
             "operational_benchmark_face_validity_sha256": sha256(operational_face_path),
             "candidate_route_count": len(tracker.get("candidates") or []),
             "public_full_loop_search_candidate_count": candidate_count(search),
+            "latest_public_full_loop_search_candidate_count": candidate_count(latest_search),
             "public_operational_benchmark_candidate_count": candidate_count(operational_search),
         },
         "claim_policy": [

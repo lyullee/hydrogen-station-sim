@@ -67,6 +67,15 @@ The source index does not change the numerical model or turn aggregate public
 results into a holdout. The runtime must continue to describe the following
 boundaries explicitly:
 
+The 2026-10-06 public-data recheck also inspected the 3Emotion operational-log
+record, FCH2RAIL station/vehicle measurements, the FCH2RAIL KPI report, the
+H2-Stations API and the IPCEI inventory. They provide real-station context or
+published curves, but no new rights-cleared synchronized raw station-to-
+vehicle set. The search record is
+`research/public_full_loop_search_recheck_2026_10_06.json`; its negative result
+keeps the full-loop gate open rather than converting aggregate or plot-only
+evidence into a validation claim.
+
 The Grune-derived envelope is the one bounded exception: it changes the
 virtual detector concentration proxy when leak flow, orifice size and wind
 direction are available. The factor is nearest-neighbour/interpolated only

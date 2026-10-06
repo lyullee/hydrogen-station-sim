@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-06",
+  "scope": "Live recheck for a rights-cleared, synchronized public station-to-vehicle fueling holdout",
+  "search_channels": [
+    "publisher and institutional pages",
+    "Crossref/DOI-linked records",
+    "open repository and dataset search"
+  ],
+  "eligibility_rule": {
+    "required_channels": [
+      "common timestamp or elapsed time",
+      "vehicle or receptacle pressure",
+      "mass flow or transferred mass"
+    ],
+    "preferred_channels": [
+      "vehicle or tank temperature",
+      "station source pressure",
+      "dispenser/controller state",
+      "protocol and initial-condition metadata"
+    ],
+    "required_rights": "explicit public reuse or written permission for derived metrics and journal publication",
+    "excluded_substitutes": [
+      "aggregate operational tables",
+      "plot-only traces",
+      "static station inventories",
+      "simulator outputs",
+      "component-only experiments"
+    ]
+  },
+  "candidates": [
+    {
+      "id": "caponi_3emotion_operational_logs_2026_10_06",
+      "title": "Four years of operational data for five hydrogen refueling stations",
+      "doi": "10.1051/e3sconf/202233406008",
+      "url": "https://doi.org/10.1051/e3sconf/202233406008",
+      "publisher_url": "https://www.e3s-conferences.org/articles/e3sconf/pdf/2022/01/e3sconf_efc2022_06008.pdf",
+      "decision": "REAL_STATION_AGGREGATE_CONTEXT_ONLY",
+      "finding": "The paper reports operator logbooks with event-level amount, duration, average flow and daily profiles for 350 bar buses. The public record exposes summary figures/tables rather than a synchronized station-controller-vehicle raw time series and does not state reuse terms for raw logs.",
+      "observed_scope": {
+        "real_station_logs_reported": true,
+        "vehicle_fueling_events_reported": true,
+        "synchronized_pressure_temperature_mass_flow_rows_public": false,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "Use for face-validity and workload distributions only; request the de-identified log export and written reuse terms before numerical scoring."
+    },
+    {
+      "id": "fch2rail_ijhe_measurement_record_2026_10_06",
+      "title": "Development, application and optimization of hydrogen refueling processes for railway vehicles",
+      "doi": "10.1016/j.ijhydene.2025.04.040",
+      "url": "https://doi.org/10.1016/j.ijhydene.2025.04.040",
+      "repository_url": "https://elib.dlr.de/213625/",
+      "decision": "REAL_STATION_VEHICLE_PUBLISHED_CURVES_ONLY",
+      "finding": "The open article states that station and vehicle measurements were compared with a model and shows pressure, temperature and mass-flow traces. The repository exposes the article PDF but no machine-readable synchronized logger archive or raw-data reuse terms.",
+      "observed_scope": {
+        "station_and_vehicle_measurement_claimed": true,
+        "published_trace_channels": [
+          "tank-module pressure",
+          "dispenser pressure",
+          "temperature",
+          "mass flow"
+        ],
+        "machine_readable_raw_rows_retrieved": false,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "Use as independent face-validity and data-request lead. Do not digitize figures into the primary holdout without written reuse permission and a predeclared digitization protocol."
+    },
+    {
+      "id": "fch2rail_d61_operating_range_2026_10_06",
+      "title": "FCH2RAIL D6.1 report on KPI assessment",
+      "url": "https://fch2rail.eu/wp-content/uploads/2025/01/FCH2RAIL_D6.1_Report-on-KPI-assessment.pdf",
+      "decision": "REAL_PROTOTYPE_OPERATING_RANGE_CONTEXT_ONLY",
+      "finding": "The public deliverable reports repeated prototype refueling tests and average flow-rate ranges. It does not provide the synchronized source/vehicle raw logger rows required for an untouched numerical holdout.",
+      "observed_scope": {
+        "physical_refueling_tests_reported": true,
+        "flow_range_reported": true,
+        "raw_synchronized_rows_retrieved": false,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "Use for bounded operating-range comparison and request provenance only."
+    },
+    {
+      "id": "h2_stations_v2_operational_api_2026_10_06",
+      "title": "H2-Stations export API v2",
+      "url": "https://docs.h2-stations.eu/for-data-users/api-v2/",
+      "license": "CC BY 4.0 for the published HRS dataset; live API token required",
+      "decision": "STATIC_AND_OPERATIONAL_CONTEXT_ONLY",
+      "finding": "The API exposes station layout, availability, usage, storage and pricing signals. It does not expose synchronized vehicle pressure, temperature and mass-flow traces for individual fueling events.",
+      "observed_scope": {
+        "public_api_documentation": true,
+        "per_event_vehicle_pressure": false,
+        "per_event_mass_flow": false,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "May support station inventory, availability and demand context after token/licence review; it cannot close the numerical full-loop gate."
+    },
+    {
+      "id": "ipcei_hrs_inventory_2026_10_06",
+      "title": "IPCEI Hydrogen HRS inventory datastream",
+      "url": "https://ipcei.observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations",
+      "decision": "STATIC_INVENTORY_ONLY",
+      "finding": "The downloadable workbook describes station location and dispenser type. It contains no fueling-event pressure, temperature or transferred-mass time series.",
+      "observed_scope": {
+        "inventory_workbook_public": true,
+        "synchronized_fueling_trace": false,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "Inventory/coverage context only."
+    }
+  ],
+  "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+  "gate_impact": "full_loop_external_validation_remains_open",
+  "next_action": "Request a de-identified synchronized logger export and written reuse terms from the FCH2RAIL, Cal State LA HRFF, NREL/NLR HITRF, CARB/HyStEP or HRS custodians; freeze the model and scoring protocol before numerical outcomes are accessed.",
+  "claim_boundary": "This record documents a current public-data search and exclusion decision. It does not add numerical validation evidence or permit a full-loop readiness claim.",
+  "source_accessed_at": "2026-10-06"
+}
