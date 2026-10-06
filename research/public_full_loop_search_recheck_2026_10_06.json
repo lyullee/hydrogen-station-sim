@@ -129,6 +129,50 @@
         "full_loop_holdout_eligible": false
       },
       "reuse_status": "Use as openly licensed HRS sampling-system instrumentation and timing context. Keep it separate from calibration and full-loop scoring until a custodian supplies channel semantics, vehicle/receptacle mapping, protocol metadata and a frozen auxiliary protocol."
+    },
+    {
+      "id": "calstate_la_back_to_back_fueling_2026_10_06",
+      "title": "Hydrogen station in situ back-to-back fueling data for design and modeling",
+      "doi": "10.1016/j.jclepro.2021.129737",
+      "url": "https://doi.org/10.1016/j.jclepro.2021.129737",
+      "publisher_url": "https://www.sciencedirect.com/science/article/pii/S0959652621039135",
+      "decision": "REAL_STATION_AGGREGATE_AND_FIGURE_CONTEXT_ONLY",
+      "finding": "The open article describes field operation and back-to-back fueling behavior at the Cal State LA research facility, but the public record exposes aggregate/event summaries and plotted results rather than a rights-cleared synchronized station-to-vehicle row archive.",
+      "observed_scope": {
+        "real_station_operation_reported": true,
+        "back_to_back_behavior_reported": true,
+        "synchronized_pressure_temperature_mass_flow_rows_public": false,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "Use for scenario and workload context; request the de-identified logger export and written reuse terms before numerical scoring."
+    },
+    {
+      "id": "carb_h70_in_use_station_study_2026_10_06",
+      "title": "Existing Light-Duty Hydrogen Refueling Stations In-Use Study",
+      "url": "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf",
+      "decision": "FIELD_STATION_SUMMARY_AND_PROTOCOL_CONTEXT_ONLY",
+      "finding": "The public report covers in-use tests at 22 stations and reports protocol adherence and operating observations, but no reusable synchronized vehicle pressure, temperature and mass-flow archive is attached.",
+      "observed_scope": {
+        "station_count_reported": 22,
+        "in_use_testing_reported": true,
+        "synchronized_raw_rows_public": false,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "Use for independent field face-validity and protocol context; request raw test matrices and reuse permission for numerical validation."
+    },
+    {
+      "id": "nrel_retail_cdp_operational_2026_10_06",
+      "title": "NREL Hydrogen Station Retail Composite Data Products",
+      "url": "https://www.nrel.gov/hydrogen/infrastructure-cdps-retail.html",
+      "decision": "AGGREGATED_STATION_OPERATIONS_ONLY",
+      "finding": "The public products report quarterly/daily station dispensing, availability and component-reliability aggregates; they do not provide per-fill synchronized vehicle pressure, temperature and mass-flow traces.",
+      "observed_scope": {
+        "aggregate_station_operations_public": true,
+        "per_event_vehicle_pressure": false,
+        "per_event_mass_flow": false,
+        "full_loop_holdout_eligible": false
+      },
+      "reuse_status": "Use for station-demand and availability context only; it cannot close the numerical full-loop gate."
     }
   ],
   "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",

@@ -12,7 +12,13 @@ def test_latest_public_full_loop_recheck_keeps_real_context_separate_from_holdou
     )
     assert record["result"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET"
     assert record["gate_impact"] == "full_loop_external_validation_remains_open"
-    assert len(record["candidates"]) == 6
+    assert len(record["candidates"]) == 9
+    candidate_ids = {item["id"] for item in record["candidates"]}
+    assert {
+        "calstate_la_back_to_back_fueling_2026_10_06",
+        "carb_h70_in_use_station_study_2026_10_06",
+        "nrel_retail_cdp_operational_2026_10_06",
+    }.issubset(candidate_ids)
     assert all(item["observed_scope"]["full_loop_holdout_eligible"] is False
                for item in record["candidates"])
     assert "written reuse terms" in record["next_action"]
