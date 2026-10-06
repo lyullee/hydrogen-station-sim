@@ -394,10 +394,14 @@ def audit(root: Path) -> dict[str, object]:
     ))
 
     schema_audit_path = root / "research/confidential_station_schema_audit_2026_10.json"
+    owner_recheck_path = root / "research/private_owner_data_intake_recheck_2026_10_06.json"
     schema_audit = _json(schema_audit_path)
+    owner_recheck = _json(owner_recheck_path)
     schema_inventory = (schema_audit or {}).get("signal_inventory") or {}
     schema_eligibility = (schema_audit or {}).get("eligibility") or {}
     schema_units = (schema_audit or {}).get("unit_attestation") or {}
+    schema_recheck = (owner_recheck or {}).get("schema_recheck") or {}
+    schema_recheck_values = schema_recheck.get("verified_aggregate") or {}
     schema_audit_pass = bool(
         (schema_audit or {}).get("schema_version") == 1
         and (schema_audit or {}).get("artifact_type") == "confidential_station_schema_audit"
@@ -416,12 +420,18 @@ def audit(root: Path) -> dict[str, object]:
         and schema_units.get("pressure_units_attested") is False
         and schema_units.get("temperature_units_attested") is False
         and schema_units.get("flow_units_attested") is False
+        and (owner_recheck or {}).get("privacy", {}).get("raw_files_outside_repository") is True
+        and schema_recheck.get("committed_aggregate_match") is True
+        and schema_recheck_values.get("file_count") == (schema_audit or {}).get("file_count")
+        and schema_recheck_values.get("pressure_channel_count") == (schema_inventory.get("tagged_channel_counts") or {}).get("pressure")
+        and schema_recheck_values.get("vehicle_side_channel_family_count") == schema_eligibility.get("vehicle_side_channel_family_count")
+        and schema_recheck_values.get("full_loop_holdout_eligible") is False
     )
     gates.append(_gate(
         "confidential_station_schema_intake_integrity",
         "PASS" if schema_audit_pass else ("FAIL" if schema_audit else "PENDING"),
         "The restricted station archive has a de-identified channel-presence inventory that identifies station-side calibration candidates without treating unconfirmed units as measurements.",
-        str(schema_audit_path.relative_to(root)),
+        f"{schema_audit_path.relative_to(root)}; {owner_recheck_path.relative_to(root)}",
         "At least two source bundles, pressure/state channel candidates, no raw rows or source identifiers, and an explicit unit-attestation hold.",
         {
             "source_bundle_count": (schema_audit or {}).get("source_bundle_count"),
@@ -438,6 +448,12 @@ def audit(root: Path) -> dict[str, object]:
                 "station_side_component_families_present"
             ),
             "full_loop_holdout_eligible": schema_eligibility.get("full_loop_holdout_eligible"),
+            "owner_schema_recheck": {
+                "committed_aggregate_match": schema_recheck.get("committed_aggregate_match"),
+                "verified_file_count": schema_recheck_values.get("file_count"),
+                "verified_pressure_channel_count": schema_recheck_values.get("pressure_channel_count"),
+                "verified_vehicle_side_channel_family_count": schema_recheck_values.get("vehicle_side_channel_family_count"),
+            },
         } if schema_audit else "missing; confidential schema intake has not completed",
     ))
 

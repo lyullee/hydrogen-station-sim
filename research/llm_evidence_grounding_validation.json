@@ -16,7 +16,7 @@
     },
     "full_suite": {
       "command": ".venv\\Scripts\\python.exe -m pytest -q",
-      "passed": 664,
+      "passed": 665,
       "failed": 0,
       "warnings": 16
     }
