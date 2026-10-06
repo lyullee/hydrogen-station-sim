@@ -394,6 +394,20 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert prompt_evidence_header(idle)[
         "confidential_operational_profile_recheck"
     ]["profile_match"] is True
+    channel_quality = idle["response_evidence"][
+        "confidential_station_channel_quality_recheck"
+    ]
+    assert channel_quality["files_read"] == 8
+    assert channel_quality["sampled_rows"] == 1092
+    assert channel_quality["parseable_timestamp_fraction"] == 1.0
+    assert channel_quality["temperature_or_flow_parameter_fit_supported"] is False
+    assert channel_quality["full_loop_holdout_eligible"] is False
+    assert prompt_evidence_summary(idle)[
+        "confidential_station_channel_quality_recheck"
+    ]["roles"]["pressure"]["finite_fraction"] == 1.0
+    assert prompt_evidence_header(idle)[
+        "confidential_station_channel_quality_recheck"
+    ]["full_station_vehicle_validation"] is False
     channel_envelopes = idle["response_evidence"][
         "confidential_pressure_channel_envelopes"
     ]

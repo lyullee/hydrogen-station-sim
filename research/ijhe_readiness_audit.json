@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-06T07:44:51.441573+00:00",
+  "generated_at": "2026-10-06T07:59:24.018689+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 74,
+    "PASS": 75,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -447,6 +447,67 @@
         "profile_replaced": false,
         "opt_in_only": true,
         "full_loop_claim": true
+      }
+    },
+    {
+      "id": "confidential_station_channel_quality_integrity",
+      "status": "PASS",
+      "claim": "The mapped private station channels have a privacy-bounded timebase and quality recheck while un-attested temperature/flow semantics remain excluded from fitting.",
+      "evidence": "research\\confidential_station_channel_quality_recheck_2026_10_06.json",
+      "requirement": "Timestamp parsing, monotonicity, finite-channel fractions, discrete transitions, privacy flags and explicit no-full-loop eligibility are retained.",
+      "observed": {
+        "files_read": 8,
+        "sampled_rows": 1092,
+        "parseable_timestamp_fraction": 1.0,
+        "timebase": {
+          "duration_s_min": 54527.0,
+          "duration_s_max": 86054.0,
+          "median_interval_s": 606.0,
+          "maximum_interval_s": 611.0,
+          "positive_interval_count": 1084,
+          "negative_interval_count": 0,
+          "duplicate_interval_count": 0
+        },
+        "roles": {
+          "pressure": {
+            "mapped_channel_count": 11,
+            "sampled_observations": 12012,
+            "finite_observations": 12012,
+            "missing_or_non_numeric_observations": 0,
+            "finite_fraction": 1.0
+          },
+          "temperature": {
+            "mapped_channel_count": 11,
+            "sampled_observations": 12012,
+            "finite_observations": 10920,
+            "missing_or_non_numeric_observations": 1092,
+            "finite_fraction": 0.909091
+          },
+          "flow": {
+            "mapped_channel_count": 2,
+            "sampled_observations": 2184,
+            "finite_observations": 2184,
+            "missing_or_non_numeric_observations": 0,
+            "finite_fraction": 1.0
+          },
+          "discrete_state": {
+            "mapped_channel_count": 26,
+            "sampled_observations": 28392,
+            "finite_observations": 28392,
+            "missing_or_non_numeric_observations": 0,
+            "finite_fraction": 1.0
+          },
+          "lifecycle": {
+            "mapped_channel_count": 1,
+            "sampled_observations": 1092,
+            "finite_observations": 1092,
+            "missing_or_non_numeric_observations": 0,
+            "finite_fraction": 1.0
+          }
+        },
+        "discrete_state_transition_count": 1283,
+        "temperature_or_flow_parameter_fit_supported": false,
+        "full_loop_holdout_eligible": false
       }
     },
     {

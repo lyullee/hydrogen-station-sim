@@ -454,6 +454,65 @@ def audit(root: Path) -> dict[str, object]:
         } if operational_recheck else "missing",
     ))
 
+    channel_quality_path = root / (
+        "research/confidential_station_channel_quality_recheck_2026_10_06.json"
+    )
+    channel_quality = _json(channel_quality_path)
+    channel_roles = (channel_quality or {}).get("roles") or {}
+    channel_timebase = (channel_quality or {}).get("timebase") or {}
+    channel_eligibility = (channel_quality or {}).get("eligibility") or {}
+    channel_quality_pass = bool(
+        (channel_quality or {}).get("schema_version") == 1
+        and (channel_quality or {}).get("artifact_type")
+        == "confidential_station_channel_quality_recheck"
+        and (channel_quality or {}).get("source_identifiers_published") is False
+        and (channel_quality or {}).get("raw_rows_persisted") is False
+        and (channel_quality or {}).get("exact_source_dates_published") is False
+        and (channel_quality or {}).get("source_paths_published") is False
+        and (channel_quality or {}).get("files_read") == 8
+        and (channel_quality or {}).get("sampled_rows") == 1092
+        and (channel_quality or {}).get("parseable_timestamp_fraction") == 1.0
+        and channel_timebase.get("positive_interval_count", 0) > 0
+        and channel_timebase.get("negative_interval_count") == 0
+        and channel_timebase.get("duplicate_interval_count") == 0
+        and channel_roles.get("pressure", {}).get("finite_fraction") == 1.0
+        and channel_roles.get("flow", {}).get("finite_fraction") == 1.0
+        and channel_roles.get("discrete_state", {}).get("finite_fraction") == 1.0
+        and 0.0 < channel_roles.get("temperature", {}).get("finite_fraction", 0.0) < 1.0
+        and (channel_quality or {}).get("discrete_state_transition_count") == 1283
+        and channel_eligibility.get("station_channel_quality_recheck_supported") is True
+        and channel_eligibility.get("temperature_or_flow_parameter_fit_supported") is False
+        and channel_eligibility.get("full_station_vehicle_validation") is False
+        and channel_eligibility.get("full_loop_holdout_eligible") is False
+    )
+    gates.append(_gate(
+        "confidential_station_channel_quality_integrity",
+        "PASS" if channel_quality_pass else (
+            "FAIL" if channel_quality else "PENDING"
+        ),
+        "The mapped private station channels have a privacy-bounded timebase and quality recheck while un-attested temperature/flow semantics remain excluded from fitting.",
+        str(channel_quality_path.relative_to(root)),
+        "Timestamp parsing, monotonicity, finite-channel fractions, discrete transitions, privacy flags and explicit no-full-loop eligibility are retained.",
+        {
+            "files_read": (channel_quality or {}).get("files_read"),
+            "sampled_rows": (channel_quality or {}).get("sampled_rows"),
+            "parseable_timestamp_fraction": (channel_quality or {}).get(
+                "parseable_timestamp_fraction"
+            ),
+            "timebase": channel_timebase,
+            "roles": channel_roles,
+            "discrete_state_transition_count": (channel_quality or {}).get(
+                "discrete_state_transition_count"
+            ),
+            "temperature_or_flow_parameter_fit_supported": channel_eligibility.get(
+                "temperature_or_flow_parameter_fit_supported"
+            ),
+            "full_loop_holdout_eligible": channel_eligibility.get(
+                "full_loop_holdout_eligible"
+            ),
+        } if channel_quality else "missing",
+    ))
+
     schema_audit_path = root / "research/confidential_station_schema_audit_2026_10.json"
     owner_recheck_path = root / "research/private_owner_data_intake_recheck_2026_10_06.json"
     schema_audit = _json(schema_audit_path)

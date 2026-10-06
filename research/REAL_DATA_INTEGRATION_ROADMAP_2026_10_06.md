@@ -43,6 +43,15 @@ family는 0건으로 유지됐다. 이 재검사는 집계 일치성만 확인�
 `research/confidential_operational_profile_recheck_2026_10_06.json`이며, 실행
 도구는 `scripts/recheck_confidential_operational_profile.py`다.
 
+추가로 온도·유량·이산 상태 채널을 임의로 물리 보정에 사용하지 않도록 generic
+매핑으로 품질만 재검산했다. 8개 파일에서 1,092개 샘플의 시간값은 모두
+파싱됐고, 압력·유량·상태 관측은 유한값 비율 1.0이었다. 온도는 한정된 결측이
+확인됐으며, 이산 상태 전이는 1,283건으로 집계됐다. 이 결과는 채널 품질과
+동기화 가능성의 intake 근거일 뿐 단위·교정·태그 의미를 대신하지 않는다.
+따라서 온도·유량 parameter fit과 full-loop 검증은 계속 보류하고, 결과는
+`research/confidential_station_channel_quality_recheck_2026_10_06.json` 및
+`scripts/recheck_confidential_station_channel_quality.py`에 보존한다.
+
 공개 HITRF 기준선은 `research/nlr_hitrf_public_operational_reference_2026_10_06.json`에 정적 정격과 명시적 주장 경계를 기록하고, LLM 근거 envelope에만 연결한다. 이 기준선으로 기본 시뮬레이션 파라미터를 자동 변경하지 않는다. 공개 페이지에는 자동 로깅이 설명되어 있지만 동기화된 원시 logger archive가 제공되지 않으므로 full-loop 검증 gate의 증거로 세지 않는다.
 
 추가로 비공개 설비 logger에서 식별정보를 제거한 압력·온도·상태 envelope를

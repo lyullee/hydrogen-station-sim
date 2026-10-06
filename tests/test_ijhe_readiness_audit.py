@@ -230,6 +230,14 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert recheck["profile_replaced"] is False
     assert recheck["opt_in_only"] is True
     assert recheck["full_loop_claim"] is True
+    assert gates["confidential_station_channel_quality_integrity"]["status"] == "PASS"
+    channel_quality = gates["confidential_station_channel_quality_integrity"]["observed"]
+    assert channel_quality["files_read"] == 8
+    assert channel_quality["sampled_rows"] == 1092
+    assert channel_quality["parseable_timestamp_fraction"] == 1.0
+    assert channel_quality["timebase"]["negative_interval_count"] == 0
+    assert channel_quality["temperature_or_flow_parameter_fit_supported"] is False
+    assert channel_quality["full_loop_holdout_eligible"] is False
     assert gates["confidential_station_schema_intake_integrity"]["status"] == "PASS"
     schema = gates["confidential_station_schema_intake_integrity"]["observed"]
     assert schema["source_bundle_count"] == 2

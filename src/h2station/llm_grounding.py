@@ -1990,6 +1990,53 @@ def _confidential_operational_profile_recheck() -> dict[str, Any] | None:
     }
 
 
+def _confidential_station_channel_quality_recheck() -> dict[str, Any] | None:
+    """Expose station-channel quality aggregates without implying calibration.
+
+    Temperature, flow and state channels are useful for intake planning, but
+    their units and semantics remain unconfirmed.  Keeping this evidence
+    separate from runtime calibration prevents the LLM from presenting a
+    quality screen as a full-loop measurement result.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/confidential_station_channel_quality_recheck_2026_10_06.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    eligibility = record.get("eligibility") or {}
+    if (
+        record.get("artifact_type") != "confidential_station_channel_quality_recheck"
+        or record.get("source_identifiers_published") is not False
+        or record.get("raw_rows_persisted") is not False
+        or record.get("exact_source_dates_published") is not False
+        or record.get("source_paths_published") is not False
+        or eligibility.get("station_channel_quality_recheck_supported") is not True
+        or eligibility.get("temperature_or_flow_parameter_fit_supported") is not False
+        or eligibility.get("full_station_vehicle_validation") is not False
+        or eligibility.get("full_loop_holdout_eligible") is not False
+    ):
+        return None
+    return {
+        "artifact": "research/confidential_station_channel_quality_recheck_2026_10_06.json",
+        "evidence_role": "confidential station-channel quality recheck",
+        "files_read": record.get("files_read"),
+        "sampled_rows": record.get("sampled_rows"),
+        "parseable_timestamp_fraction": record.get("parseable_timestamp_fraction"),
+        "timebase": record.get("timebase") or {},
+        "roles": record.get("roles") or {},
+        "discrete_state_transition_count": record.get(
+            "discrete_state_transition_count"
+        ),
+        "temperature_or_flow_parameter_fit_supported": False,
+        "full_station_vehicle_validation": False,
+        "full_loop_holdout_eligible": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_station_schema_evidence() -> dict[str, Any] | None:
     """Expose only the de-identified private-channel intake boundary."""
 
@@ -2486,6 +2533,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_operational_profile_recheck"
         ] = operational_profile_recheck
+    channel_quality_recheck = _confidential_station_channel_quality_recheck()
+    if channel_quality_recheck is not None:
+        envelope["response_evidence"][
+            "confidential_station_channel_quality_recheck"
+        ] = channel_quality_recheck
     station_schema = _confidential_station_schema_evidence()
     if station_schema is not None:
         envelope["response_evidence"][
@@ -2893,6 +2945,22 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if operational_profile_recheck.get(key) is not None
         }
+    channel_quality_recheck = evidence.get(
+        "confidential_station_channel_quality_recheck"
+    )
+    if isinstance(channel_quality_recheck, dict):
+        summary["confidential_station_channel_quality_recheck"] = {
+            key: channel_quality_recheck.get(key)
+            for key in (
+                "evidence_role", "files_read", "sampled_rows",
+                "parseable_timestamp_fraction", "timebase", "roles",
+                "discrete_state_transition_count",
+                "temperature_or_flow_parameter_fit_supported",
+                "full_station_vehicle_validation", "full_loop_holdout_eligible",
+                "claim_limit",
+            )
+            if channel_quality_recheck.get(key) is not None
+        }
     station_schema = evidence.get("confidential_station_schema_intake")
     if isinstance(station_schema, dict):
         summary["confidential_station_schema_intake"] = {
@@ -2964,6 +3032,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     pressure_recheck = evidence.get("confidential_pressure_recheck_decision") or {}
     operational_profile_recheck = evidence.get(
         "confidential_operational_profile_recheck"
+    ) or {}
+    channel_quality_recheck = evidence.get(
+        "confidential_station_channel_quality_recheck"
     ) or {}
     station_schema = evidence.get("confidential_station_schema_intake") or {}
     private_media = evidence.get("confidential_private_media_intake") or {}
@@ -3422,6 +3493,28 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "full_station_vehicle_validation"
             ) is True,
             "claim_limit": operational_profile_recheck.get("claim_limit"),
+        },
+        "confidential_station_channel_quality_recheck": {
+            "files_read": channel_quality_recheck.get("files_read"),
+            "sampled_rows": channel_quality_recheck.get("sampled_rows"),
+            "parseable_timestamp_fraction": channel_quality_recheck.get(
+                "parseable_timestamp_fraction"
+            ),
+            "timebase": channel_quality_recheck.get("timebase") or {},
+            "roles": channel_quality_recheck.get("roles") or {},
+            "discrete_state_transition_count": channel_quality_recheck.get(
+                "discrete_state_transition_count"
+            ),
+            "temperature_or_flow_parameter_fit_supported": channel_quality_recheck.get(
+                "temperature_or_flow_parameter_fit_supported"
+            ) is True,
+            "full_station_vehicle_validation": channel_quality_recheck.get(
+                "full_station_vehicle_validation"
+            ) is True,
+            "full_loop_holdout_eligible": channel_quality_recheck.get(
+                "full_loop_holdout_eligible"
+            ) is True,
+            "claim_limit": channel_quality_recheck.get("claim_limit"),
         },
         "confidential_station_schema_intake": {
             "source_bundle_count": station_schema.get("source_bundle_count"),
