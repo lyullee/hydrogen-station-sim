@@ -86,6 +86,10 @@ class ReferenceScenario:
     # measured restart margin without embedding raw station data.
     station_dispatch_pressure_margin_pa: float | None = None
     station_recharge_hysteresis_pa: float | None = None
+    # Optional owner-attested station-side dynamic calibration.  It represents
+    # the observed compressor restart dwell only; it is not a vehicle-fill or
+    # compressor-capacity validation result.
+    station_minimum_recharge_off_time_s: float | None = None
     initial_bank_fill_percent: tuple[float, float, float] = DEFAULT_BANK_INITIAL_FILL_PERCENT
     fault_events: tuple[FaultEvent, ...] = ()
     # Optional time-dependent boundary traces used by partial-station validation.
@@ -201,6 +205,11 @@ def build_reference_scenario(
         )
     ):
         raise ValueError("station calibration margins must be positive when provided")
+    if (
+        config.station_minimum_recharge_off_time_s is not None
+        and config.station_minimum_recharge_off_time_s < 0.0
+    ):
+        raise ValueError("station_minimum_recharge_off_time_s cannot be negative")
     vehicle_fit = CompositeTankFitParameters(
         effective_volume_multiplier=config.vehicle_effective_volume_multiplier,
         gas_liner_ua_multiplier=config.vehicle_gas_liner_ua_multiplier,
@@ -350,6 +359,11 @@ def build_reference_scenario(
                     config.station_recharge_hysteresis_pa
                     if config.station_recharge_hysteresis_pa is not None
                     else 1.0e6
+                ),
+                minimum_recharge_off_time_s=(
+                    config.station_minimum_recharge_off_time_s
+                    if config.station_minimum_recharge_off_time_s is not None
+                    else 0.0
                 ),
             )
         ),

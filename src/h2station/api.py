@@ -38,6 +38,7 @@ from .scenario import ReferenceScenario, build_reference_scenario
 from .calibration_profiles import (
     load_bank_pressure_envelopes,
     load_measured_boundary_calibration,
+    load_station_recharge_dynamics_calibration,
 )
 from .dispersion_proxy import PUBLIC_DISPERSION_PROXY
 from .public_benchmarks import compare_public_operating_context
@@ -50,12 +51,31 @@ from .hazop.response import (classify_rule, load_playbooks, response_selection,
                              prompt_guidance, render_guidance, structured_guidance)
 
 
-def _runtime_calibration_payload(profile: Any | None) -> dict[str, Any]:
+def _runtime_calibration_payload(
+    profile: Any | None,
+    recharge_dynamics_profile: Any | None = None,
+    *,
+    recharge_dynamics_requested: bool = False,
+) -> dict[str, Any]:
     """Serialize sanitized calibration provenance for jobs and operator views."""
 
-    if profile is None:
-        return {"id": "reference_defaults", "evidence_artifact": None}
-    return profile.runtime_metadata()
+    result = (
+        {"id": "reference_defaults", "evidence_artifact": None}
+        if profile is None else profile.runtime_metadata()
+    )
+    result["station_recharge_dynamics"] = (
+        recharge_dynamics_profile.runtime_metadata()
+        if recharge_dynamics_profile is not None else {
+            "status": "unavailable" if recharge_dynamics_requested else "disabled",
+            "id": None,
+            "evidence_artifact": None,
+            "claim_boundary": (
+                "Only an owner-attested, temporally checked station-side restart "
+                "dwell may be applied; reference defaults remain unchanged."
+            ),
+        }
+    )
+    return result
 
 
 class FaultInput(BaseModel):
@@ -140,6 +160,7 @@ class ProcessSettings(BaseModel):
     risk_display_mode: Literal["relative", "absolute"] = "relative"
     risk_update_interval_s: Literal[15, 30, 60, 120] = 30
     measured_boundary_calibration: bool = False
+    measured_station_dynamics_calibration: bool = False
     vehicle_1_auto_stop: bool = True
     vehicle_1_target_pressure_mpa: float = Field(default=70.0, gt=1.0, le=110.0)
     vehicle_2_auto_stop: bool = True
@@ -419,6 +440,12 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             if process_settings is not None and process_settings.measured_boundary_calibration
             else None
         )
+        recharge_dynamics_profile = (
+            load_station_recharge_dynamics_calibration()
+            if process_settings is not None
+            and process_settings.measured_station_dynamics_calibration
+            else None
+        )
         config = ReferenceScenario(
             duration_s=request.duration_s,
             control_period_s=request.control_period_s,
@@ -464,6 +491,10 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                 measured_profile.recharge_hysteresis_pa
                 if measured_profile is not None else None
             ),
+            station_minimum_recharge_off_time_s=(
+                recharge_dynamics_profile.minimum_recharge_off_time_s
+                if recharge_dynamics_profile is not None else 0.0
+            ),
             fault_events=tuple(fault.to_event() for fault in request.faults),
         )
         built = build_reference_scenario(config, backend)
@@ -506,7 +537,14 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             simulated_time_s=0.0,
             duration_s=config.duration_s,
             hyram_backend=backend.name,
-            calibration_profile=_runtime_calibration_payload(measured_profile),
+            calibration_profile=_runtime_calibration_payload(
+                measured_profile,
+                recharge_dynamics_profile,
+                recharge_dynamics_requested=bool(
+                    process_settings
+                    and process_settings.measured_station_dynamics_calibration
+                ),
+            ),
             updated_at=_utc_now(),
         )
 
@@ -1034,6 +1072,12 @@ def create_simulation(request: SimulationInput) -> dict[str, Any]:
         if runtime_settings is not None and runtime_settings.get("measured_boundary_calibration")
         else None
     )
+    recharge_dynamics_profile = (
+        load_station_recharge_dynamics_calibration()
+        if runtime_settings is not None
+        and runtime_settings.get("measured_station_dynamics_calibration")
+        else None
+    )
     if measured_profile is not None:
         for bank in ("low", "medium", "high"):
             runtime_settings[f"recharge_restart_margin_{bank}_mpa"] = (
@@ -1066,7 +1110,15 @@ def create_simulation(request: SimulationInput) -> dict[str, Any]:
             "fault_registry": {fault.event_id: fault.to_event() for fault in request.faults},
             "auto_resolved_fault_ids": [],
             "operations": process_runtime.snapshot() if process_runtime is not None else None,
-            "calibration_profile": _runtime_calibration_payload(measured_profile),
+            "calibration_profile": _runtime_calibration_payload(
+                measured_profile,
+                recharge_dynamics_profile,
+                recharge_dynamics_requested=bool(
+                    runtime_settings
+                    and runtime_settings.get("measured_station_dynamics_calibration")
+                ),
+            ),
+            "station_dynamics_calibration_applied": recharge_dynamics_profile is not None,
         }
     _executor.submit(_execute_simulation, job_id, request)
     return {"id": job_id, "status": "queued"}
@@ -1214,6 +1266,16 @@ def set_process_operations(job_id: str, settings: ProcessSettings) -> dict[str, 
         if runtime is None:
             raise HTTPException(status_code=409, detail="This simulation has no operator process mode")
         settings_dict = settings.model_dump()
+        dynamics_requested = bool(settings_dict.get("measured_station_dynamics_calibration"))
+        dynamics_applied = bool(job.get("station_dynamics_calibration_applied"))
+        if dynamics_requested != dynamics_applied:
+            raise HTTPException(
+                status_code=409,
+                detail=(
+                    "Station recharge-dynamics calibration is applied when a "
+                    "simulation starts; reset and start a new simulation to change it"
+                ),
+            )
         measured_profile = (
             load_measured_boundary_calibration()
             if settings_dict.get("measured_boundary_calibration") else None
@@ -1223,12 +1285,17 @@ def set_process_operations(job_id: str, settings: ProcessSettings) -> dict[str, 
                 settings_dict[f"recharge_restart_margin_{bank}_mpa"] = (
                     measured_profile.recharge_restart_margin_pa / 1.0e6
                 )
-            job["calibration_profile"] = _runtime_calibration_payload(measured_profile)
+            job["calibration_profile"] = _runtime_calibration_payload(
+                measured_profile,
+                load_station_recharge_dynamics_calibration() if dynamics_applied else None,
+                recharge_dynamics_requested=dynamics_requested,
+            )
         else:
-            job["calibration_profile"] = {
-                "id": "reference_defaults",
-                "evidence_artifact": None,
-            }
+            job["calibration_profile"] = _runtime_calibration_payload(
+                None,
+                load_station_recharge_dynamics_calibration() if dynamics_applied else None,
+                recharge_dynamics_requested=dynamics_requested,
+            )
         try:
             runtime.configure(settings_dict)
         except ValueError as exc:

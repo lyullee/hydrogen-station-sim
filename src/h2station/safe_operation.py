@@ -443,6 +443,7 @@ class SafeFullStationSimulator:
                     restart_margins_pa=process.recharge_restart_margins_pa() if process is not None else None,
                     ignore_targets=not process.settings["recharge_auto_stop"] if process is not None else False,
                     excluded_indices=blocked_inlets,
+                    time_s=time_s,
                 )
             )
             compressor_flow_multiplier = (

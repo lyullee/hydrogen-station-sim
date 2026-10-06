@@ -201,6 +201,42 @@ class BankPressureEnvelopeProfile:
             result["status"] = "unavailable"
         return result
 
+
+@dataclass(frozen=True)
+class StationRechargeDynamicsCalibrationProfile:
+    """Reviewed station-side compressor restart dwell.
+
+    This profile can only alter an opt-in dwell after a chronological holdout
+    check.  It does not alter flow capacity, vessel geometry, safety limits,
+    or the reference model defaults.
+    """
+
+    profile_id: str
+    evidence_artifact: str
+    minimum_recharge_off_time_s: float
+    sampled_rows: int
+    calibration_fraction: float
+    holdout_completed_off_to_on_intervals: int
+    holdout_minimum_off_to_on_s: float
+    claim_boundary: str
+
+    def runtime_metadata(self) -> dict[str, object]:
+        return {
+            "status": "active",
+            "id": self.profile_id,
+            "evidence_artifact": self.evidence_artifact,
+            "minimum_recharge_off_time_s": self.minimum_recharge_off_time_s,
+            "sampled_rows": self.sampled_rows,
+            "temporal_holdout": {
+                "method": "chronological_within_trace_holdout",
+                "calibration_fraction": self.calibration_fraction,
+                "completed_off_to_on_intervals": self.holdout_completed_off_to_on_intervals,
+                "minimum_off_to_on_s": self.holdout_minimum_off_to_on_s,
+            },
+            "default_model_parameters_changed": False,
+            "claim_boundary": self.claim_boundary,
+        }
+
 _ROOT = Path(__file__).resolve().parents[2]
 _PROFILE_PATHS = (
     _ROOT / "research" / "confidential_operational_envelope_calibration_summary_2026_10_06.json",
@@ -209,6 +245,10 @@ _PROFILE_PATHS = (
 
 _BANK_ENVELOPE_PATH = (
     _ROOT / "research" / "confidential_bank_role_pressure_envelopes_2026_10_06.json"
+)
+
+_RECHARGE_DYNAMICS_PROFILE_PATH = (
+    _ROOT / "research" / "confidential_station_recharge_dynamics_calibration_2026_10_06.json"
 )
 
 
@@ -267,6 +307,79 @@ def load_bank_pressure_envelopes() -> BankPressureEnvelopeProfile | None:
         bank_role_mapping_attested=attestation.get("bank_role_mapping_attested") is True,
         pressure_scale_mapping_attested=attestation.get("pressure_scale_mapping_attested") is True,
         claim_boundary=str(record.get("claim_boundary") or ""),
+    )
+
+
+@lru_cache(maxsize=1)
+def load_station_recharge_dynamics_calibration(
+    path: Path | None = None,
+) -> StationRechargeDynamicsCalibrationProfile | None:
+    """Load a privacy-bounded dwell only after temporal verification.
+
+    The strict schema intentionally rejects a merely descriptive aggregate.
+    A profile must prove that a dwell fitted on earlier data is no longer than
+    every complete OFF-to-ON interval in the later holdout segment.
+    """
+
+    candidate = path or _RECHARGE_DYNAMICS_PROFILE_PATH
+    try:
+        record = json.loads(candidate.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    try:
+        calibration = record["calibration"]
+        holdout = record["temporal_holdout"]
+        eligibility = record["eligibility"]
+        channel_attestation = record["channel_attestation"]
+        dwell = float(calibration["recommended_minimum_recharge_off_time_s"])
+        sampled_rows = int(calibration["sampled_rows"])
+        calibration_fraction = float(holdout["calibration_fraction"])
+        interval_count = int(holdout["holdout_completed_off_to_on_intervals"])
+        holdout_minimum = float(holdout["holdout_minimum_off_to_on_s"])
+        warnings = tuple(str(item) for item in (calibration.get("quality_warnings") or []))
+        holdout_warnings = tuple(str(item) for item in (holdout.get("quality_warnings") or []))
+        safe_numbers = (dwell, calibration_fraction, holdout_minimum)
+        if (
+            record.get("artifact_type") != "confidential_station_recharge_dynamics_calibration"
+            or record.get("source_identifiers_published") is not False
+            or record.get("raw_rows_persisted") is not False
+            or record.get("absolute_timestamps_published") is not False
+            or record.get("source_paths_published") is not False
+            or record.get("tag_names_published") is not False
+            or record.get("manufacturer_or_model_published") is not False
+            or channel_attestation.get("pressure_role_and_unit_semantics_attested") is not True
+            or channel_attestation.get("compressor_state_semantics_attested") is not True
+            or eligibility.get("station_recharge_dynamics_calibration_supported") is not True
+            or eligibility.get("runtime_parameter_application") is not True
+            or eligibility.get("full_station_vehicle_validation") is not False
+            or eligibility.get("full_loop_holdout_eligible") is not False
+            or eligibility.get("default_model_parameters_changed") is not False
+            or holdout.get("method") != "chronological_within_trace_holdout"
+            or holdout.get("dwell_consistent") is not True
+            or warnings or holdout_warnings
+            or sampled_rows < 1
+            or interval_count < 3
+            or not all(math.isfinite(value) for value in safe_numbers)
+            or not 0.0 < dwell <= 600.0
+            or not 0.50 <= calibration_fraction < 0.90
+            or holdout_minimum < dwell
+        ):
+            return None
+    except (KeyError, TypeError, ValueError):
+        return None
+    try:
+        artifact = candidate.relative_to(_ROOT).as_posix()
+    except ValueError:
+        artifact = candidate.name
+    return StationRechargeDynamicsCalibrationProfile(
+        profile_id=str(record.get("profile_id") or "owner_station_recharge_dynamics_v1"),
+        evidence_artifact=artifact,
+        minimum_recharge_off_time_s=dwell,
+        sampled_rows=sampled_rows,
+        calibration_fraction=calibration_fraction,
+        holdout_completed_off_to_on_intervals=interval_count,
+        holdout_minimum_off_to_on_s=holdout_minimum,
+        claim_boundary=str(record.get("claim_boundary") or "station recharge-dynamics calibration only"),
     )
 
 

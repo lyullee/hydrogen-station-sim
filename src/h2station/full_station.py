@@ -345,6 +345,19 @@ class MultistageHydrogenCompressor:
 class CascadeSupervisorParameters:
     minimum_dispatch_pressure_margin_pa: float = 1.0e6
     recharge_pressure_hysteresis_pa: float = 1.0e6
+    # A compressor normally remains unavailable for a short cooldown/unload
+    # interval after a completed recharge.  This is separate from the pressure
+    # hysteresis: hysteresis decides *whether* recharge is required, while this
+    # dwell prevents a sampled controller from immediately restarting it.
+    minimum_recharge_off_time_s: float = 0.0
+
+    def __post_init__(self) -> None:
+        if self.minimum_dispatch_pressure_margin_pa <= 0.0:
+            raise ValueError("minimum_dispatch_pressure_margin_pa must be positive")
+        if self.recharge_pressure_hysteresis_pa <= 0.0:
+            raise ValueError("recharge_pressure_hysteresis_pa must be positive")
+        if self.minimum_recharge_off_time_s < 0.0:
+            raise ValueError("minimum_recharge_off_time_s cannot be negative")
 
 
 class CascadeSupervisor:
@@ -358,6 +371,7 @@ class CascadeSupervisor:
         self._dispatch_indices: dict[str, int] = {}
         self._recharge_index: int | None = None
         self._recharge_armed: list[bool] = []
+        self._recharge_off_started_s: float | None = None
 
     def reset_dispatch(self, circuit_id: str = "primary") -> None:
         self._dispatch_indices.pop(circuit_id, None)
@@ -413,7 +427,10 @@ class CascadeSupervisor:
         restart_margins_pa: tuple[float, ...] | None = None,
         ignore_targets: bool = False,
         excluded_indices: frozenset[int] = frozenset(),
+        *,
+        time_s: float | None = None,
     ) -> int | None:
+        was_recharging = self._recharge_index is not None
         excluded = {
             index for index in (
                 dispatch_index if isinstance(dispatch_index, tuple)
@@ -457,16 +474,37 @@ class CascadeSupervisor:
                                     and gas.pressure_pa < targets[index]))
         ]
         if not needs_charge:
+            # The target-processing loop above may already clear the selected
+            # bank.  Preserve the preceding state so a completed recharge
+            # cycle still starts the measured restart dwell.
+            if was_recharging and time_s is not None:
+                self._recharge_off_started_s = time_s
             self._recharge_index = None
+            return None
+        # This dwell never delays a normal stop at the configured upper target:
+        # it applies only to a *new* restart after the supervisor has already
+        # elected to stop.  A caller that has no simulation clock keeps the
+        # historical immediate-restart behavior for backwards compatibility.
+        if (
+            self._recharge_index is None
+            and time_s is not None
+            and self._recharge_off_started_s is not None
+            and time_s - self._recharge_off_started_s
+            < self.parameters.minimum_recharge_off_time_s
+        ):
             return None
         if ignore_targets:
             # With operator auto-stop disabled, keep feeding the lowest-pressure
             # available bank instead of pinning the compressor to the high bank.
-            return min(needs_charge, key=lambda index: gas_states[index].pressure_pa)
+            selected = min(needs_charge, key=lambda index: gas_states[index].pressure_pa)
+            self._recharge_index = selected
+            self._recharge_off_started_s = None
+            return selected
         self._recharge_index = max(
             needs_charge,
             key=lambda index: targets[index],
         )
+        self._recharge_off_started_s = None
         return self._recharge_index
 
 
@@ -830,7 +868,7 @@ class FullStationModel:
                 )
             )
             recharge_index = self.supervisor.select_recharge_bank(
-                self.banks, bank_gases, dispatch_index
+                self.banks, bank_gases, dispatch_index, time_s=time_s
             )
             observation = FuelingObservation(
                 time_s,

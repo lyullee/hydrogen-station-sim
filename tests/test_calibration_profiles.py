@@ -7,6 +7,7 @@ import pytest
 from h2station.calibration_profiles import (
     load_bank_pressure_envelopes,
     load_measured_boundary_calibration,
+    load_station_recharge_dynamics_calibration,
 )
 
 
@@ -156,3 +157,55 @@ def test_bank_pressure_envelope_is_diagnostic_and_uses_robust_quantiles():
         "above_observed_robust_range"
     )
     assert "full-loop" in result["claim_boundary"]
+
+
+def test_temporally_checked_recharge_dynamics_profile_is_opt_in_ready():
+    profile = load_station_recharge_dynamics_calibration()
+    assert profile is not None
+    assert profile.minimum_recharge_off_time_s == pytest.approx(265.2)
+    metadata = profile.runtime_metadata()
+    assert metadata["default_model_parameters_changed"] is False
+    assert metadata["temporal_holdout"]["completed_off_to_on_intervals"] >= 3
+    assert (
+        metadata["temporal_holdout"]["minimum_off_to_on_s"]
+        >= metadata["minimum_recharge_off_time_s"]
+    )
+
+
+def test_recharge_dynamics_profile_rejects_an_unverified_holdout(tmp_path):
+    source = {
+        "artifact_type": "confidential_station_recharge_dynamics_calibration",
+        "source_identifiers_published": False,
+        "raw_rows_persisted": False,
+        "absolute_timestamps_published": False,
+        "source_paths_published": False,
+        "tag_names_published": False,
+        "manufacturer_or_model_published": False,
+        "channel_attestation": {
+            "pressure_role_and_unit_semantics_attested": True,
+            "compressor_state_semantics_attested": True,
+        },
+        "calibration": {
+            "sampled_rows": 10,
+            "recommended_minimum_recharge_off_time_s": 120.0,
+            "quality_warnings": [],
+        },
+        "temporal_holdout": {
+            "method": "chronological_within_trace_holdout",
+            "calibration_fraction": 0.7,
+            "holdout_completed_off_to_on_intervals": 3,
+            "holdout_minimum_off_to_on_s": 100.0,
+            "dwell_consistent": True,
+            "quality_warnings": [],
+        },
+        "eligibility": {
+            "station_recharge_dynamics_calibration_supported": True,
+            "runtime_parameter_application": True,
+            "full_station_vehicle_validation": False,
+            "full_loop_holdout_eligible": False,
+            "default_model_parameters_changed": False,
+        },
+    }
+    path = tmp_path / "unverified-dynamics.json"
+    path.write_text(json.dumps(source), encoding="utf-8")
+    assert load_station_recharge_dynamics_calibration(path) is None

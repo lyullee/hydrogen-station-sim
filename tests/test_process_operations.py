@@ -162,6 +162,23 @@ def test_opt_in_measured_boundary_profile_can_set_dispatch_margin():
     assert calibrated.station.supervisor.parameters.minimum_dispatch_pressure_margin_pa == pytest.approx(540_000.0)
 
 
+def test_opt_in_station_dynamics_profile_is_attached_when_a_job_starts():
+    with TestClient(app) as client:
+        started = client.post("/api/simulations", json={
+            "duration_s": 0.4,
+            "control_period_s": 0.2,
+            "process_settings": ProcessSettings(
+                measured_station_dynamics_calibration=True,
+            ).model_dump(),
+        })
+        assert started.status_code == 202, started.text
+        job = client.get(f"/api/simulations/{started.json()['id']}").json()
+        dynamics = job["calibration_profile"]["station_recharge_dynamics"]
+        assert job["station_dynamics_calibration_applied"] is True
+        assert dynamics["status"] == "active"
+        assert dynamics["minimum_recharge_off_time_s"] == pytest.approx(265.2)
+
+
 def test_recharge_bank_waits_for_configured_restart_margin_after_target():
     built, _ = _station(ProcessSettings().model_dump())
     gases = tuple(bank.gas_state(state) for bank, state in
@@ -177,6 +194,38 @@ def test_recharge_bank_waits_for_configured_restart_margin_after_target():
         None, target_pressures_pa=targets, restart_margins_pa=margins,
     )
     assert selected == 2
+
+
+def test_recharge_bank_respects_optional_restart_dwell_without_delaying_target_stop():
+    built, _ = _station(ProcessSettings().model_dump())
+    supervisor = built.station.supervisor
+    supervisor.parameters = type(supervisor.parameters)(
+        minimum_dispatch_pressure_margin_pa=supervisor.parameters.minimum_dispatch_pressure_margin_pa,
+        recharge_pressure_hysteresis_pa=supervisor.parameters.recharge_pressure_hysteresis_pa,
+        minimum_recharge_off_time_s=30.0,
+    )
+    gases = tuple(bank.gas_state(state) for bank, state in zip(built.station.banks, built.initial_state.banks))
+    targets = (44e6, 68e6, 89e6)
+    margins = (2e6, 3e6, 4e6)
+    charging = tuple(replace(gas, pressure_pa=pressure) for gas, pressure in zip(gases, (44e6, 68e6, 85e6)))
+    selected = supervisor.select_recharge_bank(
+        built.station.banks, charging, None, target_pressures_pa=targets,
+        restart_margins_pa=margins, time_s=0.0,
+    )
+    assert selected == 2
+    reached_target = tuple(replace(gas, pressure_pa=pressure) for gas, pressure in zip(gases, (44e6, 68e6, 89e6)))
+    assert supervisor.select_recharge_bank(
+        built.station.banks, reached_target, None, target_pressures_pa=targets,
+        restart_margins_pa=margins, time_s=10.0,
+    ) is None
+    assert supervisor.select_recharge_bank(
+        built.station.banks, charging, None, target_pressures_pa=targets,
+        restart_margins_pa=margins, time_s=25.0,
+    ) is None
+    assert supervisor.select_recharge_bank(
+        built.station.banks, charging, None, target_pressures_pa=targets,
+        restart_margins_pa=margins, time_s=40.0,
+    ) == 2
 
     # Reaching the upper target disarms the bank. A small pressure drop must
     # not make the compressor chatter between recharge and standby.

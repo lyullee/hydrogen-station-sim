@@ -1,0 +1,59 @@
+# 실측 기반 재충전 동특성 보정
+
+이 문서는 소유자 관리 실측 자료를 원자료·설비명·태그명·절대 시각 없이 수소충전소 디지털 트윈의 **재충전 재기동 대기시간**에 반영하는 절차를 설명한다. 이 보정은 참조 모델의 기본값을 바꾸지 않으며, 운전 설정에서 명시적으로 선택한 새 시뮬레이션에만 적용된다.
+
+## 적용 범위
+
+실측 압축기 부하 상태와 일반화한 중·고압 저장영역 압력을 같은 시간축으로 비교해 다음 값만 산출한다.
+
+- 압축기 OFF 후 다음 ON까지의 완료된 대기 구간
+- 압축기 가동·비가동 중 저장영역 압력 변화율
+- 기동에서 정지까지의 압력 이력 폭
+
+현재 승인된 비식별 집계는 시간 순서대로 앞 70%에서 후보값을 정하고, 뒤 30%의 완료된 OFF→ON 구간으로 점검했다. 그 결과 선택 가능한 최소 재기동 대기시간은 **265.2 s**이며, 뒤 구간의 7개 완료 주기 중 최단 대기시간은 **405.0 s**였다. 이 값은 압축기 재기동 채터링을 모사·완화하기 위한 동특성 설정값이다.
+
+## 적용하지 않는 항목
+
+이 자료에는 동기화된 차량 탱크 압력·온도, 노즐 질량유량, 차량 통신/충전 프로토콜 상태가 포함되지 않는다. 따라서 다음에는 사용하지 않는다.
+
+- 압축기 정격 용량 또는 노즐 유량 보정
+- 차량 충전 종료 예측이나 SAE J2601 적합성 주장
+- 용기 설계압, 안전밸브 설정, ESD 설정, 안전거리의 결정
+- 사고 빈도·개인위험도 또는 현장 안전인증
+- 전체 station-to-vehicle 루프의 정확도 주장
+
+이 경계는 전체 충전루프를 하나의 계수로 맞추어 과도한 주장을 하는 것을 막는다. 차량측 검증은 독립된 공개 차량 충전 자료로 계속 수행하고, 실제 충전소 자료는 저장·압축기측 동특성에만 쓴다.
+
+## 실행 방법
+
+리모콘의 **운전 설정 → 실측 보정 · 선택 적용 → 실측 재충전 대기시간 보정 사용**을 선택한 뒤 새 시뮬레이션을 시작한다. 실행 중에는 이 값의 적용 여부를 바꾸지 못한다. 이미 적분을 시작한 압축기 제어기와 상태 전이를 중간에 교체하면 전·후 결과를 같은 모델 결과로 해석할 수 없기 때문이다.
+
+API에서는 `process_settings.measured_station_dynamics_calibration: true`로 선택한다. 작업 상태의 `calibration_profile.station_recharge_dynamics`에 적용 여부, 산출값, 비식별 근거 파일, 시간순 점검 요약이 기록된다.
+
+## 재생성 및 검토
+
+제한된 환경에서 다음 스크립트를 실행한다.
+
+```powershell
+$env:PYTHONPATH='src'
+.\.venv\Scripts\python.exe scripts\calibrate_confidential_station_recharge_dynamics.py `
+  --input <restricted-trace-or-folder> `
+  --mapping <custodian-mapping.json> `
+  --output <approved-aggregate.json> `
+  --compressor-state-role <approved-role> `
+  --active-state <approved-active-value> `
+  --bank-role <approved-pressure-role>=medium `
+  --bank-role <approved-pressure-role>=high `
+  --pressure-semantics-attested --state-semantics-attested `
+  --temporal-holdout --calibration-fraction 0.70
+```
+
+스크립트는 원자료를 메모리에서만 읽으며 결과에 원시 행, 식별자, 절대 시각, 경로, 태그명, 제조사·모델을 포함하지 않는다. 런타임은 다음 조건을 모두 만족한 집계만 읽는다.
+
+1. 압력 역할·단위와 압축기 상태 의미를 데이터 관리자가 확인한다.
+2. 시간 순서 holdout에 최소 3개의 완료 OFF→ON 구간이 있다.
+3. holdout의 최단 대기시간이 앞 구간에서 정한 대기시간보다 짧지 않다.
+4. 경고·결측·비단조 시간 문제가 없다.
+5. 기본 모델은 변경하지 않고 선택 적용으로만 사용한다.
+
+현재 집계와 생성 스크립트는 비식별 근거 형식만 저장한다. 원자료와 제한 매핑 파일은 저장소에 추가하거나 Git으로 추적하지 않는다.
