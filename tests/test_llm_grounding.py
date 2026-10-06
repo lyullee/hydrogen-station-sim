@@ -453,6 +453,16 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert schema_header["station_side_schema_intake_supported"] is True
     assert schema_header["privacy_bounded_channel_families"]["flow_rate"] > 0
     assert schema_header["vehicle_side_channel_family_count"] == 0
+    private_media = idle["response_evidence"]["confidential_private_media_intake"]
+    assert private_media["screen_recorded_logger_candidate"] is True
+    assert private_media["machine_readable_trace_present"] is False
+    assert private_media["parameter_fit_permitted"] is False
+    assert private_media["full_loop_holdout_eligible"] is False
+    media_summary = prompt_evidence_summary(idle)["confidential_private_media_intake"]
+    assert media_summary["video_count"] > 0
+    assert prompt_evidence_header(idle)["confidential_private_media_intake"][
+        "machine_readable_trace_present"
+    ] is False
     equipment_header = prompt_evidence_header(idle)[
         "confidential_station_equipment_operational_envelope"
     ]

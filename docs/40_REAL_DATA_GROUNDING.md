@@ -64,6 +64,13 @@ full-loop validation gate. A custodian-side CSV/XLSX export, tag dictionary,
 calibration/uncertainty record, relative-time event markers and reuse terms are
 still required before a frozen temporal holdout can be built.
 
+The compact media boundary is now included in the runtime LLM evidence envelope
+as `confidential_private_media_intake`. The assistant can therefore state that
+the owner supplied screen recordings/photos are provenance or inventory clues,
+while `machine_readable_trace_present=false` and
+`parameter_fit_permitted=false` prevent a video value from being presented as a
+calibrated field measurement. The raw media itself is never sent to the LLM.
+
 The pressure bundle is also summarized by generic channel index. Its two
 measured boundary channels have distinct operating envelopes, which is useful
 context for the assistant when explaining a bank-specific observation. The

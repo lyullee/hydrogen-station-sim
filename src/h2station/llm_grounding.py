@@ -2000,6 +2000,64 @@ def _confidential_station_schema_evidence() -> dict[str, Any] | None:
     }
 
 
+def _confidential_private_media_evidence() -> dict[str, Any] | None:
+    """Expose the private-media intake boundary without exposing media.
+
+    Screen recordings and photographs can establish provenance and suggest
+    channel/equipment families, but they must not be presented to an assistant
+    as calibrated logger rows.  Keeping this status in the evidence envelope
+    prevents the LLM from silently treating a video-derived observation as a
+    numerical field validation.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/confidential_private_media_intake_assessment_2026_10.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    if (
+        record.get("artifact_type") != "confidential_private_media_intake_assessment"
+        or record.get("source_identifiers_published") is not False
+        or record.get("raw_media_persisted") is not False
+        or record.get("exact_source_dates_published") is not False
+    ):
+        return None
+    inventory = record.get("media_inventory") or {}
+    assessment = record.get("content_assessment") or {}
+    eligibility = record.get("eligibility") or {}
+    return {
+        "artifact": (
+            "research/confidential_private_media_intake_assessment_2026_10.json"
+        ),
+        "evidence_role": "confidential private-media provenance and intake boundary",
+        "image_count": inventory.get("image_count"),
+        "video_count": inventory.get("video_count"),
+        "video_decoded_count": inventory.get("video_decoded_count"),
+        "video_probe_undecodable_count": inventory.get("video_undecodable_count"),
+        "screen_recorded_logger_candidate": assessment.get(
+            "screen_recorded_logger_candidate"
+        ) is True,
+        "machine_readable_trace_present": assessment.get(
+            "machine_readable_trace_present"
+        ) is True,
+        "ocr_or_frame_values_used_for_calibration": assessment.get(
+            "ocr_or_frame_values_used_for_calibration"
+        ) is True,
+        "channel_inventory_candidate": eligibility.get(
+            "channel_inventory_candidate"
+        ) is True,
+        "parameter_fit_permitted": eligibility.get(
+            "pressure_or_temperature_parameter_fit"
+        ) is True,
+        "full_loop_holdout_eligible": eligibility.get(
+            "full_loop_holdout_eligible"
+        ) is True,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _finite_number(value: Any) -> int | float | None:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         return None
@@ -2381,6 +2439,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_station_schema_intake"
         ] = station_schema
+    private_media = _confidential_private_media_evidence()
+    if private_media is not None:
+        envelope["response_evidence"][
+            "confidential_private_media_intake"
+        ] = private_media
     canonical = json.dumps(envelope, ensure_ascii=False, sort_keys=True,
                            separators=(",", ":"), default=str).encode("utf-8")
     envelope["evidence_digest"] = "sha256:" + sha256(canonical).hexdigest()
@@ -2778,6 +2841,20 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if station_schema.get(key) is not None
         }
+    private_media = evidence.get("confidential_private_media_intake")
+    if isinstance(private_media, dict):
+        summary["confidential_private_media_intake"] = {
+            key: private_media.get(key)
+            for key in (
+                "evidence_role", "artifact", "image_count", "video_count",
+                "video_decoded_count", "video_probe_undecodable_count",
+                "screen_recorded_logger_candidate", "machine_readable_trace_present",
+                "ocr_or_frame_values_used_for_calibration",
+                "channel_inventory_candidate", "parameter_fit_permitted",
+                "full_loop_holdout_eligible", "claim_limit",
+            )
+            if private_media.get(key) is not None
+        }
     public_source_links = _public_source_links(evidence)
     if public_source_links:
         summary["public_source_links"] = public_source_links
@@ -2819,6 +2896,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     bank_pressure = evidence.get("confidential_bank_role_pressure_envelopes") or {}
     pressure_recheck = evidence.get("confidential_pressure_recheck_decision") or {}
     station_schema = evidence.get("confidential_station_schema_intake") or {}
+    private_media = evidence.get("confidential_private_media_intake") or {}
     incident = evidence.get("public_incident_traceability") or {}
     action_taxonomy = incident.get("action_taxonomy") or {}
     accident_inventory = evidence.get("public_accident_report_inventory") or {}
@@ -3279,6 +3357,28 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "full_loop_holdout_eligible": (
                 station_schema.get("full_loop_holdout_eligible") is True
             ),
+        },
+        "confidential_private_media_intake": {
+            "artifact": private_media.get("artifact"),
+            "image_count": private_media.get("image_count"),
+            "video_count": private_media.get("video_count"),
+            "video_decoded_count": private_media.get("video_decoded_count"),
+            "video_probe_undecodable_count": private_media.get(
+                "video_probe_undecodable_count"
+            ),
+            "screen_recorded_logger_candidate": private_media.get(
+                "screen_recorded_logger_candidate"
+            ) is True,
+            "machine_readable_trace_present": private_media.get(
+                "machine_readable_trace_present"
+            ) is True,
+            "parameter_fit_permitted": private_media.get(
+                "parameter_fit_permitted"
+            ) is True,
+            "full_loop_holdout_eligible": private_media.get(
+                "full_loop_holdout_eligible"
+            ) is True,
+            "claim_limit": private_media.get("claim_limit"),
         },
         "impact_status": (manifest.get("impact") or {}).get("calculation_status"),
         "evidence_digest": manifest.get("evidence_digest"),

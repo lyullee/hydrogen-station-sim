@@ -47,6 +47,10 @@ contains:
   operator frame and evidence envelope. It reports whether the simulated
   source pressure is inside the observed range, without turning that range
   into a safety limit, trip criterion, or full-loop validation claim;
+- a privacy-bounded private-media intake boundary. Screen recordings and
+  equipment photos are exposed only as provenance/inventory status; they are
+  explicitly marked as non-machine-readable and cannot authorize parameter fit
+  or a full-loop claim;
 - public real-station operating context for back-to-back fueling, with its
   synchronized-raw-log and full-loop eligibility boundary;
 - public operating-range benchmarks for 35 MPa transportable supply and H70 high-flow filling, with pressure-class selection and an explicit partial-boundary/full-loop claim limit;
@@ -69,7 +73,7 @@ The following tests passed in the repository virtual environment:
 19 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-662 passed, 16 warnings
+664 passed, 16 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
