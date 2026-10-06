@@ -55,6 +55,7 @@
     "claim_boundary": "This record does not validate the digital twin, establish a safety distance, or support an IJHE full-loop claim. No model parameter was fitted from this candidate."
   },
   "custodian_request": {
+    "draft": "research/NBSDC_HEAVY_VEHICLE_FAST_REFUELING_DATA_REQUEST_DRAFT_2026_10_06.md",
     "preferred_export": "de-identified CSV, Parquet or workbook for an approved subset",
     "minimum_channels": [
       "elapsed time with timezone/clock rule",

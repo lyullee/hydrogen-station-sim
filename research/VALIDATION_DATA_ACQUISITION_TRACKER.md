@@ -35,4 +35,6 @@ temperature/flow tests and protocol documents. The numerical files still
 require a data application; only the description file was downloadable without
 login. The result is recorded in
 [`nbsdc_heavy_vehicle_fast_refueling_access_recheck_2026_10_06.json`](nbsdc_heavy_vehicle_fast_refueling_access_recheck_2026_10_06.json).
+The prepared request is
+[`NBSDC_HEAVY_VEHICLE_FAST_REFUELING_DATA_REQUEST_DRAFT_2026_10_06.md`](NBSDC_HEAVY_VEHICLE_FAST_REFUELING_DATA_REQUEST_DRAFT_2026_10_06.md).
 It is an acquisition lead and protocol/schema reference, not a scored holdout.
