@@ -137,6 +137,15 @@ aggregate error but still passed 0/8; it is explicitly marked post-freeze
 diagnostic-only and cannot be used as validation, certification or a production
 parameter-fitting result.
 
+The public NREL H2FillS HDVS Type-IV tank screen is now carried as a separate
+partial-boundary record. Seven tanks and 351 samples are evaluated with measured
+mass-flow, inlet-temperature and pressure boundaries; pressure RMSE is 6.164
+MPa, temperature RMSE is 4.625 °C, and the predeclared joint screen passes 0/7.
+The EOS-equivalent volume ratio (median 0.911 relative to the frozen effective
+volume) is retained as a geometry diagnostic only. It is not applied as a
+production correction, and it cannot support a station-controller, receptacle or
+full-loop accuracy claim.
+
 ## Claim boundary
 
 This is traceability and consistency evidence for the software contract. It

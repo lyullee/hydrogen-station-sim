@@ -69,6 +69,17 @@ vehicle-SOC outputs. The public record does not provide a reusable synchronized
 row-level archive, so the LLM may use it for scenario and face-validity
 context, while the full-loop validation gate remains closed.
 
+The NREL H2FillS HDVS Type-IV workbook is evaluated separately as a frozen
+tank/thermal boundary screen. It contains seven tanks and 351 synchronized
+samples with measured pressure, temperature and mass channels. The current
+model screen reports pressure RMSE 6.16 MPa, temperature RMSE 4.62 °C and
+zero of seven tanks passing the predeclared joint screen; the measured-to-model
+EOS-equivalent volume ratio is about 0.91. That ratio is a geometry diagnostic,
+not a fitted production correction. The workbook remains local and ignored;
+only the aggregate result is exposed to the LLM through
+`public_tank_validation_boundary`, with a claim boundary that excludes
+station-controller, receptacle and full-loop validation.
+
 - `measured_boundary_calibration` is opt-in. It applies the de-identified
   station-boundary pressure margin to both cascade dispatch and recharge
   restart selection, so a bank is not repeatedly selected around the measured

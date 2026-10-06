@@ -111,10 +111,24 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     )
     assert ventilation["runtime_statistic_default"] == "upper"
     assert ventilation["wind_mode_upper_envelope_summary"]["co-flow"]["case_count"] == 12
+    tank_validation = idle["response_evidence"]["public_tank_validation_boundary"]
+    assert tank_validation["evidence_role"] == (
+        "independent_tank_thermal_external_validation"
+    )
+    assert tank_validation["aggregate"]["tank_count"] == 7
+    assert tank_validation["aggregate"]["screening_pass_count"] == 0
+    assert tank_validation["claim_supported"] is False
+    assert tank_validation["geometry_diagnostic"]["claim_prohibited"] is True
+    assert tank_validation["geometry_diagnostic"][
+        "ratio_to_frozen_effective_volume_median"
+    ] < 1.0
     early = prompt_evidence_summary(idle)
     assert early["impact_status"] == "not_requested"
     assert early["public_experimental_benchmarks"]["sources"]
     assert early["public_grune_ventilation_evidence"]["factor_count"] == 42
+    assert early["public_tank_validation_boundary"]["aggregate"][
+        "pressure_rmse_mpa"
+    ] == 6.164469743688679
     instrumentation = idle["response_evidence"][
         "public_measurement_instrumentation"
     ]
@@ -189,6 +203,10 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert header["public_measurement_instrumentation"][
         "full_loop_holdout_eligible"
     ] is False
+    assert header["public_tank_validation_boundary"]["claim_supported"] is False
+    assert header["public_tank_validation_boundary"]["aggregate"][
+        "temperature_rmse_c"
+    ] == 4.624745495755946
     assert header["preslhy_validation_boundary"][
         "independent_holdout_claim_supported"
     ] is False

@@ -670,6 +670,86 @@ def _public_experimental_benchmarks() -> dict[str, Any] | None:
     }
 
 
+def _public_tank_validation_evidence() -> dict[str, Any] | None:
+    """Expose the frozen public NREL tank screen without exposing raw rows.
+
+    The NREL workbook is a useful measured tank boundary, but it has no
+    station-controller or receptacle trace.  Keeping its failed pressure
+    screen and geometry diagnostic in the evidence envelope prevents a
+    decision assistant from silently turning a partial-boundary result into a
+    full HRS validation claim.  This function reads only the aggregate result
+    artifact; the workbook remains local and ignored.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "data/public_validation/results/nrel_h2fills_hdvs_typeiv/validation.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    aggregate = record.get("aggregate") or {}
+    source = record.get("source") or {}
+    frozen_model = record.get("frozen_model") or {}
+    geometry = record.get("geometry_diagnostic") or {}
+    if (
+        record.get("evidence_role") != "independent_tank_thermal_external_validation"
+        or frozen_model.get("post_access_parameter_tuning") is not False
+        or not isinstance(record.get("claim_boundary"), str)
+        or aggregate.get("screening_pass_count") is None
+    ):
+        return None
+    return {
+        "artifact": "data/public_validation/results/nrel_h2fills_hdvs_typeiv/validation.json",
+        "evidence_role": record.get("evidence_role"),
+        "source": {
+            "publisher": source.get("publisher"),
+            "official_download_page": source.get("official_download_page"),
+            "dataset_summary": {
+                key: source.get("dataset_summary", {}).get(key)
+                for key in (
+                    "tank_count", "sample_count", "sample_period_median_s",
+                    "duration_s", "capacity_per_tank_kg", "mass_added_kg",
+                    "reported_mass_added_kg", "initial_pressure_mean_mpa",
+                    "final_pressure_mean_mpa", "peak_temperature_mean_c",
+                    "ambient_temperature_c",
+                )
+                if source.get("dataset_summary", {}).get(key) is not None
+            },
+        },
+        "frozen_model": {
+            "boundary_conditions": frozen_model.get("boundary_conditions"),
+            "post_access_parameter_tuning": False,
+            "ambient_temperature_c": frozen_model.get("ambient_temperature_c"),
+        },
+        "screening_limits": {
+            str(key): value
+            for key, value in (record.get("screening_limits") or {}).items()
+            if isinstance(value, (int, float, str, bool))
+        },
+        "aggregate": {
+            str(key): value
+            for key, value in aggregate.items()
+            if isinstance(value, (int, float, str, bool))
+            and not (isinstance(value, float) and not math.isfinite(value))
+        },
+        "geometry_diagnostic": {
+            "status": geometry.get("status"),
+            "method": geometry.get("method"),
+            "frozen_effective_volume_m3": geometry.get("frozen_effective_volume_m3"),
+            "implied_volume_m3_median_across_tanks": geometry.get(
+                "implied_volume_m3_median_across_tanks"
+            ),
+            "ratio_to_frozen_effective_volume_median": geometry.get(
+                "ratio_to_frozen_effective_volume_median"
+            ),
+            "claim_prohibited": True,
+        },
+        "claim_supported": False,
+        "claim_limit": record.get("claim_boundary"),
+    }
+
+
 def _public_measurement_instrumentation_evidence() -> dict[str, Any] | None:
     """Expose public sampling-workbook scope without inventing channel meaning.
 
@@ -1735,6 +1815,11 @@ def build_evidence_manifest(
         envelope_screen = _public_operating_envelope_screen(frame, public_benchmarks)
         if envelope_screen is not None:
             envelope["response_evidence"]["public_operating_envelope_screen"] = envelope_screen
+    public_tank_validation = _public_tank_validation_evidence()
+    if public_tank_validation is not None:
+        envelope["response_evidence"][
+            "public_tank_validation_boundary"
+        ] = public_tank_validation
     public_measurement = _public_measurement_instrumentation_evidence()
     if public_measurement is not None:
         envelope["response_evidence"][
@@ -1840,6 +1925,17 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "sources": rows,
                 "claim_limit": short(benchmarks.get("claim_limit")),
             }
+    public_tank_validation = evidence.get("public_tank_validation_boundary")
+    if isinstance(public_tank_validation, dict):
+        summary["public_tank_validation_boundary"] = {
+            key: public_tank_validation.get(key)
+            for key in (
+                "evidence_role", "source", "frozen_model", "screening_limits",
+                "aggregate", "geometry_diagnostic", "claim_supported",
+                "claim_limit",
+            )
+            if public_tank_validation.get(key) is not None
+        }
     public_measurement = evidence.get("public_measurement_instrumentation")
     if isinstance(public_measurement, dict):
         summary["public_measurement_instrumentation"] = {
@@ -2213,6 +2309,32 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "vehicle_or_receptacle_channels_identified"
             ) is True,
             "claim_limit": public_measurement.get("claim_limit"),
+        },
+        "public_tank_validation_boundary": {
+            "evidence_role": (
+                evidence.get("public_tank_validation_boundary") or {}
+            ).get("evidence_role"),
+            "source": (
+                evidence.get("public_tank_validation_boundary") or {}
+            ).get("source") or {},
+            "frozen_model": (
+                evidence.get("public_tank_validation_boundary") or {}
+            ).get("frozen_model") or {},
+            "screening_limits": (
+                evidence.get("public_tank_validation_boundary") or {}
+            ).get("screening_limits") or {},
+            "aggregate": (
+                evidence.get("public_tank_validation_boundary") or {}
+            ).get("aggregate") or {},
+            "geometry_diagnostic": (
+                evidence.get("public_tank_validation_boundary") or {}
+            ).get("geometry_diagnostic") or {},
+            "claim_supported": (
+                evidence.get("public_tank_validation_boundary") or {}
+            ).get("claim_supported"),
+            "claim_limit": (
+                evidence.get("public_tank_validation_boundary") or {}
+            ).get("claim_limit"),
         },
         "preslhy_validation_boundary": {
             "locked_model_module": preslhy.get("locked_model_module"),
