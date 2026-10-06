@@ -75,6 +75,12 @@ context, while the full-loop validation gate remains closed.
   pressure noise band. It does not alter vehicle geometry, temperature or flow
   parameters because those channel roles are not attested in the private
   aggregate.
+- When this profile is active, each operator frame also carries a
+  `measured_boundary_envelope` scope diagnostic for the simulated source
+  pressure. It reports whether that value is inside or outside the observed
+  range and the distance to the nearest observed limit. This is an evidence
+  boundary check only; it is not a safety limit, trip criterion, bank mapping,
+  or vehicle-side validation.
 - The private pressure replay supports a station-boundary plausibility check,
   not a station-to-vehicle validation.
 - Public aggregate plots and facility ratings support operating-range and

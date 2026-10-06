@@ -36,6 +36,10 @@ contains:
   42 no-wind-normalized factors) with a runtime scope limited to the virtual
   detector proxy. Active releases use the measured upper spatial envelope by
   default; the central median remains available for sensitivity runs;
+- an opt-in, de-identified station-boundary pressure scope diagnostic in each
+  operator frame and evidence envelope. It reports whether the simulated
+  source pressure is inside the observed range, without turning that range
+  into a safety limit, trip criterion, or full-loop validation claim;
 - public real-station operating context for back-to-back fueling, with its
   synchronized-raw-log and full-loop eligibility boundary;
 - consequence flow-boundary status, requested process flow, HyRAM modeled flow,

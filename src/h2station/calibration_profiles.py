@@ -39,7 +39,60 @@ class MeasuredBoundaryCalibrationProfile:
     temperature_boundary_role_attested: bool = False
     mass_flow_units_attested: bool = False
 
-    def runtime_metadata(self) -> dict[str, object]:
+    def pressure_envelope_comparison(
+        self, current_pressure_mpa: float | None,
+    ) -> dict[str, object]:
+        """Compare a simulated station-boundary pressure with the measured range.
+
+        This is a scope diagnostic only.  The private archive is a station
+        boundary, not a bank identity or vehicle-side validation set, so the
+        comparison must never be interpreted as a safety limit or controller
+        trip criterion.
+        """
+
+        pressure = (
+            float(current_pressure_mpa)
+            if current_pressure_mpa is not None
+            else float("nan")
+        )
+        lower = (
+            self.observed_pressure_min_pa / 1.0e6
+            if self.observed_pressure_min_pa is not None else None
+        )
+        upper = (
+            self.observed_pressure_max_pa / 1.0e6
+            if self.observed_pressure_max_pa is not None else None
+        )
+        result: dict[str, object] = {
+            "status": "unavailable",
+            "current_pressure_mpa": None,
+            "observed_range_mpa": {"min": lower, "max": upper},
+            "margin_to_nearest_limit_mpa": None,
+            "outside_by_mpa": None,
+            "claim_limit": (
+                "비식별 station-boundary envelope의 범위 점검이며, "
+                "안전 한계·차단 설정값·뱅크 식별 또는 차량 검증이 아님"
+            ),
+        }
+        if not math.isfinite(pressure) or lower is None or upper is None:
+            return result
+        result["current_pressure_mpa"] = pressure
+        if lower <= pressure <= upper:
+            result["status"] = "within_measured_envelope"
+            result["margin_to_nearest_limit_mpa"] = min(
+                pressure - lower, upper - pressure
+            )
+        elif pressure < lower:
+            result["status"] = "below_measured_envelope"
+            result["outside_by_mpa"] = lower - pressure
+        else:
+            result["status"] = "above_measured_envelope"
+            result["outside_by_mpa"] = pressure - upper
+        return result
+
+    def runtime_metadata(
+        self, *, current_boundary_pressure_mpa: float | None = None,
+    ) -> dict[str, object]:
         """Return bounded provenance metadata safe to expose to the runtime/UI."""
 
         pressure_range = {
@@ -50,7 +103,7 @@ class MeasuredBoundaryCalibrationProfile:
             "max_mpa": self.observed_pressure_max_pa / 1.0e6
             if self.observed_pressure_max_pa is not None else None,
         }
-        return {
+        result = {
             "id": self.profile_id,
             "evidence_artifact": self.evidence_artifact,
             "sampled_rows": self.sampled_rows,
@@ -71,6 +124,11 @@ class MeasuredBoundaryCalibrationProfile:
             },
             "claim_boundary": self.claim_boundary,
         }
+        if current_boundary_pressure_mpa is not None:
+            result["current_boundary_pressure_comparison"] = (
+                self.pressure_envelope_comparison(current_boundary_pressure_mpa)
+            )
+        return result
 
 
 _ROOT = Path(__file__).resolve().parents[2]

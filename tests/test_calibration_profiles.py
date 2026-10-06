@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 
+import pytest
+
 from h2station.calibration_profiles import load_measured_boundary_calibration
 
 
@@ -123,3 +125,17 @@ def test_default_profile_prefers_deidentified_operational_envelope():
         "temperature_boundary_role_attested": False,
         "mass_flow_units_attested": False,
     }
+
+
+def test_pressure_envelope_comparison_is_scope_diagnostic_only():
+    profile = load_measured_boundary_calibration()
+    assert profile is not None
+    inside = profile.pressure_envelope_comparison(60.0)
+    assert inside["status"] == "within_measured_envelope"
+    assert inside["margin_to_nearest_limit_mpa"] == pytest.approx(3.36)
+    above = profile.pressure_envelope_comparison(65.0)
+    assert above["status"] == "above_measured_envelope"
+    assert above["outside_by_mpa"] == pytest.approx(1.64)
+    unavailable = profile.pressure_envelope_comparison(None)
+    assert unavailable["status"] == "unavailable"
+    assert "안전 한계" in unavailable["claim_limit"]

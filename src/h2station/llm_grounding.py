@@ -32,11 +32,19 @@ def _runtime_calibration_profile(frame: dict[str, Any]) -> dict[str, Any]:
     settings = operations.get("settings") or {}
     requested = settings.get("measured_boundary_calibration") is True
     profile = load_measured_boundary_calibration() if requested else None
+    current_boundary_pressure = operations.get("trailer_pressure_mpa")
     if profile is not None:
         return {
             "status": "active",
             "requested": True,
-            **profile.runtime_metadata(),
+            **profile.runtime_metadata(
+                current_boundary_pressure_mpa=(
+                    float(current_boundary_pressure)
+                    if isinstance(current_boundary_pressure, (int, float))
+                    and math.isfinite(float(current_boundary_pressure))
+                    else None
+                )
+            ),
             "profile_id": profile.profile_id,
             "claim_limit": profile.claim_boundary,
         }

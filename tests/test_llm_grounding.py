@@ -447,6 +447,7 @@ def test_manifest_records_opt_in_measured_boundary_profile():
         "time_s": 12.5,
         "process_operations": {
             "settings": {"measured_boundary_calibration": True},
+            "trailer_pressure_mpa": 60.0,
         },
     }
     manifest = build_evidence_manifest(frame, {}, [], False, question="현재 상태")
@@ -455,6 +456,9 @@ def test_manifest_records_opt_in_measured_boundary_profile():
     assert profile["requested"] is True
     assert profile["profile_id"] == "owner_measured_operational_envelope_v1"
     assert profile["recharge_restart_margin_pa"] == 540000.0
+    assert profile["current_boundary_pressure_comparison"]["status"] == (
+        "within_measured_envelope"
+    )
     assert prompt_evidence_summary(manifest)["runtime_calibration"]["status"] == "active"
     assert prompt_evidence_header(manifest)["confidential_station_boundary_calibration"][
         "channel_attestation"

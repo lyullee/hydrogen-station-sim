@@ -581,6 +581,16 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                         "vehicle_mass_kg": sample.vehicle_mass_kg,
                         "vehicle_2_mass_kg": sample.vehicle_2_mass_kg,
                     }
+                if measured_profile is not None:
+                    boundary_pressure = (
+                        (frame.get("process_operations") or {})
+                        .get("trailer_pressure_mpa")
+                    )
+                    frame["measured_boundary_envelope"] = (
+                        measured_profile.pressure_envelope_comparison(
+                            boundary_pressure
+                        )
+                    )
                 previous_time = _jobs[job_id].get("last_sample_time_s")
                 previous_leak = _jobs[job_id].get("last_leak_kg_s", 0.0)
                 released = float(_jobs[job_id].get("released_mass_kg", 0.0))
