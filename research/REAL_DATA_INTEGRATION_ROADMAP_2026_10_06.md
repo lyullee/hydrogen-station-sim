@@ -23,6 +23,13 @@
 
 공개 HITRF 기준선은 `research/nlr_hitrf_public_operational_reference_2026_10_06.json`에 정적 정격과 명시적 주장 경계를 기록하고, LLM 근거 envelope에만 연결한다. 이 기준선으로 기본 시뮬레이션 파라미터를 자동 변경하지 않는다. 공개 페이지에는 자동 로깅이 설명되어 있지만 동기화된 원시 logger archive가 제공되지 않으므로 full-loop 검증 gate의 증거로 세지 않는다.
 
+추가로 비공개 설비 logger에서 식별정보를 제거한 압력·온도·상태 envelope를
+`research/confidential_station_equipment_operational_envelope_2026_10_06.json`으로
+LLM 근거에 연결했다. 1,426개 샘플의 station-side 압력 범위와 상태 전이 횟수는
+운전 맥락을 설명하는 데 사용하지만, 온도 역할과 상태 의미는 custodian attestation
+전까지 보정값으로 승격하지 않는다. 차량측 채널이 없으므로 full-loop 또는 안전거리
+검증을 주장하지 않으며, 기본 모델 파라미터도 변경하지 않는다.
+
 차량 용기 형상은 `capacity_eos` 선택지로 선언 용량과 공칭 압력에서 표 형상방정식
 밀도로 체적을 계산할 수 있게 했다. 2026-10-06에 이미 열어본 공개 개발 케이스
 8건을 재생한 결과는 0/8 screening pass로, 기존 `capacity_scaled`의 1/8보다

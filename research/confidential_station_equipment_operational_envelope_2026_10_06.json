@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_station_equipment_operational_envelope",
+  "recorded_at": "2026-10-06",
+  "evidence_role": "privacy_bounded_station_equipment_diagnostic",
+  "source_scope": "confidential owner-controlled station equipment logger aggregate",
+  "source_aggregate_sha256": "21e02d9ef0dfd7950bae3285d54713540bc54d44465653c79c1730f25ca7fa0c",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "exact_source_dates_published": false,
+  "manufacturer_or_model_published": false,
+  "tag_names_published": false,
+  "sampling": {
+    "files_read": 1,
+    "sampled_rows": 1426,
+    "duration_s": 169575.0,
+    "median_sample_period_s": 119.0,
+    "maximum_gap_s": 119.0
+  },
+  "observed_envelope": {
+    "storage_pressure_mpa": {
+      "min": 56.295,
+      "median": 60.8825,
+      "max": 63.26
+    },
+    "station_temperature_degC": {
+      "min": -41.0,
+      "median": 0.2,
+      "max": 39.4
+    },
+    "state_transition_count": 44
+  },
+  "channel_roles": [
+    "station_pressure",
+    "station_temperature",
+    "discrete_state"
+  ],
+  "channel_attestation": {
+    "pressure_boundary_semantics_attested": true,
+    "temperature_boundary_role_attested": false,
+    "state_semantics_attested": false
+  },
+  "eligibility": {
+    "station_equipment_envelope_supported": true,
+    "station_boundary_temperature_calibration_supported": false,
+    "vehicle_side_channels_present": false,
+    "full_station_vehicle_validation": false,
+    "default_model_parameters_changed": false
+  },
+  "quality_warnings": [],
+  "claim_boundary": "De-identified station-equipment pressure/temperature/state envelope only. The temperature role and state semantics require custodian attestation; this does not establish vehicle-side accuracy, full-loop validation, field safety distance, failure frequency or a universal operating limit."
+}
+

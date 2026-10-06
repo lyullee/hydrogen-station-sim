@@ -116,6 +116,11 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert early["proust_release_model_validation_boundary"][
         "parameter_fitting"
     ] is False
+    equipment_summary = early[
+        "confidential_station_equipment_operational_envelope"
+    ]
+    assert equipment_summary["station_equipment_envelope_supported"] is True
+    assert equipment_summary["vehicle_side_channels_present"] is False
     assert early["confidential_measured_boundary_replay"]["temporal_holdout"][
         "time_ordered_holdout_supported"
     ] is True
@@ -203,6 +208,20 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "mass_flow_units_attested"
     ] is False
     assert station_calibration["full_station_vehicle_validation"] is False
+    station_equipment = idle["response_evidence"][
+        "confidential_station_equipment_operational_envelope"
+    ]
+    assert station_equipment["sampled_rows"] == 1426
+    assert station_equipment["storage_pressure_mpa"]["min"] == 56.295
+    assert station_equipment["station_temperature_degC"]["max"] == 39.4
+    assert station_equipment["state_transition_count"] == 44
+    assert station_equipment["channel_attestation"][
+        "temperature_boundary_role_attested"
+    ] is False
+    assert station_equipment["station_equipment_envelope_supported"] is True
+    assert station_equipment["station_boundary_temperature_calibration_supported"] is False
+    assert station_equipment["full_station_vehicle_validation"] is False
+    assert station_equipment["default_model_parameters_changed"] is False
     recheck = idle["response_evidence"][
         "confidential_pressure_recheck_decision"
     ]
@@ -230,6 +249,11 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert schema_header["station_side_schema_intake_supported"] is True
     assert schema_header["privacy_bounded_channel_families"]["flow_rate"] > 0
     assert schema_header["vehicle_side_channel_family_count"] == 0
+    equipment_header = prompt_evidence_header(idle)[
+        "confidential_station_equipment_operational_envelope"
+    ]
+    assert equipment_header["state_transition_count"] == 44
+    assert equipment_header["station_boundary_temperature_calibration_supported"] is False
     confidential = idle["response_evidence"]["confidential_measured_boundary_replay"]
     assert confidential["trajectory_completed"] is True
     assert confidential["station_boundary_calibration_supported"] is True
