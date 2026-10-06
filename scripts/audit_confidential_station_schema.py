@@ -37,7 +37,10 @@ CHANNEL_FAMILY_PATTERNS = {
     "valve_state": ("status.xv_", "xv_", "valve"),
     "alarm_state": ("alarm",),
     "lifecycle_counter": ("lifecycle", "_cnt", "count"),
-    "vehicle_side": ("vehicle", "fcv", "nozzle", "receptacle", "dispenser"),
+    "vehicle_side": (
+        "vehicle", "fcv", "nozzle", "receptacle", "dispenser", "car",
+        "차량", "수소차", "노즐", "리셉터클", "디스펜서", "충전기",
+    ),
 }
 SIZE_BUCKETS = ("<1MiB", "1-100MiB", "100-500MiB", ">=500MiB")
 TIMESTAMP_FORMATS = (
@@ -98,10 +101,20 @@ def _files(root: Path) -> list[tuple[str, Path]]:
         path for path in root.rglob("*")
         if path.is_file() and path.suffix.lower() == ".csv"
     )
-    groups = sorted({path.parent.relative_to(root).parts[0] for path in files if path.parent != root})
+    group_names = []
+    for path in files:
+        parts = path.parent.relative_to(root).parts
+        group_names.append(parts[0] if parts else "__root__")
+    groups = sorted(set(group_names))
     group_ids = {name: f"source_bundle_{index + 1}" for index, name in enumerate(groups)}
     return [
-        (group_ids.get(path.parent.relative_to(root).parts[0], "source_bundle_1"), path)
+        (
+            group_ids[
+                (path.parent.relative_to(root).parts[0]
+                 if path.parent != root else "__root__")
+            ],
+            path,
+        )
         for path in files
     ]
 

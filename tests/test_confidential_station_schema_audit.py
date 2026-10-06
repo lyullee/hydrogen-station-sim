@@ -1,6 +1,8 @@
 import json
+import csv
 from pathlib import Path
 
+from scripts.audit_confidential_station_schema import audit
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / "research/confidential_station_schema_audit_2026_10.json"
@@ -27,3 +29,13 @@ def test_confidential_schema_audit_is_deidentified_and_claim_bounded():
     assert "화성" not in serialized
     assert "LocalTimeCol" not in serialized
     assert "2025 04" not in serialized
+
+
+def test_schema_family_screen_catches_non_english_vehicle_aliases(tmp_path):
+    sample = tmp_path / "sample.csv"
+    with sample.open("w", encoding="utf-8-sig", newline="") as handle:
+        csv.writer(handle).writerow(["시간", "차량탱크압력", "노즐온도", "밸브상태"])
+    result = audit(tmp_path)
+    families = result["signal_inventory"]["privacy_bounded_channel_families"]
+    assert families["vehicle_side"] == 2
+    assert result["eligibility"]["vehicle_side_channel_family_count"] == 2
