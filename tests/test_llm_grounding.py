@@ -49,6 +49,9 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert local_accident["case_count"] == 322
     assert local_accident["mapped_case_count"] == 322
     assert local_accident["required_stage_count"] == 5
+    assert local_accident["scenario_family_candidate_counts"]["gas_release"] == 305
+    assert local_accident["scenario_family_candidate_counts"]["hose_connection"] == 261
+    assert local_accident["multi_family_case_count"] == 318
     assert local_accident["contract_pass"] is True
     assert local_accident["raw_rows_persisted"] is False
     assert local_accident["local_contract_run"][
@@ -130,6 +133,9 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert early["confidential_local_accident_response_coverage"][
         "case_with_missing_stage_count"
     ] == 0
+    assert early["confidential_local_accident_response_coverage"][
+        "scenario_family_candidate_counts"
+    ]["fueling_fault"] == 162
     assert early["proust_release_model_validation_boundary"][
         "baseline_joint_primary_pass_count"
     ] == 0
@@ -172,6 +178,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "10.5281/zenodo.17913628"
     )
     assert header["public_accident_evidence"]["accidental_release_full_loop"] is False
+    assert header["confidential_local_accident_response_coverage"][
+        "scenario_family_candidate_counts"
+    ]["gas_release"] == 305
+    assert header["confidential_local_accident_response_coverage"][
+        "multi_family_case_count"
+    ] == 318
     assert header["public_accident_evidence"]["action_category_counts"][
         "shutdown_isolation_depressurization"
     ] == 22

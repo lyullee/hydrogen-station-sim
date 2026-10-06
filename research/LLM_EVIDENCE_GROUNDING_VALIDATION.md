@@ -125,4 +125,12 @@ review, holdout response collection and expert rating gates remain required.
 
 The [HIAD accident-response coverage evaluation](HIAD_ACCIDENT_RESPONSE_COVERAGE_EVALUATION.md) additionally checks the 34 public metadata cases one by one: 33 cases with recorded action categories route to staged plans, all 8 categories have zero uncovered case-category pairs, and one case with no recorded category is explicitly marked as not assessed rather than treated as no response. This is structural traceability only; raw action prose is excluded and no effectiveness or safety claim is made.
 
+The restricted local accident casebook now contributes only a de-identified
+candidate-family count: 322/322 cases have five non-empty response stages.
+Candidate mappings are `gas_release` 305, `hose_connection` 261,
+`fueling_fault` 162, `supply_connection` 137, `compressor_thermal` 108,
+`relief_discharge` 47, `hydrogen_fire` 27 and `overpressure` 6; 318 cases map
+to more than one family. These are coverage counts, not incident frequencies,
+and no narrative, site, operator, date or effectiveness claim is exposed.
+
 The [KHK public-report inventory](khk_hydrogen_station_public_reports_inventory_2026_10_04.json) adds official accident and precaution report links for qualitative scenario and response grounding. The [scenario-precedent map](khk_scenario_precedent_map_2026_10_04.json) links the inventory's equipment classes to conservative response families and exposes only counts plus representative citation links to the assistant. It is deliberately excluded from numerical model validation, accident-frequency estimation and the station-to-vehicle full-loop holdout because the public reports do not provide synchronized process traces or complete boundary conditions.

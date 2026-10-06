@@ -225,6 +225,12 @@ def _confidential_local_accident_response_coverage() -> dict[str, Any] | None:
         "unknown_plan_reference_count": aggregate.get("unknown_plan_reference_count"),
         "case_with_missing_stage_count": aggregate.get("case_with_missing_stage_count"),
         "required_stage_count": aggregate.get("required_stage_count"),
+        "scenario_family_candidate_counts": {
+            str(key): int(value)
+            for key, value in (aggregate.get("scenario_family_candidate_counts") or {}).items()
+            if isinstance(value, int) and value >= 0
+        },
+        "multi_family_case_count": aggregate.get("multi_family_case_count"),
         "contract_pass": True,
         "local_contract_run": {
             "casebook_generated_with_descriptions": local_contract_run.get(
@@ -1611,7 +1617,8 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             for key in (
                 "evidence_role", "case_count", "mapped_case_count",
                 "unmapped_case_count", "case_with_missing_stage_count",
-                "required_stage_count", "contract_pass", "claim_limit",
+                "required_stage_count", "scenario_family_candidate_counts",
+                "multi_family_case_count", "contract_pass", "claim_limit",
             )
             if local_accident_coverage.get(key) is not None
         }
@@ -1931,6 +1938,12 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "mapped_case_count": local_accident_coverage.get("mapped_case_count"),
             "required_stage_count": local_accident_coverage.get(
                 "required_stage_count"
+            ),
+            "scenario_family_candidate_counts": local_accident_coverage.get(
+                "scenario_family_candidate_counts"
+            ) or {},
+            "multi_family_case_count": local_accident_coverage.get(
+                "multi_family_case_count"
             ),
             "contract_pass": local_accident_coverage.get("contract_pass") is True,
         },

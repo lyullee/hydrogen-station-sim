@@ -38,7 +38,8 @@
     "public CC BY accidental-release/ignition archive metadata is carried into the hashed envelope without raw traces, ignition-probability claims or full-loop validation claims",
     "public CC BY sampling-workbook instrumentation context is carried into the evidence envelope without inferring vehicle or receptacle channels",
     "PRESLHY development and independent holdout outcomes are separated, with failed claim conditions and unchanged runtime parameters preserved",
-    "de-identified station-equipment pressure, temperature and state envelope is carried with explicit attestation and full-loop claim limits"
+    "de-identified station-equipment pressure, temperature and state envelope is carried with explicit attestation and full-loop claim limits",
+    "restricted actual-accident metadata is summarized by response-family candidate counts without publishing narratives or treating counts as frequencies"
   ],
   "not_established": [
     "physics validity of the consequence model",
@@ -73,6 +74,25 @@
       "safety_claimed": false,
       "holdout_use": false,
       "interpretation": "public accident action-category to staged-plan interface coverage only; cases without a recorded category are not treated as having no response"
+    },
+    "confidential_local_accident_response_coverage": {
+      "evidence": "research/confidential_local_accident_response_coverage_2026_10_06.json",
+      "case_count": 322,
+      "mapped_case_count": 322,
+      "required_stage_count": 5,
+      "scenario_family_candidate_counts": {
+        "compressor_thermal": 108,
+        "fueling_fault": 162,
+        "gas_release": 305,
+        "hose_connection": 261,
+        "hydrogen_fire": 27,
+        "overpressure": 6,
+        "relief_discharge": 47,
+        "supply_connection": 137
+      },
+      "multi_family_case_count": 318,
+      "contract_pass": true,
+      "interpretation": "metadata candidate-family coverage only; counts are not incident frequencies because cases may map to multiple families"
     }
   },
   "response_stage_contract": {

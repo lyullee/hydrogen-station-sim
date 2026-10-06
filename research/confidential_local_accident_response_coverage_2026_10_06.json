@@ -22,7 +22,18 @@
     "case_with_missing_stage_count": 0,
     "required_stage_count": 5,
     "stage_contract_pass": true,
-    "contract_pass": true
+    "contract_pass": true,
+    "scenario_family_candidate_counts": {
+      "compressor_thermal": 108,
+      "fueling_fault": 162,
+      "gas_release": 305,
+      "hose_connection": 261,
+      "hydrogen_fire": 27,
+      "overpressure": 6,
+      "relief_discharge": 47,
+      "supply_connection": 137
+    },
+    "multi_family_case_count": 318
   },
-  "claim_boundary": "This de-identified aggregate proves only that local actual-accident metadata had a candidate response family with five non-empty simulator stages. It does not publish incident narratives, identify an operator or site, estimate incident probability, validate physics or consequence distances, or demonstrate response effectiveness or safety."
+  "claim_boundary": "This de-identified aggregate proves only that local actual-accident metadata had a candidate response family with five non-empty simulator stages. It does not publish incident narratives, identify an operator or site, estimate incident probability, validate physics or consequence distances, or demonstrate response effectiveness or safety. Candidate-family counts are not incident frequencies because one case may map to multiple response families."
 }
