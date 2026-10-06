@@ -967,12 +967,23 @@ def _confidential_station_schema_evidence() -> dict[str, Any] | None:
     inventory = record.get("signal_inventory") or {}
     units = record.get("unit_attestation") or {}
     eligibility = record.get("eligibility") or {}
+    family_counts = dict(inventory.get("privacy_bounded_channel_families") or {})
+    station_side_families = list(
+        eligibility.get("station_side_component_families_present") or []
+    )
     return {
         "artifact": "research/confidential_station_schema_audit_2026_10.json",
         "evidence_role": "confidential de-identified station schema intake",
         "source_bundle_count": record.get("source_bundle_count"),
         "file_count": record.get("file_count"),
         "tagged_channel_counts": dict(inventory.get("tagged_channel_counts") or {}),
+        # Keep the private intake useful to the assistant without exposing raw
+        # tag names, filenames, dates, or site/manufacturer identifiers.
+        "privacy_bounded_channel_families": family_counts,
+        "vehicle_side_channel_family_count": eligibility.get(
+            "vehicle_side_channel_family_count"
+        ),
+        "station_side_component_families_present": station_side_families,
         "unit_attestation": {
             key: units.get(key)
             for key in (
@@ -1393,6 +1404,9 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             for key in (
                 "evidence_role", "source_bundle_count", "file_count",
                 "tagged_channel_counts", "unit_attestation",
+                "privacy_bounded_channel_families",
+                "vehicle_side_channel_family_count",
+                "station_side_component_families_present",
                 "station_side_schema_intake_supported",
                 "full_loop_holdout_eligible", "claim_limit",
             )
@@ -1601,6 +1615,15 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "source_bundle_count": station_schema.get("source_bundle_count"),
             "file_count": station_schema.get("file_count"),
             "tagged_channel_counts": station_schema.get("tagged_channel_counts"),
+            "privacy_bounded_channel_families": station_schema.get(
+                "privacy_bounded_channel_families"
+            ),
+            "vehicle_side_channel_family_count": station_schema.get(
+                "vehicle_side_channel_family_count"
+            ),
+            "station_side_component_families_present": station_schema.get(
+                "station_side_component_families_present"
+            ),
             "pressure_units_attested": (
                 station_schema.get("unit_attestation", {}).get("pressure_units_attested")
                 is True

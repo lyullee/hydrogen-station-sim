@@ -24,6 +24,21 @@ ROLE_PATTERNS = {
     "discrete_state": ("status", "alarm", "xv_", "valve", "run", "load"),
     "lifecycle": ("lifecycle", "cycle", "_cnt", "count"),
 }
+CHANNEL_FAMILY_PATTERNS = {
+    # These are intentionally coarse, privacy-bounded families.  They are
+    # used to decide which engineering roles need custodian attestation; the
+    # individual tag names never enter the committed artifact.
+    "compressor_pressure": ("comp.ai.pt_", "comp.ai.pi_"),
+    "compressor_temperature": ("comp.ai.tt_", "comp.ai.temp"),
+    "station_pressure": ("sta.pt_", "pi_", "pt_"),
+    "station_temperature": ("sta.tt_", "ti_", "tt_", "temp"),
+    "flow_rate": ("_rate", "mfm_f", "flow"),
+    "flow_totalizer": ("_acc", "total", "mfm"),
+    "valve_state": ("status.xv_", "xv_", "valve"),
+    "alarm_state": ("alarm",),
+    "lifecycle_counter": ("lifecycle", "_cnt", "count"),
+    "vehicle_side": ("vehicle", "fcv", "nozzle", "receptacle", "dispenser"),
+}
 SIZE_BUCKETS = ("<1MiB", "1-100MiB", "100-500MiB", ">=500MiB")
 TIMESTAMP_FORMATS = (
     "%Y-%m-%d %H:%M:%S",
@@ -96,6 +111,8 @@ def audit(root: Path) -> dict[str, object]:
     bundles: dict[str, dict[str, object]] = {}
     channel_counts = {role: 0 for role in ROLE_PATTERNS}
     files_with_roles = {role: 0 for role in ROLE_PATTERNS}
+    family_counts = {family: 0 for family in CHANNEL_FAMILY_PATTERNS}
+    family_file_counts = {family: 0 for family in CHANNEL_FAMILY_PATTERNS}
     timestamp_detected = 0
     timestamp_parseable = 0
     size_buckets = {bucket: 0 for bucket in SIZE_BUCKETS}
@@ -115,6 +132,14 @@ def audit(root: Path) -> dict[str, object]:
                 channel_counts[role] += count
                 files_with_roles[role] += 1
                 roles_for_file.add(role)
+        for family, patterns in CHANNEL_FAMILY_PATTERNS.items():
+            count = sum(
+                1 for header in normalized
+                if any(pattern in header for pattern in patterns)
+            )
+            if count:
+                family_counts[family] += count
+                family_file_counts[family] += 1
         timestamp_index = next(
             (index for index, header in enumerate(normalized)
              if any(token in header for token in ("time", "date", "local"))),
@@ -152,6 +177,8 @@ def audit(root: Path) -> dict[str, object]:
         "signal_inventory": {
             "tagged_channel_counts": channel_counts,
             "files_with_tagged_roles": files_with_roles,
+            "privacy_bounded_channel_families": family_counts,
+            "files_with_channel_families": family_file_counts,
         },
         "timestamp_screen": {
             "files_with_detectable_timestamp": timestamp_detected,
@@ -173,6 +200,15 @@ def audit(root: Path) -> dict[str, object]:
             "temperature_or_flow_parameter_fit_deferred": True,
             "full_station_vehicle_validation": False,
             "full_loop_holdout_eligible": False,
+            "vehicle_side_channel_family_count": family_counts["vehicle_side"],
+            "station_side_component_families_present": [
+                family for family in (
+                    "compressor_pressure", "compressor_temperature",
+                    "station_pressure", "station_temperature", "flow_rate",
+                    "flow_totalizer", "valve_state", "alarm_state",
+                    "lifecycle_counter",
+                ) if family_counts[family] > 0
+            ],
         },
         "claim_boundary": "Schema and channel-presence intake only. This audit does not attest units, calibration, physical correctness, station safety, vehicle-side accuracy or full-loop validation.",
     }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T23:50:54.943957+00:00",
+  "generated_at": "2026-10-06T00:18:13.659071+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -437,6 +437,30 @@
           "state_semantics_attested": false,
           "action": "Require custodian unit and tag-semantics confirmation before fitting untrusted channels."
         },
+        "privacy_bounded_channel_families": {
+          "compressor_pressure": 80,
+          "compressor_temperature": 56,
+          "station_pressure": 136,
+          "station_temperature": 129,
+          "flow_rate": 32,
+          "flow_totalizer": 40,
+          "valve_state": 112,
+          "alarm_state": 16,
+          "lifecycle_counter": 34,
+          "vehicle_side": 0
+        },
+        "vehicle_side_channel_family_count": 0,
+        "station_side_component_families_present": [
+          "compressor_pressure",
+          "compressor_temperature",
+          "station_pressure",
+          "station_temperature",
+          "flow_rate",
+          "flow_totalizer",
+          "valve_state",
+          "alarm_state",
+          "lifecycle_counter"
+        ],
         "full_loop_holdout_eligible": false
       }
     },

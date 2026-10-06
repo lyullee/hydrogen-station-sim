@@ -18,6 +18,11 @@ def test_confidential_schema_audit_is_deidentified_and_claim_bounded():
     assert result["eligibility"]["station_side_schema_intake_supported"] is True
     assert result["eligibility"]["full_station_vehicle_validation"] is False
     assert result["eligibility"]["full_loop_holdout_eligible"] is False
+    families = result["signal_inventory"]["privacy_bounded_channel_families"]
+    assert families["compressor_pressure"] > 0
+    assert families["compressor_temperature"] > 0
+    assert families["flow_rate"] > 0
+    assert result["eligibility"]["vehicle_side_channel_family_count"] == 0
     assert "코하이젠" not in serialized
     assert "화성" not in serialized
     assert "LocalTimeCol" not in serialized

@@ -198,10 +198,14 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     schema = idle["response_evidence"]["confidential_station_schema_intake"]
     assert schema["source_bundle_count"] == 2
     assert schema["tagged_channel_counts"]["pressure"] > 0
+    assert schema["privacy_bounded_channel_families"]["compressor_pressure"] > 0
+    assert schema["vehicle_side_channel_family_count"] == 0
     assert schema["unit_attestation"]["pressure_units_attested"] is False
     assert schema["full_loop_holdout_eligible"] is False
     schema_header = prompt_evidence_header(idle)["confidential_station_schema_intake"]
     assert schema_header["station_side_schema_intake_supported"] is True
+    assert schema_header["privacy_bounded_channel_families"]["flow_rate"] > 0
+    assert schema_header["vehicle_side_channel_family_count"] == 0
     confidential = idle["response_evidence"]["confidential_measured_boundary_replay"]
     assert confidential["trajectory_completed"] is True
     assert confidential["station_boundary_calibration_supported"] is True

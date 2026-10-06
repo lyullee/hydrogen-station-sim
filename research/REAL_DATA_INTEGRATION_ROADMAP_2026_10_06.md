@@ -16,6 +16,11 @@
 
 비공개 로그는 원시 행·태그명·위치·운영자·설비 식별정보를 저장소에 넣지 않는다. 현재 온도와 유량은 경계 역할·단위·교정 증명이 없으므로 진단값으로만 남긴다.
 
+최근 privacy-bounded schema 재검사에서는 압축기 압력·온도, station 압력·온도,
+유량/적산, 밸브·알람 상태와 lifecycle counter 계열이 확인됐지만 차량측
+채널 family는 0건이었다. 따라서 이 자료로 가능한 보정은 station-side 경계와
+설비 상태까지이며, 차량 충전 정확도나 full-loop 검증으로 확대하지 않는다.
+
 공개 HITRF 기준선은 `research/nlr_hitrf_public_operational_reference_2026_10_06.json`에 정적 정격과 명시적 주장 경계를 기록하고, LLM 근거 envelope에만 연결한다. 이 기준선으로 기본 시뮬레이션 파라미터를 자동 변경하지 않는다. 공개 페이지에는 자동 로깅이 설명되어 있지만 동기화된 원시 logger archive가 제공되지 않으므로 full-loop 검증 gate의 증거로 세지 않는다.
 
 차량 용기 형상은 `capacity_eos` 선택지로 선언 용량과 공칭 압력에서 표 형상방정식

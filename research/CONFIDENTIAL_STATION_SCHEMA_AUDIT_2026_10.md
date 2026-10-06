@@ -16,3 +16,11 @@ The full-loop gate remains open because the archive does not provide an
 approved synchronized vehicle pressure/SOC/nozzle-temperature/protocol trace.
 The public artifact therefore contains no operational values from the private
 rows and does not identify the operator, site, dates or equipment.
+
+The latest privacy-bounded family screen found compressor pressure and
+temperature, station pressure and temperature, flow-rate/totalizer, valve and
+alarm-state, and lifecycle-counter families. It found **zero vehicle-side
+channel families**. This narrows the safe use of the archive to station-side
+boundary and equipment-state calibration; it must not be used as a vehicle-fill
+accuracy claim until a custodian supplies the missing vehicle/receptacle
+mapping and unit/semantics attestation.

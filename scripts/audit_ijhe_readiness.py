@@ -410,6 +410,8 @@ def audit(root: Path) -> dict[str, object]:
         and schema_eligibility.get("station_side_schema_intake_supported") is True
         and schema_eligibility.get("full_station_vehicle_validation") is False
         and schema_eligibility.get("full_loop_holdout_eligible") is False
+        and schema_eligibility.get("vehicle_side_channel_family_count") == 0
+        and bool(schema_eligibility.get("station_side_component_families_present"))
         and schema_units.get("machine_readable_unit_dictionary_found") is False
         and schema_units.get("pressure_units_attested") is False
         and schema_units.get("temperature_units_attested") is False
@@ -426,6 +428,15 @@ def audit(root: Path) -> dict[str, object]:
             "file_count": (schema_audit or {}).get("file_count"),
             "tagged_channel_counts": schema_inventory.get("tagged_channel_counts"),
             "unit_attestation": schema_units,
+            "privacy_bounded_channel_families": schema_inventory.get(
+                "privacy_bounded_channel_families"
+            ),
+            "vehicle_side_channel_family_count": schema_eligibility.get(
+                "vehicle_side_channel_family_count"
+            ),
+            "station_side_component_families_present": schema_eligibility.get(
+                "station_side_component_families_present"
+            ),
             "full_loop_holdout_eligible": schema_eligibility.get("full_loop_holdout_eligible"),
         } if schema_audit else "missing; confidential schema intake has not completed",
     ))

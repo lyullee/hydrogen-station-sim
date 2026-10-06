@@ -61,6 +61,30 @@
       "flow": 20,
       "discrete_state": 8,
       "lifecycle": 21
+    },
+    "privacy_bounded_channel_families": {
+      "compressor_pressure": 80,
+      "compressor_temperature": 56,
+      "station_pressure": 136,
+      "station_temperature": 129,
+      "flow_rate": 32,
+      "flow_totalizer": 40,
+      "valve_state": 112,
+      "alarm_state": 16,
+      "lifecycle_counter": 34,
+      "vehicle_side": 0
+    },
+    "files_with_channel_families": {
+      "compressor_pressure": 8,
+      "compressor_temperature": 8,
+      "station_pressure": 20,
+      "station_temperature": 21,
+      "flow_rate": 20,
+      "flow_totalizer": 20,
+      "valve_state": 8,
+      "alarm_state": 8,
+      "lifecycle_counter": 21,
+      "vehicle_side": 0
     }
   },
   "timestamp_screen": {
@@ -82,7 +106,19 @@
     "equipment_state_model_candidate": true,
     "temperature_or_flow_parameter_fit_deferred": true,
     "full_station_vehicle_validation": false,
-    "full_loop_holdout_eligible": false
+    "full_loop_holdout_eligible": false,
+    "vehicle_side_channel_family_count": 0,
+    "station_side_component_families_present": [
+      "compressor_pressure",
+      "compressor_temperature",
+      "station_pressure",
+      "station_temperature",
+      "flow_rate",
+      "flow_totalizer",
+      "valve_state",
+      "alarm_state",
+      "lifecycle_counter"
+    ]
   },
   "claim_boundary": "Schema and channel-presence intake only. This audit does not attest units, calibration, physical correctness, station safety, vehicle-side accuracy or full-loop validation."
 }
