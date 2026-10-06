@@ -953,6 +953,55 @@ def _public_hitrf_operational_reference() -> dict[str, Any] | None:
     }
 
 
+def _public_real_station_context() -> dict[str, Any] | None:
+    """Load a public real-station report without treating it as raw holdout data."""
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/calstate_la_back_to_back_article_data_boundary_2026_10_05.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    observed = record.get("observed_evidence") or {}
+    decision = record.get("eligibility_decision") or {}
+    if (
+        not isinstance(source, dict)
+        or not source.get("doi")
+        or not str(source.get("url") or "").startswith(("https://", "http://"))
+        or observed.get("field_integration") is not True
+        or observed.get("public_raw_synchronized_rows") is not False
+        or decision.get("full_loop_external_holdout_eligible") is not False
+    ):
+        return None
+    return {
+        "artifact": "research/calstate_la_back_to_back_article_data_boundary_2026_10_05.json",
+        "evidence_role": "public real-station operational context",
+        "source": {
+            "title": str(source.get("title") or ""),
+            "doi": str(source.get("doi") or ""),
+            "url": str(source.get("url") or ""),
+            "publisher": str(source.get("publisher") or ""),
+            "article_open_access": source.get("article_open_access") is True,
+            "public_raw_synchronized_rows": False,
+        },
+        "reported_campaign": str(observed.get("reported_campaign") or ""),
+        "reported_scenarios": [
+            str(value) for value in observed.get("reported_scenarios") or []
+        ],
+        "reported_channels_or_outputs": [
+            str(value) for value in observed.get("reported_channels_or_outputs") or []
+        ],
+        "full_loop_external_holdout_eligible": False,
+        "allowed_use": [str(value) for value in decision.get("allowed_use") or []],
+        "prohibited_use": [
+            str(value) for value in decision.get("prohibited_use") or []
+        ],
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
     """Return a tiny, inspectable index of public sources used for grounding.
 
@@ -998,6 +1047,15 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
         str(hitrf_source.get("title") or "Public HRS facility reference"),
         str(hitrf_source.get("url") or ""),
         "실설비 규모·압력 tier·압축/예냉 운전범위 참고",
+    )
+
+    station_context = evidence.get("public_real_station_context") or {}
+    station_source = station_context.get("source") or {}
+    add(
+        "PUBLIC_REAL_STATION_B2B_CONTEXT",
+        str(station_source.get("title") or "Real-station back-to-back fueling context"),
+        str(station_source.get("url") or ""),
+        "실충전소 back-to-back 운전·저장압력·냉각·차량 SOC 맥락",
     )
 
     khk = evidence.get("public_accident_report_inventory") or {}
@@ -1543,6 +1601,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_hitrf_operational_reference"
         ] = hitrf_reference
+    real_station_context = _public_real_station_context()
+    if real_station_context is not None:
+        envelope["response_evidence"][
+            "public_real_station_context"
+        ] = real_station_context
     lifecycle = _confidential_lifecycle_evidence()
     if lifecycle is not None:
         envelope["response_evidence"]["confidential_lifecycle_counter_summary"] = lifecycle
@@ -1702,6 +1765,18 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "eligible_for": hitrf_reference.get("eligible_for") or [],
             "not_eligible_for": hitrf_reference.get("not_eligible_for") or [],
             "claim_limit": short(hitrf_reference.get("claim_limit")),
+        }
+    real_station_context = evidence.get("public_real_station_context")
+    if isinstance(real_station_context, dict):
+        summary["public_real_station_context"] = {
+            key: real_station_context.get(key)
+            for key in (
+                "evidence_role", "source", "reported_campaign",
+                "reported_scenarios", "reported_channels_or_outputs",
+                "full_loop_external_holdout_eligible", "allowed_use",
+                "prohibited_use", "claim_limit",
+            )
+            if real_station_context.get(key) is not None
         }
     detector = evidence.get("public_detector_logic_evidence")
     if isinstance(detector, dict):
@@ -1881,6 +1956,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     evidence = manifest.get("response_evidence") or {}
     benchmarks = evidence.get("public_experimental_benchmarks") or {}
     hitrf_reference = evidence.get("public_hitrf_operational_reference") or {}
+    real_station_context = evidence.get("public_real_station_context") or {}
     benchmark_ids = [
         str(source.get("id"))
         for source in benchmarks.get("sources") or []
@@ -1917,6 +1993,19 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "public_source_links": _public_source_links(evidence),
         "public_experiment_sources": benchmark_ids,
+        "public_real_station_context": {
+            "doi": (real_station_context.get("source") or {}).get("doi"),
+            "reported_scenarios": real_station_context.get(
+                "reported_scenarios"
+            ) or [],
+            "reported_channels_or_outputs": real_station_context.get(
+                "reported_channels_or_outputs"
+            ) or [],
+            "full_loop_external_holdout_eligible": real_station_context.get(
+                "full_loop_external_holdout_eligible"
+            ) is True,
+            "claim_limit": real_station_context.get("claim_limit"),
+        },
         "public_measurement_instrumentation": {
             "source_count": public_measurement.get("source_count"),
             "file_count": public_measurement.get("file_count"),

@@ -13,10 +13,21 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert idle["impact"]["calculation_status"] == "not_requested"
     assert idle["impact"]["result_count"] == 0
     assert idle["source"]["field_measurement"] is False
+    station_context = idle["response_evidence"]["public_real_station_context"]
+    assert station_context["source"]["doi"] == "10.1016/j.jclepro.2021.129737"
+    assert station_context["full_loop_external_holdout_eligible"] is False
+    assert station_context["source"]["public_raw_synchronized_rows"] is False
+    assert any(
+        scenario.startswith("back-to-back fueling")
+        for scenario in station_context["reported_scenarios"]
+    )
     assert idle["runtime_calibration"]["status"] == "reference_defaults"
     assert prompt_evidence_header(idle)["runtime_calibration"]["profile_id"] == (
         "reference_defaults"
     )
+    assert prompt_evidence_header(idle)["public_real_station_context"][
+        "full_loop_external_holdout_eligible"
+    ] is False
     assert idle["evidence_digest"].startswith("sha256:")
     traceability = idle["response_evidence"]["public_incident_traceability"]
     assert traceability["category_count"] == 8

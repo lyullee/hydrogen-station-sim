@@ -38,6 +38,13 @@ The source index does not change the numerical model or turn aggregate public
 results into a holdout. The runtime must continue to describe the following
 boundaries explicitly:
 
+The public Cal State LA back-to-back fueling article is also included as
+real-station operating context. It reports multiple daily and back-to-back
+fills together with storage pressure, cooling/temperature, thermodynamic and
+vehicle-SOC outputs. The public record does not provide a reusable synchronized
+row-level archive, so the LLM may use it for scenario and face-validity
+context, while the full-loop validation gate remains closed.
+
 - `measured_boundary_calibration` is opt-in. It applies the de-identified
   station-boundary pressure margin to both cascade dispatch and recharge
   restart selection, so a bank is not repeatedly selected around the measured

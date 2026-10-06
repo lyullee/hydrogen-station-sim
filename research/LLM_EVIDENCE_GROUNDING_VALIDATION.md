@@ -32,6 +32,8 @@ contains:
   `calculated`;
 - calculated impact basis, input sensor tags, model outputs and threshold
   interpretation limits;
+- public real-station operating context for back-to-back fueling, with its
+  synchronized-raw-log and full-loop eligibility boundary;
 - consequence flow-boundary status, requested process flow, HyRAM modeled flow,
   and an explicit mismatch claim limit when high-pressure choked flow causes
   the physics adapter to recompute the release rate;
@@ -51,7 +53,7 @@ The following tests passed in the repository virtual environment:
 16 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-631 passed, 16 warnings
+639 passed, 16 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -92,6 +94,15 @@ The privacy-bounded station-equipment envelope is also carried with its
 pressure range, temperature range and state-transition count. Temperature and
 state semantics remain unattested, and the artifact contains no vehicle-side
 channels or full-loop validation claim.
+
+The owner-attested lifecycle-counter summary is carried separately. Its
+full-bank pressure units are available for operator/LLM history context, while
+the absence of a validated degradation relationship keeps capacity, leak-rate,
+relief-setting and failure-probability changes out of the physical model.
+
+The public real-station back-to-back fueling record is carried as a source
+link and scenario context. It is not treated as a raw synchronized holdout
+because the public record does not provide reusable event-level logger rows.
 
 The frozen station-to-vehicle external holdout is also carried as a hard claim
 boundary. Eight public MC-default cases were evaluated under a protocol frozen
