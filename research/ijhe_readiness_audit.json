@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-06T04:19:19.259413+00:00",
+  "generated_at": "2026-10-06T04:29:01.880396+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -4918,7 +4918,7 @@
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 647,
+            "passed": 648,
             "failed": 0,
             "warnings": 16
           }
@@ -4946,8 +4946,10 @@
           "public real-station back-to-back fueling context and its no-raw-log/full-loop boundary are carried into the evidence envelope",
           "restricted actual-accident metadata is summarized by response-family candidate counts without publishing narratives or treating counts as frequencies",
           "frozen external station-to-vehicle holdout remains explicitly bounded at 0/8, while post-freeze calibration is marked diagnostic-only and cannot support validation claims",
+          "public NREL HDVS tank boundary screen is carried with failed pressure screening and a non-promoted geometry diagnostic",
           "public Grune/Sempert ventilation factors are carried into the evidence envelope and applied only to the virtual detector proxy",
-          "active releases use the measured upper spatial ventilation envelope by default while median mode remains available for sensitivity analysis"
+          "active releases use the measured upper spatial ventilation envelope by default while median mode remains available for sensitivity analysis",
+          "opt-in measured station-boundary pressure scope status is carried in operator frames and evidence envelopes without becoming a safety limit"
         ],
         "not_established": [
           "physics validity of the consequence model",
@@ -5075,6 +5077,18 @@
           "channel_dictionary_present": false,
           "vehicle_or_receptacle_channels_identified": false,
           "interpretation": "public measurement timing and instrumentation context only; no vehicle-channel inference or full-loop validation claim"
+        },
+        "public_tank_validation_boundary": {
+          "evidence": "data/public_validation/results/nrel_h2fills_hdvs_typeiv/validation.json",
+          "evidence_role": "independent_tank_thermal_external_validation",
+          "tank_count": 7,
+          "sample_count": 351,
+          "screening_passes": 0,
+          "pressure_rmse_mpa": 6.164469743688679,
+          "temperature_rmse_c": 4.624745495755946,
+          "geometry_ratio_to_frozen_effective_volume_median": 0.9107089985145354,
+          "claim_supported": false,
+          "interpretation": "partial tank/thermal boundary evidence only; geometry ratio is diagnostic and is not applied as a production correction or full-loop validation claim"
         },
         "preslhy_validation_boundary": {
           "evidence": "data/public_validation/results/preslhy_e5_1_holdout.json",
