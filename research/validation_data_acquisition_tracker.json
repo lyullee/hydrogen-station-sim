@@ -655,6 +655,27 @@
       "rights": "JRC states use is free of charge subject to HIAD 2.2 download conditions and required acknowledgement; preserve original-source uncertainty and do not imply incident statistics are complete.",
       "next_action": "Use the 34 hydrogen-refuelling-station records as candidate cases for the existing coordinator-review and ethics-controlled SAGA casebook.",
       "claim_boundary": "Actual-incident evidence for scenario and response grounding only; no synchronized station-to-vehicle time-series and no numerical full-loop validation claim."
+    },
+    {
+      "id": "nbsdc_heavy_vehicle_fast_refueling_2026",
+      "draft": "research/NBSDC_HEAVY_VEHICLE_FAST_REFUELING_DATA_REQUEST_DRAFT_2026_10_06.md",
+      "source": "https://www.nbsdc.cn/general/dataDetail?id=69a705c7195d2650b5d79a06&type=1",
+      "candidate_type": "heavy-vehicle high-pressure refuelling test-cylinder and dispenser archive",
+      "status": "metadata_file_tree_verified_application_required",
+      "requested_fields": [
+        "common_elapsed_time",
+        "test-cylinder_or_receptacle_pressure",
+        "gas_temperature",
+        "mass_flow_or_transferred_mass",
+        "initial_pressure_and_capacity",
+        "protocol_phase_target_pressure_and_stop_reason",
+        "units_calibration_quality_flags"
+      ],
+      "minimum_acceptance": "Rights-cleared machine-readable numerical subset with explicit channel mapping and a frozen independent holdout; test-cylinder traces remain component-level unless vehicle equivalence is confirmed.",
+      "rights": "The public file tree is visible but numerical downloads return an application-required response; written permission for derived metrics and journal/repository use is still required.",
+      "next_action": "Submit research/NBSDC_HEAVY_VEHICLE_FAST_REFUELING_DATA_REQUEST_DRAFT_2026_10_06.md and retain approval, hashes and channel dictionary.",
+      "access_recheck": "research/nbsdc_heavy_vehicle_fast_refueling_access_recheck_2026_10_06.json",
+      "claim_boundary": "Public metadata and protocol description only; no numerical holdout score or station-to-vehicle validation claim."
     }
   ]
 }
