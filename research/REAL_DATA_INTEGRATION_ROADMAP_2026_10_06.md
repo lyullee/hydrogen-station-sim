@@ -36,6 +36,13 @@ LLM 근거에 연결했다. 1,426개 샘플의 station-side 압력 범위와 상
 전까지 보정값으로 승격하지 않는다. 차량측 채널이 없으므로 full-loop 또는 안전거리
 검증을 주장하지 않으며, 기본 모델 파라미터도 변경하지 않는다.
 
+같은 압력 bundle은 generic 채널별로도 집계했다. 채널 1·2의 중앙값은 각각
+43.2896 MPa와 82.8211 MPa로 서로 다른 경계를 보였고, 이 값은 LLM이 관측
+범위를 설명하는 데만 사용한다. 채널과 저·중·고압 뱅크의 대응은 공개하지 않았고
+attestation도 받지 않았으므로 controller에 자동 주입하지 않는다. 결과는
+`research/confidential_station_boundary_channel_envelopes_2026_10_06.json`에
+보존한다.
+
 차량 용기 형상은 `capacity_eos` 선택지로 선언 용량과 공칭 압력에서 표 형상방정식
 밀도로 체적을 계산할 수 있게 했다. 2026-10-06에 이미 열어본 공개 개발 케이스
 8건을 재생한 결과는 0/8 screening pass로, 기존 `capacity_scaled`의 1/8보다

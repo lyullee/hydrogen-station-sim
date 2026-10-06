@@ -133,3 +133,16 @@ changes only the virtual station recharge hysteresis when the operator checks
 does not provide vehicle-side pressure/SOC, dispenser protocol state, or an
 attested flow unit, so this is a station-boundary operating-envelope
 calibration and not a full-loop validation.
+
+## Channel-indexed follow-up (2026-10-06)
+
+The custodian pressure bundle was also summarized per mapped channel without
+publishing source tags or assigning a bank identity. The bounded sample reports
+median pressures of 43.2896 MPa and 82.8211 MPa for generic channels 1 and 2;
+the five-percent to ninety-five-percent ranges are retained in
+`research/confidential_station_boundary_channel_envelopes_2026_10_06.json`.
+This lets the assistant explain that measured boundary signals have different
+operating envelopes. It does not authorize mapping a channel to low/medium/high
+storage, and it does not change controller parameters. A custodian-approved
+channel-to-bank dictionary and a frozen holdout are still required before
+bank-specific calibration can be considered.

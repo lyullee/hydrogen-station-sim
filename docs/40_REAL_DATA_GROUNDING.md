@@ -27,6 +27,13 @@ lifecycle channels. The current archive contains zero vehicle-side channel
 families, so the assistant keeps station-boundary calibration separate from
 vehicle-fill or station-to-vehicle accuracy claims.
 
+The pressure bundle is also summarized by generic channel index. Its two
+measured boundary channels have distinct operating envelopes, which is useful
+context for the assistant when explaining a bank-specific observation. The
+channel-to-bank mapping is withheld and remains unattested in the public
+artifact, so these values are diagnostic evidence only and do not retune the
+controller automatically.
+
 When a live frame contains a nozzle flow, the evidence envelope also adds
 `public_operating_envelope_screen`. It compares the simulated flow with the
 published high-flow experiment's aggregate average and peak and labels the

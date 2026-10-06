@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_station_boundary_channel_envelopes",
+  "recorded_at": "2026-10-06",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "exact_source_dates_published": false,
+  "sampling": {
+    "stride": 600,
+    "max_rows_per_file": 250000,
+    "value_cap_per_channel": 50000
+  },
+  "channels": {
+    "boundary_channel_1": {
+      "sampled_rows": 48941,
+      "pressure_mpa": {
+        "min": 0.000143,
+        "p05": 38.9843,
+        "median": 43.2896,
+        "p95": 44.4866,
+        "max": 45.0596
+      },
+      "positive_pressure_ramp_p95_pa_s": 7020.067,
+      "recommended_restart_margin_pa": 1565640.0,
+      "pressure_semantics_attested": true
+    },
+    "boundary_channel_2": {
+      "sampled_rows": 48936,
+      "pressure_mpa": {
+        "min": 0.000881,
+        "p05": 77.26845,
+        "median": 82.8211,
+        "p95": 83.6992,
+        "max": 84.9715
+      },
+      "positive_pressure_ramp_p95_pa_s": 10286.0,
+      "recommended_restart_margin_pa": 1664440.0,
+      "pressure_semantics_attested": true
+    }
+  },
+  "eligibility": {
+    "channel_specific_boundary_envelopes_supported": true,
+    "bank_role_mapping_attested": false,
+    "runtime_parameter_application": false
+  },
+  "claim_boundary": "De-identified channel-indexed pressure envelopes for station-boundary plausibility and operator review only; channel-to-bank identity, vehicle-side accuracy, safety distance and full-loop validation are not established."
+}

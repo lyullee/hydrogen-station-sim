@@ -68,6 +68,7 @@ from .vehicle import (
 from .scenario import BuiltScenario, ReferenceScenario, build_reference_scenario
 from .controlled_station_replay import (
     LifecycleCalibrationSummary,
+    PressureChannelEnvelopeSummary,
     StationCalibrationSummary,
     StationBoundaryProfile,
     SynchronizedStationProfile,
@@ -76,6 +77,7 @@ from .controlled_station_replay import (
     apply_recharge_hysteresis,
     fit_station_boundary,
     read_boundary_profile,
+    summarize_pressure_channel_envelopes,
     summarize_lifecycle_counters,
     synchronize_station_traces,
 )
@@ -180,6 +182,8 @@ __all__ = [
     "VehicleStateOfCharge",
     "build_reference_scenario",
     "fit_station_boundary",
+    "PressureChannelEnvelopeSummary",
+    "summarize_pressure_channel_envelopes",
     "MeasuredBoundaryCalibrationProfile",
     "load_measured_boundary_calibration",
     "LifecycleEvidenceProfile",

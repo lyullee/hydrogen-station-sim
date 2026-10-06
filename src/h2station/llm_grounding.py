@@ -1240,6 +1240,65 @@ def _confidential_station_calibration_evidence() -> dict[str, Any] | None:
     }
 
 
+def _confidential_pressure_channel_evidence() -> dict[str, Any] | None:
+    """Expose channel-specific measured envelopes without bank identity."""
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/confidential_station_boundary_channel_envelopes_2026_10_06.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    if (
+        record.get("artifact_type")
+        != "confidential_station_boundary_channel_envelopes"
+        or record.get("source_identifiers_published") is not False
+        or record.get("raw_rows_persisted") is not False
+        or record.get("exact_source_dates_published") is not False
+    ):
+        return None
+    channels: dict[str, dict[str, Any]] = {}
+    for channel_id, value in (record.get("channels") or {}).items():
+        if not str(channel_id).startswith("boundary_channel_") or not isinstance(value, dict):
+            continue
+        pressure = value.get("pressure_mpa") or {}
+        channels[str(channel_id)] = {
+            "sampled_rows": value.get("sampled_rows"),
+            "pressure_mpa": {
+                key: pressure.get(key)
+                for key in ("min", "p05", "median", "p95", "max")
+                if pressure.get(key) is not None
+            },
+            "positive_pressure_ramp_p95_pa_s": value.get(
+                "positive_pressure_ramp_p95_pa_s"
+            ),
+            "recommended_restart_margin_pa": value.get(
+                "recommended_restart_margin_pa"
+            ),
+            "pressure_semantics_attested": value.get(
+                "pressure_semantics_attested"
+            ) is True,
+        }
+    if not channels:
+        return None
+    return {
+        "artifact": "research/confidential_station_boundary_channel_envelopes_2026_10_06.json",
+        "evidence_role": "confidential measured channel-indexed pressure envelope",
+        "sampled_rows": sum(
+            int(value.get("sampled_rows") or 0) for value in channels.values()
+        ),
+        "channels": channels,
+        "bank_role_mapping_attested": (
+            record.get("eligibility", {}).get("bank_role_mapping_attested") is True
+        ),
+        "runtime_parameter_application": (
+            record.get("eligibility", {}).get("runtime_parameter_application") is True
+        ),
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_station_equipment_evidence() -> dict[str, Any] | None:
     """Expose a de-identified equipment envelope without fitting new physics."""
 
@@ -1614,6 +1673,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_station_boundary_calibration"
         ] = station_calibration
+    channel_envelopes = _confidential_pressure_channel_evidence()
+    if channel_envelopes is not None:
+        envelope["response_evidence"][
+            "confidential_pressure_channel_envelopes"
+        ] = channel_envelopes
     station_equipment = _confidential_station_equipment_evidence()
     if station_equipment is not None:
         envelope["response_evidence"][
@@ -1897,6 +1961,17 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if station_calibration.get(key) is not None
         }
+    channel_envelopes = evidence.get("confidential_pressure_channel_envelopes")
+    if isinstance(channel_envelopes, dict):
+        summary["confidential_pressure_channel_envelopes"] = {
+            key: channel_envelopes.get(key)
+            for key in (
+                "evidence_role", "artifact", "sampled_rows", "channels",
+                "bank_role_mapping_attested", "runtime_parameter_application",
+                "claim_limit",
+            )
+            if channel_envelopes.get(key) is not None
+        }
     station_equipment = evidence.get(
         "confidential_station_equipment_operational_envelope"
     )
@@ -1970,6 +2045,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     cross_station = confidential.get("cross_station_pressure_envelope") or {}
     lifecycle = evidence.get("confidential_lifecycle_counter_summary") or {}
     station_calibration = evidence.get("confidential_station_boundary_calibration") or {}
+    channel_envelopes = evidence.get(
+        "confidential_pressure_channel_envelopes"
+    ) or {}
     station_equipment = evidence.get(
         "confidential_station_equipment_operational_envelope"
     ) or {}
@@ -2222,6 +2300,18 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "full_station_vehicle_validation": station_calibration.get(
                 "full_station_vehicle_validation"
             ) is True,
+        },
+        "confidential_pressure_channel_envelopes": {
+            "artifact": channel_envelopes.get("artifact"),
+            "sampled_rows": channel_envelopes.get("sampled_rows"),
+            "channels": channel_envelopes.get("channels") or {},
+            "bank_role_mapping_attested": channel_envelopes.get(
+                "bank_role_mapping_attested"
+            ) is True,
+            "runtime_parameter_application": channel_envelopes.get(
+                "runtime_parameter_application"
+            ) is True,
+            "claim_limit": channel_envelopes.get("claim_limit"),
         },
         "confidential_station_equipment_operational_envelope": {
             "sampled_rows": station_equipment.get("sampled_rows"),

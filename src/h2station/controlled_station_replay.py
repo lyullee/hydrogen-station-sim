@@ -182,6 +182,46 @@ class StationCalibrationSummary:
 
 
 @dataclass(frozen=True)
+class PressureChannelEnvelopeSummary:
+    """De-identified pressure envelope for one custodian-mapped channel.
+
+    The channel index is assigned from the private mapping order.  It is
+    intentionally not a published tag or bank identity; callers must obtain
+    a separate custodian attestation before using it to change a bank model.
+    """
+
+    sampled_rows: int
+    pressure_min_pa: float
+    pressure_p05_pa: float
+    pressure_median_pa: float
+    pressure_p95_pa: float
+    pressure_max_pa: float
+    positive_pressure_ramp_p95_pa_s: float | None
+    recommended_restart_margin_pa: float
+    pressure_semantics_attested: bool = True
+
+    def to_public_dict(self) -> dict[str, object]:
+        return {
+            "sampled_rows": self.sampled_rows,
+            "pressure_mpa": {
+                "min": round(self.pressure_min_pa / 1.0e6, 6),
+                "p05": round(self.pressure_p05_pa / 1.0e6, 6),
+                "median": round(self.pressure_median_pa / 1.0e6, 6),
+                "p95": round(self.pressure_p95_pa / 1.0e6, 6),
+                "max": round(self.pressure_max_pa / 1.0e6, 6),
+            },
+            "positive_pressure_ramp_p95_pa_s": (
+                round(self.positive_pressure_ramp_p95_pa_s, 3)
+                if self.positive_pressure_ramp_p95_pa_s is not None else None
+            ),
+            "recommended_restart_margin_pa": round(
+                self.recommended_restart_margin_pa, 1
+            ),
+            "pressure_semantics_attested": self.pressure_semantics_attested,
+        }
+
+
+@dataclass(frozen=True)
 class LifecycleCalibrationSummary:
     """Aggregate owner-defined storage-cycle counters without exporting rows."""
 
@@ -860,6 +900,120 @@ def fit_station_boundary(
         temperature_max_deg_c=max(temperatures) if temperatures else None,
         state_transition_count=state_transition_count,
     )
+
+
+def summarize_pressure_channel_envelopes(
+    input_path: Path,
+    mapping: TraceMapping,
+    *,
+    stride: int = 600,
+    max_rows_per_file: int | None = 250_000,
+    value_cap_per_channel: int = 50_000,
+) -> tuple[PressureChannelEnvelopeSummary, ...]:
+    """Summarize each mapped pressure channel without exporting raw rows.
+
+    This is deliberately a diagnostic evidence path.  Values are aggregated
+    by channel order, and no source column name, timestamp, filename, or bank
+    identity is returned.  The summary is therefore suitable for a
+    privacy-bounded review artifact but cannot, by itself, retune a bank.
+    """
+
+    if not mapping.pressure_columns:
+        raise ValueError("pressure_columns are required for channel envelopes")
+    if stride < 1:
+        raise ValueError("stride must be at least one")
+    if value_cap_per_channel < 2:
+        raise ValueError("value_cap_per_channel must be at least two")
+
+    channel_count = len(mapping.pressure_columns)
+    values: list[list[float]] = [[] for _ in range(channel_count)]
+    steps: list[list[float]] = [[] for _ in range(channel_count)]
+    ramps: list[list[float]] = [[] for _ in range(channel_count)]
+    sampled = [0] * channel_count
+    minima = [math.inf] * channel_count
+    maxima = [-math.inf] * channel_count
+    previous_by_file: dict[Path, tuple[float, tuple[float | None, ...]]] = {}
+
+    for path, time_value, row in _sampled_rows(
+        input_path, mapping, stride=stride, max_rows_per_file=max_rows_per_file
+    ):
+        mapped = tuple(
+            (
+                value * mapping.pressure_scale_pa_per_unit
+                if (value := _finite(row.get(column))) is not None
+                else None
+            )
+            for _, column in mapping.pressure_columns
+        )
+        previous = previous_by_file.get(path)
+        if previous is not None:
+            previous_time, previous_values = previous
+            dt = abs(time_value - previous_time)
+            if dt > 0.0:
+                for index, current in enumerate(mapped):
+                    prior = previous_values[index]
+                    if current is None or prior is None:
+                        continue
+                    step = abs(current - prior)
+                    if len(steps[index]) < value_cap_per_channel:
+                        steps[index].append(step)
+                    else:
+                        slot = (sampled[index] * 2246822519) % sampled[index]
+                        if slot < value_cap_per_channel:
+                            steps[index][slot] = step
+                    if step > 0.0:
+                        ramp = step / dt
+                        if len(ramps[index]) < value_cap_per_channel:
+                            ramps[index].append(ramp)
+                        else:
+                            slot = (sampled[index] * 3266489917) % sampled[index]
+                            if slot < value_cap_per_channel:
+                                ramps[index][slot] = ramp
+        previous_by_file[path] = (time_value, mapped)
+
+        for index, current in enumerate(mapped):
+            if current is None or current <= 0.0 or not math.isfinite(current):
+                continue
+            sampled[index] += 1
+            minima[index] = min(minima[index], current)
+            maxima[index] = max(maxima[index], current)
+            # Keep a bounded deterministic sample for quantiles.  The raw row
+            # is never written; only the numeric aggregate remains in memory.
+            if len(values[index]) < value_cap_per_channel:
+                values[index].append(current)
+            else:
+                slot = (sampled[index] * 2654435761) % sampled[index]
+                if slot < value_cap_per_channel:
+                    values[index][slot] = current
+
+    summaries: list[PressureChannelEnvelopeSummary] = []
+    for index in range(channel_count):
+        if not values[index] or not math.isfinite(minima[index]):
+            continue
+        ordered = sorted(values[index])
+        ordered_steps = sorted(steps[index])
+        ordered_ramps = sorted(ramps[index])
+        stable_steps = [
+            value for value in ordered_steps
+            if value <= (_quantile(ordered_steps, 0.75) or value)
+        ]
+        margin = max(
+            0.25e6,
+            min(2.0e6, (_quantile(stable_steps, 0.95) or 0.0) * 2.0),
+        )
+        summaries.append(
+            PressureChannelEnvelopeSummary(
+                sampled_rows=sampled[index],
+                pressure_min_pa=minima[index],
+                pressure_p05_pa=_quantile(ordered, 0.05) or minima[index],
+                pressure_median_pa=median(ordered),
+                pressure_p95_pa=_quantile(ordered, 0.95) or maxima[index],
+                pressure_max_pa=maxima[index],
+                positive_pressure_ramp_p95_pa_s=_quantile(ordered_ramps, 0.95),
+                recommended_restart_margin_pa=margin,
+            )
+        )
+    return tuple(summaries)
 
 
 def summarize_lifecycle_counters(

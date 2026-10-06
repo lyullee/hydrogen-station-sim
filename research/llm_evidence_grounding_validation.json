@@ -16,9 +16,9 @@
     },
     "full_suite": {
       "command": ".venv\\Scripts\\python.exe -m pytest -q",
-      "passed": 639,
+      "passed": 641,
       "failed": 0,
-      "warnings": 16
+      "warnings": 17
     }
   },
   "verified_properties": [
@@ -39,6 +39,7 @@
     "public CC BY sampling-workbook instrumentation context is carried into the evidence envelope without inferring vehicle or receptacle channels",
     "PRESLHY development and independent holdout outcomes are separated, with failed claim conditions and unchanged runtime parameters preserved",
     "de-identified station-equipment pressure, temperature and state envelope is carried with explicit attestation and full-loop claim limits",
+    "channel-indexed measured pressure envelopes are carried as evidence-only context without publishing source tags or applying an unattested bank mapping",
     "owner-attested lifecycle-counter semantics and full-recharge pressure units are carried as history context without enabling an unvalidated degradation model",
     "public real-station back-to-back fueling context and its no-raw-log/full-loop boundary are carried into the evidence envelope",
     "restricted actual-accident metadata is summarized by response-family candidate counts without publishing narratives or treating counts as frequencies",
@@ -200,6 +201,18 @@
     "vehicle_side_channels_present": false,
     "full_station_vehicle_validation": false,
     "interpretation": "privacy-bounded station equipment context only; no vehicle or full-loop claim"
+  },
+  "confidential_pressure_channel_envelopes": {
+    "evidence": "research/confidential_station_boundary_channel_envelopes_2026_10_06.json",
+    "sampled_rows": 97877,
+    "channel_count": 2,
+    "median_pressure_mpa_by_generic_channel": {
+      "boundary_channel_1": 43.2896,
+      "boundary_channel_2": 82.8211
+    },
+    "bank_role_mapping_attested": false,
+    "runtime_parameter_application": false,
+    "interpretation": "de-identified channel-indexed station-boundary context only; no bank identity, vehicle-side accuracy or full-loop validation claim"
   },
   "closed_loop_validation_boundary": {
     "evidence": "data/public_validation/results/closed_loop_external_holdout/validation.json",

@@ -283,6 +283,20 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "mass_flow_units_attested"
     ] is False
     assert station_calibration["full_station_vehicle_validation"] is False
+    channel_envelopes = idle["response_evidence"][
+        "confidential_pressure_channel_envelopes"
+    ]
+    assert channel_envelopes["bank_role_mapping_attested"] is False
+    assert channel_envelopes["runtime_parameter_application"] is False
+    assert channel_envelopes["channels"]["boundary_channel_1"][
+        "pressure_mpa"
+    ]["median"] == 43.2896
+    channel_header = prompt_evidence_header(idle)[
+        "confidential_pressure_channel_envelopes"
+    ]
+    assert channel_header["channels"]["boundary_channel_2"][
+        "pressure_mpa"
+    ]["median"] == 82.8211
     station_equipment = idle["response_evidence"][
         "confidential_station_equipment_operational_envelope"
     ]

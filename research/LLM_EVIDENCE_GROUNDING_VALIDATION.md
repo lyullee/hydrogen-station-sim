@@ -53,7 +53,7 @@ The following tests passed in the repository virtual environment:
 16 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-639 passed, 16 warnings
+641 passed, 17 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -94,6 +94,15 @@ The privacy-bounded station-equipment envelope is also carried with its
 pressure range, temperature range and state-transition count. Temperature and
 state semantics remain unattested, and the artifact contains no vehicle-side
 channels or full-loop validation claim.
+
+The private pressure bundle is additionally summarized by generic channel
+index. The two measured boundary channels show materially different pressure
+envelopes (median values of 43.2896 and 82.8211 MPa in the bounded sample), so
+the assistant can distinguish a channel-specific operating context instead of
+pretending that one station-wide pressure value represents every bank. The
+channel-to-bank identity is intentionally not published or inferred, and the
+summary is therefore evidence-only: it is not automatically applied to
+controller parameters.
 
 The owner-attested lifecycle-counter summary is carried separately. Its
 full-bank pressure units are available for operator/LLM history context, while
