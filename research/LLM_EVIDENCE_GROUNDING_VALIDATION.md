@@ -1,6 +1,6 @@
 # LLM evidence-grounding validation
 
-**Recorded:** 2026-10-05
+**Recorded:** 2026-10-06
 **Scope:** digital-twin main assistant and selected-sensor assistant routes
 
 This record documents a software-level grounding check. It is not a human
@@ -48,10 +48,10 @@ The following tests passed in the repository virtual environment:
 
 ```text
 .venv\Scripts\python.exe -m pytest tests/test_llm_grounding.py tests/test_digital_twin_direct_qa.py tests/test_hiad_action_playbook_coverage.py tests/test_hiad_accident_response_coverage_evaluation.py -q
-14 passed, 2 warnings
+16 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-590 passed, 16 warnings
+631 passed, 16 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -75,6 +75,23 @@ The consequence handoff also records whether a supplied process-flow boundary
 was retained.  If HyRAM's high-pressure choked-flow path recomputes a different
 release rate, the status and ratio are carried into the impact record and LLM
 evidence envelope; the result is explicitly limited to model-bound screening.
+
+The evidence envelope now also carries the public MetHyTrucks/NPL sampling
+workbook context: two CC BY records, 13 files and an observed 0.5 s sampling
+interval. The public metadata do not identify vehicle/receptacle channels, so
+this remains instrumentation context rather than a station-to-vehicle
+validation result.
+
+PRESLHY development and independent holdout outcomes are carried separately.
+The development set passes 20 of 22 cases, while the independent E5.1 ambient
+holdout passes 2 of 3 cases and does not meet its minimum-case or claim
+threshold. The runtime release parameters remain unchanged, and the LLM is
+shown this boundary explicitly.
+
+The privacy-bounded station-equipment envelope is also carried with its
+pressure range, temperature range and state-transition count. Temperature and
+state semantics remain unattested, and the artifact contains no vehicle-side
+channels or full-loop validation claim.
 
 ## Claim boundary
 

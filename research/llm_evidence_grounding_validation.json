@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "recorded_at": "2026-10-05",
+  "recorded_at": "2026-10-06",
   "status": "software_contract_verified",
   "scope": [
     "digital-twin main assistant",
@@ -11,12 +11,12 @@
   "tests": {
     "targeted": {
       "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_digital_twin_direct_qa.py tests/test_hiad_action_playbook_coverage.py tests/test_hiad_accident_response_coverage_evaluation.py -q",
-      "passed": 14,
+      "passed": 16,
       "warnings": 2
     },
     "full_suite": {
       "command": ".venv\\Scripts\\python.exe -m pytest -q",
-      "passed": 590,
+      "passed": 631,
       "failed": 0,
       "warnings": 16
     }
@@ -35,7 +35,10 @@
     "consequence flow-boundary mismatches are exposed when HyRAM recomputes a high-pressure choked flow instead of silently presenting it as the supplied process flow",
     "public HIAD action categories are evaluated case-by-case against required staged response plans without using raw action text or making an effectiveness claim",
     "derived HIAD action-category counts and the action-evidence artifact digest are carried into the hashed runtime envelope without raw incident prose",
-    "public CC BY accidental-release/ignition archive metadata is carried into the hashed envelope without raw traces, ignition-probability claims or full-loop validation claims"
+    "public CC BY accidental-release/ignition archive metadata is carried into the hashed envelope without raw traces, ignition-probability claims or full-loop validation claims",
+    "public CC BY sampling-workbook instrumentation context is carried into the evidence envelope without inferring vehicle or receptacle channels",
+    "PRESLHY development and independent holdout outcomes are separated, with failed claim conditions and unchanged runtime parameters preserved",
+    "de-identified station-equipment pressure, temperature and state envelope is carried with explicit attestation and full-loop claim limits"
   ],
   "not_established": [
     "physics validity of the consequence model",
@@ -131,5 +134,48 @@
     "numerical_release_model_validation_claimed": false,
     "interpretation": "public accidental-release/ignition provenance and qualitative scenario grounding only; no ignition probability or station full-loop claim",
     "all_local_file_hashes_match": true
+  },
+  "public_measurement_instrumentation": {
+    "evidence": "research/metHyTrucks_public_measurement_recheck_2026_10_04.json",
+    "source_count": 2,
+    "file_count": 13,
+    "observed_sampling_intervals_s": [
+      0.5
+    ],
+    "station_measurement_auxiliary_eligible": true,
+    "full_loop_holdout_eligible": false,
+    "channel_dictionary_present": false,
+    "vehicle_or_receptacle_channels_identified": false,
+    "interpretation": "public measurement timing and instrumentation context only; no vehicle-channel inference or full-loop validation claim"
+  },
+  "preslhy_validation_boundary": {
+    "evidence": "data/public_validation/results/preslhy_e5_1_holdout.json",
+    "development_evidence": "research/preslhy_nonadiabatic_development_result.json",
+    "development_cases": 22,
+    "development_joint_primary_passes": 20,
+    "independent_holdout_cases": 3,
+    "independent_holdout_joint_primary_passes": 2,
+    "independent_holdout_minimum_requirements_met": false,
+    "independent_holdout_claim_supported": false,
+    "runtime_model_parameter_changed": false,
+    "interpretation": "development and independent holdout are kept separate; no validated release claim is made"
+  },
+  "confidential_station_equipment_operational_envelope": {
+    "evidence": "research/confidential_station_equipment_operational_envelope_2026_10_06.json",
+    "sampled_rows": 1426,
+    "storage_pressure_mpa": [
+      56.295,
+      63.26
+    ],
+    "station_temperature_degC": [
+      -41.0,
+      39.4
+    ],
+    "state_transition_count": 44,
+    "temperature_role_attested": false,
+    "state_semantics_attested": false,
+    "vehicle_side_channels_present": false,
+    "full_station_vehicle_validation": false,
+    "interpretation": "privacy-bounded station equipment context only; no vehicle or full-loop claim"
   }
 }
