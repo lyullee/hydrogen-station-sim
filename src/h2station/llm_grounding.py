@@ -10,6 +10,7 @@ from __future__ import annotations
 from hashlib import sha256
 import json
 import math
+import re
 from pathlib import Path
 from statistics import median
 from typing import Any, Iterable
@@ -1932,6 +1933,122 @@ def _impact_rows(results: Iterable[dict[str, Any]] | None) -> list[dict[str, Any
         if row:
             rows.append(row)
     return rows
+
+
+_UNSUPPORTED_CLAIM_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
+    (
+        "full_loop_field_validation",
+        re.compile(
+            r"(?:full[\s-]*loop|station[\s-]*to[\s-]*vehicle|충전소[\s·-]*차량|전체\s*(?:충전)?\s*루프|현장)"
+            r".{0,24}(?:검증|validation|validated|검증됨|검증완료|통과)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "safety_certification",
+        re.compile(
+            r"(?:안전\s*(?:인증|승인)|safety\s*certif(?:ied|ication)|certified\s*safe)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "confirmed_safety_distance",
+        re.compile(
+            r"(?:현장\s*)?(?:안전|대피|영향|피해)\s*(?:거리|반경).{0,20}"
+            r"(?:확정|보장|적용|confirmed|guaranteed|validated)",
+            re.IGNORECASE,
+        ),
+    ),
+)
+
+
+def _claim_is_explicitly_limited(line: str, match: re.Match[str]) -> bool:
+    """Return true when a matched phrase is explicitly negated or bounded.
+
+    The LLM is expected to explain these limits.  The post-generation guard
+    must therefore preserve sentences such as ``현장 검증이 아닙니다`` and
+    ``not a confirmed safety distance`` instead of treating every occurrence
+    of a validation word as an overclaim.
+    """
+
+    start = max(0, match.start() - 42)
+    end = min(len(line), match.end() + 42)
+    window = line[start:end].lower().replace(" ", "")
+    return any(token in window for token in (
+        "아니", "아닙", "아니다", "않", "못", "불가", "미확인", "미지원", "한계", "가정",
+        "not", "no", "cannot", "can't", "unsupported", "unconfirmed",
+        "screeningonly", "advisoryonly", "notafield",
+    ))
+
+
+def guard_llm_claims(
+    answer: str,
+    evidence_manifest: dict[str, Any] | None,
+) -> tuple[str, dict[str, Any]]:
+    """Bound generated claims to the evidence envelope.
+
+    Public experiments and the anonymized station replay currently support
+    component/envelope calibration only.  They do not establish station to
+    vehicle full-loop validation, field safety certification, or a confirmed
+    evacuation distance.  This guard is intentionally narrow: it leaves
+    sensor observations, calculated consequence values, response steps, and
+    explicit limitation statements intact, while replacing a positive claim
+    that exceeds the manifest with a deterministic caveat.
+
+    Returns the guarded answer and a small audit record suitable for API
+    responses and saved LLM traces.
+    """
+
+    text = str(answer or "")
+    manifest = evidence_manifest or {}
+    real_station = manifest.get("public_real_station_context") or {}
+    closed_loop = manifest.get("closed_loop_validation_boundary") or {}
+    full_loop_supported = any(
+        value is True
+        for value in (
+            manifest.get("full_loop_validation_supported"),
+            real_station.get("full_loop_external_holdout_eligible"),
+            closed_loop.get("claim_supported"),
+        )
+    )
+    # These are separate flags so a future component-level certification does
+    # not accidentally authorize a full-loop claim.
+    blocked_families: set[str] = set()
+    if not full_loop_supported:
+        blocked_families.add("full_loop_field_validation")
+    blocked_families.update({"safety_certification", "confirmed_safety_distance"})
+
+    blocked: list[dict[str, str]] = []
+    output: list[str] = []
+    caveat = (
+        "※ 근거 경계: 현재 자료는 공개 실험·비식별 운전 경계 보정과 모의 계산을 지원하지만 "
+        "충전소-차량 full-loop 현장검증, 안전 인증 또는 확정 대피거리를 입증하지 않습니다."
+    )
+    for line in text.splitlines():
+        line_families: list[tuple[str, str]] = []
+        for family, pattern in _UNSUPPORTED_CLAIM_PATTERNS:
+            if family not in blocked_families:
+                continue
+            match = pattern.search(line)
+            if match is None or _claim_is_explicitly_limited(line, match):
+                continue
+            line_families.append((family, match.group(0)[:160]))
+        if line_families:
+            blocked.extend({"family": family, "text": text} for family, text in line_families)
+            # Keep the answer readable and avoid silently dropping the whole
+            # response.  The deterministic caveat is the only replacement;
+            # verified values and response guidance remain in adjacent lines.
+            output.append(caveat)
+        else:
+            output.append(line)
+    guarded = "\n".join(output).strip()
+    return guarded, {
+        "status": "guarded" if blocked else "clear",
+        "blocked_claims": blocked,
+        "full_loop_validation_supported": full_loop_supported,
+        "source_field_measurement": (manifest.get("source") or {}).get("field_measurement"),
+        "claim_limit": "생성 답변의 검증·인증·확정 거리 과장을 근거 봉투와 일치시킴",
+    }
 
 
 def build_evidence_manifest(

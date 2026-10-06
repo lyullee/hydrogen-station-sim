@@ -34,6 +34,15 @@ the prompt. Private station logs remain represented only by de-identified
 quality and calibration metadata; no operator, site, date, manufacturer,
 tag, or raw row is exposed.
 
+Generated text is bounded a second time after the provider returns. The
+`guard_llm_claims()` post-processor reads the same evidence manifest and
+replaces positive claims of full-loop field validation, safety certification,
+or a confirmed evacuation/safety distance when those gates are false. An
+explicit limitation such as “this is not field validation” is preserved, as
+are measured observations, calculated sample distances, and the staged
+response plan. Each API answer exposes the small `llm_claim_guard` audit record
+so a replay can show whether a provider overclaim was filtered.
+
 The private schema intake also carries a privacy-bounded family summary for
 compressor/station pressure and temperature, flow/totalizer, valve/alarm and
 lifecycle channels. The current archive contains zero vehicle-side channel

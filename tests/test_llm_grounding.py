@@ -1,5 +1,6 @@
 from h2station.llm_grounding import (
     build_evidence_manifest,
+    guard_llm_claims,
     prompt_evidence_header,
     prompt_evidence_summary,
 )
@@ -586,3 +587,36 @@ def test_manifest_marks_attempt_without_result_and_filters_nonfinite_values():
     assert manifest["signals"]["count"] == 1
     assert manifest["signals"]["rows"][0]["tag"] == "TT-0901"
     assert manifest["source"]["simulation_time_s"] is None
+
+
+def test_llm_claim_guard_replaces_unsupported_positive_validation_claims():
+    manifest = build_evidence_manifest({"time_s": 12.5}, {}, [], False)
+    answer, audit = guard_llm_claims(
+        "현장 검증 완료이며 안전거리는 5 m로 확정되었습니다.\n"
+        "현재 압력은 88 MPa입니다.",
+        manifest,
+    )
+    assert audit["status"] == "guarded"
+    assert {item["family"] for item in audit["blocked_claims"]} == {
+        "full_loop_field_validation", "confirmed_safety_distance",
+    }
+    assert "현장 검증 완료" not in answer
+    assert "근거 경계" in answer
+    assert "현재 압력은 88 MPa입니다." in answer
+
+
+def test_llm_claim_guard_preserves_explicit_limitations_and_calculated_values():
+    manifest = build_evidence_manifest(
+        {"time_s": 12.5}, {},
+        [{"node_id": "N09", "calculation_status": "calculated",
+          "sampled_effect_radius_m": 4.0}],
+        True,
+    )
+    answer, audit = guard_llm_claims(
+        "이 표본 결과는 현장 검증이 아닙니다.\n"
+        "표본 영향거리는 4 m이며 확정 대피거리가 아닙니다.",
+        manifest,
+    )
+    assert audit["status"] == "clear"
+    assert answer.count("현장 검증이 아닙니다") == 1
+    assert "4 m" in answer

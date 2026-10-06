@@ -30,7 +30,7 @@ from .operations import ProcessRuntime, RELIEF_TARGETS
 from .risk.runtime_backend import load_hyram_backend
 from .risk.sensor_assessment import assess_sensor_cases, available_sensor_inputs
 from .risk.scenario_planning import parse_saga_plan
-from .llm_grounding import build_evidence_manifest, prompt_evidence_header
+from .llm_grounding import build_evidence_manifest, guard_llm_claims, prompt_evidence_header
 from .safe_operation import SafeOperationSample
 from .simulation_clock import SimulationClock
 from .virtual_safety import VALVE_LABELS, ZONES, RECOVERY_CHECKS, suggested_actions
@@ -2539,6 +2539,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         reply = {"answer": "\n".join(fallback), "model": "센서 기반 위험 분석"}
     answer = str(reply.get("answer") or "")
     answer = _safe_saga_text(answer)
+    answer, llm_claim_guard = guard_llm_claims(answer, evidence_manifest)
     if emergency_context:
         answer = "\n".join(line for line in answer.splitlines()
             if not re.search(r"(?:현재\s*(?:운전\s*)?상태는\s*정상|현재\s*운전은\s*정상|정상\s*운전\s*중|경보는\s*없)", line))
@@ -2561,7 +2562,8 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
                            "calculated_impact_count":len(impact_results)},
         "show_impact_results":show_impact_results,
         "impact_results":impact_results,
-        "evidence_manifest": evidence_manifest}
+        "evidence_manifest": evidence_manifest,
+        "llm_claim_guard": llm_claim_guard}
 
 
 @app.post("/api/simulations/{job_id}/saga-analysis/stream")
@@ -3148,6 +3150,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         if release.get("relief_discharge_g_s", 0) > 0.001:
             lines.append(f"현재 안전밸브 방출 **{release['relief_discharge_g_s']:.3f} g/s**")
         direct_answer = _safe_saga_text(_direct_hazop_answer(direct_result)) if direct_result else ""
+        direct_answer, direct_claim_guard = guard_llm_claims(direct_answer, evidence_manifest)
         if current_rules and re.search(r"(?:정상\s*운전|정상\s*범위|이상\s*없|경보\s*없)", direct_answer):
             direct_answer = ""
         if direct_answer and (current_rules or payload["sensor_status"] == "NORMAL"):
@@ -3164,6 +3167,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         answer = "\n\n".join(lines)
         llm_model = "SAGA 직답 · 센서 기반 계산"
         llm_error = None
+        llm_claim_guard = direct_claim_guard
         if request.one_pass:
             prompt_data = {
                 "output_language": request.language,
@@ -3186,6 +3190,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                     stream_output=True,
                 )
                 llm_answer = _safe_saga_text(str(reply.get("answer") or ""))
+                llm_answer, llm_claim_guard = guard_llm_claims(llm_answer, evidence_manifest)
                 if llm_answer and _direct_answer_conflicts_with_signals(
                     llm_answer, alert=bool(current_rules),
                     gas_observed=bool(gas.get("hydrogen_observed")),
@@ -3220,7 +3225,8 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                 "evidence_manifest": evidence_manifest,
                 "active_rule_count": len(active_rules), "related_active_count": len(related_rules),
                 "sensor_status": payload["sensor_status"], "hazop_direct": direct_result,
-                "response_guidance": response_guidance}
+                "response_guidance": response_guidance,
+                "llm_claim_guard": llm_claim_guard}
     compact_rules = lambda rows: [{key: rule.get(key) for key in
                                    ("rule_id", "sensor_id", "scenario", "state", "condition_status",
                                     "severity", "evaluated_value", "threshold", "unit", "quality", "cause")
@@ -3324,6 +3330,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
     except (URLError, HTTPError, TimeoutError, OSError) as exc:
         raise HTTPException(status_code=503, detail=f"SAGA 센서 분석 실패: {exc}") from exc
     answer = _safe_saga_text(str(reply.get("answer") or ""))
+    answer, llm_claim_guard = guard_llm_claims(answer, evidence_manifest)
     gas_evidence = payload["gas_signal_evidence"] or {}
     release_evidence = payload["simulated_release_evidence"]
     evidence_lines = []
@@ -3352,7 +3359,8 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
             "active_rule_count": len(active_rules), "related_active_count": len(related_rules),
             "sensor_status": payload["sensor_status"],
             "evidence_manifest": evidence_manifest,
-            "response_guidance": response_guidance}
+            "response_guidance": response_guidance,
+            "llm_claim_guard": llm_claim_guard}
 
 
 @app.post("/api/simulations/{job_id}/sensors/{sensor_id}/analyze/stream")
