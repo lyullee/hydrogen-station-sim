@@ -35,6 +35,14 @@ family는 0건으로 유지됐다. 이 재검사는 집계 일치성만 확인�
 `research/private_owner_data_intake_recheck_2026_10_06.json`의
 `schema_recheck`에 남겼고, full-loop 검증 상태는 계속 `false`다.
 
+같은 날 승인된 압력 매핑으로 운전영역 보정 집계를 다시 계산해 동결 프로필과
+대조했다. 8개 파일·10,896개 샘플, 61초 중앙 샘플주기, 64초 최대 공백,
+56.295–63.360 MPa 경계, 0.540 MPa 재시작 여유가 모두 일치했다. 온도·유량·
+이산 상태 매핑이 없는 호출에서는 해당 항목을 일치로 간주하지 않고 생략 목록으로
+기록한다. 불일치 시 프로필은 자동 교체하지 않는다. 재검산 기록은
+`research/confidential_operational_profile_recheck_2026_10_06.json`이며, 실행
+도구는 `scripts/recheck_confidential_operational_profile.py`다.
+
 공개 HITRF 기준선은 `research/nlr_hitrf_public_operational_reference_2026_10_06.json`에 정적 정격과 명시적 주장 경계를 기록하고, LLM 근거 envelope에만 연결한다. 이 기준선으로 기본 시뮬레이션 파라미터를 자동 변경하지 않는다. 공개 페이지에는 자동 로깅이 설명되어 있지만 동기화된 원시 logger archive가 제공되지 않으므로 full-loop 검증 gate의 증거로 세지 않는다.
 
 추가로 비공개 설비 logger에서 식별정보를 제거한 압력·온도·상태 envelope를

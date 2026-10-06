@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_operational_envelope_recheck",
+  "recorded_at": "2026-10-06",
+  "source_scope": "owner-controlled station logger; aggregate recheck only",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "exact_source_dates_published": false,
+  "source_paths_published": false,
+  "fresh_calibration": {
+    "schema_version": 1,
+    "raw_rows_persisted": false,
+    "source_identifiers_published": false,
+    "files_read": 8,
+    "sampled_rows": 10896,
+    "finite_rows": 10896,
+    "duration_s": 659751.0,
+    "median_sample_period_s": 61.0,
+    "maximum_gap_s": 64.0,
+    "boundary_pressure_pa": {
+      "min": 56295000.0,
+      "median": 62500000.0,
+      "max": 63360000.0,
+      "noise_sigma": 310462.0,
+      "positive_ramp_p95": 15409.836
+    },
+    "flow_p95_kg_s": null,
+    "boundary_temperature_degC": {
+      "min": null,
+      "median": null,
+      "max": null
+    },
+    "state_transition_count": 0,
+    "recharge_hysteresis_pa": 540000.0,
+    "recharge_restart_margin_pa": 540000.0,
+    "channel_roles": [
+      "station_pressure"
+    ],
+    "quality_warnings": [],
+    "claim_boundary": "Aggregate station-boundary calibration only; this is not a full station-to-vehicle validation result."
+  },
+  "committed_profile_comparison": {
+    "matches": true,
+    "fields_compared": [
+      "files_read",
+      "sampled_rows",
+      "duration_s",
+      "median_sample_period_s",
+      "maximum_gap_s",
+      "boundary_pressure_pa.min",
+      "boundary_pressure_pa.median",
+      "boundary_pressure_pa.max",
+      "boundary_pressure_pa.noise_sigma",
+      "boundary_pressure_pa.positive_ramp_p95",
+      "recharge_hysteresis_pa",
+      "recharge_restart_margin_pa"
+    ],
+    "fields_omitted_without_attestation": [
+      "boundary_temperature_degC.max",
+      "boundary_temperature_degC.median",
+      "boundary_temperature_degC.min",
+      "flow_p95_kg_s",
+      "state_transition_count"
+    ],
+    "mismatches": [],
+    "fresh_channel_roles": [
+      "station_pressure"
+    ],
+    "expected_channel_roles": [
+      "station_pressure",
+      "discrete_state"
+    ]
+  },
+  "runtime_decision": {
+    "committed_profile_replaced": false,
+    "default_model_parameters_changed": false,
+    "measured_boundary_calibration_remains_opt_in": true,
+    "mismatch_requires_custodian_review": true
+  },
+  "claim_boundary": "This is a de-identified aggregate consistency recheck. It supports station-boundary calibration provenance only; it is not vehicle-side validation, full-loop accuracy, safety certification or a universal limit."
+}
