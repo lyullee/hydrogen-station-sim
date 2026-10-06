@@ -16,6 +16,10 @@ not included.
   generic role is placed in `TraceMapping.authorized_boundary_roles` and, for
   an equipment temperature, `temperature_boundary_role` identifies the same
   role.
+- The lifecycle counter meaning and its full-recharge pressure units may be
+  attested for operator/LLM history context. That attestation does not permit
+  a counter to change capacity, leak rate, relief settings, or failure
+  probability without a separately validated degradation relationship.
 - A mapped channel is never promoted because its source name looks like a
   pressure, temperature, or flow tag.
 

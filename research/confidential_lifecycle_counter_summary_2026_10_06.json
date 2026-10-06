@@ -36,6 +36,18 @@
     }
   },
   "quality_warnings": [],
+  "attestation": {
+    "status": "custodian_attested",
+    "counter_semantics_attested": true,
+    "threshold_units_attested": true,
+    "degradation_relationship_attested": false,
+    "full_recharge_threshold_bar": {
+      "medium_bank": 450.0,
+      "high_bank": 850.0
+    },
+    "raw_mapping_published": false,
+    "source_identity_published": false
+  },
   "eligibility": {
     "station_operating_history_evidence": true,
     "cycle_aware_degradation_fit": false,

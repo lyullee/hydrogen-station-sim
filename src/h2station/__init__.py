@@ -83,6 +83,10 @@ from .calibration_profiles import (
     MeasuredBoundaryCalibrationProfile,
     load_measured_boundary_calibration,
 )
+from .lifecycle_evidence import (
+    LifecycleEvidenceProfile,
+    load_lifecycle_evidence,
+)
 from .safe_operation import SafeFullStationSimulator, SafeOperationTrajectory
 from .nbsdc_ingest import NbsdcColumnMap, NbsdcRefuelTrace, read_nbsdc_workbook
 from .safety_runtime import (
@@ -178,6 +182,8 @@ __all__ = [
     "fit_station_boundary",
     "MeasuredBoundaryCalibrationProfile",
     "load_measured_boundary_calibration",
+    "LifecycleEvidenceProfile",
+    "load_lifecycle_evidence",
     "read_boundary_profile",
     "summarize_lifecycle_counters",
     "synchronize_station_traces",

@@ -42,7 +42,18 @@
       "per-file ordering and gap checks",
       "aggregate-only output",
       "chronological holdout replay before runtime use"
-    ]
+    ],
+    "lifecycle_counter_attestation": {
+      "status": "custodian_attested",
+      "counter_semantics_attested": true,
+      "threshold_units_attested": true,
+      "full_recharge_threshold_bar": {
+        "medium_bank": 450.0,
+        "high_bank": 850.0
+      },
+      "degradation_relationship_attested": false,
+      "runtime_use": "LLM and operator history context only"
+    }
   },
   "next_data_based_step": {
     "implemented": "rights-gated workbook loader for the public heavy-vehicle refuelling candidate",

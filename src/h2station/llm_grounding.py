@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from .calibration_profiles import load_measured_boundary_calibration
+from .lifecycle_evidence import load_lifecycle_evidence
 
 
 def _runtime_calibration_profile(frame: dict[str, Any]) -> dict[str, Any]:
@@ -1095,43 +1096,23 @@ def _public_operating_envelope_screen(
 def _confidential_lifecycle_evidence() -> dict[str, Any] | None:
     """Expose only de-identified lifecycle-counter calibration context."""
 
-    path = Path(__file__).resolve().parents[2] / (
-        "research/confidential_lifecycle_counter_summary_2026_10_06.json"
-    )
-    try:
-        record = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
+    profile = load_lifecycle_evidence()
+    if profile is None:
         return None
-    if (
-        record.get("artifact_type") != "confidential_lifecycle_counter_summary"
-        or record.get("source_identifiers_published") is not False
-        or record.get("raw_rows_persisted") is not False
-    ):
-        return None
-    counters: dict[str, dict[str, Any]] = {}
-    for role, values in (record.get("counters") or {}).items():
-        if not isinstance(values, dict):
-            continue
-        counters[str(role)] = {
-            key: values.get(key)
-            for key in (
-                "sample_count", "observed_min", "observed_max",
-                "positive_increment_count", "total_positive_increment",
-                "maximum_single_increment",
-            )
-            if values.get(key) is not None
-        }
+    metadata = profile.runtime_metadata()
     return {
-        "artifact": "research/confidential_lifecycle_counter_summary_2026_10_06.json",
+        "artifact": metadata["artifact"],
         "evidence_role": "confidential de-identified lifecycle history",
-        "counter_semantics": str(record.get("counter_semantics") or ""),
-        "files_read": record.get("files_read"),
-        "sampled_rows": record.get("sampled_rows"),
-        "counters": counters,
-        "cycle_aware_degradation_fit": (
-            record.get("eligibility", {}).get("cycle_aware_degradation_fit") is True
-        ),
-        "claim_limit": str(record.get("claim_boundary") or ""),
+        "counter_semantics": metadata["counter_semantics"],
+        "sampled_rows": metadata["sampled_rows"],
+        "counters": metadata["counters"],
+        "full_recharge_threshold_bar": metadata["full_recharge_threshold_bar"],
+        "counter_semantics_attested": metadata["counter_semantics_attested"],
+        "threshold_units_attested": metadata["threshold_units_attested"],
+        "cycle_aware_degradation_fit": metadata[
+            "degradation_relationship_attested"
+        ],
+        "claim_limit": metadata["claim_boundary"],
     }
 
 

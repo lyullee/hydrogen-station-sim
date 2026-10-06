@@ -11,6 +11,12 @@ they are not operating-hour measurements. The aggregate is therefore suitable
 for station operating-history context and a future aging-state experiment, but
 it is not a degradation law or a failure-rate estimate.
 
+The data custodian has attested the generic counter meaning and the full-bank
+threshold units: 450 bar for the medium tier and 850 bar for the high tier.
+These thresholds are exposed only as explanatory evidence. The simulator does
+not turn them into a capacity loss, leak-rate change, relief setting or failure
+probability. The degradation relationship remains explicitly unattested.
+
 The current simulator does not silently convert these counts into a capacity,
 heat-transfer, leak, or relief-threshold change. A cycle-aware model must first
 freeze the physical relationship and validate it on a later untouched window.

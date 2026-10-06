@@ -252,6 +252,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     lifecycle = idle["response_evidence"]["confidential_lifecycle_counter_summary"]
     assert lifecycle["cycle_aware_degradation_fit"] is False
     assert lifecycle["counters"]["high_bank_cycles"]["total_positive_increment"] == 1183
+    assert lifecycle["counter_semantics_attested"] is True
+    assert lifecycle["threshold_units_attested"] is True
+    assert lifecycle["full_recharge_threshold_bar"] == {
+        "medium_bank": 450.0,
+        "high_bank": 850.0,
+    }
     station_calibration = idle["response_evidence"][
         "confidential_station_boundary_calibration"
     ]
