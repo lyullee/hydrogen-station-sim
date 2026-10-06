@@ -2452,8 +2452,17 @@
     "recorded_at": "2026-10-06",
     "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
     "gate_impact": "full_loop_external_validation_remains_open",
-    "candidate_count": 5,
+    "candidate_count": 6,
     "eligible_count": 0,
-    "claim_boundary": "Current public-data search/exclusion record only; no numerical validation claim."
+    "claim_boundary": "Current public-data search/exclusion record only; no numerical validation claim.",
+    "source_ids": [
+      "caponi_3emotion_operational_logs_2026_10_06",
+      "fch2rail_ijhe_measurement_record_2026_10_06",
+      "fch2rail_d61_operating_range_2026_10_06",
+      "h2_stations_v2_operational_api_2026_10_06",
+      "ipcei_hrs_inventory_2026_10_06",
+      "methytrucks_hysam_system_measurement_2026_10_06"
+    ],
+    "finding": "The open HySam record adds a rights-cleared component/system measurement context with verified local hash matches, but no candidate supplies the frozen synchronized station-to-vehicle raw loop. Full-loop external validation remains open."
   }
 }

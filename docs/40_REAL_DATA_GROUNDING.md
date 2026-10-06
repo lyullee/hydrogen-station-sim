@@ -69,9 +69,13 @@ boundaries explicitly:
 
 The 2026-10-06 public-data recheck also inspected the 3Emotion operational-log
 record, FCH2RAIL station/vehicle measurements, the FCH2RAIL KPI report, the
-H2-Stations API and the IPCEI inventory. They provide real-station context or
-published curves, but no new rights-cleared synchronized raw station-to-
-vehicle set. The search record is
+H2-Stations API, the IPCEI inventory and the open MetHyTrucks HySam
+system-measurement record (Zenodo DOI `10.5281/zenodo.20590842`). HySam's
+three CC BY 4.0 workbooks are verified against their published hashes and
+provide 0.5 s instrumentation context, but their public metadata do not map
+channels to a vehicle/receptacle or protocol state. These sources provide
+real-station context or published curves, but no new rights-cleared
+synchronized raw station-to-vehicle set. The search record is
 `research/public_full_loop_search_recheck_2026_10_06.json`; its negative result
 keeps the full-loop gate open rather than converting aggregate or plot-only
 evidence into a validation claim.
