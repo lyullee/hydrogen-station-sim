@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-06T05:50:34.610189+00:00",
+  "generated_at": "2026-10-06T07:45:17.733355+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -16,7 +16,7 @@
     "interpretation": "A bounded manuscript may be drafted around model-level and qualitative evidence, but the validated full-station digital-twin objective cannot be declared complete."
   },
   "gate_counts": {
-    "PASS": 73,
+    "PASS": 74,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -110,16 +110,16 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "50c82c65010935ff7db7f8cbd3f8d87a731d8e01ecb219f8ef942a8b4eeb1bdc",
+    "audit_sha256": "2ecae56960009b0c548850e60ec1f2e4ff794d3f133925f47502676bb537ce8b",
     "hiad_readiness_sha256": "e028c9a9b71ecbac658a66d1421834025e2708e07383a21f82b413abfe5fdb86",
     "acquisition_tracker_sha256": "bdaff28618a0bdf3f8bbb7e4ab09b366470fb2ce086b8bf16a3f6362ca7a530a",
     "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",
-    "latest_full_loop_search_sha256": "d42405971c3cb203ed6c76a6a969c1b49c03f86ed731f53652fefdf0809efcc1",
+    "latest_full_loop_search_sha256": "14391668298eea81e1aaff919e9a20fd9c3570694e33cf8998d4156976cba808",
     "operational_benchmark_recheck_sha256": "80e865de45384c7bd48c721125e440f482343c2420095f56f6866390db842e81",
     "operational_benchmark_face_validity_sha256": "64001782ba19ebd3299b0f17caf61f78138d9bc9a7836bc77d6e27f4c0dcec02",
     "candidate_route_count": 31,
     "public_full_loop_search_candidate_count": 17,
-    "latest_public_full_loop_search_candidate_count": 6,
+    "latest_public_full_loop_search_candidate_count": 9,
     "public_operational_benchmark_candidate_count": 18
   },
   "claim_policy": [

@@ -223,6 +223,13 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     }
     assert operational["cross_station_pressure_plausibility"] is True
     assert operational["cross_station_full_loop_validation"] is False
+    assert gates["confidential_operational_profile_recheck_integrity"]["status"] == "PASS"
+    recheck = gates["confidential_operational_profile_recheck_integrity"]["observed"]
+    assert recheck["matches"] is True
+    assert recheck["sampled_rows"] == 10896
+    assert recheck["profile_replaced"] is False
+    assert recheck["opt_in_only"] is True
+    assert recheck["full_loop_claim"] is True
     assert gates["confidential_station_schema_intake_integrity"]["status"] == "PASS"
     schema = gates["confidential_station_schema_intake_integrity"]["observed"]
     assert schema["source_bundle_count"] == 2

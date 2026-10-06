@@ -12,7 +12,7 @@ evidence-readiness decision; it is not a prediction of editorial acceptance.
 
 ## Current decision
 
-Audit snapshot: **2026-10-05 21:10 UTC**
+Audit snapshot: **2026-10-06 07:44 UTC**
 
 | Decision | Result |
 |---|---|
@@ -20,7 +20,12 @@ Audit snapshot: **2026-10-05 21:10 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **73 PASS · 6 FAIL · 7 PENDING**.
+Gate counts: **74 PASS · 6 FAIL · 7 PENDING**.
+
+The fresh de-identified private-data recheck matches the committed
+station-boundary profile across all attested fields. It does not replace the
+profile, change default model parameters, or establish station-to-vehicle
+validation; measured-boundary calibration remains explicitly opt-in.
 
 The manuscript is therefore kept claim-bounded. The current full-loop negative
 result, component-level evidence and all unresolved gates remain disclosed; no

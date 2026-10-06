@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-06T07:16:49.580268+00:00",
+  "generated_at": "2026-10-06T07:44:51.441573+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 73,
+    "PASS": 74,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -411,6 +411,42 @@
         },
         "cross_station_pressure_plausibility": true,
         "cross_station_full_loop_validation": false
+      }
+    },
+    {
+      "id": "confidential_operational_profile_recheck_integrity",
+      "status": "PASS",
+      "claim": "The fresh private-data aggregate recheck matches the committed station-boundary profile without replacing it or widening the validation claim.",
+      "evidence": "research\\confidential_operational_profile_recheck_2026_10_06.json",
+      "requirement": "Privacy flags, compared-field match, explicit omitted un-attested channels, empty mismatch list, opt-in runtime decision and full-loop claim boundary are all retained.",
+      "observed": {
+        "matches": true,
+        "fields_compared": [
+          "files_read",
+          "sampled_rows",
+          "duration_s",
+          "median_sample_period_s",
+          "maximum_gap_s",
+          "boundary_pressure_pa.min",
+          "boundary_pressure_pa.median",
+          "boundary_pressure_pa.max",
+          "boundary_pressure_pa.noise_sigma",
+          "boundary_pressure_pa.positive_ramp_p95",
+          "recharge_hysteresis_pa",
+          "recharge_restart_margin_pa"
+        ],
+        "fields_omitted_without_attestation": [
+          "boundary_temperature_degC.max",
+          "boundary_temperature_degC.median",
+          "boundary_temperature_degC.min",
+          "flow_p95_kg_s",
+          "state_transition_count"
+        ],
+        "mismatches": [],
+        "sampled_rows": 10896,
+        "profile_replaced": false,
+        "opt_in_only": true,
+        "full_loop_claim": true
       }
     },
     {

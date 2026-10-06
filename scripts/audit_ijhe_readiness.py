@@ -393,6 +393,67 @@ def audit(root: Path) -> dict[str, object]:
         } if operational_calibration and operational_replay else "missing",
     ))
 
+    operational_recheck_path = root / (
+        "research/confidential_operational_profile_recheck_2026_10_06.json"
+    )
+    operational_recheck = _json(operational_recheck_path)
+    recheck_comparison = (operational_recheck or {}).get(
+        "committed_profile_comparison"
+    ) or {}
+    recheck_runtime = (operational_recheck or {}).get("runtime_decision") or {}
+    operational_recheck_pass = bool(
+        (operational_recheck or {}).get("schema_version") == 1
+        and (operational_recheck or {}).get("artifact_type")
+        == "confidential_operational_envelope_recheck"
+        and (operational_recheck or {}).get("source_identifiers_published") is False
+        and (operational_recheck or {}).get("raw_rows_persisted") is False
+        and (operational_recheck or {}).get("exact_source_dates_published") is False
+        and (operational_recheck or {}).get("source_paths_published") is False
+        and recheck_comparison.get("matches") is True
+        and bool(recheck_comparison.get("fields_compared"))
+        and bool(recheck_comparison.get("fields_omitted_without_attestation"))
+        and recheck_comparison.get("mismatches") == []
+        and recheck_runtime.get("committed_profile_replaced") is False
+        and recheck_runtime.get("default_model_parameters_changed") is False
+        and recheck_runtime.get("measured_boundary_calibration_remains_opt_in") is True
+        and recheck_runtime.get("mismatch_requires_custodian_review") is True
+        and "vehicle-side validation" in str(
+            (operational_recheck or {}).get("claim_boundary", "")
+        ).lower()
+        and "full-loop" in str(
+            (operational_recheck or {}).get("claim_boundary", "")
+        ).lower()
+    )
+    gates.append(_gate(
+        "confidential_operational_profile_recheck_integrity",
+        "PASS" if operational_recheck_pass else (
+            "FAIL" if operational_recheck else "PENDING"
+        ),
+        "The fresh private-data aggregate recheck matches the committed station-boundary profile without replacing it or widening the validation claim.",
+        str(operational_recheck_path.relative_to(root)),
+        "Privacy flags, compared-field match, explicit omitted un-attested channels, empty mismatch list, opt-in runtime decision and full-loop claim boundary are all retained.",
+        {
+            "matches": recheck_comparison.get("matches"),
+            "fields_compared": recheck_comparison.get("fields_compared"),
+            "fields_omitted_without_attestation": recheck_comparison.get(
+                "fields_omitted_without_attestation"
+            ),
+            "mismatches": recheck_comparison.get("mismatches"),
+            "sampled_rows": ((operational_recheck or {}).get("fresh_calibration") or {}).get(
+                "sampled_rows"
+            ),
+            "profile_replaced": recheck_runtime.get("committed_profile_replaced"),
+            "opt_in_only": recheck_runtime.get(
+                "measured_boundary_calibration_remains_opt_in"
+            ),
+            "full_loop_claim": "vehicle-side validation" in str(
+                (operational_recheck or {}).get("claim_boundary", "")
+            ).lower() and "full-loop" in str(
+                (operational_recheck or {}).get("claim_boundary", "")
+            ).lower(),
+        } if operational_recheck else "missing",
+    ))
+
     schema_audit_path = root / "research/confidential_station_schema_audit_2026_10.json"
     owner_recheck_path = root / "research/private_owner_data_intake_recheck_2026_10_06.json"
     schema_audit = _json(schema_audit_path)
