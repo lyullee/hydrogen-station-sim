@@ -490,7 +490,13 @@ class VirtualSafetyRuntime:
                          "storage": 90, "dispenser": 0}[group]
             exposure = 1.0 + .25 * cos(radians(self.wind_direction_deg - direction))
             measured = 1.0
-            if ventilation_running and mass_flow_g_s is not None and leak_diameter_m is not None:
+            if (
+                ventilation_running
+                and mass_flow_g_s is not None
+                and leak_diameter_m is not None
+                and float(mass_flow_g_s) > 0.0
+                and float(leak_diameter_m) > 0.0
+            ):
                 relative_angle = abs(
                     (self.wind_direction_deg - direction + 180.0) % 360.0 - 180.0
                 )

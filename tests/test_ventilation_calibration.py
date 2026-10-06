@@ -39,6 +39,9 @@ def test_virtual_detector_uses_public_factor_only_when_release_inputs_exist():
     )
     assert calibrated == pytest.approx(base * 0.822490737992286)
     assert safety.detector_multiplier("cascade.medium") == pytest.approx(base)
+    assert safety.detector_multiplier(
+        "cascade.medium", mass_flow_g_s=0.0, leak_diameter_m=0.001
+    ) == pytest.approx(base)
 
 
 def test_virtual_detector_can_select_median_for_sensitivity_comparison():
