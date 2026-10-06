@@ -91,6 +91,18 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     early = prompt_evidence_summary(idle)
     assert early["impact_status"] == "not_requested"
     assert early["public_experimental_benchmarks"]["sources"]
+    instrumentation = idle["response_evidence"][
+        "public_measurement_instrumentation"
+    ]
+    assert instrumentation["source_count"] == 2
+    assert instrumentation["file_count"] == 13
+    assert instrumentation["observed_sampling_intervals_s"] == [0.5]
+    assert instrumentation["station_measurement_auxiliary_eligible"] is True
+    assert instrumentation["full_loop_holdout_eligible"] is False
+    assert instrumentation["channel_dictionary_present"] is False
+    assert early["public_measurement_instrumentation"][
+        "vehicle_or_receptacle_channels_identified"
+    ] is False
     screen = early["public_operating_envelope_screen"]
     assert screen["status"] == "screened"
     assert screen["flow_context"] == "idle"
@@ -126,6 +138,10 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     ] is True
     assert early["evidence_digest"] == idle["evidence_digest"]
     header = prompt_evidence_header(idle)
+    assert header["public_measurement_instrumentation"]["file_count"] == 13
+    assert header["public_measurement_instrumentation"][
+        "full_loop_holdout_eligible"
+    ] is False
     public_links = header["public_source_links"]
     public_link_ids = {row["id"] for row in public_links}
     assert {

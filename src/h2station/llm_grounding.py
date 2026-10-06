@@ -579,6 +579,62 @@ def _public_experimental_benchmarks() -> dict[str, Any] | None:
     }
 
 
+def _public_measurement_instrumentation_evidence() -> dict[str, Any] | None:
+    """Expose public sampling-workbook scope without inventing channel meaning.
+
+    The MetHyTrucks workbooks are real, openly licensed measurements, but the
+    public record does not identify vehicle/receptacle channels or a complete
+    refuelling protocol.  Supplying only their provenance and timing context
+    keeps the assistant from silently treating tag names as HRS variables.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/metHyTrucks_public_measurement_recheck_2026_10_04.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    classification = record.get("classification") or {}
+    inspection = record.get("file_level_inspection") or {}
+    if (
+        record.get("decision") != "PUBLIC_RAW_HRS_SAMPLING_TIME_SERIES_AUXILIARY_ONLY"
+        or classification.get("station_measurement_auxiliary_eligible") is not True
+        or classification.get("full_loop_holdout_eligible") is not False
+    ):
+        return None
+    sources = []
+    for source in record.get("sources") or []:
+        if not isinstance(source, dict) or not source.get("record_id"):
+            continue
+        sources.append({
+            "record_id": str(source.get("record_id")),
+            "doi": str(source.get("doi") or ""),
+            "title": str(source.get("title") or ""),
+            "license": str(source.get("license") or ""),
+            "observed_file_count": source.get("observed_file_count"),
+        })
+    intervals = sorted({
+        float(item.get("sampling_interval_observed_s"))
+        for item in inspection.get("files") or []
+        if isinstance(item, dict)
+        and isinstance(item.get("sampling_interval_observed_s"), (int, float))
+    })
+    return {
+        "artifact": "research/metHyTrucks_public_measurement_recheck_2026_10_04.json",
+        "evidence_role": "public HRS sampling-system instrumentation context",
+        "source_count": len(sources),
+        "sources": sources,
+        "file_count": inspection.get("file_count"),
+        "observed_sampling_intervals_s": intervals,
+        "station_measurement_auxiliary_eligible": True,
+        "full_loop_holdout_eligible": False,
+        "channel_dictionary_present": False,
+        "vehicle_or_receptacle_channels_identified": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _release_model_validation_boundary() -> dict[str, Any] | None:
     """Expose the locked component-release limitation to decision support.
 
@@ -1314,6 +1370,11 @@ def build_evidence_manifest(
         envelope_screen = _public_operating_envelope_screen(frame, public_benchmarks)
         if envelope_screen is not None:
             envelope["response_evidence"]["public_operating_envelope_screen"] = envelope_screen
+    public_measurement = _public_measurement_instrumentation_evidence()
+    if public_measurement is not None:
+        envelope["response_evidence"][
+            "public_measurement_instrumentation"
+        ] = public_measurement
     release_boundary = _release_model_validation_boundary()
     if release_boundary is not None:
         envelope["response_evidence"][
@@ -1396,6 +1457,20 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "sources": rows,
                 "claim_limit": short(benchmarks.get("claim_limit")),
             }
+    public_measurement = evidence.get("public_measurement_instrumentation")
+    if isinstance(public_measurement, dict):
+        summary["public_measurement_instrumentation"] = {
+            key: public_measurement.get(key)
+            for key in (
+                "evidence_role", "source_count", "file_count",
+                "observed_sampling_intervals_s",
+                "station_measurement_auxiliary_eligible",
+                "full_loop_holdout_eligible",
+                "channel_dictionary_present",
+                "vehicle_or_receptacle_channels_identified", "claim_limit",
+            )
+            if public_measurement.get(key) is not None
+        }
     envelope_screen = evidence.get("public_operating_envelope_screen")
     if isinstance(envelope_screen, dict):
         summary["public_operating_envelope_screen"] = {
@@ -1639,11 +1714,32 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     hitrf_storage = hitrf_reference.get("storage") or {}
     hitrf_thermal = hitrf_reference.get("dispensing_and_thermal") or {}
     envelope_screen = evidence.get("public_operating_envelope_screen") or {}
+    public_measurement = evidence.get("public_measurement_instrumentation") or {}
     release_boundary = evidence.get("proust_release_model_validation_boundary") or {}
     return {
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "public_source_links": _public_source_links(evidence),
         "public_experiment_sources": benchmark_ids,
+        "public_measurement_instrumentation": {
+            "source_count": public_measurement.get("source_count"),
+            "file_count": public_measurement.get("file_count"),
+            "observed_sampling_intervals_s": public_measurement.get(
+                "observed_sampling_intervals_s"
+            ),
+            "station_measurement_auxiliary_eligible": public_measurement.get(
+                "station_measurement_auxiliary_eligible"
+            ) is True,
+            "full_loop_holdout_eligible": public_measurement.get(
+                "full_loop_holdout_eligible"
+            ) is True,
+            "channel_dictionary_present": public_measurement.get(
+                "channel_dictionary_present"
+            ) is True,
+            "vehicle_or_receptacle_channels_identified": public_measurement.get(
+                "vehicle_or_receptacle_channels_identified"
+            ) is True,
+            "claim_limit": public_measurement.get("claim_limit"),
+        },
         "public_operating_envelope_screen": {
             "status": envelope_screen.get("status"),
             "source_id": envelope_screen.get("source_id"),
