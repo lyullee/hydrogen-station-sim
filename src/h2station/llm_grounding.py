@@ -635,6 +635,66 @@ def _public_measurement_instrumentation_evidence() -> dict[str, Any] | None:
     }
 
 
+def _preslhy_validation_boundary() -> dict[str, Any] | None:
+    """Expose development versus independent PRESLHY outcomes separately.
+
+    The E3.1 development score is useful context, while the E5.1 result is the
+    independent holdout that controls the claim.  Neither result is used to
+    tune the runtime release model here.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    holdout_path = root / "data/public_validation/results/preslhy_e5_1_holdout.json"
+    development_path = root / "research/preslhy_nonadiabatic_development_result.json"
+    protocol_path = root / "research/preslhy_e5_1_holdout_protocol.json"
+    try:
+        holdout = json.loads(holdout_path.read_text(encoding="utf-8"))
+        development = json.loads(development_path.read_text(encoding="utf-8"))
+        protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    primary = holdout.get("primary_ambient") or {}
+    holdout_aggregate = primary.get("aggregate") or {}
+    development_aggregate = development.get("aggregate") or {}
+    locked_model = protocol.get("locked_model") or {}
+    if (
+        development.get("evidence_role") != "consumed_development_data_not_external_validation"
+        or development.get("claim_prohibited") is not True
+        or holdout_aggregate.get("claim_supported") is not False
+        or holdout_aggregate.get("minimum_requirements_met") is not False
+        or not isinstance(holdout.get("claim_boundary"), str)
+        or not isinstance(locked_model.get("module"), str)
+    ):
+        return None
+    return {
+        "artifact": "data/public_validation/results/preslhy_e5_1_holdout.json",
+        "development_artifact": "research/preslhy_nonadiabatic_development_result.json",
+        "evidence_role": "public source-depletion development and independent holdout boundary",
+        "locked_model_module": locked_model.get("module"),
+        "locked_discharge_coefficient": locked_model.get("discharge_coefficient"),
+        "development": {
+            "cases": development_aggregate.get("cases"),
+            "joint_primary_passes": development_aggregate.get("joint_primary_passes"),
+            "joint_primary_pass_fraction": development_aggregate.get(
+                "joint_primary_pass_fraction"
+            ),
+            "claim_prohibited": True,
+        },
+        "independent_holdout": {
+            "cases": holdout_aggregate.get("cases"),
+            "joint_primary_passes": holdout_aggregate.get("joint_primary_passes"),
+            "joint_primary_pass_fraction": holdout_aggregate.get(
+                "joint_primary_pass_fraction"
+            ),
+            "minimum_requirements_met": False,
+            "claim_supported": False,
+            "claim_threshold": holdout_aggregate.get("claim_threshold"),
+        },
+        "runtime_model_parameter_changed": False,
+        "claim_limit": str(holdout.get("claim_boundary") or ""),
+    }
+
+
 def _release_model_validation_boundary() -> dict[str, Any] | None:
     """Expose the locked component-release limitation to decision support.
 
@@ -1375,6 +1435,9 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_measurement_instrumentation"
         ] = public_measurement
+    preslhy = _preslhy_validation_boundary()
+    if preslhy is not None:
+        envelope["response_evidence"]["preslhy_validation_boundary"] = preslhy
     release_boundary = _release_model_validation_boundary()
     if release_boundary is not None:
         envelope["response_evidence"][
@@ -1470,6 +1533,21 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "vehicle_or_receptacle_channels_identified", "claim_limit",
             )
             if public_measurement.get(key) is not None
+        }
+    preslhy = evidence.get("preslhy_validation_boundary")
+    if isinstance(preslhy, dict):
+        summary["preslhy_validation_boundary"] = {
+            "evidence_role": preslhy.get("evidence_role"),
+            "locked_model_module": preslhy.get("locked_model_module"),
+            "locked_discharge_coefficient": preslhy.get(
+                "locked_discharge_coefficient"
+            ),
+            "development": preslhy.get("development") or {},
+            "independent_holdout": preslhy.get("independent_holdout") or {},
+            "runtime_model_parameter_changed": preslhy.get(
+                "runtime_model_parameter_changed"
+            ),
+            "claim_limit": short(preslhy.get("claim_limit")),
         }
     envelope_screen = evidence.get("public_operating_envelope_screen")
     if isinstance(envelope_screen, dict):
@@ -1715,6 +1793,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     hitrf_thermal = hitrf_reference.get("dispensing_and_thermal") or {}
     envelope_screen = evidence.get("public_operating_envelope_screen") or {}
     public_measurement = evidence.get("public_measurement_instrumentation") or {}
+    preslhy = evidence.get("preslhy_validation_boundary") or {}
     release_boundary = evidence.get("proust_release_model_validation_boundary") or {}
     return {
         "runtime_calibration": manifest.get("runtime_calibration") or {},
@@ -1739,6 +1818,25 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "vehicle_or_receptacle_channels_identified"
             ) is True,
             "claim_limit": public_measurement.get("claim_limit"),
+        },
+        "preslhy_validation_boundary": {
+            "locked_model_module": preslhy.get("locked_model_module"),
+            "locked_discharge_coefficient": preslhy.get(
+                "locked_discharge_coefficient"
+            ),
+            "development_joint_primary_pass_fraction": (
+                preslhy.get("development") or {}
+            ).get("joint_primary_pass_fraction"),
+            "independent_holdout_joint_primary_pass_fraction": (
+                preslhy.get("independent_holdout") or {}
+            ).get("joint_primary_pass_fraction"),
+            "independent_holdout_claim_supported": (
+                preslhy.get("independent_holdout") or {}
+            ).get("claim_supported") is True,
+            "runtime_model_parameter_changed": preslhy.get(
+                "runtime_model_parameter_changed"
+            ) is True,
+            "claim_limit": preslhy.get("claim_limit"),
         },
         "public_operating_envelope_screen": {
             "status": envelope_screen.get("status"),

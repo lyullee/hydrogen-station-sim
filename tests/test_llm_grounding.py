@@ -103,6 +103,14 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert early["public_measurement_instrumentation"][
         "vehicle_or_receptacle_channels_identified"
     ] is False
+    preslhy = idle["response_evidence"]["preslhy_validation_boundary"]
+    assert preslhy["development"]["joint_primary_passes"] == 20
+    assert preslhy["independent_holdout"]["joint_primary_passes"] == 2
+    assert preslhy["independent_holdout"]["claim_supported"] is False
+    assert preslhy["runtime_model_parameter_changed"] is False
+    assert early["preslhy_validation_boundary"][
+        "independent_holdout"
+    ]["minimum_requirements_met"] is False
     screen = early["public_operating_envelope_screen"]
     assert screen["status"] == "screened"
     assert screen["flow_context"] == "idle"
@@ -141,6 +149,9 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert header["public_measurement_instrumentation"]["file_count"] == 13
     assert header["public_measurement_instrumentation"][
         "full_loop_holdout_eligible"
+    ] is False
+    assert header["preslhy_validation_boundary"][
+        "independent_holdout_claim_supported"
     ] is False
     public_links = header["public_source_links"]
     public_link_ids = {row["id"] for row in public_links}
