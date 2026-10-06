@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_measured_boundary_runtime_update",
+  "recorded_at": "2026-10-06",
+  "evidence_artifact": "research/confidential_operational_envelope_calibration_summary_2026_10_06.json",
+  "change": {
+    "opt_in_setting": "process_settings.measured_boundary_calibration",
+    "previous_behavior": "The measured pressure margin was used for recharge restart thresholds; dispatch selection kept the 1.0 MPa reference margin.",
+    "current_behavior": "When explicitly enabled, the measured station-boundary margin is used for cascade dispatch selection and recharge restart selection.",
+    "measured_margin_pa": 540000.0,
+    "reference_margin_pa": 1000000.0
+  },
+  "validation": {
+    "unit_test": "tests/test_process_operations.py::test_opt_in_measured_boundary_profile_can_set_dispatch_margin",
+    "targeted_result": "27 passed",
+    "default_behavior_unchanged": true,
+    "vehicle_side_validation": false,
+    "full_loop_validation": false
+  },
+  "privacy_boundary": {
+    "raw_rows_persisted": false,
+    "source_identifiers_published": false,
+    "exact_source_dates_published": false,
+    "manufacturer_or_model_published": false
+  },
+  "claim_boundary": "This is an opt-in station-boundary control calibration. It reduces dispatch/recharge chatter around the observed pressure noise band; it does not validate vehicle-side pressure, temperature, mass flow, protocol conformance, accident frequency or consequence distance."
+}

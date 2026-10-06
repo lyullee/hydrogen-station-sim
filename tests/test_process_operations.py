@@ -148,6 +148,20 @@ def test_operator_bank_target_does_not_stop_one_mpa_early():
     assert selected == 1
 
 
+def test_opt_in_measured_boundary_profile_can_set_dispatch_margin():
+    """The measured station-boundary profile must affect bank selection only when opted in."""
+    default = build_reference_scenario(
+        ReferenceScenario(), UnavailableHyRAMBackend()
+    )
+    calibrated = build_reference_scenario(
+        ReferenceScenario(station_dispatch_pressure_margin_pa=540_000.0),
+        UnavailableHyRAMBackend(),
+    )
+
+    assert default.station.supervisor.parameters.minimum_dispatch_pressure_margin_pa == pytest.approx(1.0e6)
+    assert calibrated.station.supervisor.parameters.minimum_dispatch_pressure_margin_pa == pytest.approx(540_000.0)
+
+
 def test_recharge_bank_waits_for_configured_restart_margin_after_target():
     built, _ = _station(ProcessSettings().model_dump())
     gases = tuple(bank.gas_state(state) for bank, state in

@@ -448,6 +448,13 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             delivery_temperature_k=request.delivery_temperature_c + 273.15,
             maximum_mass_flow_kg_s=request.maximum_mass_flow_g_s / 1000.0,
             risk_update_period_s=max(1.0, 5.0 * request.control_period_s),
+            # The owner-controlled profile is a station-boundary dispatch
+            # reference.  Apply it only when the operator explicitly opts in;
+            # the default reference model remains unchanged.
+            station_dispatch_pressure_margin_pa=(
+                measured_profile.recharge_restart_margin_pa
+                if measured_profile is not None else None
+            ),
             station_recharge_hysteresis_pa=(
                 measured_profile.recharge_hysteresis_pa
                 if measured_profile is not None else None

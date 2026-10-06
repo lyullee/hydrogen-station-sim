@@ -122,6 +122,15 @@ overfill exercise; relief valves and independent ESD protections remain separate
 Trailer pressure falls as compressor transfer removes mass. Its fixed volume and
 isothermal temperature are explicit reference-model assumptions.
 
+The **실측 경계 보정** option is an explicit opt-in. It loads only the
+de-identified station-boundary aggregate in
+`research/confidential_operational_envelope_calibration_summary_2026_10_06.json`.
+The observed pressure margin is applied to both cascade-bank dispatch and
+recharge restart selection, reducing READY/CHARGE chatter around the measured
+noise band. The default reference model remains unchanged; the profile does
+not calibrate vehicle-side pressure, temperature, mass flow, protocol
+conformance, or consequence distance.
+
 Seven virtual relief valves cover the three storage banks, two dispenser hoses,
 and two vehicle tanks. Their enable switches, opening and closing pressures, and
 orifice sizes are adjustable during a run. A valve stays open until pressure

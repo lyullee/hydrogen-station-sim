@@ -38,8 +38,12 @@ The source index does not change the numerical model or turn aggregate public
 results into a holdout. The runtime must continue to describe the following
 boundaries explicitly:
 
-- `measured_boundary_calibration` is opt-in and currently changes only the
-  station-bank recharge hysteresis.
+- `measured_boundary_calibration` is opt-in. It applies the de-identified
+  station-boundary pressure margin to both cascade dispatch and recharge
+  restart selection, so a bank is not repeatedly selected around the measured
+  pressure noise band. It does not alter vehicle geometry, temperature or flow
+  parameters because those channel roles are not attested in the private
+  aggregate.
 - The private pressure replay supports a station-boundary plausibility check,
   not a station-to-vehicle validation.
 - Public aggregate plots and facility ratings support operating-range and
