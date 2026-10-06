@@ -11,12 +11,12 @@
   "tests": {
     "targeted": {
       "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_digital_twin_direct_qa.py tests/test_hiad_action_playbook_coverage.py tests/test_hiad_accident_response_coverage_evaluation.py -q",
-      "passed": 17,
+      "passed": 19,
       "warnings": 2
     },
     "full_suite": {
       "command": ".venv\\Scripts\\python.exe -m pytest -q",
-      "passed": 654,
+      "passed": 662,
       "failed": 0,
       "warnings": 16
     }
@@ -52,7 +52,8 @@
     "runtime evidence preserves reference versus capacity/EOS geometry basis and capacities for each simulation snapshot",
     "public HyTF 70 MPa tank trace is carried as hash-linked component-boundary evidence without a full-loop claim",
     "virtual detector alarm/trip policy is loaded from the public concentration replay record with its claim boundary",
-    "virtual detector concentration scale is derived from 22 public concentration traces and carries an explicit open-channel claim boundary"
+    "virtual detector concentration scale is derived from 22 public concentration traces and carries an explicit open-channel claim boundary",
+    "public experimental operating benchmarks are carried into the evidence envelope with pressure-class selection and explicit partial-boundary claim limits"
   ],
   "not_established": [
     "physics validity of the consequence model",
@@ -296,5 +297,17 @@
     "full_loop_external_holdout_eligible": false,
     "claim_supported": false,
     "interpretation": "hash-linked public tank boundary candidate; component screening only until a separately frozen protocol is run"
+  },
+  "public_operating_benchmarks": {
+    "evidence": "research/public_experimental_benchmarks_2026_10_06.json",
+    "source_count": 3,
+    "source_ids": [
+      "NREL_HDVS_2022_TANK_HOSE_TRACE",
+      "NREL_HD_FAST_FLOW_2024_REPORT",
+      "FCH2RAIL_D61_350BAR_REPORT"
+    ],
+    "pressure_class_selection": "35 MPa FCH2RAIL context below 50 MPa; H70 NREL context above 50 MPa",
+    "full_loop_holdout_eligible": false,
+    "interpretation": "These are aggregate public experimental benchmarks and a separately controlled tank/hose trace. They provide real operating-range context and partial-boundary evidence; they do not establish complete station-to-vehicle digital-twin accuracy, accident frequency, safety distance, or field certification."
   }
 }

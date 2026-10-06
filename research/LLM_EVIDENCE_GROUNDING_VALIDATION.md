@@ -49,6 +49,7 @@ contains:
   into a safety limit, trip criterion, or full-loop validation claim;
 - public real-station operating context for back-to-back fueling, with its
   synchronized-raw-log and full-loop eligibility boundary;
+- public operating-range benchmarks for 35 MPa transportable supply and H70 high-flow filling, with pressure-class selection and an explicit partial-boundary/full-loop claim limit;
 - consequence flow-boundary status, requested process flow, HyRAM modeled flow,
   and an explicit mismatch claim limit when high-pressure choked flow causes
   the physics adapter to recompute the release rate;
@@ -65,10 +66,10 @@ The following tests passed in the repository virtual environment:
 
 ```text
 .venv\Scripts\python.exe -m pytest tests/test_llm_grounding.py tests/test_digital_twin_direct_qa.py tests/test_hiad_action_playbook_coverage.py tests/test_hiad_accident_response_coverage_evaluation.py -q
-17 passed, 2 warnings
+19 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-654 passed, 16 warnings
+662 passed, 16 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
