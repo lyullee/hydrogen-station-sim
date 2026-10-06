@@ -513,6 +513,52 @@ def audit(root: Path) -> dict[str, object]:
         } if channel_quality else "missing",
     ))
 
+    equipment_drift_path = root / (
+        "research/confidential_station_equipment_drift_recheck_2026_10_06.json"
+    )
+    equipment_drift = _json(equipment_drift_path)
+    drift_comparison = (equipment_drift or {}).get("comparison") or {}
+    drift_runtime = (equipment_drift or {}).get("runtime_decision") or {}
+    drift_eligibility = (equipment_drift or {}).get("eligibility") or {}
+    equipment_drift_pass = bool(
+        (equipment_drift or {}).get("schema_version") == 1
+        and (equipment_drift or {}).get("artifact_type")
+        == "confidential_station_equipment_drift_recheck"
+        and (equipment_drift or {}).get("source_identifiers_published") is False
+        and (equipment_drift or {}).get("raw_rows_persisted") is False
+        and (equipment_drift or {}).get("exact_source_dates_published") is False
+        and (equipment_drift or {}).get("source_paths_published") is False
+        and (equipment_drift or {}).get("fresh_calibration", {}).get("sampled_rows", 0) > 0
+        and drift_comparison.get("matches") is False
+        and bool(drift_comparison.get("mismatches"))
+        and drift_runtime.get("profile_replaced") is False
+        and drift_runtime.get("default_model_parameters_changed") is False
+        and drift_runtime.get("measured_boundary_calibration_remains_opt_in") is True
+        and drift_runtime.get("mismatch_requires_custodian_review") is True
+        and drift_eligibility.get("equipment_drift_recheck_supported") is True
+        and drift_eligibility.get("temperature_or_flow_parameter_fit_supported") is False
+        and drift_eligibility.get("full_station_vehicle_validation") is False
+        and drift_eligibility.get("full_loop_holdout_eligible") is False
+    )
+    gates.append(_gate(
+        "confidential_station_equipment_drift_integrity",
+        "PASS" if equipment_drift_pass else (
+            "FAIL" if equipment_drift else "PENDING"
+        ),
+        "A fresh private equipment-log window is checked for drift and is prevented from silently replacing the retained station-boundary profile.",
+        str(equipment_drift_path.relative_to(root)),
+        "Privacy flags, an explicit mismatch, no automatic profile/model update, custodian review requirement and full-loop exclusion are retained.",
+        {
+            "sampled_rows": (equipment_drift or {}).get("fresh_calibration", {}).get("sampled_rows"),
+            "matches": drift_comparison.get("matches"),
+            "mismatch_fields": [item.get("field") for item in drift_comparison.get("mismatches", [])],
+            "profile_replaced": drift_runtime.get("profile_replaced"),
+            "default_model_parameters_changed": drift_runtime.get("default_model_parameters_changed"),
+            "mismatch_requires_custodian_review": drift_runtime.get("mismatch_requires_custodian_review"),
+            "full_loop_holdout_eligible": drift_eligibility.get("full_loop_holdout_eligible"),
+        } if equipment_drift else "missing",
+    ))
+
     schema_audit_path = root / "research/confidential_station_schema_audit_2026_10.json"
     owner_recheck_path = root / "research/private_owner_data_intake_recheck_2026_10_06.json"
     schema_audit = _json(schema_audit_path)

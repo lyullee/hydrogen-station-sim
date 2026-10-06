@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-06T07:59:24.018689+00:00",
+  "generated_at": "2026-10-06T08:24:49.013130+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 75,
+    "PASS": 76,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -507,6 +507,32 @@
         },
         "discrete_state_transition_count": 1283,
         "temperature_or_flow_parameter_fit_supported": false,
+        "full_loop_holdout_eligible": false
+      }
+    },
+    {
+      "id": "confidential_station_equipment_drift_integrity",
+      "status": "PASS",
+      "claim": "A fresh private equipment-log window is checked for drift and is prevented from silently replacing the retained station-boundary profile.",
+      "evidence": "research\\confidential_station_equipment_drift_recheck_2026_10_06.json",
+      "requirement": "Privacy flags, an explicit mismatch, no automatic profile/model update, custodian review requirement and full-loop exclusion are retained.",
+      "observed": {
+        "sampled_rows": 1426,
+        "matches": false,
+        "mismatch_fields": [
+          "files_read",
+          "sampled_rows",
+          "duration_s",
+          "maximum_gap_s",
+          "boundary_pressure_pa.median",
+          "boundary_pressure_pa.max",
+          "boundary_pressure_pa.noise_sigma",
+          "boundary_pressure_pa.positive_ramp_p95",
+          "state_transition_count"
+        ],
+        "profile_replaced": false,
+        "default_model_parameters_changed": false,
+        "mismatch_requires_custodian_review": true,
         "full_loop_holdout_eligible": false
       }
     },

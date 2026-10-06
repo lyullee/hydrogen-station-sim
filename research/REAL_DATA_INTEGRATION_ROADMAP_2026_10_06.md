@@ -68,6 +68,14 @@ attestation도 받지 않았으므로 controller에 자동 주입하지 않는�
 `research/confidential_station_boundary_channel_envelopes_2026_10_06.json`에
 보존한다.
 
+추가로 새로운 장비 로그 구간을 기존 운전 경계 프로필과 비교하는 드리프트
+재점검을 수행했다. 새 구간은 1,426개 표본에서 기존 8개 파일 집계와 표본 수,
+관측 기간, 압력 중앙값·잡음, 상태 전이 수가 달랐다. 이 차이는 보정 프로필을
+자동 교체하지 않고 custodian 검토 대상으로 격리했다. 기록은
+`research/confidential_station_equipment_drift_recheck_2026_10_06.json`과
+`scripts/recheck_confidential_equipment_drift.py`에 남겼으며, 온도·유량 보정과
+full-loop 검증은 계속 보류한다.
+
 차량 용기 형상은 `capacity_eos` 선택지로 선언 용량과 공칭 압력에서 표 형상방정식
 밀도로 체적을 계산할 수 있게 했다. 2026-10-06에 이미 열어본 공개 개발 케이스
 8건을 재생한 결과는 0/8 screening pass로, 기존 `capacity_scaled`의 1/8보다

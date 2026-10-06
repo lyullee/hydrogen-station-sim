@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-06 07:44 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **75 PASS · 6 FAIL · 7 PENDING**.
+Gate counts: **76 PASS · 6 FAIL · 7 PENDING**.
 
 The fresh de-identified private-data recheck matches the committed
 station-boundary profile across all attested fields. It does not replace the

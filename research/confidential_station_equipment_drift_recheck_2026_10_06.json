@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_station_equipment_drift_recheck",
+  "recorded_at": "2026-10-06",
+  "source_scope": "owner-controlled equipment logger; generic aggregate only",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "exact_source_dates_published": false,
+  "source_paths_published": false,
+  "fresh_calibration": {
+    "schema_version": 1,
+    "raw_rows_persisted": false,
+    "source_identifiers_published": false,
+    "files_read": 1,
+    "sampled_rows": 1426,
+    "finite_rows": 1426,
+    "duration_s": 86357.0,
+    "median_sample_period_s": 61.0,
+    "maximum_gap_s": 63.0,
+    "boundary_pressure_pa": {
+      "min": 56295000.0,
+      "median": 60882500.0,
+      "max": 63260000.0,
+      "noise_sigma": 332948.9,
+      "positive_ramp_p95": 14835.246
+    },
+    "flow_p95_kg_s": null,
+    "boundary_temperature_degC": {
+      "min": null,
+      "median": null,
+      "max": null
+    },
+    "state_transition_count": 44,
+    "recharge_hysteresis_pa": 540000.0,
+    "recharge_restart_margin_pa": 540000.0,
+    "channel_roles": [
+      "station_pressure",
+      "discrete_state"
+    ],
+    "quality_warnings": [],
+    "claim_boundary": "Aggregate station-boundary calibration only; this is not a full station-to-vehicle validation result."
+  },
+  "comparison": {
+    "matches": false,
+    "fields_compared": [
+      "files_read",
+      "sampled_rows",
+      "duration_s",
+      "median_sample_period_s",
+      "maximum_gap_s",
+      "boundary_pressure_pa.min",
+      "boundary_pressure_pa.median",
+      "boundary_pressure_pa.max",
+      "boundary_pressure_pa.noise_sigma",
+      "boundary_pressure_pa.positive_ramp_p95",
+      "recharge_restart_margin_pa",
+      "state_transition_count"
+    ],
+    "mismatches": [
+      {
+        "field": "files_read",
+        "fresh": 1,
+        "retained": 8
+      },
+      {
+        "field": "sampled_rows",
+        "fresh": 1426,
+        "retained": 10896
+      },
+      {
+        "field": "duration_s",
+        "fresh": 86357.0,
+        "retained": 659751.0
+      },
+      {
+        "field": "maximum_gap_s",
+        "fresh": 63.0,
+        "retained": 64.0
+      },
+      {
+        "field": "boundary_pressure_pa.median",
+        "fresh": 60882500.0,
+        "retained": 62500000.0
+      },
+      {
+        "field": "boundary_pressure_pa.max",
+        "fresh": 63260000.0,
+        "retained": 63360000.0
+      },
+      {
+        "field": "boundary_pressure_pa.noise_sigma",
+        "fresh": 332948.9,
+        "retained": 310462.0
+      },
+      {
+        "field": "boundary_pressure_pa.positive_ramp_p95",
+        "fresh": 14835.246,
+        "retained": 15409.836
+      },
+      {
+        "field": "state_transition_count",
+        "fresh": 44,
+        "retained": 274
+      }
+    ]
+  },
+  "runtime_decision": {
+    "profile_replaced": false,
+    "default_model_parameters_changed": false,
+    "measured_boundary_calibration_remains_opt_in": true,
+    "mismatch_requires_custodian_review": true
+  },
+  "eligibility": {
+    "equipment_drift_recheck_supported": true,
+    "temperature_or_flow_parameter_fit_supported": false,
+    "full_station_vehicle_validation": false,
+    "full_loop_holdout_eligible": false
+  },
+  "claim_boundary": "De-identified equipment-window drift check only. A mismatch is a review signal, not a new safety limit, calibration update, or station-to-vehicle validation result."
+}

@@ -221,6 +221,12 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
         "min": 56.295,
         "max": 63.36,
     }
+    assert gates["confidential_station_equipment_drift_integrity"]["status"] == "PASS"
+    drift = gates["confidential_station_equipment_drift_integrity"]["observed"]
+    assert drift["matches"] is False
+    assert drift["profile_replaced"] is False
+    assert drift["default_model_parameters_changed"] is False
+    assert drift["mismatch_requires_custodian_review"] is True
     assert operational["cross_station_pressure_plausibility"] is True
     assert operational["cross_station_full_loop_validation"] is False
     assert gates["confidential_operational_profile_recheck_integrity"]["status"] == "PASS"
