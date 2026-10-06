@@ -284,6 +284,8 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert {
         "NREL_HDVS_2022_TANK_HOSE_TRACE",
         "NREL_HD_FAST_FLOW_2024_REPORT",
+        "PUBLIC_METHYTRUCKS_20590761",
+        "PUBLIC_METHYTRUCKS_20590842",
         "PUBLIC_HITRF_OPERATIONAL_REFERENCE",
         "KHK_PUBLIC_ACCIDENT_REPORTS",
         "PUBLIC_ACCIDENTAL_RELEASE_ARTICLE",

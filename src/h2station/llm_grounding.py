@@ -1423,6 +1423,26 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             "실제 충전 실험 운전범위·부분 경계 근거",
         )
 
+    # MetHyTrucks publishes open sampling-system workbooks with a common
+    # 0.5-s time base.  The record is useful for instrumentation provenance,
+    # but its public metadata do not identify a vehicle/receptacle loop or
+    # protocol state.  Keep the DOI discoverable to the assistant while
+    # preserving that explicit auxiliary-only boundary.
+    public_measurement = evidence.get("public_measurement_instrumentation") or {}
+    for source in public_measurement.get("sources") or []:
+        if not isinstance(source, dict):
+            continue
+        doi = str(source.get("doi") or "").strip()
+        record_id = str(source.get("record_id") or "").strip()
+        if not doi or not record_id:
+            continue
+        add(
+            f"PUBLIC_METHYTRUCKS_{record_id}",
+            str(source.get("title") or "MetHyTrucks public measurement dataset"),
+            f"https://doi.org/{doi}",
+            "공개 HRS 계측·시간축 근거(차량 full-loop 검증 아님)",
+        )
+
     hitrf = evidence.get("public_hitrf_operational_reference") or {}
     hitrf_source = hitrf.get("source") or {}
     add(
