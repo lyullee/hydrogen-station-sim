@@ -29,6 +29,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "detector_policy": {
             "source_artifact": "research/dispersion_detector_logic_validation.json",
             "source_doi": "10.23642/usn.26117989.v2",
+            "source_license": "CC BY 4.0",
             "status": "PUBLIC_REPLAY_RULE_APPLIED",
             "alarm_threshold_volpct_h2": 1.0,
             "trip_threshold_volpct_h2": 2.0,

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
+import math
 from pathlib import Path
 
 
@@ -55,7 +56,7 @@ def _valid_number(value: object, *, minimum: float = 0.0) -> float | None:
         number = float(value)
     except (TypeError, ValueError):
         return None
-    if number <= minimum:
+    if not math.isfinite(number) or number <= minimum:
         return None
     return number
 

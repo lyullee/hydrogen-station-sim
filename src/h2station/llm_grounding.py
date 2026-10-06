@@ -1949,7 +1949,7 @@ def build_evidence_manifest(
         "detector_policy": {
             key: frame.get("detector_policy", {}).get(key)
             for key in (
-                "source_artifact", "source_doi", "status",
+                "source_artifact", "source_doi", "source_license", "status",
                 "alarm_threshold_volpct_h2", "trip_threshold_volpct_h2",
                 "persistence_s", "claim_limit",
             )

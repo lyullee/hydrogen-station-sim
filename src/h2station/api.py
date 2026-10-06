@@ -590,6 +590,7 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                         "detector_policy": {
                             "source_artifact": built.simulator.safety_plc.limits.detector_policy_source,
                             "source_doi": built.simulator.safety_plc.limits.detector_policy_doi,
+                            "source_license": "CC BY 4.0" if built.simulator.safety_plc.limits.detector_policy_status == "PUBLIC_REPLAY_RULE_APPLIED" else "",
                             "status": built.simulator.safety_plc.limits.detector_policy_status,
                             "alarm_threshold_volpct_h2": built.simulator.safety_plc.limits.detector_alarm_volume_fraction * 100.0,
                             "trip_threshold_volpct_h2": built.simulator.safety_plc.limits.detector_trip_volume_fraction * 100.0,
