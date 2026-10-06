@@ -49,6 +49,21 @@ lifecycle channels. The current archive contains zero vehicle-side channel
 families, so the assistant keeps station-boundary calibration separate from
 vehicle-fill or station-to-vehicle accuracy claims.
 
+An additional owner-controlled media drop was screened on 2026-10. It contains
+equipment photographs and screen recordings of an Excel/SCADA-style logger.
+Those recordings are valuable provenance and may reveal candidate tag families,
+but they are not machine-readable traces: the displayed rows cannot establish
+engineering units, calibration state, quality semantics, event boundaries or
+vehicle/receptacle identity. Nine of the twenty-nine videos also lacked a
+decodable stream header during the local media probe. The aggregate result is
+kept in
+`research/confidential_private_media_intake_assessment_2026_10.json`; no media,
+frame, OCR value, source filename or calendar value is copied into the
+repository. The media therefore does not change model parameters or the
+full-loop validation gate. A custodian-side CSV/XLSX export, tag dictionary,
+calibration/uncertainty record, relative-time event markers and reuse terms are
+still required before a frozen temporal holdout can be built.
+
 The pressure bundle is also summarized by generic channel index. Its two
 measured boundary channels have distinct operating envelopes, which is useful
 context for the assistant when explaining a bank-specific observation. The

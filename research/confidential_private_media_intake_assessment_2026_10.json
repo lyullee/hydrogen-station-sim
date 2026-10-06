@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_private_media_intake_assessment",
+  "recorded_at": "2026-10",
+  "source_identifiers_published": false,
+  "raw_media_persisted": false,
+  "exact_source_dates_published": false,
+  "file_count": 84,
+  "extension_counts": {
+    ".hwpx": 1,
+    ".jpg": 54,
+    ".mp4": 29
+  },
+  "size_buckets": {
+    "<1MiB": 1,
+    "1-100MiB": 82,
+    "100-500MiB": 1,
+    ">=500MiB": 0
+  },
+  "media_inventory": {
+    "image_count": 54,
+    "video_count": 29,
+    "non_media_count": 1,
+    "video_probe_used": true,
+    "video_decoded_count": 20,
+    "video_undecodable_count": 9,
+    "video_duration_s_total": 1116.81,
+    "video_audio_stream_count": 20,
+    "video_resolution_families": [
+      "1920x1080"
+    ]
+  },
+  "content_assessment": {
+    "screen_recorded_logger_candidate": true,
+    "displayed_channel_values_machine_readable": false,
+    "machine_readable_trace_present": false,
+    "equipment_photo_inventory_candidate": true,
+    "ocr_or_frame_values_used_for_calibration": false,
+    "assessment": "Screen recordings and photos can support channel/equipment inventory. They are not used as calibration rows because timestamps, tag units, calibration status and event semantics cannot be verified from media alone."
+  },
+  "eligibility": {
+    "channel_inventory_candidate": true,
+    "equipment_geometry_review_candidate": true,
+    "pressure_or_temperature_parameter_fit": false,
+    "station_vehicle_full_loop_validation": false,
+    "full_loop_holdout_eligible": false
+  },
+  "required_custodian_intake": [
+    "Export the original logger/SCADA table as CSV or XLSX, not a screen recording.",
+    "Provide a tag dictionary with engineering units, scale, direction and quality semantics.",
+    "Provide calibration/uncertainty information and a timezone policy; exact calendar dates can be replaced by relative seconds after intake.",
+    "Mark fill, idle, vent, alarm, ESD and vehicle/receptacle events so a temporal holdout can be frozen.",
+    "Confirm written reuse terms and keep the raw archive outside the public repository."
+  ],
+  "claim_boundary": "Private-media provenance and intake readiness only. This artifact is not numerical calibration, physical validation, safety certification or a station-to-vehicle holdout."
+}
