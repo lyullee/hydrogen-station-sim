@@ -2230,6 +2230,9 @@ def build_evidence_manifest(
         },
         "runtime_calibration": _runtime_calibration_profile(frame),
         "runtime_geometry": _runtime_geometry_profile(frame),
+        "measured_bank_pressure_envelope": frame.get(
+            "measured_bank_pressure_envelope"
+        ) or {},
         "virtual_detector_proxy": frame.get("virtual_detector_proxy") or {},
         "detector_policy": {
             key: frame.get("detector_policy", {}).get(key)
@@ -2402,6 +2405,9 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         "claim_limit": short(evidence.get("claim_limit")),
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "runtime_geometry": manifest.get("runtime_geometry") or {},
+        "measured_bank_pressure_envelope": manifest.get(
+            "measured_bank_pressure_envelope"
+        ) or {},
         "virtual_detector_proxy": manifest.get("virtual_detector_proxy") or {},
         "detector_policy": manifest.get("detector_policy") or {},
     }
@@ -2830,6 +2836,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     return {
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "runtime_geometry": manifest.get("runtime_geometry") or {},
+        "measured_bank_pressure_envelope": manifest.get(
+            "measured_bank_pressure_envelope"
+        ) or {},
         "virtual_detector_proxy": manifest.get("virtual_detector_proxy") or {},
         "detector_policy": manifest.get("detector_policy") or {},
         "public_dispersion_proxy_evidence": {

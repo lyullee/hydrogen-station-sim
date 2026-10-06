@@ -23,6 +23,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         for scenario in station_context["reported_scenarios"]
     )
     assert idle["runtime_calibration"]["status"] == "reference_defaults"
+    assert idle["measured_bank_pressure_envelope"] == {}
     assert idle["runtime_geometry"]["basis"] == "reference"
     assert idle["runtime_geometry"]["default_basis"] == "reference"
     policy_frame = {
@@ -573,6 +574,11 @@ def test_public_operating_envelope_screen_is_descriptive_only():
 def test_manifest_records_opt_in_measured_boundary_profile():
     frame = {
         "time_s": 12.5,
+        "measured_bank_pressure_envelope": {
+            "status": "diagnostic_only",
+            "runtime_parameter_application": False,
+            "banks": {"medium": {"comparison": "within_observed_robust_range"}},
+        },
         "process_operations": {
             "settings": {"measured_boundary_calibration": True},
             "trailer_pressure_mpa": 60.0,
@@ -587,6 +593,12 @@ def test_manifest_records_opt_in_measured_boundary_profile():
     assert profile["current_boundary_pressure_comparison"]["status"] == (
         "within_measured_envelope"
     )
+    assert manifest["measured_bank_pressure_envelope"]["banks"]["medium"][
+        "comparison"
+    ] == "within_observed_robust_range"
+    assert prompt_evidence_header(manifest)["measured_bank_pressure_envelope"][
+        "runtime_parameter_application"
+    ] is False
     assert prompt_evidence_summary(manifest)["runtime_calibration"]["status"] == "active"
     assert prompt_evidence_header(manifest)["confidential_station_boundary_calibration"][
         "channel_attestation"

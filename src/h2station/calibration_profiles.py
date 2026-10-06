@@ -9,6 +9,7 @@ or full-loop validation result.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import lru_cache
 import json
 import math
 from pathlib import Path
@@ -131,11 +132,142 @@ class MeasuredBoundaryCalibrationProfile:
         return result
 
 
+@dataclass(frozen=True)
+class BankPressureEnvelopeProfile:
+    """Privacy-bounded measured ranges for generic medium/high bank roles.
+
+    This profile is a diagnostic comparison only.  It never supplies a
+    controller setpoint, trip threshold or universal safety limit.
+    """
+
+    artifact: str
+    profiles: tuple[dict[str, object], ...]
+    bank_role_mapping_attested: bool
+    pressure_scale_mapping_attested: bool
+    claim_boundary: str
+
+    def compare(self, bank_pressures_mpa: dict[str, float] | None) -> dict[str, object]:
+        values = bank_pressures_mpa or {}
+        result: dict[str, object] = {
+            "status": "diagnostic_only",
+            "artifact": self.artifact,
+            "bank_role_mapping_attested": self.bank_role_mapping_attested,
+            "pressure_scale_mapping_attested": self.pressure_scale_mapping_attested,
+            "banks": {},
+            "runtime_parameter_application": False,
+            "claim_boundary": self.claim_boundary,
+        }
+        # Use the robust P05/P95 envelope across anonymized profiles.  The
+        # profile minimum/maximum may include idle/sentinel samples and are
+        # intentionally excluded from runtime interpretation.
+        for role, runtime_name in (
+            ("medium_storage_pressure", "medium"),
+            ("high_storage_pressure", "high"),
+        ):
+            observations: list[dict[str, float]] = []
+            for profile in self.profiles:
+                row = (profile.get("bank_roles") or {}).get(role)
+                if not isinstance(row, dict):
+                    continue
+                pressure = row.get("pressure_mpa") or {}
+                if all(isinstance(pressure.get(key), (int, float)) for key in ("p05", "p95")):
+                    observations.append({
+                        "p05": float(pressure["p05"]),
+                        "p95": float(pressure["p95"]),
+                    })
+            current = values.get(runtime_name)
+            if not observations or not isinstance(current, (int, float)):
+                continue
+            lower = min(item["p05"] for item in observations)
+            upper = max(item["p95"] for item in observations)
+            pressure = float(current)
+            row: dict[str, object] = {
+                "current_pressure_mpa": pressure,
+                "observed_robust_range_mpa": {"p05": lower, "p95": upper},
+                "comparison": "within_observed_robust_range"
+                if lower <= pressure <= upper
+                else ("below_observed_robust_range" if pressure < lower else "above_observed_robust_range"),
+            }
+            if pressure < lower:
+                row["outside_by_mpa"] = lower - pressure
+            elif pressure > upper:
+                row["outside_by_mpa"] = pressure - upper
+            else:
+                row["margin_to_nearest_observed_bound_mpa"] = min(
+                    pressure - lower, upper - pressure
+                )
+            result["banks"][runtime_name] = row
+        if not result["banks"]:
+            result["status"] = "unavailable"
+        return result
+
 _ROOT = Path(__file__).resolve().parents[2]
 _PROFILE_PATHS = (
     _ROOT / "research" / "confidential_operational_envelope_calibration_summary_2026_10_06.json",
     _ROOT / "research" / "confidential_station_boundary_calibration_summary_2026_10_06.json",
 )
+
+_BANK_ENVELOPE_PATH = (
+    _ROOT / "research" / "confidential_bank_role_pressure_envelopes_2026_10_06.json"
+)
+
+
+@lru_cache(maxsize=1)
+def load_bank_pressure_envelopes() -> BankPressureEnvelopeProfile | None:
+    """Load the de-identified bank-role envelope once per process."""
+
+    try:
+        record = json.loads(_BANK_ENVELOPE_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    if (
+        record.get("artifact_type") != "confidential_bank_role_pressure_envelopes"
+        or record.get("evidence_role")
+        != "privacy_bounded_bank_role_pressure_diagnostic"
+        or record.get("source_identifiers_published") is not False
+        or record.get("raw_rows_persisted") is not False
+        or record.get("exact_source_dates_published") is not False
+        or record.get("tag_names_published") is not False
+        or record.get("manufacturer_or_model_published") is not False
+    ):
+        return None
+    profiles: list[dict[str, object]] = []
+    for profile in record.get("profiles") or []:
+        if not isinstance(profile, dict):
+            continue
+        roles: dict[str, object] = {}
+        for role in ("medium_storage_pressure", "high_storage_pressure"):
+            row = (profile.get("bank_roles") or {}).get(role)
+            if not isinstance(row, dict):
+                continue
+            pressure = row.get("pressure_mpa") or {}
+            if not all(
+                isinstance(pressure.get(key), (int, float))
+                and math.isfinite(float(pressure[key]))
+                for key in ("p05", "p95")
+            ):
+                continue
+            roles[role] = {
+                "pressure_mpa": {
+                    "p05": float(pressure["p05"]),
+                    "p95": float(pressure["p95"]),
+                }
+            }
+        if roles:
+            profiles.append({
+                "profile_id": str(profile.get("profile_id") or ""),
+                "bank_roles": roles,
+            })
+    if not profiles:
+        return None
+    attestation = record.get("attestation") or {}
+    return BankPressureEnvelopeProfile(
+        artifact="research/confidential_bank_role_pressure_envelopes_2026_10_06.json",
+        profiles=tuple(profiles),
+        bank_role_mapping_attested=attestation.get("bank_role_mapping_attested") is True,
+        pressure_scale_mapping_attested=attestation.get("pressure_scale_mapping_attested") is True,
+        claim_boundary=str(record.get("claim_boundary") or ""),
+    )
 
 
 def load_measured_boundary_calibration(

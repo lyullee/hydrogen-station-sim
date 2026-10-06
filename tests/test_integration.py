@@ -37,6 +37,12 @@ def test_api_job_lifecycle() -> None:
         response = client.get(f"/api/simulations/{simulation_id}/result")
         assert response.status_code == 200
         assert {"series", "events", "risk_updates", "summary"} <= response.json().keys()
+        frames = client.get(f"/api/simulations/{simulation_id}/frames").json()["frames"]
+        assert frames
+        bank_envelope = frames[-1]["measured_bank_pressure_envelope"]
+        assert bank_envelope["runtime_parameter_application"] is False
+        assert "medium" in bank_envelope["banks"]
+        assert "high" in bank_envelope["banks"]
 
 
 def test_native_hyram_dynamic_release() -> None:

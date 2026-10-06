@@ -35,7 +35,10 @@ from .safe_operation import SafeOperationSample
 from .simulation_clock import SimulationClock
 from .virtual_safety import VALVE_LABELS, ZONES, RECOVERY_CHECKS, suggested_actions
 from .scenario import ReferenceScenario, build_reference_scenario
-from .calibration_profiles import load_measured_boundary_calibration
+from .calibration_profiles import (
+    load_bank_pressure_envelopes,
+    load_measured_boundary_calibration,
+)
 from .dispersion_proxy import PUBLIC_DISPERSION_PROXY
 from .safety_runtime import FaultEvent, FaultKind, FaultSchedule
 from .tabulated import PropsSI
@@ -609,6 +612,11 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                         measured_profile.pressure_envelope_comparison(
                             boundary_pressure
                         )
+                    )
+                bank_envelope = load_bank_pressure_envelopes()
+                if bank_envelope is not None:
+                    frame["measured_bank_pressure_envelope"] = bank_envelope.compare(
+                        frame.get("bank_pressure_mpa")
                     )
                 previous_time = _jobs[job_id].get("last_sample_time_s")
                 previous_leak = _jobs[job_id].get("last_leak_kg_s", 0.0)

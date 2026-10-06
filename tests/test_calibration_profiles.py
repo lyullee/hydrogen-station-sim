@@ -4,7 +4,10 @@ import json
 
 import pytest
 
-from h2station.calibration_profiles import load_measured_boundary_calibration
+from h2station.calibration_profiles import (
+    load_bank_pressure_envelopes,
+    load_measured_boundary_calibration,
+)
 
 
 def test_sanitized_measured_boundary_profile_is_bounded(tmp_path):
@@ -139,3 +142,17 @@ def test_pressure_envelope_comparison_is_scope_diagnostic_only():
     unavailable = profile.pressure_envelope_comparison(None)
     assert unavailable["status"] == "unavailable"
     assert "안전 한계" in unavailable["claim_limit"]
+
+
+def test_bank_pressure_envelope_is_diagnostic_and_uses_robust_quantiles():
+    profile = load_bank_pressure_envelopes()
+    assert profile is not None
+    result = profile.compare({"medium": 42.0, "high": 90.0, "low": 20.0})
+    assert result["runtime_parameter_application"] is False
+    assert result["banks"]["medium"]["comparison"] == (
+        "within_observed_robust_range"
+    )
+    assert result["banks"]["high"]["comparison"] == (
+        "above_observed_robust_range"
+    )
+    assert "full-loop" in result["claim_boundary"]

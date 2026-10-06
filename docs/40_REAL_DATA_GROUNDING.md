@@ -179,5 +179,10 @@ compare a simulated bank pressure with a measured operating range, while
 The artifact does not attest temperature/flow roles, vehicle-side behavior,
 field safety limits, consequence distances or full-loop validation.
 
+Each simulation frame also carries `measured_bank_pressure_envelope` with a
+P05--P95 comparison for the generic medium and high banks. It is cached, uses
+no raw rows, and remains diagnostic-only: an observed-range excursion is an
+investigation cue, not an alarm, trip or safe/unsafe classification.
+
 The source list is intentionally deterministic and tested. A missing or
 invalid source URL is omitted rather than replaced with an invented citation.
