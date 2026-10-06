@@ -3,7 +3,9 @@ from pathlib import Path
 from h2station.public_benchmarks import (
     ARTIFACT_RELATIVE_PATH,
     compare_public_high_flow_benchmark,
+    compare_public_operating_context,
     load_public_benchmark,
+    load_public_fch2rail_benchmark,
 )
 
 
@@ -42,3 +44,20 @@ def test_public_benchmark_is_unavailable_without_source() -> None:
     )
     assert result["status"] == "unavailable"
     assert result["runtime_parameter_application"] is False
+
+
+def test_fch2rail_context_is_selected_for_35_mpa_runs() -> None:
+    benchmark = load_public_fch2rail_benchmark(ROOT)
+    assert benchmark is not None
+    result = compare_public_operating_context(
+        duration_s=180.0,
+        start_pressure_mpa=5.0,
+        end_pressure_mpa=35.0,
+        average_flow_g_s=15.0,
+        maximum_flow_g_s=30.0,
+        fch2rail_benchmark=benchmark,
+    )
+    assert result["selection"] == "fch2rail_35mpa"
+    assert result["metrics"]["average_flow_g_s"]["comparison"] == "within_reported_range"
+    assert result["runtime_parameter_application"] is False
+    assert result["full_loop_holdout_eligible"] is False

@@ -40,7 +40,7 @@ from .calibration_profiles import (
     load_measured_boundary_calibration,
 )
 from .dispersion_proxy import PUBLIC_DISPERSION_PROXY
-from .public_benchmarks import compare_public_high_flow_benchmark
+from .public_benchmarks import compare_public_operating_context
 from .safety_runtime import FaultEvent, FaultKind, FaultSchedule
 from .tabulated import PropsSI
 from .hazop.database import EventStore, load_catalog
@@ -918,15 +918,21 @@ def _serialize_result(trajectory, station, backend, faults=()) -> dict[str, Any]
             "maximum_flow_g_s": float(
                 np.max(trajectory.nozzle_mass_flow_kg_s) * 1000.0
             ),
+            "average_flow_g_s": float(
+                np.mean(trajectory.nozzle_mass_flow_kg_s[trajectory.nozzle_mass_flow_kg_s > 1.0e-9]) * 1000.0
+            ) if np.any(trajectory.nozzle_mass_flow_kg_s > 1.0e-9) else 0.0,
             "released_mass_kg": released_mass,
             "esd_time_s": trajectory.esd_time_s,
             "hyram_available": bool(getattr(backend, "available", False)),
             "hyram_backend": backend.name,
             "active_faults": [fault.model_dump() if hasattr(fault, "model_dump") else asdict(fault) for fault in faults],
-            "public_benchmark_diagnostics": compare_public_high_flow_benchmark(
+            "public_benchmark_diagnostics": compare_public_operating_context(
                 duration_s=float(trajectory.time_s[-1]),
                 start_pressure_mpa=float(trajectory.vehicle_pressure_pa[0] / 1.0e6),
                 end_pressure_mpa=float(trajectory.vehicle_pressure_pa[-1] / 1.0e6),
+                average_flow_g_s=float(
+                    np.mean(trajectory.nozzle_mass_flow_kg_s[trajectory.nozzle_mass_flow_kg_s > 1.0e-9]) * 1000.0
+                ) if np.any(trajectory.nozzle_mass_flow_kg_s > 1.0e-9) else 0.0,
                 maximum_flow_g_s=float(np.max(trajectory.nozzle_mass_flow_kg_s) * 1000.0),
             ),
         },

@@ -185,13 +185,16 @@ no raw rows, and remains diagnostic-only: an observed-range excursion is an
 investigation cue, not an alarm, trip or safe/unsafe classification.
 
 Completed simulation results also carry `summary.public_benchmark_diagnostics`.
-This compares the simulated fill duration, maximum flow, start/end pressure
-and average pressure-rise rate with the aggregate DOE/NREL H2IQ high-flow
-experiment. The status is `operating_range_context`, never pass/fail
-validation: the public report does not provide synchronized row-level logs or
-controller state. The comparison is therefore not a controller setpoint,
-safety limit, or full-loop holdout result; if the provenance artifact is
-missing it fails closed to `unavailable` without changing the physics.
+For a 70 MPa-class run this compares the simulated fill duration, maximum
+flow, start/end pressure and average pressure-rise rate with the aggregate
+DOE/NREL H2IQ high-flow experiment. For a 35 MPa-class run it instead compares
+the positive-flow average with the independently reported FCH2RAIL
+transportable-HRS range. The status is `operating_range_context`, never
+pass/fail validation: these public reports do not provide the synchronized
+row-level logs and controller state needed for a holdout. The comparison is
+therefore not a controller setpoint, safety limit, or full-loop result; if the
+provenance artifact is missing it fails closed to `unavailable` without
+changing the physics.
 
 The source list is intentionally deterministic and tested. A missing or
 invalid source URL is omitted rather than replaced with an invented citation.

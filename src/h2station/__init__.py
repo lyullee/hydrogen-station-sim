@@ -101,7 +101,9 @@ from .nbsdc_ingest import NbsdcColumnMap, NbsdcRefuelTrace, read_nbsdc_workbook
 from .public_benchmarks import (
     PublicBenchmark,
     compare_public_high_flow_benchmark,
+    compare_public_operating_context,
     load_public_benchmark,
+    load_public_fch2rail_benchmark,
 )
 from .safety_runtime import (
     FaultEvent,
@@ -188,7 +190,9 @@ __all__ = [
     "read_nbsdc_workbook",
     "PublicBenchmark",
     "compare_public_high_flow_benchmark",
+    "compare_public_operating_context",
     "load_public_benchmark",
+    "load_public_fch2rail_benchmark",
     "SafetyCommand",
     "SafetyLimits",
     "SafetyPLC",

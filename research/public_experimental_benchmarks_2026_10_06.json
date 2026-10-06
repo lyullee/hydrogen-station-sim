@@ -66,6 +66,39 @@
         "controller, valve or ESD fault replay",
         "consequence-distance or risk-model validation"
       ]
+    },
+    {
+      "id": "FCH2RAIL_D61_350BAR_REPORT",
+      "title": "FCH2RAIL D6.1 transportable HRS demonstrator-train refuelling report",
+      "url": "https://fch2rail.eu/wp-content/uploads/2025/01/FCH2RAIL_D6.1_Report-on-KPI-assessment.pdf",
+      "doi": "10.1016/j.ijhydene.2025.04.040",
+      "raw_rows_public": false,
+      "measured_boundary": [
+        "reported transportable HRS and 300 bar tube-trailer supply",
+        "reported dispenser and train-storage pressure/temperature/flow context"
+      ],
+      "applicable_pressure_class_mpa": 35.0,
+      "aggregate": {
+        "average_flow_min_g_s": 11.54,
+        "average_flow_max_g_s": 19.44,
+        "example_first_dispensing_flow_g_s": 18.34,
+        "example_second_dispensing_flow_g_s": 13.87,
+        "average_refuelling_speed_min_kg_min": 0.69,
+        "average_refuelling_speed_max_kg_min": 1.17,
+        "sampling_interval_min_s": 5.0,
+        "sampling_interval_max_s": 10.0,
+        "supply_pressure_mpa": 30.0
+      },
+      "eligible_for": [
+        "35 MPa trailer-supply operating-range checks",
+        "large-vehicle low-flow protocol context"
+      ],
+      "not_eligible_for": [
+        "untouched row-level full-loop holdout",
+        "70 MPa passenger-vehicle validation",
+        "controller, valve or ESD fault replay",
+        "consequence-distance or risk-model validation"
+      ]
     }
   ],
   "claim_boundary": "These are aggregate public experimental benchmarks and a separately controlled tank/hose trace. They provide real operating-range context and partial-boundary evidence; they do not establish complete station-to-vehicle digital-twin accuracy, accident frequency, safety distance, or field certification."
