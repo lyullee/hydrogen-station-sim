@@ -580,6 +580,13 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                         "simulation_rate_x": simulation_rate_x,
                         "vehicle_mass_kg": sample.vehicle_mass_kg,
                         "vehicle_2_mass_kg": sample.vehicle_2_mass_kg,
+                        # Preserve the selected geometry basis in every
+                        # snapshot so LLM evidence can distinguish the
+                        # reference default from the opt-in capacity/EOS
+                        # sensitivity path.
+                        "vehicle_geometry_basis": request.vehicle_geometry_basis,
+                        "vehicle_capacity_kg": request.vehicle_capacity_kg,
+                        "vehicle_2_capacity_kg": request.vehicle_2_capacity_kg,
                     }
                 if measured_profile is not None:
                     boundary_pressure = (

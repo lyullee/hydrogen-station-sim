@@ -146,6 +146,20 @@ volume) is retained as a geometry diagnostic only. It is not applied as a
 production correction, and it cannot support a station-controller, receptacle or
 full-loop accuracy claim.
 
+The same public workbook is also exposed as a post-access geometry-sensitivity
+diagnostic. A capacity/EOS volume basis screens 7/7 tanks in both the frozen-fit
+and no-volume-fit variants (mean pressure RMSE 3.538 and 0.496 MPa; mean
+temperature RMSE 4.255 and 4.185 °C). Because the workbook was available before
+the comparison, these results are not an independent confirmation. The runtime
+therefore keeps `reference` as the default, exposes `capacity_eos` only as an
+explicit opt-in, and tells the assistant that a frozen prospective holdout is
+still required.
+
+Every simulation snapshot now carries its selected vehicle geometry basis and
+declared capacities into the hashed evidence envelope. This prevents the main
+and sensor assistants from describing an opt-in capacity/EOS sensitivity run
+as if it were the reference-default run.
+
 ## Claim boundary
 
 This is traceability and consistency evidence for the software contract. It

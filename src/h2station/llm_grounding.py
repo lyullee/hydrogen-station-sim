@@ -65,6 +65,26 @@ def _runtime_calibration_profile(frame: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _runtime_geometry_profile(frame: dict[str, Any]) -> dict[str, Any]:
+    """Identify the vehicle geometry basis used by the current snapshot."""
+
+    basis = str(frame.get("vehicle_geometry_basis") or "reference")
+    if basis not in {"reference", "capacity_eos"}:
+        basis = "reference"
+    return {
+        "basis": basis,
+        "vehicle_capacity_kg": frame.get("vehicle_capacity_kg"),
+        "vehicle_2_capacity_kg": frame.get("vehicle_2_capacity_kg"),
+        "public_sensitivity_available": True,
+        "default_basis": "reference",
+        "capacity_eos_opt_in": basis == "capacity_eos",
+        "claim_limit": (
+            "capacity/EOS 형상은 공개 탱크 민감도 진단에 근거한 선택 옵션이며 "
+            "독립적인 station-to-vehicle 검증이나 기본값 변경을 의미하지 않음"
+        ),
+    }
+
+
 def _public_incident_traceability() -> dict[str, Any] | None:
     """Return the committed HIAD-to-playbook coverage summary when available.
 
@@ -747,6 +767,82 @@ def _public_tank_validation_evidence() -> dict[str, Any] | None:
         },
         "claim_supported": False,
         "claim_limit": record.get("claim_boundary"),
+    }
+
+
+def _public_geometry_sensitivity_evidence() -> dict[str, Any] | None:
+    """Expose the public capacity/EOS geometry sensitivity as diagnostic evidence.
+
+    The sensitivity report was produced after the public workbook had already
+    been accessed.  It is therefore useful for explaining the opt-in geometry
+    path and its direction of effect, but it must never be presented as a new
+    holdout or silently promote a production default.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/nrel_h2fills_geometry_sensitivity.json"
+    )
+    rule_path = Path(__file__).resolve().parents[2] / (
+        "research/capacity_eos_geometry_rule_2026_10_06.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+        rule = json.loads(rule_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    variants = record.get("variants") or {}
+    claim = record.get("interpretation") or {}
+    runtime_rule = rule.get("rule") or {}
+    claim_boundary = rule.get("claim_boundary") or {}
+    required_variants = (
+        "legacy_frozen", "capacity_eos_with_frozen_fit", "capacity_eos_no_volume_fit"
+    )
+    if (
+        record.get("status") != "exploratory_geometry_sensitivity_only"
+        or rule.get("status") != "opt_in_runtime_geometry_rule"
+        or not all(isinstance(variants.get(name), dict) for name in required_variants)
+        or runtime_rule.get("default_changed") is not False
+        or claim_boundary.get("independent_confirmatory_validation") is not False
+    ):
+        return None
+
+    def scalar_values(values: dict[str, Any]) -> dict[str, Any]:
+        return {
+            str(key): value
+            for key, value in values.items()
+            if isinstance(value, (int, float, str, bool))
+            and not (isinstance(value, float) and not math.isfinite(value))
+        }
+
+    return {
+        "artifact": "research/nrel_h2fills_geometry_sensitivity.json",
+        "evidence_role": "post_access_public_geometry_sensitivity_diagnostic",
+        "source": {
+            "tank_count": source.get("tank_count"),
+            "capacity_per_tank_kg": source.get("capacity_per_tank_kg"),
+            "reference_pressure_mpa": source.get("reference_pressure_mpa"),
+            "reference_temperature_c": source.get("reference_temperature_c"),
+            "capacity_eos_volume_m3": source.get("capacity_eos_volume_m3"),
+        },
+        "runtime_rule": {
+            key: runtime_rule.get(key)
+            for key in (
+                "basis", "fluid", "reference_pressure_mpa",
+                "reference_temperature_c", "runtime_table", "default_basis",
+                "default_changed",
+            )
+            if runtime_rule.get(key) is not None
+        },
+        "variants": {
+            name: scalar_values(variants[name]) for name in required_variants
+        },
+        "finding": str(claim.get("finding") or ""),
+        "required_next_step": str(claim.get("required_next_step") or ""),
+        "claim_supported": False,
+        "claim_limit": str(claim.get("claim_limit") or "") + " " + str(
+            claim_boundary.get("reason") or ""
+        ),
     }
 
 
@@ -1757,6 +1853,7 @@ def build_evidence_manifest(
             "claim_limit": "모의 계측과 모델 계산이며 현장 안전거리·실측 사고를 확정하지 않음",
         },
         "runtime_calibration": _runtime_calibration_profile(frame),
+        "runtime_geometry": _runtime_geometry_profile(frame),
         "selected_sensor": selected_sensor,
         "question": question[:1200],
         "signals": {
@@ -1820,6 +1917,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_tank_validation_boundary"
         ] = public_tank_validation
+    public_geometry_sensitivity = _public_geometry_sensitivity_evidence()
+    if public_geometry_sensitivity is not None:
+        envelope["response_evidence"][
+            "public_geometry_sensitivity"
+        ] = public_geometry_sensitivity
     public_measurement = _public_measurement_instrumentation_evidence()
     if public_measurement is not None:
         envelope["response_evidence"][
@@ -1899,6 +2001,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
     summary: dict[str, Any] = {
         "claim_limit": short(evidence.get("claim_limit")),
         "runtime_calibration": manifest.get("runtime_calibration") or {},
+        "runtime_geometry": manifest.get("runtime_geometry") or {},
     }
     benchmarks = evidence.get("public_experimental_benchmarks")
     if isinstance(benchmarks, dict):
@@ -1935,6 +2038,17 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_limit",
             )
             if public_tank_validation.get(key) is not None
+        }
+    public_geometry_sensitivity = evidence.get("public_geometry_sensitivity")
+    if isinstance(public_geometry_sensitivity, dict):
+        summary["public_geometry_sensitivity"] = {
+            key: public_geometry_sensitivity.get(key)
+            for key in (
+                "evidence_role", "source", "runtime_rule", "variants",
+                "finding", "required_next_step", "claim_supported",
+                "claim_limit",
+            )
+            if public_geometry_sensitivity.get(key) is not None
         }
     public_measurement = evidence.get("public_measurement_instrumentation")
     if isinstance(public_measurement, dict):
@@ -2275,6 +2389,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     release_boundary = evidence.get("proust_release_model_validation_boundary") or {}
     return {
         "runtime_calibration": manifest.get("runtime_calibration") or {},
+        "runtime_geometry": manifest.get("runtime_geometry") or {},
         "public_source_links": _public_source_links(evidence),
         "public_experiment_sources": benchmark_ids,
         "public_real_station_context": {
@@ -2334,6 +2449,32 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             ).get("claim_supported"),
             "claim_limit": (
                 evidence.get("public_tank_validation_boundary") or {}
+            ).get("claim_limit"),
+        },
+        "public_geometry_sensitivity": {
+            "evidence_role": (
+                evidence.get("public_geometry_sensitivity") or {}
+            ).get("evidence_role"),
+            "source": (
+                evidence.get("public_geometry_sensitivity") or {}
+            ).get("source") or {},
+            "runtime_rule": (
+                evidence.get("public_geometry_sensitivity") or {}
+            ).get("runtime_rule") or {},
+            "variants": (
+                evidence.get("public_geometry_sensitivity") or {}
+            ).get("variants") or {},
+            "finding": (
+                evidence.get("public_geometry_sensitivity") or {}
+            ).get("finding"),
+            "required_next_step": (
+                evidence.get("public_geometry_sensitivity") or {}
+            ).get("required_next_step"),
+            "claim_supported": (
+                evidence.get("public_geometry_sensitivity") or {}
+            ).get("claim_supported"),
+            "claim_limit": (
+                evidence.get("public_geometry_sensitivity") or {}
             ).get("claim_limit"),
         },
         "preslhy_validation_boundary": {

@@ -22,6 +22,8 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         for scenario in station_context["reported_scenarios"]
     )
     assert idle["runtime_calibration"]["status"] == "reference_defaults"
+    assert idle["runtime_geometry"]["basis"] == "reference"
+    assert idle["runtime_geometry"]["default_basis"] == "reference"
     assert prompt_evidence_header(idle)["runtime_calibration"]["profile_id"] == (
         "reference_defaults"
     )
@@ -122,6 +124,17 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert tank_validation["geometry_diagnostic"][
         "ratio_to_frozen_effective_volume_median"
     ] < 1.0
+    geometry = idle["response_evidence"]["public_geometry_sensitivity"]
+    assert geometry["evidence_role"] == (
+        "post_access_public_geometry_sensitivity_diagnostic"
+    )
+    assert geometry["source"]["tank_count"] == 7
+    assert geometry["runtime_rule"]["default_basis"] == "reference"
+    assert geometry["runtime_rule"]["default_changed"] is False
+    assert geometry["variants"]["capacity_eos_no_volume_fit"][
+        "screening_pass_count"
+    ] == 7
+    assert geometry["claim_supported"] is False
     early = prompt_evidence_summary(idle)
     assert early["impact_status"] == "not_requested"
     assert early["public_experimental_benchmarks"]["sources"]
@@ -129,6 +142,9 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert early["public_tank_validation_boundary"]["aggregate"][
         "pressure_rmse_mpa"
     ] == 6.164469743688679
+    assert early["public_geometry_sensitivity"]["variants"][
+        "capacity_eos_with_frozen_fit"
+    ]["pressure_rmse_mean_mpa"] == 3.5380890196945884
     instrumentation = idle["response_evidence"][
         "public_measurement_instrumentation"
     ]
@@ -207,6 +223,10 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert header["public_tank_validation_boundary"]["aggregate"][
         "temperature_rmse_c"
     ] == 4.624745495755946
+    assert header["public_geometry_sensitivity"]["claim_supported"] is False
+    assert header["public_geometry_sensitivity"]["runtime_rule"][
+        "default_basis"
+    ] == "reference"
     assert header["preslhy_validation_boundary"][
         "independent_holdout_claim_supported"
     ] is False
@@ -434,6 +454,31 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert calculated["response_evidence"]["source_ids"] == ["H2_INCIDENT", "HIAD2026"]
     assert calculated["evidence_digest"] != idle["evidence_digest"]
 
+
+def test_manifest_preserves_opt_in_capacity_eos_geometry_basis():
+    manifest = build_evidence_manifest(
+        {
+            "time_s": 2.0,
+            "vehicle_geometry_basis": "capacity_eos",
+            "vehicle_capacity_kg": 5.0,
+            "vehicle_2_capacity_kg": 5.0,
+        },
+        {},
+        [],
+        False,
+    )
+    assert manifest["runtime_geometry"] == {
+        "basis": "capacity_eos",
+        "vehicle_capacity_kg": 5.0,
+        "vehicle_2_capacity_kg": 5.0,
+        "public_sensitivity_available": True,
+        "default_basis": "reference",
+        "capacity_eos_opt_in": True,
+        "claim_limit": manifest["runtime_geometry"]["claim_limit"],
+    }
+    assert prompt_evidence_summary(manifest)["runtime_geometry"]["basis"] == (
+        "capacity_eos"
+    )
 
 def test_public_operating_envelope_screen_is_descriptive_only():
     manifest = build_evidence_manifest(

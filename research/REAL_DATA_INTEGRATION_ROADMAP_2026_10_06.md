@@ -50,6 +50,14 @@ attestation도 받지 않았으므로 controller에 자동 주입하지 않는�
 프로토콜 검증으로 승격하지 않는다. 세부값은
 `research/h2protocol_capacity_eos_diagnostic_2026_10_06.json`에 고정한다.
 
+이번 보완에서는 공개 NREL 탱크 민감도 결과를 LLM 근거 봉투에도 연결했다.
+`public_geometry_sensitivity`는 legacy/reference와 capacity/EOS 선택 경로의
+집계 성능을 구분해 전달하고, 사후 접근 진단이라는 한계를 함께 표시한다.
+각 실행 프레임에는 실제 선택된 `vehicle_geometry_basis`와 선언 용량도 남겨
+reference 기본 실행과 capacity/EOS 민감도 실행이 혼동되지 않게 했다. 이
+연결은 모델 기본값을 바꾸지 않으며, 미사용 외부 holdout이 확보되기 전에는
+검증 완료나 논문 성능 주장으로 승격하지 않는다.
+
 Proust 독립 방출 holdout에서는 고정된 전역 방출계수 `Cd=0.8`이 1·2·3 mm
 구경을 동시에 설명하지 못했다. 사후 진단에서 구경별 measured-to-unit 계수가
 서로 다른 범위를 보였고, 1 mm 계열은 유효계수가 1보다 크게 추정되었다. 이는

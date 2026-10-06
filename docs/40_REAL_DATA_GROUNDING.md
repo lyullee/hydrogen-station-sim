@@ -80,6 +80,22 @@ only the aggregate result is exposed to the LLM through
 `public_tank_validation_boundary`, with a claim boundary that excludes
 station-controller, receptacle and full-loop validation.
 
+The same public workbook also has a separate `public_geometry_sensitivity`
+record. It compares the legacy effective volume with an opt-in capacity/EOS
+geometry rule: the capacity/EOS variants screen 7/7 tanks, with mean pressure
+RMSE of 3.54 MPa (frozen fit) or 0.50 MPa (no volume fit) and mean temperature
+RMSE of 4.25--4.18 °C. These are post-access sensitivity results, so the
+runtime keeps the existing `reference` default and the LLM labels the
+capacity/EOS result as diagnostic only. Before changing a default, the rule
+must be frozen before data access and evaluated on an untouched external
+holdout.
+
+Each simulation snapshot also carries the selected vehicle geometry basis and
+declared capacities into the evidence envelope. This lets the main and sensor
+assistants state whether the current run used the `reference` default or the
+explicit `capacity_eos` option, instead of silently mixing a sensitivity run
+with the default model.
+
 - `measured_boundary_calibration` is opt-in. It applies the de-identified
   station-boundary pressure margin to both cascade dispatch and recharge
   restart selection, so a bank is not repeatedly selected around the measured
