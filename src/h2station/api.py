@@ -36,6 +36,7 @@ from .simulation_clock import SimulationClock
 from .virtual_safety import VALVE_LABELS, ZONES, RECOVERY_CHECKS, suggested_actions
 from .scenario import ReferenceScenario, build_reference_scenario
 from .calibration_profiles import load_measured_boundary_calibration
+from .dispersion_proxy import PUBLIC_DISPERSION_PROXY
 from .safety_runtime import FaultEvent, FaultKind, FaultSchedule
 from .tabulated import PropsSI
 from .hazop.database import EventStore, load_catalog
@@ -993,6 +994,7 @@ def health() -> dict[str, Any]:
         "hyram_available": bool(getattr(backend, "available", False)),
         "hyram_backend": backend.name,
         "hyram_reason": getattr(backend, "reason", None),
+        "virtual_detector_proxy": PUBLIC_DISPERSION_PROXY.metadata(),
         "hazop": hazop_status,
     }
 
