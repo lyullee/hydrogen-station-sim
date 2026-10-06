@@ -30,6 +30,17 @@
 프로토콜 검증으로 승격하지 않는다. 세부값은
 `research/h2protocol_capacity_eos_diagnostic_2026_10_06.json`에 고정한다.
 
+Proust 독립 방출 holdout에서는 고정된 전역 방출계수 `Cd=0.8`이 1·2·3 mm
+구경을 동시에 설명하지 못했다. 사후 진단에서 구경별 measured-to-unit 계수가
+서로 다른 범위를 보였고, 1 mm 계열은 유효계수가 1보다 크게 추정되었다. 이는
+상류 밸브·배관 제한, 라인 체적 또는 계측·디지타이징의 영향을 분리해야 한다는
+신호이며, holdout 결과에 맞춰 계수를 조정하거나 생산 모델을 변경할 근거가
+아니다. 세부 민감도 표는
+`research/proust_discharge_coefficient_sensitivity_2026_10_06.json`에 기록했고,
+해당 파일은 `post_outcome_diagnostic_only`로 고정했다. 새 apparatus-resolved
+release 모델은 미사용 캠페인에서 밸브 개방법과 라인 저항을 함께 동결한 뒤
+독립 검증해야 한다.
+
 LLM 근거 봉투에는 이제 `public_source_links`와 현재 모의 노즐 유량을
 NREL 고유량 실험의 집계 평균·최대값과 비교하는
 `public_operating_envelope_screen`이 포함된다. 이는 공개 출처를 운영자에게
