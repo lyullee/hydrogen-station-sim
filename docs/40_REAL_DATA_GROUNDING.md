@@ -191,6 +191,14 @@ with the default model.
   face-validity explanations, not ESD, controller, accident-frequency,
   consequence-distance, or field-certification claims.
 
+The owner-side recheck is recorded in
+`research/confidential_operational_profile_recheck_2026_10_06.json`. It compares
+the freshly aggregated, de-identified pressure/time fields with the committed
+operational profile. A match confirms provenance consistency only; it does not
+replace the profile, change default parameters, or close the station-to-vehicle
+validation gate. Unattested temperature, flow and discrete-state fields remain
+explicitly omitted from the comparison and from any LLM claim.
+
 The owner-controlled pressure bundle is also summarized by generic storage
 role in `confidential_bank_role_pressure_envelopes_2026_10_06.json`. The
 artifact keeps only medium/high role P05, median, P95, sampled-row counts and

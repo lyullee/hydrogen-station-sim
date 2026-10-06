@@ -1943,6 +1943,53 @@ def _confidential_pressure_recheck_decision() -> dict[str, Any] | None:
     }
 
 
+def _confidential_operational_profile_recheck() -> dict[str, Any] | None:
+    """Expose the fresh aggregate/profile consistency check to the LLM.
+
+    This is provenance evidence only.  A match confirms that the owner-side
+    recheck reproduces the committed station-boundary profile; it does not
+    add vehicle channels or turn the profile into a full-loop validation.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/confidential_operational_profile_recheck_2026_10_06.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    comparison = record.get("committed_profile_comparison") or {}
+    runtime = record.get("runtime_decision") or {}
+    fresh = record.get("fresh_calibration") or {}
+    if (
+        record.get("artifact_type") != "confidential_operational_envelope_recheck"
+        or record.get("source_identifiers_published") is not False
+        or record.get("raw_rows_persisted") is not False
+        or record.get("exact_source_dates_published") is not False
+        or record.get("source_paths_published") is not False
+        or comparison.get("matches") is not True
+        or runtime.get("committed_profile_replaced") is not False
+        or runtime.get("default_model_parameters_changed") is not False
+        or runtime.get("measured_boundary_calibration_remains_opt_in") is not True
+    ):
+        return None
+    return {
+        "artifact": "research/confidential_operational_profile_recheck_2026_10_06.json",
+        "evidence_role": "confidential operational-profile consistency recheck",
+        "profile_match": True,
+        "fields_compared": list(comparison.get("fields_compared") or []),
+        "fields_omitted_without_attestation": list(
+            comparison.get("fields_omitted_without_attestation") or []
+        ),
+        "sampled_rows": fresh.get("sampled_rows"),
+        "channel_roles": list(fresh.get("channel_roles") or []),
+        "committed_profile_replaced": False,
+        "measured_boundary_calibration_remains_opt_in": True,
+        "full_station_vehicle_validation": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_station_schema_evidence() -> dict[str, Any] | None:
     """Expose only the de-identified private-channel intake boundary."""
 
@@ -2434,6 +2481,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_pressure_recheck_decision"
         ] = pressure_recheck
+    operational_profile_recheck = _confidential_operational_profile_recheck()
+    if operational_profile_recheck is not None:
+        envelope["response_evidence"][
+            "confidential_operational_profile_recheck"
+        ] = operational_profile_recheck
     station_schema = _confidential_station_schema_evidence()
     if station_schema is not None:
         envelope["response_evidence"][
@@ -2826,6 +2878,21 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if pressure_recheck.get(key) is not None
         }
+    operational_profile_recheck = evidence.get(
+        "confidential_operational_profile_recheck"
+    )
+    if isinstance(operational_profile_recheck, dict):
+        summary["confidential_operational_profile_recheck"] = {
+            key: operational_profile_recheck.get(key)
+            for key in (
+                "evidence_role", "profile_match", "fields_compared",
+                "fields_omitted_without_attestation", "sampled_rows",
+                "channel_roles", "committed_profile_replaced",
+                "measured_boundary_calibration_remains_opt_in",
+                "full_station_vehicle_validation", "claim_limit",
+            )
+            if operational_profile_recheck.get(key) is not None
+        }
     station_schema = evidence.get("confidential_station_schema_intake")
     if isinstance(station_schema, dict):
         summary["confidential_station_schema_intake"] = {
@@ -2895,6 +2962,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     bank_pressure = evidence.get("confidential_bank_role_pressure_envelopes") or {}
     pressure_recheck = evidence.get("confidential_pressure_recheck_decision") or {}
+    operational_profile_recheck = evidence.get(
+        "confidential_operational_profile_recheck"
+    ) or {}
     station_schema = evidence.get("confidential_station_schema_intake") or {}
     private_media = evidence.get("confidential_private_media_intake") or {}
     incident = evidence.get("public_incident_traceability") or {}
@@ -3333,6 +3403,25 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "candidate_restart_margin_mpa"
             ),
             "quality_warnings": pressure_recheck.get("quality_warnings") or [],
+        },
+        "confidential_operational_profile_recheck": {
+            "profile_match": operational_profile_recheck.get("profile_match") is True,
+            "fields_compared": operational_profile_recheck.get("fields_compared") or [],
+            "fields_omitted_without_attestation": operational_profile_recheck.get(
+                "fields_omitted_without_attestation"
+            ) or [],
+            "sampled_rows": operational_profile_recheck.get("sampled_rows"),
+            "channel_roles": operational_profile_recheck.get("channel_roles") or [],
+            "committed_profile_replaced": operational_profile_recheck.get(
+                "committed_profile_replaced"
+            ) is True,
+            "measured_boundary_calibration_remains_opt_in": operational_profile_recheck.get(
+                "measured_boundary_calibration_remains_opt_in"
+            ) is True,
+            "full_station_vehicle_validation": operational_profile_recheck.get(
+                "full_station_vehicle_validation"
+            ) is True,
+            "claim_limit": operational_profile_recheck.get("claim_limit"),
         },
         "confidential_station_schema_intake": {
             "source_bundle_count": station_schema.get("source_bundle_count"),

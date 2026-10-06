@@ -378,6 +378,22 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "mass_flow_units_attested"
     ] is False
     assert station_calibration["full_station_vehicle_validation"] is False
+    operational_recheck = idle["response_evidence"][
+        "confidential_operational_profile_recheck"
+    ]
+    assert operational_recheck["profile_match"] is True
+    assert operational_recheck["sampled_rows"] == 10896
+    assert operational_recheck["committed_profile_replaced"] is False
+    assert operational_recheck[
+        "measured_boundary_calibration_remains_opt_in"
+    ] is True
+    assert operational_recheck["full_station_vehicle_validation"] is False
+    assert prompt_evidence_summary(idle)[
+        "confidential_operational_profile_recheck"
+    ]["profile_match"] is True
+    assert prompt_evidence_header(idle)[
+        "confidential_operational_profile_recheck"
+    ]["profile_match"] is True
     channel_envelopes = idle["response_evidence"][
         "confidential_pressure_channel_envelopes"
     ]
