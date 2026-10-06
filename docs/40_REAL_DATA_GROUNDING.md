@@ -169,5 +169,15 @@ with the default model.
   face-validity explanations, not ESD, controller, accident-frequency,
   consequence-distance, or field-certification claims.
 
+The owner-controlled pressure bundle is also summarized by generic storage
+role in `confidential_bank_role_pressure_envelopes_2026_10_06.json`. The
+artifact keeps only medium/high role P05, median, P95, sampled-row counts and
+pressure-ramp/restart-margin diagnostics. It excludes raw tags, site names,
+dates and manufacturer information. The LLM receives this envelope so it can
+compare a simulated bank pressure with a measured operating range, while
+`runtime_parameter_application=false` keeps the evidence diagnostic-only.
+The artifact does not attest temperature/flow roles, vehicle-side behavior,
+field safety limits, consequence distances or full-loop validation.
+
 The source list is intentionally deterministic and tested. A missing or
 invalid source URL is omitted rather than replaced with an invented citation.

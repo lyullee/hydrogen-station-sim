@@ -1802,6 +1802,105 @@ def _confidential_station_equipment_evidence() -> dict[str, Any] | None:
     }
 
 
+def _confidential_bank_pressure_evidence() -> dict[str, Any] | None:
+    """Expose anonymized medium/high-bank pressure envelopes to the LLM.
+
+    The artifact is derived from owner-controlled logs, but contains no raw
+    rows, tags, dates, site names or equipment identifiers.  It is deliberately
+    diagnostic-only: the LLM may use it to explain plausibility and observed
+    ranges, while the simulator keeps its reference controller parameters.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/confidential_bank_role_pressure_envelopes_2026_10_06.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    if (
+        record.get("artifact_type") != "confidential_bank_role_pressure_envelopes"
+        or record.get("evidence_role")
+        != "privacy_bounded_bank_role_pressure_diagnostic"
+        or record.get("source_identifiers_published") is not False
+        or record.get("raw_rows_persisted") is not False
+        or record.get("exact_source_dates_published") is not False
+        or record.get("tag_names_published") is not False
+        or record.get("manufacturer_or_model_published") is not False
+    ):
+        return None
+    attestation = record.get("attestation") or {}
+    eligibility = record.get("eligibility") or {}
+    profiles: list[dict[str, Any]] = []
+    for profile in record.get("profiles") or []:
+        if not isinstance(profile, dict):
+            continue
+        banks: dict[str, Any] = {}
+        for role in ("medium_storage_pressure", "high_storage_pressure"):
+            value = (profile.get("bank_roles") or {}).get(role)
+            if not isinstance(value, dict):
+                continue
+            pressure = value.get("pressure_mpa") or {}
+            banks[role] = {
+                "sampled_rows": value.get("sampled_rows"),
+                "pressure_mpa": {
+                    key: pressure.get(key)
+                    for key in ("p05", "median", "p95")
+                    if pressure.get(key) is not None
+                },
+                "positive_pressure_ramp_p95_pa_s": value.get(
+                    "positive_pressure_ramp_p95_pa_s"
+                ),
+                "recommended_restart_margin_pa": value.get(
+                    "recommended_restart_margin_pa"
+                ),
+                "pressure_semantics_attested": value.get(
+                    "pressure_semantics_attested"
+                ) is True,
+            }
+        if banks:
+            profiles.append({
+                "profile_id": str(profile.get("profile_id") or ""),
+                "sampled_rows": profile.get("sampled_rows"),
+                "bank_roles": banks,
+            })
+    if not profiles:
+        return None
+    return {
+        "artifact": "research/confidential_bank_role_pressure_envelopes_2026_10_06.json",
+        "evidence_role": str(record.get("evidence_role") or ""),
+        "profiles": profiles,
+        "bank_role_mapping_attested": attestation.get(
+            "bank_role_mapping_attested"
+        ) is True,
+        "pressure_scale_mapping_attested": attestation.get(
+            "pressure_scale_mapping_attested"
+        ) is True,
+        "machine_readable_unit_dictionary_present": attestation.get(
+            "machine_readable_unit_dictionary_present"
+        ) is True,
+        "temperature_or_flow_roles_attested": attestation.get(
+            "temperature_or_flow_roles_attested"
+        ) is True,
+        "bank_role_pressure_diagnostic_supported": eligibility.get(
+            "bank_role_pressure_diagnostic_supported"
+        ) is True,
+        "runtime_parameter_application": eligibility.get(
+            "runtime_parameter_application"
+        ) is True,
+        "full_station_vehicle_validation": eligibility.get(
+            "full_station_vehicle_validation"
+        ) is True,
+        "full_loop_holdout_eligible": eligibility.get(
+            "full_loop_holdout_eligible"
+        ) is True,
+        "default_model_parameters_changed": eligibility.get(
+            "default_model_parameters_changed"
+        ) is True,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_pressure_recheck_decision() -> dict[str, Any] | None:
     """Expose the privacy-safe decision on a rejected pressure recheck.
 
@@ -2264,6 +2363,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_station_equipment_operational_envelope"
         ] = station_equipment
+    bank_pressure = _confidential_bank_pressure_evidence()
+    if bank_pressure is not None:
+        envelope["response_evidence"][
+            "confidential_bank_role_pressure_envelopes"
+        ] = bank_pressure
     pressure_recheck = _confidential_pressure_recheck_decision()
     if pressure_recheck is not None:
         envelope["response_evidence"][
@@ -2626,6 +2730,22 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if station_equipment.get(key) is not None
         }
+    bank_pressure = evidence.get("confidential_bank_role_pressure_envelopes")
+    if isinstance(bank_pressure, dict):
+        summary["confidential_bank_role_pressure_envelopes"] = {
+            key: bank_pressure.get(key)
+            for key in (
+                "evidence_role", "artifact", "profiles",
+                "bank_role_mapping_attested", "pressure_scale_mapping_attested",
+                "machine_readable_unit_dictionary_present",
+                "temperature_or_flow_roles_attested",
+                "bank_role_pressure_diagnostic_supported",
+                "runtime_parameter_application", "full_station_vehicle_validation",
+                "full_loop_holdout_eligible", "default_model_parameters_changed",
+                "claim_limit",
+            )
+            if bank_pressure.get(key) is not None
+        }
     pressure_recheck = evidence.get("confidential_pressure_recheck_decision")
     if isinstance(pressure_recheck, dict):
         summary["confidential_pressure_recheck_decision"] = {
@@ -2690,6 +2810,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     station_equipment = evidence.get(
         "confidential_station_equipment_operational_envelope"
     ) or {}
+    bank_pressure = evidence.get("confidential_bank_role_pressure_envelopes") or {}
     pressure_recheck = evidence.get("confidential_pressure_recheck_decision") or {}
     station_schema = evidence.get("confidential_station_schema_intake") or {}
     incident = evidence.get("public_incident_traceability") or {}
@@ -3078,6 +3199,38 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "default_model_parameters_changed": station_equipment.get(
                 "default_model_parameters_changed"
             ) is True,
+        },
+        "confidential_bank_role_pressure_envelopes": {
+            "artifact": bank_pressure.get("artifact"),
+            "profiles": bank_pressure.get("profiles") or [],
+            "bank_role_mapping_attested": bank_pressure.get(
+                "bank_role_mapping_attested"
+            ) is True,
+            "pressure_scale_mapping_attested": bank_pressure.get(
+                "pressure_scale_mapping_attested"
+            ) is True,
+            "machine_readable_unit_dictionary_present": bank_pressure.get(
+                "machine_readable_unit_dictionary_present"
+            ) is True,
+            "temperature_or_flow_roles_attested": bank_pressure.get(
+                "temperature_or_flow_roles_attested"
+            ) is True,
+            "bank_role_pressure_diagnostic_supported": bank_pressure.get(
+                "bank_role_pressure_diagnostic_supported"
+            ) is True,
+            "runtime_parameter_application": bank_pressure.get(
+                "runtime_parameter_application"
+            ) is True,
+            "full_station_vehicle_validation": bank_pressure.get(
+                "full_station_vehicle_validation"
+            ) is True,
+            "full_loop_holdout_eligible": bank_pressure.get(
+                "full_loop_holdout_eligible"
+            ) is True,
+            "default_model_parameters_changed": bank_pressure.get(
+                "default_model_parameters_changed"
+            ) is True,
+            "claim_limit": bank_pressure.get("claim_limit"),
         },
         "confidential_pressure_recheck_decision": {
             "candidate_applied_to_runtime": pressure_recheck.get(

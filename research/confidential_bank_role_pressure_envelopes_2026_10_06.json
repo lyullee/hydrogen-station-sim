@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_bank_role_pressure_envelopes",
+  "recorded_at": "2026-10-06",
+  "evidence_role": "privacy_bounded_bank_role_pressure_diagnostic",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "exact_source_dates_published": false,
+  "tag_names_published": false,
+  "manufacturer_or_model_published": false,
+  "sampling": {
+    "stride": 600,
+    "max_rows_per_file": 250000,
+    "value_cap_per_channel": 50000
+  },
+  "profiles": [
+    {
+      "profile_id": "owner_station_profile_a",
+      "bank_roles": {
+        "medium_storage_pressure": {
+          "sampled_rows": 48941,
+          "pressure_mpa": {
+            "min": 0.000143,
+            "p05": 38.9843,
+            "median": 43.2896,
+            "p95": 44.4866,
+            "max": 45.0596
+          },
+          "positive_pressure_ramp_p95_pa_s": 7020.067,
+          "recommended_restart_margin_pa": 1565640.0,
+          "pressure_semantics_attested": true
+        },
+        "high_storage_pressure": {
+          "sampled_rows": 48936,
+          "pressure_mpa": {
+            "min": 0.000881,
+            "p05": 77.26845,
+            "median": 82.8211,
+            "p95": 83.6992,
+            "max": 84.9715
+          },
+          "positive_pressure_ramp_p95_pa_s": 10286.0,
+          "recommended_restart_margin_pa": 1664440.0,
+          "pressure_semantics_attested": true
+        }
+      },
+      "sampled_rows": 97877
+    },
+    {
+      "profile_id": "owner_station_profile_b",
+      "bank_roles": {
+        "medium_storage_pressure": {
+          "sampled_rows": 1092,
+          "pressure_mpa": {
+            "min": 34.97,
+            "p05": 38.93,
+            "median": 42.32,
+            "p95": 42.76,
+            "max": 43.01
+          },
+          "positive_pressure_ramp_p95_pa_s": 2385.321,
+          "recommended_restart_margin_pa": 250000.0,
+          "pressure_semantics_attested": true
+        },
+        "high_storage_pressure": {
+          "sampled_rows": 1092,
+          "pressure_mpa": {
+            "min": 76.38,
+            "p05": 79.43,
+            "median": 82.81,
+            "p95": 83.58,
+            "max": 84.02
+          },
+          "positive_pressure_ramp_p95_pa_s": 4236.864,
+          "recommended_restart_margin_pa": 250000.0,
+          "pressure_semantics_attested": true
+        }
+      },
+      "sampled_rows": 2184
+    }
+  ],
+  "attestation": {
+    "bank_role_mapping_attested": true,
+    "pressure_scale_mapping_attested": true,
+    "machine_readable_unit_dictionary_present": false,
+    "temperature_or_flow_roles_attested": false
+  },
+  "eligibility": {
+    "bank_role_pressure_diagnostic_supported": true,
+    "runtime_parameter_application": false,
+    "full_station_vehicle_validation": false,
+    "full_loop_holdout_eligible": false,
+    "default_model_parameters_changed": false
+  },
+  "claim_boundary": "비식별화된 저장탱크 역할별 압력 envelope를 운전범위 점검과 LLM 근거로만 사용한다. 원본 태그·사업장·날짜·제조사·차량측 채널은 보존하지 않으며, 안전한계·차량측 정확도·현장 피해거리·full-loop 검증을 의미하지 않는다."
+}

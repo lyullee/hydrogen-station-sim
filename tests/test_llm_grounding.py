@@ -405,6 +405,26 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert station_equipment["station_boundary_temperature_calibration_supported"] is False
     assert station_equipment["full_station_vehicle_validation"] is False
     assert station_equipment["default_model_parameters_changed"] is False
+    bank_pressure = idle["response_evidence"][
+        "confidential_bank_role_pressure_envelopes"
+    ]
+    assert bank_pressure["bank_role_mapping_attested"] is True
+    assert bank_pressure["pressure_scale_mapping_attested"] is True
+    assert bank_pressure["machine_readable_unit_dictionary_present"] is False
+    assert bank_pressure["runtime_parameter_application"] is False
+    assert bank_pressure["full_loop_holdout_eligible"] is False
+    assert bank_pressure["profiles"][0]["bank_roles"][
+        "medium_storage_pressure"
+    ]["pressure_mpa"]["median"] == 43.2896
+    bank_header = prompt_evidence_header(idle)[
+        "confidential_bank_role_pressure_envelopes"
+    ]
+    assert bank_header["profiles"][1]["bank_roles"][
+        "high_storage_pressure"
+    ]["pressure_mpa"]["p95"] == 83.58
+    assert prompt_evidence_summary(idle)[
+        "confidential_bank_role_pressure_envelopes"
+    ]["default_model_parameters_changed"] is False
     recheck = idle["response_evidence"][
         "confidential_pressure_recheck_decision"
     ]
