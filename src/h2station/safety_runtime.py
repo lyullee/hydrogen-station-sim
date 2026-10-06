@@ -194,6 +194,10 @@ class SafetyLimits:
     detector_trip_volume_fraction: float
     trip_persistence_s: float
     process_transient_persistence_s: float = 2.0
+    detector_policy_source: str = "runtime safety defaults"
+    detector_policy_doi: str = ""
+    detector_policy_status: str = "DEFAULT_FALLBACK"
+    detector_policy_claim_limit: str = ""
 
     def __post_init__(self) -> None:
         positive = (

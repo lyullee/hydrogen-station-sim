@@ -36,6 +36,9 @@ contains:
   42 no-wind-normalized factors) with a runtime scope limited to the virtual
   detector proxy. Active releases use the measured upper spatial envelope by
   default; the central median remains available for sensitivity runs;
+- the detector alarm/trip policy loaded from the public concentration replay
+  record (1.0 vol% H₂ alarm, 2.0 vol% H₂ trip, 0.5 s persistence) together
+  with its DOI and explicit outdoor-dispersion/ESD claim boundary;
 - an opt-in, de-identified station-boundary pressure scope diagnostic in each
   operator frame and evidence envelope. It reports whether the simulated
   source pressure is inside the observed range, without turning that range
@@ -58,10 +61,10 @@ The following tests passed in the repository virtual environment:
 
 ```text
 .venv\Scripts\python.exe -m pytest tests/test_llm_grounding.py tests/test_digital_twin_direct_qa.py tests/test_hiad_action_playbook_coverage.py tests/test_hiad_accident_response_coverage_evaluation.py -q
-16 passed, 2 warnings
+17 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-647 passed, 16 warnings
+651 passed, 16 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -127,6 +130,12 @@ the measured upper spatial envelope during an active release, falls back to a
 neutral factor for unrepresented conditions, and does not modify the physical
 release model, HyRAM consequence result, controller parameters or full-loop
 validation status.
+
+The detector persistence rule is now applied through the same public replay
+record instead of remaining an unexplained pair of constants in scenario
+assembly. This is a logic/provenance change only: the concentration proxy,
+detector placement, outdoor dispersion and ESD effectiveness are still outside
+the record's claim boundary.
 
 The frozen station-to-vehicle external holdout is also carried as a hard claim
 boundary. Eight public MC-default cases were evaluated under a protocol frozen

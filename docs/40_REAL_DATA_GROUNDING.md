@@ -62,6 +62,15 @@ detector-proxy choice, not a detector-placement or outdoor-dispersion claim.
 The evidence header exposes the DOI, profile count, factor count, statistic,
 and claim boundary so an LLM cannot present it as full-loop validation.
 
+The virtual detector alarm/trip rule is loaded from the hash-checked
+`dispersion_detector_logic_validation.json` record when it is available. The
+public replay covers 22 instrumented concentration cases using 1.0 vol% H₂
+alarm, 2.0 vol% H₂ trip and 0.5 s persistence. Each live frame carries the
+policy DOI, thresholds and claim boundary, so the LLM can distinguish a
+publicly replayed detector rule from an outdoor detector-placement or ESD
+validation. If the record is unavailable, the same values remain an explicit
+fallback and the frame reports that provenance status.
+
 The public Cal State LA back-to-back fueling article is also included as
 real-station operating context. It reports multiple daily and back-to-back
 fills together with storage pressure, cooling/temperature, thermodynamic and

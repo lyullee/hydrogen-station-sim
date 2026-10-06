@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-06T04:48:17.900143+00:00",
+  "generated_at": "2026-10-06T04:59:21.470315+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -4918,7 +4918,7 @@
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 649,
+            "passed": 651,
             "failed": 0,
             "warnings": 16
           }
@@ -4952,7 +4952,8 @@
           "opt-in measured station-boundary pressure scope status is carried in operator frames and evidence envelopes without becoming a safety limit",
           "post-access public capacity/EOS geometry sensitivity is exposed as diagnostic-only evidence while the reference default remains unchanged",
           "runtime evidence preserves reference versus capacity/EOS geometry basis and capacities for each simulation snapshot",
-          "public HyTF 70 MPa tank trace is carried as hash-linked component-boundary evidence without a full-loop claim"
+          "public HyTF 70 MPa tank trace is carried as hash-linked component-boundary evidence without a full-loop claim",
+          "virtual detector alarm/trip policy is loaded from the public concentration replay record with its claim boundary"
         ],
         "not_established": [
           "physics validity of the consequence model",

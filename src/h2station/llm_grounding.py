@@ -1946,6 +1946,16 @@ def build_evidence_manifest(
         },
         "runtime_calibration": _runtime_calibration_profile(frame),
         "runtime_geometry": _runtime_geometry_profile(frame),
+        "detector_policy": {
+            key: frame.get("detector_policy", {}).get(key)
+            for key in (
+                "source_artifact", "source_doi", "status",
+                "alarm_threshold_volpct_h2", "trip_threshold_volpct_h2",
+                "persistence_s", "claim_limit",
+            )
+            if isinstance(frame.get("detector_policy"), dict)
+            and frame.get("detector_policy", {}).get(key) is not None
+        },
         "selected_sensor": selected_sensor,
         "question": question[:1200],
         "signals": {
@@ -2099,6 +2109,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         "claim_limit": short(evidence.get("claim_limit")),
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "runtime_geometry": manifest.get("runtime_geometry") or {},
+        "detector_policy": manifest.get("detector_policy") or {},
     }
     benchmarks = evidence.get("public_experimental_benchmarks")
     if isinstance(benchmarks, dict):
@@ -2500,6 +2511,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     return {
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "runtime_geometry": manifest.get("runtime_geometry") or {},
+        "detector_policy": manifest.get("detector_policy") or {},
         "public_source_links": _public_source_links(evidence),
         "public_experiment_sources": benchmark_ids,
         "public_real_station_context": {

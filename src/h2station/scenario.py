@@ -13,6 +13,7 @@ from .dispenser import (
     RestrictionParameters,
     SupplyState,
 )
+from .detector_policy import load_public_detector_policy
 from .full_station import (
     CascadeBank,
     CascadeBankParameters,
@@ -387,6 +388,7 @@ def build_reference_scenario(
         secondary_partial_station=initial_partial_2,
     )
     fault_injector = FaultInjector(FaultSchedule(config.fault_events))
+    detector_policy = load_public_detector_policy()
     safety_plc = SafetyPLC(
         SafetyLimits(
             maximum_vehicle_pressure_pa=87.5e6,
@@ -400,9 +402,13 @@ def build_reference_scenario(
                 + config.maximum_precooler_temperature_deviation_k,
             ),
             maximum_flow_imbalance_kg_s=0.050,
-            detector_alarm_volume_fraction=0.01,
-            detector_trip_volume_fraction=0.02,
-            trip_persistence_s=0.5,
+            detector_alarm_volume_fraction=detector_policy.alarm_volume_fraction,
+            detector_trip_volume_fraction=detector_policy.trip_volume_fraction,
+            trip_persistence_s=detector_policy.persistence_s,
+            detector_policy_source=detector_policy.source_artifact,
+            detector_policy_doi=detector_policy.source_doi,
+            detector_policy_status=detector_policy.evidence_status,
+            detector_policy_claim_limit=detector_policy.claim_limit,
         )
     )
     risk_monitor = DynamicRiskMonitor(

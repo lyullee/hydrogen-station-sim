@@ -587,6 +587,15 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                         "vehicle_geometry_basis": request.vehicle_geometry_basis,
                         "vehicle_capacity_kg": request.vehicle_capacity_kg,
                         "vehicle_2_capacity_kg": request.vehicle_2_capacity_kg,
+                        "detector_policy": {
+                            "source_artifact": built.simulator.safety_plc.limits.detector_policy_source,
+                            "source_doi": built.simulator.safety_plc.limits.detector_policy_doi,
+                            "status": built.simulator.safety_plc.limits.detector_policy_status,
+                            "alarm_threshold_volpct_h2": built.simulator.safety_plc.limits.detector_alarm_volume_fraction * 100.0,
+                            "trip_threshold_volpct_h2": built.simulator.safety_plc.limits.detector_trip_volume_fraction * 100.0,
+                            "persistence_s": built.simulator.safety_plc.limits.trip_persistence_s,
+                            "claim_limit": built.simulator.safety_plc.limits.detector_policy_claim_limit,
+                        },
                     }
                 if measured_profile is not None:
                     boundary_pressure = (

@@ -24,6 +24,27 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert idle["runtime_calibration"]["status"] == "reference_defaults"
     assert idle["runtime_geometry"]["basis"] == "reference"
     assert idle["runtime_geometry"]["default_basis"] == "reference"
+    policy_frame = {
+        **frame,
+        "detector_policy": {
+            "source_artifact": "research/dispersion_detector_logic_validation.json",
+            "source_doi": "10.23642/usn.26117989.v2",
+            "status": "PUBLIC_REPLAY_RULE_APPLIED",
+            "alarm_threshold_volpct_h2": 1.0,
+            "trip_threshold_volpct_h2": 2.0,
+            "persistence_s": 0.5,
+            "claim_limit": "does not validate outdoor station dispersion",
+        },
+    }
+    policy_manifest = build_evidence_manifest(policy_frame, signals, [], False)
+    assert policy_manifest["detector_policy"]["status"] == "PUBLIC_REPLAY_RULE_APPLIED"
+    assert policy_manifest["detector_policy"]["trip_threshold_volpct_h2"] == 2.0
+    assert prompt_evidence_summary(policy_manifest)["detector_policy"]["source_doi"] == (
+        "10.23642/usn.26117989.v2"
+    )
+    assert prompt_evidence_header(policy_manifest)["detector_policy"][
+        "alarm_threshold_volpct_h2"
+    ] == 1.0
     assert prompt_evidence_header(idle)["runtime_calibration"]["profile_id"] == (
         "reference_defaults"
     )
