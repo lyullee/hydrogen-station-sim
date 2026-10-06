@@ -29,6 +29,29 @@
     "vehicle_pressure_temperature_flow_channels": false,
     "synchronized_vehicle_fill_cases": false
   },
+  "schema_recheck": {
+    "performed_at": "2026-10-06",
+    "method": "scripts/audit_confidential_station_schema.py",
+    "committed_aggregate_match": true,
+    "compared_fields": [
+      "file_count",
+      "tagged_channel_counts",
+      "privacy_bounded_channel_families",
+      "vehicle_side_channel_family_count",
+      "full_loop_holdout_eligible"
+    ],
+    "verified_aggregate": {
+      "file_count": 33,
+      "pressure_channel_count": 136,
+      "temperature_channel_count": 64,
+      "flow_channel_count": 64,
+      "discrete_state_channel_count": 216,
+      "lifecycle_channel_count": 34,
+      "vehicle_side_channel_family_count": 0,
+      "full_loop_holdout_eligible": false
+    },
+    "claim_boundary": "The recheck confirms only that the committed privacy-bounded schema summary matches the owner-controlled intake at the aggregate level; it does not expose raw rows, tag names, dates, units or vehicle-side validation."
+  },
   "model_use": {
     "current_profile": "research/confidential_operational_envelope_calibration_summary_2026_10_06.json",
     "allowed_role": "opt-in station-boundary operating-envelope calibration",

@@ -6,6 +6,7 @@ from scripts.audit_confidential_station_schema import audit
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / "research/confidential_station_schema_audit_2026_10.json"
+OWNER_RECHECK = ROOT / "research/private_owner_data_intake_recheck_2026_10_06.json"
 
 
 def test_confidential_schema_audit_is_deidentified_and_claim_bounded():
@@ -39,3 +40,14 @@ def test_schema_family_screen_catches_non_english_vehicle_aliases(tmp_path):
     families = result["signal_inventory"]["privacy_bounded_channel_families"]
     assert families["vehicle_side"] == 2
     assert result["eligibility"]["vehicle_side_channel_family_count"] == 2
+
+
+def test_owner_recheck_records_aggregate_match_without_promoting_full_loop_claim():
+    result = json.loads(OWNER_RECHECK.read_text(encoding="utf-8"))
+    recheck = result["schema_recheck"]
+    assert recheck["committed_aggregate_match"] is True
+    assert recheck["verified_aggregate"]["file_count"] == 33
+    assert recheck["verified_aggregate"]["pressure_channel_count"] == 136
+    assert recheck["verified_aggregate"]["vehicle_side_channel_family_count"] == 0
+    assert recheck["verified_aggregate"]["full_loop_holdout_eligible"] is False
+    assert result["privacy"]["raw_files_outside_repository"] is True
