@@ -21,6 +21,12 @@ the prompt. Private station logs remain represented only by de-identified
 quality and calibration metadata; no operator, site, date, manufacturer,
 tag, or raw row is exposed.
 
+The private schema intake also carries a privacy-bounded family summary for
+compressor/station pressure and temperature, flow/totalizer, valve/alarm and
+lifecycle channels. The current archive contains zero vehicle-side channel
+families, so the assistant keeps station-boundary calibration separate from
+vehicle-fill or station-to-vehicle accuracy claims.
+
 When a live frame contains a nozzle flow, the evidence envelope also adds
 `public_operating_envelope_screen`. It compares the simulated flow with the
 published high-flow experiment's aggregate average and peak and labels the
