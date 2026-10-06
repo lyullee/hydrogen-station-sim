@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "artifact_type": "h2protocol_closed_loop_flow_multiplier_recheck",
+  "recorded_at": "2026-10-06",
+  "evidence_role": "development_diagnostic_only",
+  "source_commit": "6ea387e",
+  "prior_artifact": "research/closed_loop_flow_calibration_v2.json",
+  "prior_artifact_sha256": "79c87a7a153958e32a477d96dc18cd2184efa92b5267b5b0df0d168602d2097e",
+  "development_lab_test_numbers": [
+    1,
+    4,
+    11,
+    13,
+    19,
+    22,
+    29,
+    31
+  ],
+  "exploratory_case_excluded": "H2P-L06",
+  "confirmatory_lab_test_numbers": [
+    3,
+    9,
+    12,
+    15,
+    18,
+    21,
+    24,
+    27,
+    30,
+    33,
+    36
+  ],
+  "confirmatory_cases_evaluated": false,
+  "tank_fit": {
+    "effective_volume_multiplier": 1.052729261198358,
+    "gas_liner_ua_multiplier": 31.460656519273492
+  },
+  "objective": "mean((P_RMSE/5 MPa)^2 + (T_RMSE/10 degC)^2 + (SOC_RMSE/5 percentage points)^2)",
+  "candidates": [
+    {
+      "multiplier": 1.0,
+      "score": 21.47580220725696,
+      "pressure_rmse_mean_mpa": 12.47985027102984,
+      "temperature_rmse_mean_c": 11.908258079675182,
+      "soc_rmse_mean_percentage_points": 14.689759740049109
+    },
+    {
+      "multiplier": 1.25,
+      "score": 15.877457393219581,
+      "pressure_rmse_mean_mpa": 9.848198184659868,
+      "temperature_rmse_mean_c": 11.884811054779814,
+      "soc_rmse_mean_percentage_points": 11.537963666269134
+    },
+    {
+      "multiplier": 1.5,
+      "score": 13.451359154016547,
+      "pressure_rmse_mean_mpa": 8.29059749389582,
+      "temperature_rmse_mean_c": 11.884780774339012,
+      "soc_rmse_mean_percentage_points": 9.622789305133027
+    },
+    {
+      "multiplier": 1.75,
+      "score": 12.684737919468446,
+      "pressure_rmse_mean_mpa": 7.777068885014273,
+      "temperature_rmse_mean_c": 12.001424057666902,
+      "soc_rmse_mean_percentage_points": 8.809429971016602
+    },
+    {
+      "multiplier": 2.0,
+      "score": 12.519150385912496,
+      "pressure_rmse_mean_mpa": 7.832800481155872,
+      "temperature_rmse_mean_c": 12.105533775470528,
+      "soc_rmse_mean_percentage_points": 8.629878128697445
+    },
+    {
+      "multiplier": 2.25,
+      "score": 12.533161975904168,
+      "pressure_rmse_mean_mpa": 7.977486379027952,
+      "temperature_rmse_mean_c": 12.19533345293097,
+      "soc_rmse_mean_percentage_points": 8.689451543104113
+    },
+    {
+      "multiplier": 2.5,
+      "score": 12.630046351009536,
+      "pressure_rmse_mean_mpa": 8.161260639752424,
+      "temperature_rmse_mean_c": 12.280550593746812,
+      "soc_rmse_mean_percentage_points": 8.910477211807546
+    }
+  ],
+  "selected_dispenser_flow_area_multiplier": 2.0,
+  "production_model_parameter_changed": false,
+  "interpretation": "The adaptive 1.00-2.50 development-only grid again selects 2.00, matching the retained production diagnostic. This rerun does not add a holdout, protocol-compliance or safety-validation claim.",
+  "claim_boundary": "Development parameter-selection reproducibility only; no confirmatory validation, full-loop accuracy, protocol compliance or safety certification claim."
+}
