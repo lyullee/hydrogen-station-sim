@@ -14,6 +14,7 @@ from typing import Any, Mapping
 from uuid import uuid4
 
 from .safety_runtime import FaultEvent, FaultKind
+from .ventilation_calibration import measured_ventilation_factor
 
 
 BANKS = ("low", "medium", "high")
@@ -454,7 +455,21 @@ class VirtualSafetyRuntime:
                                     external_temperature_k=ambient_k, heat_transfer_ua_w_k=1800.0)
                          for bank in BANKS if self.cooling[bank]["running"])
 
-    def detector_multiplier(self, zone: str) -> float:
+    def detector_multiplier(
+        self,
+        zone: str,
+        *,
+        mass_flow_g_s: float | None = None,
+        leak_diameter_m: float | None = None,
+    ) -> float:
+        """Return the detector proxy concentration multiplier.
+
+        The original multiplier remains the transparent station proxy.  When a
+        physical leak provides a flow and orifice diameter, a bounded empirical
+        factor derived from the public Grune/Sempert ventilation measurements is
+        applied on top of it.  Missing geometry or flow deliberately preserves
+        the old deterministic behavior; this is not a CFD replacement.
+        """
         with self._lock:
             group = ("storage" if zone.startswith("cascade") or zone in ("storage", "header")
                      else "compressor" if zone.startswith("compressor")
@@ -462,12 +477,32 @@ class VirtualSafetyRuntime:
                      else "unloading")
             # A transparent, deliberately coarse virtual dispersion proxy;
             # it is not a CFD model or a detector-placement certification.
-            ventilation = 0.4 if self.ventilation[group]["running"] else 1.3
+            ventilation_running = self.ventilation[group]["running"]
+            ventilation = 0.4 if ventilation_running else 1.3
             wind_speed = min(2.0, max(.5, sqrt(3.0 / max(.5, self.wind_speed_m_s))))
             direction = {"unloading": 270, "compressor": 180,
                          "storage": 90, "dispenser": 0}[group]
             exposure = 1.0 + .25 * cos(radians(self.wind_direction_deg - direction))
-            return ventilation * wind_speed * exposure
+            measured = 1.0
+            if ventilation_running and mass_flow_g_s is not None and leak_diameter_m is not None:
+                relative_angle = abs(
+                    (self.wind_direction_deg - direction + 180.0) % 360.0 - 180.0
+                )
+                if self.wind_speed_m_s < 0.5:
+                    wind_mode = "no-wind"
+                elif relative_angle <= 45.0:
+                    wind_mode = "co-flow"
+                elif relative_angle >= 135.0:
+                    wind_mode = "counter-flow"
+                else:
+                    wind_mode = "cross-flow"
+                measured = measured_ventilation_factor(
+                    diameter_m=leak_diameter_m,
+                    release_g_s=mass_flow_g_s,
+                    wind_mode=wind_mode,
+                    wind_speed_m_s=self.wind_speed_m_s,
+                )
+            return ventilation * wind_speed * exposure * measured
 
     def snapshot(self, *, include_actions: bool = True) -> dict[str, Any]:
         with self._lock:

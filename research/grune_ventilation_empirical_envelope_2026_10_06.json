@@ -1,0 +1,443 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-06T03:47:15.324434+00:00",
+  "status": "derived_empirical_ventilation_envelope",
+  "source": {
+    "title": "Efficiency of mechanical ventilation on H2 dispersion (PS)",
+    "doi": "10.5281/zenodo.4668554",
+    "record": "https://zenodo.org/records/4668554",
+    "license": "CC BY 4.0",
+    "raw_rows_committed": false
+  },
+  "definition": {
+    "reference": "same release diameter and nominal release rate, no-wind profile",
+    "quantity": "median of measured spatial-average concentration values",
+    "use": "bounded multiplier for the virtual detector concentration proxy",
+    "fallback": "1.0 when no matching public envelope is available",
+    "not_a_claim": "not CFD, not detector certification, not outdoor HRS or full-loop validation"
+  },
+  "profiles_used": 42,
+  "factor_count": 42,
+  "factors": [
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "no-wind",
+      "wind_speed_m_s": 0.0,
+      "measured_mean_concentration_vol_pct": 2.0728301886792457,
+      "no_wind_reference_vol_pct": 2.0728301886792457,
+      "relative_factor": 1.0,
+      "point_count": 117
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "co-flow",
+      "wind_speed_m_s": 1.5,
+      "measured_mean_concentration_vol_pct": 1.4255102040816325,
+      "no_wind_reference_vol_pct": 2.0728301886792457,
+      "relative_factor": 0.6877120045178091,
+      "point_count": 117
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "counter-flow",
+      "wind_speed_m_s": 1.5,
+      "measured_mean_concentration_vol_pct": 2.2613043478260866,
+      "no_wind_reference_vol_pct": 2.0728301886792457,
+      "relative_factor": 1.0909260006807078,
+      "point_count": 117
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "co-flow",
+      "wind_speed_m_s": 3.5,
+      "measured_mean_concentration_vol_pct": 0.7016666666666668,
+      "no_wind_reference_vol_pct": 2.0728301886792457,
+      "relative_factor": 0.33850658413738693,
+      "point_count": 117
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "counter-flow",
+      "wind_speed_m_s": 3.5,
+      "measured_mean_concentration_vol_pct": 2.0020370370370375,
+      "no_wind_reference_vol_pct": 2.0728301886792457,
+      "relative_factor": 0.9658471050697521,
+      "point_count": 81
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "co-flow",
+      "wind_speed_m_s": 5.0,
+      "measured_mean_concentration_vol_pct": 0.6601785714285713,
+      "no_wind_reference_vol_pct": 2.0728301886792457,
+      "relative_factor": 0.3184913916413096,
+      "point_count": 117
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "counter-flow",
+      "wind_speed_m_s": 5.0,
+      "measured_mean_concentration_vol_pct": 2.0500961538461535,
+      "no_wind_reference_vol_pct": 2.0728301886792457,
+      "relative_factor": 0.9890323698693438,
+      "point_count": 90
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "cross-flow",
+      "wind_speed_m_s": 1.5,
+      "measured_mean_concentration_vol_pct": 1.1517941176470585,
+      "no_wind_reference_vol_pct": 2.0728301886792457,
+      "relative_factor": 0.555662554481104,
+      "point_count": 162
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "cross-flow",
+      "wind_speed_m_s": 3.5,
+      "measured_mean_concentration_vol_pct": 0.8214238042269189,
+      "no_wind_reference_vol_pct": 2.0728301886792457,
+      "relative_factor": 0.3962812818498697,
+      "point_count": 108
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "cross-flow",
+      "wind_speed_m_s": 5.0,
+      "measured_mean_concentration_vol_pct": 0.7665877016129031,
+      "no_wind_reference_vol_pct": 2.0728301886792457,
+      "relative_factor": 0.36982658097108917,
+      "point_count": 108
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 5.0,
+      "wind_mode": "no-wind",
+      "wind_speed_m_s": 0.0,
+      "measured_mean_concentration_vol_pct": 3.914799999999999,
+      "no_wind_reference_vol_pct": 3.914799999999999,
+      "relative_factor": 1.0,
+      "point_count": 153
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 5.0,
+      "wind_mode": "co-flow",
+      "wind_speed_m_s": 1.5,
+      "measured_mean_concentration_vol_pct": 3.2504761904761907,
+      "no_wind_reference_vol_pct": 3.914799999999999,
+      "relative_factor": 0.8303045341974536,
+      "point_count": 153
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 5.0,
+      "wind_mode": "counter-flow",
+      "wind_speed_m_s": 1.5,
+      "measured_mean_concentration_vol_pct": 4.355714285714287,
+      "no_wind_reference_vol_pct": 3.914799999999999,
+      "relative_factor": 1.1126275379877102,
+      "point_count": 153
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 5.0,
+      "wind_mode": "co-flow",
+      "wind_speed_m_s": 3.5,
+      "measured_mean_concentration_vol_pct": 2.008947368421053,
+      "no_wind_reference_vol_pct": 3.914799999999999,
+      "relative_factor": 0.5131673057170362,
+      "point_count": 153
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 5.0,
+      "wind_mode": "counter-flow",
+      "wind_speed_m_s": 3.5,
+      "measured_mean_concentration_vol_pct": 4.404800000000001,
+      "no_wind_reference_vol_pct": 3.914799999999999,
+      "relative_factor": 1.125166036579136,
+      "point_count": 153
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 5.0,
+      "wind_mode": "co-flow",
+      "wind_speed_m_s": 5.0,
+      "measured_mean_concentration_vol_pct": 2.105,
+      "no_wind_reference_vol_pct": 3.914799999999999,
+      "relative_factor": 0.5377030755083275,
+      "point_count": 153
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 5.0,
+      "wind_mode": "counter-flow",
+      "wind_speed_m_s": 0.0,
+      "measured_mean_concentration_vol_pct": 4.308076923076923,
+      "no_wind_reference_vol_pct": 3.914799999999999,
+      "relative_factor": 1.1004590076317882,
+      "point_count": 135
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 1.5,
+      "wind_mode": "no-wind",
+      "wind_speed_m_s": 0.0,
+      "measured_mean_concentration_vol_pct": 3.0585,
+      "no_wind_reference_vol_pct": 3.0585,
+      "relative_factor": 1.0,
+      "point_count": 117
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 1.5,
+      "wind_mode": "cross-flow",
+      "wind_speed_m_s": 1.5,
+      "measured_mean_concentration_vol_pct": 1.695057692307692,
+      "no_wind_reference_vol_pct": 3.0585,
+      "relative_factor": 0.5542120949183234,
+      "point_count": 126
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 1.5,
+      "wind_mode": "cross-flow",
+      "wind_speed_m_s": 3.5,
+      "measured_mean_concentration_vol_pct": 1.06325,
+      "no_wind_reference_vol_pct": 3.0585,
+      "relative_factor": 0.34763773091384664,
+      "point_count": 108
+    },
+    {
+      "diameter_mm": 1.0,
+      "nominal_release_g_s": 1.5,
+      "wind_mode": "cross-flow",
+      "wind_speed_m_s": 5.0,
+      "measured_mean_concentration_vol_pct": 0.8842857142857143,
+      "no_wind_reference_vol_pct": 3.0585,
+      "relative_factor": 0.2891239870151101,
+      "point_count": 99
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "no-wind",
+      "wind_speed_m_s": 0.0,
+      "measured_mean_concentration_vol_pct": 3.0063414634146333,
+      "no_wind_reference_vol_pct": 3.0063414634146333,
+      "relative_factor": 1.0,
+      "point_count": 117
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "co-flow",
+      "wind_speed_m_s": 1.5,
+      "measured_mean_concentration_vol_pct": 1.7023404255319143,
+      "no_wind_reference_vol_pct": 3.0063414634146333,
+      "relative_factor": 0.5662498575921509,
+      "point_count": 99
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "counter-flow",
+      "wind_speed_m_s": 1.5,
+      "measured_mean_concentration_vol_pct": 2.0380327868852457,
+      "no_wind_reference_vol_pct": 3.0063414634146333,
+      "relative_factor": 0.6779112791034813,
+      "point_count": 117
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "co-flow",
+      "wind_speed_m_s": 3.5,
+      "measured_mean_concentration_vol_pct": 0.7674,
+      "no_wind_reference_vol_pct": 3.0063414634146333,
+      "relative_factor": 0.2552604251176376,
+      "point_count": 99
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "counter-flow",
+      "wind_speed_m_s": 3.5,
+      "measured_mean_concentration_vol_pct": 1.9968000000000001,
+      "no_wind_reference_vol_pct": 3.0063414634146333,
+      "relative_factor": 0.6641960084374495,
+      "point_count": 63
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "co-flow",
+      "wind_speed_m_s": 5.0,
+      "measured_mean_concentration_vol_pct": 0.48204081632653084,
+      "no_wind_reference_vol_pct": 3.0063414634146333,
+      "relative_factor": 0.1603413391967205,
+      "point_count": 99
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "counter-flow",
+      "wind_speed_m_s": 5.0,
+      "measured_mean_concentration_vol_pct": 2.1886447750362845,
+      "no_wind_reference_vol_pct": 3.0063414634146333,
+      "relative_factor": 0.7280093767360676,
+      "point_count": 72
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "cross-flow",
+      "wind_speed_m_s": 1.5,
+      "measured_mean_concentration_vol_pct": 1.1925999999999997,
+      "no_wind_reference_vol_pct": 3.0063414634146333,
+      "relative_factor": 0.39669479149764725,
+      "point_count": 144
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "cross-flow",
+      "wind_speed_m_s": 3.5,
+      "measured_mean_concentration_vol_pct": 0.5721392156862746,
+      "no_wind_reference_vol_pct": 3.0063414634146333,
+      "relative_factor": 0.1903107889269614,
+      "point_count": 108
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_mode": "cross-flow",
+      "wind_speed_m_s": 5.0,
+      "measured_mean_concentration_vol_pct": 0.6649790969899667,
+      "no_wind_reference_vol_pct": 3.0063414634146333,
+      "relative_factor": 0.22119213837894405,
+      "point_count": 108
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 5.0,
+      "wind_mode": "no-wind",
+      "wind_speed_m_s": 0.0,
+      "measured_mean_concentration_vol_pct": 3.8575494071146244,
+      "no_wind_reference_vol_pct": 3.8575494071146244,
+      "relative_factor": 1.0,
+      "point_count": 198
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 5.0,
+      "wind_mode": "co-flow",
+      "wind_speed_m_s": 1.5,
+      "measured_mean_concentration_vol_pct": 3.5673913043478267,
+      "no_wind_reference_vol_pct": 3.8575494071146244,
+      "relative_factor": 0.9247817533505474,
+      "point_count": 153
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 5.0,
+      "wind_mode": "counter-flow",
+      "wind_speed_m_s": 1.5,
+      "measured_mean_concentration_vol_pct": 4.938095238095238,
+      "no_wind_reference_vol_pct": 3.8575494071146244,
+      "relative_factor": 1.2801119874155655,
+      "point_count": 153
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 5.0,
+      "wind_mode": "co-flow",
+      "wind_speed_m_s": 3.5,
+      "measured_mean_concentration_vol_pct": 2.57,
+      "no_wind_reference_vol_pct": 3.8575494071146244,
+      "relative_factor": 0.6662260748391328,
+      "point_count": 135
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 5.0,
+      "wind_mode": "counter-flow",
+      "wind_speed_m_s": 3.5,
+      "measured_mean_concentration_vol_pct": 4.180476190476191,
+      "no_wind_reference_vol_pct": 3.8575494071146244,
+      "relative_factor": 1.083712935151519,
+      "point_count": 153
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 5.0,
+      "wind_mode": "co-flow",
+      "wind_speed_m_s": 5.0,
+      "measured_mean_concentration_vol_pct": 2.4923809523809526,
+      "no_wind_reference_vol_pct": 3.8575494071146244,
+      "relative_factor": 0.6461047388749345,
+      "point_count": 135
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 5.0,
+      "wind_mode": "counter-flow",
+      "wind_speed_m_s": 5.0,
+      "measured_mean_concentration_vol_pct": 4.366842105263157,
+      "no_wind_reference_vol_pct": 3.8575494071146244,
+      "relative_factor": 1.1320249319967814,
+      "point_count": 135
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 2.5,
+      "wind_mode": "no-wind",
+      "wind_speed_m_s": 0.0,
+      "measured_mean_concentration_vol_pct": 3.8596000000000017,
+      "no_wind_reference_vol_pct": 3.8596000000000017,
+      "relative_factor": 1.0,
+      "point_count": 135
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 2.5,
+      "wind_mode": "cross-flow",
+      "wind_speed_m_s": 1.5,
+      "measured_mean_concentration_vol_pct": 2.5133768115942026,
+      "no_wind_reference_vol_pct": 3.8596000000000017,
+      "relative_factor": 0.6512013710214015,
+      "point_count": 162
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 2.5,
+      "wind_mode": "cross-flow",
+      "wind_speed_m_s": 3.5,
+      "measured_mean_concentration_vol_pct": 1.8808333333333334,
+      "no_wind_reference_vol_pct": 3.8596000000000017,
+      "relative_factor": 0.4873130203475315,
+      "point_count": 117
+    },
+    {
+      "diameter_mm": 4.0,
+      "nominal_release_g_s": 2.5,
+      "wind_mode": "cross-flow",
+      "wind_speed_m_s": 5.0,
+      "measured_mean_concentration_vol_pct": 1.7293999999999996,
+      "no_wind_reference_vol_pct": 3.8596000000000017,
+      "relative_factor": 0.44807752098663045,
+      "point_count": 117
+    }
+  ]
+}

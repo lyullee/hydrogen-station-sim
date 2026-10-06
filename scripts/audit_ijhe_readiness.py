@@ -1503,6 +1503,39 @@ def audit(root: Path) -> dict[str, object]:
         grune_measurements if grune_inventory else "missing; Grune measurement inventory has not run",
     ))
 
+    grune_envelope_path = root / (
+        "research/grune_ventilation_empirical_envelope_2026_10_06.json"
+    )
+    grune_envelope = _json(grune_envelope_path)
+    grune_envelope_source = (grune_envelope or {}).get("source") or {}
+    grune_envelope_definition = (grune_envelope or {}).get("definition") or {}
+    grune_envelope_pass = bool(
+        (grune_envelope or {}).get("status")
+        == "derived_empirical_ventilation_envelope"
+        and grune_envelope_source.get("doi") == "10.5281/zenodo.4668554"
+        and grune_envelope_source.get("license") == "CC BY 4.0"
+        and grune_envelope_source.get("raw_rows_committed") is False
+        and (grune_envelope or {}).get("profiles_used") == 42
+        and (grune_envelope or {}).get("factor_count") == 42
+        and grune_envelope_definition.get("fallback")
+        and grune_envelope_definition.get("not_a_claim")
+    )
+    gates.append(_gate(
+        "grune_ventilation_empirical_envelope_integrity",
+        "PASS" if grune_envelope_pass else ("FAIL" if grune_envelope else "PENDING"),
+        "The public measured ventilation envelope is applied only to the virtual detector proxy with an explicit confined-space claim boundary.",
+        str(grune_envelope_path.relative_to(root)),
+        "42 hash-verified public profiles, derived no-wind-normalized factors, no raw rows committed, and deterministic fallback for unrepresented conditions.",
+        {
+            "doi": grune_envelope_source.get("doi"),
+            "profiles_used": (grune_envelope or {}).get("profiles_used"),
+            "factor_count": (grune_envelope or {}).get("factor_count"),
+            "raw_rows_committed": grune_envelope_source.get("raw_rows_committed"),
+            "runtime_scope": "virtual_detector_proxy_only",
+            "claim_boundary": grune_envelope_definition.get("not_a_claim"),
+        } if grune_envelope else "missing; empirical ventilation envelope has not been built",
+    ))
+
     explosion_inventory_path = root / "research/dataverse_hydrogen_explosion_dataset_inventory_2026_10_05.json"
     explosion_inventory = _json(explosion_inventory_path)
     explosion_sources = (explosion_inventory or {}).get("sources") or []

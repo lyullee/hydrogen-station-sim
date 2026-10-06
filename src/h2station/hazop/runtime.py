@@ -89,7 +89,18 @@ class HazopMonitor:
             near_tag, far_tag = zone_detectors[key]
             # Proxy plume: mass release converted to vol% with near/far heads. This
             # is an advisory virtual sensor, not a replacement for consequence CFD.
-            dilution = (float(detector_multiplier(target)) if detector_multiplier is not None else 1.0)
+            dilution = 1.0
+            if detector_multiplier is not None:
+                try:
+                    dilution = float(detector_multiplier(
+                        target,
+                        mass_flow_g_s=mass_flow * 1000.0,
+                        leak_diameter_m=leak.orifice_diameter_m,
+                    ))
+                except TypeError:
+                    # Preserve compatibility with external callbacks that still
+                    # implement the pre-calibration one-argument contract.
+                    dilution = float(detector_multiplier(target))
             near_value = min(100.0, mass_flow * 10000.0 * dilution)
             for tag, multiplier in ((near_tag, 1.0), (far_tag, 0.45)):
                 if tag not in self.mapper.specs or self.mapper.specs[tag]["종류"] != "G":

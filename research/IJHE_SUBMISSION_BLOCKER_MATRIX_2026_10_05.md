@@ -1,13 +1,13 @@
 # IJHE objective blocker matrix
 
-Generated: `2026-10-05T21:33:40.651795+00:00`
+Generated: `2026-10-06T03:57:17.284931+00:00`
 
 This is an evidence-readiness record, not a prediction of journal acceptance.
 
 - Bounded IJHE submission ready: **False**
 - Full validated-digital-twin objective ready: **False**
 - Automatic goal completion permitted: **False**
-- Gate counts: `{'PASS': 71, 'FAIL': 6, 'PENDING': 7}`
+- Gate counts: `{'PASS': 72, 'FAIL': 6, 'PENDING': 7}`
 
 ## Blocking matrix
 
@@ -26,6 +26,6 @@ This is an evidence-readiness record, not a prediction of journal acceptance.
 
 ## Reproducibility
 
-- Acquisition routes tracked: `30`
+- Acquisition routes tracked: `31`
 - Full-loop search candidates: `17`
 - Source hashes are recorded in the JSON companion.

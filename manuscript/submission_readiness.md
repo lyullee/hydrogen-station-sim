@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-05 21:10 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **71 PASS · 6 FAIL · 7 PENDING**.
+Gate counts: **72 PASS · 6 FAIL · 7 PENDING**.
 
 The manuscript is therefore kept claim-bounded. The current full-loop negative
 result, component-level evidence and all unresolved gates remain disclosed; no
@@ -147,4 +147,3 @@ work with explicit negative and pending evidence.
 
 The audit must be regenerated after any evidence, manuscript, or protocol
 change; this summary must retain the same decision flags and gate counts.
-

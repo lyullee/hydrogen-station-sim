@@ -13,6 +13,11 @@ purpose for which the source may be used. Current entries cover:
   precedent.
 - A licensed accidental-release dataset and an open detector-dispersion
   dataset for release/ignition wording and detector persistence replay.
+- The public Grune/Sempert confined-space ventilation archive. Its 42 measured
+  spatial profiles are reduced to no-wind-normalized factors by release size,
+  flow and wind mode. These factors are applied only to the virtual detector
+  proxy; they are not used as a CFD field, detector-placement certification or
+  station-scale validation.
 
 The links are placed in `prompt_evidence_header()` and
 `prompt_evidence_summary()` as `public_source_links`. This makes the sources
@@ -44,6 +49,14 @@ an accuracy score or as an automatic controller limit.
 The source index does not change the numerical model or turn aggregate public
 results into a holdout. The runtime must continue to describe the following
 boundaries explicitly:
+
+The Grune-derived envelope is the one bounded exception: it changes the
+virtual detector concentration proxy when leak flow, orifice size and wind
+direction are available. The factor is nearest-neighbour/interpolated only
+inside the measured diameter/flow/mode envelope and falls back to `1.0` for
+unrepresented conditions. The evidence header exposes the DOI, profile count,
+factor count and claim boundary so an LLM cannot present it as full-loop
+validation.
 
 The public Cal State LA back-to-back fueling article is also included as
 real-station operating context. It reports multiple daily and back-to-back

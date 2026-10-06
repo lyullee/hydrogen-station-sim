@@ -102,9 +102,17 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert detector["aggregate"]["case_count"] == 22
     assert detector["aggregate"]["cases_with_trip_detection"] == 22
     assert "outdoor station dispersion" in detector["claim_limit"]
+    ventilation = idle["response_evidence"]["public_grune_ventilation_evidence"]
+    assert ventilation["doi"] == "10.5281/zenodo.4668554"
+    assert ventilation["profiles_used"] == 42
+    assert ventilation["factor_count"] == 42
+    assert ventilation["runtime_parameter_application"] == (
+        "virtual_detector_proxy_only"
+    )
     early = prompt_evidence_summary(idle)
     assert early["impact_status"] == "not_requested"
     assert early["public_experimental_benchmarks"]["sources"]
+    assert early["public_grune_ventilation_evidence"]["factor_count"] == 42
     instrumentation = idle["response_evidence"][
         "public_measurement_instrumentation"
     ]
@@ -199,6 +207,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "PUBLIC_ACCIDENTAL_RELEASE_ARTICLE",
         "PUBLIC_ACCIDENTAL_RELEASE_DATASET",
         "PUBLIC_DETECTOR_LOGIC_DATASET",
+        "PUBLIC_GRUNE_VENTILATION_DATASET",
     } <= public_link_ids
     assert all(row["url"].startswith(("https://", "http://")) for row in public_links)
     assert not any("confidential" in row["id"].lower() for row in public_links)

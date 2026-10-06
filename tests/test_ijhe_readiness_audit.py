@@ -115,6 +115,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert grune_inventory["profile_count"] == 42
     assert grune_inventory["spatial_point_count"] == 5256
     assert grune_inventory["source_identity_all_match"] is True
+    assert gates["grune_ventilation_empirical_envelope_integrity"]["status"] == "PASS"
+    grune_envelope = gates["grune_ventilation_empirical_envelope_integrity"]["observed"]
+    assert grune_envelope["profiles_used"] == 42
+    assert grune_envelope["factor_count"] == 42
+    assert grune_envelope["raw_rows_committed"] is False
     assert gates["dataverse_hydrogen_explosion_component_inventory"]["status"] == "PASS"
     explosion_inventory = gates["dataverse_hydrogen_explosion_component_inventory"]["observed"]
     assert explosion_inventory["dois"] == [

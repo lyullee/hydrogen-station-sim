@@ -11,6 +11,7 @@ from hashlib import sha256
 import json
 import math
 from pathlib import Path
+from statistics import median
 from typing import Any, Iterable
 
 from .calibration_profiles import load_measured_boundary_calibration
@@ -372,6 +373,65 @@ def _public_detector_logic_evidence() -> dict[str, Any] | None:
         },
         "aggregate": numeric_aggregate,
         "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
+def _public_grune_ventilation_evidence() -> dict[str, Any] | None:
+    """Expose the measured ventilation envelope used by the virtual proxy.
+
+    Only aggregate ratios enter the evidence envelope.  The raw workbooks stay
+    outside Git and the result remains explicitly limited to confined-space
+    ventilation/detector-proxy behavior.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/grune_ventilation_empirical_envelope_2026_10_06.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    definition = record.get("definition") or {}
+    factors = [item for item in record.get("factors") or [] if isinstance(item, dict)]
+    if (
+        record.get("status") != "derived_empirical_ventilation_envelope"
+        or source.get("license") != "CC BY 4.0"
+        or source.get("raw_rows_committed") is not False
+        or not factors
+    ):
+        return None
+    by_mode: dict[str, list[float]] = {}
+    for item in factors:
+        mode = str(item.get("wind_mode") or "")
+        value = item.get("relative_factor")
+        if mode and isinstance(value, (int, float)) and math.isfinite(float(value)):
+            by_mode.setdefault(mode, []).append(float(value))
+    mode_summary = {
+        mode: {
+            "case_count": len(values),
+            "factor_min": min(values),
+            "factor_median": float(median(values)),
+            "factor_max": max(values),
+        }
+        for mode, values in sorted(by_mode.items())
+        if values
+    }
+    return {
+        "artifact": "research/grune_ventilation_empirical_envelope_2026_10_06.json",
+        "doi": str(source.get("doi") or ""),
+        "license": str(source.get("license") or ""),
+        "evidence_role": "public measured confined-space ventilation envelope",
+        "profiles_used": record.get("profiles_used"),
+        "factor_count": record.get("factor_count"),
+        "wind_mode_summary": mode_summary,
+        "runtime_parameter_application": "virtual_detector_proxy_only",
+        "definition": {
+            "reference": definition.get("reference"),
+            "quantity": definition.get("quantity"),
+            "fallback": definition.get("fallback"),
+        },
+        "claim_limit": str(definition.get("not_a_claim") or ""),
     }
 
 
@@ -1089,6 +1149,15 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             f"https://doi.org/{detector_doi}",
             "검지기 alarm/trip persistence 재현 근거",
         )
+    ventilation = evidence.get("public_grune_ventilation_evidence") or {}
+    ventilation_doi = str(ventilation.get("doi") or "")
+    if ventilation_doi:
+        add(
+            "PUBLIC_GRUNE_VENTILATION_DATASET",
+            "Efficiency of mechanical ventilation on H2 dispersion",
+            f"https://doi.org/{ventilation_doi}",
+            "공개 환기·확산 측정 기반 검지기 proxy 보정",
+        )
     return links
 
 
@@ -1628,6 +1697,11 @@ def build_evidence_manifest(
     detector_logic = _public_detector_logic_evidence()
     if detector_logic is not None:
         envelope["response_evidence"]["public_detector_logic_evidence"] = detector_logic
+    grune_ventilation = _public_grune_ventilation_evidence()
+    if grune_ventilation is not None:
+        envelope["response_evidence"][
+            "public_grune_ventilation_evidence"
+        ] = grune_ventilation
     confidential_boundary = _confidential_measured_boundary_evidence()
     if confidential_boundary is not None:
         envelope["response_evidence"]["confidential_measured_boundary_replay"] = confidential_boundary
@@ -1857,6 +1931,17 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             },
             "claim_limit": short(detector.get("claim_limit")),
         }
+    grune_ventilation = evidence.get("public_grune_ventilation_evidence")
+    if isinstance(grune_ventilation, dict):
+        summary["public_grune_ventilation_evidence"] = {
+            key: grune_ventilation.get(key)
+            for key in (
+                "doi", "evidence_role", "profiles_used", "factor_count",
+                "wind_mode_summary", "runtime_parameter_application",
+                "definition", "claim_limit",
+            )
+            if grune_ventilation.get(key) is not None
+        }
     local_accident_coverage = evidence.get(
         "confidential_local_accident_response_coverage"
     )
@@ -2039,6 +2124,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     ]
     detector = evidence.get("public_detector_logic_evidence") or {}
     detector_aggregate = detector.get("aggregate") or {}
+    grune_ventilation = evidence.get("public_grune_ventilation_evidence") or {}
     confidential = evidence.get("confidential_measured_boundary_replay") or {}
     holdout = confidential.get("temporal_holdout") or {}
     operational_holdout = confidential.get("operational_envelope_holdout") or {}
@@ -2213,6 +2299,16 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         "public_detector_trip_coverage": detector_aggregate.get(
             "mean_trip_sensor_coverage_fraction"
         ),
+        "public_grune_ventilation_envelope": {
+            "doi": grune_ventilation.get("doi"),
+            "profiles_used": grune_ventilation.get("profiles_used"),
+            "factor_count": grune_ventilation.get("factor_count"),
+            "wind_mode_summary": grune_ventilation.get("wind_mode_summary") or {},
+            "runtime_parameter_application": grune_ventilation.get(
+                "runtime_parameter_application"
+            ),
+            "claim_limit": grune_ventilation.get("claim_limit"),
+        },
         "public_accident_evidence": {
             "hiad_case_count": incident.get("case_count"),
             "hiad_action_taxonomy": incident.get("action_taxonomy", {}).get(

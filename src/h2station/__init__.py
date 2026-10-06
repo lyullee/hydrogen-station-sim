@@ -89,6 +89,11 @@ from .lifecycle_evidence import (
     LifecycleEvidenceProfile,
     load_lifecycle_evidence,
 )
+from .ventilation_calibration import (
+    MEASURED_VENTILATION_FACTORS,
+    MeasuredVentilationFactor,
+    measured_ventilation_factor,
+)
 from .safe_operation import SafeFullStationSimulator, SafeOperationTrajectory
 from .nbsdc_ingest import NbsdcColumnMap, NbsdcRefuelTrace, read_nbsdc_workbook
 from .safety_runtime import (
@@ -188,6 +193,9 @@ __all__ = [
     "load_measured_boundary_calibration",
     "LifecycleEvidenceProfile",
     "load_lifecycle_evidence",
+    "MEASURED_VENTILATION_FACTORS",
+    "MeasuredVentilationFactor",
+    "measured_ventilation_factor",
     "read_boundary_profile",
     "summarize_lifecycle_counters",
     "synchronize_station_traces",

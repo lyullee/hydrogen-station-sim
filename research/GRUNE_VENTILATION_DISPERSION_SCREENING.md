@@ -58,6 +58,25 @@ The inventory is intentionally a pre-analysis measurement boundary: it reports
 what is in the public archive but does not compare a digital-twin prediction
 with those fields and does not close a numeric validation gate.
 
+## Measured envelope applied to the virtual detector proxy
+
+The frozen parser and the existing inventory were used to derive
+`research/grune_ventilation_empirical_envelope_2026_10_06.json`. For every
+profile with a same-diameter, same-release-rate no-wind reference, the factor
+is the median measured spatial-average concentration divided by that reference.
+The artifact contains 42 profiles and 42 derived factors; no workbook rows are
+committed. `h2station.ventilation_calibration` embeds the resulting table and
+uses nearest diameter/release-rate selection plus speed interpolation within a
+declared wind mode. Missing conditions return a neutral factor of `1.0`.
+
+`VirtualSafetyRuntime.detector_multiplier()` applies this factor only when the
+release flow and orifice diameter are known, and only to the simulated detector
+proxy. It does not alter the physical release, HyRAM consequence calculation,
+or controller limits. The HAZOP runtime passes the measured release inputs to
+the proxy and retains a compatibility path for older one-argument callbacks.
+This is a measured-boundary improvement to the safety display and detector
+logic, not a numerical validation of the full HRS loop.
+
 It cannot support claims about vehicle filling, cascade pressure management, compressor/precooler dynamics, dispenser control, SOC, or the full SAE J2601 station loop. Those claims still require de-identified synchronized station traces from CARB, JRC GasTeF, Cal State LA, or another independent provider.
 
 ## Reproducibility plan
