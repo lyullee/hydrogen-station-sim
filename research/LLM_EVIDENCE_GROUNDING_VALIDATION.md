@@ -93,6 +93,15 @@ pressure range, temperature range and state-transition count. Temperature and
 state semantics remain unattested, and the artifact contains no vehicle-side
 channels or full-loop validation claim.
 
+The frozen station-to-vehicle external holdout is also carried as a hard claim
+boundary. Eight public MC-default cases were evaluated under a protocol frozen
+before data access; the pressure, temperature and final-SOC screens passed 0/8
+(mean RMSE 15.862 MPa, 13.230 °C and 18.082 percentage points). Five cases
+stopped at the gas-temperature safety limit. A later parameter sweep reduced
+aggregate error but still passed 0/8; it is explicitly marked post-freeze
+diagnostic-only and cannot be used as validation, certification or a production
+parameter-fitting result.
+
 ## Claim boundary
 
 This is traceability and consistency evidence for the software contract. It

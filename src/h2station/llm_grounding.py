@@ -701,6 +701,109 @@ def _preslhy_validation_boundary() -> dict[str, Any] | None:
     }
 
 
+def _closed_loop_validation_boundary() -> dict[str, Any] | None:
+    """Expose the frozen station-to-vehicle holdout boundary.
+
+    The MC-default result is an intentionally consumed external holdout.  It
+    failed its predeclared pressure, temperature and final-SOC screens, so it
+    must remain visible to decision support as a limitation.  A later
+    parameter sweep is carried only as a post-freeze diagnostic and cannot be
+    presented as validation or used to support a release claim.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    holdout_path = root / (
+        "data/public_validation/results/closed_loop_external_holdout/validation.json"
+    )
+    diagnostic_path = root / "research/closed_loop_mc_default_postfreeze_diagnostic.json"
+    try:
+        holdout = json.loads(holdout_path.read_text(encoding="utf-8"))
+        diagnostic = json.loads(diagnostic_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    aggregate = holdout.get("aggregate") or {}
+    limits = holdout.get("screening_limits") or {}
+    metrics = aggregate.get("metrics") or {}
+    diagnostic_aggregate = diagnostic.get("diagnostic_aggregate") or {}
+    required = (
+        holdout.get("protocol_frozen_before_data_access") is True,
+        holdout.get("post_freeze_parameter_tuning") is False,
+        aggregate.get("case_count") == 8,
+        aggregate.get("screening_pass_count") == 0,
+        diagnostic.get("status") == "post_freeze_diagnostic_only",
+        diagnostic.get("prohibited_use") and isinstance(
+            diagnostic.get("purpose"), str
+        ),
+    )
+    if not all(required):
+        return None
+
+    def metric(name: str, field: str) -> Any:
+        value = (metrics.get(name) or {}).get(field)
+        return _finite_number(value)
+
+    return {
+        "artifact": "data/public_validation/results/closed_loop_external_holdout/validation.json",
+        "diagnostic_artifact": "research/closed_loop_mc_default_postfreeze_diagnostic.json",
+        "evidence_role": "frozen station-to-vehicle external holdout boundary",
+        "protocol": holdout.get("protocol"),
+        "frozen_model_commit": holdout.get("frozen_model_commit"),
+        "protocol_frozen_before_data_access": True,
+        "post_freeze_parameter_tuning": False,
+        "screening_limits": {
+            key: _finite_number(value) for key, value in limits.items()
+        },
+        "aggregate": {
+            "case_count": aggregate.get("case_count"),
+            "screening_pass_count": aggregate.get("screening_pass_count"),
+            "screening_pass_fraction": _finite_number(
+                aggregate.get("screening_pass_fraction")
+            ),
+            "final_stop_reason_counts": {
+                str(key): value
+                for key, value in (aggregate.get("final_stop_reason_counts") or {}).items()
+                if isinstance(value, int)
+            },
+            "pressure_rmse_mean_mpa": metric("pressure_rmse_mpa", "mean"),
+            "temperature_rmse_mean_c": metric("temperature_rmse_c", "mean"),
+            "soc_rmse_mean_percentage_points": metric(
+                "soc_rmse_percentage_points", "mean"
+            ),
+        },
+        "post_freeze_diagnostic": {
+            "status": diagnostic.get("status"),
+            "screening_pass_count": diagnostic_aggregate.get(
+                "screening_pass_count"
+            ),
+            "case_count": diagnostic_aggregate.get("case_count"),
+            "pressure_rmse_mean_mpa": _finite_number(
+                diagnostic_aggregate.get("pressure_rmse_mean_mpa")
+            ),
+            "temperature_rmse_mean_c": _finite_number(
+                diagnostic_aggregate.get("temperature_rmse_mean_c")
+            ),
+            "soc_rmse_mean_percentage_points": _finite_number(
+                diagnostic_aggregate.get("soc_rmse_mean_percentage_points")
+            ),
+            "final_stop_reason_counts": {
+                str(key): value
+                for key, value in (
+                    diagnostic_aggregate.get("final_stop_reason_counts") or {}
+                ).items()
+                if isinstance(value, int)
+            },
+            "claim_prohibited": True,
+        },
+        "runtime_model_parameter_changed": False,
+        "claim_supported": False,
+        "claim_limit": (
+            "8개 외부 차량 충전 holdout은 사전 고정된 압력·온도·최종 SOC 기준을 "
+            "0/8로 통과하지 못했습니다. 사후 보정 결과는 진단용이며 검증·인증·"
+            "현장 일반화 또는 안전성 주장을 뒷받침하지 않습니다."
+        ),
+    }
+
+
 def _release_model_validation_boundary() -> dict[str, Any] | None:
     """Expose the locked component-release limitation to decision support.
 
@@ -1444,6 +1547,11 @@ def build_evidence_manifest(
     preslhy = _preslhy_validation_boundary()
     if preslhy is not None:
         envelope["response_evidence"]["preslhy_validation_boundary"] = preslhy
+    closed_loop = _closed_loop_validation_boundary()
+    if closed_loop is not None:
+        envelope["response_evidence"][
+            "closed_loop_validation_boundary"
+        ] = closed_loop
     release_boundary = _release_model_validation_boundary()
     if release_boundary is not None:
         envelope["response_evidence"][
@@ -1554,6 +1662,27 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "runtime_model_parameter_changed"
             ),
             "claim_limit": short(preslhy.get("claim_limit")),
+        }
+    closed_loop = evidence.get("closed_loop_validation_boundary")
+    if isinstance(closed_loop, dict):
+        summary["closed_loop_validation_boundary"] = {
+            "evidence_role": closed_loop.get("evidence_role"),
+            "protocol_frozen_before_data_access": closed_loop.get(
+                "protocol_frozen_before_data_access"
+            ),
+            "post_freeze_parameter_tuning": closed_loop.get(
+                "post_freeze_parameter_tuning"
+            ),
+            "screening_limits": closed_loop.get("screening_limits") or {},
+            "aggregate": closed_loop.get("aggregate") or {},
+            "post_freeze_diagnostic": closed_loop.get(
+                "post_freeze_diagnostic"
+            ) or {},
+            "runtime_model_parameter_changed": closed_loop.get(
+                "runtime_model_parameter_changed"
+            ),
+            "claim_supported": closed_loop.get("claim_supported"),
+            "claim_limit": short(closed_loop.get("claim_limit")),
         }
     envelope_screen = evidence.get("public_operating_envelope_screen")
     if isinstance(envelope_screen, dict):
@@ -1801,6 +1930,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     envelope_screen = evidence.get("public_operating_envelope_screen") or {}
     public_measurement = evidence.get("public_measurement_instrumentation") or {}
     preslhy = evidence.get("preslhy_validation_boundary") or {}
+    closed_loop = evidence.get("closed_loop_validation_boundary") or {}
     release_boundary = evidence.get("proust_release_model_validation_boundary") or {}
     return {
         "runtime_calibration": manifest.get("runtime_calibration") or {},
@@ -1844,6 +1974,25 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "runtime_model_parameter_changed"
             ) is True,
             "claim_limit": preslhy.get("claim_limit"),
+        },
+        "closed_loop_validation_boundary": {
+            "evidence_role": closed_loop.get("evidence_role"),
+            "protocol_frozen_before_data_access": closed_loop.get(
+                "protocol_frozen_before_data_access"
+            ) is True,
+            "post_freeze_parameter_tuning": closed_loop.get(
+                "post_freeze_parameter_tuning"
+            ) is True,
+            "screening_limits": closed_loop.get("screening_limits") or {},
+            "aggregate": closed_loop.get("aggregate") or {},
+            "post_freeze_diagnostic": closed_loop.get(
+                "post_freeze_diagnostic"
+            ) or {},
+            "runtime_model_parameter_changed": closed_loop.get(
+                "runtime_model_parameter_changed"
+            ) is True,
+            "claim_supported": closed_loop.get("claim_supported") is True,
+            "claim_limit": closed_loop.get("claim_limit"),
         },
         "public_operating_envelope_screen": {
             "status": envelope_screen.get("status"),

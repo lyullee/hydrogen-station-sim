@@ -114,6 +114,18 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert early["preslhy_validation_boundary"][
         "independent_holdout"
     ]["minimum_requirements_met"] is False
+    closed_loop = idle["response_evidence"]["closed_loop_validation_boundary"]
+    assert closed_loop["aggregate"]["case_count"] == 8
+    assert closed_loop["aggregate"]["screening_pass_count"] == 0
+    assert closed_loop["aggregate"]["final_stop_reason_counts"][
+        "safety-temperature"
+    ] == 5
+    assert closed_loop["claim_supported"] is False
+    assert closed_loop["runtime_model_parameter_changed"] is False
+    assert closed_loop["post_freeze_diagnostic"]["claim_prohibited"] is True
+    assert early["closed_loop_validation_boundary"]["aggregate"][
+        "screening_pass_count"
+    ] == 0
     screen = early["public_operating_envelope_screen"]
     assert screen["status"] == "screened"
     assert screen["flow_context"] == "idle"
@@ -159,6 +171,13 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert header["preslhy_validation_boundary"][
         "independent_holdout_claim_supported"
     ] is False
+    assert header["closed_loop_validation_boundary"]["claim_supported"] is False
+    assert header["closed_loop_validation_boundary"][
+        "protocol_frozen_before_data_access"
+    ] is True
+    assert header["closed_loop_validation_boundary"][
+        "post_freeze_diagnostic"
+    ]["claim_prohibited"] is True
     public_links = header["public_source_links"]
     public_link_ids = {row["id"] for row in public_links}
     assert {

@@ -39,7 +39,8 @@
     "public CC BY sampling-workbook instrumentation context is carried into the evidence envelope without inferring vehicle or receptacle channels",
     "PRESLHY development and independent holdout outcomes are separated, with failed claim conditions and unchanged runtime parameters preserved",
     "de-identified station-equipment pressure, temperature and state envelope is carried with explicit attestation and full-loop claim limits",
-    "restricted actual-accident metadata is summarized by response-family candidate counts without publishing narratives or treating counts as frequencies"
+    "restricted actual-accident metadata is summarized by response-family candidate counts without publishing narratives or treating counts as frequencies",
+    "frozen external station-to-vehicle holdout remains explicitly bounded at 0/8, while post-freeze calibration is marked diagnostic-only and cannot support validation claims"
   ],
   "not_established": [
     "physics validity of the consequence model",
@@ -197,5 +198,29 @@
     "vehicle_side_channels_present": false,
     "full_station_vehicle_validation": false,
     "interpretation": "privacy-bounded station equipment context only; no vehicle or full-loop claim"
+  },
+  "closed_loop_validation_boundary": {
+    "evidence": "data/public_validation/results/closed_loop_external_holdout/validation.json",
+    "diagnostic_evidence": "research/closed_loop_mc_default_postfreeze_diagnostic.json",
+    "protocol_frozen_before_data_access": true,
+    "screening_limits": {
+      "pressure_rmse_mpa": 5.0,
+      "temperature_rmse_c": 10.0,
+      "soc_final_abs_error_percentage_points": 5.0
+    },
+    "external_holdout_cases": 8,
+    "external_holdout_passes": 0,
+    "external_holdout_screening_pass_fraction": 0.0,
+    "external_holdout_metrics": {
+      "pressure_rmse_mean_mpa": 15.861950187335326,
+      "temperature_rmse_mean_c": 13.2297713971845,
+      "soc_rmse_mean_percentage_points": 18.082051217903157
+    },
+    "post_freeze_diagnostic_cases": 8,
+    "post_freeze_diagnostic_passes": 0,
+    "post_freeze_diagnostic_only": true,
+    "runtime_model_parameter_changed": false,
+    "claim_supported": false,
+    "interpretation": "predeclared full-loop pressure, temperature and final-SOC screens failed on all 8 external cases; later calibration is retained only to diagnose premature thermal stopping and under-delivery"
   }
 }
