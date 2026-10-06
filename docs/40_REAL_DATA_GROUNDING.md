@@ -90,6 +90,14 @@ capacity/EOS result as diagnostic only. Before changing a default, the rule
 must be frozen before data access and evaluated on an untouched external
 holdout.
 
+An additional public HyTF trace is carried as `public_tank_trace_boundary`.
+It contains 2,536 synchronized samples from a 70 MPa tank fill with two
+pressure channels and fourteen tank thermocouples. Because it has no mass-flow,
+vehicle/receptacle, station-controller or ESD channels, it is exposed as a
+component-screen candidate only. Its repository commit and file hash are
+retained for reproducibility, while raw rows remain outside the prompt and the
+full-loop claim remains false.
+
 Each simulation snapshot also carries the selected vehicle geometry basis and
 declared capacities into the evidence envelope. This lets the main and sensor
 assistants state whether the current run used the `reference` default or the

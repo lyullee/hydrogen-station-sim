@@ -846,6 +846,89 @@ def _public_geometry_sensitivity_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_tank_trace_boundary_evidence() -> dict[str, Any] | None:
+    """Expose a second public tank trace as a bounded boundary candidate.
+
+    HyTF provides a real 70 MPa tank pressure/thermocouple trace, but it has no
+    transferred-mass, dispenser, controller or ESD channels.  The raw file is
+    referenced by hash and is never copied into the prompt.  This evidence is
+    therefore useful for provenance and future frozen component screening only.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/hytf_open_tank_trace_boundary_2026_10_05.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    experiment = record.get("experiment") or {}
+    channels = experiment.get("channels") or {}
+    eligibility = record.get("eligibility") or {}
+    access = record.get("access_observation") or {}
+    if (
+        record.get("status") != "PUBLIC_RAW_TANK_TRACE_BOUNDARY_RECHECKED"
+        or source.get("repository_commit") is None
+        or source.get("dataset_sha256") is None
+        or experiment.get("sample_count") is None
+        or eligibility.get("component_tank_screen_eligible_after_protocol_freeze")
+        is not True
+        or eligibility.get("full_loop_external_holdout_eligible") is not False
+        or access.get("vehicle_or_receptacle_pressure_temperature_trace") is not False
+    ):
+        return None
+    geometry = experiment.get("geometry") or {}
+    observed = experiment.get("observed_ranges") or {}
+    return {
+        "artifact": "research/hytf_open_tank_trace_boundary_2026_10_05.json",
+        "evidence_role": "public_tank_thermal_boundary_candidate",
+        "source": {
+            "title": source.get("title"),
+            "repository_url": source.get("repository_url"),
+            "repository_commit": source.get("repository_commit"),
+            "repository_license": source.get("repository_license"),
+            "dataset_specific_license_identified": (
+                source.get("dataset_specific_license_identified") is True
+            ),
+            "dataset_sha256": source.get("dataset_sha256"),
+        },
+        "experiment": {
+            key: experiment.get(key)
+            for key in ("dataset_id", "sample_count", "sample_period_s", "duration_s")
+            if experiment.get(key) is not None
+        },
+        "geometry": {
+            key: geometry.get(key)
+            for key in ("internal_volume_m3", "internal_diameter_m", "inlet_area_m2")
+            if geometry.get(key) is not None
+        },
+        "channel_scope": {
+            "pressure_channel_count": len(channels.get("pressure_channels") or []),
+            "tank_thermocouple_count": len(channels.get("tank_thermocouples") or []),
+            "mass_flow_channel_present": (
+                channels.get("mass_flow_channel_present") is True
+            ),
+            "vehicle_receptacle_channel_present": (
+                channels.get("vehicle_receptacle_channel_present") is True
+            ),
+            "station_controller_or_esd_channel_present": (
+                channels.get("station_controller_or_esd_channel_present") is True
+            ),
+        },
+        "observed_ranges": {
+            key: observed.get(key)
+            for key in ("p_1_bar", "p_2_bar", "tank_thermocouple_min_degC",
+                        "tank_thermocouple_max_degC")
+            if observed.get(key) is not None
+        },
+        "component_tank_screen_eligible": True,
+        "full_loop_external_holdout_eligible": False,
+        "claim_supported": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_measurement_instrumentation_evidence() -> dict[str, Any] | None:
     """Expose public sampling-workbook scope without inventing channel meaning.
 
@@ -1316,6 +1399,15 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
         str(station_source.get("title") or "Real-station back-to-back fueling context"),
         str(station_source.get("url") or ""),
         "실충전소 back-to-back 운전·저장압력·냉각·차량 SOC 맥락",
+    )
+
+    tank_trace = evidence.get("public_tank_trace_boundary") or {}
+    tank_source = tank_trace.get("source") or {}
+    add(
+        "PUBLIC_HYTF_TANK_TRACE",
+        str(tank_source.get("title") or "Public high-pressure tank trace"),
+        str(tank_source.get("repository_url") or ""),
+        "실측 70 MPa 탱크 압력·열경계 후보(충전소 full-loop 검증 아님)",
     )
 
     khk = evidence.get("public_accident_report_inventory") or {}
@@ -1922,6 +2014,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_geometry_sensitivity"
         ] = public_geometry_sensitivity
+    public_tank_trace = _public_tank_trace_boundary_evidence()
+    if public_tank_trace is not None:
+        envelope["response_evidence"][
+            "public_tank_trace_boundary"
+        ] = public_tank_trace
     public_measurement = _public_measurement_instrumentation_evidence()
     if public_measurement is not None:
         envelope["response_evidence"][
@@ -2049,6 +2146,19 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_limit",
             )
             if public_geometry_sensitivity.get(key) is not None
+        }
+    public_tank_trace = evidence.get("public_tank_trace_boundary")
+    if isinstance(public_tank_trace, dict):
+        summary["public_tank_trace_boundary"] = {
+            key: public_tank_trace.get(key)
+            for key in (
+                "evidence_role", "source", "experiment", "geometry",
+                "channel_scope", "observed_ranges",
+                "component_tank_screen_eligible",
+                "full_loop_external_holdout_eligible", "claim_supported",
+                "claim_limit",
+            )
+            if public_tank_trace.get(key) is not None
         }
     public_measurement = evidence.get("public_measurement_instrumentation")
     if isinstance(public_measurement, dict):
@@ -2475,6 +2585,38 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             ).get("claim_supported"),
             "claim_limit": (
                 evidence.get("public_geometry_sensitivity") or {}
+            ).get("claim_limit"),
+        },
+        "public_tank_trace_boundary": {
+            "evidence_role": (
+                evidence.get("public_tank_trace_boundary") or {}
+            ).get("evidence_role"),
+            "source": (
+                evidence.get("public_tank_trace_boundary") or {}
+            ).get("source") or {},
+            "experiment": (
+                evidence.get("public_tank_trace_boundary") or {}
+            ).get("experiment") or {},
+            "geometry": (
+                evidence.get("public_tank_trace_boundary") or {}
+            ).get("geometry") or {},
+            "channel_scope": (
+                evidence.get("public_tank_trace_boundary") or {}
+            ).get("channel_scope") or {},
+            "observed_ranges": (
+                evidence.get("public_tank_trace_boundary") or {}
+            ).get("observed_ranges") or {},
+            "component_tank_screen_eligible": (
+                evidence.get("public_tank_trace_boundary") or {}
+            ).get("component_tank_screen_eligible"),
+            "full_loop_external_holdout_eligible": (
+                evidence.get("public_tank_trace_boundary") or {}
+            ).get("full_loop_external_holdout_eligible"),
+            "claim_supported": (
+                evidence.get("public_tank_trace_boundary") or {}
+            ).get("claim_supported"),
+            "claim_limit": (
+                evidence.get("public_tank_trace_boundary") or {}
             ).get("claim_limit"),
         },
         "preslhy_validation_boundary": {

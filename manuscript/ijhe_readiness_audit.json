@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-06T04:40:03.335113+00:00",
+  "generated_at": "2026-10-06T04:48:17.900143+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -4951,7 +4951,8 @@
           "active releases use the measured upper spatial ventilation envelope by default while median mode remains available for sensitivity analysis",
           "opt-in measured station-boundary pressure scope status is carried in operator frames and evidence envelopes without becoming a safety limit",
           "post-access public capacity/EOS geometry sensitivity is exposed as diagnostic-only evidence while the reference default remains unchanged",
-          "runtime evidence preserves reference versus capacity/EOS geometry basis and capacities for each simulation snapshot"
+          "runtime evidence preserves reference versus capacity/EOS geometry basis and capacities for each simulation snapshot",
+          "public HyTF 70 MPa tank trace is carried as hash-linked component-boundary evidence without a full-loop claim"
         ],
         "not_established": [
           "physics validity of the consequence model",
@@ -5181,6 +5182,20 @@
           "runtime_default_changed": false,
           "claim_supported": false,
           "interpretation": "post-access sensitivity only; capacity/EOS remains explicit opt-in and requires a frozen prospective external holdout before any default change"
+        },
+        "public_tank_trace_boundary": {
+          "evidence": "research/hytf_open_tank_trace_boundary_2026_10_05.json",
+          "evidence_role": "public_tank_thermal_boundary_candidate",
+          "sample_count": 2536,
+          "sample_period_s": 0.1,
+          "pressure_channel_count": 2,
+          "tank_thermocouple_count": 14,
+          "mass_flow_channel_present": false,
+          "vehicle_receptacle_channel_present": false,
+          "station_controller_or_esd_channel_present": false,
+          "full_loop_external_holdout_eligible": false,
+          "claim_supported": false,
+          "interpretation": "hash-linked public tank boundary candidate; component screening only until a separately frozen protocol is run"
         }
       }
     },

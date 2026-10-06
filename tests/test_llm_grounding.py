@@ -135,6 +135,13 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "screening_pass_count"
     ] == 7
     assert geometry["claim_supported"] is False
+    tank_trace = idle["response_evidence"]["public_tank_trace_boundary"]
+    assert tank_trace["evidence_role"] == "public_tank_thermal_boundary_candidate"
+    assert tank_trace["experiment"]["sample_count"] == 2536
+    assert tank_trace["channel_scope"]["tank_thermocouple_count"] == 14
+    assert tank_trace["channel_scope"]["mass_flow_channel_present"] is False
+    assert tank_trace["full_loop_external_holdout_eligible"] is False
+    assert tank_trace["claim_supported"] is False
     early = prompt_evidence_summary(idle)
     assert early["impact_status"] == "not_requested"
     assert early["public_experimental_benchmarks"]["sources"]
@@ -145,6 +152,9 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert early["public_geometry_sensitivity"]["variants"][
         "capacity_eos_with_frozen_fit"
     ]["pressure_rmse_mean_mpa"] == 3.5380890196945884
+    assert early["public_tank_trace_boundary"]["observed_ranges"][
+        "p_2_bar"
+    ][1] == 699.553778
     instrumentation = idle["response_evidence"][
         "public_measurement_instrumentation"
     ]
@@ -227,6 +237,9 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert header["public_geometry_sensitivity"]["runtime_rule"][
         "default_basis"
     ] == "reference"
+    assert header["public_tank_trace_boundary"]["source"][
+        "repository_commit"
+    ] == "4482486fa9ab02360af364f3d1dad5ea48eabaf8"
     assert header["preslhy_validation_boundary"][
         "independent_holdout_claim_supported"
     ] is False
@@ -248,6 +261,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "PUBLIC_ACCIDENTAL_RELEASE_DATASET",
         "PUBLIC_DETECTOR_LOGIC_DATASET",
         "PUBLIC_GRUNE_VENTILATION_DATASET",
+        "PUBLIC_HYTF_TANK_TRACE",
     } <= public_link_ids
     assert all(row["url"].startswith(("https://", "http://")) for row in public_links)
     assert not any("confidential" in row["id"].lower() for row in public_links)

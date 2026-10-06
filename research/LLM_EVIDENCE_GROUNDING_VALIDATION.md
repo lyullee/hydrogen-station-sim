@@ -155,6 +155,12 @@ therefore keeps `reference` as the default, exposes `capacity_eos` only as an
 explicit opt-in, and tells the assistant that a frozen prospective holdout is
 still required.
 
+The evidence envelope also carries the public HyTF 70 MPa tank trace as a
+component-boundary candidate: 2,536 synchronized samples, two pressure
+channels and fourteen thermocouples. The source commit and hash are preserved,
+but the absence of mass-flow, vehicle/receptacle and controller/ESD channels
+keeps `claim_supported=false` and prevents any full-loop interpretation.
+
 Every simulation snapshot now carries its selected vehicle geometry basis and
 declared capacities into the hashed evidence envelope. This prevents the main
 and sensor assistants from describing an opt-in capacity/EOS sensitivity run
