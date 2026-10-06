@@ -402,11 +402,15 @@ def _public_grune_ventilation_evidence() -> dict[str, Any] | None:
     ):
         return None
     by_mode: dict[str, list[float]] = {}
+    upper_by_mode: dict[str, list[float]] = {}
     for item in factors:
         mode = str(item.get("wind_mode") or "")
         value = item.get("relative_factor")
+        upper_value = item.get("relative_factor_upper")
         if mode and isinstance(value, (int, float)) and math.isfinite(float(value)):
             by_mode.setdefault(mode, []).append(float(value))
+        if mode and isinstance(upper_value, (int, float)) and math.isfinite(float(upper_value)):
+            upper_by_mode.setdefault(mode, []).append(float(upper_value))
     mode_summary = {
         mode: {
             "case_count": len(values),
@@ -417,6 +421,16 @@ def _public_grune_ventilation_evidence() -> dict[str, Any] | None:
         for mode, values in sorted(by_mode.items())
         if values
     }
+    upper_summary = {
+        mode: {
+            "case_count": len(values),
+            "factor_min": min(values),
+            "factor_median": float(median(values)),
+            "factor_max": max(values),
+        }
+        for mode, values in sorted(upper_by_mode.items())
+        if values
+    }
     return {
         "artifact": "research/grune_ventilation_empirical_envelope_2026_10_06.json",
         "doi": str(source.get("doi") or ""),
@@ -425,7 +439,9 @@ def _public_grune_ventilation_evidence() -> dict[str, Any] | None:
         "profiles_used": record.get("profiles_used"),
         "factor_count": record.get("factor_count"),
         "wind_mode_summary": mode_summary,
-        "runtime_parameter_application": "virtual_detector_proxy_only",
+        "wind_mode_upper_envelope_summary": upper_summary,
+        "runtime_parameter_application": "virtual_detector_proxy_only; active releases default to the measured upper spatial envelope",
+        "runtime_statistic_default": "upper",
         "definition": {
             "reference": definition.get("reference"),
             "quantity": definition.get("quantity"),

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-06T03:47:15.324434+00:00",
+  "generated_at": "2026-10-06T04:06:15.319357+00:00",
   "status": "derived_empirical_ventilation_envelope",
   "source": {
     "title": "Efficiency of mechanical ventilation on H2 dispersion (PS)",
@@ -11,9 +11,10 @@
   },
   "definition": {
     "reference": "same release diameter and nominal release rate, no-wind profile",
-    "quantity": "median of measured spatial-average concentration values",
-    "use": "bounded multiplier for the virtual detector concentration proxy",
+    "quantity": "median and spatial p10/p90 of measured concentration values",
+    "use": "bounded median multiplier with an optional upper spatial envelope for the virtual detector concentration proxy",
     "fallback": "1.0 when no matching public envelope is available",
+    "upper_envelope": "relative p90 concentration against the same release's no-wind p90 profile",
     "not_a_claim": "not CFD, not detector certification, not outdoor HRS or full-loop validation"
   },
   "profiles_used": 42,
@@ -27,6 +28,13 @@
       "measured_mean_concentration_vol_pct": 2.0728301886792457,
       "no_wind_reference_vol_pct": 2.0728301886792457,
       "relative_factor": 1.0,
+      "measured_p10_concentration_vol_pct": 0.04618588399720478,
+      "measured_p90_concentration_vol_pct": 7.69761725067386,
+      "no_wind_reference_p10_vol_pct": 0.04618588399720478,
+      "no_wind_reference_p90_vol_pct": 7.69761725067386,
+      "relative_factor_p10": 1.0,
+      "relative_factor_p90": 1.0,
+      "relative_factor_upper": 1.0,
       "point_count": 117
     },
     {
@@ -37,6 +45,13 @@
       "measured_mean_concentration_vol_pct": 1.4255102040816325,
       "no_wind_reference_vol_pct": 2.0728301886792457,
       "relative_factor": 0.6877120045178091,
+      "measured_p10_concentration_vol_pct": 0.04861538461538463,
+      "measured_p90_concentration_vol_pct": 7.326692307692313,
+      "no_wind_reference_p10_vol_pct": 0.04618588399720478,
+      "no_wind_reference_p90_vol_pct": 7.69761725067386,
+      "relative_factor_p10": 1.052602665747978,
+      "relative_factor_p90": 0.9518130181194608,
+      "relative_factor_upper": 0.9518130181194608,
       "point_count": 117
     },
     {
@@ -47,6 +62,13 @@
       "measured_mean_concentration_vol_pct": 2.2613043478260866,
       "no_wind_reference_vol_pct": 2.0728301886792457,
       "relative_factor": 1.0909260006807078,
+      "measured_p10_concentration_vol_pct": 0.12522525107604027,
+      "measured_p90_concentration_vol_pct": 8.026784313725495,
+      "no_wind_reference_p10_vol_pct": 0.04618588399720478,
+      "no_wind_reference_p90_vol_pct": 7.69761725067386,
+      "relative_factor_p10": 2.7113316935455654,
+      "relative_factor_p90": 1.042762201903819,
+      "relative_factor_upper": 1.0909260006807078,
       "point_count": 117
     },
     {
@@ -57,6 +79,13 @@
       "measured_mean_concentration_vol_pct": 0.7016666666666668,
       "no_wind_reference_vol_pct": 2.0728301886792457,
       "relative_factor": 0.33850658413738693,
+      "measured_p10_concentration_vol_pct": 0.047014901960784346,
+      "measured_p90_concentration_vol_pct": 6.623520000000002,
+      "no_wind_reference_p10_vol_pct": 0.04618588399720478,
+      "no_wind_reference_p90_vol_pct": 7.69761725067386,
+      "relative_factor_p10": 1.017949596106675,
+      "relative_factor_p90": 0.8604636713289648,
+      "relative_factor_upper": 0.8604636713289648,
       "point_count": 117
     },
     {
@@ -67,6 +96,13 @@
       "measured_mean_concentration_vol_pct": 2.0020370370370375,
       "no_wind_reference_vol_pct": 2.0728301886792457,
       "relative_factor": 0.9658471050697521,
+      "measured_p10_concentration_vol_pct": 0.05607843137254901,
+      "measured_p90_concentration_vol_pct": 8.93320754716981,
+      "no_wind_reference_p10_vol_pct": 0.04618588399720478,
+      "no_wind_reference_p90_vol_pct": 7.69761725067386,
+      "relative_factor_p10": 1.2141898458832776,
+      "relative_factor_p90": 1.1605159436042087,
+      "relative_factor_upper": 1.1605159436042087,
       "point_count": 81
     },
     {
@@ -77,6 +113,13 @@
       "measured_mean_concentration_vol_pct": 0.6601785714285713,
       "no_wind_reference_vol_pct": 2.0728301886792457,
       "relative_factor": 0.3184913916413096,
+      "measured_p10_concentration_vol_pct": 0.039059440559440585,
+      "measured_p90_concentration_vol_pct": 6.229255442670536,
+      "no_wind_reference_p10_vol_pct": 0.04618588399720478,
+      "no_wind_reference_p90_vol_pct": 7.69761725067386,
+      "relative_factor_p10": 0.8457008327870157,
+      "relative_factor_p90": 0.8092446324380728,
+      "relative_factor_upper": 0.8092446324380728,
       "point_count": 117
     },
     {
@@ -87,6 +130,13 @@
       "measured_mean_concentration_vol_pct": 2.0500961538461535,
       "no_wind_reference_vol_pct": 2.0728301886792457,
       "relative_factor": 0.9890323698693438,
+      "measured_p10_concentration_vol_pct": 0.07756062424969985,
+      "measured_p90_concentration_vol_pct": 8.564433962264157,
+      "no_wind_reference_p10_vol_pct": 0.04618588399720478,
+      "no_wind_reference_p90_vol_pct": 7.69761725067386,
+      "relative_factor_p10": 1.6793144904272894,
+      "relative_factor_p90": 1.1126084453620262,
+      "relative_factor_upper": 1.1126084453620262,
       "point_count": 90
     },
     {
@@ -97,6 +147,13 @@
       "measured_mean_concentration_vol_pct": 1.1517941176470585,
       "no_wind_reference_vol_pct": 2.0728301886792457,
       "relative_factor": 0.555662554481104,
+      "measured_p10_concentration_vol_pct": 0.0,
+      "measured_p90_concentration_vol_pct": 6.709233333333338,
+      "no_wind_reference_p10_vol_pct": 0.04618588399720478,
+      "no_wind_reference_p90_vol_pct": 7.69761725067386,
+      "relative_factor_p10": 0.0,
+      "relative_factor_p90": 0.8715987187783341,
+      "relative_factor_upper": 0.8715987187783341,
       "point_count": 162
     },
     {
@@ -107,6 +164,13 @@
       "measured_mean_concentration_vol_pct": 0.8214238042269189,
       "no_wind_reference_vol_pct": 2.0728301886792457,
       "relative_factor": 0.3962812818498697,
+      "measured_p10_concentration_vol_pct": 0.0,
+      "measured_p90_concentration_vol_pct": 7.224618768328445,
+      "no_wind_reference_p10_vol_pct": 0.04618588399720478,
+      "no_wind_reference_p90_vol_pct": 7.69761725067386,
+      "relative_factor_p10": 0.0,
+      "relative_factor_p90": 0.9385526108999499,
+      "relative_factor_upper": 0.9385526108999499,
       "point_count": 108
     },
     {
@@ -117,6 +181,13 @@
       "measured_mean_concentration_vol_pct": 0.7665877016129031,
       "no_wind_reference_vol_pct": 2.0728301886792457,
       "relative_factor": 0.36982658097108917,
+      "measured_p10_concentration_vol_pct": 0.02518000000000003,
+      "measured_p90_concentration_vol_pct": 5.492145833333328,
+      "no_wind_reference_p10_vol_pct": 0.04618588399720478,
+      "no_wind_reference_p90_vol_pct": 7.69761725067386,
+      "relative_factor_p10": 0.5451882224777586,
+      "relative_factor_p90": 0.7134864795794489,
+      "relative_factor_upper": 0.7134864795794489,
       "point_count": 108
     },
     {
@@ -127,6 +198,13 @@
       "measured_mean_concentration_vol_pct": 3.914799999999999,
       "no_wind_reference_vol_pct": 3.914799999999999,
       "relative_factor": 1.0,
+      "measured_p10_concentration_vol_pct": 0.06845454545454549,
+      "measured_p90_concentration_vol_pct": 12.796478260869568,
+      "no_wind_reference_p10_vol_pct": 0.06845454545454549,
+      "no_wind_reference_p90_vol_pct": 12.796478260869568,
+      "relative_factor_p10": 1.0,
+      "relative_factor_p90": 1.0,
+      "relative_factor_upper": 1.0,
       "point_count": 153
     },
     {
@@ -137,6 +215,13 @@
       "measured_mean_concentration_vol_pct": 3.2504761904761907,
       "no_wind_reference_vol_pct": 3.914799999999999,
       "relative_factor": 0.8303045341974536,
+      "measured_p10_concentration_vol_pct": 0.06514285714285717,
+      "measured_p90_concentration_vol_pct": 12.677628458498035,
+      "no_wind_reference_p10_vol_pct": 0.06845454545454549,
+      "no_wind_reference_p90_vol_pct": 12.796478260869568,
+      "relative_factor_p10": 0.9516220830961866,
+      "relative_factor_p90": 0.9907123038113568,
+      "relative_factor_upper": 0.9907123038113568,
       "point_count": 153
     },
     {
@@ -147,6 +232,13 @@
       "measured_mean_concentration_vol_pct": 4.355714285714287,
       "no_wind_reference_vol_pct": 3.914799999999999,
       "relative_factor": 1.1126275379877102,
+      "measured_p10_concentration_vol_pct": 0.7094989648033128,
+      "measured_p90_concentration_vol_pct": 12.82856314699793,
+      "no_wind_reference_p10_vol_pct": 0.06845454545454549,
+      "no_wind_reference_p90_vol_pct": 12.796478260869568,
+      "relative_factor_p10": 10.364526710274152,
+      "relative_factor_p90": 1.0025073215828821,
+      "relative_factor_upper": 1.1126275379877102,
       "point_count": 153
     },
     {
@@ -157,6 +249,13 @@
       "measured_mean_concentration_vol_pct": 2.008947368421053,
       "no_wind_reference_vol_pct": 3.914799999999999,
       "relative_factor": 0.5131673057170362,
+      "measured_p10_concentration_vol_pct": 0.05668774703557313,
+      "measured_p90_concentration_vol_pct": 10.52498484848486,
+      "no_wind_reference_p10_vol_pct": 0.06845454545454549,
+      "no_wind_reference_p90_vol_pct": 12.796478260869568,
+      "relative_factor_p10": 0.8281078584213866,
+      "relative_factor_p90": 0.8224907379922862,
+      "relative_factor_upper": 0.8224907379922862,
       "point_count": 153
     },
     {
@@ -167,6 +266,13 @@
       "measured_mean_concentration_vol_pct": 4.404800000000001,
       "no_wind_reference_vol_pct": 3.914799999999999,
       "relative_factor": 1.125166036579136,
+      "measured_p10_concentration_vol_pct": 0.9450476190476191,
+      "measured_p90_concentration_vol_pct": 13.316865942028988,
+      "no_wind_reference_p10_vol_pct": 0.06845454545454549,
+      "no_wind_reference_p90_vol_pct": 12.796478260869568,
+      "relative_factor_p10": 13.80547650667172,
+      "relative_factor_p90": 1.0406664763969253,
+      "relative_factor_upper": 1.125166036579136,
       "point_count": 153
     },
     {
@@ -177,6 +283,13 @@
       "measured_mean_concentration_vol_pct": 2.105,
       "no_wind_reference_vol_pct": 3.914799999999999,
       "relative_factor": 0.5377030755083275,
+      "measured_p10_concentration_vol_pct": 0.06139393939393941,
+      "measured_p90_concentration_vol_pct": 10.906153846153849,
+      "no_wind_reference_p10_vol_pct": 0.06845454545454549,
+      "no_wind_reference_p90_vol_pct": 12.796478260869568,
+      "relative_factor_p10": 0.8968570163789285,
+      "relative_factor_p90": 0.8522777614137669,
+      "relative_factor_upper": 0.8522777614137669,
       "point_count": 153
     },
     {
@@ -187,6 +300,13 @@
       "measured_mean_concentration_vol_pct": 4.308076923076923,
       "no_wind_reference_vol_pct": 3.914799999999999,
       "relative_factor": 1.1004590076317882,
+      "measured_p10_concentration_vol_pct": 0.9512173913043477,
+      "measured_p90_concentration_vol_pct": 15.299217391304353,
+      "no_wind_reference_p10_vol_pct": 0.06845454545454549,
+      "no_wind_reference_p90_vol_pct": 12.796478260869568,
+      "relative_factor_p10": 13.895605981869613,
+      "relative_factor_p90": 1.1955803057227024,
+      "relative_factor_upper": 1.1955803057227024,
       "point_count": 135
     },
     {
@@ -197,6 +317,13 @@
       "measured_mean_concentration_vol_pct": 3.0585,
       "no_wind_reference_vol_pct": 3.0585,
       "relative_factor": 1.0,
+      "measured_p10_concentration_vol_pct": 0.16726315789473684,
+      "measured_p90_concentration_vol_pct": 10.051112781954894,
+      "no_wind_reference_p10_vol_pct": 0.16726315789473684,
+      "no_wind_reference_p90_vol_pct": 10.051112781954894,
+      "relative_factor_p10": 1.0,
+      "relative_factor_p90": 1.0,
+      "relative_factor_upper": 1.0,
       "point_count": 117
     },
     {
@@ -207,6 +334,13 @@
       "measured_mean_concentration_vol_pct": 1.695057692307692,
       "no_wind_reference_vol_pct": 3.0585,
       "relative_factor": 0.5542120949183234,
+      "measured_p10_concentration_vol_pct": 0.0485952380952381,
+      "measured_p90_concentration_vol_pct": 7.410976190476191,
+      "no_wind_reference_p10_vol_pct": 0.16726315789473684,
+      "no_wind_reference_p90_vol_pct": 10.051112781954894,
+      "relative_factor_p10": 0.29053163115466457,
+      "relative_factor_p90": 0.7373289257863438,
+      "relative_factor_upper": 0.7373289257863438,
       "point_count": 126
     },
     {
@@ -217,6 +351,13 @@
       "measured_mean_concentration_vol_pct": 1.06325,
       "no_wind_reference_vol_pct": 3.0585,
       "relative_factor": 0.34763773091384664,
+      "measured_p10_concentration_vol_pct": 0.043000000000000024,
+      "measured_p90_concentration_vol_pct": 6.420126482213435,
+      "no_wind_reference_p10_vol_pct": 0.16726315789473684,
+      "no_wind_reference_p90_vol_pct": 10.051112781954894,
+      "relative_factor_p10": 0.2570799244808057,
+      "relative_factor_p90": 0.63874783036359,
+      "relative_factor_upper": 0.63874783036359,
       "point_count": 108
     },
     {
@@ -227,6 +368,13 @@
       "measured_mean_concentration_vol_pct": 0.8842857142857143,
       "no_wind_reference_vol_pct": 3.0585,
       "relative_factor": 0.2891239870151101,
+      "measured_p10_concentration_vol_pct": 0.04048380952380953,
+      "measured_p90_concentration_vol_pct": 5.489592727272732,
+      "no_wind_reference_p10_vol_pct": 0.16726315789473684,
+      "no_wind_reference_p90_vol_pct": 10.051112781954894,
+      "relative_factor_p10": 0.24203662081572724,
+      "relative_factor_p90": 0.5461676578864367,
+      "relative_factor_upper": 0.5461676578864367,
       "point_count": 99
     },
     {
@@ -237,6 +385,13 @@
       "measured_mean_concentration_vol_pct": 3.0063414634146333,
       "no_wind_reference_vol_pct": 3.0063414634146333,
       "relative_factor": 1.0,
+      "measured_p10_concentration_vol_pct": 0.05389584706657879,
+      "measured_p90_concentration_vol_pct": 11.437722326454038,
+      "no_wind_reference_p10_vol_pct": 0.05389584706657879,
+      "no_wind_reference_p90_vol_pct": 11.437722326454038,
+      "relative_factor_p10": 1.0,
+      "relative_factor_p90": 1.0,
+      "relative_factor_upper": 1.0,
       "point_count": 117
     },
     {
@@ -247,6 +402,13 @@
       "measured_mean_concentration_vol_pct": 1.7023404255319143,
       "no_wind_reference_vol_pct": 3.0063414634146333,
       "relative_factor": 0.5662498575921509,
+      "measured_p10_concentration_vol_pct": 0.10335918367346941,
+      "measured_p90_concentration_vol_pct": 8.158159999999997,
+      "no_wind_reference_p10_vol_pct": 0.05389584706657879,
+      "no_wind_reference_p90_vol_pct": 11.437722326454038,
+      "relative_factor_p10": 1.9177578477574984,
+      "relative_factor_p90": 0.7132678838627846,
+      "relative_factor_upper": 0.7132678838627846,
       "point_count": 99
     },
     {
@@ -257,6 +419,13 @@
       "measured_mean_concentration_vol_pct": 2.0380327868852457,
       "no_wind_reference_vol_pct": 3.0063414634146333,
       "relative_factor": 0.6779112791034813,
+      "measured_p10_concentration_vol_pct": 0.5269583333333334,
+      "measured_p90_concentration_vol_pct": 11.47421739130435,
+      "no_wind_reference_p10_vol_pct": 0.05389584706657879,
+      "no_wind_reference_p90_vol_pct": 11.437722326454038,
+      "relative_factor_p10": 9.777345788486626,
+      "relative_factor_p90": 1.0031907633188386,
+      "relative_factor_upper": 1.0031907633188386,
       "point_count": 117
     },
     {
@@ -267,6 +436,13 @@
       "measured_mean_concentration_vol_pct": 0.7674,
       "no_wind_reference_vol_pct": 3.0063414634146333,
       "relative_factor": 0.2552604251176376,
+      "measured_p10_concentration_vol_pct": 0.09525490196078432,
+      "measured_p90_concentration_vol_pct": 5.198409090909092,
+      "no_wind_reference_p10_vol_pct": 0.05389584706657879,
+      "no_wind_reference_p90_vol_pct": 11.437722326454038,
+      "relative_factor_p10": 1.7673885307547672,
+      "relative_factor_p90": 0.4544968781840257,
+      "relative_factor_upper": 0.4544968781840257,
       "point_count": 99
     },
     {
@@ -277,6 +453,13 @@
       "measured_mean_concentration_vol_pct": 1.9968000000000001,
       "no_wind_reference_vol_pct": 3.0063414634146333,
       "relative_factor": 0.6641960084374495,
+      "measured_p10_concentration_vol_pct": 0.13145454545454544,
+      "measured_p90_concentration_vol_pct": 13.51575,
+      "no_wind_reference_p10_vol_pct": 0.05389584706657879,
+      "no_wind_reference_p90_vol_pct": 11.437722326454038,
+      "relative_factor_p10": 2.439047767301191,
+      "relative_factor_p90": 1.18168194805182,
+      "relative_factor_upper": 1.18168194805182,
       "point_count": 63
     },
     {
@@ -287,6 +470,13 @@
       "measured_mean_concentration_vol_pct": 0.48204081632653084,
       "no_wind_reference_vol_pct": 3.0063414634146333,
       "relative_factor": 0.1603413391967205,
+      "measured_p10_concentration_vol_pct": 0.07948584595128373,
+      "measured_p90_concentration_vol_pct": 3.5511481481481497,
+      "no_wind_reference_p10_vol_pct": 0.05389584706657879,
+      "no_wind_reference_p90_vol_pct": 11.437722326454038,
+      "relative_factor_p10": 1.4748046515178252,
+      "relative_factor_p90": 0.31047686303196775,
+      "relative_factor_upper": 0.31047686303196775,
       "point_count": 99
     },
     {
@@ -297,6 +487,13 @@
       "measured_mean_concentration_vol_pct": 2.1886447750362845,
       "no_wind_reference_vol_pct": 3.0063414634146333,
       "relative_factor": 0.7280093767360676,
+      "measured_p10_concentration_vol_pct": 0.44053992740471865,
+      "measured_p90_concentration_vol_pct": 12.47027450980392,
+      "no_wind_reference_p10_vol_pct": 0.05389584706657879,
+      "no_wind_reference_p90_vol_pct": 11.437722326454038,
+      "relative_factor_p10": 8.173912302751443,
+      "relative_factor_p90": 1.0902760317027207,
+      "relative_factor_upper": 1.0902760317027207,
       "point_count": 72
     },
     {
@@ -307,6 +504,13 @@
       "measured_mean_concentration_vol_pct": 1.1925999999999997,
       "no_wind_reference_vol_pct": 3.0063414634146333,
       "relative_factor": 0.39669479149764725,
+      "measured_p10_concentration_vol_pct": 0.009594268476621424,
+      "measured_p90_concentration_vol_pct": 7.386641943734016,
+      "no_wind_reference_p10_vol_pct": 0.05389584706657879,
+      "no_wind_reference_p90_vol_pct": 11.437722326454038,
+      "relative_factor_p10": 0.1780149862895633,
+      "relative_factor_p90": 0.6458140644531671,
+      "relative_factor_upper": 0.6458140644531671,
       "point_count": 144
     },
     {
@@ -317,6 +521,13 @@
       "measured_mean_concentration_vol_pct": 0.5721392156862746,
       "no_wind_reference_vol_pct": 3.0063414634146333,
       "relative_factor": 0.1903107889269614,
+      "measured_p10_concentration_vol_pct": 0.030457142857142863,
+      "measured_p90_concentration_vol_pct": 7.36315384615384,
+      "no_wind_reference_p10_vol_pct": 0.05389584706657879,
+      "no_wind_reference_p90_vol_pct": 11.437722326454038,
+      "relative_factor_p10": 0.5651111266424378,
+      "relative_factor_p90": 0.6437605002111106,
+      "relative_factor_upper": 0.6437605002111106,
       "point_count": 108
     },
     {
@@ -327,6 +538,13 @@
       "measured_mean_concentration_vol_pct": 0.6649790969899667,
       "no_wind_reference_vol_pct": 3.0063414634146333,
       "relative_factor": 0.22119213837894405,
+      "measured_p10_concentration_vol_pct": 0.04722404614019521,
+      "measured_p90_concentration_vol_pct": 6.230745098039217,
+      "no_wind_reference_p10_vol_pct": 0.05389584706657879,
+      "no_wind_reference_p90_vol_pct": 11.437722326454038,
+      "relative_factor_p10": 0.8762093688194241,
+      "relative_factor_p90": 0.5447540096010439,
+      "relative_factor_upper": 0.5447540096010439,
       "point_count": 108
     },
     {
@@ -337,6 +555,13 @@
       "measured_mean_concentration_vol_pct": 3.8575494071146244,
       "no_wind_reference_vol_pct": 3.8575494071146244,
       "relative_factor": 1.0,
+      "measured_p10_concentration_vol_pct": 0.048954545454545466,
+      "measured_p90_concentration_vol_pct": 17.816863636363653,
+      "no_wind_reference_p10_vol_pct": 0.048954545454545466,
+      "no_wind_reference_p90_vol_pct": 17.816863636363653,
+      "relative_factor_p10": 1.0,
+      "relative_factor_p90": 1.0,
+      "relative_factor_upper": 1.0,
       "point_count": 198
     },
     {
@@ -347,6 +572,13 @@
       "measured_mean_concentration_vol_pct": 3.5673913043478267,
       "no_wind_reference_vol_pct": 3.8575494071146244,
       "relative_factor": 0.9247817533505474,
+      "measured_p10_concentration_vol_pct": 0.05747430830039528,
+      "measured_p90_concentration_vol_pct": 14.037523809523817,
+      "no_wind_reference_p10_vol_pct": 0.048954545454545466,
+      "no_wind_reference_p90_vol_pct": 17.816863636363653,
+      "relative_factor_p10": 1.1740341528400147,
+      "relative_factor_p90": 0.7878785007297062,
+      "relative_factor_upper": 0.9247817533505474,
       "point_count": 153
     },
     {
@@ -357,6 +589,13 @@
       "measured_mean_concentration_vol_pct": 4.938095238095238,
       "no_wind_reference_vol_pct": 3.8575494071146244,
       "relative_factor": 1.2801119874155655,
+      "measured_p10_concentration_vol_pct": 0.7062857142857144,
+      "measured_p90_concentration_vol_pct": 14.3479090909091,
+      "no_wind_reference_p10_vol_pct": 0.048954545454545466,
+      "no_wind_reference_p90_vol_pct": 17.816863636363653,
+      "relative_factor_p10": 14.427377636291284,
+      "relative_factor_p90": 0.8052993716371872,
+      "relative_factor_upper": 1.2801119874155655,
       "point_count": 153
     },
     {
@@ -367,6 +606,13 @@
       "measured_mean_concentration_vol_pct": 2.57,
       "no_wind_reference_vol_pct": 3.8575494071146244,
       "relative_factor": 0.6662260748391328,
+      "measured_p10_concentration_vol_pct": 0.05226086956521741,
+      "measured_p90_concentration_vol_pct": 13.19767588932807,
+      "no_wind_reference_p10_vol_pct": 0.048954545454545466,
+      "no_wind_reference_p90_vol_pct": 17.816863636363653,
+      "relative_factor_p10": 1.0675386540712932,
+      "relative_factor_p90": 0.7407406914420129,
+      "relative_factor_upper": 0.7407406914420129,
       "point_count": 135
     },
     {
@@ -377,6 +623,13 @@
       "measured_mean_concentration_vol_pct": 4.180476190476191,
       "no_wind_reference_vol_pct": 3.8575494071146244,
       "relative_factor": 1.083712935151519,
+      "measured_p10_concentration_vol_pct": 0.7170839160839161,
+      "measured_p90_concentration_vol_pct": 14.316083003952572,
+      "no_wind_reference_p10_vol_pct": 0.048954545454545466,
+      "no_wind_reference_p90_vol_pct": 17.816863636363653,
+      "relative_factor_p10": 14.647953717591598,
+      "relative_factor_p90": 0.8035130815467376,
+      "relative_factor_upper": 1.083712935151519,
       "point_count": 153
     },
     {
@@ -387,6 +640,13 @@
       "measured_mean_concentration_vol_pct": 2.4923809523809526,
       "no_wind_reference_vol_pct": 3.8575494071146244,
       "relative_factor": 0.6461047388749345,
+      "measured_p10_concentration_vol_pct": 0.04584679089026916,
+      "measured_p90_concentration_vol_pct": 13.432428571428591,
+      "no_wind_reference_p10_vol_pct": 0.048954545454545466,
+      "no_wind_reference_p90_vol_pct": 17.816863636363653,
+      "relative_factor_p10": 0.9365175483620439,
+      "relative_factor_p90": 0.7539165616115191,
+      "relative_factor_upper": 0.7539165616115191,
       "point_count": 135
     },
     {
@@ -397,6 +657,13 @@
       "measured_mean_concentration_vol_pct": 4.366842105263157,
       "no_wind_reference_vol_pct": 3.8575494071146244,
       "relative_factor": 1.1320249319967814,
+      "measured_p10_concentration_vol_pct": 0.9964226190476191,
+      "measured_p90_concentration_vol_pct": 14.689000000000002,
+      "no_wind_reference_p10_vol_pct": 0.048954545454545466,
+      "no_wind_reference_p90_vol_pct": 17.816863636363653,
+      "relative_factor_p10": 20.354036786488034,
+      "relative_factor_p90": 0.8244436450655782,
+      "relative_factor_upper": 1.1320249319967814,
       "point_count": 135
     },
     {
@@ -407,6 +674,13 @@
       "measured_mean_concentration_vol_pct": 3.8596000000000017,
       "no_wind_reference_vol_pct": 3.8596000000000017,
       "relative_factor": 1.0,
+      "measured_p10_concentration_vol_pct": 0.3268074534161491,
+      "measured_p90_concentration_vol_pct": 12.606260869565224,
+      "no_wind_reference_p10_vol_pct": 0.3268074534161491,
+      "no_wind_reference_p90_vol_pct": 12.606260869565224,
+      "relative_factor_p10": 1.0,
+      "relative_factor_p90": 1.0,
+      "relative_factor_upper": 1.0,
       "point_count": 135
     },
     {
@@ -417,6 +691,13 @@
       "measured_mean_concentration_vol_pct": 2.5133768115942026,
       "no_wind_reference_vol_pct": 3.8596000000000017,
       "relative_factor": 0.6512013710214015,
+      "measured_p10_concentration_vol_pct": 0.06381818181818183,
+      "measured_p90_concentration_vol_pct": 12.385102766798418,
+      "no_wind_reference_p10_vol_pct": 0.3268074534161491,
+      "no_wind_reference_p90_vol_pct": 12.606260869565224,
+      "relative_factor_p10": 0.195277620357444,
+      "relative_factor_p90": 0.9824564868952745,
+      "relative_factor_upper": 0.9824564868952745,
       "point_count": 162
     },
     {
@@ -427,6 +708,13 @@
       "measured_mean_concentration_vol_pct": 1.8808333333333334,
       "no_wind_reference_vol_pct": 3.8596000000000017,
       "relative_factor": 0.4873130203475315,
+      "measured_p10_concentration_vol_pct": 0.04866086956521742,
+      "measured_p90_concentration_vol_pct": 10.442800000000005,
+      "no_wind_reference_p10_vol_pct": 0.3268074534161491,
+      "no_wind_reference_p90_vol_pct": 12.606260869565224,
+      "relative_factor_p10": 0.14889767371141865,
+      "relative_factor_p90": 0.828382032392462,
+      "relative_factor_upper": 0.828382032392462,
       "point_count": 117
     },
     {
@@ -437,6 +725,13 @@
       "measured_mean_concentration_vol_pct": 1.7293999999999996,
       "no_wind_reference_vol_pct": 3.8596000000000017,
       "relative_factor": 0.44807752098663045,
+      "measured_p10_concentration_vol_pct": 0.03125602968460112,
+      "measured_p90_concentration_vol_pct": 9.984320000000006,
+      "no_wind_reference_p10_vol_pct": 0.3268074534161491,
+      "no_wind_reference_p90_vol_pct": 12.606260869565224,
+      "relative_factor_p10": 0.0956405043944956,
+      "relative_factor_p90": 0.7920128024722015,
+      "relative_factor_upper": 0.7920128024722015,
       "point_count": 117
     }
   ]

@@ -64,16 +64,20 @@ The frozen parser and the existing inventory were used to derive
 `research/grune_ventilation_empirical_envelope_2026_10_06.json`. For every
 profile with a same-diameter, same-release-rate no-wind reference, the factor
 is the median measured spatial-average concentration divided by that reference.
-The artifact contains 42 profiles and 42 derived factors; no workbook rows are
-committed. `h2station.ventilation_calibration` embeds the resulting table and
-uses nearest diameter/release-rate selection plus speed interpolation within a
-declared wind mode. Missing conditions return a neutral factor of `1.0`.
+The artifact also retains the spatial p10/p90 ratios and a conservative upper
+factor `max(median, p90/no-wind-p90)`. It contains 42 profiles and 42 derived
+factors; no workbook rows are committed. `h2station.ventilation_calibration`
+embeds the resulting table and uses nearest diameter/release-rate selection
+plus speed interpolation within a declared wind mode. Missing conditions
+return a neutral factor of `1.0`.
 
-`VirtualSafetyRuntime.detector_multiplier()` applies this factor only when the
-release flow and orifice diameter are known, and only to the simulated detector
-proxy. It does not alter the physical release, HyRAM consequence calculation,
-or controller limits. The HAZOP runtime passes the measured release inputs to
-the proxy and retains a compatibility path for older one-argument callbacks.
+`VirtualSafetyRuntime.detector_multiplier()` applies the conservative upper
+factor by default during an active release (the central median is available
+for sensitivity runs) only when the release flow and orifice diameter are
+known, and only to the simulated detector proxy. It does not alter the
+physical release, HyRAM consequence calculation, or controller limits. The
+HAZOP runtime passes the measured release inputs to the proxy and retains a
+compatibility path for older one-argument callbacks.
 This is a measured-boundary improvement to the safety display and detector
 logic, not a numerical validation of the full HRS loop.
 

@@ -106,9 +106,11 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert ventilation["doi"] == "10.5281/zenodo.4668554"
     assert ventilation["profiles_used"] == 42
     assert ventilation["factor_count"] == 42
-    assert ventilation["runtime_parameter_application"] == (
+    assert ventilation["runtime_parameter_application"].startswith(
         "virtual_detector_proxy_only"
     )
+    assert ventilation["runtime_statistic_default"] == "upper"
+    assert ventilation["wind_mode_upper_envelope_summary"]["co-flow"]["case_count"] == 12
     early = prompt_evidence_summary(idle)
     assert early["impact_status"] == "not_requested"
     assert early["public_experimental_benchmarks"]["sources"]

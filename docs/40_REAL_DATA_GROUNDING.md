@@ -54,9 +54,13 @@ The Grune-derived envelope is the one bounded exception: it changes the
 virtual detector concentration proxy when leak flow, orifice size and wind
 direction are available. The factor is nearest-neighbour/interpolated only
 inside the measured diameter/flow/mode envelope and falls back to `1.0` for
-unrepresented conditions. The evidence header exposes the DOI, profile count,
-factor count and claim boundary so an LLM cannot present it as full-loop
-validation.
+unrepresented conditions. During an active release the runtime defaults to the
+measured upper spatial envelope (`max(median, p90/no-wind-p90)`) so a local
+high-concentration point is not hidden by a spatial median. The central
+estimate remains selectable for sensitivity runs. This is a conservative
+detector-proxy choice, not a detector-placement or outdoor-dispersion claim.
+The evidence header exposes the DOI, profile count, factor count, statistic,
+and claim boundary so an LLM cannot present it as full-loop validation.
 
 The public Cal State LA back-to-back fueling article is also included as
 real-station operating context. It reports multiple daily and back-to-back

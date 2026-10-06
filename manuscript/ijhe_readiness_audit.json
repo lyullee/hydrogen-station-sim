@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-06T03:53:59.185498+00:00",
+  "generated_at": "2026-10-06T04:09:23.700135+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -2531,8 +2531,10 @@
         "doi": "10.5281/zenodo.4668554",
         "profiles_used": 42,
         "factor_count": 42,
+        "upper_factor_count": 42,
         "raw_rows_committed": false,
         "runtime_scope": "virtual_detector_proxy_only",
+        "runtime_statistic_default": "upper",
         "claim_boundary": "not CFD, not detector certification, not outdoor HRS or full-loop validation"
       }
     },
@@ -4916,9 +4918,9 @@
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 641,
+            "passed": 644,
             "failed": 0,
-            "warnings": 17
+            "warnings": 16
           }
         },
         "verified_properties": [
@@ -4943,7 +4945,9 @@
           "owner-attested lifecycle-counter semantics and full-recharge pressure units are carried as history context without enabling an unvalidated degradation model",
           "public real-station back-to-back fueling context and its no-raw-log/full-loop boundary are carried into the evidence envelope",
           "restricted actual-accident metadata is summarized by response-family candidate counts without publishing narratives or treating counts as frequencies",
-          "frozen external station-to-vehicle holdout remains explicitly bounded at 0/8, while post-freeze calibration is marked diagnostic-only and cannot support validation claims"
+          "frozen external station-to-vehicle holdout remains explicitly bounded at 0/8, while post-freeze calibration is marked diagnostic-only and cannot support validation claims",
+          "public Grune/Sempert ventilation factors are carried into the evidence envelope and applied only to the virtual detector proxy",
+          "active releases use the measured upper spatial ventilation envelope by default while median mode remains available for sensitivity analysis"
         ],
         "not_established": [
           "physics validity of the consequence model",
@@ -5137,6 +5141,15 @@
           "runtime_model_parameter_changed": false,
           "claim_supported": false,
           "interpretation": "predeclared full-loop pressure, temperature and final-SOC screens failed on all 8 external cases; later calibration is retained only to diagnose premature thermal stopping and under-delivery"
+        },
+        "public_grune_ventilation_evidence": {
+          "evidence": "research/grune_ventilation_empirical_envelope_2026_10_06.json",
+          "doi": "10.5281/zenodo.4668554",
+          "profiles_used": 42,
+          "factor_count": 42,
+          "runtime_parameter_application": "virtual_detector_proxy_only",
+          "raw_rows_committed": false,
+          "claim_limit": "not CFD, not detector certification, not outdoor HRS or full-loop validation"
         }
       }
     },

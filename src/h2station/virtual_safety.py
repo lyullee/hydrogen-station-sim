@@ -64,7 +64,9 @@ class VirtualActuator:
 class VirtualSafetyRuntime:
     """Actuator commands, virtual personnel, recovery gates, and replay history."""
 
-    def __init__(self) -> None:
+    def __init__(self, *, empirical_ventilation_statistic: str = "upper") -> None:
+        if empirical_ventilation_statistic not in {"median", "upper"}:
+            raise ValueError("empirical_ventilation_statistic must be 'median' or 'upper'")
         self._lock = RLock()
         self.valves = {name: VirtualActuator(name, not name.startswith("vent."),
                                              not name.startswith("vent."),
@@ -83,6 +85,10 @@ class VirtualSafetyRuntime:
         self.vehicles_evacuated = {name: 0 for name in self.vehicles}
         self.wind_direction_deg = 0.0
         self.wind_speed_m_s = 3.0
+        # The public Grune/Sempert profiles are spatial snapshots.  The upper
+        # measured envelope is the safer default for an active release, while
+        # callers may select the central estimate for sensitivity comparisons.
+        self.empirical_ventilation_statistic = empirical_ventilation_statistic
         self.esd_requested = False
         self.responders_notified = False
         self.recovery = {check: False for check in RECOVERY_CHECKS}
@@ -501,6 +507,7 @@ class VirtualSafetyRuntime:
                     release_g_s=mass_flow_g_s,
                     wind_mode=wind_mode,
                     wind_speed_m_s=self.wind_speed_m_s,
+                    statistic=self.empirical_ventilation_statistic,
                 )
             return ventilation * wind_speed * exposure * measured
 
@@ -517,6 +524,7 @@ class VirtualSafetyRuntime:
                     "vehicles_evacuated": dict(self.vehicles_evacuated),
                     "wind_direction_deg": self.wind_direction_deg,
                     "wind_speed_m_s": self.wind_speed_m_s,
+                    "empirical_ventilation_statistic": self.empirical_ventilation_statistic,
                     "esd_requested": self.esd_requested,
                     "responders_notified": self.responders_notified,
                     "recovery": dict(self.recovery),

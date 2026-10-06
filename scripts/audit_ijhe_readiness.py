@@ -1509,6 +1509,7 @@ def audit(root: Path) -> dict[str, object]:
     grune_envelope = _json(grune_envelope_path)
     grune_envelope_source = (grune_envelope or {}).get("source") or {}
     grune_envelope_definition = (grune_envelope or {}).get("definition") or {}
+    grune_envelope_factors = (grune_envelope or {}).get("factors") or []
     grune_envelope_pass = bool(
         (grune_envelope or {}).get("status")
         == "derived_empirical_ventilation_envelope"
@@ -1517,7 +1518,16 @@ def audit(root: Path) -> dict[str, object]:
         and grune_envelope_source.get("raw_rows_committed") is False
         and (grune_envelope or {}).get("profiles_used") == 42
         and (grune_envelope or {}).get("factor_count") == 42
+        and len(grune_envelope_factors) == 42
+        and all(
+            isinstance(item, dict)
+            and isinstance(item.get("relative_factor"), (int, float))
+            and isinstance(item.get("relative_factor_upper"), (int, float))
+            and item["relative_factor_upper"] >= item["relative_factor"]
+            for item in grune_envelope_factors
+        )
         and grune_envelope_definition.get("fallback")
+        and grune_envelope_definition.get("upper_envelope")
         and grune_envelope_definition.get("not_a_claim")
     )
     gates.append(_gate(
@@ -1530,8 +1540,13 @@ def audit(root: Path) -> dict[str, object]:
             "doi": grune_envelope_source.get("doi"),
             "profiles_used": (grune_envelope or {}).get("profiles_used"),
             "factor_count": (grune_envelope or {}).get("factor_count"),
+            "upper_factor_count": sum(
+                1 for item in grune_envelope_factors
+                if isinstance(item, dict) and "relative_factor_upper" in item
+            ),
             "raw_rows_committed": grune_envelope_source.get("raw_rows_committed"),
             "runtime_scope": "virtual_detector_proxy_only",
+            "runtime_statistic_default": "upper",
             "claim_boundary": grune_envelope_definition.get("not_a_claim"),
         } if grune_envelope else "missing; empirical ventilation envelope has not been built",
     ))

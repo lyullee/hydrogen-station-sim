@@ -34,7 +34,8 @@ contains:
   interpretation limits;
 - the public Grune/Sempert measured ventilation envelope (42 profiles and
   42 no-wind-normalized factors) with a runtime scope limited to the virtual
-  detector proxy;
+  detector proxy. Active releases use the measured upper spatial envelope by
+  default; the central median remains available for sensitivity runs;
 - public real-station operating context for back-to-back fueling, with its
   synchronized-raw-log and full-loop eligibility boundary;
 - consequence flow-boundary status, requested process flow, HyRAM modeled flow,
@@ -56,7 +57,7 @@ The following tests passed in the repository virtual environment:
 16 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-644 passed, 16 warnings
+647 passed, 16 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -117,10 +118,11 @@ link and scenario context. It is not treated as a raw synchronized holdout
 because the public record does not provide reusable event-level logger rows.
 
 The Grune/Sempert envelope is a measured-boundary adjustment for the virtual
-detector proxy. It uses the public DOI and aggregate factors only, falls back
-to a neutral factor for unrepresented conditions, and does not modify the
-physical release model, HyRAM consequence result, controller parameters or
-full-loop validation status.
+detector proxy. It uses the public DOI and aggregate factors only, defaults to
+the measured upper spatial envelope during an active release, falls back to a
+neutral factor for unrepresented conditions, and does not modify the physical
+release model, HyRAM consequence result, controller parameters or full-loop
+validation status.
 
 The frozen station-to-vehicle external holdout is also carried as a hard claim
 boundary. Eight public MC-default cases were evaluated under a protocol frozen

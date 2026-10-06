@@ -19,7 +19,22 @@ from statistics import median
 from h2station.public_validation import GruneVentilationProfile, read_grune_ventilation_workbook
 
 
-def _profile_mean(profile: GruneVentilationProfile) -> float:
+def _percentile(values: list[float], percentile: float) -> float:
+    """Return a deterministic linear percentile without copying raw rows."""
+
+    ordered = sorted(values)
+    if not ordered:
+        raise ValueError("profile has no concentration values")
+    if len(ordered) == 1:
+        return float(ordered[0])
+    position = (len(ordered) - 1) * (percentile / 100.0)
+    lower = int(position)
+    upper = min(lower + 1, len(ordered) - 1)
+    weight = position - lower
+    return float(ordered[lower] + weight * (ordered[upper] - ordered[lower]))
+
+
+def _profile_stats(profile: GruneVentilationProfile) -> dict[str, float]:
     values = [
         point.concentration_average_pct
         for point in profile.points
@@ -27,7 +42,11 @@ def _profile_mean(profile: GruneVentilationProfile) -> float:
     ]
     if not values:
         raise ValueError(f"profile has no average concentration: {profile.sheet_name}")
-    return float(median(values))
+    return {
+        "p10": _percentile(values, 10.0),
+        "median": float(median(values)),
+        "p90": _percentile(values, 90.0),
+    }
 
 
 def build(input_dir: Path) -> dict:
@@ -39,27 +58,40 @@ def build(input_dir: Path) -> dict:
     if not profiles:
         raise FileNotFoundError(f"No Grune concentration workbooks under {input_dir}")
 
-    baselines: dict[tuple[float, float], float] = {}
+    baselines: dict[tuple[float, float], dict[str, float]] = {}
     for profile in profiles:
         if profile.wind_mode == "no-wind":
             key = (profile.release_diameter_mm, profile.nominal_release_g_s)
-            baselines[key] = _profile_mean(profile)
+            baselines[key] = _profile_stats(profile)
 
     factors = []
     for profile in profiles:
         key = (profile.release_diameter_mm, profile.nominal_release_g_s)
         baseline = baselines.get(key)
-        mean = _profile_mean(profile)
-        if baseline is None or baseline <= 0.0:
+        stats = _profile_stats(profile)
+        if baseline is None or baseline["median"] <= 0.0:
             continue
         factors.append({
             "diameter_mm": profile.release_diameter_mm,
             "nominal_release_g_s": profile.nominal_release_g_s,
             "wind_mode": profile.wind_mode,
             "wind_speed_m_s": profile.wind_speed_m_s,
-            "measured_mean_concentration_vol_pct": mean,
-            "no_wind_reference_vol_pct": baseline,
-            "relative_factor": mean / baseline,
+            "measured_mean_concentration_vol_pct": stats["median"],
+            "no_wind_reference_vol_pct": baseline["median"],
+            "relative_factor": stats["median"] / baseline["median"],
+            "measured_p10_concentration_vol_pct": stats["p10"],
+            "measured_p90_concentration_vol_pct": stats["p90"],
+            "no_wind_reference_p10_vol_pct": baseline["p10"],
+            "no_wind_reference_p90_vol_pct": baseline["p90"],
+            "relative_factor_p10": stats["p10"] / baseline["p10"] if baseline["p10"] > 0.0 else 1.0,
+            "relative_factor_p90": stats["p90"] / baseline["p90"] if baseline["p90"] > 0.0 else 1.0,
+            # The upper runtime envelope must never be less sensitive than
+            # the central estimate.  This preserves the measured median as a
+            # floor while retaining the spatial p90 ratio where it is higher.
+            "relative_factor_upper": max(
+                stats["median"] / baseline["median"],
+                stats["p90"] / baseline["p90"] if baseline["p90"] > 0.0 else 1.0,
+            ),
             "point_count": len(profile.points),
         })
 
@@ -76,9 +108,10 @@ def build(input_dir: Path) -> dict:
         },
         "definition": {
             "reference": "same release diameter and nominal release rate, no-wind profile",
-            "quantity": "median of measured spatial-average concentration values",
-            "use": "bounded multiplier for the virtual detector concentration proxy",
+            "quantity": "median and spatial p10/p90 of measured concentration values",
+            "use": "bounded median multiplier with an optional upper spatial envelope for the virtual detector concentration proxy",
             "fallback": "1.0 when no matching public envelope is available",
+            "upper_envelope": "relative p90 concentration against the same release's no-wind p90 profile",
             "not_a_claim": "not CFD, not detector certification, not outdoor HRS or full-loop validation",
         },
         "profiles_used": len(profiles),
