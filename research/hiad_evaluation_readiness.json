@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-10-03T11:03:15.633331+00:00",
+  "generated_at_utc": "2026-10-06T14:08:24.436137+00:00",
   "protocol_id": "HIAD-SAGA-2601",
   "readiness": {
     "casebook_frozen": false,
@@ -22,7 +22,7 @@
   },
   "coordinator_prescreen": {
     "manifest_path": "data\\public_validation\\results\\hiad_coordinator_prescreen\\prescreen_manifest.json",
-    "manifest_sha256": "ebf4541a1c800aa9da46849393c6b72475c880d606d9885df105950d78752851",
+    "manifest_sha256": "57fd0aceb308761dad834109c3b2f05b610b1e7e1e94aac17142049e199557f8",
     "manifest_error": null,
     "advisory_only_and_human_review_required": true,
     "review_csv_path": "data\\public_validation\\results\\hiad_coordinator_prescreen\\coordinator_review.csv",
@@ -35,7 +35,7 @@
   },
   "protocol": {
     "path": "research\\hiad_study_protocol_manifest.json",
-    "sha256": "26c853d3b7d7d31db62457801ebb1ebfba7f4393792ff3dad4f8baf62e236853",
+    "sha256": "3d8efd0d9a42d30b0988745b9f6aef88d35be7a7a5c5e6b1e0ebac836c4f8b21",
     "error": null,
     "ethics_status": "pending",
     "ethics_determination_id": null,
@@ -44,13 +44,19 @@
     "unresolved_institution_fields": {
       "research/ETHICS_DETERMINATION_REQUEST.md": 6,
       "research/EXPERT_REVIEWER_INFORMATION_SHEET.md": 5
-    }
+    },
+    "integrity_passed": true,
+    "integrity_errors": []
   },
   "downstream_artifacts": {
     "casebook_freeze": {
       "path": "data\\public_validation\\results\\hiad_casebook_frozen\\casebook_freeze_manifest.json",
       "present": false,
-      "error": "missing"
+      "error": "missing",
+      "integrity_passed": false,
+      "errors": [
+        "freeze manifest missing or invalid"
+      ]
     },
     "collection": {
       "path": "data\\public_validation\\results\\hiad_decision\\collection_manifest.json",

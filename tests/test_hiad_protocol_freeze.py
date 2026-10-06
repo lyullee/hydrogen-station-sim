@@ -32,6 +32,7 @@ def test_pending_protocol_freeze_records_recruitment_gate(tmp_path: Path):
     assert manifest["reviewer_recruitment_permitted"] is False
     assert manifest["holdout_response_collection_permitted"] is False
     assert len(manifest["required_file_sha256"]) == len(protocol.REQUIRED_FILES)
+    assert protocol.validate_manifest_integrity(root, manifest) == []
 
 
 def test_resolved_ethics_requires_determination_id(tmp_path: Path):
@@ -46,8 +47,26 @@ def test_resolved_ethics_rejects_unfilled_institution_fields(tmp_path: Path):
         protocol.build_manifest(root, "approved", "IRB-123")
 
 
-def test_resolved_complete_packet_permits_recruitment_only(tmp_path: Path):
+def test_resolved_complete_packet_permits_collection(tmp_path: Path):
     root = _package(tmp_path, placeholder=False)
     manifest = protocol.build_manifest(root, "not-required", "DET-456")
     assert manifest["reviewer_recruitment_permitted"] is True
-    assert manifest["holdout_response_collection_permitted"] is False
+    assert manifest["holdout_response_collection_permitted"] is True
+    assert protocol.validate_manifest_integrity(
+        root, manifest, require_collection_permission=True
+    ) == []
+
+
+def test_protocol_integrity_rejects_stale_collection_code(tmp_path: Path):
+    root = _package(tmp_path, placeholder=False)
+    manifest = protocol.build_manifest(root, "exempt", "EX-123")
+    target = root / "scripts/run_hiad_decision_evaluation.py"
+    target.write_text("changed after freeze", encoding="utf-8")
+
+    errors = protocol.validate_manifest_integrity(
+        root, manifest, require_collection_permission=True
+    )
+
+    assert errors == [
+        "protocol hash mismatch: scripts/run_hiad_decision_evaluation.py"
+    ]

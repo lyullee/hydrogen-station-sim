@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
+import shutil
 import subprocess
 
 from prepare_hiad_coordinator_review import REFERENCE_FIELDS, _clean, _screen
@@ -173,6 +174,11 @@ def main() -> int:
     changes = _validate(source, approved)
 
     args.output.mkdir(parents=True, exist_ok=True)
+    submitted_path = args.output / "approved_casebook_submitted.json"
+    # Retain the exact coordinator export, including its formatting, so the
+    # submitted-casebook digest in the manifest remains independently
+    # verifiable after the coordinator's original working directory is gone.
+    shutil.copyfile(args.approved, submitted_path)
     frozen = dict(approved)
     frozen["freeze_metadata"] = {
         "frozen_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -207,6 +213,7 @@ def main() -> int:
         "file_sha256": {
             "source_casebook": _sha256(args.source),
             "submitted_approved_casebook": _sha256(args.approved),
+            submitted_path.name: _sha256(submitted_path),
             frozen_path.name: _sha256(frozen_path),
             change_path.name: _sha256(change_path),
         },

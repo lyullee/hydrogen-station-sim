@@ -18,6 +18,8 @@ import subprocess
 from time import perf_counter
 from urllib.request import Request, urlopen
 
+from freeze_hiad_study_protocol import validate_manifest_integrity
+
 
 PROMPT = """Assess this historical hydrogen-refuelling-station observation using only the supplied facts.
 Give one concise integrated response with: (1) situation and plausible scenario(s), clearly marking uncertainty; (2) immediately executable actions in priority order; (3) stabilization and restart criteria; and (4) prevention and follow-up controls. Do not invent measurements, distances, causes, or completed actions. Make the ordering clear enough for an operator to act without choosing among duplicate scenario lists."""
@@ -206,6 +208,10 @@ def main() -> int:
         "--casebook-freeze-manifest", type=Path,
         help="Required for holdout collection; verifies the frozen approved-casebook hash",
     )
+    parser.add_argument(
+        "--protocol-manifest", type=Path,
+        help="Required for holdout collection; verifies the pre-collection ethics and code lock",
+    )
     args = parser.parse_args()
 
     splits = _split(_read_jsonl(args.cases))
@@ -244,6 +250,7 @@ def main() -> int:
     if not args.saga_url:
         raise SystemExit("--saga-url is required during response collection")
     freeze_manifest = None
+    protocol_manifest = None
     if args.split == "holdout":
         if args.casebook_freeze_manifest is None:
             raise SystemExit(
@@ -261,6 +268,25 @@ def main() -> int:
             freeze_manifest.get("all_cases_approved") is not True
         ):
             raise SystemExit("Casebook freeze manifest does not confirm complete approval")
+        if args.protocol_manifest is None:
+            raise SystemExit(
+                "--protocol-manifest is required for holdout response collection"
+            )
+        try:
+            protocol_manifest = json.loads(
+                args.protocol_manifest.read_text(encoding="utf-8")
+            )
+        except (OSError, json.JSONDecodeError) as exc:
+            raise SystemExit(f"Protocol manifest cannot be read: {exc}") from exc
+        protocol_errors = validate_manifest_integrity(
+            Path(__file__).resolve().parents[1],
+            protocol_manifest,
+            require_collection_permission=True,
+        )
+        if protocol_errors:
+            raise SystemExit(
+                "Holdout protocol guard failed: " + "; ".join(protocol_errors)
+            )
     approved = json.loads(args.approved_casebook.read_text(encoding="utf-8"))
     approved_ids = [str(case["event_id"]) for case in approved["cases"]]
     if len(approved_ids) != len(set(approved_ids)):
@@ -455,6 +481,10 @@ def main() -> int:
         manifest["casebook_freeze_manifest_sha256"] = _sha256_file(
             args.casebook_freeze_manifest
         )
+        manifest["protocol_manifest"] = args.protocol_manifest.name
+        manifest["protocol_manifest_sha256"] = _sha256_file(args.protocol_manifest)
+        manifest["protocol_id"] = protocol_manifest["protocol_id"]
+        manifest["protocol_collection_permitted"] = True
     (args.output / "collection_manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )

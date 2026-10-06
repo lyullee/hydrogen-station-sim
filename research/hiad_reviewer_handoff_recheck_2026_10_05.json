@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "rechecked_at_utc": "2026-10-05T04:29:27.583812+00:00",
-  "source_commit": "f1beacbaab200d4d28402f0bc2e918d2fac0e547",
+  "rechecked_at_utc": "2026-10-06T14:08:24.545897+00:00",
+  "source_commit": "b692fc55784a602f3149705b094589f8e310e85b",
   "status": "PENDING_COORDINATOR_APPROVAL_AND_ETHICS_DETERMINATION",
   "machine_preflight": {
     "pass": true,
@@ -30,7 +30,7 @@
     },
     "protocol_manifest": {
       "path": "research/hiad_study_protocol_manifest.json",
-      "sha256": "26c853d3b7d7d31db62457801ebb1ebfba7f4393792ff3dad4f8baf62e236853"
+      "sha256": "3d8efd0d9a42d30b0988745b9f6aef88d35be7a7a5c5e6b1e0ebac836c4f8b21"
     }
   },
   "current_readiness": {
@@ -39,7 +39,7 @@
     "coordinator_review_complete": false,
     "independent_review_complete": false,
     "readiness_record": "data/public_validation/results/hiad_holdout_preparation/readiness_audit.json",
-    "readiness_sha256": "82b1b1ee5b14ffe66cabcd67fe3a3e41a0a86cd1295458f92ae90803661bdece"
+    "readiness_sha256": "376997b709b696470d301483e85450a46f9caf41d92fd0bf4a37593914da5778"
   },
   "required_next_evidence": [
     "institutional ethics, exemption or not-required determination with identifier",

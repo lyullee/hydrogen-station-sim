@@ -225,6 +225,23 @@ def test_packet_builder_requires_three_independent_reviewers(tmp_path: Path):
     assert "At least three unique reviewer codes" in result.stderr
 
 
+def test_packet_builder_rejects_unlinked_holdout_collection(tmp_path: Path):
+    collection = _collection(tmp_path)
+    manifest_path = collection / "collection_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["split"] = "holdout"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    result = subprocess.run([
+        sys.executable, str(PACKAGE_SCRIPT),
+        "--collection", str(collection), "--output", str(tmp_path / "package"),
+        "--reviewer-codes", "R1", "R2", "R3", "--ethics-status", "exempt",
+    ], capture_output=True, text=True)
+
+    assert result.returncode != 0
+    assert "missing its protocol-manifest hash" in result.stderr
+
+
 def test_analyzer_rejects_reviewer_without_independence_confirmation(tmp_path: Path):
     collection = _collection(tmp_path)
     package = tmp_path / "package"

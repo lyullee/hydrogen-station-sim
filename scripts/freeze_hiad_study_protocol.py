@@ -47,6 +47,63 @@ def _git_commit(root: Path) -> str:
         return "unavailable"
 
 
+def validate_manifest_integrity(
+    root: Path,
+    manifest: dict[str, object] | None,
+    *,
+    require_collection_permission: bool = False,
+) -> list[str]:
+    """Return protocol-lock violations without authorizing study activity.
+
+    A resolved institutional determination alone is insufficient: response
+    collection must use the exact protocol and code files hash-locked before
+    the collection run.  This shared validator keeps collection and readiness
+    tooling aligned with the freezer's interpretation of the guard.
+    """
+    if not isinstance(manifest, dict):
+        return ["protocol manifest missing or invalid"]
+
+    errors: list[str] = []
+    if manifest.get("protocol_id") != "HIAD-SAGA-2601":
+        errors.append("unexpected protocol ID")
+    if manifest.get("protocol_frozen_before_holdout_collection") is not True:
+        errors.append("protocol is not marked frozen before holdout collection")
+
+    locked = manifest.get("required_file_sha256")
+    if not isinstance(locked, dict):
+        errors.append("required-file hash map missing or invalid")
+        locked = {}
+    required = set(REQUIRED_FILES)
+    actual = set(locked)
+    if actual != required:
+        missing = sorted(required - actual)
+        extra = sorted(actual - required)
+        if missing:
+            errors.append("protocol hash map omits required files: " + ", ".join(missing))
+        if extra:
+            errors.append("protocol hash map contains unexpected files: " + ", ".join(extra))
+    for relative in sorted(required & actual):
+        expected = locked.get(relative)
+        path = root / relative
+        if not isinstance(expected, str) or len(expected) != 64:
+            errors.append(f"invalid SHA-256 for {relative}")
+        elif not path.is_file() or _sha256(path) != expected:
+            errors.append(f"protocol hash mismatch: {relative}")
+
+    if require_collection_permission:
+        if manifest.get("ethics_status") not in {"approved", "exempt", "not-required"}:
+            errors.append("institutional ethics status does not permit holdout collection")
+        if not str(manifest.get("ethics_determination_id") or "").strip():
+            errors.append("institutional determination ID missing")
+        if manifest.get("reviewer_recruitment_permitted") is not True:
+            errors.append("reviewer recruitment is not permitted by the protocol")
+        if manifest.get("holdout_response_collection_permitted") is not True:
+            errors.append("holdout response collection is not permitted by the protocol")
+        if manifest.get("unresolved_institution_fields"):
+            errors.append("institutional fields remain unresolved")
+    return errors
+
+
 def build_manifest(
     root: Path, ethics_status: str, determination_id: str = ""
 ) -> dict[str, object]:
@@ -80,7 +137,7 @@ def build_manifest(
         "ethics_status": ethics_status,
         "ethics_determination_id": determination_id or None,
         "reviewer_recruitment_permitted": ethics_status != "pending" and not unresolved,
-        "holdout_response_collection_permitted": False,
+        "holdout_response_collection_permitted": ethics_status != "pending" and not unresolved,
         "protocol_frozen_before_holdout_collection": True,
         "unresolved_institution_fields": unresolved,
         "required_file_sha256": {

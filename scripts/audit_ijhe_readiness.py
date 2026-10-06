@@ -2924,10 +2924,17 @@ def audit(root: Path) -> dict[str, object]:
 
     freeze_path = root / "data/public_validation/results/hiad_casebook_frozen/casebook_freeze_manifest.json"
     casebook_freeze = _json(freeze_path)
+    freeze_hashes = (casebook_freeze or {}).get("file_sha256") or {}
+    required_freeze_hashes = {
+        "source_casebook", "submitted_approved_casebook",
+        "approved_casebook_submitted.json", "approved_casebook_frozen.json",
+        "casebook_change_log.csv",
+    }
     casebook_pass = bool(
         (casebook_freeze or {}).get("case_count") == 24
         and (casebook_freeze or {}).get("all_frozen_cases_retained") is True
         and (casebook_freeze or {}).get("all_cases_approved") is True
+        and required_freeze_hashes.issubset(freeze_hashes)
     )
     gates.append(_gate(
         "hiad_casebook_frozen", "PASS" if casebook_pass else "PENDING",
@@ -2960,6 +2967,8 @@ def audit(root: Path) -> dict[str, object]:
         == (collection or {}).get("expected_response_count") == 168
         and (collection or {}).get("failed_calls_retained_for_blinded_scoring") is True
         and (collection or {}).get("casebook_freeze_manifest_sha256")
+        and (collection or {}).get("protocol_manifest_sha256")
+        and (collection or {}).get("protocol_collection_permitted") is True
     )
     gates.append(_gate(
         "hiad_holdout_collection", "PASS" if collection_pass else "PENDING",

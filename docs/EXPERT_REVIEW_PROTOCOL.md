@@ -159,6 +159,11 @@ $env:PYTHONPATH = "src"
 
 # Coordinator reviews and freezes an approved copy.
 
+# Only after the institution records its determination and all institution-owned
+# fields in the packet are complete, create the collection-permitted lock.
+.venv\Scripts\python.exe scripts\freeze_hiad_study_protocol.py `
+  --ethics-status exempt --determination-id <institution-issued-ID>
+
 # Optional advisory pre-screen; open coordinator_review.html locally.
 .venv\Scripts\python.exe scripts\prepare_hiad_coordinator_review.py `
   --casebook data\public_validation\results\hiad_holdout_preparation\casebook_for_approval.json `
@@ -174,6 +179,7 @@ $env:PYTHONPATH = "src"
   --saga-url http://127.0.0.1:8090 --provider groq --split holdout `
   --approved-casebook data\public_validation\results\hiad_casebook_frozen\approved_casebook_frozen.json --repeats 3 `
   --casebook-freeze-manifest data\public_validation\results\hiad_casebook_frozen\casebook_freeze_manifest.json `
+  --protocol-manifest research\hiad_study_protocol_manifest.json `
   --include-standards-rag
 
 # After the institutional ethics determination, build isolated R1/R2/R3 packets.

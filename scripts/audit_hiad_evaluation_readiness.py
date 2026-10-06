@@ -16,6 +16,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from freeze_hiad_study_protocol import validate_manifest_integrity
+
 
 REQUIRED_COORDINATOR_FIELDS = (
     "coordinator_leakage_decision",
@@ -110,6 +112,62 @@ def _coordinator_status(path: Path, expected_count: int) -> dict[str, Any]:
     }
 
 
+def _freeze_status(
+    root: Path, freeze: dict[str, Any] | None, source_casebook: Path, expected_count: int
+) -> dict[str, Any]:
+    """Verify the complete source → submitted → frozen casebook evidence chain."""
+    required_hashes = {
+        "source_casebook",
+        "submitted_approved_casebook",
+        "approved_casebook_submitted.json",
+        "approved_casebook_frozen.json",
+        "casebook_change_log.csv",
+    }
+    result: dict[str, Any] = {
+        "present": freeze is not None,
+        "integrity_passed": False,
+        "errors": [],
+    }
+    if not isinstance(freeze, dict):
+        result["errors"] = ["freeze manifest missing or invalid"]
+        return result
+    hashes = freeze.get("file_sha256")
+    if not isinstance(hashes, dict):
+        result["errors"] = ["freeze manifest hash map missing or invalid"]
+        return result
+    missing = sorted(required_hashes - set(hashes))
+    if missing:
+        result["errors"] = ["freeze manifest omits required hashes: " + ", ".join(missing)]
+        return result
+
+    errors: list[str] = []
+    if freeze.get("case_count") != expected_count:
+        errors.append("freeze case count does not match candidate casebook")
+    if freeze.get("all_frozen_cases_retained") is not True:
+        errors.append("freeze does not confirm all cases were retained")
+    if freeze.get("all_cases_approved") is not True:
+        errors.append("freeze does not confirm all cases were approved")
+    if not source_casebook.is_file() or hashes.get("source_casebook") != _sha256(source_casebook):
+        errors.append("source casebook hash does not match freeze manifest")
+
+    freeze_dir = root / "data/public_validation/results/hiad_casebook_frozen"
+    for name in (
+        "approved_casebook_submitted.json",
+        "approved_casebook_frozen.json",
+        "casebook_change_log.csv",
+    ):
+        path = freeze_dir / name
+        if not path.is_file() or hashes.get(name) != _sha256(path):
+            errors.append(f"frozen artifact hash does not match: {name}")
+    submitted_hash = hashes.get("submitted_approved_casebook")
+    if submitted_hash != hashes.get("approved_casebook_submitted.json"):
+        errors.append("submitted casebook digest does not match retained submitted copy")
+
+    result["errors"] = errors
+    result["integrity_passed"] = not errors
+    return result
+
+
 def audit(root: Path) -> dict[str, Any]:
     root = root.resolve()
     casebook_path = root / "data/public_validation/results/hiad_holdout_preparation/casebook_for_approval.json"
@@ -128,12 +186,8 @@ def audit(root: Path) -> dict[str, Any]:
     analysis, analysis_error = _read_json(analysis_path)
 
     cases = _case_status(casebook)
-    cases["casebook_frozen"] = bool(
-        freeze
-        and freeze.get("case_count") == cases["case_count"]
-        and freeze.get("all_frozen_cases_retained") is True
-        and freeze.get("all_cases_approved") is True
-    )
+    freeze_status = _freeze_status(root, freeze, casebook_path, cases["case_count"])
+    cases["casebook_frozen"] = bool(freeze_status["integrity_passed"])
     coordinator = _coordinator_status(coordinator_path, cases["case_count"])
     prescreen_advisory = bool(
         prescreen
@@ -141,8 +195,11 @@ def audit(root: Path) -> dict[str, Any]:
         and prescreen.get("human_review_required_for_every_case") is True
         and prescreen.get("case_count") == cases["case_count"]
     )
+    protocol_integrity_errors = validate_manifest_integrity(root, protocol)
+    protocol_integrity_passed = not protocol_integrity_errors
     ethics_ready = bool(
         protocol
+        and protocol_integrity_passed
         and protocol.get("ethics_status") in {"approved", "exempt", "not-required"}
         and protocol.get("ethics_determination_id")
         and protocol.get("reviewer_recruitment_permitted") is True
@@ -195,9 +252,16 @@ def audit(root: Path) -> dict[str, Any]:
             "reviewer_recruitment_permitted": (protocol or {}).get("reviewer_recruitment_permitted"),
             "holdout_response_collection_permitted": (protocol or {}).get("holdout_response_collection_permitted"),
             "unresolved_institution_fields": (protocol or {}).get("unresolved_institution_fields"),
+            "integrity_passed": protocol_integrity_passed,
+            "integrity_errors": protocol_integrity_errors,
         },
         "downstream_artifacts": {
-            "casebook_freeze": {"path": str(freeze_path.relative_to(root)), "present": freeze is not None, "error": freeze_error},
+            "casebook_freeze": {
+                "path": str(freeze_path.relative_to(root)),
+                "present": freeze is not None,
+                "error": freeze_error,
+                **freeze_status,
+            },
             "collection": {"path": str(collection_path.relative_to(root)), "present": collection is not None, "error": collection_error, "ready": collection_ready},
             "expert_review_analysis": {"path": str(analysis_path.relative_to(root)), "present": analysis is not None, "error": analysis_error, "complete": review_ready},
         },
@@ -217,7 +281,10 @@ def main() -> int:
     report = audit(args.root)
     output = args.output or args.root / "research/hiad_evaluation_readiness.json"
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    output.write_text(
+        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8", newline="\n",
+    )
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return 0
 

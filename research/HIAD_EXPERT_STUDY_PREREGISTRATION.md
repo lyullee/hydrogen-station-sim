@@ -133,6 +133,8 @@ score is used as a primary or safety endpoint.
 
 The protocol manifest hashes this document, the analysis plan, expert-review
 protocol, casebook preparation/collection code, reviewer packet builder and
-analysis code, including the pre-outcome design-sensitivity calculation. After
-response collection starts, amendments require a dated
-version, rationale and explicit classification as prospective or post hoc.
+analysis code, including the pre-outcome design-sensitivity calculation. Holdout
+collection rejects an absent or stale manifest, unresolved institutional fields,
+or a determination that does not explicitly permit collection. After response
+collection starts, amendments require a dated version, rationale and explicit
+classification as prospective or post hoc.

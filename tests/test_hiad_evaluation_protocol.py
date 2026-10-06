@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -201,4 +202,50 @@ def test_holdout_collection_requires_casebook_freeze_manifest(
     ])
 
     with pytest.raises(SystemExit, match="casebook-freeze-manifest is required"):
+        evaluation.main()
+
+
+def test_holdout_collection_requires_protocol_manifest_after_casebook_freeze(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    cases = []
+    for event_id in ("401", "402"):
+        cases.append({
+            **_case(),
+            "event_id": event_id,
+            "quality": "complete",
+            "emergency_action": "Isolate the dispenser.",
+            "lesson_learnt": "Verify hose integrity.",
+            "corrective_measures": "Replace the hose.",
+            "references": [],
+        })
+    cases_path = tmp_path / "cases.jsonl"
+    cases_path.write_text(
+        "".join(json.dumps(case) + "\n" for case in cases), encoding="utf-8"
+    )
+    holdout_case = evaluation._split(cases)["holdout"][0]
+    approved_path = tmp_path / "approved.json"
+    approved_path.write_text(json.dumps({"cases": [{
+        "event_id": holdout_case["event_id"],
+        "input_context": evaluation._context(holdout_case)["historical_observation"],
+        "narrative_action_leakage_review": "PASS",
+        "expert_vignette_approved": "YES",
+    }]}), encoding="utf-8")
+    freeze_path = tmp_path / "casebook_freeze_manifest.json"
+    freeze_path.write_text(json.dumps({
+        "all_frozen_cases_retained": True,
+        "all_cases_approved": True,
+        "file_sha256": {approved_path.name: hashlib.sha256(approved_path.read_bytes()).hexdigest()},
+    }), encoding="utf-8")
+    monkeypatch.setattr(sys, "argv", [
+        "run_hiad_decision_evaluation.py",
+        "--cases", str(cases_path),
+        "--split", "holdout",
+        "--approved-casebook", str(approved_path),
+        "--casebook-freeze-manifest", str(freeze_path),
+        "--saga-url", "http://example.invalid",
+        "--output", str(tmp_path / "result"),
+    ])
+
+    with pytest.raises(SystemExit, match="protocol-manifest is required"):
         evaluation.main()

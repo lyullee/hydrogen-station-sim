@@ -116,5 +116,11 @@ def test_cli_writes_frozen_casebook_change_log_and_hash_manifest(tmp_path: Path)
     assert manifest["all_frozen_cases_retained"] is True
     assert manifest["all_cases_approved"] is True
     assert manifest["decision_counts"] == {"KEEP": 1, "REWRITE": 0}
+    assert "approved_casebook_submitted.json" in manifest["file_sha256"]
     assert "approved_casebook_frozen.json" in manifest["file_sha256"]
+    assert (
+        manifest["file_sha256"]["submitted_approved_casebook"]
+        == manifest["file_sha256"]["approved_casebook_submitted.json"]
+    )
+    assert (output / "approved_casebook_submitted.json").is_file()
     assert (output / "casebook_change_log.csv").is_file()

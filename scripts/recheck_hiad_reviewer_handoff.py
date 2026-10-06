@@ -95,7 +95,10 @@ def build() -> dict:
 
 def main() -> None:
     path = ROOT / "research/hiad_reviewer_handoff_recheck_2026_10_05.json"
-    path.write_text(json.dumps(build(), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(build(), ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8", newline="\n",
+    )
     print(path)
 
 

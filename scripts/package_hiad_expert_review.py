@@ -92,6 +92,11 @@ def _verify_collection(collection: Path) -> tuple[dict, list[dict[str, str]]]:
         )
     if not manifest.get("failed_calls_retained_for_blinded_scoring", False):
         raise SystemExit("Collection does not prove retention of failed provider calls")
+    if manifest.get("split") == "holdout":
+        if not manifest.get("protocol_manifest_sha256"):
+            raise SystemExit("Holdout collection is missing its protocol-manifest hash")
+        if manifest.get("protocol_collection_permitted") is not True:
+            raise SystemExit("Holdout collection was not marked protocol-permitted")
     return manifest, blind_rows
 
 
