@@ -1,0 +1,383 @@
+{
+  "schema_version": 1,
+  "status": "derived_bounded_dispersion_concentration_proxy",
+  "generated_at": "2026-10-06T05:07:07.546447+00:00",
+  "source": {
+    "dataset": "Experimental Data of Hydrogen Dispersion in an Open-ended Rectangular Channel",
+    "doi": "10.23642/usn.26117989.v2",
+    "license": "CC BY 4.0",
+    "raw_directory": "data\\public_validation\\raw\\hydrogen_dispersion_channel",
+    "case_count": 22,
+    "archive_manifest": [
+      {
+        "name": "23_FFI_P101_T00003.zip",
+        "bytes": 2001430,
+        "sha256": "9672c49321a9619768b09aa695226ed3c7d7e2bf0210c2bf35d6d8ce88737cbb"
+      },
+      {
+        "name": "23_FFI_P101_T00004.zip",
+        "bytes": 2369546,
+        "sha256": "17e3f3e0014a7c9cefb97ba591c486feb9c734ec30a6421fbd35ceba457d74ae"
+      },
+      {
+        "name": "23_FFI_P101_T00005.zip",
+        "bytes": 1893720,
+        "sha256": "b6243a250ca5dcef7a1577132d3740af34efc0fe9baebbc02087203b23cea0d9"
+      },
+      {
+        "name": "23_FFI_P101_T00006.zip",
+        "bytes": 2060025,
+        "sha256": "42e969b035e94c1eabe74ab8da89a5b527ecc734e868b0b01e55ca4c345889c5"
+      },
+      {
+        "name": "23_FFI_P101_T00007.zip",
+        "bytes": 2116367,
+        "sha256": "fd0610fc26f8b45c81b632a18472b439d10689c57ea2643040da79315ac41c66"
+      },
+      {
+        "name": "23_FFI_P101_T00008.zip",
+        "bytes": 2183474,
+        "sha256": "eac542a8041c180f9359d9ad2f9cdfe0e7250a8c2b5c5fc78126bdbea0cb817e"
+      },
+      {
+        "name": "23_FFI_P101_T00009.zip",
+        "bytes": 2160984,
+        "sha256": "f54ecd967bdb325a10b6cdf74e5ed7edb003d2ceaed2383a326be7b57babb029"
+      },
+      {
+        "name": "23_FFI_P101_T00011.zip",
+        "bytes": 2133066,
+        "sha256": "f28bb82ee1d0f2d008670bd069e8e0a5d1ef3a29b874a822813beb778a50e9ca"
+      },
+      {
+        "name": "23_FFI_P101_T00012.zip",
+        "bytes": 2081982,
+        "sha256": "8dc8a7040b6f894c75a4aed3f8791f3e446a4512a3a3c3c04bc71a735a3a8eeb"
+      },
+      {
+        "name": "23_FFI_P101_T00013.zip",
+        "bytes": 2140030,
+        "sha256": "7812732ec04bafd18ec82cc352705814d6b60914f4a7add1fb2349b71aaefebe"
+      },
+      {
+        "name": "23_FFI_P101_T00014.zip",
+        "bytes": 2084607,
+        "sha256": "c571ba54c3d61faf467b9a85c5707b1983344335d3cd460705759c43ca2eac03"
+      },
+      {
+        "name": "23_FFI_P101_T00026.zip",
+        "bytes": 2199349,
+        "sha256": "caf1fbd8f6946380415559ebc78d3877dca6d681792bafe006c31baead818b12"
+      },
+      {
+        "name": "23_FFI_P101_T00027.zip",
+        "bytes": 2034963,
+        "sha256": "5b59ac382e0d55e68e3fd84ae7ab3fd6fb2c51b18b853b2e1cbeecf661e87d53"
+      },
+      {
+        "name": "23_FFI_P101_T00028.zip",
+        "bytes": 2045248,
+        "sha256": "146b5ed7dc2826c6564469f75ef757c9fb9bc6ff39df8c208c5f21d2211a05ce"
+      },
+      {
+        "name": "23_FFI_P101_T00029.zip",
+        "bytes": 2275908,
+        "sha256": "b243ece57613a2757239cccd38571a4170ccb063bc75ff7325348996e08f5301"
+      },
+      {
+        "name": "23_FFI_P101_T00030.zip",
+        "bytes": 2426741,
+        "sha256": "46003f0e3f7dc60f0fdf78c0705036398dcffdf39fc8840eef4212e9df16c32e"
+      },
+      {
+        "name": "23_FFI_P101_T00031.zip",
+        "bytes": 2248254,
+        "sha256": "023cba0cd4dfe1063c7145de2c14dbfe93bd7c240f4dfcda11a4d3f8f0973279"
+      },
+      {
+        "name": "23_FFI_P101_T00040.zip",
+        "bytes": 2428526,
+        "sha256": "2b0e70df3740f3ebc351e40904d5ed3a4374f72cd066e80a84ad5a55ed9f4e39"
+      },
+      {
+        "name": "23_FFI_P101_T00041.zip",
+        "bytes": 2287912,
+        "sha256": "e28dfb5854e917581f95dab4ab193012ee684dc5676725424127bf859408c949"
+      },
+      {
+        "name": "23_FFI_P101_T00042.zip",
+        "bytes": 2926567,
+        "sha256": "6d36e766fe813b9a4e081c7fa78abf8d137d7159da7a65bfc4b910d67d17b6f1"
+      },
+      {
+        "name": "23_FFI_P101_T00044.zip",
+        "bytes": 2840050,
+        "sha256": "3045f0d8cd3a7bcb18d8d5e9b35c85ec50b84d870c86a81d704725856bba3264"
+      },
+      {
+        "name": "23_FFI_P101_T00045.zip",
+        "bytes": 2302256,
+        "sha256": "81e31b7262b6f590957bce4129539376a029019c8d858bb3a52013f79dac9e07"
+      }
+    ]
+  },
+  "method": {
+    "statistic": "median of per-case steady-final-third sensor-grid P90 concentration divided by measured mean release flow",
+    "case_count": 22,
+    "coefficient_volpct_per_g_s": 28.449493830243835,
+    "coefficient_p25_volpct_per_g_s": 21.487184227814353,
+    "coefficient_p75_volpct_per_g_s": 123.73865110982248,
+    "min_volpct_per_g_s": 19.90148354520837,
+    "max_volpct_per_g_s": 344.3866872826479
+  },
+  "runtime_application": {
+    "formula": "clip(release_mass_flow_g_s * coefficient_volpct_per_g_s * ventilation_multiplier, 0, 100)",
+    "ventilation_multiplier_source": "research/grune_ventilation_empirical_envelope_2026_10_06.json",
+    "fallback_when_artifact_missing": "use the recorded median coefficient and mark PUBLIC_DISPERSION_PROXY_FALLBACK"
+  },
+  "cases": [
+    {
+      "case_id": "23_FFI_P101_T00003",
+      "article_test_id": "test-05-0A",
+      "source_archive": "23_FFI_P101_T00003.zip",
+      "mean_mass_flow_g_s": 0.4757728572042119,
+      "steady_interval_start_s": 70.0,
+      "steady_interval_end_s": 90.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 9.77620806451613,
+      "p90_per_flow_volpct_per_g_s": 20.548057579333435
+    },
+    {
+      "case_id": "23_FFI_P101_T00004",
+      "article_test_id": "test-05-0B",
+      "source_archive": "23_FFI_P101_T00004.zip",
+      "mean_mass_flow_g_s": 0.4783327101966778,
+      "steady_interval_start_s": 110.0,
+      "steady_interval_end_s": 150.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 10.182548387096775,
+      "p90_per_flow_volpct_per_g_s": 21.287585335550187
+    },
+    {
+      "case_id": "23_FFI_P101_T00005",
+      "article_test_id": "test-05-0C",
+      "source_archive": "23_FFI_P101_T00005.zip",
+      "mean_mass_flow_g_s": 0.46974407677375934,
+      "steady_interval_start_s": 50.0,
+      "steady_interval_end_s": 60.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 10.37475870967742,
+      "p90_per_flow_volpct_per_g_s": 22.085980904606846
+    },
+    {
+      "case_id": "23_FFI_P101_T00006",
+      "article_test_id": "test-04-0",
+      "source_archive": "23_FFI_P101_T00006.zip",
+      "mean_mass_flow_g_s": 0.3283918917891808,
+      "steady_interval_start_s": 70.0,
+      "steady_interval_end_s": 90.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 7.867861290322581,
+      "p90_per_flow_volpct_per_g_s": 23.958756251428845
+    },
+    {
+      "case_id": "23_FFI_P101_T00007",
+      "article_test_id": "test-07-0",
+      "source_archive": "23_FFI_P101_T00007.zip",
+      "mean_mass_flow_g_s": 0.7213925508117084,
+      "steady_interval_start_s": 70.0,
+      "steady_interval_end_s": 90.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 15.300070967741936,
+      "p90_per_flow_volpct_per_g_s": 21.209078123313514
+    },
+    {
+      "case_id": "23_FFI_P101_T00008",
+      "article_test_id": "test-06-0A",
+      "source_archive": "23_FFI_P101_T00008.zip",
+      "mean_mass_flow_g_s": 0.5678711379668058,
+      "steady_interval_start_s": 70.0,
+      "steady_interval_end_s": 90.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 11.844800645161289,
+      "p90_per_flow_volpct_per_g_s": 20.858254370120257
+    },
+    {
+      "case_id": "23_FFI_P101_T00009",
+      "article_test_id": "test-06-0B",
+      "source_archive": "23_FFI_P101_T00009.zip",
+      "mean_mass_flow_g_s": 0.5708860969735116,
+      "steady_interval_start_s": 70.0,
+      "steady_interval_end_s": 90.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 11.726241935483872,
+      "p90_per_flow_volpct_per_g_s": 20.540423032981927
+    },
+    {
+      "case_id": "23_FFI_P101_T00011",
+      "article_test_id": "test-08-0",
+      "source_archive": "23_FFI_P101_T00011.zip",
+      "mean_mass_flow_g_s": 1.2498731049749803,
+      "steady_interval_start_s": 90.0,
+      "steady_interval_end_s": 120.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 24.874329032258064,
+      "p90_per_flow_volpct_per_g_s": 19.90148354520837
+    },
+    {
+      "case_id": "23_FFI_P101_T00012",
+      "article_test_id": "test-02-0A",
+      "source_archive": "23_FFI_P101_T00012.zip",
+      "mean_mass_flow_g_s": 0.07921330483669818,
+      "steady_interval_start_s": 110.0,
+      "steady_interval_end_s": 150.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 10.041829032258065,
+      "p90_per_flow_volpct_per_g_s": 126.76947455935276
+    },
+    {
+      "case_id": "23_FFI_P101_T00013",
+      "article_test_id": "test-02-0B",
+      "source_archive": "23_FFI_P101_T00013.zip",
+      "mean_mass_flow_g_s": 0.07918155780533744,
+      "steady_interval_start_s": 110.0,
+      "steady_interval_end_s": 150.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 10.505657419354838,
+      "p90_per_flow_volpct_per_g_s": 132.6780845254686
+    },
+    {
+      "case_id": "23_FFI_P101_T00014",
+      "article_test_id": "test-01-0",
+      "source_archive": "23_FFI_P101_T00014.zip",
+      "mean_mass_flow_g_s": 0.02917656148128634,
+      "steady_interval_start_s": 110.0,
+      "steady_interval_end_s": 150.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 10.04801935483871,
+      "p90_per_flow_volpct_per_g_s": 344.3866872826479
+    },
+    {
+      "case_id": "23_FFI_P101_T00026",
+      "article_test_id": "test-03-0",
+      "source_archive": "23_FFI_P101_T00026.zip",
+      "mean_mass_flow_g_s": 0.10135084652247407,
+      "steady_interval_start_s": 110.0,
+      "steady_interval_end_s": 150.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 9.024169354838708,
+      "p90_per_flow_volpct_per_g_s": 89.03891446863881
+    },
+    {
+      "case_id": "23_FFI_P101_T00027",
+      "article_test_id": "test-02-1A",
+      "source_archive": "23_FFI_P101_T00027.zip",
+      "mean_mass_flow_g_s": 0.08791379616221053,
+      "steady_interval_start_s": 110.0,
+      "steady_interval_end_s": 150.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 11.649634516129032,
+      "p90_per_flow_volpct_per_g_s": 132.5120177342153
+    },
+    {
+      "case_id": "23_FFI_P101_T00028",
+      "article_test_id": "test-02-1B",
+      "source_archive": "23_FFI_P101_T00028.zip",
+      "mean_mass_flow_g_s": 0.08578523894118162,
+      "steady_interval_start_s": 110.0,
+      "steady_interval_end_s": 150.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 11.555349032258064,
+      "p90_per_flow_volpct_per_g_s": 134.70090163391575
+    },
+    {
+      "case_id": "23_FFI_P101_T00029",
+      "article_test_id": "test-05-1A",
+      "source_archive": "23_FFI_P101_T00029.zip",
+      "mean_mass_flow_g_s": 0.43438459669483015,
+      "steady_interval_start_s": 110.0,
+      "steady_interval_end_s": 150.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 11.892345161290322,
+      "p90_per_flow_volpct_per_g_s": 27.377455949813747
+    },
+    {
+      "case_id": "23_FFI_P101_T00030",
+      "article_test_id": "test-05-1B",
+      "source_archive": "23_FFI_P101_T00030.zip",
+      "mean_mass_flow_g_s": 0.4366148140374628,
+      "steady_interval_start_s": 110.0,
+      "steady_interval_end_s": 150.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 11.429251612903226,
+      "p90_per_flow_volpct_per_g_s": 26.176967078177434
+    },
+    {
+      "case_id": "23_FFI_P101_T00031",
+      "article_test_id": "test-08-1",
+      "source_archive": "23_FFI_P101_T00031.zip",
+      "mean_mass_flow_g_s": 1.2268206803043364,
+      "steady_interval_start_s": 110.0,
+      "steady_interval_end_s": 150.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 28.253208387096773,
+      "p90_per_flow_volpct_per_g_s": 23.02961536325588
+    },
+    {
+      "case_id": "23_FFI_P101_T00040",
+      "article_test_id": "test-02-2A",
+      "source_archive": "23_FFI_P101_T00040.zip",
+      "mean_mass_flow_g_s": 0.09895281820877506,
+      "steady_interval_start_s": 190.0,
+      "steady_interval_end_s": 270.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 10.774017741935484,
+      "p90_per_flow_volpct_per_g_s": 108.8803526464904
+    },
+    {
+      "case_id": "23_FFI_P101_T00041",
+      "article_test_id": "test-02-2B",
+      "source_archive": "23_FFI_P101_T00041.zip",
+      "mean_mass_flow_g_s": 0.09542987734172818,
+      "steady_interval_start_s": 190.0,
+      "steady_interval_end_s": 270.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 10.940670967741935,
+      "p90_per_flow_volpct_per_g_s": 114.64618076123166
+    },
+    {
+      "case_id": "23_FFI_P101_T00042",
+      "article_test_id": "test-05-2",
+      "source_archive": "23_FFI_P101_T00042.zip",
+      "mean_mass_flow_g_s": 0.48440685253787136,
+      "steady_interval_start_s": 190.0,
+      "steady_interval_end_s": 270.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 14.300432258064516,
+      "p90_per_flow_volpct_per_g_s": 29.521531710673923
+    },
+    {
+      "case_id": "23_FFI_P101_T00044",
+      "article_test_id": "test-05-3",
+      "source_archive": "23_FFI_P101_T00044.zip",
+      "mean_mass_flow_g_s": 0.4531402800892389,
+      "steady_interval_start_s": 190.0,
+      "steady_interval_end_s": 270.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 13.388389677419356,
+      "p90_per_flow_volpct_per_g_s": 29.545794681467562
+    },
+    {
+      "case_id": "23_FFI_P101_T00045",
+      "article_test_id": "test-02-3",
+      "source_archive": "23_FFI_P101_T00045.zip",
+      "mean_mass_flow_g_s": 0.0927113770893714,
+      "steady_interval_start_s": 190.0,
+      "steady_interval_end_s": 270.0,
+      "sensor_count": 29,
+      "steady_concentration_p90_volpct_h2": 11.811187096774194,
+      "p90_per_flow_volpct_per_g_s": 127.39738603373901
+    }
+  ],
+  "claim_boundary": "This coefficient is a bounded advisory virtual-detector proxy derived from an open-ended channel concentration dataset. It does not validate outdoor station dispersion, detector placement, detector response dynamics, ESD effectiveness, consequence distances, or the complete hydrogen-refuelling process model. A site-specific CFD or detector calibration study remains required for engineering or regulatory decisions."
+}
