@@ -215,6 +215,20 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert ignited_pressure["peak_overpressure_mae_kpa"] < 0.7
     assert gates["hiad_action_evidence_integrity"]["status"] == "PASS"
     assert gates["hiad_action_evidence_integrity"]["observed"]["case_count"] == 34
+    assert gates["hiad_digital_twin_replay_traceability"]["status"] == "PASS"
+    hiad_replay = gates["hiad_digital_twin_replay_traceability"]["observed"]
+    assert hiad_replay["aggregate"]["case_count"] == 34
+    assert hiad_replay["aggregate"]["integration_trace_pass_count"] == 34
+    assert hiad_replay["aggregate"]["representation_case_counts"] == {
+        "direct_physical_replay": 29,
+        "proxy_partial_replay": 4,
+        "response_only_no_physical_model": 1,
+        "unmapped": 0,
+    }
+    assert hiad_replay["runtime"]["family_recipe_pass_count"] == 7
+    assert hiad_replay["source_hashes_match"] is True
+    assert hiad_replay["public_response_text_used"] is False
+    assert hiad_replay["case_narrative_used_for_physical_parameters"] is False
     assert gates["hiad_accident_response_coverage_evaluation"]["status"] == "PASS"
     accident_response = gates["hiad_accident_response_coverage_evaluation"]["observed"]
     assert accident_response["aggregate"]["case_count"] == 34

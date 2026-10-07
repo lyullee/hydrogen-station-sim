@@ -68,8 +68,17 @@ class HazopMonitor:
                         "value": 0.0, "unit": "vol%_H2", "quality": "GOOD",
                         "time_s": t, "origin": "VIRTUAL_DETECTOR_PROXY", "zone": zone,
                     })
-            fire_events = tuple(event for event in model.get("fault_events", ())
-                                if event.kind.value == "external-fire")
+            # Flame heads must see both an imposed external fire and a release
+            # that the physical fault model explicitly marks as ignited.  The
+            # latter already drives the HyRAM ignited-enclosure calculation;
+            # omitting it here produced an inconsistent state in which a fire
+            # consequence existed but every virtual flame head remained clear.
+            fire_events = tuple(
+                event
+                for event in model.get("fault_events", ())
+                if event.kind.value == "external-fire"
+                or (event.kind.value == "hydrogen-leak" and event.ignited)
+            )
             for tag, _node, zone, targets in FLAME_DETECTORS:
                 if tag not in self.mapper.specs:
                     continue

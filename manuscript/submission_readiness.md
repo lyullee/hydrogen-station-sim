@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **92 PASS · 7 FAIL · 8 PENDING**.
+Gate counts: **93 PASS · 7 FAIL · 8 PENDING**.
 
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted
@@ -71,6 +71,13 @@ On the 33 cases with public action categories, a further post-outcome audit foun
 reference F1 of 0.564 versus 0.281 but also 140.5 versus 28.1 words per response,
 showing that improved coverage came with more operator information burden. These
 results do not replace the pending blinded expert study.
+
+A separate canonical replay audit now prevents the HIAD text benchmark from
+bypassing the digital twin. Seven response families were executed through the
+process, detector, HAZOP/safety and native HyRAM paths: 29/34 cases have direct
+physical-family coverage, 4/34 use the explicitly bounded compressor proxy, and
+1/34 structural-damage case remains response-only. All seven executable recipes
+passed. These fixtures do not reconstruct an accident or validate the advice.
 
 Confidential real-station data may be used without public redistribution. The
 required route is documented in
@@ -154,10 +161,10 @@ as negative development evidence rather than a new validation claim.
 
 The local format gate currently passes:
 
-- abstract: 147 words (limit checked: 150);
+- abstract: 150 words (limit checked: 150);
 - keywords: 6;
 - highlights: 5, each within the checked character limit;
-- approximate manuscript body: 7,964 words before references;
+- approximate manuscript body: 7,917 words before references;
 - figures: 2; tables: 3;
 - citations resolved and figure assets present;
 - LaTeX compilation: **PENDING**. The built-in compiler was unavailable on this

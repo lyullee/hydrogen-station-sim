@@ -40,6 +40,29 @@ def test_fire_input_waits_for_matching_virtual_flame_head():
     assert [row["sensor_id"] for row in monitor.latest["active"] if row["sensor_id"].startswith("FD-")] == ["FD-0801"]
 
 
+def test_ignited_physical_leak_activates_matching_virtual_flame_head():
+    leak = FaultEvent(
+        "medium-ignited-leak",
+        FaultKind.HYDROGEN_LEAK,
+        "cascade.medium",
+        0,
+        leak_diameter_m=0.001,
+        indoor=True,
+        ignited=True,
+        enclosure_volume_m3=100.0,
+        enclosure_vent_area_m2=2.0,
+    )
+    monitor = _simulate([leak], 1.2)
+    assert monitor.frames[0]["signals"]["FD-0801"]["value"] == 0
+    assert monitor.latest["signals"]["FD-0801"]["value"] == 1
+    assert monitor.latest["signals"]["FD-0701"]["value"] == 0
+    assert [
+        row["sensor_id"]
+        for row in monitor.latest["active"]
+        if row["sensor_id"].startswith("FD-")
+    ] == ["FD-0801"]
+
+
 def test_fire_input_is_not_claimed_as_sensor_detection():
     pending = _analyze_frame({"active_faults": ["external-fire:cascade.medium"]})
     assert pending["fire_detection"]["status"] == "PENDING"

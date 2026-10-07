@@ -1,0 +1,962 @@
+{
+  "schema_version": 1,
+  "artifact_type": "hiad_to_digital_twin_canonical_replay_coverage_audit",
+  "generated_at_utc": "2026-10-07T23:15:57.705198+00:00",
+  "status": "completed_family_level_integration_audit",
+  "evidence_role": "retrospective_metadata_to_canonical_runtime_traceability_only",
+  "source": {
+    "hiad_inventory": "research/hiad_hrs_public_evidence.json",
+    "hiad_inventory_sha256": "27b7fc752fe7ad706eb48854447bb203605be30b745515a259fad89325cc2536",
+    "playbook_catalog": "src/h2station/data/emergency_playbooks.json",
+    "playbook_catalog_sha256": "b7d64103d9c4d3a322edd2c97b3800b5a796385e4ec25a588a252d288aad8bba",
+    "model_input_sha256": {
+      "src/h2station/safety_runtime.py": "5fa9f00ca573d7bf0f8494669672d4ed13476e6c6ff64569be699c2e9e98e641",
+      "src/h2station/safe_operation.py": "c1a297860d554f09df1c6fd3c7780811713001d1f168ebcccf0782ebf9f13dd6",
+      "src/h2station/hazop/runtime.py": "42b57f90708ffbef3ec7b0c5c1a8ce9bc80db77d354887a8d3c0297806236f2d",
+      "src/h2station/hazop/mapping.py": "0412b597461848964208b415dbb8549c5c7c27d83a50970d7dacc1d29c4a9684",
+      "src/h2station/risk/live.py": "84e611b7bd79dd64658c96d56ea12f989a47d2bc8c7e747800a15ef6914f03d0",
+      "src/h2station/risk/runtime_backend.py": "521be71d85ed054fbb6b4b667494cc61c098e7ae75d9e3d833bb960fe6f796ee",
+      "src/h2station/data/emergency_playbooks.json": "b7d64103d9c4d3a322edd2c97b3800b5a796385e4ec25a588a252d288aad8bba"
+    },
+    "public_response_text_used": false,
+    "case_narrative_used_for_physical_parameters": false
+  },
+  "runtime": {
+    "backend": "HyRAM+ 6.1 native",
+    "virtual_detector_mode": true,
+    "unique_family_recipes_run": 7,
+    "family_recipe_pass_count": 7,
+    "all_executable_recipes_passed": true
+  },
+  "aggregate": {
+    "case_count": 34,
+    "integration_trace_pass_count": 34,
+    "representation_case_counts": {
+      "direct_physical_replay": 29,
+      "proxy_partial_replay": 4,
+      "response_only_no_physical_model": 1,
+      "unmapped": 0
+    },
+    "mapped_family_count": 8,
+    "physical_or_proxy_family_count": 7,
+    "response_only_family_count": 1
+  },
+  "family_recipes": {
+    "gas_release": {
+      "family": "gas_release",
+      "representation": "direct_physical_replay",
+      "status": "passed",
+      "duration_s": 1.2,
+      "control_period_s": 0.2,
+      "fault": {
+        "event_id": "hiad-gas-release",
+        "kind": "hydrogen-leak",
+        "target": "cascade.medium",
+        "start_time_s": 0.0,
+        "magnitude": 0.0,
+        "leak_diameter_m": 0.001,
+        "indoor": false,
+        "ignited": false,
+        "enclosure_volume_m3": null,
+        "enclosure_vent_area_m2": null,
+        "rate_s": 30.0,
+        "external_temperature_k": null,
+        "heat_transfer_ua_w_k": 0.0
+      },
+      "required_checks": [
+        "finite_state",
+        "physical_state_changed",
+        "release_source",
+        "gas_detection",
+        "native_consequence"
+      ],
+      "checks": {
+        "finite_state": true,
+        "physical_state_changed": true,
+        "release_source": true,
+        "gas_detection": true,
+        "native_consequence": true
+      },
+      "observed": {
+        "sample_count": 7,
+        "esd_time_s": null,
+        "trip_causes": [],
+        "alarm_sensor_ids": [
+          "GD-0801",
+          "GD-2201"
+        ],
+        "alarm_rule_ids": [
+          "HZ-153",
+          "HZ-154",
+          "HZ-155",
+          "HZ-177",
+          "HZ-178",
+          "HZ-179"
+        ],
+        "gas_detector_max_volpct": 100.0,
+        "gas_detector_positive_tags": [
+          "GD-0801",
+          "GD-2201"
+        ],
+        "flame_detector_max_bool": 0.0,
+        "flame_detector_positive_tags": [],
+        "releases": [
+          {
+            "release_id": "hiad-gas-release",
+            "component_id": "cascade.medium",
+            "maximum_mass_flow_g_s": 23.41604653235145,
+            "consequence_statuses": [
+              "calculated"
+            ],
+            "ignited_enclosure_statuses": [],
+            "maximum_sampled_effect_radius_m": 3.0
+          }
+        ]
+      },
+      "claim_boundary": "A 1 mm medium-bank release is a canonical test input, not the geometry of a HIAD event."
+    },
+    "hydrogen_fire": {
+      "family": "hydrogen_fire",
+      "representation": "direct_physical_replay",
+      "status": "passed",
+      "duration_s": 1.2,
+      "control_period_s": 0.2,
+      "fault": {
+        "event_id": "hiad-hydrogen-fire",
+        "kind": "hydrogen-leak",
+        "target": "cascade.medium",
+        "start_time_s": 0.0,
+        "magnitude": 0.0,
+        "leak_diameter_m": 0.001,
+        "indoor": true,
+        "ignited": true,
+        "enclosure_volume_m3": 100.0,
+        "enclosure_vent_area_m2": 2.0,
+        "rate_s": 30.0,
+        "external_temperature_k": null,
+        "heat_transfer_ua_w_k": 0.0
+      },
+      "required_checks": [
+        "finite_state",
+        "physical_state_changed",
+        "release_source",
+        "gas_detection",
+        "flame_detection",
+        "native_consequence",
+        "ignited_consequence"
+      ],
+      "checks": {
+        "finite_state": true,
+        "physical_state_changed": true,
+        "release_source": true,
+        "gas_detection": true,
+        "flame_detection": true,
+        "native_consequence": true,
+        "ignited_consequence": true
+      },
+      "observed": {
+        "sample_count": 7,
+        "esd_time_s": null,
+        "trip_causes": [],
+        "alarm_sensor_ids": [
+          "FD-0801",
+          "GD-0801",
+          "GD-2201"
+        ],
+        "alarm_rule_ids": [
+          "HZ-153",
+          "HZ-154",
+          "HZ-155",
+          "HZ-177",
+          "HZ-178",
+          "HZ-179",
+          "HZ-209"
+        ],
+        "gas_detector_max_volpct": 100.0,
+        "gas_detector_positive_tags": [
+          "GD-0801",
+          "GD-2201"
+        ],
+        "flame_detector_max_bool": 1.0,
+        "flame_detector_positive_tags": [
+          "FD-0801"
+        ],
+        "releases": [
+          {
+            "release_id": "hiad-hydrogen-fire",
+            "component_id": "cascade.medium",
+            "maximum_mass_flow_g_s": 23.41604653235145,
+            "consequence_statuses": [
+              "calculated"
+            ],
+            "ignited_enclosure_statuses": [
+              "calculated"
+            ],
+            "maximum_sampled_effect_radius_m": 3.0
+          }
+        ]
+      },
+      "claim_boundary": "The declared enclosure is a detector/consequence integration fixture, not a HIAD-site reconstruction."
+    },
+    "hose_connection": {
+      "family": "hose_connection",
+      "representation": "direct_physical_replay",
+      "status": "passed",
+      "duration_s": 1.2,
+      "control_period_s": 0.2,
+      "fault": {
+        "event_id": "hiad-hose-release",
+        "kind": "hydrogen-leak",
+        "target": "dispenser.hose",
+        "start_time_s": 0.0,
+        "magnitude": 0.0,
+        "leak_diameter_m": 0.0005,
+        "indoor": false,
+        "ignited": false,
+        "enclosure_volume_m3": null,
+        "enclosure_vent_area_m2": null,
+        "rate_s": 30.0,
+        "external_temperature_k": null,
+        "heat_transfer_ua_w_k": 0.0
+      },
+      "required_checks": [
+        "finite_state",
+        "physical_state_changed",
+        "release_source",
+        "gas_detection",
+        "native_consequence"
+      ],
+      "checks": {
+        "finite_state": true,
+        "physical_state_changed": true,
+        "release_source": true,
+        "gas_detection": true,
+        "native_consequence": true
+      },
+      "observed": {
+        "sample_count": 7,
+        "esd_time_s": null,
+        "trip_causes": [],
+        "alarm_sensor_ids": [
+          "GD-1301",
+          "GD-2301"
+        ],
+        "alarm_rule_ids": [
+          "HZ-162",
+          "HZ-163",
+          "HZ-164",
+          "HZ-180",
+          "HZ-181",
+          "HZ-182"
+        ],
+        "gas_detector_max_volpct": 14.035832269960522,
+        "gas_detector_positive_tags": [
+          "GD-1301",
+          "GD-2301"
+        ],
+        "flame_detector_max_bool": 0.0,
+        "flame_detector_positive_tags": [],
+        "releases": [
+          {
+            "release_id": "hiad-hose-release",
+            "component_id": "dispenser.hose",
+            "maximum_mass_flow_g_s": 0.4933596482844779,
+            "consequence_statuses": [
+              "calculated"
+            ],
+            "ignited_enclosure_statuses": [],
+            "maximum_sampled_effect_radius_m": 0.0
+          }
+        ]
+      },
+      "claim_boundary": "A 0.5 mm dispenser-hose opening tests the modeled connection zone without asserting actual break geometry."
+    },
+    "overpressure": {
+      "family": "overpressure",
+      "representation": "direct_physical_replay",
+      "status": "passed",
+      "duration_s": 3.0,
+      "control_period_s": 0.2,
+      "fault": {
+        "event_id": "hiad-overpressure",
+        "kind": "pressure-disturbance",
+        "target": "cascade.medium",
+        "start_time_s": 0.0,
+        "magnitude": 20.0,
+        "leak_diameter_m": null,
+        "indoor": false,
+        "ignited": false,
+        "enclosure_volume_m3": null,
+        "enclosure_vent_area_m2": null,
+        "rate_s": 0.5,
+        "external_temperature_k": null,
+        "heat_transfer_ua_w_k": 0.0
+      },
+      "required_checks": [
+        "finite_state",
+        "physical_state_changed",
+        "pressure_alarm"
+      ],
+      "checks": {
+        "finite_state": true,
+        "physical_state_changed": true,
+        "pressure_alarm": true
+      },
+      "observed": {
+        "sample_count": 16,
+        "esd_time_s": null,
+        "trip_causes": [],
+        "alarm_sensor_ids": [
+          "PT-0801",
+          "TT-0801"
+        ],
+        "alarm_rule_ids": [
+          "HZ-052",
+          "HZ-053",
+          "HZ-056"
+        ],
+        "gas_detector_max_volpct": 0.0,
+        "gas_detector_positive_tags": [],
+        "flame_detector_max_bool": 0.0,
+        "flame_detector_positive_tags": [],
+        "releases": []
+      },
+      "claim_boundary": "The controlled mass-source disturbance tests overpressure propagation; it is not an inferred HIAD source term."
+    },
+    "precooling_fault": {
+      "family": "precooling_fault",
+      "representation": "direct_physical_replay",
+      "status": "passed",
+      "duration_s": 4.0,
+      "control_period_s": 0.2,
+      "fault": {
+        "event_id": "hiad-precooling-loss",
+        "kind": "precooler-loss",
+        "target": "precooler",
+        "start_time_s": 0.0,
+        "magnitude": 0.0,
+        "leak_diameter_m": null,
+        "indoor": false,
+        "ignited": false,
+        "enclosure_volume_m3": null,
+        "enclosure_vent_area_m2": null,
+        "rate_s": 30.0,
+        "external_temperature_k": null,
+        "heat_transfer_ua_w_k": 0.0
+      },
+      "required_checks": [
+        "finite_state",
+        "physical_state_changed",
+        "precooling_trip"
+      ],
+      "checks": {
+        "finite_state": true,
+        "physical_state_changed": true,
+        "precooling_trip": true
+      },
+      "observed": {
+        "sample_count": 21,
+        "esd_time_s": 2.4,
+        "trip_causes": [
+          "precooling-temperature-high"
+        ],
+        "alarm_sensor_ids": [],
+        "alarm_rule_ids": [],
+        "gas_detector_max_volpct": 0.0,
+        "gas_detector_positive_tags": [],
+        "flame_detector_max_bool": 0.0,
+        "flame_detector_positive_tags": [],
+        "releases": []
+      },
+      "claim_boundary": "Complete cooling-capacity loss is a canonical fault envelope, not the severity of the source event."
+    },
+    "fueling_fault": {
+      "family": "fueling_fault",
+      "representation": "direct_physical_replay",
+      "status": "passed",
+      "duration_s": 10.0,
+      "control_period_s": 0.2,
+      "fault": {
+        "event_id": "hiad-fueling-fault",
+        "kind": "pcv-stuck-closed",
+        "target": "dispenser.pcv",
+        "start_time_s": 0.0,
+        "magnitude": 0.0,
+        "leak_diameter_m": null,
+        "indoor": false,
+        "ignited": false,
+        "enclosure_volume_m3": null,
+        "enclosure_vent_area_m2": null,
+        "rate_s": 30.0,
+        "external_temperature_k": null,
+        "heat_transfer_ua_w_k": 0.0
+      },
+      "required_checks": [
+        "finite_state",
+        "physical_state_changed",
+        "fueling_flow_alarm"
+      ],
+      "checks": {
+        "finite_state": true,
+        "physical_state_changed": true,
+        "fueling_flow_alarm": true
+      },
+      "observed": {
+        "sample_count": 51,
+        "esd_time_s": null,
+        "trip_causes": [],
+        "alarm_sensor_ids": [
+          "FT-1101",
+          "FT-1301",
+          "FT-1501",
+          "FT-1701",
+          "PT-1101",
+          "PT-1501"
+        ],
+        "alarm_rule_ids": [
+          "HZ-077",
+          "HZ-081",
+          "HZ-092",
+          "HZ-105",
+          "HZ-109",
+          "HZ-120"
+        ],
+        "gas_detector_max_volpct": 0.0,
+        "gas_detector_positive_tags": [],
+        "flame_detector_max_bool": 0.0,
+        "flame_detector_positive_tags": [],
+        "releases": []
+      },
+      "claim_boundary": "A dispenser-1 PCV stuck closed tests failed delivery; it does not reproduce every dispenser malfunction."
+    },
+    "compressor_thermal": {
+      "family": "compressor_thermal",
+      "representation": "proxy_partial_replay",
+      "status": "passed",
+      "duration_s": 1.2,
+      "control_period_s": 0.2,
+      "fault": {
+        "event_id": "hiad-compressor-fire",
+        "kind": "external-fire",
+        "target": "compressor",
+        "start_time_s": 0.0,
+        "magnitude": 0.0,
+        "leak_diameter_m": null,
+        "indoor": false,
+        "ignited": false,
+        "enclosure_volume_m3": null,
+        "enclosure_vent_area_m2": null,
+        "rate_s": 30.0,
+        "external_temperature_k": 1000.0,
+        "heat_transfer_ua_w_k": 5000.0
+      },
+      "required_checks": [
+        "finite_state",
+        "physical_state_changed",
+        "compressor_flame_detection"
+      ],
+      "checks": {
+        "finite_state": true,
+        "physical_state_changed": true,
+        "compressor_flame_detection": true
+      },
+      "observed": {
+        "sample_count": 7,
+        "esd_time_s": null,
+        "trip_causes": [],
+        "alarm_sensor_ids": [
+          "FD-0601"
+        ],
+        "alarm_rule_ids": [
+          "HZ-207"
+        ],
+        "gas_detector_max_volpct": 0.0,
+        "gas_detector_positive_tags": [],
+        "flame_detector_max_bool": 1.0,
+        "flame_detector_positive_tags": [
+          "FD-0601"
+        ],
+        "releases": []
+      },
+      "claim_boundary": "The current compressor has no separate gas/metal inventory; heat is conservatively coupled to the connected high-bank surrogate. Cavitation and oil-leak physics are not reconstructed."
+    },
+    "structural_damage": {
+      "family": "structural_damage",
+      "representation": "response_only_no_physical_model",
+      "status": "not_run_no_physical_model",
+      "fault": null,
+      "required_checks": [],
+      "checks": {},
+      "observed": {},
+      "claim_boundary": "Collision, canopy and structural mechanics are outside the current process-state model; only the staged response plan is available."
+    }
+  },
+  "cases": [
+    {
+      "event_id": "396",
+      "candidate_plan_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "401",
+      "candidate_plan_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "402",
+      "candidate_plan_ids": [
+        "compressor_thermal"
+      ],
+      "representation": "proxy_partial_replay",
+      "executed_recipe_ids": [
+        "compressor_thermal"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "403",
+      "candidate_plan_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "404",
+      "candidate_plan_ids": [
+        "fueling_fault"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "fueling_fault"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "411",
+      "candidate_plan_ids": [
+        "compressor_thermal"
+      ],
+      "representation": "proxy_partial_replay",
+      "executed_recipe_ids": [
+        "compressor_thermal"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "454",
+      "candidate_plan_ids": [
+        "structural_damage"
+      ],
+      "representation": "response_only_no_physical_model",
+      "executed_recipe_ids": [],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "463",
+      "candidate_plan_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "702",
+      "candidate_plan_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "803",
+      "candidate_plan_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "884",
+      "candidate_plan_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "953",
+      "candidate_plan_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1038",
+      "candidate_plan_ids": [
+        "hose_connection",
+        "precooling_fault"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "hose_connection",
+        "precooling_fault"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1062",
+      "candidate_plan_ids": [
+        "gas_release",
+        "overpressure"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release",
+        "overpressure"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1063",
+      "candidate_plan_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1064",
+      "candidate_plan_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1106",
+      "candidate_plan_ids": [
+        "hydrogen_fire",
+        "gas_release"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "hydrogen_fire",
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1159",
+      "candidate_plan_ids": [
+        "gas_release",
+        "overpressure"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release",
+        "overpressure"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1161",
+      "candidate_plan_ids": [
+        "gas_release",
+        "overpressure"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release",
+        "overpressure"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1163",
+      "candidate_plan_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1173",
+      "candidate_plan_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1191",
+      "candidate_plan_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1193",
+      "candidate_plan_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1194",
+      "candidate_plan_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1195",
+      "candidate_plan_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1196",
+      "candidate_plan_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1198",
+      "candidate_plan_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "hose_connection"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "hose_connection"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1202",
+      "candidate_plan_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1203",
+      "candidate_plan_ids": [
+        "gas_release",
+        "compressor_thermal"
+      ],
+      "representation": "proxy_partial_replay",
+      "executed_recipe_ids": [
+        "gas_release",
+        "compressor_thermal"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1204",
+      "candidate_plan_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1205",
+      "candidate_plan_ids": [
+        "gas_release",
+        "compressor_thermal"
+      ],
+      "representation": "proxy_partial_replay",
+      "executed_recipe_ids": [
+        "gas_release",
+        "compressor_thermal"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1206",
+      "candidate_plan_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1207",
+      "candidate_plan_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    },
+    {
+      "event_id": "1208",
+      "candidate_plan_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "representation": "direct_physical_replay",
+      "executed_recipe_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true
+    }
+  ],
+  "claim_boundary": [
+    "HIAD metadata selects a response family; incident narratives do not set pressure, temperature, opening size, enclosure geometry or timing in the canonical recipes.",
+    "A passed trace shows that the declared family can traverse process physics, virtual detection, HAZOP/safety logic, native consequence calculation where applicable, and a registered response-plan handoff.",
+    "It does not reconstruct any HIAD accident, validate accident frequencies or safe distances, establish operator benefit, or show that an action is correct or effective.",
+    "Compressor thermal events remain a partial proxy because the compressor has no separate dynamic inventory, and structural damage remains response-only because structural mechanics are outside the model."
+  ]
+}

@@ -227,6 +227,67 @@ def _public_incident_traceability() -> dict[str, Any] | None:
             "holdout_use": False,
             "claim_limit": str(action_record.get("claim_boundary") or ""),
         }
+    replay_path = path.parent / "hiad_digital_twin_replay_coverage_2026_10_08.json"
+    try:
+        replay = json.loads(replay_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        replay = None
+    replay_source = (replay or {}).get("source") or {}
+    replay_runtime = (replay or {}).get("runtime") or {}
+    replay_aggregate = (replay or {}).get("aggregate") or {}
+    replay_counts = replay_aggregate.get("representation_case_counts") or {}
+    replay_cases = (replay or {}).get("cases") or []
+    replay_model_hashes = replay_source.get("model_input_sha256") or {}
+    root = path.parents[1]
+    if (
+        isinstance(replay, dict)
+        and replay.get("status") == "completed_family_level_integration_audit"
+        and replay_source.get("hiad_inventory_sha256")
+        == sha256((path.parent / "hiad_hrs_public_evidence.json").read_bytes()).hexdigest()
+        and replay_source.get("playbook_catalog_sha256")
+        == sha256((root / "src/h2station/data/emergency_playbooks.json").read_bytes()).hexdigest()
+        and replay_source.get("public_response_text_used") is False
+        and replay_source.get("case_narrative_used_for_physical_parameters") is False
+        and bool(replay_model_hashes)
+        and all(
+            (root / relative).is_file()
+            and sha256((root / relative).read_bytes()).hexdigest() == digest
+            for relative, digest in replay_model_hashes.items()
+        )
+        and replay_runtime.get("family_recipe_pass_count") == 7
+        and replay_runtime.get("unique_family_recipes_run") == 7
+        and replay_runtime.get("all_executable_recipes_passed") is True
+        and replay_aggregate.get("case_count") == 34
+        and replay_aggregate.get("integration_trace_pass_count") == 34
+        and len(replay_cases) == 34
+        and all(case.get("integration_trace_pass") is True for case in replay_cases)
+    ):
+        result["digital_twin_replay"] = {
+            "artifact": "research/hiad_digital_twin_replay_coverage_2026_10_08.json",
+            "artifact_sha256": sha256(replay_path.read_bytes()).hexdigest(),
+            "backend": replay_runtime.get("backend"),
+            "case_count": replay_aggregate.get("case_count"),
+            "integration_trace_pass_count": replay_aggregate.get(
+                "integration_trace_pass_count"
+            ),
+            "direct_physical_case_count": replay_counts.get(
+                "direct_physical_replay"
+            ),
+            "partial_proxy_case_count": replay_counts.get(
+                "proxy_partial_replay"
+            ),
+            "response_only_case_count": replay_counts.get(
+                "response_only_no_physical_model"
+            ),
+            "canonical_recipe_pass_count": replay_runtime.get(
+                "family_recipe_pass_count"
+            ),
+            "canonical_recipe_count": replay_runtime.get(
+                "unique_family_recipes_run"
+            ),
+            "case_narrative_used_for_physical_parameters": False,
+            "claim_limit": " ".join(str(item) for item in replay.get("claim_boundary") or []),
+        }
     return result
 
 
@@ -3624,6 +3685,24 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         "detector_policy": manifest.get("detector_policy") or {},
         "common_header": manifest.get("common_header") or {},
     }
+    incident_traceability = evidence.get("public_incident_traceability")
+    if isinstance(incident_traceability, dict):
+        replay = incident_traceability.get("digital_twin_replay") or {}
+        summary["public_incident_traceability"] = {
+            "case_count": incident_traceability.get("case_count"),
+            "contract_pass": incident_traceability.get("contract_pass") is True,
+            "digital_twin_replay": {
+                key: replay.get(key)
+                for key in (
+                    "backend", "case_count", "integration_trace_pass_count",
+                    "direct_physical_case_count", "partial_proxy_case_count",
+                    "response_only_case_count", "canonical_recipe_pass_count",
+                    "canonical_recipe_count",
+                    "case_narrative_used_for_physical_parameters", "claim_limit",
+                )
+                if replay.get(key) is not None
+            },
+        }
     benchmarks = evidence.get("public_experimental_benchmarks")
     if isinstance(benchmarks, dict):
         rows = []
@@ -4269,6 +4348,24 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "case_count", "category_count", "covered_case_count",
                     "contract_pass",
                 )),
+                "digital_twin_replay": {
+                    "direct": (incident.get("digital_twin_replay") or {}).get(
+                        "direct_physical_case_count"
+                    ),
+                    "proxy": (incident.get("digital_twin_replay") or {}).get(
+                        "partial_proxy_case_count"
+                    ),
+                    "response_only": (
+                        incident.get("digital_twin_replay") or {}
+                    ).get("response_only_case_count"),
+                    "recipes_passed": (
+                        incident.get("digital_twin_replay") or {}
+                    ).get("canonical_recipe_pass_count"),
+                    "recipes_total": (
+                        incident.get("digital_twin_replay") or {}
+                    ).get("canonical_recipe_count"),
+                    "incident_parameterized": False,
+                },
                 "claim_limit": short(incident.get("claim_limit")),
             },
             "restricted_incident_metadata": {
@@ -4813,6 +4910,17 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         },
         "public_accident_evidence": {
             "hiad_case_count": incident.get("case_count"),
+            "hiad_digital_twin_replay": {
+                key: (incident.get("digital_twin_replay") or {}).get(key)
+                for key in (
+                    "backend", "case_count", "integration_trace_pass_count",
+                    "direct_physical_case_count", "partial_proxy_case_count",
+                    "response_only_case_count", "canonical_recipe_pass_count",
+                    "canonical_recipe_count",
+                    "case_narrative_used_for_physical_parameters", "claim_limit",
+                )
+                if (incident.get("digital_twin_replay") or {}).get(key) is not None
+            },
             "hiad_action_taxonomy": incident.get("action_taxonomy", {}).get(
                 "category_patterns_version"
             ) if isinstance(incident.get("action_taxonomy"), dict) else None,

@@ -271,6 +271,16 @@ review, holdout response collection and expert rating gates remain required.
 
 The [HIAD accident-response coverage evaluation](HIAD_ACCIDENT_RESPONSE_COVERAGE_EVALUATION.md) additionally checks the 34 public metadata cases one by one: 33 cases with recorded action categories route to staged plans, all 8 categories have zero uncovered case-category pairs, and one case with no recorded category is explicitly marked as not assessed rather than treated as no response. This is structural traceability only; raw action prose is excluded and no effectiveness or safety claim is made.
 
+The [HIAD-to-digital-twin replay audit](HIAD_DIGITAL_TWIN_REPLAY_COVERAGE_2026_10_08.md)
+checks the integration layer that the text-only benchmark cannot exercise. Seven
+declared canonical fault recipes run through the actual process state, virtual
+detectors, HAZOP/safety logic and native HyRAM consequences where a release is
+present. The 34 metadata cases classify as 29 direct physical replays, four
+compressor proxy/partial replays and one structural response-only case. All seven
+executable recipes pass their declared trace checks. The fixtures are not
+parameterized from incident prose and therefore do not reconstruct accidents,
+validate safe distances or establish that SAGA's advice is correct or effective.
+
 The restricted local accident casebook now contributes only a de-identified
 candidate-family count: 322/322 cases have five non-empty response stages.
 Candidate mappings are `gas_release` 305, `hose_connection` 261,

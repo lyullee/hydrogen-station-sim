@@ -79,6 +79,35 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert traceability["covered_case_count"] == 34
     assert traceability["contract_pass"] is True
     assert "does not judge incident actions" in traceability["claim_limit"]
+    replay = traceability["digital_twin_replay"]
+    assert replay["backend"] == "HyRAM+ 6.1 native"
+    assert replay["case_count"] == 34
+    assert replay["integration_trace_pass_count"] == 34
+    assert replay["direct_physical_case_count"] == 29
+    assert replay["partial_proxy_case_count"] == 4
+    assert replay["response_only_case_count"] == 1
+    assert replay["canonical_recipe_pass_count"] == replay["canonical_recipe_count"] == 7
+    assert replay["case_narrative_used_for_physical_parameters"] is False
+    assert "does not reconstruct any HIAD accident" in replay["claim_limit"]
+    summary_replay = prompt_evidence_summary(idle)["public_incident_traceability"][
+        "digital_twin_replay"
+    ]
+    assert summary_replay["direct_physical_case_count"] == 29
+    header_replay = prompt_evidence_header(idle)["public_accident_evidence"][
+        "hiad_digital_twin_replay"
+    ]
+    assert header_replay["partial_proxy_case_count"] == 4
+    compact_replay = prompt_decision_evidence(idle)["decision_support_evidence"][
+        "public_incident"
+    ]["digital_twin_replay"]
+    assert compact_replay == {
+        "direct": 29,
+        "proxy": 4,
+        "response_only": 1,
+        "recipes_passed": 7,
+        "recipes_total": 7,
+        "incident_parameterized": False,
+    }
     taxonomy = traceability["action_taxonomy"]
     assert taxonomy["raw_text_retained"] is False
     assert taxonomy["holdout_use"] is False
@@ -993,7 +1022,7 @@ def test_prompt_decision_evidence_keeps_limits_without_full_audit_payload():
         "proposals_attested": False,
         "component_envelope_supported": False,
     }
-    assert len(json.dumps(decision, ensure_ascii=False)) < 3500
+    assert len(json.dumps(decision, ensure_ascii=False)) < 3700
     assert "confidential_station_schema_intake" not in json.dumps(
         decision, ensure_ascii=False
     )

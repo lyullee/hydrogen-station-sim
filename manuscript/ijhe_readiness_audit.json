@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T23:08:51.342761+00:00",
+  "generated_at": "2026-10-07T23:27:23.393640+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 92,
+    "PASS": 93,
     "FAIL": 7,
     "PENDING": 8
   },
@@ -3742,6 +3742,44 @@
       }
     },
     {
+      "id": "hiad_digital_twin_replay_traceability",
+      "status": "PASS",
+      "claim": "Every public HIAD HRS metadata case is explicitly classified against an executed digital-twin fault family or a declared no-physics boundary.",
+      "evidence": "research\\hiad_digital_twin_replay_coverage_2026_10_08.json",
+      "requirement": "34/34 traceable cases, seven passing canonical runtime recipes, native consequence execution for releases, explicit proxy/response-only counts and current source hashes; no accident-reconstruction or effectiveness claim.",
+      "observed": {
+        "aggregate": {
+          "case_count": 34,
+          "integration_trace_pass_count": 34,
+          "representation_case_counts": {
+            "direct_physical_replay": 29,
+            "proxy_partial_replay": 4,
+            "response_only_no_physical_model": 1,
+            "unmapped": 0
+          },
+          "mapped_family_count": 8,
+          "physical_or_proxy_family_count": 7,
+          "response_only_family_count": 1
+        },
+        "runtime": {
+          "backend": "HyRAM+ 6.1 native",
+          "virtual_detector_mode": true,
+          "unique_family_recipes_run": 7,
+          "family_recipe_pass_count": 7,
+          "all_executable_recipes_passed": true
+        },
+        "source_hashes_match": true,
+        "public_response_text_used": false,
+        "case_narrative_used_for_physical_parameters": false,
+        "claim_boundary": [
+          "HIAD metadata selects a response family; incident narratives do not set pressure, temperature, opening size, enclosure geometry or timing in the canonical recipes.",
+          "A passed trace shows that the declared family can traverse process physics, virtual detection, HAZOP/safety logic, native consequence calculation where applicable, and a registered response-plan handoff.",
+          "It does not reconstruct any HIAD accident, validate accident frequencies or safe distances, establish operator benefit, or show that an action is correct or effective.",
+          "Compressor thermal events remain a partial proxy because the compressor has no separate dynamic inventory, and structural damage remains response-only because structural mechanics are outside the model."
+        ]
+      }
+    },
+    {
       "id": "hiad_action_evidence_integrity",
       "status": "PASS",
       "claim": "The public HIAD HRS action fields are summarized into a non-evaluative, traceable action taxonomy for evidence-grounded guidance.",
@@ -5716,14 +5754,14 @@
         "manifest_schema": "h2station.llm-evidence.v1",
         "tests": {
           "targeted": {
-            "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_station_thermal_diagnostic.py tests/test_station_thermal_protocol.py tests/test_ijhe_readiness_audit.py -q",
-            "passed": 20,
+            "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_station_thermal_diagnostic.py tests/test_station_thermal_protocol.py tests/test_hiad_digital_twin_replay_coverage.py tests/test_flame_detection.py tests/test_ijhe_readiness_audit.py -q",
+            "passed": 26,
             "failed": 0,
             "warnings": 0
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 867,
+            "passed": 869,
             "failed": 0,
             "warnings": 15
           }
@@ -5765,7 +5803,8 @@
           "virtual detector concentration scale is derived from 22 public concentration traces and carries an explicit open-channel claim boundary",
           "public experimental operating benchmarks are carried into the evidence envelope with pressure-class selection and explicit partial-boundary claim limits",
           "private screen-recording/photo intake is carried as a non-machine-readable provenance boundary without parameter-fit or full-loop authorization",
-          "restricted station compressor/cooler thermal evidence is projected into full, summary, header and compact decision contexts as UNCONFIRMED, with no calibration, runtime, vehicle-fill or full-loop claim"
+          "restricted station compressor/cooler thermal evidence is projected into full, summary, header and compact decision contexts as UNCONFIRMED, with no calibration, runtime, vehicle-fill or full-loop claim",
+          "public HIAD metadata-to-runtime coverage is projected into full, summary, header and compact decision contexts with 29 direct, four proxy and one response-only cases, while incident narrative parameterization remains prohibited"
         ],
         "not_established": [
           "physics validity of the consequence model",
@@ -5787,6 +5826,18 @@
           "covered_action_category_count": 8,
           "action_playbook_contract_pass": true,
           "interpretation": "qualitative scenario-family and action-to-playbook traceability only; excludes HIAD response text and does not establish effectiveness or safety",
+          "digital_twin_replay": {
+            "evidence": "research/hiad_digital_twin_replay_coverage_2026_10_08.json",
+            "case_count": 34,
+            "integration_trace_pass_count": 34,
+            "direct_physical_case_count": 29,
+            "partial_proxy_case_count": 4,
+            "response_only_case_count": 1,
+            "canonical_recipe_pass_count": 7,
+            "canonical_recipe_count": 7,
+            "case_narrative_used_for_physical_parameters": false,
+            "interpretation": "canonical family runtime traceability only; no accident reconstruction, safe-distance or response-effectiveness claim"
+          },
           "accident_response_coverage_evaluation": {
             "evidence": "research/hiad_accident_response_coverage_evaluation_2026_10_05.json",
             "case_count": 34,
@@ -6252,7 +6303,7 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7895,
+          "approximate_manuscript_words_before_references": 7917,
           "figures": 2,
           "tables": 3,
           "citation_keys": 36,

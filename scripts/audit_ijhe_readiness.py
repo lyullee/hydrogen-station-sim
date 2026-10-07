@@ -2773,6 +2773,83 @@ def audit(root: Path) -> dict[str, object]:
         stage_contract or "missing; response-stage contract audit has not run",
     ))
 
+    replay_path = root / "research/hiad_digital_twin_replay_coverage_2026_10_08.json"
+    replay = _json(replay_path)
+    replay_source = (replay or {}).get("source") or {}
+    replay_runtime = (replay or {}).get("runtime") or {}
+    replay_aggregate = (replay or {}).get("aggregate") or {}
+    replay_counts = replay_aggregate.get("representation_case_counts") or {}
+    replay_cases = (replay or {}).get("cases") or []
+    replay_recipes = (replay or {}).get("family_recipes") or {}
+    replay_model_hashes = replay_source.get("model_input_sha256") or {}
+    replay_hashes_match = bool(replay_model_hashes) and all(
+        (root / relative).is_file()
+        and digest == _sha256(root / relative)
+        for relative, digest in replay_model_hashes.items()
+    )
+    replay_pass = bool(
+        (replay or {}).get("schema_version") == 1
+        and (replay or {}).get("artifact_type")
+        == "hiad_to_digital_twin_canonical_replay_coverage_audit"
+        and (replay or {}).get("status")
+        == "completed_family_level_integration_audit"
+        and (replay or {}).get("evidence_role")
+        == "retrospective_metadata_to_canonical_runtime_traceability_only"
+        and replay_source.get("hiad_inventory_sha256")
+        == _sha256(root / "research/hiad_hrs_public_evidence.json")
+        and replay_source.get("playbook_catalog_sha256")
+        == _sha256(root / "src/h2station/data/emergency_playbooks.json")
+        and replay_source.get("public_response_text_used") is False
+        and replay_source.get("case_narrative_used_for_physical_parameters") is False
+        and replay_hashes_match
+        and replay_runtime.get("backend") == "HyRAM+ 6.1 native"
+        and replay_runtime.get("unique_family_recipes_run") == 7
+        and replay_runtime.get("family_recipe_pass_count") == 7
+        and replay_runtime.get("all_executable_recipes_passed") is True
+        and replay_aggregate.get("case_count") == 34
+        and replay_aggregate.get("integration_trace_pass_count") == 34
+        and replay_counts == {
+            "direct_physical_replay": 29,
+            "proxy_partial_replay": 4,
+            "response_only_no_physical_model": 1,
+            "unmapped": 0,
+        }
+        and len(replay_cases) == 34
+        and len({case.get("event_id") for case in replay_cases}) == 34
+        and all(case.get("integration_trace_pass") is True for case in replay_cases)
+        and set(replay_recipes) == {
+            "gas_release", "hydrogen_fire", "hose_connection", "overpressure",
+            "precooling_fault", "fueling_fault", "compressor_thermal",
+            "structural_damage",
+        }
+        and all(
+            replay_recipes[family].get("status") == "passed"
+            for family in replay_recipes if family != "structural_damage"
+        )
+        and replay_recipes.get("structural_damage", {}).get("status")
+        == "not_run_no_physical_model"
+        and replay_recipes.get("compressor_thermal", {}).get("representation")
+        == "proxy_partial_replay"
+        and len((replay or {}).get("claim_boundary") or []) >= 4
+    )
+    gates.append(_gate(
+        "hiad_digital_twin_replay_traceability",
+        "PASS" if replay_pass else ("FAIL" if replay else "PENDING"),
+        "Every public HIAD HRS metadata case is explicitly classified against an executed digital-twin fault family or a declared no-physics boundary.",
+        str(replay_path.relative_to(root)),
+        "34/34 traceable cases, seven passing canonical runtime recipes, native consequence execution for releases, explicit proxy/response-only counts and current source hashes; no accident-reconstruction or effectiveness claim.",
+        {
+            "aggregate": replay_aggregate,
+            "runtime": replay_runtime,
+            "source_hashes_match": replay_hashes_match,
+            "public_response_text_used": replay_source.get("public_response_text_used"),
+            "case_narrative_used_for_physical_parameters": replay_source.get(
+                "case_narrative_used_for_physical_parameters"
+            ),
+            "claim_boundary": (replay or {}).get("claim_boundary"),
+        } if replay else "missing; canonical HIAD-to-runtime replay audit has not run",
+    ))
+
     action_evidence_path = root / "research/hiad_action_evidence.json"
     action_evidence = _json(action_evidence_path)
     action_taxonomy = (action_evidence or {}).get("taxonomy") or {}
