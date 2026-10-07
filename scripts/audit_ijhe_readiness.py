@@ -2886,6 +2886,54 @@ def audit(root: Path) -> dict[str, object]:
         } if hiad_guard else "missing",
     ))
 
+    hiad_selectivity_path = root / "research/hiad_response_selectivity_audit_2026_10_08.json"
+    hiad_selectivity = _json(hiad_selectivity_path)
+    hiad_selectivity_source = (hiad_selectivity or {}).get("source") or {}
+    hiad_selectivity_cohort = (hiad_selectivity or {}).get("cohort") or {}
+    hiad_selectivity_variants = (hiad_selectivity or {}).get("variant_summary") or {}
+    hiad_selectivity_differences = (
+        (hiad_selectivity or {}).get("paired_differences_saga_minus_alarm_only") or {}
+    )
+    hiad_selectivity_f1 = hiad_selectivity_differences.get("reference_f1") or {}
+    hiad_selectivity_pass = bool(
+        (hiad_selectivity or {}).get("status")
+        == "COMPLETED_POST_OUTCOME_ROBUSTNESS_AUDIT"
+        and hiad_selectivity_source.get("new_provider_calls") == 0
+        and hiad_selectivity_source.get("outcomes_known_before_analysis") is True
+        and hiad_selectivity_cohort.get("retained_event_count") == 34
+        and hiad_selectivity_cohort.get("reference_evaluable_event_count") == 33
+        and hiad_selectivity_cohort.get("excluded_without_public_action_categories") == 1
+        and (hiad_selectivity_variants.get("alarm_only") or {}).get(
+            "reference_f1"
+        ) is not None
+        and (hiad_selectivity_variants.get("saga_linked_guarded") or {}).get(
+            "reference_f1"
+        ) is not None
+        and hiad_selectivity_f1.get("bootstrap_replicates") == 10_000
+        and hiad_selectivity_f1.get("bootstrap_seed") == 20261008
+        and hiad_selectivity_f1.get("mean_paired_difference", 0) > 0
+        and "post-outcome" in str((hiad_selectivity or {}).get("claim_boundary", ""))
+        and "does not establish" in str(
+            (hiad_selectivity or {}).get("claim_boundary", "")
+        )
+    )
+    gates.append(_gate(
+        "hiad_response_selectivity_robustness_integrity",
+        "PASS" if hiad_selectivity_pass else (
+            "FAIL" if hiad_selectivity else "PENDING"
+        ),
+        "The retained guarded SAGA outputs are audited for reference-category selectivity and operator information burden without new provider calls.",
+        str(hiad_selectivity_path.relative_to(root)),
+        "Same 34-event consumed cohort, 33 reference-evaluable events, fixed 10,000-sample paired bootstrap and an explicit post-outcome non-effectiveness boundary.",
+        {
+            "source": hiad_selectivity_source,
+            "cohort": hiad_selectivity_cohort,
+            "variant_summary": hiad_selectivity_variants,
+            "reference_f1_difference": hiad_selectivity_f1,
+            "claim_boundary": (hiad_selectivity or {}).get("claim_boundary"),
+        } if hiad_selectivity else "missing",
+    ))
+
     cip_endpoint_path = root / "research/cip_dispenser_endpoint_screen.json"
     cip_endpoint = _json(cip_endpoint_path)
     cip_aggregate = (cip_endpoint or {}).get("aggregate") or {}

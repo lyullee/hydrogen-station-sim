@@ -404,6 +404,11 @@ usability or safety. Because the category taxonomy existed before this benchmark
 and the same public cohort is used for development, it is neither an independent
 holdout nor a substitute for expert review.
 
+A post-outcome audit reused guarded answers without provider calls. On cases
+with public action categories, it measured reference precision/F1,
+non-reference categories and word count. Incomplete HIAD fields make these
+burden metrics, not correctness or safety endpoints.
+
 The frozen protocol compares a deterministic alarm, three direct one-pass SAGA
 responses and three SAGA responses with standards-document retrieval. Output is
 masked and randomized. Three independent reviewers with documented
@@ -757,6 +762,12 @@ the same 34 cases, provider failures remained zero and exposed unsupported
 value--unit claims decreased from 3/34 to 0/34; the guard intervened in five
 responses and mean latency was 604.1 ms. This rerun demonstrates only the runtime
 filter behavior on a consumed cohort.
+
+On 33 events, reference F1 was 0.564 for SAGA and 0.281 for alarm-only
+text (paired difference 0.283; bootstrap 95\% CI 0.196--0.366). SAGA averaged
+3.09 categories/140.5 words versus 1.00/28.1;
+non-reference categories were 0.97/0.30. Broader coverage increased burden,
+motivating concise controls and expert review, not an effectiveness claim.
 
 \section{Discussion}
 \subsection{What is externally supported}

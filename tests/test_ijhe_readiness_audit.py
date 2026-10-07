@@ -228,6 +228,12 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     hiad_guard = gates["hiad_direct_numeric_guard_recheck_integrity"]["observed"]
     assert hiad_guard["outcome"]["before_unsupported_claim_response_count"] == 3
     assert hiad_guard["outcome"]["after_unsupported_claim_response_count"] == 0
+
+    assert gates["hiad_response_selectivity_robustness_integrity"]["status"] == "PASS"
+    selectivity = gates["hiad_response_selectivity_robustness_integrity"]["observed"]
+    assert selectivity["source"]["new_provider_calls"] == 0
+    assert selectivity["cohort"]["reference_evaluable_event_count"] == 33
+    assert selectivity["reference_f1_difference"]["mean_paired_difference"] > 0
     assert hiad_guard["outcome"]["after_provider_failure_count"] == 0
     assert hiad_guard["outcome"]["guard_notice_response_count"] == 5
     assert gates["public_dispenser_endpoint_diagnostic"]["observed"]["stop_reason_counts"] == {"safety-temperature": 2}

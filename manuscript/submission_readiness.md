@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **89 PASS · 7 FAIL · 8 PENDING**.
+Gate counts: **91 PASS · 7 FAIL · 8 PENDING**.
 
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted
@@ -61,7 +61,10 @@ comparison over 34 public station incidents. Direct SAGA scored 0.760 versus
 0.401 for the alarm-only proxy, while the retained run exposed unsupported
 value--unit claims in 3/34 responses. A post-outcome runtime recheck after adding
 the direct-API numeric guard exposed 0/34 such claims with no provider failures.
-These results do not replace the pending blinded expert study.
+On the 33 cases with public action categories, a further post-outcome audit found
+reference F1 of 0.564 versus 0.281 but also 140.5 versus 28.1 words per response,
+showing that improved coverage came with more operator information burden. These
+results do not replace the pending blinded expert study.
 
 Confidential real-station data may be used without public redistribution. The
 required route is documented in

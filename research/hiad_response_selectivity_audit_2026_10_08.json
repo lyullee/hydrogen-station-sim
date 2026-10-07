@@ -1,0 +1,1021 @@
+{
+  "schema_version": 1,
+  "artifact_type": "hiad_post_outcome_response_selectivity_audit",
+  "status": "COMPLETED_POST_OUTCOME_ROBUSTNESS_AUDIT",
+  "generated_at_utc": "2026-10-07T21:45:29.517807+00:00",
+  "source": {
+    "alarm_only": "research/hiad_machine_response_benchmark_2026_10_08.json",
+    "saga_linked_guarded": "research/hiad_machine_response_guard_recheck_2026_10_08.json",
+    "new_provider_calls": 0,
+    "outcomes_known_before_analysis": true
+  },
+  "cohort": {
+    "retained_event_count": 34,
+    "reference_evaluable_event_count": 33,
+    "excluded_without_public_action_categories": 1
+  },
+  "variant_summary": {
+    "alarm_only": {
+      "reference_precision": 0.696969696969697,
+      "reference_recall": 0.18914141414141417,
+      "reference_f1": 0.2811928811928812,
+      "mentioned_category_count": 1.0,
+      "non_reference_category_count": 0.30303030303030304,
+      "stage_coverage": 0.6,
+      "word_count": 28.09090909090909
+    },
+    "saga_linked_guarded": {
+      "reference_precision": 0.6797979797979797,
+      "reference_recall": 0.5391414141414141,
+      "reference_f1": 0.5638911593457048,
+      "mentioned_category_count": 3.090909090909091,
+      "non_reference_category_count": 0.9696969696969697,
+      "stage_coverage": 0.9454545454545454,
+      "word_count": 140.4848484848485
+    }
+  },
+  "paired_differences_saga_minus_alarm_only": {
+    "reference_precision": {
+      "mean_paired_difference": -0.01717171717171718,
+      "bootstrap_95_ci": [
+        -0.13131313131313133,
+        0.10303030303030301
+      ],
+      "improved_case_count": 7,
+      "unchanged_case_count": 17,
+      "worsened_case_count": 9,
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 20261008
+    },
+    "reference_recall": {
+      "mean_paired_difference": 0.35000000000000003,
+      "bootstrap_95_ci": [
+        0.25453282828282825,
+        0.4479797979797979
+      ],
+      "improved_case_count": 24,
+      "unchanged_case_count": 9,
+      "worsened_case_count": 0,
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 20261008
+    },
+    "reference_f1": {
+      "mean_paired_difference": 0.28269827815282356,
+      "bootstrap_95_ci": [
+        0.19569356989811534,
+        0.3660806701715792
+      ],
+      "improved_case_count": 24,
+      "unchanged_case_count": 5,
+      "worsened_case_count": 4,
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 20261008
+    },
+    "mentioned_category_count": {
+      "mean_paired_difference": 2.090909090909091,
+      "bootstrap_95_ci": [
+        1.6666666666666667,
+        2.515151515151515
+      ],
+      "improved_case_count": 30,
+      "unchanged_case_count": 3,
+      "worsened_case_count": 0,
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 20261008
+    },
+    "non_reference_category_count": {
+      "mean_paired_difference": 0.6666666666666666,
+      "bootstrap_95_ci": [
+        0.3939393939393939,
+        0.9393939393939394
+      ],
+      "improved_case_count": 18,
+      "unchanged_case_count": 14,
+      "worsened_case_count": 1,
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 20261008
+    },
+    "stage_coverage": {
+      "mean_paired_difference": 0.34545454545454546,
+      "bootstrap_95_ci": [
+        0.3090909090909091,
+        0.3757575757575758
+      ],
+      "improved_case_count": 32,
+      "unchanged_case_count": 1,
+      "worsened_case_count": 0,
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 20261008
+    },
+    "word_count": {
+      "mean_paired_difference": 112.39393939393939,
+      "bootstrap_95_ci": [
+        98.0909090909091,
+        127.51515151515152
+      ],
+      "improved_case_count": 33,
+      "unchanged_case_count": 0,
+      "worsened_case_count": 0,
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 20261008
+    }
+  },
+  "cases": [
+    {
+      "event_id": "396",
+      "alarm_only": {
+        "event_id": "396",
+        "reference_category_count": 1,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 0,
+        "non_reference_category_count": 1,
+        "reference_precision": 0.0,
+        "reference_recall": 0.0,
+        "reference_f1": 0.0,
+        "stage_coverage": 0.6,
+        "word_count": 25
+      },
+      "saga_linked_guarded": {
+        "event_id": "396",
+        "reference_category_count": 1,
+        "mentioned_category_count": 3,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 2,
+        "reference_precision": 0.3333333333333333,
+        "reference_recall": 1.0,
+        "reference_f1": 0.5,
+        "stage_coverage": 0.8,
+        "word_count": 115
+      }
+    },
+    {
+      "event_id": "401",
+      "alarm_only": {
+        "event_id": "401",
+        "reference_category_count": 2,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.5,
+        "reference_f1": 0.6666666666666666,
+        "stage_coverage": 0.6,
+        "word_count": 25
+      },
+      "saga_linked_guarded": {
+        "event_id": "401",
+        "reference_category_count": 2,
+        "mentioned_category_count": 2,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 1,
+        "reference_precision": 0.5,
+        "reference_recall": 0.5,
+        "reference_f1": 0.5,
+        "stage_coverage": 1.0,
+        "word_count": 82
+      }
+    },
+    {
+      "event_id": "402",
+      "alarm_only": {
+        "event_id": "402",
+        "reference_category_count": 5,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.2,
+        "reference_f1": 0.33333333333333337,
+        "stage_coverage": 0.6,
+        "word_count": 25
+      },
+      "saga_linked_guarded": {
+        "event_id": "402",
+        "reference_category_count": 5,
+        "mentioned_category_count": 3,
+        "matched_reference_category_count": 3,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.6,
+        "reference_f1": 0.7499999999999999,
+        "stage_coverage": 1.0,
+        "word_count": 158
+      }
+    },
+    {
+      "event_id": "404",
+      "alarm_only": {
+        "event_id": "404",
+        "reference_category_count": 2,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 0,
+        "non_reference_category_count": 1,
+        "reference_precision": 0.0,
+        "reference_recall": 0.0,
+        "reference_f1": 0.0,
+        "stage_coverage": 0.6,
+        "word_count": 27
+      },
+      "saga_linked_guarded": {
+        "event_id": "404",
+        "reference_category_count": 2,
+        "mentioned_category_count": 2,
+        "matched_reference_category_count": 0,
+        "non_reference_category_count": 2,
+        "reference_precision": 0.0,
+        "reference_recall": 0.0,
+        "reference_f1": 0.0,
+        "stage_coverage": 0.8,
+        "word_count": 99
+      }
+    },
+    {
+      "event_id": "411",
+      "alarm_only": {
+        "event_id": "411",
+        "reference_category_count": 1,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 0,
+        "non_reference_category_count": 1,
+        "reference_precision": 0.0,
+        "reference_recall": 0.0,
+        "reference_f1": 0.0,
+        "stage_coverage": 0.6,
+        "word_count": 23
+      },
+      "saga_linked_guarded": {
+        "event_id": "411",
+        "reference_category_count": 1,
+        "mentioned_category_count": 3,
+        "matched_reference_category_count": 0,
+        "non_reference_category_count": 3,
+        "reference_precision": 0.0,
+        "reference_recall": 0.0,
+        "reference_f1": 0.0,
+        "stage_coverage": 1.0,
+        "word_count": 127
+      }
+    },
+    {
+      "event_id": "454",
+      "alarm_only": {
+        "event_id": "454",
+        "reference_category_count": 2,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 0,
+        "non_reference_category_count": 1,
+        "reference_precision": 0.0,
+        "reference_recall": 0.0,
+        "reference_f1": 0.0,
+        "stage_coverage": 0.6,
+        "word_count": 26
+      },
+      "saga_linked_guarded": {
+        "event_id": "454",
+        "reference_category_count": 2,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.5,
+        "reference_f1": 0.6666666666666666,
+        "stage_coverage": 1.0,
+        "word_count": 158
+      }
+    },
+    {
+      "event_id": "463",
+      "alarm_only": {
+        "event_id": "463",
+        "reference_category_count": 3,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.3333333333333333,
+        "reference_f1": 0.5,
+        "stage_coverage": 0.6,
+        "word_count": 28
+      },
+      "saga_linked_guarded": {
+        "event_id": "463",
+        "reference_category_count": 3,
+        "mentioned_category_count": 3,
+        "matched_reference_category_count": 2,
+        "non_reference_category_count": 1,
+        "reference_precision": 0.6666666666666666,
+        "reference_recall": 0.6666666666666666,
+        "reference_f1": 0.6666666666666666,
+        "stage_coverage": 0.8,
+        "word_count": 86
+      }
+    },
+    {
+      "event_id": "702",
+      "alarm_only": {
+        "event_id": "702",
+        "reference_category_count": 4,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.25,
+        "reference_f1": 0.4,
+        "stage_coverage": 0.6,
+        "word_count": 29
+      },
+      "saga_linked_guarded": {
+        "event_id": "702",
+        "reference_category_count": 4,
+        "mentioned_category_count": 4,
+        "matched_reference_category_count": 4,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 1.0,
+        "reference_f1": 1.0,
+        "stage_coverage": 1.0,
+        "word_count": 131
+      }
+    },
+    {
+      "event_id": "803",
+      "alarm_only": {
+        "event_id": "803",
+        "reference_category_count": 1,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 0,
+        "non_reference_category_count": 1,
+        "reference_precision": 0.0,
+        "reference_recall": 0.0,
+        "reference_f1": 0.0,
+        "stage_coverage": 0.6,
+        "word_count": 29
+      },
+      "saga_linked_guarded": {
+        "event_id": "803",
+        "reference_category_count": 1,
+        "mentioned_category_count": 3,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 2,
+        "reference_precision": 0.3333333333333333,
+        "reference_recall": 1.0,
+        "reference_f1": 0.5,
+        "stage_coverage": 1.0,
+        "word_count": 155
+      }
+    },
+    {
+      "event_id": "884",
+      "alarm_only": {
+        "event_id": "884",
+        "reference_category_count": 5,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.2,
+        "reference_f1": 0.33333333333333337,
+        "stage_coverage": 0.6,
+        "word_count": 29
+      },
+      "saga_linked_guarded": {
+        "event_id": "884",
+        "reference_category_count": 5,
+        "mentioned_category_count": 4,
+        "matched_reference_category_count": 4,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.8,
+        "reference_f1": 0.888888888888889,
+        "stage_coverage": 1.0,
+        "word_count": 186
+      }
+    },
+    {
+      "event_id": "953",
+      "alarm_only": {
+        "event_id": "953",
+        "reference_category_count": 5,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.2,
+        "reference_f1": 0.33333333333333337,
+        "stage_coverage": 0.6,
+        "word_count": 29
+      },
+      "saga_linked_guarded": {
+        "event_id": "953",
+        "reference_category_count": 5,
+        "mentioned_category_count": 3,
+        "matched_reference_category_count": 2,
+        "non_reference_category_count": 1,
+        "reference_precision": 0.6666666666666666,
+        "reference_recall": 0.4,
+        "reference_f1": 0.5,
+        "stage_coverage": 1.0,
+        "word_count": 135
+      }
+    },
+    {
+      "event_id": "1038",
+      "alarm_only": {
+        "event_id": "1038",
+        "reference_category_count": 1,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 1.0,
+        "reference_f1": 1.0,
+        "stage_coverage": 0.6,
+        "word_count": 27
+      },
+      "saga_linked_guarded": {
+        "event_id": "1038",
+        "reference_category_count": 1,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 1.0,
+        "reference_f1": 1.0,
+        "stage_coverage": 0.6,
+        "word_count": 102
+      }
+    },
+    {
+      "event_id": "1062",
+      "alarm_only": {
+        "event_id": "1062",
+        "reference_category_count": 4,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 0,
+        "non_reference_category_count": 1,
+        "reference_precision": 0.0,
+        "reference_recall": 0.0,
+        "reference_f1": 0.0,
+        "stage_coverage": 0.6,
+        "word_count": 28
+      },
+      "saga_linked_guarded": {
+        "event_id": "1062",
+        "reference_category_count": 4,
+        "mentioned_category_count": 3,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 2,
+        "reference_precision": 0.3333333333333333,
+        "reference_recall": 0.25,
+        "reference_f1": 0.28571428571428575,
+        "stage_coverage": 1.0,
+        "word_count": 115
+      }
+    },
+    {
+      "event_id": "1063",
+      "alarm_only": {
+        "event_id": "1063",
+        "reference_category_count": 5,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.2,
+        "reference_f1": 0.33333333333333337,
+        "stage_coverage": 0.6,
+        "word_count": 30
+      },
+      "saga_linked_guarded": {
+        "event_id": "1063",
+        "reference_category_count": 5,
+        "mentioned_category_count": 4,
+        "matched_reference_category_count": 2,
+        "non_reference_category_count": 2,
+        "reference_precision": 0.5,
+        "reference_recall": 0.4,
+        "reference_f1": 0.4444444444444445,
+        "stage_coverage": 1.0,
+        "word_count": 184
+      }
+    },
+    {
+      "event_id": "1064",
+      "alarm_only": {
+        "event_id": "1064",
+        "reference_category_count": 4,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 0,
+        "non_reference_category_count": 1,
+        "reference_precision": 0.0,
+        "reference_recall": 0.0,
+        "reference_f1": 0.0,
+        "stage_coverage": 0.6,
+        "word_count": 30
+      },
+      "saga_linked_guarded": {
+        "event_id": "1064",
+        "reference_category_count": 4,
+        "mentioned_category_count": 5,
+        "matched_reference_category_count": 3,
+        "non_reference_category_count": 2,
+        "reference_precision": 0.6,
+        "reference_recall": 0.75,
+        "reference_f1": 0.6666666666666665,
+        "stage_coverage": 1.0,
+        "word_count": 135
+      }
+    },
+    {
+      "event_id": "1106",
+      "alarm_only": {
+        "event_id": "1106",
+        "reference_category_count": 5,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 0,
+        "non_reference_category_count": 1,
+        "reference_precision": 0.0,
+        "reference_recall": 0.0,
+        "reference_f1": 0.0,
+        "stage_coverage": 0.6,
+        "word_count": 28
+      },
+      "saga_linked_guarded": {
+        "event_id": "1106",
+        "reference_category_count": 5,
+        "mentioned_category_count": 4,
+        "matched_reference_category_count": 2,
+        "non_reference_category_count": 2,
+        "reference_precision": 0.5,
+        "reference_recall": 0.4,
+        "reference_f1": 0.4444444444444445,
+        "stage_coverage": 1.0,
+        "word_count": 217
+      }
+    },
+    {
+      "event_id": "1159",
+      "alarm_only": {
+        "event_id": "1159",
+        "reference_category_count": 4,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.25,
+        "reference_f1": 0.4,
+        "stage_coverage": 0.6,
+        "word_count": 28
+      },
+      "saga_linked_guarded": {
+        "event_id": "1159",
+        "reference_category_count": 4,
+        "mentioned_category_count": 2,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 1,
+        "reference_precision": 0.5,
+        "reference_recall": 0.25,
+        "reference_f1": 0.3333333333333333,
+        "stage_coverage": 0.8,
+        "word_count": 120
+      }
+    },
+    {
+      "event_id": "1161",
+      "alarm_only": {
+        "event_id": "1161",
+        "reference_category_count": 3,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.3333333333333333,
+        "reference_f1": 0.5,
+        "stage_coverage": 0.6,
+        "word_count": 28
+      },
+      "saga_linked_guarded": {
+        "event_id": "1161",
+        "reference_category_count": 3,
+        "mentioned_category_count": 2,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 1,
+        "reference_precision": 0.5,
+        "reference_recall": 0.3333333333333333,
+        "reference_f1": 0.4,
+        "stage_coverage": 1.0,
+        "word_count": 122
+      }
+    },
+    {
+      "event_id": "1163",
+      "alarm_only": {
+        "event_id": "1163",
+        "reference_category_count": 2,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 0,
+        "non_reference_category_count": 1,
+        "reference_precision": 0.0,
+        "reference_recall": 0.0,
+        "reference_f1": 0.0,
+        "stage_coverage": 0.6,
+        "word_count": 30
+      },
+      "saga_linked_guarded": {
+        "event_id": "1163",
+        "reference_category_count": 2,
+        "mentioned_category_count": 2,
+        "matched_reference_category_count": 0,
+        "non_reference_category_count": 2,
+        "reference_precision": 0.0,
+        "reference_recall": 0.0,
+        "reference_f1": 0.0,
+        "stage_coverage": 1.0,
+        "word_count": 138
+      }
+    },
+    {
+      "event_id": "1173",
+      "alarm_only": {
+        "event_id": "1173",
+        "reference_category_count": 8,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.125,
+        "reference_f1": 0.2222222222222222,
+        "stage_coverage": 0.6,
+        "word_count": 30
+      },
+      "saga_linked_guarded": {
+        "event_id": "1173",
+        "reference_category_count": 8,
+        "mentioned_category_count": 5,
+        "matched_reference_category_count": 5,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.625,
+        "reference_f1": 0.7692307692307693,
+        "stage_coverage": 1.0,
+        "word_count": 173
+      }
+    },
+    {
+      "event_id": "1191",
+      "alarm_only": {
+        "event_id": "1191",
+        "reference_category_count": 4,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.25,
+        "reference_f1": 0.4,
+        "stage_coverage": 0.6,
+        "word_count": 31
+      },
+      "saga_linked_guarded": {
+        "event_id": "1191",
+        "reference_category_count": 4,
+        "mentioned_category_count": 6,
+        "matched_reference_category_count": 4,
+        "non_reference_category_count": 2,
+        "reference_precision": 0.6666666666666666,
+        "reference_recall": 1.0,
+        "reference_f1": 0.8,
+        "stage_coverage": 1.0,
+        "word_count": 176
+      }
+    },
+    {
+      "event_id": "1193",
+      "alarm_only": {
+        "event_id": "1193",
+        "reference_category_count": 5,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.2,
+        "reference_f1": 0.33333333333333337,
+        "stage_coverage": 0.6,
+        "word_count": 29
+      },
+      "saga_linked_guarded": {
+        "event_id": "1193",
+        "reference_category_count": 5,
+        "mentioned_category_count": 3,
+        "matched_reference_category_count": 3,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.6,
+        "reference_f1": 0.7499999999999999,
+        "stage_coverage": 1.0,
+        "word_count": 179
+      }
+    },
+    {
+      "event_id": "1194",
+      "alarm_only": {
+        "event_id": "1194",
+        "reference_category_count": 2,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.5,
+        "reference_f1": 0.6666666666666666,
+        "stage_coverage": 0.6,
+        "word_count": 29
+      },
+      "saga_linked_guarded": {
+        "event_id": "1194",
+        "reference_category_count": 2,
+        "mentioned_category_count": 3,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 2,
+        "reference_precision": 0.3333333333333333,
+        "reference_recall": 0.5,
+        "reference_f1": 0.4,
+        "stage_coverage": 1.0,
+        "word_count": 111
+      }
+    },
+    {
+      "event_id": "1195",
+      "alarm_only": {
+        "event_id": "1195",
+        "reference_category_count": 5,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.2,
+        "reference_f1": 0.33333333333333337,
+        "stage_coverage": 0.6,
+        "word_count": 28
+      },
+      "saga_linked_guarded": {
+        "event_id": "1195",
+        "reference_category_count": 5,
+        "mentioned_category_count": 3,
+        "matched_reference_category_count": 3,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.6,
+        "reference_f1": 0.7499999999999999,
+        "stage_coverage": 1.0,
+        "word_count": 115
+      }
+    },
+    {
+      "event_id": "1196",
+      "alarm_only": {
+        "event_id": "1196",
+        "reference_category_count": 6,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.16666666666666666,
+        "reference_f1": 0.2857142857142857,
+        "stage_coverage": 0.6,
+        "word_count": 29
+      },
+      "saga_linked_guarded": {
+        "event_id": "1196",
+        "reference_category_count": 6,
+        "mentioned_category_count": 3,
+        "matched_reference_category_count": 3,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.5,
+        "reference_f1": 0.6666666666666666,
+        "stage_coverage": 1.0,
+        "word_count": 104
+      }
+    },
+    {
+      "event_id": "1198",
+      "alarm_only": {
+        "event_id": "1198",
+        "reference_category_count": 6,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.16666666666666666,
+        "reference_f1": 0.2857142857142857,
+        "stage_coverage": 0.6,
+        "word_count": 31
+      },
+      "saga_linked_guarded": {
+        "event_id": "1198",
+        "reference_category_count": 6,
+        "mentioned_category_count": 3,
+        "matched_reference_category_count": 3,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.5,
+        "reference_f1": 0.6666666666666666,
+        "stage_coverage": 1.0,
+        "word_count": 200
+      }
+    },
+    {
+      "event_id": "1202",
+      "alarm_only": {
+        "event_id": "1202",
+        "reference_category_count": 5,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.2,
+        "reference_f1": 0.33333333333333337,
+        "stage_coverage": 0.6,
+        "word_count": 30
+      },
+      "saga_linked_guarded": {
+        "event_id": "1202",
+        "reference_category_count": 5,
+        "mentioned_category_count": 4,
+        "matched_reference_category_count": 4,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.8,
+        "reference_f1": 0.888888888888889,
+        "stage_coverage": 1.0,
+        "word_count": 216
+      }
+    },
+    {
+      "event_id": "1203",
+      "alarm_only": {
+        "event_id": "1203",
+        "reference_category_count": 6,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.16666666666666666,
+        "reference_f1": 0.2857142857142857,
+        "stage_coverage": 0.6,
+        "word_count": 26
+      },
+      "saga_linked_guarded": {
+        "event_id": "1203",
+        "reference_category_count": 6,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.16666666666666666,
+        "reference_f1": 0.2857142857142857,
+        "stage_coverage": 0.8,
+        "word_count": 92
+      }
+    },
+    {
+      "event_id": "1204",
+      "alarm_only": {
+        "event_id": "1204",
+        "reference_category_count": 5,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.2,
+        "reference_f1": 0.33333333333333337,
+        "stage_coverage": 0.6,
+        "word_count": 29
+      },
+      "saga_linked_guarded": {
+        "event_id": "1204",
+        "reference_category_count": 5,
+        "mentioned_category_count": 2,
+        "matched_reference_category_count": 2,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.4,
+        "reference_f1": 0.5714285714285715,
+        "stage_coverage": 0.8,
+        "word_count": 75
+      }
+    },
+    {
+      "event_id": "1205",
+      "alarm_only": {
+        "event_id": "1205",
+        "reference_category_count": 5,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.2,
+        "reference_f1": 0.33333333333333337,
+        "stage_coverage": 0.6,
+        "word_count": 28
+      },
+      "saga_linked_guarded": {
+        "event_id": "1205",
+        "reference_category_count": 5,
+        "mentioned_category_count": 6,
+        "matched_reference_category_count": 4,
+        "non_reference_category_count": 2,
+        "reference_precision": 0.6666666666666666,
+        "reference_recall": 0.8,
+        "reference_f1": 0.7272727272727272,
+        "stage_coverage": 1.0,
+        "word_count": 269
+      }
+    },
+    {
+      "event_id": "1206",
+      "alarm_only": {
+        "event_id": "1206",
+        "reference_category_count": 4,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 0,
+        "non_reference_category_count": 1,
+        "reference_precision": 0.0,
+        "reference_recall": 0.0,
+        "reference_f1": 0.0,
+        "stage_coverage": 0.6,
+        "word_count": 26
+      },
+      "saga_linked_guarded": {
+        "event_id": "1206",
+        "reference_category_count": 4,
+        "mentioned_category_count": 3,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 2,
+        "reference_precision": 0.3333333333333333,
+        "reference_recall": 0.25,
+        "reference_f1": 0.28571428571428575,
+        "stage_coverage": 1.0,
+        "word_count": 129
+      }
+    },
+    {
+      "event_id": "1207",
+      "alarm_only": {
+        "event_id": "1207",
+        "reference_category_count": 5,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.2,
+        "reference_f1": 0.33333333333333337,
+        "stage_coverage": 0.6,
+        "word_count": 28
+      },
+      "saga_linked_guarded": {
+        "event_id": "1207",
+        "reference_category_count": 5,
+        "mentioned_category_count": 3,
+        "matched_reference_category_count": 3,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.6,
+        "reference_f1": 0.7499999999999999,
+        "stage_coverage": 1.0,
+        "word_count": 116
+      }
+    },
+    {
+      "event_id": "1208",
+      "alarm_only": {
+        "event_id": "1208",
+        "reference_category_count": 5,
+        "mentioned_category_count": 1,
+        "matched_reference_category_count": 1,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.2,
+        "reference_f1": 0.33333333333333337,
+        "stage_coverage": 0.6,
+        "word_count": 29
+      },
+      "saga_linked_guarded": {
+        "event_id": "1208",
+        "reference_category_count": 5,
+        "mentioned_category_count": 3,
+        "matched_reference_category_count": 3,
+        "non_reference_category_count": 0,
+        "reference_precision": 1.0,
+        "reference_recall": 0.6,
+        "reference_f1": 0.7499999999999999,
+        "stage_coverage": 0.8,
+        "word_count": 116
+      }
+    }
+  ],
+  "interpretation": {
+    "f1_direction": "Higher reference F1 means a better balance of matching the coarse public HIAD action categories and avoiding unreferenced categories.",
+    "burden_direction": "Higher mentioned/non-reference category counts and word counts indicate more information for an operator to process."
+  },
+  "claim_boundary": "This is a post-outcome keyword robustness audit on a consumed cohort. HIAD action prose may be incomplete, so non-reference categories are not necessarily wrong or unsafe. The result does not establish clinical-style precision, operator benefit, action correctness, or SAGA safety/effectiveness."
+}

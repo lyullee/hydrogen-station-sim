@@ -73,6 +73,15 @@ unsupported numerical claims, response length and latency. It uses explicit
 Korean concept alternatives rather than a second LLM judge. Full answer text is
 kept in the JSON/CSV output so a reviewer can reproduce every score.
 
+The retained 34-case run also has a post-outcome selectivity audit at
+`research/hiad_response_selectivity_audit_2026_10_08.json`. It reuses the saved
+answers without provider calls and reports reference-category precision/F1,
+non-reference action burden and response length. These metrics expose a key
+tradeoff hidden by recall alone: more relevant actions can arrive with more text
+and more categories for an operator to process. Because HIAD action fields may be
+incomplete, an unreferenced category is additional information, not proof of an
+incorrect or unsafe recommendation.
+
 The total score uses situation 25%, action coverage 35%, action order 10%,
 prevention 15%, and impact-result use 15%. A non-applicable empty category is
 counted as satisfied. Each numerical value with a unit that is absent from the
