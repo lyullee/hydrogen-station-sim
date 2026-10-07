@@ -226,10 +226,8 @@ def run() -> dict[str, object]:
 
 def main() -> int:
     report = run()
-    RESULT_PATH.write_text(
-        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    with RESULT_PATH.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return 0
 

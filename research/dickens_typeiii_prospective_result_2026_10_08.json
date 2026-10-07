@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T19:24:41.055366+00:00",
-  "source_commit": "027440d758f7d7a4ca137d53775adae0c0692725",
+  "generated_at": "2026-10-07T19:41:06.451287+00:00",
+  "source_commit": "91698f51ab4c4a49735afe90b30c48fbb1760fd6",
   "status": "completed_prospective_external_component_validation",
   "protocol": "research/dickens_typeiii_prospective_protocol_2026_10_08.json",
   "source_hashes_match": true,
