@@ -58,7 +58,7 @@ The 3D risk-distance display is a visual representation around equipment footpri
 
 Inputs are Pydantic models and invalid jobs/actions return HTTP errors. WebSocket frame streaming and HTTP polling both consume the same job state. Jobs are ephemeral across server restarts. Do not run multiple app workers expecting a shared in-memory simulation; an external job store would be needed.
 
-The main and sensor assistant requests accept `language: "ko" | "en"`. The selected language is passed to SAGA's **dedicated** integration APIs as `output_language`, without altering the process calculation or consequence inputs. General SAGA RAG chat and the two twin assistants must remain separate for reliable command handling.
+The main and sensor assistant requests accept `language: "ko" | "en"`. The selected language is passed to SAGA's **dedicated** integration APIs as `output_language`, without altering the process calculation or consequence inputs. General SAGA RAG chat and the two twin assistants must remain separate for reliable command handling. The main channel has a 900-token default ceiling and receives only a compact response-plan projection so its answer stays focused on the operator's question; the complete deterministic staged plan remains a separate UI section. The selected-sensor channel retains a 2,200-token budget for detailed local analysis.
 
 ## 6. Front-end and internationalization
 

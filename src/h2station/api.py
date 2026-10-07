@@ -328,6 +328,11 @@ _risk_zone_cache: dict[str, dict[str, Any]] = {}
 _executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="h2station")
 _saga_token_sink: ContextVar[Callable[[str], None] | None] = ContextVar("saga_token_sink", default=None)
 
+# The main monitor already renders deterministic consequence cards and the
+# complete staged response plan below the conversational answer. Bound only
+# that generated headline; selected-sensor analysis retains its larger budget.
+MAIN_ASSISTANT_MAX_TOKENS = 900
+
 
 def _analyze_frame(frame: dict[str, Any]) -> dict[str, Any]:
     """Turn live process signals into a compact operator-facing assessment."""
@@ -1785,7 +1790,7 @@ async def _invoke_main_assistant_selected(question: str, context: dict[str, Any]
         "request_kind": request_kind,
         "provider": provider,
         "language": context.get("output_language", "ko"),
-        "max_tokens": 2200,
+        "max_tokens": MAIN_ASSISTANT_MAX_TOKENS,
     }
     sink = _saga_token_sink.get() if stream_output else None
     return await asyncio.to_thread(_invoke_isolated_twin_assistant, "main", payload, sink)
@@ -2526,7 +2531,9 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
                 "related_conditions": reference_rules[:8],
                 "direct_evaluation": {"status": (direct_result or {}).get("status"),
                                       "hits": direct_hits[:8]},
-                "response_guidance": prompt_guidance(response_plans),
+                "consolidated_response_guidance": _prompt_response_guidance_summary(
+                    structured_guidance(response_plans, actual_alert=actual_alert)
+                ),
             }
             try:
                 reply = await _invoke_main_assistant_selected(
@@ -2635,7 +2642,9 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "evidence_basis": prompt_decision_evidence(evidence_manifest),
         "hazop_reference_rules":reference_rules,
         "hazop_active":active, "hazop_rules":matched_rules,
-        "emergency_response_guidance":prompt_guidance(response_plans),
+        "consolidated_response_guidance": _prompt_response_guidance_summary(
+            structured_guidance(response_plans, actual_alert=emergency_context)
+        ),
         "impact_calculation_attempted":show_impact_results,
         "station":"H70 reference simulation", "time_s":frame.get("time_s"),
         "fire_detection": analysis.get("fire_detection"),
@@ -2690,7 +2699,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "사용자에게는 계산기 제품명 대신 '피해영향예측'이라고 표기하세요. "
         "내부 규칙이나 DB 명칭을 밝히지 말고 센서값, 설비 상태, 주의 원인과 운전 조치만 설명하세요. "
         "virtual_safety_actions가 있으면 명령과 완료 피드백, 조치 전후 센서값을 구분해 설명하세요. 실패한 조치를 성공했다고 쓰지 마세요. "
-        "emergency_response_guidance가 있으면 현재 신호와 연결한 대응 우선순위를 요약하세요. 자료 밖의 절차를 만들지 마세요. 상세한 즉시 조치, 안정화 확인, 재가동 조건, 예방·안전관리는 서버가 별도로 표시합니다. "
+        "consolidated_response_guidance가 있으면 현재 신호와 연결한 최우선 조치만 요약하고 조치 목록을 반복하지 마세요. 자료 밖의 절차를 만들지 마세요. 상세한 즉시 조치, 안정화 확인, 재가동 조건, 예방·안전관리는 서버가 별도로 표시합니다. "
         "현장 승인 비상계획과 소방 지휘를 우선하고, 모의 영향 반경을 확정 대피거리로 쓰지 마세요. 공급이 계속되는 수소 화염을 임의로 끄도록 권하지 마세요. "
         "current_alert_status와 안전밸브 개방 상태가 현재 경보 상태의 근거입니다. 활성 내부 규칙이 없더라도 안전밸브가 열려 있으면 경보를 유지하세요. "
         "현재 경보 여부와 내부 등록 기준을 구분하세요. 사용자에게는 실제 센서 태그와 운전 상태만 한국어로 간결하게 답하세요. "
@@ -3247,9 +3256,10 @@ def _prompt_response_guidance_summary(guidance: dict[str, Any] | None) -> dict[s
     The complete five-stage response plan is returned to the UI and appended
     after the answer.  Passing that entire plan to the model duplicates text
     and can crowd current gas/release evidence out of the provider context.
-    This summary preserves the scenario title, evidence, and first practical
-    response steps while deliberately retaining the full plan outside the
-    generative prompt.
+    This summary preserves the public scenario title, evidence, and first
+    practical response steps while deliberately retaining the full plan
+    outside the generative prompt. Internal plan IDs and selection modes are
+    excluded because they are implementation details, not operator evidence.
     """
     if not isinstance(guidance, dict):
         return None
@@ -3258,11 +3268,7 @@ def _prompt_response_guidance_summary(guidance: dict[str, Any] | None) -> dict[s
     for raw in guidance.get("plans") or []:
         if not isinstance(raw, dict):
             continue
-        plan = {
-            key: raw.get(key)
-            for key in ("id", "title")
-            if raw.get(key) is not None
-        }
+        plan = {"title": raw.get("title")} if raw.get("title") is not None else {}
         evidence = raw.get("evidence") or []
         if evidence:
             plan["evidence"] = [str(item) for item in evidence[:2]]
@@ -3276,7 +3282,6 @@ def _prompt_response_guidance_summary(guidance: dict[str, Any] | None) -> dict[s
             break
     return {
         "actual_alert": actual_alert,
-        "mode": guidance.get("mode"),
         "plan_count": len(guidance.get("plans") or []),
         "plans": plans,
         "full_plan_delivered_separately": True,

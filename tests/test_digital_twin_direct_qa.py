@@ -19,6 +19,41 @@ def _frame(*, alarm=False):
     }
 
 
+def test_main_assistant_uses_bounded_budget_and_compact_plan_projection(monkeypatch):
+    captured = {}
+
+    def invoke(channel, payload, on_token=None):
+        captured.update({"channel": channel, "payload": payload})
+        return {"answer": "ok", "model": "test"}
+
+    monkeypatch.setattr(api, "_invoke_isolated_twin_assistant", invoke)
+    result = api.asyncio.run(api._invoke_main_assistant_selected(
+        "무엇을 먼저 해야 해?", {"output_language": "ko"}, [], "groq", "user_query"
+    ))
+    assert result["answer"] == "ok"
+    assert captured["channel"] == "main"
+    assert captured["payload"]["max_tokens"] == api.MAIN_ASSISTANT_MAX_TOKENS == 900
+
+    compact = api._prompt_response_guidance_summary({
+        "actual_alert": True,
+        "mode": "consolidated",
+        "plans": [{
+            "id": "leak", "title": "수소 누출",
+            "evidence": ["GD 경보", "공정 누출", "추가 근거"],
+            "immediate": ["공급 정지", "상류 차단", "대피", "환기"],
+            "stabilize": ["가스 농도 확인", "기밀시험"],
+            "restart": ["재가동 승인"], "prevention": ["정비"],
+        }],
+    })
+    assert compact["full_plan_delivered_separately"] is True
+    assert compact["plans"][0]["evidence"] == ["GD 경보", "공정 누출"]
+    assert compact["plans"][0]["immediate"] == ["공급 정지", "상류 차단"]
+    assert compact["plans"][0]["stabilize"] == ["가스 농도 확인"]
+    assert "id" not in compact["plans"][0]
+    assert "mode" not in compact
+    assert "restart" not in compact["plans"][0]
+
+
 def test_direct_qa_calculates_impact_for_alarm_and_explicit_hypothesis(monkeypatch):
     received = []
     llm_prompts = []

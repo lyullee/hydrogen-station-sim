@@ -10,6 +10,8 @@ The three user surfaces are independent contracts. New code must not route one s
 
 The main and sensor integration APIs use a single direct completion. They never invoke the standalone SAGA RAG/review pipeline and never modify its conversation or model configuration. The main assistant receives main-chat history; the sensor assistant does not receive it.
 
+The main assistant is a bounded operator-headline channel: its default response ceiling is 900 tokens. It receives a compact projection of the deterministic response plan (the first action and its verification condition) and must answer the current question without repeating the complete staged checklist. The digital-twin UI renders that full checklist separately. The selected-sensor assistant keeps the larger 2,200-token budget because its purpose is detailed sensor-local analysis and response guidance.
+
 `request_kind=user_query` requires the model to answer the user's current question or instruction first. `request_kind=automatic_analysis` is reserved for automatic status and alarm reporting. Consequence calculations remain in the digital-twin server and are supplied as calculated context before either assistant is called.
 
 The older `/saga-analysis/direct`, `/sensors/{tag}/analyze/direct`, and `/api/digital-twin/chat/direct` routes remain compatibility endpoints. Browser code must use the isolated routes above.
