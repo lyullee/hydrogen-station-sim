@@ -15,7 +15,10 @@ from pathlib import Path
 from statistics import median
 from typing import Any, Iterable
 
-from .calibration_profiles import load_measured_boundary_calibration
+from .calibration_profiles import (
+    load_measured_boundary_calibration,
+    load_station_recharge_dynamics_calibration,
+)
 from .lifecycle_evidence import load_lifecycle_evidence
 
 
@@ -32,10 +35,49 @@ def _runtime_calibration_profile(frame: dict[str, Any]) -> dict[str, Any]:
     operations = frame.get("process_operations") or {}
     settings = operations.get("settings") or {}
     requested = settings.get("measured_boundary_calibration") is True
+    dynamics_requested = (
+        settings.get("measured_station_dynamics_calibration") is True
+    )
     profile = load_measured_boundary_calibration() if requested else None
+    dynamics_profile = (
+        load_station_recharge_dynamics_calibration()
+        if dynamics_requested else None
+    )
+
+    def dynamics_metadata() -> dict[str, Any]:
+        """Describe the independent opt-in restart-dwell setting.
+
+        This is intentionally a nested field: a station-boundary pressure
+        envelope and a compressor restart dwell come from different restricted
+        evidence artifacts and affect different simulator controls.
+        """
+
+        if dynamics_profile is not None:
+            return {
+                "status": "active",
+                "requested": True,
+                **dynamics_profile.runtime_metadata(),
+            }
+        if dynamics_requested:
+            return {
+                "status": "requested_unavailable",
+                "requested": True,
+                "id": "reference_defaults",
+                "evidence_artifact": None,
+                "claim_boundary": (
+                    "실측 재충전 동특성 artifact를 읽지 못해 기준 재시작 대기시간으로 실행됨"
+                ),
+            }
+        return {
+            "status": "disabled",
+            "requested": False,
+            "id": "reference_defaults",
+            "evidence_artifact": None,
+            "claim_boundary": "실측 재충전 동특성 보정은 선택 적용되지 않음",
+        }
     current_boundary_pressure = operations.get("trailer_pressure_mpa")
     if profile is not None:
-        return {
+        result = {
             "status": "active",
             "requested": True,
             **profile.runtime_metadata(
@@ -49,21 +91,27 @@ def _runtime_calibration_profile(frame: dict[str, Any]) -> dict[str, Any]:
             "profile_id": profile.profile_id,
             "claim_limit": profile.claim_boundary,
         }
+        result["station_recharge_dynamics"] = dynamics_metadata()
+        return result
     if requested:
-        return {
+        result = {
             "status": "requested_unavailable",
             "requested": True,
             "profile_id": "reference_defaults",
             "evidence_artifact": None,
             "claim_limit": "실측 경계 보정 artifact를 읽지 못해 기준값으로 실행됨",
         }
-    return {
+        result["station_recharge_dynamics"] = dynamics_metadata()
+        return result
+    result = {
         "status": "reference_defaults",
         "requested": False,
         "profile_id": "reference_defaults",
         "evidence_artifact": None,
         "claim_limit": "실측 경계 보정은 선택 적용되지 않음",
     }
+    result["station_recharge_dynamics"] = dynamics_metadata()
+    return result
 
 
 def _runtime_geometry_profile(frame: dict[str, Any]) -> dict[str, Any]:
@@ -1670,6 +1718,39 @@ def _confidential_station_calibration_evidence() -> dict[str, Any] | None:
     }
 
 
+def _confidential_station_recharge_dynamics_evidence() -> dict[str, Any] | None:
+    """Expose the reviewed compressor restart-dwell evidence to the LLM.
+
+    Unlike the measured pressure-boundary profile, this evidence changes only
+    a minimum compressor OFF interval and only when the operator selected the
+    opt-in setting for a new simulation.  It therefore needs a separate
+    evidence object and claim boundary in the prompt.
+    """
+
+    profile = load_station_recharge_dynamics_calibration()
+    if profile is None:
+        return None
+    return {
+        "artifact": profile.evidence_artifact,
+        "evidence_role": "confidential measured station recharge-dynamics calibration",
+        "profile_id": profile.profile_id,
+        "sampled_rows": profile.sampled_rows,
+        "minimum_recharge_off_time_s": profile.minimum_recharge_off_time_s,
+        "temporal_holdout": {
+            "method": "chronological_within_trace_holdout",
+            "calibration_fraction": profile.calibration_fraction,
+            "completed_off_to_on_intervals": (
+                profile.holdout_completed_off_to_on_intervals
+            ),
+            "minimum_off_to_on_s": profile.holdout_minimum_off_to_on_s,
+        },
+        "opt_in_runtime_parameter_available": True,
+        "default_model_parameters_changed": False,
+        "full_station_vehicle_validation": False,
+        "claim_limit": profile.claim_boundary,
+    }
+
+
 def _confidential_pressure_channel_evidence() -> dict[str, Any] | None:
     """Expose channel-specific measured envelopes without bank identity."""
 
@@ -2508,6 +2589,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_station_boundary_calibration"
         ] = station_calibration
+    recharge_dynamics = _confidential_station_recharge_dynamics_evidence()
+    if recharge_dynamics is not None:
+        envelope["response_evidence"][
+            "confidential_station_recharge_dynamics_calibration"
+        ] = recharge_dynamics
     channel_envelopes = _confidential_pressure_channel_evidence()
     if channel_envelopes is not None:
         envelope["response_evidence"][
@@ -2875,6 +2961,21 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if station_calibration.get(key) is not None
         }
+    recharge_dynamics = evidence.get(
+        "confidential_station_recharge_dynamics_calibration"
+    )
+    if isinstance(recharge_dynamics, dict):
+        summary["confidential_station_recharge_dynamics_calibration"] = {
+            key: recharge_dynamics.get(key)
+            for key in (
+                "evidence_role", "artifact", "profile_id", "sampled_rows",
+                "minimum_recharge_off_time_s", "temporal_holdout",
+                "opt_in_runtime_parameter_available",
+                "default_model_parameters_changed",
+                "full_station_vehicle_validation", "claim_limit",
+            )
+            if recharge_dynamics.get(key) is not None
+        }
     channel_envelopes = evidence.get("confidential_pressure_channel_envelopes")
     if isinstance(channel_envelopes, dict):
         summary["confidential_pressure_channel_envelopes"] = {
@@ -3022,6 +3123,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     cross_station = confidential.get("cross_station_pressure_envelope") or {}
     lifecycle = evidence.get("confidential_lifecycle_counter_summary") or {}
     station_calibration = evidence.get("confidential_station_boundary_calibration") or {}
+    recharge_dynamics = evidence.get(
+        "confidential_station_recharge_dynamics_calibration"
+    ) or {}
     channel_envelopes = evidence.get(
         "confidential_pressure_channel_envelopes"
     ) or {}
@@ -3391,6 +3495,25 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "full_station_vehicle_validation": station_calibration.get(
                 "full_station_vehicle_validation"
             ) is True,
+        },
+        "confidential_station_recharge_dynamics_calibration": {
+            "profile_id": recharge_dynamics.get("profile_id"),
+            "evidence_artifact": recharge_dynamics.get("artifact"),
+            "sampled_rows": recharge_dynamics.get("sampled_rows"),
+            "minimum_recharge_off_time_s": recharge_dynamics.get(
+                "minimum_recharge_off_time_s"
+            ),
+            "temporal_holdout": recharge_dynamics.get("temporal_holdout") or {},
+            "opt_in_runtime_parameter_available": recharge_dynamics.get(
+                "opt_in_runtime_parameter_available"
+            ) is True,
+            "default_model_parameters_changed": recharge_dynamics.get(
+                "default_model_parameters_changed"
+            ) is True,
+            "full_station_vehicle_validation": recharge_dynamics.get(
+                "full_station_vehicle_validation"
+            ) is True,
+            "claim_limit": recharge_dynamics.get("claim_limit"),
         },
         "confidential_pressure_channel_envelopes": {
             "artifact": channel_envelopes.get("artifact"),

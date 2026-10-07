@@ -651,6 +651,49 @@ def test_manifest_records_opt_in_measured_boundary_profile():
     )
 
 
+def test_manifest_separates_opt_in_recharge_dynamics_from_boundary_calibration():
+    manifest = build_evidence_manifest(
+        {
+            "time_s": 12.5,
+            "process_operations": {
+                "settings": {
+                    "measured_station_dynamics_calibration": True,
+                },
+            },
+        },
+        {},
+        [],
+        False,
+        question="재충전은 왜 대기하나?",
+    )
+    runtime = manifest["runtime_calibration"]
+    assert runtime["status"] == "reference_defaults"
+    dynamics = runtime["station_recharge_dynamics"]
+    assert dynamics["status"] == "active"
+    assert dynamics["requested"] is True
+    assert dynamics["minimum_recharge_off_time_s"] == 265.2
+    assert dynamics["default_model_parameters_changed"] is False
+    assert dynamics["temporal_holdout"]["completed_off_to_on_intervals"] >= 3
+
+    evidence = manifest["response_evidence"][
+        "confidential_station_recharge_dynamics_calibration"
+    ]
+    assert evidence["opt_in_runtime_parameter_available"] is True
+    assert evidence["full_station_vehicle_validation"] is False
+    assert evidence["minimum_recharge_off_time_s"] == 265.2
+    assert evidence["temporal_holdout"]["minimum_off_to_on_s"] >= 265.2
+
+    summary = prompt_evidence_summary(manifest)[
+        "confidential_station_recharge_dynamics_calibration"
+    ]
+    assert summary["default_model_parameters_changed"] is False
+    header = prompt_evidence_header(manifest)[
+        "confidential_station_recharge_dynamics_calibration"
+    ]
+    assert header["opt_in_runtime_parameter_available"] is True
+    assert header["full_station_vehicle_validation"] is False
+
+
 def test_manifest_marks_attempt_without_result_and_filters_nonfinite_values():
     manifest = build_evidence_manifest(
         {"time_s": float("nan")},

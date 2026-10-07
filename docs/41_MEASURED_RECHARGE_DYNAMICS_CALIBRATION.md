@@ -30,6 +30,8 @@
 
 API에서는 `process_settings.measured_station_dynamics_calibration: true`로 선택한다. 작업 상태의 `calibration_profile.station_recharge_dynamics`에 적용 여부, 산출값, 비식별 근거 파일, 시간순 점검 요약이 기록된다.
 
+LLM 근거 봉투에도 이 상태가 별도로 기록된다. 따라서 SAGA는 실측 대기시간 보정이 적용된 운전과 기준 운전을 구분해 설명할 수 있지만, 이를 차량 충전 정확도·압축기 용량·현장 안전한계 또는 충전소-차량 전체 검증으로 표현해서는 안 된다.
+
 ## 재생성 및 검토
 
 제한된 환경에서 다음 스크립트를 실행한다.
