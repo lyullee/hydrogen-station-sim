@@ -175,6 +175,23 @@ def test_direct_answer_must_not_negate_confirmed_sensor_or_impact_evidence():
     assert not conflicts("가정 누출은 실제 누출이 아닙니다.", physical_leak=True)
 
 
+def test_direct_impact_summary_shows_component_scope_not_safety_distance():
+    summary = api._direct_impact_summary([{
+        "node_id": "N09", "calculation_status": "calculated",
+        "calculation_basis": "SENSOR_BASED_HYPOTHESIS",
+        "pressure_sensor": "PT-0901", "current_pressure_mpa": 88.0,
+        "maximum_heat_flux_w_m2": 6200.0, "sampled_effect_radius_m": 3.0,
+        "consequence_validation_scope": "COMPONENT_SCREENING_BOUNDED",
+        "consequence_validation_claim_limit": (
+            "외부 비밀폐 자유제트 구성요소 수준의 표본 표시 근거이며, "
+            "현장 안전·대피거리는 검증되지 않았습니다."
+        ),
+    }])
+    assert "검증 범위" in summary
+    assert "현장 안전·대피거리" in summary
+    assert "현장 안전거리나 확정 대피반경이 아닙니다" in summary
+
+
 def test_direct_qa_falls_back_to_verified_alarm_when_llm_says_normal(monkeypatch):
     monkeypatch.setattr(api, "_invoke_saga_hazop_direct", lambda *args: None)
     monkeypatch.setattr(api, "load_hyram_backend", lambda: object())

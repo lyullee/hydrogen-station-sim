@@ -436,6 +436,10 @@ def test_area_case_uses_labelled_storage_bank_proxy(monkeypatch):
     assert impact["pressure_source_node_id"] == "N07"
     assert impact["temperature_source_node_id"] == "N07"
     assert impact["pressure_sensor"] == "PT-0701"
+    assert impact["consequence_validation_scope"] == "COMPONENT_SCREENING_BOUNDED"
+    assert impact["geometry_display_mapping_verified"] is True
+    assert impact["full_station_vehicle_validation_supported"] is False
+    assert impact["site_specific_safety_distance_supported"] is False
 
 
 def test_saga_does_not_present_failed_impact_as_a_result(monkeypatch):

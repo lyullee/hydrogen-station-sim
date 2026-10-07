@@ -7,7 +7,7 @@ import re
 from typing import Any, Mapping
 
 from .live import DynamicLeakModel, HyRAMDynamicReleaseRequest, LeakScenario, LeakSourceState
-from .runtime_backend import consequence_risk_summary
+from .runtime_backend import consequence_risk_summary, consequence_validation_context
 
 
 def _good_signal(signals: Mapping[str, Any], tags: str | None, prefix: str) -> tuple[str, float] | None:
@@ -96,6 +96,10 @@ def assess_sensor_cases(
             "calculation_basis": "SENSOR_BASED_HYPOTHESIS",
             "calculation_status": "input_unavailable",
         }
+        # Put the consequence claim boundary on every case, including an
+        # input-unavailable one.  The API may filter non-calculated cases, but
+        # a caller that keeps them must still not infer field validation.
+        result.update(consequence_validation_context())
         if proxy_node_id:
             result.update(calculation_basis="SENSOR_BASED_PROXY_HYPOTHESIS", sensor_basis="PROXY",
                           pressure_source_node_id=proxy_node_id,

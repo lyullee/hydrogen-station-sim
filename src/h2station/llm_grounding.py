@@ -2270,6 +2270,11 @@ def _impact_rows(results: Iterable[dict[str, Any]] | None) -> list[dict[str, Any
         "modeled_consequence_mass_flow_kg_s", "mass_flow_override_requested",
         "mass_flow_override_status", "mass_flow_override_ratio",
         "mass_flow_override_claim_limit",
+        "consequence_validation_scope", "geometry_display_mapping_verified",
+        "source_depletion_external_holdout_supported",
+        "full_station_vehicle_validation_supported",
+        "site_specific_safety_distance_supported",
+        "consequence_validation_artifacts", "consequence_validation_claim_limit",
     )
     rows: list[dict[str, Any]] = []
     for result in results or []:
@@ -2496,7 +2501,10 @@ def build_evidence_manifest(
             "calculation_status": impact_status,
             "result_count": len(impacts),
             "results": impacts,
-            "claim_limit": "표본 초과 거리이며 현장 대피거리 또는 확정 사고범위가 아님",
+            "claim_limit": (
+                "표본 초과 거리이며 현장 대피거리 또는 확정 사고범위가 아님. "
+                "결과별 consequence_validation_claim_limit도 함께 적용함"
+            ),
         },
         "uncertainty": {
             "sensor_quality_is_simulated": True,

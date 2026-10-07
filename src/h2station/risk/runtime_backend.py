@@ -29,6 +29,39 @@ DEFAULT_OBSERVATION_LOCATIONS = tuple(
 )
 
 
+def consequence_validation_context() -> dict[str, str | bool]:
+    """Return the claim boundary that travels with every consequence result.
+
+    The simulator has traceable component evidence for its *outdoor,
+    unconfined free-jet display mapping*: the bundled HyRAM+ adapter is checked
+    against its upstream suite and the geometry mapping is checked against
+    independent plume, radiation, and overpressure data.  That is deliberately
+    narrower than validating source depletion, a particular station layout, or
+    a station-to-vehicle fueling loop.  Keeping the boundary on each result
+    prevents an API/LLM consumer from turning a calculated screening radius into
+    a field-verified separation or evacuation distance.
+
+    This function is static by design.  It exposes only public artifact paths
+    and claim states; it never reads or exposes restricted measurement data.
+    """
+    return {
+        "consequence_validation_scope": "COMPONENT_SCREENING_BOUNDED",
+        "geometry_display_mapping_verified": True,
+        "source_depletion_external_holdout_supported": False,
+        "full_station_vehicle_validation_supported": False,
+        "site_specific_safety_distance_supported": False,
+        "consequence_validation_artifacts": (
+            "research/consequence_geometry_validation.json; "
+            "research/hyram_adapter_verification.json; "
+            "data/public_validation/results/closed_loop_external_holdout/validation.json"
+        ),
+        "consequence_validation_claim_limit": (
+            "외부 비밀폐 수소 자유제트의 표본 표시 매핑은 구성요소 수준에서 확인되었으나, "
+            "현재 설비의 감압·배치·충전소-차량 전체 루프 또는 현장 안전·대피거리는 검증되지 않았습니다."
+        ),
+    }
+
+
 def consequence_risk_summary(consequence: Mapping[str, float | str | bool | None]) -> dict[str, float | str]:
     """Return a transparent screening index for display beside consequences.
 
@@ -236,6 +269,7 @@ class NativeHyRAMBackend:
         output["thermal_threshold_w_m2"] = 5000.0
         output["overpressure_threshold_pa"] = 5000.0
         output.update(consequence_risk_summary(output))
+        output.update(consequence_validation_context())
         if request.indoor:
             if self.indoor_scenario is None:
                 output["indoor_status"] = "enclosure-not-configured"

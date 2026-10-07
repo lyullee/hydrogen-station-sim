@@ -709,6 +709,32 @@ def test_manifest_marks_attempt_without_result_and_filters_nonfinite_values():
     assert manifest["source"]["simulation_time_s"] is None
 
 
+def test_manifest_keeps_the_per_result_consequence_validation_boundary():
+    manifest = build_evidence_manifest(
+        {"time_s": 12.5},
+        {},
+        [{
+            "node_id": "N09",
+            "calculation_status": "calculated",
+            "maximum_heat_flux_w_m2": 6200.0,
+            "consequence_validation_scope": "COMPONENT_SCREENING_BOUNDED",
+            "geometry_display_mapping_verified": True,
+            "source_depletion_external_holdout_supported": False,
+            "full_station_vehicle_validation_supported": False,
+            "site_specific_safety_distance_supported": False,
+            "consequence_validation_artifacts": "research/consequence_geometry_validation.json",
+            "consequence_validation_claim_limit": "not a site-specific safety distance",
+        }],
+        True,
+    )
+    impact = manifest["impact"]["results"][0]
+    assert impact["consequence_validation_scope"] == "COMPONENT_SCREENING_BOUNDED"
+    assert impact["geometry_display_mapping_verified"] is True
+    assert impact["full_station_vehicle_validation_supported"] is False
+    assert impact["site_specific_safety_distance_supported"] is False
+    assert "site-specific safety distance" in impact["consequence_validation_claim_limit"]
+
+
 def test_llm_claim_guard_replaces_unsupported_positive_validation_claims():
     manifest = build_evidence_manifest({"time_s": 12.5}, {}, [], False)
     answer, audit = guard_llm_claims(

@@ -2025,6 +2025,15 @@ def _direct_impact_summary(results: list[dict[str, Any]]) -> str:
         if isinstance(plume, (int, float)) and plume > 0:
             effect.append(f"4 vol% 비점화 플룸 중심선 거리 {plume:g} m")
         lines.append("  " + " · ".join(effect))
+    validation_limit = next(
+        (
+            str(row["consequence_validation_claim_limit"])
+            for row in results
+            if row.get("consequence_validation_claim_limit")
+        ),
+        "표본점 결과는 현장 안전거리나 확정 대피반경이 아닙니다.",
+    )
+    lines.append(f"- 검증 범위: {validation_limit}")
     lines.append("표본점 결과는 현장 안전거리나 확정 대피반경이 아닙니다.")
     return "\n".join(lines)
 
@@ -2592,6 +2601,9 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "public accident action category counts는 대응계획의 근거 범위만 나타내며, 조치의 효과나 사고확률을 의미하지 않습니다. "
         "confidential_local_accident_response_coverage는 비식별 실제 사고 메타데이터와 5단계 대응계획의 구조적 연결성만 뜻하며, 사고 원문·현장 효과·확률·물리 검증으로 해석하지 마세요. "
         "impact_results의 계산 성공 항목만 수치 결과로 설명하세요. "
+        "각 impact_results의 consequence_validation_scope가 COMPONENT_SCREENING_BOUNDED이면, "
+        "외부 비밀폐 자유제트의 구성요소 수준 표본 표시 근거와 실제 설비·감압·배치·충전소-차량 전체 루프·현장 안전거리 검증의 부재를 구분하세요. "
+        "consequence_validation_claim_limit을 무시하거나 이를 현장 안전거리·대피반경·안전 인증으로 바꾸지 마세요. "
         "calculation_basis=SENSOR_BASED_HYPOTHESIS는 실제 누출이 아닌 1 mm 가정 시나리오이며, ACTIVE_RELEASE_CURRENT_SENSORS는 현재 물리 누출입니다. 둘을 혼동하지 마세요. "
         "calculation_status=calculated이면 이미 계산된 값입니다. 피해영향 계산이나 엔진 실행을 사용자에게 권하거나 요청하지 마세요. "
         "계산되지 않은 항목의 입력 부족이나 재계산 요청을 나열하지 마세요. 사용한 센서 태그와 출처·가정은 밝히세요. "
@@ -3401,6 +3413,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         "public accident action category counts는 대응계획의 근거 범위만 나타내며, 조치의 효과나 사고확률을 의미하지 않습니다. "
         "confidential_local_accident_response_coverage는 비식별 실제 사고 메타데이터의 대응계획 연결성만 나타내며, 사고 원문·효과성·확률·물리 검증으로 확대하지 마세요. "
         "실제 누출, 안전밸브 방출, 센서값 기준 가정 누출을 혼동하지 마세요. 계산된 피해영향 수치만 언급하고 안전거리를 확정하지 마세요. "
+        "impact_results의 consequence_validation_scope가 COMPONENT_SCREENING_BOUNDED이면, 외부 비밀폐 자유제트의 구성요소 수준 표본 표시 근거와 실제 설비·감압·배치·충전소-차량 전체 루프·현장 안전거리 검증의 부재를 함께 설명하세요. "
         "사용자에게 HAZOP·DB·규칙 ID나 계산 엔진 제품명을 노출하지 마세요. "
         + ("한국어 Markdown으로 '현재 상태', '관련 구역의 경보·이력', '예방·안전관리' 순서로 답하세요. "
            if not alert else "한국어 Markdown으로 '현재 판정', '발생 가능 시나리오', '판단 근거와 피해영향' 순서로 간결하게 답하세요. 단계별 대응과 예방관리는 서버의 통합 행동계획에서 제시합니다. ") +
