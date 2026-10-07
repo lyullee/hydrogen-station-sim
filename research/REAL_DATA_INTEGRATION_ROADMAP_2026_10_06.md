@@ -94,6 +94,16 @@ attestation도 받지 않았으므로 controller에 자동 주입하지 않는�
 `scripts/recheck_confidential_equipment_drift.py`에 남겼으며, 온도·유량 보정과
 full-loop 검증은 계속 보류한다.
 
+동기화된 수용용기 측 trace가 확보되면, 입력 통과만으로 모델 성능을 주장하지
+않는다. `scripts/prepare_controlled_full_loop_evaluation.py`가 receipt의 hash와
+evidence scope만으로 저장소 밖의 동결 평가 프로토콜 초안을 만들고,
+`scripts/evaluate_controlled_full_loop.py`가 동일 trace hash·동일 Git commit·깨끗한
+worktree·사전 선언한 오차 한계를 확인한 뒤 집계 RMSE/MAE와 상태 일치도만
+출력한다. 선택 뱅크 압력만 있을 때는 차량–공급원 경계로 범위를 제한하며,
+저·중·고압 뱅크 압력 3개가 모두 있어야 cascade dispatch/recharge 결과를
+평가한다. 전체 절차와 공개 한계는
+`research/CONTROLLED_FROZEN_FULL_LOOP_EVALUATION.md`에 고정했다.
+
 차량 용기 형상은 `capacity_eos` 선택지로 선언 용량과 공칭 압력에서 표 형상방정식
 밀도로 체적을 계산할 수 있게 했다. 2026-10-06에 이미 열어본 공개 개발 케이스
 8건을 재생한 결과는 0/8 screening pass로, 기존 `capacity_scaled`의 1/8보다
