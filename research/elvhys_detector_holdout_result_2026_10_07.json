@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "artifact_type": "elvhys_measured_signal_hazop_holdout",
+  "status": "FAIL",
+  "protocol": {
+    "path": "research/elvhys_detector_holdout_protocol_2026_10_07.json",
+    "sha256": "cf07c8ce785039c20d8c831bee0b9771fc483d8872cf08d1e8603235508850d1",
+    "freeze_commit": "9feeaaf",
+    "outcomes_accessed_before_freeze": false
+  },
+  "execution": {
+    "selected_case_count": 12,
+    "downloaded_file_count": 24,
+    "downloaded_bytes": 133563316,
+    "completed_case_count": 0,
+    "failure_stage": "first_selected_concentration_file_schema_validation",
+    "failure_type": "NONFINITE_MEASUREMENT_VALUE",
+    "failure_detail": "The frozen v1 numeric reader rejected a nonfinite value in an H2 concentration channel. The protocol did not predeclare a missing-value policy, so the run stopped without altering the reader or excluding the case."
+  },
+  "retained_failure": true,
+  "selected_outcomes_now_consumed_for_development": true,
+  "primary_contract_pass": false,
+  "claim_boundary": "This retained negative result demonstrates that the v1 frozen intake contract was incomplete for real ELVHYS concentration files. It provides no alarm-performance, dispersion, detector-placement, consequence-distance or full-loop validation claim. The 12 downloaded tests may be used only for disclosed development and cannot be reused as a prospective holdout."
+}

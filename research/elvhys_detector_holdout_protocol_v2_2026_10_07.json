@@ -1,0 +1,127 @@
+{
+  "schema_version": 2,
+  "status": "frozen_before_v2_selected_outcome_download",
+  "frozen_at_utc": "2026-10-07T00:00:00+00:00",
+  "source": {
+    "dataset": "ELVHYS 4.2 - Leakage into cold room/tank connection space considering barriers and obstacles",
+    "doi": "10.18710/JXJP0H",
+    "publisher": "HSE / DataverseNO",
+    "license": "CC0 1.0",
+    "dataset_version": 1
+  },
+  "development_history": {
+    "v1_result": "research/elvhys_detector_holdout_result_2026_10_07.json",
+    "v1_status": "FAIL",
+    "v1_failure_used_for_development": "The v1 reader exposed nonfinite concentration values and one nonfinite trailing time row. No v2 selected outcome was accessed while implementing the missing-data policy.",
+    "v1_consumed_tests_excluded": [4, 5, 8, 12, 15, 17, 20, 23, 25, 43, 46, 48]
+  },
+  "selection": {
+    "v2_selected_outcomes_accessed_before_freeze": false,
+    "metadata_and_readme_accessed_before_freeze": true,
+    "all_excluded_previously_accessed_tests": [3, 4, 5, 8, 12, 15, 17, 20, 23, 24, 25, 29, 30, 31, 43, 45, 46, 48],
+    "excluded_source_flagged_invalid_tests": [27, 28, 32, 33, 34, 35, 37, 39],
+    "rule": "All 15 remaining valid and uninspected dispersion tests available in the archive, spanning 2/8 barg, 0.2/0.5/1.0/1.8 mm, active/passive ventilation and horizontal/vertical releases."
+  },
+  "selected_cases": [
+    {"test_id": 6, "nominal_pressure_barg": 8.0, "nozzle_diameter_mm": 0.5, "ventilation": "500 L/min", "orientation": "horizontal"},
+    {"test_id": 7, "nominal_pressure_barg": 8.0, "nozzle_diameter_mm": 0.5, "ventilation": "2000 L/min", "orientation": "horizontal"},
+    {"test_id": 9, "nominal_pressure_barg": 2.0, "nozzle_diameter_mm": 0.5, "ventilation": "2000 L/min", "orientation": "horizontal"},
+    {"test_id": 10, "nominal_pressure_barg": 2.0, "nozzle_diameter_mm": 1.0, "ventilation": "500 L/min", "orientation": "horizontal"},
+    {"test_id": 11, "nominal_pressure_barg": 2.0, "nozzle_diameter_mm": 1.0, "ventilation": "500 L/min", "orientation": "horizontal"},
+    {"test_id": 13, "nominal_pressure_barg": 2.0, "nozzle_diameter_mm": 1.0, "ventilation": "2000 L/min", "orientation": "horizontal"},
+    {"test_id": 14, "nominal_pressure_barg": 8.0, "nozzle_diameter_mm": 1.0, "ventilation": "500 L/min", "orientation": "horizontal"},
+    {"test_id": 16, "nominal_pressure_barg": 8.0, "nozzle_diameter_mm": 1.8, "ventilation": "500 L/min", "orientation": "horizontal"},
+    {"test_id": 18, "nominal_pressure_barg": 2.0, "nozzle_diameter_mm": 1.8, "ventilation": "500 L/min", "orientation": "horizontal"},
+    {"test_id": 19, "nominal_pressure_barg": 2.0, "nozzle_diameter_mm": 1.8, "ventilation": "2000 L/min", "orientation": "horizontal"},
+    {"test_id": 21, "nominal_pressure_barg": 8.0, "nozzle_diameter_mm": 1.8, "ventilation": "passive", "orientation": "horizontal"},
+    {"test_id": 22, "nominal_pressure_barg": 2.0, "nozzle_diameter_mm": 1.0, "ventilation": "passive", "orientation": "horizontal"},
+    {"test_id": 26, "nominal_pressure_barg": 2.0, "nozzle_diameter_mm": 0.2, "ventilation": "passive", "orientation": "horizontal"},
+    {"test_id": 44, "nominal_pressure_barg": 8.0, "nozzle_diameter_mm": 1.8, "ventilation": "passive", "orientation": "vertical"},
+    {"test_id": 47, "nominal_pressure_barg": 2.0, "nozzle_diameter_mm": 1.0, "ventilation": "passive", "orientation": "vertical"}
+  ],
+  "source_manifest": [
+    {"test_id": 6,"kind":"CONC","datafile_id":254264,"name":"ELE402HSE006CONC2025118.csv","bytes":8594293,"md5":"2cbba077adbd87c9db964a2c429e82f9"},
+    {"test_id": 6,"kind":"PRES","datafile_id":254282,"name":"ELE402HSE006PRES2025118.csv","bytes":2550484,"md5":"a0a1bce214ce428c591a17b64e66ce05"},
+    {"test_id": 7,"kind":"CONC","datafile_id":254374,"name":"ELE402HSE007CONC2025118.csv","bytes":6929975,"md5":"0be69396ffda9cc48fdd5f02f8683d5a"},
+    {"test_id": 7,"kind":"PRES","datafile_id":254298,"name":"ELE402HSE007PRES2025118.csv","bytes":2020113,"md5":"6212c17833cffb8ba9fdf1bc397e5be5"},
+    {"test_id": 9,"kind":"CONC","datafile_id":254256,"name":"ELE402HSE009CONC2025118.csv","bytes":6088760,"md5":"abdb2d44e7d2256cd626ce2e6f25429c"},
+    {"test_id": 9,"kind":"PRES","datafile_id":254271,"name":"ELE402HSE009PRES2025118.csv","bytes":1707813,"md5":"42704d659c42d6099c43204ff3c6ebe7"},
+    {"test_id": 10,"kind":"CONC","datafile_id":254300,"name":"ELE402HSE010CONC20251111.csv","bytes":8541270,"md5":"bddfc764c4793f82a9b27ca2937ca912"},
+    {"test_id": 10,"kind":"PRES","datafile_id":254362,"name":"ELE402HSE010PRES20251111.csv","bytes":2546186,"md5":"1155d03dad3097badfabee97a36499af"},
+    {"test_id": 11,"kind":"CONC","datafile_id":254301,"name":"ELE402HSE011CONC20251111.csv","bytes":8639379,"md5":"904756b5284fc9a3344f4ce3a2edf32e"},
+    {"test_id": 11,"kind":"PRES","datafile_id":254359,"name":"ELE402HSE011PRES20251111.csv","bytes":2579140,"md5":"a3db4d373885667f7d1a254129d2c758"},
+    {"test_id": 13,"kind":"CONC","datafile_id":254241,"name":"ELE402HSE013CONC20251111.csv","bytes":10081877,"md5":"9e4b22216fed10f06de0c70fb3298c55"},
+    {"test_id": 13,"kind":"PRES","datafile_id":254239,"name":"ELE402HSE013PRES20251111.csv","bytes":2954403,"md5":"1e20b839b5215b836f3c77adac163624"},
+    {"test_id": 14,"kind":"CONC","datafile_id":254410,"name":"ELE402HSE014CONC20251112.csv","bytes":9407355,"md5":"2267384bc1cf9e86de4c377366805a58"},
+    {"test_id": 14,"kind":"PRES","datafile_id":254370,"name":"ELE402HSE014PRES20251112.csv","bytes":2832703,"md5":"0415a038fb29167736deaa8543c3ee4e"},
+    {"test_id": 16,"kind":"CONC","datafile_id":254409,"name":"ELE402HSE016CONC20251112.csv","bytes":17883683,"md5":"f1fbc86c5742a2d2f3869613193fb2e5"},
+    {"test_id": 16,"kind":"PRES","datafile_id":254260,"name":"ELE402HSE016PRES20251112.csv","bytes":5415909,"md5":"85fff9d56e44fd899c74ef88803f9247"},
+    {"test_id": 18,"kind":"CONC","datafile_id":254382,"name":"ELE402HSE018CONC20251112.csv","bytes":8752445,"md5":"1f19069c79f893531d93bdefe9225eed"},
+    {"test_id": 18,"kind":"PRES","datafile_id":254404,"name":"ELE402HSE018PRES20251112.csv","bytes":2591610,"md5":"8e64a3286768ed76e4d35f97a081dcdd"},
+    {"test_id": 19,"kind":"CONC","datafile_id":254343,"name":"ELE402HSE019CONC20251113.csv","bytes":11410962,"md5":"7df9340ce65ef542b2772e473e13bab1"},
+    {"test_id": 19,"kind":"PRES","datafile_id":254356,"name":"ELE402HSE019PRES20251113.csv","bytes":3310141,"md5":"238eb1a2037e3a7114ec3b927ae5153e"},
+    {"test_id": 21,"kind":"CONC","datafile_id":254223,"name":"ELE402HSE021CONC20251113.csv","bytes":19846836,"md5":"e01cea6a6f920e8ace85083d359d4a76"},
+    {"test_id": 21,"kind":"PRES","datafile_id":254366,"name":"ELE402HSE021PRES20251113.csv","bytes":5819888,"md5":"614d8830c5c2e4793db6dac53ed321a7"},
+    {"test_id": 22,"kind":"CONC","datafile_id":254367,"name":"ELE402HSE022CONC20251114.csv","bytes":10259685,"md5":"5dc7d01d9bb5f0f140bdfa4d6303eec8"},
+    {"test_id": 22,"kind":"PRES","datafile_id":254331,"name":"ELE402HSE022PRES20251114.csv","bytes":2998888,"md5":"bb4819d12caa9f88bcda3c1caada2720"},
+    {"test_id": 26,"kind":"CONC","datafile_id":254265,"name":"ELE402HSE026CONC20251114.csv","bytes":5931861,"md5":"6717a3836e03dc16c75b7a5f006e7146"},
+    {"test_id": 26,"kind":"PRES","datafile_id":254375,"name":"ELE402HSE026PRES20251114.csv","bytes":1697611,"md5":"598a34df704a71c4ca6d539c08c499fd"},
+    {"test_id": 44,"kind":"CONC","datafile_id":254221,"name":"ELE402HSE044CONC20251128.csv","bytes":6264597,"md5":"1cac98d3c8d19c26bfb54e64a614a993"},
+    {"test_id": 44,"kind":"PRES","datafile_id":254391,"name":"ELE402HSE044PRES20251128.csv","bytes":1856369,"md5":"45c5440f51cf2e750cf0a45a15495f84"},
+    {"test_id": 47,"kind":"CONC","datafile_id":254406,"name":"ELE402HSE047CONC20251128.csv","bytes":6842554,"md5":"995eed5a8b5a5d7386f4b75e74547c90"},
+    {"test_id": 47,"kind":"PRES","datafile_id":254334,"name":"ELE402HSE047PRES20251128.csv","bytes":1992137,"md5":"4fa8c6111f7f060c08457fa395374164"}
+  ],
+  "release_onset_rule": {
+    "pressure_channel": "PT2Nozzle",
+    "minimum_pressure_barg": 0.2,
+    "nominal_pressure_fraction": 0.1,
+    "persistence_s": 0.5
+  },
+  "baseline_rule": {
+    "method": "per-sensor nan-median before independently detected release onset",
+    "guard_before_release_s": 5.0,
+    "minimum_samples": 20,
+    "negative_corrected_values_clipped_to_zero": true
+  },
+  "missing_value_policy": {
+    "nonfinite_time_rows": "drop without interpolation",
+    "nonfinite_measurement_values": "retain as missing and never impute",
+    "sensor_retention": "at least 20 finite pre-release baseline values",
+    "grid_aggregation": "maximum across finite retained heads at each timestamp",
+    "all_heads_missing_at_timestamp": "omit timestamp without interpolation",
+    "hazop_evaluation_start": "independently detected release onset",
+    "pre_release_crossings": "report as secondary diagnostic only"
+  },
+  "alarm_contract": {
+    "measured_input": "maximum baseline-corrected concentration across finite retained ELVHYS heads",
+    "virtual_sensor_id": "GD-0101",
+    "thresholds": [
+      {"rule_id":"HZ-141","threshold_volpct_h2":0.4,"persistence_s":1.0,"severity":"ALARM"},
+      {"rule_id":"HZ-142","threshold_volpct_h2":1.0,"persistence_s":0.5,"severity":"TRIP"},
+      {"rule_id":"HZ-143","threshold_volpct_h2":2.0,"persistence_s":0.5,"severity":"TRIP"}
+    ],
+    "required_response_plan": "gas_release"
+  },
+  "primary_acceptance": {
+    "minimum_case_count": 15,
+    "missed_expected_trigger_count_max": 0,
+    "unexpected_trigger_count_max": 0,
+    "maximum_trigger_timing_error_s": 0.051,
+    "gas_release_response_required": true
+  },
+  "frozen_implementation": {
+    "runner": "scripts/run_elvhys_detector_holdout_v2.py",
+    "runner_sha256": "863041d636bb65148fab6c6509260cd925bdc856b755cfde2779399700880408",
+    "hazop_database": "src/h2station/data/hazop.sqlite3",
+    "hazop_database_sha256": "101b48b165aab774d57c4c9dd11fc2b67c1bf24f00f1c8daa1065ac3b73948c9"
+  },
+  "prohibited_after_outcome_access": [
+    "case exclusion",
+    "threshold or persistence tuning",
+    "release-onset tuning",
+    "baseline or missing-value policy tuning",
+    "time shifting or interpolation",
+    "replacement of failed primary results"
+  ],
+  "claim_boundary": "Prospective v2 replay of a disjoint public cryogenic-hydrogen concentration holdout through the frozen HAZOP gas-alarm and response-routing contract. It tests measured-signal ingestion, missing-data handling, persistence, severity and response availability only. It does not validate detector placement, concentration prediction, dispersion, gaseous-H70 transfer, ESD effectiveness, consequence distance, or the full station-to-vehicle digital twin."
+}
