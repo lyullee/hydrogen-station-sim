@@ -43,6 +43,14 @@ the fields it owns. `header_row` is explicit so title rows are never guessed.
 The sole supported joining method is nearest observation within the declared
 maximum offset. It does not interpolate measurements or infer missing values.
 
+Time alignment is not evidence that two source tables describe the same fill or
+fault. Each source in a mapping must therefore carry the identical private
+`event_group_token`, and the custodian must separately attest
+`same_physical_event_confirmed: true`. The exporter checks token equality but
+never writes the token to a de-identified trace, receipt, manifest, or public
+repository artifact. Do not join convenient signals from different runs merely
+because their clocks can be aligned.
+
 ```json
 {
   "schema_version": 1,
@@ -51,6 +59,7 @@ maximum offset. It does not interpolate measurements or infer missing values.
       "file": "<relative source file when --input is a directory>",
       "worksheet": "<private vehicle sheet>",
       "header_row": 1,
+      "event_group_token": "<same opaque private token for all sources in this event>",
       "time_column": "<private time label>",
       "time_format": "%Y-%m-%d %H:%M:%S",
       "column_map": {
@@ -63,6 +72,7 @@ maximum offset. It does not interpolate measurements or infer missing values.
       "file": "<relative source file when --input is a directory>",
       "worksheet": "<private station sheet>",
       "header_row": 1,
+      "event_group_token": "<same opaque private token for all sources in this event>",
       "time_column": "<private time label>",
       "column_map": {
         "station_pressure_mpa_abs": "<private pressure label>",
@@ -92,6 +102,7 @@ The existing private attestation must additionally include:
 {
   "source_synchronization": {
     "common_time_basis_confirmed": true,
+    "same_physical_event_confirmed": true,
     "alignment_method": "nearest_observation"
   }
 }

@@ -97,6 +97,10 @@ def _require_attestation(attestation: dict[str, Any]) -> None:
         raise ValueError("attestation must confirm a common time basis")
     if not isinstance(synchronization.get("alignment_method"), str) or not synchronization["alignment_method"].strip():
         raise ValueError("attestation must declare the alignment method")
+    if synchronization.get("same_physical_event_confirmed") is not True:
+        raise ValueError(
+            "attestation must confirm that every mapped source describes the same physical event"
+        )
 
 
 def _specifications(mapping: dict[str, Any]) -> tuple[list[dict[str, Any]], int, float]:
@@ -113,6 +117,7 @@ def _specifications(mapping: dict[str, Any]) -> tuple[list[dict[str, Any]], int,
         worksheet = raw.get("worksheet")
         time_column = raw.get("time_column")
         source_file = raw.get("file")
+        event_group_token = raw.get("event_group_token")
         header_row = raw.get("header_row", 1)
         column_map = raw.get("column_map")
         if worksheet is None:
@@ -125,6 +130,14 @@ def _specifications(mapping: dict[str, Any]) -> tuple[list[dict[str, Any]], int,
             raise ValueError("every source header_row must be a positive integer")
         if not isinstance(column_map, dict) or not column_map:
             raise ValueError("every source requires a nonempty column_map")
+        if (
+            not isinstance(event_group_token, str)
+            or len(event_group_token.strip()) < 8
+            or event_group_token.strip().startswith("<")
+        ):
+            raise ValueError(
+                "every source requires a custodian-approved opaque event_group_token"
+            )
         if source_file is not None:
             if not isinstance(source_file, str) or not source_file.strip():
                 raise ValueError("source file must be a nonempty relative path")
@@ -145,6 +158,7 @@ def _specifications(mapping: dict[str, Any]) -> tuple[list[dict[str, Any]], int,
         normalized.append({
             "worksheet": worksheet,
             "file": source_file,
+            "event_group_token": event_group_token.strip(),
             "time_column": time_column,
             "time_format": raw.get("time_format"),
             "header_row": header_row,
@@ -166,6 +180,25 @@ def _specifications(mapping: dict[str, Any]) -> tuple[list[dict[str, Any]], int,
     if not isinstance(maximum_offset, (int, float)) or not math.isfinite(maximum_offset) or maximum_offset < 0:
         raise ValueError("alignment.maximum_offset_s must be a finite nonnegative number")
     return normalized, anchor, float(maximum_offset)
+
+
+def _require_same_physical_event(
+    specifications: list[dict[str, Any]],
+) -> None:
+    """Reject a technically alignable join of different physical events.
+
+    Clock alignment alone cannot establish that separate logger tables belong
+    to one fill, trip, or controlled event. Every source therefore carries the
+    same custodian-approved opaque event token. The token remains in the
+    private mapping and is deliberately never emitted in a receipt, manifest,
+    declaration, or trace.
+    """
+
+    tokens = {str(specification["event_group_token"]) for specification in specifications}
+    if len(tokens) != 1:
+        raise ValueError(
+            "mapped sources do not share one custodian-approved physical-event token"
+        )
 
 
 def _source_path(input_data: Path, specification: dict[str, Any]) -> Path:
@@ -306,6 +339,7 @@ def preflight_bundle(
     attestation = _json(attestation_path)
     _require_attestation(attestation)
     specifications, _, _ = _specifications(mapping)
+    _require_same_physical_event(specifications)
     protocol = _json(protocol_path)
     if protocol.get("status") != "prospective_intake_contract":
         raise ValueError("intake protocol must be prospective")
@@ -321,6 +355,7 @@ def preflight_bundle(
         "source_format": "directory" if input_data.is_dir() else input_data.suffix.casefold().lstrip("."),
         "source_table_count": len(specifications),
         "alignment_method": "nearest_observation",
+        "same_physical_event_confirmed": True,
         "required_canonical_channels": list(OUTPUT_COLUMNS),
         "missing_canonical_channels": sorted(missing),
         "source_headers_exposed": False,
@@ -428,6 +463,7 @@ def _declaration() -> dict[str, Any]:
             "gas_or_tank_temperature": {"present": True, "unit": "degC"},
             "mass_flow_or_transferred_mass": {"present": True, "unit": "g/s"},
         },
+        "source_event_relationship": {"same_physical_event_confirmed": True},
         "metadata": {key: "declared" for key in REQUIRED_METADATA},
         "claim_boundary": (
             "A controlled, de-identified multi-source export that has passed channel and "
@@ -459,6 +495,7 @@ def export_bundle(
     attestation = _json(attestation_path)
     _require_attestation(attestation)
     specifications, anchor_index, maximum_offset = _specifications(mapping)
+    _require_same_physical_event(specifications)
     protocol = _json(protocol_path)
     if protocol.get("status") != "prospective_intake_contract":
         raise ValueError("intake protocol must be prospective")
@@ -528,6 +565,7 @@ def export_bundle(
         "raw_rows_persisted_in_repository": False,
         "source_table_count": len(specifications),
         "alignment_method": "nearest_observation",
+        "same_physical_event_confirmed": True,
         "maximum_alignment_offset_s": maximum_offset,
         "alignment_diagnostics": _alignment_diagnostics(
             offsets_by_source,

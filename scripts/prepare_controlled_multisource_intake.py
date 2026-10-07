@@ -194,6 +194,7 @@ def _mapping_template(workbench: dict[str, Any]) -> dict[str, Any]:
     def source_template(source: dict[str, Any]) -> dict[str, Any]:
         result: dict[str, Any] = {
             "header_row": source["header_row"],
+            "event_group_token": "<custodian-approved opaque event-group token shared by this one physical event>",
             "time_column": "<select one time_column_candidate>",
             "time_format": "<optional strptime format or null>",
             "column_map": {
@@ -245,12 +246,14 @@ def _attestation_template() -> dict[str, Any]:
         },
         "source_synchronization": {
             "common_time_basis_confirmed": False,
+            "same_physical_event_confirmed": False,
             "alignment_method": "nearest_observation",
         },
         "attestation_instructions": (
-            "Set authorization and common_time_basis_confirmed true only after a "
-            "custodian reviews the event selection, units, calibration status, state "
-            "meanings, and source clocks."
+            "Set authorization, common_time_basis_confirmed, and "
+            "same_physical_event_confirmed true only after a custodian reviews the "
+            "event selection, units, calibration status, state meanings, source "
+            "clocks, and confirms that every selected source belongs to one physical event."
         ),
     }
 

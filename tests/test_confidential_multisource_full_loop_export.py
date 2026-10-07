@@ -44,6 +44,7 @@ def _attestation() -> dict[str, object]:
         },
         "source_synchronization": {
             "common_time_basis_confirmed": True,
+            "same_physical_event_confirmed": True,
             "alignment_method": "nearest_observation",
         },
     }
@@ -72,6 +73,7 @@ def _write_controlled_inputs(tmp_path: Path) -> tuple[Path, Path, Path]:
         "sources": [
             {
                 "worksheet": "private vehicle", "header_row": 1,
+                "event_group_token": "private-event-group-001",
                 "time_column": "secret vehicle clock",
                 "column_map": {
                     "vehicle_pressure_mpa_abs": "secret vehicle pressure",
@@ -81,6 +83,7 @@ def _write_controlled_inputs(tmp_path: Path) -> tuple[Path, Path, Path]:
             },
             {
                 "worksheet": "private station", "header_row": 1,
+                "event_group_token": "private-event-group-001",
                 "time_column": "secret station clock",
                 "column_map": {
                     "station_pressure_mpa_abs": "secret station pressure",
@@ -106,6 +109,7 @@ def test_multisource_preflight_and_export_deidentify_private_workbook(tmp_path: 
     preflight = preflight_bundle(source, mapping, attestation, protocol)
     rendered_preflight = json.dumps(preflight)
     assert preflight["ready_for_controlled_export"] is True
+    assert preflight["same_physical_event_confirmed"] is True
     assert preflight["source_rows_read"] is False
     assert "private vehicle" not in rendered_preflight
     assert "secret vehicle clock" not in rendered_preflight
@@ -114,6 +118,7 @@ def test_multisource_preflight_and_export_deidentify_private_workbook(tmp_path: 
     receipt = export_bundle(source, mapping, attestation, output, protocol)
     rendered_receipt = json.dumps(receipt)
     assert receipt["full_loop_trace_ready"] is True
+    assert receipt["same_physical_event_confirmed"] is True
     assert receipt["source_table_count"] == 2
     assert receipt["alignment_diagnostics"] == [
         {
@@ -139,6 +144,8 @@ def test_multisource_preflight_and_export_deidentify_private_workbook(tmp_path: 
     ]
     assert "private station" not in rendered_receipt
     assert "secret station pressure" not in rendered_receipt
+    assert "private-event-group-001" not in rendered_receipt
+    assert "event_group_token" not in rendered_receipt
     assert (output / "full_loop_event.csv").is_file()
 
 
@@ -155,6 +162,21 @@ def test_multisource_export_rejects_unattested_time_alignment(tmp_path: Path):
         assert "common time basis" in str(exc)
     else:  # pragma: no cover - assertion clarity
         raise AssertionError("unattested source alignment was accepted")
+
+
+def test_multisource_export_rejects_different_physical_events(tmp_path: Path):
+    source, mapping, attestation = _write_controlled_inputs(tmp_path)
+    payload = json.loads(mapping.read_text(encoding="utf-8"))
+    payload["sources"][1]["event_group_token"] = "private-event-group-002"
+    mapping.write_text(json.dumps(payload), encoding="utf-8")
+    protocol = ROOT / "research" / "external_hrs_intake_protocol.json"
+
+    try:
+        preflight_bundle(source, mapping, attestation, protocol)
+    except ValueError as exc:
+        assert "physical-event token" in str(exc)
+    else:  # pragma: no cover - assertion clarity
+        raise AssertionError("different physical events were accepted")
 
 
 def test_multisource_export_accepts_declared_csv_directory_sources(tmp_path: Path):
@@ -184,6 +206,7 @@ def test_multisource_export_accepts_declared_csv_directory_sources(tmp_path: Pat
         "sources": [
             {
                 "file": "private-vehicle.csv", "time_column": "secret time",
+                "event_group_token": "private-event-group-001",
                 "column_map": {
                     "vehicle_pressure_mpa_abs": "secret vehicle pressure",
                     "temperature_degC": "secret vehicle temperature",
@@ -192,6 +215,7 @@ def test_multisource_export_accepts_declared_csv_directory_sources(tmp_path: Pat
             },
             {
                 "file": "private-station.csv", "time_column": "secret clock",
+                "event_group_token": "private-event-group-001",
                 "column_map": {
                     "station_pressure_mpa_abs": "secret station pressure",
                     "delivered_gas_temperature_degC": "secret delivery temperature",
