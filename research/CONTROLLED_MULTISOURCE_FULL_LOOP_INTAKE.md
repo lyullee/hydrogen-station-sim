@@ -84,5 +84,11 @@ $env:PYTHONPATH = "src"
 Proceed only after the preflight reports `ready_for_controlled_export: true`.
 Then use a new empty controlled output directory. The export retains only
 relative time and canonical field names; it never saves original metadata in
-the repository. A successful receipt makes the trace eligible for the frozen
-evaluator, but does not demonstrate model accuracy or scientific readiness.
+the repository. Its private receipt also reports anonymous per-source
+time-alignment offsets (minimum, median, 95th percentile, maximum, and the
+count near the declared tolerance). Review those statistics before using the
+trace: a pass only means every matched row met the stated tolerance; it does
+not prove that the declared common time basis is physically correct.
+
+A successful receipt makes the trace eligible for the frozen evaluator, but
+does not demonstrate model accuracy or scientific readiness.

@@ -269,14 +269,60 @@ def _timed_rows(
 
 def _nearest_row(
     timed: list[tuple[float, dict[str, object]]], target: float, maximum_offset: float,
-) -> dict[str, object]:
+) -> tuple[dict[str, object], float]:
     times = [entry[0] for entry in timed]
     position = bisect_left(times, target)
     candidates = [entry for entry in (position - 1, position) if 0 <= entry < len(timed)]
     best = min(candidates, key=lambda entry: abs(times[entry] - target))
-    if abs(times[best] - target) > maximum_offset:
+    offset = abs(times[best] - target)
+    if offset > maximum_offset:
         raise ValueError("a mapped source cannot be aligned within the declared time tolerance")
-    return timed[best][1]
+    return timed[best][1], offset
+
+
+def _quantile(values: list[float], fraction: float) -> float:
+    """Return a deterministic linear quantile without retaining source rows."""
+
+    if not values:
+        return 0.0
+    ordered = sorted(values)
+    position = (len(ordered) - 1) * fraction
+    lower = int(math.floor(position))
+    upper = int(math.ceil(position))
+    if lower == upper:
+        return ordered[lower]
+    return ordered[lower] + (ordered[upper] - ordered[lower]) * (position - lower)
+
+
+def _alignment_diagnostics(
+    offsets_by_source: dict[int, list[float]],
+    *,
+    anchor_index: int,
+    maximum_offset: float,
+) -> list[dict[str, object]]:
+    """Summarize alignment error by anonymous source index only.
+
+    The receipt contains neither source names nor original timestamps.  These
+    aggregate offsets make the common-time-basis attestation reviewable before
+    an exported trace is evaluated by the simulator.
+    """
+
+    threshold = maximum_offset * 0.8
+    return [
+        {
+            "source_index": index + 1,
+            "anchor_source": index == anchor_index,
+            "matched_row_count": len(offsets),
+            "minimum_offset_s": _quantile(offsets, 0.0),
+            "median_offset_s": _quantile(offsets, 0.5),
+            "p95_offset_s": _quantile(offsets, 0.95),
+            "maximum_offset_s": _quantile(offsets, 1.0),
+            "matches_at_or_above_80pct_of_tolerance": sum(
+                offset >= threshold for offset in offsets
+            ),
+        }
+        for index, offsets in sorted(offsets_by_source.items())
+    ]
 
 
 def _declaration() -> dict[str, Any]:
@@ -344,11 +390,19 @@ def export_bundle(
     anchor_rows = source_rows[anchor_index]
     origin = anchor_rows[0][0]
     normalized: list[dict[str, str]] = []
+    offsets_by_source: dict[int, list[float]] = {
+        index: [] for index in range(len(source_rows))
+    }
     for row_number, (anchor_time, _) in enumerate(anchor_rows, start=1):
         joined = {"time_s": f"{anchor_time - origin:.9g}"}
+        aligned_rows: dict[int, dict[str, object]] = {}
+        for source_index, timed in enumerate(source_rows):
+            source_row, offset = _nearest_row(timed, anchor_time, maximum_offset)
+            aligned_rows[source_index] = source_row
+            offsets_by_source[source_index].append(offset)
         for canonical in OUTPUT_COLUMNS[1:]:
             source_index = channel_source[canonical]
-            source_row = _nearest_row(source_rows[source_index], anchor_time, maximum_offset)
+            source_row = aligned_rows[source_index]
             raw = source_row.get(specifications[source_index]["column_map"][canonical])
             if canonical in NUMERIC_COLUMNS:
                 joined[canonical] = f"{_finite(raw, column=canonical, row_number=row_number):.9g}"
@@ -388,6 +442,11 @@ def export_bundle(
         "source_table_count": len(specifications),
         "alignment_method": "nearest_observation",
         "maximum_alignment_offset_s": maximum_offset,
+        "alignment_diagnostics": _alignment_diagnostics(
+            offsets_by_source,
+            anchor_index=anchor_index,
+            maximum_offset=maximum_offset,
+        ),
         "output_file_count": 4,
         "rows": len(normalized),
         "time_duration_s": float(normalized[-1]["time_s"]),

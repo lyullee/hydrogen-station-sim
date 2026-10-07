@@ -115,6 +115,28 @@ def test_multisource_preflight_and_export_deidentify_private_workbook(tmp_path: 
     rendered_receipt = json.dumps(receipt)
     assert receipt["full_loop_trace_ready"] is True
     assert receipt["source_table_count"] == 2
+    assert receipt["alignment_diagnostics"] == [
+        {
+            "source_index": 1,
+            "anchor_source": True,
+            "matched_row_count": 30,
+            "minimum_offset_s": 0.0,
+            "median_offset_s": 0.0,
+            "p95_offset_s": 0.0,
+            "maximum_offset_s": 0.0,
+            "matches_at_or_above_80pct_of_tolerance": 0,
+        },
+        {
+            "source_index": 2,
+            "anchor_source": False,
+            "matched_row_count": 30,
+            "minimum_offset_s": 0.25,
+            "median_offset_s": 0.25,
+            "p95_offset_s": 0.25,
+            "maximum_offset_s": 0.25,
+            "matches_at_or_above_80pct_of_tolerance": 0,
+        },
+    ]
     assert "private station" not in rendered_receipt
     assert "secret station pressure" not in rendered_receipt
     assert (output / "full_loop_event.csv").is_file()
