@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_type_iv_tank_validation_recheck",
+  "rechecked_at": "2026-10-07T09:02:39.225498+00:00",
+  "expected_artifact": "tank_model_validation_v2.json",
+  "expected_sha256": "4480505cd2e094f64c03421545bfb2a0235a7f58b66e2a5cb5ed529d4d669840",
+  "fresh_result_sha256": "d2e2029f9585a2c63c8c683fc98344dd492e5867444551e1372d7843b8a39a33",
+  "raw_experimental_rows_persisted": false,
+  "source_workbook_names_persisted": false,
+  "comparison": {
+    "matches": true,
+    "expected": {
+      "fit": {
+        "effective_volume_multiplier": 1.052729261198358,
+        "gas_liner_ua_multiplier": 31.460656519273492
+      },
+      "validation_case_count": 12,
+      "validation_mean_metrics": {
+        "pressure_rmse_mpa": 3.8413052037435977,
+        "temperature_rmse_c": 4.832748408545587,
+        "soc_rmse_percentage_points": 3.8495521984109318
+      }
+    },
+    "fresh": {
+      "fit": {
+        "effective_volume_multiplier": 1.052729261198358,
+        "gas_liner_ua_multiplier": 31.460656519273492
+      },
+      "validation_case_count": 12,
+      "validation_mean_metrics": {
+        "pressure_rmse_mpa": 3.8413052037435977,
+        "temperature_rmse_c": 4.832748408545587,
+        "soc_rmse_percentage_points": 3.8495521984109318
+      }
+    },
+    "differences": {}
+  },
+  "claim_boundary": "A matching recheck supports reproducibility of the public Type-IV tank-only fit with measured mass-flow and inlet-temperature boundaries. It is not full station-to-vehicle validation, SAE protocol certification, field safety validation, or a vehicle certification result."
+}

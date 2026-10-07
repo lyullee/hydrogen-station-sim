@@ -27,6 +27,7 @@ from .full_station import (
 from .protocol import FuelingSchedule, SampledFuelingController, _profile_value
 from .risk.live import DynamicRiskMonitor, HyRAMConsequenceBackend
 from .safe_operation import SafeFullStationSimulator
+from .public_tank_calibration import load_public_type_iv_tank_calibration
 from .safety_runtime import (
     FaultEvent,
     FaultInjector,
@@ -62,8 +63,13 @@ class ReferenceScenario:
     # It remains opt-in until a frozen external holdout is re-run.
     vehicle_geometry_basis: Literal["reference", "capacity_eos"] = "reference"
     vehicle_capacity_kg: float | None = None
-    vehicle_effective_volume_multiplier: float = 1.0
-    vehicle_gas_liner_ua_multiplier: float = 1.0
+    # The default is a public, split-validated Type-IV tank fit for this
+    # demonstrator's 4.7 kg / 70 MPa reference surrogate.  ``reference`` is
+    # retained for sensitivity work and any configuration outside that model
+    # scope.  Neither mode validates the station-side source topology.
+    vehicle_tank_calibration: Literal["public_type_iv", "reference"] = "public_type_iv"
+    vehicle_effective_volume_multiplier: float | None = None
+    vehicle_gas_liner_ua_multiplier: float | None = None
     dispenser_flow_area_multiplier: float = 1.0
     precooler_duty_multiplier: float = 1.0
     initial_vehicle_2_pressure_pa: float = 5.0e6
@@ -169,9 +175,33 @@ def build_reference_scenario(
         config.vehicle_2_nominal_working_pressure_pa,
     ) <= 0.0:
         raise ValueError("vehicle nominal working pressures must be positive")
+    if config.vehicle_tank_calibration not in {"public_type_iv", "reference"}:
+        raise ValueError("vehicle_tank_calibration must be public_type_iv or reference")
+    calibrated_tank = (
+        load_public_type_iv_tank_calibration()
+        if config.vehicle_tank_calibration == "public_type_iv" else None
+    )
+    if config.vehicle_tank_calibration == "public_type_iv" and calibrated_tank is None:
+        raise RuntimeError("public Type-IV tank calibration artifact is unavailable or invalid")
+    effective_volume_multiplier = (
+        config.vehicle_effective_volume_multiplier
+        if config.vehicle_effective_volume_multiplier is not None
+        else (
+            calibrated_tank.effective_volume_multiplier
+            if calibrated_tank is not None else 1.0
+        )
+    )
+    gas_liner_ua_multiplier = (
+        config.vehicle_gas_liner_ua_multiplier
+        if config.vehicle_gas_liner_ua_multiplier is not None
+        else (
+            calibrated_tank.gas_liner_ua_multiplier
+            if calibrated_tank is not None else 1.0
+        )
+    )
     if min(
-        config.vehicle_effective_volume_multiplier,
-        config.vehicle_gas_liner_ua_multiplier,
+        effective_volume_multiplier,
+        gas_liner_ua_multiplier,
         config.dispenser_flow_area_multiplier,
         config.precooler_duty_multiplier,
         config.maximum_gas_temperature_k,
@@ -211,8 +241,8 @@ def build_reference_scenario(
     ):
         raise ValueError("station_minimum_recharge_off_time_s cannot be negative")
     vehicle_fit = CompositeTankFitParameters(
-        effective_volume_multiplier=config.vehicle_effective_volume_multiplier,
-        gas_liner_ua_multiplier=config.vehicle_gas_liner_ua_multiplier,
+        effective_volume_multiplier=effective_volume_multiplier,
+        gas_liner_ua_multiplier=gas_liner_ua_multiplier,
     )
     vehicle = build_vehicle_tank(vehicle_volume_m3, vehicle_fit)
     secondary_vehicle = build_vehicle_tank(vehicle_2_volume_m3, vehicle_fit)

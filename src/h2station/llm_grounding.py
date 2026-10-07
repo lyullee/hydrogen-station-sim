@@ -19,6 +19,7 @@ from .calibration_profiles import (
     load_measured_boundary_calibration,
     load_station_recharge_dynamics_calibration,
 )
+from .public_tank_calibration import load_public_type_iv_tank_calibration
 from .lifecycle_evidence import load_lifecycle_evidence
 
 
@@ -132,6 +133,32 @@ def _runtime_geometry_profile(frame: dict[str, Any]) -> dict[str, Any]:
             "독립적인 station-to-vehicle 검증이나 기본값 변경을 의미하지 않음"
         ),
     }
+
+
+def _runtime_vehicle_tank_calibration_profile(frame: dict[str, Any]) -> dict[str, Any]:
+    """Expose the bounded public tank fit used by the simulated vehicle."""
+
+    mode = str(frame.get("vehicle_tank_calibration") or "public_type_iv")
+    if mode == "reference":
+        return {
+            "status": "reference",
+            "mode": mode,
+            "claim_limit": (
+                "기준 Type-IV 탱크 물성값으로 실행됨. 공개 실험 기반 탱크 보정은 "
+                "이번 실행에 적용되지 않음"
+            ),
+        }
+    profile = load_public_type_iv_tank_calibration()
+    if profile is None:
+        return {
+            "status": "unavailable",
+            "mode": mode,
+            "claim_limit": (
+                "공개 Type-IV 탱크 보정 artifact를 읽지 못해 탱크 보정 적용 여부를 "
+                "확인할 수 없음"
+            ),
+        }
+    return {"mode": mode, **profile.runtime_metadata()}
 
 
 def _public_incident_traceability() -> dict[str, Any] | None:
@@ -2527,6 +2554,7 @@ def build_evidence_manifest(
         },
         "runtime_calibration": _runtime_calibration_profile(frame),
         "runtime_geometry": _runtime_geometry_profile(frame),
+        "runtime_vehicle_tank_calibration": _runtime_vehicle_tank_calibration_profile(frame),
         "measured_bank_pressure_envelope": frame.get(
             "measured_bank_pressure_envelope"
         ) or {},
@@ -2730,6 +2758,9 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         "claim_limit": short(evidence.get("claim_limit")),
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "runtime_geometry": manifest.get("runtime_geometry") or {},
+        "runtime_vehicle_tank_calibration": manifest.get(
+            "runtime_vehicle_tank_calibration"
+        ) or {},
         "measured_bank_pressure_envelope": manifest.get(
             "measured_bank_pressure_envelope"
         ) or {},
@@ -3378,6 +3409,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     return {
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "runtime_geometry": manifest.get("runtime_geometry") or {},
+        "runtime_vehicle_tank_calibration": manifest.get(
+            "runtime_vehicle_tank_calibration"
+        ) or {},
         "measured_bank_pressure_envelope": manifest.get(
             "measured_bank_pressure_envelope"
         ) or {},

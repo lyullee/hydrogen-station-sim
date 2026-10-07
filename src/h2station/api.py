@@ -198,6 +198,7 @@ class SimulationInput(BaseModel):
     # Optional public-capacity geometry.  The default keeps the historical
     # reference volume; capacity_eos uses the tabulated hydrogen EOS.
     vehicle_geometry_basis: Literal["reference", "capacity_eos"] = "reference"
+    vehicle_tank_calibration: Literal["public_type_iv", "reference"] = "public_type_iv"
     vehicle_capacity_kg: float | None = Field(default=None, gt=0.1, le=100.0)
     initial_vehicle_2_pressure_mpa: float = Field(default=8.0, gt=0.0, le=70.0)
     initial_vehicle_2_temperature_c: float = Field(default=25.0, ge=-40.0, le=85.0)
@@ -466,6 +467,7 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                 request.initial_vehicle_temperature_c + 273.15
             ),
             vehicle_geometry_basis=request.vehicle_geometry_basis,
+            vehicle_tank_calibration=request.vehicle_tank_calibration,
             vehicle_capacity_kg=request.vehicle_capacity_kg,
             initial_vehicle_2_pressure_pa=(
                 request.initial_vehicle_2_pressure_mpa * 1.0e6
@@ -638,6 +640,7 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                         # reference default from the opt-in capacity/EOS
                         # sensitivity path.
                         "vehicle_geometry_basis": request.vehicle_geometry_basis,
+                        "vehicle_tank_calibration": request.vehicle_tank_calibration,
                         "vehicle_capacity_kg": request.vehicle_capacity_kg,
                         "vehicle_2_capacity_kg": request.vehicle_2_capacity_kg,
                         "detector_policy": {
