@@ -17,7 +17,9 @@ time base and the following channels, in their native units:
 * source/cascade-bank pressure and selected-bank or valve state;
 * precooler outlet temperature and compressor/PCV state;
 * start/stop, leak-check, vent, fault and ESD transitions;
-* tank geometry, type, initial state, ambient conditions and protocol inputs;
+* tank geometry and configuration: exact internal volume, vessel count, nominal
+  working pressure, liner/shell type and gas-temperature sensor location;
+* tank initial state, ambient conditions and protocol inputs;
 * sensor calibration, sampling period, missing-value convention and uncertainty.
 
 The event export must retain the original sample clock and a row-level event

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T18:48:13.724222+00:00",
+  "generated_at": "2026-10-07T19:13:26.736333+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 84,
+    "PASS": 85,
     "FAIL": 6,
     "PENDING": 8
   },
@@ -447,14 +447,33 @@
         "boundary_conditions": [
           "measured mass_flow_g_s",
           "measured inlet_gas_temperature_c",
-          "measured source_pressure_3_mpa"
+          "measured pressure_mpa normalized from workbook Pinlet"
         ],
         "aggregate": {
           "case_count": 8,
-          "pressure_rmse_mpa_mean": 1.8156882965866448,
-          "temperature_rmse_c_mean": 25.884020539463037,
-          "soc_rmse_percentage_points_mean": 5.581868463392878
+          "joint_screening_pass_count": 0,
+          "joint_screening_pass_fraction": 0.0,
+          "pressure_rmse_mpa_mean": 4.375541156305331,
+          "temperature_rmse_c_mean": 9.052443267854247,
+          "soc_rmse_percentage_points_mean": 5.5833493152424865
         }
+      }
+    },
+    {
+      "id": "mc_geometry_transfer_diagnostic_integrity",
+      "status": "PASS",
+      "claim": "The consumed MC geometry sensitivity exposes non-transferable volume assumptions without selecting a production rule or changing runtime parameters.",
+      "evidence": "research\\mc_geometry_transfer_diagnostic_2026_10_08.json",
+      "requirement": "Three fixed geometry rules over eight consumed cases, no fitting, runtime unchanged, and outcome-derived selection prohibited.",
+      "observed": {
+        "run_count": 3,
+        "joint_screening_pass_counts": [
+          0,
+          4,
+          4
+        ],
+        "runtime_geometry_changed": false,
+        "geometry_rule_selection_prohibited": true
       }
     },
     {
@@ -5966,7 +5985,7 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7982,
+          "approximate_manuscript_words_before_references": 7981,
           "figures": 2,
           "tables": 3,
           "citation_keys": 31,
@@ -5998,12 +6017,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-07T18:07:26.6710045Z",
+        "attempted_at": "2026-10-07T19:08:51.5488015Z",
         "attempts_this_run": 1,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "123835f18221e30c7595eb3a8bb28bd05114b15487b84bf72094eb3f8b8e5232",
+        "source_sha256": "fe98c269b6f9b1df1ce6b0acd4b77998b25f656ed2e1e29e9d890a82efe92db0",
         "diagnostic": "Unable to find standard directories for platform",
         "format_check_passed": true,
         "retained_previous_pdf": {
@@ -6012,7 +6031,7 @@
           "sha256": "694307f6dec2fb49ef941aa5bc1e5da3a01a8c665516119d0901a96f542d51c4",
           "matches_current_source": false
         },
-        "interpretation": "The updated source passes static format, citation, asset and brace checks, but the built-in compiler was unavailable on this Windows host. The retained PDF predates the current MetHyTrucks external-diagnostic text and must not be represented as the current-source rendering."
+        "interpretation": "The updated source passes static format, citation, asset and brace checks, but the built-in compiler was unavailable on this Windows host. The retained PDF predates the corrected MC inlet-boundary and geometry-transfer diagnostic text and must not be represented as the current-source rendering."
       }
     },
     {

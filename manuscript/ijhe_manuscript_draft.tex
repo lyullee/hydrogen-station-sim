@@ -521,17 +521,19 @@ as redesign targets. The bench files observe vehicle and source pressures, flow,
 inlet temperature and SOC, but do not expose every internal three-bank valve
 command; they therefore cannot by themselves validate all cascade dispatch states.
 
-An outcome-independent source-boundary diagnostic further limits the interpretation.
-For the eight MC Default traces, the observed third-source pressure drop was only
-1.36--4.91 MPa. An isothermal 0.35-m$^3$ high-bank calculation with the same
-transferred masses predicts 30.7--58.6 MPa, while the observed pressure and mass
-differences imply conditional connected volumes of 2.74--8.70 m$^3$. The public
-files do not identify whether this channel represents a larger connected inventory,
-a pressure-regulated upstream boundary, multiple banks or different valve and
-thermal behaviour. These conditional volumes are therefore retained as a
-diagnostic, not fitted into the production model. A new prospective evaluation
-must provide source pressure and temperature as boundary traces or disclose the
-bank topology and valve states before internal cascade pressure can be assessed.
+An outcome-independent source-boundary diagnostic also limits interpretation.
+Across eight traces, third-source pressure fell 1.36--4.91~MPa, versus
+30.7--58.6~MPa predicted for an isothermal 0.35-m$^3$ bank; observed pressure
+and mass changes implied 2.74--8.70~m$^3$. Because the files omit topology and
+valve states, the result remains diagnostic. Prospective evaluation must supply
+boundary pressure and temperature or disclose the topology and valve states.
+
+Correctly pairing co-located \texttt{Pinlet} and \texttt{Tinlet\_G} reduced the
+post-outcome mean temperature RMSE from 25.884 to 9.052~$^{\circ}$C; pressure
+and SOC RMSE were 4.376~MPa and 5.583 percentage points, with zero of eight
+joint passes. Two non-fitted geometry rules reached four of eight passes but
+were not selected. Prospective tests now require exact vessel geometry and
+temperature-sensor position.
 
 A superseded development-only sensitivity first scaled hydrogen--coolant and
 chiller conductance by factors 1, 2, 4 and 8 and selected its upper bound. After

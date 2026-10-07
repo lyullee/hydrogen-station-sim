@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-07 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **83 PASS · 6 FAIL · 8 PENDING**.
+Gate counts: **85 PASS · 6 FAIL · 8 PENDING**.
 
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted
@@ -131,11 +131,11 @@ The local format gate currently passes:
 - abstract: 147 words (limit checked: 150);
 - keywords: 6;
 - highlights: 5, each within the checked character limit;
-- approximate manuscript body: 7,982 words before references;
+- approximate manuscript body: 7,981 words before references;
 - figures: 2; tables: 3;
 - citations resolved and figure assets present;
 - LaTeX compilation: **PENDING**. The built-in compiler was unavailable on this
-  Windows host; the retained PDF predates the current MetHyTrucks diagnostic text.
+  Windows host; the retained PDF predates the corrected MC boundary diagnostic.
 
 These checks cover local formatting and compilation only. They do not establish
 scientific validity, safety certification, or acceptance by IJHE.

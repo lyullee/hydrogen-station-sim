@@ -385,13 +385,22 @@ def audit(root: Path) -> dict[str, object]:
     mc_tank_boundary = _json(mc_tank_boundary_path)
     mc_tank_aggregate = (mc_tank_boundary or {}).get("aggregate") or {}
     mc_tank_boundary_pass = bool(
-        (mc_tank_boundary or {}).get("schema_version") == 1
+        (mc_tank_boundary or {}).get("schema_version") == 2
         and (mc_tank_boundary or {}).get("diagnostic_type")
         == "MC Default measured-boundary vehicle-tank replay"
         and (mc_tank_boundary or {}).get("evidence_role")
         == "development_diagnostic_only"
         and (mc_tank_boundary or {}).get("post_outcome") is True
         and (mc_tank_boundary or {}).get("parameter_fitting") is False
+        and ((mc_tank_boundary or {}).get("boundary_semantics") or {}).get(
+            "pressure_channel"
+        ) == "Pinlet"
+        and ((mc_tank_boundary or {}).get("boundary_semantics") or {}).get(
+            "temperature_channel"
+        ) == "Tinlet_G"
+        and ((mc_tank_boundary or {}).get("boundary_semantics") or {}).get(
+            "production_runtime_changed"
+        ) is False
         and len((mc_tank_boundary or {}).get("cases") or []) == 8
         and mc_tank_aggregate.get("case_count") == 8
         and len((mc_tank_boundary or {}).get("boundary_conditions") or []) == 3
@@ -411,6 +420,46 @@ def audit(root: Path) -> dict[str, object]:
             "boundary_conditions": (mc_tank_boundary or {}).get("boundary_conditions"),
             "aggregate": mc_tank_aggregate,
         } if mc_tank_boundary else "missing",
+    ))
+
+    mc_geometry_path = root / "research/mc_geometry_transfer_diagnostic_2026_10_08.json"
+    mc_geometry = _json(mc_geometry_path)
+    mc_geometry_runs = (mc_geometry or {}).get("runs") or []
+    mc_geometry_pass = bool(
+        (mc_geometry or {}).get("schema_version") == 1
+        and (mc_geometry or {}).get("diagnostic_type")
+        == "MC Default Type-IV geometry-transfer sensitivity"
+        and (mc_geometry or {}).get("evidence_role")
+        == "post_outcome_development_diagnostic_only"
+        and (mc_geometry or {}).get("post_outcome") is True
+        and (mc_geometry or {}).get("parameter_fitting") is False
+        and (mc_geometry or {}).get("runtime_geometry_changed") is False
+        and (mc_geometry or {}).get("geometry_rule_selection_prohibited") is True
+        and len(mc_geometry_runs) == 3
+        and all(run.get("case_count") == 8 for run in mc_geometry_runs)
+        and ((mc_geometry or {}).get("outcome_derived_identifiability") or {}).get(
+            "use_for_parameter_selection_prohibited"
+        ) is True
+        and (mc_geometry or {}).get("claim_boundary")
+    )
+    gates.append(_gate(
+        "mc_geometry_transfer_diagnostic_integrity",
+        "PASS" if mc_geometry_pass else ("FAIL" if mc_geometry else "PENDING"),
+        "The consumed MC geometry sensitivity exposes non-transferable volume assumptions without selecting a production rule or changing runtime parameters.",
+        str(mc_geometry_path.relative_to(root)),
+        "Three fixed geometry rules over eight consumed cases, no fitting, runtime unchanged, and outcome-derived selection prohibited.",
+        {
+            "run_count": len(mc_geometry_runs),
+            "joint_screening_pass_counts": [
+                run.get("joint_screening_pass_count") for run in mc_geometry_runs
+            ],
+            "runtime_geometry_changed": (mc_geometry or {}).get(
+                "runtime_geometry_changed"
+            ),
+            "geometry_rule_selection_prohibited": (mc_geometry or {}).get(
+                "geometry_rule_selection_prohibited"
+            ),
+        } if mc_geometry else "missing",
     ))
 
     mc_enthalpy_path = root / "research/mc_enthalpy_pressure_sensitivity_2026_10_05.json"

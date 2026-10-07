@@ -26,6 +26,10 @@
   "metadata": {
     "initial_conditions": true,
     "tank_capacity_or_geometry": true,
+    "vehicle_internal_volume_m3": 0.122,
+    "vehicle_vessel_count": 1,
+    "vehicle_nominal_working_pressure_mpa": 70.0,
+    "vehicle_temperature_sensor_location": "custodian-attested internal gas sensor positions",
     "protocol_mode_or_pressure_ramp": true,
     "source_cascade_state": true,
     "compressor_state": true,
