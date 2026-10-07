@@ -184,13 +184,22 @@ def response_selection(frame: dict[str, Any], catalog: dict[str, Any],
 
 
 def prompt_guidance(selection: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Compact trusted actions early enough to survive the SAGA prompt budget."""
-    return [{"situation": item["plan"]["title"], "evidence": item["evidence"],
-             "immediate": item["plan"]["immediate"][:3],
-             "stabilize": item["plan"]["stabilize"][:2],
-             "restart": item["plan"]["restart"][:1],
-             "prevention": item["plan"]["prevention"][:2]}
-            for item in selection[:6]]
+    """Send only the first decision steps to a provider prompt.
+
+    The API appends the complete staged response plan after the LLM's focused
+    explanation.  Duplicating all five stages for as many as six situations
+    bloats a direct-answer prompt and makes the model repeat a generic
+    procedure instead of answering the operator's question.  Keep the trusted
+    evidence and the first immediate/stabilization actions here; retain the
+    full plan in :func:`render_guidance` and :func:`structured_guidance`.
+    """
+    return [{
+        "situation": item["plan"]["title"],
+        "evidence": item["evidence"][:2],
+        "immediate": item["plan"]["immediate"][:2],
+        "stabilize": item["plan"]["stabilize"][:1],
+        "full_plan_delivered_separately": True,
+    } for item in selection[:4]]
 
 
 def render_guidance(selection: list[dict[str, Any]], *, actual_alert: bool) -> str:

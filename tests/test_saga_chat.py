@@ -78,6 +78,8 @@ def test_saga_prompt_keeps_calculated_impact_before_large_sensor_context(monkeyp
         assert '"sampled_effect_radius_m": null' in prompt
         assert "영향 반경 미확정" in prompt
         assert prompt.index("impact_results") < prompt.index("hazop_active")
+        assert '"evidence_manifest"' not in prompt
+        assert '"evidence_basis"' in prompt
     finally:
         with api._jobs_lock:
             api._jobs.pop(job_id, None)

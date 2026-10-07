@@ -1,5 +1,7 @@
 """The monitor's direct Q&A routes retain sensor-based consequence results."""
 
+import json
+
 from fastapi.testclient import TestClient
 
 import h2station.api as api
@@ -58,7 +60,12 @@ def test_direct_qa_calculates_impact_for_alarm_and_explicit_hypothesis(monkeypat
             assert "피해영향예측" not in hypothetical["question_answer"]
             assert "질문에 대한 직접 답변" in hypothetical["question_answer"]
             assert llm_prompts[-1]["context"]["impact_results"][0]["maximum_heat_flux_w_m2"] == 6200.0
-            assert llm_prompts[-1]["context"]["evidence_manifest"]["impact"]["calculation_status"] == "calculated"
+            assert llm_prompts[-1]["context"]["evidence_basis"]["impact"]["calculation_status"] == "calculated"
+            assert llm_prompts[-1]["context"]["evidence_basis"]["validation_boundaries"][
+                "station_to_vehicle"
+            ]["claim_supported"] is False
+            assert "evidence_manifest" not in llm_prompts[-1]["context"]
+            assert len(json.dumps(llm_prompts[-1]["context"], default=str)) < 12000
             assert llm_prompts[-1]["kind"] == "user_query"
             assert received[-1] == [impact]
             streamed = client.post(f"/api/simulations/{job_id}/saga-analysis/direct/stream",
@@ -118,6 +125,9 @@ def test_sensor_followup_direct_route_never_calls_reasoning(monkeypatch):
         assert requested.json()["impact_results"][0]["node_id"] == "N09"
         assert requested.json()["evidence_manifest"]["impact"]["calculation_status"] == "calculated"
         assert prompts[-1]["context"]["impact_results"][0]["maximum_heat_flux_w_m2"] == 5000.0
+        assert "evidence_manifest" not in prompts[-1]["context"]
+        assert prompts[-1]["context"]["evidence_basis"]["impact"]["calculation_status"] == "calculated"
+        assert len(json.dumps(prompts[-1]["context"], default=str)) < 9000
     finally:
         with api._jobs_lock:
             api._jobs.pop(job_id, None)

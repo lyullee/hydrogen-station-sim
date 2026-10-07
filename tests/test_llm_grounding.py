@@ -1,6 +1,9 @@
+import json
+
 from h2station.llm_grounding import (
     build_evidence_manifest,
     guard_llm_claims,
+    prompt_decision_evidence,
     prompt_evidence_header,
     prompt_evidence_summary,
 )
@@ -733,6 +736,45 @@ def test_manifest_keeps_the_per_result_consequence_validation_boundary():
     assert impact["full_station_vehicle_validation_supported"] is False
     assert impact["site_specific_safety_distance_supported"] is False
     assert "site-specific safety distance" in impact["consequence_validation_claim_limit"]
+
+
+def test_prompt_decision_evidence_keeps_limits_without_full_audit_payload():
+    manifest = build_evidence_manifest(
+        {"time_s": 12.5, "nozzle_flow_g_s": 200.0},
+        {},
+        [{
+            "node_id": "N09", "calculation_status": "calculated",
+            "calculation_basis": "SENSOR_BASED_HYPOTHESIS",
+            "current_pressure_mpa": 88.0,
+            "consequence_validation_scope": "COMPONENT_SCREENING_BOUNDED",
+            "full_station_vehicle_validation_supported": False,
+            "site_specific_safety_distance_supported": False,
+            "consequence_validation_claim_limit": "not a field safety distance",
+        }],
+        True,
+    )
+    decision = prompt_decision_evidence(manifest)
+    assert decision["evidence_digest"] == manifest["evidence_digest"]
+    assert decision["impact"]["results"][0]["consequence_validation_scope"] == (
+        "COMPONENT_SCREENING_BOUNDED"
+    )
+    assert decision["impact"]["results"][0][
+        "site_specific_safety_distance_supported"
+    ] is False
+    assert decision["validation_boundaries"]["station_to_vehicle"][
+        "claim_supported"
+    ] is False
+    assert decision["validation_boundaries"]["station_to_vehicle"][
+        "screening_pass_count"
+    ] == 0
+    assert decision["public_operating_envelope_screen"]["validation_claim"] is False
+    assert decision["decision_support_evidence"]["public_incident"][
+        "contract_pass"
+    ] is True
+    assert len(json.dumps(decision, ensure_ascii=False)) < 3500
+    assert "confidential_station_schema_intake" not in json.dumps(
+        decision, ensure_ascii=False
+    )
 
 
 def test_llm_claim_guard_replaces_unsupported_positive_validation_claims():

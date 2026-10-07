@@ -30,7 +30,11 @@ from .operations import ProcessRuntime, RELIEF_TARGETS
 from .risk.runtime_backend import load_hyram_backend
 from .risk.sensor_assessment import assess_sensor_cases, available_sensor_inputs
 from .risk.scenario_planning import parse_saga_plan
-from .llm_grounding import build_evidence_manifest, guard_llm_claims, prompt_evidence_header
+from .llm_grounding import (
+    build_evidence_manifest,
+    guard_llm_claims,
+    prompt_decision_evidence,
+)
 from .safe_operation import SafeOperationSample
 from .simulation_clock import SimulationClock
 from .virtual_safety import VALVE_LABELS, ZONES, RECOVERY_CHECKS, suggested_actions
@@ -2413,6 +2417,13 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "sampled_next_distance_m": (release.get("consequence") or {}).get("sampled_next_distance_m"),
         "observation_point_count": (release.get("consequence") or {}).get("observation_point_count"),
         "effect_range_status": (release.get("consequence") or {}).get("effect_range_status"),
+        "consequence_validation_scope": (release.get("consequence") or {}).get("consequence_validation_scope"),
+        "geometry_display_mapping_verified": (release.get("consequence") or {}).get("geometry_display_mapping_verified"),
+        "source_depletion_external_holdout_supported": (release.get("consequence") or {}).get("source_depletion_external_holdout_supported"),
+        "full_station_vehicle_validation_supported": (release.get("consequence") or {}).get("full_station_vehicle_validation_supported"),
+        "site_specific_safety_distance_supported": (release.get("consequence") or {}).get("site_specific_safety_distance_supported"),
+        "consequence_validation_artifacts": (release.get("consequence") or {}).get("consequence_validation_artifacts"),
+        "consequence_validation_claim_limit": (release.get("consequence") or {}).get("consequence_validation_claim_limit"),
         "range_interpretation": ("표본 관측점에서 5 kW/m² 및 5 kPa 기준 미달; 영향 반경 미확정"
             if (release.get("consequence") or {}).get("effect_range_status") == "BELOW_THRESHOLDS_AT_SAMPLES"
             else "관측점의 임계값 초과 거리만 확인; 현장 안전반경 아님")}
@@ -2460,7 +2471,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
                 "output_language": request.language,
                 "impact_calculation_attempted": show_impact_results,
                 "impact_results": impact_results[:3],
-                "evidence_manifest": evidence_manifest,
+                "evidence_basis": prompt_decision_evidence(evidence_manifest),
                 "recent_dialogue": [{"role": turn.role, "content": turn.content[:400]}
                                     for turn in request.history[-4:]],
                 "simulation_time_s": frame.get("time_s"),
@@ -2550,16 +2561,35 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
             "hazop_sop": direct_sop,
             "hazop_hit_count": len(direct_hits),
         }
+    # The full live frame can contain many unrelated GOOD channels.  Preserve
+    # the question/alarm/detector channels first, then add a deterministic
+    # bounded sample.  The full signal set remains in the frame and API
+    # response; this only protects provider prompt budget.
+    prompt_sensor_tags = set(reference_tags)
+    prompt_sensor_tags.update(
+        str(rule.get("sensor_id"))
+        for rule in matched_rules + reference_rules
+        if rule.get("sensor_id")
+    )
+    prompt_sensor_tags.update(
+        tag for tag in sensor_values if tag.startswith(("GD-", "FD-"))
+    )
+    prompt_sensor_values: dict[str, Any] = {}
+    for tag in list(sorted(prompt_sensor_tags)) + sorted(sensor_values):
+        if tag in sensor_values:
+            prompt_sensor_values[tag] = sensor_values[tag]
+        if len(prompt_sensor_values) >= 48:
+            break
     context = {
         # Keep the compact, safety-critical facts at the front of the bounded
         # prompt.  The serialized context is deliberately capped below, so
         # bulky evidence/telemetry must not crowd out the registered HAZOP
         # rules that explain the current alarm.
         "impact_results":impact_results,
+        "evidence_basis": prompt_decision_evidence(evidence_manifest),
         "hazop_reference_rules":reference_rules,
         "hazop_active":active, "hazop_rules":matched_rules,
         "emergency_response_guidance":prompt_guidance(response_plans),
-        "evidence_manifest": evidence_manifest,
         "impact_calculation_attempted":show_impact_results,
         "station":"H70 reference simulation", "time_s":frame.get("time_s"),
         "fire_detection": analysis.get("fire_detection"),
@@ -2577,12 +2607,11 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
             (((frame.get("process_operations") or {}).get("settings") or {}).get("relief_valves") or {}).items()
             if key in (frame.get("relief_valves_open") or [])},
         "reference_sensor_values":{tag: value for tag, value in sensor_values.items() if tag in reference_tags},
-        "sensor_values":sensor_values,
+        "sensor_values":prompt_sensor_values,
         "hazop_nodes":[{"node_id": node["node_id"], "name": node.get("설비_라인")} for node in catalog["nodes"]],
         "impact_backend_available":bool(getattr(backend,"available",False)),
         "current_alert_status":alert_status,
-        "active_hazop_rule_count":len(active),
-        "evidence_basis": prompt_evidence_header(evidence_manifest)}
+        "active_hazop_rule_count":len(active)}
     history = "\n".join(f"{turn.role}: {turn.content}" for turn in request.history)[-1800:]
     prompt = ("당신은 H70 수소충전소 운전 분석 보조자입니다. 아래 데이터는 실제 현장 계측이 아닌 시뮬레이터 신호입니다. "
         "HAZOP 센서 임계값과 현재 신호 품질, 물리 누출 및 피해영향예측 계산 상태를 구분하세요. "
@@ -2593,7 +2622,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
            "현재 주의·경보에 대응하여 서버가 피해영향예측을 시도했지만 정량 결과가 확보되지 않았습니다. 결과 수치를 만들거나 재계산을 권하지 말고 현재 위험상태와 우선 조치를 설명하세요. "
            if emergency_context else
            "정상 운전에서는 사용자가 사고 영향을 요청한 경우에만 계산 결과를 설명하세요. 요청하지 않았다면 사고 수치를 언급하지 마세요. ") +
-        "evidence_manifest를 응답의 근거 목록으로 사용하고 evidence_digest를 임의로 바꾸지 마세요. "
+        "evidence_basis를 응답의 근거 목록으로 사용하고 evidence_digest를 임의로 바꾸지 마세요. "
         "public_operating_envelope_screen이 있으면 현재 모의 노즐 유량을 공개 고유량 실험의 집계 평균·최대값과 비교한 보조 screen으로만 설명하세요. "
         "이 screen을 모델 검증 통과, 실제 충전소 성능, 프로토콜 적합성 또는 안전 인증으로 표현하지 마세요. raw_rows_public=false이면 공개 원시 시계열이 없다는 한계를 함께 밝히세요. "
         "runtime_calibration.status=active이면 비식별 실측 저장 뱅크 경계 보정이 이번 실행에 적용된 것이며, 재충전 여유폭 해석에만 사용하세요. "
@@ -3157,6 +3186,48 @@ def _sensor_response_guidance(
                                    "plans": structured_plans}
 
 
+def _prompt_response_guidance_summary(guidance: dict[str, Any] | None) -> dict[str, Any] | None:
+    """Bound staged guidance before placing it in a sensor LLM prompt.
+
+    The complete five-stage response plan is returned to the UI and appended
+    after the answer.  Passing that entire plan to the model duplicates text
+    and can crowd current gas/release evidence out of the provider context.
+    This summary preserves the scenario title, evidence, and first practical
+    response steps while deliberately retaining the full plan outside the
+    generative prompt.
+    """
+    if not isinstance(guidance, dict):
+        return None
+    actual_alert = guidance.get("actual_alert") is True
+    plans: list[dict[str, Any]] = []
+    for raw in guidance.get("plans") or []:
+        if not isinstance(raw, dict):
+            continue
+        plan = {
+            key: raw.get(key)
+            for key in ("id", "title")
+            if raw.get(key) is not None
+        }
+        evidence = raw.get("evidence") or []
+        if evidence:
+            plan["evidence"] = [str(item) for item in evidence[:2]]
+        if actual_alert:
+            plan["immediate"] = [str(item) for item in (raw.get("immediate") or [])[:2]]
+            plan["stabilize"] = [str(item) for item in (raw.get("stabilize") or [])[:1]]
+        else:
+            plan["prevention"] = [str(item) for item in (raw.get("prevention") or [])[:2]]
+        plans.append(plan)
+        if len(plans) >= 3:
+            break
+    return {
+        "actual_alert": actual_alert,
+        "mode": guidance.get("mode"),
+        "plan_count": len(guidance.get("plans") or []),
+        "plans": plans,
+        "full_plan_delivered_separately": True,
+    }
+
+
 @app.post("/api/simulations/{job_id}/sensors/{sensor_id}/analyze")
 async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                                     request: SensorAnalysisInput) -> dict[str, Any]:
@@ -3275,13 +3346,13 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                 "selected_signal": signal, "sensor_status": payload["sensor_status"],
                 "equipment": label, "related_signals": payload["related_signals"],
                 "impact_results": impact_results,
-                "evidence_manifest": evidence_manifest,
+                "evidence_basis": prompt_decision_evidence(evidence_manifest),
                 "current_conditions": current_rules,
                 "retained_conditions": [rule for rule in active_rules + related_rules
                                          if rule.get("state") != "TRIGGER"][:4],
                 "gas_detection": gas,
                 "current_release": release,
-                "consolidated_response_guidance": response_guidance,
+                "consolidated_response_guidance": _prompt_response_guidance_summary(response_guidance),
             }
             try:
                 reply = await _invoke_sensor_assistant_selected(
@@ -3349,10 +3420,9 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                                   if rule.get("sensor_id", "").startswith("GD-")
                                   and rule.get("state") in {"LATCHED", "ALARM_HOLD"}})
     context = {
-        # Put compact, deterministic facts and the consolidated action plan
-        # before large provenance/impact payloads so the bounded prompt keeps
-        # the live readings, active rules and immediate response field.
-        "consolidated_response_guidance": response_guidance,
+        # Put live sensor/release evidence before prompt-only plan or
+        # provenance summaries.  The complete staged plan is attached to the
+        # API response after the model explains this snapshot.
         "time_s": payload["time_s"], "sensor": {
             "tag": sensor_id, "type": payload["sensor"].get("종류"),
             "location": payload["sensor"].get("설치_측정위치"), "node": payload["node"].get("설비_라인"),
@@ -3363,6 +3433,9 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                               "retained_gas_alarm_tags": retained_gas_alerts},
         "selected_gas_signal_evidence": payload["gas_signal_evidence"],
         "simulated_release_evidence": payload["simulated_release_evidence"],
+        "impact_results": impact_results,
+        "evidence_basis": prompt_decision_evidence(evidence_manifest),
+        "consolidated_response_guidance": _prompt_response_guidance_summary(response_guidance),
         "active_scenarios": compact_rules(active_rules),
         "same_equipment_active_signals": compact_rules(related_rules),
         "related_signals": payload["related_signals"],
@@ -3377,9 +3450,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                                  "prevention": (plan.get("prevention") or [])[:2]}
                                 for plan in plan_context] if not alert else [],
         "station_status": payload["station_status"],
-        "impact_results": impact_results,
-        "evidence_basis": prompt_evidence_header(evidence_manifest),
-        "evidence_manifest": evidence_manifest}
+    }
     if alert:
         retained_only = not any(rule.get("state") == "TRIGGER" for rule in active_rules)
         status_instruction = (("선택 센서의 경보 임계값은 현재 재초과되지 않았고 이전 경보가 유지 중입니다. 현재 경보와 경보 이력을 구분하되, 비영점 가스 농도나 모의 누출을 부정하지 마세요. "
@@ -3407,7 +3478,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         "경보 시 여러 임계값 조건을 각각 독립 사고로 나열하지 말고 공통 원인과 전개가 같은 발생 가능 시나리오로 종합하세요. "
         "consolidated_response_guidance는 서버가 최종 답변 뒤에 붙이는 단일 행동계획이므로 조치 문장을 반복하지 말고 현재 판단과 근거를 설명하세요. "
         + status_instruction +
-        "evidence_manifest의 calculation_status가 not_requested이면 피해영향 계산을 했다고 말하지 마세요. "
+        "evidence_basis.impact.calculation_status가 not_requested이면 피해영향 계산을 했다고 말하지 마세요. "
         "public_operating_envelope_screen은 공개 실험 운전범위의 설명용 비교이며 모델 정확도 판정이 아닙니다. flow_context의 의미를 바꾸거나 없는 유량을 만들지 마세요. "
         "runtime_calibration.status=active는 저장 뱅크 경계 보정이 적용되었다는 뜻일 뿐 차량·디스펜서·전체 충전루프 실측 검증을 뜻하지 않습니다. reference_defaults와 requested_unavailable은 기준값 실행으로 설명하세요. "
         "public accident action category counts는 대응계획의 근거 범위만 나타내며, 조치의 효과나 사고확률을 의미하지 않습니다. "

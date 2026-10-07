@@ -3109,8 +3109,140 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
     return summary
 
 
+def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
+    """Return the small evidence envelope sent to an interactive LLM.
+
+    ``build_evidence_manifest`` intentionally keeps every auditable artifact,
+    so it can exceed a provider context budget by an order of magnitude.  The
+    API still returns that complete manifest and its digest to the caller.  An
+    LLM only needs the current calculation boundary, calibration state and
+    decision-relevant validation limits.  This projection preserves those
+    facts without leaking restricted identifiers or displacing live signals,
+    active conditions and response steps from the prompt.
+    """
+
+    def short(value: Any, limit: int = 180) -> str:
+        text = str(value or "")
+        return text if len(text) <= limit else text[: limit - 1] + "…"
+
+    def selected(mapping: Any, keys: tuple[str, ...]) -> dict[str, Any]:
+        if not isinstance(mapping, dict):
+            return {}
+        return {key: mapping[key] for key in keys if mapping.get(key) is not None}
+
+    impact = manifest.get("impact") or {}
+    compact_impacts: list[dict[str, Any]] = []
+    for raw in impact.get("results") or []:
+        if not isinstance(raw, dict):
+            continue
+        row = selected(raw, (
+            "node_id", "node_name", "calculation_status", "calculation_basis",
+            "pressure_sensor", "temperature_sensor", "current_pressure_mpa",
+            "current_temperature_c", "orifice_diameter_mm",
+            "maximum_heat_flux_w_m2", "maximum_overpressure_pa",
+            "sampled_effect_radius_m", "sampled_next_distance_m",
+            "flammable_plume_streamline_distance_m", "effect_range_status",
+            "consequence_validation_scope", "geometry_display_mapping_verified",
+            "source_depletion_external_holdout_supported",
+            "full_station_vehicle_validation_supported",
+            "site_specific_safety_distance_supported",
+        ))
+        if raw.get("consequence_validation_claim_limit"):
+            row["consequence_validation_claim_limit"] = short(
+                raw["consequence_validation_claim_limit"]
+            )
+        if row:
+            compact_impacts.append(row)
+
+    runtime = manifest.get("runtime_calibration") or {}
+    recharge_dynamics = runtime.get("station_recharge_dynamics") or {}
+    detector = manifest.get("detector_policy") or {}
+    response = manifest.get("response_evidence") or {}
+    closed_loop = response.get("closed_loop_validation_boundary") or {}
+    closed_loop_aggregate = closed_loop.get("aggregate") or {}
+    release = response.get("proust_release_model_validation_boundary") or {}
+    preslhy = response.get("preslhy_validation_boundary") or {}
+    preslhy_holdout = preslhy.get("independent_holdout") or {}
+    operating_screen = response.get("public_operating_envelope_screen") or {}
+    incident = response.get("public_incident_traceability") or {}
+    local_incident = response.get("confidential_local_accident_response_coverage") or {}
+
+    return {
+        "evidence_digest": manifest.get("evidence_digest"),
+        "source": selected(manifest.get("source"), (
+            "kind", "field_measurement", "claim_limit",
+        )),
+        "runtime_calibration": {
+            **selected(runtime, (
+                "status", "requested", "profile_id", "claim_limit",
+            )),
+            "station_recharge_dynamics": selected(recharge_dynamics, (
+                "status", "requested", "profile_id",
+                "minimum_recharge_off_time_s", "claim_limit",
+            )),
+        },
+        "detector_policy": selected(detector, (
+            "status", "alarm_threshold_volpct_h2", "trip_threshold_volpct_h2",
+            "persistence_s", "claim_limit",
+        )),
+        "impact": {
+            "calculation_attempted": impact.get("calculation_attempted") is True,
+            "calculation_status": impact.get("calculation_status"),
+            "result_count": impact.get("result_count", 0),
+            "claim_limit": short(impact.get("claim_limit")),
+            "results": compact_impacts[:3],
+        },
+        "response_guidance": {
+            "source_ids": list(response.get("source_ids") or [])[:12],
+            "claim_limit": short(response.get("claim_limit")),
+        },
+        "public_operating_envelope_screen": selected(operating_screen, (
+            "status", "source_id", "flow_context",
+            "current_simulated_nozzle_flow_g_s", "public_average_flow_g_s",
+            "public_peak_flow_g_s", "raw_rows_public", "validation_claim",
+            "claim_limit",
+        )),
+        "decision_support_evidence": {
+            "public_incident": selected(incident, (
+                "case_count", "category_count", "covered_case_count",
+                "contract_pass", "claim_limit",
+            )),
+            "restricted_incident_metadata": selected(local_incident, (
+                "case_count", "mapped_case_count", "required_stage_count",
+                "claim_limit",
+            )),
+        },
+        "validation_boundaries": {
+            "station_to_vehicle": {
+                "claim_supported": closed_loop.get("claim_supported") is True,
+                "case_count": closed_loop_aggregate.get("case_count"),
+                "screening_pass_count": closed_loop_aggregate.get("screening_pass_count"),
+                "claim_limit": short(closed_loop.get("claim_limit")),
+            },
+            "source_depletion": {
+                "claim_supported": preslhy_holdout.get("claim_supported") is True,
+                "joint_primary_pass_fraction": preslhy_holdout.get(
+                    "joint_primary_pass_fraction"
+                ),
+                "claim_limit": short(preslhy.get("claim_limit")),
+            },
+            "high_pressure_aperture": {
+                "evidence_role": release.get("evidence_role"),
+                "baseline_joint_primary_pass_count": release.get(
+                    "baseline_joint_primary_pass_count"
+                ),
+                "claim_limit": short(release.get("claim_limit")),
+            },
+        },
+    }
+
+
 def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
-    """Return a very small provenance header that survives prompt caps."""
+    """Return a detailed provenance view for audit and UI consumers.
+
+    Interactive provider prompts use :func:`prompt_decision_evidence` instead
+    because this complete traceability view can exceed a chat context budget.
+    """
 
     evidence = manifest.get("response_evidence") or {}
     benchmarks = evidence.get("public_experimental_benchmarks") or {}
