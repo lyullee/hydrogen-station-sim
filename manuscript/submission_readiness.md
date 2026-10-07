@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-07 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **80 PASS · 6 FAIL · 8 PENDING**.
+Gate counts: **82 PASS · 6 FAIL · 8 PENDING**.
 
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted
