@@ -91,6 +91,11 @@ def build(root: Path) -> dict[str, Any]:
                 "evidence": "research/grune_ventilation_dataset_inventory_2026_10_05.json",
                 "claim_boundary": "Hash-verified CC BY 4.0 concentration/ventilation measurements only; no model comparison, outdoor separation-distance claim or full-loop validation claim.",
             },
+            "full_scale_indoor_surrogate_measurements": {
+                "gate": gate("h2safe_full_scale_indoor_surrogate_intake_integrity")["status"],
+                "evidence": "research/h2safe_indoor_release_intake_2026_10_07.json",
+                "claim_boundary": "Hash-verified full-scale indoor helium-surrogate sensor/geometry/HVAC intake only; the public fields do not calibrate H2 thresholds, site layout, outdoor consequence distances or a full filling loop.",
+            },
             "real_station_candidate": {
                 "status": "ACCESS_REQUEST_ONLY",
                 "evidence": [
@@ -163,6 +168,9 @@ def build(root: Path) -> dict[str, Any]:
             if latest_search_path.is_file() else None,
             "operational_benchmark_recheck_sha256": sha256(operational_search_path),
             "operational_benchmark_face_validity_sha256": sha256(operational_face_path),
+            "h2safe_intake_sha256": sha256(
+                root / "research/h2safe_indoor_release_intake_2026_10_07.json"
+            ),
             "candidate_route_count": len(tracker.get("candidates") or []),
             "public_full_loop_search_candidate_count": candidate_count(search),
             "latest_public_full_loop_search_candidate_count": candidate_count(latest_search),

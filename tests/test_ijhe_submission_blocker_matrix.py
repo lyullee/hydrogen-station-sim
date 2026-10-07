@@ -16,5 +16,9 @@ def test_current_blocker_matrix_tracks_the_readiness_audit():
     assert matrix["reproducibility"]["public_operational_benchmark_candidate_count"] == 18
     assert matrix["decision"]["goal_completion_permitted"] is False
     assert matrix["decision"]["full_user_objective_ready"] is False
+    h2safe = matrix["evidence_snapshot"]["full_scale_indoor_surrogate_measurements"]
+    assert h2safe["gate"] == "PASS"
+    assert "helium-surrogate" in h2safe["claim_boundary"]
+    assert len(matrix["reproducibility"]["h2safe_intake_sha256"]) == 64
     ids = {item["id"] for item in matrix["blocking_matrix"]}
     assert {"full_loop_external_validation", "saga_human_effectiveness", "submission_declarations"} <= ids

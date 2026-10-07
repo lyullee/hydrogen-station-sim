@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-06T14:08:24.900133+00:00",
+  "generated_at": "2026-10-07T08:11:53.716857+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 76,
+    "PASS": 77,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -2686,6 +2686,27 @@
         "runtime_scope": "virtual_detector_proxy_only",
         "runtime_statistic_default": "upper",
         "claim_boundary": "not CFD, not detector certification, not outdoor HRS or full-loop validation"
+      }
+    },
+    {
+      "id": "h2safe_full_scale_indoor_surrogate_intake_integrity",
+      "status": "PASS",
+      "claim": "A public full-scale indoor helium-surrogate release package is hash-verified and structurally mapped without being promoted to H2 threshold or full-station validation.",
+      "evidence": "research\\h2safe_indoor_release_intake_2026_10_07.json",
+      "requirement": "Five traces, Lab-1/2 coordinate inventories, mapped trace sensors, preserved source hashes, and explicit threshold/full-loop/runtime limits.",
+      "observed": {
+        "doi": "10.7799/17118570",
+        "case_count": 5,
+        "lab_sensor_coordinate_counts": {
+          "Lab-1": 24,
+          "Lab-2": 37
+        },
+        "all_trace_columns_coordinate_mapped": true,
+        "timestamped_signal_schema_available": true,
+        "hydrogen_threshold_calibration": false,
+        "full_loop_station_vehicle_validation": false,
+        "runtime_parameter_updated": false,
+        "claim_boundary": "This is reproducible public full-scale indoor helium-surrogate data-intake evidence. It supports only qualitative indoor detector/geometry/HVAC context and regression checks of metadata handling. It does not calibrate virtual detector amplitude, H2 alarm or trip setpoints, release physics, detector placement, ESD effectiveness, outdoor HRS dispersion, consequence distances, or a station-to-vehicle fueling loop."
       }
     },
     {

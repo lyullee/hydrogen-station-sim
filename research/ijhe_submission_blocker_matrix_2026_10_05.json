@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-06T08:25:14.268440+00:00",
+  "generated_at": "2026-10-07T08:12:52.214123+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -16,7 +16,7 @@
     "interpretation": "A bounded manuscript may be drafted around model-level and qualitative evidence, but the validated full-station digital-twin objective cannot be declared complete."
   },
   "gate_counts": {
-    "PASS": 76,
+    "PASS": 77,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -43,6 +43,11 @@
       "gate": "PASS",
       "evidence": "research/grune_ventilation_dataset_inventory_2026_10_05.json",
       "claim_boundary": "Hash-verified CC BY 4.0 concentration/ventilation measurements only; no model comparison, outdoor separation-distance claim or full-loop validation claim."
+    },
+    "full_scale_indoor_surrogate_measurements": {
+      "gate": "PASS",
+      "evidence": "research/h2safe_indoor_release_intake_2026_10_07.json",
+      "claim_boundary": "Hash-verified full-scale indoor helium-surrogate sensor/geometry/HVAC intake only; the public fields do not calibrate H2 thresholds, site layout, outdoor consequence distances or a full filling loop."
     },
     "real_station_candidate": {
       "status": "ACCESS_REQUEST_ONLY",
@@ -110,13 +115,14 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "03b1b5a80213a9b6f676d5fe1f58e215a7ac4b1e0a61a0a2849665e13d0c56da",
-    "hiad_readiness_sha256": "e028c9a9b71ecbac658a66d1421834025e2708e07383a21f82b413abfe5fdb86",
+    "audit_sha256": "3400490f24289c4ff8eb6d177c0ab540b1edb4bf91601ccee2fee00640fa1200",
+    "hiad_readiness_sha256": "98677a6d6e24c82a28b3255ef40c8f5a62ce747350f0fe7da5b15c9c3cb77f29",
     "acquisition_tracker_sha256": "bdaff28618a0bdf3f8bbb7e4ab09b366470fb2ce086b8bf16a3f6362ca7a530a",
     "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",
     "latest_full_loop_search_sha256": "14391668298eea81e1aaff919e9a20fd9c3570694e33cf8998d4156976cba808",
     "operational_benchmark_recheck_sha256": "80e865de45384c7bd48c721125e440f482343c2420095f56f6866390db842e81",
     "operational_benchmark_face_validity_sha256": "64001782ba19ebd3299b0f17caf61f78138d9bc9a7836bc77d6e27f4c0dcec02",
+    "h2safe_intake_sha256": "1ee28c8e168d2ee411763801249ee059a5e356c21f5dd45d75b48880b88f113f",
     "candidate_route_count": 31,
     "public_full_loop_search_candidate_count": 17,
     "latest_public_full_loop_search_candidate_count": 9,

@@ -12,7 +12,7 @@ evidence-readiness decision; it is not a prediction of editorial acceptance.
 
 ## Current decision
 
-Audit snapshot: **2026-10-06 07:44 UTC**
+Audit snapshot: **2026-10-07 UTC**
 
 | Decision | Result |
 |---|---|
@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-06 07:44 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **76 PASS · 6 FAIL · 7 PENDING**.
+Gate counts: **77 PASS · 6 FAIL · 7 PENDING**.
 
 The fresh de-identified private-data recheck matches the committed
 station-boundary profile across all attested fields. It does not replace the
@@ -38,8 +38,8 @@ quarantine and hash the archive, freeze the model and scoring protocol before
 outcome access, retain failed cases, publish only approved aggregates, and make
 raw files available to the editor or reviewers through an approved controlled
 inspection path when permitted. Confidential data are not automatically
-validation evidence; provenance, synchronized channels, independent cases and
-The public manuscript should report the source only as a confidential,
+validation evidence; provenance, synchronized channels, and independent cases
+are required. The public manuscript should report the source only as a confidential,
 owner-controlled operational dataset and should omit the operator, location,
 exact dates, manufacturer, model numbers, tag names and detailed geometry.
 
@@ -85,6 +85,14 @@ Published operating-range evidence is summarized in
 and is exposed to the bounded LLM context. The NREL tank/hose trace and the
 DOE/NREL high-flow report support partial-boundary and face-validity checks;
 neither is treated as a complete station-to-vehicle holdout.
+
+The public [H2SAFE full-scale indoor helium-surrogate dataset](https://data.nlr.gov/submissions/330)
+has been hash-verified and structurally mapped as five time-resolved release
+traces with sensor-coordinate and HVAC metadata. It contributes only indoor
+sensor/geometry/HVAC context: its published CSV headers do not establish a
+hydrogen concentration unit or release-time alignment, so it has not changed
+hydrogen alarm thresholds, runtime parameters, outdoor-consequence claims, or
+full-loop station-to-vehicle validation.
 
 The restricted local accident casebook also has a de-identified response-stage
 coverage summary: 322/322 cases map to a candidate plan with all five stages.

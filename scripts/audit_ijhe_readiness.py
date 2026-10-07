@@ -1779,6 +1779,53 @@ def audit(root: Path) -> dict[str, object]:
         } if grune_envelope else "missing; empirical ventilation envelope has not been built",
     ))
 
+    h2safe_path = root / "research/h2safe_indoor_release_intake_2026_10_07.json"
+    h2safe = _json(h2safe_path)
+    h2safe_source = (h2safe or {}).get("source") or {}
+    h2safe_intake = (h2safe or {}).get("intake") or {}
+    h2safe_eligibility = (h2safe or {}).get("eligibility") or {}
+    h2safe_cases = [item for item in h2safe_intake.get("cases") or [] if isinstance(item, dict)]
+    h2safe_pass = bool(
+        (h2safe or {}).get("status")
+        == "completed_bounded_full_scale_indoor_surrogate_intake"
+        and h2safe_source.get("doi") == "10.7799/17118570"
+        and h2safe_source.get("raw_rows_committed") is False
+        and h2safe_intake.get("case_count") == 5
+        and h2safe_intake.get("lab_sensor_coordinate_counts") == {"Lab-1": 24, "Lab-2": 37}
+        and all((case.get("unmapped_sensor_columns") or []) == [] for case in h2safe_cases)
+        and h2safe_eligibility.get("timestamped_signal_schema_available") is True
+        and h2safe_eligibility.get("numerical_hydrogen_alarm_or_trip_threshold_calibration") is False
+        and h2safe_eligibility.get("full_loop_station_vehicle_validation") is False
+        and (h2safe or {}).get("runtime_parameter_updated") is False
+        and bool((h2safe or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "h2safe_full_scale_indoor_surrogate_intake_integrity",
+        "PASS" if h2safe_pass else ("FAIL" if h2safe else "PENDING"),
+        "A public full-scale indoor helium-surrogate release package is hash-verified and structurally mapped without being promoted to H2 threshold or full-station validation.",
+        str(h2safe_path.relative_to(root)),
+        "Five traces, Lab-1/2 coordinate inventories, mapped trace sensors, preserved source hashes, and explicit threshold/full-loop/runtime limits.",
+        {
+            "doi": h2safe_source.get("doi"),
+            "case_count": h2safe_intake.get("case_count"),
+            "lab_sensor_coordinate_counts": h2safe_intake.get("lab_sensor_coordinate_counts"),
+            "all_trace_columns_coordinate_mapped": all(
+                (case.get("unmapped_sensor_columns") or []) == [] for case in h2safe_cases
+            ),
+            "timestamped_signal_schema_available": h2safe_eligibility.get(
+                "timestamped_signal_schema_available"
+            ),
+            "hydrogen_threshold_calibration": h2safe_eligibility.get(
+                "numerical_hydrogen_alarm_or_trip_threshold_calibration"
+            ),
+            "full_loop_station_vehicle_validation": h2safe_eligibility.get(
+                "full_loop_station_vehicle_validation"
+            ),
+            "runtime_parameter_updated": (h2safe or {}).get("runtime_parameter_updated"),
+            "claim_boundary": (h2safe or {}).get("claim_boundary"),
+        } if h2safe else "missing; H2SAFE source intake has not been audited",
+    ))
+
     explosion_inventory_path = root / "research/dataverse_hydrogen_explosion_dataset_inventory_2026_10_05.json"
     explosion_inventory = _json(explosion_inventory_path)
     explosion_sources = (explosion_inventory or {}).get("sources") or []
