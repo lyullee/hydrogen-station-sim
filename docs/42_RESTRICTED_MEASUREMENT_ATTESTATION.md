@@ -62,3 +62,28 @@ $env:PYTHONPATH = 'src'
 
 이 절차를 통과해도 차량 탱크·노즐·프로토콜 채널이 없으면 전체
 충전소-차량 루프 검증이나 안전거리·안전인증 주장은 허용되지 않습니다.
+
+## 압축기·냉각기 열거동 진단
+
+온도 역할·단위와 냉각 상태값 의미까지 확인된 뒤에는 다음 진단을 실행할 수
+있습니다. 70% 시간 접두부의 온도 분포와 30% 접미부를 비교하며, 원시 행이나
+절대 시각은 출력하지 않습니다.
+
+```powershell
+$env:PYTHONPATH = 'src'
+.\.venv\Scripts\python.exe scripts\analyze_confidential_station_thermal_dynamics.py `
+  --input <restricted-equipment-trace.csv> `
+  --mapping <restricted-equipment-map.json> `
+  --attestation <confirmed-attestation.json> `
+  --output <deidentified-thermal-diagnostic.json> `
+  --cooling-state-role cooling_run --active-state 1 `
+  --component-role compressor_temperature=compressor `
+  --component-role cooler_inlet_temperature=cooler_inlet `
+  --component-role cooler_outlet_temperature=cooler_outlet
+```
+
+검토 전 초안을 전달하면 명령은 측정 행을 읽기 전에 중단됩니다. 통과 결과도
+station-side 열운전 envelope일 뿐 차량 충전 온도 검증이나 프리쿨러 용량
+인증으로 승격하지 않습니다. 고정 방법은
+`research/confidential_station_thermal_dynamics_protocol_2026_10_08.json`에
+기록합니다.

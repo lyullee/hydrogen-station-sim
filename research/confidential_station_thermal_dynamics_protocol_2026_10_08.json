@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "protocol_id": "CONFIDENTIAL-STATION-THERMAL-DYNAMICS-001",
+  "status": "frozen_awaiting_custodian_attestation",
+  "frozen_at": "2026-10-08",
+  "evidence_role": "owner_controlled_station_component_operating_diagnostic",
+  "privacy_controls": {
+    "raw_rows_persisted": false,
+    "source_identifiers_published": false,
+    "absolute_timestamps_published": false,
+    "tag_names_published": false,
+    "source_paths_published": false,
+    "company_location_date_manufacturer_published": false
+  },
+  "required_attestation": {
+    "timebase_semantics": true,
+    "temperature_roles_and_units": true,
+    "cooling_state_value_semantics": true,
+    "calibration_or_quality_metadata": true,
+    "current_status": "UNCONFIRMED"
+  },
+  "generic_component_mapping": {
+    "temperature_roles": [
+      "compressor_temperature",
+      "cooler_inlet_temperature",
+      "cooler_outlet_temperature"
+    ],
+    "state_role": "cooling_run",
+    "proposed_source_temperature_unit": "degC",
+    "proposed_active_state_value": "1",
+    "proposals_are_attested": false
+  },
+  "analysis": {
+    "calibration_fraction": 0.7,
+    "holdout_fraction": 0.3,
+    "minimum_holdout_rows": 100,
+    "raw_smoothing": false,
+    "imputation": false,
+    "case_specific_parameter_fitting": false,
+    "metrics": [
+      "component temperature p05, median and p95",
+      "cooling-active and cooling-inactive temperature envelopes",
+      "cooler inlet-minus-outlet temperature drop",
+      "cooling-state duty cycle and transition count",
+      "chronological suffix medians inside prefix p05-p95 envelopes"
+    ]
+  },
+  "acceptance": {
+    "all_component_holdout_medians_inside_prefix_p05_p95": true,
+    "cooling_active_drop_holdout_median_inside_prefix_p05_p95": true,
+    "minimum_holdout_rows_met": true,
+    "no_quality_warnings": true
+  },
+  "promotion_boundary": {
+    "station_component_thermal_envelope_possible_after_attestation": true,
+    "runtime_parameter_application": false,
+    "vehicle_fill_thermal_validation": false,
+    "full_station_vehicle_validation": false,
+    "full_loop_holdout_eligible": false,
+    "safety_certification": false
+  },
+  "runner": "scripts/analyze_confidential_station_thermal_dynamics.py",
+  "claim_boundary": "The frozen method can produce a de-identified station-side compressor/cooler operating diagnostic after custodian attestation. It cannot validate vehicle filling, establish a safety limit, change runtime parameters or close the full-loop validation gate."
+}
