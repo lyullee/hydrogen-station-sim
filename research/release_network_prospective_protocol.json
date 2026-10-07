@@ -2,12 +2,13 @@
   "schema_version": 1,
   "status": "prospective_model_only_no_holdout_received",
   "model": "src/h2station/release_network.py",
+  "model_sha256": "BE4D21BD0D5C52A20CDA6609D4D3CE1D349C576BB4498CF3ACF4A9DBAB856D42",
   "evidence_role": "future_validation_protocol",
   "model_boundary": {
     "control_volumes": ["source_vessel", "supply_line"],
     "boundaries": ["finite_valve_opening", "terminal_restriction_to_ambient"],
     "states": ["mass", "internal_energy", "source_wall_temperature", "line_wall_temperature"],
-    "outputs": ["source_pressure", "line_pressure", "source_temperature", "line_temperature", "upstream_mass_flow", "terminal_mass_flow"]
+    "outputs": ["source_pressure", "line_pressure", "source_temperature", "line_temperature", "upstream_mass_flow", "terminal_mass_flow", "cumulative_terminal_release", "cumulative_terminal_enthalpy", "cumulative_thermal_boundary_energy", "mass_balance_residual", "energy_balance_residual"]
   },
   "required_channels": [
     "common_timestamp",
@@ -35,6 +36,12 @@
     "half_time_relative_error_percent_max": 20.0,
     "aggregate_joint_pass_fraction_min": 0.7
   },
+  "numerical_conservation_screens": {
+    "mass_closure_relative_error_max": 0.002,
+    "energy_closure_relative_error_max": 0.002,
+    "instrumentation_added_before_target_campaign_outcome_access": true,
+    "physical_trajectory_equations_changed": false
+  },
   "prohibited_after_outcome_access": [
     "case_specific_parameter_fit",
     "discharge_coefficient_fit",
@@ -49,5 +56,5 @@
     "ijhe_gate_impact": "no_change",
     "full_user_objective_ready": false
   },
-  "claim_boundary": "Implementation and mass-closure tests only; no external physical validation, station safety, consequence-distance or SAGA-effectiveness claim."
+  "claim_boundary": "Implementation and mass/energy-closure tests only; no external physical validation, station safety, consequence-distance or SAGA-effectiveness claim."
 }

@@ -13,8 +13,10 @@ the line discharges through a terminal restriction to ambient. Each volume
 has a gas mass and internal-energy state. Optional lumped wall states exchange
 heat with the gas and ambient; internal gas/wall area and external
 wall/ambient area are separate geometry inputs. The model returns source and
-line pressures,
-temperatures, inventories, upstream flow and terminal flow on one clock.
+line pressures, temperatures, inventories, upstream flow and terminal flow on
+one clock. It also returns cumulative terminal mass and enthalpy, net
+thermal-boundary energy, and instantaneous mass/energy conservation residuals.
+Those bookkeeping states do not feed the physical trajectory.
 
 No fitted discharge coefficient, opening time, line volume, time shift or
 case-specific initial condition is permitted after a holdout outcome is read.
@@ -48,7 +50,10 @@ only; it cannot enter the primary apparatus-resolved claim.
 
 ## Current status
 
-The repository contains the implementation and unit tests for mass closure and
-finite valve/line states. No qualifying new raw campaign has been received and
-no result from this model is used in the IJHE readiness audit. The full-loop
-and consequence gates therefore remain unchanged.
+The repository contains the implementation and unit tests for mass and
+open-system energy closure, finite valve/line states, and separate thermal
+areas. The conservation instrumentation was added before opening a qualifying
+target campaign and does not change the physical trajectory equations. No
+qualifying new raw campaign has been received and no result from this model is
+used in the IJHE readiness audit. The full-loop and consequence gates therefore
+remain unchanged.

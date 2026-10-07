@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
   "recorded_at": "2026-10-05",
+  "updated_at": "2026-10-07",
   "status": "PROSPECTIVE_PROTOCOL_SPECIFICATION_ONLY",
   "purpose": "Freeze an apparatus-resolved source-line-valve-terminal release model and its data contract before opening an independent facility logger archive.",
   "claim_boundary": "This artifact is a reproducibility and data-acquisition protocol. It is not external validation, does not repair the frozen Proust holdout, and does not support a safety-distance or controller claim.",
@@ -30,16 +31,24 @@
   },
   "locked_model": {
     "path": "src/h2station/release_network.py",
-    "sha256": "AD2CFBEF164999813184FE66A620F2CC301339CDD09C61741455F0B3E68AC5C0",
+    "sha256": "BE4D21BD0D5C52A20CDA6609D4D3CE1D349C576BB4498CF3ACF4A9DBAB856D42",
     "state_description": [
       "source vessel mass and internal energy",
       "finite line mass and internal energy",
       "source and line wall temperatures",
       "upstream valve/restriction flow",
-      "terminal restriction flow"
+      "terminal restriction flow",
+      "cumulative terminal mass/enthalpy and net thermal-boundary energy bookkeeping, which does not feed the physical trajectory"
     ],
     "parameter_policy": "Freeze geometry, valve opening law, discharge coefficients, heat-transfer terms, solver tolerances and boundary semantics before any target-campaign numerical result is inspected.",
     "production_status": "development_only_not_wired_into_station_runtime"
+  },
+  "protocol_revision": {
+    "revision_kind": "pre-access numerical-conservation instrumentation",
+    "target_campaign_outcome_data_accessed": false,
+    "physical_trajectory_equations_changed": false,
+    "change_scope": "The source-line-valve physics is unchanged. The model now reports cumulative terminal mass, terminal enthalpy, thermal-boundary energy, and mass/energy residuals so that a future frozen run can reject numerically non-conservative trajectories.",
+    "revalidation_required_before_promotion": true
   },
   "required_channels": [
     {
@@ -115,6 +124,7 @@
   ],
   "quality_controls": {
     "mass_closure_relative_tolerance": 0.002,
+    "energy_closure_relative_tolerance": 0.002,
     "source_line_terminal_time_alignment_tolerance_s": 0.002,
     "minimum_complete_runs": 3,
     "minimum_points_per_run": 200,
@@ -125,6 +135,7 @@
     "terminal_mass_flow_nrmse_percent_peak_measured": {"maximum": 15.0},
     "terminal_mass_flow_median_absolute_percentage_error_percent": {"maximum": 20.0},
     "mass_closure": {"maximum_relative_error": 0.002},
+    "energy_closure": {"maximum_relative_error": 0.002},
     "aggregate_rule": "At least two of three independent complete runs must pass every primary endpoint, with no required channel missing."
   },
   "promotion_gate": {

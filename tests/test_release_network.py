@@ -41,6 +41,33 @@ def test_release_network_mass_closure_is_explicit():
     terminal_release = np.trapezoid(result.terminal_mass_flow_kg_s, result.time_s)
 
     assert source_loss == pytest.approx(line_accumulation + terminal_release, rel=2.0e-4)
+    assert result.cumulative_terminal_release_kg[-1] == pytest.approx(
+        source_loss - line_accumulation, rel=1.0e-6,
+    )
+    assert np.max(np.abs(result.mass_balance_residual_kg)) < 1.0e-8
+
+
+def test_release_network_energy_closure_is_explicit_for_wall_and_boundary_heat():
+    time = np.linspace(0.0, 0.5, 101)
+    result = simulate_release_network(
+        time,
+        inputs=_inputs(
+            source_wall_mass_kg=2.0,
+            line_wall_mass_kg=1.0,
+            source_internal_area_m2=0.8,
+            line_internal_area_m2=0.2,
+            source_external_area_m2=1.0,
+            line_external_area_m2=0.4,
+            source_wall_temperature_k=305.15,
+            line_wall_temperature_k=295.15,
+            internal_heat_transfer_w_m2_k=100.0,
+            external_heat_transfer_w_m2_k=15.0,
+            ambient_temperature_k=293.15,
+        ),
+    )
+
+    assert result.cumulative_terminal_enthalpy_j[-1] > 0.0
+    assert np.max(np.abs(result.energy_balance_residual_j)) < 1.0
 
 
 def test_release_network_rejects_nonphysical_inputs():

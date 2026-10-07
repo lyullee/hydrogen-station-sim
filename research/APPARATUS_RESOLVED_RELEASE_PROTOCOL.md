@@ -20,9 +20,12 @@ distinction testable without fitting to the existing outcomes.
 
 The candidate implementation is
 `src/h2station/release_network.py`, SHA-256
-`AD2CFBEF164999813184FE66A620F2CC301339CDD09C61741455F0B3E68AC5C0` at the
-time this protocol was written. It has source and line mass/energy states,
-finite valve opening, terminal flow and optional wall thermal states. It is
+`BE4D21BD0D5C52A20CDA6609D4D3CE1D349C576BB4498CF3ACF4A9DBAB856D42` after a
+pre-access numerical-conservation instrumentation revision. It has source and
+line mass/energy states, finite valve opening, terminal flow and optional wall
+thermal states. It also reports cumulative terminal mass, cumulative terminal
+enthalpy, thermal-boundary energy, and instantaneous mass/energy residuals;
+these bookkeeping states do not feed the physical trajectory. It is
 development-only and is not wired into the station runtime.
 
 The nominal line dimensions imply 0.000785398 m³ of geometric internal volume
@@ -54,10 +57,14 @@ At least two of three independent complete runs must pass all of the following:
 * terminal-flow NRMSE normalized by measured peak ≤ 15%;
 * terminal-flow median absolute percentage error ≤ 20%;
 * integrated source-to-line-to-terminal mass closure relative error ≤ 0.2%.
+* open-system energy closure relative error ≤ 0.2%.
 
 Missing required channels make a run ineligible; they do not become a pass by
 imputation. Calibration and digitization uncertainty are reported separately
 and propagated to intervals, but cannot override a failed primary endpoint.
+The 2026-10-07 instrumentation update was made before a target-campaign
+outcome archive was opened; it adds numerical rejection checks and does not
+alter the source-line-valve trajectory equations.
 
 The machine-readable record is
 `research/apparatus_resolved_release_protocol.json`. Its explicit promotion

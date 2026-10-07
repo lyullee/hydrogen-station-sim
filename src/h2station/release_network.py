@@ -119,6 +119,11 @@ class ReleaseNetworkResult:
     line_mass_kg: np.ndarray
     upstream_mass_flow_kg_s: np.ndarray
     terminal_mass_flow_kg_s: np.ndarray
+    cumulative_terminal_release_kg: np.ndarray
+    cumulative_terminal_enthalpy_j: np.ndarray
+    cumulative_thermal_boundary_energy_j: np.ndarray
+    mass_balance_residual_kg: np.ndarray
+    energy_balance_residual_j: np.ndarray
 
 
 def _opening_fraction(time_s: float, opening_time_s: float) -> float:
@@ -173,10 +178,28 @@ def simulate_release_network(
     )
     source_wall_capacity = inputs.source_wall_capacity_j_k
     line_wall_capacity = inputs.line_wall_capacity_j_k
+    # The final three entries are bookkeeping states.  They do not affect the
+    # physical equations; they make source/line/terminal mass and open-system
+    # energy closure directly auditable at each reported time.
     initial = np.asarray(
-        [source_mass, source_energy, line_mass, line_energy,
-         source_wall_temperature, line_wall_temperature],
+        [
+            source_mass,
+            source_energy,
+            line_mass,
+            line_energy,
+            source_wall_temperature,
+            line_wall_temperature,
+            0.0,  # terminal released mass [kg]
+            0.0,  # terminal released enthalpy [J]
+            0.0,  # net thermal-boundary energy into source + line system [J]
+        ],
         dtype=float,
+    )
+    initial_stored_energy = (
+        source_energy
+        + line_energy
+        + source_wall_capacity * source_wall_temperature
+        + line_wall_capacity * line_wall_temperature
     )
     minimum_source_mass = max(source_mass * 1.0e-10, 1.0e-12)
     minimum_line_mass = max(line_mass * 1.0e-10, 1.0e-12)
@@ -230,10 +253,20 @@ def simulate_release_network(
         )
         source_wall_derivative = 0.0
         line_wall_derivative = 0.0
+        # A zero-capacity wall is a prescribed-temperature boundary in this
+        # lumped model.  Its gas-to-wall heat term is therefore counted as an
+        # external boundary exchange instead of a stored-wall contribution.
+        thermal_boundary_q = 0.0
         if source_wall_capacity > 0.0:
             source_wall_derivative = (-source_wall_q + source_external_q) / source_wall_capacity
+            thermal_boundary_q += source_external_q
+        else:
+            thermal_boundary_q += source_wall_q
         if line_wall_capacity > 0.0:
             line_wall_derivative = (-line_wall_q + line_external_q) / line_wall_capacity
+            thermal_boundary_q += line_external_q
+        else:
+            thermal_boundary_q += line_wall_q
         return np.asarray(
             [
                 -upstream,
@@ -242,6 +275,9 @@ def simulate_release_network(
                 upstream * source_h - terminal * line_h + line_wall_q,
                 source_wall_derivative,
                 line_wall_derivative,
+                terminal,
+                terminal * line_h,
+                thermal_boundary_q,
             ],
             dtype=float,
         )
@@ -253,7 +289,10 @@ def simulate_release_network(
         initial,
         method="LSODA",
         rtol=2.0e-6,
-        atol=(1.0e-11, 1.0e-2, 1.0e-11, 1.0e-2, 1.0e-7, 1.0e-7),
+        atol=(
+            1.0e-11, 1.0e-2, 1.0e-11, 1.0e-2, 1.0e-7, 1.0e-7,
+            1.0e-11, 1.0e-2, 1.0e-2,
+        ),
         max_step=max(1.0e-4, min(0.02, end_time / 2000.0)),
     )
     if not solution.success:
@@ -266,6 +305,21 @@ def simulate_release_network(
     line_t = np.asarray([item[4] for item in snapshots])
     upstream = np.asarray([item[6] for item in snapshots])
     terminal = np.asarray([item[7] for item in snapshots])
+    cumulative_terminal_release = np.interp(requested, solution.t, solution.y[6])
+    cumulative_terminal_enthalpy = np.interp(requested, solution.t, solution.y[7])
+    cumulative_thermal_boundary = np.interp(requested, solution.t, solution.y[8])
+    stored_energy = (
+        solution.y[1]
+        + solution.y[3]
+        + source_wall_capacity * solution.y[4]
+        + line_wall_capacity * solution.y[5]
+    )
+    mass_residual = (
+        solution.y[0] + solution.y[2] + solution.y[6] - (source_mass + line_mass)
+    )
+    energy_residual = (
+        stored_energy + solution.y[7] - solution.y[8] - initial_stored_energy
+    )
     return ReleaseNetworkResult(
         time_s=requested,
         source_pressure_pa_abs=np.interp(requested, solution.t, source_p),
@@ -278,6 +332,11 @@ def simulate_release_network(
         line_mass_kg=np.interp(requested, solution.t, solution.y[2]),
         upstream_mass_flow_kg_s=np.interp(requested, solution.t, upstream),
         terminal_mass_flow_kg_s=np.interp(requested, solution.t, terminal),
+        cumulative_terminal_release_kg=cumulative_terminal_release,
+        cumulative_terminal_enthalpy_j=cumulative_terminal_enthalpy,
+        cumulative_thermal_boundary_energy_j=cumulative_thermal_boundary,
+        mass_balance_residual_kg=np.interp(requested, solution.t, mass_residual),
+        energy_balance_residual_j=np.interp(requested, solution.t, energy_residual),
     )
 
 
