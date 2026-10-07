@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "attempted_at": "2026-10-07T21:38:10.065360+00:00",
+  "attempted_at": "2026-10-07T22:59:29.739540+00:00",
   "attempts_this_run": 1,
   "success": false,
   "compiler": "Codex built-in LaTeX compiler",
   "source": "manuscript/ijhe_manuscript_draft.tex",
-  "source_sha256": "9820146269e1664e8ce62ffc140321707ec466714257c4926f5f6155bf4ce805",
+  "source_sha256": "cfb07b7d8b43bf09a35752695e261232c62826a42eea8545c87a5053ff66e5d4",
   "diagnostic": "Unable to find standard directories for platform",
   "format_check_passed": true,
   "retained_previous_pdf": {
@@ -14,5 +14,5 @@
     "sha256": "694307f6dec2fb49ef941aa5bc1e5da3a01a8c665516119d0901a96f542d51c4",
     "matches_current_source": false
   },
-  "interpretation": "The current source passes static length, citation, asset and brace checks and now includes the prospective ignited-enclosure pressure-peaking result. The built-in compiler remains unavailable on this Windows host; the retained PDF predates these changes and must not be represented as the current-source rendering."
+  "interpretation": "The exact current source passes static length, citation, asset and brace checks. The built-in compiler was retried but remains unavailable on this Windows host; no terminal TeX engine is installed. The retained PDF predates the current source and must not be represented as its rendering."
 }
