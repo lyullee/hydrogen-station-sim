@@ -9,9 +9,12 @@ schema-search window is not used for calibration or outcome assessment.
 The receipt reports generic semantic coverage such as time, pressure,
 temperature, mass flow, vehicle, cascade/storage, compressor, dispenser, and
 controller-state channels. A `full_loop_candidate` is only a header-level
-candidate. It has **not** yet passed channel mapping, unit/calibration
-attestation, source synchronization, protocol freezing, quality screening, or
-an untouched holdout evaluation.
+candidate within one table. A `co_located_full_loop_candidate` means that
+separate tables in one workbook or archive have complementary channel labels;
+it is a cue for custodian review, **not** evidence that the tables share a
+clock or can be joined. Neither result has passed channel mapping,
+unit/calibration attestation, source synchronization, protocol freezing,
+quality screening, or an untouched holdout evaluation.
 
 Run the command in a controlled environment and save its aggregate JSON report
 outside this repository:

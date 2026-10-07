@@ -35,20 +35,23 @@ MAX_ARCHIVE_MEMBER_BYTES = 100 * 1024 * 1024
 # These terms are deliberately broad: candidate classification is only a
 # request for a custodian review, never automatic tag or unit attribution.
 SEMANTIC_TERMS: dict[str, tuple[str, ...]] = {
-    "time": ("time", "date", "timestamp", "clock", "시간", "일시", "시각"),
+    "time": (
+        "time", "date", "timestamp", "clock", "datetime", "시간", "일시", "시각", "날짜",
+    ),
     "pressure": ("pressure", "press", "압력"),
     "temperature": ("temp", "temperature", "온도"),
-    "mass_flow": ("flow", "mass", "rate", "유량", "질량", "유속"),
-    "vehicle": ("vehicle", "car", "자동차", "차량", "veh_", "veh-"),
+    "mass_flow": ("flow", "mass", "rate", "유량", "질량", "유속", "질량유량"),
+    "vehicle": ("vehicle", "car", "automobile", "자동차", "차량", "수소차", "차종", "veh_", "veh-"),
     "cascade_or_storage": (
-        "cascade", "bank", "storage", "저장", "뱅크", "casc_",
+        "cascade", "bank", "storage", "vessel", "저장", "뱅크", "저장용기", "저장탱크", "casc_",
     ),
     "controller_state": (
-        "state", "status", "valve", "esd", "mode", "control", "상태", "밸브", "제어", "모드",
+        "state", "status", "valve", "esd", "mode", "control", "alarm", "interlock",
+        "상태", "밸브", "제어", "모드", "운전", "기동", "정지", "경보", "알람", "차단", "인터록", "시퀀스",
     ),
-    "compressor": ("compress", "comp_", "압축"),
+    "compressor": ("compress", "comp_", "압축", "부스터"),
     "dispenser_or_nozzle": (
-        "dispenser", "nozzle", "hose", "충전기", "노즐", "호스",
+        "dispenser", "nozzle", "hose", "refuel", "충전기", "노즐", "호스", "충전",
     ),
 }
 
@@ -217,6 +220,7 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
     schema_search_rows_examined = 0
     unreadable_tables = 0
     full_loop_candidates = 0
+    co_located_full_loop_candidates = 0
     near_full_loop_candidates = 0
     station_recharge_candidates = 0
     vehicle_fill_candidates = 0
@@ -243,6 +247,7 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
             headers = [(suffix, header) for header in (_excel_headers(path) or ())]
             if not headers:
                 headers = [(suffix, None)]
+        container_coverages: list[frozenset[str]] = []
         for content_suffix, result in headers:
             tabular_content_format_counts[content_suffix.lstrip(".")] += 1
             if result is None:
@@ -252,6 +257,7 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
             tables_scanned += 1
             schema_search_rows_examined += rows_examined
             coverage = _classify_header(header)
+            container_coverages.append(coverage)
             for category in coverage:
                 coverage_counts[category] += 1
             if FULL_LOOP_REQUIRED.issubset(coverage):
@@ -262,6 +268,16 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
                 station_recharge_candidates += 1
             if VEHICLE_FILL_REQUIRED.issubset(coverage):
                 vehicle_fill_candidates += 1
+
+        # A single workbook or archive can contain synchronized tables divided
+        # by subsystem.  Its union is deliberately reported as a *co-located*
+        # candidate only: it does not assert common timestamps, matching units,
+        # or a usable joined record.  Flat files are kept table-scoped because
+        # directory placement alone says nothing about synchronization.
+        if suffix in {".xlsx", ".xlsm", ".zip"} and len(container_coverages) > 1:
+            combined_coverage = frozenset().union(*container_coverages)
+            if FULL_LOOP_REQUIRED.issubset(combined_coverage):
+                co_located_full_loop_candidates += 1
 
     return {
         "schema_version": 1,
@@ -283,12 +299,15 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
         "semantic_channel_table_counts": dict(sorted(coverage_counts.items())),
         "candidate_schema_counts": {
             "full_loop_candidate": full_loop_candidates,
+            "co_located_full_loop_candidate": co_located_full_loop_candidates,
             "near_full_loop_missing_one_semantic_group": near_full_loop_candidates,
             "station_recharge_candidate": station_recharge_candidates,
             "vehicle_fill_candidate": vehicle_fill_candidates,
         },
         "claim_boundary": (
-            "Header-level semantic screening only. Candidate counts do not attest "
+            "Header-level semantic screening only. A co-located candidate means only "
+            "that separate tables in one workbook or archive have complementary labels; "
+            "it does not attest that they can be joined. Candidate counts do not attest "
             "a tag mapping, units, calibration, time synchronization, event "
             "integrity, model accuracy, safety, or full-loop validation."
         ),

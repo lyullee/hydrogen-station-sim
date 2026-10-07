@@ -94,3 +94,27 @@ def test_schema_inventory_screens_zip_members_without_disclosing_member_names(tm
     assert "secret-full-loop" not in rendered
     assert "private-folder" not in rendered
     assert "private-value" not in rendered
+
+
+def test_inventory_flags_complementary_workbook_tables_only_as_co_located_candidate(
+    tmp_path: Path,
+):
+    source = tmp_path / "controlled_subsystem_export.xlsx"
+    workbook = Workbook()
+    storage = workbook.active
+    storage.title = "private storage signals"
+    storage.append(["시간", "저장탱크 압력", "저장용기 온도", "운전 상태"])
+    storage.append(["private-time", 1, 2, "private-state"])
+    dispenser = workbook.create_sheet("private dispenser signals")
+    dispenser.append(["시각", "차량", "충전기 유량"])
+    dispenser.append(["private-time", "private-vehicle", 3])
+    workbook.save(source)
+
+    report = inventory_schema([tmp_path])
+    rendered = json.dumps(report, ensure_ascii=False)
+
+    assert report["candidate_schema_counts"]["full_loop_candidate"] == 0
+    assert report["candidate_schema_counts"]["co_located_full_loop_candidate"] == 1
+    assert "private storage signals" not in rendered
+    assert "private dispenser signals" not in rendered
+    assert "private-time" not in rendered
