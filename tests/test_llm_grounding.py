@@ -578,14 +578,28 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     calculated = build_evidence_manifest(
         frame, signals, [result], True,
         active_conditions=[{"scenario": "고압 저장뱅크 압력 상승", "sensor_id": "PT-0901",
-                            "state": "TRIGGER", "response_source_ids": ["HIAD2026", "H2_INCIDENT"]}],
+                            "state": "TRIGGER", "response_plan_id": "overpressure",
+                            "response_source_ids": ["HIAD2026", "H2_INCIDENT"]}],
         selected_sensor="PT-0901", question="피해영향은?",
     )
     assert calculated["impact"]["calculation_status"] == "calculated"
     assert calculated["impact"]["results"][0]["pressure_sensor"] == "PT-0901"
     assert calculated["conditions"][0]["label"] == "고압 저장뱅크 압력 상승"
+    assert calculated["conditions"][0]["response_plan_id"] == "overpressure"
     assert calculated["conditions"][0]["response_source_ids"] == ["H2_INCIDENT", "HIAD2026"]
     assert calculated["response_evidence"]["source_ids"] == ["H2_INCIDENT", "HIAD2026"]
+    relevant = calculated["response_evidence"]["relevant_public_accident_precedents"]
+    assert relevant["citation_only"] is True
+    assert relevant["by_response_plan"]["overpressure"]
+    assert prompt_decision_evidence(calculated)["response_guidance"][
+        "relevant_public_accident_precedents"
+    ]["overpressure"]
+    assert prompt_evidence_summary(calculated)["relevant_public_accident_precedents"][
+        "by_response_plan"
+    ]["overpressure"]
+    assert prompt_evidence_header(calculated)["public_accident_evidence"][
+        "relevant_precedents_by_response_plan"
+    ]["overpressure"]
     assert calculated["evidence_digest"] != idle["evidence_digest"]
 
 

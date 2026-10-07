@@ -21,6 +21,7 @@ from .calibration_profiles import (
 )
 from .public_tank_calibration import load_public_type_iv_tank_calibration
 from .lifecycle_evidence import load_lifecycle_evidence
+from .hazop.response import public_accident_precedents
 
 
 def _runtime_calibration_profile(frame: dict[str, Any]) -> dict[str, Any]:
@@ -2774,6 +2775,7 @@ def build_evidence_manifest(
 
     conditions = []
     response_source_ids: set[str] = set()
+    response_plan_ids: set[str] = set()
     for condition in active_conditions or []:
         if not isinstance(condition, dict):
             continue
@@ -2784,11 +2786,15 @@ def build_evidence_manifest(
                 raw_source_ids = [raw_source_ids]
             source_ids = sorted({str(value) for value in raw_source_ids if value})
             response_source_ids.update(source_ids)
+            response_plan_id = str(condition.get("response_plan_id") or "")
+            if response_plan_id:
+                response_plan_ids.add(response_plan_id)
             conditions.append({
                 "label": str(label),
                 "sensor": str(condition.get("sensor_id") or ""),
                 "severity": str(condition.get("severity") or condition.get("등급") or ""),
                 "state": str(condition.get("state") or ""),
+                "response_plan_id": response_plan_id,
                 "response_source_ids": source_ids,
             })
 
@@ -2854,6 +2860,22 @@ def build_evidence_manifest(
     khk_inventory = _khk_public_accident_inventory()
     if khk_inventory is not None:
         envelope["response_evidence"]["public_accident_report_inventory"] = khk_inventory
+        relevant_precedents = {
+            plan_id: public_accident_precedents(plan_id)
+            for plan_id in sorted(response_plan_ids)
+        }
+        relevant_precedents = {
+            plan_id: rows for plan_id, rows in relevant_precedents.items() if rows
+        }
+        if relevant_precedents:
+            envelope["response_evidence"]["relevant_public_accident_precedents"] = {
+                "by_response_plan": relevant_precedents,
+                "citation_only": True,
+                "claim_limit": (
+                    "현재 response family와 연결된 공개 실제사고의 정성적 선례이며 "
+                    "현재 사고의 원인·빈도·결과 또는 조치 효과를 확정하지 않음"
+                ),
+            }
     local_accident_coverage = _confidential_local_accident_response_coverage()
     if local_accident_coverage is not None:
         envelope["response_evidence"][
@@ -3480,6 +3502,9 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if private_media.get(key) is not None
         }
+    relevant_precedents = evidence.get("relevant_public_accident_precedents")
+    if isinstance(relevant_precedents, dict):
+        summary["relevant_public_accident_precedents"] = relevant_precedents
     public_source_links = _public_source_links(evidence)
     if public_source_links:
         summary["public_source_links"] = public_source_links
@@ -3547,6 +3572,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     preslhy_holdout = preslhy.get("independent_holdout") or {}
     operating_screen = response.get("public_operating_envelope_screen") or {}
     incident = response.get("public_incident_traceability") or {}
+    relevant_precedents = response.get("relevant_public_accident_precedents") or {}
     local_incident = response.get("confidential_local_accident_response_coverage") or {}
     multisource = response.get("confidential_multisource_mapping_feasibility") or {}
     thermal_observation = response.get("temperature_observation_semantic_boundary") or {}
@@ -3651,6 +3677,13 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "pending_count": virtual_safety.get("pending_count", 0),
             "claim_limit": short(virtual_safety.get("claim_limit")),
         }
+    if relevant_precedents.get("by_response_plan"):
+        decision["response_guidance"].update({
+            "relevant_public_accident_precedents": relevant_precedents[
+                "by_response_plan"
+            ],
+            "precedent_claim_limit": short(relevant_precedents.get("claim_limit")),
+        })
     return decision
 
 
@@ -3705,6 +3738,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     incident = evidence.get("public_incident_traceability") or {}
     action_taxonomy = incident.get("action_taxonomy") or {}
     accident_inventory = evidence.get("public_accident_report_inventory") or {}
+    relevant_precedents = evidence.get("relevant_public_accident_precedents") or {}
     accidental_release = evidence.get("public_accidental_release_evidence") or {}
     local_accident_coverage = evidence.get(
         "confidential_local_accident_response_coverage"
@@ -4034,6 +4068,10 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 for key, value in (action_taxonomy.get("category_counts") or {}).items()
                 if isinstance(value, int)
             },
+            "relevant_precedents_by_response_plan": (
+                relevant_precedents.get("by_response_plan") or {}
+            ),
+            "precedent_claim_limit": relevant_precedents.get("claim_limit"),
         },
         "confidential_local_accident_response_coverage": {
             "case_count": local_accident_coverage.get("case_count"),

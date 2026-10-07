@@ -2631,6 +2631,51 @@ def audit(root: Path) -> dict[str, object]:
         } if khk_access else "missing; KHK public report access verification has not been run",
     ))
 
+    precedent_routing_path = root / "research/runtime_public_accident_precedent_routing_2026_10_07.json"
+    precedent_routing = _json(precedent_routing_path)
+    precedent_source = (precedent_routing or {}).get("source") or {}
+    precedent_aggregate = (precedent_routing or {}).get("aggregate") or {}
+    precedent_source_paths = {
+        "precedent_map_sha256": root / "research/khk_scenario_precedent_map_2026_10_04.json",
+        "inventory_sha256": root / "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
+        "runtime_resolver_sha256": root / "src/h2station/hazop/response.py",
+        "runtime_manifest_sha256": root / "src/h2station/llm_grounding.py",
+    }
+    precedent_hashes_match = bool(precedent_routing) and all(
+        precedent_source.get(key) == _sha256(path)
+        for key, path in precedent_source_paths.items()
+    )
+    precedent_routing_pass = bool(
+        (precedent_routing or {}).get("artifact_type")
+        == "runtime_public_accident_precedent_routing_audit"
+        and (precedent_routing or {}).get("status") == "PASS"
+        and precedent_source.get("source_digest_matches") is True
+        and precedent_hashes_match
+        and precedent_aggregate.get("public_report_count") == 23
+        and precedent_aggregate.get("mapped_response_family_count") == 8
+        and precedent_aggregate.get("unmatched_response_family_count") == 0
+        and precedent_aggregate.get("manifest_routing_failure_count") == 0
+        and precedent_aggregate.get("prompt_projection_failure_count") == 0
+        and precedent_aggregate.get("contract_pass") is True
+        and (precedent_routing or {}).get("raw_report_text_loaded") is False
+        and (precedent_routing or {}).get("effectiveness_claimed") is False
+        and (precedent_routing or {}).get("frequency_claimed") is False
+    )
+    gates.append(_gate(
+        "runtime_public_accident_precedent_routing",
+        "PASS" if precedent_routing_pass else ("FAIL" if precedent_routing else "PENDING"),
+        "Active response families receive integrity-checked, scenario-specific public KHK accident precedents in both the evidence manifest and compact LLM prompt.",
+        str(precedent_routing_path.relative_to(root)),
+        "23 citation-only reports, eight mapped response families, current source hashes and zero manifest/prompt routing failures; no raw report text or effectiveness/frequency claim.",
+        {
+            "aggregate": precedent_aggregate,
+            "source_hashes_match": precedent_hashes_match,
+            "raw_report_text_loaded": (precedent_routing or {}).get("raw_report_text_loaded"),
+            "effectiveness_claimed": (precedent_routing or {}).get("effectiveness_claimed"),
+            "claim_boundary": (precedent_routing or {}).get("claim_boundary"),
+        } if precedent_routing else "missing; runtime accident-precedent routing audit has not run",
+    ))
+
     preslhy_path = root / "research/preslhy_blowdown_external_validation.json"
     preslhy = _json(preslhy_path)
     preslhy_protocol_path = root / "research/preslhy_blowdown_validation_protocol.json"

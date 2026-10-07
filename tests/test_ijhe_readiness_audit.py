@@ -311,6 +311,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
         == "NO_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED"
     )
     assert gates["institutional_ethics_determination"]["status"] == "PENDING"
+    assert gates["runtime_public_accident_precedent_routing"]["status"] == "PASS"
+    precedent = gates["runtime_public_accident_precedent_routing"]["observed"]
+    assert precedent["aggregate"]["public_report_count"] == 23
+    assert precedent["aggregate"]["manifest_routing_failure_count"] == 0
+    assert precedent["source_hashes_match"] is True
     assert gates["hiad_casebook_machine_preflight_integrity"]["status"] == "PASS"
     assert gates["independent_expert_review_complete"]["status"] == "PENDING"
     assert report["bounded_ijhe_submission_ready"] is False

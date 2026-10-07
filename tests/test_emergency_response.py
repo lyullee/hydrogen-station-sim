@@ -6,7 +6,8 @@ import sqlite3
 import h2station.api as api
 from h2station.hazop.database import DEFAULT_DB, load_catalog
 from h2station.hazop.response import (classify_rule, load_playbooks, prompt_guidance,
-                                      response_selection, structured_guidance)
+                                      public_accident_precedents, response_selection,
+                                      structured_guidance)
 
 
 def test_all_registered_sensor_rules_have_a_complete_response_plan():
@@ -44,6 +45,16 @@ def test_high_consequence_playbooks_link_public_incident_evidence():
         assert "KHK_PUBLIC" in by_id[plan_id]["sources"]
     assert "ACCIDENTAL_RELEASE_2025" in by_id["gas_release"]["sources"]
     assert "ACCIDENTAL_RELEASE_2025" in by_id["hydrogen_fire"]["sources"]
+
+
+def test_public_accident_precedents_are_integrity_checked_and_plan_specific():
+    gas_release = public_accident_precedents("gas_release")
+    external_fire = public_accident_precedents("external_fire")
+    assert gas_release and external_fire
+    assert all(row["url"].startswith("https://www.khk.or.jp/") for row in gas_release)
+    assert all(row["incident_codes"] and row["title"] for row in external_fire)
+    assert {row["url"] for row in gas_release} != {row["url"] for row in external_fire}
+    assert public_accident_precedents("sensor_fault") == []
 
 
 def test_fire_selection_uses_actual_event_and_healthy_periodic_is_quiet():
@@ -92,12 +103,15 @@ def test_saga_alarm_receives_and_displays_specific_actions_when_backend_fails(mo
         assert "**안정화 확인**" in answer
         assert "**재가동 전 조건**" in answer
         assert "**예방·안전관리**" in answer
+        assert "공개 실제사고 선례" in answer
         assert "eiga.eu" in answer
         assert "상황별 긴급대응" not in result["analysis_answer"]
         stages = result["response_guidance"]
         assert stages["actual_alert"] is True
         assert stages["common_steps"]
         assert stages["plans"][0]["title"] == "외부 화재의 저장용기·차량 열 노출"
+        assert stages["plans"][0]["public_accident_precedents"]
+        assert "현재 사고" in stages["plans"][0]["precedent_claim_limit"]
         assert all(stages["plans"][0][name] for name in
                    ("recognition", "immediate", "stabilize", "restart", "prevention"))
     finally:
@@ -141,3 +155,5 @@ def test_simultaneous_rules_in_same_family_remain_separate_scenarios():
     assert len(compact) == len(stages["plans"]) == 2
     assert {plan["rule_id"] for plan in stages["plans"]} == {"HZ-052", "HZ-053"}
     assert all(plan["immediate"] and plan["prevention"] for plan in stages["plans"])
+    assert all(plan["public_accident_precedents"] for plan in stages["plans"])
+    assert all(item["public_accident_precedents"] for item in compact)

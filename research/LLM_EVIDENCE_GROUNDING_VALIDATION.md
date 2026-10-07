@@ -28,6 +28,9 @@ contains:
   text;
 - a derived KHK scenario-precedent map linking all 23 report records to
   conservative response families with counts and representative citations;
+- scenario-specific KHK precedents selected from the active response family and
+  delivered consistently to the full evidence manifest, compact provider prompt
+  and staged operator guidance;
 - impact calculation state: `not_requested`, `attempted_no_result`, or
   `calculated`;
 - calculated impact basis, input sensor tags, model outputs and threshold
@@ -233,3 +236,13 @@ to more than one family. These are coverage counts, not incident frequencies,
 and no narrative, site, operator, date or effectiveness claim is exposed.
 
 The [KHK public-report inventory](khk_hydrogen_station_public_reports_inventory_2026_10_04.json) adds official accident and precaution report links for qualitative scenario and response grounding. The [scenario-precedent map](khk_scenario_precedent_map_2026_10_04.json) links the inventory's equipment classes to conservative response families and exposes only counts plus representative citation links to the assistant. It is deliberately excluded from numerical model validation, accident-frequency estimation and the station-to-vehicle full-loop holdout because the public reports do not provide synchronized process traces or complete boundary conditions.
+
+The [runtime precedent-routing audit](runtime_public_accident_precedent_routing_2026_10_07.json)
+checks all 23 KHK report records across eight mapped response families. The
+runtime resolver reproduces all 42 case-to-family references and delivers 15
+representative citations to both the evidence manifest and compact LLM prompt,
+with zero count, manifest or prompt-projection failures. An overpressure alarm,
+for example, therefore receives overpressure precedents rather than the entire
+accident inventory. This remains citation routing only: it does not judge the
+historical response, infer causes or frequency, or establish that the suggested
+steps improve operator decisions.

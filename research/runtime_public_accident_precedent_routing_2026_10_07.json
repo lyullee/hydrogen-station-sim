@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "artifact_type": "runtime_public_accident_precedent_routing_audit",
+  "generated_at_utc": "2026-10-07T14:38:59.844323+00:00",
+  "status": "PASS",
+  "source": {
+    "precedent_map": "research\\khk_scenario_precedent_map_2026_10_04.json",
+    "precedent_map_sha256": "449fd452eb8db99fa9fc9a0f3c86c78d835af861b4fc1b18f147d0024b06321b",
+    "inventory": "research\\khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
+    "inventory_sha256": "53131d1737f1d9515598ec3fca690ea70c1e50975f4cd96758eba53a29d585c6",
+    "source_digest_matches": true,
+    "runtime_resolver": "src\\h2station\\hazop\\response.py",
+    "runtime_resolver_sha256": "892bf5cb805bbf616decdcbd18819f285e68c67459d57a98c04b535cc7015565",
+    "runtime_manifest": "src\\h2station\\llm_grounding.py",
+    "runtime_manifest_sha256": "87da094e1848461baddd3f67058f5243fee69ed0beecea547060c0ba99977cce"
+  },
+  "aggregate": {
+    "public_report_count": 23,
+    "mapped_response_family_count": 8,
+    "runtime_routed_case_references": 42,
+    "runtime_representative_references": 15,
+    "unmatched_response_family_count": 0,
+    "manifest_routing_failure_count": 0,
+    "prompt_projection_failure_count": 0,
+    "contract_pass": true
+  },
+  "response_families": [
+    {
+      "response_plan_id": "compressor_thermal",
+      "expected_case_count": 1,
+      "runtime_case_count": 1,
+      "representative_count": 1,
+      "manifest_representative_count": 1,
+      "prompt_representative_count": 1,
+      "case_count_matches": true,
+      "runtime_manifest_matches": true,
+      "prompt_projection_matches": true
+    },
+    {
+      "response_plan_id": "external_fire",
+      "expected_case_count": 3,
+      "runtime_case_count": 3,
+      "representative_count": 2,
+      "manifest_representative_count": 2,
+      "prompt_representative_count": 2,
+      "case_count_matches": true,
+      "runtime_manifest_matches": true,
+      "prompt_projection_matches": true
+    },
+    {
+      "response_plan_id": "fueling_fault",
+      "expected_case_count": 3,
+      "runtime_case_count": 3,
+      "representative_count": 2,
+      "manifest_representative_count": 2,
+      "prompt_representative_count": 2,
+      "case_count_matches": true,
+      "runtime_manifest_matches": true,
+      "prompt_projection_matches": true
+    },
+    {
+      "response_plan_id": "gas_release",
+      "expected_case_count": 16,
+      "runtime_case_count": 16,
+      "representative_count": 2,
+      "manifest_representative_count": 2,
+      "prompt_representative_count": 2,
+      "case_count_matches": true,
+      "runtime_manifest_matches": true,
+      "prompt_projection_matches": true
+    },
+    {
+      "response_plan_id": "hose_connection",
+      "expected_case_count": 8,
+      "runtime_case_count": 8,
+      "representative_count": 2,
+      "manifest_representative_count": 2,
+      "prompt_representative_count": 2,
+      "case_count_matches": true,
+      "runtime_manifest_matches": true,
+      "prompt_projection_matches": true
+    },
+    {
+      "response_plan_id": "hydrogen_fire",
+      "expected_case_count": 6,
+      "runtime_case_count": 6,
+      "representative_count": 2,
+      "manifest_representative_count": 2,
+      "prompt_representative_count": 2,
+      "case_count_matches": true,
+      "runtime_manifest_matches": true,
+      "prompt_projection_matches": true
+    },
+    {
+      "response_plan_id": "isolation_failure",
+      "expected_case_count": 2,
+      "runtime_case_count": 2,
+      "representative_count": 2,
+      "manifest_representative_count": 2,
+      "prompt_representative_count": 2,
+      "case_count_matches": true,
+      "runtime_manifest_matches": true,
+      "prompt_projection_matches": true
+    },
+    {
+      "response_plan_id": "overpressure",
+      "expected_case_count": 3,
+      "runtime_case_count": 3,
+      "representative_count": 2,
+      "manifest_representative_count": 2,
+      "prompt_representative_count": 2,
+      "case_count_matches": true,
+      "runtime_manifest_matches": true,
+      "prompt_projection_matches": true
+    }
+  ],
+  "raw_report_text_loaded": false,
+  "effectiveness_claimed": false,
+  "frequency_claimed": false,
+  "claim_boundary": "This audit verifies citation integrity and scenario-specific runtime routing of public accident precedents. It does not establish historical action correctness, response effectiveness, accident frequency, causality or safety."
+}

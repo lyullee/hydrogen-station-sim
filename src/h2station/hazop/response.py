@@ -9,11 +9,14 @@ from __future__ import annotations
 import json
 import re
 from functools import lru_cache
+from hashlib import sha256
 from pathlib import Path
 from typing import Any
 
 
 PLAYBOOK_PATH = Path(__file__).resolve().parents[1] / "data" / "emergency_playbooks.json"
+REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
+KHK_PRECEDENT_MAP_PATH = REPOSITORY_ROOT / "research" / "khk_scenario_precedent_map_2026_10_04.json"
 EQUIPMENT_LABELS = {
     "cascade.low": "저압 저장뱅크", "cascade.medium": "중압 저장뱅크",
     "cascade.high": "고압 저장뱅크", "low": "저압 저장뱅크",
@@ -41,6 +44,93 @@ def load_playbooks() -> dict[str, Any]:
         if any(source not in data["sources"] for source in plan["sources"]):
             raise ValueError(f"Unknown emergency source: {plan['id']}")
     return data
+
+
+@lru_cache(maxsize=1)
+def _public_accident_precedent_catalog() -> dict[str, Any]:
+    """Load the citation-only KHK map after checking its source digest.
+
+    Titles, equipment classes and links are already public metadata.  Report
+    prose is not loaded.  Returning an empty catalogue on any integrity error
+    keeps emergency guidance available without silently citing stale evidence.
+    """
+
+    empty = {"by_plan": {}, "representative_by_plan": {}, "source_page": None}
+    try:
+        record = json.loads(KHK_PRECEDENT_MAP_PATH.read_text(encoding="utf-8"))
+        source = record.get("source_inventory") or {}
+        inventory_path = REPOSITORY_ROOT / str(source.get("path") or "")
+        if (
+            record.get("status") != "citation_only_khk_scenario_precedent_map"
+            or not inventory_path.is_file()
+            or sha256(inventory_path.read_bytes()).hexdigest() != source.get("sha256")
+        ):
+            return empty
+        cases = record.get("cases") or []
+        if not isinstance(cases, list) or len(cases) != source.get("incident_report_count"):
+            return empty
+        known_plans = {plan["id"] for plan in load_playbooks()["plans"]}
+        by_plan: dict[str, list[dict[str, Any]]] = {}
+        case_index: dict[tuple[tuple[str, ...], str], dict[str, Any]] = {}
+        for raw in cases:
+            if not isinstance(raw, dict):
+                return empty
+            plan_ids = raw.get("playbook_ids") or []
+            codes = tuple(str(value) for value in raw.get("incident_codes") or [] if value)
+            url = str(raw.get("url") or "")
+            if not codes or not url.startswith("https://") or any(plan_id not in known_plans for plan_id in plan_ids):
+                return empty
+            item = {
+                "incident_codes": list(codes),
+                "title": str(raw.get("title") or ""),
+                "equipment_class": str(raw.get("equipment_class") or ""),
+                "url": url,
+            }
+            case_index[(codes, url)] = item
+            for plan_id in plan_ids:
+                by_plan.setdefault(str(plan_id), []).append(item)
+
+        mapping = record.get("mapping") or {}
+        representatives = mapping.get("representative_precedents") or {}
+        representative_by_plan: dict[str, list[dict[str, Any]]] = {}
+        for plan_id, rows in representatives.items():
+            if plan_id not in known_plans or not isinstance(rows, list):
+                return empty
+            for row in rows:
+                if not isinstance(row, dict):
+                    return empty
+                key = (
+                    tuple(str(value) for value in row.get("incident_codes") or [] if value),
+                    str(row.get("url") or ""),
+                )
+                item = case_index.get(key)
+                if item is None or item not in by_plan.get(plan_id, []):
+                    return empty
+                representative_by_plan.setdefault(plan_id, []).append(item)
+        return {
+            "by_plan": by_plan,
+            "representative_by_plan": representative_by_plan,
+            "source_page": source.get("source_page"),
+        }
+    except (OSError, ValueError, TypeError):
+        return empty
+
+
+def public_accident_precedents(
+    plan_id: str,
+    limit: int | None = 2,
+    *,
+    representative: bool = True,
+) -> list[dict[str, Any]]:
+    """Return public KHK precedents relevant to one response family."""
+
+    catalog = _public_accident_precedent_catalog()
+    rows = (
+        catalog["representative_by_plan"].get(plan_id)
+        if representative else catalog["by_plan"].get(plan_id)
+    ) or []
+    selected = rows if limit is None else rows[:max(0, limit)]
+    return [dict(row) for row in selected]
 
 
 def classify_rule(rule: dict[str, Any]) -> str:
@@ -193,13 +283,21 @@ def prompt_guidance(selection: list[dict[str, Any]]) -> list[dict[str, Any]]:
     evidence and the first immediate/stabilization actions here; retain the
     full plan in :func:`render_guidance` and :func:`structured_guidance`.
     """
-    return [{
-        "situation": item["plan"]["title"],
-        "evidence": item["evidence"][:2],
-        "immediate": item["plan"]["immediate"][:2],
-        "stabilize": item["plan"]["stabilize"][:1],
-        "full_plan_delivered_separately": True,
-    } for item in selection[:4]]
+    result = []
+    for item in selection[:4]:
+        plan = item["plan"]
+        result.append({
+            "situation": plan["title"],
+            "evidence": item["evidence"][:2],
+            "immediate": plan["immediate"][:2],
+            "stabilize": plan["stabilize"][:1],
+            "public_accident_precedents": public_accident_precedents(plan["id"]),
+            "precedent_claim_limit": (
+                "유사 실제사고의 정성적 선례이며 현재 사고의 원인·확률·결과를 확정하지 않음"
+            ),
+            "full_plan_delivered_separately": True,
+        })
+    return result
 
 
 def render_guidance(selection: list[dict[str, Any]], *, actual_alert: bool) -> str:
@@ -220,6 +318,16 @@ def render_guidance(selection: list[dict[str, Any]], *, actual_alert: bool) -> s
             parts.append(f"**{label}**\n" + "\n".join(f"- {step}" for step in plan[key]))
         sources = [data["sources"][key] for key in plan["sources"]]
         parts.append("근거 자료: " + ", ".join(f"[{source['title']}]({source['url']})" for source in sources))
+        precedents = public_accident_precedents(plan["id"])
+        if precedents:
+            parts.append(
+                "공개 실제사고 선례(정성 근거): "
+                + ", ".join(
+                    f"[{row['title']} ({'/'.join(row['incident_codes'])})]({row['url']})"
+                    for row in precedents
+                )
+                + ". 현재 사고의 원인·확률·결과를 확정하는 근거는 아닙니다."
+            )
         sections.append("\n\n".join(parts))
     return "\n\n".join(sections)
 
@@ -246,5 +354,9 @@ def structured_guidance(selection: list[dict[str, Any]], *, actual_alert: bool) 
             **{stage: list(item["plan"][stage]) for stage in
                ("recognition", "immediate", "stabilize", "restart", "prevention")},
             "sources": [data["sources"][key] for key in item["plan"]["sources"]],
+            "public_accident_precedents": public_accident_precedents(item["plan"]["id"]),
+            "precedent_claim_limit": (
+                "유사 실제사고의 정성적 선례이며 현재 사고의 원인·확률·결과를 확정하지 않음"
+            ),
         } for item in selection],
     }

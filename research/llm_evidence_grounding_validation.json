@@ -32,6 +32,7 @@
     "public HIAD action-to-playbook traceability metadata is carried into the response evidence envelope",
     "public KHK accident-report inventory and citation link are carried into the evidence envelope without mirrored report text",
     "public KHK scenario-precedent map links all 23 citation records to conservative response families without exposing report text or frequency claims",
+    "active response families now receive only their integrity-checked KHK public-accident precedents in the runtime evidence manifest, compact LLM prompt and staged operator guidance",
     "consequence flow-boundary mismatches are exposed when HyRAM recomputes a high-pressure choked flow instead of silently presenting it as the supplied process flow",
     "public HIAD action categories are evaluated case-by-case against required staged response plans without using raw action text or making an effectiveness claim",
     "derived HIAD action-category counts and the action-evidence artifact digest are carried into the hashed runtime envelope without raw incident prose",
@@ -109,6 +110,20 @@
       "contract_pass": true,
       "interpretation": "metadata candidate-family coverage only; counts are not incident frequencies because cases may map to multiple families"
     }
+  },
+  "runtime_public_accident_precedent_routing": {
+    "evidence": "research/runtime_public_accident_precedent_routing_2026_10_07.json",
+    "public_report_count": 23,
+    "mapped_response_family_count": 8,
+    "runtime_routed_case_references": 42,
+    "runtime_representative_references": 15,
+    "unmatched_response_family_count": 0,
+    "manifest_routing_failure_count": 0,
+    "prompt_projection_failure_count": 0,
+    "raw_report_text_loaded": false,
+    "effectiveness_claimed": false,
+    "frequency_claimed": false,
+    "interpretation": "scenario-specific citation routing and prompt-delivery integrity only; it does not establish response correctness, causality, frequency, operator benefit or safety"
   },
   "response_stage_contract": {
     "evidence": "research/hiad_response_stage_contract.json",
