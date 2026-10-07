@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "protocol_id": "JANKUJ-2026-PRESSURE-DECAY-TRANSFER-2601",
+  "status": "FROZEN_BEFORE_RAW_OUTCOME_ACCESS",
+  "recorded_at": "2026-10-08",
+  "purpose": "Prospectively test whether one effective breach area identified on the first repeated 50 L, 200 bar cylinder penetration transfers to the second nominally identical pressure-decay experiment without refitting.",
+  "source": {
+    "article_title": "Accidental self-ignition of hydrogen released from pressurized cylinder",
+    "article_doi": "10.1016/j.elstat.2025.104222",
+    "dataset_title": "Dataset for: Accidental self-ignition of hydrogen released from pressurized cylinder (Figures 7-9)",
+    "dataset_doi": "10.5281/zenodo.17913628",
+    "dataset_url": "https://zenodo.org/records/17913628",
+    "license": "CC BY 4.0",
+    "archive_name": "fig_7-9_Accidental self-ignition of hydrogen_VJ.7z",
+    "archive_bytes": 119376,
+    "archive_md5": "e460d8596aef6d543239781747353f36",
+    "pressure_member_expected_columns": [
+      "Time [s]",
+      "Pressure n.1 [bar]",
+      "Pressure n.2 [bar]"
+    ]
+  },
+  "pre_access_statement": {
+    "raw_archive_downloaded": false,
+    "raw_archive_opened": false,
+    "numeric_pressure_rows_seen": false,
+    "numeric_temperature_rows_seen": false,
+    "known_before_freeze": [
+      "article methods and public metadata",
+      "50 L steel hydrogen cylinder",
+      "nominal initial pressure 200 bar",
+      "pressure sampling period 0.2 s",
+      "two repeated nominally identical penetration tests",
+      "semi-enclosed repeat-test ambient temperature 3.1 degC and ambient pressure 970 hPa",
+      "the archive contains Figure 7 pressure decay plus Figure 8 and Figure 9 temperature data"
+    ],
+    "git_parent_before_protocol_freeze": "bde19e7530430fe27281b171755539283ccdbca9",
+    "required_action": "Commit this protocol before downloading or opening the raw archive."
+  },
+  "eligibility": {
+    "required_pressure_curves": 2,
+    "minimum_finite_samples_per_curve": 20,
+    "requires_strictly_increasing_time": true,
+    "requires_initial_pressure_bar_range": [150.0, 230.0],
+    "requires_pressure_drop_fraction_min": 0.5,
+    "exclusion_rules": [
+      "exclude only a curve with fewer than 20 finite samples, non-monotonic time, an initial pressure outside the declared range, or less than 50 percent pressure loss",
+      "do not exclude or trim a curve because the model performs poorly",
+      "do not use Figure 8 or Figure 9 temperature outcomes to tune the source-pressure model"
+    ]
+  },
+  "fixed_split": {
+    "development_curve": "Pressure n.1 [bar]",
+    "untouched_holdout_curve": "Pressure n.2 [bar]",
+    "selection_basis": "column order declared in the public Zenodo description before numeric archive access",
+    "case_replacement_permitted": false
+  },
+  "fixed_preprocessing": {
+    "pressure_interpretation": "reported bar is gauge pressure; convert to absolute pressure by adding 0.970 bar",
+    "initial_pressure": "median of the first three finite samples before the detected release onset",
+    "release_onset": "first sample at least 1 percent below the initial pressure estimate followed by two further non-increasing samples; shift this sample to t=0",
+    "evaluation_window": "from release onset through the last available sample; retain all finite points and do not smooth",
+    "half_pressure_target": "ambient absolute pressure plus one half of the initial excess pressure",
+    "temperature_k": 276.25,
+    "ambient_pressure_pa": 97000.0,
+    "vessel_internal_volume_m3": 0.05
+  },
+  "fixed_model": {
+    "name": "well_mixed_adiabatic_real_gas_blowdown_v1",
+    "equation_of_state": "CoolProp HEOS Hydrogen",
+    "energy_balance": "dU/dt = -m_dot*h",
+    "mass_balance": "dm/dt = -m_dot",
+    "mass_flux": "maximum isentropic flux from vessel stagnation state to ambient pressure",
+    "discharge_coefficient": 1.0,
+    "development_parameter": "one effective circular breach diameter shared by both repeats",
+    "development_parameter_bounds_mm": [0.5, 20.0],
+    "development_objective": "minimize pressure RMSE on Pressure n.1 after the frozen onset rule",
+    "holdout_refitting_permitted": false,
+    "case_specific_parameter_permitted": false
+  },
+  "frozen_primary_screens": {
+    "holdout_pressure_nrmse_percent_initial_excess_max": 10.0,
+    "holdout_median_absolute_percentage_error_percent_max": 15.0,
+    "holdout_half_pressure_time_relative_error_percent_max": 25.0,
+    "joint_pass_requires_all_screens": true
+  },
+  "secondary_outputs": [
+    "fitted effective breach diameter and development-curve metrics",
+    "holdout onset time and sample count",
+    "holdout measured and predicted half-pressure times",
+    "mass and energy conservation residuals",
+    "sensitivity to treating reported bar as absolute rather than gauge, reported separately without changing the primary decision"
+  ],
+  "prohibited_after_outcome_access": [
+    "changing the development/holdout curve assignment",
+    "changing onset, pressure-unit or evaluation-window rules",
+    "changing diameter bounds or primary thresholds",
+    "fitting any parameter to Pressure n.2",
+    "using ignition occurrence to alter source-depletion parameters",
+    "dropping failed points or the failed holdout"
+  ],
+  "claim_boundary": "A pass would support transfer of the source-cylinder pressure-depletion submodel between two nominally repeated 20 MPa penetration releases with one development-fitted effective breach area. It would not validate breach geometry, ignition probability or mechanism, flame length, consequence distance, an H70 vessel, the station-to-vehicle fueling loop, emergency response or SAGA effectiveness. A single holdout replicate cannot establish universal release accuracy."
+}
