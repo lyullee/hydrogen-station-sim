@@ -831,3 +831,59 @@ def test_llm_claim_guard_preserves_explicit_limitations_and_calculated_values():
     assert audit["status"] == "clear"
     assert answer.count("현장 검증이 아닙니다") == 1
     assert "4 m" in answer
+
+
+def test_llm_claim_guard_requires_virtual_action_completion_feedback():
+    manifest = build_evidence_manifest(
+        {
+            "time_s": 18.0,
+            "virtual_safety": {
+                "actions": [{
+                    "id": "private-action-id",
+                    "kind": "esd.trip",
+                    "target": "station",
+                    "status": "commanded",
+                    "issued_s": 17.8,
+                    "note": "private operator note",
+                    "baseline_metrics": {"private": 1},
+                }],
+            },
+        },
+        {}, [], False,
+    )
+    safety = manifest["virtual_safety"]
+    assert safety["pending_count"] == 1
+    assert "private-action-id" not in json.dumps(safety, ensure_ascii=False)
+    assert "private operator note" not in json.dumps(safety, ensure_ascii=False)
+
+    answer, audit = guard_llm_claims(
+        "ESD가 작동되었습니다.\n밸브 폐쇄 완료되었습니다.\n충전을 중지해야 합니다.",
+        manifest,
+    )
+    assert audit["status"] == "guarded"
+    assert "ESD가 작동되었습니다" not in answer
+    assert "밸브 폐쇄 완료되었습니다" not in answer
+    assert "완료 피드백이 확인되지 않아" in answer
+    # An instruction remains intact; only a false completed-state claim is removed.
+    assert "충전을 중지해야 합니다" in answer
+    assert {item["action_family"] for item in audit["blocked_claims"]} == {
+        "esd_trip", "isolation",
+    }
+
+
+def test_llm_claim_guard_preserves_confirmed_virtual_action_completion():
+    manifest = build_evidence_manifest(
+        {
+            "time_s": 18.0,
+            "virtual_safety": {
+                "actions": [{
+                    "kind": "esd.trip", "target": "station",
+                    "status": "confirmed", "issued_s": 17.8, "completed_s": 17.8,
+                }],
+            },
+        },
+        {}, [], False,
+    )
+    answer, audit = guard_llm_claims("ESD가 작동되었습니다.", manifest)
+    assert audit["status"] == "clear"
+    assert answer == "ESD가 작동되었습니다."

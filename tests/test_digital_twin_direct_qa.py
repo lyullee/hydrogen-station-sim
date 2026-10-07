@@ -89,6 +89,40 @@ def test_direct_qa_calculates_impact_for_alarm_and_explicit_hypothesis(monkeypat
             api._jobs.pop(job_id, None)
 
 
+def test_direct_qa_does_not_claim_unconfirmed_virtual_safety_action(monkeypatch):
+    monkeypatch.setattr(api, "load_hyram_backend", lambda: object())
+    monkeypatch.setattr(api, "assess_sensor_cases", lambda *args: [])
+    monkeypatch.setattr(api, "_invoke_saga_hazop_direct",
+                        lambda *args: {"status": "NORMAL", "hits": []})
+
+    async def one_pass(*args, **kwargs):
+        return {"answer": "ESD가 작동되었습니다.", "model": "one-pass-test"}
+
+    monkeypatch.setattr(api, "_invoke_main_assistant_selected", one_pass)
+    frame = _frame(alarm=True)
+    frame["virtual_safety"] = {"actions": [{
+        "kind": "esd.trip", "target": "station", "status": "commanded",
+        "issued_s": 11.9,
+    }]}
+    job_id = "direct-qa-unconfirmed-safety"
+    with api._jobs_lock:
+        api._jobs[job_id] = {"frames": [frame]}
+    try:
+        with TestClient(api.app) as client:
+            response = client.post(
+                f"/api/simulations/{job_id}/saga-analysis/direct",
+                json={"question": "ESD 상태를 알려줘"},
+            )
+        assert response.status_code == 200, response.text
+        payload = response.json()
+        assert "ESD가 작동되었습니다" not in payload["answer"]
+        assert "완료 피드백이 확인되지 않아" in payload["answer"]
+        assert payload["llm_claim_guard"]["status"] == "guarded"
+    finally:
+        with api._jobs_lock:
+            api._jobs.pop(job_id, None)
+
+
 def test_sensor_followup_direct_route_never_calls_reasoning(monkeypatch):
     monkeypatch.setattr(api, "_invoke_saga_hazop_direct", lambda *args: {"status": "NORMAL", "hits": []})
     prompts = []

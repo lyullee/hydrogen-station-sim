@@ -2458,6 +2458,119 @@ _UNSUPPORTED_CLAIM_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
 )
 
 
+# A command in the virtual safety console is deliberately not a completed
+# protective action.  These patterns only recognise retrospective completion
+# wording, never an instruction such as "close the valve" or "verify ESD".
+# The response may therefore continue to recommend a protective step while
+# being prevented from claiming that the simulator has already verified it.
+_VIRTUAL_ACTION_COMPLETION_PATTERNS: tuple[tuple[str, tuple[str, ...], re.Pattern[str]], ...] = (
+    (
+        "esd_trip",
+        ("esd.trip",),
+        re.compile(
+            r"(?:\bESD(?![A-Za-z0-9_])|비상\s*차단|emergency\s*shutdown).{0,30}"
+            r"(?:(?:가동|작동|트립|실행)\s*(?:완료|되었습니다|됐습니다|됐다|되었다|했습니다|됨)"
+            r"|(?:완료|activated|tripped|completed|confirmed|successfully))",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "operation_stop",
+        ("operation.stop", "esd.trip"),
+        re.compile(
+            r"(?:충전|공급|압축|공정|운전|fueling|supply|compression|operation).{0,28}"
+            r"(?:(?:정지|중지|멈춤)\s*(?:완료|되었습니다|됐습니다|됐다|되었다|했습니다|됨)"
+            r"|(?:stopped|halted)(?:\s*(?:confirmed|successfully))?)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "isolation",
+        ("valve.close",),
+        re.compile(
+            r"(?:밸브|상류|하류|유입|유출|차단|valve|isolation).{0,28}"
+            r"(?:(?:폐쇄|닫힘|차단)\s*(?:완료|되었습니다|됐습니다|됐다|되었다|했습니다|됨)"
+            r"|(?:isolated|closed)(?:\s*(?:confirmed|successfully))?)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "evacuation",
+        ("personnel.evacuate", "vehicle.evacuate"),
+        re.compile(
+            r"(?:대피|출입\s*통제|evacuat(?:ion|ed)|access\s*restrict(?:ed|ion)).{0,24}"
+            r"(?:완료|되었습니다|됐습니다|됐다|되었다|했습니다|됨|confirmed|completed|successfully)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "ventilation",
+        ("ventilation.on",),
+        re.compile(
+            r"(?:환기(?:팬)?|배기|ventilation|exhaust).{0,24}"
+            r"(?:(?:가동|작동)\s*(?:완료|되었습니다|됐습니다|됐다|되었다|했습니다|됨)"
+            r"|(?:started|running|activated)(?:\s*(?:confirmed|successfully))?)",
+            re.IGNORECASE,
+        ),
+    ),
+)
+
+
+def _virtual_safety_evidence(frame: dict[str, Any]) -> dict[str, Any]:
+    """Return action feedback needed to bound an LLM response.
+
+    This projection deliberately excludes action IDs, operator notes and raw
+    before/after metric snapshots.  The LLM needs only command type, target
+    and terminal feedback status to distinguish an issued command from a
+    confirmed protective state.  Full training replay remains available only
+    through the virtual-safety API.
+    """
+
+    raw = frame.get("virtual_safety") or {}
+    if not isinstance(raw, dict):
+        return {
+            "actions": [],
+            "action_count": 0,
+            "claim_limit": "가상 안전조치의 명령과 완료 피드백을 구분하며, 피드백이 없으면 완료로 단정하지 않음",
+        }
+    actions: list[dict[str, Any]] = []
+    for item in (raw.get("actions") or [])[-24:]:
+        if not isinstance(item, dict):
+            continue
+        kind = str(item.get("kind") or "")
+        target = str(item.get("target") or "")
+        status = str(item.get("status") or "unknown")
+        if not kind:
+            continue
+        row = {"kind": kind, "target": target, "status": status}
+        for key in ("issued_s", "completed_s"):
+            value = _finite_number(item.get(key))
+            if value is not None:
+                row[key] = value
+        actions.append(row)
+    return {
+        "actions": actions,
+        "action_count": len(actions),
+        "confirmed_count": sum(row["status"] == "confirmed" for row in actions),
+        "failed_count": sum(row["status"] == "failed" for row in actions),
+        "pending_count": sum(row["status"] not in {"confirmed", "failed"} for row in actions),
+        "claim_limit": "가상 안전조치의 명령과 완료 피드백을 구분하며, 피드백이 없으면 완료로 단정하지 않음",
+    }
+
+
+def _confirmed_virtual_action_kinds(manifest: dict[str, Any]) -> set[str]:
+    safety = manifest.get("virtual_safety") or {}
+    if not isinstance(safety, dict):
+        return set()
+    return {
+        str(action.get("kind"))
+        for action in safety.get("actions") or []
+        if isinstance(action, dict)
+        and action.get("status") == "confirmed"
+        and action.get("kind")
+    }
+
+
 def _claim_is_explicitly_limited(line: str, match: re.Match[str]) -> bool:
     """Return true when a matched phrase is explicitly negated or bounded.
 
@@ -2515,10 +2628,15 @@ def guard_llm_claims(
     blocked_families.update({"safety_certification", "confirmed_safety_distance"})
 
     blocked: list[dict[str, str]] = []
+    confirmed_action_kinds = _confirmed_virtual_action_kinds(manifest)
     output: list[str] = []
     caveat = (
         "※ 근거 경계: 현재 자료는 공개 실험·비식별 운전 경계 보정과 모의 계산을 지원하지만 "
         "충전소-차량 full-loop 현장검증, 안전 인증 또는 확정 대피거리를 입증하지 않습니다."
+    )
+    action_caveat = (
+        "※ 가상 조치 상태: 완료 피드백이 확인되지 않아 해당 안전조치가 완료되었다고 단정하지 않습니다. "
+        "명령·밸브 피드백·유량 변화를 안전 대응 기록에서 확인하세요."
     )
     for line in text.splitlines():
         line_families: list[tuple[str, str]] = []
@@ -2529,13 +2647,26 @@ def guard_llm_claims(
             if match is None or _claim_is_explicitly_limited(line, match):
                 continue
             line_families.append((family, match.group(0)[:160]))
+        action_families: list[tuple[str, str]] = []
+        for family, required_kinds, pattern in _VIRTUAL_ACTION_COMPLETION_PATTERNS:
+            match = pattern.search(line)
+            if match is None:
+                continue
+            if any(kind in confirmed_action_kinds for kind in required_kinds):
+                continue
+            action_families.append((family, match.group(0)[:160]))
         if line_families:
             blocked.extend({"family": family, "text": text} for family, text in line_families)
             # Keep the answer readable and avoid silently dropping the whole
             # response.  The deterministic caveat is the only replacement;
             # verified values and response guidance remain in adjacent lines.
             output.append(caveat)
-        else:
+        if action_families:
+            blocked.extend({"family": "unverified_virtual_action_completion",
+                            "text": text, "action_family": family}
+                           for family, text in action_families)
+            output.append(action_caveat)
+        if not line_families and not action_families:
             output.append(line)
     guarded = "\n".join(output).strip()
     return guarded, {
@@ -2543,7 +2674,11 @@ def guard_llm_claims(
         "blocked_claims": blocked,
         "full_loop_validation_supported": full_loop_supported,
         "source_field_measurement": (manifest.get("source") or {}).get("field_measurement"),
-        "claim_limit": "생성 답변의 검증·인증·확정 거리 과장을 근거 봉투와 일치시킴",
+        "virtual_action_feedback": {
+            "confirmed_action_kinds": sorted(confirmed_action_kinds),
+            "recorded_action_count": len((manifest.get("virtual_safety") or {}).get("actions") or []),
+        },
+        "claim_limit": "생성 답변의 검증·인증·확정 거리 및 가상 조치 완료 과장을 근거 봉투와 일치시킴",
     }
 
 
@@ -2608,6 +2743,7 @@ def build_evidence_manifest(
         "runtime_calibration": _runtime_calibration_profile(frame),
         "runtime_geometry": _runtime_geometry_profile(frame),
         "runtime_vehicle_tank_calibration": _runtime_vehicle_tank_calibration_profile(frame),
+        "virtual_safety": _virtual_safety_evidence(frame),
         "measured_bank_pressure_envelope": frame.get(
             "measured_bank_pressure_envelope"
         ) or {},
@@ -3337,6 +3473,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     runtime = manifest.get("runtime_calibration") or {}
     recharge_dynamics = runtime.get("station_recharge_dynamics") or {}
     detector = manifest.get("detector_policy") or {}
+    virtual_safety = manifest.get("virtual_safety") or {}
     response = manifest.get("response_evidence") or {}
     closed_loop = response.get("closed_loop_validation_boundary") or {}
     closed_loop_aggregate = closed_loop.get("aggregate") or {}
@@ -3348,7 +3485,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     local_incident = response.get("confidential_local_accident_response_coverage") or {}
     multisource = response.get("confidential_multisource_mapping_feasibility") or {}
 
-    return {
+    decision = {
         "evidence_digest": manifest.get("evidence_digest"),
         "source": selected(manifest.get("source"), (
             "kind", "field_measurement", "claim_limit",
@@ -3429,6 +3566,22 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             ),
         },
     }
+    # Keep the normal interactive prompt compact.  Safety feedback appears
+    # only when at least one action exists; an absent history itself is not
+    # useful context to the provider and would crowd current alarm evidence.
+    if virtual_safety.get("action_count"):
+        decision["virtual_safety"] = {
+            "actions": [
+                selected(action, ("kind", "target", "status", "issued_s", "completed_s"))
+                for action in (virtual_safety.get("actions") or [])[-8:]
+                if isinstance(action, dict)
+            ],
+            "confirmed_count": virtual_safety.get("confirmed_count", 0),
+            "failed_count": virtual_safety.get("failed_count", 0),
+            "pending_count": virtual_safety.get("pending_count", 0),
+            "claim_limit": short(virtual_safety.get("claim_limit")),
+        }
+    return decision
 
 
 def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:

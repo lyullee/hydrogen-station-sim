@@ -2331,6 +2331,16 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         if not job["frames"]:
             raise HTTPException(status_code=409, detail="No sensor frame available yet")
         frame = dict(job["frames"][-1])
+        runtime = _process_runtimes.get(job_id)
+        if runtime is not None:
+            # Streamed frames intentionally omit the rolling action history to
+            # keep monitor traffic bounded.  Interactive LLM analyses need the
+            # current feedback state, however, so attach it to this private
+            # request snapshot without mutating the retained frame.
+            frame["virtual_safety"] = {
+                **(frame.get("virtual_safety") or {}),
+                **runtime.safety.snapshot(),
+            }
     hazop = frame.get("hazop") or {}
     active = hazop.get("active") or []
     ids = {str(row.get("rule_id")) for row in active if isinstance(row, dict)}
@@ -2467,8 +2477,10 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
             findings = [str(item) for item in (analysis.get("findings") or [])[:3]]
             answer = ("현재 주의·경보 신호를 확인했습니다. " + " · ".join(findings)
                       if actual_alert else "현재 센서와 설비 신호를 확인했습니다. 정상 운전 상태입니다.")
+        answer, direct_claim_guard = guard_llm_claims(answer, evidence_manifest)
         llm_model = "SAGA 직답 · 센서 기반 계산"
         llm_error = None
+        llm_claim_guard = direct_claim_guard
         if request.one_pass:
             focused_tags = {rule.get("sensor_id") for rule in matched_rules + reference_rules}
             focused_tags.update(re.findall(r"(?:PT|TT|FT|GD|FD)-\d{4}", request.question.upper()))
@@ -2501,6 +2513,9 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
                     stream_output=True,
                 )
                 llm_answer = _safe_saga_text(str(reply.get("answer") or ""))
+                llm_answer, llm_claim_guard = guard_llm_claims(
+                    llm_answer, evidence_manifest
+                )
                 gas_observed = any(
                     tag.startswith("GD-") and value.get("quality") == "GOOD"
                     and isinstance(value.get("value"), (int, float)) and value["value"] > 0
@@ -2565,6 +2580,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
             "show_impact_results": show_impact_results,
             "impact_results": impact_results,
             "evidence_manifest": evidence_manifest,
+            "llm_claim_guard": llm_claim_guard,
             "hazop_direct": direct_result,
             "hazop_sop": direct_sop,
             "hazop_hit_count": len(direct_hits),
@@ -2907,6 +2923,15 @@ def _sensor_analysis_context(job_id: str, sensor_id: str,
             if abs(selected["time_s"] - time_s) > max(0.001, abs(time_s) * 1e-8):
                 raise HTTPException(status_code=409, detail="Displayed sensor frame is no longer retained")
         frame = dict(selected)
+        runtime = _process_runtimes.get(job_id)
+        if selected is latest and runtime is not None:
+            # Do not attach current action feedback to an historical sensor
+            # frame: that would falsely make a later command look complete at
+            # the selected earlier simulation time.
+            frame["virtual_safety"] = {
+                **(frame.get("virtual_safety") or {}),
+                **runtime.safety.snapshot(),
+            }
         detail = dict(job.get("hazop_detail") or {}) if selected is latest else {}
     catalog = load_catalog()
     sensor = next((item for item in catalog["sensors"] if item["sensor_id"] == sensor_id), None)
