@@ -4,7 +4,7 @@ This command is deliberately restricted to schema screening.  It helps a data
 custodian find candidate station, vehicle-fuelling, and complete-loop events
 before a mapping or any model outcome is read. To support exports with title
 rows, it inspects at most the first 40 rows of each table to locate a probable
-header and up to three following rows to require an increasing time-like
+header and up to three following rows to require a strictly monotonic time-like
 logger clock. The report contains only aggregate semantic coverage counts; it
 never emits filenames, worksheet names, original headers, source values,
 timestamps, or data rows.
@@ -20,7 +20,7 @@ from __future__ import annotations
 import argparse
 import csv
 from collections import Counter
-from datetime import date, datetime, time
+from datetime import date, datetime, time, timezone
 from io import BytesIO, StringIO
 from itertools import islice
 import json
@@ -203,6 +203,23 @@ def _is_time_observation(value: object) -> float | None:
         return datetime.fromisoformat(normalized).timestamp()
     except ValueError:
         pass
+    # U.S. locale exports from industrial historians commonly render the same
+    # clock as ``M/D/YYYY H:MM:SS AM``.  It is used only to establish a
+    # monotonically ordered logger candidate; the subsequent private mapping
+    # still requires a custodian-declared time format and time basis.
+    for time_format in (
+        "%m/%d/%Y %I:%M:%S %p",
+        "%m/%d/%Y %I:%M:%S.%f %p",
+        "%m/%d/%Y %I:%M %p",
+        "%m/%d/%Y %H:%M:%S",
+        "%m/%d/%Y %H:%M:%S.%f",
+    ):
+        try:
+            return datetime.strptime(compact, time_format).replace(
+                tzinfo=timezone.utc,
+            ).timestamp()
+        except ValueError:
+            pass
     try:
         parsed = time.fromisoformat(compact)
     except ValueError:
@@ -218,7 +235,13 @@ def _is_time_observation(value: object) -> float | None:
 def _time_series_like_samples(
     labels: tuple[str, ...], samples: Iterable[tuple[object, ...]],
 ) -> bool:
-    """Require two increasing values under a time-labelled logger column."""
+    """Require a strictly monotonic clock under a time-labelled logger column.
+
+    Some industrial historians export the newest observation first. A
+    decreasing sequence remains a genuine logger clock and is normalized by a
+    later, explicitly mapped replay/export path. Repeated and mixed-order
+    values remain ineligible because they cannot establish a sample order.
+    """
 
     time_indices = [
         index
@@ -234,8 +257,10 @@ def _time_series_like_samples(
             for row in rows
         ]
         observed = [value for value in observed if value is not None]
-        if len(observed) >= 2 and all(
-            later > earlier for earlier, later in zip(observed, observed[1:])
+        deltas = [later - earlier for earlier, later in zip(observed, observed[1:])]
+        if len(observed) >= 2 and (
+            all(delta > 0.0 for delta in deltas)
+            or all(delta < 0.0 for delta in deltas)
         ):
             return True
     return False
@@ -293,6 +318,33 @@ def _csv_header_bytes(raw: bytes) -> tuple[tuple[str, ...], int, bool, bool] | N
             return _screen_rows(csv.reader(StringIO(raw.decode(encoding))))
         except UnicodeError:
             continue
+    return None
+
+
+def _csv_header_file(path: Path) -> tuple[tuple[str, ...], int, bool, bool] | None:
+    """Screen a CSV prefix without materializing a controlled logger file.
+
+    Operational exports can be several gigabytes.  Schema screening only needs
+    the label-search window and three following records, so loading the whole
+    file would be both unnecessarily slow and a poor confidentiality boundary.
+    The encoding decision is made from a small byte prefix; the selected text
+    stream remains lazy while ``_screen_rows`` consumes its bounded window.
+    """
+
+    try:
+        with path.open("rb") as binary:
+            prefix = binary.read(4096)
+    except OSError:
+        return None
+
+    for encoding in _csv_encodings(prefix):
+        try:
+            with path.open("r", encoding=encoding, newline="") as handle:
+                return _screen_rows(csv.reader(handle))
+        except UnicodeError:
+            continue
+        except OSError:
+            return None
     return None
 
 
@@ -424,12 +476,7 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
             oversized_archive_members_skipped += skipped
             archive_members_scanned += len(headers)
         elif suffix == ".csv":
-            try:
-                headers = [
-                    (suffix, _csv_header_bytes(path.read_bytes())),
-                ]
-            except OSError:
-                headers = [(suffix, None)]
+            headers = [(suffix, _csv_header_file(path))]
         else:
             headers = [(suffix, header) for header in (_excel_headers(path) or ())]
             if not headers:
@@ -513,7 +560,7 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
         },
         "claim_boundary": (
             "Header-level semantic screening plus in-memory record-shape and "
-            "increasing-time checks only. "
+            "strictly-monotonic-time checks only. "
             "A co-located candidate means only that separate measurement-like tables in "
             "one workbook or archive have complementary labels; "
             "it does not attest that they can be joined. Candidate counts do not attest "

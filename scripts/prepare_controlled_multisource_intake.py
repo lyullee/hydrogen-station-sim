@@ -4,7 +4,8 @@ The output is intentionally outside the repository.  It contains worksheet
 names and original header labels so only an authorised custodian can connect
 their actual logger channels to the canonical full-loop contract. It reads at
 most the first 43 rows of each worksheet, retains no measurement values, and
-requires two increasing time-like observations in a labelled logger clock.
+requires a strictly monotonic time-like observation sequence in a labelled
+logger clock.
 Never commit, publish, or attach the generated files to a manuscript.
 """
 
@@ -14,7 +15,6 @@ import argparse
 import csv
 from datetime import datetime, timezone
 import hashlib
-from io import StringIO
 from itertools import islice
 import json
 from pathlib import Path
@@ -101,18 +101,27 @@ def _source_entry(
 
 
 def _csv_entry(path: Path, *, source_file: str | None) -> dict[str, Any] | None:
-    raw = path.read_bytes()
-    for encoding in _csv_encodings(raw):
+    """Read only the bounded schema window from a potentially large CSV."""
+
+    try:
+        with path.open("rb") as binary:
+            prefix = binary.read(4096)
+    except OSError:
+        return None
+    for encoding in _csv_encodings(prefix):
         try:
-            rows = tuple(
-                tuple(row)
-                for row in islice(
-                    csv.reader(StringIO(raw.decode(encoding))),
-                    HEADER_SEARCH_MAX_ROWS + DATA_LIKENESS_SAMPLE_ROWS,
+            with path.open("r", encoding=encoding, newline="") as handle:
+                rows = tuple(
+                    tuple(row)
+                    for row in islice(
+                        csv.reader(handle),
+                        HEADER_SEARCH_MAX_ROWS + DATA_LIKENESS_SAMPLE_ROWS,
+                    )
                 )
-            )
         except UnicodeError:
             continue
+        except OSError:
+            return None
         return _source_entry(rows, source_file=source_file, worksheet=None)
     return None
 
@@ -312,10 +321,10 @@ def prepare_workbench(input_data: Path, output_directory: Path) -> dict[str, Any
             if workbench["source_count"]
             else "No measured logger trace was identified. Select a separate "
             "CSV/XLSX/XLSM logger export with a labelled clock and at least two "
-            "increasing timestamp values, then rerun this intake."
+            "strictly monotonic timestamp values, then rerun this intake."
         ),
         "minimum_logger_contract": {
-            "clock": "one labelled clock with at least two increasing observations",
+            "clock": "one labelled clock with at least two strictly monotonic observations",
             "full_loop_numeric_channels": list(OUTPUT_COLUMNS[1:7]),
             "full_loop_state_channels": list(OUTPUT_COLUMNS[7:]),
             "custodian_attestation_required": True,

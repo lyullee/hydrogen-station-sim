@@ -74,6 +74,31 @@ def test_private_workbench_catalogs_declared_csv_directory_sources(tmp_path: Pat
     assert "private-logger.csv" not in json.dumps(receipt)
 
 
+def test_private_workbench_streams_csv_schema_without_reading_whole_file(
+    tmp_path: Path, monkeypatch,
+):
+    """Large controlled logs must not be loaded into memory during intake."""
+
+    controlled = tmp_path / "private-large-logger"
+    controlled.mkdir()
+    source = controlled / "private-large.csv"
+    source.write_text(
+        "time,vehicle_pressure,temperature,mass_flow,vehicle,cascade,controller_state\n"
+        "0,1,2,3,4,5,6\n"
+        "1,1,2,3,4,5,6\n",
+        encoding="utf-8",
+    )
+
+    def no_full_file_read(_: Path) -> bytes:
+        raise AssertionError("whole controlled CSV must not be read")
+
+    monkeypatch.setattr(Path, "read_bytes", no_full_file_read)
+    receipt = prepare_workbench(controlled, tmp_path / "private-workbench")
+
+    assert receipt["source_count"] == 1
+    assert receipt["measurement_values_persisted"] is False
+
+
 def test_private_workbench_explains_next_step_when_no_logger_trace_is_present(
     tmp_path: Path,
 ):

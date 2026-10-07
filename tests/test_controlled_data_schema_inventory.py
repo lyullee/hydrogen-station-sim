@@ -119,6 +119,57 @@ def test_schema_inventory_detects_utf16_logger_headers_without_disclosure(tmp_pa
     assert "private-value" not in rendered
 
 
+def test_schema_inventory_recognizes_us_locale_historian_timestamps(tmp_path: Path):
+    source = tmp_path / "private-historian-export.csv"
+    source.write_text(
+        "Date/Time,vehicle_pressure,temperature,mass_flow,vehicle,cascade,controller_state\n"
+        "1/7/2026 1:00:00 PM,1,2,3,4,5,6\n"
+        "1/7/2026 1:00:01 PM,1,2,3,4,5,6\n",
+        encoding="utf-8",
+    )
+
+    report = inventory_schema([tmp_path])
+
+    assert report["measurement_like_tables"] == 1
+    assert report["candidate_schema_counts"]["full_loop_candidate"] == 1
+
+
+def test_schema_inventory_recognizes_reverse_order_historian_timestamps(tmp_path: Path):
+    source = tmp_path / "private-reverse-historian-export.csv"
+    source.write_text(
+        "Date/Time,vehicle_pressure,temperature,mass_flow,vehicle,cascade,controller_state\n"
+        "1/7/2026 1:00:01 PM,1,2,3,4,5,6\n"
+        "1/7/2026 1:00:00 PM,1,2,3,4,5,6\n",
+        encoding="utf-8",
+    )
+
+    report = inventory_schema([tmp_path])
+
+    assert report["measurement_like_tables"] == 1
+    assert report["candidate_schema_counts"]["full_loop_candidate"] == 1
+
+
+def test_schema_inventory_streams_csv_schema_without_whole_file_read(
+    tmp_path: Path, monkeypatch,
+):
+    source = tmp_path / "private-large-logger.csv"
+    source.write_text(
+        "time,vehicle_pressure,temperature,mass_flow,vehicle,cascade,controller_state\n"
+        "0,1,2,3,4,5,6\n"
+        "1,1,2,3,4,5,6\n",
+        encoding="utf-8",
+    )
+
+    def no_full_file_read(_: Path) -> bytes:
+        raise AssertionError("whole controlled CSV must not be read")
+
+    monkeypatch.setattr(Path, "read_bytes", no_full_file_read)
+    report = inventory_schema([tmp_path])
+
+    assert report["measurement_like_tables"] == 1
+    assert report["raw_rows_persisted"] is False
+
+
 def test_schema_inventory_recognizes_compact_instrument_tags_without_tag_disclosure(
     tmp_path: Path,
 ):
