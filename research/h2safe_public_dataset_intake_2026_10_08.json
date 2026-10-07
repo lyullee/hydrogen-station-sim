@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_h2safe_helium_dataset_intake_audit",
+  "recorded_at": "2026-10-08",
+  "source": {
+    "title": "Dataset for H2SAFE - Controlled Gas Releases and Sensor-Response for Indoor Hydrogen Safety",
+    "doi": "10.7799/17118570",
+    "landing_page": "https://data.nlr.gov/submissions/330",
+    "test_gas": "helium",
+    "publisher": "National Laboratory of the Rockies",
+    "license_page": "https://data.nlr.gov/node/330/license"
+  },
+  "frozen_protocol": {
+    "artifact": "research/h2safe_helium_detector_protocol_2026_10_08.json",
+    "sha256": "c4b2f5f768d78800539bf3b3aa59bb0a7278e6fc6b36b7411307e23fae025023",
+    "git_commit_before_raw_access": "2ed653b"
+  },
+  "download": {
+    "archive_bytes": 3766528,
+    "archive_sha256": "f1b8bf747b7787f00152ec416940c80a143ea044fc18ee8a69ac9da204d9158e",
+    "readme_bytes": 692704,
+    "readme_sha256": "e99119f5f9aadac6e0bd8269b3fc7989a6026bc0a4c68221ea2a54b1eeee58bb"
+  },
+  "intake": {
+    "laboratory_count": 2,
+    "test_count": 5,
+    "sample_intervals_s": [
+      1.0
+    ],
+    "total_time_series_rows": 21052,
+    "labs": [
+      {
+        "lab_id": "Lab1_Small",
+        "sensor_coordinate_file": "sensors.csv",
+        "sensor_coordinate_sha256": "8f22691b9eb025ed04c953c76fbaf75f43cb029f62f51bf6de83e65841f7f61f",
+        "coordinate_sensor_count": 24,
+        "test_count": 1,
+        "tests": [
+          {
+            "file": "test1.csv",
+            "sha256": "00373790ce4816e738264f166ee796dc214b0e96d40d490c25358dbdb7654b4a",
+            "row_count": 2542,
+            "time_start_s": 0.0,
+            "time_end_s": 2541.0,
+            "median_sample_interval_s": 1.0,
+            "declared_channel_count": 24,
+            "channels_with_any_finite_value": 24,
+            "permanently_missing_channel_count": 0,
+            "missing_cell_count": 0
+          }
+        ]
+      },
+      {
+        "lab_id": "Lab2_Large",
+        "sensor_coordinate_file": "sensors.csv",
+        "sensor_coordinate_sha256": "0fabd631a816284bf97215596848d559a8f170fe650730d5ede06de72ededaa8",
+        "coordinate_sensor_count": 37,
+        "test_count": 4,
+        "tests": [
+          {
+            "file": "test1.csv",
+            "sha256": "22db00296ad45038b64668825d256efd6107600c14daf67d7dbca79d0a93f394",
+            "row_count": 3993,
+            "time_start_s": 0.0,
+            "time_end_s": 3992.0,
+            "median_sample_interval_s": 1.0,
+            "declared_channel_count": 32,
+            "channels_with_any_finite_value": 28,
+            "permanently_missing_channel_count": 4,
+            "missing_cell_count": 15972
+          },
+          {
+            "file": "test2.csv",
+            "sha256": "52995116eb615fab6b9196f16fa40171af9491f42e010d7adb93ac1ff557c108",
+            "row_count": 3113,
+            "time_start_s": 0.0,
+            "time_end_s": 3112.0,
+            "median_sample_interval_s": 1.0,
+            "declared_channel_count": 32,
+            "channels_with_any_finite_value": 32,
+            "permanently_missing_channel_count": 0,
+            "missing_cell_count": 0
+          },
+          {
+            "file": "test3.csv",
+            "sha256": "13df1b2fdb1549ef7c2f3da999703ef58c4b537fd42d1bbae2aabc817f63eee3",
+            "row_count": 5646,
+            "time_start_s": 0.0,
+            "time_end_s": 5645.0,
+            "median_sample_interval_s": 1.0,
+            "declared_channel_count": 32,
+            "channels_with_any_finite_value": 30,
+            "permanently_missing_channel_count": 2,
+            "missing_cell_count": 11292
+          },
+          {
+            "file": "test4.csv",
+            "sha256": "0ac3fa3e126362a74867508f247907801aa54fcefb416422015881b6c7efe6e5",
+            "row_count": 5758,
+            "time_start_s": 0.0,
+            "time_end_s": 5757.0,
+            "median_sample_interval_s": 1.0,
+            "declared_channel_count": 32,
+            "channels_with_any_finite_value": 28,
+            "permanently_missing_channel_count": 4,
+            "missing_cell_count": 23032
+          }
+        ]
+      }
+    ]
+  },
+  "timing_crosswalk": {
+    "readme_release_timing_basis": "wall-clock interval for Lab-2 and duration-only for Lab-1",
+    "csv_timing_basis": "relative seconds starting at zero",
+    "logger_start_wall_clock_present": false,
+    "valve_command_or_release_state_channel_present": false,
+    "unambiguous_release_to_csv_time_crosswalk_present": false
+  },
+  "eligibility_decision": {
+    "schema_and_spatial_intake_pass": true,
+    "frozen_detection_timing_validation_eligible": false,
+    "frozen_joint_primary_screen_run": false,
+    "claim_supported": false,
+    "runtime_parameter_application": false,
+    "reason": "The public release schedule is not cross-walked to the relative CSV time axis. Inferring release start from the concentration outcomes would violate the frozen timing protocol.",
+    "development_only_spatial_diagnostic_possible": true
+  },
+  "privacy_and_redistribution": {
+    "raw_rows_committed": false,
+    "source_archive_committed": false,
+    "aggregate_schema_metrics_only": true,
+    "license_notice_required_for_redistribution": true
+  },
+  "claim_boundary": "This audit establishes public file integrity, sampling cadence and spatial metadata availability only. Helium is a surrogate gas, the release-to-logger time crosswalk is absent, and no hydrogen magnitude, detector latency, placement, ventilation, outdoor dispersion, ESD, safety-distance or full-loop HRS validation claim is supported."
+}

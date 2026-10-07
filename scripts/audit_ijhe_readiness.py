@@ -1934,6 +1934,64 @@ def audit(root: Path) -> dict[str, object]:
         detector_aggregate if detector_logic else "missing; detector-logic replay has not completed",
     ))
 
+    h2safe_path = root / "research/h2safe_public_dataset_intake_2026_10_08.json"
+    h2safe = _json(h2safe_path)
+    h2safe_source = (h2safe or {}).get("source") or {}
+    h2safe_protocol = (h2safe or {}).get("frozen_protocol") or {}
+    h2safe_intake = (h2safe or {}).get("intake") or {}
+    h2safe_timing = (h2safe or {}).get("timing_crosswalk") or {}
+    h2safe_eligibility = (h2safe or {}).get("eligibility_decision") or {}
+    h2safe_privacy = (h2safe or {}).get("privacy_and_redistribution") or {}
+    h2safe_pass = bool(
+        (h2safe or {}).get("artifact_type")
+        == "public_h2safe_helium_dataset_intake_audit"
+        and h2safe_source.get("doi") == "10.7799/17118570"
+        and h2safe_source.get("test_gas") == "helium"
+        and h2safe_protocol.get("git_commit_before_raw_access") == "2ed653b"
+        and len(str(h2safe_protocol.get("sha256") or "")) == 64
+        and h2safe_intake.get("laboratory_count") == 2
+        and h2safe_intake.get("test_count") == 5
+        and h2safe_intake.get("sample_intervals_s") == [1.0]
+        and h2safe_timing.get(
+            "unambiguous_release_to_csv_time_crosswalk_present"
+        ) is False
+        and h2safe_eligibility.get("schema_and_spatial_intake_pass") is True
+        and h2safe_eligibility.get(
+            "frozen_detection_timing_validation_eligible"
+        ) is False
+        and h2safe_eligibility.get("frozen_joint_primary_screen_run") is False
+        and h2safe_eligibility.get("claim_supported") is False
+        and h2safe_eligibility.get("runtime_parameter_application") is False
+        and h2safe_privacy.get("raw_rows_committed") is False
+        and h2safe_privacy.get("source_archive_committed") is False
+        and bool((h2safe or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "h2safe_public_helium_dataset_intake",
+        "PASS" if h2safe_pass else ("FAIL" if h2safe else "PENDING"),
+        "The public full-scale H2SAFE helium sensor dataset is hash-audited and screened prospectively without being promoted to hydrogen or detector-timing validation.",
+        str(h2safe_path.relative_to(root)),
+        "Two laboratories, five 1 s time-series tests, frozen pre-access protocol, release-time crosswalk decision and explicit surrogate/full-loop exclusions.",
+        {
+            "doi": h2safe_source.get("doi"),
+            "test_gas": h2safe_source.get("test_gas"),
+            "protocol_commit": h2safe_protocol.get("git_commit_before_raw_access"),
+            "laboratory_count": h2safe_intake.get("laboratory_count"),
+            "test_count": h2safe_intake.get("test_count"),
+            "sample_intervals_s": h2safe_intake.get("sample_intervals_s"),
+            "timing_crosswalk_available": h2safe_timing.get(
+                "unambiguous_release_to_csv_time_crosswalk_present"
+            ),
+            "timing_validation_eligible": h2safe_eligibility.get(
+                "frozen_detection_timing_validation_eligible"
+            ),
+            "runtime_parameter_application": h2safe_eligibility.get(
+                "runtime_parameter_application"
+            ),
+            "claim_boundary": (h2safe or {}).get("claim_boundary"),
+        } if h2safe else "missing; H2SAFE public dataset intake has not run",
+    ))
+
     dispersion_proxy_path = root / (
         "research/dispersion_concentration_proxy_calibration_2026_10_06.json"
     )
