@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "protocol_id": "METHYTRUCKS-GROUP-D-H70-TRACE-001",
+  "status": "prospective_transient_protocol_frozen_before_workbook_access",
+  "frozen_at": "2026-10-08",
+  "frozen_model_commit": "1982fe860bcd3f8107b630380b83ddb3574e29b6",
+  "evidence_role": "prospective_single_event_external_operational_trace_screen",
+  "source": {
+    "dataset_title": "Group D -- particulates measurement data",
+    "dataset_doi": "10.5281/zenodo.20590979",
+    "dataset_record_url": "https://zenodo.org/records/20590979",
+    "publisher": "Zenodo",
+    "project": "22NRM03 MetHyTrucks",
+    "record_description": "Experimental condition datasets (for example temperature and pressure) for particulate sampling systems.",
+    "context_report_title": "D4 -- Report on the development, comparison and validation of sampling systems (using back-to-back sampling and repeated sampling)",
+    "context_report_doi": "10.5281/zenodo.20376461",
+    "context_report_sha256": "e8214db0b0d8f5624d87e15f1e94204493d007a9a52a4ff05232ff15167f2aa5"
+  },
+  "pre_access_attestation": {
+    "selected_workbook_downloaded_before_freeze": false,
+    "selected_workbook_opened_before_freeze": false,
+    "transient_pressure_temperature_or_flow_values_seen_before_freeze": false,
+    "bibliographic_event_summary_seen_before_freeze": true,
+    "known_summary_boundary": "The public D4 report identifies experiment 5 as an H70 vehicle particulate-sampling fill and publishes aggregate experiment descriptors. Those descriptors are not scored as holdout outcomes.",
+    "other_group_b_hysam_workbooks_seen_before_freeze": true,
+    "independence_boundary": "The selected Group D file is a different record, apparatus and experiment from the previously inspected Group B Hy-SaM workbooks, but it is from the same MetHyTrucks campaign family."
+  },
+  "frozen_selection": {
+    "filename": "20241024_Test_5_SINTEF_CESAME.xlsx",
+    "zenodo_file_size_bytes": 69408,
+    "zenodo_md5": "e67b7cbf1cc4907ff6b460044b7b70b9",
+    "selection_rule": "Evaluate this exact file once. Retain an intake or model failure; do not replace it with the companion mass-summary workbook or another experiment.",
+    "case_count": 1
+  },
+  "measurement_only_intake": {
+    "minimum_rows": 20,
+    "maximum_missing_fraction": 0.01,
+    "maximum_time_gap_s": 60.0,
+    "required_semantics": [
+      "common monotonic time base",
+      "vehicle or receptacle pressure",
+      "vehicle or receptacle gas temperature",
+      "mass flow or independently checkable transferred mass",
+      "engineering units"
+    ],
+    "preferred_boundary_channels": [
+      "delivered gas temperature",
+      "upstream or nozzle pressure"
+    ],
+    "channel_aliases_frozen_before_access": {
+      "time": ["Zeit", "time", "time_s", "elapsed time"],
+      "vehicle_pressure": ["PT01", "vehicle pressure", "tank pressure", "receptacle pressure"],
+      "vehicle_temperature": ["TT08", "TT09", "TT10", "TT11", "vehicle temperature", "tank temperature"],
+      "mass_flow": ["QT_D02", "mass flow", "flow rate"],
+      "transferred_mass": ["FWg35_Masse", "transferred mass", "dispensed mass"],
+      "delivered_temperature": ["TEX01", "delivered temperature", "nozzle temperature"],
+      "upstream_pressure": ["PTD10", "dispenser pressure", "nozzle pressure", "upstream pressure"]
+    },
+    "failure_rule": "If required semantics or units cannot be established from the workbook and already-public official documentation, record INELIGIBLE_METADATA without inventing a mapping or imputing a required trace."
+  },
+  "frozen_model": {
+    "model": "h2station composite Type-IV vehicle-tank model",
+    "parameter_source": "research/public_type_iv_tank_calibration.json",
+    "case_specific_fitting_allowed": false,
+    "time_warping_allowed": false,
+    "smoothing_allowed": false,
+    "initial_state_policy": "first eligible measured pressure and mean eligible measured tank-temperature sample",
+    "mass_flow_policy": "use the measured mass-flow boundary after a pre-fill idle-baseline subtraction only when an idle baseline exists; otherwise use the published raw flow channel without fitted scaling",
+    "inlet_temperature_policy": "use measured delivered-gas temperature as a boundary input when available; otherwise the model score is ineligible rather than estimated",
+    "upstream_pressure_policy": "use measured upstream/nozzle pressure only for inlet enthalpy evaluation when its units are established",
+    "ambient_temperature_policy": "use a clearly identified ambient channel when present; otherwise use the first measured tank temperature and label the approximation",
+    "tank_geometry_policy": "A primary quantitative score requires independently published or workbook-embedded vehicle internal volume and tank type. Do not infer volume from transferred mass, final pressure or any scored outcome.",
+    "geometry_sensitivity_if_primary_ineligible": [
+      0.077,
+      0.129,
+      0.244,
+      0.341
+    ]
+  },
+  "acceptance_criteria": {
+    "pressure_rmse_mpa_max": 5.0,
+    "temperature_rmse_c_max": 10.0,
+    "pressure_final_absolute_error_mpa_max": 5.0,
+    "temperature_peak_absolute_error_c_max": 10.0,
+    "all_four_required": true
+  },
+  "decision_rule": "PASS requires eligible channel semantics, independently established geometry and all four frozen error limits. Any missing requirement is retained as FAIL or INELIGIBLE; thresholds and the selected file cannot change after workbook access.",
+  "full_loop_gate_impact": {
+    "can_close_full_loop_external_validation_alone": false,
+    "reason": "One operational trace cannot meet the frozen full-loop cohort requirement of at least eight independent cases and it does not promise controller, cascade-bank or compressor-state channels.",
+    "positive_value": "A completed eligible run would add the first prospectively frozen public physical-HRS vehicle-fill transient for the tank boundary; an ineligible result will still document the exact public-data gap without selective replacement."
+  },
+  "claim_boundary": "This protocol can support a bounded single-event operational trace result. It cannot certify station safety, validate cascade dispatch, establish emergency-response effectiveness, or by itself close the IJHE full-loop external-validation gate."
+}
