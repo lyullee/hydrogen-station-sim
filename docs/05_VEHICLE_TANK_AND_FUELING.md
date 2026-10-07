@@ -47,8 +47,8 @@ physical inputs:
 
 | Parameter | Meaning | Suggested prior |
 |---|---|---:|
-| `effective_volume_multiplier` | Geometric/compliance correction | 1.0 |
-| `gas_liner_ua_multiplier` | Gas-to-liner effective convection | 1.0 |
+| `effective_volume_multiplier` | Geometric/compliance correction | 1.0 before a validated fit |
+| `gas_liner_ua_multiplier` | Gas-to-liner effective convection | 1.0 before a validated fit |
 | `liner_shell_ua_multiplier` | Liner/CFRP contact conduction | 1.0 |
 | `shell_ambient_ua_multiplier` | External convection/radiation aggregate | 1.0 |
 | `liner_heat_capacity_multiplier` | Liner effective thermal mass | 1.0 |
@@ -57,6 +57,26 @@ physical inputs:
 Fit the heat-transfer multipliers first against pressure, gas-temperature, liner,
 and shell-temperature histories. Fit effective volume only when tank-volume and
 sensor calibration uncertainty have been independently assessed.
+
+### Current runtime profile
+
+The normal API default uses `vehicle_tank_calibration=public_type_iv`. It applies
+the frozen public Type-IV fit in
+[`research/tank_model_validation_v2.json`](../research/tank_model_validation_v2.json):
+
+| Quantity | Runtime value |
+|---|---:|
+| effective-volume multiplier | 1.0527292612 |
+| gas-to-liner UA multiplier | 31.4606565193 |
+
+The fit was calibrated on 23 and evaluated on 12 held-out public fills with
+measured mass-flow and inlet-temperature boundaries. It improves only the
+vehicle-tank surrogate. It does not calibrate or validate the compressor,
+cascade topology, dispenser, station controller, safety distance, or a specific
+vehicle. Set `vehicle_tank_calibration=reference` for the uncalibrated 1.0/1.0
+sensitivity configuration. The runtime/recheck linkage is recorded without raw
+experimental rows in
+[`research/public_type_iv_tank_runtime_calibration_2026_10_07.json`](../research/public_type_iv_tank_runtime_calibration_2026_10_07.json).
 
 ## Fueling protocol interface
 
@@ -110,4 +130,3 @@ adaptive evaluation points.
   line-pack model, cascade banks, and precooler to `CompositeTankFillSimulator`.
 - Full J2601 conformance requires licensed table/MC Formula inputs, station hardware
   limits, communications behavior, fault handling, and validation test evidence.
-

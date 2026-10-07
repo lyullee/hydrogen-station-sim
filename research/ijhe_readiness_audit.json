@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T08:11:53.716857+00:00",
+  "generated_at": "2026-10-07T09:12:34.420757+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 77,
+    "PASS": 78,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -58,6 +58,25 @@
         "temperature_rmse_c": 4.832748408545587,
         "soc_rmse_percentage_points": 3.8495521984109318,
         "bootstrap_replicates": 10000
+      }
+    },
+    {
+      "id": "public_tank_runtime_calibration_integrity",
+      "status": "PASS",
+      "claim": "The split-validated public Type-IV tank fit is the runtime default and is supplied to the bounded LLM evidence manifest.",
+      "evidence": "research\\public_type_iv_tank_runtime_calibration_2026_10_07.json",
+      "requirement": "Runtime fit, API default, LLM evidence record, frozen recheck and every hashed implementation source agree; no raw experimental rows are retained.",
+      "observed": {
+        "runtime": {
+          "api_default_mode": "public_type_iv",
+          "effective_volume_multiplier": 1.052729261198358,
+          "gas_liner_ua_multiplier": 31.460656519273492,
+          "llm_evidence_status": "active",
+          "llm_evidence_id": "public_type_iv_tank_v1",
+          "validation_case_count": 12
+        },
+        "sources_match": true,
+        "recheck_matches": true
       }
     },
     {

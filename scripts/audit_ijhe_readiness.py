@@ -85,6 +85,44 @@ def audit(root: Path) -> dict[str, object]:
         tank_observed,
     ))
 
+    tank_runtime_path = root / "research/public_type_iv_tank_runtime_calibration_2026_10_07.json"
+    tank_runtime = _json(tank_runtime_path)
+    tank_runtime_hashes = (tank_runtime or {}).get("source_hashes") or {}
+    tank_runtime_sources_match = bool(tank_runtime_hashes) and all(
+        isinstance(expected, str)
+        and (root / relative).is_file()
+        and _sha256(root / relative) == expected
+        for relative, expected in tank_runtime_hashes.items()
+    )
+    tank_runtime_recheck = (tank_runtime or {}).get("recheck") or {}
+    tank_runtime_recheck_path = root / str(tank_runtime_recheck.get("artifact") or "")
+    tank_runtime_pass = bool(
+        (tank_runtime or {}).get("artifact_type")
+        == "public_type_iv_tank_runtime_calibration_audit"
+        and (tank_runtime or {}).get("raw_experimental_rows_persisted") is False
+        and (tank_runtime or {}).get("source_workbook_names_persisted") is False
+        and (tank_runtime or {}).get("runtime_match") is True
+        and (tank_runtime or {}).get("runtime", {}).get("api_default_mode")
+        == "public_type_iv"
+        and (tank_runtime or {}).get("runtime", {}).get("validation_case_count") == 12
+        and tank_runtime_recheck.get("matches_frozen_expected_result") is True
+        and tank_runtime_recheck_path.is_file()
+        and _sha256(tank_runtime_recheck_path) == tank_runtime_recheck.get("sha256")
+        and tank_runtime_sources_match
+    )
+    gates.append(_gate(
+        "public_tank_runtime_calibration_integrity",
+        "PASS" if tank_runtime_pass else ("FAIL" if tank_runtime else "PENDING"),
+        "The split-validated public Type-IV tank fit is the runtime default and is supplied to the bounded LLM evidence manifest.",
+        str(tank_runtime_path.relative_to(root)),
+        "Runtime fit, API default, LLM evidence record, frozen recheck and every hashed implementation source agree; no raw experimental rows are retained.",
+        {
+            "runtime": (tank_runtime or {}).get("runtime"),
+            "sources_match": tank_runtime_sources_match,
+            "recheck_matches": tank_runtime_recheck.get("matches_frozen_expected_result"),
+        } if tank_runtime else "missing",
+    ))
+
     correction_path = root / "research/h2protocol_active_fill_correction.json"
     correction = _json(correction_path)
     corrected_trace = (correction or {}).get("h2p_l29") or {}

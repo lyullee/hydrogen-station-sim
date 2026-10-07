@@ -39,6 +39,9 @@ model, API, and monitoring interface.
 - Real-gas PCV, nozzle, check valve, and relief primitives
 - Finite-UA precooler and finite-volume hose line-pack
 - Gas, HDPE liner, and CFRP Type IV vehicle tank
+- Split-validated public Type IV tank calibration applied by default; the API
+  exposes an uncalibrated reference sensitivity mode and keeps this component
+  evidence separate from the station-controller model
 - External SAE J2601-compatible APRR schedule boundary
 - Sampled normal control and independent latched safety PLC
 - Sensor, actuator, cooling, compressor, E-stop, and leak faults

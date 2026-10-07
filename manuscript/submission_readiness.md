@@ -20,7 +20,15 @@ Audit snapshot: **2026-10-07 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **77 PASS · 6 FAIL · 7 PENDING**.
+Gate counts: **78 PASS · 6 FAIL · 7 PENDING**.
+
+The public Type-IV component fit is now the reproducible runtime default for
+the virtual vehicle tank. Its runtime audit confirms the API default, fitted
+parameters, LLM evidence record, source hashes and frozen validation recheck
+match in [`public_type_iv_tank_runtime_calibration_2026_10_07.json`](../research/public_type_iv_tank_runtime_calibration_2026_10_07.json).
+This applies only to the tank model driven by measured mass-flow and inlet
+temperature; it does not convert the result into a compressor, cascade,
+dispenser, full-station or field-safety validation claim.
 
 The fresh de-identified private-data recheck matches the committed
 station-boundary profile across all attested fields. It does not replace the
@@ -103,8 +111,9 @@ not a response-effectiveness or safety claim, and is recorded in
 
 The capacity/EOS geometry sensitivity was also replayed on the public
 H2Protocol cases with the effective-volume multiplier removed. It retained only
-6/36 engineering-screen passes, so the production geometry and published
-validation defaults remain unchanged. The aggregate is archived in
+6/36 engineering-screen passes, so it does not displace the frozen public
+Type-IV calibration; the uncalibrated geometry remains available only as a
+sensitivity configuration. The aggregate is archived in
 [`h2protocol_capacity_geometry_no_volume_fit_diagnostic_2026_10_06.json`](../research/h2protocol_capacity_geometry_no_volume_fit_diagnostic_2026_10_06.json)
 as negative development evidence rather than a new validation claim.
 

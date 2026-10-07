@@ -15,6 +15,12 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     gates = {item["id"]: item for item in report["gates"]}
 
     assert gates["tank_external_validation"]["status"] == "PASS"
+    assert gates["public_tank_runtime_calibration_integrity"]["status"] == "PASS"
+    tank_runtime = gates["public_tank_runtime_calibration_integrity"]["observed"]
+    assert tank_runtime["runtime"]["api_default_mode"] == "public_type_iv"
+    assert tank_runtime["runtime"]["validation_case_count"] == 12
+    assert tank_runtime["sources_match"] is True
+    assert tank_runtime["recheck_matches"] is True
     assert gates["hyram_adapter_verification"]["status"] == "PASS"
     assert gates["elvhys_auxiliary_replay_integrity"]["status"] == "PASS"
     assert gates["elvhys_auxiliary_replay_integrity"]["observed"]["case_count"] == 3
