@@ -1,14 +1,14 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "status": "prospective_model_only_no_holdout_received",
   "model": "src/h2station/release_network.py",
-  "model_sha256": "BE4D21BD0D5C52A20CDA6609D4D3CE1D349C576BB4498CF3ACF4A9DBAB856D42",
+  "model_sha256": "5C52E06F3FF1C45FD6C63047B5C34494D2B605A3BD46CB40FFCD81946B7E259D",
   "evidence_role": "future_validation_protocol",
   "model_boundary": {
-    "control_volumes": ["source_vessel", "supply_line"],
-    "boundaries": ["finite_valve_opening", "terminal_restriction_to_ambient"],
-    "states": ["mass", "internal_energy", "source_wall_temperature", "line_wall_temperature"],
-    "outputs": ["source_pressure", "line_pressure", "source_temperature", "line_temperature", "upstream_mass_flow", "terminal_mass_flow", "cumulative_terminal_release", "cumulative_terminal_enthalpy", "cumulative_thermal_boundary_energy", "mass_balance_residual", "energy_balance_residual"]
+    "control_volumes": ["source_vessel", "one_or_more_physically_declared_supply_line_or_manifold_volumes"],
+    "boundaries": ["finite_shaped_valve_opening", "bidirectional_intervolume_restrictions", "terminal_restriction_to_ambient"],
+    "states": ["mass", "internal_energy", "source_wall_temperature", "line_wall_temperature_by_volume"],
+    "outputs": ["source_pressure", "line_pressure_profile", "source_temperature", "line_temperature_profile", "line_inventory_profile", "valve_opening_fraction", "upstream_mass_flow", "intersegment_mass_flow", "terminal_mass_flow", "cumulative_terminal_release", "cumulative_terminal_enthalpy", "cumulative_thermal_boundary_energy", "mass_balance_residual", "energy_balance_residual"]
   },
   "required_channels": [
     "common_timestamp",
@@ -40,7 +40,7 @@
     "mass_closure_relative_error_max": 0.002,
     "energy_closure_relative_error_max": 0.002,
     "instrumentation_added_before_target_campaign_outcome_access": true,
-    "physical_trajectory_equations_changed": false
+    "physical_trajectory_equations_changed": true
   },
   "prohibited_after_outcome_access": [
     "case_specific_parameter_fit",

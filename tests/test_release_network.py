@@ -31,6 +31,30 @@ def test_release_network_has_finite_opening_and_distinct_line_state():
     assert result.terminal_mass_flow_kg_s[0] == pytest.approx(0.0, abs=1.0e-9)
     assert result.terminal_mass_flow_kg_s[-1] > 0.0
     assert result.upstream_mass_flow_kg_s[1] < result.upstream_mass_flow_kg_s[-1]
+    assert result.valve_opening_fraction[0] == 0.0
+    assert result.valve_opening_fraction[-1] == 1.0
+    assert result.line_pressure_profile_pa_abs.shape == (len(time), 1)
+
+
+def test_declared_line_volumes_create_a_resolved_pressure_gradient():
+    time = np.linspace(0.0, 0.08, 17)
+    result = simulate_release_network(
+        time,
+        inputs=_inputs(
+            line_segments=3,
+            intersegment_diameter_m=0.0025,
+            intersegment_discharge_coefficient=0.8,
+            valve_opening_shape_exponent=2.0,
+        ),
+    )
+
+    assert result.line_pressure_profile_pa_abs.shape == (len(time), 3)
+    assert result.line_temperature_profile_k.shape == (len(time), 3)
+    assert result.line_mass_profile_kg.shape == (len(time), 3)
+    assert result.intersegment_mass_flow_kg_s.shape == (len(time), 2)
+    assert result.valve_opening_fraction[4] == pytest.approx(0.16, abs=2.0e-6)
+    assert result.line_pressure_profile_pa_abs[-1, 0] > result.line_pressure_profile_pa_abs[-1, -1]
+    assert np.max(np.abs(result.mass_balance_residual_kg)) < 1.0e-8
 
 
 def test_release_network_mass_closure_is_explicit():
@@ -75,6 +99,8 @@ def test_release_network_rejects_nonphysical_inputs():
         _inputs(line_volume_m3=0.0)
     with pytest.raises(ValueError, match="discharge coefficients"):
         _inputs(upstream_discharge_coefficient=1.1)
+    with pytest.raises(ValueError, match="intersegment_diameter_m"):
+        _inputs(line_segments=2)
 
 
 def test_zero_thermal_capacity_keeps_wall_temperature_fixed():

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "recorded_at": "2026-10-05",
-  "updated_at": "2026-10-07",
+  "updated_at": "2026-10-08",
   "status": "PROSPECTIVE_PROTOCOL_SPECIFICATION_ONLY",
   "purpose": "Freeze an apparatus-resolved source-line-valve-terminal release model and its data contract before opening an independent facility logger archive.",
   "claim_boundary": "This artifact is a reproducibility and data-acquisition protocol. It is not external validation, does not repair the frozen Proust holdout, and does not support a safety-distance or controller claim.",
@@ -31,12 +31,12 @@
   },
   "locked_model": {
     "path": "src/h2station/release_network.py",
-    "sha256": "BE4D21BD0D5C52A20CDA6609D4D3CE1D349C576BB4498CF3ACF4A9DBAB856D42",
+    "sha256": "5C52E06F3FF1C45FD6C63047B5C34494D2B605A3BD46CB40FFCD81946B7E259D",
     "state_description": [
       "source vessel mass and internal energy",
-      "finite line mass and internal energy",
+      "one or more physically declared line or manifold mass and internal-energy states",
       "source and line wall temperatures",
-      "upstream valve/restriction flow",
+      "finite upstream valve flow and bidirectional inter-volume restriction flows",
       "terminal restriction flow",
       "cumulative terminal mass/enthalpy and net thermal-boundary energy bookkeeping, which does not feed the physical trajectory"
     ],
@@ -44,10 +44,10 @@
     "production_status": "development_only_not_wired_into_station_runtime"
   },
   "protocol_revision": {
-    "revision_kind": "pre-access numerical-conservation instrumentation",
+    "revision_kind": "pre-holdout apparatus-structure revision",
     "target_campaign_outcome_data_accessed": false,
-    "physical_trajectory_equations_changed": false,
-    "change_scope": "The source-line-valve physics is unchanged. The model now reports cumulative terminal mass, terminal enthalpy, thermal-boundary energy, and mass/energy residuals so that a future frozen run can reject numerically non-conservative trajectories.",
+    "physical_trajectory_equations_changed": true,
+    "change_scope": "Before any qualifying target campaign was received, the single line volume was generalized to physically declared line/manifold volumes separated by explicit equivalent restrictions, and the valve travel law gained a frozen shape exponent. The one-volume default preserves the earlier equations. New profile outputs make distributed inventory and pressure loss directly testable.",
     "revalidation_required_before_promotion": true
   },
   "required_channels": [

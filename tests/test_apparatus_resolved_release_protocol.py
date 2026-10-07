@@ -50,11 +50,11 @@ def test_protocol_requires_apparatus_boundary_channels_and_published_gap():
     assert "valve position trace" in protocol["known_source_gap"]["not_reported_as_primary_channels"]
 
 
-def test_protocol_locks_conservation_instrumentation_before_target_data_access():
+def test_protocol_locks_candidate_revision_before_target_data_access():
     protocol = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
 
     assert protocol["protocol_revision"]["target_campaign_outcome_data_accessed"] is False
-    assert protocol["protocol_revision"]["physical_trajectory_equations_changed"] is False
+    assert protocol["protocol_revision"]["physical_trajectory_equations_changed"] is True
     assert protocol["quality_controls"]["energy_closure_relative_tolerance"] == 0.002
     assert protocol["primary_endpoints"]["energy_closure"]["maximum_relative_error"] == 0.002
 
@@ -74,7 +74,7 @@ def test_secondary_protocol_tracks_the_locked_conservation_outputs():
         "mass_closure_relative_error_max": 0.002,
         "energy_closure_relative_error_max": 0.002,
         "instrumentation_added_before_target_campaign_outcome_access": True,
-        "physical_trajectory_equations_changed": False,
+        "physical_trajectory_equations_changed": True,
     }
 
 

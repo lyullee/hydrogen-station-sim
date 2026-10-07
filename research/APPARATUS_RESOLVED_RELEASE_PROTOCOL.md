@@ -20,13 +20,14 @@ distinction testable without fitting to the existing outcomes.
 
 The candidate implementation is
 `src/h2station/release_network.py`, SHA-256
-`BE4D21BD0D5C52A20CDA6609D4D3CE1D349C576BB4498CF3ACF4A9DBAB856D42` after a
-pre-access numerical-conservation instrumentation revision. It has source and
-line mass/energy states, finite valve opening, terminal flow and optional wall
-thermal states. It also reports cumulative terminal mass, cumulative terminal
-enthalpy, thermal-boundary energy, and instantaneous mass/energy residuals;
-these bookkeeping states do not feed the physical trajectory. It is
-development-only and is not wired into the station runtime.
+`5C52E06F3FF1C45FD6C63047B5C34494D2B605A3BD46CB40FFCD81946B7E259D` after a
+pre-holdout apparatus-structure revision. It has source mass/energy, one or
+more physically declared line-volume mass/energy states, a configurable finite
+valve-opening curve, inter-volume restrictions, terminal flow and optional wall
+thermal states. It also reports every line state and boundary flow, cumulative
+terminal mass and enthalpy, thermal-boundary energy, and instantaneous
+mass/energy residuals. It is development-only and is not wired into the station
+runtime.
 
 The nominal line dimensions imply 0.000785398 m³ of geometric internal volume
 (`pi × 0.010² / 4 × 10`). That number is only a derivation from published
@@ -43,7 +44,8 @@ published Proust record does not report the line and valve channels, so it is
 retained as a local-aperture supplementary comparison rather than promoted to
 this protocol.
 
-Before opening numerical rows, freeze the as-built geometry, valve law,
+Before opening numerical rows, freeze the as-built topology and volume of each
+declared line/manifold compartment, every equivalent restriction, valve law,
 discharge coefficients, heat-transfer terms, solver configuration, sensor
 calibration, synchronization rule, missing-data rule, endpoints and archive
 hash. No case-specific fitting, time shifting, outcome-driven cropping or

@@ -7,20 +7,26 @@ consumed results into validation evidence.
 
 ## Model boundary
 
-The model contains two finite control volumes: a source vessel and a supply
-line. A time-dependent valve opening fraction connects the source to the line;
-the line discharges through a terminal restriction to ambient. Each volume
-has a gas mass and internal-energy state. Optional lumped wall states exchange
-heat with the gas and ambient; internal gas/wall area and external
-wall/ambient area are separate geometry inputs. The model returns source and
-line pressures, temperatures, inventories, upstream flow and terminal flow on
-one clock. It also returns cumulative terminal mass and enthalpy, net
-thermal-boundary energy, and instantaneous mass/energy conservation residuals.
-Those bookkeeping states do not feed the physical trajectory.
+The model contains a source vessel and one or more physically declared supply
+line or manifold volumes. A finite valve-opening curve connects the source to
+the first volume; declared equivalent restrictions connect adjacent volumes;
+the last volume discharges through a terminal restriction to ambient. Adjacent
+volumes can exchange flow in either direction. Every volume has a gas mass and
+internal-energy state. Optional lumped wall states exchange heat with the gas
+and ambient; internal gas/wall area and external wall/ambient area are separate
+geometry inputs. The model returns source state, the complete line pressure,
+temperature and inventory profiles, every boundary flow, valve position,
+cumulative terminal mass and enthalpy, net thermal-boundary energy, and
+instantaneous mass/energy conservation residuals on one clock.
+
+The number of line volumes is a physical topology declaration, not a numerical
+mesh refinement control. A multi-volume run is admissible only when the volume
+and equivalent restriction at every boundary can be frozen from apparatus
+information. The one-line-volume default preserves the original candidate.
 
 No fitted discharge coefficient, opening time, line volume, time shift or
 case-specific initial condition is permitted after a holdout outcome is read.
-The geometry and valve law must be frozen from an apparatus drawing,
+The topology, geometry and valve law must be frozen from an apparatus drawing,
 calibration record or an independent data-custodian statement before the
 numerical archive is opened.
 
@@ -51,9 +57,9 @@ only; it cannot enter the primary apparatus-resolved claim.
 ## Current status
 
 The repository contains the implementation and unit tests for mass and
-open-system energy closure, finite valve/line states, and separate thermal
-areas. The conservation instrumentation was added before opening a qualifying
-target campaign and does not change the physical trajectory equations. No
-qualifying new raw campaign has been received and no result from this model is
-used in the IJHE readiness audit. The full-loop and consequence gates therefore
-remain unchanged.
+open-system energy closure, finite valve travel, resolved line pressure and
+inventory gradients, reverse inter-volume flow, and separate thermal areas.
+The multi-volume structure was introduced before any qualifying target campaign
+was received. It is therefore a prospective candidate revision, not a repair of
+an inspected holdout. No result from this model is used in the IJHE readiness
+audit. The full-loop and consequence gates remain unchanged.
