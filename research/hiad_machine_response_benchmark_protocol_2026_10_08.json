@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "artifact_type": "hiad_retrospective_machine_response_benchmark_protocol",
+  "status": "frozen_before_cohort_model_response_collection",
+  "frozen_at_utc": "2026-10-08T00:00:00+00:00",
+  "source": {
+    "dataset": "European Hydrogen Incidents and Accidents Database HIAD 2.2",
+    "publisher": "European Commission Joint Research Centre",
+    "event_cutoff": "2025-12-31",
+    "public_hrs_selection": "FACILITY.Application exactly equals Hydrogen refuelling station"
+  },
+  "cohort": {
+    "case_count": 34,
+    "selection": "all public HRS cases in the existing reproducible inventory",
+    "split": "retrospective development cohort; no holdout claim",
+    "model_visible_fields": [
+      "title",
+      "description",
+      "initiating_system",
+      "physical_effect",
+      "consequence_nature",
+      "sub_application",
+      "supply_chain_stage",
+      "operational_condition"
+    ],
+    "withheld_fields": [
+      "emergency_action",
+      "lesson_learnt",
+      "corrective_measures"
+    ]
+  },
+  "collection": {
+    "endpoint": "/api/integrations/digital-twin/main",
+    "execution_mode": "in-process FastAPI TestClient; no persistent server",
+    "provider": "groq",
+    "response_variant": "saga-linked direct answer",
+    "repeats_per_case": 1,
+    "language": "en",
+    "max_tokens": 900,
+    "failed_calls": "retain as empty failed responses"
+  },
+  "analysis": {
+    "primary_machine_proxy": "mean of expected coarse action-category recall and five-stage response coverage",
+    "action_categories": [
+      "shutdown_isolation_depressurization",
+      "detection_alarm_monitoring",
+      "fire_response_cooling",
+      "evacuation_perimeter_access",
+      "emergency_communication_coordination",
+      "inspection_leak_test_repair",
+      "procedure_interlock_training_design",
+      "ventilation_purge"
+    ],
+    "response_stages": [
+      "recognition",
+      "immediate",
+      "stabilize",
+      "restart",
+      "prevention"
+    ],
+    "secondary_metrics": [
+      "unsupported value-unit claim response count",
+      "provider failure count",
+      "mean latency"
+    ],
+    "comparison": "paired SAGA-linked minus deterministic alarm-only baseline",
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 20261008
+  },
+  "outcome_history": {
+    "reference_action_categories_accessed_before_freeze": true,
+    "reason": "The category taxonomy and playbook coverage were existing development artifacts before this response benchmark was designed.",
+    "cohort_model_outputs_accessed_before_freeze": false,
+    "generic_endpoint_smoke_test_before_freeze": true,
+    "confirmatory_or_prospective_claim_permitted": false
+  },
+  "frozen_inputs": {
+    "hiad_cases": "data/public_validation/processed/hiad_hrs_cases.jsonl",
+    "hiad_cases_sha256": "c9f2f8eb490eab67495e6d24a6a87bece1ece35b291c20b4f83b70ef76471f20",
+    "action_evidence": "research/hiad_action_evidence.json",
+    "action_evidence_sha256": "72f2550eabea6a4207a5d59c98bd99520e217fd2d4f8597e5d1d72f2ef87e1dd",
+    "runner": "scripts/run_hiad_machine_response_benchmark.py",
+    "runner_sha256": "681bcc10f0010b50170ee911bf16587c9d0714b953a3d1f6a8606284644064ea",
+    "saga_commit": "c66920c35bd9071be6533211b7184f54ebc76261",
+    "saga_api": "python/saga/api.py",
+    "saga_api_sha256": "0caacaffeb4a05d329c5f5c6b73896b708cd118b544f3e6cd1448e8269a32d0b",
+    "saga_config_sha256": "2ebf6933274f9f6b955e8a0c48581663fdfe8401414a512569b8ca64e0d7e301",
+    "saga_client_sha256": "a3446e0bac71d8c61886952de0a26cecf481d6cbf2617510595849d8a86de8df"
+  },
+  "prohibited_after_response_access": [
+    "changing keyword families to improve observed scores",
+    "excluding low-scoring cases or failed provider calls",
+    "describing the result as expert validation, safety evidence, field effectiveness, or a prospective holdout"
+  ],
+  "claim_boundary": "Retrospective development-only machine proxy over 34 public HIAD HRS cases. Coarse category agreement and response-stage coverage do not establish action correctness, operator usability, field safety, causal validity, or SAGA effectiveness. The locked independent expert study remains required."
+}
