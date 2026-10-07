@@ -93,7 +93,7 @@ The following are **software defaults**, not approved operating limits. API vali
 | Delivery temperature | −40 °C | −50 to 20 °C model input. |
 | Trailer pressure / inventory | 20 MPa / 50 kg | Finite modeled source inventory. |
 | Bank recharge targets | 46 / 66 / 96 MPa | Low / medium / high target values. |
-| Recharge restart margins | 2 / 3 / 4 MPa | Must be below each target; prevent short cycling. |
+| Recharge restart margins | 2 / 3 / 4.5 MPa | Must be below each target; the high-bank value follows the de-identified station-side restart-band diagnostic. |
 | Risk display refresh | 30 s | 15 / 30 / 60 / 120 s. |
 
 Relief valve reference pairs (opening / reclosing, MPa) are low bank 50/49, medium bank 70/69, high bank 100/99, hose 1/2 90/88 and vehicle 1/2 87.5/85. The API rejects a reclosing pressure greater than or equal to the opening pressure. These set points are scenario inputs, not sizing or inspection approval.

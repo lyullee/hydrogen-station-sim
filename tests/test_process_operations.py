@@ -26,6 +26,14 @@ def _station(settings: dict):
     return built, process
 
 
+def test_process_settings_use_observed_high_bank_restart_band():
+    settings = ProcessSettings()
+
+    assert settings.recharge_restart_margin_low_mpa == 2.0
+    assert settings.recharge_restart_margin_medium_mpa == 3.0
+    assert settings.recharge_restart_margin_high_mpa == 4.5
+
+
 def test_idle_is_physically_frozen_and_vehicle_paths_are_independent():
     settings = ProcessSettings().model_dump()
     built, process = _station(settings)
@@ -231,6 +239,53 @@ def test_recharge_bank_waits_for_configured_restart_margin_after_target():
         None, target_pressures_pa=targets, restart_margins_pa=margins,
     )
     assert selected == 2
+
+
+def test_observed_high_bank_band_prevents_restart_before_4_5_mpa_drop():
+    settings = ProcessSettings()
+    built, _ = _station(settings.model_dump())
+    supervisor = built.station.supervisor
+    gases = tuple(
+        bank.gas_state(state)
+        for bank, state in zip(built.station.banks, built.initial_state.banks)
+    )
+    targets = (
+        settings.recharge_target_low_mpa * 1e6,
+        settings.recharge_target_medium_mpa * 1e6,
+        settings.recharge_target_high_mpa * 1e6,
+    )
+    margins = (
+        settings.recharge_restart_margin_low_mpa * 1e6,
+        settings.recharge_restart_margin_medium_mpa * 1e6,
+        settings.recharge_restart_margin_high_mpa * 1e6,
+    )
+
+    at_target = tuple(
+        replace(gas, pressure_pa=pressure)
+        for gas, pressure in zip(gases, targets)
+    )
+    assert supervisor.select_recharge_bank(
+        built.station.banks, at_target, None,
+        target_pressures_pa=targets, restart_margins_pa=margins,
+    ) is None
+
+    before_band = tuple(
+        replace(gas, pressure_pa=pressure)
+        for gas, pressure in zip(gases, (targets[0], targets[1], targets[2] - 4.4e6))
+    )
+    assert supervisor.select_recharge_bank(
+        built.station.banks, before_band, None,
+        target_pressures_pa=targets, restart_margins_pa=margins,
+    ) is None
+
+    at_band = tuple(
+        replace(gas, pressure_pa=pressure)
+        for gas, pressure in zip(gases, (targets[0], targets[1], targets[2] - 4.5e6))
+    )
+    assert supervisor.select_recharge_bank(
+        built.station.banks, at_band, None,
+        target_pressures_pa=targets, restart_margins_pa=margins,
+    ) == 2
 
 
 def test_recharge_bank_respects_optional_restart_dwell_without_delaying_target_stop():

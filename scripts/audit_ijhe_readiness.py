@@ -942,6 +942,67 @@ def audit(root: Path) -> dict[str, object]:
         } if recharge_multitrace else "missing",
     ))
 
+    recharge_pressure_path = root / (
+        "research/confidential_station_recharge_pressure_drop_diagnostic_2026_10_08.json"
+    )
+    recharge_pressure = _json(recharge_pressure_path)
+    pressure_observations = (recharge_pressure or {}).get("observations") or {}
+    pressure_drop = pressure_observations.get("stop_to_restart_pressure_drop_mpa") or {}
+    pressure_decision = (recharge_pressure or {}).get("software_decision") or {}
+    pressure_boundary = (recharge_pressure or {}).get("validation_boundary") or {}
+    recharge_pressure_pass = bool(
+        (recharge_pressure or {}).get("schema_version") == 1
+        and (recharge_pressure or {}).get("artifact_type")
+        == "confidential_station_recharge_pressure_drop_diagnostic"
+        and (recharge_pressure or {}).get("analysis_status")
+        == "post_outcome_development_diagnostic"
+        and (recharge_pressure or {}).get("source_identifiers_published") is False
+        and (recharge_pressure or {}).get("raw_rows_persisted") is False
+        and (recharge_pressure or {}).get("absolute_timestamps_published") is False
+        and (recharge_pressure or {}).get("source_paths_published") is False
+        and (recharge_pressure or {}).get("tag_names_published") is False
+        and (recharge_pressure or {}).get("manufacturer_or_model_published") is False
+        and pressure_observations.get("files_read") == 8
+        and pressure_observations.get("sampled_rows") == 653442
+        and pressure_observations.get("completed_high_stage_restarts") == 124
+        and pressure_drop.get("p10") == 4.36
+        and pressure_drop.get("median") == 4.555
+        and pressure_decision.get("high_bank_restart_margin_default_mpa") == 4.5
+        and pressure_decision.get("low_and_medium_defaults_changed") is False
+        and pressure_decision.get("minimum_time_dwell_applied") is False
+        and pressure_boundary.get("analysis_locked_before_outcome") is False
+        and pressure_boundary.get("independent_holdout") is False
+        and pressure_boundary.get("full_station_vehicle_validation") is False
+        and pressure_boundary.get("safety_limit_or_certification") is False
+    )
+    gates.append(_gate(
+        "confidential_recharge_pressure_band_diagnostic_integrity",
+        "PASS" if recharge_pressure_pass else (
+            "FAIL" if recharge_pressure else "PENDING"
+        ),
+        "The high-bank restart pressure band is derived from repeated de-identified station cycles while the failed time-dwell candidate remains disabled.",
+        str(recharge_pressure_path.relative_to(root)),
+        "Privacy flags, completed restart count, observed pressure-drop distribution, bounded development default and explicit post-outcome/non-validation limits.",
+        {
+            "files_read": pressure_observations.get("files_read"),
+            "sampled_rows": pressure_observations.get("sampled_rows"),
+            "completed_high_stage_restarts": pressure_observations.get(
+                "completed_high_stage_restarts"
+            ),
+            "stop_to_restart_pressure_drop_mpa": pressure_drop,
+            "high_bank_restart_margin_default_mpa": pressure_decision.get(
+                "high_bank_restart_margin_default_mpa"
+            ),
+            "minimum_time_dwell_applied": pressure_decision.get(
+                "minimum_time_dwell_applied"
+            ),
+            "independent_holdout": pressure_boundary.get("independent_holdout"),
+            "full_station_vehicle_validation": pressure_boundary.get(
+                "full_station_vehicle_validation"
+            ),
+        } if recharge_pressure else "missing",
+    ))
+
     operational_recheck_path = root / (
         "research/confidential_operational_profile_recheck_2026_10_06.json"
     )
@@ -1110,13 +1171,23 @@ def audit(root: Path) -> dict[str, object]:
 
     schema_audit_path = root / "research/confidential_station_schema_audit_2026_10.json"
     owner_recheck_path = root / "research/private_owner_data_intake_recheck_2026_10_06.json"
+    time_axis_inventory_path = root / (
+        "research/confidential_controlled_schema_time_axis_inventory_2026_10_08.json"
+    )
     schema_audit = _json(schema_audit_path)
     owner_recheck = _json(owner_recheck_path)
+    time_axis_inventory = _json(time_axis_inventory_path)
     schema_inventory = (schema_audit or {}).get("signal_inventory") or {}
     schema_eligibility = (schema_audit or {}).get("eligibility") or {}
     schema_units = (schema_audit or {}).get("unit_attestation") or {}
     schema_recheck = (owner_recheck or {}).get("schema_recheck") or {}
     schema_recheck_values = schema_recheck.get("verified_aggregate") or {}
+    time_axis_summary = (time_axis_inventory or {}).get(
+        "flat_time_axis_candidate_summary"
+    ) or {}
+    time_axis_candidates = (time_axis_inventory or {}).get(
+        "candidate_schema_counts"
+    ) or {}
     schema_audit_pass = bool(
         (schema_audit or {}).get("schema_version") == 1
         and (schema_audit or {}).get("artifact_type") == "confidential_station_schema_audit"
@@ -1141,13 +1212,26 @@ def audit(root: Path) -> dict[str, object]:
         and schema_recheck_values.get("pressure_channel_count") == (schema_inventory.get("tagged_channel_counts") or {}).get("pressure")
         and schema_recheck_values.get("vehicle_side_channel_family_count") == schema_eligibility.get("vehicle_side_channel_family_count")
         and schema_recheck_values.get("full_loop_holdout_eligible") is False
+        and (time_axis_inventory or {}).get("schema_version") == 3
+        and (time_axis_inventory or {}).get("artifact_type")
+        == "controlled_hrs_schema_inventory"
+        and (time_axis_inventory or {}).get("source_identifiers_published") is False
+        and (time_axis_inventory or {}).get("original_headers_published") is False
+        and (time_axis_inventory or {}).get("raw_rows_persisted") is False
+        and (time_axis_inventory or {}).get("absolute_timestamps_published") is False
+        and (time_axis_inventory or {}).get("source_files_scanned") == 33
+        and (time_axis_inventory or {}).get("measurement_like_tables") == 33
+        and time_axis_summary.get("candidate_groups") == 4
+        and time_axis_summary.get("tables_in_candidate_groups") == 26
+        and time_axis_summary.get("fingerprints_published") is False
+        and time_axis_candidates.get("synchronized_flat_full_loop_candidate") == 0
     )
     gates.append(_gate(
         "confidential_station_schema_intake_integrity",
         "PASS" if schema_audit_pass else ("FAIL" if schema_audit else "PENDING"),
         "The restricted station archive has a de-identified channel-presence inventory that identifies station-side calibration candidates without treating unconfirmed units as measurements.",
-        f"{schema_audit_path.relative_to(root)}; {owner_recheck_path.relative_to(root)}",
-        "At least two source bundles, pressure/state channel candidates, no raw rows or source identifiers, and an explicit unit-attestation hold.",
+        f"{schema_audit_path.relative_to(root)}; {owner_recheck_path.relative_to(root)}; {time_axis_inventory_path.relative_to(root)}",
+        "At least two source bundles, pressure/state channel candidates, bounded flat-file clock-shape groups, no raw rows or source identifiers, and an explicit unit-attestation hold.",
         {
             "source_bundle_count": (schema_audit or {}).get("source_bundle_count"),
             "file_count": (schema_audit or {}).get("file_count"),
@@ -1163,6 +1247,10 @@ def audit(root: Path) -> dict[str, object]:
                 "station_side_component_families_present"
             ),
             "full_loop_holdout_eligible": schema_eligibility.get("full_loop_holdout_eligible"),
+            "flat_time_axis_candidate_summary": time_axis_summary,
+            "synchronized_flat_full_loop_candidate": time_axis_candidates.get(
+                "synchronized_flat_full_loop_candidate"
+            ),
             "owner_schema_recheck": {
                 "committed_aggregate_match": schema_recheck.get("committed_aggregate_match"),
                 "verified_file_count": schema_recheck_values.get("file_count"),

@@ -2194,6 +2194,50 @@ def _confidential_station_recharge_dynamics_evidence() -> dict[str, Any] | None:
         or eligibility.get("full_station_vehicle_validation") is not False
     ):
         return None
+    pressure_path = Path(__file__).resolve().parents[2] / (
+        "research/confidential_station_recharge_pressure_drop_diagnostic_2026_10_08.json"
+    )
+    pressure_band: dict[str, Any] | None = None
+    try:
+        pressure_record = json.loads(pressure_path.read_text(encoding="utf-8"))
+        pressure_observations = pressure_record["observations"]
+        pressure_drop = pressure_observations["stop_to_restart_pressure_drop_mpa"]
+        pressure_decision = pressure_record["software_decision"]
+        pressure_boundary = pressure_record["validation_boundary"]
+        if (
+            pressure_record.get("artifact_type")
+            == "confidential_station_recharge_pressure_drop_diagnostic"
+            and pressure_record.get("source_identifiers_published") is False
+            and pressure_record.get("raw_rows_persisted") is False
+            and pressure_record.get("tag_names_published") is False
+            and pressure_observations.get("completed_high_stage_restarts") == 124
+            and pressure_drop.get("median") == 4.555
+            and pressure_decision.get("high_bank_restart_margin_default_mpa") == 4.5
+            and pressure_decision.get("minimum_time_dwell_applied") is False
+            and pressure_boundary.get("independent_holdout") is False
+            and pressure_boundary.get("full_station_vehicle_validation") is False
+        ):
+            pressure_band = {
+                "artifact": pressure_path.relative_to(
+                    Path(__file__).resolve().parents[2]
+                ).as_posix(),
+                "completed_restarts": pressure_observations.get(
+                    "completed_high_stage_restarts"
+                ),
+                "stop_to_restart_drop_mpa": {
+                    "p10": pressure_drop.get("p10"),
+                    "median": pressure_drop.get("median"),
+                },
+                "development_default_mpa": pressure_decision.get(
+                    "high_bank_restart_margin_default_mpa"
+                ),
+                "post_outcome_diagnostic": True,
+                "independent_holdout": False,
+                "minimum_time_dwell_applied": False,
+                "full_station_vehicle_validation": False,
+            }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        pass
     return {
         "artifact": artifact,
         "evidence_role": "confidential multi-trace station recharge-dynamics holdout",
@@ -2238,6 +2282,7 @@ def _confidential_station_recharge_dynamics_evidence() -> dict[str, Any] | None:
         "full_station_vehicle_validation": (
             eligibility.get("full_station_vehicle_validation") is True
         ),
+        "observed_high_bank_restart_pressure_band": pressure_band,
         "claim_limit": str(record.get("claim_boundary") or ""),
     }
 
@@ -3796,6 +3841,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "runtime_application_block_reason",
                 "prior_single_trace_profile_superseded",
                 "default_model_parameters_changed",
+                "observed_high_bank_restart_pressure_band",
                 "full_station_vehicle_validation", "claim_limit",
             )
             if recharge_dynamics.get(key) is not None
@@ -4701,6 +4747,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "default_model_parameters_changed": recharge_dynamics.get(
                 "default_model_parameters_changed"
             ) is True,
+            "observed_high_bank_restart_pressure_band": recharge_dynamics.get(
+                "observed_high_bank_restart_pressure_band"
+            ) or {},
             "full_station_vehicle_validation": recharge_dynamics.get(
                 "full_station_vehicle_validation"
             ) is True,

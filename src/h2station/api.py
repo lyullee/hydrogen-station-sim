@@ -165,7 +165,11 @@ class ProcessSettings(BaseModel):
     recharge_target_high_mpa: float = Field(default=96.0, gt=1.0, le=110.0)
     recharge_restart_margin_low_mpa: float = Field(default=2.0, ge=0.2, le=20.0)
     recharge_restart_margin_medium_mpa: float = Field(default=3.0, ge=0.2, le=20.0)
-    recharge_restart_margin_high_mpa: float = Field(default=4.0, ge=0.2, le=20.0)
+    # Eight de-identified station-side traces show a 4.555 MPa median
+    # stop-to-restart drop across 124 completed high-stage restarts. The
+    # rounded 4.5 MPa development default reduces rapid restart cycling; it is
+    # a controller-behavior setting, not a safety limit or full-loop validation.
+    recharge_restart_margin_high_mpa: float = Field(default=4.5, ge=0.2, le=20.0)
     risk_overlay_enabled: bool = True
     risk_display_mode: Literal["relative", "absolute"] = "relative"
     risk_update_interval_s: Literal[15, 30, 60, 120] = 30

@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **91 PASS · 7 FAIL · 8 PENDING**.
+Gate counts: **92 PASS · 7 FAIL · 8 PENDING**.
 
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted
@@ -42,6 +42,12 @@ cycles with a minimum of 176.0 s. The multi-trace holdout therefore failed.
 The earlier 265.2 s single-trace result is superseded, runtime application is
 locked, and the negative result remains visible to the evidence-grounded LLM.
 This improves model governance but does not close the full-loop validation gate.
+
+The high-stage pressure band was separately identified from 124 completed
+stop-to-restart cycles across the same eight records. The median pressure drop
+was 4.555 MPa (p10 4.36 MPa), supporting a rounded 4.5 MPa development default
+for the high-bank restart band. This is a post-outcome station-side diagnostic;
+the failed time-dwell candidate remains disabled and the full-loop gate remains open.
 
 The manuscript is therefore kept claim-bounded. The current full-loop negative
 result, component-level evidence and all unresolved gates remain disclosed; no

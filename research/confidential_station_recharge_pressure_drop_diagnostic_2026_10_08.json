@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_station_recharge_pressure_drop_diagnostic",
+  "analysis_status": "post_outcome_development_diagnostic",
+  "evidence_scope": "eight_deidentified_station_side_traces",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "absolute_timestamps_published": false,
+  "source_paths_published": false,
+  "tag_names_published": false,
+  "manufacturer_or_model_published": false,
+  "channel_attestation": {
+    "high_storage_pressure_role_and_unit_semantics_attested": true,
+    "compressor_loaded_state_semantics_attested": true
+  },
+  "observations": {
+    "files_read": 8,
+    "sampled_rows": 653442,
+    "median_sample_period_s": 1.0,
+    "completed_high_stage_restarts": 124,
+    "high_stage_active_cycle_count": 130,
+    "stop_to_restart_pressure_drop_mpa": {
+      "p10": 4.36,
+      "median": 4.555
+    },
+    "active_cycle_pressure_rise_median_mpa": 4.56
+  },
+  "software_decision": {
+    "high_bank_restart_margin_default_mpa": 4.5,
+    "low_and_medium_defaults_changed": false,
+    "minimum_time_dwell_applied": false,
+    "reason": "The rounded high-stage median directly represents the observed pressure band and reduces rapid restart cycling. The separate time-dwell candidate remains blocked by its failed chronological holdout."
+  },
+  "validation_boundary": {
+    "analysis_locked_before_outcome": false,
+    "independent_holdout": false,
+    "full_station_vehicle_validation": false,
+    "safety_limit_or_certification": false
+  },
+  "claim_boundary": "De-identified station-side controller-behavior diagnostic only. It supports an evidence-informed high-bank restart-band development default; it does not validate vehicle filling, establish a safety limit, estimate failure frequency, or certify field operation."
+}

@@ -45,6 +45,9 @@ class BankRechargeDynamicsSummary:
     inactive_absolute_ramp_p95_pa_s: float | None
     recharge_cycle_count: int
     cycle_hysteresis_median_pa: float | None
+    completed_restart_count: int
+    off_pressure_drop_to_restart_median_pa: float | None
+    off_pressure_drop_to_restart_p10_pa: float | None
 
     def to_public_dict(self) -> dict[str, object]:
         return {
@@ -63,6 +66,13 @@ class BankRechargeDynamicsSummary:
             "recharge_cycle_count": self.recharge_cycle_count,
             "cycle_hysteresis_median_pa": _rounded(
                 self.cycle_hysteresis_median_pa
+            ),
+            "completed_restart_count": self.completed_restart_count,
+            "off_pressure_drop_to_restart_median_pa": _rounded(
+                self.off_pressure_drop_to_restart_median_pa
+            ),
+            "off_pressure_drop_to_restart_p10_pa": _rounded(
+                self.off_pressure_drop_to_restart_p10_pa
             ),
         }
 
@@ -228,6 +238,9 @@ def _summarize_observations(
     active_ramps: dict[str, list[float]] = {role: [] for role in role_order}
     inactive_ramps: dict[str, list[float]] = {role: [] for role in role_order}
     cycle_hysteresis: dict[str, list[float]] = {role: [] for role in role_order}
+    off_pressure_drop_to_restart: dict[str, list[float]] = {
+        role: [] for role in role_order
+    }
     interval_count: dict[str, int] = {role: 0 for role in role_order}
     active_interval_count: dict[str, int] = {role: 0 for role in role_order}
     warnings: set[str] = set()
@@ -245,6 +258,7 @@ def _summarize_observations(
         cycle_start_pressures: dict[str, float] | None = (
             dict(prior_pressures) if prior_active else None
         )
+        off_start_pressures: dict[str, float] | None = None
         for time_s, active, pressures in rows[1:]:
             dt = time_s - prior_time
             if dt <= 0.0:
@@ -272,8 +286,15 @@ def _summarize_observations(
                 if active:
                     if off_started_s is not None:
                         off_to_on_durations.append(time_s - off_started_s)
+                    if off_start_pressures is not None:
+                        for role in role_order:
+                            stop = off_start_pressures.get(role)
+                            restart = pressures.get(role)
+                            if stop is not None and restart is not None and stop > restart:
+                                off_pressure_drop_to_restart[role].append(stop - restart)
                     cycle_start_pressures = dict(pressures)
                     off_started_s = None
+                    off_start_pressures = None
                 else:
                     if cycle_start_pressures is not None:
                         for role in role_order:
@@ -283,6 +304,7 @@ def _summarize_observations(
                                 cycle_hysteresis[role].append(stop - start)
                     cycle_start_pressures = None
                     off_started_s = time_s
+                    off_start_pressures = dict(pressures)
             prior_time, prior_active, prior_pressures = time_s, active, pressures
 
     if sampled_seconds <= 0.0:
@@ -304,6 +326,14 @@ def _summarize_observations(
             inactive_absolute_ramp_p95_pa_s=_quantile(sorted(inactive_ramps[role]), 0.95),
             recharge_cycle_count=len(cycle_hysteresis[role]),
             cycle_hysteresis_median_pa=(median(cycle_hysteresis[role]) if cycle_hysteresis[role] else None),
+            completed_restart_count=len(off_pressure_drop_to_restart[role]),
+            off_pressure_drop_to_restart_median_pa=(
+                median(off_pressure_drop_to_restart[role])
+                if off_pressure_drop_to_restart[role] else None
+            ),
+            off_pressure_drop_to_restart_p10_pa=_quantile(
+                sorted(off_pressure_drop_to_restart[role]), 0.10
+            ),
         )
         for role in role_order
     )

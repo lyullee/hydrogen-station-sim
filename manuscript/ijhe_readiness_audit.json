@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T21:57:44.609538+00:00",
+  "generated_at": "2026-10-07T22:27:42.848260+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 91,
+    "PASS": 92,
     "FAIL": 7,
     "PENDING": 8
   },
@@ -702,6 +702,26 @@
       }
     },
     {
+      "id": "confidential_recharge_pressure_band_diagnostic_integrity",
+      "status": "PASS",
+      "claim": "The high-bank restart pressure band is derived from repeated de-identified station cycles while the failed time-dwell candidate remains disabled.",
+      "evidence": "research\\confidential_station_recharge_pressure_drop_diagnostic_2026_10_08.json",
+      "requirement": "Privacy flags, completed restart count, observed pressure-drop distribution, bounded development default and explicit post-outcome/non-validation limits.",
+      "observed": {
+        "files_read": 8,
+        "sampled_rows": 653442,
+        "completed_high_stage_restarts": 124,
+        "stop_to_restart_pressure_drop_mpa": {
+          "p10": 4.36,
+          "median": 4.555
+        },
+        "high_bank_restart_margin_default_mpa": 4.5,
+        "minimum_time_dwell_applied": false,
+        "independent_holdout": false,
+        "full_station_vehicle_validation": false
+      }
+    },
+    {
       "id": "confidential_operational_profile_recheck_integrity",
       "status": "PASS",
       "claim": "The fresh private-data aggregate recheck matches the committed station-boundary profile without replacing it or widening the validation claim.",
@@ -828,8 +848,8 @@
       "id": "confidential_station_schema_intake_integrity",
       "status": "PASS",
       "claim": "The restricted station archive has a de-identified channel-presence inventory that identifies station-side calibration candidates without treating unconfirmed units as measurements.",
-      "evidence": "research\\confidential_station_schema_audit_2026_10.json; research\\private_owner_data_intake_recheck_2026_10_06.json",
-      "requirement": "At least two source bundles, pressure/state channel candidates, no raw rows or source identifiers, and an explicit unit-attestation hold.",
+      "evidence": "research\\confidential_station_schema_audit_2026_10.json; research\\private_owner_data_intake_recheck_2026_10_06.json; research\\confidential_controlled_schema_time_axis_inventory_2026_10_08.json",
+      "requirement": "At least two source bundles, pressure/state channel candidates, bounded flat-file clock-shape groups, no raw rows or source identifiers, and an explicit unit-attestation hold.",
       "observed": {
         "source_bundle_count": 2,
         "file_count": 33,
@@ -873,6 +893,14 @@
           "lifecycle_counter"
         ],
         "full_loop_holdout_eligible": false,
+        "flat_time_axis_candidate_summary": {
+          "candidate_groups": 4,
+          "tables_in_candidate_groups": 26,
+          "largest_candidate_group_tables": 10,
+          "fingerprints_published": false,
+          "absolute_time_samples_published": false
+        },
+        "synchronized_flat_full_loop_candidate": 0,
         "owner_schema_recheck": {
           "committed_aggregate_match": true,
           "verified_file_count": 33,
@@ -6186,7 +6214,7 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 8000,
+          "approximate_manuscript_words_before_references": 7895,
           "figures": 2,
           "tables": 3,
           "citation_keys": 36,

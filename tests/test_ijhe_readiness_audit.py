@@ -342,6 +342,20 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert recharge_observed["runtime_parameter_application"] is False
     assert recharge_observed["prior_single_trace_profile_superseded"] is True
     assert recharge_observed["full_station_vehicle_validation"] is False
+    pressure_band = gates[
+        "confidential_recharge_pressure_band_diagnostic_integrity"
+    ]
+    assert pressure_band["status"] == "PASS"
+    pressure_observed = pressure_band["observed"]
+    assert pressure_observed["completed_high_stage_restarts"] == 124
+    assert pressure_observed["stop_to_restart_pressure_drop_mpa"] == {
+        "p10": 4.36,
+        "median": 4.555,
+    }
+    assert pressure_observed["high_bank_restart_margin_default_mpa"] == 4.5
+    assert pressure_observed["minimum_time_dwell_applied"] is False
+    assert pressure_observed["independent_holdout"] is False
+    assert pressure_observed["full_station_vehicle_validation"] is False
     assert gates["confidential_operational_profile_recheck_integrity"]["status"] == "PASS"
     recheck = gates["confidential_operational_profile_recheck_integrity"]["observed"]
     assert recheck["matches"] is True
@@ -365,6 +379,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert schema["vehicle_side_channel_family_count"] == 0
     assert schema["unit_attestation"]["pressure_units_attested"] is False
     assert schema["full_loop_holdout_eligible"] is False
+    assert schema["flat_time_axis_candidate_summary"]["candidate_groups"] == 4
+    assert schema["flat_time_axis_candidate_summary"][
+        "tables_in_candidate_groups"
+    ] == 26
+    assert schema["synchronized_flat_full_loop_candidate"] == 0
     release_development = gates["release_network_development_integrity"]["observed"]
     assert release_development["evidence_role"] == "consumed_development_only"
     assert release_development["eligible_as_confirmatory_validation"] is False

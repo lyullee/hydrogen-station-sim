@@ -32,8 +32,8 @@ def test_recharge_dynamics_uses_attested_state_cycles_and_never_exports_columns(
         "20,61,86,ON\n"
         "30,62,87,ON\n"
         "40,62,87,IDLE\n"
-        "50,62,87,IDLE\n"
-        "60,62,87,ON\n"
+        "50,61.8,86.8,IDLE\n"
+        "60,61.5,86.5,ON\n"
         "70,63,88,ON\n",
         encoding="utf-8",
     )
@@ -55,6 +55,8 @@ def test_recharge_dynamics_uses_attested_state_cycles_and_never_exports_columns(
     assert public["state_transition_count"] == 3
     assert public["bank_profiles"][0]["bank"] == "medium"
     assert public["bank_profiles"][0]["positive_active_ramp_median_pa_s"] == pytest.approx(100_000.0)
+    assert public["bank_profiles"][0]["completed_restart_count"] == 1
+    assert public["bank_profiles"][0]["off_pressure_drop_to_restart_median_pa"] == pytest.approx(500_000.0)
     assert "medium,high,load" not in json.dumps(public)
     assert "private_trace.csv" not in json.dumps(public)
 

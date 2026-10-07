@@ -802,12 +802,24 @@ def test_manifest_separates_opt_in_recharge_dynamics_from_boundary_calibration()
     assert evidence["temporal_holdout"]["completed_off_to_on_intervals"] == 32
     assert evidence["temporal_holdout"]["minimum_off_to_on_s"] == 176.0
     assert evidence["temporal_holdout"]["dwell_consistent"] is False
+    pressure_band = evidence["observed_high_bank_restart_pressure_band"]
+    assert pressure_band["completed_restarts"] == 124
+    assert pressure_band["stop_to_restart_drop_mpa"] == {
+        "p10": 4.36,
+        "median": 4.555,
+    }
+    assert pressure_band["development_default_mpa"] == 4.5
+    assert pressure_band["minimum_time_dwell_applied"] is False
+    assert pressure_band["independent_holdout"] is False
 
     summary = prompt_evidence_summary(manifest)[
         "confidential_station_recharge_dynamics_calibration"
     ]
     assert summary["candidate_minimum_recharge_off_time_s"] == 290.0
     assert summary["default_model_parameters_changed"] is False
+    assert summary["observed_high_bank_restart_pressure_band"][
+        "development_default_mpa"
+    ] == 4.5
     header = prompt_evidence_header(manifest)[
         "confidential_station_recharge_dynamics_calibration"
     ]

@@ -591,6 +591,14 @@ so the gate failed. The prior single-trace 265.2-s result was superseded and
 runtime use locked. This station-side diagnostic does not validate compressor
 capacity, vehicle filling or the station-to-vehicle loop.
 
+The same attested high-stage state/pressure pairing was then re-analysed with
+the controller quantities separated. Across all eight records, 124 completed
+stop-to-restart cycles had a median pressure drop of 4.555~MPa (10th percentile
+4.36~MPa). The simulator therefore uses a rounded 4.5~MPa high-bank restart
+band as an evidence-informed development default while leaving the failed time
+dwell disabled. This analysis was performed after outcome access and is not an
+independent holdout, safety limit, or full-loop validation result.
+
 \subsection{Prospective confined pressure-peaking screen}
 To test a separate consequence boundary without presenting it as station-loop
 validation, a second prospective protocol was frozen before accessing the raw
@@ -930,42 +938,20 @@ A hydrogen-station safety digital twin was evaluated with separate evidence gate
 for component physics, full-loop behavior, consequence-software translation and
 LLM decision support. The measured-boundary Type-IV tank model achieved validation
 mean RMSE values of 3.841 MPa, 4.833 $^{\circ}$C and 3.850 SOC percentage points.
-The complete loop did not meet the declared screens, even after structural defects
-and preprocessing errors were corrected; only 1/8 development and 2/11 internal
-comparison fills passed, and a prospectively frozen earlier eight-case external
-holdout passed zero screens. The frozen ambient blowdown model also failed its
-prospective external test: 11/22 cases passed both screens and six eligible
-high-pressure cases produced retained thermophysical-domain failures. Although
-an eight-trace confidential station-side dwell failed holdout and was blocked
-from runtime use. The non-adiabatic revision passed 20/22 consumed development
-cases, but its frozen
-E5.1 holdout was ineligible and negative: only three cases met the primary
-temperature window and 2/3 passed both screens. An independent 90 MPa Type-IV
-release campaign passed zero of three mass-flow series, exposing diameter-
-dependent network resistance absent from the aperture-only model. The separate
-25-point Sandia/SRI transient passed its 5.83\% NRMSE screen but failed median-
-error (22.85\%) and half-peak-time (28.29\%) screens, independently showing that
-the adiabatic source depletes too quickly. A separate 222-point 43.1 MPa
-pressure-decay holdout passed only its half-time screen (6.51\% error), while
-NRMSE (11.58\%) and median error (27.46\%) failed. The 39-point Ekoto scaled
-release passed all three frozen mass-flow screens, with 3.84\% NRMSE, 12.79\%
-median error and 6.07\% half-time error. This positive result remains bounded to
-its 13.45 MPa, 3.63 L source. A prospectively specified KIT 20 MPa pressure-
-decay test remained ineligible because the accessible low-resolution publisher
-raster did not separate the measured half-pressure crossing; its 51-point
-startup segment is retained without a validation claim. The HyRAM+ adapter
-reproduced the installed v6.1 API and its directional/radial display contract.
-Separately, all 27 ignited-enclosure holdouts met the 2 kPa peak-error screen
-(MAE 0.672 kPa), supporting only that component endpoint. The incident
-decision-support experiment is specified but incomplete. The retrospective
-34-event machine benchmark favored direct SAGA over alarm-only text on the frozen
-structural proxy (0.760 versus 0.401), while revealing unsupported quantitative
-claims in 3/34 responses. A direct-API guard reduced exposed unsupported
-value--unit claims to 0/34 in a post-outcome rerun, without replacing the pending
-expert study. These results support a
-reproducible research prototype and a disciplined validation workflow; they do
-not support claims of SAE-compliant fuelling control, field safety certification
-or autonomous emergency management.
+The complete loop and prospective ambient-blowdown holdouts did not meet their
+declared screens. An eight-trace confidential station dwell rule also failed its
+holdout and remains disabled. Independent release tests exposed pressure-,
+diameter- and apparatus-dependent errors that an aperture-only source cannot
+resolve. The positive Ekoto result passed all three frozen mass-flow screens but
+is bounded to its 13.45 MPa, 3.63 L source. The HyRAM+ adapter reproduced its
+installed v6.1 API contract, and all 27 ignited-enclosure holdouts met the 2 kPa
+peak-error screen (MAE 0.672 kPa), supporting only those component endpoints.
+The retrospective 34-event benchmark favored direct SAGA over alarm-only text
+on the frozen structural proxy (0.760 versus 0.401). A post-outcome direct-API
+guard reduced exposed unsupported value--unit claims from 3/34 to 0/34, but the
+expert study remains pending. The evidence supports a reproducible research
+prototype and validation workflow, without supporting SAE-compliant fuelling
+control, field safety certification or autonomous emergency management.
 
 \section*{Data and code availability}
 Source code, study scripts, frozen machine-readable evidence and documentation are

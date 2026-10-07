@@ -1,0 +1,48 @@
+{
+  "schema_version": 3,
+  "artifact_type": "controlled_hrs_schema_inventory",
+  "source_identifiers_published": false,
+  "original_headers_published": false,
+  "schema_search_max_rows_per_table": 40,
+  "data_likeness_sample_rows_per_table": 3,
+  "schema_search_rows_examined": 1320,
+  "sample_data_rows_structurally_inspected_in_memory": true,
+  "measurement_rows_persisted": false,
+  "raw_rows_persisted": false,
+  "absolute_timestamps_published": false,
+  "source_files_scanned": 33,
+  "source_tables_scanned": 33,
+  "measurement_like_tables": 33,
+  "unreadable_tables": 0,
+  "source_container_format_counts": {"csv": 33},
+  "tabular_content_format_counts": {"csv": 33},
+  "archive_members_scanned": 0,
+  "oversized_archive_members_skipped": 0,
+  "semantic_channel_table_counts": {
+    "cascade_or_storage": 13,
+    "controller_state": 8,
+    "mass_flow": 20,
+    "pressure": 20,
+    "temperature": 8,
+    "time": 33
+  },
+  "flat_time_axis_candidate_summary": {
+    "candidate_groups": 4,
+    "tables_in_candidate_groups": 26,
+    "largest_candidate_group_tables": 10,
+    "fingerprints_published": false,
+    "absolute_time_samples_published": false
+  },
+  "candidate_schema_counts": {
+    "full_loop_candidate": 0,
+    "co_located_full_loop_candidate": 0,
+    "near_full_loop_missing_one_semantic_group": 0,
+    "station_recharge_candidate": 0,
+    "vehicle_fill_candidate": 0,
+    "synchronized_flat_full_loop_candidate": 0,
+    "synchronized_flat_station_recharge_candidate": 0,
+    "synchronized_flat_vehicle_fill_candidate": 0,
+    "rejected_nonmeasurement_candidate_container": 0
+  },
+  "claim_boundary": "Header-level semantic screening plus in-memory record-shape and strictly-monotonic-time checks only. A co-located candidate means only that separate measurement-like tables in one workbook or archive have complementary labels. A synchronized-flat candidate means that separate CSV files have matching bounded head/tail clock samples and complementary labels. Neither candidate class attests that the complete records can be joined. Candidate counts do not attest a tag mapping, units, calibration, time synchronization, event integrity, model accuracy, safety, or full-loop validation."
+}

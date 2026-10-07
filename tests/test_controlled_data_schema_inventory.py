@@ -185,6 +185,59 @@ def test_schema_inventory_streams_csv_schema_without_whole_file_read(
     assert report["raw_rows_persisted"] is False
 
 
+def test_inventory_groups_aligned_flat_files_without_publishing_clock_or_names(
+    tmp_path: Path,
+):
+    timestamps = (
+        "2026-01-07T13:00:00", "2026-01-07T13:00:01",
+        "2026-01-07T13:00:02", "2026-01-07T13:00:03",
+    )
+    (tmp_path / "private-pressure.csv").write_text(
+        "time,storage_pressure,compressor_state\n"
+        + "".join(f"{stamp},50,run\n" for stamp in timestamps),
+        encoding="utf-8",
+    )
+    (tmp_path / "private-flow.csv").write_text(
+        "time,mass_flow,vehicle,dispenser_temperature\n"
+        + "".join(f"{stamp},1,private-car,20\n" for stamp in timestamps),
+        encoding="utf-8",
+    )
+
+    report = inventory_schema([tmp_path])
+    rendered = json.dumps(report, ensure_ascii=False)
+
+    assert report["schema_version"] == 3
+    assert report["flat_time_axis_candidate_summary"] == {
+        "candidate_groups": 1,
+        "tables_in_candidate_groups": 2,
+        "largest_candidate_group_tables": 2,
+        "fingerprints_published": False,
+        "absolute_time_samples_published": False,
+    }
+    assert report["candidate_schema_counts"]["synchronized_flat_full_loop_candidate"] == 1
+    assert "2026-01-07" not in rendered
+    assert "private-pressure" not in rendered
+    assert "private-car" not in rendered
+
+
+def test_inventory_does_not_group_flat_files_with_different_tail_clocks(tmp_path: Path):
+    (tmp_path / "first.csv").write_text(
+        "time,storage_pressure,compressor_state\n"
+        "0,50,run\n1,51,run\n2,52,run\n3,53,run\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "second.csv").write_text(
+        "time,mass_flow,vehicle,temperature\n"
+        "0,1,car,20\n1,1,car,20\n2,1,car,20\n4,1,car,20\n",
+        encoding="utf-8",
+    )
+
+    report = inventory_schema([tmp_path])
+
+    assert report["flat_time_axis_candidate_summary"]["candidate_groups"] == 0
+    assert report["candidate_schema_counts"]["synchronized_flat_full_loop_candidate"] == 0
+
+
 def test_schema_inventory_recognizes_compact_instrument_tags_without_tag_disclosure(
     tmp_path: Path,
 ):

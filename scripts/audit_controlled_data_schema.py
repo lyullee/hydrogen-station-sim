@@ -36,6 +36,7 @@ TABULAR_SUFFIXES = frozenset({".csv", ".xlsx", ".xlsm"})
 HEADER_SEARCH_MAX_ROWS = 40
 DATA_LIKENESS_SAMPLE_ROWS = 3
 MAX_ARCHIVE_MEMBER_BYTES = 100 * 1024 * 1024
+TIME_AXIS_TAIL_BYTES = 128 * 1024
 
 # These terms are deliberately broad: candidate classification is only a
 # request for a custodian review, never automatic tag or unit attribution.
@@ -350,6 +351,121 @@ def _csv_header_file(path: Path) -> tuple[tuple[str, ...], int, bool, bool] | No
     return None
 
 
+def _strict_time_direction(values: tuple[float, ...]) -> int | None:
+    """Return one direction for a bounded time sample, else ``None``."""
+
+    if len(values) < 2:
+        return None
+    deltas = tuple(later - earlier for earlier, later in zip(values, values[1:]))
+    if all(delta > 0.0 for delta in deltas):
+        return 1
+    if all(delta < 0.0 for delta in deltas):
+        return -1
+    return None
+
+
+def _csv_time_axis_fingerprint(
+    path: Path,
+    header: tuple[str, ...],
+) -> tuple[float, ...] | None:
+    """Fingerprint a flat CSV clock from bounded head/tail samples.
+
+    The fingerprint exists only in memory and is never written to the report.
+    Requiring matching first *and* last samples is materially stronger than
+    grouping files by directory or by a common ``0, 1, 2`` relative clock.
+    It still establishes only a synchronization *candidate*: an authorized
+    mapping must later verify the complete clocks, units, and event identity.
+    """
+
+    time_indices = tuple(
+        index for index, label in enumerate(header)
+        if "time" in _classify_header((label,))
+    )
+    if not time_indices:
+        return None
+    try:
+        with path.open("rb") as binary:
+            prefix = binary.read(16 * 1024)
+            binary.seek(0, 2)
+            size = binary.tell()
+            tail_start = max(0, size - TIME_AXIS_TAIL_BYTES)
+            # Keep UTF-16 reads code-unit aligned. A leading partial line is
+            # discarded below, so seeking into a multibyte record is harmless.
+            if tail_start % 2:
+                tail_start += 1
+            binary.seek(tail_start)
+            tail = binary.read()
+    except OSError:
+        return None
+
+    for encoding in _csv_encodings(prefix):
+        try:
+            with path.open("r", encoding=encoding, newline="") as handle:
+                head_rows = [
+                    tuple(row)
+                    for row in islice(
+                        csv.reader(handle),
+                        HEADER_SEARCH_MAX_ROWS + DATA_LIKENESS_SAMPLE_ROWS,
+                    )
+                ]
+            decoded_tail = tail.decode(encoding)
+        except (UnicodeError, OSError):
+            continue
+        selected = _best_header(head_rows[:HEADER_SEARCH_MAX_ROWS])
+        if selected is None or selected[0] != header:
+            continue
+        header_index = next(
+            (
+                index for index, row in enumerate(head_rows)
+                if tuple(str(value or "") for value in row) == header
+            ),
+            None,
+        )
+        if header_index is None:
+            continue
+        first_rows = head_rows[
+            header_index + 1: header_index + 1 + DATA_LIKENESS_SAMPLE_ROWS
+        ]
+        # When the tail begins mid-record, the first decoded line is partial.
+        # Dropping it also removes a duplicated header for small files.
+        tail_text = decoded_tail if tail_start == 0 else decoded_tail.split("\n", 1)[-1]
+        try:
+            tail_rows = [tuple(row) for row in csv.reader(StringIO(tail_text))]
+        except csv.Error:
+            continue
+        for index in time_indices:
+            first = tuple(
+                value for value in (
+                    _is_time_observation(row[index] if index < len(row) else None)
+                    for row in first_rows
+                ) if value is not None
+            )
+            tail_values = tuple(
+                value for value in (
+                    _is_time_observation(row[index] if index < len(row) else None)
+                    for row in tail_rows
+                ) if value is not None
+            )
+            last = tail_values[-DATA_LIKENESS_SAMPLE_ROWS:]
+            direction = _strict_time_direction(first)
+            if (
+                direction is None
+                or _strict_time_direction(last) != direction
+                or len(first) < DATA_LIKENESS_SAMPLE_ROWS
+                or len(last) < DATA_LIKENESS_SAMPLE_ROWS
+            ):
+                continue
+            # Compare the sampled clock shape relative to its first value.
+            # Split subsystem exports can encode the same logger axis with a
+            # different absolute/relative origin; common head/tail deltas are
+            # the bounded evidence that matters for candidate discovery.
+            origin = first[0]
+            return tuple(
+                round(value - origin, 3) for value in (*first, *last)
+            ) + (float(direction),)
+    return None
+
+
 def _excel_headers(
     source: Path | BytesIO,
 ) -> tuple[tuple[tuple[str, ...], int, bool, bool], ...] | None:
@@ -468,6 +584,9 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
     files_scanned = 0
     archive_members_scanned = 0
     oversized_archive_members_skipped = 0
+    flat_time_axis_groups: dict[
+        tuple[float, ...], list[frozenset[str]]
+    ] = {}
 
     for path in _files(input_roots):
         files_scanned += 1
@@ -505,6 +624,10 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
                 continue
             measurement_like_tables += 1
             container_coverages.append(coverage)
+            if suffix == ".csv":
+                fingerprint = _csv_time_axis_fingerprint(path, header)
+                if fingerprint is not None:
+                    flat_time_axis_groups.setdefault(fingerprint, []).append(coverage)
             for category in coverage:
                 coverage_counts[category] += 1
             if FULL_LOOP_REQUIRED.issubset(coverage):
@@ -529,8 +652,24 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
             if FULL_LOOP_REQUIRED.issubset(frozenset().union(*nonmeasurement_coverages)):
                 rejected_nonmeasurement_candidate_containers += 1
 
+    synchronized_flat_groups = tuple(
+        coverages for coverages in flat_time_axis_groups.values()
+        if len(coverages) > 1
+    )
+    synchronized_flat_full_loop_candidates = 0
+    synchronized_flat_station_recharge_candidates = 0
+    synchronized_flat_vehicle_fill_candidates = 0
+    for coverages in synchronized_flat_groups:
+        combined = frozenset().union(*coverages)
+        if FULL_LOOP_REQUIRED.issubset(combined):
+            synchronized_flat_full_loop_candidates += 1
+        if STATION_RECHARGE_REQUIRED.issubset(combined):
+            synchronized_flat_station_recharge_candidates += 1
+        if VEHICLE_FILL_REQUIRED.issubset(combined):
+            synchronized_flat_vehicle_fill_candidates += 1
+
     return {
-        "schema_version": 2,
+        "schema_version": 3,
         "artifact_type": "controlled_hrs_schema_inventory",
         "source_identifiers_published": False,
         "original_headers_published": False,
@@ -550,12 +689,30 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
         "archive_members_scanned": archive_members_scanned,
         "oversized_archive_members_skipped": oversized_archive_members_skipped,
         "semantic_channel_table_counts": dict(sorted(coverage_counts.items())),
+        "flat_time_axis_candidate_summary": {
+            "candidate_groups": len(synchronized_flat_groups),
+            "tables_in_candidate_groups": sum(map(len, synchronized_flat_groups)),
+            "largest_candidate_group_tables": max(
+                (len(group) for group in synchronized_flat_groups), default=0
+            ),
+            "fingerprints_published": False,
+            "absolute_time_samples_published": False,
+        },
         "candidate_schema_counts": {
             "full_loop_candidate": full_loop_candidates,
             "co_located_full_loop_candidate": co_located_full_loop_candidates,
             "near_full_loop_missing_one_semantic_group": near_full_loop_candidates,
             "station_recharge_candidate": station_recharge_candidates,
             "vehicle_fill_candidate": vehicle_fill_candidates,
+            "synchronized_flat_full_loop_candidate": (
+                synchronized_flat_full_loop_candidates
+            ),
+            "synchronized_flat_station_recharge_candidate": (
+                synchronized_flat_station_recharge_candidates
+            ),
+            "synchronized_flat_vehicle_fill_candidate": (
+                synchronized_flat_vehicle_fill_candidates
+            ),
             "rejected_nonmeasurement_candidate_container": (
                 rejected_nonmeasurement_candidate_containers
             ),
@@ -564,8 +721,10 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
             "Header-level semantic screening plus in-memory record-shape and "
             "strictly-monotonic-time checks only. "
             "A co-located candidate means only that separate measurement-like tables in "
-            "one workbook or archive have complementary labels; "
-            "it does not attest that they can be joined. Candidate counts do not attest "
+            "one workbook or archive have complementary labels. A synchronized-flat "
+            "candidate means that separate CSV files have matching bounded head/tail "
+            "clock samples and complementary labels. Neither candidate class attests "
+            "that the complete records can be joined. Candidate counts do not attest "
             "a tag mapping, units, calibration, time synchronization, event "
             "integrity, model accuracy, safety, or full-loop validation."
         ),
