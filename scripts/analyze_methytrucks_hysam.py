@@ -217,6 +217,7 @@ def _replay_candidate_session(
     end: int,
     *,
     session_selection: str,
+    tank_internal_volume_m3: float,
 ) -> dict[str, Any]:
     """Replay one candidate tank mapping without fitting parameters."""
 
@@ -246,10 +247,10 @@ def _replay_candidate_session(
         effective_volume_multiplier=calibration.effective_volume_multiplier,
         gas_liner_ua_multiplier=calibration.gas_liner_ua_multiplier,
     )
-    # The paper identifies a 244 L Type-IV sink for Hy-SaM in set-up 1.  The
-    # workbook does not contain a test-to-device dictionary, so this geometry
-    # remains an explicit candidate mapping rather than a confirmed identity.
-    tank = build_vehicle_tank(0.244, fit)
+    # The paper identifies 244 L and 77 L Type-IV sinks in set-ups 1 and 2.
+    # The workbook release contains no test-to-set-up crosswalk, so geometry is
+    # an explicit candidate input rather than a confirmed identity.
+    tank = build_vehicle_tank(tank_internal_volume_m3, fit)
     initial = tank.initial_state(
         float(pressure_mpa[0] * 1.0e6), float(tank_temperature_c[0] + 273.15)
     )
@@ -304,7 +305,7 @@ def _replay_candidate_session(
             "mass_flow": "QT_D02 ValueY interpreted as g/s after measured idle baseline",
             "inlet_temperature": "TEX01 ValueY interpreted as degC",
             "upstream_pressure": "PTD10 ValueY interpreted as bar absolute",
-            "tank_internal_volume_m3": 0.244,
+            "tank_internal_volume_m3": tank_internal_volume_m3,
             "mapping_status": "inferred_from_article_and_signal_dynamics_not_confirmed_by_channel_dictionary",
         },
         "fit": {
@@ -335,6 +336,53 @@ def _replay_candidate_session(
             "peak_error_c": float(
                 np.max(predicted_temperature) - np.max(tank_temperature_c)
             ),
+        },
+    }
+
+
+def _aggregate_replays(replays: list[dict[str, Any]]) -> dict[str, Any]:
+    pressure_rmse = np.asarray([item["pressure"]["rmse_mpa"] for item in replays])
+    temperature_rmse = np.asarray([item["temperature"]["rmse_c"] for item in replays])
+    mass_ratios = np.asarray([
+        item["mass_boundary"]["flow_to_scale_mass_ratio"] for item in replays
+    ])
+    joint_screen = (pressure_rmse <= 5.0) & (temperature_rmse <= 10.0)
+    return {
+        "case_count": len(replays),
+        "unique_workbook_count": len({item["workbook"] for item in replays}),
+        "independent_event_count_claimed": False,
+        "within_workbook_sessions_may_be_correlated": True,
+        "selection_is_independent_of_model_prediction": True,
+        "selection_criteria": {
+            "flow_to_scale_mass_ratio": [
+                MASS_CLOSURE_RATIO_MIN, MASS_CLOSURE_RATIO_MAX,
+            ],
+            "minimum_integrated_flow_mass_kg": MINIMUM_SESSION_MASS_KG,
+            "minimum_duration_s": MINIMUM_SESSION_DURATION_S,
+            "required_candidate_tank_columns": list(TANK_CANDIDATE_COLUMNS),
+        },
+        "pressure_rmse_mpa": {
+            "case_mean": float(np.mean(pressure_rmse)),
+            "case_median": float(np.median(pressure_rmse)),
+            "minimum": float(np.min(pressure_rmse)),
+            "maximum": float(np.max(pressure_rmse)),
+        },
+        "temperature_rmse_c": {
+            "case_mean": float(np.mean(temperature_rmse)),
+            "case_median": float(np.median(temperature_rmse)),
+            "minimum": float(np.min(temperature_rmse)),
+            "maximum": float(np.max(temperature_rmse)),
+        },
+        "flow_to_scale_mass_ratio": {
+            "minimum": float(np.min(mass_ratios)),
+            "maximum": float(np.max(mass_ratios)),
+        },
+        "project_screen": {
+            "pressure_rmse_mpa_max": 5.0,
+            "temperature_rmse_c_max": 10.0,
+            "joint_pass_count": int(np.sum(joint_screen)),
+            "joint_pass_fraction": float(np.mean(joint_screen)),
+            "interpretation": "descriptive post-access screen, not confirmatory validation",
         },
     }
 
@@ -377,6 +425,19 @@ def analyze(source_dir: Path) -> dict[str, Any]:
                 "all sessions passing pre-model mass-closure, minimum-mass and "
                 "minimum-duration criteria"
             ),
+            tank_internal_volume_m3=0.244,
+        )
+        for trace, start, end, _summary in eligible_sessions
+    ]
+    sensitivity_replays = [
+        _replay_candidate_session(
+            trace,
+            start,
+            end,
+            session_selection=(
+                "same eligible sessions; alternative article-reported set-up-2 geometry"
+            ),
+            tank_internal_volume_m3=0.077,
         )
         for trace, start, end, _summary in eligible_sessions
     ]
@@ -384,47 +445,8 @@ def analyze(source_dir: Path) -> dict[str, Any]:
         replays,
         key=lambda item: item["mass_boundary"]["integrated_flow_kg"],
     )
-    pressure_rmse = np.asarray([item["pressure"]["rmse_mpa"] for item in replays])
-    temperature_rmse = np.asarray([item["temperature"]["rmse_c"] for item in replays])
-    mass_ratios = np.asarray([
-        item["mass_boundary"]["flow_to_scale_mass_ratio"] for item in replays
-    ])
-    joint_screen = (pressure_rmse <= 5.0) & (temperature_rmse <= 10.0)
-    aggregate = {
-        "case_count": len(replays),
-        "selection_is_independent_of_model_prediction": True,
-        "selection_criteria": {
-            "flow_to_scale_mass_ratio": [
-                MASS_CLOSURE_RATIO_MIN, MASS_CLOSURE_RATIO_MAX,
-            ],
-            "minimum_integrated_flow_mass_kg": MINIMUM_SESSION_MASS_KG,
-            "minimum_duration_s": MINIMUM_SESSION_DURATION_S,
-            "required_candidate_tank_columns": list(TANK_CANDIDATE_COLUMNS),
-        },
-        "pressure_rmse_mpa": {
-            "case_mean": float(np.mean(pressure_rmse)),
-            "case_median": float(np.median(pressure_rmse)),
-            "minimum": float(np.min(pressure_rmse)),
-            "maximum": float(np.max(pressure_rmse)),
-        },
-        "temperature_rmse_c": {
-            "case_mean": float(np.mean(temperature_rmse)),
-            "case_median": float(np.median(temperature_rmse)),
-            "minimum": float(np.min(temperature_rmse)),
-            "maximum": float(np.max(temperature_rmse)),
-        },
-        "flow_to_scale_mass_ratio": {
-            "minimum": float(np.min(mass_ratios)),
-            "maximum": float(np.max(mass_ratios)),
-        },
-        "project_screen": {
-            "pressure_rmse_mpa_max": 5.0,
-            "temperature_rmse_c_max": 10.0,
-            "joint_pass_count": int(np.sum(joint_screen)),
-            "joint_pass_fraction": float(np.mean(joint_screen)),
-            "interpretation": "descriptive post-access screen, not confirmatory validation",
-        },
-    }
+    aggregate = _aggregate_replays(replays)
+    sensitivity_aggregate = _aggregate_replays(sensitivity_replays)
     return {
         "schema_version": 1,
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -444,6 +466,10 @@ def analyze(source_dir: Path) -> dict[str, Any]:
                 "maximum_mass_flow_g_s": 120.0,
                 "protocols": ["SAE J2601", "MC Formula", "PHRYDE", "free configurable"],
                 "hysam_setup_1_sink": "244 L, 70 MPa Type-IV tank",
+                "hysam_setup_1_initial_pressure_mpa": 10.0,
+                "hysam_setup_1_aprr_mpa_min": 6.6,
+                "hysam_setup_2_sink": "77 L, 70 MPa Type-IV tank",
+                "hysam_setup_2_initial_pressure_mpa": 2.0,
                 "hysam_setup_1_reported_flow_g_s": "approximately 14-16",
                 "logged_scope": "all dispenser and tank data",
             },
@@ -477,6 +503,13 @@ def analyze(source_dir: Path) -> dict[str, Any]:
         "workbooks": workbooks,
         "candidate_session_replays": replays,
         "candidate_session_aggregate": aggregate,
+        "candidate_volume_sensitivity": {
+            "reason": "The public workbooks are not cross-walked to the article's 244 L set-up-1 or 77 L set-up-2 sink.",
+            "alternative_tank_internal_volume_m3": 0.077,
+            "case_specific_fitting": False,
+            "selected_for_validation_claim": False,
+            "aggregate": sensitivity_aggregate,
+        },
         "candidate_tank_replay_alias": (
             "largest integrated flow mass among eligible candidate_session_replays"
         ),

@@ -43,6 +43,10 @@ specified, and the public release lacks a channel dictionary, controller/bank
 states and calibration metadata. It is therefore a post-access component
 diagnostic, not a prospective full-loop holdout. The next request is narrowed
 to those missing definitions plus a disjoint, previously uninspected event.
+The article supplement was also downloaded and hash-checked; it provides bank
+contribution and composition tables but does not resolve logger tags or the
+244 L versus 77 L workbook geometry. That sensitivity changes the case-mean
+errors materially, so the geometry crosswalk remains a required acquisition.
 
 ## 2026-10-06 access recheck
 

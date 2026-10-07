@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T18:02:53.146654+00:00",
+  "generated_at": "2026-10-07T18:07:43.140078+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -66,7 +66,7 @@
       "id": "methytrucks_hysam_postaccess_diagnostic_integrity",
       "status": "PASS",
       "claim": "The public MetHyTrucks Hy-SaM archive is hash-audited and replayed without fitting as a claim-bounded post-access tank diagnostic.",
-      "evidence": "research\\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json",
+      "evidence": "research\\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json; research\\methytrucks_supplementary_mapping_recheck_2026_10_08.json",
       "requirement": "Three CC BY 4.0 workbooks, 0.5 s synchronized rows, verified hashes, flow-to-scale mass consistency, no case-specific fitting and explicit false prospective/full-loop eligibility flags.",
       "observed": {
         "workbook_count": 3,
@@ -78,6 +78,9 @@
         "temperature_rmse_c": 5.934497478484101,
         "candidate_session_aggregate": {
           "case_count": 5,
+          "unique_workbook_count": 2,
+          "independent_event_count_claimed": false,
+          "within_workbook_sessions_may_be_correlated": true,
           "selection_is_independent_of_model_prediction": true,
           "selection_criteria": {
             "flow_to_scale_mass_ratio": [
@@ -117,6 +120,74 @@
             "joint_pass_fraction": 1.0,
             "interpretation": "descriptive post-access screen, not confirmatory validation"
           }
+        },
+        "candidate_volume_sensitivity": {
+          "reason": "The public workbooks are not cross-walked to the article's 244 L set-up-1 or 77 L set-up-2 sink.",
+          "alternative_tank_internal_volume_m3": 0.077,
+          "case_specific_fitting": false,
+          "selected_for_validation_claim": false,
+          "aggregate": {
+            "case_count": 5,
+            "unique_workbook_count": 2,
+            "independent_event_count_claimed": false,
+            "within_workbook_sessions_may_be_correlated": true,
+            "selection_is_independent_of_model_prediction": true,
+            "selection_criteria": {
+              "flow_to_scale_mass_ratio": [
+                0.8,
+                1.2
+              ],
+              "minimum_integrated_flow_mass_kg": 0.05,
+              "minimum_duration_s": 10.0,
+              "required_candidate_tank_columns": [
+                "PT01 ValueY",
+                "TT08 ValueY",
+                "TT09 ValueY",
+                "TT10 ValueY",
+                "TT11 ValueY"
+              ]
+            },
+            "pressure_rmse_mpa": {
+              "case_mean": 13.13118877348638,
+              "case_median": 14.117907363457634,
+              "minimum": 0.7114212577761685,
+              "maximum": 31.437981521607632
+            },
+            "temperature_rmse_c": {
+              "case_mean": 18.948431427209613,
+              "case_median": 18.61883273010071,
+              "minimum": 7.94870504576858,
+              "maximum": 27.86474093487859
+            },
+            "flow_to_scale_mass_ratio": {
+              "minimum": 0.9906363636363635,
+              "maximum": 1.0734700460829494
+            },
+            "project_screen": {
+              "pressure_rmse_mpa_max": 5.0,
+              "temperature_rmse_c_max": 10.0,
+              "joint_pass_count": 1,
+              "joint_pass_fraction": 0.2,
+              "interpretation": "descriptive post-access screen, not confirmatory validation"
+            }
+          }
+        },
+        "supplementary_mapping_recheck": {
+          "status": "supplement_downloaded_and_mapping_gap_confirmed",
+          "observed_contents": {
+            "sheet_count": 1,
+            "row_count": 23,
+            "column_count": 8,
+            "tables": [
+              "Table S1: storage-bank contribution percentages by sampling participant in set-up 1",
+              "Table S2: nitrogen, water, carbon-dioxide and oxygen measurements for storage banks"
+            ],
+            "channel_dictionary_present": false,
+            "workbook_test_to_setup_crosswalk_present": false,
+            "sensor_calibration_metadata_present": false,
+            "controller_or_valve_state_tags_present": false
+          },
+          "claim_boundary": "The supplement confirms storage-bank contribution and composition context only. It does not identify the released logger tags or resolve whether a workbook used the 244 L or 77 L sink."
         },
         "prospective_holdout_eligible": false,
         "quantitative_full_loop_validation_eligible": false,
@@ -784,6 +855,9 @@
           "temperature_rmse_c": 5.934497478484101,
           "candidate_session_aggregate": {
             "case_count": 5,
+            "unique_workbook_count": 2,
+            "independent_event_count_claimed": false,
+            "within_workbook_sessions_may_be_correlated": true,
             "selection_is_independent_of_model_prediction": true,
             "selection_criteria": {
               "flow_to_scale_mass_ratio": [
@@ -5799,7 +5873,7 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7964,
+          "approximate_manuscript_words_before_references": 7982,
           "figures": 2,
           "tables": 3,
           "citation_keys": 31,
@@ -5831,12 +5905,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-07T18:02:39.7270735Z",
+        "attempted_at": "2026-10-07T18:07:26.6710045Z",
         "attempts_this_run": 1,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "0668602567c80623a0a3133b3268cd0b7e14ef57f0e2529bce4147d2c2efaf83",
+        "source_sha256": "123835f18221e30c7595eb3a8bb28bd05114b15487b84bf72094eb3f8b8e5232",
         "diagnostic": "Unable to find standard directories for platform",
         "format_check_passed": true,
         "retained_previous_pdf": {

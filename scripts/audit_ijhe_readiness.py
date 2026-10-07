@@ -164,6 +164,8 @@ def audit(root: Path) -> dict[str, object]:
 
     methytrucks_path = root / "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json"
     methytrucks = _json(methytrucks_path)
+    methytrucks_supplement_path = root / "research/methytrucks_supplementary_mapping_recheck_2026_10_08.json"
+    methytrucks_supplement = _json(methytrucks_supplement_path)
     methytrucks_access = (methytrucks or {}).get("access_integrity") or {}
     methytrucks_replay = (methytrucks or {}).get("candidate_tank_replay") or {}
     methytrucks_replays = (methytrucks or {}).get("candidate_session_replays") or []
@@ -173,6 +175,7 @@ def audit(root: Path) -> dict[str, object]:
     methytrucks_temperature = methytrucks_replay.get("temperature") or {}
     methytrucks_eligibility = (methytrucks or {}).get("eligibility") or {}
     methytrucks_workbooks = (methytrucks or {}).get("workbooks") or []
+    methytrucks_sensitivity = (methytrucks or {}).get("candidate_volume_sensitivity") or {}
     methytrucks_ratio = methytrucks_mass.get("flow_to_scale_mass_ratio")
     methytrucks_pass = bool(
         (methytrucks or {}).get("status")
@@ -199,6 +202,17 @@ def audit(root: Path) -> dict[str, object]:
             item.get("fit", {}).get("case_specific_fitting") is False
             for item in methytrucks_replays
         )
+        and methytrucks_sensitivity.get("alternative_tank_internal_volume_m3") == 0.077
+        and methytrucks_sensitivity.get("case_specific_fitting") is False
+        and methytrucks_sensitivity.get("selected_for_validation_claim") is False
+        and (methytrucks_supplement or {}).get("status")
+        == "supplement_downloaded_and_mapping_gap_confirmed"
+        and (methytrucks_supplement or {}).get("observed_contents", {}).get(
+            "channel_dictionary_present"
+        ) is False
+        and (methytrucks_supplement or {}).get("observed_contents", {}).get(
+            "workbook_test_to_setup_crosswalk_present"
+        ) is False
         and methytrucks_eligibility.get("component_diagnostic_eligible") is True
         and methytrucks_eligibility.get("prospective_holdout_eligible") is False
         and methytrucks_eligibility.get("quantitative_full_loop_validation_eligible") is False
@@ -207,7 +221,7 @@ def audit(root: Path) -> dict[str, object]:
         "methytrucks_hysam_postaccess_diagnostic_integrity",
         "PASS" if methytrucks_pass else ("FAIL" if methytrucks else "PENDING"),
         "The public MetHyTrucks Hy-SaM archive is hash-audited and replayed without fitting as a claim-bounded post-access tank diagnostic.",
-        str(methytrucks_path.relative_to(root)),
+        f"{methytrucks_path.relative_to(root)}; {methytrucks_supplement_path.relative_to(root)}",
         "Three CC BY 4.0 workbooks, 0.5 s synchronized rows, verified hashes, flow-to-scale mass consistency, no case-specific fitting and explicit false prospective/full-loop eligibility flags.",
         {
             "workbook_count": len(methytrucks_workbooks),
@@ -216,6 +230,12 @@ def audit(root: Path) -> dict[str, object]:
             "pressure_rmse_mpa": methytrucks_pressure.get("rmse_mpa"),
             "temperature_rmse_c": methytrucks_temperature.get("rmse_c"),
             "candidate_session_aggregate": methytrucks_aggregate,
+            "candidate_volume_sensitivity": methytrucks_sensitivity,
+            "supplementary_mapping_recheck": {
+                "status": (methytrucks_supplement or {}).get("status"),
+                "observed_contents": (methytrucks_supplement or {}).get("observed_contents"),
+                "claim_boundary": (methytrucks_supplement or {}).get("claim_boundary"),
+            },
             "prospective_holdout_eligible": methytrucks_eligibility.get("prospective_holdout_eligible"),
             "quantitative_full_loop_validation_eligible": methytrucks_eligibility.get("quantitative_full_loop_validation_eligible"),
             "claim_boundary": (methytrucks or {}).get("claim_boundary"),

@@ -131,7 +131,7 @@ The local format gate currently passes:
 - abstract: 147 words (limit checked: 150);
 - keywords: 6;
 - highlights: 5, each within the checked character limit;
-- approximate manuscript body: 7,964 words before references;
+- approximate manuscript body: 7,982 words before references;
 - figures: 2; tables: 3;
 - citations resolved and figure assets present;
 - LaTeX compilation: **PENDING**. The built-in compiler was unavailable on this
@@ -149,6 +149,13 @@ minimum-mass and duration criteria were retained. Case-mean pressure and
 temperature RMSE were 1.287 MPa and 4.578 degC, and all five met the descriptive
 project screens. This materially improves cross-institution transfer evidence
 for the tank component.
+
+The article reports both 244 L and 77 L sinks but the public workbooks are not
+cross-walked to the two set-ups. The same five-session replay with the 77 L
+alternative gave 13.131 MPa and 18.948 degC case-mean RMSE and only 1/5
+descriptive joint passes. The hash-verified publisher supplement contains bank
+and composition tables but no logger dictionary or set-up crosswalk, so this
+geometry ambiguity remains a publication limitation rather than a tunable choice.
 
 It does not close `full_loop_external_validation`: numerical outcomes were
 inspected before this diagnostic protocol, and the public package lacks a

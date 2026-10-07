@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T18:02:25.264237+00:00",
+  "generated_at": "2026-10-07T18:05:58.694805+00:00",
   "status": "completed_post_access_external_diagnostic",
   "evidence_role": "post_access_external_diagnostic_only",
-  "model_commit": "411fc5d70111fffe7902051129305cc1535f8b0f",
+  "model_commit": "56575a832605daf68e49e5717db7146ba35ed1e9",
   "source": {
     "dataset_title": "Group B -- HySam system measurement data",
     "dataset_doi": "10.5281/zenodo.20590842",
@@ -22,6 +22,10 @@
         "free configurable"
       ],
       "hysam_setup_1_sink": "244 L, 70 MPa Type-IV tank",
+      "hysam_setup_1_initial_pressure_mpa": 10.0,
+      "hysam_setup_1_aprr_mpa_min": 6.6,
+      "hysam_setup_2_sink": "77 L, 70 MPa Type-IV tank",
+      "hysam_setup_2_initial_pressure_mpa": 2.0,
       "hysam_setup_1_reported_flow_g_s": "approximately 14-16",
       "logged_scope": "all dispenser and tank data"
     }
@@ -562,6 +566,9 @@
   ],
   "candidate_session_aggregate": {
     "case_count": 5,
+    "unique_workbook_count": 2,
+    "independent_event_count_claimed": false,
+    "within_workbook_sessions_may_be_correlated": true,
     "selection_is_independent_of_model_prediction": true,
     "selection_criteria": {
       "flow_to_scale_mass_ratio": [
@@ -600,6 +607,57 @@
       "joint_pass_count": 5,
       "joint_pass_fraction": 1.0,
       "interpretation": "descriptive post-access screen, not confirmatory validation"
+    }
+  },
+  "candidate_volume_sensitivity": {
+    "reason": "The public workbooks are not cross-walked to the article's 244 L set-up-1 or 77 L set-up-2 sink.",
+    "alternative_tank_internal_volume_m3": 0.077,
+    "case_specific_fitting": false,
+    "selected_for_validation_claim": false,
+    "aggregate": {
+      "case_count": 5,
+      "unique_workbook_count": 2,
+      "independent_event_count_claimed": false,
+      "within_workbook_sessions_may_be_correlated": true,
+      "selection_is_independent_of_model_prediction": true,
+      "selection_criteria": {
+        "flow_to_scale_mass_ratio": [
+          0.8,
+          1.2
+        ],
+        "minimum_integrated_flow_mass_kg": 0.05,
+        "minimum_duration_s": 10.0,
+        "required_candidate_tank_columns": [
+          "PT01 ValueY",
+          "TT08 ValueY",
+          "TT09 ValueY",
+          "TT10 ValueY",
+          "TT11 ValueY"
+        ]
+      },
+      "pressure_rmse_mpa": {
+        "case_mean": 13.13118877348638,
+        "case_median": 14.117907363457634,
+        "minimum": 0.7114212577761685,
+        "maximum": 31.437981521607632
+      },
+      "temperature_rmse_c": {
+        "case_mean": 18.948431427209613,
+        "case_median": 18.61883273010071,
+        "minimum": 7.94870504576858,
+        "maximum": 27.86474093487859
+      },
+      "flow_to_scale_mass_ratio": {
+        "minimum": 0.9906363636363635,
+        "maximum": 1.0734700460829494
+      },
+      "project_screen": {
+        "pressure_rmse_mpa_max": 5.0,
+        "temperature_rmse_c_max": 10.0,
+        "joint_pass_count": 1,
+        "joint_pass_fraction": 0.2,
+        "interpretation": "descriptive post-access screen, not confirmatory validation"
+      }
     }
   },
   "candidate_tank_replay_alias": "largest integrated flow mass among eligible candidate_session_replays",

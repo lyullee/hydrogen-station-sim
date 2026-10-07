@@ -50,10 +50,34 @@ def test_methytrucks_result_keeps_post_access_claim_boundary_explicit():
     aggregate = record["candidate_session_aggregate"]
     assert len(replays) == aggregate["case_count"] == 5
     assert aggregate["selection_is_independent_of_model_prediction"] is True
+    assert aggregate["unique_workbook_count"] == 2
+    assert aggregate["independent_event_count_claimed"] is False
+    assert aggregate["within_workbook_sessions_may_be_correlated"] is True
     assert aggregate["selection_criteria"]["flow_to_scale_mass_ratio"] == [0.8, 1.2]
     assert all(item["fit"]["case_specific_fitting"] is False for item in replays)
     assert aggregate["project_screen"]["interpretation"].startswith("descriptive")
+    sensitivity = record["candidate_volume_sensitivity"]
+    assert sensitivity["alternative_tank_internal_volume_m3"] == 0.077
+    assert sensitivity["case_specific_fitting"] is False
+    assert sensitivity["selected_for_validation_claim"] is False
+    assert sensitivity["aggregate"]["case_count"] == 5
     assert record["eligibility"]["component_diagnostic_eligible"] is True
     assert record["eligibility"]["prospective_holdout_eligible"] is False
     assert record["eligibility"]["quantitative_full_loop_validation_eligible"] is False
     assert "not an untouched holdout" in record["claim_boundary"]
+
+
+def test_methytrucks_supplement_does_not_overstate_mapping_support():
+    record = json.loads(
+        (ROOT / "research/methytrucks_supplementary_mapping_recheck_2026_10_08.json")
+        .read_text(encoding="utf-8")
+    )
+    assert record["access_integrity"]["raw_supplement_committed"] is False
+    assert record["observed_contents"]["channel_dictionary_present"] is False
+    assert record["observed_contents"]["workbook_test_to_setup_crosswalk_present"] is False
+    assert record["article_geometry_boundary"] == {
+        "set_up_1_sink_l": 244,
+        "set_up_2_sink_l": 77,
+        "public_workbook_to_set_up_mapping_confirmed": False,
+    }
+    assert record["gate_impact"] == "channel and geometry mapping remain provisional"

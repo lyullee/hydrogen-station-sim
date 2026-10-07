@@ -21,6 +21,8 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert 0.9 < methytrucks["flow_to_scale_mass_ratio"] < 1.2
     assert methytrucks["candidate_session_aggregate"]["case_count"] == 5
     assert methytrucks["candidate_session_aggregate"]["project_screen"]["joint_pass_count"] == 5
+    assert methytrucks["candidate_volume_sensitivity"]["aggregate"]["project_screen"]["joint_pass_count"] == 1
+    assert methytrucks["supplementary_mapping_recheck"]["observed_contents"]["channel_dictionary_present"] is False
     assert methytrucks["prospective_holdout_eligible"] is False
     assert methytrucks["quantitative_full_loop_validation_eligible"] is False
     assert gates["public_tank_runtime_calibration_integrity"]["status"] == "PASS"

@@ -10,7 +10,7 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 | Gate | Status | Claim | Evidence |
 |---|---|---|---|
 | `tank_external_validation` | **PASS** | Measured-boundary Type-IV tank model is externally evaluated on the frozen public split. | `research\tank_model_validation_v2.json` |
-| `methytrucks_hysam_postaccess_diagnostic_integrity` | **PASS** | The public MetHyTrucks Hy-SaM archive is hash-audited and replayed without fitting as a claim-bounded post-access tank diagnostic. | `research\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json` |
+| `methytrucks_hysam_postaccess_diagnostic_integrity` | **PASS** | The public MetHyTrucks Hy-SaM archive is hash-audited and replayed without fitting as a claim-bounded post-access tank diagnostic. | `research\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json; research\methytrucks_supplementary_mapping_recheck_2026_10_08.json` |
 | `public_tank_runtime_calibration_integrity` | **PASS** | The split-validated public Type-IV tank fit is the runtime default and is supplied to the bounded LLM evidence manifest. | `research\public_type_iv_tank_runtime_calibration_2026_10_07.json` |
 | `active_fill_correction_disclosed` | **PASS** | The post-diagnostic H2P-L29 normalization correction and its downstream effect are disclosed and hash-linked. | `research\h2protocol_active_fill_correction.json` |
 | `corrected_closed_loop_internal_evidence` | **PASS** | The corrected development pipeline is retained with its low joint-screen pass fractions and internal-comparison status. | `research\closed_loop_development_v2.json; research\closed_loop_internal_comparison_v2.json` |

@@ -19,6 +19,7 @@
     "flow_cumulative_mass_consistency_checked": true,
     "diagnostic_result": "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json"
   },
+  "supplementary_mapping_recheck": "research/methytrucks_supplementary_mapping_recheck_2026_10_08.json",
   "missing_for_full_loop": [
     "publisher channel dictionary and unambiguous engineering units",
     "workbook-to-sampling-device crosswalk",

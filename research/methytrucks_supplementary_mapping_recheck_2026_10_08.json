@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-10-08",
+  "status": "supplement_downloaded_and_mapping_gap_confirmed",
+  "source": {
+    "article_doi": "10.3390/cleantechnol8030091",
+    "supplement_url": "https://mdpi-res.com/d_attachment/cleantechnol/cleantechnol-08-00091/article_deploy/cleantechnol-08-00091-s001.zip",
+    "license": "CC BY 4.0"
+  },
+  "access_integrity": {
+    "zip_sha256": "53a1694c0c21fdca59984e29af5d7658ce8c4e4b099cf201dccf689129b3f97f",
+    "zip_bytes": 8347,
+    "member_name": "cleantechnol-4249560-supplementary.xlsx",
+    "member_sha256": "999a33dc464655b6bfe2310e7c81d883cf1deec61d22adf49ef5a55a049fdcce",
+    "member_bytes": 10560,
+    "raw_supplement_committed": false
+  },
+  "observed_contents": {
+    "sheet_count": 1,
+    "row_count": 23,
+    "column_count": 8,
+    "tables": [
+      "Table S1: storage-bank contribution percentages by sampling participant in set-up 1",
+      "Table S2: nitrogen, water, carbon-dioxide and oxygen measurements for storage banks"
+    ],
+    "channel_dictionary_present": false,
+    "workbook_test_to_setup_crosswalk_present": false,
+    "sensor_calibration_metadata_present": false,
+    "controller_or_valve_state_tags_present": false
+  },
+  "article_geometry_boundary": {
+    "set_up_1_sink_l": 244,
+    "set_up_2_sink_l": 77,
+    "public_workbook_to_set_up_mapping_confirmed": false
+  },
+  "gate_impact": "channel and geometry mapping remain provisional",
+  "next_action": "Obtain the publisher channel dictionary and explicit workbook-to-set-up/device crosswalk before any prospective use.",
+  "claim_boundary": "The supplement confirms storage-bank contribution and composition context only. It does not identify the released logger tags or resolve whether a workbook used the 244 L or 77 L sink."
+}

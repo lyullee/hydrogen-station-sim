@@ -29,6 +29,19 @@ Across the five retained sessions, case-mean pressure RMSE was **1.287 MPa**
 These errors were not used to retune the model, and the 5/5 figure is a
 post-access descriptive result rather than a confirmatory pass rate.
 
+The article reports a 244 L sink for set-up 1 and a 77 L sink for set-up 2, but
+does not cross-walk the released workbook names to those set-ups. Replaying the
+same five sessions with the 77 L alternative produced case-mean pressure and
+temperature RMSE of 13.131 MPa and 18.948 degC, with 1/5 descriptive joint
+screen passes. This sensitivity was not used to select or fit a geometry; it
+shows that resolving the workbook-to-set-up mapping is material.
+
+The publisher's supplementary ZIP was also hash-audited. Its spreadsheet
+contains storage-bank contribution percentages and composition measurements,
+but no logger channel dictionary, test-to-set-up crosswalk, sensor calibration
+metadata or controller tags. The result is recorded in
+[`methytrucks_supplementary_mapping_recheck_2026_10_08.json`](methytrucks_supplementary_mapping_recheck_2026_10_08.json).
+
 ## Claim boundary
 
 This is a **post-access external component diagnostic**. Numerical outcomes
@@ -46,7 +59,8 @@ The candidate mapping is retained as an auditable hypothesis:
 - `QT_D02`: hydrogen mass flow in g/s after the measured idle baseline;
 - `TEX01`: delivered-gas temperature in degC;
 - `PTD10`: upstream/dispenser pressure in bar absolute;
-- sink volume: 0.244 m3 from the accompanying article's Hy-SaM setup 1.
+- primary candidate sink volume: 0.244 m3 from article set-up 1;
+- disclosed geometry sensitivity: 0.077 m3 from article set-up 2.
 
 ## Highest-value next action
 
