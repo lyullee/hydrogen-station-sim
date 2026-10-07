@@ -1,0 +1,1238 @@
+{
+  "schema_version": 1,
+  "artifact_type": "hiad_post_outcome_numeric_guard_recheck",
+  "status": "POST_OUTCOME_RUNTIME_SAFETY_RECHECK",
+  "generated_at_utc": "2026-10-07T15:19:53.177915+00:00",
+  "source": {
+    "retained_benchmark": "research/hiad_machine_response_benchmark_2026_10_08.json",
+    "retained_benchmark_sha256": "7293cd3723ef2421a05e659db73020f2a566f427aa119936ea2946fbb4c2a87c",
+    "case_count": 34,
+    "same_public_hiad_cohort": true,
+    "same_question_and_context_builder": true
+  },
+  "runtime": {
+    "digital_twin_commit": "e5fc83bf1167219b2d684c364ac0e37a6d92f716",
+    "saga_commit": "bce9732fb112644d13b0fabb858308c09a4351b1",
+    "provider": "groq",
+    "execution_mode": "in_process_fastapi_test_client_no_server"
+  },
+  "outcome": {
+    "before_unsupported_claim_response_count": 3,
+    "after_unsupported_claim_response_count": 0,
+    "after_provider_failure_count": 0,
+    "guard_notice_response_count": 5,
+    "mean_latency_ms": 604.0918970658608
+  },
+  "responses": [
+    {
+      "event_id": "396",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 891.356100095436,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical record of a hydrogen leak in the dispenser pump that triggered an alarm, with the specific cause and magnitude of the release remaining uncertain due to the lack of live sensor data.\n\nThe immediate priority is to verify the current system status and confirm that the leak has been isolated or resolved, as no active alerts are currently present.\n\nStabilization requires confirming that hydrogen concentration levels are within safe limits and that the dispenser pump has passed functional tests before resuming operations.\n\nFor prevention, implement a follow-up inspection of the dispenser pump seals and review the alarm response logs to ensure the detection system functioned correctly during the incident.",
+      "expected_categories": [
+        "inspection_leak_test_repair"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair"
+      ],
+      "category_recall": 1.0,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "stabilize"
+      ],
+      "stage_coverage": 0.8,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.9
+    },
+    {
+      "event_id": "401",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 431.5696000121534,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The station experienced a safe automatic shutdown due to a detected hydrogen release during refueling, with the leak identified post-incident at the hose end fitting, though the exact cause remains unconfirmed.\n\nImmediately, verify the integrity of the hose end fitting and replace the component if any damage is found, then perform a leak test before any restart.\n\nStabilization requires a confirmed zero-leak status and a full system reset, while follow-up controls should include enhanced periodic inspections of hose fittings to prevent recurrence.",
+      "expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair"
+      ],
+      "category_recall": 0.5,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.75
+    },
+    {
+      "event_id": "402",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 584.8380000097677,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical near-miss where a hydrogen compressor experienced severe cavitation and dead heading, causing 5 of 8 lower head bolts to snap and damaging 1st stage diaphragms, with no hydrogen release or contamination.\n\nThe plausible scenario is a non-hydrogen system initiating event leading to mechanical failure, though the specific root cause remains uncertain as only the historical narrative is provided.\n\nImmediate actions in priority order are to confirm the system remains in a safe shutdown state and to secure the area for the on-site investigation that was initiated one hour after detection.\n\nStabilization and restart conditions require the completion of the on-site investigation, repair of the snapped bolts and damaged diaphragms, and verification that the non-hydrogen initiating event has been resolved.\n\nPrevention and follow-up controls should include reviewing remote log monitoring protocols to ensure earlier detection of pressure anomalies and implementing mechanical integrity checks for the 1st stage to prevent recurrence of cavitation-induced failures.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.6,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.8
+    },
+    {
+      "event_id": "403",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 609.3881000997499,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical incident where one of two hydrogen dispensers failed, resulting in an unignited hydrogen release, while the operator successfully switched to the second dispenser to maintain service without interruption.\n\nSince no live sensor values or calculated consequence distances are supplied, the specific cause of the failure and the extent of the release remain uncertain.\n\nImmediate actions should prioritize verifying that the failed dispenser is isolated and that the active dispenser is operating within normal parameters.\n\nNext, confirm that the area around the failed unit is clear of personnel and ignition sources until the leak is confirmed resolved.\n\nStabilization requires confirmation from the dispenser company that the fault is repaired and the system is safe to re-energize.\n\nRestart conditions include passing all safety interlocks and leak tests before returning the failed dispenser to service.\n\nPrevention controls should involve reviewing the root cause with the dispenser manufacturer and updating maintenance schedules for both units.\n\nFollow-up actions include documenting the incident details and ensuring operator training covers rapid switching procedures for future single-dispenser failures.",
+      "expected_categories": [],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": null,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 1.0
+    },
+    {
+      "event_id": "404",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 459.01520003098994,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a near-miss where slow fuelling was caused by solenoid valves failing to open due to a lack of compressed air, a non-hydrogen system initiating event with no hydrogen release.\n\nThe immediate priority is to verify the compressed air supply pressure and restore it to ensure the solenoid valves can operate correctly.\n\nStabilization requires confirming that the valves open fully and that fuelling rates return to normal specifications before resuming operations.\n\nPrevention controls should include adding monitoring for compressed air pressure and implementing regular maintenance checks on the solenoid valve actuators to detect potential failures early.",
+      "expected_categories": [
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": 0.0,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "stabilize"
+      ],
+      "stage_coverage": 0.8,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.4
+    },
+    {
+      "event_id": "411",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 542.9057999281213,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical near-miss where an oil leak in the hydrogen compressor contaminated the entire hydrogen system from the compressor to the filling nozzle, with no live sensor data or calculated consequence distances available to confirm current status.\n\nImmediate actions must prioritize verifying the integrity of the hydrogen system components and confirming that no active leak or contamination persists before any operational restart.\n\nStabilization and restart conditions require a complete purge and inspection of the affected hydrogen path to ensure oil-free operation, as no specific numerical thresholds or live alerts are provided to define safe limits.\n\nPrevention and follow-up controls should focus on enhancing regular maintenance protocols for the compressor to detect oil leaks earlier and implementing stricter contamination checks before hydrogen compression resumes.",
+      "expected_categories": [
+        "detection_alarm_monitoring"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": 0.0,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.5
+    },
+    {
+      "event_id": "454",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 707.5543999671936,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical near-miss where heavy-duty vehicles struck the HRS canopy due to its lower height relative to the forecourt, with no hydrogen release or injuries reported.\n\nThe plausible scenario involves driver misjudgment of clearance, though specific vehicle dimensions or exact impact forces are not provided in the data.\n\nImmediate actions are limited to verifying the current physical integrity of the repaired canopy and confirming that the HRS operator has implemented the planned height adjustment to prevent recurrence.\n\nNo active alerts or live sensor values are available to trigger further immediate operational interventions.\n\nStabilization and restart conditions are already met as the station status is NORMAL and the canopy has been repaired twice, requiring only final verification of the raised height before resuming normal HDV traffic flow.\n\nPrevention and follow-up controls should focus on maintaining the increased canopy height, installing clear height warning signage for HDVs, and conducting periodic visual inspections to ensure structural integrity.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair"
+      ],
+      "category_recall": 0.5,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.75
+    },
+    {
+      "event_id": "463",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 528.3996999496594,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": true,
+      "answer": "The observed situation is a minor, unignited hydrogen leak at a 35MPa dispenser's break-away coupling during a low-temperature test, likely caused by a defect that was not detected during ambient-temperature commissioning.\n\nImmediate actions should prioritize confirming the area is clear of ignition sources and verifying that the 70MPa dispenser remains isolated and operational.\n\nNo precise value was supplied for this point; verify the live measurement and applicable procedure.\n\nPrevention controls must include mandatory low-temperature leak testing during commissioning and periodic maintenance to detect thermal contraction issues.",
+      "expected_categories": [
+        "fire_response_cooling",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.6666666666666666,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "stabilize"
+      ],
+      "stage_coverage": 0.8,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.7333333333333334
+    },
+    {
+      "event_id": "702",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 680.03609997686,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical hydrogen leak at a 70MPa station caused by a plastic filling hose failure after 130 cycles, resulting in an unignited release with no casualties.\n\nThe plausible scenario is material fatigue or durability limit exceedance during a durability test, though the exact root cause remains uncertain without further analysis.\n\nImmediate actions are to maintain the manual shutdown, isolate the failed hose, and verify the area is clear of hydrogen using the portable gas leak detector.\n\nStabilization and restart conditions require replacing the damaged hose, conducting a pressure integrity test on the new component, and confirming zero leaks before resuming operations.\n\nPrevention and follow-up controls include reviewing the hose durability test protocol, implementing stricter cycle-count monitoring, and scheduling preventive replacements based on the observed 130-cycle failure point.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 1.0,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 1.0
+    },
+    {
+      "event_id": "803",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 658.4591999417171,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": true,
+      "answer": "No precise value was supplied for this point; verify the live measurement and applicable procedure.\n\nThe leak was audible and triggered a safety sensor but did not ignite, and the specific root cause remains uncertain due to the historical nature of the data.\n\nImmediate actions in priority order are to confirm the area is clear of ignition sources and personnel, then verify that the safety sensor activation has initiated the appropriate automatic shutdown or isolation protocols for the affected medium-pressure system.\n\nStabilization and restart conditions require a complete physical inspection and replacement of the failed O-ring, followed by a pressure test and leak check of the medium-pressure tank end plug and valve assembly before returning the system to service.\n\nPrevention and follow-up controls should include reviewing the maintenance history of the rebuilt system, implementing stricter pre-startup checks for O-ring integrity after extended downtime, and documenting the incident to update the station’s preventive maintenance procedures.",
+      "expected_categories": [
+        "shutdown_isolation_depressurization"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 1.0,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 1.0
+    },
+    {
+      "event_id": "884",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 753.0753000173718,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": true,
+      "answer": "No precise value was supplied for this point; verify the live measurement and applicable procedure.\n\nThe primary uncertainty lies in the specific fatigue mechanism, which is attributed to pressure oscillations over two years, though no live sensor data confirms the exact failure point.\n\nImmediate actions must prioritize securing the perimeter to prevent further exposure, isolating the affected high-pressure tank from the pipeline, and verifying the integrity of all remaining gasket connections.\n\nOperators should immediately halt all refuelling operations and initiate a full shutdown of the hydrogen storage system to eliminate ignition sources.\n\nStabilization requires confirming zero hydrogen concentration in the vicinity and completing a comprehensive inspection of all bolted flanges and gaskets across the station.\n\nRestart conditions depend on the successful replacement of faulty components, verification of torque specifications, and a formal safety review by the manufacturer and regulatory bodies.\n\nPrevention controls should include implementing aviation-style assembly verification procedures, such as dual-check torque validation and periodic non-destructive testing of gasket integrity.\n\nFollow-up actions must involve a root-cause analysis with the manufacturer (NEL) and a review of pressure oscillation management during refuelling cycles to mitigate fatigue risks.",
+      "expected_categories": [
+        "evacuation_perimeter_access",
+        "fire_response_cooling",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "mentioned_categories": [
+        "evacuation_perimeter_access",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "evacuation_perimeter_access",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.8,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.9
+    },
+    {
+      "event_id": "953",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 530.1976000191644,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical hydrogen release caused by a crankshaft bearing failure in the compressor, leading to a shaft seal leak and subsequent unignited release, though the specific root cause remains a plausible scenario rather than a confirmed live diagnosis.\n\nImmediate actions should prioritize verifying that all isolation valves are securely closed and the emergency stop is engaged, followed by confirming that rescue services have secured the area and that no ignition sources are present.\n\nStabilization and restart conditions require a full mechanical inspection and repair of the compressor bearing and seal, along with a system leak test and safety review before resuming operations.\n\nPrevention and follow-up controls should include enhanced vibration monitoring on the compressor, regular bearing health checks, and a review of maintenance intervals to detect early signs of mechanical degradation.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "detection_alarm_monitoring",
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.4,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.7
+    },
+    {
+      "event_id": "1038",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 479.6692000236362,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": true,
+      "answer": "No precise value was supplied for this point; verify the live measurement and applicable procedure.\n\nThe immediate priority is to verify that the nozzle/receptacle connection is secure and free of ice before any further transfer attempts, as the system is confirmed safe to fuel even if stuck.\n\nStabilization requires confirming that the precooling temperature is within operational limits and that the connection integrity is maintained without forced mechanical separation.\n\nFollow-up controls should include reviewing precooling setpoints to prevent ice formation and documenting this event for future safety analysis, while acknowledging that no live sensor data is available to validate current conditions.",
+      "expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 1.0,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "stabilize"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.8
+    },
+    {
+      "event_id": "1062",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 489.0269000316039,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical unignited hydrogen release from a stationary tank at a bus depot, where the leak was stopped after two hours by closing the valve, though the specific cause and exact leak rate remain uncertain.\n\nThe immediate priority is to verify the isolation of the affected tank and confirm that the area is ventilated and free of residual hydrogen before any further operations.\n\nStabilization requires a full leak test of the closed valve and system integrity check, while restart is only permitted after confirming no further leaks and resetting safety interlocks.\n\nPrevention controls should include enhanced routine leak detection inspections and operator training on rapid isolation procedures for stationary storage systems.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "fire_response_cooling",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "matched_expected_categories": [
+        "ventilation_purge"
+      ],
+      "category_recall": 0.25,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.625
+    },
+    {
+      "event_id": "1063",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 783.7400999851525,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical near-miss involving a 5.7 kg unignited hydrogen release detected by auditory cues, where response was severely delayed due to access barriers and communication failures.\n\nThe plausible scenario is a pipe leak that escalated into a significant operational disruption, though the exact root cause remains unconfirmed in the provided data.\n\nImmediate actions should prioritize securing the 150 m perimeter and establishing direct communication channels with emergency services to bypass the inaccessible gate code.\n\nNext, the operator must ensure the trailer shut-off valve is locked to isolate the source, as was done at 18:40 in this incident.\n\nStabilization requires confirming zero leak via precise location and repair, which took two days in this case, before any restart.\n\nRestart conditions depend on verified integrity of the repaired pipe and restored access protocols for emergency responders.\n\nPrevention controls must include pre-sharing gate codes with local fire departments and implementing automated leak detection systems to replace reliance on auditory detection.\n\nFollow-up should focus on reviewing the 30-minute airport impact and the 11-hour delay in technician arrival to improve emergency response coordination.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "inspection_leak_test_repair",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access"
+      ],
+      "category_recall": 0.4,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.7
+    },
+    {
+      "event_id": "1064",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 546.1600000271574,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical near-miss where a hydrogen leak at the compressor filter triggered the safety system at 25% of the lower explosive limit, resulting in automatic isolation and venting.\n\nThe plausible scenario involves a filter failure in a confined space, though the exact root cause remains unverified in the provided data.\n\nImmediate actions are already complete, as the system entered safe mode, isolated storage, purged pipes, and cut power before the technician arrived to confirm safety and stop the alarm.\n\nStabilization is achieved by the confirmed safe state and the replacement of the defective filter, allowing for a standard restart procedure once the area is verified clear.\n\nPrevention controls should include enhanced monitoring of compressor filters in confined spaces and regular maintenance audits to detect degradation before it reaches the safety limit.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "matched_expected_categories": [
+        "detection_alarm_monitoring",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "category_recall": 0.75,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.875
+    },
+    {
+      "event_id": "1106",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 715.4606999829412,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed incident involved a tie rod failure in the hydrogen compressor causing a high-pressure leak and subsequent deflagration within the container, resulting in material damage but no injuries.\n\nSince this is a historical record with no live sensor data, the primary uncertainty lies in the current structural integrity of the compressor assembly and the specific root cause of the tie rod fatigue.\n\nImmediate actions should prioritize verifying the isolation of the affected compressor unit and confirming that the station-wide shutdown was successfully executed to prevent further release.\n\nNext, ensure the area is secured and that fire suppression systems are ready for any potential re-ignition, while awaiting a formal structural inspection.\n\nStabilization and restart conditions require a complete mechanical repair of the compressor, including replacement of the failed tie rod and a rigorous non-destructive testing (NDT) inspection of all structural components.\n\nAdditionally, a formal root cause analysis must be completed to confirm that the failure mechanism has been addressed before returning the unit to service.\n\nPrevention controls should include implementing a scheduled inspection regime for critical structural fasteners like tie rods and reviewing maintenance intervals based on the failure mode.\n\nFollow-up actions must involve updating the station’s emergency response plan to reflect the specific hazards of compressor container breaches and documenting the incident for regulatory reporting.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "fire_response_cooling",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "fire_response_cooling",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "fire_response_cooling",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.4,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.7
+    },
+    {
+      "event_id": "1159",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 568.9810999901965,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical unignited hydrogen release from a 950 bar composite vessel due to a suspected vibration-induced loosening of a screwed connection, with the specific detection method remaining uncertain.\n\nImmediate actions should prioritize verifying the isolation of the affected vessel and confirming the integrity of the vent stack to ensure safe depressurization, as the facility was already emptied to stop the leak.\n\nStabilization requires confirming zero pressure in the isolated section and verifying that the newly mounted additional pipe support is securely installed to prevent recurrence.\n\nFollow-up controls must include a formal review of the remote detection logic to clarify how the leak was identified and a documented inspection of all similar screwed connections for vibration resistance.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.25,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "stabilize"
+      ],
+      "stage_coverage": 0.8,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.525
+    },
+    {
+      "event_id": "1161",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 515.7184000127017,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical unignited hydrogen release from a CGH2 storage vessel caused by O-ring and back-up ring rupture due to thread length mismatch, with no injuries or property damage reported.\n\nThe immediate priority is to confirm the isolation of the affected vessel and verify that the venting system has safely cleared the area, as no live sensor data is available to confirm current atmospheric conditions.\n\nStabilization requires a complete mechanical inspection of the neck assembly to resolve the thread length discrepancy and replace all compromised sealing components before any restart.\n\nPrevention controls should include mandatory dimensional verification of plug and neck threads during maintenance and a review of back-up ring material specifications to prevent plastic deformation under operational forces.",
+      "expected_categories": [
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.3333333333333333,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.6666666666666666
+    },
+    {
+      "event_id": "1163",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 565.3747000033036,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical fire at a bus HRS caused by hydrogen venting through a storage safety valve, which was initially misreported as an explosion but resulted in no casualties and only roof damage.\n\nSince no live sensor values or calculated consequence distances are supplied, the specific cause of the valve activation remains uncertain.\n\nImmediate actions should prioritize verifying that the fire is fully extinguished and confirming the isolation of the affected storage unit, followed by checking for any residual hydrogen leaks in the vicinity.\n\nStabilization and restart conditions require a full integrity inspection of the safety valve and storage building roof, along with a confirmed leak-free status before re-pressurization.\n\nPrevention and follow-up controls should include reviewing the safety valve setpoints and maintenance logs, and updating emergency response protocols to distinguish between venting fires and explosions.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "fire_response_cooling"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": 0.0,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.5
+    },
+    {
+      "event_id": "1173",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 695.5302000278607,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical explosion and fire at a CGH2 cylinder bundle caused by a hydrogen leak from a brazed joint, which failed due to mechanical fatigue from the weight of the filling hose.\n\nThe scenario indicates a critical design flaw where the joint could not withstand cyclic loading, compounded by the failure of the hydrogen detector to issue an alarm.\n\nImmediate actions in priority order are to activate the emergency stop to halt the compressor, open the main sprinkler valve to suppress the fire, and notify the fire department while establishing a security perimeter.\n\nStabilization and restart conditions require a complete post-incident investigation to confirm the root cause, replacement of the defective brazed connections with a design that eliminates mechanical fatigue, and verification that the hydrogen detection system is functional and calibrated.\n\nPrevention and follow-up controls include implementing a design review to ensure filling ports and hoses do not impose excessive mechanical stress on piping joints, and conducting regular integrity checks on all brazed connections to prevent future fatigue failures.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "fire_response_cooling",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.625,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.8125
+    },
+    {
+      "event_id": "1191",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 671.2321999948472,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation was a fire caused by hydrogen backflow from the production vent line into a nitrogen-purged storage vessel, ignited by vacuum cleaner motor sparks during an unplanned inspection.\n\nThe primary uncertainty lies in the exact timeline of the temporary valve failure, though the narrative confirms it remained open, allowing production hydrogen to re-enter the vessel.\n\nImmediate actions in priority order are to isolate the hydrogen production vent line from the storage system, evacuate the immediate area, and extinguish the fire using appropriate Class C or hydrogen-specific suppression methods while attending to the minor injuries.\n\nStabilization requires confirming zero hydrogen concentration in the storage vessel and vent lines via continuous monitoring, verifying the integrity of the temporary valve and all temporary connections, and ensuring the vacuum cleaner and surrounding area are free of ignition sources before any restart.\n\nPrevention controls include mandatory verification of isolation valves before introducing non-inert tools, prohibiting the use of non-explosion-proof electrical equipment in hydrogen service areas, and implementing a strict lockout/tagout procedure for temporary vent line connections during maintenance.",
+      "expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "evacuation_perimeter_access",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "category_recall": 1.0,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 1.0
+    },
+    {
+      "event_id": "1193",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 750.1534000039101,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a hydrogen leak at a threaded joint upstream of a hand valve on the direct filling compressor side, triggered at 4% LEL during the first refuelling test after maintenance, likely caused by a fitting loosening during unrecorded retightening work and missed by subsequent airtightness tests due to scope errors and a closed hand valve.\n\nImmediate actions in priority order are to confirm the automatic station shutdown is maintained, isolate the specific joint using the hand valve and upstream isolation, and verify zero hydrogen concentration with a portable detector before any further intervention.\n\nStabilization and restart conditions require a documented repair of the joint, a full-scope airtightness test that includes the previously excluded upstream section with the hand valve open, and a formal review of the maintenance work instructions to ensure all affected fittings are tested.\n\nPrevention and follow-up controls involve updating work instructions to mandate comprehensive airtightness testing after any internal maintenance, implementing a verification step to confirm valve positions during testing, and conducting a root cause analysis on the procedural misunderstanding to prevent recurrence.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.6,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.8
+    },
+    {
+      "event_id": "1194",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 498.4995999839157,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a hydrogen leak at a mobile HRS dispenser triggered by the 1% LEL alarm, likely caused by EPDM shutoff valve degradation due to sustained operation at its -40°C minimum temperature limit during consecutive refueling cycles.\n\nImmediate actions should prioritize securing the area, confirming the automatic depressurization and venting completion, and isolating the affected dispenser to prevent further release.\n\nStabilization requires verifying zero hydrogen concentration in the vicinity and confirming the integrity of the replaced or repaired shutoff valve before restarting operations.\n\nPrevention controls must include reviewing material compatibility for low-temperature applications and implementing operational limits or enhanced monitoring for valves operating at their temperature specification boundaries.",
+      "expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair"
+      ],
+      "category_recall": 0.5,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.75
+    },
+    {
+      "event_id": "1195",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 539.0744000906125,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical leak at one of three shut-off valves during startup, where a hydrogen concentration of 1 vol% triggered automatic safety shutdowns, though the exact leak rate and cause remain unconfirmed.\n\nImmediate actions are to verify the isolation of the affected valve and confirm that the automatic shutdown of the hydrogen production equipment and power supply has been successfully maintained.\n\nStabilization requires confirming that hydrogen concentrations have dropped below safe limits and that the leak source is physically secured before any restart attempt.\n\nPrevention controls should include a detailed review of the startup procedure for valve integrity checks and a follow-up investigation to determine the root cause of the valve failure.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.6,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.8
+    },
+    {
+      "event_id": "1196",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 475.40900006424636,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation involves three historical incidents (Jan–Apr 2017) of dispenser hose leaks at a 70 MPa HRS, characterized by internal surface cracks and unignited hydrogen release, with uncertainty regarding the exact release quantities.\n\nImmediate actions should prioritize verifying current hose integrity against manufacturer lifetime limits and inspecting for spurious particles, as no live sensor data is available to confirm current status.\n\nStabilization and restart conditions require confirmed replacement of degraded hoses and validation of filtration systems to prevent particle-induced damage.\n\nPrevention controls must include enhanced monitoring of fill cycles and particle filtration, with follow-up audits to ensure compliance with updated maintenance intervals.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.5,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.75
+    },
+    {
+      "event_id": "1198",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 696.8044999521226,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical incident where a filling hose exploded after a gas detector alarm at 500 ppm went unnoticed due to an operator blind spot, resulting in the rupture of the hose's thermoplastic outer layer without personal injury.\n\nThe plausible scenario involves hydrogen leakage during depressurization that ignited before the hose was fully secured, though the exact ignition source remains unspecified in the provided facts.\n\nImmediate actions in priority order are to confirm the area is clear of personnel and verify that the automatic compressor shutdown has isolated the hydrogen supply.\n\nNext, secure the dispenser and prevent any further use of the affected hose until a full integrity inspection is completed.\n\nStabilization and restart conditions require a verified leak-free state of the hose and dispenser, confirmation that the gas detector alarm system is functional and visible to operators, and a formal safety review sign-off.\n\nRestart is only permitted after the root cause of the rupture is identified and corrective actions are implemented.\n\nPrevention and follow-up controls include modifying the alarm beacon placement or adding audible alerts to eliminate blind spots, and conducting a thorough inspection of the hose's thermoplastic resin layer for potential degradation or manufacturing defects.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.5,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.75
+    },
+    {
+      "event_id": "1202",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 767.5014000851661,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical leak at a 70 MPa hydrogen dispenser hose where a small inner-layer crack allowed hydrogen to diffuse and build pressure, eventually rupturing the outer layer near the emergency breakaway coupler.\n\nThis scenario is marked as a historical incident with no live sensor data or calculated consequence distances available for current assessment.\n\nImmediate actions in priority order are to confirm the emergency shutdown was executed upon the gas detector alarm and to isolate the affected dispenser hose from the station supply.\n\nThe next step is to verify that the area is clear of personnel and that no ignition sources are present, given the unignited hydrogen release.\n\nStabilization and restart conditions require a complete pressure decay of the system, a thorough inspection and replacement of the damaged hose, and a successful leak test of the entire dispenser assembly.\n\nRestart is only permitted after confirming that the stationary gas detectors are functional and that the root cause of the inner-layer crack has been addressed.\n\nPrevention and follow-up controls include implementing regular ultrasonic or acoustic emission inspections on high-pressure hoses to detect early-stage inner-layer cracks.\n\nAdditionally, review the maintenance interval for the emergency breakaway coupler and ensure that operator training covers the specific auditory signs of hose degradation, such as hissing and popping sounds.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.8,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.9
+    },
+    {
+      "event_id": "1203",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 475.8169000269845,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation involves two sequential hydrogen leaks from the 5th and 3rd stage cylinder heads of a compressor, likely caused by O-ring twisting from pressure pulsation or end-of-service-life damage, though the exact root cause remains uncertain.\n\nImmediate actions should prioritize isolating the affected compressor stages and verifying the integrity of the O-rings before any further operation.\n\nStabilization requires confirming zero leakage under nominal pressure and replacing all suspect O-rings with parts within their service life.\n\nFollow-up controls must include reviewing O-ring replacement intervals and investigating pressure pulsation sources to prevent recurrence.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair"
+      ],
+      "category_recall": 0.16666666666666666,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "stabilize"
+      ],
+      "stage_coverage": 0.8,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.48333333333333334
+    },
+    {
+      "event_id": "1204",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 514.1958000604063,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": true,
+      "answer": "No precise value was supplied for this point; verify the live measurement and applicable procedure.\n\nImmediate actions should prioritize verifying the emergency stop and excess flow prevention valve activation, securing the area to prevent ignition sources, and isolating the damaged hose, coupling, and forklift port.\n\nStabilization requires confirming zero residual pressure and leak-free conditions before any restart, while prevention controls must include mandatory hose replacement based on cycle count and periodic inspection for mechanical wear.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.4,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 0.8,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.6000000000000001
+    },
+    {
+      "event_id": "1205",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 904.2689999332651,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical unignited hydrogen release into the compressor room, triggered by a procedural error during a tightness test and subsequent maintenance, resulting in a 48% LFL detector alarm and full station shutdown.\n\nThe plausible scenario involves residual hydrogen from a dispenser vent test flowing back through a disconnected safety valve line into the occupied compressor room, though specific flow rates and exact leak durations are not provided.\n\nImmediate actions in priority order are to confirm the station remains in a safe shutdown state, verify that all personnel have evacuated the compressor room, and ensure the area is ventilated until the 48% LFL reading drops to safe levels.\n\nDo not attempt to restart any equipment or re-enter the room until gas levels are confirmed below the lower flammability limit by fixed detectors.\n\nStabilization and restart conditions require a complete physical inspection of the compressor room to confirm no ignition sources were present, a full integrity check of the dispenser depressurization line and the removed safety valve fitting, and a documented review of the tightness test procedure to prevent recurrence.\n\nThe station cannot restart until the root cause of the line misconnection is resolved and all interlocks are verified as active.\n\nPrevention and follow-up controls include implementing a mandatory line-break verification step before any venting operation, enforcing strict lockout/tagout procedures for safety valve removal, and revising the tightness test protocol to ensure interlocks remain active or are manually monitored.\n\nFollow-up should involve a formal incident investigation to update standard operating procedures and retrain operators on the specific risks of differential pressure charging and vent line configurations.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "evacuation_perimeter_access",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "category_recall": 0.8,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.9
+    },
+    {
+      "event_id": "1206",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 523.4921999508515,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical leak from a cone-and-thread fitting on a 40 MPa hydrogen storage unit, identified via portable detection during a routine test rather than fixed sensors, with the specific cause and extent of the leak remaining uncertain.\n\nImmediate actions are to confirm the 40 MPa gas storage unit is isolated and the piping system is fully depressurized, followed by verifying that the area is clear of ignition sources and personnel.\n\nStabilization and restart conditions require a successful re-tightening or replacement of the faulty fitting, a subsequent tightness test, and confirmation that fixed hydrogen safety detectors are functional and calibrated.\n\nPrevention controls should include reviewing the maintenance schedule for threaded joints and enhancing routine inspection protocols to ensure fixed detection systems cover all critical leak points.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "inspection_leak_test_repair"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair"
+      ],
+      "category_recall": 0.25,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.625
+    },
+    {
+      "event_id": "1207",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 497.8613000130281,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a historical leak at a 70 MPa HRS dispenser during FCV refueling, where the emergency shutdown valve was identified as the source due to insufficient tightening torque, though the specific leak rate and consequence distances remain unquantified.\n\nImmediate actions should prioritize verifying the isolation of the affected dispenser and confirming that the emergency shutdown valve torque has been corrected to the specified value.\n\nStabilization and restart conditions require a successful leak test on the repaired valve and verification that all safety interlocks are functional before resuming operations.\n\nPrevention controls must include a mandatory torque verification protocol for emergency shutdown valves during maintenance and periodic audits to ensure compliance with specified tightening standards.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.6,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.8
+    },
+    {
+      "event_id": "1208",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 488.3583999471739,
+      "call_failed": false,
+      "http_status": 200,
+      "guard_notice_present": false,
+      "answer": "The observed situation is a recurring hydrogen leak at a mobile 70 MPa HRS, initially identified at the dispenser's emergency shutdown valve and subsequently at the lower part of the emergency disconnect coupler on the fuelling nozzle side, with the specific root cause of the second leak remaining uncertain.\n\nImmediate actions must prioritize isolating the fuelling hose and verifying the integrity of the emergency disconnect coupler before any further fuelling attempts.\n\nStabilization requires a successful helium leak test on the coupler and confirmation that no hydrogen is detected by fixed or portable sensors.\n\nFollow-up controls should include a review of the O-ring replacement procedure and enhanced inspection protocols for the fuelling nozzle interface to prevent recurrence.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.6,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "stabilize"
+      ],
+      "stage_coverage": 0.8,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.7
+    }
+  ],
+  "claim_boundary": "Post-outcome runtime safety diagnostic on the already observed 34-case cohort. It checks only whether the API exposes unsupported value/unit claims after the guard change. It is not an independent holdout, expert review, action-correctness study, or evidence of field safety or SAGA effectiveness."
+}
