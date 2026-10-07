@@ -36,4 +36,5 @@ src/h2station/grune_2014_validation.py text eol=lf
 scripts/run_grune_2014_holdout.py text eol=lf
 research/grune_2014_holdout_protocol.json text eol=lf
 research/GRUNE_2014_HOLDOUT_PROTOCOL.md text eol=lf
+research/public_type_iv_tank_runtime_calibration_2026_10_07.json text eol=lf
 tests/test_grune_2014_holdout_protocol.py text eol=lf

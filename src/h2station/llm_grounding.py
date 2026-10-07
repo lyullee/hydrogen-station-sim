@@ -2261,6 +2261,57 @@ def _confidential_station_schema_evidence() -> dict[str, Any] | None:
     }
 
 
+def _confidential_multisource_mapping_feasibility() -> dict[str, Any] | None:
+    """Expose the controlled multi-sheet mapping boundary without identifiers.
+
+    The private review record itself stays outside the repository because it
+    contains source paths and original labels.  The committed result is only a
+    header-level feasibility screen, so it can inform an LLM that a real-data
+    source exists without allowing it to claim a synchronized full-loop
+    validation or invent the unmapped channels.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/confidential_multisource_mapping_feasibility_2026_10_07.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    review = record.get("controlled_review") or {}
+    screen = record.get("canonical_mapping_screen") or {}
+    if (
+        record.get("artifact_type") != "controlled_multisource_mapping_feasibility"
+        or record.get("source_identifiers_published") is not False
+        or record.get("original_headers_published") is not False
+        or record.get("raw_rows_persisted") is not False
+        or record.get("absolute_timestamps_published") is not False
+        or review.get("measurement_rows_read") is not False
+        or screen.get("all_required_full_loop_channels_have_unambiguous_header_candidates")
+        is not False
+        or screen.get("decision")
+        != "not_eligible_for_multisource_full_loop_export_without_custodian_mapping"
+    ):
+        return None
+    return {
+        "artifact": "research/confidential_multisource_mapping_feasibility_2026_10_07.json",
+        "evidence_role": "controlled multi-source full-loop mapping feasibility",
+        "co_located_workbook_candidates": review.get("co_located_workbook_candidates"),
+        "candidate_worksheet_count": review.get("candidate_worksheet_count"),
+        "measurement_rows_read": False,
+        "unambiguous_full_loop_mapping_available": False,
+        "header_level_candidates_present": list(
+            screen.get("header_level_candidates_present") or []
+        ),
+        "header_level_candidates_not_identified": list(
+            screen.get("header_level_candidates_not_identified") or []
+        ),
+        "full_loop_holdout_eligible": False,
+        "decision": screen.get("decision"),
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_private_media_evidence() -> dict[str, Any] | None:
     """Expose the private-media intake boundary without exposing media.
 
@@ -2729,6 +2780,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_station_schema_intake"
         ] = station_schema
+    multisource_feasibility = _confidential_multisource_mapping_feasibility()
+    if multisource_feasibility is not None:
+        envelope["response_evidence"][
+            "confidential_multisource_mapping_feasibility"
+        ] = multisource_feasibility
     private_media = _confidential_private_media_evidence()
     if private_media is not None:
         envelope["response_evidence"][
@@ -2876,6 +2932,18 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             ),
             "claim_supported": closed_loop.get("claim_supported"),
             "claim_limit": short(closed_loop.get("claim_limit")),
+        }
+    multisource = evidence.get("confidential_multisource_mapping_feasibility")
+    if isinstance(multisource, dict):
+        summary["confidential_multisource_mapping_feasibility"] = {
+            key: multisource.get(key)
+            for key in (
+                "evidence_role", "co_located_workbook_candidates",
+                "candidate_worksheet_count", "measurement_rows_read",
+                "unambiguous_full_loop_mapping_available",
+                "full_loop_holdout_eligible", "decision", "claim_limit",
+            )
+            if multisource.get(key) is not None
         }
     envelope_screen = evidence.get("public_operating_envelope_screen")
     if isinstance(envelope_screen, dict):
@@ -3276,6 +3344,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     operating_screen = response.get("public_operating_envelope_screen") or {}
     incident = response.get("public_incident_traceability") or {}
     local_incident = response.get("confidential_local_accident_response_coverage") or {}
+    multisource = response.get("confidential_multisource_mapping_feasibility") or {}
 
     return {
         "evidence_digest": manifest.get("evidence_digest"),
@@ -3343,6 +3412,15 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 ),
                 "claim_limit": short(release.get("claim_limit")),
             },
+            # The compact prompt already carries several validation limits.
+            # Preserve the controlled-data boundary in one token-cheap status
+            # field; the detailed header and audit envelope retain the counts.
+            "mapping": (
+                "ready"
+                if multisource.get("unambiguous_full_loop_mapping_available") is True
+                and multisource.get("full_loop_holdout_eligible") is True
+                else "partial"
+            ),
         },
     }
 
@@ -3391,6 +3469,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         "confidential_station_channel_quality_recheck"
     ) or {}
     station_schema = evidence.get("confidential_station_schema_intake") or {}
+    multisource_feasibility = evidence.get(
+        "confidential_multisource_mapping_feasibility"
+    ) or {}
     private_media = evidence.get("confidential_private_media_intake") or {}
     incident = evidence.get("public_incident_traceability") or {}
     action_taxonomy = incident.get("action_taxonomy") or {}
@@ -3457,6 +3538,25 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "vehicle_or_receptacle_channels_identified"
             ) is True,
             "claim_limit": public_measurement.get("claim_limit"),
+        },
+        "confidential_multisource_mapping_feasibility": {
+            "co_located_workbook_candidates": multisource_feasibility.get(
+                "co_located_workbook_candidates"
+            ),
+            "candidate_worksheet_count": multisource_feasibility.get(
+                "candidate_worksheet_count"
+            ),
+            "measurement_rows_read": multisource_feasibility.get(
+                "measurement_rows_read"
+            ) is True,
+            "unambiguous_full_loop_mapping_available": multisource_feasibility.get(
+                "unambiguous_full_loop_mapping_available"
+            ) is True,
+            "full_loop_holdout_eligible": multisource_feasibility.get(
+                "full_loop_holdout_eligible"
+            ) is True,
+            "decision": multisource_feasibility.get("decision"),
+            "claim_limit": multisource_feasibility.get("claim_limit"),
         },
         "public_tank_validation_boundary": {
             "evidence_role": (

@@ -118,7 +118,9 @@ def main() -> int:
     output = args.output if args.output.is_absolute() else ROOT / args.output
     record = build_record(ROOT)
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    # Keep the versioned audit deterministic across Windows and POSIX hosts.
+    with output.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(json.dumps(record, ensure_ascii=False, indent=2) + "\n")
     print(json.dumps(record, ensure_ascii=False, indent=2))
     return 0
 

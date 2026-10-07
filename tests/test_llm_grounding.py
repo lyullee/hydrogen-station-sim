@@ -102,6 +102,14 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert local_accident["local_contract_run"][
         "casebook_and_source_not_committed"
     ] is True
+    multisource = idle["response_evidence"][
+        "confidential_multisource_mapping_feasibility"
+    ]
+    assert multisource["co_located_workbook_candidates"] == 1
+    assert multisource["candidate_worksheet_count"] == 11
+    assert multisource["measurement_rows_read"] is False
+    assert multisource["unambiguous_full_loop_mapping_available"] is False
+    assert multisource["full_loop_holdout_eligible"] is False
     accidental = idle["response_evidence"]["public_accidental_release_evidence"]
     assert accidental["zenodo_doi"] == "10.5281/zenodo.17913628"
     assert accidental["article_doi"] == "10.1016/j.elstat.2025.104222"
@@ -227,6 +235,9 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert early["closed_loop_validation_boundary"]["aggregate"][
         "screening_pass_count"
     ] == 0
+    assert early["confidential_multisource_mapping_feasibility"][
+        "full_loop_holdout_eligible"
+    ] is False
     screen = early["public_operating_envelope_screen"]
     assert screen["status"] == "screened"
     assert screen["flow_context"] == "idle"
@@ -290,6 +301,9 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert header["closed_loop_validation_boundary"][
         "post_freeze_diagnostic"
     ]["claim_prohibited"] is True
+    assert header["confidential_multisource_mapping_feasibility"][
+        "unambiguous_full_loop_mapping_available"
+    ] is False
     public_links = header["public_source_links"]
     public_link_ids = {row["id"] for row in public_links}
     assert {
@@ -774,6 +788,7 @@ def test_prompt_decision_evidence_keeps_limits_without_full_audit_payload():
     assert decision["validation_boundaries"]["station_to_vehicle"][
         "screening_pass_count"
     ] == 0
+    assert decision["validation_boundaries"]["mapping"] == "partial"
     assert decision["public_operating_envelope_screen"]["validation_claim"] is False
     assert decision["decision_support_evidence"]["public_incident"][
         "contract_pass"
