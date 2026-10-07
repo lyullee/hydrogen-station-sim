@@ -68,6 +68,44 @@ def test_pcv_isolation_failure_rules_have_command_and_stability_modes():
         assert mapped[rule_id]["missing_modes"] == []
 
 
+def test_unloading_disconnect_residual_pressure_rule_is_simulation_ready():
+    mapped = {row["rule_id"]: row for row in coverage(load_catalog())["rules"]}
+    assert mapped["HZ-011"]["simulation_ready"] is True
+    assert mapped["HZ-011"]["missing_modes"] == []
+
+
+def test_disconnected_trailer_with_trapped_unloading_pressure_triggers_hz011():
+    built = build_reference_scenario(
+        ReferenceScenario(duration_s=13.0, control_period_s=.2),
+        UnavailableHyRAMBackend(),
+    )
+    process = ProcessRuntime(ProcessSettings().model_dump())
+    built.simulator.process_runtime = process
+    built.station.compressor_suction = lambda _time: process.trailer_state()
+    safety = process.safety
+    safety.line_pressure_mpa["trailer.station"] = 20.0
+    safety.issue("valve.close", "trailer.source", 0.0, process=process)
+    safety.issue("valve.close", "trailer.station", 0.0, process=process)
+    safety.tick(.4)
+    safety.tick(.8)
+    safety.observe(
+        .8, recharge_bank=None, dispatch_banks=(None, None),
+        compressor_flow_g_s=0.0, dispenser_flows_g_s=(0.0, 0.0),
+    )
+    safety.issue("vehicle.evacuate", "trailer", .8, process=process)
+    monitor = HazopMonitor()
+    built.simulator.hazop_monitor = monitor
+
+    built.simulator.simulate(
+        built.initial_state, 13.0, .2, start_time_s=.8, pace_idle=False,
+    )
+
+    assert monitor.latest["modes"]["unloading.disconnect_requested"] is True
+    assert monitor.latest["modes"]["unloading.depressurize_elapsed_s"] >= 10.0
+    assert monitor.latest["signals"]["PT-0201"]["value"] == pytest.approx(20.0)
+    assert any(item["rule_id"] == "HZ-011" for item in monitor.latest["active"])
+
+
 @pytest.mark.parametrize(
     "target,flow_field,rule_id,other_rule_id",
     [

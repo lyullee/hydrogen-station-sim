@@ -74,6 +74,7 @@ MODE_KEYS = {
     "station.esd", "station.esd_elapsed_s",
     "compressor.running", "compressor.elapsed_s", "compressor.stop_elapsed_s",
     "unloading.active", "unloading.elapsed_s",
+    "unloading.disconnect_requested", "unloading.depressurize_elapsed_s",
     "cooling.enabled", "cooling.elapsed_s",
     "vent.commanded", "vent.close_elapsed_s", "relief.active",
 }
@@ -130,7 +131,8 @@ class ModelMapper:
 
     def sample(self, t, *, station, state, commands, instantaneous, dispatch_indices,
                dispatch_openings, recharge_index, safety, fault_events=(), active_leaks=(), risk_snapshots=(),
-               compressor_flow_multiplier=1.0):
+               compressor_flow_multiplier=1.0, process_snapshot=None,
+               virtual_safety_snapshot=None):
         signals, modes = {}, {"station.monitoring": True, "station.esd": safety.esd_latched,
                               "station.scenario_active": bool(fault_events or active_leaks)}
         active_relief_targets = {
@@ -204,8 +206,41 @@ class ModelMapper:
         supply = station.compressor_suction(t)
         for n in ("01", "03"):
             put(f"PT-{n}01", supply.pressure_pa/1e6); put(f"TT-{n}01", supply.temperature_k-273.15)
-        put("PT-0201", supply.pressure_pa/1e6); put("PT-0302", supply.pressure_pa/1e6)
+        line_pressures = (virtual_safety_snapshot or {}).get("line_pressure_mpa") or {}
+        unloading_pressure_mpa = line_pressures.get("trailer.station")
+        if not isinstance(unloading_pressure_mpa, (int, float)):
+            unloading_pressure_mpa = supply.pressure_pa / 1e6
+        put("PT-0201", unloading_pressure_mpa); put("PT-0302", supply.pressure_pa/1e6)
         put("TT-0201", supply.temperature_k-273.15)
+        virtual_valves = (virtual_safety_snapshot or {}).get("valves") or {}
+        required_isolation = tuple(
+            virtual_valves.get(name) or {}
+            for name in ("trailer.source", "trailer.station")
+        )
+        unloading_isolated = bool(virtual_valves) and all(
+            valve.get("status") == "confirmed"
+            and not valve.get("actual_open", True)
+            and not valve.get("feedback_open", True)
+            and float(valve.get("flow_fraction", 1.0)) <= 0.0
+            for valve in required_isolation
+        )
+        vehicles = (virtual_safety_snapshot or {}).get("vehicles") or {}
+        disconnect_requested = vehicles.get("trailer") == 0
+        process_settings = (process_snapshot or {}).get("settings") or {}
+        transfer_stopped = not (
+            process_settings.get("trailer_supply", False)
+            or process_settings.get("pressure_recharge", False)
+        )
+        depressurizing = bool(disconnect_requested and unloading_isolated and transfer_stopped)
+        depressurize_elapsed_s = self.elapsed(
+            "unloading-depressurizing", depressurizing, t
+        )
+        modes.update({
+            "unloading.disconnect_requested": disconnect_requested,
+            "unloading.depressurize_elapsed_s": (
+                depressurize_elapsed_s if depressurizing else 0.0
+            ),
+        })
         discharge = (bank_gases[recharge_index].pressure_pa + station.compressor.parameters.discharge_pressure_margin_pa
                      if recharge_index is not None else supply.pressure_pa)
         compressor = station.compressor.evaluate(supply, discharge, enabled=recharge_index is not None,

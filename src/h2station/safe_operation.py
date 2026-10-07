@@ -585,6 +585,11 @@ class SafeFullStationSimulator:
             for release_id in leak_histories:
                 leak_histories[release_id].append(leak_rates.get(release_id, 0.0))
 
+            process_snapshot = process.snapshot() if process is not None else None
+            virtual_safety_snapshot = (
+                virtual_safety.snapshot(include_actions=False)
+                if virtual_safety is not None else None
+            )
             hazop_frame = None
             if self.hazop_monitor is not None:
                 hazop_frame = self.hazop_monitor.sample(
@@ -598,9 +603,10 @@ class SafeFullStationSimulator:
                     active_leaks=active_leaks, risk_snapshots=risk_snapshots,
                     compressor_flow_multiplier=compressor_flow_multiplier,
                     detector_multiplier=(virtual_safety.detector_multiplier if virtual_safety is not None else None),
+                    process_snapshot=process_snapshot,
+                    virtual_safety_snapshot=virtual_safety_snapshot,
                 )
 
-            process_snapshot = process.snapshot() if process is not None else None
             process_activity = None
             if process_snapshot is not None:
                 settings = process_snapshot["settings"]
@@ -729,7 +735,7 @@ class SafeFullStationSimulator:
                         process_activity=process_activity,
                         vehicle_mass_kg=current.partial_station.vehicle.hydrogen_mass_kg,
                         vehicle_2_mass_kg=current.secondary_partial_station.vehicle.hydrogen_mass_kg,
-                        virtual_safety=virtual_safety.snapshot(include_actions=False) if virtual_safety is not None else None,
+                        virtual_safety=virtual_safety_snapshot,
                     )
                 )
 
