@@ -125,13 +125,17 @@
       <label data-param="magnitude"><span class="magnitude-label">변화량</span><input data-field="magnitude" type="number" value="10" step="any" required></label>
       <label data-param="rate_s">응답시간 (s)<input data-field="rate_s" type="number" value="30" min="0.1" step="any" required></label>
       <label data-param="leak_diameter_mm">누출 구경 (mm)<input data-field="leak_diameter_mm" type="number" value="0.2" min="0.01" max="20" step="any" required></label>
+      <label data-param="indoor">밀폐·실내 누출 <input data-field="indoor" type="checkbox"></label>
+      <label data-param="ignited">즉시 점화 <input data-field="ignited" type="checkbox"></label>
+      <label data-param="enclosure_volume_m3">공간 체적 (m³)<input data-field="enclosure_volume_m3" type="number" value="14.9" min="0.1" max="1000000" step="any" required></label>
+      <label data-param="enclosure_vent_area_m2">벤트 면적 (m²)<input data-field="enclosure_vent_area_m2" type="number" value="0.0109" min="0.0001" max="10000" step="any" required></label>
       <label data-param="external_temperature_c">열원 온도 (°C)<input data-field="external_temperature_c" type="number" value="800" min="-50" max="2500" step="any" required></label>
       <label data-param="heat_transfer_ua_w_k">열전달 UA (W/K)<input data-field="heat_transfer_ua_w_k" type="number" value="1000" min="0.01" max="100000000" step="any" required></label>
     </div><p class="fault-note hint"></p>
   </article>
 </template>
 <script src="/locale.js?v=20261001-language3"></script>
-<script src="/remote.js?v=20260929-start-fill2"></script>
+<script src="/remote.js?v=20261008-ignited-enclosure1"></script>
 <script src="/safety-actions.js?v=1"></script>
 <script src="/safety-console.js?v=20260930-evacuation-feedback1"></script>
 </body></html>

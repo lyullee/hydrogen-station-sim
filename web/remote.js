@@ -241,11 +241,12 @@ function validateForm(includeFaults=true){
 }
 function readFault(card,index){
   const kind=card.querySelector('.kind').value,spec=catalog.kinds.find(k=>k.id===kind);
-  const value=key=>card.querySelector(`[data-field="${key}"]`).value;
+  const field=key=>card.querySelector(`[data-field="${key}"]`);
+  const value=key=>field(key).value;
   const event={event_id:`remote-${Date.now()}-${index}`,kind,target:card.querySelector('.target').value,start_time_s:Number(value('start_time_s')),end_time_s:value('end_time_s')===''?null:Number(value('end_time_s'))};
   if(event.end_time_s!==null&&event.end_time_s<=event.start_time_s)throw new Error(`사고 ${index+1}: 종료 시각은 시작 시각보다 커야 합니다.`);
   if(!['queued','running'].includes(job?.status)&&!$('continuous').checked&&event.start_time_s>=Number($('duration').value))throw new Error(`사고 ${index+1}: 시작 시각이 계산 구간 밖입니다. 계산 구간을 늘리거나 시작을 앞당기세요.`);
-  for(const key of spec.fields)event[key]=Number(value(key));
+  for(const key of spec.fields)event[key]=field(key).type==='checkbox'?field(key).checked:Number(value(key));
   return event;
 }
 function readPayload(includeFaults=true){
@@ -353,6 +354,9 @@ function configureCard(card,reset=false){
   if(reset)input.value=ratio?'.25':spec.id==='sensor-bias'?'20':'10';
   card.querySelector('.magnitude-label').textContent=ratio?(spec.id==='pipe-restriction'?'유효 개방률 (0~1)':'잔존 냉각 용량 (0~1)'):spec.id==='sensor-bias'?'센서 편향 · 표시 단위':'압력 변화량 (MPa)';
   card.querySelector('[data-field="external_temperature_c"]').min=spec.id==='external-fire'?'0.1':'-50';
+  const indoor=card.querySelector('[data-field="indoor"]'),ignited=card.querySelector('[data-field="ignited"]');
+  ignited.onchange=()=>{if(ignited.checked)indoor.checked=true;};
+  indoor.onchange=()=>{if(!indoor.checked)ignited.checked=false;};
   const showNote=()=>{const target=spec.targets.find(t=>t.value===select.value);card.querySelector('.fault-note').textContent=spec.note+(target?.unit?` 선택 센서: ${target.unit} · ${target.location}`:'');};
   select.onchange=showNote;showNote();
 }
@@ -361,7 +365,7 @@ function addFault(event={},title='직접 구성'){
   const card=$('faultTemplate').content.firstElementChild.cloneNode(true);card.dataset.number=++faultSerial;card.querySelector('.fault-title').textContent=`${faultSerial}. ${title}`;
   const select=card.querySelector('.kind');select.replaceChildren(...catalog.kinds.map(k=>new Option(k.label,k.id)));select.value=event.kind||'pressure-disturbance';
   configureCard(card,true);if(event.target)card.querySelector('.target').value=event.target;
-  for(const [key,value] of Object.entries(event)){const input=card.querySelector(`[data-field="${key}"]`);if(input)input.value=value??'';}
+  for(const [key,value] of Object.entries(event)){const input=card.querySelector(`[data-field="${key}"]`);if(input){if(input.type==='checkbox')input.checked=Boolean(value);else input.value=value??'';}}
   card.querySelector('.target').dispatchEvent(new Event('change'));
   select.addEventListener('change',()=>{configureCard(card,true);card.querySelector('.fault-title').textContent=`${card.dataset.number}. 직접 구성`;});
   card.querySelector('.remove').addEventListener('click',()=>{card.remove();updateFaultCount();});
@@ -382,7 +386,7 @@ function renderLibrary(){
   if(!filtered.length){const empty=document.createElement('p');empty.className='hint';empty.textContent='검색 결과가 없습니다. 분류나 검색어를 바꿔보세요.';$('scenarioLibrary').append(empty);}
 }
 async function initCatalog(){
-  try{catalog=await api('/scenarios.json?v=20260929-flame91');for(const c of catalog.categories)$('categoryFilter').add(new Option(c.label,c.id));renderLibrary();$('addFault').disabled=false;}
+  try{catalog=await api('/scenarios.json?v=20261008-ignited-enclosure1');for(const c of catalog.categories)$('categoryFilter').add(new Option(c.label,c.id));renderLibrary();$('addFault').disabled=false;}
   catch(error){errorMessage('사고 목록을 불러오지 못했습니다: '+error.message);$('catalogCount').textContent='불러오기 실패';$('scenarioLibrary').textContent='새로고침 후 다시 시도하세요. 정상 운전은 실행할 수 있습니다.';}
 }
 async function health(){try{await api('/api/health');$('serverStatus').textContent='서버 연결됨';$('serverStatus').dataset.state='ready';}catch{$('serverStatus').textContent='서버 연결 실패';$('serverStatus').dataset.state='error';}}

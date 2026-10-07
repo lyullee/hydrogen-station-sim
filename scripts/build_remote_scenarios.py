@@ -15,12 +15,13 @@ choices=lambda values:[{'value':key,'label':label} for key,label in values]
 kinds=[]
 def kind(key,label,targets,fields,note):
     kinds.append({'id':key,'label':label,'targets':targets,'fields':fields,'note':note})
-kind('hydrogen-leak','수소 누출',choices(physical),['leak_diameter_mm'],'누출 질량·에너지를 재고에서 차감합니다. 압축기 연결부와 헤더는 고압뱅크의 재고를 공유합니다.')
+kind('hydrogen-leak','수소 누출',choices(physical),['leak_diameter_mm','indoor','ignited','enclosure_volume_m3','enclosure_vent_area_m2'],'누출 질량·에너지를 재고에서 차감합니다. 실내·즉시점화를 함께 선택하면 검증된 환기식 밀폐공간 압력피크 모델을 계산합니다.')
 kind('external-fire','외부 화재',choices(physical),['external_temperature_c','heat_transfer_ua_w_k'],'열원과 설비의 온도차 및 UA로 열전달을 계산합니다. 자동 점화·연소 전파 모델은 아닙니다.')
 kind('pressure-disturbance','공정 압력 상승·저하',choices(physical),['magnitude','rate_s'],'MPa 변화량에 따른 질량 유입·유출을 적용합니다. 응답시간은 질량 변화 속도를 정합니다.')
 kind('temperature-disturbance','외부 가열·냉각',choices(physical),['external_temperature_c','heat_transfer_ua_w_k'],'가열·냉각 경계와 공정 사이의 열전달로 온도가 변합니다.')
 kind('pipe-restriction','배관·PCV 부분 막힘',choices(lines+[('dispenser.pcv','1번 PCV'),('dispenser_2.pcv','2번 PCV')]),['magnitude'],'유효 개방률 1은 정상, 0은 완전 폐쇄입니다.')
 kind('check-valve-failure','체크밸브 고장',choices(lines),[],'역방향 유동을 허용합니다. 실제 역류는 해당 시점의 압력차에 따라 결정됩니다.')
+kind('pcv-seat-leak','PCV 시트 누설',choices([('dispenser.pcv','1번 PCV'),('dispenser_2.pcv','2번 PCV'),('pcv','두 라인 공통 PCV')]),['magnitude'],'닫힘 명령 후에도 남는 유효 개방률입니다. 0 입력 시 기본 시트 누설률 3%를 적용합니다.')
 for key,label in [('pcv-stuck-open','PCV 열린 고착'),('pcv-stuck-closed','PCV 닫힌 고착')]:kind(key,label,choices([('pcv','두 라인 공통 PCV')]),[],'현재 모델은 두 충전 라인에 공통 고착 명령을 적용합니다.')
 for key,label in [('cascade-valve-stuck-open','캐스케이드 밸브 열린 고착'),('cascade-valve-stuck-closed','캐스케이드 밸브 닫힌 고착')]:kind(key,label,choices([('cascade','공통 캐스케이드 밸브')]),[],'두 충전 라인의 뱅크 전환 밸브에 공통 적용됩니다.')
 kind('precooler-loss','예냉 성능 저하',choices([('precooler','두 라인 예냉기')]),['magnitude'],'잔존 냉각 용량을 0~1로 설정합니다. 0은 냉각 상실입니다.')
@@ -48,6 +49,7 @@ for target,label in lines+[('dispenser.pcv','1번 PCV'),('dispenser_2.pcv','2번
     add('flow',label+' 부분 막힘','5~20초 · 유효 개방률 25%',fault('pipe-restriction',target,magnitude=.25))
 for target,label in lines:
     add('flow',label+' 체크밸브 고장','5~20초 · 역류 방지 상실 · 압력차에 따른 유동 추적',fault('check-valve-failure',target))
+add('equipment','1번 PCV 시트 누설','닫힘 명령 후 1번 PCV 유효 개방률 3% 유지',fault('pcv-seat-leak','dispenser.pcv',magnitude=.03))
 for k in kinds:
     if k['id'] in ['pcv-stuck-open','pcv-stuck-closed','cascade-valve-stuck-open','cascade-valve-stuck-closed','compressor-trip','emergency-stop']:
         add('equipment',k['label'],k['note'],fault(k['id'],k['targets'][0]['value']))
@@ -64,7 +66,6 @@ add('compound','저압 뱅크 저하와 호스 막힘','공급 압력 저하 + 1
 add('compound','고압 뱅크 누출과 센서 고정','물리 누출과 PT-0901 진단 센서 고정을 비교',fault('hydrogen-leak','cascade.high',leak_diameter_mm=.2),fault('sensor-freeze','PT-0901'))
 add('compound','2번 차량 가압과 체크밸브 고장','차량 가압 + 2번 호스 역류 허용. 역류 발생은 압력차에 의존',fault('pressure-disturbance','vehicle_2.tank',magnitude=10,rate_s=30),fault('check-valve-failure','dispenser_2.hose'))
 add('compound','화재 노출 후 지연 누출','고압뱅크 5초 화재, 10초 누출을 각각 명시적으로 주입',fault('external-fire','cascade.high',external_temperature_c=800,heat_transfer_ua_w_k=1000),fault('hydrogen-leak','cascade.high',start_time_s=10,leak_diameter_mm=.2))
-output={'version':'20260925-remote3','categories':[{'id':k,'label':v} for k,v in [('leak','누출'),('fire','외부 화재'),('pressure','압력'),('thermal','가열·냉각'),('flow','막힘·역류'),('equipment','설비 고장'),('sensor','센서 진단'),('compound','복합 사고')]],'kinds':kinds,'scenarios':scenarios}
+output={'version':'20261008-ignited-enclosure1','categories':[{'id':k,'label':v} for k,v in [('leak','누출'),('fire','외부 화재'),('pressure','압력'),('thermal','가열·냉각'),('flow','막힘·역류'),('equipment','설비 고장'),('sensor','센서 진단'),('compound','복합 사고')]],'kinds':kinds,'scenarios':scenarios}
 (ROOT/'web/scenarios.json').write_text(json.dumps(output,ensure_ascii=False,indent=2),encoding='utf-8')
 print(f'{len(scenarios)} scenarios / {len(kinds)} kinds / {len(sensors)} sensor targets')
-

@@ -8,6 +8,12 @@ import math
 import os
 from typing import Mapping
 
+import numpy as np
+
+from ..ignited_pressure_peaking import (
+    IgnitedPressurePeakingConfig,
+    simulate_ignited_pressure_peaking,
+)
 from ..thermo import HydrogenEOS
 from .hyram_adapter import (
     AmbientCondition,
@@ -53,11 +59,87 @@ def consequence_validation_context() -> dict[str, str | bool]:
         "consequence_validation_artifacts": (
             "research/consequence_geometry_validation.json; "
             "research/hyram_adapter_verification.json; "
+            "research/usn_17934047_ignited_pressure_peaking_result_2026_10_08.json; "
             "data/public_validation/results/closed_loop_external_holdout/validation.json"
         ),
         "consequence_validation_claim_limit": (
-            "외부 비밀폐 수소 자유제트의 표본 표시 매핑은 구성요소 수준에서 확인되었으나, "
-            "현재 설비의 감압·배치·충전소-차량 전체 루프 또는 현장 안전·대피거리는 검증되지 않았습니다."
+            "외부 비밀폐 수소 자유제트의 표본 표시 매핑과 검증 범위 내 즉시점화 밀폐공간 "
+            "압력 피크는 구성요소 수준에서 확인되었으나, 현재 설비의 감압·배치·충전소-차량 "
+            "전체 루프 또는 현장 안전·대피거리는 검증되지 않았습니다."
+        ),
+    }
+
+
+def ignited_enclosure_consequence(
+    request: HyRAMDynamicReleaseRequest,
+    *,
+    enclosure_volume_m3: float,
+    enclosure_vent_area_m2: float,
+    ambient_temperature_k: float = 298.15,
+) -> dict[str, float | str | bool | None]:
+    """Calculate a bounded immediately ignited enclosure pressure endpoint.
+
+    Runtime source history is represented by its elapsed average mass flow.
+    The result is identified as externally supported only inside the public
+    USN validation envelope; extrapolations remain available for training but
+    carry an explicit out-of-domain flag.
+    """
+    if enclosure_volume_m3 <= 0.0 or enclosure_vent_area_m2 <= 0.0:
+        raise ValueError("Ignited enclosure volume and vent area must be positive")
+    if ambient_temperature_k <= 0.0:
+        raise ValueError("Ambient temperature must be positive")
+
+    elapsed_s = max(0.0, float(request.duration_s))
+    horizon_s = max(0.02, min(elapsed_s, 12.0))
+    average_flow_kg_s = (
+        max(0.0, float(request.cumulative_released_mass_kg)) / elapsed_s
+        if elapsed_s > 1.0e-9
+        else max(0.0, float(request.mass_flow_override_kg_s))
+    )
+    scale = (enclosure_volume_m3 / 14.9) ** (1.0 / 3.0)
+    config = IgnitedPressurePeakingConfig(
+        enclosure_volume_m3=enclosure_volume_m3,
+        enclosure_dimensions_m=(2.5 * scale, 2.0 * scale, 2.98 * scale),
+        ambient_pressure_pa=float(request.ambient_pressure_pa),
+    )
+    mass_flow_time_s = np.asarray((0.0, horizon_s), dtype=float)
+    output_time_s = np.linspace(
+        0.0,
+        horizon_s,
+        max(2, int(math.ceil(horizon_s / 0.02)) + 1),
+    )
+    result = simulate_ignited_pressure_peaking(
+        mass_flow_time_s,
+        np.full(2, average_flow_kg_s * 1000.0),
+        initial_temperature_k=ambient_temperature_k,
+        vent_area_m2_value=enclosure_vent_area_m2,
+        output_time_s=output_time_s,
+        config=config,
+    )
+    in_validation_domain = (
+        abs(enclosure_volume_m3 - 14.9) / 14.9 <= 0.05
+        and 0.0055 <= enclosure_vent_area_m2 <= 0.0164
+        and 0.0013 <= average_flow_kg_s <= 0.012
+        and elapsed_s >= 5.0
+        and 275.0 <= ambient_temperature_k <= 300.0
+    )
+    return {
+        "ignited_enclosure_status": "calculated",
+        "ignited_enclosure_model": "LACH_GAATHAUG_2021_ZERO_DIMENSIONAL",
+        "maximum_ignited_enclosure_overpressure_pa": (
+            result.peak_overpressure_kpa * 1000.0
+        ),
+        "ignited_enclosure_peak_time_s": result.peak_time_s,
+        "ignited_enclosure_average_mass_flow_kg_s": average_flow_kg_s,
+        "ignited_enclosure_volume_m3": enclosure_volume_m3,
+        "ignited_enclosure_vent_area_m2": enclosure_vent_area_m2,
+        "ignited_enclosure_external_holdout_supported": in_validation_domain,
+        "ignited_enclosure_validation_artifact": (
+            "research/usn_17934047_ignited_pressure_peaking_result_2026_10_08.json"
+        ),
+        "ignited_enclosure_claim_limit": (
+            "즉시 점화된 환기식 밀폐공간의 압력 피크 구성요소 모델입니다. "
+            "폭연 전파, 옥외 제트화염, 전체 충전소 또는 대피거리를 검증하지 않습니다."
         ),
     }
 
@@ -268,8 +350,6 @@ class NativeHyRAMBackend:
             else "WITHIN_SAMPLED_POINTS" if extent > 0 else "BELOW_THRESHOLDS_AT_SAMPLES")
         output["thermal_threshold_w_m2"] = 5000.0
         output["overpressure_threshold_pa"] = 5000.0
-        output.update(consequence_risk_summary(output))
-        output.update(consequence_validation_context())
         if request.indoor:
             if self.indoor_scenario is None:
                 output["indoor_status"] = "enclosure-not-configured"
@@ -290,7 +370,46 @@ class NativeHyRAMBackend:
                 output["maximum_indoor_overpressure_pa"] = (
                     accumulation.maximum_overpressure
                 )
+                output["maximum_overpressure_pa"] = max(
+                    float(output["maximum_overpressure_pa"] or 0.0),
+                    float(accumulation.maximum_overpressure or 0.0),
+                )
                 output["indoor_status"] = "calculated"
+        if request.indoor and request.ignited:
+            volume_m3 = request.enclosure_volume_m3
+            vent_area_m2 = request.enclosure_vent_area_m2
+            if self.indoor_scenario is not None:
+                if volume_m3 is None:
+                    volume_m3 = (
+                        self.indoor_scenario.floor_ceiling_area
+                        * self.indoor_scenario.enclosure_height
+                    )
+                if vent_area_m2 is None:
+                    vent_area_m2 = (
+                        self.indoor_scenario.ceiling_vent_area
+                        + self.indoor_scenario.floor_vent_area
+                    )
+            if volume_m3 is None or vent_area_m2 is None:
+                output["ignited_enclosure_status"] = "enclosure-not-configured"
+            else:
+                try:
+                    ignited = ignited_enclosure_consequence(
+                        request,
+                        enclosure_volume_m3=volume_m3,
+                        enclosure_vent_area_m2=vent_area_m2,
+                        ambient_temperature_k=ambient.temperature,
+                    )
+                    output.update(ignited)
+                    output["maximum_overpressure_pa"] = max(
+                        float(output["maximum_overpressure_pa"] or 0.0),
+                        float(ignited["maximum_ignited_enclosure_overpressure_pa"] or 0.0),
+                    )
+                except (RuntimeError, ValueError, FloatingPointError) as exc:
+                    output["ignited_enclosure_status"] = "integration-failed"
+                    output["ignited_enclosure_error"] = f"{type(exc).__name__}: {exc}"
+        # Risk must be calculated after indoor consequences have been merged.
+        output.update(consequence_risk_summary(output))
+        output.update(consequence_validation_context())
         return output
 
 

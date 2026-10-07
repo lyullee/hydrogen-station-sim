@@ -40,6 +40,9 @@ class FaultEvent:
     magnitude: float = 0.0
     leak_diameter_m: float | None = None
     indoor: bool = False
+    ignited: bool = False
+    enclosure_volume_m3: float | None = None
+    enclosure_vent_area_m2: float | None = None
     rate_s: float = 30.0
     external_temperature_k: float | None = None
     heat_transfer_ua_w_k: float = 0.0
@@ -54,6 +57,19 @@ class FaultEvent:
         if self.kind is FaultKind.HYDROGEN_LEAK:
             if self.leak_diameter_m is None or self.leak_diameter_m <= 0.0:
                 raise ValueError("Hydrogen leaks require a positive leak diameter")
+            if self.ignited and not self.indoor:
+                raise ValueError("Ignited enclosure analysis requires an indoor leak")
+            if self.enclosure_volume_m3 is not None and self.enclosure_volume_m3 <= 0.0:
+                raise ValueError("Enclosure volume must be positive")
+            if self.enclosure_vent_area_m2 is not None and self.enclosure_vent_area_m2 <= 0.0:
+                raise ValueError("Enclosure vent area must be positive")
+        elif (
+            self.indoor
+            or self.ignited
+            or self.enclosure_volume_m3 is not None
+            or self.enclosure_vent_area_m2 is not None
+        ):
+            raise ValueError("Indoor ignition and enclosure geometry apply only to hydrogen leaks")
         if self.rate_s <= 0.0:
             raise ValueError("Fault response rate must be positive")
         if self.kind is FaultKind.EXTERNAL_FIRE:

@@ -1,5 +1,5 @@
 {
-  "version": "20260929-flame91",
+  "version": "20261008-ignited-enclosure1",
   "categories": [
     {
       "id": "leak",
@@ -77,9 +77,13 @@
         }
       ],
       "fields": [
-        "leak_diameter_mm"
+        "leak_diameter_mm",
+        "indoor",
+        "ignited",
+        "enclosure_volume_m3",
+        "enclosure_vent_area_m2"
       ],
-      "note": "누출 질량·에너지를 재고에서 차감합니다. 압축기 연결부와 헤더는 고압뱅크의 재고를 공유합니다."
+      "note": "누출 질량·에너지를 재고에서 차감합니다. 실내·즉시점화를 함께 선택하면 검증된 환기식 밀폐공간 압력피크 모델을 계산합니다."
     },
     {
       "id": "external-fire",

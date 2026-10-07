@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T20:49:15.714322+00:00",
+  "generated_at": "2026-10-07T21:23:27.301117+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 89,
+    "PASS": 90,
     "FAIL": 7,
     "PENDING": 8
   },
@@ -3160,6 +3160,25 @@
         "raw_subset_file_count": 3,
         "raw_subset_channel_replay_valid": true,
         "raw_subset_model_comparison_performed": false
+      }
+    },
+    {
+      "id": "ignited_pressure_peaking_external_validation",
+      "status": "PASS",
+      "claim": "The fixed reacting-enclosure model predicts large-scale ignited hydrogen peak overpressure within the prospectively frozen error boundary.",
+      "evidence": "research\\usn_17934047_ignited_pressure_peaking_protocol_2026_10_08.json; research\\usn_17934047_ignited_pressure_peaking_result_2026_10_08.json",
+      "requirement": "Twenty-seven untouched holdouts, verified raw identities, no exclusions, and >=80% within 2 kPa; timing/trace diagnostics remain secondary.",
+      "observed": {
+        "eligible_case_count": 27,
+        "excluded_case_count": 0,
+        "primary_pass_count": 27,
+        "primary_pass_fraction": 1.0,
+        "peak_overpressure_mae_kpa": 0.6716371499859706,
+        "maximum_peak_overpressure_abs_error_kpa": 1.7959931211202615,
+        "secondary_peak_time_pass_count": 21,
+        "secondary_trace_nrmse_pass_count": 26,
+        "confirmatory_rule_met": true,
+        "claim_boundary": "This result concerns only ignited pressure peaking in a vented enclosure. It does not validate an outdoor H70 station fueling loop, jet-flame radiation distance, emergency controls, operator response, or SAGA effectiveness."
       }
     },
     {

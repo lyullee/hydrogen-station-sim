@@ -2578,6 +2578,58 @@ def audit(root: Path) -> dict[str, object]:
         } if explosion_inventory else "missing; DataverseNO explosion inventory has not run",
     ))
 
+    ignited_protocol_path = root / "research/usn_17934047_ignited_pressure_peaking_protocol_2026_10_08.json"
+    ignited_result_path = root / "research/usn_17934047_ignited_pressure_peaking_result_2026_10_08.json"
+    ignited_protocol = _json(ignited_protocol_path)
+    ignited_result = _json(ignited_result_path)
+    ignited_aggregate = (ignited_result or {}).get("aggregate") or {}
+    ignited_cases = (ignited_result or {}).get("cases") or []
+    ignited_pass = bool(
+        (ignited_protocol or {}).get("protocol_id") == "USN-IGNITED-PRESSURE-PEAKING-2601"
+        and (ignited_protocol or {}).get("status") == "frozen_before_holdout_outcome_access"
+        and ((ignited_protocol or {}).get("cohort") or {}).get("expected_holdout_count") == 27
+        and ((ignited_protocol or {}).get("cohort") or {}).get("development_only_cases") == [1, 29, 30, 31]
+        and (ignited_result or {}).get("status") == "completed_prospective_protocol_execution"
+        and ((ignited_result or {}).get("source") or {}).get("dataset_doi") == "10.23642/USN.17934047"
+        and ((ignited_result or {}).get("source") or {}).get("raw_files_committed") is False
+        and ignited_aggregate.get("eligible_case_count") == 27
+        and ignited_aggregate.get("excluded_case_count") == 0
+        and ignited_aggregate.get("primary_pass_count") == 27
+        and ignited_aggregate.get("confirmatory_rule_met") is True
+        and len(ignited_cases) == 27
+        and max(
+            (case.get("peak_overpressure_abs_error_kpa", float("inf")) for case in ignited_cases),
+            default=float("inf"),
+        ) <= 2.0
+        and bool((ignited_result or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "ignited_pressure_peaking_external_validation",
+        "PASS" if ignited_pass else ("FAIL" if ignited_result else "PENDING"),
+        "The fixed reacting-enclosure model predicts large-scale ignited hydrogen peak overpressure within the prospectively frozen error boundary.",
+        f"{ignited_protocol_path.relative_to(root)}; {ignited_result_path.relative_to(root)}",
+        "Twenty-seven untouched holdouts, verified raw identities, no exclusions, and >=80% within 2 kPa; timing/trace diagnostics remain secondary.",
+        {
+            "eligible_case_count": ignited_aggregate.get("eligible_case_count"),
+            "excluded_case_count": ignited_aggregate.get("excluded_case_count"),
+            "primary_pass_count": ignited_aggregate.get("primary_pass_count"),
+            "primary_pass_fraction": ignited_aggregate.get("primary_pass_fraction"),
+            "peak_overpressure_mae_kpa": ignited_aggregate.get("peak_overpressure_mae_kpa"),
+            "maximum_peak_overpressure_abs_error_kpa": max(
+                (case.get("peak_overpressure_abs_error_kpa", 0.0) for case in ignited_cases),
+                default=None,
+            ),
+            "secondary_peak_time_pass_count": sum(
+                bool(case.get("secondary_peak_time_pass")) for case in ignited_cases
+            ),
+            "secondary_trace_nrmse_pass_count": sum(
+                bool(case.get("secondary_trace_nrmse_pass")) for case in ignited_cases
+            ),
+            "confirmatory_rule_met": ignited_aggregate.get("confirmatory_rule_met"),
+            "claim_boundary": (ignited_result or {}).get("claim_boundary"),
+        } if ignited_result else "missing; ignited pressure-peaking holdout has not run",
+    ))
+
     playbook_path = root / "src/h2station/data/emergency_playbooks.json"
     playbooks = _json(playbook_path)
     playbook_sources = (playbooks or {}).get("sources") or {}

@@ -198,6 +198,13 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     }
     assert explosion_inventory["license_set"] == ["CC BY 4.0", "CC0 1.0"]
     assert explosion_inventory["ignited_sample_sigma_shape"] == [999999, 7]
+    assert gates["ignited_pressure_peaking_external_validation"]["status"] == "PASS"
+    ignited_pressure = gates["ignited_pressure_peaking_external_validation"]["observed"]
+    assert ignited_pressure["eligible_case_count"] == 27
+    assert ignited_pressure["excluded_case_count"] == 0
+    assert ignited_pressure["primary_pass_count"] == 27
+    assert ignited_pressure["confirmatory_rule_met"] is True
+    assert ignited_pressure["peak_overpressure_mae_kpa"] < 0.7
     assert gates["hiad_action_evidence_integrity"]["status"] == "PASS"
     assert gates["hiad_action_evidence_integrity"]["observed"]["case_count"] == 34
     assert gates["hiad_accident_response_coverage_evaluation"]["status"] == "PASS"

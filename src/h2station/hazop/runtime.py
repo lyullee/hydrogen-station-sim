@@ -163,7 +163,14 @@ class HazopMonitor:
                 targets = {node_targets.get(n) for n in candidates} - {None, ""}
                 linked = [x for x in releases if x["component_id"] in targets]
                 status = "NOT_APPLICABLE" if not case_id else "RESULT_LINKED" if any(x["consequence"].get("status")=="calculated" for x in linked) else "BACKEND_UNAVAILABLE" if linked else "NEEDS_RELEASE_INPUTS"
-                if status == "RESULT_LINKED" and any(x["consequence"].get("status") != "calculated" or x["consequence"].get("indoor_status") == "enclosure-not-configured" for x in linked):
+                if status == "RESULT_LINKED" and any(
+                    x["consequence"].get("status") != "calculated"
+                    or (
+                        x["consequence"].get("indoor_status") == "enclosure-not-configured"
+                        and x["consequence"].get("ignited_enclosure_status") != "calculated"
+                    )
+                    for x in linked
+                ):
                     status = "PARTIAL_RESULT"
                 groups[key] = {"group_id":key,"node_id":alarm["node_id"],"case_id":case_id,"rule_ids":[],
                                "severity":alarm["severity"],"hyram_status":status,"release_ids":[x["release_id"] for x in linked],

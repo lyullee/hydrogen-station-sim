@@ -21,6 +21,9 @@ class LeakScenario:
     release_angle_rad: float = 0.0
     release_height_m: float = 1.0
     indoor: bool = False
+    ignited: bool = False
+    enclosure_volume_m3: float | None = None
+    enclosure_vent_area_m2: float | None = None
     annual_frequency_per_year: float | None = None
     immediate_ignition_probability: float | None = None
     delayed_ignition_probability: float | None = None
@@ -40,6 +43,10 @@ class LeakScenario:
             raise ValueError("Ignition probabilities must be in [0, 1]")
         if self.annual_frequency_per_year is not None and self.annual_frequency_per_year < 0.0:
             raise ValueError("Annual frequency cannot be negative")
+        if self.enclosure_volume_m3 is not None and self.enclosure_volume_m3 <= 0.0:
+            raise ValueError("Enclosure volume must be positive")
+        if self.enclosure_vent_area_m2 is not None and self.enclosure_vent_area_m2 <= 0.0:
+            raise ValueError("Enclosure vent area must be positive")
 
 
 @dataclass(frozen=True)
@@ -69,6 +76,9 @@ class HyRAMDynamicReleaseRequest:
     annual_frequency_per_year: float | None
     immediate_ignition_probability: float | None
     delayed_ignition_probability: float | None
+    ignited: bool = False
+    enclosure_volume_m3: float | None = None
+    enclosure_vent_area_m2: float | None = None
 
 
 class HyRAMConsequenceBackend(Protocol):
@@ -202,6 +212,9 @@ class DynamicRiskMonitor:
                         scenario.immediate_ignition_probability
                     ),
                     delayed_ignition_probability=scenario.delayed_ignition_probability,
+                    ignited=scenario.ignited,
+                    enclosure_volume_m3=scenario.enclosure_volume_m3,
+                    enclosure_vent_area_m2=scenario.enclosure_vent_area_m2,
                 )
                 consequence = dict(self.backend.evaluate_release(request))
                 self._last_consequence[scenario.release_id] = consequence

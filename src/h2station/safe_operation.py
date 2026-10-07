@@ -951,6 +951,9 @@ class SafeFullStationSimulator:
                     start_time_s=event.start_time_s,
                     orifice_diameter_m=float(event.leak_diameter_m),
                     indoor=event.indoor,
+                    ignited=event.ignited,
+                    enclosure_volume_m3=event.enclosure_volume_m3,
+                    enclosure_vent_area_m2=event.enclosure_vent_area_m2,
                     release_angle_rad=(np.pi / 2 if event.event_id.startswith("vent-") else 0.0),
                     release_height_m=(6.0 if event.event_id.startswith("vent-") else 1.0),
                 )

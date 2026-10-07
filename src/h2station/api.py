@@ -92,6 +92,9 @@ class FaultInput(BaseModel):
     magnitude: float = 0.0
     leak_diameter_mm: float | None = Field(default=None, gt=0.0)
     indoor: bool = False
+    ignited: bool = False
+    enclosure_volume_m3: float | None = Field(default=None, gt=0.0, le=1.0e6)
+    enclosure_vent_area_m2: float | None = Field(default=None, gt=0.0, le=1.0e4)
     rate_s: float = Field(default=30.0, gt=0.0)
     external_temperature_c: float | None = Field(default=None, gt=-273.15, le=2500.0)
     heat_transfer_ua_w_k: float = Field(default=0.0, ge=0.0, le=1.0e8)
@@ -114,6 +117,9 @@ class FaultInput(BaseModel):
                 if self.leak_diameter_mm is not None else None
             ),
             indoor=self.indoor,
+            ignited=self.ignited,
+            enclosure_volume_m3=self.enclosure_volume_m3,
+            enclosure_vent_area_m2=self.enclosure_vent_area_m2,
             rate_s=self.rate_s,
             external_temperature_k=(
                 self.external_temperature_c + 273.15

@@ -2,7 +2,7 @@
   "manuscript": "manuscript\\ijhe_manuscript_draft.tex",
   "highlights": "manuscript\\Highlights.txt",
   "counts": {
-    "abstract_words": 147,
+    "abstract_words": 150,
     "keywords": 6,
     "highlight_bullets": 5,
     "highlight_characters": [
@@ -12,11 +12,11 @@
       75,
       72
     ],
-    "approximate_manuscript_words_before_references": 7964,
+    "approximate_manuscript_words_before_references": 7922,
     "figures": 2,
     "tables": 3,
-    "citation_keys": 35,
-    "bibliography_entries": 36,
+    "citation_keys": 36,
+    "bibliography_entries": 37,
     "unresolved_citations": [],
     "missing_figure_assets": []
   },

@@ -708,9 +708,11 @@
       "file_manifest_scope": "33 files, including 31 MATLAB MAT traces, a file-handling guide and metadata; raw files remain external to this repository.",
       "evidence_role": "Independent ignited pressure-peaking consequence-component evidence.",
       "rights_note": "DataverseNO marks the record CC BY 4.0. Preserve attribution and both dataset and publication DOIs; do not mirror multi-gigabyte raw traces in this repository.",
-      "eligibility_note": "Not a synchronized gaseous H70 station-to-vehicle loop and not a SAGA effectiveness dataset. Ignition/combustion model comparison must use a separately frozen protocol.",
+      "eligibility_note": "Not a synchronized gaseous H70 station-to-vehicle loop and not a SAGA effectiveness dataset. The separately frozen ignited-enclosure comparison supports only component-level pressure prediction within the tested domain.",
       "inventory": "research/dataverse_hydrogen_explosion_dataset_inventory_2026_10_05.json",
-      "raw_subset_replay": "research/usn_17934047_raw_subset_replay_2026_10_05.json"
+      "raw_subset_replay": "research/usn_17934047_raw_subset_replay_2026_10_05.json",
+      "prospective_protocol": "research/usn_17934047_ignited_pressure_peaking_protocol_2026_10_08.json",
+      "prospective_result": "research/usn_17934047_ignited_pressure_peaking_result_2026_10_08.json"
     },
     "usn_pressure_peaking_mendeley_2020": {
       "title": "Pressure Peaking Phenomena: Unignited hydrogen releases in confined spaces – large-scale experiments",

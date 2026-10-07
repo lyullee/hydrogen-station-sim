@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T20:49:15.349115+00:00",
+  "generated_at": "2026-10-07T21:38:10.381669+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 89,
+    "PASS": 90,
     "FAIL": 7,
     "PENDING": 8
   },
@@ -3163,6 +3163,25 @@
       }
     },
     {
+      "id": "ignited_pressure_peaking_external_validation",
+      "status": "PASS",
+      "claim": "The fixed reacting-enclosure model predicts large-scale ignited hydrogen peak overpressure within the prospectively frozen error boundary.",
+      "evidence": "research\\usn_17934047_ignited_pressure_peaking_protocol_2026_10_08.json; research\\usn_17934047_ignited_pressure_peaking_result_2026_10_08.json",
+      "requirement": "Twenty-seven untouched holdouts, verified raw identities, no exclusions, and >=80% within 2 kPa; timing/trace diagnostics remain secondary.",
+      "observed": {
+        "eligible_case_count": 27,
+        "excluded_case_count": 0,
+        "primary_pass_count": 27,
+        "primary_pass_fraction": 1.0,
+        "peak_overpressure_mae_kpa": 0.6716371499859706,
+        "maximum_peak_overpressure_abs_error_kpa": 1.7959931211202615,
+        "secondary_peak_time_pass_count": 21,
+        "secondary_trace_nrmse_pass_count": 26,
+        "confirmatory_rule_met": true,
+        "claim_boundary": "This result concerns only ignited pressure peaking in a vented enclosure. It does not validate an outdoor H70 station fueling loop, jet-flame radiation distance, emergency controls, operator response, or SAGA effectiveness."
+      }
+    },
+    {
       "id": "incident_playbook_public_evidence",
       "status": "PASS",
       "claim": "High-consequence playbooks expose the public HIAD 2.2 accident/near-miss source alongside standards guidance.",
@@ -6104,7 +6123,7 @@
         "manuscript": "manuscript\\ijhe_manuscript_draft.tex",
         "highlights": "manuscript\\Highlights.txt",
         "counts": {
-          "abstract_words": 147,
+          "abstract_words": 150,
           "keywords": 6,
           "highlight_bullets": 5,
           "highlight_characters": [
@@ -6114,11 +6133,11 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7964,
+          "approximate_manuscript_words_before_references": 7922,
           "figures": 2,
           "tables": 3,
-          "citation_keys": 35,
-          "bibliography_entries": 36,
+          "citation_keys": 36,
+          "bibliography_entries": 37,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -6146,12 +6165,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-07T20:08:30.615646+00:00",
+        "attempted_at": "2026-10-07T21:38:10.065360+00:00",
         "attempts_this_run": 1,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "a3d0a5c167d4088fc1ce992c46a2036d6cba24847642f8b3ea8927f4dafca7da",
+        "source_sha256": "9820146269e1664e8ce62ffc140321707ec466714257c4926f5f6155bf4ce805",
         "diagnostic": "Unable to find standard directories for platform",
         "format_check_passed": true,
         "retained_previous_pdf": {
@@ -6160,7 +6179,7 @@
           "sha256": "694307f6dec2fb49ef941aa5bc1e5da3a01a8c665516119d0901a96f542d51c4",
           "matches_current_source": false
         },
-        "interpretation": "The updated source passes static format, citation, asset and brace checks, but the built-in compiler was unavailable on this Windows host. The retained PDF predates the corrected MC inlet-boundary, geometry-transfer, prospective Type-III thermal-validation and confidential multi-trace recharge-holdout text and must not be represented as the current-source rendering."
+        "interpretation": "The current source passes static length, citation, asset and brace checks and now includes the prospective ignited-enclosure pressure-peaking result. The built-in compiler remains unavailable on this Windows host; the retained PDF predates these changes and must not be represented as the current-source rendering."
       }
     },
     {
