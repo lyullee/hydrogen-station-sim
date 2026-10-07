@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "protocol_id": "H2SAFE-HELIUM-DETECTOR-SPATIAL-TRANSFER-2601",
+  "status": "FROZEN_BEFORE_RAW_OUTCOME_ACCESS",
+  "recorded_at": "2026-10-08",
+  "purpose": "Prospectively test whether a fixed geometry-only buoyant-gas sensor-ranking rule transfers to an independent full-scale indoor release dataset.",
+  "source": {
+    "title": "Dataset for H2SAFE - Controlled Gas Releases and Sensor-Response for Indoor Hydrogen Safety",
+    "doi": "10.7799/17118570",
+    "landing_page": "https://data.nlr.gov/submissions/330",
+    "publisher": "National Laboratory of the Rockies",
+    "public_status": "Public",
+    "expected_experiment_count_from_landing_page": 5,
+    "expected_laboratories_from_landing_page": 2,
+    "expected_sensor_coordinate_counts_from_landing_page": {
+      "Lab-1": 24,
+      "Lab-2": 37
+    },
+    "test_gas": "helium",
+    "license_page": "https://data.nlr.gov/node/330/license",
+    "license_obligation": "Retain the NLR data notice and credit DOE/NLR/ALLIANCE in resulting publications."
+  },
+  "pre_access_statement": {
+    "raw_archive_downloaded": false,
+    "raw_time_series_opened": false,
+    "measured_sensor_outcomes_seen": false,
+    "repository_visualization_used": false,
+    "known_before_freeze": [
+      "landing-page dataset description",
+      "five experiments across two full-scale indoor laboratories",
+      "time-resolved concentration measurements",
+      "sensor and release-source coordinates",
+      "release and HVAC metadata",
+      "helium is a nonflammable surrogate rather than hydrogen"
+    ]
+  },
+  "eligibility": {
+    "minimum_experiments": 4,
+    "minimum_valid_sensors_per_experiment": 10,
+    "requires_common_time_axis": true,
+    "requires_source_coordinates": true,
+    "requires_sensor_coordinates": true,
+    "requires_release_start_or_interval": true,
+    "requires_nonnegative_finite_concentration": true,
+    "exclusion_rules": [
+      "exclude only a sensor channel explicitly marked missing, invalid or without coordinates",
+      "exclude an experiment only when a required source or time boundary is absent",
+      "do not exclude an experiment or sensor because the frozen predictor performs poorly"
+    ]
+  },
+  "fixed_predictor": {
+    "name": "geometry_only_buoyant_rank_v1",
+    "fitting_permitted": false,
+    "case_specific_parameters_permitted": false,
+    "inputs": [
+      "release-source x, y, z",
+      "sensor x, y, z"
+    ],
+    "formula": "score = exp(0.7*max(dz,0) - 1.2*max(-dz,0)) / (0.25 + horizontal_distance_m^2 + 0.35*abs(dz_m))",
+    "interpretation": "Higher score predicts earlier and stronger response for a buoyant surrogate plume. HVAC direction and obstacles are intentionally omitted and remain expected error sources."
+  },
+  "measured_response_definition": {
+    "baseline": "median concentration before declared release start; if unavailable, median of the first 10 percent of samples",
+    "noise_scale": "1.4826 times pre-release median absolute deviation",
+    "detection_threshold": "max(baseline + 5*noise_scale, baseline + 0.01*case_sensor_peak_range)",
+    "persistence": "at least two consecutive finite samples above threshold",
+    "maximum_response": "maximum baseline-corrected concentration during the declared release and 60 seconds after release end"
+  },
+  "frozen_primary_screens": {
+    "experiment_count_min": 4,
+    "spearman_score_vs_maximum_response_median_min": 0.5,
+    "experiments_with_spearman_at_least_0_4_fraction_min": 0.6,
+    "top5_predictor_recall_of_first_response_quartile_mean_min": 0.6,
+    "nearest_sensor_in_first_response_quartile_fraction_min": 0.7,
+    "joint_pass_requires_all_screens": true
+  },
+  "secondary_outputs": [
+    "per-experiment valid sensor count",
+    "per-experiment detected sensor fraction",
+    "first and median detection latency",
+    "per-experiment Spearman correlation",
+    "top-five spatial recall",
+    "nearest-sensor response quartile",
+    "results stratified by laboratory and HVAC state when metadata permit"
+  ],
+  "prohibited_after_outcome_access": [
+    "changing predictor constants",
+    "changing detection threshold or persistence",
+    "changing primary screen thresholds",
+    "dropping failed experiments or sensors outside declared eligibility rules",
+    "using helium concentration as hydrogen vol-percent without a separately justified conversion"
+  ],
+  "claim_boundary": "A pass would support only a bounded, geometry-only sensor-ranking check for full-scale indoor helium surrogate releases. It would not validate hydrogen concentration magnitude, outdoor station dispersion, detector hardware dynamics, ignition, ESD effectiveness, safety distance, CFD accuracy or the full HRS digital twin."
+}
