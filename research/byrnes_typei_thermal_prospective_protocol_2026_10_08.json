@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "protocol_id": "BYRNES-TYPEI-PRESSURE-DRIVEN-THERMAL-001",
+  "frozen_at": "2026-10-08",
+  "status": "prospective_protocol_frozen_before_numeric_yaml_access",
+  "objective": "Test transfer of the no-fit real-gas pressure-driven thermal model on three public hydrogen-cylinder depressurization experiments.",
+  "source": {
+    "repository": "https://github.com/andr1976/HydDown",
+    "release_tag": "v0.50.0",
+    "commit": "1040d758b819533451086baa5cf2a47b4292a22f",
+    "selected_files": [
+      "validation/Byrnes_run7.yml",
+      "validation/Byrnes_run8.yml",
+      "validation/Byrnes_run9.yml"
+    ],
+    "numerical_validation_arrays_accessed_before_freeze": false,
+    "known_before_freeze": [
+      "the public manual describes three hydrogen runs with approximately 30 s, 480 s and 14 s depressurization durations",
+      "the public manual states a 0.0499 m3 Type-I cylinder and identifies pressure plus upper and lower gas-temperature observations",
+      "the repository file names and v0.50.0 commit were known"
+    ]
+  },
+  "locked_model": {
+    "path": "src/h2station/pressure_driven_thermal.py",
+    "sha256": "8c6b38d24a3a046dd485bc5ff812b69201e8813596a8480ca9398d4759dda7c0",
+    "pressure_role": "measured boundary; pressure is not predicted and earns no pressure-validation claim",
+    "temperature_model": "HEOS hydrogen open-system energy balance with a lumped wall and Churchill-Chu natural-convection heat transfer",
+    "prohibited_inputs": [
+      "release diameter",
+      "valve discharge coefficient",
+      "model-predicted pressure",
+      "case-specific fitted heat-transfer multiplier"
+    ],
+    "configuration_rule": "Use only non-validation YAML sections for geometry, wall properties, ambient conditions and heat-transfer settings. Do not infer a parameter from measured temperature arrays."
+  },
+  "frozen_mapping": {
+    "pressure_time": "validation.pressure.time",
+    "pressure_value_aliases": ["pressure", "pres"],
+    "upper_gas_temperature_time": "validation.temperature.gas_high.time",
+    "upper_gas_temperature_value_aliases": ["temperature", "temp"],
+    "lower_gas_temperature_time": "validation.temperature.gas_low.time",
+    "lower_gas_temperature_value_aliases": ["temperature", "temp"],
+    "unit_rule": "Accept only units explicitly stated by the YAML/manual or unambiguous SI magnitudes; otherwise retain an ineligible metadata result.",
+    "time_alignment": "Use published timestamps without an optimized time shift. Interpolate the measured pressure monotonically with PCHIP onto the union of temperature timestamps within pressure support."
+  },
+  "eligibility": {
+    "required_cases": 3,
+    "minimum_points_per_temperature_channel": 10,
+    "requires": [
+      "finite strictly increasing pressure and temperature time arrays",
+      "absolute pressure unit resolved",
+      "upper and lower gas-temperature units resolved",
+      "positive vessel volume and geometry",
+      "positive wall heat capacity or sufficient wall properties to calculate it"
+    ],
+    "failure_policy": "Retain an ineligible result without substituting channels, fitting geometry or replacing a selected file."
+  },
+  "primary_endpoints": {
+    "sensor_envelope_miss_rmse_k_max": 10.0,
+    "sensor_midpoint_rmse_k_max": 12.0,
+    "within_sensor_envelope_plus_5k_fraction_min": 0.8,
+    "energy_balance_relative_residual_max": 0.0001
+  },
+  "aggregate_decision": {
+    "minimum_joint_case_passes": 2,
+    "required_case_count": 3,
+    "all_eligibility_requirements_must_pass": true,
+    "post_access_threshold_changes_prohibited": true,
+    "case_replacement_prohibited": true
+  },
+  "claim_boundary": "A pass supports pressure-driven bulk thermal response for three public Type-I hydrogen depressurization traces. It does not validate pressure prediction, valve or line flow, Type-III/IV tanks, station control, dispersion, fire, radiation, separation distance or emergency-response effectiveness."
+}
