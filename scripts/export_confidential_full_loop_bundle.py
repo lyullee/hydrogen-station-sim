@@ -1,10 +1,10 @@
 """Export one authorised HRS event as a de-identified full-loop bundle.
 
-This is a *local, controlled-access* bridge for owner-held CSV logs.  It never
-writes the original header names, filenames, source identity, or absolute time
-to its output.  The export directory is deliberately required to be outside
-the Git worktree, so a numerical trace cannot be added to the public project by
-mistake.
+This is a *local, controlled-access* bridge for owner-held CSV, XLSX, or XLSM
+logs.  It never writes the original header names, filenames, source identity,
+or absolute time to its output.  The export directory is deliberately required
+to be outside the Git worktree, so a numerical trace cannot be added to the
+public project by mistake.
 
 The exporter is not a model evaluator.  It only makes an authorised trace
 ready for the existing hash, quality, and full-loop channel screens.  A
@@ -89,18 +89,23 @@ def _outside_repository(path: Path, *, field: str) -> Path:
     return resolved
 
 
-def _finite(value: str | None, *, column: str, row_number: int) -> float:
+def _finite(value: object | None, *, column: str, row_number: int) -> float:
     try:
-        number = float((value or "").strip())
-    except ValueError as exc:
+        number = float(value.strip()) if isinstance(value, str) else float(value)
+    except (TypeError, ValueError) as exc:
         raise ValueError(f"row {row_number}: {column} is not numeric") from exc
     if not math.isfinite(number):
         raise ValueError(f"row {row_number}: {column} is not finite")
     return number
 
 
-def _relative_time(value: str | None, mapping: dict[str, Any], *, row_number: int) -> float:
-    raw = (value or "").strip()
+def _relative_time(value: object | None, mapping: dict[str, Any], *, row_number: int) -> float:
+    if isinstance(value, datetime):
+        timestamp = value
+        if timestamp.tzinfo is None:
+            timestamp = timestamp.replace(tzinfo=timezone.utc)
+        return timestamp.timestamp()
+    raw = value.strip() if isinstance(value, str) else "" if value is None else str(value).strip()
     if not raw:
         raise ValueError(f"row {row_number}: time value is empty")
     time_format = mapping.get("time_format")
@@ -162,8 +167,137 @@ def _source_column(mapping: dict[str, Any], canonical: str) -> str:
     return columns[canonical]
 
 
+def _input_format(path: Path) -> str:
+    suffix = path.suffix.lower()
+    if suffix == ".csv":
+        return "csv"
+    if suffix in {".xlsx", ".xlsm"}:
+        return "xlsx"
+    raise ValueError("input must be a CSV, XLSX, or XLSM file")
+
+
+def _source_header_and_rows(
+    input_path: Path,
+    mapping: dict[str, Any],
+    *,
+    include_rows: bool,
+) -> tuple[tuple[str, ...], list[dict[str, object]] | None, str]:
+    """Read a controlled source without persisting source labels or values.
+
+    ``include_rows=False`` is deliberately limited to the header contract.  It
+    lets a custodian freeze the semantic mapping before model outcomes are
+    read, while returning only canonical coverage in the preflight receipt.
+    """
+
+    source_format = _input_format(input_path)
+    if source_format == "csv":
+        delimiter = str(mapping.get("delimiter") or ",")
+        encoding = str(mapping.get("encoding") or "utf-8-sig")
+        with input_path.open("r", encoding=encoding, newline="") as handle:
+            reader = csv.DictReader(handle, delimiter=delimiter)
+            header = tuple(reader.fieldnames or ())
+            rows = list(reader) if include_rows else None
+        return header, rows, source_format
+
+    worksheet_name = mapping.get("worksheet")
+    if not isinstance(worksheet_name, str) or not worksheet_name.strip():
+        raise ValueError("Excel mapping requires a nonempty worksheet name")
+    try:
+        from openpyxl import load_workbook
+    except ImportError as exc:
+        raise RuntimeError("openpyxl is required for controlled Excel intake") from exc
+    workbook = load_workbook(input_path, read_only=True, data_only=True)
+    try:
+        if worksheet_name not in workbook.sheetnames:
+            raise ValueError("specified worksheet is not present in the Excel input")
+        worksheet = workbook[worksheet_name]
+        iterator = worksheet.iter_rows(values_only=True)
+        first_row = next(iterator, None)
+        if first_row is None:
+            return (), [] if include_rows else None, source_format
+        header = tuple(str(value).strip() if value is not None else "" for value in first_row)
+        if not include_rows:
+            return header, None, source_format
+        rows: list[dict[str, object]] = []
+        for values in iterator:
+            rows.append({
+                header[index]: value
+                for index, value in enumerate(values)
+                if index < len(header)
+            })
+        return header, rows, source_format
+    finally:
+        workbook.close()
+
+
+def _mapped_source_columns(mapping: dict[str, Any]) -> tuple[str, dict[str, str]]:
+    return (
+        _source_column(mapping, "time_s"),
+        {column: _source_column(mapping, column) for column in OUTPUT_COLUMNS[1:]},
+    )
+
+
+def _missing_canonical_channels(
+    header: tuple[str, ...], original_time: str, source_columns: dict[str, str],
+) -> list[str]:
+    available = set(header)
+    missing = ["time_s"] if original_time not in available else []
+    missing.extend(
+        canonical for canonical, source in source_columns.items()
+        if source not in available
+    )
+    return missing
+
+
+def preflight_bundle(
+    input_data: Path,
+    mapping_path: Path,
+    attestation_path: Path,
+    protocol_path: Path,
+) -> dict[str, Any]:
+    """Check a private source schema without reading or retaining row values.
+
+    The returned record intentionally contains canonical names only.  It is
+    safe to retain with a controlled-access protocol because it never emits an
+    original header, worksheet, time value, filename, identity, or row count.
+    """
+
+    input_data = _outside_repository(input_data, field="input data")
+    mapping_path = _outside_repository(mapping_path, field="mapping")
+    attestation_path = _outside_repository(attestation_path, field="attestation")
+    if not input_data.is_file():
+        raise FileNotFoundError(input_data)
+    mapping = _json(mapping_path)
+    attestation = _json(attestation_path)
+    _attestation(mapping, attestation)
+    protocol = _json(protocol_path)
+    if protocol.get("status") != "prospective_intake_contract":
+        raise ValueError("intake protocol must be prospective")
+    original_time, source_columns = _mapped_source_columns(mapping)
+    header, _, source_format = _source_header_and_rows(
+        input_data, mapping, include_rows=False,
+    )
+    missing = _missing_canonical_channels(header, original_time, source_columns)
+    return {
+        "schema_version": 1,
+        "artifact_type": "controlled_deidentified_hrs_full_loop_preflight",
+        "ready_for_controlled_export": not missing,
+        "source_format": source_format,
+        "worksheet_mapping_required": source_format == "xlsx",
+        "required_canonical_channels": list(OUTPUT_COLUMNS),
+        "missing_canonical_channels": missing,
+        "source_headers_exposed": False,
+        "source_rows_read": False,
+        "claim_boundary": (
+            "This is a schema-and-attestation preflight only. It does not read "
+            "outcome rows, establish trace quality, validate the model, or "
+            "establish safety or IJHE readiness."
+        ),
+    }
+
+
 def export_bundle(
-    input_csv: Path,
+    input_data: Path,
     mapping_path: Path,
     attestation_path: Path,
     output_directory: Path,
@@ -171,12 +305,12 @@ def export_bundle(
 ) -> dict[str, Any]:
     """Create and locally verify one privacy-bounded full-loop event bundle."""
 
-    input_csv = _outside_repository(input_csv, field="input CSV")
+    input_data = _outside_repository(input_data, field="input data")
     mapping_path = _outside_repository(mapping_path, field="mapping")
     attestation_path = _outside_repository(attestation_path, field="attestation")
     output_directory = _outside_repository(output_directory, field="output directory")
-    if not input_csv.is_file():
-        raise FileNotFoundError(input_csv)
+    if not input_data.is_file():
+        raise FileNotFoundError(input_data)
     mapping = _json(mapping_path)
     attestation = _json(attestation_path)
     _attestation(mapping, attestation)
@@ -184,20 +318,18 @@ def export_bundle(
     if protocol.get("status") != "prospective_intake_contract":
         raise ValueError("intake protocol must be prospective")
 
-    delimiter = str(mapping.get("delimiter") or ",")
-    encoding = str(mapping.get("encoding") or "utf-8-sig")
-    original_time = _source_column(mapping, "time_s")
-    source_columns = {column: _source_column(mapping, column) for column in OUTPUT_COLUMNS[1:]}
-    with input_csv.open("r", encoding=encoding, newline="") as handle:
-        reader = csv.DictReader(handle, delimiter=delimiter)
-        header = tuple(reader.fieldnames or ())
-        needed = (original_time,) + tuple(source_columns.values())
-        missing = [column for column in needed if column not in header]
-        if missing:
-            raise ValueError("input CSV is missing mapped columns: " + ", ".join(missing))
-        input_rows = list(reader)
+    original_time, source_columns = _mapped_source_columns(mapping)
+    header, input_rows, source_format = _source_header_and_rows(
+        input_data, mapping, include_rows=True,
+    )
+    missing = _missing_canonical_channels(header, original_time, source_columns)
+    if missing:
+        raise ValueError(
+            "input source is missing mapped canonical channels: " + ", ".join(missing)
+        )
+    assert input_rows is not None
     if len(input_rows) < 20:
-        raise ValueError("input CSV has fewer than 20 rows")
+        raise ValueError("input source has fewer than 20 rows")
 
     normalized: list[dict[str, str]] = []
     origin: float | None = None
@@ -214,7 +346,8 @@ def export_bundle(
         for column in NUMERIC_COLUMNS:
             exported[column] = f"{_finite(row.get(source_columns[column]), column=column, row_number=index):.9g}"
         for column in STATE_COLUMNS:
-            value = (row.get(source_columns[column]) or "").strip()
+            raw_value = row.get(source_columns[column])
+            value = raw_value.strip() if isinstance(raw_value, str) else str(raw_value or "").strip()
             if not value:
                 raise ValueError(f"row {index}: {column} is empty")
             exported[column] = value
@@ -274,7 +407,8 @@ def export_bundle(
         "absolute_timestamps_published": False,
         "original_column_names_published": False,
         "raw_rows_persisted_in_repository": False,
-        "output_file_count": 3,
+        "output_file_count": 4,
+        "input_format": source_format,
         "rows": len(normalized),
         "time_duration_s": float(normalized[-1]["time_s"]),
         "generic_output_columns": list(OUTPUT_COLUMNS),
@@ -293,12 +427,19 @@ def export_bundle(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", type=Path, required=True, help="Authorised local CSV event")
+    parser.add_argument("--input", type=Path, required=True, help="Authorised local CSV, XLSX, or XLSM event")
     parser.add_argument("--mapping", type=Path, required=True, help="Local semantic mapping JSON outside this repository")
     parser.add_argument("--attestation", type=Path, required=True, help="Local unit/state attestation JSON outside this repository")
-    parser.add_argument("--output-directory", type=Path, required=True, help="Controlled export directory outside this repository")
+    parser.add_argument("--output-directory", type=Path, help="Controlled export directory outside this repository")
     parser.add_argument("--protocol", type=Path, default=ROOT / "research/external_hrs_intake_protocol.json")
+    parser.add_argument("--preflight", action="store_true", help="Check header coverage without reading source rows")
     args = parser.parse_args()
+    if args.preflight:
+        report = preflight_bundle(args.input, args.mapping, args.attestation, args.protocol)
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return 0 if report["ready_for_controlled_export"] else 2
+    if args.output_directory is None:
+        parser.error("--output-directory is required unless --preflight is used")
     receipt = export_bundle(args.input, args.mapping, args.attestation, args.output_directory, args.protocol)
     print(json.dumps(receipt, ensure_ascii=False, indent=2))
     return 0

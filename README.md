@@ -212,3 +212,9 @@ workbook is obtained, the explicit-unit loader in
 in-memory pressure, temperature and flow traces without publishing raw rows.
 The test-cylinder data remains a component/protocol candidate until its mapping
 to a vehicle-side validation contract is independently confirmed.
+
+For owner-held full-loop logger data, the controlled exporter accepts CSV, XLSX,
+and XLSM sources.  It offers a header-only preflight that does not read
+measurement rows, then writes only canonical columns and relative time to a
+directory outside this repository.  See
+[`research/CONTROLLED_FULL_LOOP_XLSX_INTAKE.md`](research/CONTROLLED_FULL_LOOP_XLSX_INTAKE.md).
