@@ -27,6 +27,14 @@ The apparatus is fixed at 14.9 m³ (2.5 × 2.0 × 2.98 m), with a 4 mm vertical
 release and immediate ignition. Documented passive vent areas are 0.0055,
 0.0109, and 0.0164 m² for one, two, and three vents.
 
+Signal processing is also frozen before holdout access. Initial temperature
+is the mean of the four channel medians from 0.2–1.2 s. The same interval
+provides the single pressure-baseline correction. Negative mass-flow samples
+are clipped to zero, and the 10 kHz mass-flow channel is reduced to 500 Hz by
+non-overlapping 20-sample means. Peaks are evaluated over 1–12 s. Trace NRMSE
+uses the same interval at 100 Hz, with no time shift or outcome-dependent
+filtering.
+
 ## Decision rule
 
 The primary endpoint is absolute peak-overpressure error. A case passes at

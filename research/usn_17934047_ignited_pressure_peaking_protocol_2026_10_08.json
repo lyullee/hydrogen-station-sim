@@ -42,6 +42,16 @@
     "underpressure_wall_heat_transfer_multiplier": 0.5,
     "parameter_policy": "The source-reported common coefficients are fixed across all cases. No per-case fitting, outcome-dependent coefficient selection, or holdout retuning is permitted."
   },
+  "signal_processing": {
+    "initial_temperature": "Mean of the four per-channel medians over SIGMA time 0.2 to 1.2 s, converted from degC to K.",
+    "pressure_baseline": "Median GEN3i overpressure over time 0.2 to 1.2 s, subtracted once from the full pressure trace.",
+    "mass_flow": "Negative values are clipped to zero. The 10 kHz input is reduced to 500 Hz by non-overlapping 20-sample arithmetic means before interpolation; no smoothing or outcome-dependent filtering is allowed.",
+    "peak_window_s": [1.0, 12.0],
+    "trace_window_s": [1.0, 12.0],
+    "trace_sampling_hz": 100,
+    "peak_definition": "Largest baseline-corrected measured or simulated gauge overpressure in the frozen peak window.",
+    "time_origin": "The source SIGMA and GEN3i clocks are used without outcome-dependent shifting."
+  },
   "endpoints": {
     "primary": {
       "name": "peak_overpressure_absolute_error_kpa",
