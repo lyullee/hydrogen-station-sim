@@ -223,6 +223,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert proust["protocol_hash_matches"] is True
     assert proust["data_hash_matches"] is True
     assert gates["release_network_development_integrity"]["status"] == "PASS"
+    assert gates["apparatus_resolved_holdout_executor_integrity"]["status"] == "PASS"
+    apparatus = gates["apparatus_resolved_holdout_executor_integrity"]["observed"]
+    assert apparatus["template_case_count"] == 8
+    assert apparatus["target_campaign_outcome_data_accessed"] is False
+    assert apparatus["external_validation_status"] == "NOT_ESTABLISHED"
     assert gates["partial_station_profile_diagnostic_integrity"]["status"] == "PASS"
     partial = gates["partial_station_profile_diagnostic_integrity"]["observed"]
     assert partial["case_count"] == 8

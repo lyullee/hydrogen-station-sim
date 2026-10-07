@@ -3056,6 +3056,100 @@ def audit(root: Path) -> dict[str, object]:
         } if release_development else "missing",
     ))
 
+    apparatus_protocol_path = root / "research/apparatus_resolved_release_protocol.json"
+    apparatus_protocol = _json(apparatus_protocol_path)
+    apparatus_secondary_path = root / "research/release_network_prospective_protocol.json"
+    apparatus_secondary = _json(apparatus_secondary_path)
+    apparatus_manifest_path = root / "research/apparatus_release_holdout_manifest.template.json"
+    apparatus_manifest = _json(apparatus_manifest_path)
+    apparatus_model_path = root / "src/h2station/release_network.py"
+    apparatus_evaluator_path = root / "src/h2station/apparatus_release_validation.py"
+    apparatus_runner_path = root / "scripts/run_apparatus_release_holdout.py"
+    locked_model = (apparatus_protocol or {}).get("locked_model") or {}
+    locked_evaluator = (apparatus_protocol or {}).get("locked_evaluator") or {}
+    template_cases = (apparatus_manifest or {}).get("cases") or []
+    apparatus_protocol_hash = (
+        _sha256(apparatus_protocol_path) if apparatus_protocol_path.is_file() else None
+    )
+    apparatus_model_hash = (
+        _sha256(apparatus_model_path) if apparatus_model_path.is_file() else None
+    )
+    apparatus_evaluator_hash = (
+        _sha256(apparatus_evaluator_path) if apparatus_evaluator_path.is_file() else None
+    )
+    apparatus_runner_hash = (
+        _sha256(apparatus_runner_path) if apparatus_runner_path.is_file() else None
+    )
+    apparatus_integrity_pass = bool(
+        (apparatus_protocol or {}).get("status")
+        == "PROSPECTIVE_PROTOCOL_SPECIFICATION_ONLY"
+        and ((apparatus_protocol or {}).get("protocol_revision") or {}).get(
+            "target_campaign_outcome_data_accessed"
+        ) is False
+        and str(locked_model.get("sha256", "")).lower() == apparatus_model_hash
+        and str(locked_evaluator.get("sha256", "")).lower() == apparatus_evaluator_hash
+        and str(locked_evaluator.get("runner_sha256", "")).lower()
+        == apparatus_runner_hash
+        and str((apparatus_secondary or {}).get("model_sha256", "")).lower()
+        == apparatus_model_hash
+        and str((apparatus_secondary or {}).get("evaluator_sha256", "")).lower()
+        == apparatus_evaluator_hash
+        and str((apparatus_secondary or {}).get("campaign_runner_sha256", "")).lower()
+        == apparatus_runner_hash
+        and str((apparatus_manifest or {}).get("protocol_sha256", "")).lower()
+        == apparatus_protocol_hash
+        and str((apparatus_manifest or {}).get("model_sha256", "")).lower()
+        == apparatus_model_hash
+        and str((apparatus_manifest or {}).get("evaluator_sha256", "")).lower()
+        == apparatus_evaluator_hash
+        and str((apparatus_manifest or {}).get("runner_sha256", "")).lower()
+        == apparatus_runner_hash
+        and len(template_cases) == 8
+        and len({
+            ((item.get("strata") or {}).get("source_pressure_group"))
+            for item in template_cases
+        }) >= 2
+        and len({
+            ((item.get("strata") or {}).get("geometry_group"))
+            for item in template_cases
+        }) >= 2
+        and len({
+            ((item.get("strata") or {}).get("valve_opening_group"))
+            for item in template_cases
+        }) >= 2
+        and ((apparatus_protocol or {}).get("promotion_gate") or {}).get(
+            "external_validation_status"
+        ) == "NOT_ESTABLISHED"
+    )
+    gates.append(_gate(
+        "apparatus_resolved_holdout_executor_integrity",
+        "PASS" if apparatus_integrity_pass else "FAIL",
+        "The prospective source-line-valve-terminal holdout path is hash-locked, privacy bounded and executable without being promoted to validation.",
+        "; ".join(str(path.relative_to(root)) for path in (
+            apparatus_protocol_path, apparatus_secondary_path, apparatus_manifest_path,
+            apparatus_model_path, apparatus_evaluator_path, apparatus_runner_path,
+        )),
+        "Model, evaluator, runner and protocol hashes agree; eight-case stratification and no-fit/privacy rules are frozen; external validation remains explicitly not established.",
+        {
+            "protocol_sha256": apparatus_protocol_hash,
+            "model_sha256": apparatus_model_hash,
+            "evaluator_sha256": apparatus_evaluator_hash,
+            "runner_sha256": apparatus_runner_hash,
+            "template_case_count": len(template_cases),
+            "target_campaign_outcome_data_accessed": (
+                ((apparatus_protocol or {}).get("protocol_revision") or {}).get(
+                    "target_campaign_outcome_data_accessed"
+                )
+            ),
+            "external_validation_status": (
+                ((apparatus_protocol or {}).get("promotion_gate") or {}).get(
+                    "external_validation_status"
+                )
+            ),
+            "claim_boundary": (apparatus_protocol or {}).get("claim_boundary"),
+        } if apparatus_protocol else "missing",
+    ))
+
     schefer_result_path = root / "research/schefer_2006_holdout_result.json"
     schefer_result = _json(schefer_result_path)
     schefer_protocol_path = root / "research/schefer_2006_holdout_protocol.json"

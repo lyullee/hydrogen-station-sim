@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T16:26:11.151839+00:00",
+  "generated_at": "2026-10-07T16:40:34.664457+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 81,
+    "PASS": 82,
     "FAIL": 6,
     "PENDING": 8
   },
@@ -4047,6 +4047,23 @@
           "next_model_requirement": "Represent known valve, line-pack and pipe geometry explicitly and test the locked model on a numerically untouched external campaign.",
           "claim_supported": false
         }
+      }
+    },
+    {
+      "id": "apparatus_resolved_holdout_executor_integrity",
+      "status": "PASS",
+      "claim": "The prospective source-line-valve-terminal holdout path is hash-locked, privacy bounded and executable without being promoted to validation.",
+      "evidence": "research\\apparatus_resolved_release_protocol.json; research\\release_network_prospective_protocol.json; research\\apparatus_release_holdout_manifest.template.json; src\\h2station\\release_network.py; src\\h2station\\apparatus_release_validation.py; scripts\\run_apparatus_release_holdout.py",
+      "requirement": "Model, evaluator, runner and protocol hashes agree; eight-case stratification and no-fit/privacy rules are frozen; external validation remains explicitly not established.",
+      "observed": {
+        "protocol_sha256": "6aade0968c3da62ef9d9a06e330196d22552125ed221080894b6ed7dfd8a74fd",
+        "model_sha256": "5c52e06f3ff1c45fd6c63047b5c34494d2b605a3bd46cb40ffcd81946b7e259d",
+        "evaluator_sha256": "87bef13f019d2be445d757ebba94933e748b1fe924dbdbc29f12649a5970d04b",
+        "runner_sha256": "4a9a12b2b771c634ebcdf7e5ca660da51c78b85505bff421fdbac0f2cc01397c",
+        "template_case_count": 8,
+        "target_campaign_outcome_data_accessed": false,
+        "external_validation_status": "NOT_ESTABLISHED",
+        "claim_boundary": "This artifact is a reproducibility and data-acquisition protocol. It is not external validation, does not repair the frozen Proust holdout, and does not support a safety-distance or controller claim."
       }
     },
     {
