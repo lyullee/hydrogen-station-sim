@@ -37,6 +37,7 @@ def test_private_workbench_writes_mapping_templates_without_measurement_values(
     rendered_receipt = json.dumps(receipt)
 
     assert receipt["source_count"] == 2
+    assert receipt["measurement_candidate_found"] is True
     assert receipt["measurement_values_persisted"] is False
     assert catalog["sample_data_rows_structurally_inspected_in_memory"] is True
     assert catalog["measurement_values_persisted"] is False
@@ -66,7 +67,31 @@ def test_private_workbench_catalogs_declared_csv_directory_sources(tmp_path: Pat
     mapping = json.loads((output / "event-mapping.template.json").read_text(encoding="utf-8"))
 
     assert receipt["input_kind"] == "directory"
+    assert receipt["measurement_candidate_found"] is True
     assert catalog["source_count"] == 1
     assert catalog["sources"][0]["file"] == "private-logger.csv"
     assert "worksheet" not in mapping["sources"][0]
     assert "private-logger.csv" not in json.dumps(receipt)
+
+
+def test_private_workbench_explains_next_step_when_no_logger_trace_is_present(
+    tmp_path: Path,
+):
+    controlled = tmp_path / "private-reference-directory"
+    controlled.mkdir()
+    (controlled / "private-reference.csv").write_text(
+        "time,pressure,temperature,state\n"
+        "case-A,40,20,standby\n"
+        "case-B,70,25,standby\n",
+        encoding="utf-8",
+    )
+
+    output = tmp_path / "empty-private-workbench"
+    receipt = prepare_workbench(controlled, output)
+    rendered = json.dumps(receipt, ensure_ascii=False)
+
+    assert receipt["source_count"] == 0
+    assert receipt["measurement_candidate_found"] is False
+    assert "No measured logger trace" in receipt["next_action"]
+    assert receipt["minimum_logger_contract"]["custodian_attestation_required"] is True
+    assert "private-reference.csv" not in rendered

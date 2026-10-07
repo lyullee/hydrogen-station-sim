@@ -305,6 +305,21 @@ def prepare_workbench(input_data: Path, output_directory: Path) -> dict[str, Any
         "measurement_values_persisted": False,
         "input_kind": workbench["input_kind"],
         "source_count": workbench["source_count"],
+        "measurement_candidate_found": workbench["source_count"] > 0,
+        "next_action": (
+            "Map one custodian-confirmed physical event, then complete the "
+            "event mapping and attestation templates before controlled export."
+            if workbench["source_count"]
+            else "No measured logger trace was identified. Select a separate "
+            "CSV/XLSX/XLSM logger export with a labelled clock and at least two "
+            "increasing timestamp values, then rerun this intake."
+        ),
+        "minimum_logger_contract": {
+            "clock": "one labelled clock with at least two increasing observations",
+            "full_loop_numeric_channels": list(OUTPUT_COLUMNS[1:7]),
+            "full_loop_state_channels": list(OUTPUT_COLUMNS[7:]),
+            "custodian_attestation_required": True,
+        },
         "source_input_sha256": workbench["source_input_sha256"],
         "output_file_count": 3,
         "claim_boundary": workbench["claim_boundary"],
