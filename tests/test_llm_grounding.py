@@ -695,6 +695,8 @@ def test_manifest_preserves_opt_in_capacity_eos_geometry_basis():
         "basis": "capacity_eos",
         "vehicle_capacity_kg": 5.0,
         "vehicle_2_capacity_kg": 5.0,
+        "effective_volume_multiplier": None,
+        "effective_volume_policy": "single_pass_capacity_eos",
         "public_sensitivity_available": True,
         "default_basis": "reference",
         "capacity_eos_opt_in": True,

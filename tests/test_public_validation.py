@@ -244,6 +244,26 @@ def test_capacity_eos_geometry_uses_declared_public_capacity_for_both_vehicles()
         capacity_eos_volume_m3(5.0, 70.0e6), rel=1e-10
     )
     assert first.parameters.internal_volume_m3 != pytest.approx(0.122)
+    assert first.fit.effective_volume_multiplier == pytest.approx(1.0)
+    assert second.fit.effective_volume_multiplier == pytest.approx(1.0)
+
+
+def test_capacity_eos_geometry_retains_explicit_volume_override():
+    built = build_reference_scenario(
+        ReferenceScenario(
+            vehicle_geometry_basis="capacity_eos",
+            vehicle_capacity_kg=9.8,
+            vehicle_2_capacity_kg=5.0,
+            vehicle_effective_volume_multiplier=1.02,
+        ),
+        UnavailableHyRAMBackend(),
+    )
+    first = built.station.partial_station.vehicle_tank
+    assert first.fit.effective_volume_multiplier == pytest.approx(1.02)
+    assert first.effective_volume_m3 == pytest.approx(
+        capacity_eos_volume_m3(9.8, 70.0e6) * 1.02,
+        rel=1e-10,
+    )
 
 
 def test_capacity_eos_geometry_requires_both_declared_capacities():

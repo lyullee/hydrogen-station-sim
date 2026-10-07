@@ -7,13 +7,16 @@
     "reference_pressure_mpa": 70.0,
     "reference_temperature_c": 15.0,
     "runtime_table": "src/h2station/data/hydrogen_properties_v1.npz",
+    "effective_volume_policy": "Use the capacity/EOS physical gas volume once; implicit effective-volume multiplier is 1.0. An explicit research override remains permitted.",
+    "thermal_fit_policy": "The public Type-IV gas-to-liner UA multiplier may remain active, with its component-only validation boundary preserved.",
     "api_fields": [
       "vehicle_geometry_basis",
       "vehicle_capacity_kg",
       "vehicle_2_capacity_kg"
     ],
     "default_basis": "reference",
-    "default_changed": false
+    "default_changed": false,
+    "opt_in_rule_changed": true
   },
   "public_evidence": {
     "source_artifact": "research/nrel_h2fills_geometry_sensitivity.json",
@@ -25,7 +28,10 @@
     "exploratory_screening": {
       "capacity_eos_with_frozen_fit_screening_pass_count": 7,
       "capacity_eos_no_volume_fit_screening_pass_count": 7,
-      "screening_case_count": 7
+      "screening_case_count": 7,
+      "mc_default_transfer_single_pass_count": 4,
+      "mc_default_transfer_case_count": 8,
+      "mc_default_transfer_evidence_role": "post_outcome_development_diagnostic_only"
     }
   },
   "claim_boundary": {

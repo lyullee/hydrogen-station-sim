@@ -58,9 +58,11 @@ class ReferenceScenario:
     vehicle_internal_volume_m3: float = 0.122
     vehicle_nominal_working_pressure_pa: float = 70.0e6
     # ``reference`` preserves the historical 0.122 m³ geometry.  The
-    # capacity-EOS option derives the tank volume from its declared capacity
-    # and the hydrogen property table at the public 15 °C reference state.
-    # It remains opt-in until a frozen external holdout is re-run.
+    # capacity-EOS option derives the physical gas volume from its declared
+    # capacity and the hydrogen property table at the public 15 °C reference
+    # state. Because this already defines the gas volume, the fitted effective
+    # volume multiplier is not applied a second time unless explicitly
+    # overridden. It remains opt-in until a frozen external holdout is re-run.
     vehicle_geometry_basis: Literal["reference", "capacity_eos"] = "reference"
     vehicle_capacity_kg: float | None = None
     # The default is a public, split-validated Type-IV tank fit for this
@@ -182,6 +184,8 @@ def build_reference_scenario(
         raise ValueError("vehicle nominal working pressures must be positive")
     if config.vehicle_tank_calibration not in {"public_type_iv", "reference"}:
         raise ValueError("vehicle_tank_calibration must be public_type_iv or reference")
+    if config.vehicle_geometry_basis not in {"reference", "capacity_eos"}:
+        raise ValueError("vehicle_geometry_basis must be 'reference' or 'capacity_eos'")
     calibrated_tank = (
         load_public_type_iv_tank_calibration()
         if config.vehicle_tank_calibration == "public_type_iv" else None
@@ -192,8 +196,12 @@ def build_reference_scenario(
         config.vehicle_effective_volume_multiplier
         if config.vehicle_effective_volume_multiplier is not None
         else (
-            calibrated_tank.effective_volume_multiplier
-            if calibrated_tank is not None else 1.0
+            1.0
+            if config.vehicle_geometry_basis == "capacity_eos"
+            else (
+                calibrated_tank.effective_volume_multiplier
+                if calibrated_tank is not None else 1.0
+            )
         )
     )
     gas_liner_ua_multiplier = (
@@ -215,8 +223,6 @@ def build_reference_scenario(
         config.bank_header_flow_area_m2,
     ) <= 0.0:
         raise ValueError("fit multipliers and precooler tolerance must be positive")
-    if config.vehicle_geometry_basis not in {"reference", "capacity_eos"}:
-        raise ValueError("vehicle_geometry_basis must be 'reference' or 'capacity_eos'")
     if any(
         value is not None and value <= 0.0
         for value in (config.vehicle_capacity_kg, config.vehicle_2_capacity_kg)

@@ -126,11 +126,19 @@ def _runtime_geometry_profile(frame: dict[str, Any]) -> dict[str, Any]:
         "basis": basis,
         "vehicle_capacity_kg": frame.get("vehicle_capacity_kg"),
         "vehicle_2_capacity_kg": frame.get("vehicle_2_capacity_kg"),
+        "effective_volume_multiplier": frame.get(
+            "vehicle_effective_volume_multiplier"
+        ),
+        "effective_volume_policy": (
+            "single_pass_capacity_eos"
+            if basis == "capacity_eos" else "public_fit_or_explicit_override"
+        ),
         "public_sensitivity_available": True,
         "default_basis": "reference",
         "capacity_eos_opt_in": basis == "capacity_eos",
         "claim_limit": (
-            "capacity/EOS 형상은 공개 탱크 민감도 진단에 근거한 선택 옵션이며 "
+            "capacity/EOS 형상은 선언 용량으로 기체 체적을 한 번만 산정하는 "
+            "공개 탱크 민감도 진단 기반 선택 옵션이며 "
             "독립적인 station-to-vehicle 검증이나 기본값 변경을 의미하지 않음"
         ),
     }
