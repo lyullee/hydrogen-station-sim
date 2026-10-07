@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T23:27:23.393640+00:00",
+  "generated_at": "2026-10-07T23:43:33.113463+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 93,
+    "PASS": 94,
     "FAIL": 7,
     "PENDING": 8
   },
@@ -4623,6 +4623,63 @@
         "protocol_hash_matches": true,
         "data_hash_matches": true,
         "claim_boundary": "This holdout tests time-resolved vessel pressure in one 43.1 MPa hydrogen blowdown from a 1.234 m3 vessel through the published 5.08 mm restriction. It does not validate flame geometry, radiation, dispersion, mass flow instrumentation, 70-90 MPa storage, refuelling control, or a complete station loop."
+      }
+    },
+    {
+      "id": "jankuj_pressure_decay_diagnostic_integrity",
+      "status": "PASS",
+      "claim": "The Jankuj pressure-decay transfer attempt is retained as a failed post-access diagnostic and cannot be mistaken for prospective external validation.",
+      "evidence": "research\\jankuj_2026_pressure_decay_transfer_result_2026_10_08.json; research\\jankuj_2026_pressure_decay_protocol_2026_10_08.json; research\\accidental_self_ignition_public_evidence_2026_10_04.json",
+      "requirement": "Prior numerical access is disclosed, the attempted protocol is invalidated, no holdout refitting occurs, all failed screens remain visible, and validation support is false.",
+      "observed": {
+        "status": "INVALIDATED_PRIOR_OUTCOME_ACCESS",
+        "evidence_role": "post_access_diagnostic_only",
+        "protocol": {
+          "artifact": "research/jankuj_2026_pressure_decay_protocol_2026_10_08.json",
+          "sha256": "43b59fd9216e5b958eeb4520b5756ba0ff74553c3d8c52a88cb6f4b4e60401ab",
+          "git_commit_before_current_archive_download": "b8b7ac542abab17fa2bdebeca83ce584bebb8831",
+          "protocol_frozen_before_first_numeric_outcome_access": false,
+          "prospective_protocol_valid": false,
+          "invalidation_reason": "research/accidental_self_ignition_public_evidence_2026_10_04.json already recorded numeric Figure 7 rows and the workbook hash",
+          "split": {
+            "development_curve": "Pressure n.1 [bar]",
+            "untouched_holdout_curve": "Pressure n.2 [bar]",
+            "selection_basis": "column order declared in the public Zenodo description before numeric archive access",
+            "case_replacement_permitted": false
+          },
+          "primary_screens": {
+            "holdout_pressure_nrmse_percent_initial_excess_max": 10.0,
+            "holdout_median_absolute_percentage_error_percent_max": 15.0,
+            "holdout_half_pressure_time_relative_error_percent_max": 25.0,
+            "joint_pass_requires_all_screens": true
+          }
+        },
+        "prior_outcome_access": {
+          "artifact": "research/accidental_self_ignition_public_evidence_2026_10_04.json",
+          "recorded_at": "2026-10-04",
+          "status": "public_accidental_release_ignition_evidence_captured",
+          "pressure_workbook_numeric_rows": 2754,
+          "pressure_workbook_sha256": "f53f88169d8673dc99b4fd49d77575d41d3a3314826d76fca4883395cdb7686c",
+          "matches_current_workbook": true
+        },
+        "fitted_effective_breach_diameter_mm": 1.469631009295538,
+        "holdout_metrics": {
+          "sample_count": 2225,
+          "pressure_nrmse_percent_initial_excess": 81.5624577772209,
+          "median_absolute_percentage_error_percent": 2836.963335262576,
+          "measured_half_pressure_time_s": 0.24298360655737702,
+          "predicted_half_pressure_time_s": null,
+          "half_pressure_time_relative_error_percent": null,
+          "pressure_nrmse_screen_pass": false,
+          "median_ape_screen_pass": false,
+          "half_pressure_time_screen_pass": false,
+          "minimum_measured_absolute_pressure_bar": -0.97,
+          "minimum_predicted_absolute_pressure_bar": 155.214590544897,
+          "maximum_absolute_error_bar": 166.7172446315169
+        },
+        "joint_primary_screen_pass": false,
+        "source_depletion_transfer_validation_supported": false,
+        "claim_boundary": "A pass would support transfer of the source-cylinder pressure-depletion submodel between two nominally repeated 20 MPa penetration releases with one development-fitted effective breach area. It would not validate breach geometry, ignition probability or mechanism, flame length, consequence distance, an H70 vessel, the station-to-vehicle fueling loop, emergency response or SAGA effectiveness. A single holdout replicate cannot establish universal release accuracy."
       }
     },
     {

@@ -4024,6 +4024,87 @@ def audit(root: Path) -> dict[str, object]:
         } if schefer_2007_result else "missing; pressure-decay holdout has not completed",
     ))
 
+    jankuj_result_path = root / (
+        "research/jankuj_2026_pressure_decay_transfer_result_2026_10_08.json"
+    )
+    jankuj_protocol_path = root / (
+        "research/jankuj_2026_pressure_decay_protocol_2026_10_08.json"
+    )
+    jankuj_prior_path = root / (
+        "research/accidental_self_ignition_public_evidence_2026_10_04.json"
+    )
+    jankuj_model_path = root / "src/h2station/schefer_2007_validation.py"
+    jankuj_result = _json(jankuj_result_path)
+    jankuj_prior = _json(jankuj_prior_path)
+    jankuj_protocol_state = (jankuj_result or {}).get("protocol") or {}
+    jankuj_prior_state = (jankuj_result or {}).get("prior_outcome_access") or {}
+    jankuj_model_state = (jankuj_result or {}).get("model") or {}
+    jankuj_holdout = ((jankuj_result or {}).get("holdout_curve") or {}).get("metrics") or {}
+    jankuj_integrity_pass = bool(
+        (jankuj_result or {}).get("schema_version") == 1
+        and (jankuj_result or {}).get("artifact_type")
+        == "post_access_pressure_decay_transfer_diagnostic"
+        and (jankuj_result or {}).get("status") == "INVALIDATED_PRIOR_OUTCOME_ACCESS"
+        and (jankuj_result or {}).get("evidence_role") == "post_access_diagnostic_only"
+        and ((jankuj_result or {}).get("source") or {}).get("article_doi")
+        == "10.1016/j.elstat.2025.104222"
+        and ((jankuj_result or {}).get("source") or {}).get("dataset_doi")
+        == "10.5281/zenodo.17913628"
+        and ((jankuj_result or {}).get("source") or {}).get("license") == "CC BY 4.0"
+        and ((jankuj_result or {}).get("source") or {}).get("raw_rows_committed") is False
+        and jankuj_protocol_state.get("sha256")
+        == (_sha256(jankuj_protocol_path) if jankuj_protocol_path.is_file() else None)
+        and jankuj_protocol_state.get("git_commit_before_current_archive_download")
+        == "b8b7ac542abab17fa2bdebeca83ce584bebb8831"
+        and jankuj_protocol_state.get("protocol_frozen_before_first_numeric_outcome_access")
+        is False
+        and jankuj_protocol_state.get("prospective_protocol_valid") is False
+        and jankuj_prior_state.get("artifact")
+        == str(jankuj_prior_path.relative_to(root)).replace("\\", "/")
+        and jankuj_prior_state.get("pressure_workbook_numeric_rows") == 2754
+        and jankuj_prior_state.get("matches_current_workbook") is True
+        and (jankuj_prior or {}).get("recorded_at") == "2026-10-04"
+        and jankuj_model_state.get("source_sha256")
+        == (_sha256(jankuj_model_path) if jankuj_model_path.is_file() else None)
+        and jankuj_model_state.get("holdout_refitted") is False
+        and (jankuj_result or {}).get("joint_primary_screen_pass") is False
+        and (jankuj_result or {}).get("source_depletion_transfer_validation_supported")
+        is False
+        and all(
+            jankuj_holdout.get(key) is False
+            for key in (
+                "pressure_nrmse_screen_pass",
+                "median_ape_screen_pass",
+                "half_pressure_time_screen_pass",
+            )
+        )
+        and bool((jankuj_result or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "jankuj_pressure_decay_diagnostic_integrity",
+        "PASS" if jankuj_integrity_pass else ("FAIL" if jankuj_result else "PENDING"),
+        "The Jankuj pressure-decay transfer attempt is retained as a failed post-access diagnostic and cannot be mistaken for prospective external validation.",
+        f"{jankuj_result_path.relative_to(root)}; {jankuj_protocol_path.relative_to(root)}; {jankuj_prior_path.relative_to(root)}",
+        "Prior numerical access is disclosed, the attempted protocol is invalidated, no holdout refitting occurs, all failed screens remain visible, and validation support is false.",
+        {
+            "status": (jankuj_result or {}).get("status"),
+            "evidence_role": (jankuj_result or {}).get("evidence_role"),
+            "protocol": jankuj_protocol_state,
+            "prior_outcome_access": jankuj_prior_state,
+            "fitted_effective_breach_diameter_mm": jankuj_model_state.get(
+                "fitted_effective_breach_diameter_mm"
+            ),
+            "holdout_metrics": jankuj_holdout,
+            "joint_primary_screen_pass": (jankuj_result or {}).get(
+                "joint_primary_screen_pass"
+            ),
+            "source_depletion_transfer_validation_supported": (jankuj_result or {}).get(
+                "source_depletion_transfer_validation_supported"
+            ),
+            "claim_boundary": (jankuj_result or {}).get("claim_boundary"),
+        } if jankuj_result else "missing; Jankuj diagnostic has not run",
+    ))
+
     grune_result_path = root / "research/grune_2014_holdout_result.json"
     grune_result = _json(grune_result_path)
     grune_protocol_path = root / "research/grune_2014_holdout_protocol.json"

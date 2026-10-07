@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "artifact_type": "post_access_pressure_decay_transfer_diagnostic",
+  "generated_at": "2026-10-07T23:49:09.826512+00:00",
+  "status": "INVALIDATED_PRIOR_OUTCOME_ACCESS",
+  "evidence_role": "post_access_diagnostic_only",
+  "source": {
+    "article_doi": "10.1016/j.elstat.2025.104222",
+    "dataset_doi": "10.5281/zenodo.17913628",
+    "license": "CC BY 4.0",
+    "archive_md5": "e460d8596aef6d543239781747353f36",
+    "workbook_sha256": "f53f88169d8673dc99b4fd49d77575d41d3a3314826d76fca4883395cdb7686c",
+    "raw_rows_committed": false
+  },
+  "protocol": {
+    "artifact": "research/jankuj_2026_pressure_decay_protocol_2026_10_08.json",
+    "sha256": "43b59fd9216e5b958eeb4520b5756ba0ff74553c3d8c52a88cb6f4b4e60401ab",
+    "git_commit_before_current_archive_download": "b8b7ac542abab17fa2bdebeca83ce584bebb8831",
+    "protocol_frozen_before_first_numeric_outcome_access": false,
+    "prospective_protocol_valid": false,
+    "invalidation_reason": "research/accidental_self_ignition_public_evidence_2026_10_04.json already recorded numeric Figure 7 rows and the workbook hash",
+    "split": {
+      "development_curve": "Pressure n.1 [bar]",
+      "untouched_holdout_curve": "Pressure n.2 [bar]",
+      "selection_basis": "column order declared in the public Zenodo description before numeric archive access",
+      "case_replacement_permitted": false
+    },
+    "primary_screens": {
+      "holdout_pressure_nrmse_percent_initial_excess_max": 10.0,
+      "holdout_median_absolute_percentage_error_percent_max": 15.0,
+      "holdout_half_pressure_time_relative_error_percent_max": 25.0,
+      "joint_pass_requires_all_screens": true
+    }
+  },
+  "prior_outcome_access": {
+    "artifact": "research/accidental_self_ignition_public_evidence_2026_10_04.json",
+    "recorded_at": "2026-10-04",
+    "status": "public_accidental_release_ignition_evidence_captured",
+    "pressure_workbook_numeric_rows": 2754,
+    "pressure_workbook_sha256": "f53f88169d8673dc99b4fd49d77575d41d3a3314826d76fca4883395cdb7686c",
+    "matches_current_workbook": true
+  },
+  "model": {
+    "source": "src/h2station/schefer_2007_validation.py",
+    "source_sha256": "bd3f5eae66e3d8bc093ebc182fa5c9f8a308813468632c973a65f76e30f2b580",
+    "name": "well_mixed_adiabatic_real_gas_blowdown_v1",
+    "fitted_effective_breach_diameter_mm": 1.469631009295538,
+    "fit_function_evaluations": 11,
+    "holdout_refitted": false
+  },
+  "development_curve": {
+    "initial_pressure_abs_bar": 186.81,
+    "onset_source_time_s": 0.4,
+    "source_sample_count": 2754,
+    "evaluation_sample_count": 2555,
+    "median_sample_interval_s": 0.0020000000000000018,
+    "pressure_drop_fraction": 1.005058114507103,
+    "large_positive_jump_count": 1,
+    "nonphysical_absolute_pressure_count": 0,
+    "minimum_reported_gauge_pressure_bar": -0.94,
+    "metrics": {
+      "sample_count": 2555,
+      "pressure_nrmse_percent_initial_excess": 49.59628810554963,
+      "median_absolute_percentage_error_percent": 17.273277811121034,
+      "measured_half_pressure_time_s": 0.2217142857142857,
+      "predicted_half_pressure_time_s": null,
+      "half_pressure_time_relative_error_percent": null,
+      "pressure_nrmse_screen_pass": false,
+      "median_ape_screen_pass": false,
+      "half_pressure_time_screen_pass": false,
+      "minimum_measured_absolute_pressure_bar": 0.030000000000000027,
+      "minimum_predicted_absolute_pressure_bar": 150.08242640722656,
+      "maximum_absolute_error_bar": 172.9748580707778
+    }
+  },
+  "holdout_curve": {
+    "initial_pressure_abs_bar": 187.99,
+    "onset_source_time_s": 1.06,
+    "source_sample_count": 2754,
+    "evaluation_sample_count": 2225,
+    "median_sample_interval_s": 0.0020000000000000018,
+    "pressure_drop_fraction": 1.0103732221152817,
+    "large_positive_jump_count": 0,
+    "nonphysical_absolute_pressure_count": 106,
+    "minimum_reported_gauge_pressure_bar": -1.94,
+    "metrics": {
+      "sample_count": 2225,
+      "pressure_nrmse_percent_initial_excess": 81.5624577772209,
+      "median_absolute_percentage_error_percent": 2836.963335262576,
+      "measured_half_pressure_time_s": 0.24298360655737702,
+      "predicted_half_pressure_time_s": null,
+      "half_pressure_time_relative_error_percent": null,
+      "pressure_nrmse_screen_pass": false,
+      "median_ape_screen_pass": false,
+      "half_pressure_time_screen_pass": false,
+      "minimum_measured_absolute_pressure_bar": -0.97,
+      "minimum_predicted_absolute_pressure_bar": 155.214590544897,
+      "maximum_absolute_error_bar": 166.7172446315169
+    }
+  },
+  "joint_primary_screen_pass": false,
+  "source_depletion_transfer_validation_supported": false,
+  "interpretation": "The attempted prospective transfer protocol is invalid because the repository already recorded numerical workbook outcomes before the protocol commit. The post-access diagnostic also failed: the development curve contains a large pressure reset after depressurization, the all-points rule retained it, and the second curve failed without refitting. No validation claim is made.",
+  "claim_boundary": "A pass would support transfer of the source-cylinder pressure-depletion submodel between two nominally repeated 20 MPa penetration releases with one development-fitted effective breach area. It would not validate breach geometry, ignition probability or mechanism, flame length, consequence distance, an H70 vessel, the station-to-vehicle fueling loop, emergency response or SAGA effectiveness. A single holdout replicate cannot establish universal release accuracy."
+}

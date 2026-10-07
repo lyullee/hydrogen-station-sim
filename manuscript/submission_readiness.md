@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **93 PASS · 7 FAIL · 8 PENDING**.
+Gate counts: **94 PASS · 7 FAIL · 8 PENDING**.
 
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted
@@ -52,6 +52,12 @@ the failed time-dwell candidate remains disabled and the full-loop gate remains 
 The manuscript is therefore kept claim-bounded. The current full-loop negative
 result, component-level evidence and all unresolved gates remain disclosed; no
 failed holdout is silently promoted to validation.
+
+A later 50 L, 20 MPa pressure-decay transfer attempt was invalidated during
+provenance review because the same public workbook had already been numerically
+inventoried on 2026-10-04, before the attempted protocol freeze. Its no-refit
+second-curve result also failed all three screens. The diagnostic is retained,
+but it contributes no prospective validation and adds no new blocking gate.
 
 A prospectively frozen public Type-III fill added a sharper tank-physics test.
 The natural-convection model passed both pressure screens (0.943 MPa RMSE) but
@@ -164,7 +170,7 @@ The local format gate currently passes:
 - abstract: 150 words (limit checked: 150);
 - keywords: 6;
 - highlights: 5, each within the checked character limit;
-- approximate manuscript body: 7,917 words before references;
+- approximate manuscript body: 7,970 words before references;
 - figures: 2; tables: 3;
 - citations resolved and figure assets present;
 - LaTeX compilation: **PENDING**. The built-in compiler was unavailable on this

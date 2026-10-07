@@ -426,6 +426,14 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert schefer_2007["result"]["half_pressure_time_screen_pass"] is True
     assert schefer_2007["protocol_hash_matches"] is True
     assert schefer_2007["data_hash_matches"] is True
+    assert gates["jankuj_pressure_decay_diagnostic_integrity"]["status"] == "PASS"
+    jankuj = gates["jankuj_pressure_decay_diagnostic_integrity"]["observed"]
+    assert jankuj["status"] == "INVALIDATED_PRIOR_OUTCOME_ACCESS"
+    assert jankuj["evidence_role"] == "post_access_diagnostic_only"
+    assert jankuj["protocol"]["prospective_protocol_valid"] is False
+    assert jankuj["prior_outcome_access"]["matches_current_workbook"] is True
+    assert jankuj["joint_primary_screen_pass"] is False
+    assert jankuj["source_depletion_transfer_validation_supported"] is False
     assert gates["grune_2014_pressure_decay_validation"]["status"] == "PENDING"
     grune = gates["grune_2014_pressure_decay_validation"]["observed"]
     assert grune["eligibility"]["minimum_requirements_met"] is False
