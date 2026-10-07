@@ -10,6 +10,24 @@ export, the data custodian must confirm that the selected worksheets describe
 the same event, their clocks are compatible, every mapped numeric field is in
 the canonical unit, and each discrete state has a written meaning.
 
+## Create a private mapping workbench
+
+For a new controlled XLSX/XLSM workbook, create editable private templates
+first. The command keeps original worksheet names and headers only in the
+outside-repository output folder. It does not retain measurement values.
+
+```powershell
+$env:PYTHONPATH = "src"
+.\.venv\Scripts\python.exe scripts\prepare_controlled_multisource_intake.py `
+  --input "D:\controlled\event.xlsx" `
+  --output-directory "D:\controlled\mapping-workbench"
+```
+
+The workbench contains `private_source_catalog.json`,
+`event-mapping.template.json`, and `event-attestation.template.json`. Replace
+each placeholder after a custodian verifies the event, units, state meanings,
+and clocks. These files contain original labels and must remain controlled.
+
 ## Private mapping contract
 
 Create a private mapping JSON beside the controlled workbook. Every canonical
