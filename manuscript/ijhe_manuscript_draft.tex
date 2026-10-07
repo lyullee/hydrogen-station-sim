@@ -465,6 +465,12 @@ order optimality (3115.9) indicates a shallow or imperfectly resolved optimum ev
 though its termination flag was successful. The fit should therefore be treated
 as an effective heat-transfer calibration, not an identified physical coefficient.
 
+Three later public ZBT physical-HRS workbooks used synchronized 0.5 s records
+\cite{dietrich2026,methytrucks2026}. A no-fit tank replay gave 1.293 MPa pressure
+and 6.071 $^{\circ}$C temperature RMSE; integrated flow and scale change were
+2.329 and 2.170 kg. Because channel identities were inferred and outcomes were
+already inspected, this is a post-access component diagnostic, not a holdout.
+
 \subsection{Negative full-loop validation result}
 After the preprocessing and nominal-pressure corrections, refitted tank, flow-area
 calibration and frozen v2 cooling sensitivity, one of eight development fills and
@@ -952,17 +958,9 @@ Source code, study scripts, frozen machine-readable evidence and documentation a
 available under the MIT License at
 \url{https://github.com/lyullee/hydrogen-station-sim}; archived release DOI:
 \href{https://doi.org/10.5281/zenodo.23084421}{10.5281/zenodo.23084421}.
-Third-party raw archives are not redistributed where their terms do not provide a
-redistribution licence. The repository records landing pages, checksums, acquisition
-instructions, split rules and analysis seeds. HyRAM+ remains governed by its own
-GPL-3.0 licence. The eventual SAGA study archive must include masked responses,
-locked ratings and the allocation key without API credentials.
+Third-party archives retain their original terms; HyRAM+ remains GPL-3.0.
 
-Additional real-station operational data may be held under a confidential
-custodian agreement and are therefore not deposited in this repository or in
-Zenodo. For any such validation, the archive is quarantined and hashed before
-outcome access, and the model commit, case-selection rule, scoring protocol and
-acceptance thresholds are frozen in advance. The manuscript reports only
+Confidential station records are not deposited. The manuscript reports only
 custodian-approved de-identified aggregates and uncertainty intervals; a secure
 editor/reviewer inspection route is provided when permitted. A measurement
 schema, controlled-access protocol and synthetic traces are supplied for public
@@ -1160,6 +1158,17 @@ hydrogen refueling station in the early years of commercial fuel cell vehicle
 deployment, \textit{International Journal of Hydrogen Energy} 45 (2020)
 31341--31352,
 \href{https://doi.org/10.1016/j.ijhydene.2020.08.251}{doi:10.1016/j.ijhydene.2020.08.251}.
+
+\bibitem{dietrich2026}
+M. Dietrich et al., Representative hydrogen sampling at hydrogen refuelling
+stations: interplay of sampling strategy and station parameters,
+\textit{Clean Technologies} 8(3) (2026) 91,
+\href{https://doi.org/10.3390/cleantechnol8030091}{doi:10.3390/cleantechnol8030091}.
+
+\bibitem{methytrucks2026}
+Hydrogen and Fuel Cell Center, \textit{Group B---HySam system measurement data},
+Zenodo (2026),
+\href{https://doi.org/10.5281/zenodo.20590842}{doi:10.5281/zenodo.20590842}.
 \end{thebibliography}
 
 \end{document}

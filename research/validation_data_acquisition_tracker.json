@@ -570,8 +570,9 @@
       "id": "zbt_hrs_sampling_2026",
       "draft": "research/ZBT_HRS_DATA_REQUEST_DRAFT.md",
       "source": "https://doi.org/10.3390/cleantechnol8030091",
+      "public_dataset": "https://doi.org/10.5281/zenodo.20590842",
       "candidate_type": "real ZBT multi-bank HRS sampling and dispenser logger archive",
-      "status": "request_draft_ready",
+      "status": "public_rows_received_post_access_mapping_incomplete",
       "requested_fields": [
         "common_timestamp",
         "storage_bank_pressure_and_temperature",
@@ -583,9 +584,9 @@
         "quality_calibration_metadata"
       ],
       "minimum_acceptance": "A de-identified synchronized export with at least eight eligible events or a justified smaller protocol-defined subset, plus channel definitions, calibration data and immutable provenance.",
-      "rights": "Authors or ZBT custodian must confirm written permission for derived metrics, open repository deposition and journal publication; the article states raw data are available on request.",
-      "next_action": "Project owner reviews research/ZBT_HRS_DATA_REQUEST_DRAFT.md and contacts the corresponding author through an approved institutional channel.",
-      "claim_boundary": "The article establishes real multi-bank HRS operating context and a high-value acquisition lead; it is not a full-loop holdout until raw data and reuse terms are received, frozen and scored without tuning."
+      "rights": "The three Hy-SaM measurement workbooks and accompanying article are CC BY 4.0. The raw files remain in the gitignored intake tree; only hashes, aggregate diagnostics and derived errors are committed.",
+      "next_action": "Request the publisher channel dictionary, workbook-to-device crosswalk, sensor calibration/uncertainty metadata, controller and storage-bank state tags, and a disjoint uninspected logger event. Freeze the mapping and scoring protocol before opening that event.",
+      "claim_boundary": "Public synchronized rows now support the no-fit post-access tank diagnostic in research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json. Outcomes were inspected before protocol definition and key channel/controller metadata are absent, so this is not a prospective holdout and does not close full_loop_external_validation."
     },
     {
       "id": "hydelta_overpumping_2023",

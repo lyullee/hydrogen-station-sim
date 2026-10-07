@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "attempted_at": "2026-10-07T15:24:44.7949517Z",
+  "attempted_at": "2026-10-07T17:54:02.8741202Z",
   "attempts_this_run": 1,
   "success": false,
   "compiler": "Codex built-in LaTeX compiler",
   "source": "manuscript/ijhe_manuscript_draft.tex",
-  "source_sha256": "2a24b367dc3ed03ae67f7eea203804e6a5d9eedefb05a9f3370f086a46623b6b",
+  "source_sha256": "97791318352f29784abea3f2d2b003c13b414cc231aba6bf28163ba51eba7983",
   "diagnostic": "Unable to find standard directories for platform",
   "format_check_passed": true,
   "retained_previous_pdf": {
@@ -14,5 +14,5 @@
     "sha256": "694307f6dec2fb49ef941aa5bc1e5da3a01a8c665516119d0901a96f542d51c4",
     "matches_current_source": false
   },
-  "interpretation": "The updated source passes static format, citation, asset and brace checks, but the built-in compiler was unavailable on this Windows host. The retained PDF predates the HIAD machine-benchmark text and must not be represented as the current-source rendering."
+  "interpretation": "The updated source passes static format, citation, asset and brace checks, but the built-in compiler was unavailable on this Windows host. The retained PDF predates the current MetHyTrucks external-diagnostic text and must not be represented as the current-source rendering."
 }

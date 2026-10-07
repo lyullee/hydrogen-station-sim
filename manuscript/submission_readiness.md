@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-07 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **82 PASS · 6 FAIL · 8 PENDING**.
+Gate counts: **83 PASS · 6 FAIL · 8 PENDING**.
 
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted
@@ -131,14 +131,29 @@ The local format gate currently passes:
 - abstract: 147 words (limit checked: 150);
 - keywords: 6;
 - highlights: 5, each within the checked character limit;
-- approximate manuscript body: 7,898 words before references;
+- approximate manuscript body: 7,966 words before references;
 - figures: 2; tables: 3;
 - citations resolved and figure assets present;
 - LaTeX compilation: **PENDING**. The built-in compiler was unavailable on this
-  Windows host; the retained PDF predates the current HIAD benchmark text.
+  Windows host; the retained PDF predates the current MetHyTrucks diagnostic text.
 
 These checks cover local formatting and compilation only. They do not establish
 scientific validity, safety certification, or acceptance by IJHE.
+
+## 2026-10-08 external physical-HRS diagnostic
+
+Three synchronized CC BY 4.0 Hy-SaM workbooks from the ZBT physical HRS were
+hash-verified and replayed with the frozen public Type-IV tank model without
+case-specific fitting. The selected 201.5 s session gave 1.293 MPa pressure RMSE
+and 6.071 degC temperature RMSE; integrated flow mass and cumulative scale
+change differed by 7.3%. This materially improves cross-institution transfer
+evidence for the tank component.
+
+It does not close `full_loop_external_validation`: numerical outcomes were
+inspected before this diagnostic protocol, and the public package lacks a
+channel dictionary, device crosswalk, calibration uncertainty, controller state
+and bank-selection tags. The next confirmatory test must freeze those mappings
+before a disjoint uninspected event is opened.
 
 ## Blocking gates
 

@@ -41,6 +41,8 @@ def build(root: Path) -> dict[str, Any]:
     tracker_path = root / "research/validation_data_acquisition_tracker.json"
     search_path = root / "research/public_full_loop_search_recheck_2026_10_05.json"
     latest_search_path = root / "research/public_full_loop_search_recheck_2026_10_06.json"
+    methytrucks_path = root / "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json"
+    public_update_path = root / "research/public_full_loop_data_update_2026_10_08.json"
     operational_search_path = root / "research/public_operational_benchmark_recheck_2026_10_05.json"
     operational_face_path = root / "research/public_operational_benchmark_face_validity_2026_10_05.json"
     audit = load_json(audit_path)
@@ -48,6 +50,8 @@ def build(root: Path) -> dict[str, Any]:
     tracker = load_json(tracker_path)
     search = load_json(search_path)
     latest_search = load_json(latest_search_path) if latest_search_path.is_file() else {}
+    methytrucks = load_json(methytrucks_path)
+    public_update = load_json(public_update_path)
     operational_search = load_json(operational_search_path)
 
     status_by_id = {g["id"]: g for g in audit.get("gates", [])}
@@ -97,31 +101,42 @@ def build(root: Path) -> dict[str, Any]:
                 "claim_boundary": "Hash-verified full-scale indoor helium-surrogate sensor/geometry/HVAC intake only; the public fields do not calibrate H2 thresholds, site layout, outdoor consequence distances or a full filling loop.",
             },
             "real_station_candidate": {
-                "status": "ACCESS_REQUEST_ONLY",
+                "status": "PUBLIC_ROWS_POST_ACCESS_MAPPING_INCOMPLETE",
                 "evidence": [
+                    "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json",
+                    "research/public_full_loop_data_update_2026_10_08.json",
                     "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
                     "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json",
                 ],
-                "claim_boundary": "NBSDC HRS descriptions and file inventories are verified; raw workbooks remain application-controlled and cannot be used as validation evidence yet.",
+                "claim_boundary": "Three public ZBT physical-HRS workbooks support a no-fit post-access tank diagnostic, but missing channel/controller metadata and prior outcome inspection prevent a prospective full-loop claim. NBSDC raw workbooks remain application-controlled.",
+            },
+            "methytrucks_hysam_postaccess": {
+                "status": "PASS_DIAGNOSTIC_ONLY",
+                "evidence": "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json",
+                "pressure_rmse_mpa": methytrucks["candidate_tank_replay"]["pressure"]["rmse_mpa"],
+                "temperature_rmse_c": methytrucks["candidate_tank_replay"]["temperature"]["rmse_c"],
+                "claim_boundary": methytrucks["claim_boundary"],
             },
         },
         "blocking_matrix": [
             {
                 "id": "full_loop_external_validation",
                 "status": gate("full_loop_external_validation")["status"],
-                "why_blocked": "The frozen external station-loop holdout has 0/8 engineering-screen passes, and the public search found no new eligible synchronized station/controller/vehicle raw set.",
+                "why_blocked": "The frozen external station-loop holdout has 0/8 engineering-screen passes. A new public ZBT set has synchronized pressure, temperature and flow-like rows, but its mapping remains provisional, controller/bank states are absent and its outcomes were inspected before this diagnostic was specified.",
                 "evidence": [
                     "data/public_validation/results/closed_loop_external_holdout/validation.json",
                     "research/mc_default_source_boundary_identifiability_2026_10_04.json",
                     "research/public_full_loop_search_recheck_2026_10_04.json",
                     "research/public_full_loop_search_recheck_2026_10_06.json",
+                    "research/public_full_loop_data_update_2026_10_08.json",
+                    "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json",
                     "research/public_operational_benchmark_recheck_2026_10_05.json",
                     "research/public_operational_benchmark_face_validity_2026_10_05.json",
                     "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
                     "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json",
                 ],
                 "unblock_criterion": "Obtain a clean, rights-cleared, pre-access frozen external dataset with synchronized station pressure/temperature/mass-flow, protocol/controller, dispenser/nozzle, and vehicle/receptacle channels; resolve the source-boundary/topology ambiguity; then score >=8 cases with >=80% screen pass fraction.",
-                "next_action": "Submit the prepared NBSDC Pucheng request and other custodian requests through an approved institutional channel; require source pressure/temperature, bank topology and valve-state metadata; do not treat request approval or metadata as validation.",
+                "next_action": "First obtain the ZBT channel dictionary, device crosswalk and controller/bank-state metadata, then freeze a disjoint uninspected event. Continue the NBSDC and other custodian requests as secondary acquisition routes.",
             },
             {
                 "id": "consequence_model_external_validation",
@@ -166,6 +181,8 @@ def build(root: Path) -> dict[str, Any]:
             "full_loop_search_sha256": sha256(search_path),
             "latest_full_loop_search_sha256": sha256(latest_search_path)
             if latest_search_path.is_file() else None,
+            "methytrucks_postaccess_sha256": sha256(methytrucks_path),
+            "public_full_loop_update_sha256": sha256(public_update_path),
             "operational_benchmark_recheck_sha256": sha256(operational_search_path),
             "operational_benchmark_face_validity_sha256": sha256(operational_face_path),
             "h2safe_intake_sha256": sha256(
@@ -174,6 +191,8 @@ def build(root: Path) -> dict[str, Any]:
             "candidate_route_count": len(tracker.get("candidates") or []),
             "public_full_loop_search_candidate_count": candidate_count(search),
             "latest_public_full_loop_search_candidate_count": candidate_count(latest_search),
+            "methytrucks_workbook_count": len(methytrucks.get("workbooks") or []),
+            "public_full_loop_update_status": public_update.get("status"),
             "public_operational_benchmark_candidate_count": candidate_count(operational_search),
         },
         "claim_policy": [
@@ -229,8 +248,8 @@ def markdown(matrix: dict[str, Any]) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=Path("."))
-    parser.add_argument("--json-output", type=Path, default=Path("research/ijhe_submission_blocker_matrix_2026_10_04.json"))
-    parser.add_argument("--report-output", type=Path, default=Path("research/IJHE_SUBMISSION_BLOCKER_MATRIX_2026_10_04.md"))
+    parser.add_argument("--json-output", type=Path, default=Path("research/ijhe_submission_blocker_matrix_2026_10_05.json"))
+    parser.add_argument("--report-output", type=Path, default=Path("research/IJHE_SUBMISSION_BLOCKER_MATRIX_2026_10_05.md"))
     args = parser.parse_args()
     root = args.root.resolve()
     matrix = build(root)

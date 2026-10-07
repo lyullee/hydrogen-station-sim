@@ -15,6 +15,12 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     gates = {item["id"]: item for item in report["gates"]}
 
     assert gates["tank_external_validation"]["status"] == "PASS"
+    assert gates["methytrucks_hysam_postaccess_diagnostic_integrity"]["status"] == "PASS"
+    methytrucks = gates["methytrucks_hysam_postaccess_diagnostic_integrity"]["observed"]
+    assert methytrucks["workbook_count"] == 3
+    assert methytrucks["flow_to_scale_mass_ratio"] == 1.0734700460829494
+    assert methytrucks["prospective_holdout_eligible"] is False
+    assert methytrucks["quantitative_full_loop_validation_eligible"] is False
     assert gates["public_tank_runtime_calibration_integrity"]["status"] == "PASS"
     tank_runtime = gates["public_tank_runtime_calibration_integrity"]["observed"]
     assert tank_runtime["runtime"]["api_default_mode"] == "public_type_iv"

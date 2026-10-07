@@ -1,0 +1,393 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-07T17:59:25.984458+00:00",
+  "status": "completed_post_access_external_diagnostic",
+  "evidence_role": "post_access_external_diagnostic_only",
+  "model_commit": "2677dc0f0207c49f02a577464b4cfdfade5eea58",
+  "source": {
+    "dataset_title": "Group B -- HySam system measurement data",
+    "dataset_doi": "10.5281/zenodo.20590842",
+    "dataset_license": "CC BY 4.0",
+    "article_title": "Representative Hydrogen Sampling at Hydrogen Refuelling Stations: Interplay of Sampling Strategy and Station Parameters",
+    "article_doi": "10.3390/cleantechnol8030091",
+    "article_license": "CC BY 4.0",
+    "article_reported_context": {
+      "station": "physical test HRS with seven storage banks",
+      "dispensing": "35 MPa and 70 MPa",
+      "maximum_mass_flow_g_s": 120.0,
+      "protocols": [
+        "SAE J2601",
+        "MC Formula",
+        "PHRYDE",
+        "free configurable"
+      ],
+      "hysam_setup_1_sink": "244 L, 70 MPa Type-IV tank",
+      "hysam_setup_1_reported_flow_g_s": "approximately 14-16",
+      "logged_scope": "all dispenser and tank data"
+    }
+  },
+  "access_integrity": {
+    "all_expected_sha256_match": true,
+    "raw_rows_committed": false,
+    "raw_files_location": "gitignored data/public_validation/raw/methytrucks_hysam",
+    "outcomes_inspected_before_protocol": true,
+    "parameter_fitting_performed": false
+  },
+  "channel_semantics": {
+    "confirmed_by_internal_consistency": [
+      "Zeit is a common 0.5 s time base",
+      "QT_D02 is flow-like and its integral tracks FWg35_Masse changes",
+      "FWg35_Masse is cumulative transferred-mass-like"
+    ],
+    "plausible_but_unconfirmed": [
+      "PT01 as sink/tank pressure",
+      "TT08..TT11 as sink/tank temperature measurements",
+      "PTD10 as upstream/dispenser pressure",
+      "TEX01 as delivered-gas temperature"
+    ],
+    "missing": [
+      "publisher channel dictionary and engineering units",
+      "unambiguous workbook/test-to-sampling-device crosswalk",
+      "sensor calibration and uncertainty metadata",
+      "controller state and storage-bank selection tags"
+    ]
+  },
+  "workbooks": [
+    {
+      "filename": "20241023_Test_1_HySaM.xlsx",
+      "sha256": "fbdd81a7ec9c1191d69322f06087e8b30a33acc8b340b861a636173c08d9913a",
+      "sample_count": 6600,
+      "sampling_interval_s": 0.5,
+      "duration_s": 3299.5,
+      "column_count": 19,
+      "tank_candidate_columns_present": true,
+      "active_session_count": 4,
+      "active_sessions": [
+        {
+          "start_elapsed_s": 210.5,
+          "end_elapsed_s": 279.0,
+          "duration_s": 68.5,
+          "sample_count": 138,
+          "flow_baseline_g_s": 0.07,
+          "peak_flow_g_s": 29.74,
+          "active_mean_flow_g_s": 12.138333333333334,
+          "integrated_flow_mass_kg": 0.32691,
+          "cumulative_scale_delta_kg": 0.33,
+          "flow_to_scale_mass_ratio": 0.9906363636363635,
+          "pressure_candidates_bar": {
+            "PT01 ValueY": {
+              "initial": 48.03,
+              "final": 65.76,
+              "minimum": 48.03,
+              "maximum": 75.77
+            },
+            "PTD10 ValueY": {
+              "initial": 38.85,
+              "final": 441.55,
+              "minimum": 35.7,
+              "maximum": 501.74
+            },
+            "PTD11 ValueY": {
+              "initial": 35.41,
+              "final": 92.95,
+              "minimum": 33.49,
+              "maximum": 213.11
+            }
+          },
+          "four_sensor_temperature_mean_c": {
+            "initial": 18.1525,
+            "final": 24.09,
+            "maximum": 24.09
+          }
+        },
+        {
+          "start_elapsed_s": 828.0,
+          "end_elapsed_s": 1044.5,
+          "duration_s": 216.5,
+          "sample_count": 434,
+          "flow_baseline_g_s": 0.07,
+          "peak_flow_g_s": 28.25,
+          "active_mean_flow_g_s": 5.311879518072288,
+          "integrated_flow_mass_kg": 1.1010075,
+          "cumulative_scale_delta_kg": 1.1,
+          "flow_to_scale_mass_ratio": 1.000915909090909,
+          "pressure_candidates_bar": {
+            "PT01 ValueY": {
+              "initial": 59.9,
+              "final": 104.53,
+              "minimum": 59.9,
+              "maximum": 104.53
+            },
+            "PTD10 ValueY": {
+              "initial": 443.58,
+              "final": 438.08,
+              "minimum": 426.94,
+              "maximum": 444.26
+            },
+            "PTD11 ValueY": {
+              "initial": 89.34,
+              "final": 133.21,
+              "minimum": 89.34,
+              "maximum": 218.68
+            }
+          },
+          "four_sensor_temperature_mean_c": {
+            "initial": 20.0225,
+            "final": 38.6075,
+            "maximum": 39.004999999999995
+          }
+        },
+        {
+          "start_elapsed_s": 2669.5,
+          "end_elapsed_s": 2686.5,
+          "duration_s": 17.0,
+          "sample_count": 35,
+          "flow_baseline_g_s": 0.07,
+          "peak_flow_g_s": 23.03,
+          "active_mean_flow_g_s": 14.575,
+          "integrated_flow_mass_kg": 0.11578000000000001,
+          "cumulative_scale_delta_kg": 0.11,
+          "flow_to_scale_mass_ratio": 1.0525454545454547,
+          "pressure_candidates_bar": {
+            "PT01 ValueY": {
+              "initial": 99.79,
+              "final": 106.12,
+              "minimum": 99.79,
+              "maximum": 113.32
+            },
+            "PTD10 ValueY": {
+              "initial": 459.38,
+              "final": 440.61,
+              "minimum": 430.59,
+              "maximum": 459.38
+            },
+            "PTD11 ValueY": {
+              "initial": 131.87,
+              "final": 135.81,
+              "minimum": 129.34,
+              "maximum": 214.3
+            }
+          },
+          "four_sensor_temperature_mean_c": {
+            "initial": 22.382499999999997,
+            "final": 22.792499999999997,
+            "maximum": 22.792499999999997
+          }
+        },
+        {
+          "start_elapsed_s": 2911.5,
+          "end_elapsed_s": 3076.0,
+          "duration_s": 164.5,
+          "sample_count": 330,
+          "flow_baseline_g_s": 0.07,
+          "peak_flow_g_s": 22.63,
+          "active_mean_flow_g_s": 17.5706734006734,
+          "integrated_flow_mass_kg": 2.6074425,
+          "cumulative_scale_delta_kg": 2.6,
+          "flow_to_scale_mass_ratio": 1.0028625,
+          "pressure_candidates_bar": {
+            "PT01 ValueY": {
+              "initial": 104.64,
+              "final": 232.49,
+              "minimum": 104.64,
+              "maximum": 234.88
+            },
+            "PTD10 ValueY": {
+              "initial": 437.9,
+              "final": 430.81,
+              "minimum": 423.65,
+              "maximum": 441.8
+            },
+            "PTD11 ValueY": {
+              "initial": 149.63,
+              "final": 256.11,
+              "minimum": 132.81,
+              "maximum": 289.64
+            }
+          },
+          "four_sensor_temperature_mean_c": {
+            "initial": 23.804999999999996,
+            "final": 53.162499999999994,
+            "maximum": 53.162499999999994
+          }
+        }
+      ]
+    },
+    {
+      "filename": "20241023_Test_4_HySaM_CESAME.xlsx",
+      "sha256": "bc9e5cbd23350b7320a96d627854cc5154f1b92ff987e087c957b1da691ea4aa",
+      "sample_count": 720,
+      "sampling_interval_s": 0.5,
+      "duration_s": 359.5,
+      "column_count": 13,
+      "tank_candidate_columns_present": false,
+      "active_session_count": 1,
+      "active_sessions": [
+        {
+          "start_elapsed_s": 78.0,
+          "end_elapsed_s": 261.0,
+          "duration_s": 183.0,
+          "sample_count": 367,
+          "flow_baseline_g_s": 0.07,
+          "peak_flow_g_s": 25.41,
+          "active_mean_flow_g_s": 18.01530259365994,
+          "integrated_flow_mass_kg": 3.1228949999999998,
+          "cumulative_scale_delta_kg": 3.12,
+          "flow_to_scale_mass_ratio": 1.0009278846153844,
+          "pressure_candidates_bar": {
+            "PTD10 ValueY": {
+              "initial": 440.72,
+              "final": 415.33,
+              "minimum": 404.19,
+              "maximum": 440.72
+            },
+            "PTD11 ValueY": {
+              "initial": 136.21,
+              "final": 332.54,
+              "minimum": 97.87,
+              "maximum": 381.26
+            }
+          }
+        }
+      ]
+    },
+    {
+      "filename": "20241024_Test_9_HySaM.xlsx",
+      "sha256": "f33d3e451b42b1d3aff905cc5deb1e9a2ed11eeaf7d4f0d559446a609bdc7563",
+      "sample_count": 2160,
+      "sampling_interval_s": 0.5,
+      "duration_s": 1079.5,
+      "column_count": 19,
+      "tank_candidate_columns_present": true,
+      "active_session_count": 2,
+      "active_sessions": [
+        {
+          "start_elapsed_s": 116.5,
+          "end_elapsed_s": 358.0,
+          "duration_s": 241.5,
+          "sample_count": 484,
+          "flow_baseline_g_s": 0.07,
+          "peak_flow_g_s": 31.23,
+          "active_mean_flow_g_s": 20.001780104712044,
+          "integrated_flow_mass_kg": 1.9070624999999999,
+          "cumulative_scale_delta_kg": 1.42,
+          "flow_to_scale_mass_ratio": 1.3430017605633802,
+          "pressure_candidates_bar": {
+            "PT01 ValueY": {
+              "initial": 56.68,
+              "final": 124.49,
+              "minimum": 33.89,
+              "maximum": 134.58
+            },
+            "PTD10 ValueY": {
+              "initial": 409.29,
+              "final": 393.74,
+              "minimum": 375.51,
+              "maximum": 409.29
+            },
+            "PTD11 ValueY": {
+              "initial": 172.35,
+              "final": 162.94,
+              "minimum": 91.11,
+              "maximum": 260.31
+            }
+          },
+          "four_sensor_temperature_mean_c": {
+            "initial": 15.200000000000001,
+            "final": 49.3275,
+            "maximum": 49.3275
+          }
+        },
+        {
+          "start_elapsed_s": 687.0,
+          "end_elapsed_s": 888.5,
+          "duration_s": 201.5,
+          "sample_count": 404,
+          "flow_baseline_g_s": 0.07,
+          "peak_flow_g_s": 29.7,
+          "active_mean_flow_g_s": 24.551421052631582,
+          "integrated_flow_mass_kg": 2.32943,
+          "cumulative_scale_delta_kg": 2.17,
+          "flow_to_scale_mass_ratio": 1.0734700460829494,
+          "pressure_candidates_bar": {
+            "PT01 ValueY": {
+              "initial": 107.86,
+              "final": 229.64,
+              "minimum": 107.86,
+              "maximum": 229.64
+            },
+            "PTD10 ValueY": {
+              "initial": 396.92,
+              "final": 387.98,
+              "minimum": 368.82,
+              "maximum": 396.92
+            },
+            "PTD11 ValueY": {
+              "initial": 134.84,
+              "final": 251.34,
+              "minimum": 130.86,
+              "maximum": 324.65
+            }
+          },
+          "four_sensor_temperature_mean_c": {
+            "initial": 35.332499999999996,
+            "final": 55.9925,
+            "maximum": 55.9925
+          }
+        }
+      ]
+    }
+  ],
+  "candidate_tank_replay": {
+    "workbook": "20241024_Test_9_HySaM.xlsx",
+    "session_selection": "largest integrated active-flow session in Test 9",
+    "event_elapsed_start_s": 687.0,
+    "event_elapsed_end_s": 888.5,
+    "event_duration_s": 201.5,
+    "sample_count": 404,
+    "candidate_mapping": {
+      "tank_pressure": "PT01 ValueY interpreted as bar absolute",
+      "tank_temperature": "arithmetic mean of TT08..TT11 interpreted as degC",
+      "mass_flow": "QT_D02 ValueY interpreted as g/s after measured idle baseline",
+      "inlet_temperature": "TEX01 ValueY interpreted as degC",
+      "upstream_pressure": "PTD10 ValueY interpreted as bar absolute",
+      "tank_internal_volume_m3": 0.244,
+      "mapping_status": "inferred_from_article_and_signal_dynamics_not_confirmed_by_channel_dictionary"
+    },
+    "fit": {
+      "source": "research/tank_model_validation_v2.json",
+      "effective_volume_multiplier": 1.052729261198358,
+      "gas_liner_ua_multiplier": 31.460656519273492,
+      "case_specific_fitting": false
+    },
+    "mass_boundary": {
+      "integrated_flow_kg": 2.32943,
+      "cumulative_scale_delta_kg": 2.17,
+      "flow_to_scale_mass_ratio": 1.0734700460829494
+    },
+    "pressure": {
+      "observed_initial_mpa": 10.786,
+      "observed_final_mpa": 22.964,
+      "predicted_final_mpa": 26.984281403058954,
+      "rmse_mpa": 1.2932280909557559,
+      "mae_mpa": 0.8348762185832087,
+      "final_error_mpa": 4.020281403058956
+    },
+    "temperature": {
+      "observed_initial_c": 35.332499999999996,
+      "observed_peak_c": 55.9925,
+      "predicted_peak_c": 63.20200715915041,
+      "rmse_c": 6.071461579848656,
+      "mae_c": 5.368227771635239,
+      "peak_error_c": 7.209507159150412
+    }
+  },
+  "eligibility": {
+    "component_diagnostic_eligible": true,
+    "prospective_holdout_eligible": false,
+    "quantitative_full_loop_validation_eligible": false,
+    "reason": "The rows are public and synchronized, but numerical outcomes were inspected before this protocol and the released package lacks a channel dictionary, controller/bank-state mapping and calibration metadata."
+  },
+  "highest_value_next_action": "Obtain the publisher channel dictionary and test-to-device crosswalk. Then freeze an event mapping and rerun the existing model without tuning; request a disjoint uninspected logger event for prospective full-loop validation.",
+  "claim_boundary": "This artifact proves file integrity, synchronized 0.5 s measurement availability, flow-to-cumulative-mass consistency and a no-fit candidate tank replay. It is a post-access diagnostic, not an untouched holdout, a full station-to-vehicle validation result, SAE certification or field-safety validation."
+}

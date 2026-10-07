@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-10-08",
+  "gate": "full_loop_external_validation",
+  "status": "public_synchronized_rows_found_but_full_loop_gate_open",
+  "source": {
+    "article_doi": "10.3390/cleantechnol8030091",
+    "dataset_doi": "10.5281/zenodo.20590842",
+    "dataset_title": "Group B -- HySam system measurement data",
+    "license": "CC BY 4.0",
+    "physical_context": "ZBT physical multi-bank hydrogen refuelling station and Hy-SaM tank filling"
+  },
+  "update_to_prior_search": "A 2026 Zenodo release now supplies three synchronized workbooks for the article lead that earlier search records classified as raw-data-on-request. The prior records remain historical snapshots; this file records the later public release.",
+  "verified_availability": {
+    "workbook_count": 3,
+    "sampling_interval_s": 0.5,
+    "hash_verified": true,
+    "flow_cumulative_mass_consistency_checked": true,
+    "diagnostic_result": "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json"
+  },
+  "missing_for_full_loop": [
+    "publisher channel dictionary and unambiguous engineering units",
+    "workbook-to-sampling-device crosswalk",
+    "sensor calibration and uncertainty metadata",
+    "storage-bank selection and valve/controller states",
+    "prospectively untouched event outcomes"
+  ],
+  "eligibility": {
+    "post_access_component_diagnostic": true,
+    "prospective_holdout": false,
+    "quantitative_full_loop_validation": false
+  },
+  "gate_impact": "full_loop_external_validation_remains_open",
+  "next_action": "Obtain the missing channel/controller metadata and a disjoint uninspected event, then freeze mapping and scoring before numerical access.",
+  "claim_boundary": "The public files improve cross-institution tank-model transfer evidence but do not validate the complete station controller/cascade/precooler loop or field safety."
+}

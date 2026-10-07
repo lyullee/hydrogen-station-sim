@@ -22,10 +22,26 @@ repository or by the audit script.
 - a prospective freeze of eligible cases, implementation commit and error
   screens, with every eligible failure retained.
 
-The current tracker status is `open_data_not_yet_received`. It does not change
-the IJHE readiness audit or permit goal completion. The existing negative
-full-loop, blowdown and high-pressure release results remain the authoritative
-results until a genuinely independent dataset is received and frozen.
+The tracker now includes one public synchronized physical-HRS archive, but its
+status is `public_rows_received_post_access_mapping_incomplete`. This does not
+permit goal completion. The existing negative full-loop result remains
+authoritative until a genuinely independent event is mapped and frozen before
+its numerical outcome is inspected.
+
+## 2026-10-08 MetHyTrucks Hy-SaM intake
+
+Three CC BY 4.0 ZBT workbooks were obtained from Zenodo and hash-verified. They
+contain synchronized 0.5 s rows, and the flow integral agrees with the
+cumulative-mass channel. A no-fit replay of the current public Type-IV tank
+model on the largest Test 9 session gave 1.293 MPa pressure RMSE and 6.071 degC
+temperature RMSE. The result is recorded in
+[`METHYTRUCKS_HYSAM_POSTACCESS_DIAGNOSTIC_2026_10_08.md`](METHYTRUCKS_HYSAM_POSTACCESS_DIAGNOSTIC_2026_10_08.md).
+
+The archive was numerically inspected before this diagnostic protocol was
+specified, and the public release lacks a channel dictionary, controller/bank
+states and calibration metadata. It is therefore a post-access component
+diagnostic, not a prospective full-loop holdout. The next request is narrowed
+to those missing definitions plus a disjoint, previously uninspected event.
 
 ## 2026-10-06 access recheck
 

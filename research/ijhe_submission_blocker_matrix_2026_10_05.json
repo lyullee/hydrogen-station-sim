@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T17:37:10.647109+00:00",
+  "generated_at": "2026-10-07T17:59:34.816809+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -16,7 +16,7 @@
     "interpretation": "A bounded manuscript may be drafted around model-level and qualitative evidence, but the validated full-station digital-twin objective cannot be declared complete."
   },
   "gate_counts": {
-    "PASS": 82,
+    "PASS": 83,
     "FAIL": 6,
     "PENDING": 8
   },
@@ -50,31 +50,42 @@
       "claim_boundary": "Hash-verified full-scale indoor helium-surrogate sensor/geometry/HVAC intake only; the public fields do not calibrate H2 thresholds, site layout, outdoor consequence distances or a full filling loop."
     },
     "real_station_candidate": {
-      "status": "ACCESS_REQUEST_ONLY",
+      "status": "PUBLIC_ROWS_POST_ACCESS_MAPPING_INCOMPLETE",
       "evidence": [
+        "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json",
+        "research/public_full_loop_data_update_2026_10_08.json",
         "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
         "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json"
       ],
-      "claim_boundary": "NBSDC HRS descriptions and file inventories are verified; raw workbooks remain application-controlled and cannot be used as validation evidence yet."
+      "claim_boundary": "Three public ZBT physical-HRS workbooks support a no-fit post-access tank diagnostic, but missing channel/controller metadata and prior outcome inspection prevent a prospective full-loop claim. NBSDC raw workbooks remain application-controlled."
+    },
+    "methytrucks_hysam_postaccess": {
+      "status": "PASS_DIAGNOSTIC_ONLY",
+      "evidence": "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json",
+      "pressure_rmse_mpa": 1.2932280909557559,
+      "temperature_rmse_c": 6.071461579848656,
+      "claim_boundary": "This artifact proves file integrity, synchronized 0.5 s measurement availability, flow-to-cumulative-mass consistency and a no-fit candidate tank replay. It is a post-access diagnostic, not an untouched holdout, a full station-to-vehicle validation result, SAE certification or field-safety validation."
     }
   },
   "blocking_matrix": [
     {
       "id": "full_loop_external_validation",
       "status": "FAIL",
-      "why_blocked": "The frozen external station-loop holdout has 0/8 engineering-screen passes, and the public search found no new eligible synchronized station/controller/vehicle raw set.",
+      "why_blocked": "The frozen external station-loop holdout has 0/8 engineering-screen passes. A new public ZBT set has synchronized pressure, temperature and flow-like rows, but its mapping remains provisional, controller/bank states are absent and its outcomes were inspected before this diagnostic was specified.",
       "evidence": [
         "data/public_validation/results/closed_loop_external_holdout/validation.json",
         "research/mc_default_source_boundary_identifiability_2026_10_04.json",
         "research/public_full_loop_search_recheck_2026_10_04.json",
         "research/public_full_loop_search_recheck_2026_10_06.json",
+        "research/public_full_loop_data_update_2026_10_08.json",
+        "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json",
         "research/public_operational_benchmark_recheck_2026_10_05.json",
         "research/public_operational_benchmark_face_validity_2026_10_05.json",
         "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
         "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json"
       ],
       "unblock_criterion": "Obtain a clean, rights-cleared, pre-access frozen external dataset with synchronized station pressure/temperature/mass-flow, protocol/controller, dispenser/nozzle, and vehicle/receptacle channels; resolve the source-boundary/topology ambiguity; then score >=8 cases with >=80% screen pass fraction.",
-      "next_action": "Submit the prepared NBSDC Pucheng request and other custodian requests through an approved institutional channel; require source pressure/temperature, bank topology and valve-state metadata; do not treat request approval or metadata as validation."
+      "next_action": "First obtain the ZBT channel dictionary, device crosswalk and controller/bank-state metadata, then freeze a disjoint uninspected event. Continue the NBSDC and other custodian requests as secondary acquisition routes."
     },
     {
       "id": "consequence_model_external_validation",
@@ -115,17 +126,21 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "e7f72a08e010d376ad2fe679fe2da18b0298cbe6452ff79bf86130bc7bf9f102",
+    "audit_sha256": "cb859f96a59a6ce85425b792814b7b05b0a2b17fbc712f2ca655e52934a0a952",
     "hiad_readiness_sha256": "bb2b8e91cf32e98f0503565d3616698376b4c2e1e6054377384c18641d33da98",
-    "acquisition_tracker_sha256": "bdaff28618a0bdf3f8bbb7e4ab09b366470fb2ce086b8bf16a3f6362ca7a530a",
+    "acquisition_tracker_sha256": "099fb2ce0d858debf1761a7ceaaaedf781fb83c9d21b6fbb660c30bcd9ba68e0",
     "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",
     "latest_full_loop_search_sha256": "14391668298eea81e1aaff919e9a20fd9c3570694e33cf8998d4156976cba808",
+    "methytrucks_postaccess_sha256": "b2a357358977d66be9d2446adbdd78c2b61865598bae0ecf3e7fd2ecfebf4a94",
+    "public_full_loop_update_sha256": "20d4512ab518df4410580f85f725ae0c7f9bc259bf4869122613496852ebb23b",
     "operational_benchmark_recheck_sha256": "80e865de45384c7bd48c721125e440f482343c2420095f56f6866390db842e81",
     "operational_benchmark_face_validity_sha256": "64001782ba19ebd3299b0f17caf61f78138d9bc9a7836bc77d6e27f4c0dcec02",
     "h2safe_intake_sha256": "1ee28c8e168d2ee411763801249ee059a5e356c21f5dd45d75b48880b88f113f",
     "candidate_route_count": 31,
     "public_full_loop_search_candidate_count": 17,
     "latest_public_full_loop_search_candidate_count": 9,
+    "methytrucks_workbook_count": 3,
+    "public_full_loop_update_status": "public_synchronized_rows_found_but_full_loop_gate_open",
     "public_operational_benchmark_candidate_count": 18
   },
   "claim_policy": [

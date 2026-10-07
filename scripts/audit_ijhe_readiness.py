@@ -162,6 +162,56 @@ def audit(root: Path) -> dict[str, object]:
         tank_observed,
     ))
 
+    methytrucks_path = root / "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json"
+    methytrucks = _json(methytrucks_path)
+    methytrucks_access = (methytrucks or {}).get("access_integrity") or {}
+    methytrucks_replay = (methytrucks or {}).get("candidate_tank_replay") or {}
+    methytrucks_mass = methytrucks_replay.get("mass_boundary") or {}
+    methytrucks_pressure = methytrucks_replay.get("pressure") or {}
+    methytrucks_temperature = methytrucks_replay.get("temperature") or {}
+    methytrucks_eligibility = (methytrucks or {}).get("eligibility") or {}
+    methytrucks_workbooks = (methytrucks or {}).get("workbooks") or []
+    methytrucks_ratio = methytrucks_mass.get("flow_to_scale_mass_ratio")
+    methytrucks_pass = bool(
+        (methytrucks or {}).get("status")
+        == "completed_post_access_external_diagnostic"
+        and (methytrucks or {}).get("evidence_role")
+        == "post_access_external_diagnostic_only"
+        and (methytrucks or {}).get("source", {}).get("dataset_doi")
+        == "10.5281/zenodo.20590842"
+        and (methytrucks or {}).get("source", {}).get("dataset_license")
+        == "CC BY 4.0"
+        and methytrucks_access.get("all_expected_sha256_match") is True
+        and methytrucks_access.get("raw_rows_committed") is False
+        and methytrucks_access.get("parameter_fitting_performed") is False
+        and len(methytrucks_workbooks) == 3
+        and all(item.get("sampling_interval_s") == 0.5 for item in methytrucks_workbooks)
+        and isinstance(methytrucks_ratio, (int, float))
+        and 0.9 < methytrucks_ratio < 1.2
+        and isinstance(methytrucks_pressure.get("rmse_mpa"), (int, float))
+        and isinstance(methytrucks_temperature.get("rmse_c"), (int, float))
+        and methytrucks_eligibility.get("component_diagnostic_eligible") is True
+        and methytrucks_eligibility.get("prospective_holdout_eligible") is False
+        and methytrucks_eligibility.get("quantitative_full_loop_validation_eligible") is False
+    )
+    gates.append(_gate(
+        "methytrucks_hysam_postaccess_diagnostic_integrity",
+        "PASS" if methytrucks_pass else ("FAIL" if methytrucks else "PENDING"),
+        "The public MetHyTrucks Hy-SaM archive is hash-audited and replayed without fitting as a claim-bounded post-access tank diagnostic.",
+        str(methytrucks_path.relative_to(root)),
+        "Three CC BY 4.0 workbooks, 0.5 s synchronized rows, verified hashes, flow-to-scale mass consistency, no case-specific fitting and explicit false prospective/full-loop eligibility flags.",
+        {
+            "workbook_count": len(methytrucks_workbooks),
+            "sampling_intervals_s": sorted({item.get("sampling_interval_s") for item in methytrucks_workbooks}),
+            "flow_to_scale_mass_ratio": methytrucks_ratio,
+            "pressure_rmse_mpa": methytrucks_pressure.get("rmse_mpa"),
+            "temperature_rmse_c": methytrucks_temperature.get("rmse_c"),
+            "prospective_holdout_eligible": methytrucks_eligibility.get("prospective_holdout_eligible"),
+            "quantitative_full_loop_validation_eligible": methytrucks_eligibility.get("quantitative_full_loop_validation_eligible"),
+            "claim_boundary": (methytrucks or {}).get("claim_boundary"),
+        } if methytrucks else "missing",
+    ))
+
     tank_runtime_path = root / "research/public_type_iv_tank_runtime_calibration_2026_10_07.json"
     tank_runtime = _json(tank_runtime_path)
     tank_runtime_hashes = (tank_runtime or {}).get("source_hashes") or {}
@@ -748,6 +798,8 @@ def audit(root: Path) -> dict[str, object]:
     external_search_recheck = _json(external_search_recheck_path)
     external_search_latest_path = root / "research/public_full_loop_search_recheck_2026_10_06.json"
     external_search_latest = _json(external_search_latest_path)
+    public_full_loop_update_path = root / "research/public_full_loop_data_update_2026_10_08.json"
+    public_full_loop_update = _json(public_full_loop_update_path)
     external_search_sweep_path = root / "research/public_full_loop_search_sweep_2026_10_05.json"
     external_search_sweep = _json(external_search_sweep_path)
     external_operational_recheck_path = root / "research/public_operational_benchmark_recheck_2026_10_05.json"
@@ -801,6 +853,7 @@ def audit(root: Path) -> dict[str, object]:
         f"{external_loop_path.relative_to(root)}; {external_search_path.relative_to(root)}; "
         f"{external_search_recheck_path.relative_to(root)}; {external_operational_recheck_path.relative_to(root)}; "
         f"{external_search_sweep_path.relative_to(root)}; {external_search_latest_path.relative_to(root)}; "
+        f"{public_full_loop_update_path.relative_to(root)}; {methytrucks_path.relative_to(root)}; "
         f"{prospective_release_protocol_path.relative_to(root)}; {controlled_registry_path.relative_to(root)}",
         "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
         {
@@ -823,6 +876,19 @@ def audit(root: Path) -> dict[str, object]:
                 "gate_impact": (external_search_latest or {}).get("gate_impact"),
                 "candidate_count": len((external_search_latest or {}).get("candidates") or []),
                 "claim_boundary": (external_search_latest or {}).get("claim_boundary"),
+            },
+            "public_data_update_2026_10_08": {
+                "status": (public_full_loop_update or {}).get("status"),
+                "gate_impact": (public_full_loop_update or {}).get("gate_impact"),
+                "eligibility": (public_full_loop_update or {}).get("eligibility"),
+                "claim_boundary": (public_full_loop_update or {}).get("claim_boundary"),
+            },
+            "methytrucks_hysam_postaccess_diagnostic": {
+                "status": (methytrucks or {}).get("status"),
+                "evidence_role": (methytrucks or {}).get("evidence_role"),
+                "pressure_rmse_mpa": methytrucks_pressure.get("rmse_mpa"),
+                "temperature_rmse_c": methytrucks_temperature.get("rmse_c"),
+                "eligibility": methytrucks_eligibility,
             },
             "live_public_search_sweep_2026_10_05": {
                 "result": (external_search_sweep or {}).get("result"),
