@@ -131,7 +131,7 @@ The local format gate currently passes:
 - abstract: 147 words (limit checked: 150);
 - keywords: 6;
 - highlights: 5, each within the checked character limit;
-- approximate manuscript body: 7,966 words before references;
+- approximate manuscript body: 7,964 words before references;
 - figures: 2; tables: 3;
 - citations resolved and figure assets present;
 - LaTeX compilation: **PENDING**. The built-in compiler was unavailable on this
@@ -144,10 +144,11 @@ scientific validity, safety certification, or acceptance by IJHE.
 
 Three synchronized CC BY 4.0 Hy-SaM workbooks from the ZBT physical HRS were
 hash-verified and replayed with the frozen public Type-IV tank model without
-case-specific fitting. The selected 201.5 s session gave 1.293 MPa pressure RMSE
-and 6.071 degC temperature RMSE; integrated flow mass and cumulative scale
-change differed by 7.3%. This materially improves cross-institution transfer
-evidence for the tank component.
+case-specific fitting. All five sessions passing measurement-only mass-closure,
+minimum-mass and duration criteria were retained. Case-mean pressure and
+temperature RMSE were 1.287 MPa and 4.578 degC, and all five met the descriptive
+project screens. This materially improves cross-institution transfer evidence
+for the tank component.
 
 It does not close `full_loop_external_validation`: numerical outcomes were
 inspected before this diagnostic protocol, and the public package lacks a

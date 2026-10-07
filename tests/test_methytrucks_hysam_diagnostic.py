@@ -10,11 +10,24 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_active_session_grouping_preserves_pulses_and_long_gaps():
-    from scripts.analyze_methytrucks_hysam import active_sessions
+    from scripts.analyze_methytrucks_hysam import (
+        _candidate_session_eligible,
+        active_sessions,
+    )
 
     time_s = np.arange(12, dtype=float) * 10.0
     flow = np.asarray([0, 2, 2, 0, 0, 3, 3, 0, 0, 0, 4, 4], dtype=float)
     assert active_sessions(time_s, flow, join_gap_s=35.0) == [(1, 6), (10, 11)]
+    assert _candidate_session_eligible({
+        "flow_to_scale_mass_ratio": 1.0,
+        "integrated_flow_mass_kg": 0.1,
+        "duration_s": 20.0,
+    }) is True
+    assert _candidate_session_eligible({
+        "flow_to_scale_mass_ratio": 1.3,
+        "integrated_flow_mass_kg": 0.1,
+        "duration_s": 20.0,
+    }) is False
 
 
 def test_methytrucks_result_keeps_post_access_claim_boundary_explicit():
@@ -33,6 +46,13 @@ def test_methytrucks_result_keeps_post_access_claim_boundary_explicit():
     replay = record["candidate_tank_replay"]
     assert 0.9 < replay["mass_boundary"]["flow_to_scale_mass_ratio"] < 1.2
     assert replay["fit"]["case_specific_fitting"] is False
+    replays = record["candidate_session_replays"]
+    aggregate = record["candidate_session_aggregate"]
+    assert len(replays) == aggregate["case_count"] == 5
+    assert aggregate["selection_is_independent_of_model_prediction"] is True
+    assert aggregate["selection_criteria"]["flow_to_scale_mass_ratio"] == [0.8, 1.2]
+    assert all(item["fit"]["case_specific_fitting"] is False for item in replays)
+    assert aggregate["project_screen"]["interpretation"].startswith("descriptive")
     assert record["eligibility"]["component_diagnostic_eligible"] is True
     assert record["eligibility"]["prospective_holdout_eligible"] is False
     assert record["eligibility"]["quantitative_full_loop_validation_eligible"] is False

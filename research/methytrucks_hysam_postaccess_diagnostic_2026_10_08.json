@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T17:59:25.984458+00:00",
+  "generated_at": "2026-10-07T18:02:25.264237+00:00",
   "status": "completed_post_access_external_diagnostic",
   "evidence_role": "post_access_external_diagnostic_only",
-  "model_commit": "2677dc0f0207c49f02a577464b4cfdfade5eea58",
+  "model_commit": "411fc5d70111fffe7902051129305cc1535f8b0f",
   "source": {
     "dataset_title": "Group B -- HySam system measurement data",
     "dataset_doi": "10.5281/zenodo.20590842",
@@ -338,13 +338,278 @@
       ]
     }
   ],
+  "candidate_session_replays": [
+    {
+      "workbook": "20241023_Test_1_HySaM.xlsx",
+      "session_selection": "all sessions passing pre-model mass-closure, minimum-mass and minimum-duration criteria",
+      "event_elapsed_start_s": 210.5,
+      "event_elapsed_end_s": 279.0,
+      "event_duration_s": 68.5,
+      "sample_count": 138,
+      "candidate_mapping": {
+        "tank_pressure": "PT01 ValueY interpreted as bar absolute",
+        "tank_temperature": "arithmetic mean of TT08..TT11 interpreted as degC",
+        "mass_flow": "QT_D02 ValueY interpreted as g/s after measured idle baseline",
+        "inlet_temperature": "TEX01 ValueY interpreted as degC",
+        "upstream_pressure": "PTD10 ValueY interpreted as bar absolute",
+        "tank_internal_volume_m3": 0.244,
+        "mapping_status": "inferred_from_article_and_signal_dynamics_not_confirmed_by_channel_dictionary"
+      },
+      "fit": {
+        "source": "research/tank_model_validation_v2.json",
+        "effective_volume_multiplier": 1.052729261198358,
+        "gas_liner_ua_multiplier": 31.460656519273492,
+        "case_specific_fitting": false
+      },
+      "mass_boundary": {
+        "integrated_flow_kg": 0.32691,
+        "cumulative_scale_delta_kg": 0.33,
+        "flow_to_scale_mass_ratio": 0.9906363636363635
+      },
+      "pressure": {
+        "observed_initial_mpa": 4.803,
+        "observed_final_mpa": 6.5760000000000005,
+        "predicted_final_mpa": 6.373271009440043,
+        "rmse_mpa": 0.592036133976859,
+        "mae_mpa": 0.3346441856004998,
+        "final_error_mpa": -0.2027289905599572
+      },
+      "temperature": {
+        "observed_initial_c": 18.1525,
+        "observed_peak_c": 24.09,
+        "predicted_peak_c": 31.458524212069676,
+        "rmse_c": 3.789455340729526,
+        "mae_c": 2.170497500795911,
+        "peak_error_c": 7.368524212069676
+      }
+    },
+    {
+      "workbook": "20241023_Test_1_HySaM.xlsx",
+      "session_selection": "all sessions passing pre-model mass-closure, minimum-mass and minimum-duration criteria",
+      "event_elapsed_start_s": 828.0,
+      "event_elapsed_end_s": 1044.5,
+      "event_duration_s": 216.5,
+      "sample_count": 434,
+      "candidate_mapping": {
+        "tank_pressure": "PT01 ValueY interpreted as bar absolute",
+        "tank_temperature": "arithmetic mean of TT08..TT11 interpreted as degC",
+        "mass_flow": "QT_D02 ValueY interpreted as g/s after measured idle baseline",
+        "inlet_temperature": "TEX01 ValueY interpreted as degC",
+        "upstream_pressure": "PTD10 ValueY interpreted as bar absolute",
+        "tank_internal_volume_m3": 0.244,
+        "mapping_status": "inferred_from_article_and_signal_dynamics_not_confirmed_by_channel_dictionary"
+      },
+      "fit": {
+        "source": "research/tank_model_validation_v2.json",
+        "effective_volume_multiplier": 1.052729261198358,
+        "gas_liner_ua_multiplier": 31.460656519273492,
+        "case_specific_fitting": false
+      },
+      "mass_boundary": {
+        "integrated_flow_kg": 1.1010075,
+        "cumulative_scale_delta_kg": 1.1,
+        "flow_to_scale_mass_ratio": 1.000915909090909
+      },
+      "pressure": {
+        "observed_initial_mpa": 5.99,
+        "observed_final_mpa": 10.453,
+        "predicted_final_mpa": 12.611014383287486,
+        "rmse_mpa": 1.475413606149057,
+        "mae_mpa": 1.297690409588386,
+        "final_error_mpa": 2.1580143832874867
+      },
+      "temperature": {
+        "observed_initial_c": 20.0225,
+        "observed_peak_c": 39.004999999999995,
+        "predicted_peak_c": 40.9762410448717,
+        "rmse_c": 4.329121313428847,
+        "mae_c": 3.7733032729331866,
+        "peak_error_c": 1.9712410448717037
+      }
+    },
+    {
+      "workbook": "20241023_Test_1_HySaM.xlsx",
+      "session_selection": "all sessions passing pre-model mass-closure, minimum-mass and minimum-duration criteria",
+      "event_elapsed_start_s": 2669.5,
+      "event_elapsed_end_s": 2686.5,
+      "event_duration_s": 17.0,
+      "sample_count": 35,
+      "candidate_mapping": {
+        "tank_pressure": "PT01 ValueY interpreted as bar absolute",
+        "tank_temperature": "arithmetic mean of TT08..TT11 interpreted as degC",
+        "mass_flow": "QT_D02 ValueY interpreted as g/s after measured idle baseline",
+        "inlet_temperature": "TEX01 ValueY interpreted as degC",
+        "upstream_pressure": "PTD10 ValueY interpreted as bar absolute",
+        "tank_internal_volume_m3": 0.244,
+        "mapping_status": "inferred_from_article_and_signal_dynamics_not_confirmed_by_channel_dictionary"
+      },
+      "fit": {
+        "source": "research/tank_model_validation_v2.json",
+        "effective_volume_multiplier": 1.052729261198358,
+        "gas_liner_ua_multiplier": 31.460656519273492,
+        "case_specific_fitting": false
+      },
+      "mass_boundary": {
+        "integrated_flow_kg": 0.11578000000000001,
+        "cumulative_scale_delta_kg": 0.11,
+        "flow_to_scale_mass_ratio": 1.0525454545454547
+      },
+      "pressure": {
+        "observed_initial_mpa": 9.979000000000001,
+        "observed_final_mpa": 10.612,
+        "predicted_final_mpa": 10.819161641556589,
+        "rmse_mpa": 0.3484466291369078,
+        "mae_mpa": 0.24987479501885948,
+        "final_error_mpa": 0.20716164155658845
+      },
+      "temperature": {
+        "observed_initial_c": 22.382499999999997,
+        "observed_peak_c": 22.792499999999997,
+        "predicted_peak_c": 28.359755684979916,
+        "rmse_c": 2.7675302274981193,
+        "mae_c": 2.427412317391965,
+        "peak_error_c": 5.567255684979919
+      }
+    },
+    {
+      "workbook": "20241023_Test_1_HySaM.xlsx",
+      "session_selection": "all sessions passing pre-model mass-closure, minimum-mass and minimum-duration criteria",
+      "event_elapsed_start_s": 2911.5,
+      "event_elapsed_end_s": 3076.0,
+      "event_duration_s": 164.5,
+      "sample_count": 330,
+      "candidate_mapping": {
+        "tank_pressure": "PT01 ValueY interpreted as bar absolute",
+        "tank_temperature": "arithmetic mean of TT08..TT11 interpreted as degC",
+        "mass_flow": "QT_D02 ValueY interpreted as g/s after measured idle baseline",
+        "inlet_temperature": "TEX01 ValueY interpreted as degC",
+        "upstream_pressure": "PTD10 ValueY interpreted as bar absolute",
+        "tank_internal_volume_m3": 0.244,
+        "mapping_status": "inferred_from_article_and_signal_dynamics_not_confirmed_by_channel_dictionary"
+      },
+      "fit": {
+        "source": "research/tank_model_validation_v2.json",
+        "effective_volume_multiplier": 1.052729261198358,
+        "gas_liner_ua_multiplier": 31.460656519273492,
+        "case_specific_fitting": false
+      },
+      "mass_boundary": {
+        "integrated_flow_kg": 2.6074425,
+        "cumulative_scale_delta_kg": 2.6,
+        "flow_to_scale_mass_ratio": 1.0028625
+      },
+      "pressure": {
+        "observed_initial_mpa": 10.464,
+        "observed_final_mpa": 23.249000000000002,
+        "predicted_final_mpa": 29.082516594060998,
+        "rmse_mpa": 2.723997995063285,
+        "mae_mpa": 2.0902738346437806,
+        "final_error_mpa": 5.833516594060995
+      },
+      "temperature": {
+        "observed_initial_c": 23.804999999999996,
+        "observed_peak_c": 53.162499999999994,
+        "predicted_peak_c": 59.469617038928334,
+        "rmse_c": 5.934497478484101,
+        "mae_c": 5.716060248161182,
+        "peak_error_c": 6.3071170389283395
+      }
+    },
+    {
+      "workbook": "20241024_Test_9_HySaM.xlsx",
+      "session_selection": "all sessions passing pre-model mass-closure, minimum-mass and minimum-duration criteria",
+      "event_elapsed_start_s": 687.0,
+      "event_elapsed_end_s": 888.5,
+      "event_duration_s": 201.5,
+      "sample_count": 404,
+      "candidate_mapping": {
+        "tank_pressure": "PT01 ValueY interpreted as bar absolute",
+        "tank_temperature": "arithmetic mean of TT08..TT11 interpreted as degC",
+        "mass_flow": "QT_D02 ValueY interpreted as g/s after measured idle baseline",
+        "inlet_temperature": "TEX01 ValueY interpreted as degC",
+        "upstream_pressure": "PTD10 ValueY interpreted as bar absolute",
+        "tank_internal_volume_m3": 0.244,
+        "mapping_status": "inferred_from_article_and_signal_dynamics_not_confirmed_by_channel_dictionary"
+      },
+      "fit": {
+        "source": "research/tank_model_validation_v2.json",
+        "effective_volume_multiplier": 1.052729261198358,
+        "gas_liner_ua_multiplier": 31.460656519273492,
+        "case_specific_fitting": false
+      },
+      "mass_boundary": {
+        "integrated_flow_kg": 2.32943,
+        "cumulative_scale_delta_kg": 2.17,
+        "flow_to_scale_mass_ratio": 1.0734700460829494
+      },
+      "pressure": {
+        "observed_initial_mpa": 10.786,
+        "observed_final_mpa": 22.964,
+        "predicted_final_mpa": 26.984281403058954,
+        "rmse_mpa": 1.2932280909557559,
+        "mae_mpa": 0.8348762185832087,
+        "final_error_mpa": 4.020281403058956
+      },
+      "temperature": {
+        "observed_initial_c": 35.332499999999996,
+        "observed_peak_c": 55.9925,
+        "predicted_peak_c": 63.20200715915041,
+        "rmse_c": 6.071461579848656,
+        "mae_c": 5.368227771635239,
+        "peak_error_c": 7.209507159150412
+      }
+    }
+  ],
+  "candidate_session_aggregate": {
+    "case_count": 5,
+    "selection_is_independent_of_model_prediction": true,
+    "selection_criteria": {
+      "flow_to_scale_mass_ratio": [
+        0.8,
+        1.2
+      ],
+      "minimum_integrated_flow_mass_kg": 0.05,
+      "minimum_duration_s": 10.0,
+      "required_candidate_tank_columns": [
+        "PT01 ValueY",
+        "TT08 ValueY",
+        "TT09 ValueY",
+        "TT10 ValueY",
+        "TT11 ValueY"
+      ]
+    },
+    "pressure_rmse_mpa": {
+      "case_mean": 1.2866244910563729,
+      "case_median": 1.2932280909557559,
+      "minimum": 0.3484466291369078,
+      "maximum": 2.723997995063285
+    },
+    "temperature_rmse_c": {
+      "case_mean": 4.57841318799785,
+      "case_median": 4.329121313428847,
+      "minimum": 2.7675302274981193,
+      "maximum": 6.071461579848656
+    },
+    "flow_to_scale_mass_ratio": {
+      "minimum": 0.9906363636363635,
+      "maximum": 1.0734700460829494
+    },
+    "project_screen": {
+      "pressure_rmse_mpa_max": 5.0,
+      "temperature_rmse_c_max": 10.0,
+      "joint_pass_count": 5,
+      "joint_pass_fraction": 1.0,
+      "interpretation": "descriptive post-access screen, not confirmatory validation"
+    }
+  },
+  "candidate_tank_replay_alias": "largest integrated flow mass among eligible candidate_session_replays",
   "candidate_tank_replay": {
-    "workbook": "20241024_Test_9_HySaM.xlsx",
-    "session_selection": "largest integrated active-flow session in Test 9",
-    "event_elapsed_start_s": 687.0,
-    "event_elapsed_end_s": 888.5,
-    "event_duration_s": 201.5,
-    "sample_count": 404,
+    "workbook": "20241023_Test_1_HySaM.xlsx",
+    "session_selection": "all sessions passing pre-model mass-closure, minimum-mass and minimum-duration criteria",
+    "event_elapsed_start_s": 2911.5,
+    "event_elapsed_end_s": 3076.0,
+    "event_duration_s": 164.5,
+    "sample_count": 330,
     "candidate_mapping": {
       "tank_pressure": "PT01 ValueY interpreted as bar absolute",
       "tank_temperature": "arithmetic mean of TT08..TT11 interpreted as degC",
@@ -361,25 +626,25 @@
       "case_specific_fitting": false
     },
     "mass_boundary": {
-      "integrated_flow_kg": 2.32943,
-      "cumulative_scale_delta_kg": 2.17,
-      "flow_to_scale_mass_ratio": 1.0734700460829494
+      "integrated_flow_kg": 2.6074425,
+      "cumulative_scale_delta_kg": 2.6,
+      "flow_to_scale_mass_ratio": 1.0028625
     },
     "pressure": {
-      "observed_initial_mpa": 10.786,
-      "observed_final_mpa": 22.964,
-      "predicted_final_mpa": 26.984281403058954,
-      "rmse_mpa": 1.2932280909557559,
-      "mae_mpa": 0.8348762185832087,
-      "final_error_mpa": 4.020281403058956
+      "observed_initial_mpa": 10.464,
+      "observed_final_mpa": 23.249000000000002,
+      "predicted_final_mpa": 29.082516594060998,
+      "rmse_mpa": 2.723997995063285,
+      "mae_mpa": 2.0902738346437806,
+      "final_error_mpa": 5.833516594060995
     },
     "temperature": {
-      "observed_initial_c": 35.332499999999996,
-      "observed_peak_c": 55.9925,
-      "predicted_peak_c": 63.20200715915041,
-      "rmse_c": 6.071461579848656,
-      "mae_c": 5.368227771635239,
-      "peak_error_c": 7.209507159150412
+      "observed_initial_c": 23.804999999999996,
+      "observed_peak_c": 53.162499999999994,
+      "predicted_peak_c": 59.469617038928334,
+      "rmse_c": 5.934497478484101,
+      "mae_c": 5.716060248161182,
+      "peak_error_c": 6.3071170389283395
     }
   },
   "eligibility": {

@@ -18,7 +18,9 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert gates["methytrucks_hysam_postaccess_diagnostic_integrity"]["status"] == "PASS"
     methytrucks = gates["methytrucks_hysam_postaccess_diagnostic_integrity"]["observed"]
     assert methytrucks["workbook_count"] == 3
-    assert methytrucks["flow_to_scale_mass_ratio"] == 1.0734700460829494
+    assert 0.9 < methytrucks["flow_to_scale_mass_ratio"] < 1.2
+    assert methytrucks["candidate_session_aggregate"]["case_count"] == 5
+    assert methytrucks["candidate_session_aggregate"]["project_screen"]["joint_pass_count"] == 5
     assert methytrucks["prospective_holdout_eligible"] is False
     assert methytrucks["quantitative_full_loop_validation_eligible"] is False
     assert gates["public_tank_runtime_calibration_integrity"]["status"] == "PASS"

@@ -13,6 +13,7 @@
   "update_to_prior_search": "A 2026 Zenodo release now supplies three synchronized workbooks for the article lead that earlier search records classified as raw-data-on-request. The prior records remain historical snapshots; this file records the later public release.",
   "verified_availability": {
     "workbook_count": 3,
+    "mass_consistent_candidate_session_count": 5,
     "sampling_interval_s": 0.5,
     "hash_verified": true,
     "flow_cumulative_mass_consistency_checked": true,

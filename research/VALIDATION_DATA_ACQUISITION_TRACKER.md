@@ -33,8 +33,9 @@ its numerical outcome is inspected.
 Three CC BY 4.0 ZBT workbooks were obtained from Zenodo and hash-verified. They
 contain synchronized 0.5 s rows, and the flow integral agrees with the
 cumulative-mass channel. A no-fit replay of the current public Type-IV tank
-model on the largest Test 9 session gave 1.293 MPa pressure RMSE and 6.071 degC
-temperature RMSE. The result is recorded in
+model retained all five mass-consistent candidate sessions. Case-mean RMSE was
+1.287 MPa for pressure and 4.578 degC for temperature; all five met the
+descriptive project screens. The result is recorded in
 [`METHYTRUCKS_HYSAM_POSTACCESS_DIAGNOSTIC_2026_10_08.md`](METHYTRUCKS_HYSAM_POSTACCESS_DIAGNOSTIC_2026_10_08.md).
 
 The archive was numerically inspected before this diagnostic protocol was

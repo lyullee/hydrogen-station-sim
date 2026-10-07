@@ -166,6 +166,8 @@ def audit(root: Path) -> dict[str, object]:
     methytrucks = _json(methytrucks_path)
     methytrucks_access = (methytrucks or {}).get("access_integrity") or {}
     methytrucks_replay = (methytrucks or {}).get("candidate_tank_replay") or {}
+    methytrucks_replays = (methytrucks or {}).get("candidate_session_replays") or []
+    methytrucks_aggregate = (methytrucks or {}).get("candidate_session_aggregate") or {}
     methytrucks_mass = methytrucks_replay.get("mass_boundary") or {}
     methytrucks_pressure = methytrucks_replay.get("pressure") or {}
     methytrucks_temperature = methytrucks_replay.get("temperature") or {}
@@ -190,6 +192,13 @@ def audit(root: Path) -> dict[str, object]:
         and 0.9 < methytrucks_ratio < 1.2
         and isinstance(methytrucks_pressure.get("rmse_mpa"), (int, float))
         and isinstance(methytrucks_temperature.get("rmse_c"), (int, float))
+        and len(methytrucks_replays) == 5
+        and methytrucks_aggregate.get("case_count") == 5
+        and methytrucks_aggregate.get("selection_is_independent_of_model_prediction") is True
+        and all(
+            item.get("fit", {}).get("case_specific_fitting") is False
+            for item in methytrucks_replays
+        )
         and methytrucks_eligibility.get("component_diagnostic_eligible") is True
         and methytrucks_eligibility.get("prospective_holdout_eligible") is False
         and methytrucks_eligibility.get("quantitative_full_loop_validation_eligible") is False
@@ -206,6 +215,7 @@ def audit(root: Path) -> dict[str, object]:
             "flow_to_scale_mass_ratio": methytrucks_ratio,
             "pressure_rmse_mpa": methytrucks_pressure.get("rmse_mpa"),
             "temperature_rmse_c": methytrucks_temperature.get("rmse_c"),
+            "candidate_session_aggregate": methytrucks_aggregate,
             "prospective_holdout_eligible": methytrucks_eligibility.get("prospective_holdout_eligible"),
             "quantitative_full_loop_validation_eligible": methytrucks_eligibility.get("quantitative_full_loop_validation_eligible"),
             "claim_boundary": (methytrucks or {}).get("claim_boundary"),
@@ -888,6 +898,7 @@ def audit(root: Path) -> dict[str, object]:
                 "evidence_role": (methytrucks or {}).get("evidence_role"),
                 "pressure_rmse_mpa": methytrucks_pressure.get("rmse_mpa"),
                 "temperature_rmse_c": methytrucks_temperature.get("rmse_c"),
+                "candidate_session_aggregate": methytrucks_aggregate,
                 "eligibility": methytrucks_eligibility,
             },
             "live_public_search_sweep_2026_10_05": {

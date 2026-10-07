@@ -16,12 +16,18 @@ the flow-like `QT_D02` channel reproduces changes in the cumulative-mass-like
 session in Test 9 transferred 2.329 kg by flow integration versus a 2.170 kg
 scale change, a ratio of 1.073.
 
-The already-frozen public Type-IV tank model was replayed without case-specific
-fitting. Under the explicitly provisional channel interpretation documented in
-the JSON result, pressure RMSE was **1.293 MPa** and temperature RMSE was
-**6.071 degC** over 201.5 s. Final pressure was overpredicted by 4.020 MPa and
-peak temperature by 7.210 degC. These errors are reported as observed; they
-were not used to retune the model.
+All sessions with candidate tank channels, at least 0.05 kg integrated flow,
+at least 10 s duration and a flow-to-scale mass ratio from 0.8 to 1.2 were
+included before considering model error. This retained five sessions and
+excluded one Test 9 session whose mass ratio was 1.343. The already-frozen
+public Type-IV tank model was replayed without case-specific fitting.
+
+Across the five retained sessions, case-mean pressure RMSE was **1.287 MPa**
+(range 0.348--2.724 MPa) and case-mean temperature RMSE was **4.578 degC**
+(range 2.768--6.071 degC). All five met the project's descriptive 5 MPa and
+10 degC screens. The flow-to-scale mass ratios ranged from 0.991 to 1.073.
+These errors were not used to retune the model, and the 5/5 figure is a
+post-access descriptive result rather than a confirmatory pass rate.
 
 ## Claim boundary
 

@@ -62,6 +62,10 @@ TANK_CANDIDATE_COLUMNS = (
     "TT10 ValueY",
     "TT11 ValueY",
 )
+MASS_CLOSURE_RATIO_MIN = 0.8
+MASS_CLOSURE_RATIO_MAX = 1.2
+MINIMUM_SESSION_MASS_KG = 0.05
+MINIMUM_SESSION_DURATION_S = 10.0
 
 
 @dataclass(frozen=True)
@@ -195,12 +199,26 @@ def _session_summary(trace: WorkbookTrace, start: int, end: int) -> dict[str, An
     return result
 
 
+def _candidate_session_eligible(summary: dict[str, Any]) -> bool:
+    """Apply measurement-only eligibility before inspecting model errors."""
+
+    ratio = summary.get("flow_to_scale_mass_ratio")
+    return bool(
+        isinstance(ratio, (int, float))
+        and MASS_CLOSURE_RATIO_MIN <= ratio <= MASS_CLOSURE_RATIO_MAX
+        and summary.get("integrated_flow_mass_kg", 0.0) >= MINIMUM_SESSION_MASS_KG
+        and summary.get("duration_s", 0.0) >= MINIMUM_SESSION_DURATION_S
+    )
+
+
 def _replay_candidate_session(
     trace: WorkbookTrace,
     start: int,
     end: int,
+    *,
+    session_selection: str,
 ) -> dict[str, Any]:
-    """Replay the strongest candidate tank mapping without fitting parameters."""
+    """Replay one candidate tank mapping without fitting parameters."""
 
     required = set(TANK_CANDIDATE_COLUMNS) | {
         "QT_D02 ValueY", "TEX01 ValueY", "PTD10 ValueY", "TT_D04 ValueY"
@@ -275,7 +293,7 @@ def _replay_candidate_session(
     scale_delta = float(cumulative[-1] - cumulative[0])
     return {
         "workbook": trace.filename,
-        "session_selection": "largest integrated active-flow session in Test 9",
+        "session_selection": session_selection,
         "event_elapsed_start_s": float(trace.elapsed_s[start]),
         "event_elapsed_end_s": float(trace.elapsed_s[end]),
         "event_duration_s": float(time_s[-1]),
@@ -324,7 +342,7 @@ def _replay_candidate_session(
 def analyze(source_dir: Path) -> dict[str, Any]:
     traces = [load_trace(source_dir / name) for name in FILES]
     workbooks: list[dict[str, Any]] = []
-    selected: tuple[WorkbookTrace, int, int] | None = None
+    eligible_sessions: list[tuple[WorkbookTrace, int, int, dict[str, Any]]] = []
     for trace in traces:
         flow = trace.channels["QT_D02 ValueY"]
         sessions = active_sessions(trace.elapsed_s, flow)
@@ -342,15 +360,71 @@ def analyze(source_dir: Path) -> dict[str, Any]:
             "active_session_count": len(sessions),
             "active_sessions": summaries,
         })
-        if trace.filename == "20241024_Test_9_HySaM.xlsx":
-            start, end = max(
-                sessions,
-                key=lambda pair: _session_summary(trace, *pair)["integrated_flow_mass_kg"],
+        if all(tag in trace.channels for tag in TANK_CANDIDATE_COLUMNS):
+            eligible_sessions.extend(
+                (trace, start, end, summary)
+                for (start, end), summary in zip(sessions, summaries, strict=True)
+                if _candidate_session_eligible(summary)
             )
-            selected = (trace, start, end)
-    if selected is None:
-        raise RuntimeError("Test 9 candidate session was not found")
-    replay = _replay_candidate_session(*selected)
+    if not eligible_sessions:
+        raise RuntimeError("No mass-consistent candidate tank session was found")
+    replays = [
+        _replay_candidate_session(
+            trace,
+            start,
+            end,
+            session_selection=(
+                "all sessions passing pre-model mass-closure, minimum-mass and "
+                "minimum-duration criteria"
+            ),
+        )
+        for trace, start, end, _summary in eligible_sessions
+    ]
+    replay = max(
+        replays,
+        key=lambda item: item["mass_boundary"]["integrated_flow_kg"],
+    )
+    pressure_rmse = np.asarray([item["pressure"]["rmse_mpa"] for item in replays])
+    temperature_rmse = np.asarray([item["temperature"]["rmse_c"] for item in replays])
+    mass_ratios = np.asarray([
+        item["mass_boundary"]["flow_to_scale_mass_ratio"] for item in replays
+    ])
+    joint_screen = (pressure_rmse <= 5.0) & (temperature_rmse <= 10.0)
+    aggregate = {
+        "case_count": len(replays),
+        "selection_is_independent_of_model_prediction": True,
+        "selection_criteria": {
+            "flow_to_scale_mass_ratio": [
+                MASS_CLOSURE_RATIO_MIN, MASS_CLOSURE_RATIO_MAX,
+            ],
+            "minimum_integrated_flow_mass_kg": MINIMUM_SESSION_MASS_KG,
+            "minimum_duration_s": MINIMUM_SESSION_DURATION_S,
+            "required_candidate_tank_columns": list(TANK_CANDIDATE_COLUMNS),
+        },
+        "pressure_rmse_mpa": {
+            "case_mean": float(np.mean(pressure_rmse)),
+            "case_median": float(np.median(pressure_rmse)),
+            "minimum": float(np.min(pressure_rmse)),
+            "maximum": float(np.max(pressure_rmse)),
+        },
+        "temperature_rmse_c": {
+            "case_mean": float(np.mean(temperature_rmse)),
+            "case_median": float(np.median(temperature_rmse)),
+            "minimum": float(np.min(temperature_rmse)),
+            "maximum": float(np.max(temperature_rmse)),
+        },
+        "flow_to_scale_mass_ratio": {
+            "minimum": float(np.min(mass_ratios)),
+            "maximum": float(np.max(mass_ratios)),
+        },
+        "project_screen": {
+            "pressure_rmse_mpa_max": 5.0,
+            "temperature_rmse_c_max": 10.0,
+            "joint_pass_count": int(np.sum(joint_screen)),
+            "joint_pass_fraction": float(np.mean(joint_screen)),
+            "interpretation": "descriptive post-access screen, not confirmatory validation",
+        },
+    }
     return {
         "schema_version": 1,
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -401,6 +475,11 @@ def analyze(source_dir: Path) -> dict[str, Any]:
             ],
         },
         "workbooks": workbooks,
+        "candidate_session_replays": replays,
+        "candidate_session_aggregate": aggregate,
+        "candidate_tank_replay_alias": (
+            "largest integrated flow mass among eligible candidate_session_replays"
+        ),
         "candidate_tank_replay": replay,
         "eligibility": {
             "component_diagnostic_eligible": True,
@@ -447,9 +526,12 @@ def main() -> int:
         newline="\n",
     )
     replay = report["candidate_tank_replay"]
+    aggregate = report["candidate_session_aggregate"]
     print(json.dumps({
         "status": report["status"],
         "workbook_count": len(report["workbooks"]),
+        "candidate_session_count": aggregate["case_count"],
+        "candidate_joint_screen_pass_count": aggregate["project_screen"]["joint_pass_count"],
         "candidate_pressure_rmse_mpa": replay["pressure"]["rmse_mpa"],
         "candidate_temperature_rmse_c": replay["temperature"]["rmse_c"],
         "full_loop_eligible": report["eligibility"]["quantitative_full_loop_validation_eligible"],
