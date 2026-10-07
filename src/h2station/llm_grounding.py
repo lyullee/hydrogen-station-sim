@@ -1315,6 +1315,66 @@ def _closed_loop_validation_boundary() -> dict[str, Any] | None:
     }
 
 
+def _temperature_observation_semantic_boundary() -> dict[str, Any] | None:
+    """Expose a bounded warning about cross-dataset tank-temperature meaning.
+
+    A public Type-IV fit may use a channel whose physical observation model is
+    declared differently from another public fill experiment. This evidence
+    makes that distinction visible to the decision assistant without selecting
+    a more favourable post-outcome observation operator or changing runtime
+    temperature logic.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/mc_temperature_observation_diagnostic_2026_10_07.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    expected_operators = {
+        "gas_temperature",
+        "liner_temperature",
+        "shell_temperature",
+        "liner_shell_mean",
+    }
+    aggregate = record.get("aggregate") or {}
+    if (
+        record.get("diagnostic_type")
+        != "MC Default temperature-observation semantic replay"
+        or record.get("evidence_role") != "post_outcome_semantic_diagnostic_only"
+        or record.get("post_outcome") is not True
+        or record.get("parameter_fitting") is not False
+        or record.get("runtime_thermal_observation_changed") is not False
+        or record.get("observation_mapping_selection_prohibited") is not True
+        or record.get("promotion_to_validation_prohibited") is not True
+        or record.get("raw_experimental_rows_persisted") is not False
+        or record.get("source_workbook_names_persisted") is not False
+        or set(aggregate) != expected_operators
+        or len(record.get("cases") or []) != 8
+    ):
+        return None
+    # Do not relay outcome-derived error ranks to the provider. It only needs
+    # to know that multiple physical observation operators diverged and that
+    # no post-outcome selection has been made.
+    return {
+        "artifact": "research/mc_temperature_observation_diagnostic_2026_10_07.json",
+        "evidence_role": "post_outcome_semantic_diagnostic_only",
+        "runtime_temperature_state": "gas_temperature",
+        "candidate_observation_operators": sorted(expected_operators),
+        "candidate_operator_count": len(expected_operators),
+        "cross_dataset_semantic_mismatch_detected": True,
+        "runtime_thermal_observation_changed": False,
+        "operator_selection_prohibited": True,
+        "validation_claim_supported": False,
+        "claim_limit": (
+            "공개 충전시험의 탱크 평균온도는 가스·라이너·쉘·센서 평균 중 무엇을 "
+            "뜻하는지 별도 확인이 필요합니다. 사후 오차가 낮은 관측 연산자를 선택하지 "
+            "않았으며, 현재 가상 운전의 가스온도를 현장 탱크 센서값과 동등하다고 단정하지 않습니다."
+        ),
+    }
+
+
 def _release_model_validation_boundary() -> dict[str, Any] | None:
     """Expose the locked component-release limitation to decision support.
 
@@ -2855,6 +2915,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "closed_loop_validation_boundary"
         ] = closed_loop
+    thermal_observation = _temperature_observation_semantic_boundary()
+    if thermal_observation is not None:
+        envelope["response_evidence"][
+            "temperature_observation_semantic_boundary"
+        ] = thermal_observation
     release_boundary = _release_model_validation_boundary()
     if release_boundary is not None:
         envelope["response_evidence"][
@@ -3484,6 +3549,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     incident = response.get("public_incident_traceability") or {}
     local_incident = response.get("confidential_local_accident_response_coverage") or {}
     multisource = response.get("confidential_multisource_mapping_feasibility") or {}
+    thermal_observation = response.get("temperature_observation_semantic_boundary") or {}
 
     decision = {
         "evidence_digest": manifest.get("evidence_digest"),
@@ -3535,6 +3601,11 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_supported": closed_loop.get("claim_supported") is True,
                 "case_count": closed_loop_aggregate.get("case_count"),
                 "screening_pass_count": closed_loop_aggregate.get("screening_pass_count"),
+                "thermal": (
+                    "unresolved"
+                    if thermal_observation.get("cross_dataset_semantic_mismatch_detected") is True
+                    else "unavailable"
+                ),
                 "claim_limit": short(closed_loop.get("claim_limit")),
             },
             "source_depletion": {
@@ -3545,7 +3616,6 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_limit": short(preslhy.get("claim_limit")),
             },
             "high_pressure_aperture": {
-                "evidence_role": release.get("evidence_role"),
                 "baseline_joint_primary_pass_count": release.get(
                     "baseline_joint_primary_pass_count"
                 ),
@@ -3646,12 +3716,35 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     preslhy = evidence.get("preslhy_validation_boundary") or {}
     closed_loop = evidence.get("closed_loop_validation_boundary") or {}
     release_boundary = evidence.get("proust_release_model_validation_boundary") or {}
+    thermal_observation = evidence.get("temperature_observation_semantic_boundary") or {}
     return {
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "runtime_geometry": manifest.get("runtime_geometry") or {},
         "runtime_vehicle_tank_calibration": manifest.get(
             "runtime_vehicle_tank_calibration"
         ) or {},
+        "temperature_observation_semantic_boundary": {
+            "evidence_role": thermal_observation.get("evidence_role"),
+            "runtime_temperature_state": thermal_observation.get(
+                "runtime_temperature_state"
+            ),
+            "candidate_observation_operators": list(
+                thermal_observation.get("candidate_observation_operators") or []
+            ),
+            "cross_dataset_semantic_mismatch_detected": thermal_observation.get(
+                "cross_dataset_semantic_mismatch_detected"
+            ) is True,
+            "runtime_thermal_observation_changed": thermal_observation.get(
+                "runtime_thermal_observation_changed"
+            ) is True,
+            "operator_selection_prohibited": thermal_observation.get(
+                "operator_selection_prohibited"
+            ) is True,
+            "validation_claim_supported": thermal_observation.get(
+                "validation_claim_supported"
+            ) is True,
+            "claim_limit": thermal_observation.get("claim_limit"),
+        },
         "measured_bank_pressure_envelope": manifest.get(
             "measured_bank_pressure_envelope"
         ) or {},
