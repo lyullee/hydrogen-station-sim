@@ -52,6 +52,24 @@ family는 0건으로 유지됐다. 이 재검사는 집계 일치성만 확인�
 `research/confidential_station_channel_quality_recheck_2026_10_06.json` 및
 `scripts/recheck_confidential_station_channel_quality.py`에 보존한다.
 
+## 수용용기 측 전 구간 추적을 확보했을 때의 안전한 반입
+
+원본 CSV, 원래 태그명, 절대시각은 저장소에 넣지 않는다. 권한 있는 데이터
+관리자가 로컬의 별도 제어 구역에서
+`scripts/export_confidential_full_loop_bundle.py`를 실행해 상대시간과 일반화된
+공학 채널만 포함한 `full_loop_event.csv`를 생성한다. 이 도구는 다음을 모두
+요구한다.
+
+- 수용용기 압력, 가스·탱크 온도, 질량유량, 충전소·캐스케이드 압력,
+  압축기·프리쿨러·누설검사·벤트·고장·ESD 상태의 명시적 매핑
+- 압력·온도·유량 단위와 모든 이산 상태의 의미에 대한 관리자의 확인
+- 동결한 평가 프로토콜 이전에 결과를 보지 않았다는 확인과 제어된 연구 이용 권한
+
+출력 디렉터리가 이 저장소 안에 있으면 도구가 즉시 거절한다. 이후에도
+`validate_external_hrs_manifest.py`, `validate_external_hrs_trace.py`,
+`validate_external_hrs_full_loop.py`를 모두 통과해야만 **평가 입력 후보**가
+된다. 이 절차의 통과는 검증, 안전성 인증, 현장 안전거리 확인을 뜻하지 않는다.
+
 공개 HITRF 기준선은 `research/nlr_hitrf_public_operational_reference_2026_10_06.json`에 정적 정격과 명시적 주장 경계를 기록하고, LLM 근거 envelope에만 연결한다. 이 기준선으로 기본 시뮬레이션 파라미터를 자동 변경하지 않는다. 공개 페이지에는 자동 로깅이 설명되어 있지만 동기화된 원시 logger archive가 제공되지 않으므로 full-loop 검증 gate의 증거로 세지 않는다.
 
 추가로 비공개 설비 logger에서 식별정보를 제거한 압력·온도·상태 envelope를
