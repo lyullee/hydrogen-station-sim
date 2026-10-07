@@ -37,9 +37,10 @@ and clocks. These files contain original labels and must remain controlled.
 
 ## Private mapping contract
 
-Create a private mapping JSON beside the controlled workbook. Every canonical
-field must occur exactly once across `sources`; a source may contribute only
-the fields it owns. `header_row` is explicit so title rows are never guessed.
+Create a private mapping JSON beside the controlled workbook. Every required
+station-to-vehicle field must occur exactly once across `sources`; a source may
+contribute only the fields it owns. `header_row` is explicit so title rows are
+never guessed.
 The sole supported joining method is nearest observation within the declared
 maximum offset. It does not interpolate measurements or infer missing values.
 
@@ -95,6 +96,23 @@ because their clocks can be aligned.
   }
 }
 ```
+
+For a cascade-resolved evaluation, add all three fields below (possibly from a
+separate, synchronised storage worksheet) and attest each as `MPa_abs`. Do not
+map only one or two of them:
+
+```json
+{
+  "cascade_low_pressure_mpa_abs": "<private low-bank pressure label>",
+  "cascade_medium_pressure_mpa_abs": "<private medium-bank pressure label>",
+  "cascade_high_pressure_mpa_abs": "<private high-bank pressure label>"
+}
+```
+
+When none of these three channels is available, the exporter produces a
+station-to-vehicle partial-cascade bundle. It cannot be used to assess
+cascade-bank dispatch or recharge dynamics, and missing bank pressures must
+not be inferred or interpolated.
 
 The existing private attestation must additionally include:
 

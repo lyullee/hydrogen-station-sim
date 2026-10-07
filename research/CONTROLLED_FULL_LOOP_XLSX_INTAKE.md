@@ -37,6 +37,23 @@ locally with the custodian-approved source headers and must never be committed.
 }
 ```
 
+The low-, medium-, and high-bank pressure fields are optional only as one
+complete triplet:
+
+```json
+{
+  "cascade_low_pressure_mpa_abs": "<private low-bank pressure column>",
+  "cascade_medium_pressure_mpa_abs": "<private medium-bank pressure column>",
+  "cascade_high_pressure_mpa_abs": "<private high-bank pressure column>"
+}
+```
+
+Include all three with `MPa_abs` unit attestations to evaluate cascade dispatch
+and recharge. Omit all three when the source retains only a selected-bank
+pressure; the exported trace remains eligible only for a clearly labelled
+station-to-vehicle partial-cascade evaluation. Never estimate missing bank
+pressures.
+
 For CSV, omit `worksheet` and optionally add `encoding` and `delimiter`.  The
 canonical numeric units are absolute MPa, degrees Celsius, and g/s.  Convert
 units before the mapping is frozen; the exporter does not infer gauge pressure

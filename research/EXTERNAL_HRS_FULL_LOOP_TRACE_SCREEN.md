@@ -9,7 +9,9 @@ The CSV must use the same monotonic clock for every channel. In addition to the
 base vehicle pressure/temperature and mass-flow contract, it must contain:
 
 * station or dispenser absolute pressure and delivered-gas temperature;
-* cascade source absolute pressure and selected-bank state;
+* cascade source absolute pressure and selected-bank state; and
+* simultaneous low-, medium-, and high-bank absolute pressures for a
+  cascade-resolved full-loop result;
 * compressor and precooler states; and
 * leak-check, vent, fault, and ESD states.
 
@@ -22,8 +24,12 @@ The screen checks channel presence, finite values, missingness, strictly
 increasing time, maximum time gap, and the frozen pressure/temperature ranges.
 It does not impute, resample, smooth, fit, or calculate model errors. A
 `FULL_LOOP_TRACE_READY_FOR_EVALUATION` result means that a separately frozen
-evaluator may be run. It does not close `full_loop_external_validation`, prove
-field safety, or permit an IJHE claim by itself.
+evaluator may be run with cascade-dispatch and recharge evidence. A valid
+trace without the three-bank triplet is labelled
+`STATION_TO_VEHICLE_TRACE_READY_PARTIAL_CASCADE`; it can support only a
+selected-bank station-to-vehicle evaluation. Neither outcome closes
+`full_loop_external_validation`, proves field safety, or permits an IJHE claim
+by itself.
 
 Example invocation after the byte-level manifest and declaration are available:
 

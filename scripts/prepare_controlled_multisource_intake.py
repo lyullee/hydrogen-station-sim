@@ -29,7 +29,14 @@ try:  # Supports both ``python scripts/...`` and test-module imports.
         _outside_repository,
         _screen_rows,
     )
-    from export_confidential_full_loop_bundle import OUTPUT_COLUMNS, ROOT, _sha256
+    from export_confidential_full_loop_bundle import (
+        CASCADE_BANK_PRESSURE_COLUMNS,
+        OUTPUT_COLUMNS,
+        REQUIRED_NUMERIC_COLUMNS,
+        ROOT,
+        STATE_COLUMNS,
+        _sha256,
+    )
 except ModuleNotFoundError:  # pragma: no cover - import style depends on launcher
     from scripts.audit_controlled_data_schema import (
         DATA_LIKENESS_SAMPLE_ROWS,
@@ -39,7 +46,14 @@ except ModuleNotFoundError:  # pragma: no cover - import style depends on launch
         _outside_repository,
         _screen_rows,
     )
-    from scripts.export_confidential_full_loop_bundle import OUTPUT_COLUMNS, ROOT, _sha256
+    from scripts.export_confidential_full_loop_bundle import (
+        CASCADE_BANK_PRESSURE_COLUMNS,
+        OUTPUT_COLUMNS,
+        REQUIRED_NUMERIC_COLUMNS,
+        ROOT,
+        STATE_COLUMNS,
+        _sha256,
+    )
 
 
 _REQUIRED_METADATA = (
@@ -226,11 +240,17 @@ def _mapping_template(workbench: dict[str, Any]) -> dict[str, Any]:
             "maximum_offset_s": "<custodian-approved tolerance>",
         },
         "mapping_instructions": (
-            "Replace every placeholder. Each canonical output field except time_s must "
-            "be assigned exactly once across sources. Do not infer or interpolate a "
-            "missing source channel."
+            "Replace every placeholder. Required station-to-vehicle fields except "
+            "time_s must be assigned exactly once across sources. The optional "
+            "low/medium/high cascade-pressure fields must be mapped together or all "
+            "omitted. Do not infer or interpolate a missing source channel."
         ),
-        "canonical_fields_required": list(OUTPUT_COLUMNS),
+        "canonical_fields_required": [
+            "time_s", *REQUIRED_NUMERIC_COLUMNS, *STATE_COLUMNS,
+        ],
+        "optional_all_or_none_cascade_bank_pressure_fields": list(
+            CASCADE_BANK_PRESSURE_COLUMNS
+        ),
     }
 
 
@@ -246,10 +266,13 @@ def _attestation_template() -> dict[str, Any]:
             "station_pressure_mpa_abs": "MPa_abs",
             "delivered_gas_temperature_degC": "degC",
             "cascade_source_pressure_mpa_abs": "MPa_abs",
+            "cascade_low_pressure_mpa_abs": "MPa_abs",
+            "cascade_medium_pressure_mpa_abs": "MPa_abs",
+            "cascade_high_pressure_mpa_abs": "MPa_abs",
         },
         "state_semantics": {
             field: "<custodian-approved meaning and valid states>"
-            for field in OUTPUT_COLUMNS[7:]
+            for field in STATE_COLUMNS
         },
         "temperature_observation": {
             "vehicle_temperature_degC": {
@@ -420,8 +443,11 @@ def prepare_workbench(input_data: Path, output_directory: Path) -> dict[str, Any
         ),
         "minimum_logger_contract": {
             "clock": "one labelled clock with at least two strictly monotonic observations",
-            "full_loop_numeric_channels": list(OUTPUT_COLUMNS[1:7]),
-            "full_loop_state_channels": list(OUTPUT_COLUMNS[7:]),
+            "station_to_vehicle_numeric_channels": list(REQUIRED_NUMERIC_COLUMNS),
+            "optional_all_or_none_cascade_bank_pressure_channels": list(
+                CASCADE_BANK_PRESSURE_COLUMNS
+            ),
+            "full_loop_state_channels": list(STATE_COLUMNS),
             "custodian_attestation_required": True,
         },
         "source_input_sha256": workbench["source_input_sha256"],

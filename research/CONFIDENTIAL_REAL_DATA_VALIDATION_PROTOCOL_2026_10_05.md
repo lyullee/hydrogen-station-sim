@@ -65,6 +65,12 @@ attestation conditions permit an aggregate station-boundary calibration. It
 does not mean vehicle-side validation, a full-loop holdout, equipment safety,
 or field separation-distance validation.
 
+For a cascade-resolved full-loop evaluation, the controlled event must contain
+simultaneous low-, medium-, and high-bank pressures as well as the selected
+bank state. A selected-source-bank-only trace is retained as a
+station-to-vehicle partial-cascade input; it must not be interpolated into a
+three-bank record or used to claim cascade-dispatch or recharge validation.
+
 ## Claim boundary
 
 Confidential data can support an externally evaluated result when provenance,

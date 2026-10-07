@@ -25,8 +25,10 @@ from typing import Any
 
 try:  # Supports both ``python scripts/...`` and test-module imports.
     from export_confidential_full_loop_bundle import (
+        CASCADE_BANK_PRESSURE_COLUMNS,
         NUMERIC_COLUMNS,
         OUTPUT_COLUMNS,
+        REQUIRED_NUMERIC_COLUMNS,
         REQUIRED_METADATA,
         ROOT,
         STATE_COLUMNS,
@@ -40,8 +42,10 @@ try:  # Supports both ``python scripts/...`` and test-module imports.
     from audit_controlled_data_schema import _csv_encodings
 except ModuleNotFoundError:  # pragma: no cover - import style depends on launcher
     from scripts.export_confidential_full_loop_bundle import (
+        CASCADE_BANK_PRESSURE_COLUMNS,
         NUMERIC_COLUMNS,
         OUTPUT_COLUMNS,
+        REQUIRED_NUMERIC_COLUMNS,
         REQUIRED_METADATA,
         ROOT,
         STATE_COLUMNS,
@@ -59,7 +63,9 @@ from validate_external_hrs_full_loop import validate_full_loop_trace
 from validate_external_hrs_manifest import validate as validate_manifest
 
 
-def _require_attestation(attestation: dict[str, Any]) -> dict[str, str]:
+def _require_attestation(
+    attestation: dict[str, Any], *, cascade_triplet_required: bool = False,
+) -> dict[str, str]:
     if attestation.get("schema_version") != 1:
         raise ValueError("attestation schema_version must be 1")
     if attestation.get("authorised_controlled_evaluation") is not True:
@@ -80,6 +86,15 @@ def _require_attestation(attestation: dict[str, Any]) -> dict[str, str]:
         units.get(column) != expected for column, expected in expected_units.items()
     ):
         raise ValueError("attestation must declare the canonical numeric units")
+    if isinstance(units, dict) and any(
+        column in units and units.get(column) != "MPa_abs"
+        for column in CASCADE_BANK_PRESSURE_COLUMNS
+    ):
+        raise ValueError("attestation cascade-bank pressure units must be MPa_abs when supplied")
+    if cascade_triplet_required and any(
+        units.get(column) != "MPa_abs" for column in CASCADE_BANK_PRESSURE_COLUMNS
+    ):
+        raise ValueError("attestation must declare MPa_abs for every mapped cascade-bank pressure")
     states = attestation.get("state_semantics")
     if not isinstance(states, dict) or not all(
         isinstance(states.get(column), str) and states[column].strip()
@@ -167,9 +182,16 @@ def _specifications(mapping: dict[str, Any]) -> tuple[list[dict[str, Any]], int,
             "header_row": header_row,
             "column_map": column_map,
         })
-    missing = [channel for channel in OUTPUT_COLUMNS[1:] if channel not in canonical_owners]
+    required_channels = tuple(REQUIRED_NUMERIC_COLUMNS) + tuple(STATE_COLUMNS)
+    missing = [channel for channel in required_channels if channel not in canonical_owners]
     if missing:
         raise ValueError("mapping does not cover every canonical full-loop channel")
+    mapped_bank_columns = [
+        channel for channel in CASCADE_BANK_PRESSURE_COLUMNS
+        if channel in canonical_owners
+    ]
+    if mapped_bank_columns and len(mapped_bank_columns) != len(CASCADE_BANK_PRESSURE_COLUMNS):
+        raise ValueError("mapping must cover all cascade low/medium/high bank pressures or none")
 
     alignment = mapping.get("alignment")
     if not isinstance(alignment, dict):
@@ -202,6 +224,17 @@ def _require_same_physical_event(
         raise ValueError(
             "mapped sources do not share one custodian-approved physical-event token"
         )
+
+
+def _cascade_triplet_required(specifications: list[dict[str, Any]]) -> bool:
+    """Whether the private mapping actually supplies all cascade banks."""
+
+    mapped = {
+        canonical
+        for specification in specifications
+        for canonical in specification["column_map"]
+    }
+    return all(column in mapped for column in CASCADE_BANK_PRESSURE_COLUMNS)
 
 
 def _source_path(input_data: Path, specification: dict[str, Any]) -> Path:
@@ -340,8 +373,11 @@ def preflight_bundle(
         raise ValueError("multi-source controlled intake requires a CSV/XLSX/XLSM file or directory")
     mapping = _json(mapping_path)
     attestation = _json(attestation_path)
-    _require_attestation(attestation)
     specifications, _, _ = _specifications(mapping)
+    _require_attestation(
+        attestation,
+        cascade_triplet_required=_cascade_triplet_required(specifications),
+    )
     _require_same_physical_event(specifications)
     protocol = _json(protocol_path)
     if protocol.get("status") != "prospective_intake_contract":
@@ -508,8 +544,11 @@ def preflight_time_alignment(
         raise ValueError("multi-source controlled intake requires a CSV/XLSX/XLSM file or directory")
     mapping = _json(mapping_path)
     attestation = _json(attestation_path)
-    _require_attestation(attestation)
     specifications, anchor_index, maximum_offset = _specifications(mapping)
+    _require_attestation(
+        attestation,
+        cascade_triplet_required=_cascade_triplet_required(specifications),
+    )
     _require_same_physical_event(specifications)
     protocol = _json(protocol_path)
     if protocol.get("status") != "prospective_intake_contract":
@@ -674,7 +713,9 @@ def _alignment_diagnostics(
     ]
 
 
-def _declaration(temperature_observation: dict[str, str]) -> dict[str, Any]:
+def _declaration(
+    temperature_observation: dict[str, str], *, cascade_triplet_present: bool,
+) -> dict[str, Any]:
     return {
         "schema_version": 1,
         "declaration_type": "external_hrs_bundle_metadata",
@@ -697,6 +738,10 @@ def _declaration(temperature_observation: dict[str, str]) -> dict[str, Any]:
                 "observation_operator": temperature_observation["delivered_gas_temperature_degC"],
             },
             "mass_flow_or_transferred_mass": {"present": True, "unit": "g/s"},
+            "cascade_bank_pressure_triplet": {
+                "present": cascade_triplet_present,
+                "unit": "MPa_abs" if cascade_triplet_present else None,
+            },
         },
         "source_event_relationship": {"same_physical_event_confirmed": True},
         "metadata": {key: "declared" for key in REQUIRED_METADATA},
@@ -728,8 +773,11 @@ def export_bundle(
 
     mapping = _json(mapping_path)
     attestation = _json(attestation_path)
-    temperature_observation = _require_attestation(attestation)
     specifications, anchor_index, maximum_offset = _specifications(mapping)
+    temperature_observation = _require_attestation(
+        attestation,
+        cascade_triplet_required=_cascade_triplet_required(specifications),
+    )
     _require_same_physical_event(specifications)
     protocol = _json(protocol_path)
     if protocol.get("status") != "prospective_intake_contract":
@@ -761,7 +809,13 @@ def export_bundle(
             aligned_rows[source_index] = source_row
             offsets_by_source[source_index].append(offset)
         for canonical in OUTPUT_COLUMNS[1:]:
-            source_index = channel_source[canonical]
+            source_index = channel_source.get(canonical)
+            if source_index is None:
+                # An omitted bank-pressure channel deliberately remains blank.
+                # The downstream screen then labels the bundle selected-bank
+                # only rather than treating it as cascade-resolved full-loop.
+                joined[canonical] = ""
+                continue
             source_row = aligned_rows[source_index]
             raw = source_row.get(specifications[source_index]["column_map"][canonical])
             if canonical in NUMERIC_COLUMNS:
@@ -779,7 +833,13 @@ def export_bundle(
         writer = csv.DictWriter(handle, fieldnames=OUTPUT_COLUMNS)
         writer.writeheader()
         writer.writerows(normalized)
-    declaration = _declaration(temperature_observation)
+    cascade_triplet_present = all(
+        channel in channel_source for channel in CASCADE_BANK_PRESSURE_COLUMNS
+    )
+    declaration = _declaration(
+        temperature_observation,
+        cascade_triplet_present=cascade_triplet_present,
+    )
     declaration_path = output_directory / "declaration.json"
     declaration_path.write_text(json.dumps(declaration, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     manifest = build_manifest(output_directory, protocol_path)
@@ -787,8 +847,8 @@ def export_bundle(
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     intake = validate_manifest(manifest_path, declaration_path, protocol_path, bundle_root=output_directory)
     screen = validate_full_loop_trace(trace_path, manifest_path, declaration_path, protocol_path, bundle_root=output_directory)
-    if not screen.get("full_loop_trace_ready"):
-        raise RuntimeError("export did not pass full-loop quality screen: " + "; ".join(screen.get("reasons") or []))
+    if not screen.get("station_to_vehicle_trace_ready"):
+        raise RuntimeError("export did not pass station-to-vehicle quality screen: " + "; ".join(screen.get("reasons") or []))
     receipt = {
         "schema_version": 1,
         "artifact_type": "controlled_deidentified_hrs_multisource_export_receipt",
@@ -821,7 +881,10 @@ def export_bundle(
         "declaration_sha256": _sha256(declaration_path),
         "intake_decision": intake.get("decision"),
         "quality_decision": screen.get("decision"),
+        "station_to_vehicle_trace_ready": screen.get("station_to_vehicle_trace_ready"),
+        "cascade_dispatch_evaluable": screen.get("cascade_dispatch_evaluable"),
         "full_loop_trace_ready": screen.get("full_loop_trace_ready"),
+        "evaluation_scope": screen.get("evaluation_scope"),
         "claim_boundary": declaration["claim_boundary"],
     }
     (output_directory / "receipt.json").write_text(

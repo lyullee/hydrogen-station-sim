@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from export_confidential_full_loop_bundle import (  # noqa: E402
+    CASCADE_BANK_PRESSURE_COLUMNS,
     OUTPUT_COLUMNS,
     export_bundle,
     preflight_bundle,
@@ -33,6 +34,9 @@ def _write_inputs(tmp_path: Path):
                 "raw_station_pressure_mpa_abs": str(90 - index / 10),
                 "raw_delivered_gas_temperature_degC": "-35",
                 "raw_cascade_source_pressure_mpa_abs": "95",
+                "raw_cascade_low_pressure_mpa_abs": "45",
+                "raw_cascade_medium_pressure_mpa_abs": "65",
+                "raw_cascade_high_pressure_mpa_abs": "95",
                 "raw_cascade_selected_bank": "high",
                 "raw_compressor_state": "ready",
                 "raw_precooler_state": "ready",
@@ -57,6 +61,9 @@ def _write_inputs(tmp_path: Path):
             "station_pressure_mpa_abs": "MPa_abs",
             "delivered_gas_temperature_degC": "degC",
             "cascade_source_pressure_mpa_abs": "MPa_abs",
+            "cascade_low_pressure_mpa_abs": "MPa_abs",
+            "cascade_medium_pressure_mpa_abs": "MPa_abs",
+            "cascade_high_pressure_mpa_abs": "MPa_abs",
         },
         "state_semantics": {name: "custodian-attested" for name in OUTPUT_COLUMNS if name in {
             "cascade_selected_bank", "compressor_state", "precooler_state", "leak_check_state",
@@ -124,6 +131,9 @@ def _write_xlsx_inputs(tmp_path: Path):
             90 - index / 10,
             -35,
             95,
+            45,
+            65,
+            95,
             "high",
             "ready",
             "ready",
@@ -156,6 +166,24 @@ def test_export_removes_source_headers_and_absolute_time(tmp_path):
     assert declaration["absolute_timestamps_published"] is False
     assert declaration["channels"]["gas_or_tank_temperature"]["observation_operator"] == "gas_temperature"
     assert receipt["temperature_observation_semantics_attested"] is True
+
+
+def test_export_labels_selected_bank_only_trace_as_partial_cascade(tmp_path):
+    source, mapping, attestation = _write_inputs(tmp_path)
+    payload = json.loads(mapping.read_text(encoding="utf-8"))
+    for column in CASCADE_BANK_PRESSURE_COLUMNS:
+        payload["column_map"].pop(column)
+    mapping.write_text(json.dumps(payload), encoding="utf-8")
+
+    receipt = export_bundle(
+        source, mapping, attestation, tmp_path / "partial-cascade-bundle",
+        ROOT / "research/external_hrs_intake_protocol.json",
+    )
+
+    assert receipt["station_to_vehicle_trace_ready"] is True
+    assert receipt["cascade_dispatch_evaluable"] is False
+    assert receipt["full_loop_trace_ready"] is False
+    assert receipt["evaluation_scope"] == "station_to_vehicle_selected_bank_only"
 
 
 def test_export_rejects_a_repository_output_path(tmp_path):

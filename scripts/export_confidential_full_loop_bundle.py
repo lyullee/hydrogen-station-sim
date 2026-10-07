@@ -31,7 +31,7 @@ from validate_external_hrs_manifest import validate as validate_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 
-NUMERIC_COLUMNS = (
+REQUIRED_NUMERIC_COLUMNS = (
     "vehicle_pressure_mpa_abs",
     "temperature_degC",
     "mass_flow_g_s",
@@ -39,6 +39,12 @@ NUMERIC_COLUMNS = (
     "delivered_gas_temperature_degC",
     "cascade_source_pressure_mpa_abs",
 )
+CASCADE_BANK_PRESSURE_COLUMNS = (
+    "cascade_low_pressure_mpa_abs",
+    "cascade_medium_pressure_mpa_abs",
+    "cascade_high_pressure_mpa_abs",
+)
+NUMERIC_COLUMNS = REQUIRED_NUMERIC_COLUMNS + CASCADE_BANK_PRESSURE_COLUMNS
 STATE_COLUMNS = (
     "cascade_selected_bank",
     "compressor_state",
@@ -198,6 +204,20 @@ def _attestation(mapping: dict[str, Any], attestation: dict[str, Any]) -> dict[s
     for column, expected in expected_units.items():
         if units.get(column) != expected:
             raise ValueError(f"attestation unit for {column} must be {expected}")
+    mapped_columns = mapping.get("column_map") if isinstance(mapping.get("column_map"), dict) else {}
+    mapped_bank_columns = [
+        column for column in CASCADE_BANK_PRESSURE_COLUMNS if column in mapped_columns
+    ]
+    if mapped_bank_columns and len(mapped_bank_columns) != len(CASCADE_BANK_PRESSURE_COLUMNS):
+        raise ValueError("mapping must cover all cascade low/medium/high bank pressures or none")
+    for column in CASCADE_BANK_PRESSURE_COLUMNS:
+        # A three-bank pressure triplet is optional at export time because
+        # many historical station logs retain only the selected source-bank
+        # pressure.  When it is supplied, however, it must carry an explicit
+        # absolute-pressure unit before it can raise the evidence scope from
+        # station-to-vehicle to cascade-resolved full-loop.
+        if column in mapped_columns and units.get(column) != "MPa_abs":
+            raise ValueError(f"attestation unit for {column} must be MPa_abs")
     state_semantics = attestation.get("state_semantics")
     if not isinstance(state_semantics, dict) or not all(
         isinstance(state_semantics.get(column), str) and state_semantics[column].strip()
@@ -218,6 +238,16 @@ def _source_column(mapping: dict[str, Any], canonical: str) -> str:
     if not isinstance(columns, dict) or not isinstance(columns.get(canonical), str):
         raise ValueError(f"mapping requires column_map.{canonical}")
     return columns[canonical]
+
+
+def _optional_source_column(mapping: dict[str, Any], canonical: str) -> str | None:
+    columns = mapping.get("column_map")
+    if not isinstance(columns, dict) or canonical not in columns:
+        return None
+    value = columns[canonical]
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"mapping column_map.{canonical} must be a nonempty string")
+    return value
 
 
 def _input_format(path: Path) -> str:
@@ -283,21 +313,31 @@ def _source_header_and_rows(
         workbook.close()
 
 
-def _mapped_source_columns(mapping: dict[str, Any]) -> tuple[str, dict[str, str]]:
+def _mapped_source_columns(mapping: dict[str, Any]) -> tuple[str, dict[str, str | None]]:
     return (
         _source_column(mapping, "time_s"),
-        {column: _source_column(mapping, column) for column in OUTPUT_COLUMNS[1:]},
+        {
+            column: (
+                _optional_source_column(mapping, column)
+                if column in CASCADE_BANK_PRESSURE_COLUMNS
+                else _source_column(mapping, column)
+            )
+            for column in OUTPUT_COLUMNS[1:]
+        },
     )
 
 
 def _missing_canonical_channels(
-    header: tuple[str, ...], original_time: str, source_columns: dict[str, str],
+    header: tuple[str, ...], original_time: str, source_columns: dict[str, str | None],
 ) -> list[str]:
     available = set(header)
     missing = ["time_s"] if original_time not in available else []
     missing.extend(
         canonical for canonical, source in source_columns.items()
-        if source not in available
+        if (
+            (canonical not in CASCADE_BANK_PRESSURE_COLUMNS and source is None)
+            or (source is not None and source not in available)
+        )
     )
     return missing
 
@@ -331,13 +371,23 @@ def preflight_bundle(
         input_data, mapping, include_rows=False,
     )
     missing = _missing_canonical_channels(header, original_time, source_columns)
+    cascade_triplet_mapped = all(
+        source_columns.get(column) is not None
+        for column in CASCADE_BANK_PRESSURE_COLUMNS
+    )
     return {
         "schema_version": 1,
         "artifact_type": "controlled_deidentified_hrs_full_loop_preflight",
         "ready_for_controlled_export": not missing,
         "source_format": source_format,
         "worksheet_mapping_required": source_format == "xlsx",
-        "required_canonical_channels": list(OUTPUT_COLUMNS),
+        "required_station_to_vehicle_channels": [
+            "time_s", *REQUIRED_NUMERIC_COLUMNS, *STATE_COLUMNS,
+        ],
+        "optional_all_or_none_cascade_bank_pressure_channels": list(
+            CASCADE_BANK_PRESSURE_COLUMNS
+        ),
+        "cascade_dispatch_evaluable_if_values_pass": cascade_triplet_mapped,
         "missing_canonical_channels": missing,
         "source_headers_exposed": False,
         "source_rows_read": False,
@@ -400,7 +450,11 @@ def export_bundle(
         previous_time = time_s
         exported = {"time_s": f"{time_s:.9g}"}
         for column in NUMERIC_COLUMNS:
-            exported[column] = f"{_finite(row.get(source_columns[column]), column=column, row_number=index):.9g}"
+            source = source_columns[column]
+            exported[column] = (
+                "" if source is None else
+                f"{_finite(row.get(source), column=column, row_number=index):.9g}"
+            )
         for column in STATE_COLUMNS:
             raw_value = row.get(source_columns[column])
             value = raw_value.strip() if isinstance(raw_value, str) else str(raw_value or "").strip()
@@ -418,6 +472,10 @@ def export_bundle(
         writer.writeheader()
         writer.writerows(normalized)
 
+    cascade_triplet_present = all(
+        source_columns.get(column) is not None
+        for column in CASCADE_BANK_PRESSURE_COLUMNS
+    )
     declaration = {
         "schema_version": 1,
         # Keep the declared type compatible with the frozen intake validator.
@@ -443,6 +501,10 @@ def export_bundle(
                 "observation_operator": temperature_observation["delivered_gas_temperature_degC"],
             },
             "mass_flow_or_transferred_mass": {"present": True, "unit": "g/s"},
+            "cascade_bank_pressure_triplet": {
+                "present": cascade_triplet_present,
+                "unit": "MPa_abs" if cascade_triplet_present else None,
+            },
         },
         "metadata": {key: "declared" for key in REQUIRED_METADATA},
         "claim_boundary": (
@@ -460,8 +522,8 @@ def export_bundle(
     screen = validate_full_loop_trace(
         trace_path, manifest_path, declaration_path, protocol_path, bundle_root=output_directory
     )
-    if not screen.get("full_loop_trace_ready"):
-        raise RuntimeError("export did not pass full-loop quality screen: " + "; ".join(screen.get("reasons") or []))
+    if not screen.get("station_to_vehicle_trace_ready"):
+        raise RuntimeError("export did not pass station-to-vehicle quality screen: " + "; ".join(screen.get("reasons") or []))
 
     receipt = {
         "schema_version": 1,
@@ -487,7 +549,10 @@ def export_bundle(
         "declaration_sha256": _sha256(declaration_path),
         "intake_decision": intake.get("decision"),
         "quality_decision": screen.get("decision"),
+        "station_to_vehicle_trace_ready": screen.get("station_to_vehicle_trace_ready"),
+        "cascade_dispatch_evaluable": screen.get("cascade_dispatch_evaluable"),
         "full_loop_trace_ready": screen.get("full_loop_trace_ready"),
+        "evaluation_scope": screen.get("evaluation_scope"),
         "claim_boundary": declaration["claim_boundary"],
     }
     receipt_path = output_directory / "receipt.json"

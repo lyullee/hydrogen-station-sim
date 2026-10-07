@@ -6,10 +6,12 @@ that the station, vehicle, source-bank and protection-state channels share a
 single monotonic clock.  It deliberately does not impute, resample, smooth,
 fit, or score the digital twin.
 
-The result ``FULL_LOOP_TRACE_READY_FOR_EVALUATION`` means only that the trace
-is a usable input for a separately frozen numerical evaluator.  It is not a
-validation result, a safety claim, or evidence that the IJHE readiness gate is
-closed.
+The result ``FULL_LOOP_TRACE_READY_FOR_EVALUATION`` requires simultaneous
+low-, medium-, and high-bank pressures.  A trace with only the selected source
+bank can still be a valid station-to-vehicle input, but it is explicitly
+classified as partial-cascade evidence and cannot evaluate cascade dispatch or
+recharge dynamics.  Neither result is a validation result, a safety claim, or
+evidence that the IJHE readiness gate is closed.
 """
 
 from __future__ import annotations
@@ -48,6 +50,15 @@ FULL_LOOP_ALIASES: dict[str, tuple[str, ...]] = {
         "source_bank_pressure_mpa_abs",
         "cascade_pressure_mpa_abs",
     ),
+    "cascade_low_pressure_mpa_abs": (
+        "cascade_low_pressure_mpa_abs", "low_bank_pressure_mpa_abs",
+    ),
+    "cascade_medium_pressure_mpa_abs": (
+        "cascade_medium_pressure_mpa_abs", "medium_bank_pressure_mpa_abs",
+    ),
+    "cascade_high_pressure_mpa_abs": (
+        "cascade_high_pressure_mpa_abs", "high_bank_pressure_mpa_abs",
+    ),
     "cascade_selected_bank": (
         "cascade_selected_bank",
         "selected_bank",
@@ -65,7 +76,16 @@ _NUMERIC_CHANNELS = {
     "station_pressure_mpa_abs": (0.0, 150.0),
     "cascade_source_pressure_mpa_abs": (0.0, 150.0),
     "delivered_gas_temperature_degC": (-100.0, 250.0),
+    "cascade_low_pressure_mpa_abs": (0.0, 150.0),
+    "cascade_medium_pressure_mpa_abs": (0.0, 150.0),
+    "cascade_high_pressure_mpa_abs": (0.0, 150.0),
 }
+
+_CASCADE_BANK_PRESSURE_COLUMNS = (
+    "cascade_low_pressure_mpa_abs",
+    "cascade_medium_pressure_mpa_abs",
+    "cascade_high_pressure_mpa_abs",
+)
 
 
 def _json(path: Path) -> dict[str, Any]:
@@ -123,6 +143,8 @@ def validate_full_loop_trace(
         return {
             "schema_version": 1,
             "decision": "INELIGIBLE_BASE_TRACE_SCREEN",
+            "station_to_vehicle_trace_ready": False,
+            "cascade_dispatch_evaluable": False,
             "full_loop_trace_ready": False,
             "numerical_values_inspected": base.get("numerical_values_inspected", False),
             "base_trace_screen": base,
@@ -154,6 +176,29 @@ def validate_full_loop_trace(
         "esd_state",
     )
     mapped = {name: _column(header, name, declaration) for name in required}
+    discovered_cascade_banks = {
+        name: _column(header, name, declaration)
+        for name in _CASCADE_BANK_PRESSURE_COLUMNS
+    }
+    channels = declaration.get("channels")
+    cascade_declaration = (
+        channels.get("cascade_bank_pressure_triplet")
+        if isinstance(channels, dict)
+        else None
+    )
+    declared_cascade_present = (
+        cascade_declaration.get("present")
+        if isinstance(cascade_declaration, dict)
+        else None
+    )
+    # Controlled exporters preserve the optional columns in the canonical CSV
+    # with empty cells. The declaration, rather than those placeholder
+    # headers, determines whether the trace has an actual three-bank record.
+    cascade_banks = (
+        {name: None for name in _CASCADE_BANK_PRESSURE_COLUMNS}
+        if declared_cascade_present is False
+        else discovered_cascade_banks
+    )
     reasons: list[str] = []
     missing_columns = [name for name, column in mapped.items() if column is None]
     if missing_columns:
@@ -161,6 +206,8 @@ def validate_full_loop_trace(
         return {
             "schema_version": 1,
             "decision": "FULL_LOOP_TRACE_NOT_READY",
+            "station_to_vehicle_trace_ready": False,
+            "cascade_dispatch_evaluable": False,
             "full_loop_trace_ready": False,
             "numerical_values_inspected": True,
             "base_trace_screen": base,
@@ -175,9 +222,25 @@ def validate_full_loop_trace(
         reasons.append("missing common time column")
         time_column = ""
 
+    mapped_bank_count = sum(column is not None for column in cascade_banks.values())
+    if 0 < mapped_bank_count < len(_CASCADE_BANK_PRESSURE_COLUMNS):
+        reasons.append("cascade bank pressure coverage is incomplete; provide all low/medium/high banks or none")
+    if (
+        declared_cascade_present is True
+        and (
+            not isinstance(cascade_declaration, dict)
+            or cascade_declaration.get("unit") != "MPa_abs"
+        )
+    ):
+        reasons.append("declared cascade bank pressure triplet must use MPa_abs")
+    cascade_dispatch_evaluable = mapped_bank_count == len(_CASCADE_BANK_PRESSURE_COLUMNS)
+
     missing_rows = 0
     times: list[float] = []
-    numeric_values: dict[str, list[float]] = {name: [] for name in _NUMERIC_CHANNELS}
+    numeric_values: dict[str, list[float]] = {
+        name: [] for name in _NUMERIC_CHANNELS
+        if name in mapped or cascade_banks.get(name) is not None
+    }
     state_values: dict[str, set[str]] = {name: set() for name in required if name not in _NUMERIC_CHANNELS}
     for row in rows:
         time_value = _finite_float(row.get(time_column, "")) if time_column else None
@@ -197,6 +260,14 @@ def validate_full_loop_trace(
                     values_ok = False
                 else:
                     state_values[name].add(raw.strip())
+        for name, column in cascade_banks.items():
+            if column is None:
+                continue
+            value = _finite_float(row.get(column, "") or "")
+            if value is None:
+                values_ok = False
+            else:
+                numeric_values[name].append(value)
         if not values_ok:
             missing_rows += 1
 
@@ -219,17 +290,30 @@ def validate_full_loop_trace(
         if values and not all(low < value <= high if low == 0.0 else low <= value <= high for value in values):
             reasons.append(f"{name} value outside the frozen physical range")
 
+    station_to_vehicle_ready = not reasons
+    if station_to_vehicle_ready and cascade_dispatch_evaluable:
+        decision = "FULL_LOOP_TRACE_READY_FOR_EVALUATION"
+        scope = "cascade_resolved_station_to_vehicle"
+    elif station_to_vehicle_ready:
+        decision = "STATION_TO_VEHICLE_TRACE_READY_PARTIAL_CASCADE"
+        scope = "station_to_vehicle_selected_bank_only"
+    else:
+        decision = "FULL_LOOP_TRACE_NOT_READY"
+        scope = "ineligible"
     return {
         "schema_version": 1,
-        "decision": "FULL_LOOP_TRACE_READY_FOR_EVALUATION" if not reasons else "FULL_LOOP_TRACE_NOT_READY",
-        "full_loop_trace_ready": not reasons,
+        "decision": decision,
+        "station_to_vehicle_trace_ready": station_to_vehicle_ready,
+        "cascade_dispatch_evaluable": cascade_dispatch_evaluable,
+        "full_loop_trace_ready": station_to_vehicle_ready and cascade_dispatch_evaluable,
+        "evaluation_scope": scope,
         "numerical_values_inspected": True,
         "base_trace_screen": {
             "decision": base.get("decision"),
             "trace": base.get("trace"),
             "manifest": base.get("intake"),
         },
-        "columns": {"time_s": time_column, **mapped},
+        "columns": {"time_s": time_column, **mapped, **cascade_banks},
         "observed": {
             "rows": len(rows),
             "rows_with_missing_or_nonfinite_required_values": missing_rows,

@@ -50,6 +50,8 @@ def test_private_workbench_writes_mapping_templates_without_measurement_values(
     assert catalog["sources"][0]["original_headers"][0] == "private time"
     assert mapping["sources"][0]["time_column"] == "<select one time_column_candidate>"
     assert mapping["sources"][0]["event_group_token"].startswith("<custodian-approved")
+    assert len(mapping["optional_all_or_none_cascade_bank_pressure_fields"]) == 3
+    assert "cascade_low_pressure_mpa_abs" in attestation["units"]
     assert attestation["authorised_controlled_evaluation"] is False
     assert attestation["source_synchronization"]["same_physical_event_confirmed"] is False
     assert attestation["temperature_observation"]["vehicle_temperature_degC"]["sensor_location_verified"] is False

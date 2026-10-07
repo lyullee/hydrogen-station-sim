@@ -9,7 +9,11 @@ from openpyxl import Workbook
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from export_confidential_full_loop_bundle import OUTPUT_COLUMNS  # noqa: E402
+from export_confidential_full_loop_bundle import (  # noqa: E402
+    CASCADE_BANK_PRESSURE_COLUMNS,
+    OUTPUT_COLUMNS,
+    STATE_COLUMNS,
+)
 from export_confidential_multisource_full_loop_bundle import (  # noqa: E402
     export_bundle,
     preflight_bundle,
@@ -29,9 +33,12 @@ def _attestation() -> dict[str, object]:
             "station_pressure_mpa_abs": "MPa_abs",
             "delivered_gas_temperature_degC": "degC",
             "cascade_source_pressure_mpa_abs": "MPa_abs",
+            "cascade_low_pressure_mpa_abs": "MPa_abs",
+            "cascade_medium_pressure_mpa_abs": "MPa_abs",
+            "cascade_high_pressure_mpa_abs": "MPa_abs",
         },
         "state_semantics": {
-            name: "private controlled state semantics" for name in OUTPUT_COLUMNS[7:]
+            name: "private controlled state semantics" for name in STATE_COLUMNS
         },
         "temperature_observation": {
             "vehicle_temperature_degC": {
@@ -74,12 +81,13 @@ def _write_controlled_inputs(tmp_path: Path) -> tuple[Path, Path, Path]:
     station = workbook.create_sheet("private station")
     station.append([
         "secret station clock", "secret station pressure", "secret delivery temperature",
-        "secret cascade pressure", *[f"secret {name}" for name in OUTPUT_COLUMNS[7:]],
+        "secret cascade pressure", *[f"secret {name}" for name in CASCADE_BANK_PRESSURE_COLUMNS],
+        *[f"secret {name}" for name in STATE_COLUMNS],
     ])
     for index in range(30):
         vehicle.append([index * 2.0, 10 + index, 20 + index / 10, 2.0])
         station.append([
-            index * 2.0 + 0.25, 50 - index / 10, -30, 70 - index / 10,
+            index * 2.0 + 0.25, 50 - index / 10, -30, 70 - index / 10, 45, 65, 95,
             "mid", "running", "running", "clear", "closed", "clear", "ready",
         ])
     workbook.save(source)
@@ -104,7 +112,8 @@ def _write_controlled_inputs(tmp_path: Path) -> tuple[Path, Path, Path]:
                     "station_pressure_mpa_abs": "secret station pressure",
                     "delivered_gas_temperature_degC": "secret delivery temperature",
                     "cascade_source_pressure_mpa_abs": "secret cascade pressure",
-                    **{name: f"secret {name}" for name in OUTPUT_COLUMNS[7:]},
+                    **{name: f"secret {name}" for name in CASCADE_BANK_PRESSURE_COLUMNS},
+                    **{name: f"secret {name}" for name in STATE_COLUMNS},
                 },
             },
         ],
@@ -263,13 +272,14 @@ def test_multisource_export_accepts_declared_csv_directory_sources(tmp_path: Pat
         encoding="utf-16",
     )
     station = controlled / "private-station.csv"
-    state_headers = ",".join(f"secret {name}" for name in OUTPUT_COLUMNS[7:])
+    cascade_headers = ",".join(f"secret {name}" for name in CASCADE_BANK_PRESSURE_COLUMNS)
+    state_headers = ",".join(f"secret {name}" for name in STATE_COLUMNS)
     state_values = ",".join(("mid", "running", "running", "clear", "closed", "clear", "ready"))
     station.write_text(
         "secret clock,secret station pressure,secret delivery temperature,secret cascade pressure,"
-        + state_headers + "\n"
+        + cascade_headers + "," + state_headers + "\n"
         + "\n".join(
-            f"{index * 2 + 0.25},{50 - index / 10},-30,{70 - index / 10},{state_values}"
+            f"{index * 2 + 0.25},{50 - index / 10},-30,{70 - index / 10},45,65,95,{state_values}"
             for index in range(30)
         ) + "\n",
         encoding="utf-8",
@@ -293,7 +303,8 @@ def test_multisource_export_accepts_declared_csv_directory_sources(tmp_path: Pat
                     "station_pressure_mpa_abs": "secret station pressure",
                     "delivered_gas_temperature_degC": "secret delivery temperature",
                     "cascade_source_pressure_mpa_abs": "secret cascade pressure",
-                    **{name: f"secret {name}" for name in OUTPUT_COLUMNS[7:]},
+                    **{name: f"secret {name}" for name in CASCADE_BANK_PRESSURE_COLUMNS},
+                    **{name: f"secret {name}" for name in STATE_COLUMNS},
                 },
             },
         ],

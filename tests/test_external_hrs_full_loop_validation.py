@@ -10,7 +10,9 @@ from intake_external_hrs_bundle import build_manifest  # noqa: E402
 from validate_external_hrs_full_loop import validate_full_loop_trace  # noqa: E402
 
 
-def _inputs(tmp_path: Path, *, omit: str | None = None):
+def _inputs(
+    tmp_path: Path, *, omit: str | None = None, include_cascade_banks: bool = False,
+):
     bundle = tmp_path / "bundle"
     bundle.mkdir()
     columns = [
@@ -29,6 +31,12 @@ def _inputs(tmp_path: Path, *, omit: str | None = None):
         "fault_state",
         "esd_state",
     ]
+    if include_cascade_banks:
+        columns.extend([
+            "cascade_low_pressure_mpa_abs",
+            "cascade_medium_pressure_mpa_abs",
+            "cascade_high_pressure_mpa_abs",
+        ])
     if omit:
         columns.remove(omit)
     trace = bundle / "event.csv"
@@ -44,6 +52,9 @@ def _inputs(tmp_path: Path, *, omit: str | None = None):
                 "station_pressure_mpa_abs": str(8 + index),
                 "delivered_gas_temperature_degC": "-35",
                 "cascade_source_pressure_mpa_abs": "80",
+                "cascade_low_pressure_mpa_abs": "45",
+                "cascade_medium_pressure_mpa_abs": "65",
+                "cascade_high_pressure_mpa_abs": "95",
                 "cascade_selected_bank": "medium",
                 "compressor_state": "running",
                 "precooler_state": "ready",
@@ -76,14 +87,25 @@ def _inputs(tmp_path: Path, *, omit: str | None = None):
     return trace, manifest_path, declaration_path, protocol
 
 
-def test_full_loop_screen_accepts_synchronized_station_vehicle_trace(tmp_path):
+def test_screen_labels_selected_bank_trace_as_partial_cascade(tmp_path):
     trace, manifest, declaration, protocol = _inputs(tmp_path)
     result = validate_full_loop_trace(trace, manifest, declaration, protocol)
-    assert result["decision"] == "FULL_LOOP_TRACE_READY_FOR_EVALUATION"
-    assert result["full_loop_trace_ready"] is True
+    assert result["decision"] == "STATION_TO_VEHICLE_TRACE_READY_PARTIAL_CASCADE"
+    assert result["station_to_vehicle_trace_ready"] is True
+    assert result["cascade_dispatch_evaluable"] is False
+    assert result["full_loop_trace_ready"] is False
     assert result["observed"]["rows"] == 20
     assert result["columns"]["esd_state"] == "esd_state"
     assert result["no_imputation_or_resampling"] is True
+
+
+def test_full_loop_screen_accepts_three_bank_cascade_trace(tmp_path):
+    trace, manifest, declaration, protocol = _inputs(tmp_path, include_cascade_banks=True)
+    result = validate_full_loop_trace(trace, manifest, declaration, protocol)
+    assert result["decision"] == "FULL_LOOP_TRACE_READY_FOR_EVALUATION"
+    assert result["station_to_vehicle_trace_ready"] is True
+    assert result["cascade_dispatch_evaluable"] is True
+    assert result["full_loop_trace_ready"] is True
 
 
 def test_full_loop_screen_retains_missing_protection_channel(tmp_path):

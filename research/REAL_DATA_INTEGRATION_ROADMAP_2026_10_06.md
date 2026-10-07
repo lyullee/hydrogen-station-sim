@@ -163,6 +163,12 @@ E5.1 독립 ambient holdout은 3건 중 2건 통과로 최소 케이스 조건�
 보간·재표본화·누락값 대체를 하지 않는다. 입력 화면을 통과해도 모델 검증이나
 안전성 입증으로 승격하지 않는다.
 
+캐스케이드 전환·재충전까지 평가하려면 저압·중압·고압 뱅크 압력 3개와 선택
+뱅크 상태가 같은 시간축에 있어야 한다. 선택 뱅크 압력만 있는 경우는
+`STATION_TO_VEHICLE_TRACE_READY_PARTIAL_CASCADE`로 따로 기록하며, 차량–디스펜서
+경계의 부분 검증에만 사용할 수 있다. 누락된 뱅크 압력을 추정하거나 보간해
+full-loop 결과로 승격하지 않는다.
+
 ### 3. 피해영향 모델의 component 범위 확장
 
 현재 실패한 PRESLHY·Proust·Schefer holdout은 재튜닝하지 않는다. 새 장치의 line volume, valve law, terminal restriction, wall heat transfer가 공개되거나 검토 가능한 데이터로 확보될 때만 apparatus-resolved 모델을 새 프로토콜로 동결한다.
