@@ -18,6 +18,15 @@ SCENARIO_QUALIFIED_FILL_RULES = {
     "HZ-077", "HZ-081", "HZ-082", "HZ-092", "HZ-100",
     "HZ-105", "HZ-109", "HZ-110", "HZ-120", "HZ-128",
 }
+# The workbook marks these pre-intercooler stage-discharge limits as
+# PROPOSED and site_activation=false. Normal multistage compression produces
+# hot gas at these points, so the unapproved 45/60 degC limits must not create
+# guaranteed alarms during ordinary operation. Keep the source rules intact
+# and qualify them with a relevant thermal or sensor-fault exercise until an
+# OEM/site limit is approved.
+SCENARIO_QUALIFIED_COMPRESSOR_TEMPERATURE_RULES = {
+    "HZ-019", "HZ-020", "HZ-027", "HZ-028", "HZ-035", "HZ-036",
+}
 
 
 class RuleEngine:
@@ -50,6 +59,9 @@ class RuleEngine:
             gate = evaluate_gate(self.gates[r["gate_id"]], frame["modes"])
             if (gate is True and rid in SCENARIO_QUALIFIED_FILL_RULES
                     and frame["modes"].get("station.scenario_active") is False):
+                gate = False
+            if (gate is True and rid in SCENARIO_QUALIFIED_COMPRESSOR_TEMPERATURE_RULES
+                    and frame["modes"].get("compressor.thermal_event") is False):
                 gate = False
             if gate is True and rid in PCV_DROP_FLOW_TAGS:
                 flow_tag = PCV_DROP_FLOW_TAGS[rid]

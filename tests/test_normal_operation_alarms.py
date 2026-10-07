@@ -63,3 +63,31 @@ def test_normal_process_requests_have_no_hazop_alarm(operations):
         sample_callback=lambda sample: active.extend(sample.hazop["active"]),
     )
     assert active == []
+
+
+def test_proposed_compressor_temperature_limits_require_relevant_exercise():
+    def decision(thermal_event):
+        engine = RuleEngine(load_catalog())
+        for time_s in (0.0, 1.0, 2.0, 3.0):
+            result = engine.evaluate({
+                "time_s": time_s,
+                "signals": {
+                    "TT-0401": {
+                        "value": 95.0, "unit": "degC", "quality": "GOOD",
+                        "time_s": time_s,
+                    },
+                },
+                "modes": {
+                    "compressor.running": True,
+                    "compressor.elapsed_s": 10.0,
+                    "compressor.thermal_event": thermal_event,
+                },
+            })
+        return {rule["rule_id"]: rule for rule in result["rules"]}
+
+    normal = decision(False)
+    exercise = decision(True)
+    assert normal["HZ-019"]["active"] is False
+    assert normal["HZ-020"]["active"] is False
+    assert exercise["HZ-019"]["active"] is True
+    assert exercise["HZ-020"]["active"] is True

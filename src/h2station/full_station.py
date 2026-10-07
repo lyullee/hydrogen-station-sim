@@ -10,8 +10,10 @@ from .tabulated import PropsSI
 from scipy.integrate import solve_ivp
 
 from .dispenser import (
+    IsentropicRealGasRestriction,
     PartialStationModel,
     PartialStationState,
+    RestrictionParameters,
     SupplyModel,
     SupplyState,
 )
@@ -596,6 +598,7 @@ class FullStationState:
     banks: tuple[CascadeBankState, ...]
     partial_station: PartialStationState
     secondary_partial_station: PartialStationState | None = None
+    common_header: CascadeBankState | None = None
 
     def as_vector(self) -> np.ndarray:
         parts = tuple(bank.as_vector() for bank in self.banks) + (
@@ -603,15 +606,23 @@ class FullStationState:
         )
         if self.secondary_partial_station is not None:
             parts += (self.secondary_partial_station.as_vector(),)
+        if self.common_header is not None:
+            parts += (self.common_header.as_vector(),)
         return np.concatenate(parts)
 
     @classmethod
     def from_vector(cls, values: np.ndarray, bank_count: int) -> "FullStationState":
         primary_size = 3 * bank_count + 8
         dual_size = primary_size + 8
-        if len(values) not in (primary_size, dual_size):
+        primary_header_size = primary_size + 3
+        dual_header_size = dual_size + 3
+        if len(values) not in (
+            primary_size, dual_size, primary_header_size, dual_header_size,
+        ):
             raise ValueError(
-                f"FullStationState requires {primary_size} or {dual_size} state values"
+                "FullStationState requires one of "
+                f"{primary_size}, {primary_header_size}, {dual_size}, or "
+                f"{dual_header_size} state values"
             )
         banks = tuple(
             CascadeBankState.from_vector(values[3 * index:3 * index + 3])
@@ -619,11 +630,18 @@ class FullStationState:
         )
         offset = 3 * bank_count
         primary = PartialStationState.from_vector(values[offset:offset + 8])
+        has_secondary = len(values) in (dual_size, dual_header_size)
+        has_header = len(values) in (primary_header_size, dual_header_size)
         secondary = (
             PartialStationState.from_vector(values[offset + 8:offset + 16])
-            if len(values) == dual_size else None
+            if has_secondary else None
         )
-        return cls(banks, primary, secondary)
+        header_offset = offset + 8 + (8 if has_secondary else 0)
+        header = (
+            CascadeBankState.from_vector(values[header_offset:header_offset + 3])
+            if has_header else None
+        )
+        return cls(banks, primary, secondary, header)
 
 
 @dataclass(frozen=True)
@@ -655,6 +673,8 @@ class FullStationModel:
         compressor_suction: SupplyModel,
         partial_station: PartialStationModel,
         secondary_partial_station: PartialStationModel | None = None,
+        common_header: CascadeBank | None = None,
+        bank_header_restriction: RestrictionParameters | None = None,
         supervisor: CascadeSupervisor | None = None,
         valve_sequencer: CascadeValveSequencer | None = None,
         ambient_temperature_k: float = 298.15,
@@ -668,10 +688,69 @@ class FullStationModel:
         self.compressor_suction = compressor_suction
         self.partial_station = partial_station
         self.secondary_partial_station = secondary_partial_station
+        self.common_header = common_header
+        self.bank_header_restriction = (
+            IsentropicRealGasRestriction(
+                bank_header_restriction or RestrictionParameters(
+                    flow_area_m2=6.0e-6,
+                    discharge_coefficient=0.8,
+                )
+            )
+            if common_header is not None else None
+        )
         self.supervisor = supervisor or CascadeSupervisor()
         self.valve_sequencer = valve_sequencer or CascadeValveSequencer()
         self.secondary_valve_sequencer = CascadeValveSequencer()
         self.ambient_temperature_k = ambient_temperature_k
+
+    def header_gas_state(
+        self, state: FullStationState,
+    ) -> CompositeTankGasState | None:
+        """Return the finite common-header gas state when the topology includes it."""
+        if self.common_header is None or state.common_header is None:
+            return None
+        return self.common_header.gas_state(state.common_header)
+
+    def header_bank_mass_flows(
+        self,
+        state: FullStationState,
+        dispatch_indices: tuple[int | None, ...],
+        dispatch_openings: tuple[float, ...],
+        *,
+        allow_reverse_flow: bool = False,
+    ) -> tuple[float, ...]:
+        """Signed bank-to-header flows for the physically connected selector valves.
+
+        A positive value enters the header. A negative value is a reverse flow
+        into a bank and is possible only after an explicit check-valve failure.
+        When both dispensers select the same bank, the common selector path is
+        represented once at the largest commanded opening.
+        """
+        if len(dispatch_indices) != len(dispatch_openings):
+            raise ValueError("dispatch indices and openings must have equal lengths")
+        header_gas = self.header_gas_state(state)
+        if header_gas is None or self.bank_header_restriction is None:
+            return tuple(0.0 for _ in self.banks)
+        openings = [0.0] * len(self.banks)
+        for index, opening in zip(dispatch_indices, dispatch_openings):
+            if index is not None:
+                openings[index] = max(openings[index], float(opening))
+        bank_gases = tuple(
+            bank.gas_state(bank_state)
+            for bank, bank_state in zip(self.banks, state.banks)
+        )
+        return tuple(
+            self.bank_header_restriction.mass_flow_kg_s(
+                gas.pressure_pa,
+                gas.temperature_k,
+                header_gas.pressure_pa,
+                opening,
+                1.0,
+                allow_reverse_flow,
+                header_gas.temperature_k,
+            )
+            for gas, opening in zip(bank_gases, openings)
+        )
 
     def derivative(
         self,
@@ -691,12 +770,14 @@ class FullStationModel:
         secondary_nozzle_area_multiplier: float = 1.0,
         primary_allow_reverse_flow: bool = False,
         secondary_allow_reverse_flow: bool = False,
+        header_allow_reverse_flow: bool = False,
         compressor_flow_multiplier: float = 1.0,
     ) -> tuple[FullStationState, CompressorResult, float]:
         bank_gases = tuple(
             bank.gas_state(bank_state)
             for bank, bank_state in zip(self.banks, state.banks)
         )
+        header_gas = self.header_gas_state(state)
         if dispatch_index is None:
             supply_index = int(np.argmax([gas.pressure_pa for gas in bank_gases]))
         else:
@@ -710,8 +791,8 @@ class FullStationModel:
             if dispatch_index is not None else 0.0
         )
         dispatch_supply = SupplyState(
-            bank_gases[supply_index].pressure_pa,
-            bank_gases[supply_index].temperature_k,
+            (header_gas or bank_gases[supply_index]).pressure_pa,
+            (header_gas or bank_gases[supply_index]).temperature_k,
         )
         instantaneous = self.partial_station._flow_and_thermal_states(
             time_s,
@@ -745,8 +826,8 @@ class FullStationModel:
                 if secondary_dispatch_index is not None else supply_index
             )
             secondary_supply = SupplyState(
-                bank_gases[secondary_supply_index].pressure_pa,
-                bank_gases[secondary_supply_index].temperature_k,
+                (header_gas or bank_gases[secondary_supply_index]).pressure_pa,
+                (header_gas or bank_gases[secondary_supply_index]).temperature_k,
             )
             secondary_effective_command = secondary_command
             effective_secondary_pcv_multiplier = (
@@ -792,26 +873,91 @@ class FullStationModel:
                 mass_flow_kg_s=compressor_result.mass_flow_kg_s * compressor_flow_multiplier,
                 electrical_power_w=compressor_result.electrical_power_w * compressor_flow_multiplier,
             )
+        header_rate: CascadeBankState | None = None
+        header_flows = self.header_bank_mass_flows(
+            state,
+            (dispatch_index, secondary_dispatch_index),
+            (dispatch_valve_opening, secondary_dispatch_valve_opening),
+            allow_reverse_flow=header_allow_reverse_flow,
+        )
+        if header_gas is not None and self.common_header is not None:
+            pcv_values = [instantaneous["pcv_mass_flow"]]
+            hose_gases = [self.partial_station.hose_gas_state(state.partial_station)]
+            if secondary_instantaneous is not None and state.secondary_partial_station is not None:
+                pcv_values.append(secondary_instantaneous["pcv_mass_flow"])
+                hose_gases.append(
+                    self.secondary_partial_station.hose_gas_state(
+                        state.secondary_partial_station
+                    )
+                )
+            header_inlet_mass = sum(max(flow, 0.0) for flow in header_flows)
+            header_inlet_energy = sum(
+                max(flow, 0.0) * gas.specific_enthalpy_j_kg
+                for flow, gas in zip(header_flows, bank_gases)
+            )
+            header_inlet_mass += sum(max(-flow, 0.0) for flow in pcv_values)
+            header_inlet_energy += sum(
+                max(-flow, 0.0) * gas.specific_enthalpy_j_kg
+                for flow, gas in zip(pcv_values, hose_gases)
+            )
+            header_outlet_mass = (
+                sum(max(-flow, 0.0) for flow in header_flows)
+                + sum(max(flow, 0.0) for flow in pcv_values)
+            )
+            inlet_enthalpy = (
+                header_inlet_energy / header_inlet_mass
+                if header_inlet_mass > 0.0
+                else header_gas.specific_enthalpy_j_kg
+            )
+            header_rate = self.common_header.derivative(
+                state.common_header,
+                header_inlet_mass,
+                inlet_enthalpy,
+                header_outlet_mass,
+                self.ambient_temperature_k,
+            )
+
         bank_rates: list[CascadeBankState] = []
         for index, (bank, bank_state) in enumerate(zip(self.banks, state.banks)):
+            if header_gas is None:
+                direct_outflow = (
+                    (instantaneous["pcv_mass_flow"] if index == dispatch_index else 0.0)
+                    + (
+                        secondary_instantaneous["pcv_mass_flow"]
+                        if secondary_instantaneous is not None
+                        and index == secondary_dispatch_index else 0.0
+                    )
+                )
+                reverse_header_inflow = 0.0
+            else:
+                direct_outflow = max(header_flows[index], 0.0)
+                reverse_header_inflow = max(-header_flows[index], 0.0)
+            compressor_inflow = (
+                compressor_result.mass_flow_kg_s if index == recharge_index else 0.0
+            )
+            total_inflow = compressor_inflow + reverse_header_inflow
+            inlet_energy = (
+                compressor_inflow * compressor_result.outlet_enthalpy_j_kg
+                + reverse_header_inflow
+                * (header_gas.specific_enthalpy_j_kg if header_gas is not None else 0.0)
+            )
+            inlet_enthalpy = (
+                inlet_energy / total_inflow
+                if total_inflow > 0.0 else compressor_result.outlet_enthalpy_j_kg
+            )
             bank_rates.append(
                 bank.derivative(
                     bank_state,
-                    compressor_result.mass_flow_kg_s if index == recharge_index else 0.0,
-                    compressor_result.outlet_enthalpy_j_kg,
-                    (
-                        (instantaneous["pcv_mass_flow"] if index == dispatch_index else 0.0)
-                        + (
-                            secondary_instantaneous["pcv_mass_flow"]
-                            if secondary_instantaneous is not None
-                            and index == secondary_dispatch_index else 0.0
-                        )
-                    ),
+                    total_inflow,
+                    inlet_enthalpy,
+                    direct_outflow,
                     self.ambient_temperature_k,
                 )
             )
         return (
-            FullStationState(tuple(bank_rates), partial_rate, secondary_rate),
+            FullStationState(
+                tuple(bank_rates), partial_rate, secondary_rate, header_rate,
+            ),
             compressor_result,
             instantaneous["nozzle_mass_flow"],
         )
@@ -891,9 +1037,11 @@ class FullStationModel:
                 if dispatch_index is not None
                 else replace(command, valve_opening=0.0)
             )
+            header_gas = self.header_gas_state(current)
+            supply_gas = header_gas or bank_gases[supply_index]
             supply = SupplyState(
-                bank_gases[supply_index].pressure_pa,
-                bank_gases[supply_index].temperature_k,
+                supply_gas.pressure_pa,
+                supply_gas.temperature_k,
             )
             instantaneous = self.partial_station._flow_and_thermal_states(
                 time_s, current.partial_station, effective_command, supply

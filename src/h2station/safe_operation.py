@@ -458,9 +458,11 @@ class SafeFullStationSimulator:
             supply_index = dispatch_index if dispatch_index is not None else int(
                 np.argmax([gas.pressure_pa for gas in bank_gases])
             )
+            header_gas = self.station.header_gas_state(current)
+            primary_supply_gas = header_gas or bank_gases[supply_index]
             supply = SupplyState(
-                bank_gases[supply_index].pressure_pa,
-                bank_gases[supply_index].temperature_k,
+                primary_supply_gas.pressure_pa,
+                primary_supply_gas.temperature_k,
             )
             effective_command = fueling_command
             effective_primary_pcv_multiplier = (
@@ -481,9 +483,10 @@ class SafeFullStationSimulator:
             supply_2_index = (
                 dispatch_2_index if dispatch_2_index is not None else supply_index
             )
+            secondary_supply_gas = header_gas or bank_gases[supply_2_index]
             supply_2 = SupplyState(
-                bank_gases[supply_2_index].pressure_pa,
-                bank_gases[supply_2_index].temperature_k,
+                secondary_supply_gas.pressure_pa,
+                secondary_supply_gas.temperature_k,
             )
             effective_command_2 = fueling_command_2
             effective_secondary_pcv_multiplier = (
@@ -787,6 +790,7 @@ class SafeFullStationSimulator:
                         (virtual_safety.opening("dispenser.2") if virtual_safety is not None else 1.0)) if requested_2 and not safety_command.esd_latched else 0.0,
                     primary_allow_reverse_flow=self._allow_reverse_flow(override, "dispenser"),
                     secondary_allow_reverse_flow=self._allow_reverse_flow(override, "dispenser_2"),
+                    header_allow_reverse_flow=self._allow_reverse_flow(override, "header"),
                     compressor_flow_multiplier=compressor_flow_multiplier,
                 )
                 rates = self._apply_fault_effects(
@@ -912,7 +916,52 @@ class SafeFullStationSimulator:
         bank_rates = list(base_rate.banks)
         partial_rate = base_rate.partial_station
         secondary_rate = base_rate.secondary_partial_station
+        header_rate = base_rate.common_header
         for event in events:
+            if (
+                event.target == "header"
+                and header_rate is not None
+                and state.common_header is not None
+                and self.station.common_header is not None
+            ):
+                gas = self.station.common_header.gas_state(state.common_header)
+                if event.kind is FaultKind.PRESSURE_DISTURBANCE:
+                    desired = gas.pressure_pa + event.magnitude * 1.0e6
+                    mass_rate = np.clip(
+                        state.common_header.hydrogen_mass_kg
+                        * (desired - gas.pressure_pa)
+                        / max(abs(gas.pressure_pa), 1.0e5)
+                        / event.rate_s,
+                        -state.common_header.hydrogen_mass_kg / event.rate_s,
+                        10.0,
+                    )
+                    header_rate = replace(
+                        header_rate,
+                        hydrogen_mass_kg=header_rate.hydrogen_mass_kg + mass_rate,
+                        hydrogen_internal_energy_j=(
+                            header_rate.hydrogen_internal_energy_j
+                            + mass_rate * gas.specific_enthalpy_j_kg
+                        ),
+                    )
+                elif event.kind in (
+                    FaultKind.EXTERNAL_FIRE, FaultKind.TEMPERATURE_DISTURBANCE,
+                ):
+                    source_temperature = event.external_temperature_k or 298.15
+                    ua = event.heat_transfer_ua_w_k or 500.0
+                    heat = ua * (
+                        source_temperature - state.common_header.wall_temperature_k
+                    )
+                    p = self.station.common_header.parameters
+                    f = self.station.common_header.fit
+                    capacity = (
+                        p.wall_mass_kg * p.wall_specific_heat_j_kg_k
+                        * f.wall_heat_capacity_multiplier
+                    )
+                    header_rate = replace(
+                        header_rate,
+                        wall_temperature_k=header_rate.wall_temperature_k + heat / capacity,
+                    )
+                continue
             if event.kind is FaultKind.PRESSURE_DISTURBANCE:
                 bank_rates, partial_rate, secondary_rate = self._apply_pressure_disturbance(
                     event, state, bank_rates, partial_rate, secondary_rate
@@ -921,7 +970,9 @@ class SafeFullStationSimulator:
                 bank_rates, partial_rate, secondary_rate = self._apply_heat_transfer(
                     event, state, bank_rates, partial_rate, secondary_rate
                 )
-        return FullStationState(tuple(bank_rates), partial_rate, secondary_rate)
+        return FullStationState(
+            tuple(bank_rates), partial_rate, secondary_rate, header_rate,
+        )
 
     def _apply_pressure_disturbance(self, event, state, bank_rates, partial_rate, secondary_rate):
         target = event.target
@@ -993,7 +1044,9 @@ class SafeFullStationSimulator:
         return bank_rates, partial_rate, secondary_rate
 
     def _gas_for_target(self, target, state):
-        if target.startswith("cascade.") or target in ("compressor", "header"):
+        if target == "header" and self.station.common_header is not None and state.common_header is not None:
+            return self.station.common_header.gas_state(state.common_header)
+        if target.startswith("cascade.") or target == "compressor":
             index = ({"low": 0, "medium": 1, "high": 2}.get(target.split(".", 1)[1]) if target.startswith("cascade.") else 2)
             return self.station.banks[index].gas_state(state.banks[index]) if index is not None else None
         if target == "dispenser.hose": return self.station.partial_station.hose_gas_state(state.partial_station)
@@ -1003,7 +1056,9 @@ class SafeFullStationSimulator:
         return None
 
     def _mass_for_target(self, target, state):
-        if target.startswith("cascade.") or target in ("compressor", "header"):
+        if target == "header" and state.common_header is not None:
+            return state.common_header.hydrogen_mass_kg
+        if target.startswith("cascade.") or target == "compressor":
             index = ({"low": 0, "medium": 1, "high": 2}.get(target.split(".", 1)[1]) if target.startswith("cascade.") else 2); return state.banks[index].hydrogen_mass_kg if index is not None else 0.0
         if target == "dispenser.hose": return state.partial_station.hose_hydrogen_mass_kg
         if target == "dispenser_2.hose" and state.secondary_partial_station is not None: return state.secondary_partial_station.hose_hydrogen_mass_kg
@@ -1045,10 +1100,13 @@ class SafeFullStationSimulator:
                 raise ValueError(f"Unknown leak target: {target}")
             index = matches[0]
             gas = self.station.banks[index].gas_state(state.banks[index])
-        elif target in ("compressor", "header"):
-            # The current full-station model has no separate compressor/header
-            # inventory. Use the connected high-bank volume as an explicit
-            # conservative proxy and retain the original component_id in risk output.
+        elif target == "header":
+            if self.station.common_header is None or state.common_header is None:
+                raise ValueError("Common-header state is unavailable")
+            gas = self.station.common_header.gas_state(state.common_header)
+        elif target == "compressor":
+            # The compressor still has no separate gas inventory. Use the
+            # connected high-bank state as a conservative source proxy.
             index = next((i for i, bank in enumerate(self.station.banks) if bank.parameters.name == "high"), len(self.station.banks)-1)
             gas = self.station.banks[index].gas_state(state.banks[index])
         else:
@@ -1067,6 +1125,7 @@ class SafeFullStationSimulator:
         bank_rates = list(base_rate.banks)
         partial_rate = base_rate.partial_station
         secondary_rate = base_rate.secondary_partial_station
+        header_rate = base_rate.common_header
         for event, scenario, source, enthalpy in self._active_leak_inputs(events, state):
             mass_flow = self.risk_monitor.leak_model.mass_flow_kg_s(scenario, source)
             # Do not allow an adaptive ODE trial step to remove more inventory
@@ -1124,6 +1183,15 @@ class SafeFullStationSimulator:
                     ),
                 )
                 secondary_rate = replace(secondary_rate, vehicle=vehicle_rate)
+            elif event.target == "header" and header_rate is not None:
+                header_rate = replace(
+                    header_rate,
+                    hydrogen_mass_kg=header_rate.hydrogen_mass_kg - mass_flow,
+                    hydrogen_internal_energy_j=(
+                        header_rate.hydrogen_internal_energy_j
+                        - mass_flow * enthalpy
+                    ),
+                )
             else:
                 bank_name = event.target.split(".", 1)[1] if event.target.startswith("cascade.") else "high"
                 index = next((index for index, bank in enumerate(self.station.banks) if bank.parameters.name == bank_name), len(self.station.banks)-1)
@@ -1137,7 +1205,9 @@ class SafeFullStationSimulator:
                         - mass_flow * enthalpy
                     ),
                 )
-        return FullStationState(tuple(bank_rates), partial_rate, secondary_rate)
+        return FullStationState(
+            tuple(bank_rates), partial_rate, secondary_rate, header_rate,
+        )
 
     @staticmethod
     def _default_concentration_extractor(

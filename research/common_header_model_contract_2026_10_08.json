@@ -1,0 +1,75 @@
+{
+  "artifact": "finite common high-pressure header model contract",
+  "created_date": "2026-10-08",
+  "status": "PROSPECTIVE_MODEL_INFRASTRUCTURE",
+  "validation_claim": "not externally validated",
+  "topology": "cascade bank selector paths -> finite common header -> dispenser PCV 1 and PCV 2",
+  "continuous_states": [
+    "header_hydrogen_mass_kg",
+    "header_hydrogen_internal_energy_j",
+    "header_wall_temperature_k"
+  ],
+  "reference_parameters": {
+    "header_internal_volume_m3": 0.015,
+    "bank_header_flow_area_m2": 0.000006,
+    "restriction_discharge_coefficient": 0.8,
+    "header_wall_mass_kg": 45.0,
+    "header_wall_specific_heat_j_kg_k": 500.0,
+    "header_gas_wall_ua_w_k": 18.0,
+    "header_wall_ambient_ua_w_k": 8.0,
+    "parameter_status": "declared reference values; not fitted to private or public station data"
+  },
+  "conservation_contract": {
+    "mass": "dm_header/dt = sum(bank_to_header) - sum(header_to_pcv) - leak",
+    "energy": "dU_header/dt = sum(mdot_in*h_source) - sum(mdot_out*h_header) - gas_wall_heat - leak*h_header",
+    "bank_coupling": "each signed header transfer is applied with equal and opposite mass and enthalpy terms",
+    "reverse_flow": "disabled by default and enabled only by an explicit header check-valve-failure event"
+  },
+  "telemetry_contract": {
+    "PT-1001": "finite common-header pressure",
+    "TT-1001": "finite common-header gas temperature",
+    "FT-1001": "signed total cascade-bank inflow to common header",
+    "MASS_HEADER": "finite common-header hydrogen inventory"
+  },
+  "hazop_effect": {
+    "newly_executable_rules": [
+      "HZ-073",
+      "HZ-074"
+    ],
+    "simulation_ready_rule_count_before": 203,
+    "simulation_ready_rule_count_after": 205,
+    "total_rule_count": 214
+  },
+  "normal_operation_guard": {
+    "affected_rules": [
+      "HZ-019",
+      "HZ-020",
+      "HZ-027",
+      "HZ-028",
+      "HZ-035",
+      "HZ-036"
+    ],
+    "reason": "The workbook thresholds are PROPOSED, site_activation=false values below the modelled normal pre-intercooler discharge temperature.",
+    "runtime_policy": "Evaluate only during a compressor thermal or matching temperature-sensor fault exercise until approved OEM/site limits are supplied.",
+    "source_thresholds_modified": false
+  },
+  "verification": {
+    "focused_test_command": "python -m pytest -q tests/test_common_header.py tests/test_hazop.py tests/test_process_operations.py tests/test_core.py",
+    "focused_result": "77 passed",
+    "integration_test_command": "python -m pytest -q tests/test_virtual_safety.py tests/test_normal_operation_alarms.py tests/test_remote_scenarios.py tests/test_bank_initial_fill.py tests/test_ijhe_readiness_audit.py tests/test_common_header.py tests/test_hazop.py tests/test_process_operations.py tests/test_core.py",
+    "integration_result": "185 passed",
+    "required_future_evidence": "apparatus-resolved, synchronized source/header/terminal pressure, temperature, flow, valve-position and mass traces under a frozen no-fit holdout"
+  },
+  "claim_limits": [
+    "The added states establish conservation and fault propagation; they do not validate the declared header geometry.",
+    "Existing frozen validation results retain their original model hashes and must not be relabeled as validation of this topology.",
+    "A future apparatus-resolved holdout must keep the declared parameters fixed and retain all eligible failures in its denominator."
+  ],
+  "implementation_paths": [
+    "src/h2station/full_station.py",
+    "src/h2station/safe_operation.py",
+    "src/h2station/hazop/mapping.py",
+    "src/h2station/hazop/engine.py",
+    "src/h2station/scenario.py"
+  ]
+}

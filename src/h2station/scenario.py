@@ -96,6 +96,11 @@ class ReferenceScenario:
     # the observed compressor restart dwell only; it is not a vehicle-fill or
     # compressor-capacity validation result.
     station_minimum_recharge_off_time_s: float | None = None
+    # Finite common-header inventory between the cascade selectors and both
+    # dispenser PCVs. These are declared reference geometry values, not fitted
+    # station data; frozen station-side validation must evaluate them unchanged.
+    header_internal_volume_m3: float = 0.015
+    bank_header_flow_area_m2: float = 6.0e-6
     initial_bank_fill_percent: tuple[float, float, float] = DEFAULT_BANK_INITIAL_FILL_PERCENT
     fault_events: tuple[FaultEvent, ...] = ()
     # Optional time-dependent boundary traces used by partial-station validation.
@@ -206,6 +211,8 @@ def build_reference_scenario(
         config.precooler_duty_multiplier,
         config.maximum_gas_temperature_k,
         config.maximum_precooler_temperature_deviation_k,
+        config.header_internal_volume_m3,
+        config.bank_header_flow_area_m2,
     ) <= 0.0:
         raise ValueError("fit multipliers and precooler tolerance must be positive")
     if config.vehicle_geometry_basis not in {"reference", "capacity_eos"}:
@@ -356,6 +363,17 @@ def build_reference_scenario(
             ("high", 95.0e6),
         )
     )
+    common_header = CascadeBank(
+        CascadeBankParameters(
+            name="common-header",
+            internal_volume_m3=config.header_internal_volume_m3,
+            target_pressure_pa=100.0e6,
+            wall_mass_kg=45.0,
+            wall_specific_heat_j_kg_k=500.0,
+            gas_wall_ua_w_k=18.0,
+            wall_ambient_ua_w_k=8.0,
+        )
+    )
     compressor = MultistageHydrogenCompressor(
         CompressorParameters(
             number_of_stages=3,
@@ -378,6 +396,10 @@ def build_reference_scenario(
         ),
         partial_station=partial,
         secondary_partial_station=secondary_partial,
+        common_header=common_header,
+        bank_header_restriction=RestrictionParameters(
+            flow_area_m2=config.bank_header_flow_area_m2,
+        ),
         supervisor=CascadeSupervisor(
             CascadeSupervisorParameters(
                 minimum_dispatch_pressure_margin_pa=(
@@ -419,17 +441,33 @@ def build_reference_scenario(
         hose_temperature_k=config.ambient_temperature_k,
         coolant_temperature_k=config.delivery_temperature_k,
     )
+    initial_bank_states = tuple(
+        bank.initial_state(maximum_pa * percent / 100.0, config.ambient_temperature_k)
+        for bank, maximum_pa, percent in zip(
+            banks,
+            BANK_REFERENCE_MAX_PRESSURE_PA,
+            config.initial_bank_fill_percent,
+        )
+    )
+    # The reference startup aligns the isolated header with the first (low)
+    # cascade step. This avoids inventing a retained high-bank line pack at a
+    # cold start while still allowing a continued run to preserve its true
+    # residual header pressure in ``final_state``.
+    initial_header_pressure_pa = min(
+        maximum_pa * percent / 100.0
+        for maximum_pa, percent in zip(
+            BANK_REFERENCE_MAX_PRESSURE_PA,
+            config.initial_bank_fill_percent,
+        )
+    )
     initial_state = FullStationState(
-        banks=tuple(
-            bank.initial_state(maximum_pa * percent / 100.0, config.ambient_temperature_k)
-            for bank, maximum_pa, percent in zip(
-                banks,
-                BANK_REFERENCE_MAX_PRESSURE_PA,
-                config.initial_bank_fill_percent,
-            )
-        ),
+        banks=initial_bank_states,
         partial_station=initial_partial,
         secondary_partial_station=initial_partial_2,
+        common_header=common_header.initial_state(
+            initial_header_pressure_pa,
+            config.ambient_temperature_k,
+        ),
     )
     fault_injector = FaultInjector(FaultSchedule(config.fault_events))
     detector_policy = load_public_detector_policy()

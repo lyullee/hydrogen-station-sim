@@ -7,7 +7,7 @@ MODEL_BINDINGS = {}
 for n, bank in (("07", "low"), ("08", "medium"), ("09", "high")):
     MODEL_BINDINGS[f"PT-{n}01"] = ("PROCESS_STATE", f"bank.{bank}.pressure_pa / 1e6")
     MODEL_BINDINGS[f"TT-{n}01"] = ("PROCESS_STATE", f"bank.{bank}.temperature_k - 273.15")
-    MODEL_BINDINGS[f"FT-{n}01"] = ("DERIVED_SHARED", f"sum of dispatched PCV flows from {bank}; not an independent meter")
+    MODEL_BINDINGS[f"FT-{n}01"] = ("PROCESS_FLOW", f"signed {bank}-bank selector flow into finite common header")
 for d, p, h, v in ((1, "11", "13", "14"), (2, "15", "17", "18")):
     hx = str(int(p)+1)
     for tag, binding in {
@@ -22,7 +22,7 @@ for d, p, h, v in ((1, "11", "13", "14"), (2, "15", "17", "18")):
 for n in ("01", "03"):
     MODEL_BINDINGS[f"PT-{n}01"] = ("BOUNDARY_SETTING", "compressor_suction.pressure_pa/1e6; fixed supply, not trailer depletion")
     MODEL_BINDINGS[f"TT-{n}01"] = ("BOUNDARY_SETTING", "compressor_suction.temperature_k-273.15; not measured trailer gas")
-MODEL_BINDINGS["FT-1001"] = ("DERIVED_SHARED", "FT-1101 + FT-1501; cannot independently detect header mass loss")
+MODEL_BINDINGS["FT-1001"] = ("PROCESS_FLOW", "signed total cascade-bank inflow to finite common header")
 GD_SENSOR_ZONES = {
     "GD-0101": "tube-trailer supply", "GD-0201": "unloading manifold",
     "GD-0601": "compressor discharge", "GD-0701": "low bank",
@@ -51,8 +51,8 @@ MODEL_BINDINGS.update({
     "PT-0601": ("COMPRESSOR_STAGE_MODEL", "compressor final discharge pressure"),
     "TT-0601": ("COMPRESSOR_STAGE_MODEL", "compressor final discharge temperature"),
     "TT-0602": ("PROCESS_STATE", "selected recharge bank gas temperature; no separate discharge line inventory"),
-    "PT-1001": ("DERIVED_SHARED", "highest selected bank supply pressure; no common header inventory"),
-    "TT-1001": ("DERIVED_SHARED", "flow-weighted selected bank supply temperature; no common header inventory"),
+    "PT-1001": ("PROCESS_STATE", "finite common-header pressure"),
+    "TT-1001": ("PROCESS_STATE", "finite common-header gas temperature"),
     "PT-1201": ("DERIVED_SHARED", "dispenser 1 PCV outlet pressure less precooler hydrogen pressure drop"),
     "PT-1601": ("DERIVED_SHARED", "dispenser 2 PCV outlet pressure less precooler hydrogen pressure drop"),
     "FT-1901": ("DERIVED_THERMAL_PROXY", "coolant equivalent L/min from total heat rate / (water cp * assumed 5 K rise)"),
@@ -63,12 +63,12 @@ MODEL_BINDINGS.update({
     "TT-2001": ("VENT_PROXY", "vent release source temperature when injected; ambient otherwise"),
     "FT-2001": ("VENT_PROXY", "vent release mass flow when injected; zero otherwise; no PSV model"),
 })
-HELPERS = {"MASS_HOSE_1", "MASS_HOSE_2"}
+HELPERS = {"MASS_HOSE_1", "MASS_HOSE_2", "MASS_HEADER"}
 # The two dispenser-nozzle restrictions have an explicit reverse-flow path that
 # is enabled only by a simulated check-valve failure.  The remaining flow
 # channels are still one-way or derived shared signals and must not be claimed
 # as reverse-flow capable.
-REVERSE_FLOW_CAPABLE_SIGNALS = {"FT-1301", "FT-1701"}
+REVERSE_FLOW_CAPABLE_SIGNALS = {"FT-1001", "FT-1301", "FT-1701"}
 MODE_KEYS = {
     "station.monitoring", "station.filling_count", "station.switch_elapsed_s",
     "station.esd", "station.esd_elapsed_s",
@@ -135,6 +135,25 @@ class ModelMapper:
                virtual_safety_snapshot=None):
         signals, modes = {}, {"station.monitoring": True, "station.esd": safety.esd_latched,
                               "station.scenario_active": bool(fault_events or active_leaks)}
+        compressor_temperature_tags = {"TT-0401", "TT-0501", "TT-0601"}
+        compressor_thermal_targets = {
+            "compressor", "compressor.stage1", "compressor.stage2",
+            "compressor.stage3", "N04", "N05", "N06",
+        }
+        modes["compressor.thermal_event"] = any(
+            (
+                event.kind.value in ("external-fire", "temperature-disturbance")
+                and (
+                    event.target in compressor_thermal_targets
+                    or event.target.startswith("compressor.")
+                )
+            )
+            or (
+                event.kind.value in ("sensor-bias", "sensor-freeze")
+                and event.target in compressor_temperature_tags
+            )
+            for event in fault_events
+        )
         active_relief_targets = {
             event.target for event, _leak, _source, _location in active_leaks
             if event.event_id.startswith("relief-")
@@ -159,12 +178,31 @@ class ModelMapper:
         modes["station.filling_count"] = sum(c.phase.value == "filling" for c in commands)
         modes["station.switch_elapsed_s"] = self.elapsed("dispatch", dispatch_indices, t)
         bank_gases = [bank.gas_state(bank_state) for bank, bank_state in zip(station.banks, state.banks)]
+        header_reverse_enabled = any(
+            getattr(getattr(event, "kind", None), "value", None) == "check-valve-failure"
+            and event.target in {"header", "cascade.header", "check-valve"}
+            for event in fault_events
+        )
+        header_flows = station.header_bank_mass_flows(
+            state,
+            tuple(dispatch_indices),
+            tuple(dispatch_openings),
+            allow_reverse_flow=header_reverse_enabled,
+        )
+        header_gas = station.header_gas_state(state)
         for index, bank in enumerate(station.banks):
             z = str(7+index).zfill(2)
             gas = bank_gases[index]
             put(f"PT-{z}01", gas.pressure_pa/1e6); put(f"TT-{z}01", gas.temperature_k-273.15)
-            flows = [inst["pcv_mass_flow"] for inst, selected in zip(instantaneous, dispatch_indices) if selected == index]
-            put(f"FT-{z}01", sum(flows)*1000)
+            if header_gas is not None:
+                bank_flow = header_flows[index]
+            else:
+                bank_flow = sum(
+                    inst["pcv_mass_flow"]
+                    for inst, selected in zip(instantaneous, dispatch_indices)
+                    if selected == index
+                )
+            put(f"FT-{z}01", bank_flow * 1000)
             selected = index in dispatch_indices
             actual_out_open = any(i == index and op > 0 for i, op in zip(dispatch_indices, dispatch_openings))
             modes.update({f"bank.{z}.dispatch": selected,
@@ -268,13 +306,24 @@ class ModelMapper:
         put("PT-0601", discharge/1e6)
         put("TT-0601", compressor.outlet_temperature_k-273.15)
         put("TT-0602", bank_gases[recharge_index].temperature_k-273.15 if recharge_index is not None else supply.temperature_k-273.15)
-        selected = [inst for inst, index in zip(instantaneous, dispatch_indices) if index is not None]
-        header = selected or [instantaneous[0]]
-        put("PT-1001", max(inst["supply_pressure"] for inst in header)/1e6)
-        total_flow = sum(max(0.0,inst["pcv_mass_flow"]) for inst in header)
-        put("TT-1001", (sum(inst["supply_temperature"]*max(0.0,inst["pcv_mass_flow"]) for inst in header)/total_flow
-                         if total_flow else header[0]["supply_temperature"])-273.15)
-        put("FT-1001", sum(inst["pcv_mass_flow"] for inst in instantaneous)*1000)
+        if header_gas is not None and state.common_header is not None:
+            put("PT-1001", header_gas.pressure_pa / 1e6)
+            put("TT-1001", header_gas.temperature_k - 273.15)
+            put("FT-1001", sum(header_flows) * 1000)
+            put(
+                "MASS_HEADER",
+                state.common_header.hydrogen_mass_kg,
+                "kg",
+                "PROCESS_INVENTORY",
+            )
+        else:
+            selected = [inst for inst, index in zip(instantaneous, dispatch_indices) if index is not None]
+            header = selected or [instantaneous[0]]
+            put("PT-1001", max(inst["supply_pressure"] for inst in header)/1e6)
+            total_flow = sum(max(0.0,inst["pcv_mass_flow"]) for inst in header)
+            put("TT-1001", (sum(inst["supply_temperature"]*max(0.0,inst["pcv_mass_flow"]) for inst in header)/total_flow
+                             if total_flow else header[0]["supply_temperature"])-273.15)
+            put("FT-1001", sum(inst["pcv_mass_flow"] for inst in instantaneous)*1000)
         coolant_states = (state.partial_station, state.secondary_partial_station)
         for tag, coolant in zip(("TT-1901","TT-1902"), coolant_states):
             put(tag, coolant.coolant_temperature_k-273.15)

@@ -35,7 +35,7 @@ model, API, and monitoring interface.
 - CoolProp-generated hydrogen property table (runtime lookup; no CoolProp calls in the process solver)
 - Storage mass, energy, and wall-temperature dynamics
 - Three-stage compressor with intercooling and electrical power
-- Three-bank cascade dispatch and recharge
+- Three-bank cascade dispatch and recharge with a finite common-header mass and energy inventory
 - Real-gas PCV, nozzle, check valve, and relief primitives
 - Finite-UA precooler and finite-volume hose line-pack
 - Gas, HDPE liner, and CFRP Type IV vehicle tank
