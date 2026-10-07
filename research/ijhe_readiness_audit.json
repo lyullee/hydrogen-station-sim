@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T09:12:34.420757+00:00",
+  "generated_at": "2026-10-07T15:06:45.435726+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 78,
+    "PASS": 80,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -616,10 +616,11 @@
       "id": "full_loop_external_validation",
       "status": "FAIL",
       "claim": "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
-      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json; research\\public_full_loop_search_sweep_2026_10_05.json; research\\public_full_loop_search_recheck_2026_10_06.json; research\\apparatus_resolved_release_protocol.json",
+      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json; research\\public_full_loop_search_sweep_2026_10_05.json; research\\public_full_loop_search_recheck_2026_10_06.json; research\\apparatus_resolved_release_protocol.json; research\\controlled_full_loop_cohort_registry.json",
       "requirement": "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
       "observed": {
         "protocol_integrity": true,
+        "public_external_loop_pass": false,
         "aggregate": {
           "case_count": 8,
           "screening_pass_count": 0,
@@ -675,6 +676,17 @@
               ]
             }
           }
+        },
+        "controlled_cohort_registry": {
+          "present": false,
+          "integrity_passed": false,
+          "evaluation_scope": null,
+          "case_count": null,
+          "case_pass_count": null,
+          "case_pass_fraction": null,
+          "provenance_screen_passed": null,
+          "full_loop_external_validation_supported": null,
+          "raw_trace_hashes_published": null
         },
         "new_external_data_search": {
           "status": "NO_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
@@ -1047,6 +1059,26 @@
         "public_consequence_component_eligible": true,
         "full_loop_station_vehicle_holdout_eligible": false,
         "date_consistency": "CONFLICT_REQUIRES_CITATION_CLARIFICATION"
+      }
+    },
+    {
+      "id": "elvhys_detector_holdout_failure_integrity",
+      "status": "PASS",
+      "claim": "Both prospective ELVHYS detector-intake failures are retained without post-outcome exclusion, and the separate diagnostic reports data usability without promoting a validation claim.",
+      "evidence": "research\\elvhys_detector_holdout_result_2026_10_07.json; research\\elvhys_detector_holdout_result_v2_2026_10_07.json; research\\elvhys_detector_intake_diagnostic_2026_10_08.json",
+      "requirement": "Both frozen results remain FAIL with matching protocol hashes; the diagnostic must identify 14/15 baseline-eligible cases, retain test 44 and remain ineligible as confirmatory validation.",
+      "observed": {
+        "v1_status": "FAIL",
+        "v2_status": "FAIL",
+        "v1_retained_failure": true,
+        "v2_retained_failure": true,
+        "baseline_eligible_case_count": 14,
+        "selected_case_count": 15,
+        "failed_case_ids": [
+          44
+        ],
+        "confirmatory_validation_eligible": false,
+        "interpretation": "Fourteen of fifteen selected files satisfy the predeclared baseline window, but the prospective cohort fails as a whole because post-outcome exclusion of test 44 is prohibited. This quantifies public data intake usability only and is not a model-performance result."
       }
     },
     {
@@ -3740,6 +3772,29 @@
       }
     },
     {
+      "id": "runtime_public_accident_precedent_routing",
+      "status": "PASS",
+      "claim": "Active response families receive integrity-checked, scenario-specific public KHK accident precedents in both the evidence manifest and compact LLM prompt.",
+      "evidence": "research\\runtime_public_accident_precedent_routing_2026_10_07.json",
+      "requirement": "23 citation-only reports, eight mapped response families, current source hashes and zero manifest/prompt routing failures; no raw report text or effectiveness/frequency claim.",
+      "observed": {
+        "aggregate": {
+          "public_report_count": 23,
+          "mapped_response_family_count": 8,
+          "runtime_routed_case_references": 42,
+          "runtime_representative_references": 15,
+          "unmatched_response_family_count": 0,
+          "manifest_routing_failure_count": 0,
+          "prompt_projection_failure_count": 0,
+          "contract_pass": true
+        },
+        "source_hashes_match": true,
+        "raw_report_text_loaded": false,
+        "effectiveness_claimed": false,
+        "claim_boundary": "This audit verifies citation integrity and scenario-specific runtime routing of public accident precedents. It does not establish historical action correctness, response effectiveness, accident frequency, causality or safety."
+      }
+    },
+    {
       "id": "preslhy_blowdown_external_validation",
       "status": "PASS",
       "claim": "The source-depletion and direct-aperture release model meets its prospectively frozen screens on public PRESLHY ambient blowdown experiments.",
@@ -5124,6 +5179,7 @@
           "public HIAD action-to-playbook traceability metadata is carried into the response evidence envelope",
           "public KHK accident-report inventory and citation link are carried into the evidence envelope without mirrored report text",
           "public KHK scenario-precedent map links all 23 citation records to conservative response families without exposing report text or frequency claims",
+          "active response families now receive only their integrity-checked KHK public-accident precedents in the runtime evidence manifest, compact LLM prompt and staged operator guidance",
           "consequence flow-boundary mismatches are exposed when HyRAM recomputes a high-pressure choked flow instead of silently presenting it as the supplied process flow",
           "public HIAD action categories are evaluated case-by-case against required staged response plans without using raw action text or making an effectiveness claim",
           "derived HIAD action-category counts and the action-evidence artifact digest are carried into the hashed runtime envelope without raw incident prose",
@@ -5201,6 +5257,20 @@
             "contract_pass": true,
             "interpretation": "metadata candidate-family coverage only; counts are not incident frequencies because cases may map to multiple families"
           }
+        },
+        "runtime_public_accident_precedent_routing": {
+          "evidence": "research/runtime_public_accident_precedent_routing_2026_10_07.json",
+          "public_report_count": 23,
+          "mapped_response_family_count": 8,
+          "runtime_routed_case_references": 42,
+          "runtime_representative_references": 15,
+          "unmatched_response_family_count": 0,
+          "manifest_routing_failure_count": 0,
+          "prompt_projection_failure_count": 0,
+          "raw_report_text_loaded": false,
+          "effectiveness_claimed": false,
+          "frequency_claimed": false,
+          "interpretation": "scenario-specific citation routing and prompt-delivery integrity only; it does not establish response correctness, causality, frequency, operator benefit or safety"
         },
         "response_stage_contract": {
           "evidence": "research/hiad_response_stage_contract.json",

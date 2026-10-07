@@ -32,6 +32,14 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert gates["elvhys_dataverse_metadata_integrity"]["observed"][
         "full_loop_station_vehicle_holdout_eligible"
     ] is False
+    assert gates["elvhys_detector_holdout_failure_integrity"]["status"] == "PASS"
+    elvhys_holdout = gates["elvhys_detector_holdout_failure_integrity"]["observed"]
+    assert elvhys_holdout["v1_status"] == "FAIL"
+    assert elvhys_holdout["v2_status"] == "FAIL"
+    assert elvhys_holdout["baseline_eligible_case_count"] == 14
+    assert elvhys_holdout["selected_case_count"] == 15
+    assert elvhys_holdout["failed_case_ids"] == [44]
+    assert elvhys_holdout["confirmatory_validation_eligible"] is False
     assert gates["preoutcome_design_sensitivity"]["status"] == "PASS"
     assert gates["full_loop_external_validation"]["status"] == "FAIL"
     assert gates["public_dispenser_table_download_integrity"]["status"] == "PASS"

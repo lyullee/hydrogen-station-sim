@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "artifact_type": "elvhys_measured_signal_hazop_holdout_v2",
+  "status": "FAIL",
+  "protocol": {
+    "path": "research/elvhys_detector_holdout_protocol_v2_2026_10_07.json",
+    "sha256": "d92810d3bfb068d633edb85467873401c7425058fd0949d475925c669f60a8e6",
+    "freeze_commit": "64fc26e",
+    "outcomes_accessed_before_freeze": false
+  },
+  "execution": {
+    "selected_case_count": 15,
+    "downloaded_file_count": 30,
+    "downloaded_bytes": 188348927,
+    "fully_scored_case_count_persisted": 0,
+    "failure_encountered_at_test_id": 44,
+    "failure_stage": "pre_release_baseline_eligibility",
+    "failure_type": "INSUFFICIENT_PRE_RELEASE_BASELINE_SAMPLES",
+    "failure_detail": "The frozen v2 protocol required at least 20 finite pre-release baseline samples per retained concentration head after a 5 s guard. Test 44's concentration trace starts only 0.5 s before the independently pressure-detected release onset, leaving zero eligible baseline rows. The run stopped without excluding the case or changing the frozen rule."
+  },
+  "retained_failure": true,
+  "selected_outcomes_now_consumed_for_development": true,
+  "primary_contract_pass": false,
+  "post_failure_diagnostic": "research/elvhys_detector_intake_diagnostic_2026_10_08.json",
+  "claim_boundary": "This retained negative result demonstrates that the prospectively frozen v2 intake contract cannot score the complete selected ELVHYS holdout because one selected trace lacks the declared pre-release baseline window. It provides no alarm-performance, dispersion, detector-placement, consequence-distance, ESD-effectiveness or full-loop validation claim. No selected v2 case may be excluded or reused as a prospective holdout."
+}

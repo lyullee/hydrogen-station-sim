@@ -1479,6 +1479,56 @@ def audit(root: Path) -> dict[str, object]:
         } if elvhys_metadata else "missing",
     ))
 
+    elvhys_v1_path = root / "research/elvhys_detector_holdout_result_2026_10_07.json"
+    elvhys_v2_path = root / "research/elvhys_detector_holdout_result_v2_2026_10_07.json"
+    elvhys_intake_path = root / "research/elvhys_detector_intake_diagnostic_2026_10_08.json"
+    elvhys_v1 = _json(elvhys_v1_path)
+    elvhys_v2 = _json(elvhys_v2_path)
+    elvhys_intake = _json(elvhys_intake_path)
+    elvhys_v1_protocol = root / str(((elvhys_v1 or {}).get("protocol") or {}).get("path") or "")
+    elvhys_v2_protocol = root / str(((elvhys_v2 or {}).get("protocol") or {}).get("path") or "")
+    elvhys_intake_aggregate = (elvhys_intake or {}).get("aggregate") or {}
+    elvhys_holdout_integrity_pass = bool(
+        (elvhys_v1 or {}).get("status") == "FAIL"
+        and (elvhys_v1 or {}).get("retained_failure") is True
+        and (elvhys_v1 or {}).get("primary_contract_pass") is False
+        and elvhys_v1_protocol.is_file()
+        and _sha256(elvhys_v1_protocol)
+        == ((elvhys_v1 or {}).get("protocol") or {}).get("sha256")
+        and (elvhys_v2 or {}).get("status") == "FAIL"
+        and (elvhys_v2 or {}).get("retained_failure") is True
+        and (elvhys_v2 or {}).get("primary_contract_pass") is False
+        and ((elvhys_v2 or {}).get("execution") or {}).get("failure_encountered_at_test_id") == 44
+        and elvhys_v2_protocol.is_file()
+        and _sha256(elvhys_v2_protocol)
+        == ((elvhys_v2 or {}).get("protocol") or {}).get("sha256")
+        and (elvhys_intake or {}).get("outcome_informed") is True
+        and (elvhys_intake or {}).get("eligible_as_confirmatory_validation") is False
+        and elvhys_intake_aggregate.get("selected_case_count") == 15
+        and elvhys_intake_aggregate.get("baseline_eligible_case_count") == 14
+        and elvhys_intake_aggregate.get("baseline_ineligible_case_count") == 1
+        and elvhys_intake_aggregate.get("failed_case_ids") == [44]
+        and elvhys_intake_aggregate.get("case_exclusion_permitted") is False
+    )
+    gates.append(_gate(
+        "elvhys_detector_holdout_failure_integrity",
+        "PASS" if elvhys_holdout_integrity_pass else "FAIL",
+        "Both prospective ELVHYS detector-intake failures are retained without post-outcome exclusion, and the separate diagnostic reports data usability without promoting a validation claim.",
+        f"{elvhys_v1_path.relative_to(root)}; {elvhys_v2_path.relative_to(root)}; {elvhys_intake_path.relative_to(root)}",
+        "Both frozen results remain FAIL with matching protocol hashes; the diagnostic must identify 14/15 baseline-eligible cases, retain test 44 and remain ineligible as confirmatory validation.",
+        {
+            "v1_status": (elvhys_v1 or {}).get("status"),
+            "v2_status": (elvhys_v2 or {}).get("status"),
+            "v1_retained_failure": (elvhys_v1 or {}).get("retained_failure"),
+            "v2_retained_failure": (elvhys_v2 or {}).get("retained_failure"),
+            "baseline_eligible_case_count": elvhys_intake_aggregate.get("baseline_eligible_case_count"),
+            "selected_case_count": elvhys_intake_aggregate.get("selected_case_count"),
+            "failed_case_ids": elvhys_intake_aggregate.get("failed_case_ids"),
+            "confirmatory_validation_eligible": (elvhys_intake or {}).get("eligible_as_confirmatory_validation"),
+            "interpretation": (elvhys_intake or {}).get("interpretation"),
+        },
+    ))
+
     nrel_retrieval_path = root / "research/nrel_h2fills_package_retrieval_check.json"
     nrel_retrieval = _json(nrel_retrieval_path)
     nrel_validation_path = root / "data/public_validation/results/nrel_h2fills_hdvs_typeiv/validation.json"

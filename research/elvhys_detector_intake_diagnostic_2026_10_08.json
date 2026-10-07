@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "artifact_type": "elvhys_detector_holdout_v2_post_failure_intake_diagnostic",
+  "status": "COMPLETED_POST_OUTCOME_DIAGNOSTIC",
+  "source_result": "research/elvhys_detector_holdout_result_v2_2026_10_07.json",
+  "protocol": "research/elvhys_detector_holdout_protocol_v2_2026_10_07.json",
+  "outcome_informed": true,
+  "eligible_as_confirmatory_validation": false,
+  "aggregate": {
+    "selected_case_count": 15,
+    "baseline_eligible_case_count": 14,
+    "baseline_ineligible_case_count": 1,
+    "baseline_eligible_fraction": 0.9333333333333333,
+    "failed_case_ids": [44],
+    "case_exclusion_permitted": false
+  },
+  "baseline_contract": {
+    "guard_before_release_s": 5.0,
+    "minimum_finite_samples_per_sensor": 20,
+    "release_onset_source": "PT2Nozzle",
+    "measurement_imputation": false
+  },
+  "cases": [
+    {"test_id": 6, "release_onset_s_relative": 157.350000000002, "concentration_start_s_relative": 0.0, "available_pre_guard_rows": 3048, "published_sensor_count": 16, "eligible_sensor_count": 16, "case_baseline_eligible": true},
+    {"test_id": 7, "release_onset_s_relative": 14.5500000000001, "concentration_start_s_relative": 0.0, "available_pre_guard_rows": 192, "published_sensor_count": 16, "eligible_sensor_count": 16, "case_baseline_eligible": true},
+    {"test_id": 9, "release_onset_s_relative": 24.5500000000002, "concentration_start_s_relative": 0.0, "available_pre_guard_rows": 392, "published_sensor_count": 16, "eligible_sensor_count": 16, "case_baseline_eligible": true},
+    {"test_id": 10, "release_onset_s_relative": 201.550000000012, "concentration_start_s_relative": 0.0, "available_pre_guard_rows": 3932, "published_sensor_count": 16, "eligible_sensor_count": 16, "case_baseline_eligible": true},
+    {"test_id": 11, "release_onset_s_relative": 106.599999999996, "concentration_start_s_relative": 0.0, "available_pre_guard_rows": 2033, "published_sensor_count": 16, "eligible_sensor_count": 16, "case_baseline_eligible": true},
+    {"test_id": 13, "release_onset_s_relative": 121.749999999995, "concentration_start_s_relative": 0.0, "available_pre_guard_rows": 2335, "published_sensor_count": 16, "eligible_sensor_count": 16, "case_baseline_eligible": true},
+    {"test_id": 14, "release_onset_s_relative": 182.150000000007, "concentration_start_s_relative": 0.0, "available_pre_guard_rows": 3544, "published_sensor_count": 16, "eligible_sensor_count": 16, "case_baseline_eligible": true},
+    {"test_id": 16, "release_onset_s_relative": 181.150000000007, "concentration_start_s_relative": 0.0, "available_pre_guard_rows": 3524, "published_sensor_count": 16, "eligible_sensor_count": 16, "case_baseline_eligible": true},
+    {"test_id": 18, "release_onset_s_relative": 181.200000000007, "concentration_start_s_relative": 0.0, "available_pre_guard_rows": 3525, "published_sensor_count": 16, "eligible_sensor_count": 16, "case_baseline_eligible": true},
+    {"test_id": 19, "release_onset_s_relative": 211.800000000014, "concentration_start_s_relative": 0.0, "available_pre_guard_rows": 4137, "published_sensor_count": 16, "eligible_sensor_count": 16, "case_baseline_eligible": true},
+    {"test_id": 21, "release_onset_s_relative": 211.650000000014, "concentration_start_s_relative": 0.0, "available_pre_guard_rows": 4134, "published_sensor_count": 16, "eligible_sensor_count": 16, "case_baseline_eligible": true},
+    {"test_id": 22, "release_onset_s_relative": 361.800000000048, "concentration_start_s_relative": 0.0, "available_pre_guard_rows": 7137, "published_sensor_count": 16, "eligible_sensor_count": 16, "case_baseline_eligible": true},
+    {"test_id": 26, "release_onset_s_relative": 121.349999999995, "concentration_start_s_relative": 0.0, "available_pre_guard_rows": 2327, "published_sensor_count": 16, "eligible_sensor_count": 16, "case_baseline_eligible": true},
+    {"test_id": 44, "release_onset_s_relative": 1200.39999999946, "concentration_start_s_relative": 1199.89999999946, "available_pre_guard_rows": 0, "published_sensor_count": 16, "eligible_sensor_count": 0, "case_baseline_eligible": false},
+    {"test_id": 47, "release_onset_s_relative": 2586.15000000064, "concentration_start_s_relative": 2349.89999999978, "available_pre_guard_rows": 4626, "published_sensor_count": 16, "eligible_sensor_count": 16, "case_baseline_eligible": true}
+  ],
+  "interpretation": "Fourteen of fifteen selected files satisfy the predeclared baseline window, but the prospective cohort fails as a whole because post-outcome exclusion of test 44 is prohibited. This quantifies public data intake usability only and is not a model-performance result.",
+  "claim_boundary": "Outcome-informed post-failure diagnostic. It may support a data-completeness discussion and future intake design, but it cannot support alarm accuracy, predictive-model validation, detector placement, dispersion, consequence-distance or full-loop claims."
+}
