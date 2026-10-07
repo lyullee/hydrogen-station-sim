@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T22:59:48.374311+00:00",
+  "generated_at": "2026-10-07T23:08:51.342761+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -5716,15 +5716,16 @@
         "manifest_schema": "h2station.llm-evidence.v1",
         "tests": {
           "targeted": {
-            "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_public_tank_calibration.py tests/test_digital_twin_direct_qa.py tests/test_hiad_action_playbook_coverage.py tests/test_hiad_accident_response_coverage_evaluation.py -q",
-            "passed": 31,
-            "warnings": 2
+            "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_station_thermal_diagnostic.py tests/test_station_thermal_protocol.py tests/test_ijhe_readiness_audit.py -q",
+            "passed": 20,
+            "failed": 0,
+            "warnings": 0
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 820,
+            "passed": 867,
             "failed": 0,
-            "warnings": 14
+            "warnings": 15
           }
         },
         "verified_properties": [
@@ -5763,7 +5764,8 @@
           "virtual detector alarm/trip policy is loaded from the public concentration replay record with its claim boundary",
           "virtual detector concentration scale is derived from 22 public concentration traces and carries an explicit open-channel claim boundary",
           "public experimental operating benchmarks are carried into the evidence envelope with pressure-class selection and explicit partial-boundary claim limits",
-          "private screen-recording/photo intake is carried as a non-machine-readable provenance boundary without parameter-fit or full-loop authorization"
+          "private screen-recording/photo intake is carried as a non-machine-readable provenance boundary without parameter-fit or full-loop authorization",
+          "restricted station compressor/cooler thermal evidence is projected into full, summary, header and compact decision contexts as UNCONFIRMED, with no calibration, runtime, vehicle-fill or full-loop claim"
         ],
         "not_established": [
           "physics validity of the consequence model",
@@ -6103,6 +6105,42 @@
           "pressure_class_selection": "35 MPa FCH2RAIL context below 50 MPa; H70 NREL context above 50 MPa",
           "full_loop_holdout_eligible": false,
           "interpretation": "These are aggregate public experimental benchmarks and a separately controlled tank/hose trace. They provide real operating-range context and partial-boundary evidence; they do not establish complete station-to-vehicle digital-twin accuracy, accident frequency, safety distance, or field certification."
+        },
+        "confidential_station_thermal_dynamics_boundary": {
+          "attestation_request": "research/confidential_station_equipment_attestation_request_2026_10_08.json",
+          "frozen_protocol": "research/confidential_station_thermal_dynamics_protocol_2026_10_08.json",
+          "status": "UNCONFIRMED",
+          "mapped_channel_family_counts": {
+            "pressure": 2,
+            "temperature": 3,
+            "flow": 0,
+            "discrete_state": 3,
+            "lifecycle": 0
+          },
+          "proposed_engineering_units": {
+            "pressure": [
+              "bar"
+            ],
+            "temperature": [
+              "degC"
+            ],
+            "flow": []
+          },
+          "proposals_attested": false,
+          "result_available": false,
+          "assistant_projection_paths": [
+            "full_manifest",
+            "prompt_summary",
+            "prompt_header",
+            "compact_decision_evidence"
+          ],
+          "station_component_thermal_envelope_supported": false,
+          "runtime_parameter_application": false,
+          "vehicle_fill_thermal_validation": false,
+          "full_station_vehicle_validation": false,
+          "full_loop_holdout_eligible": false,
+          "default_model_parameters_changed": false,
+          "interpretation": "pending generic channel-role and engineering-unit custodian attestation; no measurement rows or source identifiers are exposed to the assistant"
         }
       }
     },

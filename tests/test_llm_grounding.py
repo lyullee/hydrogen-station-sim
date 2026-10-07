@@ -537,6 +537,28 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert station_equipment["station_boundary_temperature_calibration_supported"] is False
     assert station_equipment["full_station_vehicle_validation"] is False
     assert station_equipment["default_model_parameters_changed"] is False
+    station_thermal = idle["response_evidence"][
+        "confidential_station_thermal_dynamics"
+    ]
+    assert station_thermal["status"] == "UNCONFIRMED"
+    assert station_thermal["mapped_channel_family_counts"] == {
+        "pressure": 2,
+        "temperature": 3,
+        "flow": 0,
+        "discrete_state": 3,
+        "lifecycle": 0,
+    }
+    assert station_thermal["proposed_engineering_units"]["temperature"] == ["degC"]
+    assert station_thermal["proposals_attested"] is False
+    assert station_thermal["result_available"] is False
+    assert station_thermal["runtime_parameter_application"] is False
+    assert station_thermal["full_loop_holdout_eligible"] is False
+    assert prompt_evidence_summary(idle)["confidential_station_thermal_dynamics"][
+        "station_component_thermal_envelope_supported"
+    ] is False
+    assert prompt_evidence_header(idle)["confidential_station_thermal_dynamics"][
+        "result_available"
+    ] is False
     bank_pressure = idle["response_evidence"][
         "confidential_bank_role_pressure_envelopes"
     ]
@@ -965,6 +987,11 @@ def test_prompt_decision_evidence_keeps_limits_without_full_audit_payload():
         "ineligible": 1,
         "universal": False,
         "apparatus_holdout": False,
+    }
+    assert decision["validation_boundaries"]["station_component_thermal"] == {
+        "status": "UNCONFIRMED",
+        "proposals_attested": False,
+        "component_envelope_supported": False,
     }
     assert len(json.dumps(decision, ensure_ascii=False)) < 3500
     assert "confidential_station_schema_intake" not in json.dumps(

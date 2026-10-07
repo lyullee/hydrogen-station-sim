@@ -2427,6 +2427,145 @@ def _confidential_station_equipment_evidence() -> dict[str, Any] | None:
     }
 
 
+def _confidential_station_thermal_evidence() -> dict[str, Any] | None:
+    """Expose attestation status and, when available, thermal diagnostics.
+
+    The pending review is useful decision context: it prevents an assistant
+    from presenting mapped compressor/cooler temperatures as validated
+    boundaries.  A future completed result is accepted only when its privacy
+    controls and attestation-gated artifact type are intact.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    request_path = root / (
+        "research/confidential_station_equipment_attestation_request_2026_10_08.json"
+    )
+    protocol_path = root / (
+        "research/confidential_station_thermal_dynamics_protocol_2026_10_08.json"
+    )
+    try:
+        request = json.loads(request_path.read_text(encoding="utf-8"))
+        protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    privacy_flags = (
+        "source_identifiers_published",
+        "raw_rows_persisted",
+        "absolute_timestamps_published",
+        "tag_names_published",
+        "source_paths_published",
+    )
+    privacy = protocol.get("privacy_controls") or {}
+    if (
+        request.get("artifact_type")
+        != "confidential_station_attestation_request_status"
+        or any(request.get(key) is not False for key in privacy_flags)
+        or protocol.get("protocol_id")
+        != "CONFIDENTIAL-STATION-THERMAL-DYNAMICS-001"
+        or any(privacy.get(key) is not False for key in privacy_flags)
+        or privacy.get("company_location_date_manufacturer_published") is not False
+    ):
+        return None
+    base: dict[str, Any] = {
+        "artifact": str(request_path.relative_to(root)).replace("\\", "/"),
+        "protocol": str(protocol_path.relative_to(root)).replace("\\", "/"),
+        "evidence_role": str(protocol.get("evidence_role") or ""),
+        "status": str(request.get("review_status") or "UNCONFIRMED"),
+        "mapped_channel_family_counts": dict(
+            request.get("mapped_channel_family_counts") or {}
+        ),
+        "proposed_engineering_units": dict(
+            request.get("proposed_engineering_units") or {}
+        ),
+        "proposals_attested": (
+            (protocol.get("generic_component_mapping") or {}).get(
+                "proposals_are_attested"
+            ) is True
+        ),
+        "confirmation_required": dict(request.get("confirmation_required") or {}),
+        "result_available": False,
+        "station_component_thermal_envelope_supported": False,
+        "runtime_parameter_application": False,
+        "vehicle_fill_thermal_validation": False,
+        "full_station_vehicle_validation": False,
+        "full_loop_holdout_eligible": False,
+        "default_model_parameters_changed": False,
+        "claim_limit": str(request.get("claim_boundary") or ""),
+    }
+    result_path = root / (
+        "research/confidential_station_thermal_dynamics_diagnostic_2026_10_08.json"
+    )
+    if not result_path.is_file():
+        return base
+    try:
+        result = json.loads(result_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return base
+    attestation = result.get("channel_attestation") or {}
+    required_attestations = (
+        "timebase_semantics_attested",
+        "temperature_role_and_unit_semantics_attested",
+        "state_semantics_attested",
+        "calibration_metadata_attested",
+    )
+    if (
+        result.get("artifact_type")
+        != "confidential_station_thermal_dynamics_diagnostic"
+        or result.get("status") != "completed_attested_within_trace_diagnostic"
+        or any(result.get(key) is not False for key in privacy_flags)
+        or result.get("manufacturer_or_model_published") is not False
+        or any(attestation.get(key) is not True for key in required_attestations)
+        or any(attestation.get(key) is not False for key in privacy_flags)
+    ):
+        return base
+    eligibility = result.get("eligibility") or {}
+    stability = result.get("temporal_stability") or {}
+    base.update({
+        "artifact": str(result_path.relative_to(root)).replace("\\", "/"),
+        "status": str(result.get("status") or ""),
+        "result_available": True,
+        "channel_attestation": {
+            key: attestation.get(key) is True
+            for key in (
+                "timebase_semantics_attested",
+                "temperature_role_and_unit_semantics_attested",
+                "state_semantics_attested",
+                "calibration_metadata_attested",
+            )
+        },
+        "temporal_stability": {
+            key: stability.get(key)
+            for key in (
+                "method", "calibration_fraction",
+                "component_medians_inside_calibration_p05_p95",
+                "cooler_active_drop_median_inside_calibration_p05_p95",
+                "minimum_holdout_rows_met", "stability_supported",
+            )
+            if stability.get(key) is not None
+        },
+        "station_component_thermal_envelope_supported": (
+            eligibility.get("station_component_thermal_envelope_supported") is True
+        ),
+        "runtime_parameter_application": (
+            eligibility.get("runtime_parameter_application") is True
+        ),
+        "vehicle_fill_thermal_validation": (
+            eligibility.get("vehicle_fill_thermal_validation") is True
+        ),
+        "full_station_vehicle_validation": (
+            eligibility.get("full_station_vehicle_validation") is True
+        ),
+        "full_loop_holdout_eligible": (
+            eligibility.get("full_loop_holdout_eligible") is True
+        ),
+        "default_model_parameters_changed": (
+            eligibility.get("default_model_parameters_changed") is True
+        ),
+        "claim_limit": str(result.get("claim_boundary") or ""),
+    })
+    return base
+
+
 def _confidential_bank_pressure_evidence() -> dict[str, Any] | None:
     """Expose anonymized medium/high-bank pressure envelopes to the LLM.
 
@@ -3411,6 +3550,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_station_equipment_operational_envelope"
         ] = station_equipment
+    station_thermal = _confidential_station_thermal_evidence()
+    if station_thermal is not None:
+        envelope["response_evidence"][
+            "confidential_station_thermal_dynamics"
+        ] = station_thermal
     bank_pressure = _confidential_bank_pressure_evidence()
     if bank_pressure is not None:
         envelope["response_evidence"][
@@ -3882,6 +4026,22 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if station_equipment.get(key) is not None
         }
+    station_thermal = evidence.get("confidential_station_thermal_dynamics")
+    if isinstance(station_thermal, dict):
+        summary["confidential_station_thermal_dynamics"] = {
+            key: station_thermal.get(key)
+            for key in (
+                "evidence_role", "artifact", "protocol", "status",
+                "mapped_channel_family_counts", "proposed_engineering_units",
+                "proposals_attested", "confirmation_required",
+                "result_available", "channel_attestation", "temporal_stability",
+                "station_component_thermal_envelope_supported",
+                "runtime_parameter_application", "vehicle_fill_thermal_validation",
+                "full_station_vehicle_validation", "full_loop_holdout_eligible",
+                "default_model_parameters_changed", "claim_limit",
+            )
+            if station_thermal.get(key) is not None
+        }
     bank_pressure = evidence.get("confidential_bank_role_pressure_envelopes")
     if isinstance(bank_pressure, dict):
         summary["confidential_bank_role_pressure_envelopes"] = {
@@ -4062,6 +4222,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     local_incident = response.get("confidential_local_accident_response_coverage") or {}
     multisource = response.get("confidential_multisource_mapping_feasibility") or {}
     thermal_observation = response.get("temperature_observation_semantic_boundary") or {}
+    station_thermal = response.get("confidential_station_thermal_dynamics") or {}
 
     decision = {
         "evidence_digest": manifest.get("evidence_digest"),
@@ -4151,6 +4312,13 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     else "unavailable"
                 ),
                 "claim_limit": short(closed_loop.get("claim_limit")),
+            },
+            "station_component_thermal": {
+                "status": station_thermal.get("status"),
+                "proposals_attested": station_thermal.get("proposals_attested") is True,
+                "component_envelope_supported": station_thermal.get(
+                    "station_component_thermal_envelope_supported"
+                ) is True,
             },
             "source_depletion": {
                 "claim_supported": preslhy_holdout.get("claim_supported") is True,
@@ -4255,6 +4423,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     station_equipment = evidence.get(
         "confidential_station_equipment_operational_envelope"
     ) or {}
+    station_thermal = evidence.get("confidential_station_thermal_dynamics") or {}
     bank_pressure = evidence.get("confidential_bank_role_pressure_envelopes") or {}
     pressure_recheck = evidence.get("confidential_pressure_recheck_decision") or {}
     operational_profile_recheck = evidence.get(
@@ -4798,6 +4967,43 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "default_model_parameters_changed": station_equipment.get(
                 "default_model_parameters_changed"
             ) is True,
+        },
+        "confidential_station_thermal_dynamics": {
+            "artifact": station_thermal.get("artifact"),
+            "protocol": station_thermal.get("protocol"),
+            "status": station_thermal.get("status"),
+            "mapped_channel_family_counts": station_thermal.get(
+                "mapped_channel_family_counts"
+            ) or {},
+            "proposed_engineering_units": station_thermal.get(
+                "proposed_engineering_units"
+            ) or {},
+            "proposals_attested": station_thermal.get("proposals_attested") is True,
+            "confirmation_required": station_thermal.get(
+                "confirmation_required"
+            ) or {},
+            "result_available": station_thermal.get("result_available") is True,
+            "channel_attestation": station_thermal.get("channel_attestation") or {},
+            "temporal_stability": station_thermal.get("temporal_stability") or {},
+            "station_component_thermal_envelope_supported": station_thermal.get(
+                "station_component_thermal_envelope_supported"
+            ) is True,
+            "runtime_parameter_application": station_thermal.get(
+                "runtime_parameter_application"
+            ) is True,
+            "vehicle_fill_thermal_validation": station_thermal.get(
+                "vehicle_fill_thermal_validation"
+            ) is True,
+            "full_station_vehicle_validation": station_thermal.get(
+                "full_station_vehicle_validation"
+            ) is True,
+            "full_loop_holdout_eligible": station_thermal.get(
+                "full_loop_holdout_eligible"
+            ) is True,
+            "default_model_parameters_changed": station_thermal.get(
+                "default_model_parameters_changed"
+            ) is True,
+            "claim_limit": station_thermal.get("claim_limit"),
         },
         "confidential_bank_role_pressure_envelopes": {
             "artifact": bank_pressure.get("artifact"),

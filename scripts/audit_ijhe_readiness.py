@@ -4187,6 +4187,9 @@ def audit(root: Path) -> dict[str, object]:
     grounding_release_validation = (
         (grounding or {}).get("cross_campaign_release_validation_boundary") or {}
     )
+    grounding_station_thermal = (
+        (grounding or {}).get("confidential_station_thermal_dynamics_boundary") or {}
+    )
     grounding_pass = bool(
         (grounding or {}).get("status") == "software_contract_verified"
         and ((grounding or {}).get("tests") or {}).get("full_suite", {}).get("failed") == 0
@@ -4221,6 +4224,17 @@ def audit(root: Path) -> dict[str, object]:
         and grounding_release_validation.get(
             "runtime_model_changed_after_outcomes"
         ) is False
+        and grounding_station_thermal.get("status") == "UNCONFIRMED"
+        and grounding_station_thermal.get("proposals_attested") is False
+        and grounding_station_thermal.get("result_available") is False
+        and grounding_station_thermal.get(
+            "station_component_thermal_envelope_supported"
+        ) is False
+        and grounding_station_thermal.get("runtime_parameter_application") is False
+        and grounding_station_thermal.get("vehicle_fill_thermal_validation") is False
+        and grounding_station_thermal.get("full_station_vehicle_validation") is False
+        and grounding_station_thermal.get("full_loop_holdout_eligible") is False
+        and grounding_station_thermal.get("default_model_parameters_changed") is False
     )
     gates.append(_gate(
         "llm_evidence_grounding_contract",

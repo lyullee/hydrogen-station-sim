@@ -56,6 +56,10 @@ contains:
   or a full-loop claim;
 - public real-station operating context for back-to-back fueling, with its
   synchronized-raw-log and full-loop eligibility boundary;
+- a restricted station compressor/cooler thermal boundary carried into the full,
+  summary, header and compact decision prompt paths. Its generic channel roles and
+  engineering units remain `UNCONFIRMED`; no calibration, runtime parameter,
+  vehicle-fill or full-loop validation claim is permitted;
 - the five-session MetHyTrucks HySaM no-fit tank diagnostic, including the
   244 L candidate replay, 77 L geometry sensitivity and the unresolved public
   workbook-to-sink crosswalk;
@@ -78,11 +82,11 @@ distances. An LLM response is not allowed to turn `not_requested` or
 The following tests passed in the repository virtual environment:
 
 ```text
-.venv\Scripts\python.exe -m pytest tests/test_llm_grounding.py tests/test_public_tank_calibration.py tests/test_digital_twin_direct_qa.py tests/test_hiad_action_playbook_coverage.py tests/test_hiad_accident_response_coverage_evaluation.py -q
-31 passed, 2 warnings
+.venv\Scripts\python.exe -m pytest tests/test_llm_grounding.py tests/test_station_thermal_diagnostic.py tests/test_station_thermal_protocol.py tests/test_ijhe_readiness_audit.py -q
+20 passed
 
 .venv\Scripts\python.exe -m pytest -q
-820 passed, 14 warnings
+867 passed, 15 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -149,6 +153,14 @@ The privacy-bounded station-equipment envelope is also carried with its
 pressure range, temperature range and state-transition count. Temperature and
 state semantics remain unattested, and the artifact contains no vehicle-side
 channels or full-loop validation claim.
+
+The restricted station thermal protocol is projected separately so the assistant cannot
+turn proposed compressor/cooler channel roles into a completed validation. The current
+status is `UNCONFIRMED`: two pressure, three temperature and three discrete-state
+channels are known only by generic family count, the proposed bar/°C units are not
+attested, and no diagnostic result exists. The full manifest, prompt summary, prompt
+header and compact decision evidence all preserve `false` for component-envelope
+support, runtime application, vehicle-fill validation and full-loop eligibility.
 
 The private pressure bundle is additionally summarized by generic channel
 index. The two measured boundary channels show materially different pressure

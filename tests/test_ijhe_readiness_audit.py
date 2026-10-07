@@ -125,6 +125,14 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
         "flow-boundary mismatches" in item
         for item in gates["llm_evidence_grounding_contract"]["observed"]["verified_properties"]
     )
+    station_thermal = gates["llm_evidence_grounding_contract"]["observed"][
+        "confidential_station_thermal_dynamics_boundary"
+    ]
+    assert station_thermal["status"] == "UNCONFIRMED"
+    assert station_thermal["proposals_attested"] is False
+    assert station_thermal["result_available"] is False
+    assert station_thermal["runtime_parameter_application"] is False
+    assert station_thermal["full_loop_holdout_eligible"] is False
     assert gates["public_hitrf_operational_reference_integrity"]["status"] == "PASS"
     hitrf = gates["public_hitrf_operational_reference_integrity"]["observed"]
     assert hitrf["raw_synchronized_logger_public"] is False
