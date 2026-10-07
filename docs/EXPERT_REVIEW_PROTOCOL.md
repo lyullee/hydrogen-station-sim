@@ -36,6 +36,10 @@ The optional coordinator pre-screen highlights exact phrase overlap with the
 withheld HIAD action/lesson fields and sentences that may disclose a completed
 response. Its tiers are advisory only: the coordinator must inspect every case,
 including cases marked LOW, and the tool cannot write `PASS` or `YES`.
+It also offers a separate machine-suggested description that removes only
+sentences matched as completed responses. The suggestion never changes the
+source casebook, never auto-confirms a case, and does not assert that retained
+sentences are leakage-free.
 The generated local HTML provides editable title/description fields and exports
 an approved JSON only after every frozen case has a KEEP or REWRITE decision, an
 individual confirmation, and a coded qualified-coordinator declaration. The

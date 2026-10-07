@@ -101,10 +101,40 @@ def _screen(case: dict, min_overlap_tokens: int) -> dict[str, object]:
     overlaps = _maximal_overlap_phrases(
         input_text, reference_text, min_tokens=min_overlap_tokens
     )
-    action_sentences = [
-        sentence for sentence in _sentences(context.get("description"))
-        if ACTION_PATTERN.search(sentence)
-    ]
+    sentence_review = []
+    retained_sentences = []
+    action_sentences = []
+    for position, sentence in enumerate(_sentences(context.get("description")), start=1):
+        sentence_overlaps = _maximal_overlap_phrases(
+            sentence, reference_text, min_tokens=min_overlap_tokens
+        )
+        possible_completed_action = bool(ACTION_PATTERN.search(sentence))
+        if possible_completed_action:
+            action_sentences.append(sentence)
+        else:
+            retained_sentences.append(sentence)
+        reasons = []
+        if possible_completed_action:
+            reasons.append("possible completed response/action")
+        if sentence_overlaps:
+            longest_sentence_overlap = max(
+                len(_tokens(phrase)) for phrase in sentence_overlaps
+            )
+            reasons.append(
+                f"exact overlap with coordinator-only reference "
+                f"({longest_sentence_overlap} tokens)"
+            )
+        sentence_review.append(
+            {
+                "position": position,
+                "sentence": sentence,
+                "machine_suggestion": (
+                    "REVIEW_REMOVE" if possible_completed_action else "RETAIN_WITH_REVIEW"
+                ),
+                "reasons": reasons,
+                "exact_overlap_phrases": sentence_overlaps,
+            }
+        )
     longest = max((len(_tokens(phrase)) for phrase in overlaps), default=0)
     if longest >= 8 or len(action_sentences) >= 2:
         tier = "HIGH"
@@ -120,6 +150,11 @@ def _screen(case: dict, min_overlap_tokens: int) -> dict[str, object]:
         "longest_exact_overlap_tokens": longest,
         "exact_overlap_phrases": overlaps,
         "possible_completed_action_sentences": action_sentences,
+        # This is deliberately a separate, non-authoritative draft. It removes
+        # only sentences matched as completed actions and never mutates the source.
+        "machine_suggested_description": " ".join(retained_sentences),
+        "machine_removed_sentence_count": len(action_sentences),
+        "machine_sentence_review": sentence_review,
         "coordinator_leakage_decision": "",
         "rewrite_required_yes_no": "",
         "coordinator_notes": "",
@@ -130,7 +165,9 @@ def _write_csv(path: Path, rows: list[dict[str, object]]) -> None:
     fields = [
         "event_id", "stratum", "quality", "advisory_tier",
         "longest_exact_overlap_tokens", "exact_overlap_phrases",
-        "possible_completed_action_sentences", "coordinator_leakage_decision",
+        "possible_completed_action_sentences", "machine_suggested_description",
+        "machine_removed_sentence_count", "machine_sentence_review_json",
+        "coordinator_leakage_decision",
         "rewrite_required_yes_no", "coordinator_notes",
     ]
     with path.open("w", encoding="utf-8-sig", newline="") as handle:
@@ -142,6 +179,10 @@ def _write_csv(path: Path, rows: list[dict[str, object]]) -> None:
             exported["possible_completed_action_sentences"] = " || ".join(
                 row["possible_completed_action_sentences"]
             )
+            exported["machine_sentence_review_json"] = json.dumps(
+                row["machine_sentence_review"], ensure_ascii=False
+            )
+            exported.pop("machine_sentence_review", None)
             writer.writerow(exported)
 
 
@@ -163,6 +204,18 @@ def _write_html(path: Path, casebook: dict, rows: list[dict[str, object]]) -> No
             f"<li>{html.escape(item)}</li>"
             for item in row["possible_completed_action_sentences"]
         ) or "<li>None detected</li>"
+        sentence_items = "".join(
+            "<li><strong>#{position} · {suggestion}</strong> — {sentence}"
+            "<br><small>{reasons}</small></li>".format(
+                position=item["position"],
+                suggestion=html.escape(item["machine_suggestion"]),
+                sentence=html.escape(item["sentence"]),
+                reasons=html.escape("; ".join(item["reasons"]) or "no automated flag"),
+            )
+            for item in row["machine_sentence_review"]
+        )
+        suggested_description = str(row["machine_suggested_description"])
+        suggestion_disabled = "" if suggested_description else " disabled"
         sections.append(f"""
 <section class="case {row['advisory_tier'].lower()}" data-event="{html.escape(row['event_id'])}">
   <h2>Event {html.escape(row['event_id'])} · {html.escape(row['advisory_tier'])} advisory flag</h2>
@@ -172,6 +225,14 @@ def _write_html(path: Path, casebook: dict, rows: list[dict[str, object]]) -> No
   <article><h3>Coordinator-only reference</h3>{references}</article></div>
   <h3>Exact overlap candidates</h3><ul>{overlap_items}</ul>
   <h3>Possible completed-action sentences</h3><ul>{action_items}</ul>
+  <details class="sentence-review"><summary>Sentence-by-sentence machine review</summary>
+    <ol>{sentence_items}</ol></details>
+  <div class="machine-draft"><h3>Machine-suggested description · human review required</h3>
+    <p>This draft only removes sentences flagged as completed responses. Exact-overlap-only
+    sentences remain and every sentence still requires coordinator review.</p>
+    <textarea class="machine-suggestion tall" readonly>{html.escape(suggested_description)}</textarea>
+    <button class="apply-suggestion" type="button"{suggestion_disabled}>Copy suggestion to editable description</button>
+  </div>
   <div class="decision"><label>Decision
     <select class="review-decision"><option value="">Unresolved</option>
       <option value="KEEP">Keep after full review</option>
@@ -185,6 +246,17 @@ def _write_html(path: Path, casebook: dict, rows: list[dict[str, object]]) -> No
     safe_casebook_json = json.dumps(casebook, ensure_ascii=False).replace("<", "\\u003c")
     application_script = r"""
 const sourceCasebook = JSON.parse(document.getElementById('casebook-data').textContent);
+for (const button of document.querySelectorAll('.apply-suggestion')) {
+  button.addEventListener('click', () => {
+    const section = button.closest('section.case');
+    const suggestion = section.querySelector('.machine-suggestion').value.trim();
+    if (!suggestion) return;
+    section.querySelector('.review-description').value = suggestion;
+    section.querySelector('.review-decision').value = 'REWRITE';
+    section.querySelector('.review-confirm').checked = false;
+    section.querySelector('.review-description').focus();
+  });
+}
 function downloadApprovedCasebook() {
   const coordinatorCode = document.getElementById('coordinator-code').value.trim();
   const qualified = document.getElementById('coordinator-qualified').checked;
@@ -250,6 +322,8 @@ body{{font:15px/1.5 Arial,sans-serif;max-width:1200px;margin:2rem auto;color:#18
 .case.high{{border-left-color:#b42318}}.case.medium{{border-left-color:#b36b00}}
 .case.low{{border-left-color:#138a72}}.grid{{display:grid;grid-template-columns:1fr 1fr;gap:1rem}}
 article{{background:#f5f8fa;padding:.8rem}}.decision{{background:#eef4f8;padding:.8rem}}
+.machine-draft{{background:#fff8e7;border-left:4px solid #b36b00;padding:.8rem;margin:1rem 0}}
+.machine-draft p,small{{color:#526579}}.sentence-review{{margin:.8rem 0}}
 label{{display:block;margin:.5rem 0}}textarea,select,input[type=text]{{box-sizing:border-box;width:100%;padding:.55rem}}
 textarea{{min-height:3.5rem}}textarea.tall{{min-height:10rem}}input[type=checkbox]{{width:auto}}
 button{{background:#075985;color:white;border:0;border-radius:4px;padding:.65rem 1rem;font-weight:bold;cursor:pointer}}
@@ -290,6 +364,17 @@ def main() -> int:
         tier: sum(row["advisory_tier"] == tier for row in rows)
         for tier in ("HIGH", "MEDIUM", "LOW")
     }
+    suggested_rewrite_counts = {
+        "cases_with_removed_action_sentences": sum(
+            int(row["machine_removed_sentence_count"]) > 0 for row in rows
+        ),
+        "sentences_suggested_for_removal": sum(
+            int(row["machine_removed_sentence_count"]) for row in rows
+        ),
+        "cases_without_machine_draft": sum(
+            not str(row["machine_suggested_description"]).strip() for row in rows
+        ),
+    }
     manifest = {
         "schema_version": 1,
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -300,6 +385,11 @@ def main() -> int:
         "human_review_required_for_every_case": True,
         "min_overlap_tokens": args.min_overlap_tokens,
         "tier_counts": tier_counts,
+        "machine_rewrite_suggestion": {
+            "advisory_only": True,
+            "source_casebook_modified": False,
+            **suggested_rewrite_counts,
+        },
         "output_sha256": {
             "coordinator_review.csv": _sha256(args.output / "coordinator_review.csv"),
             "coordinator_review.html": _sha256(args.output / "coordinator_review.html"),
