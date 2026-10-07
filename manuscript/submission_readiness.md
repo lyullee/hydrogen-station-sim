@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **88 PASS · 7 FAIL · 8 PENDING**.
+Gate counts: **89 PASS · 7 FAIL · 8 PENDING**.
 
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted
@@ -190,6 +190,13 @@ or the selected vehicle tank geometry. The predeclared rule therefore produced
 geometry was inferred from outcomes and no numerical model score was produced.
 This prospective negative intake result exhausts the public MetHyTrucks route
 without adding an eligible case to the eight-case full-loop gate.
+
+A proposed three-case Byrnes thermal route was also stopped before numerical
+execution. Repository-wide provenance matching showed that the same YAML files
+had already been accessed through the Zenodo reproducibility archive under a
+different source path. The attempted protocol is retained as invalidated, and
+its additional frozen channel mismatch remains recorded. It adds no prospective
+case and prevents a duplicate public copy from being presented as new evidence.
 
 ## Blocking gates
 

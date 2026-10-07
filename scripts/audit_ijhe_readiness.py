@@ -315,6 +315,65 @@ def audit(root: Path) -> dict[str, object]:
         } if group_d_result else "missing",
     ))
 
+    byrnes_protocol_path = root / "research/byrnes_typei_thermal_prospective_protocol_2026_10_08.json"
+    byrnes_result_path = root / "research/byrnes_typei_thermal_prospective_result_2026_10_08.json"
+    byrnes_protocol = _json(byrnes_protocol_path)
+    byrnes_result = _json(byrnes_result_path)
+    byrnes_files = (byrnes_result or {}).get("source", {}).get("files") or []
+    byrnes_integrity_pass = bool(
+        (byrnes_protocol or {}).get("status")
+        == "protocol_invalidated_after_freeze_prior_numeric_access_discovered"
+        and (byrnes_protocol or {}).get("source", {}).get(
+            "numerical_validation_arrays_accessed_before_freeze"
+        ) is True
+        and (byrnes_protocol or {}).get("source", {}).get("correction", {}).get(
+            "prior_artifact"
+        ) == "research/byrnes_zenodo_exploratory_result.json"
+        and (byrnes_result or {}).get("status")
+        == "completed_invalidated_prospective_attempt"
+        and (byrnes_result or {}).get("decision")
+        == "PROTOCOL_INVALID_PRIOR_OUTCOME_ACCESS"
+        and len(byrnes_files) == 3
+        and all(item.get("sha256") and item.get("numeric_values_committed") is False for item in byrnes_files)
+        and (byrnes_result or {}).get("eligibility", {}).get("resolved_case_count") == 0
+        and len((byrnes_result or {}).get("eligibility", {}).get("frozen_mapping_failures") or []) == 6
+        and (byrnes_result or {}).get("model_evaluation", {}).get("executed") is False
+        and (byrnes_result or {}).get("model_evaluation", {}).get(
+            "case_specific_fitting_performed"
+        ) is False
+        and (byrnes_result or {}).get("gate_impact", {}).get(
+            "thermal_external_validation_supported"
+        ) is False
+    )
+    gates.append(_gate(
+        "byrnes_typei_thermal_prospective_intake_integrity",
+        "PASS" if byrnes_integrity_pass else (
+            "FAIL" if byrnes_protocol or byrnes_result else "PENDING"
+        ),
+        "The duplicate Byrnes source path is explicitly invalidated after prior numerical access is discovered, with the independent frozen channel mismatch also retained.",
+        f"{byrnes_protocol_path.relative_to(root)}; {byrnes_result_path.relative_to(root)}",
+        "Prior Zenodo access is linked, duplicate-path provenance is disclosed, publisher-file hashes are retained, and no new numerical run or prospective claim is permitted.",
+        {
+            "decision": (byrnes_result or {}).get("decision"),
+            "file_count": len(byrnes_files),
+            "resolved_case_count": (byrnes_result or {}).get(
+                "eligibility", {}
+            ).get("resolved_case_count"),
+            "mapping_failure_count": len(
+                (byrnes_result or {}).get("eligibility", {}).get(
+                    "frozen_mapping_failures"
+                ) or []
+            ),
+            "model_executed": (byrnes_result or {}).get(
+                "model_evaluation", {}
+            ).get("executed"),
+            "thermal_external_validation_supported": (byrnes_result or {}).get(
+                "gate_impact", {}
+            ).get("thermal_external_validation_supported"),
+            "claim_boundary": (byrnes_result or {}).get("claim_boundary"),
+        } if byrnes_result else "missing",
+    ))
+
     tank_runtime_path = root / "research/public_type_iv_tank_runtime_calibration_2026_10_07.json"
     tank_runtime = _json(tank_runtime_path)
     tank_runtime_hashes = (tank_runtime or {}).get("source_hashes") or {}

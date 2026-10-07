@@ -1,9 +1,11 @@
 # Prospective Byrnes Type-I hydrogen thermal validation protocol
 
-This protocol freezes three exact public HydDown `v0.50.0` validation files and
-the local pressure-driven thermal model before their numerical validation
-arrays are downloaded or opened. Public prose and file names were known; the
-pressure and temperature coordinates were not.
+This attempted protocol froze three exact public HydDown `v0.50.0` validation
+files and the local pressure-driven thermal model. After the freeze, the
+repository audit found that the same three YAML files and numerical outcomes
+had already been accessed through Zenodo DOI `10.5281/zenodo.20728325` and are
+recorded in `research/byrnes_zenodo_exploratory_result.json`. The GitHub files
+are another copy of consumed data, so the prospective claim is invalidated.
 
 The measured pressure is imposed as a boundary, so the experiment cannot be
 used to infer a valve coefficient and then score its own pressure prediction.
@@ -20,6 +22,6 @@ and relative energy residual at most 1e-4. At least two of all three selected
 cases must pass. Missing units or wall/geometry metadata produces a retained
 ineligible result rather than an inferred input.
 
-Any pass is limited to Type-I pressure-driven bulk thermal response. Pressure
-prediction, valve and line flow, composite tanks, station control and accident
-consequences remain outside this test.
+No pass can be issued from this attempt. The frozen model remains reusable for
+a genuinely untouched dataset. Pressure prediction, valve and line flow,
+composite tanks, station control and accident consequences remain outside it.

@@ -43,6 +43,7 @@ def build(root: Path) -> dict[str, Any]:
     latest_search_path = root / "research/public_full_loop_search_recheck_2026_10_06.json"
     methytrucks_path = root / "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json"
     methytrucks_group_d_path = root / "research/methytrucks_group_d_prospective_result_2026_10_08.json"
+    byrnes_path = root / "research/byrnes_typei_thermal_prospective_result_2026_10_08.json"
     public_update_path = root / "research/public_full_loop_data_update_2026_10_08.json"
     operational_search_path = root / "research/public_operational_benchmark_recheck_2026_10_05.json"
     operational_face_path = root / "research/public_operational_benchmark_face_validity_2026_10_05.json"
@@ -53,6 +54,7 @@ def build(root: Path) -> dict[str, Any]:
     latest_search = load_json(latest_search_path) if latest_search_path.is_file() else {}
     methytrucks = load_json(methytrucks_path)
     methytrucks_group_d = load_json(methytrucks_group_d_path)
+    byrnes = load_json(byrnes_path)
     public_update = load_json(public_update_path)
     operational_search = load_json(operational_search_path)
 
@@ -90,6 +92,16 @@ def build(root: Path) -> dict[str, Any]:
                     "research/dickens_typeiii_mixed_convection_diagnostic_2026_10_08.json",
                 ],
                 "claim_boundary": "The prospective natural-convection model failed temperature screens. The post-outcome forced-mixing sensitivity identifies a mechanism but cannot revise that decision or set a runtime parameter.",
+            },
+            "byrnes_typei_thermal_prospective_intake": {
+                "gate": gate("byrnes_typei_thermal_prospective_intake_integrity")["status"],
+                "evidence": [
+                    "research/byrnes_typei_thermal_prospective_protocol_2026_10_08.json",
+                    "research/byrnes_typei_thermal_prospective_result_2026_10_08.json",
+                ],
+                "decision": byrnes["decision"],
+                "model_executed": byrnes["model_evaluation"]["executed"],
+                "claim_boundary": byrnes["claim_boundary"],
             },
             "llm_grounding": {
                 "gate": gate("llm_evidence_grounding_contract")["status"],
@@ -150,14 +162,16 @@ def build(root: Path) -> dict[str, Any]:
             {
                 "id": "tank_thermal_transfer_validation",
                 "status": gate("dickens_typeiii_prospective_validation")["status"],
-                "why_blocked": "The prospectively frozen Type-III fill passed both pressure screens but failed both temperature screens. A post-outcome inlet-jet sensitivity reduced temperature RMSE below the limit across three plausible diameters, but the exact nozzle geometry is absent and the result cannot be promoted to validation.",
+                "why_blocked": "The prospectively frozen Type-III fill passed both pressure screens but failed both temperature screens. A post-outcome inlet-jet sensitivity reduced temperature RMSE below the limit across three plausible diameters, but the exact nozzle geometry is absent. A proposed Byrnes Type-I route was invalidated when the same numerical files were found in the already-consumed Zenodo exploratory archive; its mean-temperature schema also differed from the frozen upper/lower endpoint pair.",
                 "evidence": [
                     "research/DICKENS_TYPEIII_PROSPECTIVE_VALIDATION_2026_10_08.md",
                     "research/dickens_typeiii_prospective_result_2026_10_08.json",
                     "research/dickens_typeiii_mixed_convection_diagnostic_2026_10_08.json",
+                    "research/byrnes_typei_thermal_prospective_protocol_2026_10_08.json",
+                    "research/byrnes_typei_thermal_prospective_result_2026_10_08.json",
                 ],
                 "unblock_criterion": "Freeze the mixed-convection formulation and exact inlet geometry before opening a new filling trace, then pass the joint pressure and temperature screens without post-outcome parameter selection.",
-                "next_action": "Prioritize an untouched fill dataset with nozzle diameter, time-resolved inlet temperature and flow, tank geometry, pressure and gas-temperature sensor positions.",
+                "next_action": "Prioritize an untouched fill or discharge dataset with a predeclared temperature observable, explicit sensor locations, tank geometry and boundary-flow/pressure data.",
             },
             {
                 "id": "full_loop_external_validation",
@@ -225,6 +239,7 @@ def build(root: Path) -> dict[str, Any]:
             if latest_search_path.is_file() else None,
             "methytrucks_postaccess_sha256": sha256(methytrucks_path),
             "methytrucks_group_d_prospective_sha256": sha256(methytrucks_group_d_path),
+            "byrnes_typei_thermal_prospective_sha256": sha256(byrnes_path),
             "public_full_loop_update_sha256": sha256(public_update_path),
             "operational_benchmark_recheck_sha256": sha256(operational_search_path),
             "operational_benchmark_face_validity_sha256": sha256(operational_face_path),

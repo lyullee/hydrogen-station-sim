@@ -2,7 +2,7 @@
   "schema_version": 1,
   "protocol_id": "BYRNES-TYPEI-PRESSURE-DRIVEN-THERMAL-001",
   "frozen_at": "2026-10-08",
-  "status": "prospective_protocol_frozen_before_numeric_yaml_access",
+  "status": "protocol_invalidated_after_freeze_prior_numeric_access_discovered",
   "objective": "Test transfer of the no-fit real-gas pressure-driven thermal model on three public hydrogen-cylinder depressurization experiments.",
   "source": {
     "repository": "https://github.com/andr1976/HydDown",
@@ -13,11 +13,18 @@
       "validation/Byrnes_run8.yml",
       "validation/Byrnes_run9.yml"
     ],
-    "numerical_validation_arrays_accessed_before_freeze": false,
+    "numerical_validation_arrays_accessed_before_freeze": true,
+    "correction": {
+      "discovered_after_freeze": true,
+      "prior_artifact": "research/byrnes_zenodo_exploratory_result.json",
+      "prior_source_doi": "10.5281/zenodo.20728325",
+      "reason": "The same three YAML files and their numerical outcomes had already been accessed through the Zenodo reproducibility archive. The GitHub path is another copy, not a new holdout."
+    },
     "known_before_freeze": [
       "the public manual describes three hydrogen runs with approximately 30 s, 480 s and 14 s depressurization durations",
       "the public manual states a 0.0499 m3 Type-I cylinder and identifies pressure plus upper and lower gas-temperature observations",
-      "the repository file names and v0.50.0 commit were known"
+      "the repository file names and v0.50.0 commit were known",
+      "correction: the same numerical files had previously been accessed through a separately named Zenodo archive"
     ]
   },
   "locked_model": {
@@ -53,7 +60,7 @@
       "positive vessel volume and geometry",
       "positive wall heat capacity or sufficient wall properties to calculate it"
     ],
-    "failure_policy": "Retain an ineligible result without substituting channels, fitting geometry or replacing a selected file."
+    "failure_policy": "Invalidate the prospective claim when prior access is discovered; retain an ineligible result without substituting channels, fitting geometry or replacing a selected file."
   },
   "primary_endpoints": {
     "sensor_envelope_miss_rmse_k_max": 10.0,

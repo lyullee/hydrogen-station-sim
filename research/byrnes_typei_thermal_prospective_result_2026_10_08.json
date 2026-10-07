@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-07T20:49:14.984362+00:00",
+  "status": "completed_invalidated_prospective_attempt",
+  "decision": "PROTOCOL_INVALID_PRIOR_OUTCOME_ACCESS",
+  "evidence_role": "retained_protocol_invalidation",
+  "execution_commit": "b770af3159a43b6332ab73c144ddadaad0ba508b",
+  "protocol": {
+    "path": "research/byrnes_typei_thermal_prospective_protocol_2026_10_08.json",
+    "protocol_id": "BYRNES-TYPEI-PRESSURE-DRIVEN-THERMAL-001",
+    "frozen_before_numeric_yaml_access": false,
+    "prior_outcome_access_discovered_after_freeze": true,
+    "prior_artifact": "research/byrnes_zenodo_exploratory_result.json",
+    "prior_source_doi": "10.5281/zenodo.20728325",
+    "selected_files_replaced": false,
+    "mapping_or_thresholds_changed_after_access": false
+  },
+  "source": {
+    "repository": "https://github.com/andr1976/HydDown",
+    "release_tag": "v0.50.0",
+    "commit": "1040d758b819533451086baa5cf2a47b4292a22f",
+    "license": "MIT",
+    "files": [
+      {
+        "name": "Byrnes_run7.yml",
+        "bytes": 987,
+        "sha256": "30f6e65ea7ee9a285e581c08209af6fc8bd5b96c957637c38f1d384ab36abe83",
+        "observed_temperature_channels": [
+          "gas_mean",
+          "wall_mean"
+        ],
+        "observed_pressure_value_keys": [
+          "pres"
+        ],
+        "frozen_upper_lower_mapping_resolved": false,
+        "numeric_values_committed": false
+      },
+      {
+        "name": "Byrnes_run8.yml",
+        "bytes": 953,
+        "sha256": "8e0bcaf33423c28664afe2659d0879e74cd4917e03978784eca7296dff3d9190",
+        "observed_temperature_channels": [
+          "gas_mean",
+          "wall_mean"
+        ],
+        "observed_pressure_value_keys": [
+          "pres"
+        ],
+        "frozen_upper_lower_mapping_resolved": false,
+        "numeric_values_committed": false
+      },
+      {
+        "name": "Byrnes_run9.yml",
+        "bytes": 942,
+        "sha256": "36475e35c887f445f376e6e36a822403d5e1ef23daa7f79d619b1376ba86626a",
+        "observed_temperature_channels": [
+          "gas_mean",
+          "wall_mean"
+        ],
+        "observed_pressure_value_keys": [
+          "pres"
+        ],
+        "frozen_upper_lower_mapping_resolved": false,
+        "numeric_values_committed": false
+      }
+    ],
+    "raw_files_committed": false
+  },
+  "eligibility": {
+    "eligible": false,
+    "prior_outcome_access": true,
+    "required_case_count": 3,
+    "resolved_case_count": 0,
+    "frozen_mapping_failures": [
+      "Byrnes_run7.yml:validation.temperature.gas_high",
+      "Byrnes_run7.yml:validation.temperature.gas_low",
+      "Byrnes_run8.yml:validation.temperature.gas_high",
+      "Byrnes_run8.yml:validation.temperature.gas_low",
+      "Byrnes_run9.yml:validation.temperature.gas_high",
+      "Byrnes_run9.yml:validation.temperature.gas_low"
+    ],
+    "observed_unmapped_alternative": "Each selected file reports gas_mean and wall_mean rather than the predeclared gas_high and gas_low pair. The alternative was not substituted."
+  },
+  "model_evaluation": {
+    "executed": false,
+    "metrics": null,
+    "case_specific_fitting_performed": false,
+    "reason": "The same numerical files had already been accessed through a Zenodo archive, invalidating the prospective claim. Independently, the frozen upper/lower endpoint does not match the observed gas_mean schema."
+  },
+  "gate_impact": {
+    "thermal_external_validation_supported": false,
+    "eligible_case_count_contributed": 0,
+    "status": "remains_open"
+  },
+  "claim_boundary": "This retained invalidation is neither a prospective validation nor a numerical thermal-model failure. The same Byrnes values were already classified as post-access exploratory evidence."
+}

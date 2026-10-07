@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T20:37:09.033633+00:00",
+  "generated_at": "2026-10-07T20:49:15.714322+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 88,
+    "PASS": 89,
     "FAIL": 7,
     "PENDING": 8
   },
@@ -215,6 +215,22 @@
         "model_executed": false,
         "full_loop_external_validation_supported": false,
         "claim_boundary": "This retained prospective negative result demonstrates that the selected public Group D workbook cannot support the predeclared vehicle-tank or station full-loop score. It is not evidence that the model failed a numerical prediction, and it does not validate station safety or emergency response."
+      }
+    },
+    {
+      "id": "byrnes_typei_thermal_prospective_intake_integrity",
+      "status": "PASS",
+      "claim": "The duplicate Byrnes source path is explicitly invalidated after prior numerical access is discovered, with the independent frozen channel mismatch also retained.",
+      "evidence": "research\\byrnes_typei_thermal_prospective_protocol_2026_10_08.json; research\\byrnes_typei_thermal_prospective_result_2026_10_08.json",
+      "requirement": "Prior Zenodo access is linked, duplicate-path provenance is disclosed, publisher-file hashes are retained, and no new numerical run or prospective claim is permitted.",
+      "observed": {
+        "decision": "PROTOCOL_INVALID_PRIOR_OUTCOME_ACCESS",
+        "file_count": 3,
+        "resolved_case_count": 0,
+        "mapping_failure_count": 6,
+        "model_executed": false,
+        "thermal_external_validation_supported": false,
+        "claim_boundary": "This retained invalidation is neither a prospective validation nor a numerical thermal-model failure. The same Byrnes values were already classified as post-access exploratory evidence."
       }
     },
     {

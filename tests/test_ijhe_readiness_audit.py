@@ -32,6 +32,14 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert group_d["sampling_interval_s"] == 0.5
     assert group_d["model_executed"] is False
     assert group_d["full_loop_external_validation_supported"] is False
+    assert gates["byrnes_typei_thermal_prospective_intake_integrity"]["status"] == "PASS"
+    byrnes = gates["byrnes_typei_thermal_prospective_intake_integrity"]["observed"]
+    assert byrnes["decision"] == "PROTOCOL_INVALID_PRIOR_OUTCOME_ACCESS"
+    assert byrnes["file_count"] == 3
+    assert byrnes["resolved_case_count"] == 0
+    assert byrnes["mapping_failure_count"] == 6
+    assert byrnes["model_executed"] is False
+    assert byrnes["thermal_external_validation_supported"] is False
     assert gates["public_tank_runtime_calibration_integrity"]["status"] == "PASS"
     tank_runtime = gates["public_tank_runtime_calibration_integrity"]["observed"]
     assert tank_runtime["runtime"]["api_default_mode"] == "public_type_iv"
