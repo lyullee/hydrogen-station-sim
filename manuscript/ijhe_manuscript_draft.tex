@@ -332,6 +332,14 @@ before numerical Figure 3 coordinates were opened. Public apparatus inputs were
 NRMSE, median error and half-peak-time limits were the same 15\%, 20\% and 20\%
 screens used for the 2006 transient, and all three were required.
 
+Residuals motivated an apparatus-resolved candidate with
+source and line/manifold mass--energy volumes, finite valve travel and
+bidirectional inter-volume restrictions. It exposes line states and boundary flows; tests require
+whole-network mass and open-system energy closure. Line-volume count declares
+apparatus topology rather than mesh refinement. No qualifying independent logger
+archive has been received, so it is excluded from validation pass counts and
+does not alter frozen results.
+
 \subsection{Consequence-model verification}
 HyRAM+ receives immutable release state and geometry from the twin. The
 production adapter reports (i) the directional centreline distance to 4 vol\%
@@ -777,6 +785,11 @@ visible before this comparison was formalized, these numbers are development
 diagnostics only. They indicate apparatus-specific valve or upstream resistance
 rather than a transferable nozzle correction and leave the negative Proust
 decision unchanged.
+
+The apparatus-resolved candidate implements these missing dynamics, but remains
+development-only. Its protocol requires synchronized state, flow, valve position
+and as-built geometry from new campaign data; the consumed
+Proust, Schefer and PRESLHY outcomes cannot be recycled as its holdout.
 
 The separate Sandia/SRI transient reinforces the thermal limitation without
 sharing the PRESLHY or INERIS/CEA facilities. Its low aggregate NRMSE can obscure
