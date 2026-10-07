@@ -9,6 +9,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from h2station.api import ProcessSettings, _analyze_frame, app
+from h2station.calibration_profiles import load_station_recharge_dynamics_calibration
 from h2station.operations import ProcessRuntime
 from h2station.risk.runtime_backend import UnavailableHyRAMBackend
 from h2station.scenario import ReferenceScenario, build_reference_scenario
@@ -162,14 +163,12 @@ def test_opt_in_measured_boundary_profile_can_set_dispatch_margin():
     assert calibrated.station.supervisor.parameters.minimum_dispatch_pressure_margin_pa == pytest.approx(540_000.0)
 
 
-def test_opt_in_station_dynamics_profile_is_attached_when_a_job_starts():
+def test_default_station_dynamics_profile_is_attached_when_a_job_starts():
     with TestClient(app) as client:
         started = client.post("/api/simulations", json={
             "duration_s": 0.4,
             "control_period_s": 0.2,
-            "process_settings": ProcessSettings(
-                measured_station_dynamics_calibration=True,
-            ).model_dump(),
+            "process_settings": ProcessSettings().model_dump(),
         })
         assert started.status_code == 202, started.text
         job = client.get(f"/api/simulations/{started.json()['id']}").json()
@@ -177,6 +176,16 @@ def test_opt_in_station_dynamics_profile_is_attached_when_a_job_starts():
         assert job["station_dynamics_calibration_applied"] is True
         assert dynamics["status"] == "active"
         assert dynamics["minimum_recharge_off_time_s"] == pytest.approx(265.2)
+
+
+def test_default_settings_apply_the_temporally_checked_station_restart_dwell():
+    """Default operation uses only the verified station-side dwell profile."""
+    settings = ProcessSettings()
+    assert settings.measured_station_dynamics_calibration is True
+    assert settings.measured_boundary_calibration is False
+    profile = load_station_recharge_dynamics_calibration()
+    assert profile is not None
+    assert profile.minimum_recharge_off_time_s == pytest.approx(265.2)
 
 
 def test_recharge_bank_waits_for_configured_restart_margin_after_target():

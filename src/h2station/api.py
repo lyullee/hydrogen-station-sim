@@ -164,7 +164,12 @@ class ProcessSettings(BaseModel):
     risk_display_mode: Literal["relative", "absolute"] = "relative"
     risk_update_interval_s: Literal[15, 30, 60, 120] = 30
     measured_boundary_calibration: bool = False
-    measured_station_dynamics_calibration: bool = False
+    # The owner-attested restart dwell passed its chronological station-side
+    # holdout.  It is safe to make normal virtual compressor behaviour, while
+    # still leaving the unrelated boundary-envelope profile opt-in.
+    # This setting changes only restart dwell, never fill capacity, vehicle
+    # accuracy, protection limits, or consequence calculations.
+    measured_station_dynamics_calibration: bool = True
     vehicle_1_auto_stop: bool = True
     vehicle_1_target_pressure_mpa: float = Field(default=70.0, gt=1.0, le=110.0)
     vehicle_2_auto_stop: bool = True
