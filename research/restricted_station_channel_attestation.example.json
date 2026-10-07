@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "absolute_timestamps_published": false,
+  "tag_names_published": false,
+  "source_paths_published": false,
+  "timebase_semantics_attested": true,
+  "pressure_role_and_unit_semantics_attested": true,
+  "temperature_role_and_unit_semantics_attested": false,
+  "flow_role_and_unit_semantics_attested": false,
+  "state_semantics_attested": true,
+  "lifecycle_semantics_attested": false,
+  "calibration_metadata_attested": true,
+  "authorized_boundary_roles": [
+    "station_pressure"
+  ]
+}

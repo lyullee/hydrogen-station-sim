@@ -18,6 +18,7 @@ from h2station.controlled_station_replay import (
     summarize_lifecycle_counters,
     synchronize_station_traces,
 )
+from h2station.restricted_attestation import load_restricted_channel_attestation
 
 
 def _mapping(path: Path) -> TraceMapping:
@@ -63,6 +64,13 @@ def main() -> int:
     parser.add_argument("--input", type=Path, required=True, help="restricted raw CSV file or directory")
     parser.add_argument("--mapping", type=Path, required=True, help="restricted custodian mapping JSON")
     parser.add_argument("--output", type=Path, required=True, help="aggregate result JSON")
+    parser.add_argument(
+        "--attestation", type=Path,
+        help=(
+            "restricted generic-role/unit attestation; without it the output "
+            "remains diagnostic-only and cannot be promoted to a runtime profile"
+        ),
+    )
     parser.add_argument("--stride", type=int, default=60)
     parser.add_argument("--max-rows-per-file", type=int, default=250_000)
     parser.add_argument(
@@ -92,6 +100,10 @@ def main() -> int:
     if bool(args.lifecycle_input) != bool(args.lifecycle_mapping):
         parser.error("--lifecycle-input and --lifecycle-mapping must be supplied together")
     mapping = _mapping(args.mapping)
+    attestation = (
+        load_restricted_channel_attestation(args.attestation, mapping)
+        if args.attestation is not None else None
+    )
     summary = fit_station_boundary(
         args.input,
         mapping,
@@ -108,6 +120,23 @@ def main() -> int:
             "max_rows_per_file": args.max_rows_per_file,
         },
         "calibration": summary.to_public_dict(),
+        "channel_attestation": (
+            attestation.to_public_dict()
+            if attestation is not None else {
+                "provided": False,
+                "eligibility": {
+                    "station_boundary_calibration_supported": False,
+                    "temperature_boundary_supported": False,
+                    "recharge_state_calibration_supported": False,
+                    "full_station_vehicle_validation": False,
+                    "full_loop_holdout_eligible": False,
+                },
+                "claim_boundary": (
+                    "No custodian role/unit attestation was supplied; this "
+                    "aggregate is diagnostic-only."
+                ),
+            }
+        ),
     }
     if args.equipment_input:
         alignment = synchronize_station_traces(
