@@ -105,9 +105,10 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     multisource = idle["response_evidence"][
         "confidential_multisource_mapping_feasibility"
     ]
-    assert multisource["co_located_workbook_candidates"] == 1
-    assert multisource["candidate_worksheet_count"] == 11
-    assert multisource["measurement_rows_read"] is False
+    assert multisource["co_located_workbook_candidates"] == 0
+    assert multisource["candidate_worksheet_count"] == 0
+    assert multisource["sample_data_rows_structurally_inspected_in_memory"] is True
+    assert multisource["measurement_values_persisted"] is False
     assert multisource["unambiguous_full_loop_mapping_available"] is False
     assert multisource["full_loop_holdout_eligible"] is False
     accidental = idle["response_evidence"]["public_accidental_release_evidence"]
@@ -788,7 +789,7 @@ def test_prompt_decision_evidence_keeps_limits_without_full_audit_payload():
     assert decision["validation_boundaries"]["station_to_vehicle"][
         "screening_pass_count"
     ] == 0
-    assert decision["validation_boundaries"]["mapping"] == "partial"
+    assert decision["validation_boundaries"]["mapping"] == "not_found"
     assert decision["public_operating_envelope_screen"]["validation_claim"] is False
     assert decision["decision_support_evidence"]["public_incident"][
         "contract_pass"

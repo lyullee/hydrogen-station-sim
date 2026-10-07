@@ -2266,9 +2266,9 @@ def _confidential_multisource_mapping_feasibility() -> dict[str, Any] | None:
 
     The private review record itself stays outside the repository because it
     contains source paths and original labels.  The committed result is only a
-    header-level feasibility screen, so it can inform an LLM that a real-data
-    source exists without allowing it to claim a synchronized full-loop
-    validation or invent the unmapped channels.
+    header-and-structure feasibility screen, so it can keep an LLM from
+    treating documentation-shaped tables as synchronized measurement evidence
+    or inventing unmapped channels.
     """
 
     path = Path(__file__).resolve().parents[2] / (
@@ -2286,11 +2286,12 @@ def _confidential_multisource_mapping_feasibility() -> dict[str, Any] | None:
         or record.get("original_headers_published") is not False
         or record.get("raw_rows_persisted") is not False
         or record.get("absolute_timestamps_published") is not False
-        or review.get("measurement_rows_read") is not False
+        or review.get("sample_data_rows_structurally_inspected_in_memory") is not True
+        or review.get("measurement_values_persisted") is not False
         or screen.get("all_required_full_loop_channels_have_unambiguous_header_candidates")
         is not False
         or screen.get("decision")
-        != "not_eligible_for_multisource_full_loop_export_without_custodian_mapping"
+        != "no_measurement_grade_multisource_candidate_found_in_controlled_intake"
     ):
         return None
     return {
@@ -2298,7 +2299,8 @@ def _confidential_multisource_mapping_feasibility() -> dict[str, Any] | None:
         "evidence_role": "controlled multi-source full-loop mapping feasibility",
         "co_located_workbook_candidates": review.get("co_located_workbook_candidates"),
         "candidate_worksheet_count": review.get("candidate_worksheet_count"),
-        "measurement_rows_read": False,
+        "sample_data_rows_structurally_inspected_in_memory": True,
+        "measurement_values_persisted": False,
         "unambiguous_full_loop_mapping_available": False,
         "header_level_candidates_present": list(
             screen.get("header_level_candidates_present") or []
@@ -3416,10 +3418,14 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             # Preserve the controlled-data boundary in one token-cheap status
             # field; the detailed header and audit envelope retain the counts.
             "mapping": (
-                "ready"
-                if multisource.get("unambiguous_full_loop_mapping_available") is True
-                and multisource.get("full_loop_holdout_eligible") is True
-                else "partial"
+                "not_found"
+                if multisource.get("co_located_workbook_candidates") == 0
+                else (
+                    "ready"
+                    if multisource.get("unambiguous_full_loop_mapping_available") is True
+                    and multisource.get("full_loop_holdout_eligible") is True
+                    else "partial"
+                )
             ),
         },
     }
@@ -3546,8 +3552,13 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "candidate_worksheet_count": multisource_feasibility.get(
                 "candidate_worksheet_count"
             ),
-            "measurement_rows_read": multisource_feasibility.get(
-                "measurement_rows_read"
+            "sample_data_rows_structurally_inspected_in_memory": (
+                multisource_feasibility.get(
+                    "sample_data_rows_structurally_inspected_in_memory"
+                ) is True
+            ),
+            "measurement_values_persisted": multisource_feasibility.get(
+                "measurement_values_persisted"
             ) is True,
             "unambiguous_full_loop_mapping_available": multisource_feasibility.get(
                 "unambiguous_full_loop_mapping_available"

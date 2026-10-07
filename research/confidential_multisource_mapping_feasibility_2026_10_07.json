@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "artifact_type": "controlled_multisource_mapping_feasibility",
   "assessment_date": "2026-10-07",
   "source_identifiers_published": false,
@@ -7,20 +7,20 @@
   "raw_rows_persisted": false,
   "absolute_timestamps_published": false,
   "controlled_review": {
-    "co_located_workbook_candidates": 1,
-    "candidate_worksheet_count": 11,
-    "measurement_rows_read": false,
+    "co_located_workbook_candidates": 0,
+    "candidate_worksheet_count": 0,
+    "sample_data_rows_structurally_inspected_in_memory": true,
+    "measurement_values_persisted": false,
     "unreadable_workbooks": 0
   },
   "canonical_mapping_screen": {
+    "measurement_grade_multisource_candidate_found": false,
     "all_required_full_loop_channels_have_unambiguous_header_candidates": false,
-    "header_level_candidates_present": [
+    "header_level_candidates_present": [],
+    "header_level_candidates_not_identified": [
+      "event_time",
       "vehicle_pressure_mpa_abs",
       "temperature_degC",
-      "delivered_gas_temperature_degC",
-      "precooler_state"
-    ],
-    "header_level_candidates_not_identified": [
       "mass_flow_g_s",
       "station_pressure_mpa_abs",
       "cascade_source_pressure_mpa_abs",
@@ -31,17 +31,18 @@
       "fault_state",
       "esd_state"
     ],
-    "decision": "not_eligible_for_multisource_full_loop_export_without_custodian_mapping"
+    "decision": "no_measurement_grade_multisource_candidate_found_in_controlled_intake"
   },
   "permitted_evidence_use": [
-    "controlled partial-channel calibration or plausibility assessment after a custodian-approved mapping",
-    "data-acquisition gap specification for a future synchronized event export"
+    "data-acquisition gap specification for a future synchronized event export",
+    "documentation of the controlled-intake screening boundary"
   ],
   "prohibited_evidence_use": [
     "station-to-vehicle full-loop validation",
+    "controlled partial-channel calibration from this screened candidate set",
     "controller or consequence-model parameter fitting",
     "safety-distance validation",
     "journal-readiness completion claim"
   ],
-  "claim_boundary": "This is a header-only, controlled-access feasibility result. It does not disclose source identity or values, does not prove absence of a signal in the controlled data, and does not substitute for a custodian-approved semantic mapping, unit attestation, or time-synchronization assessment."
+  "claim_boundary": "This is a controlled-access feasibility result. It does not disclose source identity or values. It uses only header semantics and the in-memory structural shape of up to three post-header rows per table; no measurement values are retained. No measurement-grade co-located multi-source candidate was found by this screen. This does not prove that suitable signals are absent elsewhere in the controlled data and does not substitute for a custodian-approved semantic mapping, unit attestation, or time-synchronization assessment."
 }

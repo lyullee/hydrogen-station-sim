@@ -2,7 +2,8 @@
 
 Unlike the public-safe schema inventory, this custodian utility retains source
 paths, worksheet names, and header labels in its output so an authorised
-reviewer can construct a semantic mapping.  It never reads measurement rows.
+reviewer can construct a semantic mapping.  It inspects only the shape of up
+to three post-header rows in memory and never retains measurement values.
 The output is intentionally rejected inside the Git worktree and must never be
 committed, published, or attached to a manuscript.
 """
@@ -16,10 +17,12 @@ from pathlib import Path
 from typing import Iterable
 
 from audit_controlled_data_schema import (
+    DATA_LIKENESS_SAMPLE_ROWS,
     FULL_LOOP_REQUIRED,
     HEADER_SEARCH_MAX_ROWS,
     _classify_header,
     _outside_repository,
+    _screen_rows,
 )
 
 
@@ -43,20 +46,26 @@ def _workbooks(roots: Iterable[Path]) -> Iterable[Path]:
 
 
 def _best_header(worksheet) -> tuple[int, tuple[str, ...], frozenset[str]] | None:
-    selected: tuple[tuple[int, int, int], int, tuple[str, ...], frozenset[str]] | None = None
-    for row_number, row in enumerate(
-        worksheet.iter_rows(min_row=1, max_row=HEADER_SEARCH_MAX_ROWS, values_only=True), start=1,
-    ):
-        labels = tuple(str(value or "").strip() for value in row)
-        coverage = _classify_header(labels)
-        textual = sum(bool(label) and not label.replace(".", "", 1).isdigit() for label in labels)
-        score = (len(coverage), textual, -row_number)
-        if selected is None or score > selected[0]:
-            selected = (score, row_number, labels, coverage)
-    if selected is None:
+    """Return a private header only when its table has a measurement-like shape."""
+
+    rows = tuple(
+        worksheet.iter_rows(
+            min_row=1,
+            max_row=HEADER_SEARCH_MAX_ROWS + DATA_LIKENESS_SAMPLE_ROWS,
+            values_only=True,
+        )
+    )
+    screen = _screen_rows(rows)
+    if screen is None:
         return None
-    _, row_number, labels, coverage = selected
-    return row_number, labels, coverage
+    labels, _, record_shaped = screen
+    coverage = _classify_header(labels)
+    if not (record_shaped and "time" in coverage):
+        return None
+    for row_number, row in enumerate(rows[:HEADER_SEARCH_MAX_ROWS], start=1):
+        if tuple(str(value or "") for value in row) == labels:
+            return row_number, labels, coverage
+    return None
 
 
 def build_review(input_roots: Iterable[Path]) -> dict[str, object]:
@@ -104,16 +113,19 @@ def build_review(input_roots: Iterable[Path]) -> dict[str, object]:
         finally:
             workbook.close()
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "artifact_type": "controlled_private_multisource_mapping_review",
         "publication_prohibited": True,
         "repository_storage_prohibited": True,
-        "measurement_rows_read": False,
+        "sample_data_rows_structurally_inspected_in_memory": True,
+        "measurement_values_persisted": False,
+        "raw_rows_persisted": False,
         "candidate_count": len(candidates),
         "unreadable_workbook_count": unreadable,
         "candidates": candidates,
         "claim_boundary": (
-            "Co-located labels only. A custodian must attest same-event selection, "
+            "Co-located measurement-like labels only. Row shapes are inspected in memory, "
+            "but no measurement values are retained. A custodian must attest same-event selection, "
             "units, state meanings, and time synchronization before export."
         ),
     }

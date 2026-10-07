@@ -28,7 +28,8 @@ def test_private_review_finds_complementary_workbook_without_reading_rows(tmp_pa
 
     assert review["publication_prohibited"] is True
     assert review["repository_storage_prohibited"] is True
-    assert review["measurement_rows_read"] is False
+    assert review["sample_data_rows_structurally_inspected_in_memory"] is True
+    assert review["measurement_values_persisted"] is False
     assert review["candidate_count"] == 1
     source = review["candidates"][0]
     assert source["review_status"] == "requires_custodian_mapping_and_synchronization_attestation"

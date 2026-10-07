@@ -20,6 +20,7 @@ import argparse
 import csv
 from collections import Counter
 from io import BytesIO, StringIO
+from itertools import islice
 import json
 from pathlib import Path
 from typing import Iterable
@@ -30,6 +31,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SUPPORTED_SUFFIXES = frozenset({".csv", ".xlsx", ".xlsm", ".zip"})
 TABULAR_SUFFIXES = frozenset({".csv", ".xlsx", ".xlsm"})
 HEADER_SEARCH_MAX_ROWS = 40
+DATA_LIKENESS_SAMPLE_ROWS = 3
 MAX_ARCHIVE_MEMBER_BYTES = 100 * 1024 * 1024
 
 # These terms are deliberately broad: candidate classification is only a
@@ -76,6 +78,19 @@ def _outside_repository(path: Path, *, label: str) -> Path:
     raise ValueError(f"{label} must be outside the repository worktree")
 
 
+def _is_compact_label(value: str) -> bool:
+    """Reject prose cells that merely mention several measurement concepts."""
+
+    cleaned = value.strip()
+    return (
+        bool(cleaned)
+        and len(cleaned) <= 80
+        and len(cleaned.split()) <= 10
+        and "\n" not in cleaned
+        and cleaned.count(".") <= 1
+    )
+
+
 def _best_header(rows: Iterable[Iterable[object]]) -> tuple[tuple[str, ...], int] | None:
     """Choose a likely header without retaining any source content.
 
@@ -116,16 +131,65 @@ def _is_number(value: str) -> bool:
     return True
 
 
-def _csv_header_bytes(raw: bytes) -> tuple[tuple[str, ...], int] | None:
+def _row_has_record_shape(row: Iterable[object], expected_columns: int) -> bool:
+    """Check only shape, not content, of a row following a proposed header."""
+
+    values = tuple(row)
+    populated = sum(
+        bool(value is not None and str(value).strip()) for value in values
+    )
+    return expected_columns >= 2 and populated >= min(2, expected_columns) and (
+        len(values) >= expected_columns
+    )
+
+
+def _screen_rows(
+    rows: Iterable[Iterable[object]],
+) -> tuple[tuple[str, ...], int, bool] | None:
+    """Locate a header and retain only a boolean record-shape result.
+
+    At most three following rows are inspected in memory to reject narrative
+    sheets that happen to mention operational terms.  No values, headers, or
+    row identifiers leave this function.
+    """
+
+    buffered = [
+        tuple(row)
+        for row in islice(rows, HEADER_SEARCH_MAX_ROWS + DATA_LIKENESS_SAMPLE_ROWS)
+    ]
+    selected = _best_header(buffered[:HEADER_SEARCH_MAX_ROWS])
+    if selected is None:
+        return None
+    header, rows_examined = selected
+    header_index = next(
+        (
+            index
+            for index, row in enumerate(buffered[:HEADER_SEARCH_MAX_ROWS])
+            if tuple(str(value or "") for value in row) == header
+        ),
+        None,
+    )
+    if header_index is None:
+        return None
+    samples = buffered[
+        header_index + 1: header_index + 1 + DATA_LIKENESS_SAMPLE_ROWS
+    ]
+    record_shaped = any(_row_has_record_shape(row, len(header)) for row in samples)
+    return header, rows_examined, record_shaped
+
+
+def _csv_header_bytes(raw: bytes) -> tuple[tuple[str, ...], int, bool] | None:
     for encoding in ("utf-8-sig", "utf-8", "cp949", "euc-kr"):
         try:
-            return _best_header(csv.reader(StringIO(raw.decode(encoding))))
+            return _screen_rows(csv.reader(StringIO(raw.decode(encoding))))
         except UnicodeError:
             continue
     return None
 
 
-def _excel_headers(source: Path | BytesIO) -> tuple[tuple[tuple[str, ...], int], ...] | None:
+def _excel_headers(
+    source: Path | BytesIO,
+) -> tuple[tuple[tuple[str, ...], int, bool], ...] | None:
     try:
         from openpyxl import load_workbook
     except ImportError as exc:  # pragma: no cover - environment-specific
@@ -135,13 +199,13 @@ def _excel_headers(source: Path | BytesIO) -> tuple[tuple[tuple[str, ...], int],
     except Exception:
         return None
     try:
-        headers: list[tuple[tuple[str, ...], int]] = []
+        headers: list[tuple[tuple[str, ...], int, bool]] = []
         for worksheet in workbook.worksheets:
-            header = _best_header(
+            header = _screen_rows(
                 row
                 for row in worksheet.iter_rows(
                     min_row=1,
-                    max_row=HEADER_SEARCH_MAX_ROWS,
+                    max_row=HEADER_SEARCH_MAX_ROWS + DATA_LIKENESS_SAMPLE_ROWS,
                     values_only=True,
                 )
             )
@@ -153,11 +217,17 @@ def _excel_headers(source: Path | BytesIO) -> tuple[tuple[tuple[str, ...], int],
 
 
 def _classify_header(header: Iterable[str]) -> frozenset[str]:
-    joined = " ".join(header).casefold()
+    compact_labels = tuple(
+        value.casefold() for value in header if _is_compact_label(value)
+    )
     return frozenset(
         category
         for category, terms in SEMANTIC_TERMS.items()
-        if any(term.casefold() in joined for term in terms)
+        if any(
+            term.casefold() in label
+            for term in terms
+            for label in compact_labels
+        )
     )
 
 
@@ -173,10 +243,12 @@ def _files(input_roots: Iterable[Path]) -> Iterable[Path]:
                     yield candidate
 
 
-def _archive_headers(path: Path) -> tuple[list[tuple[str, tuple[tuple[str, ...], int] | None]], int]:
+def _archive_headers(
+    path: Path,
+) -> tuple[list[tuple[str, tuple[tuple[str, ...], int, bool] | None]], int]:
     """Read eligible archive members in memory without disclosing their names."""
 
-    result: list[tuple[str, tuple[tuple[str, ...], int] | None]] = []
+    result: list[tuple[str, tuple[tuple[str, ...], int, bool] | None]] = []
     oversized = 0
     try:
         with ZipFile(path) as archive:
@@ -221,6 +293,8 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
     unreadable_tables = 0
     full_loop_candidates = 0
     co_located_full_loop_candidates = 0
+    measurement_like_tables = 0
+    rejected_nonmeasurement_candidate_containers = 0
     near_full_loop_candidates = 0
     station_recharge_candidates = 0
     vehicle_fill_candidates = 0
@@ -248,15 +322,21 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
             if not headers:
                 headers = [(suffix, None)]
         container_coverages: list[frozenset[str]] = []
+        nonmeasurement_coverages: list[frozenset[str]] = []
         for content_suffix, result in headers:
             tabular_content_format_counts[content_suffix.lstrip(".")] += 1
             if result is None:
                 unreadable_tables += 1
                 continue
-            header, rows_examined = result
+            header, rows_examined, record_shaped = result
             tables_scanned += 1
             schema_search_rows_examined += rows_examined
             coverage = _classify_header(header)
+            measurement_like = bool(coverage) and record_shaped and "time" in coverage
+            if not measurement_like:
+                nonmeasurement_coverages.append(coverage)
+                continue
+            measurement_like_tables += 1
             container_coverages.append(coverage)
             for category in coverage:
                 coverage_counts[category] += 1
@@ -278,19 +358,25 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
             combined_coverage = frozenset().union(*container_coverages)
             if FULL_LOOP_REQUIRED.issubset(combined_coverage):
                 co_located_full_loop_candidates += 1
+        if suffix in {".xlsx", ".xlsm", ".zip"} and len(nonmeasurement_coverages) > 1:
+            if FULL_LOOP_REQUIRED.issubset(frozenset().union(*nonmeasurement_coverages)):
+                rejected_nonmeasurement_candidate_containers += 1
 
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "artifact_type": "controlled_hrs_schema_inventory",
         "source_identifiers_published": False,
         "original_headers_published": False,
         "schema_search_max_rows_per_table": HEADER_SEARCH_MAX_ROWS,
+        "data_likeness_sample_rows_per_table": DATA_LIKENESS_SAMPLE_ROWS,
         "schema_search_rows_examined": schema_search_rows_examined,
+        "sample_data_rows_structurally_inspected_in_memory": True,
         "measurement_rows_persisted": False,
         "raw_rows_persisted": False,
         "absolute_timestamps_published": False,
         "source_files_scanned": files_scanned,
         "source_tables_scanned": tables_scanned,
+        "measurement_like_tables": measurement_like_tables,
         "unreadable_tables": unreadable_tables,
         "source_container_format_counts": dict(sorted(container_format_counts.items())),
         "tabular_content_format_counts": dict(sorted(tabular_content_format_counts.items())),
@@ -303,10 +389,14 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
             "near_full_loop_missing_one_semantic_group": near_full_loop_candidates,
             "station_recharge_candidate": station_recharge_candidates,
             "vehicle_fill_candidate": vehicle_fill_candidates,
+            "rejected_nonmeasurement_candidate_container": (
+                rejected_nonmeasurement_candidate_containers
+            ),
         },
         "claim_boundary": (
-            "Header-level semantic screening only. A co-located candidate means only "
-            "that separate tables in one workbook or archive have complementary labels; "
+            "Header-level semantic screening plus an in-memory record-shape check only. "
+            "A co-located candidate means only that separate measurement-like tables in "
+            "one workbook or archive have complementary labels; "
             "it does not attest that they can be joined. Candidate counts do not attest "
             "a tag mapping, units, calibration, time synchronization, event "
             "integrity, model accuracy, safety, or full-loop validation."

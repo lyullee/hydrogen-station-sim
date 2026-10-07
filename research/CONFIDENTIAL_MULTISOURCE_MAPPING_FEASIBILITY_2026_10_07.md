@@ -1,19 +1,20 @@
 # Controlled multi-source mapping feasibility
 
-The controlled workbook review found one co-located candidate with multiple
-subsystem worksheets. The review itself remains outside the repository because
-it contains source paths, worksheet names, and headers. No measurement row was
-read during the feasibility screen.
+The refined controlled-intake screen found no measurement-grade co-located
+multi-source candidate. The screen deliberately requires a compact time-field
+label, complementary operational labels, and the structural shape of a
+post-header record. It therefore excludes documentation, design, and risk
+register tables that mention process variables but are not synchronized
+measurement streams.
 
-The candidate does not yet meet the canonical full-loop contract. At header
-level, vehicle pressure, temperature, delivery temperature, and a precooler
-state have plausible candidates; mass flow, station/cascade pressure, bank
-selection, compressor, leak-check, vent, fault, and ESD state do not have an
-unambiguous candidate. This must not be repaired by inference or by copying a
-state from another event.
+The screen inspects only header semantics and the in-memory structure of at
+most three rows after a proposed header. It does not retain measurement values,
+source identities, original headers, timestamps, worksheet names, or file
+paths. The private review record remains outside the repository.
 
-The data can still support a controlled partial-channel assessment after a
-custodian-approved mapping. A synchronized station-to-vehicle validation event
-requires an explicit mapping and attestation for every missing canonical role,
-confirmed common time basis, units, state meanings, and an untouched outcome
-window. See [the multi-source controlled intake procedure](CONTROLLED_MULTISOURCE_FULL_LOOP_INTAKE.md).
+This result cannot be used for full-loop validation, partial-channel
+calibration, controller fitting, consequence validation, or a publication
+readiness claim. It only specifies the data-acquisition gap: a custodian must
+provide a deliberately selected synchronized event export with an approved
+canonical mapping, units, state meanings, common time basis, and an untouched
+outcome window. See [the multi-source controlled intake procedure](CONTROLLED_MULTISOURCE_FULL_LOOP_INTAKE.md).

@@ -118,3 +118,25 @@ def test_inventory_flags_complementary_workbook_tables_only_as_co_located_candid
     assert "private storage signals" not in rendered
     assert "private dispenser signals" not in rendered
     assert "private-time" not in rendered
+
+
+def test_inventory_rejects_documentation_sheets_that_only_mention_channels(
+    tmp_path: Path,
+):
+    source = tmp_path / "controlled_documentation.xlsx"
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.title = "private notes"
+    sheet.append(["시간", "차량 압력", "온도", "유량"])
+    sheet.append(["설계 검토 문서이며 계측 로그가 아니다."])
+    other = workbook.create_sheet("private response notes")
+    other.append(["시간", "저장 압력", "압축기", "제어 상태"])
+    other.append(["실제 시계열 또는 동기화된 운전 기록이 아니다."])
+    workbook.save(source)
+
+    report = inventory_schema([tmp_path])
+
+    assert report["measurement_like_tables"] == 0
+    assert report["candidate_schema_counts"]["co_located_full_loop_candidate"] == 0
+    assert report["candidate_schema_counts"]["rejected_nonmeasurement_candidate_container"] == 1
+    assert report["sample_data_rows_structurally_inspected_in_memory"] is True
