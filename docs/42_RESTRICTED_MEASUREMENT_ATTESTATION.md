@@ -22,6 +22,23 @@
 
 ## 실행
 
+먼저 제한 매핑만 읽는 검토 초안을 생성합니다. 이 단계는 측정 행을 읽지
+않으며, 제안 단위는 변환계수에서 표시할 뿐 확인된 값으로 취급하지 않습니다.
+
+```powershell
+$env:PYTHONPATH = 'src'
+.\.venv\Scripts\python.exe scripts\build_restricted_attestation_review.py `
+  --mapping <restricted-raw-column-map.json> `
+  --profile-id station-equipment-generic-v1 `
+  --private-draft <outside-repository-attestation-draft.json> `
+  --private-markdown <outside-repository-review-checklist.md> `
+  --public-status research/confidential_station_attestation_request_status.json
+```
+
+생성 초안은 `UNCONFIRMED` 상태라서 로더가 거부합니다. 관리자가 일반화한
+역할·단위·압력 기준·상태값 의미를 확인하고 `review_status`를
+`CUSTODIAN_CONFIRMED`로 바꾼 뒤에만 아래 검증 단계로 진행할 수 있습니다.
+
 제한된 원자료가 있는 환경에서만 다음을 실행합니다.
 
 ```powershell

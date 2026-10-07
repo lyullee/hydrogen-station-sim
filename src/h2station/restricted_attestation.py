@@ -49,6 +49,77 @@ def _mapping_roles(mapping: TraceMapping) -> set[str]:
     return roles
 
 
+def _require_generated_review_confirmations(record: Mapping[str, object]) -> None:
+    """Keep generated drafts unusable until every claimed family is reviewed."""
+
+    if "review_status" not in record:
+        return
+    if record.get("review_status") != "CUSTODIAN_CONFIRMED":
+        raise ValueError("generated attestation draft requires custodian confirmation")
+    timebase = record.get("timebase_review")
+    if _flag(record, "timebase_semantics_attested") and (
+        not isinstance(timebase, Mapping)
+        or timebase.get("semantics_confirmed") is not True
+        or str(timebase.get("chronology_and_clock_basis", "")).startswith("UNCONFIRMED")
+    ):
+        raise ValueError("confirmed timebase attestation requires completed timebase review")
+    metadata = record.get("calibration_metadata_review")
+    if _flag(record, "calibration_metadata_attested") and (
+        not isinstance(metadata, Mapping) or metadata.get("confirmed") is not True
+    ):
+        raise ValueError(
+            "confirmed calibration metadata attestation requires completed metadata review"
+        )
+    role_review = record.get("role_review")
+    if not isinstance(role_review, Mapping):
+        raise ValueError("generated attestation requires role_review")
+    requirements = {
+        "pressure_role_and_unit_semantics_attested": ("pressure", "role_and_unit_confirmed"),
+        "temperature_role_and_unit_semantics_attested": (
+            "temperature", "role_and_unit_confirmed"
+        ),
+        "flow_role_and_unit_semantics_attested": ("flow", "role_and_unit_confirmed"),
+        "state_semantics_attested": ("discrete_state", "semantics_confirmed"),
+        "lifecycle_semantics_attested": ("lifecycle", "semantics_confirmed"),
+    }
+    for attestation_flag, (family, confirmation_key) in requirements.items():
+        if not _flag(record, attestation_flag):
+            continue
+        rows = role_review.get(family)
+        if not isinstance(rows, list) or not rows:
+            raise ValueError(f"{attestation_flag} requires mapped {family} review rows")
+        if any(
+            not isinstance(row, Mapping) or row.get(confirmation_key) is not True
+            for row in rows
+        ):
+            raise ValueError(f"{attestation_flag} requires all {family} roles to be confirmed")
+        if family == "pressure" and any(
+            str(row.get("pressure_reference", "")).startswith("UNCONFIRMED")
+            for row in rows
+        ):
+            raise ValueError("pressure attestation requires absolute/gauge reference review")
+        if family == "temperature" and any(
+            row.get("physical_location_and_role_confirmed") is not True for row in rows
+        ):
+            raise ValueError("temperature attestation requires physical-location review")
+        if family == "flow" and any(
+            str(row.get("positive_direction", "")).startswith("UNCONFIRMED")
+            for row in rows
+        ):
+            raise ValueError("flow attestation requires positive-direction review")
+        if family == "discrete_state" and any(
+            str(row.get(key, "")).startswith("UNCONFIRMED")
+            for row in rows
+            for key in ("value_semantics", "normal_value", "active_or_trip_value")
+        ):
+            raise ValueError("state attestation requires explicit value semantics")
+        if family == "lifecycle" and any(
+            str(row.get("counter_unit_and_reset_semantics", "")).startswith("UNCONFIRMED")
+            for row in rows
+        ):
+            raise ValueError("lifecycle attestation requires counter/reset semantics")
+
+
 @dataclass(frozen=True)
 class RestrictedChannelAttestation:
     """Sanitized proof of what a restricted mapping is permitted to drive."""
@@ -154,6 +225,7 @@ def load_restricted_channel_attestation(
         raise ValueError("restricted channel attestation must be valid JSON") from exc
     if not isinstance(record, dict) or record.get("schema_version") != 1:
         raise ValueError("restricted channel attestation schema_version must be 1")
+    _require_generated_review_confirmations(record)
     if any(record.get(key) is not False for key in _REQUIRED_PRIVATE_FLAGS):
         raise ValueError("attestation must explicitly prohibit publication of restricted data")
 

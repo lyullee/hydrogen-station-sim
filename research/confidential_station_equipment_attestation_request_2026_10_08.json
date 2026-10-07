@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_station_attestation_request_status",
+  "profile_id": "station-equipment-generic-v1",
+  "review_status": "UNCONFIRMED",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "absolute_timestamps_published": false,
+  "tag_names_published": false,
+  "source_paths_published": false,
+  "mapped_channel_family_counts": {
+    "pressure": 2,
+    "temperature": 3,
+    "flow": 0,
+    "discrete_state": 3,
+    "lifecycle": 0
+  },
+  "proposed_engineering_units": {
+    "pressure": [
+      "bar"
+    ],
+    "temperature": [
+      "degC"
+    ],
+    "flow": []
+  },
+  "confirmation_required": {
+    "timebase": true,
+    "pressure_reference_and_roles": true,
+    "temperature_location_roles_and_units": true,
+    "flow_direction_and_units": false,
+    "discrete_state_value_semantics": true,
+    "lifecycle_counter_semantics": false,
+    "calibration_metadata": true
+  },
+  "eligibility": {
+    "station_component_calibration_supported": false,
+    "temperature_boundary_supported": false,
+    "recharge_state_calibration_supported": false,
+    "full_station_vehicle_validation": false,
+    "full_loop_holdout_eligible": false
+  },
+  "claim_boundary": "This record only reports a pending custodian review of generic channel families. It contains no measurement rows or source identifiers, does not attest the proposed units, and cannot support calibration or validation."
+}
