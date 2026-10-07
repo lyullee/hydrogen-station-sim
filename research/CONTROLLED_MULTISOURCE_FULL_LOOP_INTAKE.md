@@ -108,6 +108,22 @@ The existing private attestation must additionally include:
 }
 ```
 
+## Declare what each temperature actually measures
+
+The vehicle-temperature channel must not be assumed to be a gas temperature
+just because its unit is °C. In the private attestation, declare one of
+`gas_temperature`, `liner_temperature`, `shell_temperature`, or
+`sensor_weighted_tank_temperature` for `vehicle_temperature_degC`, and declare
+`delivered_gas_temperature` for `delivered_gas_temperature_degC`. For both,
+the custodian must confirm the sensor location, measurement/averaging method,
+and calibration or traceability status. These free-text details stay in the
+private attestation; a de-identified export retains only the coarse observation
+operator.
+
+This guards against the specific error of comparing a measured tank-wall or
+sensor-average temperature directly with a simulated gas temperature. It does
+not itself validate the observation operator or the thermal model.
+
 ## Run first without rows
 
 ```powershell

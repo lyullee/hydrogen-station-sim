@@ -62,6 +62,20 @@ def _write_inputs(tmp_path: Path):
             "cascade_selected_bank", "compressor_state", "precooler_state", "leak_check_state",
             "vent_state", "fault_state", "esd_state",
         }},
+        "temperature_observation": {
+            "vehicle_temperature_degC": {
+                "observation_operator": "gas_temperature",
+                "sensor_location_verified": True,
+                "measurement_method": "custodian-attested private sensor method",
+                "calibration_or_traceability": "custodian-attested private calibration",
+            },
+            "delivered_gas_temperature_degC": {
+                "observation_operator": "delivered_gas_temperature",
+                "sensor_location_verified": True,
+                "measurement_method": "custodian-attested private sensor method",
+                "calibration_or_traceability": "custodian-attested private calibration",
+            },
+        },
         "metadata": {
             "initial_conditions": "declared",
             "tank_capacity_or_geometry": "declared",
@@ -140,6 +154,8 @@ def test_export_removes_source_headers_and_absolute_time(tmp_path):
     declaration = json.loads((output / "declaration.json").read_text(encoding="utf-8"))
     assert declaration["source_identifiers_published"] is False
     assert declaration["absolute_timestamps_published"] is False
+    assert declaration["channels"]["gas_or_tank_temperature"]["observation_operator"] == "gas_temperature"
+    assert receipt["temperature_observation_semantics_attested"] is True
 
 
 def test_export_rejects_a_repository_output_path(tmp_path):
@@ -169,6 +185,18 @@ def test_export_requires_attested_state_semantics(tmp_path):
     payload["state_semantics"].pop("esd_state")
     attestation.write_text(json.dumps(payload), encoding="utf-8")
     with pytest.raises(ValueError, match="state column"):
+        export_bundle(
+            source, mapping, attestation, tmp_path / "controlled_bundle",
+            ROOT / "research/external_hrs_intake_protocol.json",
+        )
+
+
+def test_export_rejects_unverified_temperature_sensor_semantics(tmp_path):
+    source, mapping, attestation = _write_inputs(tmp_path)
+    payload = json.loads(attestation.read_text(encoding="utf-8"))
+    payload["temperature_observation"]["vehicle_temperature_degC"]["sensor_location_verified"] = False
+    attestation.write_text(json.dumps(payload), encoding="utf-8")
+    with pytest.raises(ValueError, match="sensor location"):
         export_bundle(
             source, mapping, attestation, tmp_path / "controlled_bundle",
             ROOT / "research/external_hrs_intake_protocol.json",

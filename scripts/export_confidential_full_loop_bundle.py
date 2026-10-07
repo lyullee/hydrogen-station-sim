@@ -66,6 +66,14 @@ REQUIRED_METADATA = (
     "license_or_reuse_reference",
 )
 
+VEHICLE_TEMPERATURE_OBSERVATION_OPERATORS = frozenset({
+    "gas_temperature",
+    "liner_temperature",
+    "shell_temperature",
+    "sensor_weighted_tank_temperature",
+})
+DELIVERED_TEMPERATURE_OBSERVATION_OPERATOR = "delivered_gas_temperature"
+
 
 def _json(path: Path) -> dict[str, Any]:
     value = json.loads(path.read_text(encoding="utf-8"))
@@ -133,7 +141,41 @@ def _relative_time(value: object | None, mapping: dict[str, Any], *, row_number:
             raise numeric_error
 
 
-def _attestation(mapping: dict[str, Any], attestation: dict[str, Any]) -> None:
+def _temperature_observation_semantics(attestation: dict[str, Any]) -> dict[str, str]:
+    """Validate private thermal-measurement meaning and return safe categories.
+
+    The free-text location and calibration declarations remain in the private
+    attestation.  Only a coarse, non-identifying observation operator is
+    eligible for the de-identified evaluator declaration.
+    """
+
+    semantics = attestation.get("temperature_observation")
+    if not isinstance(semantics, dict):
+        raise ValueError("attestation must declare temperature observation semantics")
+    vehicle = semantics.get("vehicle_temperature_degC")
+    delivered = semantics.get("delivered_gas_temperature_degC")
+    if not isinstance(vehicle, dict) or not isinstance(delivered, dict):
+        raise ValueError("attestation must declare both vehicle and delivered temperature observations")
+    vehicle_operator = vehicle.get("observation_operator")
+    delivered_operator = delivered.get("observation_operator")
+    if vehicle_operator not in VEHICLE_TEMPERATURE_OBSERVATION_OPERATORS:
+        raise ValueError("vehicle temperature observation operator is unsupported or unknown")
+    if delivered_operator != DELIVERED_TEMPERATURE_OBSERVATION_OPERATOR:
+        raise ValueError("delivered temperature must be declared as delivered_gas_temperature")
+    for declaration in (vehicle, delivered):
+        if declaration.get("sensor_location_verified") is not True:
+            raise ValueError("temperature observation requires a custodian-verified sensor location")
+        if not isinstance(declaration.get("measurement_method"), str) or not declaration["measurement_method"].strip():
+            raise ValueError("temperature observation requires a nonempty measurement method")
+        if not isinstance(declaration.get("calibration_or_traceability"), str) or not declaration["calibration_or_traceability"].strip():
+            raise ValueError("temperature observation requires a nonempty calibration or traceability declaration")
+    return {
+        "vehicle_temperature_degC": vehicle_operator,
+        "delivered_gas_temperature_degC": delivered_operator,
+    }
+
+
+def _attestation(mapping: dict[str, Any], attestation: dict[str, Any]) -> dict[str, str]:
     if mapping.get("schema_version") != 1:
         raise ValueError("mapping schema_version must be 1")
     if attestation.get("schema_version") != 1:
@@ -168,6 +210,7 @@ def _attestation(mapping: dict[str, Any], attestation: dict[str, Any]) -> None:
         for key in REQUIRED_METADATA
     ):
         raise ValueError("attestation must provide all required generic metadata declarations")
+    return _temperature_observation_semantics(attestation)
 
 
 def _source_column(mapping: dict[str, Any], canonical: str) -> str:
@@ -326,7 +369,7 @@ def export_bundle(
         raise FileNotFoundError(input_data)
     mapping = _json(mapping_path)
     attestation = _json(attestation_path)
-    _attestation(mapping, attestation)
+    temperature_observation = _attestation(mapping, attestation)
     protocol = _json(protocol_path)
     if protocol.get("status") != "prospective_intake_contract":
         raise ValueError("intake protocol must be prospective")
@@ -389,7 +432,16 @@ def export_bundle(
         "channels": {
             "common_time_base": {"present": True},
             "vehicle_or_receptacle_pressure": {"present": True, "unit": "MPa_abs"},
-            "gas_or_tank_temperature": {"present": True, "unit": "degC"},
+            "gas_or_tank_temperature": {
+                "present": True,
+                "unit": "degC",
+                "observation_operator": temperature_observation["vehicle_temperature_degC"],
+            },
+            "delivered_gas_temperature": {
+                "present": True,
+                "unit": "degC",
+                "observation_operator": temperature_observation["delivered_gas_temperature_degC"],
+            },
             "mass_flow_or_transferred_mass": {"present": True, "unit": "g/s"},
         },
         "metadata": {key: "declared" for key in REQUIRED_METADATA},
@@ -420,6 +472,7 @@ def export_bundle(
         "absolute_timestamps_published": False,
         "original_column_names_published": False,
         "raw_rows_persisted_in_repository": False,
+        "temperature_observation_semantics_attested": True,
         "output_file_count": 4,
         "input_format": source_format,
         "rows": len(normalized),

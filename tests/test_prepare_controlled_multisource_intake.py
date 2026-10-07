@@ -43,6 +43,7 @@ def test_private_workbench_writes_mapping_templates_without_measurement_values(
     assert mapping["sources"][0]["event_group_token"].startswith("<custodian-approved")
     assert attestation["authorised_controlled_evaluation"] is False
     assert attestation["source_synchronization"]["same_physical_event_confirmed"] is False
+    assert attestation["temperature_observation"]["vehicle_temperature_degC"]["sensor_location_verified"] is False
     assert "private vehicle sheet" not in rendered_receipt
     assert "do-not-persist" not in catalog["sources"][0]["original_headers"]
 

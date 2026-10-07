@@ -35,6 +35,7 @@ try:  # Supports both ``python scripts/...`` and test-module imports.
         _outside_repository,
         _relative_time,
         _sha256,
+        _temperature_observation_semantics,
     )
     from audit_controlled_data_schema import _csv_encodings
 except ModuleNotFoundError:  # pragma: no cover - import style depends on launcher
@@ -49,6 +50,7 @@ except ModuleNotFoundError:  # pragma: no cover - import style depends on launch
         _outside_repository,
         _relative_time,
         _sha256,
+        _temperature_observation_semantics,
     )
     from scripts.audit_controlled_data_schema import _csv_encodings
 
@@ -57,7 +59,7 @@ from validate_external_hrs_full_loop import validate_full_loop_trace
 from validate_external_hrs_manifest import validate as validate_manifest
 
 
-def _require_attestation(attestation: dict[str, Any]) -> None:
+def _require_attestation(attestation: dict[str, Any]) -> dict[str, str]:
     if attestation.get("schema_version") != 1:
         raise ValueError("attestation schema_version must be 1")
     if attestation.get("authorised_controlled_evaluation") is not True:
@@ -101,6 +103,7 @@ def _require_attestation(attestation: dict[str, Any]) -> None:
         raise ValueError(
             "attestation must confirm that every mapped source describes the same physical event"
         )
+    return _temperature_observation_semantics(attestation)
 
 
 def _specifications(mapping: dict[str, Any]) -> tuple[list[dict[str, Any]], int, float]:
@@ -671,7 +674,7 @@ def _alignment_diagnostics(
     ]
 
 
-def _declaration() -> dict[str, Any]:
+def _declaration(temperature_observation: dict[str, str]) -> dict[str, Any]:
     return {
         "schema_version": 1,
         "declaration_type": "external_hrs_bundle_metadata",
@@ -683,7 +686,16 @@ def _declaration() -> dict[str, Any]:
         "channels": {
             "common_time_base": {"present": True},
             "vehicle_or_receptacle_pressure": {"present": True, "unit": "MPa_abs"},
-            "gas_or_tank_temperature": {"present": True, "unit": "degC"},
+            "gas_or_tank_temperature": {
+                "present": True,
+                "unit": "degC",
+                "observation_operator": temperature_observation["vehicle_temperature_degC"],
+            },
+            "delivered_gas_temperature": {
+                "present": True,
+                "unit": "degC",
+                "observation_operator": temperature_observation["delivered_gas_temperature_degC"],
+            },
             "mass_flow_or_transferred_mass": {"present": True, "unit": "g/s"},
         },
         "source_event_relationship": {"same_physical_event_confirmed": True},
@@ -716,7 +728,7 @@ def export_bundle(
 
     mapping = _json(mapping_path)
     attestation = _json(attestation_path)
-    _require_attestation(attestation)
+    temperature_observation = _require_attestation(attestation)
     specifications, anchor_index, maximum_offset = _specifications(mapping)
     _require_same_physical_event(specifications)
     protocol = _json(protocol_path)
@@ -767,7 +779,7 @@ def export_bundle(
         writer = csv.DictWriter(handle, fieldnames=OUTPUT_COLUMNS)
         writer.writeheader()
         writer.writerows(normalized)
-    declaration = _declaration()
+    declaration = _declaration(temperature_observation)
     declaration_path = output_directory / "declaration.json"
     declaration_path.write_text(json.dumps(declaration, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     manifest = build_manifest(output_directory, protocol_path)
@@ -786,6 +798,7 @@ def export_bundle(
         "absolute_timestamps_published": False,
         "original_column_names_published": False,
         "raw_rows_persisted_in_repository": False,
+        "temperature_observation_semantics_attested": True,
         "source_table_count": len(specifications),
         "alignment_method": "nearest_observation",
         "same_physical_event_confirmed": True,

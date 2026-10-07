@@ -1,0 +1,252 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-07T11:53:59.545878+00:00",
+  "source_commit": "39ea8302a0306ce26302ce49491daa332155b9d0",
+  "diagnostic_type": "MC Default temperature-observation semantic replay",
+  "evidence_role": "post_outcome_semantic_diagnostic_only",
+  "post_outcome": true,
+  "parameter_fitting": false,
+  "runtime_thermal_observation_changed": false,
+  "observation_mapping_selection_prohibited": true,
+  "promotion_to_validation_prohibited": true,
+  "raw_experimental_rows_persisted": false,
+  "source_workbook_names_persisted": false,
+  "protocol": "research\\mc_default_external_holdout_protocol.json",
+  "boundary_conditions": [
+    "measured mass_flow_g_s",
+    "measured inlet_gas_temperature_c",
+    "measured source_pressure_3_mpa"
+  ],
+  "candidate_observation_operators": {
+    "gas_temperature": "uniform gas state",
+    "liner_temperature": "inner polymer liner state",
+    "shell_temperature": "outer composite shell state",
+    "liner_shell_mean": "unweighted liner and shell state mean"
+  },
+  "aggregate": {
+    "gas_temperature": {
+      "temperature_rmse_c": 27.077285603723404,
+      "temperature_mae_c": 25.217654364934415,
+      "temperature_peak_error_c": 27.736835345187764
+    },
+    "liner_temperature": {
+      "temperature_rmse_c": 22.119263247672784,
+      "temperature_mae_c": 19.618202337626848,
+      "temperature_peak_error_c": 23.964656933182788
+    },
+    "shell_temperature": {
+      "temperature_rmse_c": 27.73598072870812,
+      "temperature_mae_c": 25.892623282363026,
+      "temperature_peak_error_c": -29.52416267014479
+    },
+    "liner_shell_mean": {
+      "temperature_rmse_c": 9.839150955529814,
+      "temperature_mae_c": 8.935345663904606,
+      "temperature_peak_error_c": -2.949642064887322
+    }
+  },
+  "cases": [
+    {
+      "case_id": "H2P-MC-1-A",
+      "observations": {
+        "gas_temperature": {
+          "temperature_rmse_c": 27.009283479496496,
+          "temperature_mae_c": 22.921058674173775,
+          "temperature_peak_error_c": 23.75440162903088
+        },
+        "liner_temperature": {
+          "temperature_rmse_c": 24.37972558949633,
+          "temperature_mae_c": 20.540005628025842,
+          "temperature_peak_error_c": 20.984024287535632
+        },
+        "shell_temperature": {
+          "temperature_rmse_c": 20.870057543773985,
+          "temperature_mae_c": 18.755996297759683,
+          "temperature_peak_error_c": -22.252788657565034
+        },
+        "liner_shell_mean": {
+          "temperature_rmse_c": 11.656541182829255,
+          "temperature_mae_c": 9.985927335500401,
+          "temperature_peak_error_c": -0.6403126259444747
+        }
+      }
+    },
+    {
+      "case_id": "H2P-MC-1-B",
+      "observations": {
+        "gas_temperature": {
+          "temperature_rmse_c": 24.35735303962176,
+          "temperature_mae_c": 22.802856250607363,
+          "temperature_peak_error_c": 27.762902505932672
+        },
+        "liner_temperature": {
+          "temperature_rmse_c": 19.901436898315175,
+          "temperature_mae_c": 17.052185590529383,
+          "temperature_peak_error_c": 24.329417685918756
+        },
+        "shell_temperature": {
+          "temperature_rmse_c": 28.40516378390203,
+          "temperature_mae_c": 27.441374015112252,
+          "temperature_peak_error_c": -29.204432952426103
+        },
+        "liner_shell_mean": {
+          "temperature_rmse_c": 8.099931430668368,
+          "temperature_mae_c": 6.587619031328093,
+          "temperature_peak_error_c": -2.5100064522537338
+        }
+      }
+    },
+    {
+      "case_id": "H2P-MC-1-C",
+      "observations": {
+        "gas_temperature": {
+          "temperature_rmse_c": 22.326894931245736,
+          "temperature_mae_c": 21.410183074009524,
+          "temperature_peak_error_c": 25.908656301142813
+        },
+        "liner_temperature": {
+          "temperature_rmse_c": 15.851705777693477,
+          "temperature_mae_c": 13.314056633533498,
+          "temperature_peak_error_c": 21.64378983334457
+        },
+        "shell_temperature": {
+          "temperature_rmse_c": 39.45477609730499,
+          "temperature_mae_c": 37.5947550800994,
+          "temperature_peak_error_c": -43.6841796883525
+        },
+        "liner_shell_mean": {
+          "temperature_rmse_c": 13.464665349345387,
+          "temperature_mae_c": 12.700010950370585,
+          "temperature_peak_error_c": -11.020638634811903
+        }
+      }
+    },
+    {
+      "case_id": "H2P-MC-1-D",
+      "observations": {
+        "gas_temperature": {
+          "temperature_rmse_c": 25.566055236713872,
+          "temperature_mae_c": 24.405034527278247,
+          "temperature_peak_error_c": 28.054248825722013
+        },
+        "liner_temperature": {
+          "temperature_rmse_c": 18.763767127769007,
+          "temperature_mae_c": 16.613332665887544,
+          "temperature_peak_error_c": 22.991565739423876
+        },
+        "shell_temperature": {
+          "temperature_rmse_c": 50.91706605190713,
+          "temperature_mae_c": 49.317458920052694,
+          "temperature_peak_error_c": -55.32878216614189
+        },
+        "liner_shell_mean": {
+          "temperature_rmse_c": 18.4844251176484,
+          "temperature_mae_c": 17.814332993254375,
+          "temperature_peak_error_c": -16.45328105551802
+        }
+      }
+    },
+    {
+      "case_id": "H2P-MC-1-E",
+      "observations": {
+        "gas_temperature": {
+          "temperature_rmse_c": 32.38940441828232,
+          "temperature_mae_c": 29.780456399813655,
+          "temperature_peak_error_c": 27.69941624409431
+        },
+        "liner_temperature": {
+          "temperature_rmse_c": 29.288718329252184,
+          "temperature_mae_c": 26.457120459125882,
+          "temperature_peak_error_c": 24.59585238004381
+        },
+        "shell_temperature": {
+          "temperature_rmse_c": 21.908788381049472,
+          "temperature_mae_c": 19.86231013944987,
+          "temperature_peak_error_c": -21.274329253361273
+        },
+        "liner_shell_mean": {
+          "temperature_rmse_c": 11.228448780313128,
+          "temperature_mae_c": 10.140103839366448,
+          "temperature_peak_error_c": 1.3094033712475692
+        }
+      }
+    },
+    {
+      "case_id": "H2P-MC-1-F",
+      "observations": {
+        "gas_temperature": {
+          "temperature_rmse_c": 28.38817609099048,
+          "temperature_mae_c": 26.61044273196758,
+          "temperature_peak_error_c": 25.254490224517625
+        },
+        "liner_temperature": {
+          "temperature_rmse_c": 26.089601156561283,
+          "temperature_mae_c": 24.48371338336697,
+          "temperature_peak_error_c": 22.725151265138507
+        },
+        "shell_temperature": {
+          "temperature_rmse_c": 15.348545528255203,
+          "temperature_mae_c": 12.582281716713409,
+          "temperature_peak_error_c": -8.116973860056063
+        },
+        "liner_shell_mean": {
+          "temperature_rmse_c": 10.842265060610721,
+          "temperature_mae_c": 10.132637897385136,
+          "temperature_peak_error_c": 6.66124301996787
+        }
+      }
+    },
+    {
+      "case_id": "H2P-MC-2-A",
+      "observations": {
+        "gas_temperature": {
+          "temperature_rmse_c": 34.817806469029904,
+          "temperature_mae_c": 32.962143096615385,
+          "temperature_peak_error_c": 40.982742018850026
+        },
+        "liner_temperature": {
+          "temperature_rmse_c": 24.639149503461788,
+          "temperature_mae_c": 21.759405374072372,
+          "temperature_peak_error_c": 34.70684154285605
+        },
+        "shell_temperature": {
+          "temperature_rmse_c": 22.43888539273242,
+          "temperature_mae_c": 19.536746544643748,
+          "temperature_peak_error_c": -32.76310527307688
+        },
+        "liner_shell_mean": {
+          "temperature_rmse_c": 1.2496392923439765,
+          "temperature_mae_c": 1.1761089586081241,
+          "temperature_peak_error_c": 0.9718681348895828
+        }
+      }
+    },
+    {
+      "case_id": "H2P-MC-9.8KG",
+      "observations": {
+        "gas_temperature": {
+          "temperature_rmse_c": 21.763311164406677,
+          "temperature_mae_c": 20.84906016500978,
+          "temperature_peak_error_c": 22.477825012211767
+        },
+        "liner_temperature": {
+          "temperature_rmse_c": 18.040001598833022,
+          "temperature_mae_c": 16.725798966473292,
+          "temperature_peak_error_c": 19.740612731201097
+        },
+        "shell_temperature": {
+          "temperature_rmse_c": 22.54456305073974,
+          "temperature_mae_c": 22.050063545073158,
+          "temperature_peak_error_c": -23.56870951017858
+        },
+        "liner_shell_mean": {
+          "temperature_rmse_c": 3.687291430479277,
+          "temperature_mae_c": 2.9460243054236916,
+          "temperature_peak_error_c": -1.9154122766754682
+        }
+      }
+    }
+  ],
+  "interpretation": "Different predefined tank-state observation operators yield materially different thermal errors. The source label alone does not identify the physical measurement location or weighting. This report does not select an operator, change the runtime gas-temperature observation, or revise any frozen validation outcome.",
+  "claim_boundary": "This is a post-outcome semantic diagnostic for one public vehicle-tank replay. It is not a tank, full-station, release, consequence, or safety validation result."
+}

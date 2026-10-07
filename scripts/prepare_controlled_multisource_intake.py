@@ -241,6 +241,20 @@ def _attestation_template() -> dict[str, Any]:
             field: "<custodian-approved meaning and valid states>"
             for field in OUTPUT_COLUMNS[7:]
         },
+        "temperature_observation": {
+            "vehicle_temperature_degC": {
+                "observation_operator": "<gas_temperature | liner_temperature | shell_temperature | sensor_weighted_tank_temperature>",
+                "sensor_location_verified": False,
+                "measurement_method": "<custodian-approved sensor position and averaging method>",
+                "calibration_or_traceability": "<custodian-approved calibration or traceability declaration>",
+            },
+            "delivered_gas_temperature_degC": {
+                "observation_operator": "delivered_gas_temperature",
+                "sensor_location_verified": False,
+                "measurement_method": "<custodian-approved sensor position and averaging method>",
+                "calibration_or_traceability": "<custodian-approved calibration or traceability declaration>",
+            },
+        },
         "metadata": {
             field: "<custodian-approved declaration>" for field in _REQUIRED_METADATA
         },
@@ -252,7 +266,7 @@ def _attestation_template() -> dict[str, Any]:
         "attestation_instructions": (
             "Set authorization, common_time_basis_confirmed, and "
             "same_physical_event_confirmed true only after a custodian reviews the "
-            "event selection, units, calibration status, state meanings, source "
+            "event selection, units, thermal sensor meaning and calibration status, state meanings, source "
             "clocks, and confirms that every selected source belongs to one physical event."
         ),
     }

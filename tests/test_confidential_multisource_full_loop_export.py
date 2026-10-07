@@ -33,6 +33,20 @@ def _attestation() -> dict[str, object]:
         "state_semantics": {
             name: "private controlled state semantics" for name in OUTPUT_COLUMNS[7:]
         },
+        "temperature_observation": {
+            "vehicle_temperature_degC": {
+                "observation_operator": "gas_temperature",
+                "sensor_location_verified": True,
+                "measurement_method": "private controlled sensor method",
+                "calibration_or_traceability": "private controlled calibration",
+            },
+            "delivered_gas_temperature_degC": {
+                "observation_operator": "delivered_gas_temperature",
+                "sensor_location_verified": True,
+                "measurement_method": "private controlled sensor method",
+                "calibration_or_traceability": "private controlled calibration",
+            },
+        },
         "metadata": {
             name: "declared in controlled record"
             for name in (
@@ -130,6 +144,7 @@ def test_multisource_preflight_and_export_deidentify_private_workbook(tmp_path: 
     receipt = export_bundle(source, mapping, attestation, output, protocol)
     rendered_receipt = json.dumps(receipt)
     assert receipt["full_loop_trace_ready"] is True
+    assert receipt["temperature_observation_semantics_attested"] is True
     assert receipt["same_physical_event_confirmed"] is True
     assert receipt["source_table_count"] == 2
     assert receipt["alignment_diagnostics"] == [
@@ -159,6 +174,8 @@ def test_multisource_preflight_and_export_deidentify_private_workbook(tmp_path: 
     assert "private-event-group-001" not in rendered_receipt
     assert "event_group_token" not in rendered_receipt
     assert (output / "full_loop_event.csv").is_file()
+    declaration = json.loads((output / "declaration.json").read_text(encoding="utf-8"))
+    assert declaration["channels"]["gas_or_tank_temperature"]["observation_operator"] == "gas_temperature"
 
 
 def test_multisource_time_preflight_rejects_clock_outside_declared_tolerance(tmp_path: Path):
@@ -203,6 +220,21 @@ def test_multisource_export_rejects_unattested_time_alignment(tmp_path: Path):
         assert "common time basis" in str(exc)
     else:  # pragma: no cover - assertion clarity
         raise AssertionError("unattested source alignment was accepted")
+
+
+def test_multisource_export_rejects_unverified_temperature_sensor_semantics(tmp_path: Path):
+    source, mapping, attestation = _write_controlled_inputs(tmp_path)
+    payload = json.loads(attestation.read_text(encoding="utf-8"))
+    payload["temperature_observation"]["vehicle_temperature_degC"]["sensor_location_verified"] = False
+    attestation.write_text(json.dumps(payload), encoding="utf-8")
+    protocol = ROOT / "research" / "external_hrs_intake_protocol.json"
+
+    try:
+        preflight_bundle(source, mapping, attestation, protocol)
+    except ValueError as exc:
+        assert "sensor location" in str(exc)
+    else:  # pragma: no cover - assertion clarity
+        raise AssertionError("unverified temperature sensor semantics were accepted")
 
 
 def test_multisource_export_rejects_different_physical_events(tmp_path: Path):
