@@ -8,10 +8,10 @@ to Lach and Gaathaug's large-scale ignited pressure-peaking study
 
 ## Frozen cohort
 
-- Holdout: experiments **1–28** (`datafile_id` 266047–266074).
-- Development-only: experiments **29–31**, because their outcome traces were
-  opened during the prior channel-integrity replay.
-- Expected holdout count: 28. A file can be excluded only for an identity,
+- Holdout: experiments **2–28** (`datafile_id` 266048–266074).
+- Development-only: experiment **1**, opened during the prior inventory sample
+  check, and experiments **29–31**, opened during the channel-integrity replay.
+- Expected holdout count: 27. A file can be excluded only for an identity,
   channel, time-base, or finite-data failure defined in the JSON protocol.
 
 ## Fixed model and inputs

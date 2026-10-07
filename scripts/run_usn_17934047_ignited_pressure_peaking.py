@@ -245,7 +245,7 @@ def main() -> None:
     parser.add_argument("--raw-directory", type=Path, default=Path("tmp/usn_17934047"))
     parser.add_argument(
         "--cases",
-        default="1-28",
+        default="2-28",
         help="Inclusive range such as 1-28, or comma-separated cases.",
     )
     parser.add_argument(

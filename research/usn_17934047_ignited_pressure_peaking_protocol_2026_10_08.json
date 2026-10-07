@@ -24,11 +24,11 @@
     }
   },
   "cohort": {
-    "holdout_cases": "HTE341USN0001READ191111.mat through HTE341USN0028READ191111.mat",
-    "holdout_datafile_ids": "266047 through 266074 inclusive",
-    "expected_holdout_count": 28,
-    "development_only_cases": [29, 30, 31],
-    "development_only_reason": "These three raw outcomes were opened during the earlier channel-integrity replay and are excluded from confirmatory scoring.",
+    "holdout_cases": "HTE341USN0002READ191111.mat through HTE341USN0028READ191111.mat",
+    "holdout_datafile_ids": "266048 through 266074 inclusive",
+    "expected_holdout_count": 27,
+    "development_only_cases": [1, 29, 30, 31],
+    "development_only_reason": "Case 1 was opened during the earlier inventory sample check, and cases 29-31 were opened during the earlier channel-integrity replay. All four are excluded from confirmatory scoring.",
     "exclusion_rule": "Exclude only a file that fails the Dataverse byte count or MD5 identity check, lacks SIGMA/GEN3i channels, has a non-monotonic time base, or has no finite positive mass-flow and overpressure samples. Report every exclusion; do not replace excluded cases."
   },
   "fixed_model": {

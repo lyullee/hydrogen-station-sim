@@ -13,7 +13,7 @@ SPEC.loader.exec_module(MODULE)
 
 
 def test_holdout_manifest_and_vent_map_are_complete():
-    assert set(range(1, 29)).issubset(MODULE.FILES)
+    assert set(range(2, 29)).issubset(MODULE.FILES)
     assert set(range(1, 32)) == set(MODULE.CASE_VENTS)
     assert MODULE.CASE_VENTS[19] == 1
     assert MODULE.CASE_VENTS[18] == 2
