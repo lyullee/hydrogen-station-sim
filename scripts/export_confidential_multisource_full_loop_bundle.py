@@ -371,6 +371,229 @@ def preflight_bundle(
     }
 
 
+def _read_source_times(
+    input_data: Path,
+    specification: dict[str, Any],
+    *,
+    source_index: int,
+) -> list[float]:
+    """Read only a declared clock column from a controlled source.
+
+    This is deliberately separate from :func:`_read_source`.  An alignment
+    preflight must establish whether the selected logger clocks can be joined
+    before it reads, converts, or writes any measurement channel.  The parser
+    may traverse a row in order to reach the clock cell, but it never retains
+    values from non-clock columns.
+    """
+
+    source_path = _source_path(input_data, specification)
+    time_column = specification["time_column"]
+    time_mapping = {"time_format": specification.get("time_format")}
+    header_row = specification["header_row"]
+    timed: list[float] = []
+    previous: float | None = None
+
+    def add_time(value: object | None, *, row_number: int) -> None:
+        nonlocal previous
+        current = _relative_time(value, time_mapping, row_number=row_number)
+        if previous is not None and current <= previous:
+            raise ValueError(
+                f"source {source_index + 1}: time values must be strictly increasing"
+            )
+        previous = current
+        timed.append(current)
+
+    if source_path.suffix.casefold() == ".csv":
+        # Detect the encoding from a short prefix, then stream records.  This
+        # avoids materialising the controlled CSV or retaining its non-clock
+        # measurement values in this preflight path.
+        with source_path.open("rb") as handle:
+            encoding_prefix = handle.read(1024)
+        for encoding in _csv_encodings(encoding_prefix):
+            try:
+                with source_path.open("r", encoding=encoding, newline="") as handle:
+                    reader = csv.reader(handle)
+                    header: tuple[str, ...] | None = None
+                    for row_number, values in enumerate(reader, start=1):
+                        if row_number == header_row:
+                            header = tuple(value.strip() for value in values)
+                            if time_column not in header:
+                                raise ValueError("a source is missing its mapped time column")
+                            time_index = header.index(time_column)
+                            continue
+                        if row_number <= header_row:
+                            continue
+                        time_value = values[time_index] if time_index < len(values) else None
+                        if time_value is None or not str(time_value).strip():
+                            continue
+                        add_time(time_value, row_number=row_number)
+                if header is None:
+                    raise ValueError("a source has no declared header row")
+                break
+            except UnicodeError:
+                timed.clear()
+                previous = None
+                continue
+        else:
+            raise ValueError("a declared CSV source cannot be decoded with supported logger encodings")
+    elif source_path.suffix.casefold() in {".xlsx", ".xlsm"}:
+        try:
+            from openpyxl import load_workbook
+        except ImportError as exc:  # pragma: no cover - environment-specific
+            raise RuntimeError("openpyxl is required for controlled Excel intake") from exc
+        workbook = load_workbook(source_path, read_only=True, data_only=True)
+        try:
+            worksheet_name = specification["worksheet"]
+            if not worksheet_name or worksheet_name not in workbook.sheetnames:
+                raise ValueError("a specified worksheet is not present in the controlled input")
+            worksheet = workbook[worksheet_name]
+            header_values = next(
+                worksheet.iter_rows(min_row=header_row, max_row=header_row, values_only=True),
+                None,
+            )
+            header = tuple(str(value).strip() if value is not None else "" for value in (header_values or ()))
+            if time_column not in header:
+                raise ValueError("a source is missing its mapped time column")
+            time_index = header.index(time_column)
+            for row_number, values in enumerate(
+                worksheet.iter_rows(min_row=header_row + 1, values_only=True),
+                start=header_row + 1,
+            ):
+                time_value = values[time_index] if time_index < len(values) else None
+                if time_value is None or not str(time_value).strip():
+                    continue
+                add_time(time_value, row_number=row_number)
+        finally:
+            workbook.close()
+    else:
+        raise ValueError("controlled multi-source intake supports CSV, XLSX, or XLSM sources")
+
+    if len(timed) < 20:
+        raise ValueError(f"source {source_index + 1}: fewer than 20 usable rows")
+    return timed
+
+
+def _nearest_time(timed: list[float], target: float, maximum_offset: float) -> float:
+    """Return a nearest clock offset without exposing its original timestamp."""
+
+    position = bisect_left(timed, target)
+    candidates = [entry for entry in (position - 1, position) if 0 <= entry < len(timed)]
+    offset = min(abs(timed[entry] - target) for entry in candidates)
+    if offset > maximum_offset:
+        raise ValueError("a mapped source cannot be aligned within the declared time tolerance")
+    return offset
+
+
+def preflight_time_alignment(
+    input_data: Path,
+    mapping_path: Path,
+    attestation_path: Path,
+    protocol_path: Path,
+) -> dict[str, Any]:
+    """Screen declared clocks before reading any measurement values.
+
+    The returned receipt has anonymous source indexes and offset summaries
+    only.  It is intended to stop a controlled evaluation early when event
+    clocks cannot meet the custodian-declared tolerance; it is not an outcome
+    read, calibration, model validation, or evidence of safety performance.
+    """
+
+    input_data = _outside_repository(input_data, field="input data")
+    mapping_path = _outside_repository(mapping_path, field="mapping")
+    attestation_path = _outside_repository(attestation_path, field="attestation")
+    if not input_data.is_dir() and input_data.suffix.casefold() not in {".csv", ".xlsx", ".xlsm"}:
+        raise ValueError("multi-source controlled intake requires a CSV/XLSX/XLSM file or directory")
+    mapping = _json(mapping_path)
+    attestation = _json(attestation_path)
+    _require_attestation(attestation)
+    specifications, anchor_index, maximum_offset = _specifications(mapping)
+    _require_same_physical_event(specifications)
+    protocol = _json(protocol_path)
+    if protocol.get("status") != "prospective_intake_contract":
+        raise ValueError("intake protocol must be prospective")
+
+    schema_preflight = preflight_bundle(
+        input_data, mapping_path, attestation_path, protocol_path,
+    )
+    missing = schema_preflight["missing_canonical_channels"]
+    if missing:
+        return {
+            "schema_version": 1,
+            "artifact_type": "controlled_deidentified_hrs_multisource_time_alignment_preflight",
+            "ready_for_controlled_export": False,
+            "source_format": schema_preflight["source_format"],
+            "source_table_count": len(specifications),
+            "alignment_method": "nearest_observation",
+            "maximum_alignment_offset_s": maximum_offset,
+            "same_physical_event_confirmed": True,
+            "source_headers_exposed": False,
+            "clock_columns_read": False,
+            "non_clock_measurement_values_evaluated": False,
+            "measurement_values_persisted": False,
+            "absolute_timestamps_published": False,
+            "alignment_diagnostics": [],
+            "failure_code": "missing_mapped_canonical_channels",
+            "mapping_sha256": _sha256(mapping_path),
+            "attestation_sha256": _sha256(attestation_path),
+            "protocol_sha256": _sha256(protocol_path),
+            "source_input_sha256": _source_input_digest(input_data, specifications),
+            "claim_boundary": (
+                "This is a clock-only controlled preflight. It does not retain or evaluate "
+                "measurement values, establish model accuracy, or establish safety or IJHE readiness."
+            ),
+        }
+
+    source_times = [
+        _read_source_times(input_data, specification, source_index=index)
+        for index, specification in enumerate(specifications)
+    ]
+    offsets_by_source: dict[int, list[float]] = {
+        index: [] for index in range(len(source_times))
+    }
+    failure: str | None = None
+    for anchor_time in source_times[anchor_index]:
+        for source_index, timed in enumerate(source_times):
+            try:
+                offsets_by_source[source_index].append(
+                    _nearest_time(timed, anchor_time, maximum_offset)
+                )
+            except ValueError:
+                failure = "time_alignment_outside_declared_tolerance"
+                break
+        if failure is not None:
+            break
+
+    return {
+        "schema_version": 1,
+        "artifact_type": "controlled_deidentified_hrs_multisource_time_alignment_preflight",
+        "ready_for_controlled_export": failure is None,
+        "source_format": "directory" if input_data.is_dir() else input_data.suffix.casefold().lstrip("."),
+        "source_table_count": len(specifications),
+        "alignment_method": "nearest_observation",
+        "maximum_alignment_offset_s": maximum_offset,
+        "same_physical_event_confirmed": True,
+        "source_headers_exposed": False,
+        "clock_columns_read": True,
+        "non_clock_measurement_values_evaluated": False,
+        "measurement_values_persisted": False,
+        "absolute_timestamps_published": False,
+        "alignment_diagnostics": _alignment_diagnostics(
+            offsets_by_source,
+            anchor_index=anchor_index,
+            maximum_offset=maximum_offset,
+        ),
+        "failure_code": failure,
+        "mapping_sha256": _sha256(mapping_path),
+        "attestation_sha256": _sha256(attestation_path),
+        "protocol_sha256": _sha256(protocol_path),
+        "source_input_sha256": _source_input_digest(input_data, specifications),
+        "claim_boundary": (
+            "This is a clock-only controlled preflight. It does not retain or evaluate "
+            "measurement values, establish model accuracy, or establish safety or IJHE readiness."
+        ),
+    }
+
+
 def _timed_rows(
     rows: list[dict[str, object]], specification: dict[str, Any], *, source_index: int,
 ) -> list[tuple[float, dict[str, object]]]:
@@ -605,10 +828,23 @@ def main() -> int:
     parser.add_argument("--output-directory", type=Path, help="Controlled output outside this repository")
     parser.add_argument("--protocol", type=Path, default=ROOT / "research/external_hrs_intake_protocol.json")
     parser.add_argument("--preflight", action="store_true", help="Check schema coverage without reading measurement rows")
+    parser.add_argument(
+        "--alignment-preflight",
+        action="store_true",
+        help="Check declared logger-clock alignment without reading measurement values",
+    )
     args = parser.parse_args()
+    if args.preflight and args.alignment_preflight:
+        parser.error("--preflight and --alignment-preflight cannot be used together")
     if args.preflight:
         print(json.dumps(preflight_bundle(args.input, args.mapping, args.attestation, args.protocol), ensure_ascii=False, indent=2))
         return 0
+    if args.alignment_preflight:
+        report = preflight_time_alignment(
+            args.input, args.mapping, args.attestation, args.protocol,
+        )
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return 0 if report["ready_for_controlled_export"] else 2
     if args.output_directory is None:
         parser.error("--output-directory is required unless --preflight is used")
     print(json.dumps(export_bundle(args.input, args.mapping, args.attestation, args.output_directory, args.protocol), ensure_ascii=False, indent=2))

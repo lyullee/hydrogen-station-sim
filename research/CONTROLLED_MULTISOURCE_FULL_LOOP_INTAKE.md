@@ -128,5 +128,30 @@ count near the declared tolerance). Review those statistics before using the
 trace: a pass only means every matched row met the stated tolerance; it does
 not prove that the declared common time basis is physically correct.
 
+## Screen the clocks before reading measurement channels
+
+After the header preflight passes, run the clock-only preflight before the
+full export. It uses the custodian-approved event mapping and declared maximum
+offset, but evaluates only the selected time column from each source. Its
+receipt contains anonymous source indexes and offset summaries; it contains no
+worksheet names, original labels, measurement values, or absolute timestamps.
+
+```powershell
+$env:PYTHONPATH = "src"
+.\.venv\Scripts\python.exe scripts\export_confidential_multisource_full_loop_bundle.py `
+  --input "D:\controlled\event.xlsx" `
+  --mapping "D:\controlled\event-mapping.json" `
+  --attestation "D:\controlled\event-attestation.json" `
+  --alignment-preflight
+```
+
+Proceed only when this command returns exit code `0` and reports
+`ready_for_controlled_export: true`. An exit code of `2` with
+`time_alignment_outside_declared_tolerance` means the selected clocks cannot
+be joined under the declared rule. Correct the controlled event selection or
+its documented synchronization; do not increase the tolerance simply to make
+the report pass. This is a data-admissibility check only and does not evaluate
+process, vehicle, safety, or model outcomes.
+
 A successful receipt makes the trace eligible for the frozen evaluator, but
 does not demonstrate model accuracy or scientific readiness.

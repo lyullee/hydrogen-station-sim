@@ -13,6 +13,7 @@ from export_confidential_full_loop_bundle import OUTPUT_COLUMNS  # noqa: E402
 from export_confidential_multisource_full_loop_bundle import (  # noqa: E402
     export_bundle,
     preflight_bundle,
+    preflight_time_alignment,
 )
 
 
@@ -114,6 +115,17 @@ def test_multisource_preflight_and_export_deidentify_private_workbook(tmp_path: 
     assert "private vehicle" not in rendered_preflight
     assert "secret vehicle clock" not in rendered_preflight
 
+    time_preflight = preflight_time_alignment(source, mapping, attestation, protocol)
+    rendered_time_preflight = json.dumps(time_preflight)
+    assert time_preflight["ready_for_controlled_export"] is True
+    assert time_preflight["clock_columns_read"] is True
+    assert time_preflight["non_clock_measurement_values_evaluated"] is False
+    assert time_preflight["measurement_values_persisted"] is False
+    assert time_preflight["alignment_diagnostics"][1]["median_offset_s"] == 0.25
+    assert "private vehicle" not in rendered_time_preflight
+    assert "secret vehicle clock" not in rendered_time_preflight
+    assert "do-not-persist" not in rendered_time_preflight
+
     output = tmp_path / "controlled-export"
     receipt = export_bundle(source, mapping, attestation, output, protocol)
     rendered_receipt = json.dumps(receipt)
@@ -147,6 +159,35 @@ def test_multisource_preflight_and_export_deidentify_private_workbook(tmp_path: 
     assert "private-event-group-001" not in rendered_receipt
     assert "event_group_token" not in rendered_receipt
     assert (output / "full_loop_event.csv").is_file()
+
+
+def test_multisource_time_preflight_rejects_clock_outside_declared_tolerance(tmp_path: Path):
+    source, mapping, attestation = _write_controlled_inputs(tmp_path)
+    payload = json.loads(mapping.read_text(encoding="utf-8"))
+    payload["alignment"]["maximum_offset_s"] = 0.1
+    mapping.write_text(json.dumps(payload), encoding="utf-8")
+    protocol = ROOT / "research" / "external_hrs_intake_protocol.json"
+
+    report = preflight_time_alignment(source, mapping, attestation, protocol)
+
+    assert report["ready_for_controlled_export"] is False
+    assert report["failure_code"] == "time_alignment_outside_declared_tolerance"
+    assert report["non_clock_measurement_values_evaluated"] is False
+
+
+def test_multisource_time_preflight_stops_at_schema_gap_before_clock_rows(tmp_path: Path):
+    source, mapping, attestation = _write_controlled_inputs(tmp_path)
+    payload = json.loads(mapping.read_text(encoding="utf-8"))
+    payload["sources"][0]["column_map"]["mass_flow_g_s"] = "missing private flow"
+    mapping.write_text(json.dumps(payload), encoding="utf-8")
+    protocol = ROOT / "research" / "external_hrs_intake_protocol.json"
+
+    report = preflight_time_alignment(source, mapping, attestation, protocol)
+
+    assert report["ready_for_controlled_export"] is False
+    assert report["failure_code"] == "missing_mapped_canonical_channels"
+    assert report["clock_columns_read"] is False
+    assert report["non_clock_measurement_values_evaluated"] is False
 
 
 def test_multisource_export_rejects_unattested_time_alignment(tmp_path: Path):
