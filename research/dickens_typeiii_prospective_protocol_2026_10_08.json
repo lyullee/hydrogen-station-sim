@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-07T19:22:30.2917908Z",
+  "source_commit": "027440d758f7d7a4ca137d53775adae0c0692725",
+  "status": "frozen_before_numerical_outcome_access",
+  "numerical_outcome_values_inspected_before_freeze": false,
+  "objective": "Prospectively test the unfitted layered hydrogen-tank energy balance against an independent Type-III filling experiment.",
+  "source": {
+    "dataset_doi": "10.5281/zenodo.20728325",
+    "record_url": "https://zenodo.org/records/20728325",
+    "archive": "data/public_validation/raw/zenodo_20728325/blowdown_reproducibility_archive.zip",
+    "archive_sha256": "ed9db84e1b3301d18ff70e0ca392529bbde9d30ffa3acb9ef127d5f77f2882e5",
+    "case_file": "data/public_validation/raw/zenodo_20728325/unpacked/zenodo_archive/inputs/hyddown_validation/dickens_typeIII.yml",
+    "case_file_sha256": "9bef3125579934462e5844e7fe755dd20de7d2c62f05aa20b1c37988e411d08b",
+    "case_id": "dickens_typeIII",
+    "source_description": "Physical Type-III hydrogen filling experiment transcribed in the public HydDown reproducibility archive.",
+    "rights_boundary": "The Zenodo record exposes the reproducibility archive but did not display a reusable license in the checked metadata. Retain hashes and derived metrics; do not republish the embedded measurement arrays."
+  },
+  "pre_access_schema_check": {
+    "measured_pressure_points": 10,
+    "measured_mean_gas_temperature_points": 10,
+    "measured_mass_flow_boundary_points": 13,
+    "numerical_measurement_values_printed_or_reviewed": false
+  },
+  "frozen_model": {
+    "thermodynamics": "repository hydrogen Helmholtz-EOS lookup table",
+    "control_volume": "uniform hydrogen gas with separate aluminium liner and composite shell thermal states",
+    "internal_volume_m3": "pi * diameter^2 * length / 4 from source geometry",
+    "wall_area_m2": "pi * diameter * length + pi * diameter^2 / 2",
+    "liner_and_shell_mass": "wall area * layer thickness * layer density",
+    "inlet_mass_flow": "piecewise-linear interpolation of the source mdot boundary, clamped to its first and last values",
+    "inlet_enthalpy": "H(P=source back_pressure, T=source initial temperature)",
+    "gas_to_liner_heat_transfer": "Churchill-Chu horizontal-cylinder natural-convection correlation evaluated from instantaneous hydrogen properties",
+    "liner_to_shell_conductance": "wall area divided by half-layer conduction resistances in series",
+    "shell_to_ambient_heat_transfer": "source h_outer multiplied by wall area",
+    "integration": "BDF with rtol 1e-7 and atol 1e-9; output at the union of measured pressure and gas-temperature times",
+    "parameter_fitting": false,
+    "case_specific_multipliers": false
+  },
+  "primary_screens": {
+    "pressure_nrmse_percent_measured_span_max": 5.0,
+    "pressure_rmse_mpa_max": 2.0,
+    "gas_temperature_rmse_k_max": 10.0,
+    "gas_temperature_peak_absolute_error_k_max": 15.0,
+    "joint_rule": "all four primary screens must pass"
+  },
+  "integrity_requirements": {
+    "source_hashes_match": true,
+    "no_post_outcome_parameter_change": true,
+    "energy_residual_relative_max": 1e-06,
+    "mass_residual_relative_max": 1e-06,
+    "retain_failure": true
+  },
+  "claim_boundary": "A pass supports only transfer of the layered vehicle-tank filling submodel to one independent Type-III experiment. It does not validate station cascade control, compressor or precooler dynamics, dispenser metering, Type-IV geometry, consequence distance, safety logic, or SAGA effectiveness."
+}

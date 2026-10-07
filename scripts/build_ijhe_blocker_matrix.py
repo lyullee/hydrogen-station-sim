@@ -77,6 +77,18 @@ def build(root: Path) -> dict[str, Any]:
                 "evidence": "research/tank_model_validation_v2.json",
                 "claim_boundary": "Type-IV tank submodel only; not a full station or safety-distance validation.",
             },
+            "typeiii_prospective_fill": {
+                "gate": gate("dickens_typeiii_prospective_validation")["status"],
+                "diagnostic_gate": gate(
+                    "dickens_mixed_convection_diagnostic_integrity"
+                )["status"],
+                "evidence": [
+                    "research/dickens_typeiii_prospective_protocol_2026_10_08.json",
+                    "research/dickens_typeiii_prospective_result_2026_10_08.json",
+                    "research/dickens_typeiii_mixed_convection_diagnostic_2026_10_08.json",
+                ],
+                "claim_boundary": "The prospective natural-convection model failed temperature screens. The post-outcome forced-mixing sensitivity identifies a mechanism but cannot revise that decision or set a runtime parameter.",
+            },
             "llm_grounding": {
                 "gate": gate("llm_evidence_grounding_contract")["status"],
                 "evidence": "research/llm_evidence_grounding_validation.json",
@@ -121,6 +133,18 @@ def build(root: Path) -> dict[str, Any]:
             },
         },
         "blocking_matrix": [
+            {
+                "id": "tank_thermal_transfer_validation",
+                "status": gate("dickens_typeiii_prospective_validation")["status"],
+                "why_blocked": "The prospectively frozen Type-III fill passed both pressure screens but failed both temperature screens. A post-outcome inlet-jet sensitivity reduced temperature RMSE below the limit across three plausible diameters, but the exact nozzle geometry is absent and the result cannot be promoted to validation.",
+                "evidence": [
+                    "research/DICKENS_TYPEIII_PROSPECTIVE_VALIDATION_2026_10_08.md",
+                    "research/dickens_typeiii_prospective_result_2026_10_08.json",
+                    "research/dickens_typeiii_mixed_convection_diagnostic_2026_10_08.json",
+                ],
+                "unblock_criterion": "Freeze the mixed-convection formulation and exact inlet geometry before opening a new filling trace, then pass the joint pressure and temperature screens without post-outcome parameter selection.",
+                "next_action": "Prioritize an untouched fill dataset with nozzle diameter, time-resolved inlet temperature and flow, tank geometry, pressure and gas-temperature sensor positions.",
+            },
             {
                 "id": "full_loop_external_validation",
                 "status": gate("full_loop_external_validation")["status"],

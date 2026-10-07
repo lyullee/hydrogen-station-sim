@@ -280,6 +280,99 @@ def audit(root: Path) -> dict[str, object]:
         } if tank_runtime else "missing",
     ))
 
+    dickens_protocol_path = root / "research/dickens_typeiii_prospective_protocol_2026_10_08.json"
+    dickens_result_path = root / "research/dickens_typeiii_prospective_result_2026_10_08.json"
+    dickens_diagnostic_path = root / "research/dickens_typeiii_mixed_convection_diagnostic_2026_10_08.json"
+    dickens_protocol = _json(dickens_protocol_path)
+    dickens_result = _json(dickens_result_path)
+    dickens_diagnostic = _json(dickens_diagnostic_path)
+    dickens_metrics = (dickens_result or {}).get("metrics") or {}
+    dickens_screens = (dickens_result or {}).get("screen_results") or {}
+    dickens_integrity = bool(
+        (dickens_protocol or {}).get("status")
+        == "frozen_before_numerical_outcome_access"
+        and (dickens_protocol or {}).get(
+            "numerical_outcome_values_inspected_before_freeze"
+        ) is False
+        and (dickens_result or {}).get("status")
+        == "completed_prospective_external_component_validation"
+        and (dickens_result or {}).get("source_hashes_match") is True
+        and (dickens_result or {}).get("parameter_fitting") is False
+        and (dickens_result or {}).get("post_outcome_parameter_change") is False
+        and (dickens_result or {}).get("integrity_pass") is True
+        and dickens_screens.get("pressure_nrmse_percent_measured_span") is True
+        and dickens_screens.get("pressure_rmse_mpa") is True
+        and dickens_screens.get("gas_temperature_rmse_k") is False
+        and dickens_screens.get("gas_temperature_peak_absolute_error_k") is False
+        and (dickens_result or {}).get("joint_primary_screen_pass") is False
+        and (dickens_result or {}).get("claim_supported") is False
+    )
+    gates.append(_gate(
+        "dickens_typeiii_prospective_validation",
+        "FAIL" if dickens_result else "PENDING",
+        "The unfitted layered tank model meets every frozen pressure and temperature screen on the prospective public Type-III filling experiment.",
+        f"{dickens_protocol_path.relative_to(root)}; {dickens_result_path.relative_to(root)}",
+        "Protocol frozen before numerical outcome access, exact source hashes, conservation residuals <=1e-6 and all four pressure/temperature screens passed.",
+        {
+            "protocol_frozen_before_outcome_access": (dickens_protocol or {}).get(
+                "numerical_outcome_values_inspected_before_freeze"
+            ) is False,
+            "metrics": dickens_metrics,
+            "screen_results": dickens_screens,
+            "integrity_pass": (dickens_result or {}).get("integrity_pass"),
+            "joint_primary_screen_pass": (dickens_result or {}).get(
+                "joint_primary_screen_pass"
+            ),
+            "claim_supported": (dickens_result or {}).get("claim_supported"),
+            "retained_negative_result": dickens_integrity,
+        } if dickens_result else "missing",
+    ))
+
+    dickens_diagnostic_runs = (dickens_diagnostic or {}).get("runs") or []
+    dickens_diagnostic_pass = bool(
+        (dickens_diagnostic or {}).get("diagnostic_type")
+        == "post-outcome forced-mixing sensitivity"
+        and (dickens_diagnostic or {}).get("evidence_role")
+        == "model-development diagnostic only"
+        and (dickens_diagnostic or {}).get("post_outcome") is True
+        and (dickens_diagnostic or {}).get("parameter_fitting") is False
+        and (dickens_diagnostic or {}).get("runtime_parameter_updated") is False
+        and (dickens_diagnostic or {}).get("frozen_validation_result_unchanged") is True
+        and (dickens_diagnostic or {}).get("source_hashes_match") is True
+        and (dickens_diagnostic or {}).get("validation_gate_effect") == "none"
+        and len(dickens_diagnostic_runs) == 3
+        and all(run.get("joint_primary_screen_pass") is True for run in dickens_diagnostic_runs)
+    )
+    gates.append(_gate(
+        "dickens_mixed_convection_diagnostic_integrity",
+        "PASS" if dickens_diagnostic_pass else (
+            "FAIL" if dickens_diagnostic else "PENDING"
+        ),
+        "The post-outcome inlet-jet sensitivity explains the Type-III thermal miss without changing runtime parameters or the frozen validation decision.",
+        str(dickens_diagnostic_path.relative_to(root)),
+        "Three declared nozzle sensitivities, no fitted coefficient, all screens reported, no runtime update and explicit zero validation-gate effect.",
+        {
+            "run_count": len(dickens_diagnostic_runs),
+            "nozzle_diameters_mm": [
+                run.get("nozzle_diameter_mm") for run in dickens_diagnostic_runs
+            ],
+            "temperature_rmse_k": [
+                (run.get("metrics") or {}).get("gas_temperature_rmse_k")
+                for run in dickens_diagnostic_runs
+            ],
+            "joint_primary_screen_passes": sum(
+                run.get("joint_primary_screen_pass") is True
+                for run in dickens_diagnostic_runs
+            ),
+            "runtime_parameter_updated": (dickens_diagnostic or {}).get(
+                "runtime_parameter_updated"
+            ),
+            "validation_gate_effect": (dickens_diagnostic or {}).get(
+                "validation_gate_effect"
+            ),
+        } if dickens_diagnostic else "missing",
+    ))
+
     correction_path = root / "research/h2protocol_active_fill_correction.json"
     correction = _json(correction_path)
     corrected_trace = (correction or {}).get("h2p_l29") or {}
@@ -3826,6 +3919,7 @@ def audit(root: Path) -> dict[str, object]:
     by_id = {item["id"]: item for item in gates}
     bounded_required = (
         "tank_external_validation", "active_fill_correction_disclosed",
+        "dickens_typeiii_prospective_validation",
         "corrected_closed_loop_internal_evidence",
         "full_loop_negative_result_disclosed",
         "hyram_adapter_verification", "preslhy_blowdown_external_validation",

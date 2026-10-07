@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-07T19:24:41.055366+00:00",
+  "source_commit": "027440d758f7d7a4ca137d53775adae0c0692725",
+  "status": "completed_prospective_external_component_validation",
+  "protocol": "research/dickens_typeiii_prospective_protocol_2026_10_08.json",
+  "source_hashes_match": true,
+  "parameter_fitting": false,
+  "post_outcome_parameter_change": false,
+  "case_id": "dickens_typeIII",
+  "fluid": "H2",
+  "derived_geometry": {
+    "internal_volume_m3": 0.07500159478620594,
+    "wall_area_m2": 1.0393261860832732,
+    "liner_mass_kg": 11.224722809699351,
+    "shell_mass_kg": 14.623319438191652,
+    "liner_shell_ua_w_k": 138.3558972306948,
+    "shell_ambient_ua_w_k": 8.314609488666186
+  },
+  "boundary_summary": {
+    "mass_flow_points": 13,
+    "mass_flow_min_kg_s": 0.00742803,
+    "mass_flow_max_kg_s": 0.06476335,
+    "source_pressure_mpa": 43.8013,
+    "source_temperature_k": 293.4
+  },
+  "measurement_summary": {
+    "pressure_points": 10,
+    "mean_gas_temperature_points": 10
+  },
+  "metrics": {
+    "pressure_rmse_mpa": 0.9429227572761019,
+    "pressure_nrmse_percent_measured_span": 3.7416086719855723,
+    "gas_temperature_rmse_k": 19.1789735912541,
+    "gas_temperature_peak_absolute_error_k": 18.71978815209468,
+    "mass_residual_relative": 4.492782269213738e-16,
+    "energy_residual_relative": 1.3725020058686309e-15,
+    "predicted_final_pressure_mpa": 36.320051972159604,
+    "measured_final_pressure_mpa": 35.24797731,
+    "predicted_peak_temperature_k": 360.79269135209466,
+    "measured_peak_temperature_k": 342.0729032
+  },
+  "screen_results": {
+    "pressure_nrmse_percent_measured_span": true,
+    "pressure_rmse_mpa": true,
+    "gas_temperature_rmse_k": false,
+    "gas_temperature_peak_absolute_error_k": false
+  },
+  "integrity_pass": true,
+  "joint_primary_screen_pass": false,
+  "claim_supported": false,
+  "claim_boundary": "A pass supports only transfer of the layered vehicle-tank filling submodel to one independent Type-III experiment. It does not validate station cascade control, compressor or precooler dynamics, dispenser metering, Type-IV geometry, consequence distance, safety logic, or SAGA effectiveness."
+}

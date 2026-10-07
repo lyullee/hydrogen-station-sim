@@ -21,4 +21,12 @@ def test_current_blocker_matrix_tracks_the_readiness_audit():
     assert "helium-surrogate" in h2safe["claim_boundary"]
     assert len(matrix["reproducibility"]["h2safe_intake_sha256"]) == 64
     ids = {item["id"] for item in matrix["blocking_matrix"]}
-    assert {"full_loop_external_validation", "saga_human_effectiveness", "submission_declarations"} <= ids
+    assert {
+        "tank_thermal_transfer_validation",
+        "full_loop_external_validation",
+        "saga_human_effectiveness",
+        "submission_declarations",
+    } <= ids
+    typeiii = matrix["evidence_snapshot"]["typeiii_prospective_fill"]
+    assert typeiii["gate"] == "FAIL"
+    assert typeiii["diagnostic_gate"] == "PASS"

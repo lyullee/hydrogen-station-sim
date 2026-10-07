@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+import math
 from typing import Callable
 
 import numpy as np
@@ -28,6 +29,12 @@ class CompositeTankParameters:
     liner_shell_ua_w_k: float
     shell_ambient_ua_w_k: float
     fluid: str = "Hydrogen"
+    internal_diameter_m: float | None = None
+    internal_length_m: float | None = None
+    natural_convection_gas_liner: bool = False
+    forced_convection_gas_liner: bool = False
+    forced_convection_nusselt_coefficient: float = 1.5
+    forced_convection_reynolds_exponent: float = 0.67
 
     def __post_init__(self) -> None:
         positive = (
@@ -45,6 +52,19 @@ class CompositeTankParameters:
             self.shell_ambient_ua_w_k,
         ) < 0.0:
             raise ValueError("UA values cannot be negative")
+        if self.natural_convection_gas_liner or self.forced_convection_gas_liner:
+            if not self.internal_diameter_m or self.internal_diameter_m <= 0.0:
+                raise ValueError(
+                    "internal_diameter_m must be positive for dynamic convection"
+                )
+            if not self.internal_length_m or self.internal_length_m <= 0.0:
+                raise ValueError(
+                    "internal_length_m must be positive for dynamic convection"
+                )
+        if self.forced_convection_nusselt_coefficient <= 0.0:
+            raise ValueError("Forced-convection Nusselt coefficient must be positive")
+        if self.forced_convection_reynolds_exponent <= 0.0:
+            raise ValueError("Forced-convection Reynolds exponent must be positive")
 
 
 @dataclass(frozen=True)
@@ -99,6 +119,9 @@ class TankBoundaryFlow:
     inlet_specific_enthalpy_j_kg: float = 0.0
     outlet_mass_flow_kg_s: float = 0.0
     ambient_temperature_k: float = 298.15
+    inlet_pressure_pa: float | None = None
+    inlet_temperature_k: float | None = None
+    inlet_nozzle_diameter_m: float | None = None
 
 
 @dataclass(frozen=True)
@@ -192,6 +215,112 @@ class CompositeVehicleTank:
             specific_enthalpy_j_kg=enthalpy,
         )
 
+    def gas_liner_ua_w_k(
+        self,
+        gas: CompositeTankGasState,
+        liner_temperature_k: float,
+        boundary: TankBoundaryFlow | None = None,
+    ) -> float:
+        """Return gas-to-liner conductance for the selected thermal model.
+
+        The default path preserves the calibrated constant-UA Type-IV model.
+        Exact-geometry research cases can opt into a Churchill--Chu horizontal
+        cylinder natural-convection correlation and an inlet-jet Reynolds
+        correlation without changing that runtime default.  The forced term is
+        disabled unless the caller supplies inlet pressure, temperature and
+        nozzle diameter explicitly.
+        """
+
+        p = self.parameters
+        if not (
+            p.natural_convection_gas_liner
+            or p.forced_convection_gas_liner
+        ):
+            return p.gas_liner_ua_w_k * self.fit.gas_liner_ua_multiplier
+
+        diameter_m = float(p.internal_diameter_m)
+        length_m = float(p.internal_length_m)
+        conductivity_w_m_k = float(PropsSI(
+            "CONDUCTIVITY", "P", gas.pressure_pa, "T", gas.temperature_k,
+            p.fluid,
+        ))
+        heat_transfer_w_m2_k = 0.0
+        if p.natural_convection_gas_liner:
+            delta_temperature_k = abs(gas.temperature_k - liner_temperature_k)
+            viscosity_pa_s = float(PropsSI(
+                "VISCOSITY", "P", gas.pressure_pa, "T", gas.temperature_k,
+                p.fluid,
+            ))
+            specific_heat_j_kg_k = float(PropsSI(
+                "CPMASS", "P", gas.pressure_pa, "T", gas.temperature_k,
+                p.fluid,
+            ))
+            kinematic_viscosity_m2_s = viscosity_pa_s / gas.density_kg_m3
+            thermal_diffusivity_m2_s = conductivity_w_m_k / (
+                gas.density_kg_m3 * specific_heat_j_kg_k
+            )
+            prandtl = kinematic_viscosity_m2_s / thermal_diffusivity_m2_s
+            rayleigh = (
+                9.80665
+                * (1.0 / gas.temperature_k)
+                * max(delta_temperature_k, 1.0e-9)
+                * diameter_m**3
+                / (kinematic_viscosity_m2_s * thermal_diffusivity_m2_s)
+            )
+            nusselt_natural = (
+                0.60
+                + 0.387 * rayleigh ** (1.0 / 6.0)
+                / (1.0 + (0.559 / prandtl) ** (9.0 / 16.0)) ** (8.0 / 27.0)
+            ) ** 2
+            heat_transfer_w_m2_k += (
+                nusselt_natural * conductivity_w_m_k / diameter_m
+            )
+
+        if (
+            p.forced_convection_gas_liner
+            and boundary is not None
+            and boundary.inlet_mass_flow_kg_s > 0.0
+        ):
+            if (
+                boundary.inlet_pressure_pa is None
+                or boundary.inlet_temperature_k is None
+                or boundary.inlet_nozzle_diameter_m is None
+                or boundary.inlet_pressure_pa <= 0.0
+                or boundary.inlet_temperature_k <= 0.0
+                or boundary.inlet_nozzle_diameter_m <= 0.0
+            ):
+                raise ValueError(
+                    "Positive inlet flow requires inlet pressure, temperature "
+                    "and nozzle diameter for forced convection"
+                )
+            inlet_viscosity_pa_s = float(PropsSI(
+                "VISCOSITY", "P", boundary.inlet_pressure_pa, "T",
+                boundary.inlet_temperature_k, p.fluid,
+            ))
+            nozzle_diameter_m = float(boundary.inlet_nozzle_diameter_m)
+            reynolds = (
+                4.0 * boundary.inlet_mass_flow_kg_s
+                / (math.pi * nozzle_diameter_m * inlet_viscosity_pa_s)
+            )
+            radius_ratio = nozzle_diameter_m / diameter_m
+            nusselt_forced = (
+                p.forced_convection_nusselt_coefficient
+                * math.sqrt(radius_ratio)
+                * reynolds ** p.forced_convection_reynolds_exponent
+            )
+            heat_transfer_w_m2_k += (
+                nusselt_forced * conductivity_w_m_k / diameter_m
+            )
+        internal_area_m2 = (
+            math.pi * diameter_m * length_m
+            + 0.5 * math.pi * diameter_m**2
+        )
+        return (
+            heat_transfer_w_m2_k
+            * internal_area_m2
+            * self.fit.gas_liner_ua_multiplier
+        )
+
     def derivative(
         self,
         state: CompositeTankState,
@@ -201,11 +330,9 @@ class CompositeVehicleTank:
         p = self.parameters
         f = self.fit
 
-        gas_liner_heat_w = (
-            p.gas_liner_ua_w_k
-            * f.gas_liner_ua_multiplier
-            * (gas.temperature_k - state.liner_temperature_k)
-        )
+        gas_liner_heat_w = self.gas_liner_ua_w_k(
+            gas, state.liner_temperature_k, boundary
+        ) * (gas.temperature_k - state.liner_temperature_k)
         liner_shell_heat_w = (
             p.liner_shell_ua_w_k
             * f.liner_shell_ua_multiplier

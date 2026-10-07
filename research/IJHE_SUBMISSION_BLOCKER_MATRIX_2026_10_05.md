@@ -1,18 +1,19 @@
 # IJHE objective blocker matrix
 
-Generated: `2026-10-07T19:13:27.842995+00:00`
+Generated: `2026-10-07T19:40:18.815721+00:00`
 
 This is an evidence-readiness record, not a prediction of journal acceptance.
 
 - Bounded IJHE submission ready: **False**
 - Full validated-digital-twin objective ready: **False**
 - Automatic goal completion permitted: **False**
-- Gate counts: `{'PASS': 85, 'FAIL': 6, 'PENDING': 8}`
+- Gate counts: `{'PASS': 86, 'FAIL': 7, 'PENDING': 8}`
 
 ## Blocking matrix
 
 | Gate | Status | Unblock criterion |
 |---|---|---|
+| `tank_thermal_transfer_validation` | **FAIL** | Freeze the mixed-convection formulation and exact inlet geometry before opening a new filling trace, then pass the joint pressure and temperature screens without post-outcome parameter selection. |
 | `full_loop_external_validation` | **FAIL** | Obtain a clean, rights-cleared, pre-access frozen external dataset with synchronized station pressure/temperature/mass-flow, protocol/controller, dispenser/nozzle, and vehicle/receptacle channels; resolve the source-boundary/topology ambiguity; then score >=8 cases with >=80% screen pass fraction. |
 | `consequence_model_external_validation` | **FAIL_OR_PENDING** | Either improve the declared model against a pre-access untouched component holdout without post-outcome tuning, or narrow the manuscript claim to the observed component-test scope. |
 | `saga_human_effectiveness` | **PENDING** | Institutional determination, coordinator leakage review, frozen 24-event casebook, 168 masked responses, and three qualified independent raters with locked analysis. |

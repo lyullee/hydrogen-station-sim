@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T19:13:27.403373+00:00",
+  "generated_at": "2026-10-07T19:40:18.720137+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,11 +13,12 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 85,
-    "FAIL": 6,
+    "PASS": 86,
+    "FAIL": 7,
     "PENDING": 8
   },
   "blocking_bounded_submission_gates": [
+    "dickens_typeiii_prospective_validation",
     "preslhy_partb_ambient_external_validation",
     "preslhy_revised_holdout_validation",
     "proust_independent_release_validation",
@@ -32,6 +33,7 @@
     "submission_metadata_and_declarations"
   ],
   "blocking_full_objective_gates": [
+    "dickens_typeiii_prospective_validation",
     "preslhy_partb_ambient_external_validation",
     "preslhy_revised_holdout_validation",
     "proust_independent_release_validation",
@@ -211,6 +213,61 @@
         },
         "sources_match": true,
         "recheck_matches": true
+      }
+    },
+    {
+      "id": "dickens_typeiii_prospective_validation",
+      "status": "FAIL",
+      "claim": "The unfitted layered tank model meets every frozen pressure and temperature screen on the prospective public Type-III filling experiment.",
+      "evidence": "research\\dickens_typeiii_prospective_protocol_2026_10_08.json; research\\dickens_typeiii_prospective_result_2026_10_08.json",
+      "requirement": "Protocol frozen before numerical outcome access, exact source hashes, conservation residuals <=1e-6 and all four pressure/temperature screens passed.",
+      "observed": {
+        "protocol_frozen_before_outcome_access": true,
+        "metrics": {
+          "pressure_rmse_mpa": 0.9429227572761019,
+          "pressure_nrmse_percent_measured_span": 3.7416086719855723,
+          "gas_temperature_rmse_k": 19.1789735912541,
+          "gas_temperature_peak_absolute_error_k": 18.71978815209468,
+          "mass_residual_relative": 4.492782269213738e-16,
+          "energy_residual_relative": 1.3725020058686309e-15,
+          "predicted_final_pressure_mpa": 36.320051972159604,
+          "measured_final_pressure_mpa": 35.24797731,
+          "predicted_peak_temperature_k": 360.79269135209466,
+          "measured_peak_temperature_k": 342.0729032
+        },
+        "screen_results": {
+          "pressure_nrmse_percent_measured_span": true,
+          "pressure_rmse_mpa": true,
+          "gas_temperature_rmse_k": false,
+          "gas_temperature_peak_absolute_error_k": false
+        },
+        "integrity_pass": true,
+        "joint_primary_screen_pass": false,
+        "claim_supported": false,
+        "retained_negative_result": true
+      }
+    },
+    {
+      "id": "dickens_mixed_convection_diagnostic_integrity",
+      "status": "PASS",
+      "claim": "The post-outcome inlet-jet sensitivity explains the Type-III thermal miss without changing runtime parameters or the frozen validation decision.",
+      "evidence": "research\\dickens_typeiii_mixed_convection_diagnostic_2026_10_08.json",
+      "requirement": "Three declared nozzle sensitivities, no fitted coefficient, all screens reported, no runtime update and explicit zero validation-gate effect.",
+      "observed": {
+        "run_count": 3,
+        "nozzle_diameters_mm": [
+          3.0,
+          5.0,
+          7.0
+        ],
+        "temperature_rmse_k": [
+          7.2147751776151345,
+          7.634245748930577,
+          7.915347030876859
+        ],
+        "joint_primary_screen_passes": 3,
+        "runtime_parameter_updated": false,
+        "validation_gate_effect": "none"
       }
     },
     {
@@ -5493,7 +5550,7 @@
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 811,
+            "passed": 820,
             "failed": 0,
             "warnings": 14
           }
@@ -5985,11 +6042,11 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7981,
+          "approximate_manuscript_words_before_references": 7997,
           "figures": 2,
           "tables": 3,
-          "citation_keys": 31,
-          "bibliography_entries": 32,
+          "citation_keys": 33,
+          "bibliography_entries": 34,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -6017,12 +6074,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-07T19:08:51.5488015Z",
-        "attempts_this_run": 1,
+        "attempted_at": "2026-10-07T19:40:06.6050340Z",
+        "attempts_this_run": 3,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "fe98c269b6f9b1df1ce6b0acd4b77998b25f656ed2e1e29e9d890a82efe92db0",
+        "source_sha256": "209a136f89935a0b9467199e8d74f56fd9b396a7c687f11be7ca455fc9fdd5a3",
         "diagnostic": "Unable to find standard directories for platform",
         "format_check_passed": true,
         "retained_previous_pdf": {
@@ -6031,7 +6088,7 @@
           "sha256": "694307f6dec2fb49ef941aa5bc1e5da3a01a8c665516119d0901a96f542d51c4",
           "matches_current_source": false
         },
-        "interpretation": "The updated source passes static format, citation, asset and brace checks, but the built-in compiler was unavailable on this Windows host. The retained PDF predates the corrected MC inlet-boundary and geometry-transfer diagnostic text and must not be represented as the current-source rendering."
+        "interpretation": "The updated source passes static format, citation, asset and brace checks, but the built-in compiler was unavailable on this Windows host. The retained PDF predates the corrected MC inlet-boundary, geometry-transfer and prospective Type-III thermal-validation text and must not be represented as the current-source rendering."
       }
     },
     {

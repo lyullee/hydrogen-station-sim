@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-07 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **85 PASS · 6 FAIL · 8 PENDING**.
+Gate counts: **86 PASS · 7 FAIL · 8 PENDING**.
 
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted
@@ -38,6 +38,15 @@ validation; measured-boundary calibration remains explicitly opt-in.
 The manuscript is therefore kept claim-bounded. The current full-loop negative
 result, component-level evidence and all unresolved gates remain disclosed; no
 failed holdout is silently promoted to validation.
+
+A prospectively frozen public Type-III fill added a sharper tank-physics test.
+The natural-convection model passed both pressure screens (0.943 MPa RMSE) but
+failed both temperature screens (19.179 K RMSE). A post-outcome inlet-jet
+sensitivity reduced temperature RMSE to 7.215--7.915 K across three plausible
+nozzle diameters, identifying forced mixing as the leading omitted mechanism.
+The exact nozzle geometry is unavailable, so runtime parameters remain unchanged
+and the frozen negative decision is preserved. See
+[`DICKENS_TYPEIII_PROSPECTIVE_VALIDATION_2026_10_08.md`](../research/DICKENS_TYPEIII_PROSPECTIVE_VALIDATION_2026_10_08.md).
 
 The frozen retrospective HIAD machine benchmark now provides a development-only
 comparison over 34 public station incidents. Direct SAGA scored 0.760 versus
@@ -131,7 +140,7 @@ The local format gate currently passes:
 - abstract: 147 words (limit checked: 150);
 - keywords: 6;
 - highlights: 5, each within the checked character limit;
-- approximate manuscript body: 7,981 words before references;
+- approximate manuscript body: 7,997 words before references;
 - figures: 2; tables: 3;
 - citations resolved and figure assets present;
 - LaTeX compilation: **PENDING**. The built-in compiler was unavailable on this
@@ -165,25 +174,26 @@ before a disjoint uninspected event is opened.
 
 ## Blocking gates
 
-The bounded paper still has 12 unresolved or failed gates:
+The bounded paper still has 13 unresolved or failed gates:
 
-1. `preslhy_partb_ambient_external_validation`
-2. `preslhy_revised_holdout_validation`
-3. `proust_independent_release_validation`
-4. `schefer_transient_release_validation`
-5. `schefer_2007_pressure_decay_validation`
-6. `grune_2014_pressure_decay_validation`
-7. `institutional_ethics_determination`
-8. `hiad_casebook_frozen`
-9. `hiad_holdout_collection`
-10. `independent_expert_review_complete`
-11. `ijhe_latex_compilation`
-12. `submission_metadata_and_declarations`
+1. `dickens_typeiii_prospective_validation`
+2. `preslhy_partb_ambient_external_validation`
+3. `preslhy_revised_holdout_validation`
+4. `proust_independent_release_validation`
+5. `schefer_transient_release_validation`
+6. `schefer_2007_pressure_decay_validation`
+7. `grune_2014_pressure_decay_validation`
+8. `institutional_ethics_determination`
+9. `hiad_casebook_frozen`
+10. `hiad_holdout_collection`
+11. `independent_expert_review_complete`
+12. `ijhe_latex_compilation`
+13. `submission_metadata_and_declarations`
 
 The full user objective additionally requires:
 
-13. `full_loop_external_validation`
-14. `saga_effectiveness_and_safety_supported`
+14. `full_loop_external_validation`
+15. `saga_effectiveness_and_safety_supported`
 
 Only `full_user_objective_ready=true` in the authoritative audit permits the
 project goal to be marked complete. Until then, the correct status is active

@@ -31,6 +31,19 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert tank_runtime["runtime"]["validation_case_count"] == 12
     assert tank_runtime["sources_match"] is True
     assert tank_runtime["recheck_matches"] is True
+    assert gates["dickens_typeiii_prospective_validation"]["status"] == "FAIL"
+    dickens = gates["dickens_typeiii_prospective_validation"]["observed"]
+    assert dickens["protocol_frozen_before_outcome_access"] is True
+    assert dickens["screen_results"]["pressure_rmse_mpa"] is True
+    assert dickens["screen_results"]["gas_temperature_rmse_k"] is False
+    assert dickens["joint_primary_screen_pass"] is False
+    assert dickens["retained_negative_result"] is True
+    assert gates["dickens_mixed_convection_diagnostic_integrity"]["status"] == "PASS"
+    mixed = gates["dickens_mixed_convection_diagnostic_integrity"]["observed"]
+    assert mixed["run_count"] == 3
+    assert mixed["joint_primary_screen_passes"] == 3
+    assert mixed["runtime_parameter_updated"] is False
+    assert mixed["validation_gate_effect"] == "none"
     assert gates["hyram_adapter_verification"]["status"] == "PASS"
     assert gates["elvhys_auxiliary_replay_integrity"]["status"] == "PASS"
     assert gates["elvhys_auxiliary_replay_integrity"]["observed"]["case_count"] == 3

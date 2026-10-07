@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-07T19:39:41.853360+00:00",
+  "source_commit": "027440d758f7d7a4ca137d53775adae0c0692725",
+  "diagnostic_type": "post-outcome forced-mixing sensitivity",
+  "evidence_role": "model-development diagnostic only",
+  "post_outcome": true,
+  "parameter_fitting": false,
+  "runtime_parameter_updated": false,
+  "frozen_validation_result_unchanged": true,
+  "source_hashes_match": true,
+  "correlation": {
+    "form": "Nu_forced = 1.5 * sqrt(D_nozzle / D_tank) * Re^0.67",
+    "empirical_factor_two_used": false,
+    "coefficient_selected_from_case_outcome": false
+  },
+  "method_sources": {
+    "published_mechanism_doi": "10.1016/j.ijhydene.2025.04.015",
+    "public_reference_implementation": "https://github.com/ArtCouteau/HyTF",
+    "public_reference_commit": "f0e8f0446fe7638abe21734d14e654a8a79f95fc",
+    "public_reference_license": "GPL-3.0",
+    "source_code_copied": false,
+    "implementation_note": "The correlation was independently expressed in repository code. The public reference's separate fitted factor of two was omitted."
+  },
+  "unknown_source_metadata": [
+    "experiment inlet nozzle internal diameter",
+    "time-resolved inlet gas temperature"
+  ],
+  "runs": [
+    {
+      "nozzle_diameter_mm": 3.0,
+      "metrics": {
+        "pressure_rmse_mpa": 0.6738279453518523,
+        "pressure_nrmse_percent_measured_span": 2.673814439517728,
+        "gas_temperature_rmse_k": 7.2147751776151345,
+        "gas_temperature_peak_absolute_error_k": 8.17737086207643,
+        "mass_residual_relative": 1.6847947834041445e-15,
+        "energy_residual_relative": 1.2581279084004896e-15
+      },
+      "screen_results": {
+        "pressure_nrmse_percent_measured_span": true,
+        "pressure_rmse_mpa": true,
+        "gas_temperature_rmse_k": true,
+        "gas_temperature_peak_absolute_error_k": true
+      },
+      "joint_primary_screen_pass": true
+    },
+    {
+      "nozzle_diameter_mm": 5.0,
+      "metrics": {
+        "pressure_rmse_mpa": 0.6610081142896709,
+        "pressure_nrmse_percent_measured_span": 2.622944110314715,
+        "gas_temperature_rmse_k": 7.634245748930577,
+        "gas_temperature_peak_absolute_error_k": 8.487690727115876,
+        "mass_residual_relative": 1.3478349599618108e-15,
+        "energy_residual_relative": 1.3725022901760395e-15
+      },
+      "screen_results": {
+        "pressure_nrmse_percent_measured_span": true,
+        "pressure_rmse_mpa": true,
+        "gas_temperature_rmse_k": true,
+        "gas_temperature_peak_absolute_error_k": true
+      },
+      "joint_primary_screen_pass": true
+    },
+    {
+      "nozzle_diameter_mm": 7.0,
+      "metrics": {
+        "pressure_rmse_mpa": 0.6531593514131298,
+        "pressure_nrmse_percent_measured_span": 2.5917994603244447,
+        "gas_temperature_rmse_k": 7.915347030876859,
+        "gas_temperature_peak_absolute_error_k": 8.697508507942644,
+        "mass_residual_relative": 1.0108758853053364e-15,
+        "energy_residual_relative": 1.7156272947352298e-15
+      },
+      "screen_results": {
+        "pressure_nrmse_percent_measured_span": true,
+        "pressure_rmse_mpa": true,
+        "gas_temperature_rmse_k": true,
+        "gas_temperature_peak_absolute_error_k": true
+      },
+      "joint_primary_screen_pass": true
+    }
+  ],
+  "validation_gate_effect": "none",
+  "claim_boundary": "This post-outcome sensitivity identifies whether an omitted inlet-jet heat-transfer mechanism can explain the frozen temperature failure. It cannot select a nozzle diameter, revise the frozen Type-III result, change the runtime model, or support a validation claim."
+}
