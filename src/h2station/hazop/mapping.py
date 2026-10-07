@@ -64,7 +64,14 @@ MODEL_BINDINGS.update({
     "FT-2001": ("VENT_PROXY", "vent release mass flow when injected; zero otherwise; no PSV model"),
 })
 HELPERS = {"MASS_HOSE_1", "MASS_HOSE_2"}
-MODE_KEYS = {"station.monitoring", "station.filling_count", "station.switch_elapsed_s", "station.esd", "station.esd_elapsed_s"}
+MODE_KEYS = {
+    "station.monitoring", "station.filling_count", "station.switch_elapsed_s",
+    "station.esd", "station.esd_elapsed_s",
+    "compressor.running", "compressor.elapsed_s", "compressor.stop_elapsed_s",
+    "unloading.active", "unloading.elapsed_s",
+    "cooling.enabled", "cooling.elapsed_s",
+    "vent.commanded", "vent.close_elapsed_s", "relief.active",
+}
 for d in (1, 2):
     MODE_KEYS |= {f"d{d}.{k}" for k in ("phase", "phase_elapsed_s", "switch_elapsed_s", "connected", "pcv_closed")}
 for n in ("07", "08", "09"):
@@ -121,6 +128,18 @@ class ModelMapper:
             event.target for event, _leak, _source, _location in active_leaks
             if event.event_id.startswith("relief-")
         }
+        vent_commanded = any(
+            event.event_id.startswith("vent-")
+            for event, _leak, _source, _location in active_leaks
+        )
+        relief_active = bool(active_relief_targets)
+        vent_path_active = vent_commanded or relief_active
+        vent_path_elapsed_s = self.elapsed("vent-path-active", vent_path_active, t)
+        modes.update({
+            "vent.commanded": vent_commanded,
+            "relief.active": relief_active,
+            "vent.close_elapsed_s": 0.0 if vent_path_active else vent_path_elapsed_s,
+        })
         def put(tag, value, unit=None, origin=None):
             signals[tag] = {"value": float(value), "unit": unit or self.specs[tag]["단위"], "quality": "GOOD",
                             "time_s": t, "origin": origin or MODEL_BINDINGS[tag][0]}
@@ -171,6 +190,18 @@ class ModelMapper:
                      if recharge_index is not None else supply.pressure_pa)
         compressor = station.compressor.evaluate(supply, discharge, enabled=recharge_index is not None,
                                                  include_stage_outlets=True)
+        compressor_flow_kg_s = max(
+            0.0, compressor.mass_flow_kg_s * compressor_flow_multiplier
+        )
+        compressor_running = compressor_flow_kg_s > 1.0e-9
+        compressor_elapsed_s = self.elapsed("compressor-running", compressor_running, t)
+        modes.update({
+            "compressor.running": compressor_running,
+            "compressor.elapsed_s": compressor_elapsed_s if compressor_running else 0.0,
+            "compressor.stop_elapsed_s": 0.0 if compressor_running else compressor_elapsed_s,
+            "unloading.active": compressor_running,
+            "unloading.elapsed_s": compressor_elapsed_s if compressor_running else 0.0,
+        })
         for n in ("01", "02", "03", "04", "05", "06"):
             put(f"FT-{n}01", compressor.mass_flow_kg_s*compressor_flow_multiplier*1000)
         for stage, node in ((0,"04"), (1,"05")):
@@ -194,6 +225,12 @@ class ModelMapper:
             put(tag, coolant.coolant_temperature_k-273.15)
         heat_w = sum(abs(inst["precooler_heat_rate"]) for inst in instantaneous)
         put("FT-1901", heat_w/(4180.0*5.0)*60.0, origin="DERIVED_THERMAL_PROXY")
+        cooling_enabled = bool(heat_w > 1.0e-6)
+        cooling_elapsed_s = self.elapsed("cooling-enabled", cooling_enabled, t)
+        modes.update({
+            "cooling.enabled": cooling_enabled,
+            "cooling.elapsed_s": cooling_elapsed_s if cooling_enabled else 0.0,
+        })
         put("PT-0001", 0.101325)
         vent = next(((source, snap) for event, leak, source, _ in active_leaks
                      for snap in risk_snapshots if event.target.startswith("vent") and snap.release_id==leak.release_id), None)

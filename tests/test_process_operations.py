@@ -36,14 +36,18 @@ def test_idle_is_physically_frozen_and_vehicle_paths_are_independent():
 
     settings["vehicle_1"] = True
     process.configure(settings)
+    monitor = HazopMonitor()
+    built.simulator.hazop_monitor = monitor
     filling = built.simulator.simulate(idle.final_state, .4, .2,
                                        start_time_s=.4, reset_runtime=False)
     assert filling.vehicle_pressure_pa[-1] > filling.vehicle_pressure_pa[0]
     assert filling.vehicle_2_pressure_pa[-1] == pytest.approx(filling.vehicle_2_pressure_pa[0])
     assert np.all(filling.nozzle_2_mass_flow_kg_s == 0)
+    assert monitor.latest["modes"]["cooling.enabled"] is True
 
     settings["vehicle_1"] = False
     process.configure(settings)
+    built.simulator.hazop_monitor = None
     stopped = built.simulator.simulate(filling.final_state, .4, .2,
                                        start_time_s=.8, reset_runtime=False)
     np.testing.assert_array_equal(stopped.states[0], stopped.states[-1])
@@ -60,11 +64,15 @@ def test_recharge_needs_both_commands_and_depletes_trailer():
 
     settings["pressure_recharge"] = True
     process.configure(settings)
+    monitor = HazopMonitor()
+    built.simulator.hazop_monitor = monitor
     charging = built.simulator.simulate(supply_only.final_state, .4, .2,
                                         start_time_s=.4, reset_runtime=False)
     assert any(bank is not None for bank in charging.recharge_bank)
     assert process.trailer_mass_kg < settings["trailer_capacity_kg"]
     assert process.snapshot()["trailer_pressure_mpa"] < settings["trailer_pressure_mpa"]
+    assert monitor.latest["modes"]["compressor.running"] is True
+    assert monitor.latest["modes"]["unloading.active"] is True
     bank_gain = charging.final_state.banks[2].hydrogen_mass_kg - supply_only.final_state.banks[2].hydrogen_mass_kg
     assert bank_gain > 0
     assert bank_gain == pytest.approx(settings["trailer_capacity_kg"] - process.trailer_mass_kg, rel=1e-5)
@@ -85,6 +93,8 @@ def test_pressure_target_auto_stop_and_relief_hysteresis_with_mass_sink():
     assert np.max(trajectory.leak_mass_flow_by_release["relief-high"]) > 0
     assert any("relief-open:cascade.high" in sample.active_faults for sample in samples)
     assert monitor.latest["modes"]["bank.09.relief_active"] is True
+    assert monitor.latest["modes"]["relief.active"] is True
+    assert monitor.latest["modes"]["vent.commanded"] is False
     assert any(snapshot.release_id == "relief-high" for sample in trajectory.risk_snapshots for snapshot in sample)
     assert process.snapshot()["settings"]["trailer_supply"] is False
     assert process.snapshot()["settings"]["pressure_recharge"] is False

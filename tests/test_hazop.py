@@ -138,6 +138,13 @@ def test_isothermal_bank_loss_rules_are_simulation_ready():
         assert rows[rule_id]['model_limits'] == []
 
 
+def test_existing_process_states_unlock_compressor_cooling_and_vent_rules():
+    rows = {row['rule_id']: row for row in coverage(load_catalog())['rules']}
+    for rule_id in ('HZ-012', 'HZ-017', 'HZ-041', 'HZ-131', 'HZ-136', 'HZ-137'):
+        assert rows[rule_id]['simulation_ready'] is True
+        assert rows[rule_id]['missing_modes'] == []
+
+
 def test_isothermal_bank_loss_rule_triggers_despite_heating():
     catalog = copy.deepcopy(load_catalog())
     rule = next(row for row in catalog['rules'] if row['rule_id'] == 'HZ-057')
