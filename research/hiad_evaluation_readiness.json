@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-10-06T14:08:24.436137+00:00",
+  "generated_at_utc": "2026-10-07T15:51:16.016284+00:00",
   "protocol_id": "HIAD-SAGA-2601",
   "readiness": {
     "casebook_frozen": false,
@@ -22,11 +22,11 @@
   },
   "coordinator_prescreen": {
     "manifest_path": "data\\public_validation\\results\\hiad_coordinator_prescreen\\prescreen_manifest.json",
-    "manifest_sha256": "57fd0aceb308761dad834109c3b2f05b610b1e7e1e94aac17142049e199557f8",
+    "manifest_sha256": "d6091eeca8d48c7626c78eea3c59ebcc498e018e1ad11f41af63be3551a814dd",
     "manifest_error": null,
     "advisory_only_and_human_review_required": true,
     "review_csv_path": "data\\public_validation\\results\\hiad_coordinator_prescreen\\coordinator_review.csv",
-    "review_csv_sha256": "eeafe11950d7f4ae1dfb91bf54f4cc35696e272638aa5ea66886661bbbcc2b14",
+    "review_csv_sha256": "d14ae644edf2eb65e30aeb24874d5861fab6b33666b8ada5ee52efbc32dae164",
     "file_present": true,
     "row_count": 24,
     "required_columns_present": true,
@@ -35,7 +35,7 @@
   },
   "protocol": {
     "path": "research\\hiad_study_protocol_manifest.json",
-    "sha256": "3d8efd0d9a42d30b0988745b9f6aef88d35be7a7a5c5e6b1e0ebac836c4f8b21",
+    "sha256": "fc1bf3dfae19f6f81fe02544a4004b0fc67af0b20d398d5448fe8c7383c6ea7f",
     "error": null,
     "ethics_status": "pending",
     "ethics_determination_id": null,

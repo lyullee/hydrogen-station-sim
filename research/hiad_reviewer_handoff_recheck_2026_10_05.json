@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "rechecked_at_utc": "2026-10-06T14:08:24.545897+00:00",
-  "source_commit": "b692fc55784a602f3149705b094589f8e310e85b",
+  "rechecked_at_utc": "2026-10-07T15:51:16.079952+00:00",
+  "source_commit": "b129f807fbef8b5f048238d5581bff97b778c4cd",
   "status": "PENDING_COORDINATOR_APPROVAL_AND_ETHICS_DETERMINATION",
   "machine_preflight": {
     "pass": true,
@@ -17,20 +17,20 @@
     },
     "prescreen_manifest": {
       "path": "data/public_validation/results/hiad_coordinator_prescreen/prescreen_manifest.json",
-      "sha256": "57fd0aceb308761dad834109c3b2f05b610b1e7e1e94aac17142049e199557f8",
+      "sha256": "d6091eeca8d48c7626c78eea3c59ebcc498e018e1ad11f41af63be3551a814dd",
       "advisory_only": true
     },
     "review_csv": {
       "path": "data/public_validation/results/hiad_coordinator_prescreen/coordinator_review.csv",
-      "sha256": "eeafe11950d7f4ae1dfb91bf54f4cc35696e272638aa5ea66886661bbbcc2b14"
+      "sha256": "d14ae644edf2eb65e30aeb24874d5861fab6b33666b8ada5ee52efbc32dae164"
     },
     "review_html": {
       "path": "data/public_validation/results/hiad_coordinator_prescreen/coordinator_review.html",
-      "sha256": "36e4ff5c73ec5f0ea3077388101ef99815be1351f9fdc90108e23f2bd4b5a614"
+      "sha256": "7778881d4e902ecf2fe9927e19889b40f5a423878d6a7f28d099a1e24f574792"
     },
     "protocol_manifest": {
       "path": "research/hiad_study_protocol_manifest.json",
-      "sha256": "3d8efd0d9a42d30b0988745b9f6aef88d35be7a7a5c5e6b1e0ebac836c4f8b21"
+      "sha256": "fc1bf3dfae19f6f81fe02544a4004b0fc67af0b20d398d5448fe8c7383c6ea7f"
     }
   },
   "current_readiness": {
