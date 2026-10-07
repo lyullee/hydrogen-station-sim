@@ -2809,6 +2809,15 @@ def _impact_rows(results: Iterable[dict[str, Any]] | None) -> list[dict[str, Any
         "sensor_basis", "pressure_sensor", "temperature_sensor",
         "current_pressure_mpa", "current_temperature_c", "orifice_diameter_mm",
         "maximum_heat_flux_w_m2", "maximum_overpressure_pa",
+        "indoor_status", "maximum_indoor_overpressure_pa",
+        "ignited_enclosure_status", "ignited_enclosure_model",
+        "maximum_ignited_enclosure_overpressure_pa",
+        "ignited_enclosure_peak_time_s",
+        "ignited_enclosure_average_mass_flow_kg_s",
+        "ignited_enclosure_volume_m3", "ignited_enclosure_vent_area_m2",
+        "ignited_enclosure_external_holdout_supported",
+        "ignited_enclosure_validation_artifact",
+        "ignited_enclosure_claim_limit",
         "sampled_effect_radius_m", "sampled_next_distance_m",
         "flammable_plume_streamline_distance_m", "effect_range_status",
         "modeled_consequence_mass_flow_kg_s", "mass_flow_override_requested",
@@ -3950,6 +3959,14 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "pressure_sensor", "temperature_sensor", "current_pressure_mpa",
             "current_temperature_c", "orifice_diameter_mm",
             "maximum_heat_flux_w_m2", "maximum_overpressure_pa",
+            "indoor_status", "maximum_indoor_overpressure_pa",
+            "ignited_enclosure_status", "ignited_enclosure_model",
+            "maximum_ignited_enclosure_overpressure_pa",
+            "ignited_enclosure_peak_time_s",
+            "ignited_enclosure_average_mass_flow_kg_s",
+            "ignited_enclosure_volume_m3", "ignited_enclosure_vent_area_m2",
+            "ignited_enclosure_external_holdout_supported",
+            "ignited_enclosure_validation_artifact",
             "sampled_effect_radius_m", "sampled_next_distance_m",
             "flammable_plume_streamline_distance_m", "effect_range_status",
             "consequence_validation_scope", "geometry_display_mapping_verified",
@@ -3960,6 +3977,10 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         if raw.get("consequence_validation_claim_limit"):
             row["consequence_validation_claim_limit"] = short(
                 raw["consequence_validation_claim_limit"]
+            )
+        if raw.get("ignited_enclosure_claim_limit"):
+            row["ignited_enclosure_claim_limit"] = short(
+                raw["ignited_enclosure_claim_limit"]
             )
         if row:
             compact_impacts.append(row)

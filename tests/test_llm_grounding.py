@@ -857,6 +857,51 @@ def test_manifest_keeps_the_per_result_consequence_validation_boundary():
     assert "site-specific safety distance" in impact["consequence_validation_claim_limit"]
 
 
+def test_manifest_and_prompt_keep_validated_ignited_enclosure_evidence():
+    manifest = build_evidence_manifest(
+        {"time_s": 19.5},
+        {},
+        [{
+            "node_id": "N08",
+            "calculation_status": "calculated",
+            "indoor_status": "calculated",
+            "maximum_indoor_overpressure_pa": 18_900.0,
+            "ignited_enclosure_status": "calculated",
+            "ignited_enclosure_model": "LACH_GAATHAUG_2021_ZERO_DIMENSIONAL",
+            "maximum_ignited_enclosure_overpressure_pa": 18_900.0,
+            "ignited_enclosure_peak_time_s": 0.42,
+            "ignited_enclosure_average_mass_flow_kg_s": 0.0061,
+            "ignited_enclosure_volume_m3": 15.0,
+            "ignited_enclosure_vent_area_m2": 0.12,
+            "ignited_enclosure_external_holdout_supported": True,
+            "ignited_enclosure_validation_artifact": (
+                "research/ignited_enclosure_external_validation_2026_10_08.json"
+            ),
+            "ignited_enclosure_claim_limit": (
+                "Validated only inside the published vented-enclosure domain."
+            ),
+        }],
+        True,
+    )
+
+    impact = manifest["impact"]["results"][0]
+    assert impact["maximum_ignited_enclosure_overpressure_pa"] == 18_900.0
+    assert impact["ignited_enclosure_external_holdout_supported"] is True
+    assert impact["ignited_enclosure_volume_m3"] == 15.0
+
+    compact = prompt_decision_evidence(manifest)["impact"]["results"][0]
+    assert compact["ignited_enclosure_status"] == "calculated"
+    assert compact["ignited_enclosure_model"] == (
+        "LACH_GAATHAUG_2021_ZERO_DIMENSIONAL"
+    )
+    assert compact["maximum_ignited_enclosure_overpressure_pa"] == 18_900.0
+    assert compact["ignited_enclosure_external_holdout_supported"] is True
+    assert compact["ignited_enclosure_vent_area_m2"] == 0.12
+    assert "published vented-enclosure domain" in compact[
+        "ignited_enclosure_claim_limit"
+    ]
+
+
 def test_prompt_decision_evidence_keeps_limits_without_full_audit_payload():
     manifest = build_evidence_manifest(
         {"time_s": 12.5, "nozzle_flow_g_s": 200.0},
