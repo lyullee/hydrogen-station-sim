@@ -74,6 +74,16 @@ def _json(path: Path) -> dict[str, Any]:
     return value
 
 
+def _sha256(path: Path) -> str:
+    """Hash a controlled file without retaining any source content."""
+
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
 def _within(path: Path, root: Path) -> bool:
     try:
         path.resolve().relative_to(root.resolve())
@@ -288,6 +298,9 @@ def preflight_bundle(
         "missing_canonical_channels": missing,
         "source_headers_exposed": False,
         "source_rows_read": False,
+        "mapping_sha256": _sha256(mapping_path),
+        "attestation_sha256": _sha256(attestation_path),
+        "protocol_sha256": _sha256(protocol_path),
         "claim_boundary": (
             "This is a schema-and-attestation preflight only. It does not read "
             "outcome rows, establish trace quality, validate the model, or "
@@ -412,9 +425,13 @@ def export_bundle(
         "rows": len(normalized),
         "time_duration_s": float(normalized[-1]["time_s"]),
         "generic_output_columns": list(OUTPUT_COLUMNS),
-        "trace_sha256": hashlib.sha256(trace_path.read_bytes()).hexdigest(),
-        "manifest_sha256": hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
-        "declaration_sha256": hashlib.sha256(declaration_path.read_bytes()).hexdigest(),
+        "source_input_sha256": _sha256(input_data),
+        "mapping_sha256": _sha256(mapping_path),
+        "attestation_sha256": _sha256(attestation_path),
+        "protocol_sha256": _sha256(protocol_path),
+        "trace_sha256": _sha256(trace_path),
+        "manifest_sha256": _sha256(manifest_path),
+        "declaration_sha256": _sha256(declaration_path),
         "intake_decision": intake.get("decision"),
         "quality_decision": screen.get("decision"),
         "full_loop_trace_ready": screen.get("full_loop_trace_ready"),

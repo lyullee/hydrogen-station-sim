@@ -187,6 +187,9 @@ def test_excel_preflight_does_not_read_rows_or_disclose_private_headers(tmp_path
     assert report["worksheet_mapping_required"] is True
     assert report["source_rows_read"] is False
     assert report["source_headers_exposed"] is False
+    assert len(report["mapping_sha256"]) == 64
+    assert len(report["attestation_sha256"]) == 64
+    assert len(report["protocol_sha256"]) == 64
     assert "raw_vehicle_pressure" not in serialized
     assert "wall_clock" not in serialized
 
@@ -216,6 +219,10 @@ def test_excel_export_is_deidentified_and_preserves_relative_time_only(tmp_path)
     exported = (output / "full_loop_event.csv").read_text(encoding="utf-8")
     assert receipt["input_format"] == "xlsx"
     assert receipt["output_file_count"] == 4
+    assert len(receipt["source_input_sha256"]) == 64
+    assert len(receipt["mapping_sha256"]) == 64
+    assert len(receipt["attestation_sha256"]) == 64
+    assert len(receipt["protocol_sha256"]) == 64
     assert "raw_vehicle_pressure" not in exported
     assert "wall_clock" not in exported
     assert "2026-01-01" not in exported

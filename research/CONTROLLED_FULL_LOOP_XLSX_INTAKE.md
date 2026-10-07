@@ -53,6 +53,12 @@ This command reads the mapping, attestation, and source header only.  It does
 not read measurement rows or print original headers, worksheet names, row
 counts, identities, or timestamps.
 
+Its result records SHA-256 values of the private mapping, attestation, and
+frozen protocol.  The later controlled receipt additionally records the
+source-file digest.  These hashes are reproducibility anchors; they do not
+contain source labels or measured values and must remain with the controlled
+evaluation record rather than being added to this repository.
+
 ```powershell
 $env:PYTHONPATH = "src"
 .\.venv\Scripts\python.exe scripts\export_confidential_full_loop_bundle.py `
