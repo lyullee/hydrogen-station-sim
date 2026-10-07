@@ -248,7 +248,7 @@ _BANK_ENVELOPE_PATH = (
 )
 
 _RECHARGE_DYNAMICS_PROFILE_PATH = (
-    _ROOT / "research" / "confidential_station_recharge_dynamics_calibration_2026_10_06.json"
+    _ROOT / "research" / "confidential_station_recharge_dynamics_multitrace_2026_10_08.json"
 )
 
 

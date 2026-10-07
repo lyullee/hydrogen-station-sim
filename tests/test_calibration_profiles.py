@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
 
@@ -9,6 +10,9 @@ from h2station.calibration_profiles import (
     load_measured_boundary_calibration,
     load_station_recharge_dynamics_calibration,
 )
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_sanitized_measured_boundary_profile_is_bounded(tmp_path):
@@ -159,17 +163,29 @@ def test_bank_pressure_envelope_is_diagnostic_and_uses_robust_quantiles():
     assert "full-loop" in result["claim_boundary"]
 
 
-def test_temporally_checked_recharge_dynamics_profile_is_opt_in_ready():
-    profile = load_station_recharge_dynamics_calibration()
-    assert profile is not None
-    assert profile.minimum_recharge_off_time_s == pytest.approx(265.2)
-    metadata = profile.runtime_metadata()
-    assert metadata["default_model_parameters_changed"] is False
-    assert metadata["temporal_holdout"]["completed_off_to_on_intervals"] >= 3
-    assert (
-        metadata["temporal_holdout"]["minimum_off_to_on_s"]
-        >= metadata["minimum_recharge_off_time_s"]
+def test_multitrace_recharge_dynamics_failure_is_not_runtime_eligible():
+    assert load_station_recharge_dynamics_calibration() is None
+
+    artifact = json.loads(
+        (
+            ROOT
+            / "research/confidential_station_recharge_dynamics_multitrace_2026_10_08.json"
+        ).read_text(encoding="utf-8")
     )
+    assert artifact["calibration"]["files_read"] == 8
+    assert artifact["calibration"]["sampled_rows"] == 457405
+    assert artifact["calibration"][
+        "recommended_minimum_recharge_off_time_s"
+    ] == pytest.approx(290.0)
+    assert artifact["temporal_holdout"][
+        "holdout_completed_off_to_on_intervals"
+    ] == 32
+    assert artifact["temporal_holdout"]["holdout_minimum_off_to_on_s"] == pytest.approx(
+        176.0
+    )
+    assert artifact["temporal_holdout"]["dwell_consistent"] is False
+    assert artifact["eligibility"]["runtime_parameter_application"] is False
+    assert artifact["validation_decision"]["runtime_application_locked"] is True
 
 
 def test_recharge_dynamics_profile_rejects_an_unverified_holdout(tmp_path):

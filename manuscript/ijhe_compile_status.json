@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "attempted_at": "2026-10-07T19:40:06.6050340Z",
-  "attempts_this_run": 3,
+  "attempted_at": "2026-10-07T20:08:30.615646+00:00",
+  "attempts_this_run": 1,
   "success": false,
   "compiler": "Codex built-in LaTeX compiler",
   "source": "manuscript/ijhe_manuscript_draft.tex",
-  "source_sha256": "209a136f89935a0b9467199e8d74f56fd9b396a7c687f11be7ca455fc9fdd5a3",
+  "source_sha256": "a3d0a5c167d4088fc1ce992c46a2036d6cba24847642f8b3ea8927f4dafca7da",
   "diagnostic": "Unable to find standard directories for platform",
   "format_check_passed": true,
   "retained_previous_pdf": {
@@ -14,5 +14,5 @@
     "sha256": "694307f6dec2fb49ef941aa5bc1e5da3a01a8c665516119d0901a96f542d51c4",
     "matches_current_source": false
   },
-  "interpretation": "The updated source passes static format, citation, asset and brace checks, but the built-in compiler was unavailable on this Windows host. The retained PDF predates the corrected MC inlet-boundary, geometry-transfer and prospective Type-III thermal-validation text and must not be represented as the current-source rendering."
+  "interpretation": "The updated source passes static format, citation, asset and brace checks, but the built-in compiler was unavailable on this Windows host. The retained PDF predates the corrected MC inlet-boundary, geometry-transfer, prospective Type-III thermal-validation and confidential multi-trace recharge-holdout text and must not be represented as the current-source rendering."
 }

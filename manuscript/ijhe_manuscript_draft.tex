@@ -251,6 +251,12 @@ implementation or certification of the proprietary MC Formula. No case-specific
 fit, post-freeze tuning, dynamic time warping or failed-case exclusion was
 permitted.
 
+A separate owner-controlled analysis split eight de-identified station-side
+traces chronologically (70\% estimation, 30\% holdout). Only attested medium/high
+storage-pressure and compressor loaded-state roles were used; no vehicle channel
+or raw identifier left the controlled environment. Runtime eligibility required
+no completed holdout OFF-to-ON interval shorter than the fitted dwell.
+
 \subsection{Prospective ambient blowdown validation}
 The source-depletion and direct-aperture release model was independently evaluated
 with the PRESLHY E3.1 DisCha dataset \cite{preslhy2023}. Before any numerical Excel
@@ -561,6 +567,13 @@ does not change the frozen decision, and cannot substitute for a new
 prospectively frozen holdout with an independently justified safety limit.
 The complete run metadata are archived in
 \texttt{research/closed\_loop\_temperature\_stop\_diagnostic\_2026\_10\_04.json}.
+
+\subsection{Negative confidential station recharge holdout}
+Calibration (457,405 samples; 89 completed restarts) fitted a 290.0-s dwell.
+The disjoint holdout (196,037 samples; 32 restarts) contained a 176.0-s minimum,
+so the gate failed. The prior single-trace 265.2-s result was superseded and
+runtime use locked. This station-side diagnostic does not validate compressor
+capacity, vehicle filling or the station-to-vehicle loop.
 
 \subsection{Prospective confined pressure-peaking screen}
 To test a separate consequence boundary without presenting it as station-loop
@@ -876,48 +889,26 @@ and standards retrieval. Its primary value will depend on qualified blinded
 ratings, unsafe-advice and critical-omission rates, not stylistic preference.
 Until those data exist, SAGA remains an interface and study hypothesis.
 
-The public-incident traceability check provides a bounded grounding result for
-the response interface: the 34 HIAD metadata cases route to registered staged
-plans, while the one case without a recorded public action category remains
-explicitly unassessed. Because the source action prose is excluded and no
-reviewer ratings are available, this result cannot support a claim about the
-correctness, safety or usefulness of SAGA responses.
-
-The retrospective machine proxy adds a reproducible engineering signal: SAGA
-more often produced the requested response stages and action-category vocabulary
-than the alarm-only text. Its magnitude cannot be interpreted as an operator
-benefit because the score is keyword-based, the action taxonomy was already known,
-and no independent human judged factual correctness or unsafe omissions. The
-numeric guard result is narrower still. It shows that precise value--unit phrases
-not present in the serialized input can be blocked at the API boundary; it does
-not verify qualitative causal claims or recommended actions.
+All 34 HIAD metadata cases route to registered plans; the case without a public
+action category remains unassessed. SAGA produced more requested stages and
+action-category terms than alarm-only text, and the API numeric guard blocked
+unsupported value--unit phrases. These are traceability and software-control
+results, not operator benefit or response correctness: source action prose was
+excluded, the proxy is keyword-based and no independent reviewer assessed unsafe
+omissions.
 
 \subsection{Limitations}
-All live sensors, valves, CCTV views and operator actions are simulated. No field
-PLC, dispenser, gas detector or station historian has been connected. Vessel
-geometry is inferred from nominal capacity scaling. The tank is lumped and cannot
-resolve local hot spots. Compressor maps, valve coefficients, thermal hardware,
-weather, occupancy and site geometry are scenario assumptions. The public J2601
-archives do not supply the complete proprietary protocol implementation. HyRAM
-outputs are conditional consequences, not certification; buildings, congestion,
-terrain and site-specific wind are not resolved, and no site field campaign was
-performed. The HIAD narratives are
-retrospective and may contain incomplete or heterogeneous reporting. Finally,
-the original direct-aperture model and its prospectively evaluated non-adiabatic
-revision failed their respective PRESLHY claim rules. The fixed aperture relation
-also failed all three eligible independent 90 MPa mass-flow series, and the SAGA
-study has no locked expert ratings yet. The independent Sandia/SRI mass-flow and
-pressure-decay transients each passed only one of three required screens.
-The separate Ekoto scaled release passed all three screens but covers only a
-small, short-duration source. The public ELVHYS 4.2 archive provides valuable
-cryogenic transfer-connection-space pressure-peaking observations, but the
-post-access replay in this study is limited to source-file and timebase
-integrity; it is not predictive validation of the gaseous H70 station loop
-because it lacks vehicle-side and controller telemetry \cite{elvhys2025}.
-The 34-case SAGA machine benchmark is retrospective, uses one stochastic response
-per event and scores lexical proxies rather than expert decisions. Its post-outcome
-guard rerun is a software safety diagnostic and cannot be treated as a second
-validation cohort.
+All sensors, valves, CCTV views and actions are simulated; no field PLC,
+dispenser, detector or historian is connected. Lumped tanks omit local hot spots,
+while compressor maps, valve coefficients, weather, occupancy and site geometry
+remain assumptions. Public archives omit the proprietary J2601 implementation.
+HyRAM results are conditional and omit site-specific congestion, terrain and
+wind. Most release-transfer gates failed; the positive Ekoto result covers only
+a small, short-duration source. ELVHYS provides cryogenic pressure-peaking
+observations, but its post-access replay is provenance/timebase evidence because
+vehicle and controller telemetry are absent \cite{elvhys2025}. HIAD reports are
+retrospective, and the 34-case machine proxy and post-outcome guard rerun cannot
+replace the pending expert study.
 
 \section{Conclusions}
 A hydrogen-station safety digital twin was evaluated with separate evidence gates
@@ -930,7 +921,9 @@ comparison fills passed, and a prospectively frozen earlier eight-case external
 holdout passed zero screens. The frozen ambient blowdown model also failed its
 prospective external test: 11/22 cases passed both screens and six eligible
 high-pressure cases produced retained thermophysical-domain failures. Although
-the non-adiabatic revision passed 20/22 consumed development cases, its frozen
+an eight-trace confidential station-side dwell failed holdout and was blocked
+from runtime use. The non-adiabatic revision passed 20/22 consumed development
+cases, but its frozen
 E5.1 holdout was ineligible and negative: only three cases met the primary
 temperature window and 2/3 passed both screens. An independent 90 MPa Type-IV
 release campaign passed zero of three mass-flow series, exposing diameter-

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "artifact_type": "confidential_station_recharge_dynamics_calibration",
-  "status": "superseded_single_trace_result",
-  "superseded_by": "research/confidential_station_recharge_dynamics_multitrace_2026_10_08.json",
+  "profile_id": "owner_station_recharge_dynamics_multitrace_v1",
+  "evidence_scope": "eight_deidentified_station_side_traces",
   "source_identifiers_published": false,
   "raw_rows_persisted": false,
   "absolute_timestamps_published": false,
@@ -22,33 +22,33 @@
     "raw_rows_persisted": false,
     "source_identifiers_published": false,
     "absolute_timestamps_published": false,
-    "files_read": 1,
-    "sampled_rows": 59880,
-    "state_transition_count": 27,
-    "active_duty_cycle": 0.185624,
+    "files_read": 8,
+    "sampled_rows": 457405,
+    "state_transition_count": 190,
+    "active_duty_cycle": 0.166152,
     "median_sample_period_s": 1.0,
-    "observed_off_to_on_intervals": 13,
-    "recommended_minimum_recharge_off_time_s": 265.2,
+    "observed_off_to_on_intervals": 89,
+    "recommended_minimum_recharge_off_time_s": 290.0,
     "bank_profiles": [
       {
         "bank": "medium",
-        "sampled_intervals": 59879,
-        "active_interval_count": 11115,
+        "sampled_intervals": 457397,
+        "active_interval_count": 75972,
         "positive_active_ramp_median_pa_s": 10000.0,
         "positive_active_ramp_p95_pa_s": 40000.0,
         "inactive_absolute_ramp_p95_pa_s": 10000.0,
-        "recharge_cycle_count": 1,
-        "cycle_hysteresis_median_pa": 1260000.0
+        "recharge_cycle_count": 10,
+        "cycle_hysteresis_median_pa": 250000.0
       },
       {
         "bank": "high",
-        "sampled_intervals": 59879,
-        "active_interval_count": 11115,
+        "sampled_intervals": 457397,
+        "active_interval_count": 75972,
         "positive_active_ramp_median_pa_s": 30000.0,
-        "positive_active_ramp_p95_pa_s": 70000.0,
-        "inactive_absolute_ramp_p95_pa_s": 20000.0,
-        "recharge_cycle_count": 13,
-        "cycle_hysteresis_median_pa": 4590000.0
+        "positive_active_ramp_p95_pa_s": 80000.0,
+        "inactive_absolute_ramp_p95_pa_s": 10000.0,
+        "recharge_cycle_count": 94,
+        "cycle_hysteresis_median_pa": 4560000.0
       }
     ],
     "quality_warnings": [],
@@ -57,21 +57,27 @@
   "temporal_holdout": {
     "method": "chronological_within_trace_holdout",
     "calibration_fraction": 0.7,
-    "holdout_files": 1,
-    "holdout_sampled_rows": 25663,
-    "holdout_completed_off_to_on_intervals": 7,
-    "holdout_minimum_off_to_on_s": 405.0,
-    "dwell_consistent": true,
+    "holdout_files": 8,
+    "holdout_sampled_rows": 196037,
+    "holdout_completed_off_to_on_intervals": 32,
+    "holdout_minimum_off_to_on_s": 176.0,
+    "dwell_consistent": false,
     "quality_warnings": [],
     "claim_boundary": "Chronological compressor restart-dwell consistency check only; not a station-to-vehicle prediction validation or safety limit."
   },
   "eligibility": {
     "station_recharge_dynamics_calibration_supported": true,
     "runtime_parameter_application": false,
-    "runtime_application_block_reason": "superseded_by_multi_trace_temporal_holdout_failure",
+    "runtime_application_block_reason": "chronological_holdout_does_not_support_fitted_restart_dwell",
     "full_station_vehicle_validation": false,
     "full_loop_holdout_eligible": false,
     "default_model_parameters_changed": false
   },
-  "claim_boundary": "Historical single-trace station-side aggregate retained for audit only. It is superseded by the eight-trace temporal-holdout result and must not be applied at runtime; it does not fit compressor capacity, validate vehicle filling, or establish a safety limit or field-safety distance."
+  "validation_decision": {
+    "status": "FAIL",
+    "prior_single_trace_profile_superseded": true,
+    "runtime_application_locked": true,
+    "reason": "The chronological holdout minimum OFF-to-ON interval is shorter than the fitted restart dwell."
+  },
+  "claim_boundary": "Owner-attested station-side recharge-dynamics aggregate only. The chronological holdout does not support runtime application of the fitted compressor restart dwell; it does not fit compressor capacity, validate vehicle filling, or establish a safety limit or field-safety distance."
 }

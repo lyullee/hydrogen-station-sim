@@ -730,6 +730,86 @@ def audit(root: Path) -> dict[str, object]:
         } if operational_calibration and operational_replay else "missing",
     ))
 
+    recharge_multitrace_path = root / (
+        "research/confidential_station_recharge_dynamics_multitrace_2026_10_08.json"
+    )
+    recharge_multitrace = _json(recharge_multitrace_path)
+    recharge_calibration = (recharge_multitrace or {}).get("calibration") or {}
+    recharge_holdout = (recharge_multitrace or {}).get("temporal_holdout") or {}
+    recharge_eligibility = (recharge_multitrace or {}).get("eligibility") or {}
+    recharge_decision = (recharge_multitrace or {}).get("validation_decision") or {}
+    recharge_multitrace_pass = bool(
+        (recharge_multitrace or {}).get("schema_version") == 1
+        and (recharge_multitrace or {}).get("artifact_type")
+        == "confidential_station_recharge_dynamics_calibration"
+        and (recharge_multitrace or {}).get("source_identifiers_published") is False
+        and (recharge_multitrace or {}).get("raw_rows_persisted") is False
+        and (recharge_multitrace or {}).get("absolute_timestamps_published") is False
+        and (recharge_multitrace or {}).get("source_paths_published") is False
+        and (recharge_multitrace or {}).get("tag_names_published") is False
+        and (recharge_multitrace or {}).get("manufacturer_or_model_published") is False
+        and recharge_calibration.get("files_read") == 8
+        and recharge_calibration.get("sampled_rows") == 457405
+        and recharge_calibration.get("observed_off_to_on_intervals") == 89
+        and recharge_calibration.get("recommended_minimum_recharge_off_time_s")
+        == 290.0
+        and recharge_holdout.get("method") == "chronological_within_trace_holdout"
+        and recharge_holdout.get("holdout_files") == 8
+        and recharge_holdout.get("holdout_sampled_rows") == 196037
+        and recharge_holdout.get("holdout_completed_off_to_on_intervals") == 32
+        and recharge_holdout.get("holdout_minimum_off_to_on_s") == 176.0
+        and recharge_holdout.get("dwell_consistent") is False
+        and recharge_eligibility.get("runtime_parameter_application") is False
+        and recharge_eligibility.get("runtime_application_block_reason")
+        == "chronological_holdout_does_not_support_fitted_restart_dwell"
+        and recharge_eligibility.get("full_station_vehicle_validation") is False
+        and recharge_eligibility.get("full_loop_holdout_eligible") is False
+        and recharge_eligibility.get("default_model_parameters_changed") is False
+        and recharge_decision.get("status") == "FAIL"
+        and recharge_decision.get("prior_single_trace_profile_superseded") is True
+        and recharge_decision.get("runtime_application_locked") is True
+    )
+    gates.append(_gate(
+        "confidential_recharge_multitrace_negative_result_integrity",
+        "PASS" if recharge_multitrace_pass else (
+            "FAIL" if recharge_multitrace else "PENDING"
+        ),
+        "The expanded private station recharge analysis retains its failed temporal holdout and blocks the superseded single-trace dwell from runtime use.",
+        str(recharge_multitrace_path.relative_to(root)),
+        "Eight privacy-bounded traces, a disjoint chronological holdout, the shorter observed restart, an explicit failed decision and a locked runtime parameter.",
+        {
+            "files_read": recharge_calibration.get("files_read"),
+            "sampled_rows": recharge_calibration.get("sampled_rows"),
+            "calibration_completed_off_to_on_intervals": recharge_calibration.get(
+                "observed_off_to_on_intervals"
+            ),
+            "candidate_minimum_recharge_off_time_s": recharge_calibration.get(
+                "recommended_minimum_recharge_off_time_s"
+            ),
+            "holdout_files": recharge_holdout.get("holdout_files"),
+            "holdout_sampled_rows": recharge_holdout.get("holdout_sampled_rows"),
+            "holdout_completed_off_to_on_intervals": recharge_holdout.get(
+                "holdout_completed_off_to_on_intervals"
+            ),
+            "holdout_minimum_off_to_on_s": recharge_holdout.get(
+                "holdout_minimum_off_to_on_s"
+            ),
+            "dwell_consistent": recharge_holdout.get("dwell_consistent"),
+            "runtime_parameter_application": recharge_eligibility.get(
+                "runtime_parameter_application"
+            ),
+            "runtime_application_block_reason": recharge_eligibility.get(
+                "runtime_application_block_reason"
+            ),
+            "prior_single_trace_profile_superseded": recharge_decision.get(
+                "prior_single_trace_profile_superseded"
+            ),
+            "full_station_vehicle_validation": recharge_eligibility.get(
+                "full_station_vehicle_validation"
+            ),
+        } if recharge_multitrace else "missing",
+    ))
+
     operational_recheck_path = root / (
         "research/confidential_operational_profile_recheck_2026_10_06.json"
     )

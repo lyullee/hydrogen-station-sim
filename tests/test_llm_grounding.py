@@ -784,28 +784,35 @@ def test_manifest_separates_opt_in_recharge_dynamics_from_boundary_calibration()
     runtime = manifest["runtime_calibration"]
     assert runtime["status"] == "reference_defaults"
     dynamics = runtime["station_recharge_dynamics"]
-    assert dynamics["status"] == "active"
+    assert dynamics["status"] == "requested_unavailable"
     assert dynamics["requested"] is True
-    assert dynamics["minimum_recharge_off_time_s"] == 265.2
-    assert dynamics["default_model_parameters_changed"] is False
-    assert dynamics["temporal_holdout"]["completed_off_to_on_intervals"] >= 3
 
     evidence = manifest["response_evidence"][
         "confidential_station_recharge_dynamics_calibration"
     ]
-    assert evidence["opt_in_runtime_parameter_available"] is True
+    assert evidence["files_read"] == 8
+    assert evidence["sampled_rows"] == 457405
+    assert evidence["candidate_minimum_recharge_off_time_s"] == 290.0
+    assert evidence["opt_in_runtime_parameter_available"] is False
+    assert evidence["runtime_application_block_reason"] == (
+        "chronological_holdout_does_not_support_fitted_restart_dwell"
+    )
+    assert evidence["prior_single_trace_profile_superseded"] is True
     assert evidence["full_station_vehicle_validation"] is False
-    assert evidence["minimum_recharge_off_time_s"] == 265.2
-    assert evidence["temporal_holdout"]["minimum_off_to_on_s"] >= 265.2
+    assert evidence["temporal_holdout"]["completed_off_to_on_intervals"] == 32
+    assert evidence["temporal_holdout"]["minimum_off_to_on_s"] == 176.0
+    assert evidence["temporal_holdout"]["dwell_consistent"] is False
 
     summary = prompt_evidence_summary(manifest)[
         "confidential_station_recharge_dynamics_calibration"
     ]
+    assert summary["candidate_minimum_recharge_off_time_s"] == 290.0
     assert summary["default_model_parameters_changed"] is False
     header = prompt_evidence_header(manifest)[
         "confidential_station_recharge_dynamics_calibration"
     ]
-    assert header["opt_in_runtime_parameter_available"] is True
+    assert header["opt_in_runtime_parameter_available"] is False
+    assert header["prior_single_trace_profile_superseded"] is True
     assert header["full_station_vehicle_validation"] is False
 
 

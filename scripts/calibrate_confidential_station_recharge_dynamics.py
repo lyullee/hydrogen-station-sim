@@ -107,6 +107,18 @@ def main() -> int:
             _mapping(args.mapping),
             **common,
         )
+    runtime_parameter_application = bool(
+        temporal_holdout is not None and temporal_holdout.dwell_consistent
+    )
+    runtime_application_block_reason = (
+        None
+        if runtime_parameter_application
+        else (
+            "chronological_holdout_does_not_support_fitted_restart_dwell"
+            if temporal_holdout is not None
+            else "chronological_holdout_not_run"
+        )
+    )
     report = {
         "schema_version": 1,
         "artifact_type": "confidential_station_recharge_dynamics_calibration",
@@ -133,18 +145,21 @@ def main() -> int:
                 summary.recommended_minimum_recharge_off_time_s is not None
                 and not summary.quality_warnings
             ),
-            "runtime_parameter_application": bool(
-                temporal_holdout is not None and temporal_holdout.dwell_consistent
-            ),
+            "runtime_parameter_application": runtime_parameter_application,
+            "runtime_application_block_reason": runtime_application_block_reason,
             "full_station_vehicle_validation": False,
             "full_loop_holdout_eligible": False,
             "default_model_parameters_changed": False,
         },
         "claim_boundary": (
-            "Owner-attested station-side recharge-dynamics aggregate only. It may "
-            "support an opt-in compressor restart dwell after review; it does not "
-            "fit compressor capacity, validate vehicle filling, or establish a "
-            "safety limit or field-safety distance."
+            "Owner-attested station-side recharge-dynamics aggregate only. "
+            + (
+                "The chronological holdout supports an opt-in compressor restart dwell; "
+                if runtime_parameter_application
+                else "The chronological holdout does not support runtime application of the fitted compressor restart dwell; "
+            )
+            + "it does not fit compressor capacity, validate vehicle filling, or "
+            "establish a safety limit or field-safety distance."
         ),
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

@@ -2157,35 +2157,88 @@ def _confidential_station_calibration_evidence() -> dict[str, Any] | None:
 
 
 def _confidential_station_recharge_dynamics_evidence() -> dict[str, Any] | None:
-    """Expose the reviewed compressor restart-dwell evidence to the LLM.
+    """Expose the multi-trace result even when runtime use is rejected.
 
-    Unlike the measured pressure-boundary profile, this evidence changes only
-    a minimum compressor OFF interval and only when the operator selected the
-    opt-in setting for a new simulation.  It therefore needs a separate
-    evidence object and claim boundary in the prompt.
+    Evidence availability and parameter eligibility are deliberately separate.
+    A failed holdout is useful negative evidence for the LLM, but it must never
+    be converted into a simulator setting.
     """
 
-    profile = load_station_recharge_dynamics_calibration()
-    if profile is None:
+    artifact = "research/confidential_station_recharge_dynamics_multitrace_2026_10_08.json"
+    path = Path(__file__).resolve().parents[2] / artifact
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+        calibration = record["calibration"]
+        holdout = record["temporal_holdout"]
+        eligibility = record["eligibility"]
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+    privacy_flags = (
+        record.get("source_identifiers_published") is False,
+        record.get("raw_rows_persisted") is False,
+        record.get("absolute_timestamps_published") is False,
+        record.get("source_paths_published") is False,
+        record.get("tag_names_published") is False,
+        record.get("manufacturer_or_model_published") is False,
+    )
+    if (
+        record.get("artifact_type")
+        != "confidential_station_recharge_dynamics_calibration"
+        or not all(privacy_flags)
+        or not isinstance(calibration.get("files_read"), int)
+        or calibration.get("files_read", 0) < 2
+        or not isinstance(calibration.get("sampled_rows"), int)
+        or calibration.get("sampled_rows", 0) < 1
+        or holdout.get("method") != "chronological_within_trace_holdout"
+        or eligibility.get("default_model_parameters_changed") is not False
+        or eligibility.get("full_station_vehicle_validation") is not False
+    ):
         return None
     return {
-        "artifact": profile.evidence_artifact,
-        "evidence_role": "confidential measured station recharge-dynamics calibration",
-        "profile_id": profile.profile_id,
-        "sampled_rows": profile.sampled_rows,
-        "minimum_recharge_off_time_s": profile.minimum_recharge_off_time_s,
+        "artifact": artifact,
+        "evidence_role": "confidential multi-trace station recharge-dynamics holdout",
+        "profile_id": str(
+            record.get("profile_id") or "owner_station_recharge_dynamics_multitrace_v1"
+        ),
+        "files_read": calibration["files_read"],
+        "sampled_rows": calibration["sampled_rows"],
+        "state_transition_count": calibration.get("state_transition_count"),
+        "observed_off_to_on_intervals": calibration.get(
+            "observed_off_to_on_intervals"
+        ),
+        "candidate_minimum_recharge_off_time_s": calibration.get(
+            "recommended_minimum_recharge_off_time_s"
+        ),
         "temporal_holdout": {
             "method": "chronological_within_trace_holdout",
-            "calibration_fraction": profile.calibration_fraction,
-            "completed_off_to_on_intervals": (
-                profile.holdout_completed_off_to_on_intervals
+            "calibration_fraction": holdout.get("calibration_fraction"),
+            "files": holdout.get("holdout_files"),
+            "sampled_rows": holdout.get("holdout_sampled_rows"),
+            "completed_off_to_on_intervals": holdout.get(
+                "holdout_completed_off_to_on_intervals"
             ),
-            "minimum_off_to_on_s": profile.holdout_minimum_off_to_on_s,
+            "minimum_off_to_on_s": holdout.get("holdout_minimum_off_to_on_s"),
+            "dwell_consistent": holdout.get("dwell_consistent") is True,
         },
-        "opt_in_runtime_parameter_available": True,
-        "default_model_parameters_changed": False,
-        "full_station_vehicle_validation": False,
-        "claim_limit": profile.claim_boundary,
+        "opt_in_runtime_parameter_available": (
+            eligibility.get("runtime_parameter_application") is True
+        ),
+        "runtime_application_block_reason": eligibility.get(
+            "runtime_application_block_reason"
+        ),
+        "prior_single_trace_profile_superseded": (
+            (record.get("validation_decision") or {}).get(
+                "prior_single_trace_profile_superseded"
+            )
+            is True
+        ),
+        "default_model_parameters_changed": (
+            eligibility.get("default_model_parameters_changed") is True
+        ),
+        "full_station_vehicle_validation": (
+            eligibility.get("full_station_vehicle_validation") is True
+        ),
+        "claim_limit": str(record.get("claim_boundary") or ""),
     }
 
 
@@ -3726,9 +3779,13 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         summary["confidential_station_recharge_dynamics_calibration"] = {
             key: recharge_dynamics.get(key)
             for key in (
-                "evidence_role", "artifact", "profile_id", "sampled_rows",
-                "minimum_recharge_off_time_s", "temporal_holdout",
+                "evidence_role", "artifact", "profile_id", "files_read",
+                "sampled_rows", "state_transition_count",
+                "observed_off_to_on_intervals",
+                "candidate_minimum_recharge_off_time_s", "temporal_holdout",
                 "opt_in_runtime_parameter_available",
+                "runtime_application_block_reason",
+                "prior_single_trace_profile_superseded",
                 "default_model_parameters_changed",
                 "full_station_vehicle_validation", "claim_limit",
             )
@@ -4605,13 +4662,20 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         "confidential_station_recharge_dynamics_calibration": {
             "profile_id": recharge_dynamics.get("profile_id"),
             "evidence_artifact": recharge_dynamics.get("artifact"),
+            "files_read": recharge_dynamics.get("files_read"),
             "sampled_rows": recharge_dynamics.get("sampled_rows"),
-            "minimum_recharge_off_time_s": recharge_dynamics.get(
-                "minimum_recharge_off_time_s"
+            "candidate_minimum_recharge_off_time_s": recharge_dynamics.get(
+                "candidate_minimum_recharge_off_time_s"
             ),
             "temporal_holdout": recharge_dynamics.get("temporal_holdout") or {},
             "opt_in_runtime_parameter_available": recharge_dynamics.get(
                 "opt_in_runtime_parameter_available"
+            ) is True,
+            "runtime_application_block_reason": recharge_dynamics.get(
+                "runtime_application_block_reason"
+            ),
+            "prior_single_trace_profile_superseded": recharge_dynamics.get(
+                "prior_single_trace_profile_superseded"
             ) is True,
             "default_model_parameters_changed": recharge_dynamics.get(
                 "default_model_parameters_changed"

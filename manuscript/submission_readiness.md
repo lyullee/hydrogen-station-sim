@@ -12,7 +12,7 @@ evidence-readiness decision; it is not a prediction of editorial acceptance.
 
 ## Current decision
 
-Audit snapshot: **2026-10-07 UTC**
+Audit snapshot: **2026-10-08 UTC**
 
 | Decision | Result |
 |---|---|
@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-07 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **86 PASS · 7 FAIL · 8 PENDING**.
+Gate counts: **87 PASS · 7 FAIL · 8 PENDING**.
 
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted
@@ -34,6 +34,14 @@ The fresh de-identified private-data recheck matches the committed
 station-boundary profile across all attested fields. It does not replace the
 profile, change default model parameters, or establish station-to-vehicle
 validation; measured-boundary calibration remains explicitly opt-in.
+
+The recharge restart-dwell analysis was expanded from one trace to eight
+de-identified station-side traces. The first 70% of each trace produced a
+290.0 s candidate, but the untouched final 30% contained 32 completed restart
+cycles with a minimum of 176.0 s. The multi-trace holdout therefore failed.
+The earlier 265.2 s single-trace result is superseded, runtime application is
+locked, and the negative result remains visible to the evidence-grounded LLM.
+This improves model governance but does not close the full-loop validation gate.
 
 The manuscript is therefore kept claim-bounded. The current full-loop negative
 result, component-level evidence and all unresolved gates remain disclosed; no

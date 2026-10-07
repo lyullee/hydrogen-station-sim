@@ -295,6 +295,20 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert drift["mismatch_requires_custodian_review"] is True
     assert operational["cross_station_pressure_plausibility"] is True
     assert operational["cross_station_full_loop_validation"] is False
+    recharge = gates[
+        "confidential_recharge_multitrace_negative_result_integrity"
+    ]
+    assert recharge["status"] == "PASS"
+    recharge_observed = recharge["observed"]
+    assert recharge_observed["files_read"] == 8
+    assert recharge_observed["calibration_completed_off_to_on_intervals"] == 89
+    assert recharge_observed["candidate_minimum_recharge_off_time_s"] == 290.0
+    assert recharge_observed["holdout_completed_off_to_on_intervals"] == 32
+    assert recharge_observed["holdout_minimum_off_to_on_s"] == 176.0
+    assert recharge_observed["dwell_consistent"] is False
+    assert recharge_observed["runtime_parameter_application"] is False
+    assert recharge_observed["prior_single_trace_profile_superseded"] is True
+    assert recharge_observed["full_station_vehicle_validation"] is False
     assert gates["confidential_operational_profile_recheck_integrity"]["status"] == "PASS"
     recheck = gates["confidential_operational_profile_recheck_integrity"]["observed"]
     assert recheck["matches"] is True
