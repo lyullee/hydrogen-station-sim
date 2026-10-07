@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "status": "completed_bounded_full_scale_indoor_surrogate_intake",
+  "generated_at": "2026-10-07T08:01:40.233685+00:00",
+  "source": {
+    "title": "Dataset for H2SAFE - Controlled Gas Releases and Sensor-Response for Indoor Hydrogen Safety",
+    "doi": "10.7799/17118570",
+    "catalog_url": "https://data.nlr.gov/submissions/330",
+    "license_url": "https://data.nlr.gov/node/330/license",
+    "license_summary": "Use/copy is granted with notice retention and DOE/NLR/Alliance credit in resulting publications.",
+    "archive_url": "https://data.nlr.gov/system/files/330/1787856683-Dataset.zip",
+    "archive_sha256": "f1b8bf747b7787f00152ec416940c80a143ea044fc18ee8a69ac9da204d9158e",
+    "archive_bytes": 3766528,
+    "readme_sha256": "e99119f5f9aadac6e0bd8269b3fc7989a6026bc0a4c68221ea2a54b1eeee58bb",
+    "raw_rows_committed": false,
+    "medium": "helium surrogate gas; full-scale indoor laboratory enclosures"
+  },
+  "intake": {
+    "case_count": 5,
+    "lab_sensor_coordinate_counts": {
+      "Lab-1": 24,
+      "Lab-2": 37
+    },
+    "readme_required_sections_present": {
+      "Smaller Lab": true,
+      "Larger Lab": true,
+      "Release Rate": true,
+      "Leak location": true
+    },
+    "case_schema_all_valid": true,
+    "cases": [
+      {
+        "case_id": "Lab1_Small:test1",
+        "published_test_metadata": {
+          "lab": "Lab-1",
+          "expected_sensor_count": 24,
+          "nozzle_diameter_mm": 2.0,
+          "orientation": "vertical",
+          "nozzle_pressure_psi": 40.0,
+          "release_rate_slm": 100.0,
+          "release_duration_s": 1389.0
+        },
+        "coordinate_member": "Lab1_Small/sensors.csv",
+        "coordinate_member_sha256": "8f22691b9eb025ed04c953c76fbaf75f43cb029f62f51bf6de83e65841f7f61f",
+        "coordinate_count": 24,
+        "trace_member": "Lab1_Small/test1.csv",
+        "trace_member_sha256": "00373790ce4816e738264f166ee796dc214b0e96d40d490c25358dbdb7654b4a",
+        "row_count": 2542,
+        "time_start_s": 0.0,
+        "time_end_s": 2541.0,
+        "sample_interval_s": {
+          "min": 1.0,
+          "median": 1.0,
+          "max": 1.0
+        },
+        "sensor_columns": 24,
+        "coordinate_mapped_sensor_columns": 24,
+        "unmapped_sensor_columns": [],
+        "numeric_signal_cell_fraction": 1.0,
+        "concentration_unit_declared_in_csv": false,
+        "release_start_aligned_to_trace_zero_declared": false
+      },
+      {
+        "case_id": "Lab2_Large:test1",
+        "published_test_metadata": {
+          "lab": "Lab-2",
+          "expected_sensor_count": 37,
+          "nozzle_diameter_mm": 0.5,
+          "orientation": "horizontal",
+          "nozzle_pressure_psi": 220.0,
+          "release_rate_slm_range": [
+            92.0,
+            100.0
+          ]
+        },
+        "coordinate_member": "Lab2_Large/sensors.csv",
+        "coordinate_member_sha256": "0fabd631a816284bf97215596848d559a8f170fe650730d5ede06de72ededaa8",
+        "coordinate_count": 37,
+        "trace_member": "Lab2_Large/test1.csv",
+        "trace_member_sha256": "22db00296ad45038b64668825d256efd6107600c14daf67d7dbca79d0a93f394",
+        "row_count": 3993,
+        "time_start_s": 0.0,
+        "time_end_s": 3992.0,
+        "sample_interval_s": {
+          "min": 1.0,
+          "median": 1.0,
+          "max": 1.0
+        },
+        "sensor_columns": 32,
+        "coordinate_mapped_sensor_columns": 32,
+        "unmapped_sensor_columns": [],
+        "numeric_signal_cell_fraction": 0.875,
+        "concentration_unit_declared_in_csv": false,
+        "release_start_aligned_to_trace_zero_declared": false
+      },
+      {
+        "case_id": "Lab2_Large:test2",
+        "published_test_metadata": {
+          "lab": "Lab-2",
+          "expected_sensor_count": 37,
+          "nozzle_diameter_mm": 0.5,
+          "orientation": "vertical",
+          "nozzle_pressure_psi": 220.0,
+          "release_rate_slm_range": [
+            92.0,
+            100.0
+          ]
+        },
+        "coordinate_member": "Lab2_Large/sensors.csv",
+        "coordinate_member_sha256": "0fabd631a816284bf97215596848d559a8f170fe650730d5ede06de72ededaa8",
+        "coordinate_count": 37,
+        "trace_member": "Lab2_Large/test2.csv",
+        "trace_member_sha256": "52995116eb615fab6b9196f16fa40171af9491f42e010d7adb93ac1ff557c108",
+        "row_count": 3113,
+        "time_start_s": 0.0,
+        "time_end_s": 3112.0,
+        "sample_interval_s": {
+          "min": 1.0,
+          "median": 1.0,
+          "max": 1.0
+        },
+        "sensor_columns": 32,
+        "coordinate_mapped_sensor_columns": 32,
+        "unmapped_sensor_columns": [],
+        "numeric_signal_cell_fraction": 1.0,
+        "concentration_unit_declared_in_csv": false,
+        "release_start_aligned_to_trace_zero_declared": false
+      },
+      {
+        "case_id": "Lab2_Large:test3",
+        "published_test_metadata": {
+          "lab": "Lab-2",
+          "expected_sensor_count": 37,
+          "nozzle_diameter_mm": 1.0,
+          "orientation": "vertical",
+          "nozzle_pressure_psi": 45.0,
+          "release_rate_slm": 100.0
+        },
+        "coordinate_member": "Lab2_Large/sensors.csv",
+        "coordinate_member_sha256": "0fabd631a816284bf97215596848d559a8f170fe650730d5ede06de72ededaa8",
+        "coordinate_count": 37,
+        "trace_member": "Lab2_Large/test3.csv",
+        "trace_member_sha256": "13df1b2fdb1549ef7c2f3da999703ef58c4b537fd42d1bbae2aabc817f63eee3",
+        "row_count": 5646,
+        "time_start_s": 0.0,
+        "time_end_s": 5645.0,
+        "sample_interval_s": {
+          "min": 1.0,
+          "median": 1.0,
+          "max": 1.0
+        },
+        "sensor_columns": 32,
+        "coordinate_mapped_sensor_columns": 32,
+        "unmapped_sensor_columns": [],
+        "numeric_signal_cell_fraction": 0.9375,
+        "concentration_unit_declared_in_csv": false,
+        "release_start_aligned_to_trace_zero_declared": false
+      },
+      {
+        "case_id": "Lab2_Large:test4",
+        "published_test_metadata": {
+          "lab": "Lab-2",
+          "expected_sensor_count": 37,
+          "nozzle_diameter_mm": 1.0,
+          "orientation": "vertical",
+          "nozzle_pressure_psi": 430.0,
+          "release_rate_slm_range": [
+            680.0,
+            700.0
+          ]
+        },
+        "coordinate_member": "Lab2_Large/sensors.csv",
+        "coordinate_member_sha256": "0fabd631a816284bf97215596848d559a8f170fe650730d5ede06de72ededaa8",
+        "coordinate_count": 37,
+        "trace_member": "Lab2_Large/test4.csv",
+        "trace_member_sha256": "0ac3fa3e126362a74867508f247907801aa54fcefb416422015881b6c7efe6e5",
+        "row_count": 5758,
+        "time_start_s": 0.0,
+        "time_end_s": 5757.0,
+        "sample_interval_s": {
+          "min": 1.0,
+          "median": 1.0,
+          "max": 1.0
+        },
+        "sensor_columns": 32,
+        "coordinate_mapped_sensor_columns": 32,
+        "unmapped_sensor_columns": [],
+        "numeric_signal_cell_fraction": 0.875,
+        "concentration_unit_declared_in_csv": false,
+        "release_start_aligned_to_trace_zero_declared": false
+      }
+    ]
+  },
+  "eligibility": {
+    "full_scale_indoor_geometry_and_sensor_coordinate_context": true,
+    "release_and_hvac_metadata_available": true,
+    "timestamped_signal_schema_available": true,
+    "numerical_hydrogen_alarm_or_trip_threshold_calibration": false,
+    "reason_threshold_calibration_closed": "The source CSV headers do not declare concentration units, and the available metadata does not explicitly align trace time zero to release onset. Helium surrogate readings must not be treated as hydrogen volume fraction.",
+    "full_loop_station_vehicle_validation": false,
+    "site_specific_detector_placement_validation": false
+  },
+  "runtime_parameter_updated": false,
+  "claim_boundary": "This is reproducible public full-scale indoor helium-surrogate data-intake evidence. It supports only qualitative indoor detector/geometry/HVAC context and regression checks of metadata handling. It does not calibrate virtual detector amplitude, H2 alarm or trip setpoints, release physics, detector placement, ESD effectiveness, outdoor HRS dispersion, consequence distances, or a station-to-vehicle fueling loop."
+}

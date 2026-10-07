@@ -145,6 +145,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     )
     assert ventilation["runtime_statistic_default"] == "upper"
     assert ventilation["wind_mode_upper_envelope_summary"]["co-flow"]["case_count"] == 12
+    h2safe = idle["response_evidence"]["public_h2safe_indoor_surrogate_evidence"]
+    assert h2safe["doi"] == "10.7799/17118570"
+    assert h2safe["case_count"] == 5
+    assert h2safe["lab_sensor_coordinate_counts"] == {"Lab-1": 24, "Lab-2": 37}
+    assert h2safe["numerical_hydrogen_alarm_or_trip_threshold_calibration"] is False
+    assert h2safe["runtime_parameter_updated"] is False
     tank_validation = idle["response_evidence"]["public_tank_validation_boundary"]
     assert tank_validation["evidence_role"] == (
         "independent_tank_thermal_external_validation"
@@ -178,6 +184,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert early["impact_status"] == "not_requested"
     assert early["public_experimental_benchmarks"]["sources"]
     assert early["public_grune_ventilation_evidence"]["factor_count"] == 42
+    assert early["public_h2safe_indoor_surrogate_evidence"]["case_count"] == 5
     assert early["public_dispersion_proxy_evidence"]["method"]["case_count"] == 22
     assert early["public_tank_validation_boundary"]["aggregate"][
         "pressure_rmse_mpa"

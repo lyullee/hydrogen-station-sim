@@ -567,6 +567,58 @@ def _public_grune_ventilation_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_h2safe_indoor_surrogate_evidence() -> dict[str, Any] | None:
+    """Expose bounded full-scale indoor surrogate data to the assistant.
+
+    H2SAFE provides useful full-scale sensor/geometry/HVAC provenance, but the
+    published package does not state a concentration unit in its CSV headers or
+    an unambiguous release-start alignment for the traces. It must therefore be
+    visible as qualitative context, never as a fitted H2 detector threshold or
+    as a site-dispersion result.
+    """
+
+    artifact = "research/h2safe_indoor_release_intake_2026_10_07.json"
+    path = Path(__file__).resolve().parents[2] / artifact
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    intake = record.get("intake") or {}
+    eligibility = record.get("eligibility") or {}
+    cases = [item for item in intake.get("cases") or [] if isinstance(item, dict)]
+    if (
+        record.get("status") != "completed_bounded_full_scale_indoor_surrogate_intake"
+        or source.get("doi") != "10.7799/17118570"
+        or source.get("raw_rows_committed") is not False
+        or intake.get("case_count") != 5
+        or len(cases) != 5
+        or not all(not item.get("unmapped_sensor_columns") for item in cases)
+        or eligibility.get("numerical_hydrogen_alarm_or_trip_threshold_calibration") is not False
+    ):
+        return None
+    return {
+        "artifact": artifact,
+        "doi": str(source.get("doi") or ""),
+        "catalog_url": str(source.get("catalog_url") or ""),
+        "license_summary": str(source.get("license_summary") or ""),
+        "evidence_role": "public full-scale indoor helium-surrogate sensor/geometry/HVAC context",
+        "medium": str(source.get("medium") or ""),
+        "case_count": intake.get("case_count"),
+        "lab_sensor_coordinate_counts": intake.get("lab_sensor_coordinate_counts") or {},
+        "timestamped_signal_schema_available": eligibility.get(
+            "timestamped_signal_schema_available"
+        ) is True,
+        "qualitative_geometry_hvac_context_available": eligibility.get(
+            "full_scale_indoor_geometry_and_sensor_coordinate_context"
+        ) is True and eligibility.get("release_and_hvac_metadata_available") is True,
+        "numerical_hydrogen_alarm_or_trip_threshold_calibration": False,
+        "full_loop_station_vehicle_validation": False,
+        "runtime_parameter_updated": record.get("runtime_parameter_updated") is True,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_measured_boundary_evidence() -> dict[str, Any] | None:
     """Expose only the claim-bounded status of the private-data replay.
 
@@ -1567,6 +1619,13 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             f"https://doi.org/{ventilation_doi}",
             "공개 환기·확산 측정 기반 검지기 proxy 보정",
         )
+    h2safe_indoor = evidence.get("public_h2safe_indoor_surrogate_evidence") or {}
+    add(
+        "PUBLIC_H2SAFE_INDOOR_SURROGATE",
+        "H2SAFE controlled indoor surrogate-release sensor dataset",
+        str(h2safe_indoor.get("catalog_url") or ""),
+        "공개 full-scale 실내 대체가스 검지기·좌표·환기 맥락(수소 임계값 보정 아님)",
+    )
     return links
 
 
@@ -2537,6 +2596,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_grune_ventilation_evidence"
         ] = grune_ventilation
+    h2safe_indoor = _public_h2safe_indoor_surrogate_evidence()
+    if h2safe_indoor is not None:
+        envelope["response_evidence"][
+            "public_h2safe_indoor_surrogate_evidence"
+        ] = h2safe_indoor
     confidential_boundary = _confidential_measured_boundary_evidence()
     if confidential_boundary is not None:
         envelope["response_evidence"]["confidential_measured_boundary_replay"] = confidential_boundary
@@ -2864,6 +2928,21 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "definition", "claim_limit",
             )
             if grune_ventilation.get(key) is not None
+        }
+    h2safe_indoor = evidence.get("public_h2safe_indoor_surrogate_evidence")
+    if isinstance(h2safe_indoor, dict):
+        summary["public_h2safe_indoor_surrogate_evidence"] = {
+            key: h2safe_indoor.get(key)
+            for key in (
+                "doi", "evidence_role", "medium", "case_count",
+                "lab_sensor_coordinate_counts",
+                "timestamped_signal_schema_available",
+                "qualitative_geometry_hvac_context_available",
+                "numerical_hydrogen_alarm_or_trip_threshold_calibration",
+                "full_loop_station_vehicle_validation",
+                "runtime_parameter_updated", "claim_limit",
+            )
+            if h2safe_indoor.get(key) is not None
         }
     local_accident_coverage = evidence.get(
         "confidential_local_accident_response_coverage"
