@@ -5,6 +5,7 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 from time import monotonic, sleep
+import warnings
 
 from h2station.api import ProcessSettings, app
 from h2station.api import (_queue_incident_resolution, _virtual_fault_signature,
@@ -36,9 +37,13 @@ def test_dispenser_isolation_only_stops_its_own_vehicle_and_confirms_flow():
     assert command["status"] == "commanded"
     assert process.safety.snapshot()["valves"]["dispenser.1"]["actual_open"]
     samples = []
-    after = built.simulator.simulate(before.final_state, 1.4, .2,
-                                     start_time_s=.8, reset_runtime=False,
-                                     sample_callback=samples.append)
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        after = built.simulator.simulate(before.final_state, 1.4, .2,
+                                         start_time_s=.8, reset_runtime=False,
+                                         sample_callback=samples.append)
+    assert after.time_s[-1] == pytest.approx(2.2)
+    assert not any("lsoda: Illegal input" in str(item.message) for item in caught)
     assert after.nozzle_1_mass_flow_kg_s[-1] == 0
     assert after.nozzle_2_mass_flow_kg_s[-1] > 0
     isolated_pressures = [sample.virtual_safety["line_pressure_mpa"]["dispenser.1"]

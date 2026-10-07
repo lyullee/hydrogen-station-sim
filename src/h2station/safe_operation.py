@@ -732,7 +732,20 @@ class SafeFullStationSimulator:
 
             if time_s >= end_time_s or (stop_callback is not None and stop_callback()):
                 break
-            end_s = min(end_time_s, time_s + control_period_s)
+            # Clamp a nearly-complete controller period to the requested end
+            # time.  Repeated floating-point additions can otherwise leave a
+            # sub-nanosecond final interval.  LSODA rejects that degenerate
+            # span, then the BDF fallback hides the issue behind a warning.
+            # This is a time-grid correction only; no physical duration is
+            # skipped because the residual is below numerical resolution for
+            # the controller step.
+            remaining_s = end_time_s - time_s
+            time_tolerance_s = max(1.0e-9, control_period_s * 1.0e-9)
+            end_s = (
+                end_time_s
+                if remaining_s <= control_period_s + time_tolerance_s
+                else time_s + control_period_s
+            )
             if process is not None and not process.any_requested() and not active_events and not cooling_events:
                 # Idle monitoring keeps all process inventories exactly unchanged.
                 # The controller scans at wall-clock pace until an operator request.
