@@ -675,6 +675,7 @@ class FullStationModel:
         secondary_partial_station: PartialStationModel | None = None,
         common_header: CascadeBank | None = None,
         bank_header_restriction: RestrictionParameters | None = None,
+        compressor_reverse_restriction: RestrictionParameters | None = None,
         supervisor: CascadeSupervisor | None = None,
         valve_sequencer: CascadeValveSequencer | None = None,
         ambient_temperature_k: float = 298.15,
@@ -697,6 +698,17 @@ class FullStationModel:
                 )
             )
             if common_header is not None else None
+        )
+        # A failed non-return valve can expose the stopped compressor train to
+        # a charged cascade bank.  The equivalent area is deliberately kept
+        # separate from normal compressor capacity: it is a fault-path input,
+        # not a fitted compressor performance coefficient.
+        self.compressor_reverse_restriction = IsentropicRealGasRestriction(
+            compressor_reverse_restriction
+            or RestrictionParameters(
+                flow_area_m2=1.0e-7,
+                discharge_coefficient=0.8,
+            )
         )
         self.supervisor = supervisor or CascadeSupervisor()
         self.valve_sequencer = valve_sequencer or CascadeValveSequencer()
@@ -752,6 +764,76 @@ class FullStationModel:
             for gas, opening in zip(bank_gases, openings)
         )
 
+    def compressor_path_result(
+        self,
+        time_s: float,
+        state: FullStationState,
+        recharge_index: int | None,
+        *,
+        allow_reverse_flow: bool = False,
+        flow_multiplier: float = 1.0,
+    ) -> tuple[CompressorResult, int | None]:
+        """Return signed flow through the common unloading/compressor path.
+
+        Positive flow is the normal trailer-to-bank compressor transfer.
+        Negative flow is bank-to-trailer backflow through a declared failed
+        non-return-valve equivalent area.  The latter is available only while
+        the compressor is stopped and an explicit fault enables it.
+        """
+
+        bank_gases = tuple(
+            bank.gas_state(bank_state)
+            for bank, bank_state in zip(self.banks, state.banks)
+        )
+        suction = self.compressor_suction(time_s)
+        result = self.compressor.evaluate(
+            suction,
+            (
+                bank_gases[recharge_index].pressure_pa
+                + self.compressor.parameters.discharge_pressure_margin_pa
+                if recharge_index is not None
+                else suction.pressure_pa
+            ),
+            enabled=recharge_index is not None,
+        )
+        if result.mass_flow_kg_s > 0.0:
+            if flow_multiplier != 1.0:
+                result = replace(
+                    result,
+                    mass_flow_kg_s=result.mass_flow_kg_s * flow_multiplier,
+                    electrical_power_w=result.electrical_power_w * flow_multiplier,
+                )
+            return result, None
+        if not allow_reverse_flow:
+            return result, None
+
+        source_index = int(np.argmax([gas.pressure_pa for gas in bank_gases]))
+        source = bank_gases[source_index]
+        signed_flow = self.compressor_reverse_restriction.mass_flow_kg_s(
+            suction.pressure_pa,
+            suction.temperature_k,
+            source.pressure_pa,
+            1.0,
+            max(0.0, flow_multiplier),
+            True,
+            source.temperature_k,
+        )
+        signed_flow = max(
+            -self.compressor.parameters.maximum_mass_flow_kg_s,
+            min(0.0, signed_flow),
+        )
+        if signed_flow >= 0.0:
+            return result, None
+        return (
+            CompressorResult(
+                mass_flow_kg_s=signed_flow,
+                outlet_enthalpy_j_kg=source.specific_enthalpy_j_kg,
+                outlet_temperature_k=source.temperature_k,
+                electrical_power_w=0.0,
+            ),
+            source_index,
+        )
+
     def derivative(
         self,
         time_s: float,
@@ -771,6 +853,7 @@ class FullStationModel:
         primary_allow_reverse_flow: bool = False,
         secondary_allow_reverse_flow: bool = False,
         header_allow_reverse_flow: bool = False,
+        compressor_allow_reverse_flow: bool = False,
         compressor_flow_multiplier: float = 1.0,
     ) -> tuple[FullStationState, CompressorResult, float]:
         bank_gases = tuple(
@@ -857,22 +940,13 @@ class FullStationModel:
                 secondary_allow_reverse_flow,
             )
 
-        compressor_result = self.compressor.evaluate(
-            self.compressor_suction(time_s),
-            (
-                bank_gases[recharge_index].pressure_pa
-                + self.compressor.parameters.discharge_pressure_margin_pa
-                if recharge_index is not None
-                else self.compressor_suction(time_s).pressure_pa
-            ),
-            enabled=recharge_index is not None,
+        compressor_result, compressor_reverse_index = self.compressor_path_result(
+            time_s,
+            state,
+            recharge_index,
+            allow_reverse_flow=compressor_allow_reverse_flow,
+            flow_multiplier=compressor_flow_multiplier,
         )
-        if compressor_flow_multiplier != 1.0:
-            compressor_result = replace(
-                compressor_result,
-                mass_flow_kg_s=compressor_result.mass_flow_kg_s * compressor_flow_multiplier,
-                electrical_power_w=compressor_result.electrical_power_w * compressor_flow_multiplier,
-            )
         header_rate: CascadeBankState | None = None
         header_flows = self.header_bank_mass_flows(
             state,
@@ -933,8 +1007,11 @@ class FullStationModel:
                 direct_outflow = max(header_flows[index], 0.0)
                 reverse_header_inflow = max(-header_flows[index], 0.0)
             compressor_inflow = (
-                compressor_result.mass_flow_kg_s if index == recharge_index else 0.0
+                max(compressor_result.mass_flow_kg_s, 0.0)
+                if index == recharge_index else 0.0
             )
+            if index == compressor_reverse_index:
+                direct_outflow += max(-compressor_result.mass_flow_kg_s, 0.0)
             total_inflow = compressor_inflow + reverse_header_inflow
             inlet_energy = (
                 compressor_inflow * compressor_result.outlet_enthalpy_j_kg

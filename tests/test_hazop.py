@@ -48,10 +48,10 @@ def test_packaged_catalog_keys_and_numeric_values():
     assert m["mapped_sensors"]==91
     assert not any(s["mapping_status"]=="UNAVAILABLE" for s in m["sensors"])
     assert m["physical_sensor_connections"]==0
-    assert 0 < m["simulation_ready_rules"] < 214
+    assert m["simulation_ready_rules"] == 214
 
 
-def test_bank_header_and_dispenser_reverse_flow_rules_are_ready_but_other_paths_are_not():
+def test_all_declared_reverse_flow_rules_have_explicit_simulation_paths():
     mapped = {row["rule_id"]: row for row in coverage(load_catalog())["rules"]}
     assert mapped["HZ-050"]["simulation_ready"] is True
     assert mapped["HZ-059"]["simulation_ready"] is True
@@ -64,8 +64,94 @@ def test_bank_header_and_dispenser_reverse_flow_rules_are_ready_but_other_paths_
     assert mapped["HZ-074"]["missing_signals"] == []
     assert mapped["HZ-091"]["model_limits"] == []
     assert mapped["HZ-119"]["model_limits"] == []
-    assert mapped["HZ-009"]["simulation_ready"] is False
-    assert "one-way restriction model cannot generate reverse flow" in mapped["HZ-009"]["model_limits"]
+    for rule_id in (
+        "HZ-009", "HZ-016", "HZ-023", "HZ-031", "HZ-039", "HZ-140",
+    ):
+        assert mapped[rule_id]["simulation_ready"] is True
+        assert mapped[rule_id]["model_limits"] == []
+
+
+def test_stopped_compressor_check_valve_failure_backflows_to_finite_trailer():
+    fault = FaultEvent(
+        "compressor-reverse", FaultKind.CHECK_VALVE_FAILURE,
+        "compressor.discharge", 0.0, end_time_s=8.0,
+    )
+    built = build_reference_scenario(
+        ReferenceScenario(duration_s=7.0, control_period_s=.2, fault_events=(fault,)),
+        UnavailableHyRAMBackend(),
+    )
+    process = ProcessRuntime(ProcessSettings().model_dump())
+    built.simulator.process_runtime = process
+    built.station.compressor_suction = lambda _time: process.trailer_state()
+    monitor = HazopMonitor()
+    built.simulator.hazop_monitor = monitor
+    initial_bank_mass = sum(bank.hydrogen_mass_kg for bank in built.initial_state.banks)
+    initial_total_mass = initial_bank_mass + process.trailer_mass_kg
+
+    trajectory = built.simulator.simulate(
+        built.initial_state, 7.0, .2, pace_idle=False,
+    )
+
+    final_bank_mass = sum(bank.hydrogen_mass_kg for bank in trajectory.final_state.banks)
+    final_total_mass = final_bank_mass + process.trailer_mass_kg
+    for tag in ("FT-0201", "FT-0301", "FT-0401", "FT-0501", "FT-0601"):
+        assert monitor.latest["signals"][tag]["value"] <= -1.0
+        assert monitor.latest["signals"][tag]["origin"] == "SIMULATED_COMPRESSOR_PATH"
+    active = {item["rule_id"] for item in monitor.latest["active"]}
+    assert {"HZ-009", "HZ-016", "HZ-023", "HZ-031", "HZ-039"} <= active
+    assert process.trailer_reverse_received_kg > 0.0
+    assert initial_bank_mass - final_bank_mass == pytest.approx(
+        process.trailer_reverse_received_kg, rel=2e-5, abs=1e-8,
+    )
+    assert final_total_mass == pytest.approx(initial_total_mass, abs=1e-8)
+
+
+def test_confirmed_compressor_isolation_stops_fault_backflow():
+    fault = FaultEvent(
+        "compressor-reverse", FaultKind.CHECK_VALVE_FAILURE,
+        "compressor.discharge", 0.0, end_time_s=4.0,
+    )
+    built = build_reference_scenario(
+        ReferenceScenario(duration_s=1.0, control_period_s=.2, fault_events=(fault,)),
+        UnavailableHyRAMBackend(),
+    )
+    process = ProcessRuntime(ProcessSettings().model_dump())
+    built.simulator.process_runtime = process
+    built.station.compressor_suction = lambda _time: process.trailer_state()
+    process.safety.issue("valve.close", "compressor.discharge", 0.0, process=process)
+    process.safety.tick(.8)
+    monitor = HazopMonitor()
+    built.simulator.hazop_monitor = monitor
+    initial_bank_mass = sum(bank.hydrogen_mass_kg for bank in built.initial_state.banks)
+
+    trajectory = built.simulator.simulate(
+        built.initial_state, 1.0, .2, start_time_s=.8, pace_idle=False,
+    )
+
+    final_bank_mass = sum(bank.hydrogen_mass_kg for bank in trajectory.final_state.banks)
+    assert monitor.latest["signals"]["FT-0601"]["value"] == pytest.approx(0.0)
+    assert final_bank_mass == pytest.approx(initial_bank_mass, abs=1e-9)
+    assert process.trailer_reverse_received_kg == pytest.approx(0.0)
+
+
+def test_vent_check_valve_failure_reports_ambient_boundary_backflow():
+    fault = FaultEvent(
+        "vent-reverse", FaultKind.CHECK_VALVE_FAILURE,
+        "vent.header", 0.0, end_time_s=4.0, magnitude=0.0003,
+    )
+    built = build_reference_scenario(
+        ReferenceScenario(duration_s=3.2, control_period_s=.2, fault_events=(fault,)),
+        UnavailableHyRAMBackend(),
+    )
+    monitor = HazopMonitor()
+    built.simulator.hazop_monitor = monitor
+
+    built.simulator.simulate(built.initial_state, 3.2, .2, pace_idle=False)
+
+    signal = monitor.latest["signals"]["FT-2001"]
+    assert signal["value"] == pytest.approx(-0.3)
+    assert signal["origin"] == "SIMULATED_VENT_BOUNDARY_BACKFLOW"
+    assert any(item["rule_id"] == "HZ-140" for item in monitor.latest["active"])
 
 
 def test_pcv_isolation_failure_rules_have_command_and_stability_modes():

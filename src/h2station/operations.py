@@ -38,6 +38,7 @@ class ProcessRuntime:
         self._trailer_pressure_pa = float(settings["trailer_pressure_mpa"]) * 1e6
         self.trailer_transferred_kg = 0.0
         self.recharge_transferred_kg = 0.0
+        self.trailer_reverse_received_kg = 0.0
         self.relief_open = {key: False for key in RELIEF_TARGETS}
         self.safety = VirtualSafetyRuntime()
         self.revision = 0
@@ -95,24 +96,27 @@ class ProcessRuntime:
 
     def account_compressor(self, mass_flow_kg_s: float, duration_s: float) -> None:
         with self._lock:
-            amount = max(0.0, mass_flow_kg_s * duration_s)
-            amount = min(amount, max(self.trailer_mass_kg - 0.1, 0.0))
-            self.trailer_mass_kg -= amount
-            if amount:
-                # Invert the supported P,T density table for this fixed-volume,
-                # isothermal source. Recompute only at controller samples.
+            signed_amount = float(mass_flow_kg_s) * float(duration_s)
+            if signed_amount > 0.0:
+                signed_amount = min(
+                    signed_amount, max(self.trailer_mass_kg - 0.1, 0.0)
+                )
+            self.trailer_mass_kg -= signed_amount
+            if signed_amount:
+                # The finite trailer is the other side of the compressor path.
+                # A negative signed transfer therefore raises its inventory.
                 density = self.trailer_mass_kg / self.trailer_volume_m3
-                lower, upper = 1e5, float(self.settings["trailer_pressure_mpa"]) * 1e6
-                for _ in range(25):
-                    middle = (lower + upper) / 2
-                    middle_density = PropsSI("Dmass", "P", middle, "T", self.trailer_temperature_k, "Hydrogen")
-                    if middle_density < density:
-                        lower = middle
-                    else:
-                        upper = middle
-                self._trailer_pressure_pa = (lower + upper) / 2
-            self.trailer_transferred_kg += amount
-            self.recharge_transferred_kg += amount
+                self._trailer_pressure_pa = float(
+                    PropsSI(
+                        "P", "Dmass", density, "T", self.trailer_temperature_k,
+                        "Hydrogen",
+                    )
+                )
+            forward_amount = max(signed_amount, 0.0)
+            reverse_amount = max(-signed_amount, 0.0)
+            self.trailer_transferred_kg += forward_amount
+            self.recharge_transferred_kg += forward_amount
+            self.trailer_reverse_received_kg += reverse_amount
             if self.trailer_mass_kg <= 0.1 or self._trailer_pressure_pa < 2e6:
                 self.stop("trailer_supply", "source-depleted")
                 self.stop("pressure_recharge", "source-depleted")
@@ -165,6 +169,7 @@ class ProcessRuntime:
                 "trailer_pressure_mpa": self.trailer_state().pressure_pa / 1e6,
                 "trailer_transferred_kg": self.trailer_transferred_kg,
                 "recharge_transferred_kg": self.recharge_transferred_kg,
+                "trailer_reverse_received_kg": self.trailer_reverse_received_kg,
                 "relief_open": dict(self.relief_open),
                 "revision": self.revision,
                 "stop_reason": dict(self.stop_reason),

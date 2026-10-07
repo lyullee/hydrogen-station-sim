@@ -101,6 +101,10 @@ class ReferenceScenario:
     # station data; frozen station-side validation must evaluate them unchanged.
     header_internal_volume_m3: float = 0.015
     bank_header_flow_area_m2: float = 6.0e-6
+    # Declared equivalent failed-seat area for the stopped compressor train.
+    # It is used only after an explicit check-valve-failure injection and has
+    # not been calibrated against an external reverse-flow experiment.
+    compressor_reverse_flow_area_m2: float = 1.0e-7
     initial_bank_fill_percent: tuple[float, float, float] = DEFAULT_BANK_INITIAL_FILL_PERCENT
     fault_events: tuple[FaultEvent, ...] = ()
     # Optional time-dependent boundary traces used by partial-station validation.
@@ -399,6 +403,9 @@ def build_reference_scenario(
         common_header=common_header,
         bank_header_restriction=RestrictionParameters(
             flow_area_m2=config.bank_header_flow_area_m2,
+        ),
+        compressor_reverse_restriction=RestrictionParameters(
+            flow_area_m2=config.compressor_reverse_flow_area_m2,
         ),
         supervisor=CascadeSupervisor(
             CascadeSupervisorParameters(

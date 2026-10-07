@@ -461,11 +461,41 @@ class SafeFullStationSimulator:
                     time_s=time_s,
                 )
             )
+            compressor_allow_reverse_flow = any(
+                self._allow_reverse_flow(override, prefix)
+                for prefix in ("compressor", "unloading", "trailer")
+            )
+            compressor_path_index = (
+                recharge_index
+                if recharge_index is not None
+                else int(np.argmax([gas.pressure_pa for gas in bank_gases]))
+            )
             compressor_flow_multiplier = (
-                min((virtual_safety.opening(name) for name in
-                     ("trailer.source", "trailer.station", "compressor.suction", "compressor.discharge",
-                      f"bank.{self.station.banks[recharge_index].parameters.name}.inlet")), default=1.0)
-                if virtual_safety is not None and recharge_index is not None else 1.0
+                min(
+                    (
+                        virtual_safety.opening(name)
+                        for name in (
+                            "trailer.source",
+                            "trailer.station",
+                            "compressor.suction",
+                            "compressor.discharge",
+                            f"bank.{self.station.banks[compressor_path_index].parameters.name}.inlet",
+                        )
+                    ),
+                    default=1.0,
+                )
+                if virtual_safety is not None
+                and (recharge_index is not None or compressor_allow_reverse_flow)
+                else 1.0
+            )
+            compressor_path_result, _compressor_reverse_index = (
+                self.station.compressor_path_result(
+                    time_s,
+                    current,
+                    recharge_index,
+                    allow_reverse_flow=compressor_allow_reverse_flow,
+                    flow_multiplier=compressor_flow_multiplier,
+                )
             )
             supply_index = dispatch_index if dispatch_index is not None else int(
                 np.argmax([gas.pressure_pa for gas in bank_gases])
@@ -635,6 +665,7 @@ class SafeFullStationSimulator:
                     fault_events=active_events,
                     active_leaks=active_leaks, risk_snapshots=risk_snapshots,
                     compressor_flow_multiplier=compressor_flow_multiplier,
+                    compressor_path_flow_kg_s=compressor_path_result.mass_flow_kg_s,
                     detector_multiplier=(virtual_safety.detector_multiplier if virtual_safety is not None else None),
                     process_snapshot=process_snapshot,
                     virtual_safety_snapshot=virtual_safety_snapshot,
@@ -832,6 +863,7 @@ class SafeFullStationSimulator:
                     primary_allow_reverse_flow=self._allow_reverse_flow(override, "dispenser"),
                     secondary_allow_reverse_flow=self._allow_reverse_flow(override, "dispenser_2"),
                     header_allow_reverse_flow=self._allow_reverse_flow(override, "header"),
+                    compressor_allow_reverse_flow=compressor_allow_reverse_flow,
                     compressor_flow_multiplier=compressor_flow_multiplier,
                 )
                 rates = self._apply_fault_effects(
@@ -949,7 +981,12 @@ class SafeFullStationSimulator:
 
     @staticmethod
     def _allow_reverse_flow(override: OperationalOverride, prefix: str) -> bool:
-        return prefix in override.check_valve_failures or f"{prefix}.hose" in override.check_valve_failures or "check-valve" in override.check_valve_failures
+        return any(
+            target == "check-valve"
+            or target == prefix
+            or target.startswith(f"{prefix}.")
+            for target in override.check_valve_failures
+        )
 
     def _apply_fault_effects(
         self,

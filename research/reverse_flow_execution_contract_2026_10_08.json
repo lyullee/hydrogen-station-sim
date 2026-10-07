@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "created_utc": "2026-10-08T00:00:00Z",
+  "purpose": "Freeze the executable reverse-flow topology and its claim boundary before any external calibration.",
+  "implementation": {
+    "compressor_train": {
+      "activation": "explicit check-valve-failure at compressor.*, unloading.*, trailer.*, or global check-valve",
+      "normal_state": "reverse flow disabled",
+      "source": "highest-pressure cascade bank while the compressor is stopped",
+      "sink": "finite isothermal trailer inventory",
+      "equivalent_failed_seat_area_m2": 1e-07,
+      "maximum_absolute_flow_kg_s": 0.035,
+      "sensor_mapping": [
+        "FT-0201",
+        "FT-0301",
+        "FT-0401",
+        "FT-0501",
+        "FT-0601"
+      ],
+      "model_boundary": "one quasi-steady signed path; no independent intermediate stage line-pack"
+    },
+    "vent_boundary": {
+      "activation": "explicit check-valve-failure at vent* or global check-valve",
+      "normal_state": "zero reverse boundary flow",
+      "sign_convention": "release positive; ambient total-gas ingress negative",
+      "default_fault_flow_kg_s": 0.0002,
+      "sensor_mapping": ["FT-2001"],
+      "hydrogen_inventory_effect": "none for ambient ingress"
+    }
+  },
+  "hazop_coverage": {
+    "before": 208,
+    "after": 214,
+    "total": 214,
+    "newly_executable_rules": [
+      "HZ-009",
+      "HZ-016",
+      "HZ-023",
+      "HZ-031",
+      "HZ-039",
+      "HZ-140"
+    ]
+  },
+  "verification": {
+    "checks": [
+      "negative compressor-path sensor flow",
+      "bank mass loss equals trailer mass gain",
+      "total modeled hydrogen mass conservation",
+      "target HAZOP rule activation after persistence",
+      "vent ambient ingress does not create hydrogen inventory"
+    ],
+    "test_file": "tests/test_hazop.py"
+  },
+  "claim_boundary": {
+    "status": "PROSPECTIVE_NOT_EXTERNALLY_VALIDATED",
+    "allowed": "The reverse-flow scenarios are executable and software-level conservation and alarm routing are tested.",
+    "prohibited": "Do not claim that the equivalent fault areas, reverse-flow magnitudes, compressor valve leakage, vent geometry, or field protection performance are externally validated."
+  }
+}

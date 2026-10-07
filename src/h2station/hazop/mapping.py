@@ -61,14 +61,17 @@ MODEL_BINDINGS.update({
     "PT-0001": ("ASSUMED_BOUNDARY", "ambient atmospheric pressure, 0.101325 MPa absolute"),
     "PT-2001": ("VENT_PROXY", "vent release source pressure when injected; ambient otherwise"),
     "TT-2001": ("VENT_PROXY", "vent release source temperature when injected; ambient otherwise"),
-    "FT-2001": ("VENT_PROXY", "vent release mass flow when injected; zero otherwise; no PSV model"),
+    "FT-2001": ("VENT_BOUNDARY_FLOW", "signed vent boundary flow: release positive, explicit failed-check-valve ambient ingress negative"),
 })
 HELPERS = {"MASS_HOSE_1", "MASS_HOSE_2", "MASS_HEADER"}
-# The bank-header selector paths and two dispenser-nozzle restrictions have an
-# explicit reverse-flow path enabled only by a simulated check-valve failure.
-# Other flow channels remain one-way or derived shared signals.
+# The bank-header selectors, stopped compressor train, and two dispenser
+# restrictions have explicit reverse-flow paths enabled only by a simulated
+# check-valve failure. The six compressor tags share one quasi-steady train;
+# intermediate line-pack is outside the current model boundary.
 REVERSE_FLOW_CAPABLE_SIGNALS = {
+    "FT-0101", "FT-0201", "FT-0301", "FT-0401", "FT-0501", "FT-0601",
     "FT-0701", "FT-0801", "FT-0901", "FT-1001", "FT-1301", "FT-1701",
+    "FT-2001",
 }
 MODE_KEYS = {
     "station.monitoring", "station.filling_count", "station.switch_elapsed_s",
@@ -132,7 +135,8 @@ class ModelMapper:
 
     def sample(self, t, *, station, state, commands, instantaneous, dispatch_indices,
                dispatch_openings, recharge_index, safety, fault_events=(), active_leaks=(), risk_snapshots=(),
-               compressor_flow_multiplier=1.0, process_snapshot=None,
+               compressor_flow_multiplier=1.0, compressor_path_flow_kg_s=None,
+               process_snapshot=None,
                virtual_safety_snapshot=None):
         signals, modes = {}, {"station.monitoring": True, "station.esd": safety.esd_latched,
                               "station.scenario_active": bool(fault_events or active_leaks)}
@@ -163,8 +167,23 @@ class ModelMapper:
             event.event_id.startswith("vent-")
             for event, _leak, _source, _location in active_leaks
         )
+        vent_reverse_fault = next(
+            (
+                event for event in fault_events
+                if getattr(getattr(event, "kind", None), "value", None)
+                == "check-valve-failure"
+                and (event.target == "check-valve" or event.target.startswith("vent"))
+            ),
+            None,
+        )
+        # FT-2001 is a bidirectional total-gas boundary meter. Negative flow is
+        # ambient ingress, so it does not add hydrogen to process inventory.
+        vent_reverse_flow_kg_s = (
+            max(float(vent_reverse_fault.magnitude), 2.0e-4)
+            if vent_reverse_fault is not None else 0.0
+        )
         relief_active = bool(active_relief_targets)
-        vent_path_active = vent_commanded or relief_active
+        vent_path_active = vent_commanded or relief_active or vent_reverse_fault is not None
         vent_path_elapsed_s = self.elapsed("vent-path-active", vent_path_active, t)
         modes.update({
             "vent.commanded": vent_commanded,
@@ -284,20 +303,28 @@ class ModelMapper:
                      if recharge_index is not None else supply.pressure_pa)
         compressor = station.compressor.evaluate(supply, discharge, enabled=recharge_index is not None,
                                                  include_stage_outlets=True)
-        compressor_flow_kg_s = max(
-            0.0, compressor.mass_flow_kg_s * compressor_flow_multiplier
+        compressor_flow_kg_s = (
+            compressor.mass_flow_kg_s * compressor_flow_multiplier
+            if compressor_path_flow_kg_s is None
+            else float(compressor_path_flow_kg_s)
         )
         compressor_running = compressor_flow_kg_s > 1.0e-9
         compressor_elapsed_s = self.elapsed("compressor-running", compressor_running, t)
+        unloading_active = abs(compressor_flow_kg_s) > 1.0e-9
+        unloading_elapsed_s = self.elapsed("unloading-path-active", unloading_active, t)
         modes.update({
             "compressor.running": compressor_running,
             "compressor.elapsed_s": compressor_elapsed_s if compressor_running else 0.0,
             "compressor.stop_elapsed_s": 0.0 if compressor_running else compressor_elapsed_s,
-            "unloading.active": compressor_running,
-            "unloading.elapsed_s": compressor_elapsed_s if compressor_running else 0.0,
+            "unloading.active": unloading_active,
+            "unloading.elapsed_s": unloading_elapsed_s if unloading_active else 0.0,
         })
         for n in ("01", "02", "03", "04", "05", "06"):
-            put(f"FT-{n}01", compressor.mass_flow_kg_s*compressor_flow_multiplier*1000)
+            put(
+                f"FT-{n}01",
+                compressor_flow_kg_s * 1000,
+                origin="SIMULATED_COMPRESSOR_PATH",
+            )
         for stage, node in ((0,"04"), (1,"05")):
             pressure, temperature = (compressor.stage_outlets[stage] if len(compressor.stage_outlets)>stage
                                      else (supply.pressure_pa, supply.temperature_k))
@@ -341,7 +368,17 @@ class ModelMapper:
                      for snap in risk_snapshots if event.target.startswith("vent") and snap.release_id==leak.release_id), None)
         put("PT-2001", vent[0].pressure_pa/1e6 if vent else 0.101325)
         put("TT-2001", vent[0].temperature_k-273.15 if vent else station.ambient_temperature_k-273.15)
-        put("FT-2001", vent[1].mass_flow_kg_s*1000 if vent else 0.0)
+        vent_flow_kg_s = (
+            (vent[1].mass_flow_kg_s if vent else 0.0) - vent_reverse_flow_kg_s
+        )
+        put(
+            "FT-2001",
+            vent_flow_kg_s * 1000,
+            origin=(
+                "SIMULATED_VENT_BOUNDARY_BACKFLOW"
+                if vent_reverse_flow_kg_s > 0.0 else None
+            ),
+        )
         # Only explicit DB-tag faults affect these channels. Legacy aggregate PLC faults cannot
         # be attributed to one physical sensor, so remain separate and are reported in the frame.
         for event in fault_events:

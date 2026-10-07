@@ -106,6 +106,21 @@ Intermediate stages return to a configured intercooler outlet temperature. Total
 electrical power includes mechanical and motor efficiencies. Flow, isentropic
 efficiency, and power multipliers are isolated for later manufacturer-map fitting.
 
+The stopped train also has a separate, signed fault path. An explicit
+`check-valve-failure` on `compressor.*`, `unloading.*`, or `trailer.*` exposes the
+highest-pressure connected bank to the finite trailer inventory through a declared
+1.0e-7 m² equivalent failed-seat area. The bank loses exactly the mass received by
+the trailer; `FT-0201` through `FT-0601` report the same negative quasi-steady train
+flow. This makes `HZ-009`, `HZ-016`, `HZ-023`, `HZ-031`, and `HZ-039` executable.
+Intermediate compressor line-pack is not modeled, so those six meters are not
+independent validation channels. The area is prospective and uncalibrated; it is
+not a manufacturer leakage specification.
+
+`FT-2001` is treated as a signed total-gas vent-boundary meter. A vent check-valve
+fault produces negative ambient ingress, while a release is positive. Ambient
+ingress does not add hydrogen inventory. This makes `HZ-140` executable but does
+not validate vent geometry or contaminant transport.
+
 Recent dynamic HRS literature likewise uses equal stage pressure ratios,
 intercooling near ambient, volumetric displacement, and summed stage work:
 https://doi.org/10.1016/j.ijhydene.2026.153374
@@ -135,6 +150,9 @@ https://www.hydrogen.energy.gov/program-areas/systems-analysis/h2a-analysis/h2a-
 
 - Compressor cylinder pulsation, clearance-volume dynamics, leakage, valve motion,
   and manufacturer maps are not yet modeled.
+- Compressor and vent reverse-flow fault areas are declared scenario values. The
+  conservation and rule-routing implementation is tested, but no external
+  reverse-flow experiment has calibrated their magnitude.
 - Intercoolers are currently quasi-steady temperature boundaries; their thermal
   capacitance will be added when measured cooldown data are available.
 - Bank selector commands update at control boundaries; actuator travel and
