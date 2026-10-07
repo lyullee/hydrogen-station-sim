@@ -3569,6 +3569,9 @@ def audit(root: Path) -> dict[str, object]:
     grounding_tank_diagnostic = (
         (grounding or {}).get("methytrucks_tank_diagnostic_boundary") or {}
     )
+    grounding_release_validation = (
+        (grounding or {}).get("cross_campaign_release_validation_boundary") or {}
+    )
     grounding_pass = bool(
         (grounding or {}).get("status") == "software_contract_verified"
         and ((grounding or {}).get("tests") or {}).get("full_suite", {}).get("failed") == 0
@@ -3586,13 +3589,30 @@ def audit(root: Path) -> dict[str, object]:
         and grounding_tank_diagnostic.get("prospective_holdout_eligible") is False
         and grounding_tank_diagnostic.get("full_loop_validation_eligible") is False
         and grounding_tank_diagnostic.get("claim_supported") is False
+        and any(
+            "cross-campaign release validation" in str(item)
+            for item in (grounding or {}).get("verified_properties", [])
+        )
+        and grounding_release_validation.get("eligible_campaign_count") == 3
+        and grounding_release_validation.get("supported_campaign_count") == 1
+        and grounding_release_validation.get("failed_campaign_count") == 2
+        and grounding_release_validation.get("ineligible_campaign_count") == 1
+        and grounding_release_validation.get(
+            "universal_release_validation_supported"
+        ) is False
+        and grounding_release_validation.get(
+            "apparatus_resolved_holdout_received"
+        ) is False
+        and grounding_release_validation.get(
+            "runtime_model_changed_after_outcomes"
+        ) is False
     )
     gates.append(_gate(
         "llm_evidence_grounding_contract",
         "PASS" if grounding_pass else "PENDING",
         "Main and selected-sensor assistants receive traceable evidence with explicit calculation and uncertainty status.",
         str(grounding_path.relative_to(root)),
-        "Manifest schema, normal/emergency distinction, contradiction guard, bounded MetHyTrucks tank diagnostic and full regression suite.",
+        "Manifest schema, normal/emergency distinction, contradiction guard, bounded tank evidence, mixed release-campaign outcomes and full regression suite.",
         grounding or "missing",
     ))
 

@@ -1569,6 +1569,156 @@ def _release_model_validation_boundary() -> dict[str, Any] | None:
     }
 
 
+def _cross_campaign_release_validation_evidence() -> dict[str, Any] | None:
+    """Expose mixed public release-validation outcomes without averaging them away.
+
+    A single passing transient cannot erase failures from other apparatus and
+    endpoints. This projection preserves each campaign's pass, fail and
+    eligibility state and keeps the apparatus-resolved protocol unexecuted.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    filenames = {
+        "ekoto_2012": "research/ekoto_2012_holdout_result.json",
+        "schefer_2006": "research/schefer_2006_holdout_result.json",
+        "schefer_2007": "research/schefer_2007_holdout_result.json",
+        "grune_2014": "research/grune_2014_holdout_result.json",
+    }
+    try:
+        records = {
+            key: json.loads((root / filename).read_text(encoding="utf-8"))
+            for key, filename in filenames.items()
+        }
+        diagnosis = json.loads(
+            (root / "research/release_validation_failure_diagnosis_2026_10_04.json")
+            .read_text(encoding="utf-8")
+        )
+        prospective = json.loads(
+            (root / "research/release_network_prospective_protocol.json")
+            .read_text(encoding="utf-8")
+        )
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+
+    ekoto = records["ekoto_2012"]
+    schefer_2006 = records["schefer_2006"]
+    schefer_2007 = records["schefer_2007"]
+    grune = records["grune_2014"]
+    grune_eligibility = grune.get("eligibility") or {}
+    diagnosis_boundary = diagnosis.get("validation_boundary") or {}
+    diagnosis_review = diagnosis.get("implementation_review") or {}
+    prospective_result = prospective.get("current_result") or {}
+    if (
+        ekoto.get("claim_supported") is not True
+        or (ekoto.get("result") or {}).get("joint_primary_screen_pass") is not True
+        or schefer_2006.get("claim_supported") is not False
+        or (schefer_2006.get("result") or {}).get("joint_primary_screen_pass") is not False
+        or schefer_2007.get("claim_supported") is not False
+        or (schefer_2007.get("result") or {}).get("joint_primary_screen_pass") is not False
+        or grune.get("claim_supported") is not False
+        or grune_eligibility.get("minimum_requirements_met") is not False
+        or diagnosis.get("status") != "DEVELOPMENT_DIAGNOSTIC_ONLY"
+        or diagnosis_boundary.get("frozen_holdouts_modified") is not False
+        or diagnosis_boundary.get("post_outcome_parameter_fitting") is not False
+        or diagnosis_review.get("clear_unit_or_initial_condition_bug_found") is not False
+        or prospective.get("status") != "prospective_model_only_no_holdout_received"
+        or prospective_result.get("raw_campaign_received") is not False
+        or prospective_result.get("numerical_holdout_run") is not False
+    ):
+        return None
+
+    def campaign(
+        key: str,
+        *,
+        endpoint: str,
+        eligible: bool,
+        metric_names: tuple[str, ...],
+        ineligibility_reason: str | None = None,
+    ) -> dict[str, Any]:
+        source = records[key]
+        result = source.get("result") or {}
+        metrics = {
+            name: result.get(name)
+            for name in metric_names
+            if isinstance(result.get(name), (int, float))
+            and math.isfinite(float(result[name]))
+        }
+        row: dict[str, Any] = {
+            "artifact": filenames[key],
+            "endpoint": endpoint,
+            "minimum_requirements_met": eligible,
+            "joint_primary_screen_pass": (
+                result.get("joint_primary_screen_pass") is True
+            ),
+            "claim_supported": source.get("claim_supported") is True,
+            "metrics": metrics,
+        }
+        if ineligibility_reason:
+            row["ineligibility_reason"] = ineligibility_reason
+        return row
+
+    campaigns = {
+        "ekoto_2012": campaign(
+            "ekoto_2012",
+            endpoint="transient_mass_flow",
+            eligible=True,
+            metric_names=(
+                "mass_flow_nrmse_percent_peak_measured",
+                "median_absolute_percentage_error_percent",
+                "half_peak_time_relative_error_percent",
+            ),
+        ),
+        "schefer_2006": campaign(
+            "schefer_2006",
+            endpoint="transient_mass_flow",
+            eligible=True,
+            metric_names=(
+                "mass_flow_nrmse_percent_peak_measured",
+                "median_absolute_percentage_error_percent",
+                "half_peak_time_relative_error_percent",
+            ),
+        ),
+        "schefer_2007": campaign(
+            "schefer_2007",
+            endpoint="pressure_decay",
+            eligible=True,
+            metric_names=(
+                "pressure_nrmse_percent_initial_measured",
+                "median_absolute_percentage_error_percent",
+                "half_pressure_time_relative_error_percent",
+            ),
+        ),
+        "grune_2014": campaign(
+            "grune_2014",
+            endpoint="pressure_decay",
+            eligible=False,
+            metric_names=(
+                "pressure_nrmse_percent_initial_measured",
+                "median_absolute_percentage_error_percent",
+            ),
+            ineligibility_reason=str(grune_eligibility.get("reason") or ""),
+        ),
+    }
+    return {
+        "evidence_role": "mixed_external_release_component_validation",
+        "campaigns": campaigns,
+        "eligible_campaign_count": 3,
+        "supported_campaign_count": 1,
+        "failed_campaign_count": 2,
+        "ineligible_campaign_count": 1,
+        "universal_release_validation_supported": False,
+        "apparatus_resolved_holdout_received": False,
+        "apparatus_resolved_holdout_run": False,
+        "runtime_model_changed_after_outcomes": False,
+        "claim_limit": (
+            "공개 방출 캠페인별 결과는 서로 다른 장치와 종점을 포함하며 1건 통과, "
+            "2건 실패, 1건 검증요건 미충족입니다. 장치 형상·밸브·라인팩이 확인된 "
+            "신규 전향적 홀드아웃 전에는 범용 방출, 충전소 전체, 피해거리 또는 현장 "
+            "안전 검증으로 확대할 수 없습니다."
+        ),
+    }
+
+
 def _public_hitrf_operational_reference() -> dict[str, Any] | None:
     """Expose a public facility envelope without treating it as raw validation.
 
@@ -3108,6 +3258,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "proust_release_model_validation_boundary"
         ] = release_boundary
+    cross_campaign_release = _cross_campaign_release_validation_evidence()
+    if cross_campaign_release is not None:
+        envelope["response_evidence"][
+            "cross_campaign_release_validation_boundary"
+        ] = cross_campaign_release
     hitrf_reference = _public_hitrf_operational_reference()
     if hitrf_reference is not None:
         envelope["response_evidence"][
@@ -3369,6 +3524,23 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "production_model_parameter_changed", "claim_limit",
             )
             if release_boundary.get(key) is not None
+        }
+    cross_campaign_release = evidence.get(
+        "cross_campaign_release_validation_boundary"
+    )
+    if isinstance(cross_campaign_release, dict):
+        summary["cross_campaign_release_validation_boundary"] = {
+            key: cross_campaign_release.get(key)
+            for key in (
+                "evidence_role", "campaigns", "eligible_campaign_count",
+                "supported_campaign_count", "failed_campaign_count",
+                "ineligible_campaign_count",
+                "universal_release_validation_supported",
+                "apparatus_resolved_holdout_received",
+                "apparatus_resolved_holdout_run",
+                "runtime_model_changed_after_outcomes", "claim_limit",
+            )
+            if cross_campaign_release.get(key) is not None
         }
     hitrf_reference = evidence.get("public_hitrf_operational_reference")
     if isinstance(hitrf_reference, dict):
@@ -3743,6 +3915,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     closed_loop = response.get("closed_loop_validation_boundary") or {}
     closed_loop_aggregate = closed_loop.get("aggregate") or {}
     release = response.get("proust_release_model_validation_boundary") or {}
+    cross_campaign_release = response.get(
+        "cross_campaign_release_validation_boundary"
+    ) or {}
     preslhy = response.get("preslhy_validation_boundary") or {}
     preslhy_holdout = preslhy.get("independent_holdout") or {}
     operating_screen = response.get("public_operating_envelope_screen") or {}
@@ -3858,6 +4033,21 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 ),
                 "claim_limit": short(release.get("claim_limit")),
             },
+            "release_cross_campaign": {
+                "supported": cross_campaign_release.get(
+                    "supported_campaign_count"
+                ),
+                "failed": cross_campaign_release.get("failed_campaign_count"),
+                "ineligible": cross_campaign_release.get(
+                    "ineligible_campaign_count"
+                ),
+                "universal": cross_campaign_release.get(
+                    "universal_release_validation_supported"
+                ) is True,
+                "apparatus_holdout": cross_campaign_release.get(
+                    "apparatus_resolved_holdout_received"
+                ) is True,
+            },
             # The compact prompt already carries several validation limits.
             # Preserve the controlled-data boundary in one token-cheap status
             # field; the detailed header and audit envelope retain the counts.
@@ -3962,6 +4152,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     preslhy = evidence.get("preslhy_validation_boundary") or {}
     closed_loop = evidence.get("closed_loop_validation_boundary") or {}
     release_boundary = evidence.get("proust_release_model_validation_boundary") or {}
+    cross_campaign_release = evidence.get(
+        "cross_campaign_release_validation_boundary"
+    ) or {}
     thermal_observation = evidence.get("temperature_observation_semantic_boundary") or {}
     return {
         "runtime_calibration": manifest.get("runtime_calibration") or {},
@@ -4234,6 +4427,35 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "production_model_parameter_changed"
             ) is True,
             "claim_limit": release_boundary.get("claim_limit"),
+        },
+        "cross_campaign_release_validation_boundary": {
+            "evidence_role": cross_campaign_release.get("evidence_role"),
+            "campaigns": cross_campaign_release.get("campaigns") or {},
+            "eligible_campaign_count": cross_campaign_release.get(
+                "eligible_campaign_count"
+            ),
+            "supported_campaign_count": cross_campaign_release.get(
+                "supported_campaign_count"
+            ),
+            "failed_campaign_count": cross_campaign_release.get(
+                "failed_campaign_count"
+            ),
+            "ineligible_campaign_count": cross_campaign_release.get(
+                "ineligible_campaign_count"
+            ),
+            "universal_release_validation_supported": cross_campaign_release.get(
+                "universal_release_validation_supported"
+            ) is True,
+            "apparatus_resolved_holdout_received": cross_campaign_release.get(
+                "apparatus_resolved_holdout_received"
+            ) is True,
+            "apparatus_resolved_holdout_run": cross_campaign_release.get(
+                "apparatus_resolved_holdout_run"
+            ) is True,
+            "runtime_model_changed_after_outcomes": cross_campaign_release.get(
+                "runtime_model_changed_after_outcomes"
+            ) is True,
+            "claim_limit": cross_campaign_release.get("claim_limit"),
         },
         "public_hitrf_operational_reference": {
             "source_url": (hitrf_reference.get("source") or {}).get("url"),

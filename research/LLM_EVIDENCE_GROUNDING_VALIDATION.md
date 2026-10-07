@@ -59,6 +59,9 @@ contains:
 - the five-session MetHyTrucks HySaM no-fit tank diagnostic, including the
   244 L candidate replay, 77 L geometry sensitivity and the unresolved public
   workbook-to-sink crosswalk;
+- cross-campaign public release-validation outcomes kept at campaign level:
+  one supported transient, two failed eligible campaigns and one ineligible
+  pressure-decay candidate, with no universal release-model claim;
 - public operating-range benchmarks for 35 MPa transportable supply and H70 high-flow filling, with pressure-class selection and an explicit partial-boundary/full-loop claim limit;
 - consequence flow-boundary status, requested process flow, HyRAM modeled flow,
   and an explicit mismatch claim limit when high-pressure choked flow causes
@@ -128,6 +131,19 @@ The development set passes 20 of 22 cases, while the independent E5.1 ambient
 holdout passes 2 of 3 cases and does not meet its minimum-case or claim
 threshold. The runtime release parameters remain unchanged, and the LLM is
 shown this boundary explicitly.
+
+The release-model evidence is also projected across four public campaigns
+without averaging away disagreement. Ekoto 2012 passes its frozen transient
+mass-flow screen (NRMSE 3.845%, median APE 12.791%, half-time error 6.068%).
+Schefer 2006 fails the joint mass-flow screen despite a 5.832% NRMSE because
+median APE is 22.852% and half-time error is 28.295%. Schefer 2007 fails the
+pressure-decay screen (NRMSE 11.581%, median APE 27.464%), while Grune 2014 is
+ineligible because the accessible record cannot support a trace-specific
+measured half-pressure time. Thus the assistant receives one supported, two
+failed and one ineligible result. The apparatus-resolved valve/line-pack
+protocol remains unexecuted, no production parameter was changed after seeing
+these outcomes, and no universal release, station, consequence-distance or
+field-safety validation claim is permitted.
 
 The privacy-bounded station-equipment envelope is also carried with its
 pressure range, temperature range and state-transition count. Temperature and

@@ -147,6 +147,26 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "effective_coefficient_by_diameter"
     ]] == [1.0, 2.0, 3.0]
     assert "corrected discharge law" in release_boundary["claim_limit"]
+    cross_release = idle["response_evidence"][
+        "cross_campaign_release_validation_boundary"
+    ]
+    assert cross_release["evidence_role"] == (
+        "mixed_external_release_component_validation"
+    )
+    assert cross_release["eligible_campaign_count"] == 3
+    assert cross_release["supported_campaign_count"] == 1
+    assert cross_release["failed_campaign_count"] == 2
+    assert cross_release["ineligible_campaign_count"] == 1
+    assert cross_release["campaigns"]["ekoto_2012"]["claim_supported"] is True
+    assert cross_release["campaigns"]["schefer_2006"]["claim_supported"] is False
+    assert cross_release["campaigns"]["schefer_2007"]["claim_supported"] is False
+    assert cross_release["campaigns"]["grune_2014"][
+        "minimum_requirements_met"
+    ] is False
+    assert cross_release["universal_release_validation_supported"] is False
+    assert cross_release["apparatus_resolved_holdout_received"] is False
+    assert cross_release["apparatus_resolved_holdout_run"] is False
+    assert cross_release["runtime_model_changed_after_outcomes"] is False
     detector = idle["response_evidence"]["public_detector_logic_evidence"]
     assert detector["doi"] == "10.23642/usn.26117989.v2"
     assert detector["rule"]["alarm_threshold_percent"] == 1.0
@@ -305,6 +325,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert early["proust_release_model_validation_boundary"][
         "parameter_fitting"
     ] is False
+    assert early["cross_campaign_release_validation_boundary"][
+        "supported_campaign_count"
+    ] == 1
+    assert early["cross_campaign_release_validation_boundary"][
+        "universal_release_validation_supported"
+    ] is False
     equipment_summary = early[
         "confidential_station_equipment_operational_envelope"
     ]
@@ -386,6 +412,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     ] == 0
     assert header["proust_release_model_validation_boundary"][
         "production_model_parameter_changed"
+    ] is False
+    assert header["cross_campaign_release_validation_boundary"][
+        "failed_campaign_count"
+    ] == 2
+    assert header["cross_campaign_release_validation_boundary"][
+        "apparatus_resolved_holdout_received"
     ] is False
     assert header["public_hitrf_operational_reference"]["raw_synchronized_logger_public"] is False
     assert header["public_hitrf_operational_reference"]["available"] is True
@@ -861,6 +893,13 @@ def test_prompt_decision_evidence_keeps_limits_without_full_audit_payload():
     assert decision["decision_support_evidence"]["public_incident"][
         "contract_pass"
     ] is True
+    assert decision["validation_boundaries"]["release_cross_campaign"] == {
+        "supported": 1,
+        "failed": 2,
+        "ineligible": 1,
+        "universal": False,
+        "apparatus_holdout": False,
+    }
     assert len(json.dumps(decision, ensure_ascii=False)) < 3500
     assert "confidential_station_schema_intake" not in json.dumps(
         decision, ensure_ascii=False

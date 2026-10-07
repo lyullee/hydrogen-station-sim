@@ -39,6 +39,7 @@
     "public CC BY accidental-release/ignition archive metadata is carried into the hashed envelope without raw traces, ignition-probability claims or full-loop validation claims",
     "public CC BY sampling-workbook instrumentation context is carried into the evidence envelope without inferring vehicle or receptacle channels",
     "the five-session MetHyTrucks HySaM no-fit tank diagnostic and 244 L versus 77 L geometry sensitivity are carried into all assistant evidence projections with unresolved channel/setup mapping and no prospective or full-loop validation claim",
+    "cross-campaign release validation carries one supported, two failed and one ineligible public campaign into every assistant route while prohibiting a universal release-model claim",
     "PRESLHY development and independent holdout outcomes are separated, with failed claim conditions and unchanged runtime parameters preserved",
     "de-identified station-equipment pressure, temperature and state envelope is carried with explicit attestation and full-loop claim limits",
     "channel-indexed measured pressure envelopes are carried as evidence-only context without publishing source tags or applying an unattested bank mapping",
@@ -219,6 +220,55 @@
     "full_loop_validation_eligible": false,
     "claim_supported": false,
     "interpretation": "post-access no-fit component diagnostic only; the assistant receives the observed error and geometry sensitivity but cannot describe them as independent, prospective, full-loop, certified or field-safety validation"
+  },
+  "cross_campaign_release_validation_boundary": {
+    "evidence_role": "mixed_external_release_component_validation",
+    "eligible_campaign_count": 3,
+    "supported_campaign_count": 1,
+    "failed_campaign_count": 2,
+    "ineligible_campaign_count": 1,
+    "campaigns": {
+      "ekoto_2012": {
+        "endpoint": "transient_mass_flow",
+        "minimum_requirements_met": true,
+        "joint_primary_screen_pass": true,
+        "claim_supported": true,
+        "nrmse_percent": 3.844753606590915,
+        "median_ape_percent": 12.791380149762766,
+        "half_time_error_percent": 6.068107840113536
+      },
+      "schefer_2006": {
+        "endpoint": "transient_mass_flow",
+        "minimum_requirements_met": true,
+        "joint_primary_screen_pass": false,
+        "claim_supported": false,
+        "nrmse_percent": 5.831534791930556,
+        "median_ape_percent": 22.852219829947433,
+        "half_time_error_percent": 28.294806952826896
+      },
+      "schefer_2007": {
+        "endpoint": "pressure_decay",
+        "minimum_requirements_met": true,
+        "joint_primary_screen_pass": false,
+        "claim_supported": false,
+        "nrmse_percent": 11.580711004119967,
+        "median_ape_percent": 27.46396061123326,
+        "half_time_error_percent": 6.511877481513398
+      },
+      "grune_2014": {
+        "endpoint": "pressure_decay",
+        "minimum_requirements_met": false,
+        "joint_primary_screen_pass": false,
+        "claim_supported": false,
+        "nrmse_percent": 11.11296821179252,
+        "median_ape_percent": 10.879884084275622
+      }
+    },
+    "universal_release_validation_supported": false,
+    "apparatus_resolved_holdout_received": false,
+    "apparatus_resolved_holdout_run": false,
+    "runtime_model_changed_after_outcomes": false,
+    "interpretation": "Mixed endpoint and apparatus evidence only. One passing public transient does not override two failed campaigns or an ineligible pressure-decay candidate; universal release, station, consequence-distance and field-safety validation remain unsupported."
   },
   "public_tank_validation_boundary": {
     "evidence": "data/public_validation/results/nrel_h2fills_hdvs_typeiv/validation.json",
