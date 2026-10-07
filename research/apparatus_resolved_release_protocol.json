@@ -43,6 +43,14 @@
     "parameter_policy": "Freeze geometry, valve opening law, discharge coefficients, heat-transfer terms, solver tolerances and boundary semantics before any target-campaign numerical result is inspected.",
     "production_status": "development_only_not_wired_into_station_runtime"
   },
+  "locked_evaluator": {
+    "path": "src/h2station/apparatus_release_validation.py",
+    "sha256": "87BEF13F019D2BE445D757EBBA94933E748B1FE924DBDBC29F12649A5970D04B",
+    "runner": "scripts/run_apparatus_release_holdout.py",
+    "runner_sha256": "4A9A12B2B771C634EBCDF7E5CA660DA51C78B85505BFF421FDBAC0F2CC01397C",
+    "initial_state_policy": "Use the first synchronized pressure, temperature and ambient sample as a boundary condition; never fit geometry, coefficients, valve travel, crop or time shift against outcomes.",
+    "archive_policy": "Persist aliases, hashes, aggregate metrics and all failed-case reasons; never persist raw rows, paths, facility identity, exact dates or manufacturer details."
+  },
   "protocol_revision": {
     "revision_kind": "pre-holdout apparatus-structure revision",
     "target_campaign_outcome_data_accessed": false,
@@ -126,17 +134,23 @@
     "mass_closure_relative_tolerance": 0.002,
     "energy_closure_relative_tolerance": 0.002,
     "source_line_terminal_time_alignment_tolerance_s": 0.002,
-    "minimum_complete_runs": 3,
+    "minimum_sampling_hz": 20,
+    "maximum_ambient_pressure_relative_range": 0.01,
+    "maximum_ambient_temperature_range_k": 2.0,
+    "maximum_valve_position_rmse_fraction": 0.05,
+    "maximum_initial_source_mass_relative_error": 0.05,
+    "minimum_complete_runs": 8,
     "minimum_points_per_run": 200,
     "uncertainty_policy": "Report logger calibration uncertainty and digitization uncertainty separately; propagate both to endpoint intervals without using intervals to override a failed primary screen."
   },
   "primary_endpoints": {
-    "source_pressure_nrmse_percent": {"maximum": 15.0},
+    "source_pressure_nrmse_percent": {"maximum": 10.0},
     "terminal_mass_flow_nrmse_percent_peak_measured": {"maximum": 15.0},
     "terminal_mass_flow_median_absolute_percentage_error_percent": {"maximum": 20.0},
+    "half_peak_time_relative_error_percent": {"maximum": 20.0},
     "mass_closure": {"maximum_relative_error": 0.002},
     "energy_closure": {"maximum_relative_error": 0.002},
-    "aggregate_rule": "At least two of three independent complete runs must pass every primary endpoint, with no required channel missing."
+    "aggregate_rule": "At least eight declared cases must span two source-pressure, two geometry and two valve-opening groups; at least 70 percent must pass every quality, primary and conservation gate. Numerical failures and missing-channel cases remain in the denominator."
   },
   "promotion_gate": {
     "full_loop_holdout_eligible": false,

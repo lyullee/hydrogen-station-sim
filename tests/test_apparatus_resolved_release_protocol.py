@@ -8,7 +8,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL_PATH = ROOT / "research" / "apparatus_resolved_release_protocol.json"
 SECONDARY_PROTOCOL_PATH = ROOT / "research" / "release_network_prospective_protocol.json"
+MANIFEST_TEMPLATE_PATH = ROOT / "research" / "apparatus_release_holdout_manifest.template.json"
 MODEL_PATH = ROOT / "src" / "h2station" / "release_network.py"
+EVALUATOR_PATH = ROOT / "src" / "h2station" / "apparatus_release_validation.py"
+RUNNER_PATH = ROOT / "scripts" / "run_apparatus_release_holdout.py"
 
 
 def _sha256(path: Path) -> str:
@@ -30,6 +33,11 @@ def test_locked_model_hash_matches_protocol():
     protocol = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
     assert protocol["locked_model"]["path"] == "src/h2station/release_network.py"
     assert protocol["locked_model"]["sha256"] == _sha256(MODEL_PATH)
+    assert protocol["locked_evaluator"]["path"] == (
+        "src/h2station/apparatus_release_validation.py"
+    )
+    assert protocol["locked_evaluator"]["sha256"] == _sha256(EVALUATOR_PATH)
+    assert protocol["locked_evaluator"]["runner_sha256"] == _sha256(RUNNER_PATH)
 
 
 def test_protocol_requires_apparatus_boundary_channels_and_published_gap():
@@ -56,13 +64,17 @@ def test_protocol_locks_candidate_revision_before_target_data_access():
     assert protocol["protocol_revision"]["target_campaign_outcome_data_accessed"] is False
     assert protocol["protocol_revision"]["physical_trajectory_equations_changed"] is True
     assert protocol["quality_controls"]["energy_closure_relative_tolerance"] == 0.002
+    assert protocol["quality_controls"]["minimum_complete_runs"] == 8
     assert protocol["primary_endpoints"]["energy_closure"]["maximum_relative_error"] == 0.002
+    assert protocol["primary_endpoints"]["source_pressure_nrmse_percent"]["maximum"] == 10.0
 
 
 def test_secondary_protocol_tracks_the_locked_conservation_outputs():
     protocol = json.loads(SECONDARY_PROTOCOL_PATH.read_text(encoding="utf-8"))
 
     assert protocol["model_sha256"] == _sha256(MODEL_PATH)
+    assert protocol["evaluator_sha256"] == _sha256(EVALUATOR_PATH)
+    assert protocol["campaign_runner_sha256"] == _sha256(RUNNER_PATH)
     assert {
         "cumulative_terminal_release",
         "cumulative_terminal_enthalpy",
@@ -76,6 +88,19 @@ def test_secondary_protocol_tracks_the_locked_conservation_outputs():
         "instrumentation_added_before_target_campaign_outcome_access": True,
         "physical_trajectory_equations_changed": True,
     }
+
+
+def test_private_manifest_template_matches_every_frozen_artifact():
+    manifest = json.loads(MANIFEST_TEMPLATE_PATH.read_text(encoding="utf-8"))
+
+    assert manifest["protocol_sha256"] == _sha256(PROTOCOL_PATH)
+    assert manifest["model_sha256"] == _sha256(MODEL_PATH)
+    assert manifest["evaluator_sha256"] == _sha256(EVALUATOR_PATH)
+    assert manifest["runner_sha256"] == _sha256(RUNNER_PATH)
+    assert len(manifest["cases"]) == 8
+    assert len({item["strata"]["source_pressure_group"] for item in manifest["cases"]}) == 2
+    assert len({item["strata"]["geometry_group"] for item in manifest["cases"]}) == 2
+    assert len({item["strata"]["valve_opening_group"] for item in manifest["cases"]}) == 2
 
 
 def test_protocol_keeps_nominal_line_volume_as_derived_only():

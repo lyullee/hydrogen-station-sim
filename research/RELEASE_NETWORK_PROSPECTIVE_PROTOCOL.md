@@ -54,6 +54,33 @@ split are recorded before numerical values are inspected. A station or vessel
 trace lacking a declared line/valve boundary may support a bounded diagnostic
 only; it cannot enter the primary apparatus-resolved claim.
 
+## Executable holdout path
+
+`research/apparatus_release_holdout_manifest.template.json` is the private
+campaign-manifest template. The custodian replaces its example geometry with
+as-built or independently calibrated values, assigns anonymous case aliases,
+records each raw CSV SHA-256, and freezes the completed manifest before running
+the model. The synchronized CSV contract uses explicit SI-unit headers; the
+evaluator rejects missing or non-finite channels, duplicate timestamps,
+excessive timestamp jitter, an unmatched valve trajectory, an inconsistent
+initial mass, or a boundary variation that the constant-ambient model cannot
+represent.
+
+Run the frozen campaign once with:
+
+```text
+python scripts/run_apparatus_release_holdout.py \
+  --manifest <private-frozen-manifest.json> \
+  --output <aggregate-result.json>
+```
+
+The result retains all declared cases and numerical errors, but contains no raw
+rows, source paths, facility identity, exact dates or manufacturer details.
+The completed manifest and logger files stay outside the public repository.
+The archived result contains only anonymous aliases, hashes, metrics and the
+bounded decision. A failed result is preserved and cannot be converted into a
+development set under the same model version.
+
 ## Current status
 
 The repository contains the implementation and unit tests for mass and

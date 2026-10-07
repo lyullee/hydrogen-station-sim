@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "campaign_id": "anonymous-apparatus-campaign-01",
+  "protocol_sha256": "6AADE0968C3DA62EF9D9A06E330196D22552125ED221080894B6ED7DFD8A74FD",
+  "model_sha256": "5C52E06F3FF1C45FD6C63047B5C34494D2B605A3BD46CB40FFCD81946B7E259D",
+  "evaluator_sha256": "87BEF13F019D2BE445D757EBBA94933E748B1FE924DBDBC29F12649A5970D04B",
+  "runner_sha256": "4A9A12B2B771C634EBCDF7E5CA660DA51C78B85505BFF421FDBAC0F2CC01397C",
+  "freeze": {
+    "protocol_frozen_before_outcome_access": true,
+    "model_frozen_before_outcome_access": true,
+    "case_manifest_hashed_before_model_run": true,
+    "post_freeze_parameter_tuning_prohibited": true,
+    "failed_case_exclusion_prohibited": true
+  },
+  "privacy": {
+    "use_anonymous_case_aliases_only": true,
+    "do_not_put_facility_company_location_exact_date_manufacturer_or_raw_tags_in_this_file": true,
+    "keep_completed_manifest_and_raw_csv_outside_the_public_repository": true
+  },
+  "csv_columns_si": [
+    "time_s",
+    "source_pressure_pa_abs",
+    "source_temperature_k",
+    "line_pressure_pa_abs",
+    "line_temperature_k",
+    "terminal_mass_flow_kg_s",
+    "valve_position_fraction",
+    "source_mass_kg",
+    "ambient_pressure_pa",
+    "ambient_temperature_k"
+  ],
+  "default_model_parameters": {
+    "source_volume_m3": 0.025,
+    "line_volume_m3": 0.0007853981633974483,
+    "upstream_diameter_m": 0.003175,
+    "upstream_discharge_coefficient": 1.0,
+    "terminal_diameter_m": 0.001,
+    "terminal_discharge_coefficient": 1.0,
+    "valve_opening_time_s": 0.1,
+    "valve_opening_shape_exponent": 1.0,
+    "line_segments": 1,
+    "intersegment_discharge_coefficient": 1.0,
+    "source_wall_mass_kg": 0.0,
+    "line_wall_mass_kg": 0.0,
+    "wall_specific_heat_j_kg_k": 500.0,
+    "source_internal_area_m2": 0.0,
+    "line_internal_area_m2": 0.0,
+    "source_external_area_m2": 0.0,
+    "line_external_area_m2": 0.0,
+    "internal_heat_transfer_w_m2_k": 0.0,
+    "external_heat_transfer_w_m2_k": 0.0
+  },
+  "template_note": "Replace geometry and coefficients with frozen as-built or independently calibrated values before reading outcomes. Replace each path and SHA-256. Use model_parameter_overrides only for predeclared apparatus differences, never for outcome fitting.",
+  "cases": [
+    {"case_id": "AR-01", "data_file": "raw/case_01.csv", "raw_data_sha256": "REPLACE_WITH_SHA256", "strata": {"source_pressure_group": "P1", "geometry_group": "G1", "valve_opening_group": "V1"}},
+    {"case_id": "AR-02", "data_file": "raw/case_02.csv", "raw_data_sha256": "REPLACE_WITH_SHA256", "strata": {"source_pressure_group": "P1", "geometry_group": "G1", "valve_opening_group": "V2"}},
+    {"case_id": "AR-03", "data_file": "raw/case_03.csv", "raw_data_sha256": "REPLACE_WITH_SHA256", "strata": {"source_pressure_group": "P1", "geometry_group": "G2", "valve_opening_group": "V1"}},
+    {"case_id": "AR-04", "data_file": "raw/case_04.csv", "raw_data_sha256": "REPLACE_WITH_SHA256", "strata": {"source_pressure_group": "P1", "geometry_group": "G2", "valve_opening_group": "V2"}},
+    {"case_id": "AR-05", "data_file": "raw/case_05.csv", "raw_data_sha256": "REPLACE_WITH_SHA256", "strata": {"source_pressure_group": "P2", "geometry_group": "G1", "valve_opening_group": "V1"}},
+    {"case_id": "AR-06", "data_file": "raw/case_06.csv", "raw_data_sha256": "REPLACE_WITH_SHA256", "strata": {"source_pressure_group": "P2", "geometry_group": "G1", "valve_opening_group": "V2"}},
+    {"case_id": "AR-07", "data_file": "raw/case_07.csv", "raw_data_sha256": "REPLACE_WITH_SHA256", "strata": {"source_pressure_group": "P2", "geometry_group": "G2", "valve_opening_group": "V1"}},
+    {"case_id": "AR-08", "data_file": "raw/case_08.csv", "raw_data_sha256": "REPLACE_WITH_SHA256", "strata": {"source_pressure_group": "P2", "geometry_group": "G2", "valve_opening_group": "V2"}}
+  ]
+}
