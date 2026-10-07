@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "status": "PROTOCOL_FROZEN_NOT_EXECUTED",
+  "frozen_at": "2026-10-07",
+  "frozen_model_commit": "579717b87c44435e752f340a0a74c1ecbca9edf3",
+  "dataset": {
+    "title": "Dataset for H2SAFE - Controlled Gas Releases and Sensor-Response for Indoor Hydrogen Safety",
+    "doi": "10.7799/17118570",
+    "catalog_record": "https://data.nlr.gov/submissions/330",
+    "archive_url": "https://data.nlr.gov/system/files/330/1787856683-Dataset.zip",
+    "dataset_license_url": "https://data.nlr.gov/node/330/license",
+    "reuse_terms": "The catalog grants use and copying with the full notice retained and requires DOE/NLR/Alliance credit in resulting publications.",
+    "physical_medium": "Helium surrogate releases in full-scale indoor laboratory enclosures",
+    "published_scope": {
+      "experiments": 5,
+      "labs": {
+        "Lab-1": {"sensor_coordinate_count": 24, "experiment_count": 1},
+        "Lab-2": {"sensor_coordinate_count": 37, "experiment_count": 4}
+      },
+      "declared_metadata": [
+        "nozzle diameter",
+        "nozzle orientation",
+        "release rate",
+        "nozzle pressure",
+        "release timing",
+        "HVAC state",
+        "release and sensor 3D coordinates",
+        "laboratory geometry"
+      ]
+    }
+  },
+  "pre_access_integrity_plan": {
+    "quarantine_root": "C:/Users/lyul/Desktop/ProjectData/external_h2safe_quarantine",
+    "raw_data_committed_to_git": false,
+    "before_inspection": [
+      "download the published archive only after this protocol is committed",
+      "record HTTP metadata, byte size and SHA-256 of the archive",
+      "retain raw files outside the Git worktree",
+      "inspect archive member names and metadata before reading concentration values"
+    ]
+  },
+  "eligibility_and_split_plan": {
+    "source_eligibility": "Require timestamped concentration channels, declared release timing and coordinates, sensor coordinates and ventilation state. Reject a test missing any primary field from numerical scoring.",
+    "frozen_holdout": "Hold out one entire experiment, including all of its sensor channels. Select the holdout from metadata identifiers only before numerical concentrations are read; retain the other eligible experiments for adapter configuration without tuning simulator physics.",
+    "primary_endpoints": [
+      "release-to-first-sensor detection delay at a declared normalized experiment-relative threshold",
+      "detector ordering agreement relative to source and ventilation geometry",
+      "post-release concentration decay classification when the source metadata declares an end time"
+    ],
+    "secondary_endpoints": [
+      "sensor-coordinate mapping completeness",
+      "HVAC-state preservation through intake",
+      "missing-channel handling",
+      "threshold-persistence replay reproducibility"
+    ],
+    "metrics": [
+      "elapsed-time parsing success rate",
+      "coordinate mapping completeness",
+      "first-detection delay MAE (s)",
+      "rank correlation for first detection time",
+      "post-release decay direction accuracy"
+    ]
+  },
+  "runtime_and_claim_boundary": {
+    "allowed_runtime_use": "Evidence and regression validation of an advisory detector-response/ventilation adapter only; no automatic recalibration of site virtual detector amplitude or safety PLC setpoints.",
+    "prohibited_inferences": [
+      "hydrogen concentration equivalence from helium volume fraction",
+      "outdoor hydrogen-refuelling-station dispersion validation",
+      "site-specific detector placement validation",
+      "fire, explosion, thermal-radiation or separation-distance validation",
+      "ESD effectiveness validation",
+      "full station-to-vehicle fueling-loop validation"
+    ],
+    "negative_result_policy": "Any malformed archive, failed eligibility criterion, failed holdout metric or contradiction remains recorded. A pass can support only the stated indoor helium-surrogate detector-response evidence scope."
+  }
+}
