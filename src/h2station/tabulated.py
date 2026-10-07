@@ -146,6 +146,36 @@ class HydrogenPropertyTable:
             self._temperature_from_pt_property(pressure, enthalpy, "enthalpy"),
         )
 
+    @lru_cache(maxsize=4096)
+    def state_rho_t(self, density: float, temperature: float) -> ThermoState:
+        """Invert the bounded P-T table at fixed density and temperature."""
+        if density <= 0.0 or temperature <= 0.0:
+            raise ThermoDomainError("Density and temperature must be positive")
+        it, wt = self._bracket(self.temperature_grid, temperature, "temperature")
+        density_table = self.pt["density"]
+        density_curve = (
+            density_table[:, it] * (1.0 - wt)
+            + density_table[:, it + 1] * wt
+        )
+        lower_density = float(density_curve[0])
+        upper_density = float(density_curve[-1])
+        tolerance = 1.0e-10 * max(abs(lower_density), abs(upper_density), 1.0)
+        if density < lower_density - tolerance or density > upper_density + tolerance:
+            raise ThermoDomainError(
+                f"Hydrogen table density={density:g} is outside "
+                f"[{lower_density:g}, {upper_density:g}] at T={temperature:g} K"
+            )
+        clipped = float(np.clip(density, lower_density, upper_density))
+        ip = int(np.searchsorted(density_curve, clipped, side="right") - 1)
+        ip = min(max(ip, 0), len(density_curve) - 2)
+        span = float(density_curve[ip + 1] - density_curve[ip])
+        weight = 0.0 if span == 0.0 else (clipped - density_curve[ip]) / span
+        log_pressure = (
+            self._log_pressure_grid[ip] * (1.0 - weight)
+            + self._log_pressure_grid[ip + 1] * weight
+        )
+        return self.state_pt(float(np.exp(log_pressure)), temperature)
+
     @lru_cache(maxsize=8192)
     def state_rho_u(self, density: float, internal_energy: float) -> ThermoState:
         if density <= 0.0:
@@ -259,6 +289,8 @@ def PropsSI(
     table = hydrogen_table()
     if {"P", "T"} <= inputs.keys():
         state = table.state_pt(inputs["P"], inputs["T"])
+    elif {"DMASS", "T"} <= inputs.keys():
+        state = table.state_rho_t(inputs["DMASS"], inputs["T"])
     elif {"DMASS", "UMASS"} <= inputs.keys():
         state = table.state_rho_u(inputs["DMASS"], inputs["UMASS"])
     elif {"P", "SMASS"} <= inputs.keys():

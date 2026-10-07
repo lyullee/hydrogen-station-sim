@@ -41,6 +41,13 @@ def test_coolprop_rho_u_round_trip(pressure, temperature):
     assert recovered.temperature == pytest.approx(reference.temperature, rel=1.0e-8)
 
 
+def test_tabulated_density_temperature_inverse_is_consistent():
+    reference = HydrogenEOS().state_pt(68.0e6, 330.0)
+    recovered = HydrogenEOS().state_rho_t(reference.density, reference.temperature)
+    assert recovered.pressure == pytest.approx(reference.pressure, rel=1.0e-9)
+    assert recovered.density == pytest.approx(reference.density, rel=1.0e-9)
+
+
 def test_tabulated_rho_u_boundary_is_bounded_for_cold_blowdown():
     """Adjacent density rows do not reject an in-table 60 K boundary state."""
     pressure = PropsSI("P", "Dmass", 0.640865, "Umass", 625703.0)

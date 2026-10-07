@@ -21,6 +21,9 @@ class HydrogenEOS:
     def state_rho_u(self, density: float, internal_energy: float) -> ThermoState:
         return hydrogen_table().state_rho_u(density, internal_energy)
 
+    def state_rho_t(self, density: float, temperature: float) -> ThermoState:
+        return hydrogen_table().state_rho_t(density, temperature)
+
     def state_ps(self, pressure: float, entropy: float) -> ThermoState:
         return hydrogen_table().state_ps(pressure, entropy)
 

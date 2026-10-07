@@ -17,6 +17,7 @@ from h2station.hazop.runtime import HazopMonitor
 from h2station.risk.runtime_backend import UnavailableHyRAMBackend
 from h2station.scenario import ReferenceScenario, build_reference_scenario
 from h2station.safety_runtime import FaultEvent, FaultKind
+from h2station.tabulated import PropsSI
 
 
 def isolated(expression="PT-1401", op=">=", threshold=87.5, latch=True, hold=.5):
@@ -104,6 +105,75 @@ def test_rate_and_linepack_balance_not_raw_flow_difference():
 def test_age_does_not_need_good_measurement_quality():
     f=frame(2,90,'BAD',age=2)
     assert Evaluator([f],{}).evaluate('AGE(PT-1401)',f)==2
+
+
+def test_isothermal_pressure_removes_temperature_only_pressure_change():
+    specs = {s['sensor_id']: s for s in load_catalog()['sensors']}
+    density = PropsSI('Dmass', 'P', 65e6, 'T', 288.15, 'Hydrogen')
+    frames = []
+    for time_s in (0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0):
+        temperature_k = 288.15 + (330.0 - 288.15) * time_s / 5.0
+        pressure_mpa = PropsSI(
+            'P', 'Dmass', density, 'T', temperature_k, 'Hydrogen'
+        ) / 1e6
+        frames.append({
+            'time_s': time_s,
+            'signals': {
+                'PT-0801': {'value': pressure_mpa, 'quality': 'GOOD', 'unit': 'MPa_abs', 'time_s': time_s},
+                'TT-0801': {'value': temperature_k - 273.15, 'quality': 'GOOD', 'unit': 'degC', 'time_s': time_s},
+            },
+            'modes': {},
+        })
+    value = Evaluator(frames, specs).evaluate(
+        'RATE(P_ISOTHERM(PT-0801,TT-0801),5)', frames[-1]
+    )
+    assert value == pytest.approx(0.0, abs=1e-8)
+
+
+def test_isothermal_bank_loss_rules_are_simulation_ready():
+    rows = {row['rule_id']: row for row in coverage(load_catalog())['rules']}
+    for rule_id in ('HZ-048', 'HZ-057', 'HZ-066'):
+        assert rows[rule_id]['simulation_ready'] is True
+        assert rows[rule_id]['missing_modes'] == []
+        assert rows[rule_id]['model_limits'] == []
+
+
+def test_isothermal_bank_loss_rule_triggers_despite_heating():
+    catalog = copy.deepcopy(load_catalog())
+    rule = next(row for row in catalog['rules'] if row['rule_id'] == 'HZ-057')
+    catalog['rules'] = [rule]
+    catalog['gates'] = [
+        row for row in catalog['gates'] if row['gate_id'] == rule['gate_id']
+    ]
+    engine = RuleEngine(catalog)
+    result = None
+    for step in range(21):
+        time_s = 0.5 * step
+        reference_pressure_pa = (65.0 - 0.10 * time_s) * 1e6
+        temperature_k = 288.15 + (330.0 - 288.15) * time_s / 10.0
+        density = PropsSI(
+            'Dmass', 'P', reference_pressure_pa, 'T', 288.15, 'Hydrogen'
+        )
+        measured_pressure_mpa = PropsSI(
+            'P', 'Dmass', density, 'T', temperature_k, 'Hydrogen'
+        ) / 1e6
+        result = engine.evaluate({
+            'time_s': time_s,
+            'signals': {
+                'PT-0801': {'value': measured_pressure_mpa, 'quality': 'GOOD', 'unit': 'MPa_abs', 'time_s': time_s},
+                'TT-0801': {'value': temperature_k - 273.15, 'quality': 'GOOD', 'unit': 'degC', 'time_s': time_s},
+            },
+            'modes': {
+                'bank.08.inlet_closed': True,
+                'bank.08.outlet_closed': True,
+                'bank.08.relief_active': False,
+                'bank.08.stable_s': 10.0 + time_s,
+            },
+        })
+    assert result is not None
+    item = result['rules'][0]
+    assert item['state'] == 'TRIGGER'
+    assert item['value'] == pytest.approx(-0.10, abs=1e-6)
 
 
 def test_model_tag_fault_activates_candidate_without_inventing_leak(tmp_path):

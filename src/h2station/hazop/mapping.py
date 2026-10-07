@@ -68,7 +68,10 @@ MODE_KEYS = {"station.monitoring", "station.filling_count", "station.switch_elap
 for d in (1, 2):
     MODE_KEYS |= {f"d{d}.{k}" for k in ("phase", "phase_elapsed_s", "switch_elapsed_s", "connected", "pcv_closed")}
 for n in ("07", "08", "09"):
-    MODE_KEYS |= {f"bank.{n}.{k}" for k in ("dispatch", "switch_elapsed_s", "inlet_closed", "outlet_closed", "stable_s")}
+    MODE_KEYS |= {f"bank.{n}.{k}" for k in (
+        "dispatch", "switch_elapsed_s", "inlet_closed", "outlet_closed",
+        "relief_active", "stable_s",
+    )}
 
 
 def mapping_catalog(sensors):
@@ -87,7 +90,7 @@ def coverage(catalog):
     for r in catalog["rules"]:
         missing = sorted(dependencies(r["신호식"]) - set(MODEL_BINDINGS) - HELPERS)
         modes = sorted(gate_dependencies(gates[r["gate_id"]]["기계식_상태조건"]) - MODE_KEYS)
-        issues = (["isothermal EOS conversion not implemented"] if "P_ISOTHERM" in r["신호식"] else [])
+        issues = []
         if r["sensor_id"].startswith("FT-") and r["연산자"] == "<=" and r["임계값"] < 0:
             issues.append("one-way restriction model cannot generate reverse flow")
         ready = not missing and not modes and not issues
@@ -114,6 +117,10 @@ class ModelMapper:
                compressor_flow_multiplier=1.0):
         signals, modes = {}, {"station.monitoring": True, "station.esd": safety.esd_latched,
                               "station.scenario_active": bool(fault_events or active_leaks)}
+        active_relief_targets = {
+            event.target for event, _leak, _source, _location in active_leaks
+            if event.event_id.startswith("relief-")
+        }
         def put(tag, value, unit=None, origin=None):
             signals[tag] = {"value": float(value), "unit": unit or self.specs[tag]["단위"], "quality": "GOOD",
                             "time_s": t, "origin": origin or MODEL_BINDINGS[tag][0]}
@@ -134,8 +141,8 @@ class ModelMapper:
                           f"bank.{z}.switch_elapsed_s": self.elapsed(f"bank{z}", selected, t),
                           f"bank.{z}.inlet_closed": recharge_index != index,
                           f"bank.{z}.outlet_closed": not actual_out_open,
+                          f"bank.{z}.relief_active": f"cascade.{bank.parameters.name}" in active_relief_targets,
                           f"bank.{z}.stable_s": self.elapsed(f"isolation{z}", (recharge_index==index, actual_out_open), t)})
-            # relief.active is intentionally unknown: no vessel PSV in the full station loop.
         for d, partial, partial_state, command, inst, selected, opening in zip(
             (1,2), (station.partial_station, station.secondary_partial_station),
             (state.partial_station, state.secondary_partial_station), commands, instantaneous, dispatch_indices, dispatch_openings):

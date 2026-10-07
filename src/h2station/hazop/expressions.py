@@ -5,9 +5,12 @@ import math
 import re
 from functools import lru_cache
 
+from ..tabulated import PropsSI
+
 TAG = re.compile(r"(?:PT|TT|FT|GD|FD)-\d{4}|MASS_HOSE_[12]|MASS_HEADER")
 CALLS = {"RATE": 2, "DIFF": 2, "ABS_DIFF": 2, "BALANCE": 4, "AGE": 1, "P_ISOTHERM": 2}
 CONDITION = re.compile(r"([a-z][a-z0-9_.]*)\s*(==|>=|<=|>|<)\s*(true|false|[A-Z_]+|-?\d+(?:\.\d+)?)")
+ISOTHERMAL_REFERENCE_TEMPERATURE_K = 288.15
 
 
 class Unknown(ValueError):
@@ -123,7 +126,22 @@ class Evaluator:
             age = frame["time_s"] - data["time_s"]
             if age < 0: raise Unknown("FUTURE_TIMESTAMP")
             return age  # Timestamp age remains evaluable when measurement quality is BAD.
-        if op == "P_ISOTHERM": raise Unknown("MODEL_UNAVAILABLE:validated isothermal EOS conversion")
+        if op == "P_ISOTHERM":
+            pressure_mpa = self.value(args[0], frame)
+            temperature_k = self.value(args[1], frame) + 273.15
+            if pressure_mpa <= 0.0 or temperature_k <= 0.0:
+                raise Unknown("INVALID_ISOTHERMAL_STATE")
+            try:
+                density = PropsSI(
+                    "Dmass", "P", pressure_mpa * 1.0e6,
+                    "T", temperature_k, "Hydrogen",
+                )
+                return PropsSI(
+                    "P", "Dmass", density,
+                    "T", ISOTHERMAL_REFERENCE_TEMPERATURE_K, "Hydrogen",
+                ) / 1.0e6
+            except (ValueError, OverflowError) as exc:
+                raise Unknown(f"ISOTHERMAL_EOS:{exc}") from exc
         if op == "SUM": return sum(self.value(x, frame) for x in args)
         if op in ("DIFF", "ABS_DIFF"):
             delta = self.value(args[0], frame) - self.value(args[1], frame)

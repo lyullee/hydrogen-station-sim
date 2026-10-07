@@ -10,6 +10,7 @@ from fastapi.testclient import TestClient
 
 from h2station.api import ProcessSettings, _analyze_frame, app
 from h2station.calibration_profiles import load_station_recharge_dynamics_calibration
+from h2station.hazop.runtime import HazopMonitor
 from h2station.operations import ProcessRuntime
 from h2station.risk.runtime_backend import UnavailableHyRAMBackend
 from h2station.scenario import ReferenceScenario, build_reference_scenario
@@ -76,11 +77,14 @@ def test_pressure_target_auto_stop_and_relief_hysteresis_with_mass_sink():
                     recharge_target_high_mpa=89.0)
     settings["relief_valves"]["high"].update(open_mpa=89.0, close_mpa=88.5, orifice_mm=.1)
     built, process = _station(settings)
+    monitor = HazopMonitor()
+    built.simulator.hazop_monitor = monitor
     samples = []
     trajectory = built.simulator.simulate(built.initial_state, .4, .2, sample_callback=samples.append)
     assert process.snapshot()["relief_open"]["high"]
     assert np.max(trajectory.leak_mass_flow_by_release["relief-high"]) > 0
     assert any("relief-open:cascade.high" in sample.active_faults for sample in samples)
+    assert monitor.latest["modes"]["bank.09.relief_active"] is True
     assert any(snapshot.release_id == "relief-high" for sample in trajectory.risk_snapshots for snapshot in sample)
     assert process.snapshot()["settings"]["trailer_supply"] is False
     assert process.snapshot()["settings"]["pressure_recharge"] is False
