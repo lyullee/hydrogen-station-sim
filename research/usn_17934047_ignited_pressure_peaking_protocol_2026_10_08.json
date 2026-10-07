@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "protocol_id": "USN-IGNITED-PRESSURE-PEAKING-2601",
+  "frozen_at": "2026-10-08T00:00:00+09:00",
+  "status": "frozen_before_holdout_outcome_access",
+  "objective": "Evaluate a fixed zero-dimensional ignited enclosure pressure-peaking model against public large-scale hydrogen experiments not previously opened for outcome analysis.",
+  "source": {
+    "dataset_doi": "10.23642/USN.17934047",
+    "dataset_version": "1.1",
+    "dataset_version_id": 5543,
+    "license": "CC BY 4.0",
+    "publication_doi": "10.1016/j.ijhydene.2020.12.015",
+    "title": "Large scale experiments and model validation of Pressure Peaking Phenomena-ignited hydrogen releases"
+  },
+  "apparatus": {
+    "enclosure_volume_m3": 14.9,
+    "enclosure_dimensions_m": [2.5, 2.0, 2.98],
+    "hydrogen_release_internal_diameter_mm": 4.0,
+    "ignition": "immediate ignition at the vertical release",
+    "vent_area_by_count_m2": {
+      "1": 0.0055,
+      "2": 0.0109,
+      "3": 0.0164
+    }
+  },
+  "cohort": {
+    "holdout_cases": "HTE341USN0001READ191111.mat through HTE341USN0028READ191111.mat",
+    "holdout_datafile_ids": "266047 through 266074 inclusive",
+    "expected_holdout_count": 28,
+    "development_only_cases": [29, 30, 31],
+    "development_only_reason": "These three raw outcomes were opened during the earlier channel-integrity replay and are excluded from confirmatory scoring.",
+    "exclusion_rule": "Exclude only a file that fails the Dataverse byte count or MD5 identity check, lacks SIGMA/GEN3i channels, has a non-monotonic time base, or has no finite positive mass-flow and overpressure samples. Report every exclusion; do not replace excluded cases."
+  },
+  "fixed_model": {
+    "type": "zero-dimensional perfectly mixed reacting enclosure with ideal-gas species and lumped wall heat transfer",
+    "species": ["H2", "O2", "N2", "H2O"],
+    "reaction": "H2 + 0.5 O2 -> H2O",
+    "hydrogen_input": "measured non-negative SIGMA mass-flow time series",
+    "pressure_observation": "baseline-corrected GEN3i overpressure; deterministic pre-ignition median baseline only",
+    "vent_discharge_coefficient": 0.9,
+    "enclosure_wall_heat_transfer_w_m2_k": 30.0,
+    "underpressure_wall_heat_transfer_multiplier": 0.5,
+    "parameter_policy": "The source-reported common coefficients are fixed across all cases. No per-case fitting, outcome-dependent coefficient selection, or holdout retuning is permitted."
+  },
+  "endpoints": {
+    "primary": {
+      "name": "peak_overpressure_absolute_error_kpa",
+      "case_threshold_kpa": 2.0,
+      "basis": "The associated publication reports prediction within approximately plus or minus 2 kPa."
+    },
+    "secondary": [
+      {
+        "name": "peak_time_relative_error_percent",
+        "case_threshold_percent": 25.0
+      },
+      {
+        "name": "pressure_trace_nrmse_percent",
+        "case_threshold_percent": 25.0,
+        "normalization": "measured peak-to-peak overpressure"
+      }
+    ]
+  },
+  "decision_rule": {
+    "minimum_eligible_cases": 20,
+    "primary_pass_fraction": 0.8,
+    "confirmatory_success": "At least 20 eligible holdout cases and at least 80% of eligible cases with peak-overpressure absolute error no greater than 2.0 kPa.",
+    "failure_interpretation": "Retain and report the negative result. Any later model revision requires a new protocol and a new untouched dataset or explicitly exploratory status."
+  },
+  "claim_boundary": "This protocol concerns only ignited pressure peaking in a vented enclosure. It cannot validate an outdoor H70 station fueling loop, jet-flame radiation distance, emergency controls, operator response, or SAGA effectiveness.",
+  "runner": "scripts/run_usn_17934047_ignited_pressure_peaking.py",
+  "result": "research/usn_17934047_ignited_pressure_peaking_result_2026_10_08.json"
+}
