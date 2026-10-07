@@ -149,6 +149,21 @@ def test_schema_inventory_recognizes_reverse_order_historian_timestamps(tmp_path
     assert report["candidate_schema_counts"]["full_loop_candidate"] == 1
 
 
+def test_schema_inventory_recognizes_space_separated_historian_timestamps(tmp_path: Path):
+    source = tmp_path / "private-space-separated-historian.csv"
+    source.write_text(
+        "time,vehicle_pressure,temperature,mass_flow,vehicle,cascade,controller_state\n"
+        "2026 01 07 13:00:00,1,2,3,4,5,6\n"
+        "2026 01 07 13:00:01,1,2,3,4,5,6\n",
+        encoding="cp949",
+    )
+
+    report = inventory_schema([tmp_path])
+
+    assert report["measurement_like_tables"] == 1
+    assert report["candidate_schema_counts"]["full_loop_candidate"] == 1
+
+
 def test_schema_inventory_streams_csv_schema_without_whole_file_read(
     tmp_path: Path, monkeypatch,
 ):

@@ -213,6 +213,8 @@ def _is_time_observation(value: object) -> float | None:
         "%m/%d/%Y %I:%M %p",
         "%m/%d/%Y %H:%M:%S",
         "%m/%d/%Y %H:%M:%S.%f",
+        "%Y %m %d %H:%M:%S",
+        "%Y %m %d %H:%M:%S.%f",
     ):
         try:
             return datetime.strptime(compact, time_format).replace(

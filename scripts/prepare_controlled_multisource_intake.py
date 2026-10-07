@@ -282,6 +282,93 @@ def _attestation_template() -> dict[str, Any]:
     }
 
 
+def _station_mapping_template() -> dict[str, Any]:
+    """Create a private map compatible with the station-side calibrators.
+
+    The full-loop template above is intentionally demanding: it requires
+    vehicle-side channels that many station historian exports do not contain.
+    This separate template lets a custodian map an equipment/station bundle
+    without implying that it validates a complete vehicle filling event.
+    Original headers remain in ``private_source_catalog.json`` only; no source
+    label is copied into this generic template.
+    """
+
+    return {
+        "schema_version": 1,
+        "mapping_scope": "station_side_equipment_or_storage_only",
+        "time_column": "<select one original header with the logger clock>",
+        "time_column_index": None,
+        "pressure_columns": [
+            ["station_pressure", "<select an owner-attested pressure header>"],
+        ],
+        "temperature_columns": [
+            ["station_temperature", "<optional owner-attested temperature header>"],
+        ],
+        "flow_column": "<optional owner-attested mass-flow header>",
+        "state_columns": [
+            ["compressor_state", "<optional owner-attested equipment-state header>"],
+        ],
+        "lifecycle_columns": [
+            ["lifecycle_counter", "<optional owner-attested lifecycle header>"],
+        ],
+        "temperature_boundary_role": None,
+        "authorized_boundary_roles": ["station_pressure"],
+        "pressure_scale_pa_per_unit": "<custodian-confirmed Pa per source pressure unit>",
+        "temperature_scale_k_per_unit": "<custodian-confirmed K increment per source temperature unit>",
+        "temperature_offset_k": "<custodian-confirmed additive offset to K>",
+        "flow_scale_kg_s_per_unit": "<custodian-confirmed kg/s per source flow unit>",
+        "lifecycle_scale_per_unit": "<custodian-confirmed lifecycle count scale>",
+        "time_format": "<exact strptime format, or null only for numeric clocks>",
+        "time_is_absolute": False,
+        "encoding": "<custodian-confirmed text encoding>",
+        "mapping_instructions": (
+            "Replace or remove every placeholder before use. Map only source "
+            "channels with custodian-confirmed units and semantics. Do not add "
+            "vehicle-side roles to this station-side map. Set "
+            "temperature_boundary_role only when the mapped temperature is an "
+            "attested supply-gas boundary measurement; equipment metal or "
+            "cabinet temperatures remain diagnostic."
+        ),
+        "claim_boundary": (
+            "This private mapping supports only station-side aggregate "
+            "calibration after matching attestation. It is not a full-loop "
+            "vehicle-fuelling validation map."
+        ),
+    }
+
+
+def _station_attestation_template() -> dict[str, Any]:
+    """Create the restricted generic-role attestation used by station fitting."""
+
+    return {
+        "schema_version": 1,
+        "source_identifiers_published": False,
+        "raw_rows_persisted": False,
+        "absolute_timestamps_published": False,
+        "tag_names_published": False,
+        "source_paths_published": False,
+        "timebase_semantics_attested": False,
+        "pressure_role_and_unit_semantics_attested": False,
+        "temperature_role_and_unit_semantics_attested": False,
+        "flow_role_and_unit_semantics_attested": False,
+        "state_semantics_attested": False,
+        "lifecycle_semantics_attested": False,
+        "calibration_metadata_attested": False,
+        "authorized_boundary_roles": ["station_pressure"],
+        "attestation_instructions": (
+            "A data custodian must confirm every true value. Pressure, flow, "
+            "temperature and state semantics must be confirmed independently. "
+            "Do not mark an equipment temperature as a station boundary merely "
+            "because its tag resembles a temperature instrument."
+        ),
+        "claim_boundary": (
+            "Role and unit attestation only. It neither releases controlled "
+            "data nor establishes model accuracy, safety limits or field "
+            "validation."
+        ),
+    }
+
+
 def prepare_workbench(input_data: Path, output_directory: Path) -> dict[str, Any]:
     """Write private mapping and attestation templates outside the repository."""
 
@@ -303,6 +390,14 @@ def prepare_workbench(input_data: Path, output_directory: Path) -> dict[str, Any
     )
     (output_directory / "event-attestation.template.json").write_text(
         json.dumps(_attestation_template(), ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    (output_directory / "station-boundary-mapping.template.json").write_text(
+        json.dumps(_station_mapping_template(), ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    (output_directory / "station-channel-attestation.template.json").write_text(
+        json.dumps(_station_attestation_template(), ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
     receipt = {
@@ -330,7 +425,7 @@ def prepare_workbench(input_data: Path, output_directory: Path) -> dict[str, Any
             "custodian_attestation_required": True,
         },
         "source_input_sha256": workbench["source_input_sha256"],
-        "output_file_count": 3,
+        "output_file_count": 5,
         "claim_boundary": workbench["claim_boundary"],
     }
     (output_directory / "receipt.json").write_text(

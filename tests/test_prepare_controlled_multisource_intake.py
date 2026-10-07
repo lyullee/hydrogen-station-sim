@@ -34,6 +34,12 @@ def test_private_workbench_writes_mapping_templates_without_measurement_values(
     catalog = json.loads((output / "private_source_catalog.json").read_text(encoding="utf-8"))
     mapping = json.loads((output / "event-mapping.template.json").read_text(encoding="utf-8"))
     attestation = json.loads((output / "event-attestation.template.json").read_text(encoding="utf-8"))
+    station_mapping = json.loads(
+        (output / "station-boundary-mapping.template.json").read_text(encoding="utf-8")
+    )
+    station_attestation = json.loads(
+        (output / "station-channel-attestation.template.json").read_text(encoding="utf-8")
+    )
     rendered_receipt = json.dumps(receipt)
 
     assert receipt["source_count"] == 2
@@ -47,6 +53,12 @@ def test_private_workbench_writes_mapping_templates_without_measurement_values(
     assert attestation["authorised_controlled_evaluation"] is False
     assert attestation["source_synchronization"]["same_physical_event_confirmed"] is False
     assert attestation["temperature_observation"]["vehicle_temperature_degC"]["sensor_location_verified"] is False
+    assert station_mapping["mapping_scope"] == "station_side_equipment_or_storage_only"
+    assert station_mapping["authorized_boundary_roles"] == ["station_pressure"]
+    assert station_mapping["temperature_boundary_role"] is None
+    assert station_attestation["pressure_role_and_unit_semantics_attested"] is False
+    assert station_attestation["source_identifiers_published"] is False
+    assert receipt["output_file_count"] == 5
     assert "private vehicle sheet" not in rendered_receipt
     assert "do-not-persist" not in catalog["sources"][0]["original_headers"]
 
