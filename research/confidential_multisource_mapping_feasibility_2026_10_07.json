@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "artifact_type": "controlled_multisource_mapping_feasibility",
+  "assessment_date": "2026-10-07",
+  "source_identifiers_published": false,
+  "original_headers_published": false,
+  "raw_rows_persisted": false,
+  "absolute_timestamps_published": false,
+  "controlled_review": {
+    "co_located_workbook_candidates": 1,
+    "candidate_worksheet_count": 11,
+    "measurement_rows_read": false,
+    "unreadable_workbooks": 0
+  },
+  "canonical_mapping_screen": {
+    "all_required_full_loop_channels_have_unambiguous_header_candidates": false,
+    "header_level_candidates_present": [
+      "vehicle_pressure_mpa_abs",
+      "temperature_degC",
+      "delivered_gas_temperature_degC",
+      "precooler_state"
+    ],
+    "header_level_candidates_not_identified": [
+      "mass_flow_g_s",
+      "station_pressure_mpa_abs",
+      "cascade_source_pressure_mpa_abs",
+      "cascade_selected_bank",
+      "compressor_state",
+      "leak_check_state",
+      "vent_state",
+      "fault_state",
+      "esd_state"
+    ],
+    "decision": "not_eligible_for_multisource_full_loop_export_without_custodian_mapping"
+  },
+  "permitted_evidence_use": [
+    "controlled partial-channel calibration or plausibility assessment after a custodian-approved mapping",
+    "data-acquisition gap specification for a future synchronized event export"
+  ],
+  "prohibited_evidence_use": [
+    "station-to-vehicle full-loop validation",
+    "controller or consequence-model parameter fitting",
+    "safety-distance validation",
+    "journal-readiness completion claim"
+  ],
+  "claim_boundary": "This is a header-only, controlled-access feasibility result. It does not disclose source identity or values, does not prove absence of a signal in the controlled data, and does not substitute for a custodian-approved semantic mapping, unit attestation, or time-synchronization assessment."
+}
