@@ -84,3 +84,40 @@ policy and all observed boundary definitions.
 Do not retune the model after a failed frozen evaluation and call the result a
 holdout. Use a new, separately frozen protocol and declare the new experiment
 as a calibration or sensitivity study.
+
+## Complete-cohort registry
+
+A single passing event cannot close the full-loop evidence gate. Before case
+outcomes are generated, collect the receipts for every planned independent
+event and create one external cohort protocol:
+
+```powershell
+$env:PYTHONPATH = 'src'
+.\.venv\Scripts\python.exe scripts\prepare_controlled_full_loop_cohort.py `
+  --receipts D:\controlled\case-*\receipt.json `
+  --output D:\controlled\cohort\cohort-protocol-draft.json
+```
+
+The custodian must retain at least eight unique traces, fill the same
+individual criteria used by every case protocol, attest independence/blinding/
+controlled-use rights, retain the 80% or higher cohort pass criterion, and
+freeze the cohort before reading any case result. Failed and incomplete cases
+must remain in the cohort.
+
+After every case has one result, generate a random secret file of at least 32
+bytes and keep it outside the repository. Build the privacy-bounded registry:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\build_controlled_full_loop_registry.py `
+  --protocol D:\controlled\cohort\cohort-protocol.json `
+  --results D:\controlled\case-*\evaluation-result.json `
+  --salt-file D:\controlled\cohort\registry-secret.bin `
+  --output D:\controlled\cohort\cohort-registry.json
+```
+
+The registry refuses missing, substituted or duplicate cases; mixed scopes,
+commits, metrics or acceptance limits; and unsafe privacy declarations. It
+publishes cohort-local HMAC codes instead of trace/result hashes, retains every
+failure, and separates numerical-screen success from independent-holdout
+provenance. The secret salt must never be committed or shared with the public
+registry.

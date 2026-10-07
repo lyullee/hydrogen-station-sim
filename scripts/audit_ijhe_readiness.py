@@ -52,6 +52,83 @@ def _protocol_integrity(root: Path, manifest: dict[str, Any] | None) -> tuple[bo
     return not mismatches, mismatches
 
 
+def _controlled_registry_integrity(registry: dict[str, Any] | None) -> tuple[bool, dict[str, Any]]:
+    """Validate the publication-safe surface of a controlled cohort registry."""
+
+    registry = registry or {}
+    cases = registry.get("cases") if isinstance(registry.get("cases"), list) else []
+    acceptance = registry.get("cohort_acceptance") if isinstance(registry.get("cohort_acceptance"), dict) else {}
+    design = registry.get("evidence_design") if isinstance(registry.get("evidence_design"), dict) else {}
+    privacy = registry.get("privacy") if isinstance(registry.get("privacy"), dict) else {}
+    case_count = registry.get("case_count")
+    pass_count = registry.get("case_pass_count")
+    pass_fraction = registry.get("case_pass_fraction")
+    decisions = [case.get("decision") for case in cases if isinstance(case, dict)]
+    case_codes = [case.get("case_code") for case in cases if isinstance(case, dict)]
+    result_codes = [case.get("result_code") for case in cases if isinstance(case, dict)]
+    expected_pass_count = sum(value == "FROZEN_EVALUATION_PASS" for value in decisions)
+    valid_fraction = (
+        isinstance(case_count, int) and case_count > 0
+        and isinstance(pass_count, int)
+        and isinstance(pass_fraction, (int, float))
+        and abs(float(pass_fraction) - pass_count / case_count) <= 1.0e-12
+    )
+    required_metrics = {
+        "vehicle_pressure_mpa", "vehicle_temperature_c", "mass_flow_g_s",
+        "delivered_temperature_c", "selected_source_pressure_mpa",
+        "cascade_low_pressure_mpa", "cascade_medium_pressure_mpa",
+        "cascade_high_pressure_mpa",
+    }
+    metric_aggregate = registry.get("metric_aggregate") if isinstance(registry.get("metric_aggregate"), dict) else {}
+    state_aggregate = registry.get("state_metric_aggregate") if isinstance(registry.get("state_metric_aggregate"), dict) else {}
+    minimum_case_count = acceptance.get("minimum_case_count")
+    minimum_pass_fraction = acceptance.get("minimum_case_pass_fraction")
+    passed = bool(
+        registry.get("schema_version") == 1
+        and registry.get("artifact_type") == "controlled_hrs_privacy_bounded_cohort_registry"
+        and registry.get("evaluation_scope") == "cascade_resolved_station_to_vehicle"
+        and isinstance(registry.get("source_commit"), str)
+        and bool(registry.get("source_commit"))
+        and isinstance(case_count, int) and case_count >= 8
+        and len(cases) == case_count
+        and len(set(case_codes)) == case_count
+        and len(set(result_codes)) == case_count
+        and all(isinstance(value, str) and value.startswith("case-") for value in case_codes)
+        and all(isinstance(value, str) and value.startswith("result-") for value in result_codes)
+        and all(value in {"FROZEN_EVALUATION_PASS", "FROZEN_EVALUATION_FAIL"} for value in decisions)
+        and pass_count == expected_pass_count
+        and valid_fraction
+        and float(pass_fraction) >= 0.8
+        and isinstance(minimum_case_count, int) and minimum_case_count >= 8
+        and isinstance(minimum_pass_fraction, (int, float)) and minimum_pass_fraction >= 0.8
+        and acceptance.get("numerical_screen_passed") is True
+        and design.get("independent_holdout") is True
+        and design.get("model_developers_blinded_to_case_outcomes_before_freeze") is True
+        and design.get("rights_cleared_for_controlled_evaluation") is True
+        and registry.get("provenance_screen_passed") is True
+        and registry.get("full_loop_external_validation_supported") is True
+        and required_metrics.issubset(metric_aggregate)
+        and {"selected_bank", "compressor_active"}.issubset(state_aggregate)
+        and privacy.get("raw_trace_hashes_published") is False
+        and privacy.get("raw_result_hashes_published") is False
+        and privacy.get("hmac_salt_published") is False
+        and privacy.get("source_identifiers_published") is False
+        and privacy.get("absolute_timestamps_published") is False
+        and privacy.get("raw_rows_persisted") is False
+    )
+    return passed, {
+        "present": bool(registry),
+        "integrity_passed": passed,
+        "evaluation_scope": registry.get("evaluation_scope"),
+        "case_count": case_count,
+        "case_pass_count": pass_count,
+        "case_pass_fraction": pass_fraction,
+        "provenance_screen_passed": registry.get("provenance_screen_passed"),
+        "full_loop_external_validation_supported": registry.get("full_loop_external_validation_supported"),
+        "raw_trace_hashes_published": privacy.get("raw_trace_hashes_published"),
+    }
+
+
 def audit(root: Path) -> dict[str, object]:
     root = root.resolve()
     gates: list[dict[str, object]] = []
@@ -679,6 +756,9 @@ def audit(root: Path) -> dict[str, object]:
     external_operational_face = _json(external_operational_face_path)
     prospective_release_protocol_path = root / "research/apparatus_resolved_release_protocol.json"
     prospective_release_protocol = _json(prospective_release_protocol_path)
+    controlled_registry_path = root / "research/controlled_full_loop_cohort_registry.json"
+    controlled_registry = _json(controlled_registry_path)
+    controlled_registry_pass, controlled_registry_observed = _controlled_registry_integrity(controlled_registry)
     aggregate = (external_loop or {}).get("aggregate") or {}
     protocol_source = (external_protocol or {}).get("source") or {}
     frozen_model = (external_protocol or {}).get("frozen_model") or {}
@@ -704,7 +784,7 @@ def audit(root: Path) -> dict[str, object]:
         and result_screens.get("soc_final_abs_error_percentage_points")
         == protocol_screens.get("soc_final_abs_error_percentage_points_max")
     )
-    external_loop_pass = (
+    public_external_loop_pass = (
         protocol_integrity
         and (external_loop or {}).get("protocol_frozen_before_data_access") is True
         and aggregate.get("case_count", 0)
@@ -713,6 +793,7 @@ def audit(root: Path) -> dict[str, object]:
         >= protocol_screens.get("minimum_joint_screen_pass_fraction", 0.80)
         and (external_loop or {}).get("source_worktree_dirty") is False
     )
+    external_loop_pass = public_external_loop_pass or controlled_registry_pass
     gates.append(_gate(
         "full_loop_external_validation",
         "PASS" if external_loop_pass else "FAIL",
@@ -720,11 +801,13 @@ def audit(root: Path) -> dict[str, object]:
         f"{external_loop_path.relative_to(root)}; {external_search_path.relative_to(root)}; "
         f"{external_search_recheck_path.relative_to(root)}; {external_operational_recheck_path.relative_to(root)}; "
         f"{external_search_sweep_path.relative_to(root)}; {external_search_latest_path.relative_to(root)}; "
-        f"{prospective_release_protocol_path.relative_to(root)}",
+        f"{prospective_release_protocol_path.relative_to(root)}; {controlled_registry_path.relative_to(root)}",
         "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
         {
             "protocol_integrity": protocol_integrity,
+            "public_external_loop_pass": public_external_loop_pass,
             "aggregate": aggregate,
+            "controlled_cohort_registry": controlled_registry_observed,
             "new_external_data_search": {
                 "status": (external_search or {}).get("status"),
                 "next_action": (external_search or {}).get("next_action"),

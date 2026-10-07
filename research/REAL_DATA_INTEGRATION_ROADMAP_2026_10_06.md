@@ -104,6 +104,14 @@ worktree·사전 선언한 오차 한계를 확인한 뒤 집계 RMSE/MAE와 상
 평가한다. 전체 절차와 공개 한계는
 `research/CONTROLLED_FROZEN_FULL_LOOP_EVALUATION.md`에 고정했다.
 
+다건 승격에서는 `scripts/prepare_controlled_full_loop_cohort.py`로 결과를 보기 전
+최소 8개 trace의 정확한 hash 집합과 80% 이상 합격 기준을 동결한다. 이후
+`scripts/build_controlled_full_loop_registry.py`가 모든 성공·실패 결과가 한 번씩
+포함됐는지, 동일 commit·scope·개별 기준인지 검사한다. 공개 가능한 registry에는
+원본 trace/result hash 대신 비공개 salt로 만든 cohort-local HMAC 코드만 남기며,
+독립 holdout·결과 사전 맹검·통제 이용권 attestation이 모두 참일 때만 full-loop
+external-validation support를 참으로 계산한다.
+
 차량 용기 형상은 `capacity_eos` 선택지로 선언 용량과 공칭 압력에서 표 형상방정식
 밀도로 체적을 계산할 수 있게 했다. 2026-10-06에 이미 열어본 공개 개발 케이스
 8건을 재생한 결과는 0/8 screening pass로, 기존 `capacity_scaled`의 1/8보다
