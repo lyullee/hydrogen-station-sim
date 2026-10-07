@@ -64,11 +64,12 @@ MODEL_BINDINGS.update({
     "FT-2001": ("VENT_PROXY", "vent release mass flow when injected; zero otherwise; no PSV model"),
 })
 HELPERS = {"MASS_HOSE_1", "MASS_HOSE_2", "MASS_HEADER"}
-# The two dispenser-nozzle restrictions have an explicit reverse-flow path that
-# is enabled only by a simulated check-valve failure.  The remaining flow
-# channels are still one-way or derived shared signals and must not be claimed
-# as reverse-flow capable.
-REVERSE_FLOW_CAPABLE_SIGNALS = {"FT-1001", "FT-1301", "FT-1701"}
+# The bank-header selector paths and two dispenser-nozzle restrictions have an
+# explicit reverse-flow path enabled only by a simulated check-valve failure.
+# Other flow channels remain one-way or derived shared signals.
+REVERSE_FLOW_CAPABLE_SIGNALS = {
+    "FT-0701", "FT-0801", "FT-0901", "FT-1001", "FT-1301", "FT-1701",
+}
 MODE_KEYS = {
     "station.monitoring", "station.filling_count", "station.switch_elapsed_s",
     "station.esd", "station.esd_elapsed_s",

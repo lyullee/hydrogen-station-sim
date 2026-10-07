@@ -64,9 +64,10 @@ The HAZOP channels now use this physical state:
 - `FT-1001`: signed total bank-to-header inflow
 - `MASS_HEADER`: common-header hydrogen mass
 
-This makes the common-header reverse-flow rule `HZ-073` and dynamic mass-balance
-rule `HZ-074` executable. It also makes a `header` leak deplete the header inventory
-instead of removing mass from the high bank proxy.
+This makes the low-, medium- and high-bank reverse-flow rules `HZ-050`, `HZ-059`
+and `HZ-068`, the common-header reverse-flow rule `HZ-073`, and dynamic
+mass-balance rule `HZ-074` executable. It also makes a `header` leak deplete the
+header inventory instead of removing mass from the high bank proxy.
 
 ## Supervisory control
 

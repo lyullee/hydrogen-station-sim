@@ -51,8 +51,11 @@ def test_packaged_catalog_keys_and_numeric_values():
     assert 0 < m["simulation_ready_rules"] < 214
 
 
-def test_header_and_dispenser_reverse_flow_rules_are_ready_but_other_paths_are_not():
+def test_bank_header_and_dispenser_reverse_flow_rules_are_ready_but_other_paths_are_not():
     mapped = {row["rule_id"]: row for row in coverage(load_catalog())["rules"]}
+    assert mapped["HZ-050"]["simulation_ready"] is True
+    assert mapped["HZ-059"]["simulation_ready"] is True
+    assert mapped["HZ-068"]["simulation_ready"] is True
     assert mapped["HZ-073"]["simulation_ready"] is True
     assert mapped["HZ-074"]["simulation_ready"] is True
     assert mapped["HZ-091"]["simulation_ready"] is True

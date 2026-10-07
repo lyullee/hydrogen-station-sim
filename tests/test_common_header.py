@@ -4,7 +4,9 @@ from dataclasses import replace
 
 import pytest
 
+from h2station.api import ProcessSettings
 from h2station.hazop.runtime import HazopMonitor
+from h2station.operations import ProcessRuntime
 from h2station.risk.runtime_backend import UnavailableHyRAMBackend
 from h2station.scenario import ReferenceScenario, build_reference_scenario
 from h2station.safety_runtime import FaultEvent, FaultKind
@@ -98,3 +100,41 @@ def test_hazop_uses_header_state_inflow_and_inventory_for_mass_balance():
     assert signals["MASS_HEADER"]["value"] == pytest.approx(
         built.initial_state.common_header.hydrogen_mass_kg
     )
+
+
+def test_cross_bank_reverse_flow_reaches_the_bank_hazop_rule():
+    fault = FaultEvent(
+        "header-check-valve-failure",
+        FaultKind.CHECK_VALVE_FAILURE,
+        "header",
+        0.0,
+        end_time_s=4.0,
+    )
+    built = _built(ReferenceScenario(
+        duration_s=3.2,
+        control_period_s=0.2,
+        initial_vehicle_2_pressure_pa=60.0e6,
+        fault_events=(fault,),
+    ))
+    built.simulator.process_runtime = ProcessRuntime(ProcessSettings(
+        vehicle_1=True,
+        vehicle_2=True,
+    ).model_dump())
+    built.simulator.hazop_monitor = HazopMonitor()
+    observed_flow = []
+    active_rules = set()
+
+    def collect(sample):
+        observed_flow.append(sample.hazop["signals"]["FT-0701"]["value"])
+        active_rules.update(row["rule_id"] for row in sample.hazop["active"])
+
+    built.simulator.simulate(
+        built.initial_state,
+        3.2,
+        0.2,
+        pace_idle=False,
+        sample_callback=collect,
+    )
+
+    assert min(observed_flow) < -1.0
+    assert "HZ-050" in active_rules
