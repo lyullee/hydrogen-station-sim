@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-07 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **78 PASS · 6 FAIL · 7 PENDING**.
+Gate counts: **80 PASS · 6 FAIL · 8 PENDING**.
 
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted
@@ -38,6 +38,13 @@ validation; measured-boundary calibration remains explicitly opt-in.
 The manuscript is therefore kept claim-bounded. The current full-loop negative
 result, component-level evidence and all unresolved gates remain disclosed; no
 failed holdout is silently promoted to validation.
+
+The frozen retrospective HIAD machine benchmark now provides a development-only
+comparison over 34 public station incidents. Direct SAGA scored 0.760 versus
+0.401 for the alarm-only proxy, while the retained run exposed unsupported
+value--unit claims in 3/34 responses. A post-outcome runtime recheck after adding
+the direct-API numeric guard exposed 0/34 such claims with no provider failures.
+These results do not replace the pending blinded expert study.
 
 Confidential real-station data may be used without public redistribution. The
 required route is documented in
@@ -121,20 +128,21 @@ as negative development evidence rather than a new validation claim.
 
 The local format gate currently passes:
 
-- abstract: 148 words (limit checked: 150);
+- abstract: 147 words (limit checked: 150);
 - keywords: 6;
 - highlights: 5, each within the checked character limit;
-- approximate manuscript body: 7,333 words before references;
+- approximate manuscript body: 7,898 words before references;
 - figures: 2; tables: 3;
 - citations resolved and figure assets present;
-- LaTeX compilation: **PASS**.
+- LaTeX compilation: **PENDING**. The built-in compiler was unavailable on this
+  Windows host; the retained PDF predates the current HIAD benchmark text.
 
 These checks cover local formatting and compilation only. They do not establish
 scientific validity, safety certification, or acceptance by IJHE.
 
 ## Blocking gates
 
-The bounded paper still has 11 unresolved or failed gates:
+The bounded paper still has 12 unresolved or failed gates:
 
 1. `preslhy_partb_ambient_external_validation`
 2. `preslhy_revised_holdout_validation`
@@ -146,12 +154,13 @@ The bounded paper still has 11 unresolved or failed gates:
 8. `hiad_casebook_frozen`
 9. `hiad_holdout_collection`
 10. `independent_expert_review_complete`
-11. `submission_metadata_and_declarations`
+11. `ijhe_latex_compilation`
+12. `submission_metadata_and_declarations`
 
 The full user objective additionally requires:
 
-12. `full_loop_external_validation`
-13. `saga_effectiveness_and_safety_supported`
+13. `full_loop_external_validation`
+14. `saga_effectiveness_and_safety_supported`
 
 Only `full_user_objective_ready=true` in the authoritative audit permits the
 project goal to be marked complete. Until then, the correct status is active

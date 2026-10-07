@@ -36,21 +36,21 @@ hydrogen refuelling station digital twin}
 \workingnote
 
 \begin{abstract}
-This study separates evidence for process physics, consequence software and
-language-model decision support in a virtual hydrogen station. A measured-boundary
-Type-IV model was calibrated on 23 fills and evaluated on 12 frozen fills,
-yielding pressure, temperature and state-of-charge root-mean-square errors of
-3.841 MPa, 4.833 $^{\circ}$C and 3.850 percentage points; results did not transfer
-to the full controller. A frozen 22-case PRESLHY blowdown evaluation failed:
-50.0\% passed both screens versus 70\%, with six domain failures. A non-adiabatic
-revision passed 20/22 consumed cases, but its E5.1 holdout was ineligible and
-negative (2/3 primary passes). An independent 90 MPa campaign passed 0/3
-mass-flow series. Two separately frozen Sandia/SRI transients failed their joint
-mass-flow and pressure-decay screens; a third scaled-release trace passed all
-screens. The consequence adapter matched HyRAM+ 6.1; identical source
-passed 47 tests and 803 subtests. A blinded HIAD protocol is specified, but expert
-ratings are pending. Evidence supports a claim-bounded prototype, not a
-field-qualified controller or autonomous emergency system.
+This study evaluates a virtual hydrogen station with separate evidence gates for
+process physics, consequence software and language-model decision support. A
+measured-boundary Type-IV model produced pressure, temperature and state-of-charge
+root-mean-square errors of 3.841 MPa, 4.833 $^{\circ}$C and 3.850 percentage
+points on 12 frozen fills but did not transfer to the full controller. A 22-case
+PRESLHY blowdown evaluation achieved 50.0\% joint passes versus a 70\% threshold;
+a non-adiabatic revision passed 20/22 consumed cases but only 2/3 eligible E5.1
+holdouts. An independent 90 MPa campaign passed 0/3 mass-flow series. Two
+Sandia/SRI transients failed joint screens and one scaled-release trace passed.
+The HyRAM+ 6.1 adapter matched its public API. Across 34 retrospective HIAD
+incidents, the SAGA machine proxy was 0.760 versus 0.401 for alarm-only text
+(paired difference 0.360; 95\% CI 0.309--0.411); expert ratings remain pending.
+A post-outcome API guard reduced exposed unsupported value--unit claims from
+3/34 to 0/34. Evidence supports a claim-bounded prototype, not a field-qualified
+controller or autonomous emergency system.
 \end{abstract}
 
 \noindent\textbf{Keywords:} hydrogen refueling station; digital twin; external
@@ -376,6 +376,19 @@ had zero uncovered case--category pairs, and one case was explicitly marked
 This is an interface traceability result, not a judgment of the historical
 actions or a safety/effectiveness evaluation.
 
+Before collecting any cohort model outputs, a separate retrospective machine
+benchmark froze the complete 34-event public HRS cohort, one integrated direct
+SAGA response per event, a deterministic alarm-only comparator, a five-stage
+response contract and eight coarse action categories. Historical emergency
+actions, lessons and corrective measures were withheld from the model-visible
+context. The primary development proxy was the mean of expected action-category
+recall and five-stage response coverage. A paired event-level bootstrap used
+10,000 replicates and seed 20261008. This proxy tests response structure and
+coarse lexical agreement only; it does not test action correctness, operator
+usability or safety. Because the category taxonomy existed before this benchmark
+and the same public cohort is used for development, it is neither an independent
+holdout nor a substitute for expert review.
+
 The frozen protocol compares a deterministic alarm, three direct one-pass SAGA
 responses and three SAGA responses with standards-document retrieval. Output is
 masked and randomized. Three independent reviewers with documented
@@ -681,10 +694,24 @@ qualified expert sign-off; the institutional ethics determination is also pendin
 The pre-outcome sensitivity simulation estimated 77.7\% power at a standardized
 paired effect of 0.6 and 95.7\% at 0.8. Even with zero unsafe-advice events among
 24 events, the exact two-sided 95\% upper event-rate bound would remain 14.2\%.
-Consequently, no SAGA effectiveness, safety, latency,
-omission-rate or inter-rater-agreement result is reported in this draft. This empty
-result is deliberate: substituting model self-assessment would violate the frozen
+Consequently, no expert-rated SAGA effectiveness, safety, omission-rate or
+inter-rater-agreement result is reported in this draft. This empty primary result
+is deliberate: substituting model self-assessment would violate the frozen
 protocol.
+
+The separate 34-case retrospective machine benchmark produced mean action-category
+recall of 0.524 and five-stage coverage of 0.982 for SAGA, compared with 0.189 and
+0.600 for the deterministic alarm-only baseline. The corresponding machine proxy
+was 0.760 versus 0.401, with a paired mean difference of 0.360 (bootstrap 95\% CI
+0.309--0.411). All 34 API calls completed; mean in-process latency was 696.4 ms.
+Three responses (8.8\%) contained a precise value--unit combination absent from
+the supplied historical observation. These original results were retained. A
+subsequent direct-API output guard removes the complete unsupported sentence and
+inserts an explicit verification notice. In an explicitly post-outcome rerun of
+the same 34 cases, provider failures remained zero and exposed unsupported
+value--unit claims decreased from 3/34 to 0/34; the guard intervened in five
+responses and mean latency was 604.1 ms. This rerun demonstrates only the runtime
+filter behavior on a consumed cohort.
 
 \section{Discussion}
 \subsection{What is externally supported}
@@ -830,6 +857,15 @@ explicitly unassessed. Because the source action prose is excluded and no
 reviewer ratings are available, this result cannot support a claim about the
 correctness, safety or usefulness of SAGA responses.
 
+The retrospective machine proxy adds a reproducible engineering signal: SAGA
+more often produced the requested response stages and action-category vocabulary
+than the alarm-only text. Its magnitude cannot be interpreted as an operator
+benefit because the score is keyword-based, the action taxonomy was already known,
+and no independent human judged factual correctness or unsafe omissions. The
+numeric guard result is narrower still. It shows that precise value--unit phrases
+not present in the serialized input can be blocked at the API boundary; it does
+not verify qualitative causal claims or recommended actions.
+
 \subsection{Limitations}
 All live sensors, valves, CCTV views and operator actions are simulated. No field
 PLC, dispenser, gas detector or station historian has been connected. Vessel
@@ -852,6 +888,10 @@ cryogenic transfer-connection-space pressure-peaking observations, but the
 post-access replay in this study is limited to source-file and timebase
 integrity; it is not predictive validation of the gaseous H70 station loop
 because it lacks vehicle-side and controller telemetry \cite{elvhys2025}.
+The 34-case SAGA machine benchmark is retrospective, uses one stochastic response
+per event and scores lexical proxies rather than expert decisions. Its post-outcome
+guard rerun is a software safety diagnostic and cannot be treated as a second
+validation cohort.
 
 \section{Conclusions}
 A hydrogen-station safety digital twin was evaluated with separate evidence gates
@@ -884,7 +924,12 @@ public API while
 the identical upstream source passed its available validation tests; a frozen
 browser contract retained the experimentally corresponding directional and radial
 geometry semantics. The incident
-decision-support experiment is specified but incomplete. These results support a
+decision-support experiment is specified but incomplete. The retrospective
+34-event machine benchmark favored direct SAGA over alarm-only text on the frozen
+structural proxy (0.760 versus 0.401), while revealing unsupported quantitative
+claims in 3/34 responses. A direct-API guard reduced exposed unsupported
+value--unit claims to 0/34 in a post-outcome rerun, without replacing the pending
+expert study. These results support a
 reproducible research prototype and a disciplined validation workflow; they do
 not support claims of SAE-compliant fuelling control, field safety certification
 or autonomous emergency management.

@@ -2275,6 +2275,41 @@ def audit(root: Path) -> dict[str, object]:
         } if hiad_machine_result else "missing",
     ))
 
+    hiad_guard_path = root / "research/hiad_machine_response_guard_recheck_2026_10_08.json"
+    hiad_guard = _json(hiad_guard_path)
+    hiad_guard_source = (hiad_guard or {}).get("source") or {}
+    hiad_guard_runtime = (hiad_guard or {}).get("runtime") or {}
+    hiad_guard_outcome = (hiad_guard or {}).get("outcome") or {}
+    hiad_guard_rows = (hiad_guard or {}).get("responses") or []
+    hiad_guard_pass = bool(
+        (hiad_guard or {}).get("status") == "POST_OUTCOME_RUNTIME_SAFETY_RECHECK"
+        and hiad_guard_source.get("retained_benchmark_sha256")
+        == _sha256(hiad_machine_result_path)
+        and hiad_guard_source.get("case_count") == 34
+        and len(hiad_guard_rows) == 34
+        and len({str(row.get("event_id")) for row in hiad_guard_rows}) == 34
+        and hiad_guard_outcome.get("before_unsupported_claim_response_count") == 3
+        and hiad_guard_outcome.get("after_unsupported_claim_response_count") == 0
+        and hiad_guard_outcome.get("after_provider_failure_count") == 0
+        and int(hiad_guard_outcome.get("guard_notice_response_count") or 0) > 0
+        and all(not row.get("unsupported_value_unit_claims") for row in hiad_guard_rows)
+        and len(str(hiad_guard_runtime.get("saga_commit") or "")) == 40
+        and "not an independent holdout" in str((hiad_guard or {}).get("claim_boundary", ""))
+    )
+    gates.append(_gate(
+        "hiad_direct_numeric_guard_recheck_integrity",
+        "PASS" if hiad_guard_pass else ("FAIL" if hiad_guard else "PENDING"),
+        "The direct SAGA API blocks input-unsupported value-unit claims in a retained post-outcome 34-case safety recheck.",
+        str(hiad_guard_path.relative_to(root)),
+        "Same consumed HIAD cohort, original 3/34 failure count retained, zero exposed unsupported claims after the guard, zero provider failures and an explicit non-holdout boundary.",
+        {
+            "source": hiad_guard_source,
+            "runtime": hiad_guard_runtime,
+            "outcome": hiad_guard_outcome,
+            "claim_boundary": (hiad_guard or {}).get("claim_boundary"),
+        } if hiad_guard else "missing",
+    ))
+
     cip_endpoint_path = root / "research/cip_dispenser_endpoint_screen.json"
     cip_endpoint = _json(cip_endpoint_path)
     cip_aggregate = (cip_endpoint or {}).get("aggregate") or {}

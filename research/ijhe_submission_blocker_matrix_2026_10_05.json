@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T09:12:34.611139+00:00",
+  "generated_at": "2026-10-07T15:26:25.332979+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -16,9 +16,9 @@
     "interpretation": "A bounded manuscript may be drafted around model-level and qualitative evidence, but the validated full-station digital-twin objective cannot be declared complete."
   },
   "gate_counts": {
-    "PASS": 78,
+    "PASS": 80,
     "FAIL": 6,
-    "PENDING": 7
+    "PENDING": 8
   },
   "evidence_snapshot": {
     "tank_model": {
@@ -115,7 +115,7 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "d2fddf1cc964069f55da73a53f375ecef01d7343622674eba6d12b59019b0f44",
+    "audit_sha256": "0a77950c3dc4d1e03057c30fcdd03d0d41d7bd2987aed3012449ad278c974756",
     "hiad_readiness_sha256": "98677a6d6e24c82a28b3255ef40c8f5a62ce747350f0fe7da5b15c9c3cb77f29",
     "acquisition_tracker_sha256": "bdaff28618a0bdf3f8bbb7e4ab09b366470fb2ce086b8bf16a3f6362ca7a530a",
     "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",

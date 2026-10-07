@@ -174,6 +174,12 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert hiad_machine["saga_linked"]["failed_call_count"] == 0
     assert hiad_machine["saga_linked"]["unsupported_claim_response_count"] == 3
     assert hiad_machine["expert_effectiveness_claimed"] is False
+    assert gates["hiad_direct_numeric_guard_recheck_integrity"]["status"] == "PASS"
+    hiad_guard = gates["hiad_direct_numeric_guard_recheck_integrity"]["observed"]
+    assert hiad_guard["outcome"]["before_unsupported_claim_response_count"] == 3
+    assert hiad_guard["outcome"]["after_unsupported_claim_response_count"] == 0
+    assert hiad_guard["outcome"]["after_provider_failure_count"] == 0
+    assert hiad_guard["outcome"]["guard_notice_response_count"] == 5
     assert gates["public_dispenser_endpoint_diagnostic"]["observed"]["stop_reason_counts"] == {"safety-temperature": 2}
     assert gates["accidental_release_ignition_public_evidence"]["status"] == "PASS"
     accidental = gates["accidental_release_ignition_public_evidence"]["observed"]
