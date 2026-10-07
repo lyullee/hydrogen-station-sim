@@ -41,6 +41,30 @@ and raw sensor rows remain restricted.
    the editor and reviewers a controlled inspection path when the journal or
    data owner requires raw-data verification.
 
+## Channel-mapping preflight
+
+Before reading rows or calibrating, an authorised data custodian runs
+`scripts/preflight_confidential_station_mapping.py` outside the repository.
+It checks whether selected time, pressure, temperature, flow and state
+channels are present in every CSV/TXT **header**, whether any template
+placeholder remains, and whether the separate role/unit attestation is enough
+for station-side pressure calibration. The output contains no source path,
+original tag, timestamp or measurement value.
+
+```powershell
+$env:PYTHONPATH = 'src'
+.\.venv\Scripts\python.exe scripts\preflight_confidential_station_mapping.py `
+  --input <controlled-logger-directory> `
+  --mapping <private-station-boundary-map.json> `
+  --attestation <private-station-channel-attestation.json> `
+  --output <private-preflight.json>
+```
+
+`station_boundary_calibration_supported: true` means only that the header and
+attestation conditions permit an aggregate station-boundary calibration. It
+does not mean vehicle-side validation, a full-loop holdout, equipment safety,
+or field separation-distance validation.
+
 ## Claim boundary
 
 Confidential data can support an externally evaluated result when provenance,
