@@ -1,0 +1,2263 @@
+{
+  "schema_version": 1,
+  "artifact_type": "hiad_retrospective_machine_response_benchmark",
+  "status": "COMPLETED_RETROSPECTIVE_MACHINE_BENCHMARK",
+  "generated_at_utc": "2026-10-07T15:13:09.275401+00:00",
+  "protocol": {
+    "path": "research/hiad_machine_response_benchmark_protocol_2026_10_08.json",
+    "sha256": "c3478edf3e9a5e9c7b004d10cf5f7df2f8a666c22a344d342c9bb09c138b10ad",
+    "model_outputs_accessed_before_protocol_freeze": false,
+    "reference_action_categories_accessed_before_protocol_freeze": true
+  },
+  "runtime": {
+    "digital_twin_commit": "c725f3387de407dd0d8074253e7c3633870b6b9d",
+    "saga_commit": "c66920c35bd9071be6533211b7184f54ebc76261",
+    "provider": "groq",
+    "execution_mode": "in_process_fastapi_test_client_no_server"
+  },
+  "aggregate": {
+    "case_count": 34,
+    "response_count": 68,
+    "variant_summary": {
+      "alarm-only": {
+        "response_count": 34,
+        "mean_machine_proxy_score": 0.40061274509803924,
+        "mean_category_recall": 0.18914141414141417,
+        "mean_stage_coverage": 0.6000000000000001,
+        "unsupported_claim_response_count": 0,
+        "failed_call_count": 0,
+        "latency_ms_mean": 0.0
+      },
+      "saga-linked": {
+        "response_count": 34,
+        "mean_machine_proxy_score": 0.7601715686274509,
+        "mean_category_recall": 0.523989898989899,
+        "mean_stage_coverage": 0.9823529411764705,
+        "unsupported_claim_response_count": 3,
+        "failed_call_count": 0,
+        "latency_ms_mean": 696.4033470550717
+      }
+    },
+    "paired_machine_proxy_difference": {
+      "case_count": 34,
+      "mean_paired_difference": 0.35955882352941176,
+      "bootstrap_95_ci": [
+        0.30882352941176466,
+        0.41127450980392155
+      ],
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 20261008
+    }
+  },
+  "responses": [
+    {
+      "event_id": "396",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Detection of hydrogen release. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "inspection_leak_test_repair"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": 0.0,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.3
+    },
+    {
+      "event_id": "396",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 941.4350999286398,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical hydrogen leak at the dispenser pump that triggered an alarm without ignition, though the specific cause and magnitude remain uncertain due to the lack of live sensor data. The immediate priority is to verify the current alarm status and isolate the affected dispenser pump to prevent further release, followed by confirming that no ignition sources are present in the vicinity. Stabilization requires verifying that hydrogen concentration levels have returned to safe limits and that the leak source is fully sealed before any restart attempt. For prevention, conduct a detailed root cause analysis of the pump seal or connection and update maintenance protocols to include more frequent leak detection checks.",
+      "expected_categories": [
+        "inspection_leak_test_repair"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair"
+      ],
+      "category_recall": 1.0,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 1.0
+    },
+    {
+      "event_id": "401",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Detection of hydrogen release. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.5,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.55
+    },
+    {
+      "event_id": "401",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 797.8564000222832,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical incident where a small hydrogen leak, located approximately 8 cm from the end fitting in the middle of the hose, triggered a station shutdown via gas detection during a filling operation. The safety systems functioned as intended, resulting in an unignited release with no reported injuries or further damage, though the exact cause of the leak remains unspecified in the provided data.\n\nImmediate actions should prioritize verifying the current isolation status of the hydrogen dispenser and confirming that the area is ventilated and free of residual gas before any physical inspection. The next step is to visually inspect the identified hose section near the end fitting to confirm the source of the leak, ensuring no ignition sources are present during this check.\n\nStabilization and restart conditions require the successful repair or replacement of the compromised hose section, followed by a pressure integrity test and a final gas detection sweep to ensure no further leaks are present. The station can only be returned to service after these verification steps are documented and approved by the responsible operator.\n\nPrevention and follow-up controls should include implementing a more rigorous periodic inspection protocol for hose end fittings and mid-hose sections, potentially adding automated leak detection sensors at critical points. Additionally, review the maintenance logs for this specific hose to determine if wear patterns or previous minor issues were overlooked, and update the preventive maintenance schedule accordingly.",
+      "expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 1.0,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 1.0
+    },
+    {
+      "event_id": "402",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Cavitation in a compressor. Observed physical effect: No Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.2,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.4
+    },
+    {
+      "event_id": "402",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 710.7055999804288,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical near-miss involving severe cavitation, vibration, and dead-heading in the 1st stage of a hydrogen compressor, which caused 5 of 8 lower head bolts to snap and damaged diaphragms, but resulted in no hydrogen release or contamination. The plausible scenario is a non-hydrogen system initiating event leading to mechanical failure, though the specific root cause remains uncertain due to the lack of live sensor data.\n\nImmediate actions in priority order are to confirm the system remains in a safe shutdown state and to secure the area for the on-site investigation that was initiated one hour after detection.\n\nStabilization and restart conditions require the completion of the on-site investigation, replacement of the snapped bolts and damaged 1st stage diaphragms, and verification that cavitation and vibration levels are within normal limits.\n\nPrevention and follow-up controls should include reviewing the remote log review procedures that detected the anomaly and implementing enhanced monitoring for compressor pressures to prevent recurrence of dead-heading and cavitation.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.8,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.9
+    },
+    {
+      "event_id": "403",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Hydrogen dispenser failure. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": null,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.6
+    },
+    {
+      "event_id": "403",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 559.6048999577761,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical hydrogen dispenser failure at a bus refuelling station, characterized as an unignited hydrogen release with no reported ignition or operational interruption. The plausible scenario is a mechanical or control fault in the primary dispenser that triggered a safe shutdown, allowing the operator to switch to the second unit without service disruption.\n\nImmediate actions in priority order are to confirm the failed dispenser is isolated and secured, then verify the second dispenser is operating within normal parameters. Stabilization and restart conditions require the dispenser company to complete repairs and certify the unit is safe for operation before reintegration into service. Prevention and follow-up controls should include a root cause analysis of the failure and a review of the station’s redundancy protocols to ensure rapid failover capability is maintained.",
+      "expected_categories": [],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": null,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 1.0
+    },
+    {
+      "event_id": "404",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Malfunctioning in a hydrogen refuelling station. Observed physical effect: No Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": 0.0,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.3
+    },
+    {
+      "event_id": "404",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 560.8645000029355,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a near-miss where slow fuelling resulted from solenoid valves failing to open due to a lack of compressed air, with the first dispenser already offline for leaking (HIAD event 403). The immediate priority is to verify and restore the compressed air supply to the active dispenser, followed by confirming that the solenoid valves operate correctly before resuming normal fuelling. Stabilization requires the compressed air pressure to be within specified limits and the valve actuation to be verified, while restart is conditional on successful test cycles. Prevention controls should include monitoring compressed air pressure with alarms and regular maintenance checks on solenoid valves to ensure reliable operation.",
+      "expected_categories": [
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": 0.0,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.5
+    },
+    {
+      "event_id": "411",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Oil leak. Observed physical effect: No Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "detection_alarm_monitoring"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": 0.0,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.3
+    },
+    {
+      "event_id": "411",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 504.0500999893993,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical near-miss where an oil leak in the hydrogen compressor contaminated the system from the compressor to the filling nozzle, with no live sensor data or calculated consequence distances available to verify current status. Immediate actions should prioritize isolating the affected compressor and hydrogen system to prevent further contamination, followed by a thorough inspection to confirm the extent of the oil residue. Stabilization and restart conditions require complete removal of oil contamination, verification of system integrity, and a successful leak test before resuming operations. Prevention controls should include enhanced routine maintenance checks for oil leaks and post-maintenance purity testing to ensure no residual contamination remains in the hydrogen supply chain.",
+      "expected_categories": [
+        "detection_alarm_monitoring"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": 0.0,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.5
+    },
+    {
+      "event_id": "454",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Damage of a HRS canopy. Observed physical effect: No Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": 0.0,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.3
+    },
+    {
+      "event_id": "454",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 751.1393000604585,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical near-miss where heavy-duty vehicles struck the HRS canopy due to its lower height relative to the forecourt, with no hydrogen release or injuries reported. The plausible scenario involves operator or driver unawareness of the height discrepancy, though the specific cause of the initial low installation is not detailed in the supplied facts.\n\nImmediate actions are limited to verifying the current physical height of the HRS canopy against the required clearance for HDVs, as no live alerts or active faults are present. Since the narrative states the canopy has already been repaired twice and the operator will raise its height, the primary immediate step is to confirm this corrective action has been physically implemented and documented.\n\nStabilization and restart conditions are met as the station status is NORMAL with no active alerts, requiring only final verification that the canopy height adjustment is complete to prevent recurrence. No further operational stabilization is needed for the hydrogen system itself.\n\nPrevention and follow-up controls should include installing permanent height warning signage at the HRS entry point and updating the station’s standard operating procedures to include a pre-operation check for canopy clearance. Additionally, a formal review of the installation specifications should be conducted to ensure future maintenance or repairs do not inadvertently lower the canopy height again.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair"
+      ],
+      "category_recall": 0.5,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.75
+    },
+    {
+      "event_id": "463",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Release at a dispenser of a HRS. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "fire_response_cooling",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.3333333333333333,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.4666666666666667
+    },
+    {
+      "event_id": "463",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 1212.0222999947146,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a minor, unignited hydrogen leak at the 35MPa dispenser's break-away coupling during a low-temperature test refuel, likely caused by a defect only manifesting below ambient conditions. The immediate priority is to confirm the 35MPa dispenser remains isolated and out of service, followed by verifying that the operational 70MPa dispenser is unaffected and safe.\n\nStabilization requires the manufacturer to install a replacement break-away coupling, after which the system must undergo a leak test specifically at the operational low-temperature range (-33°C to -40°C) rather than just ambient conditions. To prevent recurrence, follow-up controls should include mandatory low-temperature commissioning tests for all cryogenic hydrogen components and a review of the break-away coupling design or material suitability for these specific thermal conditions.",
+      "expected_categories": [
+        "fire_response_cooling",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair"
+      ],
+      "category_recall": 0.3333333333333333,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "stabilize"
+      ],
+      "stage_coverage": 0.8,
+      "unsupported_value_unit_claims": [
+        "-33°C",
+        "-40°C"
+      ],
+      "machine_proxy_score": 0.5666666666666667
+    },
+    {
+      "event_id": "702",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: hydrogen leak in the hose of a dispenser. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.25,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.425
+    },
+    {
+      "event_id": "702",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 644.8952000355348,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical hydrogen leak at a 70MPa station caused by a plastic filling hose failure after 130 cycles, characterized by specific cracks and a through-hole near the dispenser connection. The plausible scenario is material fatigue or durability failure during a durability test, though the exact root cause is not specified in the provided data.\n\nImmediate actions in priority order are to confirm the facility remains in manual shutdown, verify the area is clear of ignition sources, and ensure the portable gas leak detector confirms no residual hydrogen accumulation.\n\nStabilization and restart conditions require a complete replacement of the failed hose, a thorough inspection of the dispenser connection interface, and a successful pressure integrity test before resuming operations.\n\nPrevention and follow-up controls should include revising the hose replacement interval based on the 130-cycle failure data, implementing stricter visual inspection protocols for plastic hoses, and updating the durability test criteria to reflect actual operational limits.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.5,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.75
+    },
+    {
+      "event_id": "803",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Release from the dispenser of a refuelling station. Observed physical effect: No Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "shutdown_isolation_depressurization"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": 0.0,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.3
+    },
+    {
+      "event_id": "803",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 539.779799990356,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a near-miss external hydrogen leak (1–2 kg) from a medium-pressure manual isolation ball valve O-ring during recommissioning, with no ignition and active safety sensor detection. Immediate actions are to confirm the safety sensor alarm status, ensure the area is ventilated and clear of ignition sources, and verify that the affected valve remains isolated or is safely depressurized. Stabilization requires a full system integrity check, replacement of the failed O-ring, and successful pressure testing before restarting operations. Prevention controls include implementing a mandatory post-rebuild leak test protocol and reviewing O-ring material compatibility for the specific medium-pressure application.",
+      "expected_categories": [
+        "shutdown_isolation_depressurization"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "matched_expected_categories": [
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 1.0,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 1.0
+    },
+    {
+      "event_id": "884",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Explosion in the storage of a HRS. Observed physical effect: Hydrogen release and ignition. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "evacuation_perimeter_access",
+        "fire_response_cooling",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.2,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.4
+    },
+    {
+      "event_id": "884",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 591.44870005548,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed incident was a detonation caused by a major hydrogen leak (1.5–3 kg) from high-pressure storage, attributed to gasket failure due to untightened bolts and pressure oscillation fatigue, with uncertainty remaining regarding the exact initial failure sequence. Immediate actions must prioritize securing the area, verifying the integrity of all similar bolted connections, and confirming that no residual hydrogen remains in the affected pipeline sections. Stabilization and restart require successful pressure testing of the repaired gasket assembly, validation of the new aviation-style assembly procedures, and a comprehensive safety review by the operator and manufacturer. Prevention controls should include mandatory torque verification for all high-pressure connections, regular fatigue inspections of gaskets, and strict adherence to the updated assembly protocols to prevent recurrence.",
+      "expected_categories": [
+        "evacuation_perimeter_access",
+        "fire_response_cooling",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.4,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.7
+    },
+    {
+      "event_id": "953",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Hydrogen release at a public hydrogen refuelling station.. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.2,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.4
+    },
+    {
+      "event_id": "953",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 672.2824000753462,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical hydrogen release at a public refuelling station caused by a crankshaft bearing failure in the compressor, leading to a shaft seal leak after approximately two hours of operation. The plausible scenario involves the depletion of high-pressure inventory triggering the compressor to refill storage from liquid hydrogen, where mechanical failure resulted in an unignited release that was stopped by closing valves and using the e-stop.\n\nImmediate actions in priority order are to ensure the area is secured by emergency responders, verify that all isolation valves are closed to stop the leak, and confirm the compressor is shut down via the emergency stop. Stabilization and restart conditions require a full mechanical inspection and repair of the failed crankshaft bearing and shaft seal, along with a system integrity check before resuming operations.\n\nPrevention and follow-up controls should include implementing predictive maintenance for compressor bearings, reviewing operational limits to prevent excessive runtime without inspection, and updating emergency response protocols for mechanical failures in the hydrogen compression stage.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.4,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.7
+    },
+    {
+      "event_id": "1038",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Dispenser nozzle freezing during hydrogen refuelling. Observed physical effect: No Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 1.0,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.8
+    },
+    {
+      "event_id": "1038",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 672.5253000622615,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical near-miss where the dispenser nozzle froze during refuelling at -40°C, with no evidence of hydrogen leakage or apparatus damage. The plausible scenario involves ice formation at the nozzle/receptacle connection due to the lowest precooling temperature, though the exact cause of the freeze is not specified in the data.\n\nImmediate actions should prioritize verifying the integrity of the nozzle/receptacle seal and confirming zero hydrogen release before any further operation. Since no live sensor values are available, operators must rely on visual inspection and manual checks to ensure the stuck nozzle is safe to handle.\n\nStabilization and restart conditions require confirming that the ice has been safely cleared and that the connection is free of residual moisture or damage. Restart should only proceed after a successful leak test and verification that the precooling system is functioning within normal parameters.\n\nPrevention controls should include reviewing precooling temperature limits and adding procedural checks for ice accumulation at low temperatures. Follow-up actions must document this incident in the safety log and update operator training to emphasize the risks of nozzle freezing during hydrogen transfer.",
+      "expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 1.0,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [
+        "-40°C"
+      ],
+      "machine_proxy_score": 1.0
+    },
+    {
+      "event_id": "1062",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Leakage at a hydrogen buses refilling station. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "fire_response_cooling",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": 0.0,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.3
+    },
+    {
+      "event_id": "1062",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 555.3963999263942,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical unignited hydrogen release from a stationary tank at a bus depot, where the leak was stopped after two hours by closing the valve, though the specific cause and exact leak rate remain uncertain. Immediate actions should prioritize verifying the isolation of the leaking tank, ensuring the area is ventilated and free of ignition sources, and confirming that the fire department has cleared the site before any further operations. Stabilization requires a comprehensive leak test and pressure integrity check on the stationary tank system to ensure no residual leakage exists before restarting refueling operations. Prevention controls should include a review of valve maintenance records, implementation of enhanced acoustic or pressure monitoring for early leak detection, and updated emergency response drills for rapid isolation procedures.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "fire_response_cooling",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "matched_expected_categories": [
+        "emergency_communication_coordination",
+        "ventilation_purge"
+      ],
+      "category_recall": 0.5,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.75
+    },
+    {
+      "event_id": "1063",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Leakage at a hydrogen refilling station in a airport. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.2,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.4
+    },
+    {
+      "event_id": "1063",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 651.2248999206349,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical near-miss involving a 5.7 kg unignited hydrogen release detected by audible whistling, where the primary uncertainty lies in the exact leak source and the potential for a domino effect from the nearby fuel depot. Immediate actions should prioritize securing the 150 m perimeter, establishing reliable communication with the airport operator, and remotely isolating the trailer shut-off valve to stop the release. Stabilization requires confirmation that the leak is physically repaired and the area is cleared of hydrogen, while restart conditions depend on a full system integrity check and verification that emergency access barriers (such as the code-locked gate) do not impede future response. Prevention controls must include updating emergency access protocols for fire services, improving operator communication channels, and implementing routine acoustic or sensor-based leak detection to reduce reliance on human hearing.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "fire_response_cooling",
+        "inspection_leak_test_repair"
+      ],
+      "matched_expected_categories": [
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access"
+      ],
+      "category_recall": 0.4,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.7
+    },
+    {
+      "event_id": "1064",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Leakage at a hydrogen refilling station in a airport. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": 0.0,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.3
+    },
+    {
+      "event_id": "1064",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 746.094899950549,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical near-miss where a hydrogen leak at the compressor filter triggered a detector alarm at 25% LEL, leading to automatic safe-mode activation and isolation. The plausible scenario involves a defective filter causing a low-volume unignited release in a confined space, though the exact root cause of the failure remains unverified in the provided data.\n\nImmediate actions should prioritize verifying the physical isolation of the hydrogen storage system and confirming the purge completion of connection pipes before any manual intervention. The next step is to ensure the area is ventilated and safe for entry, followed by the replacement of the defective filter as documented.\n\nStabilization requires confirming that hydrogen concentrations have returned to below safety limits and that the alarm system is reset after the on-call technician verifies the installation is safe. Restart conditions include a successful pressure test of the new filter and a full system integrity check before resuming normal compression operations.\n\nPrevention controls should focus on implementing predictive maintenance for compressor filters and verifying the sensitivity and coverage of gas detectors in confined spaces. Follow-up actions must include a root cause analysis of the filter failure and a review of the emergency response timeline to ensure the 1 hour 45-minute delay to technician arrival is addressed.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "matched_expected_categories": [
+        "detection_alarm_monitoring",
+        "ventilation_purge"
+      ],
+      "category_recall": 0.5,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.75
+    },
+    {
+      "event_id": "1106",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Fire in a hydrogen refuelling station. Observed physical effect: Hydrogen Release and Ignition. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "fire_response_cooling",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": 0.0,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.3
+    },
+    {
+      "event_id": "1106",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 621.7923000222072,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical incident where a tie rod failure in the hydrogen compressor caused a high-pressure leak, leading to an internal deflagration and explosion within the compressor container. The scenario involves significant material damage limited to two containers, with no injuries reported, though the exact cause of the tie rod failure remains unspecified in the provided data.\n\nImmediate actions should prioritize verifying the complete isolation of the hydrogen supply and confirming that the fire is fully extinguished and the area is safe for entry. Next, secure the perimeter to prevent unauthorized access to the damaged containers and the detached door found 10 meters away.\n\nStabilization requires ensuring all hydrogen sources are isolated and depressurized, while restart conditions depend on a thorough structural integrity assessment of the remaining compressor components and the container. Prevention controls should include enhanced inspection protocols for critical structural elements like tie rods and a review of emergency response times, noting that firefighters arrived within 10 minutes.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "fire_response_cooling",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "evacuation_perimeter_access",
+        "inspection_leak_test_repair",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "evacuation_perimeter_access",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.4,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [
+        "10 minutes"
+      ],
+      "machine_proxy_score": 0.7
+    },
+    {
+      "event_id": "1159",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Release from a vessel at a HRS. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.25,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.425
+    },
+    {
+      "event_id": "1159",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 576.4721999876201,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical unignited hydrogen release from a 1 mm leak at a treated connection on a 950 bar composite vessel, likely caused by compressor-induced vibrations loosening the screwed connection, though the exact detection method remains uncertain. Immediate actions should prioritize verifying the isolation of the affected vessel and confirming the vent stack is functioning correctly to ensure safe depressurization, followed by a physical inspection of the connection for residual leaks. Stabilization and restart conditions require the installation of additional pipe support to mitigate vibration, a successful pressure test of the repaired connection, and a full system integrity check. Prevention controls include implementing regular vibration monitoring on compressor-mounted connections and establishing a mandatory notification protocol for any detected pressure anomalies, even if no ignition occurs.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.25,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.625
+    },
+    {
+      "event_id": "1161",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Release from a storage at a HRS. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.3333333333333333,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.4666666666666667
+    },
+    {
+      "event_id": "1161",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 564.8752999259159,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical unignited hydrogen release from a CGH2 storage vessel caused by O-ring and back-up ring rupture due to thread length mismatch, with no injuries or property damage reported. The immediate priority is to verify the isolation status of the affected vessel and confirm that the emergency venting system has safely completed its discharge cycle. Stabilization requires a full structural inspection of the neck assembly and replacement of the failed seals before any restart is considered. Prevention controls should focus on verifying thread compatibility during maintenance and implementing stricter torque and alignment checks for high-pressure connections.",
+      "expected_categories": [
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.3333333333333333,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.6666666666666666
+    },
+    {
+      "event_id": "1163",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Fire from the storage area of a HRS. Observed physical effect: Hydrogen Release and Ignition. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "fire_response_cooling"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": 0.0,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.3
+    },
+    {
+      "event_id": "1163",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 705.4676000261679,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical fire at a bus HRS caused by hydrogen venting through a storage safety valve, which was initially misreported as an explosion due to noise and vibration. The plausible scenario involves a safety system activation leading to ignition, with uncertainty regarding the specific trigger for the venting event since no live sensor data or calculated consequence distances are provided.\n\nImmediate actions in priority order are to confirm the fire is fully extinguished and secure the area, followed by isolating the affected storage unit and verifying the integrity of the safety valve and associated piping.\n\nStabilization and restart conditions require a complete root cause analysis of the venting event, repair of the damaged storage building roof, and successful functional testing of the safety relief system before returning to normal operations.\n\nPrevention and follow-up controls include reviewing safety valve sizing and maintenance records, updating emergency response protocols to distinguish between venting fires and explosions, and conducting a post-incident audit to ensure compliance with hydrogen safety standards.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "fire_response_cooling"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": 0.0,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.5
+    },
+    {
+      "event_id": "1173",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Explosion on a CGH2 cylinders bundle during filling. Observed physical effect: Hydrogen Release and Ignition. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "fire_response_cooling",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.125,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.3625
+    },
+    {
+      "event_id": "1173",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 488.0042999284342,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical explosion and fire at a CGH2 cylinder bundle during filling, caused by mechanical fatigue at a brazed joint due to hose weight, with the notable uncertainty that the hydrogen detector failed to alarm. Immediate actions are to stop the compressor, press the emergency stop, activate the sprinkler system, and notify the fire department to establish a security perimeter. Stabilization requires the fire brigade to extinguish the fire and confirm the area is safe before any restart procedures begin. Prevention controls must include redesigning the piping to eliminate mechanical stress on brazed joints and verifying the functionality of hydrogen detection systems.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "fire_response_cooling",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "fire_response_cooling",
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "fire_response_cooling",
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.625,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.8125
+    },
+    {
+      "event_id": "1191",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Fire at the storage of a hydrogen refuelling station. Observed physical effect: Hydrogen Release and Ignition. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.25,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.425
+    },
+    {
+      "event_id": "1191",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 654.2545999400318,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation was a fire at the CGH2 storage system during an unplanned visual inspection, where hydrogen from the operating production unit flowed back into the vessel because the temporary isolation valve was not closed, leading to ignition by vacuum cleaner motor sparks.\n\nImmediate actions in priority order are to confirm the isolation of the hydrogen production vent line from the storage system and ensure the temporary valve is fully closed, followed by verifying that all ignition sources, including the vacuum cleaner, are removed from the area.\n\nStabilization and restart conditions require a confirmed leak-free integrity check of the pressure vessels and a verified nitrogen purge that eliminates any residual hydrogen before any further maintenance or operational restart.\n\nPrevention and follow-up controls must include a mandatory verification step to confirm the closure of temporary isolation valves before connecting external equipment, along with a review of the permit-to-work procedure to explicitly prohibit the use of non-explosion-proof electrical tools in hydrogen service areas.",
+      "expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "ventilation_purge"
+      ],
+      "category_recall": 0.75,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.875
+    },
+    {
+      "event_id": "1193",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: A hydrogen leak at a 70 MPa dispenser. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.2,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.4
+    },
+    {
+      "event_id": "1193",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 546.807200065814,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a hydrogen leak at 4% LEL from a threaded joint upstream of a hand valve, likely caused by a fitting loosening during unauthorized retightening work and missed by subsequent airtightness tests due to scope errors and a closed hand valve. Immediate actions are to verify the station remains in shutdown, confirm zero hydrogen concentration with portable detectors, and isolate the specific joint before any further testing. Stabilization requires a full-scope airtightness test including the previously excluded upstream section with the hand valve open, followed by a documented review of work instructions to prevent unauthorized maintenance. Follow-up controls must enforce strict scope verification for all inspections and mandate that airtightness tests cover the entire pressure boundary, not just isolated segments.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.6,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.8
+    },
+    {
+      "event_id": "1194",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Leak in a dispenser at a mobile HRS. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.5,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.55
+    },
+    {
+      "event_id": "1194",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 609.3346999259666,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a hydrogen leak at a mobile HRS dispenser caused by an EPDM shutoff valve operating at its -40°C minimum temperature limit, likely exacerbated by cumulative stress from refueling multiple vehicles. The plausible scenario involves material fatigue or degradation at the lower temperature boundary, though the exact failure mechanism remains uncertain without live sensor data.\n\nImmediate actions should prioritize verifying the automatic depressurization and venting completion, securing the area to prevent ignition, and isolating the affected dispenser from the supply chain. Stabilization requires a detailed inspection by the equipment manufacturer to confirm the leak source and replace the compromised valve with materials rated for sustained -40°C operation.\n\nPrevention controls must include reviewing material compatibility for continuous low-temperature service, implementing periodic integrity checks on shutoff valves, and establishing operational limits or monitoring protocols to detect early signs of material stress during high-volume refueling cycles.",
+      "expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair"
+      ],
+      "category_recall": 0.5,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "stabilize"
+      ],
+      "stage_coverage": 0.8,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.65
+    },
+    {
+      "event_id": "1195",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Leak from a valve in a HRS. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.2,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.4
+    },
+    {
+      "event_id": "1195",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 707.1559000760317,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a hydrogen leak at one of the three shut-off valves during startup, which triggered a high-level alarm (≥1 vol%) and automatic shutdown of the production equipment and power supply. The specific cause of the leak is uncertain, but the system successfully isolated the hazard via automatic safety devices.\n\nImmediate actions in priority order are: 1) Confirm the automatic shutdown and power cutoff are stable; 2) Ventilate the valve unit room to reduce hydrogen concentration below safe limits; 3) Isolate the specific leaking shut-off valve from the rest of the system.\n\nStabilization and restart conditions require the hydrogen concentration to drop below the lower explosive limit (typically <1 vol% or per site-specific safety thresholds), a successful leak test on the repaired or replaced valve, and a full system integrity check.\n\nPrevention and follow-up controls include inspecting the valve for mechanical failure or seal degradation, reviewing the startup procedure for potential procedural errors, and verifying the reliability of the gas detection and automatic shutdown systems.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "category_recall": 0.8,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.9
+    },
+    {
+      "event_id": "1196",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Several leaks from the hoses of a HRS. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.16666666666666666,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.3833333333333333
+    },
+    {
+      "event_id": "1196",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 610.2605999913067,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation involves three historical incidents of dispenser hose leaks at a 70 MPa HRS, caused by premature internal surface cracking and spurious particles, resulting in unignited hydrogen releases classified as \"other than trace amount.\" The specific degradation mechanism and exact release quantities remain uncertain due to the lack of live sensor data or detailed consequence calculations.\n\nImmediate actions should prioritize verifying the current integrity of all dispenser hoses through visual inspection and leak testing, followed by checking the hydrogen supply filtration system for residual spurious particles.\n\nStabilization and restart conditions require confirmed zero-leak status on all hoses, validation that filtration systems are clean and functional, and a formal review of the hose manufacturer’s lifetime data against actual operational cycles.\n\nPrevention controls must include implementing stricter particle filtration standards, shortening the preventive maintenance interval for hose replacement, and conducting periodic internal surface inspections to detect early-stage cracking before failure occurs.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.3333333333333333,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.6666666666666666
+    },
+    {
+      "event_id": "1198",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Explosion at a filling hose of a hydrogen dispenser. Observed physical effect: Hydrogen Release and Ignition. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.16666666666666666,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.3833333333333333
+    },
+    {
+      "event_id": "1198",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 857.5633000582457,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation involves a hydrogen filling hose rupture and explosion at a 70 MPa HRS, triggered by an undetected leak alarm (500 ppm to 1,000 ppm) due to the operator being in the visual blind spot of the rotating beacon. The plausible scenario is that the hose failed structurally during the depressurization and nozzle removal phase, resulting in a hydrogen release and ignition event, though the exact mechanical cause of the rupture remains uncertain based on the provided narrative.\n\nImmediate actions in priority order are to confirm the area is clear of personnel and verify that the automatic hydrogen compressor shutdown has been maintained, followed by securing the dispenser and preventing any further hydrogen transfer attempts. Stabilization and restart conditions require a complete inspection of the ruptured hose and dispenser components, verification that hydrogen levels in the vicinity have returned to safe limits, and confirmation that the gas detection system is fully functional and visible to operators. Prevention and follow-up controls should include modifying the alarm beacon placement to eliminate blind spots, implementing mandatory audible alarms for gas detection, and conducting a root cause analysis on the hose material failure to determine if maintenance or replacement is required.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.6666666666666666,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.8333333333333333
+    },
+    {
+      "event_id": "1202",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Leak  at a filling hose of a hydrogen dispenser. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.2,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.4
+    },
+    {
+      "event_id": "1202",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 834.1991999186575,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical leak at a 70 MPa hydrogen dispenser hose where a small inner-layer crack allowed hydrogen to diffuse and build pressure until the outer layer ruptured near the emergency breakaway coupler, resulting in an unignited release that was only detected by a portable check after the initial hissing and popping sounds.\n\nImmediate actions in priority order are to confirm the emergency shutdown has isolated the hydrogen supply, evacuate personnel from the immediate vicinity to ensure safety, and verify that no ignition sources are present while waiting for the area to clear.\n\nStabilization and restart conditions require a complete visual and ultrasonic inspection of the hose and coupler to confirm no further damage, a successful pressure decay test to prove the integrity of the system, and verification that all gas detectors are functional and calibrated.\n\nPrevention and follow-up controls should include implementing periodic ultrasonic inspections of dispenser hoses to detect early-stage inner-layer cracks, reviewing the maintenance interval for hose replacement, and ensuring that portable gas detectors are used for routine leak checks in addition to stationary systems.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "evacuation_perimeter_access",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.8,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.9
+    },
+    {
+      "event_id": "1203",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Leaks from a hydrogen compressor. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.16666666666666666,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.3833333333333333
+    },
+    {
+      "event_id": "1203",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 722.0212999964133,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation involves two sequential hydrogen leaks from the 5th and 3rd stage cylinder heads of a compressor, likely caused by O-ring twisting from pressure pulsation or end-of-life damage, though the exact cause remains uncertain. Immediate actions should prioritize isolating the affected compressor stages and verifying the integrity of the O-rings before any restart. Stabilization requires confirming zero leakage under nominal pressure and replacing the compromised seals with new components. Follow-up controls must include reviewing O-ring service life schedules and investigating pressure pulsation sources to prevent recurrence.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [],
+      "matched_expected_categories": [],
+      "category_recall": 0.0,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.5
+    },
+    {
+      "event_id": "1204",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: leak from a hose when refuelling a forklift. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.2,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.4
+    },
+    {
+      "event_id": "1204",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 512.929099961184,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical hose burst during forklift refueling that released approximately 0.14 m³ of hydrogen without ignition, likely caused by fatigue from wrinkles and abrasions on a hose used 2,334 times over three years. Immediate actions should prioritize verifying the emergency stop and excess flow prevention valve activation, followed by securing the area and inspecting the damaged coupling and filling port. Stabilization requires confirming zero residual pressure and hydrogen concentration before any restart, while prevention controls must include mandatory hose replacement based on cycle counts and visual inspection for surface abrasions.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair"
+      ],
+      "category_recall": 0.2,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.6
+    },
+    {
+      "event_id": "1205",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: Hydrogen accidental release into a compressor room. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.2,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.4
+    },
+    {
+      "event_id": "1205",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 933.2352000055835,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is an unignited hydrogen release into the compressor room, triggered by a procedural error where a dispenser depressurization line remained connected to an open safety valve release line, resulting in a 48% LFL detector alarm and full station shutdown. The plausible scenario involves a sequence of maintenance oversights, specifically the failure to isolate the removed PRV discharge line before performing the differential pressure charging test, though the exact root cause of the initial over-pressurization remains a procedural deviation.\n\nImmediate actions must prioritize verifying that the station shutdown has isolated all hydrogen sources and confirming that the 48% LFL reading has dropped below the alarm threshold to ensure the area is safe for entry. Operators should then physically verify and close the specific valve connecting the dispenser vent line to the compressor room release line to stop any potential ongoing leakage.\n\nStabilization requires a complete purge and ventilation of the compressor room until gas levels are confirmed at zero, followed by a formal leak test of the reconnected piping and a review of the interlock system status before any restart. Restart conditions include restoring the compressor interlocks, verifying the integrity of the automatic shut-off valve gland packing, and obtaining management approval after a root cause analysis of the procedural failures.\n\nPrevention controls should focus on implementing a mandatory line-break isolation checklist for maintenance activities, specifically requiring positive verification that release lines are capped or isolated before any depressurization tests, and reinforcing operator training on the criticality of interlock bypass procedures during tightness tests.",
+      "expected_categories": [
+        "emergency_communication_coordination",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "category_recall": 0.8,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.9
+    },
+    {
+      "event_id": "1206",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: leaks from a threaded joint. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "inspection_leak_test_repair"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [],
+      "category_recall": 0.0,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.3
+    },
+    {
+      "event_id": "1206",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 481.1467999825254,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical leak from a cone-and-thread fitting on a 40 MPa hydrogen storage unit, which was identified via portable detection during a routine test rather than by fixed sensors. The immediate priority is to confirm the unit remains isolated and depressurized, followed by verifying that the area is free of residual hydrogen before any further intervention. Stabilization requires a successful pressure test of the repaired joint and confirmation that fixed detection systems are functional to prevent future undetected leaks. Preventive controls should include reviewing the maintenance interval for threaded joints and validating the coverage and sensitivity of fixed hydrogen detectors in the storage area.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "emergency_communication_coordination",
+        "evacuation_perimeter_access",
+        "inspection_leak_test_repair"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair"
+      ],
+      "category_recall": 0.5,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "stabilize"
+      ],
+      "stage_coverage": 0.8,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.65
+    },
+    {
+      "event_id": "1207",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: leak from a dispenser of a HRS. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.2,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.4
+    },
+    {
+      "event_id": "1207",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 806.7579000489786,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a historical leak at a 70 MPa HRS dispenser during FCV refueling, where the root cause was identified as an emergency shutdown valve with tightening torque below the specified value. The immediate priority action is to verify and correct the torque on the emergency shutdown valve to meet specifications, followed by a re-test to confirm the seal integrity. Stabilization and restart conditions require a successful leak test after torque correction and confirmation that the gas detector no longer triggers. Prevention controls should include mandatory torque verification checks during maintenance and pre-operation inspections to ensure all critical valves are within specified limits.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.8,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.9
+    },
+    {
+      "event_id": "1208",
+      "variant": "alarm-only",
+      "provider": "deterministic",
+      "model": "alarm-only",
+      "latency_ms": 0.0,
+      "call_failed": false,
+      "answer": "Incident reported: leak from a dispenser of a mobile HRS. Observed physical effect: Unignited Hydrogen Release. Follow the station emergency procedure and have an authorized operator assess the equipment.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "matched_expected_categories": [
+        "procedure_interlock_training_design"
+      ],
+      "category_recall": 0.2,
+      "response_stages": [
+        "prevention",
+        "recognition",
+        "restart"
+      ],
+      "stage_coverage": 0.6,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.4
+    },
+    {
+      "event_id": "1208",
+      "variant": "saga-linked",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "latency_ms": 1334.1105000581592,
+      "call_failed": false,
+      "http_status": 200,
+      "answer": "The observed situation is a recurring hydrogen leak at a mobile 70 MPa HRS, initially identified at the emergency shutdown valve and subsequently at the lower part of the emergency disconnect coupler on the fuelling nozzle side, with the specific root cause of the second leak remaining uncertain. Immediate actions must prioritize isolating the dispenser and securing the area, followed by a detailed inspection of the emergency disconnect coupler to confirm the leak source. Stabilization requires a successful helium leak test and pressure hold verification before any restart attempt. Prevention controls should include mandatory post-repair leak testing and a review of the O-ring replacement procedure to ensure proper torque and seating.",
+      "expected_categories": [
+        "detection_alarm_monitoring",
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization",
+        "ventilation_purge"
+      ],
+      "mentioned_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "matched_expected_categories": [
+        "inspection_leak_test_repair",
+        "procedure_interlock_training_design",
+        "shutdown_isolation_depressurization"
+      ],
+      "category_recall": 0.6,
+      "response_stages": [
+        "immediate",
+        "prevention",
+        "recognition",
+        "restart",
+        "stabilize"
+      ],
+      "stage_coverage": 1.0,
+      "unsupported_value_unit_claims": [],
+      "machine_proxy_score": 0.8
+    }
+  ],
+  "claim_boundary": "Retrospective development-only machine proxy over 34 public HIAD HRS cases. Coarse category agreement and response-stage coverage do not establish action correctness, operator usability, field safety, causal validity, or SAGA effectiveness. The locked independent expert study remains required."
+}

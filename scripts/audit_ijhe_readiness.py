@@ -2216,6 +2216,65 @@ def audit(root: Path) -> dict[str, object]:
         } if accident_response else "missing; accident-response coverage evaluation has not run",
     ))
 
+    hiad_machine_protocol_path = root / "research/hiad_machine_response_benchmark_protocol_2026_10_08.json"
+    hiad_machine_result_path = root / "research/hiad_machine_response_benchmark_2026_10_08.json"
+    hiad_machine_protocol = _json(hiad_machine_protocol_path)
+    hiad_machine_result = _json(hiad_machine_result_path)
+    hiad_machine_frozen = (hiad_machine_protocol or {}).get("frozen_inputs") or {}
+    hiad_machine_aggregate = (hiad_machine_result or {}).get("aggregate") or {}
+    hiad_machine_variants = hiad_machine_aggregate.get("variant_summary") or {}
+    hiad_machine_paired = hiad_machine_aggregate.get("paired_machine_proxy_difference") or {}
+    hiad_machine_result_protocol = (hiad_machine_result or {}).get("protocol") or {}
+    hiad_machine_sources_match = all(
+        (root / relative).is_file() and _sha256(root / relative) == hiad_machine_frozen.get(key)
+        for relative, key in (
+            ("data/public_validation/processed/hiad_hrs_cases.jsonl", "hiad_cases_sha256"),
+            ("research/hiad_action_evidence.json", "action_evidence_sha256"),
+            ("scripts/run_hiad_machine_response_benchmark.py", "runner_sha256"),
+        )
+    )
+    hiad_machine_pass = bool(
+        (hiad_machine_protocol or {}).get("status")
+        == "frozen_before_cohort_model_response_collection"
+        and ((hiad_machine_protocol or {}).get("outcome_history") or {}).get(
+            "cohort_model_outputs_accessed_before_freeze"
+        ) is False
+        and ((hiad_machine_protocol or {}).get("outcome_history") or {}).get(
+            "confirmatory_or_prospective_claim_permitted"
+        ) is False
+        and (hiad_machine_result or {}).get("status")
+        == "COMPLETED_RETROSPECTIVE_MACHINE_BENCHMARK"
+        and hiad_machine_result_protocol.get("sha256") == _sha256(hiad_machine_protocol_path)
+        and hiad_machine_sources_match
+        and hiad_machine_aggregate.get("case_count") == 34
+        and hiad_machine_aggregate.get("response_count") == 68
+        and (hiad_machine_variants.get("alarm-only") or {}).get("response_count") == 34
+        and (hiad_machine_variants.get("saga-linked") or {}).get("response_count") == 34
+        and (hiad_machine_variants.get("saga-linked") or {}).get("failed_call_count") == 0
+        and (hiad_machine_variants.get("saga-linked") or {}).get(
+            "unsupported_claim_response_count"
+        ) == 3
+        and hiad_machine_paired.get("case_count") == 34
+        and "do not establish" in str((hiad_machine_result or {}).get("claim_boundary", ""))
+    )
+    gates.append(_gate(
+        "hiad_retrospective_machine_response_benchmark_integrity",
+        "PASS" if hiad_machine_pass else ("FAIL" if hiad_machine_result else "PENDING"),
+        "The current direct SAGA path has a frozen, reproducible 34-case retrospective machine-proxy benchmark that retains provider failures and unsupported numeric claims.",
+        f"{hiad_machine_protocol_path.relative_to(root)}; {hiad_machine_result_path.relative_to(root)}",
+        "34 paired alarm/SAGA responses, matching frozen source hashes, no post-response scoring changes, retained unsupported-claim count and an explicit non-effectiveness boundary.",
+        {
+            "case_count": hiad_machine_aggregate.get("case_count"),
+            "response_count": hiad_machine_aggregate.get("response_count"),
+            "alarm_only": hiad_machine_variants.get("alarm-only"),
+            "saga_linked": hiad_machine_variants.get("saga-linked"),
+            "paired_machine_proxy_difference": hiad_machine_paired,
+            "sources_match": hiad_machine_sources_match,
+            "expert_effectiveness_claimed": False,
+            "claim_boundary": (hiad_machine_result or {}).get("claim_boundary"),
+        } if hiad_machine_result else "missing",
+    ))
+
     cip_endpoint_path = root / "research/cip_dispenser_endpoint_screen.json"
     cip_endpoint = _json(cip_endpoint_path)
     cip_aggregate = (cip_endpoint or {}).get("aggregate") or {}

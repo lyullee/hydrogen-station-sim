@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T15:06:46.119542+00:00",
+  "generated_at": "2026-10-07T15:14:57.076597+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 80,
+    "PASS": 81,
     "FAIL": 6,
     "PENDING": 7
   },
@@ -3480,6 +3480,48 @@
           "holdout_use": false
         },
         "source_hashes_match": true
+      }
+    },
+    {
+      "id": "hiad_retrospective_machine_response_benchmark_integrity",
+      "status": "PASS",
+      "claim": "The current direct SAGA path has a frozen, reproducible 34-case retrospective machine-proxy benchmark that retains provider failures and unsupported numeric claims.",
+      "evidence": "research\\hiad_machine_response_benchmark_protocol_2026_10_08.json; research\\hiad_machine_response_benchmark_2026_10_08.json",
+      "requirement": "34 paired alarm/SAGA responses, matching frozen source hashes, no post-response scoring changes, retained unsupported-claim count and an explicit non-effectiveness boundary.",
+      "observed": {
+        "case_count": 34,
+        "response_count": 68,
+        "alarm_only": {
+          "response_count": 34,
+          "mean_machine_proxy_score": 0.40061274509803924,
+          "mean_category_recall": 0.18914141414141417,
+          "mean_stage_coverage": 0.6000000000000001,
+          "unsupported_claim_response_count": 0,
+          "failed_call_count": 0,
+          "latency_ms_mean": 0.0
+        },
+        "saga_linked": {
+          "response_count": 34,
+          "mean_machine_proxy_score": 0.7601715686274509,
+          "mean_category_recall": 0.523989898989899,
+          "mean_stage_coverage": 0.9823529411764705,
+          "unsupported_claim_response_count": 3,
+          "failed_call_count": 0,
+          "latency_ms_mean": 696.4033470550717
+        },
+        "paired_machine_proxy_difference": {
+          "case_count": 34,
+          "mean_paired_difference": 0.35955882352941176,
+          "bootstrap_95_ci": [
+            0.30882352941176466,
+            0.41127450980392155
+          ],
+          "bootstrap_replicates": 10000,
+          "bootstrap_seed": 20261008
+        },
+        "sources_match": true,
+        "expert_effectiveness_claimed": false,
+        "claim_boundary": "Retrospective development-only machine proxy over 34 public HIAD HRS cases. Coarse category agreement and response-stage coverage do not establish action correctness, operator usability, field safety, causal validity, or SAGA effectiveness. The locked independent expert study remains required."
       }
     },
     {

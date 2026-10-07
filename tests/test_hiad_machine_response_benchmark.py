@@ -73,3 +73,23 @@ def test_protocol_freezes_the_runner_before_cohort_response_collection():
     assert hashlib.sha256(runner.read_bytes()).hexdigest() == protocol["frozen_inputs"][
         "runner_sha256"
     ]
+
+
+def test_current_machine_benchmark_retains_all_cases_and_numeric_claim_flags():
+    result = json.loads(
+        (ROOT / "research/hiad_machine_response_benchmark_2026_10_08.json")
+        .read_text(encoding="utf-8")
+    )
+    aggregate = result["aggregate"]
+    assert result["status"] == "COMPLETED_RETROSPECTIVE_MACHINE_BENCHMARK"
+    assert result["protocol"]["model_outputs_accessed_before_protocol_freeze"] is False
+    assert result["protocol"]["reference_action_categories_accessed_before_protocol_freeze"] is True
+    assert aggregate["case_count"] == 34
+    assert aggregate["response_count"] == 68
+    assert aggregate["variant_summary"]["saga-linked"]["failed_call_count"] == 0
+    assert aggregate["variant_summary"]["saga-linked"][
+        "unsupported_claim_response_count"
+    ] == 3
+    assert aggregate["paired_machine_proxy_difference"]["bootstrap_95_ci"][0] > 0.0
+    assert len(result["responses"]) == 68
+    assert "do not establish" in result["claim_boundary"]
