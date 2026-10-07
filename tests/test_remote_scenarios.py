@@ -16,8 +16,8 @@ CATALOG=json.loads((Path(__file__).resolve().parents[1]/'web/scenarios.json').re
 def test_remote_catalog_covers_all_implemented_faults_and_mapped_sensors():
     assert {k['id'] for k in CATALOG['kinds']}=={k.value for k in FaultKind}
     assert {f['kind'] for s in CATALOG['scenarios'] for f in s['faults']}=={k.value for k in FaultKind}
-    assert len(CATALOG['scenarios'])==68
-    assert len({s['id'] for s in CATALOG['scenarios']})==68
+    assert len(CATALOG['scenarios'])==69
+    assert len({s['id'] for s in CATALOG['scenarios']})==69
     for kind in ('sensor-bias','sensor-freeze'):
         assert {t['value'] for t in next(k for k in CATALOG['kinds'] if k['id']==kind)['targets']}==set(MODEL_BINDINGS)
 

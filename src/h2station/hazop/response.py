@@ -234,6 +234,7 @@ def response_selection(frame: dict[str, Any], catalog: dict[str, Any],
                    "sensor-bias": "sensor_fault", "precooler-loss": "precooling_fault",
                    "check-valve-failure": "flow_anomaly",
                    "pipe-restriction": "low_supply_or_blockage", "pcv-stuck-open": "fueling_fault",
+                   "pcv-seat-leak": "fueling_fault",
                    "pcv-stuck-closed": "low_supply_or_blockage",
                    "cascade-valve-stuck-open": "overpressure", "cascade-valve-stuck-closed": "low_supply_or_blockage",
                    }.get(kind)

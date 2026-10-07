@@ -265,28 +265,66 @@
       "note": "역방향 유동을 허용합니다. 실제 역류는 해당 시점의 압력차에 따라 결정됩니다."
     },
     {
+      "id": "pcv-seat-leak",
+      "label": "PCV 내부누설",
+      "targets": [
+        {
+          "value": "dispenser.pcv",
+          "label": "1번 PCV"
+        },
+        {
+          "value": "dispenser_2.pcv",
+          "label": "2번 PCV"
+        },
+        {
+          "value": "pcv",
+          "label": "두 라인 공통 PCV"
+        }
+      ],
+      "fields": [
+        "magnitude"
+      ],
+      "note": "닫힘 명령 뒤 남는 유효 개방률입니다. 0 입력 시 기본 시트 누설 3%를 적용합니다."
+    },
+    {
       "id": "pcv-stuck-open",
       "label": "PCV 열린 고착",
       "targets": [
+        {
+          "value": "dispenser.pcv",
+          "label": "1번 PCV"
+        },
+        {
+          "value": "dispenser_2.pcv",
+          "label": "2번 PCV"
+        },
         {
           "value": "pcv",
           "label": "두 라인 공통 PCV"
         }
       ],
       "fields": [],
-      "note": "현재 모델은 두 충전 라인에 공통 고착 명령을 적용합니다."
+      "note": "개별 PCV 또는 두 충전 라인 공통 고착을 선택할 수 있습니다."
     },
     {
       "id": "pcv-stuck-closed",
       "label": "PCV 닫힌 고착",
       "targets": [
         {
+          "value": "dispenser.pcv",
+          "label": "1번 PCV"
+        },
+        {
+          "value": "dispenser_2.pcv",
+          "label": "2번 PCV"
+        },
+        {
           "value": "pcv",
           "label": "두 라인 공통 PCV"
         }
       ],
       "fields": [],
-      "note": "현재 모델은 두 충전 라인에 공통 고착 명령을 적용합니다."
+      "note": "개별 PCV 또는 두 충전 라인 공통 고착을 선택할 수 있습니다."
     },
     {
       "id": "cascade-valve-stuck-open",
@@ -2122,6 +2160,22 @@
           "start_time_s": 5.0,
           "end_time_s": 20.0,
           "event_id": "flow-06-1"
+        }
+      ]
+    },
+    {
+      "id": "equipment-00",
+      "category": "equipment",
+      "title": "1번 PCV 내부누설",
+      "description": "닫힘 명령 후 1번 PCV 유효 개방률 3% 잔류",
+      "faults": [
+        {
+          "kind": "pcv-seat-leak",
+          "target": "dispenser.pcv",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "magnitude": 0.03,
+          "event_id": "equipment-00-1"
         }
       ]
     },

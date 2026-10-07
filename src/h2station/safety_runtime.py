@@ -16,6 +16,7 @@ class FaultKind(str, Enum):
     SENSOR_FREEZE = "sensor-freeze"
     PCV_STUCK_OPEN = "pcv-stuck-open"
     PCV_STUCK_CLOSED = "pcv-stuck-closed"
+    PCV_SEAT_LEAK = "pcv-seat-leak"
     CASCADE_VALVE_STUCK_OPEN = "cascade-valve-stuck-open"
     CASCADE_VALVE_STUCK_CLOSED = "cascade-valve-stuck-closed"
     PRECOOLER_LOSS = "precooler-loss"
@@ -98,6 +99,7 @@ class StationMeasurements:
 @dataclass(frozen=True)
 class OperationalOverride:
     forced_pcv_opening: float | None = None
+    forced_pcv_opening_by_dispenser: Mapping[str, float] = ()
     forced_cascade_valve_opening: float | None = None
     precooler_capacity_multiplier: float = 1.0
     compressor_enabled: bool = True
@@ -144,6 +146,7 @@ class FaultInjector:
 
     def operational_override(self, time_s: float) -> OperationalOverride:
         pcv_opening: float | None = None
+        pcv_opening_by_dispenser: dict[str, float] = {}
         cascade_opening: float | None = None
         precooler_multiplier = 1.0
         compressor_enabled = True
@@ -152,10 +155,27 @@ class FaultInjector:
         restrictions: dict[str, float] = {}
         check_valves: list[str] = []
         for event in self.schedule.active_events(time_s):
-            if event.kind is FaultKind.PCV_STUCK_OPEN:
-                pcv_opening = 1.0
-            elif event.kind is FaultKind.PCV_STUCK_CLOSED:
-                pcv_opening = 0.0
+            if event.kind in (
+                FaultKind.PCV_STUCK_OPEN,
+                FaultKind.PCV_STUCK_CLOSED,
+                FaultKind.PCV_SEAT_LEAK,
+            ):
+                opening = (
+                    1.0 if event.kind is FaultKind.PCV_STUCK_OPEN else
+                    0.0 if event.kind is FaultKind.PCV_STUCK_CLOSED else
+                    max(0.0, min(1.0, event.magnitude or 0.03))
+                )
+                target = {
+                    "dispenser.pcv": "dispenser",
+                    "dispenser_2.pcv": "dispenser_2",
+                    "dispenser.1": "dispenser",
+                    "dispenser.2": "dispenser_2",
+                }.get(event.target)
+                if target is None:
+                    # Backwards-compatible common PCV target.
+                    pcv_opening = opening
+                else:
+                    pcv_opening_by_dispenser[target] = opening
             elif event.kind is FaultKind.CASCADE_VALVE_STUCK_OPEN:
                 cascade_opening = 1.0
             elif event.kind is FaultKind.CASCADE_VALVE_STUCK_CLOSED:
@@ -174,6 +194,7 @@ class FaultInjector:
                 check_valves.append(event.target)
         return OperationalOverride(
             forced_pcv_opening=pcv_opening,
+            forced_pcv_opening_by_dispenser=pcv_opening_by_dispenser,
             forced_cascade_valve_opening=cascade_opening,
             precooler_capacity_multiplier=precooler_multiplier,
             compressor_enabled=compressor_enabled,

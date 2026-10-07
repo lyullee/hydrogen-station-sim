@@ -346,14 +346,17 @@ class SafeFullStationSimulator:
             if safety_command.close_pcv:
                 fueling_command = replace(fueling_command, valve_opening=0.0)
                 fueling_command_2 = replace(fueling_command_2, valve_opening=0.0)
-            if override.forced_pcv_opening is not None:
+            forced_pcv_1 = self._forced_pcv_opening(override, "dispenser")
+            forced_pcv_2 = self._forced_pcv_opening(override, "dispenser_2")
+            if forced_pcv_1 is not None:
                 fueling_command = replace(
                     fueling_command,
-                    valve_opening=override.forced_pcv_opening,
+                    valve_opening=forced_pcv_1,
                 )
+            if forced_pcv_2 is not None:
                 fueling_command_2 = replace(
                     fueling_command_2,
-                    valve_opening=override.forced_pcv_opening,
+                    valve_opening=forced_pcv_2,
                 )
 
             blocked_outlets = frozenset(
@@ -371,7 +374,7 @@ class SafeFullStationSimulator:
                 if safety_command.close_cascade_valves or
                 (virtual_safety is not None and (not virtual_safety.allows("dispenser.1") or
                                                  virtual_safety.power_isolated["dispenser"])) or
-                (process is not None and not requested_1 and override.forced_pcv_opening is None)
+                (process is not None and not requested_1 and forced_pcv_1 is None)
                 else self.station.supervisor.select_dispatch_bank(
                     self.station.banks,
                     bank_gases,
@@ -390,7 +393,7 @@ class SafeFullStationSimulator:
                 if safety_command.close_cascade_valves or
                 (virtual_safety is not None and (not virtual_safety.allows("dispenser.2") or
                                                  virtual_safety.power_isolated["dispenser"])) or
-                (process is not None and not requested_2 and override.forced_pcv_opening is None)
+                (process is not None and not requested_2 and forced_pcv_2 is None)
                 else self.station.supervisor.select_dispatch_bank(
                     self.station.banks,
                     bank_gases,
@@ -867,6 +870,15 @@ class SafeFullStationSimulator:
             source, enthalpy = self._resolve_leak_source(event.target, state)
             active.append((event, scenario, source, enthalpy))
         return tuple(active)
+
+    @staticmethod
+    def _forced_pcv_opening(
+        override: OperationalOverride, prefix: str,
+    ) -> float | None:
+        per_dispenser = override.forced_pcv_opening_by_dispenser
+        if per_dispenser:
+            return per_dispenser.get(prefix, override.forced_pcv_opening)
+        return override.forced_pcv_opening
 
     @staticmethod
     def _flow_multipliers(override: OperationalOverride, prefix: str) -> tuple[float, float]:

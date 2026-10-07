@@ -78,7 +78,10 @@ MODE_KEYS = {
     "vent.commanded", "vent.close_elapsed_s", "relief.active",
 }
 for d in (1, 2):
-    MODE_KEYS |= {f"d{d}.{k}" for k in ("phase", "phase_elapsed_s", "switch_elapsed_s", "connected", "pcv_closed")}
+    MODE_KEYS |= {f"d{d}.{k}" for k in (
+        "phase", "phase_elapsed_s", "switch_elapsed_s", "connected",
+        "pcv_closed", "nozzle_closed", "bleed_active", "stable_s",
+    )}
 for n in ("07", "08", "09"):
     MODE_KEYS |= {f"bank.{n}.{k}" for k in (
         "dispatch", "switch_elapsed_s", "inlet_closed", "outlet_closed",
@@ -182,11 +185,22 @@ class ModelMapper:
             put(f"TT-{v}02", partial_state.vehicle.shell_temperature_k-273.15)
             put(f"PT-{p+1}01", max(0.0, (inst["pcv_outlet_pressure"] - partial.precooler.hydrogen_pressure_drop_pa)/1e6))
             put(f"MASS_HOSE_{d}", partial_state.hose_hydrogen_mass_kg, "kg", "PROCESS_INVENTORY")
+            commanded_isolation = bool(
+                safety.esd_latched
+                or command.phase.value in ("idle", "complete", "aborted")
+                or command.valve_opening <= 0.0
+            )
+            isolation_stable_s = self.elapsed(
+                f"d{d}-commanded-isolation", commanded_isolation, t
+            )
             modes.update({f"d{d}.phase": "ESD" if safety.esd_latched else command.phase.value.upper(),
                           f"d{d}.phase_elapsed_s": self.elapsed(f"phase{d}", command.phase, t),
                           f"d{d}.switch_elapsed_s": self.elapsed(f"dispatch{d}", selected, t),
                           f"d{d}.connected": True,  # Fixed connected-vehicle model topology, not connector telemetry.
-                          f"d{d}.pcv_closed": bool(command.valve_opening * opening == 0.0)})
+                          f"d{d}.pcv_closed": commanded_isolation,
+                          f"d{d}.nozzle_closed": commanded_isolation,
+                          f"d{d}.bleed_active": False,
+                          f"d{d}.stable_s": isolation_stable_s if commanded_isolation else 0.0})
         supply = station.compressor_suction(t)
         for n in ("01", "03"):
             put(f"PT-{n}01", supply.pressure_pa/1e6); put(f"TT-{n}01", supply.temperature_k-273.15)

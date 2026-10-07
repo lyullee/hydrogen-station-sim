@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from h2station.api import app
+from h2station.api import ProcessSettings, app
 from h2station.hazop.database import EventStore, load_catalog
 from h2station.hazop.engine import RuleEngine
 from h2station.hazop.expressions import Evaluator, Unknown, evaluate_gate, parse
@@ -17,6 +17,7 @@ from h2station.hazop.mapping import coverage
 from h2station.dispenser import IsentropicRealGasRestriction, RestrictionParameters
 from h2station.protocol import FuelingCommand, FuelingPhase
 from h2station.hazop.runtime import HazopMonitor
+from h2station.operations import ProcessRuntime
 from h2station.risk.runtime_backend import UnavailableHyRAMBackend
 from h2station.scenario import ReferenceScenario, build_reference_scenario
 from h2station.safety_runtime import FaultEvent, FaultKind
@@ -58,6 +59,45 @@ def test_dispenser_reverse_flow_rules_are_ready_but_other_reverse_paths_are_not(
     assert mapped["HZ-119"]["model_limits"] == []
     assert mapped["HZ-009"]["simulation_ready"] is False
     assert "one-way restriction model cannot generate reverse flow" in mapped["HZ-009"]["model_limits"]
+
+
+def test_pcv_isolation_failure_rules_have_command_and_stability_modes():
+    mapped = {row["rule_id"]: row for row in coverage(load_catalog())["rules"]}
+    for rule_id in ("HZ-078", "HZ-106"):
+        assert mapped[rule_id]["simulation_ready"] is True
+        assert mapped[rule_id]["missing_modes"] == []
+
+
+@pytest.mark.parametrize(
+    "target,flow_field,rule_id,other_rule_id",
+    [
+        ("dispenser.pcv", "pcv_1_mass_flow_kg_s", "HZ-078", "HZ-106"),
+        ("dispenser_2.pcv", "pcv_2_mass_flow_kg_s", "HZ-106", "HZ-078"),
+    ],
+)
+def test_pcv_seat_leak_is_target_specific_and_triggers_isolation_failure(
+    target, flow_field, rule_id, other_rule_id,
+):
+    fault = FaultEvent(
+        "seat-leak", FaultKind.PCV_SEAT_LEAK, target, 0.0, end_time_s=8.0,
+    )
+    built = build_reference_scenario(
+        ReferenceScenario(duration_s=6.0, control_period_s=.2, fault_events=(fault,)),
+        UnavailableHyRAMBackend(),
+    )
+    built.simulator.process_runtime = ProcessRuntime(ProcessSettings().model_dump())
+    monitor = HazopMonitor()
+    built.simulator.hazop_monitor = monitor
+
+    trajectory = built.simulator.simulate(
+        built.initial_state, 6.0, .2, pace_idle=False,
+    )
+
+    assert max(getattr(trajectory, flow_field)) > 0.0005
+    assert any(item["rule_id"] == rule_id for item in monitor.latest["active"])
+    assert not any(
+        item["rule_id"] == other_rule_id for item in monitor.latest["active"]
+    )
 
 
 def test_check_valve_failure_reverse_flow_uses_vehicle_state_and_conserves_transfer():
