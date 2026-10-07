@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_selected_outcome_download",
+  "frozen_at_utc": "2026-10-07T00:00:00+00:00",
+  "source": {
+    "dataset": "ELVHYS 4.2 - Leakage into cold room/tank connection space considering barriers and obstacles",
+    "doi": "10.18710/JXJP0H",
+    "publisher": "HSE / DataverseNO",
+    "license": "CC0 1.0",
+    "dataset_version": 1
+  },
+  "selection": {
+    "outcomes_accessed_before_freeze": false,
+    "metadata_and_readme_accessed_before_freeze": true,
+    "excluded_previously_accessed_tests": [3, 24, 29, 30, 31, 45],
+    "excluded_source_flagged_invalid_tests": [27, 28, 32, 33, 34, 35, 37, 39],
+    "rule": "Twelve valid, previously uninspected dispersion tests fixed from README metadata to span 2/8 barg, 0.2/0.5/1.0/1.8 mm, active/passive ventilation and horizontal/vertical release orientation."
+  },
+  "selected_cases": [
+    {"test_id": 4, "nominal_pressure_barg": 8.0, "nozzle_diameter_mm": 0.2, "ventilation": "2000 L/min", "orientation": "horizontal"},
+    {"test_id": 5, "nominal_pressure_barg": 8.0, "nozzle_diameter_mm": 0.2, "ventilation": "0 L/min", "orientation": "horizontal"},
+    {"test_id": 8, "nominal_pressure_barg": 2.0, "nozzle_diameter_mm": 0.5, "ventilation": "500 L/min", "orientation": "horizontal"},
+    {"test_id": 12, "nominal_pressure_barg": 2.0, "nozzle_diameter_mm": 1.0, "ventilation": "2000 L/min", "orientation": "horizontal"},
+    {"test_id": 15, "nominal_pressure_barg": 8.0, "nozzle_diameter_mm": 1.0, "ventilation": "2000 L/min", "orientation": "horizontal"},
+    {"test_id": 17, "nominal_pressure_barg": 8.0, "nozzle_diameter_mm": 1.8, "ventilation": "2500 L/min", "orientation": "horizontal"},
+    {"test_id": 20, "nominal_pressure_barg": 2.0, "nozzle_diameter_mm": 1.8, "ventilation": "passive", "orientation": "horizontal"},
+    {"test_id": 23, "nominal_pressure_barg": 8.0, "nozzle_diameter_mm": 1.0, "ventilation": "passive", "orientation": "horizontal"},
+    {"test_id": 25, "nominal_pressure_barg": 8.0, "nozzle_diameter_mm": 0.2, "ventilation": "passive", "orientation": "horizontal"},
+    {"test_id": 43, "nominal_pressure_barg": 8.0, "nozzle_diameter_mm": 1.8, "ventilation": "passive", "orientation": "vertical"},
+    {"test_id": 46, "nominal_pressure_barg": 8.0, "nozzle_diameter_mm": 1.0, "ventilation": "passive", "orientation": "vertical"},
+    {"test_id": 48, "nominal_pressure_barg": 2.0, "nozzle_diameter_mm": 1.0, "ventilation": "passive", "orientation": "vertical"}
+  ],
+  "source_manifest": [
+    {"test_id": 4, "kind": "CONC", "datafile_id": 254238, "name": "ELE402HSE004CONC2025118.csv", "bytes": 6790044, "md5": "e5347af9781c1b3e60854ec16857b95a"},
+    {"test_id": 4, "kind": "PRES", "datafile_id": 254312, "name": "ELE402HSE004PRES2025118.csv", "bytes": 2029728, "md5": "d28d6319980bdae0a12ebbe4d3f5916e"},
+    {"test_id": 5, "kind": "CONC", "datafile_id": 254273, "name": "ELE402HSE005CONC2025118.csv", "bytes": 7655292, "md5": "8cf0573b5be25c5469015803b28a3e17"},
+    {"test_id": 5, "kind": "PRES", "datafile_id": 254373, "name": "ELE402HSE005PRES2025118.csv", "bytes": 2426168, "md5": "55d1a26e6171fc0cc1ed81f7dc284bc6"},
+    {"test_id": 8, "kind": "CONC", "datafile_id": 254274, "name": "ELE402HSE008CONC2025118.csv", "bytes": 9741000, "md5": "f66dcc167bdd881301b7be6bd5c60ed0"},
+    {"test_id": 8, "kind": "PRES", "datafile_id": 254384, "name": "ELE402HSE008PRES2025118.csv", "bytes": 2888363, "md5": "3438e87924a3da90bace3af9db7b8f12"},
+    {"test_id": 12, "kind": "CONC", "datafile_id": 254394, "name": "ELE402HSE012CONC20251111.csv", "bytes": 7269833, "md5": "8e3a150c915d6e4eca3e61adb1e31739"},
+    {"test_id": 12, "kind": "PRES", "datafile_id": 254231, "name": "ELE402HSE012PRES20251111.csv", "bytes": 2117755, "md5": "8a64238a02973c701377880a2a2236bf"},
+    {"test_id": 15, "kind": "CONC", "datafile_id": 254348, "name": "ELE402HSE015CONC20251112.csv", "bytes": 9702897, "md5": "345ef83751b20b59c796c2d8bac04879"},
+    {"test_id": 15, "kind": "PRES", "datafile_id": 254308, "name": "ELE402HSE015PRES20251112.csv", "bytes": 2830716, "md5": "61ce2705dcd5dee7cf94c3e46201c7fb"},
+    {"test_id": 17, "kind": "CONC", "datafile_id": 254353, "name": "ELE402HSE017CONC20251112.csv", "bytes": 11458694, "md5": "bcdd590251f5ffb4ce3df7756e64308e"},
+    {"test_id": 17, "kind": "PRES", "datafile_id": 254369, "name": "ELE402HSE017PRES20251112.csv", "bytes": 3360020, "md5": "0dac04935fe3b1720d5f83c1afed52f7"},
+    {"test_id": 20, "kind": "CONC", "datafile_id": 254346, "name": "ELE402HSE020CONC20251113.csv", "bytes": 8024049, "md5": "79cd4ab8a2f1042be30ca13e4d609398"},
+    {"test_id": 20, "kind": "PRES", "datafile_id": 254293, "name": "ELE402HSE020PRES20251113.csv", "bytes": 2353146, "md5": "a5ca73c9159d11741259747f395a4e72"},
+    {"test_id": 23, "kind": "CONC", "datafile_id": 254405, "name": "ELE402HSE023CONC20251114.csv", "bytes": 9160352, "md5": "d10a91d68d943de2540edf5fc09b731d"},
+    {"test_id": 23, "kind": "PRES", "datafile_id": 254219, "name": "ELE402HSE023PRES20251114.csv", "bytes": 2689358, "md5": "cc20ee6bba6957c72b2357211e22c8df"},
+    {"test_id": 25, "kind": "CONC", "datafile_id": 254279, "name": "ELE402HSE025CONC20251114.csv", "bytes": 4565928, "md5": "2c0185bd472d02aa4d780f08e5ededfa"},
+    {"test_id": 25, "kind": "PRES", "datafile_id": 254337, "name": "ELE402HSE025PRES20251114.csv", "bytes": 1327552, "md5": "08d88b2daf36912fe5be1a2aba7cb8cd"},
+    {"test_id": 43, "kind": "CONC", "datafile_id": 254303, "name": "ELE402HSE043CONC20251128.csv", "bytes": 8675547, "md5": "4138389c7ab4ca6b1076250987ce975a"},
+    {"test_id": 43, "kind": "PRES", "datafile_id": 254309, "name": "ELE402HSE043PRES20251128.csv", "bytes": 2136561, "md5": "8ed3fc59047b0a580137a1b6a896ccc8"},
+    {"test_id": 46, "kind": "CONC", "datafile_id": 254336, "name": "ELE402HSE046CONC20251128.csv", "bytes": 14527182, "md5": "8d754dafa793c1575bd857afdabcce99"},
+    {"test_id": 46, "kind": "PRES", "datafile_id": 254270, "name": "ELE402HSE046PRES20251128.csv", "bytes": 4229989, "md5": "357de09903e3f1772b887fff92537ba7"},
+    {"test_id": 48, "kind": "CONC", "datafile_id": 254228, "name": "ELE402HSE048CONC20251128.csv", "bytes": 5889283, "md5": "e957f7f7bbef48eaa134c1a4d4454835"},
+    {"test_id": 48, "kind": "PRES", "datafile_id": 254379, "name": "ELE402HSE048PRES20251128.csv", "bytes": 1713859, "md5": "ace5f251804ac7806d30bf39054ed45c"}
+  ],
+  "release_onset_rule": {
+    "pressure_channel": "PT2Nozzle",
+    "minimum_pressure_barg": 0.2,
+    "nominal_pressure_fraction": 0.1,
+    "persistence_s": 0.5
+  },
+  "baseline_rule": {
+    "method": "per-sensor median before independently detected release onset",
+    "guard_before_release_s": 5.0,
+    "minimum_samples": 20,
+    "negative_corrected_values_clipped_to_zero": true
+  },
+  "alarm_contract": {
+    "measured_input": "maximum baseline-corrected concentration across the published 16-head ELVHYS grid",
+    "virtual_sensor_id": "GD-0101",
+    "thresholds": [
+      {"rule_id": "HZ-141", "threshold_volpct_h2": 0.4, "persistence_s": 1.0, "severity": "ALARM"},
+      {"rule_id": "HZ-142", "threshold_volpct_h2": 1.0, "persistence_s": 0.5, "severity": "TRIP"},
+      {"rule_id": "HZ-143", "threshold_volpct_h2": 2.0, "persistence_s": 0.5, "severity": "TRIP"}
+    ],
+    "required_response_plan": "gas_release"
+  },
+  "primary_acceptance": {
+    "minimum_case_count": 12,
+    "missed_expected_trigger_count_max": 0,
+    "unexpected_trigger_count_max": 0,
+    "maximum_trigger_timing_error_s": 0.051,
+    "gas_release_response_required": true
+  },
+  "secondary_diagnostics": {
+    "pre_release_events": "reported but not used to tune or exclude a case",
+    "sensor_baseline_offsets": "removed only by the frozen pre-release median rule"
+  },
+  "frozen_implementation": {
+    "runner": "scripts/run_elvhys_detector_holdout.py",
+    "runner_sha256": "f8b7e509dd71faf4ce0f698518810e56c455bad5065c633fd29579cad7b3efe4",
+    "hazop_database": "src/h2station/data/hazop.sqlite3",
+    "hazop_database_sha256": "101b48b165aab774d57c4c9dd11fc2b67c1bf24f00f1c8daa1065ac3b73948c9"
+  },
+  "prohibited_after_outcome_access": [
+    "case exclusion",
+    "threshold or persistence tuning",
+    "release-onset tuning",
+    "baseline-window tuning",
+    "time shifting",
+    "replacement of failed primary results"
+  ],
+  "claim_boundary": "Prospective replay of public cryogenic-hydrogen concentration measurements through the frozen HAZOP gas-alarm and response-routing contract. It tests signal ingestion, persistence, severity and response availability only. It does not validate detector placement, concentration prediction, dispersion, gaseous-H70 transfer, ESD effectiveness, consequence distance, or the full station-to-vehicle digital twin."
+}
