@@ -259,6 +259,7 @@ class IsentropicRealGasRestriction:
         opening: float = 1.0,
         area_multiplier: float = 1.0,
         allow_reverse_flow: bool = False,
+        downstream_temperature_k: float | None = None,
     ) -> float:
         opening = min(1.0, max(0.0, opening))
         if opening == 0.0:
@@ -267,7 +268,10 @@ class IsentropicRealGasRestriction:
             if not allow_reverse_flow or downstream_pressure_pa <= upstream_pressure_pa:
                 return 0.0
             return -self.mass_flow_kg_s(
-                downstream_pressure_pa, upstream_temperature_k,
+                downstream_pressure_pa,
+                (downstream_temperature_k
+                 if downstream_temperature_k is not None
+                 else upstream_temperature_k),
                 upstream_pressure_pa, opening, area_multiplier, False,
             )
 
@@ -546,6 +550,7 @@ class PartialStationModel:
             1.0,
             self.fit.nozzle_area_multiplier * max(0.0, nozzle_area_multiplier),
             allow_reverse_flow,
+            vehicle_gas.temperature_k,
         )
         nozzle_mass_flow = min(
             nozzle_mass_flow,
@@ -555,18 +560,25 @@ class PartialStationModel:
             vehicle_gas.pressure_pa,
             self.pcv_parameters.minimum_pressure_pa,
         )
-        receptacle_temperature = float(
-            PropsSI(
-                "T", "P", receptacle_pressure, "Hmass",
-                hose_gas.specific_enthalpy_j_kg, self.fluid,
+        if nozzle_mass_flow >= 0.0:
+            receptacle_temperature = float(
+                PropsSI(
+                    "T", "P", receptacle_pressure, "Hmass",
+                    hose_gas.specific_enthalpy_j_kg, self.fluid,
+                )
             )
-        )
-        receptacle_density = float(
-            PropsSI(
-                "Dmass", "P", receptacle_pressure, "Hmass",
-                hose_gas.specific_enthalpy_j_kg, self.fluid,
+            receptacle_density = float(
+                PropsSI(
+                    "Dmass", "P", receptacle_pressure, "Hmass",
+                    hose_gas.specific_enthalpy_j_kg, self.fluid,
+                )
             )
-        )
+        else:
+            # During reverse flow the vehicle is the restriction upstream.
+            # Report its actual state instead of evaluating hose enthalpy at
+            # vehicle pressure, which describes the opposite flow direction.
+            receptacle_temperature = vehicle_gas.temperature_k
+            receptacle_density = vehicle_gas.density_kg_m3
         injector_velocity = nozzle_mass_flow / max(
             receptacle_density
             * self.hose.nozzle_flow_area_m2
@@ -610,6 +622,7 @@ class PartialStationModel:
             allow_reverse_flow,
         )
         hose_gas = self.hose_gas_state(state)
+        vehicle_gas = self.vehicle_tank.gas_state(state.vehicle)
         gas_wall_heat_rate = (
             self.hose.gas_wall_ua_w_k
             * self.fit.hose_gas_wall_ua_multiplier
@@ -635,9 +648,12 @@ class PartialStationModel:
             * self.fit.precooler_capacity_multiplier
         )
         hose_mass_rate = values["pcv_mass_flow"] - values["nozzle_mass_flow"]
+        nozzle_forward_flow = max(0.0, values["nozzle_mass_flow"])
+        nozzle_reverse_flow = max(0.0, -values["nozzle_mass_flow"])
         hose_energy_rate = (
             values["pcv_mass_flow"] * values["cooled_enthalpy"]
-            - values["nozzle_mass_flow"] * hose_gas.specific_enthalpy_j_kg
+            - nozzle_forward_flow * hose_gas.specific_enthalpy_j_kg
+            + nozzle_reverse_flow * vehicle_gas.specific_enthalpy_j_kg
             - gas_wall_heat_rate
         )
         hose_wall_temperature_rate = (
@@ -649,8 +665,9 @@ class PartialStationModel:
         vehicle_rate = self.vehicle_tank.derivative(
             state.vehicle,
             TankBoundaryFlow(
-                inlet_mass_flow_kg_s=values["nozzle_mass_flow"],
+                inlet_mass_flow_kg_s=nozzle_forward_flow,
                 inlet_specific_enthalpy_j_kg=hose_gas.specific_enthalpy_j_kg,
+                outlet_mass_flow_kg_s=nozzle_reverse_flow,
                 ambient_temperature_k=self.ambient_temperature_k,
             ),
         )

@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import math
 import time
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -13,6 +14,8 @@ from h2station.hazop.database import EventStore, load_catalog
 from h2station.hazop.engine import RuleEngine
 from h2station.hazop.expressions import Evaluator, Unknown, evaluate_gate, parse
 from h2station.hazop.mapping import coverage
+from h2station.dispenser import IsentropicRealGasRestriction, RestrictionParameters
+from h2station.protocol import FuelingCommand, FuelingPhase
 from h2station.hazop.runtime import HazopMonitor
 from h2station.risk.runtime_backend import UnavailableHyRAMBackend
 from h2station.scenario import ReferenceScenario, build_reference_scenario
@@ -45,6 +48,98 @@ def test_packaged_catalog_keys_and_numeric_values():
     assert not any(s["mapping_status"]=="UNAVAILABLE" for s in m["sensors"])
     assert m["physical_sensor_connections"]==0
     assert 0 < m["simulation_ready_rules"] < 214
+
+
+def test_dispenser_reverse_flow_rules_are_ready_but_other_reverse_paths_are_not():
+    mapped = {row["rule_id"]: row for row in coverage(load_catalog())["rules"]}
+    assert mapped["HZ-091"]["simulation_ready"] is True
+    assert mapped["HZ-119"]["simulation_ready"] is True
+    assert mapped["HZ-091"]["model_limits"] == []
+    assert mapped["HZ-119"]["model_limits"] == []
+    assert mapped["HZ-009"]["simulation_ready"] is False
+    assert "one-way restriction model cannot generate reverse flow" in mapped["HZ-009"]["model_limits"]
+
+
+def test_check_valve_failure_reverse_flow_uses_vehicle_state_and_conserves_transfer():
+    built = build_reference_scenario(
+        ReferenceScenario(duration_s=.2, control_period_s=.2),
+        UnavailableHyRAMBackend(),
+    )
+    partial = built.station.partial_station
+    vehicle = partial.vehicle_tank.initial_state(70.0e6, 330.0)
+    state = partial.initial_state(
+        vehicle=vehicle,
+        hose_pressure_pa=5.0e6,
+        hose_temperature_k=298.15,
+        coolant_temperature_k=298.15,
+    )
+    command = FuelingCommand(
+        FuelingPhase.FILLING, 0.0, 70.0e6, 298.15, 0.0,
+    )
+    values = partial._flow_and_thermal_states(
+        0.0, state, command, allow_reverse_flow=True,
+    )
+    derivative = partial.derivative(
+        0.0, state, command, allow_reverse_flow=True,
+    )
+    assert values["nozzle_mass_flow"] < 0.0
+    assert derivative.hose_hydrogen_mass_kg > 0.0
+    assert derivative.vehicle.hydrogen_mass_kg < 0.0
+    assert derivative.hose_hydrogen_mass_kg + derivative.vehicle.hydrogen_mass_kg == pytest.approx(0.0)
+    assert (derivative.hose_hydrogen_internal_energy_j
+            + derivative.vehicle.hydrogen_internal_energy_j) == pytest.approx(0.0, abs=1e-7)
+
+
+def test_reverse_restriction_uses_downstream_temperature_as_new_upstream_state():
+    restriction = IsentropicRealGasRestriction(
+        RestrictionParameters(flow_area_m2=1.0e-6, discharge_coefficient=.8)
+    )
+    reverse = restriction.mass_flow_kg_s(
+        5.0e6, 250.0, 70.0e6,
+        allow_reverse_flow=True,
+        downstream_temperature_k=330.0,
+    )
+    forward = restriction.mass_flow_kg_s(70.0e6, 330.0, 5.0e6)
+    assert reverse == pytest.approx(-forward)
+
+
+@pytest.mark.parametrize(
+    "target,state_field,flow_field,signal,rule_id",
+    [
+        ("dispenser.hose", "partial_station", "nozzle_1_mass_flow_kg_s", "FT-1301", "HZ-091"),
+        ("dispenser_2.hose", "secondary_partial_station", "nozzle_2_mass_flow_kg_s", "FT-1701", "HZ-119"),
+    ],
+)
+def test_check_valve_failure_reaches_live_hazop_reverse_alarm(
+    target, state_field, flow_field, signal, rule_id,
+):
+    fault = FaultEvent("reverse", FaultKind.CHECK_VALVE_FAILURE, target, 0.0, end_time_s=2.0)
+    built = build_reference_scenario(
+        ReferenceScenario(
+            duration_s=1.0,
+            control_period_s=.2,
+            initial_vehicle_pressure_pa=70.0e6,
+            initial_vehicle_2_pressure_pa=70.0e6,
+            fault_events=(fault,),
+        ),
+        UnavailableHyRAMBackend(),
+    )
+    partial = (built.station.partial_station if state_field == "partial_station"
+               else built.station.secondary_partial_station)
+    vehicle = partial.vehicle_tank.initial_state(70.0e6, 298.15)
+    low_pressure_hose = partial.initial_state(
+        vehicle, 5.0e6, 298.15, 233.15,
+    )
+    initial = replace(built.initial_state, **{state_field: low_pressure_hose})
+    monitor = HazopMonitor()
+    built.simulator.hazop_monitor = monitor
+
+    trajectory = built.simulator.simulate(initial, 1.0, .2)
+
+    assert min(getattr(trajectory, flow_field)) < 0.0
+    assert monitor.latest["signals"][signal]["value"] <= -1.0
+    alarm = next(item for item in monitor.latest["active"] if item["rule_id"] == rule_id)
+    assert alarm["state"] == "TRIGGER"
 
 
 def test_inclusive_threshold_elapsed_time_and_manual_reset():

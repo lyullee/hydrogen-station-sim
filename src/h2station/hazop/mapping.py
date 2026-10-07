@@ -64,6 +64,11 @@ MODEL_BINDINGS.update({
     "FT-2001": ("VENT_PROXY", "vent release mass flow when injected; zero otherwise; no PSV model"),
 })
 HELPERS = {"MASS_HOSE_1", "MASS_HOSE_2"}
+# The two dispenser-nozzle restrictions have an explicit reverse-flow path that
+# is enabled only by a simulated check-valve failure.  The remaining flow
+# channels are still one-way or derived shared signals and must not be claimed
+# as reverse-flow capable.
+REVERSE_FLOW_CAPABLE_SIGNALS = {"FT-1301", "FT-1701"}
 MODE_KEYS = {
     "station.monitoring", "station.filling_count", "station.switch_elapsed_s",
     "station.esd", "station.esd_elapsed_s",
@@ -98,7 +103,8 @@ def coverage(catalog):
         missing = sorted(dependencies(r["신호식"]) - set(MODEL_BINDINGS) - HELPERS)
         modes = sorted(gate_dependencies(gates[r["gate_id"]]["기계식_상태조건"]) - MODE_KEYS)
         issues = []
-        if r["sensor_id"].startswith("FT-") and r["연산자"] == "<=" and r["임계값"] < 0:
+        if (r["sensor_id"].startswith("FT-") and r["연산자"] == "<=" and
+                r["임계값"] < 0 and r["sensor_id"] not in REVERSE_FLOW_CAPABLE_SIGNALS):
             issues.append("one-way restriction model cannot generate reverse flow")
         ready = not missing and not modes and not issues
         rows.append({"rule_id": r["rule_id"], "node_id": r["node_id"], "simulation_ready": ready,
