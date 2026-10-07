@@ -5,6 +5,12 @@ vehicle signals in separate worksheets with a confirmed common time basis. The
 source file, worksheet names, original labels, timestamps, values, mapping,
 and attestation remain outside the repository and must not be committed.
 
+The same exporter also accepts a controlled directory containing explicitly
+mapped CSV, XLSX, or XLSM sources. For a directory, each source declaration
+must add a relative `file` field; CSV sources may omit `worksheet`. The
+directory is not searched or joined implicitly, and paths outside it are
+rejected.
+
 This is stricter than merely finding related labels in one workbook. Before
 export, the data custodian must confirm that the selected worksheets describe
 the same event, their clocks are compatible, every mapped numeric field is in
@@ -41,6 +47,7 @@ maximum offset. It does not interpolate measurements or infer missing values.
   "schema_version": 1,
   "sources": [
     {
+      "file": "<relative source file when --input is a directory>",
       "worksheet": "<private vehicle sheet>",
       "header_row": 1,
       "time_column": "<private time label>",
@@ -52,6 +59,7 @@ maximum offset. It does not interpolate measurements or infer missing values.
       }
     },
     {
+      "file": "<relative source file when --input is a directory>",
       "worksheet": "<private station sheet>",
       "header_row": 1,
       "time_column": "<private time label>",

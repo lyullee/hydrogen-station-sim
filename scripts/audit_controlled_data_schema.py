@@ -178,8 +178,19 @@ def _screen_rows(
     return header, rows_examined, record_shaped
 
 
+def _csv_encodings(raw: bytes) -> tuple[str, ...]:
+    """Prioritize the encoding signalled by BOM or UTF-16 null-byte layout."""
+
+    prefix = raw[:1024]
+    if raw.startswith((b"\xff\xfe", b"\xfe\xff")):
+        return ("utf-16", "utf-16le", "utf-16be", "utf-8-sig", "cp949", "euc-kr")
+    if prefix and prefix.count(b"\x00") >= max(2, len(prefix) // 8):
+        return ("utf-16le", "utf-16be", "utf-16", "utf-8-sig", "cp949", "euc-kr")
+    return ("utf-8-sig", "utf-8", "cp949", "euc-kr", "utf-16le", "utf-16be")
+
+
 def _csv_header_bytes(raw: bytes) -> tuple[tuple[str, ...], int, bool] | None:
-    for encoding in ("utf-8-sig", "utf-8", "cp949", "euc-kr"):
+    for encoding in _csv_encodings(raw):
         try:
             return _screen_rows(csv.reader(StringIO(raw.decode(encoding))))
         except UnicodeError:

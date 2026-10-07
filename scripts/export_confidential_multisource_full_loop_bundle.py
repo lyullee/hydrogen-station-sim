@@ -14,7 +14,10 @@ from __future__ import annotations
 
 import argparse
 from bisect import bisect_left
+import csv
 from datetime import datetime, timezone
+import hashlib
+from io import StringIO
 import json
 import math
 from pathlib import Path
@@ -33,6 +36,7 @@ try:  # Supports both ``python scripts/...`` and test-module imports.
         _relative_time,
         _sha256,
     )
+    from audit_controlled_data_schema import _csv_encodings
 except ModuleNotFoundError:  # pragma: no cover - import style depends on launcher
     from scripts.export_confidential_full_loop_bundle import (
         NUMERIC_COLUMNS,
@@ -46,6 +50,7 @@ except ModuleNotFoundError:  # pragma: no cover - import style depends on launch
         _relative_time,
         _sha256,
     )
+    from scripts.audit_controlled_data_schema import _csv_encodings
 
 from intake_external_hrs_bundle import build_manifest
 from validate_external_hrs_full_loop import validate_full_loop_trace
@@ -107,16 +112,28 @@ def _specifications(mapping: dict[str, Any]) -> tuple[list[dict[str, Any]], int,
             raise ValueError("each source specification must be an object")
         worksheet = raw.get("worksheet")
         time_column = raw.get("time_column")
+        source_file = raw.get("file")
         header_row = raw.get("header_row", 1)
         column_map = raw.get("column_map")
-        if not isinstance(worksheet, str) or not worksheet.strip():
-            raise ValueError("every source requires a nonempty worksheet mapping")
+        if worksheet is None:
+            worksheet = ""
+        if not isinstance(worksheet, str):
+            raise ValueError("worksheet mapping must be a string when supplied")
         if not isinstance(time_column, str) or not time_column.strip():
             raise ValueError("every source requires a nonempty time_column mapping")
         if not isinstance(header_row, int) or header_row < 1:
             raise ValueError("every source header_row must be a positive integer")
         if not isinstance(column_map, dict) or not column_map:
             raise ValueError("every source requires a nonempty column_map")
+        if source_file is not None:
+            if not isinstance(source_file, str) or not source_file.strip():
+                raise ValueError("source file must be a nonempty relative path")
+            source_path = Path(source_file)
+            if (
+                source_path.is_absolute()
+                or ".." in source_path.parts
+            ):
+                raise ValueError("source file must be a nonempty relative path")
         for canonical, source_name in column_map.items():
             if canonical not in OUTPUT_COLUMNS[1:]:
                 raise ValueError("source column_map contains an unsupported canonical channel")
@@ -127,6 +144,7 @@ def _specifications(mapping: dict[str, Any]) -> tuple[list[dict[str, Any]], int,
             canonical_owners[canonical] = index
         normalized.append({
             "worksheet": worksheet,
+            "file": source_file,
             "time_column": time_column,
             "time_format": raw.get("time_format"),
             "header_row": header_row,
@@ -150,19 +168,78 @@ def _specifications(mapping: dict[str, Any]) -> tuple[list[dict[str, Any]], int,
     return normalized, anchor, float(maximum_offset)
 
 
-def _read_workbook_source(
+def _source_path(input_data: Path, specification: dict[str, Any]) -> Path:
+    """Resolve a declared source without accepting an arbitrary external path."""
+
+    if input_data.is_file():
+        if specification.get("file") is not None:
+            raise ValueError("a file mapping is only valid when input is a directory")
+        return input_data
+    source_file = specification.get("file")
+    if not isinstance(source_file, str):
+        raise ValueError("directory intake requires every source to declare file")
+    resolved_root = input_data.resolve()
+    resolved_source = (resolved_root / source_file).resolve()
+    try:
+        resolved_source.relative_to(resolved_root)
+    except ValueError as exc:
+        raise ValueError("source file must remain under the controlled input directory") from exc
+    if not resolved_source.is_file():
+        raise ValueError("a declared source file is not present in the controlled input directory")
+    return resolved_source
+
+
+def _read_csv_source(
+    source_path: Path,
+    specification: dict[str, Any],
+    *,
+    include_rows: bool,
+) -> tuple[tuple[str, ...], list[dict[str, object]] | None]:
+    raw = source_path.read_bytes()
+    for encoding in _csv_encodings(raw):
+        try:
+            parsed = list(csv.reader(StringIO(raw.decode(encoding))))
+        except UnicodeError:
+            continue
+        header_index = specification["header_row"] - 1
+        if header_index >= len(parsed):
+            return (), [] if include_rows else None
+        header = tuple(value.strip() for value in parsed[header_index])
+        if not include_rows:
+            return header, None
+        rows = [
+            {
+                header[position]: value
+                for position, value in enumerate(values)
+                if position < len(header)
+            }
+            for values in parsed[header_index + 1:]
+            if any(value.strip() for value in values)
+        ]
+        return header, rows
+    raise ValueError("a declared CSV source cannot be decoded with supported logger encodings")
+
+
+def _read_source(
     input_data: Path,
     specification: dict[str, Any],
     *,
     include_rows: bool,
 ) -> tuple[tuple[str, ...], list[dict[str, object]] | None]:
+    source_path = _source_path(input_data, specification)
+    if source_path.suffix.casefold() == ".csv":
+        return _read_csv_source(source_path, specification, include_rows=include_rows)
+    if source_path.suffix.casefold() not in {".xlsx", ".xlsm"}:
+        raise ValueError("controlled multi-source intake supports CSV, XLSX, or XLSM sources")
     try:
         from openpyxl import load_workbook
     except ImportError as exc:  # pragma: no cover - environment-specific
         raise RuntimeError("openpyxl is required for controlled Excel intake") from exc
-    workbook = load_workbook(input_data, read_only=True, data_only=True)
+    workbook = load_workbook(source_path, read_only=True, data_only=True)
     try:
         worksheet_name = specification["worksheet"]
+        if not worksheet_name:
+            raise ValueError("XLSX/XLSM sources require a nonempty worksheet mapping")
         if worksheet_name not in workbook.sheetnames:
             raise ValueError("a specified worksheet is not present in the controlled input")
         worksheet = workbook[worksheet_name]
@@ -201,6 +278,17 @@ def _missing_mapped_columns(header: tuple[str, ...], specification: dict[str, An
     return missing
 
 
+def _source_input_digest(input_data: Path, specifications: list[dict[str, Any]]) -> str:
+    """Hash the actual source bytes without putting their private names in a receipt."""
+
+    if input_data.is_file():
+        return _sha256(input_data)
+    digest = hashlib.sha256()
+    for specification in specifications:
+        digest.update(_sha256(_source_path(input_data, specification)).encode("ascii"))
+    return digest.hexdigest()
+
+
 def preflight_bundle(
     input_data: Path,
     mapping_path: Path,
@@ -212,8 +300,8 @@ def preflight_bundle(
     input_data = _outside_repository(input_data, field="input data")
     mapping_path = _outside_repository(mapping_path, field="mapping")
     attestation_path = _outside_repository(attestation_path, field="attestation")
-    if input_data.suffix.casefold() not in {".xlsx", ".xlsm"}:
-        raise ValueError("multi-source controlled intake requires XLSX or XLSM input")
+    if not input_data.is_dir() and input_data.suffix.casefold() not in {".csv", ".xlsx", ".xlsm"}:
+        raise ValueError("multi-source controlled intake requires a CSV/XLSX/XLSM file or directory")
     mapping = _json(mapping_path)
     attestation = _json(attestation_path)
     _require_attestation(attestation)
@@ -224,13 +312,13 @@ def preflight_bundle(
 
     missing: set[str] = set()
     for specification in specifications:
-        header, _ = _read_workbook_source(input_data, specification, include_rows=False)
+        header, _ = _read_source(input_data, specification, include_rows=False)
         missing.update(_missing_mapped_columns(header, specification))
     return {
         "schema_version": 1,
         "artifact_type": "controlled_deidentified_hrs_multisource_preflight",
         "ready_for_controlled_export": not missing,
-        "source_format": "xlsx",
+        "source_format": "directory" if input_data.is_dir() else input_data.suffix.casefold().lstrip("."),
         "source_table_count": len(specifications),
         "alignment_method": "nearest_observation",
         "required_canonical_channels": list(OUTPUT_COLUMNS),
@@ -362,8 +450,8 @@ def export_bundle(
     mapping_path = _outside_repository(mapping_path, field="mapping")
     attestation_path = _outside_repository(attestation_path, field="attestation")
     output_directory = _outside_repository(output_directory, field="output directory")
-    if input_data.suffix.casefold() not in {".xlsx", ".xlsm"}:
-        raise ValueError("multi-source controlled intake requires XLSX or XLSM input")
+    if not input_data.is_dir() and input_data.suffix.casefold() not in {".csv", ".xlsx", ".xlsm"}:
+        raise ValueError("multi-source controlled intake requires a CSV/XLSX/XLSM file or directory")
     if output_directory.exists() and any(output_directory.iterdir()):
         raise ValueError("output directory must be empty to avoid mixing controlled data bundles")
 
@@ -378,7 +466,7 @@ def export_bundle(
     source_rows: list[list[tuple[float, dict[str, object]]]] = []
     channel_source: dict[str, int] = {}
     for index, specification in enumerate(specifications):
-        header, rows = _read_workbook_source(input_data, specification, include_rows=True)
+        header, rows = _read_source(input_data, specification, include_rows=True)
         missing = _missing_mapped_columns(header, specification)
         if missing:
             raise ValueError("a source is missing mapped canonical channels")
@@ -415,7 +503,6 @@ def export_bundle(
 
     output_directory.mkdir(parents=True, exist_ok=True)
     trace_path = output_directory / "full_loop_event.csv"
-    import csv
     with trace_path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=OUTPUT_COLUMNS)
         writer.writeheader()
@@ -451,7 +538,7 @@ def export_bundle(
         "rows": len(normalized),
         "time_duration_s": float(normalized[-1]["time_s"]),
         "generic_output_columns": list(OUTPUT_COLUMNS),
-        "source_input_sha256": _sha256(input_data),
+        "source_input_sha256": _source_input_digest(input_data, specifications),
         "mapping_sha256": _sha256(mapping_path),
         "attestation_sha256": _sha256(attestation_path),
         "protocol_sha256": _sha256(protocol_path),
@@ -471,7 +558,10 @@ def export_bundle(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", type=Path, required=True, help="Authorised local XLSX or XLSM workbook")
+    parser.add_argument(
+        "--input", type=Path, required=True,
+        help="authorised CSV/XLSX/XLSM source, or a controlled directory named by the mapping",
+    )
     parser.add_argument("--mapping", type=Path, required=True, help="Private multi-source mapping outside this repository")
     parser.add_argument("--attestation", type=Path, required=True, help="Private unit/state attestation outside this repository")
     parser.add_argument("--output-directory", type=Path, help="Controlled output outside this repository")

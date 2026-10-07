@@ -155,3 +155,66 @@ def test_multisource_export_rejects_unattested_time_alignment(tmp_path: Path):
         assert "common time basis" in str(exc)
     else:  # pragma: no cover - assertion clarity
         raise AssertionError("unattested source alignment was accepted")
+
+
+def test_multisource_export_accepts_declared_csv_directory_sources(tmp_path: Path):
+    controlled = tmp_path / "private-directory"
+    controlled.mkdir()
+    vehicle = controlled / "private-vehicle.csv"
+    vehicle.write_text(
+        "secret time,secret vehicle pressure,secret vehicle temperature,secret mass flow\n"
+        + "\n".join(f"{index * 2},{10 + index},{20 + index / 10},2" for index in range(30))
+        + "\n",
+        encoding="utf-16",
+    )
+    station = controlled / "private-station.csv"
+    state_headers = ",".join(f"secret {name}" for name in OUTPUT_COLUMNS[7:])
+    state_values = ",".join(("mid", "running", "running", "clear", "closed", "clear", "ready"))
+    station.write_text(
+        "secret clock,secret station pressure,secret delivery temperature,secret cascade pressure,"
+        + state_headers + "\n"
+        + "\n".join(
+            f"{index * 2 + 0.25},{50 - index / 10},-30,{70 - index / 10},{state_values}"
+            for index in range(30)
+        ) + "\n",
+        encoding="utf-8",
+    )
+    mapping = {
+        "schema_version": 1,
+        "sources": [
+            {
+                "file": "private-vehicle.csv", "time_column": "secret time",
+                "column_map": {
+                    "vehicle_pressure_mpa_abs": "secret vehicle pressure",
+                    "temperature_degC": "secret vehicle temperature",
+                    "mass_flow_g_s": "secret mass flow",
+                },
+            },
+            {
+                "file": "private-station.csv", "time_column": "secret clock",
+                "column_map": {
+                    "station_pressure_mpa_abs": "secret station pressure",
+                    "delivered_gas_temperature_degC": "secret delivery temperature",
+                    "cascade_source_pressure_mpa_abs": "secret cascade pressure",
+                    **{name: f"secret {name}" for name in OUTPUT_COLUMNS[7:]},
+                },
+            },
+        ],
+        "alignment": {"method": "nearest_observation", "anchor_source": 0, "maximum_offset_s": 0.5},
+    }
+    mapping_path = tmp_path / "private-csv-mapping.json"
+    mapping_path.write_text(json.dumps(mapping), encoding="utf-8")
+    attestation_path = tmp_path / "private-csv-attestation.json"
+    attestation_path.write_text(json.dumps(_attestation()), encoding="utf-8")
+    protocol = ROOT / "research" / "external_hrs_intake_protocol.json"
+
+    preflight = preflight_bundle(controlled, mapping_path, attestation_path, protocol)
+    output = tmp_path / "private-csv-export"
+    receipt = export_bundle(controlled, mapping_path, attestation_path, output, protocol)
+    rendered = json.dumps(receipt)
+
+    assert preflight["ready_for_controlled_export"] is True
+    assert preflight["source_format"] == "directory"
+    assert receipt["full_loop_trace_ready"] is True
+    assert "private-vehicle.csv" not in rendered
+    assert "private-station.csv" not in rendered

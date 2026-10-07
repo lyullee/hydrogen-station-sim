@@ -96,6 +96,23 @@ def test_schema_inventory_screens_zip_members_without_disclosing_member_names(tm
     assert "private-value" not in rendered
 
 
+def test_schema_inventory_detects_utf16_logger_headers_without_disclosure(tmp_path: Path):
+    source = tmp_path / "controlled_utf16_logger.csv"
+    source.write_text(
+        "time,vehicle_pressure,temperature,mass_flow,vehicle,cascade,controller_state\n"
+        "private-value,1,2,3,4,5,6\n",
+        encoding="utf-16",
+    )
+
+    report = inventory_schema([tmp_path])
+    rendered = json.dumps(report, ensure_ascii=False)
+
+    assert report["candidate_schema_counts"]["full_loop_candidate"] == 1
+    assert report["measurement_like_tables"] == 1
+    assert "controlled_utf16_logger" not in rendered
+    assert "private-value" not in rendered
+
+
 def test_inventory_flags_complementary_workbook_tables_only_as_co_located_candidate(
     tmp_path: Path,
 ):
