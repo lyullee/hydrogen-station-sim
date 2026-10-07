@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "protocol_id": "KIT-LH2-CONSEQUENCE-STAGED-INTAKE-001",
+  "frozen_at": "2026-10-08",
+  "status": "stage1_inventory_protocol_frozen_before_archive_download",
+  "objective": "Acquire an outcome-unread large-scale liquid-hydrogen release and combustion archive, preserve its provenance, and determine whether a prospectively scored consequence-model validation is possible.",
+  "source": {
+    "title": "Fuel Cells and Hydrogen Joint Undertaking (FCH JU)",
+    "doi": "10.35097/1483",
+    "official_record": "https://radar.kit.edu/radar/en/dataset/umUTdrjbbQCUDIXE",
+    "archive_url": "https://www.radar-service.eu/radar-backend/archives/umUTdrjbbQCUDIXE/versions/1/content",
+    "archive_version": 1,
+    "publisher_reported_archive_size": "5.0 GB",
+    "publisher_reported_md5": "0e4ac934ecb973c6f07212e8a80707c9",
+    "license": "CC BY-SA 4.0",
+    "numerical_signal_files_downloaded_before_freeze": false,
+    "numerical_signal_files_opened_before_freeze": false,
+    "video_outcomes_opened_before_freeze": false,
+    "repository_duplicate_search": {
+      "performed": true,
+      "prior_numeric_result_found": false,
+      "known_metadata_only_records": [
+        "research/KIT_H2_RELEASE_DATA_REUSE_NOTE.md",
+        "research/validation_data_acquisition_tracker.json"
+      ]
+    }
+  },
+  "stage1_allowed_operations": [
+    "download the exact archive without opening outcome files",
+    "verify archive byte count and MD5",
+    "list archive member paths, sizes and checksums",
+    "read only README, data dictionary, apparatus, geometry, calibration and experiment-index documents",
+    "classify member files by extension and declared channel family without parsing signal values"
+  ],
+  "stage1_prohibited_operations": [
+    "open or summarize pressure, mass-flow, heat-flux, concentration or thermocouple signal values",
+    "view or extract experimental videos or outcome images",
+    "select cases using observed consequence magnitude or model agreement",
+    "fit a release, dispersion, ignition, overpressure or radiation parameter",
+    "commit the raw archive or extracted signal rows"
+  ],
+  "stage1_outputs": {
+    "required": [
+      "publisher checksum verification",
+      "outcome-unread archive member inventory",
+      "metadata and apparatus document inventory",
+      "candidate case count and available channel families",
+      "eligibility decision for a stage-2 protocol"
+    ],
+    "raw_archive_location": "gitignored data/public_validation/raw/kit_lh2_consequence_1483",
+    "public_repository_content": "metadata, hashes and aggregate eligibility only"
+  },
+  "stage2_freeze_requirements": [
+    "exact all-eligible-case selection rule based only on metadata",
+    "explicit model applicability domain for delayed ignition, congestion and confinement",
+    "fixed mappings and engineering units",
+    "predeclared overpressure and heat-flux endpoints with uncertainty handling",
+    "fixed code hashes and no case-specific fitting",
+    "negative-result and out-of-domain retention policy"
+  ],
+  "claim_boundary": "Stage 1 establishes provenance and eligibility only. It cannot validate the station, a consequence distance, HyRAM, emergency response or SAGA. The campaign concerns large-scale liquid-hydrogen cloud release/combustion and may be outside the gaseous jet model domain."
+}
