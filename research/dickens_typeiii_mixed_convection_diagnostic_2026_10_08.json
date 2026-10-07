@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T19:41:36.598120+00:00",
-  "source_commit": "91698f51ab4c4a49735afe90b30c48fbb1760fd6",
+  "generated_at": "2026-10-07T19:41:49.634010+00:00",
+  "source_commit": "cc442adb3554e28daad371fdeb3fdc6b7b66eed6",
   "diagnostic_type": "post-outcome forced-mixing sensitivity",
   "evidence_role": "model-development diagnostic only",
   "post_outcome": true,
