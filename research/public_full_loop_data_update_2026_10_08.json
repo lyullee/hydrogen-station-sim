@@ -20,6 +20,27 @@
     "diagnostic_result": "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json"
   },
   "supplementary_mapping_recheck": "research/methytrucks_supplementary_mapping_recheck_2026_10_08.json",
+  "prospective_group_d_recheck": {
+    "protocol": "research/methytrucks_group_d_prospective_protocol_2026_10_08.json",
+    "result": "research/methytrucks_group_d_prospective_result_2026_10_08.json",
+    "dataset_doi": "10.5281/zenodo.20590979",
+    "selected_event_count": 1,
+    "decision": "MODEL_SCREEN_NOT_RUN_INELIGIBLE_METADATA",
+    "verified_structure": {
+      "sample_count": 720,
+      "sampling_interval_s": 0.5,
+      "publisher_checksum_match": true
+    },
+    "missing_for_model_screen": [
+      "vehicle tank pressure",
+      "vehicle tank temperature",
+      "machine-readable engineering units",
+      "independently documented tank type and internal volume"
+    ],
+    "model_executed": false,
+    "case_count_contributed_to_full_loop_gate": 0,
+    "claim_boundary": "A pre-access frozen public H70 event was retained, but the file is not a self-contained vehicle-tank or full-loop validation trace."
+  },
   "missing_for_full_loop": [
     "publisher channel dictionary and unambiguous engineering units",
     "workbook-to-sampling-device crosswalk",
@@ -33,6 +54,6 @@
     "quantitative_full_loop_validation": false
   },
   "gate_impact": "full_loop_external_validation_remains_open",
-  "next_action": "Obtain the missing channel/controller metadata and a disjoint uninspected event, then freeze mapping and scoring before numerical access.",
+  "next_action": "Obtain at least eight disjoint traces with explicit vehicle pressure and temperature, tank geometry, units, controller and cascade-state metadata; the prospectively screened Group D event cannot supply those fields.",
   "claim_boundary": "The public files improve cross-institution tank-model transfer evidence but do not validate the complete station controller/cascade/precooler loop or field safety."
 }

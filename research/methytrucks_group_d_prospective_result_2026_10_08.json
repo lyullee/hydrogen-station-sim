@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-07T20:29:12.018485+00:00",
+  "status": "completed_prospective_intake_ineligible",
+  "decision": "MODEL_SCREEN_NOT_RUN_INELIGIBLE_METADATA",
+  "evidence_role": "retained_prospective_negative_intake_result",
+  "protocol": {
+    "path": "research/methytrucks_group_d_prospective_protocol_2026_10_08.json",
+    "protocol_id": "METHYTRUCKS-GROUP-D-H70-TRACE-001",
+    "frozen_at": "2026-10-08",
+    "frozen_model_commit": "1982fe860bcd3f8107b630380b83ddb3574e29b6",
+    "workbook_accessed_after_protocol_commit": true,
+    "selected_file_replaced": false,
+    "thresholds_changed_after_access": false
+  },
+  "execution_commit": "8af1102bebf58a597d1b9bfb184895f4a481cdd1",
+  "source": {
+    "dataset_title": "Group D -- particulates measurement data",
+    "dataset_doi": "10.5281/zenodo.20590979",
+    "context_report_doi": "10.5281/zenodo.20376461",
+    "filename": "20241024_Test_5_SINTEF_CESAME.xlsx"
+  },
+  "file_integrity": {
+    "size_bytes": 69408,
+    "md5": "e67b7cbf1cc4907ff6b460044b7b70b9",
+    "sha256": "51dcc909455bff6c7aa95c78cde2227f3e47ea809ef73abcab34c856010c8f0c",
+    "zenodo_size_match": true,
+    "zenodo_md5_match": true,
+    "raw_rows_committed": false
+  },
+  "workbook_structure": {
+    "sheet_names": [
+      "Tabelle1"
+    ],
+    "sample_count": 720,
+    "column_count": 14,
+    "headers": [
+      "Zeit",
+      "TT_D04 ValueY",
+      "PTX05 ValueY",
+      "PT03 ValueY",
+      "TEX01 ValueY",
+      "TT24 ValueY",
+      "QT_D02 ValueY",
+      "PTD10 ValueY",
+      "PTD11 ValueY",
+      "fwg1 ValueY",
+      "fwg2 ValueY",
+      "TE_D22 ValueY",
+      "11TT150A ValueY",
+      "FWg70_Masse ValueY"
+    ],
+    "sampling_interval_s_median": 0.5,
+    "duration_s": 359.5,
+    "strictly_increasing_time": true
+  },
+  "channel_screen": {
+    "frozen_alias_matches": {
+      "time": [
+        "Zeit"
+      ],
+      "vehicle_pressure": [],
+      "vehicle_temperature": [],
+      "mass_flow": [
+        "QT_D02 ValueY"
+      ],
+      "transferred_mass": [],
+      "delivered_temperature": [
+        "TEX01 ValueY"
+      ],
+      "upstream_pressure": [
+        "PTD10 ValueY"
+      ]
+    },
+    "required_resolution": {
+      "time": true,
+      "vehicle_pressure": false,
+      "vehicle_temperature": false,
+      "mass_boundary": true,
+      "delivered_temperature": true,
+      "upstream_pressure": true,
+      "engineering_units": false,
+      "independent_tank_geometry": false
+    },
+    "unresolved_required": [
+      "vehicle_pressure",
+      "vehicle_temperature",
+      "engineering_units",
+      "independent_tank_geometry"
+    ],
+    "ambiguous_unmapped_pressure_like_headers": [
+      "PTX05 ValueY",
+      "PT03 ValueY"
+    ],
+    "ambiguous_unmapped_temperature_like_headers": [
+      "TT_D04 ValueY",
+      "TT24 ValueY",
+      "TE_D22 ValueY",
+      "11TT150A ValueY"
+    ],
+    "machine_readable_unit_dictionary_present": false,
+    "interpretation": "The file contains a synchronized time base and flow/mass plus dispenser-side candidate channels, but no frozen alias establishes vehicle pressure or vehicle tank temperature. Generic ValueY labels do not attest engineering units."
+  },
+  "geometry_screen": {
+    "tank_type_documented_for_selected_event": false,
+    "tank_internal_volume_documented_for_selected_event": false,
+    "outcome_inference_used": false
+  },
+  "model_evaluation": {
+    "executed": false,
+    "reason": "The pre-access protocol requires vehicle pressure, vehicle temperature, engineering units and independent tank geometry. Running a numerical replay would require inventing or outcome-inferring those inputs.",
+    "metrics": null,
+    "case_specific_fitting_performed": false
+  },
+  "full_loop_gate_impact": {
+    "full_loop_external_validation_supported": false,
+    "case_count_contributed": 0,
+    "required_case_count": 8,
+    "gate_status": "remains_open",
+    "remaining_data_need": "At least eight disjoint physical-HRS vehicle-fill traces with explicit units, vehicle tank pressure and temperature, tank geometry, station/cascade states, controller actions and calibration metadata."
+  },
+  "claim_boundary": "This retained prospective negative result demonstrates that the selected public Group D workbook cannot support the predeclared vehicle-tank or station full-loop score. It is not evidence that the model failed a numerical prediction, and it does not validate station safety or emergency response."
+}

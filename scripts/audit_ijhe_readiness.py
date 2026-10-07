@@ -242,6 +242,79 @@ def audit(root: Path) -> dict[str, object]:
         } if methytrucks else "missing",
     ))
 
+    group_d_protocol_path = root / "research/methytrucks_group_d_prospective_protocol_2026_10_08.json"
+    group_d_result_path = root / "research/methytrucks_group_d_prospective_result_2026_10_08.json"
+    group_d_protocol = _json(group_d_protocol_path)
+    group_d_result = _json(group_d_result_path)
+    group_d_unresolved = set(
+        ((group_d_result or {}).get("channel_screen") or {}).get("unresolved_required") or []
+    )
+    group_d_integrity_pass = bool(
+        (group_d_protocol or {}).get("status")
+        == "prospective_transient_protocol_frozen_before_workbook_access"
+        and (group_d_protocol or {}).get("pre_access_attestation", {}).get(
+            "selected_workbook_downloaded_before_freeze"
+        ) is False
+        and (group_d_protocol or {}).get("pre_access_attestation", {}).get(
+            "selected_workbook_opened_before_freeze"
+        ) is False
+        and (group_d_protocol or {}).get("frozen_selection", {}).get("filename")
+        == "20241024_Test_5_SINTEF_CESAME.xlsx"
+        and (group_d_result or {}).get("status")
+        == "completed_prospective_intake_ineligible"
+        and (group_d_result or {}).get("decision")
+        == "MODEL_SCREEN_NOT_RUN_INELIGIBLE_METADATA"
+        and (group_d_result or {}).get("evidence_role")
+        == "retained_prospective_negative_intake_result"
+        and (group_d_result or {}).get("source", {}).get("dataset_doi")
+        == "10.5281/zenodo.20590979"
+        and (group_d_result or {}).get("file_integrity", {}).get("md5")
+        == "e67b7cbf1cc4907ff6b460044b7b70b9"
+        and (group_d_result or {}).get("file_integrity", {}).get("zenodo_md5_match") is True
+        and (group_d_result or {}).get("file_integrity", {}).get("raw_rows_committed") is False
+        and (group_d_result or {}).get("workbook_structure", {}).get("sample_count") == 720
+        and (group_d_result or {}).get("workbook_structure", {}).get(
+            "sampling_interval_s_median"
+        ) == 0.5
+        and {
+            "vehicle_pressure", "vehicle_temperature", "engineering_units",
+            "independent_tank_geometry",
+        }.issubset(group_d_unresolved)
+        and (group_d_result or {}).get("model_evaluation", {}).get("executed") is False
+        and (group_d_result or {}).get("model_evaluation", {}).get(
+            "case_specific_fitting_performed"
+        ) is False
+        and (group_d_result or {}).get("full_loop_gate_impact", {}).get(
+            "full_loop_external_validation_supported"
+        ) is False
+    )
+    gates.append(_gate(
+        "methytrucks_group_d_prospective_intake_integrity",
+        "PASS" if group_d_integrity_pass else (
+            "FAIL" if group_d_protocol or group_d_result else "PENDING"
+        ),
+        "The exact public Group D H70 workbook is retained after a pre-access freeze and fails closed when required vehicle channels, units and geometry are absent.",
+        f"{group_d_protocol_path.relative_to(root)}; {group_d_result_path.relative_to(root)}",
+        "Frozen exact-file selection, publisher checksum match, 720 samples at 0.5 s, no case replacement, no post-access threshold change, no invented channel mapping and no numerical model run when metadata are incomplete.",
+        {
+            "decision": (group_d_result or {}).get("decision"),
+            "sample_count": (group_d_result or {}).get("workbook_structure", {}).get(
+                "sample_count"
+            ),
+            "sampling_interval_s": (group_d_result or {}).get(
+                "workbook_structure", {}
+            ).get("sampling_interval_s_median"),
+            "unresolved_required": sorted(group_d_unresolved),
+            "model_executed": (group_d_result or {}).get("model_evaluation", {}).get(
+                "executed"
+            ),
+            "full_loop_external_validation_supported": (group_d_result or {}).get(
+                "full_loop_gate_impact", {}
+            ).get("full_loop_external_validation_supported"),
+            "claim_boundary": (group_d_result or {}).get("claim_boundary"),
+        } if group_d_result else "missing",
+    ))
+
     tank_runtime_path = root / "research/public_type_iv_tank_runtime_calibration_2026_10_07.json"
     tank_runtime = _json(tank_runtime_path)
     tank_runtime_hashes = (tank_runtime or {}).get("source_hashes") or {}
@@ -1106,6 +1179,7 @@ def audit(root: Path) -> dict[str, object]:
         f"{external_search_recheck_path.relative_to(root)}; {external_operational_recheck_path.relative_to(root)}; "
         f"{external_search_sweep_path.relative_to(root)}; {external_search_latest_path.relative_to(root)}; "
         f"{public_full_loop_update_path.relative_to(root)}; {methytrucks_path.relative_to(root)}; "
+        f"{group_d_protocol_path.relative_to(root)}; {group_d_result_path.relative_to(root)}; "
         f"{prospective_release_protocol_path.relative_to(root)}; {controlled_registry_path.relative_to(root)}",
         "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
         {
@@ -1142,6 +1216,20 @@ def audit(root: Path) -> dict[str, object]:
                 "temperature_rmse_c": methytrucks_temperature.get("rmse_c"),
                 "candidate_session_aggregate": methytrucks_aggregate,
                 "eligibility": methytrucks_eligibility,
+            },
+            "methytrucks_group_d_prospective_intake": {
+                "status": (group_d_result or {}).get("status"),
+                "decision": (group_d_result or {}).get("decision"),
+                "sample_count": (group_d_result or {}).get(
+                    "workbook_structure", {}
+                ).get("sample_count"),
+                "unresolved_required": sorted(group_d_unresolved),
+                "model_executed": (group_d_result or {}).get(
+                    "model_evaluation", {}
+                ).get("executed"),
+                "full_loop_external_validation_supported": (group_d_result or {}).get(
+                    "full_loop_gate_impact", {}
+                ).get("full_loop_external_validation_supported"),
             },
             "live_public_search_sweep_2026_10_05": {
                 "result": (external_search_sweep or {}).get("result"),

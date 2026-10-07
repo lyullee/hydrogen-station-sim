@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **87 PASS · 7 FAIL · 8 PENDING**.
+Gate counts: **88 PASS · 7 FAIL · 8 PENDING**.
 
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted
@@ -148,7 +148,7 @@ The local format gate currently passes:
 - abstract: 147 words (limit checked: 150);
 - keywords: 6;
 - highlights: 5, each within the checked character limit;
-- approximate manuscript body: 7,997 words before references;
+- approximate manuscript body: 7,964 words before references;
 - figures: 2; tables: 3;
 - citations resolved and figure assets present;
 - LaTeX compilation: **PENDING**. The built-in compiler was unavailable on this
@@ -179,6 +179,17 @@ inspected before this diagnostic protocol, and the public package lacks a
 channel dictionary, device crosswalk, calibration uncertainty, controller state
 and bank-selection tags. The next confirmatory test must freeze those mappings
 before a disjoint uninspected event is opened.
+
+The only previously unopened MetHyTrucks H70 vehicle workbook was then selected
+and its exact filename, publisher checksum, channel aliases, eligibility rules
+and score thresholds were committed before download. The retained workbook
+matched the publisher checksum and contained 720 synchronized samples at 0.5 s,
+but it did not identify vehicle-tank pressure or temperature, engineering units,
+or the selected vehicle tank geometry. The predeclared rule therefore produced
+`MODEL_SCREEN_NOT_RUN_INELIGIBLE_METADATA`: no channel identity was guessed, no
+geometry was inferred from outcomes and no numerical model score was produced.
+This prospective negative intake result exhausts the public MetHyTrucks route
+without adding an eligible case to the eight-case full-loop gate.
 
 ## Blocking gates
 

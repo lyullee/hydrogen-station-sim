@@ -14,12 +14,12 @@
     "eligibility_decision": "ELIGIBLE_FOR_PROSPECTIVE_MAPPING",
     "manifest_sha256": "7700b8cbeb01516b2c7e6b118e11444ffac4a87627ef9445fa805c9f8b6de346",
     "numerical_values_inspected_before_intake": false,
-    "quarantined_zip_root": "C:/Users/lyul/Desktop/ProjectData/external_hrs_quarantine/cip_2020_35_70mpa",
+    "quarantined_zip_root": "<LOCAL_QUARANTINE>/cip_2020_35_70mpa",
     "zip_file_count": 4,
     "zip_sha256_verified": true
   },
   "post_intake_trace_check": {
-    "extraction_root": "C:/Users/lyul/Desktop/ProjectData/external_hrs_quarantine/cip_2020_35_70mpa_extracted_v1",
+    "extraction_root": "<LOCAL_QUARANTINE>/cip_2020_35_70mpa_extracted_v1",
     "numerical_values_inspected_after_gate": true,
     "files": [
       {

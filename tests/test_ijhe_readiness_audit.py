@@ -25,6 +25,13 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert methytrucks["supplementary_mapping_recheck"]["observed_contents"]["channel_dictionary_present"] is False
     assert methytrucks["prospective_holdout_eligible"] is False
     assert methytrucks["quantitative_full_loop_validation_eligible"] is False
+    assert gates["methytrucks_group_d_prospective_intake_integrity"]["status"] == "PASS"
+    group_d = gates["methytrucks_group_d_prospective_intake_integrity"]["observed"]
+    assert group_d["decision"] == "MODEL_SCREEN_NOT_RUN_INELIGIBLE_METADATA"
+    assert group_d["sample_count"] == 720
+    assert group_d["sampling_interval_s"] == 0.5
+    assert group_d["model_executed"] is False
+    assert group_d["full_loop_external_validation_supported"] is False
     assert gates["public_tank_runtime_calibration_integrity"]["status"] == "PASS"
     tank_runtime = gates["public_tank_runtime_calibration_integrity"]["observed"]
     assert tank_runtime["runtime"]["api_default_mode"] == "public_type_iv"
@@ -65,6 +72,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert elvhys_holdout["confirmatory_validation_eligible"] is False
     assert gates["preoutcome_design_sensitivity"]["status"] == "PASS"
     assert gates["full_loop_external_validation"]["status"] == "FAIL"
+    group_d_full_loop = gates["full_loop_external_validation"]["observed"][
+        "methytrucks_group_d_prospective_intake"
+    ]
+    assert group_d_full_loop["decision"] == "MODEL_SCREEN_NOT_RUN_INELIGIBLE_METADATA"
+    assert group_d_full_loop["full_loop_external_validation_supported"] is False
     assert gates["public_dispenser_table_download_integrity"]["status"] == "PASS"
     assert gates["green_hysland_trailer_context_integrity"]["status"] == "PASS"
     green = gates["green_hysland_trailer_context_integrity"]["observed"]

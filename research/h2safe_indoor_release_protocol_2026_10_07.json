@@ -30,7 +30,7 @@
     }
   },
   "pre_access_integrity_plan": {
-    "quarantine_root": "C:/Users/lyul/Desktop/ProjectData/external_h2safe_quarantine",
+    "quarantine_root": "<LOCAL_QUARANTINE>/external_h2safe_quarantine",
     "raw_data_committed_to_git": false,
     "before_inspection": [
       "download the published archive only after this protocol is committed",

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T20:13:09.508105+00:00",
+  "generated_at": "2026-10-07T20:37:09.129159+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -16,7 +16,7 @@
     "interpretation": "A bounded manuscript may be drafted around model-level and qualitative evidence, but the validated full-station digital-twin objective cannot be declared complete."
   },
   "gate_counts": {
-    "PASS": 87,
+    "PASS": 88,
     "FAIL": 7,
     "PENDING": 8
   },
@@ -77,6 +77,23 @@
       "temperature_rmse_case_mean_c": 4.57841318799785,
       "descriptive_joint_screen_pass_fraction": 1.0,
       "claim_boundary": "This artifact proves file integrity, synchronized 0.5 s measurement availability, flow-to-cumulative-mass consistency and a no-fit candidate tank replay. It is a post-access diagnostic, not an untouched holdout, a full station-to-vehicle validation result, SAE certification or field-safety validation."
+    },
+    "methytrucks_group_d_prospective": {
+      "gate": "PASS",
+      "evidence": [
+        "research/methytrucks_group_d_prospective_protocol_2026_10_08.json",
+        "research/methytrucks_group_d_prospective_result_2026_10_08.json"
+      ],
+      "decision": "MODEL_SCREEN_NOT_RUN_INELIGIBLE_METADATA",
+      "sample_count": 720,
+      "unresolved_required": [
+        "vehicle_pressure",
+        "vehicle_temperature",
+        "engineering_units",
+        "independent_tank_geometry"
+      ],
+      "model_executed": false,
+      "claim_boundary": "This retained prospective negative result demonstrates that the selected public Group D workbook cannot support the predeclared vehicle-tank or station full-loop score. It is not evidence that the model failed a numerical prediction, and it does not validate station safety or emergency response."
     }
   },
   "blocking_matrix": [
@@ -95,7 +112,7 @@
     {
       "id": "full_loop_external_validation",
       "status": "FAIL",
-      "why_blocked": "The frozen external station-loop holdout has 0/8 engineering-screen passes. A new public ZBT set has synchronized pressure, temperature and flow-like rows, but its mapping remains provisional, controller/bank states are absent and its outcomes were inspected before this diagnostic was specified.",
+      "why_blocked": "The frozen external station-loop holdout has 0/8 engineering-screen passes. The post-access ZBT set has synchronized rows but incomplete mapping. A separately frozen Group D H70 vehicle event was then retained prospectively, but it lacks vehicle tank pressure and temperature, engineering units and independently documented tank geometry, so no model score was permitted.",
       "evidence": [
         "data/public_validation/results/closed_loop_external_holdout/validation.json",
         "research/mc_default_source_boundary_identifiability_2026_10_04.json",
@@ -103,13 +120,15 @@
         "research/public_full_loop_search_recheck_2026_10_06.json",
         "research/public_full_loop_data_update_2026_10_08.json",
         "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json",
+        "research/methytrucks_group_d_prospective_protocol_2026_10_08.json",
+        "research/methytrucks_group_d_prospective_result_2026_10_08.json",
         "research/public_operational_benchmark_recheck_2026_10_05.json",
         "research/public_operational_benchmark_face_validity_2026_10_05.json",
         "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
         "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json"
       ],
       "unblock_criterion": "Obtain a clean, rights-cleared, pre-access frozen external dataset with synchronized station pressure/temperature/mass-flow, protocol/controller, dispenser/nozzle, and vehicle/receptacle channels; resolve the source-boundary/topology ambiguity; then score >=8 cases with >=80% screen pass fraction.",
-      "next_action": "First obtain the ZBT channel dictionary, device crosswalk and controller/bank-state metadata, then freeze a disjoint uninspected event. Continue the NBSDC and other custodian requests as secondary acquisition routes."
+      "next_action": "Request at least eight disjoint physical-HRS vehicle traces with explicit vehicle pressure/temperature, tank geometry, units and controller/cascade states. The public MetHyTrucks archive has now been exhausted without a qualifying full-loop cohort."
     },
     {
       "id": "consequence_model_external_validation",
@@ -150,13 +169,14 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "48418085e8f8ea8545c62c674bf708bef28edc22d09ddcf460460f4250e6fef1",
+    "audit_sha256": "bcd5bff7f64d051ec27957ef8164df4eb6d402fffade7b0725a2a0f4a5f5850a",
     "hiad_readiness_sha256": "bb2b8e91cf32e98f0503565d3616698376b4c2e1e6054377384c18641d33da98",
     "acquisition_tracker_sha256": "099fb2ce0d858debf1761a7ceaaaedf781fb83c9d21b6fbb660c30bcd9ba68e0",
     "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",
     "latest_full_loop_search_sha256": "14391668298eea81e1aaff919e9a20fd9c3570694e33cf8998d4156976cba808",
     "methytrucks_postaccess_sha256": "5f55152984db8952fb532d975f7c89db7f1681375f20c306a9ccb7cdc79ddf48",
-    "public_full_loop_update_sha256": "556942f0a9ebe9210d658392f6040436b28f709ebdc5c377e6abc71354baaf0f",
+    "methytrucks_group_d_prospective_sha256": "1378084ccf176f68ce05acc9e74d5063280f216eb7a0c33cafd3606d0efc3c25",
+    "public_full_loop_update_sha256": "119ec8ebd2fa548048923c14562f7f7fdda415ff1342ae3ad42683f2d67bb6cb",
     "operational_benchmark_recheck_sha256": "80e865de45384c7bd48c721125e440f482343c2420095f56f6866390db842e81",
     "operational_benchmark_face_validity_sha256": "64001782ba19ebd3299b0f17caf61f78138d9bc9a7836bc77d6e27f4c0dcec02",
     "h2safe_intake_sha256": "1ee28c8e168d2ee411763801249ee059a5e356c21f5dd45d75b48880b88f113f",
@@ -165,6 +185,7 @@
     "latest_public_full_loop_search_candidate_count": 9,
     "methytrucks_workbook_count": 3,
     "methytrucks_candidate_session_count": 5,
+    "methytrucks_group_d_decision": "MODEL_SCREEN_NOT_RUN_INELIGIBLE_METADATA",
     "public_full_loop_update_status": "public_synchronized_rows_found_but_full_loop_gate_open",
     "public_operational_benchmark_candidate_count": 18
   },

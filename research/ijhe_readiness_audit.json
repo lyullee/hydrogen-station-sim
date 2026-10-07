@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T20:08:48.471630+00:00",
+  "generated_at": "2026-10-07T20:37:09.033633+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 87,
+    "PASS": 88,
     "FAIL": 7,
     "PENDING": 8
   },
@@ -194,6 +194,27 @@
         "prospective_holdout_eligible": false,
         "quantitative_full_loop_validation_eligible": false,
         "claim_boundary": "This artifact proves file integrity, synchronized 0.5 s measurement availability, flow-to-cumulative-mass consistency and a no-fit candidate tank replay. It is a post-access diagnostic, not an untouched holdout, a full station-to-vehicle validation result, SAE certification or field-safety validation."
+      }
+    },
+    {
+      "id": "methytrucks_group_d_prospective_intake_integrity",
+      "status": "PASS",
+      "claim": "The exact public Group D H70 workbook is retained after a pre-access freeze and fails closed when required vehicle channels, units and geometry are absent.",
+      "evidence": "research\\methytrucks_group_d_prospective_protocol_2026_10_08.json; research\\methytrucks_group_d_prospective_result_2026_10_08.json",
+      "requirement": "Frozen exact-file selection, publisher checksum match, 720 samples at 0.5 s, no case replacement, no post-access threshold change, no invented channel mapping and no numerical model run when metadata are incomplete.",
+      "observed": {
+        "decision": "MODEL_SCREEN_NOT_RUN_INELIGIBLE_METADATA",
+        "sample_count": 720,
+        "sampling_interval_s": 0.5,
+        "unresolved_required": [
+          "engineering_units",
+          "independent_tank_geometry",
+          "vehicle_pressure",
+          "vehicle_temperature"
+        ],
+        "model_executed": false,
+        "full_loop_external_validation_supported": false,
+        "claim_boundary": "This retained prospective negative result demonstrates that the selected public Group D workbook cannot support the predeclared vehicle-tank or station full-loop score. It is not evidence that the model failed a numerical prediction, and it does not validate station safety or emergency response."
       }
     },
     {
@@ -848,7 +869,7 @@
       "id": "full_loop_external_validation",
       "status": "FAIL",
       "claim": "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
-      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json; research\\public_full_loop_search_sweep_2026_10_05.json; research\\public_full_loop_search_recheck_2026_10_06.json; research\\public_full_loop_data_update_2026_10_08.json; research\\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json; research\\apparatus_resolved_release_protocol.json; research\\controlled_full_loop_cohort_registry.json",
+      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json; research\\public_full_loop_search_sweep_2026_10_05.json; research\\public_full_loop_search_recheck_2026_10_06.json; research\\public_full_loop_data_update_2026_10_08.json; research\\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json; research\\methytrucks_group_d_prospective_protocol_2026_10_08.json; research\\methytrucks_group_d_prospective_result_2026_10_08.json; research\\apparatus_resolved_release_protocol.json; research\\controlled_full_loop_cohort_registry.json",
       "requirement": "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
       "observed": {
         "protocol_integrity": true,
@@ -1002,6 +1023,19 @@
             "quantitative_full_loop_validation_eligible": false,
             "reason": "The rows are public and synchronized, but numerical outcomes were inspected before this protocol and the released package lacks a channel dictionary, controller/bank-state mapping and calibration metadata."
           }
+        },
+        "methytrucks_group_d_prospective_intake": {
+          "status": "completed_prospective_intake_ineligible",
+          "decision": "MODEL_SCREEN_NOT_RUN_INELIGIBLE_METADATA",
+          "sample_count": 720,
+          "unresolved_required": [
+            "engineering_units",
+            "independent_tank_geometry",
+            "vehicle_pressure",
+            "vehicle_temperature"
+          ],
+          "model_executed": false,
+          "full_loop_external_validation_supported": false
         },
         "live_public_search_sweep_2026_10_05": {
           "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
@@ -6064,11 +6098,11 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7869,
+          "approximate_manuscript_words_before_references": 7964,
           "figures": 2,
           "tables": 3,
-          "citation_keys": 33,
-          "bibliography_entries": 34,
+          "citation_keys": 35,
+          "bibliography_entries": 36,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },

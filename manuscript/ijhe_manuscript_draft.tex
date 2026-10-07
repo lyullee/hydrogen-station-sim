@@ -477,6 +477,16 @@ mean pressure and temperature RMSE of 1.287 MPa and 4.578 $^{\circ}$C. All met
 descriptive screens; inferred channel identities and prior access restrict them
 to a diagnostic. A 77-L alternative passed 1/5 screens; missing setup mapping
 remains material.
+To test whether another public event could remove that limitation, the exact
+Group D H70 vehicle-fill workbook was frozen before download
+\cite{methytrucksgroupd2026,methytrucksd42026}. Its publisher checksum matched
+and it contained 720 synchronized samples at 0.5 s. The predeclared intake rule
+nevertheless classified it as ineligible because the released tags do not
+establish vehicle-tank pressure or temperature, machine-readable units, tank
+type or internal volume. No numerical replay was run and the file was not
+replaced. This is a retained prospective data-eligibility result, not a model
+prediction failure, and contributes zero cases to the eight-case full-loop
+gate.
 A frozen public Type-III fill \cite{andreasen2026archive,couteau2025flow} passed both
 pressure screens (0.943 MPa RMSE) but failed temperature (19.179 K RMSE). A
 post-outcome forced-mixing sensitivity passed all screens but cannot revise the
@@ -1179,6 +1189,16 @@ stations: interplay of sampling strategy and station parameters,
 Hydrogen and Fuel Cell Center, \textit{Group B---HySam system measurement data},
 Zenodo (2026),
 \href{https://doi.org/10.5281/zenodo.20590842}{doi:10.5281/zenodo.20590842}.
+
+\bibitem{methytrucksgroupd2026}
+MetHyTrucks consortium, \textit{Group D---particulates measurement data},
+Zenodo (2026),
+\href{https://doi.org/10.5281/zenodo.20590979}{doi:10.5281/zenodo.20590979}.
+
+\bibitem{methytrucksd42026}
+MetHyTrucks consortium, \textit{D4---Report on the development, comparison and
+validation of sampling systems}, Zenodo (2026),
+\href{https://doi.org/10.5281/zenodo.20376461}{doi:10.5281/zenodo.20376461}.
 \end{thebibliography}
 
 \end{document}

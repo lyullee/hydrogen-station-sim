@@ -6,7 +6,7 @@ Date: 2026-09-19
 
 User requested a review of the other equipment after the transporter remodel. This review compares the known implemented geometry with primary manufacturer and hydrogen-system references. It is not a browser inspection, code re-read, execution test, engineering certification or review of the process equations. No implementation files were modified.
 
-Relevant implementation: C:/Users/lyul/Desktop/Materials/Project/hydrogen-station-sim/web/station3d.js
+Relevant implementation: `web/station3d.js`
 
 ## Findings in priority order
 
