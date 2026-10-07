@@ -29,7 +29,9 @@
     "PT-1001": "finite common-header pressure",
     "TT-1001": "finite common-header gas temperature",
     "FT-1001": "signed total cascade-bank inflow to common header",
-    "MASS_HEADER": "finite common-header hydrogen inventory"
+    "MASS_HEADER": "finite common-header hydrogen inventory",
+    "live_api": "header_pressure_mpa, header_temperature_c, header_mass_kg and signed header_inflow_g_s are emitted in every live frame and aligned result series",
+    "llm_evidence": "the same live values are passed to main and selected-sensor assistants with simulated/prospective provenance and claim limits"
   },
   "hazop_effect": {
     "newly_executable_rules": [

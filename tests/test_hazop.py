@@ -530,6 +530,10 @@ def test_frame_cursor_and_continuous_stop_result_alignment(tmp_path, monkeypatch
         assert len(result['series']['analysis'])==length
         assert len(result['series']['gas_detectors'])==length
         assert all(len(values)==length for values in result['series']['bank_pressure_mpa'].values())
+        assert len(result['series']['header_pressure_mpa'])==length
+        assert len(result['series']['header_temperature_c'])==length
+        assert len(result['series']['header_mass_kg'])==length
+        assert len(result['series']['header_inflow_g_s'])==length
         assert client.get('/api/simulations/missing/frames').status_code==404
 
 def test_storage_release_chokes_before_table_cold_limit():

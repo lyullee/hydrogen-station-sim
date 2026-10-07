@@ -2854,6 +2854,21 @@ def build_evidence_manifest(
             "uncalculated_values_must_not_be_invented": True,
         },
     }
+    common_header = {
+        "pressure_mpa_abs": _finite_number(frame.get("header_pressure_mpa")),
+        "temperature_c": _finite_number(frame.get("header_temperature_c")),
+        "inventory_kg": _finite_number(frame.get("header_mass_kg")),
+        "bank_inflow_g_s": _finite_number(frame.get("header_inflow_g_s")),
+    }
+    if any(value is not None for value in common_header.values()):
+        envelope["common_header"] = {
+            **common_header,
+            "origin": "DIGITAL_TWIN_PROCESS_STATE",
+            "model_status": "PROSPECTIVE_NOT_EXTERNALLY_VALIDATED",
+            "claim_limit": (
+                "유한 공통 헤더의 모의 상태이며 현장 계측 또는 검증된 배관 치수를 의미하지 않음"
+            ),
+        }
     traceability = _public_incident_traceability()
     if traceability is not None:
         envelope["response_evidence"]["public_incident_traceability"] = traceability
@@ -3047,6 +3062,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         ) or {},
         "virtual_detector_proxy": manifest.get("virtual_detector_proxy") or {},
         "detector_policy": manifest.get("detector_policy") or {},
+        "common_header": manifest.get("common_header") or {},
     }
     benchmarks = evidence.get("public_experimental_benchmarks")
     if isinstance(benchmarks, dict):
@@ -3594,6 +3610,10 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "detector_policy": selected(detector, (
             "status", "alarm_threshold_volpct_h2", "trip_threshold_volpct_h2",
             "persistence_s", "claim_limit",
+        )),
+        "common_header": selected(manifest.get("common_header"), (
+            "pressure_mpa_abs", "temperature_c", "inventory_kg",
+            "bank_inflow_g_s", "origin", "model_status", "claim_limit",
         )),
         "impact": {
             "calculation_attempted": impact.get("calculation_attempted") is True,

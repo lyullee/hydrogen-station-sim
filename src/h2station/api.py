@@ -618,6 +618,19 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                             for name, temperature in (sample.bank_temperature_k or {}).items()
                         },
                         "bank_mass_kg": dict(sample.bank_mass_kg or {}),
+                        "header_pressure_mpa": (
+                            sample.header_pressure_pa / 1.0e6
+                            if sample.header_pressure_pa is not None else None
+                        ),
+                        "header_temperature_c": (
+                            sample.header_temperature_k - 273.15
+                            if sample.header_temperature_k is not None else None
+                        ),
+                        "header_mass_kg": sample.header_mass_kg,
+                        "header_inflow_g_s": (
+                            sample.header_inflow_kg_s * 1000.0
+                            if sample.header_inflow_kg_s is not None else None
+                        ),
                         "dispatch_bank": sample.dispatch_bank,
                         "dispatch_bank_2": sample.dispatch_bank_2,
                         "recharge_bank": sample.recharge_bank,
@@ -1024,6 +1037,10 @@ def _serialize_result(trajectory, station, backend, faults=()) -> dict[str, Any]
             "hose_2_pressure_mpa": hose_2_pressures,
             "hose_2_temperature_c": hose_2_temperatures,
             "bank_pressure_mpa": bank_pressures,
+            "header_pressure_mpa": (trajectory.header_pressure_pa / 1.0e6).tolist(),
+            "header_temperature_c": (trajectory.header_temperature_k - 273.15).tolist(),
+            "header_mass_kg": trajectory.header_mass_kg.tolist(),
+            "header_inflow_g_s": (trajectory.header_inflow_kg_s * 1000.0).tolist(),
             "dispatch_bank": list(trajectory.dispatch_bank),
             "dispatch_bank_2": list(trajectory.dispatch_bank_2),
             "recharge_bank": list(trajectory.recharge_bank),

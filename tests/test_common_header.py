@@ -4,7 +4,7 @@ from dataclasses import replace
 
 import pytest
 
-from h2station.api import ProcessSettings
+from h2station.api import ProcessSettings, _serialize_result
 from h2station.hazop.runtime import HazopMonitor
 from h2station.operations import ProcessRuntime
 from h2station.risk.runtime_backend import UnavailableHyRAMBackend
@@ -100,6 +100,41 @@ def test_hazop_uses_header_state_inflow_and_inventory_for_mass_balance():
     assert signals["MASS_HEADER"]["value"] == pytest.approx(
         built.initial_state.common_header.hydrogen_mass_kg
     )
+
+
+def test_header_state_is_exposed_in_samples_and_result_series():
+    built = _built()
+    samples = []
+    trajectory = built.simulator.simulate(
+        built.initial_state,
+        0.4,
+        0.2,
+        pace_idle=False,
+        sample_callback=samples.append,
+    )
+
+    first = samples[0]
+    assert first.header_pressure_pa == pytest.approx(45.0e6)
+    assert first.header_temperature_k == pytest.approx(298.15)
+    assert first.header_mass_kg == pytest.approx(
+        built.initial_state.common_header.hydrogen_mass_kg
+    )
+    assert first.header_inflow_kg_s is not None
+
+    payload = _serialize_result(
+        trajectory,
+        built.station,
+        UnavailableHyRAMBackend(),
+    )
+    length = len(payload["series"]["time_s"])
+    for key in (
+        "header_pressure_mpa",
+        "header_temperature_c",
+        "header_mass_kg",
+        "header_inflow_g_s",
+    ):
+        assert len(payload["series"][key]) == length
+    assert payload["series"]["header_pressure_mpa"][0] == pytest.approx(45.0)
 
 
 def test_cross_bank_reverse_flow_reaches_the_bank_hazop_rule():

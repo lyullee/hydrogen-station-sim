@@ -10,7 +10,14 @@ from h2station.llm_grounding import (
 
 
 def test_manifest_distinguishes_not_requested_from_calculated_impact():
-    frame = {"time_s": 12.5, "nozzle_flow_g_s": 0.0}
+    frame = {
+        "time_s": 12.5,
+        "nozzle_flow_g_s": 0.0,
+        "header_pressure_mpa": 44.8,
+        "header_temperature_c": 24.2,
+        "header_mass_kg": 0.16,
+        "header_inflow_g_s": 12.4,
+    }
     signals = {"PT-0901": {"value": 88.0, "unit": "MPa", "quality": "GOOD"}}
 
     idle = build_evidence_manifest(frame, signals, [], False, question="현재 상태")
@@ -29,6 +36,13 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert idle["measured_bank_pressure_envelope"] == {}
     assert idle["runtime_geometry"]["basis"] == "reference"
     assert idle["runtime_geometry"]["default_basis"] == "reference"
+    assert idle["common_header"]["pressure_mpa_abs"] == 44.8
+    assert idle["common_header"]["inventory_kg"] == 0.16
+    assert idle["common_header"]["model_status"] == (
+        "PROSPECTIVE_NOT_EXTERNALLY_VALIDATED"
+    )
+    assert prompt_evidence_summary(idle)["common_header"]["bank_inflow_g_s"] == 12.4
+    assert prompt_decision_evidence(idle)["common_header"]["temperature_c"] == 24.2
     policy_frame = {
         **frame,
         "detector_policy": {

@@ -57,6 +57,10 @@ class SafeOperationTrajectory:
     pcv_2_mass_flow_kg_s: np.ndarray
     nozzle_1_mass_flow_kg_s: np.ndarray
     nozzle_2_mass_flow_kg_s: np.ndarray
+    header_pressure_pa: np.ndarray
+    header_temperature_k: np.ndarray
+    header_mass_kg: np.ndarray
+    header_inflow_kg_s: np.ndarray
     leak_mass_flow_by_release: Mapping[str, np.ndarray]
     safety_commands: tuple[SafetyCommand, ...]
     fueling_commands: tuple[FuelingCommand, ...]
@@ -107,6 +111,10 @@ class SafeOperationSample:
     virtual_safety: Mapping | None = None
     bank_temperature_k: Mapping[str, float] | None = None
     bank_mass_kg: Mapping[str, float] | None = None
+    header_pressure_pa: float | None = None
+    header_temperature_k: float | None = None
+    header_mass_kg: float | None = None
+    header_inflow_kg_s: float | None = None
 
 
 class SafeFullStationSimulator:
@@ -184,6 +192,10 @@ class SafeFullStationSimulator:
         pcv_2_flows: list[float] = []
         nozzle_1_flows: list[float] = []
         nozzle_2_flows: list[float] = []
+        header_pressures: list[float] = []
+        header_temperatures: list[float] = []
+        header_masses: list[float] = []
+        header_inflows: list[float] = []
         safety_history: list[SafetyCommand] = []
         fueling_history: list[FuelingCommand] = []
         risk_history: list[tuple[DynamicRiskSnapshot, ...]] = []
@@ -459,6 +471,13 @@ class SafeFullStationSimulator:
                 np.argmax([gas.pressure_pa for gas in bank_gases])
             )
             header_gas = self.station.header_gas_state(current)
+            header_bank_flows = self.station.header_bank_mass_flows(
+                current,
+                (dispatch_index, dispatch_2_index),
+                (dispatch_opening, dispatch_2_opening),
+                allow_reverse_flow=self._allow_reverse_flow(override, "header"),
+            )
+            header_inflow = sum(header_bank_flows)
             primary_supply_gas = header_gas or bank_gases[supply_index]
             supply = SupplyState(
                 primary_supply_gas.pressure_pa,
@@ -566,6 +585,17 @@ class SafeFullStationSimulator:
             pcv_2_flows.append(previous_pcv_2_flow)
             nozzle_1_flows.append(previous_nozzle_flow)
             nozzle_2_flows.append(previous_nozzle_2_flow)
+            header_pressures.append(
+                float(header_gas.pressure_pa) if header_gas is not None else np.nan
+            )
+            header_temperatures.append(
+                float(header_gas.temperature_k) if header_gas is not None else np.nan
+            )
+            header_masses.append(
+                float(current.common_header.hydrogen_mass_kg)
+                if current.common_header is not None else np.nan
+            )
+            header_inflows.append(float(header_inflow))
             safety_history.append(safety_command)
             fueling_history.append(fueling_command)
             risk_history.append(risk_snapshots)
@@ -709,6 +739,17 @@ class SafeFullStationSimulator:
                             bank.parameters.name: state.hydrogen_mass_kg
                             for bank, state in zip(self.station.banks, current.banks)
                         },
+                        header_pressure_pa=(
+                            header_gas.pressure_pa if header_gas is not None else None
+                        ),
+                        header_temperature_k=(
+                            header_gas.temperature_k if header_gas is not None else None
+                        ),
+                        header_mass_kg=(
+                            current.common_header.hydrogen_mass_kg
+                            if current.common_header is not None else None
+                        ),
+                        header_inflow_kg_s=header_inflow,
                         dispatch_bank=(
                             self.station.banks[dispatch_index].parameters.name
                             if dispatch_index is not None else None
@@ -844,6 +885,10 @@ class SafeFullStationSimulator:
             pcv_2_mass_flow_kg_s=np.asarray(pcv_2_flows),
             nozzle_1_mass_flow_kg_s=np.asarray(nozzle_1_flows),
             nozzle_2_mass_flow_kg_s=np.asarray(nozzle_2_flows),
+            header_pressure_pa=np.asarray(header_pressures),
+            header_temperature_k=np.asarray(header_temperatures),
+            header_mass_kg=np.asarray(header_masses),
+            header_inflow_kg_s=np.asarray(header_inflows),
             leak_mass_flow_by_release={
                 release_id: np.asarray(values)
                 for release_id, values in leak_histories.items()
