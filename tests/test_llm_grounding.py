@@ -230,6 +230,30 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert early["public_measurement_instrumentation"][
         "vehicle_or_receptacle_channels_identified"
     ] is False
+    methytrucks_tank = idle["response_evidence"][
+        "methytrucks_tank_diagnostic_boundary"
+    ]
+    assert methytrucks_tank["scope"]["case_count"] == 5
+    assert methytrucks_tank["scope"]["unique_workbook_count"] == 2
+    assert methytrucks_tank["scope"]["independent_event_count_claimed"] is False
+    assert methytrucks_tank["candidate_244_l_diagnostic"][
+        "pressure_rmse_case_mean_mpa"
+    ] == 1.2866244910563729
+    assert methytrucks_tank["candidate_244_l_diagnostic"][
+        "temperature_rmse_case_mean_c"
+    ] == 4.57841318799785
+    assert methytrucks_tank["alternate_77_l_sensitivity"][
+        "descriptive_joint_pass_count"
+    ] == 1
+    assert methytrucks_tank["mapping_boundary"][
+        "workbook_to_sink_crosswalk_present"
+    ] is False
+    assert methytrucks_tank["prospective_holdout_eligible"] is False
+    assert methytrucks_tank["full_loop_validation_eligible"] is False
+    assert methytrucks_tank["claim_supported"] is False
+    assert early["methytrucks_tank_diagnostic_boundary"][
+        "component_diagnostic_eligible"
+    ] is True
     preslhy = idle["response_evidence"]["preslhy_validation_boundary"]
     assert preslhy["development"]["joint_primary_passes"] == 20
     assert preslhy["independent_holdout"]["joint_primary_passes"] == 2
@@ -294,6 +318,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert header["public_measurement_instrumentation"]["file_count"] == 13
     assert header["public_measurement_instrumentation"][
         "full_loop_holdout_eligible"
+    ] is False
+    assert header["methytrucks_tank_diagnostic_boundary"][
+        "mapping_boundary"
+    ]["channel_dictionary_present"] is False
+    assert header["methytrucks_tank_diagnostic_boundary"][
+        "claim_supported"
     ] is False
     assert header["public_tank_validation_boundary"]["claim_supported"] is False
     assert header["public_tank_validation_boundary"]["aggregate"][
@@ -817,6 +847,15 @@ def test_prompt_decision_evidence_keeps_limits_without_full_audit_payload():
     assert decision["validation_boundaries"]["station_to_vehicle"][
         "screening_pass_count"
     ] == 0
+    assert decision["validation_boundaries"]["public_tank_postaccess"] == {
+        "claim_supported": False,
+        "case_count": 5,
+        "pressure_rmse_mpa": 1.2866244910563729,
+        "temperature_rmse_c": 4.57841318799785,
+        "geometry_crosswalk": "unresolved",
+        "prospective": False,
+        "full_loop": False,
+    }
     assert decision["validation_boundaries"]["mapping"] == "not_found"
     assert decision["public_operating_envelope_screen"]["validation_claim"] is False
     assert decision["decision_support_evidence"]["public_incident"][

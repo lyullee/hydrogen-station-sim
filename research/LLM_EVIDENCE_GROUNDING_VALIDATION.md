@@ -1,6 +1,6 @@
 # LLM evidence-grounding validation
 
-**Recorded:** 2026-10-06
+**Recorded:** 2026-10-08
 **Scope:** digital-twin main assistant and selected-sensor assistant routes
 
 This record documents a software-level grounding check. It is not a human
@@ -56,6 +56,9 @@ contains:
   or a full-loop claim;
 - public real-station operating context for back-to-back fueling, with its
   synchronized-raw-log and full-loop eligibility boundary;
+- the five-session MetHyTrucks HySaM no-fit tank diagnostic, including the
+  244 L candidate replay, 77 L geometry sensitivity and the unresolved public
+  workbook-to-sink crosswalk;
 - public operating-range benchmarks for 35 MPa transportable supply and H70 high-flow filling, with pressure-class selection and an explicit partial-boundary/full-loop claim limit;
 - consequence flow-boundary status, requested process flow, HyRAM modeled flow,
   and an explicit mismatch claim limit when high-pressure choked flow causes
@@ -72,11 +75,11 @@ distances. An LLM response is not allowed to turn `not_requested` or
 The following tests passed in the repository virtual environment:
 
 ```text
-.venv\Scripts\python.exe -m pytest tests/test_llm_grounding.py tests/test_digital_twin_direct_qa.py tests/test_hiad_action_playbook_coverage.py tests/test_hiad_accident_response_coverage_evaluation.py -q
-19 passed, 2 warnings
+.venv\Scripts\python.exe -m pytest tests/test_llm_grounding.py tests/test_public_tank_calibration.py tests/test_digital_twin_direct_qa.py tests/test_hiad_action_playbook_coverage.py tests/test_hiad_accident_response_coverage_evaluation.py -q
+31 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-665 passed, 16 warnings
+811 passed, 14 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -106,6 +109,19 @@ workbook context: two CC BY records, 13 files and an observed 0.5 s sampling
 interval. The public metadata do not identify vehicle/receptacle channels, so
 this remains instrumentation context rather than a station-to-vehicle
 validation result.
+
+The MetHyTrucks HySaM numerical diagnostic is now carried separately from that
+instrumentation context. Five measurement-only selected sessions from two
+workbooks are exposed as a no-fit component diagnostic. With the 244 L candidate
+sink, the case-mean pressure and temperature RMSE are 1.287 MPa and 4.578 °C;
+all five pass the project's descriptive screen. The same sessions evaluated at
+77 L yield 13.131 MPa and 18.948 °C, with one descriptive pass. The public
+supplement still provides neither a logger-channel dictionary nor a
+workbook-to-244/77 L setup crosswalk. Every assistant projection therefore
+receives both the measured result and `claim_supported=false`,
+`prospective_holdout_eligible=false`, and
+`full_loop_validation_eligible=false`. The five sessions are not described as
+five independent events because sessions within a workbook may be correlated.
 
 PRESLHY development and independent holdout outcomes are carried separately.
 The development set passes 20 of 22 cases, while the independent E5.1 ambient

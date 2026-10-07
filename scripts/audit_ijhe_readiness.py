@@ -3566,6 +3566,9 @@ def audit(root: Path) -> dict[str, object]:
 
     grounding_path = root / "research/llm_evidence_grounding_validation.json"
     grounding = _json(grounding_path)
+    grounding_tank_diagnostic = (
+        (grounding or {}).get("methytrucks_tank_diagnostic_boundary") or {}
+    )
     grounding_pass = bool(
         (grounding or {}).get("status") == "software_contract_verified"
         and ((grounding or {}).get("tests") or {}).get("full_suite", {}).get("failed") == 0
@@ -3573,13 +3576,23 @@ def audit(root: Path) -> dict[str, object]:
             "flow-boundary mismatches" in str(item)
             for item in (grounding or {}).get("verified_properties", [])
         )
+        and any(
+            "five-session MetHyTrucks HySaM" in str(item)
+            for item in (grounding or {}).get("verified_properties", [])
+        )
+        and grounding_tank_diagnostic.get("case_count") == 5
+        and grounding_tank_diagnostic.get("channel_dictionary_present") is False
+        and grounding_tank_diagnostic.get("workbook_to_sink_crosswalk_present") is False
+        and grounding_tank_diagnostic.get("prospective_holdout_eligible") is False
+        and grounding_tank_diagnostic.get("full_loop_validation_eligible") is False
+        and grounding_tank_diagnostic.get("claim_supported") is False
     )
     gates.append(_gate(
         "llm_evidence_grounding_contract",
         "PASS" if grounding_pass else "PENDING",
         "Main and selected-sensor assistants receive traceable evidence with explicit calculation and uncertainty status.",
         str(grounding_path.relative_to(root)),
-        "Manifest schema, normal/emergency distinction, contradiction guard and full regression suite.",
+        "Manifest schema, normal/emergency distinction, contradiction guard, bounded MetHyTrucks tank diagnostic and full regression suite.",
         grounding or "missing",
     ))
 

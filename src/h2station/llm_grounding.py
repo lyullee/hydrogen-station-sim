@@ -1153,6 +1153,128 @@ def _public_measurement_instrumentation_evidence() -> dict[str, Any] | None:
     }
 
 
+def _methytrucks_tank_diagnostic_evidence() -> dict[str, Any] | None:
+    """Expose the bounded HySaM tank replay without promoting it to validation.
+
+    The public workbooks support a useful no-fit component diagnostic, but the
+    released package still lacks a channel dictionary and a workbook-to-sink
+    crosswalk.  The compact aggregate below lets every assistant route use the
+    measured error evidence while preserving those two blocking limitations.
+    Raw rows, workbook names and inferred tag mappings are deliberately omitted.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    diagnostic_path = root / (
+        "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json"
+    )
+    supplement_path = root / (
+        "research/methytrucks_supplementary_mapping_recheck_2026_10_08.json"
+    )
+    try:
+        diagnostic = json.loads(diagnostic_path.read_text(encoding="utf-8"))
+        supplement = json.loads(supplement_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+
+    source = diagnostic.get("source") or {}
+    aggregate = diagnostic.get("candidate_session_aggregate") or {}
+    alternative = (
+        (diagnostic.get("candidate_volume_sensitivity") or {}).get("aggregate")
+        or {}
+    )
+    eligibility = diagnostic.get("eligibility") or {}
+    observed = supplement.get("observed_contents") or {}
+    geometry = supplement.get("article_geometry_boundary") or {}
+    candidate_screen = aggregate.get("project_screen") or {}
+    alternative_screen = alternative.get("project_screen") or {}
+
+    if not all((
+        diagnostic.get("status") == "completed_post_access_external_diagnostic",
+        supplement.get("status")
+        == "supplement_downloaded_and_mapping_gap_confirmed",
+        source.get("dataset_doi") == "10.5281/zenodo.20590842",
+        aggregate.get("case_count") == 5,
+        aggregate.get("unique_workbook_count") == 2,
+        aggregate.get("independent_event_count_claimed") is False,
+        eligibility.get("component_diagnostic_eligible") is True,
+        eligibility.get("prospective_holdout_eligible") is False,
+        eligibility.get("quantitative_full_loop_validation_eligible") is False,
+        observed.get("channel_dictionary_present") is False,
+        observed.get("workbook_test_to_setup_crosswalk_present") is False,
+        geometry.get("public_workbook_to_set_up_mapping_confirmed") is False,
+    )):
+        return None
+
+    def metric(container: dict[str, Any], name: str) -> Any:
+        return _finite_number((container.get(name) or {}).get("case_mean"))
+
+    return {
+        "artifact": (
+            "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json"
+        ),
+        "supplementary_artifact": (
+            "research/methytrucks_supplementary_mapping_recheck_2026_10_08.json"
+        ),
+        "evidence_role": "post_access_no_fit_public_tank_diagnostic",
+        "source": {
+            "dataset_doi": source.get("dataset_doi"),
+            "dataset_license": source.get("dataset_license"),
+            "article_doi": source.get("article_doi"),
+            "article_license": source.get("article_license"),
+        },
+        "scope": {
+            "case_count": aggregate.get("case_count"),
+            "unique_workbook_count": aggregate.get("unique_workbook_count"),
+            "independent_event_count_claimed": False,
+            "within_workbook_sessions_may_be_correlated": (
+                aggregate.get("within_workbook_sessions_may_be_correlated") is True
+            ),
+            "selection_is_independent_of_model_prediction": (
+                aggregate.get("selection_is_independent_of_model_prediction") is True
+            ),
+            "case_specific_fitting": False,
+        },
+        "candidate_244_l_diagnostic": {
+            "pressure_rmse_case_mean_mpa": metric(aggregate, "pressure_rmse_mpa"),
+            "temperature_rmse_case_mean_c": metric(aggregate, "temperature_rmse_c"),
+            "descriptive_joint_pass_count": candidate_screen.get(
+                "joint_pass_count"
+            ),
+            "descriptive_joint_pass_fraction": _finite_number(
+                candidate_screen.get("joint_pass_fraction")
+            ),
+        },
+        "alternate_77_l_sensitivity": {
+            "pressure_rmse_case_mean_mpa": metric(
+                alternative, "pressure_rmse_mpa"
+            ),
+            "temperature_rmse_case_mean_c": metric(
+                alternative, "temperature_rmse_c"
+            ),
+            "descriptive_joint_pass_count": alternative_screen.get(
+                "joint_pass_count"
+            ),
+            "descriptive_joint_pass_fraction": _finite_number(
+                alternative_screen.get("joint_pass_fraction")
+            ),
+        },
+        "mapping_boundary": {
+            "channel_dictionary_present": False,
+            "workbook_to_sink_crosswalk_present": False,
+            "candidate_sink_volumes_l": [
+                geometry.get("set_up_1_sink_l"),
+                geometry.get("set_up_2_sink_l"),
+            ],
+        },
+        "component_diagnostic_eligible": True,
+        "prospective_holdout_eligible": False,
+        "full_loop_validation_eligible": False,
+        "claim_supported": False,
+        "required_next_step": str(diagnostic.get("highest_value_next_action") or ""),
+        "claim_limit": str(diagnostic.get("claim_boundary") or ""),
+    }
+
+
 def _preslhy_validation_boundary() -> dict[str, Any] | None:
     """Expose development versus independent PRESLHY outcomes separately.
 
@@ -1617,6 +1739,7 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
     # protocol state.  Keep the DOI discoverable to the assistant while
     # preserving that explicit auxiliary-only boundary.
     public_measurement = evidence.get("public_measurement_instrumentation") or {}
+    methytrucks_tank = evidence.get("methytrucks_tank_diagnostic_boundary") or {}
     for source in public_measurement.get("sources") or []:
         if not isinstance(source, dict):
             continue
@@ -1629,6 +1752,24 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             str(source.get("title") or "MetHyTrucks public measurement dataset"),
             f"https://doi.org/{doi}",
             "공개 HRS 계측·시간축 근거(차량 full-loop 검증 아님)",
+        )
+
+    methytrucks_source = methytrucks_tank.get("source") or {}
+    dataset_doi = str(methytrucks_source.get("dataset_doi") or "").strip()
+    article_doi = str(methytrucks_source.get("article_doi") or "").strip()
+    if dataset_doi:
+        add(
+            "PUBLIC_METHYTRUCKS_HYSAM_TANK_DATA",
+            "MetHyTrucks HySaM public measurement data",
+            f"https://doi.org/{dataset_doi}",
+            "post-access tank diagnostic source; not a prospective holdout",
+        )
+    if article_doi:
+        add(
+            "PUBLIC_METHYTRUCKS_HYSAM_ARTICLE",
+            "Representative hydrogen sampling at hydrogen refuelling stations",
+            f"https://doi.org/{article_doi}",
+            "test context and sink geometry source; logger crosswalk unresolved",
         )
 
     hitrf = evidence.get("public_hitrf_operational_reference") or {}
@@ -2944,6 +3085,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_measurement_instrumentation"
         ] = public_measurement
+    methytrucks_tank = _methytrucks_tank_diagnostic_evidence()
+    if methytrucks_tank is not None:
+        envelope["response_evidence"][
+            "methytrucks_tank_diagnostic_boundary"
+        ] = methytrucks_tank
     preslhy = _preslhy_validation_boundary()
     if preslhy is not None:
         envelope["response_evidence"]["preslhy_validation_boundary"] = preslhy
@@ -3137,6 +3283,19 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "vehicle_or_receptacle_channels_identified", "claim_limit",
             )
             if public_measurement.get(key) is not None
+        }
+    methytrucks_tank = evidence.get("methytrucks_tank_diagnostic_boundary")
+    if isinstance(methytrucks_tank, dict):
+        summary["methytrucks_tank_diagnostic_boundary"] = {
+            key: methytrucks_tank.get(key)
+            for key in (
+                "evidence_role", "source", "scope",
+                "candidate_244_l_diagnostic", "alternate_77_l_sensitivity",
+                "mapping_boundary", "component_diagnostic_eligible",
+                "prospective_holdout_eligible", "full_loop_validation_eligible",
+                "claim_supported", "required_next_step", "claim_limit",
+            )
+            if methytrucks_tank.get(key) is not None
         }
     preslhy = evidence.get("preslhy_validation_boundary")
     if isinstance(preslhy, dict):
@@ -3543,7 +3702,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     active conditions and response steps from the prompt.
     """
 
-    def short(value: Any, limit: int = 180) -> str:
+    def short(value: Any, limit: int = 150) -> str:
         text = str(value or "")
         return text if len(text) <= limit else text[: limit - 1] + "…"
 
@@ -3587,6 +3746,10 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     preslhy = response.get("preslhy_validation_boundary") or {}
     preslhy_holdout = preslhy.get("independent_holdout") or {}
     operating_screen = response.get("public_operating_envelope_screen") or {}
+    methytrucks_tank = response.get("methytrucks_tank_diagnostic_boundary") or {}
+    methytrucks_scope = methytrucks_tank.get("scope") or {}
+    methytrucks_244 = methytrucks_tank.get("candidate_244_l_diagnostic") or {}
+    methytrucks_mapping = methytrucks_tank.get("mapping_boundary") or {}
     incident = response.get("public_incident_traceability") or {}
     relevant_precedents = response.get("relevant_public_accident_precedents") or {}
     local_incident = response.get("confidential_local_accident_response_coverage") or {}
@@ -3633,16 +3796,44 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "claim_limit",
         )),
         "decision_support_evidence": {
-            "public_incident": selected(incident, (
-                "case_count", "category_count", "covered_case_count",
-                "contract_pass", "claim_limit",
-            )),
-            "restricted_incident_metadata": selected(local_incident, (
-                "case_count", "mapped_case_count", "required_stage_count",
-                "claim_limit",
-            )),
+            "public_incident": {
+                **selected(incident, (
+                    "case_count", "category_count", "covered_case_count",
+                    "contract_pass",
+                )),
+                "claim_limit": short(incident.get("claim_limit")),
+            },
+            "restricted_incident_metadata": {
+                **selected(local_incident, (
+                    "case_count", "mapped_case_count", "required_stage_count",
+                )),
+                "claim_limit": short(local_incident.get("claim_limit")),
+            },
         },
         "validation_boundaries": {
+            "public_tank_postaccess": {
+                "claim_supported": methytrucks_tank.get("claim_supported") is True,
+                "case_count": methytrucks_scope.get("case_count"),
+                "pressure_rmse_mpa": methytrucks_244.get(
+                    "pressure_rmse_case_mean_mpa"
+                ),
+                "temperature_rmse_c": methytrucks_244.get(
+                    "temperature_rmse_case_mean_c"
+                ),
+                "geometry_crosswalk": (
+                    "resolved"
+                    if methytrucks_mapping.get(
+                        "workbook_to_sink_crosswalk_present"
+                    ) is True
+                    else "unresolved"
+                ),
+                "prospective": (
+                    methytrucks_tank.get("prospective_holdout_eligible") is True
+                ),
+                "full_loop": (
+                    methytrucks_tank.get("full_loop_validation_eligible") is True
+                ),
+            },
             "station_to_vehicle": {
                 "claim_supported": closed_loop.get("claim_supported") is True,
                 "case_count": closed_loop_aggregate.get("case_count"),
@@ -3767,6 +3958,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     hitrf_thermal = hitrf_reference.get("dispensing_and_thermal") or {}
     envelope_screen = evidence.get("public_operating_envelope_screen") or {}
     public_measurement = evidence.get("public_measurement_instrumentation") or {}
+    methytrucks_tank = evidence.get("methytrucks_tank_diagnostic_boundary") or {}
     preslhy = evidence.get("preslhy_validation_boundary") or {}
     closed_loop = evidence.get("closed_loop_validation_boundary") or {}
     release_boundary = evidence.get("proust_release_model_validation_boundary") or {}
@@ -3844,6 +4036,30 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "vehicle_or_receptacle_channels_identified"
             ) is True,
             "claim_limit": public_measurement.get("claim_limit"),
+        },
+        "methytrucks_tank_diagnostic_boundary": {
+            "evidence_role": methytrucks_tank.get("evidence_role"),
+            "source": methytrucks_tank.get("source") or {},
+            "scope": methytrucks_tank.get("scope") or {},
+            "candidate_244_l_diagnostic": methytrucks_tank.get(
+                "candidate_244_l_diagnostic"
+            ) or {},
+            "alternate_77_l_sensitivity": methytrucks_tank.get(
+                "alternate_77_l_sensitivity"
+            ) or {},
+            "mapping_boundary": methytrucks_tank.get("mapping_boundary") or {},
+            "component_diagnostic_eligible": methytrucks_tank.get(
+                "component_diagnostic_eligible"
+            ) is True,
+            "prospective_holdout_eligible": methytrucks_tank.get(
+                "prospective_holdout_eligible"
+            ) is True,
+            "full_loop_validation_eligible": methytrucks_tank.get(
+                "full_loop_validation_eligible"
+            ) is True,
+            "claim_supported": methytrucks_tank.get("claim_supported") is True,
+            "required_next_step": methytrucks_tank.get("required_next_step"),
+            "claim_limit": methytrucks_tank.get("claim_limit"),
         },
         "confidential_multisource_mapping_feasibility": {
             "co_located_workbook_candidates": multisource_feasibility.get(
