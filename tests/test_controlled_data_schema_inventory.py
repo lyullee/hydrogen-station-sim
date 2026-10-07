@@ -14,7 +14,9 @@ def test_header_only_inventory_identifies_candidate_shapes_without_disclosure(tm
     full_loop.write_text(
         "private_time,private_vehicle_pressure,private_inlet_temp,private_mass_flow,"
         "private_vehicle_id,private_cascade_pressure,private_controller_state\n"
-        "sensitive-value,1,2,3,4,5,6\n",
+        "0,1,2,3,4,5,6\n"
+        "1,1,2,3,4,5,6\n"
+        "2,1,2,3,4,5,6\n",
         encoding="utf-8",
     )
     vehicle = tmp_path / "sensitive_vehicle_run.xlsx"
@@ -25,14 +27,15 @@ def test_header_only_inventory_identifies_candidate_shapes_without_disclosure(tm
         "private_time", "private_vehicle_pressure", "private_temperature",
         "private_mass_flow", "private_vehicle", "private_dispenser",
     ])
-    sheet.append(["sensitive-value", 1, 2, 3, 4, 5])
+    sheet.append([0, 1, 2, 3, 4, 5])
+    sheet.append([1, 1, 2, 3, 4, 5])
     workbook.save(vehicle)
 
     report = inventory_schema([tmp_path])
     rendered = json.dumps(report, ensure_ascii=False)
 
     assert report["schema_search_max_rows_per_table"] == 40
-    assert report["schema_search_rows_examined"] == 4
+    assert report["schema_search_rows_examined"] == 7
     assert report["raw_rows_persisted"] is False
     assert report["candidate_schema_counts"]["full_loop_candidate"] == 1
     assert report["candidate_schema_counts"]["vehicle_fill_candidate"] == 1
@@ -49,7 +52,8 @@ def test_inventory_finds_header_after_title_rows_without_retaining_them(tmp_path
         "confidential title\n"
         "operator-only note\n"
         "clock,vehicle_pressure,inlet_temperature,mass_flow,vehicle,cascade,controller_state\n"
-        "private-value,1,2,3,4,5,6\n",
+        "0,1,2,3,4,5,6\n"
+        "1,1,2,3,4,5,6\n",
         encoding="utf-8",
     )
 
@@ -82,7 +86,8 @@ def test_schema_inventory_screens_zip_members_without_disclosing_member_names(tm
         bundle.writestr(
             "private-folder/secret-full-loop.csv",
             "time,vehicle_pressure,temperature,mass_flow,vehicle,cascade,controller_state\n"
-            "private-value,1,2,3,4,5,6\n",
+            "0,1,2,3,4,5,6\n"
+            "1,1,2,3,4,5,6\n",
         )
 
     report = inventory_schema([tmp_path])
@@ -100,7 +105,8 @@ def test_schema_inventory_detects_utf16_logger_headers_without_disclosure(tmp_pa
     source = tmp_path / "controlled_utf16_logger.csv"
     source.write_text(
         "time,vehicle_pressure,temperature,mass_flow,vehicle,cascade,controller_state\n"
-        "private-value,1,2,3,4,5,6\n",
+        "0,1,2,3,4,5,6\n"
+        "1,1,2,3,4,5,6\n",
         encoding="utf-16",
     )
 
@@ -119,7 +125,8 @@ def test_schema_inventory_recognizes_compact_instrument_tags_without_tag_disclos
     source = tmp_path / "controlled_tag_logger.csv"
     source.write_text(
         "LocalTimeCol,COMP.AI.PT_201,COMP.AI.TT_201,FQI_0001,COMP.STATUS.RUN\n"
-        "private-value,1,2,3,1\n",
+        "0,1,2,3,1\n"
+        "1,1,2,3,1\n",
         encoding="utf-8",
     )
 
@@ -146,10 +153,12 @@ def test_inventory_flags_complementary_workbook_tables_only_as_co_located_candid
     storage = workbook.active
     storage.title = "private storage signals"
     storage.append(["시간", "저장탱크 압력", "저장용기 온도", "운전 상태"])
-    storage.append(["private-time", 1, 2, "private-state"])
+    storage.append([0, 1, 2, "private-state"])
+    storage.append([1, 1, 2, "private-state"])
     dispenser = workbook.create_sheet("private dispenser signals")
     dispenser.append(["시각", "차량", "충전기 유량"])
-    dispenser.append(["private-time", "private-vehicle", 3])
+    dispenser.append([0, "private-vehicle", 3])
+    dispenser.append([1, "private-vehicle", 3])
     workbook.save(source)
 
     report = inventory_schema([tmp_path])
@@ -182,3 +191,42 @@ def test_inventory_rejects_documentation_sheets_that_only_mention_channels(
     assert report["candidate_schema_counts"]["co_located_full_loop_candidate"] == 0
     assert report["candidate_schema_counts"]["rejected_nonmeasurement_candidate_container"] == 1
     assert report["sample_data_rows_structurally_inspected_in_memory"] is True
+
+
+def test_inventory_rejects_hazop_style_rows_without_a_monotonic_logger_clock(
+    tmp_path: Path,
+):
+    """Do not treat case tables as traces just because their headers are familiar."""
+
+    source = tmp_path / "controlled_hazop_reference.xlsx"
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.title = "private case reference"
+    sheet.append(["시간", "저장 압력", "온도", "유량", "운전 상태"])
+    sheet.append(["N01", 40, 20, 0, "대기"])
+    sheet.append(["N02", 70, 25, 0, "대기"])
+    sheet.append(["N03", 95, 30, 0, "대기"])
+    workbook.save(source)
+
+    report = inventory_schema([tmp_path])
+
+    assert report["measurement_like_tables"] == 0
+    assert report["candidate_schema_counts"]["full_loop_candidate"] == 0
+
+
+def test_inventory_rejects_repeated_timestamp_values_even_when_rows_are_numeric(
+    tmp_path: Path,
+):
+    source = tmp_path / "controlled_static_table.csv"
+    source.write_text(
+        "time,vehicle_pressure,temperature,mass_flow,vehicle,cascade,controller_state\n"
+        "0,1,2,3,4,5,6\n"
+        "0,1,2,3,4,5,6\n"
+        "0,1,2,3,4,5,6\n",
+        encoding="utf-8",
+    )
+
+    report = inventory_schema([tmp_path])
+
+    assert report["measurement_like_tables"] == 0
+    assert report["candidate_schema_counts"]["full_loop_candidate"] == 0

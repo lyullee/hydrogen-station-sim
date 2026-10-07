@@ -2,10 +2,11 @@
 
 This command is deliberately restricted to schema screening.  It helps a data
 custodian find candidate station, vehicle-fuelling, and complete-loop events
-before a mapping or any model outcome is read.  To support exports with title
-rows, it inspects at most the first 40 rows of each table in memory to locate a
-probable header.  The report contains only aggregate semantic coverage counts;
-it never emits filenames, worksheet names, original headers, source values,
+before a mapping or any model outcome is read. To support exports with title
+rows, it inspects at most the first 40 rows of each table to locate a probable
+header and up to three following rows to require an increasing time-like
+logger clock. The report contains only aggregate semantic coverage counts; it
+never emits filenames, worksheet names, original headers, source values,
 timestamps, or data rows.
 
 It is an intake aid, not a validation result.  A full-loop candidate still
@@ -19,6 +20,7 @@ from __future__ import annotations
 import argparse
 import csv
 from collections import Counter
+from datetime import date, datetime, time
 from io import BytesIO, StringIO
 from itertools import islice
 import json
@@ -156,10 +158,93 @@ def _row_has_record_shape(row: Iterable[object], expected_columns: int) -> bool:
     )
 
 
+def _is_time_observation(value: object) -> float | None:
+    """Return a sortable marker only for a plausible logged time observation.
+
+    Header vocabulary alone cannot distinguish a HAZOP worksheet's duration
+    column from a logger's sampling clock.  This deliberately small parser is
+    used only on the three in-memory data-likeness rows; it persists neither
+    original values nor their converted timestamps.
+    """
+
+    if value is None or isinstance(value, bool):
+        return None
+    if isinstance(value, datetime):
+        return value.timestamp()
+    if isinstance(value, date):
+        return datetime.combine(value, time.min).timestamp()
+    if isinstance(value, time):
+        return (
+            value.hour * 3600.0
+            + value.minute * 60.0
+            + value.second
+            + value.microsecond / 1_000_000.0
+        )
+    if isinstance(value, (int, float)):
+        try:
+            numeric = float(value)
+        except (TypeError, ValueError):  # pragma: no cover - defensive
+            return None
+        return numeric if numeric == numeric and abs(numeric) != float("inf") else None
+    if not isinstance(value, str):
+        return None
+    compact = value.strip()
+    if not compact:
+        return None
+    try:
+        numeric = float(compact)
+        return numeric if numeric == numeric and abs(numeric) != float("inf") else None
+    except ValueError:
+        pass
+    # ISO-like absolute timestamps and clock-only samples cover common logger
+    # exports without interpreting arbitrary prose as a time value.
+    normalized = compact.replace("Z", "+00:00")
+    try:
+        return datetime.fromisoformat(normalized).timestamp()
+    except ValueError:
+        pass
+    try:
+        parsed = time.fromisoformat(compact)
+    except ValueError:
+        return None
+    return (
+        parsed.hour * 3600.0
+        + parsed.minute * 60.0
+        + parsed.second
+        + parsed.microsecond / 1_000_000.0
+    )
+
+
+def _time_series_like_samples(
+    labels: tuple[str, ...], samples: Iterable[tuple[object, ...]],
+) -> bool:
+    """Require two increasing values under a time-labelled logger column."""
+
+    time_indices = [
+        index
+        for index, label in enumerate(labels)
+        if "time" in _classify_header((label,))
+    ]
+    if not time_indices:
+        return False
+    rows = tuple(samples)
+    for index in time_indices:
+        observed = [
+            _is_time_observation(row[index] if index < len(row) else None)
+            for row in rows
+        ]
+        observed = [value for value in observed if value is not None]
+        if len(observed) >= 2 and all(
+            later > earlier for earlier, later in zip(observed, observed[1:])
+        ):
+            return True
+    return False
+
+
 def _screen_rows(
     rows: Iterable[Iterable[object]],
-) -> tuple[tuple[str, ...], int, bool] | None:
-    """Locate a header and retain only a boolean record-shape result.
+) -> tuple[tuple[str, ...], int, bool, bool] | None:
+    """Locate a header and retain record-shape and time-series checks.
 
     At most three following rows are inspected in memory to reject narrative
     sheets that happen to mention operational terms.  No values, headers, or
@@ -188,7 +273,7 @@ def _screen_rows(
         header_index + 1: header_index + 1 + DATA_LIKENESS_SAMPLE_ROWS
     ]
     record_shaped = any(_row_has_record_shape(row, len(header)) for row in samples)
-    return header, rows_examined, record_shaped
+    return header, rows_examined, record_shaped, _time_series_like_samples(header, samples)
 
 
 def _csv_encodings(raw: bytes) -> tuple[str, ...]:
@@ -202,7 +287,7 @@ def _csv_encodings(raw: bytes) -> tuple[str, ...]:
     return ("utf-8-sig", "utf-8", "cp949", "euc-kr", "utf-16le", "utf-16be")
 
 
-def _csv_header_bytes(raw: bytes) -> tuple[tuple[str, ...], int, bool] | None:
+def _csv_header_bytes(raw: bytes) -> tuple[tuple[str, ...], int, bool, bool] | None:
     for encoding in _csv_encodings(raw):
         try:
             return _screen_rows(csv.reader(StringIO(raw.decode(encoding))))
@@ -213,7 +298,7 @@ def _csv_header_bytes(raw: bytes) -> tuple[tuple[str, ...], int, bool] | None:
 
 def _excel_headers(
     source: Path | BytesIO,
-) -> tuple[tuple[tuple[str, ...], int, bool], ...] | None:
+) -> tuple[tuple[tuple[str, ...], int, bool, bool], ...] | None:
     try:
         from openpyxl import load_workbook
     except ImportError as exc:  # pragma: no cover - environment-specific
@@ -223,7 +308,7 @@ def _excel_headers(
     except Exception:
         return None
     try:
-        headers: list[tuple[tuple[str, ...], int, bool]] = []
+        headers: list[tuple[tuple[str, ...], int, bool, bool]] = []
         for worksheet in workbook.worksheets:
             header = _screen_rows(
                 row
@@ -273,10 +358,10 @@ def _files(input_roots: Iterable[Path]) -> Iterable[Path]:
 
 def _archive_headers(
     path: Path,
-) -> tuple[list[tuple[str, tuple[tuple[str, ...], int, bool] | None]], int]:
+) -> tuple[list[tuple[str, tuple[tuple[str, ...], int, bool, bool] | None]], int]:
     """Read eligible archive members in memory without disclosing their names."""
 
-    result: list[tuple[str, tuple[tuple[str, ...], int, bool] | None]] = []
+    result: list[tuple[str, tuple[tuple[str, ...], int, bool, bool] | None]] = []
     oversized = 0
     try:
         with ZipFile(path) as archive:
@@ -356,11 +441,16 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
             if result is None:
                 unreadable_tables += 1
                 continue
-            header, rows_examined, record_shaped = result
+            header, rows_examined, record_shaped, time_series_like = result
             tables_scanned += 1
             schema_search_rows_examined += rows_examined
             coverage = _classify_header(header)
-            measurement_like = bool(coverage) and record_shaped and "time" in coverage
+            measurement_like = (
+                bool(coverage)
+                and record_shaped
+                and time_series_like
+                and "time" in coverage
+            )
             if not measurement_like:
                 nonmeasurement_coverages.append(coverage)
                 continue
@@ -422,7 +512,8 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
             ),
         },
         "claim_boundary": (
-            "Header-level semantic screening plus an in-memory record-shape check only. "
+            "Header-level semantic screening plus in-memory record-shape and "
+            "increasing-time checks only. "
             "A co-located candidate means only that separate measurement-like tables in "
             "one workbook or archive have complementary labels; "
             "it does not attest that they can be joined. Candidate counts do not attest "

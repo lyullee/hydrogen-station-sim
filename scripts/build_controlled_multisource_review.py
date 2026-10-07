@@ -2,8 +2,9 @@
 
 Unlike the public-safe schema inventory, this custodian utility retains source
 paths, worksheet names, and header labels in its output so an authorised
-reviewer can construct a semantic mapping.  It inspects only the shape of up
-to three post-header rows in memory and never retains measurement values.
+reviewer can construct a semantic mapping. It inspects the shape of up to
+three post-header rows and requires a labelled, increasing time-like clock in
+memory, but never retains measurement values.
 The output is intentionally rejected inside the Git worktree and must never be
 committed, published, or attached to a manuscript.
 """
@@ -58,9 +59,9 @@ def _best_header(worksheet) -> tuple[int, tuple[str, ...], frozenset[str]] | Non
     screen = _screen_rows(rows)
     if screen is None:
         return None
-    labels, _, record_shaped = screen
+    labels, _, record_shaped, time_series_like = screen
     coverage = _classify_header(labels)
-    if not (record_shaped and "time" in coverage):
+    if not (record_shaped and time_series_like and "time" in coverage):
         return None
     for row_number, row in enumerate(rows[:HEADER_SEARCH_MAX_ROWS], start=1):
         if tuple(str(value or "") for value in row) == labels:
@@ -124,8 +125,9 @@ def build_review(input_roots: Iterable[Path]) -> dict[str, object]:
         "unreadable_workbook_count": unreadable,
         "candidates": candidates,
         "claim_boundary": (
-            "Co-located measurement-like labels only. Row shapes are inspected in memory, "
-            "but no measurement values are retained. A custodian must attest same-event selection, "
+            "Co-located measurement-like labels only. Row shapes and increasing "
+            "time-like samples are inspected in memory, but no measurement values are retained. "
+            "A custodian must attest same-event selection, "
             "units, state meanings, and time synchronization before export."
         ),
     }

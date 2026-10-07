@@ -2,8 +2,9 @@
 
 The output is intentionally outside the repository.  It contains worksheet
 names and original header labels so only an authorised custodian can connect
-their actual logger channels to the canonical full-loop contract.  It reads at
-most the first 43 rows of each worksheet and retains no measurement values.
+their actual logger channels to the canonical full-loop contract. It reads at
+most the first 43 rows of each worksheet, retains no measurement values, and
+requires two increasing time-like observations in a labelled logger clock.
 Never commit, publish, or attach the generated files to a manuscript.
 """
 
@@ -82,9 +83,9 @@ def _source_entry(
     screen = _screen_rows(rows)
     if screen is None:
         return None
-    labels, _, record_shaped = screen
+    labels, _, record_shaped, time_series_like = screen
     semantic_channels = _classify_header(labels)
-    if not (record_shaped and "time" in semantic_channels):
+    if not (record_shaped and time_series_like and "time" in semantic_channels):
         return None
     entry: dict[str, Any] = {
         "header_row": _header_row(rows, labels),

@@ -18,10 +18,12 @@ def test_private_review_finds_complementary_workbook_without_reading_rows(tmp_pa
     vehicle = workbook.active
     vehicle.title = "secret vehicle"
     vehicle.append(["비공개 시간", "차량 압력", "차량 온도", "차량 유량"])
-    vehicle.append(["do-not-read", 1, 2, 3])
+    vehicle.append([0, 1, 2, 3])
+    vehicle.append([1, 1, 2, 3])
     station = workbook.create_sheet("secret station")
     station.append(["시각", "저장탱크 압력", "운전 상태", "압축기"])
-    station.append(["do-not-read", 4, "private", "private"])
+    station.append([0, 4, "private", "private"])
+    station.append([1, 4, "private", "private"])
     workbook.save(workbook_path)
 
     review = build_review([tmp_path])

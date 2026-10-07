@@ -21,10 +21,12 @@ def test_private_workbench_writes_mapping_templates_without_measurement_values(
     vehicle = workbook.active
     vehicle.title = "private vehicle sheet"
     vehicle.append(["private time", "private pressure", "private temperature", "private flow"])
-    vehicle.append(["do-not-persist", 12.0, 20.0, 2.0])
+    vehicle.append([0, 12.0, 20.0, 2.0])
+    vehicle.append([1, 12.0, 20.0, 2.0])
     station = workbook.create_sheet("private station sheet")
     station.append(["private clock", "private cascade pressure", "private compressor state"])
-    station.append(["do-not-persist", 70.0, "running"])
+    station.append([0, 70.0, "running"])
+    station.append([1, 70.0, "running"])
     workbook.save(source)
 
     output = tmp_path / "private-workbench"
@@ -53,7 +55,8 @@ def test_private_workbench_catalogs_declared_csv_directory_sources(tmp_path: Pat
     controlled.mkdir()
     (controlled / "private-logger.csv").write_text(
         "LocalTimeCol,COMP.AI.PT_201,COMP.AI.TT_201,FQI_0001\n"
-        "do-not-persist,1,2,3\n",
+        "0,1,2,3\n"
+        "1,1,2,3\n",
         encoding="utf-16",
     )
 
