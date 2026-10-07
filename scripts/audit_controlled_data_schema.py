@@ -23,6 +23,7 @@ from io import BytesIO, StringIO
 from itertools import islice
 import json
 from pathlib import Path
+import re
 from typing import Iterable
 from zipfile import BadZipFile, ZipFile
 
@@ -38,7 +39,7 @@ MAX_ARCHIVE_MEMBER_BYTES = 100 * 1024 * 1024
 # request for a custodian review, never automatic tag or unit attribution.
 SEMANTIC_TERMS: dict[str, tuple[str, ...]] = {
     "time": (
-        "time", "date", "timestamp", "clock", "datetime", "시간", "일시", "시각", "날짜",
+        "time", "date", "timestamp", "clock", "datetime", "localtime", "zeit", "시간", "일시", "시각", "날짜",
     ),
     "pressure": ("pressure", "press", "압력"),
     "temperature": ("temp", "temperature", "온도"),
@@ -54,6 +55,17 @@ SEMANTIC_TERMS: dict[str, tuple[str, ...]] = {
     "compressor": ("compress", "comp_", "압축", "부스터"),
     "dispenser_or_nozzle": (
         "dispenser", "nozzle", "hose", "refuel", "충전기", "노즐", "호스", "충전",
+    ),
+}
+
+# Instrument tags are common in controlled logger exports but are too terse to
+# be recognized by word matching alone.  These patterns require a complete tag
+# token and never attribute a physical role beyond the generic family.
+INSTRUMENT_TAG_PATTERNS: dict[str, re.Pattern[str]] = {
+    "pressure": re.compile(r"(?:^|[._\s-])(?:pt|pi)(?:$|[._\s-]|\d)", re.IGNORECASE),
+    "temperature": re.compile(r"(?:^|[._\s-])tt(?:$|[._\s-]|\d)", re.IGNORECASE),
+    "mass_flow": re.compile(
+        r"(?:^|[._\s-])(?:ft|fqi|mfm|fwg)(?:$|[._\s-]|\d)", re.IGNORECASE,
     ),
 }
 
@@ -82,12 +94,13 @@ def _is_compact_label(value: str) -> bool:
     """Reject prose cells that merely mention several measurement concepts."""
 
     cleaned = value.strip()
+    tag_like = bool(re.fullmatch(r"[A-Za-z0-9_.-]+", cleaned))
     return (
         bool(cleaned)
         and len(cleaned) <= 80
         and len(cleaned.split()) <= 10
         and "\n" not in cleaned
-        and cleaned.count(".") <= 1
+        and (cleaned.count(".") <= 1 or tag_like)
     )
 
 
@@ -238,6 +251,10 @@ def _classify_header(header: Iterable[str]) -> frozenset[str]:
             term.casefold() in label
             for term in terms
             for label in compact_labels
+        )
+        or (
+            category in INSTRUMENT_TAG_PATTERNS
+            and any(INSTRUMENT_TAG_PATTERNS[category].search(label) for label in compact_labels)
         )
     )
 

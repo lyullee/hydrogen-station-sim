@@ -113,6 +113,31 @@ def test_schema_inventory_detects_utf16_logger_headers_without_disclosure(tmp_pa
     assert "private-value" not in rendered
 
 
+def test_schema_inventory_recognizes_compact_instrument_tags_without_tag_disclosure(
+    tmp_path: Path,
+):
+    source = tmp_path / "controlled_tag_logger.csv"
+    source.write_text(
+        "LocalTimeCol,COMP.AI.PT_201,COMP.AI.TT_201,FQI_0001,COMP.STATUS.RUN\n"
+        "private-value,1,2,3,1\n",
+        encoding="utf-8",
+    )
+
+    report = inventory_schema([tmp_path])
+    rendered = json.dumps(report, ensure_ascii=False)
+
+    assert report["measurement_like_tables"] == 1
+    assert report["semantic_channel_table_counts"] == {
+        "controller_state": 1,
+        "mass_flow": 1,
+        "pressure": 1,
+        "temperature": 1,
+        "time": 1,
+    }
+    assert "COMP.AI.PT_201" not in rendered
+    assert "private-value" not in rendered
+
+
 def test_inventory_flags_complementary_workbook_tables_only_as_co_located_candidate(
     tmp_path: Path,
 ):

@@ -18,8 +18,9 @@ the canonical unit, and each discrete state has a written meaning.
 
 ## Create a private mapping workbench
 
-For a new controlled XLSX/XLSM workbook, create editable private templates
-first. The command keeps original worksheet names and headers only in the
+For a new controlled CSV/XLSX/XLSM source or a directory of explicitly mapped
+sources, create editable private templates first. The command keeps original
+worksheet names, relative source files, and headers only in the
 outside-repository output folder. It does not retain measurement values.
 
 ```powershell

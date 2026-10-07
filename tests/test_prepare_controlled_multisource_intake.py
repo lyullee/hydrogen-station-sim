@@ -43,3 +43,24 @@ def test_private_workbench_writes_mapping_templates_without_measurement_values(
     assert attestation["authorised_controlled_evaluation"] is False
     assert "private vehicle sheet" not in rendered_receipt
     assert "do-not-persist" not in catalog["sources"][0]["original_headers"]
+
+
+def test_private_workbench_catalogs_declared_csv_directory_sources(tmp_path: Path):
+    controlled = tmp_path / "private-logger-directory"
+    controlled.mkdir()
+    (controlled / "private-logger.csv").write_text(
+        "LocalTimeCol,COMP.AI.PT_201,COMP.AI.TT_201,FQI_0001\n"
+        "do-not-persist,1,2,3\n",
+        encoding="utf-16",
+    )
+
+    output = tmp_path / "private-directory-workbench"
+    receipt = prepare_workbench(controlled, output)
+    catalog = json.loads((output / "private_source_catalog.json").read_text(encoding="utf-8"))
+    mapping = json.loads((output / "event-mapping.template.json").read_text(encoding="utf-8"))
+
+    assert receipt["input_kind"] == "directory"
+    assert catalog["source_count"] == 1
+    assert catalog["sources"][0]["file"] == "private-logger.csv"
+    assert "worksheet" not in mapping["sources"][0]
+    assert "private-logger.csv" not in json.dumps(receipt)
