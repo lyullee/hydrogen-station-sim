@@ -49,6 +49,20 @@ lifecycle channels. The current archive contains zero vehicle-side channel
 families, so the assistant keeps station-boundary calibration separate from
 vehicle-fill or station-to-vehicle accuracy claims.
 
+A broader local discovery pass confirms that data volume is not the limiting
+factor. The main confidential station bundle contains 33 CSV files plus one
+metadata file, occupies 4.749 GiB and contains 59,272,275 schema-adjusted data
+rows. Eight wide
+equipment logs contribute 653,442 one-second, 64-column rows. The other 25
+nine-column history exports account for an estimated 58,618,833 rows but still
+need a custodian dictionary for their proprietary channel semantics. The same
+pass found compact H35/H70 and J2601 material and deduplicated two mirrored
+hydrogen component/process collections to 260 distinct payloads. None of the
+additional candidates established synchronized vehicle tank pressure,
+temperature, delivered mass or SOC. The privacy-safe aggregate is recorded in
+`research/local_confidential_data_discovery_2026_10_08.json`; all private
+paths, filenames and raw content remain outside the repository.
+
 A value-level, pre-attestation consistency screen now tests whether the
 unlabelled flow-like channels contain internally coherent instantaneous
 flow/cumulative-totalizer pairs. It inspected 3,053,442 sampled rows from 20

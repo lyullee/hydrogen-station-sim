@@ -1,0 +1,100 @@
+{
+  "schema_version": "1.0",
+  "generated_month": "2026-10",
+  "status": "privacy_preserving_inventory",
+  "purpose": "Determine whether the owner-controlled local archive contains enough hydrogen-station evidence for station-side calibration and full-loop validation.",
+  "privacy": {
+    "raw_rows_included": false,
+    "source_paths_included": false,
+    "source_filenames_included": false,
+    "site_or_company_included": false,
+    "calendar_dates_included": false,
+    "manufacturer_or_tag_names_included": false
+  },
+  "structured_file_screen": {
+    "files_screened": 20291,
+    "csv_files": 14144,
+    "xlsx_files": 337,
+    "xlsm_files": 635,
+    "text_files": 2835,
+    "mat_files": 2299,
+    "database_files": 30,
+    "hdf5_files": 4,
+    "process_header_candidates": 2572,
+    "note": "Header candidates include non-station engineering and software data and therefore are not treated as validation evidence without content and provenance review."
+  },
+  "confidential_station_bundle": {
+    "files": 34,
+    "csv_files": 33,
+    "metadata_files": 1,
+    "size_gib": 4.749,
+    "schema_adjusted_data_rows": 59272275,
+    "physical_line_scan_rows_after_one_header_per_file": 59272300,
+    "row_count_note": "The 25 narrow exports contain one additional schema or units row each; removing those 25 rows gives the schema-adjusted data-row count.",
+    "wide_equipment_logs": {
+      "files": 8,
+      "columns_per_file": 64,
+      "rows": 653442,
+      "nominal_sampling_seconds": 1.0,
+      "available_families": [
+        "station pressure",
+        "station temperature",
+        "instantaneous flow",
+        "cumulative totalizer",
+        "compressor load",
+        "cooling and valve state"
+      ]
+    },
+    "narrow_history_exports": {
+      "files": 25,
+      "columns_per_file": 9,
+      "schema_adjusted_data_rows": 58618833,
+      "semantic_status": "proprietary columns require a custodian dictionary before parameter fitting"
+    },
+    "confirmed_vehicle_side_families": 0,
+    "eligible_use": [
+      "station-side signal consistency",
+      "conditional recharge-flow face validity",
+      "unattested thermal-stability diagnostics"
+    ],
+    "ineligible_use": [
+      "vehicle-fill accuracy claim",
+      "station-to-vehicle full-loop validation",
+      "automatic production retuning without unit and calibration attestation"
+    ]
+  },
+  "additional_candidate_sets": [
+    {
+      "kind": "H35/H70 protocol and thermophysical workbook candidates",
+      "files": 20,
+      "xlsx_files": 17,
+      "csv_files": 3,
+      "size_mib": 8.47,
+      "h35_h70_marker_files": 17,
+      "j2601_marker_files": 2,
+      "assessment": "Useful for protocol, property-table and boundary-condition checks after provenance review; not presently an independent synchronized station/vehicle trace."
+    },
+    {
+      "kind": "duplicated hydrogen component and process-data candidates",
+      "mirrored_sets": 2,
+      "files_per_mirror": 281,
+      "unique_content_fingerprints": 260,
+      "unique_payload_gib": 1.929,
+      "assessment": "Pressure, temperature, flow and totalizer candidates are present. The two copies must be deduplicated, and component meaning and provenance must be confirmed before use."
+    },
+    {
+      "kind": "mixed hydrogen engineering and safety candidates",
+      "structured_files": 37,
+      "screened_size_gib": 0.242,
+      "strong_process_header_files": 13,
+      "vehicle_or_soc_keyword_files": 2,
+      "assessment": "The vehicle/SOC keyword hits did not resolve to an aligned station-to-vehicle telemetry archive during structural screening."
+    }
+  ],
+  "conclusion": {
+    "local_station_data_is_sparse": false,
+    "station_side_calibration_evidence_is_substantial": true,
+    "full_loop_vehicle_validation_ready": false,
+    "highest_value_next_step": "Obtain a privacy-safe dictionary for the 25 narrow history exports and confirm whether any channel represents vehicle tank pressure, vehicle tank temperature, delivered mass or SOC on a shared relative-time axis."
+  }
+}
