@@ -41,8 +41,9 @@ evidence gates for process physics, consequence software and language-model
 decision support. A Type-IV tank model yielded validation errors of 3.841 MPa,
 4.833 $^{\circ}$C and 3.850 state-of-charge percentage points across 12 frozen
 fills, but did not transfer to the full controller. A public 15-workbook intake
-contained 58,440 synchronized samples; 8/18 post-access transfer sessions passed
-descriptive flow--mass closure. A 22-case PRESLHY blowdown evaluation passed
+contained 58,440 synchronized samples; 8/9 comparable post-access transfer
+sessions passed descriptive flow--mass closure (18 sessions detected). A 22-case
+PRESLHY blowdown evaluation passed
 50.0\% against a 70\% threshold; a non-adiabatic revision passed 20/22 consumed
 cases but only 2/3 eligible holdouts. Independent 90 MPa releases passed 0/3
 mass-flow series. HyRAM+ matched its API and an ignited-enclosure model passed
@@ -481,12 +482,20 @@ as an effective heat-transfer calibration, not an identified physical coefficien
 The complete MetHyTrucks Groups A--C release contained 15 CC BY 4.0 workbooks
 and 58,440 monotonic 0.5-s samples
 \cite{methytrucksgroupa2026,methytrucks2026,methytrucksgroupc2026}.
-All hashes and sizes matched. Six workbooks had flow and cumulative-mass
-channels; 8/18 transfer sessions passed descriptive closure (median ratio
-1.002). Outcomes were inspected before this audit, and D1 lacks authoritative
-units, tag mapping, controller states and calibration uncertainty
-\cite{methytrucksd12026}. This is post-access component evidence, not a
-prospective full-loop result.
+All hashes and sizes matched. Six workbooks had flow and cumulative mass.
+Of 18 sessions, nine changed scale mass;
+8/9 met the 0.8--1.2 screen (median ratio 1.003; median absolute difference
+0.48\%; Fig.~\ref{fig:methytrucks-closure}). Nine unchanged-scale sessions were
+unscored. D1 lacks units, tag mapping, controller states and calibration
+uncertainty \cite{methytrucksd12026}; outcomes are post-access evidence.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/methytrucks_mass_closure.png}
+\caption{Descriptive flow/scale closure for nine MetHyTrucks
+sessions; workbook units remain audit assumptions.}
+\label{fig:methytrucks-closure}
+\end{figure}
 
 Within that archive, five unfitted Hy-SaM replays had pressure and temperature
 RMSE of 1.287 MPa and 4.578 $^{\circ}$C \cite{dietrich2026,methytrucks2026}.

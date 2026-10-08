@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "attempted_at": "2026-10-08T00:04:26.857455+00:00",
+  "attempted_at": "2026-10-08T02:39:59.467375+00:00",
   "attempts_this_run": 1,
   "success": false,
   "compiler": "Codex built-in LaTeX compiler",
   "source": "manuscript/ijhe_manuscript_draft.tex",
-  "source_sha256": "6ea2caca07c5eb2832220fa97fcc3ff0a20af35c3157d0434bdcb4172e1e87ee",
+  "source_sha256": "c741f3afee772c2baecbda605f27d56a9957997571fec9e5cf89d5f8f8ab228b",
   "diagnostic": "Unable to find standard directories for platform",
   "format_check_passed": true,
   "retained_previous_pdf": {

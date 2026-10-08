@@ -313,13 +313,25 @@ def build_report(data_root: Path, *, recorded_date: str) -> dict[str, Any]:
         for workbook in all_workbooks
         for session in workbook["mass_closure_sessions"]
     ]
+    closure_comparable = [
+        item
+        for item in closure_sessions
+        if item["flow_to_scale_mass_ratio"] is not None
+    ]
     closure_passes = [
-        item for item in closure_sessions if item["descriptive_closure_screen_pass"]
+        item for item in closure_comparable if item["descriptive_closure_screen_pass"]
     ]
     closure_ratios = [
         float(item["flow_to_scale_mass_ratio"])
         for item in closure_passes
         if item["flow_to_scale_mass_ratio"] is not None
+    ]
+    closure_comparable_ratios = [
+        float(item["flow_to_scale_mass_ratio"])
+        for item in closure_comparable
+    ]
+    closure_absolute_relative_differences_pct = [
+        abs(value - 1.0) * 100.0 for value in closure_comparable_ratios
     ]
     return {
         "schema_version": 1,
@@ -363,10 +375,29 @@ def build_report(data_root: Path, *, recorded_date: str) -> dict[str, Any]:
                 for item in all_workbooks
             ),
             "mass_closure_session_count": len(closure_sessions),
+            "mass_closure_comparable_session_count": len(closure_comparable),
+            "mass_closure_non_comparable_session_count": (
+                len(closure_sessions) - len(closure_comparable)
+            ),
             "mass_closure_screen_pass_count": len(closure_passes),
+            "mass_closure_comparable_pass_fraction": (
+                len(closure_passes) / len(closure_comparable)
+                if closure_comparable
+                else None
+            ),
             "mass_closure_pass_ratio_median": median(closure_ratios)
             if closure_ratios
             else None,
+            "mass_closure_comparable_ratio_median": (
+                median(closure_comparable_ratios)
+                if closure_comparable_ratios
+                else None
+            ),
+            "mass_closure_comparable_absolute_relative_difference_pct_median": (
+                median(closure_absolute_relative_differences_pct)
+                if closure_absolute_relative_differences_pct
+                else None
+            ),
         },
         "mass_closure_sessions": closure_sessions,
         "eligibility": {
@@ -420,8 +451,12 @@ def render_markdown(report: dict[str, Any]) -> str:
         f"- Synchronized samples: **{aggregate['sample_count']:,}**",
         f"- Sampling interval(s): **{', '.join(str(v) for v in aggregate['sampling_intervals_s'])} s**",
         f"- Workbooks with a mass channel: **{aggregate['workbooks_with_mass']}**",
-        f"- Descriptive flow/mass closure screens passed: **{aggregate['mass_closure_screen_pass_count']} / {aggregate['mass_closure_session_count']} sessions**",
-        f"- Median closure ratio among passing sessions: **{aggregate['mass_closure_pass_ratio_median']:.3f}**",
+        f"- Detected transfer sessions: **{aggregate['mass_closure_session_count']}**",
+        f"- Sessions with a non-zero scale change and therefore eligible for closure comparison: **{aggregate['mass_closure_comparable_session_count']}**",
+        f"- Descriptive flow/mass closure screens passed: **{aggregate['mass_closure_screen_pass_count']} / {aggregate['mass_closure_comparable_session_count']} comparable sessions**",
+        f"- Sessions without a measurable scale change (not scored): **{aggregate['mass_closure_non_comparable_session_count']}**",
+        f"- Median flow/scale ratio across comparable sessions: **{aggregate['mass_closure_comparable_ratio_median']:.3f}**",
+        f"- Median absolute relative flow/scale difference: **{aggregate['mass_closure_comparable_absolute_relative_difference_pct_median']:.2f}%**",
         "",
         "## Source records",
         "",

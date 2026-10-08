@@ -2441,8 +2441,13 @@
     "workbooks_with_mass": 6,
     "workbooks_with_receiving_cylinder_pressure_and_four_temperatures": 2,
     "mass_closure_session_count": 18,
+    "mass_closure_comparable_session_count": 9,
+    "mass_closure_non_comparable_session_count": 9,
     "mass_closure_screen_pass_count": 8,
-    "mass_closure_pass_ratio_median": 1.0018951923076922
+    "mass_closure_comparable_pass_fraction": 0.8888888888888888,
+    "mass_closure_pass_ratio_median": 1.0018951923076922,
+    "mass_closure_comparable_ratio_median": 1.0028625,
+    "mass_closure_comparable_absolute_relative_difference_pct_median": 0.484745762711869
   },
   "mass_closure_sessions": [
     {

@@ -301,7 +301,10 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert instrumentation["observed_sampling_intervals_s"] == [0.5]
     assert instrumentation["workbooks_with_mass"] == 6
     assert instrumentation["mass_closure_session_count"] == 18
+    assert instrumentation["mass_closure_comparable_session_count"] == 9
+    assert instrumentation["mass_closure_non_comparable_session_count"] == 9
     assert instrumentation["mass_closure_screen_pass_count"] == 8
+    assert instrumentation["mass_closure_comparable_pass_fraction"] == 8 / 9
     assert instrumentation["station_measurement_auxiliary_eligible"] is True
     assert instrumentation["full_loop_holdout_eligible"] is False
     assert instrumentation["channel_dictionary_present"] is False

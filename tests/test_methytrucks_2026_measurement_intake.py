@@ -57,7 +57,18 @@ def test_committed_public_intake_is_complete_and_claim_bounded():
     assert result["aggregate"]["sampling_intervals_s"] == [0.5]
     assert result["aggregate"]["workbooks_with_flow"] == 15
     assert result["aggregate"]["workbooks_with_mass"] == 6
+    assert result["aggregate"]["mass_closure_session_count"] == 18
+    assert result["aggregate"]["mass_closure_comparable_session_count"] == 9
+    assert result["aggregate"]["mass_closure_non_comparable_session_count"] == 9
     assert result["aggregate"]["mass_closure_screen_pass_count"] == 8
+    assert result["aggregate"]["mass_closure_comparable_pass_fraction"] == 8 / 9
+    assert result["aggregate"]["mass_closure_comparable_ratio_median"] == 1.0028625
+    assert (
+        result["aggregate"][
+            "mass_closure_comparable_absolute_relative_difference_pct_median"
+        ]
+        == 0.484745762711869
+    )
     assert result["eligibility"]["flow_mass_consistency_diagnostic_supported"] is True
     assert result["eligibility"]["prospective_holdout_eligible"] is False
     assert result["eligibility"]["full_loop_station_vehicle_validation_eligible"] is False

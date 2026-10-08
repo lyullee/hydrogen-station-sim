@@ -1310,11 +1310,26 @@ def _public_measurement_instrumentation_evidence() -> dict[str, Any] | None:
         "observed_sampling_intervals_s": aggregate.get("sampling_intervals_s"),
         "workbooks_with_mass": aggregate.get("workbooks_with_mass"),
         "mass_closure_session_count": aggregate.get("mass_closure_session_count"),
+        "mass_closure_comparable_session_count": aggregate.get(
+            "mass_closure_comparable_session_count"
+        ),
+        "mass_closure_non_comparable_session_count": aggregate.get(
+            "mass_closure_non_comparable_session_count"
+        ),
         "mass_closure_screen_pass_count": aggregate.get(
             "mass_closure_screen_pass_count"
         ),
+        "mass_closure_comparable_pass_fraction": aggregate.get(
+            "mass_closure_comparable_pass_fraction"
+        ),
         "mass_closure_pass_ratio_median": aggregate.get(
             "mass_closure_pass_ratio_median"
+        ),
+        "mass_closure_comparable_ratio_median": aggregate.get(
+            "mass_closure_comparable_ratio_median"
+        ),
+        "mass_closure_comparable_absolute_relative_difference_pct_median": aggregate.get(
+            "mass_closure_comparable_absolute_relative_difference_pct_median"
         ),
         "station_measurement_auxiliary_eligible": True,
         "full_loop_holdout_eligible": False,
@@ -3952,8 +3967,13 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "evidence_role", "source_count", "file_count", "sample_count",
                 "observed_sampling_intervals_s",
                 "workbooks_with_mass", "mass_closure_session_count",
+                "mass_closure_comparable_session_count",
+                "mass_closure_non_comparable_session_count",
                 "mass_closure_screen_pass_count",
+                "mass_closure_comparable_pass_fraction",
                 "mass_closure_pass_ratio_median",
+                "mass_closure_comparable_ratio_median",
+                "mass_closure_comparable_absolute_relative_difference_pct_median",
                 "station_measurement_auxiliary_eligible",
                 "full_loop_holdout_eligible",
                 "channel_dictionary_present",
@@ -4831,11 +4851,28 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "mass_closure_session_count": public_measurement.get(
                 "mass_closure_session_count"
             ),
+            "mass_closure_comparable_session_count": public_measurement.get(
+                "mass_closure_comparable_session_count"
+            ),
+            "mass_closure_non_comparable_session_count": public_measurement.get(
+                "mass_closure_non_comparable_session_count"
+            ),
             "mass_closure_screen_pass_count": public_measurement.get(
                 "mass_closure_screen_pass_count"
             ),
+            "mass_closure_comparable_pass_fraction": public_measurement.get(
+                "mass_closure_comparable_pass_fraction"
+            ),
             "mass_closure_pass_ratio_median": public_measurement.get(
                 "mass_closure_pass_ratio_median"
+            ),
+            "mass_closure_comparable_ratio_median": public_measurement.get(
+                "mass_closure_comparable_ratio_median"
+            ),
+            "mass_closure_comparable_absolute_relative_difference_pct_median": (
+                public_measurement.get(
+                    "mass_closure_comparable_absolute_relative_difference_pct_median"
+                )
             ),
             "station_measurement_auxiliary_eligible": public_measurement.get(
                 "station_measurement_auxiliary_eligible"

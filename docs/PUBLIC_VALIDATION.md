@@ -141,10 +141,19 @@ the gitignored `tmp/methytrucks_2026/<record-id>/` directories with each record'
 ```
 
 The committed audit records 58,440 monotonic samples at 0.5 s, 15/15 workbooks
-with a flow-like channel and six with cumulative mass. Eight of 18 detected
-transfer sessions pass the descriptive 0.8--1.2 flow-integral/mass-change
-closure screen; the median passing ratio is 1.002. The script retains failed
-sessions and performs no case-specific model fitting.
+with a flow-like channel and six with cumulative mass. Eighteen transfer
+sessions are detected; nine have a non-zero scale change and are comparable.
+Eight of those nine pass the descriptive 0.8--1.2
+flow-integral/mass-change closure screen. Across all comparable sessions, the
+median ratio is 1.003 and the median absolute relative difference is 0.48%.
+Nine unchanged-scale sessions remain recorded but are not scored. The script
+retains the out-of-screen session and performs no case-specific model fitting.
+
+Generate the publication figure with:
+
+```powershell
+.venv\Scripts\python.exe scripts\plot_methytrucks_mass_closure.py
+```
 
 This is a post-access component diagnostic. The public D1 guide gives operating
 context but does not supply an authoritative logger-tag/unit dictionary,

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T02:18:38.017502+00:00",
+  "generated_at": "2026-10-08T02:39:59.830593+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -231,8 +231,13 @@
           "workbooks_with_mass": 6,
           "workbooks_with_receiving_cylinder_pressure_and_four_temperatures": 2,
           "mass_closure_session_count": 18,
+          "mass_closure_comparable_session_count": 9,
+          "mass_closure_non_comparable_session_count": 9,
           "mass_closure_screen_pass_count": 8,
-          "mass_closure_pass_ratio_median": 1.0018951923076922
+          "mass_closure_comparable_pass_fraction": 0.8888888888888888,
+          "mass_closure_pass_ratio_median": 1.0018951923076922,
+          "mass_closure_comparable_ratio_median": 1.0028625,
+          "mass_closure_comparable_absolute_relative_difference_pct_median": 0.484745762711869
         },
         "source_dois": [
           "10.5281/zenodo.20590761",
@@ -1160,8 +1165,13 @@
             "workbooks_with_mass": 6,
             "workbooks_with_receiving_cylinder_pressure_and_four_temperatures": 2,
             "mass_closure_session_count": 18,
+            "mass_closure_comparable_session_count": 9,
+            "mass_closure_non_comparable_session_count": 9,
             "mass_closure_screen_pass_count": 8,
-            "mass_closure_pass_ratio_median": 1.0018951923076922
+            "mass_closure_comparable_pass_fraction": 0.8888888888888888,
+            "mass_closure_pass_ratio_median": 1.0018951923076922,
+            "mass_closure_comparable_ratio_median": 1.0028625,
+            "mass_closure_comparable_absolute_relative_difference_pct_median": 0.484745762711869
           },
           "eligibility": {
             "public_real_experimental_measurements": true,
@@ -6569,7 +6579,7 @@
         "manuscript": "manuscript\\ijhe_manuscript_draft.tex",
         "highlights": "manuscript\\Highlights.txt",
         "counts": {
-          "abstract_words": 131,
+          "abstract_words": 135,
           "keywords": 6,
           "highlight_bullets": 5,
           "highlight_characters": [
@@ -6579,8 +6589,8 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7982,
-          "figures": 2,
+          "approximate_manuscript_words_before_references": 8000,
+          "figures": 3,
           "tables": 3,
           "citation_keys": 40,
           "bibliography_entries": 41,
@@ -6611,12 +6621,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-08T00:04:26.857455+00:00",
+        "attempted_at": "2026-10-08T02:39:59.467375+00:00",
         "attempts_this_run": 1,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "6ea2caca07c5eb2832220fa97fcc3ff0a20af35c3157d0434bdcb4172e1e87ee",
+        "source_sha256": "c741f3afee772c2baecbda605f27d56a9957997571fec9e5cf89d5f8f8ab228b",
         "diagnostic": "Unable to find standard directories for platform",
         "format_check_passed": true,
         "retained_previous_pdf": {

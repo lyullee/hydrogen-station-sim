@@ -11,8 +11,12 @@ MetHyTrucks Zenodo community. Raw workbooks remain outside version control.
 - Synchronized samples: **58,440**
 - Sampling interval(s): **0.5 s**
 - Workbooks with a mass channel: **6**
-- Descriptive flow/mass closure screens passed: **8 / 18 sessions**
-- Median closure ratio among passing sessions: **1.002**
+- Detected transfer sessions: **18**
+- Sessions with a non-zero scale change and therefore eligible for closure comparison: **9**
+- Descriptive flow/mass closure screens passed: **8 / 9 comparable sessions**
+- Sessions without a measurable scale change (not scored): **9**
+- Median flow/scale ratio across comparable sessions: **1.003**
+- Median absolute relative flow/scale difference: **0.48%**
 
 ## Source records
 

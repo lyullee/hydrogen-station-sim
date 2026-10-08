@@ -24,9 +24,12 @@ Gate counts: **96 PASS · 8 FAIL · 8 PENDING**.
 
 The complete June 2026 MetHyTrucks public release has now been ingested across
 all three sampling-system groups: 15 CC BY 4.0 workbooks, 58,440 synchronized
-0.5 s samples and verified Zenodo MD5/size metadata. Eight of 18 detected
-transfer sessions passed a descriptive flow-integral/mass-closure screen, with
-a median passing ratio of 1.002. This adds real experimental component evidence,
+0.5 s samples and verified Zenodo MD5/size metadata. Eighteen transfer sessions
+were detected; nine had a non-zero scale change and could be compared. Eight of
+those nine passed the descriptive 0.8--1.2 flow-integral/mass-closure screen.
+Their all-comparable median ratio was 1.003 and median absolute relative
+difference was 0.48%. The manuscript now includes a publication figure that
+retains the single out-of-screen result. This adds real experimental component evidence,
 but the files were inspected before the audit was specified and lack an
 authoritative tag/unit dictionary, device and vehicle-geometry crosswalk,
 controller states and calibration uncertainties. The result therefore does not

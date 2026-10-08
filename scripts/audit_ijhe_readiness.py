@@ -271,7 +271,10 @@ def audit(root: Path) -> dict[str, object]:
         )
         == 2
         and complete_aggregate.get("mass_closure_session_count") == 18
+        and complete_aggregate.get("mass_closure_comparable_session_count") == 9
+        and complete_aggregate.get("mass_closure_non_comparable_session_count") == 9
         and complete_aggregate.get("mass_closure_screen_pass_count") == 8
+        and complete_aggregate.get("mass_closure_comparable_pass_fraction") == 8 / 9
         and 0.8
         <= float(complete_aggregate.get("mass_closure_pass_ratio_median", 0.0))
         <= 1.2
