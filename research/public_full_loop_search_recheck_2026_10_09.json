@@ -158,6 +158,16 @@
       "eligible_use": "operational-strategy and state-machine plausibility; simulation supplement, not measured full-loop validation"
     }
   ],
+  "locally_cached_supplementary_rechecks": [
+    {
+      "id": "uci_early_hrs_supplementary_docx",
+      "artifact": "research/uci_early_hrs_supplementary_recheck_2026_10_09.json",
+      "embedded_chart_count": 4,
+      "monthly_chart_point_count": 30,
+      "raw_synchronized_event_table_present": false,
+      "decision": "AGGREGATE_REFERENCE_ONLY"
+    }
+  ],
   "gate_impact": "full_loop_external_validation_remains_open",
   "next_action": "Request a de-identified, rights-cleared, pre-freeze station-to-vehicle logger cohort from an identified custodian; retain this search result as a negative public-access decision.",
   "claim_boundary": "This artifact documents a current public search and exclusion decision. It adds no numerical validation, does not alter any frozen holdout, and does not support a safety or IJHE full-loop claim."

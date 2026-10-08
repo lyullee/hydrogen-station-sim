@@ -10,4 +10,6 @@ The search also identified four useful published experiment leads: a direct-pres
 
 Two additional local-search leads were recorded. The UCI early-years HRS study (DOI `10.1016/j.ijhydene.2020.08.251`) describes fueling time, dispensed amount and hose/storage pressure-temperature fields, but no downloadable synchronized logger archive was found. A public CSIC/Datos.gob supplement provides one-year on-site HRS operational-strategy and finite-state-machine outputs under CC BY-NC-ND 4.0; it is a simulation supplement rather than measured full-loop data. Both leads improve schema and operating-strategy grounding but do not close the independent validation gate.
 
+The locally cached UCI supplementary DOCX was also inspected. It contains four charts, including a 30-point monthly energy/throughput series, but no synchronized event table. The detailed bounded decision is recorded in `research/uci_early_hrs_supplementary_recheck_2026_10_09.json`.
+
 The full-loop gate therefore remains open. This recheck is a discovery/exclusion record, not validation evidence. The local private collection remains materially richer for station-side calibration, but its vehicle-side semantics are not independently attested.

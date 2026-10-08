@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "artifact_type": "uci_early_hrs_supplementary_recheck",
+  "generated_at": "2026-10-09",
+  "status": "aggregate_only_no_full_loop_raw_trace",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "site_company_manufacturer_published": false,
+    "calendar_dates_published": false,
+    "raw_chart_values_persisted": false
+  },
+  "observed_structure": {
+    "embedded_chart_count": 4,
+    "monthly_chart_point_count": 30,
+    "monthly_series": [
+      "refrigeration energy",
+      "compressor energy",
+      "auxiliary energy",
+      "dispensed hydrogen mass"
+    ],
+    "synchronized_event_table_present": false,
+    "vehicle_or_receptacle_pressure_temperature_present": false,
+    "dispenser_flow_or_controller_state_present": false,
+    "delivered_mass_event_trace_present": false
+  },
+  "eligible_use": [
+    "aggregate energy and throughput plausibility",
+    "data-custodian request schema comparison"
+  ],
+  "ineligible_use": [
+    "station-to-vehicle external holdout",
+    "vehicle tank thermal or SOC validation",
+    "dispenser controller calibration"
+  ],
+  "claim_boundary": "The supplementary document is an aggregate operational reference, not a synchronized raw HRS logger cohort."
+}
