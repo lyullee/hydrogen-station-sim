@@ -48,6 +48,7 @@ class ApparatusReleaseTrace:
 
 @dataclass(frozen=True, slots=True)
 class ApparatusReleaseCaseResult:
+    observed_valve_location: str
     points: int
     duration_s: float
     sampling_hz_median: float
@@ -139,19 +140,21 @@ def _model_inputs(
     trace: ApparatusReleaseTrace,
     model_parameters: Mapping[str, Any],
 ) -> ReleaseNetworkInputs:
+    parameters = dict(model_parameters)
+    parameters.pop("observed_valve_location", None)
     prohibited = {
         "source_pressure_pa_abs", "source_temperature_k",
         "line_initial_pressure_pa_abs", "line_initial_temperature_k",
         "ambient_pressure_pa", "ambient_temperature_k",
     }
-    overlap = prohibited.intersection(model_parameters)
+    overlap = prohibited.intersection(parameters)
     if overlap:
         raise ValueError(
             "initial and ambient boundary states must come from the first synchronized "
             f"sample, not model_parameters: {', '.join(sorted(overlap))}"
         )
     return ReleaseNetworkInputs(
-        **dict(model_parameters),
+        **parameters,
         source_pressure_pa_abs=float(trace.source_pressure_pa_abs[0]),
         source_temperature_k=float(trace.source_temperature_k[0]),
         line_initial_pressure_pa_abs=float(trace.line_pressure_pa_abs[0]),
@@ -159,6 +162,15 @@ def _model_inputs(
         ambient_pressure_pa=float(trace.ambient_pressure_pa[0]),
         ambient_temperature_k=float(trace.ambient_temperature_k[0]),
     )
+
+
+def _observed_valve_location(model_parameters: Mapping[str, Any]) -> str:
+    """Return which prescribed valve command the single logger trace represents."""
+
+    location = str(model_parameters.get("observed_valve_location", "upstream")).strip().lower()
+    if location not in {"upstream", "terminal"}:
+        raise ValueError("observed_valve_location must be 'upstream' or 'terminal'")
+    return location
 
 
 def evaluate_apparatus_release_case(
@@ -196,6 +208,7 @@ def evaluate_apparatus_release_case(
     sampling_hz = 1.0 / median_interval
     timestamp_jitter = float(np.max(np.abs(intervals - median_interval)))
     inputs = _model_inputs(trace, model_parameters)
+    observed_valve_location = _observed_valve_location(model_parameters)
     predicted = simulate_release_network(elapsed, inputs=inputs)
 
     measured_peak = float(np.max(trace.terminal_mass_flow_kg_s))
@@ -243,9 +256,14 @@ def evaluate_apparatus_release_case(
     source_mass_nrmse = _nrmse(
         predicted.source_mass_kg, trace.source_mass_kg, float(trace.source_mass_kg[0]),
     )
-    valve_rmse = float(
-        np.sqrt(np.mean((predicted.valve_opening_fraction - trace.valve_position_fraction) ** 2))
+    predicted_valve_position = (
+        predicted.terminal_valve_opening_fraction
+        if observed_valve_location == "terminal"
+        else predicted.upstream_valve_opening_fraction
     )
+    valve_rmse = float(np.sqrt(np.mean(
+        (predicted_valve_position - trace.valve_position_fraction) ** 2
+    )))
     initial_mass_scale = float(predicted.source_mass_kg[0] + predicted.line_mass_kg[0])
     mass_closure = float(np.max(np.abs(predicted.mass_balance_residual_kg))) / max(
         initial_mass_scale, 1.0e-12,
@@ -326,6 +344,7 @@ def evaluate_apparatus_release_case(
     primary_pass = all(gates[key] for key in primary_keys)
     conservation_pass = all(gates[key] for key in conservation_keys)
     return ApparatusReleaseCaseResult(
+        observed_valve_location=observed_valve_location,
         points=len(elapsed),
         duration_s=float(elapsed[-1]),
         sampling_hz_median=sampling_hz,

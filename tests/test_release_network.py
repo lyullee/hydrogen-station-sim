@@ -33,6 +33,11 @@ def test_release_network_has_finite_opening_and_distinct_line_state():
     assert result.upstream_mass_flow_kg_s[1] < result.upstream_mass_flow_kg_s[-1]
     assert result.valve_opening_fraction[0] == 0.0
     assert result.valve_opening_fraction[-1] == 1.0
+    assert np.array_equal(
+        result.valve_opening_fraction,
+        result.upstream_valve_opening_fraction,
+    )
+    assert np.all(result.terminal_valve_opening_fraction == pytest.approx(1.0))
     assert result.line_pressure_profile_pa_abs.shape == (len(time), 1)
 
 
@@ -71,6 +76,31 @@ def test_release_network_mass_closure_is_explicit():
     assert np.max(np.abs(result.mass_balance_residual_kg)) < 1.0e-8
 
 
+def test_precharged_line_can_open_the_terminal_valve_independently():
+    time = np.linspace(0.0, 0.2, 41)
+    result = simulate_release_network(
+        time,
+        inputs=_inputs(
+            line_initial_pressure_pa_abs=15.513e6,
+            line_initial_temperature_k=315.15,
+            valve_opening_time_s=0.0,
+            upstream_valve_initial_fraction=1.0,
+            terminal_valve_initial_fraction=0.0,
+            terminal_valve_opening_time_s=0.1,
+        ),
+    )
+
+    assert np.all(result.upstream_valve_opening_fraction == pytest.approx(1.0))
+    assert result.terminal_valve_opening_fraction[0] == pytest.approx(0.0)
+    assert result.terminal_valve_opening_fraction[10] == pytest.approx(0.5)
+    assert result.terminal_valve_opening_fraction[20] == pytest.approx(1.0)
+    assert result.terminal_mass_flow_kg_s[0] == pytest.approx(0.0, abs=1.0e-12)
+    assert np.max(result.terminal_mass_flow_kg_s[1:]) > 0.0
+    assert np.max(result.upstream_mass_flow_kg_s[1:]) > 0.0
+    assert result.line_pressure_pa_abs[-1] < result.line_pressure_pa_abs[0]
+    assert np.max(np.abs(result.mass_balance_residual_kg)) < 1.0e-8
+
+
 def test_release_network_energy_closure_is_explicit_for_wall_and_boundary_heat():
     time = np.linspace(0.0, 0.5, 101)
     result = simulate_release_network(
@@ -101,6 +131,8 @@ def test_release_network_rejects_nonphysical_inputs():
         _inputs(upstream_discharge_coefficient=1.1)
     with pytest.raises(ValueError, match="intersegment_diameter_m"):
         _inputs(line_segments=2)
+    with pytest.raises(ValueError, match="initial valve fractions"):
+        _inputs(terminal_valve_initial_fraction=1.1)
 
 
 def test_zero_thermal_capacity_keeps_wall_temperature_fixed():

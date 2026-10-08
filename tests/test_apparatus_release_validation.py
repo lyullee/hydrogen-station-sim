@@ -49,6 +49,7 @@ def _model_parameters() -> dict:
         "upstream_diameter_m": 0.003,
         "terminal_diameter_m": 0.001,
         "valve_opening_time_s": 0.1,
+        "observed_valve_location": "upstream",
     }
 
 
@@ -63,6 +64,8 @@ def _perfect_prediction(trace: ApparatusReleaseTrace) -> SimpleNamespace:
         line_mass_kg=np.full(n, 0.01),
         terminal_mass_flow_kg_s=trace.terminal_mass_flow_kg_s.copy(),
         valve_opening_fraction=trace.valve_position_fraction.copy(),
+        upstream_valve_opening_fraction=trace.valve_position_fraction.copy(),
+        terminal_valve_opening_fraction=np.ones(n),
         cumulative_terminal_enthalpy_j=np.linspace(0.0, 100.0, n),
         cumulative_thermal_boundary_energy_j=np.zeros(n),
         mass_balance_residual_kg=np.zeros(n),
@@ -72,6 +75,7 @@ def _perfect_prediction(trace: ApparatusReleaseTrace) -> SimpleNamespace:
 
 def _passing_result() -> ApparatusReleaseCaseResult:
     return ApparatusReleaseCaseResult(
+        observed_valve_location="upstream",
         points=201,
         duration_s=1.0,
         sampling_hz_median=200.0,
@@ -115,6 +119,44 @@ def test_no_fit_case_evaluator_passes_identical_trace(monkeypatch):
     assert result.numerical_conservation_pass is True
     assert result.joint_case_pass is True
     assert all(result.gate_details.values())
+    assert result.observed_valve_location == "upstream"
+
+
+def test_case_evaluator_can_score_a_terminal_valve_trace(monkeypatch):
+    trace = _trace()
+    prediction = _perfect_prediction(trace)
+    prediction.upstream_valve_opening_fraction = np.ones(len(trace.time_s))
+    prediction.terminal_valve_opening_fraction = trace.valve_position_fraction.copy()
+    monkeypatch.setattr(
+        validation,
+        "simulate_release_network",
+        lambda _time, *, inputs: prediction,
+    )
+    parameters = _model_parameters()
+    parameters.update({
+        "observed_valve_location": "terminal",
+        "upstream_valve_initial_fraction": 1.0,
+        "terminal_valve_initial_fraction": 0.0,
+        "terminal_valve_opening_time_s": 0.1,
+    })
+
+    result = evaluate_apparatus_release_case(trace, model_parameters=parameters)
+
+    assert result.observed_valve_location == "terminal"
+    assert result.valve_position_rmse_fraction == 0.0
+    assert result.gate_details["valve_law_consistency"] is True
+
+
+def test_case_evaluator_rejects_ambiguous_valve_location():
+    parameters = _model_parameters()
+    parameters["observed_valve_location"] = "somewhere"
+
+    try:
+        evaluate_apparatus_release_case(_trace(), model_parameters=parameters)
+    except ValueError as exc:
+        assert "observed_valve_location" in str(exc)
+    else:
+        raise AssertionError("an unknown logged-valve location must be rejected")
 
 
 def test_csv_loader_requires_the_complete_synchronized_contract(tmp_path):

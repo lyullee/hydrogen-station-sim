@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T08:16:20.326215+00:00",
+  "generated_at": "2026-10-08T08:28:47.266705+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -5113,9 +5113,9 @@
       "evidence": "research\\apparatus_resolved_release_protocol.json; research\\release_network_prospective_protocol.json; research\\apparatus_release_holdout_manifest.template.json; src\\h2station\\release_network.py; src\\h2station\\apparatus_release_validation.py; scripts\\run_apparatus_release_holdout.py",
       "requirement": "Model, evaluator, runner and protocol hashes agree; eight-case stratification and no-fit/privacy rules are frozen; external validation remains explicitly not established.",
       "observed": {
-        "protocol_sha256": "6aade0968c3da62ef9d9a06e330196d22552125ed221080894b6ed7dfd8a74fd",
-        "model_sha256": "5c52e06f3ff1c45fd6c63047b5c34494d2b605a3bd46cb40ffcd81946b7e259d",
-        "evaluator_sha256": "87bef13f019d2be445d757ebba94933e748b1fe924dbdbc29f12649a5970d04b",
+        "protocol_sha256": "05b19fe9932b609de61ed7d8191fb4ea00bd6296725154c18c79790c5c223baf",
+        "model_sha256": "75a454425f131d74bd919f5fe54f468b81c655cc7a185f4ebf6b5e4dda5e876a",
+        "evaluator_sha256": "a31b9dcebbb4320749e0f39b9661519626cadbc1624c66c14c6ffa7f0ec2c035",
         "runner_sha256": "4a9a12b2b771c634ebcdf7e5ca660da51c78b85505bff421fdbac0f2cc01397c",
         "template_case_count": 8,
         "target_campaign_outcome_data_accessed": false,

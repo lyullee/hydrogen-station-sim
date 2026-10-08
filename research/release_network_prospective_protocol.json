@@ -1,19 +1,48 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "status": "prospective_model_only_no_holdout_received",
   "model": "src/h2station/release_network.py",
-  "model_sha256": "5C52E06F3FF1C45FD6C63047B5C34494D2B605A3BD46CB40FFCD81946B7E259D",
+  "model_sha256": "75A454425F131D74BD919F5FE54F468B81C655CC7A185F4EBF6B5E4DDA5E876A",
   "evaluator": "src/h2station/apparatus_release_validation.py",
-  "evaluator_sha256": "87BEF13F019D2BE445D757EBBA94933E748B1FE924DBDBC29F12649A5970D04B",
+  "evaluator_sha256": "A31B9DCEBBB4320749E0F39B9661519626CADBC1624C66C14C6FFA7F0EC2C035",
   "campaign_runner": "scripts/run_apparatus_release_holdout.py",
   "campaign_runner_sha256": "4A9A12B2B771C634EBCDF7E5CA660DA51C78B85505BFF421FDBAC0F2CC01397C",
   "manifest_template": "research/apparatus_release_holdout_manifest.template.json",
   "evidence_role": "future_validation_protocol",
   "model_boundary": {
-    "control_volumes": ["source_vessel", "one_or_more_physically_declared_supply_line_or_manifold_volumes"],
-    "boundaries": ["finite_shaped_valve_opening", "bidirectional_intervolume_restrictions", "terminal_restriction_to_ambient"],
-    "states": ["mass", "internal_energy", "source_wall_temperature", "line_wall_temperature_by_volume"],
-    "outputs": ["source_pressure", "line_pressure_profile", "source_temperature", "line_temperature_profile", "line_inventory_profile", "valve_opening_fraction", "upstream_mass_flow", "intersegment_mass_flow", "terminal_mass_flow", "cumulative_terminal_release", "cumulative_terminal_enthalpy", "cumulative_thermal_boundary_energy", "mass_balance_residual", "energy_balance_residual"]
+    "control_volumes": [
+      "source_vessel",
+      "one_or_more_physically_declared_supply_line_or_manifold_volumes"
+    ],
+    "boundaries": [
+      "independent_finite_upstream_valve_opening",
+      "bidirectional_intervolume_restrictions",
+      "independent_finite_terminal_valve_opening",
+      "terminal_restriction_to_ambient"
+    ],
+    "states": [
+      "mass",
+      "internal_energy",
+      "source_wall_temperature",
+      "line_wall_temperature_by_volume"
+    ],
+    "outputs": [
+      "source_pressure",
+      "line_pressure_profile",
+      "source_temperature",
+      "line_temperature_profile",
+      "line_inventory_profile",
+      "upstream_valve_opening_fraction",
+      "terminal_valve_opening_fraction",
+      "upstream_mass_flow",
+      "intersegment_mass_flow",
+      "terminal_mass_flow",
+      "cumulative_terminal_release",
+      "cumulative_terminal_enthalpy",
+      "cumulative_thermal_boundary_energy",
+      "mass_balance_residual",
+      "energy_balance_residual"
+    ]
   },
   "required_channels": [
     "common_timestamp",
@@ -23,9 +52,10 @@
     "line_or_manifold_temperature",
     "terminal_mass_flow_or_transferred_mass",
     "valve_command_or_position",
+    "observed_valve_location_and_other_valve_fixed_or_measured_state",
     "ambient_pressure",
     "ambient_temperature",
-    "source_and_line_geometry",
+    "source_line_valve_and_terminal_geometry",
     "units_calibration_uncertainty_and_quality_flags"
   ],
   "minimum_cases": 8,
@@ -45,13 +75,15 @@
     "mass_closure_relative_error_max": 0.002,
     "energy_closure_relative_error_max": 0.002,
     "instrumentation_added_before_target_campaign_outcome_access": true,
-    "physical_trajectory_equations_changed": true
+    "physical_trajectory_equations_changed": true,
+    "dual_valve_boundary_amended_before_target_campaign_outcome_access": true
   },
   "prohibited_after_outcome_access": [
     "case_specific_parameter_fit",
     "discharge_coefficient_fit",
-    "valve_opening_time_fit",
+    "upstream_or_terminal_valve_opening_time_fit",
     "line_volume_or_diameter_fit",
+    "observed_valve_location_reclassification",
     "time_shift_or_dynamic_time_warping",
     "failed_case_exclusion"
   ],
@@ -59,7 +91,8 @@
     "raw_campaign_received": false,
     "numerical_holdout_run": false,
     "ijhe_gate_impact": "no_change",
-    "full_user_objective_ready": false
+    "full_user_objective_ready": false,
+    "pre_holdout_dual_valve_amendment": true
   },
-  "claim_boundary": "Implementation and mass/energy-closure tests only; no external physical validation, station safety, consequence-distance or SAGA-effectiveness claim."
+  "claim_boundary": "Implementation, independent upstream/terminal valve semantics and mass/energy-closure tests only; no external physical validation, station safety, consequence-distance or SAGA-effectiveness claim."
 }

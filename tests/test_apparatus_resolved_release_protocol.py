@@ -55,7 +55,9 @@ def test_protocol_requires_apparatus_boundary_channels_and_published_gap():
         "ambient_pressure_pa",
     } <= required
     assert "line pressure" in protocol["known_source_gap"]["not_reported_as_primary_channels"]
-    assert "valve position trace" in protocol["known_source_gap"]["not_reported_as_primary_channels"]
+    assert "upstream and terminal valve position traces" in (
+        protocol["known_source_gap"]["not_reported_as_primary_channels"]
+    )
 
 
 def test_protocol_locks_candidate_revision_before_target_data_access():
@@ -63,6 +65,12 @@ def test_protocol_locks_candidate_revision_before_target_data_access():
 
     assert protocol["protocol_revision"]["target_campaign_outcome_data_accessed"] is False
     assert protocol["protocol_revision"]["physical_trajectory_equations_changed"] is True
+    assert protocol["protocol_revision"]["revision_kind"] == (
+        "second pre-holdout apparatus-structure revision"
+    )
+    assert protocol["quality_controls"]["observed_valve_location_must_be_declared"] == (
+        "upstream_or_terminal"
+    )
     assert protocol["quality_controls"]["energy_closure_relative_tolerance"] == 0.002
     assert protocol["quality_controls"]["minimum_complete_runs"] == 8
     assert protocol["primary_endpoints"]["energy_closure"]["maximum_relative_error"] == 0.002
@@ -76,6 +84,8 @@ def test_secondary_protocol_tracks_the_locked_conservation_outputs():
     assert protocol["evaluator_sha256"] == _sha256(EVALUATOR_PATH)
     assert protocol["campaign_runner_sha256"] == _sha256(RUNNER_PATH)
     assert {
+        "upstream_valve_opening_fraction",
+        "terminal_valve_opening_fraction",
         "cumulative_terminal_release",
         "cumulative_terminal_enthalpy",
         "cumulative_thermal_boundary_energy",
@@ -87,6 +97,7 @@ def test_secondary_protocol_tracks_the_locked_conservation_outputs():
         "energy_closure_relative_error_max": 0.002,
         "instrumentation_added_before_target_campaign_outcome_access": True,
         "physical_trajectory_equations_changed": True,
+        "dual_valve_boundary_amended_before_target_campaign_outcome_access": True,
     }
 
 
@@ -97,6 +108,11 @@ def test_private_manifest_template_matches_every_frozen_artifact():
     assert manifest["model_sha256"] == _sha256(MODEL_PATH)
     assert manifest["evaluator_sha256"] == _sha256(EVALUATOR_PATH)
     assert manifest["runner_sha256"] == _sha256(RUNNER_PATH)
+    assert manifest["default_model_parameters"]["observed_valve_location"] in {
+        "upstream", "terminal",
+    }
+    assert "upstream_valve_initial_fraction" in manifest["default_model_parameters"]
+    assert "terminal_valve_initial_fraction" in manifest["default_model_parameters"]
     assert len(manifest["cases"]) == 8
     assert len({item["strata"]["source_pressure_group"] for item in manifest["cases"]}) == 2
     assert len({item["strata"]["geometry_group"] for item in manifest["cases"]}) == 2

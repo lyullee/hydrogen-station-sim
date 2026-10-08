@@ -5,7 +5,7 @@ well-mixed vessel.  This module is a separate development model that represents
 the minimum additional state needed for an apparatus with a supply line:
 
 * a source vessel and one or more physically declared line control volumes,
-* a finite valve opening law,
+* independent finite upstream and terminal valve opening laws,
 * upstream, inter-volume and terminal restrictions, and
 * lumped gas/wall thermal states for every control volume.
 
@@ -45,8 +45,17 @@ class ReleaseNetworkInputs:
     upstream_discharge_coefficient: float = 1.0
     terminal_diameter_m: float = 0.00794
     terminal_discharge_coefficient: float = 1.0
+    # Legacy names describe the upstream/source isolation valve.  They remain
+    # stable for the frozen v1 data contract.
     valve_opening_time_s: float = 0.05
     valve_opening_shape_exponent: float = 1.0
+    upstream_valve_initial_fraction: float = 0.0
+    # A terminal fraction of one preserves the original always-open outlet.
+    # Set this to zero with a finite opening time for a precharged line whose
+    # release valve is located at the nozzle/end of the supply line.
+    terminal_valve_initial_fraction: float = 1.0
+    terminal_valve_opening_time_s: float = 0.0
+    terminal_valve_opening_shape_exponent: float = 1.0
     line_segments: int = 1
     intersegment_diameter_m: float | None = None
     intersegment_discharge_coefficient: float = 1.0
@@ -77,6 +86,9 @@ class ReleaseNetworkInputs:
             "wall_specific_heat_j_kg_k": self.wall_specific_heat_j_kg_k,
             "ambient_temperature_k": self.ambient_temperature_k,
             "valve_opening_shape_exponent": self.valve_opening_shape_exponent,
+            "terminal_valve_opening_shape_exponent": (
+                self.terminal_valve_opening_shape_exponent
+            ),
         }
         for name, value in positive.items():
             if not np.isfinite(value) or value <= 0.0:
@@ -85,6 +97,9 @@ class ReleaseNetworkInputs:
             "upstream_discharge_coefficient": self.upstream_discharge_coefficient,
             "terminal_discharge_coefficient": self.terminal_discharge_coefficient,
             "valve_opening_time_s": self.valve_opening_time_s,
+            "upstream_valve_initial_fraction": self.upstream_valve_initial_fraction,
+            "terminal_valve_initial_fraction": self.terminal_valve_initial_fraction,
+            "terminal_valve_opening_time_s": self.terminal_valve_opening_time_s,
             "source_wall_mass_kg": self.source_wall_mass_kg,
             "line_wall_mass_kg": self.line_wall_mass_kg,
             "source_internal_area_m2": self.source_internal_area_m2,
@@ -104,6 +119,11 @@ class ReleaseNetworkInputs:
             or self.intersegment_discharge_coefficient > 1.0
         ):
             raise ValueError("discharge coefficients cannot exceed one")
+        if (
+            self.upstream_valve_initial_fraction > 1.0
+            or self.terminal_valve_initial_fraction > 1.0
+        ):
+            raise ValueError("initial valve fractions cannot exceed one")
         if isinstance(self.line_segments, bool) or not isinstance(self.line_segments, int):
             raise ValueError("line_segments must be an integer")
         if self.line_segments < 1:
@@ -164,6 +184,8 @@ class ReleaseNetworkResult:
     mass_balance_residual_kg: np.ndarray
     energy_balance_residual_j: np.ndarray
     valve_opening_fraction: np.ndarray
+    upstream_valve_opening_fraction: np.ndarray
+    terminal_valve_opening_fraction: np.ndarray
     line_pressure_profile_pa_abs: np.ndarray
     line_temperature_profile_k: np.ndarray
     line_mass_profile_kg: np.ndarray
@@ -174,11 +196,12 @@ def _opening_fraction(
     time_s: float,
     opening_time_s: float,
     shape_exponent: float = 1.0,
+    initial_fraction: float = 0.0,
 ) -> float:
     if opening_time_s <= 0.0:
         return 1.0
     travel = float(np.clip(time_s / opening_time_s, 0.0, 1.0))
-    return travel**shape_exponent
+    return initial_fraction + (1.0 - initial_fraction) * travel**shape_exponent
 
 
 def _gas_snapshot(eos: _CoolPropHydrogen, mass: float, energy: float, volume: float):
@@ -277,16 +300,23 @@ def simulate_release_network(
         line_p = np.asarray([item[0] for item in line_snapshots])
         line_t = np.asarray([item[1] for item in line_snapshots])
         line_h = np.asarray([item[2] for item in line_snapshots])
-        opening = _opening_fraction(
+        upstream_opening = _opening_fraction(
             time_s,
             inputs.valve_opening_time_s,
             inputs.valve_opening_shape_exponent,
+            inputs.upstream_valve_initial_fraction,
+        )
+        terminal_opening = _opening_fraction(
+            time_s,
+            inputs.terminal_valve_opening_time_s,
+            inputs.terminal_valve_opening_shape_exponent,
+            inputs.terminal_valve_initial_fraction,
         )
         if source_p <= line_p[0] * (1.0 + 1.0e-9):
             upstream = 0.0
         else:
             upstream = (
-                opening
+                upstream_opening
                 * inputs.upstream_discharge_coefficient
                 * inputs.upstream_area_m2
                 * eos.isentropic_mass_flux(source_p, source_t, line_p[0])
@@ -318,7 +348,7 @@ def simulate_release_network(
             terminal = 0.0
         else:
             terminal = (
-                inputs.terminal_discharge_coefficient
+                terminal_opening * inputs.terminal_discharge_coefficient
                 * inputs.terminal_area_m2
                 * eos.isentropic_mass_flux(
                     line_p[-1], line_t[-1], inputs.ambient_pressure_pa
@@ -341,14 +371,14 @@ def simulate_release_network(
         )
         return (
             source_p, source_t, source_h, line_p, line_t, line_h,
-            upstream, interface_flows, terminal, opening,
+            upstream, interface_flows, terminal, upstream_opening, terminal_opening,
             source_wall_q, line_wall_q,
         )
 
     def derivative(time_s: float, vector: np.ndarray) -> np.ndarray:
         (
             _source_p, source_t, source_h, _line_p, _line_t, line_h,
-            upstream, interface_flows, terminal, _opening,
+            upstream, interface_flows, terminal, _upstream_opening, _terminal_opening,
             source_wall_q, line_wall_q,
         ) = quantities(time_s, vector)
         source_external_q = inputs.external_heat_transfer_w_m2_k * inputs.source_external_area_m2 * (
@@ -431,7 +461,6 @@ def simulate_release_network(
     upstream = np.asarray([item[6] for item in snapshots])
     interface_flows = np.vstack([item[7] for item in snapshots]) if segment_count > 1 else np.empty((len(snapshots), 0))
     terminal = np.asarray([item[8] for item in snapshots])
-    opening = np.asarray([item[9] for item in snapshots])
     cumulative_terminal_release = np.interp(
         requested, solution.t, solution.y[terminal_mass_index]
     )
@@ -477,6 +506,26 @@ def simulate_release_network(
             for index in range(segment_count - 1)
         ]
     ) if segment_count > 1 else np.empty((len(requested), 0))
+    # Valve position is a prescribed command, so evaluate it exactly at the
+    # requested timestamps instead of interpolating adaptive solver samples.
+    requested_upstream_opening = np.asarray([
+        _opening_fraction(
+            float(time_s),
+            inputs.valve_opening_time_s,
+            inputs.valve_opening_shape_exponent,
+            inputs.upstream_valve_initial_fraction,
+        )
+        for time_s in requested
+    ])
+    requested_terminal_opening = np.asarray([
+        _opening_fraction(
+            float(time_s),
+            inputs.terminal_valve_opening_time_s,
+            inputs.terminal_valve_opening_shape_exponent,
+            inputs.terminal_valve_initial_fraction,
+        )
+        for time_s in requested
+    ])
     return ReleaseNetworkResult(
         time_s=requested,
         source_pressure_pa_abs=np.interp(requested, solution.t, source_p),
@@ -504,7 +553,9 @@ def simulate_release_network(
         cumulative_thermal_boundary_energy_j=cumulative_thermal_boundary,
         mass_balance_residual_kg=np.interp(requested, solution.t, mass_residual),
         energy_balance_residual_j=np.interp(requested, solution.t, energy_residual),
-        valve_opening_fraction=np.interp(requested, solution.t, opening),
+        valve_opening_fraction=requested_upstream_opening,
+        upstream_valve_opening_fraction=requested_upstream_opening,
+        terminal_valve_opening_fraction=requested_terminal_opening,
         line_pressure_profile_pa_abs=line_pressure_profile,
         line_temperature_profile_k=line_temperature_profile,
         line_mass_profile_kg=line_mass_profile,

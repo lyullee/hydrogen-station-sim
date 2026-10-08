@@ -1,13 +1,17 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "recorded_at": "2026-10-05",
-  "updated_at": "2026-10-08",
+  "updated_at": "2026-10-08T08:26:24.055910+00:00",
   "status": "PROSPECTIVE_PROTOCOL_SPECIFICATION_ONLY",
   "purpose": "Freeze an apparatus-resolved source-line-valve-terminal release model and its data contract before opening an independent facility logger archive.",
   "claim_boundary": "This artifact is a reproducibility and data-acquisition protocol. It is not external validation, does not repair the frozen Proust holdout, and does not support a safety-distance or controller claim.",
   "source_target": {
     "title": "High pressure hydrogen fires",
-    "authors": ["Christophe Proust", "Didier Jamois", "Etienne Studer"],
+    "authors": [
+      "Christophe Proust",
+      "Didier Jamois",
+      "Etienne Studer"
+    ],
     "doi": "10.1016/j.ijhydene.2010.04.055",
     "open_conference_pdf": "https://conference.ing.unipi.it/ichs2009/images/stories/papers/214.pdf",
     "published_apparatus_description": {
@@ -31,31 +35,31 @@
   },
   "locked_model": {
     "path": "src/h2station/release_network.py",
-    "sha256": "5C52E06F3FF1C45FD6C63047B5C34494D2B605A3BD46CB40FFCD81946B7E259D",
+    "sha256": "75A454425F131D74BD919F5FE54F468B81C655CC7A185F4EBF6B5E4DDA5E876A",
     "state_description": [
       "source vessel mass and internal energy",
       "one or more physically declared line or manifold mass and internal-energy states",
       "source and line wall temperatures",
-      "finite upstream valve flow and bidirectional inter-volume restriction flows",
-      "terminal restriction flow",
+      "independent finite upstream and terminal valve opening laws plus bidirectional inter-volume restriction flows",
+      "terminal restriction flow to the declared ambient boundary",
       "cumulative terminal mass/enthalpy and net thermal-boundary energy bookkeeping, which does not feed the physical trajectory"
     ],
-    "parameter_policy": "Freeze geometry, valve opening law, discharge coefficients, heat-transfer terms, solver tolerances and boundary semantics before any target-campaign numerical result is inspected.",
+    "parameter_policy": "Freeze geometry, both valve locations and opening laws, discharge coefficients, heat-transfer terms, solver tolerances and boundary semantics before any target-campaign numerical result is inspected.",
     "production_status": "development_only_not_wired_into_station_runtime"
   },
   "locked_evaluator": {
     "path": "src/h2station/apparatus_release_validation.py",
-    "sha256": "87BEF13F019D2BE445D757EBBA94933E748B1FE924DBDBC29F12649A5970D04B",
+    "sha256": "A31B9DCEBBB4320749E0F39B9661519626CADBC1624C66C14C6FFA7F0EC2C035",
     "runner": "scripts/run_apparatus_release_holdout.py",
     "runner_sha256": "4A9A12B2B771C634EBCDF7E5CA660DA51C78B85505BFF421FDBAC0F2CC01397C",
-    "initial_state_policy": "Use the first synchronized pressure, temperature and ambient sample as a boundary condition; never fit geometry, coefficients, valve travel, crop or time shift against outcomes.",
+    "initial_state_policy": "Use the first synchronized pressure, temperature and ambient sample as a boundary condition; declare whether the logged valve trace is upstream or terminal; never fit geometry, coefficients, either valve travel, crop or time shift against outcomes.",
     "archive_policy": "Persist aliases, hashes, aggregate metrics and all failed-case reasons; never persist raw rows, paths, facility identity, exact dates or manufacturer details."
   },
   "protocol_revision": {
-    "revision_kind": "pre-holdout apparatus-structure revision",
+    "revision_kind": "second pre-holdout apparatus-structure revision",
     "target_campaign_outcome_data_accessed": false,
     "physical_trajectory_equations_changed": true,
-    "change_scope": "Before any qualifying target campaign was received, the single line volume was generalized to physically declared line/manifold volumes separated by explicit equivalent restrictions, and the valve travel law gained a frozen shape exponent. The one-volume default preserves the earlier equations. New profile outputs make distributed inventory and pressure loss directly testable.",
+    "change_scope": "Before any qualifying target campaign was received, the candidate model was amended to distinguish the source-side valve from the terminal release valve. Each valve now has an independent initial position, travel time and opening-law exponent; the evaluator requires the manifest to declare which valve the single synchronized valve trace represents. Legacy defaults preserve the earlier one-opening-boundary behavior. This supersedes the earlier pre-holdout multi-volume revision and requires a new freeze before any target outcomes are opened.",
     "revalidation_required_before_promotion": true
   },
   "required_channels": [
@@ -91,9 +95,10 @@
     },
     {
       "name": "valve_position_fraction",
-      "role": "opening law and command feedback",
+      "role": "measured position of the manifest-declared upstream or terminal valve",
       "required": true,
-      "minimum_sampling_hz": 500
+      "minimum_sampling_hz": 500,
+      "location_declaration_required": true
     },
     {
       "name": "source_mass_kg",
@@ -117,13 +122,13 @@
     "not_reported_as_primary_channels": [
       "line pressure",
       "line temperature",
-      "valve position trace",
+      "upstream and terminal valve position traces",
       "direct terminal mass-flow logger"
     ],
-    "decision": "The published Proust curves remain a local-aperture supplementary holdout. A future apparatus-resolved confirmatory run requires a new rights-cleared logger archive or a new experiment containing the full required channel contract."
+    "decision": "The published Proust curves remain a local-aperture supplementary holdout. A future apparatus-resolved confirmatory run requires a new rights-cleared logger archive or experiment containing the full required channel contract and an independently documented upstream/terminal valve topology."
   },
   "freeze_sequence": [
-    "Register as-built source volume, line bore, line length, dead volume, valve Cv or equivalent opening law, terminal bore and sensor calibration certificates.",
+    "Register as-built source volume, line bore, line length, dead volume, upstream and terminal valve locations and initial positions, each valve Cv or equivalent opening law, terminal bore and sensor calibration certificates.",
     "Hash the model source, configuration, solver version and raw logger archive before numerical rows are opened.",
     "Define time synchronization, missing-data, sensor-quality and uncertainty rules without inspecting model residuals.",
     "Pre-register primary endpoints, thresholds and a minimum number of complete runs.",
@@ -141,15 +146,28 @@
     "maximum_initial_source_mass_relative_error": 0.05,
     "minimum_complete_runs": 8,
     "minimum_points_per_run": 200,
-    "uncertainty_policy": "Report logger calibration uncertainty and digitization uncertainty separately; propagate both to endpoint intervals without using intervals to override a failed primary screen."
+    "uncertainty_policy": "Report logger calibration uncertainty and digitization uncertainty separately; propagate both to endpoint intervals without using intervals to override a failed primary screen.",
+    "observed_valve_location_must_be_declared": "upstream_or_terminal"
   },
   "primary_endpoints": {
-    "source_pressure_nrmse_percent": {"maximum": 10.0},
-    "terminal_mass_flow_nrmse_percent_peak_measured": {"maximum": 15.0},
-    "terminal_mass_flow_median_absolute_percentage_error_percent": {"maximum": 20.0},
-    "half_peak_time_relative_error_percent": {"maximum": 20.0},
-    "mass_closure": {"maximum_relative_error": 0.002},
-    "energy_closure": {"maximum_relative_error": 0.002},
+    "source_pressure_nrmse_percent": {
+      "maximum": 10.0
+    },
+    "terminal_mass_flow_nrmse_percent_peak_measured": {
+      "maximum": 15.0
+    },
+    "terminal_mass_flow_median_absolute_percentage_error_percent": {
+      "maximum": 20.0
+    },
+    "half_peak_time_relative_error_percent": {
+      "maximum": 20.0
+    },
+    "mass_closure": {
+      "maximum_relative_error": 0.002
+    },
+    "energy_closure": {
+      "maximum_relative_error": 0.002
+    },
     "aggregate_rule": "At least eight declared cases must span two source-pressure, two geometry and two valve-opening groups; at least 70 percent must pass every quality, primary and conservation gate. Numerical failures and missing-channel cases remain in the denominator."
   },
   "promotion_gate": {

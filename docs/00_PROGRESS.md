@@ -191,3 +191,31 @@ that definition and are listed in the completion-status document.
 - Separated process leak accounting from consequence cadence: leak mass and energy
   remain coupled every control step, while HyRAM updates use 5.0, 2.5, and 1.0
   seconds in fast, balanced, and precision modes respectively.
+
+## 2026-10-08 - Prospective dual-valve release boundary
+
+Status: implemented and frozen before any qualifying target-campaign outcome
+trace was received; physical external validation remains pending.
+
+Completed:
+
+- Split the apparatus release boundary into independently prescribed upstream
+  and terminal valve positions while preserving the legacy default behavior.
+- Added precharged-line release support so a terminal valve can open against an
+  already pressurized line without forcing the source-side valve to repeat the
+  same travel law.
+- Exposed both valve-position histories and retained the original
+  `valve_opening_fraction` output as an upstream compatibility alias.
+- Required the prospective manifest to declare whether its single synchronized
+  valve trace belongs to the upstream or terminal valve; the evaluator now
+  scores only that declared location and rejects ambiguous labels.
+- Amended and re-hashed the no-fit protocol, evaluator, model and private
+  manifest template before outcome access. The amendment does not change the
+  external-validation readiness score until a qualifying untouched campaign is
+  received and executed.
+
+Verification:
+
+- Dual-valve physics, conservation, evaluator, protocol integrity and IJHE audit
+  regression tests passed (25 tests in the focused readiness run).
+- The readiness audit remains 106 PASS, 10 FAIL and 8 PENDING out of 124 gates.
