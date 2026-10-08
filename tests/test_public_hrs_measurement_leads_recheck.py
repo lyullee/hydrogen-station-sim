@@ -69,3 +69,10 @@ def test_nbsdc_catalogue_leads_keep_access_and_claim_boundaries() -> None:
     assert port["reported_scope"]["reported_file_count"] == 15
     assert port["reported_scope"]["raw_machine_readable_trace_download_confirmed"] is False
     assert "station full-loop validation" in port["ineligible_use"]
+
+    beijing = leads["nbsdc_beijing_olympics_hrs_operational_data"]
+    assert beijing["reported_scope"]["reported_file_count"] == 4
+    assert beijing["reported_scope"]["raw_trace_download_confirmed"] is False
+    assert "transaction data workbook" in beijing["reported_scope"]["listed_files"]
+    assert beijing["decision"] == "HIGH_PRIORITY_DATA_ACCESS_REQUEST"
+    assert "independent full-loop holdout" in beijing["ineligible_use"][0]

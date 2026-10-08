@@ -16,8 +16,13 @@ def test_public_hrs_measurement_leads_are_grounded_with_raw_trace_boundary():
         question="공개된 HRS 계측자료와 현재 압력을 비교해줘",
     )
     evidence = manifest["response_evidence"]["public_hrs_measurement_leads"]
-    assert len(evidence["leads"]) == 8
+    assert len(evidence["leads"]) == 9
     assert all(lead["raw_trace_public"] is False for lead in evidence["leads"])
+    beijing = next(
+        lead for lead in evidence["leads"]
+        if lead["id"] == "nbsdc_beijing_olympics_hrs_operational_data"
+    )
+    assert beijing["decision"] == "HIGH_PRIORITY_DATA_ACCESS_REQUEST"
     assert evidence["full_loop_external_validation_supported"] is False
     assert evidence["parameter_fitting_supported"] is False
 
@@ -29,7 +34,7 @@ def test_public_hrs_measurement_leads_are_grounded_with_raw_trace_boundary():
     decision_leads = decision["decision_support_evidence"][
         "public_hrs_measurement_leads"
     ]
-    assert decision_leads["lead_count"] == 8
+    assert decision_leads["lead_count"] == 9
     assert decision_leads["raw_trace_public_count"] == 0
     assert decision["validation_boundaries"]["public_hrs_measurement_leads"][
         "full_loop_external_validation_ready"

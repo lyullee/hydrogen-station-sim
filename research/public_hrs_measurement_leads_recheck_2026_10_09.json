@@ -247,6 +247,42 @@
         "vehicle tank thermodynamic parameter fitting",
         "consequence-distance or SAGA-effectiveness claims"
       ]
+    },
+    {
+      "id": "nbsdc_beijing_olympics_hrs_operational_data",
+      "title": "NBS Data Center: Operational Data List of Hydrogen Refueling Stations for Beijing Winter Olympics",
+      "url": "https://www.nbsdc.cn/general/dataLinks/16666.11.nbsdc.aI3fJrzX",
+      "reported_scope": {
+        "official_catalogue_record": true,
+        "cstr": "16666.11.nbsdc.aI3fJrzX",
+        "public_release_date": "2023-03-21",
+        "coverage_year": "2022",
+        "reported_storage_size_mb": 10.22,
+        "reported_file_count": 4,
+        "listed_files": [
+          "transaction data workbook",
+          "hydrogen refueling gun data workbook",
+          "compressor data workbook",
+          "data description document"
+        ],
+        "station_operation_and_refueling_monitoring_claimed": true,
+        "raw_trace_download_confirmed": false,
+        "download_boundary": "data files require an approved data request; metadata and file tree are publicly visible",
+        "license_or_reuse_terms_verified": false
+      },
+      "raw_trace_public": false,
+      "abnormal_data_provenance": "The public catalogue exposes a station-operation and refueling-monitoring bundle with transaction, gun and compressor files, but the actual workbooks, channel dictionary, units, synchronization, abnormal labels and reuse terms were not accessible without approval.",
+      "decision": "HIGH_PRIORITY_DATA_ACCESS_REQUEST",
+      "eligible_use": [
+        "station-side operational schema discovery",
+        "candidate transaction/gun/compressor synchronization after authorized access",
+        "pre-access protocol and provenance request lead"
+      ],
+      "ineligible_use": [
+        "independent full-loop holdout before authorized raw access and protocol freeze",
+        "parameter fitting before units and channel semantics are attested",
+        "actual accident-frequency or SAGA-effectiveness claims"
+      ]
     }
   ],
   "request_package_requirements": [
