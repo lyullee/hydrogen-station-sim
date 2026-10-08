@@ -132,7 +132,7 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 | `hydelta_controlled_flare_response_grounding_integrity` | **PASS** | A public controlled-hydrogen-flare experiment grounds only relevant vent and relief response guidance with explicit no-ad-hoc-ignition and no-model-validation boundaries. | `research\hydelta_controlled_flare_evidence_2026_10_08.json; research\hydelta_controlled_flare_runtime_grounding_2026_10_08.json` |
 | `preoutcome_design_sensitivity` | **PASS** | The fixed incident-study sample limitations were quantified before outcomes. | `research\hiad_design_sensitivity.json` |
 | `ijhe_format_gate` | **PASS** | The manuscript satisfies the explicit IJHE length/front-matter limits checked locally. | `manuscript\ijhe_format_check.json` |
-| `ijhe_latex_compilation` | **PENDING** | The exact submitted LaTeX source compiles successfully. | `manuscript\ijhe_compile_status.json` |
+| `ijhe_latex_compilation` | **PASS** | The exact current manuscript LaTeX source compiles successfully. | `manuscript\ijhe_compile_status.json` |
 | `submission_metadata_and_declarations` | **PENDING** | Every author, affiliation, institutional email and declaration is confirmed. | `manuscript\submission_metadata.json` |
 | `software_doi` | **PASS** | The reproducible software release has a persistent DOI. | `CITATION.cff` |
 
@@ -149,7 +149,6 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 - `hiad_casebook_frozen`
 - `hiad_holdout_collection`
 - `independent_expert_review_complete`
-- `ijhe_latex_compilation`
 - `submission_metadata_and_declarations`
 
 ## Blocking full-objective gates
@@ -165,7 +164,6 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 - `hiad_casebook_frozen`
 - `hiad_holdout_collection`
 - `independent_expert_review_complete`
-- `ijhe_latex_compilation`
 - `submission_metadata_and_declarations`
 - `full_loop_external_validation`
 - `h2safe_spatial_detector_transfer_validation`

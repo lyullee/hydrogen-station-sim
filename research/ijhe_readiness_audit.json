@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T10:51:18.022870+00:00",
+  "generated_at": "2026-10-08T11:02:19.868302+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,9 +13,9 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 108,
+    "PASS": 109,
     "FAIL": 10,
-    "PENDING": 8
+    "PENDING": 7
   },
   "blocking_bounded_submission_gates": [
     "dickens_typeiii_prospective_validation",
@@ -29,7 +29,6 @@
     "hiad_casebook_frozen",
     "hiad_holdout_collection",
     "independent_expert_review_complete",
-    "ijhe_latex_compilation",
     "submission_metadata_and_declarations"
   ],
   "blocking_full_objective_gates": [
@@ -44,7 +43,6 @@
     "hiad_casebook_frozen",
     "hiad_holdout_collection",
     "independent_expert_review_complete",
-    "ijhe_latex_compilation",
     "submission_metadata_and_declarations",
     "full_loop_external_validation",
     "h2safe_spatial_detector_transfer_validation",
@@ -7079,27 +7077,63 @@
     },
     {
       "id": "ijhe_latex_compilation",
-      "status": "PENDING",
-      "claim": "The exact submitted LaTeX source compiles successfully.",
+      "status": "PASS",
+      "claim": "The exact current manuscript LaTeX source compiles successfully.",
       "evidence": "manuscript\\ijhe_compile_status.json",
-      "requirement": "Compiler success with source hash and no unresolved errors.",
+      "requirement": "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
       "observed": {
-        "schema_version": 1,
-        "attempted_at": "2026-10-08T10:45:07.807043+00:00",
-        "attempts_this_run": 1,
-        "success": false,
-        "compiler": "Codex built-in LaTeX compiler",
-        "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "434187f0d9a6520c7d427a88bb1557447666912e5abb828cc1da9ad12ab8ff77",
-        "diagnostic": "Unable to find standard directories for platform",
-        "format_check_passed": true,
-        "retained_previous_pdf": {
-          "path": "manuscript/ijhe_manuscript_draft.pdf",
-          "bytes": 624155,
-          "sha256": "694307f6dec2fb49ef941aa5bc1e5da3a01a8c665516119d0901a96f542d51c4",
-          "matches_current_source": false
+        "schema_version": 2,
+        "verified_at_utc": "2026-10-08T10:56:47.356814+00:00",
+        "success": true,
+        "compiler": {
+          "name": "Tectonic",
+          "version": "0.17.0",
+          "official_release_url": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic%400.17.0",
+          "archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845f"
         },
-        "interpretation": "The exact current source passes static length, citation, asset and brace checks. The built-in compiler was attempted but remains unavailable on this Windows host; no terminal TeX engine is installed. The retained PDF predates the current source and must not be represented as its rendering."
+        "source": {
+          "path": "manuscript/ijhe_manuscript_draft.tex",
+          "bytes": 75669,
+          "sha256": "434187f0d9a6520c7d427a88bb1557447666912e5abb828cc1da9ad12ab8ff77"
+        },
+        "pdf": {
+          "path": "output/pdf/ijhe_manuscript_working_draft.pdf",
+          "bytes": 833847,
+          "sha256": "7fee0f8d5563248dda29f3a61328bc5f0e0337127e0598f838ea74f6481a5dba",
+          "page_count": 23,
+          "extracted_character_count": 70460
+        },
+        "compile_log": {
+          "path": "output/pdf/ijhe_manuscript_working_draft.compile.txt",
+          "bytes": 19370,
+          "sha256": "91bc2adc4c7f2d9afa4981cca95c158bb705c560ab124398860a49c248c6310d",
+          "unresolved_citations": 0,
+          "unresolved_references": 0,
+          "fatal_errors": [],
+          "underfull_hbox_count": 9,
+          "overfull_hbox_count": 1,
+          "maximum_overfull_width_pt": 0.23592
+        },
+        "content_checks": {
+          "replacement_characters": 0,
+          "double_question_placeholder_tokens": 0,
+          "references_heading_present": true,
+          "working_manuscript_notice_present": true
+        },
+        "visual_qa": {
+          "renderer": "Poppler pdftoppm",
+          "pages_rendered": 23,
+          "pages_inspected": 23,
+          "all_pages_rendered_and_inspected": true,
+          "clipping_or_overlap_detected": false
+        },
+        "source_matches_pdf_build": true,
+        "format_check_passed": true,
+        "claim_boundary": "This proves that the exact working source compiled and rendered. It does not resolve scientific validation, independent review, authorship metadata, or journal acceptance.",
+        "audit_integrity": {
+          "source_hash_matches": true,
+          "pdf_hash_matches": true
+        }
       }
     },
     {

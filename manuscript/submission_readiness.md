@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **108 PASS · 10 FAIL · 8 PENDING**.
+Gate counts: **109 PASS · 10 FAIL · 7 PENDING**.
 
 The SAGA measurement guard now has a provider-free regression covering unit
 aliases and shared-unit ranges. All 5 cases pass: four grounded equivalent
@@ -329,11 +329,13 @@ The local format gate currently passes:
 - abstract: 150 words (limit checked: 150);
 - keywords: 6;
 - highlights: 5, each within the checked character limit;
-- approximate manuscript body: 7,961 words before references;
+- approximate manuscript body: 7,984 words before references;
 - figures: 3; tables: 3;
 - citations resolved and figure assets present;
-- LaTeX compilation: **PENDING**. The built-in compiler was unavailable on this
-  Windows host; the retained PDF predates the corrected MC boundary diagnostic.
+- LaTeX compilation: **PASS**. Tectonic 0.17.0 compiled the exact current source
+  to a 23-page PDF. Source and PDF hashes match the compilation record; all 23
+  pages were rendered and inspected, with no unresolved citations, references,
+  replacement characters, clipped content or overlapping elements.
 
 These checks cover local formatting and compilation only. They do not establish
 scientific validity, safety certification, or acceptance by IJHE.
@@ -398,7 +400,7 @@ but does not validate or invalidate overpressure magnitude or rank.
 
 ## Blocking gates
 
-The bounded paper still has 13 unresolved or failed gates:
+The bounded paper still has 12 unresolved or failed gates:
 
 1. `dickens_typeiii_prospective_validation`
 2. `preslhy_partb_ambient_external_validation`
@@ -411,14 +413,13 @@ The bounded paper still has 13 unresolved or failed gates:
 9. `hiad_casebook_frozen`
 10. `hiad_holdout_collection`
 11. `independent_expert_review_complete`
-12. `ijhe_latex_compilation`
-13. `submission_metadata_and_declarations`
+12. `submission_metadata_and_declarations`
 
 The full user objective additionally requires:
 
-14. `full_loop_external_validation`
-15. `h2safe_spatial_detector_transfer_validation`
-16. `saga_effectiveness_and_safety_supported`
+13. `full_loop_external_validation`
+14. `h2safe_spatial_detector_transfer_validation`
+15. `saga_effectiveness_and_safety_supported`
 
 Only `full_user_objective_ready=true` in the authoritative audit permits the
 project goal to be marked complete. Until then, the correct status is active
@@ -433,6 +434,8 @@ work with explicit negative and pending evidence.
 - [Blocker matrix](../research/ijhe_submission_blocker_matrix_2026_10_05.md)
 - [Format check](ijhe_format_check.json)
 - [Compilation status](ijhe_compile_status.json)
+- [Compiled 23-page working PDF](../output/pdf/ijhe_manuscript_working_draft.pdf)
+- [Tectonic compile transcript](../output/pdf/ijhe_manuscript_working_draft.compile.txt)
 
 The audit must be regenerated after any evidence, manuscript, or protocol
 change; this summary must retain the same decision flags and gate counts.

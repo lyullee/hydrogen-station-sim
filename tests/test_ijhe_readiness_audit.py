@@ -656,6 +656,13 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert khk_replay["claims"]["physics_validation_claimed"] is False
     assert gates["hiad_casebook_machine_preflight_integrity"]["status"] == "PASS"
     assert gates["independent_expert_review_complete"]["status"] == "PENDING"
+    assert gates["ijhe_latex_compilation"]["status"] == "PASS"
+    compile_result = gates["ijhe_latex_compilation"]["observed"]
+    assert compile_result["pdf"]["page_count"] == 23
+    assert compile_result["compile_log"]["unresolved_citations"] == 0
+    assert compile_result["compile_log"]["unresolved_references"] == 0
+    assert compile_result["audit_integrity"]["source_hash_matches"] is True
+    assert compile_result["audit_integrity"]["pdf_hash_matches"] is True
     assert report["bounded_ijhe_submission_ready"] is False
     assert report["full_user_objective_ready"] is False
     assert report["goal_completion_permitted"] is False

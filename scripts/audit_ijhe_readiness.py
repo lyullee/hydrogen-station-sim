@@ -5734,13 +5734,43 @@ def audit(root: Path) -> dict[str, object]:
 
     compile_path = root / "manuscript/ijhe_compile_status.json"
     compile_status = _json(compile_path)
-    compile_pass = bool((compile_status or {}).get("success") is True)
+    compile_source = (compile_status or {}).get("source") or {}
+    compile_pdf = (compile_status or {}).get("pdf") or {}
+    compile_log = (compile_status or {}).get("compile_log") or {}
+    compile_visual = (compile_status or {}).get("visual_qa") or {}
+    compile_source_path = root / str(compile_source.get("path") or "")
+    compile_pdf_path = root / str(compile_pdf.get("path") or "")
+    compile_source_hash_matches = bool(
+        compile_source_path.is_file()
+        and compile_source.get("sha256") == _sha256(compile_source_path)
+    )
+    compile_pdf_hash_matches = bool(
+        compile_pdf_path.is_file()
+        and compile_pdf.get("sha256") == _sha256(compile_pdf_path)
+    )
+    compile_pass = bool(
+        (compile_status or {}).get("schema_version") == 2
+        and (compile_status or {}).get("success") is True
+        and compile_source_hash_matches
+        and compile_pdf_hash_matches
+        and (compile_status or {}).get("source_matches_pdf_build") is True
+        and compile_log.get("unresolved_citations") == 0
+        and compile_log.get("unresolved_references") == 0
+        and compile_log.get("fatal_errors") == []
+        and compile_visual.get("all_pages_rendered_and_inspected") is True
+        and compile_visual.get("pages_inspected") == compile_pdf.get("page_count")
+    )
+    compile_observed = dict(compile_status or {})
+    compile_observed["audit_integrity"] = {
+        "source_hash_matches": compile_source_hash_matches,
+        "pdf_hash_matches": compile_pdf_hash_matches,
+    }
     gates.append(_gate(
         "ijhe_latex_compilation", "PASS" if compile_pass else "PENDING",
-        "The exact submitted LaTeX source compiles successfully.",
+        "The exact current manuscript LaTeX source compiles successfully.",
         str(compile_path.relative_to(root)),
-        "Compiler success with source hash and no unresolved errors.",
-        compile_status or "missing; built-in compiler previously unavailable on Windows",
+        "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
+        compile_observed or "missing; no verified external compiler artifact",
     ))
 
     metadata_path = root / "manuscript/submission_metadata.json"
