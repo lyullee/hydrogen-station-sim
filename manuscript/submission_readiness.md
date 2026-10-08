@@ -104,6 +104,15 @@ probes nearest the downward jet had a 10.68 s median alarm latency versus
 for the tested confined geometry. It does not validate the outdoor station map,
 alarm setpoints, ESD, runtime routing or the failed H2SAFE transfer gate.
 
+The 2024 CARB in-use study now supplies a separate public field benchmark over
+22 operating light-duty stations. Its aggregate HGV 4.3 outcomes are linked to
+the LLM evidence envelope and a deterministic feature-coverage audit. The
+observed failures prompted five dispenser-specific communication-fault
+injections with conservative fill termination. Startup checks, pressure-
+corridor conformance and resumed non-communication fuelling remain. Because the
+report does not publish synchronized station-dispenser-vehicle traces, it
+increases field relevance without changing the full-loop validation gate.
+
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted
 parameters, LLM evidence record, source hashes and frozen validation recheck
@@ -116,6 +125,14 @@ The fresh de-identified private-data recheck matches the committed
 station-boundary profile across all attested fields. It does not replace the
 profile, change default model parameters, or establish station-to-vehicle
 validation; measured-boundary calibration remains explicitly opt-in.
+
+A stricter privacy-bounded clock recheck now separates equal-shaped exports
+from events that actually overlap in absolute time. It found 12 multi-table
+pressure--flow--storage cohorts among 33 controlled tables, covering 24 unique
+tables. Every cohort still lacks synchronized controller-state, temperature
+and vehicle channel families, so none enters full-loop scoring. The result
+does, however, reduce the next controlled review to 12 concrete station-side
+cohorts instead of an undifferentiated multi-gigabyte archive.
 
 The recharge restart-dwell analysis was expanded from one trace to eight
 de-identified station-side traces. The first 70% of each trace produced a

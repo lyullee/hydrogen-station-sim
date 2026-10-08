@@ -18,7 +18,12 @@ from .full_station import (
 )
 from .integration_lock import nonreentrant_integrator_lock
 from .operations import ProcessRuntime
-from .protocol import FuelingCommand, FuelingObservation, FuelingPhase
+from .protocol import (
+    FuelingCommand,
+    FuelingCommunicationState,
+    FuelingObservation,
+    FuelingPhase,
+)
 from .risk.live import (
     DynamicRiskMonitor,
     DynamicRiskSnapshot,
@@ -115,6 +120,10 @@ class SafeOperationSample:
     header_temperature_k: float | None = None
     header_mass_kg: float | None = None
     header_inflow_kg_s: float | None = None
+    fueling_stop_reason: str | None = None
+    fueling_2_stop_reason: str | None = None
+    fueling_communication_state: str = "valid"
+    fueling_2_communication_state: str = "valid"
 
 
 class SafeFullStationSimulator:
@@ -304,6 +313,9 @@ class SafeFullStationSimulator:
                 temperature_k=vehicle_gas.temperature_k,
                 density_kg_m3=vehicle_gas.density_kg_m3,
                 measured_mass_flow_kg_s=previous_nozzle_flow,
+                communication_state=override.communication_state_by_dispenser.get(
+                    "dispenser", FuelingCommunicationState.VALID
+                ),
             )
             if process is not None and not requested_1:
                 if self._last_vehicle_requested[0]:
@@ -327,6 +339,9 @@ class SafeFullStationSimulator:
                 temperature_k=vehicle_2_gas.temperature_k,
                 density_kg_m3=vehicle_2_gas.density_kg_m3,
                 measured_mass_flow_kg_s=previous_nozzle_2_flow,
+                communication_state=override.communication_state_by_dispenser.get(
+                    "dispenser_2", FuelingCommunicationState.VALID
+                ),
             )
             if process is not None and not requested_2:
                 if self._last_vehicle_requested[1]:
@@ -348,11 +363,15 @@ class SafeFullStationSimulator:
                 if fueling_command.phase is FuelingPhase.COMPLETE:
                     process.stop("vehicle_1", "vehicle-target")
                 elif fueling_command.phase is FuelingPhase.ABORTED:
-                    process.stop("vehicle_1", "safety-temperature")
+                    process.stop(
+                        "vehicle_1", fueling_command.stop_reason or "controller-abort"
+                    )
                 if fueling_command_2.phase is FuelingPhase.COMPLETE:
                     process.stop("vehicle_2", "vehicle-target")
                 elif fueling_command_2.phase is FuelingPhase.ABORTED:
-                    process.stop("vehicle_2", "safety-temperature")
+                    process.stop(
+                        "vehicle_2", fueling_command_2.stop_reason or "controller-abort"
+                    )
             if current_fueling_phase is FuelingPhase.IDLE:
                 current_fueling_phase = fueling_command_2.phase
             if safety_command.close_pcv:
@@ -811,6 +830,14 @@ class SafeFullStationSimulator:
                         vehicle_mass_kg=current.partial_station.vehicle.hydrogen_mass_kg,
                         vehicle_2_mass_kg=current.secondary_partial_station.vehicle.hydrogen_mass_kg,
                         virtual_safety=virtual_safety_snapshot,
+                        fueling_stop_reason=fueling_command.stop_reason,
+                        fueling_2_stop_reason=fueling_command_2.stop_reason,
+                        fueling_communication_state=(
+                            fueling_command.communication_state.value
+                        ),
+                        fueling_2_communication_state=(
+                            fueling_command_2.communication_state.value
+                        ),
                     )
                 )
 

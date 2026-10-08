@@ -206,7 +206,7 @@ def test_inventory_groups_aligned_flat_files_without_publishing_clock_or_names(
     report = inventory_schema([tmp_path])
     rendered = json.dumps(report, ensure_ascii=False)
 
-    assert report["schema_version"] == 3
+    assert report["schema_version"] == 4
     assert report["flat_time_axis_candidate_summary"] == {
         "candidate_groups": 1,
         "tables_in_candidate_groups": 2,
@@ -215,6 +215,8 @@ def test_inventory_groups_aligned_flat_files_without_publishing_clock_or_names(
         "absolute_time_samples_published": False,
     }
     assert report["candidate_schema_counts"]["synchronized_flat_full_loop_candidate"] == 1
+    assert report["time_overlap_candidate_summary"]["multi_table_cluster_count"] == 1
+    assert report["time_overlap_candidate_summary"]["exact_full_loop_cluster_count"] == 1
     assert "2026-01-07" not in rendered
     assert "private-pressure" not in rendered
     assert "private-car" not in rendered
@@ -236,6 +238,101 @@ def test_inventory_does_not_group_flat_files_with_different_tail_clocks(tmp_path
 
     assert report["flat_time_axis_candidate_summary"]["candidate_groups"] == 0
     assert report["candidate_schema_counts"]["synchronized_flat_full_loop_candidate"] == 0
+
+
+def test_inventory_groups_partially_overlapping_absolute_clock_exports(tmp_path: Path):
+    first = tuple(f"2026-01-07T13:00:{second:02d}" for second in range(10))
+    second = tuple(f"2026-01-07T13:00:{second:02d}" for second in range(1, 10))
+    (tmp_path / "pressure.csv").write_text(
+        "time,storage_pressure,controller_state\n"
+        + "".join(f"{stamp},50,run\n" for stamp in first),
+        encoding="utf-8",
+    )
+    (tmp_path / "flow.csv").write_text(
+        "time,mass_flow,vehicle,temperature\n"
+        + "".join(f"{stamp},1,car,20\n" for stamp in second),
+        encoding="utf-8",
+    )
+
+    report = inventory_schema([tmp_path])
+    rendered = json.dumps(report, ensure_ascii=False)
+
+    summary = report["time_overlap_candidate_summary"]
+    assert summary["absolute_clock_table_count"] == 2
+    assert summary["multi_table_cluster_count"] == 1
+    assert summary["exact_full_loop_cluster_count"] == 1
+    assert summary["source_identifiers_published"] is False
+    assert "2026-01-07" not in rendered
+
+
+def test_inventory_does_not_overlap_disjoint_absolute_events_of_same_shape(tmp_path: Path):
+    morning = tuple(f"2026-01-07T09:00:{second:02d}" for second in range(4))
+    afternoon = tuple(f"2026-01-07T15:00:{second:02d}" for second in range(4))
+    (tmp_path / "first.csv").write_text(
+        "time,storage_pressure,controller_state\n"
+        + "".join(f"{stamp},50,run\n" for stamp in morning),
+        encoding="utf-8",
+    )
+    (tmp_path / "second.csv").write_text(
+        "time,mass_flow,vehicle,temperature\n"
+        + "".join(f"{stamp},1,car,20\n" for stamp in afternoon),
+        encoding="utf-8",
+    )
+
+    report = inventory_schema([tmp_path])
+
+    # The legacy shape-only diagnostic still notices identical record shape,
+    # while the stricter overlap diagnostic correctly keeps events separate.
+    assert report["flat_time_axis_candidate_summary"]["candidate_groups"] == 1
+    assert report["time_overlap_candidate_summary"]["multi_table_cluster_count"] == 0
+    assert report["candidate_schema_counts"]["time_overlap_full_loop_candidate"] == 0
+
+
+def test_inventory_keeps_path_semantics_unattested_and_aggregate_only(tmp_path: Path):
+    storage = tmp_path / "private-storage-bank"
+    vehicle = tmp_path / "private-vehicle-dispenser"
+    storage.mkdir()
+    vehicle.mkdir()
+    timestamps = tuple(f"2026-01-07T13:00:{second:02d}" for second in range(4))
+    (storage / "private-pressure.csv").write_text(
+        "time,pressure,controller_state\n"
+        + "".join(f"{stamp},50,run\n" for stamp in timestamps),
+        encoding="utf-8",
+    )
+    (vehicle / "private-flow.csv").write_text(
+        "time,mass_flow,temperature\n"
+        + "".join(f"{stamp},1,20\n" for stamp in timestamps),
+        encoding="utf-8",
+    )
+
+    report = inventory_schema([tmp_path])
+    rendered = json.dumps(report, ensure_ascii=False)
+    summary = report["time_overlap_candidate_summary"]
+
+    assert summary["exact_full_loop_cluster_count"] == 0
+    assert summary["path_assisted_candidate_count"] == 1
+    assert summary["path_semantics_are_unattested"] is True
+    assert "private-storage-bank" not in rendered
+    assert "private-vehicle-dispenser" not in rendered
+
+
+def test_inventory_reads_utf16_tail_window_without_publishing_time(tmp_path: Path):
+    timestamps = tuple(f"2026-01-07T13:00:{second:02d}" for second in range(12))
+    for name, header, body in (
+        ("one.csv", "time,storage_pressure,controller_state", "50,run"),
+        ("two.csv", "time,mass_flow,vehicle,temperature", "1,car,20"),
+    ):
+        (tmp_path / name).write_text(
+            header + "\n" + "".join(f"{stamp},{body}\n" for stamp in timestamps),
+            encoding="utf-16",
+        )
+
+    report = inventory_schema([tmp_path])
+    rendered = json.dumps(report, ensure_ascii=False)
+
+    assert report["time_overlap_candidate_summary"]["usable_table_count"] == 2
+    assert report["time_overlap_candidate_summary"]["exact_full_loop_cluster_count"] == 1
+    assert "2026-01-07" not in rendered
 
 
 def test_schema_inventory_recognizes_compact_instrument_tags_without_tag_disclosure(

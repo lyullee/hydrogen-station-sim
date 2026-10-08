@@ -10,16 +10,16 @@
   "manifest_schema": "h2station.llm-evidence.v1",
   "tests": {
     "targeted": {
-      "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_station_thermal_diagnostic.py tests/test_station_thermal_protocol.py tests/test_hiad_digital_twin_replay_coverage.py tests/test_khk_digital_twin_replay_coverage.py tests/test_flame_detection.py tests/test_ijhe_readiness_audit.py -q",
-      "passed": 27,
+      "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_station_thermal_diagnostic.py tests/test_station_thermal_protocol.py tests/test_hiad_digital_twin_replay_coverage.py tests/test_khk_digital_twin_replay_coverage.py tests/test_flame_detection.py tests/test_carb_hrs_inuse_benchmark.py tests/test_ijhe_readiness_audit.py -q",
+      "passed": 33,
       "failed": 0,
       "warnings": 0
     },
     "full_suite": {
       "command": ".venv\\Scripts\\python.exe -m pytest -q",
-      "passed": 871,
+      "passed": 944,
       "failed": 0,
-      "warnings": 15
+      "warnings": 17
     }
   },
   "verified_properties": [
@@ -61,7 +61,8 @@
     "private screen-recording/photo intake is carried as a non-machine-readable provenance boundary without parameter-fit or full-loop authorization",
     "restricted station compressor/cooler thermal evidence is projected into full, summary, header and compact decision contexts as UNCONFIRMED, with no calibration, runtime, vehicle-fill or full-loop claim",
     "public HIAD metadata-to-runtime coverage is projected into full, summary, header and compact decision contexts with 29 direct, four proxy and one response-only cases, while incident narrative parameterization remains prohibited; all nine executable canonical recipes pass",
-    "independent KHK metadata-to-runtime traceability is projected into full, summary, header and compact decision contexts: 22 reports covering 25 incident codes traverse eight passing canonical recipes, one KOH-electrolyte release remains outside gaseous-H2 scope, and report narrative parameterization remains prohibited"
+    "independent KHK metadata-to-runtime traceability is projected into full, summary, header and compact decision contexts: 22 reports covering 25 incident codes traverse eight passing canonical recipes, one KOH-electrolyte release remains outside gaseous-H2 scope, and report narrative parameterization remains prohibited",
+    "CARB 22-station HGV 4.3 aggregate fault, communication and fueling-performance results are carried into the evidence envelope and only into relevant compact prompts, with no dynamic-model or full-loop validation claim"
   ],
   "not_established": [
     "physics validity of the consequence model",
@@ -461,5 +462,18 @@
     "full_loop_holdout_eligible": false,
     "default_model_parameters_changed": false,
     "interpretation": "pending generic channel-role and engineering-unit custodian attestation; no measurement rows or source identifiers are exposed to the assistant"
+  },
+  "public_carb_hrs_inuse_field_benchmark": {
+    "evidence": "research/carb_2024_hrs_inuse_field_benchmark_2026_10_08.json",
+    "stations_tested": 22,
+    "stations_passing_all_hgv_4_3_tests": 0,
+    "stations_passing_all_fault_and_communications_tests": 5,
+    "stations_passing_all_nine_fueling_performance_metrics": 4,
+    "invalid_crc_fail_count": 8,
+    "data_loss_and_resumed_fueling_fail_count": 4,
+    "relevant_compact_prompt_routing": true,
+    "dynamic_model_validation_claimed": false,
+    "full_loop_external_holdout_eligible": false,
+    "interpretation": "public aggregate field relevance and functional-gap evidence only; no synchronized station-dispenser-vehicle traces"
   }
 }

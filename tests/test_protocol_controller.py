@@ -4,6 +4,7 @@ import pytest
 
 from h2station.protocol import (
     FuelingControllerParameters,
+    FuelingCommunicationState,
     FuelingObservation,
     FuelingPhase,
     FuelingSchedule,
@@ -200,3 +201,39 @@ def test_pressure_hold_leak_check_parameters_are_validated():
             maximum_mass_flow_kg_s=0.060,
             leak_check_pause_s=0.0,
         )
+
+
+@pytest.mark.parametrize(
+    ("state", "reason"),
+    [
+        (FuelingCommunicationState.ABORT, "communication-abort"),
+        (FuelingCommunicationState.HALT, "communication-halt"),
+        (FuelingCommunicationState.DATA_LOSS, "communication-data-loss"),
+        (FuelingCommunicationState.INVALID_CRC, "communication-invalid-crc"),
+        (FuelingCommunicationState.INVALID_VALUE, "communication-invalid-value"),
+    ],
+)
+def test_communication_faults_conservatively_terminate_fueling(state, reason):
+    controller = SampledFuelingController(FuelingSchedule(
+        target_pressure_pa=70.0e6,
+        average_pressure_ramp_rate_pa_s=1.0e5,
+        delivery_temperature_k=233.15,
+        maximum_mass_flow_kg_s=0.060,
+    ))
+    baseline = _observation(0.0)
+    controller.update(baseline, 0.2)
+    faulted = FuelingObservation(
+        time_s=1.0,
+        pressure_pa=baseline.pressure_pa,
+        temperature_k=baseline.temperature_k,
+        density_kg_m3=baseline.density_kg_m3,
+        measured_mass_flow_kg_s=0.01,
+        communication_state=state,
+    )
+
+    command = controller.update(faulted, 0.2)
+
+    assert command.phase is FuelingPhase.ABORTED
+    assert command.valve_opening == 0.0
+    assert command.stop_reason == reason
+    assert command.communication_state is state

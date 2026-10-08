@@ -144,11 +144,28 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert station_thermal["result_available"] is False
     assert station_thermal["runtime_parameter_application"] is False
     assert station_thermal["full_loop_holdout_eligible"] is False
+    grounding_carb = gates["llm_evidence_grounding_contract"]["observed"][
+        "public_carb_hrs_inuse_field_benchmark"
+    ]
+    assert grounding_carb["stations_tested"] == 22
+    assert grounding_carb["stations_passing_all_hgv_4_3_tests"] == 0
+    assert grounding_carb["invalid_crc_fail_count"] == 8
+    assert grounding_carb["dynamic_model_validation_claimed"] is False
+    assert grounding_carb["full_loop_external_holdout_eligible"] is False
     assert gates["public_hitrf_operational_reference_integrity"]["status"] == "PASS"
     hitrf = gates["public_hitrf_operational_reference_integrity"]["observed"]
     assert hitrf["raw_synchronized_logger_public"] is False
     assert hitrf["storage_tiers"] == ["high_pressure", "low_pressure", "medium_pressure"]
     assert hitrf["compression_stage_count"] == 4
+    assert gates["carb_hrs_inuse_field_benchmark_integrity"]["status"] == "PASS"
+    carb = gates["carb_hrs_inuse_field_benchmark_integrity"]["observed"]
+    assert carb["source_hash_verified"] is True
+    assert carb["stations_tested"] == 22
+    assert carb["stations_passing_all_hgv_4_3_tests"] == 0
+    assert carb["invalid_crc_results"] == [13, 8, 1]
+    assert carb["data_loss_results"] == [15, 4, 3]
+    assert carb["dynamic_model_parameter_calibration"] is False
+    assert carb["full_loop_external_holdout"] is False
     assert gates["kgs_real_station_access_boundary_integrity"]["status"] == "PASS"
     kgs_access = gates["kgs_real_station_access_boundary_integrity"]["observed"]
     assert kgs_access["reported_real_hrs_scenarios"] == 6
@@ -466,6 +483,15 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
         "tables_in_candidate_groups"
     ] == 26
     assert schema["synchronized_flat_full_loop_candidate"] == 0
+    overlap = schema["time_overlap_candidate_summary"]
+    assert overlap["absolute_clock_table_count"] == 33
+    assert overlap["multi_table_cluster_count"] == 12
+    assert overlap["tables_in_clusters"] == 24
+    assert overlap["largest_cluster_tables"] == 3
+    assert overlap["exact_full_loop_cluster_count"] == 0
+    assert overlap["path_assisted_candidate_count"] == 0
+    assert overlap["path_semantics_are_unattested"] is True
+    assert schema["time_overlap_full_loop_candidate"] == 0
     release_development = gates["release_network_development_integrity"]["observed"]
     assert release_development["evidence_role"] == "consumed_development_only"
     assert release_development["eligible_as_confirmatory_validation"] is False

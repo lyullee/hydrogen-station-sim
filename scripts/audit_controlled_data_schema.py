@@ -20,12 +20,14 @@ from __future__ import annotations
 import argparse
 import csv
 from collections import Counter
+from dataclasses import dataclass
 from datetime import date, datetime, time, timezone
 from io import BytesIO, StringIO
 from itertools import islice
 import json
 from pathlib import Path
 import re
+from statistics import median
 from typing import Iterable
 from zipfile import BadZipFile, ZipFile
 
@@ -37,6 +39,9 @@ HEADER_SEARCH_MAX_ROWS = 40
 DATA_LIKENESS_SAMPLE_ROWS = 3
 MAX_ARCHIVE_MEMBER_BYTES = 100 * 1024 * 1024
 TIME_AXIS_TAIL_BYTES = 128 * 1024
+TIME_AXIS_HEAD_BYTES = 64 * 1024
+TIME_OVERLAP_MIN_FRACTION = 0.80
+CADENCE_RATIO_LIMIT = 10.0
 
 # These terms are deliberately broad: candidate classification is only a
 # request for a custodian review, never automatic tag or unit attribution.
@@ -82,6 +87,34 @@ STATION_RECHARGE_REQUIRED = frozenset({
 VEHICLE_FILL_REQUIRED = frozenset({
     "time", "pressure", "temperature", "mass_flow", "vehicle", "dispenser_or_nozzle",
 })
+
+# A path can help a custodian find a likely subsystem export, but it cannot
+# attest a measured quantity.  Keep these hints separate from header evidence
+# and never use them to assign pressure, temperature, flow, time, or units.
+PATH_HINT_SEMANTICS = frozenset({
+    "vehicle", "cascade_or_storage", "controller_state", "compressor",
+    "dispenser_or_nozzle",
+})
+
+
+@dataclass(frozen=True)
+class _TimeAxisWindow:
+    """Private in-memory clock evidence; no field is serialized verbatim."""
+
+    absolute_clock: bool
+    start: float
+    end: float
+    cadence_s: float
+    relative_fingerprint: tuple[float, ...]
+
+
+@dataclass(frozen=True)
+class _FlatTableCandidate:
+    """Private table evidence used only for aggregate candidate discovery."""
+
+    coverage: frozenset[str]
+    path_hints: frozenset[str]
+    window: _TimeAxisWindow
 
 
 def _outside_repository(path: Path, *, label: str) -> Path:
@@ -364,17 +397,69 @@ def _strict_time_direction(values: tuple[float, ...]) -> int | None:
     return None
 
 
-def _csv_time_axis_fingerprint(
+def _is_absolute_time_value(value: object) -> bool:
+    """Classify only explicit date-bearing clocks as absolute time."""
+
+    if isinstance(value, (datetime, date)) and not isinstance(value, time):
+        return True
+    if not isinstance(value, str):
+        return False
+    compact = value.strip()
+    if not compact or _is_number(compact):
+        return False
+    normalized = compact.replace("Z", "+00:00")
+    try:
+        parsed = datetime.fromisoformat(normalized)
+        return parsed.year >= 1970
+    except ValueError:
+        pass
+    for time_format in (
+        "%m/%d/%Y %I:%M:%S %p",
+        "%m/%d/%Y %I:%M:%S.%f %p",
+        "%m/%d/%Y %I:%M %p",
+        "%m/%d/%Y %H:%M:%S",
+        "%m/%d/%Y %H:%M:%S.%f",
+        "%Y %m %d %H:%M:%S",
+        "%Y %m %d %H:%M:%S.%f",
+    ):
+        try:
+            datetime.strptime(compact, time_format)
+            return True
+        except ValueError:
+            pass
+    return False
+
+
+def _tail_decode_encoding(encoding: str, prefix: bytes) -> str:
+    """Return a BOM-independent codec for a byte slice taken inside a file."""
+
+    if encoding == "utf-16":
+        return "utf-16be" if prefix.startswith(b"\xfe\xff") else "utf-16le"
+    return encoding
+
+
+def _positive_cadence(values: tuple[float, ...]) -> float | None:
+    deltas = tuple(
+        abs(later - earlier)
+        for earlier, later in zip(values, values[1:])
+        if later != earlier
+    )
+    if not deltas:
+        return None
+    value = float(median(deltas))
+    return value if value > 0.0 else None
+
+
+def _csv_time_axis_window(
     path: Path,
     header: tuple[str, ...],
-) -> tuple[float, ...] | None:
-    """Fingerprint a flat CSV clock from bounded head/tail samples.
+) -> _TimeAxisWindow | None:
+    """Read privacy-bounded clock endpoints from a flat CSV.
 
-    The fingerprint exists only in memory and is never written to the report.
-    Requiring matching first *and* last samples is materially stronger than
-    grouping files by directory or by a common ``0, 1, 2`` relative clock.
-    It still establishes only a synchronization *candidate*: an authorized
-    mapping must later verify the complete clocks, units, and event identity.
+    Only a bounded prefix and tail are inspected. Absolute timestamps and the
+    private fingerprint remain in memory and are never written to the report.
+    The concrete UTF-16 endianness is used for the tail because a mid-file byte
+    slice has no BOM of its own.
     """
 
     time_indices = tuple(
@@ -385,7 +470,7 @@ def _csv_time_axis_fingerprint(
         return None
     try:
         with path.open("rb") as binary:
-            prefix = binary.read(16 * 1024)
+            prefix = binary.read(TIME_AXIS_HEAD_BYTES)
             binary.seek(0, 2)
             size = binary.tell()
             tail_start = max(0, size - TIME_AXIS_TAIL_BYTES)
@@ -408,7 +493,7 @@ def _csv_time_axis_fingerprint(
                         HEADER_SEARCH_MAX_ROWS + DATA_LIKENESS_SAMPLE_ROWS,
                     )
                 ]
-            decoded_tail = tail.decode(encoding)
+            decoded_tail = tail.decode(_tail_decode_encoding(encoding, prefix))
         except (UnicodeError, OSError):
             continue
         selected = _best_header(head_rows[:HEADER_SEARCH_MAX_ROWS])
@@ -455,15 +540,97 @@ def _csv_time_axis_fingerprint(
                 or len(last) < DATA_LIKENESS_SAMPLE_ROWS
             ):
                 continue
-            # Compare the sampled clock shape relative to its first value.
-            # Split subsystem exports can encode the same logger axis with a
-            # different absolute/relative origin; common head/tail deltas are
-            # the bounded evidence that matters for candidate discovery.
+            cadence = _positive_cadence(first) or _positive_cadence(last)
+            if cadence is None:
+                continue
             origin = first[0]
-            return tuple(
+            fingerprint = tuple(
                 round(value - origin, 3) for value in (*first, *last)
             ) + (float(direction),)
+            all_values = (*first, *last)
+            absolute_votes = tuple(
+                _is_absolute_time_value(row[index] if index < len(row) else None)
+                for row in (*first_rows, *tail_rows[-DATA_LIKENESS_SAMPLE_ROWS:])
+            )
+            return _TimeAxisWindow(
+                absolute_clock=any(absolute_votes),
+                start=min(all_values),
+                end=max(all_values),
+                cadence_s=cadence,
+                relative_fingerprint=fingerprint,
+            )
     return None
+
+
+def _csv_time_axis_fingerprint(
+    path: Path,
+    header: tuple[str, ...],
+) -> tuple[float, ...] | None:
+    """Backward-compatible private clock-shape fingerprint."""
+
+    window = _csv_time_axis_window(path, header)
+    return window.relative_fingerprint if window is not None else None
+
+
+def _cadence_compatible(left: _TimeAxisWindow, right: _TimeAxisWindow) -> bool:
+    slower = max(left.cadence_s, right.cadence_s)
+    faster = min(left.cadence_s, right.cadence_s)
+    return faster > 0.0 and slower / faster <= CADENCE_RATIO_LIMIT
+
+
+def _time_windows_compatible(left: _TimeAxisWindow, right: _TimeAxisWindow) -> bool:
+    if left.absolute_clock != right.absolute_clock:
+        return False
+    if not _cadence_compatible(left, right):
+        return False
+    if not left.absolute_clock:
+        return left.relative_fingerprint == right.relative_fingerprint
+    overlap = max(0.0, min(left.end, right.end) - max(left.start, right.start))
+    shorter = min(left.end - left.start, right.end - right.start)
+    return shorter > 0.0 and overlap / shorter >= TIME_OVERLAP_MIN_FRACTION
+
+
+def _maximal_time_groups(
+    candidates: tuple[_FlatTableCandidate, ...],
+) -> tuple[tuple[int, ...], ...]:
+    """Return maximal pairwise-compatible groups without publishing identity.
+
+    A broad historian file may overlap several disjoint event exports. Pairwise
+    maximal cliques keep those events separate instead of transitively merging
+    them through the broad file.
+    """
+
+    neighbours = {
+        index: {
+            other
+            for other in range(len(candidates))
+            if other != index and _time_windows_compatible(
+                candidates[index].window, candidates[other].window
+            )
+        }
+        for index in range(len(candidates))
+    }
+    maximal: set[tuple[int, ...]] = set()
+
+    def visit(clique: set[int], possible: set[int], excluded: set[int]) -> None:
+        if not possible and not excluded:
+            if len(clique) > 1:
+                maximal.add(tuple(sorted(clique)))
+            return
+        pivot_pool = possible | excluded
+        pivot = max(pivot_pool, key=lambda item: len(neighbours[item]), default=None)
+        expand = possible - (neighbours[pivot] if pivot is not None else set())
+        for vertex in tuple(sorted(expand)):
+            visit(
+                clique | {vertex},
+                possible & neighbours[vertex],
+                excluded & neighbours[vertex],
+            )
+            possible.remove(vertex)
+            excluded.add(vertex)
+
+    visit(set(), set(range(len(candidates))), set())
+    return tuple(sorted(maximal))
 
 
 def _excel_headers(
@@ -512,6 +679,34 @@ def _classify_header(header: Iterable[str]) -> frozenset[str]:
             and any(INSTRUMENT_TAG_PATTERNS[category].search(label) for label in compact_labels)
         )
     )
+
+
+def _path_hints(path: Path, input_roots: tuple[Path, ...]) -> frozenset[str]:
+    """Return unattested equipment hints from path components below the root."""
+
+    resolved = path.resolve()
+    relative = Path(path.name)
+    for root in input_roots:
+        candidate_root = root.resolve()
+        try:
+            relative = resolved.relative_to(
+                candidate_root if candidate_root.is_dir() else candidate_root.parent
+            )
+            break
+        except ValueError:
+            continue
+    labels = tuple(Path(part).stem for part in relative.parts)
+    return _classify_header(labels) & PATH_HINT_SEMANTICS
+
+
+def _missing_histogram(
+    groups: Iterable[frozenset[str]],
+) -> dict[str, int]:
+    counts: Counter[str] = Counter()
+    for coverage in groups:
+        missing = sorted(FULL_LOOP_REQUIRED - coverage)
+        counts["none" if not missing else "+".join(missing)] += 1
+    return dict(sorted(counts.items()))
 
 
 def _files(input_roots: Iterable[Path]) -> Iterable[Path]:
@@ -568,6 +763,7 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
     CLI applies the stricter outside-repository control boundary.
     """
 
+    input_roots = tuple(Path(root) for root in input_roots)
     container_format_counts: Counter[str] = Counter()
     tabular_content_format_counts: Counter[str] = Counter()
     coverage_counts: Counter[str] = Counter()
@@ -587,6 +783,7 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
     flat_time_axis_groups: dict[
         tuple[float, ...], list[frozenset[str]]
     ] = {}
+    flat_table_candidates: list[_FlatTableCandidate] = []
 
     for path in _files(input_roots):
         files_scanned += 1
@@ -625,9 +822,16 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
             measurement_like_tables += 1
             container_coverages.append(coverage)
             if suffix == ".csv":
-                fingerprint = _csv_time_axis_fingerprint(path, header)
-                if fingerprint is not None:
-                    flat_time_axis_groups.setdefault(fingerprint, []).append(coverage)
+                window = _csv_time_axis_window(path, header)
+                if window is not None:
+                    flat_time_axis_groups.setdefault(
+                        window.relative_fingerprint, []
+                    ).append(coverage)
+                    flat_table_candidates.append(_FlatTableCandidate(
+                        coverage=coverage,
+                        path_hints=_path_hints(path, input_roots),
+                        window=window,
+                    ))
             for category in coverage:
                 coverage_counts[category] += 1
             if FULL_LOOP_REQUIRED.issubset(coverage):
@@ -668,8 +872,35 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
         if VEHICLE_FILL_REQUIRED.issubset(combined):
             synchronized_flat_vehicle_fill_candidates += 1
 
+    overlap_group_indices = _maximal_time_groups(tuple(flat_table_candidates))
+    overlap_header_coverages: list[frozenset[str]] = []
+    overlap_path_coverages: list[frozenset[str]] = []
+    for indices in overlap_group_indices:
+        overlap_header_coverages.append(frozenset().union(*(
+            flat_table_candidates[index].coverage for index in indices
+        )))
+        overlap_path_coverages.append(frozenset().union(*(
+            flat_table_candidates[index].coverage
+            | flat_table_candidates[index].path_hints
+            for index in indices
+        )))
+    unique_clustered_tables = {
+        index for group in overlap_group_indices for index in group
+    }
+    absolute_clock_tables = sum(
+        candidate.window.absolute_clock for candidate in flat_table_candidates
+    )
+    exact_overlap_full_loop = sum(
+        FULL_LOOP_REQUIRED.issubset(coverage)
+        for coverage in overlap_header_coverages
+    )
+    path_assisted_full_loop = sum(
+        FULL_LOOP_REQUIRED.issubset(coverage)
+        for coverage in overlap_path_coverages
+    )
+
     return {
-        "schema_version": 3,
+        "schema_version": 4,
         "artifact_type": "controlled_hrs_schema_inventory",
         "source_identifiers_published": False,
         "original_headers_published": False,
@@ -698,6 +929,32 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
             "fingerprints_published": False,
             "absolute_time_samples_published": False,
         },
+        "time_overlap_candidate_summary": {
+            "usable_table_count": len(flat_table_candidates),
+            "absolute_clock_table_count": absolute_clock_tables,
+            "relative_clock_table_count": (
+                len(flat_table_candidates) - absolute_clock_tables
+            ),
+            "multi_table_cluster_count": len(overlap_group_indices),
+            "tables_in_clusters": len(unique_clustered_tables),
+            "largest_cluster_tables": max(
+                (len(group) for group in overlap_group_indices), default=0
+            ),
+            "exact_full_loop_cluster_count": exact_overlap_full_loop,
+            "header_only_missing_family_histogram": _missing_histogram(
+                overlap_header_coverages
+            ),
+            "path_assisted_candidate_count": path_assisted_full_loop,
+            "path_assisted_missing_family_histogram": _missing_histogram(
+                overlap_path_coverages
+            ),
+            "minimum_shorter_interval_overlap_fraction": TIME_OVERLAP_MIN_FRACTION,
+            "maximum_cadence_ratio": CADENCE_RATIO_LIMIT,
+            "path_semantics_are_unattested": True,
+            "source_identifiers_published": False,
+            "original_headers_published": False,
+            "absolute_time_samples_published": False,
+        },
         "candidate_schema_counts": {
             "full_loop_candidate": full_loop_candidates,
             "co_located_full_loop_candidate": co_located_full_loop_candidates,
@@ -713,6 +970,10 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
             "synchronized_flat_vehicle_fill_candidate": (
                 synchronized_flat_vehicle_fill_candidates
             ),
+            "time_overlap_full_loop_candidate": exact_overlap_full_loop,
+            "time_overlap_path_assisted_full_loop_candidate": (
+                path_assisted_full_loop
+            ),
             "rejected_nonmeasurement_candidate_container": (
                 rejected_nonmeasurement_candidate_containers
             ),
@@ -723,7 +984,10 @@ def inventory_schema(input_roots: Iterable[Path]) -> dict[str, object]:
             "A co-located candidate means only that separate measurement-like tables in "
             "one workbook or archive have complementary labels. A synchronized-flat "
             "candidate means that separate CSV files have matching bounded head/tail "
-            "clock samples and complementary labels. Neither candidate class attests "
+            "clock-shape samples and complementary labels. A time-overlap candidate "
+            "requires compatible bounded absolute intervals, or an exact relative-clock "
+            "fingerprint. Path-assisted coverage is an unattested review hint only and "
+            "cannot map a tag or measured quantity. No candidate class attests "
             "that the complete records can be joined. Candidate counts do not attest "
             "a tag mapping, units, calibration, time synchronization, event "
             "integrity, model accuracy, safety, or full-loop validation."

@@ -78,19 +78,22 @@ categories and plotted pressure, temperature and flow patterns
 so we use it for operating-range and fault-taxonomy context rather than as a
 numerical full-loop holdout.
 
-Two additional real-station studies provide useful independent operating
-context. Genovese et al. report more than 4,500 Cal State LA HRFF refuelling
-events and over 8,800 kg dispensed, with one-second, ten-second and minute
-station databases described in the acquisition architecture
-\cite{genovese2024}. Samuelsen et al. analyse the UCI NFCRC station during the
-first five years of commercial FCEV deployment and report fill-level start/end
-pressure and temperature, dispensed mass and refuelling-time summaries
-\cite{samuelsen2020}. The public records expose the field provenance and
-aggregate or endpoint results, but not the synchronized raw pressure,
-temperature and mass-flow rows with a reuse statement required for an
-untouched full-loop holdout. We therefore use both studies to bound plausible
-operating ranges and to identify data-acquisition requests, not as numerical
-validation evidence.
+CARB tested 22 stations with an abbreviated HGV 4.3:22
+matrix \cite{carb2024}. None passed every test; five passed all fault and
+communication tests and four passed all nine fuelling-performance metrics.
+Category pass rates were 45.5\% for general fault, 40.9\% for protocol fault,
+50.0\% for communication and 18.2\% for fuelling performance. They motivated
+abort, halt, data-loss, invalid-CRC and
+invalid-value injections with conservative termination. Startup mass/time,
+pressure-corridor, resumed-fuelling and temperature-category conformance remain.
+Aggregate results support field relevance, not model calibration.
+
+Two real-station studies bound operating context. Genovese et al.
+report more than 4,500 Cal State LA HRFF events and over 8,800 kg dispensed
+\cite{genovese2024}; Samuelsen et al. report fill-level pressure, temperature,
+mass and time summaries from the UCI NFCRC station \cite{samuelsen2020}.
+Neither public record includes synchronized pressure, temperature and
+mass-flow rows with reuse terms, so neither supplies a numerical holdout.
 
 The public PRHYDE deliverable provides a broader protocol and experiment
 context: four instrumented tanks (240 L H70, 350 L H50, 322 L H35 and 165 L
@@ -251,11 +254,11 @@ implementation or certification of the proprietary MC Formula. No case-specific
 fit, post-freeze tuning, dynamic time warping or failed-case exclusion was
 permitted.
 
-A separate owner-controlled analysis split eight de-identified station-side
-traces chronologically (70\% estimation, 30\% holdout). Only attested medium/high
-storage-pressure and compressor loaded-state roles were used; no vehicle channel
-or raw identifier left the controlled environment. Runtime eligibility required
-no completed holdout OFF-to-ON interval shorter than the fitted dwell.
+Eight de-identified station-side traces were split 70/30 using attested
+medium/high storage pressure and compressor state. Eligibility required
+holdout restarts to exceed the fitted dwell. A clock screen found 12
+pressure--flow--storage cohorts among 33 tables; none had controller state,
+temperature and vehicle channels required for full-loop validation.
 
 \subsection{Prospective ambient blowdown validation}
 The source-depletion and direct-aperture release model was independently evaluated
@@ -1190,6 +1193,11 @@ L. Zhang, Y. Wang, C. Dec\'es-Petit, \textit{Dispenser reliability analysis for
 hydrogen refuelling stations in British Columbia}, National Research Council
 Canada, Report 56628 (2024),
 \href{https://doi.org/10.4224/40003368}{doi:10.4224/40003368}.
+
+\bibitem{carb2024}
+California Air Resources Board, \textit{Existing Light-Duty Hydrogen Refueling
+Stations In-Use Study Report} (2024),
+\href{https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing\%20Light-Duty\%20Hydrogen\%20Refueling\%20Stations\%20In-Use\%20Study\%20Report\%20ADA\%20AL.pdf}{public report}.
 
 \bibitem{prhyde2023}
 PRHYDE Consortium, \textit{PRHYDE Results as Input for Standardisation},

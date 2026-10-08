@@ -1,5 +1,5 @@
 {
-  "version": "20261008-release-boundary1",
+  "version": "20261008-carb-hgv43-communication1",
   "categories": [
     {
       "id": "leak",
@@ -28,6 +28,10 @@
     {
       "id": "sensor",
       "label": "센서 진단"
+    },
+    {
+      "id": "communication",
+      "label": "충전 통신"
     },
     {
       "id": "compound",
@@ -1503,6 +1507,86 @@
       ],
       "fields": [],
       "note": "사고 시작 시점의 HAZOP 진단값을 유지합니다. 물리 공정은 계속 계산됩니다."
+    },
+    {
+      "id": "communication-abort",
+      "label": "차량 Abort 신호",
+      "targets": [
+        {
+          "value": "dispenser",
+          "label": "1번 디스펜서-차량 통신"
+        },
+        {
+          "value": "dispenser_2",
+          "label": "2번 디스펜서-차량 통신"
+        }
+      ],
+      "fields": [],
+      "note": "차량 Abort 신호를 모사하고 해당 충전을 즉시 종료합니다."
+    },
+    {
+      "id": "communication-halt",
+      "label": "차량 Halt 신호",
+      "targets": [
+        {
+          "value": "dispenser",
+          "label": "1번 디스펜서-차량 통신"
+        },
+        {
+          "value": "dispenser_2",
+          "label": "2번 디스펜서-차량 통신"
+        }
+      ],
+      "fields": [],
+      "note": "차량 Halt 신호를 모사하고 해당 충전을 즉시 종료합니다."
+    },
+    {
+      "id": "communication-data-loss",
+      "label": "통신 데이터 손실",
+      "targets": [
+        {
+          "value": "dispenser",
+          "label": "1번 디스펜서-차량 통신"
+        },
+        {
+          "value": "dispenser_2",
+          "label": "2번 디스펜서-차량 통신"
+        }
+      ],
+      "fields": [],
+      "note": "차량-디스펜서 통신 손실을 모사하고 보수적으로 충전을 종료합니다."
+    },
+    {
+      "id": "communication-invalid-crc",
+      "label": "잘못된 CRC",
+      "targets": [
+        {
+          "value": "dispenser",
+          "label": "1번 디스펜서-차량 통신"
+        },
+        {
+          "value": "dispenser_2",
+          "label": "2번 디스펜서-차량 통신"
+        }
+      ],
+      "fields": [],
+      "note": "통신 CRC 오류를 모사하고 보수적으로 충전을 종료합니다."
+    },
+    {
+      "id": "communication-invalid-value",
+      "label": "잘못된 정의값",
+      "targets": [
+        {
+          "value": "dispenser",
+          "label": "1번 디스펜서-차량 통신"
+        },
+        {
+          "value": "dispenser_2",
+          "label": "2번 디스펜서-차량 통신"
+        }
+      ],
+      "fields": [],
+      "note": "정의 범위를 벗어난 통신값을 모사하고 보수적으로 충전을 종료합니다."
     }
   ],
   "scenarios": [
@@ -2683,6 +2767,81 @@
           "end_time_s": 20.0,
           "leak_diameter_mm": 0.2,
           "event_id": "compound-08-2"
+        }
+      ]
+    },
+    {
+      "id": "communication-01",
+      "category": "communication",
+      "title": "차량 Abort 신호",
+      "description": "차량 Abort 신호를 모사하고 해당 충전을 즉시 종료합니다.",
+      "faults": [
+        {
+          "kind": "communication-abort",
+          "target": "dispenser",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "communication-01-1"
+        }
+      ]
+    },
+    {
+      "id": "communication-02",
+      "category": "communication",
+      "title": "차량 Halt 신호",
+      "description": "차량 Halt 신호를 모사하고 해당 충전을 즉시 종료합니다.",
+      "faults": [
+        {
+          "kind": "communication-halt",
+          "target": "dispenser",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "communication-02-1"
+        }
+      ]
+    },
+    {
+      "id": "communication-03",
+      "category": "communication",
+      "title": "통신 데이터 손실",
+      "description": "차량-디스펜서 통신 손실을 모사하고 보수적으로 충전을 종료합니다.",
+      "faults": [
+        {
+          "kind": "communication-data-loss",
+          "target": "dispenser",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "communication-03-1"
+        }
+      ]
+    },
+    {
+      "id": "communication-04",
+      "category": "communication",
+      "title": "잘못된 CRC",
+      "description": "통신 CRC 오류를 모사하고 보수적으로 충전을 종료합니다.",
+      "faults": [
+        {
+          "kind": "communication-invalid-crc",
+          "target": "dispenser",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "communication-04-1"
+        }
+      ]
+    },
+    {
+      "id": "communication-05",
+      "category": "communication",
+      "title": "잘못된 정의값",
+      "description": "정의 범위를 벗어난 통신값을 모사하고 보수적으로 충전을 종료합니다.",
+      "faults": [
+        {
+          "kind": "communication-invalid-value",
+          "target": "dispenser",
+          "start_time_s": 5.0,
+          "end_time_s": 20.0,
+          "event_id": "communication-05-1"
         }
       ]
     }

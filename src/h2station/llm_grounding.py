@@ -2360,6 +2360,68 @@ def _public_real_station_context() -> dict[str, Any] | None:
     }
 
 
+def _public_carb_hrs_inuse_field_benchmark() -> dict[str, Any] | None:
+    """Load CARB's aggregate 22-station field benchmark with claim limits."""
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/carb_2024_hrs_inuse_field_benchmark_2026_10_08.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    population = record.get("population") or {}
+    eligibility = record.get("eligibility") or {}
+    tables = record.get("tables") or {}
+    if (
+        record.get("artifact_type") != "public_real_station_field_benchmark"
+        or population.get("stations_tested") != 22
+        or not str(source.get("url") or "").startswith(("https://", "http://"))
+        or eligibility.get("field_relevance_benchmark") is not True
+        or eligibility.get("dynamic_model_parameter_calibration") is not False
+        or eligibility.get("full_loop_external_holdout") is not False
+        or not all(name in tables for name in (
+            "protocol_fault", "general_fault", "communications",
+            "fueling_performance",
+        ))
+    ):
+        return None
+    return {
+        "artifact": "research/carb_2024_hrs_inuse_field_benchmark_2026_10_08.json",
+        "evidence_role": "public real-station HGV 4.3 field benchmark and functional-gap audit",
+        "source": {
+            key: source.get(key)
+            for key in (
+                "title", "institution", "url", "publication_date", "test_basis",
+            )
+        },
+        "population": {
+            key: population.get(key)
+            for key in (
+                "stations_tested", "estimated_operational_station_population",
+                "sample_fraction", "stations_passing_all_hgv_4_3_tests",
+                "stations_passing_all_fault_and_communications_tests",
+                "stations_passing_all_nine_fueling_performance_metrics",
+                "in_use_protocol_counts",
+            )
+        },
+        "category_station_pass_rates": record.get("category_station_pass_rates") or {},
+        "communication_results": (
+            (tables.get("communications") or {}).get("results") or {}
+        ),
+        "general_fault_results": (
+            (tables.get("general_fault") or {}).get("results") or {}
+        ),
+        "digital_twin_functional_coverage": (
+            record.get("digital_twin_functional_coverage") or {}
+        ),
+        "full_loop_external_holdout_eligible": False,
+        "dynamic_model_parameter_calibration_eligible": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
     """Return a tiny, inspectable index of public sources used for grounding.
 
@@ -2464,6 +2526,15 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
         str(station_source.get("title") or "Real-station back-to-back fueling context"),
         str(station_source.get("url") or ""),
         "실충전소 back-to-back 운전·저장압력·냉각·차량 SOC 맥락",
+    )
+
+    carb = evidence.get("public_carb_hrs_inuse_field_benchmark") or {}
+    carb_source = carb.get("source") or {}
+    add(
+        "PUBLIC_CARB_2024_HRS_INUSE",
+        str(carb_source.get("title") or "CARB 2024 in-use HRS study"),
+        str(carb_source.get("url") or ""),
+        "22개 실제 충전소 HGV 4.3 고장·통신·충전성능 현장 벤치마크",
     )
 
     tank_trace = evidence.get("public_tank_trace_boundary") or {}
@@ -4186,6 +4257,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_real_station_context"
         ] = real_station_context
+    carb_field_benchmark = _public_carb_hrs_inuse_field_benchmark()
+    if carb_field_benchmark is not None:
+        envelope["response_evidence"][
+            "public_carb_hrs_inuse_field_benchmark"
+        ] = carb_field_benchmark
     lifecycle = _confidential_lifecycle_evidence()
     if lifecycle is not None:
         envelope["response_evidence"]["confidential_lifecycle_counter_summary"] = lifecycle
@@ -4553,6 +4629,19 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "prohibited_use", "claim_limit",
             )
             if real_station_context.get(key) is not None
+        }
+    carb = evidence.get("public_carb_hrs_inuse_field_benchmark")
+    if isinstance(carb, dict):
+        summary["public_carb_hrs_inuse_field_benchmark"] = {
+            "evidence_role": carb.get("evidence_role"),
+            "source": carb.get("source") or {},
+            "population": carb.get("population") or {},
+            "category_station_pass_rates": (
+                carb.get("category_station_pass_rates") or {}
+            ),
+            "full_loop_external_holdout_eligible": False,
+            "dynamic_model_parameter_calibration_eligible": False,
+            "claim_limit": short(carb.get("claim_limit")),
         }
     detector = evidence.get("public_detector_logic_evidence")
     if isinstance(detector, dict):
@@ -5011,6 +5100,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     spatial_stratification = response.get(
         "public_actual_hydrogen_spatial_stratification_evidence"
     ) or {}
+    carb_field = response.get("public_carb_hrs_inuse_field_benchmark") or {}
     detector_context = " ".join((
         str(manifest.get("selected_sensor") or ""),
         str(manifest.get("question") or ""),
@@ -5025,6 +5115,14 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 "검지", "센서 배치", "누출 감지", "detector", "sensor placement"
             ))
         )
+    )
+    protocol_field_relevant = bool(
+        carb_field
+        and any(token in detector_context for token in (
+            "충전", "프로토콜", "통신", "유량", "압력", "온도", "soc",
+            "j2601", "hgv", "abort", "halt", "crc", "fuel", "flow",
+            "communication", "pressure", "temperature",
+        ))
     )
 
     decision = {
@@ -5113,6 +5211,28 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "top alarm/trip 100%; no runtime or station-map validation"
                 )
             } if spatial_guidance_relevant else {}),
+            **({
+                "carb_22_station_field_benchmark": {
+                    "stations": (carb_field.get("population") or {}).get(
+                        "stations_tested"
+                    ),
+                    "all_tests_passed": (carb_field.get("population") or {}).get(
+                        "stations_passing_all_hgv_4_3_tests"
+                    ),
+                    "category_pass_rates": (
+                        carb_field.get("category_station_pass_rates") or {}
+                    ),
+                    "communication_fail_counts": {
+                        key: values[1]
+                        for key, values in (
+                            carb_field.get("communication_results") or {}
+                        ).items()
+                        if isinstance(values, list) and len(values) == 3
+                    },
+                    "dynamic_model_validation": False,
+                    "claim_limit": short(carb_field.get("claim_limit"), 120),
+                }
+            } if protocol_field_relevant else {}),
         },
         "validation_boundaries": {
             "public_tank_postaccess": {
@@ -5276,6 +5396,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     benchmarks = evidence.get("public_experimental_benchmarks") or {}
     hitrf_reference = evidence.get("public_hitrf_operational_reference") or {}
     real_station_context = evidence.get("public_real_station_context") or {}
+    carb_field = evidence.get("public_carb_hrs_inuse_field_benchmark") or {}
     benchmark_ids = [
         str(source.get("id"))
         for source in benchmarks.get("sources") or []
@@ -5393,6 +5514,24 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "full_loop_external_holdout_eligible"
             ) is True,
             "claim_limit": real_station_context.get("claim_limit"),
+        },
+        "public_carb_hrs_inuse_field_benchmark": {
+            "source": carb_field.get("source") or {},
+            "population": carb_field.get("population") or {},
+            "category_station_pass_rates": (
+                carb_field.get("category_station_pass_rates") or {}
+            ),
+            "communication_results": carb_field.get("communication_results") or {},
+            "digital_twin_functional_coverage": (
+                carb_field.get("digital_twin_functional_coverage") or {}
+            ),
+            "full_loop_external_holdout_eligible": carb_field.get(
+                "full_loop_external_holdout_eligible"
+            ) is True,
+            "dynamic_model_parameter_calibration_eligible": carb_field.get(
+                "dynamic_model_parameter_calibration_eligible"
+            ) is True,
+            "claim_limit": carb_field.get("claim_limit"),
         },
         "public_measurement_instrumentation": {
             "source_count": public_measurement.get("source_count"),

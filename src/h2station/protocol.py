@@ -39,6 +39,22 @@ class FuelingPhase(str, Enum):
     ABORTED = "aborted"
 
 
+class FuelingCommunicationState(str, Enum):
+    """Injectable dispenser/vehicle communication states for training tests.
+
+    These states model conservative controller responses and do not reproduce
+    the proprietary/standardized IrDA message encoding or certify SAE J2799 or
+    HGV 4.3 conformance.
+    """
+
+    VALID = "valid"
+    ABORT = "abort"
+    HALT = "halt"
+    DATA_LOSS = "data-loss"
+    INVALID_CRC = "invalid-crc"
+    INVALID_VALUE = "invalid-value"
+
+
 @dataclass(frozen=True)
 class FuelingSchedule:
     """Externally supplied SAE J2601-compatible fueling setpoints, in SI units."""
@@ -135,6 +151,7 @@ class FuelingObservation:
     temperature_k: float
     density_kg_m3: float
     measured_mass_flow_kg_s: float
+    communication_state: FuelingCommunicationState = FuelingCommunicationState.VALID
 
 
 @dataclass(frozen=True)
@@ -145,6 +162,7 @@ class FuelingCommand:
     delivery_temperature_target_k: float
     state_of_charge: float
     stop_reason: str | None = None
+    communication_state: FuelingCommunicationState = FuelingCommunicationState.VALID
 
 
 class VehicleStateOfCharge:
@@ -186,6 +204,7 @@ class SampledFuelingController:
         self._next_leak_check_pressure_pa: float | None = None
         self._leak_check_until_s: float | None = None
         self._leak_check_reference_pressure_pa: float | None = None
+        self._communication_state = FuelingCommunicationState.VALID
 
     def start(self, time_s: float, initial_pressure_pa: float) -> None:
         self._phase = FuelingPhase.FILLING
@@ -200,6 +219,7 @@ class SampledFuelingController:
         )
         self._leak_check_until_s = None
         self._leak_check_reference_pressure_pa = None
+        self._communication_state = FuelingCommunicationState.VALID
 
     def reset(self) -> None:
         """Return the controller to idle before a separate operator fill request."""
@@ -209,6 +229,7 @@ class SampledFuelingController:
         self._next_leak_check_pressure_pa = None
         self._leak_check_until_s = None
         self._leak_check_reference_pressure_pa = None
+        self._communication_state = FuelingCommunicationState.VALID
 
     def update(self, observation: FuelingObservation, sample_period_s: float,
                *, auto_stop: bool = True, target_pressure_pa: float | None = None) -> FuelingCommand:
@@ -230,6 +251,15 @@ class SampledFuelingController:
         else:
             reference_pressure_pa = min(target, ramp_reference) if auto_stop else min(110e6, ramp_reference)
         soc = self.soc_model.calculate(observation.density_kg_m3)
+
+        self._communication_state = observation.communication_state
+        if observation.communication_state is not FuelingCommunicationState.VALID:
+            self._phase = FuelingPhase.ABORTED
+            return self._stopped_command(
+                reference_pressure_pa,
+                soc,
+                f"communication-{observation.communication_state.value}",
+            )
 
         if observation.temperature_k >= self.schedule.maximum_gas_temperature_k:
             self._phase = FuelingPhase.ABORTED
@@ -342,6 +372,7 @@ class SampledFuelingController:
                 observation.time_s
             ),
             state_of_charge=soc,
+            communication_state=self._communication_state,
         )
 
     def _stopped_command(
@@ -360,6 +391,7 @@ class SampledFuelingController:
             ),
             state_of_charge=soc,
             stop_reason=reason,
+            communication_state=self._communication_state,
         )
 
     def _paused_command(
@@ -377,4 +409,5 @@ class SampledFuelingController:
             delivery_temperature_target_k=self.schedule.delivery_temperature_at(time_s),
             state_of_charge=soc,
             stop_reason=reason,
+            communication_state=self._communication_state,
         )

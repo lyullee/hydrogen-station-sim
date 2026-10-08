@@ -699,6 +699,14 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                                                ((sample.process_operations or {}).get("relief_open") or {}).items()
                                                if is_open],
                         "process_activity": sample.process_activity,
+                        "fueling_stop_reason": sample.fueling_stop_reason,
+                        "fueling_2_stop_reason": sample.fueling_2_stop_reason,
+                        "fueling_communication_state": (
+                            sample.fueling_communication_state
+                        ),
+                        "fueling_2_communication_state": (
+                            sample.fueling_2_communication_state
+                        ),
                         "virtual_safety": sample.virtual_safety,
                         "realtime_lag_s": realtime_lag_s,
                         "simulation_rate_x": simulation_rate_x,

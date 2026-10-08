@@ -8,7 +8,7 @@ from typing import Mapping
 
 import numpy as np
 
-from .protocol import FuelingPhase
+from .protocol import FuelingCommunicationState, FuelingPhase
 
 
 class FaultKind(str, Enum):
@@ -28,6 +28,11 @@ class FaultKind(str, Enum):
     EXTERNAL_FIRE = "external-fire"
     PIPE_RESTRICTION = "pipe-restriction"
     CHECK_VALVE_FAILURE = "check-valve-failure"
+    COMMUNICATION_ABORT = "communication-abort"
+    COMMUNICATION_HALT = "communication-halt"
+    COMMUNICATION_DATA_LOSS = "communication-data-loss"
+    COMMUNICATION_INVALID_CRC = "communication-invalid-crc"
+    COMMUNICATION_INVALID_VALUE = "communication-invalid-value"
 
 
 @dataclass(frozen=True)
@@ -94,6 +99,14 @@ class FaultEvent:
             raise ValueError("Temperature disturbances require an external temperature")
         if self.kind is FaultKind.PIPE_RESTRICTION and not 0.0 <= self.magnitude <= 1.0:
             raise ValueError("Pipe restriction magnitude is an open-area multiplier from 0 to 1")
+        if self.kind in {
+            FaultKind.COMMUNICATION_ABORT,
+            FaultKind.COMMUNICATION_HALT,
+            FaultKind.COMMUNICATION_DATA_LOSS,
+            FaultKind.COMMUNICATION_INVALID_CRC,
+            FaultKind.COMMUNICATION_INVALID_VALUE,
+        } and self.target not in {"dispenser", "dispenser_2"}:
+            raise ValueError("Communication faults target dispenser or dispenser_2")
 
     def active_at(self, time_s: float) -> bool:
         return time_s >= self.start_time_s and (
@@ -136,6 +149,7 @@ class OperationalOverride:
     active_leaks: tuple[FaultEvent, ...] = ()
     pipe_restrictions: Mapping[str, float] = ()
     check_valve_failures: tuple[str, ...] = ()
+    communication_state_by_dispenser: Mapping[str, FuelingCommunicationState] = ()
 
 
 class FaultInjector:
@@ -183,6 +197,7 @@ class FaultInjector:
         leaks: list[FaultEvent] = []
         restrictions: dict[str, float] = {}
         check_valves: list[str] = []
+        communication_states: dict[str, FuelingCommunicationState] = {}
         for event in self.schedule.active_events(time_s):
             if event.kind in (
                 FaultKind.PCV_STUCK_OPEN,
@@ -221,6 +236,20 @@ class FaultInjector:
                 restrictions[event.target] = min(restrictions.get(event.target, 1.0), event.magnitude)
             elif event.kind is FaultKind.CHECK_VALVE_FAILURE:
                 check_valves.append(event.target)
+            elif event.kind in {
+                FaultKind.COMMUNICATION_ABORT,
+                FaultKind.COMMUNICATION_HALT,
+                FaultKind.COMMUNICATION_DATA_LOSS,
+                FaultKind.COMMUNICATION_INVALID_CRC,
+                FaultKind.COMMUNICATION_INVALID_VALUE,
+            }:
+                communication_states[event.target] = {
+                    FaultKind.COMMUNICATION_ABORT: FuelingCommunicationState.ABORT,
+                    FaultKind.COMMUNICATION_HALT: FuelingCommunicationState.HALT,
+                    FaultKind.COMMUNICATION_DATA_LOSS: FuelingCommunicationState.DATA_LOSS,
+                    FaultKind.COMMUNICATION_INVALID_CRC: FuelingCommunicationState.INVALID_CRC,
+                    FaultKind.COMMUNICATION_INVALID_VALUE: FuelingCommunicationState.INVALID_VALUE,
+                }[event.kind]
         return OperationalOverride(
             forced_pcv_opening=pcv_opening,
             forced_pcv_opening_by_dispenser=pcv_opening_by_dispenser,
@@ -231,6 +260,7 @@ class FaultInjector:
             active_leaks=tuple(leaks),
             pipe_restrictions=restrictions,
             check_valve_failures=tuple(check_valves),
+            communication_state_by_dispenser=communication_states,
         )
 
 

@@ -1254,6 +1254,9 @@ def audit(root: Path) -> dict[str, object]:
     time_axis_summary = (time_axis_inventory or {}).get(
         "flat_time_axis_candidate_summary"
     ) or {}
+    time_overlap_summary = (time_axis_inventory or {}).get(
+        "time_overlap_candidate_summary"
+    ) or {}
     time_axis_candidates = (time_axis_inventory or {}).get(
         "candidate_schema_counts"
     ) or {}
@@ -1281,7 +1284,7 @@ def audit(root: Path) -> dict[str, object]:
         and schema_recheck_values.get("pressure_channel_count") == (schema_inventory.get("tagged_channel_counts") or {}).get("pressure")
         and schema_recheck_values.get("vehicle_side_channel_family_count") == schema_eligibility.get("vehicle_side_channel_family_count")
         and schema_recheck_values.get("full_loop_holdout_eligible") is False
-        and (time_axis_inventory or {}).get("schema_version") == 3
+        and (time_axis_inventory or {}).get("schema_version") == 4
         and (time_axis_inventory or {}).get("artifact_type")
         == "controlled_hrs_schema_inventory"
         and (time_axis_inventory or {}).get("source_identifiers_published") is False
@@ -1294,13 +1297,25 @@ def audit(root: Path) -> dict[str, object]:
         and time_axis_summary.get("tables_in_candidate_groups") == 26
         and time_axis_summary.get("fingerprints_published") is False
         and time_axis_candidates.get("synchronized_flat_full_loop_candidate") == 0
+        and time_overlap_summary.get("usable_table_count") == 33
+        and time_overlap_summary.get("absolute_clock_table_count") == 33
+        and time_overlap_summary.get("multi_table_cluster_count") == 12
+        and time_overlap_summary.get("tables_in_clusters") == 24
+        and time_overlap_summary.get("largest_cluster_tables") == 3
+        and time_overlap_summary.get("exact_full_loop_cluster_count") == 0
+        and time_overlap_summary.get("path_assisted_candidate_count") == 0
+        and time_overlap_summary.get("path_semantics_are_unattested") is True
+        and time_overlap_summary.get("source_identifiers_published") is False
+        and time_overlap_summary.get("original_headers_published") is False
+        and time_overlap_summary.get("absolute_time_samples_published") is False
+        and time_axis_candidates.get("time_overlap_full_loop_candidate") == 0
     )
     gates.append(_gate(
         "confidential_station_schema_intake_integrity",
         "PASS" if schema_audit_pass else ("FAIL" if schema_audit else "PENDING"),
         "The restricted station archive has a de-identified channel-presence inventory that identifies station-side calibration candidates without treating unconfirmed units as measurements.",
         f"{schema_audit_path.relative_to(root)}; {owner_recheck_path.relative_to(root)}; {time_axis_inventory_path.relative_to(root)}",
-        "At least two source bundles, pressure/state channel candidates, bounded flat-file clock-shape groups, no raw rows or source identifiers, and an explicit unit-attestation hold.",
+        "At least two source bundles, pressure/state channel candidates, bounded absolute-time overlap cohorts, no raw rows or source identifiers, and an explicit unit-attestation hold.",
         {
             "source_bundle_count": (schema_audit or {}).get("source_bundle_count"),
             "file_count": (schema_audit or {}).get("file_count"),
@@ -1317,8 +1332,12 @@ def audit(root: Path) -> dict[str, object]:
             ),
             "full_loop_holdout_eligible": schema_eligibility.get("full_loop_holdout_eligible"),
             "flat_time_axis_candidate_summary": time_axis_summary,
+            "time_overlap_candidate_summary": time_overlap_summary,
             "synchronized_flat_full_loop_candidate": time_axis_candidates.get(
                 "synchronized_flat_full_loop_candidate"
+            ),
+            "time_overlap_full_loop_candidate": time_axis_candidates.get(
+                "time_overlap_full_loop_candidate"
             ),
             "owner_schema_recheck": {
                 "committed_aggregate_match": schema_recheck.get("committed_aggregate_match"),
@@ -4815,6 +4834,9 @@ def audit(root: Path) -> dict[str, object]:
     grounding_station_thermal = (
         (grounding or {}).get("confidential_station_thermal_dynamics_boundary") or {}
     )
+    grounding_carb = (
+        (grounding or {}).get("public_carb_hrs_inuse_field_benchmark") or {}
+    )
     grounding_khk_replay = (
         ((grounding or {}).get("public_accident_report_grounding") or {}).get(
             "digital_twin_replay"
@@ -4879,13 +4901,18 @@ def audit(root: Path) -> dict[str, object]:
         and grounding_station_thermal.get("full_station_vehicle_validation") is False
         and grounding_station_thermal.get("full_loop_holdout_eligible") is False
         and grounding_station_thermal.get("default_model_parameters_changed") is False
+        and grounding_carb.get("stations_tested") == 22
+        and grounding_carb.get("stations_passing_all_hgv_4_3_tests") == 0
+        and grounding_carb.get("invalid_crc_fail_count") == 8
+        and grounding_carb.get("dynamic_model_validation_claimed") is False
+        and grounding_carb.get("full_loop_external_holdout_eligible") is False
     )
     gates.append(_gate(
         "llm_evidence_grounding_contract",
         "PASS" if grounding_pass else "PENDING",
         "Main and selected-sensor assistants receive traceable evidence with explicit calculation and uncertainty status.",
         str(grounding_path.relative_to(root)),
-        "Manifest schema, normal/emergency distinction, contradiction guard, bounded tank evidence, mixed release-campaign outcomes and full regression suite.",
+        "Manifest schema, normal/emergency distinction, contradiction guard, bounded tank evidence, CARB field benchmark, mixed release-campaign outcomes and full regression suite.",
         grounding or "missing",
     ))
 
@@ -4919,6 +4946,78 @@ def audit(root: Path) -> dict[str, object]:
             "chiller_target_temperature_c": hitrf_thermal.get("chiller_target_temperature_c"),
             "claim_boundary": ((hitrf or {}).get("runtime_use") or {}).get("claim_boundary"),
         } if hitrf else "missing",
+    ))
+
+    carb_path = root / "research/carb_2024_hrs_inuse_field_benchmark_2026_10_08.json"
+    carb = _json(carb_path)
+    carb_source = (carb or {}).get("source") or {}
+    carb_population = (carb or {}).get("population") or {}
+    carb_rates = (carb or {}).get("category_station_pass_rates") or {}
+    carb_tables = (carb or {}).get("tables") or {}
+    carb_eligibility = (carb or {}).get("eligibility") or {}
+    carb_communications = (
+        (carb_tables.get("communications") or {}).get("results") or {}
+    )
+    carb_general = (carb_tables.get("general_fault") or {}).get("results") or {}
+    carb_pass = bool(
+        (carb or {}).get("schema_version") == 1
+        and (carb or {}).get("artifact_type") == "public_real_station_field_benchmark"
+        and carb_source.get("institution") == "California Air Resources Board"
+        and str(carb_source.get("url") or "").startswith("https://ww2.arb.ca.gov/")
+        and len(str(carb_source.get("sha256") or "")) == 64
+        and carb_source.get("local_source_hash_verified") is True
+        and carb_population.get("stations_tested") == 22
+        and carb_population.get("stations_passing_all_hgv_4_3_tests") == 0
+        and carb_population.get("stations_passing_all_fault_and_communications_tests") == 5
+        and carb_population.get("stations_passing_all_nine_fueling_performance_metrics") == 4
+        and carb_population.get("in_use_protocol_counts") == {
+            "mc_formula_based": 16, "table_based": 6,
+        }
+        and carb_rates == {
+            "general_fault": 0.455,
+            "protocol_fault": 0.409,
+            "communications": 0.5,
+            "fueling_performance": 0.182,
+        }
+        and all(
+            isinstance(values, list) and len(values) == 3 and sum(values) == 22
+            for values in [*carb_general.values(), *carb_communications.values()]
+        )
+        and carb_communications.get("invalid_crc") == [13, 8, 1]
+        and carb_communications.get("data_loss_and_resumed_fueling") == [15, 4, 3]
+        and carb_eligibility.get("field_relevance_benchmark") is True
+        and carb_eligibility.get("functional_gap_audit") is True
+        and carb_eligibility.get("dynamic_model_parameter_calibration") is False
+        and carb_eligibility.get("full_loop_external_holdout") is False
+        and carb_eligibility.get("vehicle_trace_validation") is False
+        and "no synchronized" in str((carb or {}).get("claim_boundary") or "").lower()
+    )
+    gates.append(_gate(
+        "carb_hrs_inuse_field_benchmark_integrity",
+        "PASS" if carb_pass else ("FAIL" if carb else "PENDING"),
+        "A 22-station in-use HGV 4.3 field benchmark is available for controller feature coverage and LLM grounding without being presented as dynamic-model validation.",
+        str(carb_path.relative_to(root)),
+        "Pinned CARB source hash, internally consistent report counts, functional-gap mapping and explicit no-raw-trace validation boundary.",
+        {
+            "source_url": carb_source.get("url"),
+            "source_hash_verified": carb_source.get("local_source_hash_verified"),
+            "stations_tested": carb_population.get("stations_tested"),
+            "stations_passing_all_hgv_4_3_tests": carb_population.get(
+                "stations_passing_all_hgv_4_3_tests"
+            ),
+            "category_station_pass_rates": carb_rates,
+            "invalid_crc_results": carb_communications.get("invalid_crc"),
+            "data_loss_results": carb_communications.get(
+                "data_loss_and_resumed_fueling"
+            ),
+            "dynamic_model_parameter_calibration": carb_eligibility.get(
+                "dynamic_model_parameter_calibration"
+            ),
+            "full_loop_external_holdout": carb_eligibility.get(
+                "full_loop_external_holdout"
+            ),
+            "claim_boundary": (carb or {}).get("claim_boundary"),
+        } if carb else "missing",
     ))
 
     flare_evidence_path = (

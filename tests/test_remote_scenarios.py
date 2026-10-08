@@ -16,8 +16,8 @@ CATALOG=json.loads((Path(__file__).resolve().parents[1]/'web/scenarios.json').re
 def test_remote_catalog_covers_all_implemented_faults_and_mapped_sensors():
     assert {k['id'] for k in CATALOG['kinds']}=={k.value for k in FaultKind}
     assert {f['kind'] for s in CATALOG['scenarios'] for f in s['faults']}=={k.value for k in FaultKind}
-    assert len(CATALOG['scenarios'])==69
-    assert len({s['id'] for s in CATALOG['scenarios']})==69
+    assert len(CATALOG['scenarios'])==74
+    assert len({s['id'] for s in CATALOG['scenarios']})==74
     for kind in ('sensor-bias','sensor-freeze'):
         assert {t['value'] for t in next(k for k in CATALOG['kinds'] if k['id']==kind)['targets']}==set(MODEL_BINDINGS)
 
@@ -38,6 +38,27 @@ def test_preset_payload_and_model_execute(scenario):
     assert len(trajectory.time_s)==2
     assert np.isfinite(trajectory.states).all()
     assert trajectory.final_state is not None
+
+
+def test_dispenser_communication_fault_reaches_selected_controller_feedback():
+    event = SimulationInput(duration_s=.2, control_period_s=.2, faults=[{
+        'event_id': 'crc-1',
+        'kind': 'communication-invalid-crc',
+        'target': 'dispenser',
+        'start_time_s': 0,
+    }]).faults[0].to_event()
+    built = build_reference_scenario(
+        ReferenceScenario(fault_events=(event,)), UnavailableHyRAMBackend()
+    )
+    samples = []
+
+    built.simulator.simulate(
+        built.initial_state, .2, .2, sample_callback=samples.append
+    )
+
+    assert samples[-1].fueling_communication_state == 'invalid-crc'
+    assert samples[-1].fueling_stop_reason == 'communication-invalid-crc'
+    assert samples[-1].fueling_2_communication_state == 'valid'
 
 
 @pytest.mark.parametrize('target', ['cascade.low', 'cascade.medium', 'cascade.high', 'dispenser.hose', 'dispenser_2.hose'])

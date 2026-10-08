@@ -85,11 +85,11 @@ distances. An LLM response is not allowed to turn `not_requested` or
 The following tests passed in the repository virtual environment:
 
 ```text
-.venv\Scripts\python.exe -m pytest tests/test_llm_grounding.py tests/test_station_thermal_diagnostic.py tests/test_station_thermal_protocol.py tests/test_ijhe_readiness_audit.py -q
-27 passed
+.venv\Scripts\python.exe -m pytest tests/test_llm_grounding.py tests/test_station_thermal_diagnostic.py tests/test_station_thermal_protocol.py tests/test_hiad_digital_twin_replay_coverage.py tests/test_khk_digital_twin_replay_coverage.py tests/test_flame_detection.py tests/test_carb_hrs_inuse_benchmark.py tests/test_ijhe_readiness_audit.py -q
+33 passed
 
 .venv\Scripts\python.exe -m pytest -q
-871 passed, 15 warnings
+944 passed, 17 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -250,6 +250,18 @@ measure SAGA's usefulness, omission rate, unsafe-advice rate, latency, or
 operator performance. Those require an independently frozen casebook and
 qualified expert review, which remain pending in
 `manuscript/ijhe_readiness_audit.json`.
+
+## Real-station controller field benchmark
+
+The [CARB 2024 in-use field benchmark](CARB_2024_HRS_INUSE_FIELD_BENCHMARK.md)
+is now part of the evidence manifest. It carries aggregate HGV 4.3 outcomes
+from 22 operating stations and enters the compact provider prompt only for
+questions about fueling, protocol, communication, flow, pressure, temperature
+or SOC. The full and audit projections retain the source and claim boundary.
+The assistant can therefore explain why abort/halt, communication loss, CRC,
+startup and pressure-corridor checks matter using observed field results. The
+artifact has no synchronized raw traces, so it cannot support parameter
+calibration, vehicle-trace validation or a full-loop validation claim.
 
 
 ## Public incident traceability follow-up

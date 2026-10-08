@@ -16,6 +16,21 @@ clock or can be joined. Neither result has passed channel mapping,
 unit/calibration attestation, source synchronization, protocol freezing,
 quality screening, or an untouched holdout evaluation.
 
+For flat CSV exports, the inventory also reports two clock diagnostics. The
+legacy `flat_time_axis_candidate_summary` compares bounded clock *shape* and
+can therefore join equal-duration files from different dates. The stricter
+`time_overlap_candidate_summary` separates explicit absolute clocks from
+relative clocks. Absolute-clock tables must overlap for at least 80% of the
+shorter bounded interval and have compatible cadence; relative-clock tables
+must have an identical bounded fingerprint. Maximal pairwise-compatible groups
+prevent a long historian file from transitively merging unrelated events.
+
+Path text may contribute equipment-context hints only (for example, vehicle or
+storage). Those hints are reported separately as unattested, never assign a
+measured quantity or unit, and never promote a candidate to validation.
+Aggregate missing-family histograms are safe to publish; file names, headers,
+absolute timestamps, fingerprints and measurements remain private.
+
 Run the command in a controlled environment and save its aggregate JSON report
 outside this repository:
 
