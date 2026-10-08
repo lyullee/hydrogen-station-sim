@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_hrs_corpus_inventory",
+  "generated_at": "2026-10-09",
+  "status": "privacy_bounded_local_inventory",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "site_company_manufacturer_published": false,
+    "calendar_dates_published": false,
+    "raw_rows_persisted": false,
+    "per_file_hashes_published": false
+  },
+  "inventory_scope": {
+    "collections_screened": [
+      "owner-controlled station telemetry",
+      "local public validation corpus",
+      "public experimental and consequence references",
+      "derived simulator exports"
+    ],
+    "machine_readable_extensions": [
+      "csv",
+      "xlsx",
+      "xls",
+      "txt",
+      "mat",
+      "h5",
+      "hdf5",
+      "json"
+    ],
+    "note": "Counts are aggregate and do not expose source identity or raw values."
+  },
+  "collections": [
+    {
+      "id": "controlled_station_telemetry",
+      "evidence_class": "owner-controlled measured station data",
+      "file_count": 33,
+      "storage_gib": 4.749,
+      "physical_rows": 59272300,
+      "deduplicated_rows": 56854143,
+      "usable_signal_families": [
+        "medium/high storage pressure",
+        "temperature-like channels",
+        "flow or mass-like channels",
+        "compressor/load state",
+        "valve/ESD state",
+        "lifecycle counters",
+        "totalizer-like channels"
+      ],
+      "validated_boundary": "station-side pressure, cascade and recharge behavior",
+      "missing_boundary": "synchronized vehicle/receptacle pressure, temperature, delivered mass or SOC"
+    },
+    {
+      "id": "local_public_machine_readable_corpus",
+      "evidence_class": "locally cached public hydrogen validation material",
+      "file_count": 255,
+      "storage_gb_decimal": 3.509,
+      "examples": {
+        "open_tank_or_refueling_experiments": {
+          "unique_workbooks": 3,
+          "sample_rows_in_workbooks": 9480,
+          "channel_scope": "time, pressure, temperature and flow or mass-like signals"
+        },
+        "public_station_or_hose_reference": {
+          "available": true,
+          "channel_scope": "partial station/hose or tank boundary; controller and vehicle-loop fields are incomplete"
+        },
+        "dispenser_endpoint_tables": {
+          "available": true,
+          "channel_scope": "endpoint summaries without a synchronized time-base trace"
+        },
+        "release_fire_dispersion_and_detector": {
+          "available": true,
+          "channel_scope": "consequence, ignition, dispersion, detector and ventilation components"
+        }
+      },
+      "validated_boundary": "component-level tank, release, ignition, dispersion, detector and operational checks",
+      "missing_boundary": "a single independently scorable H70 station-to-vehicle synchronized cohort"
+    },
+    {
+      "id": "derived_simulator_exports",
+      "evidence_class": "local browser-exported simulator traces",
+      "file_count": 2,
+      "row_counts": [337, 339],
+      "independence": "not_independent_measured_data",
+      "eligible_use": ["export regression", "plot and UI smoke tests"],
+      "ineligible_use": ["external validation", "calibration", "incident or consequence claims"]
+    }
+  ],
+  "coverage_assessment": {
+    "local_station_data_is_sparse": false,
+    "station_side_dynamic_evidence_is_substantial": true,
+    "public_component_evidence_is_substantial": true,
+    "vehicle_side_full_loop_validation_ready": false,
+    "quantitative_consequence_validation_ready": false,
+    "full_loop_external_holdout_count": 0,
+    "main_limit": "The local corpus is rich but heterogeneous: station-side telemetry, tank/refueling experiments and consequence experiments are not one synchronized H70 station-to-vehicle trace."
+  },
+  "next_use": [
+    "Use the controlled station bundle for pressure-cycle, cascade, recharge and station-state calibration behind an explicit opt-in profile.",
+    "Use public tank/refueling experiments for component thermal and pressure validation without claiming station-controller validation.",
+    "Use public release/fire/dispersion/detector data for consequence-component holdouts and safety-logic checks.",
+    "Keep the full-loop gate closed until an independently attested synchronized vehicle/receptacle pressure, temperature and delivered-mass or SOC trace is available."
+  ],
+  "claim_boundary": "Local data are abundant for station-side and component validation, but they do not yet constitute a complete independently scorable station-to-vehicle validation cohort."
+}
