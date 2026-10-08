@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-08",
+  "status": "FROZEN_BEFORE_NUMERIC_ARCHIVE_DOWNLOAD",
+  "objective": "Prospectively test whether an independent public hydrogen-blend release dataset preserves the expected direction and rank of upper-tail hydrogen response as blend fraction and release volume increase.",
+  "claim_boundary": "This holdout tests only qualitative direction and rank transfer for upper-tail concentration response. It does not validate absolute hydrogen concentration, outdoor HRS dispersion, detector placement, alarm setpoints, ESD effectiveness, consequence distance or the complete station loop.",
+  "source": {
+    "title": "Experimental Study on Leakage and Dispersion Dynamics of Buried hydrogen blended natural gas Pipeline Under Delayed-Ignition Condition",
+    "doi": "10.17632/x8zkds4fyn.2",
+    "published": "2025-12-11",
+    "repository": "Mendeley Data",
+    "license": "CC BY 4.0",
+    "archive_url": "https://data.mendeley.com/public-api/zip/x8zkds4fyn/download/2",
+    "declared_scope": "Effect of hydrogen blending ratio and effect of leakage volume"
+  },
+  "prior_access": {
+    "public_metadata_viewed": true,
+    "file_names_seen_in_search_metadata": true,
+    "numeric_archive_downloaded": false,
+    "numeric_csv_contents_viewed": false,
+    "target_statistics_computed": false,
+    "http_head_request_only": true
+  },
+  "frozen_cases": {
+    "blend_fraction": {
+      "hydrogenAll10%.csv": 10.0,
+      "hydrogenAll20% .csv": 20.0,
+      "hydrogenAll30% .csv": 30.0
+    },
+    "release_volume": {
+      "H-232.csv": 232.0,
+      "H-325.csv": 325.0,
+      "H-476.csv": 476.0
+    }
+  },
+  "locked_extraction": {
+    "primary_response": "90th percentile of finite non-negative values from concentration-labelled columns",
+    "label_tokens": [
+      "hydrogen",
+      "h2",
+      "concentration",
+      "vol%"
+    ],
+    "fallback": "If no response-labelled column exists, exclude the first numeric coordinate/index column and use all remaining numeric cells.",
+    "minimum_finite_response_values_per_case": 3,
+    "outcome_specific_column_selection": "prohibited"
+  },
+  "primary_endpoints": {
+    "blend_fraction": {
+      "case_count": 3,
+      "minimum_spearman": 0.8,
+      "endpoint_ratio_greater_than": 1.0,
+      "strict_increase_required": true
+    },
+    "release_volume": {
+      "case_count": 3,
+      "minimum_spearman": 0.8,
+      "endpoint_ratio_greater_than": 1.0,
+      "strict_increase_required": true
+    }
+  },
+  "aggregate_decision": {
+    "claim_supported": "both primary endpoint groups pass all screens",
+    "retain_failures": true,
+    "post_access_threshold_changes": "prohibited for the primary result"
+  },
+  "locked_code": {
+    "module": {
+      "path": "src/h2station/hydrogen_blend_dispersion_validation.py",
+      "sha256": "416ff48d1a55a9f36ee1a2f11705dd5f881ad347438b657a3e082546a39ff07a"
+    },
+    "runner": {
+      "path": "scripts/run_hydrogen_blend_dispersion_holdout.py",
+      "sha256": "1ea4626bb4b86ac4a08f4101bd1c39ea778a2ed127a79cd963c9da8658d766e7"
+    }
+  }
+}
