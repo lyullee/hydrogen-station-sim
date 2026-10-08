@@ -3416,6 +3416,63 @@ def audit(root: Path) -> dict[str, object]:
         } if explosion_inventory else "missing; DataverseNO explosion inventory has not run",
     ))
 
+    x044_protocol_path = root / "research/x044qk_overpressure_rank_holdout_protocol_2026_10_08.json"
+    x044_result_path = root / "research/x044qk_overpressure_rank_holdout_result_2026_10_08.json"
+    x044_protocol = _json(x044_protocol_path)
+    x044_result = _json(x044_result_path)
+    x044_freeze = (x044_result or {}).get("freeze_integrity") or {}
+    x044_intake = (x044_result or {}).get("early_intake_check") or {}
+    x044_schema = x044_intake.get("schema") or {}
+    x044_eligibility = (x044_result or {}).get("eligibility") or {}
+    x044_execution = (x044_result or {}).get("execution") or {}
+    x044_pass = bool(
+        (x044_protocol or {}).get("protocol_id")
+        == "x044qk_actual_h2_overpressure_rank_holdout_v1"
+        and (x044_protocol or {}).get("status")
+        == "FROZEN_BEFORE_RAW_PRESSURE_OUTCOME_ACCESS"
+        and ((x044_protocol or {}).get("selection_rule") or {}).get(
+            "selected_experiment_numbers"
+        ) == [1, 2, 3, 18, 19, 20]
+        and x044_protocol_path.is_file()
+        and x044_freeze.get("protocol_sha256") == _sha256(x044_protocol_path)
+        and x044_freeze.get("protocol_committed_before_raw_trace_access") is True
+        and (x044_result or {}).get("decision")
+        == "MODEL_SCREEN_NOT_RUN_INELIGIBLE_UNCALIBRATED_PRESSURE_VOLTAGE"
+        and x044_schema.get("dynamic_pressure_channel_count") == 4
+        and set(x044_schema.get("dynamic_pressure_units") or []) == {"V"}
+        and x044_intake.get("outcome_window_opened") is False
+        and x044_intake.get("pressure_peak_outcomes_computed") is False
+        and x044_eligibility.get("engineering_pressure_units_present") is False
+        and x044_eligibility.get(
+            "publisher_documented_voltage_to_pressure_calibration_present"
+        ) is False
+        and x044_execution.get("hyram_model_executed") is False
+        and x044_execution.get("primary_metrics_computed") is False
+        and x044_execution.get("runtime_parameter_updated") is False
+        and x044_execution.get("validation_gate_effect") == "none"
+        and bool((x044_result or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "x044qk_overpressure_rank_holdout_intake_integrity",
+        "PASS" if x044_pass else ("FAIL" if x044_result else "PENDING"),
+        "The pre-access X044QK raw-pressure rank protocol fails closed when the public voltage traces lack an authenticated pressure calibration.",
+        f"{x044_protocol_path.relative_to(root)}; {x044_result_path.relative_to(root)}",
+        "Six fixed cases, protocol hash linkage, four voltage pressure channels, no outcome-window access, no model execution and no runtime update.",
+        {
+            "dataset_doi": ((x044_result or {}).get("source") or {}).get("dataset_doi"),
+            "selected_case_count": x044_freeze.get("selected_case_count"),
+            "decision": (x044_result or {}).get("decision"),
+            "dynamic_pressure_channel_count": x044_schema.get("dynamic_pressure_channel_count"),
+            "dynamic_pressure_units": x044_schema.get("dynamic_pressure_units"),
+            "outcome_window_opened": x044_intake.get("outcome_window_opened"),
+            "pressure_peak_outcomes_computed": x044_intake.get("pressure_peak_outcomes_computed"),
+            "hyram_model_executed": x044_execution.get("hyram_model_executed"),
+            "runtime_parameter_updated": x044_execution.get("runtime_parameter_updated"),
+            "validation_gate_effect": x044_execution.get("validation_gate_effect"),
+            "claim_boundary": (x044_result or {}).get("claim_boundary"),
+        } if x044_result else "missing; X044QK holdout intake has not run",
+    ))
+
     ignited_protocol_path = root / "research/usn_17934047_ignited_pressure_peaking_protocol_2026_10_08.json"
     ignited_result_path = root / "research/usn_17934047_ignited_pressure_peaking_result_2026_10_08.json"
     ignited_protocol = _json(ignited_protocol_path)

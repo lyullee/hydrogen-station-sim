@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T07:03:47.766013+00:00",
+  "generated_at": "2026-10-08T07:20:39.583937+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 103,
+    "PASS": 104,
     "FAIL": 10,
     "PENDING": 8
   },
@@ -3609,6 +3609,31 @@
         "raw_subset_file_count": 3,
         "raw_subset_channel_replay_valid": true,
         "raw_subset_model_comparison_performed": false
+      }
+    },
+    {
+      "id": "x044qk_overpressure_rank_holdout_intake_integrity",
+      "status": "PASS",
+      "claim": "The pre-access X044QK raw-pressure rank protocol fails closed when the public voltage traces lack an authenticated pressure calibration.",
+      "evidence": "research\\x044qk_overpressure_rank_holdout_protocol_2026_10_08.json; research\\x044qk_overpressure_rank_holdout_result_2026_10_08.json",
+      "requirement": "Six fixed cases, protocol hash linkage, four voltage pressure channels, no outcome-window access, no model execution and no runtime update.",
+      "observed": {
+        "dataset_doi": "10.18710/X044QK",
+        "selected_case_count": 6,
+        "decision": "MODEL_SCREEN_NOT_RUN_INELIGIBLE_UNCALIBRATED_PRESSURE_VOLTAGE",
+        "dynamic_pressure_channel_count": 4,
+        "dynamic_pressure_units": [
+          "V",
+          "V",
+          "V",
+          "V"
+        ],
+        "outcome_window_opened": false,
+        "pressure_peak_outcomes_computed": false,
+        "hyram_model_executed": false,
+        "runtime_parameter_updated": false,
+        "validation_gate_effect": "none",
+        "claim_boundary": "This retained result proves that the selected public raw files cannot be scored under the frozen engineering-unit eligibility rule with the currently published calibration metadata. It is not a numerical HyRAM failure, does not validate or invalidate overpressure magnitude or rank, and does not support HRS consequence distance, explosion probability, injury risk, the full digital twin, or regulatory compliance."
       }
     },
     {

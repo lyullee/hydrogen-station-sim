@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "protocol_id": "x044qk_actual_h2_overpressure_rank_holdout_v1",
+  "executed_at": "2026-10-08T16:19:03+09:00",
+  "status": "RETAINED_PROSPECTIVE_NEGATIVE_INTAKE_RESULT",
+  "decision": "MODEL_SCREEN_NOT_RUN_INELIGIBLE_UNCALIBRATED_PRESSURE_VOLTAGE",
+  "source": {
+    "dataset_doi": "10.18710/X044QK",
+    "dataset_version": "1.0",
+    "license": "CC0 1.0",
+    "raw_files_committed": false,
+    "raw_numeric_rows_committed": false
+  },
+  "freeze_integrity": {
+    "protocol_path": "research/x044qk_overpressure_rank_holdout_protocol_2026_10_08.json",
+    "protocol_sha256": "98309704169cd5e4cf9fa4f3d6fa3e2d6df84930bcb3e4141111a7220a4c09a2",
+    "freeze_commit": "40747ca9115cea04a23c170ab223b63f9f7e5b54",
+    "protocol_committed_before_raw_trace_access": true,
+    "selected_case_count": 6,
+    "case_replacement_performed": false,
+    "threshold_changed_after_access": false,
+    "model_changed_after_access": false
+  },
+  "early_intake_check": {
+    "experiment": 1,
+    "raw_filename": "Ign_pipe_geom_EXP_001.csv",
+    "datafile_id": 268221,
+    "publisher_expected_bytes": 412188772,
+    "publisher_expected_md5": "76f57dd1efaf3f20acd8572785ddbccf",
+    "http_range_requested": [0, 262143],
+    "returned_bytes": 262144,
+    "returned_prefix_sha256": "3ddc6ec7c2a7fdcd6d527179b3b5b7fa6e834ee222b11129b141de1480be92d7",
+    "schema": {
+      "delimiter": ";",
+      "decimal_separator": ",",
+      "time_column": "Tid",
+      "time_unit": "ms",
+      "trigger_column": "Kanal Trigger",
+      "dynamic_pressure_channel_count": 4,
+      "dynamic_pressure_channel_names": [
+        "Kanal trykk pos. 0",
+        "Kanal Trykk pos.1",
+        "Kanal Trykk pos. 2",
+        "Kanal Trykk pos.3"
+      ],
+      "dynamic_pressure_units": [
+        "V",
+        "V",
+        "V",
+        "V"
+      ],
+      "nozzle_pressure_column": "Kanal Nozzle pressure",
+      "nozzle_pressure_unit": "V"
+    },
+    "outcome_window_opened": false,
+    "pressure_peak_outcomes_computed": false,
+    "remaining_selected_files_downloaded": false,
+    "stop_reason": "The first selected publisher file stores every dynamic-pressure channel as voltage. The dataset README and the two public method sources identify the sensor family and acquisition system but do not publish the experiment-specific charge-amplifier pressure conversion. The frozen protocol requires engineering pressure units or a publisher-documented calibration and therefore fails closed before the outcome window is read."
+  },
+  "eligibility": {
+    "publisher_full_file_identity_verified": false,
+    "time_and_trigger_schema_identified": true,
+    "four_dynamic_pressure_channels_present": true,
+    "engineering_pressure_units_present": false,
+    "publisher_documented_voltage_to_pressure_calibration_present": false,
+    "eligible_case_count": 0,
+    "required_eligible_case_count": 6,
+    "all_selected_cases_eligible": false
+  },
+  "execution": {
+    "hyram_model_executed": false,
+    "raw_pressure_endpoints_computed": false,
+    "primary_metrics_computed": false,
+    "joint_screen_pass": false,
+    "absolute_overpressure_validation_supported": false,
+    "relative_severity_rank_validation_supported": false,
+    "runtime_parameter_updated": false,
+    "validation_gate_effect": "none"
+  },
+  "next_required_evidence": [
+    "publisher-authenticated voltage-to-pressure calibration for the Kistler 603B plus charge-amplifier settings used in this campaign",
+    "or a revised public archive containing pressure channels in engineering units",
+    "then a new protocol version must be frozen before any outcome-window values are read"
+  ],
+  "claim_boundary": "This retained result proves that the selected public raw files cannot be scored under the frozen engineering-unit eligibility rule with the currently published calibration metadata. It is not a numerical HyRAM failure, does not validate or invalidate overpressure magnitude or rank, and does not support HRS consequence distance, explosion probability, injury risk, the full digital twin, or regulatory compliance."
+}

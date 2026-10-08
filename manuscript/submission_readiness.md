@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **103 PASS · 10 FAIL · 8 PENDING**.
+Gate counts: **104 PASS · 10 FAIL · 8 PENDING**.
 
 The HyTunnel-CS CC BY 4.0 actual-hydrogen archive now provides a completed
 raw-time-series holdout over 18 mechanically ventilated enclosure experiments
@@ -348,6 +348,23 @@ had already been accessed through the Zenodo reproducibility archive under a
 different source path. The attempted protocol is retained as invalidated, and
 its additional frozen channel mismatch remains recorded. It adds no prospective
 case and prevents a duplicate public copy from being presented as new evidence.
+
+## 2026-10-08 X044QK raw-pressure intake
+
+A six-case delayed-ignition overpressure-rank protocol was committed before any
+selected raw pressure trace was opened. The fixed cohort balanced 29 cm and
+54 cm obstacle distances and all three ignition positions. The first selected
+file was inspected only through a 256 KiB range read, which exposed the time,
+trigger and four dynamic-pressure channel schema before the outcome window.
+
+All four pressure channels are stored as volts. The public README and method
+sources identify the sensor family and data-acquisition system but do not publish
+the charge-amplifier conversion applied to these files. The frozen protocol
+requires engineering pressure units or a publisher-authenticated calibration,
+so the evaluation failed closed before pressure peaks or HyRAM predictions were
+computed. No case was replaced, no threshold changed and no runtime parameter
+was updated. This retained negative intake result improves provenance discipline
+but does not validate or invalidate overpressure magnitude or rank.
 
 ## Blocking gates
 

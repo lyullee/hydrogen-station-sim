@@ -321,6 +321,19 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     }
     assert explosion_inventory["license_set"] == ["CC BY 4.0", "CC0 1.0"]
     assert explosion_inventory["ignited_sample_sigma_shape"] == [999999, 7]
+    assert gates["x044qk_overpressure_rank_holdout_intake_integrity"]["status"] == "PASS"
+    x044 = gates["x044qk_overpressure_rank_holdout_intake_integrity"]["observed"]
+    assert x044["selected_case_count"] == 6
+    assert x044["decision"] == (
+        "MODEL_SCREEN_NOT_RUN_INELIGIBLE_UNCALIBRATED_PRESSURE_VOLTAGE"
+    )
+    assert x044["dynamic_pressure_channel_count"] == 4
+    assert set(x044["dynamic_pressure_units"]) == {"V"}
+    assert x044["outcome_window_opened"] is False
+    assert x044["pressure_peak_outcomes_computed"] is False
+    assert x044["hyram_model_executed"] is False
+    assert x044["runtime_parameter_updated"] is False
+    assert x044["validation_gate_effect"] == "none"
     assert gates["ignited_pressure_peaking_external_validation"]["status"] == "PASS"
     ignited_pressure = gates["ignited_pressure_peaking_external_validation"]["observed"]
     assert ignited_pressure["eligible_case_count"] == 27
