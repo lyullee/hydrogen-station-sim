@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "protocol_id": "CONFIDENTIAL-STATION-HIGH-BANK-CYCLE-HOLDOUT-003",
+  "frozen_at": "2026-10-08",
+  "status": "chronology_correction_frozen_before_ordered_cycle_outcome_access",
+  "disclosure": "The first two methods returned zero cycles. A post-outcome diagnostic established that every matching file is stored newest-to-oldest. Chronologically ordered cycle outcomes had not been computed when this correction was frozen.",
+  "objective": "Apply deterministic chronological ordering before the unchanged causal filter, cycle definition and 4.5 MPa candidate screens.",
+  "target": {
+    "role": "high_storage_pressure",
+    "candidate_mpa": 4.5,
+    "candidate_changed_after_prior_results": false
+  },
+  "ordering": {
+    "method": "stable ascending timestamp sort; retain last source-order observation for duplicate timestamps",
+    "outcome_dependent": false
+  },
+  "filter": {
+    "kind": "causal_rolling_median_after_chronological_sort",
+    "window_samples": 7,
+    "nominal_window_seconds": 70
+  },
+  "frozen_rules": {
+    "sample_stride": 10,
+    "fall_confirmation_mpa": 0.25,
+    "rise_confirmation_mpa": 0.25,
+    "minimum_cycle_drop_mpa": 0.5,
+    "maximum_cycle_drop_mpa": 20.0,
+    "minimum_decline_duration_s": 30.0,
+    "maximum_decline_duration_s": 21600.0,
+    "minimum_pressure_mpa": 10.0,
+    "maximum_pressure_mpa": 100.0,
+    "maximum_sample_gap_s": 120.0,
+    "calibration_fraction": 0.7
+  },
+  "eligibility": {
+    "minimum_matching_files": 6,
+    "no_mixed_timestamp_order_files": true,
+    "minimum_calibration_cycles": 30,
+    "minimum_holdout_cycles": 15,
+    "minimum_holdout_files": 4
+  },
+  "primary_screens": {
+    "candidate_inside_holdout_p10_p90": true,
+    "candidate_relative_holdout_median_error_percent_max": 20.0,
+    "calibration_holdout_median_shift_percent_max": 25.0,
+    "all_eligibility_and_primary_screens_required": true
+  },
+  "decision_boundary": {
+    "pass_meaning": "Sequential same-site cross-format corroboration after a deterministic source-order correction.",
+    "independent_external_validation": false,
+    "runtime_parameter_application": false,
+    "default_parameter_change": false,
+    "vehicle_fill_or_full_loop_validation": false,
+    "safety_limit_or_field_certification": false
+  },
+  "locked_implementation": {
+    "evaluator": "src/h2station/confidential_pressure_cycle_ordered_holdout.py",
+    "evaluator_sha256": "f9717a5f97ec73f9738c0f22e99d80d04b1ff28ff665e6279b4532ba49776d5e",
+    "runner": "scripts/validate_confidential_station_ordered_pressure_cycles.py",
+    "runner_sha256": "564bf1dbff2273bcbbb528af646829c662da18e2649790bf7763f9bb97b5a538",
+    "filter_revision": "src/h2station/confidential_pressure_cycle_filtered_holdout.py",
+    "filter_revision_sha256": "6f450f5a2fe204b4ca35f045553c764fe6a0ed70412993305f12c6b10e55f719",
+    "base_detector": "src/h2station/confidential_pressure_cycle_holdout.py",
+    "base_detector_sha256": "74bf77c848b5f038a93185cd82a68ecfdfbda860583f852fdaea385268e5d99a"
+  }
+}
