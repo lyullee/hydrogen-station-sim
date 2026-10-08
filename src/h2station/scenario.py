@@ -24,7 +24,13 @@ from .full_station import (
     FullStationState,
     MultistageHydrogenCompressor,
 )
-from .protocol import FuelingSchedule, SampledFuelingController, _profile_value
+from .protocol import (
+    CommunicationLossPolicy,
+    FuelingSchedule,
+    FuelingTemperatureCategory,
+    SampledFuelingController,
+    _profile_value,
+)
 from .risk.live import DynamicRiskMonitor, HyRAMConsequenceBackend
 from .safe_operation import SafeFullStationSimulator
 from .public_tank_calibration import load_public_type_iv_tank_calibration
@@ -97,6 +103,17 @@ class ReferenceScenario:
     maximum_gas_temperature_k: float = 358.15
     maximum_precooler_temperature_deviation_k: float = 15.0
     maximum_mass_flow_kg_s: float = 0.060
+    # Optional public HGV 4.3-style training checks. Values are deliberately
+    # configurable because this demonstrator does not embed SAE J2601 tables.
+    minimum_startup_time_s: float = 0.0
+    maximum_startup_mass_kg: float | None = None
+    startup_mass_window_s: float | None = None
+    pressure_corridor_lower_tolerance_pa: float | None = None
+    pressure_corridor_upper_tolerance_pa: float | None = None
+    fueling_temperature_category: FuelingTemperatureCategory = (
+        FuelingTemperatureCategory.CUSTOM
+    )
+    communication_loss_policy: CommunicationLossPolicy = CommunicationLossPolicy.ABORT
     risk_update_period_s: float = 1.0
     compressor_suction_pressure_pa: float = 20.0e6
     compressor_suction_temperature_k: float = 298.15
@@ -337,6 +354,17 @@ def build_reference_scenario(
             nominal_working_pressure_pa=(
                 config.vehicle_nominal_working_pressure_pa
             ),
+            minimum_startup_time_s=config.minimum_startup_time_s,
+            maximum_startup_mass_kg=config.maximum_startup_mass_kg,
+            startup_mass_window_s=config.startup_mass_window_s,
+            pressure_corridor_lower_tolerance_pa=(
+                config.pressure_corridor_lower_tolerance_pa
+            ),
+            pressure_corridor_upper_tolerance_pa=(
+                config.pressure_corridor_upper_tolerance_pa
+            ),
+            fueling_temperature_category=config.fueling_temperature_category,
+            communication_loss_policy=config.communication_loss_policy,
         )
     )
     partial = PartialStationModel(
@@ -382,6 +410,17 @@ def build_reference_scenario(
             nominal_working_pressure_pa=(
                 config.vehicle_2_nominal_working_pressure_pa
             ),
+            minimum_startup_time_s=config.minimum_startup_time_s,
+            maximum_startup_mass_kg=config.maximum_startup_mass_kg,
+            startup_mass_window_s=config.startup_mass_window_s,
+            pressure_corridor_lower_tolerance_pa=(
+                config.pressure_corridor_lower_tolerance_pa
+            ),
+            pressure_corridor_upper_tolerance_pa=(
+                config.pressure_corridor_upper_tolerance_pa
+            ),
+            fueling_temperature_category=config.fueling_temperature_category,
+            communication_loss_policy=config.communication_loss_policy,
         )
     )
     secondary_partial = PartialStationModel(

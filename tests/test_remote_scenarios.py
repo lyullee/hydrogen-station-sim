@@ -3,14 +3,50 @@ import json
 from pathlib import Path
 import numpy as np
 import pytest
+from pydantic import ValidationError
 from h2station.api import SimulationInput
 from h2station.hazop.mapping import MODEL_BINDINGS
 from h2station.hazop.runtime import HazopMonitor
 from h2station.risk.runtime_backend import UnavailableHyRAMBackend
+from h2station.protocol import CommunicationLossPolicy
 from h2station.scenario import ReferenceScenario, build_reference_scenario
 from h2station.safety_runtime import FaultKind
 
 CATALOG=json.loads((Path(__file__).resolve().parents[1]/'web/scenarios.json').read_text(encoding='utf-8'))
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_remote_exposes_optional_hgv43_training_controls():
+    html = (ROOT / 'web/remote.html').read_text(encoding='utf-8')
+    script = (ROOT / 'web/remote.js').read_text(encoding='utf-8')
+    for control_id in (
+        'minimumStartupTime', 'maximumStartupMass', 'startupMassWindow',
+        'pressureCorridorLower', 'pressureCorridorUpper',
+        'fuelingTemperatureCategory', 'communicationLossPolicy',
+    ):
+        assert f'id="{control_id}"' in html
+        assert control_id in script
+    assert 'SAE J2601 또는 HGV 4.3 인증 시험이 아닙니다' in html
+    assert not script.rstrip().endswith(r'\n')
+
+
+def test_hgv43_training_inputs_require_a_complete_startup_mass_window():
+    with pytest.raises(ValidationError, match="must be configured together"):
+        SimulationInput(maximum_startup_mass_kg=0.05)
+
+    request = SimulationInput(
+        maximum_startup_mass_kg=0.05,
+        startup_mass_window_s=3.0,
+        minimum_startup_time_s=1.0,
+        pressure_corridor_lower_tolerance_mpa=2.0,
+        pressure_corridor_upper_tolerance_mpa=3.0,
+        fueling_temperature_category="T30",
+        communication_loss_policy="hold-and-resume",
+    )
+    assert request.maximum_startup_mass_kg == pytest.approx(0.05)
+    assert request.startup_mass_window_s == pytest.approx(3.0)
+    assert request.fueling_temperature_category == "T30"
+    assert request.communication_loss_policy == "hold-and-resume"
 
 
 def test_remote_catalog_covers_all_implemented_faults_and_mapped_sensors():
@@ -58,6 +94,36 @@ def test_dispenser_communication_fault_reaches_selected_controller_feedback():
 
     assert samples[-1].fueling_communication_state == 'invalid-crc'
     assert samples[-1].fueling_stop_reason == 'communication-invalid-crc'
+    assert samples[-1].fueling_2_communication_state == 'valid'
+
+
+def test_finite_data_loss_holds_then_resumes_selected_dispenser():
+    event = SimulationInput(duration_s=.6, control_period_s=.2, faults=[{
+        'event_id': 'loss-1',
+        'kind': 'communication-data-loss',
+        'target': 'dispenser',
+        'start_time_s': 0,
+        'end_time_s': .2,
+    }]).faults[0].to_event()
+    built = build_reference_scenario(
+        ReferenceScenario(
+            duration_s=.6,
+            control_period_s=.2,
+            fault_events=(event,),
+            communication_loss_policy=CommunicationLossPolicy.HOLD_AND_RESUME,
+        ),
+        UnavailableHyRAMBackend(),
+    )
+    samples = []
+
+    built.simulator.simulate(
+        built.initial_state, .6, .2, sample_callback=samples.append
+    )
+
+    assert samples[0].fueling_communication_state == 'data-loss'
+    assert samples[0].fueling_stop_reason == 'communication-data-loss-hold'
+    assert samples[-1].fueling_communication_state == 'valid'
+    assert samples[-1].fueling_stop_reason is None
     assert samples[-1].fueling_2_communication_state == 'valid'
 
 

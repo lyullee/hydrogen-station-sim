@@ -124,6 +124,12 @@ class SafeOperationSample:
     fueling_2_stop_reason: str | None = None
     fueling_communication_state: str = "valid"
     fueling_2_communication_state: str = "valid"
+    fueling_delivered_mass_kg: float = 0.0
+    fueling_2_delivered_mass_kg: float = 0.0
+    fueling_temperature_category: str = "custom"
+    fueling_2_temperature_category: str = "custom"
+    fueling_conformance_flags: tuple[str, ...] = ()
+    fueling_2_conformance_flags: tuple[str, ...] = ()
 
 
 class SafeFullStationSimulator:
@@ -316,6 +322,7 @@ class SafeFullStationSimulator:
                 communication_state=override.communication_state_by_dispenser.get(
                     "dispenser", FuelingCommunicationState.VALID
                 ),
+                delivery_temperature_k=previous_precooler_temperature,
             )
             if process is not None and not requested_1:
                 if self._last_vehicle_requested[0]:
@@ -342,6 +349,7 @@ class SafeFullStationSimulator:
                 communication_state=override.communication_state_by_dispenser.get(
                     "dispenser_2", FuelingCommunicationState.VALID
                 ),
+                delivery_temperature_k=previous_precooler_2_temperature,
             )
             if process is not None and not requested_2:
                 if self._last_vehicle_requested[1]:
@@ -837,6 +845,20 @@ class SafeFullStationSimulator:
                         ),
                         fueling_2_communication_state=(
                             fueling_command_2.communication_state.value
+                        ),
+                        fueling_delivered_mass_kg=fueling_command.delivered_mass_kg,
+                        fueling_2_delivered_mass_kg=(
+                            fueling_command_2.delivered_mass_kg
+                        ),
+                        fueling_temperature_category=(
+                            fueling_command.fueling_temperature_category
+                        ),
+                        fueling_2_temperature_category=(
+                            fueling_command_2.fueling_temperature_category
+                        ),
+                        fueling_conformance_flags=fueling_command.conformance_flags,
+                        fueling_2_conformance_flags=(
+                            fueling_command_2.conformance_flags
                         ),
                     )
                 )

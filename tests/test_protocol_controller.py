@@ -3,11 +3,13 @@ from __future__ import annotations
 import pytest
 
 from h2station.protocol import (
+    CommunicationLossPolicy,
     FuelingControllerParameters,
     FuelingCommunicationState,
     FuelingObservation,
     FuelingPhase,
     FuelingSchedule,
+    FuelingTemperatureCategory,
     SampledFuelingController,
 )
 from h2station.tabulated import PropsSI
@@ -237,3 +239,181 @@ def test_communication_faults_conservatively_terminate_fueling(state, reason):
     assert command.valve_opening == 0.0
     assert command.stop_reason == reason
     assert command.communication_state is state
+
+
+def test_data_loss_can_hold_and_resume_when_explicitly_configured():
+    controller = SampledFuelingController(FuelingSchedule(
+        target_pressure_pa=70.0e6,
+        average_pressure_ramp_rate_pa_s=1.0e5,
+        delivery_temperature_k=233.15,
+        maximum_mass_flow_kg_s=0.060,
+        communication_loss_policy=CommunicationLossPolicy.HOLD_AND_RESUME,
+    ))
+    controller.update(_observation(0.0), 0.2)
+    lost = FuelingObservation(
+        **{
+            **_observation(1.0).__dict__,
+            "communication_state": FuelingCommunicationState.DATA_LOSS,
+        }
+    )
+
+    held = controller.update(lost, 0.2)
+    resumed = controller.update(_observation(2.0), 0.2)
+
+    assert held.phase is FuelingPhase.COMMUNICATION_HOLD
+    assert held.valve_opening == 0.0
+    assert held.stop_reason == "communication-data-loss-hold"
+    assert resumed.phase is FuelingPhase.FILLING
+    assert resumed.valve_opening > 0.0
+
+
+def test_minimum_startup_time_holds_then_allows_flow():
+    controller = SampledFuelingController(FuelingSchedule(
+        target_pressure_pa=70.0e6,
+        average_pressure_ramp_rate_pa_s=1.0e5,
+        delivery_temperature_k=233.15,
+        maximum_mass_flow_kg_s=0.060,
+        minimum_startup_time_s=2.0,
+    ))
+
+    held = controller.update(_observation(0.0), 0.2)
+    released = controller.update(_observation(2.0), 0.2)
+
+    assert held.phase is FuelingPhase.FILLING
+    assert held.stop_reason == "minimum-startup-time"
+    assert held.valve_opening == 0.0
+    assert released.phase is FuelingPhase.FILLING
+    assert released.valve_opening > 0.0
+
+
+def test_flow_before_minimum_startup_time_aborts():
+    controller = SampledFuelingController(FuelingSchedule(
+        target_pressure_pa=70.0e6,
+        average_pressure_ramp_rate_pa_s=1.0e5,
+        delivery_temperature_k=233.15,
+        maximum_mass_flow_kg_s=0.060,
+        minimum_startup_time_s=2.0,
+    ))
+    controller.update(_observation(0.0), 0.2)
+    early_flow = FuelingObservation(
+        **{**_observation(1.0).__dict__, "measured_mass_flow_kg_s": 0.01}
+    )
+
+    command = controller.update(early_flow, 0.2)
+
+    assert command.phase is FuelingPhase.ABORTED
+    assert command.stop_reason == "startup-flow-before-minimum-time"
+
+
+def test_maximum_startup_mass_limit_aborts_inside_window():
+    controller = SampledFuelingController(FuelingSchedule(
+        target_pressure_pa=70.0e6,
+        average_pressure_ramp_rate_pa_s=1.0e5,
+        delivery_temperature_k=233.15,
+        maximum_mass_flow_kg_s=0.060,
+        maximum_startup_mass_kg=0.05,
+        startup_mass_window_s=3.0,
+    ))
+    controller.update(_observation(0.0), 0.5)
+    high_startup_mass = FuelingObservation(
+        **{**_observation(1.0).__dict__, "measured_mass_flow_kg_s": 0.06}
+    )
+
+    command = controller.update(high_startup_mass, 1.0)
+
+    assert command.phase is FuelingPhase.ABORTED
+    assert command.stop_reason == "maximum-startup-mass"
+    assert command.delivered_mass_kg == pytest.approx(0.06)
+
+
+@pytest.mark.parametrize(
+    ("pressure_pa", "expected_reason"),
+    [
+        (3.5e6, "lower-pressure-corridor"),
+        (6.5e6, "upper-pressure-corridor"),
+    ],
+)
+def test_configurable_pressure_corridor_aborts_outside_reference(
+    pressure_pa, expected_reason
+):
+    controller = SampledFuelingController(FuelingSchedule(
+        target_pressure_pa=70.0e6,
+        average_pressure_ramp_rate_pa_s=1.0e5,
+        delivery_temperature_k=233.15,
+        maximum_mass_flow_kg_s=0.060,
+        pressure_corridor_lower_tolerance_pa=1.0e6,
+        pressure_corridor_upper_tolerance_pa=1.0e6,
+    ))
+    controller.update(_observation(0.0, 5.0e6), 0.2)
+
+    command = controller.update(_observation(1.0, pressure_pa), 0.2)
+
+    assert command.phase is FuelingPhase.ABORTED
+    assert command.stop_reason == expected_reason
+
+
+def test_selected_t30_category_rejects_out_of_range_delivery_temperature():
+    controller = SampledFuelingController(FuelingSchedule(
+        target_pressure_pa=70.0e6,
+        average_pressure_ramp_rate_pa_s=1.0e5,
+        delivery_temperature_k=243.15,
+        maximum_mass_flow_kg_s=0.060,
+        fueling_temperature_category=FuelingTemperatureCategory.T30,
+    ))
+    baseline = _observation(0.0)
+    too_cold = FuelingObservation(
+        **{**baseline.__dict__, "delivery_temperature_k": 235.15}
+    )
+
+    command = controller.update(too_cold, 0.2)
+
+    assert command.phase is FuelingPhase.ABORTED
+    assert command.stop_reason == "fuel-delivery-temperature-category"
+    assert command.fueling_temperature_category == "T30"
+
+
+def test_public_temperature_category_boundaries_are_explicit():
+    common = dict(
+        target_pressure_pa=70.0e6,
+        average_pressure_ramp_rate_pa_s=1.0e5,
+        delivery_temperature_k=243.15,
+        maximum_mass_flow_kg_s=0.060,
+    )
+
+    assert FuelingSchedule(
+        **common, fueling_temperature_category=FuelingTemperatureCategory.T40
+    ).temperature_category_bounds_k() == pytest.approx((233.15, 240.15))
+    assert FuelingSchedule(
+        **common, fueling_temperature_category=FuelingTemperatureCategory.T30
+    ).temperature_category_bounds_k() == pytest.approx((240.15, 247.15))
+    assert FuelingSchedule(
+        **common, fueling_temperature_category=FuelingTemperatureCategory.T20
+    ).temperature_category_bounds_k() == pytest.approx((247.15, 255.65))
+
+
+def test_reference_scenario_wires_training_conformance_controls_to_both_dispensers():
+    built = build_reference_scenario(
+        ReferenceScenario(
+            minimum_startup_time_s=1.5,
+            maximum_startup_mass_kg=0.08,
+            startup_mass_window_s=4.0,
+            pressure_corridor_lower_tolerance_pa=2.0e6,
+            pressure_corridor_upper_tolerance_pa=3.0e6,
+            fueling_temperature_category=FuelingTemperatureCategory.T30,
+            communication_loss_policy=CommunicationLossPolicy.HOLD_AND_RESUME,
+        ),
+        UnavailableHyRAMBackend(),
+    )
+
+    for controller in (
+        built.station.partial_station.controller,
+        built.station.secondary_partial_station.controller,
+    ):
+        schedule = controller.schedule
+        assert schedule.minimum_startup_time_s == pytest.approx(1.5)
+        assert schedule.maximum_startup_mass_kg == pytest.approx(0.08)
+        assert schedule.startup_mass_window_s == pytest.approx(4.0)
+        assert schedule.pressure_corridor_lower_tolerance_pa == pytest.approx(2.0e6)
+        assert schedule.pressure_corridor_upper_tolerance_pa == pytest.approx(3.0e6)
+        assert schedule.fueling_temperature_category is FuelingTemperatureCategory.T30
+        assert schedule.communication_loss_policy is CommunicationLossPolicy.HOLD_AND_RESUME

@@ -62,7 +62,11 @@ def test_carb_gap_audit_keeps_observed_communication_failures_actionable():
     assert "abort" in represented.lower()
     assert "crc" in represented.lower()
     assert "communication loss" in represented.lower()
-    assert "resumed-fueling" in missing.lower()
+    assert "minimum-startup-time" in represented.lower()
+    assert "pressure-corridor" in represented.lower()
+    assert "t40" in represented.lower()
+    assert "automatic resume" in represented.lower()
+    assert "standards-certified" in missing.lower()
 
 
 def test_carb_field_benchmark_is_grounded_without_claiming_trace_validation():

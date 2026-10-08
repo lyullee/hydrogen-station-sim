@@ -43,6 +43,15 @@
           <label>차량 1 초기온도 (°C)<input id="initialTemp1" type="number" value="25" min="-40" max="85" step="any" required></label>
           <label>차량 2 초기온도 (°C)<input id="initialTemp2" type="number" value="25" min="-40" max="85" step="any" required></label>
         </div><p class="hint">압력 상승률과 최대 유량은 이 시뮬레이터의 고정 운전 설정입니다. SAE J2601 조건표에 따른 자동 충전 일정 선택은 적용되지 않습니다.</p></details>
+        <details class="protocol-training-settings"><summary>충전 프로토콜 훈련 검사</summary><p class="hint">공개 CARB 현장시험에서 확인된 항목을 가상 검사합니다. 빈 선택값은 검사를 끄며, 이 기능은 SAE J2601 또는 HGV 4.3 인증 시험이 아닙니다.</p><div class="grid">
+          <label>최소 기동 대기시간 (s)<input id="minimumStartupTime" type="number" value="0" min="0" max="120" step="any"></label>
+          <label>기동 질량 한도 (kg)<input id="maximumStartupMass" type="number" min="0.001" max="10" step="any" placeholder="검사 끔"></label>
+          <label>기동 질량 검사구간 (s)<input id="startupMassWindow" type="number" min="0.1" max="120" step="any" placeholder="검사 끔"></label>
+          <label>압력 하한 허용폭 (MPa)<input id="pressureCorridorLower" type="number" min="0.01" max="20" step="any" placeholder="검사 끔"></label>
+          <label>압력 상한 허용폭 (MPa)<input id="pressureCorridorUpper" type="number" min="0.01" max="20" step="any" placeholder="검사 끔"></label>
+          <label>연료 공급온도 등급<select id="fuelingTemperatureCategory"><option value="custom" selected>검사 끔 · 사용자 설정</option><option value="T40">T40 · −40~−33 °C</option><option value="T30">T30 · −33~−26 °C</option><option value="T20">T20 · −26~−17.5 °C</option></select></label>
+          <label>차량 통신 손실 시<select id="communicationLossPolicy"><option value="abort" selected>즉시 충전 종료</option><option value="hold-and-resume">유량 차단 후 통신 복구 시 재개</option></select></label>
+        </div></details>
         <details class="relief-settings"><summary>안전밸브 · 개방/재폐쇄 압력</summary><p class="hint">압력이 개방값에 도달하면 방출하고 재폐쇄값까지 낮아지면 닫힙니다. 두 값을 가깝게 설정하면 채터링을 관찰할 수 있습니다.</p><div id="reliefRows" class="relief-rows"></div></details>
         <details class="risk-display-settings"><summary>3D 위험도 표시 · 계산 부하</summary><p class="hint">위험도 버튼을 켰을 때 주요 설비의 현재 센서와 피해영향예측을 아래 주기로 갱신합니다. ‘절대’는 고정 기준 0–100 지수이며 연간 개인위험도가 아닙니다.</p><div class="grid">
           <label class="switch-label"><input id="riskOverlayEnabled" type="checkbox" checked> 주기적 위험도 갱신</label>
@@ -137,7 +146,7 @@
   </article>
 </template>
 <script src="/locale.js?v=20261001-language3"></script>
-<script src="/remote.js?v=20261008-release-boundary1"></script>
+<script src="/remote.js?v=20261008-hgv43-training1"></script>
 <script src="/safety-actions.js?v=1"></script>
 <script src="/safety-console.js?v=20260930-evacuation-feedback1"></script>
 </body></html>

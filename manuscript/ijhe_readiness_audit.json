@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T05:46:30.322506+00:00",
+  "generated_at": "2026-10-08T06:07:24.870668+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -6196,7 +6196,7 @@
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 944,
+            "passed": 956,
             "failed": 0,
             "warnings": 17
           }
@@ -6241,7 +6241,8 @@
           "restricted station compressor/cooler thermal evidence is projected into full, summary, header and compact decision contexts as UNCONFIRMED, with no calibration, runtime, vehicle-fill or full-loop claim",
           "public HIAD metadata-to-runtime coverage is projected into full, summary, header and compact decision contexts with 29 direct, four proxy and one response-only cases, while incident narrative parameterization remains prohibited; all nine executable canonical recipes pass",
           "independent KHK metadata-to-runtime traceability is projected into full, summary, header and compact decision contexts: 22 reports covering 25 incident codes traverse eight passing canonical recipes, one KOH-electrolyte release remains outside gaseous-H2 scope, and report narrative parameterization remains prohibited",
-          "CARB 22-station HGV 4.3 aggregate fault, communication and fueling-performance results are carried into the evidence envelope and only into relevant compact prompts, with no dynamic-model or full-loop validation claim"
+          "CARB 22-station HGV 4.3 aggregate fault, communication and fueling-performance results are carried into the evidence envelope and only into relevant compact prompts, with no dynamic-model or full-loop validation claim",
+          "CARB-motivated startup, pressure-corridor, T20/T30/T40 and communication hold/resume training controls publish traceable live-frame outcomes without claiming standards certification"
         ],
         "not_established": [
           "physics validity of the consequence model",
@@ -6650,6 +6651,13 @@
           "stations_passing_all_nine_fueling_performance_metrics": 4,
           "invalid_crc_fail_count": 8,
           "data_loss_and_resumed_fueling_fail_count": 4,
+          "training_controls_implemented": [
+            "minimum_startup_time",
+            "maximum_startup_mass",
+            "lower_and_upper_pressure_corridor",
+            "T40_T30_T20_delivery_temperature_category",
+            "communication_loss_hold_and_resume"
+          ],
           "relevant_compact_prompt_routing": true,
           "dynamic_model_validation_claimed": false,
           "full_loop_external_holdout_eligible": false,
@@ -6863,12 +6871,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-08T05:46:29.961247+00:00",
+        "attempted_at": "2026-10-08T06:00:15.731114+00:00",
         "attempts_this_run": 1,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "60153ac44717d45cd56511723d7b82a081d90fd68cada486216fc270c0818011",
+        "source_sha256": "a8220109fb58e3742be4f9d774e12b6c938106c7f3bd9d18dc1ed67fc33eef87",
         "diagnostic": "Unable to find standard directories for platform",
         "format_check_passed": true,
         "retained_previous_pdf": {

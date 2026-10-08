@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **99 PASS · 8 FAIL · 8 PENDING**.
+Gate counts: **100 PASS · 8 FAIL · 8 PENDING**.
 
 A newly found CC BY 4.0 detector workbook was handled prospectively: the
 protocol and thresholds were committed before the numerical Excel file was
@@ -108,10 +108,12 @@ The 2024 CARB in-use study now supplies a separate public field benchmark over
 22 operating light-duty stations. Its aggregate HGV 4.3 outcomes are linked to
 the LLM evidence envelope and a deterministic feature-coverage audit. The
 observed failures prompted five dispenser-specific communication-fault
-injections with conservative fill termination. Startup checks, pressure-
-corridor conformance and resumed non-communication fuelling remain. Because the
-report does not publish synchronized station-dispenser-vehicle traces, it
-increases field relevance without changing the full-loop validation gate.
+injections, configurable startup mass/time and pressure-corridor termination,
+T20/T30/T40 delivery-temperature checks, and a communication-loss hold/resume
+path. These are training controls rather than a certified SAE J2601/HGV 4.3
+implementation. Because the report does not publish synchronized
+station-dispenser-vehicle traces, it increases field relevance without changing
+the full-loop validation gate.
 
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted

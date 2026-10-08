@@ -38,12 +38,16 @@ temperature, delivery-temperature boundaries, operator stop and ESD.
 The field benchmark identified communication faults as the first high-value
 gap. The runtime now supports dispenser-specific Abort, Halt, data-loss,
 invalid-CRC and invalid-value injection with conservative fill termination.
-The remaining high-value behavior is:
+The next implementation increment added configurable minimum-startup-time and
+maximum-startup-mass checks, upper/lower pressure-corridor termination, public
+T40/T30/T20 delivery-temperature category checks, and an optional
+communication-loss hold/resume path. These controls are available through the
+simulation API and publish their stop reason, delivered mass, selected
+temperature category and conformance flags in live frames.
 
-1. maximum-startup-mass and minimum-startup-time conformance checks;
-2. upper/lower pressure-corridor evaluation;
-3. protocol-selectable non-communication fallback and resumed fueling;
-4. explicit T30/T40 conformance reporting.
+The remaining gap is standards certification: the repository does not embed a
+certified SAE J2601 table or MC Formula, SAE J2799 message encoding, or the
+normative HGV 4.3 pass/fail thresholds and trace-export harness.
 
 These gaps are feature-coverage findings. Closing them will improve training
 and controller testing, but will not create external dynamic-model validation

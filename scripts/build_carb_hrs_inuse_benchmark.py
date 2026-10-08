@@ -138,16 +138,18 @@ def build(source_pdf: Path | None = None) -> dict[str, Any]:
                 "operator stop and ESD termination",
                 "dispenser-specific abort and halt communication fault injection with conservative termination",
                 "dispenser-specific communication loss, invalid CRC and invalid defined-value fault injection with conservative termination",
+                "configurable minimum-startup-time and maximum-startup-mass supervision",
+                "configurable upper and lower pressure-corridor termination",
+                "T40, T30 and T20 delivery-temperature category supervision using the public CARB ranges",
+                "optional communication-loss hold followed by automatic resume when a valid signal returns",
             ],
             "partial": [
                 "pressure-ramp reference control without a certified SAE J2601 lookup table",
-                "HGV 4.3 communication error behavior without SAE J2799 message encoding or certified protocol tables",
+                "HGV 4.3 startup, pressure-corridor, temperature-category and communication behavior without SAE J2799 message encoding or certified protocol tables and thresholds",
             ],
             "missing": [
-                "maximum-startup-mass and minimum-startup-time conformance tests",
-                "upper/lower pressure-corridor conformance evaluator",
-                "protocol-selectable non-communication fallback and resumed-fueling state machine",
-                "explicit T30/T40 fueling-category conformance report",
+                "standards-certified J2601 table or MC-formula implementation",
+                "standards-certified HGV 4.3 pass/fail harness and trace export",
             ],
         },
         "eligibility": {

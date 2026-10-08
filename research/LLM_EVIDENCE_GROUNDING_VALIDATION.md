@@ -89,7 +89,7 @@ The following tests passed in the repository virtual environment:
 33 passed
 
 .venv\Scripts\python.exe -m pytest -q
-944 passed, 17 warnings
+956 passed, 17 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -260,8 +260,11 @@ questions about fueling, protocol, communication, flow, pressure, temperature
 or SOC. The full and audit projections retain the source and claim boundary.
 The assistant can therefore explain why abort/halt, communication loss, CRC,
 startup and pressure-corridor checks matter using observed field results. The
-artifact has no synchronized raw traces, so it cannot support parameter
-calibration, vehicle-trace validation or a full-loop validation claim.
+runtime exposes configurable startup, pressure-corridor and T20/T30/T40 checks,
+plus a communication-loss hold/resume path; these remain training controls, not
+standards certification. The artifact has no synchronized raw traces, so it
+cannot support parameter calibration, vehicle-trace validation or a full-loop
+validation claim.
 
 
 ## Public incident traceability follow-up

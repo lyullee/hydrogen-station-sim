@@ -35,6 +35,7 @@ class FuelingPhase(str, Enum):
     IDLE = "idle"
     FILLING = "filling"
     LEAK_CHECK = "leak_check"
+    COMMUNICATION_HOLD = "communication_hold"
     COMPLETE = "complete"
     ABORTED = "aborted"
 
@@ -53,6 +54,29 @@ class FuelingCommunicationState(str, Enum):
     DATA_LOSS = "data-loss"
     INVALID_CRC = "invalid-crc"
     INVALID_VALUE = "invalid-value"
+
+
+class CommunicationLossPolicy(str, Enum):
+    """Configurable response to a temporary loss of vehicle communication."""
+
+    ABORT = "abort"
+    HOLD_AND_RESUME = "hold-and-resume"
+
+
+class FuelingTemperatureCategory(str, Enum):
+    """Public fuel-delivery temperature categories reported by CARB."""
+
+    T40 = "T40"
+    T30 = "T30"
+    T20 = "T20"
+    CUSTOM = "custom"
+
+
+_TEMPERATURE_CATEGORY_BOUNDS_K = {
+    FuelingTemperatureCategory.T40: (233.15, 240.15),
+    FuelingTemperatureCategory.T30: (240.15, 247.15),
+    FuelingTemperatureCategory.T20: (247.15, 255.65),
+}
 
 
 @dataclass(frozen=True)
@@ -75,6 +99,17 @@ class FuelingSchedule:
     leak_check_pressure_interval_pa: float | None = None
     leak_check_pause_s: float = 5.0
     leak_check_pressure_drop_tolerance_pa: float = 10_000.0
+    # Optional, transparent HGV 4.3-style training checks. These configurable
+    # limits do not reproduce proprietary SAE J2601 tables or certify a station.
+    minimum_startup_time_s: float = 0.0
+    maximum_startup_mass_kg: float | None = None
+    startup_mass_window_s: float | None = None
+    pressure_corridor_lower_tolerance_pa: float | None = None
+    pressure_corridor_upper_tolerance_pa: float | None = None
+    fueling_temperature_category: FuelingTemperatureCategory = (
+        FuelingTemperatureCategory.CUSTOM
+    )
+    communication_loss_policy: CommunicationLossPolicy = CommunicationLossPolicy.ABORT
 
     def __post_init__(self) -> None:
         if self.target_pressure_pa <= 0.0:
@@ -89,6 +124,24 @@ class FuelingSchedule:
             raise ValueError("leak_check_pause_s must be positive")
         if self.leak_check_pressure_drop_tolerance_pa < 0.0:
             raise ValueError("leak_check_pressure_drop_tolerance_pa must be non-negative")
+        if self.minimum_startup_time_s < 0.0:
+            raise ValueError("minimum_startup_time_s must be non-negative")
+        if self.maximum_startup_mass_kg is not None and self.maximum_startup_mass_kg <= 0.0:
+            raise ValueError("maximum_startup_mass_kg must be positive when configured")
+        if self.maximum_startup_mass_kg is not None and (
+            self.startup_mass_window_s is None or self.startup_mass_window_s <= 0.0
+        ):
+            raise ValueError(
+                "startup_mass_window_s must be positive when a startup mass limit is configured"
+            )
+        if self.startup_mass_window_s is not None and self.startup_mass_window_s <= 0.0:
+            raise ValueError("startup_mass_window_s must be positive when configured")
+        for name, value in (
+            ("pressure_corridor_lower_tolerance_pa", self.pressure_corridor_lower_tolerance_pa),
+            ("pressure_corridor_upper_tolerance_pa", self.pressure_corridor_upper_tolerance_pa),
+        ):
+            if value is not None and value <= 0.0:
+                raise ValueError(f"{name} must be positive when configured")
         if not 0.0 < self.target_soc <= 1.2:
             raise ValueError("target_soc must be in (0, 1.2]")
         self._validate_profile(
@@ -132,6 +185,9 @@ class FuelingSchedule:
             self.pressure_reference_profile_pa[0][1],
         )
 
+    def temperature_category_bounds_k(self) -> tuple[float, float] | None:
+        return _TEMPERATURE_CATEGORY_BOUNDS_K.get(self.fueling_temperature_category)
+
 
 @dataclass(frozen=True)
 class FuelingControllerParameters:
@@ -152,6 +208,7 @@ class FuelingObservation:
     density_kg_m3: float
     measured_mass_flow_kg_s: float
     communication_state: FuelingCommunicationState = FuelingCommunicationState.VALID
+    delivery_temperature_k: float | None = None
 
 
 @dataclass(frozen=True)
@@ -163,6 +220,9 @@ class FuelingCommand:
     state_of_charge: float
     stop_reason: str | None = None
     communication_state: FuelingCommunicationState = FuelingCommunicationState.VALID
+    delivered_mass_kg: float = 0.0
+    fueling_temperature_category: str = FuelingTemperatureCategory.CUSTOM.value
+    conformance_flags: tuple[str, ...] = ()
 
 
 class VehicleStateOfCharge:
@@ -205,6 +265,8 @@ class SampledFuelingController:
         self._leak_check_until_s: float | None = None
         self._leak_check_reference_pressure_pa: float | None = None
         self._communication_state = FuelingCommunicationState.VALID
+        self._communication_hold_started_s: float | None = None
+        self._delivered_mass_kg = 0.0
 
     def start(self, time_s: float, initial_pressure_pa: float) -> None:
         self._phase = FuelingPhase.FILLING
@@ -220,6 +282,8 @@ class SampledFuelingController:
         self._leak_check_until_s = None
         self._leak_check_reference_pressure_pa = None
         self._communication_state = FuelingCommunicationState.VALID
+        self._communication_hold_started_s = None
+        self._delivered_mass_kg = 0.0
 
     def reset(self) -> None:
         """Return the controller to idle before a separate operator fill request."""
@@ -230,6 +294,8 @@ class SampledFuelingController:
         self._leak_check_until_s = None
         self._leak_check_reference_pressure_pa = None
         self._communication_state = FuelingCommunicationState.VALID
+        self._communication_hold_started_s = None
+        self._delivered_mass_kg = 0.0
 
     def update(self, observation: FuelingObservation, sample_period_s: float,
                *, auto_stop: bool = True, target_pressure_pa: float | None = None) -> FuelingCommand:
@@ -252,13 +318,95 @@ class SampledFuelingController:
             reference_pressure_pa = min(target, ramp_reference) if auto_stop else min(110e6, ramp_reference)
         soc = self.soc_model.calculate(observation.density_kg_m3)
 
+        self._delivered_mass_kg += max(
+            0.0, observation.measured_mass_flow_kg_s
+        ) * sample_period_s
+
         self._communication_state = observation.communication_state
+        if observation.communication_state is FuelingCommunicationState.DATA_LOSS and (
+            self.schedule.communication_loss_policy
+            is CommunicationLossPolicy.HOLD_AND_RESUME
+        ):
+            self._phase = FuelingPhase.COMMUNICATION_HOLD
+            if self._communication_hold_started_s is None:
+                self._communication_hold_started_s = observation.time_s
+            return self._paused_command(
+                reference_pressure_pa,
+                soc,
+                "communication-data-loss-hold",
+                observation.time_s,
+            )
         if observation.communication_state is not FuelingCommunicationState.VALID:
             self._phase = FuelingPhase.ABORTED
             return self._stopped_command(
                 reference_pressure_pa,
                 soc,
                 f"communication-{observation.communication_state.value}",
+            )
+        if self._phase is FuelingPhase.COMMUNICATION_HOLD:
+            self._phase = FuelingPhase.FILLING
+            self._communication_hold_started_s = None
+
+        if elapsed_s < self.schedule.minimum_startup_time_s:
+            if observation.measured_mass_flow_kg_s > 1.0e-6:
+                self._phase = FuelingPhase.ABORTED
+                return self._stopped_command(
+                    reference_pressure_pa,
+                    soc,
+                    "startup-flow-before-minimum-time",
+                )
+            return self._paused_command(
+                reference_pressure_pa,
+                soc,
+                "minimum-startup-time",
+                observation.time_s,
+            )
+
+        if (
+            self.schedule.maximum_startup_mass_kg is not None
+            and self.schedule.startup_mass_window_s is not None
+            and elapsed_s <= self.schedule.startup_mass_window_s
+            and self._delivered_mass_kg > self.schedule.maximum_startup_mass_kg
+        ):
+            self._phase = FuelingPhase.ABORTED
+            return self._stopped_command(
+                reference_pressure_pa,
+                soc,
+                "maximum-startup-mass",
+            )
+
+        category_bounds = self.schedule.temperature_category_bounds_k()
+        if category_bounds is not None and observation.delivery_temperature_k is not None:
+            lower_k, upper_k = category_bounds
+            if not lower_k <= observation.delivery_temperature_k <= upper_k:
+                self._phase = FuelingPhase.ABORTED
+                return self._stopped_command(
+                    reference_pressure_pa,
+                    soc,
+                    "fuel-delivery-temperature-category",
+                )
+
+        if (
+            self.schedule.pressure_corridor_lower_tolerance_pa is not None
+            and observation.pressure_pa
+            < reference_pressure_pa - self.schedule.pressure_corridor_lower_tolerance_pa
+        ):
+            self._phase = FuelingPhase.ABORTED
+            return self._stopped_command(
+                reference_pressure_pa,
+                soc,
+                "lower-pressure-corridor",
+            )
+        if (
+            self.schedule.pressure_corridor_upper_tolerance_pa is not None
+            and observation.pressure_pa
+            > reference_pressure_pa + self.schedule.pressure_corridor_upper_tolerance_pa
+        ):
+            self._phase = FuelingPhase.ABORTED
+            return self._stopped_command(
+                reference_pressure_pa,
+                soc,
+                "upper-pressure-corridor",
             )
 
         if observation.temperature_k >= self.schedule.maximum_gas_temperature_k:
@@ -373,6 +521,8 @@ class SampledFuelingController:
             ),
             state_of_charge=soc,
             communication_state=self._communication_state,
+            delivered_mass_kg=self._delivered_mass_kg,
+            fueling_temperature_category=self.schedule.fueling_temperature_category.value,
         )
 
     def _stopped_command(
@@ -392,6 +542,9 @@ class SampledFuelingController:
             state_of_charge=soc,
             stop_reason=reason,
             communication_state=self._communication_state,
+            delivered_mass_kg=self._delivered_mass_kg,
+            fueling_temperature_category=self.schedule.fueling_temperature_category.value,
+            conformance_flags=(reason,),
         )
 
     def _paused_command(
@@ -410,4 +563,7 @@ class SampledFuelingController:
             state_of_charge=soc,
             stop_reason=reason,
             communication_state=self._communication_state,
+            delivered_mass_kg=self._delivered_mass_kg,
+            fueling_temperature_category=self.schedule.fueling_temperature_category.value,
+            conformance_flags=(reason,),
         )

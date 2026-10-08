@@ -36,6 +36,7 @@ from .llm_grounding import (
     prompt_decision_evidence,
 )
 from .safe_operation import SafeOperationSample
+from .protocol import CommunicationLossPolicy, FuelingTemperatureCategory
 from .simulation_clock import SimulationClock
 from .virtual_safety import VALVE_LABELS, ZONES, RECOVERY_CHECKS, suggested_actions
 from .scenario import ReferenceScenario, build_reference_scenario
@@ -237,6 +238,17 @@ class SimulationInput(BaseModel):
     pressure_ramp_rate_mpa_min: float = Field(default=12.0, gt=0.0, le=30.0)
     delivery_temperature_c: float = Field(default=-40.0, ge=-50.0, le=20.0)
     maximum_mass_flow_g_s: float = Field(default=60.0, gt=0.0, le=300.0)
+    minimum_startup_time_s: float = Field(default=0.0, ge=0.0, le=120.0)
+    maximum_startup_mass_kg: float | None = Field(default=None, gt=0.0, le=10.0)
+    startup_mass_window_s: float | None = Field(default=None, gt=0.0, le=120.0)
+    pressure_corridor_lower_tolerance_mpa: float | None = Field(
+        default=None, gt=0.0, le=20.0
+    )
+    pressure_corridor_upper_tolerance_mpa: float | None = Field(
+        default=None, gt=0.0, le=20.0
+    )
+    fueling_temperature_category: Literal["T40", "T30", "T20", "custom"] = "custom"
+    communication_loss_policy: Literal["abort", "hold-and-resume"] = "abort"
     process_settings: ProcessSettings | None = None
     faults: list[FaultInput] = Field(default_factory=list)
 
@@ -265,6 +277,12 @@ class SimulationInput(BaseModel):
                     "mixed_convection requires tank diameter, tank length and "
                     "physical inlet nozzle diameter for both vehicles"
                 )
+        if (self.maximum_startup_mass_kg is None) != (
+            self.startup_mass_window_s is None
+        ):
+            raise ValueError(
+                "maximum_startup_mass_kg and startup_mass_window_s must be configured together"
+            )
         return self
 
 
@@ -546,6 +564,25 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             ),
             delivery_temperature_k=request.delivery_temperature_c + 273.15,
             maximum_mass_flow_kg_s=request.maximum_mass_flow_g_s / 1000.0,
+            minimum_startup_time_s=request.minimum_startup_time_s,
+            maximum_startup_mass_kg=request.maximum_startup_mass_kg,
+            startup_mass_window_s=request.startup_mass_window_s,
+            pressure_corridor_lower_tolerance_pa=(
+                request.pressure_corridor_lower_tolerance_mpa * 1.0e6
+                if request.pressure_corridor_lower_tolerance_mpa is not None
+                else None
+            ),
+            pressure_corridor_upper_tolerance_pa=(
+                request.pressure_corridor_upper_tolerance_mpa * 1.0e6
+                if request.pressure_corridor_upper_tolerance_mpa is not None
+                else None
+            ),
+            fueling_temperature_category=FuelingTemperatureCategory(
+                request.fueling_temperature_category
+            ),
+            communication_loss_policy=CommunicationLossPolicy(
+                request.communication_loss_policy
+            ),
             risk_update_period_s=max(1.0, 5.0 * request.control_period_s),
             # The owner-controlled profile is a station-boundary dispatch
             # reference.  Apply it only when the operator explicitly opts in;
@@ -706,6 +743,22 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                         ),
                         "fueling_2_communication_state": (
                             sample.fueling_2_communication_state
+                        ),
+                        "fueling_delivered_mass_kg": sample.fueling_delivered_mass_kg,
+                        "fueling_2_delivered_mass_kg": (
+                            sample.fueling_2_delivered_mass_kg
+                        ),
+                        "fueling_temperature_category": (
+                            sample.fueling_temperature_category
+                        ),
+                        "fueling_2_temperature_category": (
+                            sample.fueling_2_temperature_category
+                        ),
+                        "fueling_conformance_flags": list(
+                            sample.fueling_conformance_flags
+                        ),
+                        "fueling_2_conformance_flags": list(
+                            sample.fueling_2_conformance_flags
                         ),
                         "virtual_safety": sample.virtual_safety,
                         "realtime_lag_s": realtime_lag_s,

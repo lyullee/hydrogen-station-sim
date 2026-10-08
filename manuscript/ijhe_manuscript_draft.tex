@@ -79,14 +79,14 @@ so we use it for operating-range and fault-taxonomy context rather than as a
 numerical full-loop holdout.
 
 CARB tested 22 stations with an abbreviated HGV 4.3:22
-matrix \cite{carb2024}. None passed every test; five passed all fault and
-communication tests and four passed all nine fuelling-performance metrics.
-Category pass rates were 45.5\% for general fault, 40.9\% for protocol fault,
-50.0\% for communication and 18.2\% for fuelling performance. They motivated
-abort, halt, data-loss, invalid-CRC and
-invalid-value injections with conservative termination. Startup mass/time,
-pressure-corridor, resumed-fuelling and temperature-category conformance remain.
-Aggregate results support field relevance, not model calibration.
+matrix \cite{carb2024}. None passed every test; five passed fault and
+communication tests and four passed nine fuelling-performance metrics.
+Pass rates were 45.5\% for general fault, 40.9\% protocol fault,
+50.0\% communication and 18.2\% fuelling performance. They motivated
+dispenser-specific communication faults, startup and pressure-
+corridor termination, T20/T30/T40 checks, and data-loss hold/resume. These
+training controls lack J2601 tables and HGV 4.3 thresholds.
+Aggregates support field relevance, not calibration.
 
 Two real-station studies bound operating context. Genovese et al.
 report more than 4,500 Cal State LA HRFF events and over 8,800 kg dispensed

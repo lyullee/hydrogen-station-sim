@@ -17,7 +17,7 @@ function updateBankPressurePreview(){
   }
 }
 const operationNames={trailer_supply:'공급',pressure_recharge:'보완',vehicle_1:'차량 1 충전',vehicle_2:'차량 2 충전'};
-const activityReasons={'recharge-off':'압력 보완 명령 대기','supply-off':'트레일러 공급 명령 대기','bank-target':'설정한 저장뱅크 목표압력 도달','vehicle-target':'설정한 차량 목표압력·충전량 도달','compressor-starting':'압축기 기동 대기','bank-unavailable':'공급 가능한 저장뱅크 없음','valve-starting':'밸브 개방·압력 형성 중',esd:'ESD 차단','source-depleted':'트레일러 공급압·재고 소진','safety-temperature':'차량 가스 온도 보호 차단',operator:'운전자 정지'};
+const activityReasons={'recharge-off':'압력 보완 명령 대기','supply-off':'트레일러 공급 명령 대기','bank-target':'설정한 저장뱅크 목표압력 도달','vehicle-target':'설정한 차량 목표압력·충전량 도달','compressor-starting':'압축기 기동 대기','bank-unavailable':'공급 가능한 저장뱅크 없음','valve-starting':'밸브 개방·압력 형성 중',esd:'ESD 차단','source-depleted':'트레일러 공급압·재고 소진','safety-temperature':'차량 가스 온도 보호 차단','communication-abort':'차량 통신 Abort 차단','communication-halt':'차량 통신 Halt 차단','communication-data-loss':'차량 통신 손실 차단','communication-invalid-crc':'차량 통신 CRC 오류 차단','communication-invalid-value':'차량 통신 값 오류 차단','communication-data-loss-hold':'차량 통신 복구 대기','startup-flow-before-minimum-time':'최소 기동시간 전 유량 감지','maximum-startup-mass':'기동 질량 한도 초과','lower-pressure-corridor':'압력 하한 허용구간 이탈','upper-pressure-corridor':'압력 상한 허용구간 이탈','fuel-delivery-temperature-category':'선택 냉각온도 등급 이탈',operator:'운전자 정지'};
 let channel=null;try{channel=new BroadcastChannel('hrs-monitor');}catch{}
 const faultCards=()=>[...$('faults').querySelectorAll('.fault-card')];
 function errorMessage(message=''){$('errorStatus').textContent=message;$('errorStatus').hidden=!message;}
@@ -255,6 +255,15 @@ function readFault(card,index){
 }
 function readPayload(includeFaults=true){
   const payload=Object.fromEntries(Object.entries(controls).map(([key,id])=>[key,Number($(id).value)]));
+  const optionalNumber=id=>$(id).value===''?null:Number($(id).value);
+  payload.minimum_startup_time_s=Number($('minimumStartupTime').value||0);
+  payload.maximum_startup_mass_kg=optionalNumber('maximumStartupMass');
+  payload.startup_mass_window_s=optionalNumber('startupMassWindow');
+  if((payload.maximum_startup_mass_kg===null)!==(payload.startup_mass_window_s===null))throw new Error('기동 질량 한도와 검사구간을 함께 입력하세요.');
+  payload.pressure_corridor_lower_tolerance_mpa=optionalNumber('pressureCorridorLower');
+  payload.pressure_corridor_upper_tolerance_mpa=optionalNumber('pressureCorridorUpper');
+  payload.fueling_temperature_category=$('fuelingTemperatureCategory').value;
+  payload.communication_loss_policy=$('communicationLossPolicy').value;
   const process_settings=readProcessSettings();
   // The scheduled target is capped at the independent PLC threshold. In
   // over-target mode the live controller intentionally ramps beyond it.
@@ -418,4 +427,4 @@ initReliefRows();
 for(const [inputId] of bankFillSettings)$(inputId).addEventListener('input',updateBankPressurePreview);
 updateBankPressurePreview();
 if(activeJobId){$('monitorLink').href='/?job='+encodeURIComponent(activeJobId);track();}
-renderControls();initCatalog();health();setInterval(health,30000);\n
+renderControls();initCatalog();health();setInterval(health,30000);
