@@ -1117,6 +1117,47 @@ def test_manifest_exposes_claim_bounded_measured_cascade_sequence_holdout():
     assert header["independent_external_validation"] is False
 
 
+def test_manifest_routes_short_horizon_recharge_forecast_only_when_relevant():
+    manifest = build_evidence_manifest(
+        {"time_s": 12.5},
+        {},
+        [],
+        False,
+        question="고압 뱅크 재충전 압력 상승을 예측할 수 있나?",
+    )
+    evidence = manifest["response_evidence"][
+        "confidential_station_recharge_pressure_forecast_holdout"
+    ]
+    assert evidence["files_read"] == 8
+    assert evidence["sampled_rows"] == 653_442
+    assert evidence["calibration_case_count"] == 1_024
+    assert evidence["holdout_case_count"] == 394
+    assert evidence["holdout_metrics"]["median_absolute_error_mpa"] == 0.055
+    assert evidence["short_horizon_station_pressure_forecast_supported"] is True
+    assert evidence["runtime_parameter_application"] is False
+    summary = prompt_evidence_summary(manifest)[
+        "confidential_station_recharge_pressure_forecast_holdout"
+    ]
+    assert summary["vehicle_fill_validation"] is False
+    decision = prompt_decision_evidence(manifest)["validation_boundaries"][
+        "station_recharge_pressure_forecast"
+    ]
+    assert decision["claim_supported"] is True
+    assert decision["holdout_cases"] == 394
+    assert decision["full_loop"] is False
+    header = prompt_evidence_header(manifest)[
+        "confidential_station_recharge_pressure_forecast_holdout"
+    ]
+    assert header["independent_external_validation"] is False
+
+    unrelated = build_evidence_manifest(
+        {"time_s": 12.5}, {}, [], False, question="화재 검지기 상태는?"
+    )
+    assert "station_recharge_pressure_forecast" not in (
+        prompt_decision_evidence(unrelated)["validation_boundaries"]
+    )
+
+
 def test_manifest_marks_attempt_without_result_and_filters_nonfinite_values():
     manifest = build_evidence_manifest(
         {"time_s": float("nan")},

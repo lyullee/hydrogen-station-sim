@@ -69,6 +69,20 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert cascade["holdout"]["sequential_fraction"] == 0.943777
     assert cascade["decision"]["vehicle_fill_validation"] is False
     assert cascade["decision"]["full_loop_holdout_eligible"] is False
+    assert gates[
+        "confidential_station_recharge_pressure_forecast_holdout_integrity"
+    ]["status"] == "PASS"
+    recharge_forecast = gates[
+        "confidential_station_recharge_pressure_forecast_holdout_integrity"
+    ]["observed"]
+    assert recharge_forecast["protocol_hash_matches"] is True
+    assert recharge_forecast["calibration"]["case_count"] == 1_024
+    assert recharge_forecast["holdout"]["case_count"] == 394
+    assert recharge_forecast["holdout"]["combined"][
+        "median_absolute_error_mpa"
+    ] == 0.055
+    assert recharge_forecast["decision"]["runtime_parameter_application"] is False
+    assert recharge_forecast["decision"]["vehicle_fill_validation"] is False
     assert gates["dickens_typeiii_prospective_validation"]["status"] == "FAIL"
     dickens = gates["dickens_typeiii_prospective_validation"]["observed"]
     assert dickens["protocol_frozen_before_outcome_access"] is True

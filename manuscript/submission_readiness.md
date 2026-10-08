@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **117 PASS · 10 FAIL · 7 PENDING**.
+Gate counts: **118 PASS · 10 FAIL · 7 PENDING**.
 
 The confidential station archive contains substantially more usable
 station-side evidence than the earlier one-row derivative screen indicated.
@@ -76,6 +76,17 @@ sequence screens passed. This adds same-site support for the medium-to-high
 cascade controller structure. It does not identify individual vehicle fills
 or validate the low bank, dispenser/valve transitions, a complete fill loop,
 an independent site or a safety limit.
+
+A third prospectively frozen station-side holdout tests short-horizon recharge
+pressure response. Eight equipment logs supplied 1,024 calibration cases and
+394 later chronological holdout cases. After a causal 10-second prefix, the
+bank-specific model predicted the next 30 seconds with 0.055 MPa median
+absolute pressure-increment error and 0.529255 MPa P90 error; MAE improved
+71.8855% over a zero-change persistence forecast, and every frozen screen
+passed. The result supports a same-site medium/high pressure-response
+surrogate only. It does not validate compressor capacity, storage geometry,
+vehicle filling, the full loop, an independent site or a safety limit, and it
+does not change runtime defaults.
 
 The official RHeaDHy public test matrix (DOI 10.5281/zenodo.16992589) is now
 hash-pinned and converted into a trace-level pre-access protocol for the

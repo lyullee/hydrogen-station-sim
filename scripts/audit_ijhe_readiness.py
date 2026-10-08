@@ -1969,6 +1969,96 @@ def audit(root: Path) -> dict[str, object]:
         } if cascade_sequence else "missing",
     ))
 
+    recharge_forecast_path = root / (
+        "research/confidential_station_recharge_pressure_forecast_holdout_"
+        "2026_10_08.json"
+    )
+    recharge_forecast_protocol_path = root / (
+        "research/confidential_station_recharge_pressure_forecast_protocol_"
+        "2026_10_08.json"
+    )
+    recharge_forecast = _json(recharge_forecast_path)
+    recharge_forecast_protocol = _json(recharge_forecast_protocol_path)
+    recharge_forecast_calibration = (
+        (recharge_forecast or {}).get("calibration") or {}
+    )
+    recharge_forecast_holdout = (recharge_forecast or {}).get("holdout") or {}
+    recharge_forecast_combined = recharge_forecast_holdout.get("combined") or {}
+    recharge_forecast_decision = (recharge_forecast or {}).get("decision") or {}
+    recharge_forecast_privacy_keys = (
+        "source_identifiers_published",
+        "source_paths_published",
+        "source_filenames_published",
+        "source_headers_published",
+        "raw_rows_persisted",
+        "absolute_timestamps_published",
+        "calendar_dates_published",
+        "tag_names_published",
+        "manufacturer_or_model_published",
+    )
+    recharge_forecast_pass = bool(
+        (recharge_forecast or {}).get("artifact_type")
+        == "confidential_station_recharge_pressure_forecast_holdout"
+        and (recharge_forecast_protocol or {}).get("status")
+        == "FROZEN_BEFORE_JOINT_HOLDOUT_OUTCOME_ACCESS"
+        and (recharge_forecast_protocol or {}).get(
+            "joint_holdout_outcomes_seen_before_freeze"
+        ) is False
+        and all(
+            (recharge_forecast or {}).get(key) is False
+            for key in recharge_forecast_privacy_keys
+        )
+        and (recharge_forecast or {}).get("runner_git_commit") == "1415a2a"
+        and (recharge_forecast or {}).get("files_read") == 8
+        and (recharge_forecast or {}).get("sampled_rows") == 653_442
+        and recharge_forecast_calibration.get("case_count") == 1_024
+        and recharge_forecast_holdout.get("case_count") == 394
+        and recharge_forecast_combined.get("median_absolute_error_mpa") == 0.055
+        and recharge_forecast_combined.get("p90_absolute_error_mpa") == 0.529255
+        and recharge_forecast_combined.get(
+            "mae_improvement_over_persistence_fraction"
+        ) == 0.718855
+        and all(((recharge_forecast or {}).get("eligibility") or {}).values())
+        and all(((recharge_forecast or {}).get("screens") or {}).values())
+        and recharge_forecast_decision.get(
+            "short_horizon_station_pressure_forecast_supported"
+        ) is True
+        and recharge_forecast_decision.get("runtime_parameter_application") is False
+        and recharge_forecast_decision.get("default_model_parameters_changed") is False
+        and recharge_forecast_decision.get("compressor_capacity_validated") is False
+        and recharge_forecast_decision.get("storage_geometry_validated") is False
+        and recharge_forecast_decision.get("vehicle_fill_validation") is False
+        and recharge_forecast_decision.get("full_loop_holdout_eligible") is False
+        and recharge_forecast_decision.get("independent_external_validation") is False
+        and ((recharge_forecast or {}).get("protocol") or {}).get(
+            "protocol_sha256"
+        ) == _sha256(recharge_forecast_protocol_path)
+    )
+    gates.append(_gate(
+        "confidential_station_recharge_pressure_forecast_holdout_integrity",
+        "PASS" if recharge_forecast_pass else (
+            "FAIL" if recharge_forecast else "PENDING"
+        ),
+        "A prospectively frozen same-site holdout supports a causal 30-second medium/high storage pressure-response forecast while runtime, geometry, capacity, vehicle and independent-site claims remain locked.",
+        f"{recharge_forecast_protocol_path.relative_to(root)}; {recharge_forecast_path.relative_to(root)}",
+        "Hash-linked pre-outcome protocol, 1,024 calibration and 394 holdout cases, all eligibility and error/stability screens, privacy flags, and explicit non-promotion boundaries.",
+        {
+            "protocol_hash_matches": (
+                ((recharge_forecast or {}).get("protocol") or {}).get(
+                    "protocol_sha256"
+                ) == _sha256(recharge_forecast_protocol_path)
+                if recharge_forecast_protocol_path.is_file() else False
+            ),
+            "files_read": (recharge_forecast or {}).get("files_read"),
+            "sampled_rows": (recharge_forecast or {}).get("sampled_rows"),
+            "calibration": recharge_forecast_calibration,
+            "holdout": recharge_forecast_holdout,
+            "eligibility": (recharge_forecast or {}).get("eligibility"),
+            "screens": (recharge_forecast or {}).get("screens"),
+            "decision": recharge_forecast_decision,
+        } if recharge_forecast else "missing",
+    ))
+
     external_loop_path = root / "data/public_validation/results/closed_loop_external_holdout/validation.json"
     external_loop = _json(external_loop_path)
     external_protocol_path = root / "research/mc_default_external_holdout_protocol.json"

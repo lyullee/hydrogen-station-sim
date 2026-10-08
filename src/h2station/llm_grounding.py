@@ -2985,6 +2985,91 @@ def _confidential_cascade_sequence_evidence() -> dict[str, Any] | None:
     }
 
 
+def _confidential_recharge_pressure_forecast_evidence() -> dict[str, Any] | None:
+    """Expose the frozen same-site short-horizon forecast without case rows."""
+
+    root = Path(__file__).resolve().parents[2]
+    artifact = (
+        "research/confidential_station_recharge_pressure_forecast_holdout_"
+        "2026_10_08.json"
+    )
+    result_path = root / artifact
+    protocol_path = root / (
+        "research/confidential_station_recharge_pressure_forecast_protocol_"
+        "2026_10_08.json"
+    )
+    try:
+        record = json.loads(result_path.read_text(encoding="utf-8"))
+        calibration = record["calibration"]
+        holdout = record["holdout"]
+        decision = record["decision"]
+        protocol = record["protocol"]
+        protocol_hash = sha256(protocol_path.read_bytes()).hexdigest()
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+    privacy_keys = (
+        "source_identifiers_published",
+        "source_paths_published",
+        "source_filenames_published",
+        "source_headers_published",
+        "raw_rows_persisted",
+        "absolute_timestamps_published",
+        "calendar_dates_published",
+        "tag_names_published",
+        "manufacturer_or_model_published",
+    )
+    if (
+        record.get("artifact_type")
+        != "confidential_station_recharge_pressure_forecast_holdout"
+        or not all(record.get(key) is False for key in privacy_keys)
+        or protocol.get("protocol_sha256") != protocol_hash
+        or record.get("files_read") != 8
+        or calibration.get("case_count") != 1_024
+        or holdout.get("case_count") != 394
+        or not all((record.get("eligibility") or {}).values())
+        or not all((record.get("screens") or {}).values())
+        or decision.get("short_horizon_station_pressure_forecast_supported")
+        is not True
+        or decision.get("runtime_parameter_application") is not False
+        or decision.get("default_model_parameters_changed") is not False
+        or decision.get("vehicle_fill_validation") is not False
+        or decision.get("full_loop_holdout_eligible") is not False
+        or decision.get("independent_external_validation") is not False
+    ):
+        return None
+    combined = holdout.get("combined") or {}
+    return {
+        "artifact": artifact,
+        "evidence_role": (
+            "confidential same-site short-horizon storage-pressure forecast holdout"
+        ),
+        "files_read": record.get("files_read"),
+        "sampled_rows": record.get("sampled_rows"),
+        "calibration_case_count": calibration.get("case_count"),
+        "holdout_case_count": holdout.get("case_count"),
+        "fitted_continuation_gain_by_bank": calibration.get(
+            "fitted_continuation_gain_by_bank"
+        ) or {},
+        "holdout_metrics": {
+            key: combined.get(key)
+            for key in (
+                "mae_mpa", "median_absolute_error_mpa",
+                "p90_absolute_error_mpa", "persistence_mae_mpa",
+                "mae_improvement_over_persistence_fraction",
+                "mae_improvement_over_uncalibrated_prefix_fraction",
+                "positive_direction_fraction",
+            )
+        },
+        "short_horizon_station_pressure_forecast_supported": True,
+        "runtime_parameter_application": False,
+        "default_model_parameters_changed": False,
+        "vehicle_fill_validation": False,
+        "full_loop_holdout_eligible": False,
+        "independent_external_validation": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_pressure_channel_evidence() -> dict[str, Any] | None:
     """Expose channel-specific measured envelopes without bank identity."""
 
@@ -4367,6 +4452,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_station_cascade_sequence_holdout"
         ] = cascade_sequence
+    recharge_forecast = _confidential_recharge_pressure_forecast_evidence()
+    if recharge_forecast is not None:
+        envelope["response_evidence"][
+            "confidential_station_recharge_pressure_forecast_holdout"
+        ] = recharge_forecast
     channel_envelopes = _confidential_pressure_channel_evidence()
     if channel_envelopes is not None:
         envelope["response_evidence"][
@@ -4970,6 +5060,23 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if cascade_sequence.get(key) is not None
         }
+    recharge_forecast = evidence.get(
+        "confidential_station_recharge_pressure_forecast_holdout"
+    )
+    if isinstance(recharge_forecast, dict):
+        summary["confidential_station_recharge_pressure_forecast_holdout"] = {
+            key: recharge_forecast.get(key)
+            for key in (
+                "evidence_role", "artifact", "files_read", "sampled_rows",
+                "calibration_case_count", "holdout_case_count",
+                "fitted_continuation_gain_by_bank", "holdout_metrics",
+                "short_horizon_station_pressure_forecast_supported",
+                "runtime_parameter_application", "default_model_parameters_changed",
+                "vehicle_fill_validation", "full_loop_holdout_eligible",
+                "independent_external_validation", "claim_limit",
+            )
+            if recharge_forecast.get(key) is not None
+        }
     channel_envelopes = evidence.get("confidential_pressure_channel_envelopes")
     if isinstance(channel_envelopes, dict):
         summary["confidential_pressure_channel_envelopes"] = {
@@ -5230,6 +5337,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     cascade_sequence = response.get(
         "confidential_station_cascade_sequence_holdout"
     ) or {}
+    recharge_forecast = response.get(
+        "confidential_station_recharge_pressure_forecast_holdout"
+    ) or {}
     spatial_stratification = response.get(
         "public_actual_hydrogen_spatial_stratification_evidence"
     ) or {}
@@ -5262,6 +5372,13 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         and any(token in detector_context for token in (
             "캐스케이드", "중압", "고압", "뱅크 순서", "재충전",
             "cascade", "bank sequence", "recharge",
+        ))
+    )
+    recharge_forecast_relevant = bool(
+        recharge_forecast
+        and any(token in detector_context for token in (
+            "재충전", "압력 상승", "압력 예측", "압축기", "중압", "고압",
+            "recharge", "pressure rise", "pressure forecast", "compressor",
         ))
     )
 
@@ -5447,6 +5564,30 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ) is True,
                 },
             } if cascade_sequence_relevant else {}),
+            **({
+                "station_recharge_pressure_forecast": {
+                    "claim_supported": recharge_forecast.get(
+                        "short_horizon_station_pressure_forecast_supported"
+                    ) is True,
+                    "files_read": recharge_forecast.get("files_read"),
+                    "calibration_cases": recharge_forecast.get(
+                        "calibration_case_count"
+                    ),
+                    "holdout_cases": recharge_forecast.get("holdout_case_count"),
+                    "holdout_metrics": recharge_forecast.get(
+                        "holdout_metrics"
+                    ) or {},
+                    "runtime_parameter_application": recharge_forecast.get(
+                        "runtime_parameter_application"
+                    ) is True,
+                    "vehicle_fill_validation": recharge_forecast.get(
+                        "vehicle_fill_validation"
+                    ) is True,
+                    "full_loop": recharge_forecast.get(
+                        "full_loop_holdout_eligible"
+                    ) is True,
+                },
+            } if recharge_forecast_relevant else {}),
             "source_depletion": {
                 "claim_supported": preslhy_holdout.get("claim_supported") is True,
                 "joint_primary_pass_fraction": preslhy_holdout.get(
@@ -5592,6 +5733,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     cascade_sequence = evidence.get(
         "confidential_station_cascade_sequence_holdout"
+    ) or {}
+    recharge_forecast = evidence.get(
+        "confidential_station_recharge_pressure_forecast_holdout"
     ) or {}
     channel_envelopes = evidence.get(
         "confidential_pressure_channel_envelopes"
@@ -6258,6 +6402,37 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "independent_external_validation"
             ) is True,
             "claim_limit": cascade_sequence.get("claim_limit"),
+        },
+        "confidential_station_recharge_pressure_forecast_holdout": {
+            "evidence_artifact": recharge_forecast.get("artifact"),
+            "files_read": recharge_forecast.get("files_read"),
+            "sampled_rows": recharge_forecast.get("sampled_rows"),
+            "calibration_case_count": recharge_forecast.get(
+                "calibration_case_count"
+            ),
+            "holdout_case_count": recharge_forecast.get("holdout_case_count"),
+            "fitted_continuation_gain_by_bank": recharge_forecast.get(
+                "fitted_continuation_gain_by_bank"
+            ) or {},
+            "holdout_metrics": recharge_forecast.get("holdout_metrics") or {},
+            "short_horizon_station_pressure_forecast_supported": (
+                recharge_forecast.get(
+                    "short_horizon_station_pressure_forecast_supported"
+                ) is True
+            ),
+            "runtime_parameter_application": recharge_forecast.get(
+                "runtime_parameter_application"
+            ) is True,
+            "vehicle_fill_validation": recharge_forecast.get(
+                "vehicle_fill_validation"
+            ) is True,
+            "full_loop_holdout_eligible": recharge_forecast.get(
+                "full_loop_holdout_eligible"
+            ) is True,
+            "independent_external_validation": recharge_forecast.get(
+                "independent_external_validation"
+            ) is True,
+            "claim_limit": recharge_forecast.get("claim_limit"),
         },
         "confidential_pressure_channel_envelopes": {
             "artifact": channel_envelopes.get("artifact"),

@@ -110,6 +110,24 @@ or a runtime parameter. The frozen protocol and result are recorded in
 `research/confidential_station_cascade_sequence_protocol_2026_10_08.json` and
 `research/confidential_station_cascade_sequence_holdout_2026_10_08.json`.
 
+The same owner-attested pressure roles and compressor-load state now support a
+separate prospectively frozen short-horizon forecast. The evaluator splits
+each trace chronologically before extracting cases, uses only the first 10 s
+of a loaded-compressor window to identify the responding bank, and predicts
+the following 30 s with a bank-specific robust continuation gain fitted on the
+earlier 70%. Across eight equipment logs, 1,024 calibration cases and 394
+holdout cases were retained. Holdout median absolute pressure-increment error
+was 0.055 MPa, P90 error was 0.529255 MPa, and MAE improved by 71.8855% over a
+zero-change persistence forecast; every frozen eligibility, error, direction
+and gain-stability screen passed. This establishes same-site short-horizon
+station pressure-response evidence only. It does not fit compressor capacity
+or vessel geometry, validate a vehicle fill or full loop, change a runtime
+parameter, establish a safety limit, or supply independent-site validation.
+The protocol and aggregate result are recorded in
+`research/confidential_station_recharge_pressure_forecast_protocol_2026_10_08.json`
+and
+`research/confidential_station_recharge_pressure_forecast_holdout_2026_10_08.json`.
+
 A value-level, pre-attestation consistency screen now tests whether the
 unlabelled flow-like channels contain internally coherent instantaneous
 flow/cumulative-totalizer pairs. It inspected 3,053,442 sampled rows from 20

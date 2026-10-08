@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_station_recharge_pressure_forecast_holdout",
+  "evidence_role": "same_site_short_horizon_station_pressure_response",
+  "source_identifiers_published": false,
+  "source_paths_published": false,
+  "source_filenames_published": false,
+  "source_headers_published": false,
+  "raw_rows_persisted": false,
+  "absolute_timestamps_published": false,
+  "calendar_dates_published": false,
+  "tag_names_published": false,
+  "manufacturer_or_model_published": false,
+  "sampled_rows": 653442,
+  "files_read": 8,
+  "usable_files": 7,
+  "files_with_calibration_cases": 7,
+  "files_with_holdout_cases": 5,
+  "channel_attestation": {
+    "pressure_role_and_unit_semantics_attested": true,
+    "compressor_state_semantics_attested": true,
+    "temperature_semantics_used": false,
+    "mass_flow_semantics_used": false,
+    "valve_state_semantics_used": false
+  },
+  "rules": {
+    "calibration_fraction": 0.7,
+    "prefix_duration_s": 10.0,
+    "forecast_duration_s": 30.0,
+    "maximum_sample_gap_s": 2.5,
+    "endpoint_tolerance_s": 1.5,
+    "minimum_prefix_rise_mpa": 0.1,
+    "minimum_dominance_ratio": 1.5,
+    "dominance_floor_mpa": 0.05,
+    "minimum_pressure_mpa": 10.0,
+    "maximum_pressure_mpa": 100.0,
+    "minimum_matching_files": 6,
+    "minimum_calibration_cases": 100,
+    "minimum_holdout_cases": 40,
+    "minimum_holdout_cases_per_bank": 10,
+    "maximum_holdout_median_absolute_error_mpa": 0.5,
+    "maximum_holdout_p90_absolute_error_mpa": 1.5,
+    "minimum_mae_improvement_over_persistence_fraction": 0.2,
+    "minimum_positive_direction_fraction": 0.9,
+    "maximum_gain_relative_shift": 0.5
+  },
+  "calibration": {
+    "case_count": 1024,
+    "fitted_continuation_gain_by_bank": {
+      "medium": 0.944444,
+      "high": 0.919596
+    },
+    "by_bank": {
+      "medium": {
+        "case_count": 322,
+        "gain": 0.944444,
+        "mae_mpa": 0.036518,
+        "median_absolute_error_mpa": 0.021667,
+        "p90_absolute_error_mpa": 0.0665,
+        "persistence_mae_mpa": 0.335186,
+        "uncalibrated_prefix_mae_mpa": 0.042525,
+        "mae_improvement_over_persistence_fraction": 0.891052,
+        "mae_improvement_over_uncalibrated_prefix_fraction": 0.141267,
+        "positive_direction_fraction": 0.984472
+      },
+      "high": {
+        "case_count": 702,
+        "gain": 0.919596,
+        "mae_mpa": 0.214418,
+        "median_absolute_error_mpa": 0.100752,
+        "p90_absolute_error_mpa": 0.646446,
+        "persistence_mae_mpa": 0.843775,
+        "uncalibrated_prefix_mae_mpa": 0.234393,
+        "mae_improvement_over_persistence_fraction": 0.745882,
+        "mae_improvement_over_uncalibrated_prefix_fraction": 0.085217,
+        "positive_direction_fraction": 0.930199
+      }
+    }
+  },
+  "holdout": {
+    "case_count": 394,
+    "combined": {
+      "case_count": 394,
+      "mae_mpa": 0.184407,
+      "median_absolute_error_mpa": 0.055,
+      "p90_absolute_error_mpa": 0.529255,
+      "persistence_mae_mpa": 0.655914,
+      "uncalibrated_prefix_mae_mpa": 0.19583,
+      "mae_improvement_over_persistence_fraction": 0.718855,
+      "mae_improvement_over_uncalibrated_prefix_fraction": 0.058333,
+      "positive_direction_fraction": 0.949239
+    },
+    "by_bank": {
+      "medium": {
+        "case_count": 151,
+        "gain": 0.944444,
+        "mae_mpa": 0.115913,
+        "median_absolute_error_mpa": 0.028333,
+        "p90_absolute_error_mpa": 0.065,
+        "persistence_mae_mpa": 0.351921,
+        "uncalibrated_prefix_mae_mpa": 0.121945,
+        "mae_improvement_over_persistence_fraction": 0.670627,
+        "mae_improvement_over_uncalibrated_prefix_fraction": 0.049461,
+        "positive_direction_fraction": 0.97351
+      },
+      "high": {
+        "case_count": 243,
+        "gain": 0.919596,
+        "mae_mpa": 0.226968,
+        "median_absolute_error_mpa": 0.099952,
+        "p90_absolute_error_mpa": 0.701678,
+        "persistence_mae_mpa": 0.844815,
+        "uncalibrated_prefix_mae_mpa": 0.241742,
+        "mae_improvement_over_persistence_fraction": 0.731339,
+        "mae_improvement_over_uncalibrated_prefix_fraction": 0.061114,
+        "positive_direction_fraction": 0.934156
+      }
+    },
+    "oracle_gain_by_bank_diagnostic_only": {
+      "medium": 0.969697,
+      "high": 0.933333
+    },
+    "relative_gain_shift_by_bank": {
+      "medium": 0.026738,
+      "high": 0.014938
+    }
+  },
+  "eligibility": {
+    "minimum_files_met": true,
+    "minimum_calibration_cases_met": true,
+    "minimum_holdout_cases_met": true,
+    "minimum_holdout_cases_per_bank_met": true
+  },
+  "screens": {
+    "holdout_median_absolute_error_met": true,
+    "holdout_p90_absolute_error_met": true,
+    "persistence_improvement_met": true,
+    "positive_direction_met": true,
+    "gain_stability_met": true
+  },
+  "decision": {
+    "short_horizon_station_pressure_forecast_supported": true,
+    "runtime_parameter_application": false,
+    "default_model_parameters_changed": false,
+    "compressor_capacity_validated": false,
+    "storage_geometry_validated": false,
+    "vehicle_fill_validation": false,
+    "full_loop_holdout_eligible": false,
+    "independent_external_validation": false
+  },
+  "claim_boundary": "Same-site short-horizon medium/high storage pressure-response holdout using a causal 10 s prefix and a 30 s forecast. It is a de-identified station-side empirical surrogate, not a compressor-capacity or vessel-geometry fit, vehicle-fill validation, safety limit, accident-frequency estimate, independent-site validation, or field certification.",
+  "protocol": {
+    "protocol_id": "CONFIDENTIAL-STATION-RECHARGE-PRESSURE-FORECAST-001",
+    "protocol_sha256": "a8ea1755f8301bf4c1b657963d986ed1227688dd44b105c57420e73a8eb3606e",
+    "frozen_before_joint_holdout_outcome_access": true
+  },
+  "runner_git_commit": "1415a2a"
+}
