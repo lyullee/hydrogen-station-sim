@@ -86,6 +86,10 @@ def run_case(
     dispenser_flow_area_multiplier: float = 1.0,
     precooler_duty_multiplier: float = 1.0,
     geometry_basis: str = "capacity_scaled",
+    vehicle_tank_thermal_model: str = "constant_ua",
+    vehicle_internal_diameter_m: float | None = None,
+    vehicle_internal_length_m: float | None = None,
+    vehicle_inlet_nozzle_diameter_m: float | None = None,
 ) -> dict:
     case_id = summary["case_id"]
     exp_time = np.asarray([_float(row, "time_s") for row in trace_rows])
@@ -133,8 +137,15 @@ def run_case(
         vehicle_nominal_working_pressure_pa=nominal_pressure_mpa * 1.0e6,
         vehicle_effective_volume_multiplier=float(tank_fit["effective_volume_multiplier"]),
         vehicle_gas_liner_ua_multiplier=float(tank_fit["gas_liner_ua_multiplier"]),
+        vehicle_tank_thermal_model=vehicle_tank_thermal_model,
+        vehicle_internal_diameter_m=vehicle_internal_diameter_m,
+        vehicle_internal_length_m=vehicle_internal_length_m,
+        vehicle_inlet_nozzle_diameter_m=vehicle_inlet_nozzle_diameter_m,
         dispenser_flow_area_multiplier=dispenser_flow_area_multiplier,
         precooler_duty_multiplier=precooler_duty_multiplier,
+        vehicle_2_internal_diameter_m=vehicle_internal_diameter_m,
+        vehicle_2_internal_length_m=vehicle_internal_length_m,
+        vehicle_2_inlet_nozzle_diameter_m=vehicle_inlet_nozzle_diameter_m,
         target_vehicle_pressure_pa=model_target_pressure_mpa * 1.0e6,
         average_pressure_ramp_rate_pa_s=scheduled_aprr * 1.0e6 / 60.0,
         delivery_temperature_k=float(np.median(inlet_temperature) + 273.15),
@@ -256,6 +267,10 @@ def run_case(
         "geometry_basis": geometry_basis,
         "effective_volume_multiplier": float(tank_fit["effective_volume_multiplier"]),
         "gas_liner_ua_multiplier": float(tank_fit["gas_liner_ua_multiplier"]),
+        "vehicle_tank_thermal_model": vehicle_tank_thermal_model,
+        "vehicle_internal_diameter_m": vehicle_internal_diameter_m,
+        "vehicle_internal_length_m": vehicle_internal_length_m,
+        "vehicle_inlet_nozzle_diameter_m": vehicle_inlet_nozzle_diameter_m,
         "dispenser_flow_area_multiplier": dispenser_flow_area_multiplier,
         "precooler_duty_multiplier": precooler_duty_multiplier,
         "chamber_temperature_c": _float(summary, "chamber_temperature_c"),
@@ -323,6 +338,10 @@ def _run_case_file(
     dispenser_flow_area_multiplier: float,
     precooler_duty_multiplier: float = 1.0,
     geometry_basis: str = "capacity_scaled",
+    vehicle_tank_thermal_model: str = "constant_ua",
+    vehicle_internal_diameter_m: float | None = None,
+    vehicle_internal_length_m: float | None = None,
+    vehicle_inlet_nozzle_diameter_m: float | None = None,
 ) -> dict:
     return run_case(
         summary,
@@ -331,6 +350,10 @@ def _run_case_file(
         dispenser_flow_area_multiplier,
         precooler_duty_multiplier,
         geometry_basis,
+        vehicle_tank_thermal_model,
+        vehicle_internal_diameter_m,
+        vehicle_internal_length_m,
+        vehicle_inlet_nozzle_diameter_m,
     )
 
 

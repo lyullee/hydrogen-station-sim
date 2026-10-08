@@ -345,6 +345,16 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert closed_loop["claim_supported"] is False
     assert closed_loop["runtime_model_parameter_changed"] is False
     assert closed_loop["post_freeze_diagnostic"]["claim_prohibited"] is True
+    mixed_convection = closed_loop["mixed_convection_diagnostic"]
+    assert mixed_convection["nozzle_diameter_grid_mm"] == [3.0, 5.0, 7.0]
+    assert mixed_convection["constant_ua_temperature_stop_count"] == 7
+    assert mixed_convection[
+        "mixed_convection_temperature_stop_count_range"
+    ] == [5, 5]
+    assert mixed_convection["joint_screening_pass_count_range"] == [0, 0]
+    assert mixed_convection["runtime_default_changed"] is False
+    assert mixed_convection["geometry_selection_prohibited"] is True
+    assert mixed_convection["claim_prohibited"] is True
     assert early["closed_loop_validation_boundary"]["aggregate"][
         "screening_pass_count"
     ] == 0
@@ -426,6 +436,9 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert header["closed_loop_validation_boundary"][
         "post_freeze_diagnostic"
     ]["claim_prohibited"] is True
+    assert header["closed_loop_validation_boundary"][
+        "mixed_convection_diagnostic"
+    ]["joint_screening_pass_count_range"] == [0, 0]
     assert header["confidential_multisource_mapping_feasibility"][
         "unambiguous_full_loop_mapping_available"
     ] is False

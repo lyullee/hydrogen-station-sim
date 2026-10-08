@@ -1509,15 +1509,21 @@ def _closed_loop_validation_boundary() -> dict[str, Any] | None:
         "data/public_validation/results/closed_loop_external_holdout/validation.json"
     )
     diagnostic_path = root / "research/closed_loop_mc_default_postfreeze_diagnostic.json"
+    mixed_path = root / (
+        "research/mc_station_mixed_convection_diagnostic_2026_10_08.json"
+    )
     try:
         holdout = json.loads(holdout_path.read_text(encoding="utf-8"))
         diagnostic = json.loads(diagnostic_path.read_text(encoding="utf-8"))
+        mixed = json.loads(mixed_path.read_text(encoding="utf-8"))
     except (OSError, ValueError, json.JSONDecodeError):
         return None
     aggregate = holdout.get("aggregate") or {}
     limits = holdout.get("screening_limits") or {}
     metrics = aggregate.get("metrics") or {}
     diagnostic_aggregate = diagnostic.get("diagnostic_aggregate") or {}
+    mixed_interpretation = mixed.get("interpretation") or {}
+    mixed_runs = mixed.get("runs") or []
     required = (
         holdout.get("protocol_frozen_before_data_access") is True,
         holdout.get("post_freeze_parameter_tuning") is False,
@@ -1526,6 +1532,20 @@ def _closed_loop_validation_boundary() -> dict[str, Any] | None:
         diagnostic.get("status") == "post_freeze_diagnostic_only",
         diagnostic.get("prohibited_use") and isinstance(
             diagnostic.get("purpose"), str
+        ),
+        mixed.get("diagnostic_type")
+        == "MC Default full-station mixed-convection sensitivity",
+        mixed.get("evidence_role") == "post_outcome_development_diagnostic_only",
+        mixed.get("post_outcome") is True,
+        mixed.get("parameter_fitting") is False,
+        mixed.get("geometry_selection_prohibited") is True,
+        mixed.get("historical_frozen_validation_unchanged") is True,
+        mixed.get("case_count") == 8,
+        len(mixed_runs) == 4,
+        all(
+            (row.get("aggregate") or {}).get("joint_screening_pass_count") == 0
+            for row in mixed_runs
+            if isinstance(row, dict)
         ),
     )
     if not all(required):
@@ -1585,6 +1605,40 @@ def _closed_loop_validation_boundary() -> dict[str, Any] | None:
                 ).items()
                 if isinstance(value, int)
             },
+            "claim_prohibited": True,
+        },
+        "mixed_convection_diagnostic": {
+            "artifact": (
+                "research/mc_station_mixed_convection_diagnostic_2026_10_08.json"
+            ),
+            "evidence_role": "post_outcome_development_diagnostic_only",
+            "case_count": mixed.get("case_count"),
+            "nozzle_diameter_grid_mm": (
+                mixed.get("configuration") or {}
+            ).get("nozzle_diameter_grid_mm") or [],
+            "constant_ua_temperature_stop_count": mixed_interpretation.get(
+                "constant_ua_temperature_stop_count"
+            ),
+            "mixed_convection_temperature_stop_count_range": (
+                mixed_interpretation.get(
+                    "mixed_convection_temperature_stop_count_range"
+                ) or []
+            ),
+            "mixed_convection_pressure_rmse_mpa_mean_range": (
+                mixed_interpretation.get(
+                    "mixed_convection_pressure_rmse_mpa_mean_range"
+                ) or []
+            ),
+            "mixed_convection_temperature_rmse_c_mean_range": (
+                mixed_interpretation.get(
+                    "mixed_convection_temperature_rmse_c_mean_range"
+                ) or []
+            ),
+            "joint_screening_pass_count_range": mixed_interpretation.get(
+                "joint_screening_pass_count_range"
+            ) or [],
+            "runtime_default_changed": False,
+            "geometry_selection_prohibited": True,
             "claim_prohibited": True,
         },
         "runtime_model_parameter_changed": False,
@@ -3929,6 +3983,9 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "post_freeze_diagnostic": closed_loop.get(
                 "post_freeze_diagnostic"
             ) or {},
+            "mixed_convection_diagnostic": closed_loop.get(
+                "mixed_convection_diagnostic"
+            ) or {},
             "runtime_model_parameter_changed": closed_loop.get(
                 "runtime_model_parameter_changed"
             ),
@@ -4916,6 +4973,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "aggregate": closed_loop.get("aggregate") or {},
             "post_freeze_diagnostic": closed_loop.get(
                 "post_freeze_diagnostic"
+            ) or {},
+            "mixed_convection_diagnostic": closed_loop.get(
+                "mixed_convection_diagnostic"
             ) or {},
             "runtime_model_parameter_changed": closed_loop.get(
                 "runtime_model_parameter_changed"
