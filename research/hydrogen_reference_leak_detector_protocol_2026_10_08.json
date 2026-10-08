@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FERREIRA-H2-REFERENCE-LEAK-DETECTOR-2601",
+  "status": "FROZEN_BEFORE_RAW_EXCEL_OUTCOME_ACCESS",
+  "recorded_at": "2026-10-08",
+  "purpose": "Prospectively test whether two hydrogen leak detectors preserve the ordering of three physical hydrogen reference leaks and provide usable responses without fitting any digital-twin parameter.",
+  "source": {
+    "title": "Dataset for the comparison of performance of two leak detectors using hydrogen reference leaks",
+    "doi": "10.5281/zenodo.12180368",
+    "supplement_to": "10.1016/j.ijhydene.2024.04.328",
+    "publisher_record": "https://zenodo.org/records/12180368",
+    "license": "CC BY 4.0",
+    "published_file": "Leak Detector Data Dec 11 2023.xlsx",
+    "published_size_bytes": 34515,
+    "published_md5": "d326a9f714d2e9decc905ec83f6f7b04",
+    "metadata_scope": "Measurements made with three hydrogen reference leaks and two leak detectors: one portable hydrogen detector and one mass-spectrometer leak detector in hydrogen mode."
+  },
+  "pre_access_statement": {
+    "raw_workbook_downloaded": false,
+    "raw_workbook_opened": false,
+    "numerical_detector_outcomes_seen": false,
+    "paper_numerical_results_used_to_select_thresholds": false,
+    "known_before_freeze": [
+      "record title and description",
+      "three hydrogen reference leaks",
+      "two detector classes",
+      "one 34515-byte Excel workbook",
+      "source checksum, license and related article DOI"
+    ]
+  },
+  "eligibility": {
+    "requires_physical_hydrogen_reference_leak": true,
+    "requires_at_least_three_distinct_reference_levels": true,
+    "requires_both_declared_detector_classes": true,
+    "requires_numeric_reference_level_or_declared_ordinal_reference_identity": true,
+    "requires_numeric_detector_response": true,
+    "minimum_evaluable_observations_per_detector": 3,
+    "exclusion_rules": [
+      "exclude only blank headers, units, notes, or cells explicitly marked missing or invalid by the source",
+      "retain every numeric observation that can be mapped to a declared reference leak and detector",
+      "do not exclude a detector, reference level, repeat, sheet, or row because a frozen screen performs poorly",
+      "do not infer a favourable unit conversion when source units remain ambiguous"
+    ]
+  },
+  "fixed_analysis": {
+    "reference_order": "Use the source-declared numeric reference leak value; if only identities are supplied, order them by independently stated nominal reference value and fail eligibility if that value is absent.",
+    "detector_response": "Use the source-declared detector reading after numeric parsing; preserve sign and zero values and do not baseline-shift, normalize, trim, winsorize, or fit.",
+    "replicates": "Treat every source row as an observation and also report the median by detector and reference level. Never average across detector classes.",
+    "primary_metrics": [
+      "per-detector Spearman correlation between reference level and detector response",
+      "per-detector pairwise reference-order concordance with ties scored one half",
+      "per-detector finite mapped observation fraction"
+    ],
+    "secondary_metrics": [
+      "per-reference median response",
+      "per-reference median absolute deviation when repeats exist",
+      "response/reference ratio when compatible numeric units are explicitly supplied",
+      "portable-versus-MSLD comparison reported descriptively without selecting a winner"
+    ]
+  },
+  "frozen_primary_screens": {
+    "eligible_detector_count_min": 2,
+    "distinct_reference_levels_per_detector_min": 3,
+    "spearman_rho_per_detector_min": 0.8,
+    "pairwise_order_concordance_per_detector_min": 0.8,
+    "finite_mapped_observation_fraction_per_detector_min": 0.8,
+    "joint_pass_requires_all_screens_for_both_detectors": true
+  },
+  "prohibited_after_outcome_access": [
+    "changing primary endpoints or thresholds",
+    "dropping an unfavourable detector, reference level, repeat, sheet, or row",
+    "fitting digital-twin concentration multipliers, detector amplitudes, alarm thresholds, trip thresholds, or spatial-routing parameters",
+    "claiming response time when the workbook lacks a common time basis",
+    "claiming detector placement, outdoor dispersion, ESD effectiveness, safety distance, consequence accuracy, or full-station validation"
+  ],
+  "decision_policy": {
+    "pass_claim": "A joint pass supports only monotonic response ordering for the two tested detector classes across the three tested physical hydrogen reference leaks.",
+    "failure_policy": "Retain and report every failed screen; do not tune the runtime from the failed result.",
+    "runtime_application": false
+  },
+  "claim_boundary": "This protocol evaluates detector response ordering to physical hydrogen reference leaks. It cannot validate the station spatial detector map, concentration magnitude, alarm or ESD setpoints, release physics, consequence distance, vehicle filling, or the full digital twin."
+}
