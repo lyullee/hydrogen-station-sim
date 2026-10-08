@@ -2631,6 +2631,109 @@ def _public_carb_hrs_inuse_field_benchmark() -> dict[str, Any] | None:
     }
 
 
+def _public_hytunnel_failure_diagnostic_evidence() -> dict[str, Any] | None:
+    """Expose the bounded post-outcome HyTunnel diagnostic to the LLM.
+
+    The public actual-hydrogen archive is useful evidence, but its frozen
+    dispersion and local mass-flow claims did not pass the declared joint
+    endpoints.  This reader intentionally exposes that negative result and
+    the regime/support diagnostics so the assistant cannot turn a partial
+    enclosure screen into an HRS consequence-distance validation claim.
+    No raw MAT rows or private local-station identifiers are admitted here.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/hytunnel_carpark_failure_regime_diagnostic_2026_10_09.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    regimes = record.get("regimes") or {}
+    dispersion = (record.get("holdout_result") or {}).get("dispersion") or {}
+    mass_flow = (record.get("holdout_result") or {}).get("mass_flow") or {}
+    # The diagnostic stores the frozen result by reference.  Read the result
+    # artifact separately so this reader remains robust if a future diagnostic
+    # omits the convenience summary fields.
+    result_path = Path(__file__).resolve().parents[2] / (
+        "research/hytunnel_carpark_holdout_result_2026_10_08.json"
+    )
+    try:
+        result = json.loads(result_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        result = {}
+    evaluation = result.get("evaluation") or {}
+    dispersion = evaluation.get("dispersion") or dispersion
+    mass_flow = evaluation.get("mass_flow") or mass_flow
+    claims = result.get("claims") or {}
+    if (
+        record.get("artifact_type")
+        != "hytunnel_carpark_post_outcome_failure_regime_diagnostic"
+        or record.get("post_outcome_diagnostic") is not True
+        or record.get("runtime_parameter_application") is not False
+        or record.get("default_model_parameters_changed") is not False
+        or source.get("dataset_doi") != "10.23642/USN.14405903"
+        or not isinstance(regimes.get("short_release_cases"), dict)
+        or not isinstance(regimes.get("long_blowdown_cases"), dict)
+        or claims.get("well_mixed_sensor_mean_transfer_supported") is True
+        or claims.get("local_real_gas_mass_flow_transfer_supported") is True
+    ):
+        return None
+    safe_regime_fields = (
+        "case_count", "experiments", "median_sensor_span_s",
+        "median_mass_flow_span_s", "median_common_support_duration_s",
+        "median_source_to_sensor_end_gap_s", "median_ventilation_m3_h",
+        "median_flow_peak_g_s", "common_support_shorter_than_sensor_in_all_cases",
+    )
+    safe_regimes = {
+        name: {
+            key: value
+            for key, value in group.items()
+            if key in safe_regime_fields
+        }
+        for name, group in regimes.items()
+        if isinstance(group, dict)
+    }
+    return {
+        "artifact": "research/hytunnel_carpark_failure_regime_diagnostic_2026_10_09.json",
+        "evidence_role": "public actual-hydrogen holdout failure and regime diagnostic",
+        "source": {
+            key: source.get(key)
+            for key in ("dataset_doi", "article_doi", "license")
+            if source.get(key) is not None
+        },
+        "holdout": {
+            "dispersion_declared_cases": dispersion.get("eligible_case_count"),
+            "dispersion_pass_count": dispersion.get("pass_count"),
+            "dispersion_pass_fraction": dispersion.get(
+                "pass_fraction_of_declared_cases"
+            ),
+            "dispersion_joint_screen_pass": dispersion.get("joint_screen_pass") is True,
+            "mass_flow_declared_cases": mass_flow.get("eligible_case_count"),
+            "mass_flow_pass_count": mass_flow.get("pass_count"),
+            "mass_flow_pass_fraction": mass_flow.get(
+                "pass_fraction_of_declared_cases"
+            ),
+            "mass_flow_joint_screen_pass": mass_flow.get("joint_screen_pass") is True,
+        },
+        "regimes": safe_regimes,
+        "findings": [
+            {
+                "id": str(item.get("id")),
+                "finding": str(item.get("finding")),
+                "implication": str(item.get("implication")),
+            }
+            for item in record.get("findings") or []
+            if isinstance(item, dict) and item.get("id")
+        ],
+        "runtime_parameter_application": False,
+        "default_model_parameters_changed": False,
+        "claim_supported": False,
+        "claim_limit": str(record.get("claim_boundary") or result.get("claim_boundary") or ""),
+    }
+
+
 def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
     """Return a tiny, inspectable index of public sources used for grounding.
 
@@ -2657,6 +2760,17 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             "url": url,
             "role": role,
         })
+
+    hytunnel = evidence.get("public_hytunnel_failure_diagnostic") or {}
+    hytunnel_source = hytunnel.get("source") or {}
+    hytunnel_doi = str(hytunnel_source.get("dataset_doi") or "").strip()
+    if hytunnel_doi:
+        add(
+            "PUBLIC_HYTUNNEL_CARPARK_RAW_TIMESERIES",
+            "HyTunnel-CS actual-hydrogen mechanically ventilated enclosure dataset",
+            f"https://doi.org/{hytunnel_doi}",
+            "공개 실제 수소 시계열 holdout 및 모델 한계 진단",
+        )
 
     benchmarks = evidence.get("public_experimental_benchmarks") or {}
     for source in benchmarks.get("sources") or []:
@@ -5133,6 +5247,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_measurement_instrumentation"
         ] = public_measurement
+    hytunnel_diagnostic = _public_hytunnel_failure_diagnostic_evidence()
+    if hytunnel_diagnostic is not None:
+        envelope["response_evidence"][
+            "public_hytunnel_failure_diagnostic"
+        ] = hytunnel_diagnostic
     methytrucks_tank = _methytrucks_tank_diagnostic_evidence()
     if methytrucks_tank is not None:
         envelope["response_evidence"][
@@ -5443,6 +5562,23 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_limit",
             )
             if public_measurement.get(key) is not None
+        }
+    hytunnel_diagnostic = evidence.get("public_hytunnel_failure_diagnostic")
+    if isinstance(hytunnel_diagnostic, dict):
+        summary["public_hytunnel_failure_diagnostic"] = {
+            "evidence_role": hytunnel_diagnostic.get("evidence_role"),
+            "source": hytunnel_diagnostic.get("source") or {},
+            "holdout": hytunnel_diagnostic.get("holdout") or {},
+            "regimes": hytunnel_diagnostic.get("regimes") or {},
+            "findings": hytunnel_diagnostic.get("findings") or [],
+            "runtime_parameter_application": hytunnel_diagnostic.get(
+                "runtime_parameter_application"
+            ) is True,
+            "default_model_parameters_changed": hytunnel_diagnostic.get(
+                "default_model_parameters_changed"
+            ) is True,
+            "claim_supported": hytunnel_diagnostic.get("claim_supported") is True,
+            "claim_limit": short(hytunnel_diagnostic.get("claim_limit"), 320),
         }
     methytrucks_tank = evidence.get("methytrucks_tank_diagnostic_boundary")
     if isinstance(methytrucks_tank, dict):
@@ -6305,6 +6441,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     local_station_discovery = response.get(
         "confidential_local_station_data_discovery"
     ) or {}
+    hytunnel_diagnostic = response.get(
+        "public_hytunnel_failure_diagnostic"
+    ) or {}
     public_hrs_leads = response.get("public_hrs_measurement_leads") or {}
     vehicle_side_leads = response.get(
         "public_vehicle_side_h2_measurement_leads"
@@ -6325,6 +6464,11 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "로컬", "현장 데이터", "충전소 데이터", "운전 데이터", "시계열",
         "private station", "local station", "station data", "operational data",
         "vehicle-side", "vehicle side", "full-loop", "full loop",
+    ))
+    hytunnel_relevant = any(token in lead_context for token in (
+        "공개", "실측", "원자료", "검증", "데이터", "피해영향", "안전거리",
+        "public", "measurement", "raw", "validation", "dataset", "dispersion",
+        "consequence", "safety distance",
     ))
     spatial_stratification = response.get(
         "public_actual_hydrogen_spatial_stratification_evidence"
@@ -6867,6 +7011,29 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "apparatus_resolved_holdout_received"
                 ) is True,
             },
+            **({
+                "public_hytunnel_carpark": {
+                    "claim_supported": hytunnel_diagnostic.get(
+                        "claim_supported"
+                    ) is True,
+                    "dispersion_joint_screen_pass": (
+                        hytunnel_diagnostic.get("holdout") or {}
+                    ).get("dispersion_joint_screen_pass") is True,
+                    "mass_flow_joint_screen_pass": (
+                        hytunnel_diagnostic.get("holdout") or {}
+                    ).get("mass_flow_joint_screen_pass") is True,
+                    "runtime_parameter_application": hytunnel_diagnostic.get(
+                        "runtime_parameter_application"
+                    ) is True,
+                    "default_model_parameters_changed": hytunnel_diagnostic.get(
+                        "default_model_parameters_changed"
+                    ) is True,
+                    "claim_limit": short(
+                        hytunnel_diagnostic.get("claim_limit"), 220
+                    ),
+                },
+            } if hytunnel_diagnostic and hytunnel_relevant
+            and not (impact.get("calculation_attempted") is True) else {}),
             # The compact prompt already carries several validation limits.
             # Preserve the controlled-data boundary in one token-cheap status
             # field; the detailed header and audit envelope retain the counts.
@@ -7037,6 +7204,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     hitrf_thermal = hitrf_reference.get("dispensing_and_thermal") or {}
     envelope_screen = evidence.get("public_operating_envelope_screen") or {}
     public_measurement = evidence.get("public_measurement_instrumentation") or {}
+    hytunnel_diagnostic = evidence.get(
+        "public_hytunnel_failure_diagnostic"
+    ) or {}
     methytrucks_tank = evidence.get("methytrucks_tank_diagnostic_boundary") or {}
     qra_multimethod = evidence.get("qra_multimethod_comparison") or {}
     preslhy = evidence.get("preslhy_validation_boundary") or {}
@@ -7203,6 +7373,22 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "test_class_interpretation"
             ),
             "claim_limit": public_measurement.get("claim_limit"),
+        },
+        "public_hytunnel_failure_diagnostic": {
+            "artifact": hytunnel_diagnostic.get("artifact"),
+            "evidence_role": hytunnel_diagnostic.get("evidence_role"),
+            "source": hytunnel_diagnostic.get("source") or {},
+            "holdout": hytunnel_diagnostic.get("holdout") or {},
+            "regimes": hytunnel_diagnostic.get("regimes") or {},
+            "findings": hytunnel_diagnostic.get("findings") or [],
+            "runtime_parameter_application": hytunnel_diagnostic.get(
+                "runtime_parameter_application"
+            ) is True,
+            "default_model_parameters_changed": hytunnel_diagnostic.get(
+                "default_model_parameters_changed"
+            ) is True,
+            "claim_supported": hytunnel_diagnostic.get("claim_supported") is True,
+            "claim_limit": hytunnel_diagnostic.get("claim_limit"),
         },
         "qra_multimethod_comparison": {
             key: qra_multimethod.get(key)
