@@ -99,6 +99,18 @@ def test_hdf5_loader_treats_constant_flow_tank_group_as_optional(tmp_path: Path)
     assert trace.tank_temperature_c is None
 
 
+def test_hdf5_loader_normalizes_duplicate_reference_times(tmp_path: Path):
+    path = tmp_path / "Exp04.mat"
+    _synthetic_hdf5_mat(path)
+    with h5py.File(path, "a") as file:
+        time = file["#refs#/time_0"][()]
+        time[0, :3] = time[0, 0]
+        file["#refs#/time_0"][...] = time
+    trace = load_hytunnel_mat(path)
+    assert np.all(np.diff(trace.sensor_time_s) > 0.0)
+    assert trace.sensor_time_s.size == 359
+
+
 def test_evaluators_return_finite_metrics_without_time_shift_or_fit(tmp_path: Path):
     path = tmp_path / "Exp19.mat"
     _synthetic_mat(path)

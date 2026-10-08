@@ -158,7 +158,12 @@ def _load_hdf5_mat(path: Path, experiment: int) -> HyTunnelTrace:
         if len(sensor_times) != len(concentrations) or not sensor_times:
             raise ValueError("S.time and S.conc cell arrays do not have matching sensor counts")
         reference_index = max(range(len(sensor_times)), key=lambda index: sensor_times[index].size)
-        sensor_time = _vector(sensor_times[reference_index], "S.time reference")
+        raw_sensor_time = _vector(sensor_times[reference_index], "S.time reference")
+        finite_reference = np.isfinite(raw_sensor_time)
+        ordered_reference = np.argsort(raw_sensor_time[finite_reference], kind="stable")
+        sensor_time = raw_sensor_time[finite_reference][ordered_reference]
+        unique_reference = np.concatenate(([True], np.diff(sensor_time) > 0.0))
+        sensor_time = sensor_time[unique_reference]
         concentration_columns: list[np.ndarray] = []
         for index, (time_values, concentration_values) in enumerate(
             zip(sensor_times, concentrations, strict=True)

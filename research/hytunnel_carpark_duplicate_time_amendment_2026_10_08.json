@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "amended_at": "2026-10-08",
+  "status": "FROZEN_BEFORE_FINAL_RECOMPUTE",
+  "protocol_path": "research/hytunnel_carpark_holdout_protocol_2026_10_08.json",
+  "preceding_amendment": {
+    "path": "research/hytunnel_carpark_optional_tank_amendment_2026_10_08.json",
+    "sha256": "7547413548509465d92b2ab1c447f4b4491ca5ba30d622803cf4f9451fa2e7f6"
+  },
+  "trigger": {
+    "stage": "Exp05 dispersion integration",
+    "observed_error": "The longest Exp05 S.time sensor vector repeats many timestamps, so the integration time base was not strictly increasing.",
+    "affected_case": 5,
+    "preceding_result_artifact": {
+      "path": "research/hytunnel_carpark_holdout_duplicate_time_failure_2026_10_08.json",
+      "sha256": "6d66f57aed0453ecda546523a6c2d2d43ea5abfe8dd583c742462af2ee493a5a"
+    }
+  },
+  "format_only_change": "Apply the protocol's already frozen stable sort and first-occurrence duplicate rule to the selected common S.time reference itself before interpolating sensor traces. This makes the integration grid finite, unique and strictly increasing without shifting, cropping or selecting on concentration values.",
+  "scientific_rules_unchanged": {
+    "declared_cases": true,
+    "models": true,
+    "parameters": true,
+    "metrics": true,
+    "thresholds": true,
+    "aggregate_decisions": true,
+    "claim_boundaries": true
+  },
+  "updated_code": {
+    "module": {
+      "path": "src/h2station/hytunnel_carpark_validation.py",
+      "sha256": "3c747ba64c1fdcdc20da59d7d682969010f921f3fe5c5cc958c5c3280492597e"
+    },
+    "runner": {
+      "path": "scripts/run_hytunnel_carpark_holdout.py",
+      "sha256": "07f30da0dc011e2cc219c01bc471e97bd7756dcaf67d443eef478313ecd262ef"
+    }
+  }
+}
