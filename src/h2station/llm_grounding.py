@@ -4036,6 +4036,97 @@ def _local_station_asset_screen_evidence() -> dict[str, Any] | None:
     }
 
 
+def _local_hydrogen_station_discovery_evidence() -> dict[str, Any] | None:
+    """Expose the bounded local-data discovery result to the LLM.
+
+    This is deliberately a discovery/coverage record rather than a second
+    telemetry source.  It lets the assistant answer whether local station
+    data are sparse and how they may be used, while keeping source paths,
+    filenames, headers, dates, site identity and raw rows out of prompts.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/local_hydrogen_station_data_discovery_recheck_2026_10_09.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    privacy = record.get("privacy") or {}
+    groups = {
+        item.get("id"): item
+        for item in record.get("candidate_groups") or []
+        if isinstance(item, dict) and item.get("id")
+    }
+    measured = groups.get("confidential_station_measurement_bundle") or {}
+    coverage = record.get("coverage_assessment") or {}
+    required_privacy = (
+        "source_paths_published",
+        "source_filenames_published",
+        "source_headers_published",
+        "site_company_manufacturer_published",
+        "calendar_dates_published",
+        "raw_rows_persisted",
+        "per_file_hashes_published",
+    )
+    if (
+        record.get("artifact_type") != "local_hydrogen_station_data_discovery_recheck"
+        or not all(privacy.get(key) is False for key in required_privacy)
+        or measured.get("file_count") != 33
+        or measured.get("deduplicated_rows") != 56_854_143
+        or coverage.get("local_station_data_is_sparse") is not False
+        or coverage.get("station_side_dynamic_evidence_is_substantial") is not True
+        or coverage.get("vehicle_side_full_loop_validation_ready") is not False
+        or coverage.get("quantitative_consequence_validation_ready") is not False
+    ):
+        return None
+
+    safe_group_fields = (
+        "evidence_class",
+        "file_count",
+        "csv_gib",
+        "physical_rows",
+        "deduplicated_rows",
+        "scenario_step_rows",
+        "operation_workbook_rows",
+        "minute_trend_rows",
+        "timestamp_differential_rows",
+        "recovered_storage_rows",
+        "document_count",
+        "image_count",
+        "video_count",
+        "raw_machine_readable_trace_available",
+        "independence",
+        "eligible_use",
+        "ineligible_use",
+        "claim_boundary",
+    )
+    safe_groups: dict[str, dict[str, Any]] = {}
+    for group_id, group in groups.items():
+        safe_groups[group_id] = {
+            key: group.get(key)
+            for key in safe_group_fields
+            if group.get(key) is not None
+        }
+    return {
+        "artifact": "research/local_hydrogen_station_data_discovery_recheck_2026_10_09.json",
+        "evidence_role": "privacy-bounded local hydrogen-station data discovery and claim boundary",
+        "candidate_groups": safe_groups,
+        "coverage_assessment": {
+            key: coverage.get(key)
+            for key in (
+                "local_station_data_is_sparse",
+                "station_side_dynamic_evidence_is_substantial",
+                "vehicle_side_full_loop_validation_ready",
+                "quantitative_consequence_validation_ready",
+                "derived_exports_must_be_excluded_from_external_validation",
+                "main_limit",
+            )
+        },
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_multisource_mapping_feasibility() -> dict[str, Any] | None:
     """Expose the controlled multi-sheet mapping boundary without identifiers.
 
@@ -4920,6 +5011,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_local_station_asset_screen"
         ] = local_station_asset_screen
+    local_station_discovery = _local_hydrogen_station_discovery_evidence()
+    if local_station_discovery is not None:
+        envelope["response_evidence"][
+            "confidential_local_station_data_discovery"
+        ] = local_station_discovery
     multisource_feasibility = _confidential_multisource_mapping_feasibility()
     if multisource_feasibility is not None:
         envelope["response_evidence"][
@@ -5700,6 +5796,18 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if local_station_asset_screen.get(key) is not None
         }
+    local_station_discovery = evidence.get(
+        "confidential_local_station_data_discovery"
+    )
+    if isinstance(local_station_discovery, dict):
+        summary["confidential_local_station_data_discovery"] = {
+            key: local_station_discovery.get(key)
+            for key in (
+                "evidence_role", "artifact", "candidate_groups",
+                "coverage_assessment", "claim_limit",
+            )
+            if local_station_discovery.get(key) is not None
+        }
     private_media = evidence.get("confidential_private_media_intake")
     if isinstance(private_media, dict):
         summary["confidential_private_media_intake"] = {
@@ -5855,6 +5963,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     local_station_asset_screen = response.get(
         "confidential_local_station_asset_screen"
+    ) or {}
+    local_station_discovery = response.get(
+        "confidential_local_station_data_discovery"
     ) or {}
     public_hrs_leads = response.get("public_hrs_measurement_leads") or {}
     lead_context = " ".join((
@@ -6182,6 +6293,29 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 manifest.get("question") or manifest.get("selected_sensor")
             ) else {}),
             **({
+                "local_station_data_discovery": {
+                    "station_data_is_sparse": (
+                        (local_station_discovery.get("coverage_assessment") or {})
+                        .get("local_station_data_is_sparse")
+                    ),
+                    "station_side_dynamic_evidence_substantial": (
+                        (local_station_discovery.get("coverage_assessment") or {})
+                        .get("station_side_dynamic_evidence_is_substantial")
+                    ),
+                    "vehicle_side_full_loop_validation_ready": (
+                        (local_station_discovery.get("coverage_assessment") or {})
+                        .get("vehicle_side_full_loop_validation_ready")
+                    ),
+                    "quantitative_consequence_validation_ready": (
+                        (local_station_discovery.get("coverage_assessment") or {})
+                        .get("quantitative_consequence_validation_ready")
+                    ),
+                    "claim_limit": short(local_station_discovery.get("claim_limit"), 220),
+                },
+            } if local_station_discovery and (
+                manifest.get("question") or manifest.get("selected_sensor")
+            ) else {}),
+            **({
                 "station_cascade_sequence": {
                     "claim_supported": cascade_sequence.get(
                         "cascade_controller_structure_supported"
@@ -6455,6 +6589,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     local_station_asset_screen = evidence.get(
         "confidential_local_station_asset_screen"
+    ) or {}
+    local_station_discovery = evidence.get(
+        "confidential_local_station_data_discovery"
     ) or {}
     multisource_feasibility = evidence.get(
         "confidential_multisource_mapping_feasibility"
@@ -7395,6 +7532,14 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "asset_bundles": local_station_asset_screen.get("asset_bundles") or {},
             "coverage": local_station_asset_screen.get("coverage") or {},
             "claim_limit": local_station_asset_screen.get("claim_limit"),
+        },
+        "confidential_local_station_data_discovery": {
+            "evidence_artifact": local_station_discovery.get("artifact"),
+            "candidate_groups": local_station_discovery.get("candidate_groups") or {},
+            "coverage_assessment": local_station_discovery.get(
+                "coverage_assessment"
+            ) or {},
+            "claim_limit": local_station_discovery.get("claim_limit"),
         },
         "confidential_private_media_intake": {
             "artifact": private_media.get("artifact"),
