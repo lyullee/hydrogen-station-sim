@@ -1679,6 +1679,121 @@ def audit(root: Path) -> dict[str, object]:
         } if thermal_hypothesis else "missing",
     ))
 
+    history_path = root / (
+        "research/confidential_station_history_hypothesis_2026_10_08.json"
+    )
+    history = _json(history_path)
+    history_schemas = (history or {}).get("schemas") or {}
+    history_pressure = history_schemas.get("pressure_flow_candidate") or {}
+    history_thermal = history_schemas.get("thermal_candidate") or {}
+    history_attestation = (history or {}).get("attestation") or {}
+    history_eligibility = (history or {}).get("eligibility") or {}
+    history_mapping = (history or {}).get("mapping") or {}
+    history_privacy_keys = (
+        "raw_rows_persisted",
+        "source_identifiers_published",
+        "source_paths_published",
+        "source_filenames_published",
+        "absolute_timestamps_published",
+        "calendar_dates_published",
+    )
+    history_pass = bool(
+        (history or {}).get("schema_version") == 1
+        and (history or {}).get("artifact_type")
+        == "confidential_station_longitudinal_history_diagnostic"
+        and all((history or {}).get(key) is False for key in history_privacy_keys)
+        and (history or {}).get("files_read") == 25
+        and (history or {}).get("raw_data_rows") == 58_618_833
+        and (history or {}).get("sample_stride") == 600
+        and (history or {}).get("sampled_rows") == 97_709
+        and (history or {}).get("median_sample_period_s") == 1.0
+        and (history or {}).get("schema_coverage_overlap_fraction") == 0.997837
+        and (history or {}).get("quality_warnings") == []
+        and history_pressure.get("files_read") == 12
+        and history_pressure.get("raw_data_rows") == 29_361_269
+        and history_pressure.get("sampled_rows") == 48_940
+        and history_pressure.get("stability_supported") is True
+        and all(
+            history_pressure.get(
+                "holdout_medians_inside_calibration_p05_p95", {}
+            ).values()
+        )
+        and history_pressure.get("order_checks", {}).get("ordered_group_1")
+        == 0.999142
+        and history_thermal.get("files_read") == 13
+        and history_thermal.get("raw_data_rows") == 29_257_564
+        and history_thermal.get("sampled_rows") == 48_769
+        and history_thermal.get("stability_supported") is True
+        and all(
+            history_thermal.get(
+                "holdout_medians_inside_calibration_p05_p95", {}
+            ).values()
+        )
+        and all(
+            value == 1.0
+            for value in history_thermal.get(
+                "plausible_range_fractions", {}
+            ).values()
+        )
+        and history_attestation.get(
+            "medium_high_pressure_roles_attested_elsewhere"
+        ) is True
+        and history_attestation.get("flow_totalizer_roles_attested") is False
+        and history_attestation.get("temperature_roles_attested") is False
+        and history_attestation.get("temperature_units_attested") is False
+        and history_attestation.get("vehicle_side_channels_confirmed") is False
+        and history_mapping.get("contains_source_labels") is False
+        and history_mapping.get("role_and_unit_attestation_is_explicit") is True
+        and history_eligibility.get(
+            "station_side_longitudinal_diagnostic_supported"
+        ) is True
+        and history_eligibility.get("runtime_parameter_application") is False
+        and history_eligibility.get("vehicle_fill_validation") is False
+        and history_eligibility.get("full_loop_holdout_eligible") is False
+        and history_eligibility.get("default_model_parameters_changed") is False
+    )
+    gates.append(_gate(
+        "confidential_station_longitudinal_history_integrity",
+        "PASS" if history_pass else ("FAIL" if history else "PENDING"),
+        "The recovered long station histories are internally stable while all unattested flow, thermal and vehicle/full-loop claims remain locked.",
+        str(history_path.relative_to(root)),
+        "25 files, 58,618,833 one-second rows, 97,709 deterministic samples, both schema stability screens, pressure ordering and explicit non-promotion boundaries.",
+        {
+            "files_read": (history or {}).get("files_read"),
+            "raw_data_rows": (history or {}).get("raw_data_rows"),
+            "sampled_rows": (history or {}).get("sampled_rows"),
+            "median_sample_period_s": (history or {}).get(
+                "median_sample_period_s"
+            ),
+            "schema_coverage_overlap_fraction": (history or {}).get(
+                "schema_coverage_overlap_fraction"
+            ),
+            "pressure_flow": {
+                "files_read": history_pressure.get("files_read"),
+                "raw_data_rows": history_pressure.get("raw_data_rows"),
+                "sampled_rows": history_pressure.get("sampled_rows"),
+                "stability_checks": history_pressure.get(
+                    "holdout_medians_inside_calibration_p05_p95"
+                ),
+                "order_checks": history_pressure.get("order_checks"),
+            },
+            "thermal": {
+                "files_read": history_thermal.get("files_read"),
+                "raw_data_rows": history_thermal.get("raw_data_rows"),
+                "sampled_rows": history_thermal.get("sampled_rows"),
+                "stability_checks": history_thermal.get(
+                    "holdout_medians_inside_calibration_p05_p95"
+                ),
+                "plausible_range_fractions": history_thermal.get(
+                    "plausible_range_fractions"
+                ),
+            },
+            "quality_warnings": (history or {}).get("quality_warnings"),
+            "attestation": history_attestation,
+            "eligibility": history_eligibility,
+        } if history else "missing",
+    ))
+
     external_loop_path = root / "data/public_validation/results/closed_loop_external_holdout/validation.json"
     external_loop = _json(external_loop_path)
     external_protocol_path = root / "research/mc_default_external_holdout_protocol.json"

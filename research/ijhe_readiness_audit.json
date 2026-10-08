@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T13:01:49.793775+00:00",
+  "generated_at": "2026-10-08T13:32:31.702152+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 114,
+    "PASS": 115,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -1162,6 +1162,70 @@
           "full_station_vehicle_validation": false,
           "full_loop_holdout_eligible": false,
           "independent_holdout": false,
+          "default_model_parameters_changed": false
+        }
+      }
+    },
+    {
+      "id": "confidential_station_longitudinal_history_integrity",
+      "status": "PASS",
+      "claim": "The recovered long station histories are internally stable while all unattested flow, thermal and vehicle/full-loop claims remain locked.",
+      "evidence": "research\\confidential_station_history_hypothesis_2026_10_08.json",
+      "requirement": "25 files, 58,618,833 one-second rows, 97,709 deterministic samples, both schema stability screens, pressure ordering and explicit non-promotion boundaries.",
+      "observed": {
+        "files_read": 25,
+        "raw_data_rows": 58618833,
+        "sampled_rows": 97709,
+        "median_sample_period_s": 1.0,
+        "schema_coverage_overlap_fraction": 0.997837,
+        "pressure_flow": {
+          "files_read": 12,
+          "raw_data_rows": 29361269,
+          "sampled_rows": 48940,
+          "stability_checks": {
+            "flow_candidate_1": true,
+            "flow_candidate_2": true,
+            "pressure_candidate_1": true,
+            "pressure_candidate_low": true,
+            "medium_storage_pressure": true,
+            "high_storage_pressure": true
+          },
+          "order_checks": {
+            "ordered_group_1": 0.999142
+          }
+        },
+        "thermal": {
+          "files_read": 13,
+          "raw_data_rows": 29257564,
+          "sampled_rows": 48769,
+          "stability_checks": {
+            "temperature_candidate_1": true,
+            "temperature_candidate_2": true,
+            "temperature_candidate_3": true,
+            "temperature_candidate_4": true,
+            "temperature_candidate_5": true
+          },
+          "plausible_range_fractions": {
+            "temperature_candidate_1": 1.0,
+            "temperature_candidate_2": 1.0,
+            "temperature_candidate_3": 1.0,
+            "temperature_candidate_4": 1.0,
+            "temperature_candidate_5": 1.0
+          }
+        },
+        "quality_warnings": [],
+        "attestation": {
+          "medium_high_pressure_roles_attested_elsewhere": true,
+          "flow_totalizer_roles_attested": false,
+          "temperature_roles_attested": false,
+          "temperature_units_attested": false,
+          "vehicle_side_channels_confirmed": false
+        },
+        "eligibility": {
+          "station_side_longitudinal_diagnostic_supported": true,
+          "runtime_parameter_application": false,
+          "vehicle_fill_validation": false,
+          "full_loop_holdout_eligible": false,
           "default_model_parameters_changed": false
         }
       }

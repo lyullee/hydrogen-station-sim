@@ -1,0 +1,345 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_station_longitudinal_history_diagnostic",
+  "raw_rows_persisted": false,
+  "source_identifiers_published": false,
+  "source_paths_published": false,
+  "source_filenames_published": false,
+  "absolute_timestamps_published": false,
+  "calendar_dates_published": false,
+  "files_read": 25,
+  "raw_data_rows": 58618833,
+  "sample_stride": 600,
+  "sampled_rows": 97709,
+  "median_sample_period_s": 1.0,
+  "schema_coverage_overlap_fraction": 0.997837,
+  "schemas": {
+    "pressure_flow_candidate": {
+      "sampled_rows": 48940,
+      "calibration_fraction": 0.7,
+      "calibration": {
+        "totalizer_candidate_1": {
+          "count": 34258,
+          "min": 47.8186,
+          "p05": 4480.0,
+          "median": 22927.4,
+          "p95": 66194.0,
+          "max": 72888.6
+        },
+        "flow_candidate_1": {
+          "count": 34258,
+          "min": 0.0,
+          "p05": 0.0,
+          "median": 0.0,
+          "p95": 1.828159,
+          "max": 6.4422
+        },
+        "totalizer_candidate_2": {
+          "count": 34258,
+          "min": 0.0,
+          "p05": 2560.0,
+          "median": 13413.9,
+          "p95": 37137.0,
+          "max": 43343.5
+        },
+        "flow_candidate_2": {
+          "count": 34258,
+          "min": -0.235403,
+          "p05": -0.086434,
+          "median": 0.0,
+          "p95": 1.730514,
+          "max": 9.67408
+        },
+        "pressure_candidate_1": {
+          "count": 34258,
+          "min": 0.426837,
+          "p05": 6.888957,
+          "median": 16.2391,
+          "p95": 18.94463,
+          "max": 19.8812
+        },
+        "pressure_candidate_low": {
+          "count": 34258,
+          "min": 0.013042,
+          "p05": 7.006134,
+          "median": 14.28955,
+          "p95": 18.5343,
+          "max": 19.4873
+        },
+        "medium_storage_pressure": {
+          "count": 34258,
+          "min": 0.000172,
+          "p05": 39.019185,
+          "median": 43.24915,
+          "p95": 44.4038,
+          "max": 45.0261
+        },
+        "high_storage_pressure": {
+          "count": 34258,
+          "min": -0.005436,
+          "p05": 77.71928,
+          "median": 82.924,
+          "p95": 83.7113,
+          "max": 84.9825
+        }
+      },
+      "holdout": {
+        "totalizer_candidate_1": {
+          "count": 14682,
+          "min": 72888.7,
+          "p05": 75476.5,
+          "median": 100891.0,
+          "p95": 125342.55,
+          "max": 128060.0
+        },
+        "flow_candidate_1": {
+          "count": 14682,
+          "min": 0.0,
+          "p05": 0.0,
+          "median": 0.0,
+          "p95": 2.542606,
+          "max": 9.4279
+        },
+        "totalizer_candidate_2": {
+          "count": 14682,
+          "min": 43343.5,
+          "p05": 45687.9,
+          "median": 69581.3,
+          "p95": 92483.1,
+          "max": 94918.4
+        },
+        "flow_candidate_2": {
+          "count": 14682,
+          "min": -0.145195,
+          "p05": -0.097494,
+          "median": 0.0,
+          "p95": 2.392625,
+          "max": 10.5811
+        },
+        "pressure_candidate_1": {
+          "count": 14682,
+          "min": 0.036641,
+          "p05": 7.49679,
+          "median": 15.19155,
+          "p95": 18.333785,
+          "max": 19.6777
+        },
+        "pressure_candidate_low": {
+          "count": 14682,
+          "min": 0.012751,
+          "p05": 7.137802,
+          "median": 14.4966,
+          "p95": 18.09778,
+          "max": 19.3153
+        },
+        "medium_storage_pressure": {
+          "count": 14682,
+          "min": 0.002947,
+          "p05": 38.921445,
+          "median": 43.5356,
+          "p95": 44.586795,
+          "max": 45.043
+        },
+        "high_storage_pressure": {
+          "count": 14682,
+          "min": -0.010227,
+          "p05": 76.098945,
+          "median": 82.5381,
+          "p95": 83.64849,
+          "max": 84.4902
+        }
+      },
+      "stability_roles": [
+        "flow_candidate_1",
+        "flow_candidate_2",
+        "pressure_candidate_1",
+        "pressure_candidate_low",
+        "medium_storage_pressure",
+        "high_storage_pressure"
+      ],
+      "holdout_medians_inside_calibration_p05_p95": {
+        "flow_candidate_1": true,
+        "flow_candidate_2": true,
+        "pressure_candidate_1": true,
+        "pressure_candidate_low": true,
+        "medium_storage_pressure": true,
+        "high_storage_pressure": true
+      },
+      "stability_supported": true,
+      "files_read": 12,
+      "raw_data_rows": 29361269,
+      "rejected_sample_rows": 1,
+      "order_checks": {
+        "ordered_group_1": 0.999142
+      },
+      "plausible_range_fractions": {}
+    },
+    "thermal_candidate": {
+      "sampled_rows": 48769,
+      "calibration_fraction": 0.7,
+      "calibration": {
+        "counter_candidate_1": {
+          "count": 34138,
+          "min": 3.0,
+          "p05": 251.0,
+          "median": 4061.5,
+          "p95": 7433.0,
+          "max": 8135.0
+        },
+        "counter_candidate_2": {
+          "count": 34138,
+          "min": 4.0,
+          "p05": 94.0,
+          "median": 3153.0,
+          "p95": 5272.0,
+          "max": 5537.0
+        },
+        "temperature_candidate_1": {
+          "count": 34138,
+          "min": 0.421654,
+          "p05": 11.33281,
+          "median": 23.9507,
+          "p95": 30.26105,
+          "max": 43.4826
+        },
+        "temperature_candidate_2": {
+          "count": 34138,
+          "min": 1.74196,
+          "p05": 11.976425,
+          "median": 23.8782,
+          "p95": 30.446045,
+          "max": 45.2852
+        },
+        "temperature_candidate_3": {
+          "count": 34138,
+          "min": 1.72825,
+          "p05": 11.256525,
+          "median": 23.8577,
+          "p95": 30.364175,
+          "max": 45.1291
+        },
+        "temperature_candidate_4": {
+          "count": 34138,
+          "min": 1.46122,
+          "p05": 12.65861,
+          "median": 23.08865,
+          "p95": 29.46571,
+          "max": 43.9243
+        },
+        "temperature_candidate_5": {
+          "count": 34138,
+          "min": 1.38677,
+          "p05": 12.475975,
+          "median": 23.42585,
+          "p95": 29.692655,
+          "max": 43.5512
+        }
+      },
+      "holdout": {
+        "counter_candidate_1": {
+          "count": 14631,
+          "min": 8135.0,
+          "p05": 8449.0,
+          "median": 11206.0,
+          "p95": 13995.0,
+          "max": 14246.0
+        },
+        "counter_candidate_2": {
+          "count": 14631,
+          "min": 5537.0,
+          "p05": 5711.0,
+          "median": 6906.0,
+          "p95": 8602.0,
+          "max": 8767.0
+        },
+        "temperature_candidate_1": {
+          "count": 14631,
+          "min": -6.26521,
+          "p05": 3.8398,
+          "median": 18.0257,
+          "p95": 27.6806,
+          "max": 36.0946
+        },
+        "temperature_candidate_2": {
+          "count": 14631,
+          "min": -4.94395,
+          "p05": 5.662955,
+          "median": 18.3314,
+          "p95": 27.1884,
+          "max": 34.9653
+        },
+        "temperature_candidate_3": {
+          "count": 14631,
+          "min": -6.83015,
+          "p05": 4.344325,
+          "median": 17.9295,
+          "p95": 27.241,
+          "max": 34.2484
+        },
+        "temperature_candidate_4": {
+          "count": 14631,
+          "min": -4.97036,
+          "p05": 6.177525,
+          "median": 18.3371,
+          "p95": 25.64675,
+          "max": 33.2988
+        },
+        "temperature_candidate_5": {
+          "count": 14631,
+          "min": -5.54352,
+          "p05": 6.177675,
+          "median": 17.8268,
+          "p95": 24.99265,
+          "max": 32.5013
+        }
+      },
+      "stability_roles": [
+        "temperature_candidate_1",
+        "temperature_candidate_2",
+        "temperature_candidate_3",
+        "temperature_candidate_4",
+        "temperature_candidate_5"
+      ],
+      "holdout_medians_inside_calibration_p05_p95": {
+        "temperature_candidate_1": true,
+        "temperature_candidate_2": true,
+        "temperature_candidate_3": true,
+        "temperature_candidate_4": true,
+        "temperature_candidate_5": true
+      },
+      "stability_supported": true,
+      "files_read": 13,
+      "raw_data_rows": 29257564,
+      "rejected_sample_rows": 0,
+      "order_checks": {},
+      "plausible_range_fractions": {
+        "temperature_candidate_1": 1.0,
+        "temperature_candidate_2": 1.0,
+        "temperature_candidate_3": 1.0,
+        "temperature_candidate_4": 1.0,
+        "temperature_candidate_5": 1.0
+      }
+    }
+  },
+  "quality_warnings": [],
+  "attestation": {
+    "medium_high_pressure_roles_attested_elsewhere": true,
+    "flow_totalizer_roles_attested": false,
+    "temperature_roles_attested": false,
+    "temperature_units_attested": false,
+    "vehicle_side_channels_confirmed": false
+  },
+  "eligibility": {
+    "station_side_longitudinal_diagnostic_supported": true,
+    "runtime_parameter_application": false,
+    "vehicle_fill_validation": false,
+    "full_loop_holdout_eligible": false,
+    "default_model_parameters_changed": false
+  },
+  "claim_boundary": "Exploratory longitudinal station-side diagnostic. Generic flow/totalizer and temperature mappings remain hypotheses unless separately attested; no raw rows, tags, paths, filenames or calendar dates are published. It does not validate vehicle filling, safety limits or consequence distances.",
+  "mapping": {
+    "mapping_sha256": "a60d1dc67572c1e36a510d951b03408fbdf3187ffc5de1b2ea2fdd354531c80a",
+    "contains_source_labels": false,
+    "role_and_unit_attestation_is_explicit": true
+  }
+}

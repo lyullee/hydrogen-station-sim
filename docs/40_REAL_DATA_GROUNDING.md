@@ -63,6 +63,20 @@ temperature, delivered mass or SOC. The privacy-safe aggregate is recorded in
 `research/local_confidential_data_discovery_2026_10_08.json`; all private
 paths, filenames and raw content remain outside the repository.
 
+The 25 narrow exports are now structurally recovered without disclosing their
+headers. Twelve files contain 29,361,269 rows in a pressure/flow candidate
+schema; thirteen contain 29,257,564 rows in a thermal candidate schema. Their
+time coverage overlaps by 99.7837%, and every file has a one-second median
+sample period. A 600-row diagnostic sample retained 97,709 rows. The final 30%
+medians of both flow-like candidates, four pressure candidates and five
+temperature-like candidates all remained inside the first 70% P05--P95
+envelopes. The lower/medium/high pressure-candidate ordering held for 99.9142%
+of the pressure/flow samples. This is recorded in
+`research/confidential_station_history_hypothesis_2026_10_08.json`. Cumulative
+counters were excluded from the stability decision because their later values
+are expected to increase. Flow/totalizer units and temperature roles remain
+unattested, so runtime fitting and vehicle/full-loop claims remain disabled.
+
 A value-level, pre-attestation consistency screen now tests whether the
 unlabelled flow-like channels contain internally coherent instantaneous
 flow/cumulative-totalizer pairs. It inspected 3,053,442 sampled rows from 20

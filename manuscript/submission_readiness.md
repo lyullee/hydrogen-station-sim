@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **114 PASS · 10 FAIL · 7 PENDING**.
+Gate counts: **115 PASS · 10 FAIL · 7 PENDING**.
 
 The confidential station archive contains substantially more usable
 station-side evidence than the earlier one-row derivative screen indicated.
@@ -45,6 +45,17 @@ median passed the chronological 70/30 stability screens without quality
 warnings. This adds method-integrity evidence while leaving thermal-envelope,
 runtime, vehicle-fill and full-loop promotion disabled until custodian
 attestation is recorded.
+
+The larger narrow-history archive has now been recovered as a separate
+exploratory longitudinal diagnostic. Its 25 files contain 58,618,833
+one-second rows split almost evenly between pressure/flow and thermal candidate
+schemas, with 99.7837% time-coverage overlap. A deterministic 600-row sample
+retained 97,709 observations. All six non-cumulative pressure/flow candidate
+holdout medians and all five temperature-like holdout medians stayed inside the
+first-70% P05--P95 envelopes; lower/medium/high pressure ordering held in
+99.9142% of samples. The result adds station-side longitudinal integrity
+evidence while preserving the flow/temperature attestation hold, runtime lock
+and failed station-to-vehicle full-loop gate.
 
 The official RHeaDHy public test matrix (DOI 10.5281/zenodo.16992589) is now
 hash-pinned and converted into a trace-level pre-access protocol for the

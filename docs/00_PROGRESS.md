@@ -2,6 +2,18 @@
 
 ## 2026-10-08 - Confidential pressure/flow consistency boundary
 
+- Recovered the two stable schemas in the 25 previously underused station
+  history exports. The archive contains 58,618,833 one-second rows: 29,361,269
+  pressure/flow-candidate rows and 29,257,564 temperature-candidate rows with
+  99.7837% time-coverage overlap.
+- A deterministic 600-row sample retained 97,709 diagnostic observations. All
+  six non-cumulative pressure/flow candidate medians and all five
+  temperature-like medians in the final 30% stayed inside the first 70%
+  P05--P95 envelopes. The lower/medium/high pressure-candidate order held in
+  99.9142% of samples.
+- Kept flow/totalizer units, generic temperature roles and all runtime fitting
+  disabled. The new result is longitudinal station-side evidence, not a
+  vehicle-fill or consequence-distance validation.
 - Added a streaming, privacy-bounded CSV audit for owner-controlled station
   pressure and flow-like channels.
 - The result publishes no source path, filename, tag, exact timestamp or raw

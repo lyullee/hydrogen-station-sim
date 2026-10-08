@@ -639,6 +639,34 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
         "station_component_thermal_envelope_supported"
     ] is False
     assert thermal_observed["eligibility"]["runtime_parameter_application"] is False
+    history = gates["confidential_station_longitudinal_history_integrity"]
+    assert history["status"] == "PASS"
+    history_observed = history["observed"]
+    assert history_observed["files_read"] == 25
+    assert history_observed["raw_data_rows"] == 58_618_833
+    assert history_observed["sampled_rows"] == 97_709
+    assert history_observed["median_sample_period_s"] == 1.0
+    assert history_observed["schema_coverage_overlap_fraction"] == 0.997837
+    assert all(history_observed["pressure_flow"]["stability_checks"].values())
+    assert history_observed["pressure_flow"]["order_checks"][
+        "ordered_group_1"
+    ] == 0.999142
+    assert all(history_observed["thermal"]["stability_checks"].values())
+    assert all(
+        value == 1.0
+        for value in history_observed["thermal"][
+            "plausible_range_fractions"
+        ].values()
+    )
+    assert history_observed["attestation"][
+        "flow_totalizer_roles_attested"
+    ] is False
+    assert history_observed["attestation"]["temperature_roles_attested"] is False
+    assert history_observed["eligibility"][
+        "station_side_longitudinal_diagnostic_supported"
+    ] is True
+    assert history_observed["eligibility"]["runtime_parameter_application"] is False
+    assert history_observed["eligibility"]["vehicle_fill_validation"] is False
     assert schema["flat_time_axis_candidate_summary"]["candidate_groups"] == 4
     assert schema["flat_time_axis_candidate_summary"][
         "tables_in_candidate_groups"
