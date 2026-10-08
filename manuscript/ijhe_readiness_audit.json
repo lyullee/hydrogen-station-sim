@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T00:41:43.093038+00:00",
+  "generated_at": "2026-10-08T01:07:00.862134+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -1320,7 +1320,7 @@
       "requirement": "At least 15 candidate routes, existing draft request for every route, source URL and explicit non-evidentiary boundary.",
       "observed": {
         "status": "open_data_not_yet_received",
-        "candidate_count": 31,
+        "candidate_count": 33,
         "draft_count": 24,
         "claim_boundary": "This tracker is a data-acquisition plan. It is not evidence of validation, does not change any IJHE readiness gate, and does not authorize contact or publication."
       }

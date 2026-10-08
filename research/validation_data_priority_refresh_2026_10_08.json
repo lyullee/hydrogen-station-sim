@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-10-08",
+  "status": "ACQUISITION_PRIORITY_ONLY",
+  "contact_sent": false,
+  "selection_rule": "Rank candidates by the number and importance of open validation gates that one rights-cleared blind release could address.",
+  "ranked_candidates": [
+    {
+      "rank": 1,
+      "id": "hyfill_hd_hrs_experiments_2026",
+      "source": "https://doi.org/10.1016/j.ijhydene.2026.153374",
+      "draft": "research/HYFILL_HD_HRS_DATA_REQUEST_DRAFT.md",
+      "expected_gate_impact": [
+        "full_loop_external_validation",
+        "tank_thermal_transfer",
+        "station_delivery_boundary"
+      ],
+      "reason": "More than 50 reported 350/700 bar tests include station delivery and tank channels."
+    },
+    {
+      "rank": 2,
+      "id": "wan_2026_type_iii_iv_aspect_ratio",
+      "source": "https://doi.org/10.1016/j.ijhydene.2026.156406",
+      "draft": "research/WAN_2026_TYPE_III_IV_DATA_REQUEST_DRAFT.md",
+      "expected_gate_impact": [
+        "dickens_typeiii_prospective_validation",
+        "tank_thermal_transfer",
+        "mixed_convection_geometry"
+      ],
+      "reason": "Both vessel types and multiple aspect ratios directly test the current thermal-model failure."
+    },
+    {
+      "rank": 3,
+      "id": "deng_2025_highflow",
+      "source": "https://doi.org/10.1016/j.ijhydene.2025.151093",
+      "draft": "research/DENG_2025_HIGHFLOW_DATA_REQUEST_DRAFT.md",
+      "expected_gate_impact": [
+        "tank_thermal_transfer",
+        "transient_mass_flow_boundary",
+        "large_type_iv_transfer"
+      ],
+      "reason": "The experiment records transient high-flow boundaries and spatial temperature response in a large Type-IV tank."
+    },
+    {
+      "rank": 4,
+      "id": "ferry_250bar_type_iv_2026",
+      "source": "https://doi.org/10.1016/j.ijhydene.2026.153768",
+      "draft": "research/FERRY_250BAR_TYPE_IV_DATA_REQUEST_DRAFT.md",
+      "expected_gate_impact": [
+        "large_type_iv_transfer",
+        "mixed_convection_geometry"
+      ],
+      "reason": "A 28 kg-class Type-IV experiment can test capacity transfer, with an explicit boundary outside H70 scope."
+    },
+    {
+      "rank": 5,
+      "id": "rheadhy_2026_mid_flow_twin_campaign",
+      "source": "https://cordis.europa.eu/project/id/101101443/reporting",
+      "draft": "research/RHEADHY_DATA_REQUEST_DRAFT.md",
+      "expected_gate_impact": [
+        "full_loop_external_validation",
+        "heavy_duty_transfer"
+      ],
+      "reason": "The real Mid Flow Twin campaign can provide a station-to-vehicle holdout if synchronized logger channels are released."
+    }
+  ],
+  "minimum_blind_release": {
+    "required": [
+      "custodian-held case identifiers and numerical outcomes",
+      "model commit and scoring protocol frozen before release",
+      "synchronized pressure, temperature and mass or flow",
+      "initial conditions, geometry, units and quality metadata",
+      "written journal and repository reuse terms"
+    ],
+    "fallback": "If no blind subset exists, classify received files as post-publication diagnostics and retain the current readiness failures."
+  },
+  "claim_boundary": "This ranking is a planning artifact. It is not validation evidence, records no sent contact, changes no readiness gate and does not make a journal-acceptance claim."
+}

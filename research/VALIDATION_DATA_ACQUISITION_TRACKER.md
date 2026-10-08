@@ -59,3 +59,21 @@ login. The result is recorded in
 The prepared request is
 [`NBSDC_HEAVY_VEHICLE_FAST_REFUELING_DATA_REQUEST_DRAFT_2026_10_06.md`](NBSDC_HEAVY_VEHICLE_FAST_REFUELING_DATA_REQUEST_DRAFT_2026_10_06.md).
 It is an acquisition lead and protocol/schema reference, not a scored holdout.
+
+## 2026-10-08 impact-priority refresh
+
+Two recent experimental programmes were added to the machine-readable tracker.
+The Type III/IV aspect-ratio campaign can directly test the temperature and
+geometry-transfer failures, while the 250 bar, 28 kg-class ferry-tank campaign
+can test large Type-IV transfer outside the H70 claim domain. Their request
+drafts ask the custodian to withhold unreported case identifiers and outcomes
+until the model commit, eligibility rules and scoring protocol are frozen.
+
+The first acquisition round is now ordered by expected blocker reduction:
+HyFill heavy-duty HRS, the Type III/IV aspect-ratio campaign, the 35 MPa
+large-tank high-flow campaign, the ferry-tank campaign and RHeaDHy. See
+[`VALIDATION_DATA_PRIORITY_REFRESH_2026_10_08.md`](VALIDATION_DATA_PRIORITY_REFRESH_2026_10_08.md).
+Published aggregate errors are already visible for several candidates, so a
+new claim requires an unreported repeat or a custodian-held blind split. A
+post-publication trace remains useful for diagnosis but is not relabelled as
+an untouched holdout.

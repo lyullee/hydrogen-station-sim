@@ -37,6 +37,15 @@ and hash any received files, freeze the model commit and eligibility criteria
 before evaluating them, and will not digitise figures as a substitute for the
 underlying time series.
 
+Because the article already reports aggregate temperature errors, the strongest
+design would be a custodian-held blind split. If unreported repeats exist,
+please retain their case identifiers and numerical outcomes until we send a
+timestamped model commit, channel mapping and scoring protocol. A calibration
+subset may be released first; the disjoint blind subset can then be released
+once for no-fitting evaluation. If no unreported repeats exist, we will label
+the received traces as post-publication transfer diagnostics rather than an
+untouched validation holdout.
+
 Sincerely,
 
 *[name, affiliation, institutional email and project DOI to be supplied]*

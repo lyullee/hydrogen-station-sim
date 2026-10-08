@@ -677,6 +677,48 @@
       "next_action": "Submit research/NBSDC_HEAVY_VEHICLE_FAST_REFUELING_DATA_REQUEST_DRAFT_2026_10_06.md and retain approval, hashes and channel dictionary.",
       "access_recheck": "research/nbsdc_heavy_vehicle_fast_refueling_access_recheck_2026_10_06.json",
       "claim_boundary": "Public metadata and protocol description only; no numerical holdout score or station-to-vehicle validation claim."
+    },
+    {
+      "id": "wan_2026_type_iii_iv_aspect_ratio",
+      "draft": "research/WAN_2026_TYPE_III_IV_DATA_REQUEST_DRAFT.md",
+      "source": "https://doi.org/10.1016/j.ijhydene.2026.156406",
+      "candidate_type": "independent Type III/IV refuelling and aspect-ratio transfer experiments",
+      "status": "request_draft_ready_blind_split_requested",
+      "requested_fields": [
+        "common_elapsed_time",
+        "tank_and_inlet_pressure",
+        "mass_flow_or_transferred_mass",
+        "inlet_gas_internal_gas_liner_wall_and_ambient_temperature",
+        "vessel_type_volume_diameter_length_and_wall_layers",
+        "inlet_nozzle_geometry",
+        "initial_conditions_protocol_precooling_and_stop_reason",
+        "sensor_location_calibration_uncertainty_units_and_quality_flags"
+      ],
+      "minimum_acceptance": "At least six custodian-held blind cases spanning Type III and Type IV vessels and more than one aspect-ratio class, with synchronized pressure, temperature and mass/flow plus declared geometry.",
+      "rights": "Authors or the data custodian must grant written permission for derived metrics, journal figures and open-repository deposition.",
+      "next_action": "Use research/WAN_2026_TYPE_III_IV_DATA_REQUEST_DRAFT.md through an approved institutional route and ask the custodian to withhold case identifiers and outcomes until the model commit and score are frozen.",
+      "claim_boundary": "Published aggregate errors and any already-visible plots are context only. Without a custodian-held blind split, received traces remain post-publication transfer diagnostics and cannot revise the frozen external validation claims."
+    },
+    {
+      "id": "ferry_250bar_type_iv_2026",
+      "draft": "research/FERRY_250BAR_TYPE_IV_DATA_REQUEST_DRAFT.md",
+      "source": "https://doi.org/10.1016/j.ijhydene.2026.153768",
+      "candidate_type": "large 250 bar Type-IV ferry-tank refuelling experiments",
+      "status": "request_draft_ready_blind_split_requested",
+      "requested_fields": [
+        "common_elapsed_time",
+        "source_dispenser_and_tank_pressure",
+        "mass_flow_or_transferred_mass",
+        "inlet_internal_wall_and_ambient_temperature",
+        "tank_and_injector_geometry",
+        "thermocouple_locations",
+        "initial_conditions_precooling_control_and_stop_reason",
+        "calibration_uncertainty_units_and_quality_flags"
+      ],
+      "minimum_acceptance": "A custodian-held unreported repeat or blind split with synchronized pressure, mass/flow and temperature channels plus geometry and initial conditions; published cases support geometry transfer only.",
+      "rights": "Authors or the experiment custodian must grant written permission for derived metrics, journal figures and open-repository deposition.",
+      "next_action": "Use research/FERRY_250BAR_TYPE_IV_DATA_REQUEST_DRAFT.md through an approved institutional route and freeze the transfer-test protocol before the blind files are opened.",
+      "claim_boundary": "The 250 bar maritime tank is outside the H70 station claim domain. Even with a blind split, it can test large-Type-IV geometry transfer but cannot by itself close station-controller or H70 full-loop validation."
     }
   ]
 }
