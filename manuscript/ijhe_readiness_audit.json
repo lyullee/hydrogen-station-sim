@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T14:31:52.247162+00:00",
+  "generated_at": "2026-10-08T14:45:53.930459+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 118,
+    "PASS": 119,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -1041,6 +1041,59 @@
           "verified_file_count": 33,
           "verified_pressure_channel_count": 136,
           "verified_vehicle_side_channel_family_count": 0
+        }
+      }
+    },
+    {
+      "id": "local_confidential_station_data_utilization_integrity",
+      "status": "PASS",
+      "claim": "The local confidential station archive is demonstrably large and already supports multiple station-side validation cohorts; the remaining full-loop limitation is semantic and vehicle-side coverage rather than record volume.",
+      "evidence": "research\\local_confidential_station_data_utilization_2026_10_08.json",
+      "requirement": "Privacy-bounded file, deduplication and utilization counts; an explicit non-sparse conclusion; and no promotion to independent station-to-vehicle validation.",
+      "observed": {
+        "inventory": {
+          "csv_files": 33,
+          "metadata_files": 1,
+          "total_csv_bytes": 5099041365,
+          "total_csv_gib": 4.749,
+          "physical_data_rows_after_one_header_per_file": 59272300,
+          "unique_csv_payloads": 32,
+          "exact_duplicate_groups": 1,
+          "redundant_csv_files": 1,
+          "duplicate_rows": 2418157,
+          "duplicate_bytes": 226707700,
+          "deduplicated_data_rows": 56854143,
+          "deduplicated_csv_bytes": 4872333665,
+          "narrow_schema_files": 25,
+          "wide_schema_files": 8,
+          "schema_width_file_counts": {
+            "9": 25,
+            "64": 8
+          },
+          "unreadable_header_files": 0
+        },
+        "utilization": {
+          "ordered_high_bank_pressure_cycles": 16770,
+          "paired_medium_high_pressure_episodes": 11770,
+          "sequential_medium_high_pressure_episodes": 11131,
+          "short_horizon_pressure_forecast_cases": 1418,
+          "conditional_recharge_flow_episodes": 733,
+          "strong_instantaneous_totalizer_consistency_pairs": 27,
+          "station_side_evidence_is_substantial": true,
+          "independent_full_loop_vehicle_validation_complete": false
+        },
+        "assessment": {
+          "local_station_data_is_sparse": false,
+          "station_side_dynamic_validation_ready": true,
+          "station_side_longitudinal_analysis_ready": true,
+          "vehicle_side_full_loop_validation_ready": false,
+          "primary_limit": "semantic_and_vehicle_side_coverage_not_volume",
+          "next_work": [
+            "retain duplicate exclusion in every chronological split",
+            "segment long pressure-flow histories into de-identified operating episodes",
+            "use wide controller logs for pressure-state dynamics and cross-check against the long histories",
+            "keep full-loop vehicle claims disabled until vehicle pressure, vehicle temperature, delivered mass or SOC is synchronized and attested"
+          ]
         }
       }
     },

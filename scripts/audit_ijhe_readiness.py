@@ -1458,6 +1458,52 @@ def audit(root: Path) -> dict[str, object]:
         } if schema_audit else "missing; confidential schema intake has not completed",
     ))
 
+    local_utilization_path = root / (
+        "research/local_confidential_station_data_utilization_2026_10_08.json"
+    )
+    local_utilization = _json(local_utilization_path)
+    local_privacy = (local_utilization or {}).get("privacy") or {}
+    local_inventory = (local_utilization or {}).get("inventory") or {}
+    local_evidence = (local_utilization or {}).get("utilization") or {}
+    local_assessment = (local_utilization or {}).get("assessment") or {}
+    local_utilization_pass = bool(
+        (local_utilization or {}).get("schema_version") == 1
+        and (local_utilization or {}).get("artifact_type")
+        == "local_confidential_station_data_utilization_audit"
+        and local_privacy
+        and all(value is False for value in local_privacy.values())
+        and local_inventory.get("csv_files") == 33
+        and local_inventory.get("unique_csv_payloads") == 32
+        and local_inventory.get("redundant_csv_files") == 1
+        and local_inventory.get("deduplicated_data_rows") == 56_854_143
+        and local_inventory.get("narrow_schema_files") == 25
+        and local_inventory.get("wide_schema_files") == 8
+        and local_evidence.get("ordered_high_bank_pressure_cycles") == 16_770
+        and local_evidence.get("paired_medium_high_pressure_episodes") == 11_770
+        and local_evidence.get("short_horizon_pressure_forecast_cases") == 1_418
+        and local_evidence.get("conditional_recharge_flow_episodes") == 733
+        and local_evidence.get("station_side_evidence_is_substantial") is True
+        and local_evidence.get("independent_full_loop_vehicle_validation_complete")
+        is False
+        and local_assessment.get("local_station_data_is_sparse") is False
+        and local_assessment.get("station_side_dynamic_validation_ready") is True
+        and local_assessment.get("vehicle_side_full_loop_validation_ready") is False
+        and local_assessment.get("primary_limit")
+        == "semantic_and_vehicle_side_coverage_not_volume"
+    )
+    gates.append(_gate(
+        "local_confidential_station_data_utilization_integrity",
+        "PASS" if local_utilization_pass else ("FAIL" if local_utilization else "PENDING"),
+        "The local confidential station archive is demonstrably large and already supports multiple station-side validation cohorts; the remaining full-loop limitation is semantic and vehicle-side coverage rather than record volume.",
+        str(local_utilization_path.relative_to(root)),
+        "Privacy-bounded file, deduplication and utilization counts; an explicit non-sparse conclusion; and no promotion to independent station-to-vehicle validation.",
+        {
+            "inventory": local_inventory,
+            "utilization": local_evidence,
+            "assessment": local_assessment,
+        } if local_utilization else "missing; local station-data utilization audit has not completed",
+    ))
+
     signal_consistency_path = root / (
         "research/confidential_station_signal_consistency_screen_2026_10_08.json"
     )

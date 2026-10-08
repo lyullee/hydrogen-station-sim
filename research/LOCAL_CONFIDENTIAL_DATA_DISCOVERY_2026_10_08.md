@@ -49,3 +49,11 @@ and full-loop vehicle-fill claims remain disabled.
 
 The machine-readable aggregate is
 `local_confidential_data_discovery_2026_10_08.json`.
+
+A later exact-content rescan additionally found one redundant CSV payload.
+After excluding it, 32 unique payloads and 56,854,143 rows remain. The linked
+utilization audit records 16,770 ordered pressure cycles, 11,770 paired
+medium/high episodes, 1,418 pressure-forecast cases and 733 recharge-flow
+episodes already extracted from the archive. See
+`local_confidential_station_data_utilization_2026_10_08.json` and
+`LOCAL_CONFIDENTIAL_STATION_DATA_UTILIZATION_2026_10_08.md`.

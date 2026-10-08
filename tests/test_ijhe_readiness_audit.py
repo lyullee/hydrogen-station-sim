@@ -83,6 +83,20 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     ] == 0.055
     assert recharge_forecast["decision"]["runtime_parameter_application"] is False
     assert recharge_forecast["decision"]["vehicle_fill_validation"] is False
+    assert gates[
+        "local_confidential_station_data_utilization_integrity"
+    ]["status"] == "PASS"
+    local_data = gates[
+        "local_confidential_station_data_utilization_integrity"
+    ]["observed"]
+    assert local_data["inventory"]["csv_files"] == 33
+    assert local_data["inventory"]["unique_csv_payloads"] == 32
+    assert local_data["inventory"]["deduplicated_data_rows"] == 56_854_143
+    assert local_data["utilization"]["ordered_high_bank_pressure_cycles"] == 16_770
+    assert local_data["utilization"]["paired_medium_high_pressure_episodes"] == 11_770
+    assert local_data["utilization"]["short_horizon_pressure_forecast_cases"] == 1_418
+    assert local_data["assessment"]["local_station_data_is_sparse"] is False
+    assert local_data["assessment"]["vehicle_side_full_loop_validation_ready"] is False
     assert gates["dickens_typeiii_prospective_validation"]["status"] == "FAIL"
     dickens = gates["dickens_typeiii_prospective_validation"]["observed"]
     assert dickens["protocol_frozen_before_outcome_access"] is True

@@ -20,7 +20,18 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **118 PASS · 10 FAIL · 7 PENDING**.
+Gate counts: **119 PASS · 10 FAIL · 7 PENDING**.
+
+A fresh privacy-bounded local inventory confirms that data volume is not the
+station-side limitation. The controlled archive contains 33 CSV files,
+59,272,300 physical data rows and 4.749 GiB. One exact duplicate was isolated;
+32 unique payloads and 56,854,143 deduplicated rows remain. Existing analyses
+have already retained 16,770 ordered high-bank pressure cycles, 11,770 paired
+medium/high pressure episodes, 1,418 short-horizon pressure forecast cases and
+733 conditional recharge-flow episodes. The unresolved full-loop gate is
+therefore tied to unattested channel semantics and missing synchronized
+vehicle-side pressure, temperature, delivered-mass or SOC signals rather than
+to a sparse local archive.
 
 The confidential station archive contains substantially more usable
 station-side evidence than the earlier one-row derivative screen indicated.
