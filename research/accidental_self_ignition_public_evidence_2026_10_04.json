@@ -83,6 +83,21 @@
     "numerical_release_model_validation_claimed": false,
     "reason_not_full_loop": "The experiment is a controlled cylinder breach rather than a station-to-vehicle fueling event; breach geometry, discharge coefficient and complete calibration metadata are not supplied in the dataset record."
   },
+  "reported_findings": {
+    "experiment_count": 3,
+    "ignition_observed_case_count": 2,
+    "no_ignition_case_count": 1,
+    "remote_or_obstructed_ignition_reported": true,
+    "delayed_ignition_delay_s_reported": 0.33,
+    "fire_jet_length_m_greater_than_reported": 7.0,
+    "pressure_sampling_period_s": 0.2,
+    "thermocouple_sampling_period_s": 1.0,
+    "thermocouple_vertical_heights_m": [0.55, 1.35],
+    "thermocouple_horizontal_distances_m": [0.155, 0.255, 0.6],
+    "ignition_probability_estimated": false,
+    "ignition_mechanism_confirmed": false,
+    "qualifier": "Article-reported qualitative findings from three controlled cases; the observations do not estimate ignition probability or confirm a universal ignition mechanism."
+  },
   "findings": [
     "The open archive provides pressure and paired ignition/no-ignition temperature traces for a high-pressure accidental-release experiment.",
     "The parent article reports ignition variability and delayed ignition several metres from the release point, making the data relevant to consequence and ignition scenario coverage.",

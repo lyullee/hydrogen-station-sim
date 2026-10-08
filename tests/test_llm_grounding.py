@@ -186,9 +186,50 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert accidental["consequence_and_ignition_grounding_eligible"] is True
     assert accidental["full_loop_station_vehicle_holdout_eligible"] is False
     assert accidental["numerical_release_model_validation_claimed"] is False
+    assert accidental["reported_findings"]["experiment_count"] == 3
+    assert accidental["reported_findings"]["ignition_observed_case_count"] == 2
+    assert accidental["reported_findings"]["no_ignition_case_count"] == 1
+    assert accidental["reported_findings"][
+        "remote_or_obstructed_ignition_reported"
+    ] is True
+    assert accidental["reported_findings"][
+        "delayed_ignition_delay_s_reported"
+    ] == 0.33
+    assert accidental["reported_findings"][
+        "fire_jet_length_m_greater_than_reported"
+    ] == 7.0
+    assert accidental["reported_findings"]["ignition_probability_estimated"] is False
+    assert accidental["reported_findings"]["ignition_mechanism_confirmed"] is False
     assert "ignition probability" in accidental["claim_limit"]
     assert all(row["local_sha256_match"] for row in accidental["files"])
     assert "raw_text" not in accidental
+    summary_accidental = prompt_evidence_summary(idle)[
+        "public_accidental_release_evidence"
+    ]
+    assert summary_accidental["reported_findings"][
+        "remote_or_obstructed_ignition_reported"
+    ] is True
+    header_accidental = prompt_evidence_header(idle)["public_accident_evidence"]
+    assert header_accidental["accidental_release_reported_findings"][
+        "experiment_count"
+    ] == 3
+    release_manifest = build_evidence_manifest(
+        frame,
+        signals,
+        [{
+            "node_id": "N09",
+            "calculation_status": "calculated",
+            "release_source_boundary": "HIGH_PRESSURE_RELEASE",
+            "literature_delayed_ignition_status": "REPORTED_ONLY",
+        }],
+        True,
+        question="수소 누출과 지연 점화 위험을 분석해줘",
+    )
+    decision_accidental = prompt_decision_evidence(release_manifest)[
+        "decision_support_evidence"
+    ]["public_accidental_release"]
+    assert decision_accidental["ignition_probability_estimated"] is False
+    assert decision_accidental["ignition_mechanism_confirmed"] is False
     release_boundary = idle["response_evidence"][
         "proust_release_model_validation_boundary"
     ]

@@ -214,6 +214,10 @@
     "consequence_and_ignition_grounding_eligible": true,
     "full_loop_station_vehicle_holdout_eligible": false,
     "numerical_release_model_validation_claimed": false,
+    "reported_findings_forwarded": true,
+    "remote_or_obstructed_ignition_reported": true,
+    "ignition_probability_estimated": false,
+    "ignition_mechanism_confirmed": false,
     "interpretation": "public accidental-release/ignition provenance and qualitative scenario grounding only; no ignition probability or station full-loop claim",
     "all_local_file_hashes_match": true
   },

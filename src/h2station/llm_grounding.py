@@ -542,6 +542,31 @@ def _public_accidental_release_evidence() -> dict[str, Any] | None:
     ):
         return None
 
+    reported_findings = record.get("reported_findings") or {}
+    # Keep the article-reported observations separate from model-derived
+    # quantities.  These values are useful for response wording (for example,
+    # checking remote/delayed ignition), but they must never become an
+    # ignition-probability prior or an automatic release-model calibration.
+    reported_findings_payload = {
+        key: reported_findings.get(key)
+        for key in (
+            "experiment_count",
+            "ignition_observed_case_count",
+            "no_ignition_case_count",
+            "remote_or_obstructed_ignition_reported",
+            "delayed_ignition_delay_s_reported",
+            "fire_jet_length_m_greater_than_reported",
+            "pressure_sampling_period_s",
+            "thermocouple_sampling_period_s",
+            "thermocouple_vertical_heights_m",
+            "thermocouple_horizontal_distances_m",
+            "ignition_probability_estimated",
+            "ignition_mechanism_confirmed",
+            "qualifier",
+        )
+        if reported_findings.get(key) is not None
+    }
+
     files: list[dict[str, Any]] = []
     raw_dir = root / "data/public_validation/raw/zenodo_17913628_accidental_self_ignition"
     for item in record.get("files") or []:
@@ -583,6 +608,7 @@ def _public_accidental_release_evidence() -> dict[str, Any] | None:
         "consequence_and_ignition_grounding_eligible": eligibility.get(
             "consequence_and_ignition_grounding_eligible"
         ) is True,
+        "reported_findings": reported_findings_payload,
         "full_loop_station_vehicle_holdout_eligible": eligibility.get(
             "full_loop_station_vehicle_holdout_eligible"
         ) is True,
@@ -5131,12 +5157,28 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         }
     accidental = evidence.get("public_accidental_release_evidence")
     if isinstance(accidental, dict):
+        reported_findings = accidental.get("reported_findings") or {}
         summary["public_accidental_release_evidence"] = {
             key: accidental.get(key) for key in (
                 "article_doi", "zenodo_doi", "license", "evidence_role",
                 "consequence_and_ignition_grounding_eligible",
                 "full_loop_station_vehicle_holdout_eligible",
             ) if accidental.get(key) is not None
+        }
+        summary["public_accidental_release_evidence"]["reported_findings"] = {
+            key: reported_findings.get(key)
+            for key in (
+                "experiment_count",
+                "ignition_observed_case_count",
+                "no_ignition_case_count",
+                "remote_or_obstructed_ignition_reported",
+                "delayed_ignition_delay_s_reported",
+                "fire_jet_length_m_greater_than_reported",
+                "ignition_probability_estimated",
+                "ignition_mechanism_confirmed",
+                "qualifier",
+            )
+            if reported_findings.get(key) is not None
         }
         summary["public_accidental_release_evidence"]["claim_limit"] = short(
             accidental.get("claim_limit")
@@ -5568,6 +5610,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     accident_inventory = response.get("public_accident_report_inventory") or {}
     khk_replay = accident_inventory.get("digital_twin_replay") or {}
     relevant_precedents = response.get("relevant_public_accident_precedents") or {}
+    accidental_release = response.get("public_accidental_release_evidence") or {}
     controlled_flare = response.get("public_controlled_flare_evidence") or {}
     local_incident = response.get("confidential_local_accident_response_coverage") or {}
     multisource = response.get("confidential_multisource_mapping_feasibility") or {}
@@ -5593,6 +5636,21 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         str(manifest.get("selected_sensor") or ""),
         str(manifest.get("question") or ""),
     )).lower()
+    accidental_release_relevant = bool(
+        accidental_release
+        and (
+            any(token in detector_context for token in (
+                "누출", "누설", "화재", "점화", "방출", "가스", "leak",
+                "fire", "ignition", "release", "vent", "hydrogen",
+            ))
+            or any(
+                row.get("release_source_boundary")
+                or row.get("literature_delayed_ignition_status")
+                or row.get("literature_jet_flame_status")
+                for row in compact_impacts
+            )
+        )
+    )
     spatial_guidance_relevant = bool(
         spatial_stratification
         and (
@@ -5714,6 +5772,31 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 )),
                 "claim_limit": short(local_incident.get("claim_limit")),
             },
+            **({
+                "public_accidental_release": {
+                    "experiment_count": (
+                        accidental_release.get("reported_findings") or {}
+                    ).get("experiment_count"),
+                    "ignition_observed_case_count": (
+                        accidental_release.get("reported_findings") or {}
+                    ).get("ignition_observed_case_count"),
+                    "no_ignition_case_count": (
+                        accidental_release.get("reported_findings") or {}
+                    ).get("no_ignition_case_count"),
+                    "remote_or_obstructed_ignition_reported": (
+                        accidental_release.get("reported_findings") or {}
+                    ).get("remote_or_obstructed_ignition_reported") is True,
+                    "delayed_ignition_delay_s_reported": (
+                        accidental_release.get("reported_findings") or {}
+                    ).get("delayed_ignition_delay_s_reported"),
+                    "fire_jet_length_m_greater_than_reported": (
+                        accidental_release.get("reported_findings") or {}
+                    ).get("fire_jet_length_m_greater_than_reported"),
+                    "ignition_probability_estimated": False,
+                    "ignition_mechanism_confirmed": False,
+                    "claim_limit": short(accidental_release.get("claim_limit"), 180),
+                }
+            } if accidental_release_relevant else {}),
             **({
                 "detector_placement": (
                     "22 actual-H2 channel tests, post-access: ceiling + jet-path; "
@@ -6589,6 +6672,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "accidental_release_full_loop": accidental_release.get(
                 "full_loop_station_vehicle_holdout_eligible"
             ),
+            "accidental_release_reported_findings": accidental_release.get(
+                "reported_findings"
+            ) or {},
             "action_category_counts": {
                 str(key): value
                 for key, value in (action_taxonomy.get("category_counts") or {}).items()
