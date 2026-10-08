@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "hytunnel_carpark_raw_timeseries_holdout",
-  "generated_at": "2026-10-08T06:45:39.162321+00:00",
+  "generated_at": "2026-10-08T06:52:53.873585+00:00",
   "source": {
     "dataset_doi": "10.23642/USN.14405903",
     "article_doi": "10.3390/en14113008",

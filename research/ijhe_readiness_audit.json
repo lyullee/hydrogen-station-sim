@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T06:47:51.623829+00:00",
+  "generated_at": "2026-10-08T06:53:38.017867+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -2034,12 +2034,12 @@
       "id": "hytunnel_carpark_execution_integrity",
       "status": "PASS",
       "claim": "The public actual-hydrogen HyTunnel raw-time-series holdout retains its frozen protocol, disclosed amendments, complete case accounting and claim boundaries.",
-      "evidence": "research\\hytunnel_carpark_holdout_protocol_2026_10_08.json; research\\hytunnel_carpark_format_amendment_2026_10_08.json; research\\hytunnel_carpark_sampling_amendment_2026_10_08.json; research\\hytunnel_carpark_optional_tank_amendment_2026_10_08.json; research\\hytunnel_carpark_duplicate_time_amendment_2026_10_08.json; research\\hytunnel_carpark_holdout_result_2026_10_08.json; research\\HYTUNNEL_CARPARK_HOLDOUT_2026_10_08.md",
+      "evidence": "research\\hytunnel_carpark_holdout_protocol_2026_10_08.json; research\\hytunnel_carpark_format_amendment_2026_10_08.json; research\\hytunnel_carpark_sampling_amendment_2026_10_08.json; research\\hytunnel_carpark_optional_tank_amendment_2026_10_08.json; research\\hytunnel_carpark_duplicate_time_amendment_2026_10_08.json; research\\hytunnel_carpark_serialization_amendment_2026_10_08.json; research\\hytunnel_carpark_holdout_result_2026_10_08.json; research\\HYTUNNEL_CARPARK_HOLDOUT_2026_10_08.md",
       "requirement": "Frozen pre-download protocol, CC BY 4.0 DOI/version, 18 hashed raw files excluded from Git, 18 concentration cases, five mass-flow cases, no final execution failures and every post-access amendment retained.",
       "observed": {
         "dataset_doi": "10.23642/USN.14405903",
         "raw_file_count": 18,
-        "amendment_count": 4,
+        "amendment_count": 5,
         "dispersion_eligible_case_count": 18,
         "mass_flow_eligible_case_count": 5,
         "failure_count": 0,
@@ -2050,7 +2050,7 @@
       "id": "hytunnel_carpark_dispersion_validation",
       "status": "FAIL",
       "claim": "The frozen zero-dimensional well-mixed model meets its independent actual-hydrogen concentration screen across the declared ventilated-enclosure experiments.",
-      "evidence": "research\\hytunnel_carpark_holdout_protocol_2026_10_08.json; research\\hytunnel_carpark_format_amendment_2026_10_08.json; research\\hytunnel_carpark_sampling_amendment_2026_10_08.json; research\\hytunnel_carpark_optional_tank_amendment_2026_10_08.json; research\\hytunnel_carpark_duplicate_time_amendment_2026_10_08.json; research\\hytunnel_carpark_holdout_result_2026_10_08.json; research\\HYTUNNEL_CARPARK_HOLDOUT_2026_10_08.md",
+      "evidence": "research\\hytunnel_carpark_holdout_protocol_2026_10_08.json; research\\hytunnel_carpark_format_amendment_2026_10_08.json; research\\hytunnel_carpark_sampling_amendment_2026_10_08.json; research\\hytunnel_carpark_optional_tank_amendment_2026_10_08.json; research\\hytunnel_carpark_duplicate_time_amendment_2026_10_08.json; research\\hytunnel_carpark_serialization_amendment_2026_10_08.json; research\\hytunnel_carpark_holdout_result_2026_10_08.json; research\\HYTUNNEL_CARPARK_HOLDOUT_2026_10_08.md",
       "requirement": "All 18 cases eligible and at least 70% pass the unchanged per-case NRMSE, median percentage error, peak error and rank screens.",
       "observed": {
         "eligible_case_count": 18,
@@ -2064,7 +2064,7 @@
       "id": "hytunnel_carpark_mass_flow_validation",
       "status": "FAIL",
       "claim": "The fixed local real-gas 0.5 mm aperture relation meets its independent actual-hydrogen blowdown mass-flow screen.",
-      "evidence": "research\\hytunnel_carpark_holdout_protocol_2026_10_08.json; research\\hytunnel_carpark_format_amendment_2026_10_08.json; research\\hytunnel_carpark_sampling_amendment_2026_10_08.json; research\\hytunnel_carpark_optional_tank_amendment_2026_10_08.json; research\\hytunnel_carpark_duplicate_time_amendment_2026_10_08.json; research\\hytunnel_carpark_holdout_result_2026_10_08.json; research\\HYTUNNEL_CARPARK_HOLDOUT_2026_10_08.md",
+      "evidence": "research\\hytunnel_carpark_holdout_protocol_2026_10_08.json; research\\hytunnel_carpark_format_amendment_2026_10_08.json; research\\hytunnel_carpark_sampling_amendment_2026_10_08.json; research\\hytunnel_carpark_optional_tank_amendment_2026_10_08.json; research\\hytunnel_carpark_duplicate_time_amendment_2026_10_08.json; research\\hytunnel_carpark_serialization_amendment_2026_10_08.json; research\\hytunnel_carpark_holdout_result_2026_10_08.json; research\\HYTUNNEL_CARPARK_HOLDOUT_2026_10_08.md",
       "requirement": "All five cases eligible and at least four pass the unchanged per-case NRMSE, median percentage error, peak error and rank screens.",
       "observed": {
         "eligible_case_count": 5,

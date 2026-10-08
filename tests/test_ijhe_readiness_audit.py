@@ -85,7 +85,7 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert gates["hytunnel_carpark_execution_integrity"]["status"] == "PASS"
     hytunnel_integrity = gates["hytunnel_carpark_execution_integrity"]["observed"]
     assert hytunnel_integrity["raw_file_count"] == 18
-    assert hytunnel_integrity["amendment_count"] == 4
+    assert hytunnel_integrity["amendment_count"] == 5
     assert hytunnel_integrity["failure_count"] == 0
     assert gates["hytunnel_carpark_dispersion_validation"]["status"] == "FAIL"
     hytunnel_dispersion = gates["hytunnel_carpark_dispersion_validation"]["observed"]

@@ -2877,6 +2877,7 @@ def audit(root: Path) -> dict[str, object]:
         root / "research/hytunnel_carpark_sampling_amendment_2026_10_08.json",
         root / "research/hytunnel_carpark_optional_tank_amendment_2026_10_08.json",
         root / "research/hytunnel_carpark_duplicate_time_amendment_2026_10_08.json",
+        root / "research/hytunnel_carpark_serialization_amendment_2026_10_08.json",
     )
     hytunnel_protocol = _json(hytunnel_protocol_path)
     hytunnel_result = _json(hytunnel_result_path)
