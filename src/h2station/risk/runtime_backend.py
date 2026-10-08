@@ -22,6 +22,7 @@ from .hyram_adapter import (
     IndoorScenario,
     LeakScenario as AdapterLeakScenario,
 )
+from .delayed_ignition import delayed_ignition_envelope
 from .live import CallableHyRAMBackend, HyRAMDynamicReleaseRequest
 
 
@@ -397,6 +398,13 @@ class NativeHyRAMBackend:
         output.update(source_boundary)
         output.update(mass_flow_override_metadata(
             result.requested_mass_flow_rate, result.mass_flow_rate,
+        ))
+        output.update(delayed_ignition_envelope(
+            storage_pressure_pa=request.source_pressure_pa,
+            storage_temperature_k=request.source_temperature_k,
+            release_diameter_m=request.orifice_diameter_m,
+            ambient_pressure_pa=request.ambient_pressure_pa,
+            release_boundary=request.release_boundary,
         ))
         # Report only the sampled extent. Three observation points cannot
         # establish a validated safe boundary beyond the farthest point.

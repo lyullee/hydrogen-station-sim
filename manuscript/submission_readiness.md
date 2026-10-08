@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **104 PASS · 10 FAIL · 8 PENDING**.
+Gate counts: **105 PASS · 10 FAIL · 8 PENDING**.
 
 The HyTunnel-CS CC BY 4.0 actual-hydrogen archive now provides a completed
 raw-time-series holdout over 18 mechanically ventilated enclosure experiments
@@ -71,6 +71,17 @@ tuning. The native bridge preserves an active flow limit through an analytic
 area-equivalent consequence orifice and records both physical and equivalent
 diameters; this is an approximation rather than experimental validation.
 DATA3632 cannot establish a site safety distance.
+
+The consequence layer now also exposes the Cirrone et al. (2022) conservative
+delayed-ignition free-jet correlation as a separate literature comparison. Its
+implementation reproduces the paper's 21.9 kPa worked example and all 24 rounded
+Table 4 radial distances; the maximum rounding difference is 0.044 m. The source
+paper derived the correlation from 78 hydrogen experiments. Runtime values retain
+the paper's pressure, temperature and diameter domain flag, apply only to a free
+orifice, and are labelled as distances from the fast-burning mixture centre.
+They neither replace HyRAM nor establish a leak-centred site safety or evacuation
+distance. Flow-limited release paths fail closed instead of using an unvalidated
+equivalent diameter.
 
 The complete June 2026 MetHyTrucks public release has now been ingested across
 all three sampling-system groups: 15 CC BY 4.0 workbooks, 58,440 synchronized

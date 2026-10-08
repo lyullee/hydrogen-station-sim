@@ -52,7 +52,13 @@ def test_live_selected_sensor_uses_direct_api_with_computed_impact(monkeypatch):
 
         def evaluate_release(self, request):
             return {"status": "calculated", "maximum_heat_flux_w_m2": 5100.0,
-                    "maximum_overpressure_pa": 4200.0, "sampled_effect_radius_m": 3.0}
+                    "maximum_overpressure_pa": 4200.0, "sampled_effect_radius_m": 3.0,
+                    "literature_delayed_ignition_status": "CALCULATED_EXTRAPOLATED",
+                    "literature_delayed_ignition_5kpa_radial_distance_m": 5.4,
+                    "literature_delayed_ignition_distance_origin":
+                    "CENTRE_OF_25_TO_35_VOL_PERCENT_H2_CLOUD",
+                    "literature_delayed_ignition_site_safety_distance": False,
+                    "literature_delayed_ignition_doi": "10.3390/hydrogen3040027"}
 
     def direct(frame, catalog, station_id, question, impact_results):
         captured["signals"] = set(frame["hazop"]["signals"])
@@ -75,6 +81,8 @@ def test_live_selected_sensor_uses_direct_api_with_computed_impact(monkeypatch):
         assert "피해영향예측" in response.text
         assert captured["signals"] == {"PT-0801", "TT-0801"}
         assert captured["impacts"][0]["pressure_sensor"] == "PT-0801"
+        assert captured["impacts"][0]["literature_delayed_ignition_5kpa_radial_distance_m"] == 5.4
+        assert captured["impacts"][0]["literature_delayed_ignition_site_safety_distance"] is False
     finally:
         with api._jobs_lock:
             api._jobs.pop(job_id, None)

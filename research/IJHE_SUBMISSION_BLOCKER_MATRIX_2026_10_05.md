@@ -1,13 +1,13 @@
 # IJHE objective blocker matrix
 
-Generated: `2026-10-08T07:21:14.196354+00:00`
+Generated: `2026-10-08T07:47:37.282900+00:00`
 
 This is an evidence-readiness record, not a prediction of journal acceptance.
 
 - Bounded IJHE submission ready: **False**
 - Full validated-digital-twin objective ready: **False**
 - Automatic goal completion permitted: **False**
-- Gate counts: `{'PASS': 104, 'FAIL': 10, 'PENDING': 8}`
+- Gate counts: `{'PASS': 105, 'FAIL': 10, 'PENDING': 8}`
 
 ## Blocking matrix
 

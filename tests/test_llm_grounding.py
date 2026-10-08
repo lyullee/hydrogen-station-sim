@@ -818,7 +818,14 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
               "calculation_status": "calculated",
               "calculation_basis": "SENSOR_BASED_HYPOTHESIS",
               "pressure_sensor": "PT-0901", "current_pressure_mpa": 88.0,
-              "sampled_effect_radius_m": 3.0}
+              "sampled_effect_radius_m": 3.0,
+              "literature_delayed_ignition_status": "CALCULATED_EXTRAPOLATED",
+              "literature_delayed_ignition_5kpa_radial_distance_m": 4.3,
+              "literature_delayed_ignition_distance_origin":
+              "CENTRE_OF_25_TO_35_VOL_PERCENT_H2_CLOUD",
+              "literature_delayed_ignition_site_safety_distance": False,
+              "literature_delayed_ignition_doi": "10.3390/hydrogen3040027",
+              "literature_delayed_ignition_claim_limit": "not a site safety distance"}
     calculated = build_evidence_manifest(
         frame, signals, [result], True,
         active_conditions=[{"scenario": "고압 저장뱅크 압력 상승", "sensor_id": "PT-0901",
@@ -828,6 +835,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     )
     assert calculated["impact"]["calculation_status"] == "calculated"
     assert calculated["impact"]["results"][0]["pressure_sensor"] == "PT-0901"
+    assert calculated["impact"]["results"][0][
+        "literature_delayed_ignition_5kpa_radial_distance_m"
+    ] == 4.3
+    assert calculated["impact"]["results"][0][
+        "literature_delayed_ignition_site_safety_distance"
+    ] is False
     assert calculated["conditions"][0]["label"] == "고압 저장뱅크 압력 상승"
     assert calculated["conditions"][0]["response_plan_id"] == "overpressure"
     assert calculated["conditions"][0]["response_source_ids"] == ["H2_INCIDENT", "HIAD2026"]

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T07:20:22.998440+00:00",
+  "generated_at": "2026-10-08T07:47:37.019264+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 104,
+    "PASS": 105,
     "FAIL": 10,
     "PENDING": 8
   },
@@ -1763,6 +1763,23 @@
         "source_identity_match": true,
         "upstream_status": "passed",
         "adapter_parity_passed": true
+      }
+    },
+    {
+      "id": "cirrone_delayed_ignition_literature_benchmark",
+      "status": "PASS",
+      "claim": "The free-jet delayed-ignition comparison reproduces the published equation and rounded application examples without replacing HyRAM or claiming a site safety distance.",
+      "evidence": "research\\cirrone_2022_delayed_ignition_benchmark.json",
+      "requirement": "Equation (7) and all 24 Table 4 radial values pass; runtime is free-orifice-only and exposes domain and distance-origin limits.",
+      "observed": {
+        "experimental_case_count_reported": 78,
+        "forward_passed": true,
+        "inverse_case_count": 24,
+        "inverse_pass_count": 24,
+        "maximum_absolute_error_m": 0.04324804138022753,
+        "flow_limited_source_fails_closed": true,
+        "site_safety_distance": false,
+        "claim_boundary": "This verifies the software transcription against Equation (5), Equation (7), and rounded Table 4 values from the same publication. The paper's 78 experiments support the published correlation, but these checks are not independent validation by this project. Distances are radial from the fast-burning cloud centre and are not leak-centred site safety, evacuation, probability, obstacle, impingement, confinement, or full-station results."
       }
     },
     {
@@ -6975,11 +6992,11 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 8000,
+          "approximate_manuscript_words_before_references": 7998,
           "figures": 3,
           "tables": 3,
-          "citation_keys": 46,
-          "bibliography_entries": 47,
+          "citation_keys": 47,
+          "bibliography_entries": 48,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },

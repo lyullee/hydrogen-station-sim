@@ -2441,6 +2441,44 @@ def audit(root: Path) -> dict[str, object]:
         },
     ))
 
+    cirrone_path = root / "research/cirrone_2022_delayed_ignition_benchmark.json"
+    cirrone = _json(cirrone_path)
+    cirrone_source = (cirrone or {}).get("source") or {}
+    cirrone_aggregate = (cirrone or {}).get("aggregate") or {}
+    cirrone_runtime = (cirrone or {}).get("runtime_contract") or {}
+    cirrone_pass = bool(
+        (cirrone or {}).get("artifact_type")
+        == "cirrone_2022_delayed_ignition_implementation_benchmark"
+        and (cirrone or {}).get("status") == "passed"
+        and cirrone_source.get("doi") == "10.3390/hydrogen3040027"
+        and cirrone_source.get("experimental_case_count_reported") == 78
+        and cirrone_aggregate.get("inverse_case_count") == 24
+        and cirrone_aggregate.get("inverse_pass_count") == 24
+        and cirrone_aggregate.get("forward_passed") is True
+        and cirrone_aggregate.get("all_passed") is True
+        and cirrone_runtime.get("hybrid_replacement_of_hyram") is False
+        and cirrone_runtime.get("flow_limited_source_fails_closed") is True
+        and cirrone_runtime.get("site_safety_distance") is False
+        and bool((cirrone or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "cirrone_delayed_ignition_literature_benchmark",
+        "PASS" if cirrone_pass else ("FAIL" if cirrone else "PENDING"),
+        "The free-jet delayed-ignition comparison reproduces the published equation and rounded application examples without replacing HyRAM or claiming a site safety distance.",
+        str(cirrone_path.relative_to(root)),
+        "Equation (7) and all 24 Table 4 radial values pass; runtime is free-orifice-only and exposes domain and distance-origin limits.",
+        {
+            "experimental_case_count_reported": cirrone_source.get("experimental_case_count_reported"),
+            "forward_passed": cirrone_aggregate.get("forward_passed"),
+            "inverse_case_count": cirrone_aggregate.get("inverse_case_count"),
+            "inverse_pass_count": cirrone_aggregate.get("inverse_pass_count"),
+            "maximum_absolute_error_m": cirrone_aggregate.get("maximum_absolute_error_m"),
+            "flow_limited_source_fails_closed": cirrone_runtime.get("flow_limited_source_fails_closed"),
+            "site_safety_distance": cirrone_runtime.get("site_safety_distance"),
+            "claim_boundary": (cirrone or {}).get("claim_boundary"),
+        } if cirrone else "missing",
+    ))
+
     geometry_path = root / "research/consequence_geometry_validation.json"
     geometry = _json(geometry_path)
     geometry_checks = (geometry or {}).get("chain_checks") or {}
@@ -5542,7 +5580,8 @@ def audit(root: Path) -> dict[str, object]:
         "dickens_typeiii_prospective_validation",
         "corrected_closed_loop_internal_evidence",
         "full_loop_negative_result_disclosed",
-        "hyram_adapter_verification", "preslhy_blowdown_external_validation",
+        "hyram_adapter_verification", "cirrone_delayed_ignition_literature_benchmark",
+        "preslhy_blowdown_external_validation",
         "preslhy_partb_ambient_external_validation",
         "preslhy_revised_holdout_validation",
         "proust_independent_release_validation",

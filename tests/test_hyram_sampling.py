@@ -94,3 +94,30 @@ def test_flow_limited_source_is_preserved_in_native_hyram_consequence(monkeypatc
     assert result["consequence_equivalent_orifice_diameter_m"] < 0.01
     assert result["modeled_consequence_mass_flow_kg_s"] == pytest.approx(0.06, rel=.05)
     assert result["mass_flow_override_status"] == "OVERRIDE_RETAINED"
+    assert result["literature_delayed_ignition_status"] == "NOT_APPLICABLE_FLOW_LIMITED_SOURCE"
+    assert result["literature_delayed_ignition_5kpa_radial_distance_m"] is None
+
+
+def test_free_orifice_exposes_claim_bounded_delayed_ignition_comparison(monkeypatch):
+    pytest.importorskip("hyram")
+    monkeypatch.delenv("H2STATION_HYRAM_LOCATIONS", raising=False)
+    backend = NativeHyRAMBackend.from_environment()
+    request = HyRAMDynamicReleaseRequest(
+        release_id="free-orifice-literature", component_id="cascade.high", location="N09",
+        time_s=0.0, duration_s=1.0, source_pressure_pa=45.0e6,
+        source_temperature_k=288.15, ambient_pressure_pa=101325.0,
+        orifice_diameter_m=0.001, discharge_coefficient=0.8,
+        mass_flow_override_kg_s=0.01, cumulative_released_mass_kg=0.01,
+        release_angle_rad=0.0, release_height_m=1.0, indoor=False,
+        annual_frequency_per_year=None, immediate_ignition_probability=None,
+        delayed_ignition_probability=None, release_boundary="free_orifice",
+        process_flow_limit_kg_s=None,
+    )
+
+    result = backend.evaluate_release(request)
+
+    assert result["literature_delayed_ignition_status"] == "CALCULATED_IN_VALIDATION_DOMAIN"
+    assert result["literature_delayed_ignition_in_validation_domain"] is True
+    assert result["literature_delayed_ignition_5kpa_radial_distance_m"] > 1.5
+    assert result["literature_delayed_ignition_site_safety_distance"] is False
+    assert result["literature_delayed_ignition_doi"] == "10.3390/hydrogen3040027"

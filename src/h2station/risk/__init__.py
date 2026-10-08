@@ -17,6 +17,11 @@ from .coordinator import (
     ReleaseSource,
     RiskToSafetyBridge,
 )
+from .delayed_ignition import (
+    delayed_ignition_envelope,
+    delayed_ignition_overpressure_pa,
+    delayed_ignition_radial_distance_m,
+)
 
 __all__ = [
     "AmbientCondition",
@@ -32,4 +37,7 @@ __all__ = [
     "ReleaseAssessment",
     "ReleaseSource",
     "RiskToSafetyBridge",
+    "delayed_ignition_envelope",
+    "delayed_ignition_overpressure_pa",
+    "delayed_ignition_radial_distance_m",
 ]

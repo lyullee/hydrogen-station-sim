@@ -72,6 +72,13 @@
     const plume=Number(row.flammable_plume_streamline_distance_m);
     if(plume>0)extent.textContent+=` · 4 vol% 비점화 플룸 중심선 ${fmt(plume)} m`;
     card.append(extent);
+    const literatureRadius=Number(row.literature_delayed_ignition_5kpa_radial_distance_m);
+    if(literatureRadius>0){
+      const comparison=document.createElement('p');comparison.className='saga-impact-literature';
+      const extrapolated=row.literature_delayed_ignition_status==='CALCULATED_EXTRAPOLATED';
+      comparison.textContent=`지연점화 문헌 비교 · 5 kPa 방사거리 ${fmt(literatureRadius)} m${extrapolated?' · 검증범위 밖 외삽':''} · 25~35 vol% 혼합운 중심 기준 · 현장 안전거리 아님`;
+      card.append(comparison);
+    }
     const basis=document.createElement('small');basis.className='saga-impact-basis';
     const sensorParts=[row.pressure_sensor&&`${row.pressure_sensor} ${fmt(row.current_pressure_mpa,2)} MPa`,row.temperature_sensor&&`${row.temperature_sensor} ${fmt(row.current_temperature_c)} °C`].filter(Boolean);
     basis.textContent=[row.scenario_id,row.orifice_diameter_mm&&`${fmt(row.orifice_diameter_mm)} mm`,...sensorParts,row.sensor_basis==='PROXY'?'대체 센서 적용':'',row.risk_score!=null?'위험도는 빈도 미포함 피해강도 지수':''].filter(Boolean).join(' · ');card.append(basis);

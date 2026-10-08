@@ -3639,6 +3639,15 @@ def _impact_rows(results: Iterable[dict[str, Any]] | None) -> list[dict[str, Any
         "physical_orifice_diameter_m", "consequence_equivalent_orifice_diameter_m",
         "flow_limited_equivalent_orifice_applied", "flow_limited_consequence_status",
         "flow_limited_consequence_claim_limit",
+        "literature_delayed_ignition_status",
+        "literature_delayed_ignition_in_validation_domain",
+        "literature_delayed_ignition_5kpa_radial_distance_m",
+        "literature_delayed_ignition_no_harm_radial_distance_m",
+        "literature_delayed_ignition_injury_radial_distance_m",
+        "literature_delayed_ignition_fatality_radial_distance_m",
+        "literature_delayed_ignition_distance_origin",
+        "literature_delayed_ignition_site_safety_distance",
+        "literature_delayed_ignition_doi", "literature_delayed_ignition_claim_limit",
         "consequence_validation_scope", "geometry_display_mapping_verified",
         "source_depletion_external_holdout_supported",
         "full_station_vehicle_validation_supported",
@@ -5055,6 +5064,15 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "release_source_boundary", "process_flow_limit_kg_s",
             "physical_orifice_diameter_m", "consequence_equivalent_orifice_diameter_m",
             "flow_limited_equivalent_orifice_applied", "flow_limited_consequence_status",
+            "literature_delayed_ignition_status",
+            "literature_delayed_ignition_in_validation_domain",
+            "literature_delayed_ignition_5kpa_radial_distance_m",
+            "literature_delayed_ignition_no_harm_radial_distance_m",
+            "literature_delayed_ignition_injury_radial_distance_m",
+            "literature_delayed_ignition_fatality_radial_distance_m",
+            "literature_delayed_ignition_distance_origin",
+            "literature_delayed_ignition_site_safety_distance",
+            "literature_delayed_ignition_doi",
             "full_station_vehicle_validation_supported",
             "site_specific_safety_distance_supported",
         ))
@@ -5065,6 +5083,10 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         if raw.get("ignited_enclosure_claim_limit"):
             row["ignited_enclosure_claim_limit"] = short(
                 raw["ignited_enclosure_claim_limit"]
+            )
+        if raw.get("literature_delayed_ignition_claim_limit"):
+            row["literature_delayed_ignition_claim_limit"] = short(
+                raw["literature_delayed_ignition_claim_limit"]
             )
         if row:
             compact_impacts.append(row)

@@ -2602,6 +2602,16 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "site_specific_safety_distance_supported": (release.get("consequence") or {}).get("site_specific_safety_distance_supported"),
         "consequence_validation_artifacts": (release.get("consequence") or {}).get("consequence_validation_artifacts"),
         "consequence_validation_claim_limit": (release.get("consequence") or {}).get("consequence_validation_claim_limit"),
+        "literature_delayed_ignition_status": (release.get("consequence") or {}).get("literature_delayed_ignition_status"),
+        "literature_delayed_ignition_in_validation_domain": (release.get("consequence") or {}).get("literature_delayed_ignition_in_validation_domain"),
+        "literature_delayed_ignition_5kpa_radial_distance_m": (release.get("consequence") or {}).get("literature_delayed_ignition_5kpa_radial_distance_m"),
+        "literature_delayed_ignition_no_harm_radial_distance_m": (release.get("consequence") or {}).get("literature_delayed_ignition_no_harm_radial_distance_m"),
+        "literature_delayed_ignition_injury_radial_distance_m": (release.get("consequence") or {}).get("literature_delayed_ignition_injury_radial_distance_m"),
+        "literature_delayed_ignition_fatality_radial_distance_m": (release.get("consequence") or {}).get("literature_delayed_ignition_fatality_radial_distance_m"),
+        "literature_delayed_ignition_distance_origin": (release.get("consequence") or {}).get("literature_delayed_ignition_distance_origin"),
+        "literature_delayed_ignition_site_safety_distance": (release.get("consequence") or {}).get("literature_delayed_ignition_site_safety_distance"),
+        "literature_delayed_ignition_doi": (release.get("consequence") or {}).get("literature_delayed_ignition_doi"),
+        "literature_delayed_ignition_claim_limit": (release.get("consequence") or {}).get("literature_delayed_ignition_claim_limit"),
         "range_interpretation": ("표본 관측점에서 5 kW/m² 및 5 kPa 기준 미달; 영향 반경 미확정"
             if (release.get("consequence") or {}).get("effect_range_status") == "BELOW_THRESHOLDS_AT_SAMPLES"
             else "관측점의 임계값 초과 거리만 확인; 현장 안전반경 아님")}
@@ -2828,6 +2838,9 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "sampled_effect_radius_m이 null이면 표본 관측점에서 기준 미달입니다. 이때 숫자 반경을 만들지 말고 '표본 관측점에서 기준 미달, 영향 반경 미확정'이라고 쓰세요. "
         "sampled_effect_radius_m이 양수이고 sampled_next_distance_m이 있으면 기준 초과 최원거리 표본점과 다음 기준 미달 표본점을 함께 말하세요. 현장 안전거리로 단정하지 마세요. "
         "flammable_plume_streamline_distance_m이 있으면 4 vol% 비점화 플룸 중심선 거리로 별도 설명하고 열복사·과압 표본 거리와 합치지 마세요. "
+        "literature_delayed_ignition_status가 CALCULATED로 시작하면 Cirrone 2022의 78회 실험 기반 자유제트 지연점화 상관식 보조값입니다. "
+        "literature_delayed_ignition_*_radial_distance_m은 누출구가 아니라 25~35 vol% 수소 혼합운 중심에서의 방사거리이며, 현장 안전거리나 대피거리로 바꾸지 마세요. "
+        "CALCULATED_EXTRAPOLATED이면 논문 검증범위 밖임을 함께 밝히고, NOT_APPLICABLE이면 숫자를 만들지 마세요. "
         "계산 결과가 없으면 사고 범위를 추정값처럼 제시하지 마세요. 계산이 요청되지 않았다는 문구를 출력하지 마세요. 제공된 HAZOP 규칙에 없는 규칙 ID나 임계값을 만들지 마세요. "
         "사용자에게는 계산기 제품명 대신 '피해영향예측'이라고 표기하세요. "
         "내부 규칙이나 DB 명칭을 밝히지 말고 센서값, 설비 상태, 주의 원인과 운전 조치만 설명하세요. "
@@ -3678,6 +3691,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         "confidential_local_accident_response_coverage는 비식별 실제 사고 메타데이터의 대응계획 연결성만 나타내며, 사고 원문·효과성·확률·물리 검증으로 확대하지 마세요. "
         "실제 누출, 안전밸브 방출, 센서값 기준 가정 누출을 혼동하지 마세요. 계산된 피해영향 수치만 언급하고 안전거리를 확정하지 마세요. "
         "impact_results의 consequence_validation_scope가 COMPONENT_SCREENING_BOUNDED이면, 외부 비밀폐 자유제트의 구성요소 수준 표본 표시 근거와 실제 설비·감압·배치·충전소-차량 전체 루프·현장 안전거리 검증의 부재를 함께 설명하세요. "
+        "literature_delayed_ignition_status가 CALCULATED로 시작하면 78회 실험 기반 자유제트 지연점화 문헌 비교값입니다. 해당 방사거리는 25~35 vol% 혼합운 중심 기준이며 누출구 중심 안전거리·대피거리가 아닙니다. 외삽 상태와 적용 한계를 빠뜨리지 마세요. "
         "사용자에게 HAZOP·DB·규칙 ID나 계산 엔진 제품명을 노출하지 마세요. "
         + ("한국어 Markdown으로 '현재 상태', '관련 구역의 경보·이력', '예방·안전관리' 순서로 답하세요. "
            if not alert else "한국어 Markdown으로 '현재 판정', '발생 가능 시나리오', '판단 근거와 피해영향' 순서로 간결하게 답하세요. 단계별 대응과 예방관리는 서버의 통합 행동계획에서 제시합니다. ") +
