@@ -1,5 +1,22 @@
 # Development Progress
 
+## 2026-10-08 - Chronology-corrected pressure-cycle holdout
+
+- Preserved two negative pressure-cycle attempts and traced their zero-cycle
+  result to strictly reverse-chronological source histories.
+- Froze a third method before viewing chronologically ordered outcomes. It
+  sorts timestamps ascending, resolves duplicate timestamps deterministically,
+  and then applies the unchanged seven-sample causal median and cycle screens.
+- Recovered 11,565 calibration and 5,205 holdout high-storage pressure cycles
+  from all 12 matching histories. The holdout drop median was 4.6378 MPa; the
+  existing 4.5 MPa restart margin differed by 2.97% and passed all frozen
+  eligibility and stability screens.
+- Classified this as same-site cross-format corroboration only. No runtime
+  default, safety limit, vehicle-fill claim or full-loop validation status was
+  changed.
+- The complete regression suite passed after this update: 1,052 tests with no
+  failures.
+
 ## 2026-10-08 - Confidential pressure/flow consistency boundary
 
 - Recovered the two stable schemas in the 25 previously underused station

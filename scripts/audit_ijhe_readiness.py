@@ -1794,6 +1794,95 @@ def audit(root: Path) -> dict[str, object]:
         } if history else "missing",
     ))
 
+    pressure_cycle_path = root / (
+        "research/confidential_station_ordered_pressure_cycle_holdout_2026_10_08.json"
+    )
+    pressure_cycle_protocol_path = root / (
+        "research/confidential_station_ordered_pressure_cycle_protocol_2026_10_08.json"
+    )
+    pressure_cycle = _json(pressure_cycle_path)
+    pressure_cycle_protocol = _json(pressure_cycle_protocol_path)
+    pressure_cycle_privacy_keys = (
+        "source_identifiers_published",
+        "source_paths_published",
+        "source_filenames_published",
+        "source_headers_published",
+        "raw_rows_persisted",
+        "absolute_timestamps_published",
+        "calendar_dates_published",
+    )
+    pressure_cycle_calibration = (
+        ((pressure_cycle or {}).get("calibration") or {}).get("pressure_drop_mpa")
+        or {}
+    )
+    pressure_cycle_holdout = (
+        ((pressure_cycle or {}).get("holdout") or {}).get("pressure_drop_mpa")
+        or {}
+    )
+    pressure_cycle_decision = (pressure_cycle or {}).get("decision") or {}
+    pressure_cycle_pass = bool(
+        (pressure_cycle or {}).get("artifact_type")
+        == "confidential_station_ordered_pressure_cycle_holdout"
+        and (pressure_cycle or {}).get("prior_unsmoothed_failure_known") is True
+        and (pressure_cycle or {}).get("prior_reverse_order_failure_known") is True
+        and (pressure_cycle or {}).get(
+            "chronologically_ordered_cycle_outcomes_seen_before_freeze"
+        ) is False
+        and all(
+            (pressure_cycle or {}).get(key) is False
+            for key in pressure_cycle_privacy_keys
+        )
+        and (pressure_cycle or {}).get("files_read") == 12
+        and (pressure_cycle or {}).get("reverse_chronological_files") == 12
+        and (pressure_cycle or {}).get("mixed_order_files") == 0
+        and (pressure_cycle or {}).get("raw_data_rows") == 29_361_269
+        and pressure_cycle_calibration.get("count") == 11_565
+        and pressure_cycle_holdout.get("count") == 5_205
+        and pressure_cycle_holdout.get("median") == 4.6378
+        and all(((pressure_cycle or {}).get("eligibility") or {}).values())
+        and all(((pressure_cycle or {}).get("screens") or {}).values())
+        and pressure_cycle_decision.get(
+            "existing_high_bank_restart_margin_cross_format_corroborated"
+        ) is True
+        and pressure_cycle_decision.get("independent_external_validation") is False
+        and pressure_cycle_decision.get("runtime_parameter_application") is False
+        and pressure_cycle_decision.get("full_loop_holdout_eligible") is False
+        and ((pressure_cycle or {}).get("protocol") or {}).get("protocol_sha256")
+        == _sha256(pressure_cycle_protocol_path)
+        and (pressure_cycle_protocol or {}).get("target", {}).get("candidate_mpa")
+        == 4.5
+        and (pressure_cycle_protocol or {}).get("decision_boundary", {}).get(
+            "runtime_parameter_application"
+        ) is False
+    )
+    gates.append(_gate(
+        "confidential_station_ordered_pressure_cycle_holdout_integrity",
+        "PASS" if pressure_cycle_pass else (
+            "FAIL" if pressure_cycle else "PENDING"
+        ),
+        "The existing 4.5 MPa high-bank restart margin passes the frozen chronology-corrected same-site holdout while runtime and independent-validation claims remain locked.",
+        f"{pressure_cycle_protocol_path.relative_to(root)}; {pressure_cycle_path.relative_to(root)}",
+        "Hash-linked frozen protocol, disclosed prior failures, 12 reverse-order files, at least 30/15 calibration/holdout cycles, all eligibility and primary screens, and explicit non-promotion boundaries.",
+        {
+            "protocol_hash_matches": (
+                ((pressure_cycle or {}).get("protocol") or {}).get(
+                    "protocol_sha256"
+                ) == _sha256(pressure_cycle_protocol_path)
+                if pressure_cycle_protocol_path.is_file() else False
+            ),
+            "files_read": (pressure_cycle or {}).get("files_read"),
+            "reverse_chronological_files": (pressure_cycle or {}).get(
+                "reverse_chronological_files"
+            ),
+            "calibration": pressure_cycle_calibration,
+            "holdout": pressure_cycle_holdout,
+            "metrics": (pressure_cycle or {}).get("metrics"),
+            "eligibility": (pressure_cycle or {}).get("eligibility"),
+            "screens": (pressure_cycle or {}).get("screens"),
+            "decision": pressure_cycle_decision,
+        } if pressure_cycle else "missing",
+    ))
+
     external_loop_path = root / "data/public_validation/results/closed_loop_external_holdout/validation.json"
     external_loop = _json(external_loop_path)
     external_protocol_path = root / "research/mc_default_external_holdout_protocol.json"

@@ -77,6 +77,23 @@ counters were excluded from the stability decision because their later values
 are expected to increase. Flow/totalizer units and temperature roles remain
 unattested, so runtime fitting and vehicle/full-loop claims remain disabled.
 
+The pressure-role attestation also permits a bounded test of the already
+existing 4.5 MPa high-bank recharge restart margin. Two initial methods
+retained zero cycles because the 12 source histories run newest-to-oldest. That
+failure was preserved, the source-order defect was disclosed, and a third
+hash-locked protocol froze ascending timestamp sorting before any ordered
+cycle outcome was viewed. It recovered 11,565 calibration and 5,205 holdout
+cycles. The holdout pressure-drop distribution was 1.13894/4.6378/9.02996 MPa
+at P10/median/P90; 4.5 MPa was inside that interval, 2.97% from the median, and
+the calibration-to-holdout median shift was 1.01%. This corroborates the
+existing development default across two formats in the same archive. It does
+not change runtime parameters or establish independent, vehicle-fill,
+full-loop, safety-limit or field-certification evidence. Protocol and result
+are recorded in
+`research/confidential_station_ordered_pressure_cycle_protocol_2026_10_08.json`
+and
+`research/confidential_station_ordered_pressure_cycle_holdout_2026_10_08.json`.
+
 A value-level, pre-attestation consistency screen now tests whether the
 unlabelled flow-like channels contain internally coherent instantaneous
 flow/cumulative-totalizer pairs. It inspected 3,053,442 sampled rows from 20

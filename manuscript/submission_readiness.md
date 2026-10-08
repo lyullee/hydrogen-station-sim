@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **115 PASS · 10 FAIL · 7 PENDING**.
+Gate counts: **116 PASS · 10 FAIL · 7 PENDING**.
 
 The confidential station archive contains substantially more usable
 station-side evidence than the earlier one-row derivative screen indicated.
@@ -56,6 +56,16 @@ first-70% P05--P95 envelopes; lower/medium/high pressure ordering held in
 99.9142% of samples. The result adds station-side longitudinal integrity
 evidence while preserving the flow/temperature attestation hold, runtime lock
 and failed station-to-vehicle full-loop gate.
+
+A chronology-corrected pressure-cycle holdout now tests the existing 4.5 MPa
+high-bank restart margin against those long histories. Two zero-cycle method
+runs remain disclosed; all 12 files were stored newest-to-oldest. The third
+protocol froze timestamp sorting before ordered outcomes were computed and
+recovered 11,565 calibration plus 5,205 holdout cycles. The holdout median was
+4.6378 MPa, the candidate error was 2.97%, and the calibration/holdout median
+shift was 1.01%; all frozen screens passed. This is same-site cross-format
+corroboration and does not alter the runtime parameter or repair the missing
+independent station-to-vehicle full-loop validation.
 
 The official RHeaDHy public test matrix (DOI 10.5281/zenodo.16992589) is now
 hash-pinned and converted into a trace-level pre-access protocol for the

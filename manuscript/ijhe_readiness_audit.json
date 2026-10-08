@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T13:32:11.797774+00:00",
+  "generated_at": "2026-10-08T13:57:22.080132+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 115,
+    "PASS": 116,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -1227,6 +1227,53 @@
           "vehicle_fill_validation": false,
           "full_loop_holdout_eligible": false,
           "default_model_parameters_changed": false
+        }
+      }
+    },
+    {
+      "id": "confidential_station_ordered_pressure_cycle_holdout_integrity",
+      "status": "PASS",
+      "claim": "The existing 4.5 MPa high-bank restart margin passes the frozen chronology-corrected same-site holdout while runtime and independent-validation claims remain locked.",
+      "evidence": "research\\confidential_station_ordered_pressure_cycle_protocol_2026_10_08.json; research\\confidential_station_ordered_pressure_cycle_holdout_2026_10_08.json",
+      "requirement": "Hash-linked frozen protocol, disclosed prior failures, 12 reverse-order files, at least 30/15 calibration/holdout cycles, all eligibility and primary screens, and explicit non-promotion boundaries.",
+      "observed": {
+        "protocol_hash_matches": true,
+        "files_read": 12,
+        "reverse_chronological_files": 12,
+        "calibration": {
+          "count": 11565,
+          "p10": 1.13544,
+          "median": 4.5914,
+          "p90": 8.87854
+        },
+        "holdout": {
+          "count": 5205,
+          "p10": 1.13894,
+          "median": 4.6378,
+          "p90": 9.02996
+        },
+        "metrics": {
+          "candidate_relative_holdout_median_error_percent": 2.971236,
+          "calibration_holdout_median_shift_percent": 1.010585
+        },
+        "eligibility": {
+          "minimum_files_met": true,
+          "all_files_have_deterministic_time_order": true,
+          "minimum_calibration_cycles_met": true,
+          "minimum_holdout_cycles_met": true,
+          "minimum_holdout_files_met": true
+        },
+        "screens": {
+          "candidate_inside_holdout_p10_p90": true,
+          "candidate_relative_median_error_le_20_percent": true,
+          "calibration_holdout_median_shift_le_25_percent": true
+        },
+        "decision": {
+          "existing_high_bank_restart_margin_cross_format_corroborated": true,
+          "independent_external_validation": false,
+          "runtime_parameter_application": false,
+          "default_model_parameters_changed": false,
+          "full_loop_holdout_eligible": false
         }
       }
     },

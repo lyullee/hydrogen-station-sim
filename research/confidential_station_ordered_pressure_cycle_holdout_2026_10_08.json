@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_station_ordered_pressure_cycle_holdout",
+  "evidence_role": "disclosed_sequential_chronology_correction_holdout",
+  "prior_unsmoothed_failure_known": true,
+  "prior_reverse_order_failure_known": true,
+  "chronologically_ordered_cycle_outcomes_seen_before_freeze": false,
+  "source_identifiers_published": false,
+  "source_paths_published": false,
+  "source_filenames_published": false,
+  "source_headers_published": false,
+  "raw_rows_persisted": false,
+  "absolute_timestamps_published": false,
+  "calendar_dates_published": false,
+  "role": "high_storage_pressure",
+  "frozen_candidate_mpa": 4.5,
+  "files_read": 12,
+  "reverse_chronological_files": 12,
+  "mixed_order_files": 0,
+  "raw_data_rows": 29361269,
+  "sampled_rows": 2936109,
+  "filtered_rows": 2936037,
+  "rejected_sample_rows": 21,
+  "ordering": {
+    "method": "stable_ascending_timestamp_sort_then_last_duplicate",
+    "outcome_dependent": false
+  },
+  "filter": {
+    "kind": "causal_rolling_median_after_chronological_sort",
+    "window_samples": 7,
+    "nominal_window_seconds": 70
+  },
+  "rules": {
+    "sample_stride": 10,
+    "fall_confirmation_mpa": 0.25,
+    "rise_confirmation_mpa": 0.25,
+    "minimum_cycle_drop_mpa": 0.5,
+    "maximum_cycle_drop_mpa": 20.0,
+    "minimum_decline_duration_s": 30.0,
+    "maximum_decline_duration_s": 21600.0,
+    "minimum_pressure_mpa": 10.0,
+    "maximum_pressure_mpa": 100.0,
+    "maximum_sample_gap_s": 120.0,
+    "calibration_fraction": 0.7
+  },
+  "calibration": {
+    "files_with_cycles": 12,
+    "pressure_drop_mpa": {
+      "count": 11565,
+      "p10": 1.13544,
+      "median": 4.5914,
+      "p90": 8.87854
+    }
+  },
+  "holdout": {
+    "files_with_cycles": 12,
+    "pressure_drop_mpa": {
+      "count": 5205,
+      "p10": 1.13894,
+      "median": 4.6378,
+      "p90": 9.02996
+    }
+  },
+  "metrics": {
+    "candidate_relative_holdout_median_error_percent": 2.971236,
+    "calibration_holdout_median_shift_percent": 1.010585
+  },
+  "eligibility": {
+    "minimum_files_met": true,
+    "all_files_have_deterministic_time_order": true,
+    "minimum_calibration_cycles_met": true,
+    "minimum_holdout_cycles_met": true,
+    "minimum_holdout_files_met": true
+  },
+  "screens": {
+    "candidate_inside_holdout_p10_p90": true,
+    "candidate_relative_median_error_le_20_percent": true,
+    "calibration_holdout_median_shift_le_25_percent": true
+  },
+  "decision": {
+    "existing_high_bank_restart_margin_cross_format_corroborated": true,
+    "independent_external_validation": false,
+    "runtime_parameter_application": false,
+    "default_model_parameters_changed": false,
+    "full_loop_holdout_eligible": false
+  },
+  "claim_boundary": "Sequential same-site chronology-correction evidence only. Reverse source ordering was known, but ordered cycle outcomes were not computed before freeze. This result does not identify compressor state, validate vehicle filling, establish a safety limit, estimate accident frequency or certify field operation.",
+  "protocol": {
+    "protocol_id": "CONFIDENTIAL-STATION-HIGH-BANK-CYCLE-HOLDOUT-003",
+    "protocol_sha256": "fc494c17316eceabe883d0c4eb6dd25fe60bec29c2476f6c817792f08fa0fdce",
+    "mapping_sha256": "a60d1dc67572c1e36a510d951b03408fbdf3187ffc5de1b2ea2fdd354531c80a",
+    "revision_frozen_before_ordered_cycle_outcome_access": true
+  },
+  "runner_git_commit": "1a0f15b"
+}
