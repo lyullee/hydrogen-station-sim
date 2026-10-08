@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-09",
+  "artifact_type": "post_outcome_source_geometry_mapping",
+  "case_id": "dickens_typeIII",
+  "status": "source_metadata_reconciled_without_validation_revision",
+  "purpose": "Record source-confirmed inlet geometry and the remaining boundary-condition gaps for the Dickens Type-III tank diagnostic.",
+  "source": {
+    "original_experiment_doi": "10.1016/J.JPOWSOUR.2006.11.077",
+    "conference_record_url": "https://conference.ing.unipi.it/ichs2009/images/stories/papers/238.pdf",
+    "open_manual_record_url": "https://github.com/andr1976/HydDown/blob/main/Manual.md",
+    "source_geometry_statement": "The published experiment describes a Type-III tank with 0.358 m internal diameter and a 5 mm internal-diameter stainless-steel inlet pipe extending 0.082 m into the tank.",
+    "source_geometry_scope": "The 5 mm inlet value is source-confirmed for the Dickens experiment; it is not inferred from the simulator outcome."
+  },
+  "geometry_mapping": {
+    "tank_internal_diameter_m": {
+      "source_value": 0.358,
+      "archived_case_value": 0.358,
+      "status": "matched"
+    },
+    "tank_internal_length_m": {
+      "source_value": 0.893,
+      "archived_case_value": 0.7451,
+      "status": "mismatch_requires_resolution",
+      "note": "The source paper reports the inner tank length as 0.893 m, while the archived HydDown case uses 0.7451 m to reproduce the 74 L case volume. The two values must not be silently merged."
+    },
+    "inlet_pipe_internal_diameter_m": {
+      "source_value": 0.005,
+      "archived_case_value": null,
+      "status": "source_confirmed_archived_case_missing",
+      "note": "The existing post-outcome 5 mm sensitivity run is physically supported by the published inlet-pipe description, but the frozen case did not declare this value."
+    },
+    "inlet_pipe_extension_m": {
+      "source_value": 0.082,
+      "archived_case_value": null,
+      "status": "source_confirmed_archived_case_missing"
+    }
+  },
+  "boundary_mapping": {
+    "inlet_temperature_measured_in_source": true,
+    "time_resolved_inlet_temperature_available_in_archived_case": false,
+    "mass_flow_boundary_available_in_archived_case": true,
+    "tank_pressure_trace_available_in_archived_case": true,
+    "gas_temperature_trace_available_in_archived_case": true,
+    "remaining_boundary_gap": "A new prospective run needs the time-resolved inlet hydrogen temperature and an explicitly frozen inlet geometry mapping."
+  },
+  "diagnostic_interpretation": {
+    "exact_nozzle_diagnostic_supported": true,
+    "supported_diagnostic_nozzle_diameter_mm": 5.0,
+    "frozen_validation_result_changed": false,
+    "runtime_parameter_updated": false,
+    "validation_gate_effect": "none",
+    "why_not_retroactive": "The inlet diameter was confirmed after the negative frozen outcome and after the sensitivity was inspected. It can explain and prioritize a new prospective test, but cannot convert a post-outcome sensitivity into confirmatory validation."
+  },
+  "claim_boundary": "This mapping supports a source-grounded follow-up protocol for one Type-III tank-filling component. It does not validate the HRS cascade, compressor, precooler, dispenser metering, vehicle receptacle, consequence distances, safety logic or SAGA effectiveness."
+}
