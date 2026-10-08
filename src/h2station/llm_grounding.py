@@ -5429,7 +5429,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             key: local_station_utilization.get(key)
             for key in (
                 "evidence_role", "artifact", "inventory", "utilization",
-                "assessment", "claim_limit",
+                "semantic_attestation", "assessment", "claim_limit",
             )
             if local_station_utilization.get(key) is not None
         }
@@ -5790,6 +5790,10 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "deduplicated_data_rows": (
                         local_station_utilization.get("inventory", {})
                         .get("deduplicated_data_rows")
+                    ),
+                    "storage_pressure_roles_attested": (
+                        local_station_utilization.get("semantic_attestation", {})
+                        .get("storage_pressure_role_count") == 2
                     ),
                     "station_side_dynamic_validation_ready": (
                         local_station_utilization.get("assessment", {})
@@ -6978,6 +6982,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "evidence_artifact": local_station_utilization.get("artifact"),
             "inventory": local_station_utilization.get("inventory") or {},
             "utilization": local_station_utilization.get("utilization") or {},
+            "semantic_attestation": local_station_utilization.get(
+                "semantic_attestation"
+            ) or {},
             "assessment": local_station_utilization.get("assessment") or {},
             "claim_limit": local_station_utilization.get("claim_limit"),
         },

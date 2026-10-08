@@ -767,6 +767,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "confidential_local_station_data_utilization"
     ]
     assert local_summary["inventory"]["unique_csv_payloads"] == 32
+    assert local_summary["semantic_attestation"]["storage_pressure_role_count"] == 2
     local_header = prompt_evidence_header(idle)[
         "confidential_local_station_data_utilization"
     ]
@@ -775,6 +776,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "local_station_data_utilization"
     ]
     assert local_decision["deduplicated_data_rows"] == 56_854_143
+    assert local_decision["storage_pressure_roles_attested"] is True
     assert local_decision["station_side_dynamic_validation_ready"] is True
     private_media = idle["response_evidence"]["confidential_private_media_intake"]
     assert private_media["screen_recorded_logger_candidate"] is True
