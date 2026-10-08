@@ -2501,6 +2501,74 @@ def _public_hrs_measurement_leads() -> dict[str, Any] | None:
     }
 
 
+def _public_vehicle_side_h2_measurement_leads() -> dict[str, Any] | None:
+    """Expose public vehicle-side measurement leads without overstating access.
+
+    The lead is useful when a user asks how to close the vehicle-side mass or
+    pressure boundary.  It is deliberately kept separate from the HRS lead
+    index because a vehicle-side comparison paper is not a synchronized
+    station-controller holdout.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/public_vehicle_side_h2_measurement_leads_2026_10_09.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    privacy = record.get("privacy") or {}
+    leads = record.get("leads") or []
+    if (
+        record.get("artifact_type") != "public_vehicle_side_h2_measurement_leads"
+        or privacy.get("local_raw_rows_persisted") is not False
+        or privacy.get("private_station_identifiers_published") is not False
+        or not leads
+    ):
+        return None
+    compact: list[dict[str, Any]] = []
+    for lead in leads:
+        if not isinstance(lead, dict):
+            return None
+        url = str(lead.get("article_url") or "")
+        repository = str(lead.get("repository_page") or "")
+        if not url.startswith("https://") or not repository.startswith("https://"):
+            return None
+        compact.append({
+            "id": str(lead.get("id") or ""),
+            "title": str(lead.get("title") or ""),
+            "article_doi": str(lead.get("article_doi") or ""),
+            "article_url": url,
+            "repository_page": repository,
+            "reported_measurements": [
+                str(value) for value in lead.get("reported_measurements") or []
+            ],
+            "reported_scope": str(lead.get("reported_scope") or ""),
+            "raw_trace_status": str(lead.get("raw_trace_status") or ""),
+            "full_loop_eligibility": lead.get("full_loop_eligibility") is True,
+            "eligible_use": [str(value) for value in lead.get("eligible_use") or []],
+            "ineligible_use": [
+                str(value) for value in lead.get("ineligible_use") or []
+            ],
+            "next_access_request": [
+                str(value) for value in lead.get("next_access_request") or []
+            ],
+            "claim_limit": str(lead.get("claim_limit") or ""),
+        })
+    return {
+        "artifact": "research/public_vehicle_side_h2_measurement_leads_2026_10_09.json",
+        "evidence_role": "public vehicle-side H2 measurement lead and access boundary",
+        "leads": compact,
+        "full_loop_external_validation_supported": False,
+        "parameter_fitting_supported": False,
+        "saga_effectiveness_supported": False,
+        "claim_limit": (
+            "Vehicle-side mass-accounting context only; synchronized raw station-"
+            "controller traces and full-loop validation remain unavailable."
+        ),
+    }
+
+
 def _public_carb_hrs_inuse_field_benchmark() -> dict[str, Any] | None:
     """Load CARB's aggregate 22-station field benchmark with claim limits."""
 
@@ -5113,6 +5181,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_hrs_measurement_leads"
         ] = public_hrs_leads
+    vehicle_side_leads = _public_vehicle_side_h2_measurement_leads()
+    if vehicle_side_leads is not None:
+        envelope["response_evidence"][
+            "public_vehicle_side_h2_measurement_leads"
+        ] = vehicle_side_leads
     carb_field_benchmark = _public_carb_hrs_inuse_field_benchmark()
     if carb_field_benchmark is not None:
         envelope["response_evidence"][
@@ -5541,6 +5614,29 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "parameter_fitting_supported": False,
             "saga_effectiveness_supported": False,
             "claim_limit": short(measurement_leads.get("claim_limit"), 280),
+        }
+    vehicle_side_leads = evidence.get("public_vehicle_side_h2_measurement_leads")
+    if isinstance(vehicle_side_leads, dict):
+        summary["public_vehicle_side_h2_measurement_leads"] = {
+            "evidence_role": vehicle_side_leads.get("evidence_role"),
+            "leads": [
+                {
+                    key: lead.get(key)
+                    for key in (
+                        "id", "title", "article_doi", "reported_measurements",
+                        "reported_scope", "raw_trace_status",
+                        "full_loop_eligibility", "eligible_use", "ineligible_use",
+                        "next_access_request", "claim_limit",
+                    )
+                    if lead.get(key) is not None
+                }
+                for lead in vehicle_side_leads.get("leads") or []
+                if isinstance(lead, dict)
+            ],
+            "full_loop_external_validation_supported": False,
+            "parameter_fitting_supported": False,
+            "saga_effectiveness_supported": False,
+            "claim_limit": short(vehicle_side_leads.get("claim_limit"), 280),
         }
     carb = evidence.get("public_carb_hrs_inuse_field_benchmark")
     if isinstance(carb, dict):
@@ -6210,6 +6306,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "confidential_local_station_data_discovery"
     ) or {}
     public_hrs_leads = response.get("public_hrs_measurement_leads") or {}
+    vehicle_side_leads = response.get(
+        "public_vehicle_side_h2_measurement_leads"
+    ) or {}
     lead_context = " ".join((
         str(manifest.get("question") or ""),
         str(manifest.get("selected_sensor") or ""),
@@ -6217,6 +6316,10 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     public_hrs_leads_relevant = any(token in lead_context for token in (
         "공개", "계측", "실측", "실데이터", "원자료", "검증", "데이터",
         "local", "measurement", "dataset", "raw", "validation", "data",
+    ))
+    vehicle_side_leads_relevant = any(token in lead_context for token in (
+        "차량", "차량탱크", "fcev", "vehicle", "receptacle", "리셉터클",
+        "전달 질량", "질량 보정", "mass accounting", "metering",
     ))
     local_discovery_relevant = any(token in lead_context for token in (
         "로컬", "현장 데이터", "충전소 데이터", "운전 데이터", "시계열",
@@ -6358,6 +6461,26 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "claim_limit": short(public_hrs_leads.get("claim_limit"), 220),
                 },
             } if public_hrs_leads and public_hrs_leads_relevant else {}),
+            **({
+                "public_vehicle_side_h2_measurement_leads": {
+                    "lead_count": len(vehicle_side_leads.get("leads") or []),
+                    "reported_measurements": sorted({
+                        measurement
+                        for lead in vehicle_side_leads.get("leads") or []
+                        if isinstance(lead, dict)
+                        for measurement in lead.get("reported_measurements") or []
+                    }),
+                    "raw_trace_status": sorted({
+                        str(lead.get("raw_trace_status"))
+                        for lead in vehicle_side_leads.get("leads") or []
+                        if isinstance(lead, dict)
+                    }),
+                    "full_loop_external_validation_supported": False,
+                    "parameter_fitting_supported": False,
+                    "saga_effectiveness_supported": False,
+                    "claim_limit": short(vehicle_side_leads.get("claim_limit"), 220),
+                },
+            } if vehicle_side_leads and vehicle_side_leads_relevant else {}),
             "public_incident": {
                 **selected(incident, (
                     "case_count", "category_count", "covered_case_count",
@@ -6622,7 +6745,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 },
             } if cascade_sequence_relevant else {}),
             **({
-                "station_recharge_pressure_forecast": {
+            "station_recharge_pressure_forecast": {
                     "claim_supported": recharge_forecast.get(
                         "short_horizon_station_pressure_forecast_supported"
                     ) is True,
@@ -6645,6 +6768,32 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ) is True,
                 },
             } if recharge_forecast_relevant else {}),
+            **({
+                "vehicle_side_measurement_lead": {
+                    "claim_supported": False,
+                    "lead_count": len(vehicle_side_leads.get("leads") or []),
+                    "reported_measurements": sorted({
+                        measurement
+                        for lead in vehicle_side_leads.get("leads") or []
+                        if isinstance(lead, dict)
+                        for measurement in lead.get("reported_measurements") or []
+                    }),
+                    "raw_trace_status": sorted({
+                        str(lead.get("raw_trace_status"))
+                        for lead in vehicle_side_leads.get("leads") or []
+                        if isinstance(lead, dict)
+                    }),
+                    "full_loop": False,
+                    "parameter_fitting": False,
+                    "next_access_request": [
+                        item
+                        for lead in vehicle_side_leads.get("leads") or []
+                        if isinstance(lead, dict)
+                        for item in lead.get("next_access_request") or []
+                    ][:8],
+                    "claim_limit": short(vehicle_side_leads.get("claim_limit"), 180),
+                },
+            } if vehicle_side_leads and vehicle_side_leads_relevant else {}),
             **({
                 "station_lifecycle_pressure_alignment": {
                     "claim_supported": lifecycle_alignment.get(
@@ -6811,6 +6960,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     hitrf_reference = evidence.get("public_hitrf_operational_reference") or {}
     real_station_context = evidence.get("public_real_station_context") or {}
     public_hrs_leads = evidence.get("public_hrs_measurement_leads") or {}
+    vehicle_side_leads = evidence.get(
+        "public_vehicle_side_h2_measurement_leads"
+    ) or {}
     carb_field = evidence.get("public_carb_hrs_inuse_field_benchmark") or {}
     benchmark_ids = [
         str(source.get("id"))
@@ -6967,6 +7119,15 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 public_hrs_leads.get("saga_effectiveness_supported") is True
             ),
             "claim_limit": public_hrs_leads.get("claim_limit"),
+        },
+        "public_vehicle_side_h2_measurement_leads": {
+            "evidence_artifact": vehicle_side_leads.get("artifact"),
+            "evidence_role": vehicle_side_leads.get("evidence_role"),
+            "leads": vehicle_side_leads.get("leads") or [],
+            "full_loop_external_validation_supported": False,
+            "parameter_fitting_supported": False,
+            "saga_effectiveness_supported": False,
+            "claim_limit": vehicle_side_leads.get("claim_limit"),
         },
         "public_carb_hrs_inuse_field_benchmark": {
             "source": carb_field.get("source") or {},
