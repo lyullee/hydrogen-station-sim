@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "protocol_id": "CONFIDENTIAL-STATION-CASCADE-SEQUENCE-HOLDOUT-001",
+  "frozen_at": "2026-10-08",
+  "status": "frozen_before_ordered_joint_medium_high_outcome_access",
+  "objective": "Test whether owner-attested medium and high storage pressure drawdowns exhibit a stable medium-to-high ordering compatible with the simulator cascade controller.",
+  "prior_information": {
+    "individual_high_pressure_cycle_outcomes_known": true,
+    "joint_medium_high_pairing_outcomes_known": false,
+    "source_files_known_to_be_reverse_chronological": true
+  },
+  "cycle_rules": {
+    "sample_stride": 10,
+    "fall_confirmation_mpa": 0.25,
+    "rise_confirmation_mpa": 0.25,
+    "minimum_cycle_drop_mpa": 0.5,
+    "maximum_cycle_drop_mpa": 20.0,
+    "minimum_decline_duration_s": 30.0,
+    "maximum_decline_duration_s": 21600.0,
+    "minimum_pressure_mpa": 10.0,
+    "maximum_pressure_mpa": 100.0,
+    "maximum_sample_gap_s": 120.0,
+    "calibration_fraction": 0.7
+  },
+  "sequence_rules": {
+    "median_window_samples": 7,
+    "minimum_pair_gap_s": -300.0,
+    "maximum_pair_gap_s": 900.0,
+    "minimum_matching_files": 6,
+    "minimum_calibration_pairs": 60,
+    "minimum_holdout_pairs": 24,
+    "minimum_holdout_files": 4,
+    "minimum_holdout_pair_coverage": 0.6,
+    "minimum_holdout_sequential_fraction": 0.9,
+    "maximum_sequential_fraction_shift": 0.1,
+    "maximum_pair_coverage_shift": 0.2
+  },
+  "pairing": {
+    "method": "Each high drawdown is paired once to the nearest unused medium drawdown whose medium peak is not later than the high peak and whose high-peak minus medium-trough gap is inside the frozen window.",
+    "outcome_dependent": false
+  },
+  "primary_screens": {
+    "all_eligibility_required": true,
+    "all_sequence_screens_required": true,
+    "holdout_median_gap_inside_calibration_p10_p90": true
+  },
+  "decision_boundary": {
+    "pass_meaning": "Same-site pressure-sequence corroboration compatible with the medium-to-high controller structure.",
+    "unique_vehicle_fill_identification": false,
+    "low_bank_validation": false,
+    "vehicle_fill_validation": false,
+    "full_loop_holdout_eligible": false,
+    "independent_external_validation": false,
+    "runtime_parameter_application": false,
+    "default_parameter_change": false,
+    "safety_limit_or_field_certification": false
+  },
+  "locked_implementation": {
+    "evaluator": "src/h2station/confidential_cascade_sequence_holdout.py",
+    "evaluator_sha256": "a669e8bdc81ebfb471bdb7157f26d605903305777cd3422eb6edb5703edd9f4a",
+    "runner": "scripts/validate_confidential_station_cascade_sequence.py",
+    "runner_sha256": "2131176db6ee897b31963cd47fa469df3afe850a1bfe599a98edaf4e59e3f324",
+    "cycle_detector": "src/h2station/confidential_pressure_cycle_holdout.py",
+    "cycle_detector_sha256": "74bf77c848b5f038a93185cd82a68ecfdfbda860583f852fdaea385268e5d99a",
+    "causal_filter": "src/h2station/confidential_pressure_cycle_filtered_holdout.py",
+    "causal_filter_sha256": "6f450f5a2fe204b4ca35f045553c764fe6a0ed70412993305f12c6b10e55f719"
+  }
+}
