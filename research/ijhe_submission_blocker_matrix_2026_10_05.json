@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T02:18:38.593159+00:00",
+  "generated_at": "2026-10-08T02:56:29.457725+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -16,7 +16,7 @@
     "interpretation": "A bounded manuscript may be drafted around model-level and qualitative evidence, but the validated full-station digital-twin objective cannot be declared complete."
   },
   "gate_counts": {
-    "PASS": 96,
+    "PASS": 97,
     "FAIL": 8,
     "PENDING": 8
   },
@@ -96,14 +96,7 @@
       "evidence": "research/methytrucks_2026_public_measurement_intake.json",
       "workbook_count": 15,
       "sample_count": 58440,
-      "mass_closure_detected_session_count": 18,
-      "mass_closure_comparable_session_count": 9,
-      "mass_closure_non_comparable_session_count": 9,
       "mass_closure_screen_pass_count": 8,
-      "mass_closure_comparable_pass_fraction": 0.8888888888888888,
-      "mass_closure_comparable_ratio_median": 1.0028625,
-      "mass_closure_comparable_absolute_relative_difference_pct_median": 0.484745762711869,
-      "publication_figure": "manuscript/figures/methytrucks_mass_closure.png",
       "full_loop_eligible": false,
       "claim_boundary": "The 15 CC BY 4.0 workbooks are real public experimental traces and can support post-access component diagnostics, including descriptive flow-to-scale mass closure. Outcomes were inspected before this audit and the release lacks an authoritative tag/unit dictionary, device crosswalk, vehicle geometry and station controller states. It therefore does not establish prospective validation, a complete HRS-to-vehicle full-loop result, safety performance or regulatory compliance."
     },
@@ -221,8 +214,8 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "d42a68d45b0c48065be356ae589d23e4e55a34edfdd8527ddb3ac8c92d8d6879",
-    "hiad_readiness_sha256": "bb2b8e91cf32e98f0503565d3616698376b4c2e1e6054377384c18641d33da98",
+    "audit_sha256": "15fda332f100a3a42ace8453171ceee47e457a228be79effc37aebe71fbc4fcb",
+    "hiad_readiness_sha256": "5c2e99a8371e3dd6fc97847f956d065f7d0c62bed48270a6bdb15021725d4310",
     "acquisition_tracker_sha256": "f141806ae0cce8ec9a0797e2ca6f7102b299eaedc33317693922abd763a3e399",
     "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",
     "latest_full_loop_search_sha256": "14391668298eea81e1aaff919e9a20fd9c3570694e33cf8998d4156976cba808",

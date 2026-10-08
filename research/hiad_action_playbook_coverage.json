@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-05T10:21:30.594092+00:00",
+  "generated_at": "2026-10-08T02:56:51.423492+00:00",
   "status": "completed_public_action_to_playbook_traceability_audit",
   "evidence_role": "public_incident_grounding_traceability_only",
   "source": {
     "action_evidence_path": "research\\hiad_action_evidence.json",
     "action_evidence_sha256": "72f2550eabea6a4207a5d59c98bd99520e217fd2d4f8597e5d1d72f2ef87e1dd",
     "playbook_path": "src\\h2station\\data\\emergency_playbooks.json",
-    "playbook_sha256": "b7d64103d9c4d3a322edd2c97b3800b5a796385e4ec25a588a252d288aad8bba",
+    "playbook_sha256": "d8fedb036a91b5adae3934f1604a17966b8f0f9200c52f4d40bf2da2243a7c6c",
     "case_count": 34,
     "category_count": 8
   },

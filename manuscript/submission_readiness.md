@@ -20,7 +20,15 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **96 PASS · 8 FAIL · 8 PENDING**.
+Gate counts: **97 PASS · 8 FAIL · 8 PENDING**.
+
+The emergency-response evidence layer now includes the CC BY 4.0 HyDelta
+controlled-hydrogen-flare report (DOI 10.5281/zenodo.20817291). The runtime
+routes its safeguards only to linked vent and relief scenarios and omits them
+from unrelated compact LLM prompts. The audit also enforces that ordinary vent
+streams are not ignited ad hoc, the reported 34 vol% nitrogen boundary remains
+specific to the tested burner, and the report is not treated as release-model
+or site-distance validation.
 
 The complete June 2026 MetHyTrucks public release has now been ingested across
 all three sampling-system groups: 15 CC BY 4.0 workbooks, 58,440 synchronized

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "rechecked_at_utc": "2026-10-07T15:51:16.079952+00:00",
-  "source_commit": "b129f807fbef8b5f048238d5581bff97b778c4cd",
+  "rechecked_at_utc": "2026-10-08T02:56:28.583127+00:00",
+  "source_commit": "b927c138aafd3aad64c804d0c29ccb73b45ea516",
   "status": "PENDING_COORDINATOR_APPROVAL_AND_ETHICS_DETERMINATION",
   "machine_preflight": {
     "pass": true,
@@ -17,7 +17,7 @@
     },
     "prescreen_manifest": {
       "path": "data/public_validation/results/hiad_coordinator_prescreen/prescreen_manifest.json",
-      "sha256": "d6091eeca8d48c7626c78eea3c59ebcc498e018e1ad11f41af63be3551a814dd",
+      "sha256": "68099bdeb66b5be93bd6abb11902a8bfb0201b04d0af9d44961026134aab8337",
       "advisory_only": true
     },
     "review_csv": {

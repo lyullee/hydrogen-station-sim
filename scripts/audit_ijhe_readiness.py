@@ -4669,6 +4669,53 @@ def audit(root: Path) -> dict[str, object]:
         } if hitrf else "missing",
     ))
 
+    flare_evidence_path = (
+        root / "research/hydelta_controlled_flare_evidence_2026_10_08.json"
+    )
+    flare_runtime_path = (
+        root / "research/hydelta_controlled_flare_runtime_grounding_2026_10_08.json"
+    )
+    flare_evidence = _json(flare_evidence_path)
+    flare_runtime = _json(flare_runtime_path)
+    flare_checks = (flare_runtime or {}).get("checks") or {}
+    flare_runtime_use = (flare_evidence or {}).get("runtime_use") or {}
+    flare_pass = bool(
+        (flare_evidence or {}).get("status")
+        == "verified_report_level_controlled_flare_evidence"
+        and (flare_evidence or {}).get("source", {}).get("doi")
+        == "10.5281/zenodo.20817291"
+        and (flare_evidence or {}).get("source", {}).get("license")
+        == "CC BY 4.0"
+        and (flare_runtime or {}).get("status") == "PASS"
+        and flare_checks
+        and all(value is True for value in flare_checks.values())
+        and flare_runtime_use.get("emergency_response_grounding") is True
+        and flare_runtime_use.get(
+            "applies_only_to_engineered_approved_controlled_flare"
+        ) is True
+        and flare_runtime_use.get("ad_hoc_ignition_of_vent_stream_authorized")
+        is False
+        and flare_runtime_use.get("station_release_model_validation") is False
+        and flare_runtime_use.get("site_safety_distance_validation") is False
+    )
+    gates.append(_gate(
+        "hydelta_controlled_flare_response_grounding_integrity",
+        "PASS" if flare_pass else ("FAIL" if flare_evidence else "PENDING"),
+        "A public controlled-hydrogen-flare experiment grounds only relevant vent and relief response guidance with explicit no-ad-hoc-ignition and no-model-validation boundaries.",
+        (
+            f"{flare_evidence_path.relative_to(root)}; "
+            f"{flare_runtime_path.relative_to(root)}"
+        ),
+        "Verified CC BY 4.0 report identity, all claim checks, guarded playbook routing, omission from unrelated compact prompts and explicit false release/safety-distance validation flags.",
+        {
+            "doi": (flare_evidence or {}).get("source", {}).get("doi"),
+            "license": (flare_evidence or {}).get("source", {}).get("license"),
+            "runtime_checks": flare_checks,
+            "runtime_use": flare_runtime_use,
+            "claim_boundary": (flare_runtime or {}).get("claim_boundary"),
+        } if flare_evidence else "missing",
+    ))
+
     sensitivity_path = root / "research/hiad_design_sensitivity.json"
     sensitivity = _json(sensitivity_path)
     sensitivity_pass = bool(

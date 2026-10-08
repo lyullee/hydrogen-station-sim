@@ -480,6 +480,16 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert precedent["aggregate"]["public_report_count"] == 23
     assert precedent["aggregate"]["manifest_routing_failure_count"] == 0
     assert precedent["source_hashes_match"] is True
+    assert gates[
+        "hydelta_controlled_flare_response_grounding_integrity"
+    ]["status"] == "PASS"
+    flare = gates[
+        "hydelta_controlled_flare_response_grounding_integrity"
+    ]["observed"]
+    assert flare["doi"] == "10.5281/zenodo.20817291"
+    assert flare["runtime_checks"]["idle_compact_prompt_omits_flare"] is True
+    assert flare["runtime_checks"]["active_compact_prompt_includes_flare"] is True
+    assert flare["runtime_use"]["station_release_model_validation"] is False
 
     assert gates["khk_digital_twin_replay_traceability"]["status"] == "PASS"
     khk_replay = gates["khk_digital_twin_replay_traceability"]["observed"]

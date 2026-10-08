@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-08T02:53:42.236080+00:00",
+  "status": "PASS",
+  "source": {
+    "doi": "10.5281/zenodo.20817291",
+    "evidence": "research/hydelta_controlled_flare_evidence_2026_10_08.json",
+    "playbook": "src/h2station/data/emergency_playbooks.json"
+  },
+  "checks": {
+    "evidence_status_verified": true,
+    "source_doi_registered": true,
+    "source_license_registered": true,
+    "relevant_plans_link_source": true,
+    "ad_hoc_ignition_prohibited_in_playbook": true,
+    "equipment_specific_nitrogen_boundary_stated": true,
+    "idle_compact_prompt_omits_flare": true,
+    "active_compact_prompt_includes_flare": true,
+    "active_prompt_keeps_engineered_only_boundary": true,
+    "active_prompt_prohibits_ad_hoc_ignition": true,
+    "active_prompt_keeps_equipment_specific_value": true,
+    "detailed_header_keeps_no_release_validation_boundary": true
+  },
+  "runtime_observation": {
+    "relevant_plan_ids": [
+      "relief_discharge",
+      "vent_fault"
+    ],
+    "idle_prompt_has_controlled_flare": false,
+    "active_prompt_controlled_flare": {
+      "doi": "10.5281/zenodo.20817291",
+      "engineered_approved_system_only": true,
+      "ad_hoc_vent_ignition_authorized": false,
+      "tested_nitrogen_boundary_volpct": 34.0,
+      "tested_safeguards": [
+        "inhibit start when gas pre-pressure is too low",
+        "check leakage through the paired gas valves",
+        "trip on gas-line pressure that is too low or too high",
+        "electronically regulate burner gas and combustion-air flow"
+      ],
+      "claim_limit": "A CC BY 4.0 report-level experiment supports planning and verification language for an engineered controlled flare. The reported 34 vol% nitrogen bou…"
+    }
+  },
+  "claim_boundary": "This audit verifies evidence routing and guardrails only. It does not validate a station release model, site safety distance, flare design or the effectiveness of a field emergency response."
+}

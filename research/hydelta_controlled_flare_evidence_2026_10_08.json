@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-08",
+  "status": "verified_report_level_controlled_flare_evidence",
+  "source": {
+    "title": "D5e.1 Experimental results of the controlled hydrogen flaring installation",
+    "publisher": "HyDelta 4 / Kiwa",
+    "doi": "10.5281/zenodo.20817291",
+    "record_url": "https://doi.org/10.5281/zenodo.20817291",
+    "publication_date": "2026-06-23",
+    "license": "CC BY 4.0",
+    "language": "English",
+    "file": "D5_E1_HyDelta_Vierde_Tranche_Experimental_Results_Of_The_Controlled_Hydrogen_Flaring_Installation_EN.pdf",
+    "publisher_file_identity": {
+      "expected_bytes": 1535209,
+      "expected_md5": "71bbe9dfd128a6a3be27e62d9a23423c",
+      "observed": {
+        "bytes": 1535209,
+        "md5": "71bbe9dfd128a6a3be27e62d9a23423c",
+        "sha256": "a36fc96f10a6d9b9fe009d0b152a64508caae1f1c48c5cc6212f5a53df00d5c0"
+      },
+      "identity_match": true
+    },
+    "page_count": 29,
+    "raw_pdf_committed": false
+  },
+  "reported_findings": {
+    "controlled_flare_combustion_efficiency_lower_bound_percent": 99.0,
+    "nox_reduction_factor_approximate": 10.0,
+    "maximum_reported_nitrogen_fraction_for_continued_operation_volpct": 34.0,
+    "above_reported_nitrogen_boundary": "tested burner's flame-protection system shuts off gas supply; this is equipment-specific and not a universal station trip setpoint",
+    "tested_safeguards": [
+      "inhibit start when gas pre-pressure is too low",
+      "check leakage through the paired gas valves",
+      "trip on gas-line pressure that is too low or too high",
+      "electronically regulate burner gas and combustion-air flow"
+    ]
+  },
+  "claim_checks": {
+    "controlled_flare_efficiency_above_99_percent_reported": true,
+    "nox_reduction_about_factor_ten_reported": true,
+    "nitrogen_34_volpct_operating_boundary_reported": true,
+    "flame_protection_shutdown_reported": true,
+    "gas_prepressure_low_high_trip_reported": true,
+    "gas_valve_leak_check_reported": true
+  },
+  "runtime_use": {
+    "emergency_response_grounding": true,
+    "applies_only_to_engineered_approved_controlled_flare": true,
+    "ad_hoc_ignition_of_vent_stream_authorized": false,
+    "station_release_model_validation": false,
+    "site_safety_distance_validation": false,
+    "numerical_raw_trace_available": false
+  },
+  "claim_boundary": "A CC BY 4.0 report-level experiment supports planning and verification language for an engineered controlled flare. The reported 34 vol% nitrogen boundary, >99% conversion and approximate tenfold NOx reduction belong to the tested burner and must not be reused as universal HRS setpoints, raw time-series validation, vent ignition instructions or site safety distances."
+}

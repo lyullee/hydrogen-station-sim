@@ -187,8 +187,12 @@ def _markdown(report: dict) -> str:
 
 def main() -> int:
     report = audit()
-    OUTPUT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    MARKDOWN.write_text(_markdown(report), encoding="utf-8")
+    OUTPUT.write_text(
+        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    MARKDOWN.write_text(_markdown(report), encoding="utf-8", newline="\n")
     print(json.dumps(report["aggregate"], ensure_ascii=False))
     return 0 if report["aggregate"]["contract_pass"] else 1
 

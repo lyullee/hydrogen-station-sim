@@ -593,6 +593,53 @@ def _public_accidental_release_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_controlled_flare_evidence() -> dict[str, Any] | None:
+    """Expose HyDelta's report-level flare safeguards with strict boundaries."""
+
+    artifact = "research/hydelta_controlled_flare_evidence_2026_10_08.json"
+    path = Path(__file__).resolve().parents[2] / artifact
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    findings = record.get("reported_findings") or {}
+    runtime = record.get("runtime_use") or {}
+    checks = record.get("claim_checks") or {}
+    identity = source.get("publisher_file_identity") or {}
+    if (
+        record.get("status") != "verified_report_level_controlled_flare_evidence"
+        or source.get("doi") != "10.5281/zenodo.20817291"
+        or source.get("license") != "CC BY 4.0"
+        or identity.get("identity_match") is not True
+        or not checks
+        or not all(value is True for value in checks.values())
+        or runtime.get("emergency_response_grounding") is not True
+        or runtime.get("station_release_model_validation") is not False
+        or runtime.get("ad_hoc_ignition_of_vent_stream_authorized") is not False
+    ):
+        return None
+    return {
+        "artifact": artifact,
+        "doi": source.get("doi"),
+        "record_url": source.get("record_url"),
+        "license": source.get("license"),
+        "evidence_role": "engineered controlled-flare emergency-response grounding",
+        "reported_findings": {
+            key: findings.get(key)
+            for key in (
+                "controlled_flare_combustion_efficiency_lower_bound_percent",
+                "nox_reduction_factor_approximate",
+                "maximum_reported_nitrogen_fraction_for_continued_operation_volpct",
+                "above_reported_nitrogen_boundary",
+                "tested_safeguards",
+            )
+        },
+        "runtime_use": runtime,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_detector_logic_evidence() -> dict[str, Any] | None:
     """Expose the public concentration-detector replay as bounded evidence.
 
@@ -2210,6 +2257,15 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
         str(accidental.get("dataset_url") or ""),
         "공개 실험 원자료 출처(방출모델 검증 주장 아님)",
     )
+    controlled_flare = evidence.get("public_controlled_flare_evidence") or {}
+    flare_doi = str(controlled_flare.get("doi") or "").strip()
+    if flare_doi:
+        add(
+            "HYDELTA_FLARE_2026",
+            "HyDelta controlled hydrogen flaring experiment",
+            f"https://doi.org/{flare_doi}",
+            "승인된 제어식 플레어 보호기능·운전경계 근거(일반 벤트 점화 지침 아님)",
+        )
 
     detector = evidence.get("public_detector_logic_evidence") or {}
     detector_doi = str(detector.get("doi") or "")
@@ -3679,6 +3735,9 @@ def build_evidence_manifest(
     accidental_release = _public_accidental_release_evidence()
     if accidental_release is not None:
         envelope["response_evidence"]["public_accidental_release_evidence"] = accidental_release
+    controlled_flare = _public_controlled_flare_evidence()
+    if controlled_flare is not None:
+        envelope["response_evidence"]["public_controlled_flare_evidence"] = controlled_flare
     detector_logic = _public_detector_logic_evidence()
     if detector_logic is not None:
         envelope["response_evidence"]["public_detector_logic_evidence"] = detector_logic
@@ -4186,6 +4245,22 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         summary["public_accidental_release_evidence"]["claim_limit"] = short(
             accidental.get("claim_limit")
         )
+    controlled_flare = evidence.get("public_controlled_flare_evidence")
+    if isinstance(controlled_flare, dict):
+        findings = controlled_flare.get("reported_findings") or {}
+        runtime_use = controlled_flare.get("runtime_use") or {}
+        summary["public_controlled_flare_evidence"] = {
+            "doi": controlled_flare.get("doi"),
+            "nitrogen_operating_boundary_volpct": findings.get(
+                "maximum_reported_nitrogen_fraction_for_continued_operation_volpct"
+            ),
+            "tested_safeguards": list(findings.get("tested_safeguards") or []),
+            "engineered_flare_only": runtime_use.get(
+                "applies_only_to_engineered_approved_controlled_flare"
+            ) is True,
+            "ad_hoc_vent_ignition_authorized": False,
+            "claim_limit": short(controlled_flare.get("claim_limit")),
+        }
     confidential = evidence.get("confidential_measured_boundary_replay")
     if isinstance(confidential, dict):
         summary["confidential_measured_boundary_replay"] = {
@@ -4507,6 +4582,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     accident_inventory = response.get("public_accident_report_inventory") or {}
     khk_replay = accident_inventory.get("digital_twin_replay") or {}
     relevant_precedents = response.get("relevant_public_accident_precedents") or {}
+    controlled_flare = response.get("public_controlled_flare_evidence") or {}
     local_incident = response.get("confidential_local_accident_response_coverage") or {}
     multisource = response.get("confidential_multisource_mapping_feasibility") or {}
     thermal_observation = response.get("temperature_observation_semantic_boundary") or {}
@@ -4714,6 +4790,28 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             ],
             "precedent_claim_limit": short(relevant_precedents.get("claim_limit")),
         })
+    # The flare report is decision-relevant only for registered vent/relief
+    # response plans.  Keeping it out of unrelated prompts avoids spending
+    # context on a safeguard that cannot be acted on in the current state.
+    if (
+        "HYDELTA_FLARE_2026" in decision["response_guidance"]["source_ids"]
+        and isinstance(controlled_flare, dict)
+        and controlled_flare
+    ):
+        findings = controlled_flare.get("reported_findings") or {}
+        runtime_use = controlled_flare.get("runtime_use") or {}
+        decision["response_guidance"]["controlled_flare"] = {
+            "doi": controlled_flare.get("doi"),
+            "engineered_approved_system_only": runtime_use.get(
+                "applies_only_to_engineered_approved_controlled_flare"
+            ) is True,
+            "ad_hoc_vent_ignition_authorized": False,
+            "tested_nitrogen_boundary_volpct": findings.get(
+                "maximum_reported_nitrogen_fraction_for_continued_operation_volpct"
+            ),
+            "tested_safeguards": list(findings.get("tested_safeguards") or []),
+            "claim_limit": short(controlled_flare.get("claim_limit")),
+        }
     return decision
 
 
@@ -4771,6 +4869,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     accident_inventory = evidence.get("public_accident_report_inventory") or {}
     relevant_precedents = evidence.get("relevant_public_accident_precedents") or {}
     accidental_release = evidence.get("public_accidental_release_evidence") or {}
+    controlled_flare = evidence.get("public_controlled_flare_evidence") or {}
     local_accident_coverage = evidence.get(
         "confidential_local_accident_response_coverage"
     ) or {}
@@ -5215,6 +5314,13 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 relevant_precedents.get("by_response_plan") or {}
             ),
             "precedent_claim_limit": relevant_precedents.get("claim_limit"),
+        },
+        "public_controlled_flare_evidence": {
+            "doi": controlled_flare.get("doi"),
+            "license": controlled_flare.get("license"),
+            "reported_findings": controlled_flare.get("reported_findings") or {},
+            "runtime_use": controlled_flare.get("runtime_use") or {},
+            "claim_limit": controlled_flare.get("claim_limit"),
         },
         "confidential_local_accident_response_coverage": {
             "case_count": local_accident_coverage.get("case_count"),

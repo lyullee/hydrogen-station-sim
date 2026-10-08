@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T02:39:59.830593+00:00",
+  "generated_at": "2026-10-08T02:56:51.836453+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 96,
+    "PASS": 97,
     "FAIL": 8,
     "PENDING": 8
   },
@@ -3394,19 +3394,19 @@
       "requirement": "34/34 mapped rows, no missing recognition/immediate/stabilize/restart/prevention fields, explicit metadata-only claim boundary.",
       "observed": {
         "schema_version": 1,
-        "generated_at_utc": "2026-10-05T10:22:13.477919+00:00",
+        "generated_at_utc": "2026-10-08T02:51:42.641471+00:00",
         "status": "completed_metadata_only_response_stage_contract",
         "evidence_role": "metadata_only_response_contract",
         "source": {
           "inventory": "research/hiad_hrs_public_evidence.json",
           "inventory_sha256": "27b7fc752fe7ad706eb48854447bb203605be30b745515a259fad89325cc2536",
           "coverage": "research/hiad_playbook_coverage.json",
-          "coverage_sha256": "879d5d87ef76b8657483fba8ae3f8963183ea1f716342b13d0669f8f4bc42b29",
+          "coverage_sha256": "8ee95901a506ec341d7f9ae04c626d6bb811eb3f0d5f43db988cd43e5d2ea9bf",
           "public_source": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt"
         },
         "catalog": {
           "path": "src/h2station/data/emergency_playbooks.json",
-          "catalog_sha256": "b7d64103d9c4d3a322edd2c97b3800b5a796385e4ec25a588a252d288aad8bba",
+          "catalog_sha256": "d8fedb036a91b5adae3934f1604a17966b8f0f9200c52f4d40bf2da2243a7c6c",
           "plan_count": 16,
           "required_stages": [
             "recognition",
@@ -6501,6 +6501,40 @@
       }
     },
     {
+      "id": "hydelta_controlled_flare_response_grounding_integrity",
+      "status": "PASS",
+      "claim": "A public controlled-hydrogen-flare experiment grounds only relevant vent and relief response guidance with explicit no-ad-hoc-ignition and no-model-validation boundaries.",
+      "evidence": "research\\hydelta_controlled_flare_evidence_2026_10_08.json; research\\hydelta_controlled_flare_runtime_grounding_2026_10_08.json",
+      "requirement": "Verified CC BY 4.0 report identity, all claim checks, guarded playbook routing, omission from unrelated compact prompts and explicit false release/safety-distance validation flags.",
+      "observed": {
+        "doi": "10.5281/zenodo.20817291",
+        "license": "CC BY 4.0",
+        "runtime_checks": {
+          "evidence_status_verified": true,
+          "source_doi_registered": true,
+          "source_license_registered": true,
+          "relevant_plans_link_source": true,
+          "ad_hoc_ignition_prohibited_in_playbook": true,
+          "equipment_specific_nitrogen_boundary_stated": true,
+          "idle_compact_prompt_omits_flare": true,
+          "active_compact_prompt_includes_flare": true,
+          "active_prompt_keeps_engineered_only_boundary": true,
+          "active_prompt_prohibits_ad_hoc_ignition": true,
+          "active_prompt_keeps_equipment_specific_value": true,
+          "detailed_header_keeps_no_release_validation_boundary": true
+        },
+        "runtime_use": {
+          "emergency_response_grounding": true,
+          "applies_only_to_engineered_approved_controlled_flare": true,
+          "ad_hoc_ignition_of_vent_stream_authorized": false,
+          "station_release_model_validation": false,
+          "site_safety_distance_validation": false,
+          "numerical_raw_trace_available": false
+        },
+        "claim_boundary": "This audit verifies evidence routing and guardrails only. It does not validate a station release model, site safety distance, flare design or the effectiveness of a field emergency response."
+      }
+    },
+    {
       "id": "preoutcome_design_sensitivity",
       "status": "PASS",
       "claim": "The fixed incident-study sample limitations were quantified before outcomes.",
@@ -6592,8 +6626,8 @@
           "approximate_manuscript_words_before_references": 8000,
           "figures": 3,
           "tables": 3,
-          "citation_keys": 40,
-          "bibliography_entries": 41,
+          "citation_keys": 41,
+          "bibliography_entries": 42,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -6621,12 +6655,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-08T02:39:59.467375+00:00",
-        "attempts_this_run": 1,
+        "attempted_at": "2026-10-08T02:56:19.434154+00:00",
+        "attempts_this_run": 2,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "c741f3afee772c2baecbda605f27d56a9957997571fec9e5cf89d5f8f8ab228b",
+        "source_sha256": "7b51e6afc5273912d91846b0f9347abbfea237bdd75e6bdb577ade09fc2ca66c",
         "diagnostic": "Unable to find standard directories for platform",
         "format_check_passed": true,
         "retained_previous_pdf": {

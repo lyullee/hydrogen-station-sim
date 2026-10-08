@@ -72,6 +72,19 @@
         }
       ]
     },
+    "hydelta_2026_controlled_hydrogen_flare": {
+      "title": "D5e.1 Experimental results of the controlled hydrogen flaring installation",
+      "publisher": "HyDelta 4 / Kiwa",
+      "landing_page": "https://doi.org/10.5281/zenodo.20817291",
+      "doi": "10.5281/zenodo.20817291",
+      "publication_date": "2026-06-23",
+      "license": "CC BY 4.0",
+      "file_bytes": 1535209,
+      "file_md5": "71bbe9dfd128a6a3be27e62d9a23423c",
+      "file_sha256": "a36fc96f10a6d9b9fe009d0b152a64508caae1f1c48c5cc6212f5a53df00d5c0",
+      "rights_note": "The openly licensed English report may be audited locally; the raw PDF remains outside version control and only its identity, reported safeguards and bounded findings are committed.",
+      "eligibility_note": "Report-level emergency-response grounding for an engineered controlled flare only. It is not a raw time-series release-model validation set, does not authorize ad hoc ignition of a vent stream and does not establish HRS safety distances or universal nitrogen trip setpoints."
+    },
     "hydrogen_dispersion_channel": {
       "title": "Experimental Data of Hydrogen Dispersion in an Open-ended Rectangular Channel",
       "publisher": "University of South-Eastern Norway / Figshare",
