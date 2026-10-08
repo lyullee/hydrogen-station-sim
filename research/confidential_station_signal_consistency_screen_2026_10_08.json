@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_station_signal_consistency_screen",
+  "analysis_status": "pre_attestation_internal_consistency_screen",
+  "evidence_scope": "owner_controlled_confidential_station_side_archive",
+  "privacy": {
+    "source_identifiers_published": false,
+    "source_paths_published": false,
+    "filenames_published": false,
+    "tag_names_published": false,
+    "raw_rows_persisted": false,
+    "exact_timestamps_published": false,
+    "manufacturer_or_model_published": false
+  },
+  "screen": {
+    "csv_files_discovered": 33,
+    "pressure_flow_tables_read": 20,
+    "sampled_rows": 3053442,
+    "variable_pressure_channels": 136,
+    "variable_flow_like_channels": 62,
+    "cumulative_flow_like_candidates": 31,
+    "instantaneous_flow_like_candidates": 31,
+    "candidate_pairs_evaluated": 52,
+    "strong_consistency_pairs": 0,
+    "files_with_strong_consistency_pair": 0,
+    "candidate_pair_aggregate": {
+      "correlation_median": 0.15094366994265107,
+      "correlation_max": 0.521705078874178,
+      "normalized_rmse_percent_median": 49.742138213236856,
+      "normalized_rmse_percent_min": 24.8261085329625,
+      "negative_scale_pair_count": 8,
+      "active_samples_median": 35787.5
+    },
+    "strong_pair_aggregate": {
+      "correlation_median": null,
+      "correlation_p10": null,
+      "normalized_rmse_percent_median": null,
+      "normalized_rmse_percent_p90": null,
+      "derivative_to_signal_scale_median": null,
+      "scale_is_dimensionless_or_physical": false
+    }
+  },
+  "attestation": {
+    "channel_roles_attested": false,
+    "flow_units_attested": false,
+    "totalizer_reset_semantics_attested": false,
+    "calibration_status_attested": false
+  },
+  "eligibility": {
+    "flow_channel_pair_attestation_candidate": false,
+    "absolute_mass_flow_supported": false,
+    "conditional_bank_inventory_estimation_supported": false,
+    "full_station_vehicle_validation": false,
+    "independent_holdout": false
+  },
+  "next_action": "A data custodian must identify the generic instantaneous/totalizer pair, its engineering units, sign/reset convention and calibration status before the scale or any storage-volume estimate is used by the physical model.",
+  "claim_boundary": "De-identified station-side signal-consistency screening only. Correlation between unlabelled channels does not attest their physical role or unit, validate the station-to-vehicle model, establish a safety limit or certify operation."
+}

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T08:28:47.266705+00:00",
+  "generated_at": "2026-10-08T10:02:28.669785+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -7044,7 +7044,7 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-08T08:07:51.899268+00:00",
+        "attempted_at": "2026-10-08T10:01:50.110682+00:00",
         "attempts_this_run": 1,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",

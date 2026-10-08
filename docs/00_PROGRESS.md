@@ -1,5 +1,23 @@
 # Development Progress
 
+## 2026-10-08 - Confidential pressure/flow consistency boundary
+
+- Added a streaming, privacy-bounded CSV audit for owner-controlled station
+  pressure and flow-like channels.
+- The result publishes no source path, filename, tag, exact timestamp or raw
+  measurement row and cannot apply an unattested unit to the process model.
+- Screened 3,053,442 rows from 20 pressure-and-flow tables. None of 52
+  cumulative/instantaneous candidate pairs met the joint consistency screen;
+  the strongest correlation was 0.522.
+- Kept absolute mass-flow and conditional storage-volume fitting disabled. The
+  remaining data request is narrowed to a custodian-confirmed generic channel
+  pair, units, sign/reset convention and calibration status.
+- The complete regression suite passed: 1,014 tests with no failures.
+- Re-ran the built-in LaTeX compiler for the exact current IJHE draft. The host
+  still reports `Unable to find standard directories for platform`, so the
+  compilation gate remains pending rather than being inferred from the older
+  PDF.
+
 ## 2026-09-07 - Modeling foundation
 
 Status: implemented as the first code baseline; not yet validated against an
