@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_hrs_source_reconciliation",
+  "generated_at": "2026-10-09",
+  "status": "privacy_bounded_local_source_reconciliation",
+  "purpose": "Reconcile the locally present hydrogen-refueling-station measurements with the privacy-bounded validation roles already exposed to the model.",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "source_identifiers_published": false,
+    "site_company_manufacturer_published": false,
+    "calendar_dates_published": false,
+    "raw_rows_persisted": false,
+    "per_file_hashes_published": false
+  },
+  "local_search": {
+    "collections_screened": [
+      "local measured HRS data collection",
+      "local project data and cached public validation material",
+      "local simulator exports",
+      "local operational media"
+    ],
+    "measured_hrs_source_file_count": 33,
+    "measured_hrs_storage_gib": 4.749,
+    "measured_hrs_physical_rows": 59272300,
+    "measured_hrs_deduplicated_rows": 56854143,
+    "interpretation": "The local measured HRS corpus is quantitatively substantial. The count is the curated privacy-bounded bundle used by the existing station-side evidence records; raw paths, names and rows remain outside the repository."
+  },
+  "measured_collections": [
+    {
+      "id": "station_pressure_meter_bundle",
+      "file_count": 12,
+      "schema_width": 9,
+      "channel_families": [
+        "station pressure",
+        "flow-like rate",
+        "totalizer-like accumulation"
+      ],
+      "validated_boundary": "station-side pressure and meter continuity",
+      "semantic_limits": [
+        "flow unit and reference basis are not independently attested",
+        "no vehicle or receptacle boundary is present"
+      ],
+      "eligible_use": [
+        "station pressure-cycle holdout",
+        "cascade/recharge chronology screening",
+        "meter continuity and missingness checks"
+      ]
+    },
+    {
+      "id": "bank_lifecycle_thermal_bundle",
+      "file_count": 13,
+      "schema_width": 9,
+      "channel_families": [
+        "high-pressure bank lifecycle counter",
+        "medium-pressure bank lifecycle counter",
+        "storage temperature-like channels"
+      ],
+      "validated_boundary": "storage-bank cycling and temperature-like continuity",
+      "semantic_limits": [
+        "no synchronized dispenser or vehicle event",
+        "temperature unit and sensor-role mapping require custodian attestation before parameter fitting"
+      ],
+      "eligible_use": [
+        "bank-cycle and recharge-state screening",
+        "chronological lifecycle holdout",
+        "temperature continuity and anomaly checks"
+      ]
+    },
+    {
+      "id": "wide_compressor_equipment_bundle",
+      "file_count": 8,
+      "schema_width": 64,
+      "row_count": 653442,
+      "median_sample_period_s": 1.0,
+      "maximum_gap_s": 3.0,
+      "channel_families": [
+        "compressor pressure and temperature",
+        "cooling and chiller state",
+        "valve command/state candidates",
+        "equipment and communication status",
+        "mass-flow-meter candidates",
+        "compressor alarm candidates"
+      ],
+      "validated_boundary": "station-equipment pressure, temperature and state transitions",
+      "semantic_limits": [
+        "flow units and state semantics are not fully attested",
+        "vehicle/dispenser candidate count is zero in the expanded header screen"
+      ],
+      "eligible_use": [
+        "compressor and cooling state-transition replay",
+        "virtual valve/ESD sequence plausibility",
+        "station-equipment continuity and chronological holdout"
+      ]
+    }
+  ],
+  "coverage_assessment": {
+    "local_station_data_is_sparse": false,
+    "station_side_dynamic_evidence_is_substantial": true,
+    "station_equipment_state_evidence_is_substantial": true,
+    "vehicle_side_full_loop_validation_ready": false,
+    "quantitative_consequence_validation_ready": false,
+    "full_loop_external_holdout_count": 0,
+    "missing_for_full_loop": [
+      "synchronized dispenser and receiving-vehicle/receptacle pressure",
+      "receiving-vehicle/receptacle gas temperature",
+      "delivered mass or attested mass-flow channel",
+      "common time base and initial conditions",
+      "controller/protocol/ESD state aligned to the same event",
+      "custodian-approved reuse and holdout attestation"
+    ],
+    "main_limit": "The local corpus is rich for station-side dynamics and equipment-state validation, but it is not a single independently scorable station-to-vehicle refueling cohort."
+  },
+  "recommended_next_use": [
+    "Use the pressure and lifecycle bundles for chronological station-side calibration and holdouts behind an explicit controlled-data profile.",
+    "Use the wide equipment bundle to validate compressor, cooling, valve and ESD state transitions before any vehicle-side claim.",
+    "Keep flow scale, temperature roles and state semantics behind custodian attestation gates.",
+    "Combine this station-side evidence with public tank, refueling, release, fire, dispersion and detector data only as component-level validation.",
+    "Keep the full-loop external-validation gate closed until a deidentified synchronized vehicle/receptacle cohort is approved."
+  ],
+  "claim_boundary": "Local HRS data are abundant and actionable for station-side and equipment-boundary validation. They do not by themselves validate vehicle SOC, delivered mass, dispenser protocol compliance, or site-specific consequence distances."
+}

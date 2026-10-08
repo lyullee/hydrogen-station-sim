@@ -11,6 +11,8 @@ The local scan found a substantial measured station-side bundle, plus adjacent h
 
 The local data are therefore **not sparse**. The limiting issue is alignment: the measured bundle is station-side, while a full-loop validation cohort still needs synchronized measured vehicle pressure/temperature and delivered mass or SOC. The two Downloads CSV files must stay outside that validation gate because they are derived simulator exports.
 
+The role-level reconciliation of the 12 pressure/meter files, 13 bank-lifecycle files and eight wide compressor/equipment files is recorded in [`local_hrs_source_reconciliation_2026_10_09.json`](local_hrs_source_reconciliation_2026_10_09.json) and [`LOCAL_HRS_SOURCE_RECONCILIATION_2026_10_09.md`](LOCAL_HRS_SOURCE_RECONCILIATION_2026_10_09.md).
+
 ## Safe reuse boundary
 
 Use the measured bundle for station-side pressure-cycle, cascade, recharge and state-transition holdouts. Use the adjacent LH2 material for qualitative HAZOP and virtual response training. Use the simulator exports only for export, plotting and vehicle-side UI smoke tests. Do not publish raw rows, source paths, file names, site/company/manufacturer identifiers or exact calendar dates.
