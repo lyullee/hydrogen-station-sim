@@ -7,6 +7,7 @@ from .engine import RuleEngine
 from .mapping import GD_SENSOR_ZONES, ModelMapper, coverage
 from .flame import FLAME_DETECTORS, FLAME_RESPONSE_DELAY_S, sees_target
 from ..dispersion_proxy import PUBLIC_DISPERSION_PROXY, concentration_volpct
+from ..spatial_detector import spatial_proxy_metadata
 
 
 class HazopMonitor:
@@ -21,6 +22,7 @@ class HazopMonitor:
         self.consequence_times = {}
         self.persistence_error = None
         self.virtual_detectors = bool(virtual_detectors)
+        self.spatial_detector_proxy = spatial_proxy_metadata()
         if store and run_id: store.start(run_id, self.catalog["metadata"])
 
     def sample(self, t, *, active_leaks, risk_snapshots, **model):
@@ -120,6 +122,9 @@ class HazopMonitor:
                 multiplier=dilution,
                 policy=PUBLIC_DISPERSION_PROXY,
             )
+            # The H2SAFE coordinate-only rank diagnostic failed its joint
+            # spatial screen, so the existing zone mapping and amplitudes are
+            # retained until an orientation/HVAC/obstacle-aware holdout passes.
             for tag, multiplier in ((near_tag, 1.0), (far_tag, 0.45)):
                 if tag not in self.mapper.specs or self.mapper.specs[tag]["종류"] != "G":
                     continue
@@ -188,6 +193,7 @@ class HazopMonitor:
             if alarm["severity"] == "TRIP": groups[key]["severity"] = "TRIP"
         result.update({"groups":list(groups.values()),"releases":releases,
                        "virtual_detector_proxy": PUBLIC_DISPERSION_PROXY.metadata(),
+                       "virtual_detector_spatial_proxy": self.spatial_detector_proxy,
                        "mapped_sensor_count":sum(k in self.mapper.specs for k in frame["signals"]),
                        "sensor_total":len(self.mapper.specs),"source_sha256":self.catalog["metadata"]["source_sha256"],
                        "legacy_plc_sensor_faults":frame["legacy_plc_sensor_faults"]})

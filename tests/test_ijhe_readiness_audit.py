@@ -194,6 +194,12 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert h2safe["hydrogen_threshold_calibration"] is False
     assert h2safe["full_loop_station_vehicle_validation"] is False
     assert h2safe["runtime_parameter_updated"] is False
+    assert gates["h2safe_spatial_detector_transfer_validation"]["status"] == "FAIL"
+    h2safe_spatial = gates["h2safe_spatial_detector_transfer_validation"]["observed"]
+    assert h2safe_spatial["experiment_count"] == 5
+    assert h2safe_spatial["median_spearman"] > 0.5
+    assert h2safe_spatial["screens"]["mean_top5_recall_at_least_0_6"] is False
+    assert h2safe_spatial["joint_pass"] is False
     assert gates["dataverse_hydrogen_explosion_component_inventory"]["status"] == "PASS"
     explosion_inventory = gates["dataverse_hydrogen_explosion_component_inventory"]["observed"]
     assert explosion_inventory["dois"] == [

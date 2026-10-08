@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T00:41:43.218349+00:00",
+  "generated_at": "2026-10-08T01:33:16.706675+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -17,7 +17,7 @@
   },
   "gate_counts": {
     "PASS": 95,
-    "FAIL": 7,
+    "FAIL": 8,
     "PENDING": 8
   },
   "evidence_snapshot": {
@@ -71,6 +71,14 @@
       "gate": "PASS",
       "evidence": "research/h2safe_indoor_release_intake_2026_10_07.json",
       "claim_boundary": "Hash-verified full-scale indoor helium-surrogate sensor/geometry/HVAC intake only; the public fields do not calibrate H2 thresholds, site layout, outdoor consequence distances or a full filling loop."
+    },
+    "h2safe_spatial_detector_transfer": {
+      "gate": "FAIL",
+      "evidence": "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
+      "experiment_count": 5,
+      "median_spearman": 0.5817391304347826,
+      "joint_pass": false,
+      "claim_boundary": "This post-access diagnostic supports only a development choice to replace arbitrary near/far detector assignment with a transparent coordinate ranking. It failed the joint spatial screen and is not independent validation."
     },
     "real_station_candidate": {
       "status": "PUBLIC_ROWS_POST_ACCESS_MAPPING_INCOMPLETE",
@@ -160,6 +168,17 @@
       "next_action": "Keep all failures and confidence intervals in the manuscript; do not convert a partial component screen into a station consequence claim."
     },
     {
+      "id": "h2safe_spatial_detector_transfer",
+      "status": "FAIL",
+      "why_blocked": "The fixed coordinate-only rank law passed two of four H2SAFE spatial screens. It did not reach the top-five recall or nearest-sensor criteria, and the horizontal release produced a negative rank correlation.",
+      "evidence": [
+        "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
+        "research/H2SAFE_SPATIAL_RESPONSE_DIAGNOSTIC_2026_10_08.md"
+      ],
+      "unblock_criterion": "Freeze an orientation-, ventilation- and obstacle-aware predictor before opening an independent indoor release cohort, then pass all spatial rank and recall screens without fitting detector amplitudes or hydrogen alarm thresholds on helium data.",
+      "next_action": "Acquire a new synchronized indoor release cohort with declared time alignment, gas units, nozzle vector, HVAC vectors and geometry; retain H2SAFE as development evidence only."
+    },
+    {
       "id": "saga_human_effectiveness",
       "status": "PENDING",
       "why_blocked": "The HIAD casebook is not frozen, ethics/collection permission is unresolved, no masked holdout responses are present, and no independent expert ratings exist.",
@@ -184,9 +203,9 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "972559313217f33c65a5e26ae35eaabb57d520315e6693e5d1440a64f6d81c61",
+    "audit_sha256": "2706810cfed3c805be446ed35f1969252c0b601111b6ff9a13e5e7ea78c820a3",
     "hiad_readiness_sha256": "bb2b8e91cf32e98f0503565d3616698376b4c2e1e6054377384c18641d33da98",
-    "acquisition_tracker_sha256": "099fb2ce0d858debf1761a7ceaaaedf781fb83c9d21b6fbb660c30bcd9ba68e0",
+    "acquisition_tracker_sha256": "67058515a70203f477800af97d70204a7286aa6b913f1e74e206230684b78cac",
     "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",
     "latest_full_loop_search_sha256": "14391668298eea81e1aaff919e9a20fd9c3570694e33cf8998d4156976cba808",
     "methytrucks_postaccess_sha256": "5f55152984db8952fb532d975f7c89db7f1681375f20c306a9ccb7cdc79ddf48",
@@ -196,7 +215,8 @@
     "operational_benchmark_recheck_sha256": "80e865de45384c7bd48c721125e440f482343c2420095f56f6866390db842e81",
     "operational_benchmark_face_validity_sha256": "64001782ba19ebd3299b0f17caf61f78138d9bc9a7836bc77d6e27f4c0dcec02",
     "h2safe_intake_sha256": "1ee28c8e168d2ee411763801249ee059a5e356c21f5dd45d75b48880b88f113f",
-    "candidate_route_count": 31,
+    "h2safe_spatial_diagnostic_sha256": "1a918fcd5c8d0b2556bef9d19f8ebeb9a590f2bc8323639d3c3ea5def5b979e3",
+    "candidate_route_count": 33,
     "public_full_loop_search_candidate_count": 17,
     "latest_public_full_loop_search_candidate_count": 9,
     "methytrucks_workbook_count": 3,
@@ -208,6 +228,6 @@
   "claim_policy": [
     "Never present a request, metadata page, or public station inventory as raw validation evidence.",
     "Keep component-test failures and model limitations visible in the paper and supplement.",
-    "Do not mark the user goal complete until full_loop_external_validation and saga_effectiveness_and_safety_supported are supported and all pending human/submission gates are closed."
+    "Do not mark the user goal complete until full_loop_external_validation, h2safe_spatial_detector_transfer_validation and saga_effectiveness_and_safety_supported are supported and all pending human/submission gates are closed."
   ]
 }

@@ -2449,6 +2449,65 @@ def audit(root: Path) -> dict[str, object]:
         } if h2safe else "missing; H2SAFE public dataset intake has not run",
     ))
 
+    h2safe_spatial_path = root / (
+        "research/h2safe_spatial_response_diagnostic_2026_10_08.json"
+    )
+    h2safe_spatial = _json(h2safe_spatial_path)
+    h2safe_spatial_source = (h2safe_spatial or {}).get("source") or {}
+    h2safe_spatial_method = (h2safe_spatial or {}).get("method") or {}
+    h2safe_spatial_results = (
+        ((h2safe_spatial or {}).get("results") or {}).get("Y_as_elevation") or {}
+    )
+    h2safe_spatial_aggregate = h2safe_spatial_results.get("aggregate") or {}
+    h2safe_spatial_decision = (h2safe_spatial or {}).get("decision") or {}
+    h2safe_spatial_integrity = bool(
+        (h2safe_spatial or {}).get("artifact_type")
+        == "post_access_h2safe_spatial_response_diagnostic"
+        and h2safe_spatial_source.get("doi") == "10.7799/17118570"
+        and h2safe_spatial_source.get("test_gas") == "helium surrogate"
+        and len(str(h2safe_spatial_source.get("archive_sha256") or "")) == 64
+        and h2safe_spatial_method.get("status")
+        == "POST_ACCESS_DEVELOPMENT_DIAGNOSTIC_NOT_VALIDATION"
+        and h2safe_spatial_aggregate.get("experiment_count") == 5
+        and isinstance(h2safe_spatial_aggregate.get("median_spearman"), (int, float))
+        and len(h2safe_spatial_aggregate.get("screens") or {}) == 4
+        and h2safe_spatial_decision.get("joint_spatial_screen_pass")
+        == h2safe_spatial_aggregate.get("joint_pass")
+        and "not independent validation" in str(
+            (h2safe_spatial or {}).get("claim_boundary") or ""
+        )
+    )
+    h2safe_spatial_pass = bool(
+        h2safe_spatial_integrity
+        and h2safe_spatial_aggregate.get("joint_pass") is True
+    )
+    gates.append(_gate(
+        "h2safe_spatial_detector_transfer_validation",
+        "PASS" if h2safe_spatial_pass else (
+            "FAIL" if h2safe_spatial_integrity else "PENDING"
+        ),
+        "The runtime detector-placement ranking must pass all frozen H2SAFE spatial-transfer screens before it is described as validated.",
+        str(h2safe_spatial_path.relative_to(root)),
+        "Five full-scale helium-surrogate tests, four joint rank/recall screens, explicit post-access status and no H2 amplitude or threshold transfer.",
+        {
+            "doi": h2safe_spatial_source.get("doi"),
+            "method_status": h2safe_spatial_method.get("status"),
+            "experiment_count": h2safe_spatial_aggregate.get("experiment_count"),
+            "median_spearman": h2safe_spatial_aggregate.get("median_spearman"),
+            "spearman_at_least_0_4_fraction": h2safe_spatial_aggregate.get(
+                "spearman_at_least_0_4_fraction"
+            ),
+            "mean_top5_recall": h2safe_spatial_aggregate.get("mean_top5_recall"),
+            "nearest_in_response_quartile_fraction": h2safe_spatial_aggregate.get(
+                "nearest_in_response_quartile_fraction"
+            ),
+            "screens": h2safe_spatial_aggregate.get("screens"),
+            "joint_pass": h2safe_spatial_aggregate.get("joint_pass"),
+            "runtime_use": h2safe_spatial_decision.get("runtime_use"),
+            "claim_boundary": (h2safe_spatial or {}).get("claim_boundary"),
+        } if h2safe_spatial else "missing; H2SAFE spatial diagnostic has not run",
+    ))
+
     dispersion_proxy_path = root / (
         "research/dispersion_concentration_proxy_calibration_2026_10_06.json"
     )
@@ -4627,6 +4686,7 @@ def audit(root: Path) -> dict[str, object]:
     )
     full_required = bounded_required + (
         "full_loop_external_validation", "station_consequence_geometry_validation",
+        "h2safe_spatial_detector_transfer_validation",
         "saga_effectiveness_and_safety_supported",
     )
     bounded_ready = all(by_id[item]["status"] == "PASS" for item in bounded_required)

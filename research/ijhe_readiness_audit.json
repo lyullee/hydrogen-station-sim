@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T00:41:43.093038+00:00",
+  "generated_at": "2026-10-08T01:33:16.578486+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -14,7 +14,7 @@
   "goal_completion_permitted": false,
   "gate_counts": {
     "PASS": 95,
-    "FAIL": 7,
+    "FAIL": 8,
     "PENDING": 8
   },
   "blocking_bounded_submission_gates": [
@@ -47,6 +47,7 @@
     "ijhe_latex_compilation",
     "submission_metadata_and_declarations",
     "full_loop_external_validation",
+    "h2safe_spatial_detector_transfer_validation",
     "saga_effectiveness_and_safety_supported"
   ],
   "gates": [
@@ -1320,7 +1321,7 @@
       "requirement": "At least 15 candidate routes, existing draft request for every route, source URL and explicit non-evidentiary boundary.",
       "observed": {
         "status": "open_data_not_yet_received",
-        "candidate_count": 31,
+        "candidate_count": 33,
         "draft_count": 24,
         "claim_boundary": "This tracker is a data-acquisition plan. It is not evidence of validation, does not change any IJHE readiness gate, and does not authorize contact or publication."
       }
@@ -1727,6 +1728,31 @@
         "timing_validation_eligible": false,
         "runtime_parameter_application": false,
         "claim_boundary": "This audit establishes public file integrity, sampling cadence and spatial metadata availability only. Helium is a surrogate gas, the release-to-logger time crosswalk is absent, and no hydrogen magnitude, detector latency, placement, ventilation, outdoor dispersion, ESD, safety-distance or full-loop HRS validation claim is supported."
+      }
+    },
+    {
+      "id": "h2safe_spatial_detector_transfer_validation",
+      "status": "FAIL",
+      "claim": "The runtime detector-placement ranking must pass all frozen H2SAFE spatial-transfer screens before it is described as validated.",
+      "evidence": "research\\h2safe_spatial_response_diagnostic_2026_10_08.json",
+      "requirement": "Five full-scale helium-surrogate tests, four joint rank/recall screens, explicit post-access status and no H2 amplitude or threshold transfer.",
+      "observed": {
+        "doi": "10.7799/17118570",
+        "method_status": "POST_ACCESS_DEVELOPMENT_DIAGNOSTIC_NOT_VALIDATION",
+        "experiment_count": 5,
+        "median_spearman": 0.5817391304347826,
+        "spearman_at_least_0_4_fraction": 0.8,
+        "mean_top5_recall": 0.56,
+        "nearest_in_response_quartile_fraction": 0.6,
+        "screens": {
+          "median_spearman_at_least_0_5": true,
+          "spearman_at_least_0_4_fraction_at_least_0_6": true,
+          "mean_top5_recall_at_least_0_6": false,
+          "nearest_in_response_quartile_fraction_at_least_0_7": false
+        },
+        "joint_pass": false,
+        "runtime_use": "Do not apply the failed geometry-only ranking to runtime detector routing. Retain the existing zone mapping, 1.0 and 0.45 concentration multipliers, and all alarm/trip thresholds until a new independent spatial holdout passes.",
+        "claim_boundary": "This post-access diagnostic supports only a development choice to replace arbitrary near/far detector assignment with a transparent coordinate ranking. It failed the joint spatial screen and is not independent validation."
       }
     },
     {

@@ -3564,6 +3564,9 @@ def build_evidence_manifest(
             "measured_bank_pressure_envelope"
         ) or {},
         "virtual_detector_proxy": frame.get("virtual_detector_proxy") or {},
+        "virtual_detector_spatial_proxy": frame.get(
+            "virtual_detector_spatial_proxy"
+        ) or {},
         "detector_policy": {
             key: frame.get("detector_policy", {}).get(key)
             for key in (
@@ -3826,6 +3829,9 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "measured_bank_pressure_envelope"
         ) or {},
         "virtual_detector_proxy": manifest.get("virtual_detector_proxy") or {},
+        "virtual_detector_spatial_proxy": manifest.get(
+            "virtual_detector_spatial_proxy"
+        ) or {},
         "detector_policy": manifest.get("detector_policy") or {},
         "common_header": manifest.get("common_header") or {},
     }
@@ -4489,6 +4495,15 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "status", "alarm_threshold_volpct_h2", "trip_threshold_volpct_h2",
             "persistence_s", "claim_limit",
         )),
+        **({
+            "virtual_detector_spatial_proxy": {
+                **selected(
+                    manifest.get("virtual_detector_spatial_proxy"),
+                    ("status", "source_doi", "vertical_axis", "runtime_application"),
+                ),
+                "validation_claim": False,
+            }
+        } if manifest.get("virtual_detector_spatial_proxy") else {}),
         "common_header": selected(manifest.get("common_header"), (
             "pressure_mpa_abs", "temperature_c", "inventory_kg",
             "bank_inflow_g_s", "origin", "model_status", "claim_limit",

@@ -20,7 +20,17 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **95 PASS · 7 FAIL · 8 PENDING**.
+Gate counts: **95 PASS · 8 FAIL · 8 PENDING**.
+
+The newly released public H2SAFE dataset was screened across five full-scale
+indoor helium-surrogate experiments. A fixed coordinate-only buoyant-gas rank
+law improved when the published Y coordinate was treated as elevation, but it
+passed only two of four joint spatial screens; the horizontal-release test was
+the clearest failure. The failed coordinate-only ranking is therefore not
+applied to runtime detector routing; the existing zone mapping, concentration
+amplitudes and alarm thresholds remain unchanged. The failed transfer screen is
+an explicit readiness blocker and is not presented as hydrogen CFD,
+detector-placement, ESD or safety-distance validation.
 
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted
@@ -248,7 +258,8 @@ The bounded paper still has 13 unresolved or failed gates:
 The full user objective additionally requires:
 
 14. `full_loop_external_validation`
-15. `saga_effectiveness_and_safety_supported`
+15. `h2safe_spatial_detector_transfer_validation`
+16. `saga_effectiveness_and_safety_supported`
 
 Only `full_user_objective_ready=true` in the authoritative audit permits the
 project goal to be marked complete. Until then, the correct status is active

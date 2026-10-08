@@ -47,6 +47,7 @@ def build(root: Path) -> dict[str, Any]:
     public_update_path = root / "research/public_full_loop_data_update_2026_10_08.json"
     operational_search_path = root / "research/public_operational_benchmark_recheck_2026_10_05.json"
     operational_face_path = root / "research/public_operational_benchmark_face_validity_2026_10_05.json"
+    h2safe_spatial_path = root / "research/h2safe_spatial_response_diagnostic_2026_10_08.json"
     audit = load_json(audit_path)
     hiad = load_json(hiad_path)
     tracker = load_json(tracker_path)
@@ -57,6 +58,7 @@ def build(root: Path) -> dict[str, Any]:
     byrnes = load_json(byrnes_path)
     public_update = load_json(public_update_path)
     operational_search = load_json(operational_search_path)
+    h2safe_spatial = load_json(h2safe_spatial_path)
 
     status_by_id = {g["id"]: g for g in audit.get("gates", [])}
     gate = lambda gate_id: status_by_id.get(gate_id, {"status": "MISSING"})
@@ -130,6 +132,14 @@ def build(root: Path) -> dict[str, Any]:
                 "gate": gate("h2safe_full_scale_indoor_surrogate_intake_integrity")["status"],
                 "evidence": "research/h2safe_indoor_release_intake_2026_10_07.json",
                 "claim_boundary": "Hash-verified full-scale indoor helium-surrogate sensor/geometry/HVAC intake only; the public fields do not calibrate H2 thresholds, site layout, outdoor consequence distances or a full filling loop.",
+            },
+            "h2safe_spatial_detector_transfer": {
+                "gate": gate("h2safe_spatial_detector_transfer_validation")["status"],
+                "evidence": "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
+                "experiment_count": h2safe_spatial["results"]["Y_as_elevation"]["aggregate"]["experiment_count"],
+                "median_spearman": h2safe_spatial["results"]["Y_as_elevation"]["aggregate"]["median_spearman"],
+                "joint_pass": h2safe_spatial["results"]["Y_as_elevation"]["aggregate"]["joint_pass"],
+                "claim_boundary": h2safe_spatial["claim_boundary"],
             },
             "real_station_candidate": {
                 "status": "PUBLIC_ROWS_POST_ACCESS_MAPPING_INCOMPLETE",
@@ -214,6 +224,17 @@ def build(root: Path) -> dict[str, Any]:
                 "next_action": "Keep all failures and confidence intervals in the manuscript; do not convert a partial component screen into a station consequence claim.",
             },
             {
+                "id": "h2safe_spatial_detector_transfer",
+                "status": gate("h2safe_spatial_detector_transfer_validation")["status"],
+                "why_blocked": "The fixed coordinate-only rank law passed two of four H2SAFE spatial screens. It did not reach the top-five recall or nearest-sensor criteria, and the horizontal release produced a negative rank correlation.",
+                "evidence": [
+                    "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
+                    "research/H2SAFE_SPATIAL_RESPONSE_DIAGNOSTIC_2026_10_08.md",
+                ],
+                "unblock_criterion": "Freeze an orientation-, ventilation- and obstacle-aware predictor before opening an independent indoor release cohort, then pass all spatial rank and recall screens without fitting detector amplitudes or hydrogen alarm thresholds on helium data.",
+                "next_action": "Acquire a new synchronized indoor release cohort with declared time alignment, gas units, nozzle vector, HVAC vectors and geometry; retain H2SAFE as development evidence only.",
+            },
+            {
                 "id": "saga_human_effectiveness",
                 "status": "PENDING",
                 "why_blocked": "The HIAD casebook is not frozen, ethics/collection permission is unresolved, no masked holdout responses are present, and no independent expert ratings exist.",
@@ -251,6 +272,7 @@ def build(root: Path) -> dict[str, Any]:
             "h2safe_intake_sha256": sha256(
                 root / "research/h2safe_indoor_release_intake_2026_10_07.json"
             ),
+            "h2safe_spatial_diagnostic_sha256": sha256(h2safe_spatial_path),
             "candidate_route_count": len(tracker.get("candidates") or []),
             "public_full_loop_search_candidate_count": candidate_count(search),
             "latest_public_full_loop_search_candidate_count": candidate_count(latest_search),
@@ -263,7 +285,7 @@ def build(root: Path) -> dict[str, Any]:
         "claim_policy": [
             "Never present a request, metadata page, or public station inventory as raw validation evidence.",
             "Keep component-test failures and model limitations visible in the paper and supplement.",
-            "Do not mark the user goal complete until full_loop_external_validation and saga_effectiveness_and_safety_supported are supported and all pending human/submission gates are closed.",
+            "Do not mark the user goal complete until full_loop_external_validation, h2safe_spatial_detector_transfer_validation and saga_effectiveness_and_safety_supported are supported and all pending human/submission gates are closed.",
         ],
     }
     return matrix

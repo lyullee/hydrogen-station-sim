@@ -553,6 +553,8 @@ def test_virtual_detector_follows_actual_release_zone(target, tag):
     signals=monitor.latest['signals']
     assert signals[tag]['value'] > 0
     assert signals[tag]['origin']=='VIRTUAL_DETECTOR_PROXY'
+    assert monitor.latest['virtual_detector_spatial_proxy']['source_doi']=='10.7799/17118570'
+    assert monitor.latest['virtual_detector_spatial_proxy']['runtime_application'] is False
     assert signals['GD-2001']['value']==0  # No unrelated header alarm.
     assert len([k for k in signals if k.startswith('GD-')])==15
     assert len([k for k in signals if k in monitor.mapper.specs])==91

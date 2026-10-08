@@ -1,13 +1,13 @@
 # IJHE objective blocker matrix
 
-Generated: `2026-10-08T00:41:43.218349+00:00`
+Generated: `2026-10-08T01:33:16.706675+00:00`
 
 This is an evidence-readiness record, not a prediction of journal acceptance.
 
 - Bounded IJHE submission ready: **False**
 - Full validated-digital-twin objective ready: **False**
 - Automatic goal completion permitted: **False**
-- Gate counts: `{'PASS': 95, 'FAIL': 7, 'PENDING': 8}`
+- Gate counts: `{'PASS': 95, 'FAIL': 8, 'PENDING': 8}`
 
 ## Blocking matrix
 
@@ -16,6 +16,7 @@ This is an evidence-readiness record, not a prediction of journal acceptance.
 | `tank_thermal_transfer_validation` | **FAIL** | Freeze the mixed-convection formulation and exact inlet geometry before opening a new filling trace, then pass the joint pressure and temperature screens without post-outcome parameter selection. |
 | `full_loop_external_validation` | **FAIL** | Obtain a clean, rights-cleared, pre-access frozen external dataset with synchronized station pressure/temperature/mass-flow, protocol/controller, dispenser/nozzle, and vehicle/receptacle channels; resolve the source-boundary/topology ambiguity; then score >=8 cases with >=80% screen pass fraction. |
 | `consequence_model_external_validation` | **FAIL_OR_PENDING** | Either improve the declared model against a pre-access untouched component holdout without post-outcome tuning, or narrow the manuscript claim to the observed component-test scope. |
+| `h2safe_spatial_detector_transfer` | **FAIL** | Freeze an orientation-, ventilation- and obstacle-aware predictor before opening an independent indoor release cohort, then pass all spatial rank and recall screens without fitting detector amplitudes or hydrogen alarm thresholds on helium data. |
 | `saga_human_effectiveness` | **PENDING** | Institutional determination, coordinator leakage review, frozen 24-event casebook, 168 masked responses, and three qualified independent raters with locked analysis. |
 | `submission_declarations` | **PENDING** | All author and declaration fields completed and independently checked before submission. |
 
@@ -23,10 +24,10 @@ This is an evidence-readiness record, not a prediction of journal acceptance.
 
 - Never present a request, metadata page, or public station inventory as raw validation evidence.
 - Keep component-test failures and model limitations visible in the paper and supplement.
-- Do not mark the user goal complete until full_loop_external_validation and saga_effectiveness_and_safety_supported are supported and all pending human/submission gates are closed.
+- Do not mark the user goal complete until full_loop_external_validation, h2safe_spatial_detector_transfer_validation and saga_effectiveness_and_safety_supported are supported and all pending human/submission gates are closed.
 
 ## Reproducibility
 
-- Acquisition routes tracked: `31`
+- Acquisition routes tracked: `33`
 - Full-loop search candidates: `17`
 - Source hashes are recorded in the JSON companion.

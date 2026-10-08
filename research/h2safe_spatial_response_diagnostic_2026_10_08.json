@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "artifact_type": "post_access_h2safe_spatial_response_diagnostic",
+  "recorded_at": "2026-10-08",
+  "source": {
+    "doi": "10.7799/17118570",
+    "test_gas": "helium surrogate",
+    "archive_sha256": "f1b8bf747b7787f00152ec416940c80a143ea044fc18ee8a69ac9da204d9158e"
+  },
+  "method": {
+    "status": "POST_ACCESS_DEVELOPMENT_DIAGNOSTIC_NOT_VALIDATION",
+    "response": "per-sensor q99 minus q10 over the complete trace",
+    "reason_for_time_independent_response": "The public package does not cross-walk wall-clock release intervals to CSV-relative time; release onset was not inferred from outcomes.",
+    "rank_predictor": "exp(0.7*max(dy,0)-1.2*max(-dy,0)) / (0.25 + horizontal_distance_m^2 + 0.35*abs(dy))",
+    "coordinate_decision": "Y is treated as elevation because the published sensor coordinates form repeated physical height bands (including 0.6096 m and 10.2235 m); Z-axis results are retained as an explicit sensitivity check."
+  },
+  "results": {
+    "Y_as_elevation": {
+      "cases": [
+        {
+          "case_id": "Lab1_Small:test1.csv",
+          "valid_sensor_count": 24,
+          "spearman_score_vs_robust_response": 0.5817391304347826,
+          "top5_predictor_recall_of_response_quartile": 0.8,
+          "nearest_sensor": "p24",
+          "nearest_sensor_response_rank": 5,
+          "nearest_sensor_in_response_quartile": true,
+          "maximum_response_sensor": "p13"
+        },
+        {
+          "case_id": "Lab2_Large:test1.csv",
+          "valid_sensor_count": 28,
+          "spearman_score_vs_robust_response": -0.3661740558292282,
+          "top5_predictor_recall_of_response_quartile": 0.2,
+          "nearest_sensor": "p27",
+          "nearest_sensor_response_rank": 8,
+          "nearest_sensor_in_response_quartile": false,
+          "maximum_response_sensor": "p21"
+        },
+        {
+          "case_id": "Lab2_Large:test2.csv",
+          "valid_sensor_count": 32,
+          "spearman_score_vs_robust_response": 0.5161290322580645,
+          "top5_predictor_recall_of_response_quartile": 0.6,
+          "nearest_sensor": "p27",
+          "nearest_sensor_response_rank": 9,
+          "nearest_sensor_in_response_quartile": false,
+          "maximum_response_sensor": "p23"
+        },
+        {
+          "case_id": "Lab2_Large:test3.csv",
+          "valid_sensor_count": 30,
+          "spearman_score_vs_robust_response": 0.6827586206896552,
+          "top5_predictor_recall_of_response_quartile": 0.6,
+          "nearest_sensor": "p3",
+          "nearest_sensor_response_rank": 5,
+          "nearest_sensor_in_response_quartile": true,
+          "maximum_response_sensor": "p23"
+        },
+        {
+          "case_id": "Lab2_Large:test4.csv",
+          "valid_sensor_count": 28,
+          "spearman_score_vs_robust_response": 0.5922276956759714,
+          "top5_predictor_recall_of_response_quartile": 0.6,
+          "nearest_sensor": "p3",
+          "nearest_sensor_response_rank": 4,
+          "nearest_sensor_in_response_quartile": true,
+          "maximum_response_sensor": "p23"
+        }
+      ],
+      "aggregate": {
+        "experiment_count": 5,
+        "median_spearman": 0.5817391304347826,
+        "spearman_at_least_0_4_fraction": 0.8,
+        "mean_top5_recall": 0.56,
+        "nearest_in_response_quartile_fraction": 0.6,
+        "screens": {
+          "median_spearman_at_least_0_5": true,
+          "spearman_at_least_0_4_fraction_at_least_0_6": true,
+          "mean_top5_recall_at_least_0_6": false,
+          "nearest_in_response_quartile_fraction_at_least_0_7": false
+        },
+        "joint_pass": false
+      }
+    },
+    "Z_as_elevation_sensitivity": {
+      "cases": [
+        {
+          "case_id": "Lab1_Small:test1.csv",
+          "valid_sensor_count": 24,
+          "spearman_score_vs_robust_response": -0.12869565217391304,
+          "top5_predictor_recall_of_response_quartile": 0.0,
+          "nearest_sensor": "p18",
+          "nearest_sensor_response_rank": 24,
+          "nearest_sensor_in_response_quartile": false,
+          "maximum_response_sensor": "p13"
+        },
+        {
+          "case_id": "Lab2_Large:test1.csv",
+          "valid_sensor_count": 28,
+          "spearman_score_vs_robust_response": 0.32567049808429116,
+          "top5_predictor_recall_of_response_quartile": 0.6,
+          "nearest_sensor": "p21",
+          "nearest_sensor_response_rank": 1,
+          "nearest_sensor_in_response_quartile": true,
+          "maximum_response_sensor": "p21"
+        },
+        {
+          "case_id": "Lab2_Large:test2.csv",
+          "valid_sensor_count": 32,
+          "spearman_score_vs_robust_response": 0.4765395894428152,
+          "top5_predictor_recall_of_response_quartile": 0.4,
+          "nearest_sensor": "p21",
+          "nearest_sensor_response_rank": 28,
+          "nearest_sensor_in_response_quartile": false,
+          "maximum_response_sensor": "p23"
+        },
+        {
+          "case_id": "Lab2_Large:test3.csv",
+          "valid_sensor_count": 30,
+          "spearman_score_vs_robust_response": 0.3904338153503893,
+          "top5_predictor_recall_of_response_quartile": 0.4,
+          "nearest_sensor": "p21",
+          "nearest_sensor_response_rank": 29,
+          "nearest_sensor_in_response_quartile": false,
+          "maximum_response_sensor": "p23"
+        },
+        {
+          "case_id": "Lab2_Large:test4.csv",
+          "valid_sensor_count": 28,
+          "spearman_score_vs_robust_response": 0.1981390257252326,
+          "top5_predictor_recall_of_response_quartile": 0.2,
+          "nearest_sensor": "p21",
+          "nearest_sensor_response_rank": 27,
+          "nearest_sensor_in_response_quartile": false,
+          "maximum_response_sensor": "p23"
+        }
+      ],
+      "aggregate": {
+        "experiment_count": 5,
+        "median_spearman": 0.32567049808429116,
+        "spearman_at_least_0_4_fraction": 0.2,
+        "mean_top5_recall": 0.31999999999999995,
+        "nearest_in_response_quartile_fraction": 0.2,
+        "screens": {
+          "median_spearman_at_least_0_5": false,
+          "spearman_at_least_0_4_fraction_at_least_0_6": false,
+          "mean_top5_recall_at_least_0_6": false,
+          "nearest_in_response_quartile_fraction_at_least_0_7": false
+        },
+        "joint_pass": false
+      }
+    }
+  },
+  "decision": {
+    "joint_spatial_screen_pass": false,
+    "runtime_use": "Do not apply the failed geometry-only ranking to runtime detector routing. Retain the existing zone mapping, 1.0 and 0.45 concentration multipliers, and all alarm/trip thresholds until a new independent spatial holdout passes.",
+    "rejected_uses": [
+      "helium-to-hydrogen concentration conversion",
+      "amplitude fitting",
+      "alarm or trip setpoint calibration",
+      "detector placement validation",
+      "CFD, ESD, safety-distance or full-station validation"
+    ]
+  },
+  "claim_boundary": "This post-access diagnostic supports only a development choice to replace arbitrary near/far detector assignment with a transparent coordinate ranking. It failed the joint spatial screen and is not independent validation."
+}

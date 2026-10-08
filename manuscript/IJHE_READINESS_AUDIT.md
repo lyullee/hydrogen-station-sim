@@ -61,6 +61,7 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 | `station_consequence_geometry_validation` | **PASS** | Displayed outdoor free-jet screening geometry is traceably checked against geometrically applicable independent data. | `research\consequence_geometry_validation.json` |
 | `open_channel_detector_logic_evidence` | **PASS** | Measured open-channel concentration records replay the declared detector threshold and persistence logic with an explicit non-HRS claim boundary. | `research\dispersion_detector_logic_validation.json` |
 | `h2safe_public_helium_dataset_intake` | **PASS** | The public full-scale H2SAFE helium sensor dataset is hash-audited and screened prospectively without being promoted to hydrogen or detector-timing validation. | `research\h2safe_public_dataset_intake_2026_10_08.json` |
+| `h2safe_spatial_detector_transfer_validation` | **FAIL** | The runtime detector-placement ranking must pass all frozen H2SAFE spatial-transfer screens before it is described as validated. | `research\h2safe_spatial_response_diagnostic_2026_10_08.json` |
 | `open_channel_concentration_proxy_integrity` | **PASS** | The virtual detector concentration scale is derived from public measured concentration/flow traces instead of an unexplained saturation constant. | `research\dispersion_concentration_proxy_calibration_2026_10_06.json` |
 | `grune_ventilation_measurement_inventory` | **PASS** | The public Grune/Sempert confined-space ventilation fields are hash-verified and inventoried without being promoted to model validation. | `research\grune_ventilation_dataset_inventory_2026_10_05.json` |
 | `grune_ventilation_empirical_envelope_integrity` | **PASS** | The public measured ventilation envelope is applied only to the virtual detector proxy with an explicit confined-space claim boundary. | `research\grune_ventilation_empirical_envelope_2026_10_06.json` |
@@ -152,6 +153,7 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 - `ijhe_latex_compilation`
 - `submission_metadata_and_declarations`
 - `full_loop_external_validation`
+- `h2safe_spatial_detector_transfer_validation`
 - `saga_effectiveness_and_safety_supported`
 
 Only full_user_objective_ready=true permits goal completion. A bounded paper may report negative or limited physics honestly, but it does not satisfy the full validated-digital-twin objective.

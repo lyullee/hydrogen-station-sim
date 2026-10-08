@@ -45,6 +45,7 @@ from .calibration_profiles import (
     load_station_recharge_dynamics_calibration,
 )
 from .dispersion_proxy import PUBLIC_DISPERSION_PROXY
+from .spatial_detector import spatial_proxy_metadata
 from .public_benchmarks import compare_public_operating_context
 from .safety_runtime import FaultEvent, FaultKind, FaultSchedule
 from .tabulated import PropsSI
@@ -1148,6 +1149,7 @@ def health() -> dict[str, Any]:
         "hyram_backend": backend.name,
         "hyram_reason": getattr(backend, "reason", None),
         "virtual_detector_proxy": PUBLIC_DISPERSION_PROXY.metadata(),
+        "virtual_detector_spatial_proxy": spatial_proxy_metadata(),
         "hazop": hazop_status,
     }
 
