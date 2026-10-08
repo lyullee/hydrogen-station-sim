@@ -67,6 +67,34 @@ def test_fire_selection_uses_actual_event_and_healthy_periodic_is_quiet():
     assert "중압 저장뱅크" in selected[0]["evidence"][0]
 
 
+def test_ignited_release_selects_hydrogen_fire_plan_for_runtime_handoff():
+    frame = {
+        "hazop": {
+            "active": [],
+            "releases": [{
+                "component_id": "cascade.medium",
+                "release_id": "hiad-hydrogen-fire",
+                "consequence": {
+                    "status": "calculated",
+                    "ignited_enclosure_status": "calculated",
+                    "visible_flame_length_m": 2.0,
+                },
+            }],
+        },
+        "active_faults": ["hydrogen-leak:cascade.medium"],
+    }
+    selected = response_selection(frame, load_catalog(), trigger="alarm")
+    assert selected[0]["plan"]["id"] == "hydrogen_fire"
+    assert "gas_release" in {item["plan"]["id"] for item in selected}
+    guidance = structured_guidance(selected, actual_alert=True)
+    assert guidance is not None
+    fire_plan = next(plan for plan in guidance["plans"] if plan["id"] == "hydrogen_fire")
+    assert fire_plan["immediate"]
+    assert fire_plan["stabilize"]
+    assert fire_plan["restart"]
+    assert fire_plan["prevention"]
+
+
 def test_active_bank_pressure_and_relief_get_distinct_measures():
     frame = {"hazop": {"active": [{"rule_id": "HZ-053", "node_id": "N08"}], "releases": []},
              "relief_valves_open": ["cascade.medium"], "active_faults": []}

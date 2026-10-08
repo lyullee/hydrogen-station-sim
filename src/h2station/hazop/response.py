@@ -223,13 +223,34 @@ def response_selection(frame: dict[str, Any], catalog: dict[str, Any],
                 15 if rule.get("등급") == "TRIP" else 0, rule=rule)
     for release in hazop.get("releases") or []:
         if isinstance(release, dict):
-            add("gas_release", f"현재 누출: {_equipment_label(release.get('component_id'))}", 35)
+            component = _equipment_label(release.get("component_id"))
+            consequence = release.get("consequence") or {}
+            # A hydrogen leak may be ignited without an external-fire fault.
+            # The consequence engine is the authoritative runtime signal for
+            # this distinction, so route the event to the dedicated fire plan
+            # while retaining the underlying release plan as a separate
+            # scenario.  This keeps the LLM/SAGA handoff faithful to the
+            # physical event instead of describing a jet fire as an unignited
+            # leak only.
+            # ``visible_flame_length_m`` and the literature jet-flame fields
+            # are calculated as delayed-ignition screening outputs for an
+            # unignited release too.  They are therefore not ignition state.
+            # Only an explicit ignition flag or the enclosure ignition result
+            # may promote a release to the hydrogen-fire plan.
+            ignited = (
+                consequence.get("ignited") is True
+                or consequence.get("ignited_enclosure_status") == "calculated"
+            )
+            if ignited:
+                add("hydrogen_fire", f"점화된 수소 방출: {component}", 40)
+            add("gas_release", f"현재 누출: {component}", 35)
     for valve in frame.get("relief_valves_open") or []:
         add("relief_discharge", f"안전밸브 개방: {_equipment_label(valve)}", 25)
     for fault in frame.get("active_faults") or []:
         fault = str(fault)
         kind = fault.split(":", 1)[0]
         plan_id = {"external-fire": "external_fire", "hydrogen-leak": "gas_release",
+                   "hydrogen-fire": "hydrogen_fire", "ignited-hydrogen-leak": "hydrogen_fire",
                    "sensor-freeze": "sensor_fault",
                    "sensor-bias": "sensor_fault", "precooler-loss": "precooling_fault",
                    "check-valve-failure": "flow_anomaly",

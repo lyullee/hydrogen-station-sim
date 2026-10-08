@@ -1,0 +1,419 @@
+{
+  "schema_version": 1,
+  "artifact_type": "hiad_runtime_response_handoff_audit",
+  "generated_at_utc": "2026-10-08T22:32:51.555421+00:00",
+  "status": "completed_canonical_family_handoff_audit",
+  "evidence_role": "retrospective_metadata_to_runtime_response_traceability_only",
+  "source": {
+    "replay_coverage_artifact": "research/hiad_digital_twin_replay_coverage_2026_10_08.json",
+    "replay_coverage_artifact_sha256": "75fe0f41aed9393861e50a5d4b94428d8997eaec599968e267fc3c3875e9d0f4",
+    "response_module": "src/h2station/hazop/response.py",
+    "response_module_sha256": "c2277527c75ea557794f01d34b92d913b17492cab30b52bfb945a64339d681a1",
+    "playbook_catalog": "src/h2station/data/emergency_playbooks.json",
+    "playbook_catalog_sha256": "d8fedb036a91b5adae3934f1604a17966b8f0f9200c52f4d40bf2da2243a7c6c"
+  },
+  "runtime": {
+    "backend": "HyRAM+ 6.1 native",
+    "virtual_detector_mode": true,
+    "unique_family_recipes_run": 9,
+    "response_handoff_pass_count": 9,
+    "all_executable_handoffs_passed": true
+  },
+  "family_results": {
+    "gas_release": {
+      "family": "gas_release",
+      "status": "passed",
+      "event_kind": "hydrogen-leak",
+      "event_target": "cascade.medium",
+      "active_fault_context": [
+        "hydrogen-leak:cascade.medium"
+      ],
+      "selected_plan_ids": [
+        "gas_release",
+        "gas_release",
+        "gas_release",
+        "gas_release",
+        "gas_release",
+        "gas_release",
+        "gas_release"
+      ],
+      "expected_plan_ids": [
+        "gas_release"
+      ],
+      "guidance_plan_ids": [
+        "gas_release"
+      ],
+      "checks": {
+        "monitor_frame_available": true,
+        "response_selection_nonempty": true,
+        "expected_plan_selected": true,
+        "structured_guidance_available": true,
+        "staged_guidance_complete": true,
+        "consequence_evidence_present": true
+      },
+      "observed": {
+        "monitor_frame_time_s": 1.2,
+        "active_rule_count": 6,
+        "release_count": 1,
+        "release_ids": [
+          "hiad-gas-release"
+        ],
+        "active_sensor_ids": [
+          "GD-0801",
+          "GD-0801",
+          "GD-0801",
+          "GD-2201",
+          "GD-2201",
+          "GD-2201"
+        ]
+      },
+      "claim_boundary": "A passed handoff proves only that the canonical fixture reaches the registered response family and five staged guidance fields. It does not prove accident reconstruction, response effectiveness, frequency or a safe-distance value."
+    },
+    "hydrogen_fire": {
+      "family": "hydrogen_fire",
+      "status": "passed",
+      "event_kind": "hydrogen-leak",
+      "event_target": "cascade.medium",
+      "active_fault_context": [
+        "hydrogen-leak:cascade.medium"
+      ],
+      "selected_plan_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "external_fire",
+        "gas_release",
+        "gas_release",
+        "gas_release",
+        "gas_release",
+        "gas_release",
+        "gas_release"
+      ],
+      "expected_plan_ids": [
+        "hydrogen_fire"
+      ],
+      "guidance_plan_ids": [
+        "external_fire",
+        "gas_release",
+        "hydrogen_fire"
+      ],
+      "checks": {
+        "monitor_frame_available": true,
+        "response_selection_nonempty": true,
+        "expected_plan_selected": true,
+        "structured_guidance_available": true,
+        "staged_guidance_complete": true,
+        "consequence_evidence_present": true
+      },
+      "observed": {
+        "monitor_frame_time_s": 1.2,
+        "active_rule_count": 7,
+        "release_count": 1,
+        "release_ids": [
+          "hiad-hydrogen-fire"
+        ],
+        "active_sensor_ids": [
+          "FD-0801",
+          "GD-0801",
+          "GD-0801",
+          "GD-0801",
+          "GD-2201",
+          "GD-2201",
+          "GD-2201"
+        ]
+      },
+      "claim_boundary": "A passed handoff proves only that the canonical fixture reaches the registered response family and five staged guidance fields. It does not prove accident reconstruction, response effectiveness, frequency or a safe-distance value."
+    },
+    "hose_connection": {
+      "family": "hose_connection",
+      "status": "passed",
+      "event_kind": "hydrogen-leak",
+      "event_target": "dispenser.hose",
+      "active_fault_context": [
+        "hydrogen-leak:dispenser.hose"
+      ],
+      "selected_plan_ids": [
+        "gas_release",
+        "gas_release",
+        "gas_release",
+        "gas_release",
+        "gas_release",
+        "gas_release",
+        "gas_release"
+      ],
+      "expected_plan_ids": [
+        "gas_release"
+      ],
+      "guidance_plan_ids": [
+        "gas_release"
+      ],
+      "checks": {
+        "monitor_frame_available": true,
+        "response_selection_nonempty": true,
+        "expected_plan_selected": true,
+        "structured_guidance_available": true,
+        "staged_guidance_complete": true,
+        "consequence_evidence_present": true
+      },
+      "observed": {
+        "monitor_frame_time_s": 1.2,
+        "active_rule_count": 6,
+        "release_count": 1,
+        "release_ids": [
+          "hiad-hose-release"
+        ],
+        "active_sensor_ids": [
+          "GD-1301",
+          "GD-1301",
+          "GD-1301",
+          "GD-2301",
+          "GD-2301",
+          "GD-2301"
+        ]
+      },
+      "claim_boundary": "A passed handoff proves only that the canonical fixture reaches the registered response family and five staged guidance fields. It does not prove accident reconstruction, response effectiveness, frequency or a safe-distance value."
+    },
+    "overpressure": {
+      "family": "overpressure",
+      "status": "passed",
+      "event_kind": "pressure-disturbance",
+      "event_target": "cascade.medium",
+      "active_fault_context": [
+        "pressure-disturbance:cascade.medium"
+      ],
+      "selected_plan_ids": [
+        "overpressure",
+        "overpressure",
+        "overpressure"
+      ],
+      "expected_plan_ids": [
+        "overpressure"
+      ],
+      "guidance_plan_ids": [
+        "overpressure"
+      ],
+      "checks": {
+        "monitor_frame_available": true,
+        "response_selection_nonempty": true,
+        "expected_plan_selected": true,
+        "structured_guidance_available": true,
+        "staged_guidance_complete": true,
+        "consequence_evidence_present": false
+      },
+      "observed": {
+        "monitor_frame_time_s": 3.0,
+        "active_rule_count": 3,
+        "release_count": 0,
+        "release_ids": [],
+        "active_sensor_ids": [
+          "PT-0801",
+          "PT-0801",
+          "TT-0801"
+        ]
+      },
+      "claim_boundary": "A passed handoff proves only that the canonical fixture reaches the registered response family and five staged guidance fields. It does not prove accident reconstruction, response effectiveness, frequency or a safe-distance value."
+    },
+    "precooling_fault": {
+      "family": "precooling_fault",
+      "status": "passed",
+      "event_kind": "precooler-loss",
+      "event_target": "precooler",
+      "active_fault_context": [
+        "precooler-loss:precooler"
+      ],
+      "selected_plan_ids": [
+        "precooling_fault"
+      ],
+      "expected_plan_ids": [
+        "precooling_fault"
+      ],
+      "guidance_plan_ids": [
+        "precooling_fault"
+      ],
+      "checks": {
+        "monitor_frame_available": true,
+        "response_selection_nonempty": true,
+        "expected_plan_selected": true,
+        "structured_guidance_available": true,
+        "staged_guidance_complete": true,
+        "consequence_evidence_present": false
+      },
+      "observed": {
+        "monitor_frame_time_s": 4.0,
+        "active_rule_count": 0,
+        "release_count": 0,
+        "release_ids": [],
+        "active_sensor_ids": []
+      },
+      "claim_boundary": "A passed handoff proves only that the canonical fixture reaches the registered response family and five staged guidance fields. It does not prove accident reconstruction, response effectiveness, frequency or a safe-distance value."
+    },
+    "fueling_fault": {
+      "family": "fueling_fault",
+      "status": "passed",
+      "event_kind": "pcv-stuck-closed",
+      "event_target": "dispenser.pcv",
+      "active_fault_context": [
+        "pcv-stuck-closed:dispenser.pcv"
+      ],
+      "selected_plan_ids": [
+        "low_supply_or_blockage",
+        "low_supply_or_blockage",
+        "low_supply_or_blockage",
+        "low_supply_or_blockage",
+        "low_supply_or_blockage",
+        "low_supply_or_blockage"
+      ],
+      "expected_plan_ids": [
+        "low_supply_or_blockage"
+      ],
+      "guidance_plan_ids": [
+        "low_supply_or_blockage"
+      ],
+      "checks": {
+        "monitor_frame_available": true,
+        "response_selection_nonempty": true,
+        "expected_plan_selected": true,
+        "structured_guidance_available": true,
+        "staged_guidance_complete": true,
+        "consequence_evidence_present": false
+      },
+      "observed": {
+        "monitor_frame_time_s": 10.0,
+        "active_rule_count": 5,
+        "release_count": 0,
+        "release_ids": [],
+        "active_sensor_ids": [
+          "FT-1101",
+          "FT-1301",
+          "FT-1501",
+          "FT-1701",
+          "PT-1101"
+        ]
+      },
+      "claim_boundary": "A passed handoff proves only that the canonical fixture reaches the registered response family and five staged guidance fields. It does not prove accident reconstruction, response effectiveness, frequency or a safe-distance value."
+    },
+    "compressor_thermal": {
+      "family": "compressor_thermal",
+      "status": "passed",
+      "event_kind": "external-fire",
+      "event_target": "compressor",
+      "active_fault_context": [
+        "external-fire:compressor"
+      ],
+      "selected_plan_ids": [
+        "external_fire",
+        "external_fire"
+      ],
+      "expected_plan_ids": [
+        "external_fire"
+      ],
+      "guidance_plan_ids": [
+        "external_fire"
+      ],
+      "checks": {
+        "monitor_frame_available": true,
+        "response_selection_nonempty": true,
+        "expected_plan_selected": true,
+        "structured_guidance_available": true,
+        "staged_guidance_complete": true,
+        "consequence_evidence_present": false
+      },
+      "observed": {
+        "monitor_frame_time_s": 1.2,
+        "active_rule_count": 1,
+        "release_count": 0,
+        "release_ids": [],
+        "active_sensor_ids": [
+          "FD-0601"
+        ]
+      },
+      "claim_boundary": "A passed handoff proves only that the canonical fixture reaches the registered response family and five staged guidance fields. It does not prove accident reconstruction, response effectiveness, frequency or a safe-distance value."
+    },
+    "external_fire": {
+      "family": "external_fire",
+      "status": "passed",
+      "event_kind": "external-fire",
+      "event_target": "cascade.medium",
+      "active_fault_context": [
+        "external-fire:cascade.medium"
+      ],
+      "selected_plan_ids": [
+        "external_fire",
+        "external_fire"
+      ],
+      "expected_plan_ids": [
+        "external_fire"
+      ],
+      "guidance_plan_ids": [
+        "external_fire"
+      ],
+      "checks": {
+        "monitor_frame_available": true,
+        "response_selection_nonempty": true,
+        "expected_plan_selected": true,
+        "structured_guidance_available": true,
+        "staged_guidance_complete": true,
+        "consequence_evidence_present": false
+      },
+      "observed": {
+        "monitor_frame_time_s": 1.2,
+        "active_rule_count": 1,
+        "release_count": 0,
+        "release_ids": [],
+        "active_sensor_ids": [
+          "FD-0801"
+        ]
+      },
+      "claim_boundary": "A passed handoff proves only that the canonical fixture reaches the registered response family and five staged guidance fields. It does not prove accident reconstruction, response effectiveness, frequency or a safe-distance value."
+    },
+    "isolation_failure": {
+      "family": "isolation_failure",
+      "status": "passed",
+      "event_kind": "pcv-stuck-open",
+      "event_target": "dispenser.pcv",
+      "active_fault_context": [
+        "pcv-stuck-open:dispenser.pcv"
+      ],
+      "selected_plan_ids": [
+        "fueling_fault",
+        "fueling_fault",
+        "fueling_fault",
+        "low_supply_or_blockage",
+        "low_supply_or_blockage"
+      ],
+      "expected_plan_ids": [
+        "fueling_fault",
+        "low_supply_or_blockage"
+      ],
+      "guidance_plan_ids": [
+        "fueling_fault",
+        "low_supply_or_blockage"
+      ],
+      "checks": {
+        "monitor_frame_available": true,
+        "response_selection_nonempty": true,
+        "expected_plan_selected": true,
+        "structured_guidance_available": true,
+        "staged_guidance_complete": true,
+        "consequence_evidence_present": false
+      },
+      "observed": {
+        "monitor_frame_time_s": 10.0,
+        "active_rule_count": 4,
+        "release_count": 0,
+        "release_ids": [],
+        "active_sensor_ids": [
+          "FT-1501",
+          "FT-1701",
+          "PT-1401",
+          "TT-1401"
+        ]
+      },
+      "claim_boundary": "A passed handoff proves only that the canonical fixture reaches the registered response family and five staged guidance fields. It does not prove accident reconstruction, response effectiveness, frequency or a safe-distance value."
+    }
+  },
+  "claim_boundary": [
+    "The public HIAD inventory does not provide synchronized boundary traces; canonical fixtures are used for runtime testing.",
+    "The audit checks monitor-frame availability, response-family selection, structured guidance and complete recognition/immediate/stabilize/restart/prevention stages.",
+    "It does not infer incident parameters from public narratives or establish that any response action is correct or effective in the field."
+  ]
+}
