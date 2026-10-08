@@ -157,6 +157,23 @@
     "derived_exports_must_be_excluded_from_external_validation": true,
     "main_limit": "The local collection is rich in station-side telemetry, but independently attested vehicle pressure/temperature/delivered-mass or SOC channels are still absent from the measured station cohort."
   },
+  "independent_header_recheck": {
+    "method": "expanded second-pass in-memory header taxonomy",
+    "files_screened": 33,
+    "schema_widths": {
+      "9": 25,
+      "64": 8
+    },
+    "candidate_file_counts": {
+      "vehicle_or_dispenser_expanded": 0,
+      "vehicle_pressure_temperature_expanded": 0,
+      "flow_or_mass_expanded": 12,
+      "pressure_expanded": 20,
+      "temperature_expanded": 21,
+      "protocol_state_expanded": 8
+    },
+    "interpretation": "A broader synonym and abbreviation screen found no vehicle, receptacle or dispenser candidate in the measured bundle. This is a header-level negative screen only and still requires custodian confirmation before treating vehicle channels as absent."
+  },
   "recommended_next_steps": [
     "Use the measured station bundle for station-side calibration and chronological holdouts, retaining duplicate exclusion.",
     "Request custodian attestation for the 12 flow/mass-like files and any MFM-like field before fitting a flow scale.",

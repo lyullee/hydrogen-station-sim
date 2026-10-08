@@ -1,5 +1,19 @@
 # Development Progress
 
+## 2026-10-09 - Independent vehicle-channel recheck of the local archive
+
+- Re-screened all 33 measured station CSV files in memory with an expanded
+  synonym and abbreviation taxonomy covering vehicle, receptacle, dispenser,
+  SOC, fueling and protocol fields.
+- The archive remains 25 narrow nine-column files plus 8 wide 64-column files;
+  the expanded screen found zero vehicle/dispenser and zero vehicle
+  pressure/temperature candidates. This is a header-level negative result and
+  still requires custodian confirmation; it does not expose headers or raw
+  rows.
+- Added the result to the privacy-bounded discovery artifact and the LLM
+  evidence envelope. The full-loop gate remains closed while station-side
+  validation continues.
+
 ## 2026-10-09 - Local HRS corpus inventory and validation boundary
 
 - Rechecked the local collections and recorded a privacy-bounded corpus

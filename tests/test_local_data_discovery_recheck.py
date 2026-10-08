@@ -39,3 +39,13 @@ def test_local_recheck_preserves_full_loop_boundary() -> None:
     assert coverage["station_side_dynamic_evidence_is_substantial"] is True
     assert coverage["vehicle_side_full_loop_validation_ready"] is False
     assert coverage["quantitative_consequence_validation_ready"] is False
+
+
+def test_local_recheck_expanded_header_screen_finds_no_vehicle_candidate() -> None:
+    record = json.loads(ARTIFACT.read_text(encoding="utf-8"))
+    screen = record["independent_header_recheck"]
+    assert screen["files_screened"] == 33
+    assert screen["schema_widths"] == {"9": 25, "64": 8}
+    assert screen["candidate_file_counts"]["vehicle_or_dispenser_expanded"] == 0
+    assert screen["candidate_file_counts"]["vehicle_pressure_temperature_expanded"] == 0
+    assert "custodian confirmation" in screen["interpretation"]

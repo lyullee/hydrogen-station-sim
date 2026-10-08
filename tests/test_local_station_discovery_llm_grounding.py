@@ -47,6 +47,14 @@ def test_local_discovery_is_grounded_without_raw_provenance():
     assert coverage["local_station_data_is_sparse"] is False
     assert coverage["station_side_dynamic_evidence_is_substantial"] is True
     assert coverage["vehicle_side_full_loop_validation_ready"] is False
+    header_recheck = discovery["independent_header_recheck"]
+    assert header_recheck["files_screened"] == 33
+    assert header_recheck["candidate_file_counts"][
+        "vehicle_or_dispenser_expanded"
+    ] == 0
+    assert header_recheck["candidate_file_counts"][
+        "vehicle_pressure_temperature_expanded"
+    ] == 0
     assert "source_paths_published" not in discovery
     assert "source_filenames_published" not in discovery
 

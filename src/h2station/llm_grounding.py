@@ -4095,6 +4095,8 @@ def _local_hydrogen_station_discovery_evidence() -> dict[str, Any] | None:
     }
     measured = groups.get("confidential_station_measurement_bundle") or {}
     coverage = record.get("coverage_assessment") or {}
+    header_recheck = record.get("independent_header_recheck") or {}
+    header_counts = header_recheck.get("candidate_file_counts") or {}
     required_privacy = (
         "source_paths_published",
         "source_filenames_published",
@@ -4113,6 +4115,10 @@ def _local_hydrogen_station_discovery_evidence() -> dict[str, Any] | None:
         or coverage.get("station_side_dynamic_evidence_is_substantial") is not True
         or coverage.get("vehicle_side_full_loop_validation_ready") is not False
         or coverage.get("quantitative_consequence_validation_ready") is not False
+        or header_recheck.get("files_screened") != 33
+        or header_recheck.get("schema_widths") != {"9": 25, "64": 8}
+        or header_counts.get("vehicle_or_dispenser_expanded") != 0
+        or header_counts.get("vehicle_pressure_temperature_expanded") != 0
     ):
         return None
 
@@ -4277,6 +4283,30 @@ def _local_hydrogen_station_discovery_evidence() -> dict[str, Any] | None:
                 "derived_exports_must_be_excluded_from_external_validation",
                 "main_limit",
             )
+        },
+        "independent_header_recheck": {
+            "method": header_recheck.get("method"),
+            "files_screened": header_recheck.get("files_screened"),
+            "schema_widths": header_recheck.get("schema_widths") or {},
+            "candidate_file_counts": {
+                "vehicle_or_dispenser_expanded": header_counts.get(
+                    "vehicle_or_dispenser_expanded"
+                ),
+                "vehicle_pressure_temperature_expanded": header_counts.get(
+                    "vehicle_pressure_temperature_expanded"
+                ),
+                "flow_or_mass_expanded": header_counts.get(
+                    "flow_or_mass_expanded"
+                ),
+                "pressure_expanded": header_counts.get("pressure_expanded"),
+                "temperature_expanded": header_counts.get(
+                    "temperature_expanded"
+                ),
+                "protocol_state_expanded": header_counts.get(
+                    "protocol_state_expanded"
+                ),
+            },
+            "interpretation": header_recheck.get("interpretation"),
         },
         "claim_limit": str(record.get("claim_boundary") or ""),
     }
