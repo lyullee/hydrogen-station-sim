@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_operational_media_inventory",
+  "status": "privacy_bounded_metadata_screen",
+  "generated_at": "2026-10-09",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_timestamps_published": false,
+    "site_company_manufacturer_published": false,
+    "raw_media_persisted": false,
+    "per_file_hashes_published": false,
+    "frames_published": false
+  },
+  "collection": {
+    "media_type": "MP4 video files",
+    "file_count": 26,
+    "total_bytes": 1971029347,
+    "total_gib": 1.836,
+    "container_metadata_screen": {
+      "complete_container_count": 17,
+      "incomplete_or_unreadable_container_count": 9,
+      "complete_video_track_count": 17,
+      "complete_audio_track_count": 17,
+      "video_dimensions": "1920x1080 for all complete video tracks",
+      "duration_seconds": {
+        "minimum": 8.843,
+        "maximum": 52.276,
+        "median": 49.691,
+        "aggregate_complete_media_duration": 775.143
+      },
+      "interpretation": "Container-level metadata only; no frame content, identity, location or event labels were published."
+    }
+  },
+  "evidence_class": "local_operational_visual_media",
+  "review_status": "metadata_screen_only",
+  "eligible_use": [
+    "qualitative CCTV and 3D scene/topology matching after human frame review",
+    "operator-action and equipment-state sequence annotation after provenance review",
+    "visual timing cross-check against an independently attested station-side trace",
+    "training replay of observed visual cues without exposing the source media"
+  ],
+  "ineligible_use": [
+    "process telemetry or sensor calibration",
+    "quantitative pressure, temperature, flow or inventory fitting",
+    "incident frequency or accident-label claims",
+    "consequence-distance validation or automatic safety-limit generation",
+    "full-loop vehicle-fueling validation or SAGA effectiveness claims"
+  ],
+  "required_before_stronger_claims": [
+    "custodian attestation of provenance, recording clock and operational context",
+    "human review of representative frames with generic equipment/zone labels",
+    "reacquisition or repair of the 9 incomplete containers",
+    "authorized time alignment to a synchronized station-side trace",
+    "independent holdout policy before any model tuning or validation use"
+  ],
+  "claim_boundary": "The local collection contains useful visual operational evidence, but metadata alone cannot establish what event occurred, where it occurred, or whether a process variable changed. Keep the raw media private and separate from quantitative validation datasets."
+}

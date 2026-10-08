@@ -206,6 +206,31 @@
         "scene geometry and camera-view review"
       ],
       "claim_boundary": "Media do not provide process telemetry or independent safety validation."
+    },
+    {
+      "id": "local_operational_video_collection",
+      "file_count": 26,
+      "approximate_bytes": 1971029347,
+      "complete_container_count": 17,
+      "incomplete_or_unreadable_container_count": 9,
+      "complete_video_dimensions": "1920x1080",
+      "complete_duration_seconds": {
+        "minimum": 8.843,
+        "maximum": 52.276,
+        "median": 49.691
+      },
+      "content_role": "visual operational/CCTV evidence; metadata screen only",
+      "eligible_use": [
+        "qualitative 3D/CCTV topology and equipment-state review",
+        "operator-action sequence annotation after provenance review",
+        "visual timing cross-check against independently attested station-side traces"
+      ],
+      "ineligible_use": [
+        "process telemetry calibration",
+        "quantitative consequence validation",
+        "incident frequency or full-loop vehicle-fueling validation"
+      ],
+      "claim_boundary": "Raw media and identifiers remain private; nine containers require reacquisition or repair, and metadata alone does not establish events or locations."
     }
   ],
   "coverage_assessment": {
@@ -214,14 +239,17 @@
     "local_hazop_scenario_coverage_is_substantial": true,
     "vehicle_side_full_loop_validation_ready": false,
     "quantitative_consequence_validation_ready": false,
-    "main_limit": "The local collection is rich in station-side telemetry, operational sequences, qualitative hazard controls and engineering context, but synchronized vehicle pressure/temperature/SOC/delivered-mass channels are not yet attested as one independent full-loop cohort."
+    "main_limit": "The local collection is rich on station-side dynamics, procedure/hazard controls, asset context and visual operational media, while a single independently attested station-to-vehicle synchronized cohort with vehicle pressure/temperature, delivered mass or SOC is still missing.",
+    "local_operational_visual_evidence_is_substantial": true,
+    "local_operational_visual_evidence_is_quantitatively_validated": false
   },
   "recommended_next_steps": [
     "Use the 52-step local scenario matrix to cross-check HAZOP action coverage and virtual command mappings without copying raw hazard text into the public repository.",
     "Use the 10-cycle operation logs as a sequence holdout only after channel units and cycle provenance are signed off by the custodian.",
     "Use minute/recovered trend workbooks for qualitative trend and persistence checks, keeping reconstructed values separate from raw logger evidence.",
     "Map the engineering reference bundle to de-identified asset classes and zones for 3D/CCTV placement; do not publish drawings, site identity or manufacturer details.",
-    "Keep the full-loop validation gate closed until an independent synchronized vehicle-side pressure, temperature, delivered-mass or SOC channel set is attested."
+    "Keep the full-loop validation gate closed until an independent synchronized vehicle-side pressure, temperature, delivered-mass or SOC channel set is attested.",
+    "Screen the 26-file operational video collection as private visual evidence; review frames and provenance before using it for generic CCTV/3D timing annotations, and keep incomplete containers outside quantitative validation."
   ],
   "claim_boundary": "This privacy-bounded inventory proves that local station-related data are not sparse and identifies defensible uses. It does not publish raw records, reveal the site, certify units, validate safety distances, or close the IJHE full-loop gate."
 }
