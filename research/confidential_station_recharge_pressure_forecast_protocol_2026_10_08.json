@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "protocol_id": "CONFIDENTIAL-STATION-RECHARGE-PRESSURE-FORECAST-001",
+  "status": "FROZEN_BEFORE_JOINT_HOLDOUT_OUTCOME_ACCESS",
+  "frozen_month": "2026-10",
+  "joint_holdout_outcomes_seen_before_freeze": false,
+  "objective": "Test whether an earlier chronological partition can predict the next 30 seconds of medium/high storage pressure response after a causal 10-second loaded-compressor prefix.",
+  "data_scope": {
+    "roles": [
+      "medium_storage_pressure",
+      "high_storage_pressure",
+      "compressor_load"
+    ],
+    "pressure_role_and_unit_semantics_attested": true,
+    "compressor_state_semantics_attested": true,
+    "temperature_used": false,
+    "mass_flow_used": false,
+    "valve_state_used": false,
+    "vehicle_side_signal_used": false
+  },
+  "privacy": {
+    "publish_raw_rows": false,
+    "publish_case_rows": false,
+    "publish_source_paths": false,
+    "publish_source_filenames": false,
+    "publish_headers_or_tags": false,
+    "publish_absolute_timestamps_or_dates": false,
+    "publish_site_company_location_or_manufacturer": false
+  },
+  "split": {
+    "method": "chronological_within_each_trace",
+    "calibration_fraction": 0.7,
+    "holdout_fraction": 0.3,
+    "split_before_case_extraction": true
+  },
+  "case_definition": {
+    "prefix_duration_s": 10.0,
+    "forecast_duration_s": 30.0,
+    "maximum_sample_gap_s": 2.5,
+    "endpoint_tolerance_s": 1.5,
+    "minimum_prefix_rise_mpa": 0.1,
+    "minimum_target_to_other_rise_ratio": 1.5,
+    "other_bank_rise_floor_mpa": 0.05,
+    "pressure_range_mpa": [10.0, 100.0],
+    "windows_overlap": false,
+    "target_selection": "The bank with the larger prefix rise is selected using prefix data only; the scored 30-second segment is never used for eligibility or target selection."
+  },
+  "model": {
+    "name": "bank_specific_robust_continuation_gain",
+    "calibration": "For each bank, median(forecast rate / prefix rate) in the earlier partition, clipped to [-1, 3].",
+    "prediction": "prefix_rate_mpa_s * forecast_duration_s * fitted_bank_gain",
+    "comparators": [
+      "zero-change persistence",
+      "uncalibrated prefix-rate extrapolation"
+    ],
+    "post_holdout_refit_allowed": false
+  },
+  "eligibility": {
+    "minimum_matching_files": 6,
+    "minimum_calibration_cases": 100,
+    "minimum_holdout_cases": 40,
+    "minimum_holdout_cases_per_bank": 10
+  },
+  "primary_screens": {
+    "maximum_holdout_median_absolute_error_mpa": 0.5,
+    "maximum_holdout_p90_absolute_error_mpa": 1.5,
+    "minimum_mae_improvement_over_persistence_fraction": 0.2,
+    "minimum_positive_direction_fraction": 0.9,
+    "maximum_bank_gain_relative_shift": 0.5
+  },
+  "decision_rule": "PASS only if every eligibility and primary screen passes. Failure leaves all runtime and reference defaults unchanged.",
+  "claim_boundary": "A pass supports only a same-site, short-horizon, station-side medium/high pressure-response surrogate. It does not validate compressor capacity, storage geometry, vehicle filling, full-loop behavior, a safety limit, accident frequency, an independent site, or field certification."
+}
