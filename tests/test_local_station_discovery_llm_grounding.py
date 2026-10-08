@@ -87,3 +87,41 @@ def test_local_discovery_reaches_bounded_prompt_views():
     assert header["candidate_groups"][
         "adjacent_h2_operational_telemetry"
     ]["telemetry_time_span_hours"] == 24.0
+
+
+def test_local_attestation_request_is_exposed_without_private_identifiers():
+    manifest = _manifest()
+    request = manifest["response_evidence"][
+        "confidential_local_station_attestation_request"
+    ]
+    assert request["status"] == "awaiting_custodian_confirmation"
+    assert request["observed_local_archive"]["csv_file_count"] == 33
+    assert request["observed_local_archive"][
+        "deduplicated_data_row_count"
+    ] == 56_854_143
+    ids = {item["id"] for item in request["requested_attestations"]}
+    assert {
+        "timebase_and_event_alignment",
+        "pressure_reference_and_units",
+        "flow_and_totalizer_semantics",
+        "vehicle_dispenser_full_loop_channels",
+    } <= ids
+    assert "source_paths_published" not in request
+    assert "source_tags_published" not in request
+
+    summary = prompt_evidence_summary(manifest)[
+        "confidential_local_station_attestation_request"
+    ]
+    assert summary["status"] == "awaiting_custodian_confirmation"
+    assert len(summary["requested_attestations"]) >= 8
+    decision = prompt_decision_evidence(manifest)["validation_boundaries"][
+        "local_station_attestation_request"
+    ]
+    assert "vehicle_dispenser_full_loop_channels" in decision[
+        "requested_attestation_ids"
+    ]
+    header = prompt_evidence_header(manifest)[
+        "confidential_local_station_attestation_request"
+    ]
+    assert header["observed_local_archive"]["vehicle_side_full_loop_ready"] is False
+    assert "source_paths_published" not in str(header)

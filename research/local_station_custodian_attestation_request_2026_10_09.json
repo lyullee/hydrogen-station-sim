@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_station_custodian_attestation_request",
+  "status": "awaiting_custodian_confirmation",
+  "generated_at": "2026-10-09",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "source_tags_published": false,
+    "site_company_manufacturer_published": false,
+    "calendar_dates_published": false,
+    "raw_rows_persisted": false,
+    "absolute_timestamps_published": false,
+    "per_file_hashes_published": false
+  },
+  "observed_local_archive": {
+    "csv_file_count": 33,
+    "unique_csv_payload_count": 32,
+    "deduplicated_data_row_count": 56854143,
+    "schema_width_file_counts": {
+      "narrow": 25,
+      "wide_equipment": 8
+    },
+    "station_side_dynamic_evidence_ready": true,
+    "vehicle_side_full_loop_ready": false
+  },
+  "requested_attestations": [
+    {
+      "id": "timebase_and_event_alignment",
+      "request": "Confirm the common clock, timezone/offset treatment, reset behavior, and whether a shared operation/event identifier exists.",
+      "acceptance": "A de-identified timebase contract plus event-boundary rules; no raw timestamps or tags required.",
+      "enables": ["chronological holdout", "cross-file synchronization", "incident replay"]
+    },
+    {
+      "id": "pressure_reference_and_units",
+      "request": "Confirm each storage-pressure role's engineering unit and absolute/gauge reference, including sensor scale and valid range.",
+      "acceptance": "Role-level unit/reference statement and calibration/quality flag definition.",
+      "enables": ["pressure-envelope validation", "restart-margin evaluation", "pressure-to-mass conversion"]
+    },
+    {
+      "id": "temperature_roles_and_units",
+      "request": "Confirm whether each temperature channel is gas, wall, ambient, compressor discharge, or cooler outlet and provide units and sensor location class.",
+      "acceptance": "Role-level semantic map and degC/K conversion rule; no equipment identity required.",
+      "enables": ["thermal boundary validation", "cooler-state comparison", "temperature response holdout"]
+    },
+    {
+      "id": "flow_and_totalizer_semantics",
+      "request": "Confirm flow direction, engineering units, whether values are mass or volume, and totalizer reset/rollover behavior.",
+      "acceptance": "Unit/sign/reset contract plus one aggregate closure statistic supplied by the custodian.",
+      "enables": ["recharge-flow screening", "mass-balance checks", "flow-limited consequence boundary"]
+    },
+    {
+      "id": "equipment_state_and_esd_semantics",
+      "request": "Map compressor, cooling, valve, ESD, and trip state codes to generic operational meanings, including failed-feedback values.",
+      "acceptance": "Generic state dictionary and transition validity rules; no raw state strings required.",
+      "enables": ["state-transition validation", "virtual action feedback", "ESD response replay"]
+    },
+    {
+      "id": "vehicle_dispenser_full_loop_channels",
+      "request": "Confirm whether synchronized vehicle/receptacle pressure, temperature, delivered mass or SOC, dispenser flow, and fill-event identifiers exist.",
+      "acceptance": "De-identified channel-family presence/absence matrix and synchronization rule; values remain outside the repository.",
+      "enables": ["station-to-vehicle holdout", "vehicle-fill accuracy", "SOC/mass closure"]
+    },
+    {
+      "id": "calibration_and_quality_metadata",
+      "request": "Confirm calibration interval, uncertainty/quality flags, missing-value codes, maintenance windows, and sensor replacement handling.",
+      "acceptance": "Aggregate uncertainty and missingness policy with a de-identified quality flag dictionary.",
+      "enables": ["uncertainty bands", "data-quality stratification", "reviewer reproducibility"]
+    },
+    {
+      "id": "rights_and_review_scope",
+      "request": "Confirm that derived aggregate metrics may be reviewed and that raw data remain owner-controlled and unpublished.",
+      "acceptance": "Custodian approval record identifying permitted derived outputs and reviewer access scope.",
+      "enables": ["controlled validation report", "independent review", "privacy-preserving publication"]
+    }
+  ],
+  "current_gate_effect": {
+    "station_side_pressure_and_sequence": "eligible after role-level confirmation; current aggregate evidence is descriptive",
+    "station_side_temperature_flow_state": "blocked until the corresponding semantic/unit attestations are supplied",
+    "station_to_vehicle_full_loop": "blocked until synchronized vehicle/dispenser channel families are confirmed and attested",
+    "safety_limits_and_field_certification": "out of scope for this request and remain disabled"
+  },
+  "custodian_submission_contract": [
+    "Return only generic role names, units, reference conventions, event rules, and aggregate quality statistics.",
+    "Do not return site, company, manufacturer, calendar date, raw tag, raw row, or absolute timestamp.",
+    "Hash-lock any owner-controlled private mapping outside the repository before a controlled replay.",
+    "Keep validation and parameter fitting splits frozen before numerical outcomes are inspected."
+  ],
+  "claim_boundary": "This is a de-identified request checklist. It does not attest any unconfirmed channel, publish measurements, authorize production retuning, establish safety limits, or certify operation."
+}

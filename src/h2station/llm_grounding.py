@@ -4494,6 +4494,82 @@ def _local_hydrogen_station_discovery_evidence() -> dict[str, Any] | None:
     }
 
 
+def _local_station_custodian_attestation_request_evidence() -> dict[str, Any] | None:
+    """Expose the privacy-bounded checklist needed to close local-data gates.
+
+    This is a request contract, not a measurement source.  Keeping it in the
+    evidence envelope lets the LLM state precisely which local semantics are
+    still missing without exposing raw paths, tags, timestamps or rows.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / (
+        "research/local_station_custodian_attestation_request_2026_10_09.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    privacy = record.get("privacy") or {}
+    required_privacy = (
+        "source_paths_published",
+        "source_filenames_published",
+        "source_headers_published",
+        "source_tags_published",
+        "site_company_manufacturer_published",
+        "calendar_dates_published",
+        "raw_rows_persisted",
+        "absolute_timestamps_published",
+        "per_file_hashes_published",
+    )
+    inventory = record.get("observed_local_archive") or {}
+    if (
+        record.get("artifact_type") != "local_station_custodian_attestation_request"
+        or record.get("status") != "awaiting_custodian_confirmation"
+        or any(privacy.get(key) is not False for key in required_privacy)
+        or inventory.get("csv_file_count") != 33
+        or inventory.get("unique_csv_payload_count") != 32
+        or inventory.get("deduplicated_data_row_count") != 56854143
+        or inventory.get("station_side_dynamic_evidence_ready") is not True
+        or inventory.get("vehicle_side_full_loop_ready") is not False
+    ):
+        return None
+
+    requests: list[dict[str, Any]] = []
+    for item in record.get("requested_attestations") or []:
+        if not isinstance(item, dict) or not item.get("id"):
+            continue
+        requests.append({
+            "id": str(item.get("id")),
+            "request": str(item.get("request") or ""),
+            "acceptance": str(item.get("acceptance") or ""),
+            "enables": [str(value) for value in item.get("enables") or []],
+        })
+    if len(requests) < 8:
+        return None
+    return {
+        "artifact": str(path.relative_to(root)).replace("\\", "/"),
+        "evidence_role": "privacy-bounded local-station custodian attestation request",
+        "status": str(record.get("status")),
+        "observed_local_archive": {
+            "csv_file_count": inventory.get("csv_file_count"),
+            "unique_csv_payload_count": inventory.get("unique_csv_payload_count"),
+            "deduplicated_data_row_count": inventory.get(
+                "deduplicated_data_row_count"
+            ),
+            "schema_width_file_counts": inventory.get("schema_width_file_counts") or {},
+            "station_side_dynamic_evidence_ready": True,
+            "vehicle_side_full_loop_ready": False,
+        },
+        "requested_attestations": requests,
+        "current_gate_effect": record.get("current_gate_effect") or {},
+        "custodian_submission_contract": [
+            str(value) for value in record.get("custodian_submission_contract") or []
+        ],
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _local_public_validation_catalog_evidence() -> dict[str, Any] | None:
     """Expose the local public-cache inventory without exposing its files.
 
@@ -5516,6 +5592,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_local_station_data_discovery"
         ] = local_station_discovery
+    local_attestation_request = _local_station_custodian_attestation_request_evidence()
+    if local_attestation_request is not None:
+        envelope["response_evidence"][
+            "confidential_local_station_attestation_request"
+        ] = local_attestation_request
     local_public_catalog = _local_public_validation_catalog_evidence()
     if local_public_catalog is not None:
         envelope["response_evidence"][
@@ -5735,6 +5816,30 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "coverage_assessment"
             ) or {},
             "claim_limit": short(local_public_catalog.get("claim_limit"), 320),
+        }
+    local_attestation_request = evidence.get(
+        "confidential_local_station_attestation_request"
+    )
+    if isinstance(local_attestation_request, dict):
+        summary["confidential_local_station_attestation_request"] = {
+            "evidence_role": local_attestation_request.get("evidence_role"),
+            "status": local_attestation_request.get("status"),
+            "observed_local_archive": local_attestation_request.get(
+                "observed_local_archive"
+            ) or {},
+            "requested_attestations": [
+                {
+                    "id": item.get("id"),
+                    "acceptance": item.get("acceptance"),
+                    "enables": item.get("enables") or [],
+                }
+                for item in local_attestation_request.get("requested_attestations") or []
+                if isinstance(item, dict)
+            ],
+            "current_gate_effect": local_attestation_request.get(
+                "current_gate_effect"
+            ) or {},
+            "claim_limit": short(local_attestation_request.get("claim_limit"), 320),
         }
     qra = evidence.get("qra_multimethod_comparison")
     if isinstance(qra, dict):
@@ -6611,6 +6716,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     local_station_discovery = response.get(
         "confidential_local_station_data_discovery"
     ) or {}
+    local_attestation_request = response.get(
+        "confidential_local_station_attestation_request"
+    ) or {}
     local_public_catalog = response.get("local_public_validation_catalog") or {}
     hytunnel_diagnostic = response.get(
         "public_hytunnel_failure_diagnostic"
@@ -7034,6 +7142,27 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 },
             } if local_station_discovery and local_discovery_relevant else {}),
             **({
+                "local_station_attestation_request": {
+                    "status": local_attestation_request.get("status"),
+                    "observed_archive": local_attestation_request.get(
+                        "observed_local_archive"
+                    ) or {},
+                    "requested_attestation_ids": [
+                        item.get("id")
+                        for item in local_attestation_request.get(
+                            "requested_attestations"
+                        ) or []
+                        if isinstance(item, dict) and item.get("id")
+                    ],
+                    "current_gate_effect": local_attestation_request.get(
+                        "current_gate_effect"
+                    ) or {},
+                    "claim_limit": short(
+                        local_attestation_request.get("claim_limit"), 220
+                    ),
+                },
+            } if local_attestation_request and local_discovery_relevant else {}),
+            **({
                 "local_public_validation_catalog": {
                     "collection_count": (
                         (local_public_catalog.get("scope") or {}).get(
@@ -7393,6 +7522,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     local_station_discovery = evidence.get(
         "confidential_local_station_data_discovery"
     ) or {}
+    local_attestation_request = evidence.get(
+        "confidential_local_station_attestation_request"
+    ) or {}
     local_public_catalog = evidence.get("local_public_validation_catalog") or {}
     multisource_feasibility = evidence.get(
         "confidential_multisource_mapping_feasibility"
@@ -7588,6 +7720,23 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "coverage_assessment"
             ) or {},
             "claim_limit": local_public_catalog.get("claim_limit"),
+        },
+        "confidential_local_station_attestation_request": {
+            "evidence_artifact": local_attestation_request.get("artifact"),
+            "status": local_attestation_request.get("status"),
+            "observed_local_archive": local_attestation_request.get(
+                "observed_local_archive"
+            ) or {},
+            "requested_attestations": local_attestation_request.get(
+                "requested_attestations"
+            ) or [],
+            "current_gate_effect": local_attestation_request.get(
+                "current_gate_effect"
+            ) or {},
+            "custodian_submission_contract": local_attestation_request.get(
+                "custodian_submission_contract"
+            ) or [],
+            "claim_limit": local_attestation_request.get("claim_limit"),
         },
         "public_hytunnel_failure_diagnostic": {
             "artifact": hytunnel_diagnostic.get("artifact"),
