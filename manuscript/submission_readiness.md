@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **102 PASS · 10 FAIL · 8 PENDING**.
+Gate counts: **103 PASS · 10 FAIL · 8 PENDING**.
 
 The HyTunnel-CS CC BY 4.0 actual-hydrogen archive now provides a completed
 raw-time-series holdout over 18 mechanically ventilated enclosure experiments
@@ -33,6 +33,15 @@ normalized RMSE, but two cases exceeded the 25% median percentage-error limit
 by about 1.2 percentage points. Both failed aggregate claims are retained and
 narrow the next work to spatial transport and independently split discharge-
 coefficient calibration.
+
+The same HyTunnel archive also supplied a model-frozen, raw-spatial-endpoint-
+preaccess holdout for the detector-ranking candidate. All 18 declared actual-
+hydrogen experiments were eligible. The candidate passed three of four frozen
+scientific screens: median Spearman correlation was 0.560, the fraction of
+cases with rho at least 0.4 was 0.833, and the nearest predicted sensor fell in
+the observed response quartile in 0.944 of cases. Mean top-five recall was
+0.578 against the frozen 0.600 threshold, so the joint result remains **FAIL**
+and runtime use remains disabled. The threshold and case set were not relaxed.
 
 A newly found CC BY 4.0 detector workbook was handled prospectively: the
 protocol and thresholds were committed before the numerical Excel file was

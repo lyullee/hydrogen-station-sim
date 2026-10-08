@@ -297,6 +297,18 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert sandia["top3_recall"] == 1.0
     assert sandia["independent_validation_pass"] is False
     assert sandia["runtime_candidate_enabled"] is False
+    hytunnel_spatial = h2safe_spatial["hytunnel_actual_hydrogen_holdout"]
+    assert hytunnel_spatial["audit_integrity"] is True
+    assert hytunnel_spatial["dataset_doi"] == "10.23642/USN.14405903"
+    assert hytunnel_spatial["experiment_count"] == 18
+    assert hytunnel_spatial["median_spearman"] > 0.55
+    assert hytunnel_spatial["spearman_at_least_0_4_fraction"] > 0.8
+    assert 0.57 < hytunnel_spatial["mean_top5_recall"] < 0.6
+    assert hytunnel_spatial["nearest_in_response_quartile_fraction"] > 0.94
+    assert hytunnel_spatial["screens"]["mean_top5_recall_at_least_0_6"] is False
+    assert hytunnel_spatial["joint_screen_pass"] is False
+    assert hytunnel_spatial["runtime_candidate_enabled"] is False
+    assert gates["hytunnel_spatial_holdout_execution_integrity"]["status"] == "PASS"
     assert gates["dataverse_hydrogen_explosion_component_inventory"]["status"] == "PASS"
     explosion_inventory = gates["dataverse_hydrogen_explosion_component_inventory"]["observed"]
     assert explosion_inventory["dois"] == [

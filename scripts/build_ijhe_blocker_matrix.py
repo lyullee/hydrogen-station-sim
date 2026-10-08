@@ -52,6 +52,9 @@ def build(root: Path) -> dict[str, Any]:
     h2safe_orientation_path = root / "research/h2safe_orientation_development_2026_10_08.json"
     hydelta_spatial_eligibility_path = root / "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json"
     sandia_spatial_path = root / "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json"
+    hytunnel_spatial_protocol_path = root / "research/hytunnel_spatial_holdout_protocol_2026_10_08.json"
+    hytunnel_spatial_amendment_path = root / "research/hytunnel_spatial_format_amendment_2026_10_08.json"
+    hytunnel_spatial_result_path = root / "research/hytunnel_spatial_holdout_result_2026_10_08.json"
     ignited_pressure_path = root / "research/usn_17934047_ignited_pressure_peaking_result_2026_10_08.json"
     qra_comparison_path = root / "research/qra_multimethod_comparison_2026_10_08.json"
     runtime_qra_path = root / "research/runtime_qra_envelope_comparison_2026_10_08.json"
@@ -72,6 +75,7 @@ def build(root: Path) -> dict[str, Any]:
     h2safe_orientation = load_json(h2safe_orientation_path)
     hydelta_spatial_eligibility = load_json(hydelta_spatial_eligibility_path)
     sandia_spatial = load_json(sandia_spatial_path)
+    hytunnel_spatial = load_json(hytunnel_spatial_result_path)
     ignited_pressure = load_json(ignited_pressure_path)
     qra_comparison = load_json(qra_comparison_path)
     runtime_qra = load_json(runtime_qra_path)
@@ -221,6 +225,10 @@ def build(root: Path) -> dict[str, Any]:
                     "research/h2safe_orientation_development_2026_10_08.json",
                     "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json",
                     "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json",
+                    "research/hytunnel_spatial_holdout_protocol_2026_10_08.json",
+                    "research/hytunnel_spatial_format_amendment_2026_10_08.json",
+                    "research/hytunnel_spatial_holdout_result_2026_10_08.json",
+                    "research/HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md",
                 ],
                 "experiment_count": h2safe_spatial["results"]["Y_as_elevation"]["aggregate"]["experiment_count"],
                 "median_spearman": h2safe_spatial["results"]["Y_as_elevation"]["aggregate"]["median_spearman"],
@@ -267,6 +275,33 @@ def build(root: Path) -> dict[str, Any]:
                         "independent_validation_pass"
                     ],
                     "runtime_candidate_enabled": sandia_spatial["decision"][
+                        "runtime_candidate_enabled"
+                    ],
+                },
+                "actual_hydrogen_independent_holdout": {
+                    "execution_integrity_gate": gate(
+                        "hytunnel_spatial_holdout_execution_integrity"
+                    )["status"],
+                    "experiment_count": hytunnel_spatial["evaluation"]["aggregate"][
+                        "experiment_count"
+                    ],
+                    "median_spearman": hytunnel_spatial["evaluation"]["aggregate"][
+                        "median_spearman"
+                    ],
+                    "spearman_at_least_0_4_fraction": hytunnel_spatial[
+                        "evaluation"
+                    ]["aggregate"]["spearman_at_least_0_4_fraction"],
+                    "mean_top5_recall": hytunnel_spatial["evaluation"]["aggregate"][
+                        "mean_top5_recall"
+                    ],
+                    "nearest_in_response_quartile_fraction": hytunnel_spatial[
+                        "evaluation"
+                    ]["aggregate"]["nearest_in_response_quartile_fraction"],
+                    "screens": hytunnel_spatial["evaluation"]["aggregate"]["screens"],
+                    "joint_screen_pass": hytunnel_spatial["evaluation"]["aggregate"][
+                        "joint_screen_pass"
+                    ],
+                    "runtime_candidate_enabled": hytunnel_spatial["decision"][
                         "runtime_candidate_enabled"
                     ],
                 },
@@ -396,7 +431,7 @@ def build(root: Path) -> dict[str, Any]:
             {
                 "id": "h2safe_spatial_detector_transfer",
                 "status": gate("h2safe_spatial_detector_transfer_validation")["status"],
-                "why_blocked": "The frozen coordinate-only rank law passed two of four H2SAFE spatial screens. Post-access actual-hydrogen evidence now includes a six-sensor Sandia diagnostic and 638 sensor-case observations from 22 USN/FFI channel tests. The latter supports layered ceiling plus jet-path coverage, but it was designed after outcome access and does not evaluate the frozen station rank law independently. The pre-access-frozen HyDelta candidate was ineligible before model execution because required numeric spatial fields are absent.",
+                "why_blocked": "The exact frozen orientation-class candidate was evaluated without parameter fitting on 18 HyTunnel actual-hydrogen experiments. It passed three of four scientific screens: median Spearman 0.560, fraction with rho >= 0.4 of 0.833, and nearest predicted sensor in the observed response quartile in 0.944 of cases. Mean top-five recall was 0.578, below the frozen 0.600 threshold, so the joint decision remains FAIL and runtime routing remains disabled.",
                 "evidence": [
                     "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
                     "research/H2SAFE_SPATIAL_RESPONSE_DIAGNOSTIC_2026_10_08.md",
@@ -410,9 +445,13 @@ def build(root: Path) -> dict[str, Any]:
                     "research/SANDIA_WAREHOUSE_SPATIAL_DIAGNOSTIC_2026_10_08.md",
                     "research/usn_channel_spatial_stratification_evidence_2026_10_08.json",
                     "research/USN_CHANNEL_SPATIAL_STRATIFICATION_EVIDENCE_2026_10_08.md",
+                    "research/hytunnel_spatial_holdout_protocol_2026_10_08.json",
+                    "research/hytunnel_spatial_format_amendment_2026_10_08.json",
+                    "research/hytunnel_spatial_holdout_result_2026_10_08.json",
+                    "research/HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md",
                 ],
-                "unblock_criterion": "Evaluate the now-frozen orientation-class candidate on an independent indoor release cohort and pass all spatial rank and recall screens without fitting detector amplitudes or hydrogen alarm thresholds on helium data.",
-                "next_action": "Request a HyDelta companion export containing experiment ID, source/sensor XYZ, release orientation and per-sensor numerical H2 responses, while screening another untouched actual-hydrogen indoor cohort under the unchanged candidate and thresholds.",
+                "unblock_criterion": "Develop a ventilation-, boundary- and near-field-aware candidate without fitting it to the HyTunnel validation outcomes, freeze its implementation and thresholds, and then pass every spatial screen on another untouched actual-hydrogen cohort.",
+                "next_action": "Add explicit HVAC-vector, downward-jet and obstruction features using development-only evidence, freeze the revised candidate, and reserve a separate actual-hydrogen spatial cohort for the next confirmatory execution.",
             },
             {
                 "id": "saga_human_effectiveness",
@@ -459,6 +498,9 @@ def build(root: Path) -> dict[str, Any]:
                 hydelta_spatial_eligibility_path
             ),
             "sandia_spatial_diagnostic_sha256": sha256(sandia_spatial_path),
+            "hytunnel_spatial_protocol_sha256": sha256(hytunnel_spatial_protocol_path),
+            "hytunnel_spatial_amendment_sha256": sha256(hytunnel_spatial_amendment_path),
+            "hytunnel_spatial_result_sha256": sha256(hytunnel_spatial_result_path),
             "reference_leak_detector_result_sha256": sha256(
                 reference_leak_detector_path
             ),

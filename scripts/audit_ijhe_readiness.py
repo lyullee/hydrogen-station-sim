@@ -2646,9 +2646,27 @@ def audit(root: Path) -> dict[str, object]:
     sandia_spatial_path = root / (
         "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json"
     )
+    hytunnel_spatial_protocol_path = root / (
+        "research/hytunnel_spatial_holdout_protocol_2026_10_08.json"
+    )
+    hytunnel_spatial_amendment_path = root / (
+        "research/hytunnel_spatial_format_amendment_2026_10_08.json"
+    )
+    hytunnel_spatial_initial_path = root / (
+        "research/hytunnel_spatial_holdout_initial_schema_failure_2026_10_08.json"
+    )
+    hytunnel_spatial_result_path = root / (
+        "research/hytunnel_spatial_holdout_result_2026_10_08.json"
+    )
+    hytunnel_spatial_report_path = root / (
+        "research/HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md"
+    )
     h2safe_spatial = _json(h2safe_spatial_path)
     hydelta_spatial_eligibility = _json(hydelta_spatial_eligibility_path)
     sandia_spatial = _json(sandia_spatial_path)
+    hytunnel_spatial_protocol = _json(hytunnel_spatial_protocol_path)
+    hytunnel_spatial_amendment = _json(hytunnel_spatial_amendment_path)
+    hytunnel_spatial_result = _json(hytunnel_spatial_result_path)
     h2safe_spatial_source = (h2safe_spatial or {}).get("source") or {}
     h2safe_spatial_method = (h2safe_spatial or {}).get("method") or {}
     h2safe_spatial_results = (
@@ -2673,9 +2691,66 @@ def audit(root: Path) -> dict[str, object]:
             (h2safe_spatial or {}).get("claim_boundary") or ""
         )
     )
+    hytunnel_spatial_source = (hytunnel_spatial_result or {}).get("source") or {}
+    hytunnel_spatial_evaluation = (
+        (hytunnel_spatial_result or {}).get("evaluation") or {}
+    )
+    hytunnel_spatial_aggregate = hytunnel_spatial_evaluation.get("aggregate") or {}
+    hytunnel_spatial_decision = (
+        (hytunnel_spatial_result or {}).get("decision") or {}
+    )
+    hytunnel_spatial_integrity = bool(
+        (hytunnel_spatial_protocol or {}).get("status")
+        == "FROZEN_BEFORE_HYTUNNEL_SPATIAL_OUTCOME_ACCESS"
+        and (hytunnel_spatial_protocol or {}).get("prior_access", {}).get(
+            "per_sensor_spatial_responses_computed"
+        ) is False
+        and (hytunnel_spatial_protocol or {}).get("prior_access", {}).get(
+            "model_frozen_before_hytunnel_raw_access"
+        ) is True
+        and (hytunnel_spatial_protocol or {}).get("model_lock", {}).get(
+            "implementation_sha256"
+        ) == _sha256(root / "src/h2station/spatial_detector.py")
+        and (hytunnel_spatial_protocol or {}).get("model_lock", {}).get(
+            "parameter_fitting"
+        ) == "prohibited"
+        and (hytunnel_spatial_amendment or {}).get("status")
+        == "POST_ACCESS_FORMAT_ONLY_REPAIR_BEFORE_FULL_RECOMPUTE"
+        and all(
+            value is True for value in (
+                (hytunnel_spatial_amendment or {}).get(
+                    "scientific_rules_unchanged", {}
+                )
+            ).values()
+        )
+        and (hytunnel_spatial_amendment or {}).get("trigger", {}).get(
+            "partial_spatial_outcomes_computed_before_repair"
+        ) is True
+        and (hytunnel_spatial_amendment or {}).get("trigger", {}).get(
+            "initial_result", {}
+        ).get("sha256") == _sha256(hytunnel_spatial_initial_path)
+        and (hytunnel_spatial_result or {}).get("artifact_type")
+        == "hytunnel_actual_hydrogen_spatial_rank_holdout"
+        and hytunnel_spatial_source.get("dataset_doi")
+        == "10.23642/USN.14405903"
+        and hytunnel_spatial_source.get("test_gas") == "hydrogen"
+        and hytunnel_spatial_source.get("license") == "CC BY 4.0"
+        and hytunnel_spatial_source.get("raw_files_committed") is False
+        and len(hytunnel_spatial_source.get("files") or []) == 18
+        and (hytunnel_spatial_result or {}).get("protocol_sha256")
+        == _sha256(hytunnel_spatial_protocol_path)
+        and len(hytunnel_spatial_evaluation.get("cases") or []) == 18
+        and not (hytunnel_spatial_evaluation.get("failures") or [])
+        and hytunnel_spatial_aggregate.get("experiment_count") == 18
+        and len(hytunnel_spatial_aggregate.get("screens") or {}) == 5
+        and hytunnel_spatial_decision.get("independent_spatial_validation_pass")
+        == hytunnel_spatial_aggregate.get("joint_screen_pass")
+        and hytunnel_spatial_decision.get("runtime_candidate_enabled") is False
+        and hytunnel_spatial_report_path.is_file()
+    )
     h2safe_spatial_pass = bool(
-        h2safe_spatial_integrity
-        and h2safe_spatial_aggregate.get("joint_pass") is True
+        hytunnel_spatial_integrity
+        and hytunnel_spatial_aggregate.get("joint_screen_pass") is True
     )
     hydelta_spatial_decision = (
         (hydelta_spatial_eligibility or {}).get("decision") or {}
@@ -2723,15 +2798,20 @@ def audit(root: Path) -> dict[str, object]:
     gates.append(_gate(
         "h2safe_spatial_detector_transfer_validation",
         "PASS" if h2safe_spatial_pass else (
-            "FAIL" if h2safe_spatial_integrity else "PENDING"
+            "FAIL" if (hytunnel_spatial_integrity or h2safe_spatial_integrity)
+            else "PENDING"
         ),
-        "The runtime detector-placement ranking must pass all frozen H2SAFE spatial-transfer screens before it is described as validated.",
+        "The exact frozen orientation-class detector ranking must pass every screen on an independent actual-hydrogen spatial holdout before runtime use.",
         "; ".join((
             str(h2safe_spatial_path.relative_to(root)),
             str(hydelta_spatial_eligibility_path.relative_to(root)),
             str(sandia_spatial_path.relative_to(root)),
+            str(hytunnel_spatial_protocol_path.relative_to(root)),
+            str(hytunnel_spatial_amendment_path.relative_to(root)),
+            str(hytunnel_spatial_result_path.relative_to(root)),
+            str(hytunnel_spatial_report_path.relative_to(root)),
         )),
-        "Five full-scale helium-surrogate tests, four joint rank/recall screens, explicit post-access status, and a pre-access-frozen actual-hydrogen candidate eligibility audit with no figure-digitisation rescue.",
+        "Exact frozen model hash, 18 complete actual-hydrogen cases, unchanged rank/recall screens, retained format amendment and no runtime activation unless every screen passes.",
         {
             "doi": h2safe_spatial_source.get("doi"),
             "method_status": h2safe_spatial_method.get("status"),
@@ -2779,8 +2859,63 @@ def audit(root: Path) -> dict[str, object]:
                     "runtime_candidate_enabled"
                 ),
             },
+            "hytunnel_actual_hydrogen_holdout": {
+                "audit_integrity": hytunnel_spatial_integrity,
+                "dataset_doi": hytunnel_spatial_source.get("dataset_doi"),
+                "experiment_count": hytunnel_spatial_aggregate.get(
+                    "experiment_count"
+                ),
+                "median_spearman": hytunnel_spatial_aggregate.get(
+                    "median_spearman"
+                ),
+                "spearman_at_least_0_4_fraction": hytunnel_spatial_aggregate.get(
+                    "spearman_at_least_0_4_fraction"
+                ),
+                "mean_top5_recall": hytunnel_spatial_aggregate.get(
+                    "mean_top5_recall"
+                ),
+                "nearest_in_response_quartile_fraction": (
+                    hytunnel_spatial_aggregate.get(
+                        "nearest_in_response_quartile_fraction"
+                    )
+                ),
+                "screens": hytunnel_spatial_aggregate.get("screens"),
+                "joint_screen_pass": hytunnel_spatial_aggregate.get(
+                    "joint_screen_pass"
+                ),
+                "runtime_candidate_enabled": hytunnel_spatial_decision.get(
+                    "runtime_candidate_enabled"
+                ),
+            },
             "claim_boundary": (h2safe_spatial or {}).get("claim_boundary"),
         } if h2safe_spatial else "missing; H2SAFE spatial diagnostic has not run",
+    ))
+    gates.append(_gate(
+        "hytunnel_spatial_holdout_execution_integrity",
+        "PASS" if hytunnel_spatial_integrity else "PENDING",
+        "The HyTunnel actual-hydrogen spatial holdout preserves the frozen candidate, all 18 cases, its post-access format repair and the failed joint result.",
+        "; ".join((
+            str(hytunnel_spatial_protocol_path.relative_to(root)),
+            str(hytunnel_spatial_amendment_path.relative_to(root)),
+            str(hytunnel_spatial_initial_path.relative_to(root)),
+            str(hytunnel_spatial_result_path.relative_to(root)),
+            str(hytunnel_spatial_report_path.relative_to(root)),
+        )),
+        "Frozen model hash and endpoints, 18/18 eligible actual-H2 cases, zero final failures, disclosed missing-position repair, raw files excluded and runtime candidate left disabled.",
+        {
+            "dataset_doi": hytunnel_spatial_source.get("dataset_doi"),
+            "experiment_count": hytunnel_spatial_aggregate.get("experiment_count"),
+            "screens": hytunnel_spatial_aggregate.get("screens"),
+            "joint_screen_pass": hytunnel_spatial_aggregate.get(
+                "joint_screen_pass"
+            ),
+            "runtime_candidate_enabled": hytunnel_spatial_decision.get(
+                "runtime_candidate_enabled"
+            ),
+            "claim_boundary": (hytunnel_spatial_result or {}).get(
+                "claim_boundary"
+            ),
+        } if hytunnel_spatial_result else "missing",
     ))
 
     blend_protocol_path = root / (

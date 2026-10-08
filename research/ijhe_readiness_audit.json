@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T06:53:38.017867+00:00",
+  "generated_at": "2026-10-08T07:03:47.766013+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 102,
+    "PASS": 103,
     "FAIL": 10,
     "PENDING": 8
   },
@@ -1957,9 +1957,9 @@
     {
       "id": "h2safe_spatial_detector_transfer_validation",
       "status": "FAIL",
-      "claim": "The runtime detector-placement ranking must pass all frozen H2SAFE spatial-transfer screens before it is described as validated.",
-      "evidence": "research\\h2safe_spatial_response_diagnostic_2026_10_08.json; research\\hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json; research\\sandia_warehouse_spatial_diagnostic_2026_10_08.json",
-      "requirement": "Five full-scale helium-surrogate tests, four joint rank/recall screens, explicit post-access status, and a pre-access-frozen actual-hydrogen candidate eligibility audit with no figure-digitisation rescue.",
+      "claim": "The exact frozen orientation-class detector ranking must pass every screen on an independent actual-hydrogen spatial holdout before runtime use.",
+      "evidence": "research\\h2safe_spatial_response_diagnostic_2026_10_08.json; research\\hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json; research\\sandia_warehouse_spatial_diagnostic_2026_10_08.json; research\\hytunnel_spatial_holdout_protocol_2026_10_08.json; research\\hytunnel_spatial_format_amendment_2026_10_08.json; research\\hytunnel_spatial_holdout_result_2026_10_08.json; research\\HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md",
+      "requirement": "Exact frozen model hash, 18 complete actual-hydrogen cases, unchanged rank/recall screens, retained format amendment and no runtime activation unless every screen passes.",
       "observed": {
         "doi": "10.7799/17118570",
         "method_status": "POST_ACCESS_DEVELOPMENT_DIAGNOSTIC_NOT_VALIDATION",
@@ -1999,7 +1999,46 @@
           "independent_validation_pass": false,
           "runtime_candidate_enabled": false
         },
+        "hytunnel_actual_hydrogen_holdout": {
+          "audit_integrity": true,
+          "dataset_doi": "10.23642/USN.14405903",
+          "experiment_count": 18,
+          "median_spearman": 0.5600876703795867,
+          "spearman_at_least_0_4_fraction": 0.8333333333333334,
+          "mean_top5_recall": 0.5777777777777777,
+          "nearest_in_response_quartile_fraction": 0.9444444444444444,
+          "screens": {
+            "all_18_declared_cases_eligible": true,
+            "median_spearman_at_least_0_5": true,
+            "spearman_at_least_0_4_fraction_at_least_0_6": true,
+            "mean_top5_recall_at_least_0_6": false,
+            "nearest_in_response_quartile_fraction_at_least_0_7": true
+          },
+          "joint_screen_pass": false,
+          "runtime_candidate_enabled": false
+        },
         "claim_boundary": "This post-access diagnostic supports only a development choice to replace arbitrary near/far detector assignment with a transparent coordinate ranking. It failed the joint spatial screen and is not independent validation."
+      }
+    },
+    {
+      "id": "hytunnel_spatial_holdout_execution_integrity",
+      "status": "PASS",
+      "claim": "The HyTunnel actual-hydrogen spatial holdout preserves the frozen candidate, all 18 cases, its post-access format repair and the failed joint result.",
+      "evidence": "research\\hytunnel_spatial_holdout_protocol_2026_10_08.json; research\\hytunnel_spatial_format_amendment_2026_10_08.json; research\\hytunnel_spatial_holdout_initial_schema_failure_2026_10_08.json; research\\hytunnel_spatial_holdout_result_2026_10_08.json; research\\HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md",
+      "requirement": "Frozen model hash and endpoints, 18/18 eligible actual-H2 cases, zero final failures, disclosed missing-position repair, raw files excluded and runtime candidate left disabled.",
+      "observed": {
+        "dataset_doi": "10.23642/USN.14405903",
+        "experiment_count": 18,
+        "screens": {
+          "all_18_declared_cases_eligible": true,
+          "median_spearman_at_least_0_5": true,
+          "spearman_at_least_0_4_fraction_at_least_0_6": true,
+          "mean_top5_recall_at_least_0_6": false,
+          "nearest_in_response_quartile_fraction_at_least_0_7": true
+        },
+        "joint_screen_pass": false,
+        "runtime_candidate_enabled": false,
+        "claim_boundary": "This holdout tests only spatial rank transfer of the already frozen orientation-class candidate in one mechanically ventilated enclosure with a vertically downward source. It does not validate concentration amplitude, alarm thresholds, outdoor station placement, CFD, ESD, consequence distance or a complete station-to-vehicle loop."
       }
     },
     {

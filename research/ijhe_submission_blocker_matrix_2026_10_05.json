@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T06:53:38.121496+00:00",
+  "generated_at": "2026-10-08T07:03:48.197391+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -16,7 +16,7 @@
     "interpretation": "A bounded manuscript may be drafted around model-level and qualitative evidence, but the validated full-station digital-twin objective cannot be declared complete."
   },
   "gate_counts": {
-    "PASS": 102,
+    "PASS": 103,
     "FAIL": 10,
     "PENDING": 8
   },
@@ -124,7 +124,11 @@
         "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
         "research/h2safe_orientation_development_2026_10_08.json",
         "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json",
-        "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json"
+        "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json",
+        "research/hytunnel_spatial_holdout_protocol_2026_10_08.json",
+        "research/hytunnel_spatial_format_amendment_2026_10_08.json",
+        "research/hytunnel_spatial_holdout_result_2026_10_08.json",
+        "research/HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md"
       ],
       "experiment_count": 5,
       "median_spearman": 0.5817391304347826,
@@ -153,6 +157,23 @@
         "candidate_spearman_rho": 0.942857142857143,
         "top3_recall": 1.0,
         "independent_validation_pass": false,
+        "runtime_candidate_enabled": false
+      },
+      "actual_hydrogen_independent_holdout": {
+        "execution_integrity_gate": "PASS",
+        "experiment_count": 18,
+        "median_spearman": 0.5600876703795867,
+        "spearman_at_least_0_4_fraction": 0.8333333333333334,
+        "mean_top5_recall": 0.5777777777777777,
+        "nearest_in_response_quartile_fraction": 0.9444444444444444,
+        "screens": {
+          "all_18_declared_cases_eligible": true,
+          "median_spearman_at_least_0_5": true,
+          "spearman_at_least_0_4_fraction_at_least_0_6": true,
+          "mean_top5_recall_at_least_0_6": false,
+          "nearest_in_response_quartile_fraction_at_least_0_7": true
+        },
+        "joint_screen_pass": false,
         "runtime_candidate_enabled": false
       },
       "claim_boundary": "This post-access diagnostic supports only a development choice to replace arbitrary near/far detector assignment with a transparent coordinate ranking. It failed the joint spatial screen and is not independent validation."
@@ -280,7 +301,7 @@
     {
       "id": "h2safe_spatial_detector_transfer",
       "status": "FAIL",
-      "why_blocked": "The frozen coordinate-only rank law passed two of four H2SAFE spatial screens. Post-access actual-hydrogen evidence now includes a six-sensor Sandia diagnostic and 638 sensor-case observations from 22 USN/FFI channel tests. The latter supports layered ceiling plus jet-path coverage, but it was designed after outcome access and does not evaluate the frozen station rank law independently. The pre-access-frozen HyDelta candidate was ineligible before model execution because required numeric spatial fields are absent.",
+      "why_blocked": "The exact frozen orientation-class candidate was evaluated without parameter fitting on 18 HyTunnel actual-hydrogen experiments. It passed three of four scientific screens: median Spearman 0.560, fraction with rho >= 0.4 of 0.833, and nearest predicted sensor in the observed response quartile in 0.944 of cases. Mean top-five recall was 0.578, below the frozen 0.600 threshold, so the joint decision remains FAIL and runtime routing remains disabled.",
       "evidence": [
         "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
         "research/H2SAFE_SPATIAL_RESPONSE_DIAGNOSTIC_2026_10_08.md",
@@ -293,10 +314,14 @@
         "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json",
         "research/SANDIA_WAREHOUSE_SPATIAL_DIAGNOSTIC_2026_10_08.md",
         "research/usn_channel_spatial_stratification_evidence_2026_10_08.json",
-        "research/USN_CHANNEL_SPATIAL_STRATIFICATION_EVIDENCE_2026_10_08.md"
+        "research/USN_CHANNEL_SPATIAL_STRATIFICATION_EVIDENCE_2026_10_08.md",
+        "research/hytunnel_spatial_holdout_protocol_2026_10_08.json",
+        "research/hytunnel_spatial_format_amendment_2026_10_08.json",
+        "research/hytunnel_spatial_holdout_result_2026_10_08.json",
+        "research/HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md"
       ],
-      "unblock_criterion": "Evaluate the now-frozen orientation-class candidate on an independent indoor release cohort and pass all spatial rank and recall screens without fitting detector amplitudes or hydrogen alarm thresholds on helium data.",
-      "next_action": "Request a HyDelta companion export containing experiment ID, source/sensor XYZ, release orientation and per-sensor numerical H2 responses, while screening another untouched actual-hydrogen indoor cohort under the unchanged candidate and thresholds."
+      "unblock_criterion": "Develop a ventilation-, boundary- and near-field-aware candidate without fitting it to the HyTunnel validation outcomes, freeze its implementation and thresholds, and then pass every spatial screen on another untouched actual-hydrogen cohort.",
+      "next_action": "Add explicit HVAC-vector, downward-jet and obstruction features using development-only evidence, freeze the revised candidate, and reserve a separate actual-hydrogen spatial cohort for the next confirmatory execution."
     },
     {
       "id": "saga_human_effectiveness",
@@ -323,7 +348,7 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "cfeeb2276b47d7c0a826eb936f593c7609f8312dcf4a192a40e4a5ae882abf50",
+    "audit_sha256": "33b4f9de1ec6f67daceddf5f0961b05bd4d0e70d304797b9c26c5b0730260ff6",
     "hiad_readiness_sha256": "5c2e99a8371e3dd6fc97847f956d065f7d0c62bed48270a6bdb15021725d4310",
     "acquisition_tracker_sha256": "f141806ae0cce8ec9a0797e2ca6f7102b299eaedc33317693922abd763a3e399",
     "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",
@@ -340,6 +365,9 @@
     "h2safe_spatial_diagnostic_sha256": "1a918fcd5c8d0b2556bef9d19f8ebeb9a590f2bc8323639d3c3ea5def5b979e3",
     "hydelta_spatial_eligibility_sha256": "7edb4605c427918947ee9914cf7e9ecece412656479f59b62dbdb24103083813",
     "sandia_spatial_diagnostic_sha256": "12cecd95e218fa9a76040d295f2e2a1af8e8f7a13e30d5bd22e61b96335e87e5",
+    "hytunnel_spatial_protocol_sha256": "5f7d80f2698da7bf7f4fccbf230fb4f465cdd01db6336a8377470764f29549ea",
+    "hytunnel_spatial_amendment_sha256": "6723cb93b188b7033a587901ab2833463c5a9af391f2faf5f9579124d5c65dc6",
+    "hytunnel_spatial_result_sha256": "c9217b45976287f8bdd034d2afe5d46dbe8c15187f955b085e3f3b3153e68fad",
     "reference_leak_detector_result_sha256": "1b03b114e73a7d4070920ae6e59d4edad854459dd74834998a35cb64893f2b2f",
     "usn_spatial_stratification_sha256": "92a6f11d1ec8c0a8cff16cd1865249beb1b2475aec5edeb7d2b0d7d27c9b5803",
     "ignited_pressure_peaking_sha256": "53dbb83055c0eaa50d7f9ff2af351302b325ffb46e38b0290a4583eae4356174",

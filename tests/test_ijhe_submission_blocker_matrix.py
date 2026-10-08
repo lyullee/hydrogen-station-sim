@@ -60,6 +60,19 @@ def test_current_blocker_matrix_tracks_the_readiness_audit():
     assert sandia["independent_validation_pass"] is False
     assert sandia["runtime_candidate_enabled"] is False
     assert len(matrix["reproducibility"]["sandia_spatial_diagnostic_sha256"]) == 64
+    hytunnel = transfer["actual_hydrogen_independent_holdout"]
+    assert hytunnel["execution_integrity_gate"] == "PASS"
+    assert hytunnel["experiment_count"] == 18
+    assert hytunnel["median_spearman"] > 0.56
+    assert hytunnel["spearman_at_least_0_4_fraction"] > 0.83
+    assert 0.57 < hytunnel["mean_top5_recall"] < 0.6
+    assert hytunnel["nearest_in_response_quartile_fraction"] > 0.94
+    assert hytunnel["screens"]["mean_top5_recall_at_least_0_6"] is False
+    assert hytunnel["joint_screen_pass"] is False
+    assert hytunnel["runtime_candidate_enabled"] is False
+    assert len(matrix["reproducibility"]["hytunnel_spatial_protocol_sha256"]) == 64
+    assert len(matrix["reproducibility"]["hytunnel_spatial_amendment_sha256"]) == 64
+    assert len(matrix["reproducibility"]["hytunnel_spatial_result_sha256"]) == 64
     ids = {item["id"] for item in matrix["blocking_matrix"]}
     assert {
         "tank_thermal_transfer_validation",
