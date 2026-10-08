@@ -199,6 +199,35 @@ recorded in
 development evidence and must not be described as an external holdout or as a
 validated production geometry.
 
+### Optional mixed-convection tank diagnostic
+
+The same runner can execute the opt-in inlet-jet mixed-convection model. The
+public case files do not disclose the physical vessel pack or receptacle-nozzle
+geometry, so both an equivalent capsule aspect ratio and a nozzle diameter must
+be declared explicitly:
+
+```powershell
+$env:PYTHONPATH='src'
+.venv\Scripts\python.exe scripts\run_h2protocol_validation.py `
+  --geometry-basis capacity_eos `
+  --flow-calibration-json data\public_validation\results\closed_loop_flow_calibration\calibration.json `
+  --thermal-calibration-json data\public_validation\results\closed_loop_thermal_calibration_v2\calibration.json `
+  --vehicle-tank-thermal-model mixed_convection `
+  --vehicle-equivalent-capsule-aspect-ratio 5 `
+  --vehicle-inlet-nozzle-diameter-mm 3 `
+  --lab-test-numbers 3,9,12,15,18,21,24,27,30,33,36 `
+  --output data\public_validation\results\closed_loop_internal_mixed_convection_diagnostic `
+  --jobs 4
+```
+
+The declared 3 mm/5:1 diagnostic reduced aggregate pressure, temperature and
+SOC RMSE from 4.530 MPa, 7.819 °C and 4.625 percentage points to 4.311 MPa,
+7.156 °C and 4.380 percentage points. The joint screen remained 2/11. The
+result therefore identifies a modest model-form improvement but does not justify
+changing the production default. It is post-outcome development evidence, not
+an external holdout or a reconstruction of the undisclosed physical vessel
+pack. See `research/CLOSED_LOOP_MIXED_CONVECTION_DIAGNOSTIC_2026_10_08.md`.
+
 The tank model was refitted after this correction. Its global effective-volume
 and gas-to-liner-UA multipliers are 1.052729 and 31.460657. The 12 frozen
 measured-boundary validation fills have mean pressure, temperature and SOC RMSE

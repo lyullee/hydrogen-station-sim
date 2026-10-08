@@ -219,3 +219,31 @@ Verification:
 - Dual-valve physics, conservation, evaluator, protocol integrity and IJHE audit
   regression tests passed (25 tests in the focused readiness run).
 - The readiness audit remains 106 PASS, 10 FAIL and 8 PENDING out of 124 gates.
+
+## 2026-10-08 - Closed-loop mixed-convection execution path
+
+Status: implemented as a claim-bounded, post-outcome development diagnostic;
+the production default and frozen external results are unchanged.
+
+Completed:
+
+- Added explicit validation-runner options for the mixed-convection tank model,
+  declared inlet-nozzle diameter and a volume-preserving equivalent capsule.
+- Refused missing, nonphysical or constant-UA geometry combinations before any
+  experimental files are evaluated.
+- Re-ran the 11 already-inspected comparison fills with a single declared 3 mm
+  nozzle and 5:1 capsule aspect ratio without result-dependent parameter
+  selection.
+- Reduced aggregate mean pressure, temperature and SOC RMSE from 4.530 MPa,
+  7.819 °C and 4.625 percentage points to 4.311 MPa, 7.156 °C and 4.380
+  percentage points.
+- Retained the constant-UA production default because the strict joint-screen
+  result remained 2/11; controller and boundary-model error remains material.
+- Stored the complete per-case output and a compact claim-boundary record so the
+  expensive run does not need to be repeated during routine regression tests.
+
+Verification:
+
+- Mixed-convection geometry, CLI guard and claim-boundary focused tests passed.
+- The complete repository regression suite passed: 1,002 tests, 18 dependency
+  warnings, no failures.

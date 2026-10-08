@@ -1,0 +1,1736 @@
+{
+  "schema_version": 2,
+  "generated_at": "2026-10-08T09:16:18.732548+00:00",
+  "source_commit": "ffebf256fa2316d5f691cca00c005279b25706ff",
+  "source_worktree_dirty": true,
+  "protocol_source": "Powertech Labs SAE J2601 Tables Method validation data",
+  "screening_limits": {
+    "pressure_rmse_mpa": 5.0,
+    "temperature_rmse_c": 10.0,
+    "soc_final_abs_error_percentage_points": 5.0
+  },
+  "tank_fit_source": null,
+  "tank_fit": null,
+  "dispenser_flow_area_multiplier": 2.0,
+  "flow_calibration_source": "data\\public_validation\\results\\closed_loop_flow_calibration\\calibration.json",
+  "precooler_duty_multiplier": 16.0,
+  "geometry_basis": "capacity_eos",
+  "vehicle_tank_thermal_model": "mixed_convection",
+  "vehicle_equivalent_capsule_aspect_ratio": 5.0,
+  "vehicle_inlet_nozzle_diameter_m": 0.003,
+  "thermal_calibration_source": "data\\public_validation\\results\\closed_loop_thermal_calibration_v2\\calibration.json",
+  "selected_lab_test_numbers": [
+    3,
+    9,
+    12,
+    15,
+    18,
+    21,
+    24,
+    27,
+    30,
+    33,
+    36
+  ],
+  "aggregate": {
+    "case_count": 11,
+    "screening_pass_count": 2,
+    "screening_pass_fraction": 0.18181818181818182,
+    "final_stop_reason_counts": {
+      "none": 8,
+      "gas-temperature-limit": 1,
+      "vehicle-target": 2
+    },
+    "metrics": {
+      "pressure_rmse_mpa": {
+        "mean": 4.310972182534457,
+        "median": 4.547995302350304,
+        "standard_deviation": 2.082138244416053,
+        "mean_bootstrap_95_ci": [
+          3.232523914343212,
+          5.574328111125372
+        ]
+      },
+      "pressure_mae_mpa": {
+        "mean": 3.1306652879132186,
+        "median": 3.0288171547580984,
+        "standard_deviation": 1.5608969285575427,
+        "mean_bootstrap_95_ci": [
+          2.3488538616364694,
+          4.0805725191220175
+        ]
+      },
+      "temperature_rmse_c": {
+        "mean": 7.156124878915967,
+        "median": 6.748443190049918,
+        "standard_deviation": 3.4458587956978395,
+        "mean_bootstrap_95_ci": [
+          5.419370548858929,
+          9.293008096450636
+        ]
+      },
+      "temperature_mae_c": {
+        "mean": 6.163476280022677,
+        "median": 5.7567531495182696,
+        "standard_deviation": 3.136371032790045,
+        "mean_bootstrap_95_ci": [
+          4.5731228843617595,
+          8.117649953253139
+        ]
+      },
+      "soc_rmse_percentage_points": {
+        "mean": 4.380386163853669,
+        "median": 4.215914110859259,
+        "standard_deviation": 2.0500057431241383,
+        "mean_bootstrap_95_ci": [
+          3.2838265470685895,
+          5.579428918117497
+        ]
+      }
+    }
+  },
+  "strata": {
+    "tank_capacity_kg": {
+      "4.6": {
+        "case_count": 1,
+        "screening_pass_count": 0,
+        "screening_pass_fraction": 0.0,
+        "final_stop_reason_counts": {
+          "none": 1
+        },
+        "metrics": {
+          "pressure_rmse_mpa": {
+            "mean": 2.718894157398388,
+            "median": 2.718894157398388,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              2.718894157398388,
+              2.718894157398388
+            ]
+          },
+          "pressure_mae_mpa": {
+            "mean": 2.0764928163901444,
+            "median": 2.0764928163901444,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              2.0764928163901444,
+              2.0764928163901444
+            ]
+          },
+          "temperature_rmse_c": {
+            "mean": 14.3531659280365,
+            "median": 14.3531659280365,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              14.3531659280365,
+              14.3531659280365
+            ]
+          },
+          "temperature_mae_c": {
+            "mean": 12.856857310204044,
+            "median": 12.856857310204044,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              12.856857310204044,
+              12.856857310204044
+            ]
+          },
+          "soc_rmse_percentage_points": {
+            "mean": 1.5085265402177916,
+            "median": 1.5085265402177916,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              1.5085265402177916,
+              1.5085265402177916
+            ]
+          }
+        }
+      },
+      "4.7": {
+        "case_count": 7,
+        "screening_pass_count": 1,
+        "screening_pass_fraction": 0.14285714285714285,
+        "final_stop_reason_counts": {
+          "none": 5,
+          "gas-temperature-limit": 1,
+          "vehicle-target": 1
+        },
+        "metrics": {
+          "pressure_rmse_mpa": {
+            "mean": 4.7341081440332555,
+            "median": 4.755764772146825,
+            "standard_deviation": 2.213934382240862,
+            "mean_bootstrap_95_ci": [
+              3.4814080556373503,
+              6.445966834959621
+            ]
+          },
+          "pressure_mae_mpa": {
+            "mean": 3.5344784994560112,
+            "median": 3.0715182086447537,
+            "standard_deviation": 1.6806206456516823,
+            "mean_bootstrap_95_ci": [
+              2.5562311989376414,
+              4.801214957696758
+            ]
+          },
+          "temperature_rmse_c": {
+            "mean": 6.935989916717121,
+            "median": 6.964724118521588,
+            "standard_deviation": 3.0485834921245734,
+            "mean_bootstrap_95_ci": [
+              4.98606755830569,
+              9.107193658206942
+            ]
+          },
+          "temperature_mae_c": {
+            "mean": 5.961945045743697,
+            "median": 5.896242761667097,
+            "standard_deviation": 2.6998417092934486,
+            "mean_bootstrap_95_ci": [
+              4.235989419256248,
+              7.896742603773542
+            ]
+          },
+          "soc_rmse_percentage_points": {
+            "mean": 4.904441735924597,
+            "median": 4.215914110859259,
+            "standard_deviation": 2.1202536290983733,
+            "mean_bootstrap_95_ci": [
+              3.5436282957432796,
+              6.419926846994968
+            ]
+          }
+        }
+      },
+      "5.9": {
+        "case_count": 1,
+        "screening_pass_count": 1,
+        "screening_pass_fraction": 1.0,
+        "final_stop_reason_counts": {
+          "vehicle-target": 1
+        },
+        "metrics": {
+          "pressure_rmse_mpa": {
+            "mean": 1.4088688910829823,
+            "median": 1.4088688910829823,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              1.4088688910829823,
+              1.4088688910829823
+            ]
+          },
+          "pressure_mae_mpa": {
+            "mean": 0.9244907344844819,
+            "median": 0.9244907344844819,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              0.9244907344844819,
+              0.9244907344844819
+            ]
+          },
+          "temperature_rmse_c": {
+            "mean": 5.469238559089234,
+            "median": 5.469238559089234,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              5.469238559089234,
+              5.469238559089234
+            ]
+          },
+          "temperature_mae_c": {
+            "mean": 4.51566387122522,
+            "median": 4.51566387122522,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              4.51566387122522,
+              4.51566387122522
+            ]
+          },
+          "soc_rmse_percentage_points": {
+            "mean": 2.4343963888647857,
+            "median": 2.4343963888647857,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              2.4343963888647857,
+              2.4343963888647857
+            ]
+          }
+        }
+      },
+      "9.8": {
+        "case_count": 2,
+        "screening_pass_count": 0,
+        "screening_pass_fraction": 0.0,
+        "final_stop_reason_counts": {
+          "none": 2
+        },
+        "metrics": {
+          "pressure_rmse_mpa": {
+            "mean": 5.077086975582436,
+            "median": 5.077086975582436,
+            "standard_deviation": 0.7482486200235544,
+            "mean_bootstrap_95_ci": [
+              4.547995302350304,
+              5.606178648814567
+            ]
+          },
+          "pressure_mae_mpa": {
+            "mean": 3.34749255998935,
+            "median": 3.34749255998935,
+            "standard_deviation": 0.4506750800727781,
+            "mean_bootstrap_95_ci": [
+              3.0288171547580984,
+              3.666167965220602
+            ]
+          },
+          "temperature_rmse_c": {
+            "mean": 5.171519881965027,
+            "median": 5.171519881965027,
+            "standard_deviation": 0.34168030450853937,
+            "mean_bootstrap_95_ci": [
+              4.929915421649155,
+              5.4131243422809
+            ]
+          },
+          "temperature_mae_c": {
+            "mean": 4.346051289307148,
+            "median": 4.346051289307148,
+            "standard_deviation": 0.47576739015838126,
+            "mean_bootstrap_95_ci": [
+              4.00963294145873,
+              4.682469637155565
+            ]
+          },
+          "soc_rmse_percentage_points": {
+            "mean": 4.9551163609178035,
+            "median": 4.9551163609178035,
+            "standard_deviation": 0.659438821115649,
+            "mean_bootstrap_95_ci": [
+              4.488822698729265,
+              5.421410023106342
+            ]
+          }
+        }
+      }
+    },
+    "chamber_temperature_c": {
+      "0.0": {
+        "case_count": 2,
+        "screening_pass_count": 1,
+        "screening_pass_fraction": 0.5,
+        "final_stop_reason_counts": {
+          "none": 2
+        },
+        "metrics": {
+          "pressure_rmse_mpa": {
+            "mean": 3.9198651693953925,
+            "median": 3.9198651693953925,
+            "standard_deviation": 1.1821405549933577,
+            "mean_bootstrap_95_ci": [
+              3.0839655666439607,
+              4.755764772146825
+            ]
+          },
+          "pressure_mae_mpa": {
+            "mean": 2.9244848645502213,
+            "median": 2.9244848645502213,
+            "standard_deviation": 0.5413573449266654,
+            "mean_bootstrap_95_ci": [
+              2.5416874149074316,
+              3.3072823141930114
+            ]
+          },
+          "temperature_rmse_c": {
+            "mean": 3.5981371882780153,
+            "median": 3.5981371882780153,
+            "standard_deviation": 1.03571746747014,
+            "mean_bootstrap_95_ci": [
+              2.865774343636522,
+              4.330500032919509
+            ]
+          },
+          "temperature_mae_c": {
+            "mean": 3.023868178630784,
+            "median": 3.023868178630784,
+            "standard_deviation": 0.896898283189439,
+            "mean_bootstrap_95_ci": [
+              2.389665320552959,
+              3.6580710367086087
+            ]
+          },
+          "soc_rmse_percentage_points": {
+            "mean": 3.8052022047654477,
+            "median": 3.8052022047654477,
+            "standard_deviation": 0.5808343478259733,
+            "mean_bootstrap_95_ci": [
+              3.394490298671636,
+              4.215914110859259
+            ]
+          }
+        }
+      },
+      "20.0": {
+        "case_count": 5,
+        "screening_pass_count": 0,
+        "screening_pass_fraction": 0.0,
+        "final_stop_reason_counts": {
+          "none": 4,
+          "vehicle-target": 1
+        },
+        "metrics": {
+          "pressure_rmse_mpa": {
+            "mean": 4.983933880632886,
+            "median": 4.547995302350304,
+            "standard_deviation": 2.567626493808036,
+            "mean_bootstrap_95_ci": [
+              3.2505399687091767,
+              7.170839724584651
+            ]
+          },
+          "pressure_mae_mpa": {
+            "mean": 3.769935742640996,
+            "median": 3.0288171547580984,
+            "standard_deviation": 1.9795089593886128,
+            "mean_bootstrap_95_ci": [
+              2.382984786690042,
+              5.481896595706759
+            ]
+          },
+          "temperature_rmse_c": {
+            "mean": 6.850863411290257,
+            "median": 6.964724118521588,
+            "standard_deviation": 0.944916402198519,
+            "mean_bootstrap_95_ci": [
+              6.056725746215139,
+              7.593513734600752
+            ]
+          },
+          "temperature_mae_c": {
+            "mean": 5.904308855021054,
+            "median": 5.896242761667097,
+            "standard_deviation": 0.9252636296780657,
+            "mean_bootstrap_95_ci": [
+              5.168700341701992,
+              6.703057851811789
+            ]
+          },
+          "soc_rmse_percentage_points": {
+            "mean": 5.107470285761981,
+            "median": 4.488822698729265,
+            "standard_deviation": 2.4287895897417555,
+            "mean_bootstrap_95_ci": [
+              3.2145827538255176,
+              7.000357817698443
+            ]
+          }
+        }
+      },
+      "40.0": {
+        "case_count": 3,
+        "screening_pass_count": 1,
+        "screening_pass_fraction": 0.3333333333333333,
+        "final_stop_reason_counts": {
+          "gas-temperature-limit": 1,
+          "vehicle-target": 1,
+          "none": 1
+        },
+        "metrics": {
+          "pressure_rmse_mpa": {
+            "mean": 3.018371872369747,
+            "median": 2.718894157398388,
+            "standard_deviation": 1.7782567372600615,
+            "mean_bootstrap_95_ci": [
+              1.4088688910829823,
+              4.92735256862787
+            ]
+          },
+          "pressure_mae_mpa": {
+            "mean": 2.0241672531731267,
+            "median": 2.0764928163901444,
+            "standard_deviation": 1.0744697376493404,
+            "mean_bootstrap_95_ci": [
+              0.924490734484482,
+              3.0715182086447537
+            ]
+          },
+          "temperature_rmse_c": {
+            "mean": 10.778955604473055,
+            "median": 12.514462326293426,
+            "standard_deviation": 4.689352733618505,
+            "mean_bootstrap_95_ci": [
+              5.469238559089234,
+              14.353165928036498
+            ]
+          },
+          "temperature_mae_c": {
+            "mean": 9.406441835474626,
+            "median": 10.846804324994611,
+            "standard_deviation": 4.353143699963051,
+            "mean_bootstrap_95_ci": [
+              4.51566387122522,
+              12.856857310204044
+            ]
+          },
+          "soc_rmse_percentage_points": {
+            "mean": 3.2050273136477396,
+            "median": 2.4343963888647857,
+            "standard_deviation": 2.1861753947027114,
+            "mean_bootstrap_95_ci": [
+              1.5085265402177914,
+              5.67215901186064
+            ]
+          }
+        }
+      },
+      "50.0": {
+        "case_count": 1,
+        "screening_pass_count": 0,
+        "screening_pass_fraction": 0.0,
+        "final_stop_reason_counts": {
+          "none": 1
+        },
+        "metrics": {
+          "pressure_rmse_mpa": {
+            "mean": 5.606178648814567,
+            "median": 5.606178648814567,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              5.606178648814567,
+              5.606178648814567
+            ]
+          },
+          "pressure_mae_mpa": {
+            "mean": 3.666167965220602,
+            "median": 3.666167965220602,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              3.666167965220602,
+              3.666167965220602
+            ]
+          },
+          "temperature_rmse_c": {
+            "mean": 4.929915421649155,
+            "median": 4.929915421649155,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              4.929915421649155,
+              4.929915421649155
+            ]
+          },
+          "temperature_mae_c": {
+            "mean": 4.00963294145873,
+            "median": 4.00963294145873,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              4.00963294145873,
+              4.00963294145873
+            ]
+          },
+          "soc_rmse_percentage_points": {
+            "mean": 5.421410023106342,
+            "median": 5.421410023106342,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              5.421410023106342,
+              5.421410023106342
+            ]
+          }
+        }
+      }
+    },
+    "scheduled_aprr_mpa_min": {
+      "6.4": {
+        "case_count": 1,
+        "screening_pass_count": 1,
+        "screening_pass_fraction": 1.0,
+        "final_stop_reason_counts": {
+          "vehicle-target": 1
+        },
+        "metrics": {
+          "pressure_rmse_mpa": {
+            "mean": 1.4088688910829823,
+            "median": 1.4088688910829823,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              1.4088688910829823,
+              1.4088688910829823
+            ]
+          },
+          "pressure_mae_mpa": {
+            "mean": 0.9244907344844819,
+            "median": 0.9244907344844819,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              0.9244907344844819,
+              0.9244907344844819
+            ]
+          },
+          "temperature_rmse_c": {
+            "mean": 5.469238559089234,
+            "median": 5.469238559089234,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              5.469238559089234,
+              5.469238559089234
+            ]
+          },
+          "temperature_mae_c": {
+            "mean": 4.51566387122522,
+            "median": 4.51566387122522,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              4.51566387122522,
+              4.51566387122522
+            ]
+          },
+          "soc_rmse_percentage_points": {
+            "mean": 2.4343963888647857,
+            "median": 2.4343963888647857,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              2.4343963888647857,
+              2.4343963888647857
+            ]
+          }
+        }
+      },
+      "7.6": {
+        "case_count": 1,
+        "screening_pass_count": 0,
+        "screening_pass_fraction": 0.0,
+        "final_stop_reason_counts": {
+          "none": 1
+        },
+        "metrics": {
+          "pressure_rmse_mpa": {
+            "mean": 5.606178648814567,
+            "median": 5.606178648814567,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              5.606178648814567,
+              5.606178648814567
+            ]
+          },
+          "pressure_mae_mpa": {
+            "mean": 3.666167965220602,
+            "median": 3.666167965220602,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              3.666167965220602,
+              3.666167965220602
+            ]
+          },
+          "temperature_rmse_c": {
+            "mean": 4.929915421649155,
+            "median": 4.929915421649155,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              4.929915421649155,
+              4.929915421649155
+            ]
+          },
+          "temperature_mae_c": {
+            "mean": 4.00963294145873,
+            "median": 4.00963294145873,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              4.00963294145873,
+              4.00963294145873
+            ]
+          },
+          "soc_rmse_percentage_points": {
+            "mean": 5.421410023106342,
+            "median": 5.421410023106342,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              5.421410023106342,
+              5.421410023106342
+            ]
+          }
+        }
+      },
+      "11.5": {
+        "case_count": 2,
+        "screening_pass_count": 0,
+        "screening_pass_fraction": 0.0,
+        "final_stop_reason_counts": {
+          "gas-temperature-limit": 1,
+          "none": 1
+        },
+        "metrics": {
+          "pressure_rmse_mpa": {
+            "mean": 3.8231233630131287,
+            "median": 3.8231233630131287,
+            "standard_deviation": 1.5616159185488359,
+            "mean_bootstrap_95_ci": [
+              2.718894157398388,
+              4.92735256862787
+            ]
+          },
+          "pressure_mae_mpa": {
+            "mean": 2.574005512517449,
+            "median": 2.574005512517449,
+            "standard_deviation": 0.7035892023160386,
+            "mean_bootstrap_95_ci": [
+              2.0764928163901444,
+              3.0715182086447537
+            ]
+          },
+          "temperature_rmse_c": {
+            "mean": 13.433814127164963,
+            "median": 13.433814127164963,
+            "standard_deviation": 1.3001597853846565,
+            "mean_bootstrap_95_ci": [
+              12.514462326293426,
+              14.3531659280365
+            ]
+          },
+          "temperature_mae_c": {
+            "mean": 11.851830817599328,
+            "median": 11.851830817599328,
+            "standard_deviation": 1.4213220963858526,
+            "mean_bootstrap_95_ci": [
+              10.846804324994611,
+              12.856857310204044
+            ]
+          },
+          "soc_rmse_percentage_points": {
+            "mean": 3.5903427760392157,
+            "median": 3.5903427760392157,
+            "standard_deviation": 2.9441327550671637,
+            "mean_bootstrap_95_ci": [
+              1.5085265402177916,
+              5.67215901186064
+            ]
+          }
+        }
+      },
+      "18.0": {
+        "case_count": 2,
+        "screening_pass_count": 0,
+        "screening_pass_fraction": 0.0,
+        "final_stop_reason_counts": {
+          "none": 1,
+          "vehicle-target": 1
+        },
+        "metrics": {
+          "pressure_rmse_mpa": {
+            "mean": 4.162467597549824,
+            "median": 4.162467597549824,
+            "standard_deviation": 1.669384485434915,
+            "mean_bootstrap_95_ci": [
+              2.9820345074911803,
+              5.342900687608467
+            ]
+          },
+          "pressure_mae_mpa": {
+            "mean": 3.3451601071169152,
+            "median": 3.3451601071169152,
+            "standard_deviation": 1.592772836931394,
+            "mean_bootstrap_95_ci": [
+              2.2188996332329913,
+              4.471420581000839
+            ]
+          },
+          "temperature_rmse_c": {
+            "mean": 7.023599742721494,
+            "median": 7.023599742721494,
+            "standard_deviation": 0.08326270623668929,
+            "mean_bootstrap_95_ci": [
+              6.964724118521588,
+              7.0824753669214005
+            ]
+          },
+          "temperature_mae_c": {
+            "mean": 5.826497955592684,
+            "median": 5.826497955592684,
+            "standard_deviation": 0.09863405065551757,
+            "mean_bootstrap_95_ci": [
+              5.7567531495182696,
+              5.896242761667097
+            ]
+          },
+          "soc_rmse_percentage_points": {
+            "mean": 4.945668788237557,
+            "median": 4.945668788237557,
+            "standard_deviation": 2.944202640998094,
+            "mean_bootstrap_95_ci": [
+              2.8638031356004627,
+              7.027534440874652
+            ]
+          }
+        }
+      },
+      "19.4": {
+        "case_count": 1,
+        "screening_pass_count": 0,
+        "screening_pass_fraction": 0.0,
+        "final_stop_reason_counts": {
+          "none": 1
+        },
+        "metrics": {
+          "pressure_rmse_mpa": {
+            "mean": 4.547995302350304,
+            "median": 4.547995302350304,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              4.547995302350304,
+              4.547995302350304
+            ]
+          },
+          "pressure_mae_mpa": {
+            "mean": 3.0288171547580984,
+            "median": 3.0288171547580984,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              3.0288171547580984,
+              3.0288171547580984
+            ]
+          },
+          "temperature_rmse_c": {
+            "mean": 5.4131243422809,
+            "median": 5.4131243422809,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              5.4131243422809,
+              5.4131243422809
+            ]
+          },
+          "temperature_mae_c": {
+            "mean": 4.682469637155565,
+            "median": 4.682469637155565,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              4.682469637155565,
+              4.682469637155565
+            ]
+          },
+          "soc_rmse_percentage_points": {
+            "mean": 4.488822698729265,
+            "median": 4.488822698729265,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              4.488822698729265,
+              4.488822698729265
+            ]
+          }
+        }
+      },
+      "21.8": {
+        "case_count": 2,
+        "screening_pass_count": 0,
+        "screening_pass_fraction": 0.0,
+        "final_stop_reason_counts": {
+          "none": 2
+        },
+        "metrics": {
+          "pressure_rmse_mpa": {
+            "mean": 6.023369452857239,
+            "median": 6.023369452857239,
+            "standard_deviation": 4.459088462508746,
+            "mean_bootstrap_95_ci": [
+              2.870317763106608,
+              9.17642114260787
+            ]
+          },
+          "pressure_mae_mpa": {
+            "mean": 4.565270672106527,
+            "median": 4.565270672106527,
+            "standard_deviation": 3.310839293699028,
+            "mean_bootstrap_95_ci": [
+              2.2241537561130644,
+              6.906387588099989
+            ]
+          },
+          "temperature_rmse_c": {
+            "mean": 7.396996614363699,
+            "median": 7.396996614363699,
+            "standard_deviation": 0.9171930485880625,
+            "mean_bootstrap_95_ci": [
+              6.748443190049918,
+              8.045550038677481
+            ]
+          },
+          "temperature_mae_c": {
+            "mean": 6.59303936338217,
+            "median": 6.59303936338217,
+            "standard_deviation": 0.9803177489583795,
+            "mean_bootstrap_95_ci": [
+              5.899850035376168,
+              7.286228691388171
+            ]
+          },
+          "soc_rmse_percentage_points": {
+            "mean": 5.578595576802762,
+            "median": 5.578595576802762,
+            "standard_deviation": 3.748165408280608,
+            "mean_bootstrap_95_ci": [
+              2.928242399598699,
+              8.228948754006824
+            ]
+          }
+        }
+      },
+      "28.5": {
+        "case_count": 1,
+        "screening_pass_count": 1,
+        "screening_pass_fraction": 1.0,
+        "final_stop_reason_counts": {
+          "none": 1
+        },
+        "metrics": {
+          "pressure_rmse_mpa": {
+            "mean": 3.0839655666439607,
+            "median": 3.0839655666439607,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              3.0839655666439607,
+              3.0839655666439607
+            ]
+          },
+          "pressure_mae_mpa": {
+            "mean": 2.5416874149074316,
+            "median": 2.5416874149074316,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              2.5416874149074316,
+              2.5416874149074316
+            ]
+          },
+          "temperature_rmse_c": {
+            "mean": 2.865774343636522,
+            "median": 2.865774343636522,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              2.865774343636522,
+              2.865774343636522
+            ]
+          },
+          "temperature_mae_c": {
+            "mean": 2.389665320552959,
+            "median": 2.389665320552959,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              2.389665320552959,
+              2.389665320552959
+            ]
+          },
+          "soc_rmse_percentage_points": {
+            "mean": 3.394490298671636,
+            "median": 3.394490298671636,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              3.394490298671636,
+              3.394490298671636
+            ]
+          }
+        }
+      },
+      "35.0": {
+        "case_count": 1,
+        "screening_pass_count": 0,
+        "screening_pass_fraction": 0.0,
+        "final_stop_reason_counts": {
+          "none": 1
+        },
+        "metrics": {
+          "pressure_rmse_mpa": {
+            "mean": 4.755764772146825,
+            "median": 4.755764772146825,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              4.755764772146825,
+              4.755764772146825
+            ]
+          },
+          "pressure_mae_mpa": {
+            "mean": 3.3072823141930114,
+            "median": 3.3072823141930114,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              3.3072823141930114,
+              3.3072823141930114
+            ]
+          },
+          "temperature_rmse_c": {
+            "mean": 4.330500032919509,
+            "median": 4.330500032919509,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              4.330500032919509,
+              4.330500032919509
+            ]
+          },
+          "temperature_mae_c": {
+            "mean": 3.6580710367086087,
+            "median": 3.6580710367086087,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              3.6580710367086087,
+              3.6580710367086087
+            ]
+          },
+          "soc_rmse_percentage_points": {
+            "mean": 4.215914110859259,
+            "median": 4.215914110859259,
+            "standard_deviation": null,
+            "mean_bootstrap_95_ci": [
+              4.215914110859259,
+              4.215914110859259
+            ]
+          }
+        }
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "H2P-L03",
+      "lab_test_number": 3,
+      "test_code": "1-2 D",
+      "tank_capacity_kg": 4.7,
+      "nominal_working_pressure_mpa": 70.0,
+      "tank_volume_assumed_m3": 0.11699316780055986,
+      "geometry_basis": "capacity_eos",
+      "effective_volume_multiplier": 1.0,
+      "gas_liner_ua_multiplier": 1.0,
+      "vehicle_tank_thermal_model": "mixed_convection",
+      "vehicle_internal_diameter_m": 0.29733610690496937,
+      "vehicle_internal_length_m": 1.4866805345248468,
+      "vehicle_inlet_nozzle_diameter_m": 0.003,
+      "vehicle_equivalent_capsule_aspect_ratio": 5.0,
+      "vehicle_geometry_derivation": "volume_preserving_equivalent_capsule",
+      "dispenser_flow_area_multiplier": 2.0,
+      "precooler_duty_multiplier": 16.0,
+      "chamber_temperature_c": 20.0,
+      "scheduled_aprr_mpa_min": 18.0,
+      "experimental_duration_s": 292.00000036507845,
+      "experimental_final_pressure_mpa": 82.065,
+      "model_target_pressure_mpa": 82.065,
+      "experimental_peak_temperature_c": 70.86,
+      "experimental_final_soc_percent": 99.0,
+      "predicted_final_pressure_mpa": 75.82152134353869,
+      "predicted_peak_temperature_c": 80.02854097962205,
+      "predicted_final_soc_percent": 91.72550067942527,
+      "predicted_peak_mass_flow_g_s": 43.68450237660311,
+      "mass_flow_rmse_g_s": 8.218812435120649,
+      "mass_flow_peak_error_g_s": 18.56029390986855,
+      "experimental_first_half_mass_fraction": 0.5384459574340208,
+      "predicted_first_half_mass_fraction": 0.5990557041472935,
+      "active_fueling_duration_s": 292.00000036507845,
+      "active_pressure_reference_tracking_rmse_mpa": 6.640998585238038,
+      "active_pressure_reference_final_lag_mpa": 6.243478656461306,
+      "active_hose_inlet_temperature_rmse_c": 15.866536338094754,
+      "active_precooler_outlet_temperature_rmse_c": 17.735521158438264,
+      "active_dispatch_sample_counts": {
+        "low": 130,
+        "none": 50,
+        "medium": 50,
+        "high": 63
+      },
+      "bank_pressures_at_active_end_mpa": {
+        "low": 31.081136095343783,
+        "medium": 52.804147613159195,
+        "high": 76.65155820699783
+      },
+      "experimental_transferred_mass_kg": 4.872684002071736,
+      "predicted_transferred_mass_kg": 4.09985052407222,
+      "final_fueling_phase": "filling",
+      "final_stop_reason": null,
+      "controller_final_stop_reason": null,
+      "first_stop_time_s": null,
+      "first_stop_reason": null,
+      "sample_count": 202,
+      "pressure_rmse_mpa": 2.9820345074911803,
+      "pressure_mae_mpa": 2.2188996332329913,
+      "pressure_final_error_mpa": -6.243478656461306,
+      "temperature_rmse_c": 6.964724118521588,
+      "temperature_mae_c": 5.896242761667097,
+      "temperature_peak_error_c": 9.168539739717787,
+      "soc_rmse_percentage_points": 2.8638031356004627,
+      "soc_final_error_percentage_points": -7.2744993205747335,
+      "screening_pass": false,
+      "volume_assumption": "hydrogen EOS density at declared nominal working pressure and 15 °C"
+    },
+    {
+      "case_id": "H2P-L09",
+      "lab_test_number": 9,
+      "test_code": "1-5 A",
+      "tank_capacity_kg": 4.7,
+      "nominal_working_pressure_mpa": 70.0,
+      "tank_volume_assumed_m3": 0.11699316780055986,
+      "geometry_basis": "capacity_eos",
+      "effective_volume_multiplier": 1.0,
+      "gas_liner_ua_multiplier": 1.0,
+      "vehicle_tank_thermal_model": "mixed_convection",
+      "vehicle_internal_diameter_m": 0.29733610690496937,
+      "vehicle_internal_length_m": 1.4866805345248468,
+      "vehicle_inlet_nozzle_diameter_m": 0.003,
+      "vehicle_equivalent_capsule_aspect_ratio": 5.0,
+      "vehicle_geometry_derivation": "volume_preserving_equivalent_capsule",
+      "dispenser_flow_area_multiplier": 2.0,
+      "precooler_duty_multiplier": 16.0,
+      "chamber_temperature_c": 0.0,
+      "scheduled_aprr_mpa_min": 35.0,
+      "experimental_duration_s": 198.5,
+      "experimental_final_pressure_mpa": 81.128,
+      "model_target_pressure_mpa": 81.128,
+      "experimental_peak_temperature_c": 71.926,
+      "experimental_final_soc_percent": 97.7,
+      "predicted_final_pressure_mpa": 75.92602090638154,
+      "predicted_peak_temperature_c": 77.52628065402342,
+      "predicted_final_soc_percent": 92.42008588605007,
+      "predicted_peak_mass_flow_g_s": 60.0,
+      "mass_flow_rmse_g_s": 13.73767047734679,
+      "mass_flow_peak_error_g_s": 23.705,
+      "experimental_first_half_mass_fraction": 0.5561983678337549,
+      "predicted_first_half_mass_fraction": 0.6417246908561014,
+      "active_fueling_duration_s": 198.5,
+      "active_pressure_reference_tracking_rmse_mpa": 13.031480064471515,
+      "active_pressure_reference_final_lag_mpa": 5.201979093618462,
+      "active_hose_inlet_temperature_rmse_c": 12.300742385499783,
+      "active_precooler_outlet_temperature_rmse_c": 10.879757139919501,
+      "active_dispatch_sample_counts": {
+        "low": 172,
+        "none": 113,
+        "medium": 56,
+        "high": 57
+      },
+      "bank_pressures_at_active_end_mpa": {
+        "low": 31.217695861152013,
+        "medium": 53.03287552228385,
+        "high": 76.79924171070586
+      },
+      "experimental_transferred_mass_kg": 4.55563275,
+      "predicted_transferred_mass_kg": 4.110503290308672,
+      "final_fueling_phase": "filling",
+      "final_stop_reason": null,
+      "controller_final_stop_reason": null,
+      "first_stop_time_s": null,
+      "first_stop_reason": null,
+      "sample_count": 398,
+      "pressure_rmse_mpa": 4.755764772146825,
+      "pressure_mae_mpa": 3.3072823141930114,
+      "pressure_final_error_mpa": -5.201979093618462,
+      "temperature_rmse_c": 4.330500032919509,
+      "temperature_mae_c": 3.6580710367086087,
+      "temperature_peak_error_c": 5.600280654023422,
+      "soc_rmse_percentage_points": 4.215914110859259,
+      "soc_final_error_percentage_points": -5.279914113949928,
+      "screening_pass": false,
+      "volume_assumption": "hydrogen EOS density at declared nominal working pressure and 15 °C"
+    },
+    {
+      "case_id": "H2P-L12",
+      "lab_test_number": 12,
+      "test_code": "4-1 A",
+      "tank_capacity_kg": 9.8,
+      "nominal_working_pressure_mpa": 70.0,
+      "tank_volume_assumed_m3": 0.24394320094584823,
+      "geometry_basis": "capacity_eos",
+      "effective_volume_multiplier": 1.0,
+      "gas_liner_ua_multiplier": 1.0,
+      "vehicle_tank_thermal_model": "mixed_convection",
+      "vehicle_internal_diameter_m": 0.3798601394948233,
+      "vehicle_internal_length_m": 1.8993006974741165,
+      "vehicle_inlet_nozzle_diameter_m": 0.003,
+      "vehicle_equivalent_capsule_aspect_ratio": 5.0,
+      "vehicle_geometry_derivation": "volume_preserving_equivalent_capsule",
+      "dispenser_flow_area_multiplier": 2.0,
+      "precooler_duty_multiplier": 16.0,
+      "chamber_temperature_c": 20.0,
+      "scheduled_aprr_mpa_min": 19.4,
+      "experimental_duration_s": 328.4999997820705,
+      "experimental_final_pressure_mpa": 70.729,
+      "model_target_pressure_mpa": 70.729,
+      "experimental_peak_temperature_c": 77.334,
+      "experimental_final_soc_percent": 87.0,
+      "predicted_final_pressure_mpa": 64.22340334739336,
+      "predicted_peak_temperature_c": 80.49715594287238,
+      "predicted_final_soc_percent": 81.42266698515746,
+      "predicted_peak_mass_flow_g_s": 60.0,
+      "mass_flow_rmse_g_s": 15.889508602165455,
+      "mass_flow_peak_error_g_s": 22.323999999999998,
+      "experimental_first_half_mass_fraction": 0.5161772483843288,
+      "predicted_first_half_mass_fraction": 0.5961330275899192,
+      "active_fueling_duration_s": 328.4999997820705,
+      "active_pressure_reference_tracking_rmse_mpa": 14.972265583534378,
+      "active_pressure_reference_final_lag_mpa": 6.505596652606641,
+      "active_hose_inlet_temperature_rmse_c": 15.036391635054247,
+      "active_precooler_outlet_temperature_rmse_c": 13.939637768870414,
+      "active_dispatch_sample_counts": {
+        "low": 279,
+        "none": 174,
+        "medium": 101,
+        "high": 105
+      },
+      "bank_pressures_at_active_end_mpa": {
+        "low": 24.160831581490946,
+        "medium": 43.453564490325334,
+        "high": 65.13429573788301
+      },
+      "experimental_transferred_mass_kg": 8.28023274974014,
+      "predicted_transferred_mass_kg": 7.569212477191002,
+      "final_fueling_phase": "filling",
+      "final_stop_reason": null,
+      "controller_final_stop_reason": null,
+      "first_stop_time_s": null,
+      "first_stop_reason": null,
+      "sample_count": 658,
+      "pressure_rmse_mpa": 4.547995302350304,
+      "pressure_mae_mpa": 3.0288171547580984,
+      "pressure_final_error_mpa": -6.505596652606641,
+      "temperature_rmse_c": 5.4131243422809,
+      "temperature_mae_c": 4.682469637155565,
+      "temperature_peak_error_c": 3.1631549759505475,
+      "soc_rmse_percentage_points": 4.488822698729265,
+      "soc_final_error_percentage_points": -5.577333014842537,
+      "screening_pass": false,
+      "volume_assumption": "hydrogen EOS density at declared nominal working pressure and 15 °C"
+    },
+    {
+      "case_id": "H2P-L15",
+      "lab_test_number": 15,
+      "test_code": "5-1 B",
+      "tank_capacity_kg": 4.7,
+      "nominal_working_pressure_mpa": 70.0,
+      "tank_volume_assumed_m3": 0.11699316780055986,
+      "geometry_basis": "capacity_eos",
+      "effective_volume_multiplier": 1.0,
+      "gas_liner_ua_multiplier": 1.0,
+      "vehicle_tank_thermal_model": "mixed_convection",
+      "vehicle_internal_diameter_m": 0.29733610690496937,
+      "vehicle_internal_length_m": 1.4866805345248468,
+      "vehicle_inlet_nozzle_diameter_m": 0.003,
+      "vehicle_equivalent_capsule_aspect_ratio": 5.0,
+      "vehicle_geometry_derivation": "volume_preserving_equivalent_capsule",
+      "dispenser_flow_area_multiplier": 2.0,
+      "precooler_duty_multiplier": 16.0,
+      "chamber_temperature_c": 40.0,
+      "scheduled_aprr_mpa_min": 11.5,
+      "experimental_duration_s": 411.00999971386045,
+      "experimental_final_pressure_mpa": 80.223,
+      "model_target_pressure_mpa": 80.223,
+      "experimental_peak_temperature_c": 76.98100000000001,
+      "experimental_final_soc_percent": 98.1,
+      "predicted_final_pressure_mpa": 64.39428518479754,
+      "predicted_peak_temperature_c": 85.02503194878273,
+      "predicted_final_soc_percent": 80.48525520771969,
+      "predicted_peak_mass_flow_g_s": 28.31114948295565,
+      "mass_flow_rmse_g_s": 5.68274235192095,
+      "mass_flow_peak_error_g_s": 12.358034420747785,
+      "experimental_first_half_mass_fraction": 0.5730215032414173,
+      "predicted_first_half_mass_fraction": 0.7191263548665531,
+      "active_fueling_duration_s": 293.4998841024935,
+      "active_pressure_reference_tracking_rmse_mpa": 4.215783112062859,
+      "active_pressure_reference_final_lag_mpa": -2.8768344825740186,
+      "active_hose_inlet_temperature_rmse_c": 16.589124395797135,
+      "active_precooler_outlet_temperature_rmse_c": 25.57511219167468,
+      "active_dispatch_sample_counts": {
+        "low": 339,
+        "none": 2,
+        "medium": 166,
+        "high": 81
+      },
+      "bank_pressures_at_active_end_mpa": {
+        "low": 32.12646201443649,
+        "medium": 53.109382011209995,
+        "high": 81.80469345718853
+      },
+      "experimental_transferred_mass_kg": 4.21697980934889,
+      "predicted_transferred_mass_kg": 3.3312315679259066,
+      "final_fueling_phase": "idle",
+      "final_stop_reason": "gas-temperature-limit",
+      "controller_final_stop_reason": "operator-idle",
+      "first_stop_time_s": 293.99988390505314,
+      "first_stop_reason": "gas-temperature-limit",
+      "sample_count": 821,
+      "pressure_rmse_mpa": 4.92735256862787,
+      "pressure_mae_mpa": 3.0715182086447537,
+      "pressure_final_error_mpa": -15.82871481520246,
+      "temperature_rmse_c": 12.514462326293426,
+      "temperature_mae_c": 10.846804324994611,
+      "temperature_peak_error_c": 8.044031948782717,
+      "soc_rmse_percentage_points": 5.67215901186064,
+      "soc_final_error_percentage_points": -17.614744792280305,
+      "screening_pass": false,
+      "volume_assumption": "hydrogen EOS density at declared nominal working pressure and 15 °C"
+    },
+    {
+      "case_id": "H2P-L18",
+      "lab_test_number": 18,
+      "test_code": "5-2 C",
+      "tank_capacity_kg": 4.7,
+      "nominal_working_pressure_mpa": 70.0,
+      "tank_volume_assumed_m3": 0.11699316780055986,
+      "geometry_basis": "capacity_eos",
+      "effective_volume_multiplier": 1.0,
+      "gas_liner_ua_multiplier": 1.0,
+      "vehicle_tank_thermal_model": "mixed_convection",
+      "vehicle_internal_diameter_m": 0.29733610690496937,
+      "vehicle_internal_length_m": 1.4866805345248468,
+      "vehicle_inlet_nozzle_diameter_m": 0.003,
+      "vehicle_equivalent_capsule_aspect_ratio": 5.0,
+      "vehicle_geometry_derivation": "volume_preserving_equivalent_capsule",
+      "dispenser_flow_area_multiplier": 2.0,
+      "precooler_duty_multiplier": 16.0,
+      "chamber_temperature_c": 0.0,
+      "scheduled_aprr_mpa_min": 28.5,
+      "experimental_duration_s": 191.9999996200204,
+      "experimental_final_pressure_mpa": 81.009,
+      "model_target_pressure_mpa": 81.009,
+      "experimental_peak_temperature_c": 76.20833333333333,
+      "experimental_final_soc_percent": 96.6,
+      "predicted_final_pressure_mpa": 75.96516178045812,
+      "predicted_peak_temperature_c": 78.7902318256568,
+      "predicted_final_soc_percent": 92.04272573991729,
+      "predicted_peak_mass_flow_g_s": 60.0,
+      "mass_flow_rmse_g_s": 11.736244675474893,
+      "mass_flow_peak_error_g_s": 23.979999999999997,
+      "experimental_first_half_mass_fraction": 0.4476870463793886,
+      "predicted_first_half_mass_fraction": 0.4784753488842291,
+      "active_fueling_duration_s": 191.9999996200204,
+      "active_pressure_reference_tracking_rmse_mpa": 10.910240478824068,
+      "active_pressure_reference_final_lag_mpa": 5.0438382195418825,
+      "active_hose_inlet_temperature_rmse_c": 8.626914981568671,
+      "active_precooler_outlet_temperature_rmse_c": 8.193887485397479,
+      "active_dispatch_sample_counts": {
+        "low": 193,
+        "none": 63,
+        "medium": 64,
+        "high": 66
+      },
+      "bank_pressures_at_active_end_mpa": {
+        "low": 31.393811131006267,
+        "medium": 53.172847862242946,
+        "high": 76.91603659867828
+      },
+      "experimental_transferred_mass_kg": 4.552829680729495,
+      "predicted_transferred_mass_kg": 4.051625169326504,
+      "final_fueling_phase": "filling",
+      "final_stop_reason": null,
+      "controller_final_stop_reason": null,
+      "first_stop_time_s": null,
+      "first_stop_reason": null,
+      "sample_count": 371,
+      "pressure_rmse_mpa": 3.0839655666439607,
+      "pressure_mae_mpa": 2.5416874149074316,
+      "pressure_final_error_mpa": -5.0438382195418825,
+      "temperature_rmse_c": 2.865774343636522,
+      "temperature_mae_c": 2.389665320552959,
+      "temperature_peak_error_c": 2.5818974724670483,
+      "soc_rmse_percentage_points": 3.394490298671636,
+      "soc_final_error_percentage_points": -4.557274260082707,
+      "screening_pass": true,
+      "volume_assumption": "hydrogen EOS density at declared nominal working pressure and 15 °C"
+    },
+    {
+      "case_id": "H2P-L21",
+      "lab_test_number": 21,
+      "test_code": "6-3 A",
+      "tank_capacity_kg": 5.9,
+      "nominal_working_pressure_mpa": 35.0,
+      "tank_volume_assumed_m3": 0.2458849681436105,
+      "geometry_basis": "capacity_eos",
+      "effective_volume_multiplier": 1.0,
+      "gas_liner_ua_multiplier": 1.0,
+      "vehicle_tank_thermal_model": "mixed_convection",
+      "vehicle_internal_diameter_m": 0.380865361867524,
+      "vehicle_internal_length_m": 1.90432680933762,
+      "vehicle_inlet_nozzle_diameter_m": 0.003,
+      "vehicle_equivalent_capsule_aspect_ratio": 5.0,
+      "vehicle_geometry_derivation": "volume_preserving_equivalent_capsule",
+      "dispenser_flow_area_multiplier": 2.0,
+      "precooler_duty_multiplier": 16.0,
+      "chamber_temperature_c": 40.0,
+      "scheduled_aprr_mpa_min": 6.4,
+      "experimental_duration_s": 391.19999979157,
+      "experimental_final_pressure_mpa": 41.353,
+      "model_target_pressure_mpa": 41.353,
+      "experimental_peak_temperature_c": 72.88766666666666,
+      "experimental_final_soc_percent": 98.65996649916248,
+      "predicted_final_pressure_mpa": 41.26523618965124,
+      "predicted_peak_temperature_c": 78.87197707843467,
+      "predicted_final_soc_percent": 96.6551485030945,
+      "predicted_peak_mass_flow_g_s": 39.276018875023226,
+      "mass_flow_rmse_g_s": 6.7561734066518255,
+      "mass_flow_peak_error_g_s": 19.359003658178146,
+      "experimental_first_half_mass_fraction": 0.4110526735826688,
+      "predicted_first_half_mass_fraction": 0.42845581703127583,
+      "active_fueling_duration_s": 364.49985606595874,
+      "active_pressure_reference_tracking_rmse_mpa": 5.116758587982436,
+      "active_pressure_reference_final_lag_mpa": -0.13382786631063226,
+      "active_hose_inlet_temperature_rmse_c": 14.286228887710969,
+      "active_precooler_outlet_temperature_rmse_c": 24.124608613405172,
+      "active_dispatch_sample_counts": {
+        "low": 524,
+        "none": 1,
+        "medium": 205
+      },
+      "bank_pressures_at_active_end_mpa": {
+        "low": 23.861224946941682,
+        "medium": 43.44628131710032,
+        "high": 89.99999999999996
+      },
+      "experimental_transferred_mass_kg": 5.288534500474215,
+      "predicted_transferred_mass_kg": 5.286173800353236,
+      "final_fueling_phase": "idle",
+      "final_stop_reason": "vehicle-target",
+      "controller_final_stop_reason": "operator-idle",
+      "first_stop_time_s": 364.99985586851835,
+      "first_stop_reason": "target-pressure",
+      "sample_count": 783,
+      "pressure_rmse_mpa": 1.4088688910829823,
+      "pressure_mae_mpa": 0.9244907344844819,
+      "pressure_final_error_mpa": -0.08776381034876124,
+      "temperature_rmse_c": 5.469238559089234,
+      "temperature_mae_c": 4.51566387122522,
+      "temperature_peak_error_c": 5.984310411768007,
+      "soc_rmse_percentage_points": 2.4343963888647857,
+      "soc_final_error_percentage_points": -2.0048179960679846,
+      "screening_pass": true,
+      "volume_assumption": "hydrogen EOS density at declared nominal working pressure and 15 °C"
+    },
+    {
+      "case_id": "H2P-L24",
+      "lab_test_number": 24,
+      "test_code": "7-2 A",
+      "tank_capacity_kg": 4.7,
+      "nominal_working_pressure_mpa": 70.0,
+      "tank_volume_assumed_m3": 0.11699316780055986,
+      "geometry_basis": "capacity_eos",
+      "effective_volume_multiplier": 1.0,
+      "gas_liner_ua_multiplier": 1.0,
+      "vehicle_tank_thermal_model": "mixed_convection",
+      "vehicle_internal_diameter_m": 0.29733610690496937,
+      "vehicle_internal_length_m": 1.4866805345248468,
+      "vehicle_inlet_nozzle_diameter_m": 0.003,
+      "vehicle_equivalent_capsule_aspect_ratio": 5.0,
+      "vehicle_geometry_derivation": "volume_preserving_equivalent_capsule",
+      "dispenser_flow_area_multiplier": 2.0,
+      "precooler_duty_multiplier": 16.0,
+      "chamber_temperature_c": 20.0,
+      "scheduled_aprr_mpa_min": 21.8,
+      "experimental_duration_s": 309.50999956112355,
+      "experimental_final_pressure_mpa": 81.481,
+      "model_target_pressure_mpa": 81.481,
+      "experimental_peak_temperature_c": 76.30933333333333,
+      "experimental_final_soc_percent": 98.2,
+      "predicted_final_pressure_mpa": 75.68492323881357,
+      "predicted_peak_temperature_c": 81.62765603022791,
+      "predicted_final_soc_percent": 91.60354625894855,
+      "predicted_peak_mass_flow_g_s": 50.87484987505906,
+      "mass_flow_rmse_g_s": 7.581817430839682,
+      "mass_flow_peak_error_g_s": 21.91476209873285,
+      "experimental_first_half_mass_fraction": 0.6990587783591325,
+      "predicted_first_half_mass_fraction": 0.7465660518882172,
+      "active_fueling_duration_s": 309.50999956112355,
+      "active_pressure_reference_tracking_rmse_mpa": 7.768791227700606,
+      "active_pressure_reference_final_lag_mpa": 5.796076761186427,
+      "active_hose_inlet_temperature_rmse_c": 18.324143722457915,
+      "active_precooler_outlet_temperature_rmse_c": 16.768243052174135,
+      "active_dispatch_sample_counts": {
+        "low": 231,
+        "none": 207,
+        "medium": 82,
+        "high": 101
+      },
+      "bank_pressures_at_active_end_mpa": {
+        "low": 31.037815347063948,
+        "medium": 52.834794933693985,
+        "high": 76.5645195320272
+      },
+      "experimental_transferred_mass_kg": 4.622711578773544,
+      "predicted_transferred_mass_kg": 4.11376734213087,
+      "final_fueling_phase": "filling",
+      "final_stop_reason": null,
+      "controller_final_stop_reason": null,
+      "first_stop_time_s": null,
+      "first_stop_reason": null,
+      "sample_count": 568,
+      "pressure_rmse_mpa": 2.870317763106608,
+      "pressure_mae_mpa": 2.2241537561130644,
+      "pressure_final_error_mpa": -5.796076761186427,
+      "temperature_rmse_c": 6.748443190049918,
+      "temperature_mae_c": 5.899850035376168,
+      "temperature_peak_error_c": 5.318188537914878,
+      "soc_rmse_percentage_points": 2.928242399598699,
+      "soc_final_error_percentage_points": -6.596453741051448,
+      "screening_pass": false,
+      "volume_assumption": "hydrogen EOS density at declared nominal working pressure and 15 °C"
+    },
+    {
+      "case_id": "H2P-L27",
+      "lab_test_number": 27,
+      "test_code": "8-2 B",
+      "tank_capacity_kg": 4.7,
+      "nominal_working_pressure_mpa": 70.0,
+      "tank_volume_assumed_m3": 0.11699316780055986,
+      "geometry_basis": "capacity_eos",
+      "effective_volume_multiplier": 1.0,
+      "gas_liner_ua_multiplier": 1.0,
+      "vehicle_tank_thermal_model": "mixed_convection",
+      "vehicle_internal_diameter_m": 0.29733610690496937,
+      "vehicle_internal_length_m": 1.4866805345248468,
+      "vehicle_inlet_nozzle_diameter_m": 0.003,
+      "vehicle_equivalent_capsule_aspect_ratio": 5.0,
+      "vehicle_geometry_derivation": "volume_preserving_equivalent_capsule",
+      "dispenser_flow_area_multiplier": 2.0,
+      "precooler_duty_multiplier": 16.0,
+      "chamber_temperature_c": 20.0,
+      "scheduled_aprr_mpa_min": 21.8,
+      "experimental_duration_s": 379.4999997597188,
+      "experimental_final_pressure_mpa": 82.376,
+      "model_target_pressure_mpa": 82.376,
+      "experimental_peak_temperature_c": 72.59033333333332,
+      "experimental_final_soc_percent": 99.0,
+      "predicted_final_pressure_mpa": 75.61845440986374,
+      "predicted_peak_temperature_c": 81.81464814987703,
+      "predicted_final_soc_percent": 91.82079761119486,
+      "predicted_peak_mass_flow_g_s": 50.56767476777846,
+      "mass_flow_rmse_g_s": 10.146135690244671,
+      "mass_flow_peak_error_g_s": 22.67158852466096,
+      "experimental_first_half_mass_fraction": 0.7067440865648169,
+      "predicted_first_half_mass_fraction": 0.9652192501245981,
+      "active_fueling_duration_s": 379.4999997597188,
+      "active_pressure_reference_tracking_rmse_mpa": 7.680070172845374,
+      "active_pressure_reference_final_lag_mpa": 6.75754559013626,
+      "active_hose_inlet_temperature_rmse_c": 21.05373181770247,
+      "active_precooler_outlet_temperature_rmse_c": 15.097010752443225,
+      "active_dispatch_sample_counts": {
+        "low": 227,
+        "none": 347,
+        "medium": 82,
+        "high": 105
+      },
+      "bank_pressures_at_active_end_mpa": {
+        "low": 31.53974405048527,
+        "medium": 53.03987783656887,
+        "high": 76.59552091278157
+      },
+      "experimental_transferred_mass_kg": 4.506945776762185,
+      "predicted_transferred_mass_kg": 4.026144261902646,
+      "final_fueling_phase": "filling",
+      "final_stop_reason": null,
+      "controller_final_stop_reason": null,
+      "first_stop_time_s": null,
+      "first_stop_reason": null,
+      "sample_count": 760,
+      "pressure_rmse_mpa": 9.17642114260787,
+      "pressure_mae_mpa": 6.906387588099989,
+      "pressure_final_error_mpa": -6.75754559013626,
+      "temperature_rmse_c": 8.045550038677481,
+      "temperature_mae_c": 7.286228691388171,
+      "temperature_peak_error_c": 9.224313806816,
+      "soc_rmse_percentage_points": 8.228948754006824,
+      "soc_final_error_percentage_points": -7.1792023888051375,
+      "screening_pass": false,
+      "volume_assumption": "hydrogen EOS density at declared nominal working pressure and 15 °C"
+    },
+    {
+      "case_id": "H2P-L30",
+      "lab_test_number": 30,
+      "test_code": "9-2 A",
+      "tank_capacity_kg": 4.6,
+      "nominal_working_pressure_mpa": 70.0,
+      "tank_volume_assumed_m3": 0.11450395146437772,
+      "geometry_basis": "capacity_eos",
+      "effective_volume_multiplier": 1.0,
+      "gas_liner_ua_multiplier": 1.0,
+      "vehicle_tank_thermal_model": "mixed_convection",
+      "vehicle_internal_diameter_m": 0.2952122050672711,
+      "vehicle_internal_length_m": 1.4760610253363553,
+      "vehicle_inlet_nozzle_diameter_m": 0.003,
+      "vehicle_equivalent_capsule_aspect_ratio": 5.0,
+      "vehicle_geometry_derivation": "volume_preserving_equivalent_capsule",
+      "dispenser_flow_area_multiplier": 2.0,
+      "precooler_duty_multiplier": 16.0,
+      "chamber_temperature_c": 40.0,
+      "scheduled_aprr_mpa_min": 11.5,
+      "experimental_duration_s": 398.0099998181686,
+      "experimental_final_pressure_mpa": 76.021,
+      "model_target_pressure_mpa": 76.021,
+      "experimental_peak_temperature_c": 40.788,
+      "experimental_final_soc_percent": 99.6,
+      "predicted_final_pressure_mpa": 75.40663229887724,
+      "predicted_peak_temperature_c": 60.376175373753654,
+      "predicted_final_soc_percent": 95.03856699192661,
+      "predicted_peak_mass_flow_g_s": 30.234168620267113,
+      "mass_flow_rmse_g_s": 4.729660831661456,
+      "mass_flow_peak_error_g_s": 11.426168336857216,
+      "experimental_first_half_mass_fraction": 0.5631202680772514,
+      "predicted_first_half_mass_fraction": 0.5979232915075287,
+      "active_fueling_duration_s": 398.0099998181686,
+      "active_pressure_reference_tracking_rmse_mpa": 4.088357968815533,
+      "active_pressure_reference_final_lag_mpa": 0.6143677011227595,
+      "active_hose_inlet_temperature_rmse_c": 15.205301571055497,
+      "active_precooler_outlet_temperature_rmse_c": 5.727840186151988,
+      "active_dispatch_sample_counts": {
+        "low": 354,
+        "none": 33,
+        "medium": 168,
+        "high": 243
+      },
+      "bank_pressures_at_active_end_mpa": {
+        "low": 30.70454696438112,
+        "medium": 52.465035914075514,
+        "high": 76.40754875664109
+      },
+      "experimental_transferred_mass_kg": 4.467667633565481,
+      "predicted_transferred_mass_kg": 4.12178308936862,
+      "final_fueling_phase": "filling",
+      "final_stop_reason": null,
+      "controller_final_stop_reason": null,
+      "first_stop_time_s": null,
+      "first_stop_reason": null,
+      "sample_count": 768,
+      "pressure_rmse_mpa": 2.718894157398388,
+      "pressure_mae_mpa": 2.0764928163901444,
+      "pressure_final_error_mpa": -0.6143677011227595,
+      "temperature_rmse_c": 14.3531659280365,
+      "temperature_mae_c": 12.856857310204044,
+      "temperature_peak_error_c": 19.58799889004213,
+      "soc_rmse_percentage_points": 1.5085265402177916,
+      "soc_final_error_percentage_points": -4.561433008073379,
+      "screening_pass": false,
+      "volume_assumption": "hydrogen EOS density at declared nominal working pressure and 15 °C"
+    },
+    {
+      "case_id": "H2P-L33",
+      "lab_test_number": 33,
+      "test_code": "11-1 A",
+      "tank_capacity_kg": 9.8,
+      "nominal_working_pressure_mpa": 70.0,
+      "tank_volume_assumed_m3": 0.24394320094584823,
+      "geometry_basis": "capacity_eos",
+      "effective_volume_multiplier": 1.0,
+      "gas_liner_ua_multiplier": 1.0,
+      "vehicle_tank_thermal_model": "mixed_convection",
+      "vehicle_internal_diameter_m": 0.3798601394948233,
+      "vehicle_internal_length_m": 1.8993006974741165,
+      "vehicle_inlet_nozzle_diameter_m": 0.003,
+      "vehicle_equivalent_capsule_aspect_ratio": 5.0,
+      "vehicle_geometry_derivation": "volume_preserving_equivalent_capsule",
+      "dispenser_flow_area_multiplier": 2.0,
+      "precooler_duty_multiplier": 16.0,
+      "chamber_temperature_c": 50.0,
+      "scheduled_aprr_mpa_min": 7.6,
+      "experimental_duration_s": 593.0199999595061,
+      "experimental_final_pressure_mpa": 81.172,
+      "model_target_pressure_mpa": 81.172,
+      "experimental_peak_temperature_c": 79.943,
+      "experimental_final_soc_percent": 96.3,
+      "predicted_final_pressure_mpa": 64.27566994469328,
+      "predicted_peak_temperature_c": 82.94845599336793,
+      "predicted_final_soc_percent": 80.99463661105572,
+      "predicted_peak_mass_flow_g_s": 43.28237953145135,
+      "mass_flow_rmse_g_s": 8.337910460986874,
+      "mass_flow_peak_error_g_s": 21.589321653819727,
+      "experimental_first_half_mass_fraction": 0.5648425101416064,
+      "predicted_first_half_mass_fraction": 0.6744559086670796,
+      "active_fueling_duration_s": 593.0199999595061,
+      "active_pressure_reference_tracking_rmse_mpa": 6.423938944834716,
+      "active_pressure_reference_final_lag_mpa": 16.080196716844156,
+      "active_hose_inlet_temperature_rmse_c": 20.08877032207674,
+      "active_precooler_outlet_temperature_rmse_c": 20.92113896959673,
+      "active_dispatch_sample_counts": {
+        "low": 446,
+        "none": 274,
+        "medium": 183,
+        "high": 285
+      },
+      "bank_pressures_at_active_end_mpa": {
+        "low": 25.94965986219798,
+        "medium": 44.14631153479507,
+        "high": 65.27363978895218
+      },
+      "experimental_transferred_mass_kg": 8.551693010704767,
+      "predicted_transferred_mass_kg": 7.005500116791685,
+      "final_fueling_phase": "filling",
+      "final_stop_reason": null,
+      "controller_final_stop_reason": null,
+      "first_stop_time_s": null,
+      "first_stop_reason": null,
+      "sample_count": 1107,
+      "pressure_rmse_mpa": 5.606178648814567,
+      "pressure_mae_mpa": 3.666167965220602,
+      "pressure_final_error_mpa": -16.89633005530672,
+      "temperature_rmse_c": 4.929915421649155,
+      "temperature_mae_c": 4.00963294145873,
+      "temperature_peak_error_c": 3.0027848505068135,
+      "soc_rmse_percentage_points": 5.421410023106342,
+      "soc_final_error_percentage_points": -15.305363388944272,
+      "screening_pass": false,
+      "volume_assumption": "hydrogen EOS density at declared nominal working pressure and 15 °C"
+    },
+    {
+      "case_id": "H2P-L36",
+      "lab_test_number": 36,
+      "test_code": "FM 3",
+      "tank_capacity_kg": 4.7,
+      "nominal_working_pressure_mpa": 70.0,
+      "tank_volume_assumed_m3": 0.11699316780055986,
+      "geometry_basis": "capacity_eos",
+      "effective_volume_multiplier": 1.0,
+      "gas_liner_ua_multiplier": 1.0,
+      "vehicle_tank_thermal_model": "mixed_convection",
+      "vehicle_internal_diameter_m": 0.29733610690496937,
+      "vehicle_internal_length_m": 1.4866805345248468,
+      "vehicle_inlet_nozzle_diameter_m": 0.003,
+      "vehicle_equivalent_capsule_aspect_ratio": 5.0,
+      "vehicle_geometry_derivation": "volume_preserving_equivalent_capsule",
+      "dispenser_flow_area_multiplier": 2.0,
+      "precooler_duty_multiplier": 16.0,
+      "chamber_temperature_c": 20.0,
+      "scheduled_aprr_mpa_min": 18.0,
+      "experimental_duration_s": 248.00000013783574,
+      "experimental_final_pressure_mpa": 72.36,
+      "model_target_pressure_mpa": 72.36,
+      "experimental_peak_temperature_c": 61.61266666666668,
+      "experimental_final_soc_percent": 92.1958442803938,
+      "predicted_final_pressure_mpa": 72.37381232330242,
+      "predicted_peak_temperature_c": 73.60937056759974,
+      "predicted_final_soc_percent": 89.73384573101971,
+      "predicted_peak_mass_flow_g_s": 44.03372141636688,
+      "mass_flow_rmse_g_s": 9.609686362215358,
+      "mass_flow_peak_error_g_s": 17.576510112324065,
+      "experimental_first_half_mass_fraction": 0.6018802352950412,
+      "predicted_first_half_mass_fraction": 0.4736156095568107,
+      "active_fueling_duration_s": 225.0000525964424,
+      "active_pressure_reference_tracking_rmse_mpa": 7.303590057055646,
+      "active_pressure_reference_final_lag_mpa": -2.4071623246954914,
+      "active_hose_inlet_temperature_rmse_c": 8.786941287739927,
+      "active_precooler_outlet_temperature_rmse_c": 12.31861427045921,
+      "active_dispatch_sample_counts": {
+        "low": 130,
+        "none": 2,
+        "medium": 49,
+        "high": 45
+      },
+      "bank_pressures_at_active_end_mpa": {
+        "low": 30.823491729583203,
+        "medium": 52.57920142017359,
+        "high": 77.92360122187021
+      },
+      "experimental_transferred_mass_kg": 4.179262502176361,
+      "predicted_transferred_mass_kg": 4.0058545311076905,
+      "final_fueling_phase": "idle",
+      "final_stop_reason": "vehicle-target",
+      "controller_final_stop_reason": "operator-idle",
+      "first_stop_time_s": 226.00005283020437,
+      "first_stop_reason": "target-pressure",
+      "sample_count": 249,
+      "pressure_rmse_mpa": 5.342900687608467,
+      "pressure_mae_mpa": 4.471420581000839,
+      "pressure_final_error_mpa": 0.01381232330241744,
+      "temperature_rmse_c": 7.0824753669214005,
+      "temperature_mae_c": 5.7567531495182696,
+      "temperature_peak_error_c": 11.996703900933063,
+      "soc_rmse_percentage_points": 7.027534440874652,
+      "soc_final_error_percentage_points": -2.461998549374087,
+      "screening_pass": false,
+      "volume_assumption": "hydrogen EOS density at declared nominal working pressure and 15 °C"
+    }
+  ]
+}

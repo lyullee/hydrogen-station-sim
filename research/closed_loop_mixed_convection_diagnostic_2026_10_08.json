@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-08T09:17:37.301159+00:00",
+  "artifact_type": "post_outcome_closed_loop_mixed_convection_diagnostic",
+  "evidence_role": "model-development diagnostic only",
+  "post_outcome": true,
+  "parameter_fitting": false,
+  "production_default_changed": false,
+  "validation_gate_effect": "none",
+  "source_commit": "ffebf256fa2316d5f691cca00c005279b25706ff",
+  "source_worktree_dirty_during_execution": true,
+  "runner_sha256_at_execution": "5561f1c2b5975fdf63c59cb3698b77a5cf90b3565afe74efc8e7a37909276c56",
+  "result_sha256": "84497e7ec2b24dcd24a31591669812de1d8e87472558e10e4da6d174de61bce2",
+  "configuration": {
+    "case_ids": [
+      "H2P-L03",
+      "H2P-L09",
+      "H2P-L12",
+      "H2P-L15",
+      "H2P-L18",
+      "H2P-L21",
+      "H2P-L24",
+      "H2P-L27",
+      "H2P-L30",
+      "H2P-L33",
+      "H2P-L36"
+    ],
+    "case_count": 11,
+    "geometry_basis": "capacity_eos",
+    "vehicle_tank_thermal_model": "mixed_convection",
+    "equivalent_capsule_aspect_ratio": 5.0,
+    "inlet_nozzle_diameter_mm": 3.0,
+    "dispenser_flow_area_multiplier": 2.0,
+    "precooler_duty_multiplier": 16.0,
+    "geometry_status": "volume-preserving lumped surrogate; physical vessel pack undisclosed"
+  },
+  "baseline": {
+    "artifact": "research/closed_loop_internal_comparison_v2.json",
+    "screening_pass_count": 2,
+    "metrics_mean": {
+      "pressure_rmse_mpa": 4.529542460901498,
+      "temperature_rmse_c": 7.819001473367806,
+      "soc_rmse_percentage_points": 4.625272093704332
+    }
+  },
+  "mixed_convection": {
+    "artifact": "data/public_validation/results/closed_loop_internal_mixed_convection_diagnostic/validation.json",
+    "screening_pass_count": 2,
+    "metrics_mean": {
+      "pressure_rmse_mpa": 4.310972182534457,
+      "temperature_rmse_c": 7.156124878915967,
+      "soc_rmse_percentage_points": 4.380386163853669
+    }
+  },
+  "absolute_change_mixed_minus_baseline": {
+    "pressure_rmse_mpa": -0.21857027836704024,
+    "temperature_rmse_c": -0.6628765944518396,
+    "soc_rmse_percentage_points": -0.24488592985066315
+  },
+  "relative_change_percent": {
+    "pressure_rmse_mpa": -4.825438336293662,
+    "temperature_rmse_c": -8.477765309415203,
+    "soc_rmse_percentage_points": -5.294519433440219
+  },
+  "decision": "Retain constant-UA as the production default. Mixed convection modestly reduced all three aggregate mean errors but did not increase the joint screen pass count; controller and boundary-model error remains material.",
+  "claim_boundary": "The 11 outcomes were already inspected before this model-form comparison. The result cannot revise the frozen 0/8 MC Default holdout, identify the undisclosed physical tank/nozzle geometry, establish SAE conformance, validate field safety, or close an IJHE external-validation gate."
+}

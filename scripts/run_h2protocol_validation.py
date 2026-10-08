@@ -13,6 +13,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 import csv
 from datetime import datetime, timezone
 import json
+import math
 from pathlib import Path
 import subprocess
 
@@ -79,6 +80,29 @@ def _tank_volume_from_nominal_capacity(capacity_kg: float) -> float:
     return 0.122 * capacity_kg / 4.7
 
 
+def equivalent_capsule_geometry(
+    volume_m3: float,
+    cylindrical_length_to_diameter: float,
+) -> tuple[float, float]:
+    """Return a volume-preserving cylinder with two hemispherical ends.
+
+    Public J2601 case tables declare nominal tank capacity but do not identify
+    the physical vessel pack.  This helper therefore creates only a lumped
+    research surrogate.  The aspect ratio must be declared before execution;
+    the validation runner never estimates it from case outcomes.
+    """
+
+    if volume_m3 <= 0.0:
+        raise ValueError("volume_m3 must be positive")
+    if cylindrical_length_to_diameter <= 0.0:
+        raise ValueError("cylindrical_length_to_diameter must be positive")
+    coefficient = math.pi * (
+        cylindrical_length_to_diameter / 4.0 + 1.0 / 6.0
+    )
+    diameter_m = (volume_m3 / coefficient) ** (1.0 / 3.0)
+    return diameter_m, cylindrical_length_to_diameter * diameter_m
+
+
 def run_case(
     summary: dict[str, str],
     trace_rows: list[dict[str, str]],
@@ -90,6 +114,7 @@ def run_case(
     vehicle_internal_diameter_m: float | None = None,
     vehicle_internal_length_m: float | None = None,
     vehicle_inlet_nozzle_diameter_m: float | None = None,
+    vehicle_equivalent_capsule_aspect_ratio: float | None = None,
 ) -> dict:
     case_id = summary["case_id"]
     exp_time = np.asarray([_float(row, "time_s") for row in trace_rows])
@@ -118,6 +143,50 @@ def run_case(
     else:
         raise ValueError(
             "geometry_basis must be 'capacity_scaled' or 'capacity_eos'"
+        )
+    geometry_derivation = (
+        "explicit_dimensions"
+        if vehicle_tank_thermal_model == "mixed_convection"
+        else "not_required"
+    )
+    if vehicle_tank_thermal_model == "mixed_convection":
+        explicit_geometry = (
+            vehicle_internal_diameter_m is not None
+            or vehicle_internal_length_m is not None
+        )
+        if explicit_geometry and vehicle_equivalent_capsule_aspect_ratio is not None:
+            raise ValueError(
+                "Do not combine explicit tank dimensions with an equivalent-capsule "
+                "aspect ratio"
+            )
+        if vehicle_equivalent_capsule_aspect_ratio is not None:
+            vehicle_internal_diameter_m, vehicle_internal_length_m = (
+                equivalent_capsule_geometry(
+                    tank_volume,
+                    vehicle_equivalent_capsule_aspect_ratio,
+                )
+            )
+            geometry_derivation = "volume_preserving_equivalent_capsule"
+        required = {
+            "vehicle_internal_diameter_m": vehicle_internal_diameter_m,
+            "vehicle_internal_length_m": vehicle_internal_length_m,
+            "vehicle_inlet_nozzle_diameter_m": vehicle_inlet_nozzle_diameter_m,
+        }
+        missing = [name for name, value in required.items() if value is None]
+        if missing:
+            raise ValueError(
+                "mixed_convection requires explicit geometry or a declared "
+                "equivalent-capsule aspect ratio: " + ", ".join(missing)
+            )
+    elif any(value is not None for value in (
+        vehicle_internal_diameter_m,
+        vehicle_internal_length_m,
+        vehicle_inlet_nozzle_diameter_m,
+        vehicle_equivalent_capsule_aspect_ratio,
+    )):
+        raise ValueError(
+            "Tank/nozzle geometry options require vehicle_tank_thermal_model="
+            "'mixed_convection'"
         )
     tank_fit = tank_fit or {
         "effective_volume_multiplier": 1.0,
@@ -271,6 +340,10 @@ def run_case(
         "vehicle_internal_diameter_m": vehicle_internal_diameter_m,
         "vehicle_internal_length_m": vehicle_internal_length_m,
         "vehicle_inlet_nozzle_diameter_m": vehicle_inlet_nozzle_diameter_m,
+        "vehicle_equivalent_capsule_aspect_ratio": (
+            vehicle_equivalent_capsule_aspect_ratio
+        ),
+        "vehicle_geometry_derivation": geometry_derivation,
         "dispenser_flow_area_multiplier": dispenser_flow_area_multiplier,
         "precooler_duty_multiplier": precooler_duty_multiplier,
         "chamber_temperature_c": _float(summary, "chamber_temperature_c"),
@@ -342,6 +415,7 @@ def _run_case_file(
     vehicle_internal_diameter_m: float | None = None,
     vehicle_internal_length_m: float | None = None,
     vehicle_inlet_nozzle_diameter_m: float | None = None,
+    vehicle_equivalent_capsule_aspect_ratio: float | None = None,
 ) -> dict:
     return run_case(
         summary,
@@ -354,6 +428,7 @@ def _run_case_file(
         vehicle_internal_diameter_m,
         vehicle_internal_length_m,
         vehicle_inlet_nozzle_diameter_m,
+        vehicle_equivalent_capsule_aspect_ratio,
     )
 
 
@@ -440,6 +515,9 @@ def _write_markdown(path: Path, report: dict) -> None:
         f"- Precooler duty multiplier: `{report['precooler_duty_multiplier']}`",
         f"- Thermal calibration source: `{report['thermal_calibration_source'] or 'none'}`",
         f"- Vehicle geometry basis: `{report.get('geometry_basis', 'capacity_scaled')}`",
+        f"- Vehicle thermal model: `{report.get('vehicle_tank_thermal_model', 'constant_ua')}`",
+        f"- Equivalent capsule aspect ratio: `{report.get('vehicle_equivalent_capsule_aspect_ratio')}`",
+        f"- Inlet nozzle diameter: `{report.get('vehicle_inlet_nozzle_diameter_m')}` m",
         f"- Selected laboratory tests: `{report['selected_lab_test_numbers'] or 'all 36'}`",
         "",
         "## Aggregate agreement",
@@ -511,7 +589,21 @@ def _write_markdown(path: Path, report: dict) -> None:
         "",
         "- Initial pressure and gas temperature, chamber temperature, scheduled APRR, median inlet-gas temperature, and final comparison time come from each experiment.",
         "- Maximum flow remains fixed at the 60 g/s model setting; observed peak flow is not fitted.",
-        "- Vessel volume is scaled from the demonstrator's 0.122 m³ per 4.7 kg surrogate because the public overview does not provide machine-readable vessel geometry.",
+        (
+            "- Vessel gas volume is calculated from declared capacity and hydrogen EOS "
+            "density at nominal pressure and 15 °C."
+            if report.get("geometry_basis") == "capacity_eos" else
+            "- Vessel volume is scaled from the demonstrator's 0.122 m³ per 4.7 kg "
+            "surrogate because the public overview does not provide machine-readable "
+            "vessel geometry."
+        ),
+        (
+            "- Mixed convection uses a volume-preserving capsule surrogate with the "
+            "declared aspect ratio and nozzle diameter. It is a model-form diagnostic, "
+            "not a reconstruction of the undisclosed physical vessel pack."
+            if report.get("vehicle_tank_thermal_model") == "mixed_convection" else
+            "- The constant-UA tank model does not require an assumed vessel aspect ratio."
+        ),
         "- Predictions are interpolated to the experimental clock without dynamic time warping.",
     ])
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -547,10 +639,60 @@ def main() -> int:
         help="Load the selected global precooler-duty multiplier from calibration.json",
     )
     parser.add_argument(
+        "--vehicle-tank-thermal-model",
+        choices=("constant_ua", "mixed_convection"),
+        default="constant_ua",
+        help=(
+            "Tank heat-transfer model. mixed_convection is a research path and "
+            "requires a declared equivalent geometry and inlet-nozzle diameter."
+        ),
+    )
+    parser.add_argument(
+        "--vehicle-equivalent-capsule-aspect-ratio",
+        type=float,
+        help=(
+            "Cylindrical length/diameter for a volume-preserving capsule surrogate; "
+            "required with mixed_convection."
+        ),
+    )
+    parser.add_argument(
+        "--vehicle-inlet-nozzle-diameter-mm",
+        type=float,
+        help="Declared inlet-nozzle diameter in millimetres; required with mixed_convection.",
+    )
+    parser.add_argument(
         "--lab-test-numbers",
         help="Optional comma-separated frozen subset, for example 3,9,12",
     )
     args = parser.parse_args()
+    if args.vehicle_tank_thermal_model == "mixed_convection":
+        if (
+            args.vehicle_equivalent_capsule_aspect_ratio is None
+            or args.vehicle_inlet_nozzle_diameter_mm is None
+        ):
+            raise SystemExit(
+                "mixed_convection requires --vehicle-equivalent-capsule-aspect-ratio "
+                "and --vehicle-inlet-nozzle-diameter-mm"
+            )
+        if args.vehicle_equivalent_capsule_aspect_ratio <= 0.0:
+            raise SystemExit(
+                "--vehicle-equivalent-capsule-aspect-ratio must be positive"
+            )
+        if args.vehicle_inlet_nozzle_diameter_mm <= 0.0:
+            raise SystemExit("--vehicle-inlet-nozzle-diameter-mm must be positive")
+    elif (
+        args.vehicle_equivalent_capsule_aspect_ratio is not None
+        or args.vehicle_inlet_nozzle_diameter_mm is not None
+    ):
+        raise SystemExit(
+            "Equivalent geometry options require --vehicle-tank-thermal-model "
+            "mixed_convection"
+        )
+    inlet_nozzle_diameter_m = (
+        None
+        if args.vehicle_inlet_nozzle_diameter_mm is None
+        else args.vehicle_inlet_nozzle_diameter_mm / 1000.0
+    )
     flow_calibration_source = None
     if args.flow_calibration_json is not None:
         if args.dispenser_flow_area_multiplier != 1.0:
@@ -622,6 +764,11 @@ def main() -> int:
                 args.dispenser_flow_area_multiplier,
                 args.precooler_duty_multiplier,
                 args.geometry_basis,
+                args.vehicle_tank_thermal_model,
+                None,
+                None,
+                inlet_nozzle_diameter_m,
+                args.vehicle_equivalent_capsule_aspect_ratio,
             )
             rows.append(result)
             print(f"validated {result['case_id']}", flush=True)
@@ -636,6 +783,11 @@ def main() -> int:
                     args.dispenser_flow_area_multiplier,
                     args.precooler_duty_multiplier,
                     args.geometry_basis,
+                    args.vehicle_tank_thermal_model,
+                    None,
+                    None,
+                    inlet_nozzle_diameter_m,
+                    args.vehicle_equivalent_capsule_aspect_ratio,
                 ): summary["case_id"]
                 for summary in ordered_summaries
             }
@@ -657,6 +809,11 @@ def main() -> int:
         "flow_calibration_source": flow_calibration_source,
         "precooler_duty_multiplier": args.precooler_duty_multiplier,
         "geometry_basis": args.geometry_basis,
+        "vehicle_tank_thermal_model": args.vehicle_tank_thermal_model,
+        "vehicle_equivalent_capsule_aspect_ratio": (
+            args.vehicle_equivalent_capsule_aspect_ratio
+        ),
+        "vehicle_inlet_nozzle_diameter_m": inlet_nozzle_diameter_m,
         "thermal_calibration_source": thermal_calibration_source,
         "selected_lab_test_numbers": (
             sorted(selected_lab_tests) if selected_lab_tests is not None else None
