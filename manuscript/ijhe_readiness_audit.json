@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T10:02:28.669785+00:00",
+  "generated_at": "2026-10-08T10:34:50.143173+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 106,
+    "PASS": 107,
     "FAIL": 10,
     "PENDING": 8
   },
@@ -399,6 +399,24 @@
           7.915347030876859
         ],
         "joint_primary_screen_passes": 3,
+        "runtime_parameter_updated": false,
+        "validation_gate_effect": "none"
+      }
+    },
+    {
+      "id": "woodfield_heat_transfer_development_integrity",
+      "status": "PASS",
+      "claim": "The pre-existing inlet-forced heat-transfer mechanism improves an external metal-tank filling replay while remaining inactive during discharge, without fitting or promotion.",
+      "evidence": "research\\woodfield_metal_tank_heat_transfer_development_2026_10_08.json",
+      "requirement": "Pinned source commit and hashes, aggregate metrics only, positive filling improvement, identical discharge result, no runtime change and explicit zero validation-gate effect.",
+      "observed": {
+        "source_commit": "1040d758b819533451086baa5cf2a47b4292a22f",
+        "fill_pressure_rmse_reduction_percent": 30.499200393810554,
+        "fill_temperature_envelope_rmse_reduction_percent": 68.22987269832011,
+        "discharge_path_unchanged": true,
+        "conservation_pass": true,
+        "maximum_mass_residual_relative": 3.242546167695795e-15,
+        "maximum_energy_residual_relative": 7.350779843384536e-13,
         "runtime_parameter_updated": false,
         "validation_gate_effect": "none"
       }
@@ -7012,11 +7030,11 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7990,
+          "approximate_manuscript_words_before_references": 7999,
           "figures": 3,
           "tables": 3,
-          "citation_keys": 48,
-          "bibliography_entries": 49,
+          "citation_keys": 49,
+          "bibliography_entries": 50,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -7044,12 +7062,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-08T10:01:50.110682+00:00",
+        "attempted_at": "2026-10-08T10:34:49.741114+00:00",
         "attempts_this_run": 1,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "f6234a5571637c5c7abdfa523e03b4c010578c9f4fa1668b0c8bc1a1be76dc17",
+        "source_sha256": "ebc29385c79d66b03824e99577200ae5bdfeb5298da55fe4f2eb747e3d18631e",
         "diagnostic": "Unable to find standard directories for platform",
         "format_check_passed": true,
         "retained_previous_pdf": {

@@ -899,6 +899,21 @@
       "runtime_comparison": "research/runtime_qra_envelope_comparison_2026_10_08.json",
       "rights_note": "CC BY 4.0. The audit retains hashes and derived summaries; downloaded raw files remain outside version control.",
       "eligibility_note": "Simulation-to-simulation diagnostic only. It is not experimental consequence validation, a site-specific safety-distance basis, a field incident dataset, or authority to tune runtime parameters after outcome access."
+    },
+    "woodfield_hyddown_metal_tank": {
+      "title": "Woodfield hydrogen vessel filling and discharge traces transcribed in HydDown",
+      "publisher": "HydDown public GitHub repository",
+      "landing_page": "https://github.com/andr1976/HydDown",
+      "repository_commit": "1040d758b819533451086baa5cf2a47b4292a22f",
+      "repository_license": "MIT",
+      "original_publication_doi": "10.1299/jtst.2.180",
+      "source_file_sha256": {
+        "fillingH2_woodfield.yml": "d2978ccbd9928ae8c8c363f9a7fc912ad3ba9e5d67b3c30ae8c30ddb2e14af54",
+        "dischargeH2_woodfield.yml": "c0f5c3f96670f2e7063b9c99dcebb3871c758ad78f41253ca431ec3bf4a82f8b"
+      },
+      "evidence_role": "Post-access metal-tank heat-transfer mechanism diagnostic only.",
+      "rights_note": "The HydDown repository is MIT licensed, but redistribution rights for the original experimental arrays were not independently established. Only hashes, source metadata and aggregate errors are committed.",
+      "eligibility_note": "The outcomes were inspected before this comparison and the vessel is a small Type-I metal tank. The result cannot serve as prospective Type-III/IV or full-station validation and does not select runtime parameters."
     }
   }
 }

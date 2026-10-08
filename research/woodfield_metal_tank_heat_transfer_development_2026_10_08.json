@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-08T10:34:13.512374+00:00",
+  "artifact_type": "post_access_woodfield_metal_tank_heat_transfer_development",
+  "evidence_role": "model-development diagnostic only",
+  "post_access": true,
+  "parameter_fitting": false,
+  "runtime_parameter_updated": false,
+  "validation_gate_effect": "none",
+  "source": {
+    "repository": "https://github.com/andr1976/HydDown",
+    "commit": "1040d758b819533451086baa5cf2a47b4292a22f",
+    "license": "MIT",
+    "case_ids": [
+      "Woodfield filling H2",
+      "Woodfield discharge H2"
+    ],
+    "original_publication": {
+      "title": "Measurement of Averaged Heat Transfer Coefficients in High-Pressure Vessel during Charging with Hydrogen, Nitrogen or Argon Gas",
+      "doi": "10.1299/jtst.2.180",
+      "year": 2007
+    },
+    "source_hashes": {
+      "fillingH2_woodfield.yml": "d2978ccbd9928ae8c8c363f9a7fc912ad3ba9e5d67b3c30ae8c30ddb2e14af54",
+      "dischargeH2_woodfield.yml": "c0f5c3f96670f2e7063b9c99dcebb3871c758ad78f41253ca431ec3bf4a82f8b"
+    },
+    "source_hashes_match": true,
+    "original_measurement_rights_independently_confirmed": false
+  },
+  "privacy_and_rights": {
+    "raw_measurement_rows_persisted": false,
+    "raw_measurement_arrays_persisted": false,
+    "absolute_local_source_path_persisted": false,
+    "derived_metrics_only": true,
+    "rights_boundary": "The HydDown repository is MIT licensed, but the embedded measurement arrays are a secondary transcription. Only hashes, source metadata and aggregate errors are retained here."
+  },
+  "model": {
+    "real_gas_eos": "CoolProp HEOS Hydrogen",
+    "gas_control_volume": "uniform pressure and bulk temperature",
+    "wall_control_volume": "single measured-geometry steel thermal mass",
+    "natural_convection": "Churchill-Chu horizontal-cylinder form",
+    "station_mixed_convection": "existing Nu_forced = 1.5 sqrt(D_nozzle/D_tank) Re^0.67; forced term active during positive inlet flow only",
+    "discharge_flow": "real-gas isentropic maximum-flux orifice",
+    "formulation_source_commit": "91698f51",
+    "formulation_changed_for_this_dataset": false
+  },
+  "experiments": {
+    "fill": {
+      "natural_convection_only": {
+        "mode": "fill",
+        "correlation": "natural",
+        "volume_l": 0.9617294758581361,
+        "wall_volume_l": 0.3278251934020948,
+        "wall_capacity_j_k": 1278.5182542681696,
+        "pressure_rmse_bar": 13.21837656627008,
+        "temperature_midpoint_rmse_k": 26.045610814208416,
+        "temperature_envelope_rmse_k": 24.09847393666159,
+        "predicted_peak_temperature_k": 371.59765083677587,
+        "predicted_final_pressure_bar": 113.0155939038836,
+        "predicted_final_temperature_k": 313.1003316292152,
+        "mass_residual_relative": 2.2182064974862908e-16,
+        "energy_residual_relative": 1.9004432474986222e-14
+      },
+      "station_mixed_convection": {
+        "mode": "fill",
+        "correlation": "ours",
+        "volume_l": 0.9617294758581361,
+        "wall_volume_l": 0.3278251934020948,
+        "wall_capacity_j_k": 1278.5182542681696,
+        "pressure_rmse_bar": 9.186877408514874,
+        "temperature_midpoint_rmse_k": 9.869037425478194,
+        "temperature_envelope_rmse_k": 7.656115847439535,
+        "predicted_peak_temperature_k": 323.56555764867204,
+        "predicted_final_pressure_bar": 112.77121641114314,
+        "predicted_final_temperature_k": 312.43665936084096,
+        "mass_residual_relative": 6.65463381404461e-16,
+        "energy_residual_relative": 6.708334627745835e-14
+      }
+    },
+    "discharge": {
+      "natural_convection_only": {
+        "mode": "discharge",
+        "correlation": "natural",
+        "volume_l": 0.9365873098514571,
+        "wall_volume_l": 2.9567884657423744,
+        "wall_capacity_j_k": 11531.475016395261,
+        "pressure_rmse_bar": 1.0621039492966495,
+        "temperature_midpoint_rmse_k": 13.590153230068932,
+        "temperature_envelope_rmse_k": 9.034304824850429,
+        "predicted_peak_temperature_k": 305.0000000000001,
+        "predicted_final_pressure_bar": 1.0001009220475188,
+        "predicted_final_temperature_k": 304.41766492821273,
+        "mass_residual_relative": 3.242546167695795e-15,
+        "energy_residual_relative": 7.350779843384536e-13
+      },
+      "station_mixed_convection": {
+        "mode": "discharge",
+        "correlation": "ours",
+        "volume_l": 0.9365873098514571,
+        "wall_volume_l": 2.9567884657423744,
+        "wall_capacity_j_k": 11531.475016395261,
+        "pressure_rmse_bar": 1.0621039492966495,
+        "temperature_midpoint_rmse_k": 13.590153230068932,
+        "temperature_envelope_rmse_k": 9.034304824850429,
+        "predicted_peak_temperature_k": 305.0000000000001,
+        "predicted_final_pressure_bar": 1.0001009220475188,
+        "predicted_final_temperature_k": 304.41766492821273,
+        "mass_residual_relative": 3.242546167695795e-15,
+        "energy_residual_relative": 7.350779843384536e-13
+      }
+    }
+  },
+  "comparisons": {
+    "fill_pressure_rmse_reduction_percent": 30.499200393810554,
+    "fill_temperature_envelope_rmse_reduction_percent": 68.22987269832011,
+    "discharge_pressure_rmse_difference_bar": 0.0,
+    "discharge_temperature_envelope_rmse_difference_k": 0.0
+  },
+  "interpretation": {
+    "fill_mechanism_supported": true,
+    "discharge_path_unchanged_by_inlet_forcing": true,
+    "production_default_change_supported": false,
+    "prospective_validation_claim_supported": false,
+    "next_evidence": "Freeze the unchanged mixed-convection formulation and exact geometry before opening a new independent Type-III/IV fill."
+  },
+  "claim_boundary": "The already inspected Woodfield traces support mechanism diagnosis only. They do not close the prospective tank-thermal validation gate, select a production parameter, or validate the full station loop."
+}

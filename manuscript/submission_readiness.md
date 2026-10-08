@@ -20,7 +20,13 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **106 PASS · 10 FAIL · 8 PENDING**.
+Gate counts: **107 PASS · 10 FAIL · 8 PENDING**.
+
+A post-access Woodfield metal-vessel replay supports the existing filling-jet
+heat-transfer mechanism: pressure and temperature-envelope RMSE fell 30.50% and
+68.23%, while the inlet term remained inactive during discharge. It remains
+development evidence because the data were already inspected and are not an
+independent Type-III/IV or station-loop validation.
 
 The HyTunnel-CS CC BY 4.0 actual-hydrogen archive now provides a completed
 raw-time-series holdout over 18 mechanically ventilated enclosure experiments

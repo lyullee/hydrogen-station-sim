@@ -574,6 +574,115 @@ def audit(root: Path) -> dict[str, object]:
         } if dickens_diagnostic else "missing",
     ))
 
+    woodfield_path = (
+        root
+        / "research/woodfield_metal_tank_heat_transfer_development_2026_10_08.json"
+    )
+    woodfield = _json(woodfield_path)
+    woodfield_source = (woodfield or {}).get("source") or {}
+    woodfield_rights = (woodfield or {}).get("privacy_and_rights") or {}
+    woodfield_comparison = (woodfield or {}).get("comparisons") or {}
+    woodfield_interpretation = (woodfield or {}).get("interpretation") or {}
+    woodfield_experiments = (woodfield or {}).get("experiments") or {}
+    woodfield_runs = [
+        run
+        for experiment in woodfield_experiments.values()
+        if isinstance(experiment, dict)
+        for run in experiment.values()
+        if isinstance(run, dict)
+    ]
+    woodfield_conservation_pass = bool(
+        len(woodfield_runs) == 4
+        and all(
+            run.get("mass_residual_relative", 1.0) <= 1.0e-9
+            and run.get("energy_residual_relative", 1.0) <= 1.0e-9
+            for run in woodfield_runs
+        )
+    )
+    woodfield_pass = bool(
+        (woodfield or {}).get("artifact_type")
+        == "post_access_woodfield_metal_tank_heat_transfer_development"
+        and (woodfield or {}).get("evidence_role")
+        == "model-development diagnostic only"
+        and (woodfield or {}).get("post_access") is True
+        and (woodfield or {}).get("parameter_fitting") is False
+        and (woodfield or {}).get("runtime_parameter_updated") is False
+        and (woodfield or {}).get("validation_gate_effect") == "none"
+        and woodfield_source.get("commit")
+        == "1040d758b819533451086baa5cf2a47b4292a22f"
+        and woodfield_source.get("source_hashes_match") is True
+        and woodfield_source.get(
+            "original_measurement_rights_independently_confirmed"
+        ) is False
+        and woodfield_rights.get("raw_measurement_rows_persisted") is False
+        and woodfield_rights.get("raw_measurement_arrays_persisted") is False
+        and woodfield_rights.get("absolute_local_source_path_persisted") is False
+        and set(woodfield_experiments) == {"fill", "discharge"}
+        and woodfield_conservation_pass
+        and woodfield_comparison.get(
+            "fill_pressure_rmse_reduction_percent", -1.0
+        ) > 0.0
+        and woodfield_comparison.get(
+            "fill_temperature_envelope_rmse_reduction_percent", -1.0
+        ) > 0.0
+        and woodfield_interpretation.get("fill_mechanism_supported") is True
+        and woodfield_interpretation.get(
+            "discharge_path_unchanged_by_inlet_forcing"
+        ) is True
+        and woodfield_interpretation.get(
+            "production_default_change_supported"
+        ) is False
+        and woodfield_interpretation.get(
+            "prospective_validation_claim_supported"
+        ) is False
+    )
+    gates.append(_gate(
+        "woodfield_heat_transfer_development_integrity",
+        "PASS" if woodfield_pass else ("FAIL" if woodfield else "PENDING"),
+        "The pre-existing inlet-forced heat-transfer mechanism improves an "
+        "external metal-tank filling replay while remaining inactive during "
+        "discharge, without fitting or promotion.",
+        str(woodfield_path.relative_to(root)),
+        "Pinned source commit and hashes, aggregate metrics only, positive "
+        "filling improvement, identical discharge result, no runtime change "
+        "and explicit zero validation-gate effect.",
+        {
+            "source_commit": woodfield_source.get("commit"),
+            "fill_pressure_rmse_reduction_percent": woodfield_comparison.get(
+                "fill_pressure_rmse_reduction_percent"
+            ),
+            "fill_temperature_envelope_rmse_reduction_percent": (
+                woodfield_comparison.get(
+                    "fill_temperature_envelope_rmse_reduction_percent"
+                )
+            ),
+            "discharge_path_unchanged": woodfield_interpretation.get(
+                "discharge_path_unchanged_by_inlet_forcing"
+            ),
+            "conservation_pass": woodfield_conservation_pass,
+            "maximum_mass_residual_relative": max(
+                (
+                    run.get("mass_residual_relative", 1.0)
+                    for run in woodfield_runs
+                ),
+                default=None,
+            ),
+            "maximum_energy_residual_relative": max(
+                (
+                    run.get("energy_residual_relative", 1.0)
+                    for run in woodfield_runs
+                ),
+                default=None,
+            ),
+            "runtime_parameter_updated": (woodfield or {}).get(
+                "runtime_parameter_updated"
+            ),
+            "validation_gate_effect": (woodfield or {}).get(
+                "validation_gate_effect"
+            ),
+        } if woodfield else "missing",
+    ))
+
     correction_path = root / "research/h2protocol_active_fill_correction.json"
     correction = _json(correction_path)
     corrected_trace = (correction or {}).get("h2p_l29") or {}

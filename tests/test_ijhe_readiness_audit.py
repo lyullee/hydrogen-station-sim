@@ -70,6 +70,20 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert mixed["joint_primary_screen_passes"] == 3
     assert mixed["runtime_parameter_updated"] is False
     assert mixed["validation_gate_effect"] == "none"
+    assert gates[
+        "woodfield_heat_transfer_development_integrity"
+    ]["status"] == "PASS"
+    woodfield = gates[
+        "woodfield_heat_transfer_development_integrity"
+    ]["observed"]
+    assert woodfield["fill_pressure_rmse_reduction_percent"] > 20.0
+    assert woodfield["fill_temperature_envelope_rmse_reduction_percent"] > 60.0
+    assert woodfield["discharge_path_unchanged"] is True
+    assert woodfield["conservation_pass"] is True
+    assert woodfield["maximum_mass_residual_relative"] < 1.0e-9
+    assert woodfield["maximum_energy_residual_relative"] < 1.0e-9
+    assert woodfield["runtime_parameter_updated"] is False
+    assert woodfield["validation_gate_effect"] == "none"
     assert gates["hyram_adapter_verification"]["status"] == "PASS"
     assert gates["molkov_jet_flame_literature_benchmark"]["status"] == "PASS"
     molkov = gates["molkov_jet_flame_literature_benchmark"]["observed"]
