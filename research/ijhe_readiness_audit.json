@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T18:15:24.010660+00:00",
+  "generated_at": "2026-10-08T19:33:36.111265+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -1145,14 +1145,16 @@
           "CGA": 15,
           "API": 9
         },
-        "bundle_count": 8,
+        "bundle_count": 9,
         "coverage": {
           "local_station_data_is_sparse": false,
           "station_side_dynamic_evidence_is_substantial": true,
           "local_hazop_scenario_coverage_is_substantial": true,
           "vehicle_side_full_loop_validation_ready": false,
           "quantitative_consequence_validation_ready": false,
-          "main_limit": "The local collection is rich in station-side telemetry, operational sequences, qualitative hazard controls and engineering context, but synchronized vehicle pressure/temperature/SOC/delivered-mass channels are not yet attested as one independent full-loop cohort."
+          "main_limit": "The local collection is rich on station-side dynamics, procedure/hazard controls, asset context and visual operational media, while a single independently attested station-to-vehicle synchronized cohort with vehicle pressure/temperature, delivered mass or SOC is still missing.",
+          "local_operational_visual_evidence_is_substantial": true,
+          "local_operational_visual_evidence_is_quantitatively_validated": false
         },
         "privacy": {
           "source_paths_published": false,
