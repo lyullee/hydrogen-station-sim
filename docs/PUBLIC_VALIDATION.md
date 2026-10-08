@@ -536,6 +536,25 @@ These cases are now consumed development evidence; any revised heat-transfer,
 property-domain or valve/line model requires a separately frozen external
 holdout.
 
+## Cascade-inventory boundary sensitivity
+
+The public H2Protocol vehicle records do not identify the connected station-side
+storage inventory. A separate source-pressure audit showed that the observed
+pressure drop would conditionally correspond to 2.737–8.697 m³ under a simplified
+constant-volume balance, rather than the demonstrator's 0.35 m³ bank. The model now
+accepts explicit low-, medium- and high-bank volumes, while retaining 0.35 m³ as the
+production default.
+
+One post-outcome diagnostic fixed all three banks at 5.0 m³ and repeated the 11
+already-inspected closed-loop cases without a volume search. Engineering-screening
+passes increased from 2/11 to 6/11; mean pressure RMSE changed from 4.530 to
+4.357 MPa, temperature RMSE from 7.819 to 8.175 °C, and SOC RMSE from 4.625 to
+4.348 percentage points. Paired bootstrap confidence intervals for all three mean
+changes included zero. The result identifies source inventory and topology as a
+material candidate boundary, but it is neither an identified rig parameter nor an
+external validation. The default is unchanged. See
+[`CLOSED_LOOP_BANK_INVENTORY_SENSITIVITY_2026_10_08.md`](../research/CLOSED_LOOP_BANK_INVENTORY_SENSITIVITY_2026_10_08.md).
+
 ## Publication-readiness gate
 
 Treat an IJHE-level submission as ready only when all of the following evidence

@@ -247,3 +247,33 @@ Verification:
 - Mixed-convection geometry, CLI guard and claim-boundary focused tests passed.
 - The complete repository regression suite passed: 1,002 tests, 18 dependency
   warnings, no failures.
+
+## 2026-10-08 - Explicit cascade inventory and boundary diagnostic
+
+Status: implemented; the post-outcome sensitivity is diagnostic only and does not
+change the production default or an external-validation gate.
+
+Completed:
+
+- Replaced the hard-coded 0.35 m³ bank volume with independent low-, medium- and
+  high-bank scenario inputs while preserving 0.35 m³ defaults.
+- Recomputed initial bank mass from declared pressure, temperature and volume, and
+  scaled the lumped wall inventory and heat-transfer conductance with aggregate
+  vessel-module volume.
+- Exposed the inputs through the API, remote operating settings and H2Protocol
+  validation runner; invalid or incomplete volume triples are rejected.
+- Re-ran the 11 already-inspected closed-loop cases from clean commit `471f94b`
+  using one fixed 5.0 m³-per-bank source-inventory hypothesis and no volume grid.
+- Engineering-screening passes increased from 2/11 to 6/11; mean pressure and SOC
+  RMSE decreased by 0.173 MPa and 0.277 percentage points, while mean temperature
+  RMSE increased by 0.356 °C. Paired bootstrap intervals included zero.
+- Retained the 0.35 m³ reference default because public files do not disclose the
+  connected storage topology, valve states, regulation or source temperature.
+
+Verification:
+
+- The clean diagnostic artifact records commit `471f94b`, a clean worktree and a
+  SHA-256 digest of the complete per-case result.
+- Focused scenario, API, runner and readiness-integrity tests passed.
+- The complete repository regression suite passed: 1,011 tests, 18 dependency
+  warnings, no failures.

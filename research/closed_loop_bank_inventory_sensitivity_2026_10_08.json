@@ -1,0 +1,249 @@
+{
+  "schema_version": 1,
+  "artifact_type": "closed_loop_bank_inventory_sensitivity",
+  "generated_at_utc": "2026-10-08T09:42:07.412106+00:00",
+  "status": "POST_OUTCOME_DIAGNOSTIC_ONLY",
+  "source_commit": "471f94b28b6ed5fae80b4e470264d2f13a050940",
+  "source_worktree_dirty": false,
+  "question": "Does the demonstrator 0.35 m3-per-bank source inventory materially limit the closed-loop comparison?",
+  "design": {
+    "cases": [
+      "H2P-L03",
+      "H2P-L09",
+      "H2P-L12",
+      "H2P-L15",
+      "H2P-L18",
+      "H2P-L21",
+      "H2P-L24",
+      "H2P-L27",
+      "H2P-L30",
+      "H2P-L33",
+      "H2P-L36"
+    ],
+    "case_count": 11,
+    "baseline_bank_internal_volume_m3": [
+      0.35,
+      0.35,
+      0.35
+    ],
+    "alternative_bank_internal_volume_m3": [
+      5.0,
+      5.0,
+      5.0
+    ],
+    "alternative_selection": "One rounded source-inventory hypothesis inside the independently calculated 2.737-8.697 m3 conditional range; no volume grid or outcome-minimizing search was run.",
+    "other_parameters_unchanged": true,
+    "parameter_search": false,
+    "outcomes_previously_inspected": true
+  },
+  "baseline": {
+    "artifact": "research/closed_loop_internal_comparison_v2.json",
+    "aggregate": {
+      "case_count": 11,
+      "screening_pass_count": 2,
+      "screening_pass_fraction": 0.18181818181818182,
+      "pressure_rmse_mpa": 4.529542460901498,
+      "temperature_rmse_c": 7.819001473367806,
+      "soc_rmse_percentage_points": 4.625272093704332
+    }
+  },
+  "alternative": {
+    "artifact": "data/public_validation/results/closed_loop_bank_inventory_5m3_diagnostic/validation.json",
+    "sha256": "db9789a1275a793a1c99f7a18a3b47552032198c0181fc398369d80d8e888dca",
+    "aggregate": {
+      "case_count": 11,
+      "screening_pass_count": 6,
+      "screening_pass_fraction": 0.5454545454545454,
+      "pressure_rmse_mpa": 4.356586834214706,
+      "temperature_rmse_c": 8.175125921887052,
+      "soc_rmse_percentage_points": 4.348475911727268
+    }
+  },
+  "paired_change_alternative_minus_baseline": {
+    "pressure_rmse_mpa": {
+      "mean_change": -0.1729556266867907,
+      "bootstrap_95_ci": [
+        -0.856013582275665,
+        0.4752342719115042
+      ]
+    },
+    "temperature_rmse_c": {
+      "mean_change": 0.3561244485192456,
+      "bootstrap_95_ci": [
+        -0.13385889996514544,
+        0.9087734463834838
+      ]
+    },
+    "soc_rmse_percentage_points": {
+      "mean_change": -0.27679618197706335,
+      "bootstrap_95_ci": [
+        -1.01226449689319,
+        0.4345648343853375
+      ]
+    }
+  },
+  "cases": [
+    {
+      "case_id": "H2P-L03",
+      "baseline_screening_pass": false,
+      "alternative_screening_pass": true,
+      "baseline_pressure_rmse_mpa": 2.989775494026516,
+      "alternative_pressure_rmse_mpa": 2.6675450605008804,
+      "change_pressure_rmse_mpa": -0.32223043352563563,
+      "baseline_temperature_rmse_c": 7.150089456085436,
+      "alternative_temperature_rmse_c": 7.509376933586849,
+      "change_temperature_rmse_c": 0.35928747750141365,
+      "baseline_soc_rmse_percentage_points": 2.711510953623737,
+      "alternative_soc_rmse_percentage_points": 2.2884184041069706,
+      "change_soc_rmse_percentage_points": -0.42309254951676634
+    },
+    {
+      "case_id": "H2P-L09",
+      "baseline_screening_pass": false,
+      "alternative_screening_pass": true,
+      "baseline_pressure_rmse_mpa": 4.4065451475648585,
+      "alternative_pressure_rmse_mpa": 4.710829718405079,
+      "change_pressure_rmse_mpa": 0.3042845708402204,
+      "baseline_temperature_rmse_c": 6.637171555225489,
+      "alternative_temperature_rmse_c": 7.315321661090423,
+      "change_temperature_rmse_c": 0.6781501058649342,
+      "baseline_soc_rmse_percentage_points": 3.572503328909617,
+      "alternative_soc_rmse_percentage_points": 3.771309142935713,
+      "change_soc_rmse_percentage_points": 0.19880581402609598
+    },
+    {
+      "case_id": "H2P-L12",
+      "baseline_screening_pass": false,
+      "alternative_screening_pass": false,
+      "baseline_pressure_rmse_mpa": 3.947204993770827,
+      "alternative_pressure_rmse_mpa": 5.494141824861645,
+      "change_pressure_rmse_mpa": 1.5469368310908176,
+      "baseline_temperature_rmse_c": 5.310042223281695,
+      "alternative_temperature_rmse_c": 4.91784975847748,
+      "change_temperature_rmse_c": -0.3921924648042143,
+      "baseline_soc_rmse_percentage_points": 3.7206386251458707,
+      "alternative_soc_rmse_percentage_points": 5.487178263320466,
+      "change_soc_rmse_percentage_points": 1.7665396381745953
+    },
+    {
+      "case_id": "H2P-L15",
+      "baseline_screening_pass": false,
+      "alternative_screening_pass": false,
+      "baseline_pressure_rmse_mpa": 6.2634236278705595,
+      "alternative_pressure_rmse_mpa": 5.932687747964297,
+      "change_pressure_rmse_mpa": -0.3307358799062623,
+      "baseline_temperature_rmse_c": 12.316872564763484,
+      "alternative_temperature_rmse_c": 12.05064963735794,
+      "change_temperature_rmse_c": -0.26622292740554343,
+      "baseline_soc_rmse_percentage_points": 7.1240364648242895,
+      "alternative_soc_rmse_percentage_points": 6.842341200302941,
+      "change_soc_rmse_percentage_points": -0.28169526452134885
+    },
+    {
+      "case_id": "H2P-L18",
+      "baseline_screening_pass": true,
+      "alternative_screening_pass": true,
+      "baseline_pressure_rmse_mpa": 2.768741230873666,
+      "alternative_pressure_rmse_mpa": 3.0307704466545125,
+      "change_pressure_rmse_mpa": 0.2620292157808466,
+      "baseline_temperature_rmse_c": 5.118233306175256,
+      "alternative_temperature_rmse_c": 5.548492487708718,
+      "change_temperature_rmse_c": 0.43025918153346243,
+      "baseline_soc_rmse_percentage_points": 2.5986492977881555,
+      "alternative_soc_rmse_percentage_points": 3.4918322399481454,
+      "change_soc_rmse_percentage_points": 0.89318294215999
+    },
+    {
+      "case_id": "H2P-L21",
+      "baseline_screening_pass": true,
+      "alternative_screening_pass": true,
+      "baseline_pressure_rmse_mpa": 2.642789272214115,
+      "alternative_pressure_rmse_mpa": 1.216635580790634,
+      "change_pressure_rmse_mpa": -1.426153691423481,
+      "baseline_temperature_rmse_c": 6.063363287701044,
+      "alternative_temperature_rmse_c": 5.223003663803869,
+      "change_temperature_rmse_c": -0.8403596238971751,
+      "baseline_soc_rmse_percentage_points": 4.832002403459241,
+      "alternative_soc_rmse_percentage_points": 2.269226766216913,
+      "change_soc_rmse_percentage_points": -2.562775637242328
+    },
+    {
+      "case_id": "H2P-L24",
+      "baseline_screening_pass": false,
+      "alternative_screening_pass": true,
+      "baseline_pressure_rmse_mpa": 2.8576110069354197,
+      "alternative_pressure_rmse_mpa": 4.095873492251799,
+      "change_pressure_rmse_mpa": 1.2382624853163797,
+      "baseline_temperature_rmse_c": 6.609454926281005,
+      "alternative_temperature_rmse_c": 8.259874463960196,
+      "change_temperature_rmse_c": 1.6504195376791913,
+      "baseline_soc_rmse_percentage_points": 2.780027701756135,
+      "alternative_soc_rmse_percentage_points": 3.131472534257392,
+      "change_soc_rmse_percentage_points": 0.35144483250125713
+    },
+    {
+      "case_id": "H2P-L27",
+      "baseline_screening_pass": false,
+      "alternative_screening_pass": false,
+      "baseline_pressure_rmse_mpa": 9.15315595130953,
+      "alternative_pressure_rmse_mpa": 10.090125140375113,
+      "change_pressure_rmse_mpa": 0.9369691890655822,
+      "baseline_temperature_rmse_c": 8.652209251610826,
+      "alternative_temperature_rmse_c": 10.957214804997959,
+      "change_temperature_rmse_c": 2.305005553387133,
+      "baseline_soc_rmse_percentage_points": 7.944533454175986,
+      "alternative_soc_rmse_percentage_points": 8.305369279694217,
+      "change_soc_rmse_percentage_points": 0.36083582551823046
+    },
+    {
+      "case_id": "H2P-L30",
+      "baseline_screening_pass": false,
+      "alternative_screening_pass": false,
+      "baseline_pressure_rmse_mpa": 2.837820033436683,
+      "alternative_pressure_rmse_mpa": 2.327658569228594,
+      "change_pressure_rmse_mpa": -0.5101614642080889,
+      "baseline_temperature_rmse_c": 15.509129840299702,
+      "alternative_temperature_rmse_c": 15.710824078523673,
+      "change_temperature_rmse_c": 0.20169423822397192,
+      "baseline_soc_rmse_percentage_points": 1.7143752719040286,
+      "alternative_soc_rmse_percentage_points": 1.7973062169179508,
+      "change_soc_rmse_percentage_points": 0.08293094501392217
+    },
+    {
+      "case_id": "H2P-L33",
+      "baseline_screening_pass": false,
+      "alternative_screening_pass": false,
+      "baseline_pressure_rmse_mpa": 6.108380921090984,
+      "alternative_pressure_rmse_mpa": 3.589276466921989,
+      "change_pressure_rmse_mpa": -2.5191044541689953,
+      "baseline_temperature_rmse_c": 5.050112190157262,
+      "alternative_temperature_rmse_c": 5.325109811687106,
+      "change_temperature_rmse_c": 0.2749976215298444,
+      "baseline_soc_rmse_percentage_points": 5.9833643378810315,
+      "alternative_soc_rmse_percentage_points": 3.787397974308841,
+      "change_soc_rmse_percentage_points": -2.1959663635721904
+    },
+    {
+      "case_id": "H2P-L36",
+      "baseline_screening_pass": false,
+      "alternative_screening_pass": true,
+      "baseline_pressure_rmse_mpa": 5.849519390823312,
+      "alternative_pressure_rmse_mpa": 4.766911128407231,
+      "change_pressure_rmse_mpa": -1.0826082624160813,
+      "baseline_temperature_rmse_c": 7.5923376054646745,
+      "alternative_temperature_rmse_c": 7.108667839563358,
+      "change_temperature_rmse_c": -0.4836697659013165,
+      "baseline_soc_rmse_percentage_points": 7.896351191279558,
+      "alternative_soc_rmse_percentage_points": 6.661383006990404,
+      "change_soc_rmse_percentage_points": -1.234968184289154
+    }
+  ],
+  "interpretation": {
+    "finding": "The larger declared cascade inventory increases engineering-screening passes from 2/11 to 6/11, reduces mean pressure RMSE and SOC RMSE, and slightly increases mean temperature RMSE. Paired bootstrap confidence intervals for the three mean changes include zero.",
+    "meaning": "Station-side source inventory and unpublished cascade topology are material candidate contributors to closed-loop pressure and inventory error; vehicle heat-transfer refinement alone cannot resolve this boundary mismatch.",
+    "limitation": "The 5 m3 value is a post-outcome, conditional source-boundary hypothesis. The public files do not disclose connected bank topology, valve states, regulator behavior, or source temperature, so this is not an identified physical parameter or external validation."
+  },
+  "production_default_changed": false,
+  "validation_gate_effect": "none",
+  "claim_boundary": "This diagnostic supports making bank inventory a declared input and prioritizing an independently measured station boundary. It cannot revise the frozen model, validate the full station loop, or support certification claims."
+}
