@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **98 PASS · 8 FAIL · 8 PENDING**.
+Gate counts: **99 PASS · 8 FAIL · 8 PENDING**.
 
 A newly found CC BY 4.0 detector workbook was handled prospectively: the
 protocol and thresholds were committed before the numerical Excel file was
@@ -94,6 +94,15 @@ from 0.600 to 0.943, achieved top-three recall 1.0 and selected the highest
 response sensor without fitting. Because the diagnostic was formalized after
 the six outcomes were viewed and the full time histories are unavailable, it
 does not close the independent validation gate or enable runtime routing.
+
+The 22-test USN/FFI physical-hydrogen channel dataset was also re-analysed as
+post-access descriptive placement evidence. Its 29 mapped sensors provide 638
+sensor-case observations. Ceiling probes achieved 100% alarm and trip coverage
+and had the highest placement-group mean in 20/22 tests, while the three floor
+probes nearest the downward jet had a 10.68 s median alarm latency versus
+18.01 s at the ceiling. This supports layered ceiling plus near-source coverage only
+for the tested confined geometry. It does not validate the outdoor station map,
+alarm setpoints, ESD, runtime routing or the failed H2SAFE transfer gate.
 
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted

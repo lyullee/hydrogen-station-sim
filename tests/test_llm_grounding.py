@@ -240,6 +240,25 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert reference_detector["runtime_application"] is False
     assert reference_detector["spatial_detector_transfer_gate_changed"] is False
     assert reference_detector["full_loop_validation_supported"] is False
+    spatial_detector = idle["response_evidence"][
+        "public_actual_hydrogen_spatial_stratification_evidence"
+    ]
+    assert spatial_detector["dataset_doi"] == "10.23642/usn.26117989.v2"
+    assert spatial_detector["article_doi"] == "10.1016/j.jlp.2025.105669"
+    assert spatial_detector["experiment_count"] == 22
+    assert spatial_detector["sensor_case_observation_count"] == 638
+    assert spatial_detector["placements"]["top"][
+        "alarm_coverage_fraction"
+    ] == 1.0
+    assert spatial_detector["placements"]["top"][
+        "trip_coverage_fraction"
+    ] == 1.0
+    assert spatial_detector["near_source_bottom"][
+        "median_alarm_latency_after_fill_start_s"
+    ] < 11.0
+    assert spatial_detector["post_access_descriptive_evidence"] is True
+    assert spatial_detector["runtime_application"] is False
+    assert spatial_detector["h2safe_gate_changed"] is False
     dispersion_proxy = idle["response_evidence"]["public_dispersion_proxy_evidence"]
     assert dispersion_proxy["doi"] == "10.23642/usn.26117989.v2"
     assert dispersion_proxy["method"]["case_count"] == 22
@@ -298,6 +317,9 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert early["public_reference_leak_detector_evidence"][
         "observation_count"
     ] == 45
+    assert early["public_actual_hydrogen_spatial_stratification_evidence"][
+        "sensor_case_observation_count"
+    ] == 638
     assert early["public_tank_validation_boundary"]["aggregate"][
         "pressure_rmse_mpa"
     ] == 6.164469743688679
@@ -495,6 +517,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "PUBLIC_ACCIDENTAL_RELEASE_DATASET",
         "PUBLIC_DETECTOR_LOGIC_DATASET",
         "PUBLIC_REFERENCE_LEAK_DETECTOR_DATASET",
+        "PUBLIC_ACTUAL_H2_SPATIAL_STRATIFICATION_ARTICLE",
         "PUBLIC_GRUNE_VENTILATION_DATASET",
         "PUBLIC_HYTF_TANK_TRACE",
     } <= public_link_ids
@@ -505,6 +528,17 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert header["public_reference_leak_detector_evidence"][
         "runtime_application"
     ] is False
+    assert header[
+        "public_actual_hydrogen_spatial_stratification_evidence"
+    ]["experiment_count"] == 22
+    detector_prompt = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False,
+        selected_sensor="GD-0901",
+        question="가스 검지기 배치를 분석해줘",
+    )
+    assert "no runtime or station-map validation" in prompt_decision_evidence(
+        detector_prompt
+    )["decision_support_evidence"]["detector_placement"]
     assert header["public_accident_evidence"]["public_report_count"] == 23
     assert header["public_accident_evidence"]["accidental_release_zenodo_doi"] == (
         "10.5281/zenodo.17913628"

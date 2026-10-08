@@ -786,6 +786,122 @@ def _public_reference_leak_detector_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_actual_hydrogen_spatial_stratification_evidence() -> dict[str, Any] | None:
+    """Expose bounded physical-H2 detector-height evidence.
+
+    This analysis was designed after outcome access.  Strict checks keep it as
+    descriptive placement guidance and prevent promotion to runtime routing or
+    independent spatial-transfer validation.
+    """
+
+    artifact = (
+        "research/usn_channel_spatial_stratification_evidence_2026_10_08.json"
+    )
+    path = Path(__file__).resolve().parents[2] / artifact
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    design = record.get("analysis_design") or {}
+    aggregate = record.get("aggregate") or {}
+    placements = aggregate.get("placements") or {}
+    near_source_bottom = (
+        aggregate.get("jet_path_subsets") or {}
+    ).get("near_source_bottom") or {}
+    decision = record.get("decision") or {}
+    if (
+        record.get("artifact_type")
+        != "post_access_actual_hydrogen_spatial_stratification_evidence"
+        or record.get("status")
+        != "COMPLETED_DESCRIPTIVE_EVIDENCE_NOT_INDEPENDENT_VALIDATION"
+        or source.get("dataset_doi") != "10.23642/usn.26117989.v2"
+        or source.get("article_doi") != "10.1016/j.jlp.2025.105669"
+        or source.get("test_gas") != "hydrogen"
+        or source.get("license") != "CC BY 4.0"
+        or design.get("outcomes_accessed_before_analysis_design") is not True
+        or design.get("parameter_fitting_performed") is not False
+        or aggregate.get("experiment_count") != 22
+        or aggregate.get("sensor_count_per_experiment") != 29
+        or aggregate.get("sensor_case_observation_count") != 638
+        or len(placements) != 4
+        or near_source_bottom.get("sensor_case_observation_count") != 66
+        or (near_source_bottom.get("alarm") or {}).get(
+            "coverage_fraction"
+        ) != 1.0
+        or decision.get(
+            "layered_confined_detector_placement_rationale_supported"
+        ) is not True
+        or decision.get("independent_spatial_validation_supported") is not False
+        or decision.get("runtime_application") is not False
+        or decision.get("h2safe_gate_changed") is not False
+        or decision.get("full_loop_validation_supported") is not False
+    ):
+        return None
+
+    placement_summary: dict[str, Any] = {}
+    for name in ("top", "mid-high", "mid-low", "bottom"):
+        item = placements.get(name) or {}
+        alarm = item.get("alarm") or {}
+        trip = item.get("trip") or {}
+        concentration = item.get("steady_concentration_percent") or {}
+        placement_summary[name] = {
+            "sensor_case_observation_count": item.get(
+                "sensor_case_observation_count"
+            ),
+            "median_steady_concentration_percent": concentration.get("median"),
+            "alarm_coverage_fraction": alarm.get("coverage_fraction"),
+            "median_alarm_latency_after_fill_start_s": alarm.get(
+                "median_latency_after_fill_start_s"
+            ),
+            "trip_coverage_fraction": trip.get("coverage_fraction"),
+        }
+    return {
+        "artifact": artifact,
+        "dataset_doi": source.get("dataset_doi"),
+        "article_doi": source.get("article_doi"),
+        "license": source.get("license"),
+        "evidence_role": (
+            "post-access descriptive physical-hydrogen spatial stratification"
+        ),
+        "experiment_count": aggregate.get("experiment_count"),
+        "sensor_count_per_experiment": aggregate.get(
+            "sensor_count_per_experiment"
+        ),
+        "sensor_case_observation_count": aggregate.get(
+            "sensor_case_observation_count"
+        ),
+        "top_placement_highest_case_mean_count": aggregate.get(
+            "top_placement_highest_case_mean_count"
+        ),
+        "placements": placement_summary,
+        "near_source_bottom": {
+            "sensor_case_observation_count": near_source_bottom.get(
+                "sensor_case_observation_count"
+            ),
+            "median_alarm_latency_after_fill_start_s": (
+                near_source_bottom.get("alarm") or {}
+            ).get("median_latency_after_fill_start_s"),
+            "alarm_coverage_fraction": (
+                near_source_bottom.get("alarm") or {}
+            ).get("coverage_fraction"),
+            "trip_coverage_fraction": (
+                near_source_bottom.get("trip") or {}
+            ).get("coverage_fraction"),
+        },
+        "bounded_guidance": (
+            "In this confined downward-jet geometry, combine ceiling coverage "
+            "for the sustained buoyant layer with near-source jet-path coverage."
+        ),
+        "post_access_descriptive_evidence": True,
+        "runtime_application": False,
+        "h2safe_gate_changed": False,
+        "independent_spatial_validation_supported": False,
+        "full_loop_validation_supported": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_dispersion_proxy_evidence() -> dict[str, Any] | None:
     """Expose the concentration scale used by the virtual detector proxy."""
 
@@ -2408,6 +2524,17 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             f"https://doi.org/{reference_detector_doi}",
             "실제 수소 기준누출에 대한 검지기 응답 순서 근거(경보값·공간배치 보정 아님)",
         )
+    spatial_stratification = evidence.get(
+        "public_actual_hydrogen_spatial_stratification_evidence"
+    ) or {}
+    spatial_article_doi = str(spatial_stratification.get("article_doi") or "")
+    if spatial_article_doi:
+        add(
+            "PUBLIC_ACTUAL_H2_SPATIAL_STRATIFICATION_ARTICLE",
+            "Physical-H2 spatial stratification in an open-ended channel",
+            f"https://doi.org/{spatial_article_doi}",
+            "밀폐 유사 채널의 천장층·하향 제트 경로 검지기 배치 근거(충전소 배치 검증 아님)",
+        )
     proxy = evidence.get("public_dispersion_proxy_evidence") or {}
     proxy_doi = str(proxy.get("doi") or "")
     if proxy_doi:
@@ -3969,6 +4096,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_reference_leak_detector_evidence"
         ] = reference_detector
+    spatial_stratification = _public_actual_hydrogen_spatial_stratification_evidence()
+    if spatial_stratification is not None:
+        envelope["response_evidence"][
+            "public_actual_hydrogen_spatial_stratification_evidence"
+        ] = spatial_stratification
     dispersion_proxy = _public_dispersion_proxy_evidence()
     if dispersion_proxy is not None:
         envelope["response_evidence"]["public_dispersion_proxy_evidence"] = dispersion_proxy
@@ -4450,6 +4582,25 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if reference_detector.get(key) is not None
         }
+    spatial_stratification = evidence.get(
+        "public_actual_hydrogen_spatial_stratification_evidence"
+    )
+    if isinstance(spatial_stratification, dict):
+        summary["public_actual_hydrogen_spatial_stratification_evidence"] = {
+            key: spatial_stratification.get(key)
+            for key in (
+                "dataset_doi", "article_doi", "evidence_role",
+                "experiment_count", "sensor_count_per_experiment",
+                "sensor_case_observation_count",
+                "top_placement_highest_case_mean_count", "placements",
+                "near_source_bottom",
+                "bounded_guidance", "post_access_descriptive_evidence",
+                "runtime_application", "h2safe_gate_changed",
+                "independent_spatial_validation_supported",
+                "full_loop_validation_supported", "claim_limit",
+            )
+            if spatial_stratification.get(key) is not None
+        }
     dispersion_proxy = evidence.get("public_dispersion_proxy_evidence")
     if isinstance(dispersion_proxy, dict):
         summary["public_dispersion_proxy_evidence"] = {
@@ -4857,6 +5008,24 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     multisource = response.get("confidential_multisource_mapping_feasibility") or {}
     thermal_observation = response.get("temperature_observation_semantic_boundary") or {}
     station_thermal = response.get("confidential_station_thermal_dynamics") or {}
+    spatial_stratification = response.get(
+        "public_actual_hydrogen_spatial_stratification_evidence"
+    ) or {}
+    detector_context = " ".join((
+        str(manifest.get("selected_sensor") or ""),
+        str(manifest.get("question") or ""),
+    )).lower()
+    spatial_guidance_relevant = bool(
+        spatial_stratification
+        and (
+            str(manifest.get("selected_sensor") or "").upper().startswith(
+                ("GD-", "FD-")
+            )
+            or any(token in detector_context for token in (
+                "검지", "센서 배치", "누출 감지", "detector", "sensor placement"
+            ))
+        )
+    )
 
     decision = {
         "evidence_digest": manifest.get("evidence_digest"),
@@ -4938,6 +5107,12 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 )),
                 "claim_limit": short(local_incident.get("claim_limit")),
             },
+            **({
+                "detector_placement": (
+                    "22 actual-H2 channel tests, post-access: ceiling + jet-path; "
+                    "top alarm/trip 100%; no runtime or station-map validation"
+                )
+            } if spatial_guidance_relevant else {}),
         },
         "validation_boundaries": {
             "public_tank_postaccess": {
@@ -5109,6 +5284,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     detector = evidence.get("public_detector_logic_evidence") or {}
     detector_aggregate = detector.get("aggregate") or {}
     reference_detector = evidence.get("public_reference_leak_detector_evidence") or {}
+    spatial_stratification = evidence.get(
+        "public_actual_hydrogen_spatial_stratification_evidence"
+    ) or {}
     dispersion_proxy = evidence.get("public_dispersion_proxy_evidence") or {}
     grune_ventilation = evidence.get("public_grune_ventilation_evidence") or {}
     confidential = evidence.get("confidential_measured_boundary_replay") or {}
@@ -5568,6 +5746,21 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "full_loop_validation_supported", "claim_limit",
             )
             if reference_detector.get(key) is not None
+        },
+        "public_actual_hydrogen_spatial_stratification_evidence": {
+            key: spatial_stratification.get(key)
+            for key in (
+                "dataset_doi", "article_doi", "evidence_role",
+                "experiment_count", "sensor_count_per_experiment",
+                "sensor_case_observation_count",
+                "top_placement_highest_case_mean_count", "placements",
+                "near_source_bottom",
+                "bounded_guidance", "post_access_descriptive_evidence",
+                "runtime_application", "h2safe_gate_changed",
+                "independent_spatial_validation_supported",
+                "full_loop_validation_supported", "claim_limit",
+            )
+            if spatial_stratification.get(key) is not None
         },
         "public_grune_ventilation_envelope": {
             "doi": grune_ventilation.get("doi"),

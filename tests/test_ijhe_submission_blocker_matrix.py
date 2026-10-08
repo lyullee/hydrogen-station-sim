@@ -30,6 +30,20 @@ def test_current_blocker_matrix_tracks_the_readiness_audit():
     assert len(
         matrix["reproducibility"]["reference_leak_detector_result_sha256"]
     ) == 64
+    spatial = matrix["evidence_snapshot"][
+        "actual_hydrogen_spatial_stratification"
+    ]
+    assert spatial["gate"] == "PASS"
+    assert spatial["experiment_count"] == 22
+    assert spatial["sensor_case_observation_count"] == 638
+    assert spatial["top_alarm_coverage_fraction"] == 1.0
+    assert spatial["top_trip_coverage_fraction"] == 1.0
+    assert spatial["near_source_bottom_alarm_latency_s"] < 11.0
+    assert spatial["runtime_application"] is False
+    assert spatial["h2safe_gate_changed"] is False
+    assert len(
+        matrix["reproducibility"]["usn_spatial_stratification_sha256"]
+    ) == 64
     assert len(matrix["reproducibility"]["h2safe_intake_sha256"]) == 64
     assert len(matrix["reproducibility"]["hydelta_spatial_eligibility_sha256"]) == 64
     transfer = matrix["evidence_snapshot"]["h2safe_spatial_detector_transfer"]

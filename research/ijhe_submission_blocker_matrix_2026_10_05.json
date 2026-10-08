@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T04:48:24.699364+00:00",
+  "generated_at": "2026-10-08T05:07:51.983781+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -16,7 +16,7 @@
     "interpretation": "A bounded manuscript may be drafted around model-level and qualitative evidence, but the validated full-station digital-twin objective cannot be declared complete."
   },
   "gate_counts": {
-    "PASS": 98,
+    "PASS": 99,
     "FAIL": 8,
     "PENDING": 8
   },
@@ -101,6 +101,22 @@
       ],
       "runtime_application": false,
       "claim_boundary": "This protocol evaluates detector response ordering to physical hydrogen reference leaks. It cannot validate the station spatial detector map, concentration magnitude, alarm or ESD setpoints, release physics, consequence distance, vehicle filling, or the full digital twin."
+    },
+    "actual_hydrogen_spatial_stratification": {
+      "gate": "PASS",
+      "evidence": [
+        "research/usn_channel_spatial_stratification_evidence_2026_10_08.json",
+        "research/USN_CHANNEL_SPATIAL_STRATIFICATION_EVIDENCE_2026_10_08.md"
+      ],
+      "experiment_count": 22,
+      "sensor_case_observation_count": 638,
+      "top_alarm_coverage_fraction": 1.0,
+      "top_trip_coverage_fraction": 1.0,
+      "top_highest_case_mean_count": 20,
+      "near_source_bottom_alarm_latency_s": 10.674999999995634,
+      "runtime_application": false,
+      "h2safe_gate_changed": false,
+      "claim_boundary": "Twenty-two physical-hydrogen tests support a descriptive layered-placement rationale inside this open-ended 5.8 m channel: ceiling probes provide broad sustained coverage, while probes in the downward-jet path can respond earlier. Because outcomes were accessed before this analysis was designed, this is not independent validation and cannot validate an outdoor station detector map, alarm setpoints, ESD effectiveness, runtime spatial routing, or the full digital twin."
     },
     "h2safe_spatial_detector_transfer": {
       "gate": "FAIL",
@@ -264,7 +280,7 @@
     {
       "id": "h2safe_spatial_detector_transfer",
       "status": "FAIL",
-      "why_blocked": "The frozen coordinate-only rank law passed two of four H2SAFE spatial screens. A post-access orientation-class candidate passes all four internal reference screens and reaches Spearman rho 0.943 with top-3 recall 1.0 on a six-sensor Sandia actual-hydrogen summary without fitting. That external diagnostic was formalised after outcome access and cannot revise the gate. The pre-access-frozen HyDelta candidate was ineligible before model execution because required numeric spatial fields are absent.",
+      "why_blocked": "The frozen coordinate-only rank law passed two of four H2SAFE spatial screens. Post-access actual-hydrogen evidence now includes a six-sensor Sandia diagnostic and 638 sensor-case observations from 22 USN/FFI channel tests. The latter supports layered ceiling plus jet-path coverage, but it was designed after outcome access and does not evaluate the frozen station rank law independently. The pre-access-frozen HyDelta candidate was ineligible before model execution because required numeric spatial fields are absent.",
       "evidence": [
         "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
         "research/H2SAFE_SPATIAL_RESPONSE_DIAGNOSTIC_2026_10_08.md",
@@ -275,7 +291,9 @@
         "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json",
         "research/HYDELTA_INDOOR_SPATIAL_HOLDOUT_ELIGIBILITY_2026_10_08.md",
         "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json",
-        "research/SANDIA_WAREHOUSE_SPATIAL_DIAGNOSTIC_2026_10_08.md"
+        "research/SANDIA_WAREHOUSE_SPATIAL_DIAGNOSTIC_2026_10_08.md",
+        "research/usn_channel_spatial_stratification_evidence_2026_10_08.json",
+        "research/USN_CHANNEL_SPATIAL_STRATIFICATION_EVIDENCE_2026_10_08.md"
       ],
       "unblock_criterion": "Evaluate the now-frozen orientation-class candidate on an independent indoor release cohort and pass all spatial rank and recall screens without fitting detector amplitudes or hydrogen alarm thresholds on helium data.",
       "next_action": "Request a HyDelta companion export containing experiment ID, source/sensor XYZ, release orientation and per-sensor numerical H2 responses, while screening another untouched actual-hydrogen indoor cohort under the unchanged candidate and thresholds."
@@ -305,7 +323,7 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "259de53b4c76b56e33182e37942352e8c93796a7522226d29d7322fa00ddc0f8",
+    "audit_sha256": "e7ad0e61566bcb78718b78af84affeb470179556dc6048dca526bbc1ff1ea7a1",
     "hiad_readiness_sha256": "5c2e99a8371e3dd6fc97847f956d065f7d0c62bed48270a6bdb15021725d4310",
     "acquisition_tracker_sha256": "f141806ae0cce8ec9a0797e2ca6f7102b299eaedc33317693922abd763a3e399",
     "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",
@@ -323,6 +341,7 @@
     "hydelta_spatial_eligibility_sha256": "7edb4605c427918947ee9914cf7e9ecece412656479f59b62dbdb24103083813",
     "sandia_spatial_diagnostic_sha256": "12cecd95e218fa9a76040d295f2e2a1af8e8f7a13e30d5bd22e61b96335e87e5",
     "reference_leak_detector_result_sha256": "1b03b114e73a7d4070920ae6e59d4edad854459dd74834998a35cb64893f2b2f",
+    "usn_spatial_stratification_sha256": "92a6f11d1ec8c0a8cff16cd1865249beb1b2475aec5edeb7d2b0d7d27c9b5803",
     "ignited_pressure_peaking_sha256": "53dbb83055c0eaa50d7f9ff2af351302b325ffb46e38b0290a4583eae4356174",
     "qra_multimethod_comparison_sha256": "e248db619eec2cc6161b151fdaa2fa3a7fb3886abb14bcd426f3e7ac1de4c70f",
     "runtime_qra_comparison_sha256": "1a7b91b433721ce6c07c7bbcb41c1e2f13544e600dcc45941c21049f69038c9f",

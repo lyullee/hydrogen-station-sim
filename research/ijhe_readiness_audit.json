@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T04:42:00.963890+00:00",
+  "generated_at": "2026-10-08T05:07:51.841314+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 98,
+    "PASS": 99,
     "FAIL": 8,
     "PENDING": 8
   },
@@ -1885,6 +1885,29 @@
         "mean_trip_sensor_coverage_fraction": 0.8087774294670846,
         "median_first_alarm_after_fill_start_s": 10.674999999995634,
         "median_first_trip_after_fill_start_s": 10.674999999995634
+      }
+    },
+    {
+      "id": "actual_hydrogen_spatial_stratification_evidence",
+      "status": "PASS",
+      "claim": "Physical-hydrogen channel measurements support a bounded layered detector-placement rationale without being promoted to station-map validation.",
+      "evidence": "research\\usn_channel_spatial_stratification_evidence_2026_10_08.json",
+      "requirement": "22 tests, 29 mapped sensors, 638 sensor-case observations, height-stratified concentration and threshold coverage, source hashes, and explicit post-access/no-runtime limits.",
+      "observed": {
+        "dataset_doi": "10.23642/usn.26117989.v2",
+        "article_doi": "10.1016/j.jlp.2025.105669",
+        "test_gas": "hydrogen",
+        "experiment_count": 22,
+        "sensor_count_per_experiment": 29,
+        "sensor_case_observation_count": 638,
+        "top_alarm_coverage_fraction": 1.0,
+        "top_trip_coverage_fraction": 1.0,
+        "top_placement_highest_case_mean_count": 20,
+        "near_source_bottom_alarm_latency_s": 10.674999999995634,
+        "post_access_descriptive_evidence": true,
+        "runtime_application": false,
+        "h2safe_gate_changed": false,
+        "claim_boundary": "Twenty-two physical-hydrogen tests support a descriptive layered-placement rationale inside this open-ended 5.8 m channel: ceiling probes provide broad sustained coverage, while probes in the downward-jet path can respond earlier. Because outcomes were accessed before this analysis was designed, this is not independent validation and cannot validate an outdoor station detector map, alarm setpoints, ESD effectiveness, runtime spatial routing, or the full digital twin."
       }
     },
     {
@@ -6739,7 +6762,7 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7961,
+          "approximate_manuscript_words_before_references": 7995,
           "figures": 3,
           "tables": 3,
           "citation_keys": 45,

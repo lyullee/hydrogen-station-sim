@@ -2467,6 +2467,99 @@ def audit(root: Path) -> dict[str, object]:
         detector_aggregate if detector_logic else "missing; detector-logic replay has not completed",
     ))
 
+    spatial_stratification_path = root / (
+        "research/usn_channel_spatial_stratification_evidence_2026_10_08.json"
+    )
+    spatial_stratification = _json(spatial_stratification_path)
+    spatial_source = (spatial_stratification or {}).get("source") or {}
+    spatial_design = (spatial_stratification or {}).get("analysis_design") or {}
+    spatial_aggregate = (spatial_stratification or {}).get("aggregate") or {}
+    spatial_placements = spatial_aggregate.get("placements") or {}
+    spatial_top = spatial_placements.get("top") or {}
+    spatial_near_source = (
+        spatial_aggregate.get("jet_path_subsets") or {}
+    ).get("near_source_bottom") or {}
+    spatial_decision = (spatial_stratification or {}).get("decision") or {}
+    spatial_stratification_pass = bool(
+        (spatial_stratification or {}).get("artifact_type")
+        == "post_access_actual_hydrogen_spatial_stratification_evidence"
+        and (spatial_stratification or {}).get("status")
+        == "COMPLETED_DESCRIPTIVE_EVIDENCE_NOT_INDEPENDENT_VALIDATION"
+        and spatial_source.get("dataset_doi") == "10.23642/usn.26117989.v2"
+        and spatial_source.get("article_doi") == "10.1016/j.jlp.2025.105669"
+        and spatial_source.get("test_gas") == "hydrogen"
+        and spatial_source.get("license") == "CC BY 4.0"
+        and spatial_source.get("archive_count") == 22
+        and len(str(spatial_source.get("archive_manifest_sha256") or "")) == 64
+        and spatial_design.get("outcomes_accessed_before_analysis_design") is True
+        and spatial_design.get("post_access_descriptive_evidence") is True
+        and spatial_design.get("parameter_fitting_performed") is False
+        and spatial_aggregate.get("experiment_count") == 22
+        and spatial_aggregate.get("sensor_count_per_experiment") == 29
+        and spatial_aggregate.get("sensor_case_observation_count") == 638
+        and len(spatial_placements) == 4
+        and (spatial_top.get("alarm") or {}).get("coverage_fraction") == 1.0
+        and (spatial_top.get("trip") or {}).get("coverage_fraction") == 1.0
+        and spatial_near_source.get("sensor_case_observation_count") == 66
+        and (spatial_near_source.get("alarm") or {}).get(
+            "coverage_fraction"
+        ) == 1.0
+        and (spatial_near_source.get("trip") or {}).get(
+            "coverage_fraction"
+        ) == 1.0
+        and spatial_aggregate.get("top_placement_highest_case_mean_count", 0) >= 20
+        and spatial_decision.get(
+            "layered_confined_detector_placement_rationale_supported"
+        ) is True
+        and spatial_decision.get("independent_spatial_validation_supported") is False
+        and spatial_decision.get("runtime_application") is False
+        and spatial_decision.get("runtime_parameter_changed") is False
+        and spatial_decision.get("h2safe_gate_changed") is False
+        and spatial_decision.get("full_loop_validation_supported") is False
+        and "not independent validation" in str(
+            (spatial_stratification or {}).get("claim_boundary") or ""
+        )
+    )
+    gates.append(_gate(
+        "actual_hydrogen_spatial_stratification_evidence",
+        "PASS" if spatial_stratification_pass else (
+            "FAIL" if spatial_stratification else "PENDING"
+        ),
+        "Physical-hydrogen channel measurements support a bounded layered detector-placement rationale without being promoted to station-map validation.",
+        str(spatial_stratification_path.relative_to(root)),
+        "22 tests, 29 mapped sensors, 638 sensor-case observations, height-stratified concentration and threshold coverage, source hashes, and explicit post-access/no-runtime limits.",
+        {
+            "dataset_doi": spatial_source.get("dataset_doi"),
+            "article_doi": spatial_source.get("article_doi"),
+            "test_gas": spatial_source.get("test_gas"),
+            "experiment_count": spatial_aggregate.get("experiment_count"),
+            "sensor_count_per_experiment": spatial_aggregate.get(
+                "sensor_count_per_experiment"
+            ),
+            "sensor_case_observation_count": spatial_aggregate.get(
+                "sensor_case_observation_count"
+            ),
+            "top_alarm_coverage_fraction": (
+                spatial_top.get("alarm") or {}
+            ).get("coverage_fraction"),
+            "top_trip_coverage_fraction": (
+                spatial_top.get("trip") or {}
+            ).get("coverage_fraction"),
+            "top_placement_highest_case_mean_count": spatial_aggregate.get(
+                "top_placement_highest_case_mean_count"
+            ),
+            "near_source_bottom_alarm_latency_s": (
+                spatial_near_source.get("alarm") or {}
+            ).get("median_latency_after_fill_start_s"),
+            "post_access_descriptive_evidence": spatial_design.get(
+                "post_access_descriptive_evidence"
+            ),
+            "runtime_application": spatial_decision.get("runtime_application"),
+            "h2safe_gate_changed": spatial_decision.get("h2safe_gate_changed"),
+            "claim_boundary": (spatial_stratification or {}).get("claim_boundary"),
+        } if spatial_stratification else "missing; spatial stratification analysis has not run",
+    ))
+
     h2safe_path = root / "research/h2safe_public_dataset_intake_2026_10_08.json"
     h2safe = _json(h2safe_path)
     h2safe_source = (h2safe or {}).get("source") or {}

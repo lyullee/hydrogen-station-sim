@@ -1,0 +1,675 @@
+{
+  "schema_version": 1,
+  "artifact_type": "post_access_actual_hydrogen_spatial_stratification_evidence",
+  "status": "COMPLETED_DESCRIPTIVE_EVIDENCE_NOT_INDEPENDENT_VALIDATION",
+  "generated_at": "2026-10-08T05:07:49.868146+00:00",
+  "source": {
+    "dataset_title": "Experimental Data of Hydrogen Dispersion in an Open-ended Rectangular Channel",
+    "dataset_doi": "10.23642/usn.26117989.v2",
+    "article_title": "A study of hydrogen dispersion in an open-ended rectangular channel",
+    "article_doi": "10.1016/j.jlp.2025.105669",
+    "test_gas": "hydrogen",
+    "license": "CC BY 4.0",
+    "channel_dimensions_m": {
+      "length_y": 5.8,
+      "width_x": 0.9,
+      "height_z": 0.8
+    },
+    "release": {
+      "x_m": 0.45,
+      "y_m": 0.5,
+      "z_m": 0.8,
+      "orientation": "downward",
+      "diameter_mm": 4.6
+    },
+    "coordinate_source": "Henriksen et al. (2025), Table 1",
+    "supporting_file_manifest": [
+      {
+        "name": "article_105669.pdf",
+        "bytes": 3378711,
+        "sha256": "9aecb3f46cb32f5516576de97bbbe9ad97664affcdc64907af02126b03e812c5"
+      },
+      {
+        "name": "article_105669.txt",
+        "bytes": 57469,
+        "sha256": "c381d96f668b5d1ef29d7c17bb45a86345ebdb740034bb7dbc6de0989090f1bb"
+      },
+      {
+        "name": "ReadMe.txt",
+        "bytes": 2499,
+        "sha256": "c474c05b9c3983c609030755c8f6e9d854fa53a8531b81425da87e206e837b04"
+      }
+    ],
+    "archive_count": 22,
+    "archive_manifest_sha256": "1cf7d4d88d4876797fe67e985a9ee42a755213e8440234fbad6d1936e4efeb12"
+  },
+  "analysis_design": {
+    "outcomes_accessed_before_analysis_design": true,
+    "post_access_descriptive_evidence": true,
+    "parameter_fitting_performed": false,
+    "steady_interval": "final third of each declared fill interval",
+    "alarm_threshold_percent": 1.0,
+    "trip_threshold_percent": 2.0,
+    "persistence_s": 0.5,
+    "highest_response_quartile_count_per_case": 8
+  },
+  "geometry": {
+    "sensor_count": 29,
+    "placement_sensor_counts": {
+      "top": 13,
+      "mid-high": 5,
+      "mid-low": 5,
+      "bottom": 6
+    },
+    "sensors": {
+      "1": {
+        "placement": "top",
+        "x_m": 0.77,
+        "y_m": 0.24,
+        "z_m": 0.8
+      },
+      "2": {
+        "placement": "top",
+        "x_m": 0.46,
+        "y_m": 0.0,
+        "z_m": 0.8
+      },
+      "3": {
+        "placement": "mid-high",
+        "x_m": 0.48,
+        "y_m": 0.25,
+        "z_m": 0.52
+      },
+      "4": {
+        "placement": "top",
+        "x_m": 0.13,
+        "y_m": 0.26,
+        "z_m": 0.8
+      },
+      "5": {
+        "placement": "mid-high",
+        "x_m": 0.48,
+        "y_m": 1.33,
+        "z_m": 0.52
+      },
+      "6": {
+        "placement": "top",
+        "x_m": 0.46,
+        "y_m": 1.11,
+        "z_m": 0.8
+      },
+      "7": {
+        "placement": "top",
+        "x_m": 0.9,
+        "y_m": 2.22,
+        "z_m": 0.8
+      },
+      "8": {
+        "placement": "mid-high",
+        "x_m": 0.47,
+        "y_m": 2.46,
+        "z_m": 0.52
+      },
+      "9": {
+        "placement": "top",
+        "x_m": 0.46,
+        "y_m": 2.22,
+        "z_m": 0.8
+      },
+      "10": {
+        "placement": "top",
+        "x_m": 0.74,
+        "y_m": 2.45,
+        "z_m": 0.8
+      },
+      "11": {
+        "placement": "top",
+        "x_m": 0.15,
+        "y_m": 2.44,
+        "z_m": 0.8
+      },
+      "12": {
+        "placement": "top",
+        "x_m": 0.0,
+        "y_m": 2.22,
+        "z_m": 0.8
+      },
+      "13": {
+        "placement": "mid-high",
+        "x_m": 0.47,
+        "y_m": 3.54,
+        "z_m": 0.52
+      },
+      "14": {
+        "placement": "top",
+        "x_m": 0.46,
+        "y_m": 3.31,
+        "z_m": 0.8
+      },
+      "15": {
+        "placement": "top",
+        "x_m": 0.78,
+        "y_m": 4.65,
+        "z_m": 0.8
+      },
+      "17": {
+        "placement": "top",
+        "x_m": 0.46,
+        "y_m": 4.39,
+        "z_m": 0.8
+      },
+      "18": {
+        "placement": "mid-high",
+        "x_m": 0.47,
+        "y_m": 4.63,
+        "z_m": 0.52
+      },
+      "19": {
+        "placement": "top",
+        "x_m": 0.14,
+        "y_m": 4.68,
+        "z_m": 0.8
+      },
+      "20": {
+        "placement": "bottom",
+        "x_m": 0.75,
+        "y_m": 0.24,
+        "z_m": 0.0
+      },
+      "21": {
+        "placement": "bottom",
+        "x_m": 0.45,
+        "y_m": 0.0,
+        "z_m": 0.0
+      },
+      "22": {
+        "placement": "bottom",
+        "x_m": 0.16,
+        "y_m": 0.24,
+        "z_m": 0.0
+      },
+      "23": {
+        "placement": "mid-low",
+        "x_m": 0.47,
+        "y_m": 0.24,
+        "z_m": 0.28
+      },
+      "24": {
+        "placement": "mid-low",
+        "x_m": 0.46,
+        "y_m": 1.33,
+        "z_m": 0.27
+      },
+      "25": {
+        "placement": "bottom",
+        "x_m": 0.47,
+        "y_m": 1.1,
+        "z_m": 0.0
+      },
+      "26": {
+        "placement": "mid-low",
+        "x_m": 0.46,
+        "y_m": 2.46,
+        "z_m": 0.27
+      },
+      "27": {
+        "placement": "bottom",
+        "x_m": 0.47,
+        "y_m": 2.23,
+        "z_m": 0.0
+      },
+      "28": {
+        "placement": "mid-low",
+        "x_m": 0.47,
+        "y_m": 3.56,
+        "z_m": 0.27
+      },
+      "29": {
+        "placement": "mid-low",
+        "x_m": 0.47,
+        "y_m": 4.63,
+        "z_m": 0.27
+      },
+      "30": {
+        "placement": "bottom",
+        "x_m": 0.46,
+        "y_m": 4.44,
+        "z_m": 0.0
+      }
+    }
+  },
+  "aggregate": {
+    "experiment_count": 22,
+    "sensor_count_per_experiment": 29,
+    "sensor_case_observation_count": 638,
+    "height_vs_steady_concentration_spearman_rho": {
+      "median": 0.34066820542696014,
+      "mean": 0.5245338538313985,
+      "positive_fraction": 1.0
+    },
+    "top_share_of_highest_response_quartile": {
+      "median": 0.5,
+      "mean": 0.6875
+    },
+    "top_placement_highest_case_mean_count": 20,
+    "top_placement_highest_case_mean_fraction": 0.9090909090909091,
+    "placements": {
+      "top": {
+        "sensor_case_observation_count": 286,
+        "steady_concentration_percent": {
+          "median": 9.571835827604438,
+          "mean": 10.094409416347764
+        },
+        "alarm": {
+          "coverage_fraction": 1.0,
+          "detected_count": 286,
+          "median_latency_after_fill_start_s": 18.0099999999984
+        },
+        "trip": {
+          "coverage_fraction": 1.0,
+          "detected_count": 286,
+          "median_latency_after_fill_start_s": 20.2699999999968
+        }
+      },
+      "mid-high": {
+        "sensor_case_observation_count": 110,
+        "steady_concentration_percent": {
+          "median": 3.6159685483870962,
+          "mean": 4.639654183471319
+        },
+        "alarm": {
+          "coverage_fraction": 0.9272727272727272,
+          "detected_count": 102,
+          "median_latency_after_fill_start_s": 19.25
+        },
+        "trip": {
+          "coverage_fraction": 0.7727272727272727,
+          "detected_count": 85,
+          "median_latency_after_fill_start_s": 20.549999999995634
+        }
+      },
+      "mid-low": {
+        "sensor_case_observation_count": 110,
+        "steady_concentration_percent": {
+          "median": 0.44001260839403405,
+          "mean": 1.9700262233656374
+        },
+        "alarm": {
+          "coverage_fraction": 0.6818181818181818,
+          "detected_count": 75,
+          "median_latency_after_fill_start_s": 34.2899999999936
+        },
+        "trip": {
+          "coverage_fraction": 0.4727272727272727,
+          "detected_count": 52,
+          "median_latency_after_fill_start_s": 19.3949999999968
+        }
+      },
+      "bottom": {
+        "sensor_case_observation_count": 132,
+        "steady_concentration_percent": {
+          "median": 0.2743119623655914,
+          "mean": 5.215751475197935
+        },
+        "alarm": {
+          "coverage_fraction": 0.7803030303030303,
+          "detected_count": 103,
+          "median_latency_after_fill_start_s": 11.319999999999709
+        },
+        "trip": {
+          "coverage_fraction": 0.7045454545454546,
+          "detected_count": 93,
+          "median_latency_after_fill_start_s": 11.139999999999418
+        }
+      }
+    },
+    "jet_path_subsets": {
+      "near_source_bottom": {
+        "sensor_case_observation_count": 66,
+        "steady_concentration_percent": {
+          "median": 11.27050053763441,
+          "mean": 8.867383902195554
+        },
+        "alarm": {
+          "coverage_fraction": 1.0,
+          "detected_count": 66,
+          "median_latency_after_fill_start_s": 10.674999999995634
+        },
+        "trip": {
+          "coverage_fraction": 1.0,
+          "detected_count": 66,
+          "median_latency_after_fill_start_s": 10.689999999995052
+        },
+        "sensor_ids": [
+          "20",
+          "21",
+          "22"
+        ],
+        "selection": "three floor probes nearest the downward jet origin"
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "23_FFI_P101_T00003",
+      "article_test_id": "test-05-0A",
+      "mean_mass_flow_g_s": 0.4757728572042119,
+      "height_vs_steady_concentration_spearman_rho": 0.30733064403961236,
+      "top_share_of_highest_response_quartile": 0.5,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 7.832026095947065,
+        "mid-high": 6.158304623655914,
+        "mid-low": 2.211740215053763,
+        "bottom": 6.156780286738351
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00004",
+      "article_test_id": "test-05-0B",
+      "mean_mass_flow_g_s": 0.4783327101966778,
+      "height_vs_steady_concentration_spearman_rho": 0.3391055072369282,
+      "top_share_of_highest_response_quartile": 0.5,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 8.163690198511166,
+        "mid-high": 6.243802956989248,
+        "mid-low": 2.0638593548387094,
+        "bottom": 6.2688797939068115
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00005",
+      "article_test_id": "test-05-0C",
+      "mean_mass_flow_g_s": 0.46974407677375934,
+      "height_vs_steady_concentration_spearman_rho": 0.17189680090351198,
+      "top_share_of_highest_response_quartile": 0.375,
+      "highest_mean_placement": "bottom",
+      "placement_steady_mean_percent": {
+        "top": 5.664932208436725,
+        "mid-high": 4.466912688172042,
+        "mid-low": 1.731928817204301,
+        "bottom": 6.359986845878137
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00006",
+      "article_test_id": "test-04-0",
+      "mean_mass_flow_g_s": 0.3283918917891808,
+      "height_vs_steady_concentration_spearman_rho": 0.41567771854849267,
+      "top_share_of_highest_response_quartile": 0.625,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 6.6663409196650125,
+        "mid-high": 4.430896915322581,
+        "mid-low": 1.5741687298387095,
+        "bottom": 4.640140036962365
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00007",
+      "article_test_id": "test-07-0",
+      "mean_mass_flow_g_s": 0.7213925508117084,
+      "height_vs_steady_concentration_spearman_rho": 0.15236307352811293,
+      "top_share_of_highest_response_quartile": 0.375,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 11.14632258064516,
+        "mid-high": 8.260145806451613,
+        "mid-low": 3.105969032258065,
+        "bottom": 9.956395334720778
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00008",
+      "article_test_id": "test-06-0A",
+      "mean_mass_flow_g_s": 0.5678711379668058,
+      "height_vs_steady_concentration_spearman_rho": 0.28701556756919727,
+      "top_share_of_highest_response_quartile": 0.5,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 9.099501736972703,
+        "mid-high": 6.725321290322581,
+        "mid-low": 2.9142393548387098,
+        "bottom": 7.665164516129033
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00009",
+      "article_test_id": "test-06-0B",
+      "mean_mass_flow_g_s": 0.5708860969735116,
+      "height_vs_steady_concentration_spearman_rho": 0.2784207275240217,
+      "top_share_of_highest_response_quartile": 0.5,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 9.23607071960298,
+        "mid-high": 6.814087741935485,
+        "mid-low": 2.173468407908429,
+        "bottom": 7.3918925945195975
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00011",
+      "article_test_id": "test-08-0",
+      "mean_mass_flow_g_s": 1.2498731049749803,
+      "height_vs_steady_concentration_spearman_rho": 0.1179837133474105,
+      "top_share_of_highest_response_quartile": 0.375,
+      "highest_mean_placement": "bottom",
+      "placement_steady_mean_percent": {
+        "top": 15.886922522570085,
+        "mid-high": 14.187917460535349,
+        "mid-low": 5.699078503774881,
+        "bottom": 16.14951132463967
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00012",
+      "article_test_id": "test-02-0A",
+      "mean_mass_flow_g_s": 0.07921330483669818,
+      "height_vs_steady_concentration_spearman_rho": 0.8574004069308507,
+      "top_share_of_highest_response_quartile": 1.0,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 8.845197585568553,
+        "mid-high": 0.3176050998463902,
+        "mid-low": 0.20596570404505893,
+        "bottom": 0.14204202935654547
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00013",
+      "article_test_id": "test-02-0B",
+      "mean_mass_flow_g_s": 0.07918155780533744,
+      "height_vs_steady_concentration_spearman_rho": 0.8680788445627355,
+      "top_share_of_highest_response_quartile": 1.0,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 8.66492617866005,
+        "mid-high": 0.25181516129032255,
+        "mid-low": 0.10650854318418317,
+        "bottom": 0.05156196670135276
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00014",
+      "article_test_id": "test-01-0",
+      "mean_mass_flow_g_s": 0.02917656148128634,
+      "height_vs_steady_concentration_spearman_rho": 0.8980305598716809,
+      "top_share_of_highest_response_quartile": 1.0,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 8.977050454921423,
+        "mid-high": 0.166414623655914,
+        "mid-low": 0.09469268817204299,
+        "bottom": 0.07805393411845024
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00026",
+      "article_test_id": "test-03-0",
+      "mean_mass_flow_g_s": 0.10135084652247407,
+      "height_vs_steady_concentration_spearman_rho": 0.9144388908670161,
+      "top_share_of_highest_response_quartile": 1.0,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 8.409843672456576,
+        "mid-high": 0.16764472424557755,
+        "mid-low": 0.07808726326742976,
+        "bottom": 0.04644215227193896
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00027",
+      "article_test_id": "test-02-1A",
+      "mean_mass_flow_g_s": 0.08791379616221053,
+      "height_vs_steady_concentration_spearman_rho": 0.8852685246530868,
+      "top_share_of_highest_response_quartile": 1.0,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 10.131066377171217,
+        "mid-high": 0.367803870967742,
+        "mid-low": 0.20159806451612905,
+        "bottom": 0.11945430107526883
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00028",
+      "article_test_id": "test-02-1B",
+      "mean_mass_flow_g_s": 0.08578523894118162,
+      "height_vs_steady_concentration_spearman_rho": 0.8933424653015851,
+      "top_share_of_highest_response_quartile": 1.0,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 10.016061443932411,
+        "mid-high": 0.25017652841781873,
+        "mid-low": 0.0874863389656938,
+        "bottom": 0.06573118279569894
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00029",
+      "article_test_id": "test-05-1A",
+      "mean_mass_flow_g_s": 0.43438459669483015,
+      "height_vs_steady_concentration_spearman_rho": 0.3375428090468963,
+      "top_share_of_highest_response_quartile": 0.5,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 10.049084987593051,
+        "mid-high": 6.996078064516129,
+        "mid-low": 3.1804174193548387,
+        "bottom": 7.132830645161293
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00030",
+      "article_test_id": "test-05-1B",
+      "mean_mass_flow_g_s": 0.4366148140374628,
+      "height_vs_steady_concentration_spearman_rho": 0.34223090361699204,
+      "top_share_of_highest_response_quartile": 0.5,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 9.639454195989098,
+        "mid-high": 6.0586058804865175,
+        "mid-low": 2.356883945002644,
+        "bottom": 6.838777630883132
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00031",
+      "article_test_id": "test-08-1",
+      "mean_mass_flow_g_s": 1.2268206803043364,
+      "height_vs_steady_concentration_spearman_rho": 0.06771692156805018,
+      "top_share_of_highest_response_quartile": 0.375,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 19.689273237603217,
+        "mid-high": 14.306058339502911,
+        "mid-low": 7.694065912215758,
+        "bottom": 18.504844570773844
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00040",
+      "article_test_id": "test-02-2A",
+      "mean_mass_flow_g_s": 0.09895281820877506,
+      "height_vs_steady_concentration_spearman_rho": 0.9235546303088691,
+      "top_share_of_highest_response_quartile": 1.0,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 9.687372859293005,
+        "mid-high": 0.3636952247488102,
+        "mid-low": 0.17702574828133266,
+        "bottom": 0.1305617838885951
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00041",
+      "article_test_id": "test-02-2B",
+      "mean_mass_flow_g_s": 0.09542987734172818,
+      "height_vs_steady_concentration_spearman_rho": 0.9287636242756422,
+      "top_share_of_highest_response_quartile": 1.0,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 9.822716198511168,
+        "mid-high": 0.29926529032258065,
+        "mid-low": 0.11369375483870969,
+        "bottom": 0.07129318279569895
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00042",
+      "article_test_id": "test-05-2",
+      "mean_mass_flow_g_s": 0.48440685253787136,
+      "height_vs_steady_concentration_spearman_rho": 0.3174881822748199,
+      "top_share_of_highest_response_quartile": 0.5,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 12.420548198511169,
+        "mid-high": 8.06778289032258,
+        "mid-low": 4.25956015483871,
+        "bottom": 8.858567849462366
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00044",
+      "article_test_id": "test-05-3",
+      "mean_mass_flow_g_s": 0.4531402800892389,
+      "height_vs_steady_concentration_spearman_rho": 0.3255621229233182,
+      "top_share_of_highest_response_quartile": 0.5,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 11.55625043473164,
+        "mid-high": 6.843789164338331,
+        "mid-low": 3.130643606807213,
+        "bottom": 7.952556642113282
+      }
+    },
+    {
+      "case_id": "23_FFI_P101_T00045",
+      "article_test_id": "test-02-3",
+      "mean_mass_flow_g_s": 0.0927113770893714,
+      "height_vs_steady_concentration_spearman_rho": 0.9105321453919363,
+      "top_share_of_highest_response_quartile": 1.0,
+      "highest_mean_placement": "top",
+      "placement_steady_mean_percent": {
+        "top": 10.472354352357321,
+        "mid-high": 0.32826769032258063,
+        "mid-low": 0.17949535483870965,
+        "bottom": 0.16506384946236563
+      }
+    }
+  ],
+  "decision": {
+    "bounded_actual_hydrogen_spatial_stratification_supported": true,
+    "layered_confined_detector_placement_rationale_supported": true,
+    "ceiling_layer_coverage_supported": true,
+    "near_source_jet_path_supplement_supported": true,
+    "independent_spatial_validation_supported": false,
+    "runtime_application": false,
+    "runtime_parameter_changed": false,
+    "h2safe_gate_changed": false,
+    "outdoor_station_detector_map_validated": false,
+    "full_loop_validation_supported": false
+  },
+  "claim_boundary": "Twenty-two physical-hydrogen tests support a descriptive layered-placement rationale inside this open-ended 5.8 m channel: ceiling probes provide broad sustained coverage, while probes in the downward-jet path can respond earlier. Because outcomes were accessed before this analysis was designed, this is not independent validation and cannot validate an outdoor station detector map, alarm setpoints, ESD effectiveness, runtime spatial routing, or the full digital twin."
+}

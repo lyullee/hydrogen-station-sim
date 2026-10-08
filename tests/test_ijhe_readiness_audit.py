@@ -206,6 +206,21 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert h2safe["full_loop_station_vehicle_validation"] is False
     assert h2safe["runtime_parameter_updated"] is False
     assert gates["h2safe_spatial_detector_transfer_validation"]["status"] == "FAIL"
+    spatial_stratification = gates[
+        "actual_hydrogen_spatial_stratification_evidence"
+    ]
+    assert spatial_stratification["status"] == "PASS"
+    spatial_observed = spatial_stratification["observed"]
+    assert spatial_observed["test_gas"] == "hydrogen"
+    assert spatial_observed["experiment_count"] == 22
+    assert spatial_observed["sensor_count_per_experiment"] == 29
+    assert spatial_observed["sensor_case_observation_count"] == 638
+    assert spatial_observed["top_alarm_coverage_fraction"] == 1.0
+    assert spatial_observed["top_trip_coverage_fraction"] == 1.0
+    assert spatial_observed["near_source_bottom_alarm_latency_s"] < 11.0
+    assert spatial_observed["post_access_descriptive_evidence"] is True
+    assert spatial_observed["runtime_application"] is False
+    assert spatial_observed["h2safe_gate_changed"] is False
     reference_detector = gates["physical_hydrogen_reference_leak_detector_response"]
     assert reference_detector["status"] == "PASS"
     assert reference_detector["observed"]["observation_count"] == 45

@@ -56,6 +56,7 @@ def build(root: Path) -> dict[str, Any]:
     qra_comparison_path = root / "research/qra_multimethod_comparison_2026_10_08.json"
     runtime_qra_path = root / "research/runtime_qra_envelope_comparison_2026_10_08.json"
     reference_leak_detector_path = root / "research/hydrogen_reference_leak_detector_result_2026_10_08.json"
+    spatial_stratification_path = root / "research/usn_channel_spatial_stratification_evidence_2026_10_08.json"
     audit = load_json(audit_path)
     hiad = load_json(hiad_path)
     tracker = load_json(tracker_path)
@@ -75,6 +76,7 @@ def build(root: Path) -> dict[str, Any]:
     qra_comparison = load_json(qra_comparison_path)
     runtime_qra = load_json(runtime_qra_path)
     reference_leak_detector = load_json(reference_leak_detector_path)
+    spatial_stratification = load_json(spatial_stratification_path)
 
     status_by_id = {g["id"]: g for g in audit.get("gates", [])}
     gate = lambda gate_id: status_by_id.get(gate_id, {"status": "MISSING"})
@@ -175,6 +177,42 @@ def build(root: Path) -> dict[str, Any]:
                     "runtime_application"
                 ],
                 "claim_boundary": reference_leak_detector["claim_boundary"],
+            },
+            "actual_hydrogen_spatial_stratification": {
+                "gate": gate(
+                    "actual_hydrogen_spatial_stratification_evidence"
+                )["status"],
+                "evidence": [
+                    "research/usn_channel_spatial_stratification_evidence_2026_10_08.json",
+                    "research/USN_CHANNEL_SPATIAL_STRATIFICATION_EVIDENCE_2026_10_08.md",
+                ],
+                "experiment_count": spatial_stratification["aggregate"][
+                    "experiment_count"
+                ],
+                "sensor_case_observation_count": spatial_stratification[
+                    "aggregate"
+                ]["sensor_case_observation_count"],
+                "top_alarm_coverage_fraction": spatial_stratification[
+                    "aggregate"
+                ]["placements"]["top"]["alarm"]["coverage_fraction"],
+                "top_trip_coverage_fraction": spatial_stratification[
+                    "aggregate"
+                ]["placements"]["top"]["trip"]["coverage_fraction"],
+                "top_highest_case_mean_count": spatial_stratification[
+                    "aggregate"
+                ]["top_placement_highest_case_mean_count"],
+                "near_source_bottom_alarm_latency_s": spatial_stratification[
+                    "aggregate"
+                ]["jet_path_subsets"]["near_source_bottom"]["alarm"][
+                    "median_latency_after_fill_start_s"
+                ],
+                "runtime_application": spatial_stratification["decision"][
+                    "runtime_application"
+                ],
+                "h2safe_gate_changed": spatial_stratification["decision"][
+                    "h2safe_gate_changed"
+                ],
+                "claim_boundary": spatial_stratification["claim_boundary"],
             },
             "h2safe_spatial_detector_transfer": {
                 "gate": gate("h2safe_spatial_detector_transfer_validation")["status"],
@@ -358,7 +396,7 @@ def build(root: Path) -> dict[str, Any]:
             {
                 "id": "h2safe_spatial_detector_transfer",
                 "status": gate("h2safe_spatial_detector_transfer_validation")["status"],
-                "why_blocked": "The frozen coordinate-only rank law passed two of four H2SAFE spatial screens. A post-access orientation-class candidate passes all four internal reference screens and reaches Spearman rho 0.943 with top-3 recall 1.0 on a six-sensor Sandia actual-hydrogen summary without fitting. That external diagnostic was formalised after outcome access and cannot revise the gate. The pre-access-frozen HyDelta candidate was ineligible before model execution because required numeric spatial fields are absent.",
+                "why_blocked": "The frozen coordinate-only rank law passed two of four H2SAFE spatial screens. Post-access actual-hydrogen evidence now includes a six-sensor Sandia diagnostic and 638 sensor-case observations from 22 USN/FFI channel tests. The latter supports layered ceiling plus jet-path coverage, but it was designed after outcome access and does not evaluate the frozen station rank law independently. The pre-access-frozen HyDelta candidate was ineligible before model execution because required numeric spatial fields are absent.",
                 "evidence": [
                     "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
                     "research/H2SAFE_SPATIAL_RESPONSE_DIAGNOSTIC_2026_10_08.md",
@@ -370,6 +408,8 @@ def build(root: Path) -> dict[str, Any]:
                     "research/HYDELTA_INDOOR_SPATIAL_HOLDOUT_ELIGIBILITY_2026_10_08.md",
                     "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json",
                     "research/SANDIA_WAREHOUSE_SPATIAL_DIAGNOSTIC_2026_10_08.md",
+                    "research/usn_channel_spatial_stratification_evidence_2026_10_08.json",
+                    "research/USN_CHANNEL_SPATIAL_STRATIFICATION_EVIDENCE_2026_10_08.md",
                 ],
                 "unblock_criterion": "Evaluate the now-frozen orientation-class candidate on an independent indoor release cohort and pass all spatial rank and recall screens without fitting detector amplitudes or hydrogen alarm thresholds on helium data.",
                 "next_action": "Request a HyDelta companion export containing experiment ID, source/sensor XYZ, release orientation and per-sensor numerical H2 responses, while screening another untouched actual-hydrogen indoor cohort under the unchanged candidate and thresholds.",
@@ -421,6 +461,9 @@ def build(root: Path) -> dict[str, Any]:
             "sandia_spatial_diagnostic_sha256": sha256(sandia_spatial_path),
             "reference_leak_detector_result_sha256": sha256(
                 reference_leak_detector_path
+            ),
+            "usn_spatial_stratification_sha256": sha256(
+                spatial_stratification_path
             ),
             "ignited_pressure_peaking_sha256": sha256(ignited_pressure_path),
             "qra_multimethod_comparison_sha256": sha256(qra_comparison_path),
