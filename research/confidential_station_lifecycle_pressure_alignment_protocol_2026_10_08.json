@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "protocol_id": "CONFIDENTIAL-STATION-LIFECYCLE-PRESSURE-ALIGNMENT-001",
+  "status": "FROZEN_BEFORE_JOINT_ALIGNMENT_OUTCOME_ACCESS",
+  "frozen_month": "2026-10",
+  "joint_alignment_outcomes_seen_before_freeze": false,
+  "objective": "Test whether owner-attested medium/high storage pressure completion events align with owner-defined full-bank recharge counter increments on the shared local logger clock.",
+  "prior_information": {
+    "pressure_cycle_distributions_known": true,
+    "one_counter_window_summary_known": true,
+    "full_archive_pressure_counter_event_matches_known": false,
+    "source_files_known_to_be_reverse_chronological": true,
+    "one_exact_duplicate_payload_known": true
+  },
+  "data_scope": {
+    "pressure_roles": [
+      "medium_storage_pressure",
+      "high_storage_pressure"
+    ],
+    "counter_roles": [
+      "medium_bank_full_recharge_counter",
+      "high_bank_full_recharge_counter"
+    ],
+    "pressure_roles_and_units_attested": true,
+    "counter_semantics_attested": true,
+    "full_recharge_thresholds_attested": true,
+    "local_clock_alignment_attested": true,
+    "vehicle_side_signals_used": false
+  },
+  "privacy": {
+    "publish_raw_rows": false,
+    "publish_source_paths": false,
+    "publish_source_filenames": false,
+    "publish_headers_or_tags": false,
+    "publish_per_file_hashes": false,
+    "publish_absolute_timestamps_or_dates": false,
+    "publish_site_company_location_or_manufacturer": false
+  },
+  "split": {
+    "method": "global chronological time boundary derived from the mapped raw time range",
+    "calibration_fraction": 0.7,
+    "holdout_fraction": 0.3,
+    "matching_is_partition_local": true
+  },
+  "event_definition": {
+    "completion_pressure": "owner-attested nominal full pressure multiplied by the frozen 0.99 measurement-tolerance fraction",
+    "rearm": "pressure must fall at least 0.50 MPa below the completion threshold before another completion is counted",
+    "counter_event": "a positive integer increment in chronological order",
+    "matching": "greedy one-to-one nearest event within plus or minus 300 seconds, separately by bank and chronological partition",
+    "exact_duplicate_files_excluded": true
+  },
+  "rules": {
+    "calibration_fraction": 0.7,
+    "medium_full_pressure_mpa": 45.0,
+    "high_full_pressure_mpa": 85.0,
+    "completion_threshold_fraction": 0.99,
+    "rearm_drop_mpa": 0.5,
+    "maximum_sample_gap_s": 2.5,
+    "maximum_match_offset_s": 300.0,
+    "minimum_pressure_mpa": 10.0,
+    "maximum_pressure_mpa": 100.0,
+    "minimum_pressure_files": 6,
+    "minimum_counter_files": 6,
+    "minimum_calibration_counter_events_per_bank": 200,
+    "minimum_holdout_counter_events_per_bank": 50,
+    "minimum_holdout_counter_recall": 0.8,
+    "minimum_holdout_pressure_precision": 0.7,
+    "maximum_recall_shift": 0.1,
+    "maximum_holdout_median_absolute_offset_s": 120.0
+  },
+  "decision_rule": "PASS only if every eligibility and primary screen passes for both medium and high banks. A failure is retained and does not permit threshold refitting on the holdout.",
+  "decision_boundary": {
+    "pass_meaning": "Same-site corroboration that the frozen pressure completion detector tracks the owner-defined storage recharge counter.",
+    "compressor_capacity_validation": false,
+    "storage_geometry_validation": false,
+    "vehicle_fill_validation": false,
+    "full_loop_holdout_eligible": false,
+    "independent_external_validation": false,
+    "runtime_parameter_application": false,
+    "default_parameter_change": false,
+    "degradation_law_or_failure_rate": false,
+    "safety_limit_or_field_certification": false
+  },
+  "locked_implementation": {
+    "evaluator": "src/h2station/confidential_lifecycle_pressure_alignment.py",
+    "evaluator_sha256": "d1072c3aa42df41d54ea23c4e97baacfcdb44221d175b18f34adfe34a96bdd2f",
+    "runner": "scripts/validate_confidential_station_lifecycle_pressure_alignment.py",
+    "runner_sha256": "badadfdf3f2d7a9636a92033837d85d66cbbf998e1f4dd7d3576d1018c79c08e",
+    "synthetic_regression_test": "tests/test_confidential_lifecycle_pressure_alignment.py",
+    "synthetic_regression_test_sha256": "6448169f48717235a479ee3cb6dbaec713fb5396f4a46d3ec5179cc9233fddad"
+  }
+}
