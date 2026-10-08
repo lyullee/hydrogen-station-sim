@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T17:42:32.409563+00:00",
+  "generated_at": "2026-10-08T18:15:24.010660+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 120,
+    "PASS": 121,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -1120,6 +1120,51 @@
             "keep full-loop vehicle claims disabled until vehicle pressure, vehicle temperature, delivered mass or SOC is synchronized and attested"
           ]
         }
+      }
+    },
+    {
+      "id": "local_station_asset_screen_integrity",
+      "status": "PASS",
+      "claim": "The privacy-bounded local station asset screen confirms substantial scenario, operational-sequence and engineering-reference coverage without promoting it to vehicle-loop or quantitative consequence validation.",
+      "evidence": "research\\local_station_asset_screen_2026_10_09.json",
+      "requirement": "De-identified asset summary, 52-step scenario matrix with populated consequence fields, standard-family references, and explicit vehicle/full-consequence limits.",
+      "observed": {
+        "scenario_step_rows": 52,
+        "nonempty_consequence_fields": {
+          "leak": 52,
+          "fire": 52,
+          "explosion": 52,
+          "hazard_classification": 52
+        },
+        "referenced_standard_families": {
+          "KGS": 107,
+          "KOSHA": 82,
+          "NFPA": 36,
+          "ASME": 27,
+          "IEC": 19,
+          "CGA": 15,
+          "API": 9
+        },
+        "bundle_count": 8,
+        "coverage": {
+          "local_station_data_is_sparse": false,
+          "station_side_dynamic_evidence_is_substantial": true,
+          "local_hazop_scenario_coverage_is_substantial": true,
+          "vehicle_side_full_loop_validation_ready": false,
+          "quantitative_consequence_validation_ready": false,
+          "main_limit": "The local collection is rich in station-side telemetry, operational sequences, qualitative hazard controls and engineering context, but synchronized vehicle pressure/temperature/SOC/delivered-mass channels are not yet attested as one independent full-loop cohort."
+        },
+        "privacy": {
+          "source_paths_published": false,
+          "source_filenames_published": false,
+          "source_headers_published": false,
+          "source_tags_published": false,
+          "site_company_manufacturer_published": false,
+          "calendar_dates_published": false,
+          "raw_rows_persisted": false,
+          "per_file_hashes_published": false
+        },
+        "claim_boundary": "This privacy-bounded inventory proves that local station-related data are not sparse and identifies defensible uses. It does not publish raw records, reveal the site, certify units, validate safety distances, or close the IJHE full-loop gate."
       }
     },
     {

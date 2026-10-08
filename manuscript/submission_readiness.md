@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-09 KST**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **120 PASS · 10 FAIL · 7 PENDING**.
+Gate counts: **121 PASS · 10 FAIL · 7 PENDING**.
 
 A fresh privacy-bounded local inventory confirms that data volume is not the
 station-side limitation. The controlled archive contains 33 CSV files,
@@ -32,6 +32,14 @@ medium/high pressure episodes, 1,418 short-horizon pressure forecast cases and
 therefore tied to unattested channel semantics and missing synchronized
 vehicle-side pressure, temperature, delivered-mass or SOC signals rather than
 to a sparse local archive.
+
+The companion privacy-bounded asset screen adds a separate passing integrity
+gate: 52 operational scenario steps have populated leak, fire, explosion and
+hazard-classification fields, with references to KGS, KOSHA, NFPA, ASME, IEC,
+CGA and API families. It also records the operation-sequence, trend,
+engineering-reference and media bundles without publishing paths, filenames,
+tags, dates or raw rows. This strengthens station-side scenario coverage but
+does not close the vehicle-loop or quantitative-consequence gates.
 
 A prospectively frozen lifecycle/pressure alignment test then evaluated
 29,361,281 storage-pressure rows against 26,839,420 owner-defined counter rows.

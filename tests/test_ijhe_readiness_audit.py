@@ -132,6 +132,13 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert local_data["utilization"]["semantic_attestation"][
         "flow_units_attested"
     ] is False
+    assert gates["local_station_asset_screen_integrity"]["status"] == "PASS"
+    local_assets = gates["local_station_asset_screen_integrity"]["observed"]
+    assert local_assets["scenario_step_rows"] == 52
+    assert local_assets["nonempty_consequence_fields"]["fire"] == 52
+    assert local_assets["referenced_standard_families"]["KGS"] == 107
+    assert local_assets["coverage"]["vehicle_side_full_loop_validation_ready"] is False
+    assert local_assets["coverage"]["quantitative_consequence_validation_ready"] is False
     assert gates["dickens_typeiii_prospective_validation"]["status"] == "FAIL"
     dickens = gates["dickens_typeiii_prospective_validation"]["observed"]
     assert dickens["protocol_frozen_before_outcome_access"] is True

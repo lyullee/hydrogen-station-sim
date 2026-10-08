@@ -1510,6 +1510,53 @@ def audit(root: Path) -> dict[str, object]:
         } if local_utilization else "missing; local station-data utilization audit has not completed",
     ))
 
+    local_asset_path = root / "research/local_station_asset_screen_2026_10_09.json"
+    local_asset = _json(local_asset_path)
+    local_asset_privacy = (local_asset or {}).get("privacy") or {}
+    local_asset_coverage = (local_asset or {}).get("coverage_assessment") or {}
+    local_asset_bundles = (local_asset or {}).get("station_specific_bundles") or []
+    local_asset_matrix = next(
+        (
+            item for item in local_asset_bundles
+            if isinstance(item, dict)
+            and item.get("id") == "local_liquid_hydrogen_operational_scenario_matrix"
+        ),
+        {},
+    )
+    local_asset_screen_pass = bool(
+        (local_asset or {}).get("schema_version") == 1
+        and (local_asset or {}).get("artifact_type") == "local_station_asset_screen"
+        and local_asset_privacy
+        and all(value is False for value in local_asset_privacy.values())
+        and local_asset_matrix.get("scenario_step_rows") == 52
+        and all(
+            (local_asset_matrix.get("nonempty_consequence_fields") or {}).get(key) == 52
+            for key in ("leak", "fire", "explosion", "hazard_classification")
+        )
+        and (local_asset_matrix.get("referenced_standard_families") or {}).get("KGS") == 107
+        and local_asset_coverage.get("local_station_data_is_sparse") is False
+        and local_asset_coverage.get("station_side_dynamic_evidence_is_substantial") is True
+        and local_asset_coverage.get("local_hazop_scenario_coverage_is_substantial") is True
+        and local_asset_coverage.get("vehicle_side_full_loop_validation_ready") is False
+        and local_asset_coverage.get("quantitative_consequence_validation_ready") is False
+    )
+    gates.append(_gate(
+        "local_station_asset_screen_integrity",
+        "PASS" if local_asset_screen_pass else ("FAIL" if local_asset else "PENDING"),
+        "The privacy-bounded local station asset screen confirms substantial scenario, operational-sequence and engineering-reference coverage without promoting it to vehicle-loop or quantitative consequence validation.",
+        str(local_asset_path.relative_to(root)),
+        "De-identified asset summary, 52-step scenario matrix with populated consequence fields, standard-family references, and explicit vehicle/full-consequence limits.",
+        {
+            "scenario_step_rows": local_asset_matrix.get("scenario_step_rows"),
+            "nonempty_consequence_fields": local_asset_matrix.get("nonempty_consequence_fields"),
+            "referenced_standard_families": local_asset_matrix.get("referenced_standard_families"),
+            "bundle_count": len(local_asset_bundles),
+            "coverage": local_asset_coverage,
+            "privacy": local_asset_privacy,
+            "claim_boundary": (local_asset or {}).get("claim_boundary"),
+        } if local_asset else "missing; local station asset screen has not completed",
+    ))
+
     signal_consistency_path = root / (
         "research/confidential_station_signal_consistency_screen_2026_10_08.json"
     )
