@@ -39,6 +39,8 @@ def test_inventory_deduplicates_without_publishing_source_details(tmp_path: Path
     assert inventory["deduplicated_data_rows"] == 7
     assert inventory["narrow_schema_files"] == 2
     assert inventory["wide_schema_files"] == 1
+    assert inventory["header_family_screen"]["files_screened"] == 3
+    assert inventory["header_family_screen"]["vehicle_or_dispenser_candidate_files"] == 0
 
     serialized = str(result)
     assert "station-a.csv" not in serialized

@@ -12,12 +12,31 @@ import argparse
 import csv
 import hashlib
 import json
+import re
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
 
 WIDE_MIN_COLUMNS = 32
+
+# Header-only families used to explain coverage without publishing proprietary
+# tag names.  The screen is intentionally qualitative: a match is a candidate
+# family, not a confirmed engineering meaning or unit attestation.
+HEADER_FAMILY_PATTERNS = {
+    "vehicle_or_dispenser": re.compile(
+        r"veh|car|tank|disp|nozzle|fuel|충전|차량|디스펜|노즐", re.I
+    ),
+    "flow_or_mass": re.compile(
+        r"flow|mass|massflow|rate|fqi|fqm|유량|질량|flowrate", re.I
+    ),
+    "pressure": re.compile(r"press|pressure|pi_|pt_|압력", re.I),
+    "temperature": re.compile(r"temp|temperature|tt_|ti_|온도", re.I),
+    "compressor": re.compile(r"comp|compress|압축", re.I),
+    "valve_or_esd": re.compile(r"valve|pcv|esd|trip|밸브|차단", re.I),
+    "lifecycle": re.compile(r"life|cycle|cnt|count|수명|사이클", re.I),
+    "totalizer": re.compile(r"acc|total|누적|적산", re.I),
+}
 
 
 def _sha256_and_lines(path: Path) -> tuple[str, int]:
@@ -132,6 +151,27 @@ def _research_utilization(research_dir: Path | None) -> dict[str, Any]:
     }
 
 
+def _header_family_screen(headers: list[list[str]]) -> dict[str, Any]:
+    """Return aggregate candidate-family counts without retaining headers."""
+
+    counts = {family: 0 for family in HEADER_FAMILY_PATTERNS}
+    for columns in headers:
+        for family, pattern in HEADER_FAMILY_PATTERNS.items():
+            if any(pattern.search(str(column)) for column in columns):
+                counts[family] += 1
+    return {
+        "method": "header_only_regex_family_screen",
+        "files_screened": len(headers),
+        "candidate_file_counts": counts,
+        "vehicle_or_dispenser_candidate_files": counts["vehicle_or_dispenser"],
+        "interpretation": (
+            "No channel names, values, dates or paths are retained. A zero vehicle/dispenser "
+            "candidate count means no header-level candidate was found; it does not prove "
+            "that vehicle telemetry is absent without custodian confirmation."
+        ),
+    }
+
+
 def audit_station_directory(
     source: Path, *, research_dir: Path | None = None
 ) -> dict[str, Any]:
@@ -147,10 +187,12 @@ def audit_station_directory(
     total_bytes = 0
     total_data_rows = 0
     unreadable_headers = 0
+    headers: list[list[str]] = []
 
     for path in csv_files:
         digest, physical_lines = _sha256_and_lines(path)
         header = _read_header(path)
+        headers.append(header)
         width = len(header)
         if not header:
             unreadable_headers += 1
@@ -204,6 +246,7 @@ def audit_station_directory(
                 str(width): count for width, count in sorted(schema_widths.items())
             },
             "unreadable_header_files": unreadable_headers,
+            "header_family_screen": _header_family_screen(headers),
         },
         "utilization": _research_utilization(research_dir),
         "assessment": {

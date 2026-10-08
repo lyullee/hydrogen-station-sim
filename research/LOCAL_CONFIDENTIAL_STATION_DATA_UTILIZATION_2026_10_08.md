@@ -21,6 +21,13 @@ The current analysis has already extracted substantial station-side evidence:
 - 733 conditional compressor-recharge flow episodes; and
 - 27 strong instantaneous/totalizer consistency pairs.
 
+A header-only family screen retained no original names or values. It found no
+vehicle/dispenser candidate files, while 12 files had flow/mass candidates,
+20 had pressure candidates, 21 had temperature candidates, and 8 each had
+compressor and valve/ESD candidates. This is structural evidence that no
+vehicle-side header candidate was found; it is not proof that vehicle
+telemetry is absent without custodian confirmation.
+
 This is enough for station-side pressure-envelope, cascade-sequence,
 recharge-pressure response, controller-state, lifecycle, and conditional-flow
 work. The limiting issue is semantic closure and vehicle-side coverage, not

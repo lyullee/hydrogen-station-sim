@@ -798,6 +798,9 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     ]
     assert local_station["inventory"]["csv_files"] == 33
     assert local_station["inventory"]["deduplicated_data_rows"] == 56_854_143
+    assert local_station["inventory"]["header_family_screen"][
+        "vehicle_or_dispenser_candidate_files"
+    ] == 0
     assert local_station["utilization"]["ordered_high_bank_pressure_cycles"] == 16_770
     assert local_station["utilization"]["short_horizon_pressure_forecast_cases"] == 1_418
     assert local_station["assessment"]["local_station_data_is_sparse"] is False
@@ -808,6 +811,9 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "confidential_local_station_data_utilization"
     ]
     assert local_summary["inventory"]["unique_csv_payloads"] == 32
+    assert local_summary["inventory"]["header_family_screen"][
+        "candidate_file_counts"
+    ]["pressure"] == 20
     assert local_summary["semantic_attestation"]["storage_pressure_role_count"] == 2
     local_header = prompt_evidence_header(idle)[
         "confidential_local_station_data_utilization"

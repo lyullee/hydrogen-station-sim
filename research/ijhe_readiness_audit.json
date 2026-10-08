@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T17:18:09.691575+00:00",
+  "generated_at": "2026-10-08T17:42:32.409563+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -1070,7 +1070,23 @@
             "9": 25,
             "64": 8
           },
-          "unreadable_header_files": 0
+          "unreadable_header_files": 0,
+          "header_family_screen": {
+            "method": "header_only_regex_family_screen",
+            "files_screened": 33,
+            "candidate_file_counts": {
+              "vehicle_or_dispenser": 0,
+              "flow_or_mass": 12,
+              "pressure": 20,
+              "temperature": 21,
+              "compressor": 8,
+              "valve_or_esd": 8,
+              "lifecycle": 21,
+              "totalizer": 12
+            },
+            "vehicle_or_dispenser_candidate_files": 0,
+            "interpretation": "No channel names, values, dates or paths are retained. A zero vehicle/dispenser candidate count means no header-level candidate was found; it does not prove that vehicle telemetry is absent without custodian confirmation."
+          }
         },
         "utilization": {
           "ordered_high_bank_pressure_cycles": 16770,

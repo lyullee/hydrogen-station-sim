@@ -3816,7 +3816,7 @@ def _confidential_local_station_utilization_evidence() -> dict[str, Any] | None:
                 "csv_files", "total_csv_gib", "physical_data_rows_after_one_header_per_file",
                 "unique_csv_payloads", "redundant_csv_files", "duplicate_rows",
                 "deduplicated_data_rows", "narrow_schema_files", "wide_schema_files",
-                "schema_width_file_counts",
+                "schema_width_file_counts", "header_family_screen",
             )
         },
         "utilization": {
