@@ -5800,13 +5800,40 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         "confidential_local_station_data_discovery"
     )
     if isinstance(local_station_discovery, dict):
+        discovery_groups = local_station_discovery.get("candidate_groups") or {}
+        measured_group = discovery_groups.get(
+            "confidential_station_measurement_bundle"
+        ) or {}
+        scenario_group = discovery_groups.get(
+            "adjacent_liquid_hydrogen_operations_bundle"
+        ) or {}
+        media_group = discovery_groups.get("engineering_and_media_context") or {}
+        operational_media_group = discovery_groups.get(
+            "local_operational_video_collection"
+        ) or {}
         summary["confidential_local_station_data_discovery"] = {
-            key: local_station_discovery.get(key)
-            for key in (
-                "evidence_role", "artifact", "candidate_groups",
-                "coverage_assessment", "claim_limit",
-            )
-            if local_station_discovery.get(key) is not None
+            "evidence_role": local_station_discovery.get("evidence_role"),
+            "artifact": local_station_discovery.get("artifact"),
+            "inventory": {
+                "station_measurement_file_count": measured_group.get("file_count"),
+                "station_measurement_physical_rows": measured_group.get(
+                    "physical_rows"
+                ),
+                "station_measurement_deduplicated_rows": measured_group.get(
+                    "deduplicated_rows"
+                ),
+                "scenario_step_rows": scenario_group.get("scenario_step_rows"),
+                "engineering_document_count": media_group.get("document_count"),
+                "engineering_image_count": media_group.get("image_count"),
+                "engineering_video_count": media_group.get("video_count"),
+                "operational_video_file_count": operational_media_group.get(
+                    "file_count"
+                ),
+            },
+            "coverage_assessment": local_station_discovery.get(
+                "coverage_assessment"
+            ) or {},
+            "claim_limit": local_station_discovery.get("claim_limit"),
         }
     private_media = evidence.get("confidential_private_media_intake")
     if isinstance(private_media, dict):
@@ -5975,6 +6002,11 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     public_hrs_leads_relevant = any(token in lead_context for token in (
         "공개", "계측", "실측", "실데이터", "원자료", "검증", "데이터",
         "local", "measurement", "dataset", "raw", "validation", "data",
+    ))
+    local_discovery_relevant = any(token in lead_context for token in (
+        "로컬", "현장 데이터", "충전소 데이터", "운전 데이터", "시계열",
+        "private station", "local station", "station data", "operational data",
+        "vehicle-side", "vehicle side", "full-loop", "full loop",
     ))
     spatial_stratification = response.get(
         "public_actual_hydrogen_spatial_stratification_evidence"
@@ -6312,9 +6344,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ),
                     "claim_limit": short(local_station_discovery.get("claim_limit"), 220),
                 },
-            } if local_station_discovery and (
-                manifest.get("question") or manifest.get("selected_sensor")
-            ) else {}),
+            } if local_station_discovery and local_discovery_relevant else {}),
             **({
                 "station_cascade_sequence": {
                     "claim_supported": cascade_sequence.get(
