@@ -1,0 +1,240 @@
+{
+  "schema_version": 1,
+  "artifact_type": "hytunnel_actual_hydrogen_spatial_rank_holdout",
+  "generated_at": "2026-10-08T06:58:32.039798+00:00",
+  "source": {
+    "dataset_doi": "10.23642/USN.14405903",
+    "article_doi": "10.3390/en14113008",
+    "test_gas": "hydrogen",
+    "license": "CC BY 4.0",
+    "version": "1.1",
+    "raw_files_committed": false,
+    "files": [
+      {
+        "name": "Exp04.mat",
+        "bytes": 7013153,
+        "sha256": "d3d10d8b07a11c6cd3fc6777c502591a4d94400c3af21c6aab3d3257d105655b"
+      },
+      {
+        "name": "Exp05.mat",
+        "bytes": 6406283,
+        "sha256": "fa0a95bcfe42059bd42935f3e57f2a0bd8a12563fed3d21991c4868e8a65b101"
+      },
+      {
+        "name": "Exp06.mat",
+        "bytes": 6966901,
+        "sha256": "f045fba3c022b40a57ed1fcf9b457032e88c75b045cf0c21b86c0d60e55cb4f1"
+      },
+      {
+        "name": "Exp07.mat",
+        "bytes": 7497583,
+        "sha256": "087a7d3c51f210a3f4318c774c51c5b6a75f783198d44455859405d2fa5edec6"
+      },
+      {
+        "name": "Exp08.mat",
+        "bytes": 7222508,
+        "sha256": "4fa72d65a761f9ace7ebee4c7cb61cf2e8dab285963d61e83720a8c209ed4062"
+      },
+      {
+        "name": "Exp09.mat",
+        "bytes": 7261446,
+        "sha256": "c2232a0be2bbcf2735f985c32e35cb4b1fef9ab6cd5342c96adcb39648b4ba78"
+      },
+      {
+        "name": "Exp10.mat",
+        "bytes": 7526264,
+        "sha256": "966375ef8e715146ebae73993d5f93353e6dd2862095cd8a8a1409e7345b5998"
+      },
+      {
+        "name": "Exp11.mat",
+        "bytes": 7213627,
+        "sha256": "230b44e71dea4053ffc387542f3dab3c99061c13c54dc2c7fa9a73975892f9a3"
+      },
+      {
+        "name": "Exp12.mat",
+        "bytes": 6778360,
+        "sha256": "f9d1d6de2430adeead2ce135b1e8b581ea9df6a185de28512873b9baf1fffe1d"
+      },
+      {
+        "name": "Exp13.mat",
+        "bytes": 7371715,
+        "sha256": "3414adf55f11c72f4b85608b4e9b1b2b8a1fd181bd89a80c112065fb2ba039fa"
+      },
+      {
+        "name": "Exp14.mat",
+        "bytes": 6947707,
+        "sha256": "ab967e3ce2a26e4cc8432359e864486a57a71ee02cfc233ec5e52451e010cf9d"
+      },
+      {
+        "name": "Exp15.mat",
+        "bytes": 6980195,
+        "sha256": "4c7107a9fa1e082b291a311284a8f80265bc76d951087ec9daf208a36cc04306"
+      },
+      {
+        "name": "Exp16.mat",
+        "bytes": 30929249,
+        "sha256": "cbeb25175596778f9c04cf9f69a6a0922650a0c534df68a6c8ca84fa8257d3cd"
+      },
+      {
+        "name": "Exp19.mat",
+        "bytes": 30964564,
+        "sha256": "dff296c154136028d7a38568ff4e7f90c0a74e29a51a0f026433f8b8fbd22fd2"
+      },
+      {
+        "name": "Exp20.mat",
+        "bytes": 32013319,
+        "sha256": "b0bc7c415da5dba9ba878bf5c7e4e14a785cf2c4ec7454b57f697609676417b3"
+      },
+      {
+        "name": "Exp21.mat",
+        "bytes": 30449511,
+        "sha256": "9cfc76033748612c441d71e9d23515c81260d557a8f0168403be889ba55cfd65"
+      },
+      {
+        "name": "Exp22.mat",
+        "bytes": 29952927,
+        "sha256": "8afd80f1e7e71650c47222adfbe11d64c21a2b05eeadb8f65ff2e8181984441e"
+      },
+      {
+        "name": "Exp23.mat",
+        "bytes": 32653229,
+        "sha256": "49f33d8ef7b7a73e607a615fcf5cf7fa443f1345265d0c4d3f18c7584560ac65"
+      }
+    ]
+  },
+  "protocol_sha256": "5f7d80f2698da7bf7f4fccbf230fb4f465cdd01db6336a8377470764f29549ea",
+  "evaluation": {
+    "cases": [
+      {
+        "experiment": 4,
+        "valid_sensor_count": 37,
+        "spearman_score_vs_robust_response": 0.5903271692745375,
+        "top5_predictor_recall_of_response_quartile": 1.0,
+        "nearest_sensor": "D165",
+        "nearest_sensor_in_response_quartile": true,
+        "maximum_response_sensor": "D164"
+      },
+      {
+        "experiment": 7,
+        "valid_sensor_count": 37,
+        "spearman_score_vs_robust_response": 0.6019440493124704,
+        "top5_predictor_recall_of_response_quartile": 0.8,
+        "nearest_sensor": "D165",
+        "nearest_sensor_in_response_quartile": true,
+        "maximum_response_sensor": "D164"
+      },
+      {
+        "experiment": 8,
+        "valid_sensor_count": 37,
+        "spearman_score_vs_robust_response": 0.5033191085822665,
+        "top5_predictor_recall_of_response_quartile": 1.0,
+        "nearest_sensor": "D165",
+        "nearest_sensor_in_response_quartile": true,
+        "maximum_response_sensor": "D166"
+      },
+      {
+        "experiment": 9,
+        "valid_sensor_count": 30,
+        "spearman_score_vs_robust_response": 0.5274749721913237,
+        "top5_predictor_recall_of_response_quartile": 0.6,
+        "nearest_sensor": "D165",
+        "nearest_sensor_in_response_quartile": true,
+        "maximum_response_sensor": "D164"
+      },
+      {
+        "experiment": 14,
+        "valid_sensor_count": 38,
+        "spearman_score_vs_robust_response": 0.597767808294124,
+        "top5_predictor_recall_of_response_quartile": 0.6,
+        "nearest_sensor": "D165",
+        "nearest_sensor_in_response_quartile": true,
+        "maximum_response_sensor": "D164"
+      },
+      {
+        "experiment": 19,
+        "valid_sensor_count": 38,
+        "spearman_score_vs_robust_response": 0.6785206258890469,
+        "top5_predictor_recall_of_response_quartile": 0.8,
+        "nearest_sensor": "D165",
+        "nearest_sensor_in_response_quartile": true,
+        "maximum_response_sensor": "D164"
+      },
+      {
+        "experiment": 20,
+        "valid_sensor_count": 36,
+        "spearman_score_vs_robust_response": 0.5822393822393823,
+        "top5_predictor_recall_of_response_quartile": 0.8,
+        "nearest_sensor": "D165",
+        "nearest_sensor_in_response_quartile": true,
+        "maximum_response_sensor": "D164"
+      }
+    ],
+    "aggregate": {
+      "experiment_count": 7,
+      "median_spearman": 0.5903271692745375,
+      "spearman_at_least_0_4_fraction": 0.3888888888888889,
+      "mean_top5_recall": 0.3111111111111111,
+      "nearest_in_response_quartile_fraction": 0.3888888888888889,
+      "screens": {
+        "all_18_declared_cases_eligible": false,
+        "median_spearman_at_least_0_5": true,
+        "spearman_at_least_0_4_fraction_at_least_0_6": false,
+        "mean_top5_recall_at_least_0_6": false,
+        "nearest_in_response_quartile_fraction_at_least_0_7": false
+      },
+      "joint_screen_pass": false
+    },
+    "failures": [
+      {
+        "experiment": 5,
+        "reason": "ValueError: S.pos[30] does not contain three coordinates"
+      },
+      {
+        "experiment": 6,
+        "reason": "ValueError: S.pos[36] does not contain three coordinates"
+      },
+      {
+        "experiment": 10,
+        "reason": "ValueError: S.pos[30] does not contain three coordinates"
+      },
+      {
+        "experiment": 11,
+        "reason": "ValueError: S.pos[38] does not contain three coordinates"
+      },
+      {
+        "experiment": 12,
+        "reason": "ValueError: S.pos[30] does not contain three coordinates"
+      },
+      {
+        "experiment": 13,
+        "reason": "ValueError: S.pos[38] does not contain three coordinates"
+      },
+      {
+        "experiment": 15,
+        "reason": "ValueError: S.pos[38] does not contain three coordinates"
+      },
+      {
+        "experiment": 16,
+        "reason": "ValueError: S.pos[38] does not contain three coordinates"
+      },
+      {
+        "experiment": 21,
+        "reason": "ValueError: S.pos[36] does not contain three coordinates"
+      },
+      {
+        "experiment": 22,
+        "reason": "ValueError: S.pos[36] does not contain three coordinates"
+      },
+      {
+        "experiment": 23,
+        "reason": "ValueError: S.pos[38] does not contain three coordinates"
+      }
+    ]
+  },
+  "decision": {
+    "independent_spatial_validation_pass": false,
+    "runtime_candidate_enabled": false,
+    "runtime_policy": "Keep runtime routing disabled until the audit verifies the exact frozen candidate, complete case accounting and every joint screen."
+  },
+  "claim_boundary": "This holdout tests only spatial rank transfer of the already frozen orientation-class candidate in one mechanically ventilated enclosure with a vertically downward source. It does not validate concentration amplitude, alarm thresholds, outdoor station placement, CFD, ESD, consequence distance or a complete station-to-vehicle loop."
+}

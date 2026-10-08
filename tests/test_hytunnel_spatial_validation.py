@@ -79,6 +79,17 @@ def test_exact_frozen_candidate_passes_ordered_synthetic_cases(tmp_path: Path):
     assert aggregate["joint_screen_pass"] is True
 
 
+def test_loader_skips_only_channels_with_missing_position_cells(tmp_path: Path):
+    path = tmp_path / "Exp04.mat"
+    _synthetic_spatial_mat(path)
+    with h5py.File(path, "a") as file:
+        empty = file["#refs#"].create_dataset("empty_position", data=np.asarray([]))
+        file["S/pos"][0, 0] = empty.ref
+    case = load_hytunnel_spatial_case(path)
+    assert len(case.sensors) == 23
+    assert all(sensor.sensor_id != "S01" for sensor in case.sensors)
+
+
 def test_protocol_freezes_spatial_endpoint_before_spatial_outcome_access():
     protocol = json.loads(PROTOCOL.read_text(encoding="utf-8"))
     assert protocol["status"] == "FROZEN_BEFORE_HYTUNNEL_SPATIAL_OUTCOME_ACCESS"

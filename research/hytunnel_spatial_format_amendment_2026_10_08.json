@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "amended_at": "2026-10-08",
+  "status": "POST_ACCESS_FORMAT_ONLY_REPAIR_BEFORE_FULL_RECOMPUTE",
+  "protocol_path": "research/hytunnel_spatial_holdout_protocol_2026_10_08.json",
+  "protocol_sha256": "5f7d80f2698da7bf7f4fccbf230fb4f465cdd01db6336a8377470764f29549ea",
+  "trigger": {
+    "observed_error": "Eleven experiments retained one or more extra concentration-channel cells whose corresponding S.pos cell did not contain three coordinates.",
+    "initial_eligible_cases": 7,
+    "initial_failed_cases": 11,
+    "partial_spatial_outcomes_computed_before_repair": true,
+    "initial_result": {
+      "path": "research/hytunnel_spatial_holdout_initial_schema_failure_2026_10_08.json",
+      "sha256": "38bbdf6e1bb7b85ac00a205ccccb5ef4c2eb24e957ee960ffe52e78cfb689f85"
+    }
+  },
+  "format_only_change": "Skip only channels whose S.pos cell lacks exactly three numeric coordinates. Preserve every mapped channel and require at least eight eligible sensors for the experiment. This implements the frozen missing-position exclusion and does not inspect concentration response when deciding whether to skip a channel.",
+  "scientific_rules_unchanged": {
+    "declared_cases": true,
+    "source_coordinate": true,
+    "coordinate_axes_and_scale": true,
+    "frozen_rank_model": true,
+    "rank_parameters": true,
+    "response_window": true,
+    "response_statistic": true,
+    "minimum_samples": true,
+    "per_case_metrics": true,
+    "aggregate_thresholds": true,
+    "runtime_policy": true,
+    "claim_boundary": true
+  },
+  "updated_code": {
+    "evaluation_module": {
+      "path": "src/h2station/hytunnel_spatial_validation.py",
+      "sha256": "90b730f20a452c307da2d92c321a95c3263a62fdec648fe1dba910154d3e1d01"
+    },
+    "runner": {
+      "path": "scripts/run_hytunnel_spatial_holdout.py",
+      "sha256": "9419cf0431f2d637fb70f1d56f6dcd360f1c7314e849c62751c193d3a716ae55"
+    }
+  }
+}

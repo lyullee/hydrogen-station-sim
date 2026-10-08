@@ -100,7 +100,11 @@ def load_hytunnel_spatial_case(path: str | Path) -> HyTunnelSpatialCase:
             time = np.asarray(raw_time, dtype=float).reshape(-1)
             concentration = np.asarray(raw_concentration, dtype=float).reshape(-1)
             if position.size != 3:
-                raise ValueError(f"S.pos[{index}] does not contain three coordinates")
+                # Several experiments retain extra concentration channels whose
+                # coordinate cell is empty.  The frozen protocol excludes only
+                # documented missing-position channels and keeps the case when
+                # enough mapped sensors remain.
+                continue
             if time.size != concentration.size:
                 raise ValueError(f"S.time[{index}] and S.conc[{index}] lengths differ")
             sensors.append(HyTunnelSpatialSensor(
