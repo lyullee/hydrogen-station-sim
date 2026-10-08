@@ -1158,6 +1158,62 @@ def test_manifest_routes_short_horizon_recharge_forecast_only_when_relevant():
     )
 
 
+def test_manifest_routes_retained_negative_lifecycle_alignment_only_when_relevant():
+    manifest = build_evidence_manifest(
+        {"time_s": 12.5},
+        {},
+        [],
+        False,
+        question="저장 뱅크 완충 압력이 수명 카운터 증가를 검증하나?",
+    )
+    evidence = manifest["response_evidence"][
+        "confidential_station_lifecycle_pressure_alignment_holdout"
+    ]
+    assert evidence["files"]["pressure_files_read"] == 12
+    assert evidence["files"]["counter_files_read"] == 12
+    assert evidence["rows"]["pressure_rows_read"] == 29_361_281
+    assert evidence["holdout"]["combined"]["counter_event_recall"] == 0.196032
+    assert evidence["holdout"]["combined"]["pressure_event_precision"] == 0.902716
+    assert evidence["pressure_completion_counter_alignment_supported"] is False
+    assert evidence["recharge_event_detector_corroborated"] is False
+    assert evidence["runtime_parameter_application"] is False
+    assert evidence["vehicle_fill_validation"] is False
+
+    summary = prompt_evidence_summary(manifest)[
+        "confidential_station_lifecycle_pressure_alignment_holdout"
+    ]
+    assert summary["screens"]["holdout_counter_recall_met"] is False
+    assert summary["screens"]["recall_stability_met"] is False
+
+    decision = prompt_decision_evidence(manifest)["validation_boundaries"][
+        "station_lifecycle_pressure_alignment"
+    ]
+    assert decision["claim_supported"] is False
+    assert decision["recharge_event_detector_corroborated"] is False
+    assert decision["calibration_counter_recall"] == 0.170591
+    assert decision["holdout_counter_recall"] == 0.196032
+    assert decision["holdout_pressure_precision"] == 0.902716
+    assert decision["holdout_median_absolute_offset_s"] == 26.0
+    assert decision["counter_monotonicity_met"] is False
+    assert decision["runtime_parameter_application"] is False
+    assert decision["vehicle_fill_validation"] is False
+    assert decision["full_loop"] is False
+
+    header = prompt_evidence_header(manifest)[
+        "confidential_station_lifecycle_pressure_alignment_holdout"
+    ]
+    assert header["pressure_completion_counter_alignment_supported"] is False
+    assert header["recharge_event_detector_corroborated"] is False
+    assert header["independent_external_validation"] is False
+
+    unrelated = build_evidence_manifest(
+        {"time_s": 12.5}, {}, [], False, question="화재 검지기 상태는?"
+    )
+    assert "station_lifecycle_pressure_alignment" not in (
+        prompt_decision_evidence(unrelated)["validation_boundaries"]
+    )
+
+
 def test_manifest_marks_attempt_without_result_and_filters_nonfinite_values():
     manifest = build_evidence_manifest(
         {"time_s": float("nan")},

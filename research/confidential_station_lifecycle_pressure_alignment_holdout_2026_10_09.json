@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_station_lifecycle_pressure_alignment_holdout",
+  "evidence_role": "same_site_storage_recharge_event_alignment",
+  "joint_alignment_outcomes_seen_before_freeze": false,
+  "privacy": {
+    "source_identifiers_published": false,
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "per_file_hashes_published": false,
+    "raw_rows_persisted": false,
+    "absolute_timestamps_published": false,
+    "calendar_dates_published": false,
+    "site_company_location_manufacturer_published": false
+  },
+  "files": {
+    "pressure_files_read": 12,
+    "counter_files_read": 12,
+    "exact_duplicate_files_excluded": 1
+  },
+  "rows": {
+    "pressure_rows_read": 29361281,
+    "counter_rows_read": 26839420,
+    "rejected_rows": 216
+  },
+  "counter_quality": {
+    "negative_chronological_steps": 2
+  },
+  "rules": {
+    "calibration_fraction": 0.7,
+    "medium_full_pressure_mpa": 45.0,
+    "high_full_pressure_mpa": 85.0,
+    "completion_threshold_fraction": 0.99,
+    "rearm_drop_mpa": 0.5,
+    "maximum_sample_gap_s": 2.5,
+    "maximum_match_offset_s": 300.0,
+    "minimum_pressure_mpa": 10.0,
+    "maximum_pressure_mpa": 100.0,
+    "minimum_pressure_files": 6,
+    "minimum_counter_files": 6,
+    "minimum_calibration_counter_events_per_bank": 200,
+    "minimum_holdout_counter_events_per_bank": 50,
+    "minimum_holdout_counter_recall": 0.8,
+    "minimum_holdout_pressure_precision": 0.7,
+    "maximum_recall_shift": 0.1,
+    "maximum_holdout_median_absolute_offset_s": 120.0
+  },
+  "calibration": {
+    "by_bank": {
+      "medium": {
+        "pressure_completion_event_count": 1512,
+        "counter_increment_event_count": 4638,
+        "counter_increment_total": 4638,
+        "matched_event_count": 1391,
+        "matched_counter_increment_total": 1391,
+        "counter_event_recall": 0.299914,
+        "pressure_event_precision": 0.919974,
+        "time_offset_s": {
+          "count": 1391,
+          "p10": -49.0,
+          "median": -27.0,
+          "p90": -22.0
+        },
+        "absolute_time_offset_s": {
+          "count": 1391,
+          "p10": 22.0,
+          "median": 27.0,
+          "p90": 49.0
+        }
+      },
+      "high": {
+        "pressure_completion_event_count": 669,
+        "counter_increment_event_count": 6998,
+        "counter_increment_total": 6998,
+        "matched_event_count": 594,
+        "matched_counter_increment_total": 594,
+        "counter_event_recall": 0.084881,
+        "pressure_event_precision": 0.887892,
+        "time_offset_s": {
+          "count": 594,
+          "p10": 1.0,
+          "median": 3.0,
+          "p90": 4.0
+        },
+        "absolute_time_offset_s": {
+          "count": 594,
+          "p10": 2.0,
+          "median": 3.0,
+          "p90": 5.0
+        }
+      }
+    },
+    "combined": {
+      "pressure_completion_event_count": 2181,
+      "counter_increment_event_count": 11636,
+      "matched_event_count": 1985,
+      "counter_event_recall": 0.170591,
+      "pressure_event_precision": 0.910133,
+      "time_offset_s": {
+        "count": 1985,
+        "p10": -44.0,
+        "median": -24.0,
+        "p90": 3.0
+      },
+      "absolute_time_offset_s": {
+        "count": 1985,
+        "p10": 2.0,
+        "median": 24.0,
+        "p90": 45.0
+      }
+    }
+  },
+  "holdout": {
+    "by_bank": {
+      "medium": {
+        "pressure_completion_event_count": 1758,
+        "counter_increment_event_count": 3230,
+        "counter_increment_total": 3230,
+        "matched_event_count": 1561,
+        "matched_counter_increment_total": 1561,
+        "counter_event_recall": 0.483282,
+        "pressure_event_precision": 0.887941,
+        "time_offset_s": {
+          "count": 1561,
+          "p10": -48.0,
+          "median": -27.0,
+          "p90": -20.0
+        },
+        "absolute_time_offset_s": {
+          "count": 1561,
+          "p10": 20.0,
+          "median": 27.0,
+          "p90": 49.0
+        }
+      },
+      "high": {
+        "pressure_completion_event_count": 267,
+        "counter_increment_event_count": 6095,
+        "counter_increment_total": 6096,
+        "matched_event_count": 267,
+        "matched_counter_increment_total": 267,
+        "counter_event_recall": 0.043806,
+        "pressure_event_precision": 1.0,
+        "time_offset_s": {
+          "count": 267,
+          "p10": 1.0,
+          "median": 3.0,
+          "p90": 4.0
+        },
+        "absolute_time_offset_s": {
+          "count": 267,
+          "p10": 1.0,
+          "median": 3.0,
+          "p90": 4.0
+        }
+      }
+    },
+    "combined": {
+      "pressure_completion_event_count": 2025,
+      "counter_increment_event_count": 9325,
+      "matched_event_count": 1828,
+      "counter_event_recall": 0.196032,
+      "pressure_event_precision": 0.902716,
+      "time_offset_s": {
+        "count": 1828,
+        "p10": -46.0,
+        "median": -25.0,
+        "p90": 3.0
+      },
+      "absolute_time_offset_s": {
+        "count": 1828,
+        "p10": 3.0,
+        "median": 26.0,
+        "p90": 47.0
+      }
+    }
+  },
+  "metrics": {
+    "recall_shift_by_bank": {
+      "medium": 0.183368,
+      "high": 0.041075
+    }
+  },
+  "eligibility": {
+    "minimum_pressure_files_met": true,
+    "minimum_counter_files_met": true,
+    "minimum_calibration_counter_events_per_bank_met": true,
+    "minimum_holdout_counter_events_per_bank_met": true,
+    "counter_monotonicity_met": false
+  },
+  "screens": {
+    "holdout_counter_recall_met": false,
+    "holdout_pressure_precision_met": true,
+    "recall_stability_met": false,
+    "holdout_median_absolute_offset_met": true
+  },
+  "decision": {
+    "pressure_completion_counter_alignment_supported": false,
+    "recharge_event_detector_corroborated": false,
+    "runtime_parameter_application": false,
+    "default_model_parameters_changed": false,
+    "vehicle_fill_validation": false,
+    "full_loop_holdout_eligible": false,
+    "independent_external_validation": false
+  },
+  "claim_boundary": "Same-site storage recharge completion and owner-defined lifecycle-counter alignment only. It does not validate vehicle filling, compressor capacity, storage geometry, degradation rate, a safety limit, accident frequency, independent-site transfer, or field certification.",
+  "protocol": {
+    "protocol_id": "CONFIDENTIAL-STATION-LIFECYCLE-PRESSURE-ALIGNMENT-001",
+    "protocol_sha256": "7a58f6314e0c0840d530b745f1a6cc6b6886e13cf403c5353575d1d67ea32105",
+    "mapping_sha256": "a60236a41556bdae1217239d02479f55d0ce6304629f1e3f4f46937fb31fe79d",
+    "frozen_before_joint_alignment_outcome_access": true
+  },
+  "runner_git_commit": "7af51ce"
+}

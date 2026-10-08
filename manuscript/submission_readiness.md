@@ -12,7 +12,7 @@ evidence-readiness decision; it is not a prediction of editorial acceptance.
 
 ## Current decision
 
-Audit snapshot: **2026-10-08 UTC**
+Audit snapshot: **2026-10-09 KST**
 
 | Decision | Result |
 |---|---|
@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **119 PASS · 10 FAIL · 7 PENDING**.
+Gate counts: **120 PASS · 10 FAIL · 7 PENDING**.
 
 A fresh privacy-bounded local inventory confirms that data volume is not the
 station-side limitation. The controlled archive contains 33 CSV files,
@@ -32,6 +32,19 @@ medium/high pressure episodes, 1,418 short-horizon pressure forecast cases and
 therefore tied to unattested channel semantics and missing synchronized
 vehicle-side pressure, temperature, delivered-mass or SOC signals rather than
 to a sparse local archive.
+
+A prospectively frozen lifecycle/pressure alignment test then evaluated
+29,361,281 storage-pressure rows against 26,839,420 owner-defined counter rows.
+The 70/30 chronological holdout retained 2,025 representative bank-pressure
+completion events and 9,325 counter events. Matched pressure events were precise
+(90.27%) and close in time (26 s median absolute offset), but the detector
+recalled only 19.60% of counter events; calibration recall was 17.06%, the
+medium-bank recall shift exceeded the frozen stability limit, and two negative
+counter steps failed the monotonicity screen. The negative result is retained
+without threshold refitting. It shows that the counter semantics are more
+granular or otherwise different from a representative bank reaching 99% of its
+nominal full pressure, so the counters cannot be promoted to validated recharge
+events, degradation cycles or runtime model parameters.
 
 The confidential station archive contains substantially more usable
 station-side evidence than the earlier one-row derivative screen indicated.

@@ -3070,6 +3070,110 @@ def _confidential_recharge_pressure_forecast_evidence() -> dict[str, Any] | None
     }
 
 
+def _confidential_lifecycle_pressure_alignment_evidence() -> dict[str, Any] | None:
+    """Expose the retained negative lifecycle/pressure alignment holdout."""
+
+    root = Path(__file__).resolve().parents[2]
+    artifact = (
+        "research/confidential_station_lifecycle_pressure_alignment_holdout_"
+        "2026_10_09.json"
+    )
+    result_path = root / artifact
+    protocol_path = root / (
+        "research/confidential_station_lifecycle_pressure_alignment_protocol_"
+        "2026_10_08.json"
+    )
+    try:
+        record = json.loads(result_path.read_text(encoding="utf-8"))
+        calibration = record["calibration"]
+        holdout = record["holdout"]
+        eligibility = record["eligibility"]
+        screens = record["screens"]
+        decision = record["decision"]
+        protocol = record["protocol"]
+        protocol_hash = sha256(protocol_path.read_bytes()).hexdigest()
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+    privacy = record.get("privacy") or {}
+    privacy_keys = (
+        "source_identifiers_published",
+        "source_paths_published",
+        "source_filenames_published",
+        "source_headers_published",
+        "per_file_hashes_published",
+        "raw_rows_persisted",
+        "absolute_timestamps_published",
+        "calendar_dates_published",
+        "site_company_location_manufacturer_published",
+    )
+    files = record.get("files") or {}
+    rows = record.get("rows") or {}
+    calibration_combined = calibration.get("combined") or {}
+    holdout_combined = holdout.get("combined") or {}
+    if (
+        record.get("artifact_type")
+        != "confidential_station_lifecycle_pressure_alignment_holdout"
+        or not all(privacy.get(key) is False for key in privacy_keys)
+        or protocol.get("protocol_sha256") != protocol_hash
+        or files.get("pressure_files_read") != 12
+        or files.get("counter_files_read") != 12
+        or files.get("exact_duplicate_files_excluded") != 1
+        or rows.get("pressure_rows_read") != 29_361_281
+        or rows.get("counter_rows_read") != 26_839_420
+        or calibration_combined.get("counter_event_recall") != 0.170591
+        or holdout_combined.get("counter_event_recall") != 0.196032
+        or holdout_combined.get("pressure_event_precision") != 0.902716
+        or eligibility.get("counter_monotonicity_met") is not False
+        or screens.get("holdout_counter_recall_met") is not False
+        or screens.get("recall_stability_met") is not False
+        or decision.get("pressure_completion_counter_alignment_supported")
+        is not False
+        or decision.get("recharge_event_detector_corroborated") is not False
+        or any(
+            decision.get(key) is not False
+            for key in (
+                "runtime_parameter_application",
+                "default_model_parameters_changed",
+                "vehicle_fill_validation",
+                "full_loop_holdout_eligible",
+                "independent_external_validation",
+            )
+        )
+    ):
+        return None
+    return {
+        "artifact": artifact,
+        "evidence_role": (
+            "retained negative same-site lifecycle-counter and storage-pressure "
+            "alignment holdout"
+        ),
+        "files": files,
+        "rows": rows,
+        "counter_quality": record.get("counter_quality") or {},
+        "calibration": {
+            "combined": calibration_combined,
+            "by_bank": calibration.get("by_bank") or {},
+        },
+        "holdout": {
+            "combined": holdout_combined,
+            "by_bank": holdout.get("by_bank") or {},
+        },
+        "recall_shift_by_bank": (
+            (record.get("metrics") or {}).get("recall_shift_by_bank") or {}
+        ),
+        "eligibility": eligibility,
+        "screens": screens,
+        "pressure_completion_counter_alignment_supported": False,
+        "recharge_event_detector_corroborated": False,
+        "runtime_parameter_application": False,
+        "default_model_parameters_changed": False,
+        "vehicle_fill_validation": False,
+        "full_loop_holdout_eligible": False,
+        "independent_external_validation": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_pressure_channel_evidence() -> dict[str, Any] | None:
     """Expose channel-specific measured envelopes without bank identity."""
 
@@ -4457,6 +4561,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_station_recharge_pressure_forecast_holdout"
         ] = recharge_forecast
+    lifecycle_alignment = _confidential_lifecycle_pressure_alignment_evidence()
+    if lifecycle_alignment is not None:
+        envelope["response_evidence"][
+            "confidential_station_lifecycle_pressure_alignment_holdout"
+        ] = lifecycle_alignment
     channel_envelopes = _confidential_pressure_channel_evidence()
     if channel_envelopes is not None:
         envelope["response_evidence"][
@@ -5077,6 +5186,23 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if recharge_forecast.get(key) is not None
         }
+    lifecycle_alignment = evidence.get(
+        "confidential_station_lifecycle_pressure_alignment_holdout"
+    )
+    if isinstance(lifecycle_alignment, dict):
+        summary["confidential_station_lifecycle_pressure_alignment_holdout"] = {
+            key: lifecycle_alignment.get(key)
+            for key in (
+                "evidence_role", "artifact", "files", "rows", "counter_quality",
+                "calibration", "holdout", "recall_shift_by_bank", "eligibility",
+                "screens", "pressure_completion_counter_alignment_supported",
+                "recharge_event_detector_corroborated",
+                "runtime_parameter_application", "default_model_parameters_changed",
+                "vehicle_fill_validation", "full_loop_holdout_eligible",
+                "independent_external_validation", "claim_limit",
+            )
+            if lifecycle_alignment.get(key) is not None
+        }
     channel_envelopes = evidence.get("confidential_pressure_channel_envelopes")
     if isinstance(channel_envelopes, dict):
         summary["confidential_pressure_channel_envelopes"] = {
@@ -5340,6 +5466,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     recharge_forecast = response.get(
         "confidential_station_recharge_pressure_forecast_holdout"
     ) or {}
+    lifecycle_alignment = response.get(
+        "confidential_station_lifecycle_pressure_alignment_holdout"
+    ) or {}
     spatial_stratification = response.get(
         "public_actual_hydrogen_spatial_stratification_evidence"
     ) or {}
@@ -5379,6 +5508,13 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         and any(token in detector_context for token in (
             "재충전", "압력 상승", "압력 예측", "압축기", "중압", "고압",
             "recharge", "pressure rise", "pressure forecast", "compressor",
+        ))
+    )
+    lifecycle_alignment_relevant = bool(
+        lifecycle_alignment
+        and any(token in detector_context for token in (
+            "수명", "카운터", "완충", "재충전", "저장", "뱅크",
+            "lifecycle", "counter", "full charge", "recharge", "storage", "bank",
         ))
     )
 
@@ -5588,6 +5724,51 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ) is True,
                 },
             } if recharge_forecast_relevant else {}),
+            **({
+                "station_lifecycle_pressure_alignment": {
+                    "claim_supported": lifecycle_alignment.get(
+                        "pressure_completion_counter_alignment_supported"
+                    ) is True,
+                    "recharge_event_detector_corroborated": lifecycle_alignment.get(
+                        "recharge_event_detector_corroborated"
+                    ) is True,
+                    "calibration_counter_recall": (
+                        ((lifecycle_alignment.get("calibration") or {}).get(
+                            "combined"
+                        ) or {}).get("counter_event_recall")
+                    ),
+                    "holdout_counter_recall": (
+                        ((lifecycle_alignment.get("holdout") or {}).get(
+                            "combined"
+                        ) or {}).get("counter_event_recall")
+                    ),
+                    "holdout_pressure_precision": (
+                        ((lifecycle_alignment.get("holdout") or {}).get(
+                            "combined"
+                        ) or {}).get("pressure_event_precision")
+                    ),
+                    "holdout_median_absolute_offset_s": (
+                        (((lifecycle_alignment.get("holdout") or {}).get(
+                            "combined"
+                        ) or {}).get("absolute_time_offset_s") or {}).get("median")
+                    ),
+                    "counter_monotonicity_met": (
+                        (lifecycle_alignment.get("eligibility") or {}).get(
+                            "counter_monotonicity_met"
+                        ) is True
+                    ),
+                    "runtime_parameter_application": lifecycle_alignment.get(
+                        "runtime_parameter_application"
+                    ) is True,
+                    "vehicle_fill_validation": lifecycle_alignment.get(
+                        "vehicle_fill_validation"
+                    ) is True,
+                    "full_loop": lifecycle_alignment.get(
+                        "full_loop_holdout_eligible"
+                    ) is True,
+                    "claim_limit": short(lifecycle_alignment.get("claim_limit"), 120),
+                },
+            } if lifecycle_alignment_relevant else {}),
             "source_depletion": {
                 "claim_supported": preslhy_holdout.get("claim_supported") is True,
                 "joint_primary_pass_fraction": preslhy_holdout.get(
@@ -5736,6 +5917,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     recharge_forecast = evidence.get(
         "confidential_station_recharge_pressure_forecast_holdout"
+    ) or {}
+    lifecycle_alignment = evidence.get(
+        "confidential_station_lifecycle_pressure_alignment_holdout"
     ) or {}
     channel_envelopes = evidence.get(
         "confidential_pressure_channel_envelopes"
@@ -6433,6 +6617,40 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "independent_external_validation"
             ) is True,
             "claim_limit": recharge_forecast.get("claim_limit"),
+        },
+        "confidential_station_lifecycle_pressure_alignment_holdout": {
+            "evidence_artifact": lifecycle_alignment.get("artifact"),
+            "files": lifecycle_alignment.get("files") or {},
+            "rows": lifecycle_alignment.get("rows") or {},
+            "counter_quality": lifecycle_alignment.get("counter_quality") or {},
+            "calibration": lifecycle_alignment.get("calibration") or {},
+            "holdout": lifecycle_alignment.get("holdout") or {},
+            "recall_shift_by_bank": lifecycle_alignment.get(
+                "recall_shift_by_bank"
+            ) or {},
+            "eligibility": lifecycle_alignment.get("eligibility") or {},
+            "screens": lifecycle_alignment.get("screens") or {},
+            "pressure_completion_counter_alignment_supported": (
+                lifecycle_alignment.get(
+                    "pressure_completion_counter_alignment_supported"
+                ) is True
+            ),
+            "recharge_event_detector_corroborated": lifecycle_alignment.get(
+                "recharge_event_detector_corroborated"
+            ) is True,
+            "runtime_parameter_application": lifecycle_alignment.get(
+                "runtime_parameter_application"
+            ) is True,
+            "vehicle_fill_validation": lifecycle_alignment.get(
+                "vehicle_fill_validation"
+            ) is True,
+            "full_loop_holdout_eligible": lifecycle_alignment.get(
+                "full_loop_holdout_eligible"
+            ) is True,
+            "independent_external_validation": lifecycle_alignment.get(
+                "independent_external_validation"
+            ) is True,
+            "claim_limit": lifecycle_alignment.get("claim_limit"),
         },
         "confidential_pressure_channel_envelopes": {
             "artifact": channel_envelopes.get("artifact"),

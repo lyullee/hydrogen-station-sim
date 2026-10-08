@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T14:45:53.930459+00:00",
+  "generated_at": "2026-10-08T15:19:17.608869+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 119,
+    "PASS": 120,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -1530,6 +1530,187 @@
           "default_model_parameters_changed": false,
           "compressor_capacity_validated": false,
           "storage_geometry_validated": false,
+          "vehicle_fill_validation": false,
+          "full_loop_holdout_eligible": false,
+          "independent_external_validation": false
+        }
+      }
+    },
+    {
+      "id": "confidential_station_lifecycle_pressure_alignment_negative_result_integrity",
+      "status": "PASS",
+      "claim": "The prospectively frozen same-site lifecycle/pressure alignment failure is retained without outcome-driven refitting or claim promotion.",
+      "evidence": "research\\confidential_station_lifecycle_pressure_alignment_protocol_2026_10_08.json; research\\confidential_station_lifecycle_pressure_alignment_holdout_2026_10_09.json",
+      "requirement": "Hash-linked frozen protocol, full privacy boundary, fixed file/row/event counts, failed recall/stability/monotonicity screens, and explicit false lifecycle, runtime, vehicle and full-loop claims.",
+      "observed": {
+        "protocol_hash_matches": true,
+        "files": {
+          "pressure_files_read": 12,
+          "counter_files_read": 12,
+          "exact_duplicate_files_excluded": 1
+        },
+        "rows": {
+          "pressure_rows_read": 29361281,
+          "counter_rows_read": 26839420,
+          "rejected_rows": 216
+        },
+        "counter_quality": {
+          "negative_chronological_steps": 2
+        },
+        "calibration": {
+          "by_bank": {
+            "medium": {
+              "pressure_completion_event_count": 1512,
+              "counter_increment_event_count": 4638,
+              "counter_increment_total": 4638,
+              "matched_event_count": 1391,
+              "matched_counter_increment_total": 1391,
+              "counter_event_recall": 0.299914,
+              "pressure_event_precision": 0.919974,
+              "time_offset_s": {
+                "count": 1391,
+                "p10": -49.0,
+                "median": -27.0,
+                "p90": -22.0
+              },
+              "absolute_time_offset_s": {
+                "count": 1391,
+                "p10": 22.0,
+                "median": 27.0,
+                "p90": 49.0
+              }
+            },
+            "high": {
+              "pressure_completion_event_count": 669,
+              "counter_increment_event_count": 6998,
+              "counter_increment_total": 6998,
+              "matched_event_count": 594,
+              "matched_counter_increment_total": 594,
+              "counter_event_recall": 0.084881,
+              "pressure_event_precision": 0.887892,
+              "time_offset_s": {
+                "count": 594,
+                "p10": 1.0,
+                "median": 3.0,
+                "p90": 4.0
+              },
+              "absolute_time_offset_s": {
+                "count": 594,
+                "p10": 2.0,
+                "median": 3.0,
+                "p90": 5.0
+              }
+            }
+          },
+          "combined": {
+            "pressure_completion_event_count": 2181,
+            "counter_increment_event_count": 11636,
+            "matched_event_count": 1985,
+            "counter_event_recall": 0.170591,
+            "pressure_event_precision": 0.910133,
+            "time_offset_s": {
+              "count": 1985,
+              "p10": -44.0,
+              "median": -24.0,
+              "p90": 3.0
+            },
+            "absolute_time_offset_s": {
+              "count": 1985,
+              "p10": 2.0,
+              "median": 24.0,
+              "p90": 45.0
+            }
+          }
+        },
+        "holdout": {
+          "by_bank": {
+            "medium": {
+              "pressure_completion_event_count": 1758,
+              "counter_increment_event_count": 3230,
+              "counter_increment_total": 3230,
+              "matched_event_count": 1561,
+              "matched_counter_increment_total": 1561,
+              "counter_event_recall": 0.483282,
+              "pressure_event_precision": 0.887941,
+              "time_offset_s": {
+                "count": 1561,
+                "p10": -48.0,
+                "median": -27.0,
+                "p90": -20.0
+              },
+              "absolute_time_offset_s": {
+                "count": 1561,
+                "p10": 20.0,
+                "median": 27.0,
+                "p90": 49.0
+              }
+            },
+            "high": {
+              "pressure_completion_event_count": 267,
+              "counter_increment_event_count": 6095,
+              "counter_increment_total": 6096,
+              "matched_event_count": 267,
+              "matched_counter_increment_total": 267,
+              "counter_event_recall": 0.043806,
+              "pressure_event_precision": 1.0,
+              "time_offset_s": {
+                "count": 267,
+                "p10": 1.0,
+                "median": 3.0,
+                "p90": 4.0
+              },
+              "absolute_time_offset_s": {
+                "count": 267,
+                "p10": 1.0,
+                "median": 3.0,
+                "p90": 4.0
+              }
+            }
+          },
+          "combined": {
+            "pressure_completion_event_count": 2025,
+            "counter_increment_event_count": 9325,
+            "matched_event_count": 1828,
+            "counter_event_recall": 0.196032,
+            "pressure_event_precision": 0.902716,
+            "time_offset_s": {
+              "count": 1828,
+              "p10": -46.0,
+              "median": -25.0,
+              "p90": 3.0
+            },
+            "absolute_time_offset_s": {
+              "count": 1828,
+              "p10": 3.0,
+              "median": 26.0,
+              "p90": 47.0
+            }
+          }
+        },
+        "metrics": {
+          "recall_shift_by_bank": {
+            "medium": 0.183368,
+            "high": 0.041075
+          }
+        },
+        "eligibility": {
+          "minimum_pressure_files_met": true,
+          "minimum_counter_files_met": true,
+          "minimum_calibration_counter_events_per_bank_met": true,
+          "minimum_holdout_counter_events_per_bank_met": true,
+          "counter_monotonicity_met": false
+        },
+        "screens": {
+          "holdout_counter_recall_met": false,
+          "holdout_pressure_precision_met": true,
+          "recall_stability_met": false,
+          "holdout_median_absolute_offset_met": true
+        },
+        "decision": {
+          "pressure_completion_counter_alignment_supported": false,
+          "recharge_event_detector_corroborated": false,
+          "runtime_parameter_application": false,
+          "default_model_parameters_changed": false,
           "vehicle_fill_validation": false,
           "full_loop_holdout_eligible": false,
           "independent_external_validation": false

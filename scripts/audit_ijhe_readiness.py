@@ -2105,6 +2105,103 @@ def audit(root: Path) -> dict[str, object]:
         } if recharge_forecast else "missing",
     ))
 
+    lifecycle_alignment_path = root / (
+        "research/confidential_station_lifecycle_pressure_alignment_holdout_"
+        "2026_10_09.json"
+    )
+    lifecycle_alignment_protocol_path = root / (
+        "research/confidential_station_lifecycle_pressure_alignment_protocol_"
+        "2026_10_08.json"
+    )
+    lifecycle_alignment = _json(lifecycle_alignment_path)
+    lifecycle_alignment_protocol = _json(lifecycle_alignment_protocol_path)
+    lifecycle_files = (lifecycle_alignment or {}).get("files") or {}
+    lifecycle_rows = (lifecycle_alignment or {}).get("rows") or {}
+    lifecycle_calibration = (lifecycle_alignment or {}).get("calibration") or {}
+    lifecycle_holdout = (lifecycle_alignment or {}).get("holdout") or {}
+    lifecycle_calibration_combined = lifecycle_calibration.get("combined") or {}
+    lifecycle_holdout_combined = lifecycle_holdout.get("combined") or {}
+    lifecycle_eligibility = (lifecycle_alignment or {}).get("eligibility") or {}
+    lifecycle_screens = (lifecycle_alignment or {}).get("screens") or {}
+    lifecycle_decision = (lifecycle_alignment or {}).get("decision") or {}
+    lifecycle_privacy = (lifecycle_alignment or {}).get("privacy") or {}
+    lifecycle_privacy_keys = (
+        "source_identifiers_published",
+        "source_paths_published",
+        "source_filenames_published",
+        "source_headers_published",
+        "per_file_hashes_published",
+        "raw_rows_persisted",
+        "absolute_timestamps_published",
+        "calendar_dates_published",
+        "site_company_location_manufacturer_published",
+    )
+    lifecycle_alignment_pass = bool(
+        (lifecycle_alignment or {}).get("artifact_type")
+        == "confidential_station_lifecycle_pressure_alignment_holdout"
+        and (lifecycle_alignment_protocol or {}).get("status")
+        == "FROZEN_BEFORE_JOINT_ALIGNMENT_OUTCOME_ACCESS"
+        and (lifecycle_alignment_protocol or {}).get(
+            "joint_alignment_outcomes_seen_before_freeze"
+        ) is False
+        and all(lifecycle_privacy.get(key) is False for key in lifecycle_privacy_keys)
+        and (lifecycle_alignment or {}).get("runner_git_commit") == "7af51ce"
+        and lifecycle_files.get("pressure_files_read") == 12
+        and lifecycle_files.get("counter_files_read") == 12
+        and lifecycle_files.get("exact_duplicate_files_excluded") == 1
+        and lifecycle_rows.get("pressure_rows_read") == 29_361_281
+        and lifecycle_rows.get("counter_rows_read") == 26_839_420
+        and lifecycle_calibration_combined.get("counter_event_recall") == 0.170591
+        and lifecycle_holdout_combined.get("counter_event_recall") == 0.196032
+        and lifecycle_holdout_combined.get("pressure_event_precision") == 0.902716
+        and (lifecycle_alignment or {}).get("counter_quality", {}).get(
+            "negative_chronological_steps"
+        ) == 2
+        and lifecycle_eligibility.get("counter_monotonicity_met") is False
+        and lifecycle_screens.get("holdout_counter_recall_met") is False
+        and lifecycle_screens.get("recall_stability_met") is False
+        and lifecycle_screens.get("holdout_pressure_precision_met") is True
+        and lifecycle_screens.get("holdout_median_absolute_offset_met") is True
+        and lifecycle_decision.get(
+            "pressure_completion_counter_alignment_supported"
+        ) is False
+        and lifecycle_decision.get("recharge_event_detector_corroborated") is False
+        and lifecycle_decision.get("runtime_parameter_application") is False
+        and lifecycle_decision.get("default_model_parameters_changed") is False
+        and lifecycle_decision.get("vehicle_fill_validation") is False
+        and lifecycle_decision.get("full_loop_holdout_eligible") is False
+        and lifecycle_decision.get("independent_external_validation") is False
+        and ((lifecycle_alignment or {}).get("protocol") or {}).get(
+            "protocol_sha256"
+        ) == _sha256(lifecycle_alignment_protocol_path)
+    )
+    gates.append(_gate(
+        "confidential_station_lifecycle_pressure_alignment_negative_result_integrity",
+        "PASS" if lifecycle_alignment_pass else (
+            "FAIL" if lifecycle_alignment else "PENDING"
+        ),
+        "The prospectively frozen same-site lifecycle/pressure alignment failure is retained without outcome-driven refitting or claim promotion.",
+        f"{lifecycle_alignment_protocol_path.relative_to(root)}; {lifecycle_alignment_path.relative_to(root)}",
+        "Hash-linked frozen protocol, full privacy boundary, fixed file/row/event counts, failed recall/stability/monotonicity screens, and explicit false lifecycle, runtime, vehicle and full-loop claims.",
+        {
+            "protocol_hash_matches": (
+                ((lifecycle_alignment or {}).get("protocol") or {}).get(
+                    "protocol_sha256"
+                ) == _sha256(lifecycle_alignment_protocol_path)
+                if lifecycle_alignment_protocol_path.is_file() else False
+            ),
+            "files": lifecycle_files,
+            "rows": lifecycle_rows,
+            "counter_quality": (lifecycle_alignment or {}).get("counter_quality"),
+            "calibration": lifecycle_calibration,
+            "holdout": lifecycle_holdout,
+            "metrics": (lifecycle_alignment or {}).get("metrics"),
+            "eligibility": lifecycle_eligibility,
+            "screens": lifecycle_screens,
+            "decision": lifecycle_decision,
+        } if lifecycle_alignment else "missing",
+    ))
+
     external_loop_path = root / "data/public_validation/results/closed_loop_external_holdout/validation.json"
     external_loop = _json(external_loop_path)
     external_protocol_path = root / "research/mc_default_external_holdout_protocol.json"

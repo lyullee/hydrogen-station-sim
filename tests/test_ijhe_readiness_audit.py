@@ -84,6 +84,35 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert recharge_forecast["decision"]["runtime_parameter_application"] is False
     assert recharge_forecast["decision"]["vehicle_fill_validation"] is False
     assert gates[
+        "confidential_station_lifecycle_pressure_alignment_negative_result_integrity"
+    ]["status"] == "PASS"
+    lifecycle_alignment = gates[
+        "confidential_station_lifecycle_pressure_alignment_negative_result_integrity"
+    ]["observed"]
+    assert lifecycle_alignment["protocol_hash_matches"] is True
+    assert lifecycle_alignment["rows"]["pressure_rows_read"] == 29_361_281
+    assert lifecycle_alignment["rows"]["counter_rows_read"] == 26_839_420
+    assert lifecycle_alignment["counter_quality"][
+        "negative_chronological_steps"
+    ] == 2
+    assert lifecycle_alignment["calibration"]["combined"][
+        "counter_event_recall"
+    ] == 0.170591
+    assert lifecycle_alignment["holdout"]["combined"][
+        "counter_event_recall"
+    ] == 0.196032
+    assert lifecycle_alignment["holdout"]["combined"][
+        "pressure_event_precision"
+    ] == 0.902716
+    assert lifecycle_alignment["decision"][
+        "pressure_completion_counter_alignment_supported"
+    ] is False
+    assert lifecycle_alignment["decision"][
+        "recharge_event_detector_corroborated"
+    ] is False
+    assert lifecycle_alignment["decision"]["runtime_parameter_application"] is False
+    assert lifecycle_alignment["decision"]["vehicle_fill_validation"] is False
+    assert gates[
         "local_confidential_station_data_utilization_integrity"
     ]["status"] == "PASS"
     local_data = gates[
