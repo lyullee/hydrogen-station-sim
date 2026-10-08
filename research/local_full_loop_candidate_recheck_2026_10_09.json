@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_full_loop_candidate_recheck",
+  "status": "privacy_bounded_negative_recheck",
+  "generated_at": "2026-10-09",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "source_identifiers_published": false,
+    "site_company_manufacturer_published": false,
+    "calendar_dates_published": false,
+    "raw_rows_persisted": false,
+    "candidate_values_persisted": false
+  },
+  "scan_scope": [
+    "local measured station telemetry",
+    "local hydrogen operation and HAZOP material",
+    "local simulator exports",
+    "locally staged public workbooks",
+    "broad candidate manifests requiring semantic review"
+  ],
+  "eligibility_rule": {
+    "required_for_full_loop_holdout": [
+      "synchronized station or dispenser pressure",
+      "receiving vessel or vehicle pressure and temperature",
+      "delivered mass or an attested mass-flow channel",
+      "one common time base with units and initial conditions",
+      "controller, protocol, or explicit boundary mapping",
+      "documented reuse rights and custodian attestation"
+    ],
+    "derived_or_qualitative_material_is_not_measured_holdout": true
+  },
+  "candidate_classes": [
+    {
+      "id": "measured_station_bundle",
+      "file_count": 33,
+      "deduplicated_rows": 56854143,
+      "station_pressure_temperature_flow_like_and_state_families_present": true,
+      "vehicle_side_semantics_attested": false,
+      "decision": "STATION_SIDE_ONLY",
+      "eligible_use": [
+        "station pressure cycles",
+        "cascade and recharge screening",
+        "compressor, valve and ESD state screening",
+        "chronological station-side holdouts"
+      ]
+    },
+    {
+      "id": "qualitative_operation_scenario_matrix",
+      "scenario_step_count": 52,
+      "measured_time_series": false,
+      "decision": "QUALITATIVE_HAZOP_ONLY",
+      "eligible_use": [
+        "response-step coverage",
+        "virtual action mapping",
+        "operator training scenarios"
+      ]
+    },
+    {
+      "id": "locally_staged_public_component_workbooks",
+      "workbook_count": 3,
+      "boundary": "tank and station-side diagnostic measurements",
+      "synchronized_vehicle_controller_and_protocol_trace": false,
+      "decision": "PARTIAL_COMPONENT_ONLY",
+      "eligible_use": [
+        "component-level diagnostic comparison",
+        "tank or hose boundary plausibility checks"
+      ]
+    },
+    {
+      "id": "derived_simulator_exports",
+      "file_count": 2,
+      "vehicle_shaped_channels_present": true,
+      "observed_leak_flow_g_s": 0.0,
+      "independent_measured_data": false,
+      "decision": "SIMULATOR_REGRESSION_ONLY",
+      "eligible_use": [
+        "CSV export regression",
+        "vehicle-side UI wiring smoke tests"
+      ]
+    },
+    {
+      "id": "broad_regex_candidate_manifest",
+      "candidate_row_count": 199,
+      "header_level_hits": 193,
+      "semantic_attestation": false,
+      "screen_method": "whole-file and header keyword scan; prose and derived fields can create false positives",
+      "decision": "NOT_ELIGIBLE_UNTIL_HEADER_UNIT_ATTESTATION"
+    }
+  ],
+  "coverage_assessment": {
+    "local_hydrogen_station_data_is_sparse": false,
+    "station_side_dynamic_evidence_is_substantial": true,
+    "new_local_full_loop_cohort_found": false,
+    "full_loop_holdout_eligible": false,
+    "quantitative_consequence_validation_ready": false,
+    "main_limit": "The local collection has substantial station-side telemetry, but no independently attested synchronized vehicle or receiving-vessel pressure, temperature, delivered-mass and controller/protocol trace cohort was identified."
+  },
+  "decision": "NO_NEW_LOCAL_FULL_LOOP_COHORT",
+  "next_action": "Obtain a custodian-approved semantic map or export containing the receiving-vessel or vehicle boundary, delivered mass or attested mass flow, common clock, and controller or protocol state. Keep the existing station-side cohort for calibration and chronological holdouts."
+}
