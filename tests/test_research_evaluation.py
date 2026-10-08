@@ -68,6 +68,7 @@ def test_llm_linkage_score_rewards_grounded_ordered_response():
         ),
         prevention_concepts=(("기밀시험", "누설시험"),),
         impact_concepts=(("5.5 m", "5.5m"),),
+        grounded_numeric_concepts=(("2.0 vol%_H2",), ("5.5 m", "5.5m")),
     )
     evidence = "GD-0901 2.0 vol%_H2, 영향거리 5.5 m. 충전 중지, 상류 차단, 인원 대피, 기밀시험"
     baseline = score_decision_support(
@@ -87,6 +88,7 @@ def test_llm_linkage_score_rewards_grounded_ordered_response():
     assert linked.action_coverage == 1.0
     assert linked.action_order == 1.0
     assert linked.unsupported_numeric_claims == ()
+    assert linked.grounded_numeric_coverage == 0.5
 
 
 def test_llm_linkage_score_penalizes_unsupported_numeric_claims():

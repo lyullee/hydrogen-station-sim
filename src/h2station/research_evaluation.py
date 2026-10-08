@@ -167,6 +167,7 @@ class DecisionSupportRubric:
     ordered_action_concepts: tuple[tuple[str, ...], ...]
     prevention_concepts: tuple[tuple[str, ...], ...] = ()
     impact_concepts: tuple[tuple[str, ...], ...] = ()
+    grounded_numeric_concepts: tuple[tuple[str, ...], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -179,6 +180,7 @@ class DecisionSupportScore:
     action_order: float
     prevention_coverage: float
     impact_coverage: float
+    grounded_numeric_coverage: float
     unsupported_numeric_claims: tuple[str, ...]
     response_characters: int
     latency_ms: float | None = None
@@ -238,6 +240,7 @@ def score_decision_support(
     action_positions = _concept_positions(answer, rubric.ordered_action_concepts)
     prevention_positions = _concept_positions(answer, rubric.prevention_concepts)
     impact_positions = _concept_positions(answer, rubric.impact_concepts)
+    grounded_numeric_positions = _concept_positions(answer, rubric.grounded_numeric_concepts)
 
     def coverage(positions: Sequence[int | None]) -> float:
         return 1.0 if not positions else sum(item is not None for item in positions) / len(positions)
@@ -254,6 +257,7 @@ def score_decision_support(
     actions = coverage(action_positions)
     prevention = coverage(prevention_positions)
     impact = coverage(impact_positions)
+    grounded_numeric = coverage(grounded_numeric_positions)
     unsupported = tuple(sorted(_numeric_claims(answer) - _numeric_claims(allowed_evidence)))
     score = 100.0 * (
         0.25 * situation + 0.35 * actions + 0.10 * action_order
@@ -270,6 +274,7 @@ def score_decision_support(
         action_order=round(action_order, 4),
         prevention_coverage=round(prevention, 4),
         impact_coverage=round(impact, 4),
+        grounded_numeric_coverage=round(grounded_numeric, 4),
         unsupported_numeric_claims=unsupported,
         response_characters=len(answer),
         latency_ms=None if latency_ms is None or not math.isfinite(latency_ms) else round(latency_ms, 2),

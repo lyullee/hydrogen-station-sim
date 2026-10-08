@@ -67,6 +67,12 @@ DECISION_CASES = (
             ),
             prevention_concepts=(("기밀시험", "누설시험"),),
             impact_concepts=(("5.5 m", "5.5m"), ("12.4 kPa", "12.4kPa")),
+            grounded_numeric_concepts=(
+                ("2 vol%_H2", "2.0 vol%_H2", "2vol%_H2", "2.0vol%_H2"),
+                ("5.5 m", "5.5m"),
+                ("12.4 kPa", "12.4kPa"),
+                ("5.8 kW/m2", "5.8kW/m2", "5.8 kW/m²", "5.8kW/m²"),
+            ),
         ),
     },
     {
@@ -97,6 +103,7 @@ DECISION_CASES = (
                 ("재가동 승인", "재가동이 승인", "재가동 전"),
             ),
             prevention_concepts=(("프리쿨러",), ("온도센서", "온도 센서")),
+            grounded_numeric_concepts=(("85 °C", "85.0 °C", "85°C", "85.0°C"),),
         ),
     },
 )
@@ -238,7 +245,7 @@ def _case_manifest() -> dict:
     } for case in DECISION_CASES]
     canonical = json.dumps(cases, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     return {
-        "version": "2026-10-08.2",
+        "version": "2026-10-08.3",
         "sha256": hashlib.sha256(canonical.encode("utf-8")).hexdigest(),
         "cases": cases,
         "boundary": (
@@ -277,20 +284,21 @@ def _write_markdown(path: Path, report: dict) -> None:
         "",
         "## Decision-support A/B evaluation",
         "",
-        "| Case | Variant | N | Score mean ± SD | Score range | Latency mean | Unsupported-number runs |",
-        "|---|---|---:|---:|---:|---:|---:|",
+        "| Case | Variant | N | Score mean ± SD | Score range | Grounded-number coverage | Latency mean | Unsupported-number runs |",
+        "|---|---|---:|---:|---:|---:|---:|---:|",
     ]
     for row in report["decision_summary"]:
         lines.append(
             f"| {row['case_id']} | {row['variant']} | {row['n']} | "
             f"{row['score_mean']:.1f} ± {row['score_sd']:.1f} | "
             f"{row['score_min']:.1f}–{row['score_max']:.1f} | "
+            f"{row['grounded_numeric_coverage_mean']:.2f} | "
             f"{row['latency_mean_ms']:.0f} ms | {row['unsupported_run_count']} |"
         )
     lines.extend([
         "",
-        "| Case | Variant | Model | Run | Score | Situation | Actions | Order | Prevention | Impact | Unsupported numbers | Latency |",
-        "|---|---|---|---:|---:|---:|---:|---:|---:|---:|---|---:|",
+        "| Case | Variant | Model | Run | Score | Situation | Actions | Order | Prevention | Impact | Grounded nums | Unsupported numbers | Latency |",
+        "|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---|---:|",
     ])
     for row in report["decision_support"]:
         unsupported = ", ".join(row["unsupported_numeric_claims"]) or "—"
@@ -299,7 +307,8 @@ def _write_markdown(path: Path, report: dict) -> None:
             f"| {row['case_id']} | {row['variant']} | {row['model'] or '—'} | {row['repeat_index']} | {row['score']:.1f} | "
             f"{row['situation_coverage']:.2f} | {row['action_coverage']:.2f} | "
             f"{row['action_order']:.2f} | {row['prevention_coverage']:.2f} | "
-            f"{row['impact_coverage']:.2f} | {unsupported} | {latency} |"
+            f"{row['impact_coverage']:.2f} | {row['grounded_numeric_coverage']:.2f} | "
+            f"{unsupported} | {latency} |"
         )
     if report["errors"]:
         lines.extend(["", "## Collection errors", ""] + [f"- {item}" for item in report["errors"]])
@@ -319,6 +328,7 @@ def _decision_summary(rows: list[dict]) -> list[dict]:
     summary = []
     for (case_id, variant), group in sorted(grouped.items()):
         scores = [float(row["score"]) for row in group]
+        grounded_coverage = [float(row["grounded_numeric_coverage"]) for row in group]
         latencies = [float(row["latency_ms"]) for row in group if row["latency_ms"] is not None]
         summary.append({
             "case_id": case_id,
@@ -328,6 +338,7 @@ def _decision_summary(rows: list[dict]) -> list[dict]:
             "score_sd": pstdev(scores),
             "score_min": min(scores),
             "score_max": max(scores),
+            "grounded_numeric_coverage_mean": mean(grounded_coverage),
             "latency_mean_ms": mean(latencies) if latencies else 0.0,
             "unsupported_run_count": sum(bool(row["unsupported_numeric_claims"]) for row in group),
         })
