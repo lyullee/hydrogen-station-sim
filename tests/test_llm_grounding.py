@@ -825,6 +825,33 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert local_decision["deduplicated_data_rows"] == 56_854_143
     assert local_decision["storage_pressure_roles_attested"] is True
     assert local_decision["station_side_dynamic_validation_ready"] is True
+    asset_decision = prompt_decision_evidence(idle)["validation_boundaries"][
+        "local_station_asset_screen"
+    ]
+    assert asset_decision["scenario_step_rows"] == 52
+    assert asset_decision["hazop_scenario_coverage_substantial"] is True
+    assert asset_decision["vehicle_side_full_loop_validation_ready"] is False
+    local_asset = idle["response_evidence"][
+        "confidential_local_station_asset_screen"
+    ]
+    assert local_asset["scenario_matrix"]["scenario_step_rows"] == 52
+    assert local_asset["scenario_matrix"]["nonempty_consequence_fields"][
+        "fire"
+    ] == 52
+    assert local_asset["coverage"]["local_station_data_is_sparse"] is False
+    assert local_asset["coverage"]["vehicle_side_full_loop_validation_ready"] is False
+    local_asset_summary = prompt_evidence_summary(idle)[
+        "confidential_local_station_asset_screen"
+    ]
+    assert local_asset_summary["scenario_matrix"][
+        "referenced_standard_families"
+    ]["KGS"] == 107
+    local_asset_header = prompt_evidence_header(idle)[
+        "confidential_local_station_asset_screen"
+    ]
+    assert local_asset_header["asset_bundles"][
+        "local_tank_operation_sequence_logs"
+    ]["repeated_operation_cycles"] == 10
     private_media = idle["response_evidence"]["confidential_private_media_intake"]
     assert private_media["screen_recorded_logger_candidate"] is True
     assert private_media["machine_readable_trace_present"] is False

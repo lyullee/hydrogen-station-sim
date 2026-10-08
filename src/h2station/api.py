@@ -2797,12 +2797,12 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         # bulky evidence/telemetry must not crowd out the registered HAZOP
         # rules that explain the current alarm.
         "impact_results":impact_results,
-        "evidence_basis": prompt_decision_evidence(evidence_manifest),
-        "hazop_reference_rules":reference_rules,
         "hazop_active":active, "hazop_rules":matched_rules,
+        "hazop_reference_rules":reference_rules,
         "consolidated_response_guidance": _prompt_response_guidance_summary(
             structured_guidance(response_plans, actual_alert=emergency_context)
         ),
+        "evidence_basis": prompt_decision_evidence(evidence_manifest),
         "impact_calculation_attempted":show_impact_results,
         "station":"H70 reference simulation", "time_s":frame.get("time_s"),
         "fire_detection": analysis.get("fire_detection"),
@@ -3657,10 +3657,10 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         "selected_gas_signal_evidence": payload["gas_signal_evidence"],
         "simulated_release_evidence": payload["simulated_release_evidence"],
         "impact_results": impact_results,
-        "evidence_basis": prompt_decision_evidence(evidence_manifest),
-        "consolidated_response_guidance": _prompt_response_guidance_summary(response_guidance),
         "active_scenarios": compact_rules(active_rules),
         "same_equipment_active_signals": compact_rules(related_rules),
+        "consolidated_response_guidance": _prompt_response_guidance_summary(response_guidance),
+        "evidence_basis": prompt_decision_evidence(evidence_manifest),
         "related_signals": payload["related_signals"],
         "monitored_scenarios": [{"scenario": rule["scenario"], "sensor_id": sensor_id,
                                   "threshold": rule["threshold"], "unit": rule["unit"],

@@ -3859,6 +3859,92 @@ def _confidential_local_station_utilization_evidence() -> dict[str, Any] | None:
     }
 
 
+def _local_station_asset_screen_evidence() -> dict[str, Any] | None:
+    """Expose the de-identified local scenario/asset screen to the assistant.
+
+    The source record is an aggregate inventory of local operational tables,
+    trend workbooks and engineering references.  It deliberately contains no
+    source path, tag, filename, date, site or raw row.  The assistant may use
+    it to choose qualitative HAZOP/action families, but it must not turn the
+    scenario counts into incident frequencies, safety limits or full-loop
+    validation claims.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/local_station_asset_screen_2026_10_09.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    privacy = record.get("privacy") or {}
+    coverage = record.get("coverage_assessment") or {}
+    bundles = record.get("station_specific_bundles") or []
+    matrix = next(
+        (item for item in bundles
+         if item.get("id") == "local_liquid_hydrogen_operational_scenario_matrix"),
+        None,
+    )
+    if (
+        record.get("artifact_type") != "local_station_asset_screen"
+        or not all(
+            privacy.get(key) is False
+            for key in (
+                "source_paths_published",
+                "source_filenames_published",
+                "source_headers_published",
+                "site_company_manufacturer_published",
+                "raw_rows_persisted",
+                "per_file_hashes_published",
+            )
+        )
+        or not isinstance(matrix, dict)
+        or matrix.get("scenario_step_rows") != 52
+        or coverage.get("local_station_data_is_sparse") is not False
+        or coverage.get("local_hazop_scenario_coverage_is_substantial") is not True
+        or coverage.get("vehicle_side_full_loop_validation_ready") is not False
+        or coverage.get("quantitative_consequence_validation_ready") is not False
+    ):
+        return None
+    return {
+        "artifact": "research/local_station_asset_screen_2026_10_09.json",
+        "evidence_role": "privacy-bounded local operational scenario and asset coverage",
+        "scenario_matrix": {
+            "scenario_step_rows": matrix.get("scenario_step_rows"),
+            "column_count": matrix.get("column_count"),
+            "nonempty_consequence_fields": matrix.get("nonempty_consequence_fields") or {},
+            "referenced_standard_families": matrix.get("referenced_standard_families") or {},
+            "eligible_use": matrix.get("eligible_use") or [],
+            "ineligible_use": matrix.get("ineligible_use") or [],
+        },
+        "asset_bundles": {
+            item.get("id"): {
+                key: item.get(key)
+                for key in (
+                    "workbook_count", "sheet_count", "nonempty_rows",
+                    "repeated_operation_cycles", "file_count", "document_count",
+                    "pdf_count", "image_count", "video_count",
+                )
+                if item.get(key) is not None
+            }
+            for item in bundles
+            if item.get("id") != "local_liquid_hydrogen_operational_scenario_matrix"
+        },
+        "coverage": {
+            key: coverage.get(key)
+            for key in (
+                "local_station_data_is_sparse",
+                "station_side_dynamic_evidence_is_substantial",
+                "local_hazop_scenario_coverage_is_substantial",
+                "vehicle_side_full_loop_validation_ready",
+                "quantitative_consequence_validation_ready",
+                "main_limit",
+            )
+        },
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_multisource_mapping_feasibility() -> dict[str, Any] | None:
     """Expose the controlled multi-sheet mapping boundary without identifiers.
 
@@ -4733,6 +4819,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_local_station_data_utilization"
         ] = local_station_utilization
+    local_station_asset_screen = _local_station_asset_screen_evidence()
+    if local_station_asset_screen is not None:
+        envelope["response_evidence"][
+            "confidential_local_station_asset_screen"
+        ] = local_station_asset_screen
     multisource_feasibility = _confidential_multisource_mapping_feasibility()
     if multisource_feasibility is not None:
         envelope["response_evidence"][
@@ -5475,6 +5566,18 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if local_station_utilization.get(key) is not None
         }
+    local_station_asset_screen = evidence.get(
+        "confidential_local_station_asset_screen"
+    )
+    if isinstance(local_station_asset_screen, dict):
+        summary["confidential_local_station_asset_screen"] = {
+            key: local_station_asset_screen.get(key)
+            for key in (
+                "evidence_role", "artifact", "scenario_matrix",
+                "asset_bundles", "coverage", "claim_limit",
+            )
+            if local_station_asset_screen.get(key) is not None
+        }
     private_media = evidence.get("confidential_private_media_intake")
     if isinstance(private_media, dict):
         summary["confidential_private_media_intake"] = {
@@ -5627,6 +5730,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     local_station_utilization = response.get(
         "confidential_local_station_data_utilization"
+    ) or {}
+    local_station_asset_screen = response.get(
+        "confidential_local_station_asset_screen"
     ) or {}
     spatial_stratification = response.get(
         "public_actual_hydrogen_spatial_stratification_evidence"
@@ -5888,6 +5994,21 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ),
                 },
             } if local_station_utilization and (
+                manifest.get("question") or manifest.get("selected_sensor")
+            ) else {}),
+            **({
+                "local_station_asset_screen": {
+                    "scenario_step_rows": (
+                        local_station_asset_screen.get("scenario_matrix") or {}
+                    ).get("scenario_step_rows"),
+                    "hazop_scenario_coverage_substantial": (
+                        local_station_asset_screen.get("coverage") or {}
+                    ).get("local_hazop_scenario_coverage_is_substantial"),
+                    "vehicle_side_full_loop_validation_ready": (
+                        local_station_asset_screen.get("coverage") or {}
+                    ).get("vehicle_side_full_loop_validation_ready"),
+                },
+            } if local_station_asset_screen and (
                 manifest.get("question") or manifest.get("selected_sensor")
             ) else {}),
             **({
@@ -6160,6 +6281,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     station_schema = evidence.get("confidential_station_schema_intake") or {}
     local_station_utilization = evidence.get(
         "confidential_local_station_data_utilization"
+    ) or {}
+    local_station_asset_screen = evidence.get(
+        "confidential_local_station_asset_screen"
     ) or {}
     multisource_feasibility = evidence.get(
         "confidential_multisource_mapping_feasibility"
@@ -7073,6 +7197,13 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             ) or {},
             "assessment": local_station_utilization.get("assessment") or {},
             "claim_limit": local_station_utilization.get("claim_limit"),
+        },
+        "confidential_local_station_asset_screen": {
+            "evidence_artifact": local_station_asset_screen.get("artifact"),
+            "scenario_matrix": local_station_asset_screen.get("scenario_matrix") or {},
+            "asset_bundles": local_station_asset_screen.get("asset_bundles") or {},
+            "coverage": local_station_asset_screen.get("coverage") or {},
+            "claim_limit": local_station_asset_screen.get("claim_limit"),
         },
         "confidential_private_media_intake": {
             "artifact": private_media.get("artifact"),
