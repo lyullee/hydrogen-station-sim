@@ -102,6 +102,44 @@
       "reason": "These sources improve site/infrastructure coverage and external context, but they are inventory/status products rather than synchronized process telemetry."
     }
   ],
+  "public_experiment_leads": [
+    {
+      "id": "direct_pressure_hrs_experimental_benchmark",
+      "doi": "10.1016/j.renene.2024.120410",
+      "url": "https://doi.org/10.1016/j.renene.2024.120410",
+      "role": "published HRS and vehicle-tank model benchmark",
+      "observed_scope": "The paper reports comparison with SAE J2601 laboratory data and pressure, temperature, flow and SOC trends.",
+      "raw_time_series_publicly_retrieved": false,
+      "eligible_use": "benchmark definition and protocol plausibility; not a new raw holdout"
+    },
+    {
+      "id": "nrel_type_iv_fueling_temperature_experiment",
+      "doi": "10.1002/ente.202300239",
+      "url": "https://doi.org/10.1002/ente.202300239",
+      "role": "published NREL and Powertech Type-IV fueling experiment",
+      "observed_scope": "The paper reports measured pressure and temperature boundary conditions for 36 L and 244 L tank experiments.",
+      "raw_time_series_publicly_retrieved": false,
+      "eligible_use": "vehicle-tank thermal boundary and APRR benchmark; not a station-controller full-loop holdout"
+    },
+    {
+      "id": "high_aspect_ratio_hrs_tank_experiment",
+      "doi": "10.1016/j.ijhydene.2025.152513",
+      "url": "https://doi.org/10.1016/j.ijhydene.2025.152513",
+      "role": "published HRS high-aspect-ratio Type-IV tank experiment",
+      "observed_scope": "The paper reports Empa HRS measurements for a 350 L tank and station-system pressure and temperature evolution.",
+      "raw_time_series_publicly_retrieved": false,
+      "eligible_use": "large-tank thermal-model benchmark; not a station-to-vehicle raw holdout"
+    },
+    {
+      "id": "multi_year_electrolysis_hrs_operation",
+      "doi": "10.1016/j.ijhydene.2023.04.084",
+      "url": "https://doi.org/10.1016/j.ijhydene.2023.04.084",
+      "role": "published multi-year real-station operation study",
+      "observed_scope": "The paper describes station storage, delivery, compression and dispensing records and real-world operation.",
+      "raw_time_series_publicly_retrieved": false,
+      "eligible_use": "operational envelope and reporting-schema request lead; not a new raw holdout"
+    }
+  ],
   "gate_impact": "full_loop_external_validation_remains_open",
   "next_action": "Request a de-identified, rights-cleared, pre-freeze station-to-vehicle logger cohort from an identified custodian; retain this search result as a negative public-access decision.",
   "claim_boundary": "This artifact documents a current public search and exclusion decision. It adds no numerical validation, does not alter any frozen holdout, and does not support a safety or IJHE full-loop claim."
