@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "protocol_id": "x044qk_actual_h2_overpressure_rank_holdout_v1",
+  "frozen_at": "2026-10-08T16:18:00+09:00",
+  "status": "FROZEN_BEFORE_RAW_PRESSURE_OUTCOME_ACCESS",
+  "objective": "Test whether the already locked HyRAM+ runtime consequence calculation ranks delayed-ignition hydrogen-jet severity in the same order as independent high-frequency experimental pressure traces.",
+  "source": {
+    "dataset_title": "Replication data for: Laboratory-Scale Experiments on Ignited Hydrogen Jets: Flame Acceleration and Overpressure Analysis",
+    "dataset_doi": "10.18710/X044QK",
+    "dataset_version": "1.0",
+    "dataset_license": "CC0 1.0",
+    "article_title": "Experimental results of delayed ignition of impinging high-pressure hydrogen jet on pipe geometry in open atmosphere",
+    "article_doi": "10.1016/j.firesaf.2026.104812",
+    "method_article_title": "High-Speed Visualization and Pressure Measurement of Hydrogen Explosion Dynamics in Obstructed and Unconfined Geometries",
+    "method_url": "https://www.jove.com/t/71000/high-speed-visualization-pressure-measurement-hydrogen-explosion",
+    "physical_scope": "Actual gaseous hydrogen, 1.69 mm circular nozzle, 30-80 barg release, 2.5 s delayed ignition, pipe obstacle at 29 cm or 54 cm in open atmosphere."
+  },
+  "preaccess_disclosure": {
+    "dataset_api_manifest_accessed": true,
+    "readme_accessed": true,
+    "published_input_summary_workbook_accessed": true,
+    "raw_selected_pressure_trace_files_accessed": false,
+    "raw_pressure_peak_outcomes_accessed": false,
+    "summary_contains_raw_pressure_peak_outcomes": false,
+    "known_from_public_method_before_freeze": [
+      "four synchronized piezoelectric pressure channels are ordered along the jet axis",
+      "a representative successful experiment shows sequential downstream pressure arrival",
+      "some experiments explicitly failed to ignite or lacked pressure data"
+    ],
+    "claim_boundary": "This is a prospective raw-trace endpoint evaluation after public input metadata and qualitative method behavior were known. It is not blinded to campaign design, and it is not a prospective test of the campaign existence or the fact that successful explosions generate pressure peaks."
+  },
+  "selection_rule": {
+    "rule": "For each combination of obstacle distance {29, 54} cm and ignition position {1, 2, 3}, select the lowest experiment number whose published comment does not state no ignition, missing data, or missing pressure sensors.",
+    "selection_uses_raw_outcomes": false,
+    "selected_case_count": 6,
+    "selected_experiment_numbers": [
+      1,
+      2,
+      3,
+      18,
+      19,
+      20
+    ],
+    "replacement_allowed": false
+  },
+  "selected_cases": [
+    {
+      "experiment": 1,
+      "raw_filename": "Ign_pipe_geom_EXP_001.csv",
+      "datafile_id": 268221,
+      "expected_bytes": 412188772,
+      "expected_md5": "76f57dd1efaf3f20acd8572785ddbccf",
+      "average_release_pressure_bar_g": 33.466773986816406,
+      "average_mass_flow_kg_s": 0.004676316399127245,
+      "ignition_position": 3,
+      "obstacle_distance_cm": 29,
+      "release_time_s": 3.0,
+      "ignition_delay_s": 2.5
+    },
+    {
+      "experiment": 2,
+      "raw_filename": "Ign_pipe_geom_EXP_002.csv",
+      "datafile_id": 268220,
+      "expected_bytes": 406415818,
+      "expected_md5": "f0e95dc5a2f1c6a1f98cb266f8360dccf",
+      "average_release_pressure_bar_g": 45.44980239868164,
+      "average_mass_flow_kg_s": 0.006350705865770578,
+      "ignition_position": 2,
+      "obstacle_distance_cm": 29,
+      "release_time_s": 3.0,
+      "ignition_delay_s": 2.5
+    },
+    {
+      "experiment": 3,
+      "raw_filename": "Ign_pipe_geom_EXP_003.csv",
+      "datafile_id": 268222,
+      "expected_bytes": 412994098,
+      "expected_md5": "c44b1920cb828c206c00892d65391aa4",
+      "average_release_pressure_bar_g": 42.19833755493164,
+      "average_mass_flow_kg_s": 0.0058963787741959095,
+      "ignition_position": 1,
+      "obstacle_distance_cm": 29,
+      "release_time_s": 3.0,
+      "ignition_delay_s": 2.5
+    },
+    {
+      "experiment": 18,
+      "raw_filename": "Ign_pipe_geom_EXP_018.csv",
+      "datafile_id": 268232,
+      "expected_bytes": 1046170668,
+      "expected_md5": "e84af686521628d12b6bf615445ca2c8",
+      "average_release_pressure_bar_g": 34.07114791870117,
+      "average_mass_flow_kg_s": 0.004760765470564365,
+      "ignition_position": 3,
+      "obstacle_distance_cm": 54,
+      "release_time_s": 3.0,
+      "ignition_delay_s": 2.5
+    },
+    {
+      "experiment": 19,
+      "raw_filename": "Ign_pipe_geom_EXP_019.csv",
+      "datafile_id": 268233,
+      "expected_bytes": 1053282050,
+      "expected_md5": "89ac1c87f1dc8525b779d835b5a2dc4e",
+      "average_release_pressure_bar_g": 29.020299911499023,
+      "average_mass_flow_kg_s": 0.004055009689182043,
+      "ignition_position": 2,
+      "obstacle_distance_cm": 54,
+      "release_time_s": 3.0,
+      "ignition_delay_s": 2.5
+    },
+    {
+      "experiment": 20,
+      "raw_filename": "Ign_pipe_geom_EXP_020.csv",
+      "datafile_id": 268234,
+      "expected_bytes": 1052007010,
+      "expected_md5": "879f9084989c11b13a756fb483bd601a",
+      "average_release_pressure_bar_g": 26.861921310424805,
+      "average_mass_flow_kg_s": 0.0037534197326749563,
+      "ignition_position": 1,
+      "obstacle_distance_cm": 54,
+      "release_time_s": 3.0,
+      "ignition_delay_s": 2.5
+    }
+  ],
+  "locked_model": {
+    "name": "HyRAM+ 6.1 BST runtime adapter",
+    "hyram_version": "6.1",
+    "numpy_version": "2.4.6",
+    "scipy_version": "1.15.3",
+    "source_hashes_sha256": {
+      "src/h2station/risk/hyram_adapter.py": "144562325bc345bc9da81f06e3d0ab51ef962199b9eb0985e622b352748e6795",
+      "src/h2station/risk/runtime_backend.py": "073cd29261c4e72493f2453913c6afaf18967e51b91e1564c53676c4d9325fad",
+      "pyproject.toml": "a189dd33df0b1ea4f996f08700d1dcab2cd1880ce2245b9b747789934bbc73da"
+    },
+    "configuration": {
+      "hydrogen_temperature_k": 293.15,
+      "ambient_temperature_k": 293.15,
+      "ambient_pressure_pa": 101325.0,
+      "relative_humidity": 0.5,
+      "orifice_diameter_m": 0.00169,
+      "mass_flow_input": "published average mass flow",
+      "source_pressure_input": "published average gauge pressure plus ambient pressure",
+      "overpressure_method": "bst",
+      "bst_flame_speed": 0.35,
+      "release_angle_rad": 0.0,
+      "standardized_observation_locations_m": [
+        [0.5, 0.0, 0.0],
+        [1.0, 0.0, 0.0],
+        [2.0, 0.0, 0.0],
+        [3.0, 0.0, 0.0]
+      ],
+      "predicted_endpoint": "maximum predicted overpressure across standardized locations",
+      "dispersion_calculation": false,
+      "flame_calculation": false,
+      "case_specific_fitting": false
+    }
+  },
+  "raw_trace_endpoint": {
+    "pressure_channels": "all four published dynamic pressure channels P1-P4",
+    "trigger_alignment": "Use the documented ignition trigger channel when present; otherwise require a time axis that straddles zero and use time zero.",
+    "baseline_window_s": [-0.1, -0.01],
+    "outcome_window_s": [0.0, 0.5],
+    "baseline_statistic": "median per pressure channel",
+    "measured_endpoint": "maximum positive baseline-corrected engineering-unit pressure across P1-P4 in the outcome window",
+    "eligibility": [
+      "publisher MD5 and byte size match the frozen identity",
+      "a finite monotonic time axis straddles the trigger",
+      "four dynamic pressure channels are present",
+      "pressure channels are in engineering pressure units or a publisher-documented calibration is available",
+      "both frozen baseline and outcome windows contain at least 100 samples"
+    ],
+    "fail_closed_conditions": [
+      "raw schema cannot identify four pressure channels without outcome-informed guessing",
+      "only uncalibrated voltage is available",
+      "trigger alignment is not machine-resolvable",
+      "any selected case is unavailable or ineligible"
+    ]
+  },
+  "primary_metrics": {
+    "spearman_rank_correlation": {
+      "threshold": 0.5,
+      "direction": ">="
+    },
+    "pairwise_order_concordance": {
+      "threshold": 0.7,
+      "direction": ">="
+    },
+    "top_two_measured_case_recall_in_predicted_top_two": {
+      "threshold": 0.5,
+      "direction": ">="
+    },
+    "eligible_case_count": {
+      "threshold": 6,
+      "direction": "=="
+    }
+  },
+  "decision_rule": "PASS only if all four primary screens pass without case replacement, outcome-specific parameter change, threshold relaxation, or post-access model change.",
+  "amendment_policy": "A schema-only amendment may document delimiters, encodings, header aliases, trigger-column names, pressure units, or chunked reading needed to execute the already frozen endpoint. It may not change selected cases, the physical model, observation locations, time windows, metrics, thresholds, or decision rule.",
+  "claim_boundary": "A PASS would support cross-scale rank transfer of the locked runtime's relative delayed-ignition severity for this six-case open-atmosphere pipe-obstacle cohort. It would not validate absolute overpressure, impulse, sensor-distance attenuation, outdoor HRS geometry, explosion probability, injury distance, CFD, the full digital twin, or regulatory compliance. A FAIL or ineligible result remains part of the evidence record and does not permit tuning on these six outcomes followed by reuse as validation."
+}
