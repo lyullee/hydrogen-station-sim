@@ -69,6 +69,15 @@ only. It deliberately treats keyword/header matches as discovery evidence,
 never as validation eligibility; a separate custodian attestation is required
 before any candidate can enter a prospective split.
 
+The same scanner was applied to the locally cached public-validation corpus.
+It enumerated 263 machine-readable files and screened 159 CSV/TSV headers.
+Fifty-eight candidates were release-rig/jet experiments. The only two
+vehicle/dispenser keyword matches were static QRA result tables without a
+common time axis, and no synchronized vehicle pressure-temperature-flow
+candidate was promoted. The aggregate result is retained in
+`research/local_public_candidate_scan_2026_10_09.json`; this prevents a static
+consequence table from being misrepresented as measured fueling telemetry.
+
 The accompanying custodian description now attests two storage-pressure roles
 and two lifecycle-counter roles at aggregate level. This closes the role-mapping
 gap for the pressure-cycle and cascade-sequence cohorts without publishing

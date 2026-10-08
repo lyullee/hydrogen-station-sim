@@ -41,3 +41,15 @@ def test_workspace_scan_skips_virtualenv_and_build_outputs(tmp_path: Path) -> No
     result = scan_workspace([tmp_path])
 
     assert result["scan"]["machine_readable_files"] == 0
+
+
+def test_release_rig_nozzle_trace_is_not_classified_as_vehicle_loop(tmp_path: Path) -> None:
+    (tmp_path / "release_rig.csv").write_text(
+        "Time,PT1ReleaseRig,PT2Nozzle\n0,10,9\n", encoding="utf-8"
+    )
+
+    result = scan_workspace([tmp_path])
+
+    classes = result["scan"]["coarse_candidate_classes"]
+    assert classes["release_rig_experiment_candidate"] == 1
+    assert classes.get("vehicle_pressure_temperature_candidate", 0) == 0

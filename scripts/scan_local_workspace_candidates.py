@@ -53,8 +53,12 @@ HEADER_FAMILIES = {
         r"veh|vehicle|car|tank|disp|nozzle|fuel|soc|충전|차량|탱크|디스펜|노즐",
         re.IGNORECASE,
     ),
-    "pressure": re.compile(r"press|pressure|pt_|pi_|압력", re.IGNORECASE),
-    "temperature": re.compile(r"temp|temperature|tt_|ti_|온도", re.IGNORECASE),
+    "pressure": re.compile(
+        r"press|pressure|pt[_-]?\d+|pi[_-]?\d+|압력", re.IGNORECASE
+    ),
+    "temperature": re.compile(
+        r"temp|temperature|tt[_-]?\d+|ti[_-]?\d+|온도", re.IGNORECASE
+    ),
     "flow_or_mass": re.compile(
         r"flow|mass|rate|totalizer|accum|유량|질량|적산", re.IGNORECASE
     ),
@@ -63,6 +67,10 @@ HEADER_FAMILIES = {
         re.IGNORECASE,
     ),
 }
+RELEASE_RIG_PATTERN = re.compile(
+    r"release|rig|jet|aperture|누출|분출", re.IGNORECASE
+)
+TIME_PATTERN = re.compile(r"^time$|timestamp|datetime|zeit|시간|시각", re.IGNORECASE)
 
 
 def _iter_files(roots: Iterable[Path]) -> Iterable[Path]:
@@ -94,10 +102,21 @@ def _read_header(path: Path) -> list[str]:
 
 def _classify_candidate(path: Path, header: list[str]) -> str:
     text = " ".join([path.stem, *header])
+    # ELVHYS-style release-rig traces often contain ``nozzle`` and pressure
+    # labels.  Keep them separate from vehicle/dispenser candidates so a
+    # keyword hit cannot be mistaken for a full-loop fueling record.
+    if RELEASE_RIG_PATTERN.search(text) and HEADER_FAMILIES["pressure"].search(text):
+        return "release_rig_experiment_candidate"
+    has_time = any(TIME_PATTERN.search(str(column)) for column in header)
+    has_pressure = bool(HEADER_FAMILIES["pressure"].search(text))
+    has_temperature = bool(HEADER_FAMILIES["temperature"].search(text))
+    has_flow = bool(HEADER_FAMILIES["flow_or_mass"].search(text))
     if HEADER_FAMILIES["vehicle_or_dispenser"].search(text):
-        if HEADER_FAMILIES["pressure"].search(text) and HEADER_FAMILIES[
-            "temperature"
-        ].search(text):
+        # A synchronized vehicle candidate needs a time axis and a flow/mass
+        # field in addition to pressure and temperature.  Static QRA result
+        # tables often mention dispenser, pressure and temperature but do not
+        # contain a measured time series.
+        if has_time and has_pressure and has_temperature and has_flow:
             return "vehicle_pressure_temperature_candidate"
         return "vehicle_or_dispenser_candidate"
     if HEADER_FAMILIES["protocol_or_control"].search(text):
