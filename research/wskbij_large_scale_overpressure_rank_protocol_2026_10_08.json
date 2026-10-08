@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "protocol_id": "wskbij_actual_h2_large_scale_overpressure_rank_v1",
+  "frozen_at": "2026-10-08T20:30:00+09:00",
+  "status": "FROZEN_AFTER_AGGREGATE_SUMMARY_ACCESS_BEFORE_ROW_LEVEL_MODEL_COMPARISON",
+  "objective": "Test whether the already locked HyRAM+ 6.1 BST runtime calculation preserves relative explosion-severity ordering across an independent large-scale actual-hydrogen delayed-ignition campaign.",
+  "source": {
+    "dataset_title": "Replication dataset for: Large-Scale Hydrogen Explosion Experiments: Obstructed Releases in open atmosphere",
+    "dataset_doi": "10.18710/WSKBIJ",
+    "dataset_version": "1.0",
+    "dataset_license": "CC0 1.0",
+    "dataset_record": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/WSKBIJ",
+    "summary_workbook_filename": "Experimental_results_.xlsx",
+    "summary_workbook_datafile_id": 268155,
+    "summary_workbook_expected_bytes": 21165,
+    "summary_workbook_expected_md5": "73ee4f29ca08612f46b7a37980cbe4df",
+    "summary_workbook_expected_sha256": "5ca3813fd7e9ade6c0d1aa623d2a7f5346760334b1c8b014a4ea3235ae5dbd34",
+    "physical_scope": "Actual gaseous hydrogen, 4.8 mm or 9.4 mm nozzle, approximately 0.36-221.52 barg reservoir pressure, controlled delayed ignition at three coded positions, obstructed and unobstructed open-atmosphere configurations, and four dynamic-pressure sensors."
+  },
+  "preaccess_disclosure": {
+    "dataset_api_manifest_accessed": true,
+    "readme_accessed": true,
+    "summary_workbook_accessed_by_inventory_software": true,
+    "individual_input_rows_reviewed": true,
+    "individual_pressure_outcome_rows_reviewed_or_used_for_design": false,
+    "raw_trace_files_accessed": false,
+    "aggregate_outcomes_known_before_freeze": {
+      "numbered_experiments": 51,
+      "experiments_with_at_least_one_numeric_pressure": 45,
+      "pressure_sensor_count": 4,
+      "numeric_pressure_range_kpa": [-10.39, 235.39],
+      "rows_with_at_least_one_missing_sensor_value": 12
+    },
+    "disclosure_limit": "The earlier provenance inventory necessarily machine-read pressure cells to calculate only the disclosed aggregate range and completeness counts. No case-level pressure value, ordering, correlation, model residual, or case-specific fit was displayed or used to choose this model, inclusion rule, metric, or threshold.",
+    "claim_boundary": "This is a prospectively fixed analysis after aggregate-only outcome access, not a fully blinded raw-data holdout. It is independent of model development but cannot be described as outcome-unseen in the strictest sense."
+  },
+  "selection_rule": {
+    "row_scope": "Every numbered Flow parameters row in the publisher workbook.",
+    "include": [
+      "experiment identifier is numeric after removing annotation asterisks",
+      "nozzle diameter, reservoir pressure and ignition position are finite",
+      "ignition position is one of 1, 2 or 3",
+      "experiment is not publisher-annotated no ignition or self ignition",
+      "at least one of the four published pressure-sensor peaks is finite"
+    ],
+    "exclude": [
+      "experiment 35 because the publisher marks no ignition",
+      "experiments 44, 45, 47 and 50 because the publisher marks self ignition",
+      "experiment 51 because the publisher marks self ignition and does not provide a controlled ignition position",
+      "any stratum with fewer than three otherwise eligible experiments"
+    ],
+    "stratum_key": [
+      "campaign_phase: experiments 1-27 or experiments 28-51",
+      "nozzle_diameter_mm",
+      "ignition_position"
+    ],
+    "campaign_phase_basis": "The publisher states that mass-flow instrumentation was available only for experiments 1-27; the split is therefore an instrumentation-era boundary declared without pressure outcomes.",
+    "case_replacement_allowed": false,
+    "selection_uses_pressure_magnitude_or_order": false,
+    "expected_case_count_before_minimum_stratum_rule": 45,
+    "expected_scored_case_count": 44
+  },
+  "locked_model": {
+    "name": "HyRAM+ 6.1 BST runtime adapter",
+    "hyram_version": "6.1",
+    "source_revision": "83cbaed1aab5098df72180dac3b0b125b369ba52",
+    "source_hashes_sha256": {
+      "src/h2station/risk/hyram_adapter.py": "144562325bc345bc9da81f06e3d0ab51ef962199b9eb0985e622b352748e6795",
+      "src/h2station/risk/runtime_backend.py": "5d2e13828e1d3078a79930d3ff80fd6f1d5ff00ee58da20f380701ec316c48c8",
+      "pyproject.toml": "205d72c0c425efde2ccb4eca3bda6d4f7b74898c93c2bc9309663bf99812d845"
+    },
+    "configuration": {
+      "hydrogen_temperature_k": 293.15,
+      "ambient_temperature_k": 293.15,
+      "ambient_pressure_pa": 101325.0,
+      "relative_humidity": 0.5,
+      "source_pressure_input": "published reservoir gauge pressure converted to Pa plus fixed ambient pressure",
+      "orifice_diameter_input": "published nozzle diameter converted from mm to m",
+      "mass_flow_input": "HyRAM compute_mass_flow; no measured-flow override",
+      "overpressure_method": "bst",
+      "bst_flame_speed": 0.35,
+      "release_angle_rad": 0.0,
+      "standardized_observation_locations_m": [
+        [0.5, 0.0, 0.0],
+        [1.0, 0.0, 0.0],
+        [2.0, 0.0, 0.0],
+        [3.0, 0.0, 0.0]
+      ],
+      "predicted_endpoint": "maximum HyRAM BST overpressure across the four standardized observation locations",
+      "dispersion_calculation": false,
+      "flame_calculation": false,
+      "case_specific_fitting": false,
+      "obstacle_or_ignition_position_fitting": false
+    }
+  },
+  "measured_endpoint": {
+    "source_columns": [
+      "Pressure sensor_1 [kPa]",
+      "Pressure sensor_2 [kPa]",
+      "Pressure sensor_3 [kPa]",
+      "Pressure sensor_4 [kPa]"
+    ],
+    "endpoint": "maximum finite published pressure peak in kPa across the four sensors for each experiment",
+    "missing_sensor_policy": "Retain a case when at least one sensor peak is finite; do not impute missing sensor values.",
+    "negative_value_policy": "Preserve publisher values without clipping before taking the finite row maximum.",
+    "raw_trace_reprocessing": false
+  },
+  "primary_metrics": {
+    "pooled_spearman_rank_correlation": {
+      "threshold": 0.5,
+      "direction": ">="
+    },
+    "within_stratum_rank_spearman": {
+      "definition": "Fractional-rank predicted and measured endpoints separately inside each retained stratum, concatenate the within-stratum ranks, then calculate Spearman correlation.",
+      "threshold": 0.45,
+      "direction": ">="
+    },
+    "within_stratum_pairwise_order_concordance": {
+      "definition": "Across all non-tied case pairs inside retained strata, fraction for which predicted and measured order agree.",
+      "threshold": 0.65,
+      "direction": ">="
+    },
+    "within_stratum_top_third_recall": {
+      "definition": "Micro-averaged recall of measured top-ceiling(n/3) cases in the predicted top-ceiling(n/3), evaluated inside each retained stratum.",
+      "threshold": 0.5,
+      "direction": ">="
+    },
+    "scored_case_count": {
+      "threshold": 40,
+      "direction": ">="
+    }
+  },
+  "diagnostics": {
+    "stratified_bootstrap_replicates": 10000,
+    "bootstrap_seed": 20261008,
+    "report_per_stratum_metrics": true,
+    "report_unstratified_and_stratified_scatter": false,
+    "runtime_parameter_update_allowed": false
+  },
+  "decision_rule": "PASS only if all five primary screens pass without case replacement, outcome-specific parameter change, threshold relaxation, post-access model change, or removal of an otherwise eligible retained stratum.",
+  "amendment_policy": "A schema-only amendment may document workbook sheet names, numeric encodings, header aliases or download mechanics needed to execute the already frozen endpoint. It may not change selected rows, stratum definition, physical model, observation locations, endpoint, metrics, thresholds or decision rule.",
+  "claim_boundary": "A PASS would support relative source-severity ordering by the locked runtime across this large-scale actual-hydrogen campaign. It would not validate absolute overpressure, impulse, obstacle effects, ignition-location effects, sensor-distance attenuation, outdoor HRS geometry, explosion probability, injury distance, full-loop dynamics, emergency decisions or regulatory compliance. A FAIL remains part of the evidence record and these outcomes may not be tuned and reused as fresh validation."
+}
