@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_station_filtered_pressure_cycle_holdout",
+  "evidence_role": "disclosed_sequential_method_revision_holdout",
+  "prior_unsmoothed_failure_known": true,
+  "source_identifiers_published": false,
+  "source_paths_published": false,
+  "source_filenames_published": false,
+  "source_headers_published": false,
+  "raw_rows_persisted": false,
+  "absolute_timestamps_published": false,
+  "calendar_dates_published": false,
+  "role": "high_storage_pressure",
+  "frozen_candidate_mpa": 4.5,
+  "files_read": 12,
+  "raw_data_rows": 29361269,
+  "sampled_rows": 2936109,
+  "filtered_rows": 2936037,
+  "rejected_sample_rows": 21,
+  "filter": {
+    "kind": "causal_rolling_median",
+    "window_samples": 7,
+    "nominal_window_seconds": 70
+  },
+  "rules": {
+    "sample_stride": 10,
+    "fall_confirmation_mpa": 0.25,
+    "rise_confirmation_mpa": 0.25,
+    "minimum_cycle_drop_mpa": 0.5,
+    "maximum_cycle_drop_mpa": 20.0,
+    "minimum_decline_duration_s": 30.0,
+    "maximum_decline_duration_s": 21600.0,
+    "minimum_pressure_mpa": 10.0,
+    "maximum_pressure_mpa": 100.0,
+    "maximum_sample_gap_s": 120.0,
+    "calibration_fraction": 0.7
+  },
+  "calibration": {
+    "files_with_cycles": 0,
+    "pressure_drop_mpa": {
+      "count": 0,
+      "p10": null,
+      "median": null,
+      "p90": null
+    }
+  },
+  "holdout": {
+    "files_with_cycles": 0,
+    "pressure_drop_mpa": {
+      "count": 0,
+      "p10": null,
+      "median": null,
+      "p90": null
+    }
+  },
+  "metrics": {
+    "candidate_relative_holdout_median_error_percent": null,
+    "calibration_holdout_median_shift_percent": null
+  },
+  "eligibility": {
+    "minimum_files_met": true,
+    "minimum_calibration_cycles_met": false,
+    "minimum_holdout_cycles_met": false,
+    "minimum_holdout_files_met": false
+  },
+  "screens": {
+    "candidate_inside_holdout_p10_p90": false,
+    "candidate_relative_median_error_le_20_percent": false,
+    "calibration_holdout_median_shift_le_25_percent": false
+  },
+  "decision": {
+    "existing_high_bank_restart_margin_cross_format_corroborated": false,
+    "independent_external_validation": false,
+    "runtime_parameter_application": false,
+    "default_model_parameters_changed": false,
+    "full_loop_holdout_eligible": false
+  },
+  "claim_boundary": "Sequential same-site method-revision evidence only. The prior unsmoothed failure was known before this filter was frozen. This result does not identify compressor state, validate vehicle filling, establish a safety limit, estimate accident frequency or certify field operation.",
+  "protocol": {
+    "protocol_id": "CONFIDENTIAL-STATION-HIGH-BANK-CYCLE-HOLDOUT-002",
+    "protocol_sha256": "5aedf2d1f213fc1198e14202d01a4c2eba0c2d4466c2570ff6dee78416506470",
+    "mapping_sha256": "a60d1dc67572c1e36a510d951b03408fbdf3187ffc5de1b2ea2fdd354531c80a",
+    "revision_frozen_before_filtered_cycle_outcome_access": true
+  },
+  "runner_git_commit": "9792cd4d7f8055413718c6177e4c0f1d8779a4f8",
+  "post_outcome_order_diagnostic": {
+    "matching_files": 12,
+    "reverse_chronological_files": 12,
+    "median_absolute_sample_period_s": 10.0,
+    "interpretation": "Every matching source file is stored newest-to-oldest. The version-2 detector required increasing time and therefore reset at each sample. No chronologically ordered filtered cycle outcome had been computed when this defect was identified."
+  }
+}
