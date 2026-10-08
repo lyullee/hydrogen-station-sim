@@ -94,6 +94,22 @@ are recorded in
 and
 `research/confidential_station_ordered_pressure_cycle_holdout_2026_10_08.json`.
 
+The owner-attested medium and high pressure roles also enabled a separate
+prospective controller-structure test. Before viewing their joint outcomes,
+the evaluator froze the cycle detector, one-to-one event pairing window,
+70/30 split and all eligibility and sequence screens. It retained 8,106
+calibration and 3,664 holdout pairs across all 12 matching histories. Holdout
+pair coverage was 70.3939%, and 94.3777% of paired events followed the declared
+medium-to-high order; the 80-second holdout median handoff gap remained inside
+the calibration P10--P90 range. Every frozen screen passed. This corroborates
+the simulator's medium-to-high cascade controller structure within the same
+site archive, but it does not uniquely identify vehicle fills because no
+synchronized vehicle, dispenser or valve-state channel is present. It does
+not validate the low bank, a complete station-to-vehicle loop, a safety limit
+or a runtime parameter. The frozen protocol and result are recorded in
+`research/confidential_station_cascade_sequence_protocol_2026_10_08.json` and
+`research/confidential_station_cascade_sequence_holdout_2026_10_08.json`.
+
 A value-level, pre-attestation consistency screen now tests whether the
 unlabelled flow-like channels contain internally coherent instantaneous
 flow/cumulative-totalizer pairs. It inspected 3,053,442 sampled rows from 20

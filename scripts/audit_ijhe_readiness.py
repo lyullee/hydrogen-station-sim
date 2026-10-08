@@ -1883,6 +1883,92 @@ def audit(root: Path) -> dict[str, object]:
         } if pressure_cycle else "missing",
     ))
 
+    cascade_sequence_path = root / (
+        "research/confidential_station_cascade_sequence_holdout_2026_10_08.json"
+    )
+    cascade_sequence_protocol_path = root / (
+        "research/confidential_station_cascade_sequence_protocol_2026_10_08.json"
+    )
+    cascade_sequence = _json(cascade_sequence_path)
+    cascade_sequence_protocol = _json(cascade_sequence_protocol_path)
+    cascade_privacy_keys = (
+        "source_identifiers_published",
+        "source_paths_published",
+        "source_filenames_published",
+        "source_headers_published",
+        "raw_rows_persisted",
+        "absolute_timestamps_published",
+        "calendar_dates_published",
+    )
+    cascade_calibration = (cascade_sequence or {}).get("calibration") or {}
+    cascade_holdout = (cascade_sequence or {}).get("holdout") or {}
+    cascade_decision = (cascade_sequence or {}).get("decision") or {}
+    cascade_sequence_pass = bool(
+        (cascade_sequence or {}).get("artifact_type")
+        == "confidential_station_cascade_sequence_holdout"
+        and (cascade_sequence or {}).get(
+            "ordered_joint_outcomes_seen_before_freeze"
+        ) is False
+        and all(
+            (cascade_sequence or {}).get(key) is False
+            for key in cascade_privacy_keys
+        )
+        and (cascade_sequence or {}).get("files_read") == 12
+        and (cascade_sequence or {}).get("reverse_chronological_files") == 12
+        and (cascade_sequence or {}).get("mixed_order_files") == 0
+        and (cascade_sequence or {}).get("raw_data_rows") == 29_361_269
+        and cascade_calibration.get("paired_episode_count") == 8_106
+        and cascade_holdout.get("paired_episode_count") == 3_664
+        and cascade_holdout.get("pair_coverage_fraction") == 0.703939
+        and cascade_holdout.get("sequential_fraction") == 0.943777
+        and all(((cascade_sequence or {}).get("eligibility") or {}).values())
+        and all(((cascade_sequence or {}).get("screens") or {}).values())
+        and cascade_decision.get(
+            "medium_to_high_drawdown_sequence_corroborated"
+        ) is True
+        and cascade_decision.get(
+            "cascade_controller_structure_supported"
+        ) is True
+        and cascade_decision.get("runtime_parameter_application") is False
+        and cascade_decision.get("default_model_parameters_changed") is False
+        and cascade_decision.get("vehicle_fill_validation") is False
+        and cascade_decision.get("full_loop_holdout_eligible") is False
+        and cascade_decision.get("independent_external_validation") is False
+        and ((cascade_sequence or {}).get("protocol") or {}).get(
+            "protocol_sha256"
+        ) == _sha256(cascade_sequence_protocol_path)
+        and (cascade_sequence_protocol or {}).get("decision_boundary", {}).get(
+            "runtime_parameter_application"
+        ) is False
+        and (cascade_sequence_protocol or {}).get("decision_boundary", {}).get(
+            "vehicle_fill_validation"
+        ) is False
+    )
+    gates.append(_gate(
+        "confidential_station_cascade_sequence_holdout_integrity",
+        "PASS" if cascade_sequence_pass else (
+            "FAIL" if cascade_sequence else "PENDING"
+        ),
+        "The frozen same-site holdout corroborates the medium-to-high pressure drawdown sequence while vehicle-fill, full-loop and independent-validation claims remain locked.",
+        f"{cascade_sequence_protocol_path.relative_to(root)}; {cascade_sequence_path.relative_to(root)}",
+        "Hash-linked frozen protocol, unseen ordered joint outcomes, 12 reverse-order files, all eligibility and sequence screens, and explicit non-promotion boundaries.",
+        {
+            "protocol_hash_matches": (
+                ((cascade_sequence or {}).get("protocol") or {}).get(
+                    "protocol_sha256"
+                ) == _sha256(cascade_sequence_protocol_path)
+                if cascade_sequence_protocol_path.is_file() else False
+            ),
+            "files_read": (cascade_sequence or {}).get("files_read"),
+            "calibration": cascade_calibration,
+            "holdout": cascade_holdout,
+            "metrics": (cascade_sequence or {}).get("metrics"),
+            "eligibility": (cascade_sequence or {}).get("eligibility"),
+            "screens": (cascade_sequence or {}).get("screens"),
+            "decision": cascade_decision,
+        } if cascade_sequence else "missing",
+    ))
+
     external_loop_path = root / "data/public_validation/results/closed_loop_external_holdout/validation.json"
     external_loop = _json(external_loop_path)
     external_protocol_path = root / "research/mc_default_external_holdout_protocol.json"

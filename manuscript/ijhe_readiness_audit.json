@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T13:57:22.080132+00:00",
+  "generated_at": "2026-10-08T14:12:58.543635+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 116,
+    "PASS": 117,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -1274,6 +1274,96 @@
           "runtime_parameter_application": false,
           "default_model_parameters_changed": false,
           "full_loop_holdout_eligible": false
+        }
+      }
+    },
+    {
+      "id": "confidential_station_cascade_sequence_holdout_integrity",
+      "status": "PASS",
+      "claim": "The frozen same-site holdout corroborates the medium-to-high pressure drawdown sequence while vehicle-fill, full-loop and independent-validation claims remain locked.",
+      "evidence": "research\\confidential_station_cascade_sequence_protocol_2026_10_08.json; research\\confidential_station_cascade_sequence_holdout_2026_10_08.json",
+      "requirement": "Hash-linked frozen protocol, unseen ordered joint outcomes, 12 reverse-order files, all eligibility and sequence screens, and explicit non-promotion boundaries.",
+      "observed": {
+        "protocol_hash_matches": true,
+        "files_read": 12,
+        "calibration": {
+          "files_with_pairs": 12,
+          "high_cycle_count": 11565,
+          "paired_episode_count": 8106,
+          "pair_coverage_fraction": 0.700908,
+          "sequential_episode_count": 7673,
+          "sequential_fraction": 0.946583,
+          "handoff_gap_s": {
+            "count": 8106,
+            "p10": -70.0,
+            "median": 80.0,
+            "p90": 460.0
+          },
+          "medium_pressure_drop_mpa": {
+            "count": 8106,
+            "p10": 1.22885,
+            "median": 3.6321,
+            "p90": 5.82775
+          },
+          "high_pressure_drop_mpa": {
+            "count": 8106,
+            "p10": 1.0555,
+            "median": 4.4586,
+            "p90": 8.8174
+          }
+        },
+        "holdout": {
+          "files_with_pairs": 12,
+          "high_cycle_count": 5205,
+          "paired_episode_count": 3664,
+          "pair_coverage_fraction": 0.703939,
+          "sequential_episode_count": 3458,
+          "sequential_fraction": 0.943777,
+          "handoff_gap_s": {
+            "count": 3664,
+            "p10": -80.0,
+            "median": 80.0,
+            "p90": 450.0
+          },
+          "medium_pressure_drop_mpa": {
+            "count": 3664,
+            "p10": 1.19379,
+            "median": 3.51755,
+            "p90": 5.78207
+          },
+          "high_pressure_drop_mpa": {
+            "count": 3664,
+            "p10": 1.08219,
+            "median": 4.5768,
+            "p90": 9.27106
+          }
+        },
+        "metrics": {
+          "pair_coverage_shift": 0.003031,
+          "sequential_fraction_shift": 0.002806
+        },
+        "eligibility": {
+          "minimum_files_met": true,
+          "all_files_have_deterministic_time_order": true,
+          "minimum_calibration_pairs_met": true,
+          "minimum_holdout_pairs_met": true,
+          "minimum_holdout_files_met": true
+        },
+        "screens": {
+          "holdout_pair_coverage_met": true,
+          "holdout_sequential_fraction_met": true,
+          "sequential_fraction_shift_met": true,
+          "pair_coverage_shift_met": true,
+          "holdout_median_gap_inside_calibration_p10_p90": true
+        },
+        "decision": {
+          "medium_to_high_drawdown_sequence_corroborated": true,
+          "cascade_controller_structure_supported": true,
+          "runtime_parameter_application": false,
+          "default_model_parameters_changed": false,
+          "vehicle_fill_validation": false,
+          "full_loop_holdout_eligible": false,
+          "independent_external_validation": false
         }
       }
     },

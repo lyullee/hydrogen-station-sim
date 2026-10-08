@@ -57,6 +57,18 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert tank_runtime["runtime"]["validation_case_count"] == 12
     assert tank_runtime["sources_match"] is True
     assert tank_runtime["recheck_matches"] is True
+    assert gates[
+        "confidential_station_cascade_sequence_holdout_integrity"
+    ]["status"] == "PASS"
+    cascade = gates[
+        "confidential_station_cascade_sequence_holdout_integrity"
+    ]["observed"]
+    assert cascade["protocol_hash_matches"] is True
+    assert cascade["calibration"]["paired_episode_count"] == 8_106
+    assert cascade["holdout"]["paired_episode_count"] == 3_664
+    assert cascade["holdout"]["sequential_fraction"] == 0.943777
+    assert cascade["decision"]["vehicle_fill_validation"] is False
+    assert cascade["decision"]["full_loop_holdout_eligible"] is False
     assert gates["dickens_typeiii_prospective_validation"]["status"] == "FAIL"
     dickens = gates["dickens_typeiii_prospective_validation"]["observed"]
     assert dickens["protocol_frozen_before_outcome_access"] is True

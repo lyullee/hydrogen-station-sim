@@ -1081,6 +1081,42 @@ def test_manifest_separates_opt_in_recharge_dynamics_from_boundary_calibration()
     assert header["full_station_vehicle_validation"] is False
 
 
+def test_manifest_exposes_claim_bounded_measured_cascade_sequence_holdout():
+    manifest = build_evidence_manifest(
+        {"time_s": 12.5},
+        {},
+        [],
+        False,
+        question="실측에서 중압에서 고압 순서가 확인됐나?",
+    )
+    evidence = manifest["response_evidence"][
+        "confidential_station_cascade_sequence_holdout"
+    ]
+    assert evidence["files_read"] == 12
+    assert evidence["calibration"]["paired_episode_count"] == 8_106
+    assert evidence["holdout"]["paired_episode_count"] == 3_664
+    assert evidence["holdout"]["pair_coverage_fraction"] == 0.703939
+    assert evidence["holdout"]["sequential_fraction"] == 0.943777
+    assert evidence["cascade_controller_structure_supported"] is True
+    assert evidence["runtime_parameter_application"] is False
+    assert evidence["vehicle_fill_validation"] is False
+    summary = prompt_evidence_summary(manifest)[
+        "confidential_station_cascade_sequence_holdout"
+    ]
+    assert summary["cascade_controller_structure_supported"] is True
+    decision = prompt_decision_evidence(manifest)["validation_boundaries"][
+        "station_cascade_sequence"
+    ]
+    assert decision["claim_supported"] is True
+    assert decision["vehicle_fill_validation"] is False
+    assert decision["full_loop"] is False
+    header = prompt_evidence_header(manifest)[
+        "confidential_station_cascade_sequence_holdout"
+    ]
+    assert header["cascade_controller_structure_supported"] is True
+    assert header["independent_external_validation"] is False
+
+
 def test_manifest_marks_attempt_without_result_and_filters_nonfinite_values():
     manifest = build_evidence_manifest(
         {"time_s": float("nan")},
@@ -1196,6 +1232,7 @@ def test_prompt_decision_evidence_keeps_limits_without_full_audit_payload():
     assert decision["validation_boundaries"]["station_to_vehicle"][
         "screening_pass_count"
     ] == 0
+    assert "station_cascade_sequence" not in decision["validation_boundaries"]
     assert decision["validation_boundaries"]["public_tank_postaccess"] == {
         "claim_supported": False,
         "case_count": 5,

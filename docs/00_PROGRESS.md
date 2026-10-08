@@ -1,5 +1,22 @@
 # Development Progress
 
+## 2026-10-08 - Prospective medium-to-high cascade-sequence holdout
+
+- Froze the pressure-event pairing, eligibility and decision rules before
+  viewing the joint medium/high sequence outcomes in the confidential archive.
+- Retained 8,106 calibration and 3,664 holdout pressure-drawdown pairs from all
+  12 matching histories. Holdout pair coverage was 70.3939%; 94.3777% of
+  paired events followed the declared medium-to-high sequence, with a median
+  handoff gap of 80 seconds.
+- All frozen eligibility, coverage, sequence-stability and handoff-gap screens
+  passed. The result supports the simulator's medium-to-high controller
+  structure as a same-site observation.
+- Kept vehicle-fill, low-bank, full-loop, independent-validation, safety-limit
+  and runtime-parameter claims disabled because synchronized vehicle, valve
+  and dispenser states are absent.
+- The readiness audit is now 117 PASS, 10 FAIL and 7 PENDING; the complete
+  regression suite passed 1,058 tests with no failures.
+
 ## 2026-10-08 - Chronology-corrected pressure-cycle holdout
 
 - Preserved two negative pressure-cycle attempts and traced their zero-cycle

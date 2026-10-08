@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **116 PASS · 10 FAIL · 7 PENDING**.
+Gate counts: **117 PASS · 10 FAIL · 7 PENDING**.
 
 The confidential station archive contains substantially more usable
 station-side evidence than the earlier one-row derivative screen indicated.
@@ -66,6 +66,16 @@ recovered 11,565 calibration plus 5,205 holdout cycles. The holdout median was
 shift was 1.01%; all frozen screens passed. This is same-site cross-format
 corroboration and does not alter the runtime parameter or repair the missing
 independent station-to-vehicle full-loop validation.
+
+A second pre-frozen holdout used the owner-attested medium and high pressure
+roles to test controller sequencing. It retained 8,106 calibration and 3,664
+holdout drawdown pairs from all 12 matching histories. Holdout pair coverage
+was 70.3939%, 94.3777% of paired events followed the declared medium-to-high
+order, and the median handoff gap was 80 seconds; all frozen eligibility and
+sequence screens passed. This adds same-site support for the medium-to-high
+cascade controller structure. It does not identify individual vehicle fills
+or validate the low bank, dispenser/valve transitions, a complete fill loop,
+an independent site or a safety limit.
 
 The official RHeaDHy public test matrix (DOI 10.5281/zenodo.16992589) is now
 hash-pinned and converted into a trace-level pre-access protocol for the

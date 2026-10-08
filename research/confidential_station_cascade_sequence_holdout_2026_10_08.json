@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_station_cascade_sequence_holdout",
+  "evidence_role": "same_site_medium_high_pressure_sequence_holdout",
+  "ordered_joint_outcomes_seen_before_freeze": false,
+  "source_identifiers_published": false,
+  "source_paths_published": false,
+  "source_filenames_published": false,
+  "source_headers_published": false,
+  "raw_rows_persisted": false,
+  "absolute_timestamps_published": false,
+  "calendar_dates_published": false,
+  "files_read": 12,
+  "reverse_chronological_files": 12,
+  "mixed_order_files": 0,
+  "raw_data_rows": 29361269,
+  "sampled_rows": 2936109,
+  "filtered_rows": 2936037,
+  "rejected_sample_rows": 21,
+  "roles": [
+    "medium_storage_pressure",
+    "high_storage_pressure"
+  ],
+  "cycle_rules": {
+    "sample_stride": 10,
+    "fall_confirmation_mpa": 0.25,
+    "rise_confirmation_mpa": 0.25,
+    "minimum_cycle_drop_mpa": 0.5,
+    "maximum_cycle_drop_mpa": 20.0,
+    "minimum_decline_duration_s": 30.0,
+    "maximum_decline_duration_s": 21600.0,
+    "minimum_pressure_mpa": 10.0,
+    "maximum_pressure_mpa": 100.0,
+    "maximum_sample_gap_s": 120.0,
+    "calibration_fraction": 0.7
+  },
+  "sequence_rules": {
+    "median_window_samples": 7,
+    "minimum_pair_gap_s": -300.0,
+    "maximum_pair_gap_s": 900.0,
+    "minimum_matching_files": 6,
+    "minimum_calibration_pairs": 60,
+    "minimum_holdout_pairs": 24,
+    "minimum_holdout_files": 4,
+    "minimum_holdout_pair_coverage": 0.6,
+    "minimum_holdout_sequential_fraction": 0.9,
+    "maximum_sequential_fraction_shift": 0.1,
+    "maximum_pair_coverage_shift": 0.2
+  },
+  "calibration": {
+    "files_with_pairs": 12,
+    "high_cycle_count": 11565,
+    "paired_episode_count": 8106,
+    "pair_coverage_fraction": 0.700908,
+    "sequential_episode_count": 7673,
+    "sequential_fraction": 0.946583,
+    "handoff_gap_s": {
+      "count": 8106,
+      "p10": -70.0,
+      "median": 80.0,
+      "p90": 460.0
+    },
+    "medium_pressure_drop_mpa": {
+      "count": 8106,
+      "p10": 1.22885,
+      "median": 3.6321,
+      "p90": 5.82775
+    },
+    "high_pressure_drop_mpa": {
+      "count": 8106,
+      "p10": 1.0555,
+      "median": 4.4586,
+      "p90": 8.8174
+    }
+  },
+  "holdout": {
+    "files_with_pairs": 12,
+    "high_cycle_count": 5205,
+    "paired_episode_count": 3664,
+    "pair_coverage_fraction": 0.703939,
+    "sequential_episode_count": 3458,
+    "sequential_fraction": 0.943777,
+    "handoff_gap_s": {
+      "count": 3664,
+      "p10": -80.0,
+      "median": 80.0,
+      "p90": 450.0
+    },
+    "medium_pressure_drop_mpa": {
+      "count": 3664,
+      "p10": 1.19379,
+      "median": 3.51755,
+      "p90": 5.78207
+    },
+    "high_pressure_drop_mpa": {
+      "count": 3664,
+      "p10": 1.08219,
+      "median": 4.5768,
+      "p90": 9.27106
+    }
+  },
+  "metrics": {
+    "pair_coverage_shift": 0.003031,
+    "sequential_fraction_shift": 0.002806
+  },
+  "eligibility": {
+    "minimum_files_met": true,
+    "all_files_have_deterministic_time_order": true,
+    "minimum_calibration_pairs_met": true,
+    "minimum_holdout_pairs_met": true,
+    "minimum_holdout_files_met": true
+  },
+  "screens": {
+    "holdout_pair_coverage_met": true,
+    "holdout_sequential_fraction_met": true,
+    "sequential_fraction_shift_met": true,
+    "pair_coverage_shift_met": true,
+    "holdout_median_gap_inside_calibration_p10_p90": true
+  },
+  "decision": {
+    "medium_to_high_drawdown_sequence_corroborated": true,
+    "cascade_controller_structure_supported": true,
+    "runtime_parameter_application": false,
+    "default_model_parameters_changed": false,
+    "vehicle_fill_validation": false,
+    "full_loop_holdout_eligible": false,
+    "independent_external_validation": false
+  },
+  "claim_boundary": "Same-site medium/high pressure sequence evidence only. Paired pressure drawdowns are compatible with, but do not uniquely prove, a vehicle-fill cascade handoff because vehicle, valve and dispenser states are absent. The result does not validate the low bank, a complete fill, a safety limit, accident frequency or field certification.",
+  "protocol": {
+    "protocol_id": "CONFIDENTIAL-STATION-CASCADE-SEQUENCE-HOLDOUT-001",
+    "protocol_sha256": "d6be30c6f232ac944eb1e696f96aac3fa55dd866b4561b99486e1cade5c6f754",
+    "mapping_sha256": "a60d1dc67572c1e36a510d951b03408fbdf3187ffc5de1b2ea2fdd354531c80a",
+    "frozen_before_ordered_joint_outcome_access": true
+  },
+  "runner_git_commit": "e8f9655"
+}

@@ -2913,6 +2913,78 @@ def _confidential_station_recharge_dynamics_evidence() -> dict[str, Any] | None:
     }
 
 
+def _confidential_cascade_sequence_evidence() -> dict[str, Any] | None:
+    """Expose only the privacy-bounded medium/high sequence holdout."""
+
+    root = Path(__file__).resolve().parents[2]
+    artifact = "research/confidential_station_cascade_sequence_holdout_2026_10_08.json"
+    result_path = root / artifact
+    protocol_path = root / (
+        "research/confidential_station_cascade_sequence_protocol_2026_10_08.json"
+    )
+    try:
+        record = json.loads(result_path.read_text(encoding="utf-8"))
+        calibration = record["calibration"]
+        holdout = record["holdout"]
+        decision = record["decision"]
+        protocol = record["protocol"]
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+    privacy_keys = (
+        "source_identifiers_published",
+        "source_paths_published",
+        "source_filenames_published",
+        "source_headers_published",
+        "raw_rows_persisted",
+        "absolute_timestamps_published",
+        "calendar_dates_published",
+    )
+    try:
+        protocol_hash = sha256(protocol_path.read_bytes()).hexdigest()
+    except OSError:
+        return None
+    if (
+        record.get("artifact_type")
+        != "confidential_station_cascade_sequence_holdout"
+        or not all(record.get(key) is False for key in privacy_keys)
+        or protocol.get("protocol_sha256") != protocol_hash
+        or record.get("files_read") != 12
+        or calibration.get("paired_episode_count") != 8_106
+        or holdout.get("paired_episode_count") != 3_664
+        or decision.get("cascade_controller_structure_supported") is not True
+        or decision.get("runtime_parameter_application") is not False
+        or decision.get("vehicle_fill_validation") is not False
+        or decision.get("full_loop_holdout_eligible") is not False
+        or decision.get("independent_external_validation") is not False
+    ):
+        return None
+    return {
+        "artifact": artifact,
+        "evidence_role": "confidential same-site medium/high pressure sequence holdout",
+        "files_read": record.get("files_read"),
+        "calibration": {
+            key: calibration.get(key)
+            for key in (
+                "high_cycle_count", "paired_episode_count",
+                "pair_coverage_fraction", "sequential_fraction", "handoff_gap_s",
+            )
+        },
+        "holdout": {
+            key: holdout.get(key)
+            for key in (
+                "high_cycle_count", "paired_episode_count",
+                "pair_coverage_fraction", "sequential_fraction", "handoff_gap_s",
+            )
+        },
+        "cascade_controller_structure_supported": True,
+        "runtime_parameter_application": False,
+        "vehicle_fill_validation": False,
+        "full_loop_holdout_eligible": False,
+        "independent_external_validation": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_pressure_channel_evidence() -> dict[str, Any] | None:
     """Expose channel-specific measured envelopes without bank identity."""
 
@@ -4290,6 +4362,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_station_recharge_dynamics_calibration"
         ] = recharge_dynamics
+    cascade_sequence = _confidential_cascade_sequence_evidence()
+    if cascade_sequence is not None:
+        envelope["response_evidence"][
+            "confidential_station_cascade_sequence_holdout"
+        ] = cascade_sequence
     channel_envelopes = _confidential_pressure_channel_evidence()
     if channel_envelopes is not None:
         envelope["response_evidence"][
@@ -4878,6 +4955,21 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if recharge_dynamics.get(key) is not None
         }
+    cascade_sequence = evidence.get(
+        "confidential_station_cascade_sequence_holdout"
+    )
+    if isinstance(cascade_sequence, dict):
+        summary["confidential_station_cascade_sequence_holdout"] = {
+            key: cascade_sequence.get(key)
+            for key in (
+                "evidence_role", "artifact", "files_read", "calibration",
+                "holdout", "cascade_controller_structure_supported",
+                "runtime_parameter_application", "vehicle_fill_validation",
+                "full_loop_holdout_eligible", "independent_external_validation",
+                "claim_limit",
+            )
+            if cascade_sequence.get(key) is not None
+        }
     channel_envelopes = evidence.get("confidential_pressure_channel_envelopes")
     if isinstance(channel_envelopes, dict):
         summary["confidential_pressure_channel_envelopes"] = {
@@ -5135,6 +5227,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     multisource = response.get("confidential_multisource_mapping_feasibility") or {}
     thermal_observation = response.get("temperature_observation_semantic_boundary") or {}
     station_thermal = response.get("confidential_station_thermal_dynamics") or {}
+    cascade_sequence = response.get(
+        "confidential_station_cascade_sequence_holdout"
+    ) or {}
     spatial_stratification = response.get(
         "public_actual_hydrogen_spatial_stratification_evidence"
     ) or {}
@@ -5160,6 +5255,13 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "충전", "프로토콜", "통신", "유량", "압력", "온도", "soc",
             "j2601", "hgv", "abort", "halt", "crc", "fuel", "flow",
             "communication", "pressure", "temperature",
+        ))
+    )
+    cascade_sequence_relevant = bool(
+        cascade_sequence
+        and any(token in detector_context for token in (
+            "캐스케이드", "중압", "고압", "뱅크 순서", "재충전",
+            "cascade", "bank sequence", "recharge",
         ))
     )
 
@@ -5314,6 +5416,37 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "station_component_thermal_envelope_supported"
                 ) is True,
             },
+            **({
+                "station_cascade_sequence": {
+                    "claim_supported": cascade_sequence.get(
+                        "cascade_controller_structure_supported"
+                    ) is True,
+                    "files_read": cascade_sequence.get("files_read"),
+                    "calibration_pairs": (
+                        cascade_sequence.get("calibration") or {}
+                    ).get("paired_episode_count"),
+                    "holdout_pairs": (
+                        cascade_sequence.get("holdout") or {}
+                    ).get("paired_episode_count"),
+                    "holdout_pair_coverage": (
+                        cascade_sequence.get("holdout") or {}
+                    ).get("pair_coverage_fraction"),
+                    "holdout_sequential_fraction": (
+                        cascade_sequence.get("holdout") or {}
+                    ).get("sequential_fraction"),
+                    "median_handoff_gap_s": (
+                        ((cascade_sequence.get("holdout") or {}).get(
+                            "handoff_gap_s"
+                        ) or {}).get("median")
+                    ),
+                    "vehicle_fill_validation": cascade_sequence.get(
+                        "vehicle_fill_validation"
+                    ) is True,
+                    "full_loop": cascade_sequence.get(
+                        "full_loop_holdout_eligible"
+                    ) is True,
+                },
+            } if cascade_sequence_relevant else {}),
             "source_depletion": {
                 "claim_supported": preslhy_holdout.get("claim_supported") is True,
                 "joint_primary_pass_fraction": preslhy_holdout.get(
@@ -5456,6 +5589,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     station_calibration = evidence.get("confidential_station_boundary_calibration") or {}
     recharge_dynamics = evidence.get(
         "confidential_station_recharge_dynamics_calibration"
+    ) or {}
+    cascade_sequence = evidence.get(
+        "confidential_station_cascade_sequence_holdout"
     ) or {}
     channel_envelopes = evidence.get(
         "confidential_pressure_channel_envelopes"
@@ -6100,6 +6236,28 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "full_station_vehicle_validation"
             ) is True,
             "claim_limit": recharge_dynamics.get("claim_limit"),
+        },
+        "confidential_station_cascade_sequence_holdout": {
+            "evidence_artifact": cascade_sequence.get("artifact"),
+            "files_read": cascade_sequence.get("files_read"),
+            "calibration": cascade_sequence.get("calibration") or {},
+            "holdout": cascade_sequence.get("holdout") or {},
+            "cascade_controller_structure_supported": cascade_sequence.get(
+                "cascade_controller_structure_supported"
+            ) is True,
+            "runtime_parameter_application": cascade_sequence.get(
+                "runtime_parameter_application"
+            ) is True,
+            "vehicle_fill_validation": cascade_sequence.get(
+                "vehicle_fill_validation"
+            ) is True,
+            "full_loop_holdout_eligible": cascade_sequence.get(
+                "full_loop_holdout_eligible"
+            ) is True,
+            "independent_external_validation": cascade_sequence.get(
+                "independent_external_validation"
+            ) is True,
+            "claim_limit": cascade_sequence.get("claim_limit"),
         },
         "confidential_pressure_channel_envelopes": {
             "artifact": channel_envelopes.get("artifact"),
