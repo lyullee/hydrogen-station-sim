@@ -319,6 +319,19 @@ def validate_station_thermal_temporal_stability(
         stride=stride,
         max_rows_per_file=max_rows_per_file,
     )
+    return _temporal_stability_result(
+        source,
+        calibration_fraction=calibration_fraction,
+        minimum_holdout_rows=minimum_holdout_rows,
+    )
+
+
+def _temporal_stability_result(
+    source: Mapping[Path, list[tuple[float, bool, dict[str, float]]]],
+    *,
+    calibration_fraction: float,
+    minimum_holdout_rows: int,
+) -> StationThermalStabilityResult:
     calibration_rows: dict[Path, list[tuple[float, bool, dict[str, float]]]] = {}
     holdout_rows: dict[Path, list[tuple[float, bool, dict[str, float]]]] = {}
     for path, rows in source.items():
@@ -371,10 +384,110 @@ def validate_station_thermal_temporal_stability(
     )
 
 
+def diagnose_unattested_station_thermal_stability(
+    input_path: Path,
+    mapping: TraceMapping,
+    *,
+    cooling_state_role: str,
+    cooling_active_state_values: Iterable[str],
+    component_by_temperature_role: Mapping[str, str],
+    calibration_fraction: float = 0.70,
+    minimum_holdout_rows: int = 100,
+    stride: int = 1,
+    max_rows_per_file: int | None = 250_000,
+) -> dict[str, object]:
+    """Run the frozen method while retaining an explicit semantics hold.
+
+    This path exists for post-access diagnostics when a proposed external
+    mapping is available but the custodian has not attested channel roles,
+    units, state values, or calibration.  It can establish numerical
+    stability of the hypothesis only and never promotes runtime parameters.
+    """
+
+    if not 0.50 <= calibration_fraction < 0.90:
+        raise ValueError("calibration_fraction must be in [0.50, 0.90)")
+    if minimum_holdout_rows < 1:
+        raise ValueError("minimum_holdout_rows must be positive")
+    if stride < 1:
+        raise ValueError("stride must be at least one")
+    if cooling_state_role not in dict(mapping.state_columns):
+        raise ValueError("cooling_state_role must be present in mapping.state_columns")
+    active = {_state(value) for value in cooling_active_state_values if _state(value)}
+    if not active:
+        raise ValueError("at least one active cooling-state value is required")
+    roles = _validated_roles(mapping, component_by_temperature_role)
+    result = _temporal_stability_result(
+        _observations(
+            input_path,
+            mapping,
+            component_roles=roles,
+            cooling_state_role=cooling_state_role,
+            cooling_active_values=active,
+            stride=stride,
+            max_rows_per_file=max_rows_per_file,
+        ),
+        calibration_fraction=calibration_fraction,
+        minimum_holdout_rows=minimum_holdout_rows,
+    )
+    temporal = result.to_public_dict()
+    temporal["claim_boundary"] = (
+        "Within-record stability of an unattested mapping hypothesis only; "
+        "it is not an independent, attested, or runtime validation result."
+    )
+    for partition in ("calibration", "holdout"):
+        temporal[partition]["claim_boundary"] = (
+            "Unattested station-side thermal hypothesis only. Channel roles, "
+            "units, state semantics and calibration remain unconfirmed."
+        )
+    return {
+        "schema_version": 1,
+        "artifact_type": "confidential_station_thermal_hypothesis_diagnostic",
+        "status": "completed_unattested_post_access_diagnostic",
+        "analysis_method": "frozen_chronological_prefix_suffix_envelope",
+        "privacy": {
+            "source_identifiers_published": False,
+            "source_paths_published": False,
+            "filenames_published": False,
+            "tag_names_published": False,
+            "raw_rows_persisted": False,
+            "exact_timestamps_published": False,
+            "manufacturer_or_model_published": False,
+        },
+        "mapping_semantics": {
+            "temperature_roles_and_units_attested": False,
+            "cooling_state_value_semantics_attested": False,
+            "calibration_or_quality_metadata_attested": False,
+            "mapping_is_hypothesis": True,
+        },
+        "temporal_stability": temporal,
+        "eligibility": {
+            "conditional_within_record_stability_observed": result.stability_supported,
+            "station_component_thermal_envelope_supported": False,
+            "runtime_parameter_application": False,
+            "vehicle_fill_thermal_validation": False,
+            "full_station_vehicle_validation": False,
+            "full_loop_holdout_eligible": False,
+            "independent_holdout": False,
+            "default_model_parameters_changed": False,
+        },
+        "next_action": (
+            "A data custodian must attest the generic temperature roles and units, "
+            "cooling-state value semantics and calibration/quality metadata before "
+            "this result can support a station component thermal envelope."
+        ),
+        "claim_boundary": (
+            "Frozen-method numerical diagnostic of an unattested station-side mapping "
+            "only. It cannot validate vehicle filling, precooler capacity, a safety "
+            "limit, consequence distance, or the complete station loop."
+        ),
+    }
+
+
 __all__ = [
     "ComponentTemperatureSummary",
     "StationThermalDiagnosticSummary",
     "StationThermalStabilityResult",
+    "diagnose_unattested_station_thermal_stability",
     "summarize_station_thermal_dynamics",
     "validate_station_thermal_temporal_stability",
 ]

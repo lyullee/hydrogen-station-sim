@@ -1587,6 +1587,98 @@ def audit(root: Path) -> dict[str, object]:
         } if recharge_flow else "missing",
     ))
 
+    thermal_protocol_path = root / (
+        "research/confidential_station_thermal_dynamics_protocol_2026_10_08.json"
+    )
+    thermal_hypothesis_path = root / (
+        "research/confidential_station_thermal_hypothesis_2026_10_08.json"
+    )
+    thermal_protocol = _json(thermal_protocol_path)
+    thermal_hypothesis = _json(thermal_hypothesis_path)
+    thermal_privacy = (thermal_hypothesis or {}).get("privacy") or {}
+    thermal_semantics = (thermal_hypothesis or {}).get("mapping_semantics") or {}
+    thermal_stability = (thermal_hypothesis or {}).get("temporal_stability") or {}
+    thermal_calibration = thermal_stability.get("calibration") or {}
+    thermal_holdout = thermal_stability.get("holdout") or {}
+    thermal_eligibility = (thermal_hypothesis or {}).get("eligibility") or {}
+    thermal_protocol_record = (thermal_hypothesis or {}).get("protocol") or {}
+    thermal_hypothesis_pass = bool(
+        (thermal_protocol or {}).get("status")
+        == "frozen_awaiting_custodian_attestation"
+        and (thermal_hypothesis or {}).get("schema_version") == 1
+        and (thermal_hypothesis or {}).get("artifact_type")
+        == "confidential_station_thermal_hypothesis_diagnostic"
+        and (thermal_hypothesis or {}).get("status")
+        == "completed_unattested_post_access_diagnostic"
+        and len(thermal_privacy) == 7
+        and all(value is False for value in thermal_privacy.values())
+        and thermal_semantics.get("temperature_roles_and_units_attested") is False
+        and thermal_semantics.get("cooling_state_value_semantics_attested") is False
+        and thermal_semantics.get("calibration_or_quality_metadata_attested") is False
+        and thermal_semantics.get("mapping_is_hypothesis") is True
+        and thermal_protocol_record.get("protocol_sha256")
+        == _sha256(thermal_protocol_path)
+        and thermal_protocol_record.get(
+            "frozen_before_numerical_outcome_access"
+        ) is True
+        and thermal_protocol_record.get("attestation_pending_at_execution") is True
+        and thermal_calibration.get("sampled_rows") == 457_405
+        and thermal_holdout.get("sampled_rows") == 196_037
+        and thermal_calibration.get("median_sample_period_s") == 1.0
+        and thermal_holdout.get("median_sample_period_s") == 1.0
+        and thermal_calibration.get("quality_warnings") == []
+        and thermal_holdout.get("quality_warnings") == []
+        and all(
+            thermal_stability.get(
+                "component_medians_inside_calibration_p05_p95", {}
+            ).values()
+        )
+        and thermal_stability.get(
+            "cooler_active_drop_median_inside_calibration_p05_p95"
+        ) is True
+        and thermal_stability.get("minimum_holdout_rows_met") is True
+        and thermal_stability.get("stability_supported") is True
+        and thermal_eligibility.get(
+            "conditional_within_record_stability_observed"
+        ) is True
+        and thermal_eligibility.get(
+            "station_component_thermal_envelope_supported"
+        ) is False
+        and thermal_eligibility.get("runtime_parameter_application") is False
+        and thermal_eligibility.get("vehicle_fill_thermal_validation") is False
+        and thermal_eligibility.get("full_station_vehicle_validation") is False
+        and thermal_eligibility.get("full_loop_holdout_eligible") is False
+        and thermal_eligibility.get("independent_holdout") is False
+        and thermal_eligibility.get("default_model_parameters_changed") is False
+    )
+    gates.append(_gate(
+        "confidential_station_thermal_hypothesis_integrity",
+        "PASS" if thermal_hypothesis_pass else (
+            "FAIL" if thermal_hypothesis else "PENDING"
+        ),
+        "The frozen compressor/cooler mapping hypothesis is chronologically stable while all unattested semantics and promotion holds remain explicit.",
+        f"{thermal_protocol_path.relative_to(root)}; {thermal_hypothesis_path.relative_to(root)}",
+        "Frozen protocol hash, eight one-second equipment traces, all four stability screens, no quality warnings, and false runtime/vehicle/full-loop eligibility.",
+        {
+            "protocol_hash_matches": thermal_protocol_record.get("protocol_sha256")
+            == _sha256(thermal_protocol_path),
+            "calibration_rows": thermal_calibration.get("sampled_rows"),
+            "holdout_rows": thermal_holdout.get("sampled_rows"),
+            "component_checks": thermal_stability.get(
+                "component_medians_inside_calibration_p05_p95"
+            ),
+            "cooler_drop_check": thermal_stability.get(
+                "cooler_active_drop_median_inside_calibration_p05_p95"
+            ),
+            "quality_warnings": {
+                "calibration": thermal_calibration.get("quality_warnings"),
+                "holdout": thermal_holdout.get("quality_warnings"),
+            },
+            "mapping_semantics": thermal_semantics,
+            "eligibility": thermal_eligibility,
+        } if thermal_hypothesis else "missing",
+    ))
+
     external_loop_path = root / "data/public_validation/results/closed_loop_external_holdout/validation.json"
     external_loop = _json(external_loop_path)
     external_protocol_path = root / "research/mc_default_external_holdout_protocol.json"

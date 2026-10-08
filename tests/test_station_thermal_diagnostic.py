@@ -7,6 +7,7 @@ import pytest
 
 from h2station.controlled_station_replay import TraceMapping
 from h2station.station_thermal_diagnostic import (
+    diagnose_unattested_station_thermal_stability,
     summarize_station_thermal_dynamics,
     validate_station_thermal_temporal_stability,
 )
@@ -92,3 +93,32 @@ def test_temporal_stability_uses_suffix_without_exporting_rows(tmp_path: Path):
     assert result.cooler_active_drop_median_inside_calibration_p05_p95 is True
     assert result.stability_supported is True
     assert result.to_public_dict()["claim_boundary"].startswith("Within-record")
+
+
+def test_unattested_thermal_hypothesis_retains_promotion_hold(tmp_path: Path):
+    trace = tmp_path / "private-site-and-date.csv"
+    _trace(trace, rows=200)
+
+    result = diagnose_unattested_station_thermal_stability(
+        trace,
+        _mapping(),
+        cooling_state_role="cooling_run",
+        cooling_active_state_values=("1",),
+        component_by_temperature_role={
+            "compressor_temperature": "compressor",
+            "cooler_inlet_temperature": "cooler_inlet",
+            "cooler_outlet_temperature": "cooler_outlet",
+        },
+        minimum_holdout_rows=50,
+    )
+    encoded = json.dumps(result)
+
+    assert result["temporal_stability"]["stability_supported"] is True
+    assert result["mapping_semantics"]["mapping_is_hypothesis"] is True
+    assert result["eligibility"][
+        "station_component_thermal_envelope_supported"
+    ] is False
+    assert result["eligibility"]["runtime_parameter_application"] is False
+    assert result["eligibility"]["full_station_vehicle_validation"] is False
+    assert "secret_comp" not in encoded
+    assert "private-site-and-date" not in encoded

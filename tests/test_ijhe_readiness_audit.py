@@ -625,6 +625,20 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert recharge_observed["eligibility"][
         "full_station_vehicle_validation"
     ] is False
+
+    thermal = gates["confidential_station_thermal_hypothesis_integrity"]
+    assert thermal["status"] == "PASS"
+    thermal_observed = thermal["observed"]
+    assert thermal_observed["protocol_hash_matches"] is True
+    assert thermal_observed["calibration_rows"] == 457_405
+    assert thermal_observed["holdout_rows"] == 196_037
+    assert all(thermal_observed["component_checks"].values())
+    assert thermal_observed["cooler_drop_check"] is True
+    assert thermal_observed["mapping_semantics"]["mapping_is_hypothesis"] is True
+    assert thermal_observed["eligibility"][
+        "station_component_thermal_envelope_supported"
+    ] is False
+    assert thermal_observed["eligibility"]["runtime_parameter_application"] is False
     assert schema["flat_time_axis_candidate_summary"]["candidate_groups"] == 4
     assert schema["flat_time_axis_candidate_summary"][
         "tables_in_candidate_groups"

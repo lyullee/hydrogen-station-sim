@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **113 PASS · 10 FAIL · 7 PENDING**.
+Gate counts: **114 PASS · 10 FAIL · 7 PENDING**.
 
 The confidential station archive contains substantially more usable
 station-side evidence than the earlier one-row derivative screen indicated.
@@ -37,6 +37,14 @@ intervals from 567,847 equipment rows. Their conditional flow range was
 compressor prediction of 8.689 g/s fell inside it. This adds conditional face
 validity for the reference compressor flow without fitting a runtime multiplier;
 the channel-unit and calibration attestation hold remains explicit.
+
+The pre-frozen compressor/cooler thermal method was also run over 653,442
+one-second confidential equipment rows as an explicitly unattested mapping
+hypothesis. Every component median and the cooling-active temperature-drop
+median passed the chronological 70/30 stability screens without quality
+warnings. This adds method-integrity evidence while leaving thermal-envelope,
+runtime, vehicle-fill and full-loop promotion disabled until custodian
+attestation is recorded.
 
 The official RHeaDHy public test matrix (DOI 10.5281/zenodo.16992589) is now
 hash-pinned and converted into a trace-level pre-access protocol for the

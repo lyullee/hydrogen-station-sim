@@ -23,7 +23,13 @@
   first-principles reference prediction of 8.689 g/s falls inside it. The
   runtime multiplier remains locked because flow units and calibration are not
   attested.
-- The complete regression suite passed after this update: 1,036 tests with no
+- Executed the pre-frozen 70/30 compressor/cooler thermal method as an explicit
+  unattested mapping-hypothesis diagnostic over 653,442 one-second rows. All
+  three component medians and the cooling-active temperature-drop median passed
+  the frozen within-record stability screens, with no quality warning. Runtime
+  and thermal-validation promotion remain disabled pending custodian
+  attestation.
+- The complete regression suite passed after this update: 1,037 tests with no
   failures.
 - Re-ran the built-in LaTeX compiler for the exact current IJHE draft. The host
   still reports `Unable to find standard directories for platform`, so the

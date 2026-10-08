@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T12:52:27.184331+00:00",
+  "generated_at": "2026-10-08T13:01:49.793775+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 113,
+    "PASS": 114,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -1125,6 +1125,44 @@
           "vehicle_fill_validation": false,
           "full_station_vehicle_validation": false,
           "independent_holdout": false
+        }
+      }
+    },
+    {
+      "id": "confidential_station_thermal_hypothesis_integrity",
+      "status": "PASS",
+      "claim": "The frozen compressor/cooler mapping hypothesis is chronologically stable while all unattested semantics and promotion holds remain explicit.",
+      "evidence": "research\\confidential_station_thermal_dynamics_protocol_2026_10_08.json; research\\confidential_station_thermal_hypothesis_2026_10_08.json",
+      "requirement": "Frozen protocol hash, eight one-second equipment traces, all four stability screens, no quality warnings, and false runtime/vehicle/full-loop eligibility.",
+      "observed": {
+        "protocol_hash_matches": true,
+        "calibration_rows": 457405,
+        "holdout_rows": 196037,
+        "component_checks": {
+          "compressor": true,
+          "cooler_inlet": true,
+          "cooler_outlet": true
+        },
+        "cooler_drop_check": true,
+        "quality_warnings": {
+          "calibration": [],
+          "holdout": []
+        },
+        "mapping_semantics": {
+          "temperature_roles_and_units_attested": false,
+          "cooling_state_value_semantics_attested": false,
+          "calibration_or_quality_metadata_attested": false,
+          "mapping_is_hypothesis": true
+        },
+        "eligibility": {
+          "conditional_within_record_stability_observed": true,
+          "station_component_thermal_envelope_supported": false,
+          "runtime_parameter_application": false,
+          "vehicle_fill_thermal_validation": false,
+          "full_station_vehicle_validation": false,
+          "full_loop_holdout_eligible": false,
+          "independent_holdout": false,
+          "default_model_parameters_changed": false
         }
       }
     },

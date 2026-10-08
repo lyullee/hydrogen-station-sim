@@ -1,0 +1,232 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_station_thermal_hypothesis_diagnostic",
+  "status": "completed_unattested_post_access_diagnostic",
+  "analysis_method": "frozen_chronological_prefix_suffix_envelope",
+  "privacy": {
+    "source_identifiers_published": false,
+    "source_paths_published": false,
+    "filenames_published": false,
+    "tag_names_published": false,
+    "raw_rows_persisted": false,
+    "exact_timestamps_published": false,
+    "manufacturer_or_model_published": false
+  },
+  "mapping_semantics": {
+    "temperature_roles_and_units_attested": false,
+    "cooling_state_value_semantics_attested": false,
+    "calibration_or_quality_metadata_attested": false,
+    "mapping_is_hypothesis": true
+  },
+  "temporal_stability": {
+    "method": "chronological_within_trace_envelope_stability",
+    "calibration_fraction": 0.7,
+    "calibration": {
+      "schema_version": 1,
+      "raw_rows_persisted": false,
+      "source_identifiers_published": false,
+      "absolute_timestamps_published": false,
+      "files_read": 8,
+      "sampled_rows": 457405,
+      "median_sample_period_s": 1.0,
+      "cooling_state_transition_count": 7,
+      "cooling_active_duty_cycle": 0.435254,
+      "component_temperatures": [
+        {
+          "component": "compressor",
+          "overall_degC": {
+            "count": 457405,
+            "p05": 26.9,
+            "median": 32.1,
+            "p95": 37.4
+          },
+          "cooling_active_degC": {
+            "count": 199091,
+            "p05": 24.7,
+            "median": 31.7,
+            "p95": 35.9
+          },
+          "cooling_inactive_degC": {
+            "count": 258314,
+            "p05": 27.7,
+            "median": 32.5,
+            "p95": 37.9
+          }
+        },
+        {
+          "component": "cooler_inlet",
+          "overall_degC": {
+            "count": 457405,
+            "p05": -34.2,
+            "median": -2.7,
+            "p95": 15.9
+          },
+          "cooling_active_degC": {
+            "count": 199091,
+            "p05": -34.4,
+            "median": -32.8,
+            "p95": -25.1
+          },
+          "cooling_inactive_degC": {
+            "count": 258314,
+            "p05": -4.2,
+            "median": 2.3,
+            "p95": 21.7
+          }
+        },
+        {
+          "component": "cooler_outlet",
+          "overall_degC": {
+            "count": 457405,
+            "p05": -37.2,
+            "median": -6.4,
+            "p95": 13.4
+          },
+          "cooling_active_degC": {
+            "count": 199091,
+            "p05": -38.1,
+            "median": -33.7,
+            "p95": -31.9
+          },
+          "cooling_inactive_degC": {
+            "count": 258314,
+            "p05": -8.3,
+            "median": -1.0,
+            "p95": 20.6
+          }
+        }
+      ],
+      "cooler_temperature_drop_active_degC": {
+        "count": 199091,
+        "p05": -1.6,
+        "median": 1.1,
+        "p95": 11.1
+      },
+      "cooler_temperature_drop_inactive_degC": {
+        "count": 258314,
+        "p05": 0.3,
+        "median": 2.6,
+        "p95": 4.8
+      },
+      "quality_warnings": [],
+      "claim_boundary": "Unattested station-side thermal hypothesis only. Channel roles, units, state semantics and calibration remain unconfirmed."
+    },
+    "holdout": {
+      "schema_version": 1,
+      "raw_rows_persisted": false,
+      "source_identifiers_published": false,
+      "absolute_timestamps_published": false,
+      "files_read": 8,
+      "sampled_rows": 196037,
+      "median_sample_period_s": 1.0,
+      "cooling_state_transition_count": 6,
+      "cooling_active_duty_cycle": 0.391784,
+      "component_temperatures": [
+        {
+          "component": "compressor",
+          "overall_degC": {
+            "count": 196037,
+            "p05": 28.5,
+            "median": 34.2,
+            "p95": 37.8
+          },
+          "cooling_active_degC": {
+            "count": 76802,
+            "p05": 27.4,
+            "median": 31.5,
+            "p95": 35.4
+          },
+          "cooling_inactive_degC": {
+            "count": 119235,
+            "p05": 31.6,
+            "median": 35.4,
+            "p95": 38.0
+          }
+        },
+        {
+          "component": "cooler_inlet",
+          "overall_degC": {
+            "count": 196037,
+            "p05": -34.1,
+            "median": -11.9,
+            "p95": 21.5
+          },
+          "cooling_active_degC": {
+            "count": 76802,
+            "p05": -34.3,
+            "median": -32.8,
+            "p95": -25.6
+          },
+          "cooling_inactive_degC": {
+            "count": 119235,
+            "p05": -19.6,
+            "median": -5.3,
+            "p95": 23.6
+          }
+        },
+        {
+          "component": "cooler_outlet",
+          "overall_degC": {
+            "count": 196037,
+            "p05": -36.9,
+            "median": -12.0,
+            "p95": 21.4
+          },
+          "cooling_active_degC": {
+            "count": 76802,
+            "p05": -37.6,
+            "median": -33.3,
+            "p95": -31.9
+          },
+          "cooling_inactive_degC": {
+            "count": 119235,
+            "p05": -21.4,
+            "median": -5.2,
+            "p95": 23.4
+          }
+        }
+      ],
+      "cooler_temperature_drop_active_degC": {
+        "count": 76802,
+        "p05": -1.6,
+        "median": 0.5,
+        "p95": 10.0
+      },
+      "cooler_temperature_drop_inactive_degC": {
+        "count": 119235,
+        "p05": -4.9,
+        "median": 0.5,
+        "p95": 7.4
+      },
+      "quality_warnings": [],
+      "claim_boundary": "Unattested station-side thermal hypothesis only. Channel roles, units, state semantics and calibration remain unconfirmed."
+    },
+    "component_medians_inside_calibration_p05_p95": {
+      "compressor": true,
+      "cooler_inlet": true,
+      "cooler_outlet": true
+    },
+    "cooler_active_drop_median_inside_calibration_p05_p95": true,
+    "minimum_holdout_rows_met": true,
+    "stability_supported": true,
+    "claim_boundary": "Within-record stability of an unattested mapping hypothesis only; it is not an independent, attested, or runtime validation result."
+  },
+  "eligibility": {
+    "conditional_within_record_stability_observed": true,
+    "station_component_thermal_envelope_supported": false,
+    "runtime_parameter_application": false,
+    "vehicle_fill_thermal_validation": false,
+    "full_station_vehicle_validation": false,
+    "full_loop_holdout_eligible": false,
+    "independent_holdout": false,
+    "default_model_parameters_changed": false
+  },
+  "next_action": "A data custodian must attest the generic temperature roles and units, cooling-state value semantics and calibration/quality metadata before this result can support a station component thermal envelope.",
+  "claim_boundary": "Frozen-method numerical diagnostic of an unattested station-side mapping only. It cannot validate vehicle filling, precooler capacity, a safety limit, consequence distance, or the complete station loop.",
+  "protocol": {
+    "protocol_id": "CONFIDENTIAL-STATION-THERMAL-DYNAMICS-001",
+    "protocol_sha256": "8189720bcdbb5ea40fcf1eb88f92d20c7366da7d0df6a294ad0b3ce3517bcbd4",
+    "frozen_before_numerical_outcome_access": true,
+    "attestation_pending_at_execution": true
+  }
+}

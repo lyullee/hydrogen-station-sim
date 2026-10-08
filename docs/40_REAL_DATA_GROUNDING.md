@@ -78,6 +78,17 @@ recorded in `confidential_station_recharge_flow_screen_2026_10_08.json` as
 conditional face validity only; it cannot fit capacity until units and
 calibration are attested and cannot validate a vehicle fill.
 
+The previously frozen station thermal method was also executed as an explicitly
+unattested mapping-hypothesis diagnostic. Eight equipment logs supplied 653,442
+one-second rows. All compressor, cooling-inlet and cooling-outlet medians in the
+30% chronological suffix stayed inside their 70% prefix p05--p95 envelopes; the
+cooling-active temperature-drop median also stayed inside its prefix envelope,
+and neither partition raised a quality warning. The result is recorded in
+`confidential_station_thermal_hypothesis_2026_10_08.json`. Because the generic
+temperature roles, units, cooling-state value and calibration metadata remain
+unattested, this supports numerical stability of the mapping hypothesis only:
+no runtime temperature, precooler parameter or thermal validation claim changes.
+
 An additional owner-controlled media drop was screened on 2026-10. It contains
 equipment photographs and screen recordings of an Excel/SCADA-style logger.
 Those recordings are valuable provenance and may reveal candidate tag families,
