@@ -3673,12 +3673,20 @@ def audit(root: Path) -> dict[str, object]:
 
     wsk_protocol_path = root / "research/wskbij_large_scale_overpressure_rank_protocol_2026_10_08.json"
     wsk_result_path = root / "research/wskbij_large_scale_overpressure_rank_result_2026_10_08.json"
+    wsk_apparatus_path = root / "research/wskbij_apparatus_metadata_audit_2026_10_08.json"
+    wsk_contract_path = root / "research/wskbij_apparatus_input_contract.schema.json"
     wsk_protocol = _json(wsk_protocol_path)
     wsk_result = _json(wsk_result_path)
+    wsk_apparatus = _json(wsk_apparatus_path)
+    wsk_contract = _json(wsk_contract_path)
     wsk_freeze = (wsk_result or {}).get("freeze_integrity") or {}
     wsk_cohort = (wsk_result or {}).get("cohort") or {}
     wsk_metrics = (wsk_result or {}).get("primary_metrics") or {}
     wsk_screens = (wsk_result or {}).get("primary_screens") or {}
+    wsk_eligibility = (wsk_apparatus or {}).get("eligibility") or {}
+    wsk_missing = ((wsk_apparatus or {}).get("metadata_inventory") or {}).get(
+        "required_but_missing"
+    ) or []
     wsk_integrity_pass = bool(
         (wsk_protocol or {}).get("protocol_id")
         == "wskbij_actual_h2_large_scale_overpressure_rank_v1"
@@ -3703,14 +3711,23 @@ def audit(root: Path) -> dict[str, object]:
         and wsk_screens.get("within_stratum_pairwise_order_concordance", {}).get("pass") is False
         and wsk_screens.get("within_stratum_top_third_recall", {}).get("pass") is False
         and wsk_screens.get("scored_case_count", {}).get("pass") is True
+        and (wsk_apparatus or {}).get("decision")
+        == "INSUFFICIENT_PUBLIC_METADATA_FOR_APPARATUS_AWARE_MODEL"
+        and wsk_eligibility.get("apparatus_aware_rank_model") is False
+        and wsk_eligibility.get("absolute_overpressure_model") is False
+        and wsk_eligibility.get("sensor_distance_attenuation_model") is False
+        and len(wsk_missing) >= 10
+        and (wsk_contract or {}).get("properties", {}).get("dataset_doi", {}).get("const")
+        == "10.18710/WSKBIJ"
         and bool((wsk_result or {}).get("claim_boundary"))
+        and bool((wsk_apparatus or {}).get("claim_boundary"))
     )
     gates.append(_gate(
         "wskbij_large_scale_overpressure_rank_execution_integrity",
         "PASS" if wsk_integrity_pass else ("FAIL" if wsk_result else "PENDING"),
         "The frozen 44-case actual-hydrogen rank screen is executed and its negative geometry-controlled result is retained without post-access tuning.",
-        f"{wsk_protocol_path.relative_to(root)}; {wsk_result_path.relative_to(root)}",
-        "Protocol hash linkage, publisher workbook identity, locked model hashes, 44 scored cases in six strata, all frozen screens and explicit retained FAIL decision.",
+        f"{wsk_protocol_path.relative_to(root)}; {wsk_result_path.relative_to(root)}; {wsk_apparatus_path.relative_to(root)}; {wsk_contract_path.relative_to(root)}",
+        "Protocol hash linkage, publisher workbook identity, locked model hashes, 44 scored cases in six strata, retained FAIL decision and a fail-closed apparatus metadata contract.",
         {
             "dataset_doi": ((wsk_result or {}).get("source") or {}).get("dataset_doi"),
             "decision": (wsk_result or {}).get("decision"),
@@ -3722,6 +3739,11 @@ def audit(root: Path) -> dict[str, object]:
             "top_third_recall": wsk_metrics.get("within_stratum_top_third_recall"),
             "model_validation_pass": (wsk_result or {}).get("decision") == "PASS",
             "runtime_parameter_updated": wsk_freeze.get("runtime_parameter_updated"),
+            "apparatus_aware_model_eligible": wsk_eligibility.get("apparatus_aware_rank_model"),
+            "absolute_overpressure_model_eligible": wsk_eligibility.get("absolute_overpressure_model"),
+            "missing_apparatus_field_count": len(wsk_missing),
+            "apparatus_metadata_decision": (wsk_apparatus or {}).get("decision"),
+            "raw_schema_campaign_count": len((wsk_apparatus or {}).get("observed_raw_schemas") or {}),
             "claim_boundary": (wsk_result or {}).get("claim_boundary"),
         } if wsk_result else "missing; WSKBIJ large-scale rank screen has not run",
     ))

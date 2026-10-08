@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/lyullee/hydrogen-station-sim/research/wskbij_apparatus_input_contract.schema.json",
+  "title": "WSKBIJ apparatus-resolved overpressure input contract",
+  "description": "Minimum publisher-authenticated geometry and boundary-state metadata required before an apparatus-aware WSKBIJ model comparison may be called validation.",
+  "type": "object",
+  "required": [
+    "dataset_doi",
+    "coordinate_system",
+    "pressure_sensor_layout",
+    "cases",
+    "provenance"
+  ],
+  "properties": {
+    "dataset_doi": {
+      "const": "10.18710/WSKBIJ"
+    },
+    "coordinate_system": {
+      "type": "object",
+      "required": ["origin", "x_axis", "y_axis", "z_axis", "length_unit"],
+      "properties": {
+        "origin": {"type": "string", "minLength": 1},
+        "x_axis": {"type": "string", "minLength": 1},
+        "y_axis": {"type": "string", "minLength": 1},
+        "z_axis": {"type": "string", "minLength": 1},
+        "length_unit": {"const": "m"}
+      },
+      "additionalProperties": false
+    },
+    "pressure_sensor_layout": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {"$ref": "#/$defs/locatedSensor"}
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/case"}
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["publisher_source", "retrieved_at", "authenticated_by_publisher"],
+      "properties": {
+        "publisher_source": {"type": "string", "format": "uri"},
+        "retrieved_at": {"type": "string", "format": "date-time"},
+        "authenticated_by_publisher": {"const": true}
+      },
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "point": {
+      "type": "object",
+      "required": ["x_m", "y_m", "z_m"],
+      "properties": {
+        "x_m": {"type": "number"},
+        "y_m": {"type": "number"},
+        "z_m": {"type": "number"}
+      },
+      "additionalProperties": false
+    },
+    "locatedSensor": {
+      "type": "object",
+      "required": ["tag", "location"],
+      "properties": {
+        "tag": {"enum": ["P01", "P02", "P03", "P04"]},
+        "location": {"$ref": "#/$defs/point"}
+      },
+      "additionalProperties": false
+    },
+    "obstacle": {
+      "type": "object",
+      "required": ["kind", "location", "dimensions_m", "blockage_ratio"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "location": {"$ref": "#/$defs/point"},
+        "dimensions_m": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {"type": "number", "exclusiveMinimum": 0}
+        },
+        "blockage_ratio": {"type": "number", "minimum": 0, "maximum": 1}
+      },
+      "additionalProperties": true
+    },
+    "ambient": {
+      "type": "object",
+      "required": ["temperature_k", "pressure_pa", "wind_speed_m_s", "wind_direction_deg"],
+      "properties": {
+        "temperature_k": {"type": "number", "exclusiveMinimum": 0},
+        "pressure_pa": {"type": "number", "exclusiveMinimum": 0},
+        "wind_speed_m_s": {"type": "number", "minimum": 0},
+        "wind_direction_deg": {"type": "number", "minimum": 0, "exclusiveMaximum": 360}
+      },
+      "additionalProperties": true
+    },
+    "case": {
+      "type": "object",
+      "required": [
+        "experiment",
+        "configuration",
+        "nozzle_diameter_mm",
+        "reservoir_pressure_bar_g",
+        "release_origin",
+        "release_direction_unit_vector",
+        "ignition",
+        "obstacles",
+        "ambient"
+      ],
+      "properties": {
+        "experiment": {"type": "integer", "minimum": 1, "maximum": 51},
+        "configuration": {"enum": ["obstructed", "unobstructed"]},
+        "nozzle_diameter_mm": {"type": "number", "exclusiveMinimum": 0},
+        "reservoir_pressure_bar_g": {"type": "number", "minimum": 0},
+        "release_origin": {"$ref": "#/$defs/point"},
+        "release_direction_unit_vector": {"$ref": "#/$defs/point"},
+        "ignition": {
+          "type": "object",
+          "required": ["position_code", "location", "delay_s"],
+          "properties": {
+            "position_code": {"enum": [1, 2, 3]},
+            "location": {"$ref": "#/$defs/point"},
+            "delay_s": {"type": "number", "minimum": 0}
+          },
+          "additionalProperties": true
+        },
+        "obstacles": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/obstacle"}
+        },
+        "ambient": {"$ref": "#/$defs/ambient"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"configuration": {"const": "obstructed"}},
+            "required": ["configuration"]
+          },
+          "then": {
+            "properties": {"obstacles": {"minItems": 1}}
+          }
+        },
+        {
+          "if": {
+            "properties": {"configuration": {"const": "unobstructed"}},
+            "required": ["configuration"]
+          },
+          "then": {
+            "properties": {"obstacles": {"maxItems": 0}}
+          }
+        }
+      ],
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

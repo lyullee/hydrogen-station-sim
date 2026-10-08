@@ -28,3 +28,4 @@ Thumbs.db
 # Locally generated journal build artifacts
 /manuscript/ijhe_manuscript_draft.pdf
 /manuscript/ijhe_manuscript_draft.log
+/output/pdf/ijhe_manuscript_draft.pdf

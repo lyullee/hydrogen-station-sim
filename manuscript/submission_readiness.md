@@ -421,6 +421,16 @@ claim. Obstacle geometry, ignition location and sensor distance must become
 explicit inputs and must then be tested on a new outcome-unseen campaign. This
 result does not close any existing external-validation gate.
 
+A follow-up metadata audit read the complete publisher README and workbook and
+header ranges from four raw files spanning both acquisition eras. It confirmed
+that P01--P04 are 500 kHz engineering-pressure channels in kPa. The archive does
+not provide the case-level obstacle mapping and geometry, ignition coordinates
+and delay, release coordinates, sensor coordinates or equal spacing distance;
+ambient conditions are explicitly undocumented. The apparatus-aware path now
+fails closed against a machine-readable input contract. No missing distance was
+inferred from the measured peak and the 44 consumed cases remain negative
+development evidence rather than a source for geometry fitting.
+
 ## Blocking gates
 
 The bounded paper still has 12 unresolved or failed gates:

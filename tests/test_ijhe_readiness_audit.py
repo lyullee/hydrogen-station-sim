@@ -369,6 +369,11 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert wskbij["top_third_recall"] < 0.3
     assert wskbij["model_validation_pass"] is False
     assert wskbij["runtime_parameter_updated"] is False
+    assert wskbij["apparatus_aware_model_eligible"] is False
+    assert wskbij["absolute_overpressure_model_eligible"] is False
+    assert wskbij["missing_apparatus_field_count"] >= 10
+    assert wskbij["apparatus_metadata_decision"] == "INSUFFICIENT_PUBLIC_METADATA_FOR_APPARATUS_AWARE_MODEL"
+    assert wskbij["raw_schema_campaign_count"] == 2
     assert gates["ignited_pressure_peaking_external_validation"]["status"] == "PASS"
     ignited_pressure = gates["ignited_pressure_peaking_external_validation"]["observed"]
     assert ignited_pressure["eligible_case_count"] == 27

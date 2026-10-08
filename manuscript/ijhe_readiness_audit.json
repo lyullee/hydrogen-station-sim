@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T11:21:36.751818+00:00",
+  "generated_at": "2026-10-08T11:42:52.848127+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -3693,8 +3693,8 @@
       "id": "wskbij_large_scale_overpressure_rank_execution_integrity",
       "status": "PASS",
       "claim": "The frozen 44-case actual-hydrogen rank screen is executed and its negative geometry-controlled result is retained without post-access tuning.",
-      "evidence": "research\\wskbij_large_scale_overpressure_rank_protocol_2026_10_08.json; research\\wskbij_large_scale_overpressure_rank_result_2026_10_08.json",
-      "requirement": "Protocol hash linkage, publisher workbook identity, locked model hashes, 44 scored cases in six strata, all frozen screens and explicit retained FAIL decision.",
+      "evidence": "research\\wskbij_large_scale_overpressure_rank_protocol_2026_10_08.json; research\\wskbij_large_scale_overpressure_rank_result_2026_10_08.json; research\\wskbij_apparatus_metadata_audit_2026_10_08.json; research\\wskbij_apparatus_input_contract.schema.json",
+      "requirement": "Protocol hash linkage, publisher workbook identity, locked model hashes, 44 scored cases in six strata, retained FAIL decision and a fail-closed apparatus metadata contract.",
       "observed": {
         "dataset_doi": "10.18710/WSKBIJ",
         "decision": "FAIL",
@@ -3706,6 +3706,11 @@
         "top_third_recall": 0.29411764705882354,
         "model_validation_pass": false,
         "runtime_parameter_updated": false,
+        "apparatus_aware_model_eligible": false,
+        "absolute_overpressure_model_eligible": false,
+        "missing_apparatus_field_count": 12,
+        "apparatus_metadata_decision": "INSUFFICIENT_PUBLIC_METADATA_FOR_APPARATUS_AWARE_MODEL",
+        "raw_schema_campaign_count": 2,
         "claim_boundary": "A PASS would support relative source-severity ordering by the locked runtime across this large-scale actual-hydrogen campaign. It would not validate absolute overpressure, impulse, obstacle effects, ignition-location effects, sensor-distance attenuation, outdoor HRS geometry, explosion probability, injury distance, full-loop dynamics, emergency decisions or regulatory compliance. A FAIL remains part of the evidence record and these outcomes may not be tuned and reused as fresh validation."
       }
     },
@@ -7071,7 +7076,7 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7989,
+          "approximate_manuscript_words_before_references": 7994,
           "figures": 3,
           "tables": 3,
           "citation_keys": 50,
@@ -7103,7 +7108,7 @@
       "requirement": "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
       "observed": {
         "schema_version": 2,
-        "verified_at_utc": "2026-10-08T11:21:36.218892+00:00",
+        "verified_at_utc": "2026-10-08T11:42:52.390631+00:00",
         "success": true,
         "compiler": {
           "name": "Tectonic",
@@ -7113,24 +7118,24 @@
         },
         "source": {
           "path": "manuscript/ijhe_manuscript_draft.tex",
-          "bytes": 76025,
-          "sha256": "3007b041244ecc786ee1bef7b296eb65dbf96f97d16c4de24ce4a12285b70ffa"
+          "bytes": 76047,
+          "sha256": "09cedae74bcdb164746460c1f550c67ff07674c559dc8c1d215ce2f669227b05"
         },
         "pdf": {
           "path": "output/pdf/ijhe_manuscript_working_draft.pdf",
-          "bytes": 834603,
-          "sha256": "f51d3086a23adaed260f23d256ff11212a7cd3616de349d5348e4ff45113169f",
+          "bytes": 834643,
+          "sha256": "ed6c5d98d9c59d094f8ebb433f97fd303c9b2c6c3d7899caeb9b6397c5723e97",
           "page_count": 23,
-          "extracted_character_count": 70752
+          "extracted_character_count": 70776
         },
         "compile_log": {
           "path": "output/pdf/ijhe_manuscript_working_draft.compile.txt",
-          "bytes": 19544,
-          "sha256": "a9fdca542719d52d618026b873e427165e07e0d20382f129b906286e16874534",
+          "bytes": 3039,
+          "sha256": "774ea30c798430c378d2ef072f4872ea16b9e1910003a4e67a1d698792a7da10",
           "unresolved_citations": 0,
           "unresolved_references": 0,
           "fatal_errors": [],
-          "underfull_hbox_count": 11,
+          "underfull_hbox_count": 22,
           "overfull_hbox_count": 0,
           "maximum_overfull_width_pt": 0.0
         },

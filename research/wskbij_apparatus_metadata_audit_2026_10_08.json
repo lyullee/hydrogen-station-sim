@@ -1,0 +1,155 @@
+{
+  "record_type": "public_apparatus_metadata_gap_audit",
+  "recorded_at": "2026-10-08T20:45:00+09:00",
+  "dataset": {
+    "doi": "10.18710/WSKBIJ",
+    "title": "Replication dataset for: Large-Scale Hydrogen Explosion Experiments: Obstructed Releases in open atmosphere",
+    "version": "1.0",
+    "license": "CC0 1.0",
+    "landing_page": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/WSKBIJ"
+  },
+  "inspected_public_files": [
+    {
+      "name": "00_Readme.txt",
+      "datafile_id": 268287,
+      "bytes": 6753,
+      "publisher_md5": "5642ccb734e8449bf52c0be83e4d0f23",
+      "observed_sha256": "cb7d4651d700cbd8da67cb69c3cec63ebabc4ffadbf6d5e1a2a38d63b622fb99",
+      "access_scope": "complete_file"
+    },
+    {
+      "name": "Experimental_results_.xlsx",
+      "datafile_id": 268155,
+      "bytes": 21165,
+      "publisher_md5": "73ee4f29ca08612f46b7a37980cbe4df",
+      "observed_sha256": "5ca3813fd7e9ade6c0d1aa623d2a7f5346760334b1c8b014a4ea3235ae5dbd34",
+      "access_scope": "complete_file"
+    },
+    {
+      "name": "Test001.txt",
+      "datafile_id": 268129,
+      "publisher_md5": "6a2b1e93513c33d9400ba8abf4b9d082",
+      "http_range": "bytes=0-65535",
+      "observed_bytes": 65536,
+      "observed_sha256": "e1de698c704c12d7360844f1ce7ff5ba44e3bf24dc836891efd1caedaecc4633",
+      "access_scope": "header_and_initial_samples_only"
+    },
+    {
+      "name": "Test013.txt",
+      "datafile_id": 268133,
+      "publisher_md5": "66921039ca3dcee9dc00f6a644a58fe8",
+      "http_range": "bytes=0-8191",
+      "observed_bytes": 8192,
+      "observed_sha256": "7087ad6020308ed1b9957956433c0d0d39a73e59135e4f55bdb0f21dc36c6448",
+      "access_scope": "header_and_initial_samples_only"
+    },
+    {
+      "name": "Test028.txt",
+      "datafile_id": 268166,
+      "publisher_md5": "eecce32c513166f7da711558c1dd218a",
+      "http_range": "bytes=0-8191",
+      "observed_bytes": 8192,
+      "observed_sha256": "b530294a76fe2d5792fde3965b23677094402a7b9ce824fb41ef39681b70e0ba",
+      "access_scope": "header_and_initial_samples_only"
+    },
+    {
+      "name": "Test051.txt",
+      "datafile_id": 268171,
+      "publisher_md5": "041fa54094071c0a86b1ee2a094b2d07",
+      "http_range": "bytes=0-8191",
+      "observed_bytes": 8192,
+      "observed_sha256": "f579001f33d8df491bf4597a62f9fde38edc441f09c54b7aca6f4d26a2eb0c3e",
+      "access_scope": "header_and_initial_samples_only"
+    }
+  ],
+  "observed_raw_schemas": {
+    "experiments_1_to_27": {
+      "header": ["Time", "P01", "P02", "P03", "P04", "PT1", "PT2", "MFR", "Trigger cam"],
+      "units": ["s", "kPa", "kPa", "kPa", "kPa", "V", "V", "V", "V"],
+      "sample_interval_s": 0.000002,
+      "evidence_files": ["Test001.txt", "Test013.txt"]
+    },
+    "experiments_28_to_51": {
+      "header": ["Time", "P01", "P02", "P03", "P04", "PT1", "PT2", "Sound", "Trigger"],
+      "units": ["s", "kPa", "kPa", "kPa", "kPa", "V", "V", "V", "V"],
+      "sample_interval_s": 0.000002,
+      "evidence_files": ["Test028.txt", "Test051.txt"]
+    }
+  },
+  "metadata_inventory": {
+    "present_and_case_resolved": [
+      "experiment_number",
+      "nozzle_diameter_mm",
+      "reservoir_pressure_bar_g",
+      "ignition_position_code_1_2_or_3",
+      "peak_overpressure_kpa_for_P01_to_P04"
+    ],
+    "present_but_not_case_resolved": [
+      "two_upstream_pressure_measurement_locations",
+      "four_Kulite_pressure_sensors_equally_spaced_along_x_axis",
+      "electric_spark_ignition",
+      "obstructed_and_unobstructed_configurations_exist",
+      "obstacle_distance_and_ignition_location_were_varied"
+    ],
+    "present_in_raw_trace_schema": [
+      "P01_to_P04_in_engineering_kPa",
+      "PT1_and_PT2_voltage",
+      "trigger_voltage",
+      "MFR_voltage_for_experiments_1_to_27",
+      "sound_voltage_for_experiments_28_to_51"
+    ],
+    "explicitly_not_documented": [
+      "ambient_temperature",
+      "ambient_humidity",
+      "wind_speed_and_direction"
+    ],
+    "required_but_missing": [
+      "case_to_obstructed_or_unobstructed_mapping",
+      "case_resolved_obstacle_type",
+      "case_resolved_obstacle_dimensions",
+      "case_resolved_obstacle_coordinates_and_nozzle_distance",
+      "case_resolved_blockage_ratio_or_open_area",
+      "ignition_position_code_to_xyz_mapping",
+      "case_resolved_ignition_delay",
+      "release_origin_and_direction_coordinates",
+      "P01_to_P04_xyz_coordinates",
+      "P01_to_P04_equal_spacing_distance",
+      "publisher_authenticated_common_coordinate_system",
+      "case_resolved_ambient_conditions"
+    ]
+  },
+  "related_method_source": {
+    "doi": "10.3791/71000",
+    "title": "High-Speed Visualization and Pressure Measurement of Hydrogen Explosion Dynamics in Obstructed and Unconfined Geometries",
+    "public_abstract_confirms": [
+      "controlled high-pressure hydrogen jet release",
+      "delayed ignition",
+      "systematic obstacle geometry and confinement changes",
+      "pressure-transducer and high-speed-camera acquisition"
+    ],
+    "full_text_open_access": false,
+    "dataset_linkage_in_public_metadata": false,
+    "use_decision": "Do not transfer numerical apparatus dimensions or case mappings from this method source unless the publisher explicitly links them to DOI 10.18710/WSKBIJ."
+  },
+  "eligibility": {
+    "contract": "research/wskbij_apparatus_input_contract.schema.json",
+    "apparatus_aware_rank_model": false,
+    "absolute_overpressure_model": false,
+    "sensor_distance_attenuation_model": false,
+    "reason": "The public package identifies the varied factors but does not map obstacle geometry, ignition coordinates, or pressure-sensor coordinates to individual experiments; ambient conditions are explicitly undocumented."
+  },
+  "decision": "INSUFFICIENT_PUBLIC_METADATA_FOR_APPARATUS_AWARE_MODEL",
+  "allowed_next_use": [
+    "retain the frozen source-only negative result",
+    "use raw pressure traces for waveform diagnostics that do not require spatial attenuation",
+    "request a publisher-authenticated apparatus drawing and per-case geometry crosswalk",
+    "freeze a new model and outcome-unseen campaign only after the contract is complete"
+  ],
+  "prohibited_use": [
+    "infer obstacle or sensor distances from outcome magnitude",
+    "fit geometry corrections to the consumed WSKBIJ peaks and relabel them validation",
+    "treat ignition position codes as physical distances without publisher mapping",
+    "claim absolute outdoor HRS blast or safety-distance validation"
+  ],
+  "claim_boundary": "This audit confirms raw engineering-pressure channels and records the public apparatus metadata gap. It does not add a model validation pass, revise the retained WSKBIJ failure, authenticate unpublished geometry, or support a site safety distance."
+}

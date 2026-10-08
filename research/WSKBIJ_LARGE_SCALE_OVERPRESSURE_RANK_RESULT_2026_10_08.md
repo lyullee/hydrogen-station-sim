@@ -42,3 +42,14 @@ The frozen model passed the pooled rank screen but failed every geometry-control
 A PASS would support relative source-severity ordering by the locked runtime across this large-scale actual-hydrogen campaign. It would not validate absolute overpressure, impulse, obstacle effects, ignition-location effects, sensor-distance attenuation, outdoor HRS geometry, explosion probability, injury distance, full-loop dynamics, emergency decisions or regulatory compliance. A FAIL remains part of the evidence record and these outcomes may not be tuned and reused as fresh validation.
 
 The protocol disclosed that aggregate outcome range and completeness were known before freeze; individual outcome ordering and model residuals were not used to design the analysis.
+
+## Apparatus metadata follow-up
+
+Range reads from raw files in both acquisition eras confirmed four 500 kHz
+pressure channels in engineering kPa, but the public archive does not map the
+51 experiments to obstacle geometry, physical ignition coordinates or pressure
+sensor coordinates. Ambient conditions are explicitly undocumented. The
+apparatus-aware path therefore fails closed under
+[`wskbij_apparatus_input_contract.schema.json`](wskbij_apparatus_input_contract.schema.json);
+the consumed peaks were not used to infer or fit those missing inputs. See the
+[`apparatus metadata audit`](WSKBIJ_APPARATUS_METADATA_AUDIT_2026_10_08.md).
