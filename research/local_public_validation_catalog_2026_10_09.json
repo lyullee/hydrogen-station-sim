@@ -1,0 +1,364 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_public_validation_catalog",
+  "status": "privacy_bounded_catalog_only",
+  "generated_at": "2026-10-09",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "raw_rows_persisted": false,
+    "channel_values_persisted": false,
+    "absolute_timestamps_published": false,
+    "site_company_manufacturer_published": false
+  },
+  "scope": {
+    "cache_root": "local public-validation raw corpus",
+    "collection_count": 37,
+    "file_count": 917,
+    "size_gb_decimal": 6.796,
+    "classification_basis": "cache directory key only; family hints are not semantic attestation"
+  },
+  "collections": [
+    {
+      "id": "carb_in_use_study",
+      "family_hint": "other_public_validation_material",
+      "file_count": 1,
+      "size_mb_decimal": 1.091,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "cip_2020_public_csv",
+      "family_hint": "other_public_validation_material",
+      "file_count": 10,
+      "size_mb_decimal": 0.014,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "elvhys_4_2",
+      "family_hint": "hydrogen_release_or_detection_experiment",
+      "file_count": 9,
+      "size_mb_decimal": 71.106,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "elvhys_detector_holdout",
+      "family_hint": "hydrogen_release_or_detection_experiment",
+      "file_count": 24,
+      "size_mb_decimal": 133.563,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "elvhys_detector_holdout_v2",
+      "family_hint": "hydrogen_release_or_detection_experiment",
+      "file_count": 30,
+      "size_mb_decimal": 188.349,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "figshare_26117989",
+      "family_hint": "tank_and_refueling_measurements",
+      "file_count": 23,
+      "size_mb_decimal": 49.244,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "h2protocol",
+      "family_hint": "refueling_protocol_or_controller_cases",
+      "file_count": 0,
+      "size_mb_decimal": 0.0,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "h2protocol_j2601_tables",
+      "family_hint": "refueling_protocol_or_controller_cases",
+      "file_count": 5,
+      "size_mb_decimal": 440.697,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "h2protocol_mc_default",
+      "family_hint": "refueling_protocol_or_controller_cases",
+      "file_count": 1,
+      "size_mb_decimal": 69.85,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "h2safe_2026",
+      "family_hint": "dispersion_or_detector_component",
+      "file_count": 13,
+      "size_mb_decimal": 30.388,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "hiad_2_2",
+      "family_hint": "accident_or_ignition_component",
+      "file_count": 1,
+      "size_mb_decimal": 1.482,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "hydelta_2026",
+      "family_hint": "tank_and_refueling_measurements",
+      "file_count": 2,
+      "size_mb_decimal": 7.23,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "hydelta_20817291",
+      "family_hint": "tank_and_refueling_measurements",
+      "file_count": 1,
+      "size_mb_decimal": 1.535,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "hydrogen_dispersion_channel",
+      "family_hint": "dispersion_or_detector_component",
+      "file_count": 25,
+      "size_mb_decimal": 52.68,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "hyram-v6.1",
+      "family_hint": "other_public_validation_material",
+      "file_count": 521,
+      "size_mb_decimal": 7.663,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "jankuj_2026",
+      "family_hint": "tank_and_refueling_measurements",
+      "file_count": 5,
+      "size_mb_decimal": 0.27,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "kit_lh2_consequence_1483",
+      "family_hint": "dispersion_or_detector_component",
+      "file_count": 1,
+      "size_mb_decimal": 4.787,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "met_hytrucks_hysam",
+      "family_hint": "tank_and_refueling_measurements",
+      "file_count": 3,
+      "size_mb_decimal": 1.023,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "methytrucks_docs",
+      "family_hint": "other_public_validation_material",
+      "file_count": 6,
+      "size_mb_decimal": 6.326,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "methytrucks_group_a",
+      "family_hint": "tank_and_refueling_measurements",
+      "file_count": 10,
+      "size_mb_decimal": 3.435,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "methytrucks_group_c",
+      "family_hint": "tank_and_refueling_measurements",
+      "file_count": 2,
+      "size_mb_decimal": 0.166,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "methytrucks_group_d",
+      "family_hint": "tank_and_refueling_measurements",
+      "file_count": 1,
+      "size_mb_decimal": 0.069,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "methytrucks_hysam",
+      "family_hint": "tank_and_refueling_measurements",
+      "file_count": 3,
+      "size_mb_decimal": 1.023,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "nbsdc_liquid_hrs_2025",
+      "family_hint": "station_or_hose_reference",
+      "file_count": 1,
+      "size_mb_decimal": 0.016,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "npl_synthetic_fuel",
+      "family_hint": "other_public_validation_material",
+      "file_count": 2,
+      "size_mb_decimal": 0.639,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "nrel_h2iq_2022",
+      "family_hint": "tank_and_refueling_measurements",
+      "file_count": 2,
+      "size_mb_decimal": 9.246,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "preslhy",
+      "family_hint": "hydrogen_release_or_fire_experiment",
+      "file_count": 10,
+      "size_mb_decimal": 1169.564,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "preslhy_e5_1",
+      "family_hint": "hydrogen_release_or_fire_experiment",
+      "file_count": 9,
+      "size_mb_decimal": 969.781,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "preslhy_partb_xlsx",
+      "family_hint": "hydrogen_release_or_fire_experiment",
+      "file_count": 10,
+      "size_mb_decimal": 232.039,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "proust_90mpa",
+      "family_hint": "tank_and_refueling_measurements",
+      "file_count": 1,
+      "size_mb_decimal": 1.71,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "qra_multimethod_2026",
+      "family_hint": "other_public_validation_material",
+      "file_count": 46,
+      "size_mb_decimal": 0.138,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "uci_early_hrs",
+      "family_hint": "tank_and_refueling_measurements",
+      "file_count": 1,
+      "size_mb_decimal": 0.066,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "zenodo_12180368",
+      "family_hint": "other_public_validation_material",
+      "file_count": 1,
+      "size_mb_decimal": 0.035,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "zenodo_17913628_accidental_self_ignition",
+      "family_hint": "accident_or_ignition_component",
+      "file_count": 4,
+      "size_mb_decimal": 0.15,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "zenodo_20728325",
+      "family_hint": "other_public_validation_material",
+      "file_count": 76,
+      "size_mb_decimal": 6.702,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "zenodo_4106101",
+      "family_hint": "other_public_validation_material",
+      "file_count": 15,
+      "size_mb_decimal": 3309.652,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    },
+    {
+      "id": "zenodo_4668554",
+      "family_hint": "other_public_validation_material",
+      "file_count": 42,
+      "size_mb_decimal": 24.371,
+      "semantic_attestation": "not_performed_by_catalog",
+      "full_loop_holdout_eligible": false,
+      "decision": "CATALOG_ONLY_REQUIRES_DATASET_SPECIFIC_VALIDATION"
+    }
+  ],
+  "coverage_assessment": {
+    "public_component_evidence_is_substantial": true,
+    "new_full_loop_cohort_identified_by_catalog": false,
+    "full_loop_holdout_eligible": false,
+    "next_action": "Run dataset-specific provenance, units, time-base and boundary checks before any model fit or holdout."
+  },
+  "claim_boundary": "This catalog proves only local availability of cached public files. It does not validate channel meaning, units, synchronization, reuse rights, vehicle-side coverage or safety limits."
+}
