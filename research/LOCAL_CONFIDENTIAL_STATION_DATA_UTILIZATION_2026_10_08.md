@@ -51,3 +51,9 @@ evidence without publishing channel tags or source identity. Flow units,
 totalizer reset semantics and vehicle-side channels remain unattested; the
 privacy-bounded record is
 `research/local_station_semantic_attestation_2026_10_09.json`.
+
+The same archive was rescanned on 2026-10-09 with the streaming inventory
+scanner. The rescan matched the inventory and utilization counts in this
+record and detected no aggregate drift. See
+`research/local_station_rescan_2026_10_09.json` and
+`research/LOCAL_STATION_RESCAN_2026_10_09.md` for the freshness check.

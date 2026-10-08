@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_confidential_station_data_rescan",
+  "status": "completed_privacy_bounded_rescan",
+  "generated_at": "2026-10-09",
+  "source_scope": "owner-controlled local hydrogen-refueling-station archive",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "per_file_hashes_published": false,
+    "raw_rows_persisted": false,
+    "absolute_timestamps_published": false,
+    "site_company_manufacturer_published": false,
+    "calendar_dates_published": false
+  },
+  "scanner": {
+    "script": "scripts/audit_local_station_data_utilization.py",
+    "sha256": "1aa5a2583db69f4f9c4c7cbee877257f59fa74b13092e3ad7b6968175b0efb85",
+    "method": "streaming_file_size_line_count_hash_and_header_family_screen"
+  },
+  "inventory": {
+    "csv_files": 33,
+    "metadata_files": 1,
+    "total_csv_gib": 4.749,
+    "physical_data_rows": 59272300,
+    "unique_csv_payloads": 32,
+    "exact_duplicate_groups": 1,
+    "redundant_csv_files": 1,
+    "duplicate_rows": 2418157,
+    "deduplicated_data_rows": 56854143,
+    "schema_width_file_counts": {
+      "9": 25,
+      "64": 8
+    },
+    "header_family_candidate_file_counts": {
+      "vehicle_or_dispenser": 0,
+      "flow_or_mass": 12,
+      "pressure": 20,
+      "temperature": 21,
+      "compressor": 8,
+      "valve_or_esd": 8,
+      "lifecycle": 21,
+      "totalizer": 12
+    }
+  },
+  "reconciliation": {
+    "prior_artifact": "research/local_confidential_station_data_utilization_2026_10_08.json",
+    "core_inventory_matches_prior_artifact": true,
+    "core_utilization_matches_prior_artifact": true,
+    "semantic_attestation_matches_prior_artifact": true,
+    "drift_detected": false,
+    "interpretation": "The current local archive reproduces the committed privacy-bounded inventory. No source identity, raw row or channel name is required for this reconciliation."
+  },
+  "utilization": {
+    "ordered_high_bank_pressure_cycles": 16770,
+    "paired_medium_high_pressure_episodes": 11770,
+    "sequential_medium_high_pressure_episodes": 11131,
+    "short_horizon_pressure_forecast_cases": 1418,
+    "conditional_recharge_flow_episodes": 733,
+    "strong_instantaneous_totalizer_consistency_pairs": 27,
+    "station_side_evidence_is_substantial": true,
+    "vehicle_side_full_loop_validation_complete": false
+  },
+  "decision": {
+    "local_station_data_is_sparse": false,
+    "station_side_dynamic_validation_ready": true,
+    "station_side_longitudinal_analysis_ready": true,
+    "vehicle_side_full_loop_validation_ready": false,
+    "runtime_defaults_changed": false,
+    "next_action": "Use the rescan as a freshness check before each controlled station-side replay; keep vehicle-side and consequence claims gated until synchronized attested channels are available."
+  },
+  "claim_boundary": "This rescan proves current aggregate availability and reconciliation of the local station archive. It does not publish or validate raw measurements, establish vehicle-fill accuracy, infer unconfirmed units, set safety limits, estimate accident frequency, or certify operation."
+}
