@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "artifact_type": "saga_direct_measurement_guard_regression",
+  "status": "PASS",
+  "generated_at_utc": "2026-10-08T10:42:04.516324+00:00",
+  "runtime": {
+    "saga_commit": "af232d3ec0bb44b98de00077709f07d67eeacec3",
+    "saga_remote": "https://github.com/lyullee/saga-py.git",
+    "api_path": "python/saga/api.py",
+    "api_sha256": "876d53dc5d30093ece77e179b0f414cbc6d7dbff58ee4a892a52af7491b834dd",
+    "provider_calls": 0
+  },
+  "aggregate": {
+    "case_count": 5,
+    "pass_count": 5,
+    "equivalent_grounded_case_count": 4,
+    "unsupported_rejection_case_count": 1
+  },
+  "cases": [
+    {
+      "id": "temperature_notation_equivalence",
+      "passed": true,
+      "grounded_values_retained": true,
+      "unsupported_values_removed": true,
+      "notice_observed": false
+    },
+    {
+      "id": "time_unit_equivalence",
+      "passed": true,
+      "grounded_values_retained": true,
+      "unsupported_values_removed": true,
+      "notice_observed": false
+    },
+    {
+      "id": "shared_unit_range_expansion",
+      "passed": true,
+      "grounded_values_retained": true,
+      "unsupported_values_removed": true,
+      "notice_observed": false
+    },
+    {
+      "id": "structured_context_projection",
+      "passed": true,
+      "grounded_values_retained": true,
+      "unsupported_values_removed": true,
+      "notice_observed": false
+    },
+    {
+      "id": "unsupported_value_removed",
+      "passed": true,
+      "grounded_values_retained": true,
+      "unsupported_values_removed": true,
+      "notice_observed": true
+    }
+  ],
+  "claim_boundary": "Deterministic software regression of measurement-token normalization and output filtering only. It does not establish factual completeness, action correctness, operator benefit, field safety or SAGA effectiveness."
+}

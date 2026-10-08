@@ -182,6 +182,12 @@ unavailable, the interface labels the connection error and retains a local
 sensor-based fallback answer. The older analysis API remains available for
 existing integrations, but the digital-twin interface does not call it.
 
+The direct-answer numeric guard normalizes equivalent value/unit spellings and
+shared-unit ranges before filtering. Its provider-free 5-case regression is
+documented in
+[`research/SAGA_MEASUREMENT_GUARD_REGRESSION_2026_10_08.md`](research/SAGA_MEASUREMENT_GUARD_REGRESSION_2026_10_08.md);
+this verifies filter behavior only, not response correctness or operator benefit.
+
 Consequence evaluation remains in the direct path. An active warning/critical
 state automatically evaluates relevant nodes before building the answer. Normal
 operation only evaluates consequences when the operator explicitly requests an

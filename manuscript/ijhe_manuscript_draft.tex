@@ -798,14 +798,12 @@ recall of 0.524 and five-stage coverage of 0.982 for SAGA, compared with 0.189 a
 0.600 for the deterministic alarm-only baseline. The corresponding machine proxy
 was 0.760 versus 0.401, with a paired mean difference of 0.360 (bootstrap 95\% CI
 0.309--0.411). All 34 API calls completed; mean in-process latency was 696.4 ms.
-Three responses (8.8\%) contained a precise value--unit combination absent from
-the supplied historical observation. These original results were retained. A
-subsequent direct-API output guard removes the complete unsupported sentence and
-inserts an explicit verification notice. In an explicitly post-outcome rerun of
-the same 34 cases, provider failures remained zero and exposed unsupported
-value--unit claims decreased from 3/34 to 0/34; the guard intervened in five
-responses and mean latency was 604.1 ms. This rerun demonstrates only the runtime
-filter behavior on a consumed cohort.
+The lexical detector flagged three responses (8.8\%) for an unmatched
+value--unit token. A post-outcome guard rerun reduced flags from 3/34 to 0/34,
+but equivalent units could initially be over-filtered. A provider-free
+regression then passed 5/5 cases: four equivalent forms were retained and one
+absent value was removed. These are software checks, not expert-judged
+hallucination rates.
 
 On 33 events, reference F1 was 0.564 for SAGA and 0.281 for alarm-only
 text (paired difference 0.283; bootstrap 95\% CI 0.196--0.366). SAGA averaged
@@ -975,8 +973,9 @@ installed v6.1 API contract, and all 27 ignited-enclosure holdouts met the 2 kPa
 peak-error screen (MAE 0.672 kPa), supporting only those component endpoints.
 The retrospective 34-event benchmark favored direct SAGA over alarm-only text
 on the frozen structural proxy (0.760 versus 0.401). A post-outcome direct-API
-guard reduced exposed unsupported value--unit claims from 3/34 to 0/34, but the
-expert study remains pending. The evidence supports a reproducible research
+guard reduced lexical flags from 3/34 to 0/34; a 5/5 regression then preserved
+equivalent grounded units while rejecting an absent value. Expert study remains
+pending. The evidence supports a reproducible research
 prototype and validation workflow, without supporting SAE-compliant fuelling
 control, field safety certification or autonomous emergency management.
 

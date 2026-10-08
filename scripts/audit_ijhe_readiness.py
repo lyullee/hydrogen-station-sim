@@ -4056,6 +4056,45 @@ def audit(root: Path) -> dict[str, object]:
         } if hiad_guard else "missing",
     ))
 
+    saga_measurement_guard_path = (
+        root / "research/saga_measurement_guard_regression_2026_10_08.json"
+    )
+    saga_measurement_guard = _json(saga_measurement_guard_path)
+    saga_measurement_runtime = (saga_measurement_guard or {}).get("runtime") or {}
+    saga_measurement_aggregate = (saga_measurement_guard or {}).get("aggregate") or {}
+    saga_measurement_cases = (saga_measurement_guard or {}).get("cases") or []
+    saga_measurement_guard_pass = bool(
+        (saga_measurement_guard or {}).get("artifact_type")
+        == "saga_direct_measurement_guard_regression"
+        and (saga_measurement_guard or {}).get("status") == "PASS"
+        and saga_measurement_runtime.get("provider_calls") == 0
+        and len(str(saga_measurement_runtime.get("saga_commit") or "")) == 40
+        and len(str(saga_measurement_runtime.get("api_sha256") or "")) == 64
+        and saga_measurement_aggregate.get("case_count") == 5
+        and saga_measurement_aggregate.get("pass_count") == 5
+        and saga_measurement_aggregate.get("equivalent_grounded_case_count") == 4
+        and saga_measurement_aggregate.get("unsupported_rejection_case_count") == 1
+        and len(saga_measurement_cases) == 5
+        and all(case.get("passed") is True for case in saga_measurement_cases)
+        and "does not establish" in str(
+            (saga_measurement_guard or {}).get("claim_boundary", "")
+        )
+    )
+    gates.append(_gate(
+        "saga_measurement_guard_equivalence_integrity",
+        "PASS" if saga_measurement_guard_pass else (
+            "FAIL" if saga_measurement_guard else "PENDING"
+        ),
+        "The direct SAGA guard preserves grounded measurements across equivalent unit and range spellings while still rejecting an absent value.",
+        str(saga_measurement_guard_path.relative_to(root)),
+        "Five deterministic, provider-free cases: four grounded-equivalence cases and one unsupported-value rejection, with exact SAGA source identity and a non-effectiveness boundary.",
+        {
+            "runtime": saga_measurement_runtime,
+            "aggregate": saga_measurement_aggregate,
+            "claim_boundary": (saga_measurement_guard or {}).get("claim_boundary"),
+        } if saga_measurement_guard else "missing",
+    ))
+
     hiad_selectivity_path = root / "research/hiad_response_selectivity_audit_2026_10_08.json"
     hiad_selectivity = _json(hiad_selectivity_path)
     hiad_selectivity_source = (hiad_selectivity or {}).get("source") or {}

@@ -399,6 +399,15 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert hiad_machine["expert_effectiveness_claimed"] is False
     assert gates["hiad_direct_numeric_guard_recheck_integrity"]["status"] == "PASS"
     hiad_guard = gates["hiad_direct_numeric_guard_recheck_integrity"]["observed"]
+    assert gates["saga_measurement_guard_equivalence_integrity"]["status"] == "PASS"
+    measurement_guard = gates["saga_measurement_guard_equivalence_integrity"][
+        "observed"
+    ]
+    assert measurement_guard["runtime"]["provider_calls"] == 0
+    assert measurement_guard["aggregate"]["case_count"] == 5
+    assert measurement_guard["aggregate"]["pass_count"] == 5
+    assert measurement_guard["aggregate"]["equivalent_grounded_case_count"] == 4
+    assert measurement_guard["aggregate"]["unsupported_rejection_case_count"] == 1
     assert hiad_guard["outcome"]["before_unsupported_claim_response_count"] == 3
     assert hiad_guard["outcome"]["after_unsupported_claim_response_count"] == 0
 

@@ -20,7 +20,12 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **107 PASS · 10 FAIL · 8 PENDING**.
+Gate counts: **108 PASS · 10 FAIL · 8 PENDING**.
+
+The SAGA measurement guard now has a provider-free regression covering unit
+aliases and shared-unit ranges. All 5 cases pass: four grounded equivalent
+forms are retained and one unsupported value is removed. This verifies runtime
+filter behavior only; expert evaluation remains pending.
 
 A post-access Woodfield metal-vessel replay supports the existing filling-jet
 heat-transfer mechanism: pressure and temperature-envelope RMSE fell 30.50% and
