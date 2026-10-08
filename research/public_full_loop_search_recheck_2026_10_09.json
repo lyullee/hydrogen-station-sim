@@ -6,7 +6,9 @@
   "search_scope": [
     "official Zenodo hydrogen measurement records",
     "official publisher and DOI landing pages",
-    "public GitHub repositories with hydrogen pressure-flow traces"
+    "public GitHub repositories with hydrogen pressure-flow traces",
+    "official DOE/NREL/NLR hydrogen fueling and safety data portals",
+    "public station-infrastructure and H2FillS/HDVS documentation"
   ],
   "eligibility_rule": {
     "required": [
@@ -54,6 +56,50 @@
       "role": "high-value real-station data request lead",
       "decision": "REQUEST_CUSTODIAN_DATA",
       "reason": "The publication reports multi-year real-station operation and aggregate fueling information, but no downloadable synchronized raw logger archive was located."
+    },
+    {
+      "id": "nrel_h2iq_heavy_duty_vehicle_simulator",
+      "url": "https://www.energy.gov/sites/default/files/2022-12/h2iq-121922.pdf",
+      "role": "official heavy-duty fueling simulator report",
+      "decision": "EXCLUDE_FROM_FULL_LOOP",
+      "reason": "The report shows internal vehicle-tank pressure and mass-flow behavior and documents protocol-relevant limits, but the public artifact is a report/figure rather than a downloadable synchronized raw logger cohort with station control channels and reuse terms."
+    },
+    {
+      "id": "nrel_h2fills_hdtada_validation_software",
+      "urls": [
+        "https://nrel.sitefinity.cloud/hydrogen/h2fills",
+        "https://www.nlr.gov/research/software/hdtada-hydrogen-dispenser-test-apparatus",
+        "https://github.com/NREL/HDTADA"
+      ],
+      "role": "official fueling-model and dispenser-validation software",
+      "decision": "EXCLUDE_FROM_FULL_LOOP",
+      "reason": "These resources are valuable model/protocol and test-apparatus references, but they do not publish a synchronized measured station-to-vehicle raw dataset suitable for an independent holdout."
+    },
+    {
+      "id": "nlr_h2safe_controlled_release_archive",
+      "doi": "10.7799/17118570",
+      "url": "https://data.nlr.gov/submissions/330",
+      "role": "public controlled hydrogen-release and detector-response data",
+      "decision": "EXCLUDE_FROM_HRS_FULL_LOOP",
+      "reason": "The archive supports gas-detection and dispersion-response validation, but it is a controlled release/indoor detector study without vehicle refueling, dispenser control, or station mass-transfer channels."
+    },
+    {
+      "id": "nrel_public_station_composite_metrics",
+      "url": "https://nrel.sitefinity.cloud/hydrogen/infrastructure-cdps-all",
+      "role": "public aggregate hydrogen-station metrics",
+      "decision": "EXCLUDE_FROM_FULL_LOOP",
+      "reason": "The product provides useful station-level aggregate fueling rates, amounts and final-pressure summaries, but not synchronized raw traces, initial conditions and controller events needed for a frozen full-loop holdout."
+    },
+    {
+      "id": "california_and_europe_station_inventory_portals",
+      "urls": [
+        "https://www.energy.ca.gov/data-reports/energy-almanac/zero-emission-vehicle-and-infrastructure-statistics-collection/hydrogen",
+        "https://devodp.technology.ca.gov/dataset/hydrogen-fueling-network-site-status",
+        "https://observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations"
+      ],
+      "role": "public station-inventory and status data",
+      "decision": "EXCLUDE_FROM_FULL_LOOP",
+      "reason": "These sources improve site/infrastructure coverage and external context, but they are inventory/status products rather than synchronized process telemetry."
     }
   ],
   "gate_impact": "full_loop_external_validation_remains_open",

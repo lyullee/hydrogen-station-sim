@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T20:03:51.848302+00:00",
+  "generated_at": "2026-10-08T20:07:51.117719+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -1884,7 +1884,7 @@
         "search_recheck_2026_10_09": {
           "status": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
           "gate_impact": "full_loop_external_validation_remains_open",
-          "candidate_count": 4,
+          "candidate_count": 9,
           "claim_boundary": "This artifact documents a current public search and exclusion decision. It adds no numerical validation, does not alter any frozen holdout, and does not support a safety or IJHE full-loop claim."
         },
         "public_data_update_2026_10_08": {
