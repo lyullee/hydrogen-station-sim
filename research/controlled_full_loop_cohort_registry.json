@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "artifact_type": "controlled_hrs_privacy_bounded_cohort_registry",
+  "status": "REQUEST_DRAFT_INELIGIBLE",
+  "recorded_at": "2026-10-09",
+  "source_commit": "9d3e904",
+  "evaluation_scope": "cascade_resolved_station_to_vehicle",
+  "purpose": "Record the current local-data coverage and the minimum custodian attestation needed before a station-to-vehicle holdout can be frozen.",
+  "claim_boundary": "This is a privacy-safe intake registry. It is not an external validation result, does not contain raw rows, and cannot support an IJHE full-loop claim.",
+  "local_station_evidence": {
+    "measured_station_file_count": 33,
+    "measured_station_gib": 4.749,
+    "measured_station_rows_before_deduplication": 59272300,
+    "measured_station_rows_after_duplicate_exclusion": 56854143,
+    "station_side_pressure_cycles": 16770,
+    "station_side_cascade_episodes": 11770,
+    "station_side_sequential_episodes": 11131,
+    "station_side_pressure_forecast_cases": 1418,
+    "station_side_recharge_flow_episodes": 733,
+    "vehicle_side_channels_attested": 0
+  },
+  "minimum_required_channels": [
+    "common_elapsed_time_or_timestamp",
+    "vehicle_or_receptacle_pressure",
+    "vehicle_or_receptacle_temperature",
+    "station_or_dispenser_pressure",
+    "delivered_gas_temperature",
+    "mass_flow_or_transferred_mass",
+    "cascade_source_pressure_and_selected_bank",
+    "precooler_and_compressor_state",
+    "leak_check_vent_fault_and_esd_state",
+    "protocol_initial_conditions_and_tank_geometry",
+    "calibration_sampling_and_uncertainty_metadata"
+  ],
+  "current_coverage": {
+    "station_pressure_and_temperature": "available_with_attestation",
+    "station_flow_or_mass": "candidate_channels_present_but_units_not_attested",
+    "compressor_valve_esd_lifecycle": "candidate_state_families_present",
+    "vehicle_pressure_temperature": "not_attested",
+    "delivered_mass_or_soc": "not_attested",
+    "synchronized_station_to_vehicle_trace": "not_available_for_external_holdout",
+    "rights_for_reviewer_or_reproduction_package": "not_attested"
+  },
+  "cohort_acceptance": {
+    "minimum_case_count": 8,
+    "minimum_case_pass_fraction": 0.8,
+    "numerical_screen_passed": false,
+    "reason": "No eligible synchronized station-to-vehicle cases are registered yet."
+  },
+  "evidence_design": {
+    "independent_holdout": false,
+    "model_developers_blinded_to_case_outcomes_before_freeze": false,
+    "rights_cleared_for_controlled_evaluation": false,
+    "freeze_before_outcome_access": true,
+    "post_freeze_parameter_tuning": false
+  },
+  "cases": [],
+  "case_count": 0,
+  "case_pass_count": 0,
+  "case_pass_fraction": 0.0,
+  "metric_aggregate": {},
+  "state_metric_aggregate": {},
+  "provenance_screen_passed": false,
+  "full_loop_external_validation_supported": false,
+  "privacy": {
+    "raw_trace_hashes_published": false,
+    "raw_result_hashes_published": false,
+    "hmac_salt_published": false,
+    "source_identifiers_published": false,
+    "absolute_timestamps_published": false,
+    "raw_rows_persisted": false,
+    "site_company_manufacturer_published": false
+  },
+  "next_custodian_request": [
+    "Attest the meaning and units of the candidate flow or mass channels.",
+    "Provide at least eight disjoint fills with synchronized vehicle pressure and temperature plus delivered mass or SOC.",
+    "Declare bank selection, compressor/precooler states, valve/ESD/fault markers and initial conditions.",
+    "Confirm rights for derived metrics, reviewer access and a reproducibility package without disclosing site identity or exact dates."
+  ]
+}

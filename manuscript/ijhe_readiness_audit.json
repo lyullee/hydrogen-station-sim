@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T19:33:35.706943+00:00",
+  "generated_at": "2026-10-08T19:57:45.907420+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -1855,15 +1855,15 @@
           }
         },
         "controlled_cohort_registry": {
-          "present": false,
+          "present": true,
           "integrity_passed": false,
-          "evaluation_scope": null,
-          "case_count": null,
-          "case_pass_count": null,
-          "case_pass_fraction": null,
-          "provenance_screen_passed": null,
-          "full_loop_external_validation_supported": null,
-          "raw_trace_hashes_published": null
+          "evaluation_scope": "cascade_resolved_station_to_vehicle",
+          "case_count": 0,
+          "case_pass_count": 0,
+          "case_pass_fraction": 0.0,
+          "provenance_screen_passed": false,
+          "full_loop_external_validation_supported": false,
+          "raw_trace_hashes_published": false
         },
         "new_external_data_search": {
           "status": "NO_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
