@@ -1,5 +1,7 @@
 import json
 
+import pytest
+
 from h2station.llm_grounding import (
     build_evidence_manifest,
     guard_llm_claims,
@@ -774,11 +776,44 @@ def test_manifest_preserves_opt_in_capacity_eos_geometry_basis():
         "public_sensitivity_available": True,
         "default_basis": "reference",
         "capacity_eos_opt_in": True,
+        "tank_thermal_model": "constant_ua",
+        "mixed_convection_opt_in": False,
+        "thermal_geometry": {
+            "vehicle_internal_diameter_m": None,
+            "vehicle_internal_length_m": None,
+            "vehicle_inlet_nozzle_diameter_m": None,
+            "vehicle_2_internal_diameter_m": None,
+            "vehicle_2_internal_length_m": None,
+            "vehicle_2_inlet_nozzle_diameter_m": None,
+        },
+        "thermal_geometry_complete": False,
         "claim_limit": manifest["runtime_geometry"]["claim_limit"],
     }
     assert prompt_evidence_summary(manifest)["runtime_geometry"]["basis"] == (
         "capacity_eos"
     )
+
+
+def test_manifest_exposes_mixed_convection_inputs_as_research_only():
+    frame = {
+        "time_s": 2.0,
+        "vehicle_tank_thermal_model": "mixed_convection",
+        "vehicle_internal_diameter_m": 0.358,
+        "vehicle_internal_length_m": 0.7451,
+        "vehicle_inlet_nozzle_diameter_m": 0.005,
+        "vehicle_2_internal_diameter_m": 0.358,
+        "vehicle_2_internal_length_m": 0.7451,
+        "vehicle_2_inlet_nozzle_diameter_m": 0.005,
+    }
+    manifest = build_evidence_manifest(frame, {}, [], False)
+    geometry = manifest["runtime_geometry"]
+    assert geometry["tank_thermal_model"] == "mixed_convection"
+    assert geometry["mixed_convection_opt_in"] is True
+    assert geometry["thermal_geometry_complete"] is True
+    assert geometry["thermal_geometry"]["vehicle_inlet_nozzle_diameter_m"] == (
+        pytest.approx(0.005)
+    )
+    assert "미검증 기본값이 아님" in geometry["claim_limit"]
 
 def test_public_operating_envelope_screen_is_descriptive_only():
     manifest = build_evidence_manifest(

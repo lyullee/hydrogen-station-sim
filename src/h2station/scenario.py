@@ -72,6 +72,14 @@ class ReferenceScenario:
     vehicle_tank_calibration: Literal["public_type_iv", "reference"] = "public_type_iv"
     vehicle_effective_volume_multiplier: float | None = None
     vehicle_gas_liner_ua_multiplier: float | None = None
+    # The external-validation default remains the calibrated constant-UA
+    # model.  Mixed convection is a research path and requires explicit tank
+    # and nozzle geometry; effective restriction area is never reused as a
+    # physical diameter.
+    vehicle_tank_thermal_model: Literal["constant_ua", "mixed_convection"] = "constant_ua"
+    vehicle_internal_diameter_m: float | None = None
+    vehicle_internal_length_m: float | None = None
+    vehicle_inlet_nozzle_diameter_m: float | None = None
     dispenser_flow_area_multiplier: float = 1.0
     precooler_duty_multiplier: float = 1.0
     initial_vehicle_2_pressure_pa: float = 5.0e6
@@ -79,6 +87,9 @@ class ReferenceScenario:
     vehicle_2_internal_volume_m3: float = 0.122
     vehicle_2_nominal_working_pressure_pa: float = 70.0e6
     vehicle_2_capacity_kg: float | None = None
+    vehicle_2_internal_diameter_m: float | None = None
+    vehicle_2_internal_length_m: float | None = None
+    vehicle_2_inlet_nozzle_diameter_m: float | None = None
     target_vehicle_pressure_pa: float = 70.0e6
     target_vehicle_2_pressure_pa: float = 70.0e6
     average_pressure_ramp_rate_pa_s: float = 2.0e5
@@ -124,6 +135,10 @@ class BuiltScenario:
 def build_vehicle_tank(
     internal_volume_m3: float,
     fit: CompositeTankFitParameters | None = None,
+    *,
+    thermal_model: Literal["constant_ua", "mixed_convection"] = "constant_ua",
+    internal_diameter_m: float | None = None,
+    internal_length_m: float | None = None,
 ) -> CompositeVehicleTank:
     """Build a Type-IV surrogate while preserving reference mass ratios."""
 
@@ -140,6 +155,10 @@ def build_vehicle_tank(
             gas_liner_ua_w_k=18.0 * area_scale,
             liner_shell_ua_w_k=35.0 * area_scale,
             shell_ambient_ua_w_k=12.0 * area_scale,
+            internal_diameter_m=internal_diameter_m,
+            internal_length_m=internal_length_m,
+            natural_convection_gas_liner=(thermal_model == "mixed_convection"),
+            forced_convection_gas_liner=(thermal_model == "mixed_convection"),
         ),
         fit,
     )
@@ -186,6 +205,33 @@ def build_reference_scenario(
         raise ValueError("vehicle_tank_calibration must be public_type_iv or reference")
     if config.vehicle_geometry_basis not in {"reference", "capacity_eos"}:
         raise ValueError("vehicle_geometry_basis must be 'reference' or 'capacity_eos'")
+    if config.vehicle_tank_thermal_model not in {"constant_ua", "mixed_convection"}:
+        raise ValueError(
+            "vehicle_tank_thermal_model must be constant_ua or mixed_convection"
+        )
+    if config.vehicle_tank_thermal_model == "mixed_convection":
+        required_geometry = {
+            "vehicle_internal_diameter_m": config.vehicle_internal_diameter_m,
+            "vehicle_internal_length_m": config.vehicle_internal_length_m,
+            "vehicle_inlet_nozzle_diameter_m": config.vehicle_inlet_nozzle_diameter_m,
+            "vehicle_2_internal_diameter_m": config.vehicle_2_internal_diameter_m,
+            "vehicle_2_internal_length_m": config.vehicle_2_internal_length_m,
+            "vehicle_2_inlet_nozzle_diameter_m": config.vehicle_2_inlet_nozzle_diameter_m,
+        }
+        missing = [name for name, value in required_geometry.items() if value is None]
+        if missing:
+            raise ValueError(
+                "mixed_convection requires explicit physical geometry: "
+                + ", ".join(missing)
+            )
+        invalid = [
+            name for name, value in required_geometry.items()
+            if value is not None and value <= 0.0
+        ]
+        if invalid:
+            raise ValueError(
+                "mixed_convection geometry must be positive: " + ", ".join(invalid)
+            )
     calibrated_tank = (
         load_public_type_iv_tank_calibration()
         if config.vehicle_tank_calibration == "public_type_iv" else None
@@ -257,8 +303,20 @@ def build_reference_scenario(
         effective_volume_multiplier=effective_volume_multiplier,
         gas_liner_ua_multiplier=gas_liner_ua_multiplier,
     )
-    vehicle = build_vehicle_tank(vehicle_volume_m3, vehicle_fit)
-    secondary_vehicle = build_vehicle_tank(vehicle_2_volume_m3, vehicle_fit)
+    vehicle = build_vehicle_tank(
+        vehicle_volume_m3,
+        vehicle_fit,
+        thermal_model=config.vehicle_tank_thermal_model,
+        internal_diameter_m=config.vehicle_internal_diameter_m,
+        internal_length_m=config.vehicle_internal_length_m,
+    )
+    secondary_vehicle = build_vehicle_tank(
+        vehicle_2_volume_m3,
+        vehicle_fit,
+        thermal_model=config.vehicle_tank_thermal_model,
+        internal_diameter_m=config.vehicle_2_internal_diameter_m,
+        internal_length_m=config.vehicle_2_internal_length_m,
+    )
     dispenser_fit = DispenserFitParameters(
         pcv_area_multiplier=config.dispenser_flow_area_multiplier,
         nozzle_area_multiplier=config.dispenser_flow_area_multiplier,
@@ -305,6 +363,9 @@ def build_reference_scenario(
             gas_wall_ua_w_k=45.0,
             wall_ambient_ua_w_k=18.0,
             nozzle_flow_area_m2=2.0e-6,
+            vehicle_inlet_nozzle_diameter_m=(
+                config.vehicle_inlet_nozzle_diameter_m
+            ),
         ),
         fit=dispenser_fit,
         ambient_temperature_k=config.ambient_temperature_k,
@@ -347,6 +408,9 @@ def build_reference_scenario(
             gas_wall_ua_w_k=45.0,
             wall_ambient_ua_w_k=18.0,
             nozzle_flow_area_m2=2.0e-6,
+            vehicle_inlet_nozzle_diameter_m=(
+                config.vehicle_2_inlet_nozzle_diameter_m
+            ),
         ),
         fit=dispenser_fit,
         ambient_temperature_k=config.ambient_temperature_k,

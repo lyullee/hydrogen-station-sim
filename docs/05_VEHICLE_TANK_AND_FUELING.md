@@ -78,6 +78,27 @@ sensitivity configuration. The runtime/recheck linkage is recorded without raw
 experimental rows in
 [`research/public_type_iv_tank_runtime_calibration_2026_10_07.json`](../research/public_type_iv_tank_runtime_calibration_2026_10_07.json).
 
+### Opt-in mixed-convection research path
+
+The coupled station runtime can also evaluate a geometry-resolved gas-to-liner
+conductance. Set `vehicle_tank_thermal_model=mixed_convection` and provide, for
+each vehicle, the tank internal diameter, tank internal length, and the physical
+inlet-nozzle diameter. The model combines a Churchill--Chu horizontal-cylinder
+natural-convection term with the existing inlet-jet Reynolds correlation.
+
+The nozzle diameter is deliberately separate from the dispenser's effective flow
+area. Effective restriction area includes loss effects and is not converted into a
+physical jet diameter. During forward flow the coupled dispenser supplies the
+actual isenthalpic receptacle pressure and temperature to the tank heat-transfer
+model. Reverse flow and idle intervals do not create a fictitious inlet jet.
+
+This mode is a research sensitivity path. The prospective Type-III test failed its
+frozen temperature screen before this mechanism was considered; a post-outcome
+diagnostic identified inlet mixing as a plausible missing mechanism. Therefore the
+API default remains `constant_ua`, and mixed convection does not change the
+external-validation decision until an untouched dataset with declared geometry is
+evaluated.
+
 ## Fueling protocol interface
 
 `FuelingSchedule` is the boundary between the public physics model and a compliant
@@ -123,10 +144,11 @@ adaptive evaluation points.
 
 - The gas zone is spatially uniform, so it predicts mass-averaged temperature, not
   local hot spots near the inlet or liner surface.
-- `gas_liner_ua_w_k` is currently an effective parameter. A later revision should
-  calculate it from jet mixing and natural/forced convection correlations.
-- The example inlet is intentionally only a configuration demonstration. The next
-  integration step is to connect the existing CoolProp real-gas restriction, hose
-  line-pack model, cascade banks, and precooler to `CompositeTankFillSimulator`.
+- The default `gas_liner_ua_w_k` remains an externally fitted effective parameter.
+  The geometry-resolved mixed-convection path is implemented but is not yet an
+  externally validated production default.
+- Tank geometry is an equivalent lumped geometry. Multi-cylinder vehicle packs and
+  local hot spots require a distributed model or independently justified
+  aggregation rule.
 - Full J2601 conformance requires licensed table/MC Formula inputs, station hardware
   limits, communications behavior, fault handling, and validation test evidence.

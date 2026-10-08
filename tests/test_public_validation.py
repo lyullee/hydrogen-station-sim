@@ -285,6 +285,61 @@ def test_api_rejects_capacity_eos_without_both_vehicle_capacities():
         )
 
 
+def test_mixed_convection_requires_explicit_geometry_for_both_vehicles():
+    with pytest.raises(ValueError, match="explicit physical geometry"):
+        build_reference_scenario(
+            ReferenceScenario(vehicle_tank_thermal_model="mixed_convection"),
+            UnavailableHyRAMBackend(),
+        )
+
+
+def test_api_rejects_mixed_convection_without_complete_geometry():
+    with pytest.raises(ValueError, match="physical inlet nozzle diameter"):
+        SimulationInput(
+            vehicle_tank_thermal_model="mixed_convection",
+            vehicle_internal_diameter_m=0.358,
+            vehicle_internal_length_m=0.7451,
+            vehicle_inlet_nozzle_diameter_m=0.005,
+        )
+
+
+def test_reference_scenario_connects_mixed_convection_geometry_to_both_dispensers():
+    config = ReferenceScenario(
+        duration_s=0.6,
+        control_period_s=0.2,
+        vehicle_internal_volume_m3=0.075,
+        vehicle_2_internal_volume_m3=0.075,
+        vehicle_tank_calibration="reference",
+        vehicle_tank_thermal_model="mixed_convection",
+        vehicle_internal_diameter_m=0.358,
+        vehicle_internal_length_m=0.7451,
+        vehicle_inlet_nozzle_diameter_m=0.005,
+        vehicle_2_internal_diameter_m=0.358,
+        vehicle_2_internal_length_m=0.7451,
+        vehicle_2_inlet_nozzle_diameter_m=0.005,
+    )
+    built = build_reference_scenario(config, UnavailableHyRAMBackend())
+    first = built.station.partial_station
+    second = built.station.secondary_partial_station
+
+    assert first.vehicle_tank.parameters.natural_convection_gas_liner
+    assert first.vehicle_tank.parameters.forced_convection_gas_liner
+    assert first.vehicle_tank.parameters.internal_diameter_m == pytest.approx(0.358)
+    assert second.vehicle_tank.parameters.internal_length_m == pytest.approx(0.7451)
+    assert first.hose.vehicle_inlet_nozzle_diameter_m == pytest.approx(0.005)
+    assert second.hose.vehicle_inlet_nozzle_diameter_m == pytest.approx(0.005)
+
+    # Exercise the actual coupled station path.  This failed before the hose
+    # inlet pressure/temperature/nozzle boundary was connected to the tank.
+    result = built.simulator.simulate(
+        built.initial_state,
+        config.duration_s,
+        config.control_period_s,
+    )
+    assert np.all(np.isfinite(result.states))
+    assert result.vehicle_pressure_pa[-1] > result.vehicle_pressure_pa[0]
+
+
 def test_reference_scenario_rejects_nonpositive_experimental_tank_volume():
     with pytest.raises(ValueError, match="tank volumes"):
         build_reference_scenario(

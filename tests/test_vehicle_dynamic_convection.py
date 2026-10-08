@@ -9,6 +9,7 @@ from h2station.vehicle import (
     CompositeVehicleTank,
     TankBoundaryFlow,
 )
+from h2station.dispenser import HoseParameters
 
 
 def _parameters(**changes: object) -> CompositeTankParameters:
@@ -76,4 +77,29 @@ def test_dynamic_convection_requires_internal_geometry() -> None:
         _parameters(
             internal_diameter_m=None,
             forced_convection_gas_liner=True,
+        )
+
+
+def test_hose_keeps_physical_nozzle_diameter_separate_from_effective_area() -> None:
+    hose = HoseParameters(
+        internal_volume_m3=2.0e-3,
+        wall_thermal_capacity_j_k=1.2e4,
+        gas_wall_ua_w_k=45.0,
+        wall_ambient_ua_w_k=18.0,
+        nozzle_flow_area_m2=2.0e-6,
+        vehicle_inlet_nozzle_diameter_m=0.005,
+    )
+    assert hose.nozzle_flow_area_m2 == pytest.approx(2.0e-6)
+    assert hose.vehicle_inlet_nozzle_diameter_m == pytest.approx(0.005)
+
+
+def test_hose_rejects_nonpositive_physical_nozzle_diameter() -> None:
+    with pytest.raises(ValueError, match="vehicle_inlet_nozzle_diameter_m"):
+        HoseParameters(
+            internal_volume_m3=2.0e-3,
+            wall_thermal_capacity_j_k=1.2e4,
+            gas_wall_ua_w_k=45.0,
+            wall_ambient_ua_w_k=18.0,
+            nozzle_flow_area_m2=2.0e-6,
+            vehicle_inlet_nozzle_diameter_m=0.0,
         )

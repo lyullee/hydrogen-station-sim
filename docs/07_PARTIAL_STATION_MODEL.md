@@ -84,6 +84,19 @@ that hose, nozzle/receptacle, onboard pipe dimensions, and fitting flow coeffici
 materially alter fill rate and final SOC:
 https://doi.org/10.1016/j.ijhydene.2023.04.075
 
+## Vehicle inlet thermal boundary
+
+When the optional mixed-convection tank model is selected, the nozzle/receptacle
+calculation passes four independent quantities into the tank boundary: forward mass
+flow, isenthalpic receptacle pressure, isenthalpic receptacle temperature, and the
+declared physical inlet-nozzle diameter. The physical diameter is never inferred
+from the calibrated restriction area. This connection allows inlet-jet convection
+to operate in the complete station runtime while preserving the constant-UA default.
+
+Mixed convection is accepted only when both vehicle paths have explicit tank and
+nozzle geometry. Missing geometry fails configuration validation instead of being
+silently guessed.
+
 ## Numerical coupling
 
 The digital pressure-ramp controller is evaluated once per fixed controller period.
@@ -130,4 +143,3 @@ multipliers so fitted values can be audited.
 Replace the prescribed supply boundary with dynamic low-, medium-, and high-pressure
 cascade banks. Add bank-selection sequencing with configurable dead-time/overlap and
 then connect compressor recharge without bypassing mass and energy conservation.
-

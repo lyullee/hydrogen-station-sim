@@ -1,0 +1,26 @@
+{
+  "status": "PUBLIC_GUIDANCE_RECHECKED_NO_GEOMETRY_CROSSWALK",
+  "checked_at": "2026-10-08",
+  "source": {
+    "title": "22NRM03 MetHyTrucks Deliverable 1 - impact of HRS",
+    "record_url": "https://zenodo.org/records/20540258",
+    "doi": "10.5281/zenodo.20540258",
+    "local_review_copy_sha256": "83cf120abaa30debceda0184342aeea8083ae0e7979887029d18e7fcdba419c5",
+    "pages": 5
+  },
+  "relevant_findings": [
+    "The guide recommends documenting the storage bank used during sampling.",
+    "It recommends sampling at the nominal HRS delivery temperature and at pressure above 20 MPa, preferably the nominal 35 or 70 MPa filling pressure.",
+    "For parallel sampling it recommends documenting the fueling protocol and excluding abnormal or aborted fills."
+  ],
+  "missing_for_current_model_validation": [
+    "synchronized station-to-vehicle pressure, temperature and mass-flow time series",
+    "channel dictionary and engineering units for the existing public workbooks",
+    "vehicle tank internal diameter and length",
+    "physical inlet-nozzle diameter",
+    "controller state and vehicle/fill identifiers"
+  ],
+  "decision": "The source is useful procedural evidence but cannot supply the missing MetHyTrucks workbook mapping or validate the station/tank thermal model. No validation score or readiness gate changes.",
+  "implementation_response": "Connect explicit receptacle pressure, temperature and physical nozzle diameter to the opt-in mixed-convection tank model while retaining constant-UA as the default.",
+  "claim_boundary": "This record documents a public-source recheck and an implementation decision. It is not experimental validation, full-loop validation, SAE J2601 conformance, or evidence of safety performance."
+}

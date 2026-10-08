@@ -122,6 +122,22 @@ def _runtime_geometry_profile(frame: dict[str, Any]) -> dict[str, Any]:
     basis = str(frame.get("vehicle_geometry_basis") or "reference")
     if basis not in {"reference", "capacity_eos"}:
         basis = "reference"
+    thermal_model = str(
+        frame.get("vehicle_tank_thermal_model") or "constant_ua"
+    )
+    if thermal_model not in {"constant_ua", "mixed_convection"}:
+        thermal_model = "constant_ua"
+    thermal_geometry = {
+        key: frame.get(key)
+        for key in (
+            "vehicle_internal_diameter_m",
+            "vehicle_internal_length_m",
+            "vehicle_inlet_nozzle_diameter_m",
+            "vehicle_2_internal_diameter_m",
+            "vehicle_2_internal_length_m",
+            "vehicle_2_inlet_nozzle_diameter_m",
+        )
+    }
     return {
         "basis": basis,
         "vehicle_capacity_kg": frame.get("vehicle_capacity_kg"),
@@ -136,10 +152,17 @@ def _runtime_geometry_profile(frame: dict[str, Any]) -> dict[str, Any]:
         "public_sensitivity_available": True,
         "default_basis": "reference",
         "capacity_eos_opt_in": basis == "capacity_eos",
+        "tank_thermal_model": thermal_model,
+        "mixed_convection_opt_in": thermal_model == "mixed_convection",
+        "thermal_geometry": thermal_geometry,
+        "thermal_geometry_complete": all(
+            value is not None for value in thermal_geometry.values()
+        ),
         "claim_limit": (
             "capacity/EOS 형상은 선언 용량으로 기체 체적을 한 번만 산정하는 "
             "공개 탱크 민감도 진단 기반 선택 옵션이며 "
-            "독립적인 station-to-vehicle 검증이나 기본값 변경을 의미하지 않음"
+            "독립적인 station-to-vehicle 검증이나 기본값 변경을 의미하지 않음. "
+            "mixed_convection은 명시 치수를 사용하는 연구 경로이며 미검증 기본값이 아님"
         ),
     }
 

@@ -211,9 +211,16 @@ class SimulationInput(BaseModel):
     vehicle_geometry_basis: Literal["reference", "capacity_eos"] = "reference"
     vehicle_tank_calibration: Literal["public_type_iv", "reference"] = "public_type_iv"
     vehicle_capacity_kg: float | None = Field(default=None, gt=0.1, le=100.0)
+    vehicle_tank_thermal_model: Literal["constant_ua", "mixed_convection"] = "constant_ua"
+    vehicle_internal_diameter_m: float | None = Field(default=None, gt=0.0, le=3.0)
+    vehicle_internal_length_m: float | None = Field(default=None, gt=0.0, le=20.0)
+    vehicle_inlet_nozzle_diameter_m: float | None = Field(default=None, gt=0.0, le=0.1)
     initial_vehicle_2_pressure_mpa: float = Field(default=8.0, gt=0.0, le=70.0)
     initial_vehicle_2_temperature_c: float = Field(default=25.0, ge=-40.0, le=85.0)
     vehicle_2_capacity_kg: float | None = Field(default=None, gt=0.1, le=100.0)
+    vehicle_2_internal_diameter_m: float | None = Field(default=None, gt=0.0, le=3.0)
+    vehicle_2_internal_length_m: float | None = Field(default=None, gt=0.0, le=20.0)
+    vehicle_2_inlet_nozzle_diameter_m: float | None = Field(default=None, gt=0.0, le=0.1)
     initial_bank_low_fill_percent: float = Field(default=90.0, ge=1.0, le=100.0)
     initial_bank_medium_fill_percent: float = Field(default=100.0 * 65.0 / 70.0, ge=1.0, le=100.0)
     initial_bank_high_fill_percent: float = Field(default=90.0, ge=1.0, le=100.0)
@@ -236,6 +243,20 @@ class SimulationInput(BaseModel):
                 "capacity_eos geometry requires vehicle_capacity_kg and "
                 "vehicle_2_capacity_kg"
             )
+        if self.vehicle_tank_thermal_model == "mixed_convection":
+            required = (
+                self.vehicle_internal_diameter_m,
+                self.vehicle_internal_length_m,
+                self.vehicle_inlet_nozzle_diameter_m,
+                self.vehicle_2_internal_diameter_m,
+                self.vehicle_2_internal_length_m,
+                self.vehicle_2_inlet_nozzle_diameter_m,
+            )
+            if any(value is None for value in required):
+                raise ValueError(
+                    "mixed_convection requires tank diameter, tank length and "
+                    "physical inlet nozzle diameter for both vehicles"
+                )
         return self
 
 
@@ -485,6 +506,12 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             vehicle_geometry_basis=request.vehicle_geometry_basis,
             vehicle_tank_calibration=request.vehicle_tank_calibration,
             vehicle_capacity_kg=request.vehicle_capacity_kg,
+            vehicle_tank_thermal_model=request.vehicle_tank_thermal_model,
+            vehicle_internal_diameter_m=request.vehicle_internal_diameter_m,
+            vehicle_internal_length_m=request.vehicle_internal_length_m,
+            vehicle_inlet_nozzle_diameter_m=(
+                request.vehicle_inlet_nozzle_diameter_m
+            ),
             initial_vehicle_2_pressure_pa=(
                 request.initial_vehicle_2_pressure_mpa * 1.0e6
             ),
@@ -492,6 +519,11 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                 request.initial_vehicle_2_temperature_c + 273.15
             ),
             vehicle_2_capacity_kg=request.vehicle_2_capacity_kg,
+            vehicle_2_internal_diameter_m=request.vehicle_2_internal_diameter_m,
+            vehicle_2_internal_length_m=request.vehicle_2_internal_length_m,
+            vehicle_2_inlet_nozzle_diameter_m=(
+                request.vehicle_2_inlet_nozzle_diameter_m
+            ),
             initial_bank_fill_percent=(
                 request.initial_bank_low_fill_percent,
                 request.initial_bank_medium_fill_percent,
@@ -670,6 +702,19 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                         # sensitivity path.
                         "vehicle_geometry_basis": request.vehicle_geometry_basis,
                         "vehicle_tank_calibration": request.vehicle_tank_calibration,
+                        "vehicle_tank_thermal_model": request.vehicle_tank_thermal_model,
+                        "vehicle_internal_diameter_m": request.vehicle_internal_diameter_m,
+                        "vehicle_internal_length_m": request.vehicle_internal_length_m,
+                        "vehicle_inlet_nozzle_diameter_m": (
+                            request.vehicle_inlet_nozzle_diameter_m
+                        ),
+                        "vehicle_2_internal_diameter_m": (
+                            request.vehicle_2_internal_diameter_m
+                        ),
+                        "vehicle_2_internal_length_m": request.vehicle_2_internal_length_m,
+                        "vehicle_2_inlet_nozzle_diameter_m": (
+                            request.vehicle_2_inlet_nozzle_diameter_m
+                        ),
                         "vehicle_effective_volume_multiplier": (
                             built.station.partial_station.vehicle_tank.fit.
                             effective_volume_multiplier

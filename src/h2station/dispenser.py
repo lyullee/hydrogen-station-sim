@@ -75,6 +75,12 @@ class HoseParameters:
     wall_ambient_ua_w_k: float
     nozzle_flow_area_m2: float
     nozzle_discharge_coefficient: float = 0.8
+    # Physical inside diameter of the receptacle/nozzle jet.  This is kept
+    # separate from ``nozzle_flow_area_m2`` because the latter is an effective
+    # restriction area (including local losses) and is not a geometric
+    # diameter.  It is required only by the opt-in forced-convection tank
+    # model; the validated constant-UA path leaves it unset.
+    vehicle_inlet_nozzle_diameter_m: float | None = None
 
     def __post_init__(self) -> None:
         if min(
@@ -87,6 +93,11 @@ class HoseParameters:
             raise ValueError("Hose UA values cannot be negative")
         if not 0.0 < self.nozzle_discharge_coefficient <= 1.0:
             raise ValueError("nozzle_discharge_coefficient must be in (0, 1]")
+        if (
+            self.vehicle_inlet_nozzle_diameter_m is not None
+            and self.vehicle_inlet_nozzle_diameter_m <= 0.0
+        ):
+            raise ValueError("vehicle_inlet_nozzle_diameter_m must be positive")
 
 
 @dataclass(frozen=True)
@@ -669,6 +680,21 @@ class PartialStationModel:
                 inlet_specific_enthalpy_j_kg=hose_gas.specific_enthalpy_j_kg,
                 outlet_mass_flow_kg_s=nozzle_reverse_flow,
                 ambient_temperature_k=self.ambient_temperature_k,
+                # The tank inlet state is the isenthalpic receptacle state,
+                # not the upstream hose state.  Pass it only as explicit
+                # boundary evidence for the opt-in inlet-jet correlation.
+                inlet_pressure_pa=(
+                    values["receptacle_pressure"]
+                    if nozzle_forward_flow > 0.0 else None
+                ),
+                inlet_temperature_k=(
+                    values["receptacle_temperature"]
+                    if nozzle_forward_flow > 0.0 else None
+                ),
+                inlet_nozzle_diameter_m=(
+                    self.hose.vehicle_inlet_nozzle_diameter_m
+                    if nozzle_forward_flow > 0.0 else None
+                ),
             ),
         )
         return PartialStationState(
