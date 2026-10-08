@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "artifact_type": "hiad_casebook_gate_recheck",
+  "generated_at": "2026-10-09",
+  "status": "machine_preflight_pass_human_gates_open",
+  "privacy": {
+    "raw_case_rows_published": false,
+    "event_identifiers_published": false,
+    "response_or_lesson_fields_published": false,
+    "personal_or_institutional_identifiers_published": false
+  },
+  "machine_preflight": {
+    "pass": true,
+    "case_count": 24,
+    "split": "holdout",
+    "forbidden_model_input_keys": 0,
+    "leakage_advisory_tier_counts": {
+      "HIGH": 16,
+      "MEDIUM": 6,
+      "LOW": 2
+    },
+    "interpretation": "File structure and model-visible input boundaries pass. Advisory flags are not a human leakage decision."
+  },
+  "human_gates": {
+    "coordinator_leakage_review": "PENDING",
+    "institutional_ethics_or_exemption": "PENDING",
+    "approved_casebook_freeze": "PENDING",
+    "masked_holdout_response_collection": "NOT_PERMITTED",
+    "independent_expert_review": "PENDING"
+  },
+  "claim_boundary": [
+    "This recheck does not freeze the HIAD casebook.",
+    "It does not establish SAGA effectiveness, safety, or publication readiness.",
+    "Collection and expert review remain unavailable until the stated human gates are completed."
+  ],
+  "source_artifacts": [
+    "research/hiad_casebook_machine_preflight_2026_10_09.json",
+    "research/hiad_study_protocol_manifest.json"
+  ]
+}
