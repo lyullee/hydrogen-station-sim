@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T23:43:33.225118+00:00",
+  "generated_at": "2026-10-08T00:08:14.768582+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -16,7 +16,7 @@
     "interpretation": "A bounded manuscript may be drafted around model-level and qualitative evidence, but the validated full-station digital-twin objective cannot be declared complete."
   },
   "gate_counts": {
-    "PASS": 94,
+    "PASS": 95,
     "FAIL": 7,
     "PENDING": 8
   },
@@ -53,12 +53,14 @@
     },
     "public_incident_traceability": {
       "gate": "PASS",
+      "independent_khk_gate": "PASS",
       "evidence": [
         "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
+        "research/khk_digital_twin_replay_coverage_2026_10_08.json",
         "research/hiad_accident_response_coverage_evaluation_2026_10_05.json",
         "research/hiad_digital_twin_replay_coverage_2026_10_08.json"
       ],
-      "claim_boundary": "Qualitative scenario, canonical runtime and response grounding; 29 cases map to direct physical families, four to a compressor proxy and one to response-only structural damage, with no accident reconstruction, frequency, calibrated probability, response-effectiveness or safety claim."
+      "claim_boundary": "Qualitative scenario, canonical runtime and response grounding. HIAD contributes 34 metadata traces; independently, 22 KHK reports covering 25 incident codes traverse eight runtime families while one KOH release remains outside the gaseous-H2 scope. No accident reconstruction, frequency, calibrated probability, response-effectiveness or safety claim."
     },
     "confined_space_consequence_measurements": {
       "gate": "PASS",
@@ -182,7 +184,7 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "6f4dccd7bdbedfeffb1cb4a9c77c79fee2c10e84e903d8ddc3bd1810202435a6",
+    "audit_sha256": "effc199d31d9df9fd6104026640b9ffd7bb2c028e7f28dc7e7ab635660be9829",
     "hiad_readiness_sha256": "bb2b8e91cf32e98f0503565d3616698376b4c2e1e6054377384c18641d33da98",
     "acquisition_tracker_sha256": "099fb2ce0d858debf1761a7ceaaaedf781fb83c9d21b6fbb660c30bcd9ba68e0",
     "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",

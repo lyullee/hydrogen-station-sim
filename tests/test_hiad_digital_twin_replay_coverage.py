@@ -28,7 +28,7 @@ def test_hiad_replay_artifact_is_current_complete_and_bounded():
     assert all(_sha256(ROOT / path) == digest for path, digest in source["model_input_sha256"].items())
 
     assert audit["runtime"]["backend"] == "HyRAM+ 6.1 native"
-    assert audit["runtime"]["family_recipe_pass_count"] == 7
+    assert audit["runtime"]["family_recipe_pass_count"] == 9
     assert audit["runtime"]["all_executable_recipes_passed"] is True
     assert aggregate["case_count"] == 34
     assert aggregate["integration_trace_pass_count"] == 34
@@ -46,6 +46,7 @@ def test_hiad_replay_artifact_is_current_complete_and_bounded():
     for family in (
         "gas_release", "hydrogen_fire", "hose_connection", "overpressure",
         "precooling_fault", "fueling_fault", "compressor_thermal",
+        "external_fire", "isolation_failure",
     ):
         assert recipes[family]["status"] == "passed"
         assert all(recipes[family]["checks"].values())
@@ -54,6 +55,9 @@ def test_hiad_replay_artifact_is_current_complete_and_bounded():
     assert recipes["gas_release"]["checks"]["native_consequence"] is True
     assert recipes["hose_connection"]["checks"]["native_consequence"] is True
     assert recipes["compressor_thermal"]["representation"] == "proxy_partial_replay"
+    assert recipes["external_fire"]["checks"]["flame_detection"] is True
+    assert recipes["isolation_failure"]["checks"]["isolation_fault_alarm"] is True
+    assert recipes["isolation_failure"]["representation"] == "proxy_partial_replay"
     assert recipes["structural_damage"]["status"] == "not_run_no_physical_model"
     assert recipes["structural_damage"]["representation"] == "response_only_no_physical_model"
     assert len(audit["claim_boundary"]) >= 4

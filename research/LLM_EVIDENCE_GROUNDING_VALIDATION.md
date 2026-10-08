@@ -28,6 +28,9 @@ contains:
   text;
 - a derived KHK scenario-precedent map linking all 23 report records to
   conservative response families with counts and representative citations;
+- an independent KHK metadata-to-runtime trace: 22 reports covering 25 incident
+  codes traverse eight passing canonical recipes, while one KOH-electrolyte
+  release is explicitly outside the gaseous-H2 model;
 - scenario-specific KHK precedents selected from the active response family and
   delivered consistently to the full evidence manifest, compact provider prompt
   and staged operator guidance;
@@ -83,10 +86,10 @@ The following tests passed in the repository virtual environment:
 
 ```text
 .venv\Scripts\python.exe -m pytest tests/test_llm_grounding.py tests/test_station_thermal_diagnostic.py tests/test_station_thermal_protocol.py tests/test_ijhe_readiness_audit.py -q
-20 passed
+27 passed
 
 .venv\Scripts\python.exe -m pytest -q
-867 passed, 15 warnings
+871 passed, 15 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -96,9 +99,9 @@ assistant routes remain isolated, and a generated answer cannot negate a
 confirmed alarm, gas observation, physical leak or calculated impact.
 The manifest digest now also covers the public response-source identifiers, the
 HIAD action-to-playbook traceability metadata, the derived HIAD action-category
-counts and their artifact digest, and the KHK citation inventory used to ground
-the staged action plan. Raw HIAD action prose is never inserted into the live
-prompt.
+counts and their artifact digest, and the KHK citation inventory and bounded
+runtime trace used to ground the staged action plan. Raw HIAD action prose and
+KHK report text are never inserted into the live prompt.
 
 The accidental-release evidence envelope links the open Zenodo archive and
 its parent article to qualitative release/ignition scenario grounding. It exposes

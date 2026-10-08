@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T23:43:33.113463+00:00",
+  "generated_at": "2026-10-08T00:08:14.638767+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 94,
+    "PASS": 95,
     "FAIL": 7,
     "PENDING": 8
   },
@@ -3746,7 +3746,7 @@
       "status": "PASS",
       "claim": "Every public HIAD HRS metadata case is explicitly classified against an executed digital-twin fault family or a declared no-physics boundary.",
       "evidence": "research\\hiad_digital_twin_replay_coverage_2026_10_08.json",
-      "requirement": "34/34 traceable cases, seven passing canonical runtime recipes, native consequence execution for releases, explicit proxy/response-only counts and current source hashes; no accident-reconstruction or effectiveness claim.",
+      "requirement": "34/34 traceable cases, nine passing canonical runtime recipes, native consequence execution for releases, explicit proxy/response-only counts and current source hashes; no accident-reconstruction or effectiveness claim.",
       "observed": {
         "aggregate": {
           "case_count": 34,
@@ -3757,15 +3757,15 @@
             "response_only_no_physical_model": 1,
             "unmapped": 0
           },
-          "mapped_family_count": 8,
-          "physical_or_proxy_family_count": 7,
+          "mapped_family_count": 10,
+          "physical_or_proxy_family_count": 9,
           "response_only_family_count": 1
         },
         "runtime": {
           "backend": "HyRAM+ 6.1 native",
           "virtual_detector_mode": true,
-          "unique_family_recipes_run": 7,
-          "family_recipe_pass_count": 7,
+          "unique_family_recipes_run": 9,
+          "family_recipe_pass_count": 9,
           "all_executable_recipes_passed": true
         },
         "source_hashes_match": true,
@@ -4372,6 +4372,74 @@
         "raw_report_text_loaded": false,
         "effectiveness_claimed": false,
         "claim_boundary": "This audit verifies citation integrity and scenario-specific runtime routing of public accident precedents. It does not establish historical action correctness, response effectiveness, accident frequency, causality or safety."
+      }
+    },
+    {
+      "id": "khk_digital_twin_replay_traceability",
+      "status": "PASS",
+      "claim": "Independent public KHK accident families are explicitly traced through executable digital-twin recipes with phase and equipment mismatches kept visible.",
+      "evidence": "research\\khk_digital_twin_replay_coverage_2026_10_08.json",
+      "requirement": "22/23 reports and 25/26 incident codes traverse eight passing runtime families; the KOH electrolyte release is explicitly outside the gaseous-H2 model, with no reconstruction, physics-validation or effectiveness claim.",
+      "observed": {
+        "aggregate": {
+          "public_report_count": 23,
+          "incident_code_count": 26,
+          "in_scope_report_count": 22,
+          "in_scope_incident_code_count": 25,
+          "integration_trace_pass_report_count": 22,
+          "integration_trace_pass_incident_code_count": 25,
+          "out_of_scope_report_count": 1,
+          "out_of_scope_incident_code_count": 1,
+          "representation_report_counts": {
+            "direct_canonical_family_replay": 12,
+            "proxy_partial_replay": 10,
+            "out_of_scope_non_hydrogen_chemical": 1
+          }
+        },
+        "runtime": {
+          "backend": "HyRAM+ 6.1 native",
+          "virtual_detector_mode": true,
+          "mapped_family_count": 8,
+          "family_recipe_count": 8,
+          "family_recipe_pass_count": 8,
+          "all_family_recipes_passed": true,
+          "missing_runtime_families": [],
+          "missing_playbook_ids": []
+        },
+        "source_hashes_match": true,
+        "model_hashes_match": true,
+        "out_of_scope_cases": [
+          {
+            "incident_codes": [
+              "2024-349"
+            ],
+            "title": "KOH electrolyte leak from hydrogen generator",
+            "equipment_class": "hydrogen_generation",
+            "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2025/13_2024-349.pdf",
+            "mapped_playbook_ids": [
+              "gas_release"
+            ],
+            "representation": "out_of_scope_non_hydrogen_chemical",
+            "representation_boundary": "The recorded release is KOH electrolyte, not gaseous hydrogen; the current H70 process model has no caustic-liquid transport model.",
+            "executed_recipe_ids": [],
+            "failed_recipe_ids": [],
+            "integration_trace_pass": false,
+            "excluded_from_executable_denominator": true
+          }
+        ],
+        "claims": {
+          "accident_reconstruction_claimed": false,
+          "physics_validation_claimed": false,
+          "response_effectiveness_claimed": false,
+          "frequency_estimation_claimed": false,
+          "safe_distance_claimed": false
+        },
+        "claim_boundary": [
+          "KHK metadata selects canonical response families; report text does not set pressure, temperature, opening size, enclosure geometry, heat flux or event timing.",
+          "A passed trace means the mapped family can traverse process physics, virtual detection, safety logic and native consequence calculation where applicable.",
+          "It does not reconstruct a KHK accident, validate physics or frequency, establish safe distance, or show that a response is correct or effective.",
+          "The KOH electrolyte case is explicitly outside the gaseous-hydrogen model; liquid-hydrogen, production-equipment, explosion and valve-seat mechanisms remain bounded proxies."
+        ]
       }
     },
     {
@@ -5811,14 +5879,14 @@
         "manifest_schema": "h2station.llm-evidence.v1",
         "tests": {
           "targeted": {
-            "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_station_thermal_diagnostic.py tests/test_station_thermal_protocol.py tests/test_hiad_digital_twin_replay_coverage.py tests/test_flame_detection.py tests/test_ijhe_readiness_audit.py -q",
-            "passed": 26,
+            "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_station_thermal_diagnostic.py tests/test_station_thermal_protocol.py tests/test_hiad_digital_twin_replay_coverage.py tests/test_khk_digital_twin_replay_coverage.py tests/test_flame_detection.py tests/test_ijhe_readiness_audit.py -q",
+            "passed": 27,
             "failed": 0,
             "warnings": 0
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 869,
+            "passed": 871,
             "failed": 0,
             "warnings": 15
           }
@@ -5861,7 +5929,8 @@
           "public experimental operating benchmarks are carried into the evidence envelope with pressure-class selection and explicit partial-boundary claim limits",
           "private screen-recording/photo intake is carried as a non-machine-readable provenance boundary without parameter-fit or full-loop authorization",
           "restricted station compressor/cooler thermal evidence is projected into full, summary, header and compact decision contexts as UNCONFIRMED, with no calibration, runtime, vehicle-fill or full-loop claim",
-          "public HIAD metadata-to-runtime coverage is projected into full, summary, header and compact decision contexts with 29 direct, four proxy and one response-only cases, while incident narrative parameterization remains prohibited"
+          "public HIAD metadata-to-runtime coverage is projected into full, summary, header and compact decision contexts with 29 direct, four proxy and one response-only cases, while incident narrative parameterization remains prohibited; all nine executable canonical recipes pass",
+          "independent KHK metadata-to-runtime traceability is projected into full, summary, header and compact decision contexts: 22 reports covering 25 incident codes traverse eight passing canonical recipes, one KOH-electrolyte release remains outside gaseous-H2 scope, and report narrative parameterization remains prohibited"
         ],
         "not_established": [
           "physics validity of the consequence model",
@@ -5890,8 +5959,8 @@
             "direct_physical_case_count": 29,
             "partial_proxy_case_count": 4,
             "response_only_case_count": 1,
-            "canonical_recipe_pass_count": 7,
-            "canonical_recipe_count": 7,
+            "canonical_recipe_pass_count": 9,
+            "canonical_recipe_count": 9,
             "case_narrative_used_for_physical_parameters": false,
             "interpretation": "canonical family runtime traceability only; no accident reconstruction, safe-distance or response-effectiveness claim"
           },
@@ -5979,6 +6048,18 @@
             "hydrogen_fire": 6,
             "isolation_failure": 2,
             "overpressure": 3
+          },
+          "digital_twin_replay": {
+            "evidence": "research/khk_digital_twin_replay_coverage_2026_10_08.json",
+            "public_report_count": 23,
+            "incident_code_count": 26,
+            "integration_trace_pass_report_count": 22,
+            "integration_trace_pass_incident_code_count": 25,
+            "out_of_scope_report_count": 1,
+            "canonical_recipe_pass_count": 8,
+            "canonical_recipe_count": 8,
+            "report_narrative_used_for_physical_parameters": false,
+            "interpretation": "independent metadata-to-canonical-runtime traceability only; no accident reconstruction, physics validation, safe-distance, frequency or response-effectiveness claim"
           }
         },
         "runtime_action_taxonomy": {
@@ -6360,11 +6441,11 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7917,
+          "approximate_manuscript_words_before_references": 7972,
           "figures": 2,
           "tables": 3,
-          "citation_keys": 36,
-          "bibliography_entries": 37,
+          "citation_keys": 37,
+          "bibliography_entries": 38,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -6392,12 +6473,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-07T22:59:29.739540+00:00",
+        "attempted_at": "2026-10-08T00:04:26.857455+00:00",
         "attempts_this_run": 1,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "cfb07b7d8b43bf09a35752695e261232c62826a42eea8545c87a5053ff66e5d4",
+        "source_sha256": "6ea2caca07c5eb2832220fa97fcc3ff0a20af35c3157d0434bdcb4172e1e87ee",
         "diagnostic": "Unable to find standard directories for platform",
         "format_check_passed": true,
         "retained_previous_pdf": {

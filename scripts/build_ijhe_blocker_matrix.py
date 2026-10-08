@@ -110,12 +110,16 @@ def build(root: Path) -> dict[str, Any]:
             },
             "public_incident_traceability": {
                 "gate": gate("hiad_digital_twin_replay_traceability")["status"],
+                "independent_khk_gate": gate(
+                    "khk_digital_twin_replay_traceability"
+                )["status"],
                 "evidence": [
                     "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
+                    "research/khk_digital_twin_replay_coverage_2026_10_08.json",
                     "research/hiad_accident_response_coverage_evaluation_2026_10_05.json",
                     "research/hiad_digital_twin_replay_coverage_2026_10_08.json",
                 ],
-                "claim_boundary": "Qualitative scenario, canonical runtime and response grounding; 29 cases map to direct physical families, four to a compressor proxy and one to response-only structural damage, with no accident reconstruction, frequency, calibrated probability, response-effectiveness or safety claim.",
+                "claim_boundary": "Qualitative scenario, canonical runtime and response grounding. HIAD contributes 34 metadata traces; independently, 22 KHK reports covering 25 incident codes traverse eight runtime families while one KOH release remains outside the gaseous-H2 scope. No accident reconstruction, frequency, calibrated probability, response-effectiveness or safety claim.",
             },
             "confined_space_consequence_measurements": {
                 "gate": gate("grune_ventilation_measurement_inventory")["status"],

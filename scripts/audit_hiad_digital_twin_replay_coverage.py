@@ -130,6 +130,27 @@ def _recipe_catalog() -> dict[str, dict[str, Any]]:
             "checks": ("finite_state", "physical_state_changed", "compressor_flame_detection"),
             "boundary": "The current compressor has no separate gas/metal inventory; heat is conservatively coupled to the connected high-bank surrogate. Cavitation and oil-leak physics are not reconstructed.",
         },
+        "external_fire": {
+            "representation": "direct_physical_replay",
+            "duration_s": 1.2,
+            "event": FaultEvent(
+                "canonical-external-fire", FaultKind.EXTERNAL_FIRE,
+                "cascade.medium", 0.0, external_temperature_k=1000.0,
+                heat_transfer_ua_w_k=5000.0,
+            ),
+            "checks": ("finite_state", "physical_state_changed", "flame_detection"),
+            "boundary": "The declared medium-bank heat exposure is a canonical external-fire integration fixture, not the fire geometry or heat flux of a source incident.",
+        },
+        "isolation_failure": {
+            "representation": "proxy_partial_replay",
+            "duration_s": 10.0,
+            "event": FaultEvent(
+                "canonical-isolation-failure", FaultKind.PCV_STUCK_OPEN,
+                "dispenser.pcv", 0.0,
+            ),
+            "checks": ("finite_state", "physical_state_changed", "isolation_fault_alarm"),
+            "boundary": "A dispenser PCV failed open is a bounded failed-isolation proxy. It does not reconstruct isolation-valve seat leakage, actuator travel or closure feedback.",
+        },
         "structural_damage": {
             "representation": "response_only_no_physical_model",
             "duration_s": None,
@@ -247,6 +268,9 @@ def _run_recipe(family: str, recipe: dict[str, Any]) -> dict[str, Any]:
         "precooling_trip": "precooling-temperature-high" in trip_causes,
         "fueling_flow_alarm": "FT-1101" in alarm_sensors,
         "compressor_flame_detection": "FD-0601" in flame_tags,
+        "isolation_fault_alarm": bool({
+            "FT-1501", "FT-1701", "PT-1102", "PT-1401", "PT-1501", "TT-1401",
+        } & set(alarm_sensors)),
     }
     required = tuple(recipe["checks"])
     return {

@@ -1,0 +1,1061 @@
+{
+  "schema_version": 1,
+  "artifact_type": "khk_public_accident_to_digital_twin_canonical_replay_audit",
+  "generated_at_utc": "2026-10-07T23:55:37.749480+00:00",
+  "status": "completed_independent_public_accident_integration_audit",
+  "evidence_role": "independent_retrospective_metadata_to_canonical_runtime_traceability_only",
+  "source": {
+    "inventory": {
+      "path": "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
+      "sha256": "53131d1737f1d9515598ec3fca690ea70c1e50975f4cd96758eba53a29d585c6"
+    },
+    "access_verification": {
+      "path": "research/khk_public_reports_access_verification_2026_10_04.json",
+      "sha256": "7d6aa0ecbbb1b32a553c97cdf13a1b5b9f427790c8e9f6e3f426a9a8d4992f7c"
+    },
+    "precedent_map": {
+      "path": "research/khk_scenario_precedent_map_2026_10_04.json",
+      "sha256": "449fd452eb8db99fa9fc9a0f3c86c78d835af861b4fc1b18f147d0024b06321b"
+    },
+    "playbook_catalog": {
+      "path": "src/h2station/data/emergency_playbooks.json",
+      "sha256": "b7d64103d9c4d3a322edd2c97b3800b5a796385e4ec25a588a252d288aad8bba"
+    },
+    "model_input_sha256": {
+      "src/h2station/safety_runtime.py": "5fa9f00ca573d7bf0f8494669672d4ed13476e6c6ff64569be699c2e9e98e641",
+      "src/h2station/safe_operation.py": "c1a297860d554f09df1c6fd3c7780811713001d1f168ebcccf0782ebf9f13dd6",
+      "src/h2station/hazop/runtime.py": "42b57f90708ffbef3ec7b0c5c1a8ce9bc80db77d354887a8d3c0297806236f2d",
+      "src/h2station/hazop/mapping.py": "0412b597461848964208b415dbb8549c5c7c27d83a50970d7dacc1d29c4a9684",
+      "src/h2station/risk/live.py": "84e611b7bd79dd64658c96d56ea12f989a47d2bc8c7e747800a15ef6914f03d0",
+      "src/h2station/risk/runtime_backend.py": "521be71d85ed054fbb6b4b667494cc61c098e7ae75d9e3d833bb960fe6f796ee",
+      "src/h2station/data/emergency_playbooks.json": "b7d64103d9c4d3a322edd2c97b3800b5a796385e4ec25a588a252d288aad8bba"
+    },
+    "public_report_text_used": false,
+    "report_narrative_used_for_physical_parameters": false,
+    "raw_pdf_mirrored": false
+  },
+  "runtime": {
+    "backend": "HyRAM+ 6.1 native",
+    "virtual_detector_mode": true,
+    "mapped_family_count": 8,
+    "family_recipe_count": 8,
+    "family_recipe_pass_count": 8,
+    "all_family_recipes_passed": true,
+    "missing_runtime_families": [],
+    "missing_playbook_ids": []
+  },
+  "aggregate": {
+    "public_report_count": 23,
+    "incident_code_count": 26,
+    "in_scope_report_count": 22,
+    "in_scope_incident_code_count": 25,
+    "integration_trace_pass_report_count": 22,
+    "integration_trace_pass_incident_code_count": 25,
+    "out_of_scope_report_count": 1,
+    "out_of_scope_incident_code_count": 1,
+    "representation_report_counts": {
+      "direct_canonical_family_replay": 12,
+      "proxy_partial_replay": 10,
+      "out_of_scope_non_hydrogen_chemical": 1
+    }
+  },
+  "family_recipes": {
+    "compressor_thermal": {
+      "family": "compressor_thermal",
+      "representation": "proxy_partial_replay",
+      "status": "passed",
+      "duration_s": 1.2,
+      "control_period_s": 0.2,
+      "fault": {
+        "event_id": "hiad-compressor-fire",
+        "kind": "external-fire",
+        "target": "compressor",
+        "start_time_s": 0.0,
+        "magnitude": 0.0,
+        "leak_diameter_m": null,
+        "indoor": false,
+        "ignited": false,
+        "enclosure_volume_m3": null,
+        "enclosure_vent_area_m2": null,
+        "rate_s": 30.0,
+        "external_temperature_k": 1000.0,
+        "heat_transfer_ua_w_k": 5000.0
+      },
+      "required_checks": [
+        "finite_state",
+        "physical_state_changed",
+        "compressor_flame_detection"
+      ],
+      "checks": {
+        "finite_state": true,
+        "physical_state_changed": true,
+        "compressor_flame_detection": true
+      },
+      "observed": {
+        "sample_count": 7,
+        "esd_time_s": null,
+        "trip_causes": [],
+        "alarm_sensor_ids": [
+          "FD-0601"
+        ],
+        "alarm_rule_ids": [
+          "HZ-207"
+        ],
+        "gas_detector_max_volpct": 0.0,
+        "gas_detector_positive_tags": [],
+        "flame_detector_max_bool": 1.0,
+        "flame_detector_positive_tags": [
+          "FD-0601"
+        ],
+        "releases": []
+      },
+      "claim_boundary": "The current compressor has no separate gas/metal inventory; heat is conservatively coupled to the connected high-bank surrogate. Cavitation and oil-leak physics are not reconstructed."
+    },
+    "external_fire": {
+      "family": "external_fire",
+      "representation": "direct_physical_replay",
+      "status": "passed",
+      "duration_s": 1.2,
+      "control_period_s": 0.2,
+      "fault": {
+        "event_id": "canonical-external-fire",
+        "kind": "external-fire",
+        "target": "cascade.medium",
+        "start_time_s": 0.0,
+        "magnitude": 0.0,
+        "leak_diameter_m": null,
+        "indoor": false,
+        "ignited": false,
+        "enclosure_volume_m3": null,
+        "enclosure_vent_area_m2": null,
+        "rate_s": 30.0,
+        "external_temperature_k": 1000.0,
+        "heat_transfer_ua_w_k": 5000.0
+      },
+      "required_checks": [
+        "finite_state",
+        "physical_state_changed",
+        "flame_detection"
+      ],
+      "checks": {
+        "finite_state": true,
+        "physical_state_changed": true,
+        "flame_detection": true
+      },
+      "observed": {
+        "sample_count": 7,
+        "esd_time_s": null,
+        "trip_causes": [],
+        "alarm_sensor_ids": [
+          "FD-0801"
+        ],
+        "alarm_rule_ids": [
+          "HZ-209"
+        ],
+        "gas_detector_max_volpct": 0.0,
+        "gas_detector_positive_tags": [],
+        "flame_detector_max_bool": 1.0,
+        "flame_detector_positive_tags": [
+          "FD-0801"
+        ],
+        "releases": []
+      },
+      "claim_boundary": "The declared medium-bank heat exposure is a canonical external-fire integration fixture, not the fire geometry or heat flux of a source incident."
+    },
+    "fueling_fault": {
+      "family": "fueling_fault",
+      "representation": "direct_physical_replay",
+      "status": "passed",
+      "duration_s": 10.0,
+      "control_period_s": 0.2,
+      "fault": {
+        "event_id": "hiad-fueling-fault",
+        "kind": "pcv-stuck-closed",
+        "target": "dispenser.pcv",
+        "start_time_s": 0.0,
+        "magnitude": 0.0,
+        "leak_diameter_m": null,
+        "indoor": false,
+        "ignited": false,
+        "enclosure_volume_m3": null,
+        "enclosure_vent_area_m2": null,
+        "rate_s": 30.0,
+        "external_temperature_k": null,
+        "heat_transfer_ua_w_k": 0.0
+      },
+      "required_checks": [
+        "finite_state",
+        "physical_state_changed",
+        "fueling_flow_alarm"
+      ],
+      "checks": {
+        "finite_state": true,
+        "physical_state_changed": true,
+        "fueling_flow_alarm": true
+      },
+      "observed": {
+        "sample_count": 51,
+        "esd_time_s": null,
+        "trip_causes": [],
+        "alarm_sensor_ids": [
+          "FT-1101",
+          "FT-1301",
+          "FT-1501",
+          "FT-1701",
+          "PT-1101",
+          "PT-1501"
+        ],
+        "alarm_rule_ids": [
+          "HZ-077",
+          "HZ-081",
+          "HZ-092",
+          "HZ-105",
+          "HZ-109",
+          "HZ-120"
+        ],
+        "gas_detector_max_volpct": 0.0,
+        "gas_detector_positive_tags": [],
+        "flame_detector_max_bool": 0.0,
+        "flame_detector_positive_tags": [],
+        "releases": []
+      },
+      "claim_boundary": "A dispenser-1 PCV stuck closed tests failed delivery; it does not reproduce every dispenser malfunction."
+    },
+    "gas_release": {
+      "family": "gas_release",
+      "representation": "direct_physical_replay",
+      "status": "passed",
+      "duration_s": 1.2,
+      "control_period_s": 0.2,
+      "fault": {
+        "event_id": "hiad-gas-release",
+        "kind": "hydrogen-leak",
+        "target": "cascade.medium",
+        "start_time_s": 0.0,
+        "magnitude": 0.0,
+        "leak_diameter_m": 0.001,
+        "indoor": false,
+        "ignited": false,
+        "enclosure_volume_m3": null,
+        "enclosure_vent_area_m2": null,
+        "rate_s": 30.0,
+        "external_temperature_k": null,
+        "heat_transfer_ua_w_k": 0.0
+      },
+      "required_checks": [
+        "finite_state",
+        "physical_state_changed",
+        "release_source",
+        "gas_detection",
+        "native_consequence"
+      ],
+      "checks": {
+        "finite_state": true,
+        "physical_state_changed": true,
+        "release_source": true,
+        "gas_detection": true,
+        "native_consequence": true
+      },
+      "observed": {
+        "sample_count": 7,
+        "esd_time_s": null,
+        "trip_causes": [],
+        "alarm_sensor_ids": [
+          "GD-0801",
+          "GD-2201"
+        ],
+        "alarm_rule_ids": [
+          "HZ-153",
+          "HZ-154",
+          "HZ-155",
+          "HZ-177",
+          "HZ-178",
+          "HZ-179"
+        ],
+        "gas_detector_max_volpct": 100.0,
+        "gas_detector_positive_tags": [
+          "GD-0801",
+          "GD-2201"
+        ],
+        "flame_detector_max_bool": 0.0,
+        "flame_detector_positive_tags": [],
+        "releases": [
+          {
+            "release_id": "hiad-gas-release",
+            "component_id": "cascade.medium",
+            "maximum_mass_flow_g_s": 23.41604653235145,
+            "consequence_statuses": [
+              "calculated"
+            ],
+            "ignited_enclosure_statuses": [],
+            "maximum_sampled_effect_radius_m": 3.0
+          }
+        ]
+      },
+      "claim_boundary": "A 1 mm medium-bank release is a canonical test input, not the geometry of a HIAD event."
+    },
+    "hose_connection": {
+      "family": "hose_connection",
+      "representation": "direct_physical_replay",
+      "status": "passed",
+      "duration_s": 1.2,
+      "control_period_s": 0.2,
+      "fault": {
+        "event_id": "hiad-hose-release",
+        "kind": "hydrogen-leak",
+        "target": "dispenser.hose",
+        "start_time_s": 0.0,
+        "magnitude": 0.0,
+        "leak_diameter_m": 0.0005,
+        "indoor": false,
+        "ignited": false,
+        "enclosure_volume_m3": null,
+        "enclosure_vent_area_m2": null,
+        "rate_s": 30.0,
+        "external_temperature_k": null,
+        "heat_transfer_ua_w_k": 0.0
+      },
+      "required_checks": [
+        "finite_state",
+        "physical_state_changed",
+        "release_source",
+        "gas_detection",
+        "native_consequence"
+      ],
+      "checks": {
+        "finite_state": true,
+        "physical_state_changed": true,
+        "release_source": true,
+        "gas_detection": true,
+        "native_consequence": true
+      },
+      "observed": {
+        "sample_count": 7,
+        "esd_time_s": null,
+        "trip_causes": [],
+        "alarm_sensor_ids": [
+          "GD-1301",
+          "GD-2301"
+        ],
+        "alarm_rule_ids": [
+          "HZ-162",
+          "HZ-163",
+          "HZ-164",
+          "HZ-180",
+          "HZ-181",
+          "HZ-182"
+        ],
+        "gas_detector_max_volpct": 14.035832269960522,
+        "gas_detector_positive_tags": [
+          "GD-1301",
+          "GD-2301"
+        ],
+        "flame_detector_max_bool": 0.0,
+        "flame_detector_positive_tags": [],
+        "releases": [
+          {
+            "release_id": "hiad-hose-release",
+            "component_id": "dispenser.hose",
+            "maximum_mass_flow_g_s": 0.4933596482844779,
+            "consequence_statuses": [
+              "calculated"
+            ],
+            "ignited_enclosure_statuses": [],
+            "maximum_sampled_effect_radius_m": 0.0
+          }
+        ]
+      },
+      "claim_boundary": "A 0.5 mm dispenser-hose opening tests the modeled connection zone without asserting actual break geometry."
+    },
+    "hydrogen_fire": {
+      "family": "hydrogen_fire",
+      "representation": "direct_physical_replay",
+      "status": "passed",
+      "duration_s": 1.2,
+      "control_period_s": 0.2,
+      "fault": {
+        "event_id": "hiad-hydrogen-fire",
+        "kind": "hydrogen-leak",
+        "target": "cascade.medium",
+        "start_time_s": 0.0,
+        "magnitude": 0.0,
+        "leak_diameter_m": 0.001,
+        "indoor": true,
+        "ignited": true,
+        "enclosure_volume_m3": 100.0,
+        "enclosure_vent_area_m2": 2.0,
+        "rate_s": 30.0,
+        "external_temperature_k": null,
+        "heat_transfer_ua_w_k": 0.0
+      },
+      "required_checks": [
+        "finite_state",
+        "physical_state_changed",
+        "release_source",
+        "gas_detection",
+        "flame_detection",
+        "native_consequence",
+        "ignited_consequence"
+      ],
+      "checks": {
+        "finite_state": true,
+        "physical_state_changed": true,
+        "release_source": true,
+        "gas_detection": true,
+        "flame_detection": true,
+        "native_consequence": true,
+        "ignited_consequence": true
+      },
+      "observed": {
+        "sample_count": 7,
+        "esd_time_s": null,
+        "trip_causes": [],
+        "alarm_sensor_ids": [
+          "FD-0801",
+          "GD-0801",
+          "GD-2201"
+        ],
+        "alarm_rule_ids": [
+          "HZ-153",
+          "HZ-154",
+          "HZ-155",
+          "HZ-177",
+          "HZ-178",
+          "HZ-179",
+          "HZ-209"
+        ],
+        "gas_detector_max_volpct": 100.0,
+        "gas_detector_positive_tags": [
+          "GD-0801",
+          "GD-2201"
+        ],
+        "flame_detector_max_bool": 1.0,
+        "flame_detector_positive_tags": [
+          "FD-0801"
+        ],
+        "releases": [
+          {
+            "release_id": "hiad-hydrogen-fire",
+            "component_id": "cascade.medium",
+            "maximum_mass_flow_g_s": 23.41604653235145,
+            "consequence_statuses": [
+              "calculated"
+            ],
+            "ignited_enclosure_statuses": [
+              "calculated"
+            ],
+            "maximum_sampled_effect_radius_m": 3.0
+          }
+        ]
+      },
+      "claim_boundary": "The declared enclosure is a detector/consequence integration fixture, not a HIAD-site reconstruction."
+    },
+    "isolation_failure": {
+      "family": "isolation_failure",
+      "representation": "proxy_partial_replay",
+      "status": "passed",
+      "duration_s": 10.0,
+      "control_period_s": 0.2,
+      "fault": {
+        "event_id": "canonical-isolation-failure",
+        "kind": "pcv-stuck-open",
+        "target": "dispenser.pcv",
+        "start_time_s": 0.0,
+        "magnitude": 0.0,
+        "leak_diameter_m": null,
+        "indoor": false,
+        "ignited": false,
+        "enclosure_volume_m3": null,
+        "enclosure_vent_area_m2": null,
+        "rate_s": 30.0,
+        "external_temperature_k": null,
+        "heat_transfer_ua_w_k": 0.0
+      },
+      "required_checks": [
+        "finite_state",
+        "physical_state_changed",
+        "isolation_fault_alarm"
+      ],
+      "checks": {
+        "finite_state": true,
+        "physical_state_changed": true,
+        "isolation_fault_alarm": true
+      },
+      "observed": {
+        "sample_count": 51,
+        "esd_time_s": null,
+        "trip_causes": [],
+        "alarm_sensor_ids": [
+          "FT-1501",
+          "FT-1701",
+          "PT-1102",
+          "PT-1401",
+          "PT-1501",
+          "TT-1401"
+        ],
+        "alarm_rule_ids": [
+          "HZ-080",
+          "HZ-100",
+          "HZ-101",
+          "HZ-105",
+          "HZ-109",
+          "HZ-120"
+        ],
+        "gas_detector_max_volpct": 0.0,
+        "gas_detector_positive_tags": [],
+        "flame_detector_max_bool": 0.0,
+        "flame_detector_positive_tags": [],
+        "releases": []
+      },
+      "claim_boundary": "A dispenser PCV failed open is a bounded failed-isolation proxy. It does not reconstruct isolation-valve seat leakage, actuator travel or closure feedback."
+    },
+    "overpressure": {
+      "family": "overpressure",
+      "representation": "direct_physical_replay",
+      "status": "passed",
+      "duration_s": 3.0,
+      "control_period_s": 0.2,
+      "fault": {
+        "event_id": "hiad-overpressure",
+        "kind": "pressure-disturbance",
+        "target": "cascade.medium",
+        "start_time_s": 0.0,
+        "magnitude": 20.0,
+        "leak_diameter_m": null,
+        "indoor": false,
+        "ignited": false,
+        "enclosure_volume_m3": null,
+        "enclosure_vent_area_m2": null,
+        "rate_s": 0.5,
+        "external_temperature_k": null,
+        "heat_transfer_ua_w_k": 0.0
+      },
+      "required_checks": [
+        "finite_state",
+        "physical_state_changed",
+        "pressure_alarm"
+      ],
+      "checks": {
+        "finite_state": true,
+        "physical_state_changed": true,
+        "pressure_alarm": true
+      },
+      "observed": {
+        "sample_count": 16,
+        "esd_time_s": null,
+        "trip_causes": [],
+        "alarm_sensor_ids": [
+          "PT-0801",
+          "TT-0801"
+        ],
+        "alarm_rule_ids": [
+          "HZ-052",
+          "HZ-053",
+          "HZ-056"
+        ],
+        "gas_detector_max_volpct": 0.0,
+        "gas_detector_positive_tags": [],
+        "flame_detector_max_bool": 0.0,
+        "flame_detector_positive_tags": [],
+        "releases": []
+      },
+      "claim_boundary": "The controlled mass-source disturbance tests overpressure propagation; it is not an inferred HIAD source term."
+    }
+  },
+  "cases": [
+    {
+      "incident_codes": [
+        "2024-349"
+      ],
+      "title": "KOH electrolyte leak from hydrogen generator",
+      "equipment_class": "hydrogen_generation",
+      "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2025/13_2024-349.pdf",
+      "mapped_playbook_ids": [
+        "gas_release"
+      ],
+      "representation": "out_of_scope_non_hydrogen_chemical",
+      "representation_boundary": "The recorded release is KOH electrolyte, not gaseous hydrogen; the current H70 process model has no caustic-liquid transport model.",
+      "executed_recipe_ids": [],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": false,
+      "excluded_from_executable_denominator": true
+    },
+    {
+      "incident_codes": [
+        "2023-434"
+      ],
+      "title": "Hydrogen ignition at compressed-hydrogen production dehumidifier",
+      "equipment_class": "dehumidifier_ignition",
+      "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2024/10_2023-%20434.pdf",
+      "mapped_playbook_ids": [
+        "hydrogen_fire",
+        "external_fire"
+      ],
+      "representation": "proxy_partial_replay",
+      "representation_boundary": "Hydrogen-production dehumidifier geometry is outside the station process model.",
+      "executed_recipe_ids": [
+        "hydrogen_fire",
+        "external_fire"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2023-330"
+      ],
+      "title": "Hydrogen-gas explosion",
+      "equipment_class": "explosion",
+      "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2024/06_2023-330.pdf",
+      "mapped_playbook_ids": [
+        "hydrogen_fire",
+        "overpressure"
+      ],
+      "representation": "proxy_partial_replay",
+      "representation_boundary": "The canonical fire and pressure fixtures do not reconstruct the explosion source term.",
+      "executed_recipe_ids": [
+        "hydrogen_fire",
+        "overpressure"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2023-188"
+      ],
+      "title": "Hydrogen filling-equipment explosion",
+      "equipment_class": "filling_equipment_explosion",
+      "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2023/05_2023-188.pdf",
+      "mapped_playbook_ids": [
+        "fueling_fault",
+        "overpressure"
+      ],
+      "representation": "proxy_partial_replay",
+      "representation_boundary": "The combined filling-equipment explosion sequence is represented by separate fueling and pressure fixtures.",
+      "executed_recipe_ids": [
+        "fueling_fault",
+        "overpressure"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2023-100"
+      ],
+      "title": "Liquid-hydrogen vehicle leak and engine-room fire",
+      "equipment_class": "vehicle_fire",
+      "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2023/13_2023-100.pdf",
+      "mapped_playbook_ids": [
+        "hydrogen_fire",
+        "external_fire"
+      ],
+      "representation": "proxy_partial_replay",
+      "representation_boundary": "The source report concerns liquid hydrogen and an engine-room fire; the model is gaseous H70.",
+      "executed_recipe_ids": [
+        "hydrogen_fire",
+        "external_fire"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2022-608"
+      ],
+      "title": "Trace hydrogen leak from fitting in 40 MPa storage-gas unit",
+      "equipment_class": "storage_fitting_leak",
+      "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2023/15_2022-608.pdf",
+      "mapped_playbook_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_canonical_family_replay",
+      "representation_boundary": "The equipment family is represented directly, while source-report geometry and timing remain unused.",
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2022-030"
+      ],
+      "title": "Fitting damage and hydrogen leak",
+      "equipment_class": "fitting_leak",
+      "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2023/10_2022-030.pdf",
+      "mapped_playbook_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "representation": "direct_canonical_family_replay",
+      "representation_boundary": "The equipment family is represented directly, while source-report geometry and timing remain unused.",
+      "executed_recipe_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2021-552"
+      ],
+      "title": "Hydrogen leak and electrostatic ignition at hydrogen production equipment",
+      "equipment_class": "leak_static_ignition",
+      "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/2022/14_2021-552c.pdf",
+      "mapped_playbook_ids": [
+        "gas_release",
+        "hydrogen_fire"
+      ],
+      "representation": "proxy_partial_replay",
+      "representation_boundary": "Hydrogen-production equipment and electrostatic ignition physics are outside the modeled station equipment.",
+      "executed_recipe_ids": [
+        "gas_release",
+        "hydrogen_fire"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2020-144"
+      ],
+      "title": "Hydrogen-gas leak",
+      "equipment_class": "hydrogen_leak",
+      "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/jikogaiyouhoukoku/2020-144.pdf",
+      "mapped_playbook_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_canonical_family_replay",
+      "representation_boundary": "The equipment family is represented directly, while source-report geometry and timing remain unused.",
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2019-378"
+      ],
+      "title": "Filling-hose damage during FC forklift hydrogen filling",
+      "equipment_class": "filling_hose_damage",
+      "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/jikogaiyouhoukoku/2019-378r%20.pdf",
+      "mapped_playbook_ids": [
+        "hose_connection",
+        "fueling_fault"
+      ],
+      "representation": "direct_canonical_family_replay",
+      "representation_boundary": "The equipment family is represented directly, while source-report geometry and timing remain unused.",
+      "executed_recipe_ids": [
+        "hose_connection",
+        "fueling_fault"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2018-660",
+        "2018-661"
+      ],
+      "title": "Hydrogen leaks from compressors at compressed-hydrogen stations",
+      "equipment_class": "compressor_leak",
+      "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/jikogaiyouhoukoku/02-12_2018-660%2C661.pdf",
+      "mapped_playbook_ids": [
+        "gas_release",
+        "compressor_thermal"
+      ],
+      "representation": "proxy_partial_replay",
+      "representation_boundary": "The compressor has no independent dynamic gas inventory; storage release and compressor heat are bounded proxies.",
+      "executed_recipe_ids": [
+        "gas_release",
+        "compressor_thermal"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2018-705"
+      ],
+      "title": "Filling-hose leak and fixed gas-detector alarm at hydrogen station",
+      "equipment_class": "hose_leak_detector_alarm",
+      "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/jikogaiyouhoukoku/2018-705.pdf",
+      "mapped_playbook_ids": [
+        "hose_connection",
+        "gas_release"
+      ],
+      "representation": "direct_canonical_family_replay",
+      "representation_boundary": "The equipment family is represented directly, while source-report geometry and timing remain unused.",
+      "executed_recipe_ids": [
+        "hose_connection",
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2017-101"
+      ],
+      "title": "Compressed-hydrogen station filling-hose rupture",
+      "equipment_class": "filling_hose_rupture",
+      "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/ippan_soku/2017-101.pdf",
+      "mapped_playbook_ids": [
+        "hose_connection",
+        "gas_release"
+      ],
+      "representation": "direct_canonical_family_replay",
+      "representation_boundary": "The equipment family is represented directly, while source-report geometry and timing remain unused.",
+      "executed_recipe_ids": [
+        "hose_connection",
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2017-037",
+        "2017-094",
+        "2017-119"
+      ],
+      "title": "Hydrogen leaks from compressed-hydrogen station dispensers",
+      "equipment_class": "dispenser_leak",
+      "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/ippan_soku/2017-037_2017-094_2017-119.pdf",
+      "mapped_playbook_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "representation": "direct_canonical_family_replay",
+      "representation_boundary": "The equipment family is represented directly, while source-report geometry and timing remain unused.",
+      "executed_recipe_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2016-1066"
+      ],
+      "title": "Hydrogen leak from isolation valve at compressed-hydrogen station",
+      "equipment_class": "isolation_valve_leak",
+      "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/ippan_soku/2016-1066.pdf",
+      "mapped_playbook_ids": [
+        "isolation_failure",
+        "gas_release"
+      ],
+      "representation": "proxy_partial_replay",
+      "representation_boundary": "The failed-open PCV fixture does not reproduce valve-seat leakage or actuator feedback.",
+      "executed_recipe_ids": [
+        "isolation_failure",
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2016-186"
+      ],
+      "title": "Hydrogen leak from emergency breakaway coupling",
+      "equipment_class": "breakaway_coupling_leak",
+      "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/ippan_soku/2016-186.pdf",
+      "mapped_playbook_ids": [
+        "hose_connection",
+        "gas_release"
+      ],
+      "representation": "direct_canonical_family_replay",
+      "representation_boundary": "The equipment family is represented directly, while source-report geometry and timing remain unused.",
+      "executed_recipe_ids": [
+        "hose_connection",
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2016-082"
+      ],
+      "title": "Hydrogen leak at compressed-hydrogen station",
+      "equipment_class": "station_hydrogen_leak",
+      "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/ippan_soku/2016-082.pdf",
+      "mapped_playbook_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_canonical_family_replay",
+      "representation_boundary": "The equipment family is represented directly, while source-report geometry and timing remain unused.",
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2015-363"
+      ],
+      "title": "Mobile-station emergency breakaway-coupler hydrogen leak",
+      "equipment_class": "mobile_breakaway_leak",
+      "source_url": "https://www.khk.or.jp/Portals/0/khk/hpg/accident/ippan_soku/2015-363.pdf",
+      "mapped_playbook_ids": [
+        "hose_connection",
+        "gas_release"
+      ],
+      "representation": "direct_canonical_family_replay",
+      "representation_boundary": "The equipment family is represented directly, while source-report geometry and timing remain unused.",
+      "executed_recipe_ids": [
+        "hose_connection",
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2015-333"
+      ],
+      "title": "Hydrogen leak from dispenser isolation valve during filling",
+      "equipment_class": "dispenser_isolation_valve_leak",
+      "source_url": "https://www.khk.or.jp/Portals/0/resources/activities/incident_investigation/hpg_incident/pdf/2015-333.pdf",
+      "mapped_playbook_ids": [
+        "isolation_failure",
+        "gas_release"
+      ],
+      "representation": "proxy_partial_replay",
+      "representation_boundary": "The failed-open PCV fixture does not reproduce valve-seat leakage or actuator feedback.",
+      "executed_recipe_ids": [
+        "isolation_failure",
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2015-052"
+      ],
+      "title": "Hydrogen leak from dispenser fitting",
+      "equipment_class": "dispenser_fitting_leak",
+      "source_url": "https://www.khk.or.jp/Portals/0/resources/activities/incident_investigation/hpg_incident/pdf/2015-052.pdf",
+      "mapped_playbook_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "representation": "direct_canonical_family_replay",
+      "representation_boundary": "The equipment family is represented directly, while source-report geometry and timing remain unused.",
+      "executed_recipe_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2014-349"
+      ],
+      "title": "Fire during accumulator cleaning at hydrogen station",
+      "equipment_class": "accumulator_fire",
+      "source_url": "https://www.khk.or.jp/Portals/0/resources/activities/incident_investigation/hpg_incident/pdf/2014-349.pdf",
+      "mapped_playbook_ids": [
+        "hydrogen_fire",
+        "external_fire"
+      ],
+      "representation": "proxy_partial_replay",
+      "representation_boundary": "The canonical bank heat-and-release fixtures do not reconstruct cleaning work or ignition history.",
+      "executed_recipe_ids": [
+        "hydrogen_fire",
+        "external_fire"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2014-182"
+      ],
+      "title": "Hydrogen-gas leak from compressed-hydrogen station filling hose",
+      "equipment_class": "filling_hose_leak",
+      "source_url": "https://www.khk.or.jp/Portals/0/resources/activities/incident_investigation/hpg_incident/pdf/2014-182.pdf",
+      "mapped_playbook_ids": [
+        "hose_connection",
+        "gas_release"
+      ],
+      "representation": "direct_canonical_family_replay",
+      "representation_boundary": "The equipment family is represented directly, while source-report geometry and timing remain unused.",
+      "executed_recipe_ids": [
+        "hose_connection",
+        "gas_release"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    },
+    {
+      "incident_codes": [
+        "2005-415"
+      ],
+      "title": "Explosion at hydrogen-station demonstration test equipment",
+      "equipment_class": "station_explosion",
+      "source_url": "https://www.khk.or.jp/Portals/0/resources/activities/incident_investigation/hpg_incident/pdf/2005-415.pdf",
+      "mapped_playbook_ids": [
+        "hydrogen_fire",
+        "overpressure"
+      ],
+      "representation": "proxy_partial_replay",
+      "representation_boundary": "The canonical fire and pressure fixtures do not reconstruct the demonstration-equipment explosion.",
+      "executed_recipe_ids": [
+        "hydrogen_fire",
+        "overpressure"
+      ],
+      "failed_recipe_ids": [],
+      "integration_trace_pass": true,
+      "excluded_from_executable_denominator": false
+    }
+  ],
+  "claims": {
+    "accident_reconstruction_claimed": false,
+    "physics_validation_claimed": false,
+    "response_effectiveness_claimed": false,
+    "frequency_estimation_claimed": false,
+    "safe_distance_claimed": false
+  },
+  "claim_boundary": [
+    "KHK metadata selects canonical response families; report text does not set pressure, temperature, opening size, enclosure geometry, heat flux or event timing.",
+    "A passed trace means the mapped family can traverse process physics, virtual detection, safety logic and native consequence calculation where applicable.",
+    "It does not reconstruct a KHK accident, validate physics or frequency, establish safe distance, or show that a response is correct or effective.",
+    "The KOH electrolyte case is explicitly outside the gaseous-hydrogen model; liquid-hydrogen, production-equipment, explosion and valve-seat mechanisms remain bounded proxies."
+  ],
+  "source_consistency": {
+    "inventory_report_count": 23,
+    "access_verified_report_count": 23,
+    "precedent_mapped_report_count": 23
+  }
+}

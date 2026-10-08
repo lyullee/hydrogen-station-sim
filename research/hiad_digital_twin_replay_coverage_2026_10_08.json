@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "hiad_to_digital_twin_canonical_replay_coverage_audit",
-  "generated_at_utc": "2026-10-07T23:15:57.705198+00:00",
+  "generated_at_utc": "2026-10-07T23:55:12.166702+00:00",
   "status": "completed_family_level_integration_audit",
   "evidence_role": "retrospective_metadata_to_canonical_runtime_traceability_only",
   "source": {
@@ -24,8 +24,8 @@
   "runtime": {
     "backend": "HyRAM+ 6.1 native",
     "virtual_detector_mode": true,
-    "unique_family_recipes_run": 7,
-    "family_recipe_pass_count": 7,
+    "unique_family_recipes_run": 9,
+    "family_recipe_pass_count": 9,
     "all_executable_recipes_passed": true
   },
   "aggregate": {
@@ -37,8 +37,8 @@
       "response_only_no_physical_model": 1,
       "unmapped": 0
     },
-    "mapped_family_count": 8,
-    "physical_or_proxy_family_count": 7,
+    "mapped_family_count": 10,
+    "physical_or_proxy_family_count": 9,
     "response_only_family_count": 1
   },
   "family_recipes": {
@@ -479,6 +479,116 @@
         "releases": []
       },
       "claim_boundary": "The current compressor has no separate gas/metal inventory; heat is conservatively coupled to the connected high-bank surrogate. Cavitation and oil-leak physics are not reconstructed."
+    },
+    "external_fire": {
+      "family": "external_fire",
+      "representation": "direct_physical_replay",
+      "status": "passed",
+      "duration_s": 1.2,
+      "control_period_s": 0.2,
+      "fault": {
+        "event_id": "canonical-external-fire",
+        "kind": "external-fire",
+        "target": "cascade.medium",
+        "start_time_s": 0.0,
+        "magnitude": 0.0,
+        "leak_diameter_m": null,
+        "indoor": false,
+        "ignited": false,
+        "enclosure_volume_m3": null,
+        "enclosure_vent_area_m2": null,
+        "rate_s": 30.0,
+        "external_temperature_k": 1000.0,
+        "heat_transfer_ua_w_k": 5000.0
+      },
+      "required_checks": [
+        "finite_state",
+        "physical_state_changed",
+        "flame_detection"
+      ],
+      "checks": {
+        "finite_state": true,
+        "physical_state_changed": true,
+        "flame_detection": true
+      },
+      "observed": {
+        "sample_count": 7,
+        "esd_time_s": null,
+        "trip_causes": [],
+        "alarm_sensor_ids": [
+          "FD-0801"
+        ],
+        "alarm_rule_ids": [
+          "HZ-209"
+        ],
+        "gas_detector_max_volpct": 0.0,
+        "gas_detector_positive_tags": [],
+        "flame_detector_max_bool": 1.0,
+        "flame_detector_positive_tags": [
+          "FD-0801"
+        ],
+        "releases": []
+      },
+      "claim_boundary": "The declared medium-bank heat exposure is a canonical external-fire integration fixture, not the fire geometry or heat flux of a source incident."
+    },
+    "isolation_failure": {
+      "family": "isolation_failure",
+      "representation": "proxy_partial_replay",
+      "status": "passed",
+      "duration_s": 10.0,
+      "control_period_s": 0.2,
+      "fault": {
+        "event_id": "canonical-isolation-failure",
+        "kind": "pcv-stuck-open",
+        "target": "dispenser.pcv",
+        "start_time_s": 0.0,
+        "magnitude": 0.0,
+        "leak_diameter_m": null,
+        "indoor": false,
+        "ignited": false,
+        "enclosure_volume_m3": null,
+        "enclosure_vent_area_m2": null,
+        "rate_s": 30.0,
+        "external_temperature_k": null,
+        "heat_transfer_ua_w_k": 0.0
+      },
+      "required_checks": [
+        "finite_state",
+        "physical_state_changed",
+        "isolation_fault_alarm"
+      ],
+      "checks": {
+        "finite_state": true,
+        "physical_state_changed": true,
+        "isolation_fault_alarm": true
+      },
+      "observed": {
+        "sample_count": 51,
+        "esd_time_s": null,
+        "trip_causes": [],
+        "alarm_sensor_ids": [
+          "FT-1501",
+          "FT-1701",
+          "PT-1102",
+          "PT-1401",
+          "PT-1501",
+          "TT-1401"
+        ],
+        "alarm_rule_ids": [
+          "HZ-080",
+          "HZ-100",
+          "HZ-101",
+          "HZ-105",
+          "HZ-109",
+          "HZ-120"
+        ],
+        "gas_detector_max_volpct": 0.0,
+        "gas_detector_positive_tags": [],
+        "flame_detector_max_bool": 0.0,
+        "flame_detector_positive_tags": [],
+        "releases": []
+      },
+      "claim_boundary": "A dispenser PCV failed open is a bounded failed-isolation proxy. It does not reconstruct isolation-valve seat leakage, actuator travel or closure feedback."
     },
     "structural_damage": {
       "family": "structural_damage",

@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **94 PASS · 7 FAIL · 8 PENDING**.
+Gate counts: **95 PASS · 7 FAIL · 8 PENDING**.
 
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted
@@ -79,11 +79,18 @@ showing that improved coverage came with more operator information burden. These
 results do not replace the pending blinded expert study.
 
 A separate canonical replay audit now prevents the HIAD text benchmark from
-bypassing the digital twin. Seven response families were executed through the
+bypassing the digital twin. Nine response families were executed through the
 process, detector, HAZOP/safety and native HyRAM paths: 29/34 cases have direct
 physical-family coverage, 4/34 use the explicitly bounded compressor proxy, and
-1/34 structural-damage case remains response-only. All seven executable recipes
+1/34 structural-damage case remains response-only. All nine executable recipes
 passed. These fixtures do not reconstruct an accident or validate the advice.
+
+An independent KHK trace adds 23 public reports covering 26 incident codes.
+Twenty-two reports (25 codes) traverse eight canonical runtime families; the
+KOH-electrolyte release is explicitly excluded because it is not a gaseous-H2
+release. All eight family fixtures pass, but liquid-hydrogen, production-
+equipment, explosion and valve-seat cases remain bounded proxies rather than
+accident reconstructions or response-effectiveness evidence.
 
 Confidential real-station data may be used without public redistribution. The
 required route is documented in

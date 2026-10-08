@@ -225,7 +225,7 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
         "response_only_no_physical_model": 1,
         "unmapped": 0,
     }
-    assert hiad_replay["runtime"]["family_recipe_pass_count"] == 7
+    assert hiad_replay["runtime"]["family_recipe_pass_count"] == 9
     assert hiad_replay["source_hashes_match"] is True
     assert hiad_replay["public_response_text_used"] is False
     assert hiad_replay["case_narrative_used_for_physical_parameters"] is False
@@ -463,6 +463,18 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert precedent["aggregate"]["public_report_count"] == 23
     assert precedent["aggregate"]["manifest_routing_failure_count"] == 0
     assert precedent["source_hashes_match"] is True
+
+    assert gates["khk_digital_twin_replay_traceability"]["status"] == "PASS"
+    khk_replay = gates["khk_digital_twin_replay_traceability"]["observed"]
+    assert khk_replay["aggregate"]["public_report_count"] == 23
+    assert khk_replay["aggregate"]["incident_code_count"] == 26
+    assert khk_replay["aggregate"]["integration_trace_pass_report_count"] == 22
+    assert khk_replay["aggregate"]["integration_trace_pass_incident_code_count"] == 25
+    assert khk_replay["aggregate"]["out_of_scope_report_count"] == 1
+    assert khk_replay["runtime"]["family_recipe_pass_count"] == 8
+    assert khk_replay["source_hashes_match"] is True
+    assert khk_replay["model_hashes_match"] is True
+    assert khk_replay["claims"]["physics_validation_claimed"] is False
     assert gates["hiad_casebook_machine_preflight_integrity"]["status"] == "PASS"
     assert gates["independent_expert_review_complete"]["status"] == "PENDING"
     assert report["bounded_ijhe_submission_ready"] is False

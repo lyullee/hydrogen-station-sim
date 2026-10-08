@@ -20,6 +20,7 @@ paper result from silently becoming part of the source tree.
 | Powertech Labs SAE J2601 Tables Method data | External process-physics validation | 36 fills; 2.0, 4.7, 5.9 and 9.8 kg nominal tanks | Pressure, tank-gas temperature and SOC traces on the experimental clock |
 | Powertech Labs SAE J2601 MC Default bench data | Prospectively frozen external closed-loop holdout | 8 fills; six 4.7 kg cases plus 2.0 and 9.8 kg tanks | Frozen controller, precooling and tank-response transportability |
 | HIAD 2.2, European Commission JRC | Independent real-incident decision cases | 34 HRS events; 33 with at least one response/lesson/corrective field | Development/holdout casebook and blinded expert review |
+| KHK public hydrogen accident reports | Independent actual-accident integration trace | 23 reports covering 26 incident codes | Citation-only metadata routed through canonical process, detector, safety and consequence recipes |
 | USN/FFI open-channel dispersion data | Bounded consequence/detector-logic benchmark | 22 releases, 29 concentration sensors, 0.029–1.250 g/s | Measured concentration replay through declared alarm/trip thresholds; not an outdoor HRS full-loop holdout |
 
 Exact URLs, attribution, rights notes and immutable file digests are in
@@ -304,6 +305,22 @@ action correctness, priority order, stabilization/restart criteria, prevention,
 evidence grounding and operator usability. Critical omissions and unsafe advice
 are separate binary endpoints. The allocation key must remain with the study
 coordinator until ratings are locked.
+
+The separate runtime audits prevent incident metadata from bypassing the
+digital twin:
+
+```powershell
+.venv\Scripts\python.exe scripts\audit_hiad_digital_twin_replay_coverage.py
+.venv\Scripts\python.exe scripts\audit_khk_digital_twin_replay_coverage.py
+```
+
+The KHK audit traces 22 reports covering 25 incident codes through eight
+passing canonical runtime families. It explicitly excludes the KOH-electrolyte
+release from the gaseous-H2 model and labels liquid-hydrogen, production-
+equipment, explosion and valve-seat mismatches as bounded proxies. Passing this
+audit establishes software integration and traceability only; it does not
+reconstruct the accidents or validate physics, frequency, safe distance or
+response effectiveness.
 
 After three reviewers return separate completed copies and the coordinator
 marks approved casebook vignettes `YES`, analyze the locked files:

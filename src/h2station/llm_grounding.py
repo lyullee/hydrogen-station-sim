@@ -254,8 +254,8 @@ def _public_incident_traceability() -> dict[str, Any] | None:
             and sha256((root / relative).read_bytes()).hexdigest() == digest
             for relative, digest in replay_model_hashes.items()
         )
-        and replay_runtime.get("family_recipe_pass_count") == 7
-        and replay_runtime.get("unique_family_recipes_run") == 7
+        and replay_runtime.get("family_recipe_pass_count") == 9
+        and replay_runtime.get("unique_family_recipes_run") == 9
         and replay_runtime.get("all_executable_recipes_passed") is True
         and replay_aggregate.get("case_count") == 34
         and replay_aggregate.get("integration_trace_pass_count") == 34
@@ -299,7 +299,8 @@ def _khk_public_accident_inventory() -> dict[str, Any] | None:
     lets a response show which public accident source family grounds the
     playbook while preserving the separate numerical-validation boundary.
     """
-    path = Path(__file__).resolve().parents[2] / (
+    root = Path(__file__).resolve().parents[2]
+    path = root / (
         "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json"
     )
     try:
@@ -331,7 +332,7 @@ def _khk_public_accident_inventory() -> dict[str, Any] | None:
     # classes and titles.  Include it when its source digest matches so the
     # assistant can distinguish relevant accident precedent without receiving
     # copied report text or treating counts as frequencies.
-    map_path = Path(__file__).resolve().parents[2] / (
+    map_path = root / (
         "research/khk_scenario_precedent_map_2026_10_04.json"
     )
     try:
@@ -359,6 +360,72 @@ def _khk_public_accident_inventory() -> dict[str, Any] | None:
             "unmapped_report_count": mapping.get("unmapped_report_count"),
             "citation_only": True,
             "claim_limit": str(scenario_map.get("claim_boundary") or ""),
+        }
+    replay_path = root / "research/khk_digital_twin_replay_coverage_2026_10_08.json"
+    try:
+        replay = json.loads(replay_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        replay = None
+    replay_source = (replay or {}).get("source") or {}
+    replay_runtime = (replay or {}).get("runtime") or {}
+    replay_aggregate = (replay or {}).get("aggregate") or {}
+    replay_claims = (replay or {}).get("claims") or {}
+    source_records = [
+        replay_source.get(key) or {}
+        for key in ("inventory", "access_verification", "precedent_map", "playbook_catalog")
+    ]
+    model_hashes = replay_source.get("model_input_sha256") or {}
+    if (
+        isinstance(replay, dict)
+        and replay.get("status") == "completed_independent_public_accident_integration_audit"
+        and len(source_records) == 4
+        and all(
+            isinstance(item.get("path"), str)
+            and (root / item["path"]).is_file()
+            and sha256((root / item["path"]).read_bytes()).hexdigest() == item.get("sha256")
+            for item in source_records
+        )
+        and bool(model_hashes)
+        and all(
+            (root / relative).is_file()
+            and sha256((root / relative).read_bytes()).hexdigest() == digest
+            for relative, digest in model_hashes.items()
+        )
+        and replay_source.get("public_report_text_used") is False
+        and replay_source.get("report_narrative_used_for_physical_parameters") is False
+        and replay_runtime.get("family_recipe_count") == 8
+        and replay_runtime.get("family_recipe_pass_count") == 8
+        and replay_runtime.get("all_family_recipes_passed") is True
+        and replay_aggregate.get("public_report_count") == result["public_report_count"]
+        and replay_aggregate.get("incident_code_count") == result["incident_code_count"]
+        and replay_aggregate.get("integration_trace_pass_report_count") == 22
+        and replay_aggregate.get("integration_trace_pass_incident_code_count") == 25
+        and replay_aggregate.get("out_of_scope_report_count") == 1
+        and replay_claims
+        and all(value is False for value in replay_claims.values())
+    ):
+        result["digital_twin_replay"] = {
+            "artifact": "research/khk_digital_twin_replay_coverage_2026_10_08.json",
+            "backend": replay_runtime.get("backend"),
+            "public_report_count": replay_aggregate.get("public_report_count"),
+            "incident_code_count": replay_aggregate.get("incident_code_count"),
+            "integration_trace_pass_report_count": replay_aggregate.get(
+                "integration_trace_pass_report_count"
+            ),
+            "integration_trace_pass_incident_code_count": replay_aggregate.get(
+                "integration_trace_pass_incident_code_count"
+            ),
+            "out_of_scope_report_count": replay_aggregate.get(
+                "out_of_scope_report_count"
+            ),
+            "canonical_recipe_pass_count": replay_runtime.get(
+                "family_recipe_pass_count"
+            ),
+            "canonical_recipe_count": replay_runtime.get("family_recipe_count"),
+            "report_narrative_used_for_physical_parameters": False,
+            "claim_limit": " ".join(
+                str(item) for item in replay.get("claim_boundary") or []
+            ),
         }
     return result
 
@@ -3703,6 +3770,25 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 if replay.get(key) is not None
             },
         }
+    accident_inventory = evidence.get("public_accident_report_inventory")
+    if isinstance(accident_inventory, dict):
+        khk_replay = accident_inventory.get("digital_twin_replay") or {}
+        summary["public_accident_report_inventory"] = {
+            "public_report_count": accident_inventory.get("public_report_count"),
+            "incident_code_count": accident_inventory.get("incident_code_count"),
+            "digital_twin_replay": {
+                key: khk_replay.get(key)
+                for key in (
+                    "backend", "public_report_count", "incident_code_count",
+                    "integration_trace_pass_report_count",
+                    "integration_trace_pass_incident_code_count",
+                    "out_of_scope_report_count", "canonical_recipe_pass_count",
+                    "canonical_recipe_count",
+                    "report_narrative_used_for_physical_parameters", "claim_limit",
+                )
+                if khk_replay.get(key) is not None
+            },
+        }
     benchmarks = evidence.get("public_experimental_benchmarks")
     if isinstance(benchmarks, dict):
         rows = []
@@ -4297,6 +4383,8 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     methytrucks_244 = methytrucks_tank.get("candidate_244_l_diagnostic") or {}
     methytrucks_mapping = methytrucks_tank.get("mapping_boundary") or {}
     incident = response.get("public_incident_traceability") or {}
+    accident_inventory = response.get("public_accident_report_inventory") or {}
+    khk_replay = accident_inventory.get("digital_twin_replay") or {}
     relevant_precedents = response.get("relevant_public_accident_precedents") or {}
     local_incident = response.get("confidential_local_accident_response_coverage") or {}
     multisource = response.get("confidential_multisource_mapping_feasibility") or {}
@@ -4460,6 +4548,20 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             ),
         },
     }
+    if all(
+        khk_replay.get(key) is not None
+        for key in (
+            "integration_trace_pass_incident_code_count", "incident_code_count",
+            "canonical_recipe_pass_count", "canonical_recipe_count",
+        )
+    ):
+        decision["decision_support_evidence"]["khk_trace"] = (
+            f"{khk_replay['integration_trace_pass_incident_code_count']}/"
+            f"{khk_replay['incident_code_count']} codes; "
+            f"{khk_replay['canonical_recipe_pass_count']}/"
+            f"{khk_replay['canonical_recipe_count']} recipes; "
+            "KOH excluded; metadata routing only"
+        )
     # Keep the normal interactive prompt compact.  Safety feedback appears
     # only when at least one action exists; an absent history itself is not
     # useful context to the provider and would crowd current alarm evidence.
@@ -4926,6 +5028,19 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             ) if isinstance(incident.get("action_taxonomy"), dict) else None,
             "public_report_count": accident_inventory.get("public_report_count"),
             "incident_code_count": accident_inventory.get("incident_code_count"),
+            "khk_digital_twin_replay": {
+                key: (accident_inventory.get("digital_twin_replay") or {}).get(key)
+                for key in (
+                    "backend", "public_report_count", "incident_code_count",
+                    "integration_trace_pass_report_count",
+                    "integration_trace_pass_incident_code_count",
+                    "out_of_scope_report_count", "canonical_recipe_pass_count",
+                    "canonical_recipe_count",
+                    "report_narrative_used_for_physical_parameters", "claim_limit",
+                )
+                if (accident_inventory.get("digital_twin_replay") or {}).get(key)
+                is not None
+            },
             "accidental_release_zenodo_doi": accidental_release.get("zenodo_doi"),
             "accidental_release_full_loop": accidental_release.get(
                 "full_loop_station_vehicle_holdout_eligible"

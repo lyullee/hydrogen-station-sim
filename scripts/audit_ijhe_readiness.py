@@ -2803,8 +2803,8 @@ def audit(root: Path) -> dict[str, object]:
         and replay_source.get("case_narrative_used_for_physical_parameters") is False
         and replay_hashes_match
         and replay_runtime.get("backend") == "HyRAM+ 6.1 native"
-        and replay_runtime.get("unique_family_recipes_run") == 7
-        and replay_runtime.get("family_recipe_pass_count") == 7
+        and replay_runtime.get("unique_family_recipes_run") == 9
+        and replay_runtime.get("family_recipe_pass_count") == 9
         and replay_runtime.get("all_executable_recipes_passed") is True
         and replay_aggregate.get("case_count") == 34
         and replay_aggregate.get("integration_trace_pass_count") == 34
@@ -2820,7 +2820,7 @@ def audit(root: Path) -> dict[str, object]:
         and set(replay_recipes) == {
             "gas_release", "hydrogen_fire", "hose_connection", "overpressure",
             "precooling_fault", "fueling_fault", "compressor_thermal",
-            "structural_damage",
+            "external_fire", "isolation_failure", "structural_damage",
         }
         and all(
             replay_recipes[family].get("status") == "passed"
@@ -2837,7 +2837,7 @@ def audit(root: Path) -> dict[str, object]:
         "PASS" if replay_pass else ("FAIL" if replay else "PENDING"),
         "Every public HIAD HRS metadata case is explicitly classified against an executed digital-twin fault family or a declared no-physics boundary.",
         str(replay_path.relative_to(root)),
-        "34/34 traceable cases, seven passing canonical runtime recipes, native consequence execution for releases, explicit proxy/response-only counts and current source hashes; no accident-reconstruction or effectiveness claim.",
+        "34/34 traceable cases, nine passing canonical runtime recipes, native consequence execution for releases, explicit proxy/response-only counts and current source hashes; no accident-reconstruction or effectiveness claim.",
         {
             "aggregate": replay_aggregate,
             "runtime": replay_runtime,
@@ -3609,6 +3609,86 @@ def audit(root: Path) -> dict[str, object]:
         } if precedent_routing else "missing; runtime accident-precedent routing audit has not run",
     ))
 
+    khk_replay_path = root / "research/khk_digital_twin_replay_coverage_2026_10_08.json"
+    khk_replay = _json(khk_replay_path)
+    khk_replay_source = (khk_replay or {}).get("source") or {}
+    khk_replay_runtime = (khk_replay or {}).get("runtime") or {}
+    khk_replay_aggregate = (khk_replay or {}).get("aggregate") or {}
+    khk_replay_claims = (khk_replay or {}).get("claims") or {}
+    khk_source_records = {
+        key: value for key, value in khk_replay_source.items()
+        if key in {"inventory", "access_verification", "precedent_map", "playbook_catalog"}
+        and isinstance(value, dict)
+    }
+    khk_replay_source_hashes_match = len(khk_source_records) == 4 and all(
+        isinstance(record.get("path"), str)
+        and (root / record["path"]).is_file()
+        and record.get("sha256") == _sha256(root / record["path"])
+        for record in khk_source_records.values()
+    )
+    khk_replay_model_hashes = khk_replay_source.get("model_input_sha256") or {}
+    khk_replay_model_hashes_match = bool(khk_replay_model_hashes) and all(
+        (root / relative).is_file() and digest == _sha256(root / relative)
+        for relative, digest in khk_replay_model_hashes.items()
+    )
+    khk_cases = (khk_replay or {}).get("cases") or []
+    khk_out_of_scope = [
+        case for case in khk_cases
+        if case.get("representation") == "out_of_scope_non_hydrogen_chemical"
+    ]
+    khk_replay_pass = bool(
+        (khk_replay or {}).get("schema_version") == 1
+        and (khk_replay or {}).get("artifact_type")
+        == "khk_public_accident_to_digital_twin_canonical_replay_audit"
+        and (khk_replay or {}).get("status")
+        == "completed_independent_public_accident_integration_audit"
+        and (khk_replay or {}).get("evidence_role")
+        == "independent_retrospective_metadata_to_canonical_runtime_traceability_only"
+        and khk_replay_source_hashes_match
+        and khk_replay_model_hashes_match
+        and khk_replay_source.get("public_report_text_used") is False
+        and khk_replay_source.get("report_narrative_used_for_physical_parameters") is False
+        and khk_replay_source.get("raw_pdf_mirrored") is False
+        and khk_replay_runtime.get("backend") == "HyRAM+ 6.1 native"
+        and khk_replay_runtime.get("mapped_family_count") == 8
+        and khk_replay_runtime.get("family_recipe_count") == 8
+        and khk_replay_runtime.get("family_recipe_pass_count") == 8
+        and khk_replay_runtime.get("all_family_recipes_passed") is True
+        and khk_replay_runtime.get("missing_runtime_families") == []
+        and khk_replay_runtime.get("missing_playbook_ids") == []
+        and khk_replay_aggregate.get("public_report_count") == 23
+        and khk_replay_aggregate.get("incident_code_count") == 26
+        and khk_replay_aggregate.get("in_scope_report_count") == 22
+        and khk_replay_aggregate.get("in_scope_incident_code_count") == 25
+        and khk_replay_aggregate.get("integration_trace_pass_report_count") == 22
+        and khk_replay_aggregate.get("integration_trace_pass_incident_code_count") == 25
+        and khk_replay_aggregate.get("out_of_scope_report_count") == 1
+        and khk_replay_aggregate.get("out_of_scope_incident_code_count") == 1
+        and len(khk_cases) == 23
+        and len(khk_out_of_scope) == 1
+        and khk_out_of_scope[0].get("equipment_class") == "hydrogen_generation"
+        and khk_out_of_scope[0].get("incident_codes") == ["2024-349"]
+        and all(value is False for value in khk_replay_claims.values())
+        and len(khk_replay_claims) == 5
+        and len((khk_replay or {}).get("claim_boundary") or []) >= 4
+    )
+    gates.append(_gate(
+        "khk_digital_twin_replay_traceability",
+        "PASS" if khk_replay_pass else ("FAIL" if khk_replay else "PENDING"),
+        "Independent public KHK accident families are explicitly traced through executable digital-twin recipes with phase and equipment mismatches kept visible.",
+        str(khk_replay_path.relative_to(root)),
+        "22/23 reports and 25/26 incident codes traverse eight passing runtime families; the KOH electrolyte release is explicitly outside the gaseous-H2 model, with no reconstruction, physics-validation or effectiveness claim.",
+        {
+            "aggregate": khk_replay_aggregate,
+            "runtime": khk_replay_runtime,
+            "source_hashes_match": khk_replay_source_hashes_match,
+            "model_hashes_match": khk_replay_model_hashes_match,
+            "out_of_scope_cases": khk_out_of_scope,
+            "claims": khk_replay_claims,
+            "claim_boundary": (khk_replay or {}).get("claim_boundary"),
+        } if khk_replay else "missing; KHK-to-runtime canonical replay audit has not run",
+    ))
+
     preslhy_path = root / "research/preslhy_blowdown_external_validation.json"
     preslhy = _json(preslhy_path)
     preslhy_protocol_path = root / "research/preslhy_blowdown_validation_protocol.json"
@@ -4348,6 +4428,11 @@ def audit(root: Path) -> dict[str, object]:
     grounding_station_thermal = (
         (grounding or {}).get("confidential_station_thermal_dynamics_boundary") or {}
     )
+    grounding_khk_replay = (
+        ((grounding or {}).get("public_accident_report_grounding") or {}).get(
+            "digital_twin_replay"
+        ) or {}
+    )
     grounding_pass = bool(
         (grounding or {}).get("status") == "software_contract_verified"
         and ((grounding or {}).get("tests") or {}).get("full_suite", {}).get("failed") == 0
@@ -4369,6 +4454,20 @@ def audit(root: Path) -> dict[str, object]:
             "cross-campaign release validation" in str(item)
             for item in (grounding or {}).get("verified_properties", [])
         )
+        and any(
+            "independent KHK metadata-to-runtime" in str(item)
+            for item in (grounding or {}).get("verified_properties", [])
+        )
+        and grounding_khk_replay.get("public_report_count") == 23
+        and grounding_khk_replay.get("incident_code_count") == 26
+        and grounding_khk_replay.get("integration_trace_pass_report_count") == 22
+        and grounding_khk_replay.get("integration_trace_pass_incident_code_count") == 25
+        and grounding_khk_replay.get("out_of_scope_report_count") == 1
+        and grounding_khk_replay.get("canonical_recipe_pass_count") == 8
+        and grounding_khk_replay.get("canonical_recipe_count") == 8
+        and grounding_khk_replay.get(
+            "report_narrative_used_for_physical_parameters"
+        ) is False
         and grounding_release_validation.get("eligible_campaign_count") == 3
         and grounding_release_validation.get("supported_campaign_count") == 1
         and grounding_release_validation.get("failed_campaign_count") == 2

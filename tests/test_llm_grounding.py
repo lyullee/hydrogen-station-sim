@@ -86,7 +86,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert replay["direct_physical_case_count"] == 29
     assert replay["partial_proxy_case_count"] == 4
     assert replay["response_only_case_count"] == 1
-    assert replay["canonical_recipe_pass_count"] == replay["canonical_recipe_count"] == 7
+    assert replay["canonical_recipe_pass_count"] == replay["canonical_recipe_count"] == 9
     assert replay["case_narrative_used_for_physical_parameters"] is False
     assert "does not reconstruct any HIAD accident" in replay["claim_limit"]
     summary_replay = prompt_evidence_summary(idle)["public_incident_traceability"][
@@ -104,8 +104,8 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "direct": 29,
         "proxy": 4,
         "response_only": 1,
-        "recipes_passed": 7,
-        "recipes_total": 7,
+        "recipes_passed": 9,
+        "recipes_total": 9,
         "incident_parameterized": False,
     }
     taxonomy = traceability["action_taxonomy"]
@@ -126,6 +126,29 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert precedent_map["citation_only"] is True
     assert "playbook_case_counts" not in precedent_map
     assert "representative_precedents" not in precedent_map
+    khk_replay = accident_inventory["digital_twin_replay"]
+    assert khk_replay["public_report_count"] == 23
+    assert khk_replay["incident_code_count"] == 26
+    assert khk_replay["integration_trace_pass_report_count"] == 22
+    assert khk_replay["integration_trace_pass_incident_code_count"] == 25
+    assert khk_replay["out_of_scope_report_count"] == 1
+    assert khk_replay["canonical_recipe_pass_count"] == 8
+    assert khk_replay["canonical_recipe_count"] == 8
+    assert khk_replay["report_narrative_used_for_physical_parameters"] is False
+    summary_khk = prompt_evidence_summary(idle)["public_accident_report_inventory"][
+        "digital_twin_replay"
+    ]
+    assert summary_khk["integration_trace_pass_incident_code_count"] == 25
+    header_khk = prompt_evidence_header(idle)["public_accident_evidence"][
+        "khk_digital_twin_replay"
+    ]
+    assert header_khk["out_of_scope_report_count"] == 1
+    compact_khk = prompt_decision_evidence(idle)["decision_support_evidence"][
+        "khk_trace"
+    ]
+    assert compact_khk == (
+        "25/26 codes; 8/8 recipes; KOH excluded; metadata routing only"
+    )
     local_accident = idle["response_evidence"][
         "confidential_local_accident_response_coverage"
     ]

@@ -9,7 +9,7 @@ the incident inventory has no synchronized process boundary traces.
 - Bounded proxy/partial replay: **4** cases
 - Response-only, no physical model: **1** case
 - Unmapped: **0** cases
-- Executable canonical recipes passed: **7/7**
+- Executable canonical recipes passed: **9/9**
 
 ## Canonical runtime traces
 
@@ -22,6 +22,8 @@ the incident inventory has no synchronized process boundary traces.
 | `precooling_fault` | `direct_physical_replay` | `passed` | trips precooling-temperature-high |
 | `fueling_fault` | `direct_physical_replay` | `passed` | alarms FT-1101, FT-1301, FT-1501, FT-1701, PT-1101, PT-1501 |
 | `compressor_thermal` | `proxy_partial_replay` | `passed` | alarms FD-0601; flame FD-0601 |
+| `external_fire` | `direct_physical_replay` | `passed` | alarms FD-0801; flame FD-0801 |
+| `isolation_failure` | `proxy_partial_replay` | `passed` | alarms FT-1501, FT-1701, PT-1102, PT-1401, PT-1501, TT-1401 |
 | `structural_damage` | `response_only_no_physical_model` | `not_run_no_physical_model` | staged response plan only |
 
 ## Interpretation boundary
