@@ -36,6 +36,52 @@
       ]
     },
     {
+      "id": "KGS_HRS_SIX_SCENARIO_AGGREGATE_2025",
+      "title": "Enhanced Thermofluidic Modeling and Open-Source Rigorous Simulation of Hydrogen Fueling Systems Validated with Real-World Data",
+      "url": "https://doi.org/10.1007/s11814-025-00551-9",
+      "preprint_url": "https://doi.org/10.21203/rs.3.rs-6248350/v1",
+      "raw_rows_public": false,
+      "license": "CC BY 4.0 article; underlying station-data rights not separately specified",
+      "local_rights": "citation-bounded aggregate only; no raw station or vehicle traces are redistributed",
+      "measured_boundary": [
+        "six real-world Korean HRS fueling scenarios",
+        "vehicle-tank pressure and temperature compared with hydrogen mass-flow rate",
+        "normal and extreme ambient/fueling operating conditions"
+      ],
+      "aggregate": {
+        "reported_scenario_count": 6,
+        "temperature_accuracy_r2_mean_percent": 94.5,
+        "temperature_accuracy_r2_min_percent": 92.3,
+        "temperature_accuracy_r2_max_percent": 96.7,
+        "pressure_accuracy_r2_mean_percent": 96.7,
+        "pressure_accuracy_r2_min_percent": 91.7,
+        "pressure_accuracy_r2_max_percent": 99.5,
+        "reported_final_temperature_mean_c": 73.65,
+        "reported_final_pressure_mean_mpa": 73.9,
+        "reported_fueling_time_mean_s": 351.6833333333,
+        "reported_fueling_time_min_s": 287.8,
+        "reported_fueling_time_max_s": 421.7,
+        "scenario_1_ambient_temperature_c": 27.0,
+        "scenario_1_precooling_time_s": 25.0,
+        "scenario_1_aprr_mpa_min": 11.5,
+        "scenario_2_ambient_temperature_c": 38.4,
+        "scenario_2_precooling_time_s": 44.0,
+        "scenario_2_aprr_initial_mpa_min": 10.0,
+        "scenario_2_aprr_switched_mpa_min": 16.0
+      },
+      "eligible_for": [
+        "vehicle-tank pressure/temperature and fill-duration operating-range context",
+        "cascade-bank switching and precooling protocol plausibility checks",
+        "independent aggregate comparison after a frozen local validation protocol"
+      ],
+      "not_eligible_for": [
+        "row-level or untouched full-loop holdout",
+        "station controller, valve or ESD fault replay",
+        "site-specific safety-distance or accident-probability claims",
+        "automatic parameter fitting from reported outcomes"
+      ]
+    },
+    {
       "id": "NREL_HD_FAST_FLOW_2024_REPORT",
       "title": "DOE/NREL heavy-duty hydrogen fast-flow experiment report",
       "url": "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",

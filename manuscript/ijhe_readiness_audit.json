@@ -7616,9 +7616,10 @@
         },
         "public_operating_benchmarks": {
           "evidence": "research/public_experimental_benchmarks_2026_10_06.json",
-          "source_count": 3,
+          "source_count": 4,
           "source_ids": [
             "NREL_HDVS_2022_TANK_HOSE_TRACE",
+            "KGS_HRS_SIX_SCENARIO_AGGREGATE_2025",
             "NREL_HD_FAST_FLOW_2024_REPORT",
             "FCH2RAIL_D61_350BAR_REPORT"
           ],

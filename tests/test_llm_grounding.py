@@ -870,7 +870,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "cross_station_pressure_plausibility_supported"
     ] is True
     benchmarks = idle["response_evidence"]["public_experimental_benchmarks"]
-    assert len(benchmarks["sources"]) == 3
+    assert len(benchmarks["sources"]) == 4
     nrel_trace = next(item for item in benchmarks["sources"] if item["id"] == "NREL_HDVS_2022_TANK_HOSE_TRACE")
     assert nrel_trace["aggregate"]["sample_count"] == 351
     assert nrel_trace["raw_rows_public"] is False
@@ -880,6 +880,10 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     fch2rail = next(item for item in benchmarks["sources"] if item["id"] == "FCH2RAIL_D61_350BAR_REPORT")
     assert fch2rail["aggregate"]["average_flow_min_g_s"] == 11.54
     assert "70 MPa passenger-vehicle validation" in fch2rail["not_eligible_for"]
+    kgs_six = next(item for item in benchmarks["sources"] if item["id"] == "KGS_HRS_SIX_SCENARIO_AGGREGATE_2025")
+    assert kgs_six["aggregate"]["reported_scenario_count"] == 6
+    assert kgs_six["aggregate"]["pressure_accuracy_r2_mean_percent"] == 96.7
+    assert "row-level or untouched full-loop holdout" in kgs_six["not_eligible_for"]
 
     result = {"node_id": "N09", "node_name": "고압 저장뱅크",
               "calculation_status": "calculated",
