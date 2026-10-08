@@ -37,6 +37,12 @@ def test_local_discovery_is_grounded_without_raw_provenance():
     assert adjacent["telemetry_rows"] == 2_410_985
     assert adjacent["telemetry_signal_key_count"] == 273
     assert "source_paths_published" not in adjacent
+    wide = discovery["candidate_groups"]["wide_equipment_boundary_recheck"]
+    assert wide["file_count"] == 8
+    assert wide["row_count"] == 653442
+    assert wide["schema_width"] == 64
+    assert wide["vehicle_or_dispenser_candidate_count"] == 0
+    assert "source_headers_published" not in wide
     coverage = discovery["coverage_assessment"]
     assert coverage["local_station_data_is_sparse"] is False
     assert coverage["station_side_dynamic_evidence_is_substantial"] is True
@@ -59,6 +65,10 @@ def test_local_discovery_reaches_bounded_prompt_views():
     assert decision["station_data_is_sparse"] is False
     assert decision["adjacent_operational_telemetry_rows"] == 2_410_985
     assert decision["adjacent_operational_full_loop_ready"] is False
+    assert decision["wide_equipment_file_count"] == 8
+    assert decision["wide_equipment_row_count"] == 653442
+    assert decision["wide_equipment_station_side_screen_ready"] is True
+    assert decision["wide_equipment_full_loop_ready"] is False
     assert decision["vehicle_side_full_loop_validation_ready"] is False
     header = prompt_evidence_header(manifest)[
         "confidential_local_station_data_discovery"

@@ -4196,6 +4196,73 @@ def _local_hydrogen_station_discovery_evidence() -> dict[str, Any] | None:
             "ineligible_use": (adjacent_record or {}).get("ineligible_use") or [],
             "claim_boundary": (adjacent_record or {}).get("claim_boundary"),
         }
+
+    # Keep the wide station-equipment logger as a distinct evidence class.
+    # It is useful for pressure/temperature/state continuity, but its flow
+    # units and vehicle-side coverage are not attested.  Never pass tags,
+    # paths, dates or raw rows to the model.
+    wide_path = Path(__file__).resolve().parents[2] / (
+        "research/local_wide_equipment_recheck_2026_10_09.json"
+    )
+    try:
+        wide_record = json.loads(wide_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        wide_record = None
+    wide_privacy = (wide_record or {}).get("privacy") or {}
+    wide_inventory = (wide_record or {}).get("inventory") or {}
+    wide_quality = (wide_record or {}).get("quality_screen") or {}
+    wide_coverage = (wide_record or {}).get("coverage_assessment") or {}
+    wide_required_privacy = (
+        "source_paths_published",
+        "source_filenames_published",
+        "source_headers_published",
+        "site_company_manufacturer_published",
+        "calendar_dates_published",
+        "raw_rows_persisted",
+        "per_file_hashes_published",
+    )
+    if (
+        (wide_record or {}).get("artifact_type") == "local_wide_equipment_recheck"
+        and all(wide_privacy.get(key) is False for key in wide_required_privacy)
+        and wide_inventory.get("file_count") == 8
+        and wide_inventory.get("row_count") == 653442
+        and wide_inventory.get("schema_width") == 64
+        and wide_coverage.get("local_equipment_boundary_data_is_substantial") is True
+        and wide_coverage.get("vehicle_side_full_loop_validation_ready") is False
+    ):
+        safe_groups["wide_equipment_boundary_recheck"] = {
+            "evidence_class": "privacy-bounded local wide station-equipment logger screen",
+            "file_count": wide_inventory.get("file_count"),
+            "row_count": wide_inventory.get("row_count"),
+            "schema_width": wide_inventory.get("schema_width"),
+            "median_sample_period_s": wide_inventory.get("median_sample_period_s"),
+            "maximum_gap_s": wide_inventory.get("maximum_gap_s"),
+            "pressure_role_count": wide_inventory.get("pressure_role_count"),
+            "temperature_role_count": wide_inventory.get("temperature_role_count"),
+            "equipment_state_role_count": wide_inventory.get("equipment_state_role_count"),
+            "flow_like_candidate_count": wide_inventory.get("flow_like_candidate_count"),
+            "totalizer_like_candidate_count": wide_inventory.get("totalizer_like_candidate_count"),
+            "vehicle_or_dispenser_candidate_count": wide_inventory.get(
+                "vehicle_or_dispenser_candidate_count"
+            ),
+            "pressure_roles_fully_finite": wide_quality.get(
+                "pressure_roles_fully_finite"
+            ),
+            "temperature_roles_fully_finite": wide_quality.get(
+                "temperature_roles_fully_finite"
+            ),
+            "compressor_load_transition_count": wide_quality.get(
+                "compressor_load_transition_count"
+            ),
+            "cooling_run_transition_count": wide_quality.get(
+                "cooling_run_transition_count"
+            ),
+            "flow_units_attested": wide_quality.get("flow_units_attested"),
+            "state_semantics_attested": wide_quality.get("state_semantics_attested"),
+            "eligible_use": (wide_record or {}).get("eligible_use") or [],
+            "ineligible_use": (wide_record or {}).get("ineligible_use") or [],
+            "claim_boundary": (wide_record or {}).get("claim_boundary"),
+        }
     return {
         "artifact": "research/local_hydrogen_station_data_discovery_recheck_2026_10_09.json",
         "evidence_role": "privacy-bounded local hydrogen-station data discovery and claim boundary",
@@ -5898,6 +5965,9 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         adjacent_operational_group = discovery_groups.get(
             "adjacent_h2_operational_telemetry"
         ) or {}
+        wide_equipment_group = discovery_groups.get(
+            "wide_equipment_boundary_recheck"
+        ) or {}
         media_group = discovery_groups.get("engineering_and_media_context") or {}
         operational_media_group = discovery_groups.get(
             "local_operational_video_collection"
@@ -5922,6 +5992,21 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 ),
                 "adjacent_operational_time_span_hours": adjacent_operational_group.get(
                     "telemetry_time_span_hours"
+                ),
+                "wide_equipment_file_count": wide_equipment_group.get(
+                    "file_count"
+                ),
+                "wide_equipment_row_count": wide_equipment_group.get(
+                    "row_count"
+                ),
+                "wide_equipment_schema_width": wide_equipment_group.get(
+                    "schema_width"
+                ),
+                "wide_equipment_median_sample_period_s": wide_equipment_group.get(
+                    "median_sample_period_s"
+                ),
+                "wide_equipment_vehicle_candidate_count": wide_equipment_group.get(
+                    "vehicle_or_dispenser_candidate_count"
                 ),
                 "engineering_document_count": media_group.get("document_count"),
                 "engineering_image_count": media_group.get("image_count"),
@@ -6439,6 +6524,23 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "adjacent_operational_full_loop_ready": (
                         False
                     ),
+                    "wide_equipment_file_count": (
+                        (local_station_discovery.get("candidate_groups") or {})
+                        .get("wide_equipment_boundary_recheck", {})
+                        .get("file_count")
+                    ),
+                    "wide_equipment_row_count": (
+                        (local_station_discovery.get("candidate_groups") or {})
+                        .get("wide_equipment_boundary_recheck", {})
+                        .get("row_count")
+                    ),
+                    "wide_equipment_station_side_screen_ready": (
+                        (local_station_discovery.get("candidate_groups") or {})
+                        .get("wide_equipment_boundary_recheck", {})
+                        .get("row_count")
+                        == 653442
+                    ),
+                    "wide_equipment_full_loop_ready": False,
                     "station_data_is_sparse": (
                         (local_station_discovery.get("coverage_assessment") or {})
                         .get("local_station_data_is_sparse")

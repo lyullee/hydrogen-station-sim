@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_wide_equipment_recheck",
+  "status": "privacy_bounded_in_memory_screen",
+  "generated_at": "2026-10-09",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "site_company_manufacturer_published": false,
+    "calendar_dates_published": false,
+    "raw_rows_persisted": false,
+    "per_file_hashes_published": false
+  },
+  "inventory": {
+    "file_count": 8,
+    "row_count": 653442,
+    "schema_width": 64,
+    "median_sample_period_s": 1.0,
+    "maximum_gap_s": 3.0,
+    "timestamp_parse_failures": 0,
+    "pressure_role_count": 2,
+    "temperature_role_count": 3,
+    "equipment_state_role_count": 3,
+    "flow_like_candidate_count": 2,
+    "totalizer_like_candidate_count": 1,
+    "vehicle_or_dispenser_candidate_count": 0
+  },
+  "quality_screen": {
+    "pressure_roles_fully_finite": 2,
+    "temperature_roles_fully_finite": 3,
+    "compressor_load_transition_count": 261,
+    "cooling_run_transition_count": 13,
+    "high_pressure_trip_transition_count": 0,
+    "flow_units_attested": false,
+    "state_semantics_attested": false,
+    "pressure_reference_attested": false
+  },
+  "coverage_assessment": {
+    "local_equipment_boundary_data_is_substantial": true,
+    "station_equipment_pressure_temperature_state_screen_ready": true,
+    "station_side_external_validation_ready": false,
+    "vehicle_side_full_loop_validation_ready": false,
+    "quantitative_consequence_validation_ready": false,
+    "main_limit": "The wide logs provide station-equipment pressure, temperature, candidate flow and state channels, but flow units, pressure reference, state semantics and vehicle-side channels remain unconfirmed."
+  },
+  "eligible_use": [
+    "station-equipment pressure and temperature continuity checks",
+    "compressor/cooling state-transition screening",
+    "cadence and missingness checks",
+    "de-identified measured-boundary replay after custodian attestation"
+  ],
+  "ineligible_use": [
+    "vehicle fill or SOC validation",
+    "flow-scale calibration before unit attestation",
+    "accident frequency or safety-limit generation",
+    "quantitative consequence-distance validation"
+  ],
+  "claim_boundary": "Aggregate in-memory screen only. It does not publish raw rows, tags, dates or source identity, and it is not an independent station-to-vehicle validation result."
+}
