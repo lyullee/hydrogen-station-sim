@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_station_runtime_profile_integration_audit",
+  "generated_at_utc": "2026-10-08T22:46:01.416680+00:00",
+  "status": "completed_runtime_integration_audit",
+  "evidence_role": "privacy_bounded_local_station_profile_runtime_traceability",
+  "cases": {
+    "reference_defaults": {
+      "requested": false,
+      "status": "complete",
+      "profile_id": "reference_defaults",
+      "evidence_artifact": null,
+      "sampled_rows": null,
+      "recharge_hysteresis_pa": null,
+      "recharge_restart_margin_pa": null,
+      "runtime_restart_margins_mpa": {
+        "low": 2.0,
+        "medium": 3.0,
+        "high": 4.5
+      },
+      "station_dynamics_calibration_applied": false,
+      "station_recharge_dynamics_status": "disabled",
+      "raw_data_guard": {
+        "raw_rows_persisted": false,
+        "source_identifiers_published": false,
+        "source_paths_published": false
+      }
+    },
+    "explicit_opt_in": {
+      "requested": true,
+      "status": "complete",
+      "profile_id": "owner_measured_operational_envelope_v1",
+      "evidence_artifact": "research/confidential_operational_envelope_calibration_summary_2026_10_06.json",
+      "sampled_rows": 10896,
+      "recharge_hysteresis_pa": 540000.0,
+      "recharge_restart_margin_pa": 540000.0,
+      "runtime_restart_margins_mpa": {
+        "low": 0.54,
+        "medium": 0.54,
+        "high": 0.54
+      },
+      "station_dynamics_calibration_applied": false,
+      "station_recharge_dynamics_status": "disabled",
+      "raw_data_guard": {
+        "raw_rows_persisted": false,
+        "source_identifiers_published": false,
+        "source_paths_published": false
+      }
+    }
+  },
+  "checks": {
+    "reference_defaults_preserved": true,
+    "opt_in_profile_applied": true,
+    "failed_dynamics_profile_not_attached": true,
+    "simulations_completed": true,
+    "privacy_boundary_preserved": true
+  },
+  "all_checks_passed": true,
+  "claim_boundary": [
+    "The audit verifies API wiring and provenance for a sanitized station-boundary pressure profile.",
+    "The measured profile is not a vehicle-side, full-loop, safety-limit or field-effect-distance validation.",
+    "The recharge-dynamics candidate remains disabled because its chronological holdout was inconsistent.",
+    "Raw logger rows, source identifiers, dates, paths and equipment identities are not published."
+  ]
+}
