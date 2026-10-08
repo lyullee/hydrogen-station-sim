@@ -88,6 +88,28 @@ def test_local_discovery_reaches_bounded_prompt_views():
         "adjacent_h2_operational_telemetry"
     ]["telemetry_time_span_hours"] == 24.0
 
+    deep_scan = prompt_evidence_summary(manifest)[
+        "confidential_local_data_deep_scan"
+    ]
+    assert deep_scan["measured_station_bundle"]["deduplicated_rows"] == 56_854_143
+    assert deep_scan["broad_candidate_inventory"]["unique_candidate_assets"] == 206
+    assert deep_scan["full_loop_decision"][
+        "new_eligible_synchronized_station_vehicle_cohort_found"
+    ] is False
+    decision_deep_scan = prompt_decision_evidence(manifest)[
+        "validation_boundaries"
+    ]["local_data_deep_scan"]
+    assert decision_deep_scan["station_csv_files"] == 33
+    assert decision_deep_scan["unique_candidate_assets"] == 206
+    assert decision_deep_scan["full_loop_decision"] == "NO_NEW_FULL_LOOP_HOLDOUT"
+    header_deep_scan = prompt_evidence_header(manifest)[
+        "confidential_local_data_deep_scan"
+    ]
+    assert header_deep_scan["full_loop_decision"][
+        "new_eligible_synchronized_station_vehicle_cohort_found"
+    ] is False
+    assert "source_paths_published" not in str(header_deep_scan)
+
 
 def test_local_attestation_request_is_exposed_without_private_identifiers():
     manifest = _manifest()

@@ -4570,6 +4570,103 @@ def _local_station_custodian_attestation_request_evidence() -> dict[str, Any] | 
     }
 
 
+def _local_data_deep_scan_evidence() -> dict[str, Any] | None:
+    """Expose the broader local-corpus scan without private provenance.
+
+    The deep scan is a coverage and false-positive classification record.  It
+    must not make keyword matches look like synchronized station-to-vehicle
+    measurements, and it deliberately omits paths, filenames, identifiers,
+    dates and raw values before the record enters an LLM prompt.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "research/local_data_deep_scan_2026_10_09.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    privacy = record.get("privacy") or {}
+    required_privacy = (
+        "source_paths_published",
+        "source_filenames_published",
+        "source_headers_published",
+        "source_identifiers_published",
+        "site_company_manufacturer_published",
+        "calendar_dates_published",
+        "raw_rows_persisted",
+        "candidate_values_persisted",
+    )
+    station = record.get("measured_station_bundle") or {}
+    inventory = record.get("broad_candidate_inventory") or {}
+    decision = record.get("full_loop_decision") or {}
+    classes = record.get("broad_candidate_inventory", {}).get(
+        "candidate_classes"
+    ) or []
+    if (
+        record.get("artifact_type") != "local_data_deep_scan"
+        or record.get("status")
+        != "privacy_bounded_inventory_with_full_loop_negative_result"
+        or not all(privacy.get(key) is False for key in required_privacy)
+        or station.get("csv_files") != 33
+        or station.get("deduplicated_rows") != 56_854_143
+        or inventory.get("inventory_files") != 2
+        or inventory.get("listed_entries") != 394
+        or inventory.get("unique_candidate_assets") != 206
+        or inventory.get("duplicate_listings_across_inventories") != 188
+        or inventory.get("coarse_candidate_groups") != 8
+        or len(classes) != 4
+        or decision.get("new_eligible_synchronized_station_vehicle_cohort_found")
+        is not False
+        or decision.get("decision") != "NO_NEW_FULL_LOOP_HOLDOUT"
+    ):
+        return None
+
+    safe_classes: list[dict[str, Any]] = []
+    for item in classes:
+        if not isinstance(item, dict) or not item.get("class"):
+            return None
+        safe_classes.append({
+            key: item.get(key)
+            for key in (
+                "class", "unique_assets", "description", "full_loop_eligibility"
+            )
+            if item.get(key) is not None
+        })
+    return {
+        "artifact": str(path.relative_to(root)).replace("\\", "/"),
+        "evidence_role": "privacy-bounded local data deep-scan coverage and claim boundary",
+        "scan_scope": [str(value) for value in record.get("scan_scope") or []],
+        "measured_station_bundle": {
+            key: station.get(key)
+            for key in (
+                "csv_files", "deduplicated_rows", "raw_storage_gib_rounded",
+                "station_side_evidence",
+            )
+            if station.get(key) is not None
+        },
+        "broad_candidate_inventory": {
+            key: inventory.get(key)
+            for key in (
+                "inventory_files", "listed_entries", "unique_candidate_assets",
+                "duplicate_listings_across_inventories", "coarse_candidate_groups",
+                "keyword_scanner_warning",
+            )
+            if inventory.get(key) is not None
+        },
+        "candidate_classes": safe_classes,
+        "full_loop_decision": {
+            "new_eligible_synchronized_station_vehicle_cohort_found": False,
+            "decision": str(decision.get("decision")),
+            "reason": str(decision.get("reason") or ""),
+            "required_before_full_loop_validation": [
+                str(value)
+                for value in decision.get("required_before_full_loop_validation") or []
+            ],
+        },
+        "claim_limit": str(record.get("next_action") or ""),
+    }
+
+
 def _local_public_validation_catalog_evidence() -> dict[str, Any] | None:
     """Expose the local public-cache inventory without exposing its files.
 
@@ -5597,6 +5694,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_local_station_attestation_request"
         ] = local_attestation_request
+    local_data_deep_scan = _local_data_deep_scan_evidence()
+    if local_data_deep_scan is not None:
+        envelope["response_evidence"][
+            "confidential_local_data_deep_scan"
+        ] = local_data_deep_scan
     local_public_catalog = _local_public_validation_catalog_evidence()
     if local_public_catalog is not None:
         envelope["response_evidence"][
@@ -6557,6 +6659,17 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             ) or {},
             "claim_limit": local_station_discovery.get("claim_limit"),
         }
+    local_data_deep_scan = evidence.get("confidential_local_data_deep_scan")
+    if isinstance(local_data_deep_scan, dict):
+        summary["confidential_local_data_deep_scan"] = {
+            key: local_data_deep_scan.get(key)
+            for key in (
+                "evidence_role", "artifact", "measured_station_bundle",
+                "broad_candidate_inventory", "candidate_classes",
+                "full_loop_decision", "claim_limit",
+            )
+            if local_data_deep_scan.get(key) is not None
+        }
     private_media = evidence.get("confidential_private_media_intake")
     if isinstance(private_media, dict):
         summary["confidential_private_media_intake"] = {
@@ -6718,6 +6831,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     local_attestation_request = response.get(
         "confidential_local_station_attestation_request"
+    ) or {}
+    local_data_deep_scan = response.get(
+        "confidential_local_data_deep_scan"
     ) or {}
     local_public_catalog = response.get("local_public_validation_catalog") or {}
     hytunnel_diagnostic = response.get(
@@ -7142,6 +7258,36 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 },
             } if local_station_discovery and local_discovery_relevant else {}),
             **({
+                "local_data_deep_scan": {
+                    "station_csv_files": (
+                        (local_data_deep_scan.get("measured_station_bundle") or {})
+                        .get("csv_files")
+                    ),
+                    "station_deduplicated_rows": (
+                        (local_data_deep_scan.get("measured_station_bundle") or {})
+                        .get("deduplicated_rows")
+                    ),
+                    "unique_candidate_assets": (
+                        (local_data_deep_scan.get("broad_candidate_inventory") or {})
+                        .get("unique_candidate_assets")
+                    ),
+                    "candidate_class_counts": {
+                        item.get("class"): item.get("unique_assets")
+                        for item in local_data_deep_scan.get("candidate_classes") or []
+                        if isinstance(item, dict) and item.get("class")
+                    },
+                    "new_synchronized_station_vehicle_cohort_found": (
+                        (local_data_deep_scan.get("full_loop_decision") or {})
+                        .get("new_eligible_synchronized_station_vehicle_cohort_found")
+                    ),
+                    "full_loop_decision": (
+                        (local_data_deep_scan.get("full_loop_decision") or {})
+                        .get("decision")
+                    ),
+                    "claim_limit": short(local_data_deep_scan.get("claim_limit"), 220),
+                },
+            } if local_data_deep_scan and local_discovery_relevant else {}),
+            **({
                 "local_station_attestation_request": {
                     "status": local_attestation_request.get("status"),
                     "observed_archive": local_attestation_request.get(
@@ -7524,6 +7670,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     local_attestation_request = evidence.get(
         "confidential_local_station_attestation_request"
+    ) or {}
+    local_data_deep_scan = evidence.get(
+        "confidential_local_data_deep_scan"
     ) or {}
     local_public_catalog = evidence.get("local_public_validation_catalog") or {}
     multisource_feasibility = evidence.get(
@@ -8529,6 +8678,22 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "coverage_assessment"
             ) or {},
             "claim_limit": local_station_discovery.get("claim_limit"),
+        },
+        "confidential_local_data_deep_scan": {
+            "evidence_artifact": local_data_deep_scan.get("artifact"),
+            "measured_station_bundle": local_data_deep_scan.get(
+                "measured_station_bundle"
+            ) or {},
+            "broad_candidate_inventory": local_data_deep_scan.get(
+                "broad_candidate_inventory"
+            ) or {},
+            "candidate_classes": local_data_deep_scan.get(
+                "candidate_classes"
+            ) or [],
+            "full_loop_decision": local_data_deep_scan.get(
+                "full_loop_decision"
+            ) or {},
+            "claim_limit": local_data_deep_scan.get("claim_limit"),
         },
         "confidential_private_media_intake": {
             "artifact": private_media.get("artifact"),
