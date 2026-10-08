@@ -748,33 +748,30 @@ High bank, 3 mm, override & 0.296366 & 17.224 & 9.246 \\
 }
 \end{table}
 
-This result verifies translation, unit handling, coordinate use, contour selection
-and output indexing for the installed package. It does not independently repeat
-the experiments underlying Sandia's validation report, validate the virtual
-station layout or establish an exclusion zone. A public 22-release open-channel
-dataset \cite{henriksen2025} was reviewed but was not force-fitted: its downward
-4.6 mm jet in a 5.8 m $\times$ 0.9 m $\times$ 0.8 m channel is not geometrically
-applicable to the current outdoor free-jet adapter.
+This verifies package translation and output indexing, but neither repeats the
+underlying experiments nor validates station layout or exclusion zones. A public
+22-release open-channel dataset \cite{henriksen2025} was not force-fitted because
+its downward 4.6 mm confined jet differs from the outdoor free-jet adapter.
 
-The same dataset was nevertheless used for a separate, bounded detector-logic
-replay. The measured 29-channel concentration records were passed through the
-declared 1.0 vol\% alarm, 2.0 vol\% trip and 0.5 s persistence rule, with a
-record-specific sampling-gap reset. All 22 experiments produced at least one
-alarm and one trip detection; mean channel coverage was 0.887 and 0.809,
-respectively, and the median first detection occurred 10.675 s after filling
-started. This result checks deterministic threshold and persistence handling,
-not detector response dynamics, placement, ESD effectiveness or an outdoor HRS
-dispersion field. The case-level output and archive digests are retained in the
-reproducibility record \texttt{dispersion\_detector\_logic\_validation.json}.
+The 29-channel records also replayed the fixed 1.0/2.0 vol\% alarm/trip and 0.5 s
+persistence logic. All 22 experiments triggered both levels; mean channel coverage
+was 0.887/0.809 and median first detection was 10.675 s. This checks deterministic
+logic only, not detector dynamics, placement, ESD or station dispersion.
 
-On a public six-sensor Sandia/SRI actual-H$_2$ summary
-\cite{ekoto2012,gexcon2025}, the already-frozen orientation candidate improved
-Spearman correlation from 0.600 to 0.943, attained top-three recall 1.0 and
-ranked the highest response first without fitting. Since the diagnostic was
-formalised after outcome access and combines Tests 1--2, it is not independent
-validation and runtime remains disabled. A pre-access-frozen HyDelta report was
-unscored because same-frame coordinates, orientation and per-sensor numbers were
-absent; figures were not digitised.
+A physical-H$_2$ benchmark was then run under a protocol committed before the
+public CC BY 4.0 workbook was opened \cite{ferreira2024}. Across 45 observations,
+the portable sniffer and mass-spectrometer vacuum/sniffer modes achieved Spearman
+$\rho=0.943/0.969/0.949$, pairwise concordance 1.000 and complete mapping. All
+frozen rank screens passed. Median response/reference ratios nevertheless ranged
+from 0.892 to 0.416, 1.086 to 0.862 and 0.058 to 0.048, respectively. Thus only
+monotonic ordering is supported; no calibration, placement, threshold, ESD or
+runtime claim is made.
+
+On a six-sensor Sandia/SRI actual-H$_2$ summary \cite{ekoto2012,gexcon2025}, the
+frozen candidate raised Spearman $\rho$ from 0.600 to 0.943 with top-three recall
+1.0. The post-access, combined-test diagnostic is not independent validation and
+runtime remains disabled. HyDelta was unscored because required coordinates,
+orientation and per-sensor numbers were absent; figures were not digitised.
 
 \subsection{Decision-support study status}
 The deterministic split produces a 24-case holdout casebook and nine development
@@ -1122,6 +1119,14 @@ Hydrogen Energy} 32(1) (2007) 136--151,
 M. Henriksen, H.E. Fossum, E. Akervik, D. Bjerketvedt, Experimental data of
 hydrogen dispersion in an open-ended rectangular channel, version 2 (2025),
 \href{https://doi.org/10.23642/usn.26117989.v2}{doi:10.23642/usn.26117989.v2}.
+
+\bibitem{ferreira2024}
+O. Ferreira, A. Fonseca, C.F. Adame, N. Bundaleski, R. Robinson,
+O.M.N.D. Teodoro, Advancing hydrogen leak detection: Design and calibration
+of reference leaks, \textit{International Journal of Hydrogen Energy} 68
+(2024) 1090--1096,
+\href{https://doi.org/10.1016/j.ijhydene.2024.04.328}{doi:10.1016/j.ijhydene.2024.04.328};
+data record: \href{https://doi.org/10.5281/zenodo.12180368}{10.5281/zenodo.12180368}.
 
 \bibitem{hiad2026}
 European Commission Joint Research Centre, \textit{European Hydrogen Incidents

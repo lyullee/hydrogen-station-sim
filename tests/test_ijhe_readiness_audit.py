@@ -206,6 +206,13 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert h2safe["full_loop_station_vehicle_validation"] is False
     assert h2safe["runtime_parameter_updated"] is False
     assert gates["h2safe_spatial_detector_transfer_validation"]["status"] == "FAIL"
+    reference_detector = gates["physical_hydrogen_reference_leak_detector_response"]
+    assert reference_detector["status"] == "PASS"
+    assert reference_detector["observed"]["observation_count"] == 45
+    assert reference_detector["observed"]["series_count"] == 3
+    assert reference_detector["observed"]["joint_pass"] is True
+    assert reference_detector["observed"]["runtime_application"] is False
+    assert reference_detector["observed"]["spatial_detector_transfer_gate_changed"] is False
     h2safe_spatial = gates["h2safe_spatial_detector_transfer_validation"]["observed"]
     assert h2safe_spatial["experiment_count"] == 5
     assert h2safe_spatial["median_spearman"] > 0.5

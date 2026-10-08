@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "artifact_type": "prospective_physical_hydrogen_reference_leak_detector_result",
+  "generated_at": "2026-10-08T04:38:15.869446+00:00",
+  "status": "COMPLETED_FROZEN_PROTOCOL_PASS",
+  "source": {
+    "doi": "10.5281/zenodo.12180368",
+    "supplement_to": "10.1016/j.ijhydene.2024.04.328",
+    "license": "CC BY 4.0",
+    "file": "Leak Detector Data Dec 11 2023.xlsx",
+    "bytes": 34515,
+    "md5": "d326a9f714d2e9decc905ec83f6f7b04",
+    "identity_match": true,
+    "test_gas": "hydrogen",
+    "physical_reference_leaks": true
+  },
+  "protocol": {
+    "id": "FERREIRA-H2-REFERENCE-LEAK-DETECTOR-2601",
+    "path": "research/hydrogen_reference_leak_detector_protocol_2026_10_08.json",
+    "status": "FROZEN_BEFORE_RAW_EXCEL_OUTCOME_ACCESS",
+    "raw_outcomes_accessed_before_freeze": false,
+    "parameters_fitted": false,
+    "runtime_parameter_changed": false
+  },
+  "results": {
+    "eligible_detector_class_count": 2,
+    "evaluated_series_count": 3,
+    "total_observation_count": 45,
+    "series": [
+      {
+        "series_id": "portable_hydrogen_sniffer",
+        "detector_class": "portable_hydrogen_sniffer",
+        "mode": "sniffer",
+        "observation_count": 27,
+        "expected_observation_count": 27,
+        "distinct_reference_level_count": 3,
+        "spearman_rho": 0.9434563530497264,
+        "pairwise_order_concordance": 1.0,
+        "finite_mapped_observation_fraction": 1.0,
+        "reference_summaries": [
+          {
+            "reference_leak_mbar_l_s": 1.39e-06,
+            "observation_count": 9,
+            "median_response_mbar_l_s": 1.24e-06,
+            "median_absolute_deviation_mbar_l_s": 2.4000000000000003e-07,
+            "median_response_to_reference_ratio": 0.8920863309352518,
+            "median_relative_error_fraction": -0.10791366906474824
+          },
+          {
+            "reference_leak_mbar_l_s": 1.74e-05,
+            "observation_count": 9,
+            "median_response_mbar_l_s": 8.91e-06,
+            "median_absolute_deviation_mbar_l_s": 1.1900000000000005e-06,
+            "median_response_to_reference_ratio": 0.5120689655172413,
+            "median_relative_error_fraction": -0.48793103448275865
+          },
+          {
+            "reference_leak_mbar_l_s": 8.23e-05,
+            "observation_count": 9,
+            "median_response_mbar_l_s": 3.42e-05,
+            "median_absolute_deviation_mbar_l_s": 2.8000000000000003e-06,
+            "median_response_to_reference_ratio": 0.4155528554070474,
+            "median_relative_error_fraction": -0.5844471445929527
+          }
+        ],
+        "screens": {
+          "distinct_reference_levels": true,
+          "spearman_rho": true,
+          "pairwise_order_concordance": true,
+          "finite_mapped_observation_fraction": true
+        },
+        "joint_pass": true
+      },
+      {
+        "series_id": "msld_vacuum",
+        "detector_class": "mass_spectrometry_leak_detector",
+        "mode": "vacuum",
+        "observation_count": 9,
+        "expected_observation_count": 9,
+        "distinct_reference_level_count": 3,
+        "spearman_rho": 0.969087423704698,
+        "pairwise_order_concordance": 1.0,
+        "finite_mapped_observation_fraction": 1.0,
+        "reference_summaries": [
+          {
+            "reference_leak_mbar_l_s": 1.39e-06,
+            "observation_count": 3,
+            "median_response_mbar_l_s": 1.51e-06,
+            "median_absolute_deviation_mbar_l_s": 1.3000000000000003e-07,
+            "median_response_to_reference_ratio": 1.0863309352517985,
+            "median_relative_error_fraction": 0.0863309352517985
+          },
+          {
+            "reference_leak_mbar_l_s": 1.74e-05,
+            "observation_count": 3,
+            "median_response_mbar_l_s": 1.5e-05,
+            "median_absolute_deviation_mbar_l_s": 0.0,
+            "median_response_to_reference_ratio": 0.8620689655172414,
+            "median_relative_error_fraction": -0.13793103448275856
+          },
+          {
+            "reference_leak_mbar_l_s": 8.23e-05,
+            "observation_count": 3,
+            "median_response_mbar_l_s": 7.1e-05,
+            "median_absolute_deviation_mbar_l_s": 0.0,
+            "median_response_to_reference_ratio": 0.8626974483596599,
+            "median_relative_error_fraction": -0.1373025516403401
+          }
+        ],
+        "screens": {
+          "distinct_reference_levels": true,
+          "spearman_rho": true,
+          "pairwise_order_concordance": true,
+          "finite_mapped_observation_fraction": true
+        },
+        "joint_pass": true
+      },
+      {
+        "series_id": "msld_sniffer",
+        "detector_class": "mass_spectrometry_leak_detector",
+        "mode": "sniffer",
+        "observation_count": 9,
+        "expected_observation_count": 9,
+        "distinct_reference_level_count": 3,
+        "spearman_rho": 0.9486832980505139,
+        "pairwise_order_concordance": 1.0,
+        "finite_mapped_observation_fraction": 1.0,
+        "reference_summaries": [
+          {
+            "reference_leak_mbar_l_s": 1.38e-06,
+            "observation_count": 3,
+            "median_response_mbar_l_s": 7.999999999999987e-08,
+            "median_absolute_deviation_mbar_l_s": 2.117582368135751e-22,
+            "median_response_to_reference_ratio": 0.057971014492753534,
+            "median_relative_error_fraction": -0.9420289855072465
+          },
+          {
+            "reference_leak_mbar_l_s": 1.73e-05,
+            "observation_count": 3,
+            "median_response_mbar_l_s": 8.4e-07,
+            "median_absolute_deviation_mbar_l_s": 2.000000000000002e-08,
+            "median_response_to_reference_ratio": 0.048554913294797684,
+            "median_relative_error_fraction": -0.9514450867052023
+          },
+          {
+            "reference_leak_mbar_l_s": 8.2e-05,
+            "observation_count": 3,
+            "median_response_mbar_l_s": 3.94e-06,
+            "median_absolute_deviation_mbar_l_s": 9.999999999999904e-09,
+            "median_response_to_reference_ratio": 0.04804878048780488,
+            "median_relative_error_fraction": -0.9519512195121951
+          }
+        ],
+        "screens": {
+          "distinct_reference_levels": true,
+          "spearman_rho": true,
+          "pairwise_order_concordance": true,
+          "finite_mapped_observation_fraction": true
+        },
+        "joint_pass": true
+      }
+    ],
+    "screens": {
+      "eligible_detector_class_count": true,
+      "all_series_pass_frozen_screens": true
+    },
+    "joint_pass": true
+  },
+  "decision": {
+    "bounded_actual_hydrogen_response_ordering_supported": true,
+    "runtime_application": false,
+    "spatial_detector_transfer_gate_changed": false,
+    "full_loop_validation_supported": false,
+    "reason": "The frozen screens test monotonic response ordering only. Magnitude bias is retained in the per-reference summaries and is not used to fit the runtime."
+  },
+  "claim_boundary": "This protocol evaluates detector response ordering to physical hydrogen reference leaks. It cannot validate the station spatial detector map, concentration magnitude, alarm or ESD setpoints, release physics, consequence distance, vehicle filling, or the full digital twin."
+}

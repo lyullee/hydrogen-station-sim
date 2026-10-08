@@ -55,6 +55,7 @@ def build(root: Path) -> dict[str, Any]:
     ignited_pressure_path = root / "research/usn_17934047_ignited_pressure_peaking_result_2026_10_08.json"
     qra_comparison_path = root / "research/qra_multimethod_comparison_2026_10_08.json"
     runtime_qra_path = root / "research/runtime_qra_envelope_comparison_2026_10_08.json"
+    reference_leak_detector_path = root / "research/hydrogen_reference_leak_detector_result_2026_10_08.json"
     audit = load_json(audit_path)
     hiad = load_json(hiad_path)
     tracker = load_json(tracker_path)
@@ -73,6 +74,7 @@ def build(root: Path) -> dict[str, Any]:
     ignited_pressure = load_json(ignited_pressure_path)
     qra_comparison = load_json(qra_comparison_path)
     runtime_qra = load_json(runtime_qra_path)
+    reference_leak_detector = load_json(reference_leak_detector_path)
 
     status_by_id = {g["id"]: g for g in audit.get("gates", [])}
     gate = lambda gate_id: status_by_id.get(gate_id, {"status": "MISSING"})
@@ -146,6 +148,33 @@ def build(root: Path) -> dict[str, Any]:
                 "gate": gate("h2safe_full_scale_indoor_surrogate_intake_integrity")["status"],
                 "evidence": "research/h2safe_indoor_release_intake_2026_10_07.json",
                 "claim_boundary": "Hash-verified full-scale indoor helium-surrogate sensor/geometry/HVAC intake only; the public fields do not calibrate H2 thresholds, site layout, outdoor consequence distances or a full filling loop.",
+            },
+            "physical_hydrogen_reference_leak_detector_response": {
+                "gate": gate(
+                    "physical_hydrogen_reference_leak_detector_response"
+                )["status"],
+                "evidence": [
+                    "research/hydrogen_reference_leak_detector_protocol_2026_10_08.json",
+                    "research/hydrogen_reference_leak_detector_result_2026_10_08.json",
+                ],
+                "observation_count": reference_leak_detector["results"][
+                    "total_observation_count"
+                ],
+                "series": [
+                    {
+                        "series_id": item["series_id"],
+                        "spearman_rho": item["spearman_rho"],
+                        "pairwise_order_concordance": item[
+                            "pairwise_order_concordance"
+                        ],
+                        "joint_pass": item["joint_pass"],
+                    }
+                    for item in reference_leak_detector["results"]["series"]
+                ],
+                "runtime_application": reference_leak_detector["decision"][
+                    "runtime_application"
+                ],
+                "claim_boundary": reference_leak_detector["claim_boundary"],
             },
             "h2safe_spatial_detector_transfer": {
                 "gate": gate("h2safe_spatial_detector_transfer_validation")["status"],
@@ -390,6 +419,9 @@ def build(root: Path) -> dict[str, Any]:
                 hydelta_spatial_eligibility_path
             ),
             "sandia_spatial_diagnostic_sha256": sha256(sandia_spatial_path),
+            "reference_leak_detector_result_sha256": sha256(
+                reference_leak_detector_path
+            ),
             "ignited_pressure_peaking_sha256": sha256(ignited_pressure_path),
             "qra_multimethod_comparison_sha256": sha256(qra_comparison_path),
             "runtime_qra_comparison_sha256": sha256(runtime_qra_path),

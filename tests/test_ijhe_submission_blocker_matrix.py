@@ -19,6 +19,17 @@ def test_current_blocker_matrix_tracks_the_readiness_audit():
     h2safe = matrix["evidence_snapshot"]["full_scale_indoor_surrogate_measurements"]
     assert h2safe["gate"] == "PASS"
     assert "helium-surrogate" in h2safe["claim_boundary"]
+    reference_detector = matrix["evidence_snapshot"][
+        "physical_hydrogen_reference_leak_detector_response"
+    ]
+    assert reference_detector["gate"] == "PASS"
+    assert reference_detector["observation_count"] == 45
+    assert len(reference_detector["series"]) == 3
+    assert all(item["joint_pass"] for item in reference_detector["series"])
+    assert reference_detector["runtime_application"] is False
+    assert len(
+        matrix["reproducibility"]["reference_leak_detector_result_sha256"]
+    ) == 64
     assert len(matrix["reproducibility"]["h2safe_intake_sha256"]) == 64
     assert len(matrix["reproducibility"]["hydelta_spatial_eligibility_sha256"]) == 64
     transfer = matrix["evidence_snapshot"]["h2safe_spatial_detector_transfer"]

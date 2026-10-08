@@ -20,7 +20,17 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **97 PASS · 8 FAIL · 8 PENDING**.
+Gate counts: **98 PASS · 8 FAIL · 8 PENDING**.
+
+A newly found CC BY 4.0 detector workbook was handled prospectively: the
+protocol and thresholds were committed before the numerical Excel file was
+downloaded or opened. All 45 physical-H2 observations were retained across a
+portable hydrogen sniffer and mass-spectrometer vacuum/sniffer modes. Their
+Spearman correlations were 0.943, 0.969 and 0.949, while pairwise ordering
+concordance and mapped-data completeness were 1.000 for every series. The
+bounded detector-response gate therefore passes. Large response-magnitude bias
+is still reported, and no alarm, trip, concentration or spatial-routing
+parameter was changed.
 
 The emergency-response evidence layer now includes the CC BY 4.0 HyDelta
 controlled-hydrogen-flare report (DOI 10.5281/zenodo.20817291). The runtime
@@ -240,8 +250,8 @@ The local format gate currently passes:
 - abstract: 150 words (limit checked: 150);
 - keywords: 6;
 - highlights: 5, each within the checked character limit;
-- approximate manuscript body: 7,970 words before references;
-- figures: 2; tables: 3;
+- approximate manuscript body: 7,961 words before references;
+- figures: 3; tables: 3;
 - citations resolved and figure assets present;
 - LaTeX compilation: **PENDING**. The built-in compiler was unavailable on this
   Windows host; the retained PDF predates the corrected MC boundary diagnostic.

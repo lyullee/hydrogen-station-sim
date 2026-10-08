@@ -687,6 +687,105 @@ def _public_detector_logic_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_reference_leak_detector_evidence() -> dict[str, Any] | None:
+    """Expose prospective physical-H2 detector ordering evidence.
+
+    The protocol was committed before the workbook outcomes were opened. Only
+    compact aggregate results enter the prompt; the raw workbook stays outside
+    Git. Strict checks prevent this evidence from silently becoming a runtime
+    calibration, alarm-setpoint, or spatial-detector claim.
+    """
+
+    artifact = "research/hydrogen_reference_leak_detector_result_2026_10_08.json"
+    path = Path(__file__).resolve().parents[2] / artifact
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    protocol = record.get("protocol") or {}
+    results = record.get("results") or {}
+    decision = record.get("decision") or {}
+    series = [item for item in results.get("series") or [] if isinstance(item, dict)]
+    if (
+        record.get("artifact_type")
+        != "prospective_physical_hydrogen_reference_leak_detector_result"
+        or record.get("status") != "COMPLETED_FROZEN_PROTOCOL_PASS"
+        or source.get("doi") != "10.5281/zenodo.12180368"
+        or source.get("license") != "CC BY 4.0"
+        or source.get("test_gas") != "hydrogen"
+        or source.get("physical_reference_leaks") is not True
+        or source.get("identity_match") is not True
+        or protocol.get("status") != "FROZEN_BEFORE_RAW_EXCEL_OUTCOME_ACCESS"
+        or protocol.get("raw_outcomes_accessed_before_freeze") is not False
+        or protocol.get("parameters_fitted") is not False
+        or protocol.get("runtime_parameter_changed") is not False
+        or results.get("eligible_detector_class_count") != 2
+        or results.get("evaluated_series_count") != 3
+        or results.get("total_observation_count") != 45
+        or len(series) != 3
+        or results.get("joint_pass") is not True
+        or not all(item.get("joint_pass") is True for item in series)
+        or decision.get("bounded_actual_hydrogen_response_ordering_supported") is not True
+        or decision.get("runtime_application") is not False
+        or decision.get("spatial_detector_transfer_gate_changed") is not False
+        or decision.get("full_loop_validation_supported") is not False
+    ):
+        return None
+
+    compact_series: list[dict[str, Any]] = []
+    for item in series:
+        reference_summaries = [
+            row for row in item.get("reference_summaries") or [] if isinstance(row, dict)
+        ]
+        ratios = [
+            float(row["median_response_to_reference_ratio"])
+            for row in reference_summaries
+            if isinstance(row.get("median_response_to_reference_ratio"), (int, float))
+            and math.isfinite(float(row["median_response_to_reference_ratio"]))
+        ]
+        compact_series.append(
+            {
+                "series_id": item.get("series_id"),
+                "detector_class": item.get("detector_class"),
+                "mode": item.get("mode"),
+                "observation_count": item.get("observation_count"),
+                "distinct_reference_level_count": item.get(
+                    "distinct_reference_level_count"
+                ),
+                "spearman_rho": item.get("spearman_rho"),
+                "pairwise_order_concordance": item.get(
+                    "pairwise_order_concordance"
+                ),
+                "finite_mapped_observation_fraction": item.get(
+                    "finite_mapped_observation_fraction"
+                ),
+                "median_response_to_reference_ratio_range": (
+                    [min(ratios), max(ratios)] if ratios else []
+                ),
+                "joint_pass": True,
+            }
+        )
+    return {
+        "artifact": artifact,
+        "doi": source.get("doi"),
+        "related_article_doi": source.get("supplement_to"),
+        "license": source.get("license"),
+        "evidence_role": (
+            "prospective physical-hydrogen reference-leak detector-response ordering"
+        ),
+        "observation_count": results.get("total_observation_count"),
+        "detector_class_count": results.get("eligible_detector_class_count"),
+        "evaluated_series_count": results.get("evaluated_series_count"),
+        "series": compact_series,
+        "joint_pass": True,
+        "runtime_application": False,
+        "spatial_detector_transfer_gate_changed": False,
+        "full_loop_validation_supported": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_dispersion_proxy_evidence() -> dict[str, Any] | None:
     """Expose the concentration scale used by the virtual detector proxy."""
 
@@ -2300,6 +2399,15 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             f"https://doi.org/{detector_doi}",
             "검지기 alarm/trip persistence 재현 근거",
         )
+    reference_detector = evidence.get("public_reference_leak_detector_evidence") or {}
+    reference_detector_doi = str(reference_detector.get("doi") or "")
+    if reference_detector_doi:
+        add(
+            "PUBLIC_REFERENCE_LEAK_DETECTOR_DATASET",
+            "Physical hydrogen reference-leak detector dataset",
+            f"https://doi.org/{reference_detector_doi}",
+            "실제 수소 기준누출에 대한 검지기 응답 순서 근거(경보값·공간배치 보정 아님)",
+        )
     proxy = evidence.get("public_dispersion_proxy_evidence") or {}
     proxy_doi = str(proxy.get("doi") or "")
     if proxy_doi:
@@ -3856,6 +3964,11 @@ def build_evidence_manifest(
     detector_logic = _public_detector_logic_evidence()
     if detector_logic is not None:
         envelope["response_evidence"]["public_detector_logic_evidence"] = detector_logic
+    reference_detector = _public_reference_leak_detector_evidence()
+    if reference_detector is not None:
+        envelope["response_evidence"][
+            "public_reference_leak_detector_evidence"
+        ] = reference_detector
     dispersion_proxy = _public_dispersion_proxy_evidence()
     if dispersion_proxy is not None:
         envelope["response_evidence"]["public_dispersion_proxy_evidence"] = dispersion_proxy
@@ -4323,6 +4436,19 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 ) if key in aggregate
             },
             "claim_limit": short(detector.get("claim_limit")),
+        }
+    reference_detector = evidence.get("public_reference_leak_detector_evidence")
+    if isinstance(reference_detector, dict):
+        summary["public_reference_leak_detector_evidence"] = {
+            key: reference_detector.get(key)
+            for key in (
+                "doi", "related_article_doi", "evidence_role", "observation_count",
+                "detector_class_count", "evaluated_series_count", "series",
+                "joint_pass", "runtime_application",
+                "spatial_detector_transfer_gate_changed",
+                "full_loop_validation_supported", "claim_limit",
+            )
+            if reference_detector.get(key) is not None
         }
     dispersion_proxy = evidence.get("public_dispersion_proxy_evidence")
     if isinstance(dispersion_proxy, dict):
@@ -4982,6 +5108,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     ]
     detector = evidence.get("public_detector_logic_evidence") or {}
     detector_aggregate = detector.get("aggregate") or {}
+    reference_detector = evidence.get("public_reference_leak_detector_evidence") or {}
     dispersion_proxy = evidence.get("public_dispersion_proxy_evidence") or {}
     grune_ventilation = evidence.get("public_grune_ventilation_evidence") or {}
     confidential = evidence.get("confidential_measured_boundary_replay") or {}
@@ -5431,6 +5558,17 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         "public_detector_trip_coverage": detector_aggregate.get(
             "mean_trip_sensor_coverage_fraction"
         ),
+        "public_reference_leak_detector_evidence": {
+            key: reference_detector.get(key)
+            for key in (
+                "doi", "related_article_doi", "evidence_role", "observation_count",
+                "detector_class_count", "evaluated_series_count", "series",
+                "joint_pass", "runtime_application",
+                "spatial_detector_transfer_gate_changed",
+                "full_loop_validation_supported", "claim_limit",
+            )
+            if reference_detector.get(key) is not None
+        },
         "public_grune_ventilation_envelope": {
             "doi": grune_ventilation.get("doi"),
             "profiles_used": grune_ventilation.get("profiles_used"),

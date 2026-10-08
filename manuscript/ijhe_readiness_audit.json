@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T04:27:58.814627+00:00",
+  "generated_at": "2026-10-08T04:48:24.593779+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 97,
+    "PASS": 98,
     "FAIL": 8,
     "PENDING": 8
   },
@@ -1954,6 +1954,43 @@
           "runtime_candidate_enabled": false
         },
         "claim_boundary": "This post-access diagnostic supports only a development choice to replace arbitrary near/far detector assignment with a transparent coordinate ranking. It failed the joint spatial screen and is not independent validation."
+      }
+    },
+    {
+      "id": "physical_hydrogen_reference_leak_detector_response",
+      "status": "PASS",
+      "claim": "Two physical hydrogen leak-detector classes preserve the ordering of three reference leaks under a pre-access-frozen no-fit protocol.",
+      "evidence": "research\\hydrogen_reference_leak_detector_result_2026_10_08.json",
+      "requirement": "Published CC BY 4.0 source identity, 45 mapped observations, both detector classes, three reference levels, all frozen rank/completeness screens passed, magnitude bias retained and no runtime transfer.",
+      "observed": {
+        "doi": "10.5281/zenodo.12180368",
+        "test_gas": "hydrogen",
+        "observation_count": 45,
+        "series_count": 3,
+        "series": [
+          {
+            "series_id": "portable_hydrogen_sniffer",
+            "spearman_rho": 0.9434563530497264,
+            "pairwise_order_concordance": 1.0,
+            "joint_pass": true
+          },
+          {
+            "series_id": "msld_vacuum",
+            "spearman_rho": 0.969087423704698,
+            "pairwise_order_concordance": 1.0,
+            "joint_pass": true
+          },
+          {
+            "series_id": "msld_sniffer",
+            "spearman_rho": 0.9486832980505139,
+            "pairwise_order_concordance": 1.0,
+            "joint_pass": true
+          }
+        ],
+        "joint_pass": true,
+        "runtime_application": false,
+        "spatial_detector_transfer_gate_changed": false,
+        "claim_boundary": "This protocol evaluates detector response ordering to physical hydrogen reference leaks. It cannot validate the station spatial detector map, concentration magnitude, alarm or ESD setpoints, release physics, consequence distance, vehicle filling, or the full digital twin."
       }
     },
     {
@@ -6702,11 +6739,11 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7990,
+          "approximate_manuscript_words_before_references": 7961,
           "figures": 3,
           "tables": 3,
-          "citation_keys": 44,
-          "bibliography_entries": 45,
+          "citation_keys": 45,
+          "bibliography_entries": 46,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -6734,12 +6771,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-08T04:27:58.422235+00:00",
+        "attempted_at": "2026-10-08T04:41:49.7992777Z",
         "attempts_this_run": 1,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "4c570979bdd17938b4e31a9f0e8030515d5461313bb4bcc21fbff68a0259b5bc",
+        "source_sha256": "0bdd0c6cca54e1e84dbd16e3b85e22e6f7c37b97e61a903b3fa88d0a6d099088",
         "diagnostic": "Unable to find standard directories for platform",
         "format_check_passed": true,
         "retained_previous_pdf": {

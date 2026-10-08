@@ -2671,6 +2671,78 @@ def audit(root: Path) -> dict[str, object]:
         } if h2safe_spatial else "missing; H2SAFE spatial diagnostic has not run",
     ))
 
+    reference_leak_detector_path = root / (
+        "research/hydrogen_reference_leak_detector_result_2026_10_08.json"
+    )
+    reference_leak_detector = _json(reference_leak_detector_path)
+    reference_source = (reference_leak_detector or {}).get("source") or {}
+    reference_protocol = (reference_leak_detector or {}).get("protocol") or {}
+    reference_results = (reference_leak_detector or {}).get("results") or {}
+    reference_decision = (reference_leak_detector or {}).get("decision") or {}
+    reference_series = reference_results.get("series") or []
+    reference_leak_detector_pass = bool(
+        (reference_leak_detector or {}).get("artifact_type")
+        == "prospective_physical_hydrogen_reference_leak_detector_result"
+        and (reference_leak_detector or {}).get("status")
+        == "COMPLETED_FROZEN_PROTOCOL_PASS"
+        and reference_source.get("doi") == "10.5281/zenodo.12180368"
+        and reference_source.get("license") == "CC BY 4.0"
+        and reference_source.get("identity_match") is True
+        and reference_source.get("test_gas") == "hydrogen"
+        and reference_protocol.get("status")
+        == "FROZEN_BEFORE_RAW_EXCEL_OUTCOME_ACCESS"
+        and reference_protocol.get("raw_outcomes_accessed_before_freeze") is False
+        and reference_protocol.get("parameters_fitted") is False
+        and reference_protocol.get("runtime_parameter_changed") is False
+        and reference_results.get("eligible_detector_class_count") == 2
+        and reference_results.get("evaluated_series_count") == 3
+        and reference_results.get("total_observation_count") == 45
+        and len(reference_series) == 3
+        and all(item.get("joint_pass") is True for item in reference_series)
+        and reference_results.get("joint_pass") is True
+        and reference_decision.get(
+            "bounded_actual_hydrogen_response_ordering_supported"
+        ) is True
+        and reference_decision.get("runtime_application") is False
+        and reference_decision.get("spatial_detector_transfer_gate_changed") is False
+        and reference_decision.get("full_loop_validation_supported") is False
+        and "cannot validate" in str(
+            (reference_leak_detector or {}).get("claim_boundary") or ""
+        )
+    )
+    gates.append(_gate(
+        "physical_hydrogen_reference_leak_detector_response",
+        "PASS" if reference_leak_detector_pass else (
+            "FAIL" if reference_leak_detector else "PENDING"
+        ),
+        "Two physical hydrogen leak-detector classes preserve the ordering of three reference leaks under a pre-access-frozen no-fit protocol.",
+        str(reference_leak_detector_path.relative_to(root)),
+        "Published CC BY 4.0 source identity, 45 mapped observations, both detector classes, three reference levels, all frozen rank/completeness screens passed, magnitude bias retained and no runtime transfer.",
+        {
+            "doi": reference_source.get("doi"),
+            "test_gas": reference_source.get("test_gas"),
+            "observation_count": reference_results.get("total_observation_count"),
+            "series_count": reference_results.get("evaluated_series_count"),
+            "series": [
+                {
+                    "series_id": item.get("series_id"),
+                    "spearman_rho": item.get("spearman_rho"),
+                    "pairwise_order_concordance": item.get(
+                        "pairwise_order_concordance"
+                    ),
+                    "joint_pass": item.get("joint_pass"),
+                }
+                for item in reference_series
+            ],
+            "joint_pass": reference_results.get("joint_pass"),
+            "runtime_application": reference_decision.get("runtime_application"),
+            "spatial_detector_transfer_gate_changed": reference_decision.get(
+                "spatial_detector_transfer_gate_changed"
+            ),
+            "claim_boundary": (reference_leak_detector or {}).get("claim_boundary"),
+        } if reference_leak_detector else "missing; reference-leak result has not run",
+    ))
+
     dispersion_proxy_path = root / (
         "research/dispersion_concentration_proxy_calibration_2026_10_06.json"
     )
