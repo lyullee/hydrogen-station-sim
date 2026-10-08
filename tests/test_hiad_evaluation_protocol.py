@@ -196,6 +196,7 @@ def test_holdout_collection_requires_casebook_freeze_manifest(
         "run_hiad_decision_evaluation.py",
         "--cases", str(cases_path),
         "--split", "holdout",
+        "--include-standards-rag",
         "--approved-casebook", str(approved_path),
         "--saga-url", "http://example.invalid",
         "--output", str(tmp_path / "result"),
@@ -241,6 +242,7 @@ def test_holdout_collection_requires_protocol_manifest_after_casebook_freeze(
         "run_hiad_decision_evaluation.py",
         "--cases", str(cases_path),
         "--split", "holdout",
+        "--include-standards-rag",
         "--approved-casebook", str(approved_path),
         "--casebook-freeze-manifest", str(freeze_path),
         "--saga-url", "http://example.invalid",
@@ -249,3 +251,83 @@ def test_holdout_collection_requires_protocol_manifest_after_casebook_freeze(
 
     with pytest.raises(SystemExit, match="protocol-manifest is required"):
         evaluation.main()
+
+
+@pytest.mark.parametrize(
+    ("extra_args", "message"),
+    [
+        (["--repeats", "2", "--include-standards-rag"], "exactly --repeats 3"),
+        ([], "requires --include-standards-rag"),
+    ],
+)
+def test_holdout_collection_rejects_non_preregistered_response_design(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    extra_args: list[str],
+    message: str,
+):
+    cases_path = tmp_path / "cases.jsonl"
+    cases_path.write_text(json.dumps({
+        **_case(),
+        "quality": "complete",
+        "emergency_action": "Isolate the dispenser.",
+        "lesson_learnt": "Verify hose integrity.",
+        "corrective_measures": "Replace the hose.",
+        "references": [],
+    }) + "\n", encoding="utf-8")
+    monkeypatch.setattr(sys, "argv", [
+        "run_hiad_decision_evaluation.py",
+        "--cases", str(cases_path),
+        "--split", "holdout",
+        "--approved-casebook", str(tmp_path / "approved.json"),
+        "--saga-url", "http://example.invalid",
+        "--output", str(tmp_path / "result"),
+        *extra_args,
+    ])
+
+    with pytest.raises(SystemExit, match=message):
+        evaluation.main()
+
+
+def test_empty_provider_answer_is_retained_as_failed_response(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    case = {
+        **_case(),
+        "quality": "complete",
+        "emergency_action": "Isolate the dispenser.",
+        "lesson_learnt": "Verify hose integrity.",
+        "corrective_measures": "Replace the hose.",
+        "references": [],
+    }
+    cases_path = tmp_path / "cases.jsonl"
+    cases_path.write_text(json.dumps(case) + "\n", encoding="utf-8")
+    approved_path = tmp_path / "approved.json"
+    approved_path.write_text(json.dumps({"cases": [{
+        "event_id": "401",
+        "input_context": evaluation._context(case)["historical_observation"],
+        "narrative_action_leakage_review": "PASS",
+        "expert_vignette_approved": "YES",
+    }]}), encoding="utf-8")
+
+    monkeypatch.setattr(evaluation, "_post", lambda *_: ({"answer": ""}, 12.0))
+    monkeypatch.setattr(sys, "argv", [
+        "run_hiad_decision_evaluation.py",
+        "--cases", str(cases_path),
+        "--split", "development",
+        "--approved-casebook", str(approved_path),
+        "--saga-url", "http://example.invalid",
+        "--repeats", "1",
+        "--output", str(tmp_path / "result"),
+    ])
+
+    with pytest.raises(SystemExit, match="1 failed SAGA calls"):
+        evaluation.main()
+
+    with (tmp_path / "result" / "allocation_key.csv").open(
+        encoding="utf-8-sig", newline=""
+    ) as handle:
+        rows = list(csv.DictReader(handle))
+    failed = next(row for row in rows if row["variant"] == "saga-linked")
+    assert failed["call_failed"] == "True"
+    assert "contained no answer" in failed["error"]

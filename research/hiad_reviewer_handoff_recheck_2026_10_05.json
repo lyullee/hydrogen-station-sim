@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "rechecked_at_utc": "2026-10-08T10:51:17.512775+00:00",
-  "source_commit": "6f0b1fb731bf253c1fbc87d768b0ea9460a5d5d5",
+  "rechecked_at_utc": "2026-10-08T12:10:16.091132+00:00",
+  "source_commit": "2d64f0551ad8c12af16c8bfd54c1bf750924cd62",
   "status": "PENDING_COORDINATOR_APPROVAL_AND_ETHICS_DETERMINATION",
   "machine_preflight": {
     "pass": true,
@@ -30,7 +30,7 @@
     },
     "protocol_manifest": {
       "path": "research/hiad_study_protocol_manifest.json",
-      "sha256": "4bf77e725ee08d91bf1016cc8d9e52bd048dfa620e1d873292cd4739bf4841ee"
+      "sha256": "4c2c32b02386cd6fd9efd5a33d8a22b259b7f9a43e4091003f5af0facc1ce3b7"
     }
   },
   "current_readiness": {

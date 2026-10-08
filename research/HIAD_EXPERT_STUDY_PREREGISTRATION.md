@@ -49,6 +49,12 @@ Each holdout event produces:
 2. three direct one-pass SAGA responses; and
 3. three SAGA standards-document RAG responses.
 
+The collection executable rejects any holdout run that does not request exactly
+three direct and three standards-RAG generations per event. It performs this
+design check before reading the approved casebook or contacting a provider.
+Empty provider answers are retained as masked failed calls rather than counted
+as successful responses.
+
 Provider, model identifier, prompt, token ceiling, language, endpoint contract,
 software commit and collection timeout are recorded in the collection manifest.
 A provider failure remains as a masked failure response. It is not silently

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-10-08T10:51:17.451667+00:00",
+  "generated_at_utc": "2026-10-08T12:10:16.016703+00:00",
   "protocol_id": "HIAD-SAGA-2601",
   "readiness": {
     "casebook_frozen": false,
@@ -35,7 +35,7 @@
   },
   "protocol": {
     "path": "research\\hiad_study_protocol_manifest.json",
-    "sha256": "4bf77e725ee08d91bf1016cc8d9e52bd048dfa620e1d873292cd4739bf4841ee",
+    "sha256": "4c2c32b02386cd6fd9efd5a33d8a22b259b7f9a43e4091003f5af0facc1ce3b7",
     "error": null,
     "ethics_status": "pending",
     "ethics_determination_id": null,

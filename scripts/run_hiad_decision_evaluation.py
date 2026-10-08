@@ -214,6 +214,21 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    # The confirmatory holdout design is preregistered as one alarm-only,
+    # three direct-SAGA and three standards-RAG responses per event.  Reject a
+    # partial design before reading the casebook or calling a provider; finding
+    # this only in the downstream readiness audit would waste the locked
+    # holdout collection and provider budget.
+    if args.split == "holdout":
+        if args.repeats != 3:
+            raise SystemExit(
+                "Preregistered holdout collection requires exactly --repeats 3"
+            )
+        if not args.include_standards_rag:
+            raise SystemExit(
+                "Preregistered holdout collection requires --include-standards-rag"
+            )
+
     splits = _split(_read_jsonl(args.cases))
     cases = splits[args.split]
     args.output.mkdir(parents=True, exist_ok=True)
@@ -338,10 +353,13 @@ def main() -> int:
                 try:
                     payload = _response_payload(variant, case, args.provider)
                     result, latency = _post(endpoint, payload, args.timeout_s)
+                    answer = str(result.get("answer") or "").strip()
+                    if not answer:
+                        raise ValueError("SAGA response contained no answer")
                     citations = result.get("citations") or []
                     responses.append({
                         "event_id": case["event_id"], "variant": variant,
-                        "repeat": repeat, "answer": str(result.get("answer") or ""),
+                        "repeat": repeat, "answer": answer,
                         "latency_ms": latency,
                         "provider": str(result.get("provider") or args.provider),
                         "model": str(result.get("model") or ""),

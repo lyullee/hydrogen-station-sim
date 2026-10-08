@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "protocol_id": "HIAD-SAGA-2601",
-  "frozen_at_utc": "2026-10-08T10:51:16.978413+00:00",
-  "source_commit": "6f0b1fb731bf253c1fbc87d768b0ea9460a5d5d5",
+  "frozen_at_utc": "2026-10-08T12:09:35.976733+00:00",
+  "source_commit": "2d64f0551ad8c12af16c8bfd54c1bf750924cd62",
   "ethics_status": "pending",
   "ethics_determination_id": null,
   "reviewer_recruitment_permitted": false,
@@ -13,7 +13,7 @@
     "research/EXPERT_REVIEWER_INFORMATION_SHEET.md": 5
   },
   "required_file_sha256": {
-    "research/HIAD_EXPERT_STUDY_PREREGISTRATION.md": "6c8e0878591183be50739343f6a4556b6ccddda9abd0e363fd3cae2df360985e",
+    "research/HIAD_EXPERT_STUDY_PREREGISTRATION.md": "e828dac645df0240ef51d2e2a1221e1e5d12857677ad4071898c7543e637c8ad",
     "research/ETHICS_DETERMINATION_REQUEST.md": "cec63631cf77442262930bb6676c70ff2d84ce08429eba01d577ddcc099a169b",
     "research/EXPERT_REVIEWER_INFORMATION_SHEET.md": "82320f5dc6854cbce4a176e659fe36172e7515e8d1c5dd59cd4c78f3b128ac47",
     "research/HIAD_DATA_MANAGEMENT_PLAN.md": "04541862053d593f705bcc34e61be9d0b1576864b2657053ece018c5e4928e80",
@@ -23,7 +23,7 @@
     "docs/EXPERT_REVIEW_PROTOCOL.md": "1869a208429d3f1f4903bc0806a5e73433e4c2147f9fe9d6e4d8e208ae98b211",
     "scripts/prepare_hiad_coordinator_review.py": "05b5503820c9f9db5608419ec206a7e75bcc1443e95564d492b372df8cb2c945",
     "scripts/freeze_hiad_approved_casebook.py": "fcb76da038985b6cc65f8316115d6253165dc9e9cb72f4f72cb9e9aba0bd2200",
-    "scripts/run_hiad_decision_evaluation.py": "bb307c815612f6c84556914342ca75297c06f036108413bb66a1bcf0754d2d40",
+    "scripts/run_hiad_decision_evaluation.py": "1dd7220dc85bafe96306b6bdaa484bbe23daa3527e5d38375e9286ed7b6b77e3",
     "scripts/package_hiad_expert_review.py": "069798ed8796ca3b012bdbecc1f6d21af053ecf7ac110d0db4e98c94d4805bfb",
     "scripts/analyze_hiad_expert_review.py": "06447b72249db253e9bb1abf2bc33c09c4440bef1ef974b81beb92366cbc020a",
     "scripts/analyze_hiad_design_sensitivity.py": "750aa183b8c2b79e39ae518f69061380075d71e1898ef8ebf24a4ee46514ad1f"
