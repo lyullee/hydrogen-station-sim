@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "protocol_id": "CONFIDENTIAL-STATION-HIGH-BANK-CYCLE-HOLDOUT-001",
+  "frozen_at": "2026-10-08",
+  "status": "method_and_thresholds_frozen_before_pressure_cycle_outcome_access",
+  "objective": "Cross-format temporal corroboration of the existing 4.5 MPa high-bank recharge restart margin using the previously unscored cycle structure of the narrow confidential station history archive.",
+  "target": {
+    "role": "high_storage_pressure",
+    "candidate_mpa": 4.5,
+    "candidate_origin": "Rounded median from a separate eight-file owner-attested equipment-log diagnostic; this protocol does not refit it."
+  },
+  "frozen_rules": {
+    "sample_stride": 10,
+    "fall_confirmation_mpa": 0.25,
+    "rise_confirmation_mpa": 0.25,
+    "minimum_cycle_drop_mpa": 0.5,
+    "maximum_cycle_drop_mpa": 20.0,
+    "minimum_decline_duration_s": 30.0,
+    "maximum_decline_duration_s": 21600.0,
+    "minimum_pressure_mpa": 10.0,
+    "maximum_pressure_mpa": 100.0,
+    "maximum_sample_gap_s": 120.0,
+    "calibration_fraction": 0.7
+  },
+  "eligibility": {
+    "minimum_matching_files": 6,
+    "minimum_calibration_cycles": 30,
+    "minimum_holdout_cycles": 15,
+    "minimum_holdout_files": 4,
+    "owner_attestation_required": "medium/high storage pressure role semantics are attested",
+    "cycle_definition": "A sustained peak-to-trough decline confirmed by at least 0.25 MPa fall and 0.25 MPa recovery, with 0.5-20 MPa drop and 30-21600 s decline duration."
+  },
+  "primary_screens": {
+    "candidate_inside_holdout_p10_p90": true,
+    "candidate_relative_holdout_median_error_percent_max": 20.0,
+    "calibration_holdout_median_shift_percent_max": 25.0,
+    "all_eligibility_and_primary_screens_required": true
+  },
+  "privacy_boundary": {
+    "input_and_mapping_outside_repository": true,
+    "publish_paths_filenames_headers_tags_dates_timestamps_or_raw_rows": false,
+    "publish_only_generic_role_counts_quantiles_metrics_and_decision": true
+  },
+  "decision_boundary": {
+    "pass_meaning": "Same-site, cross-format corroboration of an already selected high-bank restart margin.",
+    "runtime_parameter_application": false,
+    "default_parameter_change": false,
+    "vehicle_fill_or_full_loop_validation": false,
+    "safety_limit_or_field_certification": false,
+    "source_independence_claim": false
+  },
+  "locked_implementation": {
+    "evaluator": "src/h2station/confidential_pressure_cycle_holdout.py",
+    "evaluator_sha256": "74bf77c848b5f038a93185cd82a68ecfdfbda860583f852fdaea385268e5d99a",
+    "runner": "scripts/validate_confidential_station_pressure_cycles.py",
+    "runner_sha256": "9643328272a403717a0a23c3e7a23dc75f08ba23faf880374a32ca6c2192ed2c"
+  }
+}
