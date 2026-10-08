@@ -1,0 +1,271 @@
+{
+  "schema_version": 1,
+  "artifact_type": "molkov_2011_jet_flame_literature_benchmark",
+  "status": "passed",
+  "generated_date_utc": "2026-10-08",
+  "source": {
+    "citation": "Molkov and Saffers, The Correlation for Non-Premixed Hydrogen Jet Flame Length in Still Air, Fire Safety Science 10 (2011) 933-943",
+    "doi": "10.3801/IAFSS.FSS.10-933",
+    "url": "https://doi.org/10.3801/IAFSS.FSS.10-933",
+    "public_access": true,
+    "redistribution_license_asserted": false,
+    "paper_pdf_sha256": "b9b8993f06177a892053070c367af378fdfa9918aeb5eb2174a1806308ed7f86",
+    "experimental_case_count_reported": 123,
+    "benchmark_table": "Table 1"
+  },
+  "implementation": {
+    "path": "src/h2station/risk/jet_flame.py",
+    "sha256": "0f4c4dc1ca3ea6d6c3792ae1233e288e65162845d0ff22f8674bd0363a7a1a2c",
+    "equation": "L_F = 76 * (mass_flow_kg_s * nozzle_diameter_m)^0.347"
+  },
+  "predeclared_descriptive_screen": {
+    "mean_absolute_percentage_error_at_most_20_percent": true,
+    "at_least_80_percent_of_rows_within_30_percent": true,
+    "maximum_absolute_percentage_error_at_most_50_percent": true
+  },
+  "rows": [
+    {
+      "source_series": "Schefer 2006",
+      "nozzle_diameter_mm": 7.94,
+      "paper_flame_length_over_diameter": 544,
+      "paper_mass_flow_g_s": 57,
+      "paper_flame_length_m": 4.3193600000000005,
+      "implementation_flame_length_m": 5.2521833856346545,
+      "absolute_percentage_error": 21.596333383525657
+    },
+    {
+      "source_series": "Schefer 2006",
+      "nozzle_diameter_mm": 7.94,
+      "paper_flame_length_over_diameter": 363,
+      "paper_mass_flow_g_s": 23,
+      "paper_flame_length_m": 2.8822200000000002,
+      "implementation_flame_length_m": 3.8332828464192295,
+      "absolute_percentage_error": 32.99757986618749
+    },
+    {
+      "source_series": "Schefer 2006",
+      "nozzle_diameter_mm": 7.94,
+      "paper_flame_length_over_diameter": 277,
+      "paper_mass_flow_g_s": 6.9,
+      "paper_flame_length_m": 2.19938,
+      "implementation_flame_length_m": 2.5242475366150052,
+      "absolute_percentage_error": 14.770868909192822
+    },
+    {
+      "source_series": "Schefer 2006",
+      "nozzle_diameter_mm": 7.94,
+      "paper_flame_length_over_diameter": 223,
+      "paper_mass_flow_g_s": 2.1,
+      "paper_flame_length_m": 1.7706200000000003,
+      "implementation_flame_length_m": 1.6705573976855956,
+      "absolute_percentage_error": 5.651274825451235
+    },
+    {
+      "source_series": "Schefer 2006",
+      "nozzle_diameter_mm": 7.94,
+      "paper_flame_length_over_diameter": 191,
+      "paper_mass_flow_g_s": 1.1,
+      "paper_flame_length_m": 1.5165400000000002,
+      "implementation_flame_length_m": 1.3347949914188484,
+      "absolute_percentage_error": 11.984188256238003
+    },
+    {
+      "source_series": "Schefer 2007",
+      "nozzle_diameter_mm": 5.08,
+      "paper_flame_length_over_diameter": 1969,
+      "paper_mass_flow_g_s": 360,
+      "paper_flame_length_m": 10.00252,
+      "implementation_flame_length_m": 8.526784129771707,
+      "absolute_percentage_error": 14.75364078480516
+    },
+    {
+      "source_series": "Schefer 2007",
+      "nozzle_diameter_mm": 5.08,
+      "paper_flame_length_over_diameter": 1722,
+      "paper_mass_flow_g_s": 230,
+      "paper_flame_length_m": 8.747760000000001,
+      "implementation_flame_length_m": 7.299075560890503,
+      "absolute_percentage_error": 16.56063311189948
+    },
+    {
+      "source_series": "Schefer 2007",
+      "nozzle_diameter_mm": 5.08,
+      "paper_flame_length_over_diameter": 1378,
+      "paper_mass_flow_g_s": 140,
+      "paper_flame_length_m": 7.000240000000001,
+      "implementation_flame_length_m": 6.1440498234011525,
+      "absolute_percentage_error": 12.230868893050069
+    },
+    {
+      "source_series": "Schefer 2007",
+      "nozzle_diameter_mm": 5.08,
+      "paper_flame_length_over_diameter": 965,
+      "paper_mass_flow_g_s": 64,
+      "paper_flame_length_m": 4.902200000000001,
+      "implementation_flame_length_m": 4.682661357208169,
+      "absolute_percentage_error": 4.478369768508656
+    },
+    {
+      "source_series": "Schefer 2007",
+      "nozzle_diameter_mm": 5.08,
+      "paper_flame_length_over_diameter": 669,
+      "paper_mass_flow_g_s": 28,
+      "paper_flame_length_m": 3.3985200000000004,
+      "implementation_flame_length_m": 3.5148932307294642,
+      "absolute_percentage_error": 3.424232628599031
+    },
+    {
+      "source_series": "Schefer 2007",
+      "nozzle_diameter_mm": 5.08,
+      "paper_flame_length_over_diameter": 472,
+      "paper_mass_flow_g_s": 11,
+      "paper_flame_length_m": 2.3977600000000003,
+      "implementation_flame_length_m": 2.54162551812876,
+      "absolute_percentage_error": 5.999996585511468
+    },
+    {
+      "source_series": "Proust 2009",
+      "nozzle_diameter_mm": 3.0,
+      "paper_flame_length_over_diameter": 577,
+      "paper_mass_flow_g_s": 9,
+      "paper_flame_length_m": 1.731,
+      "implementation_flame_length_m": 1.9746804132356408,
+      "absolute_percentage_error": 14.077435773289467
+    },
+    {
+      "source_series": "Proust 2009",
+      "nozzle_diameter_mm": 3.0,
+      "paper_flame_length_over_diameter": 1933,
+      "paper_mass_flow_g_s": 250,
+      "paper_flame_length_m": 5.799,
+      "implementation_flame_length_m": 6.258350045337825,
+      "absolute_percentage_error": 7.92119409101267
+    },
+    {
+      "source_series": "Proust 2009",
+      "nozzle_diameter_mm": 3.0,
+      "paper_flame_length_over_diameter": 1377,
+      "paper_mass_flow_g_s": 66,
+      "paper_flame_length_m": 4.131,
+      "implementation_flame_length_m": 3.942361212520672,
+      "absolute_percentage_error": 4.566419449995837
+    },
+    {
+      "source_series": "Proust 2009",
+      "nozzle_diameter_mm": 3.0,
+      "paper_flame_length_over_diameter": 791,
+      "paper_mass_flow_g_s": 23,
+      "paper_flame_length_m": 2.373,
+      "implementation_flame_length_m": 2.734602627610401,
+      "absolute_percentage_error": 15.238205967568518
+    },
+    {
+      "source_series": "Proust 2009",
+      "nozzle_diameter_mm": 3.0,
+      "paper_flame_length_over_diameter": 1220,
+      "paper_mass_flow_g_s": 50,
+      "paper_flame_length_m": 3.66,
+      "implementation_flame_length_m": 3.5802821985770086,
+      "absolute_percentage_error": 2.1780820060926653
+    },
+    {
+      "source_series": "Proust 2009",
+      "nozzle_diameter_mm": 3.0,
+      "paper_flame_length_over_diameter": 675,
+      "paper_mass_flow_g_s": 15,
+      "paper_flame_length_m": 2.025,
+      "implementation_flame_length_m": 2.357644578350578,
+      "absolute_percentage_error": 16.42689275805325
+    },
+    {
+      "source_series": "Proust 2009",
+      "nozzle_diameter_mm": 2.0,
+      "paper_flame_length_over_diameter": 2551,
+      "paper_mass_flow_g_s": 110,
+      "paper_flame_length_m": 5.102,
+      "implementation_flame_length_m": 4.089161493641783,
+      "absolute_percentage_error": 19.851793538969364
+    },
+    {
+      "source_series": "Proust 2009",
+      "nozzle_diameter_mm": 2.0,
+      "paper_flame_length_over_diameter": 1977,
+      "paper_mass_flow_g_s": 46,
+      "paper_flame_length_m": 3.954,
+      "implementation_flame_length_m": 3.0216765093691698,
+      "absolute_percentage_error": 23.579248624957774
+    },
+    {
+      "source_series": "Proust 2009",
+      "nozzle_diameter_mm": 2.0,
+      "paper_flame_length_over_diameter": 1186,
+      "paper_mass_flow_g_s": 21,
+      "paper_flame_length_m": 2.372,
+      "implementation_flame_length_m": 2.3018716070384384,
+      "absolute_percentage_error": 2.9565089781434013
+    },
+    {
+      "source_series": "Proust 2009",
+      "nozzle_diameter_mm": 2.0,
+      "paper_flame_length_over_diameter": 794,
+      "paper_mass_flow_g_s": 12,
+      "paper_flame_length_m": 1.588,
+      "implementation_flame_length_m": 1.8956008429586633,
+      "absolute_percentage_error": 19.370330161124887
+    },
+    {
+      "source_series": "Proust 2009",
+      "nozzle_diameter_mm": 1.0,
+      "paper_flame_length_over_diameter": 3129,
+      "paper_mass_flow_g_s": 32,
+      "paper_flame_length_m": 3.129,
+      "implementation_flame_length_m": 2.0945977600094086,
+      "absolute_percentage_error": 33.05855672708825
+    },
+    {
+      "source_series": "Proust 2009",
+      "nozzle_diameter_mm": 1.0,
+      "paper_flame_length_over_diameter": 2567,
+      "paper_mass_flow_g_s": 20,
+      "paper_flame_length_m": 2.567,
+      "implementation_flame_length_m": 1.7793894068495024,
+      "absolute_percentage_error": 30.682142312056786
+    },
+    {
+      "source_series": "Proust 2009",
+      "nozzle_diameter_mm": 1.0,
+      "paper_flame_length_over_diameter": 1696,
+      "paper_mass_flow_g_s": 11,
+      "paper_flame_length_m": 1.696,
+      "implementation_flame_length_m": 1.4460285046964862,
+      "absolute_percentage_error": 14.738885336292082
+    },
+    {
+      "source_series": "Proust 2009",
+      "nozzle_diameter_mm": 1.0,
+      "paper_flame_length_over_diameter": 1329,
+      "paper_mass_flow_g_s": 6.6,
+      "paper_flame_length_m": 1.329,
+      "implementation_flame_length_m": 1.2111427614769055,
+      "absolute_percentage_error": 8.868114260578968
+    }
+  ],
+  "aggregate": {
+    "case_count": 25,
+    "mean_absolute_percentage_error": 14.31847187992772,
+    "median_absolute_percentage_error": 14.738885336292082,
+    "maximum_absolute_percentage_error": 33.05855672708825,
+    "within_30_percent_count": 22,
+    "within_30_percent_fraction": 0.88,
+    "all_passed": true
+  },
+  "runtime_contract": {
+    "hybrid_replacement_of_hyram": false,
+    "uses_modeled_consequence_mass_flow": true,
+    "uses_physical_release_diameter": true,
+    "visible_flame_length_only": true,
+    "thermal_harm_distance": false,
+    "site_safety_distance": false
+  },
+  "claim_boundary": "This is a same-publication transcription and descriptive comparison against 25 high-pressure Table 1 rows, not an independent project validation. It estimates visible free-jet flame length in still air. It does not establish radiation harm, separation, evacuation, impingement, obstacle, wind, confinement, frequency, or full-station performance."
+}

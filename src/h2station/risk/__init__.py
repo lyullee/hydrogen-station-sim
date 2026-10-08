@@ -22,6 +22,7 @@ from .delayed_ignition import (
     delayed_ignition_overpressure_pa,
     delayed_ignition_radial_distance_m,
 )
+from .jet_flame import jet_flame_envelope, jet_flame_length_m
 
 __all__ = [
     "AmbientCondition",
@@ -40,4 +41,6 @@ __all__ = [
     "delayed_ignition_envelope",
     "delayed_ignition_overpressure_pa",
     "delayed_ignition_radial_distance_m",
+    "jet_flame_envelope",
+    "jet_flame_length_m",
 ]

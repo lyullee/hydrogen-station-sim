@@ -96,6 +96,10 @@ def test_flow_limited_source_is_preserved_in_native_hyram_consequence(monkeypatc
     assert result["mass_flow_override_status"] == "OVERRIDE_RETAINED"
     assert result["literature_delayed_ignition_status"] == "NOT_APPLICABLE_FLOW_LIMITED_SOURCE"
     assert result["literature_delayed_ignition_5kpa_radial_distance_m"] is None
+    assert result["literature_jet_flame_status"] == "CALCULATED_EXTRAPOLATED"
+    assert result["literature_jet_flame_length_m"] > 0.0
+    assert result["literature_jet_flame_mass_flow_basis"] == "MODELED_PROCESS_FLOW"
+    assert result["literature_jet_flame_is_harm_distance"] is False
 
 
 def test_free_orifice_exposes_claim_bounded_delayed_ignition_comparison(monkeypatch):
@@ -121,3 +125,5 @@ def test_free_orifice_exposes_claim_bounded_delayed_ignition_comparison(monkeypa
     assert result["literature_delayed_ignition_5kpa_radial_distance_m"] > 1.5
     assert result["literature_delayed_ignition_site_safety_distance"] is False
     assert result["literature_delayed_ignition_doi"] == "10.3390/hydrogen3040027"
+    assert result["literature_jet_flame_length_m"] > 0.0
+    assert result["literature_jet_flame_doi"] == "10.3801/IAFSS.FSS.10-933"

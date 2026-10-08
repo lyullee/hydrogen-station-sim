@@ -2479,6 +2479,57 @@ def audit(root: Path) -> dict[str, object]:
         } if cirrone else "missing",
     ))
 
+    molkov_path = root / "research/molkov_2011_jet_flame_benchmark.json"
+    molkov = _json(molkov_path)
+    molkov_source = (molkov or {}).get("source") or {}
+    molkov_aggregate = (molkov or {}).get("aggregate") or {}
+    molkov_runtime = (molkov or {}).get("runtime_contract") or {}
+    molkov_implementation = (molkov or {}).get("implementation") or {}
+    molkov_implementation_path = root / str(molkov_implementation.get("path") or "")
+    molkov_implementation_hash_matches = bool(
+        molkov_implementation.get("sha256")
+        and molkov_implementation_path.is_file()
+        and _sha256(molkov_implementation_path) == molkov_implementation.get("sha256")
+    )
+    molkov_pass = bool(
+        (molkov or {}).get("artifact_type")
+        == "molkov_2011_jet_flame_literature_benchmark"
+        and (molkov or {}).get("status") == "passed"
+        and molkov_source.get("doi") == "10.3801/IAFSS.FSS.10-933"
+        and molkov_source.get("experimental_case_count_reported") == 123
+        and molkov_aggregate.get("case_count") == 25
+        and molkov_aggregate.get("mean_absolute_percentage_error", 100.0) <= 20.0
+        and molkov_aggregate.get("within_30_percent_fraction", 0.0) >= 0.80
+        and molkov_aggregate.get("maximum_absolute_percentage_error", 100.0) <= 50.0
+        and molkov_aggregate.get("all_passed") is True
+        and molkov_implementation_hash_matches
+        and molkov_runtime.get("hybrid_replacement_of_hyram") is False
+        and molkov_runtime.get("visible_flame_length_only") is True
+        and molkov_runtime.get("thermal_harm_distance") is False
+        and molkov_runtime.get("site_safety_distance") is False
+        and bool((molkov or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "molkov_jet_flame_literature_benchmark",
+        "PASS" if molkov_pass else ("FAIL" if molkov else "PENDING"),
+        "The runtime exposes an experiment-backed visible hydrogen jet-flame comparison without replacing HyRAM or presenting flame length as a harm distance.",
+        str(molkov_path.relative_to(root)),
+        "Twenty-five high-pressure Table 1 rows meet the predeclared descriptive screen, with source and implementation hashes and explicit claim limits.",
+        {
+            "experimental_case_count_reported": molkov_source.get("experimental_case_count_reported"),
+            "benchmark_case_count": molkov_aggregate.get("case_count"),
+            "mean_absolute_percentage_error": molkov_aggregate.get("mean_absolute_percentage_error"),
+            "median_absolute_percentage_error": molkov_aggregate.get("median_absolute_percentage_error"),
+            "within_30_percent_fraction": molkov_aggregate.get("within_30_percent_fraction"),
+            "maximum_absolute_percentage_error": molkov_aggregate.get("maximum_absolute_percentage_error"),
+            "implementation_hash_matches": molkov_implementation_hash_matches,
+            "visible_flame_length_only": molkov_runtime.get("visible_flame_length_only"),
+            "thermal_harm_distance": molkov_runtime.get("thermal_harm_distance"),
+            "site_safety_distance": molkov_runtime.get("site_safety_distance"),
+            "claim_boundary": (molkov or {}).get("claim_boundary"),
+        } if molkov else "missing",
+    ))
+
     geometry_path = root / "research/consequence_geometry_validation.json"
     geometry = _json(geometry_path)
     geometry_checks = (geometry or {}).get("chain_checks") or {}
@@ -5581,6 +5632,7 @@ def audit(root: Path) -> dict[str, object]:
         "corrected_closed_loop_internal_evidence",
         "full_loop_negative_result_disclosed",
         "hyram_adapter_verification", "cirrone_delayed_ignition_literature_benchmark",
+        "molkov_jet_flame_literature_benchmark",
         "preslhy_blowdown_external_validation",
         "preslhy_partb_ambient_external_validation",
         "preslhy_revised_holdout_validation",

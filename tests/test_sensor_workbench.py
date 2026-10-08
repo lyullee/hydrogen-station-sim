@@ -58,7 +58,12 @@ def test_live_selected_sensor_uses_direct_api_with_computed_impact(monkeypatch):
                     "literature_delayed_ignition_distance_origin":
                     "CENTRE_OF_25_TO_35_VOL_PERCENT_H2_CLOUD",
                     "literature_delayed_ignition_site_safety_distance": False,
-                    "literature_delayed_ignition_doi": "10.3390/hydrogen3040027"}
+                    "literature_delayed_ignition_doi": "10.3390/hydrogen3040027",
+                    "literature_jet_flame_status": "CALCULATED_IN_VALIDATION_DOMAIN",
+                    "literature_jet_flame_length_m": 2.8,
+                    "literature_jet_flame_mass_flow_basis": "HYRAM_ORIFICE_FLOW",
+                    "literature_jet_flame_is_harm_distance": False,
+                    "literature_jet_flame_doi": "10.3801/IAFSS.FSS.10-933"}
 
     def direct(frame, catalog, station_id, question, impact_results):
         captured["signals"] = set(frame["hazop"]["signals"])
@@ -83,6 +88,8 @@ def test_live_selected_sensor_uses_direct_api_with_computed_impact(monkeypatch):
         assert captured["impacts"][0]["pressure_sensor"] == "PT-0801"
         assert captured["impacts"][0]["literature_delayed_ignition_5kpa_radial_distance_m"] == 5.4
         assert captured["impacts"][0]["literature_delayed_ignition_site_safety_distance"] is False
+        assert captured["impacts"][0]["literature_jet_flame_length_m"] == 2.8
+        assert captured["impacts"][0]["literature_jet_flame_is_harm_distance"] is False
     finally:
         with api._jobs_lock:
             api._jobs.pop(job_id, None)

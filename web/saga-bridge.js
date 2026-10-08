@@ -79,6 +79,13 @@
       comparison.textContent=`지연점화 문헌 비교 · 5 kPa 방사거리 ${fmt(literatureRadius)} m${extrapolated?' · 검증범위 밖 외삽':''} · 25~35 vol% 혼합운 중심 기준 · 현장 안전거리 아님`;
       card.append(comparison);
     }
+    const flameLength=Number(row.literature_jet_flame_length_m);
+    if(flameLength>0){
+      const comparison=document.createElement('p');comparison.className='saga-impact-literature';
+      const extrapolated=row.literature_jet_flame_status==='CALCULATED_EXTRAPOLATED';
+      comparison.textContent=`제트화염 문헌 비교 · 예상 가시 화염길이 ${fmt(flameLength)} m${extrapolated?' · 검증 표본범위 밖 외삽':''} · 열복사 피해거리·안전거리 아님`;
+      card.append(comparison);
+    }
     const basis=document.createElement('small');basis.className='saga-impact-basis';
     const sensorParts=[row.pressure_sensor&&`${row.pressure_sensor} ${fmt(row.current_pressure_mpa,2)} MPa`,row.temperature_sensor&&`${row.temperature_sensor} ${fmt(row.current_temperature_c)} °C`].filter(Boolean);
     basis.textContent=[row.scenario_id,row.orifice_diameter_mm&&`${fmt(row.orifice_diameter_mm)} mm`,...sensorParts,row.sensor_basis==='PROXY'?'대체 센서 적용':'',row.risk_score!=null?'위험도는 빈도 미포함 피해강도 지수':''].filter(Boolean).join(' · ');card.append(basis);

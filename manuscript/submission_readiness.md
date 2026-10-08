@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **105 PASS · 10 FAIL · 8 PENDING**.
+Gate counts: **106 PASS · 10 FAIL · 8 PENDING**.
 
 The HyTunnel-CS CC BY 4.0 actual-hydrogen archive now provides a completed
 raw-time-series holdout over 18 mechanically ventilated enclosure experiments
@@ -82,6 +82,14 @@ orifice, and are labelled as distances from the fast-burning mixture centre.
 They neither replace HyRAM nor establish a leak-centred site safety or evacuation
 distance. Flow-limited release paths fail closed instead of using an unvalidated
 equivalent diameter.
+
+The runtime also exposes the Molkov--Saffers visible hydrogen jet-flame length
+as a separate literature comparison. The implementation was checked against 25
+transcribed high-pressure Table 1 rows from a publication reporting 123
+experiments: mean absolute percentage error was 14.32%, 22/25 rows were within
+30%, and the maximum was 33.06%. This same-publication check is not independent
+validation. The result is labelled as visible free-jet flame length in still
+air and cannot be interpreted as radiation harm, safety or evacuation distance.
 
 The complete June 2026 MetHyTrucks public release has now been ingested across
 all three sampling-system groups: 15 CC BY 4.0 workbooks, 58,440 synchronized

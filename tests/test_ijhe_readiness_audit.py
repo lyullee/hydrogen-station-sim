@@ -71,6 +71,15 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert mixed["runtime_parameter_updated"] is False
     assert mixed["validation_gate_effect"] == "none"
     assert gates["hyram_adapter_verification"]["status"] == "PASS"
+    assert gates["molkov_jet_flame_literature_benchmark"]["status"] == "PASS"
+    molkov = gates["molkov_jet_flame_literature_benchmark"]["observed"]
+    assert molkov["experimental_case_count_reported"] == 123
+    assert molkov["benchmark_case_count"] == 25
+    assert molkov["mean_absolute_percentage_error"] < 20.0
+    assert molkov["within_30_percent_fraction"] >= 0.80
+    assert molkov["implementation_hash_matches"] is True
+    assert molkov["thermal_harm_distance"] is False
+    assert molkov["site_safety_distance"] is False
     assert gates[
         "hydrogen_blend_dispersion_negative_result_integrity"
     ]["status"] == "PASS"

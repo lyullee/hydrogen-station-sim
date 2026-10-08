@@ -3648,6 +3648,12 @@ def _impact_rows(results: Iterable[dict[str, Any]] | None) -> list[dict[str, Any
         "literature_delayed_ignition_distance_origin",
         "literature_delayed_ignition_site_safety_distance",
         "literature_delayed_ignition_doi", "literature_delayed_ignition_claim_limit",
+        "literature_jet_flame_status",
+        "literature_jet_flame_in_validation_domain",
+        "literature_jet_flame_length_m",
+        "literature_jet_flame_mass_flow_basis",
+        "literature_jet_flame_is_harm_distance",
+        "literature_jet_flame_doi", "literature_jet_flame_claim_limit",
         "consequence_validation_scope", "geometry_display_mapping_verified",
         "source_depletion_external_holdout_supported",
         "full_station_vehicle_validation_supported",
@@ -5073,6 +5079,12 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "literature_delayed_ignition_distance_origin",
             "literature_delayed_ignition_site_safety_distance",
             "literature_delayed_ignition_doi",
+            "literature_jet_flame_status",
+            "literature_jet_flame_in_validation_domain",
+            "literature_jet_flame_length_m",
+            "literature_jet_flame_mass_flow_basis",
+            "literature_jet_flame_is_harm_distance",
+            "literature_jet_flame_doi",
             "full_station_vehicle_validation_supported",
             "site_specific_safety_distance_supported",
         ))
@@ -5087,6 +5099,10 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         if raw.get("literature_delayed_ignition_claim_limit"):
             row["literature_delayed_ignition_claim_limit"] = short(
                 raw["literature_delayed_ignition_claim_limit"]
+            )
+        if raw.get("literature_jet_flame_claim_limit"):
+            row["literature_jet_flame_claim_limit"] = short(
+                raw["literature_jet_flame_claim_limit"]
             )
         if row:
             compact_impacts.append(row)

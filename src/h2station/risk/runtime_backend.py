@@ -23,6 +23,7 @@ from .hyram_adapter import (
     LeakScenario as AdapterLeakScenario,
 )
 from .delayed_ignition import delayed_ignition_envelope
+from .jet_flame import jet_flame_envelope
 from .live import CallableHyRAMBackend, HyRAMDynamicReleaseRequest
 
 
@@ -61,6 +62,8 @@ def consequence_validation_context() -> dict[str, str | bool]:
         "consequence_validation_artifacts": (
             "research/consequence_geometry_validation.json; "
             "research/hyram_adapter_verification.json; "
+            "research/cirrone_2022_delayed_ignition_benchmark.json; "
+            "research/molkov_2011_jet_flame_benchmark.json; "
             "research/usn_17934047_ignited_pressure_peaking_result_2026_10_08.json; "
             "data/public_validation/results/closed_loop_external_holdout/validation.json"
         ),
@@ -405,6 +408,16 @@ class NativeHyRAMBackend:
             release_diameter_m=request.orifice_diameter_m,
             ambient_pressure_pa=request.ambient_pressure_pa,
             release_boundary=request.release_boundary,
+        ))
+        output.update(jet_flame_envelope(
+            mass_flow_kg_s=result.mass_flow_rate,
+            release_diameter_m=request.orifice_diameter_m,
+            storage_pressure_pa=request.source_pressure_pa,
+            mass_flow_basis=(
+                "MODELED_PROCESS_FLOW"
+                if request.release_boundary == "flow_limited_line"
+                else "HYRAM_ORIFICE_FLOW"
+            ),
         ))
         # Report only the sampled extent. Three observation points cannot
         # establish a validated safe boundary beyond the farthest point.
