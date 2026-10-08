@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_hydrogen_station_data_discovery_recheck",
+  "status": "privacy_bounded_local_discovery",
+  "generated_at": "2026-10-09",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "site_company_manufacturer_published": false,
+    "calendar_dates_published": false,
+    "raw_rows_persisted": false,
+    "per_file_hashes_published": false
+  },
+  "search_scope": {
+    "local_collections_screened": [
+      "document collection",
+      "downloads collection",
+      "project data collection",
+      "local FTP media collection"
+    ],
+    "structured_extensions_screened": [
+      "csv",
+      "txt",
+      "xlsx",
+      "xlsm",
+      "parquet",
+      "h5",
+      "hdf5",
+      "mat",
+      "db",
+      "sqlite",
+      "json",
+      "pdf"
+    ],
+    "interpretation": "Discovery covers local station data, adjacent hydrogen operations, project artifacts and simulator exports. Counts below are aggregate and do not expose source identity."
+  },
+  "candidate_groups": [
+    {
+      "id": "confidential_station_measurement_bundle",
+      "evidence_class": "local custodial station telemetry",
+      "file_count": 33,
+      "csv_gib": 4.749,
+      "physical_rows": 59272300,
+      "deduplicated_rows": 56854143,
+      "unique_payloads": 32,
+      "schema_widths": {
+        "narrow_9_column_files": 25,
+        "wide_64_column_files": 8
+      },
+      "header_family_file_counts": {
+        "pressure": 20,
+        "temperature": 21,
+        "flow_or_mass": 12,
+        "compressor": 8,
+        "valve_or_esd": 8,
+        "lifecycle": 21,
+        "totalizer": 12,
+        "vehicle_or_dispenser": 0
+      },
+      "attested_roles": {
+        "storage_pressure_role_count": 2,
+        "lifecycle_counter_role_count": 2,
+        "pressure_units_attested": true,
+        "lifecycle_counter_event_definition_attested": true,
+        "flow_units_attested": false,
+        "vehicle_side_channels_attested": 0
+      },
+      "eligible_use": [
+        "station-side pressure cycles",
+        "cascade sequence and recharge dynamics",
+        "compressor/valve state screening",
+        "chronological station-side holdouts"
+      ],
+      "claim_boundary": "Substantial station-side evidence; it does not validate a vehicle fill, SOC, delivered mass or absolute flow units."
+    },
+    {
+      "id": "derived_simulator_telemetry_exports",
+      "evidence_class": "local browser-exported simulator traces",
+      "file_count": 2,
+      "row_counts": [
+        337,
+        339
+      ],
+      "column_count": 8,
+      "channel_roles": [
+        "time",
+        "vehicle pressure (lanes 1/2)",
+        "vehicle gas temperature (lanes 1/2)",
+        "nozzle flow (lanes 1/2)",
+        "total leak flow"
+      ],
+      "observed_leak_flow_in_both_exports_g_s": 0.0,
+      "independence": "not_independent_measured_data",
+      "eligible_use": [
+        "CSV export regression",
+        "vehicle-side UI wiring smoke tests",
+        "schema/plot round-trip checks"
+      ],
+      "ineligible_use": [
+        "external validation",
+        "measurement calibration",
+        "incident or safety-distance claims"
+      ],
+      "claim_boundary": "Schema matches the application export path and is treated as derived simulation output, not as a second real station dataset."
+    },
+    {
+      "id": "adjacent_liquid_hydrogen_operations_bundle",
+      "evidence_class": "local liquid-hydrogen center operations and scenario material",
+      "scenario_step_rows": 52,
+      "operation_workbook_rows": 28121,
+      "minute_trend_rows": 18086,
+      "timestamp_differential_rows": 6740,
+      "recovered_storage_rows": 94389,
+      "eligible_use": [
+        "qualitative HAZOP/action coverage",
+        "virtual valve/vent/ESD sequence replay",
+        "trend plausibility checks after provenance review"
+      ],
+      "ineligible_use": [
+        "GH2 HRS vehicle-loop validation",
+        "incident frequency estimation",
+        "automatic safety-limit generation"
+      ],
+      "claim_boundary": "Relevant hydrogen-process context, but a separate LH2/center bundle rather than synchronized GH2 dispenser telemetry."
+    },
+    {
+      "id": "engineering_and_media_context",
+      "evidence_class": "local design and visual context",
+      "document_count": 22,
+      "image_count": 54,
+      "video_count": 3,
+      "eligible_use": [
+        "de-identified topology and zone mapping",
+        "3D/CCTV/gas-detector placement review",
+        "asset scale cross-check"
+      ],
+      "claim_boundary": "Context and appearance evidence only; no dynamic validation."
+    },
+    {
+      "id": "public_local_reference",
+      "evidence_class": "public report available locally",
+      "file_count": 1,
+      "raw_machine_readable_trace_available": false,
+      "eligible_use": [
+        "field benchmark context",
+        "data-request targeting"
+      ],
+      "claim_boundary": "Report/figure evidence does not supply a synchronized raw full-loop cohort."
+    }
+  ],
+  "coverage_assessment": {
+    "local_station_data_is_sparse": false,
+    "station_side_dynamic_evidence_is_substantial": true,
+    "vehicle_side_full_loop_validation_ready": false,
+    "quantitative_consequence_validation_ready": false,
+    "derived_exports_must_be_excluded_from_external_validation": true,
+    "main_limit": "The local collection is rich in station-side telemetry, but independently attested vehicle pressure/temperature/delivered-mass or SOC channels are still absent from the measured station cohort."
+  },
+  "recommended_next_steps": [
+    "Use the measured station bundle for station-side calibration and chronological holdouts, retaining duplicate exclusion.",
+    "Request custodian attestation for the 12 flow/mass-like files and any MFM-like field before fitting a flow scale.",
+    "Keep the two Downloads CSV files as simulator-export smoke-test fixtures only.",
+    "Keep the adjacent LH2 bundle separate from GH2 HRS full-loop claims while using its action and sequence evidence for virtual response training.",
+    "Close the full-loop validation gate only after a synchronized measured vehicle pressure/temperature and delivered-mass or SOC cohort is identified."
+  ],
+  "claim_boundary": "This recheck demonstrates that local hydrogen-station-related material is not sparse while preserving the distinction between measured station telemetry, derived simulator exports, adjacent LH2 operations and public context."
+}
