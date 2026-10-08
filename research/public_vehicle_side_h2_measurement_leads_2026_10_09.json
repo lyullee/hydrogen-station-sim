@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_vehicle_side_h2_measurement_leads",
+  "generated_at": "2026-10-09",
+  "purpose": "Record an additional public vehicle-side H2 measurement lead without treating it as a synchronized station-to-vehicle holdout.",
+  "privacy": {
+    "local_raw_rows_persisted": false,
+    "private_station_identifiers_published": false
+  },
+  "leads": [
+    {
+      "id": "bacquart_2024_fcev_synthetic_hydrogen",
+      "title": "Assessing the Performance of Fuel Cell Electric Vehicles Using Synthetic Hydrogen Fuel",
+      "article_doi": "10.3390/en17071510",
+      "article_url": "https://doi.org/10.3390/en17071510",
+      "repository_page": "https://eprintspublications.npl.co.uk/10158/",
+      "reported_measurements": [
+        "HRS flow-meter transferred mass",
+        "FCEV tank pressure",
+        "FCEV tank temperature",
+        "tank-volume based mass estimate"
+      ],
+      "reported_scope": "Real vehicle refuelling and hydrogen-quality experiments; the article compares HRS metering with mass inferred from vehicle-tank pressure and temperature.",
+      "raw_trace_status": "not_confirmed_from_public_record",
+      "full_loop_eligibility": false,
+      "eligible_use": [
+        "vehicle-side mass-accounting context",
+        "HRS meter versus vehicle-tank cross-check design",
+        "authorized data-request lead"
+      ],
+      "ineligible_use": [
+        "independent station-to-vehicle time-series holdout",
+        "controller or cascade parameter fitting",
+        "consequence-distance validation",
+        "SAGA effectiveness score"
+      ],
+      "next_access_request": [
+        "synchronized timestamped HRS flow and vehicle pressure/temperature trace",
+        "vehicle tank geometry and calibration uncertainty",
+        "refueling protocol and controller-state metadata",
+        "reuse terms for machine-readable data"
+      ],
+      "claim_limit": "The published study supports a vehicle-side measurement and mass-accounting lead. It does not by itself establish a public synchronized raw trace or complete station-controller validation."
+    }
+  ]
+}
