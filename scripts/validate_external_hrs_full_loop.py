@@ -87,6 +87,16 @@ _CASCADE_BANK_PRESSURE_COLUMNS = (
     "cascade_high_pressure_mpa_abs",
 )
 
+# A generic ``pressure_mpa_abs`` label is acceptable to the base trace screen,
+# but it is ambiguous for a station-to-vehicle claim unless the custodian's
+# declaration explicitly maps it to the vehicle/receptacle boundary.  Named
+# aliases are accepted because their engineering role is visible without
+# publishing private tag names.
+_VEHICLE_BOUNDARY_TOKENS = (
+    "vehicle", "receptacle", "chss", "tank", "fueling", "refuel",
+    "차량", "수신", "리셉터클", "탱크", "충전",
+)
+
 
 def _json(path: Path) -> dict[str, Any]:
     value = json.loads(path.read_text(encoding="utf-8"))
@@ -116,6 +126,33 @@ def _state_missing(value: str | None) -> bool:
     # ``none`` is a valid fault-state value (no active fault); only explicit
     # missing-value markers are rejected.
     return value.strip().lower() in {"", "na", "n/a", "nan", "null", "-"}
+
+
+def _declared_vehicle_pressure_is_unambiguous(
+    pressure_column: str | None,
+    station_column: str | None,
+    declaration: dict[str, Any],
+) -> tuple[bool, str]:
+    """Require an independently named or explicitly mapped receiving boundary."""
+
+    if not pressure_column:
+        return False, "missing vehicle/receptacle pressure mapping"
+    if station_column and pressure_column == station_column:
+        return False, "vehicle/receptacle pressure reuses the station pressure column"
+    mapping = declaration.get("column_map")
+    explicitly_mapped = isinstance(mapping, dict) and (
+        isinstance(mapping.get("pressure_mpa_abs"), str)
+        or isinstance(mapping.get("vehicle_pressure_mpa_abs"), str)
+        or isinstance(mapping.get("vehicle_or_receptacle_pressure_mpa_abs"), str)
+    )
+    normalized = pressure_column.casefold()
+    named_boundary = any(token in normalized for token in _VEHICLE_BOUNDARY_TOKENS)
+    if not explicitly_mapped and not named_boundary:
+        return False, (
+            "vehicle/receptacle pressure column is generic; provide an explicit "
+            "declaration column_map or a boundary-qualified column name"
+        )
+    return True, ""
 
 
 def validate_full_loop_trace(
@@ -216,6 +253,16 @@ def validate_full_loop_trace(
             "claim_boundary": claim_boundary,
             "reasons": reasons,
         }
+
+    base_columns = base.get("columns") if isinstance(base.get("columns"), dict) else {}
+    vehicle_pressure_column = base_columns.get("pressure_mpa_abs")
+    pressure_ok, pressure_reason = _declared_vehicle_pressure_is_unambiguous(
+        vehicle_pressure_column,
+        mapped.get("station_pressure_mpa_abs"),
+        declaration,
+    )
+    if not pressure_ok:
+        reasons.append(pressure_reason)
 
     time_column = _column(header, "time_s", declaration)
     if time_column is None:
