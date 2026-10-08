@@ -49,6 +49,7 @@ def build(root: Path) -> dict[str, Any]:
     operational_search_path = root / "research/public_operational_benchmark_recheck_2026_10_05.json"
     operational_face_path = root / "research/public_operational_benchmark_face_validity_2026_10_05.json"
     h2safe_spatial_path = root / "research/h2safe_spatial_response_diagnostic_2026_10_08.json"
+    h2safe_orientation_path = root / "research/h2safe_orientation_development_2026_10_08.json"
     audit = load_json(audit_path)
     hiad = load_json(hiad_path)
     tracker = load_json(tracker_path)
@@ -61,6 +62,7 @@ def build(root: Path) -> dict[str, Any]:
     public_update = load_json(public_update_path)
     operational_search = load_json(operational_search_path)
     h2safe_spatial = load_json(h2safe_spatial_path)
+    h2safe_orientation = load_json(h2safe_orientation_path)
 
     status_by_id = {g["id"]: g for g in audit.get("gates", [])}
     gate = lambda gate_id: status_by_id.get(gate_id, {"status": "MISSING"})
@@ -137,10 +139,24 @@ def build(root: Path) -> dict[str, Any]:
             },
             "h2safe_spatial_detector_transfer": {
                 "gate": gate("h2safe_spatial_detector_transfer_validation")["status"],
-                "evidence": "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
+                "evidence": [
+                    "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
+                    "research/h2safe_orientation_development_2026_10_08.json",
+                ],
                 "experiment_count": h2safe_spatial["results"]["Y_as_elevation"]["aggregate"]["experiment_count"],
                 "median_spearman": h2safe_spatial["results"]["Y_as_elevation"]["aggregate"]["median_spearman"],
                 "joint_pass": h2safe_spatial["results"]["Y_as_elevation"]["aggregate"]["joint_pass"],
+                "post_access_orientation_candidate": {
+                    "internal_reference_screen_pass": h2safe_orientation[
+                        "orientation_candidate"
+                    ]["aggregate"]["internal_reference_screen_pass"],
+                    "independent_validation_pass": h2safe_orientation[
+                        "decision"
+                    ]["independent_validation_pass"],
+                    "runtime_application": h2safe_orientation[
+                        "integrity"
+                    ]["runtime_application"],
+                },
                 "claim_boundary": h2safe_spatial["claim_boundary"],
             },
             "real_station_candidate": {
@@ -245,13 +261,17 @@ def build(root: Path) -> dict[str, Any]:
             {
                 "id": "h2safe_spatial_detector_transfer",
                 "status": gate("h2safe_spatial_detector_transfer_validation")["status"],
-                "why_blocked": "The fixed coordinate-only rank law passed two of four H2SAFE spatial screens. It did not reach the top-five recall or nearest-sensor criteria, and the horizontal release produced a negative rank correlation.",
+                "why_blocked": "The frozen coordinate-only rank law passed two of four H2SAFE spatial screens. A post-access orientation-class candidate now passes all four internal reference screens and corrects the horizontal-release failure, but it is development evidence after outcome access and cannot revise the independent validation decision.",
                 "evidence": [
                     "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
                     "research/H2SAFE_SPATIAL_RESPONSE_DIAGNOSTIC_2026_10_08.md",
+                    "research/h2safe_orientation_development_2026_10_08.json",
+                    "research/H2SAFE_ORIENTATION_DEVELOPMENT_2026_10_08.md",
+                    "research/hydelta_indoor_spatial_holdout_protocol_2026_10_08.json",
+                    "research/HYDELTA_INDOOR_SPATIAL_HOLDOUT_PROTOCOL_2026_10_08.md",
                 ],
-                "unblock_criterion": "Freeze an orientation-, ventilation- and obstacle-aware predictor before opening an independent indoor release cohort, then pass all spatial rank and recall screens without fitting detector amplitudes or hydrogen alarm thresholds on helium data.",
-                "next_action": "Acquire a new synchronized indoor release cohort with declared time alignment, gas units, nozzle vector, HVAC vectors and geometry; retain H2SAFE as development evidence only.",
+                "unblock_criterion": "Evaluate the now-frozen orientation-class candidate on an independent indoor release cohort and pass all spatial rank and recall screens without fitting detector amplitudes or hydrogen alarm thresholds on helium data.",
+                "next_action": "Screen the pre-access-frozen HyDelta D6A.1 actual-hydrogen report for tabulated per-sensor outcomes and same-frame coordinates. If eligible, apply the exact retained candidate without modification; otherwise preserve the ineligibility result and continue acquisition.",
             },
             {
                 "id": "saga_human_effectiveness",
@@ -288,6 +308,7 @@ def build(root: Path) -> dict[str, Any]:
             "byrnes_typei_thermal_prospective_sha256": sha256(byrnes_path),
             "public_full_loop_update_sha256": sha256(public_update_path),
             "operational_benchmark_recheck_sha256": sha256(operational_search_path),
+            "h2safe_orientation_development_sha256": sha256(h2safe_orientation_path),
             "operational_benchmark_face_validity_sha256": sha256(operational_face_path),
             "h2safe_intake_sha256": sha256(
                 root / "research/h2safe_indoor_release_intake_2026_10_07.json"

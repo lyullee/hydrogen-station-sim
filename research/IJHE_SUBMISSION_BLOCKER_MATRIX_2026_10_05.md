@@ -1,6 +1,6 @@
 # IJHE objective blocker matrix
 
-Generated: `2026-10-08T02:56:29.457725+00:00`
+Generated: `2026-10-08T03:18:07.607838+00:00`
 
 This is an evidence-readiness record, not a prediction of journal acceptance.
 
@@ -16,7 +16,7 @@ This is an evidence-readiness record, not a prediction of journal acceptance.
 | `tank_thermal_transfer_validation` | **FAIL** | Freeze the mixed-convection formulation and exact inlet geometry before opening a new filling trace, then pass the joint pressure and temperature screens without post-outcome parameter selection. |
 | `full_loop_external_validation` | **FAIL** | Obtain a clean, rights-cleared, pre-access frozen external dataset with synchronized station pressure/temperature/mass-flow, protocol/controller, dispenser/nozzle, and vehicle/receptacle channels; resolve the source-boundary/topology ambiguity; then score >=8 cases with >=80% screen pass fraction. |
 | `consequence_model_external_validation` | **FAIL_OR_PENDING** | Either improve the declared model against a pre-access untouched component holdout without post-outcome tuning, or narrow the manuscript claim to the observed component-test scope. |
-| `h2safe_spatial_detector_transfer` | **FAIL** | Freeze an orientation-, ventilation- and obstacle-aware predictor before opening an independent indoor release cohort, then pass all spatial rank and recall screens without fitting detector amplitudes or hydrogen alarm thresholds on helium data. |
+| `h2safe_spatial_detector_transfer` | **FAIL** | Evaluate the now-frozen orientation-class candidate on an independent indoor release cohort and pass all spatial rank and recall screens without fitting detector amplitudes or hydrogen alarm thresholds on helium data. |
 | `saga_human_effectiveness` | **PENDING** | Institutional determination, coordinator leakage review, frozen 24-event casebook, 168 masked responses, and three qualified independent raters with locked analysis. |
 | `submission_declarations` | **PENDING** | All author and declaration fields completed and independently checked before submission. |
 

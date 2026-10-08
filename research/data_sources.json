@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "checked_at": "2026-10-04",
+  "checked_at": "2026-10-08",
   "policy": "Raw third-party files are downloaded under data/public_validation/raw and are not committed or redistributed.",
   "sources": {
     "h2protocol_j2601_tables": {
@@ -833,6 +833,18 @@
       "audit_artifact": "research/methytrucks_2026_public_measurement_intake.json",
       "rights_note": "The records identify CC BY 4.0. Raw workbooks remain in the gitignored intake tree; repository artifacts contain provenance, hashes and derived aggregate diagnostics.",
       "eligibility_note": "Real synchronized experimental traces support claim-bounded post-access component diagnostics. Missing authoritative tag/unit, device, geometry, controller and calibration metadata prevents prospective or full-loop validation."
+    },
+    "hydelta_d6a1_indoor_hydrogen_spatial_holdout": {
+      "title": "D6A.1 Outflow experiment results: concentration build-up at leakages between 50 - 1000 dm3/h",
+      "publisher": "HyDelta / Zenodo",
+      "landing_page": "https://zenodo.org/records/8154318",
+      "doi": "10.5281/zenodo.8154318",
+      "license": "Zenodo record; file-specific reuse terms must be retained from the record",
+      "expected_file": "D6A_1_HyDelta_Tweede_Tranche_Experiments_Hydrogen_Outflow_in_Closed_Spaces_EN.pdf",
+      "expected_file_bytes": 7112634,
+      "public_raw_data": false,
+      "protocol": "research/hydelta_indoor_spatial_holdout_protocol_2026_10_08.json",
+      "eligibility_note": "Independent actual-hydrogen indoor spatial-transfer candidate frozen before report-file access. Promotion requires tabulated per-sensor outcomes and same-frame source/sensor coordinates; report-only aggregate or figures remain ineligible."
     }
   }
 }

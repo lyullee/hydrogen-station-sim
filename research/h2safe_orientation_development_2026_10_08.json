@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "artifact_type": "post_access_h2safe_orientation_ranker_development",
+  "generated_at": "2026-10-08T03:10:40.036620+00:00",
+  "source": {
+    "doi": "10.7799/17118570",
+    "test_gas": "helium surrogate",
+    "archive_sha256": "f1b8bf747b7787f00152ec416940c80a143ea044fc18ee8a69ac9da204d9158e"
+  },
+  "integrity": {
+    "status": "POST_ACCESS_DEVELOPMENT_ONLY_NOT_VALIDATION",
+    "outcomes_seen_before_candidate_selection": true,
+    "parameter_fitting_performed": false,
+    "independent_holdout_evaluated": false,
+    "runtime_application": false,
+    "selection_disclosure": "The orientation-class form was selected after the failed H2SAFE geometry-only result was known. Passing the same internal reference screens is diagnostic and cannot revise the frozen validation failure."
+  },
+  "candidate": {
+    "name": "orientation_class_rank_v2",
+    "vertical_formula": "exp(0.7*max(dy,0)-1.2*max(-dy,0)) / (0.25 + horizontal_distance_m^2 + 0.35*abs(dy))",
+    "horizontal_unknown_azimuth_formula": "exp(-0.5*abs(dy)) / (0.25 + horizontal_distance_m^2 + 0.35*abs(dy))",
+    "reasoning": "For a declared horizontal release without a published nozzle azimuth, marginalize direction and penalize vertical separation symmetrically instead of assuming the buoyant far field dominates the near field.",
+    "omitted_inputs": [
+      "horizontal nozzle azimuth/vector",
+      "vent coordinates and velocity vectors in the sensor coordinate frame",
+      "obstacle porosity and flow resistance",
+      "time-aligned release interval",
+      "declared signal concentration unit"
+    ]
+  },
+  "baseline": {
+    "cases": [
+      {
+        "case_id": "Lab1_Small:test1.csv",
+        "orientation": "vertical",
+        "valid_sensor_count": 24,
+        "spearman_score_vs_robust_response": 0.5817391304347826,
+        "top5_predictor_recall_of_response_quartile": 0.8,
+        "nearest_sensor": "p24",
+        "nearest_sensor_in_response_quartile": true,
+        "maximum_response_sensor": "p13"
+      },
+      {
+        "case_id": "Lab2_Large:test1.csv",
+        "orientation": "horizontal",
+        "valid_sensor_count": 28,
+        "spearman_score_vs_robust_response": -0.3661740558292282,
+        "top5_predictor_recall_of_response_quartile": 0.2,
+        "nearest_sensor": "p27",
+        "nearest_sensor_in_response_quartile": false,
+        "maximum_response_sensor": "p21"
+      },
+      {
+        "case_id": "Lab2_Large:test2.csv",
+        "orientation": "vertical",
+        "valid_sensor_count": 32,
+        "spearman_score_vs_robust_response": 0.5161290322580645,
+        "top5_predictor_recall_of_response_quartile": 0.6,
+        "nearest_sensor": "p27",
+        "nearest_sensor_in_response_quartile": false,
+        "maximum_response_sensor": "p23"
+      },
+      {
+        "case_id": "Lab2_Large:test3.csv",
+        "orientation": "vertical",
+        "valid_sensor_count": 30,
+        "spearman_score_vs_robust_response": 0.6827586206896552,
+        "top5_predictor_recall_of_response_quartile": 0.6,
+        "nearest_sensor": "p3",
+        "nearest_sensor_in_response_quartile": true,
+        "maximum_response_sensor": "p23"
+      },
+      {
+        "case_id": "Lab2_Large:test4.csv",
+        "orientation": "vertical",
+        "valid_sensor_count": 28,
+        "spearman_score_vs_robust_response": 0.5922276956759714,
+        "top5_predictor_recall_of_response_quartile": 0.6,
+        "nearest_sensor": "p3",
+        "nearest_sensor_in_response_quartile": true,
+        "maximum_response_sensor": "p23"
+      }
+    ],
+    "aggregate": {
+      "experiment_count": 5,
+      "median_spearman": 0.5817391304347826,
+      "spearman_at_least_0_4_fraction": 0.8,
+      "mean_top5_recall": 0.56,
+      "nearest_in_response_quartile_fraction": 0.6,
+      "reference_screens": {
+        "median_spearman_at_least_0_5": true,
+        "spearman_at_least_0_4_fraction_at_least_0_6": true,
+        "mean_top5_recall_at_least_0_6": false,
+        "nearest_in_response_quartile_fraction_at_least_0_7": false
+      },
+      "internal_reference_screen_pass": false
+    }
+  },
+  "orientation_candidate": {
+    "cases": [
+      {
+        "case_id": "Lab1_Small:test1.csv",
+        "orientation": "vertical",
+        "valid_sensor_count": 24,
+        "spearman_score_vs_robust_response": 0.5817391304347826,
+        "top5_predictor_recall_of_response_quartile": 0.8,
+        "nearest_sensor": "p24",
+        "nearest_sensor_in_response_quartile": true,
+        "maximum_response_sensor": "p13"
+      },
+      {
+        "case_id": "Lab2_Large:test1.csv",
+        "orientation": "horizontal",
+        "valid_sensor_count": 28,
+        "spearman_score_vs_robust_response": 0.5665024630541872,
+        "top5_predictor_recall_of_response_quartile": 0.6,
+        "nearest_sensor": "p21",
+        "nearest_sensor_in_response_quartile": true,
+        "maximum_response_sensor": "p21"
+      },
+      {
+        "case_id": "Lab2_Large:test2.csv",
+        "orientation": "vertical",
+        "valid_sensor_count": 32,
+        "spearman_score_vs_robust_response": 0.5161290322580645,
+        "top5_predictor_recall_of_response_quartile": 0.6,
+        "nearest_sensor": "p27",
+        "nearest_sensor_in_response_quartile": false,
+        "maximum_response_sensor": "p23"
+      },
+      {
+        "case_id": "Lab2_Large:test3.csv",
+        "orientation": "vertical",
+        "valid_sensor_count": 30,
+        "spearman_score_vs_robust_response": 0.6827586206896552,
+        "top5_predictor_recall_of_response_quartile": 0.6,
+        "nearest_sensor": "p3",
+        "nearest_sensor_in_response_quartile": true,
+        "maximum_response_sensor": "p23"
+      },
+      {
+        "case_id": "Lab2_Large:test4.csv",
+        "orientation": "vertical",
+        "valid_sensor_count": 28,
+        "spearman_score_vs_robust_response": 0.5922276956759714,
+        "top5_predictor_recall_of_response_quartile": 0.6,
+        "nearest_sensor": "p3",
+        "nearest_sensor_in_response_quartile": true,
+        "maximum_response_sensor": "p23"
+      }
+    ],
+    "aggregate": {
+      "experiment_count": 5,
+      "median_spearman": 0.5817391304347826,
+      "spearman_at_least_0_4_fraction": 1.0,
+      "mean_top5_recall": 0.64,
+      "nearest_in_response_quartile_fraction": 0.8,
+      "reference_screens": {
+        "median_spearman_at_least_0_5": true,
+        "spearman_at_least_0_4_fraction_at_least_0_6": true,
+        "mean_top5_recall_at_least_0_6": true,
+        "nearest_in_response_quartile_fraction_at_least_0_7": true
+      },
+      "internal_reference_screen_pass": true
+    }
+  },
+  "delta": {
+    "mean_top5_recall": 0.07999999999999996,
+    "nearest_in_response_quartile_fraction": 0.20000000000000007
+  },
+  "decision": {
+    "development_candidate_retained": true,
+    "independent_validation_pass": false,
+    "runtime_use": "PROHIBITED_UNTIL_NEW_PRE_ACCESS_HOLDOUT_PASSES",
+    "next_validation": "Freeze this exact candidate, then evaluate a new independent indoor release cohort with nozzle and HVAC vectors declared in the same frame."
+  },
+  "claim_boundary": "The candidate explains the known horizontal-release failure and passes the internal H2SAFE reference screens, but it is post-access development evidence. It does not validate H2 concentration, detector placement, ESD, CFD, outdoor dispersion, consequence distance or station runtime routing."
+}

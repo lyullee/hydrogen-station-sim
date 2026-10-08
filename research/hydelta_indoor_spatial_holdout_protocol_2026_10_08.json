@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "protocol_id": "HYDELTA-D6A1-INDOOR-SPATIAL-HOLDOUT-2601",
+  "status": "FROZEN_BEFORE_REPORT_FILE_ACCESS",
+  "frozen_at": "2026-10-08T03:17:30.376121+00:00",
+  "purpose": "Prospectively test the fixed post-access H2SAFE orientation-class detector-ranking candidate on an independent actual-hydrogen indoor release report.",
+  "source": {
+    "title": "D6A.1 Outflow experiment results: concentration build-up at leakages between 50 - 1000 dm3/h",
+    "doi": "10.5281/zenodo.8154318",
+    "record_url": "https://zenodo.org/records/8154318",
+    "publisher": "HyDelta / Zenodo",
+    "expected_file": "D6A_1_HyDelta_Tweede_Tranche_Experiments_Hydrogen_Outflow_in_Closed_Spaces_EN.pdf",
+    "expected_file_bytes": 7112634,
+    "medium": "actual hydrogen and methane indoor release experiments; hydrogen cases only are eligible"
+  },
+  "pre_access_disclosure": {
+    "report_file_downloaded": false,
+    "report_file_opened": false,
+    "numeric_tables_or_figures_seen": false,
+    "known_from_search_index_before_freeze": [
+      "report describes 50 gas sensors at changeable horizontal and vertical positions",
+      "reported hydrogen release range is 50 to 1000 normal dm3/h",
+      "container can be arranged as 10, 20 or 30 m3 spaces",
+      "search snippet exposes a top-view source location and sensor type/range"
+    ],
+    "qualitative_outcomes_known_before_freeze": [
+      "search results state that concentration build-up and ventilation effects are discussed"
+    ],
+    "exact_per_sensor_outcomes_known_before_freeze": false
+  },
+  "locked_candidate": {
+    "name": "orientation_class_rank_v2",
+    "implementation": "src/h2station/spatial_detector.py",
+    "implementation_sha256": "d01b4378a43b3dc233d7093733119963c11db208f604160eba0fa7f962d7580a",
+    "development_artifact": "research/h2safe_orientation_development_2026_10_08.json",
+    "development_artifact_sha256": "9ef79fa56afa93f0b85246361b01cc476e9cb3902b75c2f011bbcff683f12ec3",
+    "parameter_fitting_permitted": false,
+    "formula_change_permitted_after_report_access": false,
+    "runtime_application_before_holdout_pass": false
+  },
+  "eligibility": {
+    "minimum_hydrogen_experiments": 4,
+    "minimum_mapped_sensors_per_experiment": 10,
+    "requires_source_coordinates": true,
+    "requires_sensor_coordinates_in_same_frame": true,
+    "requires_release_orientation_class": true,
+    "requires_per_sensor_numeric_response": true,
+    "accepted_response": [
+      "tabulated per-sensor maximum concentration",
+      "tabulated per-sensor plateau or release-window mean concentration"
+    ],
+    "prohibited_response": [
+      "visual ranking without numerical values",
+      "values inferred from color only",
+      "methane results substituted for hydrogen",
+      "aggregate room average without sensor crosswalk"
+    ],
+    "unit_policy": "Use reported concentration values only for within-experiment ranking; do not convert them to station H2 detector amplitudes or thresholds.",
+    "ineligible_decision": "If coordinates or per-sensor numerical responses are absent, retain an intake/eligibility failure and do not digitize figures to rescue the primary claim."
+  },
+  "fixed_evaluation": {
+    "primary_unit": "experiment",
+    "prediction": "orientation_aware_geometry_score using the exact locked candidate",
+    "measured_rank": "reported per-sensor response within each experiment",
+    "screens": {
+      "median_spearman_min": 0.5,
+      "spearman_at_least_0_4_fraction_min": 0.6,
+      "mean_top5_recall_of_response_quartile_min": 0.6,
+      "nearest_ranked_sensor_in_response_quartile_fraction_min": 0.7,
+      "joint_pass_requires_all": true
+    },
+    "case_handling": "Retain every eligible hydrogen experiment and every numerical failure. Exclude only cases failing a frozen eligibility requirement."
+  },
+  "prohibited_inferences": [
+    "hydrogen alarm or trip threshold calibration",
+    "outdoor HRS dispersion or detector-placement validation",
+    "CFD accuracy, ignition, ESD or consequence-distance validation",
+    "full station-to-vehicle loop validation"
+  ],
+  "claim_boundary": "A pass would support only transfer of the fixed orientation-class spatial ranking to the reportable HyDelta indoor actual-hydrogen configurations. It would not validate runtime concentration magnitude, HRS detector placement, consequence distance, control or emergency response."
+}

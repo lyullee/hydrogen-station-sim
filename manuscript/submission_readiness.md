@@ -53,6 +53,14 @@ amplitudes and alarm thresholds remain unchanged. The failed transfer screen is
 an explicit readiness blocker and is not presented as hydrogen CFD,
 detector-placement, ESD or safety-distance validation.
 
+A post-access orientation-class candidate now corrects that specific horizontal
+release failure: mean top-five recall increases from 0.56 to 0.64 and the
+nearest-ranked sensor success fraction from 0.60 to 0.80, so all four internal
+reference screens are met. Because this form was selected after the H2SAFE
+outcomes were known, it is retained only as a frozen candidate for the next
+untouched cohort and does not change the failed validation gate or runtime
+detector routing.
+
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted
 parameters, LLM evidence record, source hashes and frozen validation recheck

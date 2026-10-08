@@ -24,6 +24,9 @@ H2SAFE_DOI = "10.7799/17118570"
 H2SAFE_DIAGNOSTIC_ARTIFACT = (
     "research/h2safe_spatial_response_diagnostic_2026_10_08.json"
 )
+H2SAFE_ORIENTATION_DEVELOPMENT_ARTIFACT = (
+    "research/h2safe_orientation_development_2026_10_08.json"
+)
 
 
 @dataclass(frozen=True)
@@ -86,6 +89,38 @@ def geometry_score(source: Point3D, detector: Point3D) -> float:
     ) / (0.25 + horizontal * horizontal + 0.35 * abs(vertical))
 
 
+def orientation_aware_geometry_score(
+    source: Point3D,
+    detector: Point3D,
+    release_orientation: str,
+) -> float:
+    """Return the fixed post-access orientation-class development score.
+
+    A vertical release keeps the original buoyant ranking.  A horizontal
+    release with unknown azimuth is treated as direction-marginalized: sensor
+    height separation is penalized symmetrically rather than being rewarded
+    simply because the detector is above the source.  The public H2SAFE
+    package declares ``horizontal`` versus ``vertical`` but not the horizontal
+    nozzle vector, so this function intentionally does not invent an azimuth.
+
+    This candidate was selected after H2SAFE outcomes had been opened.  It is
+    available for reproducible development and a future pre-access holdout;
+    it must not be used to claim independent validation or route runtime
+    detector alarms.
+    """
+
+    orientation = str(release_orientation or "").strip().lower()
+    if orientation == "vertical":
+        return geometry_score(source, detector)
+    if orientation != "horizontal":
+        raise ValueError("release_orientation must be 'vertical' or 'horizontal'")
+    vertical = detector.y - source.y
+    horizontal = math.hypot(detector.x - source.x, detector.z - source.z)
+    return math.exp(-0.5 * abs(vertical)) / (
+        0.25 + horizontal * horizontal + 0.35 * abs(vertical)
+    )
+
+
 def source_key_for_target(target: str) -> str:
     normalized = str(target or "").strip().lower()
     matches = [
@@ -128,6 +163,11 @@ def spatial_proxy_metadata() -> dict[str, object]:
             "(0.25 + horizontal_distance_m^2 + 0.35*abs(dy))"
         ),
         "runtime_application": False,
+        "orientation_development_candidate": {
+            "status": "POST_ACCESS_DEVELOPMENT_ONLY_NOT_RUNTIME",
+            "artifact": H2SAFE_ORIENTATION_DEVELOPMENT_ARTIFACT,
+            "runtime_application": False,
+        },
         "amplitude_policy": "not applied; existing zone mapping and amplitudes retained",
         "claim_limit": (
             "Post-access helium-surrogate screening did not pass all frozen spatial screens, "
@@ -143,6 +183,7 @@ __all__ = [
     "Point3D",
     "detector_weights",
     "geometry_score",
+    "orientation_aware_geometry_score",
     "ranked_detector_tags",
     "source_key_for_target",
     "spatial_proxy_metadata",

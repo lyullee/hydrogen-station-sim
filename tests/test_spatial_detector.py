@@ -9,6 +9,7 @@ from h2station.spatial_detector import (
     Point3D,
     detector_weights,
     geometry_score,
+    orientation_aware_geometry_score,
     ranked_detector_tags,
     spatial_proxy_metadata,
 )
@@ -16,6 +17,7 @@ from h2station.spatial_detector import (
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / "research/h2safe_spatial_response_diagnostic_2026_10_08.json"
+ORIENTATION_RESULT = ROOT / "research/h2safe_orientation_development_2026_10_08.json"
 
 
 def test_geometry_ranking_uses_station_y_axis_as_elevation():
@@ -23,6 +25,18 @@ def test_geometry_ranking_uses_station_y_axis_as_elevation():
     elevated = Point3D(1.0, 2.0, 0.0)
     equally_distant_below = Point3D(1.0, -2.0, 0.0)
     assert geometry_score(source, elevated) > geometry_score(source, equally_distant_below)
+
+
+def test_horizontal_orientation_candidate_prefers_release_height_without_azimuth():
+    source = Point3D(0.0, 1.5, 0.0)
+    same_height = Point3D(2.0, 1.5, 0.0)
+    high = Point3D(2.0, 5.5, 0.0)
+    assert orientation_aware_geometry_score(
+        source, same_height, "horizontal"
+    ) > orientation_aware_geometry_score(source, high, "horizontal")
+    assert orientation_aware_geometry_score(
+        source, high, "vertical"
+    ) == geometry_score(source, high)
 
 
 @pytest.mark.parametrize(
@@ -60,7 +74,23 @@ def test_runtime_metadata_does_not_claim_validated_dispersion():
     assert metadata["status"] == "EVALUATED_NOT_APPLIED_FAILED_JOINT_SCREEN"
     assert metadata["source_doi"] == "10.7799/17118570"
     assert metadata["runtime_application"] is False
+    assert metadata["orientation_development_candidate"]["runtime_application"] is False
     assert "not CFD" in metadata["claim_limit"]
+
+
+def test_orientation_candidate_passes_only_internal_development_screens():
+    result = json.loads(ORIENTATION_RESULT.read_text(encoding="utf-8"))
+    baseline = result["baseline"]["aggregate"]
+    candidate = result["orientation_candidate"]["aggregate"]
+    assert result["integrity"]["outcomes_seen_before_candidate_selection"] is True
+    assert baseline["internal_reference_screen_pass"] is False
+    assert candidate["internal_reference_screen_pass"] is True
+    assert candidate["mean_top5_recall"] > baseline["mean_top5_recall"]
+    assert candidate["nearest_in_response_quartile_fraction"] > baseline[
+        "nearest_in_response_quartile_fraction"
+    ]
+    assert result["decision"]["independent_validation_pass"] is False
+    assert result["decision"]["runtime_use"].startswith("PROHIBITED")
 
 
 def test_backend_detector_coordinates_match_the_3d_scene_markers():
