@@ -2464,5 +2464,28 @@
       "methytrucks_hysam_system_measurement_2026_10_06"
     ],
     "finding": "The open HySam record adds a rights-cleared component/system measurement context with verified local hash matches, but no candidate supplies the frozen synchronized station-to-vehicle raw loop. Full-loop external validation remains open."
+  },
+  "fch2rail_public_trace_availability_recheck_2026_10_09": {
+    "record": "research/fch2rail_public_trace_availability_recheck_2026_10_09.json",
+    "recorded_at": "2026-10-09",
+    "decision": "OFFICIAL_MEASUREMENT_LEAD_NO_PUBLIC_MACHINE_READABLE_TRACE",
+    "gate_impact": "full_loop_external_validation_remains_open",
+    "sources": [
+      "https://elib.dlr.de/213625/",
+      "https://fch2rail.eu/wp-content/uploads/2025/01/FCH2RAIL_D6.1_Report-on-KPI-assessment.pdf",
+      "https://fch2rail.eu/project-results/"
+    ],
+    "finding": "Official FCH2RAIL/DLR records report station and vehicle measurements, but the inspected public pages expose only papers and report PDFs. No synchronized station-to-vehicle raw logger archive or reuse terms were found.",
+    "eligible_use": [
+      "face_validity and operating-range context",
+      "protocol context",
+      "prioritized custodian data request"
+    ],
+    "ineligible_use": [
+      "independent full-loop validation",
+      "parameter fitting",
+      "consequence or safety-distance claims",
+      "SAGA effectiveness scoring"
+    ]
   }
 }

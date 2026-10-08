@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "artifact_type": "fch2rail_public_trace_availability_recheck",
+  "reviewed_at": "2026-10-09",
+  "status": "OFFICIAL_PUBLIC_RECORD_REVIEWED_NO_MACHINE_READABLE_TRACE_LINK",
+  "privacy": {
+    "private_station_paths_included": false,
+    "private_company_or_site_identifiers_included": false,
+    "raw_rows_included": false,
+    "exact_private_dates_included": false
+  },
+  "sources": [
+    {
+      "id": "dlr_publication_record",
+      "title": "Development, Application and Optimization of Hydrogen Refueling Processes for Railway Vehicles",
+      "url": "https://elib.dlr.de/213625/",
+      "doi": "10.1016/j.ijhydene.2025.04.040",
+      "public_file_inventory": "publication metadata and one published-version PDF"
+    },
+    {
+      "id": "dlr_published_manuscript",
+      "title": "Published manuscript PDF",
+      "url": "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf",
+      "public_file_inventory": "PDF only; no CSV, XLSX, ZIP or repository attachment found"
+    },
+    {
+      "id": "fch2rail_d61",
+      "title": "FCH2RAIL D6.1 Report on KPI assessment",
+      "url": "https://fch2rail.eu/wp-content/uploads/2025/01/FCH2RAIL_D6.1_Report-on-KPI-assessment.pdf",
+      "public_file_inventory": "report PDF only"
+    },
+    {
+      "id": "fch2rail_project_results",
+      "title": "FCH2RAIL project results",
+      "url": "https://fch2rail.eu/project-results/",
+      "public_file_inventory": "papers and deliverable links; no raw logger archive identified"
+    },
+    {
+      "id": "dlr_research_page",
+      "title": "DLR hydrogen refueling process research page",
+      "url": "https://www.dlr.de/en/energy/research-and-transfer/projects/hydrogen",
+      "public_file_inventory": "research description; no machine-readable trace link identified"
+    }
+  ],
+  "reported_measurement_scope": {
+    "station_measurements_reported": true,
+    "vehicle_measurements_reported": true,
+    "refueling_process_context_reported": true,
+    "reported_operating_ranges_can_support_face_validity": true,
+    "raw_synchronized_station_vehicle_trace_public": false,
+    "channel_dictionary_public": false,
+    "protocol_controller_state_public": false,
+    "vehicle_geometry_and_initial_conditions_public": false,
+    "reuse_terms_for_raw_trace_public": false
+  },
+  "official_file_link_inventory": {
+    "record_page_exposes_single_published_pdf": true,
+    "project_results_exposes_reports_and_publications": true,
+    "csv_or_xlsx_trace_link_observed": false,
+    "zip_or_data_repository_link_observed": false,
+    "raw_trace_download_verified": false
+  },
+  "eligibility_decision": {
+    "face_validity_and_operating_range_context": "eligible",
+    "protocol_and_data_request_lead": "eligible",
+    "independent_full_loop_validation": "ineligible_until_deidentified_synchronized_trace_is_released",
+    "parameter_fitting": "ineligible",
+    "safety_distance_or_consequence_claims": "ineligible",
+    "saga_effectiveness_validation": "ineligible"
+  },
+  "gate_impact": {
+    "full_loop_external_validation_gate": "remains_open",
+    "bounded_ijhe_submission_gate": "unchanged",
+    "goal_completion_permitted": false
+  },
+  "next_action": {
+    "request_from_custodian": [
+      "de-identified synchronized station, dispenser and vehicle pressure/temperature/mass-flow export",
+      "channel dictionary, units, sampling rates and common time base",
+      "initial conditions, tank capacity and protocol/controller state",
+      "vehicle geometry or an approved geometry abstraction",
+      "raw-data reuse and redistribution terms"
+    ],
+    "do_not_publish": [
+      "private station paths or filenames",
+      "site, company or manufacturer identifiers not already public",
+      "raw rows or exact private test dates"
+    ]
+  }
+}
