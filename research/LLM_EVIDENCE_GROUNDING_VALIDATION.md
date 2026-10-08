@@ -214,13 +214,16 @@ diagnostic-only and cannot be used as validation, certification or a production
 parameter-fitting result.
 
 The public NREL H2FillS HDVS Type-IV tank screen is now carried as a separate
-partial-boundary record. Seven tanks and 351 samples are evaluated with measured
-mass-flow, inlet-temperature and pressure boundaries; pressure RMSE is 6.164
-MPa, temperature RMSE is 4.625 °C, and the predeclared joint screen passes 0/7.
-The EOS-equivalent volume ratio (median 0.911 relative to the frozen effective
-volume) is retained as a geometry diagnostic only. It is not applied as a
-production correction, and it cannot support a station-controller, receptacle or
-full-loop accuracy claim.
+partial-boundary record. Seven tanks and 351 common-clock samples are evaluated
+with measured hose pressure/temperature plus per-tank mass-flow, inlet-
+temperature and pressure boundaries; hose pressure rises from 1.358 to 79.462
+MPa and hose temperature spans -37.369 to 17.596 °C. The frozen tank screen
+has pressure RMSE 6.164 MPa, temperature RMSE 4.625 °C, and the predeclared
+joint screen passes 0/7. The EOS-equivalent volume ratio (median 0.911 relative
+to the frozen effective volume) is retained as a geometry diagnostic only. The
+workbook still lacks station-controller/cascade, ESD/interlock,
+nozzle/receptacle and vehicle-side protocol channels, so it cannot support a
+full-loop accuracy claim or SAGA-effectiveness claim.
 
 The same public workbook is also exposed as a post-access geometry-sensitivity
 diagnostic. A capacity/EOS volume basis screens 7/7 tanks in both the frozen-fit

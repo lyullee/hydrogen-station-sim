@@ -6,8 +6,10 @@ internal use but does not grant redistribution rights for the raw file.  This
 runner therefore takes a local path, records the workbook digest and writes
 only derived metrics to the ignored validation-results directory.
 
-This is a tank-submodel validation.  The sample has no hose, nozzle,
-receptacle or station-controller traces, so its result cannot be presented as
+This is a tank-and-hose-boundary validation screen.  The workbook contains
+common-clock hose pressure/temperature and seven-tank pressure/temperature/
+mass channels.  It does not contain station-controller, cascade, ESD,
+nozzle/receptacle or protocol traces, so its result cannot be presented as
 full HRS closed-loop validation.
 """
 
@@ -67,6 +69,8 @@ class NrelDataset:
     path: Path
     description: dict[str, str]
     traces: tuple[TankTrace, ...]
+    hose_pressure_mpa: np.ndarray
+    hose_temperature_c: np.ndarray
 
     @property
     def sample_count(self) -> int:
@@ -102,6 +106,11 @@ class NrelDataset:
             "peak_temperature_mean_c": float(
                 np.max(np.mean([trace.temperature_c for trace in self.traces], axis=0))
             ),
+            "hose_pressure_initial_mpa": float(self.hose_pressure_mpa[0]),
+            "hose_pressure_final_mpa": float(self.hose_pressure_mpa[-1]),
+            "hose_pressure_peak_mpa": float(np.max(self.hose_pressure_mpa)),
+            "hose_temperature_min_c": float(np.min(self.hose_temperature_c)),
+            "hose_temperature_max_c": float(np.max(self.hose_temperature_c)),
             "ambient_temperature_c": 15.0,
         }
 
@@ -232,6 +241,8 @@ def read_nrel_workbook(path: Path) -> NrelDataset:
     index = {str(value): i for i, value in enumerate(header) if value is not None}
     required = {
         "Time [s]",
+        "P_hose [MPa]",
+        "T_hose [degC]",
         *(
             f"HDVS_ tank#{tank_id}_{field}"
             for tank_id in TANK_IDS
@@ -253,6 +264,18 @@ def read_nrel_workbook(path: Path) -> NrelDataset:
     time_s = np.asarray([float(row[index["Time [s]"]]) for row in raw_rows])
     if np.any(~np.isfinite(time_s)) or np.any(np.diff(time_s) <= 0.0):
         raise ValueError("NREL time samples must be finite and strictly increasing")
+    hose_pressure_mpa = np.asarray(
+        [float(row[index["P_hose [MPa]"]]) for row in raw_rows], dtype=float
+    )
+    hose_temperature_c = np.asarray(
+        [float(row[index["T_hose [degC]"]]) for row in raw_rows], dtype=float
+    )
+    for name, array in (
+        ("hose pressure", hose_pressure_mpa),
+        ("hose temperature", hose_temperature_c),
+    ):
+        if np.any(~np.isfinite(array)):
+            raise ValueError(f"Non-finite value in {name} channel")
 
     traces: list[TankTrace] = []
     for tank_id in TANK_IDS:
@@ -283,7 +306,13 @@ def read_nrel_workbook(path: Path) -> NrelDataset:
         if np.any(trace.mass_kg < 0.0):
             raise ValueError(f"Tank {tank_id} mass contains a negative value")
         traces.append(trace)
-    return NrelDataset(path=path, description=description, traces=tuple(traces))
+    return NrelDataset(
+        path=path,
+        description=description,
+        traces=tuple(traces),
+        hose_pressure_mpa=hose_pressure_mpa,
+        hose_temperature_c=hose_temperature_c,
+    )
 
 
 def _simulate_tank(
@@ -444,10 +473,24 @@ def run(workbook_path: Path, output_path: Path, fit_path: Path) -> dict[str, Any
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "evidence_role": "independent_tank_thermal_external_validation",
         "claim_boundary": (
-            "Tank pressure/temperature response only. The workbook has no hose, "
-            "nozzle, receptacle or station-controller trace and cannot establish "
-            "full HRS closed-loop or field safety performance."
+            "The workbook contains common-clock hose pressure/temperature and "
+            "per-tank internal pressure/temperature/mass, supporting a partial "
+            "station-to-tank/tank-and-hose screen. It lacks station-controller "
+            "or cascade state, ESD/interlock, nozzle/receptacle and vehicle-side "
+            "protocol traces; it cannot establish full HRS closed-loop or field "
+            "safety performance."
         ),
+        "boundary_channel_screen": {
+            "common_time_base": True,
+            "hose_pressure_temperature_present": True,
+            "per_tank_pressure_temperature_mass_present": True,
+            "station_controller_or_cascade_state_present": False,
+            "esd_or_safety_interlock_trace_present": False,
+            "breakaway_hose_nozzle_receptacle_trace_present": False,
+            "vehicle_side_protocol_trace_present": False,
+            "full_loop_external_holdout_eligible": False,
+            "partial_station_to_tank_boundary_eligible": True,
+        },
         "source": {
             "title": "NREL H2FillS 2022 HDVS Type IV sample test result",
             "publisher": "National Renewable Energy Laboratory / National Laboratory of the Rockies",
@@ -464,7 +507,11 @@ def run(workbook_path: Path, output_path: Path, fit_path: Path) -> dict[str, Any
             "fit_source": str(fit_path),
             "fit_source_sha256": _sha256(fit_path),
             "post_access_parameter_tuning": False,
-            "boundary_conditions": "measured per-tank inlet pressure, inlet temperature and mass derivative",
+            "boundary_conditions": (
+                "measured hose pressure/temperature retained as common-clock "
+                "boundary context; measured per-tank inlet pressure, inlet "
+                "temperature and mass derivative drive the frozen tank screen"
+            ),
             "ambient_temperature_c": 15.0,
         },
         "screening_limits": SCREENING_LIMITS,
@@ -500,6 +547,8 @@ def run(workbook_path: Path, output_path: Path, fit_path: Path) -> dict[str, Any
         f"- Joint tank screen: {aggregate['screening_pass_count']}/{aggregate['tank_count']}",
         f"- EOS-implied volume median: {geometry_diagnostic['implied_volume_m3_median_across_tanks']:.5f} m³",
         f"- Ratio to frozen effective volume: {geometry_diagnostic['ratio_to_frozen_effective_volume_median']:.3f}",
+        "",
+        "The workbook also contains common-clock hose pressure and hose temperature channels. They are retained as boundary context; station-controller/cascade, ESD/interlock, nozzle/receptacle and vehicle-side protocol traces are absent, so this remains a partial station-to-tank/tank-and-hose screen rather than full-loop validation.",
         "",
         "The EOS-implied volume comparison is a diagnostic only. It does not fit or replace the frozen geometry and cannot be used as a validation pass.",
         "",

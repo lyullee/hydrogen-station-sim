@@ -326,6 +326,11 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     )
     assert tank_validation["aggregate"]["tank_count"] == 7
     assert tank_validation["aggregate"]["screening_pass_count"] == 0
+    assert tank_validation["common_time_base"] is True
+    assert tank_validation["hose_pressure_temperature_present"] is True
+    assert tank_validation["per_tank_pressure_temperature_mass_present"] is True
+    assert tank_validation["partial_station_to_tank_boundary_eligible"] is True
+    assert tank_validation["full_loop_external_holdout_eligible"] is False
     assert tank_validation["claim_supported"] is False
     assert tank_validation["geometry_diagnostic"]["claim_prohibited"] is True
     assert tank_validation["geometry_diagnostic"][

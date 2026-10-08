@@ -23,7 +23,7 @@ def _make_workbook(path: Path) -> None:
     description.append(["Test conditions", "Name", "Value"])
     description.append([None, "CHSS size", "68.6 kg (7 tanks at 9.8 kg each)"])
     data = workbook.create_sheet("Data")
-    headers = ["Time [s]"]
+    headers = ["Time [s]", "P_hose [MPa]", "T_hose [degC]"]
     for tank_id in TANK_IDS:
         headers.extend(
             [
@@ -36,7 +36,7 @@ def _make_workbook(path: Path) -> None:
         )
     data.append(headers)
     for second in range(3):
-        row = [second]
+        row = [second, 1.5 + second, 16.0 + second]
         for tank_id in TANK_IDS:
             row.extend(
                 [
@@ -63,6 +63,9 @@ def test_nrel_reader_preserves_seven_tank_common_clock(tmp_path):
     assert [trace.tank_id for trace in dataset.traces] == list(TANK_IDS)
     assert dataset.traces[0].time_s.tolist() == [0.0, 1.0, 2.0]
     assert dataset.traces[0].mass_kg.tolist() == pytest.approx([0.4, 0.5, 0.6])
+    assert dataset.hose_pressure_mpa.tolist() == pytest.approx([1.5, 2.5, 3.5])
+    assert dataset.hose_temperature_c.tolist() == pytest.approx([16.0, 17.0, 18.0])
+    assert dataset.summary()["hose_pressure_final_mpa"] == pytest.approx(3.5)
 
 
 def test_nrel_reader_rejects_missing_required_channel(tmp_path):
@@ -79,6 +82,18 @@ def test_nrel_reader_rejects_missing_required_channel(tmp_path):
         assert "missing columns" in str(exc)
     else:
         raise AssertionError("reader accepted a workbook with a missing channel")
+
+
+def test_nrel_reader_rejects_missing_hose_boundary_channel(tmp_path):
+    path = tmp_path / "invalid_hose.xlsx"
+    _make_workbook(path)
+    workbook = __import__("openpyxl").load_workbook(path)
+    sheet = workbook["Data"]
+    sheet.cell(row=1, column=3).value = "wrong"
+    workbook.save(path)
+
+    with pytest.raises(ValueError, match="missing columns"):
+        read_nrel_workbook(path)
 
 
 def test_implied_volume_is_diagnostic_eos_mass_over_density(monkeypatch):

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T20:07:51.117719+00:00",
+  "generated_at": "2026-10-08T20:13:43.257599+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -7572,12 +7572,21 @@
           "evidence_role": "independent_tank_thermal_external_validation",
           "tank_count": 7,
           "sample_count": 351,
+          "common_time_base": true,
+          "hose_pressure_temperature_present": true,
+          "per_tank_pressure_temperature_mass_present": true,
+          "station_controller_or_cascade_state_present": false,
+          "esd_or_safety_interlock_trace_present": false,
+          "breakaway_hose_nozzle_receptacle_trace_present": false,
+          "vehicle_side_protocol_trace_present": false,
+          "partial_station_to_tank_boundary_eligible": true,
+          "full_loop_external_holdout_eligible": false,
           "screening_passes": 0,
           "pressure_rmse_mpa": 6.164469743688679,
           "temperature_rmse_c": 4.624745495755946,
           "geometry_ratio_to_frozen_effective_volume_median": 0.9107089985145354,
           "claim_supported": false,
-          "interpretation": "partial tank/thermal boundary evidence only; geometry ratio is diagnostic and is not applied as a production correction or full-loop validation claim"
+          "interpretation": "partial tank-and-hose boundary evidence only; hose pressure/temperature are present on the common clock, while controller/cascade, ESD/interlock, nozzle/receptacle and vehicle-side protocol channels are absent. Geometry ratio is diagnostic and is not applied as a production correction or full-loop validation claim"
         },
         "preslhy_validation_boundary": {
           "evidence": "data/public_validation/results/preslhy_e5_1_holdout.json",

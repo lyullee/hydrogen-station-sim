@@ -1306,14 +1306,15 @@ def _public_experimental_benchmarks() -> dict[str, Any] | None:
 
 
 def _public_tank_validation_evidence() -> dict[str, Any] | None:
-    """Expose the frozen public NREL tank screen without exposing raw rows.
+    """Expose the frozen public NREL tank/hose screen without raw rows.
 
-    The NREL workbook is a useful measured tank boundary, but it has no
-    station-controller or receptacle trace.  Keeping its failed pressure
-    screen and geometry diagnostic in the evidence envelope prevents a
-    decision assistant from silently turning a partial-boundary result into a
-    full HRS validation claim.  This function reads only the aggregate result
-    artifact; the workbook remains local and ignored.
+    The NREL workbook is a useful measured tank/hose boundary, but it has no
+    station-controller, ESD, cascade, protocol or receptacle trace. Keeping
+    its failed pressure screen, hose channels and geometry diagnostic in the
+    evidence envelope prevents a decision assistant from silently turning a
+    partial-boundary result into a full HRS validation claim. This function
+    reads only the aggregate result artifact; the workbook remains local and
+    ignored.
     """
 
     path = Path(__file__).resolve().parents[2] / (
@@ -1337,6 +1338,33 @@ def _public_tank_validation_evidence() -> dict[str, Any] | None:
     return {
         "artifact": "data/public_validation/results/nrel_h2fills_hdvs_typeiv/validation.json",
         "evidence_role": record.get("evidence_role"),
+        "common_time_base": (record.get("boundary_channel_screen") or {}).get(
+            "common_time_base"
+        ),
+        "hose_pressure_temperature_present": (
+            record.get("boundary_channel_screen") or {}
+        ).get("hose_pressure_temperature_present"),
+        "per_tank_pressure_temperature_mass_present": (
+            record.get("boundary_channel_screen") or {}
+        ).get("per_tank_pressure_temperature_mass_present"),
+        "station_controller_or_cascade_state_present": (
+            record.get("boundary_channel_screen") or {}
+        ).get("station_controller_or_cascade_state_present"),
+        "esd_or_safety_interlock_trace_present": (
+            record.get("boundary_channel_screen") or {}
+        ).get("esd_or_safety_interlock_trace_present"),
+        "breakaway_hose_nozzle_receptacle_trace_present": (
+            record.get("boundary_channel_screen") or {}
+        ).get("breakaway_hose_nozzle_receptacle_trace_present"),
+        "vehicle_side_protocol_trace_present": (
+            record.get("boundary_channel_screen") or {}
+        ).get("vehicle_side_protocol_trace_present"),
+        "partial_station_to_tank_boundary_eligible": (
+            record.get("boundary_channel_screen") or {}
+        ).get("partial_station_to_tank_boundary_eligible"),
+        "full_loop_external_holdout_eligible": (
+            record.get("boundary_channel_screen") or {}
+        ).get("full_loop_external_holdout_eligible"),
         "source": {
             "publisher": source.get("publisher"),
             "official_download_page": source.get("official_download_page"),
@@ -1347,7 +1375,9 @@ def _public_tank_validation_evidence() -> dict[str, Any] | None:
                     "duration_s", "capacity_per_tank_kg", "mass_added_kg",
                     "reported_mass_added_kg", "initial_pressure_mean_mpa",
                     "final_pressure_mean_mpa", "peak_temperature_mean_c",
-                    "ambient_temperature_c",
+                    "hose_pressure_initial_mpa", "hose_pressure_final_mpa",
+                    "hose_pressure_peak_mpa", "hose_temperature_min_c",
+                    "hose_temperature_max_c", "ambient_temperature_c",
                 )
                 if source.get("dataset_summary", {}).get(key) is not None
             },
@@ -1356,6 +1386,11 @@ def _public_tank_validation_evidence() -> dict[str, Any] | None:
             "boundary_conditions": frozen_model.get("boundary_conditions"),
             "post_access_parameter_tuning": False,
             "ambient_temperature_c": frozen_model.get("ambient_temperature_c"),
+        },
+        "boundary_channel_screen": {
+            str(key): value
+            for key, value in (record.get("boundary_channel_screen") or {}).items()
+            if isinstance(value, (int, float, str, bool))
         },
         "screening_limits": {
             str(key): value
@@ -5131,8 +5166,8 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             key: public_tank_validation.get(key)
             for key in (
                 "evidence_role", "source", "frozen_model", "screening_limits",
-                "aggregate", "geometry_diagnostic", "claim_supported",
-                "claim_limit",
+                "boundary_channel_screen", "aggregate", "geometry_diagnostic",
+                "claim_supported", "claim_limit",
             )
             if public_tank_validation.get(key) is not None
         }
@@ -6868,6 +6903,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "frozen_model": (
                 evidence.get("public_tank_validation_boundary") or {}
             ).get("frozen_model") or {},
+            "boundary_channel_screen": (
+                evidence.get("public_tank_validation_boundary") or {}
+            ).get("boundary_channel_screen") or {},
             "screening_limits": (
                 evidence.get("public_tank_validation_boundary") or {}
             ).get("screening_limits") or {},
