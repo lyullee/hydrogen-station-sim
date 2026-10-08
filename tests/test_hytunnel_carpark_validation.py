@@ -96,7 +96,7 @@ def test_evaluators_return_finite_metrics_without_time_shift_or_fit(tmp_path: Pa
     assert dispersion.points == 361
     assert dispersion.sensor_count == 4
     assert np.isfinite(dispersion.nrmse_percent_peak_measured)
-    assert mass_flow.points >= 30
+    assert 30 <= mass_flow.points <= 121
     assert np.isfinite(mass_flow.spearman_rho)
 
 

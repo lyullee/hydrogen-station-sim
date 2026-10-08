@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "amended_at": "2026-10-08",
+  "status": "FROZEN_BEFORE_COMPLETED_OUTCOME_METRICS",
+  "protocol_path": "research/hytunnel_carpark_holdout_protocol_2026_10_08.json",
+  "protocol_sha256": "f5b972a46d4585d94dd5e26fdd8891ae98b421740246672a294df6005312432e",
+  "preceding_format_amendment": {
+    "path": "research/hytunnel_carpark_format_amendment_2026_10_08.json",
+    "sha256": "79e24f95931e58229356b49ddec6cb07e725650ed0ddde6fba7036ca3b9ea265"
+  },
+  "trigger": {
+    "stage": "mass-flow endpoint computation",
+    "condition": "The five blowdown files contain 1 kHz MFM and tank channels with approximately one million adjacent electronic samples per case.",
+    "observed_issue": "A pointwise CoolProp real-gas throat optimization over roughly five million electronically autocorrelated samples did not complete within the interactive validation window.",
+    "completed_case_metrics_before_amendment": false,
+    "outcome_thresholds_inspected_or_changed": false
+  },
+  "frozen_sampling_rule": {
+    "scope": "mass-flow endpoint only",
+    "rule": "After synchronizing finite post-release MFM.mfr, Tank.p and Tank.T samples, compute non-overlapping one-second arithmetic means by floor(MFM.time - MFM.t0).",
+    "response_independent": true,
+    "then_apply_original_window": "Apply the original pressure screen and the 10% of measured peak screen to the one-second series.",
+    "minimum_eligible_points": 30,
+    "rationale": "One-second block means reduce electronic autocorrelation and pseudoreplication while retaining the full blowdown time span and all raw samples in deterministic blocks."
+  },
+  "scientific_rules_unchanged": {
+    "declared_cases": true,
+    "exclusions": true,
+    "physical_model": true,
+    "nozzle_diameter": true,
+    "discharge_coefficient": true,
+    "thermophysical_backend": true,
+    "error_metrics": true,
+    "thresholds": true,
+    "aggregate_decision": true,
+    "claim_boundary": true
+  },
+  "updated_code": {
+    "module": {
+      "path": "src/h2station/hytunnel_carpark_validation.py",
+      "sha256": "49582c0d9f46013840f051462e05b532e482c2a10725355a331017c63288a47d"
+    },
+    "runner": {
+      "path": "scripts/run_hytunnel_carpark_holdout.py",
+      "sha256": "07f30da0dc011e2cc219c01bc471e97bd7756dcaf67d443eef478313ecd262ef"
+    }
+  }
+}

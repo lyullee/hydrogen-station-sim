@@ -123,6 +123,8 @@ def _series_on_time(value: Any, source_time: np.ndarray, target_time: np.ndarray
         return np.full(target_time.shape, float(vector[0]))
     if vector.size != source_time.size:
         raise ValueError(f"{name} length does not match its documented time base")
+    if source_time.shape == target_time.shape and np.array_equal(source_time, target_time):
+        return vector.copy()
     valid = np.isfinite(source_time) & np.isfinite(vector)
     if np.count_nonzero(valid) < 2:
         raise ValueError(f"{name} has fewer than two finite synchronized samples")
@@ -346,18 +348,38 @@ def evaluate_mass_flow_case(trace: HyTunnelTrace) -> MassFlowCaseResult:
         raise ValueError("MFM.mfr length does not match MFM.time")
     pressure = _series_on_time(trace.tank_pressure_bar, trace.tank_time_s, time, "Tank.p")
     temperature = _series_on_time(trace.tank_temperature_c, trace.tank_time_s, time, "Tank.T")
-    finite = (
+    synchronized = (
         np.isfinite(time) & np.isfinite(measured) & np.isfinite(pressure)
         & np.isfinite(temperature) & (time >= trace.release_start_s)
     )
-    peak = float(np.nanmax(measured[finite])) if np.any(finite) else 0.0
-    finite &= measured >= 0.1 * peak
-    finite &= pressure * 1.0e5 > AMBIENT_PRESSURE_PA * 1.01
-    if np.count_nonzero(finite) < 30:
+    if np.count_nonzero(synchronized) < 30:
+        raise ValueError("fewer than 30 synchronized post-release mass-flow samples")
+    time = time[synchronized]
+    measured = measured[synchronized]
+    pressure = pressure[synchronized]
+    temperature = temperature[synchronized]
+
+    # The archive records MFM and tank channels at 1 kHz. One-second block
+    # means avoid treating adjacent electronic samples as independent evidence
+    # and keep the frozen real-gas calculation tractable without selecting on
+    # the measured response.
+    bins = np.floor(time - trace.release_start_s).astype(np.int64)
+    unique_bins, inverse = np.unique(bins, return_inverse=True)
+    counts = np.bincount(inverse).astype(float)
+    time = np.bincount(inverse, weights=time) / counts
+    measured = np.bincount(inverse, weights=measured) / counts
+    pressure = np.bincount(inverse, weights=pressure) / counts
+    temperature = np.bincount(inverse, weights=temperature) / counts
+    del unique_bins
+
+    peak = float(np.nanmax(measured)) if measured.size else 0.0
+    eligible = measured >= 0.1 * peak
+    eligible &= pressure * 1.0e5 > AMBIENT_PRESSURE_PA * 1.01
+    if np.count_nonzero(eligible) < 30:
         raise ValueError("fewer than 30 eligible blowdown mass-flow samples")
-    measured = measured[finite]
-    pressure = pressure[finite]
-    temperature = temperature[finite] + 273.15
+    measured = measured[eligible]
+    pressure = pressure[eligible]
+    temperature = temperature[eligible] + 273.15
     eos = _CoolPropHydrogen()
     area = math.pi * BLOWDOWN_NOZZLE_DIAMETER_M**2 / 4.0
     predicted = np.asarray([
