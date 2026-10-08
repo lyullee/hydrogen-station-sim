@@ -4494,6 +4494,72 @@ def _local_hydrogen_station_discovery_evidence() -> dict[str, Any] | None:
     }
 
 
+def _local_candidate_full_loop_screen_evidence() -> dict[str, Any] | None:
+    """Expose the bounded local/public candidate classification to the LLM.
+
+    The record distinguishes private station-side telemetry, the measured
+    NREL tank boundary, and the DTU Modelica simulator. This prevents a
+    component trace or simulator output from being presented as an
+    independent station-to-vehicle holdout.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/local_candidate_full_loop_screen_2026_10_09.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    coverage = record.get("coverage_assessment") or {}
+    candidates = record.get("candidates") or []
+    if (
+        record.get("artifact_type") != "local_candidate_full_loop_screen"
+        or record.get("decision") != "NO_NEW_FULL_LOOP_MEASURED_COHORT"
+        or coverage.get("local_station_data_is_sparse") is not False
+        or coverage.get("full_loop_holdout_eligible") is not False
+        or len(candidates) != 3
+    ):
+        return None
+
+    safe_candidates: list[dict[str, Any]] = []
+    for candidate in candidates:
+        if not isinstance(candidate, dict):
+            return None
+        safe_candidates.append({
+            key: candidate.get(key)
+            for key in (
+                "id", "evidence_class", "availability", "quantity_summary",
+                "package_summary", "observed_channels",
+                "measured_time_series_present",
+                "vehicle_or_dispenser_boundary_attested",
+                "station_controller_or_cascade_state_attested",
+                "esd_or_safety_interlock_trace_attested",
+                "vehicle_protocol_trace_attested", "decision", "eligible_use",
+                "ineligible_use", "claim_limit",
+            )
+            if candidate.get(key) is not None
+        })
+    return {
+        "artifact": "research/local_candidate_full_loop_screen_2026_10_09.json",
+        "evidence_role": "privacy-bounded local/public candidate classification",
+        "candidates": safe_candidates,
+        "coverage_assessment": {
+            key: coverage.get(key)
+            for key in (
+                "local_station_data_is_sparse",
+                "station_side_dynamic_evidence_is_substantial",
+                "public_component_boundary_evidence_available",
+                "new_full_loop_measured_cohort_found",
+                "full_loop_holdout_eligible",
+                "quantitative_consequence_validation_ready",
+                "main_limit",
+            )
+        },
+        "decision": record.get("decision"),
+        "next_action": record.get("next_action"),
+    }
+
+
 def _confidential_multisource_mapping_feasibility() -> dict[str, Any] | None:
     """Expose the controlled multi-sheet mapping boundary without identifiers.
 
@@ -5393,6 +5459,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_local_station_data_discovery"
         ] = local_station_discovery
+    local_candidate_screen = _local_candidate_full_loop_screen_evidence()
+    if local_candidate_screen is not None:
+        envelope["response_evidence"][
+            "local_candidate_full_loop_screen"
+        ] = local_candidate_screen
     multisource_feasibility = _confidential_multisource_mapping_feasibility()
     if multisource_feasibility is not None:
         envelope["response_evidence"][
@@ -5750,6 +5821,33 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "parameter_fitting_supported": False,
             "saga_effectiveness_supported": False,
             "claim_limit": short(measurement_leads.get("claim_limit"), 280),
+        }
+    local_candidate_screen = evidence.get("local_candidate_full_loop_screen")
+    if isinstance(local_candidate_screen, dict):
+        summary["local_candidate_full_loop_screen"] = {
+            "evidence_role": local_candidate_screen.get("evidence_role"),
+            "decision": local_candidate_screen.get("decision"),
+            "candidates": [
+                {
+                    key: candidate.get(key)
+                    for key in (
+                        "id", "evidence_class", "decision",
+                        "measured_time_series_present",
+                        "vehicle_or_dispenser_boundary_attested",
+                        "station_controller_or_cascade_state_attested",
+                        "esd_or_safety_interlock_trace_attested",
+                        "vehicle_protocol_trace_attested", "eligible_use",
+                        "ineligible_use", "claim_limit",
+                    )
+                    if candidate.get(key) is not None
+                }
+                for candidate in local_candidate_screen.get("candidates") or []
+                if isinstance(candidate, dict)
+            ],
+            "coverage_assessment": local_candidate_screen.get(
+                "coverage_assessment"
+            ) or {},
+            "next_action": local_candidate_screen.get("next_action"),
         }
     vehicle_side_leads = evidence.get("public_vehicle_side_h2_measurement_leads")
     if isinstance(vehicle_side_leads, dict):

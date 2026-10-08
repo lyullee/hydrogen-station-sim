@@ -34,6 +34,25 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         scenario.startswith("back-to-back fueling")
         for scenario in station_context["reported_scenarios"]
     )
+    candidate_screen = idle["response_evidence"]["local_candidate_full_loop_screen"]
+    assert candidate_screen["decision"] == "NO_NEW_FULL_LOOP_MEASURED_COHORT"
+    candidates = {item["id"]: item for item in candidate_screen["candidates"]}
+    assert candidates["nrel_h2fills_2022_hdvs_typeiv"]["decision"] == (
+        "PARTIAL_TANK_BOUNDARY_ONLY"
+    )
+    assert candidates["dtu_tes_hydrogen_fuelling_station_v2_1"]["decision"] == (
+        "SIMULATOR_REFERENCE_ONLY"
+    )
+    assert candidates["dtu_tes_hydrogen_fuelling_station_v2_1"][
+        "measured_time_series_present"
+    ] is False
+    compact_candidates = prompt_evidence_summary(idle)[
+        "local_candidate_full_loop_screen"
+    ]
+    assert compact_candidates["coverage_assessment"][
+        "station_side_dynamic_evidence_is_substantial"
+    ] is True
+    assert len(compact_candidates["candidates"]) == 3
     assert idle["runtime_calibration"]["status"] == "reference_defaults"
     assert idle["measured_bank_pressure_envelope"] == {}
     assert idle["runtime_geometry"]["basis"] == "reference"

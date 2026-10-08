@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_candidate_full_loop_screen",
+  "status": "privacy_bounded_candidate_classification",
+  "generated_at": "2026-10-09",
+  "purpose": "Classify newly confirmed local/publicly staged hydrogen-station candidates without promoting partial or simulated data to full-loop validation.",
+  "eligibility_rule": {
+    "required_for_full_loop_holdout": [
+      "synchronized station or dispenser pressure",
+      "receiving vessel or vehicle pressure and temperature",
+      "delivered mass or attested mass flow",
+      "one common time base with units and initial conditions",
+      "controller, protocol, or explicit boundary mapping",
+      "documented reuse rights and custodian attestation"
+    ],
+    "derived_or_qualitative_material_is_not_measured_holdout": true,
+    "simulator_package_is_not_experimental_validation": true
+  },
+  "candidates": [
+    {
+      "id": "local_confidential_station_measurement_bundle",
+      "evidence_class": "private measured station telemetry",
+      "availability": "local_only",
+      "quantity_summary": {
+        "file_count": 33,
+        "deduplicated_rows": 56854143,
+        "schema_widths": {"9": 25, "64": 8}
+      },
+      "observed_channels": [
+        "station pressure",
+        "station temperature",
+        "flow-like and totalizer-like candidates",
+        "compressor state",
+        "valve and ESD state"
+      ],
+      "vehicle_or_dispenser_boundary_attested": false,
+      "decision": "STATION_SIDE_ONLY",
+      "eligible_use": [
+        "station pressure-cycle calibration",
+        "cascade and recharge chronology",
+        "compressor, valve and ESD state screening",
+        "privacy-bounded chronological station holdouts"
+      ],
+      "ineligible_use": [
+        "independent station-to-vehicle full-loop validation",
+        "vehicle SOC or receiving-vessel thermal validation",
+        "site-specific consequence validation"
+      ],
+      "claim_limit": "The collection is quantitatively substantial, but the vehicle/dispenser semantic boundary is not attested in the screened exports."
+    },
+    {
+      "id": "nrel_h2fills_2022_hdvs_typeiv",
+      "evidence_class": "public measured tank and hose boundary",
+      "availability": "locally_staged_public_package",
+      "quantity_summary": {
+        "tank_count": 7,
+        "sample_count": 351,
+        "sample_period_s": 1.0,
+        "duration_s": 350.0,
+        "reported_mass_added_kg": 61.5
+      },
+      "observed_channels": [
+        "hose pressure and temperature",
+        "per-tank inlet pressure and temperature",
+        "per-tank mass",
+        "per-tank internal pressure and temperature"
+      ],
+      "station_controller_or_cascade_state_attested": false,
+      "esd_or_safety_interlock_trace_attested": false,
+      "vehicle_protocol_trace_attested": false,
+      "reuse_rights": "package licence requires permission before redistribution of the raw workbook",
+      "decision": "PARTIAL_TANK_BOUNDARY_ONLY",
+      "eligible_use": [
+        "independent tank/hose boundary screen",
+        "capacity and geometry diagnostic",
+        "future frozen component holdout after protocol freeze"
+      ],
+      "ineligible_use": [
+        "station-to-vehicle full-loop validation",
+        "ESD or controller effectiveness validation",
+        "site-specific safety-distance claim"
+      ],
+      "claim_limit": "The frozen pressure screen failed and the package has no station-controller, ESD, cascade, receptacle or protocol trace; geometry sensitivity remains exploratory and cannot change the default model."
+    },
+    {
+      "id": "dtu_tes_hydrogen_fuelling_station_v2_1",
+      "evidence_class": "public Modelica simulator and protocol reference",
+      "availability": "locally_staged_public_package",
+      "package_summary": {
+        "member_count": 45,
+        "model_language": "Modelica",
+        "includes_mat_coefficient_tables": true,
+        "includes_graphics": true,
+        "license": "GPL-3.0"
+      },
+      "measured_time_series_present": false,
+      "decision": "SIMULATOR_REFERENCE_ONLY",
+      "eligible_use": [
+        "protocol and component architecture comparison",
+        "qualitative cascade/compressor/valve scenario review",
+        "independent simulator cross-check"
+      ],
+      "ineligible_use": [
+        "external experimental validation",
+        "measured station performance claim",
+        "full-loop holdout or accident-frequency estimate"
+      ],
+      "claim_limit": "Modelica outputs are generated model results; no measured station-to-vehicle logger trace was found in the package."
+    }
+  ],
+  "coverage_assessment": {
+    "local_station_data_is_sparse": false,
+    "station_side_dynamic_evidence_is_substantial": true,
+    "public_component_boundary_evidence_available": true,
+    "new_full_loop_measured_cohort_found": false,
+    "full_loop_holdout_eligible": false,
+    "quantitative_consequence_validation_ready": false,
+    "main_limit": "The local collection is rich for station-side dynamics and the staged public package adds tank-boundary evidence, but no independently attested synchronized station-to-vehicle cohort with controller/protocol channels was identified."
+  },
+  "decision": "NO_NEW_FULL_LOOP_MEASURED_COHORT",
+  "next_action": "Keep the local station-side and NREL tank-boundary evidence in their bounded roles; request a custodian-approved de-identified station-to-vehicle logger cohort before claiming full-loop external validation."
+}
