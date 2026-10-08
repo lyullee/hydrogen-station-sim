@@ -86,6 +86,18 @@
       "independence": "not_independent_measured_data",
       "eligible_use": ["export regression", "plot and UI smoke tests"],
       "ineligible_use": ["external validation", "calibration", "incident or consequence claims"]
+    },
+    {
+      "id": "adjacent_h2_operational_telemetry",
+      "evidence_class": "adjacent upstream or site-utility operational data",
+      "file_count": 1,
+      "telemetry_rows": 2410985,
+      "signal_key_count": 273,
+      "time_span_hours": 24.0,
+      "static_engineering_workbook_count": 1,
+      "validated_boundary": "upstream hydrogen, utility demand, differential pressure and equipment-state plausibility",
+      "missing_boundary": "synchronized dispenser, hose and vehicle/receptacle event",
+      "report": "LOCAL_ADJACENT_H2_OPERATIONAL_DATA_RECHECK_2026_10_09.md"
     }
   ],
   "coverage_assessment": {

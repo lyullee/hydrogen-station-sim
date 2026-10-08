@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_adjacent_h2_operational_data_recheck",
+  "generated_at": "2026-10-09",
+  "status": "privacy_bounded_adjacent_operational_inventory",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "site_company_manufacturer_published": false,
+    "calendar_dates_published": false,
+    "raw_rows_persisted": false,
+    "per_file_hashes_published": false
+  },
+  "inventory": {
+    "telemetry_file_count": 1,
+    "telemetry_size_mb_decimal": 252.641,
+    "telemetry_rows": 2410985,
+    "telemetry_signal_key_count": 273,
+    "telemetry_time_span_hours": 24.0,
+    "signal_families": [
+      "hydrogen mass and fuel-cell thermal terms",
+      "heating and hot-water demand",
+      "water flow and volume",
+      "differential pressure",
+      "equipment status",
+      "thermal power and energy"
+    ],
+    "static_engineering_workbook_count": 1,
+    "static_engineering_workbook_role": "pipeline and metering equipment context"
+  },
+  "evidence_class": "adjacent_upstream_or_site_utility_operational_data",
+  "eligible_use": [
+    "upstream boundary and demand scenario definition",
+    "resampling and missing-value handling checks",
+    "qualitative pressure, utility and equipment-state plausibility"
+  ],
+  "ineligible_use": [
+    "station-to-vehicle external validation",
+    "H70 dispenser or hose calibration",
+    "independent vehicle SOC or delivered-mass claims"
+  ],
+  "coverage_assessment": {
+    "local_hydrogen_operational_data_is_abundant": true,
+    "station_to_vehicle_full_loop_ready": false,
+    "main_limit": "No independently attested synchronized dispenser, hose and vehicle/receptacle event is present."
+  },
+  "claim_boundary": "This adjacent corpus broadens upstream and utility context; it does not replace a station-to-vehicle validation cohort."
+}
