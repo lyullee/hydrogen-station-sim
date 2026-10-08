@@ -1,5 +1,23 @@
 # Development Progress
 
+## 2026-10-09 - Local station archive connected to LLM evidence
+
+- Completed a privacy-bounded inventory of the local station archive: 33 CSV
+  files, 4.749 GiB, 59,272,300 physical rows and 56,854,143 rows after one
+  exact duplicate payload was excluded.
+- Confirmed that station-side evidence is substantial rather than sparse. The
+  reviewed aggregate contains 16,770 ordered high-bank pressure cycles, 11,770
+  paired medium/high episodes, 1,418 short-horizon pressure-forecast cases and
+  733 conditional recharge-flow episodes.
+- Added the aggregate record to the main and sensor LLM evidence envelopes.
+  Interactive prompts receive only de-identified counts, readiness flags and
+  claim limits; no local path, filename, header, timestamp, site identity or
+  raw row is exposed.
+- Kept vehicle-side/full-loop validation disabled because synchronized vehicle
+  pressure, temperature, delivered mass or SOC is still absent from the
+  attested archive. No runtime parameter or safety limit was promoted.
+- Re-ran the complete regression suite: 1,072 tests passed with 18 warnings.
+
 ## 2026-10-08 - Prospective medium-to-high cascade-sequence holdout
 
 - Froze the pressure-event pairing, eligibility and decision rules before

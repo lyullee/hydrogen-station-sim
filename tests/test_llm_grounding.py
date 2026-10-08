@@ -752,6 +752,28 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert schema_header["station_side_schema_intake_supported"] is True
     assert schema_header["privacy_bounded_channel_families"]["flow_rate"] > 0
     assert schema_header["vehicle_side_channel_family_count"] == 0
+    local_station = idle["response_evidence"][
+        "confidential_local_station_data_utilization"
+    ]
+    assert local_station["inventory"]["csv_files"] == 33
+    assert local_station["inventory"]["deduplicated_data_rows"] == 56_854_143
+    assert local_station["utilization"]["ordered_high_bank_pressure_cycles"] == 16_770
+    assert local_station["utilization"]["short_horizon_pressure_forecast_cases"] == 1_418
+    assert local_station["assessment"]["local_station_data_is_sparse"] is False
+    assert local_station["assessment"]["vehicle_side_full_loop_validation_ready"] is False
+    local_summary = prompt_evidence_summary(idle)[
+        "confidential_local_station_data_utilization"
+    ]
+    assert local_summary["inventory"]["unique_csv_payloads"] == 32
+    local_header = prompt_evidence_header(idle)[
+        "confidential_local_station_data_utilization"
+    ]
+    assert local_header["utilization"]["paired_medium_high_pressure_episodes"] == 11_770
+    local_decision = prompt_decision_evidence(idle)["validation_boundaries"][
+        "local_station_data_utilization"
+    ]
+    assert local_decision["deduplicated_data_rows"] == 56_854_143
+    assert local_decision["station_side_dynamic_validation_ready"] is True
     private_media = idle["response_evidence"]["confidential_private_media_intake"]
     assert private_media["screen_recorded_logger_candidate"] is True
     assert private_media["machine_readable_trace_present"] is False

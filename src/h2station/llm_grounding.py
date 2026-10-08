@@ -3737,6 +3737,88 @@ def _confidential_station_schema_evidence() -> dict[str, Any] | None:
     }
 
 
+def _confidential_local_station_utilization_evidence() -> dict[str, Any] | None:
+    """Expose aggregate local-station utilization without raw provenance.
+
+    The inventory is intentionally separate from channel-schema intake.  It
+    tells the assistant how much station-side evidence actually contributed to
+    the reviewed analyses, while preserving the boundary that vehicle-side
+    full-loop validation is not available.  No path, filename, header, date or
+    row is allowed through this function.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/local_confidential_station_data_utilization_2026_10_08.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    privacy = record.get("privacy") or {}
+    inventory = record.get("inventory") or {}
+    utilization = record.get("utilization") or {}
+    assessment = record.get("assessment") or {}
+    required_privacy = (
+        "source_paths_published",
+        "source_filenames_published",
+        "source_headers_published",
+        "per_file_hashes_published",
+        "raw_rows_persisted",
+        "absolute_timestamps_published",
+        "site_company_manufacturer_published",
+    )
+    if (
+        record.get("artifact_type") != "local_confidential_station_data_utilization_audit"
+        or not all(privacy.get(key) is False for key in required_privacy)
+        or inventory.get("csv_files") != 33
+        or inventory.get("unique_csv_payloads") != 32
+        or inventory.get("deduplicated_data_rows") != 56_854_143
+        or utilization.get("station_side_evidence_is_substantial") is not True
+        or utilization.get("independent_full_loop_vehicle_validation_complete") is not False
+        or assessment.get("local_station_data_is_sparse") is not False
+        or assessment.get("station_side_dynamic_validation_ready") is not True
+        or assessment.get("vehicle_side_full_loop_validation_ready") is not False
+    ):
+        return None
+    return {
+        "artifact": "research/local_confidential_station_data_utilization_2026_10_08.json",
+        "evidence_role": "privacy-bounded aggregate local station-data utilization",
+        "inventory": {
+            key: inventory.get(key)
+            for key in (
+                "csv_files", "total_csv_gib", "physical_data_rows_after_one_header_per_file",
+                "unique_csv_payloads", "redundant_csv_files", "duplicate_rows",
+                "deduplicated_data_rows", "narrow_schema_files", "wide_schema_files",
+                "schema_width_file_counts",
+            )
+        },
+        "utilization": {
+            key: utilization.get(key)
+            for key in (
+                "ordered_high_bank_pressure_cycles",
+                "paired_medium_high_pressure_episodes",
+                "sequential_medium_high_pressure_episodes",
+                "short_horizon_pressure_forecast_cases",
+                "conditional_recharge_flow_episodes",
+                "strong_instantaneous_totalizer_consistency_pairs",
+                "station_side_evidence_is_substantial",
+                "independent_full_loop_vehicle_validation_complete",
+            )
+        },
+        "assessment": {
+            key: assessment.get(key)
+            for key in (
+                "local_station_data_is_sparse",
+                "station_side_dynamic_validation_ready",
+                "station_side_longitudinal_analysis_ready",
+                "vehicle_side_full_loop_validation_ready",
+                "primary_limit",
+            )
+        },
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_multisource_mapping_feasibility() -> dict[str, Any] | None:
     """Expose the controlled multi-sheet mapping boundary without identifiers.
 
@@ -4606,6 +4688,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_station_schema_intake"
         ] = station_schema
+    local_station_utilization = _confidential_local_station_utilization_evidence()
+    if local_station_utilization is not None:
+        envelope["response_evidence"][
+            "confidential_local_station_data_utilization"
+        ] = local_station_utilization
     multisource_feasibility = _confidential_multisource_mapping_feasibility()
     if multisource_feasibility is not None:
         envelope["response_evidence"][
@@ -5320,6 +5407,18 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if station_schema.get(key) is not None
         }
+    local_station_utilization = evidence.get(
+        "confidential_local_station_data_utilization"
+    )
+    if isinstance(local_station_utilization, dict):
+        summary["confidential_local_station_data_utilization"] = {
+            key: local_station_utilization.get(key)
+            for key in (
+                "evidence_role", "artifact", "inventory", "utilization",
+                "assessment", "claim_limit",
+            )
+            if local_station_utilization.get(key) is not None
+        }
     private_media = evidence.get("confidential_private_media_intake")
     if isinstance(private_media, dict):
         summary["confidential_private_media_intake"] = {
@@ -5468,6 +5567,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     lifecycle_alignment = response.get(
         "confidential_station_lifecycle_pressure_alignment_holdout"
+    ) or {}
+    local_station_utilization = response.get(
+        "confidential_local_station_data_utilization"
     ) or {}
     spatial_stratification = response.get(
         "public_actual_hydrogen_spatial_stratification_evidence"
@@ -5669,6 +5771,24 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "station_component_thermal_envelope_supported"
                 ) is True,
             },
+            **({
+                "local_station_data_utilization": {
+                    "deduplicated_data_rows": (
+                        local_station_utilization.get("inventory", {})
+                        .get("deduplicated_data_rows")
+                    ),
+                    "station_side_dynamic_validation_ready": (
+                        local_station_utilization.get("assessment", {})
+                        .get("station_side_dynamic_validation_ready")
+                    ),
+                    "vehicle_side_full_loop_validation_ready": (
+                        local_station_utilization.get("assessment", {})
+                        .get("vehicle_side_full_loop_validation_ready")
+                    ),
+                },
+            } if local_station_utilization and (
+                manifest.get("question") or manifest.get("selected_sensor")
+            ) else {}),
             **({
                 "station_cascade_sequence": {
                     "claim_supported": cascade_sequence.get(
@@ -5937,6 +6057,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         "confidential_station_channel_quality_recheck"
     ) or {}
     station_schema = evidence.get("confidential_station_schema_intake") or {}
+    local_station_utilization = evidence.get(
+        "confidential_local_station_data_utilization"
+    ) or {}
     multisource_feasibility = evidence.get(
         "confidential_multisource_mapping_feasibility"
     ) or {}
@@ -6836,6 +6959,13 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "full_loop_holdout_eligible": (
                 station_schema.get("full_loop_holdout_eligible") is True
             ),
+        },
+        "confidential_local_station_data_utilization": {
+            "evidence_artifact": local_station_utilization.get("artifact"),
+            "inventory": local_station_utilization.get("inventory") or {},
+            "utilization": local_station_utilization.get("utilization") or {},
+            "assessment": local_station_utilization.get("assessment") or {},
+            "claim_limit": local_station_utilization.get("claim_limit"),
         },
         "confidential_private_media_intake": {
             "artifact": private_media.get("artifact"),
