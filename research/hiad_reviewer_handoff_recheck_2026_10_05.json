@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "rechecked_at_utc": "2026-10-08T02:56:28.583127+00:00",
-  "source_commit": "b927c138aafd3aad64c804d0c29ccb73b45ea516",
+  "rechecked_at_utc": "2026-10-08T10:51:17.512775+00:00",
+  "source_commit": "6f0b1fb731bf253c1fbc87d768b0ea9460a5d5d5",
   "status": "PENDING_COORDINATOR_APPROVAL_AND_ETHICS_DETERMINATION",
   "machine_preflight": {
     "pass": true,
@@ -17,7 +17,7 @@
     },
     "prescreen_manifest": {
       "path": "data/public_validation/results/hiad_coordinator_prescreen/prescreen_manifest.json",
-      "sha256": "68099bdeb66b5be93bd6abb11902a8bfb0201b04d0af9d44961026134aab8337",
+      "sha256": "2f044a46205917f02f3c2f9c633e0852d116d198525ccb9ad8294a7e76ed3665",
       "advisory_only": true
     },
     "review_csv": {
@@ -26,11 +26,11 @@
     },
     "review_html": {
       "path": "data/public_validation/results/hiad_coordinator_prescreen/coordinator_review.html",
-      "sha256": "7778881d4e902ecf2fe9927e19889b40f5a423878d6a7f28d099a1e24f574792"
+      "sha256": "6777374009b09d7ef84714b2d4aece43ea83ad6bb43f5cfd1cec0f664f069156"
     },
     "protocol_manifest": {
       "path": "research/hiad_study_protocol_manifest.json",
-      "sha256": "fc1bf3dfae19f6f81fe02544a4004b0fc67af0b20d398d5448fe8c7383c6ea7f"
+      "sha256": "4bf77e725ee08d91bf1016cc8d9e52bd048dfa620e1d873292cd4739bf4841ee"
     }
   },
   "current_readiness": {
