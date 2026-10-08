@@ -597,6 +597,18 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert schema["vehicle_side_channel_family_count"] == 0
     assert schema["unit_attestation"]["pressure_units_attested"] is False
     assert schema["full_loop_holdout_eligible"] is False
+
+    signal = gates["confidential_signal_consistency_integrity"]
+    assert signal["status"] == "PASS"
+    signal_observed = signal["observed"]
+    assert signal_observed["sampled_rows"] == 3_053_442
+    assert signal_observed["candidate_pairs_evaluated"] == 54
+    assert signal_observed["strong_consistency_pairs"] == 27
+    assert signal_observed["files_with_strong_consistency_pair"] == 17
+    assert signal_observed["strong_pair_aggregate"]["correlation_median"] >= 0.99
+    assert signal_observed["attestation"]["flow_units_attested"] is False
+    assert signal_observed["eligibility"]["absolute_mass_flow_supported"] is False
+    assert signal_observed["eligibility"]["full_station_vehicle_validation"] is False
     assert schema["flat_time_axis_candidate_summary"]["candidate_groups"] == 4
     assert schema["flat_time_axis_candidate_summary"][
         "tables_in_candidate_groups"

@@ -1457,6 +1457,60 @@ def audit(root: Path) -> dict[str, object]:
         } if schema_audit else "missing; confidential schema intake has not completed",
     ))
 
+    signal_consistency_path = root / (
+        "research/confidential_station_signal_consistency_screen_2026_10_08.json"
+    )
+    signal_consistency = _json(signal_consistency_path)
+    signal_privacy = (signal_consistency or {}).get("privacy") or {}
+    signal_screen = (signal_consistency or {}).get("screen") or {}
+    signal_strong = signal_screen.get("strong_pair_aggregate") or {}
+    signal_attestation = (signal_consistency or {}).get("attestation") or {}
+    signal_eligibility = (signal_consistency or {}).get("eligibility") or {}
+    signal_scale = signal_strong.get("derivative_to_signal_scale_median")
+    signal_consistency_pass = bool(
+        (signal_consistency or {}).get("schema_version") == 1
+        and (signal_consistency or {}).get("artifact_type")
+        == "confidential_station_signal_consistency_screen"
+        and all(value is False for value in signal_privacy.values())
+        and signal_screen.get("csv_files_discovered") == 33
+        and signal_screen.get("pressure_flow_tables_read") == 20
+        and signal_screen.get("sampled_rows") == 3_053_442
+        and signal_screen.get("candidate_pairs_evaluated") == 54
+        and signal_screen.get("strong_consistency_pairs") == 27
+        and signal_screen.get("files_with_strong_consistency_pair") == 17
+        and signal_strong.get("correlation_median", 0.0) >= 0.99
+        and signal_strong.get("normalized_rmse_percent_median", 100.0) <= 5.0
+        and signal_strong.get("aggregation_window_seconds_median") == 60.0
+        and isinstance(signal_scale, (int, float))
+        and abs(signal_scale - (1.0 / 60.0)) <= 0.0005
+        and all(value is False for value in signal_attestation.values())
+        and signal_eligibility.get("flow_channel_pair_attestation_candidate") is True
+        and signal_eligibility.get("absolute_mass_flow_supported") is False
+        and signal_eligibility.get("conditional_bank_inventory_estimation_supported") is False
+        and signal_eligibility.get("full_station_vehicle_validation") is False
+        and signal_eligibility.get("independent_holdout") is False
+    )
+    gates.append(_gate(
+        "confidential_signal_consistency_integrity",
+        "PASS" if signal_consistency_pass else (
+            "FAIL" if signal_consistency else "PENDING"
+        ),
+        "The restricted station archive contains repeatable instantaneous/totalizer mass-balance candidates after fixed-window treatment of logger quantization.",
+        str(signal_consistency_path.relative_to(root)),
+        "De-identified aggregates, strong internal consistency, an approximately 1/60 derivative-to-signal scale and explicit unit/calibration/full-loop holds are retained together.",
+        {
+            "sampled_rows": signal_screen.get("sampled_rows"),
+            "candidate_pairs_evaluated": signal_screen.get("candidate_pairs_evaluated"),
+            "strong_consistency_pairs": signal_screen.get("strong_consistency_pairs"),
+            "files_with_strong_consistency_pair": signal_screen.get(
+                "files_with_strong_consistency_pair"
+            ),
+            "strong_pair_aggregate": signal_strong,
+            "attestation": signal_attestation,
+            "eligibility": signal_eligibility,
+        } if signal_consistency else "missing",
+    ))
+
     external_loop_path = root / "data/public_validation/results/closed_loop_external_holdout/validation.json"
     external_loop = _json(external_loop_path)
     external_protocol_path = root / "research/mc_default_external_holdout_protocol.json"

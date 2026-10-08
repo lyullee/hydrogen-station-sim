@@ -3,37 +3,47 @@
 ## Purpose
 
 This pre-attestation screen asked whether an owner-controlled station archive
-contains an unambiguous instantaneous-flow/cumulative-totalizer pair that can
-support the next storage-inventory calibration step. The implementation reads
-the controlled files locally and serializes aggregate diagnostics only. It
-does not retain paths, filenames, tag names, timestamps or measurement rows.
+contains internally coherent instantaneous-flow/cumulative-totalizer pairs
+that can support the next storage-inventory calibration step. The
+implementation reads the controlled files locally and serializes aggregate
+diagnostics only. It does not retain paths, filenames, tag names, timestamps or
+measurement rows.
+
+The revised screen evaluates fixed 1, 10, 30 and 60 second aggregation windows.
+This prevents a slowly updating or quantized totalizer from being rejected only
+because its one-second derivative alternates between zero and discrete jumps.
+The windows and acceptance thresholds were fixed in code before this rerun.
 
 ## Result
 
 The screen examined 3,053,442 sampled rows from 20 pressure-and-flow tables. It
 found 31 varying cumulative-like channels and 31 varying instantaneous-like
-channels, producing 52 finite candidate comparisons. None met the deliberately
-broad consistency screen of correlation at least 0.80 and span-normalized RMSE
-at most 35%. The highest observed correlation was 0.522; the lowest individual
-normalized RMSE was 24.83%, but it did not satisfy the joint criterion.
+channels, producing 54 finite candidate comparisons. Twenty-seven comparisons
+in 17 files met the consistency screen of correlation at least 0.80 and
+span-normalized RMSE at most 35%.
 
-This is a useful negative result. Column-name heuristics and numerical shape
-alone cannot identify the physical flow pair in this archive. Treating one of
-these channels as calibrated mass flow would add an unsupported degree of
-freedom and could make a source-volume fit look more certain than the evidence
-allows.
+Among the passing comparisons, median correlation was 0.9971, median
+span-normalized RMSE was 2.54%, and the median selected aggregation window was
+60 seconds. The median derivative-to-signal scale was 0.016648, close to 1/60.
+This is strong internal evidence for a recurring compatible
+instantaneous/totalizer relationship and is consistent with, but does not by
+itself attest, a per-minute instantaneous-flow convention relative to a
+per-second totalizer derivative.
 
 ## Decision
 
-- Do not fit absolute mass flow or cascade volume from these unlabelled flow
+- Treat the archive as containing candidate instantaneous/totalizer pairs
+  suitable for targeted custodian attestation and a frozen follow-up analysis.
+- Do not yet fit absolute mass flow or cascade volume: channel roles,
+  engineering units, sign/reset convention and calibration status remain
+  unattested.
+- Retain the already supported station-side pressure, temperature,
+  compressor-state and restart-band diagnostics.
+- Keep station-side dynamic consistency separate from vehicle-fill and
+  station-to-vehicle validation because the archive contains no vehicle-side
   channels.
-- Retain the already attested pressure and compressor-state evidence for the
-  station-side recharge/restart-band diagnostics.
-- Ask the data custodian only for the generic instantaneous/totalizer mapping,
-  engineering units, sign/reset convention and calibration status. No company,
-  site, date, manufacturer or public raw trace is needed.
-- After that attestation, freeze the mapping and conversion before estimating a
-  conditional storage compliance or effective aggregate volume.
+- Record this as a post-access diagnostic improvement, not an independent
+  holdout result or safety certification.
 
 The machine-readable aggregate is
 `research/confidential_station_signal_consistency_screen_2026_10_08.json`.

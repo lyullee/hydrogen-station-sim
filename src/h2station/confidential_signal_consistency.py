@@ -52,6 +52,7 @@ class _PairResult:
     normalized_rmse_percent: float
     scale: float
     active_samples: int
+    aggregation_window_seconds: float
 
     @property
     def strong(self) -> bool:
@@ -257,36 +258,97 @@ def _compare_pair(time_s: np.ndarray, cumulative: np.ndarray, instantaneous: np.
     instantaneous = instantaneous[valid]
     if time_s.size < 40:
         return None
-    dt = np.diff(time_s)
-    delta = np.diff(cumulative)
-    signal = 0.5 * (instantaneous[:-1] + instantaneous[1:])
+    # Industrial totalizers are commonly quantized and update less frequently
+    # than their paired instantaneous-flow signal.  A one-row derivative can
+    # therefore hide an otherwise exact mass balance.  Evaluate a fixed set of
+    # predeclared aggregation lags and retain the best screen; this is still a
+    # role/unit *candidate*, never an attestation.
+    interval_signal = 0.5 * (instantaneous[:-1] + instantaneous[1:])
+    prefix = np.concatenate(([0.0], np.cumsum(interval_signal)))
     tolerance = max(float(np.ptp(cumulative)), 1.0) * 1.0e-10
-    usable = (dt > 0.0) & (delta >= -tolerance) & np.isfinite(signal)
-    derivative = np.divide(delta, dt, out=np.zeros_like(delta), where=usable)
-    derivative = derivative[usable]
-    signal = signal[usable]
-    if derivative.size < 30:
+    candidates: list[_PairResult] = []
+    for lag in (1, 10, 30, 60):
+        if time_s.size <= lag + 30:
+            continue
+        dt = time_s[lag:] - time_s[:-lag]
+        delta = cumulative[lag:] - cumulative[:-lag]
+        signal = (prefix[lag:] - prefix[:-lag]) / float(lag)
+        usable = (
+            (dt > 0.0)
+            & (delta >= -tolerance)
+            & np.isfinite(signal)
+            & np.isfinite(delta)
+        )
+        derivative = np.divide(delta, dt, out=np.zeros_like(delta), where=usable)
+        derivative = derivative[usable]
+        signal = signal[usable]
+        used_dt = dt[usable]
+        if derivative.size < 30:
+            continue
+        derivative_threshold = max(
+            float(np.nanpercentile(np.abs(derivative), 20)), 1.0e-12
+        )
+        signal_threshold = max(
+            float(np.nanpercentile(np.abs(signal), 20)), 1.0e-12
+        )
+        active = (
+            (np.abs(derivative) > derivative_threshold)
+            | (np.abs(signal) > signal_threshold)
+        )
+        derivative = derivative[active]
+        signal = signal[active]
+        used_dt = used_dt[active]
+        if (
+            derivative.size < 30
+            or np.std(signal) <= 0.0
+            or np.std(derivative) <= 0.0
+        ):
+            continue
+        denominator = float(np.dot(signal, signal))
+        if denominator <= 0.0:
+            continue
+        scale = float(np.dot(signal, derivative) / denominator)
+        predicted = scale * signal
+        if np.std(predicted) <= 0.0:
+            continue
+        correlation = float(np.corrcoef(derivative, predicted)[0, 1])
+        reference_span = max(
+            float(
+                np.nanpercentile(derivative, 95)
+                - np.nanpercentile(derivative, 5)
+            ),
+            1.0e-12,
+        )
+        nrmse = float(
+            np.sqrt(np.mean((derivative - predicted) ** 2))
+            / reference_span
+            * 100.0
+        )
+        window_seconds = float(np.median(used_dt))
+        if not all(
+            math.isfinite(value)
+            for value in (scale, correlation, nrmse, window_seconds)
+        ):
+            continue
+        candidates.append(
+            _PairResult(
+                correlation,
+                nrmse,
+                scale,
+                int(derivative.size),
+                window_seconds,
+            )
+        )
+    if not candidates:
         return None
-    derivative_threshold = max(float(np.nanpercentile(np.abs(derivative), 20)), 1.0e-12)
-    signal_threshold = max(float(np.nanpercentile(np.abs(signal), 20)), 1.0e-12)
-    active = (np.abs(derivative) > derivative_threshold) | (np.abs(signal) > signal_threshold)
-    derivative = derivative[active]
-    signal = signal[active]
-    if derivative.size < 30 or np.std(signal) <= 0.0 or np.std(derivative) <= 0.0:
-        return None
-    denominator = float(np.dot(signal, signal))
-    if denominator <= 0.0:
-        return None
-    scale = float(np.dot(signal, derivative) / denominator)
-    predicted = scale * signal
-    if np.std(predicted) <= 0.0:
-        return None
-    correlation = float(np.corrcoef(derivative, predicted)[0, 1])
-    reference_span = max(float(np.nanpercentile(derivative, 95) - np.nanpercentile(derivative, 5)), 1.0e-12)
-    nrmse = float(np.sqrt(np.mean((derivative - predicted) ** 2)) / reference_span * 100.0)
-    if not all(math.isfinite(value) for value in (scale, correlation, nrmse)):
-        return None
-    return _PairResult(correlation, nrmse, scale, int(derivative.size))
+    return min(
+        candidates,
+        key=lambda result: (
+            not result.strong,
+            result.normalized_rmse_percent,
+            -result.correlation,
+        ),
+    )
 
 
 def _quantile(values: list[float], fraction: float) -> float | None:
@@ -345,6 +407,7 @@ def audit_confidential_signal_consistency(
     correlations = [result.correlation for result in strong]
     errors = [result.normalized_rmse_percent for result in strong]
     scales = [result.scale for result in strong]
+    windows = [result.aggregation_window_seconds for result in strong]
     return {
         "schema_version": 1,
         "artifact_type": "confidential_station_signal_consistency_screen",
@@ -386,6 +449,9 @@ def audit_confidential_signal_consistency(
                 "normalized_rmse_percent_median": median(errors) if errors else None,
                 "normalized_rmse_percent_p90": _quantile(errors, 0.90),
                 "derivative_to_signal_scale_median": median(scales) if scales else None,
+                "aggregation_window_seconds_median": (
+                    median(windows) if windows else None
+                ),
                 "scale_is_dimensionless_or_physical": False,
             },
         },

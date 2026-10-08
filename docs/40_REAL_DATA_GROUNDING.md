@@ -50,15 +50,20 @@ families, so the assistant keeps station-boundary calibration separate from
 vehicle-fill or station-to-vehicle accuracy claims.
 
 A value-level, pre-attestation consistency screen now tests whether the
-unlabelled flow-like channels contain an internally coherent instantaneous
-flow/cumulative-totalizer pair. It inspected 3,053,442 sampled rows from 20
+unlabelled flow-like channels contain internally coherent instantaneous
+flow/cumulative-totalizer pairs. It inspected 3,053,442 sampled rows from 20
 pressure-and-flow tables without persisting source paths, tags, timestamps or
-rows. None of 52 candidate pairs passed the joint correlation and normalized
-error screen. The negative result is retained in
-`confidential_station_signal_consistency_screen_2026_10_08.json`: pressure and
-compressor-state diagnostics remain usable within their existing attestation,
-while absolute flow and storage-volume fitting stay disabled until a custodian
-confirms the generic pair, units, sign/reset convention and calibration state.
+rows. The revised fixed-window screen accounts for logger quantization by
+testing 1, 10, 30 and 60 second mass-balance windows. Twenty-seven of 54
+candidate comparisons in 17 files passed the joint correlation and normalized
+error screen. Their median correlation was 0.9971, median span-normalized RMSE
+was 2.54%, median selected window was 60 seconds, and median
+derivative-to-signal scale was 0.016648 (close to 1/60). The positive internal
+consistency result is retained in
+`confidential_station_signal_consistency_screen_2026_10_08.json`. It narrows
+the remaining request to custodian confirmation of the generic pair, units,
+sign/reset convention and calibration state; absolute flow and storage-volume
+fitting remain disabled until that attestation is recorded.
 
 An additional owner-controlled media drop was screened on 2026-10. It contains
 equipment photographs and screen recordings of an Excel/SCADA-style logger.

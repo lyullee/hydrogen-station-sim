@@ -20,7 +20,16 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **111 PASS · 10 FAIL · 7 PENDING**.
+Gate counts: **112 PASS · 10 FAIL · 7 PENDING**.
+
+The confidential station archive contains substantially more usable
+station-side evidence than the earlier one-row derivative screen indicated.
+A fixed 1/10/30/60-second mass-balance screen evaluated 3,053,442 rows and
+found 27 strong instantaneous-flow/totalizer comparisons in 17 files. Passing
+comparisons had median correlation 0.9971, median span-normalized RMSE 2.54%
+and median derivative-to-signal scale 0.016648 (approximately 1/60). This adds
+a passing internal-consistency gate while preserving the unit/calibration hold
+and the failed station-to-vehicle full-loop gate.
 
 The official RHeaDHy public test matrix (DOI 10.5281/zenodo.16992589) is now
 hash-pinned and converted into a trace-level pre-access protocol for the

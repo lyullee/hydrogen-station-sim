@@ -20,23 +20,24 @@
     "variable_flow_like_channels": 62,
     "cumulative_flow_like_candidates": 31,
     "instantaneous_flow_like_candidates": 31,
-    "candidate_pairs_evaluated": 52,
-    "strong_consistency_pairs": 0,
-    "files_with_strong_consistency_pair": 0,
+    "candidate_pairs_evaluated": 54,
+    "strong_consistency_pairs": 27,
+    "files_with_strong_consistency_pair": 17,
     "candidate_pair_aggregate": {
-      "correlation_median": 0.15094366994265107,
-      "correlation_max": 0.521705078874178,
-      "normalized_rmse_percent_median": 49.742138213236856,
-      "normalized_rmse_percent_min": 24.8261085329625,
-      "negative_scale_pair_count": 8,
-      "active_samples_median": 35787.5
+      "correlation_median": 0.6652823951754594,
+      "correlation_max": 0.9992840780135002,
+      "normalized_rmse_percent_median": 23.96897394322236,
+      "normalized_rmse_percent_min": 1.5692570443516998,
+      "negative_scale_pair_count": 7,
+      "active_samples_median": 53598.5
     },
     "strong_pair_aggregate": {
-      "correlation_median": null,
-      "correlation_p10": null,
-      "normalized_rmse_percent_median": null,
-      "normalized_rmse_percent_p90": null,
-      "derivative_to_signal_scale_median": null,
+      "correlation_median": 0.9970854325653027,
+      "correlation_p10": 0.9881070147737123,
+      "normalized_rmse_percent_median": 2.5443052892969935,
+      "normalized_rmse_percent_p90": 5.425342303342091,
+      "derivative_to_signal_scale_median": 0.016648328090420165,
+      "aggregation_window_seconds_median": 60.0,
       "scale_is_dimensionless_or_physical": false
     }
   },
@@ -47,7 +48,7 @@
     "calibration_status_attested": false
   },
   "eligibility": {
-    "flow_channel_pair_attestation_candidate": false,
+    "flow_channel_pair_attestation_candidate": true,
     "absolute_mass_flow_supported": false,
     "conditional_bank_inventory_estimation_supported": false,
     "full_station_vehicle_validation": false,

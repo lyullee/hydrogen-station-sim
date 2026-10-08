@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T12:10:16.558309+00:00",
+  "generated_at": "2026-10-08T12:27:20.867908+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 111,
+    "PASS": 112,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -1041,6 +1041,41 @@
           "verified_file_count": 33,
           "verified_pressure_channel_count": 136,
           "verified_vehicle_side_channel_family_count": 0
+        }
+      }
+    },
+    {
+      "id": "confidential_signal_consistency_integrity",
+      "status": "PASS",
+      "claim": "The restricted station archive contains repeatable instantaneous/totalizer mass-balance candidates after fixed-window treatment of logger quantization.",
+      "evidence": "research\\confidential_station_signal_consistency_screen_2026_10_08.json",
+      "requirement": "De-identified aggregates, strong internal consistency, an approximately 1/60 derivative-to-signal scale and explicit unit/calibration/full-loop holds are retained together.",
+      "observed": {
+        "sampled_rows": 3053442,
+        "candidate_pairs_evaluated": 54,
+        "strong_consistency_pairs": 27,
+        "files_with_strong_consistency_pair": 17,
+        "strong_pair_aggregate": {
+          "correlation_median": 0.9970854325653027,
+          "correlation_p10": 0.9881070147737123,
+          "normalized_rmse_percent_median": 2.5443052892969935,
+          "normalized_rmse_percent_p90": 5.425342303342091,
+          "derivative_to_signal_scale_median": 0.016648328090420165,
+          "aggregation_window_seconds_median": 60.0,
+          "scale_is_dimensionless_or_physical": false
+        },
+        "attestation": {
+          "channel_roles_attested": false,
+          "flow_units_attested": false,
+          "totalizer_reset_semantics_attested": false,
+          "calibration_status_attested": false
+        },
+        "eligibility": {
+          "flow_channel_pair_attestation_candidate": true,
+          "absolute_mass_flow_supported": false,
+          "conditional_bank_inventory_estimation_supported": false,
+          "full_station_vehicle_validation": false,
+          "independent_holdout": false
         }
       }
     },

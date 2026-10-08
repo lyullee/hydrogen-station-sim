@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
+
+import pytest
 
 from h2station.confidential_signal_consistency import audit_confidential_signal_consistency
 
@@ -63,3 +66,32 @@ def test_constant_channels_do_not_become_physical_evidence(tmp_path: Path):
     assert result["screen"]["variable_pressure_channels"] == 0
     assert result["screen"]["variable_flow_like_channels"] == 0
     assert result["screen"]["candidate_pairs_evaluated"] == 0
+
+
+def test_quantized_totalizer_is_resolved_by_multiscale_mass_balance(tmp_path: Path):
+    source = tmp_path / "controlled"
+    source.mkdir()
+    path = source / "trace.csv"
+    rows = ["time,pressure,flow,total"]
+    accumulated = 0.0
+    reported = 0.0
+    for index in range(1_200):
+        flow_per_minute = (
+            0.45
+            + 0.18 * math.sin(2.0 * math.pi * index / 300.0)
+            + 0.04 * math.sin(2.0 * math.pi * index / 37.0)
+        )
+        accumulated += flow_per_minute / 60.0
+        if index % 15 == 0:
+            reported = round(accumulated, 2)
+        rows.append(f"{index},{40 + index / 1000},{flow_per_minute},{reported}")
+    path.write_text("\n".join(rows) + "\n", encoding="utf-8")
+
+    result = audit_confidential_signal_consistency(source)
+    aggregate = result["screen"]["strong_pair_aggregate"]
+
+    assert result["screen"]["strong_consistency_pairs"] == 1
+    assert aggregate["aggregation_window_seconds_median"] >= 10.0
+    assert aggregate["derivative_to_signal_scale_median"] == pytest.approx(
+        1.0 / 60.0, rel=0.12
+    )

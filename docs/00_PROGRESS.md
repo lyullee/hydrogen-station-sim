@@ -6,13 +6,19 @@
   pressure and flow-like channels.
 - The result publishes no source path, filename, tag, exact timestamp or raw
   measurement row and cannot apply an unattested unit to the process model.
-- Screened 3,053,442 rows from 20 pressure-and-flow tables. None of 52
-  cumulative/instantaneous candidate pairs met the joint consistency screen;
-  the strongest correlation was 0.522.
-- Kept absolute mass-flow and conditional storage-volume fitting disabled. The
-  remaining data request is narrowed to a custodian-confirmed generic channel
-  pair, units, sign/reset convention and calibration status.
-- The complete regression suite passed: 1,014 tests with no failures.
+- Replaced the one-row derivative with predeclared 1, 10, 30 and 60 second
+  mass-balance windows so quantized totalizers are evaluated at their effective
+  update scale.
+- Screened 3,053,442 rows from 20 pressure-and-flow tables. Twenty-seven of 54
+  cumulative/instantaneous comparisons in 17 files met the joint consistency
+  screen. Passing comparisons had median correlation 0.9971, median
+  span-normalized RMSE 2.54%, and median derivative-to-signal scale 0.016648.
+- Classified this as strong internal evidence for candidate flow/totalizer
+  pairs, while keeping absolute mass-flow and conditional storage-volume
+  fitting disabled until a custodian confirms the generic channel roles,
+  units, sign/reset convention and calibration status.
+- The complete regression suite passed after this update: 1,034 tests with no
+  failures.
 - Re-ran the built-in LaTeX compiler for the exact current IJHE draft. The host
   still reports `Unable to find standard directories for platform`, so the
   compilation gate remains pending rather than being inferred from the older
