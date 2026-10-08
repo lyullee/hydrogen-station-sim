@@ -2,6 +2,8 @@ import hashlib
 import json
 from pathlib import Path
 
+import pytest
+
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL_PATH = (
@@ -61,3 +63,53 @@ def test_wskbij_protocol_file_has_stable_sha256_shape() -> None:
     digest = hashlib.sha256(PROTOCOL_PATH.read_bytes()).hexdigest()
     assert len(digest) == 64
     assert set(digest) <= set("0123456789abcdef")
+
+
+def test_wskbij_frozen_screen_retains_negative_result_without_tuning() -> None:
+    result = json.loads(
+        (
+            ROOT
+            / "research/wskbij_large_scale_overpressure_rank_result_2026_10_08.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert result["decision"] == "FAIL"
+    assert result["cohort"]["numbered_experiment_count"] == 51
+    assert result["cohort"]["eligible_before_minimum_stratum_rule"] == 45
+    assert result["cohort"]["scored_case_count"] == 44
+    assert result["cohort"]["retained_stratum_count"] == 6
+    assert result["freeze_integrity"]["case_replacement_performed"] is False
+    assert result["freeze_integrity"]["threshold_changed_after_access"] is False
+    assert result["freeze_integrity"]["runtime_parameter_updated"] is False
+    assert result["model_integrity"]["all_match"] is True
+
+    screens = result["primary_screens"]
+    assert screens["pooled_spearman_rank_correlation"]["pass"] is True
+    assert screens["within_stratum_rank_spearman"]["pass"] is False
+    assert screens["within_stratum_pairwise_order_concordance"]["pass"] is False
+    assert screens["within_stratum_top_third_recall"]["pass"] is False
+    assert screens["scored_case_count"]["pass"] is True
+    assert result["primary_metrics"]["pooled_spearman_rank_correlation"] == pytest.approx(
+        0.5716903347571238
+    )
+    assert result["primary_metrics"]["within_stratum_rank_spearman"] == pytest.approx(
+        -0.023071711315171814
+    )
+
+
+def test_wskbij_result_matches_frozen_protocol_and_preserves_claim_boundary() -> None:
+    result = json.loads(
+        (
+            ROOT
+            / "research/wskbij_large_scale_overpressure_rank_result_2026_10_08.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert hashlib.sha256(PROTOCOL_PATH.read_bytes()).hexdigest() == result[
+        "freeze_integrity"
+    ]["protocol_sha256"]
+    assert result["file_integrity"]["sha256_match"] is True
+    assert result["diagnostic_ranges"]["measured_peak_kpa"] == [0.22, 235.39]
+    assert result["diagnostic_ranges"]["predicted_peak_span_kpa"] < 1.0
+    boundary = result["claim_boundary"].lower()
+    assert "would not validate absolute overpressure" in boundary
+    assert "full-loop dynamics" in boundary

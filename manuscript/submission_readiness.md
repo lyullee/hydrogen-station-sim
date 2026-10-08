@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **109 PASS · 10 FAIL · 7 PENDING**.
+Gate counts: **110 PASS · 10 FAIL · 7 PENDING**.
 
 The SAGA measurement guard now has a provider-free regression covering unit
 aliases and shared-unit ranges. All 5 cases pass: four grounded equivalent
@@ -397,6 +397,29 @@ so the evaluation failed closed before pressure peaks or HyRAM predictions were
 computed. No case was replaced, no threshold changed and no runtime parameter
 was updated. This retained negative intake result improves provenance discipline
 but does not validate or invalidate overpressure magnitude or rank.
+
+## 2026-10-08 WSKBIJ large-scale overpressure-rank result
+
+The exact WSKBIJ workbook and locked HyRAM+ 6.1 BST runtime were evaluated under
+a protocol committed before case-level pressure outcomes were displayed or
+compared with the model. The disclosure records that an earlier inventory had
+already machine-read the outcome cells for aggregate range and completeness;
+this is therefore a prospectively fixed aggregate-access analysis rather than a
+strictly outcome-unseen holdout.
+
+Publisher annotations and the fixed minimum-stratum rule left 44 controlled
+delayed-ignition cases in six strata. Pooled Spearman correlation passed at
+0.572, but within-stratum rank correlation (-0.023), pairwise concordance
+(0.421) and top-third recall (0.294) all failed their frozen 0.45/0.65/0.50
+thresholds. Predicted peak values occupied only 22.091--22.740 kPa while
+measured row maxima covered 0.220--235.390 kPa. No case was replaced and no
+runtime parameter or threshold changed.
+
+The retained failure is technically useful: reservoir pressure and nozzle
+diameter alone cannot support an obstructed outdoor delayed-ignition severity
+claim. Obstacle geometry, ignition location and sensor distance must become
+explicit inputs and must then be tested on a new outcome-unseen campaign. This
+result does not close any existing external-validation gate.
 
 ## Blocking gates
 

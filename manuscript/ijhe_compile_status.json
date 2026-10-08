@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "verified_at_utc": "2026-10-08T10:56:47.356814+00:00",
+  "verified_at_utc": "2026-10-08T11:21:36.218892+00:00",
   "success": true,
   "compiler": {
     "name": "Tectonic",
@@ -10,26 +10,26 @@
   },
   "source": {
     "path": "manuscript/ijhe_manuscript_draft.tex",
-    "bytes": 75669,
-    "sha256": "434187f0d9a6520c7d427a88bb1557447666912e5abb828cc1da9ad12ab8ff77"
+    "bytes": 76025,
+    "sha256": "3007b041244ecc786ee1bef7b296eb65dbf96f97d16c4de24ce4a12285b70ffa"
   },
   "pdf": {
     "path": "output/pdf/ijhe_manuscript_working_draft.pdf",
-    "bytes": 833847,
-    "sha256": "7fee0f8d5563248dda29f3a61328bc5f0e0337127e0598f838ea74f6481a5dba",
+    "bytes": 834603,
+    "sha256": "f51d3086a23adaed260f23d256ff11212a7cd3616de349d5348e4ff45113169f",
     "page_count": 23,
-    "extracted_character_count": 70460
+    "extracted_character_count": 70752
   },
   "compile_log": {
     "path": "output/pdf/ijhe_manuscript_working_draft.compile.txt",
-    "bytes": 19370,
-    "sha256": "91bc2adc4c7f2d9afa4981cca95c158bb705c560ab124398860a49c248c6310d",
+    "bytes": 19544,
+    "sha256": "a9fdca542719d52d618026b873e427165e07e0d20382f129b906286e16874534",
     "unresolved_citations": 0,
     "unresolved_references": 0,
     "fatal_errors": [],
-    "underfull_hbox_count": 9,
-    "overfull_hbox_count": 1,
-    "maximum_overfull_width_pt": 0.23592
+    "underfull_hbox_count": 11,
+    "overfull_hbox_count": 0,
+    "maximum_overfull_width_pt": 0.0
   },
   "content_checks": {
     "replacement_characters": 0,

@@ -1,0 +1,1334 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-08T11:16:43.028562+00:00",
+  "status": "completed_frozen_large_scale_overpressure_rank_screen",
+  "decision": "FAIL",
+  "evidence_role": "retained_independent_actual_hydrogen_large_scale_negative_validation",
+  "freeze_integrity": {
+    "protocol_path": "research/wskbij_large_scale_overpressure_rank_protocol_2026_10_08.json",
+    "protocol_sha256": "c13088f98d1bae0ba21df63021b69d46273747ff3eb43092c5b42d68a9e75d90",
+    "protocol_commit": "d7d979ad75cfeb0e6e6da414e329b59f80049d75",
+    "protocol_committed_before_row_level_model_comparison": true,
+    "aggregate_outcomes_known_before_freeze": true,
+    "case_replacement_performed": false,
+    "threshold_changed_after_access": false,
+    "runtime_parameter_updated": false
+  },
+  "execution_commit": "d7d979ad75cfeb0e6e6da414e329b59f80049d75",
+  "source": {
+    "dataset_doi": "10.18710/WSKBIJ",
+    "dataset_license": "CC0 1.0",
+    "summary_workbook_datafile_id": 268155
+  },
+  "file_integrity": {
+    "bytes": 21165,
+    "md5": "73ee4f29ca08612f46b7a37980cbe4df",
+    "sha256": "5ca3813fd7e9ade6c0d1aa623d2a7f5346760334b1c8b014a4ea3235ae5dbd34",
+    "bytes_match": true,
+    "md5_match": true,
+    "sha256_match": true
+  },
+  "model_integrity": {
+    "files": {
+      "src/h2station/risk/hyram_adapter.py": {
+        "expected_sha256": "144562325bc345bc9da81f06e3d0ab51ef962199b9eb0985e622b352748e6795",
+        "observed_sha256": "144562325bc345bc9da81f06e3d0ab51ef962199b9eb0985e622b352748e6795",
+        "match": true
+      },
+      "src/h2station/risk/runtime_backend.py": {
+        "expected_sha256": "5d2e13828e1d3078a79930d3ff80fd6f1d5ff00ee58da20f380701ec316c48c8",
+        "observed_sha256": "5d2e13828e1d3078a79930d3ff80fd6f1d5ff00ee58da20f380701ec316c48c8",
+        "match": true
+      },
+      "pyproject.toml": {
+        "expected_sha256": "205d72c0c425efde2ccb4eca3bda6d4f7b74898c93c2bc9309663bf99812d845",
+        "observed_sha256": "205d72c0c425efde2ccb4eca3bda6d4f7b74898c93c2bc9309663bf99812d845",
+        "match": true
+      }
+    },
+    "all_match": true
+  },
+  "cohort": {
+    "numbered_experiment_count": 51,
+    "eligible_before_minimum_stratum_rule": 45,
+    "scored_case_count": 44,
+    "retained_stratum_count": 6,
+    "exclusions": [
+      {
+        "experiment": 16,
+        "reasons": [
+          "stratum_has_fewer_than_three_eligible_cases"
+        ]
+      },
+      {
+        "experiment": 35,
+        "reasons": [
+          "publisher_no_ignition",
+          "no_finite_pressure_peak"
+        ]
+      },
+      {
+        "experiment": 44,
+        "reasons": [
+          "publisher_self_ignition",
+          "no_finite_pressure_peak"
+        ]
+      },
+      {
+        "experiment": 45,
+        "reasons": [
+          "publisher_self_ignition",
+          "no_finite_pressure_peak"
+        ]
+      },
+      {
+        "experiment": 47,
+        "reasons": [
+          "publisher_self_ignition",
+          "no_finite_pressure_peak"
+        ]
+      },
+      {
+        "experiment": 50,
+        "reasons": [
+          "publisher_self_ignition",
+          "no_finite_pressure_peak"
+        ]
+      },
+      {
+        "experiment": 51,
+        "reasons": [
+          "publisher_self_ignition",
+          "missing_controlled_ignition_position",
+          "no_finite_pressure_peak"
+        ]
+      }
+    ]
+  },
+  "primary_metrics": {
+    "pooled_spearman_rank_correlation": 0.5716903347571238,
+    "within_stratum_rank_spearman": -0.023071711315171814,
+    "within_stratum_pairwise_order_concordance": 0.42073170731707316,
+    "within_stratum_top_third_recall": 0.29411764705882354,
+    "scored_case_count": 44,
+    "retained_stratum_count": 6,
+    "comparable_pair_count": 164,
+    "top_third_case_count": 17
+  },
+  "primary_screens": {
+    "pooled_spearman_rank_correlation": {
+      "value": 0.5716903347571238,
+      "threshold": 0.5,
+      "direction": ">=",
+      "pass": true
+    },
+    "within_stratum_rank_spearman": {
+      "value": -0.023071711315171814,
+      "threshold": 0.45,
+      "direction": ">=",
+      "pass": false
+    },
+    "within_stratum_pairwise_order_concordance": {
+      "value": 0.42073170731707316,
+      "threshold": 0.65,
+      "direction": ">=",
+      "pass": false
+    },
+    "within_stratum_top_third_recall": {
+      "value": 0.29411764705882354,
+      "threshold": 0.5,
+      "direction": ">=",
+      "pass": false
+    },
+    "scored_case_count": {
+      "value": 44,
+      "threshold": 40,
+      "direction": ">=",
+      "pass": true
+    }
+  },
+  "bootstrap_diagnostics": {
+    "pooled_spearman_rank_correlation": {
+      "valid_replicates": 10000,
+      "median": 0.5803765204939094,
+      "percentile_95_interval": [
+        0.4388333746732665,
+        0.6871173166393205
+      ]
+    },
+    "within_stratum_rank_spearman": {
+      "valid_replicates": 10000,
+      "median": 0.016302287468924467,
+      "percentile_95_interval": [
+        -0.20313800869251358,
+        0.22837865036024077
+      ]
+    },
+    "within_stratum_pairwise_order_concordance": {
+      "valid_replicates": 10000,
+      "median": 0.4225352112676056,
+      "percentile_95_interval": [
+        0.29411764705882354,
+        0.5411023277371511
+      ]
+    }
+  },
+  "diagnostic_ranges": {
+    "measured_peak_kpa": [
+      0.22,
+      235.39
+    ],
+    "predicted_peak_kpa": [
+      22.09104153434669,
+      22.7404627222345
+    ],
+    "modeled_mass_flow_kg_s": [
+      0.00532681408023155,
+      0.8520925532506921
+    ],
+    "predicted_peak_span_kpa": 0.6494211878878104,
+    "measured_peak_span_kpa": 235.17
+  },
+  "per_stratum": {
+    "experiments_1_27|d=4.8mm|ign=1": {
+      "case_count": 7,
+      "experiments": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8,
+        11
+      ],
+      "spearman": -0.5714285714285715
+    },
+    "experiments_1_27|d=9.4mm|ign=1": {
+      "case_count": 5,
+      "experiments": [
+        4,
+        5,
+        9,
+        10,
+        12
+      ],
+      "spearman": -0.49999999999999994
+    },
+    "experiments_1_27|d=9.4mm|ign=2": {
+      "case_count": 11,
+      "experiments": [
+        13,
+        14,
+        15,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ],
+      "spearman": 0.5181818181818182
+    },
+    "experiments_1_27|d=9.4mm|ign=3": {
+      "case_count": 3,
+      "experiments": [
+        25,
+        26,
+        27
+      ],
+      "spearman": 1.0
+    },
+    "experiments_28_51|d=9.4mm|ign=1": {
+      "case_count": 11,
+      "experiments": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        36,
+        37,
+        38,
+        39
+      ],
+      "spearman": -0.7562661989798206
+    },
+    "experiments_28_51|d=9.4mm|ign=2": {
+      "case_count": 7,
+      "experiments": [
+        40,
+        41,
+        42,
+        43,
+        46,
+        48,
+        49
+      ],
+      "spearman": -0.5357142857142858
+    }
+  },
+  "cases": [
+    {
+      "experiment": 1,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 4.8,
+      "reservoir_pressure_bar_g": 183.68,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        7.98,
+        4.23,
+        2.85,
+        1.94
+      ],
+      "measured_peak_kpa": 7.98,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=4.8mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.09104153434669,
+        21.7364404341,
+        21.71771756346634,
+        21.327605110252584
+      ],
+      "predicted_peak_kpa": 22.09104153434669,
+      "modeled_mass_flow_kg_s": 0.20453678470726783
+    },
+    {
+      "experiment": 2,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 4.8,
+      "reservoir_pressure_bar_g": 138.73,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        3.65,
+        2.21,
+        1.15,
+        0.75
+      ],
+      "measured_peak_kpa": 3.65,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=4.8mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        21.878873681231585,
+        21.7364404341,
+        22.73625111236444,
+        19.2474887716679
+      ],
+      "predicted_peak_kpa": 22.73625111236444,
+      "modeled_mass_flow_kg_s": 0.15556140879848188
+    },
+    {
+      "experiment": 3,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 4.8,
+      "reservoir_pressure_bar_g": 118.71,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        7.58,
+        1.34,
+        0.96,
+        0.63
+      ],
+      "measured_peak_kpa": 7.58,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=4.8mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.235397685837604,
+        21.7364404341,
+        22.46321438795867,
+        17.746569267024594
+      ],
+      "predicted_peak_kpa": 22.46321438795867,
+      "modeled_mass_flow_kg_s": 0.1335768617612597
+    },
+    {
+      "experiment": 4,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 46.14,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        12.63,
+        6.86,
+        3.96,
+        2.64
+      ],
+      "measured_peak_kpa": 12.63,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.225539681705882,
+        21.7364404341,
+        21.87906350896718,
+        21.535497158332742
+      ],
+      "predicted_peak_kpa": 22.225539681705882,
+      "modeled_mass_flow_kg_s": 0.2033658060861065
+    },
+    {
+      "experiment": 5,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 32.6,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        3.7,
+        1.86,
+        1.37,
+        0.97
+      ],
+      "measured_peak_kpa": 3.7,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        21.93319862265158,
+        21.7364404341,
+        22.73300314334064,
+        18.626511063153053
+      ],
+      "predicted_peak_kpa": 22.73300314334064,
+      "modeled_mass_flow_kg_s": 0.1451770524190053
+    },
+    {
+      "experiment": 6,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 4.8,
+      "reservoir_pressure_bar_g": 203.47,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        11.55,
+        6.71,
+        3.84,
+        2.74
+      ],
+      "measured_peak_kpa": 11.55,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=4.8mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.22468537146632,
+        21.7364404341,
+        22.238532011783015,
+        22.390822754897524
+      ],
+      "predicted_peak_kpa": 22.390822754897524,
+      "modeled_mass_flow_kg_s": 0.22592738885895272
+    },
+    {
+      "experiment": 7,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 4.8,
+      "reservoir_pressure_bar_g": 155.92,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        6.31,
+        3.68,
+        2.73,
+        2.02
+      ],
+      "measured_peak_kpa": 6.31,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=4.8mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        21.716546617953487,
+        21.7364404341,
+        22.221500059019387,
+        19.968038939019525
+      ],
+      "predicted_peak_kpa": 22.221500059019387,
+      "modeled_mass_flow_kg_s": 0.17435426757265463
+    },
+    {
+      "experiment": 8,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 4.8,
+      "reservoir_pressure_bar_g": 126.05,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        4.52,
+        2.7,
+        2.03,
+        1.45
+      ],
+      "measured_peak_kpa": 4.52,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=4.8mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.227829138359176,
+        21.7364404341,
+        22.505157245522597,
+        18.276918734881615
+      ],
+      "predicted_peak_kpa": 22.505157245522597,
+      "modeled_mass_flow_kg_s": 0.14164926904398026
+    },
+    {
+      "experiment": 9,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 51.98,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        13.2,
+        7.75,
+        5.01,
+        3.7
+      ],
+      "measured_peak_kpa": 13.2,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.223665293128217,
+        21.7364404341,
+        21.736742341171066,
+        22.44857237548864
+      ],
+      "predicted_peak_kpa": 22.44857237548864,
+      "modeled_mass_flow_kg_s": 0.22841098187002998
+    },
+    {
+      "experiment": 10,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 35.12,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        5.59,
+        3.68,
+        2.56,
+        1.86
+      ],
+      "measured_peak_kpa": 5.59,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        21.71774116352045,
+        21.7364404341,
+        22.73760459604603,
+        19.444621316348094
+      ],
+      "predicted_peak_kpa": 22.73760459604603,
+      "modeled_mass_flow_kg_s": 0.15601967082577187
+    },
+    {
+      "experiment": 11,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 4.8,
+      "reservoir_pressure_bar_g": 217.57,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        15.91,
+        6.96,
+        4.59,
+        3.2
+      ],
+      "measured_peak_kpa": 15.91,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=4.8mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.22366143533986,
+        21.7364404341,
+        21.730949995394692,
+        22.450293430035085
+      ],
+      "predicted_peak_kpa": 22.450293430035085,
+      "modeled_mass_flow_kg_s": 0.2411031255676114
+    },
+    {
+      "experiment": 12,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 0.36,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        0.01,
+        0.14,
+        0.22,
+        0.13
+      ],
+      "measured_peak_kpa": 0.22,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.644907992910266,
+        13.512486088203715,
+        5.88735158123009,
+        3.760539780352334
+      ],
+      "predicted_peak_kpa": 22.644907992910266,
+      "modeled_mass_flow_kg_s": 0.00532681408023155
+    },
+    {
+      "experiment": 13,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 57.59,
+      "ignition_position": 2,
+      "pressure_sensor_peaks_kpa": [
+        10.42,
+        6.9,
+        4.45,
+        2.92
+      ],
+      "measured_peak_kpa": 10.42,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=2",
+      "predicted_pressure_by_location_kpa": [
+        22.222172343635922,
+        21.7364404341,
+        21.7364404341,
+        22.453851401178124
+      ],
+      "predicted_peak_kpa": 22.453851401178124,
+      "modeled_mass_flow_kg_s": 0.2524397527057018
+    },
+    {
+      "experiment": 14,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 39.84,
+      "ignition_position": 2,
+      "pressure_sensor_peaks_kpa": [
+        0.27,
+        0.28,
+        0.38,
+        0.29
+      ],
+      "measured_peak_kpa": 0.38,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=2",
+      "predicted_pressure_by_location_kpa": [
+        21.715306463574905,
+        21.7364404341,
+        22.22126265621702,
+        20.180273600769283
+      ],
+      "predicted_peak_kpa": 22.22126265621702,
+      "modeled_mass_flow_kg_s": 0.17631234154876907
+    },
+    {
+      "experiment": 15,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 25.9,
+      "ignition_position": 2,
+      "pressure_sensor_peaks_kpa": [
+        2.07,
+        1.41,
+        0.84,
+        0.56
+      ],
+      "measured_peak_kpa": 2.07,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=2",
+      "predicted_pressure_by_location_kpa": [
+        22.237569366792087,
+        21.7364404341,
+        22.456370050609937,
+        16.98104009658433
+      ],
+      "predicted_peak_kpa": 22.456370050609937,
+      "modeled_mass_flow_kg_s": 0.11632115741773098
+    },
+    {
+      "experiment": 17,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 80.86,
+      "ignition_position": 2,
+      "pressure_sensor_peaks_kpa": [
+        27.52,
+        16.12,
+        10.09,
+        6.32
+      ],
+      "measured_peak_kpa": 27.52,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=2",
+      "predicted_pressure_by_location_kpa": [
+        22.39838398900887,
+        21.735404965642278,
+        21.7364404341,
+        22.737114626352195
+      ],
+      "predicted_peak_kpa": 22.737114626352195,
+      "modeled_mass_flow_kg_s": 0.35179200043135
+    },
+    {
+      "experiment": 18,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 60.53,
+      "ignition_position": 2,
+      "pressure_sensor_peaks_kpa": [
+        -10.39,
+        7.03,
+        4.52,
+        2.91
+      ],
+      "measured_peak_kpa": 7.03,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=2",
+      "predicted_pressure_by_location_kpa": [
+        22.221501154549156,
+        21.7364404341,
+        21.7364404341,
+        22.456525909118334
+      ],
+      "predicted_peak_kpa": 22.456525909118334,
+      "modeled_mass_flow_kg_s": 0.26502055966761734
+    },
+    {
+      "experiment": 19,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 42.83,
+      "ignition_position": 2,
+      "pressure_sensor_peaks_kpa": [
+        5.16,
+        3.03,
+        2.04,
+        1.42
+      ],
+      "measured_peak_kpa": 5.16,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=2",
+      "predicted_pressure_by_location_kpa": [
+        21.991917365009403,
+        21.7364404341,
+        22.102125672943167,
+        20.92162418926593
+      ],
+      "predicted_peak_kpa": 22.102125672943167,
+      "modeled_mass_flow_kg_s": 0.1891565881964018
+    },
+    {
+      "experiment": 20,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 29.06,
+      "ignition_position": 2,
+      "pressure_sensor_peaks_kpa": [
+        1.58,
+        0.93,
+        0.73,
+        0.49
+      ],
+      "measured_peak_kpa": 1.58,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=2",
+      "predicted_pressure_by_location_kpa": [
+        22.234727505135545,
+        21.7364404341,
+        22.462616828538348,
+        17.669857536877338
+      ],
+      "predicted_peak_kpa": 22.462616828538348,
+      "modeled_mass_flow_kg_s": 0.12993591785257402
+    },
+    {
+      "experiment": 21,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 113.16,
+      "ignition_position": 2,
+      "pressure_sensor_peaks_kpa": [
+        38.01,
+        28.69,
+        14.86,
+        8.62
+      ],
+      "measured_peak_kpa": 38.01,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=2",
+      "predicted_pressure_by_location_kpa": [
+        22.739283497500622,
+        22.237774267039,
+        21.7364404341,
+        22.236160875696164
+      ],
+      "predicted_peak_kpa": 22.739283497500622,
+      "modeled_mass_flow_kg_s": 0.48883249905833276
+    },
+    {
+      "experiment": 22,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 72.63,
+      "ignition_position": 2,
+      "pressure_sensor_peaks_kpa": [
+        22.46,
+        16.15,
+        7.8,
+        5.62
+      ],
+      "measured_peak_kpa": 22.46,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=2",
+      "predicted_pressure_by_location_kpa": [
+        22.219187402925137,
+        21.7364404341,
+        21.7364404341,
+        22.51364425973032
+      ],
+      "predicted_peak_kpa": 22.51364425973032,
+      "modeled_mass_flow_kg_s": 0.31671261633087033
+    },
+    {
+      "experiment": 23,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 48.15,
+      "ignition_position": 2,
+      "pressure_sensor_peaks_kpa": [
+        12.37,
+        6.93,
+        3.74,
+        2.36
+      ],
+      "measured_peak_kpa": 12.37,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=2",
+      "predicted_pressure_by_location_kpa": [
+        22.22485601427833,
+        21.7364404341,
+        22.23516693734421,
+        22.06279121511502
+      ],
+      "predicted_peak_kpa": 22.23516693734421,
+      "modeled_mass_flow_kg_s": 0.21198939511183698
+    },
+    {
+      "experiment": 24,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 32.64,
+      "ignition_position": 2,
+      "pressure_sensor_peaks_kpa": [
+        3.37,
+        1.92,
+        1.54,
+        1.17
+      ],
+      "measured_peak_kpa": 3.37,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=2",
+      "predicted_pressure_by_location_kpa": [
+        21.92886650524764,
+        21.7364404341,
+        22.73308008367902,
+        18.640215284064446
+      ],
+      "predicted_peak_kpa": 22.73308008367902,
+      "modeled_mass_flow_kg_s": 0.14534920301542562
+    },
+    {
+      "experiment": 25,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 116.25,
+      "ignition_position": 3,
+      "pressure_sensor_peaks_kpa": [
+        125.9,
+        58.12,
+        39.78,
+        22.26
+      ],
+      "measured_peak_kpa": 125.9,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=3",
+      "predicted_pressure_by_location_kpa": [
+        22.73903674293815,
+        22.237043042478106,
+        21.7364404341,
+        22.238344015140182
+      ],
+      "predicted_peak_kpa": 22.73903674293815,
+      "modeled_mass_flow_kg_s": 0.5018888970396107
+    },
+    {
+      "experiment": 26,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 72.93,
+      "ignition_position": 3,
+      "pressure_sensor_peaks_kpa": [
+        65.21,
+        28.91,
+        15.32,
+        7.74
+      ],
+      "measured_peak_kpa": 65.21,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=3",
+      "predicted_pressure_by_location_kpa": [
+        22.219137602680643,
+        21.7364404341,
+        21.7364404341,
+        22.535899776072398
+      ],
+      "predicted_peak_kpa": 22.535899776072398,
+      "modeled_mass_flow_kg_s": 0.3179924688101145
+    },
+    {
+      "experiment": 27,
+      "campaign_phase": "experiments_1_27",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 49.62,
+      "ignition_position": 3,
+      "pressure_sensor_peaks_kpa": [
+        0.23,
+        1.97,
+        0.99,
+        0.21
+      ],
+      "measured_peak_kpa": 1.97,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_1_27|d=9.4mm|ign=3",
+      "predicted_pressure_by_location_kpa": [
+        22.224382643738792,
+        21.7364404341,
+        22.237575730304698,
+        22.28290554969529
+      ],
+      "predicted_peak_kpa": 22.28290554969529,
+      "modeled_mass_flow_kg_s": 0.21829381634197453
+    },
+    {
+      "experiment": 28,
+      "campaign_phase": "experiments_28_51",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 194.0,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        140.24,
+        79.65,
+        null,
+        39.6
+      ],
+      "measured_peak_kpa": 140.24,
+      "finite_pressure_sensor_count": 3,
+      "stratum": "experiments_28_51|d=9.4mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.73514849834905,
+        22.12952066659221,
+        21.7364404341,
+        21.7364404341
+      ],
+      "predicted_peak_kpa": 22.73514849834905,
+      "modeled_mass_flow_kg_s": 0.8272423248587231
+    },
+    {
+      "experiment": 29,
+      "campaign_phase": "experiments_28_51",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 135.0,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        142.63,
+        68.83,
+        null,
+        17.52
+      ],
+      "measured_peak_kpa": 142.63,
+      "finite_pressure_sensor_count": 3,
+      "stratum": "experiments_28_51|d=9.4mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.737731155701987,
+        22.125947792567906,
+        21.7364404341,
+        21.7364404341
+      ],
+      "predicted_peak_kpa": 22.737731155701987,
+      "modeled_mass_flow_kg_s": 0.5809107324406213
+    },
+    {
+      "experiment": 30,
+      "campaign_phase": "experiments_28_51",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 100.0,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        99.95,
+        30.77,
+        null,
+        9.88
+      ],
+      "measured_peak_kpa": 99.95,
+      "finite_pressure_sensor_count": 3,
+      "stratum": "experiments_28_51|d=9.4mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.7404627222345,
+        21.75247691500136,
+        21.7364404341,
+        22.01396787991975
+      ],
+      "predicted_peak_kpa": 22.7404627222345,
+      "modeled_mass_flow_kg_s": 0.43312109470789917
+    },
+    {
+      "experiment": 31,
+      "campaign_phase": "experiments_28_51",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 200.0,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        235.39,
+        102.07,
+        null,
+        89.73
+      ],
+      "measured_peak_kpa": 235.39,
+      "finite_pressure_sensor_count": 3,
+      "stratum": "experiments_28_51|d=9.4mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.734957569434272,
+        22.22567104806221,
+        21.7364404341,
+        21.7364404341
+      ],
+      "predicted_peak_kpa": 22.734957569434272,
+      "modeled_mass_flow_kg_s": 0.8520925532506921
+    },
+    {
+      "experiment": 32,
+      "campaign_phase": "experiments_28_51",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 138.0,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        113.29,
+        50.92,
+        null,
+        25.24
+      ],
+      "measured_peak_kpa": 113.29,
+      "finite_pressure_sensor_count": 3,
+      "stratum": "experiments_28_51|d=9.4mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.737548196511735,
+        22.0434918818327,
+        21.7364404341,
+        21.7364404341
+      ],
+      "predicted_peak_kpa": 22.737548196511735,
+      "modeled_mass_flow_kg_s": 0.5935215452796927
+    },
+    {
+      "experiment": 33,
+      "campaign_phase": "experiments_28_51",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 100.0,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        91.3,
+        27.68,
+        null,
+        11.1
+      ],
+      "measured_peak_kpa": 91.3,
+      "finite_pressure_sensor_count": 3,
+      "stratum": "experiments_28_51|d=9.4mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.7404627222345,
+        21.75247691500136,
+        21.7364404341,
+        22.01396787991975
+      ],
+      "predicted_peak_kpa": 22.7404627222345,
+      "modeled_mass_flow_kg_s": 0.43312109470789917
+    },
+    {
+      "experiment": 34,
+      "campaign_phase": "experiments_28_51",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 192.5,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        128.91,
+        55.53,
+        24.3,
+        19.11
+      ],
+      "measured_peak_kpa": 128.91,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_28_51|d=9.4mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.73519775076953,
+        22.10137743814017,
+        21.7364404341,
+        21.7364404341
+      ],
+      "predicted_peak_kpa": 22.73519775076953,
+      "modeled_mass_flow_kg_s": 0.8210239399243534
+    },
+    {
+      "experiment": 36,
+      "campaign_phase": "experiments_28_51",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 124.0,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        78.47,
+        34.73,
+        12.8,
+        9.72
+      ],
+      "measured_peak_kpa": 78.47,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_28_51|d=9.4mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.7384600789501,
+        22.235386261845743,
+        21.7364404341,
+        21.73066275947778
+      ],
+      "predicted_peak_kpa": 22.7384600789501,
+      "modeled_mass_flow_kg_s": 0.53459381320414
+    },
+    {
+      "experiment": 37,
+      "campaign_phase": "experiments_28_51",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 192.0,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        161.17,
+        110.99,
+        32.96,
+        32.69
+      ],
+      "measured_peak_kpa": 161.17,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_28_51|d=9.4mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.735214307934825,
+        22.091919297715233,
+        21.7364404341,
+        21.7364404341
+      ],
+      "predicted_peak_kpa": 22.735214307934825,
+      "modeled_mass_flow_kg_s": 0.8189506273816082
+    },
+    {
+      "experiment": 38,
+      "campaign_phase": "experiments_28_51",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 142.0,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        173.12,
+        96.44,
+        25.49,
+        30.6
+      ],
+      "measured_peak_kpa": 173.12,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_28_51|d=9.4mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.73732344808271,
+        21.93773964953906,
+        21.7364404341,
+        21.7364404341
+      ],
+      "predicted_peak_kpa": 22.73732344808271,
+      "modeled_mass_flow_kg_s": 0.6103218564290283
+    },
+    {
+      "experiment": 39,
+      "campaign_phase": "experiments_28_51",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 108.0,
+      "ignition_position": 1,
+      "pressure_sensor_peaks_kpa": [
+        94.27,
+        39.52,
+        18.07,
+        12.61
+      ],
+      "measured_peak_kpa": 94.27,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_28_51|d=9.4mm|ign=1",
+      "predicted_pressure_by_location_kpa": [
+        22.73971953591023,
+        22.239085964285806,
+        21.7364404341,
+        21.98598683505877
+      ],
+      "predicted_peak_kpa": 22.73971953591023,
+      "modeled_mass_flow_kg_s": 0.4670085323914955
+    },
+    {
+      "experiment": 40,
+      "campaign_phase": "experiments_28_51",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 188.0,
+      "ignition_position": 2,
+      "pressure_sensor_peaks_kpa": [
+        120.57,
+        85.14,
+        44.05,
+        23.99
+      ],
+      "measured_peak_kpa": 120.57,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_28_51|d=9.4mm|ign=2",
+      "predicted_pressure_by_location_kpa": [
+        22.735349344742747,
+        22.01483073157315,
+        21.7364404341,
+        21.7364404341
+      ],
+      "predicted_peak_kpa": 22.735349344742747,
+      "modeled_mass_flow_kg_s": 0.8023548174418109
+    },
+    {
+      "experiment": 41,
+      "campaign_phase": "experiments_28_51",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 144.0,
+      "ignition_position": 2,
+      "pressure_sensor_peaks_kpa": [
+        219.11,
+        51.87,
+        33.01,
+        18.31
+      ],
+      "measured_peak_kpa": 219.11,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_28_51|d=9.4mm|ign=2",
+      "predicted_pressure_by_location_kpa": [
+        22.737217213438576,
+        21.886565638722118,
+        21.7364404341,
+        21.7364404341
+      ],
+      "predicted_peak_kpa": 22.737217213438576,
+      "modeled_mass_flow_kg_s": 0.6187159549604905
+    },
+    {
+      "experiment": 42,
+      "campaign_phase": "experiments_28_51",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 105.0,
+      "ignition_position": 2,
+      "pressure_sensor_peaks_kpa": [
+        80.73,
+        41.91,
+        16.65,
+        11.04
+      ],
+      "measured_peak_kpa": 80.73,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_28_51|d=9.4mm|ign=2",
+      "predicted_pressure_by_location_kpa": [
+        22.739988048486765,
+        22.095946825458363,
+        21.7364404341,
+        21.71745392616465
+      ],
+      "predicted_peak_kpa": 22.739988048486765,
+      "modeled_mass_flow_kg_s": 0.4543081113840159
+    },
+    {
+      "experiment": 43,
+      "campaign_phase": "experiments_28_51",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 193.0,
+      "ignition_position": 2,
+      "pressure_sensor_peaks_kpa": [
+        184.47,
+        73.85,
+        32.72,
+        20.43
+      ],
+      "measured_peak_kpa": 184.47,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_28_51|d=9.4mm|ign=2",
+      "predicted_pressure_by_location_kpa": [
+        22.735181263744472,
+        22.110796882217784,
+        21.7364404341,
+        21.7364404341
+      ],
+      "predicted_peak_kpa": 22.735181263744472,
+      "modeled_mass_flow_kg_s": 0.8230969937146349
+    },
+    {
+      "experiment": 46,
+      "campaign_phase": "experiments_28_51",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 195.0,
+      "ignition_position": 2,
+      "pressure_sensor_peaks_kpa": [
+        179.24,
+        80.32,
+        38.72,
+        18.18
+      ],
+      "measured_peak_kpa": 179.24,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_28_51|d=9.4mm|ign=2",
+      "predicted_pressure_by_location_kpa": [
+        22.735116008258615,
+        22.14809259860741,
+        21.7364404341,
+        21.7364404341
+      ],
+      "predicted_peak_kpa": 22.735116008258615,
+      "modeled_mass_flow_kg_s": 0.8313866204590168
+    },
+    {
+      "experiment": 48,
+      "campaign_phase": "experiments_28_51",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 103.0,
+      "ignition_position": 2,
+      "pressure_sensor_peaks_kpa": [
+        43.47,
+        19.67,
+        8.91,
+        3.22
+      ],
+      "measured_peak_kpa": 43.47,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_28_51|d=9.4mm|ign=2",
+      "predicted_pressure_by_location_kpa": [
+        22.740173681677565,
+        21.961594753316135,
+        21.7364404341,
+        21.71605158040365
+      ],
+      "predicted_peak_kpa": 22.740173681677565,
+      "modeled_mass_flow_kg_s": 0.4458362478555291
+    },
+    {
+      "experiment": 49,
+      "campaign_phase": "experiments_28_51",
+      "nozzle_diameter_mm": 9.4,
+      "reservoir_pressure_bar_g": 181.0,
+      "ignition_position": 2,
+      "pressure_sensor_peaks_kpa": [
+        78.6,
+        57.05,
+        27.51,
+        8.01
+      ],
+      "measured_peak_kpa": 78.6,
+      "finite_pressure_sensor_count": 4,
+      "stratum": "experiments_28_51|d=9.4mm|ign=2",
+      "predicted_pressure_by_location_kpa": [
+        22.735597260060693,
+        21.87352053747832,
+        21.7364404341,
+        21.7364404341
+      ],
+      "predicted_peak_kpa": 22.735597260060693,
+      "modeled_mass_flow_kg_s": 0.7732723820316809
+    }
+  ],
+  "interpretation": "The frozen model passed the pooled rank screen but failed every geometry-controlled rank screen. Its standardized nearest-location BST endpoint occupied a narrow band while the measured peaks varied by more than two orders of magnitude. Reservoir pressure and nozzle diameter alone therefore do not preserve case ordering when obstacle configuration and ignition location vary; no runtime parameter was changed.",
+  "claim_boundary": "A PASS would support relative source-severity ordering by the locked runtime across this large-scale actual-hydrogen campaign. It would not validate absolute overpressure, impulse, obstacle effects, ignition-location effects, sensor-distance attenuation, outdoor HRS geometry, explosion probability, injury distance, full-loop dynamics, emergency decisions or regulatory compliance. A FAIL remains part of the evidence record and these outcomes may not be tuned and reused as fresh validation."
+}

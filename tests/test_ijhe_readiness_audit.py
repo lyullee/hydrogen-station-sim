@@ -357,6 +357,18 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert x044["hyram_model_executed"] is False
     assert x044["runtime_parameter_updated"] is False
     assert x044["validation_gate_effect"] == "none"
+    assert gates["wskbij_large_scale_overpressure_rank_execution_integrity"]["status"] == "PASS"
+    wskbij = gates["wskbij_large_scale_overpressure_rank_execution_integrity"]["observed"]
+    assert wskbij["dataset_doi"] == "10.18710/WSKBIJ"
+    assert wskbij["decision"] == "FAIL"
+    assert wskbij["scored_case_count"] == 44
+    assert wskbij["retained_stratum_count"] == 6
+    assert wskbij["pooled_spearman"] > 0.57
+    assert wskbij["within_stratum_spearman"] < 0.0
+    assert wskbij["pairwise_concordance"] < 0.5
+    assert wskbij["top_third_recall"] < 0.3
+    assert wskbij["model_validation_pass"] is False
+    assert wskbij["runtime_parameter_updated"] is False
     assert gates["ignited_pressure_peaking_external_validation"]["status"] == "PASS"
     ignited_pressure = gates["ignited_pressure_peaking_external_validation"]["observed"]
     assert ignited_pressure["eligible_case_count"] == 27

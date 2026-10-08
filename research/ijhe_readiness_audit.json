@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T11:02:19.868302+00:00",
+  "generated_at": "2026-10-08T11:21:36.751818+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 109,
+    "PASS": 110,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -3690,6 +3690,26 @@
       }
     },
     {
+      "id": "wskbij_large_scale_overpressure_rank_execution_integrity",
+      "status": "PASS",
+      "claim": "The frozen 44-case actual-hydrogen rank screen is executed and its negative geometry-controlled result is retained without post-access tuning.",
+      "evidence": "research\\wskbij_large_scale_overpressure_rank_protocol_2026_10_08.json; research\\wskbij_large_scale_overpressure_rank_result_2026_10_08.json",
+      "requirement": "Protocol hash linkage, publisher workbook identity, locked model hashes, 44 scored cases in six strata, all frozen screens and explicit retained FAIL decision.",
+      "observed": {
+        "dataset_doi": "10.18710/WSKBIJ",
+        "decision": "FAIL",
+        "scored_case_count": 44,
+        "retained_stratum_count": 6,
+        "pooled_spearman": 0.5716903347571238,
+        "within_stratum_spearman": -0.023071711315171814,
+        "pairwise_concordance": 0.42073170731707316,
+        "top_third_recall": 0.29411764705882354,
+        "model_validation_pass": false,
+        "runtime_parameter_updated": false,
+        "claim_boundary": "A PASS would support relative source-severity ordering by the locked runtime across this large-scale actual-hydrogen campaign. It would not validate absolute overpressure, impulse, obstacle effects, ignition-location effects, sensor-distance attenuation, outdoor HRS geometry, explosion probability, injury distance, full-loop dynamics, emergency decisions or regulatory compliance. A FAIL remains part of the evidence record and these outcomes may not be tuned and reused as fresh validation."
+      }
+    },
+    {
       "id": "ignited_pressure_peaking_external_validation",
       "status": "PASS",
       "claim": "The fixed reacting-enclosure model predicts large-scale ignited hydrogen peak overpressure within the prospectively frozen error boundary.",
@@ -7041,7 +7061,7 @@
         "manuscript": "manuscript\\ijhe_manuscript_draft.tex",
         "highlights": "manuscript\\Highlights.txt",
         "counts": {
-          "abstract_words": 135,
+          "abstract_words": 150,
           "keywords": 6,
           "highlight_bullets": 5,
           "highlight_characters": [
@@ -7051,11 +7071,11 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7984,
+          "approximate_manuscript_words_before_references": 7989,
           "figures": 3,
           "tables": 3,
-          "citation_keys": 49,
-          "bibliography_entries": 50,
+          "citation_keys": 50,
+          "bibliography_entries": 51,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -7083,7 +7103,7 @@
       "requirement": "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
       "observed": {
         "schema_version": 2,
-        "verified_at_utc": "2026-10-08T10:56:47.356814+00:00",
+        "verified_at_utc": "2026-10-08T11:21:36.218892+00:00",
         "success": true,
         "compiler": {
           "name": "Tectonic",
@@ -7093,26 +7113,26 @@
         },
         "source": {
           "path": "manuscript/ijhe_manuscript_draft.tex",
-          "bytes": 75669,
-          "sha256": "434187f0d9a6520c7d427a88bb1557447666912e5abb828cc1da9ad12ab8ff77"
+          "bytes": 76025,
+          "sha256": "3007b041244ecc786ee1bef7b296eb65dbf96f97d16c4de24ce4a12285b70ffa"
         },
         "pdf": {
           "path": "output/pdf/ijhe_manuscript_working_draft.pdf",
-          "bytes": 833847,
-          "sha256": "7fee0f8d5563248dda29f3a61328bc5f0e0337127e0598f838ea74f6481a5dba",
+          "bytes": 834603,
+          "sha256": "f51d3086a23adaed260f23d256ff11212a7cd3616de349d5348e4ff45113169f",
           "page_count": 23,
-          "extracted_character_count": 70460
+          "extracted_character_count": 70752
         },
         "compile_log": {
           "path": "output/pdf/ijhe_manuscript_working_draft.compile.txt",
-          "bytes": 19370,
-          "sha256": "91bc2adc4c7f2d9afa4981cca95c158bb705c560ab124398860a49c248c6310d",
+          "bytes": 19544,
+          "sha256": "a9fdca542719d52d618026b873e427165e07e0d20382f129b906286e16874534",
           "unresolved_citations": 0,
           "unresolved_references": 0,
           "fatal_errors": [],
-          "underfull_hbox_count": 9,
-          "overfull_hbox_count": 1,
-          "maximum_overfull_width_pt": 0.23592
+          "underfull_hbox_count": 11,
+          "overfull_hbox_count": 0,
+          "maximum_overfull_width_pt": 0.0
         },
         "content_checks": {
           "replacement_characters": 0,

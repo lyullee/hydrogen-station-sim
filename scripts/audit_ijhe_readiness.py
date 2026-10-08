@@ -3671,6 +3671,61 @@ def audit(root: Path) -> dict[str, object]:
         } if x044_result else "missing; X044QK holdout intake has not run",
     ))
 
+    wsk_protocol_path = root / "research/wskbij_large_scale_overpressure_rank_protocol_2026_10_08.json"
+    wsk_result_path = root / "research/wskbij_large_scale_overpressure_rank_result_2026_10_08.json"
+    wsk_protocol = _json(wsk_protocol_path)
+    wsk_result = _json(wsk_result_path)
+    wsk_freeze = (wsk_result or {}).get("freeze_integrity") or {}
+    wsk_cohort = (wsk_result or {}).get("cohort") or {}
+    wsk_metrics = (wsk_result or {}).get("primary_metrics") or {}
+    wsk_screens = (wsk_result or {}).get("primary_screens") or {}
+    wsk_integrity_pass = bool(
+        (wsk_protocol or {}).get("protocol_id")
+        == "wskbij_actual_h2_large_scale_overpressure_rank_v1"
+        and (wsk_protocol or {}).get("status")
+        == "FROZEN_AFTER_AGGREGATE_SUMMARY_ACCESS_BEFORE_ROW_LEVEL_MODEL_COMPARISON"
+        and wsk_protocol_path.is_file()
+        and wsk_freeze.get("protocol_sha256") == _sha256(wsk_protocol_path)
+        and wsk_freeze.get("protocol_committed_before_row_level_model_comparison") is True
+        and wsk_freeze.get("aggregate_outcomes_known_before_freeze") is True
+        and wsk_freeze.get("case_replacement_performed") is False
+        and wsk_freeze.get("threshold_changed_after_access") is False
+        and wsk_freeze.get("runtime_parameter_updated") is False
+        and ((wsk_result or {}).get("file_integrity") or {}).get("sha256_match") is True
+        and ((wsk_result or {}).get("model_integrity") or {}).get("all_match") is True
+        and wsk_cohort.get("numbered_experiment_count") == 51
+        and wsk_cohort.get("eligible_before_minimum_stratum_rule") == 45
+        and wsk_cohort.get("scored_case_count") == 44
+        and wsk_cohort.get("retained_stratum_count") == 6
+        and (wsk_result or {}).get("decision") == "FAIL"
+        and wsk_screens.get("pooled_spearman_rank_correlation", {}).get("pass") is True
+        and wsk_screens.get("within_stratum_rank_spearman", {}).get("pass") is False
+        and wsk_screens.get("within_stratum_pairwise_order_concordance", {}).get("pass") is False
+        and wsk_screens.get("within_stratum_top_third_recall", {}).get("pass") is False
+        and wsk_screens.get("scored_case_count", {}).get("pass") is True
+        and bool((wsk_result or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "wskbij_large_scale_overpressure_rank_execution_integrity",
+        "PASS" if wsk_integrity_pass else ("FAIL" if wsk_result else "PENDING"),
+        "The frozen 44-case actual-hydrogen rank screen is executed and its negative geometry-controlled result is retained without post-access tuning.",
+        f"{wsk_protocol_path.relative_to(root)}; {wsk_result_path.relative_to(root)}",
+        "Protocol hash linkage, publisher workbook identity, locked model hashes, 44 scored cases in six strata, all frozen screens and explicit retained FAIL decision.",
+        {
+            "dataset_doi": ((wsk_result or {}).get("source") or {}).get("dataset_doi"),
+            "decision": (wsk_result or {}).get("decision"),
+            "scored_case_count": wsk_cohort.get("scored_case_count"),
+            "retained_stratum_count": wsk_cohort.get("retained_stratum_count"),
+            "pooled_spearman": wsk_metrics.get("pooled_spearman_rank_correlation"),
+            "within_stratum_spearman": wsk_metrics.get("within_stratum_rank_spearman"),
+            "pairwise_concordance": wsk_metrics.get("within_stratum_pairwise_order_concordance"),
+            "top_third_recall": wsk_metrics.get("within_stratum_top_third_recall"),
+            "model_validation_pass": (wsk_result or {}).get("decision") == "PASS",
+            "runtime_parameter_updated": wsk_freeze.get("runtime_parameter_updated"),
+            "claim_boundary": (wsk_result or {}).get("claim_boundary"),
+        } if wsk_result else "missing; WSKBIJ large-scale rank screen has not run",
+    ))
+
     ignited_protocol_path = root / "research/usn_17934047_ignited_pressure_peaking_protocol_2026_10_08.json"
     ignited_result_path = root / "research/usn_17934047_ignited_pressure_peaking_result_2026_10_08.json"
     ignited_protocol = _json(ignited_protocol_path)

@@ -47,7 +47,9 @@ PRESLHY blowdown evaluation passed
 50.0\% against a 70\% threshold; a non-adiabatic revision passed 20/22 consumed
 cases but only 2/3 eligible holdouts. Independent 90 MPa releases passed 0/3
 mass-flow series. HyRAM+ matched its API and an ignited-enclosure model passed
-27/27 peak-pressure screens. Across 34 HIAD incidents, SAGA's machine proxy was
+27/27 peak-pressure screens. A 44-case large-scale delayed-ignition rank screen
+passed pooled correlation but failed all geometry-controlled ordering screens.
+Across 34 HIAD incidents, SAGA's machine proxy was
 0.760 versus 0.401 for alarm-only text; expert ratings remain pending. Evidence
 supports a claim-bounded prototype, not a field-qualified controller or
 autonomous emergency system.
@@ -793,23 +795,12 @@ inter-rater-agreement result is reported in this draft. This empty primary resul
 is deliberate: substituting model self-assessment would violate the frozen
 protocol.
 
-The separate 34-case retrospective machine benchmark produced mean action-category
-recall of 0.524 and five-stage coverage of 0.982 for SAGA, compared with 0.189 and
-0.600 for the deterministic alarm-only baseline. The corresponding machine proxy
-was 0.760 versus 0.401, with a paired mean difference of 0.360 (bootstrap 95\% CI
-0.309--0.411). All 34 API calls completed; mean in-process latency was 696.4 ms.
-The lexical detector flagged three responses (8.8\%) for an unmatched
-value--unit token. A post-outcome guard rerun reduced flags from 3/34 to 0/34,
-but equivalent units could initially be over-filtered. A provider-free
-regression then passed 5/5 cases: four equivalent forms were retained and one
-absent value was removed. These are software checks, not expert-judged
-hallucination rates.
-
-On 33 events, reference F1 was 0.564 for SAGA and 0.281 for alarm-only
-text (paired difference 0.283; bootstrap 95\% CI 0.196--0.366). SAGA averaged
-3.09 categories/140.5 words versus 1.00/28.1;
-non-reference categories were 0.97/0.30. Broader coverage increased burden,
-motivating concise controls and expert review, not an effectiveness claim.
+The 34-case retrospective machine benchmark gave SAGA versus alarm-only recall
+of 0.524/0.189, five-stage coverage of 0.982/0.600 and proxy scores of
+0.760/0.401 (paired difference 0.360; bootstrap 95\% CI 0.309--0.411). A post-
+outcome numeric guard reduced flags from 3/34 to 0/34 and passed a 5/5 regression.
+Across 33 events, F1 was 0.564 versus 0.281, with longer SAGA responses. These
+software checks do not establish expert-judged effectiveness.
 
 \section{Discussion}
 \subsection{What is externally supported}
@@ -927,6 +918,16 @@ absolute error was 1.796 kPa. Secondary peak-time and trace-NRMSE screens passed
 21/27 and 26/27 cases. This supports the pressure-peak endpoint for an immediately
 ignited vented enclosure within the tested geometry and flow range, not outdoor
 jet radiation, station-loop control or a site-specific evacuation distance.
+
+A third campaign supplied 51 large-scale open-atmosphere actual-H$_2$ tests
+\cite{wskbij2026}. A protocol fixed after aggregate-only access but before
+case-level comparison retained 44 controlled delayed-ignition cases in six
+instrumentation-era/nozzle/ignition strata. Pooled Spearman correlation passed
+at $\rho=0.572$, whereas stratified correlation ($-0.023$), pairwise concordance
+(0.421) and top-third recall (0.294) failed frozen 0.45/0.65/0.50 thresholds.
+Predictions occupied 22.091--22.740 kPa versus measured maxima of
+0.220--235.390 kPa. Source pressure and nozzle diameter therefore did not
+preserve geometry-controlled severity ordering; no parameter or threshold changed.
 
 \subsection{Evidence-gated language-model assistance}
 The LLM is positioned after deterministic calculations and receives structured
@@ -1173,6 +1174,11 @@ Pressure Peaking Phenomena---ignited hydrogen releases, \textit{International
 Journal of Hydrogen Energy} 46 (2021) 8317--8328,
 \href{https://doi.org/10.1016/j.ijhydene.2020.12.015}{doi:10.1016/j.ijhydene.2020.12.015};
 data record: \href{https://doi.org/10.23642/USN.17934047}{10.23642/USN.17934047}.
+
+\bibitem{wskbij2026}
+A.W. Lach, \textit{Replication dataset for: Large-Scale Hydrogen Explosion
+Experiments: Obstructed Releases in open atmosphere}, DataverseNO (2026),
+\href{https://doi.org/10.18710/WSKBIJ}{doi:10.18710/WSKBIJ}.
 
 \bibitem{lach2025thermal}
 A.W. Lach, K. Vaagsaether, A.V. Gaathaug, Thermal hazards from a downwards
