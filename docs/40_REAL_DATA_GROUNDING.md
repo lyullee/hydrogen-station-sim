@@ -62,6 +62,13 @@ mass or SOC. The privacy-safe aggregate is recorded in
 private paths, filenames, headers and raw content remain outside the
 repository.
 
+The discovery step is reproducible for future owner-controlled exports with
+`scripts/scan_local_workspace_candidates.py`. It accepts one or more local
+roots and writes aggregate file, header-family and coarse-candidate counts
+only. It deliberately treats keyword/header matches as discovery evidence,
+never as validation eligibility; a separate custodian attestation is required
+before any candidate can enter a prospective split.
+
 The accompanying custodian description now attests two storage-pressure roles
 and two lifecycle-counter roles at aggregate level. This closes the role-mapping
 gap for the pressure-cycle and cascade-sequence cohorts without publishing
