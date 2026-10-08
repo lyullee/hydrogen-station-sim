@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_station_asset_screen",
+  "status": "privacy_bounded_local_inventory",
+  "generated_at": "2026-10-09",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "source_tags_published": false,
+    "site_company_manufacturer_published": false,
+    "calendar_dates_published": false,
+    "raw_rows_persisted": false,
+    "per_file_hashes_published": false
+  },
+  "search_scope": {
+    "local_roots_screened": [
+      "local document collection",
+      "project data collection",
+      "local FTP media collection"
+    ],
+    "structured_extensions_screened": [
+      "csv",
+      "txt",
+      "xlsx",
+      "xlsm",
+      "parquet",
+      "h5",
+      "hdf5",
+      "mat",
+      "db",
+      "sqlite",
+      "sqlite3"
+    ],
+    "named_candidate_screen": {
+      "groups": 15,
+      "files": 92296,
+      "bytes": 51812458471,
+      "gib": 48.255,
+      "interpretation": "Filename/path screening includes code, documents, build artifacts and duplicated research copies; it is a discovery screen, not a station-data row count."
+    }
+  },
+  "station_specific_bundles": [
+    {
+      "id": "confidential_station_time_series",
+      "file_count": 33,
+      "bytes": 5099041365,
+      "gib": 4.749,
+      "deduplicated_rows": 56854143,
+      "confirmed_signal_families": [
+        "storage pressure",
+        "temperature",
+        "flow-like channels",
+        "totalizer-like channels",
+        "compressor/load-like channels",
+        "valve/ESD-like channels",
+        "lifecycle counters"
+      ],
+      "vehicle_or_dispenser_channels_attested": 0,
+      "eligible_use": [
+        "station-side pressure-cycle and cascade-sequence analysis",
+        "longitudinal trend and state-transition screening",
+        "de-identified station-side calibration candidates"
+      ],
+      "claim_boundary": "The bundle is substantial station-side evidence, but it does not by itself validate vehicle fill accuracy, SOC, delivered mass, absolute flow units or safety limits."
+    },
+    {
+      "id": "local_liquid_hydrogen_operational_scenario_matrix",
+      "csv_file_count": 3,
+      "scenario_step_rows": 52,
+      "column_count": 18,
+      "nonempty_consequence_fields": {
+        "leak": 52,
+        "fire": 52,
+        "explosion": 52,
+        "hazard_classification": 52
+      },
+      "referenced_standard_families": {
+        "KGS": 107,
+        "KOSHA": 82,
+        "NFPA": 36,
+        "ASME": 27,
+        "IEC": 19,
+        "CGA": 15,
+        "API": 9
+      },
+      "eligible_use": [
+        "qualitative HAZOP scenario and action coverage",
+        "virtual valve/vent/ESD training sequence design",
+        "operator response and prevention playbook cross-check"
+      ],
+      "ineligible_use": [
+        "incident frequency estimation",
+        "quantitative consequence-distance validation",
+        "automatic safety-limit generation"
+      ],
+      "claim_boundary": "This is a local operational/scenario matrix with hazard and control text. It is not a synchronized sensor record or an observed accident dataset."
+    },
+    {
+      "id": "local_tank_operation_sequence_logs",
+      "workbook_count": 2,
+      "sheet_count": 21,
+      "nonempty_rows": 28121,
+      "column_widths": [
+        14,
+        15
+      ],
+      "repeated_operation_cycles": 10,
+      "signal_roles": [
+        "operation step/progress",
+        "pressure-like channels",
+        "temperature-like channel",
+        "differential-pressure-like channels"
+      ],
+      "eligible_use": [
+        "sequence-aware state-machine replay",
+        "pressure/temperature trend plausibility checks",
+        "virtual action completion criteria"
+      ],
+      "claim_boundary": "The sequence logs support operational-state replay. They do not attest a vehicle-side fill or an independently calibrated physical unit system."
+    },
+    {
+      "id": "local_tank_minute_trend_logs",
+      "workbook_count": 13,
+      "sheet_count": 39,
+      "nonempty_rows": 18086,
+      "column_widths": [
+        10,
+        11
+      ],
+      "signal_roles": [
+        "pressure-like channels",
+        "temperature-like channels",
+        "differential-pressure-like channels"
+      ],
+      "provenance_note": "The workbooks describe graph-recovered or restored trend values in their own metadata; treat them as reconstructed trend evidence until raw logger provenance is attested.",
+      "eligible_use": [
+        "trend-shape and state-boundary checks",
+        "HAZOP trigger persistence demonstrations"
+      ],
+      "claim_boundary": "Reconstructed trend values must not be presented as raw calibrated logger data."
+    },
+    {
+      "id": "local_timestamp_differential_logs",
+      "workbook_count": 1,
+      "sheet_count": 10,
+      "nonempty_rows": 6740,
+      "signal_roles": [
+        "timestamp",
+        "pressure-like channels",
+        "differential-pressure-like channels"
+      ],
+      "eligible_use": [
+        "time-aligned pressure differential replay",
+        "sequence transition sanity checks"
+      ],
+      "claim_boundary": "Channel units and sensor calibration remain a custodian-attestation item."
+    },
+    {
+      "id": "local_video_recovered_storage_logs",
+      "workbook_count": 1,
+      "sheet_count": 8,
+      "nonempty_rows": 94389,
+      "column_count": 51,
+      "signal_roles": [
+        "timestamp",
+        "two named pressure-like channels",
+        "two differential-pressure-like channels",
+        "recovered/blank video columns"
+      ],
+      "eligible_use": [
+        "storage-zone trend replay",
+        "visual-to-signal timing cross-check after provenance review"
+      ],
+      "claim_boundary": "Recovered spreadsheet channels require provenance and calibration review before quantitative fitting."
+    },
+    {
+      "id": "local_engineering_reference_bundle",
+      "document_count": 22,
+      "pdf_count": 18,
+      "image_count": 4,
+      "approximate_bytes": 61050374,
+      "content_roles": [
+        "P&ID/GA and equipment arrangement references",
+        "inspection and operating reference material",
+        "equipment/location cross-checks"
+      ],
+      "eligible_use": [
+        "asset topology and zone mapping",
+        "3D equipment/CCTV/gas-detector placement review",
+        "HAZOP node naming cross-check"
+      ],
+      "claim_boundary": "Documents and drawings provide design/context evidence, not measured dynamic validation."
+    },
+    {
+      "id": "local_equipment_media_bundle",
+      "image_count": 54,
+      "video_count": 3,
+      "approximate_bytes": 692293551,
+      "content_roles": [
+        "equipment appearance and scale reference",
+        "CCTV/3D scene reconstruction reference"
+      ],
+      "eligible_use": [
+        "visual asset matching",
+        "scene geometry and camera-view review"
+      ],
+      "claim_boundary": "Media do not provide process telemetry or independent safety validation."
+    }
+  ],
+  "coverage_assessment": {
+    "local_station_data_is_sparse": false,
+    "station_side_dynamic_evidence_is_substantial": true,
+    "local_hazop_scenario_coverage_is_substantial": true,
+    "vehicle_side_full_loop_validation_ready": false,
+    "quantitative_consequence_validation_ready": false,
+    "main_limit": "The local collection is rich in station-side telemetry, operational sequences, qualitative hazard controls and engineering context, but synchronized vehicle pressure/temperature/SOC/delivered-mass channels are not yet attested as one independent full-loop cohort."
+  },
+  "recommended_next_steps": [
+    "Use the 52-step local scenario matrix to cross-check HAZOP action coverage and virtual command mappings without copying raw hazard text into the public repository.",
+    "Use the 10-cycle operation logs as a sequence holdout only after channel units and cycle provenance are signed off by the custodian.",
+    "Use minute/recovered trend workbooks for qualitative trend and persistence checks, keeping reconstructed values separate from raw logger evidence.",
+    "Map the engineering reference bundle to de-identified asset classes and zones for 3D/CCTV placement; do not publish drawings, site identity or manufacturer details.",
+    "Keep the full-loop validation gate closed until an independent synchronized vehicle-side pressure, temperature, delivered-mass or SOC channel set is attested."
+  ],
+  "claim_boundary": "This privacy-bounded inventory proves that local station-related data are not sparse and identifies defensible uses. It does not publish raw records, reveal the site, certify units, validate safety distances, or close the IJHE full-loop gate."
+}
