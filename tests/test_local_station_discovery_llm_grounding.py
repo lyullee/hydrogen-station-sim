@@ -33,6 +33,10 @@ def test_local_discovery_is_grounded_without_raw_provenance():
     assert discovery["candidate_groups"][
         "confidential_station_measurement_bundle"
     ]["physical_rows"] == 59_272_300
+    adjacent = discovery["candidate_groups"]["adjacent_h2_operational_telemetry"]
+    assert adjacent["telemetry_rows"] == 2_410_985
+    assert adjacent["telemetry_signal_key_count"] == 273
+    assert "source_paths_published" not in adjacent
     coverage = discovery["coverage_assessment"]
     assert coverage["local_station_data_is_sparse"] is False
     assert coverage["station_side_dynamic_evidence_is_substantial"] is True
@@ -53,6 +57,8 @@ def test_local_discovery_reaches_bounded_prompt_views():
         "local_station_data_discovery"
     ]
     assert decision["station_data_is_sparse"] is False
+    assert decision["adjacent_operational_telemetry_rows"] == 2_410_985
+    assert decision["adjacent_operational_full_loop_ready"] is False
     assert decision["vehicle_side_full_loop_validation_ready"] is False
     header = prompt_evidence_header(manifest)[
         "confidential_local_station_data_discovery"
@@ -60,3 +66,6 @@ def test_local_discovery_reaches_bounded_prompt_views():
     assert header["candidate_groups"][
         "derived_simulator_telemetry_exports"
     ]["independence"] == "not_independent_measured_data"
+    assert header["candidate_groups"][
+        "adjacent_h2_operational_telemetry"
+    ]["telemetry_time_span_hours"] == 24.0

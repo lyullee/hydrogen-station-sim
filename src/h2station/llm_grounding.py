@@ -4143,6 +4143,59 @@ def _local_hydrogen_station_discovery_evidence() -> dict[str, Any] | None:
             for key in safe_group_fields
             if group.get(key) is not None
         }
+
+    # Keep the newly identified adjacent operational telemetry in the same
+    # privacy-bounded discovery envelope.  It is useful for upstream/site-
+    # utility context, but the explicit boundary prevents the assistant from
+    # presenting it as a station-to-vehicle refueling trace.
+    adjacent_path = Path(__file__).resolve().parents[2] / (
+        "research/local_adjacent_h2_operational_data_recheck_2026_10_09.json"
+    )
+    try:
+        adjacent_record = json.loads(
+            adjacent_path.read_text(encoding="utf-8")
+        )
+    except (OSError, ValueError, json.JSONDecodeError):
+        adjacent_record = None
+    adjacent_privacy = (adjacent_record or {}).get("privacy") or {}
+    adjacent_inventory = (adjacent_record or {}).get("inventory") or {}
+    adjacent_coverage = (adjacent_record or {}).get("coverage_assessment") or {}
+    adjacent_required_privacy = (
+        "source_paths_published",
+        "source_filenames_published",
+        "source_headers_published",
+        "site_company_manufacturer_published",
+        "calendar_dates_published",
+        "raw_rows_persisted",
+        "per_file_hashes_published",
+    )
+    if (
+        (adjacent_record or {}).get("artifact_type")
+        == "local_adjacent_h2_operational_data_recheck"
+        and all(adjacent_privacy.get(key) is False for key in adjacent_required_privacy)
+        and adjacent_inventory.get("telemetry_rows") == 2_410_985
+        and adjacent_inventory.get("telemetry_signal_key_count") == 273
+        and adjacent_coverage.get("local_hydrogen_operational_data_is_abundant") is True
+        and adjacent_coverage.get("station_to_vehicle_full_loop_ready") is False
+    ):
+        safe_groups["adjacent_h2_operational_telemetry"] = {
+            "evidence_class": (adjacent_record or {}).get("evidence_class"),
+            "telemetry_file_count": adjacent_inventory.get("telemetry_file_count"),
+            "telemetry_rows": adjacent_inventory.get("telemetry_rows"),
+            "telemetry_signal_key_count": adjacent_inventory.get(
+                "telemetry_signal_key_count"
+            ),
+            "telemetry_time_span_hours": adjacent_inventory.get(
+                "telemetry_time_span_hours"
+            ),
+            "signal_families": adjacent_inventory.get("signal_families") or [],
+            "static_engineering_workbook_count": adjacent_inventory.get(
+                "static_engineering_workbook_count"
+            ),
+            "eligible_use": (adjacent_record or {}).get("eligible_use") or [],
+            "ineligible_use": (adjacent_record or {}).get("ineligible_use") or [],
+            "claim_boundary": (adjacent_record or {}).get("claim_boundary"),
+        }
     return {
         "artifact": "research/local_hydrogen_station_data_discovery_recheck_2026_10_09.json",
         "evidence_role": "privacy-bounded local hydrogen-station data discovery and claim boundary",
@@ -5842,6 +5895,9 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         scenario_group = discovery_groups.get(
             "adjacent_liquid_hydrogen_operations_bundle"
         ) or {}
+        adjacent_operational_group = discovery_groups.get(
+            "adjacent_h2_operational_telemetry"
+        ) or {}
         media_group = discovery_groups.get("engineering_and_media_context") or {}
         operational_media_group = discovery_groups.get(
             "local_operational_video_collection"
@@ -5858,6 +5914,15 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                     "deduplicated_rows"
                 ),
                 "scenario_step_rows": scenario_group.get("scenario_step_rows"),
+                "adjacent_operational_telemetry_rows": adjacent_operational_group.get(
+                    "telemetry_rows"
+                ),
+                "adjacent_operational_signal_key_count": adjacent_operational_group.get(
+                    "telemetry_signal_key_count"
+                ),
+                "adjacent_operational_time_span_hours": adjacent_operational_group.get(
+                    "telemetry_time_span_hours"
+                ),
                 "engineering_document_count": media_group.get("document_count"),
                 "engineering_image_count": media_group.get("image_count"),
                 "engineering_video_count": media_group.get("video_count"),
@@ -6361,6 +6426,19 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             ) else {}),
             **({
                 "local_station_data_discovery": {
+                    "adjacent_operational_telemetry_rows": (
+                        (local_station_discovery.get("candidate_groups") or {})
+                        .get("adjacent_h2_operational_telemetry", {})
+                        .get("telemetry_rows")
+                    ),
+                    "adjacent_operational_signal_key_count": (
+                        (local_station_discovery.get("candidate_groups") or {})
+                        .get("adjacent_h2_operational_telemetry", {})
+                        .get("telemetry_signal_key_count")
+                    ),
+                    "adjacent_operational_full_loop_ready": (
+                        False
+                    ),
                     "station_data_is_sparse": (
                         (local_station_discovery.get("coverage_assessment") or {})
                         .get("local_station_data_is_sparse")
