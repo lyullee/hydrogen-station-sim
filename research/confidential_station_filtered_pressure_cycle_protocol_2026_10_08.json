@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "protocol_id": "CONFIDENTIAL-STATION-HIGH-BANK-CYCLE-HOLDOUT-002",
+  "frozen_at": "2026-10-08",
+  "status": "sequential_method_revision_frozen_before_filtered_cycle_outcome_access",
+  "disclosure": "The first unsmoothed protocol had already returned zero cycles. This revision addresses that known method-resolution failure and is not represented as a fully outcome-unseen or source-independent holdout.",
+  "objective": "Test whether a fixed station-timescale causal median filter permits cross-format temporal corroboration of the unchanged 4.5 MPa high-bank restart margin.",
+  "target": {
+    "role": "high_storage_pressure",
+    "candidate_mpa": 4.5,
+    "candidate_changed_after_first_result": false
+  },
+  "filter": {
+    "kind": "causal_rolling_median",
+    "window_samples": 7,
+    "nominal_window_seconds": 70,
+    "window_selected_from_outcome": false,
+    "basis": "Suppress sub-minute instrumentation and controller reversals while preserving minute-scale storage-bank depletion and recharge."
+  },
+  "frozen_rules": {
+    "sample_stride": 10,
+    "fall_confirmation_mpa": 0.25,
+    "rise_confirmation_mpa": 0.25,
+    "minimum_cycle_drop_mpa": 0.5,
+    "maximum_cycle_drop_mpa": 20.0,
+    "minimum_decline_duration_s": 30.0,
+    "maximum_decline_duration_s": 21600.0,
+    "minimum_pressure_mpa": 10.0,
+    "maximum_pressure_mpa": 100.0,
+    "maximum_sample_gap_s": 120.0,
+    "calibration_fraction": 0.7
+  },
+  "eligibility": {
+    "minimum_matching_files": 6,
+    "minimum_calibration_cycles": 30,
+    "minimum_holdout_cycles": 15,
+    "minimum_holdout_files": 4
+  },
+  "primary_screens": {
+    "candidate_inside_holdout_p10_p90": true,
+    "candidate_relative_holdout_median_error_percent_max": 20.0,
+    "calibration_holdout_median_shift_percent_max": 25.0,
+    "all_eligibility_and_primary_screens_required": true
+  },
+  "decision_boundary": {
+    "pass_meaning": "Sequential same-site cross-format corroboration under a disclosed method revision.",
+    "independent_external_validation": false,
+    "runtime_parameter_application": false,
+    "default_parameter_change": false,
+    "vehicle_fill_or_full_loop_validation": false,
+    "safety_limit_or_field_certification": false
+  },
+  "locked_implementation": {
+    "evaluator": "src/h2station/confidential_pressure_cycle_filtered_holdout.py",
+    "evaluator_sha256": "6f450f5a2fe204b4ca35f045553c764fe6a0ed70412993305f12c6b10e55f719",
+    "runner": "scripts/validate_confidential_station_filtered_pressure_cycles.py",
+    "runner_sha256": "8bb681e1dddb376191225f6d37b39fa20aaa994c0c76c1253aff3529a21102f3",
+    "base_detector": "src/h2station/confidential_pressure_cycle_holdout.py",
+    "base_detector_sha256": "74bf77c848b5f038a93185cd82a68ecfdfbda860583f852fdaea385268e5d99a"
+  }
+}
