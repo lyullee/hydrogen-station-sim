@@ -2386,6 +2386,86 @@ def _public_real_station_context() -> dict[str, Any] | None:
     }
 
 
+def _public_hrs_measurement_leads() -> dict[str, Any] | None:
+    """Expose public HRS measurement leads with an explicit data boundary.
+
+    These records are useful for operating-range context and for preparing a
+    data request, but the cited papers/facilities do not release a
+    de-identified synchronized station-to-vehicle trace.  The assistant must
+    therefore never treat this index as an external holdout, a parameter-fit
+    source, or evidence of SAGA effectiveness.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/public_hrs_measurement_leads_recheck_2026_10_09.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    privacy = record.get("privacy") or {}
+    leads = record.get("leads") or []
+    if (
+        record.get("artifact_type") != "public_hrs_measurement_leads_recheck"
+        or record.get("status") != "HIGH_VALUE_HRS_MEASUREMENT_LEADS_RAW_TRACE_NOT_PUBLIC"
+        or not all(
+            privacy.get(key) is False
+            for key in (
+                "private_station_paths_included",
+                "raw_rows_included",
+                "private_site_identifiers_included",
+                "unpublished_personal_data_included",
+            )
+        )
+        or not leads
+    ):
+        return None
+
+    compact_leads: list[dict[str, Any]] = []
+    for lead in leads:
+        if not isinstance(lead, dict):
+            continue
+        url = str(lead.get("url") or "")
+        lead_id = str(lead.get("id") or "")
+        if not lead_id or not url.startswith(("https://", "http://")):
+            return None
+        reported_scope = lead.get("reported_scope") or {}
+        compact_leads.append({
+            "id": lead_id,
+            "title": str(lead.get("title") or ""),
+            "url": url,
+            "reported_scope": reported_scope,
+            "raw_trace_public": lead.get("raw_trace_public") is True,
+            "abnormal_data_provenance": str(
+                lead.get("abnormal_data_provenance")
+                or lead.get("data_availability_boundary")
+                or ""
+            ),
+            "decision": str(lead.get("decision") or ""),
+            "eligible_use": [str(value) for value in lead.get("eligible_use") or []],
+            "ineligible_use": [
+                str(value) for value in lead.get("ineligible_use") or []
+            ],
+        })
+    if len(compact_leads) != len(leads):
+        return None
+    return {
+        "artifact": "research/public_hrs_measurement_leads_recheck_2026_10_09.json",
+        "evidence_role": "public HRS measurement lead index and raw-trace availability boundary",
+        "status": str(record.get("status") or ""),
+        "leads": compact_leads,
+        "request_package_requirements": [
+            str(value) for value in record.get("request_package_requirements") or []
+        ],
+        "full_loop_external_validation_supported": False,
+        "parameter_fitting_supported": False,
+        "saga_effectiveness_supported": False,
+        "claim_limit": str(record.get("gate_impact", {}).get("full_loop_external_validation") or "")
+        + "; "
+        + "공개 문헌·시설 페이지의 측정 주장만 전달하며 동기화된 원시 trace가 없어 외부 full-loop 검증·보정·SAGA 효과평가에 사용할 수 없습니다.",
+    }
+
+
 def _public_carb_hrs_inuse_field_benchmark() -> dict[str, Any] | None:
     """Load CARB's aggregate 22-station field benchmark with claim limits."""
 
@@ -2553,6 +2633,17 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
         str(station_source.get("url") or ""),
         "실충전소 back-to-back 운전·저장압력·냉각·차량 SOC 맥락",
     )
+
+    measurement_leads = evidence.get("public_hrs_measurement_leads") or {}
+    for lead in measurement_leads.get("leads") or []:
+        if not isinstance(lead, dict):
+            continue
+        add(
+            f"PUBLIC_HRS_MEASUREMENT_LEAD_{lead.get('id')}",
+            str(lead.get("title") or "Public HRS measurement lead"),
+            str(lead.get("url") or ""),
+            "공개 HRS 계측 연구·시설의 측정범위 맥락(원시 trace·full-loop 검증 아님)",
+        )
 
     carb = evidence.get("public_carb_hrs_inuse_field_benchmark") or {}
     carb_source = carb.get("source") or {}
@@ -4741,6 +4832,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_real_station_context"
         ] = real_station_context
+    public_hrs_leads = _public_hrs_measurement_leads()
+    if public_hrs_leads is not None:
+        envelope["response_evidence"][
+            "public_hrs_measurement_leads"
+        ] = public_hrs_leads
     carb_field_benchmark = _public_carb_hrs_inuse_field_benchmark()
     if carb_field_benchmark is not None:
         envelope["response_evidence"][
@@ -5138,6 +5234,32 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "prohibited_use", "claim_limit",
             )
             if real_station_context.get(key) is not None
+        }
+    measurement_leads = evidence.get("public_hrs_measurement_leads")
+    if isinstance(measurement_leads, dict):
+        summary["public_hrs_measurement_leads"] = {
+            "evidence_role": measurement_leads.get("evidence_role"),
+            "status": measurement_leads.get("status"),
+            "leads": [
+                {
+                    key: lead.get(key)
+                    for key in (
+                        "id", "title", "url", "reported_scope",
+                        "raw_trace_public", "decision", "eligible_use",
+                        "ineligible_use", "abnormal_data_provenance",
+                    )
+                    if lead.get(key) is not None
+                }
+                for lead in measurement_leads.get("leads") or []
+                if isinstance(lead, dict)
+            ],
+            "request_package_requirements": measurement_leads.get(
+                "request_package_requirements"
+            ) or [],
+            "full_loop_external_validation_supported": False,
+            "parameter_fitting_supported": False,
+            "saga_effectiveness_supported": False,
+            "claim_limit": short(measurement_leads.get("claim_limit"), 280),
         }
     carb = evidence.get("public_carb_hrs_inuse_field_benchmark")
     if isinstance(carb, dict):
@@ -5734,6 +5856,15 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     local_station_asset_screen = response.get(
         "confidential_local_station_asset_screen"
     ) or {}
+    public_hrs_leads = response.get("public_hrs_measurement_leads") or {}
+    lead_context = " ".join((
+        str(manifest.get("question") or ""),
+        str(manifest.get("selected_sensor") or ""),
+    )).lower()
+    public_hrs_leads_relevant = any(token in lead_context for token in (
+        "공개", "계측", "실측", "실데이터", "원자료", "검증", "데이터",
+        "local", "measurement", "dataset", "raw", "validation", "data",
+    ))
     spatial_stratification = response.get(
         "public_actual_hydrogen_spatial_stratification_evidence"
     ) or {}
@@ -5847,6 +5978,28 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "claim_limit",
         )),
         "decision_support_evidence": {
+            **({
+                "public_hrs_measurement_leads": {
+                    "lead_count": len(public_hrs_leads.get("leads") or []),
+                    "raw_trace_public_count": sum(
+                        lead.get("raw_trace_public") is True
+                        for lead in public_hrs_leads.get("leads") or []
+                        if isinstance(lead, dict)
+                    ),
+                    "full_loop_external_validation_supported": (
+                        public_hrs_leads.get(
+                            "full_loop_external_validation_supported"
+                        ) is True
+                    ),
+                    "parameter_fitting_supported": (
+                        public_hrs_leads.get("parameter_fitting_supported") is True
+                    ),
+                    "saga_effectiveness_supported": (
+                        public_hrs_leads.get("saga_effectiveness_supported") is True
+                    ),
+                    "claim_limit": short(public_hrs_leads.get("claim_limit"), 220),
+                },
+            } if public_hrs_leads and public_hrs_leads_relevant else {}),
             "public_incident": {
                 **selected(incident, (
                     "case_count", "category_count", "covered_case_count",
@@ -5974,6 +6127,23 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "station_component_thermal_envelope_supported"
                 ) is True,
             },
+            **({
+                "public_hrs_measurement_leads": {
+                    "lead_count": len(public_hrs_leads.get("leads") or []),
+                    "full_loop_external_validation_ready": (
+                        public_hrs_leads.get(
+                            "full_loop_external_validation_supported"
+                        ) is True
+                    ),
+                    "parameter_fitting_ready": (
+                        public_hrs_leads.get("parameter_fitting_supported") is True
+                    ),
+                    "saga_effectiveness_ready": (
+                        public_hrs_leads.get("saga_effectiveness_supported") is True
+                    ),
+                    "claim_limit": short(public_hrs_leads.get("claim_limit"), 220),
+                },
+            } if public_hrs_leads and public_hrs_leads_relevant else {}),
             **({
                 "local_station_data_utilization": {
                     "deduplicated_data_rows": (
@@ -6231,6 +6401,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     benchmarks = evidence.get("public_experimental_benchmarks") or {}
     hitrf_reference = evidence.get("public_hitrf_operational_reference") or {}
     real_station_context = evidence.get("public_real_station_context") or {}
+    public_hrs_leads = evidence.get("public_hrs_measurement_leads") or {}
     carb_field = evidence.get("public_carb_hrs_inuse_field_benchmark") or {}
     benchmark_ids = [
         str(source.get("id"))
@@ -6364,6 +6535,26 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "full_loop_external_holdout_eligible"
             ) is True,
             "claim_limit": real_station_context.get("claim_limit"),
+        },
+        "public_hrs_measurement_leads": {
+            "evidence_artifact": public_hrs_leads.get("artifact"),
+            "evidence_role": public_hrs_leads.get("evidence_role"),
+            "status": public_hrs_leads.get("status"),
+            "leads": public_hrs_leads.get("leads") or [],
+            "request_package_requirements": public_hrs_leads.get(
+                "request_package_requirements"
+            ) or [],
+            "full_loop_external_validation_supported": (
+                public_hrs_leads.get("full_loop_external_validation_supported")
+                is True
+            ),
+            "parameter_fitting_supported": (
+                public_hrs_leads.get("parameter_fitting_supported") is True
+            ),
+            "saga_effectiveness_supported": (
+                public_hrs_leads.get("saga_effectiveness_supported") is True
+            ),
+            "claim_limit": public_hrs_leads.get("claim_limit"),
         },
         "public_carb_hrs_inuse_field_benchmark": {
             "source": carb_field.get("source") or {},
