@@ -6,6 +6,7 @@ import argparse
 from datetime import datetime, timezone
 import hashlib
 import json
+import math
 from pathlib import Path
 import sys
 from typing import Any
@@ -1509,6 +1510,81 @@ def audit(root: Path) -> dict[str, object]:
             "attestation": signal_attestation,
             "eligibility": signal_eligibility,
         } if signal_consistency else "missing",
+    ))
+
+    recharge_flow_path = root / (
+        "research/confidential_station_recharge_flow_screen_2026_10_08.json"
+    )
+    recharge_flow = _json(recharge_flow_path)
+    recharge_privacy = (recharge_flow or {}).get("privacy") or {}
+    recharge_screen = (recharge_flow or {}).get("screen") or {}
+    recharge_closure = recharge_screen.get(
+        "integrated_signal_to_totalizer_ratio"
+    ) or {}
+    recharge_conditional_flow = recharge_screen.get(
+        "conditional_average_mass_flow_g_s_if_totalizer_unit_is_kg"
+    ) or {}
+    recharge_reference = (recharge_flow or {}).get("reference_model") or {}
+    recharge_attestation = (recharge_flow or {}).get("attestation") or {}
+    recharge_eligibility = (recharge_flow or {}).get("eligibility") or {}
+    recharge_flow_pass = bool(
+        (recharge_flow or {}).get("schema_version") == 1
+        and (recharge_flow or {}).get("artifact_type")
+        == "confidential_station_recharge_flow_screen"
+        and len(recharge_privacy) == 7
+        and all(value is False for value in recharge_privacy.values())
+        and recharge_screen.get("csv_files_discovered") == 33
+        and recharge_screen.get("eligible_equipment_tables") == 7
+        and recharge_screen.get("sampled_rows") == 567_847
+        and recharge_screen.get("all_eligible_flow_episodes") == 995
+        and recharge_screen.get("eligible_recharge_episodes") == 733
+        and recharge_screen.get("anonymous_valve_mode_count") == 4
+        and sum(
+            recharge_screen.get(
+                "anonymous_valve_mode_episode_counts_descending", []
+            )
+        ) == 733
+        and 0.98 <= recharge_closure.get("median", 0.0) <= 1.02
+        and recharge_conditional_flow.get("p10", math.inf)
+        <= recharge_reference.get("predicted_initial_mass_flow_g_s", -math.inf)
+        <= recharge_conditional_flow.get("p90", -math.inf)
+        and recharge_reference.get("inside_conditional_observed_p10_p90") is True
+        and len(recharge_attestation) == 4
+        and all(value is False for value in recharge_attestation.values())
+        and recharge_eligibility.get(
+            "conditional_reference_compressor_flow_consistency_supported"
+        ) is True
+        and recharge_eligibility.get("runtime_parameter_update_permitted") is False
+        and recharge_eligibility.get("absolute_compressor_capacity_validation") is False
+        and recharge_eligibility.get("vehicle_fill_validation") is False
+        and recharge_eligibility.get("full_station_vehicle_validation") is False
+        and recharge_eligibility.get("independent_holdout") is False
+    )
+    gates.append(_gate(
+        "confidential_recharge_flow_consistency_integrity",
+        "PASS" if recharge_flow_pass else (
+            "FAIL" if recharge_flow else "PENDING"
+        ),
+        "The unchanged reference compressor flow lies inside the conditional recharge-flow range derived from controlled station logs.",
+        str(recharge_flow_path.relative_to(root)),
+        "At least 500 compressor-load-qualified intervals, near-unity signal/totalizer closure, a reference value inside the conditional p10-p90 range, privacy flags and explicit unit/calibration/full-loop holds.",
+        {
+            "sampled_rows": recharge_screen.get("sampled_rows"),
+            "all_eligible_flow_episodes": recharge_screen.get(
+                "all_eligible_flow_episodes"
+            ),
+            "eligible_recharge_episodes": recharge_screen.get(
+                "eligible_recharge_episodes"
+            ),
+            "anonymous_valve_mode_count": recharge_screen.get(
+                "anonymous_valve_mode_count"
+            ),
+            "integrated_signal_to_totalizer_ratio": recharge_closure,
+            "conditional_average_mass_flow_g_s": recharge_conditional_flow,
+            "reference_model": recharge_reference,
+            "attestation": recharge_attestation,
+            "eligibility": recharge_eligibility,
+        } if recharge_flow else "missing",
     ))
 
     external_loop_path = root / "data/public_validation/results/closed_loop_external_holdout/validation.json"

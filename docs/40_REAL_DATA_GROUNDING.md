@@ -65,6 +65,19 @@ the remaining request to custodian confirmation of the generic pair, units,
 sign/reset convention and calibration state; absolute flow and storage-volume
 fitting remain disabled until that attestation is recorded.
 
+A second privacy-bounded screen links the coherent flow/totalizer pair to
+compressor-load feedback without publishing any tag or trace. Seven equipment
+tables supplied 567,847 rows and 995 positive-flow intervals; 733 intervals met
+the predeclared requirement of at least 10 seconds duration and at least 80%
+compressor-load feedback. Their median integrated-signal/totalizer ratio was
+0.9909. Under the explicitly conditional assumption that the cumulative unit
+is kg, the recharge-flow median was 9.594 g/s with a 6.951--9.916 g/s 10th--90th
+percentile range. The reference compressor's first-principles initial value of
+8.689 g/s lies within that range, so the default is retained unchanged. This is
+recorded in `confidential_station_recharge_flow_screen_2026_10_08.json` as
+conditional face validity only; it cannot fit capacity until units and
+calibration are attested and cannot validate a vehicle fill.
+
 An additional owner-controlled media drop was screened on 2026-10. It contains
 equipment photographs and screen recordings of an Excel/SCADA-style logger.
 Those recordings are valuable provenance and may reveal candidate tag families,

@@ -17,7 +17,13 @@
   pairs, while keeping absolute mass-flow and conditional storage-volume
   fitting disabled until a custodian confirms the generic channel roles,
   units, sign/reset convention and calibration status.
-- The complete regression suite passed after this update: 1,034 tests with no
+- Cross-checked the reference compressor against 733 confidential recharge
+  intervals selected by duration and compressor-load feedback. The conditional
+  observed 10th--90th percentile was 6.951--9.916 g/s; the unchanged
+  first-principles reference prediction of 8.689 g/s falls inside it. The
+  runtime multiplier remains locked because flow units and calibration are not
+  attested.
+- The complete regression suite passed after this update: 1,036 tests with no
   failures.
 - Re-ran the built-in LaTeX compiler for the exact current IJHE draft. The host
   still reports `Unable to find standard directories for platform`, so the

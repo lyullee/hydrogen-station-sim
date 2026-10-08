@@ -609,6 +609,22 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert signal_observed["attestation"]["flow_units_attested"] is False
     assert signal_observed["eligibility"]["absolute_mass_flow_supported"] is False
     assert signal_observed["eligibility"]["full_station_vehicle_validation"] is False
+
+    recharge = gates["confidential_recharge_flow_consistency_integrity"]
+    assert recharge["status"] == "PASS"
+    recharge_observed = recharge["observed"]
+    assert recharge_observed["sampled_rows"] == 567_847
+    assert recharge_observed["eligible_recharge_episodes"] == 733
+    assert recharge_observed["anonymous_valve_mode_count"] == 4
+    assert recharge_observed["reference_model"][
+        "inside_conditional_observed_p10_p90"
+    ] is True
+    assert recharge_observed["eligibility"][
+        "runtime_parameter_update_permitted"
+    ] is False
+    assert recharge_observed["eligibility"][
+        "full_station_vehicle_validation"
+    ] is False
     assert schema["flat_time_axis_candidate_summary"]["candidate_groups"] == 4
     assert schema["flat_time_axis_candidate_summary"][
         "tables_in_candidate_groups"

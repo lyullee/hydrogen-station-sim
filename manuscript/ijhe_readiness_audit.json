@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T12:27:20.867908+00:00",
+  "generated_at": "2026-10-08T12:52:27.184331+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 112,
+    "PASS": 113,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -1074,6 +1074,55 @@
           "flow_channel_pair_attestation_candidate": true,
           "absolute_mass_flow_supported": false,
           "conditional_bank_inventory_estimation_supported": false,
+          "full_station_vehicle_validation": false,
+          "independent_holdout": false
+        }
+      }
+    },
+    {
+      "id": "confidential_recharge_flow_consistency_integrity",
+      "status": "PASS",
+      "claim": "The unchanged reference compressor flow lies inside the conditional recharge-flow range derived from controlled station logs.",
+      "evidence": "research\\confidential_station_recharge_flow_screen_2026_10_08.json",
+      "requirement": "At least 500 compressor-load-qualified intervals, near-unity signal/totalizer closure, a reference value inside the conditional p10-p90 range, privacy flags and explicit unit/calibration/full-loop holds.",
+      "observed": {
+        "sampled_rows": 567847,
+        "all_eligible_flow_episodes": 995,
+        "eligible_recharge_episodes": 733,
+        "anonymous_valve_mode_count": 4,
+        "integrated_signal_to_totalizer_ratio": {
+          "median": 0.9909230366906674,
+          "p10": 0.964896969256003,
+          "p90": 1.018017636328923,
+          "mean": 0.9918600798666993
+        },
+        "conditional_average_mass_flow_g_s": {
+          "median": 9.594298245614036,
+          "p10": 6.950644841269841,
+          "p90": 9.915865384615383,
+          "mean": 9.085011730345494
+        },
+        "reference_model": {
+          "suction_pressure_mpa_abs": 20.0,
+          "suction_temperature_k": 298.15,
+          "hydrogen_density_kg_m3": 14.481534131560764,
+          "swept_volume_rate_m3_s": 0.0008,
+          "volumetric_efficiency": 0.75,
+          "predicted_initial_mass_flow_g_s": 8.68892047893646,
+          "inside_conditional_observed_p10_p90": true,
+          "relative_to_conditional_observed_median_percent": -9.436623122399423
+        },
+        "attestation": {
+          "flow_channel_roles_attested": false,
+          "instantaneous_flow_units_attested": false,
+          "totalizer_units_attested": false,
+          "calibration_status_attested": false
+        },
+        "eligibility": {
+          "conditional_reference_compressor_flow_consistency_supported": true,
+          "runtime_parameter_update_permitted": false,
+          "absolute_compressor_capacity_validation": false,
+          "vehicle_fill_validation": false,
           "full_station_vehicle_validation": false,
           "independent_holdout": false
         }

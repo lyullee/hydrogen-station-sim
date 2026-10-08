@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_station_recharge_flow_screen",
+  "analysis_status": "post_access_conditional_internal_diagnostic",
+  "evidence_scope": "owner_controlled_confidential_station_side_archive",
+  "privacy": {
+    "source_identifiers_published": false,
+    "source_paths_published": false,
+    "filenames_published": false,
+    "tag_names_published": false,
+    "raw_rows_persisted": false,
+    "exact_timestamps_published": false,
+    "manufacturer_or_model_published": false
+  },
+  "screen": {
+    "csv_files_discovered": 33,
+    "eligible_equipment_tables": 7,
+    "sampled_rows": 567847,
+    "all_eligible_flow_episodes": 995,
+    "eligible_recharge_episodes": 733,
+    "recharge_selection": {
+      "minimum_duration_s": 10.0,
+      "minimum_compressor_load_fraction": 0.8
+    },
+    "anonymous_valve_mode_count": 4,
+    "anonymous_valve_mode_episode_counts_descending": [
+      336,
+      183,
+      149,
+      65
+    ],
+    "duration_s": {
+      "median": 108.0,
+      "p10": 64.0,
+      "p90": 121.0,
+      "mean": 101.43110504774897
+    },
+    "totalizer_delta_source_units": {
+      "median": 1.0,
+      "p10": 0.5625,
+      "p90": 1.140625,
+      "mean": 0.9144781718963165
+    },
+    "integrated_signal_to_totalizer_ratio": {
+      "median": 0.9909230366906674,
+      "p10": 0.964896969256003,
+      "p90": 1.018017636328923,
+      "mean": 0.9918600798666993
+    },
+    "conditional_average_mass_flow_g_s_if_totalizer_unit_is_kg": {
+      "median": 9.594298245614036,
+      "p10": 6.950644841269841,
+      "p90": 9.915865384615383,
+      "mean": 9.085011730345494
+    },
+    "all_flow_episode_compressor_load_fraction": {
+      "median": 1.0,
+      "p10": 0.0,
+      "p90": 1.0,
+      "mean": 0.7766832608412363
+    },
+    "derivative_to_signal_scale": {
+      "median": 0.016640089347091148,
+      "p10": 0.01663227412892102,
+      "p90": 0.016703000810611324,
+      "mean": 0.01665596969767275
+    },
+    "aggregation_window_seconds": {
+      "median": 61.0,
+      "p10": 61.0,
+      "p90": 61.0,
+      "mean": 61.0
+    }
+  },
+  "reference_model": {
+    "suction_pressure_mpa_abs": 20.0,
+    "suction_temperature_k": 298.15,
+    "hydrogen_density_kg_m3": 14.481534131560764,
+    "swept_volume_rate_m3_s": 0.0008,
+    "volumetric_efficiency": 0.75,
+    "predicted_initial_mass_flow_g_s": 8.68892047893646,
+    "inside_conditional_observed_p10_p90": true,
+    "relative_to_conditional_observed_median_percent": -9.436623122399423
+  },
+  "attestation": {
+    "flow_channel_roles_attested": false,
+    "instantaneous_flow_units_attested": false,
+    "totalizer_units_attested": false,
+    "calibration_status_attested": false
+  },
+  "eligibility": {
+    "conditional_reference_compressor_flow_consistency_supported": true,
+    "runtime_parameter_update_permitted": false,
+    "absolute_compressor_capacity_validation": false,
+    "vehicle_fill_validation": false,
+    "full_station_vehicle_validation": false,
+    "independent_holdout": false
+  },
+  "next_action": "Obtain custodian attestation for the generic instantaneous/totalizer roles, units, reset/sign convention and calibration status before using the conditional mass-flow values to fit compressor capacity.",
+  "claim_boundary": "Post-access station-side recharge diagnostic only. The conditional mass-flow comparison assumes the cumulative channel unit is kg and cannot validate a vehicle fill, safety limit, consequence distance or complete station loop."
+}
