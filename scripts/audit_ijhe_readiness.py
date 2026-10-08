@@ -242,6 +242,72 @@ def audit(root: Path) -> dict[str, object]:
         } if methytrucks else "missing",
     ))
 
+    methytrucks_complete_path = (
+        root / "research/methytrucks_2026_public_measurement_intake.json"
+    )
+    methytrucks_complete = _json(methytrucks_complete_path)
+    complete_integrity = (methytrucks_complete or {}).get("integrity") or {}
+    complete_aggregate = (methytrucks_complete or {}).get("aggregate") or {}
+    complete_eligibility = (methytrucks_complete or {}).get("eligibility") or {}
+    complete_mapping = (methytrucks_complete or {}).get("mapping_boundary") or {}
+    complete_sources = ((methytrucks_complete or {}).get("sources") or {}).get(
+        "measurement_records"
+    ) or []
+    complete_pass = bool(
+        (methytrucks_complete or {}).get("status") == "PASS"
+        and (methytrucks_complete or {}).get("evidence_role")
+        == "post_access_public_measurement_intake_and_component_diagnostic"
+        and complete_integrity.get("all_zenodo_md5_and_sizes_match") is True
+        and complete_integrity.get("raw_files_committed") is False
+        and complete_aggregate.get("record_count") == 3
+        and complete_aggregate.get("workbook_count") == 15
+        and complete_aggregate.get("sample_count") == 58_440
+        and complete_aggregate.get("all_time_axes_monotonic") is True
+        and complete_aggregate.get("sampling_intervals_s") == [0.5]
+        and complete_aggregate.get("workbooks_with_flow") == 15
+        and complete_aggregate.get("workbooks_with_mass") == 6
+        and complete_aggregate.get(
+            "workbooks_with_receiving_cylinder_pressure_and_four_temperatures"
+        )
+        == 2
+        and complete_aggregate.get("mass_closure_session_count") == 18
+        and complete_aggregate.get("mass_closure_screen_pass_count") == 8
+        and 0.8
+        <= float(complete_aggregate.get("mass_closure_pass_ratio_median", 0.0))
+        <= 1.2
+        and {item.get("doi") for item in complete_sources}
+        == {
+            "10.5281/zenodo.20590761",
+            "10.5281/zenodo.20590842",
+            "10.5281/zenodo.20590903",
+        }
+        and all(item.get("license") == "cc-by-4.0" for item in complete_sources)
+        and complete_eligibility.get("public_real_experimental_measurements") is True
+        and complete_eligibility.get("flow_mass_consistency_diagnostic_supported") is True
+        and complete_eligibility.get("prospective_holdout_eligible") is False
+        and complete_eligibility.get("full_loop_station_vehicle_validation_eligible")
+        is False
+        and complete_mapping.get("publisher_channel_dictionary_present") is False
+        and complete_mapping.get("engineering_units_in_workbook_headers") is False
+        and complete_mapping.get("station_controller_bank_valve_states_present") is False
+    )
+    gates.append(_gate(
+        "methytrucks_complete_public_measurement_intake_integrity",
+        "PASS" if complete_pass else ("FAIL" if methytrucks_complete else "PENDING"),
+        "The complete public MetHyTrucks Groups A-C release is hash-audited and retained as a claim-bounded component diagnostic.",
+        str(methytrucks_complete_path.relative_to(root)),
+        "Fifteen CC BY 4.0 workbooks, 58,440 monotonic 0.5 s samples, verified Zenodo MD5/size metadata, and explicit false prospective/full-loop eligibility flags.",
+        {
+            "aggregate": complete_aggregate,
+            "source_dois": [item.get("doi") for item in complete_sources],
+            "eligibility": complete_eligibility,
+            "mapping_boundary": complete_mapping,
+            "claim_boundary": (methytrucks_complete or {}).get("claim_boundary"),
+        }
+        if methytrucks_complete
+        else "missing",
+    ))
+
     group_d_protocol_path = root / "research/methytrucks_group_d_prospective_protocol_2026_10_08.json"
     group_d_result_path = root / "research/methytrucks_group_d_prospective_result_2026_10_08.json"
     group_d_protocol = _json(group_d_protocol_path)
@@ -1326,6 +1392,7 @@ def audit(root: Path) -> dict[str, object]:
         f"{external_search_recheck_path.relative_to(root)}; {external_operational_recheck_path.relative_to(root)}; "
         f"{external_search_sweep_path.relative_to(root)}; {external_search_latest_path.relative_to(root)}; "
         f"{public_full_loop_update_path.relative_to(root)}; {methytrucks_path.relative_to(root)}; "
+        f"{methytrucks_complete_path.relative_to(root)}; "
         f"{group_d_protocol_path.relative_to(root)}; {group_d_result_path.relative_to(root)}; "
         f"{prospective_release_protocol_path.relative_to(root)}; {controlled_registry_path.relative_to(root)}",
         "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
@@ -1363,6 +1430,12 @@ def audit(root: Path) -> dict[str, object]:
                 "temperature_rmse_c": methytrucks_temperature.get("rmse_c"),
                 "candidate_session_aggregate": methytrucks_aggregate,
                 "eligibility": methytrucks_eligibility,
+            },
+            "methytrucks_complete_public_measurement_intake": {
+                "status": (methytrucks_complete or {}).get("status"),
+                "aggregate": complete_aggregate,
+                "eligibility": complete_eligibility,
+                "mapping_boundary": complete_mapping,
             },
             "methytrucks_group_d_prospective_intake": {
                 "status": (group_d_result or {}).get("status"),

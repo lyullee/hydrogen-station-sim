@@ -29,29 +29,27 @@
 hydrogen refuelling station digital twin}
 \author{Author names withheld in working draft\\
 \small Affiliation and corresponding-author details to be confirmed}
-\date{Working draft: 3 October 2026}
+\date{Working draft: 8 October 2026}
 
 \begin{document}
 \maketitle
 \workingnote
 
 \begin{abstract}
-This study evaluates a virtual hydrogen station with evidence gates for
-process physics, consequence software and language-model decision support. A
-measured-boundary Type-IV model produced pressure, temperature and state-of-charge
-root-mean-square errors of 3.841 MPa, 4.833 $^{\circ}$C and 3.850 percentage
-points on 12 frozen fills but did not transfer to the full controller. A 22-case
-PRESLHY blowdown evaluation achieved 50.0\% joint passes versus a 70\% threshold;
-a non-adiabatic revision passed 20/22 consumed cases but only 2/3 eligible E5.1
-holdouts. An independent 90 MPa campaign passed 0/3 mass-flow series. Two
-Sandia/SRI transients failed joint screens and one scaled-release trace passed.
-HyRAM+ matched its API; an ignited-enclosure model passed 27/27 peak-pressure
-screens (MAE 0.672 kPa). Across 34 HIAD
-incidents, the SAGA machine proxy was 0.760 versus 0.401 for alarm-only text
-(paired difference 0.360; 95\% CI 0.309--0.411); expert ratings remain pending.
-An API guard reduced exposed unsupported value--unit claims from
-3/34 to 0/34. Evidence supports a claim-bounded prototype, not a field-qualified
-controller or autonomous emergency system.
+This study evaluates a virtual hydrogen refuelling station using separate
+evidence gates for process physics, consequence software and language-model
+decision support. A Type-IV tank model yielded validation errors of 3.841 MPa,
+4.833 $^{\circ}$C and 3.850 state-of-charge percentage points across 12 frozen
+fills, but did not transfer to the full controller. A public 15-workbook intake
+contained 58,440 synchronized samples; 8/18 post-access transfer sessions passed
+descriptive flow--mass closure. A 22-case PRESLHY blowdown evaluation passed
+50.0\% against a 70\% threshold; a non-adiabatic revision passed 20/22 consumed
+cases but only 2/3 eligible holdouts. Independent 90 MPa releases passed 0/3
+mass-flow series. HyRAM+ matched its API and an ignited-enclosure model passed
+27/27 peak-pressure screens. Across 34 HIAD incidents, SAGA's machine proxy was
+0.760 versus 0.401 for alarm-only text; expert ratings remain pending. Evidence
+supports a claim-bounded prototype, not a field-qualified controller or
+autonomous emergency system.
 \end{abstract}
 
 \noindent\textbf{Keywords:} hydrogen refueling station; digital twin; external
@@ -480,22 +478,23 @@ order optimality (3115.9) indicates a shallow or imperfectly resolved optimum ev
 though its termination flag was successful. The fit should therefore be treated
 as an effective heat-transfer calibration, not an identified physical coefficient.
 
-Three ZBT physical-HRS workbooks contained synchronized 0.5-s records
-\cite{dietrich2026,methytrucks2026}. Five unfitted mass-consistent replays had
-mean pressure and temperature RMSE of 1.287 MPa and 4.578 $^{\circ}$C. All met
-descriptive screens; inferred channel identities and prior access restrict them
-to a diagnostic. A 77-L alternative passed 1/5 screens; missing setup mapping
-remains material.
-To test whether another public event could remove that limitation, the exact
-Group D H70 vehicle-fill workbook was frozen before download
-\cite{methytrucksgroupd2026,methytrucksd42026}. Its publisher checksum matched
-and it contained 720 synchronized samples at 0.5 s. The predeclared intake rule
-nevertheless classified it as ineligible because the released tags do not
-establish vehicle-tank pressure or temperature, machine-readable units, tank
-type or internal volume. No numerical replay was run and the file was not
-replaced. This is a retained prospective data-eligibility result, not a model
-prediction failure, and contributes zero cases to the eight-case full-loop
-gate.
+The complete MetHyTrucks Groups A--C release contained 15 CC BY 4.0 workbooks
+and 58,440 monotonic 0.5-s samples
+\cite{methytrucksgroupa2026,methytrucks2026,methytrucksgroupc2026}.
+All hashes and sizes matched. Six workbooks had flow and cumulative-mass
+channels; 8/18 transfer sessions passed descriptive closure (median ratio
+1.002). Outcomes were inspected before this audit, and D1 lacks authoritative
+units, tag mapping, controller states and calibration uncertainty
+\cite{methytrucksd12026}. This is post-access component evidence, not a
+prospective full-loop result.
+
+Within that archive, five unfitted Hy-SaM replays had pressure and temperature
+RMSE of 1.287 MPa and 4.578 $^{\circ}$C \cite{dietrich2026,methytrucks2026}.
+All met descriptive screens, but inferred tags and missing setup mapping restrict
+them to a diagnostic; a 77-L alternative passed 1/5 screens. A separately frozen
+Group D H70 workbook contained 720 samples but lacked confirmed tank pressure,
+temperature, units, type and volume \cite{methytrucksgroupd2026,methytrucksd42026}.
+It was retained as ineligible without replay and contributes zero full-loop cases.
 A frozen public Type-III fill \cite{andreasen2026archive,couteau2025flow} passed both
 pressure screens (0.943 MPa RMSE) but failed temperature (19.179 K RMSE). A
 post-outcome forced-mixing sensitivity passed all screens but cannot revise the
@@ -948,6 +947,9 @@ A hydrogen-station safety digital twin was evaluated with separate evidence gate
 for component physics, full-loop behavior, consequence-software translation and
 LLM decision support. The measured-boundary Type-IV tank model achieved validation
 mean RMSE values of 3.841 MPa, 4.833 $^{\circ}$C and 3.850 SOC percentage points.
+The complete 15-workbook MetHyTrucks intake added 58,440 synchronized public
+experimental samples and eight descriptive flow--mass closure passes, while its
+metadata gaps and prior outcome access precluded a prospective full-loop claim.
 The complete loop and prospective ambient-blowdown holdouts did not meet their
 declared screens. An eight-trace confidential station dwell rule also failed its
 holdout and remains disabled. Independent release tests exposed pressure-,
@@ -1202,6 +1204,20 @@ stations: interplay of sampling strategy and station parameters,
 Hydrogen and Fuel Cell Center, \textit{Group B---HySam system measurement data},
 Zenodo (2026),
 \href{https://doi.org/10.5281/zenodo.20590842}{doi:10.5281/zenodo.20590842}.
+
+\bibitem{methytrucksgroupa2026}
+National Physical Laboratory, \textit{Group A---NPL system measurement data},
+Zenodo (2026),
+\href{https://doi.org/10.5281/zenodo.20590761}{doi:10.5281/zenodo.20590761}.
+
+\bibitem{methytrucksgroupc2026}
+ENGIE, \textit{Group C---ENGIE system measurement data}, Zenodo (2026),
+\href{https://doi.org/10.5281/zenodo.20590903}{doi:10.5281/zenodo.20590903}.
+
+\bibitem{methytrucksd12026}
+National Physical Laboratory, \textit{D1---Good practice guide on HD-HRS
+parameters for representative and reliable sampling}, Zenodo (2026),
+\href{https://doi.org/10.5281/zenodo.20540258}{doi:10.5281/zenodo.20540258}.
 
 \bibitem{methytrucksgroupd2026}
 MetHyTrucks consortium, \textit{Group D---particulates measurement data},

@@ -12,6 +12,7 @@ Original project software and associated documentation are available under the [
 - [User manual](docs/USER_MANUAL.md): startup, remote operation, incident exercises, response controls, trends and troubleshooting.
 - [Paper evaluation](docs/PAPER_EVALUATION.md): repeatable fueling-boundary metrics and alarm-only versus SAGA-PY A/B scoring.
 - [Public-data validation](docs/PUBLIC_VALIDATION.md): checksum-verified SAE J2601 experiments, HIAD incidents, dispersion data, and the publication-readiness gate.
+- [MetHyTrucks public intake](research/METHYTRUCKS_2026_PUBLIC_MEASUREMENT_INTAKE.md): 15 checksum-verified physical-HRS sampling-system workbooks and a claim-bounded flow/mass component diagnostic.
 - [Detector-logic replay](research/DISPERSION_DETECTOR_LOGIC_VALIDATION.md): a bounded 22-case replay of alarm/trip thresholds and persistence against public USN/FFI concentration measurements.
 - [HyRAM adapter verification](docs/HYRAM_ADAPTER_VERIFICATION.md): exact v6.1 source identity, upstream experimental validation-suite execution, and field-by-field production-adapter parity.
 - [Consequence geometry validation](research/CONSEQUENCE_GEOMETRY_VALIDATION.md): bounded public-experiment-to-browser traceability for directional plume and sampled radial effects.

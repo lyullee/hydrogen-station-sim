@@ -1266,22 +1266,28 @@ def _public_measurement_instrumentation_evidence() -> dict[str, Any] | None:
     """
 
     path = Path(__file__).resolve().parents[2] / (
-        "research/metHyTrucks_public_measurement_recheck_2026_10_04.json"
+        "research/methytrucks_2026_public_measurement_intake.json"
     )
     try:
         record = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError, json.JSONDecodeError):
         return None
-    classification = record.get("classification") or {}
-    inspection = record.get("file_level_inspection") or {}
+    integrity = record.get("integrity") or {}
+    aggregate = record.get("aggregate") or {}
+    eligibility = record.get("eligibility") or {}
+    mapping = record.get("mapping_boundary") or {}
     if (
-        record.get("decision") != "PUBLIC_RAW_HRS_SAMPLING_TIME_SERIES_AUXILIARY_ONLY"
-        or classification.get("station_measurement_auxiliary_eligible") is not True
-        or classification.get("full_loop_holdout_eligible") is not False
+        record.get("status") != "PASS"
+        or integrity.get("all_zenodo_md5_and_sizes_match") is not True
+        or aggregate.get("workbook_count") != 15
+        or eligibility.get("public_real_experimental_measurements") is not True
+        or eligibility.get("full_loop_station_vehicle_validation_eligible") is not False
+        or mapping.get("publisher_channel_dictionary_present") is not False
     ):
         return None
     sources = []
-    for source in record.get("sources") or []:
+    source_block = record.get("sources") or {}
+    for source in source_block.get("measurement_records") or []:
         if not isinstance(source, dict) or not source.get("record_id"):
             continue
         sources.append({
@@ -1289,21 +1295,27 @@ def _public_measurement_instrumentation_evidence() -> dict[str, Any] | None:
             "doi": str(source.get("doi") or ""),
             "title": str(source.get("title") or ""),
             "license": str(source.get("license") or ""),
-            "observed_file_count": source.get("observed_file_count"),
+            "observed_file_count": source.get("workbook_count"),
         })
-    intervals = sorted({
-        float(item.get("sampling_interval_observed_s"))
-        for item in inspection.get("files") or []
-        if isinstance(item, dict)
-        and isinstance(item.get("sampling_interval_observed_s"), (int, float))
-    })
     return {
-        "artifact": "research/metHyTrucks_public_measurement_recheck_2026_10_04.json",
-        "evidence_role": "public HRS sampling-system instrumentation context",
+        "artifact": "research/methytrucks_2026_public_measurement_intake.json",
+        "evidence_role": (
+            "post-access public HRS sampling-system instrumentation and "
+            "flow-mass component diagnostic"
+        ),
         "source_count": len(sources),
         "sources": sources,
-        "file_count": inspection.get("file_count"),
-        "observed_sampling_intervals_s": intervals,
+        "file_count": aggregate.get("workbook_count"),
+        "sample_count": aggregate.get("sample_count"),
+        "observed_sampling_intervals_s": aggregate.get("sampling_intervals_s"),
+        "workbooks_with_mass": aggregate.get("workbooks_with_mass"),
+        "mass_closure_session_count": aggregate.get("mass_closure_session_count"),
+        "mass_closure_screen_pass_count": aggregate.get(
+            "mass_closure_screen_pass_count"
+        ),
+        "mass_closure_pass_ratio_median": aggregate.get(
+            "mass_closure_pass_ratio_median"
+        ),
         "station_measurement_auxiliary_eligible": True,
         "full_loop_holdout_eligible": False,
         "channel_dictionary_present": False,
@@ -3937,8 +3949,11 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         summary["public_measurement_instrumentation"] = {
             key: public_measurement.get(key)
             for key in (
-                "evidence_role", "source_count", "file_count",
+                "evidence_role", "source_count", "file_count", "sample_count",
                 "observed_sampling_intervals_s",
+                "workbooks_with_mass", "mass_closure_session_count",
+                "mass_closure_screen_pass_count",
+                "mass_closure_pass_ratio_median",
                 "station_measurement_auxiliary_eligible",
                 "full_loop_holdout_eligible",
                 "channel_dictionary_present",
@@ -4808,8 +4823,19 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         "public_measurement_instrumentation": {
             "source_count": public_measurement.get("source_count"),
             "file_count": public_measurement.get("file_count"),
+            "sample_count": public_measurement.get("sample_count"),
             "observed_sampling_intervals_s": public_measurement.get(
                 "observed_sampling_intervals_s"
+            ),
+            "workbooks_with_mass": public_measurement.get("workbooks_with_mass"),
+            "mass_closure_session_count": public_measurement.get(
+                "mass_closure_session_count"
+            ),
+            "mass_closure_screen_pass_count": public_measurement.get(
+                "mass_closure_screen_pass_count"
+            ),
+            "mass_closure_pass_ratio_median": public_measurement.get(
+                "mass_closure_pass_ratio_median"
             ),
             "station_measurement_auxiliary_eligible": public_measurement.get(
                 "station_measurement_auxiliary_eligible"

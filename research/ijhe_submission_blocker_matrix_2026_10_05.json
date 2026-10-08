@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T01:33:16.706675+00:00",
+  "generated_at": "2026-10-08T02:18:38.593159+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -16,7 +16,7 @@
     "interpretation": "A bounded manuscript may be drafted around model-level and qualitative evidence, but the validated full-station digital-twin objective cannot be declared complete."
   },
   "gate_counts": {
-    "PASS": 95,
+    "PASS": 96,
     "FAIL": 8,
     "PENDING": 8
   },
@@ -83,12 +83,22 @@
     "real_station_candidate": {
       "status": "PUBLIC_ROWS_POST_ACCESS_MAPPING_INCOMPLETE",
       "evidence": [
+        "research/methytrucks_2026_public_measurement_intake.json",
         "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json",
         "research/public_full_loop_data_update_2026_10_08.json",
         "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
         "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json"
       ],
-      "claim_boundary": "Three public ZBT physical-HRS workbooks support a no-fit post-access tank diagnostic, but missing channel/controller metadata and prior outcome inspection prevent a prospective full-loop claim. NBSDC raw workbooks remain application-controlled."
+      "claim_boundary": "Fifteen public MetHyTrucks physical-HRS sampling-system workbooks support post-access component diagnostics, and the three-file Hy-SaM subset supports a no-fit tank diagnostic. Missing authoritative channel/unit, geometry and controller metadata plus prior outcome inspection prevent a prospective full-loop claim. NBSDC raw workbooks remain application-controlled."
+    },
+    "methytrucks_complete_public_measurement_intake": {
+      "gate": "PASS",
+      "evidence": "research/methytrucks_2026_public_measurement_intake.json",
+      "workbook_count": 15,
+      "sample_count": 58440,
+      "mass_closure_screen_pass_count": 8,
+      "full_loop_eligible": false,
+      "claim_boundary": "The 15 CC BY 4.0 workbooks are real public experimental traces and can support post-access component diagnostics, including descriptive flow-to-scale mass closure. Outcomes were inspected before this audit and the release lacks an authoritative tag/unit dictionary, device crosswalk, vehicle geometry and station controller states. It therefore does not establish prospective validation, a complete HRS-to-vehicle full-loop result, safety performance or regulatory compliance."
     },
     "methytrucks_hysam_postaccess": {
       "status": "PASS_DIAGNOSTIC_ONLY",
@@ -142,6 +152,7 @@
         "research/public_full_loop_search_recheck_2026_10_04.json",
         "research/public_full_loop_search_recheck_2026_10_06.json",
         "research/public_full_loop_data_update_2026_10_08.json",
+        "research/methytrucks_2026_public_measurement_intake.json",
         "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json",
         "research/methytrucks_group_d_prospective_protocol_2026_10_08.json",
         "research/methytrucks_group_d_prospective_result_2026_10_08.json",
@@ -203,12 +214,13 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "2706810cfed3c805be446ed35f1969252c0b601111b6ff9a13e5e7ea78c820a3",
+    "audit_sha256": "d42a68d45b0c48065be356ae589d23e4e55a34edfdd8527ddb3ac8c92d8d6879",
     "hiad_readiness_sha256": "bb2b8e91cf32e98f0503565d3616698376b4c2e1e6054377384c18641d33da98",
-    "acquisition_tracker_sha256": "67058515a70203f477800af97d70204a7286aa6b913f1e74e206230684b78cac",
+    "acquisition_tracker_sha256": "f141806ae0cce8ec9a0797e2ca6f7102b299eaedc33317693922abd763a3e399",
     "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",
     "latest_full_loop_search_sha256": "14391668298eea81e1aaff919e9a20fd9c3570694e33cf8998d4156976cba808",
     "methytrucks_postaccess_sha256": "5f55152984db8952fb532d975f7c89db7f1681375f20c306a9ccb7cdc79ddf48",
+    "methytrucks_complete_intake_sha256": "8b1e8f5a25434ca357b4264cf05ac7052aca2c301a398d90650cb65b3cc0ea6a",
     "methytrucks_group_d_prospective_sha256": "1378084ccf176f68ce05acc9e74d5063280f216eb7a0c33cafd3606d0efc3c25",
     "byrnes_typei_thermal_prospective_sha256": "a58940c390268abdbd1d5904f50f91ac06b60709bc4e75ade570fefc34e59998",
     "public_full_loop_update_sha256": "119ec8ebd2fa548048923c14562f7f7fdda415ff1342ae3ad42683f2d67bb6cb",
@@ -221,6 +233,8 @@
     "latest_public_full_loop_search_candidate_count": 9,
     "methytrucks_workbook_count": 3,
     "methytrucks_candidate_session_count": 5,
+    "methytrucks_complete_workbook_count": 15,
+    "methytrucks_complete_sample_count": 58440,
     "methytrucks_group_d_decision": "MODEL_SCREEN_NOT_RUN_INELIGIBLE_METADATA",
     "public_full_loop_update_status": "public_synchronized_rows_found_but_full_loop_gate_open",
     "public_operational_benchmark_candidate_count": 18

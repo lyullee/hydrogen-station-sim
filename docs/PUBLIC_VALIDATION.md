@@ -127,6 +127,33 @@ report; this screen never uses a model prediction. It currently identifies the
 repeat-fuelling trial whose measured flow implies substantially more inventory
 than its nominal SOC change.
 
+### Complete MetHyTrucks 2026 public intake
+
+The June 2026 MetHyTrucks release contains 15 CC BY 4.0 sampling-system
+workbooks across NPL, Hy-SaM and ENGIE. Download the three Zenodo records into
+the gitignored `tmp/methytrucks_2026/<record-id>/` directories with each record's
+`metadata.json`, and reproduce the integrity and component diagnostic with:
+
+```powershell
+.venv\Scripts\python.exe scripts\audit_methytrucks_2026_measurements.py `
+  --data-root tmp\methytrucks_2026 `
+  --recorded-date 2026-10-08
+```
+
+The committed audit records 58,440 monotonic samples at 0.5 s, 15/15 workbooks
+with a flow-like channel and six with cumulative mass. Eight of 18 detected
+transfer sessions pass the descriptive 0.8--1.2 flow-integral/mass-change
+closure screen; the median passing ratio is 1.002. The script retains failed
+sessions and performs no case-specific model fitting.
+
+This is a post-access component diagnostic. The public D1 guide gives operating
+context but does not supply an authoritative logger-tag/unit dictionary,
+workbook-to-device and vehicle-geometry crosswalk, controller states or sensor
+uncertainties. The result must not be presented as a prospective holdout,
+complete station-to-vehicle validation, safety result or protocol certification.
+See
+[`METHYTRUCKS_2026_PUBLIC_MEASUREMENT_INTAKE.md`](../research/METHYTRUCKS_2026_PUBLIC_MEASUREMENT_INTAKE.md).
+
 The original closed-loop baseline failed its engineering screen because the
 unfitted tank overheated and the dispenser under-delivered mass. Mass-flow timing
 diagnostics then exposed a preprocessing error in H2P-L29: an isolated 1.526 g/s

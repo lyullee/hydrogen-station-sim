@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T01:33:16.146007+00:00",
+  "generated_at": "2026-10-08T02:18:38.017502+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 95,
+    "PASS": 96,
     "FAIL": 8,
     "PENDING": 8
   },
@@ -195,6 +195,68 @@
         "prospective_holdout_eligible": false,
         "quantitative_full_loop_validation_eligible": false,
         "claim_boundary": "This artifact proves file integrity, synchronized 0.5 s measurement availability, flow-to-cumulative-mass consistency and a no-fit candidate tank replay. It is a post-access diagnostic, not an untouched holdout, a full station-to-vehicle validation result, SAE certification or field-safety validation."
+      }
+    },
+    {
+      "id": "methytrucks_complete_public_measurement_intake_integrity",
+      "status": "PASS",
+      "claim": "The complete public MetHyTrucks Groups A-C release is hash-audited and retained as a claim-bounded component diagnostic.",
+      "evidence": "research\\methytrucks_2026_public_measurement_intake.json",
+      "requirement": "Fifteen CC BY 4.0 workbooks, 58,440 monotonic 0.5 s samples, verified Zenodo MD5/size metadata, and explicit false prospective/full-loop eligibility flags.",
+      "observed": {
+        "aggregate": {
+          "record_count": 3,
+          "workbook_count": 15,
+          "sample_count": 58440,
+          "all_time_axes_monotonic": true,
+          "sampling_intervals_s": [
+            0.5
+          ],
+          "common_headers": [
+            "11TT150A ValueY",
+            "PT03 ValueY",
+            "PTD10 ValueY",
+            "PTD11 ValueY",
+            "PTX05 ValueY",
+            "QT_D02 ValueY",
+            "TEX01 ValueY",
+            "TE_D22 ValueY",
+            "TT24 ValueY",
+            "TT_D04 ValueY",
+            "Zeit",
+            "fwg1 ValueY",
+            "fwg2 ValueY"
+          ],
+          "workbooks_with_flow": 15,
+          "workbooks_with_mass": 6,
+          "workbooks_with_receiving_cylinder_pressure_and_four_temperatures": 2,
+          "mass_closure_session_count": 18,
+          "mass_closure_screen_pass_count": 8,
+          "mass_closure_pass_ratio_median": 1.0018951923076922
+        },
+        "source_dois": [
+          "10.5281/zenodo.20590761",
+          "10.5281/zenodo.20590842",
+          "10.5281/zenodo.20590903"
+        ],
+        "eligibility": {
+          "public_real_experimental_measurements": true,
+          "synchronized_component_trace_candidate": true,
+          "flow_mass_consistency_diagnostic_supported": true,
+          "receiving_cylinder_thermal_diagnostic_candidate": true,
+          "prospective_holdout_eligible": false,
+          "full_loop_station_vehicle_validation_eligible": false
+        },
+        "mapping_boundary": {
+          "publisher_channel_dictionary_present": false,
+          "engineering_units_in_workbook_headers": false,
+          "workbook_to_sampling_device_crosswalk_present": false,
+          "vehicle_identity_and_tank_geometry_present": false,
+          "station_controller_bank_valve_states_present": false,
+          "sensor_calibration_uncertainty_present": false,
+          "guide_use": "D1 supplies operating-practice context but does not define the logger tags, workbook-to-device mapping, sensor units or controller states."
+        },
+        "claim_boundary": "The 15 CC BY 4.0 workbooks are real public experimental traces and can support post-access component diagnostics, including descriptive flow-to-scale mass closure. Outcomes were inspected before this audit and the release lacks an authoritative tag/unit dictionary, device crosswalk, vehicle geometry and station controller states. It therefore does not establish prospective validation, a complete HRS-to-vehicle full-loop result, safety performance or regulatory compliance."
       }
     },
     {
@@ -914,7 +976,7 @@
       "id": "full_loop_external_validation",
       "status": "FAIL",
       "claim": "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
-      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json; research\\public_full_loop_search_sweep_2026_10_05.json; research\\public_full_loop_search_recheck_2026_10_06.json; research\\public_full_loop_data_update_2026_10_08.json; research\\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json; research\\methytrucks_group_d_prospective_protocol_2026_10_08.json; research\\methytrucks_group_d_prospective_result_2026_10_08.json; research\\apparatus_resolved_release_protocol.json; research\\controlled_full_loop_cohort_registry.json",
+      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json; research\\public_full_loop_search_sweep_2026_10_05.json; research\\public_full_loop_search_recheck_2026_10_06.json; research\\public_full_loop_data_update_2026_10_08.json; research\\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json; research\\methytrucks_2026_public_measurement_intake.json; research\\methytrucks_group_d_prospective_protocol_2026_10_08.json; research\\methytrucks_group_d_prospective_result_2026_10_08.json; research\\apparatus_resolved_release_protocol.json; research\\controlled_full_loop_cohort_registry.json",
       "requirement": "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
       "observed": {
         "protocol_integrity": true,
@@ -1067,6 +1129,56 @@
             "prospective_holdout_eligible": false,
             "quantitative_full_loop_validation_eligible": false,
             "reason": "The rows are public and synchronized, but numerical outcomes were inspected before this protocol and the released package lacks a channel dictionary, controller/bank-state mapping and calibration metadata."
+          }
+        },
+        "methytrucks_complete_public_measurement_intake": {
+          "status": "PASS",
+          "aggregate": {
+            "record_count": 3,
+            "workbook_count": 15,
+            "sample_count": 58440,
+            "all_time_axes_monotonic": true,
+            "sampling_intervals_s": [
+              0.5
+            ],
+            "common_headers": [
+              "11TT150A ValueY",
+              "PT03 ValueY",
+              "PTD10 ValueY",
+              "PTD11 ValueY",
+              "PTX05 ValueY",
+              "QT_D02 ValueY",
+              "TEX01 ValueY",
+              "TE_D22 ValueY",
+              "TT24 ValueY",
+              "TT_D04 ValueY",
+              "Zeit",
+              "fwg1 ValueY",
+              "fwg2 ValueY"
+            ],
+            "workbooks_with_flow": 15,
+            "workbooks_with_mass": 6,
+            "workbooks_with_receiving_cylinder_pressure_and_four_temperatures": 2,
+            "mass_closure_session_count": 18,
+            "mass_closure_screen_pass_count": 8,
+            "mass_closure_pass_ratio_median": 1.0018951923076922
+          },
+          "eligibility": {
+            "public_real_experimental_measurements": true,
+            "synchronized_component_trace_candidate": true,
+            "flow_mass_consistency_diagnostic_supported": true,
+            "receiving_cylinder_thermal_diagnostic_candidate": true,
+            "prospective_holdout_eligible": false,
+            "full_loop_station_vehicle_validation_eligible": false
+          },
+          "mapping_boundary": {
+            "publisher_channel_dictionary_present": false,
+            "engineering_units_in_workbook_headers": false,
+            "workbook_to_sampling_device_crosswalk_present": false,
+            "vehicle_identity_and_tank_geometry_present": false,
+            "station_controller_bank_valve_states_present": false,
+            "sensor_calibration_uncertainty_present": false,
+            "guide_use": "D1 supplies operating-practice context but does not define the logger tags, workbook-to-device mapping, sensor units or controller states."
           }
         },
         "methytrucks_group_d_prospective_intake": {
@@ -6457,7 +6569,7 @@
         "manuscript": "manuscript\\ijhe_manuscript_draft.tex",
         "highlights": "manuscript\\Highlights.txt",
         "counts": {
-          "abstract_words": 150,
+          "abstract_words": 131,
           "keywords": 6,
           "highlight_bullets": 5,
           "highlight_characters": [
@@ -6467,11 +6579,11 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7972,
+          "approximate_manuscript_words_before_references": 7982,
           "figures": 2,
           "tables": 3,
-          "citation_keys": 37,
-          "bibliography_entries": 38,
+          "citation_keys": 40,
+          "bibliography_entries": 41,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },

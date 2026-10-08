@@ -20,7 +20,17 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **95 PASS · 8 FAIL · 8 PENDING**.
+Gate counts: **96 PASS · 8 FAIL · 8 PENDING**.
+
+The complete June 2026 MetHyTrucks public release has now been ingested across
+all three sampling-system groups: 15 CC BY 4.0 workbooks, 58,440 synchronized
+0.5 s samples and verified Zenodo MD5/size metadata. Eight of 18 detected
+transfer sessions passed a descriptive flow-integral/mass-closure screen, with
+a median passing ratio of 1.002. This adds real experimental component evidence,
+but the files were inspected before the audit was specified and lack an
+authoritative tag/unit dictionary, device and vehicle-geometry crosswalk,
+controller states and calibration uncertainties. The result therefore does not
+close the prospective station-to-vehicle full-loop gate.
 
 The newly released public H2SAFE dataset was screened across five full-scale
 indoor helium-surrogate experiments. A fixed coordinate-only buoyant-gas rank

@@ -25,6 +25,17 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert methytrucks["supplementary_mapping_recheck"]["observed_contents"]["channel_dictionary_present"] is False
     assert methytrucks["prospective_holdout_eligible"] is False
     assert methytrucks["quantitative_full_loop_validation_eligible"] is False
+    assert gates["methytrucks_complete_public_measurement_intake_integrity"]["status"] == "PASS"
+    complete_methytrucks = gates[
+        "methytrucks_complete_public_measurement_intake_integrity"
+    ]["observed"]
+    assert complete_methytrucks["aggregate"]["workbook_count"] == 15
+    assert complete_methytrucks["aggregate"]["sample_count"] == 58_440
+    assert complete_methytrucks["aggregate"]["mass_closure_screen_pass_count"] == 8
+    assert complete_methytrucks["eligibility"]["prospective_holdout_eligible"] is False
+    assert complete_methytrucks["eligibility"][
+        "full_loop_station_vehicle_validation_eligible"
+    ] is False
     assert gates["methytrucks_group_d_prospective_intake_integrity"]["status"] == "PASS"
     group_d = gates["methytrucks_group_d_prospective_intake_integrity"]["observed"]
     assert group_d["decision"] == "MODEL_SCREEN_NOT_RUN_INELIGIBLE_METADATA"

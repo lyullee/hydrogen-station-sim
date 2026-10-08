@@ -28,7 +28,23 @@ permit goal completion. The existing negative full-loop result remains
 authoritative until a genuinely independent event is mapped and frozen before
 its numerical outcome is inspected.
 
-## 2026-10-08 MetHyTrucks Hy-SaM intake
+## 2026-10-08 MetHyTrucks Groups A-C intake
+
+The complete public release now contains 15 CC BY 4.0 workbooks: ten NPL,
+three Hy-SaM and two ENGIE traces. All 58,440 rows use a monotonic 0.5 s time
+base and all Zenodo MD5 values and byte sizes match. Six workbooks include a
+cumulative-mass channel. Eight of 18 detected transfer sessions meet the
+declared descriptive flow-integral/mass-closure screen, with a median passing
+ratio of 1.002. The complete intake is recorded in
+[`METHYTRUCKS_2026_PUBLIC_MEASUREMENT_INTAKE.md`](METHYTRUCKS_2026_PUBLIC_MEASUREMENT_INTAKE.md).
+
+The public D1 guide was also checked. It gives operating-practice context but
+does not define the logger tags, engineering units, device crosswalk,
+controller states or sensor uncertainties. The 15-workbook result is therefore
+a post-access component diagnostic and provenance improvement, not a
+prospective station-to-vehicle validation result.
+
+### Hy-SaM tank subset
 
 Three CC BY 4.0 ZBT workbooks were obtained from Zenodo and hash-verified. They
 contain synchronized 0.5 s rows, and the flow integral agrees with the

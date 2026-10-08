@@ -572,7 +572,7 @@
       "source": "https://doi.org/10.3390/cleantechnol8030091",
       "public_dataset": "https://doi.org/10.5281/zenodo.20590842",
       "candidate_type": "real ZBT multi-bank HRS sampling and dispenser logger archive",
-      "status": "public_rows_received_post_access_mapping_incomplete",
+      "status": "public_15_workbooks_received_post_access_mapping_incomplete",
       "requested_fields": [
         "common_timestamp",
         "storage_bank_pressure_and_temperature",
@@ -584,9 +584,14 @@
         "quality_calibration_metadata"
       ],
       "minimum_acceptance": "A de-identified synchronized export with at least eight eligible events or a justified smaller protocol-defined subset, plus channel definitions, calibration data and immutable provenance.",
-      "rights": "The three Hy-SaM measurement workbooks and accompanying article are CC BY 4.0. The raw files remain in the gitignored intake tree; only hashes, aggregate diagnostics and derived errors are committed.",
-      "next_action": "Request the publisher channel dictionary, workbook-to-device crosswalk, sensor calibration/uncertainty metadata, controller and storage-bank state tags, and a disjoint uninspected logger event. Freeze the mapping and scoring protocol before opening that event.",
-      "claim_boundary": "Public synchronized rows now support the no-fit post-access tank diagnostic in research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json. Outcomes were inspected before protocol definition and key channel/controller metadata are absent, so this is not a prospective holdout and does not close full_loop_external_validation."
+      "rights": "All 15 Group A-C workbooks and the D1 guide are CC BY 4.0. Raw files remain in the gitignored intake tree; hashes and aggregate diagnostics are committed.",
+      "next_action": "Obtain the authoritative channel/unit dictionary, workbook-to-device crosswalk, sensor calibration/uncertainty metadata, controller and storage-bank state tags, and a disjoint uninspected station-to-vehicle event. Freeze mapping and scoring before opening that event.",
+      "claim_boundary": "Fifteen public synchronized experimental workbooks support the claim-bounded intake and post-access flow/mass diagnostic in research/methytrucks_2026_public_measurement_intake.json; the Hy-SaM subset also supports the existing no-fit tank diagnostic. Prior outcome inspection and missing channel, geometry and controller metadata prevent prospective or full-loop validation.",
+      "public_datasets": [
+        "https://doi.org/10.5281/zenodo.20590761",
+        "https://doi.org/10.5281/zenodo.20590842",
+        "https://doi.org/10.5281/zenodo.20590903"
+      ]
     },
     {
       "id": "hydelta_overpumping_2023",

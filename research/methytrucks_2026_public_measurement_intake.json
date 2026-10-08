@@ -1,0 +1,2701 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-10-08",
+  "status": "PASS",
+  "evidence_role": "post_access_public_measurement_intake_and_component_diagnostic",
+  "sources": {
+    "measurement_records": [
+      {
+        "record_id": "20590761",
+        "doi": "10.5281/zenodo.20590761",
+        "title": "Group A -- NPL system measurement data",
+        "license": "cc-by-4.0",
+        "metadata_sha256": "4feb04c2921f3d262e952ebe2bf42dc3e5cc623c779683b9df4be1cbf13d09d9",
+        "workbook_count": 10,
+        "workbooks": [
+          {
+            "filename": "20241023_Test_3_NPL.xlsx",
+            "sha256": "273592792c1c7a1f9fd8b99c113bc1287a728dcf43adef93cc0ea6c1a9aaa707",
+            "sheet_names": [
+              "Tabelle1"
+            ],
+            "sample_count": 10800,
+            "duration_s": 5399.5,
+            "sampling_interval_s": 0.5,
+            "sampling_interval_max_abs_deviation_s": 0.0,
+            "time_monotonic": true,
+            "headers": [
+              "Zeit",
+              "TT_D04 ValueY",
+              "PTX05 ValueY",
+              "PT03 ValueY",
+              "TEX01 ValueY",
+              "TT24 ValueY",
+              "QT_D02 ValueY",
+              "PTD10 ValueY",
+              "PTD11 ValueY",
+              "fwg1 ValueY",
+              "fwg2 ValueY",
+              "TE_D22 ValueY",
+              "11TT150A ValueY"
+            ],
+            "channels": {
+              "TT_D04 ValueY": {
+                "numeric_count": 10800,
+                "missing_or_non_numeric_count": 0,
+                "first": 19.48,
+                "last": 18.03,
+                "minimum": 18.03,
+                "maximum": 19.8
+              },
+              "PTX05 ValueY": {
+                "numeric_count": 10800,
+                "missing_or_non_numeric_count": 0,
+                "first": 11.27,
+                "last": 0.74,
+                "minimum": -0.94,
+                "maximum": 316.71
+              },
+              "PT03 ValueY": {
+                "numeric_count": 10800,
+                "missing_or_non_numeric_count": 0,
+                "first": 9.87,
+                "last": -0.8,
+                "minimum": -0.8,
+                "maximum": 258.64
+              },
+              "TEX01 ValueY": {
+                "numeric_count": 10800,
+                "missing_or_non_numeric_count": 0,
+                "first": 15.41,
+                "last": 11.44,
+                "minimum": 4.34,
+                "maximum": 16.4
+              },
+              "TT24 ValueY": {
+                "numeric_count": 10800,
+                "missing_or_non_numeric_count": 0,
+                "first": 15.75,
+                "last": 13.29,
+                "minimum": 8.58,
+                "maximum": 18.27
+              },
+              "QT_D02 ValueY": {
+                "numeric_count": 10800,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.07,
+                "last": 0.07,
+                "minimum": 0.07,
+                "maximum": 6.83
+              },
+              "PTD10 ValueY": {
+                "numeric_count": 10800,
+                "missing_or_non_numeric_count": 0,
+                "first": 328.63,
+                "last": 329.21,
+                "minimum": 86.12,
+                "maximum": 664.61
+              },
+              "PTD11 ValueY": {
+                "numeric_count": 10800,
+                "missing_or_non_numeric_count": 0,
+                "first": 324.0,
+                "last": 249.78,
+                "minimum": 14.87,
+                "maximum": 324.94
+              },
+              "fwg1 ValueY": {
+                "numeric_count": 10800,
+                "missing_or_non_numeric_count": 0,
+                "first": 9.1,
+                "last": -26.0,
+                "minimum": -35.2,
+                "maximum": 9.8
+              },
+              "fwg2 ValueY": {
+                "numeric_count": 10800,
+                "missing_or_non_numeric_count": 0,
+                "first": 9.0,
+                "last": -26.0,
+                "minimum": -35.4,
+                "maximum": 9.6
+              },
+              "TE_D22 ValueY": {
+                "numeric_count": 10800,
+                "missing_or_non_numeric_count": 0,
+                "first": 16.09,
+                "last": 0.46,
+                "minimum": -7.41,
+                "maximum": 16.41
+              },
+              "11TT150A ValueY": {
+                "numeric_count": 10800,
+                "missing_or_non_numeric_count": 0,
+                "first": -18.8,
+                "last": -30.3,
+                "minimum": -35.7,
+                "maximum": -18.5
+              }
+            },
+            "has_flow_channel": true,
+            "has_mass_channel": false,
+            "has_candidate_receiving_cylinder_pressure": false,
+            "has_four_candidate_receiving_cylinder_temperatures": false,
+            "mass_closure_sessions": [],
+            "record_id": "20590761",
+            "zenodo_md5": "md5:a3a89a85dfe4c076fe5fa0befd9f57ff",
+            "byte_size": 777723
+          },
+          {
+            "filename": "20241024_Test_7_NPL_DirSam_CESAME.xlsx",
+            "sha256": "ebea50c7d3a4182e6cf16c535c566b66eda213b57c914ebe9acd4af5cba22ed8",
+            "sheet_names": [
+              "Tabelle1"
+            ],
+            "sample_count": 5400,
+            "duration_s": 2699.5,
+            "sampling_interval_s": 0.5,
+            "sampling_interval_max_abs_deviation_s": 0.0,
+            "time_monotonic": true,
+            "headers": [
+              "Zeit",
+              "TT_D04 ValueY",
+              "PTX05 ValueY",
+              "PT03 ValueY",
+              "TEX01 ValueY",
+              "TT24 ValueY",
+              "QT_D02 ValueY",
+              "PTD10 ValueY",
+              "PTD11 ValueY",
+              "fwg1 ValueY",
+              "fwg2 ValueY",
+              "FWg35_Masse ValueY",
+              "TE_D22 ValueY",
+              "11TT150A ValueY"
+            ],
+            "channels": {
+              "TT_D04 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 13.2,
+                "last": 14.69,
+                "minimum": 13.2,
+                "maximum": 14.69
+              },
+              "PTX05 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 6.09,
+                "last": 1.92,
+                "minimum": 0.9,
+                "maximum": 403.79
+              },
+              "PT03 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 4.27,
+                "last": 0.11,
+                "minimum": -0.76,
+                "maximum": 271.77
+              },
+              "TEX01 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 10.82,
+                "last": 12.29,
+                "minimum": 5.55,
+                "maximum": 12.29
+              },
+              "TT24 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 10.72,
+                "last": 11.3,
+                "minimum": 7.61,
+                "maximum": 16.39
+              },
+              "QT_D02 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.06,
+                "last": 0.07,
+                "minimum": 0.06,
+                "maximum": 9.51
+              },
+              "PTD10 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 349.46,
+                "last": 299.77,
+                "minimum": 224.54,
+                "maximum": 473.78
+              },
+              "PTD11 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 346.21,
+                "last": 297.31,
+                "minimum": 38.85,
+                "maximum": 347.51
+              },
+              "fwg1 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 2.9,
+                "last": -24.6,
+                "minimum": -32.4,
+                "maximum": 3.4
+              },
+              "fwg2 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 2.7,
+                "last": -24.8,
+                "minimum": -32.7,
+                "maximum": 3.2
+              },
+              "FWg35_Masse ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 1.18,
+                "last": 1.18,
+                "minimum": 1.18,
+                "maximum": 1.18
+              },
+              "TE_D22 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 11.04,
+                "last": 3.43,
+                "minimum": -0.72,
+                "maximum": 11.25
+              },
+              "11TT150A ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": -21.8,
+                "last": -33.3,
+                "minimum": -33.4,
+                "maximum": -19.9
+              }
+            },
+            "has_flow_channel": true,
+            "has_mass_channel": true,
+            "has_candidate_receiving_cylinder_pressure": false,
+            "has_four_candidate_receiving_cylinder_temperatures": false,
+            "mass_closure_sessions": [
+              {
+                "start_elapsed_s": 210.5,
+                "end_elapsed_s": 387.0,
+                "duration_s": 176.5,
+                "flow_baseline_raw_units": 0.07,
+                "peak_corrected_flow_raw_units": 9.44,
+                "integrated_flow_mass_assuming_g_per_s_kg": 0.053665,
+                "scale_delta_assuming_kg": 0.0,
+                "flow_to_scale_mass_ratio": null,
+                "descriptive_closure_screen_pass": false
+              },
+              {
+                "start_elapsed_s": 786.0,
+                "end_elapsed_s": 819.0,
+                "duration_s": 33.0,
+                "flow_baseline_raw_units": 1.2,
+                "peak_corrected_flow_raw_units": 1.51,
+                "integrated_flow_mass_assuming_g_per_s_kg": 0.020545,
+                "scale_delta_assuming_kg": 0.0,
+                "flow_to_scale_mass_ratio": null,
+                "descriptive_closure_screen_pass": false
+              },
+              {
+                "start_elapsed_s": 1068.0,
+                "end_elapsed_s": 1079.0,
+                "duration_s": 11.0,
+                "flow_baseline_raw_units": 4.255,
+                "peak_corrected_flow_raw_units": 1.4350000000000005,
+                "integrated_flow_mass_assuming_g_per_s_kg": 0.0081775,
+                "scale_delta_assuming_kg": 0.0,
+                "flow_to_scale_mass_ratio": null,
+                "descriptive_closure_screen_pass": false
+              },
+              {
+                "start_elapsed_s": 1319.0,
+                "end_elapsed_s": 1330.0,
+                "duration_s": 11.0,
+                "flow_baseline_raw_units": 4.155,
+                "peak_corrected_flow_raw_units": 2.295,
+                "integrated_flow_mass_assuming_g_per_s_kg": 0.011797499999999999,
+                "scale_delta_assuming_kg": 0.0,
+                "flow_to_scale_mass_ratio": null,
+                "descriptive_closure_screen_pass": false
+              },
+              {
+                "start_elapsed_s": 1512.5,
+                "end_elapsed_s": 1523.5,
+                "duration_s": 11.0,
+                "flow_baseline_raw_units": 3.585,
+                "peak_corrected_flow_raw_units": 2.865,
+                "integrated_flow_mass_assuming_g_per_s_kg": 0.0149525,
+                "scale_delta_assuming_kg": 0.0,
+                "flow_to_scale_mass_ratio": null,
+                "descriptive_closure_screen_pass": false
+              },
+              {
+                "start_elapsed_s": 1711.5,
+                "end_elapsed_s": 1722.5,
+                "duration_s": 11.0,
+                "flow_baseline_raw_units": 3.775,
+                "peak_corrected_flow_raw_units": 2.6650000000000005,
+                "integrated_flow_mass_assuming_g_per_s_kg": 0.014217500000000001,
+                "scale_delta_assuming_kg": 0.0,
+                "flow_to_scale_mass_ratio": null,
+                "descriptive_closure_screen_pass": false
+              },
+              {
+                "start_elapsed_s": 1918.5,
+                "end_elapsed_s": 1929.5,
+                "duration_s": 11.0,
+                "flow_baseline_raw_units": 3.4,
+                "peak_corrected_flow_raw_units": 3.1,
+                "integrated_flow_mass_assuming_g_per_s_kg": 0.01538,
+                "scale_delta_assuming_kg": 0.0,
+                "flow_to_scale_mass_ratio": null,
+                "descriptive_closure_screen_pass": false
+              },
+              {
+                "start_elapsed_s": 2113.0,
+                "end_elapsed_s": 2124.0,
+                "duration_s": 11.0,
+                "flow_baseline_raw_units": 3.715,
+                "peak_corrected_flow_raw_units": 2.785,
+                "integrated_flow_mass_assuming_g_per_s_kg": 0.0147325,
+                "scale_delta_assuming_kg": 0.0,
+                "flow_to_scale_mass_ratio": null,
+                "descriptive_closure_screen_pass": false
+              },
+              {
+                "start_elapsed_s": 2351.0,
+                "end_elapsed_s": 2354.0,
+                "duration_s": 3.0,
+                "flow_baseline_raw_units": 2.96,
+                "peak_corrected_flow_raw_units": 0.3599999999999999,
+                "integrated_flow_mass_assuming_g_per_s_kg": 0.0003799999999999999,
+                "scale_delta_assuming_kg": 0.0,
+                "flow_to_scale_mass_ratio": null,
+                "descriptive_closure_screen_pass": false
+              }
+            ],
+            "record_id": "20590761",
+            "zenodo_md5": "md5:aec51150bd7f4f191660891278af47e7",
+            "byte_size": 414449
+          },
+          {
+            "filename": "20241025_Test_11_NPL.xlsx",
+            "sha256": "742fab05c78c3658301990ded9f71d38e1fd4a58f6485aaf91e8feb2902a072d",
+            "sheet_names": [
+              "Tabelle1"
+            ],
+            "sample_count": 4560,
+            "duration_s": 2279.5000000000036,
+            "sampling_interval_s": 0.5,
+            "sampling_interval_max_abs_deviation_s": 3.637978807091713e-12,
+            "time_monotonic": true,
+            "headers": [
+              "Zeit",
+              "TT_D04 ValueY",
+              "PTX05 ValueY",
+              "PT03 ValueY",
+              "TEX01 ValueY",
+              "TT24 ValueY",
+              "QT_D02 ValueY",
+              "PTD10 ValueY",
+              "PTD11 ValueY",
+              "fwg1 ValueY",
+              "fwg2 ValueY",
+              "TE_D22 ValueY",
+              "11TT150A ValueY"
+            ],
+            "channels": {
+              "TT_D04 ValueY": {
+                "numeric_count": 4560,
+                "missing_or_non_numeric_count": 0,
+                "first": 13.27,
+                "last": 13.58,
+                "minimum": 13.27,
+                "maximum": 13.58
+              },
+              "PTX05 ValueY": {
+                "numeric_count": 4560,
+                "missing_or_non_numeric_count": 0,
+                "first": 1.59,
+                "last": 1.09,
+                "minimum": -1.12,
+                "maximum": 248.93
+              },
+              "PT03 ValueY": {
+                "numeric_count": 4560,
+                "missing_or_non_numeric_count": 0,
+                "first": -0.18,
+                "last": -0.61,
+                "minimum": -0.69,
+                "maximum": 238.32
+              },
+              "TEX01 ValueY": {
+                "numeric_count": 4560,
+                "missing_or_non_numeric_count": 0,
+                "first": 11.97,
+                "last": 12.4,
+                "minimum": 10.4,
+                "maximum": 16.27
+              },
+              "TT24 ValueY": {
+                "numeric_count": 4560,
+                "missing_or_non_numeric_count": 0,
+                "first": 11.85,
+                "last": 12.23,
+                "minimum": 10.7,
+                "maximum": 15.23
+              },
+              "QT_D02 ValueY": {
+                "numeric_count": 4560,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.06,
+                "last": 0.07,
+                "minimum": 0.06,
+                "maximum": 47.42
+              },
+              "PTD10 ValueY": {
+                "numeric_count": 4560,
+                "missing_or_non_numeric_count": 0,
+                "first": 76.32,
+                "last": 377.1,
+                "minimum": 27.96,
+                "maximum": 449.91
+              },
+              "PTD11 ValueY": {
+                "numeric_count": 4560,
+                "missing_or_non_numeric_count": 0,
+                "first": 73.46,
+                "last": 109.88,
+                "minimum": 25.57,
+                "maximum": 323.24
+              },
+              "fwg1 ValueY": {
+                "numeric_count": 4560,
+                "missing_or_non_numeric_count": 0,
+                "first": 10.5,
+                "last": 6.3,
+                "minimum": 1.9,
+                "maximum": 10.5
+              },
+              "fwg2 ValueY": {
+                "numeric_count": 4560,
+                "missing_or_non_numeric_count": 0,
+                "first": 10.5,
+                "last": 6.3,
+                "minimum": 1.8,
+                "maximum": 10.5
+              },
+              "TE_D22 ValueY": {
+                "numeric_count": 4560,
+                "missing_or_non_numeric_count": 0,
+                "first": 13.41,
+                "last": 15.39,
+                "minimum": 13.3,
+                "maximum": 15.61
+              },
+              "11TT150A ValueY": {
+                "numeric_count": 4560,
+                "missing_or_non_numeric_count": 0,
+                "first": -10.7,
+                "last": -10.2,
+                "minimum": -10.7,
+                "maximum": -10.2
+              }
+            },
+            "has_flow_channel": true,
+            "has_mass_channel": false,
+            "has_candidate_receiving_cylinder_pressure": false,
+            "has_four_candidate_receiving_cylinder_temperatures": false,
+            "mass_closure_sessions": [],
+            "record_id": "20590761",
+            "zenodo_md5": "md5:8410f9afb764cdc0ffcd599d169f4948",
+            "byte_size": 323484
+          },
+          {
+            "filename": "20241025_Test_12_NPL.xlsx",
+            "sha256": "b465a5d809c67e3eb3d86d7d8bbcf86f59efb39e44335e3a0367624b6bcd6411",
+            "sheet_names": [
+              "Tabelle1"
+            ],
+            "sample_count": 3840,
+            "duration_s": 1919.5,
+            "sampling_interval_s": 0.5,
+            "sampling_interval_max_abs_deviation_s": 0.0,
+            "time_monotonic": true,
+            "headers": [
+              "Zeit",
+              "TT_D04 ValueY",
+              "PTX05 ValueY",
+              "PT03 ValueY",
+              "TEX01 ValueY",
+              "TT24 ValueY",
+              "QT_D02 ValueY",
+              "PTD10 ValueY",
+              "PTD11 ValueY",
+              "fwg1 ValueY",
+              "fwg2 ValueY",
+              "TE_D22 ValueY",
+              "11TT150A ValueY"
+            ],
+            "channels": {
+              "TT_D04 ValueY": {
+                "numeric_count": 3840,
+                "missing_or_non_numeric_count": 0,
+                "first": 13.68,
+                "last": 14.43,
+                "minimum": 13.68,
+                "maximum": 14.43
+              },
+              "PTX05 ValueY": {
+                "numeric_count": 3840,
+                "missing_or_non_numeric_count": 0,
+                "first": 1.12,
+                "last": 6.78,
+                "minimum": 0.74,
+                "maximum": 279.35
+              },
+              "PT03 ValueY": {
+                "numeric_count": 3840,
+                "missing_or_non_numeric_count": 0,
+                "first": -0.61,
+                "last": 5.06,
+                "minimum": -0.65,
+                "maximum": 240.7
+              },
+              "TEX01 ValueY": {
+                "numeric_count": 3840,
+                "missing_or_non_numeric_count": 0,
+                "first": 12.4,
+                "last": 13.62,
+                "minimum": 12.4,
+                "maximum": 16.23
+              },
+              "TT24 ValueY": {
+                "numeric_count": 3840,
+                "missing_or_non_numeric_count": 0,
+                "first": 12.23,
+                "last": 13.0,
+                "minimum": 11.17,
+                "maximum": 18.67
+              },
+              "QT_D02 ValueY": {
+                "numeric_count": 3840,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.07,
+                "last": 0.07,
+                "minimum": 0.07,
+                "maximum": 45.25
+              },
+              "PTD10 ValueY": {
+                "numeric_count": 3840,
+                "missing_or_non_numeric_count": 0,
+                "first": 377.21,
+                "last": 32.73,
+                "minimum": 28.54,
+                "maximum": 407.41
+              },
+              "PTD11 ValueY": {
+                "numeric_count": 3840,
+                "missing_or_non_numeric_count": 0,
+                "first": 124.46,
+                "last": 30.45,
+                "minimum": 26.44,
+                "maximum": 304.98
+              },
+              "fwg1 ValueY": {
+                "numeric_count": 3840,
+                "missing_or_non_numeric_count": 0,
+                "first": 7.7,
+                "last": -1.0,
+                "minimum": -1.5,
+                "maximum": 10.0
+              },
+              "fwg2 ValueY": {
+                "numeric_count": 3840,
+                "missing_or_non_numeric_count": 0,
+                "first": 7.5,
+                "last": -1.0,
+                "minimum": -1.7,
+                "maximum": 9.8
+              },
+              "TE_D22 ValueY": {
+                "numeric_count": 3840,
+                "missing_or_non_numeric_count": 0,
+                "first": 14.96,
+                "last": 15.94,
+                "minimum": 14.85,
+                "maximum": 16.35
+              },
+              "11TT150A ValueY": {
+                "numeric_count": 3840,
+                "missing_or_non_numeric_count": 0,
+                "first": -10.0,
+                "last": -9.7,
+                "minimum": -10.0,
+                "maximum": -9.6
+              }
+            },
+            "has_flow_channel": true,
+            "has_mass_channel": false,
+            "has_candidate_receiving_cylinder_pressure": false,
+            "has_four_candidate_receiving_cylinder_temperatures": false,
+            "mass_closure_sessions": [],
+            "record_id": "20590761",
+            "zenodo_md5": "md5:5d36b4eedbb9f478de0ea880069010cb",
+            "byte_size": 279188
+          },
+          {
+            "filename": "20241025_Test_13_NPL.xlsx",
+            "sha256": "a62b17f4a63a37f3847795f5d2a884aba0fa8330172469c329015ebcc4f80cc7",
+            "sheet_names": [
+              "Tabelle1"
+            ],
+            "sample_count": 2760,
+            "duration_s": 1379.5,
+            "sampling_interval_s": 0.5,
+            "sampling_interval_max_abs_deviation_s": 0.0,
+            "time_monotonic": true,
+            "headers": [
+              "Zeit",
+              "TT_D04 ValueY",
+              "PTX05 ValueY",
+              "PT03 ValueY",
+              "TEX01 ValueY",
+              "TT24 ValueY",
+              "QT_D02 ValueY",
+              "PTD10 ValueY",
+              "PTD11 ValueY",
+              "fwg1 ValueY",
+              "fwg2 ValueY",
+              "TE_D22 ValueY",
+              "11TT150A ValueY"
+            ],
+            "channels": {
+              "TT_D04 ValueY": {
+                "numeric_count": 2760,
+                "missing_or_non_numeric_count": 0,
+                "first": 14.53,
+                "last": 15.18,
+                "minimum": 14.53,
+                "maximum": 15.18
+              },
+              "PTX05 ValueY": {
+                "numeric_count": 2760,
+                "missing_or_non_numeric_count": 0,
+                "first": 7.14,
+                "last": 351.44,
+                "minimum": 0.54,
+                "maximum": 356.01
+              },
+              "PT03 ValueY": {
+                "numeric_count": 2760,
+                "missing_or_non_numeric_count": 0,
+                "first": 5.5,
+                "last": 349.61,
+                "minimum": -0.69,
+                "maximum": 354.2
+              },
+              "TEX01 ValueY": {
+                "numeric_count": 2760,
+                "missing_or_non_numeric_count": 0,
+                "first": 13.62,
+                "last": 14.76,
+                "minimum": 13.36,
+                "maximum": 15.28
+              },
+              "TT24 ValueY": {
+                "numeric_count": 2760,
+                "missing_or_non_numeric_count": 0,
+                "first": 13.0,
+                "last": 14.55,
+                "minimum": 12.89,
+                "maximum": 15.26
+              },
+              "QT_D02 ValueY": {
+                "numeric_count": 2760,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.07,
+                "last": 0.07,
+                "minimum": 0.07,
+                "maximum": 8.73
+              },
+              "PTD10 ValueY": {
+                "numeric_count": 2760,
+                "missing_or_non_numeric_count": 0,
+                "first": 32.73,
+                "last": 392.83,
+                "minimum": 32.05,
+                "maximum": 458.66
+              },
+              "PTD11 ValueY": {
+                "numeric_count": 2760,
+                "missing_or_non_numeric_count": 0,
+                "first": 30.45,
+                "last": 375.0,
+                "minimum": 29.41,
+                "maximum": 379.59
+              },
+              "fwg1 ValueY": {
+                "numeric_count": 2760,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.6,
+                "last": 8.3,
+                "minimum": 0.6,
+                "maximum": 9.8
+              },
+              "fwg2 ValueY": {
+                "numeric_count": 2760,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.5,
+                "last": 8.3,
+                "minimum": 0.5,
+                "maximum": 9.6
+              },
+              "TE_D22 ValueY": {
+                "numeric_count": 2760,
+                "missing_or_non_numeric_count": 0,
+                "first": 15.72,
+                "last": 15.96,
+                "minimum": 15.72,
+                "maximum": 16.49
+              },
+              "11TT150A ValueY": {
+                "numeric_count": 2760,
+                "missing_or_non_numeric_count": 0,
+                "first": -9.5,
+                "last": -9.2,
+                "minimum": -9.6,
+                "maximum": -9.2
+              }
+            },
+            "has_flow_channel": true,
+            "has_mass_channel": false,
+            "has_candidate_receiving_cylinder_pressure": false,
+            "has_four_candidate_receiving_cylinder_temperatures": false,
+            "mass_closure_sessions": [],
+            "record_id": "20590761",
+            "zenodo_md5": "md5:4c6f39a35d7cb3d5c27bb2607820d775",
+            "byte_size": 205103
+          },
+          {
+            "filename": "20241025_Test_14_NPL.xlsx",
+            "sha256": "efc51cec996c23bc459f81e32e564d74a810b405ccbebc7b7a95125fe587db6b",
+            "sheet_names": [
+              "Tabelle1"
+            ],
+            "sample_count": 3720,
+            "duration_s": 1859.5,
+            "sampling_interval_s": 0.5,
+            "sampling_interval_max_abs_deviation_s": 0.0,
+            "time_monotonic": true,
+            "headers": [
+              "Zeit",
+              "TT_D04 ValueY",
+              "PTX05 ValueY",
+              "PT03 ValueY",
+              "TEX01 ValueY",
+              "TT24 ValueY",
+              "QT_D02 ValueY",
+              "PTD10 ValueY",
+              "PTD11 ValueY",
+              "fwg1 ValueY",
+              "fwg2 ValueY",
+              "TE_D22 ValueY",
+              "11TT150A ValueY"
+            ],
+            "channels": {
+              "TT_D04 ValueY": {
+                "numeric_count": 3720,
+                "missing_or_non_numeric_count": 0,
+                "first": 15.52,
+                "last": 17.26,
+                "minimum": 15.52,
+                "maximum": 17.26
+              },
+              "PTX05 ValueY": {
+                "numeric_count": 3720,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.92,
+                "last": 47.36,
+                "minimum": -1.39,
+                "maximum": 78.14
+              },
+              "PT03 ValueY": {
+                "numeric_count": 3720,
+                "missing_or_non_numeric_count": 0,
+                "first": -0.61,
+                "last": 43.95,
+                "minimum": -0.72,
+                "maximum": 76.43
+              },
+              "TEX01 ValueY": {
+                "numeric_count": 3720,
+                "missing_or_non_numeric_count": 0,
+                "first": 13.76,
+                "last": 14.82,
+                "minimum": 13.76,
+                "maximum": 15.34
+              },
+              "TT24 ValueY": {
+                "numeric_count": 3720,
+                "missing_or_non_numeric_count": 0,
+                "first": 13.68,
+                "last": 15.52,
+                "minimum": 13.61,
+                "maximum": 16.71
+              },
+              "QT_D02 ValueY": {
+                "numeric_count": 3720,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.07,
+                "last": 7.3,
+                "minimum": 0.07,
+                "maximum": 8.41
+              },
+              "PTD10 ValueY": {
+                "numeric_count": 3720,
+                "missing_or_non_numeric_count": 0,
+                "first": 29.41,
+                "last": 303.13,
+                "minimum": 28.94,
+                "maximum": 462.06
+              },
+              "PTD11 ValueY": {
+                "numeric_count": 3720,
+                "missing_or_non_numeric_count": 0,
+                "first": 27.2,
+                "last": 83.59,
+                "minimum": 26.29,
+                "maximum": 153.46
+              },
+              "fwg1 ValueY": {
+                "numeric_count": 3720,
+                "missing_or_non_numeric_count": 0,
+                "first": -0.2,
+                "last": 6.7,
+                "minimum": -0.2,
+                "maximum": 7.3
+              },
+              "fwg2 ValueY": {
+                "numeric_count": 3720,
+                "missing_or_non_numeric_count": 0,
+                "first": -0.3,
+                "last": 6.5,
+                "minimum": -0.3,
+                "maximum": 7.2
+              },
+              "TE_D22 ValueY": {
+                "numeric_count": 3720,
+                "missing_or_non_numeric_count": 0,
+                "first": 14.96,
+                "last": 17.83,
+                "minimum": 14.96,
+                "maximum": 17.83
+              },
+              "11TT150A ValueY": {
+                "numeric_count": 3720,
+                "missing_or_non_numeric_count": 0,
+                "first": -9.2,
+                "last": -8.7,
+                "minimum": -9.2,
+                "maximum": -8.7
+              }
+            },
+            "has_flow_channel": true,
+            "has_mass_channel": false,
+            "has_candidate_receiving_cylinder_pressure": false,
+            "has_four_candidate_receiving_cylinder_temperatures": false,
+            "mass_closure_sessions": [],
+            "record_id": "20590761",
+            "zenodo_md5": "md5:8555a228ef6d8078222b303774d33383",
+            "byte_size": 269687
+          },
+          {
+            "filename": "20241025_Test_15_NPL.xlsx",
+            "sha256": "bcca83c1e56bbc616a734bd0b6f15acd56d648db576b7f574ff7a8ac434b3488",
+            "sheet_names": [
+              "Tabelle1"
+            ],
+            "sample_count": 2640,
+            "duration_s": 1319.5,
+            "sampling_interval_s": 0.5,
+            "sampling_interval_max_abs_deviation_s": 0.0,
+            "time_monotonic": true,
+            "headers": [
+              "Zeit",
+              "TT_D04 ValueY",
+              "PTX05 ValueY",
+              "PT03 ValueY",
+              "TEX01 ValueY",
+              "TT24 ValueY",
+              "QT_D02 ValueY",
+              "PTD10 ValueY",
+              "PTD11 ValueY",
+              "fwg1 ValueY",
+              "fwg2 ValueY",
+              "TE_D22 ValueY",
+              "11TT150A ValueY"
+            ],
+            "channels": {
+              "TT_D04 ValueY": {
+                "numeric_count": 2640,
+                "missing_or_non_numeric_count": 0,
+                "first": 17.37,
+                "last": 16.82,
+                "minimum": 16.82,
+                "maximum": 17.37
+              },
+              "PTX05 ValueY": {
+                "numeric_count": 2640,
+                "missing_or_non_numeric_count": 0,
+                "first": 35.01,
+                "last": 0.74,
+                "minimum": -2.98,
+                "maximum": 353.19
+              },
+              "PT03 ValueY": {
+                "numeric_count": 2640,
+                "missing_or_non_numeric_count": 0,
+                "first": 33.42,
+                "last": -0.69,
+                "minimum": -0.69,
+                "maximum": 345.59
+              },
+              "TEX01 ValueY": {
+                "numeric_count": 2640,
+                "missing_or_non_numeric_count": 0,
+                "first": 15.53,
+                "last": 16.08,
+                "minimum": 10.13,
+                "maximum": 17.64
+              },
+              "TT24 ValueY": {
+                "numeric_count": 2640,
+                "missing_or_non_numeric_count": 0,
+                "first": 15.07,
+                "last": 15.61,
+                "minimum": 7.48,
+                "maximum": 17.38
+              },
+              "QT_D02 ValueY": {
+                "numeric_count": 2640,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.07,
+                "last": 0.07,
+                "minimum": 0.07,
+                "maximum": 14.72
+              },
+              "PTD10 ValueY": {
+                "numeric_count": 2640,
+                "missing_or_non_numeric_count": 0,
+                "first": 372.21,
+                "last": 370.4,
+                "minimum": 359.05,
+                "maximum": 373.19
+              },
+              "PTD11 ValueY": {
+                "numeric_count": 2640,
+                "missing_or_non_numeric_count": 0,
+                "first": 60.22,
+                "last": 368.02,
+                "minimum": 58.05,
+                "maximum": 379.09
+              },
+              "fwg1 ValueY": {
+                "numeric_count": 2640,
+                "missing_or_non_numeric_count": 0,
+                "first": 1.4,
+                "last": 10.3,
+                "minimum": 1.3,
+                "maximum": 10.6
+              },
+              "fwg2 ValueY": {
+                "numeric_count": 2640,
+                "missing_or_non_numeric_count": 0,
+                "first": 1.2,
+                "last": 10.1,
+                "minimum": 1.1,
+                "maximum": 10.5
+              },
+              "TE_D22 ValueY": {
+                "numeric_count": 2640,
+                "missing_or_non_numeric_count": 0,
+                "first": 18.01,
+                "last": 17.38,
+                "minimum": 17.38,
+                "maximum": 18.44
+              },
+              "11TT150A ValueY": {
+                "numeric_count": 2640,
+                "missing_or_non_numeric_count": 0,
+                "first": -8.7,
+                "last": -8.4,
+                "minimum": -8.7,
+                "maximum": -8.4
+              }
+            },
+            "has_flow_channel": true,
+            "has_mass_channel": false,
+            "has_candidate_receiving_cylinder_pressure": false,
+            "has_four_candidate_receiving_cylinder_temperatures": false,
+            "mass_closure_sessions": [],
+            "record_id": "20590761",
+            "zenodo_md5": "md5:95563269815017949bea0cd940e9ab66",
+            "byte_size": 192940
+          },
+          {
+            "filename": "20241025_Test_17_NPL.xlsx",
+            "sha256": "c4cf8c1ca14312d99846b42f05a7f9c56779c90731e70a91573d668cd1059995",
+            "sheet_names": [
+              "Tabelle1"
+            ],
+            "sample_count": 4800,
+            "duration_s": 2399.5,
+            "sampling_interval_s": 0.5,
+            "sampling_interval_max_abs_deviation_s": 0.0,
+            "time_monotonic": true,
+            "headers": [
+              "Zeit",
+              "TT_D04 ValueY",
+              "PTX05 ValueY",
+              "PT03 ValueY",
+              "TEX01 ValueY",
+              "TT24 ValueY",
+              "QT_D02 ValueY",
+              "PTD10 ValueY",
+              "PTD11 ValueY",
+              "fwg1 ValueY",
+              "fwg2 ValueY",
+              "TE_D22 ValueY",
+              "11TT150A ValueY"
+            ],
+            "channels": {
+              "TT_D04 ValueY": {
+                "numeric_count": 4800,
+                "missing_or_non_numeric_count": 0,
+                "first": 19.81,
+                "last": 20.58,
+                "minimum": 19.81,
+                "maximum": 20.58
+              },
+              "PTX05 ValueY": {
+                "numeric_count": 4800,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.83,
+                "last": 0.78,
+                "minimum": -3.38,
+                "maximum": 376.09
+              },
+              "PT03 ValueY": {
+                "numeric_count": 4800,
+                "missing_or_non_numeric_count": 0,
+                "first": -0.58,
+                "last": -0.69,
+                "minimum": -0.94,
+                "maximum": 344.11
+              },
+              "TEX01 ValueY": {
+                "numeric_count": 4800,
+                "missing_or_non_numeric_count": 0,
+                "first": 16.77,
+                "last": 14.53,
+                "minimum": 7.54,
+                "maximum": 18.06
+              },
+              "TT24 ValueY": {
+                "numeric_count": 4800,
+                "missing_or_non_numeric_count": 0,
+                "first": 16.74,
+                "last": 15.85,
+                "minimum": 7.54,
+                "maximum": 20.43
+              },
+              "QT_D02 ValueY": {
+                "numeric_count": 4800,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.07,
+                "last": 0.07,
+                "minimum": 0.07,
+                "maximum": 11.64
+              },
+              "PTD10 ValueY": {
+                "numeric_count": 4800,
+                "missing_or_non_numeric_count": 0,
+                "first": 369.68,
+                "last": 253.91,
+                "minimum": 253.54,
+                "maximum": 370.15
+              },
+              "PTD11 ValueY": {
+                "numeric_count": 4800,
+                "missing_or_non_numeric_count": 0,
+                "first": 95.38,
+                "last": 86.88,
+                "minimum": 48.32,
+                "maximum": 371.31
+              },
+              "fwg1 ValueY": {
+                "numeric_count": 4800,
+                "missing_or_non_numeric_count": 0,
+                "first": -7.2,
+                "last": -20.5,
+                "minimum": -26.2,
+                "maximum": -6.0
+              },
+              "fwg2 ValueY": {
+                "numeric_count": 4800,
+                "missing_or_non_numeric_count": 0,
+                "first": -7.2,
+                "last": -20.6,
+                "minimum": -26.2,
+                "maximum": -6.2
+              },
+              "TE_D22 ValueY": {
+                "numeric_count": 4800,
+                "missing_or_non_numeric_count": 0,
+                "first": 11.84,
+                "last": 4.65,
+                "minimum": 1.84,
+                "maximum": 12.49
+              },
+              "11TT150A ValueY": {
+                "numeric_count": 4800,
+                "missing_or_non_numeric_count": 0,
+                "first": -25.7,
+                "last": -27.1,
+                "minimum": -27.1,
+                "maximum": -24.6
+              }
+            },
+            "has_flow_channel": true,
+            "has_mass_channel": false,
+            "has_candidate_receiving_cylinder_pressure": false,
+            "has_four_candidate_receiving_cylinder_temperatures": false,
+            "mass_closure_sessions": [],
+            "record_id": "20590761",
+            "zenodo_md5": "md5:9b3787103b11d1627be0671ed96ec04d",
+            "byte_size": 341889
+          },
+          {
+            "filename": "20241025_Test_18_NPL.xlsx",
+            "sha256": "f021c298fe6591e77e52e8b4f486a85278d3de9332939f7b157120dca431f0fb",
+            "sheet_names": [
+              "Tabelle1"
+            ],
+            "sample_count": 5400,
+            "duration_s": 2699.5,
+            "sampling_interval_s": 0.5,
+            "sampling_interval_max_abs_deviation_s": 0.0,
+            "time_monotonic": true,
+            "headers": [
+              "Zeit",
+              "TT_D04 ValueY",
+              "PTX05 ValueY",
+              "PT03 ValueY",
+              "TEX01 ValueY",
+              "TT24 ValueY",
+              "QT_D02 ValueY",
+              "PTD10 ValueY",
+              "PTD11 ValueY",
+              "fwg1 ValueY",
+              "fwg2 ValueY",
+              "TE_D22 ValueY",
+              "11TT150A ValueY"
+            ],
+            "channels": {
+              "TT_D04 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 20.69,
+                "last": 21.18,
+                "minimum": 20.69,
+                "maximum": 21.21
+              },
+              "PTX05 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.89,
+                "last": 0.74,
+                "minimum": -3.04,
+                "maximum": 344.33
+              },
+              "PT03 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": -0.58,
+                "last": -0.69,
+                "minimum": -0.69,
+                "maximum": 341.72
+              },
+              "TEX01 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 15.63,
+                "last": 13.43,
+                "minimum": 5.81,
+                "maximum": 17.47
+              },
+              "TT24 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 16.61,
+                "last": 14.8,
+                "minimum": 5.28,
+                "maximum": 20.51
+              },
+              "QT_D02 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.07,
+                "last": 0.07,
+                "minimum": 0.07,
+                "maximum": 22.89
+              },
+              "PTD10 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 240.16,
+                "last": 30.06,
+                "minimum": 29.48,
+                "maximum": 434.43
+              },
+              "PTD11 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 99.83,
+                "last": 28.07,
+                "minimum": 27.52,
+                "maximum": 369.03
+              },
+              "fwg1 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": -15.4,
+                "last": -29.4,
+                "minimum": -35.6,
+                "maximum": -12.7
+              },
+              "fwg2 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": -15.5,
+                "last": -29.5,
+                "minimum": -35.9,
+                "maximum": -12.7
+              },
+              "TE_D22 ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": 7.98,
+                "last": 1.77,
+                "minimum": -1.77,
+                "maximum": 10.08
+              },
+              "11TT150A ValueY": {
+                "numeric_count": 5400,
+                "missing_or_non_numeric_count": 0,
+                "first": -29.0,
+                "last": -36.1,
+                "minimum": -36.1,
+                "maximum": -28.8
+              }
+            },
+            "has_flow_channel": true,
+            "has_mass_channel": false,
+            "has_candidate_receiving_cylinder_pressure": false,
+            "has_four_candidate_receiving_cylinder_temperatures": false,
+            "mass_closure_sessions": [],
+            "record_id": "20590761",
+            "zenodo_md5": "md5:4b994c386ef66d04c3cd7ee23f71af52",
+            "byte_size": 382098
+          },
+          {
+            "filename": "20241025_Test_19_NPL.xlsx",
+            "sha256": "de63f5bf6521cf884971aa93057144bb327115fb0c3b1822660d1e7ee4f646a6",
+            "sheet_names": [
+              "Tabelle1"
+            ],
+            "sample_count": 3360,
+            "duration_s": 1679.5,
+            "sampling_interval_s": 0.5,
+            "sampling_interval_max_abs_deviation_s": 0.0,
+            "time_monotonic": true,
+            "headers": [
+              "Zeit",
+              "TT_D04 ValueY",
+              "PTX05 ValueY",
+              "PT03 ValueY",
+              "TEX01 ValueY",
+              "TT24 ValueY",
+              "QT_D02 ValueY",
+              "PTD10 ValueY",
+              "PTD11 ValueY",
+              "fwg1 ValueY",
+              "fwg2 ValueY",
+              "TE_D22 ValueY",
+              "11TT150A ValueY"
+            ],
+            "channels": {
+              "TT_D04 ValueY": {
+                "numeric_count": 3360,
+                "missing_or_non_numeric_count": 0,
+                "first": 21.14,
+                "last": 21.69,
+                "minimum": 21.14,
+                "maximum": 21.7
+              },
+              "PTX05 ValueY": {
+                "numeric_count": 3360,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.92,
+                "last": 0.94,
+                "minimum": -3.02,
+                "maximum": 342.57
+              },
+              "PT03 ValueY": {
+                "numeric_count": 3360,
+                "missing_or_non_numeric_count": 0,
+                "first": -0.47,
+                "last": -0.61,
+                "minimum": -0.61,
+                "maximum": 337.75
+              },
+              "TEX01 ValueY": {
+                "numeric_count": 3360,
+                "missing_or_non_numeric_count": 0,
+                "first": 16.18,
+                "last": 11.33,
+                "minimum": 0.97,
+                "maximum": 18.2
+              },
+              "TT24 ValueY": {
+                "numeric_count": 3360,
+                "missing_or_non_numeric_count": 0,
+                "first": 17.25,
+                "last": 14.53,
+                "minimum": 4.86,
+                "maximum": 18.98
+              },
+              "QT_D02 ValueY": {
+                "numeric_count": 3360,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.07,
+                "last": 0.07,
+                "minimum": 0.07,
+                "maximum": 14.06
+              },
+              "PTD10 ValueY": {
+                "numeric_count": 3360,
+                "missing_or_non_numeric_count": 0,
+                "first": 29.55,
+                "last": 28.83,
+                "minimum": 27.92,
+                "maximum": 420.65
+              },
+              "PTD11 ValueY": {
+                "numeric_count": 3360,
+                "missing_or_non_numeric_count": 0,
+                "first": 27.92,
+                "last": 26.73,
+                "minimum": 26.11,
+                "maximum": 362.49
+              },
+              "fwg1 ValueY": {
+                "numeric_count": 3360,
+                "missing_or_non_numeric_count": 0,
+                "first": -12.5,
+                "last": -32.6,
+                "minimum": -38.9,
+                "maximum": -11.2
+              },
+              "fwg2 ValueY": {
+                "numeric_count": 3360,
+                "missing_or_non_numeric_count": 0,
+                "first": -12.7,
+                "last": -32.8,
+                "minimum": -38.9,
+                "maximum": -11.2
+              },
+              "TE_D22 ValueY": {
+                "numeric_count": 3360,
+                "missing_or_non_numeric_count": 0,
+                "first": 10.91,
+                "last": -0.5,
+                "minimum": -5.92,
+                "maximum": 11.84
+              },
+              "11TT150A ValueY": {
+                "numeric_count": 3360,
+                "missing_or_non_numeric_count": 0,
+                "first": -39.6,
+                "last": -37.8,
+                "minimum": -39.6,
+                "maximum": -37.8
+              }
+            },
+            "has_flow_channel": true,
+            "has_mass_channel": false,
+            "has_candidate_receiving_cylinder_pressure": false,
+            "has_four_candidate_receiving_cylinder_temperatures": false,
+            "mass_closure_sessions": [],
+            "record_id": "20590761",
+            "zenodo_md5": "md5:60c3084033133569998a230f688e3d3e",
+            "byte_size": 248702
+          }
+        ]
+      },
+      {
+        "record_id": "20590842",
+        "doi": "10.5281/zenodo.20590842",
+        "title": "Group B -- HySam system measurement data",
+        "license": "cc-by-4.0",
+        "metadata_sha256": "602606e0196eaee52ff2fed43d88c0d559d2c74b4d8097438c2d88981a6694e1",
+        "workbook_count": 3,
+        "workbooks": [
+          {
+            "filename": "20241023_Test_1_HySaM.xlsx",
+            "sha256": "fbdd81a7ec9c1191d69322f06087e8b30a33acc8b340b861a636173c08d9913a",
+            "sheet_names": [
+              "Tabelle1"
+            ],
+            "sample_count": 6600,
+            "duration_s": 3299.5,
+            "sampling_interval_s": 0.5,
+            "sampling_interval_max_abs_deviation_s": 0.0,
+            "time_monotonic": true,
+            "headers": [
+              "Zeit",
+              "TT_D04 ValueY",
+              "PTX05 ValueY",
+              "PT03 ValueY",
+              "TEX01 ValueY",
+              "TT24 ValueY",
+              "QT_D02 ValueY",
+              "PTD10 ValueY",
+              "PTD11 ValueY",
+              "fwg1 ValueY",
+              "fwg2 ValueY",
+              "FWg35_Masse ValueY",
+              "TE_D22 ValueY",
+              "11TT150A ValueY",
+              "PT01 ValueY",
+              "TT01 ValueY",
+              "TT08 ValueY",
+              "TT09 ValueY",
+              "TT10 ValueY",
+              "TT11 ValueY"
+            ],
+            "channels": {
+              "TT_D04 ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": 17.39,
+                "last": 17.66,
+                "minimum": 16.6,
+                "maximum": 18.13
+              },
+              "PTX05 ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": 1.21,
+                "last": 2.73,
+                "minimum": 0.74,
+                "maximum": 250.65
+              },
+              "PT03 ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": -0.76,
+                "last": 0.43,
+                "minimum": -0.76,
+                "maximum": 243.82
+              },
+              "TEX01 ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": 6.77,
+                "last": 0.76,
+                "minimum": -19.48,
+                "maximum": 17.11
+              },
+              "TT24 ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": 9.0,
+                "last": -0.72,
+                "minimum": -20.58,
+                "maximum": 13.62
+              },
+              "QT_D02 ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.07,
+                "last": 0.07,
+                "minimum": 0.07,
+                "maximum": 29.81
+              },
+              "PTD10 ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": 46.88,
+                "last": 414.86,
+                "minimum": 35.7,
+                "maximum": 501.74
+              },
+              "PTD11 ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": 44.7,
+                "last": 270.07,
+                "minimum": 33.49,
+                "maximum": 405.09
+              },
+              "fwg1 ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": -17.1,
+                "last": -17.9,
+                "minimum": -30.1,
+                "maximum": -4.2
+              },
+              "fwg2 ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": -17.3,
+                "last": -17.9,
+                "minimum": -30.5,
+                "maximum": -4.2
+              },
+              "FWg35_Masse ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.0,
+                "last": 2.6,
+                "minimum": 0.0,
+                "maximum": 2.6
+              },
+              "TE_D22 ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": -0.72,
+                "last": -2.26,
+                "minimum": -7.99,
+                "maximum": 12.0
+              },
+              "11TT150A ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": -21.4,
+                "last": -20.8,
+                "minimum": -32.0,
+                "maximum": -19.9
+              },
+              "PT01 ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": 48.25,
+                "last": 224.28,
+                "minimum": 48.03,
+                "maximum": 234.88
+              },
+              "TT01 ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": 11.3,
+                "last": -0.54,
+                "minimum": -13.51,
+                "maximum": 15.4
+              },
+              "TT08 ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": 19.98,
+                "last": 45.41,
+                "minimum": 17.74,
+                "maximum": 52.58
+              },
+              "TT09 ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": 20.39,
+                "last": 45.48,
+                "minimum": 17.94,
+                "maximum": 54.51
+              },
+              "TT10 ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": 20.05,
+                "last": 45.33,
+                "minimum": 17.83,
+                "maximum": 52.44
+              },
+              "TT11 ValueY": {
+                "numeric_count": 6600,
+                "missing_or_non_numeric_count": 0,
+                "first": 20.53,
+                "last": 45.89,
+                "minimum": 18.11,
+                "maximum": 54.32
+              }
+            },
+            "has_flow_channel": true,
+            "has_mass_channel": true,
+            "has_candidate_receiving_cylinder_pressure": true,
+            "has_four_candidate_receiving_cylinder_temperatures": true,
+            "mass_closure_sessions": [
+              {
+                "start_elapsed_s": 210.5,
+                "end_elapsed_s": 279.0,
+                "duration_s": 68.5,
+                "flow_baseline_raw_units": 0.07,
+                "peak_corrected_flow_raw_units": 29.74,
+                "integrated_flow_mass_assuming_g_per_s_kg": 0.32691,
+                "scale_delta_assuming_kg": 0.33,
+                "flow_to_scale_mass_ratio": 0.9906363636363635,
+                "descriptive_closure_screen_pass": true
+              },
+              {
+                "start_elapsed_s": 828.0,
+                "end_elapsed_s": 1044.5,
+                "duration_s": 216.5,
+                "flow_baseline_raw_units": 0.07,
+                "peak_corrected_flow_raw_units": 28.25,
+                "integrated_flow_mass_assuming_g_per_s_kg": 1.1010075,
+                "scale_delta_assuming_kg": 1.1,
+                "flow_to_scale_mass_ratio": 1.000915909090909,
+                "descriptive_closure_screen_pass": true
+              },
+              {
+                "start_elapsed_s": 2669.5,
+                "end_elapsed_s": 2686.5,
+                "duration_s": 17.0,
+                "flow_baseline_raw_units": 0.07,
+                "peak_corrected_flow_raw_units": 23.03,
+                "integrated_flow_mass_assuming_g_per_s_kg": 0.11578000000000001,
+                "scale_delta_assuming_kg": 0.11,
+                "flow_to_scale_mass_ratio": 1.0525454545454547,
+                "descriptive_closure_screen_pass": true
+              },
+              {
+                "start_elapsed_s": 2911.5,
+                "end_elapsed_s": 3076.0,
+                "duration_s": 164.5,
+                "flow_baseline_raw_units": 0.07,
+                "peak_corrected_flow_raw_units": 22.63,
+                "integrated_flow_mass_assuming_g_per_s_kg": 2.6074425,
+                "scale_delta_assuming_kg": 2.6,
+                "flow_to_scale_mass_ratio": 1.0028625,
+                "descriptive_closure_screen_pass": true
+              }
+            ],
+            "record_id": "20590842",
+            "zenodo_md5": "md5:8eb7c14218ae25d4ffe410cbf440484f",
+            "byte_size": 663869
+          },
+          {
+            "filename": "20241023_Test_4_HySaM_CESAME.xlsx",
+            "sha256": "bc9e5cbd23350b7320a96d627854cc5154f1b92ff987e087c957b1da691ea4aa",
+            "sheet_names": [
+              "Tabelle1"
+            ],
+            "sample_count": 720,
+            "duration_s": 359.5,
+            "sampling_interval_s": 0.5,
+            "sampling_interval_max_abs_deviation_s": 0.0,
+            "time_monotonic": true,
+            "headers": [
+              "Zeit",
+              "TT_D04 ValueY",
+              "PTX05 ValueY",
+              "PT03 ValueY",
+              "TEX01 ValueY",
+              "TT24 ValueY",
+              "QT_D02 ValueY",
+              "PTD10 ValueY",
+              "PTD11 ValueY",
+              "fwg1 ValueY",
+              "fwg2 ValueY",
+              "FWg35_Masse ValueY",
+              "TE_D22 ValueY",
+              "11TT150A ValueY"
+            ],
+            "channels": {
+              "TT_D04 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 14.29,
+                "last": 14.18,
+                "minimum": 14.18,
+                "maximum": 14.29
+              },
+              "PTX05 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 1.59,
+                "last": 15.28,
+                "minimum": 1.45,
+                "maximum": 337.13
+              },
+              "PT03 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": -0.07,
+                "last": 12.3,
+                "minimum": -0.07,
+                "maximum": 329.72
+              },
+              "TEX01 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 10.88,
+                "last": -9.29,
+                "minimum": -24.13,
+                "maximum": 10.88
+              },
+              "TT24 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 10.82,
+                "last": -8.17,
+                "minimum": -24.59,
+                "maximum": 11.81
+              },
+              "QT_D02 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.07,
+                "last": 0.07,
+                "minimum": 0.07,
+                "maximum": 25.48
+              },
+              "PTD10 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 363.53,
+                "last": 404.8,
+                "minimum": 361.07,
+                "maximum": 440.72
+              },
+              "PTD11 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 359.52,
+                "last": 322.81,
+                "minimum": 89.27,
+                "maximum": 381.26
+              },
+              "fwg1 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.6,
+                "last": -19.3,
+                "minimum": -32.7,
+                "maximum": 0.6
+              },
+              "fwg2 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.6,
+                "last": -19.4,
+                "minimum": -33.2,
+                "maximum": 0.6
+              },
+              "FWg35_Masse ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.85,
+                "last": 3.13,
+                "minimum": 0.0,
+                "maximum": 3.13
+              },
+              "TE_D22 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 9.94,
+                "last": -9.33,
+                "minimum": -11.16,
+                "maximum": 10.15
+              },
+              "11TT150A ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": -18.0,
+                "last": -23.3,
+                "minimum": -24.7,
+                "maximum": -18.0
+              }
+            },
+            "has_flow_channel": true,
+            "has_mass_channel": true,
+            "has_candidate_receiving_cylinder_pressure": false,
+            "has_four_candidate_receiving_cylinder_temperatures": false,
+            "mass_closure_sessions": [
+              {
+                "start_elapsed_s": 78.0,
+                "end_elapsed_s": 261.0,
+                "duration_s": 183.0,
+                "flow_baseline_raw_units": 0.07,
+                "peak_corrected_flow_raw_units": 25.41,
+                "integrated_flow_mass_assuming_g_per_s_kg": 3.1228949999999998,
+                "scale_delta_assuming_kg": 3.12,
+                "flow_to_scale_mass_ratio": 1.0009278846153844,
+                "descriptive_closure_screen_pass": true
+              }
+            ],
+            "record_id": "20590842",
+            "zenodo_md5": "md5:ce0f85c5b12f55300bf8a5792e9221c8",
+            "byte_size": 75292
+          },
+          {
+            "filename": "20241024_Test_9_HySaM.xlsx",
+            "sha256": "f33d3e451b42b1d3aff905cc5deb1e9a2ed11eeaf7d4f0d559446a609bdc7563",
+            "sheet_names": [
+              "Tabelle1"
+            ],
+            "sample_count": 2160,
+            "duration_s": 1079.5,
+            "sampling_interval_s": 0.5,
+            "sampling_interval_max_abs_deviation_s": 0.0,
+            "time_monotonic": true,
+            "headers": [
+              "Zeit",
+              "TT_D04 ValueY",
+              "PTX05 ValueY",
+              "PT03 ValueY",
+              "TEX01 ValueY",
+              "TT24 ValueY",
+              "QT_D02 ValueY",
+              "PTD10 ValueY",
+              "PTD11 ValueY",
+              "fwg1 ValueY",
+              "fwg2 ValueY",
+              "FWg35_Masse ValueY",
+              "TE_D22 ValueY",
+              "11TT150A ValueY",
+              "PT01 ValueY",
+              "TT01 ValueY",
+              "TT08 ValueY",
+              "TT09 ValueY",
+              "TT10 ValueY",
+              "TT11 ValueY"
+            ],
+            "channels": {
+              "TT_D04 ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": 16.06,
+                "last": 16.17,
+                "minimum": 16.06,
+                "maximum": 16.17
+              },
+              "PTX05 ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": 1.46,
+                "last": 4.86,
+                "minimum": 0.18,
+                "maximum": 277.34
+              },
+              "PT03 ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.0,
+                "last": 3.0,
+                "minimum": 0.0,
+                "maximum": 252.0
+              },
+              "TEX01 ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": 14.25,
+                "last": -5.4,
+                "minimum": -22.53,
+                "maximum": 14.25
+              },
+              "TT24 ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": 14.76,
+                "last": -3.52,
+                "minimum": -22.09,
+                "maximum": 17.69
+              },
+              "QT_D02 ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.07,
+                "last": 0.07,
+                "minimum": 0.07,
+                "maximum": 31.3
+              },
+              "PTD10 ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": 277.31,
+                "last": 370.19,
+                "minimum": 276.62,
+                "maximum": 463.61
+              },
+              "PTD11 ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": 274.92,
+                "last": 261.25,
+                "minimum": 91.11,
+                "maximum": 324.65
+              },
+              "fwg1 ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": 12.1,
+                "last": -17.3,
+                "minimum": -30.9,
+                "maximum": 12.1
+              },
+              "fwg2 ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": 12.1,
+                "last": -17.4,
+                "minimum": -31.6,
+                "maximum": 12.1
+              },
+              "FWg35_Masse ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": 1.52,
+                "last": 2.18,
+                "minimum": 0.0,
+                "maximum": 2.18
+              },
+              "TE_D22 ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": 15.66,
+                "last": -4.96,
+                "minimum": -9.22,
+                "maximum": 15.66
+              },
+              "11TT150A ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": -33.3,
+                "last": -22.3,
+                "minimum": -33.7,
+                "maximum": -22.3
+              },
+              "PT01 ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": 29.8,
+                "last": 213.22,
+                "minimum": 29.8,
+                "maximum": 229.64
+              },
+              "TT01 ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": 13.21,
+                "last": -1.32,
+                "minimum": -17.38,
+                "maximum": 24.31
+              },
+              "TT08 ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": 13.37,
+                "last": 48.29,
+                "minimum": 13.37,
+                "maximum": 55.9
+              },
+              "TT09 ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": 16.3,
+                "last": 48.54,
+                "minimum": 16.3,
+                "maximum": 58.02
+              },
+              "TT10 ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": 13.21,
+                "last": 48.09,
+                "minimum": 13.21,
+                "maximum": 55.54
+              },
+              "TT11 ValueY": {
+                "numeric_count": 2160,
+                "missing_or_non_numeric_count": 0,
+                "first": 16.71,
+                "last": 48.68,
+                "minimum": 16.71,
+                "maximum": 57.54
+              }
+            },
+            "has_flow_channel": true,
+            "has_mass_channel": true,
+            "has_candidate_receiving_cylinder_pressure": true,
+            "has_four_candidate_receiving_cylinder_temperatures": true,
+            "mass_closure_sessions": [
+              {
+                "start_elapsed_s": 116.5,
+                "end_elapsed_s": 358.0,
+                "duration_s": 241.5,
+                "flow_baseline_raw_units": 0.07,
+                "peak_corrected_flow_raw_units": 31.23,
+                "integrated_flow_mass_assuming_g_per_s_kg": 1.9070624999999999,
+                "scale_delta_assuming_kg": 1.42,
+                "flow_to_scale_mass_ratio": 1.3430017605633802,
+                "descriptive_closure_screen_pass": false
+              },
+              {
+                "start_elapsed_s": 687.0,
+                "end_elapsed_s": 888.5,
+                "duration_s": 201.5,
+                "flow_baseline_raw_units": 0.07,
+                "peak_corrected_flow_raw_units": 29.7,
+                "integrated_flow_mass_assuming_g_per_s_kg": 2.32943,
+                "scale_delta_assuming_kg": 2.17,
+                "flow_to_scale_mass_ratio": 1.0734700460829494,
+                "descriptive_closure_screen_pass": true
+              }
+            ],
+            "record_id": "20590842",
+            "zenodo_md5": "md5:9cb74d5b885ebfcf90589bfe41bbc806",
+            "byte_size": 283636
+          }
+        ]
+      },
+      {
+        "record_id": "20590903",
+        "doi": "10.5281/zenodo.20590903",
+        "title": "Group C -- ENGIE system measurement data",
+        "license": "cc-by-4.0",
+        "metadata_sha256": "5b6d4d504487a592dc9fb5034c9f1abe4580190ecc2016d99be88d33b165c2fd",
+        "workbook_count": 2,
+        "workbooks": [
+          {
+            "filename": "20241023_Test_2_ENGIE.xlsx",
+            "sha256": "778330dd90e3fd2ddf1f0aaacc9f0b58398f900addd0b3f3671138fa21acc095",
+            "sheet_names": [
+              "Tabelle1"
+            ],
+            "sample_count": 720,
+            "duration_s": 359.5,
+            "sampling_interval_s": 0.5,
+            "sampling_interval_max_abs_deviation_s": 0.0,
+            "time_monotonic": true,
+            "headers": [
+              "Zeit",
+              "TT_D04 ValueY",
+              "PTX05 ValueY",
+              "PT03 ValueY",
+              "TEX01 ValueY",
+              "TT24 ValueY",
+              "QT_D02 ValueY",
+              "PTD10 ValueY",
+              "PTD11 ValueY",
+              "fwg1 ValueY",
+              "fwg2 ValueY",
+              "FWg35_Masse ValueY",
+              "TE_D22 ValueY",
+              "11TT150A ValueY"
+            ],
+            "channels": {
+              "TT_D04 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 18.32,
+                "last": 18.33,
+                "minimum": 18.32,
+                "maximum": 18.43
+              },
+              "PTX05 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 2.03,
+                "last": 12.23,
+                "minimum": 1.18,
+                "maximum": 390.5
+              },
+              "PT03 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.65,
+                "last": 9.26,
+                "minimum": 0.65,
+                "maximum": 385.05
+              },
+              "TEX01 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 17.23,
+                "last": -5.17,
+                "minimum": -19.39,
+                "maximum": 17.23
+              },
+              "TT24 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 15.17,
+                "last": -2.36,
+                "minimum": -18.99,
+                "maximum": 18.78
+              },
+              "QT_D02 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.07,
+                "last": 0.07,
+                "minimum": 0.07,
+                "maximum": 28.27
+              },
+              "PTD10 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 297.53,
+                "last": 425.75,
+                "minimum": 296.77,
+                "maximum": 490.52
+              },
+              "PTD11 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 293.66,
+                "last": 412.51,
+                "minimum": 90.1,
+                "maximum": 413.27
+              },
+              "fwg1 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 12.2,
+                "last": -22.1,
+                "minimum": -32.9,
+                "maximum": 12.3
+              },
+              "fwg2 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 12.1,
+                "last": -22.3,
+                "minimum": -33.7,
+                "maximum": 12.1
+              },
+              "FWg35_Masse ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 2.6,
+                "last": 1.18,
+                "minimum": 0.0,
+                "maximum": 2.6
+              },
+              "TE_D22 ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": 16.46,
+                "last": -7.62,
+                "minimum": -8.85,
+                "maximum": 16.46
+              },
+              "11TT150A ValueY": {
+                "numeric_count": 720,
+                "missing_or_non_numeric_count": 0,
+                "first": -27.2,
+                "last": -27.3,
+                "minimum": -32.0,
+                "maximum": -27.2
+              }
+            },
+            "has_flow_channel": true,
+            "has_mass_channel": true,
+            "has_candidate_receiving_cylinder_pressure": false,
+            "has_four_candidate_receiving_cylinder_temperatures": false,
+            "mass_closure_sessions": [
+              {
+                "start_elapsed_s": 52.0,
+                "end_elapsed_s": 288.0,
+                "duration_s": 236.0,
+                "flow_baseline_raw_units": 0.07,
+                "peak_corrected_flow_raw_units": 28.2,
+                "integrated_flow_mass_assuming_g_per_s_kg": 1.1857199999999999,
+                "scale_delta_assuming_kg": 1.18,
+                "flow_to_scale_mass_ratio": 1.0048474576271187,
+                "descriptive_closure_screen_pass": true
+              }
+            ],
+            "record_id": "20590903",
+            "zenodo_md5": "md5:62fbddcc23cf549e0663475d87cc0db2",
+            "byte_size": 75121
+          },
+          {
+            "filename": "20241024_Test_6_ENGIE.xlsx",
+            "sha256": "7720108b1b762c5dc974f124dd8f761278b9e480abef9bfae8bf512871b1494c",
+            "sheet_names": [
+              "Tabelle1"
+            ],
+            "sample_count": 960,
+            "duration_s": 479.5,
+            "sampling_interval_s": 0.5,
+            "sampling_interval_max_abs_deviation_s": 0.0,
+            "time_monotonic": true,
+            "headers": [
+              "Zeit",
+              "TT_D04 ValueY",
+              "PTX05 ValueY",
+              "PT03 ValueY",
+              "TEX01 ValueY",
+              "TT24 ValueY",
+              "QT_D02 ValueY",
+              "PTD10 ValueY",
+              "PTD11 ValueY",
+              "fwg1 ValueY",
+              "fwg2 ValueY",
+              "FWg35_Masse ValueY",
+              "TE_D22 ValueY",
+              "11TT150A ValueY"
+            ],
+            "channels": {
+              "TT_D04 ValueY": {
+                "numeric_count": 960,
+                "missing_or_non_numeric_count": 0,
+                "first": 11.4,
+                "last": 11.61,
+                "minimum": 11.4,
+                "maximum": 11.61
+              },
+              "PTX05 ValueY": {
+                "numeric_count": 960,
+                "missing_or_non_numeric_count": 0,
+                "first": 2.22,
+                "last": 11.12,
+                "minimum": -0.18,
+                "maximum": 374.62
+              },
+              "PT03 ValueY": {
+                "numeric_count": 960,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.18,
+                "last": 8.25,
+                "minimum": 0.07,
+                "maximum": 369.61
+              },
+              "TEX01 ValueY": {
+                "numeric_count": 960,
+                "missing_or_non_numeric_count": 0,
+                "first": 9.31,
+                "last": -6.13,
+                "minimum": -16.61,
+                "maximum": 9.42
+              },
+              "TT24 ValueY": {
+                "numeric_count": 960,
+                "missing_or_non_numeric_count": 0,
+                "first": 9.49,
+                "last": -4.05,
+                "minimum": -19.05,
+                "maximum": 11.9
+              },
+              "QT_D02 ValueY": {
+                "numeric_count": 960,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.06,
+                "last": 0.06,
+                "minimum": 0.06,
+                "maximum": 28.16
+              },
+              "PTD10 ValueY": {
+                "numeric_count": 960,
+                "missing_or_non_numeric_count": 0,
+                "first": 338.98,
+                "last": 396.23,
+                "minimum": 337.57,
+                "maximum": 426.5
+              },
+              "PTD11 ValueY": {
+                "numeric_count": 960,
+                "missing_or_non_numeric_count": 0,
+                "first": 334.92,
+                "last": 393.12,
+                "minimum": 94.69,
+                "maximum": 396.01
+              },
+              "fwg1 ValueY": {
+                "numeric_count": 960,
+                "missing_or_non_numeric_count": 0,
+                "first": 4.1,
+                "last": -21.3,
+                "minimum": -24.7,
+                "maximum": 4.3
+              },
+              "fwg2 ValueY": {
+                "numeric_count": 960,
+                "missing_or_non_numeric_count": 0,
+                "first": 4.1,
+                "last": -21.4,
+                "minimum": -25.5,
+                "maximum": 4.3
+              },
+              "FWg35_Masse ValueY": {
+                "numeric_count": 960,
+                "missing_or_non_numeric_count": 0,
+                "first": 0.0,
+                "last": 1.18,
+                "minimum": 0.0,
+                "maximum": 1.18
+              },
+              "TE_D22 ValueY": {
+                "numeric_count": 960,
+                "missing_or_non_numeric_count": 0,
+                "first": 9.7,
+                "last": -7.85,
+                "minimum": -10.33,
+                "maximum": 9.8
+              },
+              "11TT150A ValueY": {
+                "numeric_count": 960,
+                "missing_or_non_numeric_count": 0,
+                "first": -33.1,
+                "last": -27.3,
+                "minimum": -33.1,
+                "maximum": -27.3
+              }
+            },
+            "has_flow_channel": true,
+            "has_mass_channel": true,
+            "has_candidate_receiving_cylinder_pressure": false,
+            "has_four_candidate_receiving_cylinder_temperatures": false,
+            "mass_closure_sessions": [
+              {
+                "start_elapsed_s": 105.0,
+                "end_elapsed_s": 330.0,
+                "duration_s": 225.0,
+                "flow_baseline_raw_units": 0.06,
+                "peak_corrected_flow_raw_units": 28.1,
+                "integrated_flow_mass_assuming_g_per_s_kg": 1.17723,
+                "scale_delta_assuming_kg": 1.18,
+                "flow_to_scale_mass_ratio": 0.9976525423728814,
+                "descriptive_closure_screen_pass": true
+              }
+            ],
+            "record_id": "20590903",
+            "zenodo_md5": "md5:f9e95dbaf1eaa23bdbf9e5d19c6d0484",
+            "byte_size": 90428
+          }
+        ]
+      }
+    ],
+    "good_practice_guide": {
+      "record_id": "20540258",
+      "doi": "10.5281/zenodo.20540258",
+      "title": "D1 -- Good practice guide on HD-HRS parameters for representative and reliable sampling (e.g. gaseous and particulate phases)",
+      "license": "cc-by-4.0",
+      "file": "22NRM03 Deliverable 1 - impact of HRS.pdf",
+      "zenodo_md5": "md5:b521c18acc27cde459652a8a33e6ff2d",
+      "observed_md5": "md5:b521c18acc27cde459652a8a33e6ff2d",
+      "byte_size": 361979
+    }
+  },
+  "integrity": {
+    "all_zenodo_md5_and_sizes_match": true,
+    "errors": [],
+    "raw_files_committed": false,
+    "raw_location": "gitignored tmp/methytrucks_2026"
+  },
+  "aggregate": {
+    "record_count": 3,
+    "workbook_count": 15,
+    "sample_count": 58440,
+    "all_time_axes_monotonic": true,
+    "sampling_intervals_s": [
+      0.5
+    ],
+    "common_headers": [
+      "11TT150A ValueY",
+      "PT03 ValueY",
+      "PTD10 ValueY",
+      "PTD11 ValueY",
+      "PTX05 ValueY",
+      "QT_D02 ValueY",
+      "TEX01 ValueY",
+      "TE_D22 ValueY",
+      "TT24 ValueY",
+      "TT_D04 ValueY",
+      "Zeit",
+      "fwg1 ValueY",
+      "fwg2 ValueY"
+    ],
+    "workbooks_with_flow": 15,
+    "workbooks_with_mass": 6,
+    "workbooks_with_receiving_cylinder_pressure_and_four_temperatures": 2,
+    "mass_closure_session_count": 18,
+    "mass_closure_screen_pass_count": 8,
+    "mass_closure_pass_ratio_median": 1.0018951923076922
+  },
+  "mass_closure_sessions": [
+    {
+      "record_id": "20590761",
+      "filename": "20241024_Test_7_NPL_DirSam_CESAME.xlsx",
+      "start_elapsed_s": 210.5,
+      "end_elapsed_s": 387.0,
+      "duration_s": 176.5,
+      "flow_baseline_raw_units": 0.07,
+      "peak_corrected_flow_raw_units": 9.44,
+      "integrated_flow_mass_assuming_g_per_s_kg": 0.053665,
+      "scale_delta_assuming_kg": 0.0,
+      "flow_to_scale_mass_ratio": null,
+      "descriptive_closure_screen_pass": false
+    },
+    {
+      "record_id": "20590761",
+      "filename": "20241024_Test_7_NPL_DirSam_CESAME.xlsx",
+      "start_elapsed_s": 786.0,
+      "end_elapsed_s": 819.0,
+      "duration_s": 33.0,
+      "flow_baseline_raw_units": 1.2,
+      "peak_corrected_flow_raw_units": 1.51,
+      "integrated_flow_mass_assuming_g_per_s_kg": 0.020545,
+      "scale_delta_assuming_kg": 0.0,
+      "flow_to_scale_mass_ratio": null,
+      "descriptive_closure_screen_pass": false
+    },
+    {
+      "record_id": "20590761",
+      "filename": "20241024_Test_7_NPL_DirSam_CESAME.xlsx",
+      "start_elapsed_s": 1068.0,
+      "end_elapsed_s": 1079.0,
+      "duration_s": 11.0,
+      "flow_baseline_raw_units": 4.255,
+      "peak_corrected_flow_raw_units": 1.4350000000000005,
+      "integrated_flow_mass_assuming_g_per_s_kg": 0.0081775,
+      "scale_delta_assuming_kg": 0.0,
+      "flow_to_scale_mass_ratio": null,
+      "descriptive_closure_screen_pass": false
+    },
+    {
+      "record_id": "20590761",
+      "filename": "20241024_Test_7_NPL_DirSam_CESAME.xlsx",
+      "start_elapsed_s": 1319.0,
+      "end_elapsed_s": 1330.0,
+      "duration_s": 11.0,
+      "flow_baseline_raw_units": 4.155,
+      "peak_corrected_flow_raw_units": 2.295,
+      "integrated_flow_mass_assuming_g_per_s_kg": 0.011797499999999999,
+      "scale_delta_assuming_kg": 0.0,
+      "flow_to_scale_mass_ratio": null,
+      "descriptive_closure_screen_pass": false
+    },
+    {
+      "record_id": "20590761",
+      "filename": "20241024_Test_7_NPL_DirSam_CESAME.xlsx",
+      "start_elapsed_s": 1512.5,
+      "end_elapsed_s": 1523.5,
+      "duration_s": 11.0,
+      "flow_baseline_raw_units": 3.585,
+      "peak_corrected_flow_raw_units": 2.865,
+      "integrated_flow_mass_assuming_g_per_s_kg": 0.0149525,
+      "scale_delta_assuming_kg": 0.0,
+      "flow_to_scale_mass_ratio": null,
+      "descriptive_closure_screen_pass": false
+    },
+    {
+      "record_id": "20590761",
+      "filename": "20241024_Test_7_NPL_DirSam_CESAME.xlsx",
+      "start_elapsed_s": 1711.5,
+      "end_elapsed_s": 1722.5,
+      "duration_s": 11.0,
+      "flow_baseline_raw_units": 3.775,
+      "peak_corrected_flow_raw_units": 2.6650000000000005,
+      "integrated_flow_mass_assuming_g_per_s_kg": 0.014217500000000001,
+      "scale_delta_assuming_kg": 0.0,
+      "flow_to_scale_mass_ratio": null,
+      "descriptive_closure_screen_pass": false
+    },
+    {
+      "record_id": "20590761",
+      "filename": "20241024_Test_7_NPL_DirSam_CESAME.xlsx",
+      "start_elapsed_s": 1918.5,
+      "end_elapsed_s": 1929.5,
+      "duration_s": 11.0,
+      "flow_baseline_raw_units": 3.4,
+      "peak_corrected_flow_raw_units": 3.1,
+      "integrated_flow_mass_assuming_g_per_s_kg": 0.01538,
+      "scale_delta_assuming_kg": 0.0,
+      "flow_to_scale_mass_ratio": null,
+      "descriptive_closure_screen_pass": false
+    },
+    {
+      "record_id": "20590761",
+      "filename": "20241024_Test_7_NPL_DirSam_CESAME.xlsx",
+      "start_elapsed_s": 2113.0,
+      "end_elapsed_s": 2124.0,
+      "duration_s": 11.0,
+      "flow_baseline_raw_units": 3.715,
+      "peak_corrected_flow_raw_units": 2.785,
+      "integrated_flow_mass_assuming_g_per_s_kg": 0.0147325,
+      "scale_delta_assuming_kg": 0.0,
+      "flow_to_scale_mass_ratio": null,
+      "descriptive_closure_screen_pass": false
+    },
+    {
+      "record_id": "20590761",
+      "filename": "20241024_Test_7_NPL_DirSam_CESAME.xlsx",
+      "start_elapsed_s": 2351.0,
+      "end_elapsed_s": 2354.0,
+      "duration_s": 3.0,
+      "flow_baseline_raw_units": 2.96,
+      "peak_corrected_flow_raw_units": 0.3599999999999999,
+      "integrated_flow_mass_assuming_g_per_s_kg": 0.0003799999999999999,
+      "scale_delta_assuming_kg": 0.0,
+      "flow_to_scale_mass_ratio": null,
+      "descriptive_closure_screen_pass": false
+    },
+    {
+      "record_id": "20590842",
+      "filename": "20241023_Test_1_HySaM.xlsx",
+      "start_elapsed_s": 210.5,
+      "end_elapsed_s": 279.0,
+      "duration_s": 68.5,
+      "flow_baseline_raw_units": 0.07,
+      "peak_corrected_flow_raw_units": 29.74,
+      "integrated_flow_mass_assuming_g_per_s_kg": 0.32691,
+      "scale_delta_assuming_kg": 0.33,
+      "flow_to_scale_mass_ratio": 0.9906363636363635,
+      "descriptive_closure_screen_pass": true
+    },
+    {
+      "record_id": "20590842",
+      "filename": "20241023_Test_1_HySaM.xlsx",
+      "start_elapsed_s": 828.0,
+      "end_elapsed_s": 1044.5,
+      "duration_s": 216.5,
+      "flow_baseline_raw_units": 0.07,
+      "peak_corrected_flow_raw_units": 28.25,
+      "integrated_flow_mass_assuming_g_per_s_kg": 1.1010075,
+      "scale_delta_assuming_kg": 1.1,
+      "flow_to_scale_mass_ratio": 1.000915909090909,
+      "descriptive_closure_screen_pass": true
+    },
+    {
+      "record_id": "20590842",
+      "filename": "20241023_Test_1_HySaM.xlsx",
+      "start_elapsed_s": 2669.5,
+      "end_elapsed_s": 2686.5,
+      "duration_s": 17.0,
+      "flow_baseline_raw_units": 0.07,
+      "peak_corrected_flow_raw_units": 23.03,
+      "integrated_flow_mass_assuming_g_per_s_kg": 0.11578000000000001,
+      "scale_delta_assuming_kg": 0.11,
+      "flow_to_scale_mass_ratio": 1.0525454545454547,
+      "descriptive_closure_screen_pass": true
+    },
+    {
+      "record_id": "20590842",
+      "filename": "20241023_Test_1_HySaM.xlsx",
+      "start_elapsed_s": 2911.5,
+      "end_elapsed_s": 3076.0,
+      "duration_s": 164.5,
+      "flow_baseline_raw_units": 0.07,
+      "peak_corrected_flow_raw_units": 22.63,
+      "integrated_flow_mass_assuming_g_per_s_kg": 2.6074425,
+      "scale_delta_assuming_kg": 2.6,
+      "flow_to_scale_mass_ratio": 1.0028625,
+      "descriptive_closure_screen_pass": true
+    },
+    {
+      "record_id": "20590842",
+      "filename": "20241023_Test_4_HySaM_CESAME.xlsx",
+      "start_elapsed_s": 78.0,
+      "end_elapsed_s": 261.0,
+      "duration_s": 183.0,
+      "flow_baseline_raw_units": 0.07,
+      "peak_corrected_flow_raw_units": 25.41,
+      "integrated_flow_mass_assuming_g_per_s_kg": 3.1228949999999998,
+      "scale_delta_assuming_kg": 3.12,
+      "flow_to_scale_mass_ratio": 1.0009278846153844,
+      "descriptive_closure_screen_pass": true
+    },
+    {
+      "record_id": "20590842",
+      "filename": "20241024_Test_9_HySaM.xlsx",
+      "start_elapsed_s": 116.5,
+      "end_elapsed_s": 358.0,
+      "duration_s": 241.5,
+      "flow_baseline_raw_units": 0.07,
+      "peak_corrected_flow_raw_units": 31.23,
+      "integrated_flow_mass_assuming_g_per_s_kg": 1.9070624999999999,
+      "scale_delta_assuming_kg": 1.42,
+      "flow_to_scale_mass_ratio": 1.3430017605633802,
+      "descriptive_closure_screen_pass": false
+    },
+    {
+      "record_id": "20590842",
+      "filename": "20241024_Test_9_HySaM.xlsx",
+      "start_elapsed_s": 687.0,
+      "end_elapsed_s": 888.5,
+      "duration_s": 201.5,
+      "flow_baseline_raw_units": 0.07,
+      "peak_corrected_flow_raw_units": 29.7,
+      "integrated_flow_mass_assuming_g_per_s_kg": 2.32943,
+      "scale_delta_assuming_kg": 2.17,
+      "flow_to_scale_mass_ratio": 1.0734700460829494,
+      "descriptive_closure_screen_pass": true
+    },
+    {
+      "record_id": "20590903",
+      "filename": "20241023_Test_2_ENGIE.xlsx",
+      "start_elapsed_s": 52.0,
+      "end_elapsed_s": 288.0,
+      "duration_s": 236.0,
+      "flow_baseline_raw_units": 0.07,
+      "peak_corrected_flow_raw_units": 28.2,
+      "integrated_flow_mass_assuming_g_per_s_kg": 1.1857199999999999,
+      "scale_delta_assuming_kg": 1.18,
+      "flow_to_scale_mass_ratio": 1.0048474576271187,
+      "descriptive_closure_screen_pass": true
+    },
+    {
+      "record_id": "20590903",
+      "filename": "20241024_Test_6_ENGIE.xlsx",
+      "start_elapsed_s": 105.0,
+      "end_elapsed_s": 330.0,
+      "duration_s": 225.0,
+      "flow_baseline_raw_units": 0.06,
+      "peak_corrected_flow_raw_units": 28.1,
+      "integrated_flow_mass_assuming_g_per_s_kg": 1.17723,
+      "scale_delta_assuming_kg": 1.18,
+      "flow_to_scale_mass_ratio": 0.9976525423728814,
+      "descriptive_closure_screen_pass": true
+    }
+  ],
+  "eligibility": {
+    "public_real_experimental_measurements": true,
+    "synchronized_component_trace_candidate": true,
+    "flow_mass_consistency_diagnostic_supported": true,
+    "receiving_cylinder_thermal_diagnostic_candidate": true,
+    "prospective_holdout_eligible": false,
+    "full_loop_station_vehicle_validation_eligible": false
+  },
+  "mapping_boundary": {
+    "publisher_channel_dictionary_present": false,
+    "engineering_units_in_workbook_headers": false,
+    "workbook_to_sampling_device_crosswalk_present": false,
+    "vehicle_identity_and_tank_geometry_present": false,
+    "station_controller_bank_valve_states_present": false,
+    "sensor_calibration_uncertainty_present": false,
+    "guide_use": "D1 supplies operating-practice context but does not define the logger tags, workbook-to-device mapping, sensor units or controller states."
+  },
+  "claim_boundary": "The 15 CC BY 4.0 workbooks are real public experimental traces and can support post-access component diagnostics, including descriptive flow-to-scale mass closure. Outcomes were inspected before this audit and the release lacks an authoritative tag/unit dictionary, device crosswalk, vehicle geometry and station controller states. It therefore does not establish prospective validation, a complete HRS-to-vehicle full-loop result, safety performance or regulatory compliance."
+}

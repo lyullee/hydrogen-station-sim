@@ -800,6 +800,26 @@
       "access_recheck": "research/nbsdc_hrs_operational_dataset_recheck_2026_10_06.json",
       "request_draft": "research/NBSDC_HRS_OPERATIONAL_DATASET_DATA_REQUEST_DRAFT_2026_10_06.md",
       "eligibility_note": "Metadata-only candidate in the current recheck; raw files, machine-readable schema and reuse terms were not obtained, so it cannot close full_loop_external_validation."
+    },
+    "methytrucks_sampling_system_measurements_2026": {
+      "title": "MetHyTrucks Groups A-C sampling-system measurement data",
+      "publisher": "National Physical Laboratory, The Hydrogen and Fuel Cell Center, and ENGIE via Zenodo",
+      "landing_pages": [
+        "https://zenodo.org/records/20590761",
+        "https://zenodo.org/records/20590842",
+        "https://zenodo.org/records/20590903"
+      ],
+      "dois": [
+        "10.5281/zenodo.20590761",
+        "10.5281/zenodo.20590842",
+        "10.5281/zenodo.20590903"
+      ],
+      "guide_doi": "10.5281/zenodo.20540258",
+      "license": "CC BY 4.0",
+      "file_count": 15,
+      "audit_artifact": "research/methytrucks_2026_public_measurement_intake.json",
+      "rights_note": "The records identify CC BY 4.0. Raw workbooks remain in the gitignored intake tree; repository artifacts contain provenance, hashes and derived aggregate diagnostics.",
+      "eligibility_note": "Real synchronized experimental traces support claim-bounded post-access component diagnostics. Missing authoritative tag/unit, device, geometry, controller and calibration metadata prevents prospective or full-loop validation."
     }
   }
 }

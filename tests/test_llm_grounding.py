@@ -295,9 +295,13 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     instrumentation = idle["response_evidence"][
         "public_measurement_instrumentation"
     ]
-    assert instrumentation["source_count"] == 2
-    assert instrumentation["file_count"] == 13
+    assert instrumentation["source_count"] == 3
+    assert instrumentation["file_count"] == 15
+    assert instrumentation["sample_count"] == 58_440
     assert instrumentation["observed_sampling_intervals_s"] == [0.5]
+    assert instrumentation["workbooks_with_mass"] == 6
+    assert instrumentation["mass_closure_session_count"] == 18
+    assert instrumentation["mass_closure_screen_pass_count"] == 8
     assert instrumentation["station_measurement_auxiliary_eligible"] is True
     assert instrumentation["full_loop_holdout_eligible"] is False
     assert instrumentation["channel_dictionary_present"] is False
@@ -405,7 +409,11 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     ] is True
     assert early["evidence_digest"] == idle["evidence_digest"]
     header = prompt_evidence_header(idle)
-    assert header["public_measurement_instrumentation"]["file_count"] == 13
+    assert header["public_measurement_instrumentation"]["file_count"] == 15
+    assert header["public_measurement_instrumentation"]["sample_count"] == 58_440
+    assert header["public_measurement_instrumentation"][
+        "mass_closure_screen_pass_count"
+    ] == 8
     assert header["public_measurement_instrumentation"][
         "full_loop_holdout_eligible"
     ] is False
@@ -449,6 +457,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "NREL_HD_FAST_FLOW_2024_REPORT",
         "PUBLIC_METHYTRUCKS_20590761",
         "PUBLIC_METHYTRUCKS_20590842",
+        "PUBLIC_METHYTRUCKS_20590903",
         "PUBLIC_HITRF_OPERATIONAL_REFERENCE",
         "KHK_PUBLIC_ACCIDENT_REPORTS",
         "PUBLIC_ACCIDENTAL_RELEASE_ARTICLE",

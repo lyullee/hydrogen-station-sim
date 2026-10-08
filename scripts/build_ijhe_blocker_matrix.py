@@ -42,6 +42,7 @@ def build(root: Path) -> dict[str, Any]:
     search_path = root / "research/public_full_loop_search_recheck_2026_10_05.json"
     latest_search_path = root / "research/public_full_loop_search_recheck_2026_10_06.json"
     methytrucks_path = root / "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json"
+    methytrucks_complete_path = root / "research/methytrucks_2026_public_measurement_intake.json"
     methytrucks_group_d_path = root / "research/methytrucks_group_d_prospective_result_2026_10_08.json"
     byrnes_path = root / "research/byrnes_typei_thermal_prospective_result_2026_10_08.json"
     public_update_path = root / "research/public_full_loop_data_update_2026_10_08.json"
@@ -54,6 +55,7 @@ def build(root: Path) -> dict[str, Any]:
     search = load_json(search_path)
     latest_search = load_json(latest_search_path) if latest_search_path.is_file() else {}
     methytrucks = load_json(methytrucks_path)
+    methytrucks_complete = load_json(methytrucks_complete_path)
     methytrucks_group_d = load_json(methytrucks_group_d_path)
     byrnes = load_json(byrnes_path)
     public_update = load_json(public_update_path)
@@ -144,12 +146,28 @@ def build(root: Path) -> dict[str, Any]:
             "real_station_candidate": {
                 "status": "PUBLIC_ROWS_POST_ACCESS_MAPPING_INCOMPLETE",
                 "evidence": [
+                    "research/methytrucks_2026_public_measurement_intake.json",
                     "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json",
                     "research/public_full_loop_data_update_2026_10_08.json",
                     "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
                     "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json",
                 ],
-                "claim_boundary": "Three public ZBT physical-HRS workbooks support a no-fit post-access tank diagnostic, but missing channel/controller metadata and prior outcome inspection prevent a prospective full-loop claim. NBSDC raw workbooks remain application-controlled.",
+                "claim_boundary": "Fifteen public MetHyTrucks physical-HRS sampling-system workbooks support post-access component diagnostics, and the three-file Hy-SaM subset supports a no-fit tank diagnostic. Missing authoritative channel/unit, geometry and controller metadata plus prior outcome inspection prevent a prospective full-loop claim. NBSDC raw workbooks remain application-controlled.",
+            },
+            "methytrucks_complete_public_measurement_intake": {
+                "gate": gate(
+                    "methytrucks_complete_public_measurement_intake_integrity"
+                )["status"],
+                "evidence": "research/methytrucks_2026_public_measurement_intake.json",
+                "workbook_count": methytrucks_complete["aggregate"]["workbook_count"],
+                "sample_count": methytrucks_complete["aggregate"]["sample_count"],
+                "mass_closure_screen_pass_count": methytrucks_complete["aggregate"][
+                    "mass_closure_screen_pass_count"
+                ],
+                "full_loop_eligible": methytrucks_complete["eligibility"][
+                    "full_loop_station_vehicle_validation_eligible"
+                ],
+                "claim_boundary": methytrucks_complete["claim_boundary"],
             },
             "methytrucks_hysam_postaccess": {
                 "status": "PASS_DIAGNOSTIC_ONLY",
@@ -198,6 +216,7 @@ def build(root: Path) -> dict[str, Any]:
                     "research/public_full_loop_search_recheck_2026_10_04.json",
                     "research/public_full_loop_search_recheck_2026_10_06.json",
                     "research/public_full_loop_data_update_2026_10_08.json",
+                    "research/methytrucks_2026_public_measurement_intake.json",
                     "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json",
                     "research/methytrucks_group_d_prospective_protocol_2026_10_08.json",
                     "research/methytrucks_group_d_prospective_result_2026_10_08.json",
@@ -264,6 +283,7 @@ def build(root: Path) -> dict[str, Any]:
             "latest_full_loop_search_sha256": sha256(latest_search_path)
             if latest_search_path.is_file() else None,
             "methytrucks_postaccess_sha256": sha256(methytrucks_path),
+            "methytrucks_complete_intake_sha256": sha256(methytrucks_complete_path),
             "methytrucks_group_d_prospective_sha256": sha256(methytrucks_group_d_path),
             "byrnes_typei_thermal_prospective_sha256": sha256(byrnes_path),
             "public_full_loop_update_sha256": sha256(public_update_path),
@@ -278,6 +298,8 @@ def build(root: Path) -> dict[str, Any]:
             "latest_public_full_loop_search_candidate_count": candidate_count(latest_search),
             "methytrucks_workbook_count": len(methytrucks.get("workbooks") or []),
             "methytrucks_candidate_session_count": methytrucks["candidate_session_aggregate"]["case_count"],
+            "methytrucks_complete_workbook_count": methytrucks_complete["aggregate"]["workbook_count"],
+            "methytrucks_complete_sample_count": methytrucks_complete["aggregate"]["sample_count"],
             "methytrucks_group_d_decision": methytrucks_group_d["decision"],
             "public_full_loop_update_status": public_update.get("status"),
             "public_operational_benchmark_candidate_count": candidate_count(operational_search),
