@@ -761,6 +761,8 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert local_station["utilization"]["short_horizon_pressure_forecast_cases"] == 1_418
     assert local_station["assessment"]["local_station_data_is_sparse"] is False
     assert local_station["assessment"]["vehicle_side_full_loop_validation_ready"] is False
+    assert local_station["semantic_attestation"]["storage_pressure_role_count"] == 2
+    assert local_station["semantic_attestation"]["flow_units_attested"] is False
     local_summary = prompt_evidence_summary(idle)[
         "confidential_local_station_data_utilization"
     ]

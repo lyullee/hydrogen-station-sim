@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_confidential_station_semantic_attestation",
+  "status": "privacy_bounded_custodian_role_mapping",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "source_tags_published": false,
+    "site_company_manufacturer_published": false,
+    "calendar_dates_published": false,
+    "raw_rows_persisted": false
+  },
+  "attested_roles": {
+    "storage_pressure_role_count": 2,
+    "lifecycle_counter_role_count": 2,
+    "storage_pressure_units_attested": true,
+    "lifecycle_counter_event_definition_attested": true,
+    "flow_units_attested": false,
+    "totalizer_reset_semantics_attested": false,
+    "vehicle_side_channels_attested": 0
+  },
+  "eligible_use": [
+    "role-level medium/high storage pressure cycle screening",
+    "role-level cascade sequence corroboration",
+    "storage lifecycle counter descriptive comparison"
+  ],
+  "ineligible_use": [
+    "absolute mass-flow calibration",
+    "vehicle-fill accuracy or SOC validation",
+    "automatic production retuning",
+    "safety-limit or field-certification claims"
+  ],
+  "claim_boundary": "A custodian-provided role mapping confirms only two storage-pressure roles and two lifecycle-counter roles at aggregate level. It does not publish identifiers, units for flow channels, raw records, vehicle telemetry, or site identity."
+}

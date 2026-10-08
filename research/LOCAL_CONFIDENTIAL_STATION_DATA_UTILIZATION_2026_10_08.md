@@ -36,3 +36,11 @@ chronological split, and reserve full-loop claims for a later attested
 vehicle-side cohort. The machine-readable audit is
 `local_confidential_station_data_utilization_2026_10_08.json`; the reusable
 scanner is `scripts/audit_local_station_data_utilization.py`.
+
+The custodian's role description now confirms, at aggregate level, two
+storage-pressure roles and two lifecycle-counter roles. This permits the
+pressure-cycle and cascade results to be described as role-mapped station-side
+evidence without publishing channel tags or source identity. Flow units,
+totalizer reset semantics and vehicle-side channels remain unattested; the
+privacy-bounded record is
+`research/local_station_semantic_attestation_2026_10_09.json`.

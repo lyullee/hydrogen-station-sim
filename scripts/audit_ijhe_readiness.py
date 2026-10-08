@@ -1465,6 +1465,7 @@ def audit(root: Path) -> dict[str, object]:
     local_privacy = (local_utilization or {}).get("privacy") or {}
     local_inventory = (local_utilization or {}).get("inventory") or {}
     local_evidence = (local_utilization or {}).get("utilization") or {}
+    local_semantic = local_evidence.get("semantic_attestation") or {}
     local_assessment = (local_utilization or {}).get("assessment") or {}
     local_utilization_pass = bool(
         (local_utilization or {}).get("schema_version") == 1
@@ -1483,6 +1484,11 @@ def audit(root: Path) -> dict[str, object]:
         and local_evidence.get("short_horizon_pressure_forecast_cases") == 1_418
         and local_evidence.get("conditional_recharge_flow_episodes") == 733
         and local_evidence.get("station_side_evidence_is_substantial") is True
+        and local_semantic.get("storage_pressure_role_count") == 2
+        and local_semantic.get("lifecycle_counter_role_count") == 2
+        and local_semantic.get("storage_pressure_units_attested") is True
+        and local_semantic.get("flow_units_attested") is False
+        and local_semantic.get("vehicle_side_channels_attested") == 0
         and local_evidence.get("independent_full_loop_vehicle_validation_complete")
         is False
         and local_assessment.get("local_station_data_is_sparse") is False

@@ -1,5 +1,17 @@
 # Development Progress
 
+## 2026-10-09 - Role-level attestation for the local station archive
+
+- Rechecked the owner-controlled archive and preserved the privacy-bounded
+  aggregate: 33 CSV exports, 32 unique payloads and 56,854,143 deduplicated
+  rows.
+- Added a role-level semantic record for two storage-pressure roles and two
+  lifecycle-counter roles, and connected it to the readiness audit and LLM
+  evidence envelope without publishing tags, dates, site identity or raw rows.
+- Kept flow units, totalizer reset semantics and vehicle-side channels
+  unverified; this improves station-side evidence but does not close the
+  station-to-vehicle full-loop gate.
+
 ## 2026-10-09 - Local station archive connected to LLM evidence
 
 - Completed a privacy-bounded inventory of the local station archive: 33 CSV

@@ -62,6 +62,14 @@ mass or SOC. The privacy-safe aggregate is recorded in
 private paths, filenames, headers and raw content remain outside the
 repository.
 
+The accompanying custodian description now attests two storage-pressure roles
+and two lifecycle-counter roles at aggregate level. This closes the role-mapping
+gap for the pressure-cycle and cascade-sequence cohorts without publishing
+source tags or identity. Flow units, totalizer reset semantics and vehicle-side
+channels remain unverified, so absolute mass-flow fitting, SOC validation and
+automatic runtime retuning remain disabled. See
+`research/local_station_semantic_attestation_2026_10_09.json`.
+
 The aggregate utilization record is now carried into the LLM evidence envelope
 as `confidential_local_station_data_utilization`. The main and sensor assistants
 can therefore distinguish “the station archive is large and dynamically useful”

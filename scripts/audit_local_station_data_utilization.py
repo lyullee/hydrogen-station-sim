@@ -82,6 +82,10 @@ def _research_utilization(research_dir: Path | None) -> dict[str, Any]:
     signal = _load_json(
         research_dir / "confidential_station_signal_consistency_screen_2026_10_08.json"
     )
+    semantic = _load_json(
+        research_dir / "local_station_semantic_attestation_2026_10_09.json"
+    )
+    semantic_roles = semantic.get("attested_roles") or {}
 
     return {
         "ordered_high_bank_pressure_cycles": _sum_nested(
@@ -112,6 +116,19 @@ def _research_utilization(research_dir: Path | None) -> dict[str, Any]:
         ),
         "station_side_evidence_is_substantial": True,
         "independent_full_loop_vehicle_validation_complete": False,
+        "semantic_attestation": {
+            key: semantic_roles.get(key)
+            for key in (
+                "storage_pressure_role_count",
+                "lifecycle_counter_role_count",
+                "storage_pressure_units_attested",
+                "lifecycle_counter_event_definition_attested",
+                "flow_units_attested",
+                "totalizer_reset_semantics_attested",
+                "vehicle_side_channels_attested",
+            )
+            if semantic_roles.get(key) is not None
+        },
     }
 
 

@@ -3757,6 +3757,7 @@ def _confidential_local_station_utilization_evidence() -> dict[str, Any] | None:
     privacy = record.get("privacy") or {}
     inventory = record.get("inventory") or {}
     utilization = record.get("utilization") or {}
+    semantic_attestation = utilization.get("semantic_attestation") or {}
     assessment = record.get("assessment") or {}
     required_privacy = (
         "source_paths_published",
@@ -3804,6 +3805,19 @@ def _confidential_local_station_utilization_evidence() -> dict[str, Any] | None:
                 "station_side_evidence_is_substantial",
                 "independent_full_loop_vehicle_validation_complete",
             )
+        },
+        "semantic_attestation": {
+            key: semantic_attestation.get(key)
+            for key in (
+                "storage_pressure_role_count",
+                "lifecycle_counter_role_count",
+                "storage_pressure_units_attested",
+                "lifecycle_counter_event_definition_attested",
+                "flow_units_attested",
+                "totalizer_reset_semantics_attested",
+                "vehicle_side_channels_attested",
+            )
+            if semantic_attestation.get(key) is not None
         },
         "assessment": {
             key: assessment.get(key)

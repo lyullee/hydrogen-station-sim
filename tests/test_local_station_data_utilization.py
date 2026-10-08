@@ -71,6 +71,14 @@ def test_research_utilization_uses_only_deidentified_counts(tmp_path: Path) -> N
     (research / "confidential_station_signal_consistency_screen_2026_10_08.json").write_text(
         '{"screen":{"strong_consistency_pairs":4}}', encoding="utf-8"
     )
+    (research / "local_station_semantic_attestation_2026_10_09.json").write_text(
+        '{"attested_roles":{"storage_pressure_role_count":2,'
+        '"lifecycle_counter_role_count":2,"storage_pressure_units_attested":true,'
+        '"lifecycle_counter_event_definition_attested":true,'
+        '"flow_units_attested":false,"totalizer_reset_semantics_attested":false,'
+        '"vehicle_side_channels_attested":0}}',
+        encoding="utf-8",
+    )
 
     result = audit_station_directory(source, research_dir=research)
     utilization = result["utilization"]
@@ -80,3 +88,5 @@ def test_research_utilization_uses_only_deidentified_counts(tmp_path: Path) -> N
     assert utilization["short_horizon_pressure_forecast_cases"] == 28
     assert utilization["conditional_recharge_flow_episodes"] == 11
     assert utilization["strong_instantaneous_totalizer_consistency_pairs"] == 4
+    assert utilization["semantic_attestation"]["storage_pressure_role_count"] == 2
+    assert utilization["semantic_attestation"]["vehicle_side_channels_attested"] == 0

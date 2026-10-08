@@ -40,7 +40,16 @@
     "conditional_recharge_flow_episodes": 733,
     "strong_instantaneous_totalizer_consistency_pairs": 27,
     "station_side_evidence_is_substantial": true,
-    "independent_full_loop_vehicle_validation_complete": false
+    "independent_full_loop_vehicle_validation_complete": false,
+    "semantic_attestation": {
+      "storage_pressure_role_count": 2,
+      "lifecycle_counter_role_count": 2,
+      "storage_pressure_units_attested": true,
+      "lifecycle_counter_event_definition_attested": true,
+      "flow_units_attested": false,
+      "totalizer_reset_semantics_attested": false,
+      "vehicle_side_channels_attested": 0
+    }
   },
   "assessment": {
     "local_station_data_is_sparse": false,

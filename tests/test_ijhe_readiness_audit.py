@@ -126,6 +126,12 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert local_data["utilization"]["short_horizon_pressure_forecast_cases"] == 1_418
     assert local_data["assessment"]["local_station_data_is_sparse"] is False
     assert local_data["assessment"]["vehicle_side_full_loop_validation_ready"] is False
+    assert local_data["utilization"]["semantic_attestation"][
+        "storage_pressure_role_count"
+    ] == 2
+    assert local_data["utilization"]["semantic_attestation"][
+        "flow_units_attested"
+    ] is False
     assert gates["dickens_typeiii_prospective_validation"]["status"] == "FAIL"
     dickens = gates["dickens_typeiii_prospective_validation"]["observed"]
     assert dickens["protocol_frozen_before_outcome_access"] is True
