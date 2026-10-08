@@ -12,6 +12,7 @@ import argparse
 import csv
 from dataclasses import asdict
 from datetime import datetime, timezone
+import hashlib
 import json
 from pathlib import Path
 from statistics import mean, pstdev
@@ -90,7 +91,10 @@ DECISION_CASES = (
             case_id="DS-OVERHEAT-01",
             situation_concepts=(("과열", "온도 경보", "탱크 온도"), ("차량 1", "TT-1401")),
             ordered_action_concepts=(
-                ("충전 정지",), ("밸브 차단",), ("온도", "안정화"), ("재가동 승인",),
+                ("충전 정지", "충전을 정지", "충전 중단"),
+                ("밸브 차단", "밸브를 차단"),
+                ("안정화 확인", "안정화되", "안정화된"),
+                ("재가동 승인", "재가동이 승인", "재가동 전"),
             ),
             prevention_concepts=(("프리쿨러",), ("온도센서", "온도 센서")),
         ),
@@ -217,9 +221,31 @@ def _git_state(path: Path) -> dict:
             ["git", "status", "--porcelain"], cwd=path, check=True,
             capture_output=True, text=True,
         ).stdout.strip())
-        return {"path": str(path.resolve()), "commit": commit, "dirty": dirty}
+        return {"repository": path.resolve().name, "commit": commit, "dirty": dirty}
     except (OSError, subprocess.CalledProcessError):
-        return {"path": str(path.resolve()), "commit": "unavailable", "dirty": None}
+        return {"repository": path.resolve().name, "commit": "unavailable", "dirty": None}
+
+
+def _case_manifest() -> dict:
+    """Freeze the visible cases and keyword rubric used by a result file."""
+
+    cases = [{
+        "id": case["id"],
+        "question": case["question"],
+        "context": case["context"],
+        "baseline": case["baseline"],
+        "rubric": asdict(case["rubric"]),
+    } for case in DECISION_CASES]
+    canonical = json.dumps(cases, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return {
+        "version": "2026-10-08.2",
+        "sha256": hashlib.sha256(canonical.encode("utf-8")).hexdigest(),
+        "cases": cases,
+        "boundary": (
+            "Transparent keyword-concept development rubric; not an expert rating, "
+            "human-factors result, field-safety result, or regulatory compliance test."
+        ),
+    }
 
 
 def _write_markdown(path: Path, report: dict) -> None:
@@ -231,6 +257,8 @@ def _write_markdown(path: Path, report: dict) -> None:
         f"Digital twin commit: `{report['source']['digital_twin']['commit']}` (dirty={report['source']['digital_twin']['dirty']})  ",
         f"SAGA-PY commit: `{report['source']['saga_py']['commit']}` (dirty={report['source']['saga_py']['dirty']})  ",
         f"Provider: `{report['source']['provider']}`; requested repeats: {report['source']['requested_repeats']}",
+        f"Case/rubric manifest: `{report['evaluation_protocol']['version']}` / "
+        f"`{report['evaluation_protocol']['sha256']}`",
         "",
         "## Fueling schedule-boundary audit",
         "",
@@ -327,7 +355,7 @@ def main() -> int:
     if args.require_saga and (errors or not any(row["variant"] == "saga-linked" for row in decision_rows)):
         raise SystemExit("SAGA-linked rows were required but could not be collected: " + "; ".join(errors))
     report = {
-        "schema_version": 1,
+        "schema_version": 2,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "source": {
             "digital_twin": _git_state(Path.cwd()),
@@ -335,6 +363,7 @@ def main() -> int:
             "provider": args.provider if args.saga_url else "not-run",
             "requested_repeats": args.repeats,
         },
+        "evaluation_protocol": _case_manifest(),
         "protocol": protocol,
         "decision_support": decision_rows,
         "decision_summary": _decision_summary(decision_rows),

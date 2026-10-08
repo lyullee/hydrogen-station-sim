@@ -103,3 +103,30 @@ def test_llm_linkage_score_penalizes_unsupported_numeric_claims():
     )
     assert result.unsupported_numeric_claims == ("120mpa",)
     assert result.score < 100
+
+
+def test_korean_action_particles_do_not_hide_ordered_overheat_response():
+    rubric = DecisionSupportRubric(
+        case_id="DS-OVERHEAT-KO",
+        situation_concepts=(("과열", "온도 경보"),),
+        ordered_action_concepts=(
+            ("충전 정지", "충전을 정지", "충전 중단"),
+            ("밸브 차단", "밸브를 차단"),
+            ("안정화 확인", "안정화되", "안정화된"),
+            ("재가동 승인", "재가동이 승인", "재가동 전"),
+        ),
+        prevention_concepts=(("프리쿨러",), ("온도센서", "온도 센서")),
+    )
+    answer = (
+        "차량 탱크 과열입니다. 즉시 충전을 정지하고 충전밸브 차단을 확인합니다. "
+        "온도와 압력이 안정화되었는지 확인하고, 재가동 전 프리쿨러와 온도센서 기능시험을 완료합니다."
+    )
+    result = score_decision_support(
+        answer=answer,
+        allowed_evidence=answer,
+        rubric=rubric,
+        variant="saga-linked",
+    )
+    assert result.action_coverage == 1.0
+    assert result.action_order == 1.0
+    assert result.score == 100.0
