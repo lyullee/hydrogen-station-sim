@@ -72,6 +72,48 @@
       "decision": "AGGREGATE_FACE_VALIDITY_ONLY",
       "eligible_use": ["operational envelope context", "rate/time plausibility"],
       "ineligible_use": ["dynamic parameter fitting", "full-loop holdout"]
+    },
+    {
+      "id": "kim_2026_bam_hrs_anomaly_platform",
+      "title": "Data-Driven Intelligent Analysis System for Monitoring and Anomaly Detection in Hydrogen Refueling Station",
+      "url": "https://doi.org/10.3390/app16157856",
+      "reported_scope": {
+        "field_deployment_claim": true,
+        "site_context": "BAM demonstration hydrogen refueling station",
+        "reported_sensor_families": ["pressure", "temperature", "flow rate"],
+        "reported_sensor_count": 8,
+        "reported_sampling_interval": "1 s",
+        "reported_normal_data_window": "3 days, downsampled to 1 min",
+        "vehicle_refueling_test_and_plc_integration_reported": true,
+        "abnormal_ground_truth": "semi-synthetic spike, drift and noise injections",
+        "actual_abnormal_events_collected": false,
+        "data_availability": "original contributions are in the article; further inquiries are directed to the corresponding author"
+      },
+      "raw_trace_public": false,
+      "abnormal_data_provenance": "The paper reports field deployment and real vehicle-refueling measurement context, but its abnormal benchmark is semi-synthetic and no synchronized raw trace or independently labelled accident archive is released.",
+      "decision": "FIELD_VALIDATION_CONTEXT_AND_DATA_REQUEST",
+      "eligible_use": ["HRS sensor-family and sampling context", "normal-operation anomaly-detection design", "field integration and data-request lead"],
+      "ineligible_use": ["independent full-loop holdout", "parameter fitting", "actual accident-label validation", "SAGA effectiveness score"]
+    },
+    {
+      "id": "dtu_hydrogen_fuelling_library_h2logic_test",
+      "title": "Hydrogen Fuelling Stations: H2Logic 350-bar fueling test and cascade-controller context",
+      "url": "https://backend.orbit.dtu.dk/ws/portalfiles/portal/108702334/Hydrogen_Fuelling_Stations.pdf",
+      "reported_scope": {
+        "real_fueling_test": true,
+        "vehicle_pressure_class": "350 bar",
+        "reported_measurements": ["station pressure", "station and valve temperature", "mass flow"],
+        "protocol_context": "SAE J2601-oriented fueling model",
+        "reported_controller_behavior": ["cascade tank switching", "wait/recharge periods", "pressure-based stop"],
+        "tank_exit_thermocouples": "reported broken in the test",
+        "raw_machine_readable_trace_public": false,
+        "evidence_form": "published figures, tables and qualitative trend comparison"
+      },
+      "raw_trace_public": false,
+      "abnormal_data_provenance": "The publication documents a real fueling test and controller behavior, but the downloadable document does not provide a synchronized machine-readable station-to-vehicle trace or an accident-labelled dataset.",
+      "decision": "QUALITATIVE_REAL_FUELING_TREND_CONTEXT_ONLY",
+      "eligible_use": ["cascade switching and recharge sequence context", "qualitative pressure/temperature/mass-flow trend cross-check", "protocol and instrumentation requirements"],
+      "ineligible_use": ["independent full-loop holdout", "parameter fitting", "quantitative consequence-distance validation", "SAGA effectiveness score"]
     }
   ],
   "request_package_requirements": [

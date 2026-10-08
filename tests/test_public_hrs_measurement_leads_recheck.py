@@ -38,3 +38,18 @@ def test_metrology_and_aggregate_sources_keep_their_boundaries() -> None:
     nlr = leads["nlr_hydrogen_station_composite_data_products"]
     assert nlr["reported_scope"]["machine_readable_synchronized_trace_public"] is False
     assert record["gate_impact"]["goal_completion_permitted"] is False
+
+
+def test_field_and_real_fueling_sources_are_bounded_without_raw_traces() -> None:
+    record = json.loads(ARTIFACT.read_text(encoding="utf-8"))
+    leads = {lead["id"]: lead for lead in record["leads"]}
+    bam = leads["kim_2026_bam_hrs_anomaly_platform"]
+    assert bam["reported_scope"]["vehicle_refueling_test_and_plc_integration_reported"] is True
+    assert bam["reported_scope"]["actual_abnormal_events_collected"] is False
+    assert bam["raw_trace_public"] is False
+    assert "actual accident-label validation" in bam["ineligible_use"]
+
+    dtu = leads["dtu_hydrogen_fuelling_library_h2logic_test"]
+    assert dtu["reported_scope"]["real_fueling_test"] is True
+    assert dtu["reported_scope"]["raw_machine_readable_trace_public"] is False
+    assert "independent full-loop holdout" in dtu["ineligible_use"]
