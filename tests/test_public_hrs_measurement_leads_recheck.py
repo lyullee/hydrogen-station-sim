@@ -53,3 +53,19 @@ def test_field_and_real_fueling_sources_are_bounded_without_raw_traces() -> None
     assert dtu["reported_scope"]["real_fueling_test"] is True
     assert dtu["reported_scope"]["raw_machine_readable_trace_public"] is False
     assert "independent full-loop holdout" in dtu["ineligible_use"]
+
+
+def test_nbsdc_catalogue_leads_keep_access_and_claim_boundaries() -> None:
+    record = json.loads(ARTIFACT.read_text(encoding="utf-8"))
+    leads = {lead["id"]: lead for lead in record["leads"]}
+    hrs = leads["nbsdc_1000kgd_hrs_and_hydrogen_emergency_demo_dataset"]
+    assert hrs["reported_scope"]["official_catalogue_record"] is True
+    assert hrs["reported_scope"]["station_raw_trace_download_confirmed"] is False
+    assert hrs["reported_scope"]["actual_accident_event_archive_download_confirmed"] is False
+    assert hrs["raw_trace_public"] is False
+    assert "independent full-loop holdout before raw access and protocol freeze" in hrs["ineligible_use"]
+
+    port = leads["nbsdc_70mpa_hydrogen_refueling_port_test_dataset"]
+    assert port["reported_scope"]["reported_file_count"] == 15
+    assert port["reported_scope"]["raw_machine_readable_trace_download_confirmed"] is False
+    assert "station full-loop validation" in port["ineligible_use"]

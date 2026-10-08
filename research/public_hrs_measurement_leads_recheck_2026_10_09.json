@@ -19,14 +19,26 @@
         "sample_count": 885,
         "sampling_interval": "1 s",
         "feature_count": 24,
-        "reported_feature_families": ["temperature", "pressure", "state of charge"],
+        "reported_feature_families": [
+          "temperature",
+          "pressure",
+          "state of charge"
+        ],
         "risk_target": "normal/abnormal hydrogen-leak classification"
       },
       "raw_trace_public": false,
       "abnormal_data_provenance": "not sufficient for independent validation; the article states that actual abnormal events were not collected and does not release a raw event-level file",
       "decision": "REQUEST_DEIDENTIFIED_RAW_CSV_AND_LABEL_PROVENANCE",
-      "eligible_use": ["face-validity context", "sensor-family crosswalk", "data-request lead"],
-      "ineligible_use": ["independent full-loop holdout", "parameter fitting", "SAGA effectiveness score"]
+      "eligible_use": [
+        "face-validity context",
+        "sensor-family crosswalk",
+        "data-request lead"
+      ],
+      "ineligible_use": [
+        "independent full-loop holdout",
+        "parameter fitting",
+        "SAGA effectiveness score"
+      ]
     },
     {
       "id": "hasulyo_2026_hungarian_hrs_digital_twin",
@@ -35,13 +47,25 @@
       "reported_scope": {
         "existing_hungarian_station_measurement_claim": true,
         "reported_refueling_duration": "300 s",
-        "reported_outputs": ["vehicle tank temperature", "storage pressure", "delivered mass", "mass flow"]
+        "reported_outputs": [
+          "vehicle tank temperature",
+          "storage pressure",
+          "delivered mass",
+          "mass flow"
+        ]
       },
       "raw_trace_public": false,
       "data_availability_boundary": "the article states that supporting data are not publicly available due to legal restrictions",
       "decision": "REQUEST_DEIDENTIFIED_SYNCHRONIZED_TRACE",
-      "eligible_use": ["operating-range context", "data-request lead"],
-      "ineligible_use": ["independent full-loop holdout", "parameter fitting", "consequence claim"]
+      "eligible_use": [
+        "operating-range context",
+        "data-request lead"
+      ],
+      "ineligible_use": [
+        "independent full-loop holdout",
+        "parameter fitting",
+        "consequence claim"
+      ]
     },
     {
       "id": "nist_transient_flow_facility",
@@ -56,8 +80,14 @@
       },
       "raw_trace_public": false,
       "decision": "METROLOGY_CONTEXT_AND_DATA_REQUEST_LEAD",
-      "eligible_use": ["flow-meter uncertainty context", "transient sampling requirements"],
-      "ineligible_use": ["station digital-twin validation", "full-loop holdout"]
+      "eligible_use": [
+        "flow-meter uncertainty context",
+        "transient sampling requirements"
+      ],
+      "ineligible_use": [
+        "station digital-twin validation",
+        "full-loop holdout"
+      ]
     },
     {
       "id": "nlr_hydrogen_station_composite_data_products",
@@ -65,13 +95,25 @@
       "url": "https://www.nlr.gov/hydrogen/infrastructure-cdps-all",
       "reported_scope": {
         "station_count_or_aggregate_performance_context": true,
-        "available_products": ["fueling rates", "fueling times", "fueling amounts", "fuel temperature", "maintenance and safety aggregates"],
+        "available_products": [
+          "fueling rates",
+          "fueling times",
+          "fueling amounts",
+          "fuel temperature",
+          "maintenance and safety aggregates"
+        ],
         "machine_readable_synchronized_trace_public": false
       },
       "raw_trace_public": false,
       "decision": "AGGREGATE_FACE_VALIDITY_ONLY",
-      "eligible_use": ["operational envelope context", "rate/time plausibility"],
-      "ineligible_use": ["dynamic parameter fitting", "full-loop holdout"]
+      "eligible_use": [
+        "operational envelope context",
+        "rate/time plausibility"
+      ],
+      "ineligible_use": [
+        "dynamic parameter fitting",
+        "full-loop holdout"
+      ]
     },
     {
       "id": "kim_2026_bam_hrs_anomaly_platform",
@@ -80,7 +122,11 @@
       "reported_scope": {
         "field_deployment_claim": true,
         "site_context": "BAM demonstration hydrogen refueling station",
-        "reported_sensor_families": ["pressure", "temperature", "flow rate"],
+        "reported_sensor_families": [
+          "pressure",
+          "temperature",
+          "flow rate"
+        ],
         "reported_sensor_count": 8,
         "reported_sampling_interval": "1 s",
         "reported_normal_data_window": "3 days, downsampled to 1 min",
@@ -92,8 +138,17 @@
       "raw_trace_public": false,
       "abnormal_data_provenance": "The paper reports field deployment and real vehicle-refueling measurement context, but its abnormal benchmark is semi-synthetic and no synchronized raw trace or independently labelled accident archive is released.",
       "decision": "FIELD_VALIDATION_CONTEXT_AND_DATA_REQUEST",
-      "eligible_use": ["HRS sensor-family and sampling context", "normal-operation anomaly-detection design", "field integration and data-request lead"],
-      "ineligible_use": ["independent full-loop holdout", "parameter fitting", "actual accident-label validation", "SAGA effectiveness score"]
+      "eligible_use": [
+        "HRS sensor-family and sampling context",
+        "normal-operation anomaly-detection design",
+        "field integration and data-request lead"
+      ],
+      "ineligible_use": [
+        "independent full-loop holdout",
+        "parameter fitting",
+        "actual accident-label validation",
+        "SAGA effectiveness score"
+      ]
     },
     {
       "id": "dtu_hydrogen_fuelling_library_h2logic_test",
@@ -102,9 +157,17 @@
       "reported_scope": {
         "real_fueling_test": true,
         "vehicle_pressure_class": "350 bar",
-        "reported_measurements": ["station pressure", "station and valve temperature", "mass flow"],
+        "reported_measurements": [
+          "station pressure",
+          "station and valve temperature",
+          "mass flow"
+        ],
         "protocol_context": "SAE J2601-oriented fueling model",
-        "reported_controller_behavior": ["cascade tank switching", "wait/recharge periods", "pressure-based stop"],
+        "reported_controller_behavior": [
+          "cascade tank switching",
+          "wait/recharge periods",
+          "pressure-based stop"
+        ],
         "tank_exit_thermocouples": "reported broken in the test",
         "raw_machine_readable_trace_public": false,
         "evidence_form": "published figures, tables and qualitative trend comparison"
@@ -112,8 +175,78 @@
       "raw_trace_public": false,
       "abnormal_data_provenance": "The publication documents a real fueling test and controller behavior, but the downloadable document does not provide a synchronized machine-readable station-to-vehicle trace or an accident-labelled dataset.",
       "decision": "QUALITATIVE_REAL_FUELING_TREND_CONTEXT_ONLY",
-      "eligible_use": ["cascade switching and recharge sequence context", "qualitative pressure/temperature/mass-flow trend cross-check", "protocol and instrumentation requirements"],
-      "ineligible_use": ["independent full-loop holdout", "parameter fitting", "quantitative consequence-distance validation", "SAGA effectiveness score"]
+      "eligible_use": [
+        "cascade switching and recharge sequence context",
+        "qualitative pressure/temperature/mass-flow trend cross-check",
+        "protocol and instrumentation requirements"
+      ],
+      "ineligible_use": [
+        "independent full-loop holdout",
+        "parameter fitting",
+        "quantitative consequence-distance validation",
+        "SAGA effectiveness score"
+      ]
+    },
+    {
+      "id": "nbsdc_1000kgd_hrs_and_hydrogen_emergency_demo_dataset",
+      "title": "NBS Data Center: 1,000 kg/d HRS production-operation data and hydrogen combustion/explosion emergency-decision demonstration dataset",
+      "url": "https://nbsdc.cn/general/dataDetail?id=67fb63bb195d26544804482c&type=1",
+      "reported_scope": {
+        "official_catalogue_record": true,
+        "listed_components": [
+          "1-1000 kg/d hydrogen-refueling-station production-operation data",
+          "1000 Nm3/h hydrogen-production operation data",
+          "hydrogen combustion/explosion emergency-decision demonstration data description and application documents"
+        ],
+        "station_raw_trace_download_confirmed": false,
+        "actual_accident_event_archive_download_confirmed": false,
+        "metadata_fields_exposed_on_public_page": false
+      },
+      "raw_trace_public": false,
+      "abnormal_data_provenance": "The official catalogue lists station-operation and emergency-demonstration components, but the public page did not expose a downloadable schema, synchronized raw trace, accident-event labels, DOI or reuse licence without registration/permission.",
+      "decision": "REQUEST_CATALOGUE_ACCESS_AND_DATA_USE_TERMS",
+      "eligible_use": [
+        "high-priority public-data request lead",
+        "station-side operation and emergency-response evidence discovery",
+        "schema and licence verification after authorized access"
+      ],
+      "ineligible_use": [
+        "independent full-loop holdout before raw access and protocol freeze",
+        "parameter fitting before provenance and units are verified",
+        "actual accident-frequency or SAGA-effectiveness claims"
+      ]
+    },
+    {
+      "id": "nbsdc_70mpa_hydrogen_refueling_port_test_dataset",
+      "title": "NBS Data Center: 70 MPa hydrogen refueling-port test dataset",
+      "url": "https://www.nbsdc.cn/general/dataLinks/16666.11.nbsdc.ZjzPghqx",
+      "reported_scope": {
+        "official_catalogue_record": true,
+        "reported_size": "73.94 MB",
+        "reported_file_count": 15,
+        "reported_formats": [
+          "mp4",
+          "xlsx",
+          "pdf",
+          "docx"
+        ],
+        "component_scope": "70 MPa vehicle hydrogen-storage-system refueling-port tests",
+        "raw_machine_readable_trace_download_confirmed": false,
+        "public_page_access": "registration or permission required"
+      },
+      "raw_trace_public": false,
+      "abnormal_data_provenance": "The official record describes component test data and media, but the public page does not establish a synchronized station-to-vehicle trace, calibration uncertainty or reuse terms.",
+      "decision": "COMPONENT_TEST_DATA_REQUEST_LEAD",
+      "eligible_use": [
+        "coupling, leak-tightness and component-function evidence after authorized download",
+        "virtual nozzle/connection state-machine cross-check",
+        "component-level safety-response grounding"
+      ],
+      "ineligible_use": [
+        "station full-loop validation",
+        "vehicle tank thermodynamic parameter fitting",
+        "consequence-distance or SAGA-effectiveness claims"
+      ]
     }
   ],
   "request_package_requirements": [
