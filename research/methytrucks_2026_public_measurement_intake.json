@@ -2406,6 +2406,16 @@
       "zenodo_md5": "md5:b521c18acc27cde459652a8a33e6ff2d",
       "observed_md5": "md5:b521c18acc27cde459652a8a33e6ff2d",
       "byte_size": 361979
+    },
+    "implementation_report": {
+      "record_id": "18185068",
+      "doi": "10.5281/zenodo.18185068",
+      "title": "D3 -- Report on the development of four reference methods/systems including implementation of sampling systems for hydrogen quality assessment",
+      "license": "cc-by-4.0",
+      "file": "22NRM03 MetHyTrucks D3- Report on the development of four reference methods and systems.pdf",
+      "zenodo_md5": "md5:0c876cc1f0adc48fae25c8fc5781c65d",
+      "observed_md5": "md5:0c876cc1f0adc48fae25c8fc5781c65d",
+      "byte_size": 1760926
     }
   },
   "integrity": {
@@ -2700,7 +2710,35 @@
     "vehicle_identity_and_tank_geometry_present": false,
     "station_controller_bank_valve_states_present": false,
     "sensor_calibration_uncertainty_present": false,
-    "guide_use": "D1 supplies operating-practice context but does not define the logger tags, workbook-to-device mapping, sensor units or controller states."
+    "official_test_context": {
+      "station_storage_pressure_levels_bar": [
+        200,
+        500,
+        900
+      ],
+      "functionality_test_storage_selection": "medium-pressure banks 4+5",
+      "group_a_npl": {
+        "method": "NPL HD direct sampling",
+        "pressure_line_mpa": 35,
+        "flow_class": "high-flow",
+        "protocol": "maintenance/manual pressure setting",
+        "pre_cooling": "T20 heat exchanger",
+        "vehicle_receiving_tank": false,
+        "documented_sink": "sampling cylinder and portable vent"
+      },
+      "group_c_engie": {
+        "method": "ENGIE direct/serial sampling",
+        "pressure_line_mpa": 35,
+        "flow_class": "high-flow",
+        "protocol": "SAE J2601-1",
+        "pre_cooling": "T20 heat exchanger",
+        "vehicle_receiving_tank": false,
+        "documented_sink": "55 L sampling-device tank and vent mast"
+      },
+      "source": "MetHyTrucks D3, sections 2.1.1, 2.1.3 and 3.1, including Table 1"
+    },
+    "guide_use": "D1 supplies operating-practice context but does not define the logger tags, workbook-to-device mapping, sensor units or controller states.",
+    "implementation_report_use": "D3 resolves the physical test class for Groups A and C as 35 MPa direct/serial sampling-system tests supplied from the station's medium storage banks. It does not publish a logger tag/unit dictionary, and the documented receiving systems are sampling hardware rather than vehicle tanks."
   },
-  "claim_boundary": "The 15 CC BY 4.0 workbooks are real public experimental traces and can support post-access component diagnostics, including descriptive flow-to-scale mass closure. Outcomes were inspected before this audit and the release lacks an authoritative tag/unit dictionary, device crosswalk, vehicle geometry and station controller states. It therefore does not establish prospective validation, a complete HRS-to-vehicle full-loop result, safety performance or regulatory compliance."
+  "claim_boundary": "The 15 CC BY 4.0 workbooks are real public experimental traces and can support post-access component diagnostics, including descriptive flow-to-scale mass closure. D3 identifies Groups A and C as 35 MPa direct/serial sampling-system tests, not vehicle-tank filling traces. Outcomes were inspected before this audit and the release lacks an authoritative tag/unit dictionary, vehicle geometry and station controller states. It therefore does not establish prospective validation, a complete HRS-to-vehicle full-loop result, safety performance or regulatory compliance."
 }

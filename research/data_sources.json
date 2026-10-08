@@ -856,6 +856,19 @@
       "public_raw_data": false,
       "diagnostic_artifact": "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json",
       "eligibility_note": "Six sensor coordinates and combined Test-1/Test-2 maximum hydrogen concentrations support a no-fit post-access spatial-rank diagnostic. The full concentration histories are not public and the diagnostic was formalised after the outcomes were viewed, so it cannot close the independent validation gate."
+    },
+    "methytrucks_d3_2026_implementation_report": {
+      "title": "D3 -- Report on the development of four reference methods/systems including implementation of sampling systems for hydrogen quality assessment",
+      "publisher": "MetHyTrucks 22NRM03 / Zenodo",
+      "landing_page": "https://doi.org/10.5281/zenodo.18185068",
+      "doi": "10.5281/zenodo.18185068",
+      "publication_date": "2026-01-15",
+      "license": "CC BY 4.0",
+      "file_bytes": 1760926,
+      "file_md5": "0c876cc1f0adc48fae25c8fc5781c65d",
+      "file_sha256": "17f170b70796e63644f7272bf4bd950c09dad20a7542254847837f09d58b9220",
+      "rights_note": "The openly licensed report may be audited locally; the raw PDF remains outside version control and only its identity and bounded findings are committed.",
+      "eligibility_note": "D3 classifies the Group A NPL and Group C ENGIE October 2024 work as 35 MPa high-flow direct/serial sampling-system tests fed from medium-pressure station banks. The documented sinks are sampling hardware rather than vehicle tanks, so these records are component-boundary evidence and do not satisfy the station-to-vehicle full-loop validation gate."
     }
   }
 }

@@ -28,6 +28,8 @@ MetHyTrucks Zenodo community. Raw workbooks remain outside version control.
 
 The operating-context check used the public
 [D1 -- Good practice guide on HD-HRS parameters for representative and reliable sampling (e.g. gaseous and particulate phases)](https://doi.org/10.5281/zenodo.20540258).
+The physical test-class check used the public
+[D3 -- Report on the development of four reference methods/systems including implementation of sampling systems for hydrogen quality assessment](https://doi.org/10.5281/zenodo.18185068).
 
 ## Scientific use
 
@@ -36,11 +38,14 @@ pressure, temperature, flow and transferred-mass behavior. The flow/mass
 closure calculation is a post-access component diagnostic and records every
 passing and failing session.
 
-It does not close the station-to-vehicle full-loop gate. The release does not
+D3 resolves Groups A and C as 35 MPa direct/serial sampling-system tests
+fed from medium-pressure station banks; the documented sinks are sampling
+hardware rather than vehicle tanks. It does not close the station-to-vehicle
+full-loop gate. The release also does not
 contain an authoritative channel/unit dictionary, an explicit workbook-to-device
 crosswalk, vehicle tank geometry, controller/bank/valve states or calibration
 uncertainties. D1 provides operating guidance but does not fill those metadata gaps.
 
 ## Claim boundary
 
-The 15 CC BY 4.0 workbooks are real public experimental traces and can support post-access component diagnostics, including descriptive flow-to-scale mass closure. Outcomes were inspected before this audit and the release lacks an authoritative tag/unit dictionary, device crosswalk, vehicle geometry and station controller states. It therefore does not establish prospective validation, a complete HRS-to-vehicle full-loop result, safety performance or regulatory compliance.
+The 15 CC BY 4.0 workbooks are real public experimental traces and can support post-access component diagnostics, including descriptive flow-to-scale mass closure. D3 identifies Groups A and C as 35 MPa direct/serial sampling-system tests, not vehicle-tank filling traces. Outcomes were inspected before this audit and the release lacks an authoritative tag/unit dictionary, vehicle geometry and station controller states. It therefore does not establish prospective validation, a complete HRS-to-vehicle full-loop result, safety performance or regulatory compliance.

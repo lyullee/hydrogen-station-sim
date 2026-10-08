@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T03:33:05.355760+00:00",
+  "generated_at": "2026-10-08T03:52:11.815428+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -259,9 +259,37 @@
           "vehicle_identity_and_tank_geometry_present": false,
           "station_controller_bank_valve_states_present": false,
           "sensor_calibration_uncertainty_present": false,
-          "guide_use": "D1 supplies operating-practice context but does not define the logger tags, workbook-to-device mapping, sensor units or controller states."
+          "official_test_context": {
+            "station_storage_pressure_levels_bar": [
+              200,
+              500,
+              900
+            ],
+            "functionality_test_storage_selection": "medium-pressure banks 4+5",
+            "group_a_npl": {
+              "method": "NPL HD direct sampling",
+              "pressure_line_mpa": 35,
+              "flow_class": "high-flow",
+              "protocol": "maintenance/manual pressure setting",
+              "pre_cooling": "T20 heat exchanger",
+              "vehicle_receiving_tank": false,
+              "documented_sink": "sampling cylinder and portable vent"
+            },
+            "group_c_engie": {
+              "method": "ENGIE direct/serial sampling",
+              "pressure_line_mpa": 35,
+              "flow_class": "high-flow",
+              "protocol": "SAE J2601-1",
+              "pre_cooling": "T20 heat exchanger",
+              "vehicle_receiving_tank": false,
+              "documented_sink": "55 L sampling-device tank and vent mast"
+            },
+            "source": "MetHyTrucks D3, sections 2.1.1, 2.1.3 and 3.1, including Table 1"
+          },
+          "guide_use": "D1 supplies operating-practice context but does not define the logger tags, workbook-to-device mapping, sensor units or controller states.",
+          "implementation_report_use": "D3 resolves the physical test class for Groups A and C as 35 MPa direct/serial sampling-system tests supplied from the station's medium storage banks. It does not publish a logger tag/unit dictionary, and the documented receiving systems are sampling hardware rather than vehicle tanks."
         },
-        "claim_boundary": "The 15 CC BY 4.0 workbooks are real public experimental traces and can support post-access component diagnostics, including descriptive flow-to-scale mass closure. Outcomes were inspected before this audit and the release lacks an authoritative tag/unit dictionary, device crosswalk, vehicle geometry and station controller states. It therefore does not establish prospective validation, a complete HRS-to-vehicle full-loop result, safety performance or regulatory compliance."
+        "claim_boundary": "The 15 CC BY 4.0 workbooks are real public experimental traces and can support post-access component diagnostics, including descriptive flow-to-scale mass closure. D3 identifies Groups A and C as 35 MPa direct/serial sampling-system tests, not vehicle-tank filling traces. Outcomes were inspected before this audit and the release lacks an authoritative tag/unit dictionary, vehicle geometry and station controller states. It therefore does not establish prospective validation, a complete HRS-to-vehicle full-loop result, safety performance or regulatory compliance."
       }
     },
     {
@@ -1188,7 +1216,35 @@
             "vehicle_identity_and_tank_geometry_present": false,
             "station_controller_bank_valve_states_present": false,
             "sensor_calibration_uncertainty_present": false,
-            "guide_use": "D1 supplies operating-practice context but does not define the logger tags, workbook-to-device mapping, sensor units or controller states."
+            "official_test_context": {
+              "station_storage_pressure_levels_bar": [
+                200,
+                500,
+                900
+              ],
+              "functionality_test_storage_selection": "medium-pressure banks 4+5",
+              "group_a_npl": {
+                "method": "NPL HD direct sampling",
+                "pressure_line_mpa": 35,
+                "flow_class": "high-flow",
+                "protocol": "maintenance/manual pressure setting",
+                "pre_cooling": "T20 heat exchanger",
+                "vehicle_receiving_tank": false,
+                "documented_sink": "sampling cylinder and portable vent"
+              },
+              "group_c_engie": {
+                "method": "ENGIE direct/serial sampling",
+                "pressure_line_mpa": 35,
+                "flow_class": "high-flow",
+                "protocol": "SAE J2601-1",
+                "pre_cooling": "T20 heat exchanger",
+                "vehicle_receiving_tank": false,
+                "documented_sink": "55 L sampling-device tank and vent mast"
+              },
+              "source": "MetHyTrucks D3, sections 2.1.1, 2.1.3 and 3.1, including Table 1"
+            },
+            "guide_use": "D1 supplies operating-practice context but does not define the logger tags, workbook-to-device mapping, sensor units or controller states.",
+            "implementation_report_use": "D3 resolves the physical test class for Groups A and C as 35 MPa direct/serial sampling-system tests supplied from the station's medium storage banks. It does not publish a logger tag/unit dictionary, and the documented receiving systems are sampling hardware rather than vehicle tanks."
           }
         },
         "methytrucks_group_d_prospective_intake": {
@@ -6646,11 +6702,11 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7984,
+          "approximate_manuscript_words_before_references": 7999,
           "figures": 3,
           "tables": 3,
-          "citation_keys": 42,
-          "bibliography_entries": 43,
+          "citation_keys": 43,
+          "bibliography_entries": 44,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -6678,12 +6734,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-08T03:33:00.2932993Z",
+        "attempted_at": "2026-10-08T03:52:11.4482670+00:00",
         "attempts_this_run": 1,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "9fcf42c1339099a60d8eb1b44d2a64577f402387cf23d266769a0df57725121c",
+        "source_sha256": "0e5332b55823ad781d68f2f620517a8048c35a9c66adea8d4bad935958d4a87d",
         "diagnostic": "Unable to find standard directories for platform",
         "format_check_passed": true,
         "retained_previous_pdf": {

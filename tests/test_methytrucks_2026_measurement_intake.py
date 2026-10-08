@@ -73,4 +73,9 @@ def test_committed_public_intake_is_complete_and_claim_bounded():
     assert result["eligibility"]["prospective_holdout_eligible"] is False
     assert result["eligibility"]["full_loop_station_vehicle_validation_eligible"] is False
     assert result["mapping_boundary"]["publisher_channel_dictionary_present"] is False
+    official = result["mapping_boundary"]["official_test_context"]
+    assert official["functionality_test_storage_selection"] == "medium-pressure banks 4+5"
+    assert official["group_a_npl"]["vehicle_receiving_tank"] is False
+    assert official["group_c_engie"]["vehicle_receiving_tank"] is False
+    assert result["sources"]["implementation_report"]["doi"] == "10.5281/zenodo.18185068"
     assert "does not establish prospective validation" in result["claim_boundary"]

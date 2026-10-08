@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T03:33:06.463900+00:00",
+  "generated_at": "2026-10-08T03:50:33.943918+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -120,7 +120,7 @@
         "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
         "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json"
       ],
-      "claim_boundary": "Fifteen public MetHyTrucks physical-HRS sampling-system workbooks support post-access component diagnostics, and the three-file Hy-SaM subset supports a no-fit tank diagnostic. Missing authoritative channel/unit, geometry and controller metadata plus prior outcome inspection prevent a prospective full-loop claim. NBSDC raw workbooks remain application-controlled."
+      "claim_boundary": "Fifteen public MetHyTrucks physical-HRS sampling-system workbooks support post-access component diagnostics, and the three-file Hy-SaM subset supports a no-fit tank diagnostic. The official D3 implementation report classifies Groups A and C as 35 MPa direct/serial sampling-system tests with sampling-hardware sinks rather than vehicle tanks. Missing authoritative channel/unit, geometry and controller metadata plus prior outcome inspection prevent a prospective full-loop claim. NBSDC raw workbooks remain application-controlled."
     },
     "methytrucks_complete_public_measurement_intake": {
       "gate": "PASS",
@@ -129,7 +129,7 @@
       "sample_count": 58440,
       "mass_closure_screen_pass_count": 8,
       "full_loop_eligible": false,
-      "claim_boundary": "The 15 CC BY 4.0 workbooks are real public experimental traces and can support post-access component diagnostics, including descriptive flow-to-scale mass closure. Outcomes were inspected before this audit and the release lacks an authoritative tag/unit dictionary, device crosswalk, vehicle geometry and station controller states. It therefore does not establish prospective validation, a complete HRS-to-vehicle full-loop result, safety performance or regulatory compliance."
+      "claim_boundary": "The 15 CC BY 4.0 workbooks are real public experimental traces and can support post-access component diagnostics, including descriptive flow-to-scale mass closure. D3 identifies Groups A and C as 35 MPa direct/serial sampling-system tests, not vehicle-tank filling traces. Outcomes were inspected before this audit and the release lacks an authoritative tag/unit dictionary, vehicle geometry and station controller states. It therefore does not establish prospective validation, a complete HRS-to-vehicle full-loop result, safety performance or regulatory compliance."
     },
     "methytrucks_hysam_postaccess": {
       "status": "PASS_DIAGNOSTIC_ONLY",
@@ -176,7 +176,7 @@
     {
       "id": "full_loop_external_validation",
       "status": "FAIL",
-      "why_blocked": "The frozen external station-loop holdout has 0/8 engineering-screen passes. The post-access ZBT set has synchronized rows but incomplete mapping. A separately frozen Group D H70 vehicle event was then retained prospectively, but it lacks vehicle tank pressure and temperature, engineering units and independently documented tank geometry, so no model score was permitted.",
+      "why_blocked": "The frozen external station-loop holdout has 0/8 engineering-screen passes. The public MetHyTrucks D3 report confirms Groups A and C are 35 MPa direct/serial sampling-system tests, not vehicle-tank filling traces; the post-access Hy-SaM set also has incomplete mapping. A separately frozen Group D H70 vehicle event was retained prospectively, but it lacks vehicle tank pressure and temperature, engineering units and independently documented tank geometry, so no model score was permitted.",
       "evidence": [
         "data/public_validation/results/closed_loop_external_holdout/validation.json",
         "research/mc_default_source_boundary_identifiability_2026_10_04.json",
@@ -193,7 +193,7 @@
         "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json"
       ],
       "unblock_criterion": "Obtain a clean, rights-cleared, pre-access frozen external dataset with synchronized station pressure/temperature/mass-flow, protocol/controller, dispenser/nozzle, and vehicle/receptacle channels; resolve the source-boundary/topology ambiguity; then score >=8 cases with >=80% screen pass fraction.",
-      "next_action": "Request at least eight disjoint physical-HRS vehicle traces with explicit vehicle pressure/temperature, tank geometry, units and controller/cascade states. The public MetHyTrucks archive has now been exhausted without a qualifying full-loop cohort."
+      "next_action": "Request at least eight disjoint physical-HRS vehicle traces with explicit vehicle pressure/temperature, tank geometry, units and controller/cascade states. Do not spend additional model-scoring effort on MetHyTrucks Groups A/C for the full-loop gate; their official physical test class is now resolved."
     },
     {
       "id": "consequence_model_external_validation",
@@ -259,7 +259,7 @@
     "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",
     "latest_full_loop_search_sha256": "14391668298eea81e1aaff919e9a20fd9c3570694e33cf8998d4156976cba808",
     "methytrucks_postaccess_sha256": "5f55152984db8952fb532d975f7c89db7f1681375f20c306a9ccb7cdc79ddf48",
-    "methytrucks_complete_intake_sha256": "1594e727260524541699de55a7902d6dbf21725b59f4e3049bab3651fb2931c3",
+    "methytrucks_complete_intake_sha256": "383f3884e736cf9db78d675c28b5854cc85c2868ffcc85b9448123482cd26d7d",
     "methytrucks_group_d_prospective_sha256": "1378084ccf176f68ce05acc9e74d5063280f216eb7a0c33cafd3606d0efc3c25",
     "byrnes_typei_thermal_prospective_sha256": "a58940c390268abdbd1d5904f50f91ac06b60709bc4e75ade570fefc34e59998",
     "public_full_loop_update_sha256": "119ec8ebd2fa548048923c14562f7f7fdda415ff1342ae3ad42683f2d67bb6cb",

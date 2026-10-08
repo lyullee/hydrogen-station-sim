@@ -28,6 +28,10 @@ GUIDE_RECORD = {
     "record_id": "20540258",
     "doi": "10.5281/zenodo.20540258",
 }
+IMPLEMENTATION_RECORD = {
+    "record_id": "18185068",
+    "doi": "10.5281/zenodo.18185068",
+}
 FLOW_TAG = "QT_D02 ValueY"
 MASS_TAG = "FWg35_Masse ValueY"
 TANK_PRESSURE_TAG = "PT01 ValueY"
@@ -305,6 +309,18 @@ def build_report(data_root: Path, *, recorded_date: str) -> dict[str, Any]:
     if str(guide_entry.get("checksum")) != f"md5:{guide_md5}":
         integrity_errors.append("D1 guide MD5 mismatch")
 
+    implementation_dir = data_root / IMPLEMENTATION_RECORD["record_id"]
+    implementation_metadata_path = implementation_dir / "metadata.json"
+    implementation_metadata = json.loads(
+        implementation_metadata_path.read_text(encoding="utf-8")
+    )
+    implementation_files = _metadata_files(implementation_metadata)
+    implementation_entry = next(iter(implementation_files.values()))
+    implementation_path = implementation_dir / str(implementation_entry["key"])
+    implementation_md5 = _digest(implementation_path, "md5")
+    if str(implementation_entry.get("checksum")) != f"md5:{implementation_md5}":
+        integrity_errors.append("D3 implementation report MD5 mismatch")
+
     common_headers = sorted(
         set.intersection(*(set(item["headers"]) for item in all_workbooks))
     )
@@ -350,6 +366,19 @@ def build_report(data_root: Path, *, recorded_date: str) -> dict[str, Any]:
                 "zenodo_md5": guide_entry.get("checksum"),
                 "observed_md5": f"md5:{guide_md5}",
                 "byte_size": guide_path.stat().st_size,
+            },
+            "implementation_report": {
+                "record_id": IMPLEMENTATION_RECORD["record_id"],
+                "doi": IMPLEMENTATION_RECORD["doi"],
+                "title": implementation_metadata.get("title")
+                or implementation_metadata.get("metadata", {}).get("title"),
+                "license": (
+                    implementation_metadata.get("metadata", {}).get("license") or {}
+                ).get("id"),
+                "file": str(implementation_entry["key"]),
+                "zenodo_md5": implementation_entry.get("checksum"),
+                "observed_md5": f"md5:{implementation_md5}",
+                "byte_size": implementation_path.stat().st_size,
             },
         },
         "integrity": {
@@ -419,18 +448,48 @@ def build_report(data_root: Path, *, recorded_date: str) -> dict[str, Any]:
             "vehicle_identity_and_tank_geometry_present": False,
             "station_controller_bank_valve_states_present": False,
             "sensor_calibration_uncertainty_present": False,
+            "official_test_context": {
+                "station_storage_pressure_levels_bar": [200, 500, 900],
+                "functionality_test_storage_selection": "medium-pressure banks 4+5",
+                "group_a_npl": {
+                    "method": "NPL HD direct sampling",
+                    "pressure_line_mpa": 35,
+                    "flow_class": "high-flow",
+                    "protocol": "maintenance/manual pressure setting",
+                    "pre_cooling": "T20 heat exchanger",
+                    "vehicle_receiving_tank": False,
+                    "documented_sink": "sampling cylinder and portable vent",
+                },
+                "group_c_engie": {
+                    "method": "ENGIE direct/serial sampling",
+                    "pressure_line_mpa": 35,
+                    "flow_class": "high-flow",
+                    "protocol": "SAE J2601-1",
+                    "pre_cooling": "T20 heat exchanger",
+                    "vehicle_receiving_tank": False,
+                    "documented_sink": "55 L sampling-device tank and vent mast",
+                },
+                "source": "MetHyTrucks D3, sections 2.1.1, 2.1.3 and 3.1, including Table 1",
+            },
             "guide_use": (
                 "D1 supplies operating-practice context but does not define the logger tags, "
                 "workbook-to-device mapping, sensor units or controller states."
+            ),
+            "implementation_report_use": (
+                "D3 resolves the physical test class for Groups A and C as 35 MPa "
+                "direct/serial sampling-system tests supplied from the station's medium "
+                "storage banks. It does not publish a logger tag/unit dictionary, and the "
+                "documented receiving systems are sampling hardware rather than vehicle tanks."
             ),
         },
         "claim_boundary": (
             "The 15 CC BY 4.0 workbooks are real public experimental traces and can support "
             "post-access component diagnostics, including descriptive flow-to-scale mass "
-            "closure. Outcomes were inspected before this audit and the release lacks an "
-            "authoritative tag/unit dictionary, device crosswalk, vehicle geometry and station "
-            "controller states. It therefore does not establish prospective validation, a "
-            "complete HRS-to-vehicle full-loop result, safety performance or regulatory compliance."
+            "closure. D3 identifies Groups A and C as 35 MPa direct/serial sampling-system "
+            "tests, not vehicle-tank filling traces. Outcomes were inspected before this audit "
+            "and the release lacks an authoritative tag/unit dictionary, vehicle geometry and "
+            "station controller states. It therefore does not establish prospective validation, "
+            "a complete HRS-to-vehicle full-loop result, safety performance or regulatory compliance."
         ),
     }
 
@@ -469,11 +528,14 @@ def render_markdown(report: dict[str, Any]) -> str:
             f"{source['workbook_count']} | {source['license']} |"
         )
     guide = report["sources"]["good_practice_guide"]
+    implementation = report["sources"]["implementation_report"]
     lines.extend(
         [
             "",
             "The operating-context check used the public",
             f"[{guide['title']}](https://doi.org/{guide['doi']}).",
+            "The physical test-class check used the public",
+            f"[{implementation['title']}](https://doi.org/{implementation['doi']}).",
             "",
             "## Scientific use",
             "",
@@ -482,7 +544,10 @@ def render_markdown(report: dict[str, Any]) -> str:
             "closure calculation is a post-access component diagnostic and records every",
             "passing and failing session.",
             "",
-            "It does not close the station-to-vehicle full-loop gate. The release does not",
+            "D3 resolves Groups A and C as 35 MPa direct/serial sampling-system tests",
+            "fed from medium-pressure station banks; the documented sinks are sampling",
+            "hardware rather than vehicle tanks. It does not close the station-to-vehicle",
+            "full-loop gate. The release also does not",
             "contain an authoritative channel/unit dictionary, an explicit workbook-to-device",
             "crosswalk, vehicle tank geometry, controller/bank/valve states or calibration",
             "uncertainties. D1 provides operating guidance but does not fill those metadata gaps.",

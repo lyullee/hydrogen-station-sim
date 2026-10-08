@@ -208,7 +208,7 @@ def build(root: Path) -> dict[str, Any]:
                     "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
                     "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json",
                 ],
-                "claim_boundary": "Fifteen public MetHyTrucks physical-HRS sampling-system workbooks support post-access component diagnostics, and the three-file Hy-SaM subset supports a no-fit tank diagnostic. Missing authoritative channel/unit, geometry and controller metadata plus prior outcome inspection prevent a prospective full-loop claim. NBSDC raw workbooks remain application-controlled.",
+                "claim_boundary": "Fifteen public MetHyTrucks physical-HRS sampling-system workbooks support post-access component diagnostics, and the three-file Hy-SaM subset supports a no-fit tank diagnostic. The official D3 implementation report classifies Groups A and C as 35 MPa direct/serial sampling-system tests with sampling-hardware sinks rather than vehicle tanks. Missing authoritative channel/unit, geometry and controller metadata plus prior outcome inspection prevent a prospective full-loop claim. NBSDC raw workbooks remain application-controlled.",
             },
             "methytrucks_complete_public_measurement_intake": {
                 "gate": gate(
@@ -265,7 +265,7 @@ def build(root: Path) -> dict[str, Any]:
             {
                 "id": "full_loop_external_validation",
                 "status": gate("full_loop_external_validation")["status"],
-                "why_blocked": "The frozen external station-loop holdout has 0/8 engineering-screen passes. The post-access ZBT set has synchronized rows but incomplete mapping. A separately frozen Group D H70 vehicle event was then retained prospectively, but it lacks vehicle tank pressure and temperature, engineering units and independently documented tank geometry, so no model score was permitted.",
+                "why_blocked": "The frozen external station-loop holdout has 0/8 engineering-screen passes. The public MetHyTrucks D3 report confirms Groups A and C are 35 MPa direct/serial sampling-system tests, not vehicle-tank filling traces; the post-access Hy-SaM set also has incomplete mapping. A separately frozen Group D H70 vehicle event was retained prospectively, but it lacks vehicle tank pressure and temperature, engineering units and independently documented tank geometry, so no model score was permitted.",
                 "evidence": [
                     "data/public_validation/results/closed_loop_external_holdout/validation.json",
                     "research/mc_default_source_boundary_identifiability_2026_10_04.json",
@@ -282,7 +282,7 @@ def build(root: Path) -> dict[str, Any]:
                     "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json",
                 ],
                 "unblock_criterion": "Obtain a clean, rights-cleared, pre-access frozen external dataset with synchronized station pressure/temperature/mass-flow, protocol/controller, dispenser/nozzle, and vehicle/receptacle channels; resolve the source-boundary/topology ambiguity; then score >=8 cases with >=80% screen pass fraction.",
-                "next_action": "Request at least eight disjoint physical-HRS vehicle traces with explicit vehicle pressure/temperature, tank geometry, units and controller/cascade states. The public MetHyTrucks archive has now been exhausted without a qualifying full-loop cohort.",
+                "next_action": "Request at least eight disjoint physical-HRS vehicle traces with explicit vehicle pressure/temperature, tank geometry, units and controller/cascade states. Do not spend additional model-scoring effort on MetHyTrucks Groups A/C for the full-loop gate; their official physical test class is now resolved.",
             },
             {
                 "id": "consequence_model_external_validation",
