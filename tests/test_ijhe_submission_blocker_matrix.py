@@ -20,6 +20,21 @@ def test_current_blocker_matrix_tracks_the_readiness_audit():
     assert h2safe["gate"] == "PASS"
     assert "helium-surrogate" in h2safe["claim_boundary"]
     assert len(matrix["reproducibility"]["h2safe_intake_sha256"]) == 64
+    assert len(matrix["reproducibility"]["hydelta_spatial_eligibility_sha256"]) == 64
+    transfer = matrix["evidence_snapshot"]["h2safe_spatial_detector_transfer"]
+    actual_hydrogen = transfer["actual_hydrogen_holdout_candidate"]
+    assert actual_hydrogen["status"] == "INELIGIBLE_NO_MODEL_EVALUATION"
+    assert actual_hydrogen["eligible"] is False
+    assert actual_hydrogen["model_evaluation_executed"] is False
+    assert actual_hydrogen["runtime_candidate_enabled"] is False
+    sandia = transfer["actual_hydrogen_external_diagnostic"]
+    assert sandia["status"] == "EXTERNAL_POST_ACCESS_DIAGNOSTIC_NOT_VALIDATION"
+    assert sandia["sensor_count"] == 6
+    assert sandia["candidate_spearman_rho"] > 0.94
+    assert sandia["top3_recall"] == 1.0
+    assert sandia["independent_validation_pass"] is False
+    assert sandia["runtime_candidate_enabled"] is False
+    assert len(matrix["reproducibility"]["sandia_spatial_diagnostic_sha256"]) == 64
     ids = {item["id"] for item in matrix["blocking_matrix"]}
     assert {
         "tank_thermal_transfer_validation",

@@ -211,6 +211,27 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert h2safe_spatial["median_spearman"] > 0.5
     assert h2safe_spatial["screens"]["mean_top5_recall_at_least_0_6"] is False
     assert h2safe_spatial["joint_pass"] is False
+    hydelta_holdout = h2safe_spatial["hydelta_actual_hydrogen_holdout"]
+    assert hydelta_holdout["audit_integrity"] is True
+    assert hydelta_holdout["status"] == "INELIGIBLE_NO_MODEL_EVALUATION"
+    assert hydelta_holdout["eligible"] is False
+    assert hydelta_holdout["model_evaluation_executed"] is False
+    assert hydelta_holdout["runtime_candidate_enabled"] is False
+    assert set(hydelta_holdout["failed_required_fields"]) == {
+        "source_coordinates",
+        "sensor_coordinates_in_same_frame",
+        "release_orientation_class",
+        "per_sensor_numeric_response",
+    }
+    sandia = h2safe_spatial["sandia_actual_hydrogen_external_diagnostic"]
+    assert sandia["audit_integrity"] is True
+    assert sandia["status"] == "EXTERNAL_POST_ACCESS_DIAGNOSTIC_NOT_VALIDATION"
+    assert sandia["sensor_count"] == 6
+    assert sandia["baseline_spearman_rho"] == 0.6
+    assert sandia["candidate_spearman_rho"] > 0.94
+    assert sandia["top3_recall"] == 1.0
+    assert sandia["independent_validation_pass"] is False
+    assert sandia["runtime_candidate_enabled"] is False
     assert gates["dataverse_hydrogen_explosion_component_inventory"]["status"] == "PASS"
     explosion_inventory = gates["dataverse_hydrogen_explosion_component_inventory"]["observed"]
     assert explosion_inventory["dois"] == [

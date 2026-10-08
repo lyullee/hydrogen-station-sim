@@ -61,6 +61,19 @@ outcomes were known, it is retained only as a frozen candidate for the next
 untouched cohort and does not change the failed validation gate or runtime
 detector routing.
 
+Two actual-hydrogen sources were then checked without changing the candidate.
+The pre-access-frozen HyDelta D6A.1 report contains 32 hydrogen
+configuration/flow combinations and a 50-sensor matrix, but it publishes no
+tabulated same-frame source/sensor coordinates, declared release orientation or
+per-sensor numeric response; the model was therefore not run and figures were
+not digitized. A separate public Sandia warehouse summary supplies six sensor
+coordinates and combined Test-1/Test-2 maximum concentrations. In that bounded
+post-access diagnostic, the orientation-class candidate improved Spearman rho
+from 0.600 to 0.943, achieved top-three recall 1.0 and selected the highest
+response sensor without fitting. Because the diagnostic was formalized after
+the six outcomes were viewed and the full time histories are unavailable, it
+does not close the independent validation gate or enable runtime routing.
+
 The public Type-IV component fit is now the reproducible runtime default for
 the virtual vehicle tank. Its runtime audit confirms the API default, fitted
 parameters, LLM evidence record, source hashes and frozen validation recheck

@@ -2528,7 +2528,15 @@ def audit(root: Path) -> dict[str, object]:
     h2safe_spatial_path = root / (
         "research/h2safe_spatial_response_diagnostic_2026_10_08.json"
     )
+    hydelta_spatial_eligibility_path = root / (
+        "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json"
+    )
+    sandia_spatial_path = root / (
+        "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json"
+    )
     h2safe_spatial = _json(h2safe_spatial_path)
+    hydelta_spatial_eligibility = _json(hydelta_spatial_eligibility_path)
+    sandia_spatial = _json(sandia_spatial_path)
     h2safe_spatial_source = (h2safe_spatial or {}).get("source") or {}
     h2safe_spatial_method = (h2safe_spatial or {}).get("method") or {}
     h2safe_spatial_results = (
@@ -2557,14 +2565,61 @@ def audit(root: Path) -> dict[str, object]:
         h2safe_spatial_integrity
         and h2safe_spatial_aggregate.get("joint_pass") is True
     )
+    hydelta_spatial_decision = (
+        (hydelta_spatial_eligibility or {}).get("decision") or {}
+    )
+    hydelta_spatial_audit_integrity = bool(
+        (hydelta_spatial_eligibility or {}).get("artifact_type")
+        == "pre_access_frozen_hydelta_spatial_holdout_eligibility_result"
+        and (hydelta_spatial_eligibility or {}).get("status")
+        == "INELIGIBLE_NO_MODEL_EVALUATION"
+        and (hydelta_spatial_eligibility or {}).get("source", {}).get("doi")
+        == "10.5281/zenodo.8154318"
+        and (hydelta_spatial_eligibility or {}).get("source", {}).get(
+            "publisher_file_identity", {}
+        ).get("identity_match") is True
+        and (hydelta_spatial_eligibility or {}).get("protocol", {}).get(
+            "pre_access_status"
+        ) == "FROZEN_BEFORE_REPORT_FILE_ACCESS"
+        and (hydelta_spatial_eligibility or {}).get("protocol", {}).get(
+            "figure_digitisation_performed"
+        ) is False
+        and hydelta_spatial_decision.get("eligible_for_primary_spatial_holdout")
+        is False
+        and hydelta_spatial_decision.get("model_evaluation_executed") is False
+        and hydelta_spatial_decision.get("runtime_candidate_enabled") is False
+    )
+    sandia_spatial_decision = (sandia_spatial or {}).get("decision") or {}
+    sandia_candidate = (sandia_spatial or {}).get("orientation_candidate") or {}
+    sandia_spatial_integrity = bool(
+        (sandia_spatial or {}).get("artifact_type")
+        == "post_access_actual_hydrogen_spatial_rank_diagnostic"
+        and (sandia_spatial or {}).get("status")
+        == "EXTERNAL_POST_ACCESS_DIAGNOSTIC_NOT_VALIDATION"
+        and (sandia_spatial or {}).get("source", {}).get("test_gas") == "hydrogen"
+        and len((sandia_spatial or {}).get("cases") or []) == 6
+        and isinstance(sandia_candidate.get("spearman_rho"), (int, float))
+        and float(sandia_candidate["spearman_rho"]) > 0.94
+        and (sandia_spatial or {}).get("model_lock", {}).get("parameters_fitted")
+        is False
+        and (sandia_spatial or {}).get("model_lock", {}).get("runtime_application")
+        is False
+        and sandia_spatial_decision.get("independent_validation_pass") is False
+        and sandia_spatial_decision.get("h2safe_gate_changed") is False
+        and sandia_spatial_decision.get("runtime_candidate_enabled") is False
+    )
     gates.append(_gate(
         "h2safe_spatial_detector_transfer_validation",
         "PASS" if h2safe_spatial_pass else (
             "FAIL" if h2safe_spatial_integrity else "PENDING"
         ),
         "The runtime detector-placement ranking must pass all frozen H2SAFE spatial-transfer screens before it is described as validated.",
-        str(h2safe_spatial_path.relative_to(root)),
-        "Five full-scale helium-surrogate tests, four joint rank/recall screens, explicit post-access status and no H2 amplitude or threshold transfer.",
+        "; ".join((
+            str(h2safe_spatial_path.relative_to(root)),
+            str(hydelta_spatial_eligibility_path.relative_to(root)),
+            str(sandia_spatial_path.relative_to(root)),
+        )),
+        "Five full-scale helium-surrogate tests, four joint rank/recall screens, explicit post-access status, and a pre-access-frozen actual-hydrogen candidate eligibility audit with no figure-digitisation rescue.",
         {
             "doi": h2safe_spatial_source.get("doi"),
             "method_status": h2safe_spatial_method.get("status"),
@@ -2580,6 +2635,38 @@ def audit(root: Path) -> dict[str, object]:
             "screens": h2safe_spatial_aggregate.get("screens"),
             "joint_pass": h2safe_spatial_aggregate.get("joint_pass"),
             "runtime_use": h2safe_spatial_decision.get("runtime_use"),
+            "hydelta_actual_hydrogen_holdout": {
+                "audit_integrity": hydelta_spatial_audit_integrity,
+                "status": (hydelta_spatial_eligibility or {}).get("status"),
+                "eligible": hydelta_spatial_decision.get(
+                    "eligible_for_primary_spatial_holdout"
+                ),
+                "failed_required_fields": hydelta_spatial_decision.get(
+                    "failed_required_fields"
+                ),
+                "model_evaluation_executed": hydelta_spatial_decision.get(
+                    "model_evaluation_executed"
+                ),
+                "runtime_candidate_enabled": hydelta_spatial_decision.get(
+                    "runtime_candidate_enabled"
+                ),
+            },
+            "sandia_actual_hydrogen_external_diagnostic": {
+                "audit_integrity": sandia_spatial_integrity,
+                "status": (sandia_spatial or {}).get("status"),
+                "sensor_count": len((sandia_spatial or {}).get("cases") or []),
+                "baseline_spearman_rho": (
+                    (sandia_spatial or {}).get("baseline_geometry_only") or {}
+                ).get("spearman_rho"),
+                "candidate_spearman_rho": sandia_candidate.get("spearman_rho"),
+                "top3_recall": sandia_candidate.get("top3_recall"),
+                "independent_validation_pass": sandia_spatial_decision.get(
+                    "independent_validation_pass"
+                ),
+                "runtime_candidate_enabled": sandia_spatial_decision.get(
+                    "runtime_candidate_enabled"
+                ),
+            },
             "claim_boundary": (h2safe_spatial or {}).get("claim_boundary"),
         } if h2safe_spatial else "missing; H2SAFE spatial diagnostic has not run",
     ))

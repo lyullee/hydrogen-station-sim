@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "artifact_type": "pre_access_frozen_hydelta_spatial_holdout_eligibility_result",
+  "generated_at": "2026-10-08T03:26:19.393607+00:00",
+  "status": "INELIGIBLE_NO_MODEL_EVALUATION",
+  "protocol": {
+    "id": "HYDELTA-D6A1-INDOOR-SPATIAL-HOLDOUT-2601",
+    "frozen_at": "2026-10-08T03:17:30.376121+00:00",
+    "pre_access_status": "FROZEN_BEFORE_REPORT_FILE_ACCESS",
+    "path": "research/hydelta_indoor_spatial_holdout_protocol_2026_10_08.json",
+    "formula_change_after_access": false,
+    "figure_digitisation_performed": false
+  },
+  "source": {
+    "title": "D6A.1 Outflow experiment results: concentration build-up at leakages between 50 - 1000 dm3/h",
+    "doi": "10.5281/zenodo.8154318",
+    "record_url": "https://zenodo.org/records/8154318",
+    "publication_date": "2023-07-17",
+    "license": "CC BY 4.0",
+    "access_right": "open",
+    "publisher_file_identity": {
+      "expected_bytes": 7112634,
+      "expected_md5": "686abfae74bc1c2b04345731b4fdc323",
+      "expected_sha256": "fbbc2ce6b411c15cb36f20f6e283a67f8a02a3bd53e919e6bcef88fcf2a4e9f7",
+      "observed": {
+        "file": "D6A_1_HyDelta_Tweede_Tranche_Experiments_Hydrogen_Outflow_in_Closed_Spaces_EN.pdf",
+        "bytes": 7112634,
+        "md5": "686abfae74bc1c2b04345731b4fdc323",
+        "sha256": "fbbc2ce6b411c15cb36f20f6e283a67f8a02a3bd53e919e6bcef88fcf2a4e9f7",
+        "page_count": 85
+      },
+      "identity_match": true
+    },
+    "raw_pdf_committed": false
+  },
+  "report_checks": {
+    "actual_hydrogen_test_medium_reported": true,
+    "fifty_sensor_matrix_reported": true,
+    "sensor_locations_change_by_experiment_reported": true,
+    "four_hydrogen_release_rates_reported": true,
+    "eight_configuration_codes_reported": true,
+    "source_location_is_figure_only": true,
+    "responses_are_graphs": true,
+    "summary_uses_colour_categories": true,
+    "aggregate_final_average_table_reported": true
+  },
+  "eligibility": {
+    "minimum_hydrogen_experiments": {
+      "required": 4,
+      "observed": 32,
+      "passed": true
+    },
+    "minimum_mapped_sensors_per_experiment": {
+      "required": 10,
+      "observed": 50,
+      "passed": true,
+      "qualification": "The report states 50 sensors, but this does not satisfy the separate same-frame numeric coordinate requirement."
+    },
+    "source_coordinates": {
+      "required": true,
+      "observed": "top-view blue-dot figure only",
+      "passed": false
+    },
+    "sensor_coordinates_in_same_frame": {
+      "required": true,
+      "observed": "layout photographs/figures and height groups; no tabulated numeric per-sensor coordinates or report companion data",
+      "passed": false
+    },
+    "release_orientation_class": {
+      "required": true,
+      "observed": "gas-valve photograph/schematic without a declared orientation class",
+      "passed": false
+    },
+    "per_sensor_numeric_response": {
+      "required": true,
+      "observed": "multi-sensor plots plus colour-coded final-concentration categories; no tabulated per-sensor maximum, plateau or release-window mean",
+      "passed": false
+    }
+  },
+  "decision": {
+    "eligible_for_primary_spatial_holdout": false,
+    "failed_required_fields": [
+      "source_coordinates",
+      "sensor_coordinates_in_same_frame",
+      "release_orientation_class",
+      "per_sensor_numeric_response"
+    ],
+    "model_evaluation_executed": false,
+    "independent_validation_pass": false,
+    "runtime_candidate_enabled": false,
+    "reason": "The report supplies an actual-hydrogen experiment matrix and 50-sensor coverage, but the frozen rank test cannot be reproduced without numeric source/sensor coordinates, a declared orientation class and tabulated per-sensor responses. The protocol prohibits graph or colour digitisation."
+  },
+  "usable_evidence": {
+    "actual_hydrogen_experiment_count_inventory": 32,
+    "sensor_count": 50,
+    "release_rates_normal_dm3_h": [
+      50,
+      100,
+      300,
+      1000
+    ],
+    "configuration_count": 8,
+    "container_internal_dimensions_m": [
+      6.0,
+      2.5,
+      2.5
+    ],
+    "container_working_volume_m3": 36.0,
+    "qualitative_roles": [
+      "actual-hydrogen concentration stratification context",
+      "detector-height and multi-location coverage rationale",
+      "ventilation and compartment-opening sensitivity context"
+    ],
+    "not_used_for": [
+      "detector amplitude or alarm-threshold calibration",
+      "outdoor HRS detector-placement validation",
+      "consequence distance, ignition, ESD or full-loop validation"
+    ]
+  },
+  "next_acquisition_requirement": "Obtain a rights-cleared companion export containing experiment ID, sensor ID, source XYZ, sensor XYZ, release orientation and per-sensor numerical H2 response, or freeze the same candidate against another untouched actual-hydrogen cohort.",
+  "claim_boundary": "HyDelta D6A.1 is retained as public actual-hydrogen report-level evidence for indoor concentration stratification, sensor coverage and ventilation context. It does not independently validate the frozen spatial ranker because the report does not publish the machine-readable spatial outcome fields required by the pre-access protocol."
+}

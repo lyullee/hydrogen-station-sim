@@ -50,6 +50,8 @@ def build(root: Path) -> dict[str, Any]:
     operational_face_path = root / "research/public_operational_benchmark_face_validity_2026_10_05.json"
     h2safe_spatial_path = root / "research/h2safe_spatial_response_diagnostic_2026_10_08.json"
     h2safe_orientation_path = root / "research/h2safe_orientation_development_2026_10_08.json"
+    hydelta_spatial_eligibility_path = root / "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json"
+    sandia_spatial_path = root / "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json"
     audit = load_json(audit_path)
     hiad = load_json(hiad_path)
     tracker = load_json(tracker_path)
@@ -63,6 +65,8 @@ def build(root: Path) -> dict[str, Any]:
     operational_search = load_json(operational_search_path)
     h2safe_spatial = load_json(h2safe_spatial_path)
     h2safe_orientation = load_json(h2safe_orientation_path)
+    hydelta_spatial_eligibility = load_json(hydelta_spatial_eligibility_path)
+    sandia_spatial = load_json(sandia_spatial_path)
 
     status_by_id = {g["id"]: g for g in audit.get("gates", [])}
     gate = lambda gate_id: status_by_id.get(gate_id, {"status": "MISSING"})
@@ -142,6 +146,8 @@ def build(root: Path) -> dict[str, Any]:
                 "evidence": [
                     "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
                     "research/h2safe_orientation_development_2026_10_08.json",
+                    "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json",
+                    "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json",
                 ],
                 "experiment_count": h2safe_spatial["results"]["Y_as_elevation"]["aggregate"]["experiment_count"],
                 "median_spearman": h2safe_spatial["results"]["Y_as_elevation"]["aggregate"]["median_spearman"],
@@ -156,6 +162,40 @@ def build(root: Path) -> dict[str, Any]:
                     "runtime_application": h2safe_orientation[
                         "integrity"
                     ]["runtime_application"],
+                },
+                "actual_hydrogen_holdout_candidate": {
+                    "status": hydelta_spatial_eligibility["status"],
+                    "eligible": hydelta_spatial_eligibility["decision"][
+                        "eligible_for_primary_spatial_holdout"
+                    ],
+                    "failed_required_fields": hydelta_spatial_eligibility[
+                        "decision"
+                    ]["failed_required_fields"],
+                    "model_evaluation_executed": hydelta_spatial_eligibility[
+                        "decision"
+                    ]["model_evaluation_executed"],
+                    "runtime_candidate_enabled": hydelta_spatial_eligibility[
+                        "decision"
+                    ]["runtime_candidate_enabled"],
+                },
+                "actual_hydrogen_external_diagnostic": {
+                    "status": sandia_spatial["status"],
+                    "sensor_count": len(sandia_spatial["cases"]),
+                    "baseline_spearman_rho": sandia_spatial[
+                        "baseline_geometry_only"
+                    ]["spearman_rho"],
+                    "candidate_spearman_rho": sandia_spatial[
+                        "orientation_candidate"
+                    ]["spearman_rho"],
+                    "top3_recall": sandia_spatial["orientation_candidate"][
+                        "top3_recall"
+                    ],
+                    "independent_validation_pass": sandia_spatial["decision"][
+                        "independent_validation_pass"
+                    ],
+                    "runtime_candidate_enabled": sandia_spatial["decision"][
+                        "runtime_candidate_enabled"
+                    ],
                 },
                 "claim_boundary": h2safe_spatial["claim_boundary"],
             },
@@ -261,7 +301,7 @@ def build(root: Path) -> dict[str, Any]:
             {
                 "id": "h2safe_spatial_detector_transfer",
                 "status": gate("h2safe_spatial_detector_transfer_validation")["status"],
-                "why_blocked": "The frozen coordinate-only rank law passed two of four H2SAFE spatial screens. A post-access orientation-class candidate now passes all four internal reference screens and corrects the horizontal-release failure, but it is development evidence after outcome access and cannot revise the independent validation decision.",
+                "why_blocked": "The frozen coordinate-only rank law passed two of four H2SAFE spatial screens. A post-access orientation-class candidate passes all four internal reference screens and reaches Spearman rho 0.943 with top-3 recall 1.0 on a six-sensor Sandia actual-hydrogen summary without fitting. That external diagnostic was formalised after outcome access and cannot revise the gate. The pre-access-frozen HyDelta candidate was ineligible before model execution because required numeric spatial fields are absent.",
                 "evidence": [
                     "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
                     "research/H2SAFE_SPATIAL_RESPONSE_DIAGNOSTIC_2026_10_08.md",
@@ -269,9 +309,13 @@ def build(root: Path) -> dict[str, Any]:
                     "research/H2SAFE_ORIENTATION_DEVELOPMENT_2026_10_08.md",
                     "research/hydelta_indoor_spatial_holdout_protocol_2026_10_08.json",
                     "research/HYDELTA_INDOOR_SPATIAL_HOLDOUT_PROTOCOL_2026_10_08.md",
+                    "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json",
+                    "research/HYDELTA_INDOOR_SPATIAL_HOLDOUT_ELIGIBILITY_2026_10_08.md",
+                    "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json",
+                    "research/SANDIA_WAREHOUSE_SPATIAL_DIAGNOSTIC_2026_10_08.md",
                 ],
                 "unblock_criterion": "Evaluate the now-frozen orientation-class candidate on an independent indoor release cohort and pass all spatial rank and recall screens without fitting detector amplitudes or hydrogen alarm thresholds on helium data.",
-                "next_action": "Screen the pre-access-frozen HyDelta D6A.1 actual-hydrogen report for tabulated per-sensor outcomes and same-frame coordinates. If eligible, apply the exact retained candidate without modification; otherwise preserve the ineligibility result and continue acquisition.",
+                "next_action": "Request a HyDelta companion export containing experiment ID, source/sensor XYZ, release orientation and per-sensor numerical H2 responses, while screening another untouched actual-hydrogen indoor cohort under the unchanged candidate and thresholds.",
             },
             {
                 "id": "saga_human_effectiveness",
@@ -314,6 +358,10 @@ def build(root: Path) -> dict[str, Any]:
                 root / "research/h2safe_indoor_release_intake_2026_10_07.json"
             ),
             "h2safe_spatial_diagnostic_sha256": sha256(h2safe_spatial_path),
+            "hydelta_spatial_eligibility_sha256": sha256(
+                hydelta_spatial_eligibility_path
+            ),
+            "sandia_spatial_diagnostic_sha256": sha256(sandia_spatial_path),
             "candidate_route_count": len(tracker.get("candidates") or []),
             "public_full_loop_search_candidate_count": candidate_count(search),
             "latest_public_full_loop_search_candidate_count": candidate_count(latest_search),

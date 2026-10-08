@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T03:18:07.607838+00:00",
+  "generated_at": "2026-10-08T03:33:06.463900+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -76,7 +76,9 @@
       "gate": "FAIL",
       "evidence": [
         "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
-        "research/h2safe_orientation_development_2026_10_08.json"
+        "research/h2safe_orientation_development_2026_10_08.json",
+        "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json",
+        "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json"
       ],
       "experiment_count": 5,
       "median_spearman": 0.5817391304347826,
@@ -85,6 +87,27 @@
         "internal_reference_screen_pass": true,
         "independent_validation_pass": false,
         "runtime_application": false
+      },
+      "actual_hydrogen_holdout_candidate": {
+        "status": "INELIGIBLE_NO_MODEL_EVALUATION",
+        "eligible": false,
+        "failed_required_fields": [
+          "source_coordinates",
+          "sensor_coordinates_in_same_frame",
+          "release_orientation_class",
+          "per_sensor_numeric_response"
+        ],
+        "model_evaluation_executed": false,
+        "runtime_candidate_enabled": false
+      },
+      "actual_hydrogen_external_diagnostic": {
+        "status": "EXTERNAL_POST_ACCESS_DIAGNOSTIC_NOT_VALIDATION",
+        "sensor_count": 6,
+        "baseline_spearman_rho": 0.6,
+        "candidate_spearman_rho": 0.942857142857143,
+        "top3_recall": 1.0,
+        "independent_validation_pass": false,
+        "runtime_candidate_enabled": false
       },
       "claim_boundary": "This post-access diagnostic supports only a development choice to replace arbitrary near/far detector assignment with a transparent coordinate ranking. It failed the joint spatial screen and is not independent validation."
     },
@@ -189,17 +212,21 @@
     {
       "id": "h2safe_spatial_detector_transfer",
       "status": "FAIL",
-      "why_blocked": "The frozen coordinate-only rank law passed two of four H2SAFE spatial screens. A post-access orientation-class candidate now passes all four internal reference screens and corrects the horizontal-release failure, but it is development evidence after outcome access and cannot revise the independent validation decision.",
+      "why_blocked": "The frozen coordinate-only rank law passed two of four H2SAFE spatial screens. A post-access orientation-class candidate passes all four internal reference screens and reaches Spearman rho 0.943 with top-3 recall 1.0 on a six-sensor Sandia actual-hydrogen summary without fitting. That external diagnostic was formalised after outcome access and cannot revise the gate. The pre-access-frozen HyDelta candidate was ineligible before model execution because required numeric spatial fields are absent.",
       "evidence": [
         "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
         "research/H2SAFE_SPATIAL_RESPONSE_DIAGNOSTIC_2026_10_08.md",
         "research/h2safe_orientation_development_2026_10_08.json",
         "research/H2SAFE_ORIENTATION_DEVELOPMENT_2026_10_08.md",
         "research/hydelta_indoor_spatial_holdout_protocol_2026_10_08.json",
-        "research/HYDELTA_INDOOR_SPATIAL_HOLDOUT_PROTOCOL_2026_10_08.md"
+        "research/HYDELTA_INDOOR_SPATIAL_HOLDOUT_PROTOCOL_2026_10_08.md",
+        "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json",
+        "research/HYDELTA_INDOOR_SPATIAL_HOLDOUT_ELIGIBILITY_2026_10_08.md",
+        "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json",
+        "research/SANDIA_WAREHOUSE_SPATIAL_DIAGNOSTIC_2026_10_08.md"
       ],
       "unblock_criterion": "Evaluate the now-frozen orientation-class candidate on an independent indoor release cohort and pass all spatial rank and recall screens without fitting detector amplitudes or hydrogen alarm thresholds on helium data.",
-      "next_action": "Screen the pre-access-frozen HyDelta D6A.1 actual-hydrogen report for tabulated per-sensor outcomes and same-frame coordinates. If eligible, apply the exact retained candidate without modification; otherwise preserve the ineligibility result and continue acquisition."
+      "next_action": "Request a HyDelta companion export containing experiment ID, source/sensor XYZ, release orientation and per-sensor numerical H2 responses, while screening another untouched actual-hydrogen indoor cohort under the unchanged candidate and thresholds."
     },
     {
       "id": "saga_human_effectiveness",
@@ -226,7 +253,7 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "c569dcc2c67597361edd7979c6ebc7b26deb883cf5144d789566ee25f8d002d7",
+    "audit_sha256": "d94664c9aa52fb2ed12d8c1d6420757b9648f3319a4dfde7846b708b3046f976",
     "hiad_readiness_sha256": "5c2e99a8371e3dd6fc97847f956d065f7d0c62bed48270a6bdb15021725d4310",
     "acquisition_tracker_sha256": "f141806ae0cce8ec9a0797e2ca6f7102b299eaedc33317693922abd763a3e399",
     "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",
@@ -241,6 +268,8 @@
     "operational_benchmark_face_validity_sha256": "64001782ba19ebd3299b0f17caf61f78138d9bc9a7836bc77d6e27f4c0dcec02",
     "h2safe_intake_sha256": "1ee28c8e168d2ee411763801249ee059a5e356c21f5dd45d75b48880b88f113f",
     "h2safe_spatial_diagnostic_sha256": "1a918fcd5c8d0b2556bef9d19f8ebeb9a590f2bc8323639d3c3ea5def5b979e3",
+    "hydelta_spatial_eligibility_sha256": "7edb4605c427918947ee9914cf7e9ecece412656479f59b62dbdb24103083813",
+    "sandia_spatial_diagnostic_sha256": "12cecd95e218fa9a76040d295f2e2a1af8e8f7a13e30d5bd22e61b96335e87e5",
     "candidate_route_count": 33,
     "public_full_loop_search_candidate_count": 17,
     "latest_public_full_loop_search_candidate_count": 9,

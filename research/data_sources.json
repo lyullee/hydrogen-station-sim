@@ -839,12 +839,23 @@
       "publisher": "HyDelta / Zenodo",
       "landing_page": "https://zenodo.org/records/8154318",
       "doi": "10.5281/zenodo.8154318",
-      "license": "Zenodo record; file-specific reuse terms must be retained from the record",
+      "license": "CC BY 4.0",
       "expected_file": "D6A_1_HyDelta_Tweede_Tranche_Experiments_Hydrogen_Outflow_in_Closed_Spaces_EN.pdf",
       "expected_file_bytes": 7112634,
       "public_raw_data": false,
       "protocol": "research/hydelta_indoor_spatial_holdout_protocol_2026_10_08.json",
-      "eligibility_note": "Independent actual-hydrogen indoor spatial-transfer candidate frozen before report-file access. Promotion requires tabulated per-sensor outcomes and same-frame source/sensor coordinates; report-only aggregate or figures remain ineligible."
+      "eligibility_audit": "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json",
+      "eligibility_note": "Pre-access-frozen actual-hydrogen spatial holdout was screened after report access and is ineligible: the report has 50 sensors and 32 hydrogen configuration/flow combinations, but no tabulated same-frame source/sensor coordinates, declared release orientation class or per-sensor numeric response. Figures and colour categories were not digitized to rescue eligibility."
+    },
+    "sandia_warehouse_actual_hydrogen_spatial_summary": {
+      "title": "Sandia/SRI hydrogen forklift release in enclosed warehouse",
+      "primary_article_doi": "10.1016/j.ijhydene.2012.03.161",
+      "public_numeric_summary": "https://knowledge.gexcon.com/docs/sandia-validation-case",
+      "publisher": "Sandia/SRI experiment; public six-point summary by Gexcon",
+      "license": "Public factual summary; no open-data license asserted",
+      "public_raw_data": false,
+      "diagnostic_artifact": "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json",
+      "eligibility_note": "Six sensor coordinates and combined Test-1/Test-2 maximum hydrogen concentrations support a no-fit post-access spatial-rank diagnostic. The full concentration histories are not public and the diagnostic was formalised after the outcomes were viewed, so it cannot close the independent validation gate."
     }
   }
 }

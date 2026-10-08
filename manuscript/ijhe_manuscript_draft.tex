@@ -765,6 +765,15 @@ not detector response dynamics, placement, ESD effectiveness or an outdoor HRS
 dispersion field. The case-level output and archive digests are retained in the
 reproducibility record \texttt{dispersion\_detector\_logic\_validation.json}.
 
+On a public six-sensor Sandia/SRI actual-H$_2$ summary
+\cite{ekoto2012,gexcon2025}, the already-frozen orientation candidate improved
+Spearman correlation from 0.600 to 0.943, attained top-three recall 1.0 and
+ranked the highest response first without fitting. Since the diagnostic was
+formalised after outcome access and combines Tests 1--2, it is not independent
+validation and runtime remains disabled. A pre-access-frozen HyDelta report was
+unscored because same-frame coordinates, orientation and per-sensor numbers were
+absent; figures were not digitised.
+
 \subsection{Decision-support study status}
 The deterministic split produces a 24-case holdout casebook and nine development
 cases, but all vignettes remain unapproved until coordinator leakage review and
@@ -850,30 +859,20 @@ The Proust curves are now consumed development evidence. Their plot-digitization
 uncertainty was much smaller than the discrepancies and did not determine the
 negative result.
 
-A post-outcome network diagnostic illustrates why a universal fitted correction
-would be misleading. A series-conductance approximation selected on the consumed
-Proust curves (2.62 mm equivalent upstream restriction) brought all three Proust
-diameter groups inside the descriptive error screens, but its NRMSE increased to
-29.25\% and 41.81\% on the already-visible 3 and 4 mm Imamura series. A direct
-aperture relation with $C_d=1.0$ instead remained between 3.79\% and 7.60\%
-NRMSE across the consumed 1--4 mm Imamura data. Because both outcome sets were
-visible before this comparison was formalized, these numbers are development
-diagnostics only. They indicate apparatus-specific valve or upstream resistance
-rather than a transferable nozzle correction and leave the negative Proust
-decision unchanged.
+A post-outcome series-conductance fit brought the consumed Proust curves inside
+descriptive screens, but NRMSE rose to 29.25\% and 41.81\% on the already-visible
+3 and 4 mm Imamura series; direct-aperture $C_d=1.0$ gave 3.79--7.60\% across
+1--4 mm. These development-only results indicate apparatus-specific upstream
+resistance and leave the negative Proust decision unchanged.
 
 The apparatus-resolved candidate implements these missing dynamics, but remains
 development-only. Its protocol requires synchronized state, flow, valve position
 and as-built geometry from new campaign data; the consumed
 Proust, Schefer and PRESLHY outcomes cannot be recycled as its holdout.
 
-The separate Sandia/SRI transient reinforces the thermal limitation without
-sharing the PRESLHY or INERIS/CEA facilities. Its low aggregate NRMSE can obscure
-the operationally relevant timing error: the adiabatic vessel model depleted the
-flow too quickly. A non-adiabatic two-cylinder wall model and explicit 7.6 m tube
-line-pack are therefore development priorities. The Figure 3b trace is now
-consumed evidence, and the known approximate duration prevents describing this
-test as fully blinded.
+The separate Sandia/SRI transient had low aggregate NRMSE but the adiabatic model
+depleted flow too quickly. It motivates non-adiabatic cylinder walls and explicit
+7.6 m tube line-pack; the consumed approximate-duration trace is not fully blinded.
 
 The 2007 pressure trace makes the omitted dynamics more specific. A single
 adiabatic vessel state could match the initial value and half-pressure time while
@@ -1100,6 +1099,11 @@ Experimental investigation of hydrogen release and ignition from fuel cell
 powered forklifts in enclosed spaces, \textit{International Journal of Hydrogen
 Energy} 37(22) (2012) 17446--17456,
 \href{https://doi.org/10.1016/j.ijhydene.2012.03.161}{doi:10.1016/j.ijhydene.2012.03.161}.
+
+\bibitem{gexcon2025}
+Gexcon, \textit{Sandia validation case}, updated 28 November 2025,
+\url{https://knowledge.gexcon.com/docs/sandia-validation-case}
+(accessed 8 October 2026).
 
 \bibitem{han2013}
 S.H. Han, D. Chang, J.S. Kim, Release characteristics of highly pressurized

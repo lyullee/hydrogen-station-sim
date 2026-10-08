@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T02:56:52.216617+00:00",
+  "generated_at": "2026-10-08T03:33:06.053321+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -1856,8 +1856,8 @@
       "id": "h2safe_spatial_detector_transfer_validation",
       "status": "FAIL",
       "claim": "The runtime detector-placement ranking must pass all frozen H2SAFE spatial-transfer screens before it is described as validated.",
-      "evidence": "research\\h2safe_spatial_response_diagnostic_2026_10_08.json",
-      "requirement": "Five full-scale helium-surrogate tests, four joint rank/recall screens, explicit post-access status and no H2 amplitude or threshold transfer.",
+      "evidence": "research\\h2safe_spatial_response_diagnostic_2026_10_08.json; research\\hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json; research\\sandia_warehouse_spatial_diagnostic_2026_10_08.json",
+      "requirement": "Five full-scale helium-surrogate tests, four joint rank/recall screens, explicit post-access status, and a pre-access-frozen actual-hydrogen candidate eligibility audit with no figure-digitisation rescue.",
       "observed": {
         "doi": "10.7799/17118570",
         "method_status": "POST_ACCESS_DEVELOPMENT_DIAGNOSTIC_NOT_VALIDATION",
@@ -1874,6 +1874,29 @@
         },
         "joint_pass": false,
         "runtime_use": "Do not apply the failed geometry-only ranking to runtime detector routing. Retain the existing zone mapping, 1.0 and 0.45 concentration multipliers, and all alarm/trip thresholds until a new independent spatial holdout passes.",
+        "hydelta_actual_hydrogen_holdout": {
+          "audit_integrity": true,
+          "status": "INELIGIBLE_NO_MODEL_EVALUATION",
+          "eligible": false,
+          "failed_required_fields": [
+            "source_coordinates",
+            "sensor_coordinates_in_same_frame",
+            "release_orientation_class",
+            "per_sensor_numeric_response"
+          ],
+          "model_evaluation_executed": false,
+          "runtime_candidate_enabled": false
+        },
+        "sandia_actual_hydrogen_external_diagnostic": {
+          "audit_integrity": true,
+          "status": "EXTERNAL_POST_ACCESS_DIAGNOSTIC_NOT_VALIDATION",
+          "sensor_count": 6,
+          "baseline_spearman_rho": 0.6,
+          "candidate_spearman_rho": 0.942857142857143,
+          "top3_recall": 1.0,
+          "independent_validation_pass": false,
+          "runtime_candidate_enabled": false
+        },
         "claim_boundary": "This post-access diagnostic supports only a development choice to replace arbitrary near/far detector assignment with a transparent coordinate ranking. It failed the joint spatial screen and is not independent validation."
       }
     },
@@ -6623,11 +6646,11 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 8000,
+          "approximate_manuscript_words_before_references": 7984,
           "figures": 3,
           "tables": 3,
-          "citation_keys": 41,
-          "bibliography_entries": 42,
+          "citation_keys": 42,
+          "bibliography_entries": 43,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -6655,12 +6678,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-08T02:56:19.434154+00:00",
-        "attempts_this_run": 2,
+        "attempted_at": "2026-10-08T03:33:00.2932993Z",
+        "attempts_this_run": 1,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "7b51e6afc5273912d91846b0f9347abbfea237bdd75e6bdb577ade09fc2ca66c",
+        "source_sha256": "9fcf42c1339099a60d8eb1b44d2a64577f402387cf23d266769a0df57725121c",
         "diagnostic": "Unable to find standard directories for platform",
         "format_check_passed": true,
         "retained_previous_pdf": {

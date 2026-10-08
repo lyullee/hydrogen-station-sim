@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "artifact_type": "post_access_actual_hydrogen_spatial_rank_diagnostic",
+  "generated_at": "2026-10-08T03:30:03.499807+00:00",
+  "status": "EXTERNAL_POST_ACCESS_DIAGNOSTIC_NOT_VALIDATION",
+  "source": {
+    "experiment": "Sandia/SRI hydrogen forklift release in enclosed warehouse",
+    "primary_article": "Ekoto et al. (2012), Experimental investigation of hydrogen release and ignition from fuel cell powered forklifts in enclosed spaces",
+    "primary_article_doi": "10.1016/j.ijhydene.2012.03.161",
+    "public_numeric_summary_url": "https://knowledge.gexcon.com/docs/sandia-validation-case",
+    "public_summary_updated": "2025-11-28",
+    "data_scope": "Six public sensor coordinates and Test-1/Test-2 combined maximum H2 concentrations; full concentration-time histories are not public.",
+    "test_gas": "hydrogen",
+    "raw_time_series_available": false,
+    "license": "Public factual summary; no open-data license asserted"
+  },
+  "model_lock": {
+    "candidate": "orientation_class_rank_v2",
+    "implementation": "src/h2station/spatial_detector.py",
+    "implementation_sha256": "d01b4378a43b3dc233d7093733119963c11db208f604160eba0fa7f962d7580a",
+    "candidate_frozen_before_numeric_outcome_access": true,
+    "freeze_commit": "2056c04",
+    "diagnostic_protocol_frozen_before_outcome_access": false,
+    "parameters_fitted": false,
+    "runtime_application": false
+  },
+  "coordinate_mapping": {
+    "published_frame": "FLACS x/y/z with z as elevation",
+    "model_frame": "x/y/z with y as elevation",
+    "transform": "model Point3D = (FLACS x, FLACS z, FLACS y)",
+    "source_coordinate_m_model_frame": {
+      "x": 2.12,
+      "y_elevation": 0.22,
+      "z": 1.2
+    },
+    "release_orientation": "horizontal",
+    "published_release_direction": "-X",
+    "candidate_uses_azimuth": false
+  },
+  "cases": [
+    {
+      "sensor": "S01",
+      "coordinate_m_model_frame": {
+        "x": 1.97,
+        "y_elevation": 0.28,
+        "z": 1.25
+      },
+      "experiment_combined_peak_h2_volpct": 99.21,
+      "baseline_score": 3.5232921579417673,
+      "orientation_candidate_score": 3.278532207934149
+    },
+    {
+      "sensor": "S04",
+      "coordinate_m_model_frame": {
+        "x": 1.97,
+        "y_elevation": 2.68,
+        "z": 1.25
+      },
+      "experiment_combined_peak_h2_volpct": 12.66,
+      "baseline_score": 4.925799909957127,
+      "orientation_candidate_score": 0.25729980429653115
+    },
+    {
+      "sensor": "S06",
+      "coordinate_m_model_frame": {
+        "x": 1.86,
+        "y_elevation": 0.54,
+        "z": 1.24
+      },
+      "experiment_combined_peak_h2_volpct": 90.24,
+      "baseline_score": 2.9013706387485207,
+      "orientation_candidate_score": 1.9762147239476142
+    },
+    {
+      "sensor": "S07",
+      "coordinate_m_model_frame": {
+        "x": 1.68,
+        "y_elevation": 1.21,
+        "z": 1.25
+      },
+      "experiment_combined_peak_h2_volpct": 43.34,
+      "baseline_score": 2.5229695439580664,
+      "orientation_candidate_score": 0.7690776019383158
+    },
+    {
+      "sensor": "S08",
+      "coordinate_m_model_frame": {
+        "x": 4.16,
+        "y_elevation": 2.67,
+        "z": 1.27
+      },
+      "experiment_combined_peak_h2_volpct": 7.71,
+      "baseline_score": 1.0535979356013303,
+      "orientation_candidate_score": 0.055699222662785895
+    },
+    {
+      "sensor": "S11",
+      "coordinate_m_model_frame": {
+        "x": 4.15,
+        "y_elevation": 2.67,
+        "z": 2.83
+      },
+      "experiment_combined_peak_h2_volpct": 7.81,
+      "baseline_score": 0.7046879018377762,
+      "orientation_candidate_score": 0.037253839463753165
+    }
+  ],
+  "baseline_geometry_only": {
+    "spearman_rho": 0.6,
+    "kendall_tau_b": 0.4666666666666666,
+    "highest_ranked_sensor_matches": false,
+    "top3_recall": 0.6666666666666666,
+    "predicted_order": [
+      "S04",
+      "S01",
+      "S06",
+      "S07",
+      "S08",
+      "S11"
+    ],
+    "observed_order": [
+      "S01",
+      "S06",
+      "S07",
+      "S04",
+      "S11",
+      "S08"
+    ]
+  },
+  "orientation_candidate": {
+    "spearman_rho": 0.942857142857143,
+    "kendall_tau_b": 0.8666666666666666,
+    "highest_ranked_sensor_matches": true,
+    "top3_recall": 1.0,
+    "predicted_order": [
+      "S01",
+      "S06",
+      "S07",
+      "S04",
+      "S08",
+      "S11"
+    ],
+    "observed_order": [
+      "S01",
+      "S06",
+      "S07",
+      "S04",
+      "S11",
+      "S08"
+    ]
+  },
+  "delta": {
+    "spearman_rho": 0.34285714285714297,
+    "kendall_tau_b": 0.39999999999999997
+  },
+  "decision": {
+    "candidate_consistent_with_public_actual_hydrogen_rank_order": true,
+    "independent_validation_pass": false,
+    "h2safe_gate_changed": false,
+    "runtime_candidate_enabled": false,
+    "reason": "The exact locked candidate ranks the six public actual-H2 maxima well, but the six outcomes were viewed before this diagnostic was formalised, Tests 1 and 2 are combined into one response vector, and the full time histories are explicitly unavailable."
+  },
+  "claim_boundary": "This single six-point combined-test summary is actual-hydrogen external diagnostic evidence for spatial ordering only. It is not a prospective validation, detector calibration, concentration prediction, alarm-setpoint, outdoor HRS placement, CFD, consequence-distance, ESD or full-loop claim."
+}
