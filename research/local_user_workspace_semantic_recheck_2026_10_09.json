@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_user_workspace_semantic_recheck",
+  "status": "privacy_bounded_negative_full_loop_recheck",
+  "generated_at": "2026-10-09",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "source_identifiers_published": false,
+    "site_company_manufacturer_published": false,
+    "calendar_dates_published": false,
+    "raw_rows_persisted": false,
+    "candidate_values_persisted": false
+  },
+  "scan_scope": [
+    "Desktop, Documents and Downloads user-data roots",
+    "CSV, TSV, XLS/XLSX, MAT, HDF5, JSON, database and archive extensions",
+    "header-level semantic screening of hydrogen-station and vehicle-related candidates"
+  ],
+  "scan_counts": {
+    "machine_readable_files": 33491,
+    "path_keyword_candidate_files": 3935,
+    "header_screened_keyword_files": 728,
+    "header_semantic_vehicle_candidates": 160,
+    "header_parse_errors": 1
+  },
+  "provenance_classification": {
+    "known_project_processed_or_reference_candidates": 158,
+    "additional_workspace_exports": {
+      "file_count": 2,
+      "row_counts": [337, 339],
+      "common_field_families": [
+        "elapsed time",
+        "vehicle 1 and vehicle 2 pressure",
+        "vehicle 1 and vehicle 2 temperature",
+        "nozzle 1 and nozzle 2 flow",
+        "total leak flow"
+      ],
+      "observed_total_leak_flow_max_g_s": 0.0,
+      "observed_duration_s": [67.000001, 67.400001],
+      "decision": "SIMULATOR_REGRESSION_ONLY",
+      "reason": "The schema matches the local dual-vehicle simulator export and contains no independently attested station controller, protocol, ESD, calibration or measurement provenance."
+    }
+  },
+  "full_loop_decision": {
+    "new_measured_station_vehicle_cohort_found": false,
+    "decision": "NO_NEW_FULL_LOOP_HOLDOUT",
+    "required_before_external_validation": [
+      "custodian confirmation that the trace is measured rather than generated",
+      "station/dispenser boundary and controller/protocol state",
+      "units, calibration and common-clock provenance",
+      "rights for derived metrics and reviewer access"
+    ]
+  },
+  "claim_boundary": "Header-level matches and simulator exports cannot be presented as public or private measured station-to-vehicle validation."
+}
