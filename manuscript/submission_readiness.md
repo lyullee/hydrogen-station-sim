@@ -20,7 +20,19 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **100 PASS · 8 FAIL · 8 PENDING**.
+Gate counts: **102 PASS · 10 FAIL · 8 PENDING**.
+
+The HyTunnel-CS CC BY 4.0 actual-hydrogen archive now provides a completed
+raw-time-series holdout over 18 mechanically ventilated enclosure experiments
+and five high-pressure blowdowns. All declared cases were evaluated with no
+remaining file or runtime failure. The zero-dimensional well-mixed model
+passed 6/18 concentration cases and therefore failed its frozen 70% aggregate
+screen. The fixed 0.5 mm, `Cd = 0.8` real-gas aperture model passed 3/5
+mass-flow cases; all five preserved perfect rank and less than 9.5% peak-
+normalized RMSE, but two cases exceeded the 25% median percentage-error limit
+by about 1.2 percentage points. Both failed aggregate claims are retained and
+narrow the next work to spatial transport and independently split discharge-
+coefficient calibration.
 
 A newly found CC BY 4.0 detector workbook was handled prospectively: the
 protocol and thresholds were committed before the numerical Excel file was

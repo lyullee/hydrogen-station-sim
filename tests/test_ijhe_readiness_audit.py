@@ -82,6 +82,21 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     )
     assert blend_holdout["joint_primary_screen_pass"] is False
     assert blend_holdout["claim_supported"] is False
+    assert gates["hytunnel_carpark_execution_integrity"]["status"] == "PASS"
+    hytunnel_integrity = gates["hytunnel_carpark_execution_integrity"]["observed"]
+    assert hytunnel_integrity["raw_file_count"] == 18
+    assert hytunnel_integrity["amendment_count"] == 4
+    assert hytunnel_integrity["failure_count"] == 0
+    assert gates["hytunnel_carpark_dispersion_validation"]["status"] == "FAIL"
+    hytunnel_dispersion = gates["hytunnel_carpark_dispersion_validation"]["observed"]
+    assert hytunnel_dispersion["eligible_case_count"] == 18
+    assert hytunnel_dispersion["pass_count"] == 6
+    assert hytunnel_dispersion["joint_screen_pass"] is False
+    assert gates["hytunnel_carpark_mass_flow_validation"]["status"] == "FAIL"
+    hytunnel_mass_flow = gates["hytunnel_carpark_mass_flow_validation"]["observed"]
+    assert hytunnel_mass_flow["eligible_case_count"] == 5
+    assert hytunnel_mass_flow["pass_count"] == 3
+    assert hytunnel_mass_flow["joint_screen_pass"] is False
     assert gates["elvhys_auxiliary_replay_integrity"]["status"] == "PASS"
     assert gates["elvhys_auxiliary_replay_integrity"]["observed"]["case_count"] == 3
     assert gates["elvhys_auxiliary_replay_integrity"]["observed"][

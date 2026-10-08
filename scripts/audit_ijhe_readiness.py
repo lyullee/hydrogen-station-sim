@@ -2863,6 +2863,134 @@ def audit(root: Path) -> dict[str, object]:
         } if blend_result else "missing; hydrogen-blend holdout has not run",
     ))
 
+    hytunnel_protocol_path = root / (
+        "research/hytunnel_carpark_holdout_protocol_2026_10_08.json"
+    )
+    hytunnel_result_path = root / (
+        "research/hytunnel_carpark_holdout_result_2026_10_08.json"
+    )
+    hytunnel_report_path = root / (
+        "research/HYTUNNEL_CARPARK_HOLDOUT_2026_10_08.md"
+    )
+    hytunnel_amendment_paths = (
+        root / "research/hytunnel_carpark_format_amendment_2026_10_08.json",
+        root / "research/hytunnel_carpark_sampling_amendment_2026_10_08.json",
+        root / "research/hytunnel_carpark_optional_tank_amendment_2026_10_08.json",
+        root / "research/hytunnel_carpark_duplicate_time_amendment_2026_10_08.json",
+    )
+    hytunnel_protocol = _json(hytunnel_protocol_path)
+    hytunnel_result = _json(hytunnel_result_path)
+    hytunnel_amendments = [_json(path) for path in hytunnel_amendment_paths]
+    hytunnel_source = (hytunnel_result or {}).get("source") or {}
+    hytunnel_evaluation = (hytunnel_result or {}).get("evaluation") or {}
+    hytunnel_dispersion = hytunnel_evaluation.get("dispersion") or {}
+    hytunnel_mass_flow = hytunnel_evaluation.get("mass_flow") or {}
+    hytunnel_claims = (hytunnel_result or {}).get("claims") or {}
+    hytunnel_files = hytunnel_source.get("files") or []
+    hytunnel_integrity = bool(
+        (hytunnel_protocol or {}).get("status")
+        == "FROZEN_BEFORE_RAW_MAT_TIMESERIES_DOWNLOAD"
+        and (hytunnel_protocol or {}).get("prior_access", {}).get(
+            "raw_mat_files_downloaded"
+        ) is False
+        and (hytunnel_protocol or {}).get("prior_access", {}).get(
+            "raw_mat_numeric_outcomes_viewed"
+        ) is False
+        and (hytunnel_result or {}).get("artifact_type")
+        == "hytunnel_carpark_raw_timeseries_holdout"
+        and hytunnel_source.get("dataset_doi") == "10.23642/USN.14405903"
+        and hytunnel_source.get("article_doi") == "10.3390/en14113008"
+        and hytunnel_source.get("license") == "CC BY 4.0"
+        and hytunnel_source.get("version") == "1.1"
+        and hytunnel_source.get("raw_files_committed") is False
+        and len(hytunnel_files) == 18
+        and all(len(str(item.get("sha256") or "")) == 64 for item in hytunnel_files)
+        and (hytunnel_result or {}).get("protocol_sha256")
+        == _sha256(hytunnel_protocol_path)
+        and all(amendment is not None for amendment in hytunnel_amendments)
+        and all(
+            all(value is True for value in amendment.get(
+                "scientific_rules_unchanged", {}
+            ).values())
+            for amendment in hytunnel_amendments
+        )
+        and hytunnel_dispersion.get("eligible_case_count") == 18
+        and len(hytunnel_dispersion.get("cases") or []) == 18
+        and hytunnel_mass_flow.get("eligible_case_count") == 5
+        and len(hytunnel_mass_flow.get("cases") or []) == 5
+        and not (hytunnel_evaluation.get("failures") or [])
+        and hytunnel_report_path.is_file()
+    )
+    hytunnel_evidence = "; ".join(
+        str(path.relative_to(root))
+        for path in (
+            hytunnel_protocol_path,
+            *hytunnel_amendment_paths,
+            hytunnel_result_path,
+            hytunnel_report_path,
+        )
+    )
+    gates.append(_gate(
+        "hytunnel_carpark_execution_integrity",
+        "PASS" if hytunnel_integrity else "PENDING",
+        "The public actual-hydrogen HyTunnel raw-time-series holdout retains its frozen protocol, disclosed amendments, complete case accounting and claim boundaries.",
+        hytunnel_evidence,
+        "Frozen pre-download protocol, CC BY 4.0 DOI/version, 18 hashed raw files excluded from Git, 18 concentration cases, five mass-flow cases, no final execution failures and every post-access amendment retained.",
+        {
+            "dataset_doi": hytunnel_source.get("dataset_doi"),
+            "raw_file_count": len(hytunnel_files),
+            "amendment_count": len(hytunnel_amendments),
+            "dispersion_eligible_case_count": hytunnel_dispersion.get(
+                "eligible_case_count"
+            ),
+            "mass_flow_eligible_case_count": hytunnel_mass_flow.get(
+                "eligible_case_count"
+            ),
+            "failure_count": len(hytunnel_evaluation.get("failures") or []),
+            "claim_boundary": (hytunnel_result or {}).get("claim_boundary"),
+        } if hytunnel_result else "missing; HyTunnel holdout has not run",
+    ))
+    gates.append(_gate(
+        "hytunnel_carpark_dispersion_validation",
+        "PASS" if hytunnel_dispersion.get("joint_screen_pass") is True else (
+            "FAIL" if hytunnel_result else "PENDING"
+        ),
+        "The frozen zero-dimensional well-mixed model meets its independent actual-hydrogen concentration screen across the declared ventilated-enclosure experiments.",
+        hytunnel_evidence,
+        "All 18 cases eligible and at least 70% pass the unchanged per-case NRMSE, median percentage error, peak error and rank screens.",
+        {
+            "eligible_case_count": hytunnel_dispersion.get("eligible_case_count"),
+            "pass_count": hytunnel_dispersion.get("pass_count"),
+            "pass_fraction_of_declared_cases": hytunnel_dispersion.get(
+                "pass_fraction_of_declared_cases"
+            ),
+            "joint_screen_pass": hytunnel_dispersion.get("joint_screen_pass"),
+            "claim_supported": hytunnel_claims.get(
+                "well_mixed_sensor_mean_transfer_supported"
+            ),
+        } if hytunnel_result else "missing",
+    ))
+    gates.append(_gate(
+        "hytunnel_carpark_mass_flow_validation",
+        "PASS" if hytunnel_mass_flow.get("joint_screen_pass") is True else (
+            "FAIL" if hytunnel_result else "PENDING"
+        ),
+        "The fixed local real-gas 0.5 mm aperture relation meets its independent actual-hydrogen blowdown mass-flow screen.",
+        hytunnel_evidence,
+        "All five cases eligible and at least four pass the unchanged per-case NRMSE, median percentage error, peak error and rank screens.",
+        {
+            "eligible_case_count": hytunnel_mass_flow.get("eligible_case_count"),
+            "pass_count": hytunnel_mass_flow.get("pass_count"),
+            "pass_fraction_of_declared_cases": hytunnel_mass_flow.get(
+                "pass_fraction_of_declared_cases"
+            ),
+            "joint_screen_pass": hytunnel_mass_flow.get("joint_screen_pass"),
+            "claim_supported": hytunnel_claims.get(
+                "local_real_gas_mass_flow_transfer_supported"
+            ),
+        } if hytunnel_result else "missing",
+    ))
+
     reference_leak_detector_path = root / (
         "research/hydrogen_reference_leak_detector_result_2026_10_08.json"
     )
