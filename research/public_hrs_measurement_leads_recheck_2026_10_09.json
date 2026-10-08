@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_hrs_measurement_leads_recheck",
+  "reviewed_at": "2026-10-09",
+  "status": "HIGH_VALUE_HRS_MEASUREMENT_LEADS_RAW_TRACE_NOT_PUBLIC",
+  "privacy": {
+    "private_station_paths_included": false,
+    "raw_rows_included": false,
+    "private_site_identifiers_included": false,
+    "unpublished_personal_data_included": false
+  },
+  "leads": [
+    {
+      "id": "an_2024_sustainability_hrs_safety_model",
+      "title": "Digital Twin-Based Hydrogen Refueling Station (HRS) Safety Model: CNN-Based Decision-Making and 3D Simulation",
+      "url": "https://doi.org/10.3390/su16219482",
+      "reported_scope": {
+        "actual_station_measurement_claim": true,
+        "sample_count": 885,
+        "sampling_interval": "1 s",
+        "feature_count": 24,
+        "reported_feature_families": ["temperature", "pressure", "state of charge"],
+        "risk_target": "normal/abnormal hydrogen-leak classification"
+      },
+      "raw_trace_public": false,
+      "abnormal_data_provenance": "not sufficient for independent validation; the article states that actual abnormal events were not collected and does not release a raw event-level file",
+      "decision": "REQUEST_DEIDENTIFIED_RAW_CSV_AND_LABEL_PROVENANCE",
+      "eligible_use": ["face-validity context", "sensor-family crosswalk", "data-request lead"],
+      "ineligible_use": ["independent full-loop holdout", "parameter fitting", "SAGA effectiveness score"]
+    },
+    {
+      "id": "hasulyo_2026_hungarian_hrs_digital_twin",
+      "title": "Dynamic Digital Twin Network for Real-Time Safety Monitoring and Predictive Risk Assessment of Hydrogen Refueling Infrastructure",
+      "url": "https://doi.org/10.32604/ee.2026.081099",
+      "reported_scope": {
+        "existing_hungarian_station_measurement_claim": true,
+        "reported_refueling_duration": "300 s",
+        "reported_outputs": ["vehicle tank temperature", "storage pressure", "delivered mass", "mass flow"]
+      },
+      "raw_trace_public": false,
+      "data_availability_boundary": "the article states that supporting data are not publicly available due to legal restrictions",
+      "decision": "REQUEST_DEIDENTIFIED_SYNCHRONIZED_TRACE",
+      "eligible_use": ["operating-range context", "data-request lead"],
+      "ineligible_use": ["independent full-loop holdout", "parameter fitting", "consequence claim"]
+    },
+    {
+      "id": "nist_transient_flow_facility",
+      "title": "NIST Transient Flow Facility",
+      "url": "https://www.nist.gov/programs-projects/transient-flow-facility",
+      "reported_scope": {
+        "facility_reproduces_refueling_transients": true,
+        "reported_pressure_range": "0–70 MPa",
+        "reported_flow_range": "0–10 kg/min",
+        "reported_time_resolution": "100 ms or less",
+        "station_vehicle_full_loop_data_public": false
+      },
+      "raw_trace_public": false,
+      "decision": "METROLOGY_CONTEXT_AND_DATA_REQUEST_LEAD",
+      "eligible_use": ["flow-meter uncertainty context", "transient sampling requirements"],
+      "ineligible_use": ["station digital-twin validation", "full-loop holdout"]
+    },
+    {
+      "id": "nlr_hydrogen_station_composite_data_products",
+      "title": "Next Generation Hydrogen Station Composite Data Products",
+      "url": "https://www.nlr.gov/hydrogen/infrastructure-cdps-all",
+      "reported_scope": {
+        "station_count_or_aggregate_performance_context": true,
+        "available_products": ["fueling rates", "fueling times", "fueling amounts", "fuel temperature", "maintenance and safety aggregates"],
+        "machine_readable_synchronized_trace_public": false
+      },
+      "raw_trace_public": false,
+      "decision": "AGGREGATE_FACE_VALIDITY_ONLY",
+      "eligible_use": ["operational envelope context", "rate/time plausibility"],
+      "ineligible_use": ["dynamic parameter fitting", "full-loop holdout"]
+    }
+  ],
+  "request_package_requirements": [
+    "de-identified synchronized dispenser and vehicle pressure/temperature/mass-flow trace",
+    "sampling rates, units and common time base",
+    "initial conditions, tank capacity and protocol/controller state",
+    "normal versus abnormal label provenance",
+    "vehicle geometry abstraction or approved substitute",
+    "raw-data reuse and redistribution terms"
+  ],
+  "gate_impact": {
+    "full_loop_external_validation": "remains_open",
+    "public_data_search_quality": "improved_by_explicit_raw_trace_boundary",
+    "goal_completion_permitted": false
+  }
+}

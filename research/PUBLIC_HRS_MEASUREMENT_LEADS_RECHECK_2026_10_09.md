@@ -1,0 +1,15 @@
+# Public HRS measurement-leads recheck (2026-10-09)
+
+Four official public sources were rechecked as possible independent evidence for the hydrogen-station digital twin. Two recent papers report real HRS measurements: a Korean study describes 885 one-second samples with 24 station/vehicle-related attributes, and a Hungarian study describes a 300-second refueling replay with station and vehicle measurements. Neither source exposes the synchronized raw logger needed for a reproducible external holdout. The Korean paper also states that actual abnormal events were not collected, so its leak labels cannot be treated as independent accident observations without provenance clarification.
+
+The NIST Transient Flow Facility page provides an unusually useful metrology boundary—0–70 MPa and 0–10 kg/min transients at 100 ms or finer resolution—but it is a facility description rather than a downloadable HRS trace. The National Laboratory of the Rockies composite data products provide aggregate fueling-rate, fueling-time, temperature, maintenance and safety context, not synchronized station-to-vehicle traces.
+
+## Decision
+
+- These records are high-value operating-range and data-request leads.
+- They are not promoted to the independent full-loop holdout, parameter-fitting set, consequence validation, or SAGA-effectiveness benchmark.
+- A valid request must obtain de-identified pressure, temperature and mass-flow channels on a common time base, protocol/controller state, initial conditions, geometry abstraction, label provenance and reuse terms.
+
+The machine-readable boundary is [`public_hrs_measurement_leads_recheck_2026_10_09.json`](public_hrs_measurement_leads_recheck_2026_10_09.json).
+
+Official sources: [Korean HRS digital-twin paper](https://doi.org/10.3390/su16219482), [Hungarian HRS digital-twin paper](https://doi.org/10.32604/ee.2026.081099), [NIST Transient Flow Facility](https://www.nist.gov/programs-projects/transient-flow-facility), and [NLR composite data products](https://www.nlr.gov/hydrogen/infrastructure-cdps-all).

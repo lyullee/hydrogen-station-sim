@@ -2487,5 +2487,19 @@
       "consequence or safety-distance claims",
       "SAGA effectiveness scoring"
     ]
+  },
+  "public_hrs_measurement_leads_recheck_2026_10_09": {
+    "record": "research/public_hrs_measurement_leads_recheck_2026_10_09.json",
+    "recorded_at": "2026-10-09",
+    "decision": "HIGH_VALUE_HRS_MEASUREMENT_LEADS_RAW_TRACE_NOT_PUBLIC",
+    "gate_impact": "full_loop_external_validation_remains_open",
+    "sources": [
+      "https://doi.org/10.3390/su16219482",
+      "https://doi.org/10.32604/ee.2026.081099",
+      "https://www.nist.gov/programs-projects/transient-flow-facility",
+      "https://www.nlr.gov/hydrogen/infrastructure-cdps-all"
+    ],
+    "finding": "Two HRS digital-twin papers report real station measurements, but raw synchronized traces are not public; NIST provides transient metrology context and NLR provides aggregate station products. No source closes the independent station-to-vehicle holdout.",
+    "claim_boundary": "Use for face validity and a custodian request only; do not fit parameters or score full-loop validation, consequence, or SAGA effectiveness."
   }
 }
