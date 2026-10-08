@@ -1,0 +1,598 @@
+{
+  "schema_version": 1,
+  "artifact_type": "post_access_development_regression",
+  "title": "SAGA grounded digital-twin measurement preservation regression",
+  "generated_at": "2026-10-08T01:56:54.036433+00:00",
+  "defect": "The direct-response guard recognized only literal value-unit pairs in prompt text and could remove complete sentences containing supported values encoded as structured JSON keys or sibling value/unit fields.",
+  "fix": {
+    "saga_commit": "54baa715227b5618861afb80eecdc20605d1842d",
+    "digital_twin_commit": "fbbae1bbe9376ed4851f665ff2567c1a1b8a910c",
+    "behavior": "Project structured values into explicit value-unit evidence before generation and guard evaluation; normalize equivalent numeric formatting; cover main and sensor endpoints.",
+    "verification": {
+      "saga_test_suite": "200 passed",
+      "targeted_digital_twin_research_tests": "5 passed"
+    }
+  },
+  "before_fix": {
+    "saga_commit": "0c5bfe9b91f1e1e675aa478b0153367128db2052",
+    "digital_twin_commit": "354f4e56bb497502f8f5cbd0660e85010135005e",
+    "provider": "groq",
+    "n": 3,
+    "score_mean": 49.583333333333336,
+    "score_sd": 18.856180831641268,
+    "score_min": 36.25,
+    "score_max": 76.25,
+    "latency_mean_ms": 665.9133333333333,
+    "guard_notice_runs": 2,
+    "observed_output_grounded_number_coverage_mean": 0.0,
+    "rows": [
+      {
+        "case_id": "DS-LEAK-01",
+        "variant": "saga-linked",
+        "score": 76.25,
+        "situation_coverage": 1.0,
+        "action_coverage": 0.75,
+        "action_order": 1.0,
+        "prevention_coverage": 1.0,
+        "impact_coverage": 0.0,
+        "unsupported_numeric_claims": [],
+        "response_characters": 190,
+        "latency_ms": 999.37,
+        "answer_text": "고압 저장 뱅크에서 수소 누출이 감지되어 CRITICAL 상태이므로, 즉시 충전 및 공급을 중지하고 해당 뱅크 상류를 차단해야 합니다.\n\n이후 영향구역 출입 통제 및 인원 대피를 실시하고, 가스 농도가 감소했는지 확인하여 안정화를 검증합니다.\n\n마지막으로 복구 전 기밀시험을 수행하여 누출 재발을 방지하는 예방 관리 체계를 점검해야 합니다.",
+        "provider": "groq",
+        "model": "qwen/qwen3.8-27b",
+        "repeat_index": 1
+      },
+      {
+        "case_id": "DS-LEAK-01",
+        "variant": "saga-linked",
+        "score": 36.25,
+        "situation_coverage": 0.5,
+        "action_coverage": 0.25,
+        "action_order": 0.0,
+        "prevention_coverage": 1.0,
+        "impact_coverage": 0.0,
+        "unsupported_numeric_claims": [],
+        "response_characters": 155,
+        "latency_ms": 474.47,
+        "answer_text": "입력 데이터에 없는 구체 수치는 제시하지 않습니다. 현장 계측값과 적용 기준을 확인하세요.\n\n이후 가스 농도가 감소했는지 확인하고, 복구 전 기밀시험을 완료하는 것이 안정화 확인의 핵심입니다.\n\n이러한 절차는 재발 방지를 위한 예방 관리의 기초가 되므로 반드시 준수해야 합니다.",
+        "provider": "groq",
+        "model": "qwen/qwen3.8-27b",
+        "repeat_index": 2
+      },
+      {
+        "case_id": "DS-LEAK-01",
+        "variant": "saga-linked",
+        "score": 36.25,
+        "situation_coverage": 0.5,
+        "action_coverage": 0.25,
+        "action_order": 0.0,
+        "prevention_coverage": 1.0,
+        "impact_coverage": 0.0,
+        "unsupported_numeric_claims": [],
+        "response_characters": 165,
+        "latency_ms": 523.9,
+        "answer_text": "입력 데이터에 없는 구체 수치는 제시하지 않습니다. 현장 계측값과 적용 기준을 확인하세요.\n\n안정화확인: 가스 농도가 기준치 이하로 감소했는지 확인하고, 복구 전 기밀시험을 통과해야 합니다.\n\n예방관리: 누출 원인을 분석하여 재발 방지 대책을 수립하고, 유사 설비의 정기 점검 주기를 강화하세요.",
+        "provider": "groq",
+        "model": "qwen/qwen3.8-27b",
+        "repeat_index": 3
+      }
+    ],
+    "retained_source_sha256": "343a3b624a0576f1687c39ebb6b0f3782d7dbe6da5255295c416e9b180b1889c"
+  },
+  "after_fix": {
+    "schema_version": 2,
+    "generated_at": "2026-10-08T01:56:54.036433+00:00",
+    "source": {
+      "digital_twin": {
+        "repository": "hydrogen-station-sim",
+        "commit": "fbbae1bbe9376ed4851f665ff2567c1a1b8a910c",
+        "dirty": false
+      },
+      "saga_py": {
+        "repository": "saga-system",
+        "commit": "54baa715227b5618861afb80eecdc20605d1842d",
+        "dirty": false
+      },
+      "provider": "groq",
+      "requested_repeats": 5
+    },
+    "evaluation_protocol": {
+      "version": "2026-10-08.3",
+      "sha256": "2b29fcb20aeea26bc260fcb64306937859ea8dbfed0534b764da1f81ffb25a5b",
+      "cases": [
+        {
+          "id": "DS-LEAK-01",
+          "question": "현재 사고를 종합해 관리자가 실행할 행동을 사고판단, 즉시조치, 안정화확인, 예방관리 순서로 간결하게 작성해줘.",
+          "context": {
+            "station_status": "CRITICAL",
+            "active_alerts": [
+              {
+                "sensor_id": "GD-0901",
+                "equipment": "고압 저장 뱅크",
+                "value": 2.0,
+                "unit": "vol%_H2",
+                "hazard": "수소 누출"
+              }
+            ],
+            "impact_results": [
+              {
+                "equipment": "고압 저장 뱅크",
+                "maximum_overpressure_kpa": 12.4,
+                "maximum_heat_flux_kw_m2": 5.8,
+                "effect_distance_m": 5.5,
+                "calculation_status": "calculated"
+              }
+            ],
+            "recommended_actions": [
+              "충전·공급 중지",
+              "해당 뱅크 상류 차단",
+              "영향구역 출입 통제 및 인원 대피",
+              "가스 농도 감소 확인",
+              "복구 전 기밀시험"
+            ]
+          },
+          "baseline": "GD-0901 수소 누출 경보: 2.0 vol%_H2.",
+          "rubric": {
+            "case_id": "DS-LEAK-01",
+            "situation_concepts": [
+              [
+                "수소 누출",
+                "가스 농도"
+              ],
+              [
+                "고압 저장",
+                "GD-0901"
+              ]
+            ],
+            "ordered_action_concepts": [
+              [
+                "충전 중지",
+                "공급 중지",
+                "충전·공급 중지",
+                "공급을 중지"
+              ],
+              [
+                "상류 차단",
+                "뱅크 차단",
+                "상류를 차단"
+              ],
+              [
+                "출입 통제",
+                "인원 대피",
+                "출입을 통제"
+              ],
+              [
+                "농도 감소",
+                "안정화 확인",
+                "농도가 기준 이하"
+              ]
+            ],
+            "prevention_concepts": [
+              [
+                "기밀시험",
+                "누설시험"
+              ]
+            ],
+            "impact_concepts": [
+              [
+                "5.5 m",
+                "5.5m"
+              ],
+              [
+                "12.4 kPa",
+                "12.4kPa"
+              ]
+            ],
+            "grounded_numeric_concepts": [
+              [
+                "2 vol%_H2",
+                "2.0 vol%_H2",
+                "2vol%_H2",
+                "2.0vol%_H2"
+              ],
+              [
+                "5.5 m",
+                "5.5m"
+              ],
+              [
+                "12.4 kPa",
+                "12.4kPa"
+              ],
+              [
+                "5.8 kW/m2",
+                "5.8kW/m2",
+                "5.8 kW/m²",
+                "5.8kW/m²"
+              ]
+            ]
+          }
+        },
+        {
+          "id": "DS-OVERHEAT-01",
+          "question": "차량 충전 중 과열 상황을 종합해 즉시조치, 재가동 조건, 예방관리 순서로 작성해줘.",
+          "context": {
+            "station_status": "ALARM",
+            "active_alerts": [
+              {
+                "sensor_id": "TT-1401",
+                "equipment": "차량 1 탱크",
+                "value": 85.0,
+                "unit": "°C",
+                "hazard": "충전 중 과열"
+              }
+            ],
+            "impact_results": [],
+            "recommended_actions": [
+              "차량 1 충전 정지",
+              "충전밸브 차단 확인",
+              "탱크 온도와 압력 안정화 확인",
+              "프리쿨러 및 온도센서 기능시험 후 재가동 승인"
+            ]
+          },
+          "baseline": "TT-1401 차량 온도 경보: 85.0 °C.",
+          "rubric": {
+            "case_id": "DS-OVERHEAT-01",
+            "situation_concepts": [
+              [
+                "과열",
+                "온도 경보",
+                "탱크 온도"
+              ],
+              [
+                "차량 1",
+                "TT-1401"
+              ]
+            ],
+            "ordered_action_concepts": [
+              [
+                "충전 정지",
+                "충전을 정지",
+                "충전 중단"
+              ],
+              [
+                "밸브 차단",
+                "밸브를 차단"
+              ],
+              [
+                "안정화 확인",
+                "안정화되",
+                "안정화된"
+              ],
+              [
+                "재가동 승인",
+                "재가동이 승인",
+                "재가동 전"
+              ]
+            ],
+            "prevention_concepts": [
+              [
+                "프리쿨러"
+              ],
+              [
+                "온도센서",
+                "온도 센서"
+              ]
+            ],
+            "impact_concepts": [],
+            "grounded_numeric_concepts": [
+              [
+                "85 °C",
+                "85.0 °C",
+                "85°C",
+                "85.0°C"
+              ]
+            ]
+          }
+        }
+      ],
+      "boundary": "Transparent keyword-concept development rubric; not an expert rating, human-factors result, field-safety result, or regulatory compliance test."
+    },
+    "protocol": {
+      "case_id": "PT-03-DEFAULT-H70",
+      "sample_count": 361,
+      "active_duration_s": 308.0,
+      "scheduled_aprr_mpa_min": 12.0,
+      "observed_aprr_mpa_min": 12.66678789090363,
+      "aprr_error_percent": 5.556565757530244,
+      "pressure_tracking_rmse_mpa": 9.168860254770102,
+      "final_pressure_mpa": 70.02284450663863,
+      "final_soc_percent": 87.84858597890188,
+      "target_soc_percent": 100.0,
+      "soc_shortfall_percent": 12.151414021098116,
+      "soc_target_pass": false,
+      "peak_mass_flow_g_s": 33.96886524450678,
+      "peak_gas_temperature_c": 72.47970445840173,
+      "hard_pressure_margin_mpa": 17.47715549336137,
+      "temperature_margin_c": 12.520295541598273,
+      "flow_margin_g_s": 26.031134755493213,
+      "completion_reason": "target-pressure",
+      "completion_pass": true,
+      "safety_envelope_pass": true,
+      "protocol_boundary_pass": true,
+      "failures": [],
+      "scope": "Public SAE J2601-compatible schedule-boundary audit; not SAE J2601 certification or station qualification."
+    },
+    "decision_support": [
+      {
+        "case_id": "DS-LEAK-01",
+        "variant": "alarm-only",
+        "score": 25.0,
+        "situation_coverage": 1.0,
+        "action_coverage": 0.0,
+        "action_order": 0.0,
+        "prevention_coverage": 0.0,
+        "impact_coverage": 0.0,
+        "grounded_numeric_coverage": 0.25,
+        "unsupported_numeric_claims": [],
+        "response_characters": 30,
+        "latency_ms": 0.0,
+        "answer_text": "GD-0901 수소 누출 경보: 2.0 vol%_H2.",
+        "provider": "deterministic",
+        "model": "alarm-only",
+        "repeat_index": 1
+      },
+      {
+        "case_id": "DS-LEAK-01",
+        "variant": "saga-linked",
+        "score": 91.25,
+        "situation_coverage": 1.0,
+        "action_coverage": 0.75,
+        "action_order": 1.0,
+        "prevention_coverage": 1.0,
+        "impact_coverage": 1.0,
+        "grounded_numeric_coverage": 1.0,
+        "unsupported_numeric_claims": [],
+        "response_characters": 284,
+        "latency_ms": 561.66,
+        "answer_text": "고압 저장 뱅크에서 수소 농도 2 vol%_H2가 감지되어 CRITICAL 상태이며, 최대 과압 12.4 kPa와 열유속 5.8 kW/m2로 5.5 m 이내 영향이 확인됩니다.\n\n즉시 충전·공급을 중지하고 해당 뱅크 상류를 차단한 뒤, 5.5 m 영향구역 내 출입을 통제하고 인원을 대피시켜야 합니다.\n\n가스 농도가 감소하는 것을 확인한 후, 복구 전 기밀시험을 수행하여 안정화를 검증해야 합니다.\n\n향후 유사 사고 방지를 위해 센서 점검 주기를 강화하고 정기적인 누출 점검을 실시하는 예방관리가 필요합니다.",
+        "provider": "groq",
+        "model": "qwen/qwen3.8-27b",
+        "repeat_index": 1
+      },
+      {
+        "case_id": "DS-LEAK-01",
+        "variant": "saga-linked",
+        "score": 83.75,
+        "situation_coverage": 1.0,
+        "action_coverage": 0.75,
+        "action_order": 1.0,
+        "prevention_coverage": 1.0,
+        "impact_coverage": 0.5,
+        "grounded_numeric_coverage": 0.5,
+        "unsupported_numeric_claims": [],
+        "response_characters": 216,
+        "latency_ms": 446.83,
+        "answer_text": "고압 저장 뱅크에서 2 vol%_H2의 수소 누출이 감지되어 CRITICAL 상태로 판단됩니다.\n\n즉시 충전·공급을 중지하고 해당 뱅크 상류를 차단한 뒤, 5.5 m 영향구역 내 출입을 통제하고 인원을 대피시키세요.\n\n가스 농도가 감소하는 것을 확인한 후, 복구 전 기밀시험을 수행하여 안정화를 확인해야 합니다.\n\n이후 누출 원인 분석 및 정기 점검 강화를 통해 재발을 예방해야 합니다.",
+        "provider": "groq",
+        "model": "qwen/qwen3.8-27b",
+        "repeat_index": 2
+      },
+      {
+        "case_id": "DS-LEAK-01",
+        "variant": "saga-linked",
+        "score": 83.75,
+        "situation_coverage": 1.0,
+        "action_coverage": 0.75,
+        "action_order": 1.0,
+        "prevention_coverage": 1.0,
+        "impact_coverage": 0.5,
+        "grounded_numeric_coverage": 0.5,
+        "unsupported_numeric_claims": [],
+        "response_characters": 235,
+        "latency_ms": 476.42,
+        "answer_text": "고압 저장 뱅크에서 2 vol%_H2의 수소 누출이 감지되어 CRITICAL 상태로 판단됩니다.\n\n즉시 충전·공급을 중지하고 해당 뱅크 상류를 차단한 뒤, 5.5 m 영향구역 내 출입을 통제하고 인원을 대피시켜야 합니다.\n\n가스 농도가 감소하는 것을 확인한 후 복구 전 기밀시험을 실시하여 안정화를 확인하세요.\n\n향후 유사 사고 방지를 위해 정기적인 기밀성 점검 및 센서 교정 주기를 강화하는 예방관리를 수행해야 합니다.",
+        "provider": "groq",
+        "model": "qwen/qwen3.8-27b",
+        "repeat_index": 3
+      },
+      {
+        "case_id": "DS-LEAK-01",
+        "variant": "saga-linked",
+        "score": 91.25,
+        "situation_coverage": 1.0,
+        "action_coverage": 0.75,
+        "action_order": 1.0,
+        "prevention_coverage": 1.0,
+        "impact_coverage": 1.0,
+        "grounded_numeric_coverage": 1.0,
+        "unsupported_numeric_claims": [],
+        "response_characters": 276,
+        "latency_ms": 533.87,
+        "answer_text": "고압 저장 뱅크에서 수소 농도 2 vol%_H2가 감지되어 CRITICAL 상태이며, 최대 과압 12.4 kPa과 열유속 5.8 kW/m2로 5.5 m 이내의 피해 영향이 확인됩니다.\n\n즉시 충전·공급을 중지하고 해당 뱅크 상류를 차단한 뒤, 5.5 m 영향구역 내 출입을 통제하고 인원을 대피시켜야 합니다.\n\n가스 농도가 감소하는지 확인하여 안정화 여부를 판단하고, 복구 전 기밀시험을 수행해야 합니다.\n\n재발 방지를 위해 누출 원인 분석 및 정기 점검 주기를 강화하는 예방관리를 실시합니다.",
+        "provider": "groq",
+        "model": "qwen/qwen3.8-27b",
+        "repeat_index": 4
+      },
+      {
+        "case_id": "DS-LEAK-01",
+        "variant": "saga-linked",
+        "score": 91.25,
+        "situation_coverage": 1.0,
+        "action_coverage": 0.75,
+        "action_order": 1.0,
+        "prevention_coverage": 1.0,
+        "impact_coverage": 1.0,
+        "grounded_numeric_coverage": 1.0,
+        "unsupported_numeric_claims": [],
+        "response_characters": 244,
+        "latency_ms": 488.54,
+        "answer_text": "고압 저장 뱅크에서 수소 농도 2 vol%_H2가 감지되어 CRITICAL 상태이며, 최대 과압 12.4 kPa와 열유속 5.8 kW/m2로 5.5 m 범위에 피해가 예상됩니다.\n\n즉시 충전·공급을 중지하고 해당 뱅크 상류를 차단한 뒤, 5.5 m 영향구역 내 인원을 대피시키고 출입을 통제해야 합니다.\n\n가스 농도가 감소하는 것을 확인한 후, 복구 전 기밀시험을 수행하여 안정화를 확인하고 재발 방지를 위한 예방관리를 진행해야 합니다.",
+        "provider": "groq",
+        "model": "qwen/qwen3.8-27b",
+        "repeat_index": 5
+      },
+      {
+        "case_id": "DS-OVERHEAT-01",
+        "variant": "alarm-only",
+        "score": 40.0,
+        "situation_coverage": 1.0,
+        "action_coverage": 0.0,
+        "action_order": 0.0,
+        "prevention_coverage": 0.0,
+        "impact_coverage": 1.0,
+        "grounded_numeric_coverage": 1.0,
+        "unsupported_numeric_claims": [],
+        "response_characters": 26,
+        "latency_ms": 0.0,
+        "answer_text": "TT-1401 차량 온도 경보: 85.0 °C.",
+        "provider": "deterministic",
+        "model": "alarm-only",
+        "repeat_index": 1
+      },
+      {
+        "case_id": "DS-OVERHEAT-01",
+        "variant": "saga-linked",
+        "score": 96.67,
+        "situation_coverage": 1.0,
+        "action_coverage": 1.0,
+        "action_order": 0.6667,
+        "prevention_coverage": 1.0,
+        "impact_coverage": 1.0,
+        "grounded_numeric_coverage": 1.0,
+        "unsupported_numeric_claims": [],
+        "response_characters": 187,
+        "latency_ms": 432.14,
+        "answer_text": "차량 1 탱크 온도가 85 °C로 과열 경보가 발생했으므로, 즉시 충전을 정지하고 충전밸브 차단을 확인해야 합니다.\n\n재가동 전에는 탱크의 온도와 압력이 안정화되었는지 확인한 뒤, 프리쿨러 및 온도센서 기능시험을 통과해야 합니다.\n\n예방관리를 위해 정기적인 프리쿨러 점검과 센서 교정 주기를 준수하여 초기 이상 징후를 포착해야 합니다.",
+        "provider": "groq",
+        "model": "qwen/qwen3.8-27b",
+        "repeat_index": 1
+      },
+      {
+        "case_id": "DS-OVERHEAT-01",
+        "variant": "saga-linked",
+        "score": 96.67,
+        "situation_coverage": 1.0,
+        "action_coverage": 1.0,
+        "action_order": 0.6667,
+        "prevention_coverage": 1.0,
+        "impact_coverage": 1.0,
+        "grounded_numeric_coverage": 1.0,
+        "unsupported_numeric_claims": [],
+        "response_characters": 185,
+        "latency_ms": 430.87,
+        "answer_text": "차량 1 탱크 온도가 85 °C로 과열 경보가 발생했으므로, 즉시 충전을 정지하고 충전밸브 차단을 확인해야 합니다.\n\n재가동 전에는 탱크의 온도와 압력이 안정화되었는지 확인한 후, 프리쿨러 및 온도센서 기능시험을 통과해야 합니다.\n\n예방관리를 위해 정기적인 프리쿨러 점검과 센서 보정을 수행하여 유사한 과열 상황을 방지해야 합니다.",
+        "provider": "groq",
+        "model": "qwen/qwen3.8-27b",
+        "repeat_index": 2
+      },
+      {
+        "case_id": "DS-OVERHEAT-01",
+        "variant": "saga-linked",
+        "score": 96.67,
+        "situation_coverage": 1.0,
+        "action_coverage": 1.0,
+        "action_order": 0.6667,
+        "prevention_coverage": 1.0,
+        "impact_coverage": 1.0,
+        "grounded_numeric_coverage": 1.0,
+        "unsupported_numeric_claims": [],
+        "response_characters": 182,
+        "latency_ms": 415.94,
+        "answer_text": "차량 1 탱크 온도가 85 °C로 과열 경보가 발생했으므로, 즉시 충전을 정지하고 충전밸브 차단을 확인해야 합니다.\n\n재가동 전에는 탱크의 온도와 압력이 안정화되었는지 확인하고, 프리쿨러 및 온도센서에 대한 기능시험을 완료해야 합니다.\n\n이후 예방관리를 위해 정기적인 센서 점검과 냉각 시스템 성능 모니터링을 수행해야 합니다.",
+        "provider": "groq",
+        "model": "qwen/qwen3.8-27b",
+        "repeat_index": 3
+      },
+      {
+        "case_id": "DS-OVERHEAT-01",
+        "variant": "saga-linked",
+        "score": 96.67,
+        "situation_coverage": 1.0,
+        "action_coverage": 1.0,
+        "action_order": 0.6667,
+        "prevention_coverage": 1.0,
+        "impact_coverage": 1.0,
+        "grounded_numeric_coverage": 1.0,
+        "unsupported_numeric_claims": [],
+        "response_characters": 188,
+        "latency_ms": 426.2,
+        "answer_text": "차량 1 탱크 온도가 85 °C로 과열 경보가 발생했으므로, 즉시 충전을 정지하고 충전밸브 차단을 확인해야 합니다.\n\n재가동 전에는 탱크의 온도와 압력이 안정화되었는지 확인한 후, 프리쿨러 및 온도센서 기능시험을 통과해야 합니다.\n\n예방관리를 위해 정기적인 프리쿨러 점검과 센서 보정 주기를 준수하여 유사한 과열 상황을 방지해야 합니다.",
+        "provider": "groq",
+        "model": "qwen/qwen3.8-27b",
+        "repeat_index": 4
+      },
+      {
+        "case_id": "DS-OVERHEAT-01",
+        "variant": "saga-linked",
+        "score": 96.67,
+        "situation_coverage": 1.0,
+        "action_coverage": 1.0,
+        "action_order": 0.6667,
+        "prevention_coverage": 1.0,
+        "impact_coverage": 1.0,
+        "grounded_numeric_coverage": 1.0,
+        "unsupported_numeric_claims": [],
+        "response_characters": 184,
+        "latency_ms": 434.2,
+        "answer_text": "차량 1 탱크 온도가 85 °C로 과열 경보가 발생했으므로, 즉시 충전을 정지하고 충전밸브 차단을 확인해야 합니다.\n\n재가동 전에는 탱크의 온도와 압력이 안정화되었는지 확인한 후, 프리쿨러 및 온도센서의 기능시험을 통과해야 합니다.\n\n이후 예방관리를 위해 정기적인 냉각계통 점검과 센서 보정을 수행하여 재발 방지에 힘써야 합니다.",
+        "provider": "groq",
+        "model": "qwen/qwen3.8-27b",
+        "repeat_index": 5
+      }
+    ],
+    "decision_summary": [
+      {
+        "case_id": "DS-LEAK-01",
+        "variant": "alarm-only",
+        "n": 1,
+        "score_mean": 25.0,
+        "score_sd": 0.0,
+        "score_min": 25.0,
+        "score_max": 25.0,
+        "grounded_numeric_coverage_mean": 0.25,
+        "latency_mean_ms": 0.0,
+        "unsupported_run_count": 0
+      },
+      {
+        "case_id": "DS-LEAK-01",
+        "variant": "saga-linked",
+        "n": 5,
+        "score_mean": 88.25,
+        "score_sd": 3.6742346141747673,
+        "score_min": 83.75,
+        "score_max": 91.25,
+        "grounded_numeric_coverage_mean": 0.8,
+        "latency_mean_ms": 501.464,
+        "unsupported_run_count": 0
+      },
+      {
+        "case_id": "DS-OVERHEAT-01",
+        "variant": "alarm-only",
+        "n": 1,
+        "score_mean": 40.0,
+        "score_sd": 0.0,
+        "score_min": 40.0,
+        "score_max": 40.0,
+        "grounded_numeric_coverage_mean": 1.0,
+        "latency_mean_ms": 0.0,
+        "unsupported_run_count": 0
+      },
+      {
+        "case_id": "DS-OVERHEAT-01",
+        "variant": "saga-linked",
+        "n": 5,
+        "score_mean": 96.67,
+        "score_sd": 0.0,
+        "score_min": 96.67,
+        "score_max": 96.67,
+        "grounded_numeric_coverage_mean": 1.0,
+        "latency_mean_ms": 427.87,
+        "unsupported_run_count": 0
+      }
+    ],
+    "errors": []
+  },
+  "comparison": {
+    "scope": "DS-LEAK-01 only; its scoring rubric weights and concept groups were unchanged between the compared runs.",
+    "score_mean_delta": 38.666666666666664,
+    "minimum_score_delta": 47.5,
+    "grounded_number_coverage_mean_before": 0.0,
+    "grounded_number_coverage_mean_after": 0.8,
+    "guard_notice_runs_before": 2,
+    "guard_notice_runs_after": 0,
+    "unsupported_number_runs_after": 0,
+    "post_result_sha256": "9db06f01ac3b25bb893ef4d642c886080d81e8dba109ac19de2db97a6222a845"
+  },
+  "claim_boundary": "Post-access development regression with unequal repeat counts (3 before, 5 after). It demonstrates correction of a software defect and retained output behavior, not independent SAGA effectiveness, operator benefit, field safety, or regulatory compliance. Expert and human-factors evaluation remain required."
+}
