@@ -1323,6 +1323,9 @@ def _public_measurement_instrumentation_evidence() -> dict[str, Any] | None:
     aggregate = record.get("aggregate") or {}
     eligibility = record.get("eligibility") or {}
     mapping = record.get("mapping_boundary") or {}
+    official_test_context = mapping.get("official_test_context") or {}
+    group_a = official_test_context.get("group_a_npl") or {}
+    group_c = official_test_context.get("group_c_engie") or {}
     if (
         record.get("status") != "PASS"
         or integrity.get("all_zenodo_md5_and_sizes_match") is not True
@@ -1382,6 +1385,16 @@ def _public_measurement_instrumentation_evidence() -> dict[str, Any] | None:
         "full_loop_holdout_eligible": False,
         "channel_dictionary_present": False,
         "vehicle_or_receptacle_channels_identified": False,
+        "official_test_context": official_test_context,
+        "group_a_c_vehicle_fill_eligible": bool(
+            group_a.get("vehicle_receiving_tank") is True
+            and group_c.get("vehicle_receiving_tank") is True
+        ),
+        "test_class_interpretation": (
+            "Groups A and C are documented 35 MPa direct/serial sampling-system "
+            "tests with sampling-hardware sinks; do not describe them as vehicle "
+            "fills or station-to-vehicle full-loop validation."
+        ),
         "claim_limit": str(record.get("claim_boundary") or ""),
     }
 
@@ -4036,7 +4049,11 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "station_measurement_auxiliary_eligible",
                 "full_loop_holdout_eligible",
                 "channel_dictionary_present",
-                "vehicle_or_receptacle_channels_identified", "claim_limit",
+                "vehicle_or_receptacle_channels_identified",
+                "official_test_context",
+                "group_a_c_vehicle_fill_eligible",
+                "test_class_interpretation",
+                "claim_limit",
             )
             if public_measurement.get(key) is not None
         }
@@ -4985,6 +5002,15 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "vehicle_or_receptacle_channels_identified": public_measurement.get(
                 "vehicle_or_receptacle_channels_identified"
             ) is True,
+            "official_test_context": public_measurement.get(
+                "official_test_context"
+            ) or {},
+            "group_a_c_vehicle_fill_eligible": public_measurement.get(
+                "group_a_c_vehicle_fill_eligible"
+            ) is True,
+            "test_class_interpretation": public_measurement.get(
+                "test_class_interpretation"
+            ),
             "claim_limit": public_measurement.get("claim_limit"),
         },
         "methytrucks_tank_diagnostic_boundary": {

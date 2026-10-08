@@ -308,8 +308,21 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert instrumentation["station_measurement_auxiliary_eligible"] is True
     assert instrumentation["full_loop_holdout_eligible"] is False
     assert instrumentation["channel_dictionary_present"] is False
+    assert instrumentation["group_a_c_vehicle_fill_eligible"] is False
+    assert instrumentation["official_test_context"]["group_a_npl"][
+        "vehicle_receiving_tank"
+    ] is False
+    assert instrumentation["official_test_context"]["group_c_engie"][
+        "vehicle_receiving_tank"
+    ] is False
+    assert "do not describe them as vehicle fills" in instrumentation[
+        "test_class_interpretation"
+    ]
     assert early["public_measurement_instrumentation"][
         "vehicle_or_receptacle_channels_identified"
+    ] is False
+    assert early["public_measurement_instrumentation"][
+        "group_a_c_vehicle_fill_eligible"
     ] is False
     methytrucks_tank = idle["response_evidence"][
         "methytrucks_tank_diagnostic_boundary"
