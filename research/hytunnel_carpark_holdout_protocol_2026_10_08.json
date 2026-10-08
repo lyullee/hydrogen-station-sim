@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-08",
+  "status": "FROZEN_BEFORE_RAW_MAT_TIMESERIES_DOWNLOAD",
+  "objective": "Test two bounded hydrogen-release model claims against previously unopened raw time series from independent, public, actual-hydrogen experiments in a mechanically ventilated enclosure: sensor-array-mean concentration response and local blowdown mass flow.",
+  "claim_boundary": "This holdout addresses a spatially lumped mean concentration in a mechanically ventilated 60.8 m3 enclosure and local 0.5 mm blowdown mass flow from measured upstream pressure and temperature. It does not validate local plume geometry, detector placement, the 3.86 m discharge-line transient, outdoor hydrogen-refuelling-station dispersion, consequence distance, station controls, or a complete station-to-vehicle loop.",
+  "source": {
+    "title": "Experimental data - Hydrogen Safety-mechanical ventilation",
+    "dataset_doi": "10.23642/USN.14405903",
+    "article_title": "Experimental Study of Hydrogen Release Accidents in a Full-Scale Hydrogen Refuelling Station",
+    "article_doi": "10.3390/en14113008",
+    "repository": "DataverseNO",
+    "dataset_version": "1.1",
+    "released": "2026-02-13",
+    "license": "CC BY 4.0",
+    "declared_scope": "Unignited hydrogen releases in a mechanically ventilated 40 ft ISO container representative of an underground car-park enclosure."
+  },
+  "prior_access": {
+    "public_metadata_viewed": true,
+    "documentation_pdf_viewed": true,
+    "readme_viewed": true,
+    "published_aggregate_outcomes_accessed": true,
+    "raw_mat_file_names_and_checksums_viewed": true,
+    "raw_mat_files_downloaded": false,
+    "raw_mat_numeric_outcomes_viewed": false,
+    "target_statistics_computed": false,
+    "blinding_statement": "This is a raw-time-series pre-access holdout, not a fully blinded study. The associated article's aggregate methods and outcomes were available before freezing, but no MAT numeric time series was downloaded, opened, plotted, or summarized."
+  },
+  "experimental_context": {
+    "enclosure": "40 ft ISO container",
+    "internal_volume_m3": 60.8,
+    "hydrogen_source_orientation": "vertically downward",
+    "source_height_above_floor_m": 0.25,
+    "source_distance_from_ventilation_wall_m": 5.0,
+    "constant_flow_line_inner_diameter_mm": 3.0,
+    "constant_flow_line_length_m": 3.84,
+    "blowdown_line_inner_diameter_mm": 3.0,
+    "blowdown_line_length_m": 3.86,
+    "blowdown_nozzle_diameter_mm": 0.5,
+    "nominal_blowdown_pressures_bar": [200, 350, 700],
+    "nominal_air_changes_per_hour": [6, 10],
+    "documented_concentration_sensor_count": 38,
+    "documented_concentration_sampling_hz": 3
+  },
+  "frozen_cases": {
+    "dispersion": {
+      "included_experiments": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23],
+      "declared_case_count": 18
+    },
+    "mass_flow": {
+      "included_experiments": [19, 20, 21, 22, 23],
+      "declared_case_count": 5
+    },
+    "excluded_experiments": {
+      "1": "No Exp01.mat is present in dataset version 1.1.",
+      "2": "No Exp02.mat is present in dataset version 1.1.",
+      "3": "The public article identifies Exp3 as nonrepresentative.",
+      "17": "The public article identifies Exp17 as nonrepresentative.",
+      "18": "The public article identifies Exp18 as nonrepresentative."
+    }
+  },
+  "locked_extraction": {
+    "mat_fields": {
+      "concentration": ["S.time", "S.conc"],
+      "mass_flow": ["MFM.time", "MFM.mfr", "MFM.t0"],
+      "ventilation": ["Vent.time", "Vent.vfr"],
+      "blowdown_upstream_state": ["Tank.time", "Tank.p", "Tank.T"]
+    },
+    "time_alignment": "Linear interpolation only within each documented source time base; duplicate source times retain the first value. No time shift is permitted.",
+    "post_release_window": "All finite samples at or after MFM.t0; at least 30 paired samples are required.",
+    "dispersion_observation": "Arithmetic mean across every concentration head available at each S.time sample.",
+    "mass_flow_observation_window": "Finite post-release samples where measured MFM.mfr is at least 10% of the measured case peak and measured Tank.p exceeds 1.01 times ambient pressure."
+  },
+  "locked_models": {
+    "dispersion": {
+      "name": "zero-dimensional well-mixed hydrogen mass balance",
+      "volume_m3": 60.8,
+      "ambient_pressure_pa": 101325.0,
+      "ambient_temperature_k": 293.15,
+      "hydrogen_density": "CoolProp hydrogen density at the locked ambient pressure and temperature",
+      "equation": "dx/dt = m_dot/(rho_H2*V) - (Q_vent/V)*x",
+      "initial_condition": "measured sensor-array mean at the first retained post-release time",
+      "integration": "closed-form constant-coefficient update over each measured interval",
+      "clipping": "predicted volume fraction clipped to [0,1]"
+    },
+    "mass_flow": {
+      "name": "local real-gas isentropic aperture relation",
+      "upstream_state": "measured Tank.p and Tank.T at each MFM.time",
+      "downstream_pressure_pa": 101325.0,
+      "nozzle_diameter_m": 0.0005,
+      "discharge_coefficient": 0.8,
+      "thermophysical_backend": "CoolProp hydrogen",
+      "equation": "m_dot = Cd*A*G_isentropic(P_tank,T_tank,P_ambient)"
+    }
+  },
+  "primary_endpoints": {
+    "dispersion_per_case": {
+      "nrmse_percent_of_measured_peak_max": 40.0,
+      "median_absolute_percentage_error_percent_max": 50.0,
+      "peak_relative_error_percent_max": 50.0,
+      "spearman_rho_min": 0.6,
+      "joint_rule": "all four screens pass"
+    },
+    "dispersion_aggregate": {
+      "all_declared_cases_must_be_eligible": true,
+      "minimum_pass_fraction_of_declared_cases": 0.7
+    },
+    "mass_flow_per_case": {
+      "nrmse_percent_of_measured_peak_max": 20.0,
+      "median_absolute_percentage_error_percent_max": 25.0,
+      "peak_relative_error_percent_max": 20.0,
+      "spearman_rho_min": 0.95,
+      "joint_rule": "all four screens pass"
+    },
+    "mass_flow_aggregate": {
+      "all_declared_cases_must_be_eligible": true,
+      "minimum_passing_cases": 4,
+      "declared_case_count": 5
+    },
+    "secondary_descriptive_endpoint": "Measured and predicted duration above 4 vol% H2 is reported for dispersion cases but is not used to decide the primary claim."
+  },
+  "parameter_policy": {
+    "case_specific_fitting": "prohibited",
+    "global_post_access_fitting": "prohibited for the primary result",
+    "time_shift": "prohibited",
+    "manual_time_crop": "prohibited",
+    "sensor_subset_selection": "prohibited",
+    "post_access_case_exclusion": "prohibited for the primary result",
+    "post_access_threshold_change": "prohibited for the primary result",
+    "format_only_repairs": "permitted only when documented in a dated amendment that preserves cases, endpoints, models, parameters and thresholds"
+  },
+  "aggregate_decision": {
+    "dispersion_claim_supported": "all 18 declared cases are eligible and at least 70% pass the frozen per-case joint screen",
+    "mass_flow_claim_supported": "all 5 declared blowdown cases are eligible and at least 4 pass the frozen per-case joint screen",
+    "claims_decided_independently": true,
+    "retain_all_failures": true,
+    "schema_or_runtime_failure_treatment": "retained as an explicit failure record and counted against eligibility"
+  },
+  "raw_file_manifest": [
+    {"id": 265810, "name": "Exp03.mat", "bytes": 3174901, "md5": "38f71302d6180bcf175ff801dc8c2c90"},
+    {"id": 265811, "name": "Exp04.mat", "bytes": 7013153, "md5": "b68d2875caebb5f533d391e40359ca10"},
+    {"id": 265812, "name": "Exp05.mat", "bytes": 6406283, "md5": "97893f32f3e53b9693d1dd4f6a1719dd"},
+    {"id": 265813, "name": "Exp06.mat", "bytes": 6966901, "md5": "7dc9f3728a3aa87fd0f65558489a4a96"},
+    {"id": 265814, "name": "Exp07.mat", "bytes": 7497583, "md5": "a3a6f5b6703ed017c92f4e1e32ed3d7d"},
+    {"id": 265815, "name": "Exp08.mat", "bytes": 7222508, "md5": "1aee00038f553936b8924fd38deac23a"},
+    {"id": 265816, "name": "Exp09.mat", "bytes": 7261446, "md5": "133c4487574e2350df8fd024a5c18372"},
+    {"id": 265817, "name": "Exp10.mat", "bytes": 7526264, "md5": "61c661add3d27cdadd0f82b6518f231b"},
+    {"id": 265818, "name": "Exp11.mat", "bytes": 7213627, "md5": "02b6ef4be20e3d9bbfbe11930e1c1026"},
+    {"id": 265819, "name": "Exp12.mat", "bytes": 6778360, "md5": "cad4e74952dde0bd01933983fc1c44a3"},
+    {"id": 265820, "name": "Exp13.mat", "bytes": 7371715, "md5": "3ec7875faada39a95344be787633e4e7"},
+    {"id": 265821, "name": "Exp14.mat", "bytes": 6947707, "md5": "7a2d996204483ec247445d50ca7e9403"},
+    {"id": 265822, "name": "Exp15.mat", "bytes": 6980195, "md5": "4562c346f9f3747ac58f3fff826957f9"},
+    {"id": 265823, "name": "Exp16.mat", "bytes": 30929249, "md5": "abd484ed7defd2ddb31e9608204dab12"},
+    {"id": 265825, "name": "Exp17.mat", "bytes": 33237976, "md5": "fd2fdef1f31c94fd957cfd505ddf4089"},
+    {"id": 265826, "name": "Exp18.mat", "bytes": 33586389, "md5": "48a7d1006c2ea31b025cbbbe10586cab"},
+    {"id": 265827, "name": "Exp19.mat", "bytes": 30964564, "md5": "372c4ddee15a6fdfeac3d29c99659060"},
+    {"id": 265828, "name": "Exp20.mat", "bytes": 32013319, "md5": "5cc966bb36c57a3a210c0c5d404b43e6"},
+    {"id": 265829, "name": "Exp21.mat", "bytes": 30449511, "md5": "dbee45f5c855e149db1e963918071375"},
+    {"id": 265830, "name": "Exp22.mat", "bytes": 29952927, "md5": "ea9df4920ac01a958876ade7410b05d5"},
+    {"id": 265831, "name": "Exp23.mat", "bytes": 32653229, "md5": "d66804a544ede24b013479b9843df657"}
+  ],
+  "documentation_manifest": [
+    {"id": 265832, "name": "File handling guide.pdf", "bytes": 428725, "md5": "71a59cb4a74346a02554a6d2f4e32412"},
+    {"id": 265833, "name": "USNReadmetemplate.txt", "bytes": 1739, "md5": "b0781be08d2d07a12e9d1c5e40967f1a"}
+  ],
+  "locked_code": {
+    "module": {
+      "path": "src/h2station/hytunnel_carpark_validation.py",
+      "sha256": "e049966533229845322cd496246f639edb69219aa6ec3504184186f09310039b"
+    },
+    "runner": {
+      "path": "scripts/run_hytunnel_carpark_holdout.py",
+      "sha256": "07f30da0dc011e2cc219c01bc471e97bd7756dcaf67d443eef478313ecd262ef"
+    }
+  }
+}
