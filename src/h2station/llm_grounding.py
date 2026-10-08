@@ -4494,6 +4494,63 @@ def _local_hydrogen_station_discovery_evidence() -> dict[str, Any] | None:
     }
 
 
+def _local_public_validation_catalog_evidence() -> dict[str, Any] | None:
+    """Expose the local public-cache inventory without exposing its files.
+
+    The catalog is intentionally only a coverage signal.  Dataset-specific
+    evidence functions remain the authority for units, synchronization,
+    provenance and holdout eligibility.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/local_public_validation_catalog_2026_10_09.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    privacy = record.get("privacy") or {}
+    scope = record.get("scope") or {}
+    coverage = record.get("coverage_assessment") or {}
+    if (
+        record.get("artifact_type") != "local_public_validation_catalog"
+        or record.get("status") != "privacy_bounded_catalog_only"
+        or not all(value is False for value in privacy.values())
+        or scope.get("collection_count", 0) < 10
+        or scope.get("file_count", 0) < 100
+        or coverage.get("public_component_evidence_is_substantial") is not True
+        or coverage.get("new_full_loop_cohort_identified_by_catalog") is not False
+        or coverage.get("full_loop_holdout_eligible") is not False
+    ):
+        return None
+    family_counts: dict[str, int] = {}
+    family_files: dict[str, int] = {}
+    for item in record.get("collections") or []:
+        if not isinstance(item, dict):
+            continue
+        family = str(item.get("family_hint") or "other_public_validation_material")
+        family_counts[family] = family_counts.get(family, 0) + 1
+        family_files[family] = family_files.get(family, 0) + int(item.get("file_count") or 0)
+    return {
+        "artifact": "research/local_public_validation_catalog_2026_10_09.json",
+        "evidence_role": "privacy-bounded local public validation corpus availability",
+        "scope": {
+            "collection_count": scope.get("collection_count"),
+            "file_count": scope.get("file_count"),
+            "size_gb_decimal": scope.get("size_gb_decimal"),
+            "family_collection_counts": dict(sorted(family_counts.items())),
+            "family_file_counts": dict(sorted(family_files.items())),
+        },
+        "coverage_assessment": {
+            "public_component_evidence_is_substantial": True,
+            "new_full_loop_cohort_identified_by_catalog": False,
+            "full_loop_holdout_eligible": False,
+            "next_action": coverage.get("next_action"),
+        },
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _local_candidate_full_loop_screen_evidence() -> dict[str, Any] | None:
     """Expose the bounded local/public candidate classification to the LLM.
 
@@ -5459,6 +5516,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_local_station_data_discovery"
         ] = local_station_discovery
+    local_public_catalog = _local_public_validation_catalog_evidence()
+    if local_public_catalog is not None:
+        envelope["response_evidence"][
+            "local_public_validation_catalog"
+        ] = local_public_catalog
     local_candidate_screen = _local_candidate_full_loop_screen_evidence()
     if local_candidate_screen is not None:
         envelope["response_evidence"][
@@ -5663,6 +5725,16 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_supported", "required_next_step", "claim_limit",
             )
             if methytrucks_tank.get(key) is not None
+        }
+    local_public_catalog = evidence.get("local_public_validation_catalog")
+    if isinstance(local_public_catalog, dict):
+        summary["local_public_validation_catalog"] = {
+            "evidence_role": local_public_catalog.get("evidence_role"),
+            "scope": local_public_catalog.get("scope") or {},
+            "coverage_assessment": local_public_catalog.get(
+                "coverage_assessment"
+            ) or {},
+            "claim_limit": short(local_public_catalog.get("claim_limit"), 320),
         }
     qra = evidence.get("qra_multimethod_comparison")
     if isinstance(qra, dict):
@@ -6539,6 +6611,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     local_station_discovery = response.get(
         "confidential_local_station_data_discovery"
     ) or {}
+    local_public_catalog = response.get("local_public_validation_catalog") or {}
     hytunnel_diagnostic = response.get(
         "public_hytunnel_failure_diagnostic"
     ) or {}
@@ -6550,6 +6623,11 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         str(manifest.get("question") or ""),
         str(manifest.get("selected_sensor") or ""),
     )).lower()
+    public_catalog_relevant = any(token in lead_context for token in (
+        "공개", "실측", "실험", "데이터", "검증", "원자료", "자료",
+        "public", "measurement", "experiment", "dataset", "validation",
+        "data", "raw",
+    ))
     public_hrs_leads_relevant = any(token in lead_context for token in (
         "공개", "계측", "실측", "실데이터", "원자료", "검증", "데이터",
         "local", "measurement", "dataset", "raw", "validation", "data",
@@ -6956,6 +7034,36 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 },
             } if local_station_discovery and local_discovery_relevant else {}),
             **({
+                "local_public_validation_catalog": {
+                    "collection_count": (
+                        (local_public_catalog.get("scope") or {}).get(
+                            "collection_count"
+                        )
+                    ),
+                    "file_count": (
+                        (local_public_catalog.get("scope") or {}).get(
+                            "file_count"
+                        )
+                    ),
+                    "size_gb_decimal": (
+                        (local_public_catalog.get("scope") or {}).get(
+                            "size_gb_decimal"
+                        )
+                    ),
+                    "public_component_evidence_substantial": (
+                        (local_public_catalog.get("coverage_assessment") or {}).get(
+                            "public_component_evidence_is_substantial"
+                        )
+                    ),
+                    "full_loop_holdout_eligible": (
+                        (local_public_catalog.get("coverage_assessment") or {}).get(
+                            "full_loop_holdout_eligible"
+                        )
+                    ),
+                    "claim_limit": short(local_public_catalog.get("claim_limit"), 220),
+                },
+            } if local_public_catalog and public_catalog_relevant else {}),
+            **({
                 "station_cascade_sequence": {
                     "claim_supported": cascade_sequence.get(
                         "cascade_controller_structure_supported"
@@ -7285,6 +7393,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     local_station_discovery = evidence.get(
         "confidential_local_station_data_discovery"
     ) or {}
+    local_public_catalog = evidence.get("local_public_validation_catalog") or {}
     multisource_feasibility = evidence.get(
         "confidential_multisource_mapping_feasibility"
     ) or {}
@@ -7471,6 +7580,14 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "test_class_interpretation"
             ),
             "claim_limit": public_measurement.get("claim_limit"),
+        },
+        "local_public_validation_catalog": {
+            "evidence_artifact": local_public_catalog.get("artifact"),
+            "scope": local_public_catalog.get("scope") or {},
+            "coverage_assessment": local_public_catalog.get(
+                "coverage_assessment"
+            ) or {},
+            "claim_limit": local_public_catalog.get("claim_limit"),
         },
         "public_hytunnel_failure_diagnostic": {
             "artifact": hytunnel_diagnostic.get("artifact"),

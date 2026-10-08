@@ -64,6 +64,31 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     )
     assert prompt_evidence_summary(idle)["common_header"]["bank_inflow_g_s"] == 12.4
     assert prompt_decision_evidence(idle)["common_header"]["temperature_c"] == 24.2
+    public_catalog = idle["response_evidence"]["local_public_validation_catalog"]
+    assert public_catalog["scope"]["collection_count"] == 37
+    assert public_catalog["scope"]["file_count"] == 917
+    assert public_catalog["coverage_assessment"][
+        "full_loop_holdout_eligible"
+    ] is False
+    catalog_summary = prompt_evidence_summary(idle)[
+        "local_public_validation_catalog"
+    ]
+    assert catalog_summary["scope"]["size_gb_decimal"] == 6.796
+    catalog_header = prompt_evidence_header(idle)[
+        "local_public_validation_catalog"
+    ]
+    assert catalog_header["scope"]["file_count"] == 917
+    assert "local_public_validation_catalog" not in prompt_decision_evidence(idle)[
+        "validation_boundaries"
+    ]
+    data_manifest = build_evidence_manifest(
+        frame, signals, [], False, question="공개 실측 데이터 검증"
+    )
+    catalog_decision = prompt_decision_evidence(data_manifest)[
+        "validation_boundaries"
+    ]["local_public_validation_catalog"]
+    assert catalog_decision["public_component_evidence_substantial"] is True
+    assert catalog_decision["full_loop_holdout_eligible"] is False
     policy_frame = {
         **frame,
         "detector_policy": {
