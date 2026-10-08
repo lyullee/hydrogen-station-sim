@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_data_deep_scan",
+  "status": "privacy_bounded_inventory_with_full_loop_negative_result",
+  "generated_at": "2026-10-09",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "source_identifiers_published": false,
+    "site_company_manufacturer_published": false,
+    "calendar_dates_published": false,
+    "raw_rows_persisted": false,
+    "candidate_values_persisted": false
+  },
+  "scan_scope": [
+    "local station-data roots",
+    "local project-data roots",
+    "quarantined broad keyword candidate inventories",
+    "processed validation and research outputs"
+  ],
+  "measured_station_bundle": {
+    "csv_files": 33,
+    "deduplicated_rows": 56854143,
+    "raw_storage_gib_rounded": 4.75,
+    "station_side_evidence": [
+      "pressure and temperature cycles",
+      "cascade and recharge sequence traces",
+      "flow-like and totalizer-like channels",
+      "compressor, valve and ESD/lifecycle state families"
+    ],
+    "decision": "STATION_SIDE_ONLY",
+    "eligible_use": [
+      "station pressure-cycle calibration",
+      "cascade/recharge screening",
+      "chronological station-side holdouts",
+      "virtual response and control training"
+    ]
+  },
+  "broad_candidate_inventory": {
+    "inventory_files": 2,
+    "listed_entries": 394,
+    "unique_candidate_assets": 206,
+    "duplicate_listings_across_inventories": 188,
+    "coarse_candidate_groups": 8,
+    "candidate_classes": [
+      {
+        "class": "processed_protocol_or_case_outputs",
+        "unique_assets": 187,
+        "description": "public component/tank traces and derived research, calibration, diagnostic or simulator outputs",
+        "full_loop_eligibility": "NO"
+      },
+      {
+        "class": "lh2_release_or_consequence_sources",
+        "unique_assets": 7,
+        "description": "liquid-hydrogen release, dispersion or consequence source tables; not synchronized HRS-to-vehicle telemetry",
+        "full_loop_eligibility": "NO"
+      },
+      {
+        "class": "hazop_incident_or_operational_catalogs",
+        "unique_assets": 11,
+        "description": "scenario, alarm, point, safety-management or incident-reference catalogs; qualitative or metadata material",
+        "full_loop_eligibility": "NO"
+      },
+      {
+        "class": "file_catalog",
+        "unique_assets": 1,
+        "description": "inventory metadata only",
+        "full_loop_eligibility": "NO"
+      }
+    ],
+    "keyword_scanner_warning": "presence of time, pressure, temperature, flow, vehicle or station words is not semantic attestation; headers, units, boundary roles and provenance must be reviewed before use"
+  },
+  "full_loop_decision": {
+    "new_eligible_synchronized_station_vehicle_cohort_found": false,
+    "decision": "NO_NEW_FULL_LOOP_HOLDOUT",
+    "reason": "The additional local candidates are processed/component/qualitative/reference material or lack an attested synchronized station-dispenser-vehicle boundary.",
+    "required_before_full_loop_validation": [
+      "station or dispenser pressure on the same time base",
+      "receiving vehicle/tank pressure and temperature",
+      "delivered mass or an attested mass-flow channel",
+      "common time base, units and initial conditions",
+      "controller/protocol or explicit boundary mapping",
+      "reuse rights and custodian attestation"
+    ]
+  },
+  "next_action": "Request a privacy-bounded custodian attestation and a small synchronized vehicle/dispenser export if available; keep all unverified candidates out of prospective validation."
+}
