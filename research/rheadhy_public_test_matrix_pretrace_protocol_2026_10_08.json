@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-08",
+  "artifact_type": "public_test_matrix_and_pretrace_validation_protocol",
+  "status": "FROZEN_BEFORE_SYNCHRONIZED_TRACE_ACCESS_AFTER_AGGREGATE_CAMPAIGN_REPORT",
+  "source": {
+    "title": "RHeaDHy Introduction to test matrix (Public)",
+    "project": "RHeaDHy",
+    "project_id": "101101443",
+    "project_doi": "10.3030/101101443",
+    "record_doi": "10.5281/zenodo.16992589",
+    "record_url": "https://zenodo.org/records/16992589",
+    "official_project_page": "https://rheadhy.eu/projet-outcomes/public-documentation/",
+    "license": "CC BY 4.0",
+    "publication_date": "2025-08-29",
+    "pdf_file": "RHeaDHy_Introduction_to_test_matrix_Public.pdf",
+    "pdf_bytes": 706953,
+    "pdf_md5": "864e0cf8e55b00b62638015ca364803a",
+    "pdf_sha256": "86b97e48892d59f864232c796d1c2894be8494620076ca70fcef2364f49b8baf",
+    "pdf_pages": 19,
+    "source_file_committed": false,
+    "reason_source_file_not_committed": "The repository retains the persistent public DOI and cryptographic digest rather than redistributing the source PDF."
+  },
+  "verified_public_plan": {
+    "planned_total_test_count": 300,
+    "test_sites": [
+      "ZBT (Germany)",
+      "HRS (France)"
+    ],
+    "tank_system": "FORVIA Truck Storage Test System representative of an approximately 100 kg heavy-duty vehicle storage system",
+    "flow_range_g_s": [
+      120,
+      300
+    ],
+    "project_kpis": [
+      "fuel 100 kg in 10 minutes",
+      "hold -30 degC precooling throughout a 10 minute fill",
+      "reach 300 g/s peak flow"
+    ],
+    "planned_batches": {
+      "RAM": 10,
+      "KPI": 15,
+      "PRO": 85,
+      "PAR": 34,
+      "EXT": 97,
+      "CER": 9,
+      "OPT": 25,
+      "OTH": 25
+    },
+    "high_priority_trace_families": [
+      {
+        "test_ids": "11-24",
+        "family": "KPI",
+        "purpose": "mass, precooling-duration and peak-flow demonstrations"
+      },
+      {
+        "test_ids": "26-75",
+        "family": "PRO-SAE",
+        "purpose": "SAE J2601-5 fills spanning initial pressure, ambient temperature, precooling target, flow class, back-to-back and soak conditions"
+      },
+      {
+        "test_ids": "76-90",
+        "family": "PRO-SAO",
+        "purpose": "PRR taper, K0 and volume-measurement options"
+      },
+      {
+        "test_ids": "91-110",
+        "family": "PRO-PRH",
+        "purpose": "PRHYDE TgasInitial+ and TgasThrottle variants"
+      }
+    ],
+    "public_release_commitment": "The source states that selected test-campaign datasets and a summary report will be made publicly available.",
+    "explicit_channel_dictionary_in_source": false,
+    "synchronized_numeric_rows_in_source": false
+  },
+  "public_repository_recheck": {
+    "checked_at": "2026-10-08",
+    "query_url": "https://zenodo.org/api/records?q=RHeaDHy&size=25&sort=mostrecent",
+    "matching_record_count": 7,
+    "matching_record_dois": [
+      "10.5281/zenodo.16992589",
+      "10.5281/zenodo.15016444",
+      "10.5281/zenodo.14720574",
+      "10.5281/zenodo.14720545",
+      "10.5281/zenodo.14720513",
+      "10.5281/zenodo.14703065",
+      "10.5281/zenodo.14701089"
+    ],
+    "machine_readable_test_result_dataset_found": false,
+    "official_public_documentation_records": [
+      "10.5281/zenodo.16992589",
+      "10.5281/zenodo.15016444"
+    ]
+  },
+  "known_before_freeze": {
+    "campaign_boundary_artifact": "research/rheadhy_2026_campaign_data_boundary_2026_10_05.json",
+    "aggregate_outcomes_already_public": true,
+    "known_aggregate_summary": "18 Mid Flow Twin tests over six days; public ranges and >95% SOC claim are already visible.",
+    "raw_time_series_or_case_level_numerical_outcomes_inspected": false,
+    "interpretation": "This is a trace-level pre-access protocol, not a fully outcome-blind campaign protocol. Aggregate campaign success was public before the freeze."
+  },
+  "frozen_evaluation": {
+    "model_commit": "0d0eeb4",
+    "case_selection": "Retain every released priority-1 RHeaDHy event with a test identifier and all required channel families; do not choose cases by prediction error.",
+    "minimum_evaluable_cases": 8,
+    "minimum_joint_screen_pass_fraction": 0.8,
+    "required_channel_families": [
+      "common monotonic timestamp",
+      "station storage-bank pressure and temperature",
+      "active bank and cascade valve or controller state",
+      "compressor state",
+      "precooler state and delivered-gas temperature",
+      "dispenser upstream pressure and temperature",
+      "mass flow or transferred mass",
+      "vehicle or TSTS pressure",
+      "vehicle or TSTS gas temperature",
+      "stop, abort and fault markers",
+      "initial conditions and tank configuration",
+      "engineering units, calibration and quality metadata"
+    ],
+    "primary_screens": {
+      "pressure_rmse_mpa_max": 5.0,
+      "temperature_rmse_c_max": 10.0,
+      "final_soc_absolute_error_percentage_points_max": 10.0
+    },
+    "integrity_rules": [
+      "Verify publisher checksum and preserve the exact received files before parsing.",
+      "Reject rather than infer missing engineering units or channel identities.",
+      "Run the frozen model without case-specific parameter fitting.",
+      "Report every eligible case, failed case and unevaluable case.",
+      "Do not promote aggregate press-release outcomes to synchronized validation rows."
+    ],
+    "disqualifiers": [
+      "fewer than eight disjoint evaluable traces",
+      "no vehicle or TSTS pressure and temperature",
+      "no station bank or controller state",
+      "no mass-flow or transferred-mass boundary",
+      "ambiguous units or tank configuration",
+      "no written right to publish derived validation metrics",
+      "post-access threshold or model-parameter changes"
+    ]
+  },
+  "eligibility": {
+    "public_test_matrix_reuse_permitted": true,
+    "trace_level_protocol_frozen": true,
+    "raw_synchronized_results_available": false,
+    "full_loop_external_validation_supported": false,
+    "goal_completion_permitted": false
+  },
+  "next_action": "Recheck the official RHeaDHy page and Zenodo query for the promised selected datasets; if released, hash-lock the files and execute this protocol without changing the screens.",
+  "claim_boundary": "This artifact freezes a reproducible trace-level evaluation before synchronized rows are available. It is protocol-integrity evidence only. It neither converts the public test matrix or aggregate campaign report into validation data nor closes the full-loop, safety or journal-readiness gates."
+}

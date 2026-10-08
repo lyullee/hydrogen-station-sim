@@ -44,5 +44,6 @@
     ]
   },
   "claim_boundary": "This record confirms public reporting of a real RHeaDHy heavy-duty refuelling campaign and preserves a reproducible acquisition boundary. It adds no synchronized full-loop validation result and does not close the IJHE or full-objective gate.",
-  "next_action": "Request a de-identified event-level export with common timestamps, station/dispenser/vehicle pressure and temperature, mass flow or transferred mass, protocol/controller state, calibration metadata and written permission to publish derived metrics; freeze model and scoring before numerical outcomes are accessed."
+  "pretrace_protocol": "research/rheadhy_public_test_matrix_pretrace_protocol_2026_10_08.json",
+  "next_action": "Monitor the official RHeaDHy page and Zenodo for the selected datasets promised by the CC BY 4.0 public test matrix. If traces appear, hash-lock them and execute the frozen pretrace protocol without changing its case rule or screens; otherwise use the prepared request for a de-identified event-level export."
 }

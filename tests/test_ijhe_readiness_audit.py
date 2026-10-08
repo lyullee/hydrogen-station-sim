@@ -145,6 +145,25 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     ]
     assert group_d_full_loop["decision"] == "MODEL_SCREEN_NOT_RUN_INELIGIBLE_METADATA"
     assert group_d_full_loop["full_loop_external_validation_supported"] is False
+    rheadhy_pretrace = gates["full_loop_external_validation"]["observed"][
+        "rheadhy_public_test_matrix_pretrace"
+    ]
+    assert rheadhy_pretrace["record_doi"] == "10.5281/zenodo.16992589"
+    assert rheadhy_pretrace["planned_total_test_count"] == 300
+    assert rheadhy_pretrace["machine_readable_test_result_dataset_found"] is False
+    assert rheadhy_pretrace["trace_level_protocol_frozen"] is True
+    assert rheadhy_pretrace["full_loop_external_validation_supported"] is False
+    assert gates[
+        "rheadhy_public_test_matrix_pretrace_protocol_integrity"
+    ]["status"] == "PASS"
+    rheadhy_protocol_gate = gates[
+        "rheadhy_public_test_matrix_pretrace_protocol_integrity"
+    ]["observed"]
+    assert rheadhy_protocol_gate["aggregate_outcomes_already_public"] is True
+    assert rheadhy_protocol_gate["raw_time_series_inspected"] is False
+    assert rheadhy_protocol_gate["eligibility"][
+        "full_loop_external_validation_supported"
+    ] is False
     assert gates["public_dispenser_table_download_integrity"]["status"] == "PASS"
     assert gates["green_hysland_trailer_context_integrity"]["status"] == "PASS"
     green = gates["green_hysland_trailer_context_integrity"]["observed"]

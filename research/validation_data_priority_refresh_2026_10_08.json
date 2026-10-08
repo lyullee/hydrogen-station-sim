@@ -7,15 +7,14 @@
   "ranked_candidates": [
     {
       "rank": 1,
-      "id": "hyfill_hd_hrs_experiments_2026",
-      "source": "https://doi.org/10.1016/j.ijhydene.2026.153374",
-      "draft": "research/HYFILL_HD_HRS_DATA_REQUEST_DRAFT.md",
+      "id": "rheadhy_2026_mid_flow_twin_campaign",
+      "source": "https://doi.org/10.5281/zenodo.16992589",
+      "draft": "research/RHEADHY_DATA_REQUEST_DRAFT.md",
       "expected_gate_impact": [
         "full_loop_external_validation",
-        "tank_thermal_transfer",
-        "station_delivery_boundary"
+        "heavy_duty_transfer"
       ],
-      "reason": "More than 50 reported 350/700 bar tests include station delivery and tank channels."
+      "reason": "The official CC BY 4.0 matrix predefines 300 station-to-TSTS tests, and the completed real-station campaign is the strongest full-loop lead if the promised synchronized datasets are released."
     },
     {
       "rank": 2,
@@ -54,14 +53,15 @@
     },
     {
       "rank": 5,
-      "id": "rheadhy_2026_mid_flow_twin_campaign",
-      "source": "https://cordis.europa.eu/project/id/101101443/reporting",
-      "draft": "research/RHEADHY_DATA_REQUEST_DRAFT.md",
+      "id": "hyfill_hd_hrs_experiments_2026",
+      "source": "https://doi.org/10.1016/j.ijhydene.2026.153374",
+      "draft": "research/HYFILL_HD_HRS_DATA_REQUEST_DRAFT.md",
       "expected_gate_impact": [
-        "full_loop_external_validation",
-        "heavy_duty_transfer"
+        "tank_thermal_transfer",
+        "station_delivery_boundary"
       ],
-      "reason": "The real Mid Flow Twin campaign can provide a station-to-vehicle holdout if synchronized logger channels are released."
+      "eligibility": "component_tank_and_fuelling_line_only",
+      "reason": "The primary paper reports more than 50 tank/fuelling-line tests but explicitly states that only the tank model was validated and complete station operation was not compared with a real station."
     }
   ],
   "minimum_blind_release": {
@@ -73,6 +73,11 @@
       "written journal and repository reuse terms"
     ],
     "fallback": "If no blind subset exists, classify received files as post-publication diagnostics and retain the current readiness failures."
+  },
+  "source_boundary_update": {
+    "hyfill_primary_source": "https://hal.science/hal-05452471/document",
+    "hyfill_primary_source_conclusion": "Only the tank model was validated; complete station operation has yet to be compared with a real station.",
+    "rheadhy_pretrace_protocol": "research/rheadhy_public_test_matrix_pretrace_protocol_2026_10_08.json"
   },
   "claim_boundary": "This ranking is a planning artifact. It is not validation evidence, records no sent contact, changes no readiness gate and does not make a journal-acceptance claim."
 }

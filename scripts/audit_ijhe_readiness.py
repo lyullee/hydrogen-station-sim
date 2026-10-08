@@ -1469,6 +1469,8 @@ def audit(root: Path) -> dict[str, object]:
     external_search_latest = _json(external_search_latest_path)
     public_full_loop_update_path = root / "research/public_full_loop_data_update_2026_10_08.json"
     public_full_loop_update = _json(public_full_loop_update_path)
+    rheadhy_pretrace_path = root / "research/rheadhy_public_test_matrix_pretrace_protocol_2026_10_08.json"
+    rheadhy_pretrace = _json(rheadhy_pretrace_path)
     external_search_sweep_path = root / "research/public_full_loop_search_sweep_2026_10_05.json"
     external_search_sweep = _json(external_search_sweep_path)
     external_operational_recheck_path = root / "research/public_operational_benchmark_recheck_2026_10_05.json"
@@ -1523,6 +1525,7 @@ def audit(root: Path) -> dict[str, object]:
         f"{external_search_recheck_path.relative_to(root)}; {external_operational_recheck_path.relative_to(root)}; "
         f"{external_search_sweep_path.relative_to(root)}; {external_search_latest_path.relative_to(root)}; "
         f"{public_full_loop_update_path.relative_to(root)}; {methytrucks_path.relative_to(root)}; "
+        f"{rheadhy_pretrace_path.relative_to(root)}; "
         f"{methytrucks_complete_path.relative_to(root)}; "
         f"{group_d_protocol_path.relative_to(root)}; {group_d_result_path.relative_to(root)}; "
         f"{prospective_release_protocol_path.relative_to(root)}; {controlled_registry_path.relative_to(root)}",
@@ -1553,6 +1556,25 @@ def audit(root: Path) -> dict[str, object]:
                 "gate_impact": (public_full_loop_update or {}).get("gate_impact"),
                 "eligibility": (public_full_loop_update or {}).get("eligibility"),
                 "claim_boundary": (public_full_loop_update or {}).get("claim_boundary"),
+            },
+            "rheadhy_public_test_matrix_pretrace": {
+                "status": (rheadhy_pretrace or {}).get("status"),
+                "record_doi": (rheadhy_pretrace or {}).get("source", {}).get("record_doi"),
+                "planned_total_test_count": (rheadhy_pretrace or {}).get(
+                    "verified_public_plan", {}
+                ).get("planned_total_test_count"),
+                "machine_readable_test_result_dataset_found": (
+                    rheadhy_pretrace or {}
+                ).get("public_repository_recheck", {}).get(
+                    "machine_readable_test_result_dataset_found"
+                ),
+                "trace_level_protocol_frozen": (rheadhy_pretrace or {}).get(
+                    "eligibility", {}
+                ).get("trace_level_protocol_frozen"),
+                "full_loop_external_validation_supported": (
+                    rheadhy_pretrace or {}
+                ).get("eligibility", {}).get("full_loop_external_validation_supported"),
+                "claim_boundary": (rheadhy_pretrace or {}).get("claim_boundary"),
             },
             "methytrucks_hysam_postaccess_diagnostic": {
                 "status": (methytrucks or {}).get("status"),
@@ -1907,6 +1929,76 @@ def audit(root: Path) -> dict[str, object]:
             "full_loop_external_holdout_eligible": rheadhy_decision.get("full_loop_external_holdout_eligible"),
             "claim_boundary": (rheadhy or {}).get("claim_boundary"),
         } if rheadhy else "missing; RHeaDHy campaign data-boundary record has not been captured",
+    ))
+
+    rheadhy_pretrace_source = (rheadhy_pretrace or {}).get("source") or {}
+    rheadhy_pretrace_plan = (rheadhy_pretrace or {}).get("verified_public_plan") or {}
+    rheadhy_pretrace_repo = (rheadhy_pretrace or {}).get("public_repository_recheck") or {}
+    rheadhy_pretrace_known = (rheadhy_pretrace or {}).get("known_before_freeze") or {}
+    rheadhy_pretrace_frozen = (rheadhy_pretrace or {}).get("frozen_evaluation") or {}
+    rheadhy_pretrace_screens = rheadhy_pretrace_frozen.get("primary_screens") or {}
+    rheadhy_pretrace_eligibility = (rheadhy_pretrace or {}).get("eligibility") or {}
+    rheadhy_pretrace_pass = bool(
+        (rheadhy_pretrace or {}).get("schema_version") == 1
+        and (rheadhy_pretrace or {}).get("status")
+        == "FROZEN_BEFORE_SYNCHRONIZED_TRACE_ACCESS_AFTER_AGGREGATE_CAMPAIGN_REPORT"
+        and rheadhy_pretrace_source.get("record_doi") == "10.5281/zenodo.16992589"
+        and rheadhy_pretrace_source.get("license") == "CC BY 4.0"
+        and rheadhy_pretrace_source.get("pdf_md5") == "864e0cf8e55b00b62638015ca364803a"
+        and len(str(rheadhy_pretrace_source.get("pdf_sha256") or "")) == 64
+        and rheadhy_pretrace_plan.get("planned_total_test_count") == 300
+        and len(rheadhy_pretrace_plan.get("high_priority_trace_families") or []) == 4
+        and rheadhy_pretrace_repo.get("matching_record_count") == 7
+        and rheadhy_pretrace_repo.get("machine_readable_test_result_dataset_found") is False
+        and rheadhy_pretrace_known.get("aggregate_outcomes_already_public") is True
+        and rheadhy_pretrace_known.get(
+            "raw_time_series_or_case_level_numerical_outcomes_inspected"
+        ) is False
+        and rheadhy_pretrace_frozen.get("minimum_evaluable_cases", 0) >= 8
+        and rheadhy_pretrace_frozen.get("minimum_joint_screen_pass_fraction", 0.0)
+        >= 0.8
+        and len(rheadhy_pretrace_frozen.get("required_channel_families") or []) >= 12
+        and rheadhy_pretrace_screens.get("pressure_rmse_mpa_max") == 5.0
+        and rheadhy_pretrace_screens.get("temperature_rmse_c_max") == 10.0
+        and rheadhy_pretrace_screens.get(
+            "final_soc_absolute_error_percentage_points_max"
+        ) == 10.0
+        and rheadhy_pretrace_eligibility.get("trace_level_protocol_frozen") is True
+        and rheadhy_pretrace_eligibility.get("raw_synchronized_results_available") is False
+        and rheadhy_pretrace_eligibility.get("full_loop_external_validation_supported") is False
+        and rheadhy_pretrace_eligibility.get("goal_completion_permitted") is False
+        and "protocol-integrity evidence only"
+        in str((rheadhy_pretrace or {}).get("claim_boundary") or "")
+    )
+    gates.append(_gate(
+        "rheadhy_public_test_matrix_pretrace_protocol_integrity",
+        "PASS" if rheadhy_pretrace_pass else ("FAIL" if rheadhy_pretrace else "PENDING"),
+        "The public RHeaDHy test matrix is hash-pinned and converted into a trace-level pre-access protocol without treating the matrix or aggregate campaign report as validation data.",
+        str(rheadhy_pretrace_path.relative_to(root)),
+        "CC BY 4.0 source identity and digest, 300-test plan, explicit aggregate-outcome awareness, no synchronized-row access, >=8-case no-fit screen and false full-loop promotion flags.",
+        {
+            "record_doi": rheadhy_pretrace_source.get("record_doi"),
+            "license": rheadhy_pretrace_source.get("license"),
+            "planned_total_test_count": rheadhy_pretrace_plan.get("planned_total_test_count"),
+            "high_priority_trace_families": rheadhy_pretrace_plan.get(
+                "high_priority_trace_families"
+            ),
+            "matching_repository_record_count": rheadhy_pretrace_repo.get(
+                "matching_record_count"
+            ),
+            "machine_readable_test_result_dataset_found": rheadhy_pretrace_repo.get(
+                "machine_readable_test_result_dataset_found"
+            ),
+            "aggregate_outcomes_already_public": rheadhy_pretrace_known.get(
+                "aggregate_outcomes_already_public"
+            ),
+            "raw_time_series_inspected": rheadhy_pretrace_known.get(
+                "raw_time_series_or_case_level_numerical_outcomes_inspected"
+            ),
+            "frozen_evaluation": rheadhy_pretrace_frozen,
+            "eligibility": rheadhy_pretrace_eligibility,
+            "claim_boundary": (rheadhy_pretrace or {}).get("claim_boundary"),
+        } if rheadhy_pretrace else "missing; RHeaDHy pretrace protocol has not been frozen",
     ))
 
     temperature_diagnostic_path = root / "research/closed_loop_temperature_stop_diagnostic_2026_10_04.json"

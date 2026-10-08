@@ -45,7 +45,7 @@ def test_priority_refresh_targets_the_largest_validation_blockers_first():
     )
     ranked = priority["ranked_candidates"]
     assert [row["rank"] for row in ranked] == list(range(1, len(ranked) + 1))
-    assert ranked[0]["id"] == "hyfill_hd_hrs_experiments_2026"
+    assert ranked[0]["id"] == "rheadhy_2026_mid_flow_twin_campaign"
     assert ranked[1]["id"] == "wan_2026_type_iii_iv_aspect_ratio"
     assert "full_loop_external_validation" in ranked[0]["expected_gate_impact"]
     assert "dickens_typeiii_prospective_validation" in ranked[1][
@@ -53,5 +53,10 @@ def test_priority_refresh_targets_the_largest_validation_blockers_first():
     ]
     assert priority["contact_sent"] is False
     assert "not validation evidence" in priority["claim_boundary"].lower()
+    hyfill = next(
+        row for row in ranked if row["id"] == "hyfill_hd_hrs_experiments_2026"
+    )
+    assert "full_loop_external_validation" not in hyfill["expected_gate_impact"]
+    assert hyfill["eligibility"] == "component_tank_and_fuelling_line_only"
     for row in ranked:
         assert (ROOT / row["draft"]).is_file()

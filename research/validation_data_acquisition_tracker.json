@@ -621,6 +621,8 @@
       "id": "rheadhy_2026_mid_flow_twin_campaign",
       "draft": "research/RHEADHY_DATA_REQUEST_DRAFT.md",
       "source": "https://cordis.europa.eu/project/id/101101443/reporting",
+      "public_test_matrix": "https://doi.org/10.5281/zenodo.16992589",
+      "pretrace_protocol": "research/rheadhy_public_test_matrix_pretrace_protocol_2026_10_08.json",
       "candidate_type": "real heavy-duty HRS Mid Flow Twin campaign logger archive",
       "status": "request_draft_ready",
       "requested_fields": [
@@ -639,7 +641,7 @@
       ],
       "minimum_acceptance": "De-identified machine-readable synchronized logger files for at least eight complete or protocol-defined eligible heavy-duty fills, with channel definitions, tank capacity, initial conditions, protocol metadata, quality/calibration fields and untouched holdout eligibility.",
       "rights": "RHeaDHy/HRS data custodian must grant written permission for derived metrics, open-repository deposition and journal publication; public campaign summaries alone do not grant raw-data reuse.",
-      "next_action": "Project owner reviews research/RHEADHY_DATA_REQUEST_DRAFT.md and contacts the project or test-field custodian only through an approved institutional channel.",
+      "next_action": "Recheck the official RHeaDHy page and Zenodo for the selected datasets promised by the public test matrix. If no trace release appears, the project owner reviews research/RHEADHY_DATA_REQUEST_DRAFT.md and contacts the custodian only through an approved institutional channel.",
       "claim_boundary": "The public RHeaDHy campaign reports real tests and operating bounds but no synchronized raw archive; it is a high-priority acquisition lead and cannot close full-loop validation until the raw files and rights are frozen."
     },
     {

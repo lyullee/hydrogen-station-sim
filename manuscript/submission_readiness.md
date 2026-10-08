@@ -20,7 +20,16 @@ Audit snapshot: **2026-10-08 UTC**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **110 PASS · 10 FAIL · 7 PENDING**.
+Gate counts: **111 PASS · 10 FAIL · 7 PENDING**.
+
+The official RHeaDHy public test matrix (DOI 10.5281/zenodo.16992589) is now
+hash-pinned and converted into a trace-level pre-access protocol for the
+promised public test results. The matrix defines 300 planned station-to-truck-
+storage-system tests, but the official project page and Zenodo search still
+expose no synchronized machine-readable result archive. This adds protocol
+integrity without changing the failed full-loop validation decision. A primary-
+source recheck also demoted HyFill from a full-loop acquisition lead because
+its paper explicitly reports tank-model validation only.
 
 The SAGA measurement guard now has a provider-free regression covering unit
 aliases and shared-unit ranges. All 5 cases pass: four grounded equivalent

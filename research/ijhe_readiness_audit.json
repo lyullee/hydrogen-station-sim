@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T11:21:36.751818+00:00",
+  "generated_at": "2026-10-08T11:59:09.286738+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 110,
+    "PASS": 111,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -1048,7 +1048,7 @@
       "id": "full_loop_external_validation",
       "status": "FAIL",
       "claim": "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
-      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json; research\\public_full_loop_search_sweep_2026_10_05.json; research\\public_full_loop_search_recheck_2026_10_06.json; research\\public_full_loop_data_update_2026_10_08.json; research\\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json; research\\methytrucks_2026_public_measurement_intake.json; research\\methytrucks_group_d_prospective_protocol_2026_10_08.json; research\\methytrucks_group_d_prospective_result_2026_10_08.json; research\\apparatus_resolved_release_protocol.json; research\\controlled_full_loop_cohort_registry.json",
+      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json; research\\public_full_loop_search_sweep_2026_10_05.json; research\\public_full_loop_search_recheck_2026_10_06.json; research\\public_full_loop_data_update_2026_10_08.json; research\\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json; research\\rheadhy_public_test_matrix_pretrace_protocol_2026_10_08.json; research\\methytrucks_2026_public_measurement_intake.json; research\\methytrucks_group_d_prospective_protocol_2026_10_08.json; research\\methytrucks_group_d_prospective_result_2026_10_08.json; research\\apparatus_resolved_release_protocol.json; research\\controlled_full_loop_cohort_registry.json",
       "requirement": "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
       "observed": {
         "protocol_integrity": true,
@@ -1145,6 +1145,15 @@
             "quantitative_full_loop_validation": false
           },
           "claim_boundary": "The public files improve cross-institution tank-model transfer evidence but do not validate the complete station controller/cascade/precooler loop or field safety."
+        },
+        "rheadhy_public_test_matrix_pretrace": {
+          "status": "FROZEN_BEFORE_SYNCHRONIZED_TRACE_ACCESS_AFTER_AGGREGATE_CAMPAIGN_REPORT",
+          "record_doi": "10.5281/zenodo.16992589",
+          "planned_total_test_count": 300,
+          "machine_readable_test_result_dataset_found": false,
+          "trace_level_protocol_frozen": true,
+          "full_loop_external_validation_supported": false,
+          "claim_boundary": "This artifact freezes a reproducible trace-level evaluation before synchronized rows are available. It is protocol-integrity evidence only. It neither converts the public test matrix or aggregate campaign report into validation data nor closes the full-loop, safety or journal-readiness gates."
         },
         "methytrucks_hysam_postaccess_diagnostic": {
           "status": "completed_post_access_external_diagnostic",
@@ -1461,6 +1470,93 @@
         "raw_synchronized_rows": false,
         "full_loop_external_holdout_eligible": false,
         "claim_boundary": "This record confirms public reporting of a real RHeaDHy heavy-duty refuelling campaign and preserves a reproducible acquisition boundary. It adds no synchronized full-loop validation result and does not close the IJHE or full-objective gate."
+      }
+    },
+    {
+      "id": "rheadhy_public_test_matrix_pretrace_protocol_integrity",
+      "status": "PASS",
+      "claim": "The public RHeaDHy test matrix is hash-pinned and converted into a trace-level pre-access protocol without treating the matrix or aggregate campaign report as validation data.",
+      "evidence": "research\\rheadhy_public_test_matrix_pretrace_protocol_2026_10_08.json",
+      "requirement": "CC BY 4.0 source identity and digest, 300-test plan, explicit aggregate-outcome awareness, no synchronized-row access, >=8-case no-fit screen and false full-loop promotion flags.",
+      "observed": {
+        "record_doi": "10.5281/zenodo.16992589",
+        "license": "CC BY 4.0",
+        "planned_total_test_count": 300,
+        "high_priority_trace_families": [
+          {
+            "test_ids": "11-24",
+            "family": "KPI",
+            "purpose": "mass, precooling-duration and peak-flow demonstrations"
+          },
+          {
+            "test_ids": "26-75",
+            "family": "PRO-SAE",
+            "purpose": "SAE J2601-5 fills spanning initial pressure, ambient temperature, precooling target, flow class, back-to-back and soak conditions"
+          },
+          {
+            "test_ids": "76-90",
+            "family": "PRO-SAO",
+            "purpose": "PRR taper, K0 and volume-measurement options"
+          },
+          {
+            "test_ids": "91-110",
+            "family": "PRO-PRH",
+            "purpose": "PRHYDE TgasInitial+ and TgasThrottle variants"
+          }
+        ],
+        "matching_repository_record_count": 7,
+        "machine_readable_test_result_dataset_found": false,
+        "aggregate_outcomes_already_public": true,
+        "raw_time_series_inspected": false,
+        "frozen_evaluation": {
+          "model_commit": "0d0eeb4",
+          "case_selection": "Retain every released priority-1 RHeaDHy event with a test identifier and all required channel families; do not choose cases by prediction error.",
+          "minimum_evaluable_cases": 8,
+          "minimum_joint_screen_pass_fraction": 0.8,
+          "required_channel_families": [
+            "common monotonic timestamp",
+            "station storage-bank pressure and temperature",
+            "active bank and cascade valve or controller state",
+            "compressor state",
+            "precooler state and delivered-gas temperature",
+            "dispenser upstream pressure and temperature",
+            "mass flow or transferred mass",
+            "vehicle or TSTS pressure",
+            "vehicle or TSTS gas temperature",
+            "stop, abort and fault markers",
+            "initial conditions and tank configuration",
+            "engineering units, calibration and quality metadata"
+          ],
+          "primary_screens": {
+            "pressure_rmse_mpa_max": 5.0,
+            "temperature_rmse_c_max": 10.0,
+            "final_soc_absolute_error_percentage_points_max": 10.0
+          },
+          "integrity_rules": [
+            "Verify publisher checksum and preserve the exact received files before parsing.",
+            "Reject rather than infer missing engineering units or channel identities.",
+            "Run the frozen model without case-specific parameter fitting.",
+            "Report every eligible case, failed case and unevaluable case.",
+            "Do not promote aggregate press-release outcomes to synchronized validation rows."
+          ],
+          "disqualifiers": [
+            "fewer than eight disjoint evaluable traces",
+            "no vehicle or TSTS pressure and temperature",
+            "no station bank or controller state",
+            "no mass-flow or transferred-mass boundary",
+            "ambiguous units or tank configuration",
+            "no written right to publish derived validation metrics",
+            "post-access threshold or model-parameter changes"
+          ]
+        },
+        "eligibility": {
+          "public_test_matrix_reuse_permitted": true,
+          "trace_level_protocol_frozen": true,
+          "raw_synchronized_results_available": false,
+          "full_loop_external_validation_supported": false,
+          "goal_completion_permitted": false
+        },
+        "claim_boundary": "This artifact freezes a reproducible trace-level evaluation before synchronized rows are available. It is protocol-integrity evidence only. It neither converts the public test matrix or aggregate campaign report into validation data nor closes the full-loop, safety or journal-readiness gates."
       }
     },
     {
@@ -3693,8 +3789,8 @@
       "id": "wskbij_large_scale_overpressure_rank_execution_integrity",
       "status": "PASS",
       "claim": "The frozen 44-case actual-hydrogen rank screen is executed and its negative geometry-controlled result is retained without post-access tuning.",
-      "evidence": "research\\wskbij_large_scale_overpressure_rank_protocol_2026_10_08.json; research\\wskbij_large_scale_overpressure_rank_result_2026_10_08.json",
-      "requirement": "Protocol hash linkage, publisher workbook identity, locked model hashes, 44 scored cases in six strata, all frozen screens and explicit retained FAIL decision.",
+      "evidence": "research\\wskbij_large_scale_overpressure_rank_protocol_2026_10_08.json; research\\wskbij_large_scale_overpressure_rank_result_2026_10_08.json; research\\wskbij_apparatus_metadata_audit_2026_10_08.json; research\\wskbij_apparatus_input_contract.schema.json",
+      "requirement": "Protocol hash linkage, publisher workbook identity, locked model hashes, 44 scored cases in six strata, retained FAIL decision and a fail-closed apparatus metadata contract.",
       "observed": {
         "dataset_doi": "10.18710/WSKBIJ",
         "decision": "FAIL",
@@ -3706,6 +3802,11 @@
         "top_third_recall": 0.29411764705882354,
         "model_validation_pass": false,
         "runtime_parameter_updated": false,
+        "apparatus_aware_model_eligible": false,
+        "absolute_overpressure_model_eligible": false,
+        "missing_apparatus_field_count": 12,
+        "apparatus_metadata_decision": "INSUFFICIENT_PUBLIC_METADATA_FOR_APPARATUS_AWARE_MODEL",
+        "raw_schema_campaign_count": 2,
         "claim_boundary": "A PASS would support relative source-severity ordering by the locked runtime across this large-scale actual-hydrogen campaign. It would not validate absolute overpressure, impulse, obstacle effects, ignition-location effects, sensor-distance attenuation, outdoor HRS geometry, explosion probability, injury distance, full-loop dynamics, emergency decisions or regulatory compliance. A FAIL remains part of the evidence record and these outcomes may not be tuned and reused as fresh validation."
       }
     },
@@ -7071,7 +7172,7 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7989,
+          "approximate_manuscript_words_before_references": 7994,
           "figures": 3,
           "tables": 3,
           "citation_keys": 50,
@@ -7103,7 +7204,7 @@
       "requirement": "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
       "observed": {
         "schema_version": 2,
-        "verified_at_utc": "2026-10-08T11:21:36.218892+00:00",
+        "verified_at_utc": "2026-10-08T11:42:52.390631+00:00",
         "success": true,
         "compiler": {
           "name": "Tectonic",
@@ -7113,24 +7214,24 @@
         },
         "source": {
           "path": "manuscript/ijhe_manuscript_draft.tex",
-          "bytes": 76025,
-          "sha256": "3007b041244ecc786ee1bef7b296eb65dbf96f97d16c4de24ce4a12285b70ffa"
+          "bytes": 76047,
+          "sha256": "09cedae74bcdb164746460c1f550c67ff07674c559dc8c1d215ce2f669227b05"
         },
         "pdf": {
           "path": "output/pdf/ijhe_manuscript_working_draft.pdf",
-          "bytes": 834603,
-          "sha256": "f51d3086a23adaed260f23d256ff11212a7cd3616de349d5348e4ff45113169f",
+          "bytes": 834643,
+          "sha256": "ed6c5d98d9c59d094f8ebb433f97fd303c9b2c6c3d7899caeb9b6397c5723e97",
           "page_count": 23,
-          "extracted_character_count": 70752
+          "extracted_character_count": 70776
         },
         "compile_log": {
           "path": "output/pdf/ijhe_manuscript_working_draft.compile.txt",
-          "bytes": 19544,
-          "sha256": "a9fdca542719d52d618026b873e427165e07e0d20382f129b906286e16874534",
+          "bytes": 3039,
+          "sha256": "774ea30c798430c378d2ef072f4872ea16b9e1910003a4e67a1d698792a7da10",
           "unresolved_citations": 0,
           "unresolved_references": 0,
           "fatal_errors": [],
-          "underfull_hbox_count": 11,
+          "underfull_hbox_count": 22,
           "overfull_hbox_count": 0,
           "maximum_overfull_width_pt": 0.0
         },
