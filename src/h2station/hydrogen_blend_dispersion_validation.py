@@ -84,7 +84,7 @@ def _percentile(values: list[float], fraction: float) -> float:
 
 def _decode(path: Path) -> str:
     payload = path.read_bytes()
-    for encoding in ("utf-8-sig", "utf-8", "gb18030", "cp1252"):
+    for encoding in ("utf-8-sig", "utf-8", "utf-16", "gb18030", "cp1252"):
         try:
             return payload.decode(encoding)
         except UnicodeDecodeError:
@@ -103,7 +103,12 @@ def extract_case_response(path: Path, driver_value: float) -> CaseResponse:
     if len(rows) < 2:
         raise ValueError(f"CSV has fewer than two rows: {path.name}")
 
-    headers = [_normalise_header(value) for value in rows[0]]
+    first_row_is_data = sum(_number(value) is not None for value in rows[0]) >= 2
+    headers = (
+        [""] * len(rows[0])
+        if first_row_is_data
+        else [_normalise_header(value) for value in rows[0]]
+    )
     labelled = [
         index
         for index, header in enumerate(headers)
@@ -120,7 +125,8 @@ def extract_case_response(path: Path, driver_value: float) -> CaseResponse:
         mode = "fallback_exclude_first_numeric_coordinate_column"
 
     values: list[float] = []
-    for row in rows[1:]:
+    data_rows = rows if first_row_is_data else rows[1:]
+    for row in data_rows:
         for index in selected:
             if index >= len(row):
                 continue

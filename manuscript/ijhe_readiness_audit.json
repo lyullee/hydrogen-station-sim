@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T06:07:24.870668+00:00",
+  "generated_at": "2026-10-08T06:27:25.279224+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 100,
+    "PASS": 101,
     "FAIL": 8,
     "PENDING": 8
   },
@@ -2000,6 +2000,34 @@
           "runtime_candidate_enabled": false
         },
         "claim_boundary": "This post-access diagnostic supports only a development choice to replace arbitrary near/far detector assignment with a transparent coordinate ranking. It failed the joint spatial screen and is not independent validation."
+      }
+    },
+    {
+      "id": "hydrogen_blend_dispersion_negative_result_integrity",
+      "status": "PASS",
+      "claim": "A newly screened public hydrogen-blend dataset retains its failed frozen trend result and discloses the post-access format repair without outcome-specific rescue.",
+      "evidence": "research\\hydrogen_blend_dispersion_holdout_protocol_2026_10_08.json; research\\hydrogen_blend_dispersion_format_amendment_2026_10_08.json; research\\hydrogen_blend_dispersion_holdout_result_2026_10_08.json",
+      "requirement": "Frozen cases and thresholds, verified public DOI/archive hash, both three-case screens, unchanged endpoints, raw archive excluded and failed result retained.",
+      "observed": {
+        "doi": "10.17632/x8zkds4fyn.2",
+        "execution_classification": "PROSPECTIVE_ENDPOINTS_POST_ACCESS_FORMAT_REPAIR",
+        "blend_fraction_screen": {
+          "case_count": 3,
+          "spearman": 0.0,
+          "endpoint_ratio": 1.0,
+          "strictly_increasing": false,
+          "pass_screen": false
+        },
+        "release_volume_screen": {
+          "case_count": 3,
+          "spearman": null,
+          "endpoint_ratio": 1.0,
+          "strictly_increasing": false,
+          "pass_screen": false
+        },
+        "joint_primary_screen_pass": false,
+        "claim_supported": false,
+        "claim_boundary": "This holdout tests only whether public hydrogen-blend measurements preserve the pre-declared direction and rank of upper-tail response versus blend fraction and release volume. It does not validate absolute hydrogen concentration, outdoor HRS dispersion, detector placement, alarm setpoints, ESD, consequence distance or the complete station loop."
       }
     },
     {

@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-08",
+  "status": "POST_ACCESS_FORMAT_ONLY_REPAIR",
+  "trigger": {
+    "first_execution": "failed before statistic calculation",
+    "error": "CSV lacks a response column",
+    "observed_format": [
+      "UTF-16 text with BOM",
+      "tab-delimited rows",
+      "no header row"
+    ]
+  },
+  "changes": {
+    "encoding_order": "UTF-16 decoding is attempted before permissive legacy encodings",
+    "header_detection": "A row containing at least two finite numeric cells is treated as data, not a header.",
+    "endpoint_or_threshold_changed": false,
+    "case_selection_changed": false,
+    "response_statistic_changed": false,
+    "fallback_column_rule_changed": false
+  },
+  "integrity": {
+    "locked_module_sha256": "416ff48d1a55a9f36ee1a2f11705dd5f881ad347438b657a3e082546a39ff07a",
+    "repaired_module_sha256": "78cd19bc83c283b923d3cb66d7ffcfdf5ba128195225ec16ef57d240c7b098f6",
+    "locked_runner_sha256": "1ea4626bb4b86ac4a08f4101bd1c39ea778a2ed127a79cd963c9da8658d766e7",
+    "repaired_runner_sha256": "cdf4682009dd04d51506e230f3668de5089ec21c63df0ea307a42b695a9f55e3"
+  },
+  "classification": "Prospective endpoints with a disclosed post-access format repair; not a byte-identical fully prospective execution.",
+  "claim_boundary": "The repair permits execution of the frozen case selection, response statistic and thresholds. It does not rescue a failed endpoint, justify outcome-specific column selection, or support absolute concentration, HRS dispersion, detector placement, ESD or consequence-distance validation."
+}

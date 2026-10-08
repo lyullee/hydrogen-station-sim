@@ -34,6 +34,11 @@ def main() -> None:
         default=Path("research/hydrogen_blend_dispersion_holdout_result_2026_10_08.json"),
     )
     parser.add_argument(
+        "--format-amendment",
+        type=Path,
+        default=Path("research/hydrogen_blend_dispersion_format_amendment_2026_10_08.json"),
+    )
+    parser.add_argument(
         "--extract-directory",
         type=Path,
         default=Path("tmp/hydrogen_blend_dispersion_holdout"),
@@ -44,6 +49,10 @@ def main() -> None:
         bundle.extractall(args.extract_directory)
 
     evaluation = evaluate_archive(args.extract_directory)
+    protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
+    amendment = json.loads(args.format_amendment.read_text(encoding="utf-8"))
+    root = Path(__file__).resolve().parents[1]
+    module_path = root / "src/h2station/hydrogen_blend_dispersion_validation.py"
     payload = {
         "schema_version": 1,
         "artifact_type": "prospective_hydrogen_blend_dispersion_trend_holdout",
@@ -55,6 +64,22 @@ def main() -> None:
             "raw_archive_committed": False,
         },
         "protocol_sha256": _sha256(args.protocol),
+        "execution_integrity": {
+            "classification": "PROSPECTIVE_ENDPOINTS_POST_ACCESS_FORMAT_REPAIR",
+            "format_amendment": str(args.format_amendment).replace("\\", "/"),
+            "format_amendment_sha256": _sha256(args.format_amendment),
+            "locked_module_sha256": protocol["locked_code"]["module"]["sha256"],
+            "executed_module_sha256": _sha256(module_path),
+            "locked_module_byte_identical": (
+                protocol["locked_code"]["module"]["sha256"] == _sha256(module_path)
+            ),
+            "endpoint_or_threshold_changed": amendment["changes"][
+                "endpoint_or_threshold_changed"
+            ],
+            "case_selection_changed": amendment["changes"][
+                "case_selection_changed"
+            ],
+        },
         "evaluation": evaluation,
         "claim_supported": evaluation["joint_primary_screen_pass"],
         "claim_boundary": (

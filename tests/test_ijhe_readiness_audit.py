@@ -71,6 +71,17 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert mixed["runtime_parameter_updated"] is False
     assert mixed["validation_gate_effect"] == "none"
     assert gates["hyram_adapter_verification"]["status"] == "PASS"
+    assert gates[
+        "hydrogen_blend_dispersion_negative_result_integrity"
+    ]["status"] == "PASS"
+    blend_holdout = gates[
+        "hydrogen_blend_dispersion_negative_result_integrity"
+    ]["observed"]
+    assert blend_holdout["execution_classification"] == (
+        "PROSPECTIVE_ENDPOINTS_POST_ACCESS_FORMAT_REPAIR"
+    )
+    assert blend_holdout["joint_primary_screen_pass"] is False
+    assert blend_holdout["claim_supported"] is False
     assert gates["elvhys_auxiliary_replay_integrity"]["status"] == "PASS"
     assert gates["elvhys_auxiliary_replay_integrity"]["observed"]["case_count"] == 3
     assert gates["elvhys_auxiliary_replay_integrity"]["observed"][

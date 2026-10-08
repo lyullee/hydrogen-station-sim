@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "artifact_type": "prospective_hydrogen_blend_dispersion_trend_holdout",
+  "generated_at": "2026-10-08T06:21:48.856965+00:00",
+  "source": {
+    "doi": "10.17632/x8zkds4fyn.2",
+    "license": "CC BY 4.0",
+    "archive_sha256": "7fe1ceba6e0a6b2c0fc49fc7d8ce4b456a2a3b34c49501fe2f6d6537d83e94f0",
+    "raw_archive_committed": false
+  },
+  "protocol_sha256": "4afce6886fac9eaca0d8c49fc74fb16470a1f577d88460c19a1694d4ab02f069",
+  "execution_integrity": {
+    "classification": "PROSPECTIVE_ENDPOINTS_POST_ACCESS_FORMAT_REPAIR",
+    "format_amendment": "research/hydrogen_blend_dispersion_format_amendment_2026_10_08.json",
+    "format_amendment_sha256": "a16dc674f0646eea253f2a3d3820082fb7bc8fc8c3ee37a9800412d74ec42f62",
+    "locked_module_sha256": "416ff48d1a55a9f36ee1a2f11705dd5f881ad347438b657a3e082546a39ff07a",
+    "executed_module_sha256": "78cd19bc83c283b923d3cb66d7ffcfdf5ba128195225ec16ef57d240c7b098f6",
+    "locked_module_byte_identical": false,
+    "endpoint_or_threshold_changed": false,
+    "case_selection_changed": false
+  },
+  "evaluation": {
+    "cases": {
+      "blend_fraction": [
+        {
+          "file_name": "hydrogenAll10%.csv",
+          "driver_value": 10.0,
+          "response_q90": 4.0,
+          "finite_response_count": 116,
+          "extraction_mode": "fallback_exclude_first_numeric_coordinate_column"
+        },
+        {
+          "file_name": "hydrogenAll20% .csv",
+          "driver_value": 20.0,
+          "response_q90": 5.0,
+          "finite_response_count": 136,
+          "extraction_mode": "fallback_exclude_first_numeric_coordinate_column"
+        },
+        {
+          "file_name": "hydrogenAll30%  .csv",
+          "driver_value": 30.0,
+          "response_q90": 4.0,
+          "finite_response_count": 136,
+          "extraction_mode": "fallback_exclude_first_numeric_coordinate_column"
+        }
+      ],
+      "release_volume": [
+        {
+          "file_name": "H-232.csv",
+          "driver_value": 232.0,
+          "response_q90": 4.0,
+          "finite_response_count": 148,
+          "extraction_mode": "fallback_exclude_first_numeric_coordinate_column"
+        },
+        {
+          "file_name": "H-325.csv",
+          "driver_value": 325.0,
+          "response_q90": 4.0,
+          "finite_response_count": 104,
+          "extraction_mode": "fallback_exclude_first_numeric_coordinate_column"
+        },
+        {
+          "file_name": "H-476.csv",
+          "driver_value": 476.0,
+          "response_q90": 4.0,
+          "finite_response_count": 148,
+          "extraction_mode": "fallback_exclude_first_numeric_coordinate_column"
+        }
+      ]
+    },
+    "screens": {
+      "blend_fraction": {
+        "case_count": 3,
+        "spearman": 0.0,
+        "endpoint_ratio": 1.0,
+        "strictly_increasing": false,
+        "pass_screen": false
+      },
+      "release_volume": {
+        "case_count": 3,
+        "spearman": null,
+        "endpoint_ratio": 1.0,
+        "strictly_increasing": false,
+        "pass_screen": false
+      }
+    },
+    "joint_primary_screen_pass": false
+  },
+  "claim_supported": false,
+  "claim_boundary": "This holdout tests only whether public hydrogen-blend measurements preserve the pre-declared direction and rank of upper-tail response versus blend fraction and release volume. It does not validate absolute hydrogen concentration, outdoor HRS dispersion, detector placement, alarm setpoints, ESD, consequence distance or the complete station loop."
+}

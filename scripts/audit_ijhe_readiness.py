@@ -2783,6 +2783,86 @@ def audit(root: Path) -> dict[str, object]:
         } if h2safe_spatial else "missing; H2SAFE spatial diagnostic has not run",
     ))
 
+    blend_protocol_path = root / (
+        "research/hydrogen_blend_dispersion_holdout_protocol_2026_10_08.json"
+    )
+    blend_amendment_path = root / (
+        "research/hydrogen_blend_dispersion_format_amendment_2026_10_08.json"
+    )
+    blend_result_path = root / (
+        "research/hydrogen_blend_dispersion_holdout_result_2026_10_08.json"
+    )
+    blend_protocol = _json(blend_protocol_path)
+    blend_amendment = _json(blend_amendment_path)
+    blend_result = _json(blend_result_path)
+    blend_source = (blend_result or {}).get("source") or {}
+    blend_execution = (blend_result or {}).get("execution_integrity") or {}
+    blend_evaluation = (blend_result or {}).get("evaluation") or {}
+    blend_screens = blend_evaluation.get("screens") or {}
+    blend_integrity = bool(
+        (blend_protocol or {}).get("status")
+        == "FROZEN_BEFORE_NUMERIC_ARCHIVE_DOWNLOAD"
+        and (blend_protocol or {}).get("prior_access", {}).get(
+            "numeric_archive_downloaded"
+        ) is False
+        and (blend_amendment or {}).get("status")
+        == "POST_ACCESS_FORMAT_ONLY_REPAIR"
+        and (blend_amendment or {}).get("changes", {}).get(
+            "endpoint_or_threshold_changed"
+        ) is False
+        and (blend_amendment or {}).get("changes", {}).get(
+            "case_selection_changed"
+        ) is False
+        and (blend_result or {}).get("artifact_type")
+        == "prospective_hydrogen_blend_dispersion_trend_holdout"
+        and blend_source.get("doi") == "10.17632/x8zkds4fyn.2"
+        and blend_source.get("license") == "CC BY 4.0"
+        and blend_source.get("raw_archive_committed") is False
+        and len(str(blend_source.get("archive_sha256") or "")) == 64
+        and (blend_result or {}).get("protocol_sha256")
+        == _sha256(blend_protocol_path)
+        and blend_execution.get("classification")
+        == "PROSPECTIVE_ENDPOINTS_POST_ACCESS_FORMAT_REPAIR"
+        and blend_execution.get("locked_module_byte_identical") is False
+        and blend_execution.get("endpoint_or_threshold_changed") is False
+        and blend_execution.get("case_selection_changed") is False
+        and blend_execution.get("format_amendment_sha256")
+        == _sha256(blend_amendment_path)
+        and set(blend_screens) == {"blend_fraction", "release_volume"}
+        and all(
+            screen.get("case_count") == 3
+            for screen in blend_screens.values()
+            if isinstance(screen, dict)
+        )
+        and blend_evaluation.get("joint_primary_screen_pass") is False
+        and (blend_result or {}).get("claim_supported") is False
+        and "does not validate absolute" in str(
+            (blend_result or {}).get("claim_boundary") or ""
+        )
+    )
+    gates.append(_gate(
+        "hydrogen_blend_dispersion_negative_result_integrity",
+        "PASS" if blend_integrity else "PENDING",
+        "A newly screened public hydrogen-blend dataset retains its failed frozen trend result and discloses the post-access format repair without outcome-specific rescue.",
+        "; ".join((
+            str(blend_protocol_path.relative_to(root)),
+            str(blend_amendment_path.relative_to(root)),
+            str(blend_result_path.relative_to(root)),
+        )),
+        "Frozen cases and thresholds, verified public DOI/archive hash, both three-case screens, unchanged endpoints, raw archive excluded and failed result retained.",
+        {
+            "doi": blend_source.get("doi"),
+            "execution_classification": blend_execution.get("classification"),
+            "blend_fraction_screen": blend_screens.get("blend_fraction"),
+            "release_volume_screen": blend_screens.get("release_volume"),
+            "joint_primary_screen_pass": blend_evaluation.get(
+                "joint_primary_screen_pass"
+            ),
+            "claim_supported": (blend_result or {}).get("claim_supported"),
+            "claim_boundary": (blend_result or {}).get("claim_boundary"),
+        } if blend_result else "missing; hydrogen-blend holdout has not run",
+    ))
+
     reference_leak_detector_path = root / (
         "research/hydrogen_reference_leak_detector_result_2026_10_08.json"
     )
