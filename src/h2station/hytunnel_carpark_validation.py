@@ -179,7 +179,7 @@ def _load_hdf5_mat(path: Path, experiment: int) -> HyTunnelTrace:
         mfm = file["MFM"]
         vent = file["Vent"]
         tank_time = tank_pressure = tank_temperature = None
-        if "Tank" in file:
+        if "Tank" in file and {"time", "p", "T"}.issubset(file["Tank"].keys()):
             tank = file["Tank"]
             tank_time = _vector(_hdf5_numeric(tank, "time"), "Tank.time")
             tank_pressure = _vector(_hdf5_numeric(tank, "p"), "Tank.p")

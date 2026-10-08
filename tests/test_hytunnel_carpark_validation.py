@@ -87,6 +87,18 @@ def test_matlab_v73_hdf5_loader_dereferences_sensor_cells(tmp_path: Path):
     assert trace.mass_flow_time_s.shape == (361,)
 
 
+def test_hdf5_loader_treats_constant_flow_tank_group_as_optional(tmp_path: Path):
+    path = tmp_path / "Exp04.mat"
+    _synthetic_hdf5_mat(path)
+    with h5py.File(path, "a") as file:
+        del file["Tank/p"]
+        del file["Tank/T"]
+    trace = load_hytunnel_mat(path)
+    assert trace.experiment == 4
+    assert trace.tank_pressure_bar is None
+    assert trace.tank_temperature_c is None
+
+
 def test_evaluators_return_finite_metrics_without_time_shift_or_fit(tmp_path: Path):
     path = tmp_path / "Exp19.mat"
     _synthetic_mat(path)

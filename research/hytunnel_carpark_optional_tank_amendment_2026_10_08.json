@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "amended_at": "2026-10-08",
+  "status": "FROZEN_BEFORE_DISPERSION_RECOMPUTE",
+  "protocol_path": "research/hytunnel_carpark_holdout_protocol_2026_10_08.json",
+  "preceding_sampling_amendment": {
+    "path": "research/hytunnel_carpark_sampling_amendment_2026_10_08.json",
+    "sha256": "37b1b5b91d60537edeec047c216a9ee472f4028b8c447dac94a8e2c6f41ce3b2"
+  },
+  "trigger": {
+    "stage": "constant-flow MAT loading",
+    "observed_error": "Exp04-Exp16 contain a Tank group with time and unit fields but no Tank.p or Tank.T fields.",
+    "affected_cases": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+    "documentation_consistency": "The pre-access documentation states that Tank.p and Tank.T are additional fields for Exp17-Exp23, so they are not required for Exp04-Exp16 dispersion evaluation.",
+    "partial_result_artifact": {
+      "path": "research/hytunnel_carpark_holdout_partial_schema_failure_2026_10_08.json",
+      "sha256": "abda8534f4700f58a546990660fada2adaea85b1e585be9ea6033c8953167a11"
+    }
+  },
+  "format_only_change": "Populate optional tank arrays only when the HDF5 Tank group contains all three documented fields Tank.time, Tank.p and Tank.T. No dispersion calculation uses Tank fields.",
+  "scientific_rules_unchanged": {
+    "declared_cases": true,
+    "models": true,
+    "parameters": true,
+    "metrics": true,
+    "thresholds": true,
+    "aggregate_decisions": true,
+    "claim_boundaries": true
+  },
+  "updated_code": {
+    "module": {
+      "path": "src/h2station/hytunnel_carpark_validation.py",
+      "sha256": "785fbecfffbdaeb38c0d8cca0536d1448ff673c46f74cedfe7fae2541be1ab0a"
+    },
+    "runner": {
+      "path": "scripts/run_hytunnel_carpark_holdout.py",
+      "sha256": "07f30da0dc011e2cc219c01bc471e97bd7756dcaf67d443eef478313ecd262ef"
+    }
+  }
+}
