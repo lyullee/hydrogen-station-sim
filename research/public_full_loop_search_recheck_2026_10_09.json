@@ -138,6 +138,24 @@
       "observed_scope": "The paper describes station storage, delivery, compression and dispensing records and real-world operation.",
       "raw_time_series_publicly_retrieved": false,
       "eligible_use": "operational envelope and reporting-schema request lead; not a new raw holdout"
+    },
+    {
+      "id": "uci_early_years_hrs_operation",
+      "doi": "10.1016/j.ijhydene.2020.08.251",
+      "url": "https://doi.org/10.1016/j.ijhydene.2020.08.251",
+      "role": "published real-station operational data study",
+      "observed_scope": "The study describes a public UCI hydrogen refueling station data set with fueling time, dispensed amount, hose and storage pressures/temperatures, ambient conditions and energy-related measurements.",
+      "raw_time_series_publicly_retrieved": false,
+      "eligible_use": "custodian request and schema comparison; the raw synchronized station-to-vehicle archive was not located"
+    },
+    {
+      "id": "csic_hrs_operational_strategy_supplement",
+      "url": "https://datos.gob.es/en/catalogo/e05066901-supplementary-material-for-modelling-and-operation-strategy-approaches-for-on-site-hydrogen-refuelling-stations-dataset",
+      "license": "CC BY-NC-ND 4.0",
+      "role": "public HRS operational-strategy supplement",
+      "observed_scope": "The package contains one-year model and finite-state-machine operating-strategy results for an on-site HRS, including demand and storage/compression/dispensing context.",
+      "raw_time_series_publicly_retrieved": true,
+      "eligible_use": "operational-strategy and state-machine plausibility; simulation supplement, not measured full-loop validation"
     }
   ],
   "gate_impact": "full_loop_external_validation_remains_open",
