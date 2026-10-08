@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-09",
+  "artifact_type": "public_full_loop_search_recheck",
+  "status": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+  "search_scope": [
+    "official Zenodo hydrogen measurement records",
+    "official publisher and DOI landing pages",
+    "public GitHub repositories with hydrogen pressure-flow traces"
+  ],
+  "eligibility_rule": {
+    "required": [
+      "synchronized station or dispenser pressure",
+      "vehicle or receiving-vessel pressure and temperature",
+      "mass flow or transferred mass",
+      "common time base",
+      "initial conditions, units and reuse terms"
+    ],
+    "excluded_substitutes": [
+      "aggregate operating KPIs without synchronized rows",
+      "sampling-system traces without a vehicle or receiving-tank mapping",
+      "metal-hydride laboratory rig data",
+      "simulator-generated traces"
+    ]
+  },
+  "candidates": [
+    {
+      "id": "methytrucks_group_b_hysam_zenodo",
+      "doi": "10.5281/zenodo.20590842",
+      "url": "https://zenodo.org/records/20590842",
+      "role": "public component measurement",
+      "decision": "EXCLUDE_FROM_FULL_LOOP",
+      "reason": "Temperature/pressure files describe a sampling system; no vehicle receiving-tank and station-controller channel contract was supplied."
+    },
+    {
+      "id": "methytrucks_group_a_npl_zenodo",
+      "doi": "10.5281/zenodo.20590761",
+      "url": "https://zenodo.org/records/20590761",
+      "role": "public component measurement",
+      "decision": "EXCLUDE_FROM_FULL_LOOP",
+      "reason": "Public sampling-system measurements improve component diagnostics but do not provide a synchronized station-to-vehicle holdout."
+    },
+    {
+      "id": "hsr_rig_project_github",
+      "url": "https://github.com/gadoseb/HSR-Rig-Project",
+      "role": "public laboratory pressure-flow trace",
+      "decision": "EXCLUDE_FROM_HRS_VALIDATION",
+      "reason": "The repository describes a metal-hydride storage-reaction rig rather than a hydrogen refueling station or vehicle fill."
+    },
+    {
+      "id": "cal_state_la_multi_year_hrs",
+      "doi": "10.1016/j.ijhydene.2023.04.084",
+      "url": "https://doi.org/10.1016/j.ijhydene.2023.04.084",
+      "role": "high-value real-station data request lead",
+      "decision": "REQUEST_CUSTODIAN_DATA",
+      "reason": "The publication reports multi-year real-station operation and aggregate fueling information, but no downloadable synchronized raw logger archive was located."
+    }
+  ],
+  "gate_impact": "full_loop_external_validation_remains_open",
+  "next_action": "Request a de-identified, rights-cleared, pre-freeze station-to-vehicle logger cohort from an identified custodian; retain this search result as a negative public-access decision.",
+  "claim_boundary": "This artifact documents a current public search and exclusion decision. It adds no numerical validation, does not alter any frozen holdout, and does not support a safety or IJHE full-loop claim."
+}
