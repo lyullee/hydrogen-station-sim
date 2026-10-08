@@ -1,5 +1,21 @@
 # Development Progress
 
+## 2026-10-09 - Local HRS corpus inventory and validation boundary
+
+- Rechecked the local collections and recorded a privacy-bounded corpus
+  inventory in `research/local_hrs_corpus_inventory_2026_10_09.json` and its
+  companion report.
+- Confirmed that the owner-controlled station bundle is substantial: 33 files,
+  4.749 GiB and 56,854,143 rows after duplicate exclusion. It supports
+  station-side pressure, cascade, recharge and equipment-state checks.
+- Counted 255 locally cached public machine-readable validation files totaling
+  about 3.509 GB (decimal), including tank/refueling experiments and separate
+  release, ignition, dispersion, detector and ventilation evidence.
+- Kept the complete station-to-vehicle gate closed because no single local
+  cohort has an independently attested common time base for vehicle/receptacle
+  pressure, temperature, delivered mass or SOC together with station controls.
+- Added regression checks for the inventory; the focused seven-test run passed.
+
 ## 2026-10-09 - Role-level attestation for the local station archive
 
 - Rechecked the owner-controlled archive and preserved the privacy-bounded
