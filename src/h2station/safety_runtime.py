@@ -46,6 +46,8 @@ class FaultEvent:
     rate_s: float = 30.0
     external_temperature_k: float | None = None
     heat_transfer_ua_w_k: float = 0.0
+    release_boundary: str = "free_orifice"
+    maximum_release_mass_flow_kg_s: float | None = None
 
     def __post_init__(self) -> None:
         if not self.event_id or not self.target:
@@ -63,11 +65,22 @@ class FaultEvent:
                 raise ValueError("Enclosure volume must be positive")
             if self.enclosure_vent_area_m2 is not None and self.enclosure_vent_area_m2 <= 0.0:
                 raise ValueError("Enclosure vent area must be positive")
+            if self.release_boundary not in {"free_orifice", "flow_limited_line"}:
+                raise ValueError("Unknown hydrogen release boundary")
+            if self.release_boundary == "flow_limited_line" and (
+                self.maximum_release_mass_flow_kg_s is None
+                or self.maximum_release_mass_flow_kg_s <= 0.0
+            ):
+                raise ValueError(
+                    "Flow-limited hydrogen releases require a positive maximum mass flow"
+                )
         elif (
             self.indoor
             or self.ignited
             or self.enclosure_volume_m3 is not None
             or self.enclosure_vent_area_m2 is not None
+            or self.release_boundary != "free_orifice"
+            or self.maximum_release_mass_flow_kg_s is not None
         ):
             raise ValueError("Indoor ignition and enclosure geometry apply only to hydrogen leaks")
         if self.rate_s <= 0.0:

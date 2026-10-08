@@ -157,6 +157,12 @@ def assess_sensor_cases(
                 release_id=str(result.get("release_id") or f"sensor-{node_id}"),
                 component_id=str(component), location=str(node_id), start_time_s=0.0,
                 orifice_diameter_m=orifice_m, discharge_coefficient=coefficient,
+                release_boundary=str(
+                    (release or {}).get("release_source_boundary") or "free_orifice"
+                ),
+                maximum_mass_flow_kg_s=(release or {}).get(
+                    "process_flow_limit_kg_s"
+                ),
             )
             source = LeakSourceState(source_pressure_pa, source_temperature_k)
             estimated_flow = leak_model.mass_flow_kg_s(scenario, source)
@@ -175,6 +181,8 @@ def assess_sensor_cases(
                 release_angle_rad=0.0, release_height_m=1.0, indoor=False,
                 annual_frequency_per_year=None, immediate_ignition_probability=None,
                 delayed_ignition_probability=None,
+                release_boundary=scenario.release_boundary,
+                process_flow_limit_kg_s=scenario.maximum_mass_flow_kg_s,
             )
             consequence = dict(backend.evaluate_release(request))
             consequence.update(consequence_risk_summary(consequence))
@@ -184,6 +192,10 @@ def assess_sensor_cases(
                           maximum_heat_flux_w_m2=consequence.get("maximum_heat_flux_w_m2"),
                           maximum_overpressure_pa=consequence.get("maximum_overpressure_pa"),
                           sampled_effect_radius_m=radius if radius and radius > 0 else None,
+                          sampled_thermal_radius_m=consequence.get("sampled_thermal_radius_m"),
+                          sampled_overpressure_radius_m=consequence.get("sampled_overpressure_radius_m"),
+                          thermal_range_status=consequence.get("thermal_range_status"),
+                          overpressure_range_status=consequence.get("overpressure_range_status"),
                           flammable_contour_volume_fraction=consequence.get("flammable_contour_volume_fraction"),
                           flammable_plume_streamline_distance_m=consequence.get("flammable_plume_streamline_distance_m"),
                           flammable_plume_x_extent_m=consequence.get("flammable_plume_x_extent_m"),
@@ -193,6 +205,8 @@ def assess_sensor_cases(
                           mass_flow_override_status=consequence.get("mass_flow_override_status"),
                           mass_flow_override_ratio=consequence.get("mass_flow_override_ratio"),
                           mass_flow_override_claim_limit=consequence.get("mass_flow_override_claim_limit"),
+                          release_source_boundary=consequence.get("release_source_boundary"),
+                          process_flow_limit_kg_s=consequence.get("process_flow_limit_kg_s"),
                           sampled_max_distance_m=consequence.get("sampled_max_distance_m"),
                           sampled_next_distance_m=consequence.get("sampled_next_distance_m"),
                           observation_point_count=consequence.get("observation_point_count"),

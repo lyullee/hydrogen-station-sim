@@ -52,6 +52,9 @@ def build(root: Path) -> dict[str, Any]:
     h2safe_orientation_path = root / "research/h2safe_orientation_development_2026_10_08.json"
     hydelta_spatial_eligibility_path = root / "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json"
     sandia_spatial_path = root / "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json"
+    ignited_pressure_path = root / "research/usn_17934047_ignited_pressure_peaking_result_2026_10_08.json"
+    qra_comparison_path = root / "research/qra_multimethod_comparison_2026_10_08.json"
+    runtime_qra_path = root / "research/runtime_qra_envelope_comparison_2026_10_08.json"
     audit = load_json(audit_path)
     hiad = load_json(hiad_path)
     tracker = load_json(tracker_path)
@@ -67,6 +70,9 @@ def build(root: Path) -> dict[str, Any]:
     h2safe_orientation = load_json(h2safe_orientation_path)
     hydelta_spatial_eligibility = load_json(hydelta_spatial_eligibility_path)
     sandia_spatial = load_json(sandia_spatial_path)
+    ignited_pressure = load_json(ignited_pressure_path)
+    qra_comparison = load_json(qra_comparison_path)
+    runtime_qra = load_json(runtime_qra_path)
 
     status_by_id = {g["id"]: g for g in audit.get("gates", [])}
     gate = lambda gate_id: status_by_id.get(gate_id, {"status": "MISSING"})
@@ -199,6 +205,24 @@ def build(root: Path) -> dict[str, Any]:
                 },
                 "claim_boundary": h2safe_spatial["claim_boundary"],
             },
+            "consequence_component_evidence": {
+                "ignited_confined_pressure_peaking": {
+                    "decision": ignited_pressure.get("status"),
+                    "primary_pass_count": ignited_pressure.get("aggregate", {}).get("primary_pass_count"),
+                    "case_count": ignited_pressure.get("aggregate", {}).get("eligible_case_count"),
+                    "claim_boundary": ignited_pressure.get("claim_boundary"),
+                },
+                "qra_multimethod_context": {
+                    "method_count": qra_comparison.get("selection", {}).get("method_count"),
+                    "retained_row_count": qra_comparison.get("aggregate", {}).get("observation_count"),
+                    "maximum_method_ratio": qra_comparison.get("aggregate", {}).get("matched_input_spread_ratio", {}).get("maximum"),
+                    "runtime_thermal_within_envelope": runtime_qra.get("aggregate", {}).get("thermal_within_method_envelope_count"),
+                    "runtime_overpressure_within_envelope": runtime_qra.get("aggregate", {}).get("overpressure_within_method_envelope_count"),
+                    "runtime_case_count": runtime_qra.get("aggregate", {}).get("case_count"),
+                    "experimental_validation": False,
+                    "automatic_calibration": False,
+                },
+            },
             "real_station_candidate": {
                 "status": "PUBLIC_ROWS_POST_ACCESS_MAPPING_INCOMPLETE",
                 "evidence": [
@@ -287,16 +311,20 @@ def build(root: Path) -> dict[str, Any]:
             {
                 "id": "consequence_model_external_validation",
                 "status": "FAIL_OR_PENDING",
-                "why_blocked": "Several release/blowdown datasets are useful component tests, but the retained joint screens do not meet the predeclared threshold or lack an observable decay feature.",
+                "why_blocked": "The prospectively frozen ignited confined pressure-peaking component passed 27/27 primary screens, but that narrow result does not validate outdoor jet-fire or blast distance. The seven-method DATA3632 simulation comparison retained 211 rows and shows material method/source-boundary spread: the current runtime lies inside 2/4 thermal envelopes and 0/3 comparable overpressure envelopes. The dispenser mass-flow boundary differs by about 22-fold. Because DATA3632 is a simulation ensemble rather than experimental truth, these findings diagnose the boundary but cannot close the station consequence gate or authorize post-outcome tuning.",
                 "evidence": [
                     "manuscript/ijhe_readiness_audit.json",
                     "research/preslhy_blowdown_validation.json",
                     "research/proust_independent_release_validation.json",
                     "research/schefer_transient_release_validation.json",
                     "research/grune_2014_pressure_decay_validation.json",
+                    "research/usn_17934047_ignited_pressure_peaking_result_2026_10_08.json",
+                    "research/qra_multimethod_comparison_protocol_2026_10_08.json",
+                    "research/qra_multimethod_comparison_2026_10_08.json",
+                    "research/runtime_qra_envelope_comparison_2026_10_08.json",
                 ],
-                "unblock_criterion": "Either improve the declared model against a pre-access untouched component holdout without post-outcome tuning, or narrow the manuscript claim to the observed component-test scope.",
-                "next_action": "Keep all failures and confidence intervals in the manuscript; do not convert a partial component screen into a station consequence claim.",
+                "unblock_criterion": "Pass a pre-access frozen, rights-cleared physical outdoor jet-fire/overpressure holdout with matched pressure, temperature, aperture or measured mass flow and weather, or narrow every claim to the already passed ignited confined pressure-peaking component.",
+                "next_action": "Classify free-orifice and flow-limited line releases explicitly before any calibration; acquire a measured outdoor consequence holdout and keep the simulation-method ensemble as uncertainty context only.",
             },
             {
                 "id": "h2safe_spatial_detector_transfer",
@@ -362,6 +390,9 @@ def build(root: Path) -> dict[str, Any]:
                 hydelta_spatial_eligibility_path
             ),
             "sandia_spatial_diagnostic_sha256": sha256(sandia_spatial_path),
+            "ignited_pressure_peaking_sha256": sha256(ignited_pressure_path),
+            "qra_multimethod_comparison_sha256": sha256(qra_comparison_path),
+            "runtime_qra_comparison_sha256": sha256(runtime_qra_path),
             "candidate_route_count": len(tracker.get("candidates") or []),
             "public_full_loop_search_candidate_count": candidate_count(search),
             "latest_public_full_loop_search_candidate_count": candidate_count(latest_search),

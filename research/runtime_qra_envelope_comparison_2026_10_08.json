@@ -1,0 +1,419 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-08T04:11:49.417277+00:00",
+  "status": "completed_postaccess_runtime_to_qra_method_envelope_diagnostic",
+  "source": {
+    "doi": "10.34810/DATA3632",
+    "version": "2.0",
+    "comparison_artifact": "research/qra_multimethod_comparison_2026_10_08.json"
+  },
+  "runtime": {
+    "backend": "HyRAM+ 6.1 native",
+    "thermal_threshold_w_m2": 5000.0,
+    "overpressure_threshold_pa": 5000.0,
+    "discharge_coefficient": 0.8,
+    "observation_locations_m": [
+      [
+        0.5,
+        0.0,
+        1.5
+      ],
+      [
+        1.0,
+        0.0,
+        1.5
+      ],
+      [
+        1.5,
+        0.0,
+        1.5
+      ],
+      [
+        2.0,
+        0.0,
+        1.5
+      ],
+      [
+        2.5,
+        0.0,
+        1.5
+      ],
+      [
+        3.0,
+        0.0,
+        1.5
+      ],
+      [
+        3.5,
+        0.0,
+        1.5
+      ],
+      [
+        4.0,
+        0.0,
+        1.5
+      ],
+      [
+        4.5,
+        0.0,
+        1.5
+      ],
+      [
+        5.0,
+        0.0,
+        1.5
+      ],
+      [
+        5.5,
+        0.0,
+        1.5
+      ],
+      [
+        6.0,
+        0.0,
+        1.5
+      ],
+      [
+        6.5,
+        0.0,
+        1.5
+      ],
+      [
+        7.0,
+        0.0,
+        1.5
+      ],
+      [
+        7.5,
+        0.0,
+        1.5
+      ],
+      [
+        8.0,
+        0.0,
+        1.5
+      ],
+      [
+        8.5,
+        0.0,
+        1.5
+      ],
+      [
+        9.0,
+        0.0,
+        1.5
+      ],
+      [
+        9.5,
+        0.0,
+        1.5
+      ],
+      [
+        10.0,
+        0.0,
+        1.5
+      ],
+      [
+        12.0,
+        0.0,
+        1.5
+      ],
+      [
+        15.0,
+        0.0,
+        1.5
+      ],
+      [
+        20.0,
+        0.0,
+        1.5
+      ],
+      [
+        25.0,
+        0.0,
+        1.5
+      ],
+      [
+        30.0,
+        0.0,
+        1.5
+      ],
+      [
+        40.0,
+        0.0,
+        1.5
+      ],
+      [
+        50.0,
+        0.0,
+        1.5
+      ]
+    ]
+  },
+  "cases": [
+    {
+      "equipment": "Supply",
+      "input": {
+        "category": "explosion",
+        "equipment": "Supply",
+        "pressure_bar": 199.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "1.5F"
+      },
+      "benchmark": {
+        "thermal_5_kw_m2_distance_m": {
+          "count": 8,
+          "minimum": 7.688829090044032,
+          "median": 21.924157224186082,
+          "maximum": 25.44985795526936
+        },
+        "overpressure_5_kpa_distance_m": {
+          "count": 7,
+          "minimum": 43.95683431973745,
+          "median": 43.9782443481198,
+          "maximum": 61.876424437087245
+        },
+        "thermal_method_count": 6,
+        "overpressure_method_count": 6,
+        "jet_fire_mass_rate_kg_s": {
+          "count": 8,
+          "minimum": 0.06,
+          "median": 0.586119,
+          "maximum": 0.825418
+        }
+      },
+      "runtime": {
+        "input_mass_flow_kg_s": 0.7707775727774584,
+        "modeled_mass_flow_kg_s": 0.7707102755178316,
+        "mass_flow_override_status": "OVERRIDE_RETAINED",
+        "thermal_radius_5_kw_m2_m": 20.0,
+        "overpressure_radius_5_kpa_m": 20.0,
+        "combined_radius_m": 20.0,
+        "thermal_range_status": "WITHIN_SAMPLED_POINTS",
+        "overpressure_range_status": "WITHIN_SAMPLED_POINTS",
+        "sampled_max_distance_m": 50.0,
+        "visible_flame_length_m": 16.29230087580751
+      },
+      "comparison": {
+        "thermal": {
+          "within_method_envelope": true,
+          "ratio_to_method_median": 0.9122357496112367,
+          "below_envelope_by_m": 0.0,
+          "above_envelope_by_m": 0.0
+        },
+        "mass_rate": {
+          "within_method_envelope": true,
+          "ratio_to_method_median": 1.314938221620237,
+          "below_envelope_by_m": 0.0,
+          "above_envelope_by_m": 0.0
+        },
+        "overpressure": {
+          "within_method_envelope": false,
+          "ratio_to_method_median": 0.45477031419638875,
+          "below_envelope_by_m": 23.956834319737453,
+          "above_envelope_by_m": 0.0
+        }
+      }
+    },
+    {
+      "equipment": "Compressor",
+      "input": {
+        "category": "explosion",
+        "equipment": "Compressor",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "1.5F"
+      },
+      "benchmark": {
+        "thermal_5_kw_m2_distance_m": {
+          "count": 5,
+          "minimum": 21.966864640594853,
+          "median": 21.966864640594853,
+          "maximum": 35.14230611966324
+        },
+        "overpressure_5_kpa_distance_m": {
+          "count": 5,
+          "minimum": 43.952821381638245,
+          "median": 43.952821381638245,
+          "maximum": 84.78029691429626
+        },
+        "thermal_method_count": 4,
+        "overpressure_method_count": 4,
+        "jet_fire_mass_rate_kg_s": {
+          "count": 5,
+          "minimum": 0.591441,
+          "median": 0.591441,
+          "maximum": 1.77309
+        }
+      },
+      "runtime": {
+        "input_mass_flow_kg_s": 1.6860556447390231,
+        "modeled_mass_flow_kg_s": 1.6859373460186704,
+        "mass_flow_override_status": "OVERRIDE_RETAINED",
+        "thermal_radius_5_kw_m2_m": 30.0,
+        "overpressure_radius_5_kpa_m": 30.0,
+        "combined_radius_m": 30.0,
+        "thermal_range_status": "WITHIN_SAMPLED_POINTS",
+        "overpressure_range_status": "WITHIN_SAMPLED_POINTS",
+        "sampled_max_distance_m": 50.0,
+        "visible_flame_length_m": 23.631947420485655
+      },
+      "comparison": {
+        "thermal": {
+          "within_method_envelope": true,
+          "ratio_to_method_median": 1.3656933062973349,
+          "below_envelope_by_m": 0.0,
+          "above_envelope_by_m": 0.0
+        },
+        "mass_rate": {
+          "within_method_envelope": true,
+          "ratio_to_method_median": 2.8505587979505487,
+          "below_envelope_by_m": 0.0,
+          "above_envelope_by_m": 0.0
+        },
+        "overpressure": {
+          "within_method_envelope": false,
+          "ratio_to_method_median": 0.6825500401785997,
+          "below_envelope_by_m": 13.952821381638245,
+          "above_envelope_by_m": 0.0
+        }
+      }
+    },
+    {
+      "equipment": "Buffer",
+      "input": {
+        "category": "explosion",
+        "equipment": "Buffer",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "1.5F"
+      },
+      "benchmark": {
+        "thermal_5_kw_m2_distance_m": {
+          "count": 5,
+          "minimum": 30.24280549640191,
+          "median": 35.08729096691677,
+          "maximum": 35.14230611966324
+        },
+        "overpressure_5_kpa_distance_m": {
+          "count": 5,
+          "minimum": 65.5116562870884,
+          "median": 84.7405423684166,
+          "maximum": 84.78073961915841
+        },
+        "thermal_method_count": 5,
+        "overpressure_method_count": 5,
+        "jet_fire_mass_rate_kg_s": {
+          "count": 5,
+          "minimum": 1.25087,
+          "median": 1.77309,
+          "maximum": 1.77309
+        }
+      },
+      "runtime": {
+        "input_mass_flow_kg_s": 1.6860556447390231,
+        "modeled_mass_flow_kg_s": 1.6859373460186704,
+        "mass_flow_override_status": "OVERRIDE_RETAINED",
+        "thermal_radius_5_kw_m2_m": 30.0,
+        "overpressure_radius_5_kpa_m": 30.0,
+        "combined_radius_m": 30.0,
+        "thermal_range_status": "WITHIN_SAMPLED_POINTS",
+        "overpressure_range_status": "WITHIN_SAMPLED_POINTS",
+        "sampled_max_distance_m": 50.0,
+        "visible_flame_length_m": 23.631947420485655
+      },
+      "comparison": {
+        "thermal": {
+          "within_method_envelope": false,
+          "ratio_to_method_median": 0.8550104374910708,
+          "below_envelope_by_m": 0.2428054964019104,
+          "above_envelope_by_m": 0.0
+        },
+        "mass_rate": {
+          "within_method_envelope": true,
+          "ratio_to_method_median": 0.9508470218763122,
+          "below_envelope_by_m": 0.0,
+          "above_envelope_by_m": 0.0
+        },
+        "overpressure": {
+          "within_method_envelope": false,
+          "ratio_to_method_median": 0.3540218077620095,
+          "below_envelope_by_m": 35.5116562870884,
+          "above_envelope_by_m": 0.0
+        }
+      }
+    },
+    {
+      "equipment": "Dispenser",
+      "input": {
+        "category": "jet_fire",
+        "equipment": "Dispenser",
+        "pressure_bar": 349.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "1.5F"
+      },
+      "benchmark": {
+        "thermal_5_kw_m2_distance_m": {
+          "count": 6,
+          "minimum": 7.666794560859458,
+          "median": 7.666794560859458,
+          "maximum": 7.67219406331479
+        },
+        "overpressure_5_kpa_distance_m": null,
+        "thermal_method_count": 6,
+        "overpressure_method_count": 0,
+        "jet_fire_mass_rate_kg_s": {
+          "count": 6,
+          "minimum": 0.06,
+          "median": 0.06,
+          "maximum": 0.06
+        }
+      },
+      "runtime": {
+        "input_mass_flow_kg_s": 1.3271418659999787,
+        "modeled_mass_flow_kg_s": 1.327059411323446,
+        "mass_flow_override_status": "OVERRIDE_RETAINED",
+        "thermal_radius_5_kw_m2_m": 25.0,
+        "overpressure_radius_5_kpa_m": 25.0,
+        "combined_radius_m": 25.0,
+        "thermal_range_status": "WITHIN_SAMPLED_POINTS",
+        "overpressure_range_status": "WITHIN_SAMPLED_POINTS",
+        "sampled_max_distance_m": 50.0,
+        "visible_flame_length_m": 21.126259674927727
+      },
+      "comparison": {
+        "thermal": {
+          "within_method_envelope": false,
+          "ratio_to_method_median": 3.260815168783845,
+          "below_envelope_by_m": 0.0,
+          "above_envelope_by_m": 17.32780593668521
+        },
+        "mass_rate": {
+          "within_method_envelope": false,
+          "ratio_to_method_median": 22.117656855390766,
+          "below_envelope_by_m": 0.0,
+          "above_envelope_by_m": 1.267059411323446
+        },
+        "overpressure": null
+      }
+    }
+  ],
+  "aggregate": {
+    "case_count": 4,
+    "thermal_within_method_envelope_count": 2,
+    "overpressure_within_method_envelope_count": 0,
+    "overpressure_comparable_case_count": 3
+  },
+  "limitations": [
+    "DATA3632 is a simulation ensemble, not experimental truth.",
+    "PHAST weather category 1.5/F is selected in the benchmark; the runtime adapter does not reproduce that weather category.",
+    "The runtime uses a 0.8 discharge coefficient; source-method discharge coefficients are not harmonised in the exported rows.",
+    "Runtime distances are discrete sampled extents, while DATA3632 5-unit distances are log-log interpolations between direct exported endpoints."
+  ],
+  "model_action": "No automatic calibration or runtime parameter change is permitted from this diagnostic.",
+  "claim_boundary": "This comparison detects material disagreement with an international QRA method envelope. It does not determine which model is physically correct and is not experimental validation, a safety distance or certification evidence."
+}

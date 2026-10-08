@@ -30,6 +30,17 @@ streams are not ignited ad hoc, the reported 34 vol% nitrogen boundary remains
 specific to the tested burner, and the report is not treated as release-model
 or site-distance validation.
 
+The open seven-method DATA3632 HRS QRA archive is retained as a post-access
+simulation-to-simulation diagnostic. The fixed 46-file audit keeps 211 rows in
+46 matched input groups. The runtime is inside 2/4 thermal method envelopes and
+0/3 comparable overpressure envelopes; the dispenser comparison also exposes a
+1.327 versus 0.060 kg/s source-boundary difference. This motivated an explicit
+`free_orifice` versus `flow_limited_line` runtime boundary, not coefficient
+tuning. The native bridge preserves an active flow limit through an analytic
+area-equivalent consequence orifice and records both physical and equivalent
+diameters; this is an approximation rather than experimental validation.
+DATA3632 cannot establish a site safety distance.
+
 The complete June 2026 MetHyTrucks public release has now been ingested across
 all three sampling-system groups: 15 CC BY 4.0 workbooks, 58,440 synchronized
 0.5 s samples and verified Zenodo MD5/size metadata. Eighteen transfer sessions

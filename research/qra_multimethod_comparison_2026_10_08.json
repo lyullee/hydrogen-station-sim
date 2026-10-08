@@ -1,0 +1,2215 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-08T04:11:46.269866+00:00",
+  "status": "completed_postaccess_descriptive_multimethod_comparison",
+  "source": {
+    "doi": "10.34810/DATA3632",
+    "version": "2.0",
+    "license": "CC BY 4.0"
+  },
+  "protocol": "research/qra_multimethod_comparison_protocol_2026_10_08.json",
+  "selection": {
+    "file_count": 46,
+    "method_count": 7,
+    "equipment": [
+      "Buffer",
+      "Compressor",
+      "Dispenser",
+      "Supply"
+    ],
+    "categories": [
+      "explosion",
+      "jet_fire"
+    ]
+  },
+  "files": [
+    {
+      "file_id": 515912,
+      "method": "M1",
+      "country": "Canada",
+      "equipment": "Compressor",
+      "category": "explosion",
+      "bytes": 3124,
+      "sha256": "fe0d36cb61c25c62873a52bfeb2633d1cb56c60e363f1453fbb8781dc77c4721",
+      "row_count": 4
+    },
+    {
+      "file_id": 515952,
+      "method": "M1",
+      "country": "Canada",
+      "equipment": "Supply",
+      "category": "explosion",
+      "bytes": 2417,
+      "sha256": "e0d1c869f893af4b75d97332011d0566ae04adab8fe171216a1c68d92d3e3718",
+      "row_count": 2
+    },
+    {
+      "file_id": 516070,
+      "method": "M2",
+      "country": "China",
+      "equipment": "Buffer",
+      "category": "explosion",
+      "bytes": 3870,
+      "sha256": "62f827a43804279eb4789f20f7e7181687bf88cf6b14a6796e33c9162701f9e8",
+      "row_count": 6
+    },
+    {
+      "file_id": 515968,
+      "method": "M2",
+      "country": "China",
+      "equipment": "Compressor",
+      "category": "explosion",
+      "bytes": 3942,
+      "sha256": "8d48b3d371f1e86e998af2f9d34429a6bd25e474a6bb0cdbddb3a23630146b46",
+      "row_count": 6
+    },
+    {
+      "file_id": 516055,
+      "method": "M2",
+      "country": "China",
+      "equipment": "Supply",
+      "category": "explosion",
+      "bytes": 4976,
+      "sha256": "9912af6172ae4cadb83b0daba0aa3987d03c9621f97436e04b2aff65bebd92b4",
+      "row_count": 9
+    },
+    {
+      "file_id": 515972,
+      "method": "M3",
+      "country": "Japan",
+      "equipment": "Buffer",
+      "category": "explosion",
+      "bytes": 2413,
+      "sha256": "9a5e13415a362e8e4a695c8089f2bd72abd72a5dca17cd839b5c50674d193410",
+      "row_count": 2
+    },
+    {
+      "file_id": 515923,
+      "method": "M3",
+      "country": "Japan",
+      "equipment": "Compressor",
+      "category": "explosion",
+      "bytes": 2435,
+      "sha256": "3ec0b2b6e372cdfc85476783b5c6ea1506a74f35407b5ac0f22185c7f163dabc",
+      "row_count": 2
+    },
+    {
+      "file_id": 515932,
+      "method": "M3",
+      "country": "Japan",
+      "equipment": "Dispenser",
+      "category": "explosion",
+      "bytes": 2088,
+      "sha256": "4bcf84e14b173532d918fa8ad4b8458b66af58be2575da7e9ed3fd9e743006e3",
+      "row_count": 1
+    },
+    {
+      "file_id": 515937,
+      "method": "M3",
+      "country": "Japan",
+      "equipment": "Supply",
+      "category": "explosion",
+      "bytes": 2079,
+      "sha256": "86c7d064f7e37f0eedcd2b65095781804537f2d59d959227974933abf3ea061c",
+      "row_count": 1
+    },
+    {
+      "file_id": 516071,
+      "method": "M4",
+      "country": "Korea",
+      "equipment": "Buffer",
+      "category": "explosion",
+      "bytes": 2782,
+      "sha256": "f63df14b828dede971ae455613b5deab9ae5ea1c1c7541ee73353820ad63dce0",
+      "row_count": 3
+    },
+    {
+      "file_id": 515934,
+      "method": "M4",
+      "country": "Korea",
+      "equipment": "Supply",
+      "category": "explosion",
+      "bytes": 2789,
+      "sha256": "c7216ddeb8bf2c702e109bba835e865fdfd11ddbac90e4243833dff37d99c68d",
+      "row_count": 3
+    },
+    {
+      "file_id": 515892,
+      "method": "M5",
+      "country": "Netherlands",
+      "equipment": "Buffer",
+      "category": "explosion",
+      "bytes": 4977,
+      "sha256": "ca57ddf86e2fdce3d9198875df1c48247a1a72cced8242784e860180084e743f",
+      "row_count": 9
+    },
+    {
+      "file_id": 516009,
+      "method": "M5",
+      "country": "Netherlands",
+      "equipment": "Compressor",
+      "category": "explosion",
+      "bytes": 2834,
+      "sha256": "a5bd1bbb5f72f69925cbe212df5860f2597ba348c979cbdf3530b2eed798871a",
+      "row_count": 3
+    },
+    {
+      "file_id": 516038,
+      "method": "M5",
+      "country": "Netherlands",
+      "equipment": "Supply",
+      "category": "explosion",
+      "bytes": 3944,
+      "sha256": "9dd3a930fb8aef342337b96da50aca2dc55aa7de41306d6e6548c5578db95257",
+      "row_count": 6
+    },
+    {
+      "file_id": 516064,
+      "method": "M6",
+      "country": "Spain",
+      "equipment": "Buffer",
+      "category": "explosion",
+      "bytes": 3843,
+      "sha256": "d4b63a07b0790e8e9eb74666f650e631c1adca047386603d48bbeeb437f9532b",
+      "row_count": 6
+    },
+    {
+      "file_id": 516130,
+      "method": "M6",
+      "country": "Spain",
+      "equipment": "Compressor",
+      "category": "explosion",
+      "bytes": 2465,
+      "sha256": "09b1ec63676eed6b856f91cf099807925e64335ea69aa69af7af2361b1a1aaff",
+      "row_count": 2
+    },
+    {
+      "file_id": 515917,
+      "method": "M6",
+      "country": "Spain",
+      "equipment": "Supply",
+      "category": "explosion",
+      "bytes": 3851,
+      "sha256": "626f54f9b62f40087f1d4959f5c9eee164bda9080ed479e7bf639f5668633112",
+      "row_count": 6
+    },
+    {
+      "file_id": 515920,
+      "method": "M7",
+      "country": "USA",
+      "equipment": "Buffer",
+      "category": "explosion",
+      "bytes": 3105,
+      "sha256": "0ab87ce78dea24955601ffb9e7167bd8a36aa6e05b138ec2f590eac91cd6e80a",
+      "row_count": 4
+    },
+    {
+      "file_id": 515902,
+      "method": "M7",
+      "country": "USA",
+      "equipment": "Compressor",
+      "category": "explosion",
+      "bytes": 3150,
+      "sha256": "54c11defe824becf444676b186a3d02e16af48684f01c9a1018d86fb00259d81",
+      "row_count": 4
+    },
+    {
+      "file_id": 515927,
+      "method": "M7",
+      "country": "USA",
+      "equipment": "Dispenser",
+      "category": "explosion",
+      "bytes": 2095,
+      "sha256": "5df40ced01d8059e2aea8d368cd66cff8419938463e8c7cdfd3a14b4147ff88e",
+      "row_count": 1
+    },
+    {
+      "file_id": 515930,
+      "method": "M7",
+      "country": "USA",
+      "equipment": "Supply",
+      "category": "explosion",
+      "bytes": 2429,
+      "sha256": "091bc55b40953ad0c5f37145af9e239c4b38b02df1ad149fbffb561117a533eb",
+      "row_count": 2
+    },
+    {
+      "file_id": 515976,
+      "method": "M1",
+      "country": "Canada",
+      "equipment": "Compressor",
+      "category": "jet_fire",
+      "bytes": 3808,
+      "sha256": "63bb4bc1572ac65d0ac945f8193d8b79c2125a0fc3aafc455c806c38363a3950",
+      "row_count": 8
+    },
+    {
+      "file_id": 516139,
+      "method": "M1",
+      "country": "Canada",
+      "equipment": "Dispenser",
+      "category": "jet_fire",
+      "bytes": 1788,
+      "sha256": "e590b2bb0f6ef2cd71b30e04339069edc3b524afb266f7bc0807c5e54204fe36",
+      "row_count": 2
+    },
+    {
+      "file_id": 515985,
+      "method": "M1",
+      "country": "Canada",
+      "equipment": "Supply",
+      "category": "jet_fire",
+      "bytes": 4050,
+      "sha256": "e31fff57c95db849b2a7dad1840343ddee83c498790cdc839268b58abd86b2b5",
+      "row_count": 8
+    },
+    {
+      "file_id": 515983,
+      "method": "M2",
+      "country": "China",
+      "equipment": "Buffer",
+      "category": "jet_fire",
+      "bytes": 2168,
+      "sha256": "fc6c71785a6de794c06bbf159030ca9f05b14c999818d2903ccc8868595f0a61",
+      "row_count": 3
+    },
+    {
+      "file_id": 516021,
+      "method": "M2",
+      "country": "China",
+      "equipment": "Compressor",
+      "category": "jet_fire",
+      "bytes": 3126,
+      "sha256": "5d4b6f410d042b6d75a0eae1a511b3715703fec7a458492d60234becdc88f671",
+      "row_count": 6
+    },
+    {
+      "file_id": 516113,
+      "method": "M2",
+      "country": "China",
+      "equipment": "Dispenser",
+      "category": "jet_fire",
+      "bytes": 2162,
+      "sha256": "8f73b69c4ebd6a2a26b724077a0f069ba9c70f80dcb250d9c326acffc4675e2b",
+      "row_count": 3
+    },
+    {
+      "file_id": 515995,
+      "method": "M2",
+      "country": "China",
+      "equipment": "Supply",
+      "category": "jet_fire",
+      "bytes": 3108,
+      "sha256": "84764af91cd72834252fbe22ccac7be808f53740fbd6fe5d8d547221c430ef17",
+      "row_count": 6
+    },
+    {
+      "file_id": 516062,
+      "method": "M3",
+      "country": "Japan",
+      "equipment": "Buffer",
+      "category": "jet_fire",
+      "bytes": 3186,
+      "sha256": "92c7005ac0d3233d2b7fbbec45e4bb1d4e47394a0816163aac206dbe91067ede",
+      "row_count": 5
+    },
+    {
+      "file_id": 515990,
+      "method": "M3",
+      "country": "Japan",
+      "equipment": "Compressor",
+      "category": "jet_fire",
+      "bytes": 3206,
+      "sha256": "1b52e28fb88adf5d7fd131ab417d4af337d625f49d26bd725caa70544cdb1a87",
+      "row_count": 5
+    },
+    {
+      "file_id": 516015,
+      "method": "M3",
+      "country": "Japan",
+      "equipment": "Dispenser",
+      "category": "jet_fire",
+      "bytes": 3196,
+      "sha256": "9278c316cfe9a6bb10fe9f142f81a5cfc9bd41a65162c5ed8e2b87d116937ad9",
+      "row_count": 5
+    },
+    {
+      "file_id": 515973,
+      "method": "M3",
+      "country": "Japan",
+      "equipment": "Supply",
+      "category": "jet_fire",
+      "bytes": 3322,
+      "sha256": "fab89c45c4722ec38057b6246220b72cfcea4f16c16c068d234f5a58216527e7",
+      "row_count": 5
+    },
+    {
+      "file_id": 515987,
+      "method": "M4",
+      "country": "Korea",
+      "equipment": "Buffer",
+      "category": "jet_fire",
+      "bytes": 2128,
+      "sha256": "3ca45de8600a81dcfd9e39cef8c2391037c37a18caeea52216a38b30447b27b9",
+      "row_count": 3
+    },
+    {
+      "file_id": 516041,
+      "method": "M4",
+      "country": "Korea",
+      "equipment": "Supply",
+      "category": "jet_fire",
+      "bytes": 2131,
+      "sha256": "de6f08d45eed28ae17b091f81a50aae614fdeb2198024daa09a250a19ebfbc99",
+      "row_count": 3
+    },
+    {
+      "file_id": 516014,
+      "method": "M5",
+      "country": "Netherlands",
+      "equipment": "Buffer",
+      "category": "jet_fire",
+      "bytes": 3111,
+      "sha256": "eec0bd303425eae904c3722f5c3fb4d2902b36573813d0cfe9b0c00effb98336",
+      "row_count": 6
+    },
+    {
+      "file_id": 516149,
+      "method": "M5",
+      "country": "Netherlands",
+      "equipment": "Compressor",
+      "category": "jet_fire",
+      "bytes": 3129,
+      "sha256": "ea301b117bdfa83ccd84d76804e50f6cd83e8fc6959417b61290aac2b1dd4ac3",
+      "row_count": 6
+    },
+    {
+      "file_id": 516120,
+      "method": "M5",
+      "country": "Netherlands",
+      "equipment": "Dispenser",
+      "category": "jet_fire",
+      "bytes": 3081,
+      "sha256": "aa55f73b207934df55c75ccf40ea043d389c0f97bf3528c3ea88b49e8f4781f0",
+      "row_count": 6
+    },
+    {
+      "file_id": 516102,
+      "method": "M5",
+      "country": "Netherlands",
+      "equipment": "Supply",
+      "category": "jet_fire",
+      "bytes": 4144,
+      "sha256": "1eaa6407964204c6d8af260d25aa580c71b059d12858acacfc8af1d26e215472",
+      "row_count": 9
+    },
+    {
+      "file_id": 515994,
+      "method": "M6",
+      "country": "Spain",
+      "equipment": "Buffer",
+      "category": "jet_fire",
+      "bytes": 2438,
+      "sha256": "4db01daa20a270b2fae913fdab357ccb79aaf87b57ce9b97c9db39da7cfb6547",
+      "row_count": 4
+    },
+    {
+      "file_id": 515906,
+      "method": "M6",
+      "country": "Spain",
+      "equipment": "Compressor",
+      "category": "jet_fire",
+      "bytes": 2452,
+      "sha256": "090b327c94b24cecb7504d74d37dbbc119fbf40f5d6bd2f35d78abaa03b15ef3",
+      "row_count": 4
+    },
+    {
+      "file_id": 516087,
+      "method": "M6",
+      "country": "Spain",
+      "equipment": "Dispenser",
+      "category": "jet_fire",
+      "bytes": 2392,
+      "sha256": "0d41490bd5e479a4d3f45dc98f26a68fce7eba79e61af7796ce7ebe7d68e4924",
+      "row_count": 4
+    },
+    {
+      "file_id": 516077,
+      "method": "M6",
+      "country": "Spain",
+      "equipment": "Supply",
+      "category": "jet_fire",
+      "bytes": 2442,
+      "sha256": "198919f11847d96cf8ae40ababd76aa06314a1cbf54440d3deae2b85cd5bdd4f",
+      "row_count": 4
+    },
+    {
+      "file_id": 515888,
+      "method": "M7",
+      "country": "USA",
+      "equipment": "Buffer",
+      "category": "jet_fire",
+      "bytes": 2962,
+      "sha256": "4efca640cad16453f63ebab8f8afe19ef05982e99cced5c270830c61fc99e1b1",
+      "row_count": 6
+    },
+    {
+      "file_id": 516123,
+      "method": "M7",
+      "country": "USA",
+      "equipment": "Compressor",
+      "category": "jet_fire",
+      "bytes": 2986,
+      "sha256": "5b630c0ffda9e9f32d868633aa695d6ee2c2133ec36320201c6c8a029026d2f5",
+      "row_count": 6
+    },
+    {
+      "file_id": 515941,
+      "method": "M7",
+      "country": "USA",
+      "equipment": "Dispenser",
+      "category": "jet_fire",
+      "bytes": 2978,
+      "sha256": "7f4ddddf38a2ab264616c50aa58a19ccd1713199b976b94a5e60d2bf91ef8ad0",
+      "row_count": 6
+    },
+    {
+      "file_id": 516142,
+      "method": "M7",
+      "country": "USA",
+      "equipment": "Supply",
+      "category": "jet_fire",
+      "bytes": 2978,
+      "sha256": "bce04b8773ab15879d09db51d5b973f5344fca9c64e7a3a73360ef691ef37a47",
+      "row_count": 6
+    }
+  ],
+  "aggregate": {
+    "observation_count": 211,
+    "endpoint_summaries": {
+      "distance_2_068_kpa_m": {
+        "count": 82,
+        "minimum": 28.646,
+        "median": 64.0298,
+        "maximum": 307.551
+      },
+      "distance_13_79_kpa_m": {
+        "count": 82,
+        "minimum": 13.624,
+        "median": 28.557499999999997,
+        "maximum": 77.4364
+      },
+      "interpolated_distance_5_kpa_m": {
+        "count": 82,
+        "minimum": 20.27130730620664,
+        "median": 43.97609203013916,
+        "maximum": 161.82140458180683
+      },
+      "distance_4_kw_m2_m": {
+        "count": 125,
+        "minimum": 0.928963,
+        "median": 11.054,
+        "maximum": 37.1313
+      },
+      "distance_12_5_kw_m2_m": {
+        "count": 122,
+        "minimum": 1.09176,
+        "median": 8.53421,
+        "maximum": 28.0317
+      },
+      "interpolated_distance_5_kw_m2_m": {
+        "count": 122,
+        "minimum": 1.1478179374015625,
+        "median": 10.507900604840424,
+        "maximum": 35.14230611966324
+      },
+      "jet_fire_mass_rate_kg_s": {
+        "count": 129,
+        "minimum": 8.25418e-05,
+        "median": 0.110818,
+        "maximum": 1.77309
+      }
+    },
+    "matched_input_group_count": 46,
+    "matched_input_spread_ratio": {
+      "count": 45,
+      "minimum": 1.0,
+      "median": 1.0,
+      "maximum": 3.3099783669562113
+    }
+  },
+  "by_method": {
+    "M1": {
+      "row_count": 24,
+      "equipment": [
+        "Compressor",
+        "Dispenser",
+        "Supply"
+      ],
+      "endpoints": {
+        "distance_2_068_kpa_m": {
+          "count": 6,
+          "minimum": 31.0691,
+          "median": 61.735699999999994,
+          "maximum": 63.9918
+        },
+        "distance_13_79_kpa_m": {
+          "count": 6,
+          "minimum": 14.0949,
+          "median": 28.1116,
+          "maximum": 28.5501
+        },
+        "interpolated_distance_5_kpa_m": {
+          "count": 6,
+          "minimum": 21.508208598184414,
+          "median": 42.81183229980701,
+          "maximum": 43.95683431973745
+        },
+        "distance_4_kw_m2_m": {
+          "count": 18,
+          "minimum": 0.928963,
+          "median": 8.08666,
+          "maximum": 23.2205
+        },
+        "distance_12_5_kw_m2_m": {
+          "count": 16,
+          "minimum": 1.18791,
+          "median": 6.434875,
+          "maximum": 17.4901
+        },
+        "interpolated_distance_5_kw_m2_m": {
+          "count": 16,
+          "minimum": 1.2634482537573364,
+          "median": 7.953203622729467,
+          "maximum": 21.966864640594853
+        },
+        "jet_fire_mass_rate_kg_s": {
+          "count": 18,
+          "minimum": 0.000845228,
+          "median": 0.06,
+          "maximum": 0.591441
+        }
+      }
+    },
+    "M2": {
+      "row_count": 39,
+      "equipment": [
+        "Buffer",
+        "Compressor",
+        "Dispenser",
+        "Supply"
+      ],
+      "endpoints": {
+        "distance_2_068_kpa_m": {
+          "count": 21,
+          "minimum": 61.0929,
+          "median": 117.346,
+          "maximum": 307.551
+        },
+        "distance_13_79_kpa_m": {
+          "count": 21,
+          "minimum": 27.9867,
+          "median": 55.0327,
+          "maximum": 77.4364
+        },
+        "interpolated_distance_5_kpa_m": {
+          "count": 21,
+          "minimum": 42.48478767996613,
+          "median": 82.49986081045377,
+          "maximum": 161.82140458180683
+        },
+        "distance_4_kw_m2_m": {
+          "count": 18,
+          "minimum": 8.09405,
+          "median": 25.0791,
+          "maximum": 37.1313
+        },
+        "distance_12_5_kw_m2_m": {
+          "count": 18,
+          "minimum": 6.15834,
+          "median": 18.883200000000002,
+          "maximum": 28.0317
+        },
+        "interpolated_distance_5_kw_m2_m": {
+          "count": 18,
+          "minimum": 7.67219406331479,
+          "median": 23.72344005074222,
+          "maximum": 35.14230611966324
+        },
+        "jet_fire_mass_rate_kg_s": {
+          "count": 18,
+          "minimum": 0.06,
+          "median": 0.7084295,
+          "maximum": 1.77309
+        }
+      }
+    },
+    "M3": {
+      "row_count": 26,
+      "equipment": [
+        "Buffer",
+        "Compressor",
+        "Dispenser",
+        "Supply"
+      ],
+      "endpoints": {
+        "distance_2_068_kpa_m": {
+          "count": 6,
+          "minimum": 30.5294,
+          "median": 48.374750000000006,
+          "maximum": 95.1518
+        },
+        "distance_13_79_kpa_m": {
+          "count": 6,
+          "minimum": 13.99,
+          "median": 21.48665,
+          "maximum": 42.6627
+        },
+        "interpolated_distance_5_kpa_m": {
+          "count": 6,
+          "minimum": 21.233687550054345,
+          "median": 33.160345604017394,
+          "maximum": 65.5116562870884
+        },
+        "distance_4_kw_m2_m": {
+          "count": 16,
+          "minimum": 0.928963,
+          "median": 5.99739,
+          "maximum": 31.9549
+        },
+        "distance_12_5_kw_m2_m": {
+          "count": 15,
+          "minimum": 1.09176,
+          "median": 6.1593,
+          "maximum": 24.1223
+        },
+        "interpolated_distance_5_kw_m2_m": {
+          "count": 15,
+          "minimum": 1.1478179374015625,
+          "median": 7.666794560859458,
+          "maximum": 30.24280549640191
+        },
+        "jet_fire_mass_rate_kg_s": {
+          "count": 20,
+          "minimum": 8.25418e-05,
+          "median": 0.01588705,
+          "maximum": 1.25087
+        }
+      }
+    },
+    "M4": {
+      "row_count": 12,
+      "equipment": [
+        "Buffer",
+        "Supply"
+      ],
+      "endpoints": {
+        "distance_2_068_kpa_m": {
+          "count": 6,
+          "minimum": 28.646,
+          "median": 94.95089999999999,
+          "maximum": 307.351
+        },
+        "distance_13_79_kpa_m": {
+          "count": 6,
+          "minimum": 13.624,
+          "median": 42.62365,
+          "maximum": 67.7922
+        },
+        "interpolated_distance_5_kpa_m": {
+          "count": 6,
+          "minimum": 20.27130730620664,
+          "median": 65.4083973757487,
+          "maximum": 152.11830569489882
+        },
+        "distance_4_kw_m2_m": {
+          "count": 6,
+          "minimum": 3.1004,
+          "median": 10.371310000000001,
+          "maximum": 33.5786
+        },
+        "distance_12_5_kw_m2_m": {
+          "count": 6,
+          "minimum": 2.4741,
+          "median": 8.009855,
+          "maximum": 25.2698
+        },
+        "interpolated_distance_5_kw_m2_m": {
+          "count": 6,
+          "minimum": 2.9663718741840337,
+          "median": 9.859574438069927,
+          "maximum": 31.760284122701524
+        },
+        "jet_fire_mass_rate_kg_s": {
+          "count": 6,
+          "minimum": 0.0110659,
+          "median": 0.1221045,
+          "maximum": 1.33132
+        }
+      }
+    },
+    "M5": {
+      "row_count": 45,
+      "equipment": [
+        "Buffer",
+        "Compressor",
+        "Dispenser",
+        "Supply"
+      ],
+      "endpoints": {
+        "distance_2_068_kpa_m": {
+          "count": 18,
+          "minimum": 33.991,
+          "median": 90.60804999999999,
+          "maximum": 307.551
+        },
+        "distance_13_79_kpa_m": {
+          "count": 18,
+          "minimum": 14.6628,
+          "median": 41.7796,
+          "maximum": 77.4364
+        },
+        "interpolated_distance_5_kpa_m": {
+          "count": 18,
+          "minimum": 22.985736420368692,
+          "median": 63.19713315964617,
+          "maximum": 161.82140458180683
+        },
+        "distance_4_kw_m2_m": {
+          "count": 27,
+          "minimum": 2.78247,
+          "median": 8.11026,
+          "maximum": 37.1313
+        },
+        "distance_12_5_kw_m2_m": {
+          "count": 27,
+          "minimum": 2.20956,
+          "median": 6.17588,
+          "maximum": 28.0317
+        },
+        "interpolated_distance_5_kw_m2_m": {
+          "count": 27,
+          "minimum": 2.6596369465499317,
+          "median": 7.688829090044032,
+          "maximum": 35.14230611966324
+        },
+        "jet_fire_mass_rate_kg_s": {
+          "count": 27,
+          "minimum": 0.00825418,
+          "median": 0.06,
+          "maximum": 1.77309
+        }
+      }
+    },
+    "M6": {
+      "row_count": 30,
+      "equipment": [
+        "Buffer",
+        "Compressor",
+        "Dispenser",
+        "Supply"
+      ],
+      "endpoints": {
+        "distance_2_068_kpa_m": {
+          "count": 14,
+          "minimum": 34.3257,
+          "median": 86.3312,
+          "maximum": 307.351
+        },
+        "distance_13_79_kpa_m": {
+          "count": 14,
+          "minimum": 14.7279,
+          "median": 40.948350000000005,
+          "maximum": 67.7922
+        },
+        "interpolated_distance_5_kpa_m": {
+          "count": 14,
+          "minimum": 23.154158330035678,
+          "median": 61.01450023990956,
+          "maximum": 152.11830569489882
+        },
+        "distance_4_kw_m2_m": {
+          "count": 16,
+          "minimum": 2.78193,
+          "median": 14.08355,
+          "maximum": 37.0627
+        },
+        "distance_12_5_kw_m2_m": {
+          "count": 16,
+          "minimum": 2.21133,
+          "median": 10.81195,
+          "maximum": 28.0203
+        },
+        "interpolated_distance_5_kw_m2_m": {
+          "count": 16,
+          "minimum": 2.6596389003008256,
+          "median": 13.372978072552925,
+          "maximum": 35.08729096691677
+        },
+        "jet_fire_mass_rate_kg_s": {
+          "count": 16,
+          "minimum": 0.00825418,
+          "median": 0.2282675,
+          "maximum": 1.77309
+        }
+      }
+    },
+    "M7": {
+      "row_count": 35,
+      "equipment": [
+        "Buffer",
+        "Compressor",
+        "Dispenser",
+        "Supply"
+      ],
+      "endpoints": {
+        "distance_2_068_kpa_m": {
+          "count": 11,
+          "minimum": 30.5294,
+          "median": 61.7296,
+          "maximum": 108.781
+        },
+        "distance_13_79_kpa_m": {
+          "count": 11,
+          "minimum": 13.99,
+          "median": 28.1104,
+          "maximum": 53.368
+        },
+        "interpolated_distance_5_kpa_m": {
+          "count": 11,
+          "minimum": 21.233687550054345,
+          "median": 42.8087201080179,
+          "maximum": 78.09918874917706
+        },
+        "distance_4_kw_m2_m": {
+          "count": 24,
+          "minimum": 2.78193,
+          "median": 9.858005,
+          "maximum": 31.9549
+        },
+        "distance_12_5_kw_m2_m": {
+          "count": 24,
+          "minimum": 2.21133,
+          "median": 7.62233,
+          "maximum": 24.1223
+        },
+        "interpolated_distance_5_kw_m2_m": {
+          "count": 24,
+          "minimum": 2.6596389003008256,
+          "median": 9.37375664471995,
+          "maximum": 30.24280549640191
+        },
+        "jet_fire_mass_rate_kg_s": {
+          "count": 24,
+          "minimum": 0.00825418,
+          "median": 0.11132645,
+          "maximum": 1.25087
+        }
+      }
+    }
+  },
+  "matched_input_groups": [
+    {
+      "signature": {
+        "category": "explosion",
+        "equipment": "Supply",
+        "pressure_bar": 199.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7"
+      ],
+      "method_count": 6,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kpa_m",
+      "distance_summary_m": {
+        "count": 7,
+        "minimum": 43.95683431973745,
+        "median": 43.9782443481198,
+        "maximum": 61.876424437087245
+      },
+      "jet_fire_mass_rate_summary_kg_s": null,
+      "max_min_ratio": 1.407663345067221
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Dispenser",
+        "pressure_bar": 349.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7"
+      ],
+      "method_count": 6,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 6,
+        "minimum": 7.666794560859458,
+        "median": 7.666794560859458,
+        "maximum": 7.67219406331479
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 6,
+        "minimum": 0.06,
+        "median": 0.06,
+        "maximum": 0.06
+      },
+      "max_min_ratio": 1.0007042711804093
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Supply",
+        "pressure_bar": 199.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7"
+      ],
+      "method_count": 6,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 8,
+        "minimum": 7.688829090044032,
+        "median": 21.924157224186082,
+        "maximum": 25.44985795526936
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 8,
+        "minimum": 0.06,
+        "median": 0.586119,
+        "maximum": 0.825418
+      },
+      "max_min_ratio": 3.3099783669562113
+    },
+    {
+      "signature": {
+        "category": "explosion",
+        "equipment": "Buffer",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7"
+      ],
+      "method_count": 5,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kpa_m",
+      "distance_summary_m": {
+        "count": 5,
+        "minimum": 65.5116562870884,
+        "median": 84.7405423684166,
+        "maximum": 84.78073961915841
+      },
+      "jet_fire_mass_rate_summary_kg_s": null,
+      "max_min_ratio": 1.2941321350146924
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Buffer",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7"
+      ],
+      "method_count": 5,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 5,
+        "minimum": 30.24280549640191,
+        "median": 35.08729096691677,
+        "maximum": 35.14230611966324
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 5,
+        "minimum": 1.25087,
+        "median": 1.77309,
+        "maximum": 1.77309
+      },
+      "max_min_ratio": 1.1620054933013486
+    },
+    {
+      "signature": {
+        "category": "explosion",
+        "equipment": "Compressor",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M1",
+        "M2",
+        "M3",
+        "M7"
+      ],
+      "method_count": 4,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kpa_m",
+      "distance_summary_m": {
+        "count": 5,
+        "minimum": 43.952821381638245,
+        "median": 43.952821381638245,
+        "maximum": 84.78029691429626
+      },
+      "jet_fire_mass_rate_summary_kg_s": null,
+      "max_min_ratio": 1.9288931688402176
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Compressor",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M1",
+        "M2",
+        "M3",
+        "M7"
+      ],
+      "method_count": 4,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 5,
+        "minimum": 21.966864640594853,
+        "median": 21.966864640594853,
+        "maximum": 35.14230611966324
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 5,
+        "minimum": 0.591441,
+        "median": 0.591441,
+        "maximum": 1.77309
+      },
+      "max_min_ratio": 1.599787074515865
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Dispenser",
+        "pressure_bar": 349.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 1.0,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M3",
+        "M5",
+        "M6",
+        "M7"
+      ],
+      "method_count": 4,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 4,
+        "minimum": 3.369829238677007,
+        "median": 3.369829238677007,
+        "maximum": 3.3701513126540195
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 4,
+        "minimum": 0.0140432,
+        "median": 0.0140432,
+        "maximum": 0.0140432
+      },
+      "max_min_ratio": 1.0000955757559808
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Supply",
+        "pressure_bar": 199.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 1.0,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M1",
+        "M3",
+        "M5",
+        "M7"
+      ],
+      "method_count": 4,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 4,
+        "minimum": 2.6596369465499317,
+        "median": 2.6596389003008256,
+        "maximum": 2.6596389003008256
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 4,
+        "minimum": 0.00825418,
+        "median": 0.00825418,
+        "maximum": 0.00825418
+      },
+      "max_min_ratio": 1.000000734593079
+    },
+    {
+      "signature": {
+        "category": "explosion",
+        "equipment": "Compressor",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 3.16,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M1",
+        "M3",
+        "M7"
+      ],
+      "method_count": 3,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kpa_m",
+      "distance_summary_m": {
+        "count": 3,
+        "minimum": 22.31543417588982,
+        "median": 22.31543417588982,
+        "maximum": 22.31543417588982
+      },
+      "jet_fire_mass_rate_summary_kg_s": null,
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "explosion",
+        "equipment": "Supply",
+        "pressure_bar": 199.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "4D"
+      },
+      "methods": [
+        "M1",
+        "M6",
+        "M7"
+      ],
+      "method_count": 3,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kpa_m",
+      "distance_summary_m": {
+        "count": 3,
+        "minimum": 42.8087201080179,
+        "median": 42.8087201080179,
+        "maximum": 60.15257604273187
+      },
+      "jet_fire_mass_rate_summary_kg_s": null,
+      "max_min_ratio": 1.4051477337082436
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Compressor",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 1.0,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M1",
+        "M3",
+        "M7"
+      ],
+      "method_count": 3,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 3,
+        "minimum": 3.735378121293689,
+        "median": 3.735378121293689,
+        "maximum": 3.735378121293689
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 3,
+        "minimum": 0.0177309,
+        "median": 0.0177309,
+        "maximum": 0.0177309
+      },
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Compressor",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 3.16,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M1",
+        "M3",
+        "M7"
+      ],
+      "method_count": 3,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 3,
+        "minimum": 11.684065678764329,
+        "median": 11.684065678764329,
+        "maximum": 11.684065678764329
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 3,
+        "minimum": 0.177054,
+        "median": 0.177054,
+        "maximum": 0.177054
+      },
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Dispenser",
+        "pressure_bar": 349.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "4D"
+      },
+      "methods": [
+        "M1",
+        "M6",
+        "M7"
+      ],
+      "method_count": 3,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 3,
+        "minimum": 7.666794560859458,
+        "median": 7.666794560859458,
+        "maximum": 7.666794560859458
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 3,
+        "minimum": 0.06,
+        "median": 0.06,
+        "maximum": 0.06
+      },
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Supply",
+        "pressure_bar": 199.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 3.16,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M1",
+        "M3",
+        "M7"
+      ],
+      "method_count": 3,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 3,
+        "minimum": 8.239612684599477,
+        "median": 8.239612684599477,
+        "maximum": 8.239612684599477
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 3,
+        "minimum": 0.0824229,
+        "median": 0.0824229,
+        "maximum": 0.0824229
+      },
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Supply",
+        "pressure_bar": 199.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "4D"
+      },
+      "methods": [
+        "M1",
+        "M6",
+        "M7"
+      ],
+      "method_count": 3,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 3,
+        "minimum": 21.9092039917821,
+        "median": 21.9092039917821,
+        "maximum": 25.413943250051524
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 3,
+        "minimum": 0.586119,
+        "median": 0.586119,
+        "maximum": 0.825418
+      },
+      "max_min_ratio": 1.1599665263778645
+    },
+    {
+      "signature": {
+        "category": "explosion",
+        "equipment": "Buffer",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 3.16,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M3",
+        "M7"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kpa_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 22.367869826396536,
+        "median": 22.367869826396536,
+        "maximum": 22.367869826396536
+      },
+      "jet_fire_mass_rate_summary_kg_s": null,
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "explosion",
+        "equipment": "Buffer",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "1.5D"
+      },
+      "methods": [
+        "M2",
+        "M5"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kpa_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 98.16353592309656,
+        "median": 98.16353592309656,
+        "maximum": 98.16353592309656
+      },
+      "jet_fire_mass_rate_summary_kg_s": null,
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "explosion",
+        "equipment": "Buffer",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "5D"
+      },
+      "methods": [
+        "M2",
+        "M5"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kpa_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 82.41602197117254,
+        "median": 82.41602197117254,
+        "maximum": 82.41602197117254
+      },
+      "jet_fire_mass_rate_summary_kg_s": null,
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "explosion",
+        "equipment": "Buffer",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "4D"
+      },
+      "methods": [
+        "M6",
+        "M7"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kpa_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 78.09918874917706,
+        "median": 87.24262365711787,
+        "maximum": 96.38605856505869
+      },
+      "jet_fire_mass_rate_summary_kg_s": null,
+      "max_min_ratio": 1.2341492928257123
+    },
+    {
+      "signature": {
+        "category": "explosion",
+        "equipment": "Compressor",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 3.16,
+        "weather": "4D"
+      },
+      "methods": [
+        "M1",
+        "M7"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kpa_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 21.508208598184414,
+        "median": 21.508208598184414,
+        "maximum": 21.508208598184414
+      },
+      "jet_fire_mass_rate_summary_kg_s": null,
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "explosion",
+        "equipment": "Compressor",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "4D"
+      },
+      "methods": [
+        "M1",
+        "M7"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kpa_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 42.814944491596115,
+        "median": 42.814944491596115,
+        "maximum": 42.814944491596115
+      },
+      "jet_fire_mass_rate_summary_kg_s": null,
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "explosion",
+        "equipment": "Compressor",
+        "pressure_bar": 199.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M5",
+        "M6"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kpa_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 25.332303580846126,
+        "median": 25.362644854763587,
+        "maximum": 25.392986128681045
+      },
+      "jet_fire_mass_rate_summary_kg_s": null,
+      "max_min_ratio": 1.0023954611013268
+    },
+    {
+      "signature": {
+        "category": "explosion",
+        "equipment": "Dispenser",
+        "pressure_bar": 349.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 3.16,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M3",
+        "M7"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kpa_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 21.233687550054345,
+        "median": 21.233687550054345,
+        "maximum": 21.233687550054345
+      },
+      "jet_fire_mass_rate_summary_kg_s": null,
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "explosion",
+        "equipment": "Supply",
+        "pressure_bar": 199.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "1.5D"
+      },
+      "methods": [
+        "M2",
+        "M5"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kpa_m",
+      "distance_summary_m": {
+        "count": 3,
+        "minimum": 43.486819466985644,
+        "median": 43.486819466985644,
+        "maximum": 61.2315820668183
+      },
+      "jet_fire_mass_rate_summary_kg_s": null,
+      "max_min_ratio": 1.4080492162298541
+    },
+    {
+      "signature": {
+        "category": "explosion",
+        "equipment": "Supply",
+        "pressure_bar": 199.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "5D"
+      },
+      "methods": [
+        "M2",
+        "M5"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kpa_m",
+      "distance_summary_m": {
+        "count": 3,
+        "minimum": 42.48478767996613,
+        "median": 42.48478767996613,
+        "maximum": 59.63011210255145
+      },
+      "jet_fire_mass_rate_summary_kg_s": null,
+      "max_min_ratio": 1.4035638485883328
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Buffer",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 1.0,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M3",
+        "M7"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 3.735378121293689,
+        "median": 3.735378121293689,
+        "maximum": 3.735378121293689
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 2,
+        "minimum": 0.0177309,
+        "median": 0.0177309,
+        "maximum": 0.0177309
+      },
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Buffer",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 3.16,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M3",
+        "M7"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 11.684065678764329,
+        "median": 11.684065678764329,
+        "maximum": 11.684065678764329
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 2,
+        "minimum": 0.177054,
+        "median": 0.177054,
+        "maximum": 0.177054
+      },
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Buffer",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "1.5D"
+      },
+      "methods": [
+        "M2",
+        "M5"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 35.14230611966324,
+        "median": 35.14230611966324,
+        "maximum": 35.14230611966324
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 2,
+        "minimum": 1.77309,
+        "median": 1.77309,
+        "maximum": 1.77309
+      },
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Buffer",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "5D"
+      },
+      "methods": [
+        "M2",
+        "M5"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 35.14230611966324,
+        "median": 35.14230611966324,
+        "maximum": 35.14230611966324
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 2,
+        "minimum": 1.77309,
+        "median": 1.77309,
+        "maximum": 1.77309
+      },
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Buffer",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "4D"
+      },
+      "methods": [
+        "M6",
+        "M7"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 30.24280549640191,
+        "median": 32.66504823165934,
+        "maximum": 35.08729096691677
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 2,
+        "minimum": 1.25087,
+        "median": 1.5119799999999999,
+        "maximum": 1.77309
+      },
+      "max_min_ratio": 1.1601863779169304
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Compressor",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 0.32,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M1",
+        "M3"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 1.2634482537573364,
+        "median": 1.2634482537573364,
+        "maximum": 1.2634482537573364
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 2,
+        "minimum": 0.00181565,
+        "median": 0.00181565,
+        "maximum": 0.00181565
+      },
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Compressor",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 1.0,
+        "weather": "4D"
+      },
+      "methods": [
+        "M1",
+        "M7"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 3.735378121293689,
+        "median": 3.735378121293689,
+        "maximum": 3.735378121293689
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 2,
+        "minimum": 0.0177309,
+        "median": 0.0177309,
+        "maximum": 0.0177309
+      },
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Compressor",
+        "pressure_bar": 199.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 1.0,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M5",
+        "M6"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 2.6596369465499317,
+        "median": 2.659637923425379,
+        "maximum": 2.6596389003008256
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 2,
+        "minimum": 0.00825418,
+        "median": 0.00825418,
+        "maximum": 0.00825418
+      },
+      "max_min_ratio": 1.000000734593079
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Compressor",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 3.16,
+        "weather": "4D"
+      },
+      "methods": [
+        "M1",
+        "M7"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 11.684065678764329,
+        "median": 11.684065678764329,
+        "maximum": 11.684065678764329
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 2,
+        "minimum": 0.177054,
+        "median": 0.177054,
+        "maximum": 0.177054
+      },
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Compressor",
+        "pressure_bar": 449.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "4D"
+      },
+      "methods": [
+        "M1",
+        "M7"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 21.966864640594853,
+        "median": 21.966864640594853,
+        "maximum": 21.966864640594853
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 2,
+        "minimum": 0.591441,
+        "median": 0.591441,
+        "maximum": 0.591441
+      },
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Compressor",
+        "pressure_bar": 199.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M5",
+        "M6"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 15.852883785611743,
+        "median": 15.861232637335585,
+        "maximum": 15.869581489059426
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 2,
+        "minimum": 0.278354,
+        "median": 0.278354,
+        "maximum": 0.278354
+      },
+      "max_min_ratio": 1.0010532912291226
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Dispenser",
+        "pressure_bar": 349.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 1.0,
+        "weather": "4D"
+      },
+      "methods": [
+        "M6",
+        "M7"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 3.369829238677007,
+        "median": 3.369829238677007,
+        "maximum": 3.369829238677007
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 2,
+        "minimum": 0.0140432,
+        "median": 0.0140432,
+        "maximum": 0.0140432
+      },
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Dispenser",
+        "pressure_bar": 349.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 3.16,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M3",
+        "M7"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 10.507900604840424,
+        "median": 10.507900604840424,
+        "maximum": 10.507900604840424
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 2,
+        "minimum": 0.14023,
+        "median": 0.14023,
+        "maximum": 0.14023
+      },
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Dispenser",
+        "pressure_bar": 349.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "1.5D"
+      },
+      "methods": [
+        "M2",
+        "M5"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 7.67219406331479,
+        "median": 7.67219406331479,
+        "maximum": 7.67219406331479
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 2,
+        "minimum": 0.06,
+        "median": 0.06,
+        "maximum": 0.06
+      },
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Dispenser",
+        "pressure_bar": 349.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "5D"
+      },
+      "methods": [
+        "M2",
+        "M5"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 7.67219406331479,
+        "median": 7.67219406331479,
+        "maximum": 7.67219406331479
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 2,
+        "minimum": 0.06,
+        "median": 0.06,
+        "maximum": 0.06
+      },
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Supply",
+        "pressure_bar": 199.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 0.32,
+        "weather": "1.5F"
+      },
+      "methods": [
+        "M1",
+        "M3"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 0,
+        "minimum": null,
+        "median": null,
+        "maximum": null
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 2,
+        "minimum": 0.000845228,
+        "median": 0.000845228,
+        "maximum": 0.000845228
+      },
+      "max_min_ratio": null
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Supply",
+        "pressure_bar": 199.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 1.0,
+        "weather": "4D"
+      },
+      "methods": [
+        "M1",
+        "M7"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 2.6596389003008256,
+        "median": 2.6596389003008256,
+        "maximum": 2.6596389003008256
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 2,
+        "minimum": 0.00825418,
+        "median": 0.00825418,
+        "maximum": 0.00825418
+      },
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Supply",
+        "pressure_bar": 199.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 3.16,
+        "weather": "4D"
+      },
+      "methods": [
+        "M1",
+        "M7"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 2,
+        "minimum": 8.239612684599477,
+        "median": 8.239612684599477,
+        "maximum": 8.239612684599477
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 2,
+        "minimum": 0.0824229,
+        "median": 0.0824229,
+        "maximum": 0.0824229
+      },
+      "max_min_ratio": 1.0
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Supply",
+        "pressure_bar": 199.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "1.5D"
+      },
+      "methods": [
+        "M2",
+        "M5"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 4,
+        "minimum": 7.688829090044032,
+        "median": 21.939110456590065,
+        "maximum": 25.44985795526936
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 4,
+        "minimum": 0.06,
+        "median": 0.586119,
+        "maximum": 0.825418
+      },
+      "max_min_ratio": 3.3099783669562113
+    },
+    {
+      "signature": {
+        "category": "jet_fire",
+        "equipment": "Supply",
+        "pressure_bar": 199.0,
+        "temperature_c": 15.0,
+        "hole_size_mm": 10.0,
+        "weather": "5D"
+      },
+      "methods": [
+        "M2",
+        "M5"
+      ],
+      "method_count": 2,
+      "runtime_aligned_endpoint": "interpolated_distance_5_kw_m2_m",
+      "distance_summary_m": {
+        "count": 4,
+        "minimum": 7.688829090044032,
+        "median": 21.939110456590065,
+        "maximum": 25.44985795526936
+      },
+      "jet_fire_mass_rate_summary_kg_s": {
+        "count": 4,
+        "minimum": 0.06,
+        "median": 0.586119,
+        "maximum": 0.825418
+      },
+      "max_min_ratio": 3.3099783669562113
+    }
+  ],
+  "integrity": {
+    "all_selected_files_present": true,
+    "all_seven_methods_present": true,
+    "value_based_exclusions": 0,
+    "model_tuning_performed": false,
+    "runtime_parameters_changed": false,
+    "experimental_validation": false,
+    "actual_incident_validation": false
+  },
+  "claim_boundary": "The result measures variation among seven published QRA implementations for a common idealised HRS. The ensemble is not ground truth and cannot validate physical accuracy, accident frequency, site-specific separation distances, emergency actions, the station-to-vehicle dynamic loop or SAGA effectiveness."
+}

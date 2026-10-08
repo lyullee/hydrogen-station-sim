@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "protocol_id": "DATA3632-HRS-QRA-MULTIMETHOD-001",
+  "frozen_at": "2026-10-08",
+  "status": "descriptive_protocol_frozen_after_limited_schema_and_value_access",
+  "objective": "Quantify the international method-to-method spread in HRS consequence distances for the same input signatures without treating a simulation ensemble as experimental truth.",
+  "source": {
+    "dataset_doi": "10.34810/DATA3632",
+    "dataset_version": "2.0",
+    "record_url": "https://doi.org/10.34810/DATA3632",
+    "title": "Simulation dataset for benchmarking quantitative risk analysis methodologies for hydrogen refuelling stations",
+    "publisher": "CORA.Repositori de Dades de Recerca",
+    "license": "CC BY 4.0",
+    "reported_file_count": 276,
+    "software": "DNV Safeti 9.11 / PHAST 9.11"
+  },
+  "access_attestation": {
+    "metadata_and_readme_accessed_before_freeze": true,
+    "full_result_cohort_aggregated_before_freeze": false,
+    "limited_numerical_rows_inspected_before_freeze": true,
+    "inspected_file_ids": [
+      515912,
+      515952,
+      516070,
+      515976,
+      516139,
+      515983,
+      516021,
+      516142
+    ],
+    "consequence_thresholds_seen_before_freeze": true,
+    "interpretation": "This is an honest post-access descriptive comparison. It is not a prospective holdout and has no pass/fail acceptance threshold."
+  },
+  "frozen_selection": {
+    "methodologies": {
+      "M1": "Canada",
+      "M2": "China",
+      "M3": "Japan",
+      "M4": "Korea",
+      "M5": "Netherlands",
+      "M6": "Spain",
+      "M7": "USA"
+    },
+    "equipment": [
+      "Supply",
+      "Compressor",
+      "Buffer",
+      "Dispenser"
+    ],
+    "consequence_files": [
+      "Explosions.csv",
+      "Jet fire.csv"
+    ],
+    "selected_file_count": 46,
+    "selection_rule": "Use every available explosion or jet-fire export for the four common HRS equipment classes. Omitted files must be absent from the source method, not removed after viewing their values.",
+    "immutable_file_manifest": "QRA_FILES in scripts/audit_qra_multimethod_benchmark.py"
+  },
+  "comparison_endpoints": {
+    "direct": [
+      "distance to 2.068 kPa overpressure",
+      "distance to 13.79 kPa overpressure",
+      "distance to 4 kW/m2 thermal radiation",
+      "distance to 12.5 kW/m2 thermal radiation"
+    ],
+    "runtime_aligned_descriptive": [
+      "log-log interpolated distance to 5 kPa overpressure",
+      "log-log interpolated distance to 5 kW/m2 thermal radiation"
+    ],
+    "interpolation_rule": "Interpolate log(distance) against log(effect threshold) only between two positive direct source endpoints. Never extrapolate and never replace a direct source value.",
+    "matching_signature": [
+      "consequence category",
+      "normalized equipment class",
+      "source pressure bar",
+      "source temperature degC",
+      "hole diameter mm",
+      "normalized weather class"
+    ],
+    "minimum_methods_per_matched_group": 2
+  },
+  "reporting_rule": {
+    "pass_fail_allowed": false,
+    "model_tuning_allowed": false,
+    "runtime_parameter_change_allowed": false,
+    "primary_outputs": [
+      "source file hashes and row counts",
+      "method/equipment coverage",
+      "direct endpoint min/median/max",
+      "matched-input method envelope and max/min ratio"
+    ],
+    "missing_value_policy": "Retain non-reached or nonnumeric cells as missing and report counts; do not impute them.",
+    "outlier_policy": "Retain all finite source values; no value-based exclusion is allowed."
+  },
+  "evidence_classification": {
+    "comparative_qra_method_benchmark": true,
+    "experimental_validation": false,
+    "actual_incident_validation": false,
+    "full_loop_station_validation": false,
+    "safety_certification": false,
+    "goal_completion_permitted": false
+  },
+  "claim_boundary": "The result measures variation among seven published QRA implementations for a common idealised HRS. The ensemble is not ground truth and cannot validate physical accuracy, accident frequency, site-specific separation distances, emergency actions, the station-to-vehicle dynamic loop or SAGA effectiveness."
+}

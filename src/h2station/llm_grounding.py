@@ -2222,6 +2222,17 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             "test context and sink geometry source; logger crosswalk unresolved",
         )
 
+    qra = evidence.get("qra_multimethod_comparison") or {}
+    qra_source = qra.get("source") or {}
+    qra_doi = str(qra_source.get("doi") or "").strip()
+    if qra_doi:
+        add(
+            "PUBLIC_QRA_MULTIMETHOD_DATA3632",
+            "Multi-method hydrogen refuelling station QRA benchmark",
+            f"https://doi.org/{qra_doi}",
+            "simulation-method spread and source-boundary diagnostic; not experimental validation",
+        )
+
     hitrf = evidence.get("public_hitrf_operational_reference") or {}
     hitrf_source = hitrf.get("source") or {}
     add(
@@ -3311,11 +3322,17 @@ def _impact_rows(results: Iterable[dict[str, Any]] | None) -> list[dict[str, Any
         "ignited_enclosure_external_holdout_supported",
         "ignited_enclosure_validation_artifact",
         "ignited_enclosure_claim_limit",
-        "sampled_effect_radius_m", "sampled_next_distance_m",
+        "sampled_effect_radius_m", "sampled_thermal_radius_m",
+        "sampled_overpressure_radius_m", "sampled_next_distance_m",
+        "thermal_range_status", "overpressure_range_status",
         "flammable_plume_streamline_distance_m", "effect_range_status",
         "modeled_consequence_mass_flow_kg_s", "mass_flow_override_requested",
         "mass_flow_override_status", "mass_flow_override_ratio",
         "mass_flow_override_claim_limit",
+        "release_source_boundary", "process_flow_limit_kg_s",
+        "physical_orifice_diameter_m", "consequence_equivalent_orifice_diameter_m",
+        "flow_limited_equivalent_orifice_applied", "flow_limited_consequence_status",
+        "flow_limited_consequence_claim_limit",
         "consequence_validation_scope", "geometry_display_mapping_verified",
         "source_depletion_external_holdout_supported",
         "full_station_vehicle_validation_supported",
@@ -3336,6 +3353,91 @@ def _impact_rows(results: Iterable[dict[str, Any]] | None) -> list[dict[str, Any
         if row:
             rows.append(row)
     return rows
+
+
+def _qra_multimethod_comparison_evidence() -> dict[str, Any] | None:
+    """Expose a compact, non-validating consequence-method comparison.
+
+    DATA3632 is a seven-method simulation benchmark.  It is valuable for
+    identifying source-boundary and method spread, but it is not experimental
+    truth and must never be used to silently tune the runtime consequence
+    model.  Only committed aggregate diagnostics are exposed to the LLM.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    comparison_path = root / "research/qra_multimethod_comparison_2026_10_08.json"
+    runtime_path = root / "research/runtime_qra_envelope_comparison_2026_10_08.json"
+    try:
+        comparison = json.loads(comparison_path.read_text(encoding="utf-8"))
+        runtime = json.loads(runtime_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    if (
+        comparison.get("source", {}).get("doi") != "10.34810/DATA3632"
+        or runtime.get("source", {}).get("doi") != "10.34810/DATA3632"
+        or comparison.get("selection", {}).get("method_count") != 7
+        or not str(runtime.get("model_action") or "").startswith(
+            "No automatic calibration"
+        )
+    ):
+        return None
+    aggregate = runtime.get("aggregate") or {}
+    cases = []
+    for case in runtime.get("cases") or []:
+        if not isinstance(case, dict):
+            continue
+        benchmark = case.get("benchmark") or {}
+        mass = benchmark.get("jet_fire_mass_rate_kg_s") or {}
+        current = case.get("runtime") or {}
+        comparison_row = case.get("comparison") or {}
+        cases.append({
+            "equipment": case.get("equipment"),
+            "runtime_mass_flow_kg_s": current.get("modeled_mass_flow_kg_s"),
+            "benchmark_mass_flow_range_kg_s": [mass.get("minimum"), mass.get("maximum")],
+            "mass_flow_ratio_to_method_median": (
+                comparison_row.get("mass_rate") or {}
+            ).get("ratio_to_method_median"),
+            "thermal_within_method_envelope": (
+                comparison_row.get("thermal") or {}
+            ).get("within_method_envelope") is True,
+            "overpressure_within_method_envelope": (
+                comparison_row.get("overpressure") or {}
+            ).get("within_method_envelope") is True,
+        })
+    return {
+        "artifact": "research/runtime_qra_envelope_comparison_2026_10_08.json",
+        "source": {
+            "doi": "10.34810/DATA3632",
+            "version": comparison.get("source", {}).get("version"),
+            "license": comparison.get("source", {}).get("license"),
+        },
+        "evidence_role": "post-access simulation-to-simulation QRA method comparison",
+        "method_count": comparison.get("selection", {}).get("method_count"),
+        "retained_row_count": comparison.get("aggregate", {}).get(
+            "observation_count"
+        ),
+        "matched_group_count": comparison.get("aggregate", {}).get(
+            "matched_input_group_count"
+        ),
+        "maximum_matched_method_ratio": (
+            comparison.get("aggregate", {}).get("matched_input_spread_ratio") or {}
+        ).get("maximum"),
+        "runtime_case_count": aggregate.get("case_count"),
+        "runtime_thermal_within_envelope_count": aggregate.get(
+            "thermal_within_method_envelope_count"
+        ),
+        "runtime_overpressure_within_envelope_count": aggregate.get(
+            "overpressure_within_method_envelope_count"
+        ),
+        "cases": cases,
+        "automatic_calibration_performed": False,
+        "experimental_validation": False,
+        "claim_limit": runtime.get("claim_boundary"),
+        "operator_rule": (
+            "방출원 유형과 실제/제한 유량을 먼저 확인한다. 이 QRA 방법군만으로 "
+            "거리계수나 설비별 유량을 자동 보정하지 않는다."
+        ),
+    }
 
 
 _UNSUPPORTED_CLAIM_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
@@ -3801,6 +3903,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "methytrucks_tank_diagnostic_boundary"
         ] = methytrucks_tank
+    qra_multimethod = _qra_multimethod_comparison_evidence()
+    if qra_multimethod is not None:
+        envelope["response_evidence"][
+            "qra_multimethod_comparison"
+        ] = qra_multimethod
     preslhy = _preslhy_validation_boundary()
     if preslhy is not None:
         envelope["response_evidence"]["preslhy_validation_boundary"] = preslhy
@@ -4069,6 +4176,20 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_supported", "required_next_step", "claim_limit",
             )
             if methytrucks_tank.get(key) is not None
+        }
+    qra = evidence.get("qra_multimethod_comparison")
+    if isinstance(qra, dict):
+        summary["qra_multimethod_comparison"] = {
+            key: qra.get(key)
+            for key in (
+                "evidence_role", "source", "method_count", "retained_row_count",
+                "matched_group_count", "maximum_matched_method_ratio",
+                "runtime_case_count", "runtime_thermal_within_envelope_count",
+                "runtime_overpressure_within_envelope_count", "cases",
+                "automatic_calibration_performed", "experimental_validation",
+                "operator_rule", "claim_limit",
+            )
+            if qra.get(key) is not None
         }
     preslhy = evidence.get("preslhy_validation_boundary")
     if isinstance(preslhy, dict):
@@ -4559,10 +4680,15 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "ignited_enclosure_volume_m3", "ignited_enclosure_vent_area_m2",
             "ignited_enclosure_external_holdout_supported",
             "ignited_enclosure_validation_artifact",
-            "sampled_effect_radius_m", "sampled_next_distance_m",
+            "sampled_effect_radius_m", "sampled_thermal_radius_m",
+            "sampled_overpressure_radius_m", "sampled_next_distance_m",
+            "thermal_range_status", "overpressure_range_status",
             "flammable_plume_streamline_distance_m", "effect_range_status",
             "consequence_validation_scope", "geometry_display_mapping_verified",
             "source_depletion_external_holdout_supported",
+            "release_source_boundary", "process_flow_limit_kg_s",
+            "physical_orifice_diameter_m", "consequence_equivalent_orifice_diameter_m",
+            "flow_limited_equivalent_orifice_applied", "flow_limited_consequence_status",
             "full_station_vehicle_validation_supported",
             "site_specific_safety_distance_supported",
         ))
@@ -4595,6 +4721,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     methytrucks_scope = methytrucks_tank.get("scope") or {}
     methytrucks_244 = methytrucks_tank.get("candidate_244_l_diagnostic") or {}
     methytrucks_mapping = methytrucks_tank.get("mapping_boundary") or {}
+    qra_multimethod = response.get("qra_multimethod_comparison") or {}
     incident = response.get("public_incident_traceability") or {}
     accident_inventory = response.get("public_accident_report_inventory") or {}
     khk_replay = accident_inventory.get("digital_twin_replay") or {}
@@ -4719,7 +4846,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     if thermal_observation.get("cross_dataset_semantic_mismatch_detected") is True
                     else "unavailable"
                 ),
-                "claim_limit": short(closed_loop.get("claim_limit")),
+                "claim_limit": short(closed_loop.get("claim_limit"), 80),
             },
             "station_component_thermal": {
                 "status": station_thermal.get("status"),
@@ -4733,13 +4860,13 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 "joint_primary_pass_fraction": preslhy_holdout.get(
                     "joint_primary_pass_fraction"
                 ),
-                "claim_limit": short(preslhy.get("claim_limit")),
+                "claim_limit": short(preslhy.get("claim_limit"), 80),
             },
             "high_pressure_aperture": {
                 "baseline_joint_primary_pass_count": release.get(
                     "baseline_joint_primary_pass_count"
                 ),
-                "claim_limit": short(release.get("claim_limit")),
+                "claim_limit": short(release.get("claim_limit"), 80),
             },
             "release_cross_campaign": {
                 "supported": cross_campaign_release.get(
@@ -4771,6 +4898,11 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             ),
         },
     }
+    if qra_multimethod:
+        decision["validation_boundaries"]["qra_method_ensemble"] = (
+            "DATA3632 simulation-only: 7 methods; runtime thermal 2/4, "
+            "overpressure 0/3; verify release boundary; no automatic tuning"
+        )
     if all(
         khk_replay.get(key) is not None
         for key in (
@@ -4895,6 +5027,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     envelope_screen = evidence.get("public_operating_envelope_screen") or {}
     public_measurement = evidence.get("public_measurement_instrumentation") or {}
     methytrucks_tank = evidence.get("methytrucks_tank_diagnostic_boundary") or {}
+    qra_multimethod = evidence.get("qra_multimethod_comparison") or {}
     preslhy = evidence.get("preslhy_validation_boundary") or {}
     closed_loop = evidence.get("closed_loop_validation_boundary") or {}
     release_boundary = evidence.get("proust_release_model_validation_boundary") or {}
@@ -5012,6 +5145,18 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "test_class_interpretation"
             ),
             "claim_limit": public_measurement.get("claim_limit"),
+        },
+        "qra_multimethod_comparison": {
+            key: qra_multimethod.get(key)
+            for key in (
+                "source", "evidence_role", "method_count", "retained_row_count",
+                "matched_group_count", "maximum_matched_method_ratio",
+                "runtime_case_count", "runtime_thermal_within_envelope_count",
+                "runtime_overpressure_within_envelope_count", "cases",
+                "automatic_calibration_performed", "experimental_validation",
+                "operator_rule", "claim_limit",
+            )
+            if qra_multimethod.get(key) is not None
         },
         "methytrucks_tank_diagnostic_boundary": {
             "evidence_role": methytrucks_tank.get("evidence_role"),

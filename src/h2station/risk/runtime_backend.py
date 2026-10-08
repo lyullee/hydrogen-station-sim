@@ -10,6 +10,7 @@ from typing import Mapping
 
 import numpy as np
 
+from ..dispenser import IsentropicRealGasRestriction, RestrictionParameters
 from ..ignited_pressure_peaking import (
     IgnitedPressurePeakingConfig,
     simulate_ignited_pressure_peaking,
@@ -220,6 +221,69 @@ def mass_flow_override_metadata(
     }
 
 
+def consequence_orifice_boundary(
+    request: HyRAMDynamicReleaseRequest,
+) -> dict[str, float | str | bool | None]:
+    """Represent a defensible flow-limited source in HyRAM's orifice interface.
+
+    HyRAM 6.1 may recompute choked flow and ignore a supplied mass-flow value.
+    For a declared flow-limited line, use the area ratio implied by the process
+    source model so the consequence jet carries the bounded flow. This is a
+    source-boundary transformation, not a post-outcome fit to a desired radius.
+    """
+    physical_diameter = float(request.orifice_diameter_m)
+    base = {
+        "physical_orifice_diameter_m": physical_diameter,
+        "consequence_equivalent_orifice_diameter_m": physical_diameter,
+        "free_orifice_mass_flow_kg_s": None,
+        "flow_limited_equivalent_orifice_applied": False,
+        "flow_limited_consequence_status": "NOT_APPLICABLE",
+        "flow_limited_consequence_claim_limit": (
+            "Physical aperture used directly; no flow-limited source boundary applied"
+        ),
+    }
+    if request.release_boundary != "flow_limited_line":
+        return base
+
+    area = math.pi * physical_diameter ** 2 / 4.0
+    free_flow = IsentropicRealGasRestriction(
+        RestrictionParameters(
+            flow_area_m2=area,
+            discharge_coefficient=float(request.discharge_coefficient),
+            minimum_pressure_pa=max(1.0, float(request.ambient_pressure_pa)),
+        )
+    ).mass_flow_kg_s(
+        float(request.source_pressure_pa),
+        float(request.source_temperature_k),
+        float(request.ambient_pressure_pa),
+    )
+    bounded_flow = max(0.0, float(request.mass_flow_override_kg_s))
+    if free_flow <= 0.0 or bounded_flow >= free_flow * (1.0 - 1.0e-9):
+        return {
+            **base,
+            "free_orifice_mass_flow_kg_s": free_flow,
+            "flow_limited_consequence_status": "CAP_NOT_ACTIVE",
+            "flow_limited_consequence_claim_limit": (
+                "Declared process limit does not reduce the current free-orifice flow"
+            ),
+        }
+
+    equivalent_diameter = physical_diameter * math.sqrt(
+        max(bounded_flow, 1.0e-15) / free_flow
+    )
+    return {
+        **base,
+        "consequence_equivalent_orifice_diameter_m": equivalent_diameter,
+        "free_orifice_mass_flow_kg_s": free_flow,
+        "flow_limited_equivalent_orifice_applied": True,
+        "flow_limited_consequence_status": "EQUIVALENT_AREA_APPLIED",
+        "flow_limited_consequence_claim_limit": (
+            "Equivalent area preserves the declared process-flow boundary in HyRAM's "
+            "choked-orifice interface; it is not a measured aperture or calibrated distance"
+        ),
+    }
+
+
 class UnavailableHyRAMBackend:
     """Honest fallback that preserves source terms without inventing consequences."""
 
@@ -238,6 +302,8 @@ class UnavailableHyRAMBackend:
             "reason": self.reason,
             "mass_flow_override_kg_s": request.mass_flow_override_kg_s,
             "cumulative_released_mass_kg": request.cumulative_released_mass_kg,
+            "release_source_boundary": request.release_boundary,
+            "process_flow_limit_kg_s": request.process_flow_limit_kg_s,
         }
 
 
@@ -289,8 +355,11 @@ class NativeHyRAMBackend:
             request.source_temperature_k,
         )
         ambient = AmbientCondition(pressure=request.ambient_pressure_pa)
+        source_boundary = consequence_orifice_boundary(request)
         leak = AdapterLeakScenario(
-            orifice_diameter=request.orifice_diameter_m,
+            orifice_diameter=float(
+                source_boundary["consequence_equivalent_orifice_diameter_m"]
+            ),
             locations=self.observation_locations,
             discharge_coefficient=request.discharge_coefficient,
             release_angle=request.release_angle_rad,
@@ -321,8 +390,11 @@ class NativeHyRAMBackend:
             "flammable_plume_x_extent_m": result.flammable_x_extent,
             "flammable_plume_y_extent_m": result.flammable_y_extent,
             "release_angle_rad": request.release_angle_rad,
+            "release_source_boundary": request.release_boundary,
+            "process_flow_limit_kg_s": request.process_flow_limit_kg_s,
             "observation_locations_m": self.observation_locations,
         }
+        output.update(source_boundary)
         output.update(mass_flow_override_metadata(
             result.requested_mass_flow_rate, result.mass_flow_rate,
         ))
@@ -336,18 +408,37 @@ class NativeHyRAMBackend:
             (float((x*x + y*y) ** .5), float(pressure))
             for (x, y, _), pressure in zip(self.observation_locations, result.overpressures)
         ]
-        affected = [distance for distance, value in thermal_points if value >= 5000.0]
-        affected += [distance for distance, value in blast_points if value >= 5000.0]
+        thermal_affected = [
+            distance for distance, value in thermal_points if value >= 5000.0
+        ]
+        blast_affected = [
+            distance for distance, value in blast_points if value >= 5000.0
+        ]
+        affected = thermal_affected + blast_affected
         sampled_max = max((distance for distance, _ in thermal_points + blast_points), default=0.0)
         extent = max(affected, default=0.0)
+        thermal_extent = max(thermal_affected, default=0.0)
+        blast_extent = max(blast_affected, default=0.0)
         distances = sorted({distance for distance, _ in thermal_points + blast_points})
         next_sample = next((distance for distance in distances if distance > extent), None) if extent > 0 else None
         output["sampled_effect_radius_m"] = extent
+        output["sampled_thermal_radius_m"] = thermal_extent
+        output["sampled_overpressure_radius_m"] = blast_extent
         output["sampled_max_distance_m"] = sampled_max
         output["sampled_next_distance_m"] = next_sample
         output["observation_point_count"] = len(self.observation_locations)
         output["effect_range_status"] = ("BEYOND_SAMPLED_POINTS" if extent >= sampled_max and extent > 0
             else "WITHIN_SAMPLED_POINTS" if extent > 0 else "BELOW_THRESHOLDS_AT_SAMPLES")
+        output["thermal_range_status"] = (
+            "BEYOND_SAMPLED_POINTS" if thermal_extent >= sampled_max and thermal_extent > 0
+            else "WITHIN_SAMPLED_POINTS" if thermal_extent > 0
+            else "BELOW_THRESHOLD_AT_SAMPLES"
+        )
+        output["overpressure_range_status"] = (
+            "BEYOND_SAMPLED_POINTS" if blast_extent >= sampled_max and blast_extent > 0
+            else "WITHIN_SAMPLED_POINTS" if blast_extent > 0
+            else "BELOW_THRESHOLD_AT_SAMPLES"
+        )
         output["thermal_threshold_w_m2"] = 5000.0
         output["overpressure_threshold_pa"] = 5000.0
         if request.indoor:

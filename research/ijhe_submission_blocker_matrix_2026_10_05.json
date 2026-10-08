@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T03:50:33.943918+00:00",
+  "generated_at": "2026-10-08T04:27:58.920877+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -111,6 +111,24 @@
       },
       "claim_boundary": "This post-access diagnostic supports only a development choice to replace arbitrary near/far detector assignment with a transparent coordinate ranking. It failed the joint spatial screen and is not independent validation."
     },
+    "consequence_component_evidence": {
+      "ignited_confined_pressure_peaking": {
+        "decision": "completed_prospective_protocol_execution",
+        "primary_pass_count": 27,
+        "case_count": 27,
+        "claim_boundary": "This result concerns only ignited pressure peaking in a vented enclosure. It does not validate an outdoor H70 station fueling loop, jet-flame radiation distance, emergency controls, operator response, or SAGA effectiveness."
+      },
+      "qra_multimethod_context": {
+        "method_count": 7,
+        "retained_row_count": 211,
+        "maximum_method_ratio": 3.3099783669562113,
+        "runtime_thermal_within_envelope": 2,
+        "runtime_overpressure_within_envelope": 0,
+        "runtime_case_count": 4,
+        "experimental_validation": false,
+        "automatic_calibration": false
+      }
+    },
     "real_station_candidate": {
       "status": "PUBLIC_ROWS_POST_ACCESS_MAPPING_INCOMPLETE",
       "evidence": [
@@ -198,16 +216,20 @@
     {
       "id": "consequence_model_external_validation",
       "status": "FAIL_OR_PENDING",
-      "why_blocked": "Several release/blowdown datasets are useful component tests, but the retained joint screens do not meet the predeclared threshold or lack an observable decay feature.",
+      "why_blocked": "The prospectively frozen ignited confined pressure-peaking component passed 27/27 primary screens, but that narrow result does not validate outdoor jet-fire or blast distance. The seven-method DATA3632 simulation comparison retained 211 rows and shows material method/source-boundary spread: the current runtime lies inside 2/4 thermal envelopes and 0/3 comparable overpressure envelopes. The dispenser mass-flow boundary differs by about 22-fold. Because DATA3632 is a simulation ensemble rather than experimental truth, these findings diagnose the boundary but cannot close the station consequence gate or authorize post-outcome tuning.",
       "evidence": [
         "manuscript/ijhe_readiness_audit.json",
         "research/preslhy_blowdown_validation.json",
         "research/proust_independent_release_validation.json",
         "research/schefer_transient_release_validation.json",
-        "research/grune_2014_pressure_decay_validation.json"
+        "research/grune_2014_pressure_decay_validation.json",
+        "research/usn_17934047_ignited_pressure_peaking_result_2026_10_08.json",
+        "research/qra_multimethod_comparison_protocol_2026_10_08.json",
+        "research/qra_multimethod_comparison_2026_10_08.json",
+        "research/runtime_qra_envelope_comparison_2026_10_08.json"
       ],
-      "unblock_criterion": "Either improve the declared model against a pre-access untouched component holdout without post-outcome tuning, or narrow the manuscript claim to the observed component-test scope.",
-      "next_action": "Keep all failures and confidence intervals in the manuscript; do not convert a partial component screen into a station consequence claim."
+      "unblock_criterion": "Pass a pre-access frozen, rights-cleared physical outdoor jet-fire/overpressure holdout with matched pressure, temperature, aperture or measured mass flow and weather, or narrow every claim to the already passed ignited confined pressure-peaking component.",
+      "next_action": "Classify free-orifice and flow-limited line releases explicitly before any calibration; acquire a measured outdoor consequence holdout and keep the simulation-method ensemble as uncertainty context only."
     },
     {
       "id": "h2safe_spatial_detector_transfer",
@@ -253,7 +275,7 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "d94664c9aa52fb2ed12d8c1d6420757b9648f3319a4dfde7846b708b3046f976",
+    "audit_sha256": "8acbbdb2d11ed51bcead20163aca2d98a99b2c56325638cf5b49557bb1b55efb",
     "hiad_readiness_sha256": "5c2e99a8371e3dd6fc97847f956d065f7d0c62bed48270a6bdb15021725d4310",
     "acquisition_tracker_sha256": "f141806ae0cce8ec9a0797e2ca6f7102b299eaedc33317693922abd763a3e399",
     "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",
@@ -270,6 +292,9 @@
     "h2safe_spatial_diagnostic_sha256": "1a918fcd5c8d0b2556bef9d19f8ebeb9a590f2bc8323639d3c3ea5def5b979e3",
     "hydelta_spatial_eligibility_sha256": "7edb4605c427918947ee9914cf7e9ecece412656479f59b62dbdb24103083813",
     "sandia_spatial_diagnostic_sha256": "12cecd95e218fa9a76040d295f2e2a1af8e8f7a13e30d5bd22e61b96335e87e5",
+    "ignited_pressure_peaking_sha256": "53dbb83055c0eaa50d7f9ff2af351302b325ffb46e38b0290a4583eae4356174",
+    "qra_multimethod_comparison_sha256": "69c7c74c942f2b32f7feeb0448ddac2e65c0d52fb932f4b75eab98f6047eaffe",
+    "runtime_qra_comparison_sha256": "0eb371b5f9788089f88f42d16d0dbcda4edf040fbec08245e698958108d53d6c",
     "candidate_route_count": 33,
     "public_full_loop_search_candidate_count": 17,
     "latest_public_full_loop_search_candidate_count": 9,

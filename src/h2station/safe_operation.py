@@ -954,6 +954,8 @@ class SafeFullStationSimulator:
                     ignited=event.ignited,
                     enclosure_volume_m3=event.enclosure_volume_m3,
                     enclosure_vent_area_m2=event.enclosure_vent_area_m2,
+                    release_boundary=event.release_boundary,
+                    maximum_mass_flow_kg_s=event.maximum_release_mass_flow_kg_s,
                     release_angle_rad=(np.pi / 2 if event.event_id.startswith("vent-") else 0.0),
                     release_height_m=(6.0 if event.event_id.startswith("vent-") else 1.0),
                 )

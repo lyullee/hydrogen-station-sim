@@ -1,6 +1,7 @@
 """A live leak can enter and leave an already running physical simulation."""
 import time
 
+import pytest
 from fastapi.testclient import TestClient
 
 from h2station.api import app
@@ -35,6 +36,38 @@ def test_add_and_remove_live_leak_changes_process():
             assert response.status_code == 202, response.text
             _wait_for(client, job_id, lambda frames: len(frames) > 3 and
                 "hydrogen-leak:cascade.high" not in frames[-1]["active_faults"])
+        finally:
+            client.post(f"/api/simulations/{job_id}/stop")
+
+
+def test_live_flow_limited_leak_preserves_boundary_and_caps_flow():
+    with TestClient(app) as client:
+        job_id = client.post("/api/simulations", json={"continuous": True,
+            "duration_s": 2.0, "control_period_s": .2}).json()["id"]
+        try:
+            _wait_for(client, job_id, lambda frames: len(frames) >= 2)
+            response = client.post(f"/api/simulations/{job_id}/faults", json={
+                "event_id": "flow-limited-leak", "kind": "hydrogen-leak",
+                "target": "dispenser.hose", "start_time_s": 0,
+                "leak_diameter_mm": 10.0,
+                "release_boundary": "flow_limited_line",
+                "maximum_release_mass_flow_g_s": 60.0,
+            })
+            assert response.status_code == 202, response.text
+            frames = _wait_for(client, job_id, lambda frames: any(
+                "hydrogen-leak:dispenser.hose" in frame["active_faults"]
+                and frame["total_leak_flow_g_s"] > 0 for frame in frames))
+            active = next(
+                frame for frame in reversed(frames)
+                if "hydrogen-leak:dispenser.hose" in frame["active_faults"]
+                and frame["total_leak_flow_g_s"] > 0
+            )
+            assert active["total_leak_flow_g_s"] <= 60.0 + 1e-9
+
+            listed = client.get(f"/api/simulations/{job_id}/faults").json()["faults"]
+            fault = next(item for item in listed if item["event_id"] == "flow-limited-leak")
+            assert fault["release_boundary"] == "flow_limited_line"
+            assert fault["maximum_release_mass_flow_g_s"] == pytest.approx(60.0)
         finally:
             client.post(f"/api/simulations/{job_id}/stop")
 

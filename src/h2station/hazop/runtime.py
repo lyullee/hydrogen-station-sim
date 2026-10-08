@@ -159,7 +159,10 @@ class HazopMonitor:
             releases.append({"release_id":leak.release_id, "component_id":leak.component_id,
                              "mass_flow_g_s":float(snap.mass_flow_kg_s * 1000.0) if snap else 0.0,
                              "source_pressure_pa":source.pressure_pa,"source_temperature_k":source.temperature_k,
-                             "orifice_diameter_m":leak.orifice_diameter_m, "release_evidence":"INJECTED_PHYSICAL_LEAK",
+                             "orifice_diameter_m":leak.orifice_diameter_m,
+                             "release_source_boundary":leak.release_boundary,
+                             "process_flow_limit_kg_s":leak.maximum_mass_flow_kg_s,
+                             "release_evidence":"INJECTED_PHYSICAL_LEAK",
                              "consequence":consequence, "calculated_time_s":self.consequence_times.get(leak.release_id),
                              "cached":not snap.consequence_updated if snap else False,
                              "geometry_status":"SCENARIO_DEFAULTS_NOT_SITE_VALIDATED"})

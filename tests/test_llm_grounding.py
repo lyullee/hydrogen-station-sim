@@ -832,6 +832,35 @@ def test_manifest_preserves_opt_in_capacity_eos_geometry_basis():
     )
 
 
+def test_manifest_exposes_qra_method_spread_without_promoting_validation():
+    manifest = build_evidence_manifest({"time_s": 2.0}, {}, [], False)
+    qra = manifest["response_evidence"]["qra_multimethod_comparison"]
+
+    assert qra["source"]["doi"] == "10.34810/DATA3632"
+    assert qra["method_count"] == 7
+    assert qra["retained_row_count"] == 211
+    assert qra["runtime_thermal_within_envelope_count"] == 2
+    assert qra["runtime_overpressure_within_envelope_count"] == 0
+    assert qra["experimental_validation"] is False
+    assert qra["automatic_calibration_performed"] is False
+    dispenser = next(row for row in qra["cases"] if row["equipment"] == "Dispenser")
+    assert dispenser["mass_flow_ratio_to_method_median"] > 20.0
+
+    compact = prompt_decision_evidence(manifest)["validation_boundaries"][
+        "qra_method_ensemble"
+    ]
+    assert "simulation-only" in compact
+    assert "thermal 2/4" in compact
+    assert "overpressure 0/3" in compact
+    assert "no automatic tuning" in compact
+
+    summary = prompt_evidence_summary(manifest)["qra_multimethod_comparison"]
+    assert summary["matched_group_count"] == 46
+    assert summary["maximum_matched_method_ratio"] > 3.3
+    links = prompt_evidence_header(manifest)["public_source_links"]
+    assert any(row["id"] == "PUBLIC_QRA_MULTIMETHOD_DATA3632" for row in links)
+
+
 def test_manifest_exposes_mixed_convection_inputs_as_research_only():
     frame = {
         "time_s": 2.0,

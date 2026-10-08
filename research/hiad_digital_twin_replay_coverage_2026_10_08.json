@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "hiad_to_digital_twin_canonical_replay_coverage_audit",
-  "generated_at_utc": "2026-10-08T02:52:30.995138+00:00",
+  "generated_at_utc": "2026-10-08T04:26:28.673928+00:00",
   "status": "completed_family_level_integration_audit",
   "evidence_role": "retrospective_metadata_to_canonical_runtime_traceability_only",
   "source": {
@@ -10,12 +10,12 @@
     "playbook_catalog": "src/h2station/data/emergency_playbooks.json",
     "playbook_catalog_sha256": "d8fedb036a91b5adae3934f1604a17966b8f0f9200c52f4d40bf2da2243a7c6c",
     "model_input_sha256": {
-      "src/h2station/safety_runtime.py": "5fa9f00ca573d7bf0f8494669672d4ed13476e6c6ff64569be699c2e9e98e641",
-      "src/h2station/safe_operation.py": "c1a297860d554f09df1c6fd3c7780811713001d1f168ebcccf0782ebf9f13dd6",
-      "src/h2station/hazop/runtime.py": "ce53a2ae9a22bde4acd7515fc8bba1f8058122b33e17db82f331ec557769ae69",
+      "src/h2station/safety_runtime.py": "f3a37bfc7e56f361a772ebadea44325dc4462253753290470c02cc478443415b",
+      "src/h2station/safe_operation.py": "a502a06e29446a07897b1cd2843f90fb8ebc6aaa57ff1c3c6ed916820cd1449b",
+      "src/h2station/hazop/runtime.py": "fccdc6ede1db2087e433eb56412c4fa9a61da3bd5d907383019877b66e49292e",
       "src/h2station/hazop/mapping.py": "0412b597461848964208b415dbb8549c5c7c27d83a50970d7dacc1d29c4a9684",
-      "src/h2station/risk/live.py": "84e611b7bd79dd64658c96d56ea12f989a47d2bc8c7e747800a15ef6914f03d0",
-      "src/h2station/risk/runtime_backend.py": "521be71d85ed054fbb6b4b667494cc61c098e7ae75d9e3d833bb960fe6f796ee",
+      "src/h2station/risk/live.py": "73b9d430fd02ccad87758aa206ce2f31fdb78604225f7f3a3579231097fd97d4",
+      "src/h2station/risk/runtime_backend.py": "073cd29261c4e72493f2453913c6afaf18967e51b91e1564c53676c4d9325fad",
       "src/h2station/data/emergency_playbooks.json": "d8fedb036a91b5adae3934f1604a17966b8f0f9200c52f4d40bf2da2243a7c6c"
     },
     "public_response_text_used": false,

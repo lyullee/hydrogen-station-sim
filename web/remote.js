@@ -246,7 +246,11 @@ function readFault(card,index){
   const event={event_id:`remote-${Date.now()}-${index}`,kind,target:card.querySelector('.target').value,start_time_s:Number(value('start_time_s')),end_time_s:value('end_time_s')===''?null:Number(value('end_time_s'))};
   if(event.end_time_s!==null&&event.end_time_s<=event.start_time_s)throw new Error(`사고 ${index+1}: 종료 시각은 시작 시각보다 커야 합니다.`);
   if(!['queued','running'].includes(job?.status)&&!$('continuous').checked&&event.start_time_s>=Number($('duration').value))throw new Error(`사고 ${index+1}: 시작 시각이 계산 구간 밖입니다. 계산 구간을 늘리거나 시작을 앞당기세요.`);
-  for(const key of spec.fields)event[key]=field(key).type==='checkbox'?field(key).checked:Number(value(key));
+  for(const key of spec.fields){
+    if(key==='release_boundary')event[key]=value(key);
+    else if(key==='maximum_release_mass_flow_g_s'&&value('release_boundary')!=='flow_limited_line')continue;
+    else event[key]=field(key).type==='checkbox'?field(key).checked:Number(value(key));
+  }
   return event;
 }
 function readPayload(includeFaults=true){
@@ -348,7 +352,7 @@ function updateFaultCount(){const count=faultCards().length;$('faultCount').text
 function configureCard(card,reset=false){
   const spec=catalog.kinds.find(k=>k.id===card.querySelector('.kind').value),select=card.querySelector('.target'),old=select.value;
   select.replaceChildren(...spec.targets.map(t=>new Option(t.label,t.value)));if(spec.targets.some(t=>t.value===old))select.value=old;
-  for(const label of card.querySelectorAll('[data-param]')){const visible=spec.fields.includes(label.dataset.param);label.hidden=!visible;label.querySelector('input').disabled=!visible;}
+  for(const label of card.querySelectorAll('[data-param]')){const visible=spec.fields.includes(label.dataset.param);label.hidden=!visible;label.querySelector('input,select').disabled=!visible;}
   const input=card.querySelector('[data-field="magnitude"]'),ratio=['pipe-restriction','precooler-loss'].includes(spec.id);
   input.min=ratio?'0':spec.id==='pressure-disturbance'?'-80':'-1000';input.max=ratio?'1':spec.id==='pressure-disturbance'?'100':'1000';
   if(reset)input.value=ratio?'.25':spec.id==='sensor-bias'?'20':'10';
@@ -357,6 +361,9 @@ function configureCard(card,reset=false){
   const indoor=card.querySelector('[data-field="indoor"]'),ignited=card.querySelector('[data-field="ignited"]');
   ignited.onchange=()=>{if(ignited.checked)indoor.checked=true;};
   indoor.onchange=()=>{if(!indoor.checked)ignited.checked=false;};
+  const boundary=card.querySelector('[data-field="release_boundary"]'),limit=card.querySelector('[data-field="maximum_release_mass_flow_g_s"]'),limitLabel=limit.closest('[data-param]');
+  const showBoundary=()=>{const visible=spec.fields.includes('maximum_release_mass_flow_g_s')&&boundary.value==='flow_limited_line';limitLabel.hidden=!visible;limit.disabled=!visible;limit.required=visible;};
+  boundary.onchange=showBoundary;showBoundary();
   const showNote=()=>{const target=spec.targets.find(t=>t.value===select.value);card.querySelector('.fault-note').textContent=spec.note+(target?.unit?` 선택 센서: ${target.unit} · ${target.location}`:'');};
   select.onchange=showNote;showNote();
 }
@@ -386,7 +393,7 @@ function renderLibrary(){
   if(!filtered.length){const empty=document.createElement('p');empty.className='hint';empty.textContent='검색 결과가 없습니다. 분류나 검색어를 바꿔보세요.';$('scenarioLibrary').append(empty);}
 }
 async function initCatalog(){
-  try{catalog=await api('/scenarios.json?v=20261008-ignited-enclosure1');for(const c of catalog.categories)$('categoryFilter').add(new Option(c.label,c.id));renderLibrary();$('addFault').disabled=false;}
+  try{catalog=await api('/scenarios.json?v=20261008-release-boundary1');for(const c of catalog.categories)$('categoryFilter').add(new Option(c.label,c.id));renderLibrary();$('addFault').disabled=false;}
   catch(error){errorMessage('사고 목록을 불러오지 못했습니다: '+error.message);$('catalogCount').textContent='불러오기 실패';$('scenarioLibrary').textContent='새로고침 후 다시 시도하세요. 정상 운전은 실행할 수 있습니다.';}
 }
 async function health(){try{await api('/api/health');$('serverStatus').textContent='서버 연결됨';$('serverStatus').dataset.state='ready';}catch{$('serverStatus').textContent='서버 연결 실패';$('serverStatus').dataset.state='error';}}

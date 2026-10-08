@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T03:52:11.815428+00:00",
+  "generated_at": "2026-10-08T04:27:58.814627+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -6702,11 +6702,11 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7999,
+          "approximate_manuscript_words_before_references": 7990,
           "figures": 3,
           "tables": 3,
-          "citation_keys": 43,
-          "bibliography_entries": 44,
+          "citation_keys": 44,
+          "bibliography_entries": 45,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -6734,12 +6734,12 @@
       "requirement": "Compiler success with source hash and no unresolved errors.",
       "observed": {
         "schema_version": 1,
-        "attempted_at": "2026-10-08T03:52:11.4482670+00:00",
+        "attempted_at": "2026-10-08T04:27:58.422235+00:00",
         "attempts_this_run": 1,
         "success": false,
         "compiler": "Codex built-in LaTeX compiler",
         "source": "manuscript/ijhe_manuscript_draft.tex",
-        "source_sha256": "0e5332b55823ad781d68f2f620517a8048c35a9c66adea8d4bad935958d4a87d",
+        "source_sha256": "4c570979bdd17938b4e31a9f0e8030515d5461313bb4bcc21fbff68a0259b5bc",
         "diagnostic": "Unable to find standard directories for platform",
         "format_check_passed": true,
         "retained_previous_pdf": {

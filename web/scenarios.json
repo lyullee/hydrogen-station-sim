@@ -1,5 +1,5 @@
 {
-  "version": "20261008-ignited-enclosure1",
+  "version": "20261008-release-boundary1",
   "categories": [
     {
       "id": "leak",
@@ -78,12 +78,14 @@
       ],
       "fields": [
         "leak_diameter_mm",
+        "release_boundary",
+        "maximum_release_mass_flow_g_s",
         "indoor",
         "ignited",
         "enclosure_volume_m3",
         "enclosure_vent_area_m2"
       ],
-      "note": "누출 질량·에너지를 재고에서 차감합니다. 실내·즉시점화를 함께 선택하면 검증된 환기식 밀폐공간 압력피크 모델을 계산합니다."
+      "note": "누출 질량·에너지를 재고에서 차감합니다. 자유분출은 압력·구경으로, 배관·공정 제한은 입력한 최대 유량으로 상한을 둡니다. 실내·즉시점화 선택 시 환기식 밀폐공간 압력피크를 별도 계산합니다."
     },
     {
       "id": "external-fire",

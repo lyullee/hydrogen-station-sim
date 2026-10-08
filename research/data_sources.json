@@ -869,6 +869,36 @@
       "file_sha256": "17f170b70796e63644f7272bf4bd950c09dad20a7542254847837f09d58b9220",
       "rights_note": "The openly licensed report may be audited locally; the raw PDF remains outside version control and only its identity and bounded findings are committed.",
       "eligibility_note": "D3 classifies the Group A NPL and Group C ENGIE October 2024 work as 35 MPa high-flow direct/serial sampling-system tests fed from medium-pressure station banks. The documented sinks are sampling hardware rather than vehicle tanks, so these records are component-boundary evidence and do not satisfy the station-to-vehicle full-loop validation gate."
+    },
+    "cora_data3632_qra_multimethod_v2": {
+      "title": "Simulation dataset for benchmarking quantitative risk analysis methodologies for hydrogen refuelling stations",
+      "publisher": "CORA.Repositori de Dades de Recerca / Universitat Politècnica de Catalunya",
+      "landing_page": "https://doi.org/10.34810/DATA3632",
+      "doi": "10.34810/DATA3632",
+      "version": "2.0",
+      "license": "CC BY 4.0",
+      "published_file_count": 276,
+      "methods": [
+        "M1 Canada",
+        "M2 China",
+        "M3 Japan",
+        "M4 Korea",
+        "M5 Netherlands",
+        "M6 Spain",
+        "M7 USA"
+      ],
+      "software_context": "DNV Safeti 9.11 / PHAST 9.11",
+      "readme": {
+        "dataverse_file_id": 522067,
+        "bytes": 64040,
+        "sha256": "7683e2baa6dd9721e9b06cf7c143e4f5c5da0d4b0770d09b3343c1621c2505b2"
+      },
+      "evidence_role": "Open multi-method simulation benchmark for consequence-method spread and source-boundary diagnostics.",
+      "comparison_protocol": "research/qra_multimethod_comparison_protocol_2026_10_08.json",
+      "comparison_result": "research/qra_multimethod_comparison_2026_10_08.json",
+      "runtime_comparison": "research/runtime_qra_envelope_comparison_2026_10_08.json",
+      "rights_note": "CC BY 4.0. The audit retains hashes and derived summaries; downloaded raw files remain outside version control.",
+      "eligibility_note": "Simulation-to-simulation diagnostic only. It is not experimental consequence validation, a site-specific safety-distance basis, a field incident dataset, or authority to tune runtime parameters after outcome access."
     }
   }
 }

@@ -60,6 +60,8 @@ the next implementation step.
 - Ambient pressure
 - Physical orifice diameter and discharge coefficient
 - Simulator-calculated `mass_flow_override_kg_s`
+- Explicit release-source boundary: `free_orifice` or `flow_limited_line`
+- Optional defensible process/line flow cap for a flow-limited boundary
 - Cumulative released mass and elapsed release duration
 - Release location, angle, height, and indoor/outdoor flag
 - Optional annual leak frequency and ignition probabilities
@@ -75,7 +77,13 @@ station state -> leak source term -> HyRAM jet/plume/flame/overpressure/accumula
 
 The local HyRAM+ adapter should implement `HyRAMConsequenceBackend.evaluate_release`
 and pass `mass_flow_override_kg_s` to the existing consequence methods. HyRAM+ 6.1
-is the target version.
+is the target version. The process model applies a flow cap before creating the
+request and preserves both the boundary label and cap in the consequence output.
+The cap must come from a stated equipment or benchmark boundary; it is not fitted
+after viewing a desired consequence distance. Because HyRAM 6.1 can recompute a
+choked orifice flow, the native bridge converts an active cap to an analytically
+area-scaled equivalent consequence orifice. Results retain both the physical
+aperture and the equivalent diameter, together with an approximation flag.
 
 Official HyRAM+ page and technical references:
 https://energy.sandia.gov/programs/sustainable-transportation/hydrogen/hydrogen-safety-codes-and-standards/hyram/
@@ -104,4 +112,3 @@ The safety PLC, fault injector, and HyRAM runtime contract are implemented. The 
 phase will connect `OperationalOverride` and active leak mass/energy sinks directly
 to `FullStationModel`, feed HyRAM indoor concentration back to detector readings, and
 record trip-to-isolation response time and total released mass.
-

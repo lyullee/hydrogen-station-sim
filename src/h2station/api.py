@@ -96,6 +96,8 @@ class FaultInput(BaseModel):
     ignited: bool = False
     enclosure_volume_m3: float | None = Field(default=None, gt=0.0, le=1.0e6)
     enclosure_vent_area_m2: float | None = Field(default=None, gt=0.0, le=1.0e4)
+    release_boundary: Literal["free_orifice", "flow_limited_line"] = "free_orifice"
+    maximum_release_mass_flow_g_s: float | None = Field(default=None, gt=0.0)
     rate_s: float = Field(default=30.0, gt=0.0)
     external_temperature_c: float | None = Field(default=None, gt=-273.15, le=2500.0)
     heat_transfer_ua_w_k: float = Field(default=0.0, ge=0.0, le=1.0e8)
@@ -121,6 +123,11 @@ class FaultInput(BaseModel):
             ignited=self.ignited,
             enclosure_volume_m3=self.enclosure_volume_m3,
             enclosure_vent_area_m2=self.enclosure_vent_area_m2,
+            release_boundary=self.release_boundary,
+            maximum_release_mass_flow_kg_s=(
+                self.maximum_release_mass_flow_g_s / 1000.0
+                if self.maximum_release_mass_flow_g_s is not None else None
+            ),
             rate_s=self.rate_s,
             external_temperature_k=(
                 self.external_temperature_c + 273.15
@@ -1713,6 +1720,14 @@ def list_simulation_faults(job_id: str) -> dict[str, Any]:
              "start_time_s": event.start_time_s + (time_s if relative else 0.0),
              "end_time_s": (event.end_time_s + (time_s if relative else 0.0)
                             if event.end_time_s is not None else None),
+             "release_boundary": (
+                 event.release_boundary if event.kind is FaultKind.HYDROGEN_LEAK else None
+             ),
+             "maximum_release_mass_flow_g_s": (
+                 event.maximum_release_mass_flow_kg_s * 1000.0
+                 if event.kind is FaultKind.HYDROGEN_LEAK
+                 and event.maximum_release_mass_flow_kg_s is not None else None
+             ),
              "active": not relative and event.active_at(time_s)}
             for event, relative in events if relative or event.end_time_s is None or event.end_time_s > time_s
         ]}

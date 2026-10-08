@@ -24,6 +24,8 @@ class LeakScenario:
     ignited: bool = False
     enclosure_volume_m3: float | None = None
     enclosure_vent_area_m2: float | None = None
+    release_boundary: str = "free_orifice"
+    maximum_mass_flow_kg_s: float | None = None
     annual_frequency_per_year: float | None = None
     immediate_ignition_probability: float | None = None
     delayed_ignition_probability: float | None = None
@@ -47,6 +49,15 @@ class LeakScenario:
             raise ValueError("Enclosure volume must be positive")
         if self.enclosure_vent_area_m2 is not None and self.enclosure_vent_area_m2 <= 0.0:
             raise ValueError("Enclosure vent area must be positive")
+        if self.release_boundary not in {"free_orifice", "flow_limited_line"}:
+            raise ValueError("Unknown hydrogen release boundary")
+        if self.release_boundary == "flow_limited_line" and (
+            self.maximum_mass_flow_kg_s is None
+            or self.maximum_mass_flow_kg_s <= 0.0
+        ):
+            raise ValueError(
+                "Flow-limited hydrogen releases require a positive maximum mass flow"
+            )
 
 
 @dataclass(frozen=True)
@@ -79,6 +90,8 @@ class HyRAMDynamicReleaseRequest:
     ignited: bool = False
     enclosure_volume_m3: float | None = None
     enclosure_vent_area_m2: float | None = None
+    release_boundary: str = "free_orifice"
+    process_flow_limit_kg_s: float | None = None
 
 
 class HyRAMConsequenceBackend(Protocol):
@@ -140,11 +153,14 @@ class DynamicLeakModel:
             ),
             self.fluid,
         )
-        return restriction.mass_flow_kg_s(
+        free_orifice_flow = restriction.mass_flow_kg_s(
             source.pressure_pa,
             source.temperature_k,
             source.ambient_pressure_pa,
         )
+        if scenario.release_boundary == "flow_limited_line":
+            return min(free_orifice_flow, float(scenario.maximum_mass_flow_kg_s))
+        return free_orifice_flow
 
 
 class DynamicRiskMonitor:
@@ -215,6 +231,8 @@ class DynamicRiskMonitor:
                     ignited=scenario.ignited,
                     enclosure_volume_m3=scenario.enclosure_volume_m3,
                     enclosure_vent_area_m2=scenario.enclosure_vent_area_m2,
+                    release_boundary=scenario.release_boundary,
+                    process_flow_limit_kg_s=scenario.maximum_mass_flow_kg_s,
                 )
                 consequence = dict(self.backend.evaluate_release(request))
                 self._last_consequence[scenario.release_id] = consequence
