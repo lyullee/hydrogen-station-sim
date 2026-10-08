@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import h5py
 import numpy as np
 import pytest
 from scipy.io import savemat
@@ -39,6 +40,33 @@ def _synthetic_mat(path: Path, experiment: int = 19) -> None:
     )
 
 
+def _synthetic_hdf5_mat(path: Path) -> None:
+    time = np.linspace(0.0, 120.0, 361)
+    with h5py.File(path, "w") as file:
+        references = file.create_group("#refs#")
+        sensor = file.create_group("S")
+        time_cells = sensor.create_dataset("time", (4, 1), dtype=h5py.ref_dtype)
+        concentration_cells = sensor.create_dataset("conc", (4, 1), dtype=h5py.ref_dtype)
+        for index in range(4):
+            sensor_time = references.create_dataset(f"time_{index}", data=time.reshape(1, -1))
+            concentration = references.create_dataset(
+                f"conc_{index}", data=(0.05 * (index + 1) * time).reshape(1, -1)
+            )
+            time_cells[index, 0] = sensor_time.ref
+            concentration_cells[index, 0] = concentration.ref
+        mfm = file.create_group("MFM")
+        mfm.create_dataset("time", data=time.reshape(-1, 1))
+        mfm.create_dataset("mfr", data=np.ones((1, len(time))))
+        mfm.create_dataset("t0", data=[[0.0]])
+        vent = file.create_group("Vent")
+        vent.create_dataset("time", data=time.reshape(-1, 1))
+        vent.create_dataset("vfr", data=np.full((1, len(time)), 365.0))
+        tank = file.create_group("Tank")
+        tank.create_dataset("time", data=time.reshape(-1, 1))
+        tank.create_dataset("p", data=np.full((1, len(time)), 200.0))
+        tank.create_dataset("T", data=np.full((1, len(time)), 20.0))
+
+
 def test_mat_loader_preserves_documented_time_series(tmp_path: Path):
     path = tmp_path / "Exp19.mat"
     _synthetic_mat(path)
@@ -47,6 +75,16 @@ def test_mat_loader_preserves_documented_time_series(tmp_path: Path):
     assert trace.concentration_volpct.shape == (361, 4)
     assert trace.mass_flow_g_s.shape == trace.mass_flow_time_s.shape
     assert trace.tank_pressure_bar is not None
+
+
+def test_matlab_v73_hdf5_loader_dereferences_sensor_cells(tmp_path: Path):
+    path = tmp_path / "Exp19.mat"
+    _synthetic_hdf5_mat(path)
+    trace = load_hytunnel_mat(path)
+    assert trace.experiment == 19
+    assert trace.concentration_volpct.shape == (361, 4)
+    assert np.allclose(trace.concentration_volpct[:, 2], 0.15 * trace.sensor_time_s)
+    assert trace.mass_flow_time_s.shape == (361,)
 
 
 def test_evaluators_return_finite_metrics_without_time_shift_or_fit(tmp_path: Path):

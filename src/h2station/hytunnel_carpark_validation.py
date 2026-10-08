@@ -20,6 +20,7 @@ import math
 from pathlib import Path
 from typing import Any
 
+import h5py
 import numpy as np
 from scipy.io import loadmat
 from scipy.stats import spearmanr
@@ -129,16 +130,82 @@ def _series_on_time(value: Any, source_time: np.ndarray, target_time: np.ndarray
     x = source_time[valid][ordered]
     y = vector[valid][ordered]
     unique = np.concatenate(([True], np.diff(x) > 0.0))
-    return np.interp(target_time, x[unique], y[unique])
+    return np.interp(target_time, x[unique], y[unique], left=np.nan, right=np.nan)
+
+
+def _hdf5_numeric(group: h5py.Group, name: str) -> np.ndarray:
+    return np.asarray(group[name][()], dtype=float).squeeze()
+
+
+def _hdf5_sensor_series(file: h5py.File, group: h5py.Group, name: str) -> list[np.ndarray]:
+    references = np.asarray(group[name][()]).reshape(-1)
+    values: list[np.ndarray] = []
+    for reference in references:
+        if not reference:
+            values.append(np.asarray([], dtype=float))
+            continue
+        values.append(np.asarray(file[reference][()], dtype=float).squeeze().reshape(-1))
+    return values
+
+
+def _load_hdf5_mat(path: Path, experiment: int) -> HyTunnelTrace:
+    with h5py.File(path, "r") as file:
+        sensor = file["S"]
+        sensor_times = _hdf5_sensor_series(file, sensor, "time")
+        concentrations = _hdf5_sensor_series(file, sensor, "conc")
+        if len(sensor_times) != len(concentrations) or not sensor_times:
+            raise ValueError("S.time and S.conc cell arrays do not have matching sensor counts")
+        reference_index = max(range(len(sensor_times)), key=lambda index: sensor_times[index].size)
+        sensor_time = _vector(sensor_times[reference_index], "S.time reference")
+        concentration_columns: list[np.ndarray] = []
+        for index, (time_values, concentration_values) in enumerate(
+            zip(sensor_times, concentrations, strict=True)
+        ):
+            time_vector = _vector(time_values, f"S.time[{index}]")
+            concentration_vector = _vector(concentration_values, f"S.conc[{index}]")
+            if time_vector.size != concentration_vector.size:
+                raise ValueError(f"S.time[{index}] and S.conc[{index}] lengths differ")
+            concentration_columns.append(
+                _series_on_time(
+                    concentration_vector,
+                    time_vector,
+                    sensor_time,
+                    f"S.conc[{index}]",
+                )
+            )
+        concentration = np.column_stack(concentration_columns)
+        mfm = file["MFM"]
+        vent = file["Vent"]
+        tank_time = tank_pressure = tank_temperature = None
+        if "Tank" in file:
+            tank = file["Tank"]
+            tank_time = _vector(_hdf5_numeric(tank, "time"), "Tank.time")
+            tank_pressure = _vector(_hdf5_numeric(tank, "p"), "Tank.p")
+            tank_temperature = _vector(_hdf5_numeric(tank, "T"), "Tank.T")
+        return HyTunnelTrace(
+            experiment=experiment,
+            sensor_time_s=sensor_time,
+            concentration_volpct=concentration,
+            mass_flow_time_s=_vector(_hdf5_numeric(mfm, "time"), "MFM.time"),
+            mass_flow_g_s=_vector(_hdf5_numeric(mfm, "mfr"), "MFM.mfr"),
+            release_start_s=float(np.asarray(_hdf5_numeric(mfm, "t0")).squeeze()),
+            ventilation_time_s=_vector(_hdf5_numeric(vent, "time"), "Vent.time"),
+            ventilation_m3_h=_vector(_hdf5_numeric(vent, "vfr"), "Vent.vfr"),
+            tank_time_s=tank_time,
+            tank_pressure_bar=tank_pressure,
+            tank_temperature_c=tank_temperature,
+        )
 
 
 def load_hytunnel_mat(path: str | Path) -> HyTunnelTrace:
     path = Path(path)
-    payload = loadmat(path, squeeze_me=True, struct_as_record=False)
     experiment_match = "".join(character for character in path.stem if character.isdigit())
     if not experiment_match:
         raise ValueError("experiment number is missing from the MAT filename")
     experiment = int(experiment_match)
+    if h5py.is_hdf5(path):
+        return _load_hdf5_mat(path, experiment)
+    payload = loadmat(path, squeeze_me=True, struct_as_record=False)
     sensor = payload["S"]
     mfm = payload["MFM"]
     vent = payload["Vent"]
@@ -196,6 +263,13 @@ def simulate_well_mixed_concentration(trace: HyTunnelTrace) -> tuple[np.ndarray,
         time,
         "Vent.vfr",
     )
+    synchronized = np.isfinite(measured_mean) & np.isfinite(flow) & np.isfinite(ventilation)
+    time = time[synchronized]
+    measured_mean = measured_mean[synchronized]
+    flow = flow[synchronized]
+    ventilation = ventilation[synchronized]
+    if time.size < 30:
+        raise ValueError("fewer than 30 samples on the common concentration, flow and ventilation support")
     flow = np.maximum(flow, 0.0) / 1000.0
     ventilation = np.maximum(ventilation, 0.0) / 3600.0
     density = _hydrogen_density_ambient()

@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "amended_at": "2026-10-08",
+  "status": "FROZEN_BEFORE_OUTCOME_METRICS_RECOMPUTE",
+  "protocol_path": "research/hytunnel_carpark_holdout_protocol_2026_10_08.json",
+  "protocol_sha256": "f5b972a46d4585d94dd5e26fdd8891ae98b421740246672a294df6005312432e",
+  "trigger": {
+    "stage": "raw-file loading",
+    "observed_error": "NotImplementedError: Please use HDF reader for matlab v7.3 files, e.g. h5py",
+    "affected_declared_cases": 18,
+    "outcome_metrics_computed_before_amendment": false,
+    "initial_failure_artifact": {
+      "path": "research/hytunnel_carpark_holdout_initial_format_failure_2026_10_08.json",
+      "sha256": "aabf13effeaad62ab6d62ccbad15ac100d67737f178c5bb88a3087627440b528"
+    }
+  },
+  "limited_format_inspection": {
+    "file": "Exp19.mat",
+    "inspected": [
+      "HDF5 group and dataset names",
+      "dataset shapes and dtypes",
+      "sensor cell-reference structure",
+      "time-vector lengths and ranges",
+      "concentration-vector lengths and finite ranges needed to verify units and orientation"
+    ],
+    "not_computed": [
+      "case error metrics",
+      "case pass/fail status",
+      "aggregate pass fraction",
+      "threshold alternatives",
+      "parameter fits"
+    ]
+  },
+  "format_only_changes": [
+    "Use h5py when a MAT file is MATLAB v7.3/HDF5; retain scipy.io.loadmat for earlier MAT files.",
+    "Dereference each S.time and S.conc cell entry as one sensor trace.",
+    "Choose the longest documented S.time vector as the deterministic common sensor time base, breaking ties by original sensor order.",
+    "Linearly interpolate each sensor only within its own time support and use NaN outside that support; no time shift or extrapolation is allowed.",
+    "Read MFM, Vent and Tank numeric arrays directly from their documented HDF5 groups.",
+    "Evaluate concentration only on the common finite support of the sensor mean, mass flow and ventilation because extrapolation is prohibited."
+  ],
+  "scientific_rules_unchanged": {
+    "declared_cases": true,
+    "exclusions": true,
+    "models": true,
+    "physical_parameters": true,
+    "primary_endpoints": true,
+    "thresholds": true,
+    "aggregate_decisions": true,
+    "claim_boundaries": true
+  },
+  "updated_code": {
+    "module": {
+      "path": "src/h2station/hytunnel_carpark_validation.py",
+      "sha256": "84131b5c1fd06b8e31a37e97d1b3f19efe06ba0b64cebabd4b294ac2f1d21753"
+    },
+    "runner": {
+      "path": "scripts/run_hytunnel_carpark_holdout.py",
+      "sha256": "07f30da0dc011e2cc219c01bc471e97bd7756dcaf67d443eef478313ecd262ef"
+    }
+  }
+}
