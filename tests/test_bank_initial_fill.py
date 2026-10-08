@@ -37,12 +37,60 @@ def test_independent_fill_percent_changes_only_selected_bank_inventory():
     assert changed.initial_state.banks[2].hydrogen_mass_kg > baseline.initial_state.banks[2].hydrogen_mass_kg
 
 
+def test_bank_volume_is_explicit_and_scales_inventory_and_lumped_wall_model():
+    baseline = build_reference_scenario(ReferenceScenario(), UnavailableHyRAMBackend())
+    changed = build_reference_scenario(
+        replace(ReferenceScenario(), bank_internal_volume_m3=(0.70, 0.35, 0.175)),
+        UnavailableHyRAMBackend(),
+    )
+
+    assert [bank.parameters.internal_volume_m3 for bank in changed.station.banks] == pytest.approx(
+        [0.70, 0.35, 0.175]
+    )
+    assert changed.initial_state.banks[0].hydrogen_mass_kg == pytest.approx(
+        2.0 * baseline.initial_state.banks[0].hydrogen_mass_kg
+    )
+    assert changed.initial_state.banks[1].hydrogen_mass_kg == pytest.approx(
+        baseline.initial_state.banks[1].hydrogen_mass_kg
+    )
+    assert changed.initial_state.banks[2].hydrogen_mass_kg == pytest.approx(
+        0.5 * baseline.initial_state.banks[2].hydrogen_mass_kg
+    )
+    assert changed.station.banks[0].parameters.wall_mass_kg == pytest.approx(600.0)
+    assert changed.station.banks[2].parameters.gas_wall_ua_w_k == pytest.approx(15.0)
+
+
+@pytest.mark.parametrize(
+    "volumes",
+    [(0.35, 0.35), (0.35, 0.0, 0.35), (0.35, -0.1, 0.35)],
+)
+def test_reference_scenario_rejects_invalid_bank_volumes(volumes):
+    with pytest.raises(ValueError, match="three positive values"):
+        build_reference_scenario(
+            replace(ReferenceScenario(), bank_internal_volume_m3=volumes),
+            UnavailableHyRAMBackend(),
+        )
+
+
 @pytest.mark.parametrize("field,value", [
     ("initial_bank_low_fill_percent", 0),
     ("initial_bank_medium_fill_percent", 101),
     ("initial_bank_high_fill_percent", -1),
 ])
 def test_api_rejects_out_of_range_bank_fill(field, value):
+    with pytest.raises(ValidationError):
+        SimulationInput.model_validate({field: value})
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("bank_low_internal_volume_m3", 0),
+        ("bank_medium_internal_volume_m3", -1),
+        ("bank_high_internal_volume_m3", 101),
+    ],
+)
+def test_api_rejects_nonphysical_bank_volume(field, value):
     with pytest.raises(ValidationError):
         SimulationInput.model_validate({field: value})
 

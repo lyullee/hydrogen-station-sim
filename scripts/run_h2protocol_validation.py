@@ -115,6 +115,7 @@ def run_case(
     vehicle_internal_length_m: float | None = None,
     vehicle_inlet_nozzle_diameter_m: float | None = None,
     vehicle_equivalent_capsule_aspect_ratio: float | None = None,
+    bank_internal_volume_m3: tuple[float, float, float] = (0.35, 0.35, 0.35),
 ) -> dict:
     case_id = summary["case_id"]
     exp_time = np.asarray([_float(row, "time_s") for row in trace_rows])
@@ -220,6 +221,7 @@ def run_case(
         delivery_temperature_k=float(np.median(inlet_temperature) + 273.15),
         maximum_mass_flow_kg_s=0.060,
         risk_update_period_s=max(float(exp_time[-1]) + 1.0, 3600.0),
+        bank_internal_volume_m3=bank_internal_volume_m3,
     )
     built = build_reference_scenario(config, UnavailableHyRAMBackend())
     settings = ProcessSettings(
@@ -346,6 +348,7 @@ def run_case(
         "vehicle_geometry_derivation": geometry_derivation,
         "dispenser_flow_area_multiplier": dispenser_flow_area_multiplier,
         "precooler_duty_multiplier": precooler_duty_multiplier,
+        "bank_internal_volume_m3": list(bank_internal_volume_m3),
         "chamber_temperature_c": _float(summary, "chamber_temperature_c"),
         "scheduled_aprr_mpa_min": scheduled_aprr,
         "experimental_duration_s": float(exp_time[-1]),
@@ -416,6 +419,7 @@ def _run_case_file(
     vehicle_internal_length_m: float | None = None,
     vehicle_inlet_nozzle_diameter_m: float | None = None,
     vehicle_equivalent_capsule_aspect_ratio: float | None = None,
+    bank_internal_volume_m3: tuple[float, float, float] = (0.35, 0.35, 0.35),
 ) -> dict:
     return run_case(
         summary,
@@ -429,6 +433,7 @@ def _run_case_file(
         vehicle_internal_length_m,
         vehicle_inlet_nozzle_diameter_m,
         vehicle_equivalent_capsule_aspect_ratio,
+        bank_internal_volume_m3,
     )
 
 
@@ -518,6 +523,8 @@ def _write_markdown(path: Path, report: dict) -> None:
         f"- Vehicle thermal model: `{report.get('vehicle_tank_thermal_model', 'constant_ua')}`",
         f"- Equivalent capsule aspect ratio: `{report.get('vehicle_equivalent_capsule_aspect_ratio')}`",
         f"- Inlet nozzle diameter: `{report.get('vehicle_inlet_nozzle_diameter_m')}` m",
+        f"- Cascade-bank gas volumes (low/medium/high): "
+        f"`{report.get('bank_internal_volume_m3', [0.35, 0.35, 0.35])}` m³",
         f"- Selected laboratory tests: `{report['selected_lab_test_numbers'] or 'all 36'}`",
         "",
         "## Aggregate agreement",
@@ -604,9 +611,26 @@ def _write_markdown(path: Path, report: dict) -> None:
             if report.get("vehicle_tank_thermal_model") == "mixed_convection" else
             "- The constant-UA tank model does not require an assumed vessel aspect ratio."
         ),
+        "- Cascade-bank volumes are declared model inputs. Public J2601 case files do "
+        "not identify the station-side storage inventory, so a changed value is a "
+        "source-boundary sensitivity and not a reconstructed test-rig measurement.",
         "- Predictions are interpolated to the experimental clock without dynamic time warping.",
     ])
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _parse_bank_volumes(value: str) -> tuple[float, float, float]:
+    try:
+        parsed = tuple(float(item.strip()) for item in value.split(","))
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(
+            "bank volumes must be three comma-separated numbers"
+        ) from exc
+    if len(parsed) != 3 or any(volume <= 0.0 for volume in parsed):
+        raise argparse.ArgumentTypeError(
+            "bank volumes must contain three positive values: low,medium,high"
+        )
+    return parsed
 
 
 def main() -> int:
@@ -624,6 +648,16 @@ def main() -> int:
         help="Load the frozen selected flow-area multiplier from calibration.json",
     )
     parser.add_argument("--precooler-duty-multiplier", type=float, default=1.0)
+    parser.add_argument(
+        "--bank-internal-volumes-m3",
+        type=_parse_bank_volumes,
+        default=(0.35, 0.35, 0.35),
+        metavar="LOW,MEDIUM,HIGH",
+        help=(
+            "Declared aggregate gas volumes of the cascade banks. This changes the "
+            "station-side source boundary and is not inferred from vehicle outcomes."
+        ),
+    )
     parser.add_argument(
         "--geometry-basis",
         choices=("capacity_scaled", "capacity_eos"),
@@ -769,6 +803,7 @@ def main() -> int:
                 None,
                 inlet_nozzle_diameter_m,
                 args.vehicle_equivalent_capsule_aspect_ratio,
+                args.bank_internal_volumes_m3,
             )
             rows.append(result)
             print(f"validated {result['case_id']}", flush=True)
@@ -788,6 +823,7 @@ def main() -> int:
                     None,
                     inlet_nozzle_diameter_m,
                     args.vehicle_equivalent_capsule_aspect_ratio,
+                    args.bank_internal_volumes_m3,
                 ): summary["case_id"]
                 for summary in ordered_summaries
             }
@@ -814,6 +850,7 @@ def main() -> int:
             args.vehicle_equivalent_capsule_aspect_ratio
         ),
         "vehicle_inlet_nozzle_diameter_m": inlet_nozzle_diameter_m,
+        "bank_internal_volume_m3": list(args.bank_internal_volumes_m3),
         "thermal_calibration_source": thermal_calibration_source,
         "selected_lab_test_numbers": (
             sorted(selected_lab_tests) if selected_lab_tests is not None else None

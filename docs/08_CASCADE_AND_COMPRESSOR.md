@@ -34,6 +34,14 @@ CoolProp closes every bank state from density and specific internal energy. Bank
 volume, wall capacity, and both heat-transfer paths have explicit fitting
 multipliers.
 
+The aggregate low-, medium- and high-bank gas volumes are first-class scenario
+inputs. The reference plant remains 0.35 m³ per bank for backward compatibility.
+When a different volume is declared, initial hydrogen inventory is recomputed at
+the same pressure and temperature, while lumped wall mass and both UA values scale
+linearly. This represents adding or removing similar vessel modules; it is not an
+OEM vessel reconstruction. The API and remote operating settings expose the three
+volumes independently.
+
 ## Finite common-header model
 
 The cascade selector valves feed a separate 0.015 m³ reference header. Its reference
@@ -161,6 +169,9 @@ https://www.hydrogen.energy.gov/program-areas/systems-analysis/h2a-analysis/h2a-
 - Header geometry and restriction area are prospective reference values. They must
   remain fixed for a future apparatus-resolved holdout; the current implementation
   is prospective infrastructure, not external validation evidence.
+- Public J2601 vehicle-case files do not disclose connected cascade volume, valve
+  topology or regulator state. A bank-volume sensitivity can diagnose source-boundary
+  error but cannot identify the test-rig inventory or validate the full loop.
 - The compressor suction is currently a pressure-temperature boundary. A low-pressure
   buffer, trailer, pipeline, or electrolyzer model can replace it without changing
   the compressor equations.

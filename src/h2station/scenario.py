@@ -51,6 +51,7 @@ from .vehicle import (
 
 BANK_REFERENCE_MAX_PRESSURE_PA = (50.0e6, 70.0e6, 100.0e6)
 DEFAULT_BANK_INITIAL_FILL_PERCENT = (90.0, 100.0 * 65.0 / 70.0, 90.0)
+DEFAULT_BANK_INTERNAL_VOLUME_M3 = (0.35, 0.35, 0.35)
 CAPACITY_EOS_REFERENCE_TEMPERATURE_K = 288.15
 
 
@@ -131,6 +132,13 @@ class ReferenceScenario:
     # station data; frozen station-side validation must evaluate them unchanged.
     header_internal_volume_m3: float = 0.015
     bank_header_flow_area_m2: float = 6.0e-6
+    # Aggregate gas volume of the low/medium/high storage banks.  The 0.35 m3
+    # default preserves the demonstrator reference plant, while explicit
+    # values allow a public rig or an anonymized station inventory to be
+    # represented without changing source code.
+    bank_internal_volume_m3: tuple[float, float, float] = (
+        DEFAULT_BANK_INTERNAL_VOLUME_M3
+    )
     initial_bank_fill_percent: tuple[float, float, float] = DEFAULT_BANK_INITIAL_FILL_PERCENT
     fault_events: tuple[FaultEvent, ...] = ()
     # Optional time-dependent boundary traces used by partial-station validation.
@@ -211,6 +219,10 @@ def build_reference_scenario(
         not 1.0 <= percent <= 100.0 for percent in config.initial_bank_fill_percent
     ):
         raise ValueError("initial_bank_fill_percent must contain three values from 1 to 100")
+    if len(config.bank_internal_volume_m3) != len(BANK_REFERENCE_MAX_PRESSURE_PA) or any(
+        volume_m3 <= 0.0 for volume_m3 in config.bank_internal_volume_m3
+    ):
+        raise ValueError("bank_internal_volume_m3 must contain three positive values")
     if config.vehicle_internal_volume_m3 <= 0.0 or config.vehicle_2_internal_volume_m3 <= 0.0:
         raise ValueError("vehicle tank volumes must be positive")
     if min(
@@ -454,22 +466,30 @@ def build_reference_scenario(
         fit=dispenser_fit,
         ambient_temperature_k=config.ambient_temperature_k,
     )
+    reference_bank_volume_m3 = DEFAULT_BANK_INTERNAL_VOLUME_M3[0]
     banks = tuple(
         CascadeBank(
             CascadeBankParameters(
                 name=name,
-                internal_volume_m3=0.35,
+                internal_volume_m3=internal_volume_m3,
                 target_pressure_pa=target_pressure_pa,
-                wall_mass_kg=300.0,
+                # Treat a larger aggregate bank as additional vessels of the
+                # same construction. Wall inventory and conductance therefore
+                # scale with gas volume rather than assuming one enlarged
+                # geometrically-similar shell.
+                wall_mass_kg=300.0 * internal_volume_m3 / reference_bank_volume_m3,
                 wall_specific_heat_j_kg_k=500.0,
-                gas_wall_ua_w_k=30.0,
-                wall_ambient_ua_w_k=12.0,
+                gas_wall_ua_w_k=30.0 * internal_volume_m3 / reference_bank_volume_m3,
+                wall_ambient_ua_w_k=12.0 * internal_volume_m3 / reference_bank_volume_m3,
             )
         )
-        for name, target_pressure_pa in (
-            ("low", 45.0e6),
-            ("medium", 65.0e6),
-            ("high", 95.0e6),
+        for (name, target_pressure_pa), internal_volume_m3 in zip(
+            (
+                ("low", 45.0e6),
+                ("medium", 65.0e6),
+                ("high", 95.0e6),
+            ),
+            config.bank_internal_volume_m3,
         )
     )
     common_header = CascadeBank(

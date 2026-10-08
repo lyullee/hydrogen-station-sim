@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import math
@@ -12,7 +13,11 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from run_h2protocol_validation import equivalent_capsule_geometry, main  # noqa: E402
+from run_h2protocol_validation import (  # noqa: E402
+    _parse_bank_volumes,
+    equivalent_capsule_geometry,
+    main,
+)
 
 
 def test_equivalent_capsule_geometry_preserves_declared_volume() -> None:
@@ -65,6 +70,13 @@ def test_constant_ua_cli_rejects_mixed_convection_geometry(
     )
     with pytest.raises(SystemExit, match="require --vehicle-tank-thermal-model"):
         main()
+
+
+def test_bank_volume_cli_parser_requires_three_positive_values() -> None:
+    assert _parse_bank_volumes("0.35, 3, 8.5") == pytest.approx((0.35, 3.0, 8.5))
+    for value in ("0.35,3", "0.35,0,8", "low,medium,high"):
+        with pytest.raises(argparse.ArgumentTypeError):
+            _parse_bank_volumes(value)
 
 
 def test_committed_mixed_convection_diagnostic_is_claim_bounded() -> None:

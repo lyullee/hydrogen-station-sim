@@ -230,6 +230,9 @@ class SimulationInput(BaseModel):
     vehicle_2_internal_diameter_m: float | None = Field(default=None, gt=0.0, le=3.0)
     vehicle_2_internal_length_m: float | None = Field(default=None, gt=0.0, le=20.0)
     vehicle_2_inlet_nozzle_diameter_m: float | None = Field(default=None, gt=0.0, le=0.1)
+    bank_low_internal_volume_m3: float = Field(default=0.35, gt=0.0, le=100.0)
+    bank_medium_internal_volume_m3: float = Field(default=0.35, gt=0.0, le=100.0)
+    bank_high_internal_volume_m3: float = Field(default=0.35, gt=0.0, le=100.0)
     initial_bank_low_fill_percent: float = Field(default=90.0, ge=1.0, le=100.0)
     initial_bank_medium_fill_percent: float = Field(default=100.0 * 65.0 / 70.0, ge=1.0, le=100.0)
     initial_bank_high_fill_percent: float = Field(default=90.0, ge=1.0, le=100.0)
@@ -549,6 +552,11 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             vehicle_2_internal_length_m=request.vehicle_2_internal_length_m,
             vehicle_2_inlet_nozzle_diameter_m=(
                 request.vehicle_2_inlet_nozzle_diameter_m
+            ),
+            bank_internal_volume_m3=(
+                request.bank_low_internal_volume_m3,
+                request.bank_medium_internal_volume_m3,
+                request.bank_high_internal_volume_m3,
             ),
             initial_bank_fill_percent=(
                 request.initial_bank_low_fill_percent,
