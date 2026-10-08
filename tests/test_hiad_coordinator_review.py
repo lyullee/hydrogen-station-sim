@@ -112,3 +112,9 @@ def test_cli_writes_auditable_advisory_package(tmp_path: Path):
     assert "Machine-suggested description · human review required" in html
     assert "Copy suggestion to editable description" in html
     assert "section.querySelector('.review-confirm').checked = false" in html
+    assert "Review progress:" in html
+    assert "Next unresolved case" in html
+    assert "Save local draft" in html
+    assert "localStorage.setItem(storageKey" in html
+    assert "restoreDraft();" in html
+    assert "caseComplete(section)" in html

@@ -34,6 +34,13 @@ coordinator must inspect the original text, withheld references, retained text
 and removed sentences before confirming the case. The generator never modifies
 the source casebook and never fills an approval field.
 
+The form displays the number of completed cases, jumps to the next unresolved
+case, and saves an unfinished draft in that browser's local storage. The local
+draft contains only the coordinator's working edits and coded identifier; it is
+not uploaded, treated as approval, or used by an evaluation. Export remains
+blocked until all 24 cases have a decision, explicit confirmation, and non-empty
+model-visible text. A successful approved-JSON export clears the local draft.
+
 The output directory is intentionally excluded from the source distribution
 because the casebook and reference response fields are public-evidence working
 artifacts rather than a completed blinded evaluation. When a coordinator
