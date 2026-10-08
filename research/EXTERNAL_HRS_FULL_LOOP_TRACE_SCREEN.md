@@ -22,6 +22,11 @@ site, company, equipment serial or manufacturer identifiers.
 
 The screen checks channel presence, finite values, missingness, strictly
 increasing time, maximum time gap, and the frozen pressure/temperature ranges.
+It also requires the pressure used by the base trace screen to be an
+independently named vehicle/receptacle boundary or to be explicitly mapped to
+that boundary in the custodian declaration. A generic pressure column cannot
+be reused as both station and vehicle pressure, because that would create a
+false full-loop claim without an independent receiving-side measurement.
 It does not impute, resample, smooth, fit, or calculate model errors. A
 `FULL_LOOP_TRACE_READY_FOR_EVALUATION` result means that a separately frozen
 evaluator may be run with cascade-dispatch and recharge evidence. A valid
