@@ -4230,6 +4230,86 @@ def _confidential_cross_station_bundle_recheck_evidence() -> dict[str, Any] | No
     }
 
 
+def _local_station_cross_bundle_transfer_evidence() -> dict[str, Any] | None:
+    """Expose the privacy-bounded numerical station-side transfer diagnostic.
+
+    The result is intentionally routed as corroboration for a fixed pressure
+    cycle candidate only.  It is never promoted to a vehicle/full-loop or
+    safety-limit claim, and raw local files remain outside the repository.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/local_station_cross_bundle_transfer_result_2026_10_09.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    privacy_keys = (
+        "source_identifiers_published",
+        "source_paths_published",
+        "source_filenames_published",
+        "source_headers_published",
+        "raw_rows_persisted",
+        "absolute_timestamps_published",
+        "calendar_dates_published",
+    )
+    decision = record.get("decision") or {}
+    if (
+        record.get("schema_version") != 1
+        or record.get("artifact_type")
+        != "local_station_cross_bundle_pressure_transfer_diagnostic"
+        or any(record.get(key) is not False for key in privacy_keys)
+        or record.get("normalization", {}).get("pressure_unit") != "MPa"
+        or record.get("method", {}).get("outcome_used_for_fit") is not False
+        or decision.get("independent_external_validation") is not False
+        or decision.get("full_loop_vehicle_validation") is not False
+        or decision.get("safety_limit_or_field_certification") is not False
+        or decision.get("runtime_parameter_application") is not False
+        or not isinstance(record.get("transfer_bundle"), dict)
+        or not isinstance(record.get("metrics"), dict)
+    ):
+        return None
+    calibration = record.get("calibration_bundle") or {}
+    transfer = record.get("transfer_bundle") or {}
+    calibration_cycles = calibration.get("cycles") or {}
+    transfer_cycles = transfer.get("cycles") or {}
+    return {
+        "artifact": "research/local_station_cross_bundle_transfer_result_2026_10_09.json",
+        "evidence_role": "privacy-bounded station-side cross-bundle transfer diagnostic",
+        "candidate_margin_mpa": record.get("method", {}).get("candidate_margin_mpa"),
+        "calibration_bundle": {
+            "file_count": calibration.get("files_read"),
+            "cycle_count": calibration_cycles.get("count"),
+            "median_pressure_drop_mpa": calibration_cycles.get("median"),
+        },
+        "transfer_bundle": {
+            "file_count": transfer.get("files_read"),
+            "files_with_cycles": transfer.get("files_with_cycles"),
+            "cycle_count": transfer_cycles.get("count"),
+            "p05_pressure_drop_mpa": transfer_cycles.get("p05"),
+            "median_pressure_drop_mpa": transfer_cycles.get("median"),
+            "p95_pressure_drop_mpa": transfer_cycles.get("p95"),
+        },
+        "candidate_relative_transfer_median_error_percent": (
+            record.get("metrics", {}).get(
+                "candidate_relative_transfer_median_error_percent"
+            )
+        ),
+        "candidate_inside_transfer_p05_p95": (
+            record.get("screens", {}).get("candidate_inside_transfer_p05_p95")
+            is True
+        ),
+        "fixed_candidate_corroborated_on_transfer_bundle": (
+            decision.get("fixed_candidate_corroborated_on_transfer_bundle")
+            is True
+        ),
+        "full_loop_external_validation_supported": False,
+        "runtime_parameter_application": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _local_station_asset_screen_evidence() -> dict[str, Any] | None:
     """Expose the de-identified local scenario/asset screen to the assistant.
 
@@ -6009,6 +6089,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_cross_station_bundle_recheck"
         ] = cross_station_bundle
+    cross_station_transfer = _local_station_cross_bundle_transfer_evidence()
+    if cross_station_transfer is not None:
+        envelope["response_evidence"][
+            "confidential_local_station_cross_bundle_transfer"
+        ] = cross_station_transfer
     local_station_asset_screen = _local_station_asset_screen_evidence()
     if local_station_asset_screen is not None:
         envelope["response_evidence"][
@@ -6627,6 +6712,23 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if cross_station_bundle.get(key) is not None
         }
+    cross_station_transfer = evidence.get(
+        "confidential_local_station_cross_bundle_transfer"
+    )
+    if isinstance(cross_station_transfer, dict):
+        summary["confidential_local_station_cross_bundle_transfer"] = {
+            key: cross_station_transfer.get(key)
+            for key in (
+                "evidence_role", "candidate_margin_mpa",
+                "calibration_bundle", "transfer_bundle",
+                "candidate_relative_transfer_median_error_percent",
+                "candidate_inside_transfer_p05_p95",
+                "fixed_candidate_corroborated_on_transfer_bundle",
+                "full_loop_external_validation_supported",
+                "runtime_parameter_application", "claim_limit",
+            )
+            if cross_station_transfer.get(key) is not None
+        }
     accidental = evidence.get("public_accidental_release_evidence")
     if isinstance(accidental, dict):
         reported_findings = accidental.get("reported_findings") or {}
@@ -7234,6 +7336,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     cross_station_bundle = response.get(
         "confidential_cross_station_bundle_recheck"
     ) or {}
+    cross_station_transfer = response.get(
+        "confidential_local_station_cross_bundle_transfer"
+    ) or {}
     multisource = response.get("confidential_multisource_mapping_feasibility") or {}
     thermal_observation = response.get("temperature_observation_semantic_boundary") or {}
     station_thermal = response.get("confidential_station_thermal_dynamics") or {}
@@ -7499,6 +7604,37 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 },
             } if cross_station_bundle and local_discovery_relevant else {}),
             **({
+                "confidential_local_station_cross_bundle_transfer": {
+                    "candidate_margin_mpa": cross_station_transfer.get(
+                        "candidate_margin_mpa"
+                    ),
+                    "calibration_cycle_count": (
+                        cross_station_transfer.get("calibration_bundle") or {}
+                    ).get("cycle_count"),
+                    "transfer_cycle_count": (
+                        cross_station_transfer.get("transfer_bundle") or {}
+                    ).get("cycle_count"),
+                    "transfer_median_pressure_drop_mpa": (
+                        cross_station_transfer.get("transfer_bundle") or {}
+                    ).get("median_pressure_drop_mpa"),
+                    "candidate_relative_transfer_median_error_percent": (
+                        cross_station_transfer.get(
+                            "candidate_relative_transfer_median_error_percent"
+                        )
+                    ),
+                    "fixed_candidate_corroborated_on_transfer_bundle": (
+                        cross_station_transfer.get(
+                            "fixed_candidate_corroborated_on_transfer_bundle"
+                        ) is True
+                    ),
+                    "full_loop_external_validation_supported": False,
+                    "runtime_parameter_application": False,
+                    "claim_limit": short(
+                        cross_station_transfer.get("claim_limit"), 220
+                    ),
+                },
+            } if cross_station_transfer and local_discovery_relevant else {}),
+            **({
                 "public_accidental_release": {
                     "experiment_count": (
                         accidental_release.get("reported_findings") or {}
@@ -7594,6 +7730,24 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "station_component_thermal_envelope_supported"
                 ) is True,
             },
+            **({
+                "local_station_cross_bundle_transfer": {
+                    "candidate_margin_mpa": cross_station_transfer.get(
+                        "candidate_margin_mpa"
+                    ),
+                    "transfer_cycle_count": (
+                        cross_station_transfer.get("transfer_bundle") or {}
+                    ).get("cycle_count"),
+                    "candidate_corroborated": cross_station_transfer.get(
+                        "fixed_candidate_corroborated_on_transfer_bundle"
+                    ) is True,
+                    "full_loop": False,
+                    "runtime_parameter_application": False,
+                    "claim_limit": short(
+                        cross_station_transfer.get("claim_limit"), 220
+                    ),
+                },
+            } if cross_station_transfer and local_discovery_relevant else {}),
             **({
                 "public_hrs_measurement_leads": {
                     "lead_count": len(public_hrs_leads.get("leads") or []),
@@ -8268,6 +8422,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     cross_station_bundle = evidence.get(
         "confidential_cross_station_bundle_recheck"
     ) or {}
+    cross_station_transfer = evidence.get(
+        "confidential_local_station_cross_bundle_transfer"
+    ) or {}
     hitrf_storage = hitrf_reference.get("storage") or {}
     hitrf_thermal = hitrf_reference.get("dispensing_and_thermal") or {}
     envelope_screen = evidence.get("public_operating_envelope_screen") or {}
@@ -8893,6 +9050,29 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "full_loop_external_validation_supported": False,
             "quantitative_consequence_validation_supported": False,
             "claim_limit": cross_station_bundle.get("claim_limit"),
+        },
+        "confidential_local_station_cross_bundle_transfer": {
+            "evidence_role": cross_station_transfer.get("evidence_role"),
+            "candidate_margin_mpa": cross_station_transfer.get(
+                "candidate_margin_mpa"
+            ),
+            "calibration_bundle": cross_station_transfer.get(
+                "calibration_bundle"
+            ) or {},
+            "transfer_bundle": cross_station_transfer.get("transfer_bundle") or {},
+            "candidate_relative_transfer_median_error_percent": (
+                cross_station_transfer.get(
+                    "candidate_relative_transfer_median_error_percent"
+                )
+            ),
+            "fixed_candidate_corroborated_on_transfer_bundle": (
+                cross_station_transfer.get(
+                    "fixed_candidate_corroborated_on_transfer_bundle"
+                ) is True
+            ),
+            "full_loop_external_validation_supported": False,
+            "runtime_parameter_application": False,
+            "claim_limit": cross_station_transfer.get("claim_limit"),
         },
         "confidential_boundary_holdout": holdout.get(
             "time_ordered_holdout_supported"

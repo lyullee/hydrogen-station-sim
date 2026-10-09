@@ -240,6 +240,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     ]
     assert discovery_decision["wide_equipment_continuity_screen_ready"] is True
     assert discovery_decision["wide_equipment_replay_ready"] is False
+    transfer_decision = local_decision["validation_boundaries"][
+        "local_station_cross_bundle_transfer"
+    ]
+    assert transfer_decision["transfer_cycle_count"] == 225
+    assert transfer_decision["candidate_corroborated"] is True
+    assert transfer_decision["full_loop"] is False
     multisource = idle["response_evidence"][
         "confidential_multisource_mapping_feasibility"
     ]
@@ -882,6 +888,14 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert local_station["assessment"]["vehicle_side_full_loop_validation_ready"] is False
     assert local_station["semantic_attestation"]["storage_pressure_role_count"] == 2
     assert local_station["semantic_attestation"]["flow_units_attested"] is False
+    transfer = idle["response_evidence"][
+        "confidential_local_station_cross_bundle_transfer"
+    ]
+    assert transfer["candidate_margin_mpa"] == 4.5
+    assert transfer["transfer_bundle"]["cycle_count"] == 225
+    assert transfer["candidate_inside_transfer_p05_p95"] is True
+    assert transfer["fixed_candidate_corroborated_on_transfer_bundle"] is True
+    assert transfer["full_loop_external_validation_supported"] is False
     local_discovery = idle["response_evidence"][
         "confidential_local_station_data_discovery"
     ]
@@ -906,6 +920,15 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "confidential_local_station_data_utilization"
     ]
     assert local_header["utilization"]["paired_medium_high_pressure_episodes"] == 11_770
+    transfer_summary = prompt_evidence_summary(idle)[
+        "confidential_local_station_cross_bundle_transfer"
+    ]
+    assert transfer_summary["transfer_bundle"]["cycle_count"] == 225
+    transfer_header = prompt_evidence_header(idle)[
+        "confidential_local_station_cross_bundle_transfer"
+    ]
+    assert transfer_header["candidate_margin_mpa"] == 4.5
+    assert transfer_header["fixed_candidate_corroborated_on_transfer_bundle"] is True
     discovery_header = prompt_evidence_header(idle)[
         "confidential_local_station_data_discovery"
     ]

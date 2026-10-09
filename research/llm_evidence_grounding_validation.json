@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "recorded_at": "2026-10-08",
+  "recorded_at": "2026-10-09",
   "status": "software_contract_verified",
   "scope": [
     "digital-twin main assistant",
@@ -17,9 +17,9 @@
     },
     "full_suite": {
       "command": ".venv\\Scripts\\python.exe -m pytest -q",
-      "passed": 956,
+      "passed": 1158,
       "failed": 0,
-      "warnings": 17
+      "warnings": 19
     }
   },
   "verified_properties": [
@@ -63,7 +63,8 @@
     "public HIAD metadata-to-runtime coverage is projected into full, summary, header and compact decision contexts with 29 direct, four proxy and one response-only cases, while incident narrative parameterization remains prohibited; all nine executable canonical recipes pass",
     "independent KHK metadata-to-runtime traceability is projected into full, summary, header and compact decision contexts: 22 reports covering 25 incident codes traverse eight passing canonical recipes, one KOH-electrolyte release remains outside gaseous-H2 scope, and report narrative parameterization remains prohibited",
     "CARB 22-station HGV 4.3 aggregate fault, communication and fueling-performance results are carried into the evidence envelope and only into relevant compact prompts, with no dynamic-model or full-loop validation claim",
-    "CARB-motivated startup, pressure-corridor, T20/T30/T40 and communication hold/resume training controls publish traceable live-frame outcomes without claiming standards certification"
+    "CARB-motivated startup, pressure-corridor, T20/T30/T40 and communication hold/resume training controls publish traceable live-frame outcomes without claiming standards certification",
+    "owner-controlled station pressure-cycle cross-bundle transfer evidence is routed to all assistant projections while vehicle/full-loop and runtime-parameter claims remain false"
   ],
   "not_established": [
     "physics validity of the consequence model",

@@ -1,6 +1,6 @@
 # LLM evidence-grounding validation
 
-**Recorded:** 2026-10-08
+**Recorded:** 2026-10-09
 **Scope:** digital-twin main assistant and selected-sensor assistant routes
 
 This record documents a software-level grounding check. It is not a human
@@ -73,6 +73,9 @@ contains:
 - consequence flow-boundary status, requested process flow, HyRAM modeled flow,
   and an explicit mismatch claim limit when high-pressure choked flow causes
   the physics adapter to recompute the release rate;
+- a privacy-bounded cross-station pressure-cycle transfer diagnostic: the fixed
+  4.5 MPa candidate is corroborated on a second station-side bundle, while
+  vehicle/full-loop validation and runtime parameter application remain false;
 - a SHA-256 digest over the canonical manifest contents.
 
 The manifest explicitly states that simulated signals are not field
@@ -89,7 +92,7 @@ The following tests passed in the repository virtual environment:
 33 passed
 
 .venv\Scripts\python.exe -m pytest -q
-956 passed, 17 warnings
+1158 passed, 19 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -182,6 +185,13 @@ relief-setting and failure-probability changes out of the physical model.
 The public real-station back-to-back fueling record is carried as a source
 link and scenario context. It is not treated as a raw synchronized holdout
 because the public record does not provide reusable event-level logger rows.
+
+The owner-controlled station archive now also contributes a numerical
+cross-bundle pressure-cycle diagnostic. A 4.5 MPa fixed restart-margin
+candidate falls inside the transfer bundle's p05-p95 cycle-drop range with a
+17.431193% relative error to its median. This strengthens station-side
+corroboration only; it does not authorize vehicle filling, consequence, safety
+limit or runtime claims.
 
 The Grune/Sempert envelope is a measured-boundary adjustment for the virtual
 detector proxy. It uses the public DOI and aggregate factors only, defaults to
