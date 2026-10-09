@@ -1,0 +1,22 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+ARTIFACT = ROOT / "research/public_full_loop_search_recheck_2026_10_10.json"
+
+
+def test_public_full_loop_recheck_is_explicitly_claim_limited() -> None:
+    record = json.loads(ARTIFACT.read_text(encoding="utf-8"))
+
+    assert record["decision"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED"
+    assert record["gate_impact"] == "full_loop_external_validation_remains_open"
+    assert len(record["screened_sources"]) == 4
+    assert record["minimum_next_input"]["event_count"] == 3
+    rendered = json.dumps(record, ensure_ascii=False)
+    assert "C:\\" not in rendered
+    assert "raw rows" not in rendered.lower()
+    assert all("local paths" not in item.get("claim_limit", "").lower()
+               for item in record["screened_sources"])

@@ -22,7 +22,10 @@ from .calibration_profiles import (
 from .public_tank_calibration import load_public_type_iv_tank_calibration
 from .lifecycle_evidence import load_lifecycle_evidence
 from .hazop.response import public_accident_precedents
-from .local_evidence import local_station_evidence_summary
+from .local_evidence import (
+    local_station_evidence_summary,
+    public_evidence_inventory_summary,
+)
 from .component_bundle_evidence import component_bundle_evidence
 
 
@@ -10528,6 +10531,13 @@ def compact_data_used(
             ),
         }
         if include_references:
+            # Keep the evidence scale visible without exposing raw rows,
+            # source paths, filenames or site identity.  This is deliberately
+            # a compact audit projection rather than prompt content so the
+            # provider context remains bounded.
+            inventory = public_evidence_inventory_summary()
+            if inventory:
+                result["public_evidence_inventory"] = inventory
             result["public_references"] = _compact_public_references(evidence)
     return result
 

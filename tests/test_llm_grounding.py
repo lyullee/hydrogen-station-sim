@@ -1480,6 +1480,17 @@ def test_compact_data_used_reports_available_and_applied_station_profile():
         item.get("doi") for item in references["public_sources"]
     }
     assert all("artifact" not in item for item in references["public_sources"])
+    inventory = compact_data_used(
+        build_evidence_manifest(base_frame, {}, [], False, question="현재 상태"),
+        include_references=True,
+    )["public_evidence_inventory"]
+    assert inventory["public_accident_reports"]["report_count"] == 23
+    assert inventory["public_accidental_release"]["experiment_count"] == 3
+    assert inventory["public_experimental_benchmarks"][
+        "actual_hydrogen_archive_count"
+    ] == 22
+    assert inventory["public_field_benchmark"]["stations_tested"] == 22
+    assert "C:\\" not in str(inventory)
 
     applied_frame = {
         **base_frame,
