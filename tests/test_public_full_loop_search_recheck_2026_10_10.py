@@ -26,3 +26,11 @@ def test_public_full_loop_recheck_is_explicitly_claim_limited() -> None:
         if item["id"] == "nlr_kuroki_2023_vehicle_tank_fueling_experiment"
     )
     assert kuroki["decision"] == "PUBLISHED_EXPERIMENT_DESCRIPTION_DATA_NOT_SHARED"
+    additions = record["latest_search_additions"]
+    assert additions["decision"].startswith("No new eligible raw full-loop")
+    assert additions["privacy"]["private_raw_rows_persisted"] is False
+    assert len(additions["new_public_leads"]) == 4
+    assert all(
+        item["raw_synchronized_archive_located"] is False
+        for item in additions["new_public_leads"]
+    )

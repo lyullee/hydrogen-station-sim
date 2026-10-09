@@ -152,5 +152,51 @@
       "ESD and fault transitions"
     ]
   },
-  "claim_boundary": "This is a source-classification recheck only. It does not establish validation, safety distances, or journal readiness."
+  "claim_boundary": "This is a source-classification recheck only. It does not establish validation, safety distances, or journal readiness.",
+  "latest_search_additions": {
+    "recorded_at": "2026-10-10",
+    "new_public_leads": [
+      {
+        "id": "fch2rail_measured_station_vehicle_refuelling",
+        "doi": "10.1016/j.ijhydene.2025.04.040",
+        "url": "https://doi.org/10.1016/j.ijhydene.2025.04.040",
+        "role": "published station-and-vehicle measurement study",
+        "raw_synchronized_archive_located": false,
+        "decision": "REQUEST_CUSTODIAN_DATA",
+        "eligible_use": "protocol and operating-envelope benchmark; not a new raw holdout"
+      },
+      {
+        "id": "uci_hrs_operational_measurement_study",
+        "doi": "10.1016/j.ijhydene.2020.08.251",
+        "url": "https://doi.org/10.1016/j.ijhydene.2020.08.251",
+        "role": "published real-station operational data study",
+        "raw_synchronized_archive_located": false,
+        "decision": "REQUEST_CUSTODIAN_DATA",
+        "eligible_use": "schema and aggregate operating-envelope comparison; not a new raw holdout"
+      },
+      {
+        "id": "cal_state_la_multi_year_operation",
+        "doi": "10.1016/j.ijhydene.2023.04.084",
+        "url": "https://doi.org/10.1016/j.ijhydene.2023.04.084",
+        "role": "published multi-year real-station performance dataset description",
+        "raw_synchronized_archive_located": false,
+        "decision": "REQUEST_CUSTODIAN_DATA",
+        "eligible_use": "aggregate KPI and station-state schema context; not a new raw holdout"
+      },
+      {
+        "id": "european_hrs_status_api_v2",
+        "url": "https://docs.h2-stations.eu/for-data-users/api-v2/",
+        "role": "public station layout and status API",
+        "raw_synchronized_archive_located": false,
+        "decision": "EXCLUDE_FROM_FULL_LOOP",
+        "eligible_use": "inventory, layout and availability context"
+      }
+    ],
+    "decision": "No new eligible raw full-loop cohort; continue station-side/component validation.",
+    "privacy": {
+      "private_source_paths_published": false,
+      "private_site_or_company_identity_published": false,
+      "private_raw_rows_persisted": false
+    }
+  }
 }

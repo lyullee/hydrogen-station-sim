@@ -8,3 +8,9 @@ The recheck added official public sources that looked promising because they des
 - H2-Stations API v2 ([API documentation](https://docs.h2-stations.eu/for-data-users/api-v2/)): public layout/status context; no thermodynamic fueling historian.
 
 The project therefore stops broad public-data searching at this stage. The next useful input is a small, de-identified three-event pilot with common elapsed time, station/dispenser pressure, boundary temperature, mass flow or transferred mass, and protocol phase. Until that exists, station-side and component claims continue, while the full-loop gate remains explicitly closed.
+
+## Latest search additions
+
+The same recheck also examined the FCH2Rail station-and-vehicle measurement paper ([10.1016/j.ijhydene.2025.04.040](https://doi.org/10.1016/j.ijhydene.2025.04.040)) and the UCI operational measurement study ([10.1016/j.ijhydene.2020.08.251](https://doi.org/10.1016/j.ijhydene.2020.08.251)). They provide credible measured-operation context, but no rights-cleared synchronized raw archive was located. The documented European HRS status API was retained for layout/status context only.
+
+No private path, facility identity, tag, date or raw measurement was added.
