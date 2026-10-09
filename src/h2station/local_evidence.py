@@ -566,6 +566,7 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "source_count": 0,
             "actual_hydrogen_archive_count": 0,
             "actual_hydrogen_rows_screened": 0,
+            "aggregate_operating_context": [],
             "full_loop_holdout_eligible": False,
         },
         "public_field_benchmark": {
@@ -655,11 +656,80 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
         )
         aggregate = actual.get("aggregate") or {}
         if record.get("status") == "citation_bounded_aggregate_benchmarks":
+            # Keep this projection compact enough for the operator evidence
+            # panel while retaining the actual published operating ranges.
+            # It deliberately excludes raw rows, private source identity and
+            # any parameter-fit claim.
+            context_fields = {
+                "NREL_HDVS_2022_TANK_HOSE_TRACE": (
+                    "sample_count", "duration_s", "tank_count",
+                    "reported_transfer_kg", "reported_start_pressure_mpa",
+                    "reported_end_pressure_mpa", "ambient_temperature_c",
+                ),
+                "KGS_HRS_SIX_SCENARIO_AGGREGATE_2025": (
+                    "reported_scenario_count", "temperature_accuracy_r2_mean_percent",
+                    "pressure_accuracy_r2_mean_percent", "reported_final_temperature_mean_c",
+                    "reported_final_pressure_mean_mpa", "reported_fueling_time_mean_s",
+                    "reported_fueling_time_min_s", "reported_fueling_time_max_s",
+                ),
+                "NREL_HD_FAST_FLOW_2024_REPORT": (
+                    "mass_transfer_kg", "total_fill_time_s", "fueling_time_s",
+                    "average_mass_flow_g_s", "peak_mass_flow_g_s", "aprr_mpa_min",
+                    "starting_pressure_mpa", "ending_pressure_mpa", "ambient_temperature_c",
+                    "protocol",
+                ),
+                "NIU_FULL_SCALE_HRS_LEAKAGE_2025": (
+                    "release_pressure_mpa_levels", "nozzle_geometry_classes",
+                    "parallel_dispenser_count", "canopy_height_m",
+                    "wind_observation_h2_volpct_threshold",
+                ),
+                "USN_OPEN_CHANNEL_ACTUAL_H2_2025": (
+                    "archive_count", "total_rows_screened", "sensor_count_per_archive",
+                    "median_sample_interval_s", "median_experiment_duration_s",
+                    "peak_mass_flow_g_s_range", "maximum_filling_pressure_bar_range",
+                    "maximum_sensor_h2_volpct_range",
+                ),
+                "FCH2RAIL_D61_350BAR_REPORT": (
+                    "average_flow_min_g_s", "average_flow_max_g_s",
+                    "average_refuelling_speed_min_kg_min", "average_refuelling_speed_max_kg_min",
+                    "supply_pressure_mpa",
+                ),
+            }
+            aggregate_context = []
+            for source in sources:
+                if not isinstance(source, dict) or not source.get("id"):
+                    continue
+                fields = context_fields.get(str(source["id"]))
+                aggregate = source.get("aggregate") or {}
+                if not fields or not isinstance(aggregate, dict):
+                    continue
+                selected = {
+                    field: aggregate[field]
+                    for field in fields
+                    if field in aggregate
+                    and isinstance(aggregate[field], (str, int, float, list))
+                    and not isinstance(aggregate[field], bool)
+                }
+                if selected:
+                    aggregate_context.append({
+                        "id": str(source["id"]),
+                        "title": str(source.get("title") or ""),
+                        "url": str(source.get("url") or ""),
+                        "raw_rows_public": source.get("raw_rows_public") is True,
+                        "aggregate": selected,
+                        "eligible_for": [
+                            str(value) for value in source.get("eligible_for") or []
+                        ],
+                        "not_eligible_for": [
+                            str(value) for value in source.get("not_eligible_for") or []
+                        ],
+                    })
             result["public_experimental_benchmarks"] = {
                 "status": "available",
                 "source_count": len(sources),
                 "actual_hydrogen_archive_count": int(aggregate.get("archive_count") or 0),
                 "actual_hydrogen_rows_screened": int(aggregate.get("total_rows_screened") or 0),
+                "aggregate_operating_context": aggregate_context,
                 "full_loop_holdout_eligible": any(
                     item.get("id") == "USN_OPEN_CHANNEL_ACTUAL_H2_2025"
                     and "station-to-vehicle or full-loop holdout" not in " ".join(

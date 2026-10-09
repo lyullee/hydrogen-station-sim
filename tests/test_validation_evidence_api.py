@@ -37,6 +37,19 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
     assert inventory["public_accidental_release"]["ignition_observed_case_count"] == 2
     assert inventory["public_experimental_benchmarks"]["source_count"] == 8
     assert inventory["public_experimental_benchmarks"]["actual_hydrogen_archive_count"] == 22
+    context = inventory["public_experimental_benchmarks"]["aggregate_operating_context"]
+    assert len(context) == 6
+    fast_flow = next(
+        item for item in context if item["id"] == "NREL_HD_FAST_FLOW_2024_REPORT"
+    )
+    assert fast_flow["aggregate"]["peak_mass_flow_g_s"] == 483.33
+    assert fast_flow["aggregate"]["protocol"] == "SAE J2601-5 MCF-HF-G H70 FM300 T40"
+    actual_h2 = next(
+        item for item in context if item["id"] == "USN_OPEN_CHANNEL_ACTUAL_H2_2025"
+    )
+    assert actual_h2["aggregate"]["total_rows_screened"] == 417340
+    assert actual_h2["raw_rows_public"] is True
+    assert all("C:\\" not in str(item) for item in context)
     assert inventory["public_field_benchmark"]["stations_tested"] == 22
     assert inventory["public_field_benchmark"]["full_loop_holdout_eligible"] is False
     assert all(value is False for value in summary["privacy"].values())

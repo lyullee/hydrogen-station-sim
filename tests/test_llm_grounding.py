@@ -1569,6 +1569,13 @@ def test_compact_data_used_reports_available_and_applied_station_profile():
     assert inventory["public_experimental_benchmarks"][
         "actual_hydrogen_archive_count"
     ] == 22
+    context = inventory["public_experimental_benchmarks"]["aggregate_operating_context"]
+    assert next(
+        item for item in context if item["id"] == "NREL_HD_FAST_FLOW_2024_REPORT"
+    )["aggregate"]["average_mass_flow_g_s"] == 172.3
+    assert next(
+        item for item in context if item["id"] == "KGS_HRS_SIX_SCENARIO_AGGREGATE_2025"
+    )["aggregate"]["reported_scenario_count"] == 6
     assert inventory["public_field_benchmark"]["stations_tested"] == 22
     assert inventory["public_station_tank_boundary"]["sample_count"] == 351
     assert inventory["public_station_tank_boundary"]["tank_count"] == 7
