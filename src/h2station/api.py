@@ -60,6 +60,43 @@ from .local_evidence import local_station_evidence_summary, validation_evidence_
 from .station_pressure_forecast import forecast_storage_pressure
 
 
+def _provider_evidence_basis(manifest: dict[str, Any]) -> dict[str, Any]:
+    """Project evidence to the small envelope used by an interactive LLM.
+
+    ``prompt_decision_evidence`` is also used by the audit/UI paths and is
+    intentionally richer than a provider prompt.  The full decision-support
+    archive contains internal response-family identifiers and many historical
+    aggregates; sending it on every operational turn both wastes context and
+    can make a model repeat implementation labels.  Keep the live calculation
+    boundary and the single station-to-vehicle limitation visible while the
+    complete manifest remains available to the API caller and audit artifacts.
+    """
+    full = prompt_decision_evidence(manifest)
+    keep = {
+        key: full[key]
+        for key in (
+            "evidence_digest", "source", "runtime_calibration", "detector_policy",
+            "common_header", "impact", "response_guidance",
+            "public_operating_envelope_screen",
+        )
+        if key in full
+    }
+    boundaries = full.get("validation_boundaries")
+    if isinstance(boundaries, dict):
+        # The station-to-vehicle limitation is the decision-relevant boundary
+        # for live answers.  Detailed campaign inventory stays in the returned
+        # manifest and is only requested explicitly through evidence queries.
+        selected_boundaries = {
+            key: boundaries[key]
+            for key in ("station_to_vehicle", "public_tank_postaccess",
+                        "local_station_data_utilization")
+            if key in boundaries
+        }
+        if selected_boundaries:
+            keep["validation_boundaries"] = selected_boundaries
+    return keep
+
+
 def _runtime_calibration_payload(
     profile: Any | None,
     recharge_dynamics_profile: Any | None = None,
@@ -2757,7 +2794,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         llm_error = None
         llm_claim_guard = direct_claim_guard
         if request.one_pass:
-            evidence_basis = prompt_decision_evidence(evidence_manifest)
+            evidence_basis = _provider_evidence_basis(evidence_manifest)
             focused_tags = {rule.get("sensor_id") for rule in matched_rules + reference_rules}
             focused_tags.update(re.findall(r"(?:PT|TT|FT|GD|FD)-\d{4}", request.question.upper()))
             selected_values = {tag: value for tag, value in sensor_values.items() if tag in focused_tags}
@@ -2903,7 +2940,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "consolidated_response_guidance": _prompt_response_guidance_summary(
             structured_guidance(response_plans, actual_alert=emergency_context)
         ),
-        "evidence_basis": prompt_decision_evidence(evidence_manifest),
+        "evidence_basis": _provider_evidence_basis(evidence_manifest),
         "impact_calculation_attempted":show_impact_results,
         "station":"H70 reference simulation", "time_s":frame.get("time_s"),
         "fire_detection": analysis.get("fire_detection"),
@@ -3666,7 +3703,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         llm_error = None
         llm_claim_guard = direct_claim_guard
         if request.one_pass:
-            evidence_basis = prompt_decision_evidence(evidence_manifest)
+            evidence_basis = _provider_evidence_basis(evidence_manifest)
             prompt_data = {
                 "output_language": request.language,
                 "time_s": payload["time_s"], "selected_sensor": sensor_id,
@@ -3767,7 +3804,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         "active_scenarios": compact_rules(active_rules),
         "same_equipment_active_signals": compact_rules(related_rules),
         "consolidated_response_guidance": _prompt_response_guidance_summary(response_guidance),
-        "evidence_basis": prompt_decision_evidence(evidence_manifest),
+        "evidence_basis": _provider_evidence_basis(evidence_manifest),
         "related_signals": payload["related_signals"],
         "monitored_scenarios": [{"scenario": rule["scenario"], "sensor_id": sensor_id,
                                   "threshold": rule["threshold"], "unit": rule["unit"],
