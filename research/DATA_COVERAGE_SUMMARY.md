@@ -14,6 +14,7 @@
 | `owner_station_runtime_replay` | ACTIONABLE | sanitized station pressure-boundary profile is wired and replayable | automatic runtime parameter replacement or full-loop validation |
 | `public_type_iv_tank` | VALIDATED_COMPONENT | measured-boundary Type-IV tank component validation | station controller, compressor, cascade, dispenser or field safety certification |
 | `public_station_tank_boundary` | DIAGNOSTIC_ONLY | 공통시계 호스·수용탱크 압력·온도·질량의 부분 station-to-tank 경계 진단 | 충전소 제어기·캐스케이드·ESD·노즐/리셉터클을 포함한 full-loop 검증 |
+| `nbsdc_liquid_hrs_catalogue` | REQUEST_CANDIDATE | 실제 액체수소 충전소의 1초급 16시간 운전범위와 7개 원자료 파일 목록을 확인한 데이터 접근 경로 | 수치 파일이 데이터 신청으로 잠겨 있어 현재 모델 보정·holdout·안전거리 산정에 사용하지 않음 |
 | `public_component_measurements` | DIAGNOSTIC_ONLY | public synchronized component pressure/temperature/flow diagnostics | prospective station-to-vehicle holdout |
 | `public_type_i_filling_thermal` | DIAGNOSTIC_ONLY | 공개 Type-I 탱크 충전 열거동의 구성품 진단 및 열 모델 비교 | 충전소 제어기·캐스케이드·디스펜서·차량을 포함한 full-loop 검증 또는 런타임 파라미터 승격 |
 | `public_field_metrology` | DIAGNOSTIC_ONLY | 35 MPa 현장 계측의 압력·온도·질량 경계 및 반복성 맥락 | 원시 station-to-vehicle holdout, 제어기·ESD·사고영향 검증 |
@@ -35,6 +36,8 @@
 ## 판정
 
 현재 자료로 설비·저장뱅크·탱크·검지기·사고 대응 근거는 계속 보강할 수 있다. 데이터 양이 주된 병목은 아니며, 완전한 IJHE 수준의 충전소-차량 외부 검증에 필요한 것은 차량 측 채널의 동기화·의미·재사용 권한이다.
+
+공개 카탈로그에서 실제 운전 데이터 후보를 추가로 확인했지만, 원자료 파일은 신청 승인 전에는 내려받을 수 없었다. 이 결과는 `research/nbsdc_liquid_hrs_public_access_recheck_2026_10_10.json`에 기록했고, 설명 파일과 파일 목록만 근거로 삼았다. 원자료를 받기 전에는 수치 보정이나 성능 주장을 하지 않는다.
 
 원시 데이터를 공개하기 어렵다면 custodian이 원시 파일을 보관한 채, 비식별 이벤트 3건의 해시·역할 증명·집계 지표만 전달하는 방식으로 검증을 진행한다.
 

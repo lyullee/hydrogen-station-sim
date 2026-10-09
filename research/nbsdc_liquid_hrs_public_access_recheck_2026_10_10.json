@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "rechecked_at": "2026-10-10",
+  "status": "REAL_LHRS_METADATA_CONFIRMED_NUMERICAL_FILES_APPLICATION_CONTROLLED",
+  "source": {
+    "title": "Operating Dataset of Liquid Hydrogen Refueling Station",
+    "title_zh": "液氢加氢站运行数据集",
+    "data_id": "67d50e37195d260905af9869",
+    "cstr": "CSTR:16666.11.nbsdc.nlMxRHct",
+    "landing_url": "https://nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1",
+    "metadata_endpoint": "https://nbsdc.cn/api/general/searchDataDetail?id=67d50e37195d260905af9869",
+    "provider": "Tongji University",
+    "share_range": "完全共享",
+    "catalog_updated_at": "2025-03-03T23:36:16.000+0000"
+  },
+  "metadata_observation": {
+    "http_status": 200,
+    "file_count": 7,
+    "storage_mb": 42.06,
+    "declared_scope": "Real liquid-HRS operating monitoring over a concentrated 16-hour window at one-second precision; 35 MPa dispensers, 90 MPa compressor, high-pressure storage-cylinder groups, and liquid-pump/tank system.",
+    "declared_channels": [
+      "pressure",
+      "temperature",
+      "flow rate",
+      "dispensed mass",
+      "current",
+      "frequency",
+      "liquid level",
+      "volume"
+    ],
+    "description_file_downloaded": true,
+    "description_file_sha256": "669bf3487f07714da3ed08f7d891077841c39ef38497dc2abb307a5877954142",
+    "numerical_file_inventory": [
+      {"id": "67bc96ed34eb407463579069", "name": "35MPa加氢机1.xlsx", "size_bytes": 3605593, "role": "dispenser_35mpa_1"},
+      {"id": "67bc96ed34eb40746357906a", "name": "35MPa加氢机2.xlsx", "size_bytes": 5700855, "role": "dispenser_35mpa_2"},
+      {"id": "67bc96ed34eb40746357906b", "name": "70MPa加氢机.csv", "size_bytes": 5974368, "role": "dispenser_70mpa"},
+      {"id": "67bc96ed34eb40746357906c", "name": "90MPa压缩机.xlsx", "size_bytes": 3922132, "role": "compressor_90mpa"},
+      {"id": "67bc96ed34eb40746357906e", "name": "液氢泵-液氢储罐.xlsx", "size_bytes": 15458212, "role": "liquid_pump_tank"},
+      {"id": "67bc96ed34eb40746357906f", "name": "高压储氢瓶组.xlsx", "size_bytes": 9423277, "role": "high_pressure_storage"}
+    ]
+  },
+  "access_probe": {
+    "file_tree_endpoint": "https://nbsdc.cn/api/general/v1/getFileTree?dataId=67d50e37195d260905af9869&pid=1&pageOffset=0&pageSize=100",
+    "file_tree_http_status": 200,
+    "download_endpoint_template": "https://nbsdc.cn/api/general/v1/checkAndDownloadFile?dataId=67d50e37195d260905af9869&id={file_id}&pid=1&pageOffset=0&pageSize=12",
+    "description_download": "allowed",
+    "numeric_download_http_status": 200,
+    "numeric_download_portal_code": 403,
+    "numeric_download_message": "目前只支持部分数据集的说明文件下载，数据文件请通过数据申请获取。",
+    "numeric_download_response_sha256": "3dc242b38b1d0017e43b33734ca67e875ea6280f7a1f23089f721d7662c54ec1",
+    "raw_numerical_files_obtained": false
+  },
+  "eligibility": {
+    "full_loop_holdout_eligible": false,
+    "component_or_station_side_diagnostic_eligible": false,
+    "high_value_request_candidate": true,
+    "decision": "METADATA_ONLY_UNTIL_CUSTODIAN_APPROVES_NUMERICAL_FILES",
+    "reason": "The catalogue exposes a credible real liquid-HRS one-second operational scope and file inventory, but numerical workbooks/CSV remain application-controlled. Vehicle/receptacle channels, common clock, protocol semantics, calibration and reuse terms cannot be inspected before access.",
+    "required_before_any_model_use": [
+      "custodian-approved numerical files",
+      "source-file hashes and channel dictionary",
+      "common time base and timezone",
+      "vehicle/receptacle pressure and temperature definitions",
+      "mass-flow or transferred-mass semantics",
+      "initial state, tank capacity and pressure-ramp/stop semantics",
+      "calibration/quality and alarm/ESD metadata",
+      "written permission for derived metrics and IJHE publication"
+    ]
+  },
+  "claim_boundary": "This recheck confirms a high-value public catalogue and its current application boundary. It is not numerical validation, does not establish a gaseous H70 station-to-vehicle holdout, and must not be used for runtime parameter fitting or safety-distance claims.",
+  "privacy": {
+    "raw_rows_persisted": false,
+    "private_site_or_company_identity_published": false,
+    "manufacturer_details_published": false,
+    "calendar_dates_from_private_sources_published": false
+  }
+}
