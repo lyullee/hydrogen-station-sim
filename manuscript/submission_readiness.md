@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-09 KST**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **122 PASS · 10 FAIL · 7 PENDING**.
+Gate counts: **124 PASS · 10 FAIL · 7 PENDING**.
 
 A fresh privacy-bounded local inventory confirms that data volume is not the
 station-side limitation. The controlled archive contains 33 CSV files,
