@@ -85,6 +85,23 @@ Inject an external-fire scenario at a chosen equipment zone. Confirm the virtual
 
 The assistant is deliberately separate from process control. A question such as “close the high-bank inlet” may receive advice and a mapped **virtual action button**; text alone is not evidence that a valve moved. If the text conflicts with the sensor pane, trust the structured current readings and investigate the discrepancy. English output uses the same structured inputs and consequence results; tag names, units and original cited Korean safety material may remain untranslated for traceability.
 
-## 10. Run record checklist
+## 10. Reading validation status in assistant answers
+
+The assistant receives a compact `validation_readiness` summary from the same
+committed evidence ledger used by the research report. At the current snapshot
+the ledger is **125 PASS · 10 FAIL · 7 PENDING** and does not authorize a claim
+of externally validated station-to-vehicle full-loop behavior. This status is
+shown to keep answers grounded; it is not a live plant alarm and it does not
+change the simulator state.
+
+The claim guard is fail-closed. If the ledger is missing, malformed, or says
+that full-loop evidence is unsupported, the answer must describe the result as
+modelled, conditional, component-level, or station-side as appropriate. A
+successful HyRAM calculation, a local station replay, or a populated HAZOP
+response does not override the failed or pending gates. Use the committed
+audit JSON and its linked reports for the evidence boundary, and use the
+simulator UI only for the virtual operating exercise.
+
+## 11. Run record checklist
 
 For a useful training record, save the Git version, local date/time, job ID and simulation speed; starting bank percentages and vehicle/trailer state; process targets and stop switches; relief set points; fault type/target/aperture/timing; selected sensor quality and trend export; calculated consequence status and criteria; virtual action sequence with issue/feedback/flow timestamps; and the final recovery decision. Two runs can only be compared fairly when their initial and injected conditions match. The **Safety replay / compare** functions help identify the effect of response delay, wrong isolation and unverified closure.

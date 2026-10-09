@@ -19,6 +19,13 @@ contains only:
 - explicit station-to-vehicle, source-depletion and aperture-model claim
   limits.
 
+It also includes a compact, aggregate `validation_readiness` projection from
+`manuscript/ijhe_readiness_audit.json`.  The projection carries the gate counts,
+ledger-integrity status, full-loop support flag and claim boundary; it contains
+no source paths, private identifiers or raw measurement rows.  The ledger is
+authoritative for the downstream claim guard, so a stale permissive manifest
+cannot re-enable an unsupported full-loop statement.
+
 On the current reproducible manifest, the full audit object is about 45.7 kB
 when JSON encoded; the decision envelope is kept below 3.5 kB.  The SHA-256
 digest is retained so the compact prompt can be related to the complete API

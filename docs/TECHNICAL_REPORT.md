@@ -70,6 +70,31 @@ Install with Python 3.10+ and `pip install -e ".[api,test]"`; include `[risk]` o
 
 For a repeatable exercise, record the Git commit, Python/dependency versions, job settings, initial bank fills, stop-target/relief settings, injected faults, time scale, weather/ventilation assumptions and HyRAM version. Save trends and the virtual action replay. A modelled response should be validated against actual plant drawings, detector coverage, relief discharge design and competent engineering review before operational interpretation.
 
+### 7.1 Evidence-readiness ledger and claim guard
+
+`manuscript/ijhe_readiness_audit.json` is the authoritative, machine-readable
+readiness ledger. It is an evidence gate, not a prediction of editorial
+acceptance. The current snapshot contains **125 PASS, 10 FAIL and 7 PENDING**
+gates; bounded IJHE submission readiness and the full user objective are both
+false. In particular, the frozen station-to-vehicle full-loop screen is not
+supported, and the independent expert-effectiveness evaluation is not complete.
+
+`h2station.llm_grounding._ijhe_readiness_ledger()` loads only aggregate,
+privacy-safe fields from that ledger. `build_evidence_manifest()` exposes the
+same view under `response_evidence.validation_readiness`, while the compact
+decision envelope carries a bounded status projection. `guard_llm_claims()`
+then treats the ledger as an upper bound: even if a stale or caller-supplied
+manifest sets a permissive full-loop flag, an unavailable, malformed, or
+negative ledger prevents the assistant from claiming external full-loop
+validation. This is deliberately fail-closed and does not alter process
+physics or consequence calculations.
+
+The ledger is regenerated whenever a source-hashed runtime or evidence artifact
+changes. Reviewers should compare its generated timestamp, gate counts and
+claim boundary with the committed audit JSON before using an assistant output
+as research evidence. A PASS gate means that the named artifact or integrity
+check passed; it does not turn a component diagnostic into station validation.
+
 ## 8. Known boundaries
 
 The model is a training and research simulator. All sensors are simulated; no actual PLC, CCTV or gas detector is connected. The 3D image and CCTV illustrations are representational. The station layout, volumes, heat transfer, compressor performance, leak geometry, population and meteorology are scenario assumptions, not an as-built survey. Weather-dependent dispersion, structural failure, detailed indoor CFD and full probabilistic risk are outside the model's validated scope. HyRAM outputs are conditional consequences, and a successful LLM response does not validate a safety decision. Operators must use actual site procedures and measurements for real incidents.
