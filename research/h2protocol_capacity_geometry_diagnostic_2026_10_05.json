@@ -10,9 +10,9 @@
     "formula": "V = declared_capacity_kg / rho(P_nominal, 288.15 K)"
   },
   "fit_sources": {
-    "tank": "C:\\Users\\lyul\\Desktop\\ProjectData\\hydrogen-station-sim\\research\\tank_model_validation_v2.json",
-    "flow": "C:\\Users\\lyul\\Desktop\\ProjectData\\hydrogen-station-sim\\research\\closed_loop_flow_calibration_v2.json",
-    "thermal": "C:\\Users\\lyul\\Desktop\\ProjectData\\hydrogen-station-sim\\research\\closed_loop_thermal_calibration_v2.json",
+    "tank": "research/tank_model_validation_v2.json",
+    "flow": "research/closed_loop_flow_calibration_v2.json",
+    "thermal": "research/closed_loop_thermal_calibration_v2.json",
     "effective_volume_multiplier": 1.052729261198358,
     "gas_liner_ua_multiplier": 31.460656519273492,
     "dispenser_flow_area_multiplier": 2.0,

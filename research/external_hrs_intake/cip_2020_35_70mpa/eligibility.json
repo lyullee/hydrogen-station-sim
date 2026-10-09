@@ -4,7 +4,7 @@
   "eligible_for_numerical_evaluation": true,
   "generated_at": "2026-10-05T02:07:09.685347+00:00",
   "manifest": "research\\external_hrs_intake\\cip_2020_35_70mpa\\manifest.json",
-  "manifest_sha256": "7700b8cbeb01516b2c7e6b118e11444ffac4a87627ef9445fa805c9f8b6de346",
+  "manifest_sha256": "3f4a1e5725615a93144791c686a40d88de35a8ec04b2dcc500e1810e5dae3098",
   "declaration": "research\\external_hrs_intake\\cip_2020_35_70mpa\\declaration.json",
   "declaration_sha256": "d3e569cc536ff1cdf5d0570ee8ebeae5295e63cbee955c014996275ae1c76fba",
   "protocol": "research\\external_hrs_intake_protocol.json",
@@ -13,9 +13,10 @@
   "claim_boundary": "Eligibility metadata only; this is not a model-validation result, accuracy claim, or IJHE completion evidence.",
   "integrity": {
     "source_available": true,
-    "source_root": "C:\\Users\\lyul\\Desktop\\ProjectData\\external_hrs_quarantine\\cip_2020_35_70mpa",
+    "source_root": "<LOCAL_QUARANTINE>/cip_2020_35_70mpa",
     "records_checked": 4,
     "records_hash_verified": 4
   },
-  "reasons": []
+  "reasons": [],
+  "source_path_published": false
 }

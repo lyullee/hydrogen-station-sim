@@ -2,7 +2,7 @@
   "schema_version": 1,
   "manifest_type": "external_hrs_metadata_only_intake",
   "created_at": "2026-10-05T02:02:27.859505+00:00",
-  "source_path": "C:\\Users\\lyul\\Desktop\\ProjectData\\external_hrs_quarantine\\cip_2020_35_70mpa",
+  "source_path": "<LOCAL_QUARANTINE>/cip_2020_35_70mpa",
   "protocol_path": "research\\external_hrs_intake_protocol.json",
   "protocol_sha256": "0fff4440a179bb55410980fab429b844fdde91205de04cb8d439285a48cdf853",
   "numerical_values_inspected": false,
@@ -30,5 +30,6 @@
       "sha256": "44c6fc612715ef018ecde9e4a734eee86fa75640b5b91614e21b2bd035537a2e"
     }
   ],
-  "claim_boundary": "An intake manifest and trace-quality screen prove provenance and data usability only; they are not a model-validation result and cannot close the IJHE readiness gate."
+  "claim_boundary": "An intake manifest and trace-quality screen prove provenance and data usability only; they are not a model-validation result and cannot close the IJHE readiness gate.",
+  "source_path_published": false
 }
