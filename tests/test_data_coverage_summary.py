@@ -32,3 +32,11 @@ def test_data_coverage_summary_preserves_claim_boundary() -> None:
     )
     assert accidents["coverage"]["mapped_response_family_count"] == 8
     assert accidents["coverage"]["unmatched_response_family_count"] == 0
+
+    metrology = next(
+        item for item in summary["validated_or_actionable_now"]
+        if item["id"] == "public_field_metrology"
+    )
+    assert metrology["coverage"]["field_draft_count"] == 7
+    assert metrology["coverage"]["maximum_method_agreement_percent"] == 1.53
+    assert metrology["not_allowed"] == "원시 station-to-vehicle holdout, 제어기·ESD·사고영향 검증"

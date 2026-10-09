@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "artifact_type": "privacy_bounded_data_coverage_summary",
+  "generated_at": "2026-10-10",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "raw_rows_persisted": false,
+    "site_company_manufacturer_published": false,
+    "absolute_timestamps_published": false
+  },
+  "readiness": {
+    "ijhe_gate_counts": {
+      "PASS": 127,
+      "FAIL": 10,
+      "PENDING": 7
+    },
+    "bounded_submission_ready": false,
+    "full_user_objective_ready": false
+  },
+  "validated_or_actionable_now": [
+    {
+      "id": "owner_station_side_dynamics",
+      "status": "ACTIONABLE",
+      "evidence": "research/local_confidential_station_data_utilization_2026_10_08.json",
+      "coverage": {
+        "deduplicated_rows": 56854143,
+        "ordered_high_bank_pressure_cycles": 16770,
+        "paired_medium_high_pressure_episodes": 11770,
+        "short_horizon_pressure_forecast_cases": 1418,
+        "conditional_recharge_flow_episodes": 733
+      },
+      "allowed_claim": "station-side pressure, cascade and recharge dynamics diagnostics",
+      "not_allowed": "vehicle-side full-loop accuracy or field safety limits"
+    },
+    {
+      "id": "owner_station_runtime_replay",
+      "status": "ACTIONABLE",
+      "evidence": "research/local_station_runtime_profile_integration_2026_10_09.json",
+      "coverage": {
+        "reference_defaults_completed": true,
+        "opt_in_profile_completed": true,
+        "failed_dynamics_profile_detached": true,
+        "simulations_completed": true
+      },
+      "allowed_claim": "sanitized station pressure-boundary profile is wired and replayable",
+      "not_allowed": "automatic runtime parameter replacement or full-loop validation"
+    },
+    {
+      "id": "public_type_iv_tank",
+      "status": "VALIDATED_COMPONENT",
+      "evidence": "research/public_type_iv_tank_runtime_calibration_2026_10_07.json",
+      "coverage": {
+        "validation_case_count": 12,
+        "runtime_match": true,
+        "evidence_status": "active"
+      },
+      "allowed_claim": "measured-boundary Type-IV tank component validation",
+      "not_allowed": "station controller, compressor, cascade, dispenser or field safety certification"
+    },
+    {
+      "id": "public_component_measurements",
+      "status": "DIAGNOSTIC_ONLY",
+      "evidence": "research/methytrucks_2026_public_measurement_intake.json",
+      "coverage": {
+        "workbook_count": 15,
+        "sample_count": 58440,
+        "mass_closure_comparable_pass_fraction": 0.8888888888888888
+      },
+      "allowed_claim": "public synchronized component pressure/temperature/flow diagnostics",
+      "not_allowed": "prospective station-to-vehicle holdout"
+    },
+    {
+      "id": "public_field_metrology",
+      "status": "DIAGNOSTIC_ONLY",
+      "evidence": "research/public_experimental_benchmarks_2026_10_06.json",
+      "coverage": {
+        "field_draft_count": 7,
+        "pressure_mpa_range": [
+          16.1,
+          31.39
+        ],
+        "mass_groups_kg": [
+          0.5,
+          1.0
+        ],
+        "maximum_method_agreement_percent": 1.53
+      },
+      "allowed_claim": "35 MPa 현장 계측의 압력·온도·질량 경계 및 반복성 맥락",
+      "not_allowed": "원시 station-to-vehicle holdout, 제어기·ESD·사고영향 검증"
+    },
+    {
+      "id": "public_accident_precedents",
+      "status": "ROUTED_FOR_GROUNDING",
+      "evidence": "research/runtime_public_accident_precedent_routing_2026_10_07.json",
+      "coverage": {
+        "public_report_count": 23,
+        "mapped_response_family_count": 8,
+        "runtime_routed_case_references": 42,
+        "unmatched_response_family_count": 0
+      },
+      "allowed_claim": "traceable scenario and response-plan grounding",
+      "not_allowed": "historical frequency or response-effectiveness estimation"
+    }
+  ],
+  "minimum_next_input": {
+    "purpose": "close the independent station-to-vehicle validation gate",
+    "event_count": 3,
+    "required_channels": [
+      "common elapsed time",
+      "station or dispenser pressure",
+      "delivered-gas or boundary temperature",
+      "mass flow or transferred mass",
+      "protocol start/stop phase"
+    ],
+    "preferred_channels": [
+      "vehicle/receptacle pressure and temperature",
+      "selected cascade-bank state",
+      "precooler outlet temperature",
+      "ESD and fault transitions"
+    ],
+    "privacy_route": "custodian-run export or de-identified component bundle outside the repository",
+    "evaluation_rule": "freeze protocol and model before scoring; never fit on the holdout"
+  },
+  "decision": {
+    "data_volume_is_primary_blocker": false,
+    "current_primary_gap": "synchronized and attested receiving-vessel/vehicle channels",
+    "continue_component_validation": true,
+    "full_loop_gate_remains_open": true,
+    "goal_completion_permitted": false
+  },
+  "claim_boundary": "This summary joins audited aggregate evidence only. It does not expose raw data, identify a site or company, establish safety distances, or convert component and station-side evidence into a full station-to-vehicle validation claim."
+}

@@ -31,15 +31,31 @@ def build_summary(root: Path) -> dict[str, Any]:
     tank = _read(root, "research/public_type_iv_tank_runtime_calibration_2026_10_07.json")
     accidents = _read(root, "research/runtime_public_accident_precedent_routing_2026_10_07.json")
     methytrucks = _read(root, "research/methytrucks_2026_public_measurement_intake.json")
+    benchmarks = _read(
+        root,
+        "research/public_experimental_benchmarks_2026_10_06.json",
+    )
 
     inventory = local["inventory"]
     utilization = local["utilization"]
     gate_counts = readiness["gate_counts"]
     component_aggregate = methytrucks.get("aggregate", {})
+    nist = next(
+        (
+            item
+            for item in benchmarks.get("sources") or []
+            if isinstance(item, dict)
+            and item.get("id") == "NIST_FTS_2015_FIELD_METROLOGY"
+        ),
+        {},
+    )
+    nist_aggregate = nist.get("aggregate") if isinstance(nist, dict) else {}
+    if not isinstance(nist_aggregate, dict):
+        nist_aggregate = {}
     return {
         "schema_version": 1,
         "artifact_type": "privacy_bounded_data_coverage_summary",
-        "generated_at": "2026-10-09",
+        "generated_at": "2026-10-10",
         "privacy": {
             "source_paths_published": False,
             "source_filenames_published": False,
@@ -108,6 +124,24 @@ def build_summary(root: Path) -> dict[str, Any]:
                 "not_allowed": "prospective station-to-vehicle holdout",
             },
             {
+                "id": "public_field_metrology",
+                "status": "DIAGNOSTIC_ONLY",
+                "evidence": "research/public_experimental_benchmarks_2026_10_06.json",
+                "coverage": {
+                    "field_draft_count": nist_aggregate.get("field_draft_count"),
+                    "pressure_mpa_range": [
+                        nist_aggregate.get("field_pressure_mpa_min"),
+                        nist_aggregate.get("field_pressure_mpa_max"),
+                    ],
+                    "mass_groups_kg": nist_aggregate.get("field_draft_mass_groups_kg"),
+                    "maximum_method_agreement_percent": nist_aggregate.get(
+                        "field_method_agreement_max_percent"
+                    ),
+                },
+                "allowed_claim": "35 MPa 현장 계측의 압력·온도·질량 경계 및 반복성 맥락",
+                "not_allowed": "원시 station-to-vehicle holdout, 제어기·ESD·사고영향 검증",
+            },
+            {
                 "id": "public_accident_precedents",
                 "status": "ROUTED_FOR_GROUNDING",
                 "evidence": "research/runtime_public_accident_precedent_routing_2026_10_07.json",
@@ -158,7 +192,7 @@ def build_summary(root: Path) -> dict[str, Any]:
 def _markdown(summary: dict[str, Any]) -> str:
     counts = summary["readiness"]["ijhe_gate_counts"]
     lines = [
-        "# Privacy-bounded data coverage summary (2026-10-09)",
+        "# Privacy-bounded data coverage summary (2026-10-10)",
         "",
         "이 문서는 확보된 공개·비식별 자료로 지금 검증할 수 있는 범위와, 완전한 충전소-차량 검증에 필요한 최소 입력을 자동으로 정리한 산출물이다.",
         "",
