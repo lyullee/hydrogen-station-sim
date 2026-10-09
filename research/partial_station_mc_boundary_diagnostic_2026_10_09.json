@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-09T11:01:09.223188+00:00",
+  "diagnostic_type": "MC Default published-boundary partial-station sensitivity",
+  "evidence_role": "development_diagnostic_only",
+  "post_outcome": true,
+  "source": {
+    "dataset": "Powertech Labs SAE J2601 MC Default bench traces",
+    "source_role": "public consumed development material; not a fresh holdout",
+    "boundary_inputs": [
+      "published source pressure trace",
+      "published pressure-reference schedule",
+      "published inlet-gas temperature trace used as delivery thermal boundary"
+    ],
+    "case_count": 8
+  },
+  "claim_boundary": "This is a bounded PCV/precooler/hose/vehicle-tank diagnostic. It is not independent full-station validation, SAE conformance, field-safety evidence, or an IJHE full digital-twin performance claim.",
+  "production_runtime_changed": false,
+  "frozen_holdout_effect": "none; the previously frozen 0/8 external result remains unchanged",
+  "screening_limits": {
+    "pressure_rmse_mpa": 5.0,
+    "temperature_rmse_c": 10.0,
+    "soc_final_abs_error_percentage_points": 5.0
+  },
+  "runs": [
+    {
+      "name": "safety-aware baseline",
+      "maximum_gas_temperature_c": 85.0,
+      "screening_pass_count": 0,
+      "screening_pass_fraction": 0.0,
+      "aggregate": {
+        "pressure_rmse_mpa": 3.8763434957654863,
+        "temperature_rmse_c": 7.9305716094898715,
+        "soc_rmse_percentage_points": 4.971295903638917,
+        "simulation_coverage_fraction": 0.536376889576208
+      },
+      "stop_reason": "five of eight cases stopped at the 85°C gas-temperature limit",
+      "interpretation": "Pressure and temperature error can look bounded over the simulated prefix, but the model covers only part of the observed fill in several cases. It must not be treated as a complete fill validation."
+    },
+    {
+      "name": "raised-temperature-limit sensitivity",
+      "maximum_gas_temperature_c": 120.0,
+      "screening_pass_count": 0,
+      "screening_pass_fraction": 0.0,
+      "aggregate": {
+        "pressure_rmse_mpa": 6.130872389127282,
+        "temperature_rmse_c": 15.903565304979603,
+        "soc_rmse_percentage_points": 7.531884310229813,
+        "simulation_coverage_fraction": 1.0
+      },
+      "stop_reason": "controller temperature stop removed as a diagnostic counterfactual",
+      "interpretation": "Coverage reaches the full observed duration, but aggregate pressure, temperature, and SOC errors worsen and no case meets the joint screen. The raised limit is not an allowable operating setting."
+    }
+  ],
+  "decision": {
+    "current_result": "no release-gate pass",
+    "what_is_supported": [
+      "partial-station replay with an explicitly measured/published source-pressure boundary",
+      "separate diagnosis of premature safety termination versus thermal/flow mismatch",
+      "prioritisation of source-boundary, heat-transfer, and controller-state measurements"
+    ],
+    "what_is_not_supported": [
+      "full station cascade/compressor/vehicle closed-loop validation",
+      "automatic production parameter retuning",
+      "safety-limit relaxation based on this sensitivity"
+    ],
+    "next_data_priority": [
+      "synchronised dispenser inlet pressure, inlet temperature and mass flow",
+      "precooler outlet temperature and controller/valve state",
+      "vehicle tank pressure/temperature/SOC on the same clock",
+      "declared sensor units, calibration and stop-event semantics"
+    ]
+  },
+  "reproduction": {
+    "baseline": "scripts/run_partial_station_validation.py --dataset mc_default --use-source-pressure-profile --use-protocol-pressure-profile",
+    "sensitivity": "scripts/run_partial_station_validation.py --dataset mc_default --use-source-pressure-profile --use-protocol-pressure-profile --maximum-gas-temperature-c 120"
+  }
+}

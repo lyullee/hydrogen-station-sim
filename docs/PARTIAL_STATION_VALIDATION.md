@@ -74,3 +74,30 @@ The pressure schedule is now a first-class optional controller boundary.  An
 empty schedule preserves the constant APRR implementation, while a supplied
 schedule is linearly interpolated on the controller clock and clamped at its
 published endpoints.
+
+## What the published MC boundary can and cannot establish
+
+The published MC Default traces are useful even though they do not provide a
+new independent station holdout.  The source-pressure trace and the published
+pressure-reference schedule can be applied to the partial station boundary,
+which separates two failure modes that otherwise look the same: an early
+safety-temperature stop and a model that runs for the full fill but misses the
+thermal, pressure, or SOC trajectory.  The reproducible aggregate comparison is
+recorded in
+[`research/partial_station_mc_boundary_diagnostic_2026_10_09.json`](../research/partial_station_mc_boundary_diagnostic_2026_10_09.json).
+
+The safety-aware run uses the production 85 °C gas-temperature stop.  It
+covers only part of the observed duration for several cases and has no joint
+screening pass.  A separate 120 °C run is a diagnostic counterfactual only: it
+covers the full observed duration, but its aggregate pressure, temperature, and
+SOC errors are larger and it also has no joint pass.  The 120 °C value must not
+be used as an operating limit or as a production retuning.  Neither run changes
+the frozen external 0/8 result.
+
+This is the useful engineering conclusion from the available public data: the
+next high-value measurements are synchronised dispenser-inlet pressure,
+delivered-gas temperature, mass flow, precooler/control state, and vehicle tank
+pressure/temperature/SOC with declared units and stop-event semantics.  The
+current model can already replay the station-side boundary and expose the
+remaining mismatch without claiming that the whole station or field safety has
+been validated.
