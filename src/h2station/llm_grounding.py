@@ -151,6 +151,85 @@ def _ijhe_readiness_ledger() -> dict[str, Any]:
     }
 
 
+def _validation_gap_triage() -> dict[str, Any]:
+    """Load the privacy-bounded next-action view of unresolved gates.
+
+    This is intentionally separate from the readiness ledger.  The ledger
+    answers whether a claim is open; this view tells the assistant what the
+    smallest next evidence or review action is.  It exposes no evidence paths,
+    raw rows, or site identity and fails closed if the derived artifact is
+    stale or malformed.
+    """
+
+    unavailable: dict[str, Any] = {
+        "status": "unavailable",
+        "artifact_integrity": False,
+        "bucket_counts": {},
+        "open_gate_count": 0,
+        "next_actions": [],
+        "claim_limit": "검증 공백 보고서를 읽지 못해 다음 입력을 추정하지 않음",
+    }
+    path = Path(__file__).resolve().parents[2] / "research" / (
+        "validation_gap_triage_2026_10_10.json"
+    )
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return unavailable
+    if not isinstance(payload, dict) or payload.get("schema_version") != 1:
+        return unavailable
+    overall = payload.get("overall")
+    counts = payload.get("bucket_counts")
+    gates = payload.get("unresolved_gates")
+    interpretation = payload.get("interpretation")
+    if not isinstance(overall, dict) or not isinstance(counts, dict):
+        return unavailable
+    if not isinstance(gates, list) or not isinstance(interpretation, dict):
+        return unavailable
+    safe_buckets: dict[str, dict[str, int]] = {}
+    for bucket, values in counts.items():
+        if not isinstance(bucket, str) or not isinstance(values, dict):
+            return unavailable
+        safe_values: dict[str, int] = {}
+        for status in ("FAIL", "PENDING"):
+            value = values.get(status, 0)
+            if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                return unavailable
+            safe_values[status] = value
+        safe_buckets[bucket] = safe_values
+    safe_actions: list[dict[str, str]] = []
+    seen: set[tuple[str, str]] = set()
+    for gate in gates:
+        if not isinstance(gate, dict):
+            return unavailable
+        gate_id = str(gate.get("id") or "")
+        status = str(gate.get("status") or "")
+        action = str(gate.get("next_action") or "")
+        bucket = str(gate.get("bucket") or "")
+        if not gate_id or status not in {"FAIL", "PENDING"} or not action or not bucket:
+            return unavailable
+        key = (bucket, action)
+        if key not in seen:
+            safe_actions.append({"bucket": bucket, "status": status, "action": action})
+            seen.add(key)
+    open_gate_count = sum(sum(values.values()) for values in safe_buckets.values())
+    return {
+        "status": "available",
+        "artifact_integrity": True,
+        "source_generated_at": payload.get("source_audit_generated_at"),
+        "bucket_counts": safe_buckets,
+        "open_gate_count": open_gate_count,
+        "next_actions": safe_actions[:8],
+        "data_volume_is_primary_blocker": (
+            interpretation.get("data_volume_is_primary_blocker") is True
+        ),
+        "primary_blocker": str(interpretation.get("primary_blocker") or ""),
+        "claim_limit": (
+            "게이트 상태와 최소 다음 조치의 요약일 뿐, 외부검증·안전성·저널 게재를 보증하지 않음"
+        ),
+    }
+
+
 def _runtime_calibration_profile(frame: dict[str, Any]) -> dict[str, Any]:
     """Describe the measured-boundary profile used by this simulator frame.
 
@@ -6909,6 +6988,7 @@ def build_evidence_manifest(
         "runtime_calibration": _runtime_calibration_profile(frame),
         "runtime_geometry": _runtime_geometry_profile(frame),
         "runtime_vehicle_tank_calibration": _runtime_vehicle_tank_calibration_profile(frame),
+        "validation_gap_triage": _validation_gap_triage(),
         "data_coverage": _data_coverage_summary(),
         "virtual_safety": _virtual_safety_evidence(frame),
         "measured_bank_pressure_envelope": frame.get(
@@ -7359,6 +7439,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         "runtime_vehicle_tank_calibration": manifest.get(
             "runtime_vehicle_tank_calibration"
         ) or {},
+        "validation_gap_triage": manifest.get("validation_gap_triage") or {},
         "data_coverage": manifest.get("data_coverage") or {},
         "measured_bank_pressure_envelope": manifest.get(
             "measured_bank_pressure_envelope"
@@ -10194,6 +10275,22 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     # already receives the detailed live signal/impact fields separately.
     if current_forecast or manifest.get("selected_sensor"):
         decision["data_used"] = data_used
+    # The gate-triage view is useful for evidence/data questions but is too
+    # expensive for ordinary operational turns.  Keep the default provider
+    # envelope compact and expose it only when the operator asks about
+    # validation, evidence, experiments or datasets.
+    if any(token in lead_context for token in (
+        "검증", "근거", "데이터", "실측", "실험", "공개", "validation",
+        "evidence", "dataset", "experiment", "measurement", "raw",
+    )):
+        decision["validation_gap_triage"] = selected(
+            manifest.get("validation_gap_triage"),
+            (
+                "status", "artifact_integrity", "source_generated_at",
+                "bucket_counts", "open_gate_count", "next_actions",
+                "data_volume_is_primary_blocker", "primary_blocker", "claim_limit",
+            ),
+        )
     if relevant_precedents.get("by_response_plan"):
         decision["response_guidance"].update({
             "relevant_public_accident_precedents": relevant_precedents[
@@ -10624,6 +10721,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     thermal_observation = evidence.get("temperature_observation_semantic_boundary") or {}
     data_coverage = manifest.get("data_coverage") or {}
+    validation_gap_triage = manifest.get("validation_gap_triage") or {}
     return {
         "data_coverage": {
             key: data_coverage.get(key)
@@ -10638,6 +10736,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if data_coverage.get(key) is not None
         },
+        "validation_gap_triage": validation_gap_triage,
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "runtime_geometry": manifest.get("runtime_geometry") or {},
         "runtime_vehicle_tank_calibration": manifest.get(
