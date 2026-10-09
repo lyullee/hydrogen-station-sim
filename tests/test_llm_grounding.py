@@ -888,6 +888,23 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert local_station["assessment"]["vehicle_side_full_loop_validation_ready"] is False
     assert local_station["semantic_attestation"]["storage_pressure_role_count"] == 2
     assert local_station["semantic_attestation"]["flow_units_attested"] is False
+    signal_consistency = idle["response_evidence"][
+        "confidential_station_signal_consistency"
+    ]
+    assert signal_consistency["candidate_pairs_evaluated"] == 54
+    assert signal_consistency["strong_consistency_pairs"] == 27
+    assert signal_consistency["files_with_strong_consistency_pair"] == 17
+    assert signal_consistency["strong_pair_aggregate"][
+        "correlation_median"
+    ] == 0.9970854325653027
+    assert signal_consistency["flow_units_attested"] is False
+    assert signal_consistency["flow_parameter_fit_supported"] is False
+    assert prompt_evidence_summary(idle)[
+        "confidential_station_signal_consistency"
+    ]["strong_consistency_pairs"] == 27
+    assert prompt_evidence_header(idle)[
+        "confidential_station_signal_consistency"
+    ]["absolute_mass_flow_supported"] is False
     transfer = idle["response_evidence"][
         "confidential_local_station_cross_bundle_transfer"
     ]
@@ -950,6 +967,17 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert asset_decision["scenario_step_rows"] == 52
     assert asset_decision["hazop_scenario_coverage_substantial"] is True
     assert asset_decision["vehicle_side_full_loop_validation_ready"] is False
+    signal_question = build_evidence_manifest(
+        {"time_s": 4.0}, {}, [], False,
+        question="충전소 유량과 재충전 데이터를 어떻게 검증했어?",
+    )
+    signal_decision = prompt_decision_evidence(signal_question)
+    assert signal_decision["decision_support_evidence"][
+        "confidential_station_signal_consistency"
+    ]["strong_consistency_pairs"] == 27
+    assert signal_decision["validation_boundaries"][
+        "station_signal_consistency"
+    ]["flow_units_attested"] is False
     local_asset = idle["response_evidence"][
         "confidential_local_station_asset_screen"
     ]

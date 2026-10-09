@@ -4014,6 +4014,95 @@ def _confidential_station_channel_quality_recheck() -> dict[str, Any] | None:
     }
 
 
+def _confidential_station_signal_consistency_evidence() -> dict[str, Any] | None:
+    """Expose the bounded flow/totalizer consistency screen.
+
+    The archive contains recurring station-side signal relationships, but the
+    custodian has not yet attested channel roles, engineering units, reset
+    semantics or calibration.  Keeping this as a *candidate* evidence class
+    lets the assistant explain why a flow-related question has useful local
+    support without turning correlation into an absolute mass-flow model.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/confidential_station_signal_consistency_screen_2026_10_08.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    privacy = record.get("privacy") or {}
+    screen = record.get("screen") or {}
+    aggregate = screen.get("candidate_pair_aggregate") or {}
+    strong = screen.get("strong_pair_aggregate") or {}
+    attestation = record.get("attestation") or {}
+    eligibility = record.get("eligibility") or {}
+    required_privacy = (
+        "source_identifiers_published", "source_paths_published",
+        "filenames_published", "tag_names_published", "raw_rows_persisted",
+        "exact_timestamps_published", "manufacturer_or_model_published",
+    )
+    if (
+        record.get("schema_version") != 1
+        or record.get("artifact_type")
+        != "confidential_station_signal_consistency_screen"
+        or record.get("analysis_status")
+        != "pre_attestation_internal_consistency_screen"
+        or not all(privacy.get(key) is False for key in required_privacy)
+        or screen.get("candidate_pairs_evaluated") != 54
+        or screen.get("strong_consistency_pairs") != 27
+        or screen.get("files_with_strong_consistency_pair") != 17
+        or eligibility.get("flow_channel_pair_attestation_candidate") is not True
+        or eligibility.get("absolute_mass_flow_supported") is not False
+        or eligibility.get("conditional_bank_inventory_estimation_supported") is not False
+        or eligibility.get("full_station_vehicle_validation") is not False
+        or eligibility.get("independent_holdout") is not False
+        or any(attestation.get(key) is not False for key in (
+            "channel_roles_attested", "flow_units_attested",
+            "totalizer_reset_semantics_attested", "calibration_status_attested",
+        ))
+    ):
+        return None
+    return {
+        "artifact": "research/confidential_station_signal_consistency_screen_2026_10_08.json",
+        "evidence_role": "confidential station-side flow/totalizer consistency candidate",
+        "analysis_status": record.get("analysis_status"),
+        "candidate_pairs_evaluated": screen.get("candidate_pairs_evaluated"),
+        "strong_consistency_pairs": screen.get("strong_consistency_pairs"),
+        "files_with_strong_consistency_pair": screen.get(
+            "files_with_strong_consistency_pair"
+        ),
+        "candidate_pair_aggregate": {
+            key: aggregate.get(key)
+            for key in (
+                "correlation_median", "correlation_max",
+                "normalized_rmse_percent_median", "active_samples_median",
+            )
+            if aggregate.get(key) is not None
+        },
+        "strong_pair_aggregate": {
+            key: strong.get(key)
+            for key in (
+                "correlation_median", "correlation_p10", "correlation_p90",
+                "normalized_rmse_percent_median",
+                "normalized_rmse_percent_p90",
+                "derivative_to_signal_scale_median",
+                "aggregation_window_seconds_median",
+            )
+            if strong.get(key) is not None
+        },
+        "channel_roles_attested": False,
+        "flow_units_attested": False,
+        "totalizer_reset_semantics_attested": False,
+        "calibration_status_attested": False,
+        "flow_parameter_fit_supported": False,
+        "absolute_mass_flow_supported": False,
+        "full_station_vehicle_validation": False,
+        "independent_holdout": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_station_schema_evidence() -> dict[str, Any] | None:
     """Expose only the de-identified private-channel intake boundary."""
 
@@ -6074,6 +6163,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_station_channel_quality_recheck"
         ] = channel_quality_recheck
+    signal_consistency = _confidential_station_signal_consistency_evidence()
+    if signal_consistency is not None:
+        envelope["response_evidence"][
+            "confidential_station_signal_consistency"
+        ] = signal_consistency
     station_schema = _confidential_station_schema_evidence()
     if station_schema is not None:
         envelope["response_evidence"][
@@ -6964,6 +7058,22 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if station_thermal.get(key) is not None
         }
+    signal_consistency = evidence.get("confidential_station_signal_consistency")
+    if isinstance(signal_consistency, dict):
+        summary["confidential_station_signal_consistency"] = {
+            key: signal_consistency.get(key)
+            for key in (
+                "evidence_role", "artifact", "analysis_status",
+                "candidate_pairs_evaluated", "strong_consistency_pairs",
+                "files_with_strong_consistency_pair", "candidate_pair_aggregate",
+                "strong_pair_aggregate", "channel_roles_attested",
+                "flow_units_attested", "totalizer_reset_semantics_attested",
+                "calibration_status_attested", "flow_parameter_fit_supported",
+                "absolute_mass_flow_supported", "full_station_vehicle_validation",
+                "independent_holdout", "claim_limit",
+            )
+            if signal_consistency.get(key) is not None
+        }
     bank_pressure = evidence.get("confidential_bank_role_pressure_envelopes")
     if isinstance(bank_pressure, dict):
         summary["confidential_bank_role_pressure_envelopes"] = {
@@ -7342,6 +7452,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     multisource = response.get("confidential_multisource_mapping_feasibility") or {}
     thermal_observation = response.get("temperature_observation_semantic_boundary") or {}
     station_thermal = response.get("confidential_station_thermal_dynamics") or {}
+    signal_consistency = response.get(
+        "confidential_station_signal_consistency"
+    ) or {}
     cascade_sequence = response.get(
         "confidential_station_cascade_sequence_holdout"
     ) or {}
@@ -7400,6 +7513,11 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "로컬", "현장 데이터", "충전소 데이터", "운전 데이터", "시계열",
         "private station", "local station", "station data", "operational data",
         "vehicle-side", "vehicle side", "full-loop", "full loop",
+    ))
+    station_signal_relevant = any(token in lead_context for token in (
+        "충전", "압력", "온도", "유량", "질량", "적산", "토털라이저",
+        "압축기", "재충전", "flow", "mass", "totalizer", "pressure",
+        "temperature", "compressor", "recharge",
     ))
     hytunnel_relevant = any(token in lead_context for token in (
         "공개", "실측", "원자료", "검증", "데이터", "피해영향", "안전거리",
@@ -7635,6 +7753,30 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 },
             } if cross_station_transfer and local_discovery_relevant else {}),
             **({
+                "confidential_station_signal_consistency": {
+                    "candidate_pairs_evaluated": signal_consistency.get(
+                        "candidate_pairs_evaluated"
+                    ),
+                    "strong_consistency_pairs": signal_consistency.get(
+                        "strong_consistency_pairs"
+                    ),
+                    "files_with_strong_consistency_pair": signal_consistency.get(
+                        "files_with_strong_consistency_pair"
+                    ),
+                    "strong_pair_aggregate": signal_consistency.get(
+                        "strong_pair_aggregate"
+                    ) or {},
+                    "flow_parameter_fit_supported": False,
+                    "absolute_mass_flow_supported": False,
+                    "full_station_vehicle_validation": False,
+                    "claim_limit": short(
+                        signal_consistency.get("claim_limit"), 220
+                    ),
+                },
+            } if signal_consistency and (
+                local_discovery_relevant or station_signal_relevant
+            ) else {}),
+            **({
                 "public_accidental_release": {
                     "experiment_count": (
                         accidental_release.get("reported_findings") or {}
@@ -7786,6 +7928,31 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 },
             } if local_station_utilization and (
                 manifest.get("question") or manifest.get("selected_sensor")
+            ) else {}),
+            **({
+                "station_signal_consistency": {
+                    "strong_consistency_pairs": signal_consistency.get(
+                        "strong_consistency_pairs"
+                    ),
+                    "strong_correlation_median": (
+                        signal_consistency.get("strong_pair_aggregate") or {}
+                    ).get("correlation_median"),
+                    "strong_normalized_rmse_percent_median": (
+                        signal_consistency.get("strong_pair_aggregate") or {}
+                    ).get("normalized_rmse_percent_median"),
+                    "aggregation_window_seconds_median": (
+                        signal_consistency.get("strong_pair_aggregate") or {}
+                    ).get("aggregation_window_seconds_median"),
+                    "channel_roles_attested": False,
+                    "flow_units_attested": False,
+                    "flow_parameter_fit_supported": False,
+                    "full_station_vehicle_validation": False,
+                    "claim_limit": short(
+                        signal_consistency.get("claim_limit"), 220
+                    ),
+                },
+            } if signal_consistency and (
+                local_discovery_relevant or station_signal_relevant
             ) else {}),
             **({
                 "local_station_asset_screen": {
@@ -8383,6 +8550,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     channel_quality_recheck = evidence.get(
         "confidential_station_channel_quality_recheck"
+    ) or {}
+    signal_consistency = evidence.get(
+        "confidential_station_signal_consistency"
     ) or {}
     station_schema = evidence.get("confidential_station_schema_intake") or {}
     local_station_utilization = evidence.get(
@@ -9407,6 +9577,50 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "full_loop_holdout_eligible"
             ) is True,
             "claim_limit": channel_quality_recheck.get("claim_limit"),
+        },
+        "confidential_station_signal_consistency": {
+            "artifact": signal_consistency.get("artifact"),
+            "analysis_status": signal_consistency.get("analysis_status"),
+            "candidate_pairs_evaluated": signal_consistency.get(
+                "candidate_pairs_evaluated"
+            ),
+            "strong_consistency_pairs": signal_consistency.get(
+                "strong_consistency_pairs"
+            ),
+            "files_with_strong_consistency_pair": signal_consistency.get(
+                "files_with_strong_consistency_pair"
+            ),
+            "candidate_pair_aggregate": signal_consistency.get(
+                "candidate_pair_aggregate"
+            ) or {},
+            "strong_pair_aggregate": signal_consistency.get(
+                "strong_pair_aggregate"
+            ) or {},
+            "channel_roles_attested": signal_consistency.get(
+                "channel_roles_attested"
+            ) is True,
+            "flow_units_attested": signal_consistency.get(
+                "flow_units_attested"
+            ) is True,
+            "totalizer_reset_semantics_attested": signal_consistency.get(
+                "totalizer_reset_semantics_attested"
+            ) is True,
+            "calibration_status_attested": signal_consistency.get(
+                "calibration_status_attested"
+            ) is True,
+            "flow_parameter_fit_supported": signal_consistency.get(
+                "flow_parameter_fit_supported"
+            ) is True,
+            "absolute_mass_flow_supported": signal_consistency.get(
+                "absolute_mass_flow_supported"
+            ) is True,
+            "full_station_vehicle_validation": signal_consistency.get(
+                "full_station_vehicle_validation"
+            ) is True,
+            "independent_holdout": signal_consistency.get(
+                "independent_holdout"
+            ) is True,
+            "claim_limit": signal_consistency.get("claim_limit"),
         },
         "confidential_station_schema_intake": {
             "source_bundle_count": station_schema.get("source_bundle_count"),

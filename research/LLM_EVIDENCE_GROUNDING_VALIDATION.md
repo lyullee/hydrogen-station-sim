@@ -92,7 +92,7 @@ The following tests passed in the repository virtual environment:
 33 passed
 
 .venv\Scripts\python.exe -m pytest -q
-1158 passed, 19 warnings
+1158 passed, 18 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -192,6 +192,16 @@ candidate falls inside the transfer bundle's p05-p95 cycle-drop range with a
 17.431193% relative error to its median. This strengthens station-side
 corroboration only; it does not authorize vehicle filling, consequence, safety
 limit or runtime claims.
+
+The same archive also contributes a pre-attestation flow/totalizer
+signal-consistency screen when a question concerns flow, charging or recharge.
+Twenty-seven of 54 candidate comparisons in 17 files met the fixed
+consistency screen (strong-pair median correlation 0.9971; median
+span-normalized RMSE 2.54%; median aggregation window 60 s). Because channel
+roles, engineering units, reset semantics and calibration remain unattested,
+the LLM receives this only as a station-side candidate: absolute mass-flow
+fitting, inventory estimation and station-to-vehicle/full-loop validation
+remain false.
 
 The Grune/Sempert envelope is a measured-boundary adjustment for the virtual
 detector proxy. It uses the public DOI and aggregate factors only, defaults to

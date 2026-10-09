@@ -19,7 +19,7 @@
       "command": ".venv\\Scripts\\python.exe -m pytest -q",
       "passed": 1158,
       "failed": 0,
-      "warnings": 19
+      "warnings": 18
     }
   },
   "verified_properties": [
@@ -60,6 +60,7 @@
     "public experimental operating benchmarks are carried into the evidence envelope with pressure-class selection and explicit partial-boundary claim limits",
     "private screen-recording/photo intake is carried as a non-machine-readable provenance boundary without parameter-fit or full-loop authorization",
     "restricted station compressor/cooler thermal evidence is projected into full, summary, header and compact decision contexts as UNCONFIRMED, with no calibration, runtime, vehicle-fill or full-loop claim",
+    "pre-attestation local station flow/totalizer signal-consistency evidence is carried into full, summary, header and compact decision contexts with units, roles, reset semantics, absolute-flow fitting and full-loop validation explicitly disabled",
     "public HIAD metadata-to-runtime coverage is projected into full, summary, header and compact decision contexts with 29 direct, four proxy and one response-only cases, while incident narrative parameterization remains prohibited; all nine executable canonical recipes pass",
     "independent KHK metadata-to-runtime traceability is projected into full, summary, header and compact decision contexts: 22 reports covering 25 incident codes traverse eight passing canonical recipes, one KOH-electrolyte release remains outside gaseous-H2 scope, and report narrative parameterization remains prohibited",
     "CARB 22-station HGV 4.3 aggregate fault, communication and fueling-performance results are carried into the evidence envelope and only into relevant compact prompts, with no dynamic-model or full-loop validation claim",
