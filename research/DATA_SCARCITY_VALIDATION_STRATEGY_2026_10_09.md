@@ -1,4 +1,4 @@
-# Data-scarcity validation strategy (2026-10-09)
+# Data-scarcity validation strategy (2026-10-10)
 
 Real hydrogen-refuelling datasets are difficult to obtain in the exact form
 needed for an independent digital-twin claim. The limiting factor is not the
@@ -24,6 +24,13 @@ restart screening, trend displays and bounded operator guidance. They are not
 silently promoted to vehicle or full-loop validation. The inventory found no
 header-level vehicle/dispenser candidate, and vehicle-side channel attestation
 remains zero.
+
+The public HydDown archive now also contributes a bounded Type-I filling
+thermal diagnostic: three common-time cases are reproduced with aggregate
+temperature errors of 6.36, 9.94 and 11.75 K. The source arrays are not copied
+into the repository. This evidence is available to the LLM for vessel thermal
+comparisons, but it does not change runtime parameters or close the
+station-to-vehicle gate.
 
 ## Public data can fill context, not every gate
 
@@ -62,4 +69,3 @@ until an independent synchronized full-loop holdout and expert review exist.
 This boundary is deliberate: it prevents a large private archive from being
 mistaken for a validated channel contract and keeps unpublished operational
 data out of the repository.
-
