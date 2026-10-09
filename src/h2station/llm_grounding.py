@@ -219,6 +219,42 @@ def _public_incident_traceability() -> dict[str, Any] | None:
         "contract_pass": aggregate.get("contract_pass") is True,
         "claim_limit": str(record.get("claim_boundary") or ""),
     }
+    # Keep the current public HIAD 2.2 provenance next to the derived
+    # traceability counts.  The workbook is never copied into the prompt;
+    # this only tells the assistant which public release and coverage window
+    # the scenario inventory came from.
+    provenance_path = path.parent / "hiad_2_2_access_recheck_2026_10_05.json"
+    try:
+        provenance = json.loads(provenance_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        provenance = None
+    provenance_source = (provenance or {}).get("source") or {}
+    provenance_observation = (provenance or {}).get("workbook_observation") or {}
+    if (
+        isinstance(provenance, dict)
+        and provenance.get("status") == "completed_public_accident_dataset_provenance_recheck"
+        and provenance_source.get("version") == "HIAD 2.2"
+        and str(provenance_source.get("official_page") or "").startswith("https://")
+        and str(provenance_source.get("download_url") or "").startswith("https://")
+        and provenance_observation.get("hydrogen_refuelling_station_records") == aggregate.get("case_count")
+    ):
+        result["public_source"] = {
+            "title": str(provenance_source.get("title") or ""),
+            "publisher": str(provenance_source.get("publisher") or ""),
+            "version": str(provenance_source.get("version") or ""),
+            "coverage_end": str(provenance_source.get("coverage_end") or ""),
+            "official_page": str(provenance_source.get("official_page") or ""),
+            "download_url": str(provenance_source.get("download_url") or ""),
+            "station_record_count": provenance_observation.get(
+                "hydrogen_refuelling_station_records"
+            ),
+            "raw_rows_in_prompt": False,
+            "claim_limit": (
+                "HIAD 2.2 public incident metadata provide qualitative scenario and "
+                "response grounding only; they do not provide synchronized process traces "
+                "or numerical station-to-vehicle validation."
+            ),
+        }
     # Pass only the compact, derived action taxonomy to the model.  The raw
     # HIAD narrative remains outside the prompt; the digest links the
     # category counts back to the public workbook without implying that the
@@ -3128,6 +3164,15 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
         str(khk.get("institution") or "Public hydrogen accident reports"),
         str(khk.get("source_page") or ""),
         "공개 사고사례 분류·대응절차 근거",
+    )
+
+    incident = evidence.get("public_incident_traceability") or {}
+    hiad_source = incident.get("public_source") or {}
+    add(
+        "PUBLIC_HIAD_2_2",
+        str(hiad_source.get("title") or "European Hydrogen Incidents and Accidents Database HIAD 2.2"),
+        str(hiad_source.get("official_page") or ""),
+        "공개 HIAD 2.2 사고·근접사고 시나리오 근거(정성적·비수치 검증)",
     )
 
     accidental = evidence.get("public_accidental_release_evidence") or {}
@@ -6543,6 +6588,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         summary["public_incident_traceability"] = {
             "case_count": incident_traceability.get("case_count"),
             "contract_pass": incident_traceability.get("contract_pass") is True,
+            "public_source": incident_traceability.get("public_source") or {},
             "digital_twin_replay": {
                 key: replay.get(key)
                 for key in (
@@ -9556,6 +9602,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         },
         "public_accident_evidence": {
             "hiad_case_count": incident.get("case_count"),
+            "hiad_public_source": incident.get("public_source") or {},
             "hiad_digital_twin_replay": {
                 key: (incident.get("digital_twin_replay") or {}).get(key)
                 for key in (

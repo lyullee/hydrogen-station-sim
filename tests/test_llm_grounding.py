@@ -654,6 +654,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "PUBLIC_STATION_OPERATION_PRACTICE",
         "PUBLIC_STATION_AGGREGATE_BENCHMARK",
         "PUBLIC_3EMOTION_STATION_OPERATING_AGGREGATE",
+        "PUBLIC_HIAD_2_2",
         "KHK_PUBLIC_ACCIDENT_REPORTS",
         "PUBLIC_ACCIDENTAL_RELEASE_ARTICLE",
         "PUBLIC_ACCIDENTAL_RELEASE_DATASET",
@@ -750,6 +751,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         detector_prompt
     )["decision_support_evidence"]["detector_placement"]
     assert header["public_accident_evidence"]["public_report_count"] == 23
+    assert header["public_accident_evidence"]["hiad_public_source"]["version"] == (
+        "HIAD 2.2"
+    )
+    assert header["public_accident_evidence"]["hiad_public_source"][
+        "station_record_count"
+    ] == 34
     assert header["public_accident_evidence"]["accidental_release_zenodo_doi"] == (
         "10.5281/zenodo.17913628"
     )
