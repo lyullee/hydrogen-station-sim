@@ -61,6 +61,12 @@
           <label>연료 공급온도 등급<select id="fuelingTemperatureCategory"><option value="custom" selected>검사 끔 · 사용자 설정</option><option value="T40">T40 · −40~−33 °C</option><option value="T30">T30 · −33~−26 °C</option><option value="T20">T20 · −26~−17.5 °C</option></select></label>
           <label>차량 통신 손실 시<select id="communicationLossPolicy"><option value="abort" selected>즉시 충전 종료</option><option value="hold-and-resume">유량 차단 후 통신 복구 시 재개</option></select></label>
         </div></details>
+        <details class="leak-check-settings"><summary>충전 중 누설검사 훈련</summary><p class="hint">충전 중 설정 압력 간격마다 공급을 잠시 멈추고 압력 저하를 확인하는 선택형 훈련입니다. 기본은 꺼져 있으며, 켜면 차량 1·2에 동일하게 적용됩니다. 실제 법정검사나 SAE J2601 인증을 대신하지 않습니다.</p><div class="grid">
+          <label class="switch-label"><input id="leakCheckEnabled" type="checkbox"> 압력 유지 누설검사 사용</label>
+          <label>검사 간격 (MPa)<input id="leakCheckPressureInterval" type="number" value="3" min="0.1" max="20" step="any" disabled></label>
+          <label>검사 대기시간 (s)<input id="leakCheckPause" type="number" value="5" min="0.1" max="60" step="any" disabled></label>
+          <label>허용 압력저하 (kPa)<input id="leakCheckTolerance" type="number" value="10" min="0" max="1000" step="any" disabled></label>
+        </div><p class="hint">검사 중 허용값을 넘는 압력 저하가 감지되면 해당 차량 충전을 중지하고 누설 의심 상태를 기록합니다.</p></details>
         <details class="relief-settings"><summary>안전밸브 · 개방/재폐쇄 압력</summary><p class="hint">압력이 개방값에 도달하면 방출하고 재폐쇄값까지 낮아지면 닫힙니다. 두 값을 가깝게 설정하면 채터링을 관찰할 수 있습니다.</p><div id="reliefRows" class="relief-rows"></div></details>
         <details class="risk-display-settings"><summary>3D 위험도 표시 · 계산 부하</summary><p class="hint">위험도 버튼을 켰을 때 주요 설비의 현재 센서와 피해영향예측을 아래 주기로 갱신합니다. ‘절대’는 고정 기준 0–100 지수이며 연간 개인위험도가 아닙니다.</p><div class="grid">
           <label class="switch-label"><input id="riskOverlayEnabled" type="checkbox" checked> 주기적 위험도 갱신</label>
@@ -155,7 +161,7 @@
   </article>
 </template>
 <script src="/locale.js?v=20261001-language3"></script>
-<script src="/remote.js?v=20261008-hgv43-training1"></script>
+<script src="/remote.js?v=20261009-leakcheck1"></script>
 <script src="/safety-actions.js?v=1"></script>
 <script src="/safety-console.js?v=20260930-evacuation-feedback1"></script>
 </body></html>

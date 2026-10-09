@@ -264,6 +264,11 @@ function readPayload(includeFaults=true){
   payload.pressure_corridor_upper_tolerance_mpa=optionalNumber('pressureCorridorUpper');
   payload.fueling_temperature_category=$('fuelingTemperatureCategory').value;
   payload.communication_loss_policy=$('communicationLossPolicy').value;
+  payload.leak_check_pressure_interval_mpa=$('leakCheckEnabled').checked?Number($('leakCheckPressureInterval').value):null;
+  payload.leak_check_pause_s=Number($('leakCheckPause').value||5);
+  payload.leak_check_pressure_drop_tolerance_kpa=Number($('leakCheckTolerance').value||10);
+  if(payload.leak_check_pressure_interval_mpa!==null&&!Number.isFinite(payload.leak_check_pressure_interval_mpa))throw new Error('누설검사 간격을 입력하세요.');
+  if(!Number.isFinite(payload.leak_check_pause_s)||!Number.isFinite(payload.leak_check_pressure_drop_tolerance_kpa))throw new Error('누설검사 대기시간과 허용 압력저하를 확인하세요.');
   const process_settings=readProcessSettings();
   // The scheduled target is capped at the independent PLC threshold. In
   // over-target mode the live controller intentionally ramps beyond it.
@@ -413,6 +418,10 @@ document.querySelectorAll('[data-remote-tab]').forEach(button=>button.addEventLi
 const trailerFields=document.querySelector('[data-process="trailer_supply"] .process-fields');
 const trailerDetails=document.createElement('details');const trailerSummary=document.createElement('summary');trailerSummary.textContent='트레일러 초기 조건';trailerDetails.append(trailerSummary);trailerFields.before(trailerDetails);trailerDetails.append(trailerFields);
 $('applyProcess').addEventListener('click',()=>applyProcessSettings());
+const leakCheckFields=['leakCheckPressureInterval','leakCheckPause','leakCheckTolerance'];
+function renderLeakCheckSettings(){const enabled=$('leakCheckEnabled').checked;for(const id of leakCheckFields)$(id).disabled=!enabled||mutating;}
+$('leakCheckEnabled').addEventListener('change',()=>{renderLeakCheckSettings();});
+renderLeakCheckSettings();
 for(const id of ['vehicle1AutoStop','vehicle2AutoStop','rechargeTargetLow','rechargeTargetMedium','rechargeTargetHigh','vehicle1TargetPressure','vehicle2TargetPressure'])
   $(id).addEventListener('change',()=>{if(['queued','running'].includes(job?.status))applyProcessSettings();else renderProcess();});
 for(const [source,other] of [['trailerAutoStop','rechargeAutoStop'],['rechargeAutoStop','trailerAutoStop']])
