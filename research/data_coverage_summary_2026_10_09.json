@@ -12,7 +12,7 @@
   },
   "readiness": {
     "ijhe_gate_counts": {
-      "PASS": 126,
+      "PASS": 127,
       "FAIL": 10,
       "PENDING": 7
     },

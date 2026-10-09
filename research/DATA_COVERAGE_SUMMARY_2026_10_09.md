@@ -2,7 +2,7 @@
 
 이 문서는 확보된 공개·비식별 자료로 지금 검증할 수 있는 범위와, 완전한 충전소-차량 검증에 필요한 최소 입력을 자동으로 정리한 산출물이다.
 
-- IJHE 게이트: PASS 126 / FAIL 10 / PENDING 7
+- IJHE 게이트: PASS 127 / FAIL 10 / PENDING 7
 - 데이터 양이 주된 병목인가: 아니오
 - 현재 주된 공백: synchronized and attested receiving-vessel/vehicle channels
 
