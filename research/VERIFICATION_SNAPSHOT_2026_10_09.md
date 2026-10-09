@@ -11,6 +11,9 @@ vehicle objective is complete.
 - Focused external-data checks (HyTunnel, Dickens Type-III, data-coverage
   summary): **14 passed**.
 - Working tree: clean after the verification run.
+- IJHE readiness audit: **127 PASS / 10 FAIL / 7 PENDING**. The new station-side
+  integrated validation gate is PASS; the full-loop and objective-completion
+  gates remain explicitly closed.
 
 ## Evidence that is usable now
 

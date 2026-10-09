@@ -2456,6 +2456,107 @@ def audit(root: Path) -> dict[str, object]:
         } if lifecycle_alignment else "missing",
     ))
 
+    station_side_integrated_path = root / (
+        "research/confidential_station_side_integrated_validation_2026_10_09.json"
+    )
+    station_side_integrated = _json(station_side_integrated_path)
+    station_side_integrated_privacy = (
+        (station_side_integrated or {}).get("privacy") or {}
+    )
+    station_side_integrated_decision = (
+        (station_side_integrated or {}).get("decision") or {}
+    )
+    station_side_integrated_checks = (
+        (station_side_integrated or {}).get("checks") or {}
+    )
+    integrated_expected_inputs = {
+        "pressure_boundary_holdout": (
+            "research/confidential_operational_envelope_holdout_replay_2026_10_06.json"
+        ),
+        "cascade_sequence_holdout": (
+            "research/confidential_station_cascade_sequence_holdout_2026_10_08.json"
+        ),
+        "recharge_pressure_forecast_holdout": (
+            "research/confidential_station_recharge_pressure_forecast_holdout_2026_10_08.json"
+        ),
+        "lifecycle_alignment_holdout": (
+            "research/confidential_station_lifecycle_pressure_alignment_holdout_2026_10_09.json"
+        ),
+    }
+    integrated_inputs = {
+        item.get("id"): item
+        for item in (station_side_integrated or {}).get("inputs") or []
+        if isinstance(item, dict) and item.get("id")
+    }
+    integrated_hashes_match = bool(
+        set(integrated_inputs) == set(integrated_expected_inputs)
+        and all(
+            integrated_inputs[input_id].get("artifact") == relative
+            and (root / relative).is_file()
+            and integrated_inputs[input_id].get("sha256") == _sha256(root / relative)
+            for input_id, relative in integrated_expected_inputs.items()
+        )
+    )
+    station_side_integrated_pass = bool(
+        (station_side_integrated or {}).get("schema_version") == 1
+        and (station_side_integrated or {}).get("artifact_type")
+        == "confidential_station_side_integrated_validation"
+        and station_side_integrated_privacy
+        and all(value is False for value in station_side_integrated_privacy.values())
+        and integrated_hashes_match
+        and station_side_integrated_decision.get(
+            "station_side_integrated_validation_supported"
+        ) is True
+        and station_side_integrated_decision.get(
+            "pressure_boundary_holdout_supported"
+        ) is True
+        and station_side_integrated_decision.get(
+            "cascade_sequence_holdout_supported"
+        ) is True
+        and station_side_integrated_decision.get(
+            "recharge_pressure_forecast_supported"
+        ) is True
+        and station_side_integrated_decision.get(
+            "lifecycle_counter_alignment_supported"
+        ) is False
+        and station_side_integrated_decision.get("runtime_parameter_application") is False
+        and station_side_integrated_decision.get("default_model_parameters_changed") is False
+        and station_side_integrated_decision.get("vehicle_fill_validation") is False
+        and station_side_integrated_decision.get(
+            "full_loop_external_validation_supported"
+        ) is False
+        and station_side_integrated_decision.get(
+            "site_specific_safety_distance_validation"
+        ) is False
+        and station_side_integrated_decision.get("independent_external_validation") is False
+        and (station_side_integrated_checks.get("pressure_boundary") or {}).get(
+            "holdout_points"
+        ) == 30
+        and (station_side_integrated_checks.get("cascade_sequence") or {}).get(
+            "holdout_pairs"
+        ) == 3_664
+        and (station_side_integrated_checks.get("recharge_pressure_forecast") or {}).get(
+            "holdout_cases"
+        ) == 394
+        and (station_side_integrated_checks.get("lifecycle_alignment") or {}).get(
+            "negative_result_retained"
+        ) is True
+    )
+    gates.append(_gate(
+        "confidential_station_side_integrated_validation_integrity",
+        "PASS" if station_side_integrated_pass else (
+            "FAIL" if station_side_integrated else "PENDING"
+        ),
+        "A hash-linked same-site bundle integrates pressure-boundary, cascade-sequence and recharge-pressure holdouts while retaining the negative lifecycle-counter result.",
+        str(station_side_integrated_path.relative_to(root)),
+        "The bundle must be privacy-bounded, hash-linked to its four frozen inputs, pass all three station-side checks, preserve the negative lifecycle result, and keep vehicle/full-loop, site-distance and runtime-parameter claims false.",
+        {
+            "input_hashes_match": integrated_hashes_match,
+            "checks": station_side_integrated_checks,
+            "decision": station_side_integrated_decision,
+        } if station_side_integrated else "missing",
+    ))
+
     external_loop_path = root / "data/public_validation/results/closed_loop_external_holdout/validation.json"
     external_loop = _json(external_loop_path)
     external_protocol_path = root / "research/mc_default_external_holdout_protocol.json"

@@ -113,6 +113,21 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert lifecycle_alignment["decision"]["runtime_parameter_application"] is False
     assert lifecycle_alignment["decision"]["vehicle_fill_validation"] is False
     assert gates[
+        "confidential_station_side_integrated_validation_integrity"
+    ]["status"] == "PASS"
+    integrated = gates[
+        "confidential_station_side_integrated_validation_integrity"
+    ]["observed"]
+    assert integrated["input_hashes_match"] is True
+    assert integrated["checks"]["pressure_boundary"]["holdout_points"] == 30
+    assert integrated["checks"]["cascade_sequence"]["holdout_pairs"] == 3_664
+    assert integrated["checks"]["recharge_pressure_forecast"]["holdout_cases"] == 394
+    assert integrated["checks"]["lifecycle_alignment"][
+        "negative_result_retained"
+    ] is True
+    assert integrated["decision"]["vehicle_fill_validation"] is False
+    assert integrated["decision"]["full_loop_external_validation_supported"] is False
+    assert gates[
         "local_confidential_station_data_utilization_integrity"
     ]["status"] == "PASS"
     local_data = gates[

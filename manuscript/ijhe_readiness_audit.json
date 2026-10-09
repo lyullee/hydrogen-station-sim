@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-09T13:12:25.030381+00:00",
+  "generated_at": "2026-10-09T13:17:03.480935+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 126,
+    "PASS": 127,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -1918,6 +1918,61 @@
           "default_model_parameters_changed": false,
           "vehicle_fill_validation": false,
           "full_loop_holdout_eligible": false,
+          "independent_external_validation": false
+        }
+      }
+    },
+    {
+      "id": "confidential_station_side_integrated_validation_integrity",
+      "status": "PASS",
+      "claim": "A hash-linked same-site bundle integrates pressure-boundary, cascade-sequence and recharge-pressure holdouts while retaining the negative lifecycle-counter result.",
+      "evidence": "research\\confidential_station_side_integrated_validation_2026_10_09.json",
+      "requirement": "The bundle must be privacy-bounded, hash-linked to its four frozen inputs, pass all three station-side checks, preserve the negative lifecycle result, and keep vehicle/full-loop, site-distance and runtime-parameter claims false.",
+      "observed": {
+        "input_hashes_match": true,
+        "checks": {
+          "pressure_boundary": {
+            "supported": true,
+            "calibration_points": 998,
+            "holdout_points": 30,
+            "holdout_duration_s": 1755.0,
+            "replay_completed": true,
+            "recharge_restart_margin_pa": 490000.0
+          },
+          "cascade_sequence": {
+            "supported": true,
+            "calibration_pairs": 8106,
+            "holdout_pairs": 3664,
+            "holdout_pair_coverage": 0.703939,
+            "holdout_sequential_fraction": 0.943777,
+            "median_handoff_gap_s": 80.0
+          },
+          "recharge_pressure_forecast": {
+            "supported": true,
+            "calibration_cases": 1024,
+            "holdout_cases": 394,
+            "holdout_mae_mpa": 0.184407,
+            "holdout_p90_absolute_error_mpa": 0.529255,
+            "positive_direction_fraction": 0.949239
+          },
+          "lifecycle_alignment": {
+            "negative_result_retained": true,
+            "counter_monotonicity_met": false,
+            "holdout_counter_recall": 0.196032,
+            "holdout_pressure_precision": 0.902716
+          }
+        },
+        "decision": {
+          "station_side_integrated_validation_supported": true,
+          "pressure_boundary_holdout_supported": true,
+          "cascade_sequence_holdout_supported": true,
+          "recharge_pressure_forecast_supported": true,
+          "lifecycle_counter_alignment_supported": false,
+          "runtime_parameter_application": false,
+          "default_model_parameters_changed": false,
+          "vehicle_fill_validation": false,
+          "full_loop_external_validation_supported": false,
+          "site_specific_safety_distance_validation": false,
           "independent_external_validation": false
         }
       }
