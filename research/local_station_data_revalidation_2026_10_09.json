@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_station_data_revalidation",
+  "status": "repeat_audit_matches_committed_inventory",
+  "generated_at": "2026-10-09",
+  "purpose": "Record a second privacy-bounded audit of the locally available hydrogen-station material before using it for further model work.",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "source_identifiers_published": false,
+    "site_company_manufacturer_published": false,
+    "calendar_dates_published": false,
+    "raw_rows_persisted": false,
+    "measurement_values_persisted": false,
+    "per_file_hashes_published": false
+  },
+  "revalidation": {
+    "audit_script": "scripts/audit_local_station_data_utilization.py",
+    "committed_inventory_artifact": "research/local_confidential_station_data_utilization_2026_10_08.json",
+    "source_inventory_matches_committed_record": true,
+    "raw_rows_loaded_in_memory_only": true,
+    "checked_aggregate_fields": [
+      "csv_files",
+      "total_csv_gib",
+      "physical_data_rows_after_one_header_per_file",
+      "deduplicated_data_rows",
+      "schema_width_file_counts",
+      "header_family_screen"
+    ]
+  },
+  "measured_station_bundle": {
+    "csv_files": 33,
+    "total_csv_gib": 4.749,
+    "physical_rows": 59272300,
+    "deduplicated_rows": 56854143,
+    "schema_width_file_counts": {
+      "9": 25,
+      "64": 8
+    },
+    "station_side_evidence_is_substantial": true,
+    "vehicle_or_dispenser_header_candidates": 0
+  },
+  "sampled_candidate_manifest": {
+    "sampled_table_count": 20,
+    "sampled_rows_per_table": 2000,
+    "coverage_classes": {
+      "station_pressure_flow_time": 12,
+      "station_pressure_temperature_flow_state_time": 8
+    },
+    "interpretation": "The sampled station candidates contain useful station-side signals. The presence of pressure, temperature, flow-like and state-like fields does not establish vehicle-side or dispenser-boundary semantics."
+  },
+  "broader_local_screen": {
+    "machine_readable_files_screened": 38528,
+    "csv_tsv_headers_screened": 12804,
+    "refined_csv_files_screened": 13050,
+    "synchronized_station_dispenser_vehicle_candidates": 0,
+    "quantitative_consequence_validation_ready": false,
+    "derived_outputs_excluded": true
+  },
+  "decision": {
+    "local_data_is_sparse": false,
+    "station_side_replay_and_chronological_holdouts_supported": true,
+    "new_full_loop_measured_cohort_found": false,
+    "full_loop_external_validation_supported": false,
+    "runtime_parameter_application": false,
+    "reason": "The local collection is large and supports station-side dynamics, but no independently attested synchronized receiving-vessel/vehicle pressure, temperature, delivered mass or SOC cohort with controller/protocol state was identified."
+  },
+  "next_action": "Use the station bundle for station-side holdouts and obtain custodian-approved semantic and reuse attestation before fitting flow, temperature or state parameters. Keep the full-loop gate closed until a synchronized vehicle/receptacle cohort is approved.",
+  "claim_boundary": "This record is an aggregate local-data revalidation. It does not publish raw rows or source identity, attest channel units, validate a vehicle fill, establish a safety limit, or certify operation."
+}
