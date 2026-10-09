@@ -27,6 +27,12 @@
   원시자료 열람 뒤에 좌표 holdout을 구성했으므로 독립 공간 holdout으로
   승격하지 않는다. 현재는 사고 모델의 저압 누출·검지 응답 범위 진단
   근거로만 등록하고 충전소 안전거리 검증으로 주장하지 않는다.
+- USN의 공개 CC BY 점화 압력상승 자료는 동결된 절차로 27건을 평가해
+  peak overpressure MAE 약 0.672 kPa와 27/27 primary pass를 기록한다.
+  이 결과는 `public_ignited_pressure_peaking_validation`으로 LLM에 연결해
+  점화·과압 시나리오의 component 근거로 사용하지만, 실외 H70 충전소,
+  ESD 동작, 대피거리 또는 SAGA 대응효과 검증으로 확대하지 않는다
+  ([DOI 10.23642/USN.17934047](https://doi.org/10.23642/USN.17934047)).
 
 ## 모델과 LLM에 적용하는 방식
 

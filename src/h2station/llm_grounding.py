@@ -888,6 +888,72 @@ def _public_accidental_release_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_ignited_pressure_peaking_evidence() -> dict[str, Any] | None:
+    """Expose the prospective ignited-pressure component validation result.
+
+    The public CC BY archive contains synchronized pressure and mass-flow
+    channels for a vented enclosure.  Its frozen protocol passed the declared
+    peak-overpressure screen, but the apparatus is not an outdoor H70 station
+    and contains no station controller or operator-response trace.  Keep this
+    positive component result visible to the LLM without promoting it to a
+    station, safety-distance or SAGA-effectiveness claim.
+    """
+
+    artifact = "research/usn_17934047_ignited_pressure_peaking_result_2026_10_08.json"
+    path = Path(__file__).resolve().parents[2] / artifact
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    aggregate = record.get("aggregate") or {}
+    if (
+        record.get("schema_version") != 1
+        or record.get("status") != "completed_prospective_protocol_execution"
+        or record.get("evidence_role")
+        != "prospective_external_ignited_pressure_peaking_validation"
+        or source.get("dataset_doi") != "10.23642/USN.17934047"
+        or source.get("license") != "CC BY 4.0"
+        or source.get("raw_files_committed") is not False
+        or aggregate.get("eligible_case_count") != 27
+        or aggregate.get("excluded_case_count") != 0
+        or aggregate.get("primary_pass_count") != 27
+        or aggregate.get("confirmatory_rule_met") is not True
+    ):
+        return None
+    return {
+        "artifact": artifact,
+        "evidence_role": str(record.get("evidence_role") or ""),
+        "source": {
+            "dataset_doi": source.get("dataset_doi"),
+            "publication_doi": source.get("publication_doi"),
+            "doi": source.get("dataset_doi"),
+            "url": (
+                f"https://doi.org/{source.get('dataset_doi')}"
+                if source.get("dataset_doi") else None
+            ),
+            "license": source.get("license"),
+            "raw_files_committed": False,
+        },
+        "aggregate": {
+            key: aggregate.get(key)
+            for key in (
+                "requested_case_count", "eligible_case_count",
+                "excluded_case_count", "primary_pass_count",
+                "primary_pass_fraction", "peak_overpressure_mae_kpa",
+                "median_trace_nrmse_percent", "confirmatory_rule",
+                "confirmatory_rule_met", "interpretation",
+            )
+            if aggregate.get(key) is not None
+        },
+        "component_validation_supported": True,
+        "station_controller_validation_supported": False,
+        "station_vehicle_full_loop_supported": False,
+        "saga_effectiveness_supported": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_controlled_flare_evidence() -> dict[str, Any] | None:
     """Expose HyDelta's report-level flare safeguards with strict boundaries."""
 
@@ -3645,6 +3711,29 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             "Striednig Type-I hydrogen tank filling experiment",
             f"https://doi.org/{type_i_doi}",
             "공개 Type-I 탱크 충전 열거동 진단(충전소-차량 full-loop 검증 아님)",
+        )
+
+    ignited_pressure = evidence.get(
+        "public_ignited_pressure_peaking_validation"
+    ) or {}
+    ignited_source = ignited_pressure.get("source") or {}
+    ignited_dataset_doi = str(ignited_source.get("dataset_doi") or "").strip()
+    ignited_publication_doi = str(
+        ignited_source.get("publication_doi") or ""
+    ).strip()
+    if ignited_dataset_doi:
+        add(
+            "PUBLIC_USN_IGNITED_PRESSURE_PEAKING",
+            "USN ignited hydrogen pressure-peaking consequence experiment",
+            f"https://doi.org/{ignited_dataset_doi}",
+            "공개 점화 압력상승 결과의 독립 component 검증",
+        )
+    if ignited_publication_doi:
+        add(
+            "PUBLIC_USN_IGNITED_PRESSURE_PEAKING_ARTICLE",
+            "Ignited hydrogen pressure-peaking experiment publication",
+            f"https://doi.org/{ignited_publication_doi}",
+            "점화 압력상승 실험 방법·범위 출처",
         )
 
     tank_trace = evidence.get("public_tank_trace_boundary") or {}
@@ -7155,6 +7244,11 @@ def build_evidence_manifest(
     accidental_release = _public_accidental_release_evidence()
     if accidental_release is not None:
         envelope["response_evidence"]["public_accidental_release_evidence"] = accidental_release
+    ignited_pressure_peaking = _public_ignited_pressure_peaking_evidence()
+    if ignited_pressure_peaking is not None:
+        envelope["response_evidence"][
+            "public_ignited_pressure_peaking_validation"
+        ] = ignited_pressure_peaking
     controlled_flare = _public_controlled_flare_evidence()
     if controlled_flare is not None:
         envelope["response_evidence"]["public_controlled_flare_evidence"] = controlled_flare
@@ -8086,6 +8180,22 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "runtime_parameter_application": False,
             "claim_limit": short(type_i_filling.get("claim_limit")),
         }
+    ignited_pressure_peaking = evidence.get(
+        "public_ignited_pressure_peaking_validation"
+    )
+    if isinstance(ignited_pressure_peaking, dict):
+        summary["public_ignited_pressure_peaking_validation"] = {
+            "evidence_role": ignited_pressure_peaking.get("evidence_role"),
+            "source": ignited_pressure_peaking.get("source") or {},
+            "aggregate": ignited_pressure_peaking.get("aggregate") or {},
+            "component_validation_supported": ignited_pressure_peaking.get(
+                "component_validation_supported"
+            ) is True,
+            "station_controller_validation_supported": False,
+            "station_vehicle_full_loop_supported": False,
+            "saga_effectiveness_supported": False,
+            "claim_limit": short(ignited_pressure_peaking.get("claim_limit")),
+        }
     detector = evidence.get("public_detector_logic_evidence")
     if isinstance(detector, dict):
         aggregate = detector.get("aggregate") or {}
@@ -8939,6 +9049,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     khk_replay = accident_inventory.get("digital_twin_replay") or {}
     relevant_precedents = response.get("relevant_public_accident_precedents") or {}
     accidental_release = response.get("public_accidental_release_evidence") or {}
+    ignited_pressure_peaking = response.get(
+        "public_ignited_pressure_peaking_validation"
+    ) or {}
     controlled_flare = response.get("public_controlled_flare_evidence") or {}
     local_incident = response.get("confidential_local_accident_response_coverage") or {}
     measured_boundary_replay = response.get(
@@ -9062,6 +9175,21 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 or row.get("literature_delayed_ignition_status")
                 or row.get("literature_jet_flame_status")
                 for row in compact_impacts
+            )
+        )
+    )
+    ignited_pressure_peaking_relevant = bool(
+        ignited_pressure_peaking
+        and (
+            public_catalog_relevant
+            or any(token in detector_context for token in (
+                "폭발", "과압", "압력상승", "점화", "화재", "누출",
+                "overpressure", "pressure peaking", "ignited", "fire",
+                "explosion", "leak", "consequence",
+            ))
+            or (
+                bool(compact_impacts)
+                and bool(manifest.get("question") or manifest.get("selected_sensor"))
             )
         )
     )
@@ -9715,6 +9843,29 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "claim_limit": short(type_i_filling.get("claim_limit"), 180),
                 }
             } if type_i_filling_relevant else {}),
+            **({
+                "public_ignited_pressure_peaking_validation": {
+                    "evidence_role": ignited_pressure_peaking.get(
+                        "evidence_role"
+                    ),
+                    "dataset_doi": (
+                        ignited_pressure_peaking.get("source") or {}
+                    ).get("dataset_doi"),
+                    "publication_doi": (
+                        ignited_pressure_peaking.get("source") or {}
+                    ).get("publication_doi"),
+                    "aggregate": ignited_pressure_peaking.get(
+                        "aggregate"
+                    ) or {},
+                    "component_validation_supported": True,
+                    "station_controller_validation_supported": False,
+                    "station_vehicle_full_loop_supported": False,
+                    "saga_effectiveness_supported": False,
+                    "claim_limit": short(
+                        ignited_pressure_peaking.get("claim_limit"), 220
+                    ),
+                }
+            } if ignited_pressure_peaking_relevant else {}),
         },
         "validation_boundaries": {
             # Keep this projection compact because it is sent on every
@@ -10956,6 +11107,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     accident_inventory = evidence.get("public_accident_report_inventory") or {}
     relevant_precedents = evidence.get("relevant_public_accident_precedents") or {}
     accidental_release = evidence.get("public_accidental_release_evidence") or {}
+    ignited_pressure_peaking = evidence.get(
+        "public_ignited_pressure_peaking_validation"
+    ) or {}
     controlled_flare = evidence.get("public_controlled_flare_evidence") or {}
     local_accident_coverage = evidence.get(
         "confidential_local_accident_response_coverage"
@@ -11642,6 +11796,21 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "accidental_release_reported_findings": accidental_release.get(
                 "reported_findings"
             ) or {},
+            "ignited_pressure_peaking_validation": {
+                "dataset_doi": (
+                    ignited_pressure_peaking.get("source") or {}
+                ).get("dataset_doi"),
+                "publication_doi": (
+                    ignited_pressure_peaking.get("source") or {}
+                ).get("publication_doi"),
+                "aggregate": ignited_pressure_peaking.get("aggregate") or {},
+                "component_validation_supported": ignited_pressure_peaking.get(
+                    "component_validation_supported"
+                ) is True,
+                "station_vehicle_full_loop_supported": False,
+                "saga_effectiveness_supported": False,
+                "claim_limit": ignited_pressure_peaking.get("claim_limit"),
+            },
             "action_category_counts": {
                 str(key): value
                 for key, value in (action_taxonomy.get("category_counts") or {}).items()
