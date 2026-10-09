@@ -202,6 +202,38 @@
       },
       "allowed_claim": "traceable scenario and response-plan grounding",
       "not_allowed": "historical frequency or response-effectiveness estimation"
+    },
+    {
+      "id": "public_h2protocol_tank_protocol_boundary",
+      "status": "DIAGNOSTIC_ONLY",
+      "evidence": "data/public_validation/results/h2protocol/validation.json; research/h2protocol_case_inventory_recheck_2026_10_05.json",
+      "coverage": {
+        "case_count": 36,
+        "screening_pass_count": 0,
+        "pressure_rmse_mean_mpa": 26.29284612350118,
+        "temperature_rmse_mean_c": 17.512689431278773,
+        "soc_rmse_mean_percentage_points": 34.377692605317165,
+        "fresh_holdout_available": false,
+        "full_loop_external_holdout_eligible": false
+      },
+      "allowed_claim": "inspected public laboratory tank/protocol boundary diagnostic and explicit model limitation",
+      "not_allowed": "fresh independent holdout, station-to-vehicle full-loop validation, runtime parameter promotion, or field safety claim"
+    },
+    {
+      "id": "public_nrel_hdv_tank_boundary",
+      "status": "DIAGNOSTIC_ONLY",
+      "evidence": "data/public_validation/results/nrel_h2fills_hdvs_typeiv/validation.json; research/nrel_hdvs_boundary_screen_2026_10_10.json",
+      "coverage": {
+        "tank_count": 7,
+        "sample_count": 351,
+        "duration_s": 350,
+        "pressure_rmse_mpa": 6.164469743688679,
+        "temperature_rmse_c": 4.624745495755946,
+        "mass_rmse_kg": 0.04499166627656306,
+        "full_loop_holdout_eligible": false
+      },
+      "allowed_claim": "measured NREL tank/hose boundary and mass-closure diagnostic",
+      "not_allowed": "full-loop station-to-vehicle accuracy, safety-distance claim, or automatic runtime recalibration"
     }
   ],
   "minimum_next_input": {

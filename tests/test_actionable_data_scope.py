@@ -79,3 +79,16 @@ def test_decision_prompt_names_usable_data_before_full_loop_boundary() -> None:
     assert provider_basis["station_side_data_scope"]["full_loop_holdout"][
         "synchronized_trace_count"
     ] == 0
+
+    protocol = decision["decision_support_evidence"][
+        "public_h2protocol_validation_boundary"
+    ]
+    assert protocol["case_count"] == 36
+    assert protocol["screening_pass_count"] == 0
+    assert protocol["fresh_holdout_available"] is False
+    assert protocol["full_loop_external_holdout_eligible"] is False
+    assert protocol["claim_supported"] is False
+    assert "fresh independent holdout" in protocol["claim_limit"]
+    provider_protocol = provider_basis["public_h2protocol_validation_boundary"]
+    assert provider_protocol["case_count"] == 36
+    assert provider_protocol["fresh_holdout_available"] is False

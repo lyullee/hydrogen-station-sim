@@ -1914,6 +1914,72 @@ def _public_tank_validation_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_h2protocol_validation_evidence() -> dict[str, Any] | None:
+    """Expose the inspected H2Protocol results without treating them as fresh data.
+
+    The local archive contains 36 public laboratory cases.  They are valuable
+    for explaining the current tank/protocol model boundary and its measured
+    error, but every case has already entered an inspected protocol record.
+    The provider must therefore see both the aggregate metrics and the explicit
+    ``fresh_holdout_available``/``full_loop`` limits instead of inferring that
+    a large case count is an independent station-to-vehicle validation set.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "data/public_validation/results/h2protocol/validation.json"
+    inventory_path = root / "research/h2protocol_case_inventory_recheck_2026_10_05.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+        inventory = json.loads(inventory_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    aggregate = record.get("aggregate") or {}
+    metrics = aggregate.get("metrics") or {}
+    if (
+        not isinstance(aggregate.get("case_count"), int)
+        or aggregate.get("case_count") <= 0
+        or aggregate.get("screening_pass_count") is None
+        or inventory.get("decision")
+        != "NO_UNUSED_PUBLIC_H2PROTOCOL_CASE_FOR_FRESH_FULL_LOOP_HOLDOUT"
+    ):
+        return None
+
+    def mean_metric(name: str) -> float | None:
+        value = (metrics.get(name) or {}).get("mean")
+        return _finite_number(value)
+
+    return {
+        "artifact": "data/public_validation/results/h2protocol/validation.json",
+        "inventory_artifact": "research/h2protocol_case_inventory_recheck_2026_10_05.json",
+        "evidence_role": "public laboratory tank/protocol boundary diagnostic",
+        "case_count": aggregate.get("case_count"),
+        "screening_pass_count": aggregate.get("screening_pass_count"),
+        "screening_pass_fraction": _finite_number(
+            aggregate.get("screening_pass_fraction")
+        ),
+        "pressure_rmse_mean_mpa": mean_metric("pressure_rmse_mpa"),
+        "temperature_rmse_mean_c": mean_metric("temperature_rmse_c"),
+        "soc_rmse_mean_percentage_points": mean_metric(
+            "soc_rmse_percentage_points"
+        ),
+        "final_stop_reason_counts": {
+            str(key): value
+            for key, value in (aggregate.get("final_stop_reason_counts") or {}).items()
+            if isinstance(value, int)
+        },
+        "fresh_holdout_available": False,
+        "full_loop_external_holdout_eligible": False,
+        "runtime_parameter_application": False,
+        "claim_supported": False,
+        "claim_limit": (
+            "The inspected H2Protocol cases support a bounded laboratory tank/protocol "
+            "diagnostic only. All downloaded cases are already consumed by an inspected "
+            "protocol record; they cannot be reopened as a fresh independent holdout or "
+            "support station-to-vehicle/full-loop claims."
+        ),
+    }
+
+
 def _public_geometry_sensitivity_evidence() -> dict[str, Any] | None:
     """Expose the public capacity/EOS geometry sensitivity as diagnostic evidence.
 
@@ -7644,6 +7710,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_tank_validation_boundary"
         ] = public_tank_validation
+    public_h2protocol_validation = _public_h2protocol_validation_evidence()
+    if public_h2protocol_validation is not None:
+        envelope["response_evidence"][
+            "public_h2protocol_validation_boundary"
+        ] = public_h2protocol_validation
     public_geometry_sensitivity = _public_geometry_sensitivity_evidence()
     if public_geometry_sensitivity is not None:
         envelope["response_evidence"][
@@ -8115,6 +8186,23 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_supported", "claim_limit",
             )
             if public_tank_validation.get(key) is not None
+        }
+    public_h2protocol_validation = evidence.get(
+        "public_h2protocol_validation_boundary"
+    )
+    if isinstance(public_h2protocol_validation, dict):
+        summary["public_h2protocol_validation_boundary"] = {
+            key: public_h2protocol_validation.get(key)
+            for key in (
+                "evidence_role", "case_count", "screening_pass_count",
+                "screening_pass_fraction", "pressure_rmse_mean_mpa",
+                "temperature_rmse_mean_c", "soc_rmse_mean_percentage_points",
+                "final_stop_reason_counts", "fresh_holdout_available",
+                "full_loop_external_holdout_eligible",
+                "runtime_parameter_application", "claim_supported",
+                "claim_limit",
+            )
+            if public_h2protocol_validation.get(key) is not None
         }
     public_geometry_sensitivity = evidence.get("public_geometry_sensitivity")
     if isinstance(public_geometry_sensitivity, dict):
@@ -9541,6 +9629,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     local_public_catalog = response.get("local_public_validation_catalog") or {}
     local_public_candidate_scan = response.get("local_public_candidate_scan") or {}
     nrel_screen = response.get("public_nrel_boundary_screen") or {}
+    public_h2protocol_validation = response.get(
+        "public_h2protocol_validation_boundary"
+    ) or {}
     hytunnel_diagnostic = response.get(
         "public_hytunnel_failure_diagnostic"
     ) or {}
@@ -9590,6 +9681,21 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "압축기", "재충전", "flow", "mass", "totalizer", "pressure",
         "temperature", "compressor", "recharge",
     ))
+    h2protocol_validation_relevant = bool(
+        public_h2protocol_validation
+        and (
+            public_catalog_relevant
+            or station_signal_relevant
+            or any(
+                token in lead_context
+                for token in ("데이터", "실험", "검증", "자료", "프로토콜", "충전")
+            )
+            or any(token in lead_context for token in (
+                "protocol", "j2601", "h2protocol", "laboratory",
+                "experiment", "validation", "dataset", "data",
+            ))
+        )
+    )
     station_side_integrated_relevant = any(token in lead_context for token in (
         "실측", "현장 데이터", "운전 데이터", "검증", "검증범위", "근거",
         "데이터", "holdout", "validation", "measured", "evidence",
@@ -9928,10 +10034,40 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         **({
             "station_side_data_scope": station_side_data_scope,
         } if station_side_data_scope is not None else {}),
+        **({
+            "public_h2protocol_validation_boundary": {
+                key: public_h2protocol_validation.get(key)
+                for key in (
+                    "evidence_role", "case_count", "screening_pass_count",
+                    "screening_pass_fraction", "pressure_rmse_mean_mpa",
+                    "temperature_rmse_mean_c", "soc_rmse_mean_percentage_points",
+                    "final_stop_reason_counts", "fresh_holdout_available",
+                    "full_loop_external_holdout_eligible",
+                    "runtime_parameter_application", "claim_supported",
+                    "claim_limit",
+                )
+                if public_h2protocol_validation.get(key) is not None
+            },
+        } if public_h2protocol_validation and h2protocol_validation_relevant else {}),
         "decision_support_evidence": {
             **({
                 "public_operational_evidence_leads": operational_evidence_projection,
             } if operational_evidence_projection is not None else {}),
+            **({
+                "public_h2protocol_validation_boundary": {
+                    key: public_h2protocol_validation.get(key)
+                    for key in (
+                        "evidence_role", "case_count", "screening_pass_count",
+                        "screening_pass_fraction", "pressure_rmse_mean_mpa",
+                        "temperature_rmse_mean_c", "soc_rmse_mean_percentage_points",
+                        "final_stop_reason_counts", "fresh_holdout_available",
+                        "full_loop_external_holdout_eligible",
+                        "runtime_parameter_application", "claim_supported",
+                        "claim_limit",
+                    )
+                    if public_h2protocol_validation.get(key) is not None
+                },
+            } if public_h2protocol_validation and h2protocol_validation_relevant else {}),
             **({
                 "public_preslhy_e35_file_access": {
                     "evidence_role": public_preslhy_e35.get("evidence_role"),
@@ -10123,6 +10259,21 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     if nrel_screen.get(key) is not None
                 },
             } if nrel_screen and public_catalog_relevant else {}),
+            **({
+                "public_h2protocol_validation_boundary": {
+                    key: public_h2protocol_validation.get(key)
+                    for key in (
+                        "evidence_role", "case_count", "screening_pass_count",
+                        "screening_pass_fraction", "pressure_rmse_mean_mpa",
+                        "temperature_rmse_mean_c", "soc_rmse_mean_percentage_points",
+                        "final_stop_reason_counts", "fresh_holdout_available",
+                        "full_loop_external_holdout_eligible",
+                        "runtime_parameter_application", "claim_supported",
+                        "claim_limit",
+                    )
+                    if public_h2protocol_validation.get(key) is not None
+                },
+            } if public_h2protocol_validation and h2protocol_validation_relevant else {}),
             **({
                 "public_station_aggregate_benchmark_reference": {
                     "source": aggregate_benchmark.get("source") or {},
@@ -12061,6 +12212,20 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "claim_limit": (
                 evidence.get("public_tank_validation_boundary") or {}
             ).get("claim_limit"),
+        },
+        "public_h2protocol_validation_boundary": {
+            key: (evidence.get("public_h2protocol_validation_boundary") or {}).get(key)
+            for key in (
+                "evidence_role", "case_count", "screening_pass_count",
+                "screening_pass_fraction", "pressure_rmse_mean_mpa",
+                "temperature_rmse_mean_c", "soc_rmse_mean_percentage_points",
+                "final_stop_reason_counts", "fresh_holdout_available",
+                "full_loop_external_holdout_eligible",
+                "runtime_parameter_application", "claim_supported",
+                "claim_limit",
+            )
+            if (evidence.get("public_h2protocol_validation_boundary") or {}).get(key)
+            is not None
         },
         "public_nrel_boundary_screen": {
             key: (evidence.get("public_nrel_boundary_screen") or {}).get(key)
