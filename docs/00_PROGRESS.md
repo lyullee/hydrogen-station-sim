@@ -1,5 +1,17 @@
 # Development Progress
 
+## 2026-10-09 - Full regression recheck after local-data evidence update
+
+- Re-ran the complete Python regression suite after connecting the local
+  station-data inventory and custodian-attestation boundary to the evidence
+  documents.
+- **1,138 tests passed** with 18 dependency deprecation/physics warnings and
+  no test failures.
+- The result verifies software and evidence-routing regressions only. It does
+  not close the independent vehicle/full-loop, accident-casebook, expert-review
+  or institutional-review gates that remain explicitly marked in the readiness
+  audit.
+
 ## 2026-10-09 - Independent vehicle-channel recheck of the local archive
 
 - Re-screened all 33 measured station CSV files in memory with an expanded
