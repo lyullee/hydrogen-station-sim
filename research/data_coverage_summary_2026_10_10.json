@@ -89,6 +89,21 @@
       "not_allowed": "충전소 제어기·캐스케이드·ESD·노즐/리셉터클을 포함한 full-loop 검증"
     },
     {
+      "id": "nbsdc_liquid_hrs_catalogue",
+      "status": "REQUEST_CANDIDATE",
+      "evidence": "research/nbsdc_liquid_hrs_public_access_recheck_2026_10_10.json",
+      "coverage": {
+        "catalogue_record_verified": true,
+        "monitoring_window_hours": 16,
+        "sample_interval_s": 1,
+        "file_count": 7,
+        "raw_synchronized_archive_located": false,
+        "numerical_file_access": "application_required"
+      },
+      "allowed_claim": "real liquid-hydrogen refueling-station operating-range and data-access lead for station-side schema/context and LLM claim-boundary grounding",
+      "not_allowed": "numerical model calibration, independent holdout scoring, full station-to-vehicle validation, safety-distance calculation, or response-effectiveness claim before custodian approval and channel attestation"
+    },
+    {
       "id": "public_component_measurements",
       "status": "DIAGNOSTIC_ONLY",
       "evidence": "research/methytrucks_2026_public_measurement_intake.json",

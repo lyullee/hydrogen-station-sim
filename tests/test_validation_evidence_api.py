@@ -24,6 +24,15 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
         and item["status"] == "VALIDATED_COMPONENT"
         for item in summary["validated_or_actionable_now"]
     )
+    liquid_hrs = next(
+        item
+        for item in summary["validated_or_actionable_now"]
+        if item["id"] == "nbsdc_liquid_hrs_catalogue"
+    )
+    assert liquid_hrs["status"] == "REQUEST_CANDIDATE"
+    assert liquid_hrs["coverage"]["numerical_file_access"] == "application_required"
+    assert "custodian approval" in liquid_hrs["not_allowed"].lower()
+    assert liquid_hrs["coverage"]["raw_synchronized_archive_located"] is False
     assert any(
         item["id"] == "full_loop_external_validation"
         and item["status"] == "FAIL"
