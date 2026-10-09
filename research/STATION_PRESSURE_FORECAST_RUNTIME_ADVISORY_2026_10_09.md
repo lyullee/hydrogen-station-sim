@@ -13,3 +13,12 @@ The runtime selects a dominant positive rise in the medium or high bank, applies
 This is an advisory signal for the digital twin and LLM prompt. It does not modify the physical simulator, compressor capacity, recharge restart margins, safety limits or ESD logic. It does not validate vehicle filling, storage geometry, consequence distances or a complete station-to-vehicle loop.
 
 Implementation: [`src/h2station/station_pressure_forecast.py`](../src/h2station/station_pressure_forecast.py). The API carries the value as `station_pressure_forecast`; the evidence manifest carries the same claim boundary to the LLM.
+
+## Interactive provenance
+
+The compact evidence envelope now exposes `data_used` in the selected-sensor
+and pressure-forecast views. It reports
+the bounded sensor tags, impact-calculation status, and forecast status used for
+that answer. It does not expose private file names, raw rows, site identifiers,
+or unpublished channel mappings. The detailed audit manifest and its digest
+remain available to the API/UI for traceability.

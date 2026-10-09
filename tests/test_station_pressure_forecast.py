@@ -57,3 +57,8 @@ def test_llm_manifest_carries_forecast_with_claim_boundary() -> None:
     assert projected["status"] == "available"
     assert projected["forecast_pressure_mpa"] > projected["current_pressure_mpa"]
     assert projected["provenance"]["vehicle_fill_validation"] is False
+    used = prompt_evidence["data_used"]
+    assert used["signals"] == []
+    assert used["impact"][0] == "not_requested"
+    assert used["station_pressure_forecast"]["bank"] == "medium"
+    assert used["station_pressure_forecast"]["status"] == "available"

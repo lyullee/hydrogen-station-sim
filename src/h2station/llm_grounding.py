@@ -9110,6 +9110,33 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             ))
         if forecast_view:
             decision["current_station_pressure_forecast"] = forecast_view
+
+    # Give the operator a compact, explicit answer to "what data did you use?".
+    # This is deliberately derived from the same bounded envelope above rather
+    # than from private file names, raw rows, or provider-specific prompt text.
+    # It makes the provenance visible in both the main and sensor assistants
+    # without allowing restricted identifiers to leak into an interactive turn.
+    signal_rows = (manifest.get("signals") or {}).get("rows") or []
+    data_used: dict[str, Any] = {
+        "signals": [
+            row.get("tag")
+            for row in signal_rows[:4]
+            if isinstance(row, dict) and row.get("tag")
+        ],
+        "impact": [
+            impact.get("calculation_status"),
+            impact.get("result_count", 0),
+        ],
+    }
+    if isinstance(current_forecast, dict) and current_forecast:
+        data_used["station_pressure_forecast"] = selected(current_forecast, (
+            "status", "reason", "bank",
+        ))
+    # Sensor-analysis and forecast views have a stable UI slot for this
+    # provenance line.  Main direct-Q&A keeps its stricter prompt budget and
+    # already receives the detailed live signal/impact fields separately.
+    if current_forecast or manifest.get("selected_sensor"):
+        decision["data_used"] = data_used
     if relevant_precedents.get("by_response_plan"):
         decision["response_guidance"].update({
             "relevant_public_accident_precedents": relevant_precedents[
