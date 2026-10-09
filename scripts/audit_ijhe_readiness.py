@@ -5871,6 +5871,58 @@ def audit(root: Path) -> dict[str, object]:
         } if e5_result else "missing; holdout evaluation has not completed",
     ))
 
+    e31_80k_result_path = root / "research/preslhy_e31_80k_holdout_result_2026_10_09.json"
+    e31_80k_result = _json(e31_80k_result_path)
+    e31_80k_protocol_path = root / "research/preslhy_e31_80k_holdout_protocol_2026_10_09.json"
+    e31_80k_protocol = _json(e31_80k_protocol_path)
+    e31_80k_source = (e31_80k_result or {}).get("source") or {}
+    e31_80k_observed = (e31_80k_result or {}).get("observed") or {}
+    e31_80k_protocol_hash = (
+        _sha256(e31_80k_protocol_path)
+        if e31_80k_protocol_path.is_file()
+        else None
+    )
+    e31_80k_intake_pass = bool(
+        (e31_80k_result or {}).get("status")
+        == "completed_negative_eligibility_result"
+        and (e31_80k_protocol or {}).get("status")
+        == "frozen_before_numerical_outcome_access"
+        and ((e31_80k_protocol or {}).get("independence") or {}).get(
+            "temperature_campaign_separate_from_consumed_300k_development"
+        ) is True
+        and e31_80k_result.get("protocol", {}).get("sha256")
+        == e31_80k_protocol_hash
+        and e31_80k_observed.get("workbooks_read") == 7
+        and e31_80k_observed.get("read_errors") == 0
+        and e31_80k_observed.get("temperature_values_measured") == 7
+        and e31_80k_observed.get("ambient_pressure_values_measured") == 0
+        and e31_80k_result.get("aggregate", {}).get(
+            "ambient_80k_direct_aperture_blowdown_claim_supported"
+        ) is False
+        and e31_80k_result.get("source", {}).get("raw_rows_persisted") is False
+    )
+    gates.append(_gate(
+        "preslhy_e31_80k_holdout_intake_integrity",
+        "PASS" if e31_80k_intake_pass else ("FAIL" if e31_80k_result else "PENDING"),
+        "The public PRESLHY E3.1 80 K package is independently read and its missing ambient-pressure channel is retained as a negative eligibility result without promoting a validation claim.",
+        f"{e31_80k_result_path.relative_to(root)}; {e31_80k_protocol_path.relative_to(root)}",
+        "Seven workbooks read without errors, measured gas-side temperature retained, no ambient-pressure substitution accepted, frozen protocol hash and explicit no-claim boundary.",
+        {
+            "observed": e31_80k_observed,
+            "source": {
+                "package_name": e31_80k_source.get("package_name"),
+                "package_sha256": e31_80k_source.get("package_sha256"),
+                "raw_rows_persisted": e31_80k_source.get("raw_rows_persisted"),
+            },
+            "aggregate": (e31_80k_result or {}).get("aggregate"),
+            "protocol_hash_matches": (
+                (e31_80k_result or {}).get("protocol", {}).get("sha256")
+                == e31_80k_protocol_hash
+            ),
+            "claim_boundary": (e31_80k_result or {}).get("claim_boundary"),
+        } if e31_80k_result else "missing; 80 K holdout intake has not completed",
+    ))
+
     proust_result_path = root / "research/proust_release_holdout_result.json"
     proust_result = _json(proust_result_path)
     proust_protocol_path = root / "research/proust_release_holdout_protocol.json"

@@ -570,6 +570,13 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert revised["aggregate"]["minimum_requirements_met"] is False
     assert revised["aggregate"]["claim_supported"] is False
     assert revised["protocol_hash_matches"] is True
+    assert gates["preslhy_e31_80k_holdout_intake_integrity"]["status"] == "PASS"
+    e31_80k = gates["preslhy_e31_80k_holdout_intake_integrity"]["observed"]
+    assert e31_80k["observed"]["workbooks_read"] == 7
+    assert e31_80k["observed"]["temperature_values_measured"] == 7
+    assert e31_80k["observed"]["ambient_pressure_values_measured"] == 0
+    assert e31_80k["source"]["raw_rows_persisted"] is False
+    assert e31_80k["protocol_hash_matches"] is True
     assert gates["proust_independent_release_validation"]["status"] == "FAIL"
     proust = gates["proust_independent_release_validation"]["observed"]
     assert proust["aggregate"]["series"] == 3

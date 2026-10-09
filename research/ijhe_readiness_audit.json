@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-09T00:29:06.749604+00:00",
+  "generated_at": "2026-10-09T00:30:41.498590+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 121,
+    "PASS": 122,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -5974,6 +5974,48 @@
         "retained_failures": 3,
         "protocol_hash_matches": true,
         "claim_boundary": "The holdout concerns pressure depletion of the 2.8 L DisCha source vessel during an open atmospheric jet, including the downstream-ignition condition represented in E5.1. It does not validate combustion overpressure, heat flux, flame length, cryogenic two-phase flow, a vehicle-fueling loop, or station emergency separation distance."
+      }
+    },
+    {
+      "id": "preslhy_e31_80k_holdout_intake_integrity",
+      "status": "PASS",
+      "claim": "The public PRESLHY E3.1 80 K package is independently read and its missing ambient-pressure channel is retained as a negative eligibility result without promoting a validation claim.",
+      "evidence": "research\\preslhy_e31_80k_holdout_result_2026_10_09.json; research\\preslhy_e31_80k_holdout_protocol_2026_10_09.json",
+      "requirement": "Seven workbooks read without errors, measured gas-side temperature retained, no ambient-pressure substitution accepted, frozen protocol hash and explicit no-claim boundary.",
+      "observed": {
+        "observed": {
+          "workbooks_read": 7,
+          "read_errors": 0,
+          "gas_initial_temperature_k_range": [
+            83.800308,
+            85.54472899999999
+          ],
+          "temperature_values_measured": 7,
+          "ambient_pressure_values_measured": 0,
+          "ambient_pressure_values_missing": 7,
+          "initial_pressure_bar_abs_range": [
+            6.104063000000001,
+            202.714436
+          ]
+        },
+        "source": {
+          "package_name": "PRE3P1A_KIT_D4_80K_DATA.zip",
+          "package_sha256": "a0d728f051693bafd0059bf1afafce51877419fc9ab8c5f444bf02c4cfb65e66",
+          "raw_rows_persisted": false
+        },
+        "aggregate": {
+          "joint_primary_screen_pass_fraction": null,
+          "bootstrap_95_percent_ci": [
+            null,
+            null
+          ],
+          "bootstrap_replicates": 10000,
+          "bootstrap_seed": 20261009,
+          "claim_threshold": 0.7,
+          "ambient_80k_direct_aperture_blowdown_claim_supported": false
+        },
+        "protocol_hash_matches": true,
+        "claim_boundary": "No validation claim is supported by this package. It does not validate cryogenic two-phase flow, ignition, dispersion, flame radiation, station control, refuelling, or emergency separation distance."
       }
     },
     {
