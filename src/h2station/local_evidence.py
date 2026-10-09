@@ -725,7 +725,10 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
                 screening_limits = screen.get("screening_limits") or {}
                 geometry = screen.get("geometry_diagnostic") or {}
                 if (
-                    screen.get("evidence_role")
+                    screen.get("artifact_type")
+                    == "privacy_bounded_nrel_hdvs_boundary_screen"
+                    and screen.get("raw_rows_persisted") is False
+                    and screen.get("evidence_role")
                     == "independent_tank_thermal_external_validation"
                     and screen.get("boundary_channel_screen", {}).get(
                         "partial_station_to_tank_boundary_eligible"
