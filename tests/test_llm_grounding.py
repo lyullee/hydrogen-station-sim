@@ -108,6 +108,11 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     )
     assert prompt_evidence_summary(idle)["common_header"]["bank_inflow_g_s"] == 12.4
     assert prompt_decision_evidence(idle)["common_header"]["temperature_c"] == 24.2
+    scope = prompt_decision_evidence(idle)["support_scope"]
+    assert scope["station_side"] is True
+    assert scope["full_loop"] is False
+    assert scope["site_distance"] is False
+    assert scope["saga_effectiveness"] is False
     public_catalog = idle["response_evidence"]["local_public_validation_catalog"]
     assert public_catalog["scope"]["collection_count"] == 37
     assert public_catalog["scope"]["file_count"] == 917

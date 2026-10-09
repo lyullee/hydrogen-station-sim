@@ -30,6 +30,13 @@ HTTPS source link; an active alert must also contain common initial steps. This
 is a structural safety guard, not an expert-effectiveness or field-safety
 claim.
 
+The interactive evidence envelope also carries a compact support-scope
+contract: station-side evidence is marked separately from full-loop vehicle
+validation, site-specific consequence distance and SAGA effectiveness. The
+operator-facing `data_used.support_scope` exposes the same four flags. This
+keeps the privacy-bounded station results usable for pressure, cascade and
+recharge advice without promoting them into vehicle or field certification.
+
 ## Evidence still outside the claim boundary
 
 The synchronized station-to-vehicle external holdout remains unavailable. The

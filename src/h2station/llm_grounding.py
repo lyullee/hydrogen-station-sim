@@ -8355,6 +8355,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     accidental_release = response.get("public_accidental_release_evidence") or {}
     controlled_flare = response.get("public_controlled_flare_evidence") or {}
     local_incident = response.get("confidential_local_accident_response_coverage") or {}
+    measured_boundary_replay = response.get(
+        "confidential_measured_boundary_replay"
+    ) or {}
     cross_station_bundle = response.get(
         "confidential_cross_station_bundle_recheck"
     ) or {}
@@ -8535,6 +8538,48 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "lifecycle", "counter", "full charge", "recharge", "storage", "bank",
         ))
     )
+
+    # Keep the evidence boundary explicit in the provider-facing envelope.
+    # The project has substantial, privacy-bounded station-side telemetry, but
+    # it does not have a rights-cleared, synchronized vehicle-side trace.  A
+    # compact scope contract prevents an LLM from silently promoting a
+    # station-side replay or a consequence screen into full-loop validation.
+    local_station_assessment = (
+        local_station_utilization.get("assessment")
+        if isinstance(local_station_utilization, dict)
+        else {}
+    ) or {}
+    operational_holdout = (
+        measured_boundary_replay.get("operational_envelope_holdout")
+        if isinstance(measured_boundary_replay, dict)
+        else {}
+    ) or {}
+    station_side_supported = bool(
+        local_station_assessment.get("station_side_dynamic_validation_ready") is True
+        and (
+            operational_holdout.get("time_ordered_holdout_supported") is True
+            or cascade_sequence.get("cascade_controller_structure_supported") is True
+            or recharge_forecast.get(
+                "short_horizon_station_pressure_forecast_supported"
+            ) is True
+        )
+    )
+    full_loop_supported = bool(
+        readiness.get("full_loop_external_validation_supported") is True
+    )
+    site_distance_supported = any(
+        raw.get("site_specific_safety_distance_supported") is True
+        for raw in (impact.get("results") or [])
+        if isinstance(raw, dict)
+    )
+    support_scope = {
+        "station_side": station_side_supported,
+        "full_loop": full_loop_supported,
+        "site_distance": site_distance_supported,
+        "saga_effectiveness": readiness.get(
+            "expert_effectiveness_evaluation_supported"
+        ) is True,
+    }
 
     decision = {
         "evidence_digest": manifest.get("evidence_digest"),
@@ -9562,6 +9607,15 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             ),
         },
     }
+    # Keep the no-question compact projection within the legacy provider
+    # budget. Interactive turns always carry a question or selected sensor, so
+    # they receive the explicit scope contract; internal summary-only calls do
+    # not need to spend prompt tokens on it.
+    if (
+        (manifest.get("question") or manifest.get("selected_sensor"))
+        and impact.get("calculation_attempted") is not True
+    ):
+        decision["support_scope"] = support_scope
     if qra_multimethod:
         decision["validation_boundaries"]["qra_method_ensemble"] = (
             "DATA3632 simulation-only: 7 methods; runtime thermal 2/4, "
@@ -9808,6 +9862,24 @@ def compact_data_used(manifest: dict[str, Any]) -> dict[str, Any]:
                 )
                 if key in readiness
             }
+        # A compact, user-visible scope flag accompanies the data list.  It
+        # distinguishes the substantial station-side replay evidence from the
+        # still-open vehicle/full-loop and field-distance claims.
+        result["support_scope"] = {
+            "station_side": result.get("station_data", {}).get("status")
+            == "substantial_station_side",
+            "full_loop": result.get("validation", {}).get(
+                "full_loop_external_validation_supported", False
+            ),
+            "site_distance": any(
+                row.get("site_specific_safety_distance_supported") is True
+                for row in impact.get("results") or []
+                if isinstance(row, dict)
+            ),
+            "saga_effectiveness": result.get("validation", {}).get(
+                "expert_effectiveness_evaluation_supported", False
+            ),
+        }
     return result
 
 

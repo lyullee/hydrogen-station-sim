@@ -107,6 +107,12 @@ def test_direct_qa_calculates_impact_for_alarm_and_explicit_hypothesis(monkeypat
             assert hypothetical["data_used"]["validation"][
                 "full_loop_external_validation_supported"
             ] is False
+            assert hypothetical["data_used"]["support_scope"] == {
+                "station_side": True,
+                "full_loop": False,
+                "site_distance": False,
+                "saga_effectiveness": False,
+            }
             assert len(json.dumps(llm_prompts[-1]["context"], default=str)) < 12000
             assert llm_prompts[-1]["kind"] == "user_query"
             assert received[-1] == [impact]
