@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_station_operation_practice_reference",
+  "generated_at": "2026-10-09",
+  "status": "public_qualitative_operating_context",
+  "source": {
+    "title": "Hydrogen Research and Fueling Facility operation guidance",
+    "institution": "California State University, Los Angeles",
+    "url": "https://www.calstatela.edu/ecst/h2station/operation",
+    "source_type": "official_facility_operation_page",
+    "public_access": true
+  },
+  "reported_practices": {
+    "cascade_then_compressor_topoff": true,
+    "approximate_storage_to_vehicle_equilibrium_psi": 6000,
+    "target_pressure_can_exceed_nominal_psi": 11000,
+    "pre_cooler_setpoint_c": -36,
+    "delivered_gas_temperature_band_c": [-20, -17],
+    "periodic_leak_check_pressure_increment_psi": 3000,
+    "periodic_leak_check_pause_s": 5,
+    "leak_and_flame_detection_described": true,
+    "post_fill_cooldown_soc_percent_range": [95, 98]
+  },
+  "allowed_use": [
+    "qualitative protocol and operator-response context",
+    "leak-check pause and cascade-to-compressor sequence cross-check",
+    "LLM explanation of why a virtual fill may pause or overshoot transiently"
+  ],
+  "not_allowed": [
+    "station-specific calibration",
+    "universal SAE or KGS limit generation",
+    "full-loop external validation",
+    "safety certification or site-specific operating instruction"
+  ],
+  "claim_boundary": "This official facility page is qualitative operating context from one public research facility. It is not a synchronized raw logger release, an independent holdout, a universal protocol specification or a site-specific safety limit."
+}

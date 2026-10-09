@@ -2421,6 +2421,67 @@ def _public_real_station_context() -> dict[str, Any] | None:
     }
 
 
+def _public_station_operation_practice_reference() -> dict[str, Any] | None:
+    """Expose qualitative public-facility operating practice with hard limits.
+
+    The source describes one public research facility's sequence and operating
+    cues.  It is useful for explaining pauses, cascade-to-compressor transfer
+    and pre-cooling, but it must never be promoted to a universal station
+    protocol or a site-specific safety limit.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/calstate_la_operation_practice_reference_2026_10_09.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    practices = record.get("reported_practices") or {}
+    if (
+        record.get("artifact_type") != "public_station_operation_practice_reference"
+        or record.get("status") != "public_qualitative_operating_context"
+        or source.get("public_access") is not True
+        or not str(source.get("url") or "").startswith("https://")
+        or practices.get("cascade_then_compressor_topoff") is not True
+        or practices.get("periodic_leak_check_pause_s") != 5
+        or not isinstance(practices.get("delivered_gas_temperature_band_c"), list)
+        or len(practices.get("delivered_gas_temperature_band_c")) != 2
+        or not record.get("allowed_use")
+        or not record.get("not_allowed")
+    ):
+        return None
+    return {
+        "artifact": "research/calstate_la_operation_practice_reference_2026_10_09.json",
+        "evidence_role": "public facility qualitative operating-practice reference",
+        "source": {
+            "title": str(source.get("title") or ""),
+            "institution": str(source.get("institution") or ""),
+            "url": str(source.get("url") or ""),
+            "source_type": str(source.get("source_type") or ""),
+        },
+        "reported_practices": {
+            key: practices.get(key)
+            for key in (
+                "cascade_then_compressor_topoff",
+                "approximate_storage_to_vehicle_equilibrium_psi",
+                "target_pressure_can_exceed_nominal_psi",
+                "pre_cooler_setpoint_c",
+                "delivered_gas_temperature_band_c",
+                "periodic_leak_check_pressure_increment_psi",
+                "periodic_leak_check_pause_s",
+                "leak_and_flame_detection_described",
+                "post_fill_cooldown_soc_percent_range",
+            )
+            if practices.get(key) is not None
+        },
+        "allowed_use": [str(value) for value in record.get("allowed_use") or []],
+        "not_allowed": [str(value) for value in record.get("not_allowed") or []],
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_hrs_measurement_leads() -> dict[str, Any] | None:
     """Expose public HRS measurement leads with an explicit data boundary.
 
@@ -2849,6 +2910,20 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
         str(station_source.get("title") or "Real-station back-to-back fueling context"),
         str(station_source.get("url") or ""),
         "실충전소 back-to-back 운전·저장압력·냉각·차량 SOC 맥락",
+    )
+
+    operation_practice = evidence.get(
+        "public_station_operation_practice_reference"
+    ) or {}
+    operation_source = operation_practice.get("source") or {}
+    add(
+        "PUBLIC_STATION_OPERATION_PRACTICE",
+        str(
+            operation_source.get("title")
+            or "Public station operating-practice reference"
+        ),
+        str(operation_source.get("url") or ""),
+        "공개 시설의 정성적 충전 시퀀스·리크체크·예냉 맥락(보편 프로토콜/검증 아님)",
     )
 
     measurement_leads = evidence.get("public_hrs_measurement_leads") or {}
@@ -6085,6 +6160,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_real_station_context"
         ] = real_station_context
+    operation_practice = _public_station_operation_practice_reference()
+    if operation_practice is not None:
+        envelope["response_evidence"][
+            "public_station_operation_practice_reference"
+        ] = operation_practice
     public_hrs_leads = _public_hrs_measurement_leads()
     if public_hrs_leads is not None:
         envelope["response_evidence"][
@@ -6608,6 +6688,20 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "prohibited_use", "claim_limit",
             )
             if real_station_context.get(key) is not None
+        }
+    operation_practice = evidence.get(
+        "public_station_operation_practice_reference"
+    )
+    if isinstance(operation_practice, dict):
+        summary["public_station_operation_practice_reference"] = {
+            "evidence_role": operation_practice.get("evidence_role"),
+            "source": operation_practice.get("source") or {},
+            "reported_practices": operation_practice.get(
+                "reported_practices"
+            ) or {},
+            "allowed_use": operation_practice.get("allowed_use") or [],
+            "not_allowed": operation_practice.get("not_allowed") or [],
+            "claim_limit": short(operation_practice.get("claim_limit"), 320),
         }
     measurement_leads = evidence.get("public_hrs_measurement_leads")
     if isinstance(measurement_leads, dict):
@@ -7431,6 +7525,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     preslhy = response.get("preslhy_validation_boundary") or {}
     preslhy_holdout = preslhy.get("independent_holdout") or {}
     operating_screen = response.get("public_operating_envelope_screen") or {}
+    operation_practice = response.get(
+        "public_station_operation_practice_reference"
+    ) or {}
     methytrucks_tank = response.get("methytrucks_tank_diagnostic_boundary") or {}
     methytrucks_scope = methytrucks_tank.get("scope") or {}
     methytrucks_244 = methytrucks_tank.get("candidate_244_l_diagnostic") or {}
@@ -7566,6 +7663,14 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "communication", "pressure", "temperature",
         ))
     )
+    operation_practice_relevant = bool(
+        operation_practice
+        and any(token in detector_context for token in (
+            "충전", "충전 중", "재충전", "누출", "누설", "리크", "압력",
+            "온도", "예냉", "프리쿨", "프로토콜", "leak", "fuel", "refuel",
+            "recharge", "pressure", "temperature", "precool", "protocol",
+        ))
+    )
     cascade_sequence_relevant = bool(
         cascade_sequence
         and any(token in detector_context for token in (
@@ -7637,6 +7742,17 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "claim_limit",
         )),
         "decision_support_evidence": {
+            **({
+                "public_station_operation_practice_reference": {
+                    "source": operation_practice.get("source") or {},
+                    "reported_practices": operation_practice.get(
+                        "reported_practices"
+                    ) or {},
+                    "allowed_use": operation_practice.get("allowed_use") or [],
+                    "not_allowed": operation_practice.get("not_allowed") or [],
+                    "claim_limit": short(operation_practice.get("claim_limit"), 260),
+                },
+            } if operation_practice and operation_practice_relevant else {}),
             **({
                 "public_hrs_measurement_leads": {
                     "lead_count": len(public_hrs_leads.get("leads") or []),
@@ -8500,6 +8616,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     benchmarks = evidence.get("public_experimental_benchmarks") or {}
     hitrf_reference = evidence.get("public_hitrf_operational_reference") or {}
     real_station_context = evidence.get("public_real_station_context") or {}
+    operation_practice = evidence.get(
+        "public_station_operation_practice_reference"
+    ) or {}
     public_hrs_leads = evidence.get("public_hrs_measurement_leads") or {}
     vehicle_side_leads = evidence.get(
         "public_vehicle_side_h2_measurement_leads"
@@ -8664,6 +8783,13 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "full_loop_external_holdout_eligible"
             ) is True,
             "claim_limit": real_station_context.get("claim_limit"),
+        },
+        "public_station_operation_practice_reference": {
+            "source": operation_practice.get("source") or {},
+            "reported_practices": operation_practice.get("reported_practices") or {},
+            "allowed_use": operation_practice.get("allowed_use") or [],
+            "not_allowed": operation_practice.get("not_allowed") or [],
+            "claim_limit": operation_practice.get("claim_limit"),
         },
         "public_hrs_measurement_leads": {
             "evidence_artifact": public_hrs_leads.get("artifact"),

@@ -34,6 +34,23 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         scenario.startswith("back-to-back fueling")
         for scenario in station_context["reported_scenarios"]
     )
+    operation_practice = idle["response_evidence"][
+        "public_station_operation_practice_reference"
+    ]
+    assert operation_practice["source"]["url"] == (
+        "https://www.calstatela.edu/ecst/h2station/operation"
+    )
+    assert operation_practice["reported_practices"][
+        "cascade_then_compressor_topoff"
+    ] is True
+    assert operation_practice["reported_practices"][
+        "periodic_leak_check_pause_s"
+    ] == 5
+    assert operation_practice["not_allowed"]
+    assert operation_practice["claim_limit"]
+    assert "public_station_operation_practice_reference" not in (
+        prompt_decision_evidence(idle)["decision_support_evidence"]
+    )
     candidate_screen = idle["response_evidence"]["local_candidate_full_loop_screen"]
     assert candidate_screen["decision"] == "NO_NEW_FULL_LOOP_MEASURED_COHORT"
     candidates = {item["id"]: item for item in candidate_screen["candidates"]}
@@ -634,6 +651,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "PUBLIC_METHYTRUCKS_20590842",
         "PUBLIC_METHYTRUCKS_20590903",
         "PUBLIC_HITRF_OPERATIONAL_REFERENCE",
+        "PUBLIC_STATION_OPERATION_PRACTICE",
         "KHK_PUBLIC_ACCIDENT_REPORTS",
         "PUBLIC_ACCIDENTAL_RELEASE_ARTICLE",
         "PUBLIC_ACCIDENTAL_RELEASE_DATASET",
@@ -646,6 +664,18 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert all(row["url"].startswith(("https://", "http://")) for row in public_links)
     assert not any("confidential" in row["id"].lower() for row in public_links)
     assert prompt_evidence_summary(idle)["public_source_links"] == public_links
+    operation_question = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False,
+        question="충전 중 리크체크와 예냉 순서를 설명해줘",
+    )
+    operation_decision = prompt_decision_evidence(operation_question)
+    operation_support = operation_decision["decision_support_evidence"][
+        "public_station_operation_practice_reference"
+    ]
+    assert operation_support["reported_practices"][
+        "pre_cooler_setpoint_c"
+    ] == -36
+    assert operation_support["not_allowed"]
     assert header["public_reference_leak_detector_evidence"]["joint_pass"] is True
     assert header["public_reference_leak_detector_evidence"][
         "runtime_application"
