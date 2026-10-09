@@ -2482,6 +2482,74 @@ def _public_station_operation_practice_reference() -> dict[str, Any] | None:
     }
 
 
+def _public_station_aggregate_benchmark_reference() -> dict[str, Any] | None:
+    """Expose aggregate public-station operating context with hard limits.
+
+    The article reports multi-year counts and energy aggregates, not a
+    synchronized station-to-vehicle logger.  Keep this source available for
+    sanity checks and explanations while preventing calibration or holdout
+    claims from entering the runtime evidence envelope.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/calstate_la_multi_year_aggregate_reference_2026_10_09.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    aggregate = record.get("reported_aggregate") or {}
+    event_count = aggregate.get("refueling_event_count_approx")
+    hydrogen_kg = aggregate.get("dispensed_hydrogen_kg_approx")
+    energy_range = aggregate.get("reported_2020_q1_energy_kwh_per_kg_range")
+    if (
+        record.get("artifact_type") != "public_station_aggregate_benchmark_reference"
+        or record.get("status") != "public_aggregate_operating_context"
+        or source.get("public_access") is not True
+        or source.get("public_raw_synchronized_rows") is not False
+        or not str(source.get("doi") or "").strip()
+        or not str(source.get("url") or "").startswith("https://")
+        or not isinstance(event_count, (int, float))
+        or event_count <= 0
+        or not isinstance(hydrogen_kg, (int, float))
+        or hydrogen_kg <= 0
+        or not isinstance(energy_range, list)
+        or len(energy_range) != 2
+        or not all(isinstance(value, (int, float)) for value in energy_range)
+        or not record.get("allowed_use")
+        or not record.get("not_allowed")
+    ):
+        return None
+    return {
+        "artifact": "research/calstate_la_multi_year_aggregate_reference_2026_10_09.json",
+        "evidence_role": "public aggregate station operating benchmark",
+        "source": {
+            "title": str(source.get("title") or ""),
+            "institution": str(source.get("institution") or ""),
+            "doi": str(source.get("doi") or ""),
+            "url": str(source.get("url") or ""),
+            "source_type": str(source.get("source_type") or ""),
+            "public_raw_synchronized_rows": False,
+        },
+        "reported_aggregate": {
+            "observation_period": str(aggregate.get("observation_period") or ""),
+            "refueling_event_count_approx": event_count,
+            "dispensed_hydrogen_kg_approx": hydrogen_kg,
+            "reported_domains": [
+                str(value) for value in aggregate.get("reported_domains") or []
+            ],
+            "reported_2020_q1_energy_kwh_per_kg_range": list(energy_range),
+            "reported_2020_q1_site_efficiency_percent_max": aggregate.get(
+                "reported_2020_q1_site_efficiency_percent_max"
+            ),
+        },
+        "allowed_use": [str(value) for value in record.get("allowed_use") or []],
+        "not_allowed": [str(value) for value in record.get("not_allowed") or []],
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_hrs_measurement_leads() -> dict[str, Any] | None:
     """Expose public HRS measurement leads with an explicit data boundary.
 
@@ -2924,6 +2992,20 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
         ),
         str(operation_source.get("url") or ""),
         "공개 시설의 정성적 충전 시퀀스·리크체크·예냉 맥락(보편 프로토콜/검증 아님)",
+    )
+
+    aggregate_benchmark = evidence.get(
+        "public_station_aggregate_benchmark_reference"
+    ) or {}
+    aggregate_source = aggregate_benchmark.get("source") or {}
+    add(
+        "PUBLIC_STATION_AGGREGATE_BENCHMARK",
+        str(
+            aggregate_source.get("title")
+            or "Public station aggregate operating benchmark"
+        ),
+        str(aggregate_source.get("url") or ""),
+        "공개 실제 충전소 집계 처리량·에너지 운전 맥락(원시 full-loop 검증 아님)",
     )
 
     measurement_leads = evidence.get("public_hrs_measurement_leads") or {}
@@ -6165,6 +6247,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_station_operation_practice_reference"
         ] = operation_practice
+    aggregate_benchmark = _public_station_aggregate_benchmark_reference()
+    if aggregate_benchmark is not None:
+        envelope["response_evidence"][
+            "public_station_aggregate_benchmark_reference"
+        ] = aggregate_benchmark
     public_hrs_leads = _public_hrs_measurement_leads()
     if public_hrs_leads is not None:
         envelope["response_evidence"][
@@ -6702,6 +6789,30 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "allowed_use": operation_practice.get("allowed_use") or [],
             "not_allowed": operation_practice.get("not_allowed") or [],
             "claim_limit": short(operation_practice.get("claim_limit"), 320),
+        }
+    aggregate_benchmark = evidence.get(
+        "public_station_aggregate_benchmark_reference"
+    )
+    if isinstance(aggregate_benchmark, dict):
+        aggregate = aggregate_benchmark.get("reported_aggregate") or {}
+        summary["public_station_aggregate_benchmark_reference"] = {
+            "evidence_role": aggregate_benchmark.get("evidence_role"),
+            "source": aggregate_benchmark.get("source") or {},
+            "reported_aggregate": {
+                key: aggregate.get(key)
+                for key in (
+                    "observation_period",
+                    "refueling_event_count_approx",
+                    "dispensed_hydrogen_kg_approx",
+                    "reported_domains",
+                    "reported_2020_q1_energy_kwh_per_kg_range",
+                    "reported_2020_q1_site_efficiency_percent_max",
+                )
+                if aggregate.get(key) is not None
+            },
+            "allowed_use": aggregate_benchmark.get("allowed_use") or [],
+            "not_allowed": aggregate_benchmark.get("not_allowed") or [],
+            "claim_limit": short(aggregate_benchmark.get("claim_limit"), 360),
         }
     measurement_leads = evidence.get("public_hrs_measurement_leads")
     if isinstance(measurement_leads, dict):
@@ -7528,6 +7639,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     operation_practice = response.get(
         "public_station_operation_practice_reference"
     ) or {}
+    aggregate_benchmark = response.get(
+        "public_station_aggregate_benchmark_reference"
+    ) or {}
     methytrucks_tank = response.get("methytrucks_tank_diagnostic_boundary") or {}
     methytrucks_scope = methytrucks_tank.get("scope") or {}
     methytrucks_244 = methytrucks_tank.get("candidate_244_l_diagnostic") or {}
@@ -7671,6 +7785,14 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "precool", "protocol",
         ))
     )
+    aggregate_benchmark_relevant = bool(
+        aggregate_benchmark
+        and any(token in detector_context for token in (
+            "충전소", "운영", "처리량", "에너지", "용량", "실적", "운전",
+            "station", "operation", "throughput", "energy", "capacity",
+            "performance",
+        ))
+    )
     cascade_sequence_relevant = bool(
         cascade_sequence
         and any(token in detector_context for token in (
@@ -7753,6 +7875,19 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "claim_limit": short(operation_practice.get("claim_limit"), 260),
                 },
             } if operation_practice and operation_practice_relevant else {}),
+            **({
+                "public_station_aggregate_benchmark_reference": {
+                    "source": aggregate_benchmark.get("source") or {},
+                    "reported_aggregate": aggregate_benchmark.get(
+                        "reported_aggregate"
+                    ) or {},
+                    "allowed_use": aggregate_benchmark.get("allowed_use") or [],
+                    "not_allowed": aggregate_benchmark.get("not_allowed") or [],
+                    "claim_limit": short(
+                        aggregate_benchmark.get("claim_limit"), 300
+                    ),
+                },
+            } if aggregate_benchmark and aggregate_benchmark_relevant else {}),
             **({
                 "public_hrs_measurement_leads": {
                     "lead_count": len(public_hrs_leads.get("leads") or []),
@@ -8619,6 +8754,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     operation_practice = evidence.get(
         "public_station_operation_practice_reference"
     ) or {}
+    aggregate_benchmark = evidence.get(
+        "public_station_aggregate_benchmark_reference"
+    ) or {}
     public_hrs_leads = evidence.get("public_hrs_measurement_leads") or {}
     vehicle_side_leads = evidence.get(
         "public_vehicle_side_h2_measurement_leads"
@@ -8790,6 +8928,15 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "allowed_use": operation_practice.get("allowed_use") or [],
             "not_allowed": operation_practice.get("not_allowed") or [],
             "claim_limit": operation_practice.get("claim_limit"),
+        },
+        "public_station_aggregate_benchmark_reference": {
+            "source": aggregate_benchmark.get("source") or {},
+            "reported_aggregate": aggregate_benchmark.get(
+                "reported_aggregate"
+            ) or {},
+            "allowed_use": aggregate_benchmark.get("allowed_use") or [],
+            "not_allowed": aggregate_benchmark.get("not_allowed") or [],
+            "claim_limit": aggregate_benchmark.get("claim_limit"),
         },
         "public_hrs_measurement_leads": {
             "evidence_artifact": public_hrs_leads.get("artifact"),

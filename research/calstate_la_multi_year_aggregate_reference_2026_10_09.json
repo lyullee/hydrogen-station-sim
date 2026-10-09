@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_station_aggregate_benchmark_reference",
+  "generated_at": "2026-10-09",
+  "status": "public_aggregate_operating_context",
+  "source": {
+    "title": "Multi-year energy performance data for an electrolysis-based hydrogen refueling station",
+    "institution": "California State University, Los Angeles",
+    "doi": "10.1016/j.ijhydene.2023.04.084",
+    "url": "https://doi.org/10.1016/j.ijhydene.2023.04.084",
+    "source_type": "open_access_peer_reviewed_aggregate_study",
+    "public_access": true,
+    "public_raw_synchronized_rows": false
+  },
+  "reported_aggregate": {
+    "observation_period": "2016-2020",
+    "refueling_event_count_approx": 4500,
+    "dispensed_hydrogen_kg_approx": 8800,
+    "reported_domains": [
+      "electrolyzer",
+      "storage",
+      "refueling_compressors",
+      "dispensing",
+      "site_energy"
+    ],
+    "reported_2020_q1_energy_kwh_per_kg_range": [70, 80],
+    "reported_2020_q1_site_efficiency_percent_max": 40
+  },
+  "allowed_use": [
+    "aggregate station-throughput and energy sanity check",
+    "LLM explanation of storage/compressor/dispensing operating scale",
+    "public data-request lead"
+  ],
+  "not_allowed": [
+    "runtime parameter fitting",
+    "full-loop external validation",
+    "site-specific safety or distance limits",
+    "accident frequency or response-effectiveness inference"
+  ],
+  "claim_boundary": "This peer-reviewed study reports aggregate operating and energy performance for one public research station. It is not a synchronized raw station-to-vehicle logger release, an independent holdout, a universal protocol specification or a site-specific safety limit. Approximate counts and ranges are contextual only."
+}

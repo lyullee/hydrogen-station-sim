@@ -333,6 +333,17 @@ vehicle-SOC outputs. The public record does not provide a reusable synchronized
 row-level archive, so the LLM may use it for scenario and face-validity
 context, while the full-loop validation gate remains closed.
 
+The peer-reviewed multi-year Cal State LA operating study is kept separately in
+`research/calstate_la_multi_year_aggregate_reference_2026_10_09.json`. It
+reports approximate aggregate counts (about 4,500 refueling events and more
+than 8,800 kg dispensed over 2016--2020), station domains, and a 2020-Q1
+energy range. These values are useful for a station-throughput and site-energy
+sanity check and for explaining the scale of storage/compression/dispensing in
+the LLM. They are intentionally excluded from parameter fitting, full-loop
+holdout scoring, site-specific safety distances, and accident-frequency or
+response-effectiveness claims because no synchronized raw station-to-vehicle
+logger is publicly released by that record.
+
 The NREL H2FillS HDVS Type-IV workbook is evaluated separately as a frozen
 tank/thermal boundary screen. It contains seven tanks and 351 synchronized
 samples with measured pressure, temperature and mass channels. The current
