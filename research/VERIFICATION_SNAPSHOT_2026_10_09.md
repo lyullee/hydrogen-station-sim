@@ -6,7 +6,7 @@ vehicle objective is complete.
 
 ## Executed checks
 
-- Full repository test suite: **1189 passed**, 18 dependency deprecation or
+- Full repository test suite: **1192 passed**, 18 dependency deprecation or
   physics warnings, 0 test failures.
 - Focused external-data checks (HyTunnel, Dickens Type-III, data-coverage
   summary): **14 passed**.
@@ -20,6 +20,15 @@ vehicle objective is complete.
 | Same-site pressure forecast | 394 chronological holdout cases; MAE 0.184 MPa; p90 0.529 MPa; direction 94.9% | short-horizon advisory forecast |
 | Public Type-IV tank data | 12 measured-boundary cases; runtime match true | Type-IV tank component behavior |
 | Public accident precedents | 23 reports routed to 8 response families and 42 runtime references | scenario and response-plan grounding |
+
+## SAGA response contract
+
+The runtime now rejects an incomplete structured emergency plan before it is
+returned to the monitor. Every selected plan must contain non-empty
+recognition, immediate, stabilization, restart and prevention stages plus an
+HTTPS source link; an active alert must also contain common initial steps. This
+is a structural safety guard, not an expert-effectiveness or field-safety
+claim.
 
 ## Evidence still outside the claim boundary
 

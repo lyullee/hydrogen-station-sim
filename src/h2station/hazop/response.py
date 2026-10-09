@@ -28,6 +28,47 @@ EQUIPMENT_LABELS = {
     "station": "충전소 전체",
 }
 
+RESPONSE_STAGES = ("recognition", "immediate", "stabilize", "restart", "prevention")
+
+
+def response_guidance_contract_issues(guidance: dict[str, Any] | None) -> list[str]:
+    """Return missing safety-response fields before guidance reaches the UI.
+
+    This is a structural guard only.  It checks that the deterministic plan
+    contains the five staged response sections and traceable source metadata;
+    it does not judge whether an individual action is safe for a real site or
+    prove SAGA/operator effectiveness.
+    """
+
+    if not isinstance(guidance, dict):
+        return ["guidance must be an object"]
+    issues: list[str] = []
+    plans = guidance.get("plans")
+    if not isinstance(plans, list) or not plans:
+        issues.append("plans must be a non-empty list")
+        return issues
+    if guidance.get("actual_alert") and not guidance.get("common_steps"):
+        issues.append("active alerts require common_steps")
+    for index, plan in enumerate(plans):
+        prefix = f"plans[{index}]"
+        if not isinstance(plan, dict):
+            issues.append(f"{prefix} must be an object")
+            continue
+        if not str(plan.get("title") or "").strip():
+            issues.append(f"{prefix}.title is empty")
+        for stage in RESPONSE_STAGES:
+            values = plan.get(stage)
+            if not isinstance(values, list) or not any(str(value).strip() for value in values):
+                issues.append(f"{prefix}.{stage} is empty")
+        sources = plan.get("sources")
+        if not isinstance(sources, list) or not sources:
+            issues.append(f"{prefix}.sources is empty")
+        else:
+            for source_index, source in enumerate(sources):
+                if not isinstance(source, dict) or not str(source.get("url") or "").startswith("https://"):
+                    issues.append(f"{prefix}.sources[{source_index}] is not traceable")
+    return issues
+
 
 def _equipment_label(target: Any) -> str:
     text = str(target or "위치 확인 중")
@@ -363,7 +404,7 @@ def structured_guidance(selection: list[dict[str, Any]], *, actual_alert: bool) 
     def _node_id(sensor_id: str | None) -> str | None:
         match = re.search(r"-(\d\d)\d\d$", sensor_id or "")
         return f"N{match.group(1)}" if match else None
-    return {
+    guidance = {
         "actual_alert": actual_alert,
         "intro": "현장 승인 비상계획과 현장 지휘를 우선하세요. 시뮬레이션 기반 의사결정 지원입니다.",
         "common_steps": list(data["common_response"]) if actual_alert else [],
@@ -382,3 +423,10 @@ def structured_guidance(selection: list[dict[str, Any]], *, actual_alert: bool) 
             ),
         } for item in selection],
     }
+    issues = response_guidance_contract_issues(guidance)
+    if issues:
+        # A missing stage is a software defect, not a reason to silently show
+        # an incomplete emergency plan.  Keep the failure explicit so tests
+        # and operators can identify the broken plan/source mapping.
+        raise RuntimeError("response guidance contract violation: " + "; ".join(issues))
+    return guidance
