@@ -1,0 +1,258 @@
+{
+  "schema_version": 1,
+  "artifact_type": "privacy_bounded_data_coverage_summary",
+  "generated_at": "2026-10-10",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "raw_rows_persisted": false,
+    "site_company_manufacturer_published": false,
+    "absolute_timestamps_published": false
+  },
+  "readiness": {
+    "ijhe_gate_counts": {
+      "PASS": 127,
+      "FAIL": 10,
+      "PENDING": 7
+    },
+    "bounded_submission_ready": false,
+    "full_user_objective_ready": false
+  },
+  "validated_or_actionable_now": [
+    {
+      "id": "owner_station_side_dynamics",
+      "status": "ACTIONABLE",
+      "evidence": "research/local_confidential_station_data_utilization_2026_10_08.json",
+      "coverage": {
+        "deduplicated_rows": 56854143,
+        "ordered_high_bank_pressure_cycles": 16770,
+        "paired_medium_high_pressure_episodes": 11770,
+        "short_horizon_pressure_forecast_cases": 1418,
+        "conditional_recharge_flow_episodes": 733
+      },
+      "allowed_claim": "station-side pressure, cascade and recharge dynamics diagnostics",
+      "not_allowed": "vehicle-side full-loop accuracy or field safety limits"
+    },
+    {
+      "id": "owner_station_runtime_replay",
+      "status": "ACTIONABLE",
+      "evidence": "research/local_station_runtime_profile_integration_2026_10_09.json",
+      "coverage": {
+        "reference_defaults_completed": true,
+        "opt_in_profile_completed": true,
+        "failed_dynamics_profile_detached": true,
+        "simulations_completed": true
+      },
+      "allowed_claim": "sanitized station pressure-boundary profile is wired and replayable",
+      "not_allowed": "automatic runtime parameter replacement or full-loop validation"
+    },
+    {
+      "id": "public_type_iv_tank",
+      "status": "VALIDATED_COMPONENT",
+      "evidence": "research/public_type_iv_tank_runtime_calibration_2026_10_07.json",
+      "coverage": {
+        "validation_case_count": 12,
+        "runtime_match": true,
+        "evidence_status": "active"
+      },
+      "allowed_claim": "measured-boundary Type-IV tank component validation",
+      "not_allowed": "station controller, compressor, cascade, dispenser or field safety certification"
+    },
+    {
+      "id": "public_station_tank_boundary",
+      "status": "DIAGNOSTIC_ONLY",
+      "evidence": "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json",
+      "coverage": {
+        "sample_count": 351,
+        "duration_s": 350,
+        "tank_count": 7,
+        "hose_pressure_temperature_present": true,
+        "tank_pressure_temperature_mass_present": true,
+        "partial_station_to_tank_boundary_eligible": true,
+        "full_loop_holdout_eligible": false,
+        "screening_status": "diagnostic_only_failed_screen",
+        "screening_pass_count": 0,
+        "screening_pass_fraction": 0.0,
+        "pressure_rmse_mpa": 6.164469743688679,
+        "temperature_rmse_c": 4.624745495755946,
+        "mass_rmse_kg": 0.04499166627656306,
+        "pressure_final_error_mpa": -8.680787636562084,
+        "screening_limits": {
+          "pressure_rmse_mpa_max": 5.0,
+          "temperature_rmse_c_max": 10.0,
+          "mass_final_abs_error_kg_max": 0.5
+        },
+        "parameter_tuning": false
+      },
+      "allowed_claim": "공통시계 호스·수용탱크 압력·온도·질량의 부분 station-to-tank 경계 진단",
+      "not_allowed": "충전소 제어기·캐스케이드·ESD·노즐/리셉터클을 포함한 full-loop 검증"
+    },
+    {
+      "id": "public_component_measurements",
+      "status": "DIAGNOSTIC_ONLY",
+      "evidence": "research/methytrucks_2026_public_measurement_intake.json",
+      "coverage": {
+        "workbook_count": 15,
+        "sample_count": 58440,
+        "mass_closure_comparable_pass_fraction": 0.8888888888888888
+      },
+      "allowed_claim": "public synchronized component pressure/temperature/flow diagnostics",
+      "not_allowed": "prospective station-to-vehicle holdout"
+    },
+    {
+      "id": "public_type_i_filling_thermal",
+      "status": "DIAGNOSTIC_ONLY",
+      "evidence": "research/striednig_hyddown_diagnostic_result_2026_10_10.json",
+      "coverage": {
+        "case_count": 3,
+        "gas_temperature_rmse_k": [
+          6.355506812719564,
+          9.941005439058026,
+          11.75378719956619
+        ],
+        "gas_temperature_peak_absolute_error_k": [
+          4.342474645427501,
+          1.8908271600629973,
+          2.8847599168500437
+        ],
+        "runtime_parameter_application": false,
+        "full_loop_holdout_eligible": false
+      },
+      "allowed_claim": "공개 Type-I 탱크 충전 열거동의 구성품 진단 및 열 모델 비교",
+      "not_allowed": "충전소 제어기·캐스케이드·디스펜서·차량을 포함한 full-loop 검증 또는 런타임 파라미터 승격"
+    },
+    {
+      "id": "public_field_metrology",
+      "status": "DIAGNOSTIC_ONLY",
+      "evidence": "research/public_experimental_benchmarks_2026_10_06.json",
+      "coverage": {
+        "field_draft_count": 7,
+        "pressure_mpa_range": [
+          16.1,
+          31.39
+        ],
+        "mass_groups_kg": [
+          0.5,
+          1.0
+        ],
+        "maximum_method_agreement_percent": 1.53
+      },
+      "allowed_claim": "35 MPa 현장 계측의 압력·온도·질량 경계 및 반복성 맥락",
+      "not_allowed": "원시 station-to-vehicle holdout, 제어기·ESD·사고영향 검증"
+    },
+    {
+      "id": "public_actual_h2_spatial_dispersion",
+      "status": "DIAGNOSTIC_ONLY",
+      "evidence": "research/public_experimental_benchmarks_2026_10_06.json",
+      "coverage": {
+        "archive_count": 22,
+        "total_rows_screened": 417340,
+        "sensor_count_per_archive": 29,
+        "median_sample_interval_s": 0.009996,
+        "sensor_coordinate_count": 29,
+        "machine_readable_sensor_coordinates_public": true,
+        "spatial_holdout_ready": false
+      },
+      "allowed_claim": "실제 수소 저압 누출·다중 검지기 응답 범위와 사고 모델 진단",
+      "not_allowed": "충전소 full-loop, 좌표기반 검지기 holdout, site-specific safety distance"
+    },
+    {
+      "id": "public_hytf_tank_boundary",
+      "status": "DIAGNOSTIC_ONLY",
+      "evidence": "research/hytf_open_tank_trace_boundary_2026_10_05.json",
+      "coverage": {
+        "sample_count": 2536,
+        "duration_s": 253.5,
+        "pressure_channel_count": 2,
+        "tank_thermocouple_count": 14,
+        "pressure_bar_range": [
+          292.121913,
+          694.616597
+        ]
+      },
+      "allowed_claim": "공개 70 MPa 탱크 압력·열 응답의 구성품 경계 진단",
+      "not_allowed": "질량유량, 차량 수용부, 충전소 제어기·ESD를 포함한 full-loop 검증"
+    },
+    {
+      "id": "public_h2safe_indoor_surrogate",
+      "status": "DIAGNOSTIC_ONLY",
+      "evidence": "research/h2safe_public_dataset_intake_2026_10_08.json",
+      "coverage": {
+        "laboratory_count": 2,
+        "test_count": 5,
+        "total_time_series_rows": 21052,
+        "lab_declared_channel_counts": {
+          "Lab1_Small": 24,
+          "Lab2_Large": 32
+        }
+      },
+      "allowed_claim": "헬륨 대체가스의 실내 센서 응답·좌표 진단",
+      "not_allowed": "수소 농도 환산, 충전소 외부 확산, ESD 효과 또는 안전거리 검증"
+    },
+    {
+      "id": "public_accident_precedents",
+      "status": "ROUTED_FOR_GROUNDING",
+      "evidence": "research/runtime_public_accident_precedent_routing_2026_10_07.json",
+      "coverage": {
+        "public_report_count": 23,
+        "mapped_response_family_count": 8,
+        "runtime_routed_case_references": 42,
+        "unmatched_response_family_count": 0
+      },
+      "allowed_claim": "traceable scenario and response-plan grounding",
+      "not_allowed": "historical frequency or response-effectiveness estimation"
+    }
+  ],
+  "minimum_next_input": {
+    "purpose": "close the independent station-to-vehicle validation gate",
+    "event_count": 3,
+    "required_channels": [
+      "common elapsed time",
+      "station or dispenser pressure",
+      "delivered-gas or boundary temperature",
+      "mass flow or transferred mass",
+      "protocol start/stop phase"
+    ],
+    "preferred_channels": [
+      "vehicle/receptacle pressure and temperature",
+      "selected cascade-bank state",
+      "precooler outlet temperature",
+      "ESD and fault transitions"
+    ],
+    "privacy_route": "custodian-run export or de-identified component bundle outside the repository",
+    "evaluation_rule": "freeze protocol and model before scoring; never fit on the holdout"
+  },
+  "privacy_safe_export_contract": {
+    "purpose": "작은 비식별 이벤트 묶음으로 full-loop 외부 검증을 닫기 위한 최소 계약",
+    "validator": "src/h2station/privacy_safe_full_loop_intake.py",
+    "validator_status": "implemented_and_tested",
+    "guide": "research/PRIVACY_SAFE_FULL_LOOP_INTAKE_2026_10_10.md",
+    "custodian_keeps_raw_data": true,
+    "repository_receives_only": [
+      "pseudonymous event id",
+      "elapsed time from event start",
+      "unit-normalized channel names",
+      "channel-role attestation",
+      "file hash and row count",
+      "aggregate validation metrics"
+    ],
+    "must_not_include": [
+      "site or company identity",
+      "manufacturer or equipment serial",
+      "calendar timestamps",
+      "raw rows unless separately approved"
+    ],
+    "minimum_event_bundle": 3,
+    "why_this_is_enough": "세 이벤트를 동일한 사전 동결 프로토콜로 평가하면 차량 경계 유무와 generalization을 확인할 수 있으며, 전체 원시 히스토리 공개가 필요하지 않다."
+  },
+  "decision": {
+    "data_volume_is_primary_blocker": false,
+    "current_primary_gap": "synchronized and attested receiving-vessel/vehicle channels",
+    "continue_component_validation": true,
+    "full_loop_gate_remains_open": true,
+    "goal_completion_permitted": false,
+    "data_acquisition_message": "추가 데이터의 우선순위는 양이 아니라 동기화된 수용부 채널과 역할 증명이다."
+  },
+  "claim_boundary": "This summary joins audited aggregate evidence only. It does not expose raw data, identify a site or company, establish safety distances, or convert component and station-side evidence into a full station-to-vehicle validation claim."
+}
