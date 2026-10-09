@@ -8040,6 +8040,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             ) is True,
             "full_loop_external_validation_supported": False,
             "runtime_parameter_application": False,
+            "replay_diagnostic": component_bundle.get("replay_diagnostic"),
             "claim_limit": short(component_bundle.get("claim_limit"), 320),
         }
     readiness = evidence.get("validation_readiness")
@@ -8599,6 +8600,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ) is True,
                     "full_loop_external_validation_supported": False,
                     "runtime_parameter_application": False,
+                    "replay_diagnostic": component_bundle.get("replay_diagnostic"),
                     "claim_limit": short(component_bundle.get("claim_limit"), 320),
                 }
             } if component_bundle else {}),
@@ -10189,6 +10191,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             ) is True,
             "full_loop_external_validation_supported": False,
             "runtime_parameter_application": False,
+            "replay_diagnostic": component_bundle.get("replay_diagnostic"),
             "claim_limit": component_bundle.get("claim_limit"),
         },
         "confidential_local_station_attestation_request": {

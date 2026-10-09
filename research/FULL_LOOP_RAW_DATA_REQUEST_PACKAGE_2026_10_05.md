@@ -75,6 +75,25 @@ variable. The LLM receives only the sanitized event count, aggregate quality
 summary, and claim boundary; it cannot read the exported CSV rows through this
 path.
 
+Run the bounded runtime replay before using the bundle as evidence:
+
+```powershell
+$env:PYTHONPATH = "src"
+\.venv\Scripts\python.exe scripts/evaluate_confidential_component_bundle.py `
+  --bundle-directory C:\restricted\component_bundle `
+  --output C:\restricted\component_replay_result.json
+```
+
+The evaluator checks finite, monotonic channels and fixed pressure, gas-
+temperature and mass-flow envelopes, then feeds the measured boundary profile
+to the frozen safety runtime. It records whether the replay executed, ESD and
+stop outcomes, and event-level aggregate diagnostics. It does not fit model
+parameters, use outcomes to change the model, or compare the measured boundary
+to a vehicle prediction. To expose the sanitized diagnostic to LLM prompts,
+also set `H2STATION_COMPONENT_BUNDLE_REPLAY` to the result JSON. A
+`COMPONENT_REPLAY_DIAGNOSTIC_PASS` is a component-runtime diagnostic only; it
+does not close the full-loop holdout gate.
+
 ## Rights and provenance request
 
 Ask the custodian to confirm in writing:
