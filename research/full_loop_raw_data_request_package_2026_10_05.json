@@ -38,6 +38,34 @@
     },
     "rationale": "The current local corpus is substantial for station-side dynamics; the missing evidence is the synchronized receiving-vessel boundary, not additional station historian volume."
   },
+  "minimum_useful_component_bundle": {
+    "minimum_event_count": 3,
+    "required_channels": [
+      "common elapsed time or timestamp",
+      "station_or_dispenser_pressure",
+      "delivered_gas_temperature_or_attested_boundary_temperature",
+      "mass_flow_or_transferred_mass",
+      "protocol_phase_and_start_stop_state"
+    ],
+    "preferred_channels": [
+      "vehicle_or_receptacle_pressure",
+      "vehicle_or_receptacle_temperature",
+      "selected_cascade_bank",
+      "pre_cooler_outlet_temperature"
+    ],
+    "allowed_use": [
+      "station_to_dispenser_boundary_replay",
+      "operating_range_and_protocol_face_validity",
+      "measurement_join_and_quality_screen"
+    ],
+    "not_allowed": [
+      "full_station_to_vehicle_holdout_claim",
+      "safety_distance_validation",
+      "SAGA_effectiveness_claim",
+      "runtime_parameter_fitting_without_a_frozen_protocol"
+    ],
+    "rationale": "A small de-identified bundle can close a useful component-evidence gap without asking the custodian for the full historian. It is intentionally below the eight-event full-loop requirement."
+  },
   "custodian_routes": [
     {
       "id": "nrel_hitrf",

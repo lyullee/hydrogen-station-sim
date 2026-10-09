@@ -46,6 +46,22 @@ supports station-side pressure, cascade and recharge checks, so the missing
 information is the synchronized receiving-vessel boundary rather than a larger
 station historian.
 
+## Smaller first contribution when full access is difficult
+
+If an eight-event frozen holdout cannot be released immediately, request a
+three-event **minimum useful component bundle** first. It only needs a common
+clock, station or dispenser pressure, delivered-gas or boundary temperature,
+mass flow (or transferred mass), and protocol start/stop phase. Vehicle pressure
+and temperature, selected-bank state, and precooler outlet temperature are
+preferred but may follow in a second export.
+
+This smaller bundle can support station-to-dispenser boundary replay, operating
+range and protocol face-validity checks, and channel-quality screening. It must
+not be presented as full station-to-vehicle validation, safety-distance
+validation, SAGA-effectiveness evidence, or a basis for runtime parameter fitting
+without a frozen protocol. The existing eight-event requirement remains in force
+for the full-loop IJHE gate.
+
 ## Rights and provenance request
 
 Ask the custodian to confirm in writing:
