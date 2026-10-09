@@ -9103,6 +9103,31 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         ) is True,
     }
 
+    # Make the positive evidence surface explicit in the bounded interactive
+    # projection.  The complete manifest already contains this record, but a
+    # provider-facing prompt must not collapse "no synchronized full-loop
+    # trace" into "no usable data".  Keep this projection aggregate-only and
+    # include it only for an operational/data-relevant turn so the normal
+    # context budget remains unchanged.
+    coverage = manifest.get("data_coverage") or {}
+    evidence_availability = None
+    if coverage and (
+        station_signal_relevant
+        or public_catalog_relevant
+        or local_discovery_relevant
+    ):
+        evidence_availability = {
+            "tier": coverage.get(
+                "available_evidence_tier", "station_side_and_component"
+            ),
+            "runtime_evidence": coverage.get("runtime_usable_evidence_count"),
+            "diagnostic_evidence": coverage.get(
+                "diagnostic_only_evidence_count"
+            ),
+            "full_loop_trace": coverage.get("synchronized_full_loop_trace_count"),
+            "use_available_first": True,
+        }
+
     decision = {
         "evidence_digest": manifest.get("evidence_digest"),
         "source": selected(manifest.get("source"), (
@@ -9141,6 +9166,8 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "claim_limit": short(impact.get("claim_limit")),
             "results": compact_impacts[:3],
         },
+        **({"evidence_availability": evidence_availability}
+           if evidence_availability is not None else {}),
         "response_guidance": {
             "source_ids": list(response.get("source_ids") or [])[:12],
             "claim_limit": short(response.get("claim_limit")),

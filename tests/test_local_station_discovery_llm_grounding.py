@@ -206,6 +206,13 @@ def test_data_coverage_instruction_uses_available_evidence_before_claim_limits()
     assert "데이터 부족을 이유로" in instruction
     assert "full-loop" in instruction
 
+    availability = prompt_decision_evidence(manifest)["evidence_availability"]
+    assert availability["tier"] == "station_side_and_component"
+    assert availability["runtime_evidence"] == 5
+    assert availability["diagnostic_evidence"] == 2
+    assert availability["full_loop_trace"] == 0
+    assert availability["use_available_first"] is True
+
 
 def test_local_attestation_request_is_exposed_without_private_identifiers():
     manifest = _manifest()
