@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "artifact_type": "privacy_bounded_actionable_data_scope",
+  "recorded_at": "2026-10-09",
+  "status": "AVAILABLE_COMPONENT_AND_STATION_SIDE_EVIDENCE",
+  "privacy": {
+    "raw_rows_persisted": false,
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "source_identifiers_published": false,
+    "site_company_manufacturer_published": false,
+    "calendar_dates_published": false
+  },
+  "runtime_usable_now": [
+    {
+      "id": "station_pressure_forecast",
+      "evidence": "same-site chronological medium/high-bank pressure holdout",
+      "calibration_cases": 1024,
+      "holdout_cases": 394,
+      "holdout_mae_mpa": 0.184407,
+      "holdout_p90_absolute_error_mpa": 0.529255,
+      "runtime_role": "advisory short-horizon pressure continuation",
+      "parameter_fitting": false
+    },
+    {
+      "id": "station_pressure_cycle_and_cascade_screen",
+      "evidence": "same-site ordered pressure-cycle and medium/high sequence holdout",
+      "ordered_high_bank_cycles": 16770,
+      "paired_medium_high_episodes": 11770,
+      "runtime_role": "station-side chronology and cascade plausibility",
+      "parameter_fitting": false
+    },
+    {
+      "id": "public_blowdown_component_screen",
+      "evidence": "PRESLHY ambient direct-aperture external validation",
+      "eligible_cases": 22,
+      "nominal_aperture_groups_mm": [0.5, 1.0, 2.0, 4.0],
+      "runtime_role": "bounded source-depletion/release component behavior",
+      "parameter_fitting": false
+    },
+    {
+      "id": "public_consequence_and_ignition_context",
+      "evidence": "openly licensed controlled release/ignition and thermal-effect records",
+      "ignition_trace_cases": 3,
+      "thermal_effect_cases": 8,
+      "runtime_role": "scenario grounding and uncertainty context",
+      "parameter_fitting": false
+    }
+  ],
+  "available_but_not_runtime_promoted": [
+    {
+      "id": "recharge_restart_dwell",
+      "evidence": "eight owner-controlled station-side traces",
+      "sampled_rows": 457405,
+      "calibration_candidate_seconds": 290.0,
+      "holdout_minimum_seconds": 176.0,
+      "holdout_consistent": false,
+      "reason": "The fitted dwell does not pass the chronological suffix minimum; it remains diagnostic evidence and is not attached to runtime."
+    },
+    {
+      "id": "station_thermal_envelope",
+      "evidence": "owner-controlled station temperature and cooling-state candidate",
+      "runtime_role": "diagnostic only until temperature roles, units and state semantics are attested",
+      "parameter_fitting": false
+    }
+  ],
+  "not_available_for_full_loop_holdout": {
+    "synchronized_station_dispenser_vehicle_trace_count": 0,
+    "required_channels": [
+      "common time base",
+      "station or dispenser pressure",
+      "receiving vehicle/receptacle pressure and temperature",
+      "delivered mass or attested mass flow",
+      "controller/protocol and stop/ESD state",
+      "custodian-approved units and reuse terms"
+    ],
+    "runtime_role": "do not claim station-to-vehicle full-loop validation"
+  },
+  "decision": {
+    "data_shortage_claim_is_incorrect": true,
+    "use_station_side_and_component_evidence_now": true,
+    "keep_full_loop_gate_closed": true,
+    "llm_should_name_used_evidence_before_describing_the_boundary": true
+  },
+  "claim_boundary": "This aggregate scope shows which station-side and component evidence can be used now. It does not publish raw measurements, identify the site or equipment, validate a complete station-to-vehicle loop, establish a safety limit or certify field operation."
+}

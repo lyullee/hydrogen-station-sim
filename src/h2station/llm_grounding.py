@@ -4781,6 +4781,90 @@ def _confidential_local_station_utilization_evidence() -> dict[str, Any] | None:
     }
 
 
+def _local_actionable_data_scope_evidence() -> dict[str, Any] | None:
+    """Expose the bounded evidence that can be used immediately.
+
+    This projection is intentionally smaller than the full research ledger.
+    It prevents a provider from collapsing a rich station-side/component
+    corpus into a generic ``data unavailable`` answer while preserving the
+    separate full-loop boundary.  Only aggregate counts and precomputed
+    holdout metrics are accepted; raw rows and source identity never enter a
+    prompt.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "research/local_data_actionable_scope_2026_10_09.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    privacy = record.get("privacy") or {}
+    if (
+        record.get("schema_version") != 1
+        or record.get("artifact_type") != "privacy_bounded_actionable_data_scope"
+        or record.get("status") != "AVAILABLE_COMPONENT_AND_STATION_SIDE_EVIDENCE"
+        or not privacy
+        or not all(value is False for value in privacy.values())
+        or (record.get("decision") or {}).get("data_shortage_claim_is_incorrect") is not True
+        or (record.get("decision") or {}).get("use_station_side_and_component_evidence_now") is not True
+        or (record.get("not_available_for_full_loop_holdout") or {}).get(
+            "synchronized_station_dispenser_vehicle_trace_count"
+        ) != 0
+    ):
+        return None
+
+    runtime: list[dict[str, Any]] = []
+    for item in record.get("runtime_usable_now") or []:
+        if not isinstance(item, dict) or not item.get("id"):
+            continue
+        runtime.append({
+            "id": str(item["id"]),
+            "evidence": str(item.get("evidence") or ""),
+            "calibration_cases": item.get("calibration_cases"),
+            "holdout_cases": item.get("holdout_cases"),
+            "holdout_mae_mpa": item.get("holdout_mae_mpa"),
+            "holdout_p90_absolute_error_mpa": item.get(
+                "holdout_p90_absolute_error_mpa"
+            ),
+            "eligible_cases": item.get("eligible_cases"),
+            "runtime_role": str(item.get("runtime_role") or ""),
+            "parameter_fitting": item.get("parameter_fitting") is True,
+        })
+    if len(runtime) < 3:
+        return None
+    pending = []
+    for item in record.get("available_but_not_runtime_promoted") or []:
+        if not isinstance(item, dict) or not item.get("id"):
+            continue
+        pending.append({
+            "id": str(item["id"]),
+            "evidence": str(item.get("evidence") or ""),
+            "sampled_rows": item.get("sampled_rows"),
+            "calibration_candidate_seconds": item.get(
+                "calibration_candidate_seconds"
+            ),
+            "holdout_minimum_seconds": item.get("holdout_minimum_seconds"),
+            "holdout_consistent": item.get("holdout_consistent"),
+            "reason": str(item.get("reason") or ""),
+            "runtime_role": str(item.get("runtime_role") or ""),
+        })
+    full_loop = record.get("not_available_for_full_loop_holdout") or {}
+    return {
+        "artifact": path.relative_to(root).as_posix(),
+        "evidence_role": "privacy-bounded actionable station-side and component evidence scope",
+        "runtime_usable_now": runtime,
+        "available_but_not_runtime_promoted": pending,
+        "full_loop_holdout": {
+            "synchronized_trace_count": full_loop.get(
+                "synchronized_station_dispenser_vehicle_trace_count"
+            ),
+            "required_channels": list(full_loop.get("required_channels") or []),
+        },
+        "decision": record.get("decision") or {},
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_cross_station_bundle_recheck_evidence() -> dict[str, Any] | None:
     """Expose the cross-station station-side data-quality recheck.
 
@@ -6745,6 +6829,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_local_station_data_utilization"
         ] = local_station_utilization
+    actionable_data_scope = _local_actionable_data_scope_evidence()
+    if actionable_data_scope is not None:
+        envelope["response_evidence"][
+            "local_actionable_data_scope"
+        ] = actionable_data_scope
     # Keep the latest local archive revalidation visible to the LLM through
     # the same privacy-bounded API projection used by the UI.  This reads only
     # committed aggregate evidence; raw rows, paths, identifiers and site
@@ -7823,6 +7912,22 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if local_station_utilization.get(key) is not None
         }
+    actionable_data_scope = evidence.get("local_actionable_data_scope")
+    if isinstance(actionable_data_scope, dict):
+        summary["local_actionable_data_scope"] = {
+            "evidence_role": actionable_data_scope.get("evidence_role"),
+            "runtime_usable_now": actionable_data_scope.get(
+                "runtime_usable_now"
+            ) or [],
+            "available_but_not_runtime_promoted": actionable_data_scope.get(
+                "available_but_not_runtime_promoted"
+            ) or [],
+            "full_loop_holdout": actionable_data_scope.get(
+                "full_loop_holdout"
+            ) or {},
+            "decision": actionable_data_scope.get("decision") or {},
+            "claim_limit": short(actionable_data_scope.get("claim_limit"), 320),
+        }
     local_revalidation = evidence.get("local_station_data_revalidation")
     if isinstance(local_revalidation, dict):
         summary["local_station_data_revalidation"] = {
@@ -8172,6 +8277,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     local_station_utilization = response.get(
         "confidential_local_station_data_utilization"
     ) or {}
+    actionable_data_scope = response.get("local_actionable_data_scope") or {}
     local_revalidation = response.get("local_station_data_revalidation") or {}
     readiness = response.get("validation_readiness") or {}
     local_station_asset_screen = response.get(
@@ -8376,6 +8482,52 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "claim_limit",
         )),
         "decision_support_evidence": {
+            **({
+                "local_actionable_data_scope": {
+                    "evidence_role": actionable_data_scope.get("evidence_role"),
+                    "runtime_usable_now": [
+                        {
+                            "id": item.get("id"),
+                            "calibration_cases": item.get("calibration_cases"),
+                            "holdout_cases": item.get("holdout_cases"),
+                            "holdout_mae_mpa": item.get("holdout_mae_mpa"),
+                            "eligible_cases": item.get("eligible_cases"),
+                            "runtime_role": item.get("runtime_role"),
+                        }
+                        for item in actionable_data_scope.get(
+                            "runtime_usable_now"
+                        ) or []
+                        if isinstance(item, dict)
+                    ],
+                    "available_but_not_runtime_promoted": [
+                        {
+                            "id": item.get("id"),
+                            "sampled_rows": item.get("sampled_rows"),
+                            "calibration_candidate_seconds": item.get(
+                                "calibration_candidate_seconds"
+                            ),
+                            "holdout_minimum_seconds": item.get(
+                                "holdout_minimum_seconds"
+                            ),
+                            "holdout_consistent": item.get("holdout_consistent"),
+                            "reason": short(item.get("reason"), 180),
+                        }
+                        for item in actionable_data_scope.get(
+                            "available_but_not_runtime_promoted"
+                        ) or []
+                        if isinstance(item, dict)
+                    ],
+                    "full_loop_holdout": actionable_data_scope.get(
+                        "full_loop_holdout"
+                    ) or {},
+                    "claim_limit": short(
+                        actionable_data_scope.get("claim_limit"), 260
+                    ),
+                },
+            } if actionable_data_scope and (
+                station_signal_relevant or public_catalog_relevant
+                or local_discovery_relevant
+            ) else {}),
             **({
                 "public_station_operation_practice_reference": {
                     "source": operation_practice.get("source") or {},
