@@ -174,6 +174,13 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert traceability["covered_case_count"] == 34
     assert traceability["contract_pass"] is True
     assert "does not judge incident actions" in traceability["claim_limit"]
+    impact = traceability["reported_human_impact"]
+    assert impact["case_count"] == 34
+    assert impact["reported_injured_persons_total"] == 2
+    assert impact["reported_fatalities_total"] == 0
+    assert impact["records_without_reported_injury_count"] == 32
+    assert impact["records_without_reported_fatality_count"] == 34
+    assert "cannot estimate" in impact["claim_limit"]
     replay = traceability["digital_twin_replay"]
     assert replay["backend"] == "HyRAM+ 6.1 native"
     assert replay["case_count"] == 34
@@ -820,6 +827,9 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert header["public_accident_evidence"]["hiad_public_source"][
         "station_record_count"
     ] == 34
+    assert header["public_accident_evidence"]["hiad_reported_human_impact"][
+        "reported_injured_persons_total"
+    ] == 2
     assert header["public_accident_evidence"]["accidental_release_zenodo_doi"] == (
         "10.5281/zenodo.17913628"
     )

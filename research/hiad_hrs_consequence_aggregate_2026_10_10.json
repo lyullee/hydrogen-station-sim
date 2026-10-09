@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "status": "derived_privacy_bounded_hiad_human_impact_aggregate",
+  "source": {
+    "artifact": "research/hiad_2_2_access_recheck_2026_10_05.json",
+    "sha256": "910ce0da39cb7e09f73a63454552dd6fd4c03b7301c94bc55a373efb77a12929",
+    "source_version": "HIAD 2.2",
+    "case_count": 34,
+    "raw_case_rows_included": false,
+    "narrative_text_included": false
+  },
+  "aggregate": {
+    "case_count": 34,
+    "reported_injured_persons_total": 2,
+    "reported_fatalities_total": 0,
+    "records_with_reported_injury_count": 2,
+    "records_with_reported_fatality_count": 0,
+    "records_without_reported_injury_count": 32,
+    "records_without_reported_fatality_count": 34,
+    "reported_fields_are_not_exposure_denominators": true
+  },
+  "claim_boundary": "Reported consequence fields are an aggregate historical context only. Blank fields are unreported, not zero; the aggregate cannot estimate frequency, severity, response effectiveness, or station safety distance."
+}

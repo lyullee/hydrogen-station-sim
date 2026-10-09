@@ -40,6 +40,15 @@ The records cover dispenser leaks and hose failures, compressor faults,
 storage leaks/explosions, transfer events, detection failures and operational
 near-misses. Exact counts and immutable source digest are in the JSON record.
 
+The separate
+`research/hiad_hrs_consequence_aggregate_2026_10_10.json` artifact exposes only
+an aggregate of the optional human-impact fields: **2 reported injured persons
+across 2 records and 0 reported fatalities**, while 32 injury fields and all 34
+fatality fields are unreported. An empty HIAD field is kept as unknown rather
+than converted to zero. This aggregate is available to the LLM as historical
+context only; it is not a probability, severity rate, response-effectiveness
+score, or safety-distance input.
+
 HIAD 2.2 is free for public use with acknowledgement, but the JRC warns that
 the validity of each event depends on the original public or secondary source.
 The dataset has no exposure denominator and generally lacks synchronized
@@ -49,4 +58,3 @@ checks only. It cannot by itself validate station physics, estimate incident
 probabilities, or establish a safety distance.
 
 Source: [JRC HIAD 2.2 download and terms](https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt)
-

@@ -435,6 +435,7 @@ def _public_incident_traceability() -> dict[str, Any] | None:
     section rather than making runtime decision support unavailable.
     """
     path = Path(__file__).resolve().parents[2] / "research/hiad_action_playbook_coverage.json"
+    root = path.parents[1]
     try:
         record = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError):
@@ -488,6 +489,52 @@ def _public_incident_traceability() -> dict[str, Any] | None:
                 "or numerical station-to-vehicle validation."
             ),
         }
+    # Keep the optional human-impact aggregate separate from the public event
+    # inventory.  Blank consequence cells remain unknown rather than being
+    # interpreted as zero, and no event rows or narrative text enter prompts.
+    impact_path = path.parent / "hiad_hrs_consequence_aggregate_2026_10_10.json"
+    try:
+        impact = json.loads(impact_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        impact = None
+    impact_source = (impact or {}).get("source") or {}
+    impact_aggregate = (impact or {}).get("aggregate") or {}
+    provenance_digest = sha256(provenance_path.read_bytes()).hexdigest() if isinstance(provenance, dict) else None
+    if (
+        isinstance(impact, dict)
+        and impact.get("status") == "derived_privacy_bounded_hiad_human_impact_aggregate"
+        and impact_source.get("artifact") == "research/hiad_2_2_access_recheck_2026_10_05.json"
+        and impact_source.get("sha256") == provenance_digest
+        and impact_source.get("case_count") == aggregate.get("case_count")
+        and impact_source.get("raw_case_rows_included") is False
+        and impact_source.get("narrative_text_included") is False
+        and impact_aggregate.get("case_count") == aggregate.get("case_count")
+        and impact_aggregate.get("reported_fields_are_not_exposure_denominators") is True
+    ):
+        result["reported_human_impact"] = {
+            "artifact": "research/hiad_hrs_consequence_aggregate_2026_10_10.json",
+            "artifact_sha256": sha256(impact_path.read_bytes()).hexdigest(),
+            "case_count": impact_aggregate.get("case_count"),
+            "reported_injured_persons_total": impact_aggregate.get(
+                "reported_injured_persons_total"
+            ),
+            "reported_fatalities_total": impact_aggregate.get(
+                "reported_fatalities_total"
+            ),
+            "records_with_reported_injury_count": impact_aggregate.get(
+                "records_with_reported_injury_count"
+            ),
+            "records_with_reported_fatality_count": impact_aggregate.get(
+                "records_with_reported_fatality_count"
+            ),
+            "records_without_reported_injury_count": impact_aggregate.get(
+                "records_without_reported_injury_count"
+            ),
+            "records_without_reported_fatality_count": impact_aggregate.get(
+                "records_without_reported_fatality_count"
+            ),
+            "claim_limit": str(impact.get("claim_boundary") or ""),
+        }
     # Pass only the compact, derived action taxonomy to the model.  The raw
     # HIAD narrative remains outside the prompt; the digest links the
     # category counts back to the public workbook without implying that the
@@ -530,7 +577,6 @@ def _public_incident_traceability() -> dict[str, Any] | None:
     replay_counts = replay_aggregate.get("representation_case_counts") or {}
     replay_cases = (replay or {}).get("cases") or []
     replay_model_hashes = replay_source.get("model_input_sha256") or {}
-    root = path.parents[1]
     if (
         isinstance(replay, dict)
         and replay.get("status") == "completed_family_level_integration_audit"
@@ -7896,6 +7942,9 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "case_count": incident_traceability.get("case_count"),
             "contract_pass": incident_traceability.get("contract_pass") is True,
             "public_source": incident_traceability.get("public_source") or {},
+            "reported_human_impact": incident_traceability.get(
+                "reported_human_impact"
+            ) or {},
             "digital_twin_replay": {
                 key: replay.get(key)
                 for key in (
@@ -12058,6 +12107,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         "public_accident_evidence": {
             "hiad_case_count": incident.get("case_count"),
             "hiad_public_source": incident.get("public_source") or {},
+            "hiad_reported_human_impact": incident.get(
+                "reported_human_impact"
+            ) or {},
             "hiad_digital_twin_replay": {
                 key: (incident.get("digital_twin_replay") or {}).get(key)
                 for key in (
