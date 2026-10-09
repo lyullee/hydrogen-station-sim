@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_preslhy_e35_file_access_audit",
+  "recorded_at": "2026-10-09",
+  "status": "PUBLIC_RAW_COMPONENT_CONSEQUENCE_FILE_ACCESSED",
+  "source": {
+    "doi": "10.35097/1481",
+    "repository_page": "https://www.radar-service.eu/radar/en/dataset/nWczysTWjmuzgFKm",
+    "license": "CC BY-SA 4.0",
+    "archive_role": "public controlled liquid-hydrogen release experiment"
+  },
+  "file": {
+    "name": "trial_10_13-09-2019alldata.xlsx",
+    "bytes": 575705,
+    "sha256": "17987bc4e2f8a0d7bebc40900063e3a3c2ce7a9ad6f9ab4014a5715ab04924aa",
+    "raw_file_committed": false,
+    "numerical_rows_persisted": false
+  },
+  "sheets": [
+    {
+      "name": "Flexlogger",
+      "row_count_including_header": 209,
+      "column_count": 99,
+      "header_count": 99,
+      "time_columns": [
+        "time"
+      ],
+      "channel_roles": {
+        "hydrogen_detector": 0,
+        "mass_flow": 1,
+        "pressure": 2,
+        "temperature": 49,
+        "weather": 3
+      }
+    },
+    {
+      "name": "Draeger",
+      "row_count_including_header": 209,
+      "column_count": 121,
+      "header_count": 121,
+      "time_columns": [
+        "ARAK0249_20190913_1539_dltime"
+      ],
+      "channel_roles": {
+        "hydrogen_detector": 90,
+        "mass_flow": 0,
+        "pressure": 0,
+        "temperature": 0,
+        "weather": 0
+      }
+    },
+    {
+      "name": "Xensor",
+      "row_count_including_header": 693,
+      "column_count": 33,
+      "header_count": 33,
+      "time_columns": [
+        "X2019_09_04_02EC25Time",
+        "Time"
+      ],
+      "channel_roles": {
+        "hydrogen_detector": 0,
+        "mass_flow": 0,
+        "pressure": 0,
+        "temperature": 0,
+        "weather": 0
+      }
+    },
+    {
+      "name": "LocalWeather",
+      "row_count_including_header": 93,
+      "column_count": 18,
+      "header_count": 18,
+      "time_columns": [
+        "Time"
+      ],
+      "channel_roles": {
+        "hydrogen_detector": 0,
+        "mass_flow": 0,
+        "pressure": 2,
+        "temperature": 2,
+        "weather": 5
+      }
+    },
+    {
+      "name": "Flowmeter",
+      "row_count_including_header": 209,
+      "column_count": 15,
+      "header_count": 15,
+      "time_columns": [
+        "FlTime",
+        "FlElapseTimesec"
+      ],
+      "channel_roles": {
+        "hydrogen_detector": 0,
+        "mass_flow": 1,
+        "pressure": 0,
+        "temperature": 1,
+        "weather": 0
+      }
+    }
+  ],
+  "observed_channels": {
+    "source_flow": {
+      "present": true,
+      "finite_count": 208,
+      "minimum": 0.05546957585036694,
+      "maximum": 286.48914614255114
+    },
+    "pipe_pressure": {
+      "present": true,
+      "finite_count": 208,
+      "minimum": -0.0074670046855001004,
+      "maximum": 5.0866876963135
+    },
+    "nozzle_pressure": {
+      "present": true,
+      "finite_count": 208,
+      "minimum": -0.07946887537299974,
+      "maximum": 0.05203993811500007
+    },
+    "flowmeter_mass_flow": {
+      "present": true,
+      "finite_count": 208,
+      "minimum": 0.0,
+      "maximum": 285.3391
+    },
+    "hydrogen_detector_percent_channels": 60,
+    "hydrogen_detector_ppm_channels": 30
+  },
+  "eligibility": {
+    "public_raw_component_consequence_data": true,
+    "release_source_and_detector_diagnostic": true,
+    "prospective_holdout_eligible": false,
+    "full_loop_station_vehicle_validation_eligible": false,
+    "runtime_parameter_application": false
+  },
+  "claim_boundary": "This audit proves that one public E3.5 workbook is downloadable and contains release-source, pressure, temperature, detector and weather channel families. The experiment is a liquid-hydrogen controlled release, not a gaseous HRS fill; the file was accessed before a new prospective protocol and is therefore a post-access diagnostic only."
+}

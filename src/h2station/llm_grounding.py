@@ -2044,6 +2044,76 @@ def _preslhy_validation_boundary() -> dict[str, Any] | None:
     }
 
 
+def _public_preslhy_e35_file_access_evidence() -> dict[str, Any] | None:
+    """Expose the bounded audit of the downloaded public E3.5 workbook.
+
+    The workbook is intentionally kept outside the repository.  Only its
+    integrity hash, channel inventory and eligibility boundary are sent to
+    decision support, so the provider can use it as public component evidence
+    without mistaking it for a gaseous HRS full-loop holdout.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "research/preslhy_e35_public_file_access_2026_10_09.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    file_record = record.get("file") or {}
+    eligibility = record.get("eligibility") or {}
+    if (
+        record.get("schema_version") != 1
+        or record.get("artifact_type") != "public_preslhy_e35_file_access_audit"
+        or record.get("status") != "PUBLIC_RAW_COMPONENT_CONSEQUENCE_FILE_ACCESSED"
+        or source.get("doi") != "10.35097/1481"
+        or source.get("license") != "CC BY-SA 4.0"
+        or file_record.get("raw_file_committed") is not False
+        or file_record.get("numerical_rows_persisted") is not False
+        or eligibility.get("public_raw_component_consequence_data") is not True
+        or eligibility.get("full_loop_station_vehicle_validation_eligible") is not False
+        or eligibility.get("runtime_parameter_application") is not False
+    ):
+        return None
+    observed = record.get("observed_channels") or {}
+    return {
+        "artifact": "research/preslhy_e35_public_file_access_2026_10_09.json",
+        "evidence_role": "post_access_public_raw_liquid_release_file_audit",
+        "source": {
+            "doi": source.get("doi"),
+            "repository_page": source.get("repository_page"),
+            "license": source.get("license"),
+        },
+        "file": {
+            "name": file_record.get("name"),
+            "bytes": file_record.get("bytes"),
+            "sha256": file_record.get("sha256"),
+            "raw_file_committed": False,
+            "numerical_rows_persisted": False,
+        },
+        "observed_channels": {
+            "source_flow": observed.get("source_flow") or {},
+            "pipe_pressure": observed.get("pipe_pressure") or {},
+            "nozzle_pressure": observed.get("nozzle_pressure") or {},
+            "flowmeter_mass_flow": observed.get("flowmeter_mass_flow") or {},
+            "hydrogen_detector_percent_channels": observed.get(
+                "hydrogen_detector_percent_channels"
+            ),
+            "hydrogen_detector_ppm_channels": observed.get(
+                "hydrogen_detector_ppm_channels"
+            ),
+        },
+        "eligibility": {
+            "public_raw_component_consequence_data": True,
+            "release_source_and_detector_diagnostic": True,
+            "prospective_holdout_eligible": False,
+            "full_loop_station_vehicle_validation_eligible": False,
+            "runtime_parameter_application": False,
+        },
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _closed_loop_validation_boundary() -> dict[str, Any] | None:
     """Expose the frozen station-to-vehicle holdout boundary.
 
@@ -6920,6 +6990,11 @@ def build_evidence_manifest(
     preslhy = _preslhy_validation_boundary()
     if preslhy is not None:
         envelope["response_evidence"]["preslhy_validation_boundary"] = preslhy
+    public_preslhy_e35 = _public_preslhy_e35_file_access_evidence()
+    if public_preslhy_e35 is not None:
+        envelope["response_evidence"][
+            "public_preslhy_e35_file_access"
+        ] = public_preslhy_e35
     closed_loop = _closed_loop_validation_boundary()
     if closed_loop is not None:
         envelope["response_evidence"][
@@ -8508,6 +8583,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "cross_campaign_release_validation_boundary"
     ) or {}
     preslhy = response.get("preslhy_validation_boundary") or {}
+    public_preslhy_e35 = response.get(
+        "public_preslhy_e35_file_access"
+    ) or {}
     preslhy_holdout = preslhy.get("independent_holdout") or {}
     operating_screen = response.get("public_operating_envelope_screen") or {}
     operation_practice = response.get(
@@ -8817,6 +8895,48 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "claim_limit",
         )),
         "decision_support_evidence": {
+            **({
+                "public_preslhy_e35_file_access": {
+                    "evidence_role": public_preslhy_e35.get("evidence_role"),
+                    "source_doi": (public_preslhy_e35.get("source") or {}).get(
+                        "doi"
+                    ),
+                    "repository_page": (
+                        public_preslhy_e35.get("source") or {}
+                    ).get("repository_page"),
+                    "license": (public_preslhy_e35.get("source") or {}).get(
+                        "license"
+                    ),
+                    "file_sha256": (public_preslhy_e35.get("file") or {}).get(
+                        "sha256"
+                    ),
+                    "raw_file_committed": (
+                        public_preslhy_e35.get("file") or {}
+                    ).get("raw_file_committed") is True,
+                    "numerical_rows_persisted": (
+                        public_preslhy_e35.get("file") or {}
+                    ).get("numerical_rows_persisted") is True,
+                    "observed_channel_families": public_preslhy_e35.get(
+                        "observed_channels"
+                    ) or {},
+                    "public_raw_component_consequence_data": (
+                        public_preslhy_e35.get("eligibility") or {}
+                    ).get("public_raw_component_consequence_data") is True,
+                    "release_source_and_detector_diagnostic": (
+                        public_preslhy_e35.get("eligibility") or {}
+                    ).get("release_source_and_detector_diagnostic") is True,
+                    "prospective_holdout_eligible": (
+                        public_preslhy_e35.get("eligibility") or {}
+                    ).get("prospective_holdout_eligible") is True,
+                    "full_loop_station_vehicle_validation_eligible": (
+                        public_preslhy_e35.get("eligibility") or {}
+                    ).get("full_loop_station_vehicle_validation_eligible") is True,
+                    "runtime_parameter_application": (
+                        public_preslhy_e35.get("eligibility") or {}
+                    ).get("runtime_parameter_application") is True,
+                    "claim_limit": short(public_preslhy_e35.get("claim_limit"), 300),
+                },
+            } if public_preslhy_e35 and public_catalog_relevant else {}),
             **({
                 "confidential_component_bundle": {
                     "evidence_role": component_bundle.get("evidence_role"),
