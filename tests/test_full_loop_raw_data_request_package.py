@@ -30,3 +30,4 @@ def test_request_markdown_mentions_hashes_and_holdout_freeze():
     assert "change the current gate status" in text
     assert "minimum useful component bundle" in text
     assert "three-event" in text
+    assert "export_confidential_component_bundle.py" in text

@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "status": "prospective_component_intake_contract",
+  "outcomes_accessed_before_freeze": false,
+  "required_channels": [
+    "common elapsed time or timestamp",
+    "station_or_dispenser_pressure",
+    "delivered_gas_temperature_or_attested_boundary_temperature",
+    "mass_flow_or_transferred_mass",
+    "protocol_phase_and_start_stop_state"
+  ],
+  "accepted_units": {
+    "station_pressure_mpa_abs": "MPa_abs",
+    "boundary_temperature_degC": "degC",
+    "mass_flow_g_s": "g/s"
+  },
+  "minimum_event_count": 3,
+  "runtime_parameter_application": false,
+  "full_loop_holdout_eligible": false,
+  "claim_boundary": "This contract is for a controlled component-evidence intake. It does not establish full station-to-vehicle validation, safety-distance evidence, SAGA effectiveness, or IJHE readiness."
+}
