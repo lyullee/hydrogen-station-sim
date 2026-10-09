@@ -163,6 +163,38 @@ def test_local_discovery_reaches_bounded_prompt_views():
     assert "source_paths_published" not in str(header_candidate_scan)
 
 
+def test_validation_readiness_ledger_reaches_all_llm_views_without_paths():
+    manifest = _manifest()
+    expected = {
+        "PASS": 125,
+        "FAIL": 10,
+        "PENDING": 7,
+    }
+    readiness = manifest["response_evidence"]["validation_readiness"]
+    assert readiness["status"] == "available"
+    assert readiness["ledger_integrity"] is True
+    assert readiness["gate_counts"] == expected
+    assert readiness["bounded_ijhe_submission_ready"] is False
+    assert readiness["full_user_objective_ready"] is False
+    assert readiness["goal_completion_permitted"] is False
+    assert readiness["full_loop_external_validation_supported"] is False
+    assert readiness["expert_effectiveness_evaluation_supported"] is False
+    assert readiness["independent_expert_review_complete"] is False
+    assert "C:\\" not in str(readiness)
+    assert "source_paths" not in str(readiness)
+
+    summary = prompt_evidence_summary(manifest)["validation_readiness"]
+    assert summary["gate_counts"] == expected
+    assert summary["full_user_objective_ready"] is False
+
+    decision = prompt_decision_evidence(manifest)["validation_boundaries"]
+    assert decision["r"] == "125/10/7;0l0"
+
+    header = prompt_evidence_header(manifest)["validation_readiness"]
+    assert header["gate_counts"] == expected
+    assert header["ledger_integrity"] is True
+
+
 def test_local_attestation_request_is_exposed_without_private_identifiers():
     manifest = _manifest()
     request = manifest["response_evidence"][

@@ -25,6 +25,105 @@ from .hazop.response import public_accident_precedents
 from .local_evidence import local_station_evidence_summary
 
 
+def _ijhe_readiness_ledger() -> dict[str, Any]:
+    """Return a privacy-bounded view of the submission-readiness ledger.
+
+    The ledger is a repository-level audit of validation gates.  It is useful
+    context for an LLM because it prevents a response from turning a passing
+    component test into a claim of full-loop or journal-ready validation.  The
+    prompt receives only aggregate counts and a few claim-boundary booleans;
+    paths, gate evidence payloads, raw rows and private identifiers are never
+    included.  Missing or malformed ledgers fail closed.
+    """
+
+    unavailable: dict[str, Any] = {
+        "evidence_role": "aggregate validation-readiness ledger",
+        "status": "unavailable",
+        "ledger_integrity": False,
+        "gate_counts": {},
+        "bounded_ijhe_submission_ready": False,
+        "full_user_objective_ready": False,
+        "goal_completion_permitted": False,
+        "full_loop_external_validation_supported": False,
+        "expert_effectiveness_evaluation_supported": False,
+        "independent_expert_review_complete": False,
+        "claim_boundary": (
+            "Validation-readiness metadata is unavailable; do not claim full-loop "
+            "external validation, journal readiness, or objective completion."
+        ),
+    }
+    ledger_path = Path(__file__).resolve().parents[2] / "manuscript" / (
+        "ijhe_readiness_audit.json"
+    )
+    try:
+        payload = json.loads(ledger_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return unavailable
+    if not isinstance(payload, dict):
+        return unavailable
+
+    raw_counts = payload.get("gate_counts")
+    if not isinstance(raw_counts, dict):
+        return unavailable
+    counts: dict[str, int] = {}
+    for key in ("PASS", "FAIL", "PENDING"):
+        value = raw_counts.get(key)
+        if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+            return unavailable
+        counts[key] = value
+
+    statuses: dict[str, str] = {}
+    gates = payload.get("gates")
+    if not isinstance(gates, list):
+        return unavailable
+    for gate in gates:
+        if not isinstance(gate, dict):
+            continue
+        gate_id = gate.get("id")
+        status = gate.get("status")
+        if gate_id and isinstance(status, str):
+            statuses[str(gate_id)] = status.upper()
+    computed_counts = {
+        key: sum(1 for status in statuses.values() if status == key)
+        for key in ("PASS", "FAIL", "PENDING")
+    }
+    # A stale or partially written audit must not be used to relax claim
+    # boundaries.  The count check is deliberately strict and deterministic.
+    if computed_counts != counts:
+        return unavailable
+
+    return {
+        "evidence_role": "aggregate validation-readiness ledger",
+        "status": "available",
+        "ledger_integrity": True,
+        "generated_at": payload.get("generated_at"),
+        "gate_counts": counts,
+        "bounded_ijhe_submission_ready": (
+            payload.get("bounded_ijhe_submission_ready") is True
+        ),
+        "full_user_objective_ready": (
+            payload.get("full_user_objective_ready") is True
+        ),
+        "goal_completion_permitted": (
+            payload.get("goal_completion_permitted") is True
+        ),
+        "full_loop_external_validation_supported": (
+            statuses.get("full_loop_external_validation") == "PASS"
+        ),
+        "expert_effectiveness_evaluation_supported": (
+            statuses.get("saga_effectiveness_and_safety_supported") == "PASS"
+        ),
+        "independent_expert_review_complete": (
+            statuses.get("independent_expert_review_complete") == "PASS"
+        ),
+        "claim_boundary": (
+            "Aggregate audit status only; this does not predict peer review or "
+            "journal acceptance. Full-loop and objective-completion claims remain "
+            "disabled unless their gates are PASS."
+        ),
+    }
+
+
 def _runtime_calibration_profile(frame: dict[str, Any]) -> dict[str, Any]:
     """Describe the measured-boundary profile used by this simulator frame.
 
@@ -6492,6 +6591,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "local_station_data_revalidation"
         ] = local_revalidation
+    # Expose only the aggregate readiness state so the LLM cannot infer that
+    # passing station-side checks imply full-loop or journal-ready validation.
+    envelope["response_evidence"][
+        "validation_readiness"
+    ] = _ijhe_readiness_ledger()
     cross_station_bundle = _confidential_cross_station_bundle_recheck_evidence()
     if cross_station_bundle is not None:
         envelope["response_evidence"][
@@ -7541,6 +7645,20 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "decision": local_revalidation.get("decision") or {},
             "claim_boundary": short(local_revalidation.get("claim_boundary"), 320),
         }
+    readiness = evidence.get("validation_readiness")
+    if isinstance(readiness, dict):
+        summary["validation_readiness"] = {
+            key: readiness.get(key)
+            for key in (
+                "evidence_role", "status", "ledger_integrity", "generated_at",
+                "gate_counts", "bounded_ijhe_submission_ready",
+                "full_user_objective_ready", "goal_completion_permitted",
+                "full_loop_external_validation_supported",
+                "expert_effectiveness_evaluation_supported",
+                "independent_expert_review_complete", "claim_boundary",
+            )
+            if readiness.get(key) is not None
+        }
     local_station_asset_screen = evidence.get(
         "confidential_local_station_asset_screen"
     )
@@ -7859,6 +7977,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "confidential_local_station_data_utilization"
     ) or {}
     local_revalidation = response.get("local_station_data_revalidation") or {}
+    readiness = response.get("validation_readiness") or {}
     local_station_asset_screen = response.get(
         "confidential_local_station_asset_screen"
     ) or {}
@@ -8284,6 +8403,16 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             } if protocol_field_relevant else {}),
         },
         "validation_boundaries": {
+            # Keep this projection compact because it is sent on every
+            # interactive turn; compact order is PASS/FAIL/PENDING; objective;
+            # full-loop, with 0 meaning false.
+            "r": (
+                f"{(readiness.get('gate_counts') or {}).get('PASS', 0)}/"
+                f"{(readiness.get('gate_counts') or {}).get('FAIL', 0)}/"
+                f"{(readiness.get('gate_counts') or {}).get('PENDING', 0)};"
+                f"{int(readiness.get('full_user_objective_ready') is True)}l"
+                f"{int(readiness.get('full_loop_external_validation_supported') is True)}"
+            ),
             "public_tank_postaccess": {
                 "claim_supported": methytrucks_tank.get("claim_supported") is True,
                 "case_count": methytrucks_scope.get("case_count"),
@@ -9048,6 +9177,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         "confidential_local_station_data_utilization"
     ) or {}
     local_revalidation = evidence.get("local_station_data_revalidation") or {}
+    readiness = evidence.get("validation_readiness") or {}
     local_station_asset_screen = evidence.get(
         "confidential_local_station_asset_screen"
     ) or {}
@@ -10171,6 +10301,18 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             ) or {},
             "assessment": local_station_utilization.get("assessment") or {},
             "claim_limit": local_station_utilization.get("claim_limit"),
+        },
+        "validation_readiness": {
+            key: readiness.get(key)
+            for key in (
+                "evidence_role", "status", "ledger_integrity", "generated_at",
+                "gate_counts", "bounded_ijhe_submission_ready",
+                "full_user_objective_ready", "goal_completion_permitted",
+                "full_loop_external_validation_supported",
+                "expert_effectiveness_evaluation_supported",
+                "independent_expert_review_complete", "claim_boundary",
+            )
+            if readiness.get(key) is not None
         },
         "local_station_data_revalidation": {
             "evidence_role": local_revalidation.get("evidence_role"),
