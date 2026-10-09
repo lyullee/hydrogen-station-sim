@@ -1,49 +1,54 @@
-# Local station custodian attestation request (privacy bounded)
+# Local station-data custodian attestation request
 
-The local archive is substantial enough for station-side validation: 33 CSV
-files, 32 unique payloads after duplicate exclusion, and 56,854,143 retained
-rows. The current screen supports station pressure cycles, cascade ordering,
-short-horizon pressure forecasts, conditional recharge-flow episodes, and
-equipment-state continuity. It does not yet support a station-to-vehicle
-full-loop claim because channel meaning and vehicle-side coverage are not
-closed.
-
-This checklist requests only generic semantics and aggregate quality metadata.
-It deliberately does not request raw rows, source paths, channel tags, site or
-company identity, manufacturer details, calendar dates, or absolute
-timestamps. Raw data remain under the custodian's control.
+This checklist is the next controlled intake step for the owner-controlled
+station archive. It requests only generic channel semantics and aggregate
+quality information. It does not request raw rows, site identity, equipment
+identity, exact dates, absolute timestamps or raw tag names.
 
 ## Required confirmations
 
-1. **Timebase and event alignment** – common clock, offset handling, reset
-   behavior, and whether a shared de-identified operation/event identifier
-   exists. Acceptance is a timebase contract and event-boundary rule.
-2. **Pressure reference and units** – role-level unit, absolute/gauge
-   reference, scale, valid range, and calibration/quality flag definition.
-3. **Temperature roles and units** – gas/wall/ambient/compressor/cooler role,
-   location class, units, and degC/K conversion rule.
-4. **Flow and totalizer semantics** – mass or volume, units, sign convention,
-   direction, and reset/rollover behavior, plus one aggregate closure statistic.
-5. **Equipment state and ESD semantics** – generic meanings for compressor,
-   cooler, valve, ESD and trip states, including failed-feedback values.
-6. **Vehicle/dispenser coverage** – presence of synchronized vehicle or
-   receptacle pressure, temperature, delivered mass or SOC, dispenser flow,
-   and fill-event identifiers. A presence/absence matrix is sufficient.
-7. **Calibration and quality metadata** – uncertainty, missing-value codes,
-   maintenance windows, calibration interval, and sensor replacement rules.
-8. **Rights and review scope** – permission for reviewers to inspect derived
-   aggregates while raw data remain private and unpublished.
+1. **Time base and event alignment** — common clock, reset/timezone treatment,
+   event boundaries and any shared operation identifier.
+2. **Pressure reference and units** — generic storage-bank roles, gauge/absolute
+   reference, scale and valid range.
+3. **Temperature roles and units** — gas, wall, ambient, compressor discharge
+   or cooler outlet, with unit conversion and sensor-location class.
+4. **Flow and totalizer semantics** — direction, mass/volume units, reset or
+   rollover behavior and one aggregate closure statistic.
+5. **Equipment and ESD states** — generic meanings for compressor, cooling,
+   valve, ESD and trip states, including failed-feedback values.
+6. **Vehicle/dispenser boundary** — presence or absence of synchronized vehicle
+   or receptacle pressure, temperature, delivered mass/SOC, dispenser flow and
+   fill-event identifiers.
+7. **Calibration and quality metadata** — uncertainty, missing-value codes,
+   maintenance windows and sensor replacement treatment.
+8. **Rights and review scope** — permission to review derived aggregates while
+   keeping raw data owner-controlled and unpublished.
 
-## How the answers change the validation gates
+## Acceptance format
 
-- Pressure and sequence results can remain station-side descriptive until
-  units/reference and timebase are confirmed.
-- Temperature, flow, state-transition and consequence boundaries stay blocked
-  until their corresponding semantics are attested.
-- Full station-to-vehicle validation stays blocked until synchronized vehicle
-  or dispenser channel families and an event alignment rule are confirmed.
-- Safety limits, accident frequencies, production auto-tuning and field
-  certification remain outside this checklist.
+Return a de-identified role/unit/state matrix and aggregate quality statistics.
+Keep the calibration and holdout split frozen before inspecting numerical
+outcomes. A hash of the private mapping may be retained outside this repository
+for controlled replay.
 
-The machine-readable contract is
-`research/local_station_custodian_attestation_request_2026_10_09.json`.
+## What each confirmation enables
+
+| Confirmation | Enabled evidence |
+| --- | --- |
+| Time base and event rules | Cross-file synchronization, chronological holdouts, incident replay |
+| Pressure roles and units | Pressure-envelope and restart-margin evaluation |
+| Temperature roles and units | Thermal-boundary and cooler-state holdouts |
+| Flow/totalizer semantics | Mass-balance and flow-limited consequence checks |
+| Equipment/ESD state dictionary | State-transition and virtual-action replay |
+| Vehicle/dispenser channels | Station-to-vehicle pressure/temperature/mass/SOC holdout |
+| Quality and calibration metadata | Uncertainty bands and reviewer reproducibility |
+| Rights approval | Controlled review and privacy-preserving publication |
+
+Until these confirmations are supplied, the current evidence remains valid for
+station-side pressure cycles, cascade ordering and recharge-response diagnostics
+only. It must not be promoted to vehicle-fill accuracy, full-loop validation,
+field safety distance, safety-limit certification or production retuning.
+
+The machine-readable version is
+[`local_station_custodian_attestation_request_2026_10_09.json`](local_station_custodian_attestation_request_2026_10_09.json).

@@ -13,6 +13,7 @@ Original project software and associated documentation are available under the [
 - [Paper evaluation](docs/PAPER_EVALUATION.md): repeatable fueling-boundary metrics and alarm-only versus SAGA-PY A/B scoring.
 - [Public-data validation](docs/PUBLIC_VALIDATION.md): checksum-verified SAE J2601 experiments, HIAD incidents, dispersion data, and the publication-readiness gate.
 - [Local station-data inventory](research/LOCAL_HYDROGEN_STATION_DATA_DISCOVERY_RECHECK_2026_10_09.md): privacy-bounded inventory of the measured station-side archive, its validated uses and the remaining vehicle/full-loop boundary.
+- [Station-data custodian attestation request](research/LOCAL_STATION_CUSTODIAN_ATTESTATION_REQUEST_2026_10_09.md): de-identified semantic and rights checklist required before vehicle/full-loop validation.
 - [MetHyTrucks public intake](research/METHYTRUCKS_2026_PUBLIC_MEASUREMENT_INTAKE.md): 15 checksum-verified physical-HRS sampling-system workbooks and a claim-bounded flow/mass component diagnostic.
 - [Detector-logic replay](research/DISPERSION_DETECTOR_LOGIC_VALIDATION.md): a bounded 22-case replay of alarm/trip thresholds and persistence against public USN/FFI concentration measurements.
 - [HyRAM adapter verification](docs/HYRAM_ADAPTER_VERIFICATION.md): exact v6.1 source identity, upstream experimental validation-suite execution, and field-by-field production-adapter parity.
