@@ -3558,6 +3558,67 @@ def _public_carb_hrs_inuse_field_benchmark() -> dict[str, Any] | None:
     }
 
 
+def _public_operational_evidence_lead_recheck() -> dict[str, Any] | None:
+    """Load the latest public field/metrology lead classification.
+
+    CARB's field study and NIST's transient-flow facility are useful for
+    grounding controller coverage, instrumentation assumptions and operating
+    plausibility.  They do not publish a rights-cleared synchronized
+    station-to-vehicle logger cohort.  Keep that distinction in the manifest
+    so the assistant can use the context without upgrading it to a holdout.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/public_operational_evidence_lead_recheck_2026_10_10.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    privacy = record.get("privacy") or {}
+    sources = record.get("sources") or []
+    if (
+        record.get("artifact_type") != "public_operational_evidence_lead_recheck"
+        or record.get("decision")
+        != "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED"
+        or not isinstance(sources, list)
+        or len(sources) != 2
+        or not privacy
+        or not all(value is False for value in privacy.values())
+        or any(
+            not isinstance(item, dict)
+            or item.get("raw_synchronized_archive_located") is not False
+            for item in sources
+        )
+    ):
+        return None
+
+    compact_sources: list[dict[str, Any]] = []
+    for source in sources:
+        compact_sources.append({
+            "id": str(source.get("id") or ""),
+            "publisher": str(source.get("publisher") or ""),
+            "url": str(source.get("url") or ""),
+            "reported_scope": str(source.get("reported_scope") or ""),
+            "public_material": [str(value) for value in source.get("public_material") or []],
+            "raw_synchronized_archive_located": False,
+            "decision": str(source.get("decision") or ""),
+            "usable_for": [str(value) for value in source.get("usable_for") or []],
+            "not_usable_for": [str(value) for value in source.get("not_usable_for") or []],
+            "claim_limit": str(source.get("claim_limit") or ""),
+        })
+    return {
+        "artifact": "research/public_operational_evidence_lead_recheck_2026_10_10.json",
+        "evidence_role": "public field and transient-flow metrology lead classification",
+        "sources": compact_sources,
+        "decision": str(record.get("decision") or ""),
+        "minimum_full_loop_input": record.get("minimum_full_loop_input") or {},
+        "full_loop_external_validation_supported": False,
+        "dynamic_model_parameter_calibration_eligible": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_type_i_filling_diagnostic() -> dict[str, Any] | None:
     """Expose the aggregate Type-I filling diagnostic with a strict boundary."""
 
@@ -3901,6 +3962,20 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
         str(carb_source.get("url") or ""),
         "22개 실제 충전소 HGV 4.3 고장·통신·충전성능 현장 벤치마크",
     )
+
+    operational_leads = evidence.get("public_operational_evidence_leads") or {}
+    for source in operational_leads.get("sources") or []:
+        if not isinstance(source, dict):
+            continue
+        source_id = str(source.get("id") or "").strip()
+        if not source_id:
+            continue
+        add(
+            f"PUBLIC_OPERATIONAL_LEAD_{source_id.upper()}",
+            str(source.get("publisher") or source_id),
+            str(source.get("url") or ""),
+            "공개 현장·과도유동 계측 근거(원시 station-to-vehicle full-loop 검증 아님)",
+        )
 
     type_i_filling = evidence.get("public_type_i_filling_diagnostic") or {}
     type_i_source = type_i_filling.get("source") or {}
@@ -7709,6 +7784,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_carb_hrs_inuse_field_benchmark"
         ] = carb_field_benchmark
+    operational_evidence_leads = _public_operational_evidence_lead_recheck()
+    if operational_evidence_leads is not None:
+        envelope["response_evidence"][
+            "public_operational_evidence_leads"
+        ] = operational_evidence_leads
     type_i_filling = _public_type_i_filling_diagnostic()
     if type_i_filling is not None:
         envelope["response_evidence"][
@@ -8463,6 +8543,31 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "full_loop_external_holdout_eligible": False,
             "dynamic_model_parameter_calibration_eligible": False,
             "claim_limit": short(carb.get("claim_limit")),
+        }
+    operational_evidence_leads = evidence.get("public_operational_evidence_leads")
+    if isinstance(operational_evidence_leads, dict):
+        summary["public_operational_evidence_leads"] = {
+            "evidence_role": operational_evidence_leads.get("evidence_role"),
+            "sources": [
+                {
+                    key: source.get(key)
+                    for key in (
+                        "id", "publisher", "url", "reported_scope",
+                        "public_material", "raw_synchronized_archive_located",
+                        "decision", "usable_for", "not_usable_for", "claim_limit",
+                    )
+                    if source.get(key) is not None
+                }
+                for source in operational_evidence_leads.get("sources") or []
+                if isinstance(source, dict)
+            ],
+            "decision": operational_evidence_leads.get("decision"),
+            "minimum_full_loop_input": operational_evidence_leads.get(
+                "minimum_full_loop_input"
+            ) or {},
+            "full_loop_external_validation_supported": False,
+            "dynamic_model_parameter_calibration_eligible": False,
+            "claim_limit": short(operational_evidence_leads.get("claim_limit")),
         }
     type_i_filling = evidence.get("public_type_i_filling_diagnostic")
     if isinstance(type_i_filling, dict):
