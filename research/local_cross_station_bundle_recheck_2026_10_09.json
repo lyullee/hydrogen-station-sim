@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_cross_station_bundle_recheck",
+  "status": "privacy_bounded_cross_station_station_side_recheck",
+  "bundle_count": 2,
+  "bundles": [
+    {
+      "id": "station_bundle_a",
+      "file_count": 25,
+      "data_rows": 58618858,
+      "timestamp_parse_rate_min": 1.0,
+      "timestamp_parse_rate_mean": 1.0,
+      "ordered_timestamp_file_count": 25,
+      "timestamp_directions": [
+        "descending"
+      ],
+      "files_with_timestamp_duration": 25,
+      "duration_seconds_min": 259200.0,
+      "duration_seconds_max": 2524690.0,
+      "family_presence_file_counts": {
+        "pressure": 12,
+        "temperature": 13,
+        "flow_or_mass": 12,
+        "control_state": 13
+      },
+      "candidate_family_screen_is_qualitative": true
+    },
+    {
+      "id": "station_bundle_b",
+      "file_count": 8,
+      "data_rows": 653442,
+      "timestamp_parse_rate_min": 1.0,
+      "timestamp_parse_rate_mean": 1.0,
+      "ordered_timestamp_file_count": 8,
+      "timestamp_directions": [
+        "ascending"
+      ],
+      "files_with_timestamp_duration": 8,
+      "duration_seconds_min": 54978.0,
+      "duration_seconds_max": 86399.0,
+      "family_presence_file_counts": {
+        "pressure": 8,
+        "temperature": 8,
+        "flow_or_mass": 0,
+        "control_state": 8
+      },
+      "candidate_family_screen_is_qualitative": true
+    }
+  ],
+  "station_side_transfer_candidate": true,
+  "full_loop_external_validation_supported": false,
+  "quantitative_consequence_validation_supported": false,
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "exact_source_dates_published": false,
+  "manufacturer_or_model_published": false,
+  "tag_names_published": false,
+  "claim_boundary": "Two de-identified local station-side bundles share a parseable ordered time axis and qualitative pressure/temperature/control-family coverage. This is a transfer candidate and data-quality recheck only; it is not vehicle-side, full-loop, consequence, field-safety, or certification validation."
+}

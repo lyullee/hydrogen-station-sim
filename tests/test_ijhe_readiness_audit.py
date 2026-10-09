@@ -132,6 +132,13 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert local_data["utilization"]["semantic_attestation"][
         "flow_units_attested"
     ] is False
+    assert gates["local_cross_station_bundle_recheck_integrity"]["status"] == "PASS"
+    cross_station = gates["local_cross_station_bundle_recheck_integrity"]["observed"]
+    assert cross_station["bundle_count"] == 2
+    assert [item["file_count"] for item in cross_station["bundles"]] == [25, 8]
+    assert [item["data_rows"] for item in cross_station["bundles"]] == [58_618_858, 653_442]
+    assert cross_station["station_side_transfer_candidate"] is True
+    assert cross_station["full_loop_external_validation_supported"] is False
     assert gates["local_station_asset_screen_integrity"]["status"] == "PASS"
     local_assets = gates["local_station_asset_screen_integrity"]["observed"]
     assert local_assets["scenario_step_rows"] == 52

@@ -1510,6 +1510,51 @@ def audit(root: Path) -> dict[str, object]:
         } if local_utilization else "missing; local station-data utilization audit has not completed",
     ))
 
+    cross_station_bundle_path = root / (
+        "research/local_cross_station_bundle_recheck_2026_10_09.json"
+    )
+    cross_station_bundle = _json(cross_station_bundle_path)
+    cross_station_bundles = (cross_station_bundle or {}).get("bundles") or []
+    cross_station_bundle_pass = bool(
+        (cross_station_bundle or {}).get("schema_version") == 1
+        and (cross_station_bundle or {}).get("artifact_type")
+        == "confidential_cross_station_bundle_recheck"
+        and (cross_station_bundle or {}).get("bundle_count") == 2
+        and len(cross_station_bundles) == 2
+        and [item.get("file_count") for item in cross_station_bundles] == [25, 8]
+        and [item.get("data_rows") for item in cross_station_bundles]
+        == [58_618_858, 653_442]
+        and all(
+            item.get("timestamp_parse_rate_min") == 1.0
+            and item.get("ordered_timestamp_file_count") == item.get("file_count")
+            and (item.get("family_presence_file_counts") or {}).get("pressure", 0) > 0
+            and (item.get("family_presence_file_counts") or {}).get("control_state", 0) > 0
+            for item in cross_station_bundles
+        )
+        and (cross_station_bundle or {}).get("station_side_transfer_candidate") is True
+        and (cross_station_bundle or {}).get("full_loop_external_validation_supported") is False
+        and (cross_station_bundle or {}).get("quantitative_consequence_validation_supported") is False
+        and (cross_station_bundle or {}).get("source_identifiers_published") is False
+        and (cross_station_bundle or {}).get("raw_rows_persisted") is False
+        and (cross_station_bundle or {}).get("exact_source_dates_published") is False
+        and (cross_station_bundle or {}).get("manufacturer_or_model_published") is False
+        and (cross_station_bundle or {}).get("tag_names_published") is False
+    )
+    gates.append(_gate(
+        "local_cross_station_bundle_recheck_integrity",
+        "PASS" if cross_station_bundle_pass else ("FAIL" if cross_station_bundle else "PENDING"),
+        "Two de-identified local station-side bundles have a parseable monotonic time axis and compatible qualitative pressure/control coverage, supporting a future custodian-approved transfer-candidate study without promoting it to full-loop validation.",
+        str(cross_station_bundle_path.relative_to(root)),
+        "Aggregate-only row/file counts, bounded timestamp checks, and explicit privacy and claim-boundary flags; no raw paths, dates, tags, rows, vehicle-loop or consequence claim.",
+        {
+            "bundle_count": (cross_station_bundle or {}).get("bundle_count"),
+            "bundles": cross_station_bundles,
+            "station_side_transfer_candidate": (cross_station_bundle or {}).get("station_side_transfer_candidate"),
+            "full_loop_external_validation_supported": (cross_station_bundle or {}).get("full_loop_external_validation_supported"),
+            "claim_boundary": (cross_station_bundle or {}).get("claim_boundary"),
+        } if cross_station_bundle else "missing; cross-station bundle recheck has not completed",
+    ))
+
     local_asset_path = root / "research/local_station_asset_screen_2026_10_09.json"
     local_asset = _json(local_asset_path)
     local_asset_privacy = (local_asset or {}).get("privacy") or {}

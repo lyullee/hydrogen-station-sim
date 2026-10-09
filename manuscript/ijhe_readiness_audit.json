@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-09T00:35:53.221379+00:00",
+  "generated_at": "2026-10-09T00:48:08.278963+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 122,
+    "PASS": 123,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -1120,6 +1120,63 @@
             "keep full-loop vehicle claims disabled until vehicle pressure, vehicle temperature, delivered mass or SOC is synchronized and attested"
           ]
         }
+      }
+    },
+    {
+      "id": "local_cross_station_bundle_recheck_integrity",
+      "status": "PASS",
+      "claim": "Two de-identified local station-side bundles have a parseable monotonic time axis and compatible qualitative pressure/control coverage, supporting a future custodian-approved transfer-candidate study without promoting it to full-loop validation.",
+      "evidence": "research\\local_cross_station_bundle_recheck_2026_10_09.json",
+      "requirement": "Aggregate-only row/file counts, bounded timestamp checks, and explicit privacy and claim-boundary flags; no raw paths, dates, tags, rows, vehicle-loop or consequence claim.",
+      "observed": {
+        "bundle_count": 2,
+        "bundles": [
+          {
+            "id": "station_bundle_a",
+            "file_count": 25,
+            "data_rows": 58618858,
+            "timestamp_parse_rate_min": 1.0,
+            "timestamp_parse_rate_mean": 1.0,
+            "ordered_timestamp_file_count": 25,
+            "timestamp_directions": [
+              "descending"
+            ],
+            "files_with_timestamp_duration": 25,
+            "duration_seconds_min": 259200.0,
+            "duration_seconds_max": 2524690.0,
+            "family_presence_file_counts": {
+              "pressure": 12,
+              "temperature": 13,
+              "flow_or_mass": 12,
+              "control_state": 13
+            },
+            "candidate_family_screen_is_qualitative": true
+          },
+          {
+            "id": "station_bundle_b",
+            "file_count": 8,
+            "data_rows": 653442,
+            "timestamp_parse_rate_min": 1.0,
+            "timestamp_parse_rate_mean": 1.0,
+            "ordered_timestamp_file_count": 8,
+            "timestamp_directions": [
+              "ascending"
+            ],
+            "files_with_timestamp_duration": 8,
+            "duration_seconds_min": 54978.0,
+            "duration_seconds_max": 86399.0,
+            "family_presence_file_counts": {
+              "pressure": 8,
+              "temperature": 8,
+              "flow_or_mass": 0,
+              "control_state": 8
+            },
+            "candidate_family_screen_is_qualitative": true
+          }
+        ],
+        "station_side_transfer_candidate": true,
+        "full_loop_external_validation_supported": false,
+        "claim_boundary": "Two de-identified local station-side bundles share a parseable ordered time axis and qualitative pressure/temperature/control-family coverage. This is a transfer candidate and data-quality recheck only; it is not vehicle-side, full-loop, consequence, field-safety, or certification validation."
       }
     },
     {
