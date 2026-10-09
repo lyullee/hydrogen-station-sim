@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_docudata_full_header_discovery",
+  "status": "privacy_bounded_header_discovery_only",
+  "generated_at": "2026-10-09",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "source_identifiers_published": false,
+    "site_company_manufacturer_published": false,
+    "calendar_dates_published": false,
+    "raw_rows_persisted": false,
+    "measurement_values_persisted": false
+  },
+  "broad_scan": {
+    "machine_readable_files_screened": 38528,
+    "csv_tsv_headers_screened": 12804,
+    "path_keyword_candidates": 279,
+    "vehicle_or_dispenser_keyword_candidates": 783,
+    "release_rig_or_jet_candidates": 139
+  },
+  "refined_header_screen": {
+    "csv_files_screened": 13050,
+    "vehicle_keyword_hits": 832,
+    "vehicle_pressure_temperature_flow_time_candidates": 0,
+    "header_screen_is_not_semantic_attestation": true
+  },
+  "eligibility": {
+    "eligible_synchronized_station_dispenser_vehicle_cohort": 0,
+    "full_loop_external_validation_ready": false,
+    "quantitative_consequence_validation_ready": false,
+    "runtime_parameter_application": false
+  },
+  "claim_boundary": "Broad local discovery demonstrates abundant candidate material but does not establish HRS station-to-vehicle synchronization, units, boundary roles, provenance or reuse rights. No full-loop or safety-distance claim is permitted from this scan."
+}

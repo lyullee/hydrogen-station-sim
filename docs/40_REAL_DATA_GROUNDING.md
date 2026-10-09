@@ -118,6 +118,16 @@ HRS runtime fitting and full-loop validation. See
 `research/LOCAL_ADJACENT_HYDROGEN_DATA_DISCOVERY_2026_10_09.md` and its
 privacy-bounded JSON companion.
 
+A full header-only pass over the broader local document collection screened
+38,528 machine-readable files and 12,804 CSV/TSV headers. It produced many
+vehicle/dispenser keyword hits, mostly from LH2, pipeline, component and
+derived-output material; a refined screen found zero files with the complete
+time-plus-pressure-plus-temperature-plus-flow/mass header combination. The
+aggregate is recorded in
+`research/LOCAL_DOCUDATA_FULL_DISCOVERY_2026_10_09.md`. This confirms that
+the archive is not small while preserving the stricter full-loop eligibility
+boundary.
+
 The 25 narrow exports are now structurally recovered without disclosing their
 headers. Twelve files contain 29,361,269 rows in a pressure/flow candidate
 schema; thirteen contain 29,257,564 rows in a thermal candidate schema. Their
