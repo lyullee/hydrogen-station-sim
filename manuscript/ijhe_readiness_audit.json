@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-09T06:09:19.409801+00:00",
+  "generated_at": "2026-10-09T06:49:07.061294+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 125,
+    "PASS": 126,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -1178,6 +1178,24 @@
           "per_file_hashes_published": false
         },
         "claim_boundary": "This record is an aggregate local-data revalidation. It does not publish raw rows or source identity, attest channel units, validate a vehicle fill, establish a safety limit, or certify operation."
+      }
+    },
+    {
+      "id": "local_station_direct_replay_and_profile_mismatch_integrity",
+      "status": "PASS",
+      "claim": "The current local measured bundle was re-counted, its changed aggregate was kept separate from the frozen opt-in profile, and a bounded measured pressure boundary was replayed through the simulator.",
+      "evidence": "research\\local_station_data_utilization_recheck_2026_10_09.json; research\\local_operational_profile_recheck_2026_10_09.json; research\\local_station_boundary_replay_2026_10_09.json",
+      "requirement": "Direct local inventory, explicit profile mismatch preservation, no automatic replacement of runtime parameters, and a completed station-boundary replay with a non-full-loop claim boundary.",
+      "observed": {
+        "local_csv_files": 33,
+        "local_deduplicated_rows": 56854143,
+        "profile_recheck_matches": false,
+        "profile_mismatch_count": 4,
+        "committed_profile_replaced": false,
+        "replayed_profile_points": 1426,
+        "simulated_samples": 1501,
+        "simulated_duration_s": 300.0,
+        "full_loop_validation": false
       }
     },
     {

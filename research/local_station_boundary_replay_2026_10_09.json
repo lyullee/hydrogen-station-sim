@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_station_boundary_replay",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "input_boundary": {
+    "source_mode": "pressure_boundary_only",
+    "mapped_profile_points": 1426,
+    "profile_duration_s": 169575.0,
+    "pressure_profile_used": true,
+    "temperature_profile_used": false
+  },
+  "alignment": null,
+  "window": {
+    "start_s": 138516.0,
+    "duration_s": 300.0,
+    "replayed_profile_points": 3,
+    "active_vehicle": "both",
+    "selection_method": "max_abs_pressure_ramp"
+  },
+  "calibration": {
+    "aggregate_margin_applied": false,
+    "raw_rows_persisted": false,
+    "source_identifiers_published": false
+  },
+  "replay": {
+    "requested_duration_s": 300.0,
+    "simulated_duration_s": 300.0,
+    "simulated_samples": 1501,
+    "esd_triggered": false,
+    "control_period_s": 0.2
+  },
+  "claim_boundary": "Controlled measured-boundary replay only; this is not independent full station-to-vehicle validation."
+}

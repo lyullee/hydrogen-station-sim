@@ -123,6 +123,13 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert local_data["inventory"]["deduplicated_data_rows"] == 56_854_143
     assert local_data["utilization"]["ordered_high_bank_pressure_cycles"] == 16_770
     assert local_data["utilization"]["paired_medium_high_pressure_episodes"] == 11_770
+    direct_replay = gates[
+        "local_station_direct_replay_and_profile_mismatch_integrity"
+    ]
+    assert direct_replay["status"] == "PASS"
+    assert direct_replay["observed"]["profile_recheck_matches"] is False
+    assert direct_replay["observed"]["committed_profile_replaced"] is False
+    assert direct_replay["observed"]["simulated_samples"] == 1_501
     assert local_data["utilization"]["short_horizon_pressure_forecast_cases"] == 1_418
     assert local_data["assessment"]["local_station_data_is_sparse"] is False
     assert local_data["assessment"]["vehicle_side_full_loop_validation_ready"] is False

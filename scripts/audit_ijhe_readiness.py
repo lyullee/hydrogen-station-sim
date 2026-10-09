@@ -1582,6 +1582,90 @@ def audit(root: Path) -> dict[str, object]:
         } if local_revalidation else "missing; local station-data revalidation has not completed",
     ))
 
+    # The custodian re-ran the current local bundle directly after the
+    # committed profile was frozen.  The fresh bundle is useful evidence even
+    # when its clock span differs from the frozen aggregate: the mismatch must
+    # remain visible and must never silently replace the opt-in runtime
+    # profile.  A bounded pressure-boundary replay then proves that the
+    # available measured signal can still pass through the protection-aware
+    # simulator without publishing raw rows or widening the claim boundary.
+    local_replay_inventory_path = root / (
+        "research/local_station_data_utilization_recheck_2026_10_09.json"
+    )
+    local_profile_recheck_path = root / (
+        "research/local_operational_profile_recheck_2026_10_09.json"
+    )
+    local_boundary_replay_path = root / (
+        "research/local_station_boundary_replay_2026_10_09.json"
+    )
+    local_replay_inventory = _json(local_replay_inventory_path)
+    local_profile_recheck = _json(local_profile_recheck_path)
+    local_boundary_replay = _json(local_boundary_replay_path)
+    replay_inventory_privacy = (local_replay_inventory or {}).get("privacy") or {}
+    profile_recheck_comparison = (
+        (local_profile_recheck or {}).get("committed_profile_comparison") or {}
+    )
+    profile_recheck_runtime = (
+        (local_profile_recheck or {}).get("runtime_decision") or {}
+    )
+    replay_input = (local_boundary_replay or {}).get("input_boundary") or {}
+    replay_result = (local_boundary_replay or {}).get("replay") or {}
+    local_direct_replay_pass = bool(
+        (local_replay_inventory or {}).get("schema_version") == 1
+        and (local_replay_inventory or {}).get("artifact_type")
+        == "local_confidential_station_data_utilization_audit"
+        and replay_inventory_privacy
+        and all(value is False for value in replay_inventory_privacy.values())
+        and ((local_replay_inventory or {}).get("inventory") or {}).get("csv_files") == 33
+        and ((local_replay_inventory or {}).get("inventory") or {}).get(
+            "deduplicated_data_rows"
+        ) == 56_854_143
+        and (local_profile_recheck or {}).get("schema_version") == 1
+        and (local_profile_recheck or {}).get("artifact_type")
+        == "confidential_operational_envelope_recheck"
+        and (local_profile_recheck or {}).get("raw_rows_persisted") is False
+        and (local_profile_recheck or {}).get("source_paths_published") is False
+        and profile_recheck_comparison.get("matches") is False
+        and profile_recheck_comparison.get("mismatches")
+        and profile_recheck_runtime.get("committed_profile_replaced") is False
+        and profile_recheck_runtime.get("default_model_parameters_changed") is False
+        and profile_recheck_runtime.get(
+            "measured_boundary_calibration_remains_opt_in"
+        ) is True
+        and (local_boundary_replay or {}).get("schema_version") == 1
+        and (local_boundary_replay or {}).get("artifact_type")
+        == "confidential_station_boundary_replay"
+        and (local_boundary_replay or {}).get("source_identifiers_published") is False
+        and (local_boundary_replay or {}).get("raw_rows_persisted") is False
+        and replay_input.get("pressure_profile_used") is True
+        and replay_result.get("simulated_duration_s") == 300.0
+        and replay_result.get("simulated_samples") == 1_501
+        and isinstance((local_boundary_replay or {}).get("claim_boundary"), str)
+        and "not independent" in str(
+            (local_boundary_replay or {}).get("claim_boundary", "")
+        ).lower()
+    )
+    gates.append(_gate(
+        "local_station_direct_replay_and_profile_mismatch_integrity",
+        "PASS" if local_direct_replay_pass else (
+            "FAIL" if any((local_replay_inventory, local_profile_recheck, local_boundary_replay)) else "PENDING"
+        ),
+        "The current local measured bundle was re-counted, its changed aggregate was kept separate from the frozen opt-in profile, and a bounded measured pressure boundary was replayed through the simulator.",
+        f"{local_replay_inventory_path.relative_to(root)}; {local_profile_recheck_path.relative_to(root)}; {local_boundary_replay_path.relative_to(root)}",
+        "Direct local inventory, explicit profile mismatch preservation, no automatic replacement of runtime parameters, and a completed station-boundary replay with a non-full-loop claim boundary.",
+        {
+            "local_csv_files": ((local_replay_inventory or {}).get("inventory") or {}).get("csv_files"),
+            "local_deduplicated_rows": ((local_replay_inventory or {}).get("inventory") or {}).get("deduplicated_data_rows"),
+            "profile_recheck_matches": profile_recheck_comparison.get("matches"),
+            "profile_mismatch_count": len(profile_recheck_comparison.get("mismatches") or []),
+            "committed_profile_replaced": profile_recheck_runtime.get("committed_profile_replaced"),
+            "replayed_profile_points": replay_input.get("mapped_profile_points"),
+            "simulated_samples": replay_result.get("simulated_samples"),
+            "simulated_duration_s": replay_result.get("simulated_duration_s"),
+            "full_loop_validation": False,
+        } if local_replay_inventory and local_profile_recheck and local_boundary_replay else "missing; direct local recheck/replay artifacts have not completed",
+    ))
+
     cross_station_bundle_path = root / (
         "research/local_cross_station_bundle_recheck_2026_10_09.json"
     )
