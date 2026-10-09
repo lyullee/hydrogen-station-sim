@@ -110,6 +110,36 @@ def test_local_discovery_reaches_bounded_prompt_views():
     ] is False
     assert "source_paths_published" not in str(header_deep_scan)
 
+    public_candidate_scan = prompt_evidence_summary(manifest)[
+        "local_public_candidate_scan"
+    ]
+    assert public_candidate_scan["scan"][
+        "coarse_candidate_classes"
+    ]["release_rig_experiment_candidate"] == 58
+    assert public_candidate_scan["eligibility"][
+        "full_loop_candidate_count"
+    ] == 0
+    assert "source_paths_published" not in str(public_candidate_scan)
+
+    decision_candidate_scan = prompt_decision_evidence(manifest)[
+        "validation_boundaries"
+    ]["local_public_candidate_scan"]
+    assert decision_candidate_scan["coarse_candidate_classes"][
+        "vehicle_or_dispenser_candidate"
+    ] == 2
+    assert decision_candidate_scan["decision"] == (
+        "DISCOVERY_ONLY_UNTIL_ATTESTED"
+    )
+    assert "source_paths_published" not in str(decision_candidate_scan)
+
+    header_candidate_scan = prompt_evidence_header(manifest)[
+        "local_public_candidate_scan"
+    ]
+    assert header_candidate_scan["eligibility"][
+        "full_loop_candidate_count"
+    ] == 0
+    assert "source_paths_published" not in str(header_candidate_scan)
+
 
 def test_local_attestation_request_is_exposed_without_private_identifiers():
     manifest = _manifest()

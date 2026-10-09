@@ -4724,6 +4724,61 @@ def _local_public_validation_catalog_evidence() -> dict[str, Any] | None:
     }
 
 
+def _local_public_candidate_scan_evidence() -> dict[str, Any] | None:
+    """Expose the semantic second-pass screen for the public cache.
+
+    This is deliberately separate from the broad file catalog.  It tells the
+    assistants why a keyword match was retained as a release experiment or a
+    static consequence table instead of being promoted to a synchronized
+    station-to-vehicle holdout.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/local_public_candidate_scan_2026_10_09.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    privacy = record.get("privacy") or {}
+    scan = record.get("scan") or {}
+    eligibility = record.get("eligibility") or {}
+    classes = scan.get("coarse_candidate_classes") or {}
+    if (
+        record.get("artifact_type")
+        != "privacy_bounded_local_workspace_candidate_scan"
+        or record.get("status") != "discovery_only"
+        or not privacy
+        or not all(value is False for value in privacy.values())
+        or int(scan.get("machine_readable_files") or 0) < 1
+        or int(scan.get("csv_tsv_headers_screened") or 0) < 1
+        or eligibility.get("decision") != "DISCOVERY_ONLY_UNTIL_ATTESTED"
+        or int(eligibility.get("full_loop_candidate_count", -1)) != 0
+        or int(classes.get("vehicle_pressure_temperature_candidate") or 0) != 0
+    ):
+        return None
+    return {
+        "artifact": "research/local_public_candidate_scan_2026_10_09.json",
+        "evidence_role": "privacy-bounded semantic screening of local public candidates",
+        "scan": {
+            "machine_readable_files": int(scan.get("machine_readable_files") or 0),
+            "csv_tsv_headers_screened": int(scan.get("csv_tsv_headers_screened") or 0),
+            "header_parse_errors": int(scan.get("header_parse_errors") or 0),
+            "coarse_candidate_classes": {
+                str(key): int(value) for key, value in classes.items()
+            },
+        },
+        "eligibility": {
+            "full_loop_candidate_count": 0,
+            "decision": str(eligibility.get("decision")),
+            "required_attestation": [
+                str(value) for value in eligibility.get("required_attestation") or []
+            ],
+        },
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _local_candidate_full_loop_screen_evidence() -> dict[str, Any] | None:
     """Expose the bounded local/public candidate classification to the LLM.
 
@@ -5704,6 +5759,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "local_public_validation_catalog"
         ] = local_public_catalog
+    local_public_candidate_scan = _local_public_candidate_scan_evidence()
+    if local_public_candidate_scan is not None:
+        envelope["response_evidence"][
+            "local_public_candidate_scan"
+        ] = local_public_candidate_scan
     local_candidate_screen = _local_candidate_full_loop_screen_evidence()
     if local_candidate_screen is not None:
         envelope["response_evidence"][
@@ -5918,6 +5978,16 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "coverage_assessment"
             ) or {},
             "claim_limit": short(local_public_catalog.get("claim_limit"), 320),
+        }
+    local_public_candidate_scan = evidence.get("local_public_candidate_scan")
+    if isinstance(local_public_candidate_scan, dict):
+        summary["local_public_candidate_scan"] = {
+            "evidence_role": local_public_candidate_scan.get("evidence_role"),
+            "scan": local_public_candidate_scan.get("scan") or {},
+            "eligibility": local_public_candidate_scan.get("eligibility") or {},
+            "claim_limit": short(
+                local_public_candidate_scan.get("claim_limit"), 320
+            ),
         }
     local_attestation_request = evidence.get(
         "confidential_local_station_attestation_request"
@@ -6836,6 +6906,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "confidential_local_data_deep_scan"
     ) or {}
     local_public_catalog = response.get("local_public_validation_catalog") or {}
+    local_public_candidate_scan = response.get("local_public_candidate_scan") or {}
     hytunnel_diagnostic = response.get(
         "public_hytunnel_failure_diagnostic"
     ) or {}
@@ -7339,6 +7410,43 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 },
             } if local_public_catalog and public_catalog_relevant else {}),
             **({
+                "local_public_candidate_scan": {
+                    "machine_readable_files": (
+                        (local_public_candidate_scan.get("scan") or {}).get(
+                            "machine_readable_files"
+                        )
+                    ),
+                    "csv_tsv_headers_screened": (
+                        (local_public_candidate_scan.get("scan") or {}).get(
+                            "csv_tsv_headers_screened"
+                        )
+                    ),
+                    "header_parse_errors": (
+                        (local_public_candidate_scan.get("scan") or {}).get(
+                            "header_parse_errors"
+                        )
+                    ),
+                    "coarse_candidate_classes": (
+                        (local_public_candidate_scan.get("scan") or {}).get(
+                            "coarse_candidate_classes"
+                        ) or {}
+                    ),
+                    "full_loop_candidate_count": (
+                        (local_public_candidate_scan.get("eligibility") or {}).get(
+                            "full_loop_candidate_count"
+                        )
+                    ),
+                    "decision": (
+                        (local_public_candidate_scan.get("eligibility") or {}).get(
+                            "decision"
+                        )
+                    ),
+                    "claim_limit": short(
+                        local_public_candidate_scan.get("claim_limit"), 220
+                    ),
+                },
+            } if local_public_candidate_scan and public_catalog_relevant else {}),
+            **({
                 "station_cascade_sequence": {
                     "claim_supported": cascade_sequence.get(
                         "cascade_controller_structure_supported"
@@ -7675,6 +7783,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         "confidential_local_data_deep_scan"
     ) or {}
     local_public_catalog = evidence.get("local_public_validation_catalog") or {}
+    local_public_candidate_scan = evidence.get("local_public_candidate_scan") or {}
     multisource_feasibility = evidence.get(
         "confidential_multisource_mapping_feasibility"
     ) or {}
@@ -7869,6 +7978,13 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "coverage_assessment"
             ) or {},
             "claim_limit": local_public_catalog.get("claim_limit"),
+        },
+        "local_public_candidate_scan": {
+            "evidence_artifact": local_public_candidate_scan.get("artifact"),
+            "evidence_role": local_public_candidate_scan.get("evidence_role"),
+            "scan": local_public_candidate_scan.get("scan") or {},
+            "eligibility": local_public_candidate_scan.get("eligibility") or {},
+            "claim_limit": local_public_candidate_scan.get("claim_limit"),
         },
         "confidential_local_station_attestation_request": {
             "evidence_artifact": local_attestation_request.get("artifact"),
