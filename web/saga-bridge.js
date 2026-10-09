@@ -96,9 +96,11 @@
     const tags=Array.isArray(used.signals)?used.signals.filter(Boolean):[];
     const impact=Array.isArray(used.impact)?used.impact:[];
     const forecast=used.station_pressure_forecast&&typeof used.station_pressure_forecast==='object'?used.station_pressure_forecast:null;
+    const stationCalibration=used.station_calibration&&typeof used.station_calibration==='object'?used.station_calibration:null;
+    const rechargeDynamics=used.station_recharge_dynamics&&typeof used.station_recharge_dynamics==='object'?used.station_recharge_dynamics:null;
     const basis=Array.isArray(used.evidence_basis)?used.evidence_basis.filter(Boolean):[];
     const validation=used.validation&&typeof used.validation==='object'?used.validation:null;
-    if(!tags.length&&!impact.length&&!forecast&&!basis.length&&!validation)return null;
+    if(!tags.length&&!impact.length&&!forecast&&!stationCalibration&&!rechargeDynamics&&!basis.length&&!validation)return null;
     const panel=document.createElement('details');panel.className='saga-data-used';
     const english=window.stationLocale?.language?.()==='en';
     const summary=document.createElement('summary');summary.textContent=english?'Data used':'사용 데이터';panel.append(summary);
@@ -106,6 +108,8 @@
     if(tags.length)text.push(`${english?'signals':'센서'}: ${tags.join(', ')}`);
     if(impact.length)text.push(`${english?'impact':'피해영향'}: ${impact[0]||'—'}${impact[1]!=null?` (${impact[1]})`:''}`);
     if(forecast)text.push(`${english?'forecast':'압력예측'}: ${forecast.status||'—'}${forecast.bank?` · ${forecast.bank}`:''}`);
+    if(stationCalibration){const mode=stationCalibration.status==='active'?(english?'applied':'적용'):(stationCalibration.status==='reference_defaults'?(english?'reference defaults':'기준값'):(english?'requested but unavailable':'요청됐지만 사용 불가'));const profile=stationCalibration.profile_id&&stationCalibration.profile_id!=='reference_defaults'?stationCalibration.profile_id:(stationCalibration.available_profile_id?`${stationCalibration.available_profile_id} · ${english?'opt-in':'선택 적용 가능'}`:'—');text.push(`${english?'station calibration':'실측 보정'}: ${mode} · ${profile}`);}
+    if(rechargeDynamics){const mode=rechargeDynamics.status==='active'?(english?'applied':'적용'):(english?'reference defaults':'기준값');text.push(`${english?'recharge dwell':'재충전 대기'}: ${mode}`);}
     if(basis.length){const labels=english?{public_accident_data:'public incident data',public_experimental_data:'public experimental data',confidential_station_data:'confidential station measurements',local_data_audit:'local data audit'}:{public_accident_data:'공개 사고자료',public_experimental_data:'공개 실험자료',confidential_station_data:'비공개 station 측정자료',local_data_audit:'로컬 데이터 감사'};text.push(`${english?'evidence':'근거'}: ${basis.map(item=>labels[item]||item).join(', ')}`);}
     if(validation){const labels=english?{bounded_ijhe_submission_ready:'bounded manuscript gate',full_loop_external_validation_supported:'full-loop external validation',expert_effectiveness_evaluation_supported:'expert effectiveness'}:{bounded_ijhe_submission_ready:'제한적 논문 게이트',full_loop_external_validation_supported:'full-loop 외부검증',expert_effectiveness_evaluation_supported:'전문가 효과성 평가'};text.push(`${english?'validation':'검증'}: ${Object.entries(validation).map(([key,value])=>`${labels[key]||key}=${value?'PASS':'미확인'}`).join(', ')}`);}
     const body=document.createElement('p');body.textContent=text.join(' · ');panel.append(body);return panel;

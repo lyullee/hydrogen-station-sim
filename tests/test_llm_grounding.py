@@ -4,6 +4,7 @@ import pytest
 
 from h2station.llm_grounding import (
     build_evidence_manifest,
+    compact_data_used,
     guard_llm_claims,
     prompt_decision_evidence,
     prompt_evidence_header,
@@ -1363,6 +1364,41 @@ def test_manifest_records_opt_in_measured_boundary_profile():
     assert prompt_evidence_header(manifest)["runtime_calibration"]["profile_id"] == (
         "owner_measured_operational_envelope_v1"
     )
+
+
+def test_compact_data_used_reports_available_and_applied_station_profile():
+    base_frame = {
+        "time_s": 12.5,
+        "process_operations": {
+            "settings": {"measured_boundary_calibration": False},
+            "trailer_pressure_mpa": 60.0,
+        },
+    }
+    reference = compact_data_used(
+        build_evidence_manifest(base_frame, {}, [], False, question="현재 상태")
+    )
+    calibration = reference["station_calibration"]
+    assert calibration["status"] == "reference_defaults"
+    assert calibration["requested"] is False
+    assert calibration["profile_id"] == "reference_defaults"
+    assert calibration["available_profile_id"] == (
+        "owner_measured_operational_envelope_v1"
+    )
+
+    applied_frame = {
+        **base_frame,
+        "process_operations": {
+            **base_frame["process_operations"],
+            "settings": {"measured_boundary_calibration": True},
+        },
+    }
+    applied = compact_data_used(
+        build_evidence_manifest(applied_frame, {}, [], False, question="현재 상태")
+    )["station_calibration"]
+    assert applied["status"] == "active"
+    assert applied["requested"] is True
+    assert applied["profile_id"] == "owner_measured_operational_envelope_v1"
+    assert applied["evidence_artifact"]
 
 
 def test_manifest_separates_opt_in_recharge_dynamics_from_boundary_calibration():

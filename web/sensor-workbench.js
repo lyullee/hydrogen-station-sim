@@ -175,7 +175,9 @@
       const tags=Array.isArray(used.signals)?used.signals.filter(Boolean):[];
       const impact=Array.isArray(used.impact)?used.impact:[];
       const forecast=used.station_pressure_forecast&&typeof used.station_pressure_forecast==='object'?used.station_pressure_forecast:null;
-      if(!tags.length&&!impact.length&&!forecast)return;
+      const stationCalibration=used.station_calibration&&typeof used.station_calibration==='object'?used.station_calibration:null;
+      const rechargeDynamics=used.station_recharge_dynamics&&typeof used.station_recharge_dynamics==='object'?used.station_recharge_dynamics:null;
+      if(!tags.length&&!impact.length&&!forecast&&!stationCalibration&&!rechargeDynamics)return;
       const english=window.stationLocale?.language?.()==='en';
       const details=node('details','sensor-data-used');
       details.append(node('summary','',english?'Data used':'사용 데이터'));
@@ -183,6 +185,8 @@
       if(tags.length)parts.push(`${english?'signals':'센서'}: ${tags.join(', ')}`);
       if(impact.length)parts.push(`${english?'impact':'피해영향'}: ${impact[0]||'—'}${impact[1]!=null?` (${impact[1]})`:''}`);
       if(forecast)parts.push(`${english?'forecast':'압력예측'}: ${forecast.status||'—'}${forecast.bank?` · ${forecast.bank}`:''}`);
+      if(stationCalibration){const mode=stationCalibration.status==='active'?(english?'applied':'적용'):(stationCalibration.status==='reference_defaults'?(english?'reference defaults':'기준값'):(english?'requested but unavailable':'요청됐지만 사용 불가'));const profile=stationCalibration.profile_id&&stationCalibration.profile_id!=='reference_defaults'?stationCalibration.profile_id:(stationCalibration.available_profile_id?`${stationCalibration.available_profile_id} · ${english?'opt-in':'선택 적용 가능'}`:'—');parts.push(`${english?'station calibration':'실측 보정'}: ${mode} · ${profile}`);}
+      if(rechargeDynamics){const mode=rechargeDynamics.status==='active'?(english?'applied':'적용'):(english?'reference defaults':'기준값');parts.push(`${english?'recharge dwell':'재충전 대기'}: ${mode}`);}
       details.append(node('p','',parts.join(' · ')));target.append(details);
     }
     function renderDetail(payload){

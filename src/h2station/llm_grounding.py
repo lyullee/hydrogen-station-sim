@@ -140,7 +140,12 @@ def _runtime_calibration_profile(frame: dict[str, Any]) -> dict[str, Any]:
     dynamics_requested = (
         settings.get("measured_station_dynamics_calibration") is True
     )
-    profile = load_measured_boundary_calibration() if requested else None
+    # Load the sanitized profile even when the operator leaves the runtime
+    # switch off. This distinguishes “available but not applied” from “no
+    # measured profile exists” without reading raw station rows or changing
+    # simulator defaults.
+    available_profile = load_measured_boundary_calibration()
+    profile = available_profile if requested else None
     dynamics_profile = (
         load_station_recharge_dynamics_calibration()
         if dynamics_requested else None
@@ -205,12 +210,31 @@ def _runtime_calibration_profile(frame: dict[str, Any]) -> dict[str, Any]:
         }
         result["station_recharge_dynamics"] = dynamics_metadata()
         return result
+    if available_profile is not None:
+        metadata = available_profile.runtime_metadata()
+        available_metadata: dict[str, Any] = {
+            "status": "available_opt_in",
+            "profile_id": metadata.get("id"),
+            "evidence_artifact": metadata.get("evidence_artifact"),
+            "sampled_rows": metadata.get("sampled_rows"),
+            "observed_pressure_range_mpa": metadata.get(
+                "observed_pressure_range_mpa"
+            ),
+            "claim_boundary": metadata.get("claim_boundary"),
+        }
+    else:
+        available_metadata = {
+            "status": "unavailable",
+            "profile_id": None,
+            "evidence_artifact": None,
+        }
     result = {
         "status": "reference_defaults",
         "requested": False,
         "profile_id": "reference_defaults",
         "evidence_artifact": None,
         "claim_limit": "실측 경계 보정은 선택 적용되지 않음",
+        "available_measured_profile": available_metadata,
     }
     result["station_recharge_dynamics"] = dynamics_metadata()
     return result
@@ -9182,6 +9206,39 @@ def compact_data_used(manifest: dict[str, Any]) -> dict[str, Any]:
             for key in ("status", "reason", "bank")
             if forecast.get(key) is not None
         }
+    runtime_calibration = manifest.get("runtime_calibration")
+    if isinstance(runtime_calibration, dict):
+        available = runtime_calibration.get("available_measured_profile") or {}
+        active_profile_id = runtime_calibration.get("profile_id")
+        # Keep this projection small: it records which bounded station-side
+        # profile was used (or was available but left off), while leaving raw
+        # rows, site identifiers, and controller claims out of the UI summary.
+        result["station_calibration"] = {
+            "status": runtime_calibration.get("status"),
+            "requested": runtime_calibration.get("requested") is True,
+            "profile_id": active_profile_id,
+            "available_profile_id": available.get("profile_id"),
+            "evidence_artifact": (
+                runtime_calibration.get("evidence_artifact")
+                or available.get("evidence_artifact")
+            ),
+            "observed_pressure_range_mpa": (
+                runtime_calibration.get("observed_pressure_range_mpa")
+                or available.get("observed_pressure_range_mpa")
+            ),
+            "claim_limit": runtime_calibration.get("claim_limit"),
+        }
+        dynamics = runtime_calibration.get("station_recharge_dynamics")
+        if isinstance(dynamics, dict):
+            result["station_recharge_dynamics"] = {
+                "status": dynamics.get("status"),
+                "requested": dynamics.get("requested") is True,
+                "profile_id": dynamics.get("id"),
+                "minimum_recharge_off_time_s": dynamics.get(
+                    "minimum_recharge_off_time_s"
+                ),
+                "claim_boundary": dynamics.get("claim_boundary"),
+            }
     evidence = manifest.get("response_evidence") or {}
     if isinstance(evidence, dict):
         basis: list[str] = []
