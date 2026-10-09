@@ -1260,6 +1260,26 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert calculated["evidence_digest"] != idle["evidence_digest"]
 
 
+def test_prompt_projection_carries_consequence_risk_screening_boundary():
+    manifest = build_evidence_manifest(
+        {"time_s": 4.0},
+        {},
+        [{
+            "node_id": "N09",
+            "calculation_status": "calculated",
+            "risk_score": 62.0,
+            "risk_level": "높음",
+            "risk_basis": "CONSEQUENCE_SCREENING_NO_FREQUENCY",
+        }],
+        True,
+        question="피해영향과 위험도를 설명해줘",
+    )
+    compact = prompt_decision_evidence(manifest)["impact"]["results"][0]
+    assert compact["risk_score"] == 62.0
+    assert compact["risk_level"] == "높음"
+    assert compact["risk_basis"] == "CONSEQUENCE_SCREENING_NO_FREQUENCY"
+
+
 def test_manifest_preserves_opt_in_capacity_eos_geometry_basis():
     manifest = build_evidence_manifest(
         {

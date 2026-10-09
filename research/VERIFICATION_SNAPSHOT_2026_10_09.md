@@ -6,7 +6,7 @@ vehicle objective is complete.
 
 ## Executed checks
 
-- Full repository test suite: **1192 passed**, 18 dependency deprecation or
+- Full repository test suite: **1193 passed**, 18 dependency deprecation or
   physics warnings, 0 test failures.
 - Focused external-data checks (HyTunnel, Dickens Type-III, data-coverage
   summary): **14 passed**.
@@ -36,6 +36,11 @@ validation, site-specific consequence distance and SAGA effectiveness. The
 operator-facing `data_used.support_scope` exposes the same four flags. This
 keeps the privacy-bounded station results usable for pressure, cascade and
 recharge advice without promoting them into vehicle or field certification.
+
+Consequence results now carry `risk_score`, `risk_level` and
+`risk_basis` through the bounded LLM projection. The prompt instructions label
+this as `CONSEQUENCE_SCREENING_NO_FREQUENCY`, so the score cannot be described
+as annual accident probability or a safety certification.
 
 ## Evidence still outside the claim boundary
 
