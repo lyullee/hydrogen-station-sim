@@ -114,6 +114,38 @@
       ]
     },
     {
+      "id": "CAL_STATE_LA_MULTI_YEAR_HRS_2024",
+      "title": "Multi-year energy performance data for an electrolysis-based hydrogen refueling station",
+      "url": "https://doi.org/10.1016/j.ijhydene.2023.04.084",
+      "raw_rows_public": false,
+      "license": "CC BY article; synchronized operator logs are not separately released",
+      "local_rights": "citation-bounded aggregate only; no raw station or vehicle traces are redistributed",
+      "measured_boundary": [
+        "multi-year real-station fueling-event and station-energy aggregates",
+        "electrolyzer, storage, compressor and dispensing domains"
+      ],
+      "aggregate": {
+        "observation_period": "2016-2020",
+        "refueling_event_count_approx": 4500,
+        "dispensed_hydrogen_kg_approx": 8800,
+        "reported_2020_q1_energy_kwh_per_kg_range": [
+          70,
+          80
+        ],
+        "reported_2020_q1_site_efficiency_percent_max": 40.0
+      },
+      "eligible_for": [
+        "aggregate station-throughput and energy sanity checks",
+        "public operating-scale context",
+        "data-request lead"
+      ],
+      "not_eligible_for": [
+        "synchronized station-to-vehicle holdout",
+        "runtime parameter fitting",
+        "site-specific safety or distance limits"
+      ]
+    },
+    {
       "id": "FCH2RAIL_D61_350BAR_REPORT",
       "title": "FCH2RAIL D6.1 transportable HRS demonstrator-train refuelling report",
       "url": "https://fch2rail.eu/wp-content/uploads/2025/01/FCH2RAIL_D6.1_Report-on-KPI-assessment.pdf",
