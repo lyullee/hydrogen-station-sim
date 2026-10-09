@@ -4,7 +4,12 @@ import numpy as np
 import pytest
 from openpyxl import Workbook
 
-from h2station.nbsdc_ingest import NbsdcColumnMap, read_nbsdc_workbook
+from h2station.nbsdc_ingest import (
+    NbsdcColumnMap,
+    read_nbsdc_csv,
+    read_nbsdc_export,
+    read_nbsdc_workbook,
+)
 from h2station.validation import OutputChannel
 
 
@@ -72,3 +77,67 @@ def test_nbsdc_reader_rejects_duplicate_timestamps(tmp_path):
 def test_nbsdc_column_map_rejects_unknown_units():
     with pytest.raises(ValueError, match="unsupported unit"):
         NbsdcColumnMap(time="t", pressure="p", pressure_unit="psi")
+
+
+def test_nbsdc_csv_reader_uses_same_unit_contract(tmp_path):
+    path = tmp_path / "approved.csv"
+    path.write_text(
+        "Time,Pressure,Bottle temperature,Flow,Mass\n"
+        "2025-01-01T00:00:00,20,25,60,0\n"
+        "2025-01-01T00:00:01,21,26,66,0.0183333333\n"
+        "2025-01-01T00:00:02,22,27,72,0.0383333333\n",
+        encoding="utf-8",
+    )
+    mapping = NbsdcColumnMap(
+        time="Time",
+        pressure="Pressure",
+        pressure_unit="MPa",
+        temperature="Bottle temperature",
+        temperature_unit="C",
+        mass_flow="Flow",
+        mass_flow_unit="kg/min",
+        transferred_mass="Mass",
+        transferred_mass_unit="kg",
+    )
+    trace = read_nbsdc_csv(path, mapping, case_id="NBS-CSV-01", source="approved-sha256:test")
+    assert trace.pressure_pa.tolist() == pytest.approx([20e6, 21e6, 22e6])
+    assert trace.temperature_k.tolist() == pytest.approx([298.15, 299.15, 300.15])
+    assert trace.mass_flow_kg_s.tolist() == pytest.approx([1.0, 1.1, 1.2])
+    assert trace.transferred_mass_kg.tolist() == pytest.approx([0.0, 0.0183333333, 0.0383333333])
+
+
+def test_nbsdc_csv_reader_rejects_duplicate_timestamps(tmp_path):
+    path = tmp_path / "duplicate.csv"
+    path.write_text(
+        "Time,Pressure\n"
+        "0,20\n"
+        "0,20.1\n"
+        "1,21\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="duplicate timestamps"):
+        read_nbsdc_csv(
+            path,
+            NbsdcColumnMap(time="Time", pressure="Pressure", pressure_unit="MPa"),
+            case_id="NBS-CSV-02",
+            source="approved-sha256:test",
+        )
+
+
+def test_nbsdc_export_dispatches_csv_and_rejects_unknown_suffix(tmp_path):
+    path = tmp_path / "approved.csv"
+    path.write_text("t,p\n0,20\n1,21\n", encoding="utf-8")
+    trace = read_nbsdc_export(
+        path,
+        NbsdcColumnMap(time="t", pressure="p", pressure_unit="MPa"),
+        case_id="NBS-CSV-03",
+        source="approved-sha256:test",
+    )
+    assert trace.time_s.tolist() == pytest.approx([0.0, 1.0])
+    with pytest.raises(ValueError, match="unsupported NBS DC export format"):
+        read_nbsdc_export(
+            tmp_path / "approved.txt",
+            NbsdcColumnMap(time="t", pressure="p", pressure_unit="MPa"),
+            case_id="NBS-CSV-04",
+            source="approved-sha256:test",
+        )

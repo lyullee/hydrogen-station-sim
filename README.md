@@ -217,7 +217,7 @@ it does not upgrade the full-station validation claim.
 The current public-data intake lead is documented in
 [`research/NBSDC_HEAVY_VEHICLE_FAST_REFUELING_ACCESS_RECHECK_2026_10_06.md`](research/NBSDC_HEAVY_VEHICLE_FAST_REFUELING_ACCESS_RECHECK_2026_10_06.md).
 Its numerical files require an approved portal request. Once a rights-cleared
-workbook is obtained, the explicit-unit loader in
+workbook or CSV export is obtained, the explicit-unit loader in
 [`src/h2station/nbsdc_ingest.py`](src/h2station/nbsdc_ingest.py) can produce
 in-memory pressure, temperature and flow traces without publishing raw rows.
 The test-cylinder data remains a component/protocol candidate until its mapping

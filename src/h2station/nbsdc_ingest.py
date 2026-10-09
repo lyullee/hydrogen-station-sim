@@ -2,9 +2,9 @@
 
 The catalogue exposes a public description and a file tree, but the numerical
 files require an approved download.  This module therefore accepts a local,
-rights-cleared workbook only after the caller has recorded its provenance and
-hash.  It never writes source rows, source filenames, timestamps, or source
-identifiers to a repository artifact.
+rights-cleared workbook or CSV only after the caller has recorded its
+provenance and hash.  It never writes source rows, source filenames,
+timestamps, or source identifiers to a repository artifact.
 
 The NBS DC dataset contains test-cylinder traces.  They can be compared with
 the vehicle-side model channels only when the custodian confirms the test
@@ -16,6 +16,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
+import csv
 import math
 from pathlib import Path
 from statistics import median
@@ -215,51 +216,83 @@ def read_nbsdc_workbook(
     try:
         sheet = workbook[sheet_name] if sheet_name else workbook.active
         rows = sheet.iter_rows(values_only=True)
-        headers = tuple(str(item).strip() if item is not None else "" for item in next(rows))
-        try:
-            indexes = {
-                name: headers.index(column)
-                for name, column in {
-                    "time": mapping.time,
-                    "pressure": mapping.pressure,
-                }.items()
-            }
-            for name, column in {
-                "temperature": mapping.temperature,
-                "mass_flow": mapping.mass_flow,
-                "transferred_mass": mapping.transferred_mass,
-            }.items():
-                if column is not None:
-                    indexes[name] = headers.index(column)
-        except ValueError as exc:
-            raise ValueError(f"mapped column is absent from workbook: {exc}") from exc
-
-        records: list[tuple[float, float, float | None, float | None, float | None]] = []
-        for row_number, row in enumerate(rows, start=2):
-            if max_rows is not None and len(records) >= max_rows:
-                break
-            time = _time_seconds(row[indexes["time"]] if indexes["time"] < len(row) else None)
-            pressure = _finite(row[indexes["pressure"]] if indexes["pressure"] < len(row) else None)
-            if time is None or pressure is None:
-                continue
-            temperature = (
-                _finite(row[indexes["temperature"]])
-                if "temperature" in indexes and indexes["temperature"] < len(row) else None
-            )
-            mass_flow = (
-                _finite(row[indexes["mass_flow"]])
-                if "mass_flow" in indexes and indexes["mass_flow"] < len(row) else None
-            )
-            transferred_mass = (
-                _finite(row[indexes["transferred_mass"]])
-                if "transferred_mass" in indexes and indexes["transferred_mass"] < len(row) else None
-            )
-            records.append((time, pressure, temperature, mass_flow, transferred_mass))
+        records = _records_from_rows(rows, mapping, max_rows=max_rows, input_label="workbook")
     finally:
         workbook.close()
 
+    return _trace_from_records(records, mapping, case_id=case_id, source=source, input_label="workbook")
+
+
+def _records_from_rows(
+    rows: Iterable[Iterable[object]],
+    mapping: NbsdcColumnMap,
+    *,
+    max_rows: int | None,
+    input_label: str,
+) -> list[tuple[float, float, float | None, float | None, float | None]]:
+    """Extract mapped numeric records from a header row followed by data rows."""
+
+    iterator = iter(rows)
+    try:
+        header_row = next(iterator)
+    except StopIteration as exc:
+        raise ValueError(f"{input_label} is empty") from exc
+    headers = tuple(str(item).strip() if item is not None else "" for item in header_row)
+    try:
+        indexes = {
+            name: headers.index(column)
+            for name, column in {
+                "time": mapping.time,
+                "pressure": mapping.pressure,
+            }.items()
+        }
+        for name, column in {
+            "temperature": mapping.temperature,
+            "mass_flow": mapping.mass_flow,
+            "transferred_mass": mapping.transferred_mass,
+        }.items():
+            if column is not None:
+                indexes[name] = headers.index(column)
+    except ValueError as exc:
+        raise ValueError(f"mapped column is absent from {input_label}: {exc}") from exc
+
+    records: list[tuple[float, float, float | None, float | None, float | None]] = []
+    for row in iterator:
+        if max_rows is not None and len(records) >= max_rows:
+            break
+        values = tuple(row)
+        time = _time_seconds(values[indexes["time"]] if indexes["time"] < len(values) else None)
+        pressure = _finite(values[indexes["pressure"]] if indexes["pressure"] < len(values) else None)
+        if time is None or pressure is None:
+            continue
+        temperature = (
+            _finite(values[indexes["temperature"]])
+            if "temperature" in indexes and indexes["temperature"] < len(values) else None
+        )
+        mass_flow = (
+            _finite(values[indexes["mass_flow"]])
+            if "mass_flow" in indexes and indexes["mass_flow"] < len(values) else None
+        )
+        transferred_mass = (
+            _finite(values[indexes["transferred_mass"]])
+            if "transferred_mass" in indexes and indexes["transferred_mass"] < len(values) else None
+        )
+        records.append((time, pressure, temperature, mass_flow, transferred_mass))
+    return records
+
+
+def _trace_from_records(
+    records: list[tuple[float, float, float | None, float | None, float | None]],
+    mapping: NbsdcColumnMap,
+    *,
+    case_id: str,
+    source: str,
+    input_label: str,
+) -> NbsdcRefuelTrace:
+    """Convert sanitized records into the unit-normalized in-memory trace."""
+
     if len(records) < 2:
-        raise ValueError("workbook contains fewer than two usable samples")
+        raise ValueError(f"{input_label} contains fewer than two usable samples")
     records.sort(key=lambda item: item[0])
     if any(right[0] == left[0] for left, right in zip(records, records[1:])):
         raise ValueError("duplicate timestamps require custodian-side resolution before intake")
@@ -286,4 +319,69 @@ def read_nbsdc_workbook(
     return NbsdcRefuelTrace(case_id, source, time - time[0], pressure, temperature, mass_flow, transferred_mass)
 
 
-__all__ = ["NbsdcColumnMap", "NbsdcRefuelTrace", "read_nbsdc_workbook"]
+def read_nbsdc_csv(
+    path: str | Path,
+    mapping: NbsdcColumnMap,
+    *,
+    case_id: str,
+    source: str,
+    encoding: str = "utf-8-sig",
+    delimiter: str = ",",
+    max_rows: int | None = None,
+) -> NbsdcRefuelTrace:
+    """Read one rights-cleared NBS DC CSV export into memory.
+
+    The caller must supply an approved opaque provenance label and explicit
+    units in ``mapping``.  CSV support is intentionally equivalent to workbook
+    support so approved exports cannot take a less strict validation path.
+    """
+
+    with Path(path).open("r", encoding=encoding, newline="") as handle:
+        rows = csv.reader(handle, delimiter=delimiter)
+        records = _records_from_rows(rows, mapping, max_rows=max_rows, input_label="CSV")
+    return _trace_from_records(records, mapping, case_id=case_id, source=source, input_label="CSV")
+
+
+def read_nbsdc_export(
+    path: str | Path,
+    mapping: NbsdcColumnMap,
+    *,
+    case_id: str,
+    source: str,
+    sheet_name: str | None = None,
+    encoding: str = "utf-8-sig",
+    delimiter: str = ",",
+    max_rows: int | None = None,
+) -> NbsdcRefuelTrace:
+    """Dispatch an approved workbook or CSV export to the strict shared parser."""
+
+    suffix = Path(path).suffix.lower()
+    if suffix == ".csv":
+        return read_nbsdc_csv(
+            path,
+            mapping,
+            case_id=case_id,
+            source=source,
+            encoding=encoding,
+            delimiter=delimiter,
+            max_rows=max_rows,
+        )
+    if suffix in {".xlsx", ".xlsm"}:
+        return read_nbsdc_workbook(
+            path,
+            mapping,
+            case_id=case_id,
+            source=source,
+            sheet_name=sheet_name,
+            max_rows=max_rows,
+        )
+    raise ValueError(f"unsupported NBS DC export format: {suffix or '<none>'}")
+
+
+__all__ = [
+    "NbsdcColumnMap",
+    "NbsdcRefuelTrace",
+    "read_nbsdc_csv",
+    "read_nbsdc_export",
+    "read_nbsdc_workbook",
+]
