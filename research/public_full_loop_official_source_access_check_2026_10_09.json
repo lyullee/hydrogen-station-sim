@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-09",
+  "artifact_type": "official_public_full_loop_source_access_check",
+  "status": "NO_PUBLIC_RAW_STATION_TO_VEHICLE_TRACE_CONFIRMED",
+  "purpose": "Document an access-level recheck of official sources before requesting additional private data.",
+  "eligibility_rule": {
+    "required": [
+      "synchronized station or dispenser pressure",
+      "vehicle or receiving-vessel pressure and temperature",
+      "mass flow or transferred mass",
+      "common time base",
+      "initial conditions, units and reuse terms"
+    ],
+    "claim_boundary": "A report, plot, aggregate KPI or software description is not counted as a raw full-loop holdout."
+  },
+  "sources": [
+    {
+      "id": "nrel_h2fills",
+      "url": "https://www.nrel.gov/hydrogen/h2fills",
+      "publisher": "NREL",
+      "source_class": "fueling model and validation software",
+      "public_artifact_accessed": true,
+      "raw_synchronized_trace_available": false,
+      "full_loop_eligible": false,
+      "observation": "The page describes transient station-to-FCEV pressure, temperature and mass-flow modeling and validation datasets, but does not publish a downloadable rights-cleared raw logger cohort."
+    },
+    {
+      "id": "nrel_h2fills_manual",
+      "url": "https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf?sfvrsn=b2960c3d_1",
+      "publisher": "NREL",
+      "source_class": "software manual",
+      "public_artifact_accessed": true,
+      "raw_synchronized_trace_available": false,
+      "full_loop_eligible": false,
+      "observation": "The manual documents model inputs and validation context; it is not a machine-readable station-to-vehicle measurement archive."
+    },
+    {
+      "id": "nrel_hitrf",
+      "url": "https://www.nrel.gov/hydrogen/hitrf-animation?print=",
+      "publisher": "NREL",
+      "source_class": "fueling test facility description",
+      "public_artifact_accessed": true,
+      "raw_synchronized_trace_available": false,
+      "full_loop_eligible": false,
+      "observation": "The facility description confirms representative H70/H35 pressure, temperature and flow instrumentation, but no public raw trace download or reuse contract was found on the page."
+    },
+    {
+      "id": "nrel_h2iq_hdvs",
+      "url": "https://www.energy.gov/sites/default/files/2022-12/h2iq-121922.pdf",
+      "publisher": "U.S. Department of Energy / NREL",
+      "source_class": "heavy-duty fueling simulator report",
+      "public_artifact_accessed": true,
+      "raw_synchronized_trace_available": false,
+      "full_loop_eligible": false,
+      "observation": "The public report contains plots and aggregate heavy-duty fueling results, not synchronized raw station, dispenser and vehicle rows."
+    },
+    {
+      "id": "doe_h2iq_heavy_duty_text",
+      "url": "https://www.energy.gov/cmei/fuels/march-h2iq-hour-hydrogen-fuel-dispensing-medium-and-heavy-duty-vehicles-text-version",
+      "publisher": "U.S. Department of Energy",
+      "source_class": "official program description",
+      "public_artifact_accessed": true,
+      "raw_synchronized_trace_available": false,
+      "full_loop_eligible": false,
+      "observation": "The page reports test capability and known data gaps; it does not expose a downloadable synchronized logger archive."
+    },
+    {
+      "id": "nlr_hdtada",
+      "url": "https://www.nlr.gov/research/software/hdtada-hydrogen-dispenser-test-apparatus",
+      "publisher": "National Laboratory of the Rockies",
+      "source_class": "dispenser test apparatus and software",
+      "public_artifact_accessed": true,
+      "raw_synchronized_trace_available": false,
+      "full_loop_eligible": false,
+      "observation": "The software and apparatus support station performance testing, but the public page does not provide a rights-cleared full-loop measurement cohort."
+    },
+    {
+      "id": "h2_stations_api_v2",
+      "url": "https://docs.h2-stations.eu/for-data-users/api-v2/",
+      "publisher": "H2-Stations.eu",
+      "source_class": "station inventory and status API",
+      "public_artifact_accessed": true,
+      "raw_synchronized_trace_available": false,
+      "full_loop_eligible": false,
+      "observation": "The API exposes layout, availability and usage context, not synchronized pressure, temperature, mass-flow and vehicle-tank time series."
+    },
+    {
+      "id": "zenodo_methytrucks_group_b",
+      "url": "https://zenodo.org/records/20590842",
+      "publisher": "Zenodo / MetHyTrucks",
+      "source_class": "public component sensor measurement",
+      "public_artifact_accessed": true,
+      "raw_synchronized_trace_available": true,
+      "full_loop_eligible": false,
+      "observation": "Temperature and pressure files are useful component evidence, but do not include a station-to-vehicle refueling channel contract."
+    }
+  ],
+  "aggregate": {
+    "source_count": 8,
+    "public_artifact_access_count": 8,
+    "raw_synchronized_trace_source_count": 1,
+    "eligible_full_loop_source_count": 0,
+    "official_station_to_vehicle_raw_trace_confirmed": false
+  },
+  "decision": {
+    "do_not_claim_public_full_loop_validation": true,
+    "use_component_and_station_side_evidence_now": true,
+    "smallest_next_request": "tier_1_component_pilot",
+    "request_private_deidentified_cohort_only_after_minimum_schema_is_available": true
+  },
+  "claim_boundary": "This access check records what the cited public sources expose. It adds no validation score, does not change a frozen holdout, and does not imply that component measurements validate station-to-vehicle behavior."
+}

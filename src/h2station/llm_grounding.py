@@ -4971,6 +4971,7 @@ def _local_actionable_data_scope_evidence() -> dict[str, Any] | None:
             "runtime_role": str(item.get("runtime_role") or ""),
         })
     full_loop = record.get("not_available_for_full_loop_holdout") or {}
+    official_access = _official_public_full_loop_access_evidence(root)
     return {
         "artifact": path.relative_to(root).as_posix(),
         "evidence_role": "privacy-bounded actionable station-side and component evidence scope",
@@ -4999,6 +5000,53 @@ def _local_actionable_data_scope_evidence() -> dict[str, Any] | None:
             if isinstance(item, dict) and item.get("id")
         ],
         "decision": record.get("decision") or {},
+        "official_public_access_check": official_access,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
+def _official_public_full_loop_access_evidence(root: Path) -> dict[str, Any] | None:
+    """Return only the aggregate result of the latest official-source recheck.
+
+    The source list remains a research artifact.  Runtime prompts receive the
+    access boundary and next smallest request, never raw rows, credentials or
+    site identity.  This prevents the assistant from treating a software page
+    or aggregate plot as an independent full-loop holdout.
+    """
+
+    path = root / "research/public_full_loop_official_source_access_check_2026_10_09.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    aggregate = record.get("aggregate") or {}
+    decision = record.get("decision") or {}
+    sources = record.get("sources") or []
+    if (
+        record.get("schema_version") != 1
+        or record.get("artifact_type") != "official_public_full_loop_source_access_check"
+        or record.get("status") != "NO_PUBLIC_RAW_STATION_TO_VEHICLE_TRACE_CONFIRMED"
+        or aggregate.get("source_count") != len(sources)
+        or aggregate.get("eligible_full_loop_source_count") != 0
+        or aggregate.get("official_station_to_vehicle_raw_trace_confirmed") is not False
+        or decision.get("do_not_claim_public_full_loop_validation") is not True
+        or decision.get("smallest_next_request") != "tier_1_component_pilot"
+        or not str(record.get("claim_boundary") or "")
+    ):
+        return None
+    return {
+        "artifact": path.relative_to(root).as_posix(),
+        "status": str(record.get("status") or ""),
+        "source_count": aggregate.get("source_count"),
+        "public_artifact_access_count": aggregate.get("public_artifact_access_count"),
+        "raw_synchronized_trace_source_count": aggregate.get(
+            "raw_synchronized_trace_source_count"
+        ),
+        "eligible_full_loop_source_count": aggregate.get(
+            "eligible_full_loop_source_count"
+        ),
+        "official_station_to_vehicle_raw_trace_confirmed": False,
+        "smallest_next_request": str(decision.get("smallest_next_request") or ""),
         "claim_limit": str(record.get("claim_boundary") or ""),
     }
 

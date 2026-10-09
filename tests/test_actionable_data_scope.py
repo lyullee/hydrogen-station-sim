@@ -40,6 +40,10 @@ def test_actionable_data_scope_is_privacy_bounded_and_nonempty() -> None:
     ]
     assert scope["decision"]["request_smallest_next_bundle_first"] == "tier_1_component_pilot"
     assert scope["artifact"] == "research/local_data_actionable_scope_2026_10_09.json"
+    official = scope["official_public_access_check"]
+    assert official["eligible_full_loop_source_count"] == 0
+    assert official["official_station_to_vehicle_raw_trace_confirmed"] is False
+    assert official["smallest_next_request"] == "tier_1_component_pilot"
     rendered = str(scope)
     assert "raw_rows" not in rendered
     assert "source_paths" not in rendered
