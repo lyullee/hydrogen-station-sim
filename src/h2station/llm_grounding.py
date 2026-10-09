@@ -7145,6 +7145,43 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_tank_trace_boundary"
         ] = public_tank_trace
+    # Carry the quantitative NREL boundary screen into the provider-facing
+    # evidence envelope. The raw workbook remains rights-limited and is never
+    # copied here; only the committed aggregate screen is exposed. Keeping
+    # the negative result visible prevents an LLM from describing a partial
+    # tank-boundary diagnostic as full-loop station validation.
+    public_inventory = public_evidence_inventory_summary()
+    nrel_screen = (
+        public_inventory.get("public_station_tank_boundary")
+        if isinstance(public_inventory, dict)
+        else None
+    )
+    if isinstance(nrel_screen, dict) and nrel_screen.get("screening_status") not in {
+        None,
+        "unavailable",
+        "not_loaded",
+    }:
+        envelope["response_evidence"]["public_nrel_boundary_screen"] = {
+            key: nrel_screen.get(key)
+            for key in (
+                "status", "sample_count", "duration_s", "tank_count",
+                "partial_station_to_tank_boundary_eligible",
+                "full_loop_holdout_eligible", "rights_limited",
+                "screening_status", "screening_pass_count",
+                "screening_pass_fraction", "pressure_rmse_mpa",
+                "temperature_rmse_c", "mass_rmse_kg",
+                "pressure_final_error_mpa", "screening_limits",
+                "parameter_tuning", "geometry_ratio_to_frozen_effective_volume",
+            )
+            if nrel_screen.get(key) is not None
+        }
+        envelope["response_evidence"]["public_nrel_boundary_screen"].update({
+            "claim_supported": False,
+            "claim_limit": (
+                "NREL 공통시계 호스·7개 탱크의 부분 경계 진단이며, "
+                "압력 screen은 통과하지 않았고 충전소-차량 full-loop 검증이 아님"
+            ),
+        })
     public_measurement = _public_measurement_instrumentation_evidence()
     if public_measurement is not None:
         envelope["response_evidence"][
@@ -7567,6 +7604,23 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_limit",
             )
             if public_tank_trace.get(key) is not None
+        }
+    nrel_screen = evidence.get("public_nrel_boundary_screen")
+    if isinstance(nrel_screen, dict):
+        summary["public_nrel_boundary_screen"] = {
+            key: nrel_screen.get(key)
+            for key in (
+                "status", "sample_count", "duration_s", "tank_count",
+                "partial_station_to_tank_boundary_eligible",
+                "full_loop_holdout_eligible", "rights_limited",
+                "screening_status", "screening_pass_count",
+                "screening_pass_fraction", "pressure_rmse_mpa",
+                "temperature_rmse_c", "mass_rmse_kg",
+                "pressure_final_error_mpa", "screening_limits",
+                "parameter_tuning", "geometry_ratio_to_frozen_effective_volume",
+                "claim_supported", "claim_limit",
+            )
+            if nrel_screen.get(key) is not None
         }
     public_measurement = evidence.get("public_measurement_instrumentation")
     if isinstance(public_measurement, dict):
@@ -8864,6 +8918,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     docudata_discovery = response.get("local_docudata_full_discovery") or {}
     local_public_catalog = response.get("local_public_validation_catalog") or {}
     local_public_candidate_scan = response.get("local_public_candidate_scan") or {}
+    nrel_screen = response.get("public_nrel_boundary_screen") or {}
     hytunnel_diagnostic = response.get(
         "public_hytunnel_failure_diagnostic"
     ) or {}
@@ -9269,6 +9324,23 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "claim_limit": short(operation_practice.get("claim_limit"), 260),
                 },
             } if operation_practice and operation_practice_relevant else {}),
+            **({
+                "public_nrel_boundary_screen": {
+                    key: nrel_screen.get(key)
+                    for key in (
+                        "status", "sample_count", "duration_s", "tank_count",
+                        "partial_station_to_tank_boundary_eligible",
+                        "full_loop_holdout_eligible", "rights_limited",
+                        "screening_status", "screening_pass_count",
+                        "screening_pass_fraction", "pressure_rmse_mpa",
+                        "temperature_rmse_c", "mass_rmse_kg",
+                        "pressure_final_error_mpa", "screening_limits",
+                        "parameter_tuning", "geometry_ratio_to_frozen_effective_volume",
+                        "claim_supported", "claim_limit",
+                    )
+                    if nrel_screen.get(key) is not None
+                },
+            } if nrel_screen and public_catalog_relevant else {}),
             **({
                 "public_station_aggregate_benchmark_reference": {
                     "source": aggregate_benchmark.get("source") or {},

@@ -1535,6 +1535,40 @@ def test_compact_data_used_reports_available_and_applied_station_profile():
     assert applied["evidence_artifact"]
 
 
+def test_nrel_boundary_screen_reaches_evidence_prompt_without_full_loop_claim():
+    manifest = build_evidence_manifest(
+        {"time_s": 12.5},
+        {},
+        [],
+        False,
+        question="공개 실험 검증 데이터의 범위는?",
+    )
+
+    screen = manifest["response_evidence"]["public_nrel_boundary_screen"]
+    assert screen["screening_status"] == "diagnostic_only_failed_screen"
+    assert screen["screening_pass_count"] == 0
+    assert screen["pressure_rmse_mpa"] == pytest.approx(6.164469743688679)
+    assert screen["claim_supported"] is False
+    assert screen["full_loop_holdout_eligible"] is False
+
+    summary = prompt_evidence_summary(manifest)["public_nrel_boundary_screen"]
+    assert summary["sample_count"] == 351
+    assert summary["parameter_tuning"] is False
+    decision = prompt_decision_evidence(manifest)["decision_support_evidence"]
+    assert decision["public_nrel_boundary_screen"]["screening_pass_count"] == 0
+
+    idle = build_evidence_manifest(
+        {"time_s": 12.5},
+        {},
+        [],
+        False,
+        question="현재 압력 상태는?",
+    )
+    assert "public_nrel_boundary_screen" not in prompt_decision_evidence(idle)[
+        "decision_support_evidence"
+    ]
+
+
 def test_manifest_separates_opt_in_recharge_dynamics_from_boundary_calibration():
     manifest = build_evidence_manifest(
         {
