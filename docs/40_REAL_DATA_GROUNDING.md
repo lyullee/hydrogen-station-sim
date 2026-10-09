@@ -459,7 +459,10 @@ the station runtime and does not rewrite the frozen holdout.
 The post-outcome comparison is recorded in
 `research/schefer_2006_line_transient_diagnostic_2026_10_09.json`. Using the
 published geometry without fitting reduced the frozen trace's flow NRMSE only
-slightly and left the median error and timing failure unresolved. This is a
-useful diagnosis: valve opening dynamics and the instrument measurement
-boundary must be represented and then tested on a new untouched campaign
-before the model can support a validation claim.
+slightly and left the median error and timing failure unresolved. A bounded
+post-outcome sensitivity with an explicit first-order source-valve response
+time moves the median flow error toward the frozen screen at the longest tested
+value, but it is not a validated setting. This is a useful diagnosis: valve
+opening dynamics and the instrument measurement boundary must be represented
+and then tested on a new untouched campaign before the model can support a
+validation claim.
