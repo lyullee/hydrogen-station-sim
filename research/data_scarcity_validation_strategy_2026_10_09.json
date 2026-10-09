@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-09",
+  "artifact_type": "privacy_bounded_data_scarcity_validation_strategy",
+  "status": "station_side_actionable_full_loop_gate_open",
+  "local_inventory": {
+    "csv_files": 33,
+    "total_csv_gib": 4.749,
+    "deduplicated_rows": 56854143,
+    "ordered_high_bank_pressure_cycles": 16770,
+    "paired_medium_high_pressure_episodes": 11770,
+    "short_horizon_pressure_forecast_cases": 1418,
+    "conditional_recharge_flow_episodes": 733,
+    "station_side_dynamic_validation_ready": true,
+    "station_side_longitudinal_analysis_ready": true,
+    "vehicle_side_channels_attested": 0,
+    "vehicle_side_full_loop_validation_ready": false
+  },
+  "public_evidence_role": {
+    "aggregate_operating_context_available": true,
+    "component_and_consequence_traces_available": true,
+    "rights_cleared_synchronized_full_loop_holdout_confirmed": false,
+    "full_loop_claim_permitted": false
+  },
+  "minimum_next_request": {
+    "pilot_event_count": 3,
+    "required_channels": [
+      "common_time_base",
+      "dispenser_or_hose_pressure_temperature",
+      "vehicle_or_receiving_vessel_pressure_temperature",
+      "mass_flow_or_transferred_mass",
+      "initial_conditions_capacity_protocol_state",
+      "label_provenance_and_reuse_terms"
+    ],
+    "raw_rows_committed": false,
+    "site_identity_committed": false
+  },
+  "claim_boundary": "Use existing local station-side and public component/aggregate evidence now; do not claim complete station-to-vehicle accuracy, accident frequency, certified safety distance or SAGA effectiveness without an independent synchronized full-loop holdout and expert review."
+}
