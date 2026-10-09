@@ -50,6 +50,7 @@ def build(root: Path) -> dict[str, Any]:
     operational_face_path = root / "research/public_operational_benchmark_face_validity_2026_10_05.json"
     h2safe_spatial_path = root / "research/h2safe_spatial_response_diagnostic_2026_10_08.json"
     h2safe_orientation_path = root / "research/h2safe_orientation_development_2026_10_08.json"
+    h2safe_directional_path = root / "research/h2safe_directional_obstruction_development_2026_10_09.json"
     hydelta_spatial_eligibility_path = root / "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json"
     sandia_spatial_path = root / "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json"
     hytunnel_spatial_protocol_path = root / "research/hytunnel_spatial_holdout_protocol_2026_10_08.json"
@@ -73,6 +74,7 @@ def build(root: Path) -> dict[str, Any]:
     operational_search = load_json(operational_search_path)
     h2safe_spatial = load_json(h2safe_spatial_path)
     h2safe_orientation = load_json(h2safe_orientation_path)
+    h2safe_directional = load_json(h2safe_directional_path)
     hydelta_spatial_eligibility = load_json(hydelta_spatial_eligibility_path)
     sandia_spatial = load_json(sandia_spatial_path)
     hytunnel_spatial = load_json(hytunnel_spatial_result_path)
@@ -223,6 +225,7 @@ def build(root: Path) -> dict[str, Any]:
                 "evidence": [
                     "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
                     "research/h2safe_orientation_development_2026_10_08.json",
+                    "research/h2safe_directional_obstruction_development_2026_10_09.json",
                     "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json",
                     "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json",
                     "research/hytunnel_spatial_holdout_protocol_2026_10_08.json",
@@ -243,6 +246,17 @@ def build(root: Path) -> dict[str, Any]:
                     "runtime_application": h2safe_orientation[
                         "integrity"
                     ]["runtime_application"],
+                },
+                "directional_obstruction_candidate": {
+                    "status": h2safe_directional["integrity"]["status"],
+                    "evaluation_status": h2safe_directional["evaluation"]["status"],
+                    "independent_validation_pass": h2safe_directional[
+                        "decision"
+                    ]["independent_validation_pass"],
+                    "runtime_application": h2safe_directional["integrity"][
+                        "runtime_application"
+                    ],
+                    "reason": h2safe_directional["evaluation"]["reason"],
                 },
                 "actual_hydrogen_holdout_candidate": {
                     "status": hydelta_spatial_eligibility["status"],
@@ -437,6 +451,8 @@ def build(root: Path) -> dict[str, Any]:
                     "research/H2SAFE_SPATIAL_RESPONSE_DIAGNOSTIC_2026_10_08.md",
                     "research/h2safe_orientation_development_2026_10_08.json",
                     "research/H2SAFE_ORIENTATION_DEVELOPMENT_2026_10_08.md",
+                    "research/h2safe_directional_obstruction_development_2026_10_09.json",
+                    "research/H2SAFE_DIRECTIONAL_OBSTRUCTION_DEVELOPMENT_2026_10_09.md",
                     "research/hydelta_indoor_spatial_holdout_protocol_2026_10_08.json",
                     "research/HYDELTA_INDOOR_SPATIAL_HOLDOUT_PROTOCOL_2026_10_08.md",
                     "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json",
@@ -489,6 +505,9 @@ def build(root: Path) -> dict[str, Any]:
             "public_full_loop_update_sha256": sha256(public_update_path),
             "operational_benchmark_recheck_sha256": sha256(operational_search_path),
             "h2safe_orientation_development_sha256": sha256(h2safe_orientation_path),
+            "h2safe_directional_obstruction_development_sha256": sha256(
+                h2safe_directional_path
+            ),
             "operational_benchmark_face_validity_sha256": sha256(operational_face_path),
             "h2safe_intake_sha256": sha256(
                 root / "research/h2safe_indoor_release_intake_2026_10_07.json"

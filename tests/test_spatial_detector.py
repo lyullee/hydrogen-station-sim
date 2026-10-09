@@ -13,6 +13,11 @@ from h2station.spatial_detector import (
     ranked_detector_tags,
     spatial_proxy_metadata,
 )
+from h2station.spatial_development import (
+    ObstructionBox,
+    VentilationVector,
+    directional_obstruction_geometry_score,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -37,6 +42,46 @@ def test_horizontal_orientation_candidate_prefers_release_height_without_azimuth
     assert orientation_aware_geometry_score(
         source, high, "vertical"
     ) == geometry_score(source, high)
+
+
+def test_directional_development_score_follows_declared_jet_and_vent_vector():
+    source = Point3D(0.0, 0.0, 0.0)
+    downstream = Point3D(4.0, 0.0, 0.0)
+    cross_stream = Point3D(0.0, 0.0, 4.0)
+    vent = VentilationVector(direction=Point3D(1.0, 0.0, 0.0), speed_m_s=5.0)
+    downstream_score = directional_obstruction_geometry_score(
+        source,
+        downstream,
+        "horizontal",
+        release_direction=Point3D(1.0, 0.0, 0.0),
+        ventilation=(vent,),
+    )
+    cross_stream_score = directional_obstruction_geometry_score(
+        source,
+        cross_stream,
+        "horizontal",
+        release_direction=Point3D(1.0, 0.0, 0.0),
+        ventilation=(vent,),
+    )
+    assert downstream_score > cross_stream_score
+
+
+def test_directional_development_score_penalizes_intersecting_obstruction():
+    source = Point3D(0.0, 0.0, 0.0)
+    detector = Point3D(4.0, 0.0, 0.0)
+    clear = directional_obstruction_geometry_score(source, detector, "horizontal")
+    blocked = directional_obstruction_geometry_score(
+        source,
+        detector,
+        "horizontal",
+        obstructions=(
+            ObstructionBox(
+                minimum=Point3D(1.0, -1.0, -1.0),
+                maximum=Point3D(2.0, 1.0, 1.0),
+            ),
+        ),
+    )
+    assert blocked == pytest.approx(clear * 0.6)
 
 
 @pytest.mark.parametrize(
@@ -76,6 +121,25 @@ def test_runtime_metadata_does_not_claim_validated_dispersion():
     assert metadata["runtime_application"] is False
     assert metadata["orientation_development_candidate"]["runtime_application"] is False
     assert "not CFD" in metadata["claim_limit"]
+
+
+def test_directional_candidate_is_separate_from_the_frozen_runtime_module():
+    runtime_source = (ROOT / "src/h2station/spatial_detector.py").read_text(
+        encoding="utf-8"
+    )
+    development_source = (ROOT / "src/h2station/spatial_development.py").read_text(
+        encoding="utf-8"
+    )
+    artifact = json.loads(
+        (
+            ROOT
+            / "research/h2safe_directional_obstruction_development_2026_10_09.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert "directional_obstruction_geometry_score" not in runtime_source
+    assert "directional_obstruction_geometry_score" in development_source
+    assert artifact["integrity"]["runtime_application"] is False
+    assert artifact["decision"]["independent_validation_pass"] is False
 
 
 def test_orientation_candidate_passes_only_internal_development_screens():

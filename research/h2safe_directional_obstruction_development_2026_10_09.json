@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "artifact_type": "post_access_h2safe_directional_obstruction_ranker_development",
+  "recorded_at": "2026-10-09",
+  "source": {
+    "title": "Dataset for H2SAFE - Controlled Gas Releases and Sensor-Response for Indoor Hydrogen Safety",
+    "doi": "10.7799/17118570",
+    "test_gas": "helium surrogate",
+    "archive_sha256": "f1b8bf747b7787f00152ec416940c80a143ea044fc18ee8a69ac9da204d9158e",
+    "hvac_metadata_sha256": "e99119f5f9aadac6e0bd8269b3fc7989a6026bc0a4c68221ea2a54b1eeee58bb",
+    "hvac_metadata_bytes": 692704
+  },
+  "integrity": {
+    "status": "POST_ACCESS_DEVELOPMENT_ONLY_NOT_VALIDATION",
+    "outcomes_seen_before_candidate_design": true,
+    "parameter_fitting_performed": false,
+    "independent_holdout_evaluated": false,
+    "runtime_application": false
+  },
+  "public_input_inventory": {
+    "lab_1": {
+      "release_orientation": ["vertical"],
+      "vent_records": 10,
+      "vent_speed_declared": true,
+      "vent_area_declared": true,
+      "vent_direction_declared": "surface-normal or angle text, not a common 3-D vector"
+    },
+    "lab_2": {
+      "release_orientations": ["horizontal", "vertical"],
+      "duct_records": 8,
+      "recirculation_fan_records": 2,
+      "duct_speed_declared": true,
+      "duct_area_declared": true,
+      "duct_coordinates_or_vectors": false
+    }
+  },
+  "candidate": {
+    "name": "directional_vent_obstruction_rank_v3",
+    "implementation": "src/h2station/spatial_detector.py:directional_obstruction_geometry_score",
+    "base": "orientation_class_rank_v2",
+    "non_fitted_priors": {
+      "release_alignment_gain": 0.75,
+      "ventilation_alignment_gain": 0.25,
+      "ventilation_reference_speed_m_s": 5.0,
+      "near_source_decay_length_m": 10.0,
+      "per_obstruction_transmission": 0.6
+    },
+    "formula_description": [
+      "start with the fixed orientation-aware coordinate score",
+      "increase the score for a declared release jet aligned with the source-to-detector vector, decaying with distance",
+      "increase the score for same-frame ventilation aligned with the source-to-detector vector, capped at the reference speed",
+      "multiply by 0.6 for each declared axis-aligned obstruction intersecting the source-detector segment"
+    ],
+    "required_same_frame_inputs": [
+      "release direction vector",
+      "ventilation velocity vectors and origin/area metadata",
+      "obstruction geometry or an independently validated visibility map"
+    ]
+  },
+  "evaluation": {
+    "status": "NOT_RUN",
+    "reason": "H2SAFE Lab-2 publishes duct speeds and areas but not duct coordinates/vectors in the sensor frame; applying an invented vector would be post-hoc pseudo-validation.",
+    "hydrogen_transfer": false,
+    "alarm_or_trip_calibration": false,
+    "detector_placement_validation": false,
+    "outdoor_station_validation": false
+  },
+  "decision": {
+    "candidate_retained_for_next_holdout": true,
+    "independent_validation_pass": false,
+    "runtime_use": "PROHIBITED_UNTIL_A_NEW_PRE_ACCESS_HOLDOUT_PASSES",
+    "next_validation": "Freeze this exact candidate before opening a rights-cleared cohort that publishes release vectors, HVAC vectors, obstruction geometry, signal units and release-time alignment in one coordinate frame."
+  },
+  "claim_boundary": "This record demonstrates a reproducible, transparent development candidate and an input-readiness gap. It does not validate hydrogen concentration, detector placement, alarm or ESD setpoints, CFD, consequence distance, outdoor dispersion or the full HRS digital twin."
+}
