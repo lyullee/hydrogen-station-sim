@@ -11710,6 +11710,39 @@ def compact_data_used(
                     ) is True,
                     "claim_limit": local_summary.get("claim_boundary"),
                 }
+            # Preserve the same public aggregate used by flow/protocol
+            # prompts in the operator-facing provenance panel.  The panel
+            # receives reported endpoints only; it never receives raw rows or
+            # a false full-loop validation flag.
+            benchmarks = evidence.get("public_experimental_benchmarks") or {}
+            for source in benchmarks.get("sources") or []:
+                if not isinstance(source, dict) or source.get(
+                    "id"
+                ) != "NREL_HD_FAST_FLOW_2024_REPORT":
+                    continue
+                aggregate = source.get("aggregate") or {}
+                required = (
+                    "mass_transfer_kg", "total_fill_time_s", "fueling_time_s",
+                    "average_mass_flow_g_s", "peak_mass_flow_g_s",
+                    "starting_pressure_mpa", "ending_pressure_mpa", "aprr_mpa_min",
+                    "ambient_temperature_c", "protocol",
+                )
+                if all(aggregate.get(key) is not None for key in required):
+                    result["public_h2iq_aggregate_reference"] = {
+                        "source_id": source.get("id"),
+                        "source_url": source.get("url"),
+                        "reported_aggregate": {
+                            key: aggregate.get(key) for key in required
+                        },
+                        "raw_rows_public": source.get("raw_rows_public") is True,
+                        "full_loop_holdout_eligible": False,
+                        "runtime_parameter_application": False,
+                        "claim_limit": (
+                            "공개 H2IQ 집계 보고값이며 원시 시계열이 아니다. "
+                            "full-loop 외부 검증이나 현장 안전한계로 해석하지 않는다."
+                        ),
+                    }
+                break
             result["public_references"] = _compact_public_references(evidence)
     return result
 

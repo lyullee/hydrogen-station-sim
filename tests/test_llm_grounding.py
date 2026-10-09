@@ -1473,6 +1473,19 @@ def test_public_h2iq_aggregate_is_sent_for_flow_questions_without_overclaiming()
     assert "public_h2iq_aggregate_reference" not in idle["decision_support_evidence"]
 
 
+def test_compact_data_used_retains_public_h2iq_provenance():
+    manifest = build_evidence_manifest(
+        {"time_s": 12.0, "nozzle_flow_g_s": 180.0}, {}, [], False,
+        question="충전 속도 근거를 보여줘",
+    )
+    used = compact_data_used(manifest, include_references=True)
+    reference = used["public_h2iq_aggregate_reference"]
+    assert reference["source_id"] == "NREL_HD_FAST_FLOW_2024_REPORT"
+    assert reference["reported_aggregate"]["ending_pressure_mpa"] == 74.6
+    assert reference["raw_rows_public"] is False
+    assert reference["full_loop_holdout_eligible"] is False
+
+
 def test_manifest_records_opt_in_measured_boundary_profile():
     frame = {
         "time_s": 12.5,
