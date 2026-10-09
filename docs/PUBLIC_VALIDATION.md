@@ -52,6 +52,10 @@ machine-readable inventory and full-loop exclusion decision are documented in
 [`LOCAL_HYDROGEN_STATION_DATA_DISCOVERY_RECHECK_2026_10_09.md`](../research/LOCAL_HYDROGEN_STATION_DATA_DISCOVERY_RECHECK_2026_10_09.md)
 and
 [`LOCAL_FULL_LOOP_CANDIDATE_RECHECK_2026_10_09.md`](../research/LOCAL_FULL_LOOP_CANDIDATE_RECHECK_2026_10_09.md).
+The complete privacy-bounded local-data map, including operational workbooks,
+engineering/media context, adjacent hydrogen telemetry and the refined
+full-loop negative screen, is indexed in
+[`LOCAL_DATA_CATALOG_2026_10_09.md`](../research/LOCAL_DATA_CATALOG_2026_10_09.md).
 
 ## Reproduce acquisition and normalization
 
