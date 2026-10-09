@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-09T00:54:15.170778+00:00",
+  "generated_at": "2026-10-09T05:14:50.145788+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 124,
+    "PASS": 125,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -1120,6 +1120,64 @@
             "keep full-loop vehicle claims disabled until vehicle pressure, vehicle temperature, delivered mass or SOC is synchronized and attested"
           ]
         }
+      }
+    },
+    {
+      "id": "local_station_data_revalidation_integrity",
+      "status": "PASS",
+      "claim": "A repeated privacy-bounded local station-data audit matches the committed inventory and preserves the station-side/full-loop claim boundary.",
+      "evidence": "research\\local_station_data_revalidation_2026_10_09.json",
+      "requirement": "Repeat aggregate counts, sampled-table coverage, broader header screen, privacy flags and explicit false full-loop/runtime-application flags.",
+      "observed": {
+        "inventory": {
+          "csv_files": 33,
+          "total_csv_gib": 4.749,
+          "physical_rows": 59272300,
+          "deduplicated_rows": 56854143,
+          "schema_width_file_counts": {
+            "9": 25,
+            "64": 8
+          },
+          "station_side_evidence_is_substantial": true,
+          "vehicle_or_dispenser_header_candidates": 0
+        },
+        "sampled_candidate_manifest": {
+          "sampled_table_count": 20,
+          "sampled_rows_per_table": 2000,
+          "coverage_classes": {
+            "station_pressure_flow_time": 12,
+            "station_pressure_temperature_flow_state_time": 8
+          },
+          "interpretation": "The sampled station candidates contain useful station-side signals. The presence of pressure, temperature, flow-like and state-like fields does not establish vehicle-side or dispenser-boundary semantics."
+        },
+        "broader_local_screen": {
+          "machine_readable_files_screened": 38528,
+          "csv_tsv_headers_screened": 12804,
+          "refined_csv_files_screened": 13050,
+          "synchronized_station_dispenser_vehicle_candidates": 0,
+          "quantitative_consequence_validation_ready": false,
+          "derived_outputs_excluded": true
+        },
+        "decision": {
+          "local_data_is_sparse": false,
+          "station_side_replay_and_chronological_holdouts_supported": true,
+          "new_full_loop_measured_cohort_found": false,
+          "full_loop_external_validation_supported": false,
+          "runtime_parameter_application": false,
+          "reason": "The local collection is large and supports station-side dynamics, but no independently attested synchronized receiving-vessel/vehicle pressure, temperature, delivered mass or SOC cohort with controller/protocol state was identified."
+        },
+        "privacy": {
+          "source_paths_published": false,
+          "source_filenames_published": false,
+          "source_headers_published": false,
+          "source_identifiers_published": false,
+          "site_company_manufacturer_published": false,
+          "calendar_dates_published": false,
+          "raw_rows_persisted": false,
+          "measurement_values_persisted": false,
+          "per_file_hashes_published": false
+        },
+        "claim_boundary": "This record is an aggregate local-data revalidation. It does not publish raw rows or source identity, attest channel units, validate a vehicle fill, establish a safety limit, or certify operation."
       }
     },
     {
@@ -7401,7 +7459,7 @@
       "requirement": "Manifest schema, normal/emergency distinction, contradiction guard, bounded tank evidence, CARB field benchmark, mixed release-campaign outcomes and full regression suite.",
       "observed": {
         "schema_version": 1,
-        "recorded_at": "2026-10-08",
+        "recorded_at": "2026-10-09",
         "status": "software_contract_verified",
         "scope": [
           "digital-twin main assistant",
@@ -7418,9 +7476,9 @@
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 956,
+            "passed": 1158,
             "failed": 0,
-            "warnings": 17
+            "warnings": 18
           }
         },
         "verified_properties": [
@@ -7461,10 +7519,12 @@
           "public experimental operating benchmarks are carried into the evidence envelope with pressure-class selection and explicit partial-boundary claim limits",
           "private screen-recording/photo intake is carried as a non-machine-readable provenance boundary without parameter-fit or full-loop authorization",
           "restricted station compressor/cooler thermal evidence is projected into full, summary, header and compact decision contexts as UNCONFIRMED, with no calibration, runtime, vehicle-fill or full-loop claim",
+          "pre-attestation local station flow/totalizer signal-consistency evidence is carried into full, summary, header and compact decision contexts with units, roles, reset semantics, absolute-flow fitting and full-loop validation explicitly disabled",
           "public HIAD metadata-to-runtime coverage is projected into full, summary, header and compact decision contexts with 29 direct, four proxy and one response-only cases, while incident narrative parameterization remains prohibited; all nine executable canonical recipes pass",
           "independent KHK metadata-to-runtime traceability is projected into full, summary, header and compact decision contexts: 22 reports covering 25 incident codes traverse eight passing canonical recipes, one KOH-electrolyte release remains outside gaseous-H2 scope, and report narrative parameterization remains prohibited",
           "CARB 22-station HGV 4.3 aggregate fault, communication and fueling-performance results are carried into the evidence envelope and only into relevant compact prompts, with no dynamic-model or full-loop validation claim",
-          "CARB-motivated startup, pressure-corridor, T20/T30/T40 and communication hold/resume training controls publish traceable live-frame outcomes without claiming standards certification"
+          "CARB-motivated startup, pressure-corridor, T20/T30/T40 and communication hold/resume training controls publish traceable live-frame outcomes without claiming standards certification",
+          "owner-controlled station pressure-cycle cross-bundle transfer evidence is routed to all assistant projections while vehicle/full-loop and runtime-parameter claims remain false"
         ],
         "not_established": [
           "physics validity of the consequence model",

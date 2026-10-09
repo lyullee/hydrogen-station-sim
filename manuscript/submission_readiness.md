@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-09 KST**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **124 PASS · 10 FAIL · 7 PENDING**.
+Gate counts: **125 PASS · 10 FAIL · 7 PENDING**.
 
 A fresh privacy-bounded local inventory confirms that data volume is not the
 station-side limitation. The controlled archive contains 33 CSV files,
@@ -32,6 +32,12 @@ medium/high pressure episodes, 1,418 short-horizon pressure forecast cases and
 therefore tied to unattested channel semantics and missing synchronized
 vehicle-side pressure, temperature, delivered-mass or SOC signals rather than
 to a sparse local archive.
+
+A second aggregate revalidation now independently matches the committed local
+inventory and the broader file/header screen. It is recorded as
+`local_station_data_revalidation_integrity`; the revalidation keeps runtime
+parameter application and station-to-vehicle full-loop validation explicitly
+false.
 
 The companion privacy-bounded asset screen adds a separate passing integrity
 gate: 52 operational scenario steps have populated leak, fire, explosion and

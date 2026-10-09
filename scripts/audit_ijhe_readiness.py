@@ -1510,6 +1510,78 @@ def audit(root: Path) -> dict[str, object]:
         } if local_utilization else "missing; local station-data utilization audit has not completed",
     ))
 
+    # A second, independently generated aggregate audit was added after the
+    # original utilization record.  Keep it as its own integrity gate so the
+    # readiness report records that the local archive was re-counted and that
+    # the same full-loop boundary still holds.  This gate is intentionally
+    # about evidence provenance only; it cannot promote station-side data to a
+    # vehicle/full-loop validation or alter runtime parameters.
+    local_revalidation_path = root / (
+        "research/local_station_data_revalidation_2026_10_09.json"
+    )
+    local_revalidation = _json(local_revalidation_path)
+    local_revalidation_privacy = (local_revalidation or {}).get("privacy") or {}
+    local_revalidation_inventory = (
+        (local_revalidation or {}).get("measured_station_bundle") or {}
+    )
+    local_revalidation_sample = (
+        (local_revalidation or {}).get("sampled_candidate_manifest") or {}
+    )
+    local_revalidation_broad = (
+        (local_revalidation or {}).get("broader_local_screen") or {}
+    )
+    local_revalidation_decision = (
+        (local_revalidation or {}).get("decision") or {}
+    )
+    local_revalidation_pass = bool(
+        (local_revalidation or {}).get("schema_version") == 1
+        and (local_revalidation or {}).get("artifact_type")
+        == "local_station_data_revalidation"
+        and (local_revalidation or {}).get("status")
+        == "repeat_audit_matches_committed_inventory"
+        and local_revalidation_privacy
+        and all(value is False for value in local_revalidation_privacy.values())
+        and local_revalidation_inventory.get("csv_files") == 33
+        and local_revalidation_inventory.get("total_csv_gib") == 4.749
+        and local_revalidation_inventory.get("physical_rows") == 59_272_300
+        and local_revalidation_inventory.get("deduplicated_rows") == 56_854_143
+        and local_revalidation_inventory.get("vehicle_or_dispenser_header_candidates") == 0
+        and local_revalidation_sample.get("sampled_table_count") == 20
+        and local_revalidation_sample.get("sampled_rows_per_table") == 2_000
+        and local_revalidation_broad.get("machine_readable_files_screened") == 38_528
+        and local_revalidation_broad.get("csv_tsv_headers_screened") == 12_804
+        and local_revalidation_broad.get("refined_csv_files_screened") == 13_050
+        and local_revalidation_broad.get(
+            "synchronized_station_dispenser_vehicle_candidates"
+        ) == 0
+        and local_revalidation_decision.get("local_data_is_sparse") is False
+        and local_revalidation_decision.get(
+            "station_side_replay_and_chronological_holdouts_supported"
+        ) is True
+        and local_revalidation_decision.get(
+            "full_loop_external_validation_supported"
+        ) is False
+        and local_revalidation_decision.get("runtime_parameter_application") is False
+        and isinstance((local_revalidation or {}).get("claim_boundary"), str)
+    )
+    gates.append(_gate(
+        "local_station_data_revalidation_integrity",
+        "PASS" if local_revalidation_pass else (
+            "FAIL" if local_revalidation else "PENDING"
+        ),
+        "A repeated privacy-bounded local station-data audit matches the committed inventory and preserves the station-side/full-loop claim boundary.",
+        str(local_revalidation_path.relative_to(root)),
+        "Repeat aggregate counts, sampled-table coverage, broader header screen, privacy flags and explicit false full-loop/runtime-application flags.",
+        {
+            "inventory": local_revalidation_inventory,
+            "sampled_candidate_manifest": local_revalidation_sample,
+            "broader_local_screen": local_revalidation_broad,
+            "decision": local_revalidation_decision,
+            "privacy": local_revalidation_privacy,
+            "claim_boundary": (local_revalidation or {}).get("claim_boundary"),
+        } if local_revalidation else "missing; local station-data revalidation has not completed",
+    ))
+
     cross_station_bundle_path = root / (
         "research/local_cross_station_bundle_recheck_2026_10_09.json"
     )
