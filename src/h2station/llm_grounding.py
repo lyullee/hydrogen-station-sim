@@ -5075,6 +5075,81 @@ def _local_actionable_data_scope_evidence() -> dict[str, Any] | None:
     }
 
 
+def _data_scarcity_validation_strategy_evidence() -> dict[str, Any] | None:
+    """Expose the privacy-safe data-availability strategy to grounded answers.
+
+    The strategy keeps a provider from treating a large station-side archive as
+    either ``no data`` or a complete station-to-vehicle holdout.  Only counts,
+    eligibility flags and the minimum de-identified next request are admitted;
+    raw rows, paths and site identity never enter the prompt.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "research/data_scarcity_validation_strategy_2026_10_09.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    inventory = record.get("local_inventory") or {}
+    public = record.get("public_evidence_role") or {}
+    request = record.get("minimum_next_request") or {}
+    if (
+        record.get("schema_version") != 1
+        or record.get("artifact_type")
+        != "privacy_bounded_data_scarcity_validation_strategy"
+        or record.get("status") != "station_side_actionable_full_loop_gate_open"
+        or inventory.get("csv_files") != 33
+        or inventory.get("deduplicated_rows") != 56854143
+        or inventory.get("vehicle_side_channels_attested") != 0
+        or inventory.get("station_side_dynamic_validation_ready") is not True
+        or inventory.get("vehicle_side_full_loop_validation_ready") is not False
+        or public.get("rights_cleared_synchronized_full_loop_holdout_confirmed") is not False
+        or public.get("full_loop_claim_permitted") is not False
+        or request.get("pilot_event_count") != 3
+        or len(request.get("required_channels") or []) != 6
+        or request.get("raw_rows_committed") is not False
+        or request.get("site_identity_committed") is not False
+        or not str(record.get("claim_boundary") or "")
+    ):
+        return None
+    return {
+        "artifact": path.relative_to(root).as_posix(),
+        "evidence_role": "privacy-bounded data availability and claim-scope strategy",
+        "local_inventory": {
+            key: inventory.get(key)
+            for key in (
+                "csv_files", "total_csv_gib", "deduplicated_rows",
+                "ordered_high_bank_pressure_cycles",
+                "paired_medium_high_pressure_episodes",
+                "short_horizon_pressure_forecast_cases",
+                "conditional_recharge_flow_episodes",
+                "station_side_dynamic_validation_ready",
+                "station_side_longitudinal_analysis_ready",
+                "vehicle_side_channels_attested",
+                "vehicle_side_full_loop_validation_ready",
+            )
+        },
+        "public_evidence_role": {
+            key: public.get(key)
+            for key in (
+                "aggregate_operating_context_available",
+                "component_and_consequence_traces_available",
+                "rights_cleared_synchronized_full_loop_holdout_confirmed",
+                "full_loop_claim_permitted",
+            )
+        },
+        "minimum_next_request": {
+            "pilot_event_count": request.get("pilot_event_count"),
+            "required_channels": [
+                str(value) for value in request.get("required_channels") or []
+            ],
+            "raw_rows_committed": request.get("raw_rows_committed") is True,
+            "site_identity_committed": request.get("site_identity_committed") is True,
+        },
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _official_public_full_loop_access_evidence(root: Path) -> dict[str, Any] | None:
     """Return only the aggregate result of the latest official-source recheck.
 
@@ -7148,6 +7223,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "local_actionable_data_scope"
         ] = actionable_data_scope
+    data_scarcity_strategy = _data_scarcity_validation_strategy_evidence()
+    if data_scarcity_strategy is not None:
+        envelope["response_evidence"][
+            "data_scarcity_validation_strategy"
+        ] = data_scarcity_strategy
     # Keep the latest local archive revalidation visible to the LLM through
     # the same privacy-bounded API projection used by the UI.  This reads only
     # committed aggregate evidence; raw rows, paths, identifiers and site
@@ -7449,6 +7529,19 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "coverage_assessment"
             ) or {},
             "claim_limit": short(local_public_catalog.get("claim_limit"), 320),
+        }
+    data_scarcity_strategy = evidence.get("data_scarcity_validation_strategy")
+    if isinstance(data_scarcity_strategy, dict):
+        summary["data_scarcity_validation_strategy"] = {
+            "evidence_role": data_scarcity_strategy.get("evidence_role"),
+            "local_inventory": data_scarcity_strategy.get("local_inventory") or {},
+            "public_evidence_role": data_scarcity_strategy.get(
+                "public_evidence_role"
+            ) or {},
+            "minimum_next_request": data_scarcity_strategy.get(
+                "minimum_next_request"
+            ) or {},
+            "claim_limit": short(data_scarcity_strategy.get("claim_limit"), 320),
         }
     local_public_candidate_scan = evidence.get("local_public_candidate_scan")
     if isinstance(local_public_candidate_scan, dict):
@@ -8643,6 +8736,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "confidential_local_station_data_utilization"
     ) or {}
     actionable_data_scope = response.get("local_actionable_data_scope") or {}
+    data_scarcity_strategy = response.get(
+        "data_scarcity_validation_strategy"
+    ) or {}
     local_revalidation = response.get("local_station_data_revalidation") or {}
     component_bundle = response.get("confidential_component_bundle") or {}
     readiness = response.get("validation_readiness") or {}
@@ -9010,6 +9106,53 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             } if actionable_data_scope and (
                 station_signal_relevant or public_catalog_relevant
                 or local_discovery_relevant
+            ) else {}),
+            **({
+                "data_scarcity_validation_strategy": {
+                    "station_side_actionable": (
+                        (data_scarcity_strategy.get("local_inventory") or {}).get(
+                            "station_side_dynamic_validation_ready"
+                        ) is True
+                    ),
+                    "deduplicated_rows": (
+                        (data_scarcity_strategy.get("local_inventory") or {}).get(
+                            "deduplicated_rows"
+                        )
+                    ),
+                    "vehicle_side_channels_attested": (
+                        (data_scarcity_strategy.get("local_inventory") or {}).get(
+                            "vehicle_side_channels_attested"
+                        )
+                    ),
+                    "full_loop_holdout_confirmed": (
+                        (data_scarcity_strategy.get("public_evidence_role") or {}).get(
+                            "rights_cleared_synchronized_full_loop_holdout_confirmed"
+                        ) is True
+                    ),
+                    "minimum_pilot_event_count": (
+                        (data_scarcity_strategy.get("minimum_next_request") or {}).get(
+                            "pilot_event_count"
+                        )
+                    ),
+                    "required_channel_count": len(
+                        (data_scarcity_strategy.get("minimum_next_request") or {}).get(
+                            "required_channels"
+                        ) or []
+                    ),
+                    "raw_rows_committed": (
+                        (data_scarcity_strategy.get("minimum_next_request") or {}).get(
+                            "raw_rows_committed"
+                        ) is True
+                    ),
+                },
+            } if data_scarcity_strategy and (
+                any(
+                    token in str(manifest.get("question") or "").lower()
+                    for token in (
+                        "데이터", "실측", "검증", "공개", "validation",
+                        "dataset", "data",
+                    )
+                )
             ) else {}),
             **({
                 "public_station_operation_practice_reference": {
