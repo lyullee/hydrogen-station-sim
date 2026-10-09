@@ -84,6 +84,33 @@ def _provider_evidence_basis(manifest: dict[str, Any]) -> dict[str, Any]:
         )
         if key in full
     }
+    # The audit manifest keeps stable response-family IDs, but provider
+    # prompts use operator-facing situation labels.  This preserves the
+    # public accident citations without leaking implementation identifiers
+    # such as ``external_fire`` into an interactive answer.
+    response_guidance = keep.get("response_guidance")
+    if isinstance(response_guidance, dict):
+        precedents = response_guidance.get("relevant_public_accident_precedents")
+        if isinstance(precedents, dict):
+            labels = {
+                "gas_release": "수소 누출·가스 검지",
+                "hydrogen_fire": "수소 화재·제트화염",
+                "external_fire": "외부 화재·열 노출",
+                "relief_discharge": "안전밸브 방출",
+                "overpressure": "과압·과충전",
+                "fueling_fault": "차량 충전 이상",
+                "hose_connection": "호스·커플러 연결 이상",
+            }
+            public_rows = [
+                {"situation": labels.get(str(plan_id), "관련 비상상황"),
+                 "precedents": rows}
+                for plan_id, rows in precedents.items()
+                if isinstance(rows, list) and rows
+            ]
+            keep["response_guidance"] = {
+                **response_guidance,
+                "relevant_public_accident_precedents": public_rows,
+            }
     boundaries = full.get("validation_boundaries")
     if isinstance(boundaries, dict):
         # The station-to-vehicle limitation is the decision-relevant boundary
@@ -2767,7 +2794,8 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         if row.get("calculation_status") == "calculated"]
     evidence_manifest = build_evidence_manifest(
         frame, sensor_values, impact_results, show_impact_results,
-        active_conditions=matched_rules + reference_rules,
+        active_conditions=(matched_rules + reference_rules
+                           + _response_plan_conditions(response_plans)),
         question=request.question,
     )
     if request.direct:
@@ -3595,6 +3623,45 @@ def _prompt_response_guidance_summary(guidance: dict[str, Any] | None) -> dict[s
     }
 
 
+def _response_plan_conditions(selection: list[dict[str, Any]] | None) -> list[dict[str, Any]]:
+    """Project selected response playbooks into the evidence envelope.
+
+    Active HAZOP rows already carry ``response_plan_id``.  A healthy-frame
+    operator question (for example, asking how to respond to a leak) has no
+    active row, however the response catalogue still selects a bounded
+    playbook.  Preserve that selection as provenance so public accident
+    precedents and response sources reach the provider prompt without
+    treating the hypothetical question as a live alarm.
+    """
+    rows: list[dict[str, Any]] = []
+    seen: set[tuple[str, str, str]] = set()
+    for item in selection or []:
+        if not isinstance(item, dict):
+            continue
+        plan = item.get("plan") if isinstance(item.get("plan"), dict) else {}
+        plan_id = str(plan.get("id") or "").strip()
+        if not plan_id:
+            continue
+        title = str(plan.get("title") or plan_id)
+        sensor_id = str(plan.get("sensor_id") or "")
+        key = (plan_id, sensor_id, title)
+        if key in seen:
+            continue
+        seen.add(key)
+        evidence = item.get("evidence") or []
+        if isinstance(evidence, str):
+            evidence = [evidence]
+        rows.append({
+            "scenario": title,
+            "sensor_id": sensor_id,
+            "state": "RESPONSE_PLAN_SELECTED",
+            "severity": "MANUAL_QUERY" if any("질의" in str(value) for value in evidence) else "",
+            "response_plan_id": plan_id,
+            "response_source_ids": list(plan.get("sources") or []),
+        })
+    return rows
+
+
 @app.post("/api/simulations/{job_id}/sensors/{sensor_id}/analyze")
 async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                                     request: SensorAnalysisInput) -> dict[str, Any]:
@@ -3609,10 +3676,14 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         assessed = await asyncio.to_thread(assess_sensor_cases, frame, catalog, backend,
                                            [payload["sensor"]["node_id"]])
         impact_results = [item for item in assessed if item.get("calculation_status") == "calculated"][:2]
+    question_response_plans = response_selection(
+        frame, catalog, request.question, "manual", limit=None
+    )
     evidence_manifest = build_evidence_manifest(
         frame, payload["related_signals"], impact_results,
         bool(current_triggers or _impact_requested(request.question)),
-        active_conditions=active_rules + related_rules,
+        active_conditions=(active_rules + related_rules
+                           + _response_plan_conditions(question_response_plans)),
         selected_sensor=sensor_id,
         question=request.question,
     )
@@ -3644,6 +3715,17 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         frame, catalog, request.question, active_rules, related_rules,
         applicable_plan_ids, known_plans,
     )
+    # A normal sensor should show only prevention by default, but an operator
+    # explicitly asking for a leak/fire/overpressure response must receive the
+    # complete staged playbook.  Keep this separate from live-alert routing so
+    # a routine selection does not acquire emergency instructions implicitly.
+    explicit_question_plans = [
+        item for item in question_response_plans
+        if any("질의" in str(value) for value in (item.get("evidence") or []))
+    ]
+    if not alert and not related_rules and explicit_question_plans:
+        response_markdown = render_guidance(explicit_question_plans, actual_alert=False)
+        response_guidance = structured_guidance(explicit_question_plans, actual_alert=False)
     if request.direct:
         # Scope the direct evaluation to the selected equipment. The detailed
         # rules and staged plans are already returned by the sensor detail API.

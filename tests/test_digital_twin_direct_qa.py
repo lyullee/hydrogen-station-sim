@@ -156,6 +156,45 @@ def test_direct_qa_calculates_impact_for_alarm_and_explicit_hypothesis(monkeypat
             api._jobs.pop(job_id, None)
 
 
+def test_manual_response_question_carries_public_accident_precedents(monkeypatch):
+    """A hypothetical response question must carry its public precedent basis."""
+    captured = []
+
+    monkeypatch.setattr(api, "_invoke_saga_hazop_direct",
+                        lambda *args: {"status": "NORMAL", "hits": []})
+
+    async def one_pass(question, context, history, provider, request_kind, stream_output=False):
+        captured.append({"question": question, "context": context})
+        return {"answer": "누출 대응 절차를 안내합니다.", "model": "one-pass-test"}
+
+    monkeypatch.setattr(api, "_invoke_main_assistant_selected", one_pass)
+    job_id = "direct-qa-response-provenance"
+    with api._jobs_lock:
+        api._jobs[job_id] = {"frames": [_frame()]}
+    try:
+        with TestClient(api.app) as client:
+            response = client.post(
+                f"/api/simulations/{job_id}/saga-analysis/direct",
+                json={"question": "수소 누출 발생 시 대응 절차를 알려줘"},
+            )
+        assert response.status_code == 200, response.text
+        payload = response.json()
+        precedents = (payload["evidence_manifest"]["response_evidence"]
+                      ["relevant_public_accident_precedents"]["by_response_plan"])
+        assert precedents["gas_release"]
+        provider_precedents = (captured[-1]["context"]["evidence_basis"]
+                               ["response_guidance"]
+                               ["relevant_public_accident_precedents"])
+        assert any(row["situation"] == "수소 누출·가스 검지"
+                   and row["precedents"] for row in provider_precedents)
+        assert "gas_release" not in json.dumps(provider_precedents, ensure_ascii=False)
+        assert payload["response_guidance"] is not None
+        assert payload["response_guidance"]["plans"]
+    finally:
+        with api._jobs_lock:
+            api._jobs.pop(job_id, None)
+
+
 def test_direct_qa_does_not_claim_unconfirmed_virtual_safety_action(monkeypatch):
     monkeypatch.setattr(api, "load_hyram_backend", lambda: object())
     monkeypatch.setattr(api, "assess_sensor_cases", lambda *args: [])
