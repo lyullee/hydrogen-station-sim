@@ -5,6 +5,21 @@ station archive. It requests only generic channel semantics and aggregate
 quality information. It does not request raw rows, site identity, equipment
 identity, exact dates, absolute timestamps or raw tag names.
 
+## Current evidence boundary
+
+The local archive is already large enough for station-side validation: 33 CSV
+files (25 narrow and eight wide schemas), 59,272,300 physical rows and
+56,854,143 rows after duplicate exclusion. The currently supported measured
+uses are pressure-cycle behaviour, cascade ordering, recharge-response
+diagnostics, compressor/valve/ESD state consistency and chronological station
+holdouts. Pressure reference and lifecycle event semantics are attested.
+
+This archive does not yet establish a synchronized vehicle-fill cohort. Flow
+units, vehicle-side pressure/temperature/mass/SOC channels, calibration
+uncertainty and the complete event clock still require the confirmations below.
+The request therefore asks for semantics and aggregate checks, rather than an
+export of the confidential rows.
+
 ## Required confirmations
 
 1. **Time base and event alignment** — common clock, reset/timezone treatment,
@@ -44,6 +59,19 @@ for controlled replay.
 | Vehicle/dispenser channels | Station-to-vehicle pressure/temperature/mass/SOC holdout |
 | Quality and calibration metadata | Uncertainty bands and reviewer reproducibility |
 | Rights approval | Controlled review and privacy-preserving publication |
+
+## Gate effects
+
+- Confirmations 1–5 allow the measured station profile to be replayed with
+  explicit time alignment, state transitions and pressure/thermal/flow roles.
+- Confirmation 6 is required before any vehicle, dispenser or full-loop
+  accuracy claim is enabled; an absent channel is recorded as a boundary, not
+  imputed from the simulator.
+- Confirmation 7 is required for uncertainty intervals, missing-data policy
+  and reproducible reviewer replay.
+- Confirmation 8 permits a de-identified aggregate review while the raw archive
+  remains owner-controlled. It does not transfer ownership or authorize
+  publication of site, manufacturer or date identifiers.
 
 Until these confirmations are supplied, the current evidence remains valid for
 station-side pressure cycles, cascade ordering and recharge-response diagnostics
