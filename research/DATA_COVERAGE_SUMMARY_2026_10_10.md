@@ -14,6 +14,8 @@
 | `owner_station_runtime_replay` | ACTIONABLE | sanitized station pressure-boundary profile is wired and replayable | automatic runtime parameter replacement or full-loop validation |
 | `public_type_iv_tank` | VALIDATED_COMPONENT | measured-boundary Type-IV tank component validation | station controller, compressor, cascade, dispenser or field safety certification |
 | `public_station_tank_boundary` | DIAGNOSTIC_ONLY | 공통시계 호스·수용탱크 압력·온도·질량의 부분 station-to-tank 경계 진단 | 충전소 제어기·캐스케이드·ESD·노즐/리셉터클을 포함한 full-loop 검증 |
+| `owner_station_side_integrated_validation` | VALIDATED_STATION_SIDE | hash-linked same-site station-side pressure-boundary, cascade-sequence and recharge-pressure holdout integration | vehicle-side accuracy, full station-to-vehicle validation, safety-distance or field certification; the retained lifecycle-counter result is negative |
+| `nbsdc_liquid_hrs_catalogue` | REQUEST_CANDIDATE | real liquid-hydrogen refueling-station operating-range and data-access lead for station-side schema/context and LLM claim-boundary grounding | numerical model calibration, independent holdout scoring, full station-to-vehicle validation, safety-distance calculation, or response-effectiveness claim before custodian approval and channel attestation |
 | `public_component_measurements` | DIAGNOSTIC_ONLY | public synchronized component pressure/temperature/flow diagnostics | prospective station-to-vehicle holdout |
 | `public_type_i_filling_thermal` | DIAGNOSTIC_ONLY | 공개 Type-I 탱크 충전 열거동의 구성품 진단 및 열 모델 비교 | 충전소 제어기·캐스케이드·디스펜서·차량을 포함한 full-loop 검증 또는 런타임 파라미터 승격 |
 | `public_field_metrology` | DIAGNOSTIC_ONLY | 35 MPa 현장 계측의 압력·온도·질량 경계 및 반복성 맥락 | 원시 station-to-vehicle holdout, 제어기·ESD·사고영향 검증 |

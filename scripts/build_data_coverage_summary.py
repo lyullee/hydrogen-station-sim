@@ -46,6 +46,14 @@ def build_summary(root: Path) -> dict[str, Any]:
         root,
         "research/striednig_hyddown_diagnostic_result_2026_10_10.json",
     )
+    station_side_integrated = _read(
+        root,
+        "research/confidential_station_side_integrated_validation_2026_10_09.json",
+    )
+    nbsdc_liquid = _read(
+        root,
+        "research/nbsdc_liquid_hrs_public_access_recheck_2026_10_10.json",
+    )
 
     inventory = local["inventory"]
     utilization = local["utilization"]
@@ -107,6 +115,18 @@ def build_summary(root: Path) -> dict[str, Any]:
     type_i_eligibility = type_i_filling.get("eligibility") if isinstance(type_i_filling, dict) else {}
     if not isinstance(type_i_eligibility, dict):
         type_i_eligibility = {}
+    station_side_checks = station_side_integrated.get("checks") if isinstance(station_side_integrated, dict) else {}
+    if not isinstance(station_side_checks, dict):
+        station_side_checks = {}
+    station_side_decision = station_side_integrated.get("decision") if isinstance(station_side_integrated, dict) else {}
+    if not isinstance(station_side_decision, dict):
+        station_side_decision = {}
+    nbsdc_metadata = nbsdc_liquid.get("metadata_observation") if isinstance(nbsdc_liquid, dict) else {}
+    if not isinstance(nbsdc_metadata, dict):
+        nbsdc_metadata = {}
+    nbsdc_access = nbsdc_liquid.get("access_probe") if isinstance(nbsdc_liquid, dict) else {}
+    if not isinstance(nbsdc_access, dict):
+        nbsdc_access = {}
     return {
         "schema_version": 1,
         "artifact_type": "privacy_bounded_data_coverage_summary",
@@ -204,6 +224,65 @@ def build_summary(root: Path) -> dict[str, Any]:
                 },
                 "allowed_claim": "공통시계 호스·수용탱크 압력·온도·질량의 부분 station-to-tank 경계 진단",
                 "not_allowed": "충전소 제어기·캐스케이드·ESD·노즐/리셉터클을 포함한 full-loop 검증",
+            },
+            {
+                "id": "owner_station_side_integrated_validation",
+                "status": "VALIDATED_STATION_SIDE",
+                "evidence": "research/confidential_station_side_integrated_validation_2026_10_09.json",
+                "coverage": {
+                    "pressure_boundary_holdout_supported": bool(
+                        (station_side_checks.get("pressure_boundary") or {}).get("supported")
+                    ),
+                    "pressure_boundary_holdout_points": (
+                        station_side_checks.get("pressure_boundary") or {}
+                    ).get("holdout_points"),
+                    "cascade_sequence_holdout_supported": bool(
+                        (station_side_checks.get("cascade_sequence") or {}).get("supported")
+                    ),
+                    "cascade_sequence_holdout_pairs": (
+                        station_side_checks.get("cascade_sequence") or {}
+                    ).get("holdout_pairs"),
+                    "recharge_pressure_forecast_supported": bool(
+                        (station_side_checks.get("recharge_pressure_forecast") or {}).get("supported")
+                    ),
+                    "recharge_pressure_forecast_holdout_cases": (
+                        station_side_checks.get("recharge_pressure_forecast") or {}
+                    ).get("holdout_cases"),
+                    "lifecycle_counter_alignment_supported": bool(
+                        (station_side_checks.get("lifecycle_alignment") or {}).get(
+                            "counter_monotonicity_met"
+                        )
+                    ),
+                    "runtime_parameter_application": bool(
+                        station_side_decision.get("runtime_parameter_application")
+                    ),
+                    "vehicle_fill_validation": bool(
+                        station_side_decision.get("vehicle_fill_validation")
+                    ),
+                    "full_loop_external_validation_supported": bool(
+                        station_side_decision.get("full_loop_external_validation_supported")
+                    ),
+                },
+                "allowed_claim": "hash-linked same-site station-side pressure-boundary, cascade-sequence and recharge-pressure holdout integration",
+                "not_allowed": "vehicle-side accuracy, full station-to-vehicle validation, safety-distance or field certification; the retained lifecycle-counter result is negative",
+            },
+            {
+                "id": "nbsdc_liquid_hrs_catalogue",
+                "status": "REQUEST_CANDIDATE",
+                "evidence": "research/nbsdc_liquid_hrs_public_access_recheck_2026_10_10.json",
+                "coverage": {
+                    "catalogue_record_verified": nbsdc_liquid.get("status")
+                    == "REAL_LHRS_METADATA_CONFIRMED_NUMERICAL_FILES_APPLICATION_CONTROLLED",
+                    "monitoring_window_hours": 16,
+                    "sample_interval_s": 1,
+                    "file_count": nbsdc_metadata.get("file_count"),
+                    "raw_synchronized_archive_located": bool(
+                        nbsdc_access.get("raw_numerical_files_obtained")
+                    ),
+                    "numerical_file_access": "application_required",
+                },
+                "allowed_claim": "real liquid-hydrogen refueling-station operating-range and data-access lead for station-side schema/context and LLM claim-boundary grounding",
+                "not_allowed": "numerical model calibration, independent holdout scoring, full station-to-vehicle validation, safety-distance calculation, or response-effectiveness claim before custodian approval and channel attestation",
             },
             {
                 "id": "public_component_measurements",

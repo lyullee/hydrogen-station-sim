@@ -39,6 +39,26 @@ def test_data_coverage_summary_preserves_claim_boundary() -> None:
     assert station_tank["coverage"]["pressure_rmse_mpa"] == 6.164469743688679
     assert station_tank["coverage"]["parameter_tuning"] is False
 
+    integrated = next(
+        item for item in summary["validated_or_actionable_now"]
+        if item["id"] == "owner_station_side_integrated_validation"
+    )
+    assert integrated["status"] == "VALIDATED_STATION_SIDE"
+    assert integrated["coverage"]["pressure_boundary_holdout_supported"] is True
+    assert integrated["coverage"]["cascade_sequence_holdout_supported"] is True
+    assert integrated["coverage"]["recharge_pressure_forecast_supported"] is True
+    assert integrated["coverage"]["lifecycle_counter_alignment_supported"] is False
+    assert integrated["coverage"]["full_loop_external_validation_supported"] is False
+
+    nbsdc = next(
+        item for item in summary["validated_or_actionable_now"]
+        if item["id"] == "nbsdc_liquid_hrs_catalogue"
+    )
+    assert nbsdc["status"] == "REQUEST_CANDIDATE"
+    assert nbsdc["coverage"]["file_count"] == 7
+    assert nbsdc["coverage"]["raw_synchronized_archive_located"] is False
+    assert nbsdc["coverage"]["numerical_file_access"] == "application_required"
+
     type_i = next(
         item for item in summary["validated_or_actionable_now"]
         if item["id"] == "public_type_i_filling_thermal"

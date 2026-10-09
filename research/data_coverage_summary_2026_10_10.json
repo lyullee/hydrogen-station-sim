@@ -89,6 +89,25 @@
       "not_allowed": "충전소 제어기·캐스케이드·ESD·노즐/리셉터클을 포함한 full-loop 검증"
     },
     {
+      "id": "owner_station_side_integrated_validation",
+      "status": "VALIDATED_STATION_SIDE",
+      "evidence": "research/confidential_station_side_integrated_validation_2026_10_09.json",
+      "coverage": {
+        "pressure_boundary_holdout_supported": true,
+        "pressure_boundary_holdout_points": 30,
+        "cascade_sequence_holdout_supported": true,
+        "cascade_sequence_holdout_pairs": 3664,
+        "recharge_pressure_forecast_supported": true,
+        "recharge_pressure_forecast_holdout_cases": 394,
+        "lifecycle_counter_alignment_supported": false,
+        "runtime_parameter_application": false,
+        "vehicle_fill_validation": false,
+        "full_loop_external_validation_supported": false
+      },
+      "allowed_claim": "hash-linked same-site station-side pressure-boundary, cascade-sequence and recharge-pressure holdout integration",
+      "not_allowed": "vehicle-side accuracy, full station-to-vehicle validation, safety-distance or field certification; the retained lifecycle-counter result is negative"
+    },
+    {
       "id": "nbsdc_liquid_hrs_catalogue",
       "status": "REQUEST_CANDIDATE",
       "evidence": "research/nbsdc_liquid_hrs_public_access_recheck_2026_10_10.json",
@@ -217,38 +236,6 @@
       },
       "allowed_claim": "traceable scenario and response-plan grounding",
       "not_allowed": "historical frequency or response-effectiveness estimation"
-    },
-    {
-      "id": "public_h2protocol_tank_protocol_boundary",
-      "status": "DIAGNOSTIC_ONLY",
-      "evidence": "data/public_validation/results/h2protocol/validation.json; research/h2protocol_case_inventory_recheck_2026_10_05.json",
-      "coverage": {
-        "case_count": 36,
-        "screening_pass_count": 0,
-        "pressure_rmse_mean_mpa": 26.29284612350118,
-        "temperature_rmse_mean_c": 17.512689431278773,
-        "soc_rmse_mean_percentage_points": 34.377692605317165,
-        "fresh_holdout_available": false,
-        "full_loop_external_holdout_eligible": false
-      },
-      "allowed_claim": "inspected public laboratory tank/protocol boundary diagnostic and explicit model limitation",
-      "not_allowed": "fresh independent holdout, station-to-vehicle full-loop validation, runtime parameter promotion, or field safety claim"
-    },
-    {
-      "id": "public_nrel_hdv_tank_boundary",
-      "status": "DIAGNOSTIC_ONLY",
-      "evidence": "data/public_validation/results/nrel_h2fills_hdvs_typeiv/validation.json; research/nrel_hdvs_boundary_screen_2026_10_10.json",
-      "coverage": {
-        "tank_count": 7,
-        "sample_count": 351,
-        "duration_s": 350,
-        "pressure_rmse_mpa": 6.164469743688679,
-        "temperature_rmse_c": 4.624745495755946,
-        "mass_rmse_kg": 0.04499166627656306,
-        "full_loop_holdout_eligible": false
-      },
-      "allowed_claim": "measured NREL tank/hose boundary and mass-closure diagnostic",
-      "not_allowed": "full-loop station-to-vehicle accuracy, safety-distance claim, or automatic runtime recalibration"
     }
   ],
   "minimum_next_input": {
