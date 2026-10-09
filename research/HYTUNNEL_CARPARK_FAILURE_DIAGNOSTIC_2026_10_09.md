@@ -15,4 +15,4 @@
 
 이번 진단은 사후 결과에 맞춘 파라미터 피팅, 케이스 제외, 임계값 변경, 런타임 기본값 변경을 수행하지 않았다. 디지털 트윈 런타임에는 적용하지 않으며, LLM 근거 봉투에서 “공개 실제수소로 검증 완료”라고 표현하지 못하게 하는 경계로만 사용한다.
 
-상세 집계는 [hytunnel_carpark_failure_regime_diagnostic_2026_10_09.json](C:/Users/lyul/Desktop/ProjectData/hydrogen-station-sim/research/hytunnel_carpark_failure_regime_diagnostic_2026_10_09.json)에 있다.
+상세 집계는 [`hytunnel_carpark_failure_regime_diagnostic_2026_10_09.json`](hytunnel_carpark_failure_regime_diagnostic_2026_10_09.json)에 있다.
