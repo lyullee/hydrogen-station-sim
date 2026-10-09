@@ -8,7 +8,7 @@ The simulator now exposes a short-horizon pressure forecast when the pressure-re
 - mean absolute error improvement over persistence: **71.8855%**
 - positive-direction agreement: **94.9239%**
 
-The runtime selects a dominant positive rise in the medium or high bank, applies the holdout continuation gain for that bank, and reports the current pressure, 30-second forecast and provenance. It fails closed during idle/startup, with insufficient history, or when neither bank has a dominant response.
+The runtime selects a dominant positive rise in the medium or high bank, applies the holdout continuation gain for that bank, and reports the current pressure, 30-second forecast and provenance. It also reports an empirical forecast-error envelope using the same holdout's P90 absolute error. This interval is uncertainty context, not a pressure limit or a confidence guarantee. It fails closed during idle/startup, with insufficient history, or when neither bank has a dominant response.
 
 This is an advisory signal for the digital twin and LLM prompt. It does not modify the physical simulator, compressor capacity, recharge restart margins, safety limits or ESD logic. It does not validate vehicle filling, storage geometry, consequence distances or a complete station-to-vehicle loop.
 

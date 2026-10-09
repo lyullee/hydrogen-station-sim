@@ -195,17 +195,34 @@ def forecast_storage_pressure(
     gain = profile["gains"][target]
     delta = rate_mpa_s * float(horizon_s) * gain
     current_mpa = pressures[target][1]
+    p90_error = _finite(
+        (profile.get("holdout_metrics") or {}).get("p90_absolute_error_mpa")
+    )
+    forecast_pressure = current_mpa + delta
+    uncertainty: dict[str, Any] = {
+        "method": "same_site_chronological_holdout_p90_absolute_error",
+        "claim": "empirical forecast-error envelope, not a safety limit",
+    }
+    interval: dict[str, float] | None = None
+    if p90_error is not None and p90_error >= 0.0:
+        uncertainty["absolute_error_p90_mpa"] = round(p90_error, 6)
+        interval = {
+            "lower_mpa": round(max(0.0, forecast_pressure - p90_error), 6),
+            "upper_mpa": round(forecast_pressure + p90_error, 6),
+        }
     return {
         "status": "available",
         "bank": target,
         "current_pressure_mpa": round(current_mpa, 6),
-        "forecast_pressure_mpa": round(current_mpa + delta, 6),
+        "forecast_pressure_mpa": round(forecast_pressure, 6),
         "forecast_delta_mpa": round(delta, 6),
         "prefix_span_s": round(span_s, 3),
         "horizon_s": float(horizon_s),
         "prefix_rise_mpa": round(rises[target], 6),
         "prefix_rate_mpa_s": round(rate_mpa_s, 9),
         "continuation_gain": gain,
+        "uncertainty": uncertainty,
+        "forecast_interval_mpa": interval,
         "basis": {
             "type": "causal_station_side_holdout_advisory",
             "artifact": profile["artifact"],

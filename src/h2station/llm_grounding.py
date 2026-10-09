@@ -10948,7 +10948,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "status", "reason", "bank", "current_pressure_mpa",
             "forecast_pressure_mpa", "forecast_delta_mpa", "prefix_span_s",
             "horizon_s", "dominant_rise_mpa", "dominance_ratio",
-            "gain", "claim_limit",
+            "gain", "uncertainty", "forecast_interval_mpa", "claim_limit",
         ))
         provenance = current_forecast.get("provenance") or current_forecast.get("basis")
         if isinstance(provenance, dict):
@@ -11046,7 +11046,7 @@ def compact_data_used(
     if isinstance(forecast, dict) and forecast:
         result["station_pressure_forecast"] = {
             key: forecast.get(key)
-            for key in ("status", "reason", "bank")
+            for key in ("status", "reason", "bank", "forecast_interval_mpa", "uncertainty")
             if forecast.get(key) is not None
         }
     runtime_calibration = manifest.get("runtime_calibration")

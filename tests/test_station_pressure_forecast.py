@@ -25,6 +25,11 @@ def test_forecast_requires_flowing_recharge_and_causal_prefix() -> None:
     assert result["basis"]["holdout_case_count"] == 394
     assert result["basis"]["runtime_parameter_application"] is False
     assert result["basis"]["vehicle_fill_validation"] is False
+    interval = result["forecast_interval_mpa"]
+    assert interval["lower_mpa"] < result["forecast_pressure_mpa"] < interval["upper_mpa"]
+    assert result["uncertainty"]["method"] == (
+        "same_site_chronological_holdout_p90_absolute_error"
+    )
 
     idle = forecast_storage_pressure([_frame(0.0, 60.0, 80.0, flowing=False)])
     assert idle["status"] == "not_available"
@@ -56,6 +61,8 @@ def test_llm_manifest_carries_forecast_with_claim_boundary() -> None:
     projected = prompt_evidence["current_station_pressure_forecast"]
     assert projected["status"] == "available"
     assert projected["forecast_pressure_mpa"] > projected["current_pressure_mpa"]
+    assert projected["forecast_interval_mpa"]["lower_mpa"] < projected["forecast_pressure_mpa"]
+    assert projected["uncertainty"]["absolute_error_p90_mpa"] > 0.0
     assert projected["provenance"]["vehicle_fill_validation"] is False
     used = prompt_evidence["data_used"]
     assert used["signals"] == []
