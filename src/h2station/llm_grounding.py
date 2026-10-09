@@ -9747,11 +9747,25 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             ))
         )
     )
-    station_side_integrated_relevant = any(token in lead_context for token in (
-        "실측", "현장 데이터", "운전 데이터", "검증", "검증범위", "근거",
-        "데이터", "holdout", "validation", "measured", "evidence",
-        "station-side", "station side",
-    ))
+    station_side_integrated_relevant = (
+        any(token in lead_context for token in (
+            "실측", "현장 데이터", "운전 데이터", "검증", "검증범위", "근거",
+            "데이터", "holdout", "validation", "measured", "evidence",
+            "station-side", "station side",
+        ))
+        # Operational questions should receive the station-side holdout
+        # evidence even when the user does not explicitly say "validation".
+        # This keeps pressure/cascade/recharge answers grounded in measured
+        # behaviour while leaving unrelated detector/fire questions compact.
+        or (
+            station_signal_relevant
+            and any(token in lead_context for token in (
+                "압력", "유량", "질량", "캐스케이드", "뱅크", "재충전",
+                "압축기", "pressure", "flow", "mass", "cascade", "bank",
+                "recharge", "compressor",
+            ))
+        )
+    )
     hytunnel_relevant = any(token in lead_context for token in (
         "공개", "실측", "원자료", "검증", "데이터", "피해영향", "안전거리",
         "public", "measurement", "raw", "validation", "dataset", "dispersion",

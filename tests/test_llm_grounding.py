@@ -1832,6 +1832,23 @@ def test_manifest_exposes_station_side_integrated_validation_bundle():
     assert decision["full_loop"] is False
 
 
+def test_operational_pressure_question_receives_station_side_holdout_context():
+    manifest = build_evidence_manifest(
+        {"time_s": 12.5},
+        {},
+        [],
+        False,
+        question="압력 상승과 재충전이 반복될 때 어떻게 운전해야 하나?",
+    )
+    decision = prompt_decision_evidence(manifest)["validation_boundaries"]
+    integrated = decision["station_side_integrated_validation"]
+    assert integrated["claim_supported"] is True
+    assert integrated["holdout_points"] == 30
+    assert integrated["cascade_holdout_pairs"] == 3664
+    assert integrated["recharge_forecast_holdout_cases"] == 394
+    assert integrated["full_loop"] is False
+
+
 def test_manifest_routes_retained_negative_lifecycle_alignment_only_when_relevant():
     manifest = build_evidence_manifest(
         {"time_s": 12.5},
