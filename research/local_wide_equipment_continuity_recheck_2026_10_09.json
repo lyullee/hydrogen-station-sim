@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_wide_equipment_continuity_screen",
+  "status": "privacy_bounded_structural_continuity_screen",
+  "generated_at": "2026-10-09",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "source_identifiers_published": false,
+    "calendar_dates_published": false,
+    "raw_rows_persisted": false,
+    "per_file_metrics_published": false
+  },
+  "inventory": {
+    "wide_file_count": 8,
+    "wide_row_count": 653442,
+    "wide_schema_width_minimum": 32,
+    "timestamp_parse_failures": 0,
+    "duplicate_timestamp_count": 0,
+    "negative_interval_count": 0,
+    "files_with_monotonic_time": 8,
+    "median_positive_interval_s": 1.0,
+    "maximum_positive_interval_s": 3.0,
+    "numeric_column_count_min": 62,
+    "numeric_columns_fully_finite_total": 496,
+    "state_candidate_column_count": 216,
+    "state_transition_count": 3873
+  },
+  "eligibility": {
+    "station_equipment_continuity_screen_ready": true,
+    "measured_boundary_replay_ready": false,
+    "independent_external_validation": false,
+    "full_loop_vehicle_validation": false,
+    "quantitative_consequence_validation": false,
+    "runtime_parameter_application": false
+  },
+  "claim_boundary": "This aggregate screen checks time continuity, numeric completeness and candidate state transitions only. Units, pressure reference, state meanings and engineering semantics require custodian attestation before replay or calibration."
+}
