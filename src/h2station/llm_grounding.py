@@ -4731,6 +4731,78 @@ def _confidential_station_equipment_evidence() -> dict[str, Any] | None:
     }
 
 
+def _confidential_station_equipment_coupling_evidence() -> dict[str, Any] | None:
+    """Expose a privacy-bounded compressor/cooling correlation diagnostic.
+
+    The source logger's temperature roles and binary-state semantics are still
+    awaiting custodian attestation.  Keep this diagnostic separate from the
+    calibrated operating envelope so it can inform scenario construction and
+    the LLM without changing runtime parameters or safety limits.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/confidential_station_equipment_coupling_diagnostic_2026_10_10.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    privacy_flags = (
+        "source_identifiers_published",
+        "raw_rows_persisted",
+        "absolute_timestamps_published",
+        "calendar_dates_published",
+        "manufacturer_or_model_published",
+        "tag_names_published",
+        "source_paths_published",
+    )
+    if (
+        record.get("artifact_type")
+        != "confidential_station_equipment_coupling_diagnostic"
+        or record.get("evidence_role")
+        != "privacy_bounded_station_equipment_correlation_diagnostic"
+        or any(record.get(key) is not False for key in privacy_flags)
+    ):
+        return None
+    observation = record.get("observation") or {}
+    regimes = []
+    for regime in record.get("regimes") or []:
+        if not isinstance(regime, dict):
+            continue
+        regimes.append({
+            key: regime.get(key)
+            for key in (
+                "compression_load", "cooling_running", "rows",
+                "pressure_channel_a_raw_unit_assumption",
+                "pressure_channel_b_raw_unit_assumption",
+                "compressor_temperature_degC_assumption",
+                "cooler_inlet_temperature_degC_assumption",
+                "cooler_outlet_temperature_degC_assumption",
+            )
+            if regime.get(key) is not None
+        })
+    return {
+        "artifact": "research/confidential_station_equipment_coupling_diagnostic_2026_10_10.json",
+        "evidence_role": str(record.get("evidence_role")),
+        "observation": {
+            key: observation.get(key)
+            for key in (
+                "window_label", "rows", "channel_families",
+                "median_sample_period_s", "maximum_sample_gap_s",
+                "chronology_preserved",
+            )
+            if observation.get(key) is not None
+        },
+        "regimes": regimes,
+        "transitions": record.get("transitions") or {},
+        "diagnostic_interpretation": record.get("diagnostic_interpretation") or {},
+        "attestation": record.get("attestation") or {},
+        "eligibility": record.get("eligibility") or {},
+        "runtime_decision": record.get("runtime_decision") or {},
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_station_thermal_evidence() -> dict[str, Any] | None:
     """Expose attestation status and, when available, thermal diagnostics.
 
@@ -7616,6 +7688,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_station_equipment_operational_envelope"
         ] = station_equipment
+    station_equipment_coupling = _confidential_station_equipment_coupling_evidence()
+    if station_equipment_coupling is not None:
+        envelope["response_evidence"][
+            "confidential_station_equipment_coupling_diagnostic"
+        ] = station_equipment_coupling
     station_thermal = _confidential_station_thermal_evidence()
     if station_thermal is not None:
         envelope["response_evidence"][
@@ -8720,6 +8797,19 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "default_model_parameters_changed", "claim_limit",
             )
             if station_equipment.get(key) is not None
+        }
+    station_equipment_coupling = evidence.get(
+        "confidential_station_equipment_coupling_diagnostic"
+    )
+    if isinstance(station_equipment_coupling, dict):
+        summary["confidential_station_equipment_coupling_diagnostic"] = {
+            key: station_equipment_coupling.get(key)
+            for key in (
+                "artifact", "evidence_role", "observation", "regimes",
+                "transitions", "diagnostic_interpretation", "attestation",
+                "eligibility", "runtime_decision", "claim_limit",
+            )
+            if station_equipment_coupling.get(key) is not None
         }
     station_thermal = evidence.get("confidential_station_thermal_dynamics")
     if isinstance(station_thermal, dict):
@@ -11232,6 +11322,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     station_equipment = evidence.get(
         "confidential_station_equipment_operational_envelope"
     ) or {}
+    station_equipment_coupling = evidence.get(
+        "confidential_station_equipment_coupling_diagnostic"
+    ) or {}
     station_thermal = evidence.get("confidential_station_thermal_dynamics") or {}
     bank_pressure = evidence.get("confidential_bank_role_pressure_envelopes") or {}
     pressure_recheck = evidence.get("confidential_pressure_recheck_decision") or {}
@@ -12288,6 +12381,19 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "default_model_parameters_changed": station_equipment.get(
                 "default_model_parameters_changed"
             ) is True,
+        },
+        "confidential_station_equipment_coupling_diagnostic": {
+            "artifact": station_equipment_coupling.get("artifact"),
+            "observation": station_equipment_coupling.get("observation") or {},
+            "regimes": station_equipment_coupling.get("regimes") or [],
+            "transitions": station_equipment_coupling.get("transitions") or {},
+            "diagnostic_interpretation": station_equipment_coupling.get(
+                "diagnostic_interpretation"
+            ) or {},
+            "attestation": station_equipment_coupling.get("attestation") or {},
+            "eligibility": station_equipment_coupling.get("eligibility") or {},
+            "runtime_decision": station_equipment_coupling.get("runtime_decision") or {},
+            "claim_limit": station_equipment_coupling.get("claim_limit"),
         },
         "confidential_station_thermal_dynamics": {
             "artifact": station_thermal.get("artifact"),

@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_station_equipment_coupling_diagnostic",
+  "recorded_at": "2026-10-10",
+  "evidence_role": "privacy_bounded_station_equipment_correlation_diagnostic",
+  "source_scope": "confidential owner-controlled station equipment logger aggregate",
+  "source_identifiers_published": false,
+  "raw_rows_persisted": false,
+  "absolute_timestamps_published": false,
+  "calendar_dates_published": false,
+  "manufacturer_or_model_published": false,
+  "tag_names_published": false,
+  "source_paths_published": false,
+  "observation": {
+    "window_label": "deidentified_equipment_window_1",
+    "rows": 85543,
+    "channel_families": {
+      "pressure": 2,
+      "temperature": 3,
+      "discrete_state": 3,
+      "mass_flow": 0
+    },
+    "median_sample_period_s": 1.0,
+    "maximum_sample_gap_s": 3.0,
+    "chronology_preserved": true
+  },
+  "regime_definition": {
+    "compression_load": "inactive if binary state <= 0.5, active otherwise",
+    "cooling_running": "inactive if binary state <= 0.5, active otherwise",
+    "state_semantics_attested": false
+  },
+  "regimes": [
+    {
+      "compression_load": "inactive",
+      "cooling_running": "inactive",
+      "rows": 39242,
+      "pressure_channel_a_raw_unit_assumption": {"median": 389.9, "p05": 388.8, "p95": 426.5},
+      "pressure_channel_b_raw_unit_assumption": {"median": 824.4, "p05": 821.3, "p95": 834.1},
+      "compressor_temperature_degC_assumption": {"median": 33.6, "p05": 32.5, "p95": 38.3},
+      "cooler_inlet_temperature_degC_assumption": {"median": 2.3, "p05": -13.5, "p95": 8.9},
+      "cooler_outlet_temperature_degC_assumption": {"median": -0.8, "p05": -13.3, "p95": 8.7}
+    },
+    {
+      "compression_load": "inactive",
+      "cooling_running": "active",
+      "rows": 30692,
+      "pressure_channel_a_raw_unit_assumption": {"median": 426.5, "p05": 368.9, "p95": 428.4},
+      "pressure_channel_b_raw_unit_assumption": {"median": 833.1, "p05": 812.7, "p95": 835.3},
+      "compressor_temperature_degC_assumption": {"median": 34.0, "p05": 28.1, "p95": 36.1},
+      "cooler_inlet_temperature_degC_assumption": {"median": -33.1, "p05": -34.3, "p95": -29.7},
+      "cooler_outlet_temperature_degC_assumption": {"median": -33.0, "p05": -37.4, "p95": -32.0}
+    },
+    {
+      "compression_load": "active",
+      "cooling_running": "active",
+      "rows": 15609,
+      "pressure_channel_a_raw_unit_assumption": {"median": 401.3, "p05": 359.0, "p95": 425.8},
+      "pressure_channel_b_raw_unit_assumption": {"median": 804.5, "p05": 767.4, "p95": 839.0},
+      "compressor_temperature_degC_assumption": {"median": 35.4, "p05": 29.7, "p95": 36.6},
+      "cooler_inlet_temperature_degC_assumption": {"median": -32.4, "p05": -34.9, "p95": -25.1},
+      "cooler_outlet_temperature_degC_assumption": {"median": -35.3, "p05": -38.4, "p95": -32.1}
+    }
+  ],
+  "transitions": {
+    "compression_load_transitions": 42,
+    "cooling_running_transitions": 2,
+    "oil_trip_transitions": 0,
+    "pressure_or_temperature_state_alignment_supported": false
+  },
+  "diagnostic_interpretation": {
+    "observed_correlation": "When the compressor-load state was active while cooling was running, the proposed cooler outlet median was 2.3 degC lower and the proposed compressor-temperature median was 1.8 degC higher than the cooling-only regime.",
+    "use": "Qualitative consistency check for compressor/cooling state transitions and test-case construction.",
+    "not_a_calibration": true,
+    "not_a_universal_operating_limit": true,
+    "not_a_full_loop_validation": true
+  },
+  "attestation": {
+    "timebase_attested": false,
+    "pressure_reference_and_roles_attested": false,
+    "temperature_roles_and_units_attested": false,
+    "discrete_state_semantics_attested": false,
+    "mass_flow_units_attested": false,
+    "calibration_metadata_attested": false
+  },
+  "eligibility": {
+    "station_equipment_coupling_diagnostic_supported": true,
+    "station_component_calibration_supported": false,
+    "runtime_parameter_update_supported": false,
+    "full_station_vehicle_validation": false,
+    "full_loop_holdout_eligible": false,
+    "safety_certification_supported": false
+  },
+  "runtime_decision": {
+    "default_model_parameters_changed": false,
+    "diagnostic_added_to_evidence_only": true,
+    "custodian_review_required_before_calibration": true
+  },
+  "claim_boundary": "Privacy-bounded station-equipment correlation only. Proposed engineering units and state meanings remain unconfirmed. This diagnostic must not be presented as vehicle-side accuracy, a field safety distance, a failure frequency, a universal operating limit, or a safety certification."
+}
