@@ -1442,6 +1442,37 @@ def test_public_operating_envelope_screen_is_descriptive_only():
     )
 
 
+def test_public_h2iq_aggregate_is_sent_for_flow_questions_without_overclaiming():
+    manifest = build_evidence_manifest(
+        {
+            "time_s": 120.0,
+            "nozzle_flow_g_s": 180.0,
+            "vehicle_pressure_mpa": 52.0,
+        },
+        {},
+        [],
+        False,
+        question="실제 고유량 충전 속도와 압력상승률을 비교해줘",
+    )
+    decision = prompt_decision_evidence(manifest)
+    reference = decision["decision_support_evidence"][
+        "public_h2iq_aggregate_reference"
+    ]
+    assert reference["reported_aggregate"]["mass_transfer_kg"] == 73.0
+    assert reference["reported_aggregate"]["total_fill_time_s"] == 423.5
+    assert reference["reported_aggregate"]["average_mass_flow_g_s"] == 172.3
+    assert reference["reported_aggregate"]["peak_mass_flow_g_s"] == 483.33
+    assert reference["reported_aggregate"]["aprr_mpa_min"] == 9.9
+    assert reference["raw_rows_public"] is False
+    assert reference["full_loop_holdout_eligible"] is False
+    assert reference["runtime_parameter_application"] is False
+    assert reference["not_usable_for"]
+    idle = prompt_decision_evidence(
+        build_evidence_manifest({"time_s": 1.0}, {}, [], False)
+    )
+    assert "public_h2iq_aggregate_reference" not in idle["decision_support_evidence"]
+
+
 def test_manifest_records_opt_in_measured_boundary_profile():
     frame = {
         "time_s": 12.5,

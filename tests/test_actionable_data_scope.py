@@ -101,3 +101,9 @@ def test_decision_prompt_names_usable_data_before_full_loop_boundary() -> None:
     assert provider_basis["data_used"]["station_data"][
         "full_loop_validation"
     ] is False
+    assert provider_basis["public_h2iq_aggregate_reference"][
+        "reported_aggregate"
+    ]["average_mass_flow_g_s"] == 172.3
+    assert provider_basis["public_h2iq_aggregate_reference"][
+        "full_loop_holdout_eligible"
+    ] is False

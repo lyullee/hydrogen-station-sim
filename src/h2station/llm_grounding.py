@@ -9543,6 +9543,46 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     preslhy_holdout = preslhy.get("independent_holdout") or {}
     operating_screen = response.get("public_operating_envelope_screen") or {}
+    public_benchmarks = response.get("public_experimental_benchmarks") or {}
+    public_h2iq_aggregate = None
+    if isinstance(public_benchmarks, dict):
+        for source in public_benchmarks.get("sources") or []:
+            if not isinstance(source, dict) or source.get(
+                "id"
+            ) != "NREL_HD_FAST_FLOW_2024_REPORT":
+                continue
+            aggregate = source.get("aggregate") or {}
+            required = (
+                "mass_transfer_kg", "total_fill_time_s", "fueling_time_s",
+                "average_mass_flow_g_s", "peak_mass_flow_g_s",
+                "starting_pressure_mpa", "ending_pressure_mpa", "aprr_mpa_min",
+                "ambient_temperature_c", "protocol",
+            )
+            if all(aggregate.get(key) is not None for key in required):
+                public_h2iq_aggregate = {
+                    "source_id": source.get("id"),
+                    "title": source.get("title"),
+                    "source_url": source.get("url"),
+                    "reported_aggregate": {
+                        key: aggregate.get(key) for key in required
+                    },
+                    "raw_rows_public": source.get("raw_rows_public") is True,
+                    "full_loop_holdout_eligible": False,
+                    "runtime_parameter_application": False,
+                    "usable_for": [
+                        "고유량 충전 운전범위·충전시간·압력상승률의 설명용 비교",
+                        "SAE J2601-5 H70 프로토콜 맥락 확인",
+                    ],
+                    "not_usable_for": [
+                        "동기화된 row-level station-to-vehicle 정확도 검증",
+                        "제어기·밸브·ESD 재현 또는 안전거리 인증",
+                    ],
+                    "claim_limit": (
+                        "DOE/NREL H2IQ의 집계 보고값이다. 공개 원시 시계열이 아니므로 "
+                        "full-loop 외부 검증이나 현장 안전한계로 해석하지 않는다."
+                    ),
+                }
+            break
     operation_practice = response.get(
         "public_station_operation_practice_reference"
     ) or {}
@@ -9681,6 +9721,17 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "압축기", "재충전", "flow", "mass", "totalizer", "pressure",
         "temperature", "compressor", "recharge",
     ))
+    h2iq_aggregate_relevant = bool(
+        public_h2iq_aggregate
+        and (
+            station_signal_relevant
+            or operational_evidence_relevant
+            or any(token in lead_context for token in (
+                "고유량", "충전속도", "충전시간", "압력상승률", "j2601",
+                "high-flow", "fill time", "ramp rate", "j2601-5",
+            ))
+        )
+    )
     h2protocol_validation_relevant = bool(
         public_h2protocol_validation
         and (
@@ -10032,6 +10083,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "public_operational_evidence_leads": operational_evidence_projection,
         } if operational_evidence_projection is not None else {}),
         **({
+            "public_h2iq_aggregate_reference": public_h2iq_aggregate,
+        } if h2iq_aggregate_relevant else {}),
+        **({
             "station_side_data_scope": station_side_data_scope,
         } if station_side_data_scope is not None else {}),
         **({
@@ -10053,6 +10107,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             **({
                 "public_operational_evidence_leads": operational_evidence_projection,
             } if operational_evidence_projection is not None else {}),
+            **({
+                "public_h2iq_aggregate_reference": public_h2iq_aggregate,
+            } if h2iq_aggregate_relevant else {}),
             **({
                 "public_h2protocol_validation_boundary": {
                     key: public_h2protocol_validation.get(key)

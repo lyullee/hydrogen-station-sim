@@ -77,7 +77,8 @@ def _provider_evidence_basis(manifest: dict[str, Any]) -> dict[str, Any]:
         for key in (
             "evidence_digest", "source", "runtime_calibration", "detector_policy",
             "common_header", "impact", "response_guidance",
-            "public_operating_envelope_screen", "public_operational_evidence_leads",
+            "public_operating_envelope_screen", "public_h2iq_aggregate_reference",
+            "public_operational_evidence_leads",
             "station_side_data_scope", "public_h2protocol_validation_boundary",
             "data_used",
         )
