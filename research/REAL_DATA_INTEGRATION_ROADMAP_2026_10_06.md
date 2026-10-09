@@ -206,7 +206,10 @@ full-loop 결과로 승격하지 않는다.
 
 ## 승격 규칙
 
-실측 보정 프로필은 `measured_boundary_calibration`을 켠 실행에서만 적용한다. 공개 holdout 합격 결과가 없는 파라미터를 production 기본값으로 승격하지 않는다. full-loop 검증과 SAGA 독립 평가가 모두 통과하기 전에는 목표 상태를 완료로 표시하지 않는다.
+실측 보정 프로필은 `measured_boundary_calibration`을 켠 실행에서만 적용한다.
+집계 0.540 MPa는 운영자별 뱅크 설정을 낮추지 않는 보수적 하한으로만 적용하며,
+공개 holdout 합격 결과가 없는 파라미터를 production 기본값으로 승격하지 않는다.
+full-loop 검증과 SAGA 독립 평가가 모두 통과하기 전에는 목표 상태를 완료로 표시하지 않는다.
 
 관련 근거:
 

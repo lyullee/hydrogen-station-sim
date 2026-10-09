@@ -96,7 +96,13 @@ def build_audit() -> dict[str, Any]:
             opt_in["profile_id"] == "owner_measured_operational_envelope_v1"
             and opt_in["recharge_restart_margin_pa"] == 540000.0
             and opt_in["runtime_restart_margins_mpa"]
-            == {"low": 0.54, "medium": 0.54, "high": 0.54}
+            == {"low": 2.0, "medium": 3.0, "high": 4.5}
+        ),
+        "measured_profile_is_conservative_floor": (
+            opt_in["recharge_restart_margin_pa"] / 1.0e6 < min(
+                opt_in["runtime_restart_margins_mpa"].values()
+            )
+            and opt_in["runtime_restart_margins_mpa"]["high"] >= 4.5
         ),
         "failed_dynamics_profile_not_attached": (
             reference["station_recharge_dynamics_status"] == "disabled"

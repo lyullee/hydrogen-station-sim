@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "local_station_runtime_profile_integration_audit",
-  "generated_at_utc": "2026-10-08T22:46:01.416680+00:00",
+  "generated_at_utc": "2026-10-09T02:20:28.492078+00:00",
   "status": "completed_runtime_integration_audit",
   "evidence_role": "privacy_bounded_local_station_profile_runtime_traceability",
   "cases": {
@@ -35,9 +35,9 @@
       "recharge_hysteresis_pa": 540000.0,
       "recharge_restart_margin_pa": 540000.0,
       "runtime_restart_margins_mpa": {
-        "low": 0.54,
-        "medium": 0.54,
-        "high": 0.54
+        "low": 2.0,
+        "medium": 3.0,
+        "high": 4.5
       },
       "station_dynamics_calibration_applied": false,
       "station_recharge_dynamics_status": "disabled",
@@ -51,6 +51,7 @@
   "checks": {
     "reference_defaults_preserved": true,
     "opt_in_profile_applied": true,
+    "measured_profile_is_conservative_floor": true,
     "failed_dynamics_profile_not_attached": true,
     "simulations_completed": true,
     "privacy_boundary_preserved": true

@@ -6,9 +6,14 @@ The owner-controlled raw logger archive is never read by the runtime or written 
 | Case | Result | Profile | Restart margins (MPa) | Dynamics profile |
 | --- | --- | --- | --- | --- |
 | `reference_defaults` | `complete` | `reference_defaults` | `{'low': 2.0, 'medium': 3.0, 'high': 4.5}` | `disabled` |
-| `explicit_opt_in` | `complete` | `owner_measured_operational_envelope_v1` | `{'low': 0.54, 'medium': 0.54, 'high': 0.54}` | `disabled` |
+| `explicit_opt_in` | `complete` | `owner_measured_operational_envelope_v1` | `{'low': 2.0, 'medium': 3.0, 'high': 4.5}` | `disabled` |
 
 All checks passed: **True**
+
+The aggregate 0.540 MPa measurement is retained as provenance, but it is
+applied only as a conservative lower bound. It cannot overwrite an operator's
+per-bank setting or the 4.5 MPa high-bank chronology criterion, preventing an
+opt-in calibration switch from reintroducing rapid recharge cycling.
 
 ## Claim boundary
 

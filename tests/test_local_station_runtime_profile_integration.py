@@ -16,6 +16,7 @@ def test_local_station_runtime_profile_integration_is_explicit_and_bounded():
     assert record["checks"] == {
         "reference_defaults_preserved": True,
         "opt_in_profile_applied": True,
+        "measured_profile_is_conservative_floor": True,
         "failed_dynamics_profile_not_attached": True,
         "simulations_completed": True,
         "privacy_boundary_preserved": True,
@@ -26,6 +27,11 @@ def test_local_station_runtime_profile_integration_is_explicit_and_bounded():
     )
     assert record["cases"]["explicit_opt_in"]["sampled_rows"] == 10896
     assert record["cases"]["explicit_opt_in"]["recharge_restart_margin_pa"] == 540000.0
+    assert record["cases"]["explicit_opt_in"]["runtime_restart_margins_mpa"] == {
+        "low": 2.0,
+        "medium": 3.0,
+        "high": 4.5,
+    }
     assert all(
         row["station_recharge_dynamics_status"] == "disabled"
         for row in record["cases"].values()

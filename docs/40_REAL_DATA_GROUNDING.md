@@ -325,11 +325,12 @@ explicit `capacity_eos` option, instead of silently mixing a sensitivity run
 with the default model.
 
 - `measured_boundary_calibration` is opt-in. It applies the de-identified
-  station-boundary pressure margin to both cascade dispatch and recharge
-  restart selection, so a bank is not repeatedly selected around the measured
-  pressure noise band. It does not alter vehicle geometry, temperature or flow
-  parameters because those channel roles are not attested in the private
-  aggregate.
+  station-boundary pressure margin to cascade dispatch and recharge restart
+  selection as a conservative lower bound. It never overwrites an operator's
+  low/medium/high margin or the stronger high-bank chronology criterion, so
+  opting in cannot reintroduce rapid recharge cycling. It does not alter
+  vehicle geometry, temperature or flow parameters because those channel roles
+  are not attested in the private aggregate.
 - When this profile is active, each operator frame also carries a
   `measured_boundary_envelope` scope diagnostic for the simulated source
   pressure. It reports whether that value is inside or outside the observed

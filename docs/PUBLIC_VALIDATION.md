@@ -44,8 +44,9 @@ separate multi-trace restart-dwell candidate failed its temporal consistency
 screen and remains disabled in the runtime.
 
 The measured profile is applied only through the explicit
-`measured_boundary_calibration` opt-in. Reference defaults remain unchanged,
-and no local profile is interpreted as a vehicle fill, delivered-mass/SOC,
+`measured_boundary_calibration` opt-in. Its aggregate restart margin is a
+conservative lower bound, so reference per-bank defaults and explicit operator
+settings remain authoritative. No local profile is interpreted as a vehicle fill, delivered-mass/SOC,
 absolute-flow-unit, consequence-distance or safety-limit validation. The
 machine-readable inventory and full-loop exclusion decision are documented in
 [`LOCAL_HYDROGEN_STATION_DATA_DISCOVERY_RECHECK_2026_10_09.md`](../research/LOCAL_HYDROGEN_STATION_DATA_DISCOVERY_RECHECK_2026_10_09.md)

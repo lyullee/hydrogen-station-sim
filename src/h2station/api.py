@@ -84,6 +84,47 @@ def _runtime_calibration_payload(
     return result
 
 
+_RECHARGE_MARGIN_BANKS = ("low", "medium", "high")
+
+
+def _effective_recharge_restart_margins(
+    settings: dict[str, Any], profile: Any | None,
+) -> dict[str, float]:
+    """Resolve runtime restart margins without weakening operator settings.
+
+    The owner-controlled measured profile provides one aggregate station-side
+    margin and has no bank-specific semantics.  It is therefore applied as a
+    conservative lower bound.  It must not overwrite an operator's explicit
+    low/medium/high settings or the stronger high-bank chronology result.
+    """
+
+    observed_mpa = None
+    if profile is not None:
+        try:
+            observed_mpa = float(profile.recharge_restart_margin_pa) / 1.0e6
+        except (AttributeError, TypeError, ValueError):
+            observed_mpa = None
+    resolved: dict[str, float] = {}
+    for bank in _RECHARGE_MARGIN_BANKS:
+        key = f"recharge_restart_margin_{bank}_mpa"
+        value = float(settings.get(key, 0.0))
+        if observed_mpa is not None:
+            value = max(value, observed_mpa)
+        resolved[bank] = value
+    return resolved
+
+
+def _effective_station_dispatch_margin_pa(
+    settings: dict[str, Any], profile: Any | None,
+) -> float | None:
+    """Return one conservative supervisor margin for the station model."""
+
+    if profile is None:
+        return None
+    margins = _effective_recharge_restart_margins(settings, profile)
+    return max(margins.values()) * 1.0e6
+
+
 class FaultInput(BaseModel):
     model_config = ConfigDict(allow_inf_nan=False)
     event_id: str
@@ -522,6 +563,12 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             and process_settings.measured_station_dynamics_calibration
             else None
         )
+        process_settings_dict = (
+            process_settings.model_dump() if process_settings is not None else {}
+        )
+        effective_dispatch_margin_pa = _effective_station_dispatch_margin_pa(
+            process_settings_dict, measured_profile
+        )
         config = ReferenceScenario(
             duration_s=request.duration_s,
             control_period_s=request.control_period_s,
@@ -593,16 +640,11 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             ),
             risk_update_period_s=max(1.0, 5.0 * request.control_period_s),
             # The owner-controlled profile is a station-boundary dispatch
-            # reference.  Apply it only when the operator explicitly opts in;
-            # the default reference model remains unchanged.
-            station_dispatch_pressure_margin_pa=(
-                measured_profile.recharge_restart_margin_pa
-                if measured_profile is not None else None
-            ),
-            station_recharge_hysteresis_pa=(
-                measured_profile.recharge_hysteresis_pa
-                if measured_profile is not None else None
-            ),
+            # reference.  Apply it only when the operator explicitly opts in.
+            # The aggregate measured margin is a conservative lower bound and
+            # never weakens the configured per-bank margins.
+            station_dispatch_pressure_margin_pa=effective_dispatch_margin_pa,
+            station_recharge_hysteresis_pa=effective_dispatch_margin_pa,
             station_minimum_recharge_off_time_s=(
                 recharge_dynamics_profile.minimum_recharge_off_time_s
                 if recharge_dynamics_profile is not None else 0.0
@@ -1251,10 +1293,10 @@ def create_simulation(request: SimulationInput) -> dict[str, Any]:
         else None
     )
     if measured_profile is not None:
-        for bank in ("low", "medium", "high"):
-            runtime_settings[f"recharge_restart_margin_{bank}_mpa"] = (
-                measured_profile.recharge_restart_margin_pa / 1.0e6
-            )
+        for bank, value in _effective_recharge_restart_margins(
+            runtime_settings, measured_profile
+        ).items():
+            runtime_settings[f"recharge_restart_margin_{bank}_mpa"] = value
     process_runtime = ProcessRuntime(runtime_settings) if runtime_settings is not None else None
     simulation_clock = SimulationClock(request.speed_multiplier)
     with _jobs_lock:
@@ -1453,10 +1495,10 @@ def set_process_operations(job_id: str, settings: ProcessSettings) -> dict[str, 
             if settings_dict.get("measured_boundary_calibration") else None
         )
         if measured_profile is not None:
-            for bank in ("low", "medium", "high"):
-                settings_dict[f"recharge_restart_margin_{bank}_mpa"] = (
-                    measured_profile.recharge_restart_margin_pa / 1.0e6
-                )
+            for bank, value in _effective_recharge_restart_margins(
+                settings_dict, measured_profile
+            ).items():
+                settings_dict[f"recharge_restart_margin_{bank}_mpa"] = value
             job["calibration_profile"] = _runtime_calibration_payload(
                 measured_profile,
                 load_station_recharge_dynamics_calibration() if dynamics_applied else None,
