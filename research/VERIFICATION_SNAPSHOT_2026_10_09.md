@@ -42,6 +42,10 @@ Consequence results now carry `risk_score`, `risk_level` and
 this as `CONSEQUENCE_SCREENING_NO_FREQUENCY`, so the score cannot be described
 as annual accident probability or a safety certification.
 
+The API `data_used.public_references` field now lists bounded public source
+identifiers, DOIs and official links used for the answer. It excludes private
+paths, raw rows and site/equipment identity.
+
 ## Evidence still outside the claim boundary
 
 The synchronized station-to-vehicle external holdout remains unavailable. The

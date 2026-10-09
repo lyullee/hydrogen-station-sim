@@ -113,6 +113,9 @@ def test_direct_qa_calculates_impact_for_alarm_and_explicit_hypothesis(monkeypat
                 "site_distance": False,
                 "saga_effectiveness": False,
             }
+            assert hypothetical["data_used"]["public_references"][
+                "public_sources"
+            ]
             assert len(json.dumps(llm_prompts[-1]["context"], default=str)) < 12000
             assert llm_prompts[-1]["kind"] == "user_query"
             assert received[-1] == [impact]

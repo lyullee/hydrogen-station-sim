@@ -9718,7 +9718,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     return decision
 
 
-def compact_data_used(manifest: dict[str, Any]) -> dict[str, Any]:
+def compact_data_used(
+    manifest: dict[str, Any], *, include_references: bool = False
+) -> dict[str, Any]:
     """Return a privacy-bounded list of inputs used for an answer.
 
     This projection is returned to the UI after an answer is generated.  It is
@@ -9882,7 +9884,57 @@ def compact_data_used(manifest: dict[str, Any]) -> dict[str, Any]:
                 "expert_effectiveness_evaluation_supported", False
             ),
         }
+        if include_references:
+            result["public_references"] = _compact_public_references(evidence)
     return result
+
+
+def _compact_public_references(evidence: dict[str, Any]) -> dict[str, Any]:
+    """Expose public identifiers without leaking local artifact paths.
+
+    The interactive provider envelope deliberately remains unchanged.  This
+    projection is for the API's ``data_used`` panel, where an operator can
+    see which public experiment, benchmark or incident source was used and
+    follow its DOI/official URL independently of the private station logs.
+    """
+
+    response_source_ids = sorted({
+        str(value)
+        for value in (evidence.get("source_ids") or [])
+        if value
+    })
+    references: list[dict[str, Any]] = []
+    for evidence_key, raw in sorted(evidence.items()):
+        if not evidence_key.startswith("public_") or not isinstance(raw, dict):
+            continue
+        candidates: list[dict[str, Any]] = []
+        source = raw.get("source")
+        if isinstance(source, dict):
+            candidates.append(source)
+        public_source = raw.get("public_source")
+        if isinstance(public_source, dict):
+            candidates.append(public_source)
+        sources = raw.get("sources")
+        if isinstance(sources, list):
+            candidates.extend(item for item in sources if isinstance(item, dict))
+        if not candidates and raw.get("source_page"):
+            candidates.append(raw)
+        for candidate in candidates:
+            row: dict[str, Any] = {"evidence": evidence_key}
+            for key in ("id", "doi", "title", "institution", "publisher", "version"):
+                value = candidate.get(key)
+                if value:
+                    row[key] = str(value)
+            url = candidate.get("url") or candidate.get("official_page") or candidate.get("source_page")
+            if isinstance(url, str) and url.startswith("http"):
+                row["url"] = url
+            if len(row) > 1:
+                references.append(row)
+    return {
+        "response_source_ids": response_source_ids[:16],
+        "public_sources": references[:16],
+        "claim_limit": "공개 식별자·링크는 사용 근거 확인용이며 원시 시계열·현장 인증을 뜻하지 않음",
+    }
 
 
 def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:

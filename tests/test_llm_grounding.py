@@ -1460,6 +1460,14 @@ def test_compact_data_used_reports_available_and_applied_station_profile():
     assert endpoint["case_count"] == 2
     assert endpoint["time_series_available"] is False
     assert endpoint["full_loop_validation"] is False
+    references = compact_data_used(
+        build_evidence_manifest(base_frame, {}, [], False, question="현재 상태"),
+        include_references=True,
+    )["public_references"]
+    assert "10.19799/j.cnki.2095-4239.2020.0049" in {
+        item.get("doi") for item in references["public_sources"]
+    }
+    assert all("artifact" not in item for item in references["public_sources"])
 
     applied_frame = {
         **base_frame,
