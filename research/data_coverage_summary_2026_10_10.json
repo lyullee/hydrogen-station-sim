@@ -70,7 +70,20 @@
         "hose_pressure_temperature_present": true,
         "tank_pressure_temperature_mass_present": true,
         "partial_station_to_tank_boundary_eligible": true,
-        "full_loop_holdout_eligible": false
+        "full_loop_holdout_eligible": false,
+        "screening_status": "diagnostic_only_failed_screen",
+        "screening_pass_count": 0,
+        "screening_pass_fraction": 0.0,
+        "pressure_rmse_mpa": 6.164469743688679,
+        "temperature_rmse_c": 4.624745495755946,
+        "mass_rmse_kg": 0.04499166627656306,
+        "pressure_final_error_mpa": -8.680787636562084,
+        "screening_limits": {
+          "pressure_rmse_mpa_max": 5.0,
+          "temperature_rmse_c_max": 10.0,
+          "mass_final_abs_error_kg_max": 0.5
+        },
+        "parameter_tuning": false
       },
       "allowed_claim": "공통시계 호스·수용탱크 압력·온도·질량의 부분 station-to-tank 경계 진단",
       "not_allowed": "충전소 제어기·캐스케이드·ESD·노즐/리셉터클을 포함한 full-loop 검증"

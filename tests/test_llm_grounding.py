@@ -1496,6 +1496,12 @@ def test_compact_data_used_reports_available_and_applied_station_profile():
         "partial_station_to_tank_boundary_eligible"
     ] is True
     assert inventory["public_station_tank_boundary"]["full_loop_holdout_eligible"] is False
+    assert inventory["public_station_tank_boundary"]["screening_status"] == (
+        "diagnostic_only_failed_screen"
+    )
+    assert inventory["public_station_tank_boundary"]["screening_pass_count"] == 0
+    assert inventory["public_station_tank_boundary"]["pressure_rmse_mpa"] == 6.164469743688679
+    assert inventory["public_station_tank_boundary"]["parameter_tuning"] is False
     assert "C:\\" not in str(inventory)
     local_inventory = compact_data_used(
         build_evidence_manifest(base_frame, {}, [], False, question="현재 상태"),

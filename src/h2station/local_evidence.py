@@ -29,6 +29,7 @@ _ACCIDENTAL_RELEASE = _ROOT / "research/accidental_self_ignition_public_evidence
 _EXPERIMENTAL_BENCHMARKS = _ROOT / "research/public_experimental_benchmarks_2026_10_06.json"
 _CARB_BENCHMARK = _ROOT / "research/carb_2024_hrs_inuse_field_benchmark_2026_10_08.json"
 _NREL_HDVS_BOUNDARY = _ROOT / "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json"
+_NREL_HDVS_RESULT = _ROOT / "research/nrel_hdvs_boundary_screen_2026_10_10.json"
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -582,6 +583,14 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "partial_station_to_tank_boundary_eligible": False,
             "full_loop_holdout_eligible": False,
             "rights_limited": False,
+            "screening_status": "unavailable",
+            "screening_pass_count": None,
+            "screening_pass_fraction": None,
+            "pressure_rmse_mpa": None,
+            "temperature_rmse_c": None,
+            "mass_rmse_kg": None,
+            "pressure_final_error_mpa": None,
+            "parameter_tuning": None,
         },
     }
     try:
@@ -700,7 +709,71 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
                     "full_loop_external_holdout_eligible"
                 ) is True,
                 "rights_limited": "internal-use-only" in rights,
+                "screening_status": "not_loaded",
+                "screening_pass_count": None,
+                "screening_pass_fraction": None,
+                "pressure_rmse_mpa": None,
+                "temperature_rmse_c": None,
+                "mass_rmse_kg": None,
+                "pressure_final_error_mpa": None,
+                "parameter_tuning": None,
             }
+            try:
+                screen = _read_json(_NREL_HDVS_RESULT)
+                aggregate = screen.get("aggregate") or {}
+                frozen_model = screen.get("frozen_model") or {}
+                screening_limits = screen.get("screening_limits") or {}
+                geometry = screen.get("geometry_diagnostic") or {}
+                if (
+                    screen.get("evidence_role")
+                    == "independent_tank_thermal_external_validation"
+                    and screen.get("boundary_channel_screen", {}).get(
+                        "partial_station_to_tank_boundary_eligible"
+                    ) is True
+                    and frozen_model.get("post_access_parameter_tuning") is False
+                    and all(
+                        isinstance(aggregate.get(key), (int, float))
+                        and not isinstance(aggregate.get(key), bool)
+                        for key in (
+                            "screening_pass_count",
+                            "screening_pass_fraction",
+                            "pressure_rmse_mpa",
+                            "temperature_rmse_c",
+                            "mass_rmse_kg",
+                            "pressure_final_error_mpa",
+                        )
+                    )
+                ):
+                    result["public_station_tank_boundary"].update({
+                        "screening_status": (
+                            "diagnostic_only_failed_screen"
+                            if aggregate.get("screening_pass_count") == 0
+                            else "diagnostic_only_partial_screen"
+                        ),
+                        "screening_pass_count": int(aggregate["screening_pass_count"]),
+                        "screening_pass_fraction": float(aggregate["screening_pass_fraction"]),
+                        "pressure_rmse_mpa": float(aggregate["pressure_rmse_mpa"]),
+                        "temperature_rmse_c": float(aggregate["temperature_rmse_c"]),
+                        "mass_rmse_kg": float(aggregate["mass_rmse_kg"]),
+                        "pressure_final_error_mpa": float(aggregate["pressure_final_error_mpa"]),
+                        "parameter_tuning": False,
+                        "screening_limits": {
+                            "pressure_rmse_mpa_max": screening_limits.get(
+                                "pressure_rmse_mpa_max"
+                            ),
+                            "temperature_rmse_c_max": screening_limits.get(
+                                "temperature_rmse_c_max"
+                            ),
+                            "mass_final_abs_error_kg_max": screening_limits.get(
+                                "mass_final_abs_error_kg_max"
+                            ),
+                        },
+                        "geometry_ratio_to_frozen_effective_volume": geometry.get(
+                            "ratio_to_frozen_effective_volume_median"
+                        ),
+                    })
+            except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+                pass
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
         pass
     return result

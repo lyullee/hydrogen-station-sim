@@ -34,6 +34,10 @@ def test_data_coverage_summary_preserves_claim_boundary() -> None:
     assert station_tank["coverage"]["tank_count"] == 7
     assert station_tank["coverage"]["partial_station_to_tank_boundary_eligible"] is True
     assert station_tank["coverage"]["full_loop_holdout_eligible"] is False
+    assert station_tank["coverage"]["screening_status"] == "diagnostic_only_failed_screen"
+    assert station_tank["coverage"]["screening_pass_count"] == 0
+    assert station_tank["coverage"]["pressure_rmse_mpa"] == 6.164469743688679
+    assert station_tank["coverage"]["parameter_tuning"] is False
 
     accidents = next(
         item for item in summary["validated_or_actionable_now"]

@@ -38,6 +38,10 @@ def build_summary(root: Path) -> dict[str, Any]:
     hytf = _read(root, "research/hytf_open_tank_trace_boundary_2026_10_05.json")
     h2safe = _read(root, "research/h2safe_public_dataset_intake_2026_10_08.json")
     nrel_boundary = _read(root, "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json")
+    nrel_result = _read(
+        root,
+        "research/nrel_hdvs_boundary_screen_2026_10_10.json",
+    )
 
     inventory = local["inventory"]
     utilization = local["utilization"]
@@ -87,6 +91,15 @@ def build_summary(root: Path) -> dict[str, Any]:
     nrel_eligibility = nrel_boundary.get("eligibility") if isinstance(nrel_boundary, dict) else {}
     if not isinstance(nrel_eligibility, dict):
         nrel_eligibility = {}
+    nrel_aggregate = nrel_result.get("aggregate") if isinstance(nrel_result, dict) else {}
+    if not isinstance(nrel_aggregate, dict):
+        nrel_aggregate = {}
+    nrel_screen_limits = nrel_result.get("screening_limits") if isinstance(nrel_result, dict) else {}
+    if not isinstance(nrel_screen_limits, dict):
+        nrel_screen_limits = {}
+    nrel_frozen_model = nrel_result.get("frozen_model") if isinstance(nrel_result, dict) else {}
+    if not isinstance(nrel_frozen_model, dict):
+        nrel_frozen_model = {}
     return {
         "schema_version": 1,
         "artifact_type": "privacy_bounded_data_coverage_summary",
@@ -164,6 +177,23 @@ def build_summary(root: Path) -> dict[str, Any]:
                     "full_loop_holdout_eligible": nrel_boundary_check.get(
                         "full_loop_external_holdout_eligible", False
                     ),
+                    "screening_status": (
+                        "diagnostic_only_failed_screen"
+                        if nrel_aggregate.get("screening_pass_count") == 0
+                        else "diagnostic_only_partial_screen"
+                    ),
+                    "screening_pass_count": nrel_aggregate.get("screening_pass_count"),
+                    "screening_pass_fraction": nrel_aggregate.get("screening_pass_fraction"),
+                    "pressure_rmse_mpa": nrel_aggregate.get("pressure_rmse_mpa"),
+                    "temperature_rmse_c": nrel_aggregate.get("temperature_rmse_c"),
+                    "mass_rmse_kg": nrel_aggregate.get("mass_rmse_kg"),
+                    "pressure_final_error_mpa": nrel_aggregate.get("pressure_final_error_mpa"),
+                    "screening_limits": {
+                        "pressure_rmse_mpa_max": nrel_screen_limits.get("pressure_rmse_mpa_max"),
+                        "temperature_rmse_c_max": nrel_screen_limits.get("temperature_rmse_c_max"),
+                        "mass_final_abs_error_kg_max": nrel_screen_limits.get("mass_final_abs_error_kg_max"),
+                    },
+                    "parameter_tuning": nrel_frozen_model.get("post_access_parameter_tuning") is True,
                 },
                 "allowed_claim": "공통시계 호스·수용탱크 압력·온도·질량의 부분 station-to-tank 경계 진단",
                 "not_allowed": "충전소 제어기·캐스케이드·ESD·노즐/리셉터클을 포함한 full-loop 검증",
