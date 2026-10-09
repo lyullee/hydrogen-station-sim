@@ -50,3 +50,16 @@ def test_data_coverage_summary_preserves_claim_boundary() -> None:
     assert dispersion["coverage"]["sensor_coordinate_count"] == 29
     assert dispersion["coverage"]["machine_readable_sensor_coordinates_public"] is True
     assert dispersion["coverage"]["spatial_holdout_ready"] is False
+
+    tank_boundary = next(
+        item for item in summary["validated_or_actionable_now"]
+        if item["id"] == "public_hytf_tank_boundary"
+    )
+    assert tank_boundary["coverage"]["sample_count"] == 2536
+    assert tank_boundary["coverage"]["tank_thermocouple_count"] == 14
+    assert "full-loop" in tank_boundary["not_allowed"]
+
+    export = summary["privacy_safe_export_contract"]
+    assert export["custodian_keeps_raw_data"] is True
+    assert export["minimum_event_bundle"] == 3
+    assert "site or company identity" in export["must_not_include"]

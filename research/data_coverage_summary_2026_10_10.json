@@ -107,6 +107,39 @@
       "not_allowed": "충전소 full-loop, 좌표기반 검지기 holdout, site-specific safety distance"
     },
     {
+      "id": "public_hytf_tank_boundary",
+      "status": "DIAGNOSTIC_ONLY",
+      "evidence": "research/hytf_open_tank_trace_boundary_2026_10_05.json",
+      "coverage": {
+        "sample_count": 2536,
+        "duration_s": 253.5,
+        "pressure_channel_count": 2,
+        "tank_thermocouple_count": 14,
+        "pressure_bar_range": [
+          292.121913,
+          694.616597
+        ]
+      },
+      "allowed_claim": "공개 70 MPa 탱크 압력·열 응답의 구성품 경계 진단",
+      "not_allowed": "질량유량, 차량 수용부, 충전소 제어기·ESD를 포함한 full-loop 검증"
+    },
+    {
+      "id": "public_h2safe_indoor_surrogate",
+      "status": "DIAGNOSTIC_ONLY",
+      "evidence": "research/h2safe_public_dataset_intake_2026_10_08.json",
+      "coverage": {
+        "laboratory_count": 2,
+        "test_count": 5,
+        "total_time_series_rows": 21052,
+        "lab_declared_channel_counts": {
+          "Lab1_Small": 24,
+          "Lab2_Large": 32
+        }
+      },
+      "allowed_claim": "헬륨 대체가스의 실내 센서 응답·좌표 진단",
+      "not_allowed": "수소 농도 환산, 충전소 외부 확산, ESD 효과 또는 안전거리 검증"
+    },
+    {
       "id": "public_accident_precedents",
       "status": "ROUTED_FOR_GROUNDING",
       "evidence": "research/runtime_public_accident_precedent_routing_2026_10_07.json",
@@ -139,12 +172,33 @@
     "privacy_route": "custodian-run export or de-identified component bundle outside the repository",
     "evaluation_rule": "freeze protocol and model before scoring; never fit on the holdout"
   },
+  "privacy_safe_export_contract": {
+    "purpose": "작은 비식별 이벤트 묶음으로 full-loop 외부 검증을 닫기 위한 최소 계약",
+    "custodian_keeps_raw_data": true,
+    "repository_receives_only": [
+      "pseudonymous event id",
+      "elapsed time from event start",
+      "unit-normalized channel names",
+      "channel-role attestation",
+      "file hash and row count",
+      "aggregate validation metrics"
+    ],
+    "must_not_include": [
+      "site or company identity",
+      "manufacturer or equipment serial",
+      "calendar timestamps",
+      "raw rows unless separately approved"
+    ],
+    "minimum_event_bundle": 3,
+    "why_this_is_enough": "세 이벤트를 동일한 사전 동결 프로토콜로 평가하면 차량 경계 유무와 generalization을 확인할 수 있으며, 전체 원시 히스토리 공개가 필요하지 않다."
+  },
   "decision": {
     "data_volume_is_primary_blocker": false,
     "current_primary_gap": "synchronized and attested receiving-vessel/vehicle channels",
     "continue_component_validation": true,
     "full_loop_gate_remains_open": true,
-    "goal_completion_permitted": false
+    "goal_completion_permitted": false,
+    "data_acquisition_message": "추가 데이터의 우선순위는 양이 아니라 동기화된 수용부 채널과 역할 증명이다."
   },
   "claim_boundary": "This summary joins audited aggregate evidence only. It does not expose raw data, identify a site or company, establish safety distances, or convert component and station-side evidence into a full station-to-vehicle validation claim."
 }

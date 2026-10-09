@@ -16,6 +16,8 @@
 | `public_component_measurements` | DIAGNOSTIC_ONLY | public synchronized component pressure/temperature/flow diagnostics | prospective station-to-vehicle holdout |
 | `public_field_metrology` | DIAGNOSTIC_ONLY | 35 MPa 현장 계측의 압력·온도·질량 경계 및 반복성 맥락 | 원시 station-to-vehicle holdout, 제어기·ESD·사고영향 검증 |
 | `public_actual_h2_spatial_dispersion` | DIAGNOSTIC_ONLY | 실제 수소 저압 누출·다중 검지기 응답 범위와 사고 모델 진단 | 충전소 full-loop, 좌표기반 검지기 holdout, site-specific safety distance |
+| `public_hytf_tank_boundary` | DIAGNOSTIC_ONLY | 공개 70 MPa 탱크 압력·열 응답의 구성품 경계 진단 | 질량유량, 차량 수용부, 충전소 제어기·ESD를 포함한 full-loop 검증 |
+| `public_h2safe_indoor_surrogate` | DIAGNOSTIC_ONLY | 헬륨 대체가스의 실내 센서 응답·좌표 진단 | 수소 농도 환산, 충전소 외부 확산, ESD 효과 또는 안전거리 검증 |
 | `public_accident_precedents` | ROUTED_FOR_GROUNDING | traceable scenario and response-plan grounding | historical frequency or response-effectiveness estimation |
 
 ## 다음 최소 입력
@@ -30,6 +32,8 @@
 
 ## 판정
 
-현재 자료로 설비·저장뱅크·탱크·사고 대응 근거는 계속 보강할 수 있다. 완전한 IJHE 수준의 충전소-차량 외부 검증은 차량 측 채널의 동기화·의미·재사용 권한이 확인될 때까지 열어 둔다.
+현재 자료로 설비·저장뱅크·탱크·검지기·사고 대응 근거는 계속 보강할 수 있다. 데이터 양이 주된 병목은 아니며, 완전한 IJHE 수준의 충전소-차량 외부 검증에 필요한 것은 차량 측 채널의 동기화·의미·재사용 권한이다.
+
+원시 데이터를 공개하기 어렵다면 custodian이 원시 파일을 보관한 채, 비식별 이벤트 3건의 해시·역할 증명·집계 지표만 전달하는 방식으로 검증을 진행한다.
 
 원시 행, 경로, 회사·사이트·제조사 식별자는 이 요약에 포함하지 않는다.
