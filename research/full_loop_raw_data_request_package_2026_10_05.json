@@ -22,6 +22,22 @@
     "reproducibility_deposit_or_reviewer_package_permitted",
     "source_version_and_file_hashes_provided"
   ],
+  "staged_intake": {
+    "schema_pilot": {
+      "minimum_event_count": 1,
+      "allowed_use": ["channel_join_and_quality_screen"],
+      "parameter_fitting": false,
+      "validation_score": false,
+      "raw_rows_may_remain_custodian_controlled": true
+    },
+    "frozen_evaluation_export": {
+      "minimum_disjoint_event_count": 8,
+      "freeze_model_and_scoring_before_outcome_access": true,
+      "publish_raw_rows": false,
+      "publish_event_level_metrics_and_reviewer_hash": true
+    },
+    "rationale": "The current local corpus is substantial for station-side dynamics; the missing evidence is the synchronized receiving-vessel boundary, not additional station historian volume."
+  },
   "custodian_routes": [
     {
       "id": "nrel_hitrf",

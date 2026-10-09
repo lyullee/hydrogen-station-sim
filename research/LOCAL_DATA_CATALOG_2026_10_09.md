@@ -46,6 +46,35 @@ vehicle-side/full-loop claims separate. No raw local rows are imported into the
 public repository and no safety limit or consequence distance is inferred from
 the inventory alone.
 
+## Practical acquisition decision
+
+The local audit was rerun against the owner-controlled archive on 2026-10-09.
+It reproduced the committed aggregate inventory: 33 CSV files, 4.749 GiB,
+59,272,300 physical rows and 56,854,143 rows after exact-duplicate exclusion.
+The archive yielded 16,770 ordered high-bank pressure cycles, 11,770 paired
+medium/high episodes, 1,418 short-horizon forecast cases and 733 conditional
+recharge-flow episodes. The expanded header screen found no vehicle or
+dispenser-boundary candidate. These results show that the limiting factor is
+semantic boundary coverage, not data volume.
+
+Do not spend another broad search cycle before obtaining a custodian response.
+Use the current station-side and component evidence now, and request data in two
+small stages:
+
+1. **Schema pilot:** one de-identified event (or a metadata-only channel map)
+   containing the common clock, station/dispenser pressure, receiving-vessel
+   pressure and temperature, transferred mass or mass flow, protocol phase and
+   stop/ESD state. This stage checks that the boundary can actually be joined;
+   it is not used for fitting or the final score.
+2. **Frozen holdout:** at least eight disjoint events from the same approved
+   export, with the model commit and scoring rules frozen before numerical
+   outcomes are opened. Keep raw rows owner-controlled; publish only aggregate
+   errors and a custodian-approved hash or reviewer package.
+
+This two-stage request avoids asking for an entire historian archive when only a
+small synchronized vehicle-boundary slice is needed to close the remaining
+full-loop gate.
+
 ## Linked machine-readable inventories
 
 - [`local_station_asset_screen_2026_10_09.json`](local_station_asset_screen_2026_10_09.json)
@@ -54,4 +83,3 @@ the inventory alone.
 - [`local_data_deep_scan_2026_10_09.json`](local_data_deep_scan_2026_10_09.json)
 - [`local_docudata_full_discovery_2026_10_09.json`](local_docudata_full_discovery_2026_10_09.json)
 - [`local_station_cross_bundle_transfer_result_2026_10_09.json`](local_station_cross_bundle_transfer_result_2026_10_09.json)
-

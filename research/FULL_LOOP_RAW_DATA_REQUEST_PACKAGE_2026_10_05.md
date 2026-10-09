@@ -26,6 +26,26 @@ The event export must retain the original sample clock and a row-level event
 identifier. Derived or manually digitised curves are insufficient for the primary
 holdout.
 
+## Two-stage intake that limits custodian burden
+
+Request the material in two stages rather than asking for the full historian at
+once:
+
+1. **Schema pilot (one event or metadata-only):** confirm the generic role map,
+   units, clock alignment, protocol phase, stop reason and ESD semantics. If one
+   de-identified event is supplied, use it only to test channel joining and the
+   quality screen; do not fit parameters or report a validation score from it.
+2. **Frozen evaluation export (at least eight disjoint events):** after the
+   model commit, inclusion rules and scoring code are frozen, provide the
+   remaining events through the same controlled channel. Keep the raw rows with
+   the custodian and return only event-level metrics, aggregate uncertainty and
+   a reviewer hash/package.
+
+This staged route is intentionally small: the current local archive already
+supports station-side pressure, cascade and recharge checks, so the missing
+information is the synchronized receiving-vessel boundary rather than a larger
+station historian.
+
 ## Rights and provenance request
 
 Ask the custodian to confirm in writing:
