@@ -3,7 +3,7 @@
   "recorded_at": "2026-10-10",
   "gate": "new untouched public station-to-vehicle full-loop fueling validation",
   "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED",
-  "scope": "Targeted recheck of official H2FillS, SAE J2601, DOE/NREL and public HRS availability sources.",
+  "scope": "Targeted recheck of official H2FillS, SAE J2601, DOE/NREL, NLR fueling-experiment publications and public HRS availability sources.",
   "screened_sources": [
     {
       "id": "nrel_h2fills_product_page",
@@ -36,6 +36,14 @@
       "usable_for": ["operational availability context"],
       "not_usable_for": ["vehicle boundary or mass-transfer validation"],
       "claim_limit": "The API exposes station availability and static metadata, not a common-time-base fueling logger."
+    },
+    {
+      "id": "nlr_kuroki_2023_vehicle_tank_fueling_experiment",
+      "url": "https://doi.org/10.1002/ente.202300239",
+      "decision": "PUBLISHED_EXPERIMENT_DESCRIPTION_DATA_NOT_SHARED",
+      "usable_for": ["vehicle-tank boundary context", "protocol and temperature-limit context"],
+      "not_usable_for": ["untouched station-to-vehicle raw-trace validation"],
+      "claim_limit": "The article reports real fueling experiments and boundary conditions, but its data-availability statement says research data are not shared; no rights-cleared synchronized raw logger cohort is available from the cited publication."
     }
   ],
   "gate_impact": "full_loop_external_validation_remains_open",

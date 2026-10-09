@@ -7,6 +7,9 @@ The sources were still useful, but their roles are narrower:
 - NREL H2FillS is a thermodynamic simulation tool and interface reference.
 - SAE J2601 provides protocol scope and process limits.
 - IPCEI and H2-Stations provide station inventory or availability context.
+- The NLR/Kuroki vehicle-tank fueling paper reports real experimental boundary
+  conditions, but its data-availability statement says the research data are
+  not shared, so it cannot supply a rights-cleared raw holdout.
 
 None of those sources supplies the synchronized station/dispenser pressure,
 delivered-gas temperature, receiving-vessel boundary, mass transfer and
