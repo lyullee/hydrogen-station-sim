@@ -2671,6 +2671,64 @@ def _cross_campaign_release_validation_evidence() -> dict[str, Any] | None:
     except (OSError, ValueError, json.JSONDecodeError):
         return None
 
+    # Keep the post-outcome model-form diagnostic beside the frozen campaign
+    # outcomes. It is diagnostic evidence only: a grid point that improves a
+    # trace cannot rewrite the prospective result or select a production
+    # discharge coefficient.
+    posthoc_sensitivity: dict[str, Any] | None = None
+    try:
+        sensitivity = json.loads(
+            (root / "research/release_model_posthoc_sensitivity_2026_10_10.json")
+            .read_text(encoding="utf-8")
+        )
+        if (
+            sensitivity.get("evidence_role") == "posthoc_development_diagnostic_only"
+            and sensitivity.get("status") == "completed_without_modifying_frozen_results"
+            and (sensitivity.get("method") or {}).get("outcome_fitting") is False
+            and (sensitivity.get("method") or {}).get("frozen_primary_results_rewritten") is False
+        ):
+            cases: dict[str, Any] = {}
+            for case in sensitivity.get("cases") or []:
+                if not isinstance(case, dict):
+                    continue
+                case_id = case.get("case_id")
+                best = case.get("best_grid_point_by_normalized_score")
+                if not isinstance(case_id, str) or not isinstance(best, dict):
+                    continue
+                cases[case_id] = {
+                    "base_discharge_coefficient": case.get(
+                        "base_discharge_coefficient"
+                    ),
+                    "best_grid_point": {
+                        key: best.get(key)
+                        for key in (
+                            "multiplier",
+                            "effective_discharge_coefficient",
+                            "nrmse_percent",
+                            "median_ape_percent",
+                            "half_time_error_percent",
+                            "joint_screen_pass",
+                        )
+                        if best.get(key) is not None
+                    },
+                    "any_grid_point_joint_screen_pass": case.get(
+                        "any_grid_point_joint_screen_pass"
+                    ) is True,
+                }
+            if len(cases) == 3:
+                posthoc_sensitivity = {
+                    "artifact": (
+                        "research/release_model_posthoc_sensitivity_2026_10_10.json"
+                    ),
+                    "evidence_role": sensitivity.get("evidence_role"),
+                    "cases": cases,
+                    "runtime_parameter_changed": False,
+                    "validation_claim_supported": False,
+                    "claim_limit": sensitivity.get("claim_boundary"),
+                }
+    except (OSError, ValueError, json.JSONDecodeError):
+        posthoc_sensitivity = None
+
     ekoto = records["ekoto_2012"]
     schefer_2006 = records["schefer_2006"]
     schefer_2007 = records["schefer_2007"]
@@ -2770,7 +2828,7 @@ def _cross_campaign_release_validation_evidence() -> dict[str, Any] | None:
             ineligibility_reason=str(grune_eligibility.get("reason") or ""),
         ),
     }
-    return {
+    result = {
         "evidence_role": "mixed_external_release_component_validation",
         "campaigns": campaigns,
         "eligible_campaign_count": 3,
@@ -2788,6 +2846,9 @@ def _cross_campaign_release_validation_evidence() -> dict[str, Any] | None:
             "안전 검증으로 확대할 수 없습니다."
         ),
     }
+    if posthoc_sensitivity is not None:
+        result["posthoc_model_form_diagnostic"] = posthoc_sensitivity
+    return result
 
 
 def _public_hitrf_operational_reference() -> dict[str, Any] | None:
@@ -8076,6 +8137,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "apparatus_resolved_holdout_received",
                 "apparatus_resolved_holdout_run",
                 "runtime_model_changed_after_outcomes", "claim_limit",
+                "posthoc_model_form_diagnostic",
             )
             if cross_campaign_release.get(key) is not None
         }
@@ -11785,6 +11847,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "runtime_model_changed_after_outcomes": cross_campaign_release.get(
                 "runtime_model_changed_after_outcomes"
             ) is True,
+            "posthoc_model_form_diagnostic": cross_campaign_release.get(
+                "posthoc_model_form_diagnostic"
+            ) or {},
             "claim_limit": cross_campaign_release.get("claim_limit"),
         },
         "public_hitrf_operational_reference": {

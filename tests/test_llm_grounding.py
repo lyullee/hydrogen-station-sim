@@ -392,6 +392,18 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert cross_release["apparatus_resolved_holdout_received"] is False
     assert cross_release["apparatus_resolved_holdout_run"] is False
     assert cross_release["runtime_model_changed_after_outcomes"] is False
+    posthoc = cross_release["posthoc_model_form_diagnostic"]
+    assert posthoc["evidence_role"] == "posthoc_development_diagnostic_only"
+    assert posthoc["runtime_parameter_changed"] is False
+    assert posthoc["validation_claim_supported"] is False
+    assert set(posthoc["cases"]) == {
+        "schefer_2006_mass_flow",
+        "schefer_2007_pressure",
+        "grune_2014_pressure",
+    }
+    assert posthoc["cases"]["schefer_2007_pressure"][
+        "any_grid_point_joint_screen_pass"
+    ] is False
     coverage = idle["data_coverage"]
     assert coverage["available_evidence_tier"] == "station_side_and_component"
     assert coverage["station_side_component_evidence_available"] is True
