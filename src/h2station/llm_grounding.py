@@ -7943,6 +7943,12 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "starting_pressure_mpa", "ending_pressure_mpa",
                 "reported_2020_q1_energy_kwh_per_kg_range",
                 "reported_2020_q1_site_efficiency_percent_max",
+                "release_pressure_mpa_levels",
+                "nozzle_geometry_classes",
+                "parallel_dispenser_count",
+                "canopy_height_m",
+                "non_circular_to_circular_discharge_ratio_reported_max",
+                "wind_observation_h2_volpct_threshold",
             )
             rows.append({
                 "id": source.get("id"),

@@ -146,6 +146,45 @@
       ]
     },
     {
+      "id": "NIU_FULL_SCALE_HRS_LEAKAGE_2025",
+      "title": "Experimental study on high-pressure hydrogen leakage and diffusion in full-scale hydrogen refueling stations",
+      "url": "https://doi.org/10.1016/j.ijhydene.2025.05.026",
+      "raw_rows_public": false,
+      "license": "article-level citation only; synchronized release traces were not located in the public record",
+      "local_rights": "citation-bounded aggregate only; no station-model images or raw concentration traces are redistributed",
+      "measured_boundary": [
+        "full-scale HRS physical model with two parallel dispensers and 5 m canopy",
+        "actual high-pressure hydrogen release at 20, 35, 45 and 70 MPa",
+        "circular, equilateral-triangular and square nozzle geometries",
+        "wind and obstacle effects on concentration distribution"
+      ],
+      "aggregate": {
+        "release_pressure_mpa_levels": [
+          20,
+          35,
+          45,
+          70
+        ],
+        "nozzle_geometry_classes": 3,
+        "parallel_dispenser_count": 2,
+        "canopy_height_m": 5.0,
+        "non_circular_to_circular_discharge_ratio_reported_max": 1.8,
+        "wind_observation_h2_volpct_threshold": 4.0,
+        "reported_flow_pressure_relation": "positive approximately linear trend over tested pressure levels"
+      },
+      "eligible_for": [
+        "full-scale HRS leak-source and nozzle-geometry consequence context",
+        "wind and obstacle sensitivity wording for scenario analysis",
+        "release-pressure operating-envelope checks after a frozen local protocol"
+      ],
+      "not_eligible_for": [
+        "untouched row-level concentration holdout",
+        "station controller, cascade, ESD or fueling-protocol validation",
+        "site-specific safety distance or risk-frequency claims",
+        "automatic calibration of leak coefficients or detector thresholds"
+      ]
+    },
+    {
       "id": "FCH2RAIL_D61_350BAR_REPORT",
       "title": "FCH2RAIL D6.1 transportable HRS demonstrator-train refuelling report",
       "url": "https://fch2rail.eu/wp-content/uploads/2025/01/FCH2RAIL_D6.1_Report-on-KPI-assessment.pdf",

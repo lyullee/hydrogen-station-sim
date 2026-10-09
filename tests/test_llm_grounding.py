@@ -505,6 +505,11 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     early = prompt_evidence_summary(idle)
     assert early["impact_status"] == "not_requested"
     assert early["public_experimental_benchmarks"]["sources"]
+    niu_summary = next(
+        item for item in early["public_experimental_benchmarks"]["sources"]
+        if item["id"] == "NIU_FULL_SCALE_HRS_LEAKAGE_2025"
+    )
+    assert niu_summary["aggregate"]["release_pressure_mpa_levels"] == [20, 35, 45, 70]
     assert early["public_grune_ventilation_evidence"]["factor_count"] == 42
     assert early["public_h2safe_indoor_surrogate_evidence"]["case_count"] == 5
     assert early["public_dispersion_proxy_evidence"]["method"]["case_count"] == 22
@@ -1203,7 +1208,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "cross_station_pressure_plausibility_supported"
     ] is True
     benchmarks = idle["response_evidence"]["public_experimental_benchmarks"]
-    assert len(benchmarks["sources"]) == 7
+    assert len(benchmarks["sources"]) == 8
     nrel_trace = next(item for item in benchmarks["sources"] if item["id"] == "NREL_HDVS_2022_TANK_HOSE_TRACE")
     assert nrel_trace["aggregate"]["sample_count"] == 351
     assert nrel_trace["raw_rows_public"] is False
@@ -1215,6 +1220,10 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert cal_state["aggregate"]["dispensed_hydrogen_kg_approx"] == 8800
     assert cal_state["aggregate"]["reported_2020_q1_energy_kwh_per_kg_range"] == [70, 80]
     assert "synchronized station-to-vehicle holdout" in cal_state["not_eligible_for"]
+    niu = next(item for item in benchmarks["sources"] if item["id"] == "NIU_FULL_SCALE_HRS_LEAKAGE_2025")
+    assert niu["aggregate"]["release_pressure_mpa_levels"] == [20, 35, 45, 70]
+    assert niu["aggregate"]["non_circular_to_circular_discharge_ratio_reported_max"] == 1.8
+    assert "automatic calibration of leak coefficients or detector thresholds" in niu["not_eligible_for"]
     fch2rail = next(item for item in benchmarks["sources"] if item["id"] == "FCH2RAIL_D61_350BAR_REPORT")
     assert fch2rail["aggregate"]["average_flow_min_g_s"] == 11.54
     assert "70 MPa passenger-vehicle validation" in fch2rail["not_eligible_for"]

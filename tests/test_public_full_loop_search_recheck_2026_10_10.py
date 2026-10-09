@@ -13,11 +13,12 @@ def test_public_full_loop_recheck_is_explicitly_claim_limited() -> None:
 
     assert record["decision"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED"
     assert record["gate_impact"] == "full_loop_external_validation_remains_open"
-    assert len(record["screened_sources"]) == 5
+    assert len(record["screened_sources"]) == 9
     assert record["minimum_next_input"]["event_count"] == 3
     rendered = json.dumps(record, ensure_ascii=False)
     assert "C:\\" not in rendered
-    assert "raw rows" not in rendered.lower()
+    assert "source_paths_published" not in record
+    assert all("rows" not in item for item in record["screened_sources"])
     assert all("local paths" not in item.get("claim_limit", "").lower()
                for item in record["screened_sources"])
     kuroki = next(
