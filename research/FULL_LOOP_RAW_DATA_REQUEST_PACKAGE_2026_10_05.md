@@ -69,6 +69,12 @@ The exporter writes generic event files only to an output directory outside the
 repository and records hashes and aggregate quality metadata without publishing
 source filenames, headers, absolute timestamps, or raw rows.
 
+After custodian review, point the decision-support process at the generated
+`receipt.json` with the `H2STATION_COMPONENT_BUNDLE_RECEIPT` environment
+variable. The LLM receives only the sanitized event count, aggregate quality
+summary, and claim boundary; it cannot read the exported CSV rows through this
+path.
+
 ## Rights and provenance request
 
 Ask the custodian to confirm in writing:

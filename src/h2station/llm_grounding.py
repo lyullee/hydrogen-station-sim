@@ -23,6 +23,7 @@ from .public_tank_calibration import load_public_type_iv_tank_calibration
 from .lifecycle_evidence import load_lifecycle_evidence
 from .hazop.response import public_accident_precedents
 from .local_evidence import local_station_evidence_summary
+from .component_bundle_evidence import component_bundle_evidence
 
 
 def _ijhe_readiness_ledger() -> dict[str, Any]:
@@ -6921,6 +6922,9 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "local_station_data_revalidation"
         ] = local_revalidation
+    component_bundle = component_bundle_evidence(frame)
+    if component_bundle is not None:
+        envelope["response_evidence"]["confidential_component_bundle"] = component_bundle
     # Expose only the aggregate readiness state so the LLM cannot infer that
     # passing station-side checks imply full-loop or journal-ready validation.
     envelope["response_evidence"][
@@ -8020,6 +8024,24 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "decision": local_revalidation.get("decision") or {},
             "claim_boundary": short(local_revalidation.get("claim_boundary"), 320),
         }
+    component_bundle = evidence.get("confidential_component_bundle")
+    if isinstance(component_bundle, dict):
+        summary["confidential_component_bundle"] = {
+            "evidence_role": component_bundle.get("evidence_role"),
+            "status": component_bundle.get("status"),
+            "event_count": component_bundle.get("event_count"),
+            "event_summaries": component_bundle.get("event_summaries") or [],
+            "component_bundle_ready": component_bundle.get("component_bundle_ready") is True,
+            "station_to_dispenser_boundary_replay_supported": component_bundle.get(
+                "station_to_dispenser_boundary_replay_supported"
+            ) is True,
+            "operating_range_face_validity_supported": component_bundle.get(
+                "operating_range_face_validity_supported"
+            ) is True,
+            "full_loop_external_validation_supported": False,
+            "runtime_parameter_application": False,
+            "claim_limit": short(component_bundle.get("claim_limit"), 320),
+        }
     readiness = evidence.get("validation_readiness")
     if isinstance(readiness, dict):
         summary["validation_readiness"] = {
@@ -8358,6 +8380,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     actionable_data_scope = response.get("local_actionable_data_scope") or {}
     local_revalidation = response.get("local_station_data_revalidation") or {}
+    component_bundle = response.get("confidential_component_bundle") or {}
     readiness = response.get("validation_readiness") or {}
     local_station_asset_screen = response.get(
         "confidential_local_station_asset_screen"
@@ -8561,6 +8584,24 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "claim_limit",
         )),
         "decision_support_evidence": {
+            **({
+                "confidential_component_bundle": {
+                    "evidence_role": component_bundle.get("evidence_role"),
+                    "status": component_bundle.get("status"),
+                    "event_count": component_bundle.get("event_count"),
+                    "event_summaries": component_bundle.get("event_summaries") or [],
+                    "component_bundle_ready": component_bundle.get("component_bundle_ready") is True,
+                    "station_to_dispenser_boundary_replay_supported": component_bundle.get(
+                        "station_to_dispenser_boundary_replay_supported"
+                    ) is True,
+                    "operating_range_face_validity_supported": component_bundle.get(
+                        "operating_range_face_validity_supported"
+                    ) is True,
+                    "full_loop_external_validation_supported": False,
+                    "runtime_parameter_application": False,
+                    "claim_limit": short(component_bundle.get("claim_limit"), 320),
+                }
+            } if component_bundle else {}),
             **({
                 "local_actionable_data_scope": {
                     "evidence_role": actionable_data_scope.get("evidence_role"),
@@ -9850,6 +9891,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         "confidential_local_station_data_utilization"
     ) or {}
     local_revalidation = evidence.get("local_station_data_revalidation") or {}
+    component_bundle = evidence.get("confidential_component_bundle") or {}
     readiness = evidence.get("validation_readiness") or {}
     local_station_asset_screen = evidence.get(
         "confidential_local_station_asset_screen"
@@ -10132,6 +10174,22 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "scan": local_public_candidate_scan.get("scan") or {},
             "eligibility": local_public_candidate_scan.get("eligibility") or {},
             "claim_limit": local_public_candidate_scan.get("claim_limit"),
+        },
+        "confidential_component_bundle": {
+            "evidence_role": component_bundle.get("evidence_role"),
+            "status": component_bundle.get("status"),
+            "event_count": component_bundle.get("event_count"),
+            "event_summaries": component_bundle.get("event_summaries") or [],
+            "component_bundle_ready": component_bundle.get("component_bundle_ready") is True,
+            "station_to_dispenser_boundary_replay_supported": component_bundle.get(
+                "station_to_dispenser_boundary_replay_supported"
+            ) is True,
+            "operating_range_face_validity_supported": component_bundle.get(
+                "operating_range_face_validity_supported"
+            ) is True,
+            "full_loop_external_validation_supported": False,
+            "runtime_parameter_application": False,
+            "claim_limit": component_bundle.get("claim_limit"),
         },
         "confidential_local_station_attestation_request": {
             "evidence_artifact": local_attestation_request.get("artifact"),
