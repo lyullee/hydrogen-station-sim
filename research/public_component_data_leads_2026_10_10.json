@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_component_data_lead",
+  "recorded_at": "2026-10-10",
+  "purpose": "Preserve a reproducible lead for component-level hydrogen pressure/temperature/flow diagnostics without admitting it as HRS full-loop validation.",
+  "source": {
+    "repository": "https://github.com/gadoseb/HSR-Rig-Project",
+    "commit": "9d0504b0b951d951e09dad02321cc0df00ff2b73",
+    "raw_relative_path": "Data_Analysis/Files_Example/Needs_Strain_Processising/20240618160929_RRC2-AllLogs.txt",
+    "raw_sha256": "725ce29b050abb4d20c07040343a0cb40540e18203162d027a48fceace8a0743",
+    "raw_bytes": 24851473,
+    "license_file_present": false
+  },
+  "observed_trace": {
+    "parsed_row_count": 168476,
+    "first_timestamp": "2024-06-18 16:09:30.117915",
+    "last_timestamp": "2024-06-19 16:11:03.535549",
+    "phase_marker_count": 48,
+    "phase_structure": "12 absorption phases and 12 desorption phases with start/complete markers",
+    "channels": [
+      "timestamp",
+      "hydrogen_flow_rate",
+      "temperature_1",
+      "temperature_2",
+      "pressure",
+      "cumulative_hydrogen_transferred",
+      "strain_channels"
+    ],
+    "ranges_as_recorded": {
+      "hydrogen_flow_rate": {"min": 0.0, "max": 19.6603125},
+      "temperature_1": {"min": 25.17, "max": 31.91},
+      "temperature_2": {"min": 24.3, "max": 53.77},
+      "pressure": {"min": 23.2, "max": 58.84},
+      "cumulative_hydrogen_transferred": {"min": 25.52, "max": 62.45}
+    },
+    "malformed_rows_in_screen": 0
+  },
+  "classification": {
+    "system_boundary": "metal-hydride storage-reactor rig",
+    "component_candidate_only": true,
+    "hrs_full_loop_candidate": false,
+    "full_loop_external_holdout_eligible": false,
+    "runtime_parameter_application": false,
+    "reason": "The trace has useful time/pressure/temperature/flow/cumulative-transfer channels, but it is a reactor-material cycling experiment rather than a hydrogen-refuelling station or station-to-vehicle loop. The repository has no explicit license, so the raw rows are not copied into this project."
+  },
+  "allowed_use": [
+    "provenance-tracked component dynamics screening after a physics-compatibility review",
+    "offline parser and phase-marker robustness checks",
+    "data-request lead for a custodian-approved export"
+  ],
+  "prohibited_claims": [
+    "HRS pressure/temperature/flow validation",
+    "vehicle or receptacle behaviour",
+    "station controller, cascade, ESD or protocol validation",
+    "dispersion, fire, consequence distance or emergency-response effectiveness"
+  ],
+  "privacy": {
+    "raw_rows_persisted": false,
+    "site_identity_published": false,
+    "company_or_manufacturer_published": false,
+    "calendar_dates_published": false
+  }
+}
