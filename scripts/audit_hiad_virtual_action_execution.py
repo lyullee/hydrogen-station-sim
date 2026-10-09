@@ -121,6 +121,7 @@ def _run_family(family: str, node_id: str) -> dict[str, Any]:
             })
 
     after_settings = dict(process.snapshot()["settings"])
+    operation_keys = ("trailer_supply", "pressure_recharge", "vehicle_1", "vehicle_2")
     snapshot = safety.snapshot()
     closed_valves = sorted(
         name for name, valve in snapshot["valves"].items()
@@ -152,8 +153,12 @@ def _run_family(family: str, node_id: str) -> dict[str, Any]:
         "actions": rows,
         "errors": errors,
         "closed_valves": closed_valves,
-        "process_settings_before": before_settings,
-        "process_settings_after": after_settings,
+        "process_settings_before": {
+            key: before_settings.get(key) for key in operation_keys
+        },
+        "process_settings_after": {
+            key: after_settings.get(key) for key in operation_keys
+        },
     }
 
 
