@@ -5338,7 +5338,9 @@ def _data_coverage_summary() -> dict[str, Any] | None:
             "먼저 실제로 사용한 station-side/component 근거를 명시하고, "
             "차량·디스펜서·저장계 동기화 로그가 없다는 사실을 full-loop 한계로 "
             "분리해서 설명한다. 데이터가 없다고 전체 근거를 부정하거나, "
-            "station-side 결과를 차량 full-loop 검증으로 확대하지 않는다."
+            "station-side 결과를 차량 full-loop 검증으로 확대하지 않는다. "
+            "운전·대응 질문에는 확보된 근거로 먼저 답하고 데이터 부족을 이유로 "
+            "답변 전체를 회피하지 않는다."
         ),
         "claim_limit": str(scope.get("claim_limit") or ""),
     }

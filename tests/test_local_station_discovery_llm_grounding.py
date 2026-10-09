@@ -199,6 +199,14 @@ def test_validation_readiness_ledger_reaches_all_llm_views_without_paths():
     assert header["ledger_integrity"] is True
 
 
+def test_data_coverage_instruction_uses_available_evidence_before_claim_limits():
+    manifest = _manifest()
+    instruction = manifest["data_coverage"]["assistant_instruction"]
+    assert "station-side/component" in instruction
+    assert "데이터 부족을 이유로" in instruction
+    assert "full-loop" in instruction
+
+
 def test_local_attestation_request_is_exposed_without_private_identifiers():
     manifest = _manifest()
     request = manifest["response_evidence"][
