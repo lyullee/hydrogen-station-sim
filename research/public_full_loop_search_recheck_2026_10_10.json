@@ -3,47 +3,136 @@
   "recorded_at": "2026-10-10",
   "gate": "new untouched public station-to-vehicle full-loop fueling validation",
   "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED",
-  "scope": "Targeted recheck of official H2FillS, SAE J2601, DOE/NREL, NLR fueling-experiment publications and public HRS availability sources.",
+  "scope": "Targeted recheck of official H2FillS, SAE J2601, DOE/NREL, NLR fueling-experiment publications and public HRS availability sources. Latest recheck added official Cal State LA, NLR HITRF and H2-Stations API sources; no source met the raw full-loop admission contract.",
   "screened_sources": [
     {
       "id": "nrel_h2fills_product_page",
       "url": "https://www.nrel.gov/hydrogen/h2fills",
       "decision": "SIMULATION_TOOL_NOT_INDEPENDENT_RAW_HOLDOUT",
-      "usable_for": ["protocol context", "model interface context", "face-validity checks"],
-      "not_usable_for": ["untouched station-to-vehicle validation"],
+      "usable_for": [
+        "protocol context",
+        "model interface context",
+        "face-validity checks"
+      ],
+      "not_usable_for": [
+        "untouched station-to-vehicle validation"
+      ],
       "claim_limit": "The product page describes a thermodynamic simulation tool and its output fields; it is not a rights-cleared independent logger archive."
     },
     {
       "id": "sae_j2601_public_description",
       "url": "https://saemobilus.sae.org/standards/j2601_202005-fueling-protocols-light-duty-gaseous-hydrogen-surface-vehicles",
       "decision": "STANDARD_DESCRIPTION_NOT_DATASET",
-      "usable_for": ["protocol and process-limit reference"],
-      "not_usable_for": ["raw fueling trace validation"],
+      "usable_for": [
+        "protocol and process-limit reference"
+      ],
+      "not_usable_for": [
+        "raw fueling trace validation"
+      ],
       "claim_limit": "The public description specifies protocol limits and scope; it does not provide a synchronized experimental trace."
     },
     {
       "id": "ipcei_hrs_availability_dataset",
       "url": "https://ipcei.observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations",
       "decision": "STATION_INVENTORY_OR_AVAILABILITY_CONTEXT_ONLY",
-      "usable_for": ["station inventory context", "availability context"],
-      "not_usable_for": ["thermodynamic station-to-vehicle validation"],
+      "usable_for": [
+        "station inventory context",
+        "availability context"
+      ],
+      "not_usable_for": [
+        "thermodynamic station-to-vehicle validation"
+      ],
       "claim_limit": "The resource describes station inventory and availability data, not synchronized pressure-temperature-mass-flow fueling events."
     },
     {
       "id": "h2_stations_availability_api",
       "url": "https://api.h2-stations.eu/v1.1/doc/",
       "decision": "STATION_AVAILABILITY_API_NOT_RAW_FUELING_TRACE",
-      "usable_for": ["operational availability context"],
-      "not_usable_for": ["vehicle boundary or mass-transfer validation"],
+      "usable_for": [
+        "operational availability context"
+      ],
+      "not_usable_for": [
+        "vehicle boundary or mass-transfer validation"
+      ],
       "claim_limit": "The API exposes station availability and static metadata, not a common-time-base fueling logger."
     },
     {
       "id": "nlr_kuroki_2023_vehicle_tank_fueling_experiment",
       "url": "https://doi.org/10.1002/ente.202300239",
       "decision": "PUBLISHED_EXPERIMENT_DESCRIPTION_DATA_NOT_SHARED",
-      "usable_for": ["vehicle-tank boundary context", "protocol and temperature-limit context"],
-      "not_usable_for": ["untouched station-to-vehicle raw-trace validation"],
+      "usable_for": [
+        "vehicle-tank boundary context",
+        "protocol and temperature-limit context"
+      ],
+      "not_usable_for": [
+        "untouched station-to-vehicle raw-trace validation"
+      ],
       "claim_limit": "The article reports real fueling experiments and boundary conditions, but its data-availability statement says research data are not shared; no rights-cleared synchronized raw logger cohort is available from the cited publication."
+    },
+    {
+      "id": "cal_state_la_jcp_back_to_back_article",
+      "url": "https://doi.org/10.1016/j.jclepro.2021.129737",
+      "decision": "REAL_STATION_AGGREGATE_AND_EVENT_CONTEXT_ONLY",
+      "usable_for": [
+        "back-to-back fueling context",
+        "storage-pressure and cooling behavior context",
+        "data-request lead"
+      ],
+      "not_usable_for": [
+        "untouched station-to-vehicle raw-trace validation"
+      ],
+      "reported_scope": "one-year Cal State LA HRFF fueling-event and station-response study with storage pressure, cooling response, thermodynamics and vehicle SOC context",
+      "raw_data_status": "no reproducible synchronized raw logger export identified in the public search",
+      "claim_limit": "The article is credible real-station provenance, but the public record does not expose the channel dictionary, calibration metadata and reuse-cleared common-clock rows required by the frozen full-loop protocol."
+    },
+    {
+      "id": "cal_state_la_ijhe_multi_year_aggregate",
+      "url": "https://doi.org/10.1016/j.ijhydene.2023.04.084",
+      "decision": "REAL_STATION_MULTI_YEAR_AGGREGATE_ONLY",
+      "usable_for": [
+        "aggregate throughput and energy sanity checks",
+        "public operating-range context",
+        "data-request lead"
+      ],
+      "not_usable_for": [
+        "synchronized station-to-vehicle holdout",
+        "site-specific safety or distance limits"
+      ],
+      "reported_scope": "approximately 4,500 refueling events and 8,800 kg dispensed over 2016-2020, with electrolyzer, storage, compressor and dispensing domains",
+      "raw_data_status": "public aggregate study; synchronized raw rows not identified",
+      "claim_limit": "Aggregate operating counts and energy ranges cannot score the locked transient model or establish full-loop accuracy."
+    },
+    {
+      "id": "nlr_hitrf_official_facility_reference",
+      "url": "https://www.nlr.gov/hydrogen/hitrf",
+      "decision": "FACILITY_CAPABILITY_REFERENCE_ONLY",
+      "usable_for": [
+        "H70/H35 facility envelope",
+        "SAE J2601 and MC protocol context",
+        "storage and automatic-shutoff capability context"
+      ],
+      "not_usable_for": [
+        "raw logger validation",
+        "field safety-effectiveness inference"
+      ],
+      "reported_scope": "official facility page describes 700/350 bar fueling, SAE J2601/MC methods, 365 kg storage and automatic fill shutoff",
+      "raw_data_status": "no downloadable synchronized fueling trace identified",
+      "claim_limit": "Facility specifications support face-validity and LLM explanation only; they do not constitute an independent holdout."
+    },
+    {
+      "id": "h2_stations_api_v2_layout_status",
+      "url": "https://docs.h2-stations.eu/for-data-users/api-v2/",
+      "decision": "STATIC_LAYOUT_AND_AVAILABILITY_ONLY",
+      "usable_for": [
+        "public station inventory",
+        "registered layout and availability context"
+      ],
+      "not_usable_for": [
+        "pressure-temperature-mass-flow fueling validation"
+      ],
+      "reported_scope": "API v2 exposes station layout and status signal types such as availability, usage, hydrogen storage and pricing",
+      "raw_data_status": "not a synchronized process historian",
+      "claim_limit": "Operational status/layout feeds cannot validate thermodynamic behavior or vehicle boundary response."
     }
   ],
   "gate_impact": "full_loop_external_validation_remains_open",
