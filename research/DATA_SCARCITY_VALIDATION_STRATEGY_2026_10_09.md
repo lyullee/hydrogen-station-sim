@@ -53,6 +53,16 @@ rights-cleared synchronized station/dispenser/vehicle logger cohort with
 initial conditions, units, calibration uncertainty and reuse terms. The
 repository therefore keeps the full-loop external-validation gate closed.
 
+The DOE/NREL heavy-duty fast-flow report was rechecked against the official
+PDF on 2026-10-10. Its reported H70 FM300 T40 event transfers 73 kg in 423.5 s
+(358.9 s fueling), with 172.3 g/s average flow, 483.33 g/s peak flow and
+9.9 MPa/min APRR from 5.5 to 74.6 MPa. These values are already surfaced by
+`public_operating_envelope_screen` for descriptive flow, duration and ramp-rate
+comparisons. The report provides plotted station/hose/receptacle/vehicle
+channels but no rights-cleared synchronized raw logger rows, so it remains an
+aggregate operating-range reference and does not open the full-loop gate.
+Source: [DOE/NREL H2IQ Hour (2024)](https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf).
+
 ## Smallest useful next request
 
 Do not wait for a large multi-year archive. Request three de-identified pilot
