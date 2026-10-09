@@ -1,0 +1,103 @@
+from __future__ import annotations
+
+import csv
+from pathlib import Path
+
+from h2station.privacy_safe_full_loop_intake import (
+    PilotIntakeRules,
+    validate_privacy_safe_pilot_bundle,
+)
+
+
+def _write_event(path: Path, *, with_vehicle: bool = True) -> None:
+    fields = [
+        "elapsed_time_s",
+        "station_pressure_mpa",
+        "delivered_gas_temperature_c",
+        "mass_flow_g_s",
+        "protocol_phase",
+    ]
+    if with_vehicle:
+        fields.extend(["vehicle_pressure_mpa", "vehicle_temperature_c"])
+    rows = [
+        {
+            "elapsed_time_s": "0",
+            "station_pressure_mpa": "45",
+            "delivered_gas_temperature_c": "-35",
+            "mass_flow_g_s": "10",
+            "protocol_phase": "start",
+        },
+        {
+            "elapsed_time_s": "1",
+            "station_pressure_mpa": "46",
+            "delivered_gas_temperature_c": "-34",
+            "mass_flow_g_s": "10",
+            "protocol_phase": "fill",
+        },
+    ]
+    if with_vehicle:
+        rows[0].update(vehicle_pressure_mpa="5", vehicle_temperature_c="25")
+        rows[1].update(vehicle_pressure_mpa="6", vehicle_temperature_c="28")
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def test_three_events_produce_raw_row_free_pilot_report(tmp_path: Path) -> None:
+    paths = [tmp_path / f"event_{index}.csv" for index in range(3)]
+    for path in paths:
+        _write_event(path)
+
+    report = validate_privacy_safe_pilot_bundle(paths)
+
+    assert report["status"] == "READY_FOR_PROTOCOL_FREEZE"
+    assert report["event_count"] == 3
+    assert report["valid_event_count"] == 3
+    assert report["vehicle_boundary_complete_event_count"] == 3
+    assert report["raw_rows_persisted"] is False
+    assert report["source_paths_published"] is False
+    assert report["event_reports"][0]["event_id"] == "event_001"
+    assert "event_0.csv" not in str(report)
+
+
+def test_identity_and_time_quality_errors_fail_closed(tmp_path: Path) -> None:
+    path = tmp_path / "event.csv"
+    fields = [
+        "elapsed_time_s",
+        "station_pressure_mpa",
+        "delivered_gas_temperature_c",
+        "mass_flow_g_s",
+        "protocol_phase",
+        "site_name",
+    ]
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer.writeheader()
+        writer.writerow({
+            "elapsed_time_s": "1",
+            "station_pressure_mpa": "45",
+            "delivered_gas_temperature_c": "-35",
+            "mass_flow_g_s": "1",
+            "protocol_phase": "fill",
+            "site_name": "redacted",
+        })
+        writer.writerow({
+            "elapsed_time_s": "0",
+            "station_pressure_mpa": "46",
+            "delivered_gas_temperature_c": "-34",
+            "mass_flow_g_s": "-1",
+            "protocol_phase": "fill",
+            "site_name": "redacted",
+        })
+
+    report = validate_privacy_safe_pilot_bundle(
+        [path],
+        rules=PilotIntakeRules(minimum_event_count=1),
+    )
+
+    event = report["event_reports"][0]
+    assert report["status"] == "SCHEMA_INCOMPLETE"
+    assert event["schema_valid"] is False
+    assert event["forbidden_identity_columns_detected"] is True
+    assert "forbidden_identity_or_calendar_column" in event["errors"]

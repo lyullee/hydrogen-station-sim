@@ -259,6 +259,8 @@ def build_summary(root: Path) -> dict[str, Any]:
         },
         "privacy_safe_export_contract": {
             "purpose": "작은 비식별 이벤트 묶음으로 full-loop 외부 검증을 닫기 위한 최소 계약",
+            "validator": "src/h2station/privacy_safe_full_loop_intake.py",
+            "validator_status": "implemented_and_tested",
             "custodian_keeps_raw_data": True,
             "repository_receives_only": [
                 "pseudonymous event id",

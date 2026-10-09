@@ -62,4 +62,5 @@ def test_data_coverage_summary_preserves_claim_boundary() -> None:
     export = summary["privacy_safe_export_contract"]
     assert export["custodian_keeps_raw_data"] is True
     assert export["minimum_event_bundle"] == 3
+    assert export["validator_status"] == "implemented_and_tested"
     assert "site or company identity" in export["must_not_include"]
