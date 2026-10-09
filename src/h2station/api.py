@@ -32,6 +32,7 @@ from .risk.sensor_assessment import assess_sensor_cases, available_sensor_inputs
 from .risk.scenario_planning import parse_saga_plan
 from .llm_grounding import (
     build_evidence_manifest,
+    compact_data_used,
     guard_llm_claims,
     prompt_decision_evidence,
 )
@@ -2824,6 +2825,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
                                 "calculated_impact_count": len(impact_results)},
             "show_impact_results": show_impact_results,
             "impact_results": impact_results,
+            "data_used": compact_data_used(evidence_manifest),
             "evidence_manifest": evidence_manifest,
             "llm_claim_guard": llm_claim_guard,
             "hazop_direct": direct_result,
@@ -2967,6 +2969,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
                            "calculated_impact_count":len(impact_results)},
         "show_impact_results":show_impact_results,
         "impact_results":impact_results,
+        "data_used":compact_data_used(evidence_manifest),
         "evidence_manifest": evidence_manifest,
         "llm_claim_guard": llm_claim_guard}
 
@@ -3674,9 +3677,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         return {"sensor_id": sensor_id, "time_s": payload["time_s"],
                 "answer": answer, "model": llm_model, "llm_error": llm_error,
                 "impact_results": impact_results,
-                "data_used": prompt_decision_evidence(evidence_manifest).get(
-                    "data_used", {}
-                ),
+                "data_used": compact_data_used(evidence_manifest),
                 "evidence_manifest": evidence_manifest,
                 "active_rule_count": len(active_rules), "related_active_count": len(related_rules),
                 "sensor_status": payload["sensor_status"], "hazop_direct": direct_result,
@@ -3814,9 +3815,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
     return {"sensor_id": sensor_id, "time_s": payload["time_s"],
             "answer": answer or "선택 센서의 상태를 확인했습니다.",
             "model": reply.get("model", ""), "impact_results": impact_results,
-            "data_used": prompt_decision_evidence(evidence_manifest).get(
-                "data_used", {}
-            ),
+            "data_used": compact_data_used(evidence_manifest),
             "active_rule_count": len(active_rules), "related_active_count": len(related_rules),
             "sensor_status": payload["sensor_status"],
             "evidence_manifest": evidence_manifest,

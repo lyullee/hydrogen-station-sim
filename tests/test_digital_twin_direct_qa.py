@@ -100,6 +100,8 @@ def test_direct_qa_calculates_impact_for_alarm_and_explicit_hypothesis(monkeypat
                 "station_to_vehicle"
             ]["claim_supported"] is False
             assert "evidence_manifest" not in llm_prompts[-1]["context"]
+            assert "data_used" in hypothetical
+            assert hypothetical["data_used"]["impact"][0] == "calculated"
             assert len(json.dumps(llm_prompts[-1]["context"], default=str)) < 12000
             assert llm_prompts[-1]["kind"] == "user_query"
             assert received[-1] == [impact]

@@ -91,6 +91,21 @@
     basis.textContent=[row.scenario_id,row.orifice_diameter_mm&&`${fmt(row.orifice_diameter_mm)} mm`,...sensorParts,row.sensor_basis==='PROXY'?'대체 센서 적용':'',row.risk_score!=null?'위험도는 빈도 미포함 피해강도 지수':''].filter(Boolean).join(' · ');card.append(basis);
     return card;
   }
+  function dataUsedPanel(used){
+    if(!used||typeof used!=='object')return null;
+    const tags=Array.isArray(used.signals)?used.signals.filter(Boolean):[];
+    const impact=Array.isArray(used.impact)?used.impact:[];
+    const forecast=used.station_pressure_forecast&&typeof used.station_pressure_forecast==='object'?used.station_pressure_forecast:null;
+    if(!tags.length&&!impact.length&&!forecast)return null;
+    const panel=document.createElement('details');panel.className='saga-data-used';
+    const english=window.stationLocale?.language?.()==='en';
+    const summary=document.createElement('summary');summary.textContent=english?'Data used':'사용 데이터';panel.append(summary);
+    const text=[];
+    if(tags.length)text.push(`${english?'signals':'센서'}: ${tags.join(', ')}`);
+    if(impact.length)text.push(`${english?'impact':'피해영향'}: ${impact[0]||'—'}${impact[1]!=null?` (${impact[1]})`:''}`);
+    if(forecast)text.push(`${english?'forecast':'압력예측'}: ${forecast.status||'—'}${forecast.bank?` · ${forecast.bank}`:''}`);
+    const body=document.createElement('p');body.textContent=text.join(' · ');panel.append(body);return panel;
+  }
   function responseGuidancePanel(guidance,animate=false){
     const panel=document.createElement('section');panel.className='saga-response-panel';
     if(animate)panel.classList.add('saga-response-reveal');
@@ -171,6 +186,7 @@
       }
     }
     if(message.responseGuidance?.plans?.length)destination.append(responseGuidancePanel(message.responseGuidance,animate&&!detail));
+    const used=dataUsedPanel(message.dataUsed);if(used)destination.append(used);
   }
   function streamFor(channel){return $(channel==='automatic'?'sagaAutomaticMessages':'sagaMessages');}
   function scrollToLatest(channel='manual'){const stream=streamFor(channel);if(stream)requestAnimationFrame(()=>{stream.scrollTop=stream.scrollHeight;});}
@@ -212,7 +228,7 @@
     return message;
   }
   function updateMessage(message,content,meta,error=false,result=null,animate=false){
-    message.content=content;message.meta=meta;message.error=error;message.questionAnswer=result?.question_answer||null;message.analysisAnswer=result?.analysis_answer||null;message.responseGuidance=result?.response_guidance||null;message.showImpact=Boolean(result?.show_impact_results);message.impactResults=result?.impact_results||[];message.riskAssessment=result?.risk_assessment||null;
+    message.content=content;message.meta=meta;message.error=error;message.questionAnswer=result?.question_answer||null;message.analysisAnswer=result?.analysis_answer||null;message.responseGuidance=result?.response_guidance||null;message.showImpact=Boolean(result?.show_impact_results);message.impactResults=result?.impact_results||[];message.riskAssessment=result?.risk_assessment||null;message.dataUsed=result?.data_used||null;
     const article=document.querySelector(`.saga-message[data-message-id="${message.id}"]`);if(!article)return;
     article.classList.toggle('error',error);article.querySelector('.saga-message-label span').textContent=meta;
     article.classList.remove('streaming');renderBubble(article.querySelector('.saga-bubble'),message,animate);scrollToLatest(message.channel);

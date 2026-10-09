@@ -9116,22 +9116,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     # than from private file names, raw rows, or provider-specific prompt text.
     # It makes the provenance visible in both the main and sensor assistants
     # without allowing restricted identifiers to leak into an interactive turn.
-    signal_rows = (manifest.get("signals") or {}).get("rows") or []
-    data_used: dict[str, Any] = {
-        "signals": [
-            row.get("tag")
-            for row in signal_rows[:4]
-            if isinstance(row, dict) and row.get("tag")
-        ],
-        "impact": [
-            impact.get("calculation_status"),
-            impact.get("result_count", 0),
-        ],
-    }
-    if isinstance(current_forecast, dict) and current_forecast:
-        data_used["station_pressure_forecast"] = selected(current_forecast, (
-            "status", "reason", "bank",
-        ))
+    data_used = compact_data_used(manifest)
     # Sensor-analysis and forecast views have a stable UI slot for this
     # provenance line.  Main direct-Q&A keeps its stricter prompt budget and
     # already receives the detailed live signal/impact fields separately.
@@ -9167,6 +9152,37 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "claim_limit": short(controlled_flare.get("claim_limit")),
         }
     return decision
+
+
+def compact_data_used(manifest: dict[str, Any]) -> dict[str, Any]:
+    """Return a privacy-bounded list of inputs used for an answer.
+
+    This projection is returned to the UI after an answer is generated.  It is
+    intentionally separate from the provider prompt so the main assistant can
+    keep its strict context budget while the operator still gets provenance.
+    """
+
+    signals = (manifest.get("signals") or {}).get("rows") or []
+    impact = manifest.get("impact") or {}
+    result: dict[str, Any] = {
+        "signals": [
+            row.get("tag")
+            for row in signals[:4]
+            if isinstance(row, dict) and row.get("tag")
+        ],
+        "impact": [
+            impact.get("calculation_status"),
+            impact.get("result_count", 0),
+        ],
+    }
+    forecast = manifest.get("station_pressure_forecast") or {}
+    if isinstance(forecast, dict) and forecast:
+        result["station_pressure_forecast"] = {
+            key: forecast.get(key)
+            for key in ("status", "reason", "bank")
+            if forecast.get(key) is not None
+        }
+    return result
 
 
 def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
