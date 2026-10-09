@@ -24,6 +24,13 @@ def test_actionable_data_scope_is_privacy_bounded_and_nonempty() -> None:
     scope = manifest["response_evidence"]["local_actionable_data_scope"]
     assert scope["runtime_usable_now"]
     assert scope["runtime_usable_now"][0]["holdout_cases"] == 394
+    transfer = next(
+        item for item in scope["runtime_usable_now"]
+        if item["id"] == "station_pressure_cross_bundle_transfer_corroboration"
+    )
+    assert transfer["transfer_cycles"] == 225
+    assert transfer["screen_pass"] is True
+    assert transfer["independent_external_validation"] is False
     assert scope["available_but_not_runtime_promoted"][0]["holdout_consistent"] is False
     assert scope["full_loop_holdout"]["synchronized_trace_count"] == 0
     assert scope["artifact"] == "research/local_data_actionable_scope_2026_10_09.json"

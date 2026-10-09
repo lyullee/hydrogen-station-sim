@@ -32,6 +32,17 @@
       "parameter_fitting": false
     },
     {
+      "id": "station_pressure_cross_bundle_transfer_corroboration",
+      "evidence": "owner-controlled station-side transfer bundle held out from calibration bundle",
+      "calibration_cycles": 16770,
+      "transfer_cycles": 225,
+      "transfer_median_error_percent": 17.431193,
+      "screen_pass": true,
+      "runtime_role": "corroborative station-side transfer screen; no runtime parameter change",
+      "parameter_fitting": false,
+      "independent_external_validation": false
+    },
+    {
       "id": "public_blowdown_component_screen",
       "evidence": "PRESLHY ambient direct-aperture external validation",
       "eligible_cases": 22,

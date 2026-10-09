@@ -4848,6 +4848,15 @@ def _local_actionable_data_scope_evidence() -> dict[str, Any] | None:
             "evidence": str(item.get("evidence") or ""),
             "calibration_cases": item.get("calibration_cases"),
             "holdout_cases": item.get("holdout_cases"),
+            "calibration_cycles": item.get("calibration_cycles"),
+            "transfer_cycles": item.get("transfer_cycles"),
+            "transfer_median_error_percent": item.get(
+                "transfer_median_error_percent"
+            ),
+            "screen_pass": item.get("screen_pass") is True,
+            "independent_external_validation": item.get(
+                "independent_external_validation"
+            ) is True,
             "holdout_mae_mpa": item.get("holdout_mae_mpa"),
             "holdout_p90_absolute_error_mpa": item.get(
                 "holdout_p90_absolute_error_mpa"
@@ -8518,6 +8527,15 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                             "id": item.get("id"),
                             "calibration_cases": item.get("calibration_cases"),
                             "holdout_cases": item.get("holdout_cases"),
+                            "calibration_cycles": item.get("calibration_cycles"),
+                            "transfer_cycles": item.get("transfer_cycles"),
+                            "transfer_median_error_percent": item.get(
+                                "transfer_median_error_percent"
+                            ),
+                            "screen_pass": item.get("screen_pass") is True,
+                            "independent_external_validation": item.get(
+                                "independent_external_validation"
+                            ) is True,
                             "holdout_mae_mpa": item.get("holdout_mae_mpa"),
                             "eligible_cases": item.get("eligible_cases"),
                             "runtime_role": item.get("runtime_role"),
