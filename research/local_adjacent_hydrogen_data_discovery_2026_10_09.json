@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_adjacent_hydrogen_process_data_discovery",
+  "status": "privacy_bounded_adjacent_process_inventory",
+  "generated_at": "2026-10-09",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "source_identifiers_published": false,
+    "site_company_manufacturer_published": false,
+    "calendar_dates_published": false,
+    "raw_rows_persisted": false,
+    "measurement_values_persisted": false
+  },
+  "collections": {
+    "high_pressure_hydrogen_process": {
+      "csv_event_log_count": 18,
+      "csv_event_row_count": 2411774,
+      "largest_event_log_row_count": 2410985,
+      "entity_key_count": 490,
+      "logical_key_count": 273,
+      "value_family_row_counts": {
+        "pressure_like": 292824,
+        "temperature_like": 1345721,
+        "flow_like": 322306,
+        "state_like": 218975,
+        "unclassified": 627774
+      },
+      "numeric_time_row_count": 2410985,
+      "negative_time_step_count": 11059,
+      "time_duration_in_unattested_units": 86399439,
+      "workbook_count": 19,
+      "workbook_sheet_count": 69,
+      "nontrivial_workbook_table_count": 64,
+      "semantic_attestation": "required_before_replay_or_calibration"
+    },
+    "liquid_hydrogen_centre_context": {
+      "csv_file_count": 3,
+      "scenario_row_count": 52,
+      "workbook_count": 17,
+      "workbook_sheet_count": 78,
+      "nontrivial_workbook_table_count": 31,
+      "semantic_role": "qualitative_operating_and_response_context"
+    }
+  },
+  "discovery_screen": {
+    "machine_readable_files_screened": 122,
+    "csv_tsv_headers_screened": 21,
+    "header_parse_errors": 0,
+    "candidate_full_loop_count": 0,
+    "candidate_classes_are_not_validation": true
+  },
+  "eligibility": {
+    "adjacent_process_context_supported": true,
+    "station_side_runtime_parameter_application": false,
+    "synchronized_station_dispenser_vehicle_validation": false,
+    "quantitative_consequence_validation": false,
+    "safety_limit_or_incident_frequency_claim": false
+  },
+  "claim_boundary": "The inventory demonstrates substantial local adjacent hydrogen-process material. Units, clock semantics, channel roles, co-location and reuse rights require custodian attestation. No full-loop or safety-distance claim is permitted from this discovery scan."
+}
