@@ -22,6 +22,7 @@ paper result from silently becoming part of the source tree.
 | HIAD 2.2, European Commission JRC | Independent real-incident decision cases | 34 HRS events; 33 with at least one response/lesson/corrective field | Development/holdout casebook and blinded expert review |
 | KHK public hydrogen accident reports | Independent actual-accident integration trace | 23 reports covering 26 incident codes | Citation-only metadata routed through canonical process, detector, safety and consequence recipes |
 | USN/FFI open-channel dispersion data | Bounded consequence/detector-logic benchmark | 22 releases, 29 concentration sensors, 0.029–1.250 g/s | Measured concentration replay through declared alarm/trip thresholds; not an outdoor HRS full-loop holdout |
+| Owner-controlled local station telemetry | Confidential station-side calibration and chronological holdouts | 33 CSV files, 59,272,300 physical rows, 56,854,143 deduplicated rows | Pressure-cycle, cascade-order, recharge-response, compressor/valve/ESD and station-side consistency checks; not vehicle/full-loop validation |
 
 Exact URLs, attribution, rights notes and immutable file digests are in
 `research/data_sources.json`. The acquisition log records the files actually
@@ -29,6 +30,27 @@ verified on the local machine.
 The frozen endpoints, data split, uncertainty method, and claim rules are in
 `research/analysis_plan.json`; its status is retrospective rather than a claimed
 prospective registration.
+
+### Owner-controlled station-side data
+
+The local archive is materially larger than the public component traces, but its
+validated boundary is the station side. The privacy-bounded inventory records
+pressure and temperature families, flow/totalizer-like candidates, compressor
+and valve/ESD state families, and lifecycle histories without retaining raw rows,
+source names, site identity, exact dates or manufacturer information in this
+repository. The archive has already supported chronological pressure-cycle,
+medium-to-high cascade-order and short-horizon recharge-pressure holdouts. A
+separate multi-trace restart-dwell candidate failed its temporal consistency
+screen and remains disabled in the runtime.
+
+The measured profile is applied only through the explicit
+`measured_boundary_calibration` opt-in. Reference defaults remain unchanged,
+and no local profile is interpreted as a vehicle fill, delivered-mass/SOC,
+absolute-flow-unit, consequence-distance or safety-limit validation. The
+machine-readable inventory and full-loop exclusion decision are documented in
+[`LOCAL_HYDROGEN_STATION_DATA_DISCOVERY_RECHECK_2026_10_09.md`](../research/LOCAL_HYDROGEN_STATION_DATA_DISCOVERY_RECHECK_2026_10_09.md)
+and
+[`LOCAL_FULL_LOOP_CANDIDATE_RECHECK_2026_10_09.md`](../research/LOCAL_FULL_LOOP_CANDIDATE_RECHECK_2026_10_09.md).
 
 ## Reproduce acquisition and normalization
 
