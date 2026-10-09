@@ -235,6 +235,11 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert local_decision["decision_support_evidence"][
         "confidential_cross_station_bundle_recheck"
     ]["station_side_transfer_candidate"] is True
+    discovery_decision = local_decision["validation_boundaries"][
+        "local_station_data_discovery"
+    ]
+    assert discovery_decision["wide_equipment_continuity_screen_ready"] is True
+    assert discovery_decision["wide_equipment_replay_ready"] is False
     multisource = idle["response_evidence"][
         "confidential_multisource_mapping_feasibility"
     ]
@@ -877,6 +882,18 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert local_station["assessment"]["vehicle_side_full_loop_validation_ready"] is False
     assert local_station["semantic_attestation"]["storage_pressure_role_count"] == 2
     assert local_station["semantic_attestation"]["flow_units_attested"] is False
+    local_discovery = idle["response_evidence"][
+        "confidential_local_station_data_discovery"
+    ]
+    continuity = local_discovery["candidate_groups"][
+        "wide_equipment_continuity_screen"
+    ]
+    assert continuity["wide_file_count"] == 8
+    assert continuity["wide_row_count"] == 653442
+    assert continuity["timestamp_parse_failures"] == 0
+    assert continuity["negative_interval_count"] == 0
+    assert continuity["state_transition_count"] == 3873
+    assert continuity["claim_boundary"]
     local_summary = prompt_evidence_summary(idle)[
         "confidential_local_station_data_utilization"
     ]
@@ -889,6 +906,15 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "confidential_local_station_data_utilization"
     ]
     assert local_header["utilization"]["paired_medium_high_pressure_episodes"] == 11_770
+    discovery_header = prompt_evidence_header(idle)[
+        "confidential_local_station_data_discovery"
+    ]
+    continuity_header = discovery_header["candidate_groups"][
+        "wide_equipment_continuity_screen"
+    ]
+    assert continuity_header["wide_file_count"] == 8
+    assert continuity_header["timestamp_parse_failures"] == 0
+    assert continuity_header["state_transition_count"] == 3873
     local_decision = prompt_decision_evidence(idle)["validation_boundaries"][
         "local_station_data_utilization"
     ]

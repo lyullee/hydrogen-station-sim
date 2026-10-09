@@ -4514,6 +4514,93 @@ def _local_hydrogen_station_discovery_evidence() -> dict[str, Any] | None:
             "ineligible_use": (wide_record or {}).get("ineligible_use") or [],
             "claim_boundary": (wide_record or {}).get("claim_boundary"),
         }
+
+    # The continuity screen is kept separate from the older header-only wide
+    # logger screen.  It proves timestamp/numeric continuity only; it does not
+    # attest units or state semantics and must not be promoted to calibration.
+    continuity_path = Path(__file__).resolve().parents[2] / (
+        "research/local_wide_equipment_continuity_recheck_2026_10_09.json"
+    )
+    try:
+        continuity_record = json.loads(
+            continuity_path.read_text(encoding="utf-8")
+        )
+    except (OSError, ValueError, json.JSONDecodeError):
+        continuity_record = None
+    continuity_privacy = (continuity_record or {}).get("privacy") or {}
+    continuity_inventory = (continuity_record or {}).get("inventory") or {}
+    continuity_eligibility = (continuity_record or {}).get("eligibility") or {}
+    continuity_required_privacy = (
+        "source_paths_published",
+        "source_filenames_published",
+        "source_headers_published",
+        "source_identifiers_published",
+        "calendar_dates_published",
+        "raw_rows_persisted",
+        "per_file_metrics_published",
+    )
+    if (
+        (continuity_record or {}).get("artifact_type")
+        == "local_wide_equipment_continuity_screen"
+        and all(
+            continuity_privacy.get(key) is False
+            for key in continuity_required_privacy
+        )
+        and continuity_inventory.get("wide_file_count") == 8
+        and continuity_inventory.get("wide_row_count") == 653442
+        and continuity_inventory.get("timestamp_parse_failures") == 0
+        and continuity_inventory.get("negative_interval_count") == 0
+        and continuity_eligibility.get(
+            "station_equipment_continuity_screen_ready"
+        ) is True
+        and continuity_eligibility.get("measured_boundary_replay_ready") is False
+        and continuity_eligibility.get("full_loop_vehicle_validation") is False
+    ):
+        safe_groups["wide_equipment_continuity_screen"] = {
+            "evidence_class": "privacy-bounded local wide equipment time-continuity screen",
+            "wide_file_count": continuity_inventory.get("wide_file_count"),
+            "wide_row_count": continuity_inventory.get("wide_row_count"),
+            "timestamp_parse_failures": continuity_inventory.get(
+                "timestamp_parse_failures"
+            ),
+            "duplicate_timestamp_count": continuity_inventory.get(
+                "duplicate_timestamp_count"
+            ),
+            "negative_interval_count": continuity_inventory.get(
+                "negative_interval_count"
+            ),
+            "files_with_monotonic_time": continuity_inventory.get(
+                "files_with_monotonic_time"
+            ),
+            "median_positive_interval_s": continuity_inventory.get(
+                "median_positive_interval_s"
+            ),
+            "maximum_positive_interval_s": continuity_inventory.get(
+                "maximum_positive_interval_s"
+            ),
+            "numeric_column_count_min": continuity_inventory.get(
+                "numeric_column_count_min"
+            ),
+            "numeric_columns_fully_finite_total": continuity_inventory.get(
+                "numeric_columns_fully_finite_total"
+            ),
+            "state_candidate_column_count": continuity_inventory.get(
+                "state_candidate_column_count"
+            ),
+            "state_transition_count": continuity_inventory.get(
+                "state_transition_count"
+            ),
+            "eligible_use": [
+                "time continuity and missingness checks",
+                "station-equipment replay after custodian attestation",
+            ],
+            "ineligible_use": [
+                "unit or pressure-reference calibration",
+                "vehicle-side full-loop validation",
+                "quantitative consequence-distance validation",
+            ],
+            "claim_boundary": (continuity_record or {}).get("claim_boundary"),
+        }
     return {
         "artifact": "research/local_hydrogen_station_data_discovery_recheck_2026_10_09.json",
         "evidence_role": "privacy-bounded local hydrogen-station data discovery and claim boundary",
@@ -6759,6 +6846,9 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         wide_equipment_group = discovery_groups.get(
             "wide_equipment_boundary_recheck"
         ) or {}
+        wide_continuity_group = discovery_groups.get(
+            "wide_equipment_continuity_screen"
+        ) or {}
         media_group = discovery_groups.get("engineering_and_media_context") or {}
         operational_media_group = discovery_groups.get(
             "local_operational_video_collection"
@@ -6798,6 +6888,27 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 ),
                 "wide_equipment_vehicle_candidate_count": wide_equipment_group.get(
                     "vehicle_or_dispenser_candidate_count"
+                ),
+                "wide_equipment_continuity_file_count": wide_continuity_group.get(
+                    "wide_file_count"
+                ),
+                "wide_equipment_continuity_row_count": wide_continuity_group.get(
+                    "wide_row_count"
+                ),
+                "wide_equipment_timestamp_parse_failures": wide_continuity_group.get(
+                    "timestamp_parse_failures"
+                ),
+                "wide_equipment_negative_interval_count": wide_continuity_group.get(
+                    "negative_interval_count"
+                ),
+                "wide_equipment_median_positive_interval_s": wide_continuity_group.get(
+                    "median_positive_interval_s"
+                ),
+                "wide_equipment_maximum_positive_interval_s": wide_continuity_group.get(
+                    "maximum_positive_interval_s"
+                ),
+                "wide_equipment_state_transition_count": wide_continuity_group.get(
+                    "state_transition_count"
                 ),
                 "engineering_document_count": media_group.get("document_count"),
                 "engineering_image_count": media_group.get("image_count"),
@@ -7398,6 +7509,43 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                         .get("wide_equipment_boundary_recheck", {})
                         .get("row_count")
                     ),
+                    "wide_equipment_continuity_file_count": (
+                        (local_station_discovery.get("candidate_groups") or {})
+                        .get("wide_equipment_continuity_screen", {})
+                        .get("wide_file_count")
+                    ),
+                    "wide_equipment_continuity_row_count": (
+                        (local_station_discovery.get("candidate_groups") or {})
+                        .get("wide_equipment_continuity_screen", {})
+                        .get("wide_row_count")
+                    ),
+                    "wide_equipment_timestamp_parse_failures": (
+                        (local_station_discovery.get("candidate_groups") or {})
+                        .get("wide_equipment_continuity_screen", {})
+                        .get("timestamp_parse_failures")
+                    ),
+                    "wide_equipment_negative_interval_count": (
+                        (local_station_discovery.get("candidate_groups") or {})
+                        .get("wide_equipment_continuity_screen", {})
+                        .get("negative_interval_count")
+                    ),
+                    "wide_equipment_median_positive_interval_s": (
+                        (local_station_discovery.get("candidate_groups") or {})
+                        .get("wide_equipment_continuity_screen", {})
+                        .get("median_positive_interval_s")
+                    ),
+                    "wide_equipment_state_transition_count": (
+                        (local_station_discovery.get("candidate_groups") or {})
+                        .get("wide_equipment_continuity_screen", {})
+                        .get("state_transition_count")
+                    ),
+                    "wide_equipment_continuity_screen_ready": (
+                        (local_station_discovery.get("candidate_groups") or {})
+                        .get("wide_equipment_continuity_screen", {})
+                        .get("wide_file_count")
+                        == 8
+                    ),
+                    "wide_equipment_replay_ready": False,
                     "wide_equipment_station_side_screen_ready": (
                         (local_station_discovery.get("candidate_groups") or {})
                         .get("wide_equipment_boundary_recheck", {})
