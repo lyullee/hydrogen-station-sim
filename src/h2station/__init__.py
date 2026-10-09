@@ -99,7 +99,13 @@ from .ventilation_calibration import (
     measured_ventilation_factor,
 )
 from .safe_operation import SafeFullStationSimulator, SafeOperationTrajectory
-from .nbsdc_ingest import NbsdcColumnMap, NbsdcRefuelTrace, read_nbsdc_workbook
+from .nbsdc_ingest import (
+    NbsdcColumnMap,
+    NbsdcRefuelTrace,
+    read_nbsdc_csv,
+    read_nbsdc_export,
+    read_nbsdc_workbook,
+)
 from .public_benchmarks import (
     PublicBenchmark,
     compare_public_high_flow_benchmark,
@@ -189,6 +195,8 @@ __all__ = [
     "SafeOperationTrajectory",
     "NbsdcColumnMap",
     "NbsdcRefuelTrace",
+    "read_nbsdc_csv",
+    "read_nbsdc_export",
     "read_nbsdc_workbook",
     "PublicBenchmark",
     "compare_public_high_flow_benchmark",

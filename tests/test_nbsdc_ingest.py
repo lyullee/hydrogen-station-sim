@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 from openpyxl import Workbook
 
+import h2station
 from h2station.nbsdc_ingest import (
     NbsdcColumnMap,
     read_nbsdc_csv,
@@ -141,3 +142,8 @@ def test_nbsdc_export_dispatches_csv_and_rejects_unknown_suffix(tmp_path):
             case_id="NBS-CSV-04",
             source="approved-sha256:test",
         )
+
+
+def test_nbsdc_csv_exports_are_available_from_package_surface():
+    assert h2station.read_nbsdc_csv is read_nbsdc_csv
+    assert h2station.read_nbsdc_export is read_nbsdc_export
