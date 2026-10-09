@@ -15,6 +15,10 @@
     "discharge_coefficients": {
       "source_to_line": 1.0,
       "outlet": 1.0
+    },
+    "default_valve_time_constants_s": {
+      "source_to_line": 0.0,
+      "outlet": 0.0
     }
   },
   "instrument_boundary_views": {
@@ -29,13 +33,80 @@
       "median_absolute_percentage_error_percent": 22.51399277572061
     }
   },
+  "post_outcome_valve_time_constant_sensitivity": [
+    {
+      "source_valve_time_constant_s": 0.0,
+      "source_flow": {
+        "predicted_peak_mass_flow_g_s": 59.94705168631836,
+        "mass_flow_nrmse_percent_peak_measured": 6.001987776446001,
+        "median_absolute_percentage_error_percent": 22.80869073277896
+      },
+      "outlet_flow": {
+        "predicted_peak_mass_flow_g_s": 60.175931977866135,
+        "mass_flow_nrmse_percent_peak_measured": 5.90674661847632,
+        "median_absolute_percentage_error_percent": 22.51399277572061
+      }
+    },
+    {
+      "source_valve_time_constant_s": 0.5,
+      "source_flow": {
+        "predicted_peak_mass_flow_g_s": 60.38662896755188,
+        "mass_flow_nrmse_percent_peak_measured": 5.837640058367166,
+        "median_absolute_percentage_error_percent": 22.350816736982864
+      },
+      "outlet_flow": {
+        "predicted_peak_mass_flow_g_s": 60.61580585596806,
+        "mass_flow_nrmse_percent_peak_measured": 5.742387563426419,
+        "median_absolute_percentage_error_percent": 22.05439584312624
+      }
+    },
+    {
+      "source_valve_time_constant_s": 1.0,
+      "source_flow": {
+        "predicted_peak_mass_flow_g_s": 60.63123859766921,
+        "mass_flow_nrmse_percent_peak_measured": 5.723112730068633,
+        "median_absolute_percentage_error_percent": 22.028351743885537
+      },
+      "outlet_flow": {
+        "predicted_peak_mass_flow_g_s": 60.85463128244101,
+        "mass_flow_nrmse_percent_peak_measured": 5.6284436505414,
+        "median_absolute_percentage_error_percent": 21.730699682985854
+      }
+    },
+    {
+      "source_valve_time_constant_s": 2.0,
+      "source_flow": {
+        "predicted_peak_mass_flow_g_s": 60.874072898106036,
+        "mass_flow_nrmse_percent_peak_measured": 5.531873008512266,
+        "median_absolute_percentage_error_percent": 21.401039314596694
+      },
+      "outlet_flow": {
+        "predicted_peak_mass_flow_g_s": 61.07772867797047,
+        "mass_flow_nrmse_percent_peak_measured": 5.439121875486049,
+        "median_absolute_percentage_error_percent": 21.101010444137327
+      }
+    },
+    {
+      "source_valve_time_constant_s": 4.0,
+      "source_flow": {
+        "predicted_peak_mass_flow_g_s": 60.70756221028524,
+        "mass_flow_nrmse_percent_peak_measured": 5.25261750282443,
+        "median_absolute_percentage_error_percent": 20.16367378961984
+      },
+      "outlet_flow": {
+        "predicted_peak_mass_flow_g_s": 60.84321710064015,
+        "mass_flow_nrmse_percent_peak_measured": 5.167276165410578,
+        "median_absolute_percentage_error_percent": 19.8592539760449
+      }
+    }
+  ],
   "frozen_result_unchanged": true,
   "runtime_parameter_updated": false,
   "validation_gate_effect": "none",
   "claim_supported": false,
   "interpretation": [
     "The explicit downstream-line inventory is numerically stable and preserves separate source and outlet flow boundaries.",
-    "The geometry-only line state does not remove the frozen median-error or timing failures, so valve opening dynamics and instrument placement remain unresolved.",
+    "The geometry-only line state does not remove the frozen median-error or timing failures. A post-outcome 0.5-4 s source-valve sensitivity approaches the median-error screen at the longest value, but it is not a fitted or validated setting and the timing endpoint remains unresolved.",
     "A new untouched campaign with a declared measurement boundary is required before this model can be frozen for validation."
   ],
   "claim_boundary": "This post-outcome diagnostic does not alter or replace the Schefer 2006 prospective result and does not validate a station loop, consequence distance or safety control."

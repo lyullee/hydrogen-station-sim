@@ -31,6 +31,8 @@ class LineTransientParameters:
     outlet_inner_diameter_m: float
     source_to_line_discharge_coefficient: float = 1.0
     outlet_discharge_coefficient: float = 1.0
+    source_valve_time_constant_s: float = 0.0
+    outlet_valve_time_constant_s: float = 0.0
     ambient_pressure_pa: float = 101_325.0
     line_initial_pressure_pa_abs: float | None = None
     line_initial_temperature_k: float = 293.15
@@ -70,6 +72,19 @@ def _orifice_flow(
             float(upstream.p()), float(upstream.T()), downstream_pressure_pa
         ),
     )
+
+
+def _valve_open_fraction(time_s: float, time_constant_s: float) -> float:
+    """Return a monotone first-order opening fraction.
+
+    A zero time constant is the frozen evaluator's instantaneous-open limit.
+    Positive values are an explicit development assumption and must be
+    independently frozen before a future holdout is scored.
+    """
+
+    if time_constant_s <= 0.0:
+        return 1.0
+    return float(1.0 - np.exp(-max(time_s, 0.0) / time_constant_s))
 
 
 def simulate_line_transient(
@@ -148,8 +163,14 @@ def simulate_line_transient(
         )
         return source, line, source_flow, outlet_flow
 
-    def derivative(_time: float, vector: np.ndarray) -> np.ndarray:
+    def derivative(time_s: float, vector: np.ndarray) -> np.ndarray:
         source, line, source_flow, outlet_flow = states(vector)
+        source_flow *= _valve_open_fraction(
+            time_s, p.source_valve_time_constant_s
+        )
+        outlet_flow *= _valve_open_fraction(
+            time_s, p.outlet_valve_time_constant_s
+        )
         source_flow = min(source_flow, max(float(vector[0]), 0.0) / 1.0e-4)
         outlet_flow = min(outlet_flow, max(float(vector[2]), 0.0) / 1.0e-4)
         return np.asarray(
@@ -163,14 +184,29 @@ def simulate_line_transient(
             dtype=float,
         )
 
+    valve_time_constants = [
+        value
+        for value in (
+            p.source_valve_time_constant_s,
+            p.outlet_valve_time_constant_s,
+        )
+        if value > 0.0
+    ]
+    transient_step = min(valve_time_constants) / 20.0 if valve_time_constants else 0.05
     solution = solve_ivp(
         derivative,
         (0.0, float(requested[-1])),
         np.asarray((source_mass, source_energy, line_mass, line_energy), dtype=float),
-        method="LSODA",
+        # A finite valve time constant introduces a sharp but smooth initial
+        # layer. BDF avoids the nonphysical trial states that LSODA can produce
+        # while calling the real-gas EOS during that layer.
+        method="BDF" if valve_time_constants else "LSODA",
         rtol=2.0e-7,
         atol=(1.0e-10, 1.0e-2, 1.0e-12, 1.0e-2),
-        max_step=max(1.0e-4, min(0.05, float(requested[-1]) / 1500.0)),
+        max_step=max(
+            1.0e-5,
+            min(0.05, float(requested[-1]) / 1500.0, transient_step),
+        ),
     )
     if not solution.success:
         raise RuntimeError(f"line transient integration failed: {solution.message}")
@@ -181,6 +217,12 @@ def simulate_line_transient(
     outlet_flow_values: list[float] = []
     for index in range(solution.y.shape[1]):
         source, line, source_flow, outlet_flow = states(solution.y[:, index])
+        source_flow *= _valve_open_fraction(
+            float(solution.t[index]), p.source_valve_time_constant_s
+        )
+        outlet_flow *= _valve_open_fraction(
+            float(solution.t[index]), p.outlet_valve_time_constant_s
+        )
         source_pressure.append(float(source.p()))
         line_pressure_values.append(float(line.p()))
         source_flow_values.append(source_flow)
