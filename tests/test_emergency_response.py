@@ -50,7 +50,13 @@ def test_high_consequence_playbooks_link_public_incident_evidence():
 def test_public_accident_precedents_are_integrity_checked_and_plan_specific():
     gas_release = public_accident_precedents("gas_release")
     external_fire = public_accident_precedents("external_fire")
+    relief_discharge = public_accident_precedents("relief_discharge")
     assert gas_release and external_fire
+    assert relief_discharge
+    assert all(row["precedent_relation"] == "related_overpressure"
+               for row in relief_discharge)
+    assert all("직접 입증하지 않음" in row["precedent_relation_note"]
+               for row in relief_discharge)
     assert all(row["url"].startswith("https://www.khk.or.jp/") for row in gas_release)
     assert all(row["incident_codes"] and row["title"] for row in external_fire)
     assert {row["url"] for row in gas_release} != {row["url"] for row in external_fire}

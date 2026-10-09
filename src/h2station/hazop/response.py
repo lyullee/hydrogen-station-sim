@@ -30,6 +30,15 @@ EQUIPMENT_LABELS = {
 
 RESPONSE_STAGES = ("recognition", "immediate", "stabilize", "restart", "prevention")
 
+# A relief-valve opening is a protective response to an overpressure condition.
+# The public incident inventory contains no incident explicitly classified as
+# a relief-valve discharge, so reuse only the overpressure precedents and mark
+# the relationship in the returned rows.  This keeps the LLM grounded without
+# implying that a cited incident was caused by the valve itself.
+RELATED_PRECEDENT_PLAN_IDS = {
+    "relief_discharge": ("overpressure",),
+}
+
 
 def response_guidance_contract_issues(guidance: dict[str, Any] | None) -> list[str]:
     """Return missing safety-response fields before guidance reaches the UI.
@@ -170,8 +179,27 @@ def public_accident_precedents(
         catalog["representative_by_plan"].get(plan_id)
         if representative else catalog["by_plan"].get(plan_id)
     ) or []
+    relation_note = None
+    if not rows:
+        for related_plan_id in RELATED_PRECEDENT_PLAN_IDS.get(plan_id, ()):
+            rows = (
+                catalog["representative_by_plan"].get(related_plan_id)
+                if representative else catalog["by_plan"].get(related_plan_id)
+            ) or []
+            if rows:
+                relation_note = (
+                    "관련 과압 선례이며 안전밸브 자체의 고장·개방 사고를 직접 입증하지 않음"
+                )
+                break
     selected = rows if limit is None else rows[:max(0, limit)]
-    return [dict(row) for row in selected]
+    result = []
+    for row in selected:
+        item = dict(row)
+        if relation_note:
+            item["precedent_relation"] = "related_overpressure"
+            item["precedent_relation_note"] = relation_note
+        result.append(item)
+    return result
 
 
 def classify_rule(rule: dict[str, Any]) -> str:
