@@ -19,7 +19,7 @@ def test_public_operational_leads_remain_claim_bounded() -> None:
     record = json.loads(ARTIFACT.read_text(encoding="utf-8"))
 
     assert record["decision"] == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED"
-    assert len(record["sources"]) == 2
+    assert len(record["sources"]) == 3
     assert record["minimum_full_loop_input"]["event_count"] == 3
     assert all(item["raw_synchronized_archive_located"] is False for item in record["sources"])
     rendered = json.dumps(record, ensure_ascii=False)
@@ -49,6 +49,7 @@ def test_public_operational_leads_are_routed_to_llm_without_full_loop_upgrade() 
     assert {item["id"] for item in evidence["sources"]} == {
         "carb_2024_hrs_inuse_report",
         "nist_transient_flow_facility",
+        "nbsdc_tongji_liquid_hrs_operational_catalogue",
     }
     summary = prompt_evidence_summary(manifest)
     assert "public_operational_evidence_leads" in summary
@@ -72,4 +73,5 @@ def test_public_operational_leads_are_routed_to_llm_without_full_loop_upgrade() 
     ]["sources"]} == {
         "carb_2024_hrs_inuse_report",
         "nist_transient_flow_facility",
+        "nbsdc_tongji_liquid_hrs_operational_catalogue",
     }

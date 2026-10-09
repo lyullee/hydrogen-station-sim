@@ -2,7 +2,7 @@
   "schema_version": 1,
   "artifact_type": "public_operational_evidence_lead_recheck",
   "recorded_at": "2026-10-10",
-  "scope": "Official public field and metrology sources reviewed for additional evidence that can strengthen the station-side digital twin without inventing a full-loop holdout.",
+  "scope": "Official public field, metrology and catalogue sources reviewed for additional evidence that can strengthen the station-side digital twin without inventing a full-loop holdout.",
   "sources": [
     {
       "id": "carb_2024_hrs_inuse_report",
@@ -51,10 +51,34 @@
         "full-loop consequence or SAGA effectiveness claims"
       ],
       "claim_limit": "The official project description documents the facility and methods, but does not publish a reusable synchronized station-to-vehicle measurement cohort."
+    },
+    {
+      "id": "nbsdc_tongji_liquid_hrs_operational_catalogue",
+      "publisher": "National Basic Science Data Center",
+      "url": "https://nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1",
+      "reported_scope": "Public catalogue for a real liquid-hydrogen refueling-station operating dataset with a concentrated 16-hour, one-second monitoring window and pressure, temperature, flow, dispensed-mass, compressor, storage and liquid-pump/tank file roles.",
+      "public_material": [
+        "dataset description",
+        "seven-file inventory",
+        "application-required numerical-file boundary"
+      ],
+      "raw_synchronized_archive_located": false,
+      "decision": "METADATA_ONLY_CUSTODIAN_REQUEST",
+      "usable_for": [
+        "station-side schema and operating-range context",
+        "privacy-bounded data-access request lead",
+        "LLM claim-boundary grounding"
+      ],
+      "not_usable_for": [
+        "independent station-to-vehicle transient holdout",
+        "dynamic model parameter calibration",
+        "safety-distance or response-effectiveness claims"
+      ],
+      "claim_limit": "The public catalogue and description establish a credible real-station data lead, but numerical files require a data application and vehicle/receptacle mapping, units, calibration and reuse terms are not yet verified."
     }
   ],
   "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED",
-  "next_action": "Use both sources to strengthen bounded protocol, instrumentation and LLM grounding checks; keep the independent full-loop gate open until a custodian supplies at least three de-identified synchronized events.",
+  "next_action": "Use all three sources to strengthen bounded protocol, instrumentation, data-access and LLM grounding checks; keep the independent full-loop gate open until a custodian supplies at least three de-identified synchronized events.",
   "minimum_full_loop_input": {
     "event_count": 3,
     "required_channels": [

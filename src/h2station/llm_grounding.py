@@ -3648,7 +3648,7 @@ def _public_operational_evidence_lead_recheck() -> dict[str, Any] | None:
         or record.get("decision")
         != "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED"
         or not isinstance(sources, list)
-        or len(sources) != 2
+        or len(sources) < 2
         or not privacy
         or not all(value is False for value in privacy.values())
         or any(
