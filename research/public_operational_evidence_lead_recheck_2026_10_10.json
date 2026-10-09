@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_operational_evidence_lead_recheck",
+  "recorded_at": "2026-10-10",
+  "scope": "Official public field and metrology sources reviewed for additional evidence that can strengthen the station-side digital twin without inventing a full-loop holdout.",
+  "sources": [
+    {
+      "id": "carb_2024_hrs_inuse_report",
+      "publisher": "California Air Resources Board",
+      "url": "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf",
+      "reported_scope": "HyStEP in-use testing at 22 operating light-duty hydrogen stations, including fault, communication and fueling-performance checks against the HGV 4.3 / SAE J2601 basis.",
+      "public_material": [
+        "aggregate station test outcomes",
+        "protocol and fault-test descriptions",
+        "example pressure, temperature, mass-flow and SOC figures"
+      ],
+      "raw_synchronized_archive_located": false,
+      "decision": "AGGREGATE_FIELD_BENCHMARK_ONLY",
+      "usable_for": [
+        "controller feature coverage",
+        "protocol and operating-envelope plausibility",
+        "LLM response grounding"
+      ],
+      "not_usable_for": [
+        "independent station-to-vehicle transient holdout",
+        "dynamic pressure, temperature or mass-flow error scoring",
+        "field safety-distance or response-effectiveness claims"
+      ],
+      "claim_limit": "The public report is valuable field evidence, but the public record does not expose a rights-cleared common-clock logger archive or the Appendix A workbook as a reusable raw holdout."
+    },
+    {
+      "id": "nist_transient_flow_facility",
+      "publisher": "National Institute of Standards and Technology",
+      "url": "https://www.nist.gov/programs-projects/transient-flow-facility",
+      "reported_scope": "A transient-flow facility reproducing dispenser-like pressure, temperature and flow changes for hydrogen-refuelling metrology and flow-meter evaluation.",
+      "public_material": [
+        "facility operating envelope",
+        "critical-nozzle and meter-evaluation method context",
+        "measurement-uncertainty and response-time targets"
+      ],
+      "raw_synchronized_archive_located": false,
+      "decision": "METROLOGY_COMPONENT_CONTEXT_ONLY",
+      "usable_for": [
+        "flow-meter uncertainty assumptions",
+        "transient sampling and response plausibility",
+        "station-side instrumentation requirements"
+      ],
+      "not_usable_for": [
+        "hydrogen vehicle-fill validation",
+        "station controller or ESD validation",
+        "full-loop consequence or SAGA effectiveness claims"
+      ],
+      "claim_limit": "The official project description documents the facility and methods, but does not publish a reusable synchronized station-to-vehicle measurement cohort."
+    }
+  ],
+  "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED",
+  "next_action": "Use both sources to strengthen bounded protocol, instrumentation and LLM grounding checks; keep the independent full-loop gate open until a custodian supplies at least three de-identified synchronized events.",
+  "minimum_full_loop_input": {
+    "event_count": 3,
+    "required_channels": [
+      "common elapsed time",
+      "station or dispenser pressure",
+      "delivered-gas or boundary temperature",
+      "mass flow or transferred mass",
+      "protocol start/stop phase"
+    ]
+  },
+  "privacy": {
+    "private_source_paths_published": false,
+    "private_site_or_company_identity_published": false,
+    "private_raw_rows_persisted": false,
+    "absolute_private_timestamps_published": false
+  },
+  "claim_boundary": "This is a public-source classification record. It adds field and metrology context but does not establish a new validation pass, safety distance, accident frequency or journal readiness."
+}
