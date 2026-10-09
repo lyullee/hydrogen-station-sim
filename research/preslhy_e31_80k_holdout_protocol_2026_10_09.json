@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-09T00:00:00Z",
+  "status": "frozen_before_numerical_outcome_access",
+  "objective": "Evaluate the fixed direct-aperture hydrogen release and source-depletion model on an untouched 80 K campaign from the public PRESLHY E3.1 archive.",
+  "source": {
+    "dataset_doi": "10.35097/1187",
+    "record_url": "https://doi.org/10.35097/1187",
+    "campaign": "PRESLHY E3.1 Part A, 80 K D4 release package",
+    "package_name": "PRE3P1A_KIT_D4_80K_DATA.zip",
+    "package_sha256": "a0d728f051693bafd0059bf1afafce51877419fc9ab8c5f444bf02c4cfb65e66",
+    "license": "CC BY 4.0 as declared by the public record",
+    "rights_boundary": "The package is read from the public source cache for evaluation. Raw measurement arrays are not copied into the repository; only aggregate metrics and hashes are retained."
+  },
+  "independence": {
+    "temperature_campaign_separate_from_consumed_300k_development": true,
+    "outcomes_accessed_before_freeze": false,
+    "model_parameter_fitting": false,
+    "model_source": "src/h2station/preslhy_validation.py"
+  },
+  "frozen_model": {
+    "source_depletion": "real-gas CascadeBank inventory with measured initial pressure and measured initial source temperature",
+    "release": "DynamicLeakModel direct circular aperture",
+    "discharge_coefficient": 0.8,
+    "vessel_internal_volume_m3": 0.002815,
+    "ambient_boundary": "measured workbook ambient pressure when available; otherwise ineligible",
+    "time_window": "post-opening trace until the pressure reaches 1.05 times measured ambient pressure",
+    "integration": "LSODA, rtol 1e-7, fixed bounded max_step from the existing evaluator"
+  },
+  "eligibility": {
+    "required_package_name": "PRE3P1A_KIT_D4_80K_DATA.zip",
+    "minimum_evaluable_cases": 5,
+    "minimum_nozzle_diameter_groups": 1,
+    "minimum_initial_pressure_groups": 3,
+    "required_temperature_substituted": false,
+    "required_ambient_pressure_substituted": false,
+    "minimum_unique_pressure_samples": 20,
+    "minimum_initial_temperature_k": 60.0,
+    "maximum_initial_temperature_k": 120.0
+  },
+  "primary_endpoints": {
+    "pressure_nrmse_percent_initial_absolute_pressure": {
+      "case_screen_max": 10.0
+    },
+    "time_to_50_percent_gauge_relative_error_percent": {
+      "case_screen_max": 20.0
+    }
+  },
+  "aggregate_decision": {
+    "minimum_joint_primary_screen_pass_fraction": 0.7,
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 20261009,
+    "all_minimum_eligibility_requirements_must_be_met": true,
+    "retain_all_evaluable_failures": true,
+    "negative_result_policy": "A failed result remains archived and cannot be replaced by a tuned parameter or a changed case selection."
+  },
+  "claim_boundary": "A pass supports only a bounded 80 K direct-aperture source-depletion component claim for the public E3.1 D4 campaign. It does not validate cryogenic two-phase flow, ignition, dispersion, flame radiation, station control, refuelling, or emergency separation distance."
+}

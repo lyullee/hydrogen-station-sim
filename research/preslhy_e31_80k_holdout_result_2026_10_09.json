@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "status": "completed_negative_eligibility_result",
+  "generated_at": "2026-10-09T00:21:58.971010+00:00",
+  "protocol": {
+    "path": "research/preslhy_e31_80k_holdout_protocol_2026_10_09.json",
+    "sha256": "fed10e667ef91afd2cbdb08dcda54a5f9ad8107d9c2900f1268d4ef3ba8c9266",
+    "status": "frozen_before_numerical_outcome_access"
+  },
+  "source": {
+    "dataset_doi": "10.35097/1187",
+    "package_name": "PRE3P1A_KIT_D4_80K_DATA.zip",
+    "package_sha256": "a0d728f051693bafd0059bf1afafce51877419fc9ab8c5f444bf02c4cfb65e66",
+    "raw_rows_persisted": false
+  },
+  "observed": {
+    "workbooks_read": 7,
+    "read_errors": 0,
+    "gas_initial_temperature_k_range": [
+      83.800308,
+      85.54472899999999
+    ],
+    "temperature_values_measured": 7,
+    "ambient_pressure_values_measured": 0,
+    "ambient_pressure_values_missing": 7,
+    "initial_pressure_bar_abs_range": [
+      6.104063000000001,
+      202.714436
+    ]
+  },
+  "eligibility": {
+    "evaluable_cases": 7,
+    "aggregate_eligible_cases": 0,
+    "read_errors": 0,
+    "diameter_groups": [],
+    "pressure_groups": [],
+    "minimum_requirements_met": false
+  },
+  "aggregate": {
+    "joint_primary_screen_pass_fraction": null,
+    "bootstrap_95_percent_ci": [
+      null,
+      null
+    ],
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 20261009,
+    "claim_threshold": 0.7,
+    "ambient_80k_direct_aperture_blowdown_claim_supported": false
+  },
+  "interpretation": [
+    "The 80 K gas-side temperature signal is measured and is now parsed from T1/T2/T3 only; T1o/T2o/T3o wall sensors are excluded.",
+    "The cH2-Amb worksheet contains vessel/nozzle pressure, gas concentration, humidity and ambient temperature, but no explicit atmospheric-pressure channel.",
+    "Because the prospective protocol requires measured ambient pressure, all seven cases remain ineligible for aggregate scoring; no claim is promoted."
+  ],
+  "claim_boundary": "No validation claim is supported by this package. It does not validate cryogenic two-phase flow, ignition, dispersion, flame radiation, station control, refuelling, or emergency separation distance.",
+  "implementation": {
+    "reader": "src/h2station/preslhy_80k_holdout.py",
+    "reader_sha256": "2f53a5f4c012796a3d8f4b1d3ef8bc3134e33848c67bd5d16aca80d241469c1c"
+  }
+}

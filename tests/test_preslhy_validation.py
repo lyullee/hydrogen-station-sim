@@ -12,6 +12,7 @@ from h2station.preslhy_validation import (
     read_preslhy_workbook,
     simulate_preslhy_blowdown,
 )
+from h2station.preslhy_80k_holdout import read_preslhy_80k_workbook
 
 
 def _workbook_bytes() -> bytes:
@@ -96,6 +97,51 @@ def test_preslhy_reader_joins_publisher_multirow_headers():
         "terminal_near_zero_gauge_plus_standard_ambient"
     )
     assert len(trace.time_s) == 131
+
+
+def test_preslhy_reader_uses_gas_thermocouples_and_declared_kelvin_units():
+    workbook = Workbook()
+    pressure = workbook.active
+    pressure.title = "20190523_152309-Press"
+    pressure.append(["dNoz [mm]", "record", "PVes", "PNoz", "Trigger"])
+    pressure.append([None, "Date"])
+    pressure.append([None, "Time"])
+    pressure.append(["Zero in Line", "Unit", "bar", "bar", "Volt"])
+    pressure.append([None, "dt"])
+    pressure.append(["Time [s]", "X_Value", "Druck_1", "Druck_2", "Valve-Relay"])
+    for time_s in np.linspace(-0.5, 1.0, 31):
+        pressure.append([float(time_s), 0.0, 0.0, 1.0, 5.0])
+    temperature = workbook.create_sheet("20190523_152325-Temp")
+    temperature.append(
+        [None, "Thermoelemente", None, None, None, None, None, None,
+         "T1", "T2", "T3", "T4", "T1o", "T2o", "T3o"]
+    )
+    temperature.append([None, "Date"])
+    temperature.append([None, "Time"])
+    temperature.append(
+        [None, "Unit", None, None, None, None, None, None,
+         "Kelvin", "Kelvin", "Kelvin", "Kelvin", "Kelvin", "Kelvin", "Kelvin"]
+    )
+    temperature.append([None, "dt"])
+    temperature.append(
+        ["Time [s]", "X_Value", None, None, None, None, None, None,
+         "Inside 1", "Inside 2", "Inside 3", "Stem", "Outer 1", "Outer 2", "Outer 3"]
+    )
+    for time_s in np.linspace(-0.5, 1.0, 31):
+        temperature.append(
+            [float(time_s), 0.0, None, None, None, None, None, None,
+             84.0, 85.0, 83.0, 291.0, 102.0, 103.0, 104.0]
+        )
+    output = BytesIO()
+    workbook.save(output)
+    trace = read_preslhy_80k_workbook(
+        output.getvalue(),
+        source_package="PRE3P1A_KIT_D4_80K_DATA.zip",
+        source_member="20190523_152309.xlsx",
+        nozzle_diameter_mm=4.0,
+    )
+    assert trace.initial_temperature_k == pytest.approx(84.0)
+    assert trace.temperature_substituted is False
 
 
 def test_frozen_blowdown_model_closes_mass_and_reduces_pressure():
