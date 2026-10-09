@@ -23,18 +23,24 @@
 
 ## 제출 전 자동 검사
 
+보관자에게는 [빈 이벤트 템플릿](privacy_safe_full_loop_event_template.csv)과 [채널 역할 예시](privacy_safe_full_loop_channel_roles.example.json)를 함께 전달한다. 템플릿은 헤더만 포함하며 실제 행·시설명·파일명 규칙을 저장소에 추가하지 않는다. 이벤트별 원본은 보관자가 보관하고, 평가 담당자에게는 아래 사전검사 결과와 해시만 전달한다.
+
 ~~~powershell
 python -c "from h2station.privacy_safe_full_loop_intake import validate_privacy_safe_pilot_bundle; import pathlib, json; p=sorted(pathlib.Path('pilot_events').glob('*.csv')); print(json.dumps(validate_privacy_safe_pilot_bundle(p), ensure_ascii=False, indent=2))"
 ~~~
 
+`READY_FOR_FULL_LOOP_PROTOCOL_FREEZE`가 나오더라도 이는 수용부 채널까지 갖춘 입력 후보라는 뜻이다. `FROZEN_BEFORE_OUTCOME_ACCESS` manifest를 만든 뒤에야 모델 결과를 열어야 하며, 원시 CSV·경로·시설 식별자는 결과 JSON에 남기지 않는다.
+
 기본 검사는 비식별 이벤트 3건, 단조 증가 시간축, 유한한 수치, 음수 질량유량, 누적질량 역전, 필수 열 누락을 검사한다. 결과에는 event_001 형식의 가상 ID, 행 수, 시간 범위, 채널 존재 여부, SHA-256만 남는다.
 
-READY_FOR_PROTOCOL_FREEZE는 입력 품질이 준비되었다는 뜻이다. 모델 점수나 안전성 검증 결과가 아니며, 그 다음 단계에서 모델과 평가 규칙을 먼저 동결한 뒤 별도의 외부 평가를 실행한다.
+`READY_FOR_PROTOCOL_FREEZE`는 station 경계 입력의 형식과 품질이 준비되었다는 뜻이다. 차량 압력·온도 두 열이 모든 이벤트에 있지 않으면 이 상태만 부여되며, station-to-vehicle full-loop 후보가 아니다. 이 경우에도 모델 점수나 안전성 검증 결과를 의미하지 않는다.
+
+세 이벤트 모두에 `vehicle_pressure_mpa`와 `vehicle_temperature_c`가 있고 다른 입력 검사를 통과하면 상태가 `READY_FOR_FULL_LOOP_PROTOCOL_FREEZE`로 표시된다. 이것은 full-loop 평가를 시작할 수 있는 **자료 계약 후보**라는 의미일 뿐이다. 실제 freeze manifest가 full-loop 후보로 표시되려면 두 차량 채널의 역할 확인서도 있어야 한다. 프로토콜·모델·평가기를 결과를 보기 전에 해시 고정하고, 사전 선언된 독립 평가를 통과하기 전에는 full-loop 검증이나 안전성 주장을 하지 않는다. 보고서의 `full_loop_readiness.claim_supported`는 항상 `false`로 남는다.
 
 사전 동결 manifest 생성 절차는 [PRIVACY_SAFE_FULL_LOOP_FREEZE_2026_10_10.md](PRIVACY_SAFE_FULL_LOOP_FREEZE_2026_10_10.md)에 있다. 이 단계는 코드·프로토콜·이벤트 해시와 채널 역할만 잠그며, 결과를 보거나 모델을 조정하지 않는다.
 
 ## 최소 묶음과 전체 평가
 
-비식별 3건은 수용부 채널의 동기화와 역할을 확인하는 파일럿 묶음이다. 차량 압력·온도까지 포함되면 station-to-receiving-vessel 경계를 재생할 수 있다. 완전한 외부 검증과 일반화 주장은 사전 동결된 disjoint 이벤트 묶음으로 별도 평가한다.
+비식별 3건은 수용부 채널의 동기화와 역할을 확인하는 파일럿 묶음이다. 차량 압력·온도까지 **세 이벤트 모두**에 포함되면 station-to-receiving-vessel 경계를 재생할 수 있는 full-loop 프로토콜 동결 후보가 된다. 하나라도 빠지면 station 경계 자료로만 기록하고 수용부 관련 주장을 열지 않는다. 완전한 외부 검증과 일반화 주장은 사전 동결된 disjoint 이벤트 묶음으로 별도 평가한다.
 
 원시 행은 보관자가 관리하고, 저장소에는 원시 데이터 대신 파일 해시·행 수·집계 지표·채널 역할 확인서만 전달한다. 이 절차는 실데이터의 비공개 조건을 유지하면서 재현 가능한 검증 기록을 남기기 위한 것이다.

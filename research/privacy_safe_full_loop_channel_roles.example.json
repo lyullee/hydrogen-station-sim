@@ -1,0 +1,11 @@
+{
+  "elapsed_time_s": "event-relative logger time; starts at 0 for each event",
+  "station_pressure_mpa": "station delivery boundary pressure",
+  "delivered_gas_temperature_c": "dispenser delivery-gas temperature",
+  "mass_or_transferred_mass": "calibrated mass-flow channel or monotonic transferred mass",
+  "protocol_phase": "controller phase label mapped to start, fill, hold, stop",
+  "vehicle_pressure_mpa": "receiving-vessel pressure at the vehicle boundary",
+  "vehicle_temperature_c": "receiving-vessel gas temperature at the vehicle boundary",
+  "selected_cascade_bank": "selected cascade bank label with facility-specific identity removed",
+  "precooler_outlet_temperature_c": "pre-cooler outlet temperature"
+}

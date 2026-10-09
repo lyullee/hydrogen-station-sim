@@ -1,0 +1,1 @@
+elapsed_time_s,station_pressure_mpa,delivered_gas_temperature_c,mass_flow_g_s,transferred_mass_kg,protocol_phase,vehicle_pressure_mpa,vehicle_temperature_c,selected_cascade_bank,precooler_outlet_temperature_c,esd_state,fault_state

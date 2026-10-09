@@ -16,6 +16,15 @@ def _event(path: Path) -> None:
     )
 
 
+def _event_with_vehicle(path: Path) -> None:
+    path.write_text(
+        "elapsed_time_s,station_pressure_mpa,delivered_gas_temperature_c,mass_flow_g_s,protocol_phase,vehicle_pressure_mpa,vehicle_temperature_c\n"
+        "0,20,20,1,start,5,25\n"
+        "1,21,21,1.2,fill,6,28\n",
+        encoding="utf-8",
+    )
+
+
 def _roles() -> dict[str, str]:
     return {
         "elapsed_time_s": "event-relative logger time",
@@ -77,3 +86,30 @@ def test_freeze_manifest_requires_role_attestation(tmp_path: Path) -> None:
             evaluator_path=evaluator,
             channel_roles={},
         )
+
+
+def test_full_loop_candidate_requires_vehicle_role_attestation(tmp_path: Path) -> None:
+    events = []
+    for index in range(3):
+        path = tmp_path / f"event-{index}.csv"
+        _event_with_vehicle(path)
+        events.append(path)
+    protocol = tmp_path / "protocol.json"
+    model = tmp_path / "model.py"
+    evaluator = tmp_path / "evaluator.py"
+    for path in (protocol, model, evaluator):
+        path.write_text("locked", encoding="utf-8")
+
+    manifest = build_privacy_safe_freeze_manifest(
+        events,
+        protocol_path=protocol,
+        model_path=model,
+        evaluator_path=evaluator,
+        channel_roles=_roles(),
+    )
+
+    assert manifest["eligibility"]["full_loop_protocol_freeze_candidate"] is False
+    assert manifest["eligibility"]["missing_vehicle_boundary_roles"] == [
+        "vehicle_pressure_mpa",
+        "vehicle_temperature_c",
+    ]

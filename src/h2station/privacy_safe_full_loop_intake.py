@@ -211,10 +211,20 @@ def validate_privacy_safe_pilot_bundle(
         len(report["channel_presence"]["vehicle_boundary"]) == len(VEHICLE_COLUMNS)
         for report in event_reports
     )
+    vehicle_boundary_complete = (
+        pilot_ready
+        and vehicle_complete_count == len(event_reports)
+    )
+    if not pilot_ready:
+        readiness_status = "SCHEMA_INCOMPLETE"
+    elif vehicle_boundary_complete:
+        readiness_status = "READY_FOR_FULL_LOOP_PROTOCOL_FREEZE"
+    else:
+        readiness_status = "READY_FOR_PROTOCOL_FREEZE"
     return {
         "schema_version": 1,
         "artifact_type": "privacy_safe_full_loop_pilot_intake",
-        "status": "READY_FOR_PROTOCOL_FREEZE" if pilot_ready else "SCHEMA_INCOMPLETE",
+        "status": readiness_status,
         "raw_rows_persisted": False,
         "source_paths_published": False,
         "source_filenames_published": False,
@@ -225,6 +235,21 @@ def validate_privacy_safe_pilot_bundle(
             report["schema_valid"] for report in event_reports
         ),
         "vehicle_boundary_complete_event_count": vehicle_complete_count,
+        "full_loop_readiness": {
+            "station_boundary_ready": pilot_ready,
+            "vehicle_boundary_required_for_full_loop": True,
+            "vehicle_boundary_complete": vehicle_boundary_complete,
+            "missing_vehicle_boundary_event_count": max(
+                len(event_reports) - vehicle_complete_count, 0
+            ),
+            "full_loop_protocol_freeze_candidate": vehicle_boundary_complete,
+            "claim_supported": False,
+            "claim_limit": (
+                "A complete station-to-vehicle validation still requires a frozen "
+                "protocol, independent outcomes and pre-declared scoring; schema "
+                "readiness alone is not validation."
+            ),
+        },
         "event_reports": [
             {
                 "event_id": f"event_{index:03d}",
@@ -238,8 +263,13 @@ def validate_privacy_safe_pilot_bundle(
             "parameter_fitting_performed": False,
             "next_step": (
                 "freeze model and scoring protocol before reading outcomes"
-                if pilot_ready
-                else "repair schema or channel-role attestations"
+                if vehicle_boundary_complete
+                else (
+                    "obtain synchronized vehicle_pressure_mpa and "
+                    "vehicle_temperature_c channels before full-loop freeze"
+                    if pilot_ready
+                    else "repair schema or channel-role attestations"
+                )
             ),
         },
         "claim_boundary": (
@@ -269,12 +299,22 @@ def build_privacy_safe_freeze_manifest(
 
     selected = rules or PilotIntakeRules()
     intake = validate_privacy_safe_pilot_bundle(paths, rules=selected)
-    if intake["status"] != "READY_FOR_PROTOCOL_FREEZE":
+    if intake["status"] not in {
+        "READY_FOR_PROTOCOL_FREEZE",
+        "READY_FOR_FULL_LOOP_PROTOCOL_FREEZE",
+    }:
         raise ValueError("Cannot freeze an incomplete privacy-safe intake bundle")
     required_roles = set(PILOT_REQUIRED_COLUMNS) | {"mass_or_transferred_mass"}
     missing_roles = sorted(required_roles - set(channel_roles))
     if missing_roles:
         raise ValueError("Missing channel-role attestations: " + ", ".join(missing_roles))
+    vehicle_roles_attested = sorted(
+        set(VEHICLE_COLUMNS).intersection(channel_roles)
+    )
+    full_loop_candidate = bool(
+        intake["full_loop_readiness"]["full_loop_protocol_freeze_candidate"]
+        and len(vehicle_roles_attested) == len(VEHICLE_COLUMNS)
+    )
 
     return {
         "schema_version": 1,
@@ -306,6 +346,11 @@ def build_privacy_safe_freeze_manifest(
         },
         "eligibility": {
             "preaccess_protocol_freeze_ready": True,
+            "full_loop_protocol_freeze_candidate": full_loop_candidate,
+            "vehicle_boundary_roles_attested": vehicle_roles_attested,
+            "missing_vehicle_boundary_roles": sorted(
+                set(VEHICLE_COLUMNS) - set(vehicle_roles_attested)
+            ),
             "model_scoring_performed": False,
             "full_loop_external_validation_supported": False,
             "safety_claim_supported": False,

@@ -83,6 +83,9 @@ def main() -> int:
     print(json.dumps({
         "status": manifest["status"],
         "event_count": manifest["bundle"]["event_count"],
+        "full_loop_protocol_freeze_candidate": manifest["eligibility"][
+            "full_loop_protocol_freeze_candidate"
+        ],
         "output": output.name,
         "outcome_accessed_before_freeze": manifest["freeze"][
             "outcomes_accessed_before_freeze"

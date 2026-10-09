@@ -51,10 +51,12 @@ def test_three_events_produce_raw_row_free_pilot_report(tmp_path: Path) -> None:
 
     report = validate_privacy_safe_pilot_bundle(paths)
 
-    assert report["status"] == "READY_FOR_PROTOCOL_FREEZE"
+    assert report["status"] == "READY_FOR_FULL_LOOP_PROTOCOL_FREEZE"
     assert report["event_count"] == 3
     assert report["valid_event_count"] == 3
     assert report["vehicle_boundary_complete_event_count"] == 3
+    assert report["full_loop_readiness"]["full_loop_protocol_freeze_candidate"] is True
+    assert report["full_loop_readiness"]["missing_vehicle_boundary_event_count"] == 0
     assert report["raw_rows_persisted"] is False
     assert report["source_paths_published"] is False
     assert report["event_reports"][0]["event_id"] == "event_001"
@@ -101,3 +103,20 @@ def test_identity_and_time_quality_errors_fail_closed(tmp_path: Path) -> None:
     assert event["schema_valid"] is False
     assert event["forbidden_identity_columns_detected"] is True
     assert "forbidden_identity_or_calendar_column" in event["errors"]
+
+
+def test_station_only_bundle_is_ready_for_schema_freeze_but_not_full_loop(
+    tmp_path: Path,
+) -> None:
+    paths = [tmp_path / f"event_{index}.csv" for index in range(3)]
+    for path in paths:
+        _write_event(path, with_vehicle=False)
+
+    report = validate_privacy_safe_pilot_bundle(paths)
+
+    assert report["status"] == "READY_FOR_PROTOCOL_FREEZE"
+    assert report["full_loop_readiness"]["station_boundary_ready"] is True
+    assert report["full_loop_readiness"]["vehicle_boundary_complete"] is False
+    assert report["full_loop_readiness"]["full_loop_protocol_freeze_candidate"] is False
+    assert report["full_loop_readiness"]["missing_vehicle_boundary_event_count"] == 3
+    assert "vehicle_pressure_mpa" in report["decision"]["next_step"]
