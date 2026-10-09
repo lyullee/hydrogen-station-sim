@@ -88,9 +88,61 @@
     ],
     "runtime_role": "do not claim station-to-vehicle full-loop validation"
   },
+  "minimum_data_tiers": [
+    {
+      "id": "tier_0_current",
+      "label": "현재 보유 자료",
+      "minimum_input": "저장 뱅크 압력·상태 로그와 공개 방출·탱크·열영향 자료",
+      "event_count": 0,
+      "available_now": true,
+      "supports": [
+        "station-side pressure continuation",
+        "cascade plausibility",
+        "bounded release and consequence components",
+        "LLM evidence-grounded explanation"
+      ],
+      "does_not_support": [
+        "station-to-vehicle full-loop holdout",
+        "site-specific safety distance"
+      ]
+    },
+    {
+      "id": "tier_1_component_pilot",
+      "label": "최소 비식별 구성요소 파일럿",
+      "minimum_input": "3개 이상 이벤트의 공통시간·디스펜서 압력·전달 질량/유량·프로토콜 상태",
+      "event_count": 3,
+      "available_now": false,
+      "supports": [
+        "station-to-dispenser boundary replay",
+        "channel join and unit-quality screen",
+        "protocol operating-range corroboration"
+      ],
+      "does_not_support": [
+        "vehicle-side full-loop validation",
+        "runtime parameter fitting without a frozen protocol"
+      ],
+      "custodian_burden": "원시 행을 저장소로 반출하지 않고 이벤트별 집계·해시만 제공 가능"
+    },
+    {
+      "id": "tier_2_full_loop_holdout",
+      "label": "독립 전체 루프 holdout",
+      "minimum_input": "서로 분리된 8개 이상의 이벤트와 차량 압력·온도, 전달 질량, station/dispenser 상태, ESD·정지 플래그",
+      "event_count": 8,
+      "available_now": false,
+      "supports": [
+        "independent station-to-vehicle full-loop validation"
+      ],
+      "does_not_support": [
+        "safety certification",
+        "site-specific evacuation distance without geometry and consequence validation"
+      ],
+      "custodian_burden": "비식별 이벤트 토큰·채널 메타데이터·집계 지표만 공개하고 raw rows는 custodian 통제 하에 유지 가능"
+    }
+  ],
   "decision": {
     "data_shortage_claim_is_incorrect": true,
     "use_station_side_and_component_evidence_now": true,
+    "request_smallest_next_bundle_first": "tier_1_component_pilot",
     "keep_full_loop_gate_closed": true,
     "llm_should_name_used_evidence_before_describing_the_boundary": true
   },

@@ -33,6 +33,12 @@ def test_actionable_data_scope_is_privacy_bounded_and_nonempty() -> None:
     assert transfer["independent_external_validation"] is False
     assert scope["available_but_not_runtime_promoted"][0]["holdout_consistent"] is False
     assert scope["full_loop_holdout"]["synchronized_trace_count"] == 0
+    assert [item["id"] for item in scope["minimum_data_tiers"]] == [
+        "tier_0_current",
+        "tier_1_component_pilot",
+        "tier_2_full_loop_holdout",
+    ]
+    assert scope["decision"]["request_smallest_next_bundle_first"] == "tier_1_component_pilot"
     assert scope["artifact"] == "research/local_data_actionable_scope_2026_10_09.json"
     rendered = str(scope)
     assert "raw_rows" not in rendered
@@ -45,3 +51,7 @@ def test_decision_prompt_names_usable_data_before_full_loop_boundary() -> None:
     scope = decision["decision_support_evidence"]["local_actionable_data_scope"]
     assert scope["runtime_usable_now"]
     assert scope["full_loop_holdout"]["synchronized_trace_count"] == 0
+    assert decision["decision_support_evidence"]
+    assert manifest["response_evidence"]["local_actionable_data_scope"]["decision"][
+        "request_smallest_next_bundle_first"
+    ] == "tier_1_component_pilot"

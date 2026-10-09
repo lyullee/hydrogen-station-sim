@@ -4982,6 +4982,22 @@ def _local_actionable_data_scope_evidence() -> dict[str, Any] | None:
             ),
             "required_channels": list(full_loop.get("required_channels") or []),
         },
+        "minimum_data_tiers": [
+            {
+                "id": str(item.get("id") or ""),
+                "label": str(item.get("label") or ""),
+                "event_count": item.get("event_count"),
+                "available_now": item.get("available_now") is True,
+                "minimum_input": str(item.get("minimum_input") or ""),
+                "supports": [str(value) for value in item.get("supports") or []],
+                "does_not_support": [
+                    str(value) for value in item.get("does_not_support") or []
+                ],
+                "custodian_burden": str(item.get("custodian_burden") or ""),
+            }
+            for item in record.get("minimum_data_tiers") or []
+            if isinstance(item, dict) and item.get("id")
+        ],
         "decision": record.get("decision") or {},
         "claim_limit": str(record.get("claim_boundary") or ""),
     }
@@ -5004,6 +5020,7 @@ def _data_coverage_summary() -> dict[str, Any] | None:
     full_loop = scope.get("full_loop_holdout") or {}
     runtime_items = scope.get("runtime_usable_now") or []
     pending_items = scope.get("available_but_not_runtime_promoted") or []
+    tiers = scope.get("minimum_data_tiers") or []
     return {
         "evidence_role": "top-level data availability boundary",
         "available_evidence_tier": "station_side_and_component",
@@ -5016,6 +5033,11 @@ def _data_coverage_summary() -> dict[str, Any] | None:
         "full_loop_external_validation_supported": False,
         "required_full_loop_channels": list(
             full_loop.get("required_channels") or []
+        ),
+        "minimum_data_tiers": tiers,
+        "smallest_next_data_request": (
+            (scope.get("decision") or {}).get("request_smallest_next_bundle_first")
+            or "tier_1_component_pilot"
         ),
         "assistant_instruction": (
             "먼저 실제로 사용한 station-side/component 근거를 명시하고, "
