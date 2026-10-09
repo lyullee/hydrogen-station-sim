@@ -20,6 +20,7 @@ _DEEP_SCAN = _ROOT / "research/local_data_deep_scan_2026_10_09.json"
 _CONTINUITY = _ROOT / "research/local_wide_equipment_continuity_recheck_2026_10_09.json"
 _ADJACENT_PROCESS = _ROOT / "research/local_adjacent_hydrogen_data_discovery_2026_10_09.json"
 _DOCUDATA_DISCOVERY = _ROOT / "research/local_docudata_full_discovery_2026_10_09.json"
+_ASSET_SCREEN = _ROOT / "research/local_station_asset_screen_2026_10_09.json"
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -150,6 +151,103 @@ def _docudata_discovery_summary() -> dict[str, Any] | None:
         return None
 
 
+def _station_asset_context_summary() -> dict[str, Any] | None:
+    """Return aggregate operational/context assets without source identity.
+
+    The station archive includes procedure tables, reconstructed trend sheets,
+    engineering references and video.  They are useful for virtual response
+    and topology work, but must not be presented as synchronized telemetry or
+    independent validation.  Keep this projection deliberately aggregate so
+    the API and LLM can explain the evidence boundary without exposing paths,
+    tags or raw rows.
+    """
+
+    try:
+        record = _read_json(_ASSET_SCREEN)
+        privacy = record.get("privacy") or {}
+        if (
+            record.get("artifact_type") != "local_station_asset_screen"
+            or not privacy
+            or not all(value is False for value in privacy.values())
+        ):
+            return None
+
+        bundles = {
+            str(item.get("id")): item
+            for item in record.get("station_specific_bundles") or []
+            if isinstance(item, dict) and item.get("id")
+        }
+        scenario = bundles.get("local_liquid_hydrogen_operational_scenario_matrix") or {}
+        operation = bundles.get("local_tank_operation_sequence_logs") or {}
+        minute = bundles.get("local_tank_minute_trend_logs") or {}
+        timestamp = bundles.get("local_timestamp_differential_logs") or {}
+        recovered = bundles.get("local_video_recovered_storage_logs") or {}
+        engineering = bundles.get("local_engineering_reference_bundle") or {}
+        equipment_media = bundles.get("local_equipment_media_bundle") or {}
+        video = bundles.get("local_operational_video_collection") or {}
+        coverage = record.get("coverage_assessment") or {}
+
+        return {
+            "evidence_role": "privacy-bounded local station asset context",
+            "scenario_matrix": {
+                "scenario_table_count": scenario.get("csv_file_count"),
+                "scenario_step_count": scenario.get("scenario_step_rows"),
+                "hazard_fields_populated": scenario.get("nonempty_consequence_fields") or {},
+                "eligible_use": scenario.get("eligible_use") or [],
+            },
+            "operational_logs": {
+                "operation_workbook_count": operation.get("workbook_count"),
+                "operation_sheet_count": operation.get("sheet_count"),
+                "operation_row_count": operation.get("nonempty_rows"),
+                "minute_trend_workbook_count": minute.get("workbook_count"),
+                "minute_trend_sheet_count": minute.get("sheet_count"),
+                "minute_trend_row_count": minute.get("nonempty_rows"),
+                "timestamp_differential_sheet_count": timestamp.get("sheet_count"),
+                "timestamp_differential_row_count": timestamp.get("nonempty_rows"),
+                "recovered_storage_sheet_count": recovered.get("sheet_count"),
+                "recovered_storage_row_count": recovered.get("nonempty_rows"),
+                "eligible_use": sorted({
+                    str(value)
+                    for bundle in (operation, minute, timestamp, recovered)
+                    for value in bundle.get("eligible_use") or []
+                }),
+            },
+            "engineering_and_visual_context": {
+                "engineering_document_count": engineering.get("document_count"),
+                "engineering_pdf_count": engineering.get("pdf_count"),
+                "engineering_image_count": engineering.get("image_count"),
+                "equipment_image_count": equipment_media.get("image_count"),
+                "equipment_video_count": equipment_media.get("video_count"),
+                "operational_video_count": video.get("file_count"),
+                "operational_video_complete_count": video.get("complete_container_count"),
+                "operational_video_incomplete_count": video.get("incomplete_or_unreadable_container_count"),
+                "eligible_use": sorted({
+                    str(value)
+                    for bundle in (engineering, equipment_media, video)
+                    for value in bundle.get("eligible_use") or []
+                }),
+            },
+            "claim_boundary": str(record.get("claim_boundary") or ""),
+            "coverage": {
+                "local_station_data_is_sparse": coverage.get("local_station_data_is_sparse"),
+                "station_side_dynamic_evidence_is_substantial": coverage.get(
+                    "station_side_dynamic_evidence_is_substantial"
+                ),
+                "local_hazop_scenario_coverage_is_substantial": coverage.get(
+                    "local_hazop_scenario_coverage_is_substantial"
+                ),
+                "vehicle_side_full_loop_validation_ready": coverage.get(
+                    "vehicle_side_full_loop_validation_ready"
+                ),
+                "quantitative_consequence_validation_ready": coverage.get(
+                    "quantitative_consequence_validation_ready"
+                ),
+            },
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+
 def local_station_evidence_summary() -> dict[str, Any]:
     """Return a stable, privacy-bounded view of local evidence coverage.
 
@@ -223,6 +321,9 @@ def local_station_evidence_summary() -> dict[str, Any]:
         document_scan = _docudata_discovery_summary()
         if document_scan is not None:
             result["document_archive_discovery"] = document_scan
+        asset_context = _station_asset_context_summary()
+        if asset_context is not None:
+            result["station_asset_context"] = asset_context
         return result
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
         return {
