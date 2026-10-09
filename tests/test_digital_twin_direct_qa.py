@@ -126,6 +126,22 @@ def test_direct_qa_calculates_impact_for_alarm_and_explicit_hypothesis(monkeypat
             assert "피해영향예측" in alarm["answer"]
             assert llm_prompts[-1]["context"]["impact_calculation_attempted"] is True
             assert llm_prompts[-1]["kind"] == "automatic_analysis"
+
+            # A manual one-pass status question must still include the
+            # complete staged response plan while an actual alert is active.
+            # The same request in normal operation remains concise (above).
+            manual_alarm = client.post(
+                f"/api/simulations/{job_id}/saga-analysis/direct",
+                json={"direct": False, "question": "현재 상태", "one_pass": True},
+            ).json()
+            assert manual_alarm["risk_assessment"]["status"] == "WARNING"
+            guidance = manual_alarm["response_guidance"]
+            assert guidance is not None
+            assert guidance["actual_alert"] is True
+            assert guidance["plans"]
+            assert all(guidance["plans"][0][stage] for stage in
+                       ("recognition", "immediate", "stabilize", "restart", "prevention"))
+            assert "상황 확인" in manual_alarm["answer"] or "즉시 조치" in manual_alarm["answer"]
     finally:
         with api._jobs_lock:
             api._jobs.pop(job_id, None)

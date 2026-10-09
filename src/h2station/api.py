@@ -2823,7 +2823,11 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
                 answer += (f"\n\n**최근 가상 안전조치:** {last.get('kind')} / {last.get('target')} · {label}. "
                            "밸브 피드백과 유량 변화는 안전 대응 리모콘의 사건 기록에서 확인하세요.")
         analysis_answer = question_answer if request.language == "en" else answer
-        wants_procedures = (request.trigger != "manual" or not request.one_pass or
+        # An active warning/critical context always needs the deterministic
+        # staged response plan, even when the operator asks a short status
+        # question in one-pass mode.  Normal manual Q&A stays concise and
+        # does not receive emergency procedures unless requested.
+        wants_procedures = (actual_alert or request.trigger != "manual" or not request.one_pass or
                             any(term in request.question for term in
                                 ("조치", "대응", "대피", "격리", "차단", "복구", "재가동", "안전관리", "절차")))
         guidance = render_guidance(response_plans, actual_alert=actual_alert) if wants_procedures else ""

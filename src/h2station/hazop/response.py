@@ -332,6 +332,16 @@ def response_selection(frame: dict[str, Any], catalog: dict[str, Any],
         for plan_id, terms in questions.items():
             if any(term.lower() in q.lower() for term in terms):
                 add(plan_id, "운전자 질의에 따른 가상 상황", 4)
+
+    # A live alert can be raised from a derived station-level condition before
+    # a single HAZOP rule, release, or fault has been selected.  Keep the
+    # response surface actionable in that interval: use the conservative leak
+    # playbook as a screening plan and label the evidence as an unresolved
+    # condition.  This is only reachable for a non-normal frame; healthy
+    # status questions remain procedure-free.
+    frame_status = str((frame.get("analysis") or {}).get("status") or "NORMAL").upper()
+    if not selected and frame_status in {"ADVISORY", "WARNING", "CRITICAL"}:
+        add("gas_release", "원인 미확정 경보 · 누출·화재·과압 신호를 우선 확인", 1)
     ordered = sorted(selected.values(), key=lambda item: item["score"], reverse=True)
     return ordered if limit is None else ordered[:limit]
 
