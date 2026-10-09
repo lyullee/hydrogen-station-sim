@@ -22,6 +22,8 @@ _ADJACENT_PROCESS = _ROOT / "research/local_adjacent_hydrogen_data_discovery_202
 _DOCUDATA_DISCOVERY = _ROOT / "research/local_docudata_full_discovery_2026_10_09.json"
 _ASSET_SCREEN = _ROOT / "research/local_station_asset_screen_2026_10_09.json"
 _REVALIDATION = _ROOT / "research/local_station_data_revalidation_2026_10_09.json"
+_DATA_COVERAGE = _ROOT / "research/data_coverage_summary_2026_10_10.json"
+_VALIDATION_GAP_TRIAGE = _ROOT / "research/validation_gap_triage_2026_10_10.json"
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -425,4 +427,100 @@ def local_station_evidence_summary() -> dict[str, Any]:
                 "Aggregate local evidence artifacts are unavailable or invalid; "
                 "no validation claim is permitted."
             ),
+        }
+
+
+def validation_evidence_summary() -> dict[str, Any]:
+    """Return the public/privacy-safe validation surface for the operator UI.
+
+    This is deliberately separate from ``local_station_evidence_summary``:
+    the latter describes the owner-controlled archive, while this view joins
+    the public/component evidence ledger with the unresolved-gate triage.  It
+    contains no raw rows, source paths, filenames, site identity, or model
+    parameters and never upgrades a diagnostic result to a validation claim.
+    """
+
+    privacy = {
+        "raw_rows_persisted": False,
+        "source_paths_published": False,
+        "source_filenames_published": False,
+        "source_identifiers_published": False,
+        "site_company_manufacturer_published": False,
+        "calendar_dates_published": False,
+    }
+    try:
+        coverage = _read_json(_DATA_COVERAGE)
+        triage = _read_json(_VALIDATION_GAP_TRIAGE)
+        readiness = coverage.get("readiness") or {}
+        overall = triage.get("overall") or {}
+        interpretation = triage.get("interpretation") or {}
+        if (
+            coverage.get("artifact_type") != "privacy_bounded_data_coverage_summary"
+            or triage.get("schema_version") != 1
+            or not isinstance(coverage.get("validated_or_actionable_now"), list)
+            or not isinstance(triage.get("unresolved_gates"), list)
+            or overall.get("full_user_objective_ready") is not False
+        ):
+            raise ValueError("validation evidence artifacts failed provenance checks")
+
+        usable = []
+        for item in coverage["validated_or_actionable_now"]:
+            if not isinstance(item, dict) or not item.get("id"):
+                continue
+            usable.append({
+                "id": str(item["id"]),
+                "status": str(item.get("status") or "UNKNOWN"),
+                "coverage": item.get("coverage") or {},
+                "allowed_claim": str(item.get("allowed_claim") or ""),
+                "not_allowed": str(item.get("not_allowed") or ""),
+            })
+        unresolved = []
+        for item in triage["unresolved_gates"]:
+            if not isinstance(item, dict) or not item.get("id"):
+                continue
+            unresolved.append({
+                "id": str(item["id"]),
+                "status": str(item.get("status") or "UNKNOWN"),
+                "bucket": str(item.get("bucket") or "UNKNOWN"),
+                "next_action": str(item.get("next_action") or ""),
+                "claim_boundary": str(item.get("claim_boundary") or ""),
+            })
+        return {
+            "status": "available",
+            "evidence_role": "privacy_bounded_validation_surface",
+            "privacy": privacy,
+            "readiness": {
+                "ijhe_gate_counts": readiness.get("ijhe_gate_counts") or {},
+                "bounded_submission_ready": readiness.get("bounded_submission_ready") is True,
+                "full_user_objective_ready": overall.get("full_user_objective_ready") is True,
+            },
+            "interpretation": {
+                "data_volume_is_primary_blocker": interpretation.get(
+                    "data_volume_is_primary_blocker"
+                ) is True,
+                "primary_blocker": str(interpretation.get("primary_blocker") or ""),
+            },
+            "validated_or_actionable_now": usable,
+            "unresolved_gates": unresolved,
+            "minimum_next_input": coverage.get("minimum_next_input") or {},
+            "claim_boundary": str(coverage.get("claim_boundary") or ""),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return {
+            "status": "unavailable",
+            "evidence_role": "privacy_bounded_validation_surface",
+            "privacy": privacy,
+            "readiness": {
+                "ijhe_gate_counts": {},
+                "bounded_submission_ready": False,
+                "full_user_objective_ready": False,
+            },
+            "interpretation": {
+                "data_volume_is_primary_blocker": None,
+                "primary_blocker": "validation evidence artifacts unavailable",
+            },
+            "validated_or_actionable_now": [],
+            "unresolved_gates": [],
+            "minimum_next_input": {},
+            "claim_boundary": "Evidence artifacts are unavailable; no validation claim is permitted.",
         }

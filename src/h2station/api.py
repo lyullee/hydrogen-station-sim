@@ -56,7 +56,7 @@ from .hazop.mapping import coverage as hazop_coverage
 from .hazop.runtime import HazopMonitor
 from .hazop.response import (classify_rule, load_playbooks, response_selection,
                              prompt_guidance, render_guidance, structured_guidance)
-from .local_evidence import local_station_evidence_summary
+from .local_evidence import local_station_evidence_summary, validation_evidence_summary
 from .station_pressure_forecast import forecast_storage_pressure
 
 
@@ -1306,6 +1306,18 @@ def local_station_evidence() -> dict[str, Any]:
     """Return aggregate local evidence coverage without raw-data disclosure."""
 
     return local_station_evidence_summary()
+
+
+@app.get("/api/evidence/validation")
+def validation_evidence() -> dict[str, Any]:
+    """Return the privacy-safe public/component validation surface.
+
+    The response is an operator-facing evidence index.  It exposes the
+    current supported claim classes and unresolved validation gates without
+    exposing raw rows or owner-controlled source identity.
+    """
+
+    return validation_evidence_summary()
 
 
 @app.get("/api/config/defaults")
