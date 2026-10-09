@@ -273,6 +273,44 @@ def test_sensor_followup_direct_route_never_calls_reasoning(monkeypatch):
             api._jobs.pop(job_id, None)
 
 
+def test_sensor_manual_response_question_shows_staged_guidance_and_precedents(monkeypatch):
+    captured = []
+    monkeypatch.setattr(api, "_invoke_saga_hazop_direct",
+                        lambda *args: {"status": "NORMAL", "hits": []})
+
+    async def one_pass(sensor_id, question, context, provider, request_kind, stream_output=False):
+        captured.append(context)
+        return {"answer": "누출 대응을 단계별로 안내합니다.", "model": "sensor-test"}
+
+    monkeypatch.setattr(api, "_invoke_sensor_assistant_selected", one_pass)
+    job_id = "sensor-response-provenance"
+    with api._jobs_lock:
+        api._jobs[job_id] = {"frames": [_frame()]}
+    try:
+        with TestClient(api.app) as client:
+            response = client.post(
+                f"/api/simulations/{job_id}/sensors/PT-0901/analyze/direct",
+                json={"question": "누출 시 즉시 대응 절차를 알려줘"},
+            )
+        assert response.status_code == 200, response.text
+        payload = response.json()
+        guidance = payload["response_guidance"]
+        assert guidance is not None
+        assert guidance["actual_alert"] is False
+        assert guidance["plans"]
+        assert all(guidance["plans"][0][stage]
+                   for stage in ("recognition", "immediate", "stabilize", "restart", "prevention"))
+        precedents = (payload["evidence_manifest"]["response_evidence"]
+                      ["relevant_public_accident_precedents"]["by_response_plan"])
+        assert precedents["gas_release"]
+        provider_refs = (captured[-1]["evidence_basis"]["response_guidance"]
+                         ["relevant_public_accident_precedents"])
+        assert any(row["situation"] == "수소 누출·가스 검지" for row in provider_refs)
+    finally:
+        with api._jobs_lock:
+            api._jobs.pop(job_id, None)
+
+
 def test_direct_impact_question_targets_named_equipment():
     catalog = api.load_catalog()
     assert {row["node_id"] for row in api._mentioned_hazop_nodes("압축기 누출 피해영향", catalog)} >= {"N03", "N06"}
