@@ -156,6 +156,35 @@
       "observed_scope": "The package contains one-year model and finite-state-machine operating-strategy results for an on-site HRS, including demand and storage/compression/dispensing context.",
       "raw_time_series_publicly_retrieved": true,
       "eligible_use": "operational-strategy and state-machine plausibility; simulation supplement, not measured full-loop validation"
+    },
+    {
+      "id": "ijhe_2026_multi_rig_hrs_measurement_context",
+      "doi": "10.1016/j.ijhydene.2026.153374",
+      "url": "https://doi.org/10.1016/j.ijhydene.2026.153374",
+      "role": "published multi-rig HRS fueling and defueling benchmark",
+      "observed_scope": "The article reports fueling and defueling variables including mass flow, dispenser pressure and temperature, injection temperature, vehicle-tank pressure and gas-temperature channels across several test rigs.",
+      "raw_time_series_publicly_retrieved": false,
+      "data_boundary": "The accessible publication provides experiment descriptions, tables and figures but no downloadable, rights-cleared raw synchronized archive was located during this recheck.",
+      "eligible_use": "independent benchmark and custodian data-request lead; not a new raw holdout",
+      "ineligible_use": [
+        "parameter fitting",
+        "full-loop validation score",
+        "SAGA effectiveness score"
+      ]
+    },
+    {
+      "id": "h2_stations_eu_v2_live_status_api",
+      "url": "https://docs.h2-stations.eu/for-data-users/api-v2/",
+      "role": "public European HRS inventory and status API",
+      "observed_scope": "The current API exposes station layout, nozzle usage/availability and a derived low-storage flag; process pressure, temperature, mass-flow and vehicle-tank time series are not part of the public status contract.",
+      "raw_time_series_publicly_retrieved": false,
+      "data_boundary": "The API requires a personal token and publishes infrastructure/status signals rather than synchronized process telemetry.",
+      "eligible_use": "station inventory, layout and availability context",
+      "ineligible_use": [
+        "station dynamic-model calibration",
+        "station-to-vehicle full-loop holdout",
+        "accident-consequence validation"
+      ]
     }
   ],
   "locally_cached_supplementary_rechecks": [
