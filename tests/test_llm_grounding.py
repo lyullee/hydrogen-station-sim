@@ -52,6 +52,32 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert "public_station_operation_practice_reference" not in (
         prompt_decision_evidence(idle)["decision_support_evidence"]
     )
+    cip_endpoint = idle["response_evidence"][
+        "public_cip_dispenser_endpoint_reference"
+    ]
+    assert cip_endpoint["source"]["doi"] == (
+        "10.19799/j.cnki.2095-4239.2020.0049"
+    )
+    assert len(cip_endpoint["experiments"]) == 2
+    assert cip_endpoint["endpoint_tables_verified"] is True
+    assert cip_endpoint["time_series_available"] is False
+    fueling_manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False,
+        question="차량 70 MPa 디스펜서 충전 속도와 프로토콜을 설명해줘",
+    )
+    fueling_decision = prompt_decision_evidence(fueling_manifest)
+    cip_support = fueling_decision["decision_support_evidence"][
+        "public_cip_dispenser_endpoint_reference"
+    ]
+    assert cip_support["experiments"][1]["peak_mass_flow_g_s"] == 36
+    assert cip_support["time_series_available"] is False
+    assert fueling_decision["validation_boundaries"][
+        "public_cip_dispenser_endpoint"
+    ]["full_loop_external_validation_ready"] is False
+    assert any(
+        item["id"] == "PUBLIC_CIP_2020_35_70MPA_ENDPOINTS"
+        for item in prompt_evidence_header(fueling_manifest)["public_source_links"]
+    )
     candidate_screen = idle["response_evidence"]["local_candidate_full_loop_screen"]
     assert candidate_screen["decision"] == "NO_NEW_FULL_LOOP_MEASURED_COHORT"
     candidates = {item["id"]: item for item in candidate_screen["candidates"]}
@@ -1390,6 +1416,11 @@ def test_compact_data_used_reports_available_and_applied_station_profile():
     assert station_data["deduplicated_rows"] == 56854143
     assert station_data["pressure_cycles"] == 16770
     assert station_data["full_loop_validation"] is False
+    endpoint = reference["public_endpoint_benchmark"]
+    assert endpoint["source_doi"] == "10.19799/j.cnki.2095-4239.2020.0049"
+    assert endpoint["case_count"] == 2
+    assert endpoint["time_series_available"] is False
+    assert endpoint["full_loop_validation"] is False
 
     applied_frame = {
         **base_frame,

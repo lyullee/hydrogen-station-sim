@@ -2781,6 +2781,108 @@ def _public_threeemotion_operating_aggregate_reference() -> dict[str, Any] | Non
     }
 
 
+def _public_cip_dispenser_endpoint_reference() -> dict[str, Any] | None:
+    """Expose the public 35/70 MPa dispenser benchmark at endpoint scope.
+
+    The article reports two real-station/vehicle refuelling experiments and
+    links four reproducibly downloadable summary tables.  The linked files do
+    not contain a common time axis, so this helper deliberately keeps the
+    evidence as a contextual operating-range reference.  It must never be
+    interpreted as an untouched full-loop holdout, a parameter-fit source, or
+    a safety-distance validation set.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/cip_2020_live_download_recheck_2026_10_05.json"
+    )
+    fallback_path = Path(__file__).resolve().parents[2] / (
+        "research/chinese_hrs_performance_article_recheck_2026_10_04.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        try:
+            record = json.loads(fallback_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError, json.JSONDecodeError):
+            return None
+    source = record.get("source") or {}
+    tables = record.get("tables") or []
+    experiments = record.get("reported_experiments") or []
+    # The live-download recheck owns byte/table verification, while the
+    # companion article recheck stores the two published endpoint experiments.
+    # Join those bounded records without carrying ZIP bytes or private paths.
+    companion: dict[str, Any] = {}
+    if not experiments:
+        try:
+            companion = json.loads(fallback_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError, json.JSONDecodeError):
+            companion = {}
+        experiments = companion.get("reported_experiments") or []
+    eligibility = record.get("eligibility_decision") or {}
+    if not eligibility:
+        eligibility = companion.get("eligibility_decision") or {}
+    if (
+        not str(source.get("doi") or "").strip()
+        or not str(source.get("article_url") or "").startswith("https://")
+        or not experiments
+        or len(tables) != 4
+        or any(
+            not isinstance(table, dict)
+            or table.get("inspection", {}).get("has_time_axis") is not False
+            for table in tables
+        )
+        or eligibility.get("full_loop_external_holdout_eligible") is not False
+    ):
+        return None
+
+    compact_experiments: list[dict[str, Any]] = []
+    for item in experiments:
+        if not isinstance(item, dict):
+            return None
+        keys = (
+            "pressure_class", "vehicle_volume_l", "initial_pressure_mpa",
+            "source_pressure_mpa", "duration_s", "dispensed_mass_kg",
+            "final_pressure_mpa", "final_temperature_c", "peak_mass_flow_g_s",
+        )
+        row = {key: item[key] for key in keys if item.get(key) is not None}
+        if not row.get("pressure_class") or len(row) < 5:
+            return None
+        if any(
+            isinstance(value, float) and not math.isfinite(value)
+            for value in row.values()
+        ):
+            return None
+        compact_experiments.append(row)
+    if not compact_experiments:
+        return None
+    return {
+        "artifact": "research/cip_2020_live_download_recheck_2026_10_05.json",
+        "evidence_role": "public dispenser endpoint benchmark",
+        "source": {
+            "title": str(source.get("title") or ""),
+            "doi": str(source.get("doi") or ""),
+            "url": str(source.get("article_url") or ""),
+            "publisher": str(source.get("publisher") or ""),
+        },
+        "experiments": compact_experiments,
+        "endpoint_tables_verified": True,
+        "endpoint_table_count": len(tables),
+        "time_series_available": False,
+        "full_loop_external_validation_supported": False,
+        "parameter_fitting_supported": False,
+        "allowed_use": [
+            "contextual operating-range check",
+            "data-request lead",
+        ],
+        "claim_limit": str(
+            eligibility.get("reason")
+            if isinstance(eligibility, dict) and eligibility.get("reason")
+            else record.get("claim_boundary")
+            or "공개 35/70 MPa 종점 표 요약이며 동기화된 full-loop 검증이 아님"
+        ),
+    }
+
+
 def _public_hrs_measurement_leads() -> dict[str, Any] | None:
     """Expose public HRS measurement leads with an explicit data boundary.
 
@@ -3251,6 +3353,18 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
         ),
         str(threeemotion_source.get("url") or ""),
         "공개 350 bar 버스 충전소 집계 운전 맥락(원시 full-loop 검증 아님)",
+    )
+
+    cip_endpoint = evidence.get("public_cip_dispenser_endpoint_reference") or {}
+    cip_source = cip_endpoint.get("source") or {}
+    add(
+        "PUBLIC_CIP_2020_35_70MPA_ENDPOINTS",
+        str(
+            cip_source.get("title")
+            or "35 MPa/70 MPa hydrogen dispenser refuelling performance evaluation"
+        ),
+        str(cip_source.get("url") or ""),
+        "공개 35/70 MPa 실충전 종점 벤치마크(동기화 원시 full-loop 검증 아님)",
     )
 
     measurement_leads = evidence.get("public_hrs_measurement_leads") or {}
@@ -6533,6 +6647,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_threeemotion_operating_aggregate_reference"
         ] = threeemotion_aggregate
+    cip_endpoint = _public_cip_dispenser_endpoint_reference()
+    if cip_endpoint is not None:
+        envelope["response_evidence"][
+            "public_cip_dispenser_endpoint_reference"
+        ] = cip_endpoint
     public_hrs_leads = _public_hrs_measurement_leads()
     if public_hrs_leads is not None:
         envelope["response_evidence"][
@@ -6807,6 +6926,22 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "sources": rows,
                 "claim_limit": short(benchmarks.get("claim_limit")),
             }
+    cip_endpoint = evidence.get("public_cip_dispenser_endpoint_reference")
+    if isinstance(cip_endpoint, dict):
+        summary["public_cip_dispenser_endpoint_reference"] = {
+            "evidence_role": cip_endpoint.get("evidence_role"),
+            "source": cip_endpoint.get("source") or {},
+            "experiments": cip_endpoint.get("experiments") or [],
+            "endpoint_tables_verified": cip_endpoint.get(
+                "endpoint_tables_verified"
+            ) is True,
+            "endpoint_table_count": cip_endpoint.get("endpoint_table_count"),
+            "time_series_available": cip_endpoint.get("time_series_available") is True,
+            "full_loop_external_validation_supported": cip_endpoint.get(
+                "full_loop_external_validation_supported"
+            ) is True,
+            "claim_limit": short(cip_endpoint.get("claim_limit"), 320),
+        }
     public_tank_validation = evidence.get("public_tank_validation_boundary")
     if isinstance(public_tank_validation, dict):
         summary["public_tank_validation_boundary"] = {
@@ -7986,6 +8121,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     threeemotion_aggregate = response.get(
         "public_threeemotion_operating_aggregate_reference"
     ) or {}
+    cip_endpoint = response.get(
+        "public_cip_dispenser_endpoint_reference"
+    ) or {}
     methytrucks_tank = response.get("methytrucks_tank_diagnostic_boundary") or {}
     methytrucks_scope = methytrucks_tank.get("scope") or {}
     methytrucks_244 = methytrucks_tank.get("candidate_244_l_diagnostic") or {}
@@ -8139,6 +8277,14 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "performance",
         ))
     )
+    cip_endpoint_relevant = bool(
+        cip_endpoint
+        and any(token in detector_context for token in (
+            "충전", "충전속도", "차량", "디스펜서", "질량유량", "프로토콜",
+            "35mpa", "35 mpa", "70mpa", "70 mpa", "refuel", "fueling",
+            "dispenser", "vehicle", "protocol", "mass flow", "flow",
+        ))
+    )
     threeemotion_aggregate_relevant = bool(
         threeemotion_aggregate
         and any(token in detector_context for token in (
@@ -8242,6 +8388,26 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ),
                 },
             } if aggregate_benchmark and aggregate_benchmark_relevant else {}),
+            **({
+                "public_cip_dispenser_endpoint_reference": {
+                    "source": cip_endpoint.get("source") or {},
+                    "experiments": cip_endpoint.get("experiments") or [],
+                    "endpoint_tables_verified": cip_endpoint.get(
+                        "endpoint_tables_verified"
+                    ) is True,
+                    "time_series_available": cip_endpoint.get(
+                        "time_series_available"
+                    ) is True,
+                    "full_loop_external_validation_supported": cip_endpoint.get(
+                        "full_loop_external_validation_supported"
+                    ) is True,
+                    "parameter_fitting_supported": cip_endpoint.get(
+                        "parameter_fitting_supported"
+                    ) is True,
+                    "allowed_use": cip_endpoint.get("allowed_use") or [],
+                    "claim_limit": short(cip_endpoint.get("claim_limit"), 300),
+                },
+            } if cip_endpoint and cip_endpoint_relevant else {}),
             **({
                 "public_threeemotion_operating_aggregate_reference": {
                     "source": threeemotion_aggregate.get("source") or {},
@@ -8493,6 +8659,22 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 ),
                 "claim_limit": short(closed_loop.get("claim_limit"), 80),
             },
+            **({
+                "public_cip_dispenser_endpoint": {
+                    "endpoint_tables_verified": cip_endpoint.get(
+                        "endpoint_tables_verified"
+                    ) is True,
+                    "endpoint_table_count": cip_endpoint.get(
+                        "endpoint_table_count"
+                    ),
+                    "time_series_available": cip_endpoint.get(
+                        "time_series_available"
+                    ) is True,
+                    "full_loop_external_validation_ready": False,
+                    "parameter_fitting_ready": False,
+                    "claim_limit": short(cip_endpoint.get("claim_limit"), 220),
+                },
+            } if cip_endpoint and cip_endpoint_relevant else {}),
             "station_component_thermal": {
                 "status": station_thermal.get("status"),
                 "proposals_attested": station_thermal.get("proposals_attested") is True,
@@ -9296,6 +9478,23 @@ def compact_data_used(manifest: dict[str, Any]) -> dict[str, Any]:
                 ) is True,
                 "claim_limit": local_station.get("claim_limit"),
             }
+        cip_endpoint = evidence.get("public_cip_dispenser_endpoint_reference")
+        if isinstance(cip_endpoint, dict):
+            source = cip_endpoint.get("source") or {}
+            result["public_endpoint_benchmark"] = {
+                "source_doi": source.get("doi"),
+                "case_count": len(cip_endpoint.get("experiments") or []),
+                "endpoint_tables_verified": cip_endpoint.get(
+                    "endpoint_tables_verified"
+                ) is True,
+                "time_series_available": cip_endpoint.get(
+                    "time_series_available"
+                ) is True,
+                "full_loop_validation": cip_endpoint.get(
+                    "full_loop_external_validation_supported"
+                ) is True,
+                "claim_limit": cip_endpoint.get("claim_limit"),
+            }
         readiness = evidence.get("validation_readiness")
         if isinstance(readiness, dict):
             result["validation"] = {
@@ -9329,6 +9528,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     threeemotion_aggregate = evidence.get(
         "public_threeemotion_operating_aggregate_reference"
+    ) or {}
+    cip_endpoint = evidence.get(
+        "public_cip_dispenser_endpoint_reference"
     ) or {}
     public_hrs_leads = evidence.get("public_hrs_measurement_leads") or {}
     vehicle_side_leads = evidence.get(
@@ -9521,6 +9723,23 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "allowed_use": threeemotion_aggregate.get("allowed_use") or [],
             "not_allowed": threeemotion_aggregate.get("not_allowed") or [],
             "claim_limit": threeemotion_aggregate.get("claim_limit"),
+        },
+        "public_cip_dispenser_endpoint_reference": {
+            "source": cip_endpoint.get("source") or {},
+            "experiments": cip_endpoint.get("experiments") or [],
+            "endpoint_tables_verified": cip_endpoint.get(
+                "endpoint_tables_verified"
+            ) is True,
+            "endpoint_table_count": cip_endpoint.get("endpoint_table_count"),
+            "time_series_available": cip_endpoint.get("time_series_available") is True,
+            "full_loop_external_validation_supported": cip_endpoint.get(
+                "full_loop_external_validation_supported"
+            ) is True,
+            "parameter_fitting_supported": cip_endpoint.get(
+                "parameter_fitting_supported"
+            ) is True,
+            "allowed_use": cip_endpoint.get("allowed_use") or [],
+            "claim_limit": cip_endpoint.get("claim_limit"),
         },
         "public_hrs_measurement_leads": {
             "evidence_artifact": public_hrs_leads.get("artifact"),
