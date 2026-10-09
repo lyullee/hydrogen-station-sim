@@ -7666,9 +7666,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     operation_practice_relevant = bool(
         operation_practice
         and any(token in detector_context for token in (
-            "충전", "충전 중", "재충전", "누출", "누설", "리크", "압력",
-            "온도", "예냉", "프리쿨", "프로토콜", "leak", "fuel", "refuel",
-            "recharge", "pressure", "temperature", "precool", "protocol",
+            "충전", "충전 중", "재충전", "리크체크", "예냉", "프리쿨",
+            "프로토콜", "leak-check", "fueling", "refuel", "recharge",
+            "precool", "protocol",
         ))
     )
     cascade_sequence_relevant = bool(
