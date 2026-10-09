@@ -32,6 +32,16 @@ into the repository. This evidence is available to the LLM for vessel thermal
 comparisons, but it does not change runtime parameters or close the
 station-to-vehicle gate.
 
+The private local archive was rechecked on 2026-10-10 without retaining source
+identity or measurements. It contains 33 readable measurement CSVs (about
+4.749 GiB) and reproduces the committed station-side schema result: 12 bounded
+time-overlap clusters, zero exact full-loop clusters and zero vehicle-fill
+candidates. This confirms that the current limitation is channel provenance
+and synchronization, not a lack of station-side rows. The de-identified audit
+is recorded in
+`research/local_private_archive_recheck_2026_10_10.json` and its companion
+Markdown note.
+
 ## Public data can fill context, not every gate
 
 Public NREL/DOE/NLR material provides valuable real operating ranges,

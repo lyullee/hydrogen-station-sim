@@ -1,0 +1,44 @@
+{
+  "artifact_type": "local_private_archive_schema_recheck",
+  "recheck_date": "2026-10-10",
+  "source_identifiers_published": false,
+  "source_paths_published": false,
+  "original_headers_published": false,
+  "raw_rows_persisted": false,
+  "absolute_timestamps_published": false,
+  "private_archive_file_count": 34,
+  "measurement_csv_count": 33,
+  "measurement_csv_bytes": 5099041365,
+  "schema_inventory": {
+    "measurement_like_tables": 33,
+    "unreadable_tables": 0,
+    "semantic_channel_table_counts": {
+      "cascade_or_storage": 13,
+      "controller_state": 8,
+      "mass_flow": 20,
+      "pressure": 20,
+      "temperature": 8,
+      "time": 33
+    },
+    "time_overlap_multi_table_cluster_count": 12,
+    "time_overlap_tables_in_clusters": 24,
+    "exact_full_loop_cluster_count": 0,
+    "header_only_missing_family_histogram": {
+      "controller_state+temperature+vehicle": 12
+    }
+  },
+  "candidate_counts": {
+    "full_loop_candidate": 0,
+    "station_recharge_candidate": 0,
+    "vehicle_fill_candidate": 0,
+    "time_overlap_full_loop_candidate": 0
+  },
+  "attestation": {
+    "vehicle_or_receptacle_channel_attested": false,
+    "synchronized_station_to_vehicle_contract_attested": false,
+    "station_side_pressure_cascade_evidence_usable": true,
+    "publication_safe_summary_only": true,
+    "comparison_with_committed_schema_inventory": "exact aggregate match"
+  },
+  "claim_boundary": "This is a privacy-bounded header, file-shape and bounded time-axis recheck of a private local archive. It does not publish source identity, original headers, measurements or timestamps, and it does not attest units, calibration, tag mapping, synchronization, vehicle filling accuracy, accident frequency or safety certification. The archive supports station-side pressure, cascade, flow, temperature and controller analyses; the station-to-vehicle full-loop validation gate remains closed."
+}
