@@ -30,6 +30,15 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
         for item in summary["unresolved_gates"]
     )
     assert summary["minimum_next_input"]["event_count"] == 3
+    inventory = summary["evidence_inventory"]
+    assert inventory["public_accident_reports"]["report_count"] == 23
+    assert inventory["public_accident_reports"]["incident_code_count"] == 26
+    assert inventory["public_accidental_release"]["experiment_count"] == 3
+    assert inventory["public_accidental_release"]["ignition_observed_case_count"] == 2
+    assert inventory["public_experimental_benchmarks"]["source_count"] == 6
+    assert inventory["public_experimental_benchmarks"]["actual_hydrogen_archive_count"] == 22
+    assert inventory["public_field_benchmark"]["stations_tested"] == 22
+    assert inventory["public_field_benchmark"]["full_loop_holdout_eligible"] is False
     assert all(value is False for value in summary["privacy"].values())
     rendered = str(summary)
     assert "C:\\" not in rendered

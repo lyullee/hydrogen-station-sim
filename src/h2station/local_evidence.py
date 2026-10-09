@@ -24,6 +24,10 @@ _ASSET_SCREEN = _ROOT / "research/local_station_asset_screen_2026_10_09.json"
 _REVALIDATION = _ROOT / "research/local_station_data_revalidation_2026_10_09.json"
 _DATA_COVERAGE = _ROOT / "research/data_coverage_summary_2026_10_10.json"
 _VALIDATION_GAP_TRIAGE = _ROOT / "research/validation_gap_triage_2026_10_10.json"
+_KHK_ACCIDENTS = _ROOT / "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json"
+_ACCIDENTAL_RELEASE = _ROOT / "research/accidental_self_ignition_public_evidence_2026_10_04.json"
+_EXPERIMENTAL_BENCHMARKS = _ROOT / "research/public_experimental_benchmarks_2026_10_06.json"
+_CARB_BENCHMARK = _ROOT / "research/carb_2024_hrs_inuse_field_benchmark_2026_10_08.json"
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -503,6 +507,7 @@ def validation_evidence_summary() -> dict[str, Any]:
             "validated_or_actionable_now": usable,
             "unresolved_gates": unresolved,
             "minimum_next_input": coverage.get("minimum_next_input") or {},
+            "evidence_inventory": public_evidence_inventory_summary(),
             "claim_boundary": str(coverage.get("claim_boundary") or ""),
         }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
@@ -522,5 +527,138 @@ def validation_evidence_summary() -> dict[str, Any]:
             "validated_or_actionable_now": [],
             "unresolved_gates": [],
             "minimum_next_input": {},
+            "evidence_inventory": public_evidence_inventory_summary(),
             "claim_boundary": "Evidence artifacts are unavailable; no validation claim is permitted.",
         }
+
+
+def public_evidence_inventory_summary() -> dict[str, Any]:
+    """Return counts and claim-bounded roles for public evidence sources.
+
+    The UI needs to show which evidence families were used, but it must not
+    expose local source identity or imply that an accident inventory is a
+    probability estimate.  Missing artifacts fail closed individually.
+    """
+
+    result: dict[str, Any] = {
+        "public_accident_reports": {
+            "status": "unavailable",
+            "report_count": 0,
+            "incident_code_count": 0,
+            "station_relevant_incident_code_count": 0,
+            "qualitative_grounding_eligible": False,
+            "full_loop_holdout_eligible": False,
+        },
+        "public_accidental_release": {
+            "status": "unavailable",
+            "experiment_count": 0,
+            "ignition_observed_case_count": 0,
+            "no_ignition_case_count": 0,
+            "source_doi": None,
+            "consequence_grounding_eligible": False,
+            "full_loop_holdout_eligible": False,
+        },
+        "public_experimental_benchmarks": {
+            "status": "unavailable",
+            "source_count": 0,
+            "actual_hydrogen_archive_count": 0,
+            "actual_hydrogen_rows_screened": 0,
+            "full_loop_holdout_eligible": False,
+        },
+        "public_field_benchmark": {
+            "status": "unavailable",
+            "stations_tested": 0,
+            "stations_passing_all_fueling_metrics": 0,
+            "full_loop_holdout_eligible": False,
+        },
+    }
+    try:
+        record = _read_json(_KHK_ACCIDENTS)
+        coverage = record.get("coverage") or {}
+        eligibility = record.get("eligibility") or {}
+        if record.get("status") == "public_khk_accident_report_inventory_captured":
+            result["public_accident_reports"] = {
+                "status": "available",
+                "report_count": int(coverage.get("pdf_report_count") or 0),
+                "incident_code_count": int(coverage.get("incident_code_count") or 0),
+                "station_relevant_incident_code_count": int(
+                    coverage.get("station_relevant_incident_code_count") or 0
+                ),
+                "qualitative_grounding_eligible": eligibility.get(
+                    "qualitative_scenario_grounding_eligible"
+                ) is True,
+                "full_loop_holdout_eligible": eligibility.get(
+                    "full_loop_station_vehicle_holdout_eligible"
+                ) is True,
+            }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        pass
+    try:
+        record = _read_json(_ACCIDENTAL_RELEASE)
+        source = record.get("source") or {}
+        findings = record.get("reported_findings") or {}
+        eligibility = record.get("eligibility") or {}
+        if record.get("status") == "public_accidental_release_ignition_evidence_captured":
+            result["public_accidental_release"] = {
+                "status": "available",
+                "experiment_count": int(findings.get("experiment_count") or 0),
+                "ignition_observed_case_count": int(
+                    findings.get("ignition_observed_case_count") or 0
+                ),
+                "no_ignition_case_count": int(findings.get("no_ignition_case_count") or 0),
+                "source_doi": str(source.get("zenodo_doi") or "") or None,
+                "consequence_grounding_eligible": eligibility.get(
+                    "consequence_and_ignition_grounding_eligible"
+                ) is True,
+                "full_loop_holdout_eligible": eligibility.get(
+                    "full_loop_station_vehicle_holdout_eligible"
+                ) is True,
+            }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        pass
+    try:
+        record = _read_json(_EXPERIMENTAL_BENCHMARKS)
+        sources = record.get("sources") or []
+        actual = next(
+            (item for item in sources if item.get("id") == "USN_OPEN_CHANNEL_ACTUAL_H2_2025"),
+            {},
+        )
+        aggregate = actual.get("aggregate") or {}
+        if record.get("status") == "citation_bounded_aggregate_benchmarks":
+            result["public_experimental_benchmarks"] = {
+                "status": "available",
+                "source_count": len(sources),
+                "actual_hydrogen_archive_count": int(aggregate.get("archive_count") or 0),
+                "actual_hydrogen_rows_screened": int(aggregate.get("total_rows_screened") or 0),
+                "full_loop_holdout_eligible": any(
+                    item.get("id") == "USN_OPEN_CHANNEL_ACTUAL_H2_2025"
+                    and "station-to-vehicle or full-loop holdout" not in " ".join(
+                        item.get("not_eligible_for") or []
+                    ).lower()
+                    for item in sources
+                ),
+            }
+            # The source is deliberately a component/dispersion dataset.  Keep
+            # this false even if a malformed source description contains an
+            # ambiguous phrase.
+            result["public_experimental_benchmarks"]["full_loop_holdout_eligible"] = False
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        pass
+    try:
+        record = _read_json(_CARB_BENCHMARK)
+        population = record.get("population") or {}
+        eligibility = record.get("eligibility") or {}
+        if record.get("artifact_type") == "public_real_station_field_benchmark":
+            result["public_field_benchmark"] = {
+                "status": "available",
+                "stations_tested": int(population.get("stations_tested") or 0),
+                "stations_passing_all_fueling_metrics": int(
+                    population.get("stations_passing_all_nine_fueling_performance_metrics") or 0
+                ),
+                "full_loop_holdout_eligible": eligibility.get(
+                    "full_loop_external_holdout"
+                ) is True,
+            }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        pass
+    return result
