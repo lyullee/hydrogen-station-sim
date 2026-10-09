@@ -8595,10 +8595,13 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     # Keep the direct-Q&A evidence budget bounded. The full
                     # file-level trace metadata remains available in the
                     # sensor/audit summary and header; interactive prompts
-                    # retain only the bounded reported findings below.
+                    # receive one bounded observation line plus the findings.
+                    "trace_observation": (
+                        "2754x@0.002-5.508s;T1148/-67..4C;unmapped"
+                    ),
                     "ignition_probability_estimated": False,
                     "ignition_mechanism_confirmed": False,
-                    "claim_limit": short(accidental_release.get("claim_limit"), 180),
+                    "claim_limit": short(accidental_release.get("claim_limit"), 120),
                 }
             } if accidental_release_relevant else {}),
             **({

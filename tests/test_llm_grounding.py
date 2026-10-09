@@ -351,6 +351,8 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     decision_accidental = prompt_decision_evidence(release_manifest)[
         "decision_support_evidence"
     ]["public_accidental_release"]
+    assert "2754x@0.002-5.508s" in decision_accidental["trace_observation"]
+    assert "unmapped" in decision_accidental["trace_observation"]
     assert decision_accidental["ignition_probability_estimated"] is False
     assert decision_accidental["ignition_mechanism_confirmed"] is False
     release_boundary = idle["response_evidence"][
