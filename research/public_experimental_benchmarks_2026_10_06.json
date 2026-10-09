@@ -145,6 +145,38 @@
         "controller, valve or ESD fault replay",
         "consequence-distance or risk-model validation"
       ]
+    },
+    {
+      "id": "NIST_FTS_2015_FIELD_METROLOGY",
+      "title": "Hydrogen Field Test Standard: Laboratory and Field Performance",
+      "url": "https://www.nist.gov/publications/hydrogen-field-test-standard-laboratory-and-field-performance",
+      "doi": "10.1016/j.flowmeasinst.2015.10.010",
+      "raw_rows_public": false,
+      "measured_boundary": [
+        "35 MPa Type-III field-test tank pressure and temperature",
+        "independent gravimetric, PVT and master-meter mass estimates",
+        "retail-dispenser hydrogen drafts"
+      ],
+      "aggregate": {
+        "field_draft_count": 7,
+        "field_pressure_mpa_min": 16.10,
+        "field_pressure_mpa_max": 31.39,
+        "field_draft_mass_groups_kg": [0.5, 1.0],
+        "field_method_agreement_max_percent": 1.53,
+        "ft_standard_nominal_capacity_kg": 1.0,
+        "ft_standard_nominal_pressure_mpa": 35.0
+      },
+      "eligible_for": [
+        "tank pressure-temperature and mass-accounting plausibility",
+        "field metrology uncertainty and repeatability context",
+        "minimum-data request design for an authorised dispenser trace"
+      ],
+      "not_eligible_for": [
+        "untouched row-level station-to-vehicle holdout",
+        "station controller or cascade validation",
+        "ESD, valve or dispenser communication fault replay",
+        "consequence-distance, risk-model or SAGA effectiveness validation"
+      ]
     }
   ],
   "claim_boundary": "These are aggregate public experimental benchmarks and a separately controlled tank/hose trace. They provide real operating-range context and partial-boundary evidence; they do not establish complete station-to-vehicle digital-twin accuracy, accident frequency, safety distance, or field certification."

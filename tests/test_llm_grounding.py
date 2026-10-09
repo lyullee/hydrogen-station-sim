@@ -1191,7 +1191,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "cross_station_pressure_plausibility_supported"
     ] is True
     benchmarks = idle["response_evidence"]["public_experimental_benchmarks"]
-    assert len(benchmarks["sources"]) == 4
+    assert len(benchmarks["sources"]) == 5
     nrel_trace = next(item for item in benchmarks["sources"] if item["id"] == "NREL_HDVS_2022_TANK_HOSE_TRACE")
     assert nrel_trace["aggregate"]["sample_count"] == 351
     assert nrel_trace["raw_rows_public"] is False
@@ -1205,6 +1205,10 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert kgs_six["aggregate"]["reported_scenario_count"] == 6
     assert kgs_six["aggregate"]["pressure_accuracy_r2_mean_percent"] == 96.7
     assert "row-level or untouched full-loop holdout" in kgs_six["not_eligible_for"]
+    nist_fts = next(item for item in benchmarks["sources"] if item["id"] == "NIST_FTS_2015_FIELD_METROLOGY")
+    assert nist_fts["aggregate"]["field_draft_count"] == 7
+    assert nist_fts["aggregate"]["field_method_agreement_max_percent"] == 1.53
+    assert "station controller or cascade validation" in nist_fts["not_eligible_for"]
 
     result = {"node_id": "N09", "node_name": "고압 저장뱅크",
               "calculation_status": "calculated",
