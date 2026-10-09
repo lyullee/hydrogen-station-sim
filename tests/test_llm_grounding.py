@@ -322,6 +322,8 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert accidental["reported_findings"]["ignition_mechanism_confirmed"] is False
     assert "ignition probability" in accidental["claim_limit"]
     assert all(row["local_sha256_match"] for row in accidental["files"])
+    assert accidental["files"][0]["time_range_s"] == [0.002, 5.508]
+    assert accidental["files"][1]["max_temperature_c"] == 1148.1
     assert "raw_text" not in accidental
     summary_accidental = prompt_evidence_summary(idle)[
         "public_accidental_release_evidence"
@@ -329,6 +331,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert summary_accidental["reported_findings"][
         "remote_or_obstructed_ignition_reported"
     ] is True
+    assert summary_accidental["trace_files"][0]["numeric_rows"] == 2754
     header_accidental = prompt_evidence_header(idle)["public_accident_evidence"]
     assert header_accidental["accidental_release_reported_findings"][
         "experiment_count"

@@ -7500,6 +7500,18 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if reported_findings.get(key) is not None
         }
+        summary["public_accidental_release_evidence"]["trace_files"] = [
+            {
+                "name": item.get("name"),
+                "numeric_rows": item.get("numeric_rows"),
+                "time_range_s": item.get("time_range_s"),
+                "channels": item.get("channels") or [],
+                "max_temperature_c": item.get("max_temperature_c"),
+                "min_temperature_c": item.get("min_temperature_c"),
+            }
+            for item in accidental.get("files") or []
+            if isinstance(item, dict)
+        ]
         summary["public_accidental_release_evidence"]["claim_limit"] = short(
             accidental.get("claim_limit")
         )
@@ -8580,6 +8592,10 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "fire_jet_length_m_greater_than_reported": (
                         accidental_release.get("reported_findings") or {}
                     ).get("fire_jet_length_m_greater_than_reported"),
+                    # Keep the direct-Q&A evidence budget bounded. The full
+                    # file-level trace metadata remains available in the
+                    # sensor/audit summary and header; interactive prompts
+                    # retain only the bounded reported findings below.
                     "ignition_probability_estimated": False,
                     "ignition_mechanism_confirmed": False,
                     "claim_limit": short(accidental_release.get("claim_limit"), 180),
