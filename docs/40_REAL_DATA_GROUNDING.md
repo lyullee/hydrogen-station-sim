@@ -95,6 +95,15 @@ counts, readiness flags and the claim boundary; the detailed header remains
 available for audit/UI consumers. It cannot promote an unconfirmed channel
 meaning, fit a safety limit or authorize vehicle/full-loop claims.
 
+The same privacy boundary is available at runtime through
+`GET /api/evidence/local-station` and is included in `GET /api/health` as
+`local_evidence`. This endpoint reads only the committed aggregate audit
+artifacts. It reports station-side coverage, continuity quality and the
+full-loop decision; it fails closed when an artifact is missing or malformed.
+It never returns raw rows, source paths, filenames, headers, identifiers or
+site metadata, so a UI can show the evidence scope without turning a local
+archive into a public data export.
+
 The 25 narrow exports are now structurally recovered without disclosing their
 headers. Twelve files contain 29,361,269 rows in a pressure/flow candidate
 schema; thirteen contain 29,257,564 rows in a thermal candidate schema. Their

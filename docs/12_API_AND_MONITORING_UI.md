@@ -32,6 +32,7 @@ Open `http://127.0.0.1:8000`.
 | Method | Path | Purpose |
 |---|---|---|
 | GET | `/api/health` | CoolProp, solver, and HyRAM connection status |
+| GET | `/api/evidence/local-station` | Privacy-bounded local station evidence coverage and claim boundary |
 | GET | `/api/config/defaults` | Default scenario payload |
 | POST | `/api/simulations` | Queue a dynamic simulation |
 | GET | `/api/simulations/{id}` | Read progress or failure details |

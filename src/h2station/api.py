@@ -55,6 +55,7 @@ from .hazop.mapping import coverage as hazop_coverage
 from .hazop.runtime import HazopMonitor
 from .hazop.response import (classify_rule, load_playbooks, response_selection,
                              prompt_guidance, render_guidance, structured_guidance)
+from .local_evidence import local_station_evidence_summary
 
 
 def _runtime_calibration_payload(
@@ -1269,7 +1270,15 @@ def health() -> dict[str, Any]:
         "virtual_detector_proxy": PUBLIC_DISPERSION_PROXY.metadata(),
         "virtual_detector_spatial_proxy": spatial_proxy_metadata(),
         "hazop": hazop_status,
+        "local_evidence": local_station_evidence_summary(),
     }
+
+
+@app.get("/api/evidence/local-station")
+def local_station_evidence() -> dict[str, Any]:
+    """Return aggregate local evidence coverage without raw-data disclosure."""
+
+    return local_station_evidence_summary()
 
 
 @app.get("/api/config/defaults")
