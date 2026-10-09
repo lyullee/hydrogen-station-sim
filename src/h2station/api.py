@@ -3674,6 +3674,9 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         return {"sensor_id": sensor_id, "time_s": payload["time_s"],
                 "answer": answer, "model": llm_model, "llm_error": llm_error,
                 "impact_results": impact_results,
+                "data_used": prompt_decision_evidence(evidence_manifest).get(
+                    "data_used", {}
+                ),
                 "evidence_manifest": evidence_manifest,
                 "active_rule_count": len(active_rules), "related_active_count": len(related_rules),
                 "sensor_status": payload["sensor_status"], "hazop_direct": direct_result,
@@ -3811,6 +3814,9 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
     return {"sensor_id": sensor_id, "time_s": payload["time_s"],
             "answer": answer or "선택 센서의 상태를 확인했습니다.",
             "model": reply.get("model", ""), "impact_results": impact_results,
+            "data_used": prompt_decision_evidence(evidence_manifest).get(
+                "data_used", {}
+            ),
             "active_rule_count": len(active_rules), "related_active_count": len(related_rules),
             "sensor_status": payload["sensor_status"],
             "evidence_manifest": evidence_manifest,

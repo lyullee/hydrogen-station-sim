@@ -205,6 +205,10 @@ def test_direct_sensor_llm_cannot_replace_detailed_emergency_guidance(monkeypatc
         assert "**4단계 · 복구·재가동 전 확인**" in result["answer"]
         assert "### 단계별 예방·안전관리" in result["answer"]
         assert result["response_guidance"]["plans"]
+        assert "PT-0801" in result["data_used"]["signals"]
+        assert result["data_used"]["impact"][0] in {
+            "not_requested", "attempted_no_result", "calculated"
+        }
     finally:
         with api._jobs_lock:
             api._jobs.pop(job_id, None)

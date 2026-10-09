@@ -170,6 +170,21 @@
       const sources=node('div','sensor-rule-sources','근거 자료 · ');
       keys.forEach((key,index)=>{const source=payload.response_sources?.[key];if(!source)return;if(index)sources.append(' · ');const link=node('a','',source.title);link.href=source.url;link.target='_blank';link.rel='noopener noreferrer';sources.append(link);});middle.append(sources);
     }
+    function appendDataUsed(target,used){
+      if(!used||typeof used!=='object')return;
+      const tags=Array.isArray(used.signals)?used.signals.filter(Boolean):[];
+      const impact=Array.isArray(used.impact)?used.impact:[];
+      const forecast=used.station_pressure_forecast&&typeof used.station_pressure_forecast==='object'?used.station_pressure_forecast:null;
+      if(!tags.length&&!impact.length&&!forecast)return;
+      const english=window.stationLocale?.language?.()==='en';
+      const details=node('details','sensor-data-used');
+      details.append(node('summary','',english?'Data used':'사용 데이터'));
+      const parts=[];
+      if(tags.length)parts.push(`${english?'signals':'센서'}: ${tags.join(', ')}`);
+      if(impact.length)parts.push(`${english?'impact':'피해영향'}: ${impact[0]||'—'}${impact[1]!=null?` (${impact[1]})`:''}`);
+      if(forecast)parts.push(`${english?'forecast':'압력예측'}: ${forecast.status||'—'}${forecast.bank?` · ${forecast.bank}`:''}`);
+      details.append(node('p','',parts.join(' · ')));target.append(details);
+    }
     function renderDetail(payload){
       if(closed||payload.sensor.sensor_id!==selected)return;
       middle.replaceChildren();
@@ -238,7 +253,7 @@
         if(!draft){answer.classList.remove('loading');answer.classList.add('typing');await window.revealStationText(result.answer||'분석 결과가 없습니다.',text=>{answer.textContent=text;transcript.scrollTop=transcript.scrollHeight;},()=>!closed&&selection===epoch&&sequence===analysisSequence&&!signal.aborted);}
         streamFinished=true;
         if(closed||selection!==epoch||sequence!==analysisSequence)return;
-        answer.classList.remove('loading','typing');assistantMeta.textContent=`${tag} · 모의 ${Number(result.time_s||0).toFixed(1)} s · ${result.model||'SAGA'}`;rerun.disabled=false;deepDive.disabled=false;renderMarkdown(answer,result.answer||'분석 결과가 없습니다.');transcript.scrollTop=transcript.scrollHeight;
+        answer.classList.remove('loading','typing');assistantMeta.textContent=`${tag} · 모의 ${Number(result.time_s||0).toFixed(1)} s · ${result.model||'SAGA'}`;rerun.disabled=false;deepDive.disabled=false;renderMarkdown(answer,result.answer||'분석 결과가 없습니다.');appendDataUsed(answer,result.data_used);transcript.scrollTop=transcript.scrollHeight;
       }catch(error){if(error.name==='AbortError'||closed||selection!==epoch||sequence!==analysisSequence)return;answer.classList.remove('loading','typing');answer.classList.add('error');answer.textContent=`분석을 표시할 수 없습니다: ${error.message}`;assistantMeta.textContent='SAGA 연결 상태 확인 필요';rerun.disabled=false;deepDive.disabled=false;}
     }
     async function selectSensor(tag){
