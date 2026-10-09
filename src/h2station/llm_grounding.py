@@ -9266,6 +9266,36 @@ def compact_data_used(manifest: dict[str, Any]) -> dict[str, Any]:
             basis.append("local_data_audit")
         if basis:
             result["evidence_basis"] = basis
+        local_station = evidence.get("confidential_local_station_data_utilization")
+        if isinstance(local_station, dict):
+            inventory = local_station.get("inventory") or {}
+            utilization = local_station.get("utilization") or {}
+            semantic = local_station.get("semantic_attestation") or {}
+            assessment = local_station.get("assessment") or {}
+            # These are aggregate, de-identified counts only.  They make the
+            # measured-data boundary visible to the operator without exposing
+            # paths, tags, timestamps, or raw rows.
+            result["station_data"] = {
+                "status": (
+                    "substantial_station_side"
+                    if assessment.get("station_side_dynamic_validation_ready") is True
+                    else "inventory_only"
+                ),
+                "csv_files": inventory.get("csv_files"),
+                "deduplicated_rows": inventory.get("deduplicated_data_rows"),
+                "pressure_cycles": utilization.get("ordered_high_bank_pressure_cycles"),
+                "paired_pressure_episodes": utilization.get(
+                    "paired_medium_high_pressure_episodes"
+                ),
+                "forecast_cases": utilization.get("short_horizon_pressure_forecast_cases"),
+                "vehicle_side_channels_attested": semantic.get(
+                    "vehicle_side_channels_attested"
+                ),
+                "full_loop_validation": utilization.get(
+                    "independent_full_loop_vehicle_validation_complete"
+                ) is True,
+                "claim_limit": local_station.get("claim_limit"),
+            }
         readiness = evidence.get("validation_readiness")
         if isinstance(readiness, dict):
             result["validation"] = {

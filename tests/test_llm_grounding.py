@@ -1384,6 +1384,12 @@ def test_compact_data_used_reports_available_and_applied_station_profile():
     assert calibration["available_profile_id"] == (
         "owner_measured_operational_envelope_v1"
     )
+    station_data = reference["station_data"]
+    assert station_data["status"] == "substantial_station_side"
+    assert station_data["csv_files"] == 33
+    assert station_data["deduplicated_rows"] == 56854143
+    assert station_data["pressure_cycles"] == 16770
+    assert station_data["full_loop_validation"] is False
 
     applied_frame = {
         **base_frame,

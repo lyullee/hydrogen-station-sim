@@ -177,7 +177,8 @@
       const forecast=used.station_pressure_forecast&&typeof used.station_pressure_forecast==='object'?used.station_pressure_forecast:null;
       const stationCalibration=used.station_calibration&&typeof used.station_calibration==='object'?used.station_calibration:null;
       const rechargeDynamics=used.station_recharge_dynamics&&typeof used.station_recharge_dynamics==='object'?used.station_recharge_dynamics:null;
-      if(!tags.length&&!impact.length&&!forecast&&!stationCalibration&&!rechargeDynamics)return;
+      const stationData=used.station_data&&typeof used.station_data==='object'?used.station_data:null;
+      if(!tags.length&&!impact.length&&!forecast&&!stationCalibration&&!rechargeDynamics&&!stationData)return;
       const english=window.stationLocale?.language?.()==='en';
       const details=node('details','sensor-data-used');
       details.append(node('summary','',english?'Data used':'사용 데이터'));
@@ -187,6 +188,7 @@
       if(forecast)parts.push(`${english?'forecast':'압력예측'}: ${forecast.status||'—'}${forecast.bank?` · ${forecast.bank}`:''}`);
       if(stationCalibration){const mode=stationCalibration.status==='active'?(english?'applied':'적용'):(stationCalibration.status==='reference_defaults'?(english?'reference defaults':'기준값'):(english?'requested but unavailable':'요청됐지만 사용 불가'));const profile=stationCalibration.profile_id&&stationCalibration.profile_id!=='reference_defaults'?stationCalibration.profile_id:(stationCalibration.available_profile_id?`${stationCalibration.available_profile_id} · ${english?'opt-in':'선택 적용 가능'}`:'—');parts.push(`${english?'station calibration':'실측 보정'}: ${mode} · ${profile}`);}
       if(rechargeDynamics){const mode=rechargeDynamics.status==='active'?(english?'applied':'적용'):(english?'reference defaults':'기준값');parts.push(`${english?'recharge dwell':'재충전 대기'}: ${mode}`);}
+      if(stationData){const rows=stationData.deduplicated_rows!=null?`${(Number(stationData.deduplicated_rows)/1e6).toFixed(2)}M ${english?'rows':'행'}`:'—';const cycles=stationData.pressure_cycles!=null?`${Number(stationData.pressure_cycles).toLocaleString()} ${english?'pressure cycles':'압력 사이클'}`:'—';const loop=stationData.full_loop_validation?(english?'full-loop validated':'full-loop 검증'):(english?'station-side only':'station-side 한정');parts.push(`${english?'station data':'실측 station 데이터'}: ${stationData.csv_files||'—'} CSV · ${rows} · ${cycles} · ${loop}`);}
       details.append(node('p','',parts.join(' · ')));target.append(details);
     }
     function renderDetail(payload){
