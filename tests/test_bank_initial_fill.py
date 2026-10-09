@@ -116,3 +116,28 @@ def test_api_applies_bank_fill_settings_to_new_run():
         assert [pressures[name][0] for name in ("low", "medium", "high")] == pytest.approx(
             [25.0, 56.0, 95.0], rel=1e-3
         )
+
+
+def test_api_accepts_optional_pressure_hold_leak_check_settings():
+    request = SimulationInput.model_validate({
+        "leak_check_pressure_interval_mpa": 3.0,
+        "leak_check_pause_s": 5.0,
+        "leak_check_pressure_drop_tolerance_kpa": 12.0,
+    })
+
+    assert request.leak_check_pressure_interval_mpa == pytest.approx(3.0)
+    assert request.leak_check_pause_s == pytest.approx(5.0)
+    assert request.leak_check_pressure_drop_tolerance_kpa == pytest.approx(12.0)
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("leak_check_pressure_interval_mpa", 0.0),
+        ("leak_check_pause_s", 0.0),
+        ("leak_check_pressure_drop_tolerance_kpa", -1.0),
+    ],
+)
+def test_api_rejects_invalid_pressure_hold_leak_check_settings(field, value):
+    with pytest.raises(ValidationError):
+        SimulationInput.model_validate({field: value})

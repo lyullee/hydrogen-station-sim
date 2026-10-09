@@ -111,6 +111,13 @@ class ReferenceScenario:
     startup_mass_window_s: float | None = None
     pressure_corridor_lower_tolerance_pa: float | None = None
     pressure_corridor_upper_tolerance_pa: float | None = None
+    # Optional field-procedure leak check. When configured, each pressure
+    # increment pauses the dispenser and verifies that the isolated pressure
+    # does not decay beyond the declared tolerance before filling resumes.
+    # ``None`` preserves the historical continuous-fill reference behavior.
+    leak_check_pressure_interval_pa: float | None = None
+    leak_check_pause_s: float = 5.0
+    leak_check_pressure_drop_tolerance_pa: float = 10_000.0
     fueling_temperature_category: FuelingTemperatureCategory = (
         FuelingTemperatureCategory.CUSTOM
     )
@@ -328,6 +335,15 @@ def build_reference_scenario(
         and config.station_minimum_recharge_off_time_s < 0.0
     ):
         raise ValueError("station_minimum_recharge_off_time_s cannot be negative")
+    if (
+        config.leak_check_pressure_interval_pa is not None
+        and config.leak_check_pressure_interval_pa <= 0.0
+    ):
+        raise ValueError("leak_check_pressure_interval_pa must be positive when configured")
+    if config.leak_check_pause_s <= 0.0:
+        raise ValueError("leak_check_pause_s must be positive")
+    if config.leak_check_pressure_drop_tolerance_pa < 0.0:
+        raise ValueError("leak_check_pressure_drop_tolerance_pa must be non-negative")
     vehicle_fit = CompositeTankFitParameters(
         effective_volume_multiplier=effective_volume_multiplier,
         gas_liner_ua_multiplier=gas_liner_ua_multiplier,
@@ -374,6 +390,13 @@ def build_reference_scenario(
             ),
             pressure_corridor_upper_tolerance_pa=(
                 config.pressure_corridor_upper_tolerance_pa
+            ),
+            leak_check_pressure_interval_pa=(
+                config.leak_check_pressure_interval_pa
+            ),
+            leak_check_pause_s=config.leak_check_pause_s,
+            leak_check_pressure_drop_tolerance_pa=(
+                config.leak_check_pressure_drop_tolerance_pa
             ),
             fueling_temperature_category=config.fueling_temperature_category,
             communication_loss_policy=config.communication_loss_policy,
@@ -430,6 +453,13 @@ def build_reference_scenario(
             ),
             pressure_corridor_upper_tolerance_pa=(
                 config.pressure_corridor_upper_tolerance_pa
+            ),
+            leak_check_pressure_interval_pa=(
+                config.leak_check_pressure_interval_pa
+            ),
+            leak_check_pause_s=config.leak_check_pause_s,
+            leak_check_pressure_drop_tolerance_pa=(
+                config.leak_check_pressure_drop_tolerance_pa
             ),
             fueling_temperature_category=config.fueling_temperature_category,
             communication_loss_policy=config.communication_loss_policy,

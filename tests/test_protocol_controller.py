@@ -417,3 +417,23 @@ def test_reference_scenario_wires_training_conformance_controls_to_both_dispense
         assert schedule.pressure_corridor_upper_tolerance_pa == pytest.approx(3.0e6)
         assert schedule.fueling_temperature_category is FuelingTemperatureCategory.T30
         assert schedule.communication_loss_policy is CommunicationLossPolicy.HOLD_AND_RESUME
+
+
+def test_reference_scenario_wires_optional_leak_check_to_both_dispensers():
+    built = build_reference_scenario(
+        ReferenceScenario(
+            leak_check_pressure_interval_pa=3.0e6,
+            leak_check_pause_s=5.0,
+            leak_check_pressure_drop_tolerance_pa=12_000.0,
+        ),
+        UnavailableHyRAMBackend(),
+    )
+
+    for controller in (
+        built.station.partial_station.controller,
+        built.station.secondary_partial_station.controller,
+    ):
+        schedule = controller.schedule
+        assert schedule.leak_check_pressure_interval_pa == pytest.approx(3.0e6)
+        assert schedule.leak_check_pause_s == pytest.approx(5.0)
+        assert schedule.leak_check_pressure_drop_tolerance_pa == pytest.approx(12_000.0)

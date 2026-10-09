@@ -294,6 +294,16 @@ class SimulationInput(BaseModel):
     pressure_corridor_upper_tolerance_mpa: float | None = Field(
         default=None, gt=0.0, le=20.0
     )
+    # Optional field-procedure leak check. The default keeps the historical
+    # continuous-fill behavior; operators can opt in to a pressure-hold check
+    # at each configured pressure increment.
+    leak_check_pressure_interval_mpa: float | None = Field(
+        default=None, gt=0.0, le=100.0
+    )
+    leak_check_pause_s: float = Field(default=5.0, gt=0.0, le=60.0)
+    leak_check_pressure_drop_tolerance_kpa: float = Field(
+        default=10.0, ge=0.0, le=1000.0
+    )
     fueling_temperature_category: Literal["T40", "T30", "T20", "custom"] = "custom"
     communication_loss_policy: Literal["abort", "hold-and-resume"] = "abort"
     process_settings: ProcessSettings | None = None
@@ -634,6 +644,15 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                 request.pressure_corridor_upper_tolerance_mpa * 1.0e6
                 if request.pressure_corridor_upper_tolerance_mpa is not None
                 else None
+            ),
+            leak_check_pressure_interval_pa=(
+                request.leak_check_pressure_interval_mpa * 1.0e6
+                if request.leak_check_pressure_interval_mpa is not None
+                else None
+            ),
+            leak_check_pause_s=request.leak_check_pause_s,
+            leak_check_pressure_drop_tolerance_pa=(
+                request.leak_check_pressure_drop_tolerance_kpa * 1.0e3
             ),
             fueling_temperature_category=FuelingTemperatureCategory(
                 request.fueling_temperature_category
