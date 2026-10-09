@@ -9182,6 +9182,44 @@ def compact_data_used(manifest: dict[str, Any]) -> dict[str, Any]:
             for key in ("status", "reason", "bank")
             if forecast.get(key) is not None
         }
+    evidence = manifest.get("response_evidence") or {}
+    if isinstance(evidence, dict):
+        basis: list[str] = []
+        if any(
+            key in evidence
+            for key in (
+                "public_incident_traceability",
+                "public_accident_report_inventory",
+                "relevant_public_accident_precedents",
+            )
+        ):
+            basis.append("public_accident_data")
+        if any(
+            key.startswith("public_")
+            and key not in {
+                "public_incident_traceability",
+                "public_accident_report_inventory",
+            }
+            for key in evidence
+        ):
+            basis.append("public_experimental_data")
+        if any(key.startswith("confidential_") for key in evidence):
+            basis.append("confidential_station_data")
+        if any(key.startswith("local_") for key in evidence):
+            basis.append("local_data_audit")
+        if basis:
+            result["evidence_basis"] = basis
+        readiness = evidence.get("validation_readiness")
+        if isinstance(readiness, dict):
+            result["validation"] = {
+                key: readiness.get(key) is True
+                for key in (
+                    "bounded_ijhe_submission_ready",
+                    "full_loop_external_validation_supported",
+                    "expert_effectiveness_evaluation_supported",
+                )
+                if key in readiness
+            }
     return result
 
 
