@@ -13,10 +13,21 @@ calibration metadata. It therefore cannot close the station-to-vehicle gate or
 be used for parameter fitting without an authorized data release and a frozen
 protocol.
 
+The open-access 2026 study *Representative Hydrogen Sampling at Hydrogen
+Refuelling Stations: Interplay of Sampling Strategy and Station Parameters*
+adds a second lead. It reports sampling-system mass-flow comparisons and
+vehicle/large-tank context, which is useful for checking whether simulated flow
+and instrumentation assumptions are plausible. It is still classified as
+context only: a synchronized station-controller-vehicle raw trace with reuse
+permission was not confirmed, so it is not admitted as a holdout or calibration
+source.
+
 Sources:
 
 - Article DOI: <https://doi.org/10.3390/en17071510>
 - NPL publication record: <https://eprintspublications.npl.co.uk/10158/>
+- 2026 sampling study DOI: <https://doi.org/10.3390/cleantech8030091>
+- 2026 sampling study page: <https://www.mdpi.com/2673-4591/8/3/91>
 
 The machine-readable classification is in
 `research/public_vehicle_side_h2_measurement_leads_2026_10_09.json`.

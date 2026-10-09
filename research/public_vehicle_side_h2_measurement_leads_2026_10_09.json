@@ -41,6 +41,40 @@
         "reuse terms for machine-readable data"
       ],
       "claim_limit": "The published study supports a vehicle-side measurement and mass-accounting lead. It does not by itself establish a public synchronized raw trace or complete station-controller validation."
+    },
+    {
+      "id": "dietrich_2026_hrs_sampling_interplay",
+      "title": "Representative Hydrogen Sampling at Hydrogen Refuelling Stations: Interplay of Sampling Strategy and Station Parameters",
+      "article_doi": "10.3390/cleantech8030091",
+      "article_url": "https://doi.org/10.3390/cleantech8030091",
+      "repository_page": "https://www.mdpi.com/2673-4591/8/3/91",
+      "reported_measurements": [
+        "HRS sampling-system mass flow",
+        "FCEV or tank pressure and temperature context",
+        "sampling-system comparison across tank configurations",
+        "hydrogen quality sample results"
+      ],
+      "reported_scope": "Open-access 2026 HRS sampling study comparing representative sampling arrangements; the reported flow context includes FCEV or large-tank sampling and smaller-tank sampling, but it is not a station-controller or full refuelling trace release.",
+      "raw_trace_status": "supplementary_tables_and_figures_public; synchronized_full_loop_raw_trace_not_confirmed",
+      "full_loop_eligibility": false,
+      "eligible_use": [
+        "vehicle-side and sampling-system measurement context",
+        "mass-flow plausibility range and instrumentation sensitivity",
+        "authorized data-request lead for synchronized HRS/FCEV traces"
+      ],
+      "ineligible_use": [
+        "independent station-to-vehicle time-series holdout",
+        "controller or cascade parameter fitting",
+        "consequence-distance validation",
+        "SAGA effectiveness score"
+      ],
+      "next_access_request": [
+        "synchronized timestamped HRS flow, vehicle pressure and vehicle temperature trace",
+        "sampling-system and vehicle/tank geometry with calibration uncertainty",
+        "refueling protocol, controller-state and communication metadata",
+        "reuse terms for machine-readable synchronized data"
+      ],
+      "claim_limit": "The open study strengthens measurement and flow-plausibility context, but it does not establish a rights-cleared synchronized station-to-vehicle raw trace or permit full-loop validation or parameter fitting."
     }
   ]
 }
