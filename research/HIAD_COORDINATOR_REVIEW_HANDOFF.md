@@ -26,6 +26,22 @@ review form keeps coordinator-only reference fields separate from the model
 input and exports an approved casebook only after every case is explicitly
 reviewed.
 
+Before handing the packet to a coordinator, run the packet audit:
+
+```powershell
+$env:PYTHONPATH = 'src'
+.venv\Scripts\python.exe scripts/audit_hiad_reviewer_packet.py
+```
+
+The audit records the hashes and counts for the current casebook, prescreen,
+protocol and latest machine preflight in
+`research/hiad_reviewer_packet_audit_2026_10_09.json`. A passing result means
+the packet is ready for human review only. It deliberately reports
+`ready_for_response_collection: false` until the institutional determination,
+coordinator review, approved-casebook freeze and independent review are
+recorded. It also fails closed if a stale prescreen or mismatched CSV/HTML is
+placed beside the casebook.
+
 The review form also shows a sentence-by-sentence reason list and a separate
 machine-suggested description. The suggestion removes only sentences matched
 as completed responses; exact-overlap-only sentences remain. Copying it marks

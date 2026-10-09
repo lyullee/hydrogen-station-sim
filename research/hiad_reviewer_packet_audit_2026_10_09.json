@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "artifact_type": "hiad_reviewer_packet_audit",
+  "generated_at_utc": "2026-10-09T06:31:42.847674+00:00",
+  "status": "READY_FOR_HUMAN_REVIEW_COLLECTION_BLOCKED",
+  "ready_for_human_review": true,
+  "ready_for_response_collection": false,
+  "checks": [
+    {
+      "id": "required_packet_files_present",
+      "status": "PASS",
+      "observed": {
+        "casebook": true,
+        "prescreen_manifest": true,
+        "review_csv": true,
+        "review_html": true,
+        "protocol": true,
+        "readiness": true,
+        "gate_recheck": true,
+        "machine_preflight": true,
+        "coordinator_handoff": true,
+        "ethics_request": true
+      },
+      "requirement": "The coordinator must receive every source, prescreen, protocol and gate record."
+    },
+    {
+      "id": "casebook_and_review_counts_align",
+      "status": "PASS",
+      "observed": {
+        "casebook": 24,
+        "declared": 24,
+        "prescreen": 24,
+        "review_csv": 24,
+        "machine_preflight": 24
+      },
+      "requirement": "The same 24 candidate cases must be represented in every machine-readable packet file."
+    },
+    {
+      "id": "prescreen_hash_links_casebook",
+      "status": "PASS",
+      "observed": {
+        "recorded": "3d02c589a67b7e1af112ffb5d58712ec366d66cddd13536ddabf5c0fd6bb226e",
+        "actual": "3d02c589a67b7e1af112ffb5d58712ec366d66cddd13536ddabf5c0fd6bb226e"
+      },
+      "requirement": "The prescreen must be generated from the casebook currently handed to the coordinator."
+    },
+    {
+      "id": "prescreen_hash_links_exports",
+      "status": "PASS",
+      "observed": {
+        "csv": "d14ae644edf2eb65e30aeb24874d5861fab6b33666b8ada5ee52efbc32dae164",
+        "html": "6777374009b09d7ef84714b2d4aece43ea83ad6bb43f5cfd1cec0f664f069156"
+      },
+      "requirement": "The prescreen manifest must identify the CSV and HTML actually delivered for review."
+    },
+    {
+      "id": "machine_preflight_passes",
+      "status": "PASS",
+      "observed": {
+        "machine_preflight_pass": true,
+        "forbidden_model_input_cases": []
+      },
+      "requirement": "Only the current machine preflight may establish structural readiness; it cannot approve human gates."
+    },
+    {
+      "id": "human_gates_remain_explicit",
+      "status": "PASS",
+      "observed": {
+        "coordinator_leakage_review": "PENDING",
+        "institutional_ethics_or_exemption": "PENDING",
+        "approved_casebook_freeze": "PENDING",
+        "masked_holdout_response_collection": "NOT_PERMITTED",
+        "independent_expert_review": "PENDING"
+      },
+      "requirement": "The audit must show unresolved human gates instead of inferring approval from machine output."
+    },
+    {
+      "id": "collection_fails_closed",
+      "status": "PASS",
+      "observed": {
+        "readiness_collection_allowed": false,
+        "protocol_collection_permitted": false,
+        "gate_status": {
+          "coordinator_leakage_review": "PENDING",
+          "institutional_ethics_or_exemption": "PENDING",
+          "approved_casebook_freeze": "PENDING",
+          "masked_holdout_response_collection": "NOT_PERMITTED",
+          "independent_expert_review": "PENDING"
+        }
+      },
+      "requirement": "No masked responses may be collected until the institutional and reviewer gates are explicitly complete."
+    }
+  ],
+  "human_gate_status": {
+    "coordinator_leakage_review": "PENDING",
+    "institutional_ethics_or_exemption": "PENDING",
+    "approved_casebook_freeze": "PENDING",
+    "masked_holdout_response_collection": "NOT_PERMITTED",
+    "independent_expert_review": "PENDING"
+  },
+  "packet": {
+    "casebook": {
+      "path": "data/public_validation/results/hiad_holdout_preparation/casebook_for_approval.json",
+      "sha256": "3d02c589a67b7e1af112ffb5d58712ec366d66cddd13536ddabf5c0fd6bb226e"
+    },
+    "prescreen_manifest": {
+      "path": "data/public_validation/results/hiad_coordinator_prescreen/prescreen_manifest.json",
+      "sha256": "2f044a46205917f02f3c2f9c633e0852d116d198525ccb9ad8294a7e76ed3665"
+    },
+    "review_csv": {
+      "path": "data/public_validation/results/hiad_coordinator_prescreen/coordinator_review.csv",
+      "sha256": "d14ae644edf2eb65e30aeb24874d5861fab6b33666b8ada5ee52efbc32dae164"
+    },
+    "review_html": {
+      "path": "data/public_validation/results/hiad_coordinator_prescreen/coordinator_review.html",
+      "sha256": "6777374009b09d7ef84714b2d4aece43ea83ad6bb43f5cfd1cec0f664f069156"
+    },
+    "protocol": {
+      "path": "research/hiad_study_protocol_manifest.json",
+      "sha256": "4c2c32b02386cd6fd9efd5a33d8a22b259b7f9a43e4091003f5af0facc1ce3b7"
+    },
+    "readiness": {
+      "path": "data/public_validation/results/hiad_holdout_preparation/readiness_audit.json",
+      "sha256": "376997b709b696470d301483e85450a46f9caf41d92fd0bf4a37593914da5778"
+    },
+    "gate_recheck": {
+      "path": "research/hiad_casebook_gate_recheck_2026_10_09.json",
+      "sha256": "10840747a574a27cb47d31c3a58588a3678accc3c98506e66ff5405367aee802"
+    },
+    "machine_preflight": {
+      "path": "research/hiad_casebook_machine_preflight_2026_10_09.json",
+      "sha256": "6310966045626414f4e4d7402a2fd896e756237c57c66caf3bccbc4d2c3d1b54"
+    },
+    "coordinator_handoff": {
+      "path": "research/HIAD_COORDINATOR_REVIEW_HANDOFF.md",
+      "sha256": "b0bad3e016c70b91f06c0cfe1b0ae4722b8f59e1a0022ea5e1446df2ba979e51"
+    },
+    "ethics_request": {
+      "path": "research/ETHICS_DETERMINATION_REQUEST.md",
+      "sha256": "cec63631cf77442262930bb6676c70ff2d84ce08429eba01d577ddcc099a169b"
+    }
+  },
+  "casebook": {
+    "candidate_count": 24,
+    "expected_holdout_count": 24,
+    "advisory_tier_counts": {
+      "HIGH": 16,
+      "MEDIUM": 6,
+      "LOW": 2
+    },
+    "approved_case_count": 0,
+    "unresolved_case_count": 24
+  },
+  "next_human_actions": [
+    "Institution records ethics, exemption or not-required determination and identifier.",
+    "Qualified non-rating coordinator reviews all 24 cases and exports approved_holdout_casebook.json.",
+    "Freeze the approved casebook with the hash-locked freeze script.",
+    "Only after the freeze and ethics gate, collect masked holdout responses and obtain independent expert ratings."
+  ],
+  "claim_boundary": "This audit verifies packet integrity and fail-closed workflow only. It is not an ethics determination, casebook approval, holdout result, SAGA effectiveness result, safety claim, or publication approval."
+}
