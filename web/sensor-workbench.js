@@ -179,7 +179,8 @@
       const rechargeDynamics=used.station_recharge_dynamics&&typeof used.station_recharge_dynamics==='object'?used.station_recharge_dynamics:null;
       const stationData=used.station_data&&typeof used.station_data==='object'?used.station_data:null;
       const publicEndpoint=used.public_endpoint_benchmark&&typeof used.public_endpoint_benchmark==='object'?used.public_endpoint_benchmark:null;
-      if(!tags.length&&!impact.length&&!forecast&&!stationCalibration&&!rechargeDynamics&&!stationData&&!publicEndpoint)return;
+      const publicInventory=used.public_evidence_inventory?.public_experimental_benchmarks&&typeof used.public_evidence_inventory.public_experimental_benchmarks==='object'?used.public_evidence_inventory.public_experimental_benchmarks:null;
+      if(!tags.length&&!impact.length&&!forecast&&!stationCalibration&&!rechargeDynamics&&!stationData&&!publicEndpoint&&!publicInventory)return;
       const english=window.stationLocale?.language?.()==='en';
       const details=node('details','sensor-data-used');
       details.append(node('summary','',english?'Data used':'사용 데이터'));
@@ -191,6 +192,7 @@
       if(rechargeDynamics){const mode=rechargeDynamics.status==='active'?(english?'applied':'적용'):(english?'reference defaults':'기준값');parts.push(`${english?'recharge dwell':'재충전 대기'}: ${mode}`);}
       if(stationData){const rows=stationData.deduplicated_rows!=null?`${(Number(stationData.deduplicated_rows)/1e6).toFixed(2)}M ${english?'rows':'행'}`:'—';const cycles=stationData.pressure_cycles!=null?`${Number(stationData.pressure_cycles).toLocaleString()} ${english?'pressure cycles':'압력 사이클'}`:'—';const loop=stationData.full_loop_validation?(english?'full-loop validated':'full-loop 검증'):(english?'station-side only':'station-side 한정');parts.push(`${english?'station data':'실측 station 데이터'}: ${stationData.csv_files||'—'} CSV · ${rows} · ${cycles} · ${loop}`);}
       if(publicEndpoint){const cases=publicEndpoint.case_count!=null?`${publicEndpoint.case_count} ${english?'endpoint cases':'종점 사례'}`:'—';const scope=publicEndpoint.full_loop_validation?(english?'full-loop validated':'full-loop 검증'):(english?'endpoint-only · no full-loop':'종점 표만 · full-loop 아님');parts.push(`${english?'public dispenser benchmark':'공개 디스펜서 벤치마크'}: ${cases} · ${scope}`);}
+      if(publicInventory){const contexts=Array.isArray(publicInventory.aggregate_operating_context)?publicInventory.aggregate_operating_context:[];const fast=contexts.find(item=>item?.id==='NREL_HD_FAST_FLOW_2024_REPORT')?.aggregate||{};const reference=fast.mass_transfer_kg!=null&&fast.peak_mass_flow_g_s!=null?`${fast.mass_transfer_kg} kg · ${fast.peak_mass_flow_g_s} g/s`:`${contexts.length} ${english?'aggregate sources':'개 집계 출처'}`;parts.push(`${english?'public experiment context':'공개 실험 집계'}: ${reference} · ${english?'operating-range context only':'운영범위 참고 전용'}`);}
       details.append(node('p','',parts.join(' · ')));target.append(details);
     }
     function renderDetail(payload){
