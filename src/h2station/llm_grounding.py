@@ -1493,6 +1493,14 @@ def _public_experimental_benchmarks() -> dict[str, Any] | None:
                 )
                 if key in coordinate_metadata
             }
+            if isinstance(coordinate_metadata.get("sensor_coordinate_count"), int):
+                projected_source["coordinate_metadata"]["sensor_coordinate_count"] = int(
+                    coordinate_metadata["sensor_coordinate_count"]
+                )
+            if coordinate_metadata.get("coordinate_source_artifact"):
+                projected_source["coordinate_metadata"]["coordinate_source_artifact"] = str(
+                    coordinate_metadata["coordinate_source_artifact"]
+                )
         sources.append(projected_source)
     if not sources:
         return None

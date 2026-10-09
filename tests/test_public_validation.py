@@ -419,6 +419,28 @@ def test_dispersion_reader_uses_declared_steady_interval_and_clips_sensor_noise(
     assert summary["steady_lfl_exceedance_fraction"] == pytest.approx(5 / 6)
 
 
+def test_dispersion_reader_accepts_public_nested_archive_layout(tmp_path):
+    (tmp_path / "ReadMe.txt").write_text(
+        "23_FFI_P101_T00001 - test-01-0\n", encoding="utf-8"
+    )
+    nested = tmp_path / "raw"
+    nested.mkdir()
+    csv_text = (
+        ",mass flow meter 1,filling pressure sensor,various data,h2 sensor time,sensor 1 h2 concentration [%]\n"
+        "0,species - h2,mean pressure [bar] - 2.5,total,0,0\n"
+        "1,mean mass flow - 0.5,std,mean channel temperature [C] - 25,10,1\n"
+        "2,mass fraction - 1,,baseline duration [s] - 30,50,2\n"
+        "3,logging frequency,,filling duration [s] - 30,55,3\n"
+        "4,,,,60,4\n"
+    )
+    archive = nested / "23_FFI_P101_T00001.zip"
+    with zipfile.ZipFile(archive, "w") as bundle:
+        bundle.writestr("case/case.csv", csv_text)
+    experiments = list(iter_dispersion_experiments(tmp_path))
+    assert len(experiments) == 1
+    assert experiments[0].source_archive == archive.name
+
+
 def test_detector_threshold_requires_declared_persistence_and_resets_on_gap():
     times = np.asarray([0.0, 0.5, 1.0, 1.6, 3.0])
     values = np.asarray([0.0, 1.2, 1.3, 0.0, 1.5])

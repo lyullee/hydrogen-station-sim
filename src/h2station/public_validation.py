@@ -1074,8 +1074,16 @@ def _dispersion_article_ids(readme: Path) -> dict[str, str]:
 def iter_dispersion_experiments(raw_directory: Path) -> Iterable[DispersionExperiment]:
     """Read the CC BY 4.0 USN/FFI channel-dispersion measurements."""
 
-    article_ids = _dispersion_article_ids(raw_directory / "ReadMe.txt")
+    readme_path = raw_directory / "ReadMe.txt"
     archives = sorted(raw_directory.glob("*.zip"))
+    # Download bundles are often kept as ``<root>/ReadMe.txt`` plus
+    # ``<root>/raw/*.zip``.  Accept that layout without copying or committing
+    # the raw archives, while preserving the original flat-layout behaviour.
+    nested_archives = sorted((raw_directory / "raw").glob("*.zip"))
+    if nested_archives and not any(path.name.startswith("23_FFI_P101_T") for path in archives):
+        archives = nested_archives
+        readme_path = raw_directory / "ReadMe.txt"
+    article_ids = _dispersion_article_ids(readme_path)
     if not archives:
         raise FileNotFoundError(f"No dispersion ZIP archives found under {raw_directory}")
     for archive in archives:

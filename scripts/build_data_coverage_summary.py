@@ -165,6 +165,10 @@ def build_summary(root: Path) -> dict[str, Any]:
                     "total_rows_screened": usn_aggregate.get("total_rows_screened"),
                     "sensor_count_per_archive": usn_aggregate.get("sensor_count_per_archive"),
                     "median_sample_interval_s": usn_aggregate.get("median_sample_interval_s"),
+                    "sensor_coordinate_count": usn_coordinates.get("sensor_coordinate_count"),
+                    "machine_readable_sensor_coordinates_public": usn_coordinates.get(
+                        "machine_readable_sensor_coordinates_public", False
+                    ),
                     "spatial_holdout_ready": usn_coordinates.get("spatial_holdout_ready", False),
                 },
                 "allowed_claim": "실제 수소 저압 누출·다중 검지기 응답 범위와 사고 모델 진단",

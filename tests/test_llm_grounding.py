@@ -1215,6 +1215,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     )
     assert usn_open_channel["aggregate"]["archive_count"] == 22
     assert usn_open_channel["aggregate"]["sensor_count_per_archive"] == 29
+    assert usn_open_channel["coordinate_metadata"]["sensor_coordinate_count"] == 29
     assert usn_open_channel["coordinate_metadata"]["spatial_holdout_ready"] is False
 
     result = {"node_id": "N09", "node_name": "고압 저장뱅크",

@@ -47,4 +47,6 @@ def test_data_coverage_summary_preserves_claim_boundary() -> None:
     )
     assert dispersion["coverage"]["archive_count"] == 22
     assert dispersion["coverage"]["sensor_count_per_archive"] == 29
+    assert dispersion["coverage"]["sensor_coordinate_count"] == 29
+    assert dispersion["coverage"]["machine_readable_sensor_coordinates_public"] is True
     assert dispersion["coverage"]["spatial_holdout_ready"] is False

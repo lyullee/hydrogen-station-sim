@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_usn_open_channel_sensor_coordinates",
+  "recorded_at": "2026-10-10",
+  "source": {
+    "dataset_doi": "10.23642/USN.26117989",
+    "article_doi": "10.1016/j.jlp.2025.105669",
+    "article_url": "https://doi.org/10.1016/j.jlp.2025.105669",
+    "table": "Table 1",
+    "license": "CC BY 4.0"
+  },
+  "coordinate_frame": {
+    "axes": {
+      "x": "channel width, m",
+      "y": "streamwise distance from closed end, m",
+      "z": "height above channel floor, m"
+    },
+    "channel_dimensions_m": {
+      "x": 0.9,
+      "y": 5.8,
+      "z": 0.8
+    },
+    "release_origin_m": {
+      "x": 0.45,
+      "y": 0.5,
+      "z": 0.8
+    },
+    "release_orientation": "downward",
+    "release_orifice_diameter_mm": 4.6
+  },
+  "sensors_m": {
+    "sensor_01": {
+      "x": 0.77,
+      "y": 0.24,
+      "z": 0.8
+    },
+    "sensor_02": {
+      "x": 0.46,
+      "y": 0.0,
+      "z": 0.8
+    },
+    "sensor_03": {
+      "x": 0.48,
+      "y": 0.25,
+      "z": 0.52
+    },
+    "sensor_04": {
+      "x": 0.13,
+      "y": 0.26,
+      "z": 0.8
+    },
+    "sensor_05": {
+      "x": 0.48,
+      "y": 1.33,
+      "z": 0.52
+    },
+    "sensor_06": {
+      "x": 0.46,
+      "y": 1.11,
+      "z": 0.8
+    },
+    "sensor_07": {
+      "x": 0.9,
+      "y": 2.22,
+      "z": 0.8
+    },
+    "sensor_08": {
+      "x": 0.47,
+      "y": 2.46,
+      "z": 0.52
+    },
+    "sensor_09": {
+      "x": 0.46,
+      "y": 2.22,
+      "z": 0.8
+    },
+    "sensor_10": {
+      "x": 0.74,
+      "y": 2.45,
+      "z": 0.8
+    },
+    "sensor_11": {
+      "x": 0.15,
+      "y": 2.44,
+      "z": 0.8
+    },
+    "sensor_12": {
+      "x": 0.0,
+      "y": 2.22,
+      "z": 0.8
+    },
+    "sensor_13": {
+      "x": 0.47,
+      "y": 3.54,
+      "z": 0.52
+    },
+    "sensor_14": {
+      "x": 0.46,
+      "y": 3.31,
+      "z": 0.8
+    },
+    "sensor_15": {
+      "x": 0.78,
+      "y": 4.65,
+      "z": 0.8
+    },
+    "sensor_17": {
+      "x": 0.46,
+      "y": 4.39,
+      "z": 0.8
+    },
+    "sensor_18": {
+      "x": 0.47,
+      "y": 4.63,
+      "z": 0.52
+    },
+    "sensor_19": {
+      "x": 0.14,
+      "y": 4.68,
+      "z": 0.8
+    },
+    "sensor_20": {
+      "x": 0.75,
+      "y": 0.24,
+      "z": 0.0
+    },
+    "sensor_21": {
+      "x": 0.45,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "sensor_22": {
+      "x": 0.16,
+      "y": 0.24,
+      "z": 0.0
+    },
+    "sensor_23": {
+      "x": 0.47,
+      "y": 0.24,
+      "z": 0.28
+    },
+    "sensor_24": {
+      "x": 0.46,
+      "y": 1.33,
+      "z": 0.27
+    },
+    "sensor_25": {
+      "x": 0.47,
+      "y": 1.1,
+      "z": 0.0
+    },
+    "sensor_26": {
+      "x": 0.46,
+      "y": 2.46,
+      "z": 0.27
+    },
+    "sensor_27": {
+      "x": 0.47,
+      "y": 2.23,
+      "z": 0.0
+    },
+    "sensor_28": {
+      "x": 0.47,
+      "y": 3.56,
+      "z": 0.27
+    },
+    "sensor_29": {
+      "x": 0.47,
+      "y": 4.63,
+      "z": 0.27
+    },
+    "sensor_30": {
+      "x": 0.46,
+      "y": 4.44,
+      "z": 0.0
+    }
+  },
+  "eligibility": {
+    "sensor_coordinate_count": 29,
+    "machine_readable_coordinates_now": true,
+    "pre_access_holdout_protocol_frozen": false,
+    "spatial_holdout_ready": false,
+    "runtime_parameter_application": false
+  },
+  "claim_boundary": "Public coordinates support a reproducible spatial-response development diagnostic for the actual-hydrogen open-channel experiments. Because the raw archives were accessed before a new holdout protocol was frozen, this artifact is not an independent detector-placement, CFD, safety-distance, ESD or station-runtime validation."
+}

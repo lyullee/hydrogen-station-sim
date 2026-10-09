@@ -99,6 +99,8 @@
         "total_rows_screened": 417340,
         "sensor_count_per_archive": 29,
         "median_sample_interval_s": 0.009996,
+        "sensor_coordinate_count": 29,
+        "machine_readable_sensor_coordinates_public": true,
         "spatial_holdout_ready": false
       },
       "allowed_claim": "실제 수소 저압 누출·다중 검지기 응답 범위와 사고 모델 진단",

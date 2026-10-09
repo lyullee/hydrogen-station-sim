@@ -213,8 +213,10 @@
         ]
       },
       "coordinate_metadata": {
-        "machine_readable_sensor_coordinates_public": false,
+        "machine_readable_sensor_coordinates_public": true,
         "layout_media_present": true,
+        "sensor_coordinate_count": 29,
+        "coordinate_source_artifact": "research/usn_open_channel_sensor_coordinates_2026_10_10.json",
         "spatial_holdout_ready": false
       },
       "eligible_for": [
