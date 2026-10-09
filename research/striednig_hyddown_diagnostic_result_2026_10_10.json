@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_type_i_filling_thermal_diagnostic",
+  "generated_at": "2026-10-09T19:55:53.456417+00:00",
+  "evidence_role": "post_access_public_component_diagnostic",
+  "source": {
+    "protocol": "research/striednig_hyddown_screening.json",
+    "repository": "HydDown",
+    "repository_commit": "1040d758b819533451086baa5cf2a47b4292a22f",
+    "paper_doi": "10.1016/j.ijhydene.2014.03.028",
+    "case_count": 3
+  },
+  "cases": [
+    {
+      "case": "5 MPa/min",
+      "source_file": "validation/Striednig_fillingH2_5MPa_min.yml",
+      "source_sha256": "BBEA3FC54299DAE6797D10688041C543DB1385A19FB54CB94300E7A966048EFA",
+      "source_sha256_lf_normalized": "BBEA3FC54299DAE6797D10688041C543DB1385A19FB54CB94300E7A966048EFA",
+      "source_sha256_raw_reference": "64498CA6FCC5C5BDC2346B0EB1E4ED6992B9BF03EA29B860C0E8E60C60BE2D12",
+      "measurement_count": 17,
+      "duration_s": 240.0,
+      "model": {
+        "volume_m3": 0.02346055628221415,
+        "wall_mass_kg": 58.30375745629312,
+        "orifice_diameter_mm": 0.301,
+        "upstream_pressure_mpa_abs": 48.0,
+        "mixed_convection": true,
+        "case_specific_fitting": false
+      },
+      "metrics": {
+        "gas_temperature_rmse_k": 6.355506812719564,
+        "gas_temperature_peak_absolute_error_k": 4.342474645427501,
+        "measured_peak_temperature_k": 323.2,
+        "predicted_peak_temperature_k": 327.5424746454275,
+        "predicted_final_pressure_mpa_abs": 33.82903635997249,
+        "mass_residual_relative": 0.00022999278692476915
+      }
+    },
+    {
+      "case": "10 MPa/min",
+      "source_file": "validation/Striednig_fillingH2_10MPa_min.yml",
+      "source_sha256": "B5BFF27F0D1E9858E66212C9B1E8929465CBE0F91DA9B2107C69D1524F6AC6A5",
+      "source_sha256_lf_normalized": "B5BFF27F0D1E9858E66212C9B1E8929465CBE0F91DA9B2107C69D1524F6AC6A5",
+      "source_sha256_raw_reference": "F3D93301FC0140FA390A12CC4ECDB74FFF10D2C2E9A2BEBA68CA359926804BD5",
+      "measurement_count": 23,
+      "duration_s": 240.0,
+      "model": {
+        "volume_m3": 0.02346055628221415,
+        "wall_mass_kg": 58.30375745629312,
+        "orifice_diameter_mm": 0.42000000000000004,
+        "upstream_pressure_mpa_abs": 48.0,
+        "mixed_convection": true,
+        "case_specific_fitting": false
+      },
+      "metrics": {
+        "gas_temperature_rmse_k": 9.941005439058026,
+        "gas_temperature_peak_absolute_error_k": 1.8908271600629973,
+        "measured_peak_temperature_k": 331.7,
+        "predicted_peak_temperature_k": 333.590827160063,
+        "predicted_final_pressure_mpa_abs": 47.98558392087388,
+        "mass_residual_relative": 0.00037083570982352886
+      }
+    },
+    {
+      "case": "30 MPa/min",
+      "source_file": "validation/Striednig_fillingH2_30MPa_min.yml",
+      "source_sha256": "3CA4097C308DA3C6ED70E3504C193F2F6367087B7234FFAA787307C1AC1E1C16",
+      "source_sha256_lf_normalized": "3CA4097C308DA3C6ED70E3504C193F2F6367087B7234FFAA787307C1AC1E1C16",
+      "source_sha256_raw_reference": "9957DF82F65432AAD23F4DEC012FC9DB5F650C8E8AD8F9DF884BED43BBF6801E",
+      "measurement_count": 29,
+      "duration_s": 240.0,
+      "model": {
+        "volume_m3": 0.02346055628221415,
+        "wall_mass_kg": 58.30375745629312,
+        "orifice_diameter_mm": 0.69,
+        "upstream_pressure_mpa_abs": 48.0,
+        "mixed_convection": true,
+        "case_specific_fitting": false
+      },
+      "metrics": {
+        "gas_temperature_rmse_k": 11.75378719956619,
+        "gas_temperature_peak_absolute_error_k": 2.8847599168500437,
+        "measured_peak_temperature_k": 351.5,
+        "predicted_peak_temperature_k": 348.61524008314996,
+        "predicted_final_pressure_mpa_abs": 47.99994880808937,
+        "mass_residual_relative": 0.0049956686578912475
+      }
+    }
+  ],
+  "eligibility": {
+    "physical_experiment": true,
+    "common_time_base": true,
+    "full_loop_station_vehicle_validation_eligible": false,
+    "runtime_parameter_application": false,
+    "validation_gate_changed": false,
+    "raw_measurement_arrays_persisted": false
+  },
+  "claim_boundary": "This is an aggregate-only diagnostic of the vessel thermal submodel against three public Type-I filling experiments. It does not validate station control, cascade dispatch, dispenser metering, vehicle filling, safety response or consequence distances, and it does not change any runtime parameter or validation gate.",
+  "rights_boundary": "The HydDown repository is MIT-licensed, but the embedded Striednig measurements are a secondary transcription of a publisher article. Original data-reuse permission and provenance beyond the repository transcription were not independently established."
+}

@@ -15,6 +15,7 @@
 | `public_type_iv_tank` | VALIDATED_COMPONENT | measured-boundary Type-IV tank component validation | station controller, compressor, cascade, dispenser or field safety certification |
 | `public_station_tank_boundary` | DIAGNOSTIC_ONLY | 공통시계 호스·수용탱크 압력·온도·질량의 부분 station-to-tank 경계 진단 | 충전소 제어기·캐스케이드·ESD·노즐/리셉터클을 포함한 full-loop 검증 |
 | `public_component_measurements` | DIAGNOSTIC_ONLY | public synchronized component pressure/temperature/flow diagnostics | prospective station-to-vehicle holdout |
+| `public_type_i_filling_thermal` | DIAGNOSTIC_ONLY | 공개 Type-I 탱크 충전 열거동의 구성품 진단 및 열 모델 비교 | 충전소 제어기·캐스케이드·디스펜서·차량을 포함한 full-loop 검증 또는 런타임 파라미터 승격 |
 | `public_field_metrology` | DIAGNOSTIC_ONLY | 35 MPa 현장 계측의 압력·온도·질량 경계 및 반복성 맥락 | 원시 station-to-vehicle holdout, 제어기·ESD·사고영향 검증 |
 | `public_actual_h2_spatial_dispersion` | DIAGNOSTIC_ONLY | 실제 수소 저압 누출·다중 검지기 응답 범위와 사고 모델 진단 | 충전소 full-loop, 좌표기반 검지기 holdout, site-specific safety distance |
 | `public_hytf_tank_boundary` | DIAGNOSTIC_ONLY | 공개 70 MPa 탱크 압력·열 응답의 구성품 경계 진단 | 질량유량, 차량 수용부, 충전소 제어기·ESD를 포함한 full-loop 검증 |

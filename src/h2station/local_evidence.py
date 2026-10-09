@@ -28,6 +28,7 @@ _KHK_ACCIDENTS = _ROOT / "research/khk_hydrogen_station_public_reports_inventory
 _ACCIDENTAL_RELEASE = _ROOT / "research/accidental_self_ignition_public_evidence_2026_10_04.json"
 _EXPERIMENTAL_BENCHMARKS = _ROOT / "research/public_experimental_benchmarks_2026_10_06.json"
 _CARB_BENCHMARK = _ROOT / "research/carb_2024_hrs_inuse_field_benchmark_2026_10_08.json"
+_STRIEDNIG_DIAGNOSTIC = _ROOT / "research/striednig_hyddown_diagnostic_result_2026_10_10.json"
 _NREL_HDVS_BOUNDARY = _ROOT / "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json"
 _NREL_HDVS_RESULT = _ROOT / "research/nrel_hdvs_boundary_screen_2026_10_10.json"
 
@@ -573,6 +574,14 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "stations_passing_all_fueling_metrics": 0,
             "full_loop_holdout_eligible": False,
         },
+        "public_type_i_filling_diagnostic": {
+            "status": "unavailable",
+            "case_count": 0,
+            "gas_temperature_rmse_k": [],
+            "gas_temperature_peak_absolute_error_k": [],
+            "runtime_parameter_application": False,
+            "full_loop_holdout_eligible": False,
+        },
         "public_station_tank_boundary": {
             "status": "unavailable",
             "sample_count": 0,
@@ -679,6 +688,35 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
                 "full_loop_holdout_eligible": eligibility.get(
                     "full_loop_external_holdout"
                 ) is True,
+            }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        pass
+    try:
+        record = _read_json(_STRIEDNIG_DIAGNOSTIC)
+        eligibility = record.get("eligibility") or {}
+        cases = record.get("cases") or []
+        if (
+            record.get("artifact_type") == "public_type_i_filling_thermal_diagnostic"
+            and record.get("evidence_role") == "post_access_public_component_diagnostic"
+            and isinstance(cases, list)
+            and len(cases) == 3
+            and eligibility.get("runtime_parameter_application") is False
+            and eligibility.get("full_loop_station_vehicle_validation_eligible") is False
+            and all(isinstance(case, dict) for case in cases)
+        ):
+            result["public_type_i_filling_diagnostic"] = {
+                "status": "available",
+                "case_count": len(cases),
+                "gas_temperature_rmse_k": [
+                    float((case.get("metrics") or {}).get("gas_temperature_rmse_k"))
+                    for case in cases
+                ],
+                "gas_temperature_peak_absolute_error_k": [
+                    float((case.get("metrics") or {}).get("gas_temperature_peak_absolute_error_k"))
+                    for case in cases
+                ],
+                "runtime_parameter_application": False,
+                "full_loop_holdout_eligible": False,
             }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
         pass

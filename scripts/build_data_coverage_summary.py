@@ -42,6 +42,10 @@ def build_summary(root: Path) -> dict[str, Any]:
         root,
         "research/nrel_hdvs_boundary_screen_2026_10_10.json",
     )
+    type_i_filling = _read(
+        root,
+        "research/striednig_hyddown_diagnostic_result_2026_10_10.json",
+    )
 
     inventory = local["inventory"]
     utilization = local["utilization"]
@@ -100,6 +104,9 @@ def build_summary(root: Path) -> dict[str, Any]:
     nrel_frozen_model = nrel_result.get("frozen_model") if isinstance(nrel_result, dict) else {}
     if not isinstance(nrel_frozen_model, dict):
         nrel_frozen_model = {}
+    type_i_eligibility = type_i_filling.get("eligibility") if isinstance(type_i_filling, dict) else {}
+    if not isinstance(type_i_eligibility, dict):
+        type_i_eligibility = {}
     return {
         "schema_version": 1,
         "artifact_type": "privacy_bounded_data_coverage_summary",
@@ -211,6 +218,32 @@ def build_summary(root: Path) -> dict[str, Any]:
                 },
                 "allowed_claim": "public synchronized component pressure/temperature/flow diagnostics",
                 "not_allowed": "prospective station-to-vehicle holdout",
+            },
+            {
+                "id": "public_type_i_filling_thermal",
+                "status": "DIAGNOSTIC_ONLY",
+                "evidence": "research/striednig_hyddown_diagnostic_result_2026_10_10.json",
+                "coverage": {
+                    "case_count": len(type_i_filling.get("cases") or []),
+                    "gas_temperature_rmse_k": [
+                        (case.get("metrics") or {}).get("gas_temperature_rmse_k")
+                        for case in type_i_filling.get("cases") or []
+                    ],
+                    "gas_temperature_peak_absolute_error_k": [
+                        (case.get("metrics") or {}).get(
+                            "gas_temperature_peak_absolute_error_k"
+                        )
+                        for case in type_i_filling.get("cases") or []
+                    ],
+                    "runtime_parameter_application": type_i_eligibility.get(
+                        "runtime_parameter_application", False
+                    ),
+                    "full_loop_holdout_eligible": type_i_eligibility.get(
+                        "full_loop_station_vehicle_validation_eligible", False
+                    ),
+                },
+                "allowed_claim": "공개 Type-I 탱크 충전 열거동의 구성품 진단 및 열 모델 비교",
+                "not_allowed": "충전소 제어기·캐스케이드·디스펜서·차량을 포함한 full-loop 검증 또는 런타임 파라미터 승격",
             },
             {
                 "id": "public_field_metrology",

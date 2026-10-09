@@ -101,6 +101,28 @@
       "not_allowed": "prospective station-to-vehicle holdout"
     },
     {
+      "id": "public_type_i_filling_thermal",
+      "status": "DIAGNOSTIC_ONLY",
+      "evidence": "research/striednig_hyddown_diagnostic_result_2026_10_10.json",
+      "coverage": {
+        "case_count": 3,
+        "gas_temperature_rmse_k": [
+          6.355506812719564,
+          9.941005439058026,
+          11.75378719956619
+        ],
+        "gas_temperature_peak_absolute_error_k": [
+          4.342474645427501,
+          1.8908271600629973,
+          2.8847599168500437
+        ],
+        "runtime_parameter_application": false,
+        "full_loop_holdout_eligible": false
+      },
+      "allowed_claim": "공개 Type-I 탱크 충전 열거동의 구성품 진단 및 열 모델 비교",
+      "not_allowed": "충전소 제어기·캐스케이드·디스펜서·차량을 포함한 full-loop 검증 또는 런타임 파라미터 승격"
+    },
+    {
       "id": "public_field_metrology",
       "status": "DIAGNOSTIC_ONLY",
       "evidence": "research/public_experimental_benchmarks_2026_10_06.json",

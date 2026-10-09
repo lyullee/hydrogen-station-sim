@@ -39,6 +39,15 @@ def test_data_coverage_summary_preserves_claim_boundary() -> None:
     assert station_tank["coverage"]["pressure_rmse_mpa"] == 6.164469743688679
     assert station_tank["coverage"]["parameter_tuning"] is False
 
+    type_i = next(
+        item for item in summary["validated_or_actionable_now"]
+        if item["id"] == "public_type_i_filling_thermal"
+    )
+    assert type_i["status"] == "DIAGNOSTIC_ONLY"
+    assert type_i["coverage"]["case_count"] == 3
+    assert type_i["coverage"]["runtime_parameter_application"] is False
+    assert type_i["coverage"]["full_loop_holdout_eligible"] is False
+
     accidents = next(
         item for item in summary["validated_or_actionable_now"]
         if item["id"] == "public_accident_precedents"

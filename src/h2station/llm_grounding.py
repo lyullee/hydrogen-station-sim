@@ -3292,6 +3292,56 @@ def _public_carb_hrs_inuse_field_benchmark() -> dict[str, Any] | None:
     }
 
 
+def _public_type_i_filling_diagnostic() -> dict[str, Any] | None:
+    """Expose the aggregate Type-I filling diagnostic with a strict boundary."""
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/striednig_hyddown_diagnostic_result_2026_10_10.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    eligibility = record.get("eligibility") or {}
+    cases = record.get("cases") or []
+    if (
+        record.get("artifact_type") != "public_type_i_filling_thermal_diagnostic"
+        or record.get("evidence_role") != "post_access_public_component_diagnostic"
+        or not isinstance(cases, list)
+        or len(cases) != 3
+        or eligibility.get("runtime_parameter_application") is not False
+        or eligibility.get("full_loop_station_vehicle_validation_eligible") is not False
+    ):
+        return None
+    compact_cases = []
+    for case in cases:
+        if not isinstance(case, dict):
+            return None
+        metrics = case.get("metrics") or {}
+        compact_cases.append({
+            "case": str(case.get("case") or ""),
+            "measurement_count": int(case.get("measurement_count") or 0),
+            "duration_s": float(case.get("duration_s") or 0.0),
+            "gas_temperature_rmse_k": float(metrics.get("gas_temperature_rmse_k")),
+            "gas_temperature_peak_absolute_error_k": float(
+                metrics.get("gas_temperature_peak_absolute_error_k")
+            ),
+            "predicted_final_pressure_mpa_abs": float(
+                metrics.get("predicted_final_pressure_mpa_abs")
+            ),
+        })
+    return {
+        "artifact": "research/striednig_hyddown_diagnostic_result_2026_10_10.json",
+        "evidence_role": "public Type-I filling thermal component diagnostic",
+        "source": record.get("source") or {},
+        "cases": compact_cases,
+        "full_loop_external_holdout_eligible": False,
+        "runtime_parameter_application": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+        "rights_boundary": str(record.get("rights_boundary") or ""),
+    }
+
+
 def _public_hytunnel_failure_diagnostic_evidence() -> dict[str, Any] | None:
     """Expose the bounded post-outcome HyTunnel diagnostic to the LLM.
 
@@ -3585,6 +3635,17 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
         str(carb_source.get("url") or ""),
         "22개 실제 충전소 HGV 4.3 고장·통신·충전성능 현장 벤치마크",
     )
+
+    type_i_filling = evidence.get("public_type_i_filling_diagnostic") or {}
+    type_i_source = type_i_filling.get("source") or {}
+    type_i_doi = str(type_i_source.get("paper_doi") or "").strip()
+    if type_i_doi:
+        add(
+            "PUBLIC_STRIEDNIG_TYPE_I_FILLING",
+            "Striednig Type-I hydrogen tank filling experiment",
+            f"https://doi.org/{type_i_doi}",
+            "공개 Type-I 탱크 충전 열거동 진단(충전소-차량 full-loop 검증 아님)",
+        )
 
     tank_trace = evidence.get("public_tank_trace_boundary") or {}
     tank_source = tank_trace.get("source") or {}
@@ -7277,6 +7338,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_carb_hrs_inuse_field_benchmark"
         ] = carb_field_benchmark
+    type_i_filling = _public_type_i_filling_diagnostic()
+    if type_i_filling is not None:
+        envelope["response_evidence"][
+            "public_type_i_filling_diagnostic"
+        ] = type_i_filling
     lifecycle = _confidential_lifecycle_evidence()
     if lifecycle is not None:
         envelope["response_evidence"]["confidential_lifecycle_counter_summary"] = lifecycle
@@ -8009,6 +8075,16 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "full_loop_external_holdout_eligible": False,
             "dynamic_model_parameter_calibration_eligible": False,
             "claim_limit": short(carb.get("claim_limit")),
+        }
+    type_i_filling = evidence.get("public_type_i_filling_diagnostic")
+    if isinstance(type_i_filling, dict):
+        summary["public_type_i_filling_diagnostic"] = {
+            "evidence_role": type_i_filling.get("evidence_role"),
+            "source": type_i_filling.get("source") or {},
+            "cases": type_i_filling.get("cases") or [],
+            "full_loop_external_holdout_eligible": False,
+            "runtime_parameter_application": False,
+            "claim_limit": short(type_i_filling.get("claim_limit")),
         }
     detector = evidence.get("public_detector_logic_evidence")
     if isinstance(detector, dict):
@@ -8969,6 +9045,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "public_actual_hydrogen_spatial_stratification_evidence"
     ) or {}
     carb_field = response.get("public_carb_hrs_inuse_field_benchmark") or {}
+    type_i_filling = response.get("public_type_i_filling_diagnostic") or {}
     detector_context = " ".join((
         str(manifest.get("selected_sensor") or ""),
         str(manifest.get("question") or ""),
@@ -9006,6 +9083,16 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "j2601", "hgv", "abort", "halt", "crc", "fuel", "flow",
             "communication", "pressure", "temperature",
         ))
+    )
+    type_i_filling_relevant = bool(
+        type_i_filling
+        and (
+            public_catalog_relevant
+            or any(token in detector_context for token in (
+                "충전", "탱크", "압력", "온도", "열", "filling", "tank",
+                "pressure", "temperature", "thermal",
+            ))
+        )
     )
     operation_practice_relevant = bool(
         operation_practice
@@ -9615,6 +9702,19 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "claim_limit": short(carb_field.get("claim_limit"), 120),
                 }
             } if protocol_field_relevant else {}),
+            **({
+                "public_type_i_filling_diagnostic": {
+                    "evidence_role": type_i_filling.get("evidence_role"),
+                    "source_doi": (type_i_filling.get("source") or {}).get(
+                        "paper_doi"
+                    ),
+                    "case_count": len(type_i_filling.get("cases") or []),
+                    "cases": type_i_filling.get("cases") or [],
+                    "runtime_parameter_application": False,
+                    "full_loop_external_holdout_eligible": False,
+                    "claim_limit": short(type_i_filling.get("claim_limit"), 180),
+                }
+            } if type_i_filling_relevant else {}),
         },
         "validation_boundaries": {
             # Keep this projection compact because it is sent on every
