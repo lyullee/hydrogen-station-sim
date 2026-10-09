@@ -56,6 +56,7 @@ from .hazop.runtime import HazopMonitor
 from .hazop.response import (classify_rule, load_playbooks, response_selection,
                              prompt_guidance, render_guidance, structured_guidance)
 from .local_evidence import local_station_evidence_summary
+from .station_pressure_forecast import forecast_storage_pressure
 
 
 def _runtime_calibration_payload(
@@ -892,6 +893,12 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                     if str(tag).startswith("FD-") and isinstance(value, dict)
                 }
                 frame["analysis"] = _analyze_frame(frame)
+                # The station-side forecast is advisory only.  It uses a
+                # causal prefix and the committed chronological holdout gain;
+                # it never changes the physics, controller settings or ESD.
+                frame["station_pressure_forecast"] = forecast_storage_pressure(
+                    [*frames, frame]
+                )
                 if process_runtime is not None:
                     process_runtime.safety.observe_hazards(sample.active_faults)
                     process_runtime.safety.record_metrics(sample.time_s, _virtual_safety_metrics(frame))

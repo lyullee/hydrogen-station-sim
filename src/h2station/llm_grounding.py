@@ -6297,6 +6297,12 @@ def build_evidence_manifest(
         "virtual_detector_spatial_proxy": frame.get(
             "virtual_detector_spatial_proxy"
         ) or {},
+        # A station-side, same-site forecast may inform the answer when it is
+        # available, but its claim boundary travels with the frame so the LLM
+        # cannot turn it into a safety limit or full-loop validation claim.
+        "station_pressure_forecast": frame.get(
+            "station_pressure_forecast"
+        ) or {},
         "detector_policy": {
             key: frame.get("detector_policy", {}).get(key)
             for key in (
@@ -9082,6 +9088,28 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "pending_count": virtual_safety.get("pending_count", 0),
             "claim_limit": short(virtual_safety.get("claim_limit")),
         }
+    # A runtime pressure forecast is useful only as a short-horizon advisory
+    # for an active recharge, so expose the current frame value separately
+    # from the frozen holdout evidence above.  Keeping the claim boundary in
+    # the same compact envelope prevents a provider from treating this value
+    # as a safety limit, controller input, or full-loop validation result.
+    current_forecast = manifest.get("station_pressure_forecast") or {}
+    if isinstance(current_forecast, dict) and current_forecast:
+        forecast_view = selected(current_forecast, (
+            "status", "reason", "bank", "current_pressure_mpa",
+            "forecast_pressure_mpa", "forecast_delta_mpa", "prefix_span_s",
+            "horizon_s", "dominant_rise_mpa", "dominance_ratio",
+            "gain", "claim_limit",
+        ))
+        provenance = current_forecast.get("provenance") or current_forecast.get("basis")
+        if isinstance(provenance, dict):
+            forecast_view["provenance"] = selected(provenance, (
+                "artifact", "protocol", "holdout_count", "holdout_metrics",
+                "runtime_parameter_application", "vehicle_fill_validation",
+                "full_loop_holdout_eligible",
+            ))
+        if forecast_view:
+            decision["current_station_pressure_forecast"] = forecast_view
     if relevant_precedents.get("by_response_plan"):
         decision["response_guidance"].update({
             "relevant_public_accident_precedents": relevant_precedents[

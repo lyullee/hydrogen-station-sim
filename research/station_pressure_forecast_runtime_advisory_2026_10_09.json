@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "artifact_type": "station_pressure_forecast_runtime_advisory",
+  "status": "implemented_advisory_only",
+  "generated_at": "2026-10-09",
+  "source_holdout": {
+    "artifact": "research/confidential_station_recharge_pressure_forecast_holdout_2026_10_08.json",
+    "protocol": "research/confidential_station_recharge_pressure_forecast_protocol_2026_10_08.json",
+    "sampled_rows": 653442,
+    "calibration_cases": 1024,
+    "holdout_cases": 394,
+    "holdout_median_absolute_error_mpa": 0.055,
+    "holdout_p90_absolute_error_mpa": 0.529255,
+    "mae_improvement_over_persistence_fraction": 0.718855,
+    "positive_direction_fraction": 0.949239
+  },
+  "runtime_method": {
+    "prefix_s": 10.0,
+    "horizon_s": 30.0,
+    "banks": ["medium", "high"],
+    "selection": "pressure-recharge flowing and one bank has a dominant positive prefix rise",
+    "gains": {"medium": 0.944444, "high": 0.919596},
+    "output": "current pressure, forecast pressure, delta, prefix span and provenance",
+    "physics_state_mutated": false,
+    "controller_settings_mutated": false,
+    "esd_logic_mutated": false
+  },
+  "privacy": {
+    "raw_rows_persisted": false,
+    "source_identifiers_published": false,
+    "source_paths_published": false,
+    "tag_names_published": false,
+    "calendar_dates_published": false
+  },
+  "claim_boundary": "The runtime value is a same-site station-side advisory for a short pressure response. It is not a compressor-capacity fit, storage-geometry validation, vehicle-fill validation, safety limit, consequence distance, field certification or full-loop external validation."
+}

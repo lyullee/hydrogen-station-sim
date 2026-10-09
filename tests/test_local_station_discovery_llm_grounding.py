@@ -166,7 +166,7 @@ def test_local_discovery_reaches_bounded_prompt_views():
 def test_validation_readiness_ledger_reaches_all_llm_views_without_paths():
     manifest = _manifest()
     expected = {
-        "PASS": 125,
+        "PASS": 126,
         "FAIL": 10,
         "PENDING": 7,
     }
@@ -188,7 +188,7 @@ def test_validation_readiness_ledger_reaches_all_llm_views_without_paths():
     assert summary["full_user_objective_ready"] is False
 
     decision = prompt_decision_evidence(manifest)["validation_boundaries"]
-    assert decision["r"] == "125/10/7;0l0"
+    assert decision["r"] == "126/10/7;0l0"
 
     header = prompt_evidence_header(manifest)["validation_readiness"]
     assert header["gate_counts"] == expected
