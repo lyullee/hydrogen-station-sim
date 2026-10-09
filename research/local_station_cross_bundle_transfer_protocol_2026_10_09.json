@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "protocol_id": "LOCAL-STATION-PRESSURE-CROSS-BUNDLE-TRANSFER-001",
+  "frozen_at": "2026-10-09",
+  "status": "protocol_frozen_before_cross_bundle_outcome_access",
+  "objective": "Evaluate whether a fixed high-bank recharge-restart margin remains inside the pressure-cycle distribution of a second owner-controlled station-side bundle after explicit unit normalization.",
+  "source_boundary": {
+    "source_identifiers_published": false,
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "raw_rows_persisted": false,
+    "absolute_timestamps_published": false,
+    "calendar_dates_published": false,
+    "roles": ["medium_storage_pressure", "high_storage_pressure"],
+    "station_side_only": true
+  },
+  "method": {
+    "calibration_bundle": "bundle_A",
+    "transfer_bundle": "bundle_B",
+    "within_file_ordering": "stable ascending timestamp sort; retain last source-order observation for duplicate timestamps",
+    "sample_stride": 10,
+    "filter": "causal rolling median after chronological sort",
+    "median_window_samples": 7,
+    "skip_rows_after_header": "bundle-specific owner mapping, applied before sampling",
+    "pressure_normalization": "owner-attested unit scale to MPa before cycle detection",
+    "cycle_detector": "frozen chronology-corrected pressure-cycle detector",
+    "candidate_margin_mpa": 4.5,
+    "candidate_not_fit_to_transfer_bundle": true
+  },
+  "frozen_rules": {
+    "fall_confirmation_mpa": 0.25,
+    "rise_confirmation_mpa": 0.25,
+    "minimum_cycle_drop_mpa": 0.5,
+    "maximum_cycle_drop_mpa": 20.0,
+    "minimum_decline_duration_s": 30.0,
+    "maximum_decline_duration_s": 21600.0,
+    "minimum_pressure_mpa": 10.0,
+    "maximum_pressure_mpa": 100.0,
+    "maximum_sample_gap_s": 120.0
+  },
+  "screens": {
+    "candidate_inside_transfer_p10_p90": true,
+    "candidate_relative_transfer_median_error_percent_max": 20.0,
+    "minimum_transfer_cycles": 15,
+    "minimum_transfer_files": 4
+  },
+  "decision_boundary": {
+    "pass_meaning": "Station-side cross-bundle corroboration of a fixed restart-margin candidate under the declared pressure-cycle method.",
+    "independent_external_validation": false,
+    "full_loop_vehicle_validation": false,
+    "safety_limit_or_field_certification": false,
+    "runtime_parameter_application": false,
+    "default_model_parameters_changed": false
+  },
+  "claim_boundary": "This protocol tests only owner-controlled station-side storage-pressure-cycle transfer. It does not validate vehicle filling, leak or fire consequence predictions, accident frequency, sensor performance, or field safety limits."
+}

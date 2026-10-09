@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_station_cross_bundle_pressure_transfer_diagnostic",
+  "evidence_role": "owner_controlled_station_side_transfer_only",
+  "source_identifiers_published": false,
+  "source_paths_published": false,
+  "source_filenames_published": false,
+  "source_headers_published": false,
+  "raw_rows_persisted": false,
+  "absolute_timestamps_published": false,
+  "calendar_dates_published": false,
+  "roles": [
+    "medium_storage_pressure",
+    "high_storage_pressure"
+  ],
+  "normalization": {
+    "pressure_unit": "MPa",
+    "explicit_unit_scale_applied": true
+  },
+  "method": {
+    "calibration_bundle": "bundle_A",
+    "transfer_bundle": "bundle_B",
+    "candidate_margin_mpa": 4.5,
+    "sample_stride": 10,
+    "median_window_samples": 7,
+    "outcome_used_for_fit": false
+  },
+  "calibration_bundle": {
+    "files_read": 12,
+    "reverse_chronological_files": 12,
+    "mixed_order_files": 0,
+    "raw_rows": 29361269,
+    "sampled_rows": 2936109,
+    "filtered_rows": 2936037,
+    "rejected_rows": 21,
+    "files_with_cycles": 12,
+    "cycles": {
+      "count": 16770,
+      "min": 0.5,
+      "p05": 0.832125,
+      "median": 4.6053,
+      "p95": 10.68307,
+      "max": 19.9384
+    }
+  },
+  "transfer_bundle": {
+    "files_read": 8,
+    "reverse_chronological_files": 0,
+    "mixed_order_files": 0,
+    "raw_rows": 653442,
+    "sampled_rows": 65348,
+    "filtered_rows": 65300,
+    "rejected_rows": 0,
+    "files_with_cycles": 7,
+    "cycles": {
+      "count": 225,
+      "min": 0.66,
+      "p05": 1.568,
+      "median": 5.45,
+      "p95": 7.34,
+      "max": 7.73
+    }
+  },
+  "metrics": {
+    "candidate_relative_transfer_median_error_percent": 17.431193
+  },
+  "eligibility": {
+    "transfer_cycles_minimum_met": true,
+    "transfer_files_minimum_met": true,
+    "transfer_files_have_deterministic_order": true
+  },
+  "screens": {
+    "candidate_inside_transfer_p05_p95": true,
+    "candidate_relative_transfer_median_error_le_20_percent": true
+  },
+  "decision": {
+    "fixed_candidate_corroborated_on_transfer_bundle": true,
+    "independent_external_validation": false,
+    "full_loop_vehicle_validation": false,
+    "safety_limit_or_field_certification": false,
+    "runtime_parameter_application": false,
+    "default_model_parameters_changed": false
+  },
+  "claim_boundary": "This protocol tests only owner-controlled station-side storage-pressure-cycle transfer. It does not validate vehicle filling, leak or fire consequence predictions, accident frequency, sensor performance, or field safety limits.",
+  "protocol": {
+    "protocol_id": "LOCAL-STATION-PRESSURE-CROSS-BUNDLE-TRANSFER-001",
+    "protocol_sha256": "795810eefa6a1cdd70cb080ec2ff55ece90525932833bff5763d67cf45d623c4"
+  }
+}

@@ -1,5 +1,19 @@
 # Development Progress
 
+## 2026-10-09 - Local station-side cross-bundle pressure transfer diagnostic
+
+- Added a frozen, privacy-bounded protocol that calibrates on one owner-controlled
+  station-side pressure bundle and evaluates the fixed 4.5 MPa high-bank restart
+  margin on a second bundle after explicit unit normalization.
+- The transfer bundle produced 225 pressure cycles across 7 of 8 files; its
+  median pressure drop was 5.45 MPa, the candidate was inside the p05-p95 range,
+  and the relative error to the transfer median was 17.431193%.
+- This is useful station-side corroboration only. It does not validate vehicle
+  filling, full-loop behavior, leak/fire consequence predictions, accident
+  frequency, safety limits or runtime parameter application.
+- The raw local files remain outside the repository. Only aggregate results,
+  protocol rules and privacy/claim-boundary metadata are committed.
+
 ## 2026-10-09 - Broader local archive connected with explicit HRS boundaries
 
 - The local search found substantially more than the measured station bundle:
