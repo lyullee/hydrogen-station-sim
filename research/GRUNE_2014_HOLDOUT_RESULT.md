@@ -38,3 +38,17 @@ eligibility and converts non-finite missing endpoints to JSON `null`.
 This attempted holdout concerns one 20 MPa, 0.37 L, 4 mm reservoir pressure
 trace. It cannot validate ignition, pressure load, heat release, dispersion,
 radiation, station control or safety distance.
+
+## Machine-readable archive
+
+`research/grune_2014_holdout_result.json` records the 51-point run with the
+protocol and data hashes. The original frozen numerical runner remains
+unchanged; `scripts/archive_grune_2014_holdout_result.py` adds eligibility
+metadata and serializes unavailable timing endpoints as JSON `null`.
+
+Reproduce the archive with:
+
+```powershell
+$env:PYTHONPATH = "src"
+python scripts/archive_grune_2014_holdout_result.py
+```

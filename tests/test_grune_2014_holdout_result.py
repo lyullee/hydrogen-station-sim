@@ -17,6 +17,7 @@ def _sha256(path: Path) -> str:
 
 def test_grune_result_retains_ineligibility_and_source_hashes():
     result = json.loads(RESULT.read_text(encoding="utf-8"))
+    assert result["artifact_type"] == "grune_2014_pressure_decay_holdout_result"
     assert result["protocol_sha256"] == _sha256(PROTOCOL)
     assert result["data_sha256"] == _sha256(DATA)
     assert result["eligibility"]["minimum_unique_points_met"] is True
@@ -26,6 +27,8 @@ def test_grune_result_retains_ineligibility_and_source_hashes():
     assert result["result"]["points"] == 51
     assert result["result"]["experimental_half_pressure_time_s"] is None
     assert result["result"]["predicted_half_pressure_time_s"] is None
+    assert "NaN" not in RESULT.read_text(encoding="utf-8")
+    assert "Infinity" not in RESULT.read_text(encoding="utf-8")
 
 
 def test_grune_locked_runner_remains_byte_identical_after_archiving():

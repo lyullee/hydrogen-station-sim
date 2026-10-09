@@ -1,14 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T09:08:04.449493+00:00",
+  "artifact_type": "grune_2014_pressure_decay_holdout_result",
+  "generated_at": "2026-10-09T23:58:45.655493+00:00",
   "protocol_sha256": "606dbd8a34853dfc0e98277ea23e5c0d07f0bb4e6e2da4ffcf8893299fcb62f2",
   "data_sha256": "d0f1afa0fdc589a28235d12c62ddc8f9b303f63c8c229e967d8f1c758c3e3cab",
-  "eligibility": {
-    "minimum_unique_points_met": true,
-    "measured_half_pressure_time_observed": false,
-    "minimum_requirements_met": false,
-    "reason": "The accessible publisher raster separates the valve trace only in the 0-0.01 s startup panel; the overlapping inset does not support a trace-specific half-pressure time."
-  },
   "result": {
     "points": 51,
     "measured_initial_pressure_bar_abs": 199.843137,
@@ -23,6 +18,13 @@
     "half_pressure_time_screen_pass": false,
     "joint_primary_screen_pass": false
   },
+  "eligibility": {
+    "minimum_unique_points_met": true,
+    "measured_half_pressure_time_observed": false,
+    "minimum_requirements_met": false,
+    "full_raw_holdout_eligible": false,
+    "reason": "The digitized Figure 2 measured curve never reaches half of its initial pressure; the timing endpoint is therefore unavailable and the holdout claim remains closed."
+  },
   "claim_supported": false,
-  "claim_boundary": "One 20 MPa, 0.37 L, 4 mm pressure-decay trace; no flame, ignition, dispersion, radiation, station control or safety-distance claim."
+  "claim_boundary": "One 20 MPa, 0.37 L, 4 mm pressure-decay trace; no flame, ignition, dispersion, radiation, station control or safety-distance claim. The digitized measured curve does not provide the required half-pressure crossing, so no validation claim is made."
 }
