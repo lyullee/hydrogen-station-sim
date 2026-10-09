@@ -11223,6 +11223,22 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 evidence.get("public_tank_validation_boundary") or {}
             ).get("claim_limit"),
         },
+        "public_nrel_boundary_screen": {
+            key: (evidence.get("public_nrel_boundary_screen") or {}).get(key)
+            for key in (
+                "status", "sample_count", "duration_s", "tank_count",
+                "partial_station_to_tank_boundary_eligible",
+                "full_loop_holdout_eligible", "rights_limited",
+                "screening_status", "screening_pass_count",
+                "screening_pass_fraction", "pressure_rmse_mpa",
+                "temperature_rmse_c", "mass_rmse_kg",
+                "pressure_final_error_mpa", "screening_limits",
+                "parameter_tuning", "geometry_ratio_to_frozen_effective_volume",
+                "claim_supported", "claim_limit",
+            )
+            if (evidence.get("public_nrel_boundary_screen") or {}).get(key)
+            is not None
+        },
         "public_geometry_sensitivity": {
             "evidence_role": (
                 evidence.get("public_geometry_sensitivity") or {}

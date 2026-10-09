@@ -1554,6 +1554,9 @@ def test_nrel_boundary_screen_reaches_evidence_prompt_without_full_loop_claim():
     summary = prompt_evidence_summary(manifest)["public_nrel_boundary_screen"]
     assert summary["sample_count"] == 351
     assert summary["parameter_tuning"] is False
+    header = prompt_evidence_header(manifest)["public_nrel_boundary_screen"]
+    assert header["screening_status"] == "diagnostic_only_failed_screen"
+    assert header["claim_supported"] is False
     decision = prompt_decision_evidence(manifest)["decision_support_evidence"]
     assert decision["public_nrel_boundary_screen"]["screening_pass_count"] == 0
 
