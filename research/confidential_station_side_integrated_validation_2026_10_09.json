@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_station_side_integrated_validation",
+  "recorded_at": "2026-10-09",
+  "evidence_role": "same-site station-side integrated validation bundle",
+  "source_scope": "confidential owner-controlled station operational traces",
+  "privacy": {
+    "source_identifiers_published": false,
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "raw_rows_persisted": false,
+    "absolute_timestamps_published": false,
+    "calendar_dates_published": false,
+    "site_company_location_manufacturer_published": false
+  },
+  "inputs": [
+    {
+      "id": "pressure_boundary_holdout",
+      "artifact": "research/confidential_operational_envelope_holdout_replay_2026_10_06.json",
+      "sha256": "5f211cf0f7b4df25ed18fe64cf8a9dfb9a0b7f2bfa1fe5c787b6c4ac51edc164"
+    },
+    {
+      "id": "cascade_sequence_holdout",
+      "artifact": "research/confidential_station_cascade_sequence_holdout_2026_10_08.json",
+      "sha256": "44aafda5dcb905744b22266fa431b9c2ad1f00a34410534ea5c9d03ca2caec60"
+    },
+    {
+      "id": "recharge_pressure_forecast_holdout",
+      "artifact": "research/confidential_station_recharge_pressure_forecast_holdout_2026_10_08.json",
+      "sha256": "c870990c3416de59593c7a893dc33939a0a42665bf08db972290dd412d13b999"
+    },
+    {
+      "id": "lifecycle_alignment_holdout",
+      "artifact": "research/confidential_station_lifecycle_pressure_alignment_holdout_2026_10_09.json",
+      "sha256": "98e328a37dc0093379c7495e13608c8ad79c1d8d2ce49eec3735418e3ecd2919"
+    }
+  ],
+  "checks": {
+    "pressure_boundary": {
+      "supported": true,
+      "calibration_points": 998,
+      "holdout_points": 30,
+      "holdout_duration_s": 1755.0,
+      "replay_completed": true,
+      "recharge_restart_margin_pa": 490000.0
+    },
+    "cascade_sequence": {
+      "supported": true,
+      "calibration_pairs": 8106,
+      "holdout_pairs": 3664,
+      "holdout_pair_coverage": 0.703939,
+      "holdout_sequential_fraction": 0.943777,
+      "median_handoff_gap_s": 80.0
+    },
+    "recharge_pressure_forecast": {
+      "supported": true,
+      "calibration_cases": 1024,
+      "holdout_cases": 394,
+      "holdout_mae_mpa": 0.184407,
+      "holdout_p90_absolute_error_mpa": 0.529255,
+      "positive_direction_fraction": 0.949239
+    },
+    "lifecycle_alignment": {
+      "negative_result_retained": true,
+      "counter_monotonicity_met": false,
+      "holdout_counter_recall": 0.196032,
+      "holdout_pressure_precision": 0.902716
+    }
+  },
+  "decision": {
+    "station_side_integrated_validation_supported": true,
+    "pressure_boundary_holdout_supported": true,
+    "cascade_sequence_holdout_supported": true,
+    "recharge_pressure_forecast_supported": true,
+    "lifecycle_counter_alignment_supported": false,
+    "runtime_parameter_application": false,
+    "default_model_parameters_changed": false,
+    "vehicle_fill_validation": false,
+    "full_loop_external_validation_supported": false,
+    "site_specific_safety_distance_validation": false,
+    "independent_external_validation": false
+  },
+  "claim_boundary": "Same-site station-side holdout integration only. The bundle supports bounded pressure-boundary replay, medium/high cascade sequence context, and short-horizon recharge-pressure advisory. It does not validate vehicle filling, mass closure, field safety distance, accident frequency, SAGA effectiveness, or certification. The retained lifecycle-counter result is negative and must not be treated as a validated recharge detector."
+}

@@ -6,7 +6,7 @@ vehicle objective is complete.
 
 ## Executed checks
 
-- Full repository test suite: **1193 passed**, 18 dependency deprecation or
+- Full repository test suite: **1196 passed**, 18 dependency deprecation or
   physics warnings, 0 test failures.
 - Focused external-data checks (HyTunnel, Dickens Type-III, data-coverage
   summary): **14 passed**.
@@ -18,6 +18,7 @@ vehicle objective is complete.
 | --- | --- | --- |
 | De-identified station logs | 33 CSV files; 56,854,143 deduplicated rows | station-side pressure, cascade and lifecycle diagnostics |
 | Same-site pressure forecast | 394 chronological holdout cases; MAE 0.184 MPa; p90 0.529 MPa; direction 94.9% | short-horizon advisory forecast |
+| Station-side integrated holdout bundle | pressure-boundary replay (30 holdout points), medium/high cascade sequence (3,664 holdout pairs), recharge-pressure forecast (394 holdout cases) | combined station-side operating advisory only; lifecycle-counter result retained as negative |
 | Public Type-IV tank data | 12 measured-boundary cases; runtime match true | Type-IV tank component behavior |
 | Public accident precedents | 23 reports routed to 8 response families and 42 runtime references | scenario and response-plan grounding |
 
@@ -45,6 +46,13 @@ as annual accident probability or a safety certification.
 The API `data_used.public_references` field now lists bounded public source
 identifiers, DOIs and official links used for the answer. It excludes private
 paths, raw rows and site/equipment identity.
+
+The privacy-bounded `confidential_station_side_integrated_validation` record
+now links the three positive station-side holdouts by SHA-256 and carries the
+negative lifecycle-counter alignment result alongside them. It is exposed to
+the LLM only for evidence/validation questions and to the API provenance panel
+as aggregate counts and metrics. It does not alter default simulator
+parameters.
 
 ## Evidence still outside the claim boundary
 

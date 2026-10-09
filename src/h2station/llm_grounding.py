@@ -4060,6 +4060,92 @@ def _confidential_lifecycle_pressure_alignment_evidence() -> dict[str, Any] | No
     }
 
 
+def _confidential_station_side_integrated_validation_evidence() -> dict[str, Any] | None:
+    """Expose the frozen station-side integration bundle.
+
+    This is deliberately an aggregate of already-reviewed holdouts.  The
+    loader verifies the input hashes and privacy flags so a stale or expanded
+    artifact cannot silently become prompt evidence.  It never exposes raw
+    rows, source identifiers, or site metadata.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    relative = (
+        "research/confidential_station_side_integrated_validation_2026_10_09.json"
+    )
+    path = root / relative
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    if not isinstance(record, dict):
+        return None
+    privacy = record.get("privacy") or {}
+    if (
+        record.get("schema_version") != 1
+        or record.get("artifact_type") != "confidential_station_side_integrated_validation"
+        or any(value is not False for value in privacy.values())
+    ):
+        return None
+    expected = {
+        "pressure_boundary_holdout":
+            "research/confidential_operational_envelope_holdout_replay_2026_10_06.json",
+        "cascade_sequence_holdout":
+            "research/confidential_station_cascade_sequence_holdout_2026_10_08.json",
+        "recharge_pressure_forecast_holdout":
+            "research/confidential_station_recharge_pressure_forecast_holdout_2026_10_08.json",
+        "lifecycle_alignment_holdout":
+            "research/confidential_station_lifecycle_pressure_alignment_holdout_2026_10_09.json",
+    }
+    inputs = record.get("inputs") or []
+    by_id = {
+        item.get("id"): item
+        for item in inputs
+        if isinstance(item, dict) and item.get("id")
+    }
+    if set(by_id) != set(expected):
+        return None
+    for input_id, artifact in expected.items():
+        item = by_id.get(input_id) or {}
+        if item.get("artifact") != artifact:
+            return None
+        source = root / artifact
+        try:
+            digest = sha256(source.read_bytes()).hexdigest()
+        except OSError:
+            return None
+        if item.get("sha256") != digest:
+            return None
+    decision = record.get("decision") or {}
+    checks = record.get("checks") or {}
+    if (
+        decision.get("station_side_integrated_validation_supported") is not True
+        or decision.get("pressure_boundary_holdout_supported") is not True
+        or decision.get("cascade_sequence_holdout_supported") is not True
+        or decision.get("recharge_pressure_forecast_supported") is not True
+        or decision.get("lifecycle_counter_alignment_supported") is not False
+        or decision.get("runtime_parameter_application") is not False
+        or decision.get("vehicle_fill_validation") is not False
+        or decision.get("full_loop_external_validation_supported") is not False
+        or not (checks.get("lifecycle_alignment") or {}).get("negative_result_retained")
+    ):
+        return None
+    return {
+        "artifact": relative,
+        "evidence_role": record.get("evidence_role"),
+        "pressure_boundary": checks.get("pressure_boundary") or {},
+        "cascade_sequence": checks.get("cascade_sequence") or {},
+        "recharge_pressure_forecast": checks.get("recharge_pressure_forecast") or {},
+        "lifecycle_alignment": checks.get("lifecycle_alignment") or {},
+        "station_side_integrated_validation_supported": True,
+        "runtime_parameter_application": False,
+        "vehicle_fill_validation": False,
+        "full_loop_external_validation_supported": False,
+        "site_specific_safety_distance_validation": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_pressure_channel_evidence() -> dict[str, Any] | None:
     """Expose channel-specific measured envelopes without bank identity."""
 
@@ -6857,6 +6943,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_station_lifecycle_pressure_alignment_holdout"
         ] = lifecycle_alignment
+    station_side_integrated = _confidential_station_side_integrated_validation_evidence()
+    if station_side_integrated is not None:
+        envelope["response_evidence"][
+            "confidential_station_side_integrated_validation"
+        ] = station_side_integrated
     channel_envelopes = _confidential_pressure_channel_evidence()
     if channel_envelopes is not None:
         envelope["response_evidence"][
@@ -7849,6 +7940,22 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if lifecycle_alignment.get(key) is not None
         }
+    station_side_integrated = evidence.get(
+        "confidential_station_side_integrated_validation"
+    )
+    if isinstance(station_side_integrated, dict):
+        summary["confidential_station_side_integrated_validation"] = {
+            key: station_side_integrated.get(key)
+            for key in (
+                "evidence_role", "pressure_boundary", "cascade_sequence",
+                "recharge_pressure_forecast", "lifecycle_alignment",
+                "station_side_integrated_validation_supported",
+                "runtime_parameter_application", "vehicle_fill_validation",
+                "full_loop_external_validation_supported",
+                "site_specific_safety_distance_validation", "claim_limit",
+            )
+            if station_side_integrated.get(key) is not None
+        }
     channel_envelopes = evidence.get("confidential_pressure_channel_envelopes")
     if isinstance(channel_envelopes, dict):
         summary["confidential_pressure_channel_envelopes"] = {
@@ -8381,6 +8488,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     lifecycle_alignment = response.get(
         "confidential_station_lifecycle_pressure_alignment_holdout"
     ) or {}
+    station_side_integrated = response.get(
+        "confidential_station_side_integrated_validation"
+    ) or {}
     local_station_utilization = response.get(
         "confidential_local_station_data_utilization"
     ) or {}
@@ -8439,6 +8549,11 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "충전", "압력", "온도", "유량", "질량", "적산", "토털라이저",
         "압축기", "재충전", "flow", "mass", "totalizer", "pressure",
         "temperature", "compressor", "recharge",
+    ))
+    station_side_integrated_relevant = any(token in lead_context for token in (
+        "실측", "현장 데이터", "운전 데이터", "검증", "검증범위", "근거",
+        "데이터", "holdout", "validation", "measured", "evidence",
+        "station-side", "station side",
     ))
     hytunnel_relevant = any(token in lead_context for token in (
         "공개", "실측", "원자료", "검증", "데이터", "피해영향", "안전거리",
@@ -9473,6 +9588,46 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 },
             } if recharge_forecast_relevant else {}),
             **({
+                "station_side_integrated_validation": {
+                    "claim_supported": station_side_integrated.get(
+                        "station_side_integrated_validation_supported"
+                    ) is True,
+                    "pressure_boundary_holdout_supported": station_side_integrated.get(
+                        "pressure_boundary", {}
+                    ).get("supported") is True,
+                    "cascade_sequence_holdout_supported": station_side_integrated.get(
+                        "cascade_sequence", {}
+                    ).get("supported") is True,
+                    "recharge_pressure_forecast_supported": station_side_integrated.get(
+                        "recharge_pressure_forecast", {}
+                    ).get("supported") is True,
+                    "lifecycle_counter_alignment_supported": station_side_integrated.get(
+                        "lifecycle_alignment", {}
+                    ).get("negative_result_retained") is False,
+                    "holdout_points": station_side_integrated.get(
+                        "pressure_boundary", {}
+                    ).get("holdout_points"),
+                    "cascade_holdout_pairs": station_side_integrated.get(
+                        "cascade_sequence", {}
+                    ).get("holdout_pairs"),
+                    "recharge_forecast_holdout_cases": station_side_integrated.get(
+                        "recharge_pressure_forecast", {}
+                    ).get("holdout_cases"),
+                    "runtime_parameter_application": station_side_integrated.get(
+                        "runtime_parameter_application"
+                    ) is True,
+                    "vehicle_fill_validation": station_side_integrated.get(
+                        "vehicle_fill_validation"
+                    ) is True,
+                    "full_loop": station_side_integrated.get(
+                        "full_loop_external_validation_supported"
+                    ) is True,
+                    "claim_limit": short(
+                        station_side_integrated.get("claim_limit"), 220
+                    ),
+                },
+            } if station_side_integrated and station_side_integrated_relevant else {}),
+            **({
                 "vehicle_side_measurement_lead": {
                     "claim_supported": False,
                     "lead_count": len(vehicle_side_leads.get("leads") or []),
@@ -9838,6 +9993,44 @@ def compact_data_used(
                 ) is True,
                 "claim_limit": local_station.get("claim_limit"),
             }
+        integrated = evidence.get(
+            "confidential_station_side_integrated_validation"
+        )
+        if isinstance(integrated, dict) and include_references:
+            pressure_boundary = integrated.get("pressure_boundary") or {}
+            cascade_sequence = integrated.get("cascade_sequence") or {}
+            recharge_forecast = integrated.get("recharge_pressure_forecast") or {}
+            lifecycle_alignment = integrated.get("lifecycle_alignment") or {}
+            result["station_side_integrated_validation"] = {
+                "supported": integrated.get(
+                    "station_side_integrated_validation_supported"
+                ) is True,
+                "pressure_boundary_holdout": pressure_boundary.get("supported") is True,
+                "pressure_boundary_holdout_points": pressure_boundary.get(
+                    "holdout_points"
+                ),
+                "cascade_sequence_holdout": cascade_sequence.get("supported") is True,
+                "cascade_holdout_pairs": cascade_sequence.get("holdout_pairs"),
+                "recharge_pressure_forecast_holdout": recharge_forecast.get(
+                    "supported"
+                ) is True,
+                "recharge_forecast_holdout_cases": recharge_forecast.get(
+                    "holdout_cases"
+                ),
+                "recharge_forecast_mae_mpa": recharge_forecast.get(
+                    "holdout_mae_mpa"
+                ),
+                "lifecycle_alignment_negative_retained": lifecycle_alignment.get(
+                    "negative_result_retained"
+                ) is True,
+                "vehicle_fill_validation": integrated.get(
+                    "vehicle_fill_validation"
+                ) is True,
+                "full_loop_validation": integrated.get(
+                    "full_loop_external_validation_supported"
+                ) is True,
+                "claim_limit": integrated.get("claim_limit"),
+            }
         cip_endpoint = evidence.get("public_cip_dispenser_endpoint_reference")
         if isinstance(cip_endpoint, dict):
             source = cip_endpoint.get("source") or {}
@@ -9995,6 +10188,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     lifecycle_alignment = evidence.get(
         "confidential_station_lifecycle_pressure_alignment_holdout"
+    ) or {}
+    station_side_integrated = evidence.get(
+        "confidential_station_side_integrated_validation"
     ) or {}
     channel_envelopes = evidence.get(
         "confidential_pressure_channel_envelopes"
@@ -10953,6 +11149,36 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "independent_external_validation"
             ) is True,
             "claim_limit": lifecycle_alignment.get("claim_limit"),
+        },
+        "confidential_station_side_integrated_validation": {
+            "evidence_artifact": station_side_integrated.get("artifact"),
+            "evidence_role": station_side_integrated.get("evidence_role"),
+            "pressure_boundary": station_side_integrated.get("pressure_boundary") or {},
+            "cascade_sequence": station_side_integrated.get("cascade_sequence") or {},
+            "recharge_pressure_forecast": station_side_integrated.get(
+                "recharge_pressure_forecast"
+            ) or {},
+            "lifecycle_alignment": station_side_integrated.get(
+                "lifecycle_alignment"
+            ) or {},
+            "station_side_integrated_validation_supported": (
+                station_side_integrated.get(
+                    "station_side_integrated_validation_supported"
+                ) is True
+            ),
+            "runtime_parameter_application": station_side_integrated.get(
+                "runtime_parameter_application"
+            ) is True,
+            "vehicle_fill_validation": station_side_integrated.get(
+                "vehicle_fill_validation"
+            ) is True,
+            "full_loop_external_validation_supported": station_side_integrated.get(
+                "full_loop_external_validation_supported"
+            ) is True,
+            "site_specific_safety_distance_validation": station_side_integrated.get(
+                "site_specific_safety_distance_validation"
+            ) is True,
+            "claim_limit": station_side_integrated.get("claim_limit"),
         },
         "confidential_pressure_channel_envelopes": {
             "artifact": channel_envelopes.get("artifact"),

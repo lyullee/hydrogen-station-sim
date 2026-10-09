@@ -1624,6 +1624,40 @@ def test_manifest_routes_short_horizon_recharge_forecast_only_when_relevant():
     )
 
 
+def test_manifest_exposes_station_side_integrated_validation_bundle():
+    manifest = build_evidence_manifest(
+        {"time_s": 12.5},
+        {},
+        [],
+        False,
+        question="현장 압력·캐스케이드·재충전 검증 범위는?",
+    )
+    evidence = manifest["response_evidence"][
+        "confidential_station_side_integrated_validation"
+    ]
+    assert evidence["station_side_integrated_validation_supported"] is True
+    assert evidence["pressure_boundary"]["supported"] is True
+    assert evidence["cascade_sequence"]["holdout_pairs"] == 3664
+    assert evidence["recharge_pressure_forecast"]["holdout_cases"] == 394
+    assert evidence["lifecycle_alignment"]["negative_result_retained"] is True
+    assert evidence["vehicle_fill_validation"] is False
+    assert evidence["full_loop_external_validation_supported"] is False
+
+    summary = prompt_evidence_summary(manifest)[
+        "confidential_station_side_integrated_validation"
+    ]
+    assert summary["station_side_integrated_validation_supported"] is True
+    decision = prompt_decision_evidence(manifest)["validation_boundaries"][
+        "station_side_integrated_validation"
+    ]
+    assert decision["claim_supported"] is True
+    assert decision["holdout_points"] == 30
+    assert decision["cascade_holdout_pairs"] == 3664
+    assert decision["recharge_forecast_holdout_cases"] == 394
+    assert decision["vehicle_fill_validation"] is False
+    assert decision["full_loop"] is False
+
+
 def test_manifest_routes_retained_negative_lifecycle_alignment_only_when_relevant():
     manifest = build_evidence_manifest(
         {"time_s": 12.5},
