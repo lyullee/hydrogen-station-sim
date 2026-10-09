@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-10-03T21:53:59.201558+00:00",
+  "generated_at_utc": "2026-10-09T00:35:49.028920+00:00",
   "status": "completed_endpoint_only_negative_diagnostic",
   "source": {
     "title": "Study on comprehensive evaluation of 35 MPa/70 MPa hydrogen dispenser refueling performance",
@@ -17,6 +17,11 @@
         "table": "T2",
         "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T2.csv.zip",
         "sha256": "06beb809e4021e3aee9e641e07ac4cdef98a9ae71a2abfa2ab7009a8ae28ecd0"
+      },
+      {
+        "table": "T3",
+        "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T3.csv.zip",
+        "sha256": "33d2eeddd627260044b1be28f209372bd4283058afd5837ec95a029ce6bdde02"
       },
       {
         "table": "T4",
@@ -36,7 +41,8 @@
   "aggregate": {
     "case_count": 2,
     "stop_reason_counts": {
-      "safety-temperature": 2
+      "duration-expiry": 1,
+      "gas-temperature-limit": 1
     },
     "claim_boundary": "This diagnostic does not close the independent station-to-vehicle full-loop gate and is not a safety-distance claim."
   },
@@ -51,16 +57,16 @@
         "mass_kg": 8.21
       },
       "predicted": {
-        "final_pressure_mpa": 3.2610094469489295,
-        "final_temperature_c": 85.1192476715745,
-        "final_soc_percent": 9.044249865654129,
-        "stop_reason": "safety-temperature",
-        "peak_temperature_c": 85.1192476715745
+        "final_pressure_mpa": 7.037854553550959,
+        "final_temperature_c": 85.05085406424962,
+        "final_soc_percent": 19.15068140227519,
+        "stop_reason": "gas-temperature-limit",
+        "peak_temperature_c": 85.05085406424962
       },
       "endpoint_errors": {
-        "pressure_mpa": -32.138990553051066,
-        "temperature_c": 21.1192476715745,
-        "soc_percentage_points": -78.95575013434588
+        "pressure_mpa": -28.36214544644904,
+        "temperature_c": 21.05085406424962,
+        "soc_percentage_points": -68.84931859772482
       },
       "claim_boundary": "endpoint-only public-table diagnostic; no synchronized time-series or full-loop validation claim"
     },
@@ -74,16 +80,16 @@
         "mass_kg": 5.08
       },
       "predicted": {
-        "final_pressure_mpa": 66.46092542199194,
-        "final_temperature_c": 85.06777253465157,
-        "final_soc_percent": 82.37547182068904,
-        "stop_reason": "safety-temperature",
-        "peak_temperature_c": 85.06777253465157
+        "final_pressure_mpa": 74.18155039274384,
+        "final_temperature_c": 70.24873447741294,
+        "final_soc_percent": 91.9587705630598,
+        "stop_reason": null,
+        "peak_temperature_c": 70.70257970813634
       },
       "endpoint_errors": {
-        "pressure_mpa": -15.13907457800805,
-        "temperature_c": 19.26777253465157,
-        "soc_percentage_points": -16.624528179310957
+        "pressure_mpa": -7.41844960725615,
+        "temperature_c": 4.448734477412941,
+        "soc_percentage_points": -7.041229436940199
       },
       "claim_boundary": "endpoint-only public-table diagnostic; no synchronized time-series or full-loop validation claim"
     }

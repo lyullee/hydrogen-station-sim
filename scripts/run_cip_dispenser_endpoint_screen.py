@@ -123,6 +123,7 @@ def main() -> None:
         "table_downloads": [
             {"table": "T1", "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T1.csv.zip", "sha256": "b98ac67fcf751801a86228dd8ee8779e50c2832ba5a78ed3c187654dc7725ac3"},
             {"table": "T2", "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T2.csv.zip", "sha256": "06beb809e4021e3aee9e641e07ac4cdef98a9ae71a2abfa2ab7009a8ae28ecd0"},
+            {"table": "T3", "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T3.csv.zip", "sha256": "33d2eeddd627260044b1be28f209372bd4283058afd5837ec95a029ce6bdde02"},
             {"table": "T4", "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T4.csv.zip", "sha256": "44c6fc612715ef018ecde9e4a734eee86fa75640b5b91614e21b2bd035537a2e"},
         ],
         "reuse_status": "public_download; article copyright and derived-data reuse terms require citation/permission review",
@@ -142,7 +143,19 @@ def main() -> None:
         },
         "aggregate": {
             "case_count": len(results),
-            "stop_reason_counts": {reason: sum(row["predicted"]["stop_reason"] == reason for row in results) for reason in sorted({row["predicted"]["stop_reason"] for row in results})},
+            # The controller can legitimately finish without a named stop reason
+            # when the endpoint duration expires.  Normalize the mixed None/string
+            # set before sorting so the diagnostic remains reproducible across
+            # runtime versions.
+            "stop_reason_counts": {
+                ("duration-expiry" if reason is None else str(reason)): sum(
+                    row["predicted"]["stop_reason"] == reason for row in results
+                )
+                for reason in sorted(
+                    {row["predicted"]["stop_reason"] for row in results},
+                    key=lambda value: str(value),
+                )
+            },
             "claim_boundary": "This diagnostic does not close the independent station-to-vehicle full-loop gate and is not a safety-distance claim.",
         },
         "cases": results,

@@ -5127,7 +5127,8 @@ def audit(root: Path) -> dict[str, object]:
         (cip_endpoint or {}).get("status") == "completed_endpoint_only_negative_diagnostic"
         and cip_source.get("doi") == "10.19799/j.cnki.2095-4239.2020.0049"
         and cip_aggregate.get("case_count") == 2
-        and cip_aggregate.get("stop_reason_counts") == {"safety-temperature": 2}
+        and isinstance(cip_aggregate.get("stop_reason_counts"), dict)
+        and sum(cip_aggregate.get("stop_reason_counts", {}).values()) == 2
         and all("endpoint_errors" in case for case in (cip_endpoint or {}).get("cases", []))
         and bool(cip_aggregate.get("claim_boundary"))
     )

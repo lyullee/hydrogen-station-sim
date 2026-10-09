@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-09T00:30:41.954156+00:00",
+  "generated_at": "2026-10-09T00:35:53.221379+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -5465,7 +5465,8 @@
       "observed": {
         "case_count": 2,
         "stop_reason_counts": {
-          "safety-temperature": 2
+          "duration-expiry": 1,
+          "gas-temperature-limit": 1
         },
         "claim_boundary": "This diagnostic does not close the independent station-to-vehicle full-loop gate and is not a safety-distance claim."
       }
