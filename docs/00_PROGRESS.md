@@ -1,5 +1,21 @@
 # Development Progress
 
+## 2026-10-09 - Broader local archive connected with explicit HRS boundaries
+
+- The local search found substantially more than the measured station bundle:
+  18 adjacent hydrogen-city/pipeline event logs (2,411,774 rows), 19 related
+  workbooks, a liquid-hydrogen-centre scenario collection, and a broader
+  document archive screened at 38,528 machine-readable files and 12,804
+  CSV/TSV headers.
+- Added these aggregates to the privacy-bounded API and LLM evidence views.
+  The assistant can now distinguish abundant adjacent process context from a
+  synchronized station-dispenser-vehicle cohort. Raw rows, paths, headers,
+  identifiers and dates remain excluded; automatic parameter application and
+  full-loop claims remain disabled for the adjacent corpus.
+- Regenerated the two source-hash audit records affected by the LLM evidence
+  extension. Focused checks passed (8 tests), and the complete regression suite
+  passed **1,156 tests** with 18 dependency warnings.
+
 ## 2026-10-09 - Full regression recheck after local-data evidence update
 
 - Re-ran the complete Python regression suite after connecting the local

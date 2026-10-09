@@ -17,6 +17,13 @@ def test_local_evidence_summary_is_privacy_bounded() -> None:
     assert summary["coverage"]["local_station_data_is_sparse"] is False
     assert summary["coverage"]["vehicle_side_full_loop_validation_ready"] is False
     assert summary["coverage"]["full_loop_decision"] == "NO_NEW_FULL_LOOP_HOLDOUT"
+    assert summary["adjacent_process"]["high_pressure_process"][
+        "csv_event_row_count"
+    ] == 2_411_774
+    assert summary["adjacent_process"]["runtime_parameter_application"] is False
+    assert summary["document_archive_discovery"][
+        "vehicle_pressure_temperature_flow_time_candidates"
+    ] == 0
     assert all(value is False for value in summary["privacy"].values())
     rendered = str(summary)
     assert "C:\\" not in rendered

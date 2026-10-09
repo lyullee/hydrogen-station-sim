@@ -4817,6 +4817,126 @@ def _local_data_deep_scan_evidence() -> dict[str, Any] | None:
     }
 
 
+def _local_adjacent_process_evidence() -> dict[str, Any] | None:
+    """Expose adjacent hydrogen-process inventory without raw provenance.
+
+    These logs can help explain process-context and sequence plausibility, but
+    they must never be presented as HRS station-to-vehicle validation or used
+    to retune runtime parameters automatically.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "research/local_adjacent_hydrogen_data_discovery_2026_10_09.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    privacy = record.get("privacy") or {}
+    collections = record.get("collections") or {}
+    process = collections.get("high_pressure_hydrogen_process") or {}
+    liquid = collections.get("liquid_hydrogen_centre_context") or {}
+    eligibility = record.get("eligibility") or {}
+    if (
+        record.get("artifact_type")
+        != "local_adjacent_hydrogen_process_data_discovery"
+        or not all(value is False for value in privacy.values())
+        or process.get("csv_event_log_count") != 18
+        or process.get("csv_event_row_count") != 2_411_774
+        or process.get("domain_classification")
+        != "hydrogen_city_or_pipeline_process_context_not_HRS"
+        or eligibility.get("station_side_runtime_parameter_application") is not False
+        or eligibility.get("synchronized_station_dispenser_vehicle_validation") is not False
+        or eligibility.get("quantitative_consequence_validation") is not False
+    ):
+        return None
+    return {
+        "artifact": str(path.relative_to(root)).replace("\\", "/"),
+        "evidence_role": "privacy-bounded adjacent hydrogen-process inventory",
+        "domain_classification": process.get("domain_classification"),
+        "high_pressure_process": {
+            key: process.get(key)
+            for key in (
+                "csv_event_log_count", "csv_event_row_count", "largest_event_log_row_count",
+                "entity_key_count", "logical_key_count", "value_family_row_counts",
+                "workbook_count", "workbook_sheet_count", "nontrivial_workbook_table_count",
+                "time_semantics_documented_in_local_index",
+                "time_order_interpretation",
+            )
+            if process.get(key) is not None
+        },
+        "liquid_hydrogen_centre_context": {
+            key: liquid.get(key)
+            for key in (
+                "csv_file_count", "scenario_row_count", "workbook_count",
+                "workbook_sheet_count", "nontrivial_workbook_table_count",
+                "semantic_role",
+            )
+            if liquid.get(key) is not None
+        },
+        "runtime_parameter_application": False,
+        "station_to_vehicle_full_loop_validation": False,
+        "quantitative_consequence_validation": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
+def _local_docudata_discovery_evidence() -> dict[str, Any] | None:
+    """Expose the broad local header scan as a discovery boundary only."""
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "research/local_docudata_full_discovery_2026_10_09.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    privacy = record.get("privacy") or {}
+    broad = record.get("broad_scan") or {}
+    refined = record.get("refined_header_screen") or {}
+    eligibility = record.get("eligibility") or {}
+    if (
+        record.get("artifact_type") != "local_docudata_full_header_discovery"
+        or not all(value is False for value in privacy.values())
+        or broad.get("machine_readable_files_screened") != 38_528
+        or broad.get("csv_tsv_headers_screened") != 12_804
+        or refined.get("vehicle_pressure_temperature_flow_time_candidates") != 0
+        or eligibility.get("eligible_synchronized_station_dispenser_vehicle_cohort") != 0
+        or eligibility.get("runtime_parameter_application") is not False
+    ):
+        return None
+    return {
+        "artifact": str(path.relative_to(root)).replace("\\", "/"),
+        "evidence_role": "privacy-bounded local document discovery",
+        "broad_scan": {
+            key: broad.get(key)
+            for key in (
+                "machine_readable_files_screened", "csv_tsv_headers_screened",
+                "path_keyword_candidates", "vehicle_or_dispenser_keyword_candidates",
+                "release_rig_or_jet_candidates",
+            )
+            if broad.get(key) is not None
+        },
+        "refined_header_screen": {
+            key: refined.get(key)
+            for key in (
+                "csv_files_screened", "vehicle_keyword_hits",
+                "vehicle_pressure_temperature_flow_time_candidates",
+            )
+            if refined.get(key) is not None
+        },
+        "eligibility": {
+            key: eligibility.get(key)
+            for key in (
+                "eligible_synchronized_station_dispenser_vehicle_cohort",
+                "full_loop_external_validation_ready",
+                "quantitative_consequence_validation_ready",
+                "runtime_parameter_application",
+            )
+            if eligibility.get(key) is not None
+        },
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _local_public_validation_catalog_evidence() -> dict[str, Any] | None:
     """Expose the local public-cache inventory without exposing its files.
 
@@ -5909,6 +6029,16 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_local_data_deep_scan"
         ] = local_data_deep_scan
+    adjacent_process = _local_adjacent_process_evidence()
+    if adjacent_process is not None:
+        envelope["response_evidence"][
+            "local_adjacent_hydrogen_process_context"
+        ] = adjacent_process
+    docudata_discovery = _local_docudata_discovery_evidence()
+    if docudata_discovery is not None:
+        envelope["response_evidence"][
+            "local_docudata_full_discovery"
+        ] = docudata_discovery
     local_public_catalog = _local_public_validation_catalog_evidence()
     if local_public_catalog is not None:
         envelope["response_evidence"][
@@ -6933,6 +7063,36 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if local_data_deep_scan.get(key) is not None
         }
+    adjacent_process = evidence.get("local_adjacent_hydrogen_process_context")
+    if isinstance(adjacent_process, dict):
+        summary["local_adjacent_hydrogen_process_context"] = {
+            "evidence_role": adjacent_process.get("evidence_role"),
+            "domain_classification": adjacent_process.get("domain_classification"),
+            "high_pressure_process": adjacent_process.get(
+                "high_pressure_process"
+            ) or {},
+            "liquid_hydrogen_centre_context": adjacent_process.get(
+                "liquid_hydrogen_centre_context"
+            ) or {},
+            "runtime_parameter_application": adjacent_process.get(
+                "runtime_parameter_application"
+            ) is True,
+            "station_to_vehicle_full_loop_validation": adjacent_process.get(
+                "station_to_vehicle_full_loop_validation"
+            ) is True,
+            "claim_limit": short(adjacent_process.get("claim_limit"), 320),
+        }
+    docudata_discovery = evidence.get("local_docudata_full_discovery")
+    if isinstance(docudata_discovery, dict):
+        summary["local_docudata_full_discovery"] = {
+            "evidence_role": docudata_discovery.get("evidence_role"),
+            "broad_scan": docudata_discovery.get("broad_scan") or {},
+            "refined_header_screen": docudata_discovery.get(
+                "refined_header_screen"
+            ) or {},
+            "eligibility": docudata_discovery.get("eligibility") or {},
+            "claim_limit": short(docudata_discovery.get("claim_limit"), 320),
+        }
     private_media = evidence.get("confidential_private_media_intake")
     if isinstance(private_media, dict):
         summary["confidential_private_media_intake"] = {
@@ -7101,6 +7261,10 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     local_data_deep_scan = response.get(
         "confidential_local_data_deep_scan"
     ) or {}
+    adjacent_process = response.get(
+        "local_adjacent_hydrogen_process_context"
+    ) or {}
+    docudata_discovery = response.get("local_docudata_full_discovery") or {}
     local_public_catalog = response.get("local_public_validation_catalog") or {}
     local_public_candidate_scan = response.get("local_public_candidate_scan") or {}
     hytunnel_diagnostic = response.get(
@@ -7603,6 +7767,62 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 },
             } if local_data_deep_scan and local_discovery_relevant else {}),
             **({
+                "local_adjacent_hydrogen_process_context": {
+                    "domain_classification": adjacent_process.get(
+                        "domain_classification"
+                    ),
+                    "csv_event_log_count": (
+                        (adjacent_process.get("high_pressure_process") or {})
+                        .get("csv_event_log_count")
+                    ),
+                    "csv_event_row_count": (
+                        (adjacent_process.get("high_pressure_process") or {})
+                        .get("csv_event_row_count")
+                    ),
+                    "logical_key_count": (
+                        (adjacent_process.get("high_pressure_process") or {})
+                        .get("logical_key_count")
+                    ),
+                    "value_family_row_counts": (
+                        (adjacent_process.get("high_pressure_process") or {})
+                        .get("value_family_row_counts") or {}
+                    ),
+                    "runtime_parameter_application": False,
+                    "station_to_vehicle_full_loop_validation": False,
+                    "claim_limit": short(adjacent_process.get("claim_limit"), 220),
+                },
+            } if adjacent_process and local_discovery_relevant else {}),
+            **({
+                "local_docudata_full_discovery": {
+                    "machine_readable_files_screened": (
+                        (docudata_discovery.get("broad_scan") or {})
+                        .get("machine_readable_files_screened")
+                    ),
+                    "csv_tsv_headers_screened": (
+                        (docudata_discovery.get("broad_scan") or {})
+                        .get("csv_tsv_headers_screened")
+                    ),
+                    "vehicle_or_dispenser_keyword_candidates": (
+                        (docudata_discovery.get("broad_scan") or {})
+                        .get("vehicle_or_dispenser_keyword_candidates")
+                    ),
+                    "vehicle_pressure_temperature_flow_time_candidates": (
+                        (docudata_discovery.get("refined_header_screen") or {})
+                        .get("vehicle_pressure_temperature_flow_time_candidates")
+                    ),
+                    "eligible_synchronized_station_dispenser_vehicle_cohort": (
+                        (docudata_discovery.get("eligibility") or {})
+                        .get("eligible_synchronized_station_dispenser_vehicle_cohort")
+                    ),
+                    "runtime_parameter_application": False,
+                    "full_loop_external_validation_ready": (
+                        (docudata_discovery.get("eligibility") or {})
+                        .get("full_loop_external_validation_ready")
+                    ),
+                    "claim_limit": short(docudata_discovery.get("claim_limit"), 220),
+                },
+            } if docudata_discovery and local_discovery_relevant else {}),
+            **({
                 "local_station_attestation_request": {
                     "status": local_attestation_request.get("status"),
                     "observed_archive": local_attestation_request.get(
@@ -8026,6 +8246,10 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     local_data_deep_scan = evidence.get(
         "confidential_local_data_deep_scan"
     ) or {}
+    adjacent_process = evidence.get(
+        "local_adjacent_hydrogen_process_context"
+    ) or {}
+    docudata_discovery = evidence.get("local_docudata_full_discovery") or {}
     local_public_catalog = evidence.get("local_public_validation_catalog") or {}
     local_public_candidate_scan = evidence.get("local_public_candidate_scan") or {}
     multisource_feasibility = evidence.get(
@@ -9068,6 +9292,37 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "full_loop_decision"
             ) or {},
             "claim_limit": local_data_deep_scan.get("claim_limit"),
+        },
+        "local_adjacent_hydrogen_process_context": {
+            "evidence_artifact": adjacent_process.get("artifact"),
+            "evidence_role": adjacent_process.get("evidence_role"),
+            "domain_classification": adjacent_process.get("domain_classification"),
+            "high_pressure_process": adjacent_process.get(
+                "high_pressure_process"
+            ) or {},
+            "liquid_hydrogen_centre_context": adjacent_process.get(
+                "liquid_hydrogen_centre_context"
+            ) or {},
+            "runtime_parameter_application": adjacent_process.get(
+                "runtime_parameter_application"
+            ) is True,
+            "station_to_vehicle_full_loop_validation": adjacent_process.get(
+                "station_to_vehicle_full_loop_validation"
+            ) is True,
+            "quantitative_consequence_validation": adjacent_process.get(
+                "quantitative_consequence_validation"
+            ) is True,
+            "claim_limit": adjacent_process.get("claim_limit"),
+        },
+        "local_docudata_full_discovery": {
+            "evidence_artifact": docudata_discovery.get("artifact"),
+            "evidence_role": docudata_discovery.get("evidence_role"),
+            "broad_scan": docudata_discovery.get("broad_scan") or {},
+            "refined_header_screen": docudata_discovery.get(
+                "refined_header_screen"
+            ) or {},
+            "eligibility": docudata_discovery.get("eligibility") or {},
+            "claim_limit": docudata_discovery.get("claim_limit"),
         },
         "confidential_private_media_intake": {
             "artifact": private_media.get("artifact"),

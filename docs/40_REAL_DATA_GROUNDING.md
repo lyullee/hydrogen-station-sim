@@ -128,6 +128,17 @@ aggregate is recorded in
 the archive is not small while preserving the stricter full-loop eligibility
 boundary.
 
+The adjacent process inventory is now also available to the runtime as a
+privacy-bounded context record. It covers 18 hydrogen-city/pipeline event logs
+(2,411,774 rows), 273 logical keys and 19 workbooks, plus a smaller liquid-
+hydrogen-centre scenario collection. The evidence is useful for sequence,
+upstream-utility and HAZOP plausibility discussions only. The main assistant
+receives the counts and the explicit `runtime_parameter_application=false` and
+`station_to_vehicle_full_loop_validation=false` boundaries; raw paths,
+headers, identifiers, values and dates never enter the prompt. This avoids the
+previous ambiguity where a large adjacent corpus could be mistaken for an HRS
+vehicle-fill trace.
+
 The 25 narrow exports are now structurally recovered without disclosing their
 headers. Twelve files contain 29,361,269 rows in a pressure/flow candidate
 schema; thirteen contain 29,257,564 rows in a thermal candidate schema. Their
