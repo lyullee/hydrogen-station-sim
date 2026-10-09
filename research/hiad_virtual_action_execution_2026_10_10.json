@@ -1,0 +1,1693 @@
+{
+  "schema_version": 1,
+  "artifact_type": "hiad_virtual_response_action_execution_consistency_audit",
+  "generated_at_utc": "2026-10-09T20:20:59.726282+00:00",
+  "status": "completed_virtual_action_execution_audit",
+  "evidence_role": "public_action_category_to_simulation_command_consistency_only",
+  "source": {
+    "hiad_replay_coverage": "research/hiad_digital_twin_replay_coverage_2026_10_08.json",
+    "hiad_replay_coverage_sha256": "75fe0f41aed9393861e50a5d4b94428d8997eaec599968e267fc3c3875e9d0f4",
+    "action_evidence": "research/hiad_action_evidence.json",
+    "action_evidence_sha256": "72f2550eabea6a4207a5d59c98bd99520e217fd2d4f8597e5d1d72f2ef87e1dd",
+    "playbook_catalog": "src/h2station/data/emergency_playbooks.json",
+    "playbook_catalog_sha256": "d8fedb036a91b5adae3934f1604a17966b8f0f9200c52f4d40bf2da2243a7c6c",
+    "virtual_safety_runtime": "src/h2station/virtual_safety.py",
+    "virtual_safety_runtime_sha256": "f3bae9c215f00b3f448879e1e31100eab0599f32a84f7f10e69c8d5373cae39d"
+  },
+  "runtime": {
+    "family_count": 9,
+    "family_pass_count": 9,
+    "action_count": 39,
+    "all_family_sequences_passed": true,
+    "failure_feedback_guard": {
+      "status": "passed",
+      "command_status": "commanded",
+      "feedback_status": "failed",
+      "fault": "stuck_open",
+      "claim_limit": "가상 피드백 분리 회귀시험이며 실제 밸브 고장률이나 진단성능을 검증하지 않음"
+    }
+  },
+  "family_results": {
+    "compressor_thermal": {
+      "family": "compressor_thermal",
+      "representative_node_id": "N06",
+      "status": "passed",
+      "checks": {
+        "template_nonempty": true,
+        "commands_accepted": true,
+        "completion_feedback_confirmed": true,
+        "process_settings_changed": true
+      },
+      "action_count": 2,
+      "confirmed_action_count": 2,
+      "actions": [
+        {
+          "kind": "operation.stop",
+          "target": "pressure_recharge",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "valve.close",
+          "target": "compressor.discharge",
+          "status": "commanded",
+          "feedback_status": "confirmed"
+        }
+      ],
+      "errors": [],
+      "closed_valves": [
+        "compressor.discharge"
+      ],
+      "process_settings_before": {
+        "trailer_supply": true,
+        "pressure_recharge": true,
+        "vehicle_1": true,
+        "vehicle_2": true,
+        "trailer_pressure_mpa": 20.0,
+        "trailer_temperature_c": 25.0,
+        "trailer_capacity_kg": 50.0,
+        "recharge_auto_stop": true,
+        "recharge_target_low_mpa": 46.0,
+        "recharge_target_medium_mpa": 66.0,
+        "recharge_target_high_mpa": 96.0,
+        "recharge_restart_margin_low_mpa": 2.0,
+        "recharge_restart_margin_medium_mpa": 3.0,
+        "recharge_restart_margin_high_mpa": 4.5,
+        "risk_overlay_enabled": true,
+        "risk_display_mode": "relative",
+        "risk_update_interval_s": 30,
+        "measured_boundary_calibration": false,
+        "measured_station_dynamics_calibration": false,
+        "vehicle_1_auto_stop": true,
+        "vehicle_1_target_pressure_mpa": 70.0,
+        "vehicle_2_auto_stop": true,
+        "vehicle_2_target_pressure_mpa": 70.0,
+        "relief_valves": {
+          "low": {
+            "enabled": true,
+            "open_mpa": 50.0,
+            "close_mpa": 49.0,
+            "orifice_mm": 1.0
+          },
+          "medium": {
+            "enabled": true,
+            "open_mpa": 70.0,
+            "close_mpa": 69.0,
+            "orifice_mm": 1.0
+          },
+          "high": {
+            "enabled": true,
+            "open_mpa": 100.0,
+            "close_mpa": 99.0,
+            "orifice_mm": 1.0
+          },
+          "hose_1": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "hose_2": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_1": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_2": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          }
+        }
+      },
+      "process_settings_after": {
+        "trailer_supply": true,
+        "pressure_recharge": false,
+        "vehicle_1": true,
+        "vehicle_2": true,
+        "trailer_pressure_mpa": 20.0,
+        "trailer_temperature_c": 25.0,
+        "trailer_capacity_kg": 50.0,
+        "recharge_auto_stop": true,
+        "recharge_target_low_mpa": 46.0,
+        "recharge_target_medium_mpa": 66.0,
+        "recharge_target_high_mpa": 96.0,
+        "recharge_restart_margin_low_mpa": 2.0,
+        "recharge_restart_margin_medium_mpa": 3.0,
+        "recharge_restart_margin_high_mpa": 4.5,
+        "risk_overlay_enabled": true,
+        "risk_display_mode": "relative",
+        "risk_update_interval_s": 30,
+        "measured_boundary_calibration": false,
+        "measured_station_dynamics_calibration": false,
+        "vehicle_1_auto_stop": true,
+        "vehicle_1_target_pressure_mpa": 70.0,
+        "vehicle_2_auto_stop": true,
+        "vehicle_2_target_pressure_mpa": 70.0,
+        "relief_valves": {
+          "low": {
+            "enabled": true,
+            "open_mpa": 50.0,
+            "close_mpa": 49.0,
+            "orifice_mm": 1.0
+          },
+          "medium": {
+            "enabled": true,
+            "open_mpa": 70.0,
+            "close_mpa": 69.0,
+            "orifice_mm": 1.0
+          },
+          "high": {
+            "enabled": true,
+            "open_mpa": 100.0,
+            "close_mpa": 99.0,
+            "orifice_mm": 1.0
+          },
+          "hose_1": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "hose_2": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_1": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_2": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          }
+        }
+      }
+    },
+    "external_fire": {
+      "family": "external_fire",
+      "representative_node_id": "N08",
+      "status": "passed",
+      "checks": {
+        "template_nonempty": true,
+        "commands_accepted": true,
+        "completion_feedback_confirmed": true,
+        "process_settings_changed": true
+      },
+      "action_count": 7,
+      "confirmed_action_count": 7,
+      "actions": [
+        {
+          "kind": "operation.stop",
+          "target": "all",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "valve.close",
+          "target": "bank.medium.inlet",
+          "status": "commanded",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "valve.close",
+          "target": "bank.medium.outlet",
+          "status": "commanded",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "access.restrict",
+          "target": "storage",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "personnel.evacuate",
+          "target": "storage",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "power.isolate",
+          "target": "storage",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "cooling.on",
+          "target": "medium",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        }
+      ],
+      "errors": [],
+      "closed_valves": [
+        "bank.medium.inlet",
+        "bank.medium.outlet"
+      ],
+      "process_settings_before": {
+        "trailer_supply": true,
+        "pressure_recharge": true,
+        "vehicle_1": true,
+        "vehicle_2": true,
+        "trailer_pressure_mpa": 20.0,
+        "trailer_temperature_c": 25.0,
+        "trailer_capacity_kg": 50.0,
+        "recharge_auto_stop": true,
+        "recharge_target_low_mpa": 46.0,
+        "recharge_target_medium_mpa": 66.0,
+        "recharge_target_high_mpa": 96.0,
+        "recharge_restart_margin_low_mpa": 2.0,
+        "recharge_restart_margin_medium_mpa": 3.0,
+        "recharge_restart_margin_high_mpa": 4.5,
+        "risk_overlay_enabled": true,
+        "risk_display_mode": "relative",
+        "risk_update_interval_s": 30,
+        "measured_boundary_calibration": false,
+        "measured_station_dynamics_calibration": false,
+        "vehicle_1_auto_stop": true,
+        "vehicle_1_target_pressure_mpa": 70.0,
+        "vehicle_2_auto_stop": true,
+        "vehicle_2_target_pressure_mpa": 70.0,
+        "relief_valves": {
+          "low": {
+            "enabled": true,
+            "open_mpa": 50.0,
+            "close_mpa": 49.0,
+            "orifice_mm": 1.0
+          },
+          "medium": {
+            "enabled": true,
+            "open_mpa": 70.0,
+            "close_mpa": 69.0,
+            "orifice_mm": 1.0
+          },
+          "high": {
+            "enabled": true,
+            "open_mpa": 100.0,
+            "close_mpa": 99.0,
+            "orifice_mm": 1.0
+          },
+          "hose_1": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "hose_2": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_1": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_2": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          }
+        }
+      },
+      "process_settings_after": {
+        "trailer_supply": false,
+        "pressure_recharge": false,
+        "vehicle_1": false,
+        "vehicle_2": false,
+        "trailer_pressure_mpa": 20.0,
+        "trailer_temperature_c": 25.0,
+        "trailer_capacity_kg": 50.0,
+        "recharge_auto_stop": true,
+        "recharge_target_low_mpa": 46.0,
+        "recharge_target_medium_mpa": 66.0,
+        "recharge_target_high_mpa": 96.0,
+        "recharge_restart_margin_low_mpa": 2.0,
+        "recharge_restart_margin_medium_mpa": 3.0,
+        "recharge_restart_margin_high_mpa": 4.5,
+        "risk_overlay_enabled": true,
+        "risk_display_mode": "relative",
+        "risk_update_interval_s": 30,
+        "measured_boundary_calibration": false,
+        "measured_station_dynamics_calibration": false,
+        "vehicle_1_auto_stop": true,
+        "vehicle_1_target_pressure_mpa": 70.0,
+        "vehicle_2_auto_stop": true,
+        "vehicle_2_target_pressure_mpa": 70.0,
+        "relief_valves": {
+          "low": {
+            "enabled": true,
+            "open_mpa": 50.0,
+            "close_mpa": 49.0,
+            "orifice_mm": 1.0
+          },
+          "medium": {
+            "enabled": true,
+            "open_mpa": 70.0,
+            "close_mpa": 69.0,
+            "orifice_mm": 1.0
+          },
+          "high": {
+            "enabled": true,
+            "open_mpa": 100.0,
+            "close_mpa": 99.0,
+            "orifice_mm": 1.0
+          },
+          "hose_1": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "hose_2": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_1": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_2": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          }
+        }
+      }
+    },
+    "fueling_fault": {
+      "family": "fueling_fault",
+      "representative_node_id": "N11",
+      "status": "passed",
+      "checks": {
+        "template_nonempty": true,
+        "commands_accepted": true,
+        "completion_feedback_confirmed": true,
+        "process_settings_changed": true
+      },
+      "action_count": 3,
+      "confirmed_action_count": 3,
+      "actions": [
+        {
+          "kind": "operation.stop",
+          "target": "vehicle_1",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "valve.close",
+          "target": "dispenser.1",
+          "status": "commanded",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "vehicle.evacuate",
+          "target": "vehicle_1",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        }
+      ],
+      "errors": [],
+      "closed_valves": [
+        "dispenser.1"
+      ],
+      "process_settings_before": {
+        "trailer_supply": true,
+        "pressure_recharge": true,
+        "vehicle_1": true,
+        "vehicle_2": true,
+        "trailer_pressure_mpa": 20.0,
+        "trailer_temperature_c": 25.0,
+        "trailer_capacity_kg": 50.0,
+        "recharge_auto_stop": true,
+        "recharge_target_low_mpa": 46.0,
+        "recharge_target_medium_mpa": 66.0,
+        "recharge_target_high_mpa": 96.0,
+        "recharge_restart_margin_low_mpa": 2.0,
+        "recharge_restart_margin_medium_mpa": 3.0,
+        "recharge_restart_margin_high_mpa": 4.5,
+        "risk_overlay_enabled": true,
+        "risk_display_mode": "relative",
+        "risk_update_interval_s": 30,
+        "measured_boundary_calibration": false,
+        "measured_station_dynamics_calibration": false,
+        "vehicle_1_auto_stop": true,
+        "vehicle_1_target_pressure_mpa": 70.0,
+        "vehicle_2_auto_stop": true,
+        "vehicle_2_target_pressure_mpa": 70.0,
+        "relief_valves": {
+          "low": {
+            "enabled": true,
+            "open_mpa": 50.0,
+            "close_mpa": 49.0,
+            "orifice_mm": 1.0
+          },
+          "medium": {
+            "enabled": true,
+            "open_mpa": 70.0,
+            "close_mpa": 69.0,
+            "orifice_mm": 1.0
+          },
+          "high": {
+            "enabled": true,
+            "open_mpa": 100.0,
+            "close_mpa": 99.0,
+            "orifice_mm": 1.0
+          },
+          "hose_1": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "hose_2": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_1": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_2": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          }
+        }
+      },
+      "process_settings_after": {
+        "trailer_supply": true,
+        "pressure_recharge": true,
+        "vehicle_1": false,
+        "vehicle_2": true,
+        "trailer_pressure_mpa": 20.0,
+        "trailer_temperature_c": 25.0,
+        "trailer_capacity_kg": 50.0,
+        "recharge_auto_stop": true,
+        "recharge_target_low_mpa": 46.0,
+        "recharge_target_medium_mpa": 66.0,
+        "recharge_target_high_mpa": 96.0,
+        "recharge_restart_margin_low_mpa": 2.0,
+        "recharge_restart_margin_medium_mpa": 3.0,
+        "recharge_restart_margin_high_mpa": 4.5,
+        "risk_overlay_enabled": true,
+        "risk_display_mode": "relative",
+        "risk_update_interval_s": 30,
+        "measured_boundary_calibration": false,
+        "measured_station_dynamics_calibration": false,
+        "vehicle_1_auto_stop": true,
+        "vehicle_1_target_pressure_mpa": 70.0,
+        "vehicle_2_auto_stop": true,
+        "vehicle_2_target_pressure_mpa": 70.0,
+        "relief_valves": {
+          "low": {
+            "enabled": true,
+            "open_mpa": 50.0,
+            "close_mpa": 49.0,
+            "orifice_mm": 1.0
+          },
+          "medium": {
+            "enabled": true,
+            "open_mpa": 70.0,
+            "close_mpa": 69.0,
+            "orifice_mm": 1.0
+          },
+          "high": {
+            "enabled": true,
+            "open_mpa": 100.0,
+            "close_mpa": 99.0,
+            "orifice_mm": 1.0
+          },
+          "hose_1": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "hose_2": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_1": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_2": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          }
+        }
+      }
+    },
+    "gas_release": {
+      "family": "gas_release",
+      "representative_node_id": "N08",
+      "status": "passed",
+      "checks": {
+        "template_nonempty": true,
+        "commands_accepted": true,
+        "completion_feedback_confirmed": true,
+        "process_settings_changed": true
+      },
+      "action_count": 6,
+      "confirmed_action_count": 6,
+      "actions": [
+        {
+          "kind": "operation.stop",
+          "target": "all",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "valve.close",
+          "target": "bank.medium.inlet",
+          "status": "commanded",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "valve.close",
+          "target": "bank.medium.outlet",
+          "status": "commanded",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "access.restrict",
+          "target": "storage",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "personnel.evacuate",
+          "target": "storage",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "ventilation.on",
+          "target": "storage",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        }
+      ],
+      "errors": [],
+      "closed_valves": [
+        "bank.medium.inlet",
+        "bank.medium.outlet"
+      ],
+      "process_settings_before": {
+        "trailer_supply": true,
+        "pressure_recharge": true,
+        "vehicle_1": true,
+        "vehicle_2": true,
+        "trailer_pressure_mpa": 20.0,
+        "trailer_temperature_c": 25.0,
+        "trailer_capacity_kg": 50.0,
+        "recharge_auto_stop": true,
+        "recharge_target_low_mpa": 46.0,
+        "recharge_target_medium_mpa": 66.0,
+        "recharge_target_high_mpa": 96.0,
+        "recharge_restart_margin_low_mpa": 2.0,
+        "recharge_restart_margin_medium_mpa": 3.0,
+        "recharge_restart_margin_high_mpa": 4.5,
+        "risk_overlay_enabled": true,
+        "risk_display_mode": "relative",
+        "risk_update_interval_s": 30,
+        "measured_boundary_calibration": false,
+        "measured_station_dynamics_calibration": false,
+        "vehicle_1_auto_stop": true,
+        "vehicle_1_target_pressure_mpa": 70.0,
+        "vehicle_2_auto_stop": true,
+        "vehicle_2_target_pressure_mpa": 70.0,
+        "relief_valves": {
+          "low": {
+            "enabled": true,
+            "open_mpa": 50.0,
+            "close_mpa": 49.0,
+            "orifice_mm": 1.0
+          },
+          "medium": {
+            "enabled": true,
+            "open_mpa": 70.0,
+            "close_mpa": 69.0,
+            "orifice_mm": 1.0
+          },
+          "high": {
+            "enabled": true,
+            "open_mpa": 100.0,
+            "close_mpa": 99.0,
+            "orifice_mm": 1.0
+          },
+          "hose_1": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "hose_2": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_1": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_2": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          }
+        }
+      },
+      "process_settings_after": {
+        "trailer_supply": false,
+        "pressure_recharge": false,
+        "vehicle_1": false,
+        "vehicle_2": false,
+        "trailer_pressure_mpa": 20.0,
+        "trailer_temperature_c": 25.0,
+        "trailer_capacity_kg": 50.0,
+        "recharge_auto_stop": true,
+        "recharge_target_low_mpa": 46.0,
+        "recharge_target_medium_mpa": 66.0,
+        "recharge_target_high_mpa": 96.0,
+        "recharge_restart_margin_low_mpa": 2.0,
+        "recharge_restart_margin_medium_mpa": 3.0,
+        "recharge_restart_margin_high_mpa": 4.5,
+        "risk_overlay_enabled": true,
+        "risk_display_mode": "relative",
+        "risk_update_interval_s": 30,
+        "measured_boundary_calibration": false,
+        "measured_station_dynamics_calibration": false,
+        "vehicle_1_auto_stop": true,
+        "vehicle_1_target_pressure_mpa": 70.0,
+        "vehicle_2_auto_stop": true,
+        "vehicle_2_target_pressure_mpa": 70.0,
+        "relief_valves": {
+          "low": {
+            "enabled": true,
+            "open_mpa": 50.0,
+            "close_mpa": 49.0,
+            "orifice_mm": 1.0
+          },
+          "medium": {
+            "enabled": true,
+            "open_mpa": 70.0,
+            "close_mpa": 69.0,
+            "orifice_mm": 1.0
+          },
+          "high": {
+            "enabled": true,
+            "open_mpa": 100.0,
+            "close_mpa": 99.0,
+            "orifice_mm": 1.0
+          },
+          "hose_1": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "hose_2": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_1": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_2": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          }
+        }
+      }
+    },
+    "hose_connection": {
+      "family": "hose_connection",
+      "representative_node_id": "N13",
+      "status": "passed",
+      "checks": {
+        "template_nonempty": true,
+        "commands_accepted": true,
+        "completion_feedback_confirmed": true,
+        "process_settings_changed": true
+      },
+      "action_count": 3,
+      "confirmed_action_count": 3,
+      "actions": [
+        {
+          "kind": "operation.stop",
+          "target": "vehicle_1",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "valve.close",
+          "target": "dispenser.1",
+          "status": "commanded",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "vehicle.evacuate",
+          "target": "vehicle_1",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        }
+      ],
+      "errors": [],
+      "closed_valves": [
+        "dispenser.1"
+      ],
+      "process_settings_before": {
+        "trailer_supply": true,
+        "pressure_recharge": true,
+        "vehicle_1": true,
+        "vehicle_2": true,
+        "trailer_pressure_mpa": 20.0,
+        "trailer_temperature_c": 25.0,
+        "trailer_capacity_kg": 50.0,
+        "recharge_auto_stop": true,
+        "recharge_target_low_mpa": 46.0,
+        "recharge_target_medium_mpa": 66.0,
+        "recharge_target_high_mpa": 96.0,
+        "recharge_restart_margin_low_mpa": 2.0,
+        "recharge_restart_margin_medium_mpa": 3.0,
+        "recharge_restart_margin_high_mpa": 4.5,
+        "risk_overlay_enabled": true,
+        "risk_display_mode": "relative",
+        "risk_update_interval_s": 30,
+        "measured_boundary_calibration": false,
+        "measured_station_dynamics_calibration": false,
+        "vehicle_1_auto_stop": true,
+        "vehicle_1_target_pressure_mpa": 70.0,
+        "vehicle_2_auto_stop": true,
+        "vehicle_2_target_pressure_mpa": 70.0,
+        "relief_valves": {
+          "low": {
+            "enabled": true,
+            "open_mpa": 50.0,
+            "close_mpa": 49.0,
+            "orifice_mm": 1.0
+          },
+          "medium": {
+            "enabled": true,
+            "open_mpa": 70.0,
+            "close_mpa": 69.0,
+            "orifice_mm": 1.0
+          },
+          "high": {
+            "enabled": true,
+            "open_mpa": 100.0,
+            "close_mpa": 99.0,
+            "orifice_mm": 1.0
+          },
+          "hose_1": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "hose_2": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_1": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_2": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          }
+        }
+      },
+      "process_settings_after": {
+        "trailer_supply": true,
+        "pressure_recharge": true,
+        "vehicle_1": false,
+        "vehicle_2": true,
+        "trailer_pressure_mpa": 20.0,
+        "trailer_temperature_c": 25.0,
+        "trailer_capacity_kg": 50.0,
+        "recharge_auto_stop": true,
+        "recharge_target_low_mpa": 46.0,
+        "recharge_target_medium_mpa": 66.0,
+        "recharge_target_high_mpa": 96.0,
+        "recharge_restart_margin_low_mpa": 2.0,
+        "recharge_restart_margin_medium_mpa": 3.0,
+        "recharge_restart_margin_high_mpa": 4.5,
+        "risk_overlay_enabled": true,
+        "risk_display_mode": "relative",
+        "risk_update_interval_s": 30,
+        "measured_boundary_calibration": false,
+        "measured_station_dynamics_calibration": false,
+        "vehicle_1_auto_stop": true,
+        "vehicle_1_target_pressure_mpa": 70.0,
+        "vehicle_2_auto_stop": true,
+        "vehicle_2_target_pressure_mpa": 70.0,
+        "relief_valves": {
+          "low": {
+            "enabled": true,
+            "open_mpa": 50.0,
+            "close_mpa": 49.0,
+            "orifice_mm": 1.0
+          },
+          "medium": {
+            "enabled": true,
+            "open_mpa": 70.0,
+            "close_mpa": 69.0,
+            "orifice_mm": 1.0
+          },
+          "high": {
+            "enabled": true,
+            "open_mpa": 100.0,
+            "close_mpa": 99.0,
+            "orifice_mm": 1.0
+          },
+          "hose_1": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "hose_2": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_1": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_2": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          }
+        }
+      }
+    },
+    "hydrogen_fire": {
+      "family": "hydrogen_fire",
+      "representative_node_id": "N08",
+      "status": "passed",
+      "checks": {
+        "template_nonempty": true,
+        "commands_accepted": true,
+        "completion_feedback_confirmed": true,
+        "process_settings_changed": true
+      },
+      "action_count": 7,
+      "confirmed_action_count": 7,
+      "actions": [
+        {
+          "kind": "operation.stop",
+          "target": "all",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "valve.close",
+          "target": "bank.medium.inlet",
+          "status": "commanded",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "valve.close",
+          "target": "bank.medium.outlet",
+          "status": "commanded",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "access.restrict",
+          "target": "storage",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "personnel.evacuate",
+          "target": "storage",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "power.isolate",
+          "target": "storage",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "cooling.on",
+          "target": "medium",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        }
+      ],
+      "errors": [],
+      "closed_valves": [
+        "bank.medium.inlet",
+        "bank.medium.outlet"
+      ],
+      "process_settings_before": {
+        "trailer_supply": true,
+        "pressure_recharge": true,
+        "vehicle_1": true,
+        "vehicle_2": true,
+        "trailer_pressure_mpa": 20.0,
+        "trailer_temperature_c": 25.0,
+        "trailer_capacity_kg": 50.0,
+        "recharge_auto_stop": true,
+        "recharge_target_low_mpa": 46.0,
+        "recharge_target_medium_mpa": 66.0,
+        "recharge_target_high_mpa": 96.0,
+        "recharge_restart_margin_low_mpa": 2.0,
+        "recharge_restart_margin_medium_mpa": 3.0,
+        "recharge_restart_margin_high_mpa": 4.5,
+        "risk_overlay_enabled": true,
+        "risk_display_mode": "relative",
+        "risk_update_interval_s": 30,
+        "measured_boundary_calibration": false,
+        "measured_station_dynamics_calibration": false,
+        "vehicle_1_auto_stop": true,
+        "vehicle_1_target_pressure_mpa": 70.0,
+        "vehicle_2_auto_stop": true,
+        "vehicle_2_target_pressure_mpa": 70.0,
+        "relief_valves": {
+          "low": {
+            "enabled": true,
+            "open_mpa": 50.0,
+            "close_mpa": 49.0,
+            "orifice_mm": 1.0
+          },
+          "medium": {
+            "enabled": true,
+            "open_mpa": 70.0,
+            "close_mpa": 69.0,
+            "orifice_mm": 1.0
+          },
+          "high": {
+            "enabled": true,
+            "open_mpa": 100.0,
+            "close_mpa": 99.0,
+            "orifice_mm": 1.0
+          },
+          "hose_1": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "hose_2": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_1": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_2": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          }
+        }
+      },
+      "process_settings_after": {
+        "trailer_supply": false,
+        "pressure_recharge": false,
+        "vehicle_1": false,
+        "vehicle_2": false,
+        "trailer_pressure_mpa": 20.0,
+        "trailer_temperature_c": 25.0,
+        "trailer_capacity_kg": 50.0,
+        "recharge_auto_stop": true,
+        "recharge_target_low_mpa": 46.0,
+        "recharge_target_medium_mpa": 66.0,
+        "recharge_target_high_mpa": 96.0,
+        "recharge_restart_margin_low_mpa": 2.0,
+        "recharge_restart_margin_medium_mpa": 3.0,
+        "recharge_restart_margin_high_mpa": 4.5,
+        "risk_overlay_enabled": true,
+        "risk_display_mode": "relative",
+        "risk_update_interval_s": 30,
+        "measured_boundary_calibration": false,
+        "measured_station_dynamics_calibration": false,
+        "vehicle_1_auto_stop": true,
+        "vehicle_1_target_pressure_mpa": 70.0,
+        "vehicle_2_auto_stop": true,
+        "vehicle_2_target_pressure_mpa": 70.0,
+        "relief_valves": {
+          "low": {
+            "enabled": true,
+            "open_mpa": 50.0,
+            "close_mpa": 49.0,
+            "orifice_mm": 1.0
+          },
+          "medium": {
+            "enabled": true,
+            "open_mpa": 70.0,
+            "close_mpa": 69.0,
+            "orifice_mm": 1.0
+          },
+          "high": {
+            "enabled": true,
+            "open_mpa": 100.0,
+            "close_mpa": 99.0,
+            "orifice_mm": 1.0
+          },
+          "hose_1": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "hose_2": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_1": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_2": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          }
+        }
+      }
+    },
+    "isolation_failure": {
+      "family": "isolation_failure",
+      "representative_node_id": "N11",
+      "status": "passed",
+      "checks": {
+        "template_nonempty": true,
+        "commands_accepted": true,
+        "completion_feedback_confirmed": true,
+        "process_settings_changed": true
+      },
+      "action_count": 4,
+      "confirmed_action_count": 4,
+      "actions": [
+        {
+          "kind": "operation.stop",
+          "target": "all",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "valve.close",
+          "target": "dispenser.1",
+          "status": "commanded",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "access.restrict",
+          "target": "dispenser",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "personnel.evacuate",
+          "target": "dispenser",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        }
+      ],
+      "errors": [],
+      "closed_valves": [
+        "dispenser.1"
+      ],
+      "process_settings_before": {
+        "trailer_supply": true,
+        "pressure_recharge": true,
+        "vehicle_1": true,
+        "vehicle_2": true,
+        "trailer_pressure_mpa": 20.0,
+        "trailer_temperature_c": 25.0,
+        "trailer_capacity_kg": 50.0,
+        "recharge_auto_stop": true,
+        "recharge_target_low_mpa": 46.0,
+        "recharge_target_medium_mpa": 66.0,
+        "recharge_target_high_mpa": 96.0,
+        "recharge_restart_margin_low_mpa": 2.0,
+        "recharge_restart_margin_medium_mpa": 3.0,
+        "recharge_restart_margin_high_mpa": 4.5,
+        "risk_overlay_enabled": true,
+        "risk_display_mode": "relative",
+        "risk_update_interval_s": 30,
+        "measured_boundary_calibration": false,
+        "measured_station_dynamics_calibration": false,
+        "vehicle_1_auto_stop": true,
+        "vehicle_1_target_pressure_mpa": 70.0,
+        "vehicle_2_auto_stop": true,
+        "vehicle_2_target_pressure_mpa": 70.0,
+        "relief_valves": {
+          "low": {
+            "enabled": true,
+            "open_mpa": 50.0,
+            "close_mpa": 49.0,
+            "orifice_mm": 1.0
+          },
+          "medium": {
+            "enabled": true,
+            "open_mpa": 70.0,
+            "close_mpa": 69.0,
+            "orifice_mm": 1.0
+          },
+          "high": {
+            "enabled": true,
+            "open_mpa": 100.0,
+            "close_mpa": 99.0,
+            "orifice_mm": 1.0
+          },
+          "hose_1": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "hose_2": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_1": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_2": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          }
+        }
+      },
+      "process_settings_after": {
+        "trailer_supply": false,
+        "pressure_recharge": false,
+        "vehicle_1": false,
+        "vehicle_2": false,
+        "trailer_pressure_mpa": 20.0,
+        "trailer_temperature_c": 25.0,
+        "trailer_capacity_kg": 50.0,
+        "recharge_auto_stop": true,
+        "recharge_target_low_mpa": 46.0,
+        "recharge_target_medium_mpa": 66.0,
+        "recharge_target_high_mpa": 96.0,
+        "recharge_restart_margin_low_mpa": 2.0,
+        "recharge_restart_margin_medium_mpa": 3.0,
+        "recharge_restart_margin_high_mpa": 4.5,
+        "risk_overlay_enabled": true,
+        "risk_display_mode": "relative",
+        "risk_update_interval_s": 30,
+        "measured_boundary_calibration": false,
+        "measured_station_dynamics_calibration": false,
+        "vehicle_1_auto_stop": true,
+        "vehicle_1_target_pressure_mpa": 70.0,
+        "vehicle_2_auto_stop": true,
+        "vehicle_2_target_pressure_mpa": 70.0,
+        "relief_valves": {
+          "low": {
+            "enabled": true,
+            "open_mpa": 50.0,
+            "close_mpa": 49.0,
+            "orifice_mm": 1.0
+          },
+          "medium": {
+            "enabled": true,
+            "open_mpa": 70.0,
+            "close_mpa": 69.0,
+            "orifice_mm": 1.0
+          },
+          "high": {
+            "enabled": true,
+            "open_mpa": 100.0,
+            "close_mpa": 99.0,
+            "orifice_mm": 1.0
+          },
+          "hose_1": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "hose_2": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_1": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_2": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          }
+        }
+      }
+    },
+    "overpressure": {
+      "family": "overpressure",
+      "representative_node_id": "N08",
+      "status": "passed",
+      "checks": {
+        "template_nonempty": true,
+        "commands_accepted": true,
+        "completion_feedback_confirmed": true,
+        "process_settings_changed": true
+      },
+      "action_count": 5,
+      "confirmed_action_count": 5,
+      "actions": [
+        {
+          "kind": "operation.stop",
+          "target": "all",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "valve.close",
+          "target": "bank.medium.inlet",
+          "status": "commanded",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "valve.close",
+          "target": "bank.medium.outlet",
+          "status": "commanded",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "access.restrict",
+          "target": "storage",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "personnel.evacuate",
+          "target": "storage",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        }
+      ],
+      "errors": [],
+      "closed_valves": [
+        "bank.medium.inlet",
+        "bank.medium.outlet"
+      ],
+      "process_settings_before": {
+        "trailer_supply": true,
+        "pressure_recharge": true,
+        "vehicle_1": true,
+        "vehicle_2": true,
+        "trailer_pressure_mpa": 20.0,
+        "trailer_temperature_c": 25.0,
+        "trailer_capacity_kg": 50.0,
+        "recharge_auto_stop": true,
+        "recharge_target_low_mpa": 46.0,
+        "recharge_target_medium_mpa": 66.0,
+        "recharge_target_high_mpa": 96.0,
+        "recharge_restart_margin_low_mpa": 2.0,
+        "recharge_restart_margin_medium_mpa": 3.0,
+        "recharge_restart_margin_high_mpa": 4.5,
+        "risk_overlay_enabled": true,
+        "risk_display_mode": "relative",
+        "risk_update_interval_s": 30,
+        "measured_boundary_calibration": false,
+        "measured_station_dynamics_calibration": false,
+        "vehicle_1_auto_stop": true,
+        "vehicle_1_target_pressure_mpa": 70.0,
+        "vehicle_2_auto_stop": true,
+        "vehicle_2_target_pressure_mpa": 70.0,
+        "relief_valves": {
+          "low": {
+            "enabled": true,
+            "open_mpa": 50.0,
+            "close_mpa": 49.0,
+            "orifice_mm": 1.0
+          },
+          "medium": {
+            "enabled": true,
+            "open_mpa": 70.0,
+            "close_mpa": 69.0,
+            "orifice_mm": 1.0
+          },
+          "high": {
+            "enabled": true,
+            "open_mpa": 100.0,
+            "close_mpa": 99.0,
+            "orifice_mm": 1.0
+          },
+          "hose_1": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "hose_2": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_1": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_2": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          }
+        }
+      },
+      "process_settings_after": {
+        "trailer_supply": false,
+        "pressure_recharge": false,
+        "vehicle_1": false,
+        "vehicle_2": false,
+        "trailer_pressure_mpa": 20.0,
+        "trailer_temperature_c": 25.0,
+        "trailer_capacity_kg": 50.0,
+        "recharge_auto_stop": true,
+        "recharge_target_low_mpa": 46.0,
+        "recharge_target_medium_mpa": 66.0,
+        "recharge_target_high_mpa": 96.0,
+        "recharge_restart_margin_low_mpa": 2.0,
+        "recharge_restart_margin_medium_mpa": 3.0,
+        "recharge_restart_margin_high_mpa": 4.5,
+        "risk_overlay_enabled": true,
+        "risk_display_mode": "relative",
+        "risk_update_interval_s": 30,
+        "measured_boundary_calibration": false,
+        "measured_station_dynamics_calibration": false,
+        "vehicle_1_auto_stop": true,
+        "vehicle_1_target_pressure_mpa": 70.0,
+        "vehicle_2_auto_stop": true,
+        "vehicle_2_target_pressure_mpa": 70.0,
+        "relief_valves": {
+          "low": {
+            "enabled": true,
+            "open_mpa": 50.0,
+            "close_mpa": 49.0,
+            "orifice_mm": 1.0
+          },
+          "medium": {
+            "enabled": true,
+            "open_mpa": 70.0,
+            "close_mpa": 69.0,
+            "orifice_mm": 1.0
+          },
+          "high": {
+            "enabled": true,
+            "open_mpa": 100.0,
+            "close_mpa": 99.0,
+            "orifice_mm": 1.0
+          },
+          "hose_1": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "hose_2": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_1": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_2": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          }
+        }
+      }
+    },
+    "precooling_fault": {
+      "family": "precooling_fault",
+      "representative_node_id": "N12",
+      "status": "passed",
+      "checks": {
+        "template_nonempty": true,
+        "commands_accepted": true,
+        "completion_feedback_confirmed": true,
+        "process_settings_changed": true
+      },
+      "action_count": 2,
+      "confirmed_action_count": 2,
+      "actions": [
+        {
+          "kind": "operation.stop",
+          "target": "vehicle_1",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "valve.close",
+          "target": "dispenser.1",
+          "status": "commanded",
+          "feedback_status": "confirmed"
+        }
+      ],
+      "errors": [],
+      "closed_valves": [
+        "dispenser.1"
+      ],
+      "process_settings_before": {
+        "trailer_supply": true,
+        "pressure_recharge": true,
+        "vehicle_1": true,
+        "vehicle_2": true,
+        "trailer_pressure_mpa": 20.0,
+        "trailer_temperature_c": 25.0,
+        "trailer_capacity_kg": 50.0,
+        "recharge_auto_stop": true,
+        "recharge_target_low_mpa": 46.0,
+        "recharge_target_medium_mpa": 66.0,
+        "recharge_target_high_mpa": 96.0,
+        "recharge_restart_margin_low_mpa": 2.0,
+        "recharge_restart_margin_medium_mpa": 3.0,
+        "recharge_restart_margin_high_mpa": 4.5,
+        "risk_overlay_enabled": true,
+        "risk_display_mode": "relative",
+        "risk_update_interval_s": 30,
+        "measured_boundary_calibration": false,
+        "measured_station_dynamics_calibration": false,
+        "vehicle_1_auto_stop": true,
+        "vehicle_1_target_pressure_mpa": 70.0,
+        "vehicle_2_auto_stop": true,
+        "vehicle_2_target_pressure_mpa": 70.0,
+        "relief_valves": {
+          "low": {
+            "enabled": true,
+            "open_mpa": 50.0,
+            "close_mpa": 49.0,
+            "orifice_mm": 1.0
+          },
+          "medium": {
+            "enabled": true,
+            "open_mpa": 70.0,
+            "close_mpa": 69.0,
+            "orifice_mm": 1.0
+          },
+          "high": {
+            "enabled": true,
+            "open_mpa": 100.0,
+            "close_mpa": 99.0,
+            "orifice_mm": 1.0
+          },
+          "hose_1": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "hose_2": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_1": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_2": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          }
+        }
+      },
+      "process_settings_after": {
+        "trailer_supply": true,
+        "pressure_recharge": true,
+        "vehicle_1": false,
+        "vehicle_2": true,
+        "trailer_pressure_mpa": 20.0,
+        "trailer_temperature_c": 25.0,
+        "trailer_capacity_kg": 50.0,
+        "recharge_auto_stop": true,
+        "recharge_target_low_mpa": 46.0,
+        "recharge_target_medium_mpa": 66.0,
+        "recharge_target_high_mpa": 96.0,
+        "recharge_restart_margin_low_mpa": 2.0,
+        "recharge_restart_margin_medium_mpa": 3.0,
+        "recharge_restart_margin_high_mpa": 4.5,
+        "risk_overlay_enabled": true,
+        "risk_display_mode": "relative",
+        "risk_update_interval_s": 30,
+        "measured_boundary_calibration": false,
+        "measured_station_dynamics_calibration": false,
+        "vehicle_1_auto_stop": true,
+        "vehicle_1_target_pressure_mpa": 70.0,
+        "vehicle_2_auto_stop": true,
+        "vehicle_2_target_pressure_mpa": 70.0,
+        "relief_valves": {
+          "low": {
+            "enabled": true,
+            "open_mpa": 50.0,
+            "close_mpa": 49.0,
+            "orifice_mm": 1.0
+          },
+          "medium": {
+            "enabled": true,
+            "open_mpa": 70.0,
+            "close_mpa": 69.0,
+            "orifice_mm": 1.0
+          },
+          "high": {
+            "enabled": true,
+            "open_mpa": 100.0,
+            "close_mpa": 99.0,
+            "orifice_mm": 1.0
+          },
+          "hose_1": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "hose_2": {
+            "enabled": true,
+            "open_mpa": 90.0,
+            "close_mpa": 88.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_1": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          },
+          "vehicle_2": {
+            "enabled": true,
+            "open_mpa": 87.5,
+            "close_mpa": 85.0,
+            "orifice_mm": 1.0
+          }
+        }
+      }
+    }
+  },
+  "excluded_response_only_families": [
+    "structural_damage"
+  ],
+  "claim_boundary": [
+    "Each sequence is a simulation-only command/feedback replay using representative node IDs; it is not a reconstruction of a historical HIAD event.",
+    "A pass means the registered template is accepted by the virtual runtime, changes the requested process/safety state, and reports completion feedback.",
+    "The stuck-open check confirms command and feedback are kept separate; it does not estimate field valve reliability or diagnostic sensitivity.",
+    "No operator benefit, LLM effectiveness, accident frequency, consequence distance or field safety claim is made.",
+    "Structural damage remains excluded because the current process model has no structural mechanics."
+  ]
+}

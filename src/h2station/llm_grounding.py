@@ -954,6 +954,76 @@ def _public_ignited_pressure_peaking_evidence() -> dict[str, Any] | None:
     }
 
 
+def _virtual_response_action_execution_evidence() -> dict[str, Any] | None:
+    """Expose the simulation-only command/feedback consistency audit.
+
+    This lets the provider distinguish a reviewed executable virtual action
+    from a prose recommendation.  It is intentionally not an effectiveness
+    result: no operator, field outcome or LLM quality label is included.
+    """
+
+    artifact = "research/hiad_virtual_action_execution_2026_10_10.json"
+    root = Path(__file__).resolve().parents[2]
+    path = root / artifact
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, ValueError, json.JSONDecodeError):
+        return None
+    runtime = record.get("runtime") or {}
+    guard = runtime.get("failure_feedback_guard") or {}
+    source = record.get("source") or {}
+    runtime_path = root / str(source.get("virtual_safety_runtime") or "")
+    try:
+        runtime_hash_matches = sha256(runtime_path.read_bytes()).hexdigest() == source.get(
+            "virtual_safety_runtime_sha256"
+        )
+    except OSError:
+        runtime_hash_matches = False
+    if (
+        record.get("schema_version") != 1
+        or record.get("status") != "completed_virtual_action_execution_audit"
+        or record.get("evidence_role")
+        != "public_action_category_to_simulation_command_consistency_only"
+        or runtime.get("family_count") != 9
+        or runtime.get("family_pass_count") != 9
+        or runtime.get("all_family_sequences_passed") is not True
+        or guard.get("status") != "passed"
+        or guard.get("feedback_status") != "failed"
+        or not runtime_hash_matches
+    ):
+        return None
+    families = []
+    for family, row in sorted((record.get("family_results") or {}).items()):
+        if not isinstance(row, dict) or row.get("status") != "passed":
+            return None
+        families.append({
+            "family": str(family),
+            "representative_node_id": row.get("representative_node_id"),
+            "action_count": row.get("action_count"),
+            "confirmed_action_count": row.get("confirmed_action_count"),
+            "closed_valve_count": len(row.get("closed_valves") or []),
+        })
+    return {
+        "artifact": artifact,
+        "evidence_role": str(record.get("evidence_role") or ""),
+        "runtime": {
+            "family_count": runtime.get("family_count"),
+            "family_pass_count": runtime.get("family_pass_count"),
+            "action_count": runtime.get("action_count"),
+            "all_family_sequences_passed": True,
+            "failure_feedback_guard": {
+                "command_status": guard.get("command_status"),
+                "feedback_status": guard.get("feedback_status"),
+            },
+        },
+        "families": families,
+        "simulation_only": True,
+        "saga_effectiveness_supported": False,
+        "operator_benefit_supported": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_controlled_flare_evidence() -> dict[str, Any] | None:
     """Expose HyDelta's report-level flare safeguards with strict boundaries."""
 
@@ -7249,6 +7319,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_ignited_pressure_peaking_validation"
         ] = ignited_pressure_peaking
+    virtual_action_execution = _virtual_response_action_execution_evidence()
+    if virtual_action_execution is not None:
+        envelope["response_evidence"][
+            "virtual_response_action_execution_consistency"
+        ] = virtual_action_execution
     controlled_flare = _public_controlled_flare_evidence()
     if controlled_flare is not None:
         envelope["response_evidence"]["public_controlled_flare_evidence"] = controlled_flare
@@ -8196,6 +8271,22 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "saga_effectiveness_supported": False,
             "claim_limit": short(ignited_pressure_peaking.get("claim_limit")),
         }
+    virtual_action_execution = evidence.get(
+        "virtual_response_action_execution_consistency"
+    )
+    if isinstance(virtual_action_execution, dict):
+        runtime = virtual_action_execution.get("runtime") or {}
+        summary["virtual_response_action_execution_consistency"] = {
+            "evidence_role": virtual_action_execution.get("evidence_role"),
+            "family_count": runtime.get("family_count"),
+            "family_pass_count": runtime.get("family_pass_count"),
+            "action_count": runtime.get("action_count"),
+            "failure_feedback_guard": runtime.get("failure_feedback_guard") or {},
+            "simulation_only": virtual_action_execution.get("simulation_only") is True,
+            "saga_effectiveness_supported": False,
+            "operator_benefit_supported": False,
+            "claim_limit": short(virtual_action_execution.get("claim_limit")),
+        }
     detector = evidence.get("public_detector_logic_evidence")
     if isinstance(detector, dict):
         aggregate = detector.get("aggregate") or {}
@@ -9052,6 +9143,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     ignited_pressure_peaking = response.get(
         "public_ignited_pressure_peaking_validation"
     ) or {}
+    virtual_action_execution = response.get(
+        "virtual_response_action_execution_consistency"
+    ) or {}
     controlled_flare = response.get("public_controlled_flare_evidence") or {}
     local_incident = response.get("confidential_local_accident_response_coverage") or {}
     measured_boundary_replay = response.get(
@@ -9866,6 +9960,21 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ),
                 }
             } if ignited_pressure_peaking_relevant else {}),
+            **({
+                "virtual_response_action_execution_consistency": {
+                    "evidence_role": virtual_action_execution.get("evidence_role"),
+                    "runtime": virtual_action_execution.get("runtime") or {},
+                    "families": virtual_action_execution.get("families") or [],
+                    "simulation_only": True,
+                    "saga_effectiveness_supported": False,
+                    "operator_benefit_supported": False,
+                    "claim_limit": short(
+                        virtual_action_execution.get("claim_limit"), 220
+                    ),
+                }
+            } if virtual_action_execution and (
+                manifest.get("question") or manifest.get("selected_sensor")
+            ) else {}),
         },
         "validation_boundaries": {
             # Keep this projection compact because it is sent on every

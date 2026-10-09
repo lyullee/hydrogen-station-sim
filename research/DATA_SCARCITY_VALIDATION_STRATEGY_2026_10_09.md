@@ -25,6 +25,15 @@ silently promoted to vehicle or full-loop validation. The inventory found no
 header-level vehicle/dispenser candidate, and vehicle-side channel attestation
 remains zero.
 
+확보한 자료로 즉시 검증할 수 있는 대응 기능도 별도로 닫았다. 공개 HIAD
+사례의 조치 범주를 대표 가상 고장 family에 연결해 39개 안전명령을 실제
+simulation-only runtime에 실행했고, 9/9 family에서 명령 수락·공정 설정 변화·
+완료 피드백을 확인했다. 고착 개방 밸브를 주입한 음성 회귀시험에서는 명령은
+`commanded`로 남고 피드백은 `failed`로 남아 조치 성공을 잘못 표시하지 않았다.
+이 결과는 현장 대응 효과성이나 LLM 성능이 아니라, 확보된 사고 근거가 가상
+안전명령과 상태변화로 끊김 없이 연결되는지에 대한 소프트웨어 계약검사다.
+세부 결과는 `research/hiad_virtual_action_execution_2026_10_10.json`에 보존했다.
+
 The public HydDown archive now also contributes a bounded Type-I filling
 thermal diagnostic: three common-time cases are reproduced with aggregate
 temperature errors of 6.36, 9.94 and 11.75 K. The source arrays are not copied
