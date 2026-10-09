@@ -14,10 +14,15 @@ information, and measurement values.
   keyword screen finds pressure, temperature, flow-like and state-like value
   families, but their units, tag meanings, boundary roles and provenance are
   not attested.
-- All rows in that event log are numeric value records. The time field is
-  numeric, but the unit and clock origin are not established; the structural
-  scan found 11,059 negative time steps, so it is not safe to treat the raw
-  ordering as a validated chronological trace yet.
+- All rows in that event log are numeric value records. The accompanying local
+  project index documents the time field as millisecond Unix epoch with KST
+  conversion. The rows are interleaved across entities and keys; the structural
+  scan found 11,059 negative *global* time steps, so a per-entity/key ordered
+  replay is still required before treating it as a chronological trace.
+- The local data dictionary contains hydrogen/fuel-cell pressure, temperature
+  and flow-like keys. This confirms useful process context, but it classifies
+  the collection as hydrogen-city/pipeline or fuel-cell operations rather than
+  an H70 station-to-vehicle fill dataset.
 - The same collection has **19 workbooks**, **69 sheets** and **64
   non-trivial tables**. These are reference/engineering candidates until a
   custodian confirms the measurement semantics.
@@ -32,9 +37,9 @@ information, and measurement values.
 ## Allowed use now
 
 These collections can support process-context review, HAZOP/action mapping,
-virtual valve/ESD sequence training, and a future station-side or release-model
-diagnostic after units, clock semantics, channel roles and reuse rights are
-attested. They must not automatically change runtime parameters.
+virtual valve/ESD sequence training, and a future adjacent-process diagnostic
+after per-channel units, clock semantics, roles and reuse rights are attested.
+They must not automatically change HRS runtime parameters.
 
 They do **not** yet support a claim of synchronized station-to-dispenser-
 vehicle validation, delivered-mass/SOC accuracy, incident frequency, safety

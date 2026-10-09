@@ -105,14 +105,16 @@ site metadata, so a UI can show the evidence scope without turning a local
 archive into a public data export.
 
 The wider local workspace was also screened for adjacent hydrogen-process
-material. A high-pressure process collection contains 18 event logs with
-2,411,774 numeric rows, pressure/temperature/flow-like and state-like families,
-plus 19 workbooks. A separate liquid-hydrogen-centre collection contributes 52
-scenario rows and 17 workbooks. These are useful process-context and virtual
-response candidates, but their units, clock semantics, channel roles and
-co-location are not attested; the scan found zero eligible synchronized
+material. A hydrogen-city/pipeline process collection contains 18 event logs
+with 2,411,774 numeric rows, pressure/temperature/flow-like and state-like
+families, plus 19 workbooks. Its local index documents millisecond Unix epoch
+timestamps and a KST conversion rule, but the event rows are interleaved across
+entities and keys and still require per-channel semantic attestation. A
+separate liquid-hydrogen-centre collection contributes 52 scenario rows and 17
+workbooks. These are useful process-context and virtual response candidates,
+not H70 station-to-vehicle fills; the scan found zero eligible synchronized
 station-dispenser-vehicle cohorts. They therefore remain outside automatic
-runtime fitting and full-loop validation. See
+HRS runtime fitting and full-loop validation. See
 `research/LOCAL_ADJACENT_HYDROGEN_DATA_DISCOVERY_2026_10_09.md` and its
 privacy-bounded JSON companion.
 

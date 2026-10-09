@@ -15,7 +15,9 @@ def test_adjacent_inventory_is_aggregate_only_and_substantial():
     assert process["csv_event_log_count"] == 18
     assert process["csv_event_row_count"] == 2_411_774
     assert process["logical_key_count"] == 273
-    assert process["semantic_attestation"] == "required_before_replay_or_calibration"
+    assert process["domain_classification"] == "hydrogen_city_or_pipeline_process_context_not_HRS"
+    assert "millisecond_unix_epoch" in process["time_semantics_documented_in_local_index"]
+    assert "channel_role_and_unit_attestation" in process["semantic_attestation"]
 
 
 def test_adjacent_inventory_does_not_promote_full_loop_or_runtime_fitting():

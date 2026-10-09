@@ -15,6 +15,7 @@
   },
   "collections": {
     "high_pressure_hydrogen_process": {
+      "domain_classification": "hydrogen_city_or_pipeline_process_context_not_HRS",
       "csv_event_log_count": 18,
       "csv_event_row_count": 2411774,
       "largest_event_log_row_count": 2410985,
@@ -30,10 +31,12 @@
       "numeric_time_row_count": 2410985,
       "negative_time_step_count": 11059,
       "time_duration_in_unattested_units": 86399439,
+      "time_semantics_documented_in_local_index": "millisecond_unix_epoch_with_KST_conversion_rule",
+      "time_order_interpretation": "event_log_rows_are_interleaved_across_entities_and_keys; negative_global_steps_are_not_a_chronology_pass_or_fail",
       "workbook_count": 19,
       "workbook_sheet_count": 69,
       "nontrivial_workbook_table_count": 64,
-      "semantic_attestation": "required_before_replay_or_calibration"
+      "semantic_attestation": "local_data_dictionary_exists_but_channel_role_and_unit_attestation_is_required_before_replay_or_calibration"
     },
     "liquid_hydrogen_centre_context": {
       "csv_file_count": 3,
