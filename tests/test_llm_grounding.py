@@ -214,6 +214,27 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert local_accident["local_contract_run"][
         "casebook_and_source_not_committed"
     ] is True
+    cross_station_bundle = idle["response_evidence"][
+        "confidential_cross_station_bundle_recheck"
+    ]
+    assert cross_station_bundle["bundle_count"] == 2
+    assert [item["file_count"] for item in cross_station_bundle["bundles"]] == [25, 8]
+    assert cross_station_bundle["station_side_transfer_candidate"] is True
+    assert cross_station_bundle["full_loop_external_validation_supported"] is False
+    assert prompt_evidence_summary(idle)[
+        "confidential_cross_station_bundle_recheck"
+    ]["bundle_count"] == 2
+    assert prompt_evidence_header(idle)[
+        "confidential_cross_station_bundle_recheck"
+    ]["station_side_transfer_candidate"] is True
+    local_question = build_evidence_manifest(
+        {"time_s": 0.0}, {}, [], False,
+        question="로컬 충전소 데이터 교차 검증 후보를 설명해줘",
+    )
+    local_decision = prompt_decision_evidence(local_question)
+    assert local_decision["decision_support_evidence"][
+        "confidential_cross_station_bundle_recheck"
+    ]["station_side_transfer_candidate"] is True
     multisource = idle["response_evidence"][
         "confidential_multisource_mapping_feasibility"
     ]

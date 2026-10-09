@@ -4167,6 +4167,69 @@ def _confidential_local_station_utilization_evidence() -> dict[str, Any] | None:
     }
 
 
+def _confidential_cross_station_bundle_recheck_evidence() -> dict[str, Any] | None:
+    """Expose the cross-station station-side data-quality recheck.
+
+    Only aggregate counts and qualitative family presence are made available
+    to the assistant. This is a transfer candidate, not vehicle-side
+    validation, and it must not retune runtime parameters.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/local_cross_station_bundle_recheck_2026_10_09.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    bundles = record.get("bundles") or []
+    if (
+        record.get("schema_version") != 1
+        or record.get("artifact_type") != "confidential_cross_station_bundle_recheck"
+        or record.get("bundle_count") != 2
+        or len(bundles) != 2
+        or record.get("station_side_transfer_candidate") is not True
+        or record.get("full_loop_external_validation_supported") is not False
+        or record.get("quantitative_consequence_validation_supported") is not False
+        or record.get("source_identifiers_published") is not False
+        or record.get("raw_rows_persisted") is not False
+        or record.get("exact_source_dates_published") is not False
+        or record.get("manufacturer_or_model_published") is not False
+        or record.get("tag_names_published") is not False
+        or not all(
+            item.get("timestamp_parse_rate_min") == 1.0
+            and item.get("ordered_timestamp_file_count") == item.get("file_count")
+            and (item.get("family_presence_file_counts") or {}).get("pressure", 0) > 0
+            and (item.get("family_presence_file_counts") or {}).get("control_state", 0) > 0
+            for item in bundles
+        )
+    ):
+        return None
+    return {
+        "artifact": "research/local_cross_station_bundle_recheck_2026_10_09.json",
+        "evidence_role": "privacy-bounded cross-station station-side transfer candidate",
+        "bundle_count": 2,
+        "bundles": [
+            {
+                "id": item.get("id"),
+                "file_count": item.get("file_count"),
+                "data_rows": item.get("data_rows"),
+                "timestamp_parse_rate_min": item.get("timestamp_parse_rate_min"),
+                "ordered_timestamp_file_count": item.get("ordered_timestamp_file_count"),
+                "timestamp_directions": list(item.get("timestamp_directions") or []),
+                "family_presence_file_counts": dict(
+                    item.get("family_presence_file_counts") or {}
+                ),
+            }
+            for item in bundles
+        ],
+        "station_side_transfer_candidate": True,
+        "full_loop_external_validation_supported": False,
+        "quantitative_consequence_validation_supported": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _local_station_asset_screen_evidence() -> dict[str, Any] | None:
     """Expose the de-identified local scenario/asset screen to the assistant.
 
@@ -5734,6 +5797,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_local_station_data_utilization"
         ] = local_station_utilization
+    cross_station_bundle = _confidential_cross_station_bundle_recheck_evidence()
+    if cross_station_bundle is not None:
+        envelope["response_evidence"][
+            "confidential_cross_station_bundle_recheck"
+        ] = cross_station_bundle
     local_station_asset_screen = _local_station_asset_screen_evidence()
     if local_station_asset_screen is not None:
         envelope["response_evidence"][
@@ -6328,6 +6396,20 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if local_accident_coverage.get(key) is not None
         }
+    cross_station_bundle = evidence.get(
+        "confidential_cross_station_bundle_recheck"
+    )
+    if isinstance(cross_station_bundle, dict):
+        summary["confidential_cross_station_bundle_recheck"] = {
+            key: cross_station_bundle.get(key)
+            for key in (
+                "evidence_role", "bundle_count", "bundles",
+                "station_side_transfer_candidate",
+                "full_loop_external_validation_supported",
+                "quantitative_consequence_validation_supported", "claim_limit",
+            )
+            if cross_station_bundle.get(key) is not None
+        }
     accidental = evidence.get("public_accidental_release_evidence")
     if isinstance(accidental, dict):
         reported_findings = accidental.get("reported_findings") or {}
@@ -6878,6 +6960,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     accidental_release = response.get("public_accidental_release_evidence") or {}
     controlled_flare = response.get("public_controlled_flare_evidence") or {}
     local_incident = response.get("confidential_local_accident_response_coverage") or {}
+    cross_station_bundle = response.get(
+        "confidential_cross_station_bundle_recheck"
+    ) or {}
     multisource = response.get("confidential_multisource_mapping_feasibility") or {}
     thermal_observation = response.get("temperature_observation_semantic_boundary") or {}
     station_thermal = response.get("confidential_station_thermal_dynamics") or {}
@@ -7127,6 +7212,17 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 )),
                 "claim_limit": short(local_incident.get("claim_limit")),
             },
+            **({
+                "confidential_cross_station_bundle_recheck": {
+                    "bundle_count": cross_station_bundle.get("bundle_count"),
+                    "station_side_transfer_candidate": (
+                        cross_station_bundle.get("station_side_transfer_candidate") is True
+                    ),
+                    "full_loop_external_validation_supported": False,
+                    "quantitative_consequence_validation_supported": False,
+                    "claim_limit": short(cross_station_bundle.get("claim_limit")),
+                },
+            } if cross_station_bundle and local_discovery_relevant else {}),
             **({
                 "public_accidental_release": {
                     "experiment_count": (
@@ -7797,6 +7893,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     local_accident_coverage = evidence.get(
         "confidential_local_accident_response_coverage"
     ) or {}
+    cross_station_bundle = evidence.get(
+        "confidential_cross_station_bundle_recheck"
+    ) or {}
     hitrf_storage = hitrf_reference.get("storage") or {}
     hitrf_thermal = hitrf_reference.get("dispensing_and_thermal") or {}
     envelope_screen = evidence.get("public_operating_envelope_screen") or {}
@@ -8411,6 +8510,17 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "multi_family_case_count"
             ),
             "contract_pass": local_accident_coverage.get("contract_pass") is True,
+        },
+        "confidential_cross_station_bundle_recheck": {
+            "evidence_role": cross_station_bundle.get("evidence_role"),
+            "bundle_count": cross_station_bundle.get("bundle_count"),
+            "bundles": cross_station_bundle.get("bundles") or [],
+            "station_side_transfer_candidate": (
+                cross_station_bundle.get("station_side_transfer_candidate") is True
+            ),
+            "full_loop_external_validation_supported": False,
+            "quantitative_consequence_validation_supported": False,
+            "claim_limit": cross_station_bundle.get("claim_limit"),
         },
         "confidential_boundary_holdout": holdout.get(
             "time_ordered_holdout_supported"
