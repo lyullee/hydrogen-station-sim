@@ -1503,6 +1503,15 @@ def test_compact_data_used_reports_available_and_applied_station_profile():
     )["local_station_evidence_inventory"]
     assert local_inventory["deduplicated_row_count"] == 56854143
     assert local_inventory["vehicle_side_full_loop_ready"] is False
+    readiness = compact_data_used(
+        build_evidence_manifest(base_frame, {}, [], False, question="현재 상태"),
+        include_references=True,
+    )["validation_readiness"]
+    assert readiness["claim_tier"] == "component_and_station_side_only"
+    assert readiness["gate_counts"] == {"PASS": 127, "FAIL": 10, "PENDING": 7}
+    assert readiness["open_gate_count"] == 17
+    assert readiness["full_loop_external_validation_supported"] is False
+    assert readiness["expert_effectiveness_evaluation_supported"] is False
 
     applied_frame = {
         **base_frame,

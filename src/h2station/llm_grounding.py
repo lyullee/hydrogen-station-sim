@@ -10512,6 +10512,34 @@ def compact_data_used(
                 )
                 if key in readiness
             }
+            # Keep the operator-facing provenance explicit about the current
+            # claim tier.  Aggregate counts are safe to expose and prevent a
+            # passing component check from being mistaken for full-loop or
+            # journal-ready validation.  Do not expose gate evidence paths or
+            # private identifiers in this projection.
+            raw_counts = readiness.get("gate_counts")
+            if isinstance(raw_counts, dict):
+                gate_counts = {
+                    key: int(raw_counts[key])
+                    for key in ("PASS", "FAIL", "PENDING")
+                    if isinstance(raw_counts.get(key), int)
+                    and not isinstance(raw_counts.get(key), bool)
+                }
+            else:
+                gate_counts = {}
+            result["validation_readiness"] = {
+                "status": readiness.get("status"),
+                "claim_tier": readiness.get("claim_tier"),
+                "gate_counts": gate_counts,
+                "open_gate_count": readiness.get("open_gate_count"),
+                "full_loop_external_validation_supported": readiness.get(
+                    "full_loop_external_validation_supported"
+                ) is True,
+                "expert_effectiveness_evaluation_supported": readiness.get(
+                    "expert_effectiveness_evaluation_supported"
+                ) is True,
+                "claim_boundary": readiness.get("claim_boundary"),
+            }
         # A compact, user-visible scope flag accompanies the data list.  It
         # distinguishes the substantial station-side replay evidence from the
         # still-open vehicle/full-loop and field-distance claims.
