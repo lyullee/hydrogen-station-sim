@@ -91,6 +91,20 @@
       "not_allowed": "원시 station-to-vehicle holdout, 제어기·ESD·사고영향 검증"
     },
     {
+      "id": "public_actual_h2_spatial_dispersion",
+      "status": "DIAGNOSTIC_ONLY",
+      "evidence": "research/public_experimental_benchmarks_2026_10_06.json",
+      "coverage": {
+        "archive_count": 22,
+        "total_rows_screened": 417340,
+        "sensor_count_per_archive": 29,
+        "median_sample_interval_s": 0.009996,
+        "spatial_holdout_ready": false
+      },
+      "allowed_claim": "실제 수소 저압 누출·다중 검지기 응답 범위와 사고 모델 진단",
+      "not_allowed": "충전소 full-loop, 좌표기반 검지기 holdout, site-specific safety distance"
+    },
+    {
       "id": "public_accident_precedents",
       "status": "ROUTED_FOR_GROUNDING",
       "evidence": "research/runtime_public_accident_precedent_routing_2026_10_07.json",

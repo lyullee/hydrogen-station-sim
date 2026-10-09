@@ -159,9 +159,12 @@
       ],
       "aggregate": {
         "field_draft_count": 7,
-        "field_pressure_mpa_min": 16.10,
+        "field_pressure_mpa_min": 16.1,
         "field_pressure_mpa_max": 31.39,
-        "field_draft_mass_groups_kg": [0.5, 1.0],
+        "field_draft_mass_groups_kg": [
+          0.5,
+          1.0
+        ],
         "field_method_agreement_max_percent": 1.53,
         "ft_standard_nominal_capacity_kg": 1.0,
         "ft_standard_nominal_pressure_mpa": 35.0
@@ -176,6 +179,53 @@
         "station controller or cascade validation",
         "ESD, valve or dispenser communication fault replay",
         "consequence-distance, risk-model or SAGA effectiveness validation"
+      ]
+    },
+    {
+      "id": "USN_OPEN_CHANNEL_ACTUAL_H2_2025",
+      "title": "Experimental Data of Hydrogen Dispersion in an Open-ended Rectangular Channel",
+      "url": "https://doi.org/10.23642/USN.26117989",
+      "article_url": "https://doi.org/10.1016/j.jlp.2025.105669",
+      "raw_rows_public": true,
+      "local_rights": "CC BY 4.0; raw archives are used only from the public repository and are not committed here",
+      "measured_boundary": [
+        "actual-hydrogen mass-flow and filling-pressure time series",
+        "29 hydrogen concentration sensor channels per experiment",
+        "open-ended rectangular-channel dispersion experiments"
+      ],
+      "aggregate": {
+        "archive_count": 22,
+        "total_rows_screened": 417340,
+        "sensor_count_per_archive": 29,
+        "median_sample_interval_s": 0.009996,
+        "median_experiment_duration_s": 177.339042275,
+        "peak_mass_flow_g_s_range": [
+          0.0415568346018979,
+          4.9415264150293
+        ],
+        "maximum_filling_pressure_bar_range": [
+          0.4840138785960701,
+          8.4152025026351
+        ],
+        "maximum_sensor_h2_volpct_range": [
+          12.23476129032258,
+          30.827625806451614
+        ]
+      },
+      "coordinate_metadata": {
+        "machine_readable_sensor_coordinates_public": false,
+        "layout_media_present": true,
+        "spatial_holdout_ready": false
+      },
+      "eligible_for": [
+        "actual-hydrogen spatial dispersion and detector-response development after a frozen protocol",
+        "low-pressure leak-source mass-flow and sensor-range plausibility",
+        "independent component-level accident-model diagnostic"
+      ],
+      "not_eligible_for": [
+        "station-to-vehicle fueling or full-loop holdout",
+        "station controller, cascade, ESD or dispenser protocol validation",
+        "site-specific consequence distance or safety certification"
       ]
     }
   ],

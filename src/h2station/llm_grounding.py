@@ -1466,7 +1466,7 @@ def _public_experimental_benchmarks() -> dict[str, Any] | None:
         aggregate = source.get("aggregate")
         if not isinstance(aggregate, dict):
             continue
-        sources.append({
+        projected_source = {
             "id": str(source["id"]),
             "title": str(source.get("title") or ""),
             "url": str(source.get("url") or ""),
@@ -1481,7 +1481,19 @@ def _public_experimental_benchmarks() -> dict[str, Any] | None:
             "not_eligible_for": [
                 str(value) for value in source.get("not_eligible_for") or []
             ],
-        })
+        }
+        coordinate_metadata = source.get("coordinate_metadata")
+        if isinstance(coordinate_metadata, dict):
+            projected_source["coordinate_metadata"] = {
+                key: bool(coordinate_metadata[key])
+                for key in (
+                    "machine_readable_sensor_coordinates_public",
+                    "layout_media_present",
+                    "spatial_holdout_ready",
+                )
+                if key in coordinate_metadata
+            }
+        sources.append(projected_source)
     if not sources:
         return None
     return {

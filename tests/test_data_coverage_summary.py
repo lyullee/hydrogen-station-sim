@@ -40,3 +40,11 @@ def test_data_coverage_summary_preserves_claim_boundary() -> None:
     assert metrology["coverage"]["field_draft_count"] == 7
     assert metrology["coverage"]["maximum_method_agreement_percent"] == 1.53
     assert metrology["not_allowed"] == "원시 station-to-vehicle holdout, 제어기·ESD·사고영향 검증"
+
+    dispersion = next(
+        item for item in summary["validated_or_actionable_now"]
+        if item["id"] == "public_actual_h2_spatial_dispersion"
+    )
+    assert dispersion["coverage"]["archive_count"] == 22
+    assert dispersion["coverage"]["sensor_count_per_archive"] == 29
+    assert dispersion["coverage"]["spatial_holdout_ready"] is False

@@ -52,6 +52,21 @@ def build_summary(root: Path) -> dict[str, Any]:
     nist_aggregate = nist.get("aggregate") if isinstance(nist, dict) else {}
     if not isinstance(nist_aggregate, dict):
         nist_aggregate = {}
+    usn = next(
+        (
+            item
+            for item in benchmarks.get("sources") or []
+            if isinstance(item, dict)
+            and item.get("id") == "USN_OPEN_CHANNEL_ACTUAL_H2_2025"
+        ),
+        {},
+    )
+    usn_aggregate = usn.get("aggregate") if isinstance(usn, dict) else {}
+    if not isinstance(usn_aggregate, dict):
+        usn_aggregate = {}
+    usn_coordinates = usn.get("coordinate_metadata") if isinstance(usn, dict) else {}
+    if not isinstance(usn_coordinates, dict):
+        usn_coordinates = {}
     return {
         "schema_version": 1,
         "artifact_type": "privacy_bounded_data_coverage_summary",
@@ -140,6 +155,20 @@ def build_summary(root: Path) -> dict[str, Any]:
                 },
                 "allowed_claim": "35 MPa 현장 계측의 압력·온도·질량 경계 및 반복성 맥락",
                 "not_allowed": "원시 station-to-vehicle holdout, 제어기·ESD·사고영향 검증",
+            },
+            {
+                "id": "public_actual_h2_spatial_dispersion",
+                "status": "DIAGNOSTIC_ONLY",
+                "evidence": "research/public_experimental_benchmarks_2026_10_06.json",
+                "coverage": {
+                    "archive_count": usn_aggregate.get("archive_count"),
+                    "total_rows_screened": usn_aggregate.get("total_rows_screened"),
+                    "sensor_count_per_archive": usn_aggregate.get("sensor_count_per_archive"),
+                    "median_sample_interval_s": usn_aggregate.get("median_sample_interval_s"),
+                    "spatial_holdout_ready": usn_coordinates.get("spatial_holdout_ready", False),
+                },
+                "allowed_claim": "실제 수소 저압 누출·다중 검지기 응답 범위와 사고 모델 진단",
+                "not_allowed": "충전소 full-loop, 좌표기반 검지기 holdout, site-specific safety distance",
             },
             {
                 "id": "public_accident_precedents",
