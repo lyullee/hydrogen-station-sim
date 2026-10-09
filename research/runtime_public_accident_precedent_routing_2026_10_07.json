@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "runtime_public_accident_precedent_routing_audit",
-  "generated_at_utc": "2026-10-09T22:13:53.629787+00:00",
+  "generated_at_utc": "2026-10-09T22:19:06.123070+00:00",
   "status": "PASS",
   "source": {
     "precedent_map": "research\\khk_scenario_precedent_map_2026_10_04.json",
@@ -12,7 +12,7 @@
     "runtime_resolver": "src\\h2station\\hazop\\response.py",
     "runtime_resolver_sha256": "3846b478c62a7d0d028bb0defa4d72f0d98eff7e78f2c4f9310a6e262ed80c1c",
     "runtime_manifest": "src\\h2station\\llm_grounding.py",
-    "runtime_manifest_sha256": "6f44727aa86f5d4bc603aa6f1b8da3f6567602d86dbde1c06d45760678709790"
+    "runtime_manifest_sha256": "6ecf7e5d004709568a239eb1998a4bc8ac8f69fb6ba67c37aff9cc935245c4b8"
   },
   "aggregate": {
     "public_report_count": 23,

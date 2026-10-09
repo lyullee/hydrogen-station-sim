@@ -9790,6 +9790,63 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "claim_limit": short(operational_evidence_leads.get("claim_limit")),
         }
 
+    station_side_data_scope = None
+    if actionable_data_scope and (
+        station_signal_relevant
+        or public_catalog_relevant
+        or local_discovery_relevant
+        or operational_evidence_relevant
+    ):
+        station_side_data_scope = {
+            "evidence_role": actionable_data_scope.get("evidence_role"),
+            "runtime_usable_now": [
+                {
+                    key: item.get(key)
+                    for key in (
+                        "id", "calibration_cases", "holdout_cases",
+                        "calibration_cycles", "transfer_cycles",
+                        "transfer_median_error_percent", "holdout_mae_mpa",
+                        "holdout_p90_absolute_error_mpa", "eligible_cases",
+                        "screen_pass", "independent_external_validation",
+                        "runtime_role",
+                    )
+                    if item.get(key) is not None
+                }
+                for item in actionable_data_scope.get("runtime_usable_now") or []
+                if isinstance(item, dict)
+            ],
+            "available_but_not_runtime_promoted": [
+                {
+                    key: item.get(key)
+                    for key in (
+                        "id", "sampled_rows", "calibration_candidate_seconds",
+                        "holdout_minimum_seconds", "holdout_consistent", "reason",
+                        "runtime_role",
+                    )
+                    if item.get(key) is not None
+                }
+                for item in actionable_data_scope.get(
+                    "available_but_not_runtime_promoted"
+                ) or []
+                if isinstance(item, dict)
+            ],
+            "full_loop_holdout": {
+                "synchronized_trace_count": (
+                    actionable_data_scope.get("full_loop_holdout") or {}
+                ).get("synchronized_trace_count", 0),
+                "required_channels": list((
+                    actionable_data_scope.get("full_loop_holdout") or {}
+                ).get("required_channels") or []),
+            },
+            "decision": selected(actionable_data_scope.get("decision"), (
+                "use_station_side_and_component_evidence_now",
+                "request_smallest_next_bundle_first",
+                "keep_full_loop_gate_closed",
+                "llm_should_name_used_evidence_before_describing_the_boundary",
+            )),
+            "claim_limit": short(actionable_data_scope.get("claim_limit"), 280),
+        }
+
     # Make the positive evidence surface explicit in the bounded interactive
     # projection.  The complete manifest already contains this record, but a
     # provider-facing prompt must not collapse "no synchronized full-loop
@@ -9868,6 +9925,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         **({
             "public_operational_evidence_leads": operational_evidence_projection,
         } if operational_evidence_projection is not None else {}),
+        **({
+            "station_side_data_scope": station_side_data_scope,
+        } if station_side_data_scope is not None else {}),
         "decision_support_evidence": {
             **({
                 "public_operational_evidence_leads": operational_evidence_projection,

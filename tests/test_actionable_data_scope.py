@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from h2station.llm_grounding import build_evidence_manifest, prompt_decision_evidence
+from h2station.api import _provider_evidence_basis
 
 
 def _manifest():
@@ -59,3 +60,22 @@ def test_decision_prompt_names_usable_data_before_full_loop_boundary() -> None:
     assert manifest["response_evidence"]["local_actionable_data_scope"]["decision"][
         "request_smallest_next_bundle_first"
     ] == "tier_1_component_pilot"
+
+    station_scope = decision["station_side_data_scope"]
+    assert station_scope["runtime_usable_now"]
+    forecast = next(
+        item for item in station_scope["runtime_usable_now"]
+        if item["id"] == "station_pressure_forecast"
+    )
+    assert forecast["holdout_cases"] == 394
+    assert station_scope["full_loop_holdout"]["synchronized_trace_count"] == 0
+    assert station_scope["decision"]["use_station_side_and_component_evidence_now"] is True
+    assert "source_paths" not in str(station_scope)
+    assert "C:\\" not in str(station_scope)
+
+    provider_basis = _provider_evidence_basis(manifest)
+    assert "station_side_data_scope" in provider_basis
+    assert provider_basis["station_side_data_scope"]["runtime_usable_now"]
+    assert provider_basis["station_side_data_scope"]["full_loop_holdout"][
+        "synchronized_trace_count"
+    ] == 0
