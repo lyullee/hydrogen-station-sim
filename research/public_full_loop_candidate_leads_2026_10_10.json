@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_full_loop_candidate_leads",
+  "recorded_at": "2026-10-10",
+  "purpose": "Record public leads that may contain synchronized HRS-to-vehicle measurements without admitting unverified material as validation evidence.",
+  "search_policy": {
+    "accepted_candidate_requirements": [
+      "publicly identifiable source and persistent identifier",
+      "raw or de-identified common-clock station/dispenser/receiving-vessel channels",
+      "channel dictionary and engineering units",
+      "access and reuse terms suitable for independent scoring"
+    ],
+    "not_admitted_as_validation": [
+      "facility descriptions without downloadable measurements",
+      "aggregate station inventories or pass/fail tables",
+      "article claims without a reproducible data file",
+      "data whose license or channel provenance is unresolved"
+    ]
+  },
+  "candidates": [
+    {
+      "id": "bam_keti_hrs_anomaly_platform_2026",
+      "title": "Data-Driven Intelligent Analysis System for Monitoring and Anomaly Detection in Hydrogen Refueling Station",
+      "persistent_identifier": "10.3390/app16157856",
+      "article_url": "https://doi.org/10.3390/app16157856",
+      "institutional_context_url": "https://www.bam.de/Content/EN/Standard-Articles/Topics/Energy/Hydrogen/hydrogen-h2-filling-stations.html",
+      "reported_measurements": [
+        "compressor pressure",
+        "storage-tank pressure",
+        "dispenser pressure",
+        "temperature",
+        "flow rate",
+        "vehicle refueling test"
+      ],
+      "raw_data_status": "not_identified_in_public_search",
+      "channel_dictionary_status": "not_identified_in_public_search",
+      "license_status": "not_identified_for_raw_logs",
+      "full_loop_external_holdout_eligible": false,
+      "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
+      "next_action": "Request a privacy-safe export of at least three independent events with common elapsed time, station/dispenser pressure, delivered-gas temperature, transferred mass or mass flow, protocol phase, vehicle/receptacle pressure and temperature, and ESD/fault transitions.",
+      "claim_boundary": "The article and institutional description establish a credible lead and field-instrumentation context only. They do not by themselves provide a reproducible full-loop validation dataset."
+    },
+    {
+      "id": "nrel_h2fills_hdvs_typeiv",
+      "title": "NREL H2FillS supplemental HDVS Type-IV sample test",
+      "landing_page": "https://www.nrel.gov/hydrogen/h2fills",
+      "raw_data_status": "local_internal_use_only_workbook",
+      "channel_dictionary_status": "available_for_local_screen",
+      "license_status": "internal_use_only",
+      "full_loop_external_holdout_eligible": false,
+      "admission_status": "PARTIAL_STATION_TO_TANK_BOUNDARY_ONLY",
+      "claim_boundary": "Common-clock hose and seven-tank pressure/temperature/mass boundary; no station controller, cascade, ESD, nozzle/receptacle, vehicle protocol or full-loop claim."
+    }
+  ],
+  "decision": {
+    "new_full_loop_dataset_admitted": false,
+    "reason": "No newly found candidate currently exposes a reproducible, licensed, synchronized station-to-vehicle raw trace with channel provenance.",
+    "minimum_next_input": "Use the privacy-safe three-event intake contract rather than publishing confidential raw logs.",
+    "runtime_parameter_application": false,
+    "goal_completion_permitted": false
+  },
+  "privacy": {
+    "raw_rows_persisted": false,
+    "site_identity_published": false,
+    "company_or_manufacturer_published": false,
+    "calendar_dates_published": false
+  }
+}
