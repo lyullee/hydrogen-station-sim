@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-09T00:48:08.278963+00:00",
+  "generated_at": "2026-10-09T00:50:36.484854+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 123,
+    "PASS": 124,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -5363,6 +5363,44 @@
           "holdout_use": false
         },
         "source_hashes_match": true
+      }
+    },
+    {
+      "id": "confidential_local_accident_response_grounding_integrity",
+      "status": "PASS",
+      "claim": "Owner-controlled actual-accident metadata are routed to complete staged response plans for LLM grounding while remaining excluded from public validation and effectiveness claims.",
+      "evidence": "research\\confidential_local_accident_response_coverage_2026_10_06.json",
+      "requirement": "322 restricted cases mapped to five non-empty response stages, no raw descriptions or identifiers persisted, and explicit exclusion from probability, physics, consequence and effectiveness claims.",
+      "observed": {
+        "aggregate": {
+          "case_count": 322,
+          "mapped_case_count": 322,
+          "unmapped_case_count": 0,
+          "unknown_plan_reference_count": 0,
+          "case_with_missing_stage_count": 0,
+          "required_stage_count": 5,
+          "stage_contract_pass": true,
+          "contract_pass": true,
+          "scenario_family_candidate_counts": {
+            "compressor_thermal": 108,
+            "fueling_fault": 162,
+            "gas_release": 305,
+            "hose_connection": 261,
+            "hydrogen_fire": 27,
+            "overpressure": 6,
+            "relief_discharge": 47,
+            "supply_connection": 137
+          },
+          "multi_family_case_count": 318
+        },
+        "local_contract_run": {
+          "casebook_generated_with_descriptions": false,
+          "casebook_sha256": "5787d04676640bc40f9dd07c9d6482c2aa25dcbd80a920c254cc9181eaa5d609",
+          "response_catalog_sha256": "b7d64103d9c4d3a322edd2c97b3800b5a796385e4ec25a588a252d288aad8bba",
+          "casebook_and_source_not_committed": true,
+          "pipeline": "scripts/prepare_khk_local_casebook.py + scripts/audit_khk_local_casebook_playbook_coverage.py"
+        },
+        "claim_boundary": "This de-identified aggregate proves only that local actual-accident metadata had a candidate response family with five non-empty simulator stages. It does not publish incident narratives, identify an operator or site, estimate incident probability, validate physics or consequence distances, or demonstrate response effectiveness or safety. Candidate-family counts are not incident frequencies because one case may map to multiple response families."
       }
     },
     {

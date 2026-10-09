@@ -513,6 +513,13 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert accident_response["contract"]["raw_action_text_used"] is False
     assert accident_response["contract"]["effectiveness_claimed"] is False
     assert accident_response["source_hashes_match"] is True
+    assert gates["confidential_local_accident_response_grounding_integrity"]["status"] == "PASS"
+    local_accident = gates["confidential_local_accident_response_grounding_integrity"]["observed"]
+    assert local_accident["aggregate"]["case_count"] == 322
+    assert local_accident["aggregate"]["mapped_case_count"] == 322
+    assert local_accident["aggregate"]["required_stage_count"] == 5
+    assert local_accident["aggregate"]["multi_family_case_count"] == 318
+    assert local_accident["local_contract_run"]["casebook_generated_with_descriptions"] is False
     assert gates["hiad_retrospective_machine_response_benchmark_integrity"]["status"] == "PASS"
     hiad_machine = gates[
         "hiad_retrospective_machine_response_benchmark_integrity"

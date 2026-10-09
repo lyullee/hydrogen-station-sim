@@ -4983,6 +4983,55 @@ def audit(root: Path) -> dict[str, object]:
         } if accident_response else "missing; accident-response coverage evaluation has not run",
     ))
 
+    local_accident_path = root / (
+        "research/confidential_local_accident_response_coverage_2026_10_06.json"
+    )
+    local_accident = _json(local_accident_path)
+    local_accident_aggregate = (local_accident or {}).get("aggregate") or {}
+    local_accident_run = (local_accident or {}).get("local_contract_run") or {}
+    local_accident_privacy_ok = all(
+        (local_accident or {}).get(key) is False
+        for key in ("source_identifiers_published", "raw_rows_persisted", "raw_descriptions_persisted")
+    )
+    local_accident_pass = bool(
+        (local_accident or {}).get("schema_version") == 1
+        and (local_accident or {}).get("artifact_type")
+        == "confidential_local_accident_response_coverage"
+        and (local_accident or {}).get("status")
+        == "local_restricted_metadata_stage_contract"
+        and (local_accident or {}).get("evidence_role")
+        == "confidential_actual_accident_response_traceability"
+        and local_accident_privacy_ok
+        and local_accident_aggregate.get("case_count") == 322
+        and local_accident_aggregate.get("mapped_case_count") == 322
+        and local_accident_aggregate.get("unmapped_case_count") == 0
+        and local_accident_aggregate.get("unknown_plan_reference_count") == 0
+        and local_accident_aggregate.get("case_with_missing_stage_count") == 0
+        and local_accident_aggregate.get("required_stage_count") == 5
+        and local_accident_aggregate.get("stage_contract_pass") is True
+        and local_accident_aggregate.get("contract_pass") is True
+        and local_accident_aggregate.get("multi_family_case_count") == 318
+        and local_accident_run.get("casebook_generated_with_descriptions") is False
+        and local_accident_run.get("casebook_and_source_not_committed") is True
+        and len(str(local_accident_run.get("casebook_sha256") or "")) == 64
+        and len(str(local_accident_run.get("response_catalog_sha256") or "")) == 64
+        and "does not publish incident narratives" in str(
+            (local_accident or {}).get("claim_boundary")
+        ).lower()
+    )
+    gates.append(_gate(
+        "confidential_local_accident_response_grounding_integrity",
+        "PASS" if local_accident_pass else ("FAIL" if local_accident else "PENDING"),
+        "Owner-controlled actual-accident metadata are routed to complete staged response plans for LLM grounding while remaining excluded from public validation and effectiveness claims.",
+        str(local_accident_path.relative_to(root)),
+        "322 restricted cases mapped to five non-empty response stages, no raw descriptions or identifiers persisted, and explicit exclusion from probability, physics, consequence and effectiveness claims.",
+        {
+            "aggregate": local_accident_aggregate,
+            "local_contract_run": local_accident_run,
+            "claim_boundary": (local_accident or {}).get("claim_boundary"),
+        } if local_accident else "missing; restricted local accident-response grounding audit has not run",
+    ))
+
     hiad_machine_protocol_path = root / "research/hiad_machine_response_benchmark_protocol_2026_10_08.json"
     hiad_machine_result_path = root / "research/hiad_machine_response_benchmark_2026_10_08.json"
     hiad_machine_protocol = _json(hiad_machine_protocol_path)
