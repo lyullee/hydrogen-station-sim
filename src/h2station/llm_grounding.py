@@ -9545,6 +9545,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "public_hytunnel_failure_diagnostic"
     ) or {}
     public_hrs_leads = response.get("public_hrs_measurement_leads") or {}
+    operational_evidence_leads = response.get(
+        "public_operational_evidence_leads"
+    ) or {}
     vehicle_side_leads = response.get(
         "public_vehicle_side_h2_measurement_leads"
     ) or {}
@@ -9570,6 +9573,18 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "private station", "local station", "station data", "operational data",
         "vehicle-side", "vehicle side", "full-loop", "full loop",
     ))
+    operational_evidence_relevant = bool(
+        operational_evidence_leads
+        and (
+            public_catalog_relevant
+            or public_hrs_leads_relevant
+            or local_discovery_relevant
+            or any(token in lead_context for token in (
+                "운영", "충전소", "계측", "프로토콜", "품질",
+                "operation", "station", "instrumentation", "protocol",
+            ))
+        )
+    )
     station_signal_relevant = any(token in lead_context for token in (
         "충전", "압력", "온도", "유량", "질량", "적산", "토털라이저",
         "압축기", "재충전", "flow", "mass", "totalizer", "pressure",
@@ -9749,6 +9764,32 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         ) is True,
     }
 
+    operational_evidence_projection = None
+    if operational_evidence_relevant:
+        operational_evidence_projection = {
+            "evidence_role": operational_evidence_leads.get("evidence_role"),
+            "sources": [
+                {
+                    key: source.get(key)
+                    for key in (
+                        "id", "publisher", "url", "reported_scope",
+                        "public_material", "raw_synchronized_archive_located",
+                        "decision", "usable_for", "not_usable_for", "claim_limit",
+                    )
+                    if source.get(key) is not None
+                }
+                for source in operational_evidence_leads.get("sources") or []
+                if isinstance(source, dict)
+            ],
+            "decision": operational_evidence_leads.get("decision"),
+            "minimum_full_loop_input": operational_evidence_leads.get(
+                "minimum_full_loop_input"
+            ) or {},
+            "full_loop_external_validation_supported": False,
+            "dynamic_model_parameter_calibration_eligible": False,
+            "claim_limit": short(operational_evidence_leads.get("claim_limit")),
+        }
+
     # Make the positive evidence surface explicit in the bounded interactive
     # projection.  The complete manifest already contains this record, but a
     # provider-facing prompt must not collapse "no synchronized full-loop
@@ -9824,7 +9865,13 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "public_peak_flow_g_s", "raw_rows_public", "validation_claim",
             "claim_limit",
         )),
+        **({
+            "public_operational_evidence_leads": operational_evidence_projection,
+        } if operational_evidence_projection is not None else {}),
         "decision_support_evidence": {
+            **({
+                "public_operational_evidence_leads": operational_evidence_projection,
+            } if operational_evidence_projection is not None else {}),
             **({
                 "public_preslhy_e35_file_access": {
                     "evidence_role": public_preslhy_e35.get("evidence_role"),

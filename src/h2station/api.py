@@ -77,7 +77,7 @@ def _provider_evidence_basis(manifest: dict[str, Any]) -> dict[str, Any]:
         for key in (
             "evidence_digest", "source", "runtime_calibration", "detector_policy",
             "common_header", "impact", "response_guidance",
-            "public_operating_envelope_screen",
+            "public_operating_envelope_screen", "public_operational_evidence_leads",
         )
         if key in full
     }

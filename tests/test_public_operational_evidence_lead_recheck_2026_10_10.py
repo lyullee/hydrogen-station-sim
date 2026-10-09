@@ -3,7 +3,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from h2station.llm_grounding import build_evidence_manifest, prompt_evidence_summary
+from h2station.api import _provider_evidence_basis
+from h2station.llm_grounding import (
+    build_evidence_manifest,
+    prompt_decision_evidence,
+    prompt_evidence_summary,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -50,3 +55,21 @@ def test_public_operational_leads_are_routed_to_llm_without_full_loop_upgrade() 
     rendered = json.dumps(summary, ensure_ascii=False)
     assert "raw_synchronized_archive_located" in rendered
     assert "C:\\" not in rendered
+
+    decision = prompt_decision_evidence(manifest)
+    assert "public_operational_evidence_leads" in decision
+    assert decision["public_operational_evidence_leads"][
+        "full_loop_external_validation_supported"
+    ] is False
+    assert "public_operational_evidence_leads" in decision["decision_support_evidence"]
+    provider_basis = _provider_evidence_basis(manifest)
+    assert "public_operational_evidence_leads" in provider_basis
+    assert provider_basis["public_operational_evidence_leads"][
+        "dynamic_model_parameter_calibration_eligible"
+    ] is False
+    assert {item["id"] for item in provider_basis[
+        "public_operational_evidence_leads"
+    ]["sources"]} == {
+        "carb_2024_hrs_inuse_report",
+        "nist_transient_flow_facility",
+    }
