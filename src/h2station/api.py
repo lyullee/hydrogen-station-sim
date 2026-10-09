@@ -79,6 +79,7 @@ def _provider_evidence_basis(manifest: dict[str, Any]) -> dict[str, Any]:
             "common_header", "impact", "response_guidance",
             "public_operating_envelope_screen", "public_operational_evidence_leads",
             "station_side_data_scope", "public_h2protocol_validation_boundary",
+            "data_used",
         )
         if key in full
     }

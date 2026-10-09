@@ -11329,10 +11329,18 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     # It makes the provenance visible in both the main and sensor assistants
     # without allowing restricted identifiers to leak into an interactive turn.
     data_used = compact_data_used(manifest)
-    # Sensor-analysis and forecast views have a stable UI slot for this
-    # provenance line.  Main direct-Q&A keeps its stricter prompt budget and
-    # already receives the detailed live signal/impact fields separately.
-    if current_forecast or manifest.get("selected_sensor"):
+    # Every interactive question gets this compact provenance block.  The
+    # main direct-Q&A path used to receive it only for sensor-analysis or
+    # forecast views, which allowed the provider to lose the distinction
+    # between the substantial station-side archive and the absent vehicle-side
+    # full-loop trace.  This projection contains aggregate counts only, so it
+    # is small enough for ordinary questions and keeps the evidence boundary
+    # visible without exposing private paths, tags or raw rows.
+    if (
+        current_forecast
+        or manifest.get("selected_sensor")
+        or manifest.get("question")
+    ):
         decision["data_used"] = data_used
     # The gate-triage view is useful for evidence/data questions but is too
     # expensive for ordinary operational turns.  Keep the default provider

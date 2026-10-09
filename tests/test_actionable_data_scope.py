@@ -92,3 +92,12 @@ def test_decision_prompt_names_usable_data_before_full_loop_boundary() -> None:
     provider_protocol = provider_basis["public_h2protocol_validation_boundary"]
     assert provider_protocol["case_count"] == 36
     assert provider_protocol["fresh_holdout_available"] is False
+    # Direct questions receive the same privacy-bounded provenance summary as
+    # sensor-analysis turns, so the provider cannot collapse station-side
+    # evidence into a generic "no data" answer.
+    assert provider_basis["data_used"]["station_data"][
+        "deduplicated_rows"
+    ] == 56_854_143
+    assert provider_basis["data_used"]["station_data"][
+        "full_loop_validation"
+    ] is False
