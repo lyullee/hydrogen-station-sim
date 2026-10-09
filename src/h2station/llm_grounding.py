@@ -6137,6 +6137,9 @@ def guard_llm_claims(
     manifest = evidence_manifest or {}
     real_station = manifest.get("public_real_station_context") or {}
     closed_loop = manifest.get("closed_loop_validation_boundary") or {}
+    readiness = (manifest.get("response_evidence") or {}).get(
+        "validation_readiness"
+    ) or {}
     full_loop_supported = any(
         value is True
         for value in (
@@ -6145,6 +6148,19 @@ def guard_llm_claims(
             closed_loop.get("claim_supported"),
         )
     )
+    # The repository-level readiness ledger is the authoritative upper bound
+    # for generated claims.  Even if a stale or synthetic manifest contains a
+    # permissive component flag, it cannot re-enable a failed full-loop gate.
+    if isinstance(readiness, dict):
+        if readiness.get("status") != "available" or readiness.get(
+            "ledger_integrity"
+        ) is not True:
+            full_loop_supported = False
+        else:
+            full_loop_supported = (
+                full_loop_supported
+                and readiness.get("full_loop_external_validation_supported") is True
+            )
     # These are separate flags so a future component-level certification does
     # not accidentally authorize a full-loop claim.
     blocked_families: set[str] = set()

@@ -1724,6 +1724,19 @@ def test_llm_claim_guard_replaces_unsupported_positive_validation_claims():
     assert "현재 압력은 88 MPa입니다." in answer
 
 
+def test_llm_claim_guard_cannot_be_reenabled_by_stale_full_loop_flags():
+    manifest = build_evidence_manifest({"time_s": 12.5}, {}, [], False)
+    manifest["full_loop_validation_supported"] = True
+    manifest["public_real_station_context"] = {
+        "full_loop_external_holdout_eligible": True,
+    }
+    manifest["closed_loop_validation_boundary"] = {"claim_supported": True}
+    answer, audit = guard_llm_claims("충전소-차량 전주기 검증이 완료되었습니다.", manifest)
+    assert audit["full_loop_validation_supported"] is False
+    assert "전주기 검증이 완료되었습니다" not in answer
+    assert "근거 경계" in answer
+
+
 def test_llm_claim_guard_preserves_explicit_limitations_and_calculated_values():
     manifest = build_evidence_manifest(
         {"time_s": 12.5}, {},
