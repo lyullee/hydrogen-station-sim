@@ -13,6 +13,7 @@
 | `owner_station_side_dynamics` | ACTIONABLE | station-side pressure, cascade and recharge dynamics diagnostics | vehicle-side full-loop accuracy or field safety limits |
 | `owner_station_runtime_replay` | ACTIONABLE | sanitized station pressure-boundary profile is wired and replayable | automatic runtime parameter replacement or full-loop validation |
 | `public_type_iv_tank` | VALIDATED_COMPONENT | measured-boundary Type-IV tank component validation | station controller, compressor, cascade, dispenser or field safety certification |
+| `public_station_tank_boundary` | DIAGNOSTIC_ONLY | 공통시계 호스·수용탱크 압력·온도·질량의 부분 station-to-tank 경계 진단 | 충전소 제어기·캐스케이드·ESD·노즐/리셉터클을 포함한 full-loop 검증 |
 | `public_component_measurements` | DIAGNOSTIC_ONLY | public synchronized component pressure/temperature/flow diagnostics | prospective station-to-vehicle holdout |
 | `public_field_metrology` | DIAGNOSTIC_ONLY | 35 MPa 현장 계측의 압력·온도·질량 경계 및 반복성 맥락 | 원시 station-to-vehicle holdout, 제어기·ESD·사고영향 검증 |
 | `public_actual_h2_spatial_dispersion` | DIAGNOSTIC_ONLY | 실제 수소 저압 누출·다중 검지기 응답 범위와 사고 모델 진단 | 충전소 full-loop, 좌표기반 검지기 holdout, site-specific safety distance |

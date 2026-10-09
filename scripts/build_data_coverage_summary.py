@@ -37,6 +37,7 @@ def build_summary(root: Path) -> dict[str, Any]:
     )
     hytf = _read(root, "research/hytf_open_tank_trace_boundary_2026_10_05.json")
     h2safe = _read(root, "research/h2safe_public_dataset_intake_2026_10_08.json")
+    nrel_boundary = _read(root, "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json")
 
     inventory = local["inventory"]
     utilization = local["utilization"]
@@ -77,6 +78,15 @@ def build_summary(root: Path) -> dict[str, Any]:
     h2safe_intake = h2safe.get("intake") if isinstance(h2safe, dict) else {}
     if not isinstance(h2safe_intake, dict):
         h2safe_intake = {}
+    nrel_experiment = nrel_boundary.get("experiment") if isinstance(nrel_boundary, dict) else {}
+    if not isinstance(nrel_experiment, dict):
+        nrel_experiment = {}
+    nrel_boundary_check = nrel_boundary.get("boundary_check") if isinstance(nrel_boundary, dict) else {}
+    if not isinstance(nrel_boundary_check, dict):
+        nrel_boundary_check = {}
+    nrel_eligibility = nrel_boundary.get("eligibility") if isinstance(nrel_boundary, dict) else {}
+    if not isinstance(nrel_eligibility, dict):
+        nrel_eligibility = {}
     return {
         "schema_version": 1,
         "artifact_type": "privacy_bounded_data_coverage_summary",
@@ -133,6 +143,30 @@ def build_summary(root: Path) -> dict[str, Any]:
                 },
                 "allowed_claim": "measured-boundary Type-IV tank component validation",
                 "not_allowed": "station controller, compressor, cascade, dispenser or field safety certification",
+            },
+            {
+                "id": "public_station_tank_boundary",
+                "status": "DIAGNOSTIC_ONLY",
+                "evidence": "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json",
+                "coverage": {
+                    "sample_count": nrel_experiment.get("nonempty_timed_row_count"),
+                    "duration_s": (nrel_experiment.get("time_range_s") or [None, None])[-1],
+                    "tank_count": len(nrel_experiment.get("tank_ids") or []),
+                    "hose_pressure_temperature_present": nrel_boundary_check.get(
+                        "hose_pressure_and_temperature_present", False
+                    ),
+                    "tank_pressure_temperature_mass_present": nrel_boundary_check.get(
+                        "tank_pressure_temperature_mass_present", False
+                    ),
+                    "partial_station_to_tank_boundary_eligible": nrel_eligibility.get(
+                        "partial_station_to_tank_boundary_eligible", False
+                    ),
+                    "full_loop_holdout_eligible": nrel_boundary_check.get(
+                        "full_loop_external_holdout_eligible", False
+                    ),
+                },
+                "allowed_claim": "공통시계 호스·수용탱크 압력·온도·질량의 부분 station-to-tank 경계 진단",
+                "not_allowed": "충전소 제어기·캐스케이드·ESD·노즐/리셉터클을 포함한 full-loop 검증",
             },
             {
                 "id": "public_component_measurements",

@@ -28,6 +28,7 @@ _KHK_ACCIDENTS = _ROOT / "research/khk_hydrogen_station_public_reports_inventory
 _ACCIDENTAL_RELEASE = _ROOT / "research/accidental_self_ignition_public_evidence_2026_10_04.json"
 _EXPERIMENTAL_BENCHMARKS = _ROOT / "research/public_experimental_benchmarks_2026_10_06.json"
 _CARB_BENCHMARK = _ROOT / "research/carb_2024_hrs_inuse_field_benchmark_2026_10_08.json"
+_NREL_HDVS_BOUNDARY = _ROOT / "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json"
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -571,6 +572,17 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "stations_passing_all_fueling_metrics": 0,
             "full_loop_holdout_eligible": False,
         },
+        "public_station_tank_boundary": {
+            "status": "unavailable",
+            "sample_count": 0,
+            "duration_s": None,
+            "tank_count": 0,
+            "hose_pressure_temperature_present": False,
+            "tank_pressure_temperature_mass_present": False,
+            "partial_station_to_tank_boundary_eligible": False,
+            "full_loop_holdout_eligible": False,
+            "rights_limited": False,
+        },
     }
     try:
         record = _read_json(_KHK_ACCIDENTS)
@@ -658,6 +670,36 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
                 "full_loop_holdout_eligible": eligibility.get(
                     "full_loop_external_holdout"
                 ) is True,
+            }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        pass
+    try:
+        record = _read_json(_NREL_HDVS_BOUNDARY)
+        source = record.get("source") or {}
+        experiment = record.get("experiment") or {}
+        boundary = record.get("boundary_check") or {}
+        eligibility = record.get("eligibility") or {}
+        rights = str(source.get("license") or "").casefold()
+        if (
+            record.get("status") == "NREL_HDVS_RAW_TRACE_BOUNDARY_RECHECKED"
+            and boundary.get("workbook_present_and_hash_verified") is True
+            and boundary.get("physical_measurement_trace") is True
+            and boundary.get("hose_pressure_and_temperature_present") is True
+            and boundary.get("tank_pressure_temperature_mass_present") is True
+            and eligibility.get("partial_station_to_tank_boundary_eligible") is True
+        ):
+            result["public_station_tank_boundary"] = {
+                "status": "available",
+                "sample_count": int(experiment.get("nonempty_timed_row_count") or 0),
+                "duration_s": float((experiment.get("time_range_s") or [0, 0])[-1]),
+                "tank_count": len(experiment.get("tank_ids") or []),
+                "hose_pressure_temperature_present": True,
+                "tank_pressure_temperature_mass_present": True,
+                "partial_station_to_tank_boundary_eligible": True,
+                "full_loop_holdout_eligible": boundary.get(
+                    "full_loop_external_holdout_eligible"
+                ) is True,
+                "rights_limited": "internal-use-only" in rights,
             }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
         pass

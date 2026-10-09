@@ -1490,7 +1490,19 @@ def test_compact_data_used_reports_available_and_applied_station_profile():
         "actual_hydrogen_archive_count"
     ] == 22
     assert inventory["public_field_benchmark"]["stations_tested"] == 22
+    assert inventory["public_station_tank_boundary"]["sample_count"] == 351
+    assert inventory["public_station_tank_boundary"]["tank_count"] == 7
+    assert inventory["public_station_tank_boundary"][
+        "partial_station_to_tank_boundary_eligible"
+    ] is True
+    assert inventory["public_station_tank_boundary"]["full_loop_holdout_eligible"] is False
     assert "C:\\" not in str(inventory)
+    local_inventory = compact_data_used(
+        build_evidence_manifest(base_frame, {}, [], False, question="현재 상태"),
+        include_references=True,
+    )["local_station_evidence_inventory"]
+    assert local_inventory["deduplicated_row_count"] == 56854143
+    assert local_inventory["vehicle_side_full_loop_ready"] is False
 
     applied_frame = {
         **base_frame,

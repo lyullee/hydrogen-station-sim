@@ -26,6 +26,15 @@ def test_data_coverage_summary_preserves_claim_boundary() -> None:
     assert station["coverage"]["deduplicated_rows"] == 56854143
     assert station["coverage"]["ordered_high_bank_pressure_cycles"] == 16770
 
+    station_tank = next(
+        item for item in summary["validated_or_actionable_now"]
+        if item["id"] == "public_station_tank_boundary"
+    )
+    assert station_tank["coverage"]["sample_count"] == 351
+    assert station_tank["coverage"]["tank_count"] == 7
+    assert station_tank["coverage"]["partial_station_to_tank_boundary_eligible"] is True
+    assert station_tank["coverage"]["full_loop_holdout_eligible"] is False
+
     accidents = next(
         item for item in summary["validated_or_actionable_now"]
         if item["id"] == "public_accident_precedents"

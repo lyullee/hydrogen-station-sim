@@ -10538,6 +10538,29 @@ def compact_data_used(
             inventory = public_evidence_inventory_summary()
             if inventory:
                 result["public_evidence_inventory"] = inventory
+            # Always expose the aggregate local station-data boundary in the
+            # operator-facing provenance projection.  This is deliberately
+            # independent of scenario-specific evidence routing: the LLM/UI
+            # should show that substantial station-side measurements exist,
+            # while preserving the vehicle/full-loop claim limit.
+            local_summary = local_station_evidence_summary()
+            if local_summary.get("status") == "available":
+                measured_station = local_summary.get("measured_station") or {}
+                coverage = local_summary.get("coverage") or {}
+                result["local_station_evidence_inventory"] = {
+                    "status": "substantial_station_side",
+                    "csv_file_count": measured_station.get("csv_file_count"),
+                    "deduplicated_row_count": measured_station.get(
+                        "deduplicated_row_count"
+                    ),
+                    "station_side_dynamic_evidence": coverage.get(
+                        "station_side_dynamic_evidence_is_substantial"
+                    ) is True,
+                    "vehicle_side_full_loop_ready": coverage.get(
+                        "vehicle_side_full_loop_validation_ready"
+                    ) is True,
+                    "claim_limit": local_summary.get("claim_boundary"),
+                }
             result["public_references"] = _compact_public_references(evidence)
     return result
 

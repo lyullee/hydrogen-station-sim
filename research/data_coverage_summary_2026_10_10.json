@@ -60,6 +60,22 @@
       "not_allowed": "station controller, compressor, cascade, dispenser or field safety certification"
     },
     {
+      "id": "public_station_tank_boundary",
+      "status": "DIAGNOSTIC_ONLY",
+      "evidence": "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json",
+      "coverage": {
+        "sample_count": 351,
+        "duration_s": 350,
+        "tank_count": 7,
+        "hose_pressure_temperature_present": true,
+        "tank_pressure_temperature_mass_present": true,
+        "partial_station_to_tank_boundary_eligible": true,
+        "full_loop_holdout_eligible": false
+      },
+      "allowed_claim": "공통시계 호스·수용탱크 압력·온도·질량의 부분 station-to-tank 경계 진단",
+      "not_allowed": "충전소 제어기·캐스케이드·ESD·노즐/리셉터클을 포함한 full-loop 검증"
+    },
+    {
       "id": "public_component_measurements",
       "status": "DIAGNOSTIC_ONLY",
       "evidence": "research/methytrucks_2026_public_measurement_intake.json",
