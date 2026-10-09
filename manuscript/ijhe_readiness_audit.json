@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-09T20:03:30.542131+00:00",
+  "generated_at": "2026-10-09T23:22:18.857023+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -7965,12 +7965,16 @@
         },
         "public_operating_benchmarks": {
           "evidence": "research/public_experimental_benchmarks_2026_10_06.json",
-          "source_count": 4,
+          "source_count": 8,
           "source_ids": [
             "NREL_HDVS_2022_TANK_HOSE_TRACE",
             "KGS_HRS_SIX_SCENARIO_AGGREGATE_2025",
             "NREL_HD_FAST_FLOW_2024_REPORT",
-            "FCH2RAIL_D61_350BAR_REPORT"
+            "CAL_STATE_LA_MULTI_YEAR_HRS_2024",
+            "NIU_FULL_SCALE_HRS_LEAKAGE_2025",
+            "FCH2RAIL_D61_350BAR_REPORT",
+            "NIST_FTS_2015_FIELD_METROLOGY",
+            "USN_OPEN_CHANNEL_ACTUAL_H2_2025"
           ],
           "pressure_class_selection": "35 MPa FCH2RAIL context below 50 MPa; H70 NREL context above 50 MPa",
           "full_loop_holdout_eligible": false,
