@@ -45,8 +45,14 @@ python scripts/freeze_privacy_safe_full_loop.py `
   --model model.py `
   --evaluator evaluator.py `
   --channel-roles roles.json `
+  --require-vehicle-boundary `
   --output research\pilot_freeze_manifest.json
 ```
+
+`--require-vehicle-boundary`를 지정하면 세 이벤트 모두에
+`vehicle_pressure_mpa`와 `vehicle_temperature_c`가 없을 때 동결 자체가
+실패한다. station-only 자료를 먼저 보관하려면 이 옵션을 생략하되, 그
+manifest는 full-loop 후보로 표시되지 않는다.
 
 출력 JSON은 결과 점수나 원시 경로를 저장하지 않고, 고정 시점의 코드·프로토콜·
 이벤트 SHA-256과 역할·행 수만 보존한다.
