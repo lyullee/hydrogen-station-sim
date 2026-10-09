@@ -1213,6 +1213,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     cal_state = next(item for item in benchmarks["sources"] if item["id"] == "CAL_STATE_LA_MULTI_YEAR_HRS_2024")
     assert cal_state["aggregate"]["refueling_event_count_approx"] == 4500
     assert cal_state["aggregate"]["dispensed_hydrogen_kg_approx"] == 8800
+    assert cal_state["aggregate"]["reported_2020_q1_energy_kwh_per_kg_range"] == [70, 80]
     assert "synchronized station-to-vehicle holdout" in cal_state["not_eligible_for"]
     fch2rail = next(item for item in benchmarks["sources"] if item["id"] == "FCH2RAIL_D61_350BAR_REPORT")
     assert fch2rail["aggregate"]["average_flow_min_g_s"] == 11.54

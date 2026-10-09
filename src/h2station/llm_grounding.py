@@ -1678,6 +1678,30 @@ def _public_experimental_benchmarks() -> dict[str, Any] | None:
     ):
         return None
     sources: list[dict[str, Any]] = []
+
+    def project_aggregate_value(value: Any) -> Any:
+        """Keep citation-bounded scalar values and finite numeric ranges.
+
+        A few public sources publish an operating envelope as a two-element
+        range rather than a scalar (for example, energy per kilogram).  Those
+        ranges are useful context, but arbitrary nested payloads would make
+        the LLM evidence envelope noisy, so only finite numeric lists are
+        projected.
+        """
+
+        if isinstance(value, bool) or isinstance(value, (str, int)):
+            return value
+        if isinstance(value, float):
+            return value if math.isfinite(value) else None
+        if isinstance(value, list) and value and all(
+            isinstance(item, (int, float))
+            and not isinstance(item, bool)
+            and (not isinstance(item, float) or math.isfinite(item))
+            for item in value
+        ):
+            return list(value)
+        return None
+
     for source in record.get("sources") or []:
         if not isinstance(source, dict) or not source.get("id"):
             continue
@@ -1690,10 +1714,9 @@ def _public_experimental_benchmarks() -> dict[str, Any] | None:
             "url": str(source.get("url") or ""),
             "raw_rows_public": source.get("raw_rows_public") is True,
             "aggregate": {
-                str(key): value
+                str(key): projected_value
                 for key, value in aggregate.items()
-                if isinstance(value, (str, int, float, bool))
-                and not (isinstance(value, float) and not math.isfinite(value))
+                if (projected_value := project_aggregate_value(value)) is not None
             },
             "eligible_for": [str(value) for value in source.get("eligible_for") or []],
             "not_eligible_for": [
@@ -7918,6 +7941,8 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "mass_transfer_kg", "total_fill_time_s", "fueling_time_s",
                 "average_mass_flow_g_s", "peak_mass_flow_g_s", "aprr_mpa_min",
                 "starting_pressure_mpa", "ending_pressure_mpa",
+                "reported_2020_q1_energy_kwh_per_kg_range",
+                "reported_2020_q1_site_efficiency_percent_max",
             )
             rows.append({
                 "id": source.get("id"),
