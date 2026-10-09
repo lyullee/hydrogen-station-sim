@@ -180,6 +180,10 @@ def test_validation_readiness_ledger_reaches_all_llm_views_without_paths():
     assert readiness["full_loop_external_validation_supported"] is False
     assert readiness["expert_effectiveness_evaluation_supported"] is False
     assert readiness["independent_expert_review_complete"] is False
+    assert readiness["claim_tier"] == "component_and_station_side_only"
+    assert readiness["open_gate_count"] == 17
+    assert "full_loop_external_validation" in readiness["open_gate_ids"]
+    assert readiness["evidence_use_policy"]["diagnostic"]
     assert "C:\\" not in str(readiness)
     assert "source_paths" not in str(readiness)
 

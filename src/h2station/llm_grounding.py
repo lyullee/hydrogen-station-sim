@@ -47,6 +47,14 @@ def _ijhe_readiness_ledger() -> dict[str, Any]:
         "full_loop_external_validation_supported": False,
         "expert_effectiveness_evaluation_supported": False,
         "independent_expert_review_complete": False,
+        "claim_tier": "unverified",
+        "open_gate_count": 0,
+        "open_gate_ids": [],
+        "evidence_use_policy": {
+            "validated": "Use only explicitly passed component or station-side evidence.",
+            "diagnostic": "Treat post-access replays and aggregate references as diagnostic context.",
+            "unavailable": "Do not infer full-loop, field-safety, SAGA-effectiveness, or journal-readiness claims.",
+        },
         "claim_boundary": (
             "Validation-readiness metadata is unavailable; do not claim full-loop "
             "external validation, journal readiness, or objective completion."
@@ -92,6 +100,16 @@ def _ijhe_readiness_ledger() -> dict[str, Any]:
     if computed_counts != counts:
         return unavailable
 
+    open_gate_ids = sorted(
+        gate_id for gate_id, status in statuses.items() if status != "PASS"
+    )
+    if payload.get("full_user_objective_ready") is True:
+        claim_tier = "full_objective_supported"
+    elif payload.get("bounded_ijhe_submission_ready") is True:
+        claim_tier = "bounded_submission_supported"
+    else:
+        claim_tier = "component_and_station_side_only"
+
     return {
         "evidence_role": "aggregate validation-readiness ledger",
         "status": "available",
@@ -116,6 +134,14 @@ def _ijhe_readiness_ledger() -> dict[str, Any]:
         "independent_expert_review_complete": (
             statuses.get("independent_expert_review_complete") == "PASS"
         ),
+        "claim_tier": claim_tier,
+        "open_gate_count": len(open_gate_ids),
+        "open_gate_ids": open_gate_ids,
+        "evidence_use_policy": {
+            "validated": "Use only explicitly passed component or station-side evidence.",
+            "diagnostic": "Treat post-access replays and aggregate references as diagnostic context.",
+            "unavailable": "Do not infer full-loop, field-safety, SAGA-effectiveness, or journal-readiness claims.",
+        },
         "claim_boundary": (
             "Aggregate audit status only; this does not predict peer review or "
             "journal acceptance. Full-loop and objective-completion claims remain "
@@ -7953,7 +7979,9 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "full_user_objective_ready", "goal_completion_permitted",
                 "full_loop_external_validation_supported",
                 "expert_effectiveness_evaluation_supported",
-                "independent_expert_review_complete", "claim_boundary",
+                "independent_expert_review_complete", "claim_tier",
+                "open_gate_count", "open_gate_ids", "evidence_use_policy",
+                "claim_boundary",
             )
             if readiness.get(key) is not None
         }
@@ -10912,7 +10940,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "full_user_objective_ready", "goal_completion_permitted",
                 "full_loop_external_validation_supported",
                 "expert_effectiveness_evaluation_supported",
-                "independent_expert_review_complete", "claim_boundary",
+                "independent_expert_review_complete", "claim_tier",
+                "open_gate_count", "open_gate_ids", "evidence_use_policy",
+                "claim_boundary",
             )
             if readiness.get(key) is not None
         },
