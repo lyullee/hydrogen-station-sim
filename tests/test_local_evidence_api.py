@@ -36,6 +36,15 @@ def test_local_evidence_summary_is_privacy_bounded() -> None:
     assert summary["station_asset_context"]["coverage"][
         "vehicle_side_full_loop_validation_ready"
     ] is False
+    revalidation = summary["station_data_revalidation"]
+    assert revalidation["inventory"]["csv_file_count"] == 33
+    assert revalidation["inventory"]["deduplicated_row_count"] == 56_854_143
+    assert revalidation["sampled_candidate_manifest"]["sampled_table_count"] == 20
+    assert revalidation["broader_local_screen"][
+        "synchronized_station_dispenser_vehicle_candidates"
+    ] == 0
+    assert revalidation["decision"]["local_data_is_sparse"] is False
+    assert revalidation["decision"]["full_loop_external_validation_supported"] is False
     assert all(value is False for value in summary["privacy"].values())
     rendered = str(summary)
     assert "C:\\" not in rendered

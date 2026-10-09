@@ -21,6 +21,7 @@ _CONTINUITY = _ROOT / "research/local_wide_equipment_continuity_recheck_2026_10_
 _ADJACENT_PROCESS = _ROOT / "research/local_adjacent_hydrogen_data_discovery_2026_10_09.json"
 _DOCUDATA_DISCOVERY = _ROOT / "research/local_docudata_full_discovery_2026_10_09.json"
 _ASSET_SCREEN = _ROOT / "research/local_station_asset_screen_2026_10_09.json"
+_REVALIDATION = _ROOT / "research/local_station_data_revalidation_2026_10_09.json"
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -248,6 +249,86 @@ def _station_asset_context_summary() -> dict[str, Any] | None:
         return None
 
 
+def _local_station_revalidation_summary() -> dict[str, Any] | None:
+    """Expose the latest aggregate revalidation without reading raw rows.
+
+    This is intentionally a second integrity boundary in addition to the
+    discovery index.  The runtime must fail closed if the revalidation record
+    is stale, malformed, or contains any privacy surface.  A passing record
+    strengthens station-side evidence visibility only; it never enables a
+    vehicle/full-loop claim or changes model parameters.
+    """
+
+    try:
+        record = _read_json(_REVALIDATION)
+        privacy = record.get("privacy") or {}
+        measured = record.get("measured_station_bundle") or {}
+        sampled = record.get("sampled_candidate_manifest") or {}
+        broad = record.get("broader_local_screen") or {}
+        decision = record.get("decision") or {}
+        if (
+            record.get("artifact_type") != "local_station_data_revalidation"
+            or record.get("status") != "repeat_audit_matches_committed_inventory"
+            or not privacy
+            or not all(value is False for value in privacy.values())
+            or measured.get("csv_files") != 33
+            or measured.get("total_csv_gib") != 4.749
+            or measured.get("physical_rows") != 59_272_300
+            or measured.get("deduplicated_rows") != 56_854_143
+            or measured.get("vehicle_or_dispenser_header_candidates") != 0
+            or sampled.get("sampled_table_count") != 20
+            or sampled.get("sampled_rows_per_table") != 2_000
+            or broad.get("machine_readable_files_screened") != 38_528
+            or broad.get("csv_tsv_headers_screened") != 12_804
+            or broad.get("refined_csv_files_screened") != 13_050
+            or broad.get("synchronized_station_dispenser_vehicle_candidates") != 0
+            or decision.get("local_data_is_sparse") is not False
+            or decision.get("station_side_replay_and_chronological_holdouts_supported") is not True
+            or decision.get("full_loop_external_validation_supported") is not False
+            or decision.get("runtime_parameter_application") is not False
+        ):
+            return None
+        return {
+            "evidence_role": "privacy-bounded repeated local HRS data revalidation",
+            "generated_at": record.get("generated_at"),
+            "inventory": {
+                "csv_file_count": measured.get("csv_files"),
+                "storage_gib": measured.get("total_csv_gib"),
+                "physical_row_count": measured.get("physical_rows"),
+                "deduplicated_row_count": measured.get("deduplicated_rows"),
+                "schema_width_file_counts": measured.get("schema_width_file_counts") or {},
+            },
+            "sampled_candidate_manifest": {
+                "sampled_table_count": sampled.get("sampled_table_count"),
+                "sampled_rows_per_table": sampled.get("sampled_rows_per_table"),
+                "coverage_classes": sampled.get("coverage_classes") or {},
+            },
+            "broader_local_screen": {
+                "machine_readable_files_screened": broad.get("machine_readable_files_screened"),
+                "csv_tsv_headers_screened": broad.get("csv_tsv_headers_screened"),
+                "refined_csv_files_screened": broad.get("refined_csv_files_screened"),
+                "synchronized_station_dispenser_vehicle_candidates": broad.get(
+                    "synchronized_station_dispenser_vehicle_candidates"
+                ),
+            },
+            "decision": {
+                "local_data_is_sparse": decision.get("local_data_is_sparse"),
+                "station_side_replay_and_chronological_holdouts_supported": decision.get(
+                    "station_side_replay_and_chronological_holdouts_supported"
+                ),
+                "full_loop_external_validation_supported": decision.get(
+                    "full_loop_external_validation_supported"
+                ),
+                "runtime_parameter_application": decision.get(
+                    "runtime_parameter_application"
+                ),
+            },
+            "claim_boundary": str(record.get("claim_boundary") or ""),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+
 def local_station_evidence_summary() -> dict[str, Any]:
     """Return a stable, privacy-bounded view of local evidence coverage.
 
@@ -324,6 +405,9 @@ def local_station_evidence_summary() -> dict[str, Any]:
         asset_context = _station_asset_context_summary()
         if asset_context is not None:
             result["station_asset_context"] = asset_context
+        revalidation = _local_station_revalidation_summary()
+        if revalidation is not None:
+            result["station_data_revalidation"] = revalidation
         return result
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
         return {

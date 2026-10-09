@@ -22,6 +22,7 @@ from .calibration_profiles import (
 from .public_tank_calibration import load_public_type_iv_tank_calibration
 from .lifecycle_evidence import load_lifecycle_evidence
 from .hazop.response import public_accident_precedents
+from .local_evidence import local_station_evidence_summary
 
 
 def _runtime_calibration_profile(frame: dict[str, Any]) -> dict[str, Any]:
@@ -6480,6 +6481,17 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_local_station_data_utilization"
         ] = local_station_utilization
+    # Keep the latest local archive revalidation visible to the LLM through
+    # the same privacy-bounded API projection used by the UI.  This reads only
+    # committed aggregate evidence; raw rows, paths, identifiers and site
+    # metadata never enter the prompt.  The projection deliberately preserves
+    # the full-loop gate and does not apply parameters at runtime.
+    local_evidence = local_station_evidence_summary()
+    local_revalidation = local_evidence.get("station_data_revalidation")
+    if isinstance(local_revalidation, dict):
+        envelope["response_evidence"][
+            "local_station_data_revalidation"
+        ] = local_revalidation
     cross_station_bundle = _confidential_cross_station_bundle_recheck_evidence()
     if cross_station_bundle is not None:
         envelope["response_evidence"][
@@ -7514,6 +7526,21 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if local_station_utilization.get(key) is not None
         }
+    local_revalidation = evidence.get("local_station_data_revalidation")
+    if isinstance(local_revalidation, dict):
+        summary["local_station_data_revalidation"] = {
+            "evidence_role": local_revalidation.get("evidence_role"),
+            "generated_at": local_revalidation.get("generated_at"),
+            "inventory": local_revalidation.get("inventory") or {},
+            "sampled_candidate_manifest": local_revalidation.get(
+                "sampled_candidate_manifest"
+            ) or {},
+            "broader_local_screen": local_revalidation.get(
+                "broader_local_screen"
+            ) or {},
+            "decision": local_revalidation.get("decision") or {},
+            "claim_boundary": short(local_revalidation.get("claim_boundary"), 320),
+        }
     local_station_asset_screen = evidence.get(
         "confidential_local_station_asset_screen"
     )
@@ -7831,6 +7858,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     local_station_utilization = response.get(
         "confidential_local_station_data_utilization"
     ) or {}
+    local_revalidation = response.get("local_station_data_revalidation") or {}
     local_station_asset_screen = response.get(
         "confidential_local_station_asset_screen"
     ) or {}
@@ -8353,6 +8381,33 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 },
             } if local_station_utilization and (
                 manifest.get("question") or manifest.get("selected_sensor")
+            ) else {}),
+            **({
+                "local_station_data_revalidation": {
+                    "csv_file_count": (
+                        local_revalidation.get("inventory") or {}
+                    ).get("csv_file_count"),
+                    "deduplicated_data_rows": (
+                        local_revalidation.get("inventory") or {}
+                    ).get("deduplicated_row_count"),
+                    "sampled_table_count": (
+                        local_revalidation.get("sampled_candidate_manifest") or {}
+                    ).get("sampled_table_count"),
+                    "synchronized_station_dispenser_vehicle_candidates": (
+                        local_revalidation.get("broader_local_screen") or {}
+                    ).get("synchronized_station_dispenser_vehicle_candidates"),
+                    "station_side_replay_supported": (
+                        local_revalidation.get("decision") or {}
+                    ).get("station_side_replay_and_chronological_holdouts_supported")
+                    is True,
+                    "full_loop_external_validation_supported": False,
+                    "runtime_parameter_application": False,
+                    "claim_limit": short(
+                        local_revalidation.get("claim_boundary"), 220
+                    ),
+                },
+            } if local_revalidation and (
+                local_discovery_relevant or station_signal_relevant
             ) else {}),
             **({
                 "station_signal_consistency": {
@@ -8992,6 +9047,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     local_station_utilization = evidence.get(
         "confidential_local_station_data_utilization"
     ) or {}
+    local_revalidation = evidence.get("local_station_data_revalidation") or {}
     local_station_asset_screen = evidence.get(
         "confidential_local_station_asset_screen"
     ) or {}
@@ -10115,6 +10171,19 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             ) or {},
             "assessment": local_station_utilization.get("assessment") or {},
             "claim_limit": local_station_utilization.get("claim_limit"),
+        },
+        "local_station_data_revalidation": {
+            "evidence_role": local_revalidation.get("evidence_role"),
+            "generated_at": local_revalidation.get("generated_at"),
+            "inventory": local_revalidation.get("inventory") or {},
+            "sampled_candidate_manifest": local_revalidation.get(
+                "sampled_candidate_manifest"
+            ) or {},
+            "broader_local_screen": local_revalidation.get(
+                "broader_local_screen"
+            ) or {},
+            "decision": local_revalidation.get("decision") or {},
+            "claim_limit": local_revalidation.get("claim_boundary"),
         },
         "confidential_local_station_asset_screen": {
             "evidence_artifact": local_station_asset_screen.get("artifact"),

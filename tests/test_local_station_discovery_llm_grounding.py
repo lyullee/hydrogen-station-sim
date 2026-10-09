@@ -61,6 +61,28 @@ def test_local_discovery_is_grounded_without_raw_provenance():
 
 def test_local_discovery_reaches_bounded_prompt_views():
     manifest = _manifest()
+    revalidation = manifest["response_evidence"][
+        "local_station_data_revalidation"
+    ]
+    assert revalidation["inventory"]["csv_file_count"] == 33
+    assert revalidation["inventory"]["deduplicated_row_count"] == 56_854_143
+    assert revalidation["broader_local_screen"][
+        "synchronized_station_dispenser_vehicle_candidates"
+    ] == 0
+    assert revalidation["decision"][
+        "full_loop_external_validation_supported"
+    ] is False
+    assert "source_paths_published" not in str(revalidation)
+    assert "C:\\" not in str(revalidation)
+
+    bounded = prompt_evidence_summary(manifest)["local_station_data_revalidation"]
+    assert bounded["decision"]["runtime_parameter_application"] is False
+    decision_revalidation = prompt_decision_evidence(manifest)[
+        "validation_boundaries"
+    ]["local_station_data_revalidation"]
+    assert decision_revalidation["station_side_replay_supported"] is True
+    assert decision_revalidation["full_loop_external_validation_supported"] is False
+
     summary = prompt_evidence_summary(manifest)[
         "confidential_local_station_data_discovery"
     ]
