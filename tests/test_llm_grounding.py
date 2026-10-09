@@ -387,6 +387,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert cross_release["apparatus_resolved_holdout_received"] is False
     assert cross_release["apparatus_resolved_holdout_run"] is False
     assert cross_release["runtime_model_changed_after_outcomes"] is False
+    coverage = idle["data_coverage"]
+    assert coverage["available_evidence_tier"] == "station_side_and_component"
+    assert coverage["station_side_component_evidence_available"] is True
+    assert coverage["synchronized_full_loop_trace_count"] == 0
+    assert coverage["full_loop_external_validation_supported"] is False
+    assert "full-loop" in coverage["assistant_instruction"]
     detector = idle["response_evidence"]["public_detector_logic_evidence"]
     assert detector["doi"] == "10.23642/usn.26117989.v2"
     assert detector["rule"]["alarm_threshold_percent"] == 1.0
@@ -633,6 +639,9 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     ] is True
     assert early["evidence_digest"] == idle["evidence_digest"]
     header = prompt_evidence_header(idle)
+    assert header["data_coverage"]["available_evidence_tier"] == (
+        "station_side_and_component"
+    )
     assert header["public_measurement_instrumentation"]["file_count"] == 15
     assert header["public_measurement_instrumentation"]["sample_count"] == 58_440
     assert header["public_measurement_instrumentation"][

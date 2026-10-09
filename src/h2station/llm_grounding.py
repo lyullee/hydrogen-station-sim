@@ -4900,6 +4900,46 @@ def _local_actionable_data_scope_evidence() -> dict[str, Any] | None:
     }
 
 
+def _data_coverage_summary() -> dict[str, Any] | None:
+    """Return a compact, provider-facing data-availability classification.
+
+    The repository contains substantial station-side and component evidence,
+    while the synchronized station--dispenser--vehicle trace required for a
+    full-loop holdout is still absent.  Keeping this distinction at the
+    manifest root prevents an LLM from collapsing ``no full-loop raw trace``
+    into ``no usable evidence`` or, in the other direction, implying that a
+    station-side replay proves vehicle-side behaviour.
+    """
+
+    scope = _local_actionable_data_scope_evidence()
+    if not isinstance(scope, dict):
+        return None
+    full_loop = scope.get("full_loop_holdout") or {}
+    runtime_items = scope.get("runtime_usable_now") or []
+    pending_items = scope.get("available_but_not_runtime_promoted") or []
+    return {
+        "evidence_role": "top-level data availability boundary",
+        "available_evidence_tier": "station_side_and_component",
+        "station_side_component_evidence_available": bool(runtime_items),
+        "runtime_usable_evidence_count": len(runtime_items),
+        "diagnostic_only_evidence_count": len(pending_items),
+        "synchronized_full_loop_trace_count": full_loop.get(
+            "synchronized_trace_count"
+        ),
+        "full_loop_external_validation_supported": False,
+        "required_full_loop_channels": list(
+            full_loop.get("required_channels") or []
+        ),
+        "assistant_instruction": (
+            "먼저 실제로 사용한 station-side/component 근거를 명시하고, "
+            "차량·디스펜서·저장계 동기화 로그가 없다는 사실을 full-loop 한계로 "
+            "분리해서 설명한다. 데이터가 없다고 전체 근거를 부정하거나, "
+            "station-side 결과를 차량 full-loop 검증으로 확대하지 않는다."
+        ),
+        "claim_limit": str(scope.get("claim_limit") or ""),
+    }
+
+
 def _confidential_cross_station_bundle_recheck_evidence() -> dict[str, Any] | None:
     """Expose the cross-station station-side data-quality recheck.
 
@@ -6546,6 +6586,7 @@ def build_evidence_manifest(
         "runtime_calibration": _runtime_calibration_profile(frame),
         "runtime_geometry": _runtime_geometry_profile(frame),
         "runtime_vehicle_tank_calibration": _runtime_vehicle_tank_calibration_profile(frame),
+        "data_coverage": _data_coverage_summary(),
         "virtual_safety": _virtual_safety_evidence(frame),
         "measured_bank_pressure_envelope": frame.get(
             "measured_bank_pressure_envelope"
@@ -6977,6 +7018,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         "runtime_vehicle_tank_calibration": manifest.get(
             "runtime_vehicle_tank_calibration"
         ) or {},
+        "data_coverage": manifest.get("data_coverage") or {},
         "measured_bank_pressure_envelope": manifest.get(
             "measured_bank_pressure_envelope"
         ) or {},
@@ -9862,7 +9904,21 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         "cross_campaign_release_validation_boundary"
     ) or {}
     thermal_observation = evidence.get("temperature_observation_semantic_boundary") or {}
+    data_coverage = manifest.get("data_coverage") or {}
     return {
+        "data_coverage": {
+            key: data_coverage.get(key)
+            for key in (
+                "evidence_role", "available_evidence_tier",
+                "station_side_component_evidence_available",
+                "runtime_usable_evidence_count", "diagnostic_only_evidence_count",
+                "synchronized_full_loop_trace_count",
+                "full_loop_external_validation_supported",
+                "required_full_loop_channels", "assistant_instruction",
+                "claim_limit",
+            )
+            if data_coverage.get(key) is not None
+        },
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "runtime_geometry": manifest.get("runtime_geometry") or {},
         "runtime_vehicle_tank_calibration": manifest.get(
