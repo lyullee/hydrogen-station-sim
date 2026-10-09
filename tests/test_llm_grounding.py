@@ -653,6 +653,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "PUBLIC_HITRF_OPERATIONAL_REFERENCE",
         "PUBLIC_STATION_OPERATION_PRACTICE",
         "PUBLIC_STATION_AGGREGATE_BENCHMARK",
+        "PUBLIC_3EMOTION_STATION_OPERATING_AGGREGATE",
         "KHK_PUBLIC_ACCIDENT_REPORTS",
         "PUBLIC_ACCIDENTAL_RELEASE_ARTICLE",
         "PUBLIC_ACCIDENTAL_RELEASE_DATASET",
@@ -706,6 +707,33 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert "public_station_aggregate_benchmark_reference" not in idle_decision[
         "decision_support_evidence"
     ]
+    threeemotion_header = header[
+        "public_threeemotion_operating_aggregate_reference"
+    ]
+    assert threeemotion_header["source"]["doi"] == (
+        "10.1051/e3sconf/202233406008"
+    )
+    assert threeemotion_header["reported_aggregate"][
+        "average_daily_mass_per_bus_kg"
+    ] == 12.95
+    assert threeemotion_header["reported_aggregate"][
+        "station_utilization_below_percent"
+    ] == 30
+    threeemotion_question = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False,
+        question="350 bar 버스 충전소의 처리량과 가동률을 설명해줘",
+    )
+    threeemotion_decision = prompt_decision_evidence(threeemotion_question)
+    threeemotion_support = threeemotion_decision["decision_support_evidence"][
+        "public_threeemotion_operating_aggregate_reference"
+    ]
+    assert threeemotion_support["reported_aggregate"][
+        "average_daily_mass_per_bus_kg"
+    ] == 12.95
+    assert threeemotion_support["not_allowed"]
+    assert "public_threeemotion_operating_aggregate_reference" not in (
+        idle_decision["decision_support_evidence"]
+    )
     assert header["public_reference_leak_detector_evidence"]["joint_pass"] is True
     assert header["public_reference_leak_detector_evidence"][
         "runtime_application"

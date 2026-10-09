@@ -344,6 +344,17 @@ holdout scoring, site-specific safety distances, and accident-frequency or
 response-effectiveness claims because no synchronized raw station-to-vehicle
 logger is publicly released by that record.
 
+The open 3Emotion study is retained in
+`research/threeemotion_station_operating_aggregate_reference_2026_10_09.json`.
+It provides a second, heavy-duty operating context from operator logs: 350 bar
+fuel-cell-bus filling, approximately 12.95 kg average daily mass per bus,
+approximately 24-hour refueling cadence and station utilization below 30%.
+The article title and abstract describe different station/time scopes, which is
+preserved in the artifact rather than silently reconciled. The source is used
+only for aggregate throughput/utilization explanations and data-request
+triage; it does not support raw-row calibration, vehicle-tank thermal claims or
+full-loop validation.
+
 The NREL H2FillS HDVS Type-IV workbook is evaluated separately as a frozen
 tank/thermal boundary screen. It contains seven tanks and 351 synchronized
 samples with measured pressure, temperature and mass channels. The current

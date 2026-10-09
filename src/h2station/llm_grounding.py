@@ -2550,6 +2550,77 @@ def _public_station_aggregate_benchmark_reference() -> dict[str, Any] | None:
     }
 
 
+def _public_threeemotion_operating_aggregate_reference() -> dict[str, Any] | None:
+    """Expose the 3Emotion bus-station aggregates without raw-log claims."""
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/threeemotion_station_operating_aggregate_reference_2026_10_09.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    aggregate = record.get("reported_aggregate") or {}
+    required_numeric = (
+        "average_daily_mass_per_bus_kg",
+        "most_frequent_daily_mass_per_bus_kg",
+        "daily_mass_standard_deviation_kg",
+        "overnight_dispensed_fraction_approx",
+        "typical_refueling_interval_h",
+        "station_utilization_below_percent",
+    )
+    if (
+        record.get("artifact_type") != "public_station_operating_aggregate_reference"
+        or record.get("status") != "public_aggregate_operating_context"
+        or source.get("public_access") is not True
+        or source.get("public_raw_synchronized_rows") is not False
+        or not str(source.get("doi") or "").strip()
+        or not str(source.get("url") or "").startswith("https://")
+        or aggregate.get("vehicle_class") != "350 bar fuel-cell buses"
+        or any(
+            not isinstance(aggregate.get(key), (int, float))
+            for key in required_numeric
+        )
+        or not aggregate.get("reported_outputs")
+        or not record.get("allowed_use")
+        or not record.get("not_allowed")
+    ):
+        return None
+    return {
+        "artifact": (
+            "research/threeemotion_station_operating_aggregate_reference_2026_10_09.json"
+        ),
+        "evidence_role": "public aggregate heavy-duty station operating benchmark",
+        "source": {
+            "title": str(source.get("title") or ""),
+            "authors": [str(value) for value in source.get("authors") or []],
+            "doi": str(source.get("doi") or ""),
+            "url": str(source.get("url") or ""),
+            "source_type": str(source.get("source_type") or ""),
+            "public_raw_synchronized_rows": False,
+        },
+        "reported_aggregate": {
+            key: aggregate.get(key)
+            for key in (
+                "vehicle_class",
+                "source_scope_note",
+                "average_daily_mass_per_bus_kg",
+                "most_frequent_daily_mass_per_bus_kg",
+                "daily_mass_standard_deviation_kg",
+                "overnight_dispensed_fraction_approx",
+                "typical_refueling_interval_h",
+                "station_utilization_below_percent",
+                "reported_outputs",
+            )
+            if aggregate.get(key) is not None
+        },
+        "allowed_use": [str(value) for value in record.get("allowed_use") or []],
+        "not_allowed": [str(value) for value in record.get("not_allowed") or []],
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_hrs_measurement_leads() -> dict[str, Any] | None:
     """Expose public HRS measurement leads with an explicit data boundary.
 
@@ -3006,6 +3077,20 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
         ),
         str(aggregate_source.get("url") or ""),
         "공개 실제 충전소 집계 처리량·에너지 운전 맥락(원시 full-loop 검증 아님)",
+    )
+
+    threeemotion_aggregate = evidence.get(
+        "public_threeemotion_operating_aggregate_reference"
+    ) or {}
+    threeemotion_source = threeemotion_aggregate.get("source") or {}
+    add(
+        "PUBLIC_3EMOTION_STATION_OPERATING_AGGREGATE",
+        str(
+            threeemotion_source.get("title")
+            or "3Emotion station operating aggregate"
+        ),
+        str(threeemotion_source.get("url") or ""),
+        "공개 350 bar 버스 충전소 집계 운전 맥락(원시 full-loop 검증 아님)",
     )
 
     measurement_leads = evidence.get("public_hrs_measurement_leads") or {}
@@ -6252,6 +6337,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_station_aggregate_benchmark_reference"
         ] = aggregate_benchmark
+    threeemotion_aggregate = _public_threeemotion_operating_aggregate_reference()
+    if threeemotion_aggregate is not None:
+        envelope["response_evidence"][
+            "public_threeemotion_operating_aggregate_reference"
+        ] = threeemotion_aggregate
     public_hrs_leads = _public_hrs_measurement_leads()
     if public_hrs_leads is not None:
         envelope["response_evidence"][
@@ -6813,6 +6903,20 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "allowed_use": aggregate_benchmark.get("allowed_use") or [],
             "not_allowed": aggregate_benchmark.get("not_allowed") or [],
             "claim_limit": short(aggregate_benchmark.get("claim_limit"), 360),
+        }
+    threeemotion_aggregate = evidence.get(
+        "public_threeemotion_operating_aggregate_reference"
+    )
+    if isinstance(threeemotion_aggregate, dict):
+        summary["public_threeemotion_operating_aggregate_reference"] = {
+            "evidence_role": threeemotion_aggregate.get("evidence_role"),
+            "source": threeemotion_aggregate.get("source") or {},
+            "reported_aggregate": threeemotion_aggregate.get(
+                "reported_aggregate"
+            ) or {},
+            "allowed_use": threeemotion_aggregate.get("allowed_use") or [],
+            "not_allowed": threeemotion_aggregate.get("not_allowed") or [],
+            "claim_limit": short(threeemotion_aggregate.get("claim_limit"), 360),
         }
     measurement_leads = evidence.get("public_hrs_measurement_leads")
     if isinstance(measurement_leads, dict):
@@ -7642,6 +7746,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     aggregate_benchmark = response.get(
         "public_station_aggregate_benchmark_reference"
     ) or {}
+    threeemotion_aggregate = response.get(
+        "public_threeemotion_operating_aggregate_reference"
+    ) or {}
     methytrucks_tank = response.get("methytrucks_tank_diagnostic_boundary") or {}
     methytrucks_scope = methytrucks_tank.get("scope") or {}
     methytrucks_244 = methytrucks_tank.get("candidate_244_l_diagnostic") or {}
@@ -7793,6 +7900,14 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "performance",
         ))
     )
+    threeemotion_aggregate_relevant = bool(
+        threeemotion_aggregate
+        and any(token in detector_context for token in (
+            "버스", "대형차", "350bar", "350 bar", "대중교통", "충전소 처리량",
+            "fleet", "bus", "heavy-duty", "350bar", "350 bar", "utilization",
+            "daily mass", "station throughput",
+        ))
+    )
     cascade_sequence_relevant = bool(
         cascade_sequence
         and any(token in detector_context for token in (
@@ -7888,6 +8003,19 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ),
                 },
             } if aggregate_benchmark and aggregate_benchmark_relevant else {}),
+            **({
+                "public_threeemotion_operating_aggregate_reference": {
+                    "source": threeemotion_aggregate.get("source") or {},
+                    "reported_aggregate": threeemotion_aggregate.get(
+                        "reported_aggregate"
+                    ) or {},
+                    "allowed_use": threeemotion_aggregate.get("allowed_use") or [],
+                    "not_allowed": threeemotion_aggregate.get("not_allowed") or [],
+                    "claim_limit": short(
+                        threeemotion_aggregate.get("claim_limit"), 300
+                    ),
+                },
+            } if threeemotion_aggregate and threeemotion_aggregate_relevant else {}),
             **({
                 "public_hrs_measurement_leads": {
                     "lead_count": len(public_hrs_leads.get("leads") or []),
@@ -8757,6 +8885,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     aggregate_benchmark = evidence.get(
         "public_station_aggregate_benchmark_reference"
     ) or {}
+    threeemotion_aggregate = evidence.get(
+        "public_threeemotion_operating_aggregate_reference"
+    ) or {}
     public_hrs_leads = evidence.get("public_hrs_measurement_leads") or {}
     vehicle_side_leads = evidence.get(
         "public_vehicle_side_h2_measurement_leads"
@@ -8937,6 +9068,15 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "allowed_use": aggregate_benchmark.get("allowed_use") or [],
             "not_allowed": aggregate_benchmark.get("not_allowed") or [],
             "claim_limit": aggregate_benchmark.get("claim_limit"),
+        },
+        "public_threeemotion_operating_aggregate_reference": {
+            "source": threeemotion_aggregate.get("source") or {},
+            "reported_aggregate": threeemotion_aggregate.get(
+                "reported_aggregate"
+            ) or {},
+            "allowed_use": threeemotion_aggregate.get("allowed_use") or [],
+            "not_allowed": threeemotion_aggregate.get("not_allowed") or [],
+            "claim_limit": threeemotion_aggregate.get("claim_limit"),
         },
         "public_hrs_measurement_leads": {
             "evidence_artifact": public_hrs_leads.get("artifact"),

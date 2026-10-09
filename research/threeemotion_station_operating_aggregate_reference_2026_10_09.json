@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_station_operating_aggregate_reference",
+  "generated_at": "2026-10-09",
+  "status": "public_aggregate_operating_context",
+  "source": {
+    "title": "Four years of operational data for five hydrogen refueling stations",
+    "authors": [
+      "Roberta Caponi",
+      "Andrea Monforti Ferrario",
+      "Enrico Bocci",
+      "Kristina Fløche Juelsgaard"
+    ],
+    "doi": "10.1051/e3sconf/202233406008",
+    "url": "https://doi.org/10.1051/e3sconf/202233406008",
+    "source_type": "open_access_peer_reviewed_aggregate_study",
+    "public_access": true,
+    "public_raw_synchronized_rows": false
+  },
+  "reported_aggregate": {
+    "vehicle_class": "350 bar fuel-cell buses",
+    "source_scope_note": "The title refers to five stations; the abstract describes four HRS in the 3Emotion project and an operator-log dataset covering three years.",
+    "average_daily_mass_per_bus_kg": 12.95,
+    "most_frequent_daily_mass_per_bus_kg": 15.0,
+    "daily_mass_standard_deviation_kg": 7.46,
+    "overnight_dispensed_fraction_approx": 0.5,
+    "typical_refueling_interval_h": 24,
+    "station_utilization_below_percent": 30,
+    "reported_outputs": [
+      "total hydrogen quantity",
+      "fill amount per bus",
+      "refueling duration",
+      "average mass flow rate",
+      "refueling event count",
+      "daily refills",
+      "utilization",
+      "availability"
+    ]
+  },
+  "allowed_use": [
+    "aggregate heavy-duty station throughput and utilization sanity check",
+    "LLM explanation of fleet-refueling cadence and batch demand",
+    "public data-request lead"
+  ],
+  "not_allowed": [
+    "runtime parameter fitting",
+    "full-loop external validation",
+    "site-specific safety or distance limits",
+    "vehicle-tank thermal or protocol claims"
+  ],
+  "claim_boundary": "This open-access article reports operator-log aggregates for a 350 bar fuel-cell-bus station cohort. It does not release synchronized raw station, dispenser and vehicle rows with channel definitions, calibration uncertainty or reuse permission, and the title/abstract describe different station and time scopes. Values are contextual aggregates only."
+}
