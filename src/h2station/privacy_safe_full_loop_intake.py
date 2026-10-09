@@ -17,7 +17,7 @@ from dataclasses import dataclass
 import hashlib
 import math
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
 
 
 PILOT_REQUIRED_COLUMNS = (
@@ -250,11 +250,80 @@ def validate_privacy_safe_pilot_bundle(
     }
 
 
+def build_privacy_safe_freeze_manifest(
+    paths: Sequence[Path | str],
+    *,
+    protocol_path: Path | str,
+    model_path: Path | str,
+    evaluator_path: Path | str,
+    channel_roles: Mapping[str, str],
+    rules: PilotIntakeRules | None = None,
+) -> dict[str, Any]:
+    """Create a hash-only pre-access freeze record for an intake bundle.
+
+    The function deliberately stops at protocol freeze.  It never reads model
+    outcomes, fits parameters, selects cases by performance, or marks a
+    bundle as full-loop validation.  The custodian can keep the source files
+    private while a reviewer receives a reproducible digest and role map.
+    """
+
+    selected = rules or PilotIntakeRules()
+    intake = validate_privacy_safe_pilot_bundle(paths, rules=selected)
+    if intake["status"] != "READY_FOR_PROTOCOL_FREEZE":
+        raise ValueError("Cannot freeze an incomplete privacy-safe intake bundle")
+    required_roles = set(PILOT_REQUIRED_COLUMNS) | {"mass_or_transferred_mass"}
+    missing_roles = sorted(required_roles - set(channel_roles))
+    if missing_roles:
+        raise ValueError("Missing channel-role attestations: " + ", ".join(missing_roles))
+
+    return {
+        "schema_version": 1,
+        "artifact_type": "privacy_safe_full_loop_preaccess_freeze_manifest",
+        "status": "FROZEN_BEFORE_OUTCOME_ACCESS",
+        "freeze": {
+            "outcomes_accessed_before_freeze": False,
+            "parameter_fitting_performed": False,
+            "case_selection_by_model_performance": False,
+            "post_freeze_parameter_tuning_prohibited": True,
+            "custodian_attestation_required": True,
+        },
+        "locked_files": {
+            "protocol_sha256": _sha256(Path(protocol_path)),
+            "model_sha256": _sha256(Path(model_path)),
+            "evaluator_sha256": _sha256(Path(evaluator_path)),
+        },
+        "channel_roles": dict(sorted(channel_roles.items())),
+        "bundle": {
+            "event_count": intake["event_count"],
+            "valid_event_count": intake["valid_event_count"],
+            "event_sha256": {
+                report["event_id"]: report["source_sha256"]
+                for report in intake["event_reports"]
+            },
+            "vehicle_boundary_complete_event_count": intake[
+                "vehicle_boundary_complete_event_count"
+            ],
+        },
+        "eligibility": {
+            "preaccess_protocol_freeze_ready": True,
+            "model_scoring_performed": False,
+            "full_loop_external_validation_supported": False,
+            "safety_claim_supported": False,
+        },
+        "claim_boundary": (
+            "This manifest proves only that a privacy-safe input bundle and the "
+            "declared protocol, model and evaluator were hash-locked before "
+            "outcome access. It is not a validation result or a safety claim."
+        ),
+    }
+
+
 __all__ = [
     "MASS_COLUMNS",
     "OPTIONAL_COLUMNS",
     "PILOT_REQUIRED_COLUMNS",
     "PilotIntakeRules",
     "VEHICLE_COLUMNS",
+    "build_privacy_safe_freeze_manifest",
     "validate_privacy_safe_pilot_bundle",
 ]

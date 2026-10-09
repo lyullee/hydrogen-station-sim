@@ -31,9 +31,10 @@ python -c "from h2station.privacy_safe_full_loop_intake import validate_privacy_
 
 READY_FOR_PROTOCOL_FREEZE는 입력 품질이 준비되었다는 뜻이다. 모델 점수나 안전성 검증 결과가 아니며, 그 다음 단계에서 모델과 평가 규칙을 먼저 동결한 뒤 별도의 외부 평가를 실행한다.
 
+사전 동결 manifest 생성 절차는 [PRIVACY_SAFE_FULL_LOOP_FREEZE_2026_10_10.md](PRIVACY_SAFE_FULL_LOOP_FREEZE_2026_10_10.md)에 있다. 이 단계는 코드·프로토콜·이벤트 해시와 채널 역할만 잠그며, 결과를 보거나 모델을 조정하지 않는다.
+
 ## 최소 묶음과 전체 평가
 
 비식별 3건은 수용부 채널의 동기화와 역할을 확인하는 파일럿 묶음이다. 차량 압력·온도까지 포함되면 station-to-receiving-vessel 경계를 재생할 수 있다. 완전한 외부 검증과 일반화 주장은 사전 동결된 disjoint 이벤트 묶음으로 별도 평가한다.
 
 원시 행은 보관자가 관리하고, 저장소에는 원시 데이터 대신 파일 해시·행 수·집계 지표·채널 역할 확인서만 전달한다. 이 절차는 실데이터의 비공개 조건을 유지하면서 재현 가능한 검증 기록을 남기기 위한 것이다.
-
