@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "artifact_type": "post_outcome_line_inventory_diagnostic",
+  "generated_at": "2026-10-09",
+  "post_outcome_diagnostic": true,
+  "protocol_sha256": "354f92e29be885416ddc827fef82bf6a473a7be2ad878be1e3a9202141369066",
+  "data_sha256": "f740a7db1bcd3723efa8ae4ce02114fc69d6084c937c19cf16bc3f339dfc199e",
+  "model": {
+    "module": "src/h2station/line_transient_development.py",
+    "source_volume_m3": 0.098,
+    "line_length_m": 7.6,
+    "line_inner_diameter_m": 0.00794,
+    "outlet_inner_diameter_m": 0.003175,
+    "line_volume_m3": 0.00037630889017012154,
+    "discharge_coefficients": {
+      "source_to_line": 1.0,
+      "outlet": 1.0
+    }
+  },
+  "instrument_boundary_views": {
+    "source_flow": {
+      "predicted_peak_mass_flow_g_s": 59.94705168631836,
+      "mass_flow_nrmse_percent_peak_measured": 6.001987776446001,
+      "median_absolute_percentage_error_percent": 22.80869073277896
+    },
+    "outlet_flow": {
+      "predicted_peak_mass_flow_g_s": 60.175931977866135,
+      "mass_flow_nrmse_percent_peak_measured": 5.90674661847632,
+      "median_absolute_percentage_error_percent": 22.51399277572061
+    }
+  },
+  "frozen_result_unchanged": true,
+  "runtime_parameter_updated": false,
+  "validation_gate_effect": "none",
+  "claim_supported": false,
+  "interpretation": [
+    "The explicit downstream-line inventory is numerically stable and preserves separate source and outlet flow boundaries.",
+    "The geometry-only line state does not remove the frozen median-error or timing failures, so valve opening dynamics and instrument placement remain unresolved.",
+    "A new untouched campaign with a declared measurement boundary is required before this model can be frozen for validation."
+  ],
+  "claim_boundary": "This post-outcome diagnostic does not alter or replace the Schefer 2006 prospective result and does not validate a station loop, consequence distance or safety control."
+}

@@ -446,3 +446,20 @@ changing the physics.
 
 The source list is intentionally deterministic and tested. A missing or
 invalid source URL is omitted rather than replaced with an invented citation.
+
+## Release-line transient development boundary
+
+The frozen Schefer 2006 result uses the published controlling restriction as a
+single vessel outlet. The apparatus also reports a downstream tube, so
+`src/h2station/line_transient_development.py` now provides a separate two-volume
+source-plus-line model. It carries line mass and internal energy explicitly and
+returns both the source-side and outlet-side flow. The model is not enabled in
+the station runtime and does not rewrite the frozen holdout.
+
+The post-outcome comparison is recorded in
+`research/schefer_2006_line_transient_diagnostic_2026_10_09.json`. Using the
+published geometry without fitting reduced the frozen trace's flow NRMSE only
+slightly and left the median error and timing failure unresolved. This is a
+useful diagnosis: valve opening dynamics and the instrument measurement
+boundary must be represented and then tested on a new untouched campaign
+before the model can support a validation claim.
