@@ -12,33 +12,37 @@
     "candidate_values_persisted": false
   },
   "scan": {
-    "machine_readable_files": 47062,
-    "path_keyword_candidates": 375,
-    "csv_tsv_headers_screened": 14989,
+    "machine_readable_files": 47504,
+    "path_keyword_candidates": 376,
+    "csv_tsv_headers_screened": 15207,
     "header_parse_errors": 0,
     "spreadsheet_headers_screened": 232,
     "spreadsheet_header_parse_errors": 0,
     "spreadsheet_inspection_enabled": true,
+    "scientific_headers_screened": 1323,
+    "scientific_header_parse_errors": 102,
+    "scientific_inspection_enabled": true,
     "header_family_candidate_counts": {
-      "flow_or_mass": 2133,
-      "pressure": 1596,
-      "protocol_or_control": 444,
-      "temperature": 2137,
-      "vehicle_or_dispenser": 1358
+      "flow_or_mass": 2143,
+      "pressure": 1651,
+      "protocol_or_control": 450,
+      "temperature": 2232,
+      "vehicle_or_dispenser": 1364
     },
     "coarse_candidate_classes": {
-      "control_or_protocol_candidate": 680,
-      "flow_or_mass_candidate": 1770,
-      "pressure_candidate": 389,
+      "control_or_protocol_candidate": 689,
+      "flow_or_mass_candidate": 1781,
+      "pressure_candidate": 433,
       "release_rig_experiment_candidate": 198,
       "temperature_candidate": 368,
-      "unclassified_machine_readable": 42151,
-      "vehicle_or_dispenser_candidate": 1506
+      "unclassified_machine_readable": 42522,
+      "vehicle_or_dispenser_candidate": 1513
     },
     "split_pair_candidate_count": 0
   },
   "eligibility": {
     "full_loop_candidate_count": 0,
+    "partial_loop_candidate_count": 0,
     "split_pair_candidates_require_attestation": 0,
     "decision": "DISCOVERY_ONLY_UNTIL_ATTESTED",
     "required_attestation": [

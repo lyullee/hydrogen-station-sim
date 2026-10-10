@@ -24,6 +24,16 @@ try:  # Optional: spreadsheet inspection is opt-in and must not block CSV scans.
 except ImportError:  # pragma: no cover - exercised only in minimal environments.
     openpyxl = None
 
+try:  # Optional: scientific-container inspection is explicitly opt-in.
+    from scipy.io import whosmat
+except ImportError:  # pragma: no cover - exercised only in minimal environments.
+    whosmat = None
+
+try:  # Optional: HDF5 inspection is explicitly opt-in.
+    import h5py
+except ImportError:  # pragma: no cover - exercised only in minimal environments.
+    h5py = None
+
 
 SKIP_DIRS = {
     ".git",
@@ -121,8 +131,37 @@ def _iter_files(roots: Iterable[Path]) -> Iterable[Path]:
             yield path
 
 
-def _read_header(path: Path, *, inspect_spreadsheets: bool = False) -> list[str]:
+def _read_header(
+    path: Path,
+    *,
+    inspect_spreadsheets: bool = False,
+    inspect_scientific: bool = False,
+) -> list[str]:
     suffix = path.suffix.lower()
+    if suffix in {".mat", ".h5", ".hdf5"}:
+        if not inspect_scientific:
+            return []
+        try:
+            if suffix == ".mat":
+                if whosmat is None:
+                    return []
+                # ``whosmat`` reads only the MATLAB directory and metadata;
+                # numerical arrays are not loaded or persisted.
+                return [str(name) for name, _shape, _kind in whosmat(path)]
+            if h5py is None:
+                return []
+            names: list[str] = []
+            with h5py.File(path, "r") as handle:
+                def collect(name: str) -> None:
+                    if len(names) < 4096:
+                        names.append(str(name))
+                handle.visit(collect)
+            return names
+        # Scientific archives in document workspaces are often mixed-version
+        # MATLAB/HDF5 exports.  A malformed member is a bounded parse miss,
+        # not a reason to abort the whole aggregate scan.
+        except Exception:  # noqa: BLE001 - discovery must fail closed per file.
+            return []
     if suffix not in {".csv", ".tsv", ".xlsx"}:
         return []
     if suffix == ".xlsx":
@@ -263,7 +302,10 @@ def _split_pair_signature(path: Path, header: list[str]) -> tuple[str, bool, boo
 
 
 def scan_workspace(
-    roots: Iterable[Path], *, inspect_spreadsheets: bool = False
+    roots: Iterable[Path],
+    *,
+    inspect_spreadsheets: bool = False,
+    inspect_scientific: bool = False,
 ) -> dict:
     files = 0
     path_keyword_candidates = 0
@@ -273,6 +315,8 @@ def scan_workspace(
     parse_errors = 0
     spreadsheet_headers_screened = 0
     spreadsheet_parse_errors = 0
+    scientific_headers_screened = 0
+    scientific_parse_errors = 0
     split_groups: dict[str, tuple[bool, bool, int]] = {}
     full_loop_candidates = 0
     partial_loop_candidates = 0
@@ -281,7 +325,11 @@ def scan_workspace(
         files += 1
         if PATH_KEYWORDS.search(path.stem):
             path_keyword_candidates += 1
-        header = _read_header(path, inspect_spreadsheets=inspect_spreadsheets)
+        header = _read_header(
+            path,
+            inspect_spreadsheets=inspect_spreadsheets,
+            inspect_scientific=inspect_scientific,
+        )
         if path.suffix.lower() in {".csv", ".tsv"}:
             header_screened += 1
             if not header:
@@ -293,6 +341,13 @@ def scan_workspace(
             spreadsheet_headers_screened += 1
             if not header:
                 spreadsheet_parse_errors += 1
+            for family, pattern in HEADER_FAMILIES.items():
+                if any(pattern.search(str(column)) for column in header):
+                    header_family_counts[family] += 1
+        elif path.suffix.lower() in {".mat", ".h5", ".hdf5"} and inspect_scientific:
+            scientific_headers_screened += 1
+            if not header:
+                scientific_parse_errors += 1
             for family, pattern in HEADER_FAMILIES.items():
                 if any(pattern.search(str(column)) for column in header):
                     header_family_counts[family] += 1
@@ -341,6 +396,9 @@ def scan_workspace(
             "spreadsheet_headers_screened": spreadsheet_headers_screened,
             "spreadsheet_header_parse_errors": spreadsheet_parse_errors,
             "spreadsheet_inspection_enabled": inspect_spreadsheets,
+            "scientific_headers_screened": scientific_headers_screened,
+            "scientific_header_parse_errors": scientific_parse_errors,
+            "scientific_inspection_enabled": inspect_scientific,
             "header_family_candidate_counts": dict(sorted(header_family_counts.items())),
             "coarse_candidate_classes": dict(sorted(coarse_classes.items())),
             "split_pair_candidate_count": split_pair_candidates,
@@ -373,8 +431,17 @@ def main() -> int:
         action="store_true",
         help="Inspect only XLSX header windows; never persist workbook values",
     )
+    parser.add_argument(
+        "--inspect-scientific",
+        action="store_true",
+        help="Inspect MATLAB/HDF5 variable names only; never persist numeric arrays",
+    )
     args = parser.parse_args()
-    result = scan_workspace(args.root, inspect_spreadsheets=args.inspect_spreadsheets)
+    result = scan_workspace(
+        args.root,
+        inspect_spreadsheets=args.inspect_spreadsheets,
+        inspect_scientific=args.inspect_scientific,
+    )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(
         json.dumps(result, ensure_ascii=False, indent=2) + "\n",

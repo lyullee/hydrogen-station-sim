@@ -1,5 +1,25 @@
 # Development Progress
 
+## 2026-10-10 - Inspect scientific containers in local data discovery
+
+Status: implemented; MATLAB/HDF5 channel-name screening completed without
+persisting numeric arrays.
+
+- The privacy-safe scanner now optionally reads MATLAB variable metadata via
+  `whosmat` and bounded HDF5 group/dataset names. Scientific inspection is
+  opt-in and aggregate-only, like the existing XLSX header inspection.
+- The project archive scan covered 86 scientific containers and the adjacent
+  document workspace covered 1,323. Neither produced a synchronized full-loop
+  candidate; the project still has 8 partial boundary bundles without protocol
+  phase evidence.
+- Corrupt or mixed-version scientific files are counted as per-file parse misses
+  and no longer abort the complete scan. No path, filename, variable name or
+  numeric value is written to the report.
+
+Verification:
+
+- `tests/test_local_workspace_candidate_scan.py`: 9 passed.
+
 ## 2026-10-10 - Run high-impact diagnostics concurrently
 
 Status: implemented; bounded P0/P1 development diagnostics now have a parallel

@@ -12,13 +12,16 @@
     "candidate_values_persisted": false
   },
   "scan": {
-    "machine_readable_files": 2084,
-    "path_keyword_candidates": 249,
+    "machine_readable_files": 2087,
+    "path_keyword_candidates": 250,
     "csv_tsv_headers_screened": 595,
     "header_parse_errors": 0,
     "spreadsheet_headers_screened": 88,
     "spreadsheet_header_parse_errors": 0,
     "spreadsheet_inspection_enabled": true,
+    "scientific_headers_screened": 86,
+    "scientific_header_parse_errors": 34,
+    "scientific_inspection_enabled": true,
     "header_family_candidate_counts": {
       "flow_or_mass": 363,
       "pressure": 529,
@@ -33,7 +36,7 @@
       "pressure_candidate": 78,
       "release_rig_experiment_candidate": 67,
       "temperature_candidate": 14,
-      "unclassified_machine_readable": 1269,
+      "unclassified_machine_readable": 1272,
       "vehicle_or_dispenser_candidate": 263,
       "vehicle_pressure_temperature_candidate": 199
     },

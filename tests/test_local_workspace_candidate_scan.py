@@ -152,3 +152,32 @@ def test_source_and_receiving_channels_without_protocol_are_partial_only(
     assert result["scan"]["coarse_candidate_classes"][
         "boundary_bundle_missing_protocol_candidate"
     ] == 1
+
+
+def test_mat_variable_name_inspection_is_opt_in_and_aggregate_only(tmp_path: Path) -> None:
+    scipy_io = __import__("scipy.io", fromlist=["savemat"])
+    scipy_io.savemat(
+        tmp_path / "synchronized_mat_export.mat",
+        {
+            "time_s": [0.0, 1.0],
+            "station_pressure_mpa": [45.0, 46.0],
+            "vehicle_pressure_mpa": [5.0, 6.0],
+            "vehicle_temperature_c": [25.0, 26.0],
+            "flow_g_s": [10.0, 11.0],
+            "protocol_phase": ["fill", "fill"],
+        },
+    )
+
+    disabled = scan_workspace([tmp_path])
+    assert disabled["scan"]["scientific_inspection_enabled"] is False
+    assert disabled["scan"]["scientific_headers_screened"] == 0
+    assert disabled["eligibility"]["full_loop_candidate_count"] == 0
+
+    enabled = scan_workspace([tmp_path], inspect_scientific=True)
+    assert enabled["scan"]["scientific_inspection_enabled"] is True
+    assert enabled["scan"]["scientific_headers_screened"] == 1
+    assert enabled["eligibility"]["full_loop_candidate_count"] == 1
+    serialized = json.dumps(enabled, ensure_ascii=False)
+    assert str(tmp_path) not in serialized
+    assert "synchronized_mat_export.mat" not in serialized
+    assert "station_pressure_mpa" not in serialized
