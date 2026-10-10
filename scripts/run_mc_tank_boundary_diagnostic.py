@@ -18,6 +18,7 @@ from pathlib import Path
 
 import numpy as np
 from scipy.integrate import solve_ivp
+from scipy.integrate import cumulative_trapezoid
 
 from h2station.public_validation import compare_traces
 from h2station.scenario import build_vehicle_tank
@@ -126,6 +127,118 @@ def run_case(
         "experimental_final_soc_percent": float(soc[-1]),
         "predicted_final_soc_percent": float(predicted_soc[-1]),
         "measured_transferred_mass_kg": measured_mass,
+        "fit": fit,
+        **agreement.to_dict(),
+    }
+    result["screening_pass"] = bool(
+        result["pressure_rmse_mpa"] <= SCREENING_LIMITS["pressure_rmse_mpa"]
+        and result["temperature_rmse_c"] <= SCREENING_LIMITS["temperature_rmse_c"]
+        and abs(result["soc_final_error_percentage_points"])
+        <= SCREENING_LIMITS["soc_final_abs_error_percentage_points"]
+    )
+    return result
+
+
+def run_case_cumulative_mass_boundary(
+    summary: dict[str, str], rows: list[dict[str, str]], fit: dict[str, float],
+    *, source_pressure_column: str,
+) -> dict:
+    """Replay thermal states while prescribing cumulative measured-flow mass.
+
+    This is deliberately a post-outcome sensitivity diagnostic.  The public
+    MC traces contain mass flow but no independent mass channel, so the mass
+    path below is only the trapezoidal integral of that flow.  It is useful for
+    separating ODE mass integration from thermal/geometry error, but it cannot
+    establish an independent validation result and is never the runtime model.
+    """
+    time_s = np.asarray([_f(row, "time_s") for row in rows], dtype=float)
+    pressure = np.asarray([_f(row, "pressure_mpa") for row in rows], dtype=float)
+    temperature = np.asarray([_f(row, "tank_temperature_mean_c") for row in rows], dtype=float)
+    soc = np.asarray([_f(row, "soc_percent") for row in rows], dtype=float)
+    flow = np.asarray([_f(row, "mass_flow_g_s") for row in rows], dtype=float)
+    inlet_temperature = np.asarray([_f(row, "inlet_gas_temperature_c") for row in rows], dtype=float)
+    enthalpy_pressure = np.asarray([_f(row, source_pressure_column) for row in rows], dtype=float)
+    chamber = np.asarray([_f(row, "chamber_temperature_c") for row in rows], dtype=float)
+    capacity = _f(summary, "tank_capacity_kg")
+    tank = build_vehicle_tank(0.122 * capacity / 4.7, CompositeTankFitParameters(
+        effective_volume_multiplier=float(fit["effective_volume_multiplier"]),
+        gas_liner_ua_multiplier=float(fit["gas_liner_ua_multiplier"]),
+    ))
+    initial = tank.initial_state(pressure[0] * 1.0e6, temperature[0] + 273.15)
+    cumulative_mass_kg = initial.hydrogen_mass_kg + np.concatenate([
+        [0.0], cumulative_trapezoid(flow / 1000.0, time_s),
+    ])
+    ambient_k = float(np.median(chamber) + 273.15)
+
+    def rhs(local_time_s: float, values: np.ndarray) -> np.ndarray:
+        mass = float(np.interp(local_time_s, time_s, cumulative_mass_kg))
+        state = CompositeTankState(
+            hydrogen_mass_kg=mass,
+            hydrogen_internal_energy_j=float(values[0]),
+            liner_temperature_k=float(values[1]),
+            shell_temperature_k=float(values[2]),
+        )
+        mass_flow = max(0.0, float(np.interp(local_time_s, time_s, flow))) / 1000.0
+        inlet_t = float(np.interp(local_time_s, time_s, inlet_temperature)) + 273.15
+        inlet_p = max(0.2, float(np.interp(local_time_s, time_s, enthalpy_pressure))) * 1.0e6
+        enthalpy = float(PropsSI("Hmass", "P", inlet_p, "T", inlet_t, "Hydrogen"))
+        rate = tank.derivative(state, TankBoundaryFlow(
+            inlet_mass_flow_kg_s=mass_flow,
+            inlet_specific_enthalpy_j_kg=enthalpy,
+            ambient_temperature_k=ambient_k,
+        ))
+        return np.asarray([
+            rate.hydrogen_internal_energy_j,
+            rate.liner_temperature_k,
+            rate.shell_temperature_k,
+        ], dtype=float)
+
+    initial_thermal = np.asarray([
+        initial.hydrogen_internal_energy_j,
+        initial.liner_temperature_k,
+        initial.shell_temperature_k,
+    ], dtype=float)
+    solution = solve_ivp(
+        rhs, (float(time_s[0]), float(time_s[-1])), initial_thermal,
+        method="BDF", t_eval=time_s, rtol=5.0e-6, atol=5.0e-8,
+    )
+    if not solution.success:
+        raise RuntimeError(f"{summary['case_id']}: {solution.message}")
+    states = [CompositeTankState(
+        hydrogen_mass_kg=float(mass),
+        hydrogen_internal_energy_j=float(energy),
+        liner_temperature_k=float(liner),
+        shell_temperature_k=float(shell),
+    ) for mass, energy, liner, shell in zip(
+        cumulative_mass_kg, solution.y[0], solution.y[1], solution.y[2]
+    )]
+    gases = [tank.gas_state(state) for state in states]
+    predicted_pressure = np.asarray([gas.pressure_pa / 1.0e6 for gas in gases])
+    predicted_temperature = np.asarray([gas.temperature_k - 273.15 for gas in gases])
+    reference_density = float(PropsSI("Dmass", "P", 70.0e6, "T", 288.15, "Hydrogen"))
+    predicted_soc = np.asarray([100.0 * gas.density_kg_m3 / reference_density for gas in gases])
+    agreement = compare_traces(
+        experimental_time_s=time_s,
+        experimental_pressure_mpa=pressure,
+        experimental_temperature_c=temperature,
+        experimental_soc_percent=soc,
+        predicted_time_s=time_s,
+        predicted_pressure_mpa=predicted_pressure,
+        predicted_temperature_c=predicted_temperature,
+        predicted_soc_percent=predicted_soc,
+    )
+    result = {
+        "case_id": summary["case_id"],
+        "tank_capacity_kg": capacity,
+        "inlet_enthalpy_pressure_basis": source_pressure_column,
+        "mass_boundary_mode": "cumulative_trapezoid_of_measured_mass_flow",
+        "experimental_duration_s": float(time_s[-1]),
+        "experimental_final_pressure_mpa": float(pressure[-1]),
+        "predicted_final_pressure_mpa": float(predicted_pressure[-1]),
+        "experimental_final_soc_percent": float(soc[-1]),
+        "predicted_final_soc_percent": float(predicted_soc[-1]),
+        "mass_path_final_kg": float(cumulative_mass_kg[-1]),
+        "measured_transferred_mass_kg": float(cumulative_mass_kg[-1] - initial.hydrogen_mass_kg),
         "fit": fit,
         **agreement.to_dict(),
     }

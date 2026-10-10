@@ -1999,3 +1999,28 @@ Verification:
 - Core/process/vehicle/safety and priority-focus tests: 59 passed.
 - Critical fast lane: software PASS; scientific screen remains FAIL on the
   three existing negative diagnostics and readiness remains BLOCKED.
+
+## 2026-10-10 - Isolate MC mass-boundary error without changing the frozen gate
+
+Status: implemented as a post-outcome diagnostic only. The MC public traces
+do not contain an independent mass channel, so a separate sensitivity runner
+prescribes tank mass as the initial EOS mass plus the trapezoidal integral of
+the published mass-flow channel. This is intentionally not used by runtime or
+by the frozen validation protocol.
+
+The sensitivity result did not materially improve the vehicle-tank replay:
+mean pressure RMSE changed from 4.376 to 4.375 MPa, mean temperature RMSE from
+9.052 to 9.062 °C, and mean final SOC error remained about -9.02 percentage
+points. The remaining MC mismatch therefore is not explained by numerical mass
+state integration alone; effective volume/SOC definition and thermal or inlet
+boundary assumptions remain the leading candidates.
+
+The original negative MC result and its claim boundary are unchanged. The new
+artifact is `research/mc_cumulative_mass_sensitivity_2026_10_10.json` and is
+covered by a regression test.
+
+Verification:
+
+- Cumulative-mass diagnostic: 8 cases, 0/8 joint screen; no gate promotion.
+- Bounded diagnostic test added; runtime parameters and publication readiness
+  are unchanged.
