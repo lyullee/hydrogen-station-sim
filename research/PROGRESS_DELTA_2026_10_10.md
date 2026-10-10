@@ -61,6 +61,15 @@ The same lead is now carried into the LLM candidate-lead manifest with an
 explicit `CONTACT_REQUEST_CANDIDATE_ONLY` status, so operator answers can cite
 the lead without presenting aggregate KPIs as raw validation.
 
+An additional official NLR H2FillS route was checked against the programme page,
+the H2FillS user manual and the fast-flow project description. These records
+document an empirical station-to-FCEV validation workflow and the relevant
+station, dispenser and vehicle result channels, but downloads require
+registration and no reuse-cleared synchronized logger archive was found in the
+public pages. The route is now recorded in both request and candidate manifests
+as `CONTACT_REQUEST_CANDIDATE_ONLY`; it adds a concrete custodian path without
+changing the external-holdout gate.
+
 ## Geometry evidence boundary synchronized with LLM grounding
 
 The runtime LLM evidence now carries both public geometry diagnostics instead

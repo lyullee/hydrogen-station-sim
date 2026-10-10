@@ -7,7 +7,9 @@
     "reason": "The official GTI station-evaluation report was rechecked as a concrete custodian lead; it lists the required logger channels but does not expose a reuse-cleared raw archive.",
     "source_boundary": "Report metadata and channel requirements only; no numerical rows admitted.",
     "raw_trace_obtained": false,
-    "full_loop_external_validation_supported": false
+    "full_loop_external_validation_supported": false,
+    "official_h2fills_route_added": true,
+    "official_h2fills_route_note": "The NLR H2FillS page describes empirical fueling-data validation and a full station-to-FCEV model; the H2FillS manual lists station, dispenser and vehicle result channels. The public page requires registration for downloads, so no raw rows or validation result are admitted."
   },
   "priority_lead_2026_10_10": {
     "id": "doe_nrel_h2iq_heavy_duty_fast_flow",
@@ -116,6 +118,11 @@
       "id": "nrel_hitrf",
       "url": "https://www.nrel.gov/hydrogen/hitrf-animation",
       "requested_scope": "H70/H35 station, dispenser, protocol and vehicle logger rows"
+    },
+    {
+      "id": "nlr_h2fills_fast_flow_custodian_registration",
+      "url": "https://www.nlr.gov/hydrogen/h2fills",
+      "requested_scope": "Registration/custodian request for the empirical H2FillS fast-flow validation records and HDVS/NLR station-to-vehicle logger export: common-clock station, hose, receptacle, vehicle pressure-temperature, mass flow or totalizer, selected cascade bank, precooler/compressor state, protocol phase, stop/fault/ESD state, calibration metadata and reuse terms."
     },
     {
       "id": "cal_state_la_hrff",

@@ -14,9 +14,12 @@
       "Cal State LA multi-year HRFF performance article and data-access notes",
       "NIST Transient Flow Facility public technical page",
       "NBSDC public dataset landing record for station and fuel-cell-vehicle operational datasets",
-      "official NBSDC detail page for the 35/70 MPa fixed hydrogenation-station demonstration dataset; entity-file listing and access-control check"
+      "official NBSDC detail page for the 35/70 MPa fixed hydrogenation-station demonstration dataset; entity-file listing and access-control check",
+      "NLR H2FillS official programme page and registration route",
+      "NLR fast-flow heavy-duty hydrogen truck programme page",
+      "official H2FillS user manual result-channel list"
     ],
-    "finding": "The official NBSDC record exposes a concrete 2022 station-operation dataset with a CC0 1.0 badge, a two-file package and an entity-file folder containing 固定站运营数据.xlsx; the actual file download is gated behind NBSDC registration/login, so the synchronized archive, channel dictionary and common-clock pairing remain unverified.",
+    "finding": "The official NBSDC record exposes a concrete 2022 station-operation dataset with a CC0 1.0 badge, a two-file package and an entity-file folder containing 固定站运营数据.xlsx; the actual file download is gated behind NBSDC registration/login, so the synchronized archive, channel dictionary and common-clock pairing remain unverified; the official NLR H2FillS page and manual add a concrete registration/custodian route with documented station-to-FCEV result channels, but do not expose a reuse-cleared raw synchronized archive.",
     "evidence_urls": [
       "https://doi.org/10.1016/j.ijhydene.2021.04.037",
       "https://elib.dlr.de/213625/",
@@ -28,9 +31,12 @@
       "https://xiaopeiwang.com/en/result/r-057159df",
       "https://www.nbsdc.cn/general/dataDetail?id=64f08267bb16e06dfdc78c57&type=1",
       "https://cstr.cn/16666.11.nbsdc.8c2MpcJl",
-      "https://creativecommons.org/publicdomain/zero/1.0/deed.zh-hans"
+      "https://creativecommons.org/publicdomain/zero/1.0/deed.zh-hans",
+      "https://www.nlr.gov/hydrogen/h2fills",
+      "https://www.nlr.gov/news/program/2022/fast-flow-future-heavy-duty-hydrogen-trucks.html",
+      "https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf?sfvrsn=b2960c3d_1"
     ],
-    "action": "Do not admit any NBSDC lead to the external holdout gate until the exact downloadable archive is obtained under the stated CC0 terms (or access is attested), its checksum and channel dictionary are recorded, common-clock station/dispenser/receiving-vessel linkage is verified, and the model/split are frozen before reading numerical rows."
+    "action": "Do not admit any NBSDC lead to the external holdout gate until the exact downloadable archive is obtained under the stated CC0 terms (or access is attested), its checksum and channel dictionary are recorded, common-clock station/dispenser/receiving-vessel linkage is verified, and the model/split are frozen before reading numerical rows. The H2FillS route remains registration/custodian-only until raw rows, checksum, channel dictionary, clock pairing and reuse terms are independently verified."
   },
   "purpose": "Record public leads that may contain synchronized HRS-to-vehicle measurements without admitting unverified material as validation evidence.",
   "search_policy": {
@@ -80,6 +86,28 @@
       "full_loop_external_holdout_eligible": false,
       "admission_status": "PARTIAL_STATION_TO_TANK_BOUNDARY_ONLY",
       "claim_boundary": "Common-clock hose and seven-tank pressure/temperature/mass boundary; no station controller, cascade, ESD, nozzle/receptacle, vehicle protocol or full-loop claim."
+    },
+    {
+      "id": "nlr_h2fills_official_fast_flow_validation_2022",
+      "title": "NLR H2FillS empirical fast-flow station-to-FCEV validation programme",
+      "persistent_identifier": "NLR H2FillS programme (registration route)",
+      "article_url": "https://www.nlr.gov/hydrogen/h2fills",
+      "supporting_url": "https://www.nlr.gov/news/program/2022/fast-flow-future-heavy-duty-hydrogen-trucks.html",
+      "manual_url": "https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf?sfvrsn=b2960c3d_1",
+      "reported_measurements": [
+        "station pressure and temperature",
+        "dispenser/PCV channels",
+        "vehicle tank pressure and temperature",
+        "mass flow and fueling time",
+        "full station-to-FCEV thermodynamic model outputs"
+      ],
+      "raw_data_status": "official programme requires registration/download access; reusable synchronized validation rows not verified in public search",
+      "channel_dictionary_status": "official manual lists result-channel roles; machine-readable source channel dictionary and clock attestation not public",
+      "license_status": "registration and custodian permission required for raw-data reuse and journal redistribution",
+      "full_loop_external_holdout_eligible": false,
+      "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
+      "next_action": "Request a de-identified eight-event or larger frozen export from the programme custodian, with common-clock station/dispenser/vehicle rows, calibration and protocol metadata, checksum and permission for independent scoring.",
+      "claim_boundary": "The official programme page establishes an empirical validation and download route, while the manual documents useful channels. Public metadata alone is not a reproducible full-loop holdout and has not been used for fitting or scoring."
     },
     {
       "id": "dlr_rail_h2_refueling_measurement_2025",
@@ -268,7 +296,7 @@
   ],
   "decision": {
     "new_full_loop_dataset_admitted": false,
-    "reason": "The official NBSDC 35/70MPa record is a stronger concrete lead than the prior landing-only references, but its raw workbook is login-gated and no independent channel/clock/pairing verification has been completed. No newly found candidate is therefore admitted as an external holdout.",
+    "reason": "The official NBSDC 35/70MPa record is a stronger concrete lead than the prior landing-only references, but its raw workbook is login-gated and no independent channel/clock/pairing verification has been completed. No newly found candidate is therefore admitted as an external holdout. The official H2FillS route is likewise registration/custodian-only and does not change that decision.",
     "minimum_next_input": "Use the privacy-safe three-event intake contract rather than publishing confidential raw logs.",
     "runtime_parameter_application": false,
     "goal_completion_permitted": false

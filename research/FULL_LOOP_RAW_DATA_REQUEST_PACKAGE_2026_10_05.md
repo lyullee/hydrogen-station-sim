@@ -133,8 +133,17 @@ is the highest-priority technical request route. It documents a real H70
 experiment with station, hose, receptacle, vehicle-manifold, vehicle-tank and
 mass-flow channels shown together, but the public artifact contains plots and
 aggregate values rather than a reusable synchronized logger export. The
-request below therefore asks for the original rows and controller metadata;
-the report itself remains protocol and operating-envelope context only.
+ request below therefore asks for the original rows and controller metadata;
+ the report itself remains protocol and operating-envelope context only.
+
+The official [NLR H2FillS programme page](https://www.nlr.gov/hydrogen/h2fills)
+adds a concrete registration/custodian route. It describes empirical fueling-data
+validation for a full station-to-FCEV thermodynamic model, while the [H2FillS
+manual](https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf?sfvrsn=b2960c3d_1)
+lists station, dispenser and vehicle result channels. The public route requires
+registration for downloads; no raw synchronized rows, checksum or reuse terms
+are admitted from the page alone. The [NLR fast-flow programme description](https://www.nlr.gov/news/program/2022/fast-flow-future-heavy-duty-hydrogen-trucks.html)
+is therefore a custodian lead, not external validation evidence.
 
 | Custodian route | Public lead | Requested scope |
 | --- | --- | --- |
@@ -142,6 +151,7 @@ the report itself remains protocol and operating-envelope context only.
 | GTI station-evaluation custodian | [OSTI report](https://www.osti.gov/biblio/1824631) | De-identified station acquisition and fueling-log traces, vehicle start/end pressure-temperature, mass/flow, compressor/precooler state and safety markers |
 | NREL NFCTEC station-data custodian | [NFCTEC programme](https://www.nrel.gov/hydrogen/nfctec) | Custodian-run de-identified fueling events with hose/vehicle pressure-temperature, dispensed mass, ambient temperature and station/fault state |
 | NLR/NREL HITRF | [HITRF programme](https://www.nrel.gov/hydrogen/hitrf-animation) | H70/H35 station, dispenser, protocol and vehicle logger rows |
+| NLR H2FillS fast-flow programme | [H2FillS programme](https://www.nlr.gov/hydrogen/h2fills) / [fast-flow project](https://www.nlr.gov/news/program/2022/fast-flow-future-heavy-duty-hydrogen-trucks.html) | Registration/custodian request for common-clock station, hose, receptacle and vehicle pressure-temperature, mass flow/totalizer, cascade selection, precooler/compressor state, protocol phase, stop/fault/ESD state, calibration and reuse terms |
 | Cal State LA HRFF | [HRFF operation](https://www.calstatela.edu/ecst/h2station/operation) | Light-duty station event logs and vehicle pressure/temperature/mass flow |
 | Cal State LA HRFF multi-year study | [IJHE 2024 article](https://doi.org/10.1016/j.ijhydene.2023.04.084) | Custodian-controlled historian/event export underlying the reported 4,500 refueling events and 8,800 kg dispensed; request synchronized vehicle/hose pressure-temperature, mass/totalizer, compressor/precooler state, stop/fault markers, channel dictionary, calibration and reuse terms |
 | KGS/Oh study custodians | [Published study](https://doi.org/10.1007/s11814-025-00551-9) | Six real-HRS scenarios reported with vehicle pressure, temperature and mass flow |

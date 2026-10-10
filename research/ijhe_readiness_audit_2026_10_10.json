@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-10T14:29:40.796013+00:00",
+  "generated_at": "2026-10-10T14:35:27.452777+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -2281,7 +2281,7 @@
       "observed": {
         "minimum_channel_count": 11,
         "rights_requirement_count": 4,
-        "custodian_route_count": 13,
+        "custodian_route_count": 14,
         "freeze_before_outcome_access": true,
         "post_freeze_parameter_tuning": false,
         "goal_completion_permitted": false
