@@ -1,5 +1,14 @@
 # Development Progress
 
+## 2026-10-11 - Full regression baseline rechecked
+
+The complete local regression suite finished with **1,355 passed** and no
+failures in 241.8 seconds (20 dependency deprecation/physics warnings only).
+This confirms that the current runtime, operator-control, LLM-grounding,
+virtual-safety and evidence-audit changes are internally consistent. It does
+not promote any external validation gate or imply journal acceptance; the
+readiness count remains 127 PASS / 10 FAIL / 7 PENDING.
+
 ## 2026-10-11 - Ground the NREL/NFCTEC access boundary in LLM evidence
 
 The official NLR/NFCTEC access boundary is now included in the privacy-bounded
