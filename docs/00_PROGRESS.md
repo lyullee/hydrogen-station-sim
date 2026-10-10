@@ -1,5 +1,16 @@
 # Development Progress
 
+## 2026-10-11 - Make the bank-leak regression independent of background recharge
+
+The sustained high-bank leak check now starts an explicit idle process runtime,
+so a reference-only solver cannot recharge the bank while the leak assertion is
+running.  The regression therefore compares pressure and inventory under the
+same operational condition and no longer depends on timing between telemetry
+polls.  The combined direct-QA, live-fault and readiness subset passes 23 tests;
+the SAGA, sensor-workbench, virtual-safety and HAZOP subset passes 95 tests.
+
+Commit: `8db5d59`.
+
 ## 2026-10-11 - Close the operator-command and leak-pressure feedback gaps
 
 Status: implemented; deterministic operator commands now reach the reviewed
