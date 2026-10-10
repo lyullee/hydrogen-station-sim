@@ -9,8 +9,10 @@ Status: implemented; property/restriction regression suite passed.
 - The tabulated hydrogen table remains the numerical source and the bracket,
   endpoint, and interpolation rules are unchanged; this only removes temporary
   NumPy scalar allocations during ODE right-hand-side evaluations.
-- A 15-second reference run completed in about **4.7 s** on the local runtime;
-  the earlier same-shape smoke run took about **11.6 s** (HTTP polling included).
+- A 15-second reference run completed in about **4.7 s** on the local runtime
+  (HTTP polling included). A prior 60-second smoke run took about **11.6 s**;
+  these timings are reported as separate smoke baselines, not as a controlled
+  benchmark claim.
 
 Verification:
 
