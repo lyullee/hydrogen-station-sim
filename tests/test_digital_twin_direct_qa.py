@@ -58,6 +58,26 @@ def test_common_korean_command_variants_are_not_downgraded_to_status_answers():
     assert api._requested_virtual_actions("전체 공정 상태를 알려줘") == []
 
 
+def test_equipment_valve_commands_map_to_specific_virtual_isolation_targets():
+    trailer = api._requested_virtual_actions("트레일러 양단 밸브 닫아줘")
+    assert [(row["kind"], row["target"]) for row in trailer] == [
+        ("valve.close", "trailer.source"), ("valve.close", "trailer.station")
+    ]
+    compressor = api._requested_virtual_actions("압축기 흡입 밸브를 닫아줘")
+    assert [(row["kind"], row["target"]) for row in compressor] == [
+        ("valve.close", "compressor.suction")
+    ]
+    bank = api._requested_virtual_actions("고압 저장탱크 유출 밸브 차단해줘")
+    assert [(row["kind"], row["target"]) for row in bank] == [
+        ("valve.close", "bank.high.outlet")
+    ]
+    dispenser = api._requested_virtual_actions("디스펜서2 밸브 닫아줘")
+    assert [(row["kind"], row["target"]) for row in dispenser] == [
+        ("valve.close", "dispenser.2")
+    ]
+    assert api._requested_virtual_actions("고압 저장탱크 유출 밸브 상태") == []
+
+
 def test_main_assistant_uses_bounded_budget_and_compact_plan_projection(monkeypatch):
     captured = {}
 
