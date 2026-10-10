@@ -21,6 +21,7 @@ from typing import Any
 
 from run_priority_diagnostics import (
     DEFAULT_DIAGNOSTICS,
+    _readiness_status,
     run_priority_diagnostics,
 )
 from run_priority_validation import (
@@ -73,6 +74,10 @@ def run_priority_focus(
 
     status = "PASS" if software["status"] == "PASS" and diagnostics["status"] == "PASS" else "FAIL"
     scientific_screen_status = diagnostics.get("scientific_screen_status", "NOT_REPORTED")
+    readiness_status = (
+        "FAIL" if software["status"] != "PASS"
+        else _readiness_status(status, str(scientific_screen_status))
+    )
     return {
         "schema_version": 1,
         "artifact_type": "parallel_priority_focus_run",
@@ -82,6 +87,7 @@ def run_priority_focus(
         "duration_s": round(time.perf_counter() - started, 3),
         "status": status,
         "scientific_screen_status": scientific_screen_status,
+        "readiness_status": readiness_status,
         "scientific_screen_failures": diagnostics.get("scientific_screen_failures", []),
         "software_checks": software,
         "physics_diagnostics": diagnostics,

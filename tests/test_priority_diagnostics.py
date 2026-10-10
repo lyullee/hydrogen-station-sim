@@ -7,6 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from run_priority_diagnostics import (  # noqa: E402
     DEFAULT_DIAGNOSTICS,
+    _readiness_status,
     _scientific_screen,
     select_diagnostics,
 )
@@ -43,3 +44,10 @@ def test_scientific_screen_is_separate_from_process_completion() -> None:
         {"cases": [{"joint_primary_screen_pass": True}, {"joint_primary_screen_pass": False}]}
     )["status"] == "FAIL"
     assert _scientific_screen({"case_count": 8})["status"] == "NOT_REPORTED"
+
+
+def test_readiness_status_does_not_promote_negative_or_missing_science() -> None:
+    assert _readiness_status("PASS", "FAIL") == "BLOCKED"
+    assert _readiness_status("PASS", "NOT_REPORTED") == "NOT_ASSESSED"
+    assert _readiness_status("FAIL", "PASS") == "FAIL"
+    assert _readiness_status("PASS", "PASS") == "PASS"

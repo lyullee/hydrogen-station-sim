@@ -165,6 +165,26 @@ def _scientific_screen(payload: dict[str, object] | None) -> dict[str, object]:
     return {"status": "NOT_REPORTED"}
 
 
+def _readiness_status(
+    process_status: str, scientific_screen_status: str,
+) -> str:
+    """Summarize whether a diagnostic lane is usable for a readiness claim.
+
+    ``status`` remains the child-process health signal for compatibility.  A
+    completed process can still contain negative scientific evidence, so this
+    separate field is deliberately conservative and never upgrades an
+    unreported screen to PASS.
+    """
+
+    if process_status != "PASS":
+        return "FAIL"
+    if scientific_screen_status == "FAIL":
+        return "BLOCKED"
+    if scientific_screen_status != "PASS":
+        return "NOT_ASSESSED"
+    return "PASS"
+
+
 def _run_one(diagnostic: Diagnostic, timeout_s: float) -> dict[str, object]:
     started = time.perf_counter()
     environment = os.environ.copy()
@@ -253,6 +273,10 @@ def run_priority_diagnostics(
         for item in results
         if (item.get("scientific_screen") or {}).get("status") in {"PASS", "FAIL"}
     ]
+    process_status = "PASS" if all(item["status"] == "PASS" for item in results) else "FAIL"
+    scientific_screen_status = (
+        "FAIL" if scientific_failures else "PASS" if reported_screens else "NOT_REPORTED"
+    )
     return {
         "schema_version": 1,
         "artifact_type": "parallel_priority_diagnostic_run",
@@ -261,9 +285,10 @@ def run_priority_diagnostics(
         "selected_priority": priority,
         "diagnostic_count": len(selected),
         "duration_s": round(time.perf_counter() - started, 3),
-        "status": "PASS" if all(item["status"] == "PASS" for item in results) else "FAIL",
-        "scientific_screen_status": (
-            "FAIL" if scientific_failures else "PASS" if reported_screens else "NOT_REPORTED"
+        "status": process_status,
+        "scientific_screen_status": scientific_screen_status,
+        "readiness_status": _readiness_status(
+            process_status, scientific_screen_status
         ),
         "scientific_screen_failures": scientific_failures,
         "results": results,

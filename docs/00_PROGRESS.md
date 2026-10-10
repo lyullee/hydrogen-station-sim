@@ -1,5 +1,23 @@
 # Development Progress
 
+## 2026-10-10 - Make the fast-lane readiness result fail closed
+
+Status: implemented; a completed diagnostic process is no longer presented as
+usable scientific evidence when its screening result is negative or missing.
+
+- `status` continues to mean process health for backward-compatible automation.
+- New `readiness_status` is `PASS`, `BLOCKED`, `NOT_ASSESSED` or `FAIL` and is
+  derived separately from the scientific screen.
+- The current critical run therefore reports process `PASS` but readiness
+  `BLOCKED` because `mc_tank_boundary` is **0/8**; this removes the ambiguity
+  that caused repeated low-value reruns.
+
+Verification:
+
+- `tests/test_priority_diagnostics.py`: readiness separation checks passed.
+- `scripts/run_priority_focus.py --priority critical`: process status remains
+  compatible while the scientific blocker is surfaced explicitly.
+
 ## 2026-10-10 - Critical-first parallel execution checkpoint
 
 Status: implemented; the critical work lanes were executed together instead of
