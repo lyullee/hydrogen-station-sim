@@ -18,6 +18,7 @@
 | `owner_station_side_integrated_validation` | VALIDATED_STATION_SIDE | hash-linked same-site station-side pressure-boundary, cascade-sequence and recharge-pressure holdout integration | vehicle-side accuracy, full station-to-vehicle validation, safety-distance or field certification; the retained lifecycle-counter result is negative |
 | `nbsdc_liquid_hrs_catalogue` | REQUEST_CANDIDATE | real liquid-hydrogen refueling-station operating-range and data-access lead for station-side schema/context and LLM claim-boundary grounding | numerical model calibration, independent holdout scoring, full station-to-vehicle validation, safety-distance calculation, or response-effectiveness claim before custodian approval and channel attestation |
 | `public_component_measurements` | DIAGNOSTIC_ONLY | public synchronized component pressure/temperature/flow diagnostics | prospective station-to-vehicle holdout |
+| `public_compressor_component` | DIAGNOSTIC_ONLY | 공개 2단 금속수소화물 압축기 압력·온도·유량 구성품 경계와 스키마 진단 | 충전소 full-loop, 차량 충전, SAE J2601, ESD·사고영향, 런타임 압축기 파라미터 승격 |
 | `public_type_i_filling_thermal` | DIAGNOSTIC_ONLY | 공개 Type-I 탱크 충전 열거동의 구성품 진단 및 열 모델 비교 | 충전소 제어기·캐스케이드·디스펜서·차량을 포함한 full-loop 검증 또는 런타임 파라미터 승격 |
 | `public_field_metrology` | DIAGNOSTIC_ONLY | 35 MPa 현장 계측의 압력·온도·질량 경계 및 반복성 맥락 | 원시 station-to-vehicle holdout, 제어기·ESD·사고영향 검증 |
 | `public_actual_h2_spatial_dispersion` | DIAGNOSTIC_ONLY | 실제 수소 저압 누출·다중 검지기 응답 범위와 사고 모델 진단 | 충전소 full-loop, 좌표기반 검지기 holdout, site-specific safety distance |

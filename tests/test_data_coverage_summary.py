@@ -68,6 +68,20 @@ def test_data_coverage_summary_preserves_claim_boundary() -> None:
     assert type_i["coverage"]["runtime_parameter_application"] is False
     assert type_i["coverage"]["full_loop_holdout_eligible"] is False
 
+    compressor = next(
+        item for item in summary["validated_or_actionable_now"]
+        if item["id"] == "public_compressor_component"
+    )
+    assert compressor["coverage"]["doi"] == "10.5281/zenodo.18213166"
+    assert compressor["coverage"]["license"] == "CC BY 4.0"
+    assert compressor["coverage"]["experiment_count"] == 29
+    assert compressor["coverage"]["schema_screen_pass"] is True
+    assert compressor["coverage"]["direct_runtime_model_compatibility"] is False
+    assert compressor["coverage"]["public_component_validation_candidate"] is True
+    assert compressor["coverage"]["full_loop_external_holdout_eligible"] is False
+    assert compressor["coverage"]["runtime_parameter_application"] is False
+    assert compressor["coverage"]["raw_rows_persisted"] is False
+
     accidents = next(
         item for item in summary["validated_or_actionable_now"]
         if item["id"] == "public_accident_precedents"

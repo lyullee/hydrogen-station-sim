@@ -11,6 +11,7 @@ validation.
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 import json
 from pathlib import Path
 from typing import Any
@@ -66,6 +67,18 @@ def build_summary(root: Path) -> dict[str, Any]:
     nbsdc_liquid = _read(
         root,
         "research/nbsdc_liquid_hrs_public_access_recheck_2026_10_10.json",
+    )
+    compressor_source = _read(
+        root,
+        "research/public_compressor_component_recheck_2026_10_11.json",
+    )
+    compressor_protocol = _read(
+        root,
+        "research/public_mhc_compressor_component_protocol_2026_10_10.json",
+    )
+    compressor_screen = _read(
+        root,
+        "research/public_mhc_experiment15_screen_2026_10_10.json",
     )
 
     inventory = local["inventory"]
@@ -140,10 +153,19 @@ def build_summary(root: Path) -> dict[str, Any]:
     nbsdc_access = nbsdc_liquid.get("access_probe") if isinstance(nbsdc_liquid, dict) else {}
     if not isinstance(nbsdc_access, dict):
         nbsdc_access = {}
+    compressor_scope = compressor_source.get("observed_scope") if isinstance(compressor_source, dict) else {}
+    if not isinstance(compressor_scope, dict):
+        compressor_scope = {}
+    compressor_eligibility = compressor_source.get("eligibility") if isinstance(compressor_source, dict) else {}
+    if not isinstance(compressor_eligibility, dict):
+        compressor_eligibility = {}
+    compressor_screen_scope = compressor_screen.get("screen") if isinstance(compressor_screen, dict) else {}
+    if not isinstance(compressor_screen_scope, dict):
+        compressor_screen_scope = {}
     return {
         "schema_version": 1,
         "artifact_type": "privacy_bounded_data_coverage_summary",
-        "generated_at": "2026-10-10",
+        "generated_at": datetime.now(timezone.utc).date().isoformat(),
         "privacy": {
             "source_paths_published": False,
             "source_filenames_published": False,
@@ -310,6 +332,35 @@ def build_summary(root: Path) -> dict[str, Any]:
                 },
                 "allowed_claim": "public synchronized component pressure/temperature/flow diagnostics",
                 "not_allowed": "prospective station-to-vehicle holdout",
+            },
+            {
+                "id": "public_compressor_component",
+                "status": "DIAGNOSTIC_ONLY",
+                "evidence": "research/public_compressor_component_recheck_2026_10_11.json",
+                "coverage": {
+                    "doi": (compressor_source.get("source") or {}).get("doi"),
+                    "license": (compressor_source.get("source") or {}).get("license"),
+                    "experiment_count": compressor_scope.get("experiment_count"),
+                    "measurement_families": compressor_scope.get("measurement_families") or [],
+                    "schema_screen_pass": compressor_screen_scope.get("schema_screen_pass") is True,
+                    "direct_runtime_model_compatibility": compressor_screen_scope.get(
+                        "direct_runtime_model_compatibility"
+                    ) is True,
+                    "public_component_validation_candidate": compressor_eligibility.get(
+                        "public_component_validation_candidate"
+                    ) is True,
+                    "full_loop_external_holdout_eligible": compressor_eligibility.get(
+                        "full_loop_external_holdout_eligible"
+                    ) is True,
+                    "runtime_parameter_application": compressor_eligibility.get(
+                        "runtime_parameter_application"
+                    ) is True,
+                    "raw_rows_persisted": compressor_screen.get("privacy", {}).get(
+                        "raw_rows_persisted"
+                    ) is True,
+                },
+                "allowed_claim": "공개 2단 금속수소화물 압축기 압력·온도·유량 구성품 경계와 스키마 진단",
+                "not_allowed": "충전소 full-loop, 차량 충전, SAE J2601, ESD·사고영향, 런타임 압축기 파라미터 승격",
             },
             {
                 "id": "public_type_i_filling_thermal",
@@ -488,7 +539,7 @@ def build_summary(root: Path) -> dict[str, Any]:
 def _markdown(summary: dict[str, Any]) -> str:
     counts = summary["readiness"]["ijhe_gate_counts"]
     lines = [
-        "# Privacy-bounded data coverage summary (2026-10-10)",
+        f"# Privacy-bounded data coverage summary ({summary['generated_at']})",
         "",
         "이 문서는 확보된 공개·비식별 자료로 지금 검증할 수 있는 범위와, 완전한 충전소-차량 검증에 필요한 최소 입력을 자동으로 정리한 산출물이다.",
         "",
