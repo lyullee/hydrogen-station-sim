@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "post_outcome_line_inventory_diagnostic",
-  "generated_at": "2026-10-09",
+  "generated_at": "2026-10-10",
   "post_outcome_diagnostic": true,
   "protocol_sha256": "354f92e29be885416ddc827fef82bf6a473a7be2ad878be1e3a9202141369066",
   "data_sha256": "f740a7db1bcd3723efa8ae4ce02114fc69d6084c937c19cf16bc3f339dfc199e",
@@ -19,84 +19,94 @@
     "default_valve_time_constants_s": {
       "source_to_line": 0.0,
       "outlet": 0.0
+    },
+    "diagnostic_solver": {
+      "solver_rtol": 1e-05,
+      "solver_atol": [
+        1e-08,
+        1.0,
+        1e-10,
+        1.0
+      ],
+      "solver_max_step": 1.0
     }
   },
   "instrument_boundary_views": {
     "source_flow": {
-      "predicted_peak_mass_flow_g_s": 59.94705168631836,
-      "mass_flow_nrmse_percent_peak_measured": 6.001987776446001,
-      "median_absolute_percentage_error_percent": 22.80869073277896
+      "predicted_peak_mass_flow_g_s": 59.947191496522166,
+      "mass_flow_nrmse_percent_peak_measured": 5.996355604509776,
+      "median_absolute_percentage_error_percent": 22.781958020542707
     },
     "outlet_flow": {
-      "predicted_peak_mass_flow_g_s": 60.175931977866135,
-      "mass_flow_nrmse_percent_peak_measured": 5.90674661847632,
-      "median_absolute_percentage_error_percent": 22.51399277572061
+      "predicted_peak_mass_flow_g_s": 60.176122732862055,
+      "mass_flow_nrmse_percent_peak_measured": 5.901280901870693,
+      "median_absolute_percentage_error_percent": 22.487175168503708
     }
   },
   "post_outcome_valve_time_constant_sensitivity": [
     {
       "source_valve_time_constant_s": 0.0,
       "source_flow": {
-        "predicted_peak_mass_flow_g_s": 59.94705168631836,
-        "mass_flow_nrmse_percent_peak_measured": 6.001987776446001,
-        "median_absolute_percentage_error_percent": 22.80869073277896
+        "predicted_peak_mass_flow_g_s": 59.947191496522166,
+        "mass_flow_nrmse_percent_peak_measured": 5.996355604509776,
+        "median_absolute_percentage_error_percent": 22.781958020542707
       },
       "outlet_flow": {
-        "predicted_peak_mass_flow_g_s": 60.175931977866135,
-        "mass_flow_nrmse_percent_peak_measured": 5.90674661847632,
-        "median_absolute_percentage_error_percent": 22.51399277572061
+        "predicted_peak_mass_flow_g_s": 60.176122732862055,
+        "mass_flow_nrmse_percent_peak_measured": 5.901280901870693,
+        "median_absolute_percentage_error_percent": 22.487175168503708
       }
     },
     {
       "source_valve_time_constant_s": 0.5,
       "source_flow": {
-        "predicted_peak_mass_flow_g_s": 60.38662896755188,
-        "mass_flow_nrmse_percent_peak_measured": 5.837640058367166,
-        "median_absolute_percentage_error_percent": 22.350816736982864
+        "predicted_peak_mass_flow_g_s": 60.38792767909701,
+        "mass_flow_nrmse_percent_peak_measured": 5.831259809310447,
+        "median_absolute_percentage_error_percent": 22.331895088172608
       },
       "outlet_flow": {
-        "predicted_peak_mass_flow_g_s": 60.61580585596806,
-        "mass_flow_nrmse_percent_peak_measured": 5.742387563426419,
-        "median_absolute_percentage_error_percent": 22.05439584312624
+        "predicted_peak_mass_flow_g_s": 60.61709719923411,
+        "mass_flow_nrmse_percent_peak_measured": 5.735977409793177,
+        "median_absolute_percentage_error_percent": 22.03539245229044
       }
     },
     {
       "source_valve_time_constant_s": 1.0,
       "source_flow": {
-        "predicted_peak_mass_flow_g_s": 60.63123859766921,
-        "mass_flow_nrmse_percent_peak_measured": 5.723112730068633,
-        "median_absolute_percentage_error_percent": 22.028351743885537
+        "predicted_peak_mass_flow_g_s": 60.631691020960076,
+        "mass_flow_nrmse_percent_peak_measured": 5.719065470255966,
+        "median_absolute_percentage_error_percent": 22.01000246746955
       },
       "outlet_flow": {
-        "predicted_peak_mass_flow_g_s": 60.85463128244101,
-        "mass_flow_nrmse_percent_peak_measured": 5.6284436505414,
-        "median_absolute_percentage_error_percent": 21.730699682985854
+        "predicted_peak_mass_flow_g_s": 60.855058642023145,
+        "mass_flow_nrmse_percent_peak_measured": 5.624376763640936,
+        "median_absolute_percentage_error_percent": 21.71226832543567
       }
     },
     {
       "source_valve_time_constant_s": 2.0,
       "source_flow": {
-        "predicted_peak_mass_flow_g_s": 60.874072898106036,
-        "mass_flow_nrmse_percent_peak_measured": 5.531873008512266,
-        "median_absolute_percentage_error_percent": 21.401039314596694
+        "predicted_peak_mass_flow_g_s": 60.87405429786018,
+        "mass_flow_nrmse_percent_peak_measured": 5.524264715450287,
+        "median_absolute_percentage_error_percent": 21.361670323936867
       },
       "outlet_flow": {
-        "predicted_peak_mass_flow_g_s": 61.07772867797047,
-        "mass_flow_nrmse_percent_peak_measured": 5.439121875486049,
-        "median_absolute_percentage_error_percent": 21.101010444137327
+        "predicted_peak_mass_flow_g_s": 61.07768206259624,
+        "mass_flow_nrmse_percent_peak_measured": 5.4314556113789845,
+        "median_absolute_percentage_error_percent": 21.061473029447193
       }
     },
     {
       "source_valve_time_constant_s": 4.0,
       "source_flow": {
-        "predicted_peak_mass_flow_g_s": 60.70756221028524,
-        "mass_flow_nrmse_percent_peak_measured": 5.25261750282443,
-        "median_absolute_percentage_error_percent": 20.16367378961984
+        "predicted_peak_mass_flow_g_s": 60.705947680341986,
+        "mass_flow_nrmse_percent_peak_measured": 5.2486283831328,
+        "median_absolute_percentage_error_percent": 20.132136758429738
       },
       "outlet_flow": {
-        "predicted_peak_mass_flow_g_s": 60.84321710064015,
-        "mass_flow_nrmse_percent_peak_measured": 5.167276165410578,
-        "median_absolute_percentage_error_percent": 19.8592539760449
+        "predicted_peak_mass_flow_g_s": 60.841379788327465,
+        "mass_flow_nrmse_percent_peak_measured": 5.163255658483117,
+        "median_absolute_percentage_error_percent": 19.827557401376218
       }
     }
   ],

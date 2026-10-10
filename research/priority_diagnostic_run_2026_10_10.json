@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "artifact_type": "parallel_priority_diagnostic_run",
+  "generated_at": "2026-10-10T06:35:10.389416+00:00",
+  "parallel": true,
+  "selected_priority": "all",
+  "diagnostic_count": 4,
+  "duration_s": 12.892,
+  "status": "PASS",
+  "results": [
+    {
+      "name": "mc_tank_boundary",
+      "priority": "P0",
+      "description": "MC measured-boundary vehicle-tank replay",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 3.789,
+      "output_tail": "{\"case_count\": 8, \"joint_screening_pass_count\": 0, \"joint_screening_pass_fraction\": 0.0, \"pressure_rmse_mpa_mean\": 4.375922315837227, \"temperature_rmse_c_mean\": 9.052229650073286, \"soc_rmse_percentage_points_mean\": 5.583563785890824}"
+    },
+    {
+      "name": "dickens_mixed_convection",
+      "priority": "P1",
+      "description": "Type-III inlet-jet heat-transfer sensitivity",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 1.199,
+      "output_tail": "709,\n        \"pressure_nrmse_percent_measured_span\": 2.622944110314715,\n        \"gas_temperature_rmse_k\": 7.634245748930577,\n        \"gas_temperature_peak_absolute_error_k\": 8.487690727115876,\n        \"mass_residual_relative\": 1.3478349599618108e-15,\n        \"energy_residual_relative\": 1.3725022901760395e-15\n      },\n      \"screen_results\": {\n        \"pressure_nrmse_percent_measured_span\": true,\n        \"pressure_rmse_mpa\": true,\n        \"gas_temperature_rmse_k\": true,\n        \"gas_temperature_peak_absolute_error_k\": true\n      },\n      \"joint_primary_screen_pass\": true\n    },\n    {\n      \"nozzle_diameter_mm\": 7.0,\n      \"metrics\": {\n        \"pressure_rmse_mpa\": 0.6531593514131298,\n        \"pressure_nrmse_percent_measured_span\": 2.5917994603244447,\n        \"gas_temperature_rmse_k\": 7.915347030876859,\n        \"gas_temperature_peak_absolute_error_k\": 8.697508507942644,\n        \"mass_residual_relative\": 1.0108758853053364e-15,\n        \"energy_residual_relative\": 1.7156272947352298e-15\n      },\n      \"screen_results\": {\n        \"pressure_nrmse_percent_measured_span\": true,\n        \"pressure_rmse_mpa\": true,\n        \"gas_temperature_rmse_k\": true,\n        \"gas_temperature_peak_absolute_error_k\": true\n      },\n      \"joint_primary_screen_pass\": true\n    }\n  ],\n  \"validation_gate_effect\": \"none\",\n  \"claim_boundary\": \"This post-outcome sensitivity identifies whether an omitted inlet-jet heat-transfer mechanism can explain the frozen temperature failure. It cannot select a nozzle diameter, revise the frozen Type-III result, change the runtime model, or support a validation claim.\"\n}"
+    },
+    {
+      "name": "h2safe_spatial_response",
+      "priority": "P1",
+      "description": "Hydrogen detector spatial-response diagnostic",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 1.304,
+      "output_tail": "{\"output\": \"<local-path>"
+    },
+    {
+      "name": "schefer_line_transient",
+      "priority": "P1",
+      "description": "Source-line inventory and valve-opening sensitivity",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 12.89,
+      "output_tail": ""
+    }
+  ],
+  "claim_boundary": "Process status only. These are bounded development diagnostics; the runner does not promote validation gates, change runtime parameters, or publish raw measurements."
+}
