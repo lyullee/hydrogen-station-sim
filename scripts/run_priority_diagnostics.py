@@ -45,6 +45,9 @@ class Diagnostic:
     script: str
     description: str
     output_argument: bool = True
+    # Keep exploratory replays available for explicit runs while excluding a
+    # non-screening replay from the impact-first critical lane.
+    critical_lane: bool = True
 
 
 DEFAULT_DIAGNOSTICS: tuple[Diagnostic, ...] = (
@@ -71,6 +74,7 @@ DEFAULT_DIAGNOSTICS: tuple[Diagnostic, ...] = (
         "P1",
         "scripts/run_schefer_2006_line_transient_diagnostic.py",
         "Source-line inventory and valve-opening sensitivity",
+        critical_lane=False,
     ),
     Diagnostic(
         "h2safe_spatial_response",
@@ -270,8 +274,10 @@ def _run_one(diagnostic: Diagnostic, timeout_s: float) -> dict[str, object]:
 def select_diagnostics(
     diagnostics: Sequence[Diagnostic], priority: str,
 ) -> tuple[Diagnostic, ...]:
-    if priority in {"critical", "all"}:
+    if priority == "all":
         return tuple(diagnostics)
+    if priority == "critical":
+        return tuple(item for item in diagnostics if item.critical_lane)
     return tuple(item for item in diagnostics if item.priority == priority)
 
 

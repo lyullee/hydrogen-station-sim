@@ -19,6 +19,12 @@ def test_priority_diagnostics_have_parallel_p0_and_p1_tracks() -> None:
     assert select_diagnostics(DEFAULT_DIAGNOSTICS, "P1")
     assert {item.priority for item in select_diagnostics(DEFAULT_DIAGNOSTICS, "critical")} == {"P0", "P1"}
     assert len(select_diagnostics(DEFAULT_DIAGNOSTICS, "all")) == len(DEFAULT_DIAGNOSTICS)
+    assert "schefer_line_transient" not in {
+        item.name for item in select_diagnostics(DEFAULT_DIAGNOSTICS, "critical")
+    }
+    assert "schefer_line_transient" in {
+        item.name for item in select_diagnostics(DEFAULT_DIAGNOSTICS, "P1")
+    }
 
 
 def test_diagnostic_scripts_are_repository_relative() -> None:

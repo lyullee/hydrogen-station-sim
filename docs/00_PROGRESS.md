@@ -22,6 +22,24 @@ Verification:
   `mc_tank_boundary` remains a scientific FAIL (0/8), so the readiness gate
   correctly remains BLOCKED.
 
+## 2026-10-10 - Keep the critical lane impact-first
+
+Status: implemented; the fast lane no longer waits for a long exploratory
+diagnostic that cannot report a scientific screen.
+
+- The Schefer line-transient replay remains available through an explicit P1
+  run and through `--priority all`, but is excluded from `--priority critical`
+  because it currently reports no screen result and took about 11.6 s in the
+  last critical run.
+- P0 and screen-producing P1 diagnostics continue to run concurrently. This
+  makes the critical lane answer the readiness question first while preserving
+  the detailed exploratory replay for a deliberate run.
+
+Verification:
+
+- `tests/test_priority_diagnostics.py` covers both selection paths.
+- No model parameter, frozen protocol, or readiness gate was changed.
+
 ## 2026-10-10 - Repair readiness evidence digests after fast-lane changes
 
 Status: implemented; the two stale source-hash records found by the readiness
