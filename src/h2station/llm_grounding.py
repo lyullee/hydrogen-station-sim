@@ -4165,6 +4165,51 @@ def _public_hytunnel_failure_diagnostic_evidence() -> dict[str, Any] | None:
             "claim_supported": False,
             "claim_limit": str(spatial_candidate_record.get("claim_boundary") or ""),
         }
+    spatial_transfer_path = Path(__file__).resolve().parents[2] / (
+        "research/h2safe_spatial_candidate_transfer_diagnostic_2026_10_11.json"
+    )
+    try:
+        spatial_transfer_record = json.loads(
+            spatial_transfer_path.read_text(encoding="utf-8")
+        )
+    except (OSError, ValueError, json.JSONDecodeError):
+        spatial_transfer_record = {}
+    spatial_transfer = None
+    if (
+        spatial_transfer_record.get("artifact_type")
+        == "post_access_h2safe_spatial_candidate_transfer_diagnostic"
+        and spatial_transfer_record.get("status")
+        == "POST_ACCESS_TRANSFER_DIAGNOSTIC_NOT_VALIDATION"
+        and (spatial_transfer_record.get("decision") or {}).get(
+            "runtime_application"
+        ) is False
+        and (spatial_transfer_record.get("parameters") or {}).get(
+            "candidate_selected_after_hytunnel_outcome_access"
+        ) is True
+        and (spatial_transfer_record.get("source") or {}).get(
+            "test_gas"
+        ) == "helium surrogate"
+    ):
+        baseline = spatial_transfer_record.get("baseline") or {}
+        candidate = spatial_transfer_record.get("candidate") or {}
+        baseline_aggregate = baseline.get("aggregate") or {}
+        candidate_aggregate = candidate.get("aggregate") or {}
+        spatial_transfer = {
+            "artifact": "research/h2safe_spatial_candidate_transfer_diagnostic_2026_10_11.json",
+            "source_doi": (spatial_transfer_record.get("source") or {}).get("doi"),
+            "baseline_nearest_sensor_fraction": baseline_aggregate.get(
+                "nearest_in_response_quartile_fraction"
+            ),
+            "candidate_nearest_sensor_fraction": candidate_aggregate.get(
+                "nearest_in_response_quartile_fraction"
+            ),
+            "baseline_mean_top5_recall": baseline_aggregate.get("mean_top5_recall"),
+            "candidate_mean_top5_recall": candidate_aggregate.get("mean_top5_recall"),
+            "candidate_replaces_frozen_model": False,
+            "runtime_application": False,
+            "claim_supported": False,
+            "claim_limit": str(spatial_transfer_record.get("claim_boundary") or ""),
+        }
     return {
         "artifact": "research/hytunnel_carpark_failure_regime_diagnostic_2026_10_09.json",
         "evidence_role": "public actual-hydrogen holdout failure and regime diagnostic",
@@ -4203,6 +4248,7 @@ def _public_hytunnel_failure_diagnostic_evidence() -> dict[str, Any] | None:
         "claim_limit": str(record.get("claim_boundary") or result.get("claim_boundary") or ""),
         "two_zone_development": two_zone_development,
         "spatial_rank_candidate": spatial_candidate,
+        "spatial_candidate_transfer": spatial_transfer,
     }
 
 

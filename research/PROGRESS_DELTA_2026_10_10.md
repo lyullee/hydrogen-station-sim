@@ -300,3 +300,15 @@ mixed-convection sensitivity (3/3) remained positive development diagnostics.
 The refreshed result is retained in
 `research/priority_diagnostic_run_2026_10_11_latest.json`; it does not promote
 a frozen validation gate or change the 88.2% headline.
+
+## H2SAFE transfer check for the spatial candidate (2026-10-11)
+
+The post-outcome HyTunnel candidate was applied unchanged to the five public
+H2SAFE helium-surrogate traces as a rank-only transfer check. It did not
+generalize: nearest-sensor response-quartile fraction was **0.20** for the
+candidate versus **0.60** for the frozen baseline, and mean top-five recall was
+**0.60** versus **0.56**. The H2SAFE release-to-CSV timing crosswalk is still
+absent, so this is not validation and cannot close a gate. The transfer result
+is stored in `research/h2safe_spatial_candidate_transfer_diagnostic_2026_10_11.json`,
+and the LLM evidence manifest now exposes the negative result so it cannot
+recommend the same-cohort candidate as a runtime improvement.

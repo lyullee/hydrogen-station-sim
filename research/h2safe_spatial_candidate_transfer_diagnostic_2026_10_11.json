@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "artifact_type": "post_access_h2safe_spatial_candidate_transfer_diagnostic",
+  "generated_at": "2026-10-10T16:34:33.454429+00:00",
+  "status": "POST_ACCESS_TRANSFER_DIAGNOSTIC_NOT_VALIDATION",
+  "source": {
+    "doi": "10.7799/17118570",
+    "test_gas": "helium surrogate",
+    "timing_crosswalk_available": false,
+    "candidate_source_artifact": "research/hytunnel_spatial_candidate_sensitivity_2026_10_11.json"
+  },
+  "parameters": {
+    "baseline": [
+      0.7,
+      1.2,
+      0.35,
+      1.0,
+      2.0
+    ],
+    "candidate": [
+      0.2,
+      1.0,
+      1.0,
+      1.25,
+      1.0
+    ],
+    "parameter_order": [
+      "upward_vertical_weight",
+      "downward_vertical_penalty",
+      "vertical_denominator_weight",
+      "denominator_power",
+      "horizontal_distance_power"
+    ],
+    "candidate_selected_after_hytunnel_outcome_access": true
+  },
+  "baseline": {
+    "cases": [
+      {
+        "case_id": "Lab1_Small:test1.csv",
+        "valid_sensor_count": 24,
+        "spearman_score_vs_robust_response": 0.5817391304347826,
+        "top5_predictor_recall_of_response_quartile": 0.8,
+        "nearest_sensor": "p24",
+        "nearest_sensor_response_rank": 5,
+        "nearest_sensor_in_response_quartile": true,
+        "maximum_response_sensor": "p13"
+      },
+      {
+        "case_id": "Lab2_Large:test1.csv",
+        "valid_sensor_count": 28,
+        "spearman_score_vs_robust_response": -0.3661740558292282,
+        "top5_predictor_recall_of_response_quartile": 0.2,
+        "nearest_sensor": "p27",
+        "nearest_sensor_response_rank": 8,
+        "nearest_sensor_in_response_quartile": false,
+        "maximum_response_sensor": "p21"
+      },
+      {
+        "case_id": "Lab2_Large:test2.csv",
+        "valid_sensor_count": 32,
+        "spearman_score_vs_robust_response": 0.5161290322580645,
+        "top5_predictor_recall_of_response_quartile": 0.6,
+        "nearest_sensor": "p27",
+        "nearest_sensor_response_rank": 9,
+        "nearest_sensor_in_response_quartile": false,
+        "maximum_response_sensor": "p23"
+      },
+      {
+        "case_id": "Lab2_Large:test3.csv",
+        "valid_sensor_count": 30,
+        "spearman_score_vs_robust_response": 0.6827586206896552,
+        "top5_predictor_recall_of_response_quartile": 0.6,
+        "nearest_sensor": "p3",
+        "nearest_sensor_response_rank": 5,
+        "nearest_sensor_in_response_quartile": true,
+        "maximum_response_sensor": "p23"
+      },
+      {
+        "case_id": "Lab2_Large:test4.csv",
+        "valid_sensor_count": 28,
+        "spearman_score_vs_robust_response": 0.5922276956759714,
+        "top5_predictor_recall_of_response_quartile": 0.6,
+        "nearest_sensor": "p3",
+        "nearest_sensor_response_rank": 4,
+        "nearest_sensor_in_response_quartile": true,
+        "maximum_response_sensor": "p23"
+      }
+    ],
+    "aggregate": {
+      "experiment_count": 5,
+      "median_spearman": 0.5817391304347826,
+      "spearman_at_least_0_4_fraction": 0.8,
+      "mean_top5_recall": 0.56,
+      "nearest_in_response_quartile_fraction": 0.6,
+      "screens": {
+        "median_spearman_at_least_0_5": true,
+        "spearman_at_least_0_4_fraction_at_least_0_6": true,
+        "mean_top5_recall_at_least_0_6": false,
+        "nearest_in_response_quartile_fraction_at_least_0_7": false
+      },
+      "joint_screen_pass": false
+    }
+  },
+  "candidate": {
+    "cases": [
+      {
+        "case_id": "Lab1_Small:test1.csv",
+        "valid_sensor_count": 24,
+        "spearman_score_vs_robust_response": 0.25565217391304346,
+        "top5_predictor_recall_of_response_quartile": 0.4,
+        "nearest_sensor": "p18",
+        "nearest_sensor_response_rank": 24,
+        "nearest_sensor_in_response_quartile": false,
+        "maximum_response_sensor": "p13"
+      },
+      {
+        "case_id": "Lab2_Large:test1.csv",
+        "valid_sensor_count": 28,
+        "spearman_score_vs_robust_response": 0.009852216748768473,
+        "top5_predictor_recall_of_response_quartile": 0.4,
+        "nearest_sensor": "p21",
+        "nearest_sensor_response_rank": 1,
+        "nearest_sensor_in_response_quartile": true,
+        "maximum_response_sensor": "p21"
+      },
+      {
+        "case_id": "Lab2_Large:test2.csv",
+        "valid_sensor_count": 32,
+        "spearman_score_vs_robust_response": 0.5216275659824047,
+        "top5_predictor_recall_of_response_quartile": 0.6,
+        "nearest_sensor": "p21",
+        "nearest_sensor_response_rank": 28,
+        "nearest_sensor_in_response_quartile": false,
+        "maximum_response_sensor": "p23"
+      },
+      {
+        "case_id": "Lab2_Large:test3.csv",
+        "valid_sensor_count": 30,
+        "spearman_score_vs_robust_response": 0.5510567296996662,
+        "top5_predictor_recall_of_response_quartile": 0.8,
+        "nearest_sensor": "p21",
+        "nearest_sensor_response_rank": 29,
+        "nearest_sensor_in_response_quartile": false,
+        "maximum_response_sensor": "p23"
+      },
+      {
+        "case_id": "Lab2_Large:test4.csv",
+        "valid_sensor_count": 28,
+        "spearman_score_vs_robust_response": 0.48330596606458676,
+        "top5_predictor_recall_of_response_quartile": 0.8,
+        "nearest_sensor": "p21",
+        "nearest_sensor_response_rank": 27,
+        "nearest_sensor_in_response_quartile": false,
+        "maximum_response_sensor": "p23"
+      }
+    ],
+    "aggregate": {
+      "experiment_count": 5,
+      "median_spearman": 0.48330596606458676,
+      "spearman_at_least_0_4_fraction": 0.6,
+      "mean_top5_recall": 0.6,
+      "nearest_in_response_quartile_fraction": 0.2,
+      "screens": {
+        "median_spearman_at_least_0_5": false,
+        "spearman_at_least_0_4_fraction_at_least_0_6": true,
+        "mean_top5_recall_at_least_0_6": true,
+        "nearest_in_response_quartile_fraction_at_least_0_7": false
+      },
+      "joint_screen_pass": false
+    }
+  },
+  "decision": {
+    "runtime_application": false,
+    "readiness_gate_effect": "none",
+    "candidate_replaces_frozen_model": false,
+    "reason": "The candidate loses nearest-sensor transfer on the H2SAFE helium files and the public release-to-CSV timing crosswalk is absent."
+  },
+  "claim_boundary": "This compares rank-only transfer on a helium surrogate after both source datasets were public. It is not hydrogen concentration validation, CFD, detector placement validation, alarm/ESD calibration or a safety-distance result."
+}

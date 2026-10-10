@@ -38,6 +38,14 @@ def test_hytunnel_failure_diagnostic_is_grounded_without_runtime_calibration():
     assert evidence["spatial_rank_candidate"]["claim_supported"] is False
     assert evidence["spatial_rank_candidate"]["runtime_application"] is False
     assert evidence["spatial_rank_candidate"]["candidate_joint_screen_pass"] is True
+    assert evidence["spatial_candidate_transfer"]["claim_supported"] is False
+    assert evidence["spatial_candidate_transfer"]["runtime_application"] is False
+    assert evidence["spatial_candidate_transfer"][
+        "baseline_nearest_sensor_fraction"
+    ] == 0.6
+    assert evidence["spatial_candidate_transfer"][
+        "candidate_nearest_sensor_fraction"
+    ] == 0.2
 
     summary = prompt_evidence_summary(manifest)["public_hytunnel_failure_diagnostic"]
     assert summary["claim_supported"] is False
