@@ -866,6 +866,75 @@ def _khk_public_accident_inventory() -> dict[str, Any] | None:
     return result
 
 
+def _public_accident_source_recheck() -> dict[str, Any] | None:
+    """Expose the latest public accident-source freshness boundary.
+
+    KHK, HIAD and H2Tools are useful for scenario and response grounding, but
+    their current public pages do not provide a synchronized station-to-vehicle
+    process trace.  Keep the freshness signal in the LLM envelope without
+    allowing a citation inventory to promote a numerical validation gate.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "research/public_accident_source_recheck_2026_10_11.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    boundary = record.get("aggregate_boundary") or {}
+    privacy = record.get("privacy") or {}
+    sources = record.get("sources") or []
+    if (
+        record.get("artifact_type") != "public_accident_source_recheck"
+        or record.get("status") != "PUBLIC_ACCIDENT_SOURCE_RECHECK_COMPLETED"
+        or not isinstance(sources, list)
+        or len(sources) != 3
+        or not all(isinstance(item, dict) for item in sources)
+        or boundary.get("response_grounding_supported") is not True
+        or boundary.get("numerical_validation_supported") is not False
+        or boundary.get("full_loop_external_validation_supported") is not False
+        or boundary.get("prospective_holdout_eligible") is not False
+        or not privacy
+        or not all(value is False for value in privacy.values())
+        or record.get("runtime_parameter_application") is not False
+        or record.get("claim_supported") is not False
+    ):
+        return None
+    compact_sources: list[dict[str, Any]] = []
+    for source in sources:
+        compact_sources.append({
+            key: source.get(key)
+            for key in (
+                "id", "institution", "url", "supporting_url", "source_family",
+                "version", "coverage_end", "observed_report_count",
+                "observed_incident_code_count", "observed_precaution_report_count",
+                "observed_station_record_count", "observed_fueling_station_record_count",
+                "raw_report_text_persisted", "machine_readable_time_series",
+                "use", "not_usable_for",
+            )
+            if source.get(key) is not None
+        })
+    return {
+        "artifact": "research/public_accident_source_recheck_2026_10_11.json",
+        "recorded_at": record.get("recorded_at"),
+        "sources": compact_sources,
+        "aggregate_boundary": {
+            key: boundary.get(key)
+            for key in (
+                "response_grounding_supported",
+                "numerical_validation_supported",
+                "full_loop_external_validation_supported",
+                "prospective_holdout_eligible",
+                "raw_report_text_persisted",
+            )
+        },
+        "gate_impact": str(record.get("gate_impact") or ""),
+        "runtime_parameter_application": False,
+        "claim_supported": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_local_accident_response_coverage() -> dict[str, Any] | None:
     """Expose only aggregate response-plan traceability for restricted incidents.
 
@@ -4707,6 +4776,21 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
         "공개 HIAD 2.2 사고·근접사고 시나리오 근거(정성적·비수치 검증)",
     )
 
+    accident_recheck = evidence.get("public_accident_source_recheck") or {}
+    for source in accident_recheck.get("sources") or []:
+        if not isinstance(source, dict):
+            continue
+        source_id = str(source.get("id") or "").strip()
+        source_url = str(source.get("url") or "").strip()
+        if not source_id or not source_url:
+            continue
+        add(
+            f"PUBLIC_ACCIDENT_RECHECK_{source_id.upper()}",
+            str(source.get("institution") or source_id),
+            source_url,
+            "최신 공개 사고자료 재검토(대응 근거만, 수치·full-loop 검증 아님)",
+        )
+
     accidental = evidence.get("public_accidental_release_evidence") or {}
     add(
         "PUBLIC_ACCIDENTAL_RELEASE_ARTICLE",
@@ -8375,6 +8459,11 @@ def build_evidence_manifest(
                     "현재 사고의 원인·빈도·결과 또는 조치 효과를 확정하지 않음"
                 ),
             }
+    accident_source_recheck = _public_accident_source_recheck()
+    if accident_source_recheck is not None:
+        envelope["response_evidence"][
+            "public_accident_source_recheck"
+        ] = accident_source_recheck
     local_accident_coverage = _confidential_local_accident_response_coverage()
     if local_accident_coverage is not None:
         envelope["response_evidence"][
@@ -8979,6 +9068,37 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 )
                 if khk_replay.get(key) is not None
             },
+        }
+    accident_source_recheck = evidence.get("public_accident_source_recheck")
+    if isinstance(accident_source_recheck, dict):
+        summary["public_accident_source_recheck"] = {
+            "artifact": accident_source_recheck.get("artifact"),
+            "recorded_at": accident_source_recheck.get("recorded_at"),
+            "sources": [
+                {
+                    key: source.get(key)
+                    for key in (
+                        "id", "institution", "url", "source_family",
+                        "version", "coverage_end", "observed_report_count",
+                        "observed_station_record_count",
+                        "observed_fueling_station_record_count",
+                        "raw_report_text_persisted",
+                        "machine_readable_time_series", "use",
+                    )
+                    if source.get(key) is not None
+                }
+                for source in accident_source_recheck.get("sources") or []
+                if isinstance(source, dict)
+            ],
+            "aggregate_boundary": accident_source_recheck.get(
+                "aggregate_boundary"
+            ) or {},
+            "gate_impact": accident_source_recheck.get("gate_impact"),
+            "runtime_parameter_application": accident_source_recheck.get(
+                "runtime_parameter_application"
+            ) is True,
+            "claim_supported": accident_source_recheck.get("claim_supported") is True,
+            "claim_limit": short(accident_source_recheck.get("claim_limit"), 360),
         }
     benchmarks = evidence.get("public_experimental_benchmarks")
     if isinstance(benchmarks, dict):
@@ -10645,6 +10765,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     qra_multimethod = response.get("qra_multimethod_comparison") or {}
     incident = response.get("public_incident_traceability") or {}
     accident_inventory = response.get("public_accident_report_inventory") or {}
+    accident_source_recheck = response.get("public_accident_source_recheck") or {}
     khk_replay = accident_inventory.get("digital_twin_replay") or {}
     relevant_precedents = response.get("relevant_public_accident_precedents") or {}
     accidental_release = response.get("public_accidental_release_evidence") or {}
@@ -10740,6 +10861,10 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "공개", "실측", "실험", "데이터", "검증", "원자료", "자료",
         "public", "measurement", "experiment", "dataset", "validation",
         "data", "raw",
+    ))
+    accident_sources_relevant = any(token in lead_context for token in (
+        "사고", "누출", "화재", "폭발", "대응", "안전", "accident", "leak",
+        "fire", "explosion", "response", "safety", "incident",
     ))
     public_hrs_leads_relevant = any(token in lead_context for token in (
         "공개", "계측", "실측", "실데이터", "원자료", "검증", "데이터",
@@ -11190,6 +11315,25 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "public_full_loop_candidate_leads": full_loop_candidate_projection,
         } if full_loop_candidate_projection is not None else {}),
         **({
+            "public_accident_source_recheck": {
+                "recorded_at": accident_source_recheck.get("recorded_at"),
+                "source_count": len(accident_source_recheck.get("sources") or []),
+                "aggregate_boundary": accident_source_recheck.get(
+                    "aggregate_boundary"
+                ) or {},
+                "gate_impact": accident_source_recheck.get("gate_impact"),
+                "runtime_parameter_application": accident_source_recheck.get(
+                    "runtime_parameter_application"
+                ) is True,
+                "claim_supported": accident_source_recheck.get(
+                    "claim_supported"
+                ) is True,
+                "claim_limit": short(
+                    accident_source_recheck.get("claim_limit"), 360
+                ),
+            },
+        } if accident_source_recheck and accident_sources_relevant else {}),
+        **({
             "public_h2iq_aggregate_reference": public_h2iq_aggregate,
         } if h2iq_aggregate_relevant else {}),
         **({
@@ -11211,6 +11355,24 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             },
         } if public_h2protocol_validation and h2protocol_validation_relevant else {}),
         "decision_support_evidence": {
+            **({
+                "public_accident_source_recheck": {
+                    "recorded_at": accident_source_recheck.get("recorded_at"),
+                    "source_count": len(accident_source_recheck.get("sources") or []),
+                    "response_grounding_supported": (
+                        (accident_source_recheck.get("aggregate_boundary") or {})
+                    ).get("response_grounding_supported") is True,
+                    "numerical_validation_supported": (
+                        (accident_source_recheck.get("aggregate_boundary") or {})
+                    ).get("numerical_validation_supported") is True,
+                    "full_loop_external_validation_supported": (
+                        (accident_source_recheck.get("aggregate_boundary") or {})
+                    ).get("full_loop_external_validation_supported") is True,
+                    "claim_limit": short(
+                        accident_source_recheck.get("claim_limit"), 360
+                    ),
+                },
+            } if accident_source_recheck and accident_sources_relevant else {}),
             **({
                 "public_operational_evidence_leads": operational_evidence_projection,
             } if operational_evidence_projection is not None else {}),
@@ -13902,6 +14064,25 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 )
                 if (accident_inventory.get("digital_twin_replay") or {}).get(key)
                 is not None
+            },
+            "public_accident_source_recheck": {
+                "recorded_at": (
+                    evidence.get("public_accident_source_recheck") or {}
+                ).get("recorded_at"),
+                "source_count": len(
+                    (evidence.get("public_accident_source_recheck") or {}).get(
+                        "sources"
+                    ) or []
+                ),
+                "aggregate_boundary": (
+                    evidence.get("public_accident_source_recheck") or {}
+                ).get("aggregate_boundary") or {},
+                "gate_impact": (
+                    evidence.get("public_accident_source_recheck") or {}
+                ).get("gate_impact"),
+                "claim_limit": (
+                    evidence.get("public_accident_source_recheck") or {}
+                ).get("claim_limit"),
             },
             "accidental_release_zenodo_doi": accidental_release.get("zenodo_doi"),
             "accidental_release_full_loop": accidental_release.get(

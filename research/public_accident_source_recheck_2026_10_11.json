@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_accident_source_recheck",
+  "recorded_at": "2026-10-11",
+  "status": "PUBLIC_ACCIDENT_SOURCE_RECHECK_COMPLETED",
+  "scope": "Current public accident and incident-source pages were rechecked for response-grounding freshness. The record is citation-only and deliberately separate from numerical validation evidence.",
+  "sources": [
+    {
+      "id": "khk_hydrogen_accident_information",
+      "institution": "High Pressure Gas Safety Institute of Japan (KHK)",
+      "url": "https://www.khk.or.jp/hydrogen/accident_information.html",
+      "source_family": "official_hydrogen_accident_report_inventory",
+      "observed_report_count": 23,
+      "observed_incident_code_count": 26,
+      "observed_precaution_report_count": 8,
+      "raw_report_text_persisted": false,
+      "machine_readable_time_series": false,
+      "use": "citation-only scenario and response precedent grounding",
+      "not_usable_for": [
+        "numerical process-model validation",
+        "station-to-vehicle full-loop scoring",
+        "accident frequency or response-effectiveness claims"
+      ]
+    },
+    {
+      "id": "hiad_2_2_hydrogen_refuelling_station",
+      "institution": "European Commission Joint Research Centre / Clean Hydrogen Joint Undertaking",
+      "url": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt",
+      "source_family": "public_incident_casebook",
+      "version": "HIAD 2.2",
+      "coverage_end": "2025-12-31",
+      "observed_station_record_count": 34,
+      "raw_report_text_persisted": false,
+      "machine_readable_time_series": false,
+      "use": "incident taxonomy, qualitative consequence and response-grounding evidence",
+      "not_usable_for": [
+        "dynamic pressure-temperature-flow validation",
+        "station-to-vehicle full-loop scoring",
+        "field safety-distance claims"
+      ]
+    },
+    {
+      "id": "h2tools_hydrogen_lessons_learned_and_hiad_hrs",
+      "institution": "H2Tools",
+      "url": "https://h2tools.org/hiad-facility-application-type/hydrogen-refueling-station?page=1",
+      "supporting_url": "https://h2tools.org/sites/default/files/60948.pdf",
+      "source_family": "public_hydrogen_lessons_and_incident_index",
+      "observed_fueling_station_record_count": 22,
+      "raw_report_text_persisted": false,
+      "machine_readable_time_series": false,
+      "use": "qualitative incident and lesson-learned response grounding",
+      "not_usable_for": [
+        "numerical process-model validation",
+        "station-to-vehicle full-loop scoring",
+        "consequence-distance calibration"
+      ]
+    }
+  ],
+  "aggregate_boundary": {
+    "response_grounding_supported": true,
+    "numerical_validation_supported": false,
+    "full_loop_external_validation_supported": false,
+    "prospective_holdout_eligible": false,
+    "raw_report_text_persisted": false,
+    "private_site_or_company_identity_added": false,
+    "absolute_private_timestamps_published": false
+  },
+  "source_artifact_links": {
+    "khk_inventory": "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
+    "hiad_access_recheck": "research/hiad_2_2_access_recheck_2026_10_05.json",
+    "h2tools_source_recheck": "web_only_current_page_and_pdf_recheck"
+  },
+  "gate_impact": "response_grounding_freshness_improved_only; numerical_and_full_loop_gates_remain_open",
+  "runtime_parameter_application": false,
+  "claim_supported": false,
+  "next_action": "Use the cited source families for scenario-specific response guidance; admit a numerical validation cohort only after a rights-cleared machine-readable synchronized dataset is received and frozen.",
+  "claim_boundary": "This artifact records a current public-source recheck. It does not copy report text, does not establish numerical validation, does not change runtime parameters, and does not support an IJHE full-loop or field-safety claim.",
+  "privacy": {
+    "private_raw_rows_persisted": false,
+    "private_source_paths_published": false,
+    "private_site_or_company_identity_published": false,
+    "absolute_private_timestamps_published": false
+  }
+}

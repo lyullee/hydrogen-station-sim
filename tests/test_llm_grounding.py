@@ -821,6 +821,31 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         detector_prompt
     )["decision_support_evidence"]["detector_placement"]
     assert header["public_accident_evidence"]["public_report_count"] == 23
+    accident_recheck = header["public_accident_evidence"][
+        "public_accident_source_recheck"
+    ]
+    assert accident_recheck["recorded_at"] == "2026-10-11"
+    assert accident_recheck["source_count"] == 3
+    assert accident_recheck["aggregate_boundary"][
+        "response_grounding_supported"
+    ] is True
+    assert accident_recheck["aggregate_boundary"][
+        "numerical_validation_supported"
+    ] is False
+    assert accident_recheck["aggregate_boundary"][
+        "full_loop_external_validation_supported"
+    ] is False
+    accident_manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="사고 대응 근거"
+    )
+    accident_decision = prompt_decision_evidence(accident_manifest)
+    accident_support = accident_decision["decision_support_evidence"][
+        "public_accident_source_recheck"
+    ]
+    assert accident_support["source_count"] == 3
+    assert accident_support["response_grounding_supported"] is True
+    assert accident_support["numerical_validation_supported"] is False
+    assert accident_support["full_loop_external_validation_supported"] is False
     assert header["public_accident_evidence"]["hiad_public_source"]["version"] == (
         "HIAD 2.2"
     )
