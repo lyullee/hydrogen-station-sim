@@ -15,6 +15,7 @@ def test_priority_diagnostics_have_parallel_p0_and_p1_tracks() -> None:
     assert {item.priority for item in DEFAULT_DIAGNOSTICS} == {"P0", "P1"}
     assert select_diagnostics(DEFAULT_DIAGNOSTICS, "P0")
     assert select_diagnostics(DEFAULT_DIAGNOSTICS, "P1")
+    assert {item.priority for item in select_diagnostics(DEFAULT_DIAGNOSTICS, "critical")} == {"P0", "P1"}
     assert len(select_diagnostics(DEFAULT_DIAGNOSTICS, "all")) == len(DEFAULT_DIAGNOSTICS)
 
 

@@ -34,7 +34,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def _select_checks(priority: str) -> tuple[PriorityCheck, ...]:
-    if priority == "all":
+    if priority in {"critical", "all"}:
         return DEFAULT_CHECKS
     return tuple(check for check in DEFAULT_CHECKS if check.priority == priority)
 
@@ -95,9 +95,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--priority",
-        choices=("P0", "P1", "all"),
+        choices=("P0", "P1", "critical", "all"),
         default="P0",
-        help="Run the highest-impact P0 lane by default; use 'all' for the broader queue.",
+        help=(
+            "Run one lane, or use 'critical' for P0 and P1 together; "
+            "'all' is kept as an explicit alias for the complete queue."
+        ),
     )
     parser.add_argument("--timeout-s", type=float, default=300.0)
     parser.add_argument("--max-workers", type=int)

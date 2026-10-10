@@ -136,7 +136,7 @@ def _run_one(diagnostic: Diagnostic, timeout_s: float) -> dict[str, object]:
 def select_diagnostics(
     diagnostics: Sequence[Diagnostic], priority: str,
 ) -> tuple[Diagnostic, ...]:
-    if priority == "all":
+    if priority in {"critical", "all"}:
         return tuple(diagnostics)
     return tuple(item for item in diagnostics if item.priority == priority)
 
@@ -183,7 +183,12 @@ def main() -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--priority", choices=("P0", "P1", "all"), default="all")
+    parser.add_argument(
+        "--priority",
+        choices=("P0", "P1", "critical", "all"),
+        default="all",
+        help="Use 'critical' to run the P0/P1 tracks together; 'all' is an alias.",
+    )
     parser.add_argument("--timeout-s", type=float, default=300.0)
     parser.add_argument("--max-workers", type=int)
     parser.add_argument("--output", type=Path)

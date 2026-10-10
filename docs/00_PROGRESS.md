@@ -22,6 +22,8 @@ Verification:
 
 - `scripts/run_priority_focus.py --priority all --max-workers 4`: **PASS** in
   12.2 s.
+- Added the explicit `--priority critical` alias to both priority runners; it
+  selects P0 and P1 together without requiring a broad regression command.
 
 ## 2026-10-10 - Run P0/P1 work in parallel and close the MC boundary probe
 
