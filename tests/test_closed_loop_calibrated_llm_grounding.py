@@ -1,3 +1,5 @@
+import pytest
+
 from h2station.llm_grounding import build_evidence_manifest, prompt_evidence_summary
 
 
@@ -58,6 +60,24 @@ def test_mc_tank_boundary_negative_screen_is_explicitly_grounded():
         "public_mc_tank_boundary_diagnostic"
     ]
     assert compact["aggregate"]["pressure_rmse_mpa_mean"] == 4.375922315837227
+
+
+def test_mc_temperature_channel_inventory_is_grounded_without_validation_promotion():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="탱크 온도 층화"
+    )
+    evidence = manifest["response_evidence"][
+        "public_mc_temperature_channel_inventory"
+    ]
+    assert evidence["case_count"] == 8
+    assert evidence["cases_with_individual_channels"] == 8
+    assert evidence["runtime_parameter_application"] is False
+    assert evidence["full_loop_external_validation_supported"] is False
+    assert evidence["claim_supported"] is False
+    compact = prompt_evidence_summary(manifest)[
+        "public_mc_temperature_channel_inventory"
+    ]
+    assert compact["stratification_summary"]["maximum_case_peak_spread_c"] == pytest.approx(8.532)
 
 
 def test_mc_cumulative_mass_sensitivity_is_grounded_without_promotion():

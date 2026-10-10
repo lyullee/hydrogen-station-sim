@@ -2229,6 +2229,62 @@ def _public_h2protocol_validation_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_mc_temperature_channel_inventory() -> dict[str, Any] | None:
+    """Expose the bounded MC tank-temperature channel diagnostic.
+
+    The inventory is useful for explaining why a future thermal-stratification
+    model is being considered.  It contains only channel names and aggregate
+    spread metrics; it is not a new holdout and cannot promote the inspected
+    MC cases or a partial tank trace to full-loop validation.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "research/mc_temperature_channel_inventory_2026_10_11.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, UnicodeError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    inventory = record.get("inventory") or {}
+    privacy = record.get("privacy") or {}
+    interpretation = record.get("interpretation") or {}
+    cases = inventory.get("cases") or []
+    if (
+        record.get("artifact_type") != "mc_default_temperature_channel_inventory"
+        or record.get("status") != "post_access_schema_diagnostic"
+        or source.get("selected_case_count") != 8
+        or inventory.get("parsed_case_count") != 8
+        or inventory.get("cases_with_individual_channels") != 8
+        or not isinstance(cases, list)
+        or len(cases) != 8
+        or not all(isinstance(case, dict) and case.get("channel_contract_pass") is True for case in cases)
+        or privacy.get("raw_archive_committed") is not False
+        or privacy.get("raw_rows_persisted") is not False
+        or privacy.get("temperature_values_persisted") is not False
+        or privacy.get("source_paths_persisted") is not False
+        or privacy.get("source_member_names_persisted") is not False
+        or interpretation.get("runtime_parameter_change") is not False
+        or interpretation.get("holdout_gate_change") is not False
+    ):
+        return None
+    return {
+        "artifact": "research/mc_temperature_channel_inventory_2026_10_11.json",
+        "evidence_role": "post-access public tank-temperature channel diagnostic",
+        "case_count": inventory.get("parsed_case_count"),
+        "cases_with_individual_channels": inventory.get(
+            "cases_with_individual_channels"
+        ),
+        "cases_with_reported_average": inventory.get(
+            "cases_with_reported_average"
+        ),
+        "stratification_summary": inventory.get("stratification_summary") or {},
+        "runtime_parameter_application": False,
+        "full_loop_external_validation_supported": False,
+        "claim_supported": False,
+        "claim_limit": str(interpretation.get("claim_boundary") or ""),
+    }
+
+
 @lru_cache(maxsize=1)
 def _public_geometry_sensitivity_evidence() -> dict[str, Any] | None:
     """Expose the public capacity/EOS geometry sensitivity as diagnostic evidence.
@@ -8632,6 +8688,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_h2protocol_validation_boundary"
         ] = public_h2protocol_validation
+    mc_temperature_inventory = _public_mc_temperature_channel_inventory()
+    if mc_temperature_inventory is not None:
+        envelope["response_evidence"][
+            "public_mc_temperature_channel_inventory"
+        ] = mc_temperature_inventory
     public_geometry_sensitivity = _public_geometry_sensitivity_evidence()
     if public_geometry_sensitivity is not None:
         envelope["response_evidence"][
@@ -9358,6 +9419,22 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_limit",
             )
             if public_h2protocol_validation.get(key) is not None
+        }
+    mc_temperature_inventory = evidence.get(
+        "public_mc_temperature_channel_inventory"
+    )
+    if isinstance(mc_temperature_inventory, dict):
+        summary["public_mc_temperature_channel_inventory"] = {
+            key: mc_temperature_inventory.get(key)
+            for key in (
+                "evidence_role", "case_count",
+                "cases_with_individual_channels",
+                "cases_with_reported_average", "stratification_summary",
+                "runtime_parameter_application",
+                "full_loop_external_validation_supported", "claim_supported",
+                "claim_limit",
+            )
+            if mc_temperature_inventory.get(key) is not None
         }
     public_geometry_sensitivity = evidence.get("public_geometry_sensitivity")
     if isinstance(public_geometry_sensitivity, dict):
