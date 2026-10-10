@@ -47,22 +47,27 @@ OPTIONAL_COLUMNS = (
 # report.
 _CHANNEL_ALIASES: dict[str, frozenset[str]] = {
     "elapsed_time_s": frozenset({
-        "elapsed_s", "elapsed time s", "time_s", "seconds",
-        "seconds_since_start", "경과시간", "경과 시간(s)",
+        "elapsed_s", "elapsed time s", "elapsed_time", "elapsed time",
+        "time_s", "time (s)", "time[s]", "relative_time_s", "t_s",
+        "seconds", "seconds_since_start", "경과시간", "경과 시간(s)",
+        "상대시간(s)", "시간(s)",
     }),
     "station_pressure_mpa": frozenset({
         "station_pressure", "dispenser_pressure_mpa",
         "dispensing_pressure_mpa", "supply_pressure_mpa",
-        "hose_pressure_mpa", "충전소 압력(mpa)",
+        "hose_pressure_mpa", "pressure_mpa", "pressure (mpa)",
+        "pressure[mpa]", "충전소 압력(mpa)",
     }),
     "delivered_gas_temperature_c": frozenset({
         "delivered_temperature_c", "gas_temperature_c",
         "dispensed_gas_temperature_c", "delivery_temperature_c",
-        "delivered gas temperature (c)", "공급가스 온도(c)",
+        "delivered gas temperature (c)", "temperature_c", "temp_c",
+        "temperature (c)", "temperature[c]", "공급가스 온도(c)",
     }),
     "mass_flow_g_s": frozenset({
         "mass_flow", "mass_flow_rate_g_s", "hydrogen_mass_flow_g_s",
-        "flow_g_s", "flow_rate_g_s", "질량유량(g/s)",
+        "flow_g_s", "flow_rate_g_s", "flow (g/s)", "flow[g/s]",
+        "질량유량(g/s)",
     }),
     "transferred_mass_kg": frozenset({
         "transferred_mass", "cumulative_mass_kg", "dispensed_mass_kg",
@@ -70,17 +75,20 @@ _CHANNEL_ALIASES: dict[str, frozenset[str]] = {
     }),
     "protocol_phase": frozenset({
         "phase", "fill_phase", "operation_phase", "protocol_state",
+        "controller_phase", "operation_state", "protocol step",
         "충전단계", "공정단계",
     }),
     "vehicle_pressure_mpa": frozenset({
         "vehicle_pressure", "receptacle_pressure_mpa",
         "tank_pressure_mpa", "vehicle_tank_pressure_mpa",
-        "vehicle_or_receptacle_pressure_mpa", "차량 압력(mpa)",
+        "vehicle_or_receptacle_pressure_mpa", "vehicle_pressure_mpa",
+        "vehicle pressure (mpa)", "차량 압력(mpa)",
     }),
     "vehicle_temperature_c": frozenset({
         "vehicle_temperature", "receptacle_temperature_c",
         "tank_temperature_c", "vehicle_tank_temperature_c",
-        "vehicle_or_receptacle_temperature_c", "차량 온도(c)",
+        "vehicle_or_receptacle_temperature_c", "vehicle_temperature_c",
+        "vehicle temperature (c)", "차량 온도(c)",
     }),
 }
 FORBIDDEN_IDENTITY_TOKENS = (

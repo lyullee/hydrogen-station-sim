@@ -1,5 +1,19 @@
 # Development Progress
 
+## 2026-10-10 - Broaden explicit full-loop logger aliases
+
+Status: implemented; ambiguity and unitless boundary guessing remain blocked.
+
+- Added unit-qualified aliases commonly emitted by logger exports, including
+  `time (s)`, `pressure (MPa)`, `temperature[C]`, `flow[g/s]`,
+  `operation_state`, and vehicle-side pressure/temperature labels.
+- The intake still rejects generic unitless `pressure` and `temperature`, and
+  duplicate aliases still fail closed. No source header or raw row is emitted.
+
+Verification:
+
+- Full-loop intake suite: **14 passed**.
+
 ## 2026-10-10 - Re-scan the available local archives for the P0 loop gate
 
 Status: scan completed; no unverified data was promoted.

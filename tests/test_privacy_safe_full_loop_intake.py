@@ -96,6 +96,46 @@ def test_common_engineering_aliases_are_resolved_without_relaxing_the_gate(
     assert "tank_pressure_mpa" not in str(report)
 
 
+def test_unit_qualified_logger_aliases_are_accepted_but_generic_names_are_not(
+    tmp_path: Path,
+) -> None:
+    fields = [
+        "time (s)", "pressure (MPa)", "temperature[C]", "flow[g/s]",
+        "operation_state", "vehicle pressure (MPa)", "vehicle temperature (C)",
+    ]
+    paths = []
+    for index in range(3):
+        path = tmp_path / f"qualified_{index}.csv"
+        path.write_text(
+            ",".join(fields) + "\n"
+            "0,45,-35,10,start,5,25\n"
+            "1,46,-34,10,fill,6,28\n"
+            "2,47,-33,10,stop,7,30\n",
+            encoding="utf-8",
+        )
+        paths.append(path)
+
+    report = validate_privacy_safe_pilot_bundle(paths)
+
+    assert report["status"] == "READY_FOR_FULL_LOOP_PROTOCOL_FREEZE"
+    assert report["event_reports"][0]["channel_aliases_resolved"] == 7
+
+    generic = tmp_path / "generic.csv"
+    generic.write_text(
+        "time (s),pressure,temperature,flow[g/s],operation_state,"
+        "vehicle pressure (MPa),vehicle temperature (C)\n"
+        "0,45,-35,10,start,5,25\n"
+        "1,46,-34,10,fill,6,28\n",
+        encoding="utf-8",
+    )
+    generic_report = validate_privacy_safe_pilot_bundle(
+        [generic], rules=PilotIntakeRules(minimum_event_count=1)
+    )
+    generic_event = generic_report["event_reports"][0]
+    assert generic_report["status"] == "SCHEMA_INCOMPLETE"
+    assert "missing_required_column" in generic_event["errors"]
+
+
 def test_ambiguous_aliases_fail_closed(tmp_path: Path) -> None:
     path = tmp_path / "event.csv"
     path.write_text(
