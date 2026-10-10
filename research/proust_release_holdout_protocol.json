@@ -34,11 +34,11 @@
   "locked_implementation": {
     "evaluator": {
       "path": "src/h2station/proust_release_validation.py",
-      "sha256": "e6f71a29e02f5ecd088dbb0f190eeff06fba2485d19281f42dce9d376a5a9078"
+      "sha256": "726c71b17cb451fbc421fc5a2d9324179dda7439b9b7b7804c46424776f7291f"
     },
     "runner": {
       "path": "scripts/run_proust_release_holdout.py",
-      "sha256": "d2f00f9b8298f2b4ed101f02664e238bc1277e4794adec8845b185affad8c365"
+      "sha256": "3b6ebfe19ecb866970104f0c3f094df80e74142fbf91846d96cc656ac1471445"
     }
   },
   "digitization": {

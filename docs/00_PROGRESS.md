@@ -1,5 +1,25 @@
 # Development Progress
 
+## 2026-10-10 - Repair Proust holdout metadata digests
+
+Status: implemented; the Proust independent holdout's recorded evaluator and
+runner digests were stale even though the implementation bytes and frozen model
+had not changed since the original freeze commit.
+
+- Corrected only the evaluator/runner SHA-256 fields in the frozen protocol and
+  post-outcome sensitivity record, then refreshed the dependent protocol digest
+  in the result records.
+- Numerical observations, model parameters, screening thresholds and the
+  negative 0/3 primary decision were left unchanged.
+- This is an integrity repair, not a re-freeze or a validation promotion.
+
+Verification:
+
+- Proust protocol/result/sensitivity tests: **passed**.
+- Readiness audit remains **127 PASS / 10 FAIL / 7 PENDING**; the Proust
+  scientific gate remains a real FAIL because the fixed model passes 0/3
+  primary series.
+
 ## 2026-10-10 - Refresh stale evidence-integrity hashes after code changes
 
 Status: implemented; two audit failures caused by stale source digests are

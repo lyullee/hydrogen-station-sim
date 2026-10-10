@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "generated_at": "2026-10-03T07:51:35.035187+00:00",
-  "protocol_sha256": "6f52a2b72215121276949db4c4ed06b479fde9dc71d7feb4440cbad97f46d5db",
+  "protocol_sha256": "333a40026b1b6a40785e9fc50d3841c5ccef2d06368b657e2775510918efd025",
   "data_sha256": "d203ba634e64c88d1d225551d54998379c2d99f11a588b3298607208893b67c0",
   "aggregate": {
     "series": 3,
