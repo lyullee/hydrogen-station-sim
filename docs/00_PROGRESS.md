@@ -1,5 +1,16 @@
 # Development Progress
 
+## 2026-10-10 - Split-channel freeze workflow exposed in CLI
+
+- Extended `freeze_privacy_safe_full_loop.py` with paired
+  `--station-events`/`--vehicle-events` inputs. The CLI now performs the same
+  streaming time-axis checks and creates a hash-only pre-access freeze
+  manifest without requiring a merged raw file.
+- Single-file intake remains backward compatible. Mismatched list lengths or
+  missing paired arguments fail before a manifest is created.
+- Focused intake and CLI tests pass **11 tests**; no external-validation gate
+  was promoted.
+
 ## 2026-10-10 - Split-channel full-loop intake for real exports
 
 - Added a streaming intake path for events delivered as separate station and

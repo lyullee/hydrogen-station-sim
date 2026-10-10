@@ -20,6 +20,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from h2station.privacy_safe_full_loop_intake import (  # noqa: E402
     PilotIntakeRules,
     build_privacy_safe_freeze_manifest,
+    build_privacy_safe_split_freeze_manifest,
 )
 
 
@@ -58,9 +59,41 @@ def build_manifest(
     )
 
 
+def build_split_manifest(
+    station_event_paths: list[Path],
+    vehicle_event_paths: list[Path],
+    *,
+    protocol_path: Path,
+    model_path: Path,
+    evaluator_path: Path,
+    channel_roles_path: Path,
+    minimum_event_count: int = 3,
+) -> dict[str, Any]:
+    """Build a freeze manifest from paired station/vehicle exports."""
+
+    if len(station_event_paths) != len(vehicle_event_paths):
+        raise ValueError("station and vehicle event counts must match")
+    if not station_event_paths:
+        raise ValueError("at least one station/vehicle event pair is required")
+    return build_privacy_safe_split_freeze_manifest(
+        list(zip(station_event_paths, vehicle_event_paths)),
+        protocol_path=protocol_path,
+        model_path=model_path,
+        evaluator_path=evaluator_path,
+        channel_roles=_load_roles(channel_roles_path),
+        rules=PilotIntakeRules(minimum_event_count=minimum_event_count),
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--events", nargs="+", type=Path, required=True)
+    event_group = parser.add_mutually_exclusive_group(required=True)
+    event_group.add_argument("--events", nargs="+", type=Path)
+    event_group.add_argument("--station-events", nargs="+", type=Path)
+    parser.add_argument(
+        "--vehicle-events", nargs="+", type=Path,
+        help="Vehicle CSVs paired by position with --station-events",
+    )
     parser.add_argument("--protocol", type=Path, required=True)
     parser.add_argument("--model", type=Path, required=True)
     parser.add_argument("--evaluator", type=Path, required=True)
@@ -68,21 +101,34 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--minimum-event-count", type=int, default=3)
     parser.add_argument(
-        "--require-vehicle-boundary",
-        action="store_true",
-        help="Fail intake unless every event contains vehicle pressure and temperature",
+        "--require-vehicle-boundary", action="store_true",
+        help="Fail single-file intake unless every event contains vehicle channels",
     )
     args = parser.parse_args()
 
-    manifest = build_manifest(
-        args.events,
-        protocol_path=args.protocol,
-        model_path=args.model,
-        evaluator_path=args.evaluator,
-        channel_roles_path=args.channel_roles,
-        minimum_event_count=args.minimum_event_count,
-        require_vehicle_boundary=args.require_vehicle_boundary,
-    )
+    if args.station_events is not None:
+        if args.vehicle_events is None:
+            parser.error("--vehicle-events is required with --station-events")
+        manifest = build_split_manifest(
+            args.station_events, args.vehicle_events,
+            protocol_path=args.protocol,
+            model_path=args.model,
+            evaluator_path=args.evaluator,
+            channel_roles_path=args.channel_roles,
+            minimum_event_count=args.minimum_event_count,
+        )
+    else:
+        if args.vehicle_events is not None:
+            parser.error("--vehicle-events requires --station-events")
+        manifest = build_manifest(
+            args.events,
+            protocol_path=args.protocol,
+            model_path=args.model,
+            evaluator_path=args.evaluator,
+            channel_roles_path=args.channel_roles,
+            minimum_event_count=args.minimum_event_count,
+            require_vehicle_boundary=args.require_vehicle_boundary,
+        )
     output = args.output if args.output.is_absolute() else ROOT / args.output
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(

@@ -32,6 +32,20 @@ station과 차량 로그가 별도 export로 제공되는 경우에는 파일을
 `build_privacy_safe_split_freeze_manifest`에 전달해 분리된 원자료를 합치지
 않은 채 pre-access freeze manifest를 만들 수 있다.
 
+CLI에서는 다음처럼 두 목록을 같은 순서로 전달한다.
+
+~~~powershell
+python scripts/freeze_privacy_safe_full_loop.py `
+  --station-events station_events\*.csv `
+  --vehicle-events vehicle_events\*.csv `
+  --protocol protocol.json --model model.py --evaluator evaluator.py `
+  --channel-roles roles.json --output freeze_manifest.json
+~~~
+
+두 목록의 위치가 서로 다른 이벤트를 가리키지 않도록 제출 전에 파일명·순서를
+보관자 측에서 고정하고, 결과의 `event_###` ID와 digest만 평가 담당자에게
+전달한다.
+
 ## 제출 전 자동 검사
 
 보관자에게는 [빈 이벤트 템플릿](privacy_safe_full_loop_event_template.csv)과 [채널 역할 예시](privacy_safe_full_loop_channel_roles.example.json)를 함께 전달한다. 템플릿은 헤더만 포함하며 실제 행·시설명·파일명 규칙을 저장소에 추가하지 않는다. 이벤트별 원본은 보관자가 보관하고, 평가 담당자에게는 아래 사전검사 결과와 해시만 전달한다.
