@@ -2823,8 +2823,11 @@ def _temperature_observation_semantic_boundary() -> dict[str, Any] | None:
         return None
     # Do not relay outcome-derived error ranks to the provider. It only needs
     # to know that multiple physical observation operators diverged and that
-    # no post-outcome selection has been made.
-    return {
+    # no post-outcome selection has been made.  The Dickens Type-III replay is
+    # carried as a second, independently bounded diagnostic so a provider can
+    # distinguish a prospective validation failure from an observation-semantic
+    # ambiguity without silently changing the runtime state.
+    boundary = {
         "artifact": "research/mc_temperature_observation_diagnostic_2026_10_07.json",
         "evidence_role": "post_outcome_semantic_diagnostic_only",
         "runtime_temperature_state": "gas_temperature",
@@ -2840,6 +2843,55 @@ def _temperature_observation_semantic_boundary() -> dict[str, Any] | None:
             "않았으며, 현재 가상 운전의 가스온도를 현장 탱크 센서값과 동등하다고 단정하지 않습니다."
         ),
     }
+    dickens_path = Path(__file__).resolve().parents[2] / (
+        "research/dickens_typeiii_temperature_observation_diagnostic_2026_10_11.json"
+    )
+    try:
+        dickens = json.loads(dickens_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        dickens = None
+    dickens_operators = {
+        "gas_temperature",
+        "liner_temperature",
+        "shell_temperature",
+        "gas_liner_mean",
+        "gas_shell_mean",
+        "all_state_mean",
+    }
+    if (
+        isinstance(dickens, dict)
+        and dickens.get("diagnostic_type")
+        == "Dickens Type-III temperature-observation semantic replay"
+        and dickens.get("evidence_role") == "post_outcome_semantic_diagnostic_only"
+        and dickens.get("post_outcome") is True
+        and dickens.get("parameter_fitting") is False
+        and dickens.get("runtime_thermal_observation_changed") is False
+        and dickens.get("observation_mapping_selection_prohibited") is True
+        and dickens.get("promotion_to_validation_prohibited") is True
+        and dickens.get("frozen_validation_result_revised") is False
+        and dickens.get("source_hashes_match") is True
+        and set((dickens.get("metrics") or {})) == dickens_operators
+    ):
+        boundary["dickens_typeiii"] = {
+            "artifact": (
+                "research/dickens_typeiii_temperature_observation_diagnostic_2026_10_11.json"
+            ),
+            "dataset_doi": dickens.get("dataset_doi"),
+            "reported_channel": "gas_mean",
+            "candidate_observation_operators": sorted(dickens_operators),
+            "candidate_operator_count": len(dickens_operators),
+            "diagnostic_only": True,
+            "runtime_thermal_observation_changed": False,
+            "operator_selection_prohibited": True,
+            "frozen_validation_result_revised": False,
+            "validation_claim_supported": False,
+            "claim_limit": (
+                "Dickens Type-III 공개시험의 gas_mean 라벨만으로는 가스·라이너·쉘 "
+                "상태의 관측 위치와 가중치를 확정할 수 없습니다. 사후 오차가 낮은 "
+                "관측연산자를 선택하지 않았고, 원래 전망검증의 온도 실패 결과도 유지합니다."
+            ),
+        }
+    return boundary
 
 
 def _release_model_validation_boundary() -> dict[str, Any] | None:
@@ -8934,6 +8986,53 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if public_tank_validation.get(key) is not None
         }
+    temperature_observation = evidence.get(
+        "temperature_observation_semantic_boundary"
+    )
+    if isinstance(temperature_observation, dict):
+        dickens = temperature_observation.get("dickens_typeiii") or {}
+        summary["temperature_observation_semantic_boundary"] = {
+            "evidence_role": temperature_observation.get("evidence_role"),
+            "runtime_temperature_state": temperature_observation.get(
+                "runtime_temperature_state"
+            ),
+            "candidate_observation_operators": list(
+                temperature_observation.get("candidate_observation_operators") or []
+            ),
+            "cross_dataset_semantic_mismatch_detected": (
+                temperature_observation.get("cross_dataset_semantic_mismatch_detected")
+                is True
+            ),
+            "runtime_thermal_observation_changed": (
+                temperature_observation.get("runtime_thermal_observation_changed")
+                is True
+            ),
+            "operator_selection_prohibited": (
+                temperature_observation.get("operator_selection_prohibited") is True
+            ),
+            "validation_claim_supported": (
+                temperature_observation.get("validation_claim_supported") is True
+            ),
+            "dickens_typeiii": {
+                "artifact": dickens.get("artifact"),
+                "reported_channel": dickens.get("reported_channel"),
+                "candidate_observation_operators": list(
+                    dickens.get("candidate_observation_operators") or []
+                ),
+                "diagnostic_only": dickens.get("diagnostic_only") is True,
+                "operator_selection_prohibited": (
+                    dickens.get("operator_selection_prohibited") is True
+                ),
+                "frozen_validation_result_revised": (
+                    dickens.get("frozen_validation_result_revised") is True
+                ),
+                "validation_claim_supported": (
+                    dickens.get("validation_claim_supported") is True
+                ),
+                "claim_limit": short(dickens.get("claim_limit"), 320),
+            },
+            "claim_limit": short(temperature_observation.get("claim_limit"), 320),
+        }
     public_h2protocol_validation = evidence.get(
         "public_h2protocol_validation_boundary"
     )
@@ -13011,6 +13110,44 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "validation_claim_supported": thermal_observation.get(
                 "validation_claim_supported"
             ) is True,
+            "dickens_typeiii": {
+                "artifact": (
+                    thermal_observation.get("dickens_typeiii") or {}
+                ).get("artifact"),
+                "reported_channel": (
+                    thermal_observation.get("dickens_typeiii") or {}
+                ).get("reported_channel"),
+                "candidate_observation_operators": list(
+                    (
+                        thermal_observation.get("dickens_typeiii") or {}
+                    ).get("candidate_observation_operators") or []
+                ),
+                "diagnostic_only": (
+                    (
+                        thermal_observation.get("dickens_typeiii") or {}
+                    ).get("diagnostic_only") is True
+                ),
+                "operator_selection_prohibited": (
+                    (
+                        thermal_observation.get("dickens_typeiii") or {}
+                    ).get("operator_selection_prohibited") is True
+                ),
+                "frozen_validation_result_revised": (
+                    (
+                        thermal_observation.get("dickens_typeiii") or {}
+                    ).get("frozen_validation_result_revised") is True
+                ),
+                "validation_claim_supported": (
+                    (
+                        thermal_observation.get("dickens_typeiii") or {}
+                    ).get("validation_claim_supported") is True
+                ),
+                "claim_limit": (
+                    (
+                        thermal_observation.get("dickens_typeiii") or {}
+                    ).get("claim_limit")
+                ),
+            },
             "claim_limit": thermal_observation.get("claim_limit"),
         },
         "measured_bank_pressure_envelope": manifest.get(

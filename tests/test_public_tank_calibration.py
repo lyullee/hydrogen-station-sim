@@ -70,6 +70,11 @@ def test_llm_evidence_discloses_unresolved_temperature_observation_semantics():
     assert boundary["runtime_thermal_observation_changed"] is False
     assert boundary["validation_claim_supported"] is False
     assert len(boundary["candidate_observation_operators"]) == 4
+    dickens = boundary["dickens_typeiii"]
+    assert dickens["reported_channel"] == "gas_mean"
+    assert dickens["candidate_operator_count"] == 6
+    assert dickens["operator_selection_prohibited"] is True
+    assert dickens["frozen_validation_result_revised"] is False
 
     summary = prompt_decision_evidence(manifest)["validation_boundaries"][
         "station_to_vehicle"

@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-10T16:56:47.450685+00:00",
+  "source_commit": "18cd46582c819e2db531102f15c6f93d799bf581",
+  "diagnostic_type": "Dickens Type-III temperature-observation semantic replay",
+  "evidence_role": "post_outcome_semantic_diagnostic_only",
+  "post_outcome": true,
+  "parameter_fitting": false,
+  "runtime_thermal_observation_changed": false,
+  "observation_mapping_selection_prohibited": true,
+  "promotion_to_validation_prohibited": true,
+  "frozen_validation_result_revised": false,
+  "raw_experimental_rows_persisted": false,
+  "source_hashes_match": true,
+  "protocol": "research/dickens_typeiii_prospective_protocol_2026_10_08.json",
+  "case_id": "dickens_typeIII",
+  "dataset_doi": "10.5281/zenodo.20728325",
+  "candidate_observation_operators": {
+    "gas_temperature": "uniform gas state",
+    "liner_temperature": "inner liner state",
+    "shell_temperature": "outer composite shell state",
+    "gas_liner_mean": "unweighted gas and liner state mean",
+    "gas_shell_mean": "unweighted gas and shell state mean",
+    "all_state_mean": "unweighted gas, liner, and shell state mean"
+  },
+  "derived_geometry": {
+    "internal_volume_m3": 0.07500159478620594,
+    "wall_area_m2": 1.0393261860832732,
+    "liner_mass_kg": 11.224722809699351,
+    "shell_mass_kg": 14.623319438191652,
+    "liner_shell_ua_w_k": 138.3558972306948,
+    "shell_ambient_ua_w_k": 8.314609488666186
+  },
+  "measurement_summary": {
+    "reported_channel": "gas_mean",
+    "temperature_points": 10,
+    "model_replay": "same unfitted layered gas-liner-shell model as frozen Dickens result"
+  },
+  "metrics": {
+    "gas_temperature": {
+      "temperature_rmse_k": 19.1789735912541,
+      "temperature_mae_k": 17.795307791542747,
+      "temperature_peak_error_k": 18.71978815209468,
+      "temperature_max_absolute_error_k": 23.316805839742642
+    },
+    "liner_temperature": {
+      "temperature_rmse_k": 18.696302908785846,
+      "temperature_mae_k": 17.054372341229726,
+      "temperature_peak_error_k": -12.699161329433252,
+      "temperature_max_absolute_error_k": 24.97725372210033
+    },
+    "shell_temperature": {
+      "temperature_rmse_k": 33.15603237868403,
+      "temperature_mae_k": 29.57390318854174,
+      "temperature_peak_error_k": -44.714759223555404,
+      "temperature_max_absolute_error_k": 44.714759223555404
+    },
+    "gas_liner_mean": {
+      "temperature_rmse_k": 1.2659857495836102,
+      "temperature_mae_k": 0.9514830591592556,
+      "temperature_peak_error_k": 3.010313411330742,
+      "temperature_max_absolute_error_k": 3.010313411330742
+    },
+    "gas_shell_mean": {
+      "temperature_rmse_k": 7.6391877004506155,
+      "temperature_mae_k": 5.951384916888554,
+      "temperature_peak_error_k": -12.997485535730391,
+      "temperature_max_absolute_error_k": 12.997485535730391
+    },
+    "all_state_mean": {
+      "temperature_rmse_k": 10.725578508707326,
+      "temperature_mae_k": 9.652380725002256,
+      "temperature_peak_error_k": -12.898044133631288,
+      "temperature_max_absolute_error_k": 13.578735635948362
+    }
+  },
+  "interpretation": "The reported gas_mean channel is not uniquely identified by its label. Predefined gas/liner/shell combinations can be compared to expose an observation-semantic ambiguity, but no operator is selected from these post-outcome errors and the frozen prospective result remains unchanged.",
+  "claim_boundary": "This is a post-outcome diagnostic only. It does not validate the selected operator, change runtime thermal logic, or close the Dickens Type-III gate."
+}

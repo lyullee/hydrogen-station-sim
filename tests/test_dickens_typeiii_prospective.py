@@ -61,3 +61,19 @@ def test_post_outcome_mixed_convection_cannot_promote_validation() -> None:
     assert diagnostic["method_sources"]["public_reference_license"] == "GPL-3.0"
     assert len(diagnostic["runs"]) == 3
     assert all(run["joint_primary_screen_pass"] for run in diagnostic["runs"])
+
+
+def test_temperature_observation_diagnostic_is_bounded_and_does_not_select_operator() -> None:
+    diagnostic = _json(
+        "dickens_typeiii_temperature_observation_diagnostic_2026_10_11.json"
+    )
+    assert diagnostic["evidence_role"] == "post_outcome_semantic_diagnostic_only"
+    assert diagnostic["post_outcome"] is True
+    assert diagnostic["parameter_fitting"] is False
+    assert diagnostic["runtime_thermal_observation_changed"] is False
+    assert diagnostic["observation_mapping_selection_prohibited"] is True
+    assert diagnostic["promotion_to_validation_prohibited"] is True
+    assert diagnostic["frozen_validation_result_revised"] is False
+    assert diagnostic["source_hashes_match"] is True
+    assert set(diagnostic["metrics"]) == set(diagnostic["candidate_observation_operators"])
+    assert "measured_temperature_k" not in json.dumps(diagnostic)

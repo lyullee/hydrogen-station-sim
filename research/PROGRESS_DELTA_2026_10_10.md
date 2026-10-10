@@ -338,5 +338,33 @@ record is aggregate-only and carries `independent_holdout=false`,
 answer can use the 22-case actual-H2 result as context without presenting it as
 detector calibration, safety-distance validation, or station-runtime evidence.
 The public tank and accident-precedent hash audits were refreshed after the
-grounding change, and the full regression suite remained **1,345 passed / 19
+grounding change, and the full regression suite remained **1,346 passed / 19
 warnings**.
+
+## Dickens Type-III temperature observation diagnostic (2026-10-11)
+
+The frozen Type-III replay was re-integrated with the same unfitted gas,
+liner, and shell states and the source-declared mass-flow boundary. A separate
+post-outcome diagnostic compares six predefined observation operators for the
+published `gas_mean` channel. The gas-state operator retains the frozen
+temperature miss, while the diagnostic records the other state combinations as
+semantic candidates only; none is selected or promoted. The artifact is
+`research/dickens_typeiii_temperature_observation_diagnostic_2026_10_11.json`.
+It explicitly preserves the frozen validation result, runtime gas-temperature
+state, source hashes, and the prohibition on parameter fitting or operator
+selection. The finding narrows the next data request to a measurement-location
+and weighting definition, but it does not close the Type-III gate or change the
+**127 PASS / 10 FAIL / 7 PENDING (88.2%)** readiness headline.
+
+The bounded LLM evidence now carries this artifact under the existing
+temperature-semantic boundary, including its six candidates and non-promotion
+flags. This prevents a decision assistant from silently treating a favourable
+post-outcome temperature combination as validated physics.
+
+## Final regression after observation-boundary wiring (2026-10-11)
+
+The complete suite passes **1,346 tests / 19 warnings**. The warnings are the
+existing Starlette/httpx, HyRAM physics, and workbook-reader deprecations; no
+test failures remain. The scientific readiness audit is unchanged at **88.2%**
+because this work clarifies evidence semantics rather than promoting a failed
+or pending external-validation gate.
