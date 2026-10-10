@@ -1,5 +1,17 @@
 # Development Progress
 
+## 2026-10-10 - Bound interactive SAGA latency
+
+Status: implemented; interactive SAGA calls no longer hold the digital-twin
+request for the previous long provider timeout.
+
+- Chat and direct-answer streaming paths now share a bounded timeout of 15 s by
+  default (`H2STATION_SAGA_CHAT_TIMEOUT_S` can raise it for a slow local model).
+- The limit is transport-only: deterministic local status, HAZOP and impact
+  results remain available when SAGA is slow or unavailable.
+- Provider forwarding and timeout behavior are covered by the SAGA regression
+  suite.
+
 ## 2026-10-10 - Expose vehicle geometry choice without changing the default
 
 Status: implemented; the remote now exposes the vehicle-tank geometry basis

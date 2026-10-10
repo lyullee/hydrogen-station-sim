@@ -661,6 +661,16 @@ _saga_assistant_failure_until: dict[str, float] = {}
 _saga_assistant_failure_lock = Lock()
 _SAGA_ASSISTANT_FAILURE_COOLDOWN_S = 6.0
 _SAGA_ASSISTANT_TIMEOUT_S = 12.0
+# Keep interactive SAGA questions from holding the monitor request open for a
+# long provider timeout.  Operators can raise this for a slow local model, but
+# the default is intentionally bounded so the deterministic local answer wins
+# quickly when the companion service is busy or unavailable.
+try:
+    _SAGA_CHAT_TIMEOUT_S = max(
+        3.0, min(120.0, float(os.getenv("H2STATION_SAGA_CHAT_TIMEOUT_S", "15")))
+    )
+except (TypeError, ValueError):
+    _SAGA_CHAT_TIMEOUT_S = 15.0
 
 
 def _open_saga_assistant(request: Request, *, endpoint_key: str):
@@ -2459,7 +2469,7 @@ def _invoke_saga(prompt: str, answer_length: str = "concise", provider: str = "s
     body = json.dumps({"message": prompt[:9900], "mode": "chat", "answer_length": answer_length,
                        "provider": provider},
                       ensure_ascii=False).encode("utf-8")
-    with urlopen(Request(saga_url, data=body, headers={"Content-Type": "application/json"}), timeout=35) as response:
+    with urlopen(Request(saga_url, data=body, headers={"Content-Type": "application/json"}), timeout=_SAGA_CHAT_TIMEOUT_S) as response:
         return json.load(response)
 
 
@@ -2472,7 +2482,7 @@ def _invoke_saga_stream(prompt: str, answer_length: str, provider: str,
     final: dict[str, Any] | None = None
     event_name = ""
     data_lines: list[str] = []
-    with urlopen(Request(saga_url, data=body, headers={"Content-Type": "application/json"}), timeout=120) as response:
+    with urlopen(Request(saga_url, data=body, headers={"Content-Type": "application/json"}), timeout=_SAGA_CHAT_TIMEOUT_S) as response:
         for raw_line in response:
             line = raw_line.decode("utf-8").rstrip("\r\n")
             if line.startswith("event:"):
@@ -2503,12 +2513,12 @@ def _invoke_saga_one_pass(prompt: str, provider: str,
                       ensure_ascii=False).encode("utf-8")
     request = Request(base + endpoint, data=body, headers={"Content-Type": "application/json"})
     if on_token is None:
-        with urlopen(request, timeout=35) as response:
+        with urlopen(request, timeout=_SAGA_CHAT_TIMEOUT_S) as response:
             return json.load(response)
     final: dict[str, Any] | None = None
     event_name = ""
     data_lines: list[str] = []
-    with urlopen(request, timeout=35) as response:
+    with urlopen(request, timeout=_SAGA_CHAT_TIMEOUT_S) as response:
         for raw_line in response:
             line = raw_line.decode("utf-8").rstrip("\r\n")
             if line.startswith("event:"):

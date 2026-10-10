@@ -25,6 +25,27 @@ def test_groq_selection_is_forwarded_to_saga_without_provider_fallback(monkeypat
     assert calls == [{"message": "check sensor", "mode": "chat", "answer_length": "concise", "provider": "groq"}]
 
 
+def test_saga_chat_uses_bounded_interactive_timeout(monkeypatch):
+    captured = {}
+
+    class Response(BytesIO):
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_):
+            self.close()
+
+    def fake_urlopen(request, timeout):
+        captured["timeout"] = timeout
+        return Response(b'{"answer":"ok"}')
+
+    monkeypatch.setattr(api, "urlopen", fake_urlopen)
+    result = asyncio.run(api._invoke_saga_selected("check sensor", "concise", "groq"))
+    assert result["answer"] == "ok"
+    assert captured["timeout"] == api._SAGA_CHAT_TIMEOUT_S
+    assert 3.0 <= captured["timeout"] <= 120.0
+
+
 def test_saga_sse_reader_forwards_deltas_and_returns_reviewed_answer(monkeypatch):
     lines = [
         b"event: status\n", b'data: {"text":"working"}\n', b"\n",
