@@ -170,8 +170,21 @@ def consequence_risk_summary(consequence: Mapping[str, float | str | bool | None
                 + 25.0 * min(2.0, radius / 10.0) / 2.0)
     level = ("매우 높음" if score >= 80 else "높음" if score >= 60
              else "주의" if score >= 35 else "낮음" if score >= 15 else "매우 낮음")
-    return {"risk_score": round(score, 1), "risk_level": level,
-            "risk_basis": "CONSEQUENCE_SCREENING_NO_FREQUENCY"}
+    return {
+        "risk_score": round(score, 1),
+        "risk_level": level,
+        "risk_basis": "CONSEQUENCE_SCREENING_NO_FREQUENCY",
+        # Keep the numerical index useful for training while making its
+        # evidence boundary machine-readable. This prevents an API or LLM
+        # consumer from presenting it as annual individual risk, a
+        # site-specific safety distance, or a validated full-loop result.
+        "risk_scope": "COMPONENT_SCREENING_BOUNDED",
+        "risk_confidence": "SCREENING_ONLY",
+        "risk_claim_limit": (
+            "결과는 구성요소 수준 피해영향 스크리닝 지수이며, 사고빈도·현장 안전거리·"
+            "충전소-차량 전체 루프의 검증 결과가 아닙니다."
+        ),
+    }
 
 
 def mass_flow_override_metadata(

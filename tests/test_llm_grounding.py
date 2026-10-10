@@ -1453,6 +1453,9 @@ def test_prompt_projection_carries_consequence_risk_screening_boundary():
             "risk_score": 62.0,
             "risk_level": "높음",
             "risk_basis": "CONSEQUENCE_SCREENING_NO_FREQUENCY",
+            "risk_scope": "COMPONENT_SCREENING_BOUNDED",
+            "risk_confidence": "SCREENING_ONLY",
+            "risk_claim_limit": "구성요소 수준 스크리닝",
         }],
         True,
         question="피해영향과 위험도를 설명해줘",
@@ -1461,6 +1464,8 @@ def test_prompt_projection_carries_consequence_risk_screening_boundary():
     assert compact["risk_score"] == 62.0
     assert compact["risk_level"] == "높음"
     assert compact["risk_basis"] == "CONSEQUENCE_SCREENING_NO_FREQUENCY"
+    assert compact["risk_scope"] == "COMPONENT_SCREENING_BOUNDED"
+    assert compact["risk_confidence"] == "SCREENING_ONLY"
 
 
 def test_manifest_preserves_opt_in_capacity_eos_geometry_basis():

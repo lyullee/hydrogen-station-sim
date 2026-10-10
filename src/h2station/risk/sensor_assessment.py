@@ -231,6 +231,9 @@ def assess_sensor_cases(
                           risk_score=consequence.get("risk_score"),
                           risk_level=consequence.get("risk_level"),
                           risk_basis=consequence.get("risk_basis"),
+                          risk_scope=consequence.get("risk_scope"),
+                          risk_confidence=consequence.get("risk_confidence"),
+                          risk_claim_limit=consequence.get("risk_claim_limit"),
                           range_interpretation=("표본 관측점에서 기준 미달, 영향 반경 미확정"
                               if consequence.get("effect_range_status") == "BELOW_THRESHOLDS_AT_SAMPLES"
                               else "임계값 초과 표본 거리만 확인, 현장 안전반경 아님"))

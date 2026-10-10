@@ -72,6 +72,9 @@ def test_native_backend_merges_explicit_ignited_pressure_before_risk_scoring(mon
         result["maximum_ignited_enclosure_overpressure_pa"]
     )
     assert result["risk_score"] > 0.0
+    assert result["risk_scope"] == "COMPONENT_SCREENING_BOUNDED"
+    assert result["risk_confidence"] == "SCREENING_ONLY"
+    assert "현장 안전거리" in result["risk_claim_limit"]
 
 
 def test_api_propagates_explicit_ignited_enclosure_parameters():
