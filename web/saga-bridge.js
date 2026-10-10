@@ -12,7 +12,10 @@
     const saved=localStorage.getItem(providerKey)??localStorage.getItem('h2station.saga.provider');
     return saved==='groq'?'groq':'service_hub';
   };
-  let autoEnabled=localStorage.getItem(autoKey)!=='off';
+  // Keep the interactive path responsive by requiring an explicit opt-in for
+  // periodic/alarm-triggered LLM calls. Manual questions and virtual
+  // evaluations remain available while the toggle is OFF.
+  let autoEnabled=localStorage.getItem(autoKey)==='on';
   let activeAutoController=null,activeTrigger=null;
   const pendingManual=[];
   const defaultQuestion='현재 공정에서 주의해야 할 센서와 설비 상태를 알려줘.';

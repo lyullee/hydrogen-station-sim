@@ -59,6 +59,10 @@ test('regular analysis ON still permits alarm-triggered automatic LLM calls', ()
   assert.equal(runFrame('on'), 1);
 });
 
+test('automatic analysis defaults to OFF when no preference is stored', () => {
+  assert.equal(runFrame(null), 0);
+});
+
 test('automatic reports stay out of manual question history', () => {
   const inspectable = source.replace(/\}\)\(\);\s*$/, 'window.__test = {addMessage, chatHistory};})();');
   const listeners = new Map();

@@ -929,3 +929,20 @@ Verification:
 
 - Focused LLM-grounding suite: 28 passed.
 - Full regression suite: 1276 passed, 20 warnings.
+
+## 2026-10-10 - Keep automatic LLM analysis opt-in
+
+Status: implemented; UI regression passed.
+
+- Periodic and alarm-triggered LLM analysis now starts **OFF** unless the
+  operator explicitly enables the toggle. Previously, a new browser session
+  with no saved preference implicitly enabled both paths, which could issue
+  unsolicited requests during live frames and make the interface feel slow.
+- Manual questions and virtual evaluations remain available while automatic
+  analysis is OFF. An explicit `on` preference still enables the existing
+  periodic/alarm behavior; an explicit `off` preference remains respected.
+
+Verification:
+
+- Node UI suites: 16 passed, including a regression for the no-preference
+  default.
