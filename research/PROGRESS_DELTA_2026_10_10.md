@@ -267,3 +267,14 @@ channel roles, units and scale/offsets, missing-value codes, discrete active /
 inactive / fault values, bank-role mapping, and common-clock alignment before
 numerical rows are opened. This prevents inferred tag names from being treated
 as full-loop evidence in the next intake.
+
+## Impact-first parallel rerun (2026-10-11)
+
+The critical lane was rerun with five independent diagnostics in parallel and
+completed in **2.746 s** (`research/priority_diagnostic_run_2026_10_11_latest.json`).
+The process layer was healthy, but the scientific screen remained blocked by the
+MC vehicle-tank boundary (0/8), H2SAFE spatial response (0/1), and NREL HDVS
+tank screen (0/7). MC SOC/EOS closure (8/8) and the Dickens mixed-convection
+diagnostic (3/3) passed. This is the impact-first execution path: independent
+checks run together, while negative post-outcome diagnostics remain excluded
+from runtime promotion and do not change the readiness percentage.
