@@ -123,6 +123,11 @@
       "requested_scope": "Light-duty station events with vehicle pressure/temperature/mass-flow channels"
     },
     {
+      "id": "cal_state_la_hrff_multiyear_ijhe_2024",
+      "url": "https://doi.org/10.1016/j.ijhydene.2023.04.084",
+      "requested_scope": "Custodian-controlled 2016-2020 HRFF event and historian export underlying the reported 4,500 refueling events and 8,800 kg dispensed: synchronized vehicle/hose pressure-temperature, mass or totalizer, compressor/precooler state, stop/fault markers, channel dictionary, calibration metadata and reuse terms. The article is an aggregate lead only; no numerical rows are admitted until a pre-access freeze is completed."
+    },
+    {
       "id": "uci_nfcrc_geniv",
       "url": "https://doi.org/10.1016/j.ijhydene.2020.08.251",
       "requested_scope": "De-identified Gen-IV station fueling events with hose/vehicle pressure-temperature endpoints, dispensed mass and equipment state"

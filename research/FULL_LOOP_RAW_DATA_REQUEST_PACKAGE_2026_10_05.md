@@ -143,6 +143,7 @@ the report itself remains protocol and operating-envelope context only.
 | NREL NFCTEC station-data custodian | [NFCTEC programme](https://www.nrel.gov/hydrogen/nfctec) | Custodian-run de-identified fueling events with hose/vehicle pressure-temperature, dispensed mass, ambient temperature and station/fault state |
 | NLR/NREL HITRF | [HITRF programme](https://www.nrel.gov/hydrogen/hitrf-animation) | H70/H35 station, dispenser, protocol and vehicle logger rows |
 | Cal State LA HRFF | [HRFF operation](https://www.calstatela.edu/ecst/h2station/operation) | Light-duty station event logs and vehicle pressure/temperature/mass flow |
+| Cal State LA HRFF multi-year study | [IJHE 2024 article](https://doi.org/10.1016/j.ijhydene.2023.04.084) | Custodian-controlled historian/event export underlying the reported 4,500 refueling events and 8,800 kg dispensed; request synchronized vehicle/hose pressure-temperature, mass/totalizer, compressor/precooler state, stop/fault markers, channel dictionary, calibration and reuse terms |
 | KGS/Oh study custodians | [Published study](https://doi.org/10.1007/s11814-025-00551-9) | Six real-HRS scenarios reported with vehicle pressure, temperature and mass flow |
 | FCH2RAIL/DLR | [Repository record](https://elib.dlr.de/213625/) | Railway HRS and vehicle synchronized pressure, temperature and flow |
 | JRC GasTeF | [JRC record](https://publications.jrc.ec.europa.eu/repository/handle/JRC76380) | Fast-fill tank and gas-path traces with calibration metadata |

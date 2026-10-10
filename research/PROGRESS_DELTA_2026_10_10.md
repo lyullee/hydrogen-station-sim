@@ -51,6 +51,13 @@ The NREL HDVS work also moved from a generic search lead to a bounded,
 hash-identified station-to-tank diagnostic and a separate custodian-data lead.
 Its result is retained as a model-repair signal, not as a new holdout.
 
+A further public-source recheck located the open-access Cal State LA HRFF
+multi-year study (DOI `10.1016/j.ijhydene.2023.04.084`). It reports roughly
+4,500 fills and 8,800 kg dispensed and confirms that station historian data
+exist, but the public article exposes aggregate KPIs rather than a reusable,
+synchronized vehicle-side logger archive. It is now an explicit custodian
+route in the request package; it does not close the full-loop gate.
+
 ## Geometry evidence boundary synchronized with LLM grounding
 
 The runtime LLM evidence now carries both public geometry diagnostics instead
