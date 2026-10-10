@@ -1424,6 +1424,12 @@ def test_manifest_preserves_opt_in_capacity_eos_geometry_basis():
     assert uncertainty["runtime_parameter_application"] is True
     assert uncertainty["selection_prohibited"] is True
     assert uncertainty["public_screen"]["capacity_eos"]["screening_pass_count"] == 7
+    transfer = uncertainty["cross_dataset_transfer"]
+    assert transfer["capacity_eos_screening_case_count"] == 8
+    assert transfer["capacity_eos_screening_pass_count"] == 0
+    assert transfer["baseline_screening_pass_count"] == 1
+    assert transfer["claim_supported"] is False
+    assert "not a fresh holdout" in transfer["claim_limit"]
     assert prompt_evidence_summary(manifest)["runtime_geometry"]["basis"] == (
         "capacity_eos"
     )

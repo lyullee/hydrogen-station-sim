@@ -419,6 +419,7 @@ def _runtime_geometry_profile(frame: dict[str, Any]) -> dict[str, Any]:
     sensitivity = _public_geometry_sensitivity_evidence()
     variants = (sensitivity or {}).get("variants") or {}
     source = (sensitivity or {}).get("source") or {}
+    transfer = (sensitivity or {}).get("cross_dataset_transfer") or {}
     reference_variant = variants.get("legacy_frozen") or {}
     capacity_variant = variants.get("capacity_eos_no_volume_fit") or {}
     geometry_uncertainty = {
@@ -446,12 +447,14 @@ def _runtime_geometry_profile(frame: dict[str, Any]) -> dict[str, Any]:
                 ),
             },
         },
+        "cross_dataset_transfer": transfer,
         "runtime_parameter_application": basis == "capacity_eos",
         "selection_prohibited": True,
         "claim_limit": (
             "차량 용량/EOS와 기존 형상 후보 비교는 공개 NREL 7탱크의 사후 민감도 "
-            "진단입니다. 현재 런타임 후보를 독립 검증값이나 안전거리로 선택하지 않으며, "
-            "capacity_eos도 명시적으로 요청한 경우에만 적용합니다."
+            "진단이며, H2Protocol 전이 진단에서는 같은 규칙이 8개 중 0개를 통과했습니다. "
+            "따라서 자료 간 방향이 일관되지 않아 현재 런타임 후보를 독립 검증값이나 "
+            "안전거리로 선택하지 않으며, capacity_eos도 명시적으로 요청한 경우에만 적용합니다."
         ),
     }
     thermal_geometry = {
@@ -2088,12 +2091,16 @@ def _public_geometry_sensitivity_evidence() -> dict[str, Any] | None:
     path = Path(__file__).resolve().parents[2] / (
         "research/nrel_h2fills_geometry_sensitivity.json"
     )
+    transfer_path = Path(__file__).resolve().parents[2] / (
+        "research/h2protocol_capacity_eos_diagnostic_2026_10_06.json"
+    )
     rule_path = Path(__file__).resolve().parents[2] / (
         "research/capacity_eos_geometry_rule_2026_10_06.json"
     )
     try:
         record = json.loads(path.read_text(encoding="utf-8"))
         rule = json.loads(rule_path.read_text(encoding="utf-8"))
+        transfer_record = json.loads(transfer_path.read_text(encoding="utf-8"))
     except (OSError, ValueError, json.JSONDecodeError):
         return None
     source = record.get("source") or {}
@@ -2110,6 +2117,22 @@ def _public_geometry_sensitivity_evidence() -> dict[str, Any] | None:
         or not all(isinstance(variants.get(name), dict) for name in required_variants)
         or runtime_rule.get("default_changed") is not False
         or claim_boundary.get("independent_confirmatory_validation") is not False
+    ):
+        return None
+
+    transfer_aggregate = (transfer_record.get("comparison") or {}).get(
+        "capacity_eos"
+    ) or {}
+    transfer_baseline = (transfer_record.get("comparison") or {}).get(
+        "baseline_capacity_scaled"
+    ) or {}
+    transfer_claim = str(transfer_record.get("claim_boundary") or "")
+    if (
+        transfer_record.get("status") != "development_only_post_access_diagnostic"
+        or transfer_aggregate.get("case_count") != 8
+        or transfer_aggregate.get("screening_pass_count") != 0
+        or transfer_baseline.get("case_count") != 8
+        or "not a fresh holdout" not in transfer_claim
     ):
         return None
 
@@ -2145,6 +2168,25 @@ def _public_geometry_sensitivity_evidence() -> dict[str, Any] | None:
         },
         "finding": str(claim.get("finding") or ""),
         "required_next_step": str(claim.get("required_next_step") or ""),
+        "cross_dataset_transfer": {
+            "artifact": "research/h2protocol_capacity_eos_diagnostic_2026_10_06.json",
+            "evidence_role": "post_access_public_transfer_diagnostic",
+            "capacity_eos_screening_pass_count": transfer_aggregate.get(
+                "screening_pass_count"
+            ),
+            "capacity_eos_screening_case_count": transfer_aggregate.get(
+                "case_count"
+            ),
+            "capacity_eos_screening_pass_fraction": transfer_aggregate.get(
+                "screening_pass_fraction"
+            ),
+            "baseline_screening_pass_count": transfer_baseline.get(
+                "screening_pass_count"
+            ),
+            "baseline_screening_case_count": transfer_baseline.get("case_count"),
+            "claim_supported": False,
+            "claim_limit": transfer_claim,
+        },
         "claim_supported": False,
         "claim_limit": str(claim.get("claim_limit") or "") + " " + str(
             claim_boundary.get("reason") or ""

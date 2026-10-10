@@ -51,6 +51,19 @@ The NREL HDVS work also moved from a generic search lead to a bounded,
 hash-identified station-to-tank diagnostic and a separate custodian-data lead.
 Its result is retained as a model-repair signal, not as a new holdout.
 
+## Geometry evidence boundary synchronized with LLM grounding
+
+The runtime LLM evidence now carries both public geometry diagnostics instead
+of presenting the NREL post-access result in isolation. The NREL H2FillS/HDVS
+diagnostic screened 7/7 capacity-EOS cases, while the separate H2Protocol
+transfer diagnostic screened 0/8 under the same capacity-EOS rule. Because the
+second result is also post-access and not a fresh holdout, the runtime keeps
+`reference` geometry as its default, leaves `capacity_eos` opt-in only, and
+does not select either variant as an independently validated safety-distance
+model. The tank runtime and accident-precedent source-hash audits were
+regenerated after this disclosure-only change; readiness remains 127 PASS, 10
+FAIL, and 7 PENDING (88.2%).
+
 ## P0 request route sharpened
 
 The DOE/NREL heavy-duty fast-flow report is now marked as the highest-priority
