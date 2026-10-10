@@ -123,13 +123,14 @@ def test_mc_default_reader_preserves_protocol_schedule_and_source_pressures():
     measurement.title = "MC Validation Test 1-A"
     measurement.append([
         "Time (s)", "SOC (%)", "875PT1", "875PT3", "Pinlet", "FM",
-        "Tinlet_G", "Ttank1_G", "Ttank2_G", "Ttank3_G", "Tchamber",
+        "Tinlet_G", "Ttank1_G", "Ttank2_G", "Ttank3_G", "Ttank_Ave",
+        "Tchamber",
     ])
     for index, flow in enumerate((0.0, 2.0, 3.0, 4.0, 0.0)):
         measurement.append([
             float(index), 5.0 + index, 88.0 - index, 89.0 - index,
             2.0 + index, flow, -35.0, 20.0 + index, 21.0 + index,
-            22.0 + index, 40.0,
+            22.0 + index, 21.0 + index, 40.0,
         ])
     schedule = workbook.create_sheet("Sheet1")
     schedule.append(["Time", "Pressure"])
@@ -146,6 +147,10 @@ def test_mc_default_reader_preserves_protocol_schedule_and_source_pressures():
     assert trace.time_s.tolist() == pytest.approx([0.0, 1.0, 2.0])
     assert trace.source_pressure_1_mpa.tolist() == pytest.approx([87.0, 86.0, 85.0])
     assert trace.protocol_pressure_mpa.tolist() == pytest.approx([2.0, 82.0])
+    assert [name for name, _ in trace.tank_temperature_channels_c] == [
+        "Ttank1_G", "Ttank2_G", "Ttank3_G", "Ttank_Ave",
+    ]
+    assert trace.summary()["tank_temperature_channel_count"] == 4
     assert trace.summary()["protocol_effective_aprr_mpa_min"] == pytest.approx(16.0)
 
 

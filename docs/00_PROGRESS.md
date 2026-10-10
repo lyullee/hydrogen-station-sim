@@ -1,5 +1,19 @@
 # Development Progress
 
+## 2026-10-11 - Preserve individual MC Default tank-temperature channels
+
+The public MC Default reader now preserves every complete individual tank-gas
+temperature channel alongside the historical mean/max projections.  The
+source archive was re-read under the existing selected eight-case protocol:
+all eight cases contain at least two individual channels, six contain three,
+and four also expose a publisher-reported average.  The privacy-bounded
+inventory is recorded in
+`research/mc_temperature_channel_inventory_2026_10_11.json`; no source rows or
+temperature values are committed.  This enables a future pre-outcome thermal
+stratification model without changing the frozen holdout metrics, runtime
+parameters, or readiness count.  Focused public-validation tests: **26
+passed**.
+
 ## 2026-10-11 - Decompose the MC tank blocker across all declared temperature operators
 
 The MC tank boundary blocker now has a dedicated post-outcome joint-screen

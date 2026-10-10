@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "artifact_type": "mc_default_temperature_channel_inventory",
+  "recorded_at": "2026-10-11",
+  "status": "post_access_schema_diagnostic",
+  "source": {
+    "archive_alias": "public_mc_default_bench_archive",
+    "archive_sha256": "e029c53f95c8172be08e5dc4cc41dffb42a09ad7ecbb8b6b8d73e43a9ad210d1",
+    "expected_archive_sha256": "e029c53f95c8172be08e5dc4cc41dffb42a09ad7ecbb8b6b8d73e43a9ad210d1",
+    "selected_case_count": 8
+  },
+  "inventory": {
+    "parsed_case_count": 8,
+    "cases_with_individual_channels": 8,
+    "cases_with_reported_average": 4,
+    "cases": [
+      {
+        "case_id": "H2P-MC-1-A",
+        "tank_capacity_kg": 4.7,
+        "active_sample_count": 607,
+        "individual_temperature_channels": [
+          "Ttank1_G",
+          "Ttank2_G",
+          "Ttank3_G"
+        ],
+        "reported_average_channels": [],
+        "complete_channel_count": 3,
+        "channel_contract_pass": true
+      },
+      {
+        "case_id": "H2P-MC-1-B",
+        "tank_capacity_kg": 4.7,
+        "active_sample_count": 339,
+        "individual_temperature_channels": [
+          "Ttank1_G",
+          "Ttank2_G",
+          "Ttank3_G"
+        ],
+        "reported_average_channels": [],
+        "complete_channel_count": 3,
+        "channel_contract_pass": true
+      },
+      {
+        "case_id": "H2P-MC-1-C",
+        "tank_capacity_kg": 4.7,
+        "active_sample_count": 259,
+        "individual_temperature_channels": [
+          "Ttank1_G",
+          "Ttank2_G",
+          "Ttank3_G"
+        ],
+        "reported_average_channels": [
+          "Ttank_Ave"
+        ],
+        "complete_channel_count": 4,
+        "channel_contract_pass": true
+      },
+      {
+        "case_id": "H2P-MC-1-D",
+        "tank_capacity_kg": 4.7,
+        "active_sample_count": 280,
+        "individual_temperature_channels": [
+          "Ttank1_G",
+          "Ttank2_G",
+          "Ttank3_G"
+        ],
+        "reported_average_channels": [
+          "Ttank_Ave"
+        ],
+        "complete_channel_count": 4,
+        "channel_contract_pass": true
+      },
+      {
+        "case_id": "H2P-MC-1-E",
+        "tank_capacity_kg": 4.7,
+        "active_sample_count": 810,
+        "individual_temperature_channels": [
+          "Ttank1_G",
+          "Ttank2_G",
+          "Ttank3_G"
+        ],
+        "reported_average_channels": [
+          "Ttank_Ave"
+        ],
+        "complete_channel_count": 4,
+        "channel_contract_pass": true
+      },
+      {
+        "case_id": "H2P-MC-1-F",
+        "tank_capacity_kg": 4.7,
+        "active_sample_count": 1790,
+        "individual_temperature_channels": [
+          "Ttank1_G",
+          "Ttank2_G",
+          "Ttank3_G"
+        ],
+        "reported_average_channels": [],
+        "complete_channel_count": 3,
+        "channel_contract_pass": true
+      },
+      {
+        "case_id": "H2P-MC-2-A",
+        "tank_capacity_kg": 4.7,
+        "active_sample_count": 183,
+        "individual_temperature_channels": [
+          "Ttank1_G",
+          "Ttank2_G"
+        ],
+        "reported_average_channels": [],
+        "complete_channel_count": 2,
+        "channel_contract_pass": true
+      },
+      {
+        "case_id": "H2P-MC-9.8KG",
+        "tank_capacity_kg": 9.8,
+        "active_sample_count": 626,
+        "individual_temperature_channels": [
+          "Ttank1_G",
+          "Ttank2_G",
+          "Ttank3_G"
+        ],
+        "reported_average_channels": [
+          "Ttank_Ave_G"
+        ],
+        "complete_channel_count": 4,
+        "channel_contract_pass": true
+      }
+    ]
+  },
+  "privacy": {
+    "raw_archive_committed": false,
+    "raw_rows_persisted": false,
+    "temperature_values_persisted": false,
+    "source_paths_persisted": false,
+    "source_member_names_persisted": false,
+    "site_company_manufacturer_published": false
+  },
+  "interpretation": {
+    "model_use": "The reader now preserves complete individual channels for future thermal-stratification diagnostics; frozen mean/max validation projections are unchanged.",
+    "runtime_parameter_change": false,
+    "holdout_gate_change": false,
+    "claim_boundary": "Channel presence is schema evidence only. It does not validate sensor calibration, spatial coordinates, station control, or a full-loop refuelling model."
+  }
+}

@@ -112,6 +112,12 @@ class H2ProtocolTrace:
     source_pressure_3_mpa: np.ndarray | None = None
     protocol_pressure_time_s: np.ndarray | None = None
     protocol_pressure_mpa: np.ndarray | None = None
+    # Preserve the complete, independently measured tank-temperature channels
+    # alongside the historical mean/max projections.  The projections remain
+    # the frozen validation inputs; this channel-level view is an explicit
+    # diagnostic so a later model can represent thermal stratification without
+    # silently reconstructing it from an average.
+    tank_temperature_channels_c: tuple[tuple[str, np.ndarray], ...] = ()
 
     def summary(self) -> dict:
         integrated_mass_kg = float(np.trapezoid(self.mass_flow_g_s / 1000.0, self.time_s))
@@ -138,6 +144,10 @@ class H2ProtocolTrace:
             "median_inlet_gas_temperature_c": float(np.median(self.inlet_gas_temperature_c)),
             "peak_mass_flow_g_s": float(np.max(self.mass_flow_g_s)),
             "mean_mass_flow_g_s": float(np.mean(self.mass_flow_g_s)),
+            "tank_temperature_channel_names": [
+                name for name, _ in self.tank_temperature_channels_c
+            ],
+            "tank_temperature_channel_count": len(self.tank_temperature_channels_c),
             "integrated_mass_flow_kg": integrated_mass_kg,
             "nominal_soc_mass_change_kg": nominal_soc_mass_change_kg,
             "mass_closure_ratio": (
@@ -558,6 +568,22 @@ def _active_fill_bounds(
     return first, last
 
 
+def _is_tank_temperature_channel(name: str) -> bool:
+    """Return whether a workbook header is a tank-gas temperature channel.
+
+    The publisher used both individual thermocouples (``Ttank1_G``) and an
+    explicitly reported average (``Ttank_Ave``) in the MC Default workbooks.
+    Keep the latter visible for diagnostics, while callers decide whether it
+    belongs in a spatial aggregate.
+    """
+
+    return bool(re.match(r"^Ttank(?:\d*_G|_Ave(?:_G)?)(?:\s|\(|$)", name))
+
+
+def _is_aggregate_tank_temperature_channel(name: str) -> bool:
+    return "_Ave" in name or "_Avg" in name
+
+
 def read_h2protocol_workbook(
     content: bytes,
     *,
@@ -621,11 +647,12 @@ def read_h2protocol_workbook(
     )
     _, chamber = _select_numeric_column(active_rows, headers, ("Tchamber",))
     tank_columns = []
+    tank_channel_columns: list[tuple[str, np.ndarray]] = []
     # Early tests expose one spatially averaged gas-temperature channel while
-    # later tests expose three in-tank thermocouples.
-    tank_names = tuple(
-        name for name in headers if re.match(r"^Ttank\d*_G(?:\s|\(|$)", name)
-    )
+    # later tests expose three in-tank thermocouples.  Keep all complete
+    # channels for diagnostics, but do not double-count a reported average in
+    # the historical mean/max projections.
+    tank_names = tuple(name for name in headers if _is_tank_temperature_channel(name))
     for name in tank_names:
         if name in headers:
             values = np.asarray([
@@ -633,7 +660,11 @@ def read_h2protocol_workbook(
                 for row in active_rows
             ])
             if np.isfinite(values).mean() >= 0.95:
-                tank_columns.append(values)
+                tank_channel_columns.append((name, values))
+                if not _is_aggregate_tank_temperature_channel(name):
+                    tank_columns.append(values)
+    if not tank_columns:
+        tank_columns = [values for _, values in tank_channel_columns]
     if not tank_columns:
         raise ValueError(f"{source_member} has no complete tank-temperature channel")
     tank_stack = np.vstack(tank_columns)
@@ -659,6 +690,9 @@ def read_h2protocol_workbook(
     if len(time) < 3 or np.any(np.diff(time) <= 0.0):
         raise ValueError(f"{source_member} has invalid active-fill timestamps")
     tank_stack = tank_stack[:, valid]
+    tank_channels = tuple(
+        (name, values[valid]) for name, values in tank_channel_columns
+    )
     test_code = _sheet_test_code(worksheet.title)
     metadata = overview.get(_test_key(test_code))
     if metadata is None:
@@ -687,6 +721,7 @@ def read_h2protocol_workbook(
         tank_temperature_max_c=np.max(tank_stack, axis=0),
         inlet_gas_temperature_c=inlet_temperature[valid],
         chamber_temperature_c=chamber[valid],
+        tank_temperature_channels_c=tank_channels,
     )
 
 
@@ -844,8 +879,9 @@ def read_mc_default_workbook(
         active_rows, headers, ("Tchamber", "Tchamb")
     )
     tank_columns = []
+    tank_channel_columns: list[tuple[str, np.ndarray]] = []
     for name in headers:
-        if not re.match(r"^Ttank\d*_G(?:\s|\(|$)", name):
+        if not _is_tank_temperature_channel(name):
             continue
         values = np.asarray([
             float(row[headers[name]])
@@ -853,7 +889,11 @@ def read_mc_default_workbook(
             for row in active_rows
         ])
         if np.isfinite(values).mean() >= 0.95:
-            tank_columns.append(values)
+            tank_channel_columns.append((name, values))
+            if not _is_aggregate_tank_temperature_channel(name):
+                tank_columns.append(values)
+    if not tank_columns:
+        tank_columns = [values for _, values in tank_channel_columns]
     if not tank_columns:
         raise ValueError(f"{source_member} has no complete tank-temperature channel")
     tank_stack = np.vstack(tank_columns)
@@ -873,6 +913,9 @@ def read_mc_default_workbook(
     time = time[valid]
     if len(time) < 3 or np.any(np.diff(time) <= 0.0):
         raise ValueError(f"{source_member} has invalid active-fill timestamps")
+    tank_channels = tuple(
+        (name, values[valid]) for name, values in tank_channel_columns
+    )
     case_code, tank_capacity_kg = _mc_default_case_code(source_member)
     protocol_time, protocol_pressure = _protocol_pressure_profile(workbook)
     metadata = H2ProtocolMetadata(
@@ -900,6 +943,7 @@ def read_mc_default_workbook(
         tank_temperature_max_c=np.max(tank_stack[:, valid], axis=0),
         inlet_gas_temperature_c=inlet_temperature[valid],
         chamber_temperature_c=chamber[valid],
+        tank_temperature_channels_c=tank_channels,
         source_pressure_1_mpa=(
             optional_pressures["875PT1"][valid]
             if optional_pressures["875PT1"] is not None else None
