@@ -1351,7 +1351,7 @@ Status: implemented; evidence and grounding regressions passed.
 
 - The MATLAB/HDF5 header scan is now surfaced through the same privacy-bounded
   evidence envelope used by LLM responses. It reports aggregate screening only:
-  1,409 scientific containers screened across the two local archives, 8 partial
+  1,409 scientific file headers screened across the two local archives, 8 partial
   boundary candidates, and 0 full-loop candidates.
 - No paths, filenames, headers, identifiers, raw rows or measurement values are
   exposed, and the evidence explicitly prevents runtime calibration or a

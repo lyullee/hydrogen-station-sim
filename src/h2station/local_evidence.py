@@ -104,7 +104,7 @@ def _scientific_container_discovery_summary() -> dict[str, Any] | None:
     return {
         "evidence_role": "privacy-bounded scientific-container discovery",
         "archives": safe_archives,
-        "scientific_container_count": sum(
+        "scientific_headers_screened_total": sum(
             item["scientific_headers_screened"] for item in safe_archives
         ),
         "full_loop_candidate_count": full_loop_count,
@@ -681,7 +681,7 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
         },
         "local_scientific_container_discovery": {
             "status": "unavailable",
-            "scientific_container_count": 0,
+            "scientific_headers_screened_total": 0,
             "full_loop_candidate_count": 0,
             "partial_loop_candidate_count": 0,
             "runtime_parameter_application": False,

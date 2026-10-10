@@ -63,7 +63,7 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
     assert inventory["public_field_benchmark"]["full_loop_holdout_eligible"] is False
     scientific = inventory["local_scientific_container_discovery"]
     assert scientific["status"] == "available"
-    assert scientific["scientific_container_count"] == 1409
+    assert scientific["scientific_headers_screened_total"] == 1409
     assert scientific["full_loop_candidate_count"] == 0
     assert scientific["partial_loop_candidate_count"] == 8
     assert scientific["runtime_parameter_application"] is False
