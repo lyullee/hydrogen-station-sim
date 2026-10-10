@@ -4,16 +4,17 @@
 
 - Added a reproducible Figshare API intake for the CC BY 4.0 open-channel
   hydrogen-dispersion release (DOI `10.23642/usn.26117989.v2`). The manifest
-  records 23 public files without committing raw rows, and a local T00014
-  exemplar was checked for 29 concentration channels and monotonic flow and
-  sensor time bases.
+  records 23 public files without committing raw rows; all 22 local experiment
+  archives were size-checked and their CSV schemas were checked for 29
+  concentration channels and monotonic flow and sensor time bases.
 - Linked the intake manifest to the existing public concentration-proxy audit.
   The evidence remains explicitly component-level and cannot close the HRS
   full-loop, outdoor-distance, ESD or detector-transfer gates.
-- Ran the complete project regression suite in `.venv`: **1,257 tests passed**
-  with 20 dependency/physics warnings and no test failures. Running the global
-  Python interpreter directly is unsupported because it does not contain the
-  project dependencies; use `.venv\\Scripts\\python.exe`.
+- Ran the complete project regression suite in `.venv` after the intake update:
+  **1,257 tests passed in 276.85 s** with 20 dependency/physics warnings and no
+  test failures. Running the global Python interpreter directly is unsupported
+  because it does not contain the project dependencies; use
+  `.venv\\Scripts\\python.exe`.
 
 ## 2026-10-09 - Local station-side cross-bundle pressure transfer diagnostic
 
