@@ -265,7 +265,14 @@
         if(!draft){answer.classList.remove('loading');answer.classList.add('typing');await window.revealStationText(result.answer||'분석 결과가 없습니다.',text=>{answer.textContent=text;transcript.scrollTop=transcript.scrollHeight;},()=>!closed&&selection===epoch&&sequence===analysisSequence&&!signal.aborted);}
         streamFinished=true;
         if(closed||selection!==epoch||sequence!==analysisSequence)return;
-        answer.classList.remove('loading','typing');assistantMeta.textContent=`${tag} · 모의 ${Number(result.time_s||0).toFixed(1)} s · ${result.model||'SAGA'}`;rerun.disabled=false;deepDive.disabled=false;renderMarkdown(answer,result.answer||'분석 결과가 없습니다.');appendDataUsed(answer,result.data_used);transcript.scrollTop=transcript.scrollHeight;
+        answer.classList.remove('loading','typing');assistantMeta.textContent=`${tag} · 모의 ${Number(result.time_s||0).toFixed(1)} s · ${result.model||'SAGA'}`;rerun.disabled=false;deepDive.disabled=false;renderMarkdown(answer,result.answer||'분석 결과가 없습니다.');appendDataUsed(answer,result.data_used);
+        if(result.virtual_action_proposals?.length){
+          const commandHost=node('section','sensor-command-proposals');
+          commandHost.append(node('b','',window.stationLocale?.language?.()==='en'?'Requested virtual actions · confirm before execution':'요청한 가상 조치 · 실행 전 확인'));
+          commandHost.append(node('p','',window.stationLocale?.language?.()==='en'?'The command was recognized. Use a button to apply it to the simulation and verify feedback.':'명령을 인식했습니다. 버튼을 눌러 모의 공정에 반영하고 밸브·유량 피드백을 확인하세요.'));
+          answer.after(commandHost);window.mountVirtualActionButtons?.(commandHost,result.virtual_action_proposals);
+        }
+        transcript.scrollTop=transcript.scrollHeight;
       }catch(error){if(error.name==='AbortError'||closed||selection!==epoch||sequence!==analysisSequence)return;answer.classList.remove('loading','typing');answer.classList.add('error');answer.textContent=`분석을 표시할 수 없습니다: ${error.message}`;assistantMeta.textContent='SAGA 연결 상태 확인 필요';rerun.disabled=false;deepDive.disabled=false;}
     }
     async function selectSensor(tag){

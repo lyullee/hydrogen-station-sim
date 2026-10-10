@@ -1,5 +1,24 @@
 # Development Progress
 
+## 2026-10-10 - Direct operator command bridge
+
+- Added a deterministic command-intent layer to both the main direct assistant
+  and selected-sensor direct assistant. Explicit requests such as ESD trip,
+  process stop, vehicle-2 fueling stop, zone evacuation and ventilation control
+  now return reviewed virtual-action proposals instead of only a status report.
+- Proposals are confirmation-gated: the assistant never mutates the simulation
+  from natural language. The existing virtual safety endpoint performs the
+  command, actuator movement and feedback verification after the operator
+  clicks the rendered action button.
+- Status questions do not produce command candidates. Main and sensor panels
+  render the same action buttons and report the resulting command/feedback in
+  the existing safety log.
+
+Verification:
+
+- Direct Q&A, sensor workbench, grounding and readiness-integrity tests:
+  **56 passed**; Node stream/separation/automatic-analysis tests: **6 passed**.
+
 ## 2026-10-10 - High-impact solver and telemetry hot-path reduction
 
 - Kept the validated table equations and API output cadence, but replaced

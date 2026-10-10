@@ -205,6 +205,12 @@
       }
     }
     if(message.responseGuidance?.plans?.length)destination.append(responseGuidancePanel(message.responseGuidance,animate&&!detail));
+    if(message.virtualActionProposals?.length){
+      const commandHost=document.createElement('section');commandHost.className='saga-command-proposals';
+      const heading=document.createElement('b');heading.textContent='요청한 가상 조치 · 실행 전 확인';commandHost.append(heading);
+      const note=document.createElement('p');note.textContent='명령을 인식했습니다. 버튼을 눌러 모의 공정에 반영하고 밸브·유량 피드백을 확인하세요.';commandHost.append(note);
+      destination.append(commandHost);window.mountVirtualActionButtons?.(commandHost,message.virtualActionProposals);
+    }
     const used=dataUsedPanel(message.dataUsed);if(used)destination.append(used);
   }
   function streamFor(channel){return $(channel==='automatic'?'sagaAutomaticMessages':'sagaMessages');}
@@ -247,7 +253,7 @@
     return message;
   }
   function updateMessage(message,content,meta,error=false,result=null,animate=false){
-    message.content=content;message.meta=meta;message.error=error;message.questionAnswer=result?.question_answer||null;message.analysisAnswer=result?.analysis_answer||null;message.responseGuidance=result?.response_guidance||null;message.showImpact=Boolean(result?.show_impact_results);message.impactResults=result?.impact_results||[];message.riskAssessment=result?.risk_assessment||null;message.dataUsed=result?.data_used||null;
+    message.content=content;message.meta=meta;message.error=error;message.questionAnswer=result?.question_answer||null;message.analysisAnswer=result?.analysis_answer||null;message.responseGuidance=result?.response_guidance||null;message.showImpact=Boolean(result?.show_impact_results);message.impactResults=result?.impact_results||[];message.riskAssessment=result?.risk_assessment||null;message.dataUsed=result?.data_used||null;message.virtualActionProposals=result?.virtual_action_proposals||[];
     const article=document.querySelector(`.saga-message[data-message-id="${message.id}"]`);if(!article)return;
     article.classList.toggle('error',error);article.querySelector('.saga-message-label span').textContent=meta;
     article.classList.remove('streaming');renderBubble(article.querySelector('.saga-bubble'),message,animate);scrollToLatest(message.channel);

@@ -19,6 +19,20 @@ def _frame(*, alarm=False):
     }
 
 
+def test_explicit_operator_commands_are_exposed_as_confirmed_virtual_actions():
+    esd = api._requested_virtual_actions("ESD를 가동해줘")
+    assert [(row["kind"], row["target"]) for row in esd] == [("esd.trip", "station")]
+    assert esd[0]["requires_confirmation"] is True
+    assert api._requested_virtual_actions("현재 ESD 상태를 알려줘") == []
+
+    vehicle = api._requested_virtual_actions("차량 2 충전을 정지해줘")
+    assert [(row["kind"], row["target"]) for row in vehicle] == [
+        ("operation.stop", "vehicle_2"), ("valve.close", "dispenser.2")
+    ]
+    english = api._requested_virtual_actions("stop all operations", language="en")
+    assert english[0]["label"] == "Stop all operations"
+
+
 def test_main_assistant_uses_bounded_budget_and_compact_plan_projection(monkeypatch):
     captured = {}
 
@@ -119,6 +133,13 @@ def test_direct_qa_calculates_impact_for_alarm_and_explicit_hypothesis(monkeypat
             assert len(json.dumps(llm_prompts[-1]["context"], default=str)) < 12000
             assert llm_prompts[-1]["kind"] == "user_query"
             assert received[-1] == [impact]
+            command = client.post(f"/api/simulations/{job_id}/saga-analysis/direct",
+                                  json={"direct": False, "question": "ESD를 가동해줘"}).json()
+            assert command["virtual_action_proposals"] == [{
+                "kind": "esd.trip", "target": "station", "label": "가상 ESD 차단",
+                "label_ko": "가상 ESD 차단", "label_en": "Virtual ESD trip",
+                "requires_confirmation": True, "source": "explicit_operator_command",
+            }]
             streamed = client.post(f"/api/simulations/{job_id}/saga-analysis/direct/stream",
                                    json={"direct": False, "scenario_mode": True,
                                          "question": "고압 저장 가정 누출 피해영향"})

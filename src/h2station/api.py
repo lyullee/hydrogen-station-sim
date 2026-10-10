@@ -2337,6 +2337,78 @@ def _direct_hazop_answer(result: dict[str, Any]) -> str:
     return "현재 스냅샷은 일부 HAZOP 기준과 연결되지 않아 상태를 완전한 정상으로 확정할 수 없습니다."
 
 
+# Natural-language control is deliberately a proposal layer.  It translates
+# an explicit operator imperative into the same reviewed virtual actions used
+# by the safety console, but never writes to the runtime by itself.  This keeps
+# the direct assistant fast and prevents a provider response from silently
+# tripping ESD or moving a vehicle.
+_VIRTUAL_COMMAND_PATTERNS: tuple[tuple[tuple[str, ...], tuple[tuple[str, str, str, str], ...]], ...] = (
+    (("esd", "비상정지", "비상 정지", "긴급정지", "긴급 정지", "esd trip"),
+     (("esd.trip", "station", "가상 ESD 차단", "Virtual ESD trip"),)),
+    (("전체 공정 정지", "충전·공급·압축 정지", "충전 공급 압축 정지", "모든 공정 정지",
+      "all operations stop", "stop all operations"),
+     (("operation.stop", "all", "전체 공정 정지", "Stop all operations"),)),
+    (("트레일러 공급", "트레일러 공급 정지", "트레일러 공급 중지", "stop trailer supply", "trailer supply stop"),
+     (("operation.stop", "trailer_supply", "트레일러 공급 정지", "Stop trailer supply"),)),
+    (("압력 보완", "압력보완", "압력 보완 정지", "압력 보완 중지", "stop pressure recharge", "pressure recharge stop"),
+     (("operation.stop", "pressure_recharge", "압력 보완 정지", "Stop pressure recharge"),)),
+    (("차량 1", "차량1", "차량 1 충전 정지", "차량1 충전 정지", "차량 1 충전 중지", "차량1 충전 중지", "stop vehicle 1", "vehicle 1 stop"),
+     (("operation.stop", "vehicle_1", "차량 1 충전 정지", "Stop vehicle 1 fueling"),
+      ("valve.close", "dispenser.1", "차량 1 충전라인 차단", "Close vehicle 1 fueling line"))),
+    (("차량 2", "차량2", "차량 2 충전 정지", "차량2 충전 정지", "차량 2 충전 중지", "차량2 충전 중지", "stop vehicle 2", "vehicle 2 stop"),
+     (("operation.stop", "vehicle_2", "차량 2 충전 정지", "Stop vehicle 2 fueling"),
+      ("valve.close", "dispenser.2", "차량 2 충전라인 차단", "Close vehicle 2 fueling line"))),
+    (("저장구역 대피", "저장 구역 대피", "저장구역 인원 대피", "evacuate storage", "storage evacuation"),
+     (("access.restrict", "storage", "저장구역 출입 통제", "Restrict storage access"),
+      ("personnel.evacuate", "storage", "저장구역 인원 대피", "Evacuate storage personnel"))),
+    (("압축기 구역 대피", "압축기구역 대피", "evacuate compressor", "compressor evacuation"),
+     (("access.restrict", "compressor", "압축기 구역 출입 통제", "Restrict compressor access"),
+      ("personnel.evacuate", "compressor", "압축기 구역 인원 대피", "Evacuate compressor personnel"))),
+    (("환기 가동", "환기 켜", "환기 켜줘", "ventilation on", "start ventilation"),
+     (("ventilation.on", "storage", "저장구역 환기 가동", "Start storage ventilation"),)),
+    (("환기 정지", "환기 꺼", "환기 꺼줘", "ventilation off", "stop ventilation"),
+     (("ventilation.off", "storage", "저장구역 환기 정지", "Stop storage ventilation"),)),
+)
+
+
+def _requested_virtual_actions(question: str, *, language: str = "ko") -> list[dict[str, Any]]:
+    """Return reviewed virtual action buttons for an explicit operator command.
+
+    Status questions such as ``ESD 상태`` or ``현재 정지인가`` do not match
+    because the patterns require a command phrase.  Results are intentionally
+    serialisable and contain no runtime mutation; the existing safety action
+    endpoint performs the confirmation and feedback check after a button click.
+    """
+    compact = re.sub(r"\s+", " ", str(question or "")).strip().lower()
+    if not compact:
+        return []
+    # Do not turn a status question ("ESD 상태?", "현재 정지인가?") into a
+    # command.  A phrase must contain an imperative marker or an English
+    # command verb before any reviewed action is proposed.
+    if not re.search(
+        r"(?:해\s*줘|해주세요|하라|해라|실행|가동|작동|차단|정지해|정지하|중지해|중지하|대피해|켜\s*줘|꺼\s*줘|"
+        r"\b(?:stop|start|trip|evacuate|close|open|isolate)\b)",
+        compact,
+    ):
+        return []
+    proposals: list[dict[str, Any]] = []
+    seen: set[tuple[str, str]] = set()
+    for phrases, actions in _VIRTUAL_COMMAND_PATTERNS:
+        if not any(phrase in compact for phrase in phrases):
+            continue
+        for kind, target, label_ko, label_en in actions:
+            key = (kind, target)
+            if key in seen:
+                continue
+            seen.add(key)
+            proposals.append({"kind": kind, "target": target,
+                              "label": label_en if language == "en" else label_ko,
+                              "label_ko": label_ko, "label_en": label_en,
+                              "requires_confirmation": True,
+                              "source": "explicit_operator_command"})
+    return proposals[:8]
+
+
 def _align_direct_evaluation(
     result: dict[str, Any] | None, active_rules: list[dict[str, Any]],
     station_status: str,
@@ -2881,6 +2953,9 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
             _invoke_saga_hazop_direct, frame, catalog, str(job_id), request.question, impact_results
         )
         direct_result = _align_direct_evaluation(direct_result, active, alert_status)
+        virtual_action_proposals = _requested_virtual_actions(
+            request.question, language=request.language
+        )
         direct_sop = (direct_result or {}).get("sop") if isinstance((direct_result or {}).get("sop"), dict) else {}
         direct_hits = (direct_result or {}).get("hits") if isinstance((direct_result or {}).get("hits"), list) else []
         actual_alert = emergency_context
@@ -2930,6 +3005,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
                 "consolidated_response_guidance": _prompt_response_guidance_summary(
                     structured_guidance(response_plans, actual_alert=actual_alert)
                 ),
+                "virtual_action_proposals": virtual_action_proposals,
             }
             try:
                 reply = await _invoke_main_assistant_selected(
@@ -3014,6 +3090,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
             "hazop_direct": direct_result,
             "hazop_sop": direct_sop,
             "hazop_hit_count": len(direct_hits),
+            "virtual_action_proposals": virtual_action_proposals,
         }
     # The full live frame can contain many unrelated GOOD channels.  Preserve
     # the question/alarm/detector channels first, then add a deterministic
@@ -3813,6 +3890,9 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
             direct_result, active_rules + related_rules,
             "WARNING" if current_triggers else "NORMAL",
         )
+        virtual_action_proposals = _requested_virtual_actions(
+            request.question, language=request.language
+        )
         signal = payload["signal"]
         value = signal.get("value")
         unit = signal.get("unit") or ""
@@ -3879,6 +3959,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                 "gas_detection": gas,
                 "current_release": release,
                 "consolidated_response_guidance": _prompt_response_guidance_summary(response_guidance),
+                "virtual_action_proposals": virtual_action_proposals,
             }
             try:
                 reply = await _invoke_sensor_assistant_selected(
@@ -3924,6 +4005,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                 "active_rule_count": len(active_rules), "related_active_count": len(related_rules),
                 "sensor_status": payload["sensor_status"], "hazop_direct": direct_result,
                 "response_guidance": response_guidance,
+                "virtual_action_proposals": virtual_action_proposals,
                 "llm_claim_guard": llm_claim_guard}
     compact_rules = lambda rows: [{key: rule.get(key) for key in
                                    ("rule_id", "sensor_id", "scenario", "state", "condition_status",
