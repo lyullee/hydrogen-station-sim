@@ -25,6 +25,8 @@ _ASSET_SCREEN = _ROOT / "research/local_station_asset_screen_2026_10_09.json"
 _REVALIDATION = _ROOT / "research/local_station_data_revalidation_2026_10_09.json"
 _DATA_COVERAGE = _ROOT / "research/data_coverage_summary_2026_10_10.json"
 _VALIDATION_GAP_TRIAGE = _ROOT / "research/validation_gap_triage_2026_10_10.json"
+_PRIVATE_FULL_LOOP_SCHEMA = _ROOT / "research/private_full_loop_schema_recheck_2026_10_10.json"
+_PRIVATE_RECHARGE_SCHEMA = _ROOT / "research/private_recharge_multitrace_schema_recheck_2026_10_10.json"
 _KHK_ACCIDENTS = _ROOT / "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json"
 _ACCIDENTAL_RELEASE = _ROOT / "research/accidental_self_ignition_public_evidence_2026_10_04.json"
 _EXPERIMENTAL_BENCHMARKS = _ROOT / "research/public_experimental_benchmarks_2026_10_06.json"
@@ -70,6 +72,67 @@ def _read_json(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError("aggregate evidence artifact must contain an object")
     return value
+
+
+def _role_aware_full_loop_schema_summary() -> dict[str, Any] | None:
+    """Expose the current station/vehicle schema boundary without raw labels.
+
+    The header scanner is an intake guard, not validation evidence.  Keeping
+    this aggregate in the evidence envelope prevents an assistant from
+    interpreting generic pressure/temperature columns as a synchronized
+    station-to-vehicle trace.
+    """
+    try:
+        external = _read_json(_PRIVATE_FULL_LOOP_SCHEMA)
+        station = _read_json(_PRIVATE_RECHARGE_SCHEMA)
+        external_scope = external.get("scope") or {}
+        station_scope = station.get("scope") or {}
+        if any(value is not False for value in (
+            external_scope.get("raw_rows_persisted"),
+            external_scope.get("original_headers_persisted"),
+            external_scope.get("filenames_and_source_paths_persisted"),
+            external_scope.get("absolute_timestamps_persisted"),
+            station_scope.get("raw_rows_persisted"),
+            station_scope.get("original_headers_persisted"),
+            station_scope.get("filenames_and_source_paths_persisted"),
+            station_scope.get("absolute_timestamps_persisted"),
+            station_scope.get("absolute_timestamps_persisted"),
+        )):
+            return None
+        external_aggregate = external.get("aggregate") or {}
+        station_aggregate = station.get("aggregate") or {}
+        return {
+            "status": "available",
+            "evidence_role": "privacy-bounded role-aware full-loop schema boundary",
+            "external_candidate_files_seen": int(external_aggregate.get("csv_files_seen") or 0),
+            "external_readable_files": int(external_aggregate.get("readable_csv_files") or 0),
+            "external_role_aware_contract_files": int(
+                external_aggregate.get("files_with_full_loop_contract_groups") or 0
+            ),
+            "station_side_recharge_files_seen": int(station_aggregate.get("csv_files_seen") or 0),
+            "station_side_role_aware_contract_files": int(
+                station_aggregate.get("files_with_full_loop_contract_groups") or 0
+            ),
+            "required_role_groups": [
+                "common_time", "vehicle_pressure", "vehicle_temperature",
+                "station_pressure", "delivered_temperature", "mass_flow",
+                "cascade_or_storage", "controller_state", "vehicle_identity",
+            ],
+            "external_missing_role_groups": list(
+                external_aggregate.get("missing_full_loop_contract_groups") or []
+            ),
+            "station_side_missing_role_groups": list(
+                station_aggregate.get("missing_full_loop_contract_groups") or []
+            ),
+            "full_loop_external_validation_supported": False,
+            "claim_limit": (
+                "Header coverage is an intake guard only. No synchronized station-to-vehicle "
+                "holdout, calibration attestation, reviewer rights or numerical validation "
+                "claim is established by this scan."
+            ),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
 
 
 def _scientific_container_discovery_summary() -> dict[str, Any] | None:
@@ -971,6 +1034,9 @@ def local_station_evidence_summary() -> dict[str, Any]:
         asset_context = _station_asset_context_summary()
         if asset_context is not None:
             result["station_asset_context"] = asset_context
+        schema_contract = _role_aware_full_loop_schema_summary()
+        if schema_contract is not None:
+            result["full_loop_schema_contract"] = schema_contract
         revalidation = _local_station_revalidation_summary()
         if revalidation is not None:
             result["station_data_revalidation"] = revalidation
@@ -991,6 +1057,10 @@ def local_station_evidence_summary() -> dict[str, Any]:
                 "Aggregate local evidence artifacts are unavailable or invalid; "
                 "no validation claim is permitted."
             ),
+            "full_loop_schema_contract": {
+                "status": "unavailable",
+                "full_loop_external_validation_supported": False,
+            },
         }
 
 

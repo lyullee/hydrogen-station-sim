@@ -118,6 +118,21 @@ def test_local_discovery_reaches_bounded_prompt_views():
     assert deep_scan["full_loop_decision"][
         "new_eligible_synchronized_station_vehicle_cohort_found"
     ] is False
+
+
+def test_role_aware_schema_contract_is_exposed_without_private_headers():
+    manifest = _manifest()
+    schema = manifest["response_evidence"]["full_loop_schema_contract"]
+    assert schema["external_role_aware_contract_files"] == 0
+    assert schema["station_side_role_aware_contract_files"] == 0
+    assert "vehicle_pressure" in schema["required_role_groups"]
+    assert schema["full_loop_external_validation_supported"] is False
+    assert "source_paths" not in str(schema)
+    decision = prompt_decision_evidence(manifest)
+    availability = decision["evidence_availability"]
+    assert availability["role_aware_full_loop_schema_contract"][
+        "external_role_aware_contract_files"
+    ] == 0
     decision_deep_scan = prompt_decision_evidence(manifest)[
         "validation_boundaries"
     ]["local_data_deep_scan"]

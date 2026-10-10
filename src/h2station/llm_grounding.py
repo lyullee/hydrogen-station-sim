@@ -6236,6 +6236,9 @@ def _data_coverage_summary() -> dict[str, Any] | None:
     runtime_items = scope.get("runtime_usable_now") or []
     pending_items = scope.get("available_but_not_runtime_promoted") or []
     tiers = scope.get("minimum_data_tiers") or []
+    local_summary = local_station_evidence_summary()
+    schema_contract = local_summary.get("full_loop_schema_contract") \
+        if isinstance(local_summary, dict) else None
     return {
         "evidence_role": "top-level data availability boundary",
         "available_evidence_tier": "station_side_and_component",
@@ -6250,6 +6253,8 @@ def _data_coverage_summary() -> dict[str, Any] | None:
             full_loop.get("required_channels") or []
         ),
         "minimum_data_tiers": tiers,
+        **({"role_aware_full_loop_schema_contract": schema_contract}
+           if isinstance(schema_contract, dict) else {}),
         "smallest_next_data_request": (
             (scope.get("decision") or {}).get("request_smallest_next_bundle_first")
             or "tier_1_component_pilot"
@@ -8445,6 +8450,9 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "local_station_data_revalidation"
         ] = local_revalidation
+    schema_contract = local_evidence.get("full_loop_schema_contract")
+    if isinstance(schema_contract, dict):
+        envelope["response_evidence"]["full_loop_schema_contract"] = schema_contract
     component_bundle = component_bundle_evidence(frame)
     if component_bundle is not None:
         envelope["response_evidence"]["confidential_component_bundle"] = component_bundle
@@ -10629,6 +10637,19 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "full_loop_trace": coverage.get("synchronized_full_loop_trace_count"),
             "use_available_first": True,
         }
+        schema_contract = coverage.get("role_aware_full_loop_schema_contract")
+        if isinstance(schema_contract, dict):
+            evidence_availability["role_aware_full_loop_schema_contract"] = {
+                key: schema_contract.get(key)
+                for key in (
+                    "status", "external_candidate_files_seen", "external_readable_files",
+                    "external_role_aware_contract_files", "station_side_recharge_files_seen",
+                    "station_side_role_aware_contract_files", "required_role_groups",
+                    "external_missing_role_groups", "station_side_missing_role_groups",
+                    "full_loop_external_validation_supported", "claim_limit",
+                )
+                if schema_contract.get(key) is not None
+            }
 
     decision = {
         "evidence_digest": manifest.get("evidence_digest"),
