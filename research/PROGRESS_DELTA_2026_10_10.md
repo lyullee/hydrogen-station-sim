@@ -63,6 +63,17 @@ and controller channels rather than an unsearched local folder. The scanner was
 also hardened so malformed workbooks are counted as per-file parse misses
 instead of aborting the entire discovery pass.
 
+## Official NBSDC access recheck
+
+The strongest public lead was rechecked through the official NBSDC API without
+retaining any workbook bytes. The metadata endpoint returned the declared
+35/70 MPa fixed-station record and a two-file package (436.08 KB). The file
+tree exposed a station-operation workbook (430,765 bytes) plus its description
+document. An unauthenticated request to the official download endpoint
+returned a login redirect, so no numerical rows, headers, timestamps or
+channel units were inspected. This confirms an authorized-custodian route,
+but it does not close the full-loop gate or change the readiness percentage.
+
 ## Why this still feels slow
 
 The remaining work is dominated by gates that cannot be manufactured locally:
