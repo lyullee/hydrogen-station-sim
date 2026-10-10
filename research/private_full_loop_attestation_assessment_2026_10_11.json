@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "artifact_type": "privacy_bounded_private_full_loop_attestation_assessment",
+  "generated_at": "2026-10-10T21:47:59.989548+00:00",
+  "privacy_boundary_ok": true,
+  "observed_schema_role_count": 3,
+  "attested_role_count": 0,
+  "missing_schema_roles": [
+    "cascade_or_storage",
+    "delivered_temperature",
+    "station_pressure",
+    "vehicle_identity",
+    "vehicle_pressure",
+    "vehicle_temperature"
+  ],
+  "missing_attestation_roles": [
+    "cascade_or_storage",
+    "common_time",
+    "controller_state",
+    "delivered_temperature",
+    "mass_flow",
+    "station_pressure",
+    "vehicle_identity",
+    "vehicle_pressure",
+    "vehicle_temperature"
+  ],
+  "metadata_checks": {
+    "custodian_authorized": false,
+    "research_rights_attested": false,
+    "common_clock_attested": false,
+    "calibration_attested": false,
+    "split_manifest_present": false,
+    "model_frozen_before_outcome_access": false,
+    "independent_reviewer_confirmed": false
+  },
+  "schema_role_match": false,
+  "candidate_ready_for_independent_review": false,
+  "holdout_controls": {
+    "minimum_event_count_met": true,
+    "model_freeze_attested": false,
+    "independent_reviewer_attested": false
+  },
+  "external_holdout_eligibility": false,
+  "validation_gate_effect": "none",
+  "next_actions": [
+    "attest every required station/dispenser/vehicle channel role",
+    "provide units, calibration status and uncertainty for numeric channels",
+    "attest common-clock alignment and masked event linkage",
+    "freeze model and split before outcome access, then obtain independent review"
+  ],
+  "claim_boundary": "This is a privacy-bounded intake assessment only. It does not validate the model, close the full-loop gate, or establish safety or regulatory compliance."
+}
