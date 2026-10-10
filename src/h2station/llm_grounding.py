@@ -4182,6 +4182,9 @@ def _public_full_loop_candidate_leads() -> dict[str, Any] | None:
                 key: source.get(key)
                 for key in (
                     "id", "title", "doi", "url", "decision",
+                    "supporting_url", "software_output_not_raw_experimental_archive",
+                    "empirical_validation_dataset_publicly_released",
+                    "manual_output_channels",
                     "raw_synchronized_archive_located",
                     "vehicle_pressure_temperature_channels",
                     "controller_or_esd_channels", "claim_limit",

@@ -34,3 +34,9 @@ def test_2026_10_11_public_recheck_is_privacy_safe_and_does_not_open_full_loop_g
     assert h2protocol["raw_synchronized_archive_located"] is True
     assert h2protocol["station_controller_or_esd_channels"] is False
     assert h2protocol["decision"] == "COMPONENT_BOUNDARY_ONLY"
+
+    h2fills = next(item for item in record["screened_sources"] if item["id"] == "nrel_hitrf_h2fills_programme")
+    assert h2fills["software_output_not_raw_experimental_archive"] is True
+    assert h2fills["empirical_validation_dataset_publicly_released"] is False
+    assert "vehicle-tank pressure and temperature" in h2fills["manual_output_channels"]
+    assert "simulation results rather than" in h2fills["claim_limit"]

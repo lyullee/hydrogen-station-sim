@@ -78,16 +78,25 @@
       "id": "nrel_hitrf_h2fills_programme",
       "title": "NREL HITRF/H2FillS fueling test programme",
       "url": "https://www.nrel.gov/hydrogen/h2fills",
-      "supporting_url": "https://www.nlr.gov/hydrogen/h2fills",
+      "supporting_url": "https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf?sfvrsn=b2960c3d_1",
       "license_or_access": "Facility and programme information public; raw synchronized logger export requires programme/custodian access",
       "observed_scope": [
         "station-to-receiving-vessel test apparatus",
         "pressure, temperature and flow measurement roles",
         "controlled fueling validation route"
       ],
+      "manual_output_channels": [
+        "simulation time",
+        "mass flow",
+        "storage-bank pressure and temperature",
+        "PCV inlet/outlet pressure and temperature",
+        "vehicle-tank pressure and temperature"
+      ],
+      "software_output_not_raw_experimental_archive": true,
+      "empirical_validation_dataset_publicly_released": false,
       "raw_synchronized_archive_located": false,
       "decision": "CUSTODIAN_REQUEST_LEAD_ONLY",
-      "claim_limit": "The programme documents a high-value measurement route, but no reuse-cleared raw cohort with checksum, common-clock attestation and controller/ESD channels was publicly verified."
+      "claim_limit": "The programme and manual document a high-value measurement route and model-output channel schema, but H2FillS outputs are simulation results rather than a rights-cleared raw experimental logger archive. No reuse-cleared raw cohort with checksum, common-clock attestation and controller/ESD channels was publicly verified."
     }
   ],
   "privacy": {

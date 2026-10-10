@@ -1,5 +1,19 @@
 # Development Progress
 
+## 2026-10-11 - Separate H2FillS model outputs from raw full-loop evidence
+
+The latest official NREL H2FillS page and user manual were rechecked. The
+manual documents the channels exported by a H2FillS simulation (time, mass
+flow, storage-bank state, PCV state and vehicle-tank state), but the public
+route is software/programme documentation and does not provide a
+reuse-cleared, synchronized station logger archive with controller/ESD state.
+The public-search artifact and LLM evidence projection now carry this explicit
+boundary, so an answer cannot present H2FillS-generated traces as independent
+experimental validation. No runtime parameter, frozen holdout, readiness gate,
+or full-loop claim was changed.
+
+Focused search-recheck and LLM-grounding tests: **29 passed**.
+
 ## 2026-10-11 - Full regression baseline rechecked
 
 The complete local regression suite finished with **1,355 passed** and no

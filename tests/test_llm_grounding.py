@@ -1399,6 +1399,14 @@ def test_full_loop_candidate_leads_are_grounded_without_being_admitted():
         "full_loop_external_validation_supported"
     ] is False
     assert leads["latest_search_recheck"]["runtime_parameter_application"] is False
+    h2fills = next(
+        item for item in leads["latest_search_recheck"]["sources"]
+        if item["id"] == "nrel_hitrf_h2fills_programme"
+    )
+    assert h2fills["software_output_not_raw_experimental_archive"] is True
+    assert h2fills["empirical_validation_dataset_publicly_released"] is False
+    assert "vehicle-tank pressure and temperature" in h2fills["manual_output_channels"]
+    assert "simulation results rather than" in h2fills["claim_limit"]
 
     projected = prompt_decision_evidence(manifest)["decision_support_evidence"]
     candidate = projected["public_full_loop_candidate_leads"]["candidates"][0]
