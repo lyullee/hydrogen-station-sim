@@ -1,5 +1,20 @@
 # Development Progress
 
+## 2026-10-11 - Impact-first verification triage
+
+To avoid spending time on low-impact details before the scientific blockers are
+addressed, the remaining 17 non-PASS gates are now grouped into parallel P0/P1/P2
+lanes. P0 contains the synchronized station--vehicle full-loop evidence and the
+HIAD/SAGA safety-effectiveness evaluation; P1 contains external physics and
+spatial-transfer holdouts; P2 contains submission metadata. The matrix is recorded
+in `research/PRIORITY_GATE_TRIAGE_2026_10_11.md` and its machine-readable
+form in `research/priority_gate_triage_2026_10_11.json`.
+
+This is an execution-order change only. It does not promote post-access
+diagnostics, alter runtime parameters, or change the readiness count
+(127 PASS / 10 FAIL / 7 PENDING; 88.2%).
+
+
 ## 2026-10-11 - Make the bank-leak regression independent of background recharge
 
 The sustained high-bank leak check now starts an explicit idle process runtime,

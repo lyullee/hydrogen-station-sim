@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-10T19:32:53.552844+00:00",
+  "purpose": "impact_first_parallel_execution",
+  "readiness_snapshot": {
+    "PASS": 127,
+    "FAIL": 10,
+    "PENDING": 7
+  },
+  "gate_closure_percent": 88.2,
+  "policy": {
+    "parallel_lanes": true,
+    "do_not_promote_post_access_diagnostics": true,
+    "do_not_wait_for_p2_before_p0_p1": true
+  },
+  "priority_lanes": [
+    {
+      "id": "full_loop_external_validation",
+      "status": "FAIL",
+      "priority": "P0",
+      "action": "외부 기관의 동기화된 충전소·차량 계측 8건 이상을 확보하고, 모델·프로토콜을 먼저 고정한 뒤 재현성 평가",
+      "owner": "데이터 제공기관/검증 담당"
+    },
+    {
+      "id": "hiad_casebook_frozen",
+      "status": "PENDING",
+      "priority": "P0",
+      "action": "윤리 결정 후 24개 사건 케이스북 고정, 3인 독립 평가자에게 alarm/direct/RAG 응답을 수집·분석",
+      "owner": "연구책임자/독립 평가자"
+    },
+    {
+      "id": "hiad_holdout_collection",
+      "status": "PENDING",
+      "priority": "P0",
+      "action": "윤리 결정 후 24개 사건 케이스북 고정, 3인 독립 평가자에게 alarm/direct/RAG 응답을 수집·분석",
+      "owner": "연구책임자/독립 평가자"
+    },
+    {
+      "id": "independent_expert_review_complete",
+      "status": "PENDING",
+      "priority": "P0",
+      "action": "윤리 결정 후 24개 사건 케이스북 고정, 3인 독립 평가자에게 alarm/direct/RAG 응답을 수집·분석",
+      "owner": "연구책임자/독립 평가자"
+    },
+    {
+      "id": "institutional_ethics_determination",
+      "status": "PENDING",
+      "priority": "P0",
+      "action": "기관의 인간대상 연구 해당 여부 또는 면제/비해당 결정을 문서화",
+      "owner": "기관 IRB/연구책임자"
+    },
+    {
+      "id": "saga_effectiveness_and_safety_supported",
+      "status": "PENDING",
+      "priority": "P0",
+      "action": "윤리 결정 후 24개 사건 케이스북 고정, 3인 독립 평가자에게 alarm/direct/RAG 응답을 수집·분석",
+      "owner": "연구책임자/독립 평가자"
+    },
+    {
+      "id": "dickens_typeiii_prospective_validation",
+      "status": "FAIL",
+      "priority": "P1",
+      "action": "현재 실패를 유지한 채 새 공개 원자료가 들어오면 사전 동결 프로토콜로 재평가",
+      "owner": "모델 검증 담당"
+    },
+    {
+      "id": "grune_2014_pressure_decay_validation",
+      "status": "PENDING",
+      "priority": "P1",
+      "action": "현재 실패를 유지한 채 새 공개 원자료가 들어오면 사전 동결 프로토콜로 재평가",
+      "owner": "모델 검증 담당"
+    },
+    {
+      "id": "h2safe_spatial_detector_transfer_validation",
+      "status": "FAIL",
+      "priority": "P1",
+      "action": "현재 실패를 유지한 채 새 공개 원자료가 들어오면 사전 동결 프로토콜로 재평가",
+      "owner": "모델 검증 담당"
+    },
+    {
+      "id": "hytunnel_carpark_dispersion_validation",
+      "status": "FAIL",
+      "priority": "P1",
+      "action": "현재 실패를 유지한 채 새 공개 원자료가 들어오면 사전 동결 프로토콜로 재평가",
+      "owner": "모델 검증 담당"
+    },
+    {
+      "id": "hytunnel_carpark_mass_flow_validation",
+      "status": "FAIL",
+      "priority": "P1",
+      "action": "현재 실패를 유지한 채 새 공개 원자료가 들어오면 사전 동결 프로토콜로 재평가",
+      "owner": "모델 검증 담당"
+    },
+    {
+      "id": "preslhy_partb_ambient_external_validation",
+      "status": "FAIL",
+      "priority": "P1",
+      "action": "현재 실패를 유지한 채 새 공개 원자료가 들어오면 사전 동결 프로토콜로 재평가",
+      "owner": "모델 검증 담당"
+    },
+    {
+      "id": "preslhy_revised_holdout_validation",
+      "status": "FAIL",
+      "priority": "P1",
+      "action": "현재 실패를 유지한 채 새 공개 원자료가 들어오면 사전 동결 프로토콜로 재평가",
+      "owner": "모델 검증 담당"
+    },
+    {
+      "id": "proust_independent_release_validation",
+      "status": "FAIL",
+      "priority": "P1",
+      "action": "현재 실패를 유지한 채 새 공개 원자료가 들어오면 사전 동결 프로토콜로 재평가",
+      "owner": "모델 검증 담당"
+    },
+    {
+      "id": "schefer_2007_pressure_decay_validation",
+      "status": "FAIL",
+      "priority": "P1",
+      "action": "현재 실패를 유지한 채 새 공개 원자료가 들어오면 사전 동결 프로토콜로 재평가",
+      "owner": "모델 검증 담당"
+    },
+    {
+      "id": "schefer_transient_release_validation",
+      "status": "FAIL",
+      "priority": "P1",
+      "action": "현재 실패를 유지한 채 새 공개 원자료가 들어오면 사전 동결 프로토콜로 재평가",
+      "owner": "모델 검증 담당"
+    },
+    {
+      "id": "submission_metadata_and_declarations",
+      "status": "PENDING",
+      "priority": "P2",
+      "action": "현재 실패를 유지한 채 새 공개 원자료가 들어오면 사전 동결 프로토콜로 재평가",
+      "owner": "모델 검증 담당"
+    }
+  ],
+  "claim_boundary": "우선순위 매트릭스는 작업 순서를 정하는 운영 문서이며, 외부 검증이나 논문 게재를 대신하지 않는다."
+}
