@@ -144,6 +144,8 @@ def _read_event(path: Path, rules: PilotIntakeRules) -> dict[str, Any]:
         later <= earlier for earlier, later in zip(time_values, time_values[1:])
     ):
         errors.append("elapsed_time_not_strictly_increasing")
+    if time_values and not math.isclose(time_values[0], 0.0, abs_tol=1.0e-9):
+        errors.append("elapsed_time_does_not_start_at_zero")
     if (
         "mass_flow_g_s" in normalized
         and mass_values
@@ -175,6 +177,9 @@ def _read_event(path: Path, rules: PilotIntakeRules) -> dict[str, Any]:
                     later > earlier
                     for earlier, later in zip(time_values, time_values[1:])
                 )
+            ),
+            "starts_at_zero": bool(
+                time_values and math.isclose(time_values[0], 0.0, abs_tol=1.0e-9)
             ),
         },
         "channel_presence": {
@@ -215,6 +220,14 @@ def validate_privacy_safe_pilot_bundle(
         pilot_ready
         and vehicle_complete_count == len(event_reports)
     )
+    common_elapsed_time_axis = bool(
+        event_reports
+        and all(
+            report["elapsed_time_s"]["starts_at_zero"]
+            and report["elapsed_time_s"]["strictly_increasing"]
+            for report in event_reports
+        )
+    )
     if not pilot_ready:
         readiness_status = "SCHEMA_INCOMPLETE"
     elif vehicle_boundary_complete:
@@ -237,6 +250,7 @@ def validate_privacy_safe_pilot_bundle(
         "vehicle_boundary_complete_event_count": vehicle_complete_count,
         "full_loop_readiness": {
             "station_boundary_ready": pilot_ready,
+            "common_elapsed_time_axis": common_elapsed_time_axis,
             "vehicle_boundary_required_for_full_loop": True,
             "vehicle_boundary_complete": vehicle_boundary_complete,
             "missing_vehicle_boundary_event_count": max(

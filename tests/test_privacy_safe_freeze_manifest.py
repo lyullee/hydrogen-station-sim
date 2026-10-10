@@ -4,6 +4,7 @@ import pytest
 
 from h2station.privacy_safe_full_loop_intake import (
     build_privacy_safe_freeze_manifest,
+    validate_privacy_safe_pilot_bundle,
 )
 
 
@@ -113,3 +114,20 @@ def test_full_loop_candidate_requires_vehicle_role_attestation(tmp_path: Path) -
         "vehicle_pressure_mpa",
         "vehicle_temperature_c",
     ]
+
+
+def test_intake_rejects_event_time_axis_that_does_not_start_at_zero(tmp_path: Path) -> None:
+    events = []
+    for index in range(3):
+        path = tmp_path / f"event-{index}.csv"
+        path.write_text(
+            "elapsed_time_s,station_pressure_mpa,delivered_gas_temperature_c,mass_flow_g_s,protocol_phase\n"
+            "1,20,20,1,start\n"
+            "2,21,21,1.2,fill\n",
+            encoding="utf-8",
+        )
+        events.append(path)
+    report = validate_privacy_safe_pilot_bundle(events)
+    assert report["status"] == "SCHEMA_INCOMPLETE"
+    assert report["full_loop_readiness"]["common_elapsed_time_axis"] is False
+    assert "elapsed_time_does_not_start_at_zero" in report["event_reports"][0]["errors"]

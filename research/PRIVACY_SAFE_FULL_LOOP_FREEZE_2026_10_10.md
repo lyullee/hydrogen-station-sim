@@ -4,8 +4,8 @@
 
 ## 순서
 
-1. 원자료 보관자가 이벤트 시작을 0초로 맞춘 CSV를 최소 3건 준비한다.
-2. `validate_privacy_safe_pilot_bundle`로 열 이름, 시간축, 수치 유한성, 질량 단조성을 검사한다.
+1. 원자료 보관자가 **각 이벤트 시작을 0초로 맞춘 CSV**를 최소 3건 준비한다. 이벤트마다 별도 달력 시각을 포함하지 않으며, 동일한 이벤트 상대시간 계약을 사용한다.
+2. `validate_privacy_safe_pilot_bundle`로 열 이름, 공통 0초 기준 시간축, 시간 단조성, 수치 유한성, 질량 단조성을 검사한다. 하나라도 0초에서 시작하지 않으면 intake가 `SCHEMA_INCOMPLETE`가 되고 `full_loop_readiness.common_elapsed_time_axis`가 false가 된다.
 3. 채널 역할 확인서를 작성한다. 최소 역할은 `elapsed_time_s`, `station_pressure_mpa`, `delivered_gas_temperature_c`, `protocol_phase`, `mass_or_transferred_mass`다.
 4. 모델·평가 코드·프로토콜 파일을 선택한 뒤 `build_privacy_safe_freeze_manifest`를 실행한다.
 5. 생성된 manifest의 SHA-256과 custodian의 “결과를 고정 전에 보지 않았다”는 확인을 보관한다.
