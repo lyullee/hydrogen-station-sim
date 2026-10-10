@@ -223,3 +223,8 @@ physics requirement: a single source-to-bulk zone is insufficient; a validated
 plume/stratification model and sensor-coordinate crosswalk are still needed.
 The new module has three focused regression tests; the HyTunnel test lane is
 now 9 passed.
+
+The LLM evidence manifest now exposes this negative development diagnostic as a
+separate, explicitly non-calibrating field. This prevents a future assistant
+response from presenting the two-zone experiment as a validated HRS dispersion
+model while still making the model-form finding available for grounded answers.
