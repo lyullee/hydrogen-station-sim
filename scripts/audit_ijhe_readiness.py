@@ -8,8 +8,11 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import re
 import sys
 from typing import Any
+import zipfile
+from xml.etree import ElementTree
 
 
 def _json(path: Path) -> dict[str, Any] | None:
@@ -26,6 +29,124 @@ def _sha256(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _nrel_xlsx_schema_without_openpyxl(path: Path) -> dict[str, Any]:
+    """Read the small schema surface needed by the NREL audit from XLSX XML.
+
+    The readiness audit must be reproducible in the bundled runtime as well as
+    in a developer environment with openpyxl installed.  XLSX is a ZIP/XML
+    container, so the audit can verify the sheet dimensions, headers and timed
+    row count without loading measurement values or requiring an optional
+    dependency.
+    """
+
+    main_ns = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+    rel_ns = "http://schemas.openxmlformats.org/package/2006/relationships"
+    office_rel_ns = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+    ns = {"m": main_ns, "r": office_rel_ns}
+
+    def _local_name(target: str) -> str:
+        return target.lstrip("/").replace("\\", "/")
+
+    def _column_number(reference: str) -> int:
+        letters = re.match(r"([A-Z]+)", reference.upper())
+        if not letters:
+            return 0
+        value = 0
+        for char in letters.group(1):
+            value = value * 26 + ord(char) - ord("A") + 1
+        return value
+
+    with zipfile.ZipFile(path) as archive:
+        workbook = ElementTree.fromstring(archive.read("xl/workbook.xml"))
+        relationships = ElementTree.fromstring(
+            archive.read("xl/_rels/workbook.xml.rels")
+        )
+        targets = {
+            item.attrib["Id"]: _local_name(item.attrib["Target"])
+            for item in relationships.findall(f"{{{rel_ns}}}Relationship")
+        }
+        data_sheet = next(
+            sheet
+            for sheet in workbook.find("m:sheets", ns)
+            if sheet.attrib.get("name") == "Data"
+        )
+        worksheet_target = targets[data_sheet.attrib[f"{{{office_rel_ns}}}id"]]
+        worksheet_path = (
+            worksheet_target
+            if worksheet_target.startswith("xl/")
+            else f"xl/{worksheet_target}"
+        )
+        worksheet = ElementTree.fromstring(archive.read(worksheet_path))
+
+        shared_strings: list[str] = []
+        if "xl/sharedStrings.xml" in archive.namelist():
+            shared = ElementTree.fromstring(archive.read("xl/sharedStrings.xml"))
+            for item in shared.findall("m:si", ns):
+                shared_strings.append(
+                    "".join(text.text or "" for text in item.findall(".//m:t", ns))
+                )
+
+        def _cell_value(cell: ElementTree.Element) -> str:
+            cell_type = cell.attrib.get("t")
+            if cell_type == "inlineStr":
+                return "".join(text.text or "" for text in cell.findall(".//m:t", ns))
+            value = cell.find("m:v", ns)
+            if value is None or value.text is None:
+                return ""
+            if cell_type == "s":
+                try:
+                    return shared_strings[int(value.text)]
+                except (ValueError, IndexError):
+                    return ""
+            return value.text
+
+        dimension = worksheet.find("m:dimension", ns)
+        dimension_ref = dimension.attrib.get("ref", "") if dimension is not None else ""
+        end_reference = dimension_ref.split(":")[-1]
+        max_row_match = re.search(r"(\d+)$", end_reference)
+        max_row = int(max_row_match.group(1)) if max_row_match else 0
+        max_column = _column_number(end_reference)
+        rows = worksheet.findall(".//m:sheetData/m:row", ns)
+        timed_rows = 0
+        headers: list[str] = []
+        for row in rows:
+            row_number = int(row.attrib.get("r", "0"))
+            cells = row.findall("m:c", ns)
+            if row_number == 1:
+                headers = [_cell_value(cell) for cell in cells]
+            elif row_number >= 2 and any(
+                _column_number(cell.attrib.get("r", "")) == 1
+                and _cell_value(cell) != ""
+                for cell in cells
+            ):
+                timed_rows += 1
+
+    tank_ids = sorted({
+        int(match.group(1))
+        for header in headers
+        if (match := re.search(r"tank#(\d+)", str(header)))
+    })
+    required = {"Time [s]", "P_hose [MPa]", "T_hose [degC]"}
+    required.update({
+        template.format(id=tank_id)
+        for tank_id in [1, 2, 3, 5, 7, 8, 9]
+        for template in (
+            "HDVS_ tank#{id}_inlet_press [MPa]",
+            "HDVS_ tank#{id}_inlet_temp [degC]",
+            "HDVS_ tank#{id}_mass [kg]",
+            "HDVS_ tank#{id}_internal_press [MPa]",
+            "HDVS_ tank#{id}_internal_temp [degC]",
+        )
+    })
+    return {
+        "data_sheet_max_row": max_row,
+        "data_sheet_max_column": max_column,
+        "nonempty_timed_row_count": timed_rows,
+        "tank_ids": tank_ids,
+        "required_channels_present": required.issubset(set(headers)),
+    }
 
 
 def _gate(
@@ -3572,7 +3693,14 @@ def audit(root: Path) -> dict[str, object]:
             )
             nrel_schema_observed["required_channels_present"] = required.issubset(set(headers))
             workbook.close()
-        except (ImportError, KeyError, OSError, ValueError, StopIteration):
+        except ImportError:
+            try:
+                nrel_schema_observed.update(
+                    _nrel_xlsx_schema_without_openpyxl(nrel_raw_path)
+                )
+            except (KeyError, OSError, ValueError, StopIteration, zipfile.BadZipFile, ElementTree.ParseError):
+                pass
+        except (KeyError, OSError, ValueError, StopIteration):
             pass
     nrel_boundary_pass = bool(
         (nrel_boundary or {}).get("schema_version") == 1
