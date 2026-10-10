@@ -12,6 +12,7 @@ import zipfile
 import xml.etree.ElementTree as ET
 from contextlib import closing
 from datetime import datetime, timezone
+from functools import lru_cache
 from pathlib import Path
 
 DEFAULT_DB = Path(__file__).resolve().parents[1] / "data" / "hazop.sqlite3"
@@ -136,14 +137,28 @@ def import_workbook(workbook: Path, destination: Path = DEFAULT_DB) -> dict:
     return {**metadata, "counts": {k: len(v) for k, v in data.items()}}
 
 
-def load_catalog(path: Path | None = None) -> dict:
-    path = path or definition_path()
+@lru_cache(maxsize=4)
+def _load_catalog_cached(path_text: str) -> dict:
+    """Load one immutable definition snapshot from SQLite.
+
+    The catalogue is a packaged, versioned definition database and is not
+    modified while a simulation is running.  Caching the decoded snapshot
+    avoids reopening SQLite and decoding the same JSON rows for every monitor
+    frame, sensor detail request, and LLM question.  Callers that need to
+    edit a catalogue in tests should continue to use ``copy.deepcopy``.
+    """
+    path = Path(path_text)
     with closing(sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)) as db:
         result = {table: [json.loads(x[0]) for x in db.execute(f"SELECT payload FROM {table} ORDER BY id")]
                   for table, _ in SHEETS.values()}
         result["metadata"] = {k: json.loads(v) for k, v in db.execute("SELECT key,value FROM metadata")}
         result["mappings"] = [json.loads(x[0]) for x in db.execute("SELECT payload FROM mappings ORDER BY sensor_id")]
     return result
+
+
+def load_catalog(path: Path | None = None) -> dict:
+    path = path or definition_path()
+    return _load_catalog_cached(str(path.resolve()))
 
 
 class EventStore:

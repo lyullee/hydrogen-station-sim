@@ -1845,3 +1845,27 @@ Verification:
 
 - LLM grounding, closed-loop grounding, validation-evidence and geometry
   diagnostic suites: 36 passed.
+
+## 2026-10-10 - Reuse repeated consequence screens and definition snapshots
+
+Status: implemented; repeated operator/automatic requests for the same live
+frame now reuse deterministic results instead of reopening SQLite and rerunning
+the HyRAM screen.
+
+- Added a bounded three-second, 96-entry process-local cache keyed by simulated
+  time, P/T and detector signals, release/fault/relief state, requested nodes,
+  backend availability and proposed scenario inputs.
+- Cached results are deep-copied before returning, so a UI/API consumer cannot
+  mutate a later response. A release or signal change naturally creates a new
+  key and cannot reuse the old consequence result.
+- Cached the versioned HAZOP definition snapshot by resolved database path;
+  editable test callers can still use `copy.deepcopy(load_catalog())`.
+
+Observed local timings on the same snapshot: the first HyRAM screen was about
+0.44 s and the next two requests were below 0.001 s; catalogue reads fell from
+about 7 ms to below 0.2 ms after the first load. This is a latency optimization
+only: no physical model, validation gate, or default geometry was changed.
+
+Verification:
+
+- Cache invalidation/deep-copy tests plus SAGA/API/grounding tests: 52 passed.

@@ -9,6 +9,7 @@ from copy import deepcopy
 import json
 import os
 import re
+import time
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 from concurrent.futures import ThreadPoolExecutor
@@ -60,6 +61,95 @@ from .hazop.response import (classify_rule, load_playbooks, response_selection,
                              prompt_guidance, render_guidance, structured_guidance)
 from .local_evidence import local_station_evidence_summary, validation_evidence_summary
 from .station_pressure_forecast import forecast_storage_pressure
+
+
+# Consequence screening is deterministic for one simulator snapshot, but the
+# main monitor, sensor workbench, and automatic alarm lane can ask for that
+# same snapshot within a few seconds of one another.  Keep a very small
+# process-local cache so a second request does not rerun the expensive HyRAM
+# calculation.  The key includes the live P/T and release state, so a new
+# fault or changed telemetry invalidates the entry naturally.
+_SENSOR_ASSESSMENT_CACHE_TTL_S = 3.0
+_SENSOR_ASSESSMENT_CACHE_MAX = 96
+_sensor_assessment_cache: dict[tuple[Any, ...], tuple[float, list[dict[str, Any]]]] = {}
+_sensor_assessment_cache_lock = Lock()
+
+
+def _sensor_assessment_cache_key(
+    frame: Mapping[str, Any], node_ids: list[str], backend: Any,
+    *, max_cases: int = 3, proposals: list[dict[str, str]] | None = None,
+) -> tuple[Any, ...]:
+    hazop = frame.get("hazop") or {}
+    signals = hazop.get("signals") or {}
+    signal_state = {
+        str(tag): {
+            "value": value.get("value"),
+            "quality": value.get("quality"),
+            "unit": value.get("unit"),
+        }
+        for tag, value in signals.items()
+        if isinstance(value, dict)
+        and str(tag).startswith(("PT-", "TT-", "FT-", "GD-", "FD-"))
+    }
+    releases = [
+        {
+            "release_id": item.get("release_id"),
+            "component_id": item.get("component_id"),
+            "mass_flow_g_s": item.get("mass_flow_g_s"),
+            "orifice_diameter_m": item.get("orifice_diameter_m"),
+            "release_source_boundary": item.get("release_source_boundary"),
+        }
+        for item in hazop.get("releases") or []
+        if isinstance(item, dict)
+    ]
+    proposal_state = proposals or []
+    # JSON gives stable ordering for the small dynamic subset without copying
+    # the full frame or leaking it into a persistent store.
+    state = json.dumps(
+        {
+            "signals": signal_state,
+            "releases": releases,
+            "active_faults": frame.get("active_faults") or [],
+            "relief_valves_open": frame.get("relief_valves_open") or [],
+            "proposals": proposal_state,
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+        default=str,
+    )
+    return (
+        frame.get("time_s"),
+        tuple(str(node) for node in node_ids),
+        int(max_cases),
+        bool(getattr(backend, "available", False)),
+        str(getattr(backend, "reason", "")),
+        state,
+    )
+
+
+def _assess_sensor_cases_cached(
+    frame: Mapping[str, Any], catalog: Mapping[str, Any], backend: Any,
+    node_ids: list[str], *, max_cases: int = 3,
+    proposals: list[dict[str, str]] | None = None,
+) -> list[dict[str, Any]]:
+    """Reuse a recent deterministic consequence screen for the same frame."""
+    key = _sensor_assessment_cache_key(
+        frame, node_ids, backend, max_cases=max_cases, proposals=proposals
+    )
+    now = time.monotonic()
+    with _sensor_assessment_cache_lock:
+        cached = _sensor_assessment_cache.get(key)
+        if cached is not None and now - cached[0] <= _SENSOR_ASSESSMENT_CACHE_TTL_S:
+            return deepcopy(cached[1])
+        if len(_sensor_assessment_cache) >= _SENSOR_ASSESSMENT_CACHE_MAX:
+            oldest = min(_sensor_assessment_cache, key=lambda item: _sensor_assessment_cache[item][0])
+            _sensor_assessment_cache.pop(oldest, None)
+    result = assess_sensor_cases(
+        frame, catalog, backend, node_ids, max_cases=max_cases, proposals=proposals
+    )
+    with _sensor_assessment_cache_lock:
+        _sensor_assessment_cache[key] = (time.monotonic(), deepcopy(result))
+    return result
 
 
 def _provider_evidence_basis(manifest: dict[str, Any]) -> dict[str, Any]:
@@ -3039,7 +3129,9 @@ async def _run_saga_scenario_analysis(
         raise HTTPException(status_code=503, detail=f"SAGA 시나리오 제안 실패: {exc}") from exc
     except ValueError as exc:
         raise HTTPException(status_code=502, detail=f"SAGA 시나리오 형식 검증 실패: {exc}") from exc
-    results = await asyncio.to_thread(assess_sensor_cases, frame, catalog, backend, [], proposals=proposals)
+    results = await asyncio.to_thread(
+        _assess_sensor_cases_cached, frame, catalog, backend, [], proposals=proposals
+    )
     calculated_results = [row for row in results if row.get("calculation_status") == "calculated"]
     if not calculated_results:
         summary = "제안한 가상 시나리오의 피해영향예측 수치 결과를 얻지 못했습니다. 현재 운전 중 사고가 발생했다는 뜻은 아닙니다."
@@ -3186,7 +3278,9 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
                            if node["node_id"] in usable_nodes and node["node_id"] in case_nodes
                            and node["node_id"] not in candidates]
             candidates = candidates[:3]
-        sensor_impacts = await asyncio.to_thread(assess_sensor_cases, frame, catalog, backend, candidates)
+        sensor_impacts = await asyncio.to_thread(
+            _assess_sensor_cases_cached, frame, catalog, backend, candidates
+        )
     legacy_impacts = [{"release_id": release.get("release_id"),
         "component_id": release.get("component_id"),
         "mass_flow_g_s": release.get("mass_flow_g_s"),
@@ -4141,8 +4235,10 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
     current_triggers = [rule for rule in active_rules + related_rules if rule.get("state") == "TRIGGER"]
     if current_triggers or _impact_requested(request.question):
         backend = await asyncio.to_thread(load_hyram_backend)
-        assessed = await asyncio.to_thread(assess_sensor_cases, frame, catalog, backend,
-                                           [payload["sensor"]["node_id"]])
+        assessed = await asyncio.to_thread(
+            _assess_sensor_cases_cached, frame, catalog, backend,
+            [payload["sensor"]["node_id"]]
+        )
         impact_results = [item for item in assessed if item.get("calculation_status") == "calculated"][:2]
     question_response_plans = response_selection(
         frame, catalog, request.question, "manual", limit=None
