@@ -189,7 +189,11 @@ def _read_header(
                     )))
             workbook.close()
             return headers
-        except (OSError, ValueError, KeyError, RuntimeError):
+        # A workspace can contain files with an ``.xlsx`` suffix that are
+        # incomplete downloads, legacy binary workbooks, or unrelated exports.
+        # Treat any per-file workbook failure as a bounded parse miss so one
+        # bad artifact cannot abort discovery of the remaining data surface.
+        except Exception:  # noqa: BLE001 - discovery must fail closed per file.
             return []
     for encoding in ("utf-8-sig", "cp949", "utf-16"):
         try:

@@ -114,6 +114,26 @@ def test_xlsx_header_inspection_is_opt_in_and_aggregate_only(tmp_path: Path) -> 
     assert "station_pressure_mpa" not in serialized
 
 
+def test_malformed_xlsx_is_counted_as_a_bounded_parse_miss(tmp_path: Path) -> None:
+    # Discovery must continue when a workspace contains a mislabeled or
+    # truncated workbook; the filename and raw contents must not enter output.
+    (tmp_path / "truncated_station_export.xlsx").write_bytes(b"not-a-zip")
+    (tmp_path / "valid_station.csv").write_text(
+        "time_s,station_pressure_mpa,gas_temperature_c,flow_g_s,operation_state\n"
+        "0,45,-35,10,fill\n",
+        encoding="utf-8",
+    )
+
+    result = scan_workspace([tmp_path], inspect_spreadsheets=True)
+
+    assert result["scan"]["spreadsheet_headers_screened"] == 1
+    assert result["scan"]["spreadsheet_header_parse_errors"] == 1
+    assert result["scan"]["csv_tsv_headers_screened"] == 1
+    serialized = json.dumps(result, ensure_ascii=False)
+    assert "truncated_station_export.xlsx" not in serialized
+    assert "station_pressure_mpa" not in serialized
+
+
 def test_single_file_full_loop_candidate_is_counted_without_publishing_headers(
     tmp_path: Path,
 ) -> None:
