@@ -1,5 +1,25 @@
 # Development Progress
 
+## 2026-10-10 - Re-scan the available local archives for the P0 loop gate
+
+Status: scan completed; no unverified data was promoted.
+
+- Re-scanned the local project archive and the larger private data workspace
+  with the privacy-bounded candidate scanner. The larger scan covered 47,061
+  machine-readable files and 14,989 CSV/TSV headers; the project archive
+  covered 84 files.
+- Both scans returned **zero eligible full-loop candidates**. They contain
+  many station-side pressure/temperature/flow/control-like headers, but no
+  file or attested file pair closes the synchronized station/dispenser to
+  receiving-vessel boundary with protocol state.
+- The scan records retain only aggregate counts and the required attestation
+  fields. They do not publish paths, filenames, headers or measured values.
+
+Evidence:
+
+- `research/local_docudata_candidate_scan_2026_10_10.json`
+- `research/local_hrs_sim_candidate_scan_2026_10_10.json`
+
 ## 2026-10-10 - Prepare the accident-casebook review packet
 
 Status: machine preparation complete; human gates remain intentionally open.

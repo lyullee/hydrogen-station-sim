@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "artifact_type": "privacy_bounded_local_workspace_candidate_scan",
+  "status": "discovery_only",
+  "generated_at": "2026-10-10",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "source_identifiers_published": false,
+    "raw_rows_persisted": false,
+    "candidate_values_persisted": false
+  },
+  "scan": {
+    "machine_readable_files": 84,
+    "path_keyword_candidates": 5,
+    "csv_tsv_headers_screened": 3,
+    "header_parse_errors": 0,
+    "header_family_candidate_counts": {
+      "flow_or_mass": 2,
+      "pressure": 2,
+      "temperature": 2
+    },
+    "coarse_candidate_classes": {
+      "flow_or_mass_candidate": 3,
+      "release_rig_experiment_candidate": 1,
+      "temperature_candidate": 7,
+      "unclassified_machine_readable": 72,
+      "vehicle_or_dispenser_candidate": 1
+    }
+  },
+  "eligibility": {
+    "full_loop_candidate_count": 0,
+    "decision": "DISCOVERY_ONLY_UNTIL_ATTESTED",
+    "required_attestation": [
+      "common time base and units",
+      "station/dispenser/vehicle boundary roles",
+      "initial conditions and protocol state",
+      "reuse rights and custodian confirmation"
+    ]
+  },
+  "claim_boundary": "Aggregate discovery counts only. Keyword or header matches do not prove measured status, synchronized station-to-vehicle coverage, or validation eligibility."
+}
