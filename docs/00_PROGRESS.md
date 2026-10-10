@@ -15,6 +15,8 @@ Verification:
 
 - `python scripts/run_priority_validation.py`: 41 passed, 2 dependency
   deprecation warnings, no collection errors.
+- GitHub Actions now runs the same focused P0/P1 command from a clean Python
+  3.12 environment on pushes and pull requests to `main`.
 
 ## 2026-10-10 - Mixed-format split-channel full-loop intake
 
