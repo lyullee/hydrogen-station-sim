@@ -84,7 +84,6 @@ def _read_event(path: Path, rules: PilotIntakeRules) -> dict[str, Any]:
         reader = csv.DictReader(handle)
         headers = tuple(str(value or "").strip() for value in (reader.fieldnames or ()))
         normalized = {header.lower() for header in headers if header}
-        rows = list(reader)
 
     identity_columns = sorted(
         header for header in headers
@@ -102,84 +101,106 @@ def _read_event(path: Path, rules: PilotIntakeRules) -> dict[str, Any]:
         errors.append("missing_required_column")
     if not mass_present:
         errors.append("missing_mass_flow_or_transferred_mass")
-    if len(rows) < rules.minimum_rows_per_event:
-        errors.append("too_few_rows")
 
-    time_values: list[float] = []
-    mass_values: list[float] = []
+    # Real station exports can contain millions of samples.  The intake gate
+    # needs only bounded aggregates, so stream rows instead of materializing
+    # the complete file in memory.
+    row_count = 0
+    time_count = 0
+    time_start: float | None = None
+    time_end: float | None = None
+    time_strictly_increasing = True
+    previous_time: float | None = None
+    mass_previous: float | None = None
+    mass_nonnegative = True
+    mass_monotonic = True
     if not missing_required and not identity_columns:
-        try:
-            by_lower = {header.lower(): header for header in headers}
-            for row_number, row in enumerate(rows, start=2):
-                if "elapsed_time_s" in normalized:
-                    time_values.append(_finite_float(
-                        row.get(by_lower["elapsed_time_s"], ""),
-                        column="elapsed_time_s", row_number=row_number,
-                    ))
-                if "mass_flow_g_s" in normalized:
-                    mass_values.append(_finite_float(
-                        row.get(by_lower["mass_flow_g_s"], ""),
-                        column="mass_flow_g_s", row_number=row_number,
-                    ))
-                elif "transferred_mass_kg" in normalized:
-                    mass_values.append(_finite_float(
-                        row.get(by_lower["transferred_mass_kg"], ""),
-                        column="transferred_mass_kg", row_number=row_number,
-                    ))
-                for column in (
-                    "station_pressure_mpa",
-                    "delivered_gas_temperature_c",
-                    "vehicle_pressure_mpa",
-                    "vehicle_temperature_c",
-                ):
-                    if column in normalized:
-                        _finite_float(
-                            row.get(by_lower[column], ""),
-                            column=column, row_number=row_number,
+        by_lower = {header.lower(): header for header in headers}
+        parse_error: str | None = None
+        with path.open("r", encoding="utf-8-sig", newline="") as handle:
+            reader = csv.DictReader(handle)
+            for row_number, row in enumerate(reader, start=2):
+                row_count += 1
+                try:
+                    if "elapsed_time_s" in normalized:
+                        current_time = _finite_float(
+                            row.get(by_lower["elapsed_time_s"], ""),
+                            column="elapsed_time_s", row_number=row_number,
                         )
-        except ValueError as exc:
-            errors.append(str(exc))
+                        time_count += 1
+                        if time_start is None:
+                            time_start = current_time
+                        if previous_time is not None and current_time <= previous_time:
+                            time_strictly_increasing = False
+                        previous_time = current_time
+                        time_end = current_time
+                    if "mass_flow_g_s" in normalized:
+                        mass_column = "mass_flow_g_s"
+                        current_mass = _finite_float(
+                            row.get(by_lower[mass_column], ""),
+                            column=mass_column, row_number=row_number,
+                        )
+                        if current_mass < 0.0:
+                            mass_nonnegative = False
+                    elif "transferred_mass_kg" in normalized:
+                        mass_column = "transferred_mass_kg"
+                        current_mass = _finite_float(
+                            row.get(by_lower[mass_column], ""),
+                            column=mass_column, row_number=row_number,
+                        )
+                        if mass_previous is not None and current_mass < mass_previous:
+                            mass_monotonic = False
+                    else:
+                        current_mass = None
+                    if current_mass is not None:
+                        mass_previous = current_mass
+                    for column in (
+                        "station_pressure_mpa",
+                        "delivered_gas_temperature_c",
+                        "vehicle_pressure_mpa",
+                        "vehicle_temperature_c",
+                    ):
+                        if column in normalized:
+                            _finite_float(
+                                row.get(by_lower[column], ""),
+                                column=column, row_number=row_number,
+                            )
+                except ValueError as exc:
+                    if parse_error is None:
+                        parse_error = str(exc)
+        if parse_error is not None:
+            errors.append(parse_error)
+    else:
+        with path.open("r", encoding="utf-8-sig", newline="") as handle:
+            row_count = sum(1 for _ in csv.DictReader(handle))
 
-    if time_values and any(
-        later <= earlier for earlier, later in zip(time_values, time_values[1:])
-    ):
+    if row_count < rules.minimum_rows_per_event:
+        errors.append("too_few_rows")
+    if time_count and not time_strictly_increasing:
         errors.append("elapsed_time_not_strictly_increasing")
-    if time_values and not math.isclose(time_values[0], 0.0, abs_tol=1.0e-9):
+    if time_start is not None and not math.isclose(time_start, 0.0, abs_tol=1.0e-9):
         errors.append("elapsed_time_does_not_start_at_zero")
-    if (
-        "mass_flow_g_s" in normalized
-        and mass_values
-        and any(value < 0.0 for value in mass_values)
-    ):
+    if "mass_flow_g_s" in normalized and not mass_nonnegative:
         errors.append("negative_mass_flow")
-    if (
-        "transferred_mass_kg" in normalized
-        and mass_values
-        and any(later < earlier for earlier, later in zip(mass_values, mass_values[1:]))
-    ):
+    if "transferred_mass_kg" in normalized and not mass_monotonic:
         errors.append("transferred_mass_not_monotonic")
     if rules.require_vehicle_boundary and len(vehicle_present) != len(VEHICLE_COLUMNS):
         errors.append("missing_vehicle_boundary_channel")
 
     return {
         "schema_valid": not errors,
-        "row_count": len(rows),
+        "row_count": row_count,
         "elapsed_time_s": {
-            "start": float(time_values[0]) if time_values else None,
-            "end": float(time_values[-1]) if time_values else None,
+            "start": time_start,
+            "end": time_end,
             "duration": (
-                float(time_values[-1] - time_values[0])
-                if len(time_values) >= 2 else None
+                float(time_end - time_start)
+                if time_count >= 2 and time_start is not None and time_end is not None
+                else None
             ),
-            "strictly_increasing": bool(
-                len(time_values) >= 2
-                and all(
-                    later > earlier
-                    for earlier, later in zip(time_values, time_values[1:])
-                )
-            ),
+            "strictly_increasing": bool(time_count >= 2 and time_strictly_increasing),
             "starts_at_zero": bool(
-                time_values and math.isclose(time_values[0], 0.0, abs_tol=1.0e-9)
+                time_start is not None and math.isclose(time_start, 0.0, abs_tol=1.0e-9)
             ),
         },
         "channel_presence": {

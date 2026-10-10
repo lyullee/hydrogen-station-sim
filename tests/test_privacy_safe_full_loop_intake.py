@@ -105,6 +105,25 @@ def test_identity_and_time_quality_errors_fail_closed(tmp_path: Path) -> None:
     assert "forbidden_identity_or_calendar_column" in event["errors"]
 
 
+def test_intake_counts_all_rows_without_materializing_the_event(tmp_path: Path) -> None:
+    path = tmp_path / "event.csv"
+    path.write_text(
+        "elapsed_time_s,station_pressure_mpa,delivered_gas_temperature_c,mass_flow_g_s,protocol_phase\n"
+        "0,45,-35,10,start\n"
+        "bad,46,-34,10,fill\n"
+        "2,47,-33,10,stop\n",
+        encoding="utf-8",
+    )
+
+    report = validate_privacy_safe_pilot_bundle(
+        [path], rules=PilotIntakeRules(minimum_event_count=1)
+    )
+
+    event = report["event_reports"][0]
+    assert event["row_count"] == 3
+    assert any("elapsed_time_s at row 3" in error for error in event["errors"])
+
+
 def test_station_only_bundle_is_ready_for_schema_freeze_but_not_full_loop(
     tmp_path: Path,
 ) -> None:
