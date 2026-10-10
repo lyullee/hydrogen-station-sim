@@ -9,6 +9,15 @@
 - Per-channel worksheet names are optional and are never written to the public
   freeze manifest. No external-validation gate was promoted by this change.
 
+For a quick status check or focused parallel verification, use
+`scripts/run_priority_validation.py`. It does not run the full regression and
+does not alter any evidence gate:
+
+```powershell
+\.venv\Scripts\python.exe scripts/run_priority_validation.py --no-tests
+\.venv\Scripts\python.exe scripts/run_priority_validation.py --output $env:TEMP\priority-validation.json
+```
+
 ## 2026-10-10 - Priority tracks for faster validation progress
 
 - The gap report now exposes three parallel execution tracks instead of a
