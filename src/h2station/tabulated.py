@@ -87,6 +87,7 @@ class HydrogenPropertyTable:
         weight = (clipped - grid[index]) / (grid[index + 1] - grid[index])
         return index, float(weight)
 
+    @lru_cache(maxsize=32768)
     def _pt_value(self, name: str, pressure: float, temperature: float) -> float:
         ip, wp = self._bracket(
             self._log_pressure_grid, np.log(pressure), "pressure"
@@ -221,7 +222,8 @@ class HydrogenPropertyTable:
             # row's bounded curve and let the forward refinement decide
             # whether an exact inverse exists; the explicit rho-T fallback
             # below then remains table-bounded and never extrapolates.
-            target_energy = float(np.clip(internal_energy, curve[0], curve[-1]))
+            lower, upper = float(curve[0]), float(curve[-1])
+            target_energy = min(max(float(internal_energy), lower), upper)
             temperatures.append(
                 _scalar_interp(target_energy, curve, self.temperature_grid)
             )
@@ -233,8 +235,14 @@ class HydrogenPropertyTable:
                                         self.rhot["pressure"][ir + j]) for j in (0, 1)]
         pressure_guess = pressure_rows[0] * (1.0 - wr) + pressure_rows[1] * wr
         temperature_guess = temperatures[0] * (1.0 - wr) + temperatures[1] * wr
-        log_pressure = float(np.clip(np.log(pressure_guess), self._log_pressure_grid[0], self._log_pressure_grid[-1]))
-        temperature = float(np.clip(temperature_guess, self.temperature_grid[0], self.temperature_grid[-1]))
+        log_pressure = min(
+            max(float(np.log(pressure_guess)), float(self._log_pressure_grid[0])),
+            float(self._log_pressure_grid[-1]),
+        )
+        temperature = min(
+            max(float(temperature_guess), float(self.temperature_grid[0])),
+            float(self.temperature_grid[-1]),
+        )
         # The rho-T surface provides a close initial guess.  Bilinear P-T
         # interpolation normally converges in two Newton updates; four is a
         # conservative cap for table-edge states and avoids spending the
@@ -262,14 +270,28 @@ class HydrogenPropertyTable:
                 break
             pressure_step = (rho_error * energy_dt - energy_error * rho_dt) / determinant
             temperature_step = (energy_error * rho_dp - rho_error * energy_dp) / determinant
-            log_pressure = float(np.clip(
-                log_pressure + np.clip(pressure_step, -1.0, 1.0) * (self._log_pressure_grid[ip + 1] - self._log_pressure_grid[ip]),
-                self._log_pressure_grid[0], self._log_pressure_grid[-1],
-            ))
-            temperature = float(np.clip(
-                temperature + np.clip(temperature_step, -1.0, 1.0) * (self.temperature_grid[it + 1] - self.temperature_grid[it]),
-                self.temperature_grid[0], self.temperature_grid[-1],
-            ))
+            pressure_fraction = min(max(float(pressure_step), -1.0), 1.0)
+            log_pressure = min(
+                max(
+                    log_pressure + pressure_fraction * (
+                        self._log_pressure_grid[ip + 1]
+                        - self._log_pressure_grid[ip]
+                    ),
+                    float(self._log_pressure_grid[0]),
+                ),
+                float(self._log_pressure_grid[-1]),
+            )
+            temperature_fraction = min(max(float(temperature_step), -1.0), 1.0)
+            temperature = min(
+                max(
+                    temperature + temperature_fraction * (
+                        self.temperature_grid[it + 1]
+                        - self.temperature_grid[it]
+                    ),
+                    float(self.temperature_grid[0]),
+                ),
+                float(self.temperature_grid[-1]),
+            )
         refined = self.state_pt(float(np.exp(log_pressure)), temperature)
         if (abs(refined.density - density) <= 1.0e-8 * density
                 and abs(refined.internal_energy - internal_energy) <= 1.0e-8 * max(abs(internal_energy), 1.0)):
@@ -318,7 +340,24 @@ def PropsSI(
         second_name.upper(): float(second_value),
     }
     table = hydrogen_table()
+    output_name = output.upper()
+    property_name = _OUTPUT_NAMES.get(output_name)
     if {"P", "T"} <= inputs.keys():
+        if inputs["P"] <= 0.0 or inputs["T"] <= 0.0:
+            raise ThermoDomainError("Pressure and temperature must be positive")
+        # Most RHS calls ask for one property at a time.  Building a full
+        # ThermoState for each scalar request computes every table column even
+        # when only density, enthalpy or internal energy is needed.  Keep the
+        # state_pt path for callers that need a complete state, but use the
+        # cached single-column interpolator for scalar P-T requests.  This
+        # preserves the exact same bilinear table values while avoiding a large
+        # amount of temporary dict/object work in the solver hot path.
+        if property_name is not None:
+            if property_name == "pressure":
+                return float(inputs["P"])
+            if property_name == "temperature":
+                return float(inputs["T"])
+            return table._pt_value(property_name, inputs["P"], inputs["T"])
         state = table.state_pt(inputs["P"], inputs["T"])
     elif {"DMASS", "T"} <= inputs.keys():
         state = table.state_rho_t(inputs["DMASS"], inputs["T"])
@@ -331,6 +370,6 @@ def PropsSI(
     else:
         raise ValueError(f"Unsupported tabulated property input pair: {tuple(inputs)}")
     try:
-        return float(getattr(state, _OUTPUT_NAMES[output.upper()]))
+        return float(getattr(state, _OUTPUT_NAMES[output_name]))
     except KeyError as exc:
         raise ValueError(f"Unsupported tabulated property output: {output}") from exc

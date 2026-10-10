@@ -146,10 +146,11 @@ def _sensor_assessment_cache_key(
         tuple(str(node) for node in node_ids),
         int(max_cases),
         # A test/integration assessor can intentionally return a different
-        # evaluator for the same telemetry.  The normal process path keeps
-        # this function stable, while the identity fence prevents a stale
-        # result from crossing an injected evaluator boundary.
-        id(assess_sensor_cases),
+        # evaluator for the same telemetry. Keep the callable itself in the
+        # key rather than only its ``id``: a short-lived monkeypatch can be
+        # garbage-collected and Python may recycle that integer id while an
+        # old cached result is still within its TTL.
+        assess_sensor_cases,
         bool(getattr(backend, "available", False)),
         str(getattr(backend, "reason", "")),
         state,

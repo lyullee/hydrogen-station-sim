@@ -1838,7 +1838,23 @@ function buildStation() {
   });
   function updateResponseOverlay(){
     const safety=live.virtualSafety,overlay=$('s3ResponseOverlay'),flow=document.getElementById('flowResponseOverlay');
-    if(!safety){overlay.hidden=true;if(flow)flow.hidden=true;return;}
+    if(!safety){
+      overlay.hidden=true;if(flow)flow.hidden=true;
+      updateResponseOverlay.lastSignature='';
+      return;
+    }
+    // The response overlay is DOM-heavy (chips plus evacuation targets). Keep
+    // it event-driven instead of rebuilding it for every telemetry repaint.
+    // Three.js animation and the physical frame stream remain frame-accurate.
+    const responseSignature=JSON.stringify([
+      safety.wind_direction_deg, safety.wind_speed_m_s,
+      safety.evacuated, safety.vehicles_evacuated, safety.personnel,
+      Object.entries(safety.valves||{}).map(([name,valve])=>[
+        name,Boolean(valve?.actual_open),String(valve?.status||'')
+      ]),
+    ]);
+    if(responseSignature===updateResponseOverlay.lastSignature)return;
+    updateResponseOverlay.lastSignature=responseSignature;
     const closed=Object.entries(safety.valves||{}).filter(([name,valve])=>!name.startsWith('vent.')&&!valve.actual_open).length;
     const failed=Object.entries(safety.valves||{}).filter(([,valve])=>valve.status==='failed').length;
     const vented=Object.entries(safety.valves||{}).filter(([name,valve])=>name.startsWith('vent.')&&valve.actual_open).map(([name])=>name.split('.')[1]);
@@ -1989,6 +2005,8 @@ function buildStation() {
     wheelPosition={x:event.clientX,y:event.clientY};
   },{capture:true,passive:false});
   let lastRender=0;
+  let lastMarkerPaint=0;
+  let lastRiskLabelPaint=0;
   function animate(timestamp) {
     requestAnimationFrame(animate);if(!visible||document.hidden||document.body.dataset.monitorView!=='3d'||timestamp-lastRender<33)return;lastRender=timestamp;readLive();updateDispenserHoses();
     if(Math.abs(pendingWheel)>.1){
@@ -2015,7 +2033,10 @@ function buildStation() {
     for(const vehicle of departureVehicles)vehicle.group.position.lerp(vehicle.target||vehicle.origin,.035);
     animatedFans.forEach(fan=>{fan.rotation.y=live.esd?0:timestamp*(live.flow>.01?.006:.0015);});
     if(!photoView.hidden)return;
-    controls.update();updateCameraMarkers();updateRiskLabels();animateAccidents(timestamp);renderer.render(scene,camera);
+    controls.update();
+    if(timestamp-lastMarkerPaint>=100){lastMarkerPaint=timestamp;updateCameraMarkers();}
+    if(timestamp-lastRiskLabelPaint>=100){lastRiskLabelPaint=timestamp;updateRiskLabels();}
+    animateAccidents(timestamp);renderer.render(scene,camera);
   }
   window.addEventListener('station-frame',readLive);
   drawInstruments(live,false,true);updateMonitorCards();updateCard();readLive();requestAnimationFrame(animate);

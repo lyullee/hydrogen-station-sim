@@ -10,7 +10,7 @@ from h2station.risk.runtime_backend import UnavailableHyRAMBackend
 from h2station.scenario import ReferenceScenario, build_reference_scenario
 from h2station.safety_runtime import FaultEvent, FaultKind
 from h2station.thermo import HydrogenEOS
-from h2station.tabulated import PropsSI
+from h2station.tabulated import PropsSI, hydrogen_table
 from h2station.validation import (
     DynamicModelValidator,
     OutputChannel,
@@ -46,6 +46,20 @@ def test_tabulated_density_temperature_inverse_is_consistent():
     recovered = HydrogenEOS().state_rho_t(reference.density, reference.temperature)
     assert recovered.pressure == pytest.approx(reference.pressure, rel=1.0e-9)
     assert recovered.density == pytest.approx(reference.density, rel=1.0e-9)
+
+
+@pytest.mark.parametrize("output", ["Dmass", "Umass", "Hmass", "Smass", "Cpmass"])
+def test_tabulated_pt_scalar_lookup_matches_cached_state(output):
+    """The fast scalar P-T path must return the same table value as state_pt."""
+    pressure, temperature = 68.0e6, 330.0
+    state = hydrogen_table().state_pt(pressure, temperature)
+    expected = getattr(state, {
+        "Dmass": "density", "Umass": "internal_energy", "Hmass": "enthalpy",
+        "Smass": "entropy", "Cpmass": "cp",
+    }[output])
+    assert PropsSI(output, "P", pressure, "T", temperature) == pytest.approx(
+        expected, rel=1.0e-12, abs=1.0e-9
+    )
 
 
 def test_tabulated_rho_u_boundary_is_bounded_for_cold_blowdown():

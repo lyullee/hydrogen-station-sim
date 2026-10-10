@@ -1,5 +1,30 @@
 # Development Progress
 
+## 2026-10-10 - Shorten the solver hot path with scalar table lookups
+
+Status: implemented; the numerical table and governing equations are unchanged.
+
+- The simulator's RHS called `PropsSI` hundreds of thousands of times while
+  requesting one P-T property at a time. The previous path built a complete
+  thermodynamic state and interpolated every stored property for each scalar
+  request.
+- P-T scalar requests now use a cached single-column bilinear interpolation
+  and retain the full-state path for inverse pairs and callers that need a
+  complete state. Pressure/temperature validation and table endpoints remain
+  the same.
+- A 20 s reference run with a 0.5 s control period measured about 3.9 s under
+  `cProfile` after this change (previous profile about 6.4 s). This is a local
+  development benchmark, not a real-time guarantee; inverse `rho-u` solves and
+  LSODA remain the next numerical hotspots.
+- The inverse `rho-u` path also avoids NumPy scalar `clip` allocations in its
+  Newton-boundary clamps. A repeated local wall-clock run changed from about
+  1.86 s to 1.55 s for the same 20 s case; the result is an optimization
+  measurement, not a new scientific validation claim.
+
+Verification:
+
+- Scalar table equivalence and core/Hazop/protocol tests: 87 passed.
+
 ## 2026-10-10 - Bound interactive SAGA latency
 
 Status: implemented; interactive SAGA calls no longer hold the digital-twin
