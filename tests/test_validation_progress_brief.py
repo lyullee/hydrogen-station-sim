@@ -23,5 +23,5 @@ def test_validation_progress_brief_keeps_bounded_claims_and_negative_holdout() -
     assert "56,854,143개 행" in report
     assert "0 / 8 통과" in report
     assert "새 full-loop 측정 코호트: **확인되지 않음**" in report
-    assert "원자료 자체를 저장소에 올릴 필요는 없습니다" in report
-    assert "차량 충전 정확도나 현장 안전한계로 확대하지 않습니다" in report
+    assert "The synchronized station-to-vehicle data gap is documented as a paper limitation and is no longer a required goal gate." in report
+    assert "SAGA" in report

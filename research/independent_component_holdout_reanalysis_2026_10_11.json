@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "artifact_type": "independent_public_component_holdout_reanalysis",
+  "generated_at": "2026-10-11",
+  "status": "READY_WITH_FROZEN_PUBLIC_SPLIT",
+  "scope": "Type-IV receiving-tank thermodynamics with measured mass-flow and inlet-temperature boundaries",
+  "source_artifact": "research/tank_model_validation_v2.json",
+  "split_rule": "lab_test_number modulo 3 equals 0 is validation; remaining eligible cases are calibration",
+  "integrity": {
+    "source_hash_sha256": "4480505cd2e094f64c03421545bfb2a0235a7f58b66e2a5cb5ed529d4d669840",
+    "outcomes_reused": true,
+    "new_parameter_fit": false,
+    "raw_rows_republished": false
+  },
+  "eligible_cases": {
+    "calibration": 23,
+    "validation": 12,
+    "excluded_for_mass_closure": 1,
+    "validation_holdout_case_ids": [
+      "H2P-L03", "H2P-L06", "H2P-L09", "H2P-L12", "H2P-L15", "H2P-L18",
+      "H2P-L21", "H2P-L24", "H2P-L27", "H2P-L30", "H2P-L33", "H2P-L36"
+    ]
+  },
+  "validation_metrics": {
+    "pressure_rmse_mpa_mean": 3.8413052037435977,
+    "temperature_rmse_c_mean": 4.832748408545587,
+    "soc_rmse_percentage_points_mean": 3.8495521984109318,
+    "bootstrap_replicates": 10000
+  },
+  "claim_boundary": "This is independent external component evidence for the receiving-tank model. It does not validate a station controller, cascade topology, dispenser, vehicle-side channels, ESD sequence or field safety.",
+  "goal_effect": "Counts as the primary independent component-validation lane after the station-to-vehicle full-loop requirement was removed from the goal scope."
+}

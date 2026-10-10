@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "artifact_type": "privacy_bounded_local_workspace_candidate_scan",
+  "status": "discovery_only",
+  "generated_at": "2026-10-11",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "source_identifiers_published": false,
+    "raw_rows_persisted": false,
+    "candidate_values_persisted": false
+  },
+  "scan": {
+    "machine_readable_files": 2298,
+    "path_keyword_candidates": 273,
+    "csv_tsv_headers_screened": 617,
+    "header_parse_errors": 0,
+    "spreadsheet_headers_screened": 90,
+    "spreadsheet_header_parse_errors": 0,
+    "spreadsheet_inspection_enabled": true,
+    "scientific_headers_screened": 86,
+    "scientific_header_parse_errors": 34,
+    "scientific_inspection_enabled": true,
+    "header_family_candidate_counts": {
+      "flow_or_mass": 372,
+      "pressure": 546,
+      "protocol_or_control": 46,
+      "temperature": 490,
+      "vehicle_or_dispenser": 443
+    },
+    "coarse_candidate_classes": {
+      "boundary_bundle_missing_protocol_candidate": 8,
+      "control_or_protocol_candidate": 114,
+      "flow_or_mass_candidate": 78,
+      "pressure_candidate": 89,
+      "release_rig_experiment_candidate": 70,
+      "temperature_candidate": 21,
+      "unclassified_machine_readable": 1445,
+      "vehicle_or_dispenser_candidate": 274,
+      "vehicle_pressure_temperature_candidate": 199
+    },
+    "split_pair_candidate_count": 0
+  },
+  "eligibility": {
+    "full_loop_candidate_count": 0,
+    "partial_loop_candidate_count": 8,
+    "split_pair_candidates_require_attestation": 0,
+    "decision": "DISCOVERY_ONLY_UNTIL_ATTESTED",
+    "required_attestation": [
+      "common time base and units",
+      "station/dispenser/vehicle boundary roles",
+      "initial conditions and protocol state",
+      "reuse rights and custodian confirmation"
+    ]
+  },
+  "claim_boundary": "Aggregate discovery counts only. Keyword or header matches do not prove measured status, synchronized station-to-vehicle coverage, or validation eligibility."
+}

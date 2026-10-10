@@ -6,7 +6,9 @@
 
 - IJHE 내부 게이트: **PASS 127 / FAIL 10 / PENDING 7**.
 - 제한된 투고 준비: **아직 불가**.
-- 사용자 목표(독립 full-loop 포함): **아직 미달**.
+- 현재 주 목표: **station-side 안전 디지털 트윈·구성요소 검증·근거 기반 SAGA 응답**.
+- 동기화 station-to-vehicle full-loop 검증: **주 목표에서 제외하고 논문 한계로 명시**.
+- 개정 주 목표 보조 지표: **기록 없음 PASS / 기록 없음 FAIL / 기록 없음 PENDING = 기록 없음%**. 범위 조정 결과이지 새 검증 통과가 아닙니다.
 
 ## 지금 바로 사용할 수 있는 근거
 
@@ -28,18 +30,22 @@
 3. full-loop가 아닌 범위로 안전 시나리오, 단계별 대응, 가상 밸브·ESD 조치의 실행 가능성을 평가합니다.
 4. 결과 화면과 LLM은 위 주장 경계를 자동 표시해 station-side 결과가 차량 full-loop 검증처럼 보이지 않게 합니다.
 
-## full-loop 게이트를 닫기 위한 최소 입력
+## 선택적 후속 확장 (현재 목표의 필수 조건 아님)
 
-- 비식별 이벤트 **3건 이상**.
+- 향후 full-loop를 별도 확장할 경우에만 비식별 이벤트 **3건 이상**.
 - 공통 경과시간, station/디스펜서 압력, 공급가스 또는 경계 온도, 질량유량/이송질량, 프로토콜 시작·종료 상태.
 - 가능하면 차량·수용용기 압력·온도, cascade 선택 상태, precooler 출구온도, ESD·fault 전이.
-- 단위·초기조건·센서 품질·동기화·재사용 권한에 대한 관리자 확인. 원자료 자체를 저장소에 올릴 필요는 없습니다.
+- Units, initial conditions, sensor quality, synchronization and reuse rights must be confirmed by the custodian; raw files need not be published.
+- The synchronized station-to-vehicle data gap is documented as a paper limitation and is no longer a required goal gate.
+- 윤리·전문가 평가는 물리 모델 검증이 아니라 SAGA가 사람의 안전 판단을 개선한다고 주장할 때 필요한 별도 사람 대상 평가입니다. 그 주장을 하지 않으면 미실시 한계로 명시합니다.
 
 ## 근거 파일
 
 - `research/data_coverage_summary_2026_10_10.json`
 - `research/ijhe_readiness_audit.json`
 - `research/local_candidate_full_loop_screen_2026_10_09.json`
+- `research/GOAL_SCOPE_AMENDMENT_2026_10_11.md`
+- `research/PUBLIC_STATION_TO_VEHICLE_SEARCH_2026_10_11.md`
 - `data/public_validation/results/closed_loop_external_holdout/validation.json`
 
 이 브리프는 모델이나 검증 게이트를 변경하지 않습니다. 새로운 자료가 들어오면 동일한 동결·시간축·권한 검사를 거친 뒤 다시 생성합니다.

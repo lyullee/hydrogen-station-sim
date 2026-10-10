@@ -11,50 +11,52 @@
   "policy": {
     "parallel_lanes": true,
     "do_not_promote_post_access_diagnostics": true,
-    "do_not_wait_for_p2_before_p0_p1": true
+    "do_not_wait_for_p2_before_p0_p1": true,
+    "primary_goal_scope_amended": true,
+    "optional_human_evaluation": true
   },
   "priority_lanes": [
     {
       "id": "full_loop_external_validation",
       "status": "FAIL",
-      "priority": "P0",
-      "action": "외부 기관의 동기화된 충전소·차량 계측 8건 이상을 확보하고, 모델·프로토콜을 먼저 고정한 뒤 재현성 평가",
-      "owner": "데이터 제공기관/검증 담당"
+      "priority": "OPTIONAL",
+      "action": "주 목표에서 제외하고 논문 한계로 기록한다. 승인된 원자료가 도착할 때만 별도 사전 동결 평가를 재개한다.",
+      "owner": "향후 데이터 제공기관/별도 확장"
     },
     {
       "id": "hiad_casebook_frozen",
       "status": "PENDING",
-      "priority": "P0",
-      "action": "윤리 결정 후 24개 사건 케이스북 고정, 3인 독립 평가자에게 alarm/direct/RAG 응답을 수집·분석",
-      "owner": "연구책임자/독립 평가자"
+      "priority": "OPTIONAL",
+      "action": "물리 모델 논문에는 필수가 아니다. SAGA가 사람의 안전 판단을 개선한다고 주장할 때만 기관 결정 후 독립 평가를 진행한다.",
+      "owner": "SAGA 효과 주장 시 연구책임자/독립 평가자"
     },
     {
       "id": "hiad_holdout_collection",
       "status": "PENDING",
-      "priority": "P0",
-      "action": "윤리 결정 후 24개 사건 케이스북 고정, 3인 독립 평가자에게 alarm/direct/RAG 응답을 수집·분석",
-      "owner": "연구책임자/독립 평가자"
+      "priority": "OPTIONAL",
+      "action": "물리 모델 논문에는 필수가 아니다. SAGA가 사람의 안전 판단을 개선한다고 주장할 때만 기관 결정 후 독립 평가를 진행한다.",
+      "owner": "SAGA 효과 주장 시 연구책임자/독립 평가자"
     },
     {
       "id": "independent_expert_review_complete",
       "status": "PENDING",
-      "priority": "P0",
-      "action": "윤리 결정 후 24개 사건 케이스북 고정, 3인 독립 평가자에게 alarm/direct/RAG 응답을 수집·분석",
-      "owner": "연구책임자/독립 평가자"
+      "priority": "OPTIONAL",
+      "action": "물리 모델 논문에는 필수가 아니다. SAGA가 사람의 안전 판단을 개선한다고 주장할 때만 기관 결정 후 독립 평가를 진행한다.",
+      "owner": "SAGA 효과 주장 시 연구책임자/독립 평가자"
     },
     {
       "id": "institutional_ethics_determination",
       "status": "PENDING",
-      "priority": "P0",
-      "action": "기관의 인간대상 연구 해당 여부 또는 면제/비해당 결정을 문서화",
-      "owner": "기관 IRB/연구책임자"
+      "priority": "OPTIONAL",
+      "action": "물리 모델 논문에는 필수가 아니다. SAGA가 사람의 안전 판단을 개선한다고 주장할 때만 기관 결정 후 독립 평가를 진행한다.",
+      "owner": "SAGA 효과 주장 시 연구책임자/독립 평가자"
     },
     {
       "id": "saga_effectiveness_and_safety_supported",
       "status": "PENDING",
-      "priority": "P0",
-      "action": "윤리 결정 후 24개 사건 케이스북 고정, 3인 독립 평가자에게 alarm/direct/RAG 응답을 수집·분석",
-      "owner": "연구책임자/독립 평가자"
+      "priority": "OPTIONAL",
+      "action": "물리 모델 논문에는 필수가 아니다. SAGA가 사람의 안전 판단을 개선한다고 주장할 때만 기관 결정 후 독립 평가를 진행한다.",
+      "owner": "SAGA 효과 주장 시 연구책임자/독립 평가자"
     },
     {
       "id": "dickens_typeiii_prospective_validation",
@@ -134,5 +136,30 @@
       "owner": "모델 검증 담당"
     }
   ],
-  "claim_boundary": "우선순위 매트릭스는 작업 순서를 정하는 운영 문서이며, 외부 검증이나 논문 게재를 대신하지 않는다."
+  "claim_boundary": "우선순위 매트릭스는 작업 순서를 정하는 운영 문서이며, 외부 검증이나 논문 게재를 대신하지 않는다.",
+  "scope_amendment": {
+    "primary_goal": "station-side safety digital twin, component evidence and direct-answer SAGA guidance",
+    "excluded_primary_goal": [
+      "synchronized station-to-vehicle raw data validation",
+      "vehicle-side controller/ESD channel validation"
+    ],
+    "paper_limitation": "No reuse-cleared synchronized station-to-vehicle raw bundle was identified in the current search.",
+    "optional_saga_substudy": "institutional ethics/exemption and independent expert review are required only if the paper claims SAGA improves human safety guidance."
+  },
+  "primary_scope_progress": {
+    "PASS": 127,
+    "FAIL": 9,
+    "PENDING": 2,
+    "TOTAL": 138,
+    "gate_closure_percent": 92.0,
+    "excluded_optional_or_out_of_scope": [
+      "full_loop_external_validation",
+      "institutional_ethics_determination",
+      "hiad_casebook_frozen",
+      "hiad_holdout_collection",
+      "independent_expert_review_complete",
+      "saga_effectiveness_and_safety_supported"
+    ],
+    "interpretation": "보조 지표이며 새 데이터 검증 통과가 아니라 목표 범위 변경의 결과"
+  }
 }

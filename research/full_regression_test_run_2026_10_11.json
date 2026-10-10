@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-10T22:39:24.918523+00:00",
+  "generated_at": "2026-10-10T22:57:50.7947817+00:00",
   "artifact_type": "full_regression_test_run",
   "command": ".venv\\Scripts\\python.exe -m pytest -q",
   "status": "PASS",
-  "tests_passed": 1372,
+  "tests_passed": 1373,
   "tests_failed": 0,
   "warnings": 20,
-  "elapsed_seconds": 191.94,
-  "source_commit": "34c7b9e9b540b2ef2d5fa78b588edf7b29788f26",
+  "elapsed_seconds": 269.91,
+  "source_commit": "71e8b72a8d30cccb490b028a89bbf133254812c1",
   "readiness_snapshot": "research/goal_progress_snapshot_2026_10_11.json",
   "interpretation": "All executable tests pass. This verifies implementation integrity only; it does not convert the independent validation FAIL/PENDING gates to PASS."
 }

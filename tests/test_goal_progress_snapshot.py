@@ -18,3 +18,7 @@ def test_progress_snapshot_is_a_gate_closure_metric() -> None:
     assert snapshot["gate_closure_percent"] == 88.2
     assert snapshot["full_user_objective_ready"] is False
     assert "validated_full_station_to_vehicle_digital_twin" in snapshot["interpretation"]["do_not_claim"]
+    scope = snapshot["interpretation"]["scope_amendment_2026_10_11"]
+    assert "synchronized station-to-vehicle raw logger validation" in scope["excluded_from_primary_goal"]
+    assert snapshot["interpretation"]["priority_status_2026_10_11"]["independent_component_holdout"] == "retained_public_type_iv_split_ready"
+    assert snapshot["primary_scope_progress_2026_10_11"]["gate_closure_percent"] == 88.2
