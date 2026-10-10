@@ -1,5 +1,21 @@
 # Development Progress
 
+## 2026-10-10 - Combine the priority fast lanes
+
+Status: implemented; P0/P1 software and physics checks can now start together.
+
+- Added `scripts/run_priority_focus.py`, which composes the focused software/evidence
+  runner and the bounded physics-diagnostic runner in one process-level fast lane.
+- `--priority P0` runs only the highest-impact checks; `--priority all` keeps the
+  independent P0/P1 tracks concurrent. The report preserves both runners' claim
+  boundaries and does not alter model parameters or readiness gates.
+- This avoids waiting for a serial “software first, diagnostics second” cycle while
+  keeping the full regression suite available for broad changes.
+
+Verification:
+
+- `tests/test_priority_focus.py`: 1 passed.
+
 ## 2026-10-10 - Inspect scientific containers in local data discovery
 
 Status: implemented; MATLAB/HDF5 channel-name screening completed without
