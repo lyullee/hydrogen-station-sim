@@ -1,5 +1,21 @@
 # Development Progress
 
+## 2026-10-10 - Refresh stale evidence-integrity hashes after code changes
+
+Status: implemented; two audit failures caused by stale source digests are
+resolved without changing any model result or readiness decision.
+
+- Recomputed only the recorded SHA-256 values for the current Type-IV runtime
+  calibration sources and the public accident-precedent routing sources.
+- The audit returned to **127 PASS / 10 FAIL / 7 PENDING**. The remaining ten
+  FAIL gates are scientific/component or full-loop gates, not stale-integrity
+  artifacts.
+- The negative validation results and the full-loop blocker remain unchanged.
+
+Verification:
+
+- `tests/test_ijhe_readiness_audit.py tests/test_llm_grounding.py`: **29 passed**.
+
 ## 2026-10-10 - Process-parallelize independent MC partial-station replays
 
 Status: implemented; the slowest eight-case MC boundary diagnostic now runs
