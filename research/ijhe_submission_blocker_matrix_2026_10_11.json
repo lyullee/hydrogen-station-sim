@@ -1,0 +1,405 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-10T22:34:07.457440+00:00",
+  "target_journal": {
+    "title": "International Journal of Hydrogen Energy",
+    "issn": "0360-3199",
+    "publisher_scope_url": "https://shop.elsevier.com/journals/international-journal-of-hydrogen-energy/0360-3199",
+    "guide_for_authors_url": "https://www.elsevier.com/journals/international-journal-of-hydrogen-energy/0360-3199/guide-for-authors",
+    "data_statement_guidance_url": "https://www.elsevier.com/researcher/author/tools-and-resources/research-data/data-statement",
+    "readiness_interpretation": "A local gate is an evidence-readiness decision, not an acceptance or peer-review prediction."
+  },
+  "decision": {
+    "bounded_ijhe_submission_ready": false,
+    "full_user_objective_ready": false,
+    "goal_completion_permitted": false,
+    "interpretation": "A bounded manuscript may be drafted around model-level and qualitative evidence, but the validated full-station digital-twin objective cannot be declared complete."
+  },
+  "gate_counts": {
+    "PASS": 127,
+    "FAIL": 10,
+    "PENDING": 7
+  },
+  "evidence_snapshot": {
+    "tank_model": {
+      "gate": "PASS",
+      "evidence": "research/tank_model_validation_v2.json",
+      "claim_boundary": "Type-IV tank submodel only; not a full station or safety-distance validation."
+    },
+    "typeiii_prospective_fill": {
+      "gate": "FAIL",
+      "diagnostic_gate": "PASS",
+      "evidence": [
+        "research/dickens_typeiii_prospective_protocol_2026_10_08.json",
+        "research/dickens_typeiii_prospective_result_2026_10_08.json",
+        "research/dickens_typeiii_mixed_convection_diagnostic_2026_10_08.json"
+      ],
+      "claim_boundary": "The prospective natural-convection model failed temperature screens. The post-outcome forced-mixing sensitivity identifies a mechanism but cannot revise that decision or set a runtime parameter."
+    },
+    "byrnes_typei_thermal_prospective_intake": {
+      "gate": "PASS",
+      "evidence": [
+        "research/byrnes_typei_thermal_prospective_protocol_2026_10_08.json",
+        "research/byrnes_typei_thermal_prospective_result_2026_10_08.json"
+      ],
+      "decision": "PROTOCOL_INVALID_PRIOR_OUTCOME_ACCESS",
+      "model_executed": false,
+      "claim_boundary": "This retained invalidation is neither a prospective validation nor a numerical thermal-model failure. The same Byrnes values were already classified as post-access exploratory evidence."
+    },
+    "llm_grounding": {
+      "gate": "PASS",
+      "evidence": "research/llm_evidence_grounding_validation.json",
+      "claim_boundary": "Software evidence/contradiction contract only; no operator-effectiveness or safety claim."
+    },
+    "public_incident_traceability": {
+      "gate": "PASS",
+      "independent_khk_gate": "PASS",
+      "evidence": [
+        "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json",
+        "research/khk_digital_twin_replay_coverage_2026_10_08.json",
+        "research/hiad_accident_response_coverage_evaluation_2026_10_05.json",
+        "research/hiad_digital_twin_replay_coverage_2026_10_08.json"
+      ],
+      "claim_boundary": "Qualitative scenario, canonical runtime and response grounding. HIAD contributes 34 metadata traces; independently, 22 KHK reports covering 25 incident codes traverse eight runtime families while one KOH release remains outside the gaseous-H2 scope. No accident reconstruction, frequency, calibrated probability, response-effectiveness or safety claim."
+    },
+    "confined_space_consequence_measurements": {
+      "gate": "PASS",
+      "evidence": "research/grune_ventilation_dataset_inventory_2026_10_05.json",
+      "claim_boundary": "Hash-verified CC BY 4.0 concentration/ventilation measurements only; no model comparison, outdoor separation-distance claim or full-loop validation claim."
+    },
+    "full_scale_indoor_surrogate_measurements": {
+      "gate": "PASS",
+      "evidence": "research/h2safe_indoor_release_intake_2026_10_07.json",
+      "claim_boundary": "Hash-verified full-scale indoor helium-surrogate sensor/geometry/HVAC intake only; the public fields do not calibrate H2 thresholds, site layout, outdoor consequence distances or a full filling loop."
+    },
+    "physical_hydrogen_reference_leak_detector_response": {
+      "gate": "PASS",
+      "evidence": [
+        "research/hydrogen_reference_leak_detector_protocol_2026_10_08.json",
+        "research/hydrogen_reference_leak_detector_result_2026_10_08.json"
+      ],
+      "observation_count": 45,
+      "series": [
+        {
+          "series_id": "portable_hydrogen_sniffer",
+          "spearman_rho": 0.9434563530497264,
+          "pairwise_order_concordance": 1.0,
+          "joint_pass": true
+        },
+        {
+          "series_id": "msld_vacuum",
+          "spearman_rho": 0.969087423704698,
+          "pairwise_order_concordance": 1.0,
+          "joint_pass": true
+        },
+        {
+          "series_id": "msld_sniffer",
+          "spearman_rho": 0.9486832980505139,
+          "pairwise_order_concordance": 1.0,
+          "joint_pass": true
+        }
+      ],
+      "runtime_application": false,
+      "claim_boundary": "This protocol evaluates detector response ordering to physical hydrogen reference leaks. It cannot validate the station spatial detector map, concentration magnitude, alarm or ESD setpoints, release physics, consequence distance, vehicle filling, or the full digital twin."
+    },
+    "actual_hydrogen_spatial_stratification": {
+      "gate": "PASS",
+      "evidence": [
+        "research/usn_channel_spatial_stratification_evidence_2026_10_08.json",
+        "research/USN_CHANNEL_SPATIAL_STRATIFICATION_EVIDENCE_2026_10_08.md"
+      ],
+      "experiment_count": 22,
+      "sensor_case_observation_count": 638,
+      "top_alarm_coverage_fraction": 1.0,
+      "top_trip_coverage_fraction": 1.0,
+      "top_highest_case_mean_count": 20,
+      "near_source_bottom_alarm_latency_s": 10.674999999995634,
+      "runtime_application": false,
+      "h2safe_gate_changed": false,
+      "claim_boundary": "Twenty-two physical-hydrogen tests support a descriptive layered-placement rationale inside this open-ended 5.8 m channel: ceiling probes provide broad sustained coverage, while probes in the downward-jet path can respond earlier. Because outcomes were accessed before this analysis was designed, this is not independent validation and cannot validate an outdoor station detector map, alarm setpoints, ESD effectiveness, runtime spatial routing, or the full digital twin."
+    },
+    "h2safe_spatial_detector_transfer": {
+      "gate": "FAIL",
+      "evidence": [
+        "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
+        "research/h2safe_orientation_development_2026_10_08.json",
+        "research/h2safe_directional_obstruction_development_2026_10_09.json",
+        "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json",
+        "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json",
+        "research/hytunnel_spatial_holdout_protocol_2026_10_08.json",
+        "research/hytunnel_spatial_format_amendment_2026_10_08.json",
+        "research/hytunnel_spatial_holdout_result_2026_10_08.json",
+        "research/HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md"
+      ],
+      "experiment_count": 5,
+      "median_spearman": 0.5817391304347826,
+      "joint_pass": false,
+      "post_access_orientation_candidate": {
+        "internal_reference_screen_pass": true,
+        "independent_validation_pass": false,
+        "runtime_application": false
+      },
+      "directional_obstruction_candidate": {
+        "status": "POST_ACCESS_DEVELOPMENT_ONLY_NOT_VALIDATION",
+        "evaluation_status": "NOT_RUN",
+        "independent_validation_pass": false,
+        "runtime_application": false,
+        "reason": "H2SAFE Lab-2 publishes duct speeds and areas but not duct coordinates/vectors in the sensor frame; applying an invented vector would be post-hoc pseudo-validation."
+      },
+      "actual_hydrogen_holdout_candidate": {
+        "status": "INELIGIBLE_NO_MODEL_EVALUATION",
+        "eligible": false,
+        "failed_required_fields": [
+          "source_coordinates",
+          "sensor_coordinates_in_same_frame",
+          "release_orientation_class",
+          "per_sensor_numeric_response"
+        ],
+        "model_evaluation_executed": false,
+        "runtime_candidate_enabled": false
+      },
+      "actual_hydrogen_external_diagnostic": {
+        "status": "EXTERNAL_POST_ACCESS_DIAGNOSTIC_NOT_VALIDATION",
+        "sensor_count": 6,
+        "baseline_spearman_rho": 0.6,
+        "candidate_spearman_rho": 0.942857142857143,
+        "top3_recall": 1.0,
+        "independent_validation_pass": false,
+        "runtime_candidate_enabled": false
+      },
+      "actual_hydrogen_independent_holdout": {
+        "execution_integrity_gate": "PASS",
+        "experiment_count": 18,
+        "median_spearman": 0.5600876703795867,
+        "spearman_at_least_0_4_fraction": 0.8333333333333334,
+        "mean_top5_recall": 0.5777777777777777,
+        "nearest_in_response_quartile_fraction": 0.9444444444444444,
+        "screens": {
+          "all_18_declared_cases_eligible": true,
+          "median_spearman_at_least_0_5": true,
+          "spearman_at_least_0_4_fraction_at_least_0_6": true,
+          "mean_top5_recall_at_least_0_6": false,
+          "nearest_in_response_quartile_fraction_at_least_0_7": true
+        },
+        "joint_screen_pass": false,
+        "runtime_candidate_enabled": false
+      },
+      "claim_boundary": "This post-access diagnostic supports only a development choice to replace arbitrary near/far detector assignment with a transparent coordinate ranking. It failed the joint spatial screen and is not independent validation."
+    },
+    "consequence_component_evidence": {
+      "ignited_confined_pressure_peaking": {
+        "decision": "completed_prospective_protocol_execution",
+        "primary_pass_count": 27,
+        "case_count": 27,
+        "claim_boundary": "This result concerns only ignited pressure peaking in a vented enclosure. It does not validate an outdoor H70 station fueling loop, jet-flame radiation distance, emergency controls, operator response, or SAGA effectiveness."
+      },
+      "qra_multimethod_context": {
+        "method_count": 7,
+        "retained_row_count": 211,
+        "maximum_method_ratio": 3.3099783669562113,
+        "runtime_thermal_within_envelope": 2,
+        "runtime_overpressure_within_envelope": 0,
+        "runtime_case_count": 4,
+        "experimental_validation": false,
+        "automatic_calibration": false
+      }
+    },
+    "real_station_candidate": {
+      "status": "PUBLIC_ROWS_POST_ACCESS_MAPPING_INCOMPLETE",
+      "evidence": [
+        "research/methytrucks_2026_public_measurement_intake.json",
+        "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json",
+        "research/public_full_loop_data_update_2026_10_08.json",
+        "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
+        "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json"
+      ],
+      "claim_boundary": "Fifteen public MetHyTrucks physical-HRS sampling-system workbooks support post-access component diagnostics, and the three-file Hy-SaM subset supports a no-fit tank diagnostic. The official D3 implementation report classifies Groups A and C as 35 MPa direct/serial sampling-system tests with sampling-hardware sinks rather than vehicle tanks. Missing authoritative channel/unit, geometry and controller metadata plus prior outcome inspection prevent a prospective full-loop claim. NBSDC raw workbooks remain application-controlled."
+    },
+    "methytrucks_complete_public_measurement_intake": {
+      "gate": "PASS",
+      "evidence": "research/methytrucks_2026_public_measurement_intake.json",
+      "workbook_count": 15,
+      "sample_count": 58440,
+      "mass_closure_screen_pass_count": 8,
+      "full_loop_eligible": false,
+      "claim_boundary": "The 15 CC BY 4.0 workbooks are real public experimental traces and can support post-access component diagnostics, including descriptive flow-to-scale mass closure. D3 identifies Groups A and C as 35 MPa direct/serial sampling-system tests, not vehicle-tank filling traces. Outcomes were inspected before this audit and the release lacks an authoritative tag/unit dictionary, vehicle geometry and station controller states. It therefore does not establish prospective validation, a complete HRS-to-vehicle full-loop result, safety performance or regulatory compliance."
+    },
+    "methytrucks_hysam_postaccess": {
+      "status": "PASS_DIAGNOSTIC_ONLY",
+      "evidence": "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json",
+      "case_count": 5,
+      "pressure_rmse_case_mean_mpa": 1.2866244910563729,
+      "temperature_rmse_case_mean_c": 4.57841318799785,
+      "descriptive_joint_screen_pass_fraction": 1.0,
+      "claim_boundary": "This artifact proves file integrity, synchronized 0.5 s measurement availability, flow-to-cumulative-mass consistency and a no-fit candidate tank replay. It is a post-access diagnostic, not an untouched holdout, a full station-to-vehicle validation result, SAE certification or field-safety validation."
+    },
+    "methytrucks_group_d_prospective": {
+      "gate": "PASS",
+      "evidence": [
+        "research/methytrucks_group_d_prospective_protocol_2026_10_08.json",
+        "research/methytrucks_group_d_prospective_result_2026_10_08.json"
+      ],
+      "decision": "MODEL_SCREEN_NOT_RUN_INELIGIBLE_METADATA",
+      "sample_count": 720,
+      "unresolved_required": [
+        "vehicle_pressure",
+        "vehicle_temperature",
+        "engineering_units",
+        "independent_tank_geometry"
+      ],
+      "model_executed": false,
+      "claim_boundary": "This retained prospective negative result demonstrates that the selected public Group D workbook cannot support the predeclared vehicle-tank or station full-loop score. It is not evidence that the model failed a numerical prediction, and it does not validate station safety or emergency response."
+    }
+  },
+  "blocking_matrix": [
+    {
+      "id": "tank_thermal_transfer_validation",
+      "status": "FAIL",
+      "why_blocked": "The prospectively frozen Type-III fill passed both pressure screens but failed both temperature screens. The published source now confirms a 5 mm inlet pipe extending 82 mm into the tank, and a post-outcome mixed-convection sensitivity passes all four screens for that diameter; however, the candidate is not prospective, the source and archived tank lengths differ, and the archived case lacks the time-resolved inlet-temperature boundary. A proposed Byrnes Type-I route was invalidated when the same numerical files were found in the already-consumed Zenodo exploratory archive; its mean-temperature schema also differed from the frozen upper/lower endpoint pair.",
+      "evidence": [
+        "research/DICKENS_TYPEIII_PROSPECTIVE_VALIDATION_2026_10_08.md",
+        "research/dickens_typeiii_prospective_result_2026_10_08.json",
+        "research/dickens_typeiii_mixed_convection_diagnostic_2026_10_08.json",
+        "research/dickens_typeiii_source_geometry_mapping_2026_10_09.json",
+        "research/dickens_typeiii_geometry_resolved_followup_2026_10_10.json",
+        "research/byrnes_typei_thermal_prospective_protocol_2026_10_08.json",
+        "research/byrnes_typei_thermal_prospective_result_2026_10_08.json"
+      ],
+      "unblock_criterion": "Resolve the source-versus-archive tank length, freeze the source-confirmed 5 mm/82 mm inlet geometry and time-resolved inlet-temperature boundary before opening a new filling trace, then pass the joint pressure and temperature screens without post-outcome parameter selection.",
+      "next_action": "Open a new untouched Type-III fill or discharge protocol after resolving tank length and inlet-temperature provenance; retain the result regardless of outcome."
+    },
+    {
+      "id": "full_loop_external_validation",
+      "status": "FAIL",
+      "why_blocked": "The frozen external station-loop holdout has 0/8 engineering-screen passes. The public MetHyTrucks D3 report confirms Groups A and C are 35 MPa direct/serial sampling-system tests, not vehicle-tank filling traces; the post-access Hy-SaM set also has incomplete mapping. A separately frozen Group D H70 vehicle event was retained prospectively, but it lacks vehicle tank pressure and temperature, engineering units and independently documented tank geometry, so no model score was permitted.",
+      "evidence": [
+        "data/public_validation/results/closed_loop_external_holdout/validation.json",
+        "research/mc_default_source_boundary_identifiability_2026_10_04.json",
+        "research/public_full_loop_search_recheck_2026_10_04.json",
+        "research/public_full_loop_search_recheck_2026_10_06.json",
+        "research/public_full_loop_data_update_2026_10_08.json",
+        "research/methytrucks_2026_public_measurement_intake.json",
+        "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json",
+        "research/methytrucks_group_d_prospective_protocol_2026_10_08.json",
+        "research/methytrucks_group_d_prospective_result_2026_10_08.json",
+        "research/public_operational_benchmark_recheck_2026_10_05.json",
+        "research/public_operational_benchmark_face_validity_2026_10_05.json",
+        "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
+        "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json"
+      ],
+      "unblock_criterion": "Obtain a clean, rights-cleared, pre-access frozen external dataset with synchronized station pressure/temperature/mass-flow, protocol/controller, dispenser/nozzle, and vehicle/receptacle channels; resolve the source-boundary/topology ambiguity; then score >=8 cases with >=80% screen pass fraction.",
+      "next_action": "Request at least eight disjoint physical-HRS vehicle traces with explicit vehicle pressure/temperature, tank geometry, units and controller/cascade states. Do not spend additional model-scoring effort on MetHyTrucks Groups A/C for the full-loop gate; their official physical test class is now resolved."
+    },
+    {
+      "id": "consequence_model_external_validation",
+      "status": "FAIL_OR_PENDING",
+      "why_blocked": "The prospectively frozen ignited confined pressure-peaking component passed 27/27 primary screens, but that narrow result does not validate outdoor jet-fire or blast distance. The seven-method DATA3632 simulation comparison retained 211 rows and shows material method/source-boundary spread: the current runtime lies inside 2/4 thermal envelopes and 0/3 comparable overpressure envelopes. The dispenser mass-flow boundary differs by about 22-fold. Because DATA3632 is a simulation ensemble rather than experimental truth, these findings diagnose the boundary but cannot close the station consequence gate or authorize post-outcome tuning.",
+      "evidence": [
+        "manuscript/ijhe_readiness_audit.json",
+        "research/preslhy_blowdown_validation.json",
+        "research/proust_independent_release_validation.json",
+        "research/schefer_transient_release_validation.json",
+        "research/grune_2014_pressure_decay_validation.json",
+        "research/usn_17934047_ignited_pressure_peaking_result_2026_10_08.json",
+        "research/qra_multimethod_comparison_protocol_2026_10_08.json",
+        "research/qra_multimethod_comparison_2026_10_08.json",
+        "research/runtime_qra_envelope_comparison_2026_10_08.json"
+      ],
+      "unblock_criterion": "Pass a pre-access frozen, rights-cleared physical outdoor jet-fire/overpressure holdout with matched pressure, temperature, aperture or measured mass flow and weather, or narrow every claim to the already passed ignited confined pressure-peaking component.",
+      "next_action": "Classify free-orifice and flow-limited line releases explicitly before any calibration; acquire a measured outdoor consequence holdout and keep the simulation-method ensemble as uncertainty context only."
+    },
+    {
+      "id": "h2safe_spatial_detector_transfer",
+      "status": "FAIL",
+      "why_blocked": "The exact frozen orientation-class candidate was evaluated without parameter fitting on 18 HyTunnel actual-hydrogen experiments. It passed three of four scientific screens: median Spearman 0.560, fraction with rho >= 0.4 of 0.833, and nearest predicted sensor in the observed response quartile in 0.944 of cases. Mean top-five recall was 0.578, below the frozen 0.600 threshold, so the joint decision remains FAIL and runtime routing remains disabled.",
+      "evidence": [
+        "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
+        "research/H2SAFE_SPATIAL_RESPONSE_DIAGNOSTIC_2026_10_08.md",
+        "research/h2safe_orientation_development_2026_10_08.json",
+        "research/H2SAFE_ORIENTATION_DEVELOPMENT_2026_10_08.md",
+        "research/h2safe_directional_obstruction_development_2026_10_09.json",
+        "research/H2SAFE_DIRECTIONAL_OBSTRUCTION_DEVELOPMENT_2026_10_09.md",
+        "research/hydelta_indoor_spatial_holdout_protocol_2026_10_08.json",
+        "research/HYDELTA_INDOOR_SPATIAL_HOLDOUT_PROTOCOL_2026_10_08.md",
+        "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json",
+        "research/HYDELTA_INDOOR_SPATIAL_HOLDOUT_ELIGIBILITY_2026_10_08.md",
+        "research/sandia_warehouse_spatial_diagnostic_2026_10_08.json",
+        "research/SANDIA_WAREHOUSE_SPATIAL_DIAGNOSTIC_2026_10_08.md",
+        "research/usn_channel_spatial_stratification_evidence_2026_10_08.json",
+        "research/USN_CHANNEL_SPATIAL_STRATIFICATION_EVIDENCE_2026_10_08.md",
+        "research/hytunnel_spatial_holdout_protocol_2026_10_08.json",
+        "research/hytunnel_spatial_format_amendment_2026_10_08.json",
+        "research/hytunnel_spatial_holdout_result_2026_10_08.json",
+        "research/HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md"
+      ],
+      "unblock_criterion": "Develop a ventilation-, boundary- and near-field-aware candidate without fitting it to the HyTunnel validation outcomes, freeze its implementation and thresholds, and then pass every spatial screen on another untouched actual-hydrogen cohort.",
+      "next_action": "Add explicit HVAC-vector, downward-jet and obstruction features using development-only evidence, freeze the revised candidate, and reserve a separate actual-hydrogen spatial cohort for the next confirmatory execution."
+    },
+    {
+      "id": "saga_human_effectiveness",
+      "status": "PENDING",
+      "why_blocked": "The HIAD casebook is not frozen, ethics/collection permission is unresolved, no masked holdout responses are present, and no independent expert ratings exist.",
+      "evidence": [
+        "research/hiad_evaluation_readiness.json",
+        "research/HIAD_EXPERT_STUDY_PREREGISTRATION.md",
+        "research/ETHICS_DETERMINATION_REQUEST.md",
+        "research/hiad_accident_response_coverage_evaluation_2026_10_05.json"
+      ],
+      "unblock_criterion": "Institutional determination, coordinator leakage review, frozen 24-event casebook, 168 masked responses, and three qualified independent raters with locked analysis.",
+      "next_action": "Obtain the institutional determination and complete the pre-registered human-evaluation workflow before making an effectiveness or safety claim about SAGA."
+    },
+    {
+      "id": "submission_declarations",
+      "status": "PENDING",
+      "why_blocked": "Author, affiliation, CRediT, conflict, funding and AI-use declarations are not confirmed in the repository.",
+      "evidence": [
+        "manuscript/submission_metadata.json"
+      ],
+      "unblock_criterion": "All author and declaration fields completed and independently checked before submission.",
+      "next_action": "Complete the metadata file with the actual author team; do not invent names, affiliations or declarations."
+    }
+  ],
+  "reproducibility": {
+    "audit_sha256": "7c7240d00ab887bbdc7cfc8fe025c37e808713fcacd65e53db2337b15487c7ce",
+    "hiad_readiness_sha256": "b2c482328eca3a13af8774142a2d9b933234bee8a12851784dc148fc5538045b",
+    "acquisition_tracker_sha256": "42f06e0474285fbe75847fd9d7af463c9cd23a36fe4cc5f0c00cc1d3405baa10",
+    "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",
+    "latest_full_loop_search_sha256": "14391668298eea81e1aaff919e9a20fd9c3570694e33cf8998d4156976cba808",
+    "methytrucks_postaccess_sha256": "5f55152984db8952fb532d975f7c89db7f1681375f20c306a9ccb7cdc79ddf48",
+    "methytrucks_complete_intake_sha256": "383f3884e736cf9db78d675c28b5854cc85c2868ffcc85b9448123482cd26d7d",
+    "methytrucks_group_d_prospective_sha256": "1378084ccf176f68ce05acc9e74d5063280f216eb7a0c33cafd3606d0efc3c25",
+    "byrnes_typei_thermal_prospective_sha256": "a58940c390268abdbd1d5904f50f91ac06b60709bc4e75ade570fefc34e59998",
+    "public_full_loop_update_sha256": "119ec8ebd2fa548048923c14562f7f7fdda415ff1342ae3ad42683f2d67bb6cb",
+    "operational_benchmark_recheck_sha256": "80e865de45384c7bd48c721125e440f482343c2420095f56f6866390db842e81",
+    "h2safe_orientation_development_sha256": "9ef79fa56afa93f0b85246361b01cc476e9cb3902b75c2f011bbcff683f12ec3",
+    "h2safe_directional_obstruction_development_sha256": "40609a3910b97970279a0e70929aa93ad53827585da902e612a1d5fd5b118350",
+    "operational_benchmark_face_validity_sha256": "64001782ba19ebd3299b0f17caf61f78138d9bc9a7836bc77d6e27f4c0dcec02",
+    "h2safe_intake_sha256": "1ee28c8e168d2ee411763801249ee059a5e356c21f5dd45d75b48880b88f113f",
+    "h2safe_spatial_diagnostic_sha256": "1a918fcd5c8d0b2556bef9d19f8ebeb9a590f2bc8323639d3c3ea5def5b979e3",
+    "hydelta_spatial_eligibility_sha256": "7edb4605c427918947ee9914cf7e9ecece412656479f59b62dbdb24103083813",
+    "sandia_spatial_diagnostic_sha256": "12cecd95e218fa9a76040d295f2e2a1af8e8f7a13e30d5bd22e61b96335e87e5",
+    "hytunnel_spatial_protocol_sha256": "5f7d80f2698da7bf7f4fccbf230fb4f465cdd01db6336a8377470764f29549ea",
+    "hytunnel_spatial_amendment_sha256": "6723cb93b188b7033a587901ab2833463c5a9af391f2faf5f9579124d5c65dc6",
+    "hytunnel_spatial_result_sha256": "c9217b45976287f8bdd034d2afe5d46dbe8c15187f955b085e3f3b3153e68fad",
+    "reference_leak_detector_result_sha256": "1b03b114e73a7d4070920ae6e59d4edad854459dd74834998a35cb64893f2b2f",
+    "usn_spatial_stratification_sha256": "92a6f11d1ec8c0a8cff16cd1865249beb1b2475aec5edeb7d2b0d7d27c9b5803",
+    "ignited_pressure_peaking_sha256": "53dbb83055c0eaa50d7f9ff2af351302b325ffb46e38b0290a4583eae4356174",
+    "qra_multimethod_comparison_sha256": "e248db619eec2cc6161b151fdaa2fa3a7fb3886abb14bcd426f3e7ac1de4c70f",
+    "runtime_qra_comparison_sha256": "1a7b91b433721ce6c07c7bbcb41c1e2f13544e600dcc45941c21049f69038c9f",
+    "candidate_route_count": 33,
+    "public_full_loop_search_candidate_count": 17,
+    "latest_public_full_loop_search_candidate_count": 9,
+    "methytrucks_workbook_count": 3,
+    "methytrucks_candidate_session_count": 5,
+    "methytrucks_complete_workbook_count": 15,
+    "methytrucks_complete_sample_count": 58440,
+    "methytrucks_group_d_decision": "MODEL_SCREEN_NOT_RUN_INELIGIBLE_METADATA",
+    "public_full_loop_update_status": "public_synchronized_rows_found_but_full_loop_gate_open",
+    "public_operational_benchmark_candidate_count": 18
+  },
+  "claim_policy": [
+    "Never present a request, metadata page, or public station inventory as raw validation evidence.",
+    "Keep component-test failures and model limitations visible in the paper and supplement.",
+    "Do not mark the user goal complete until full_loop_external_validation, h2safe_spatial_detector_transfer_validation and saga_effectiveness_and_safety_supported are supported and all pending human/submission gates are closed."
+  ]
+}
