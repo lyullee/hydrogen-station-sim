@@ -1,0 +1,733 @@
+{
+  "schema_version": 1,
+  "artifact_type": "hiad_public_metadata_to_runtime_family_concordance",
+  "generated_at_utc": "2026-10-10T23:43:53.683144+00:00",
+  "status": "completed_retrospective_category_concordance",
+  "evidence_role": "supporting_traceability_only",
+  "source": {
+    "hiad_inventory": "research/hiad_hrs_public_evidence.json",
+    "hiad_inventory_sha256": "27b7fc752fe7ad706eb48854447bb203605be30b745515a259fad89325cc2536",
+    "replay_coverage": "research/hiad_digital_twin_replay_coverage_2026_10_08.json",
+    "replay_coverage_sha256": "e6d10a112feb6dc542aea10d9cfe9904b384cfa55ea4986715c182bce5943ffe",
+    "public_metadata_fields_used": [
+      "physical_effect",
+      "consequence_nature",
+      "event_id"
+    ],
+    "incident_narrative_used": false,
+    "emergency_action_text_used": false,
+    "physical_parameters_from_incident_text": false
+  },
+  "mapping_contract": {
+    "unignited_release": {
+      "required": [
+        "gas_release"
+      ],
+      "forbidden": [
+        "hydrogen_fire"
+      ]
+    },
+    "release_with_ignition": {
+      "required": [
+        "gas_release",
+        "hydrogen_fire"
+      ],
+      "forbidden": []
+    },
+    "no_release": {
+      "required": [],
+      "forbidden": [
+        "gas_release",
+        "hydrogen_fire"
+      ]
+    },
+    "unclassified": {
+      "required": [],
+      "forbidden": []
+    },
+    "rule": "A matched category means only that coarse public outcome metadata is consistent with the declared runtime family IDs; it does not validate numerical results or response correctness."
+  },
+  "aggregate": {
+    "case_count": 34,
+    "category_concordance_counts": {
+      "matched": 33,
+      "partial": 0,
+      "metadata_runtime_conflict": 1,
+      "not_comparable": 0
+    },
+    "representation_case_counts": {
+      "direct_physical_replay": 29,
+      "proxy_partial_replay": 4,
+      "response_only_no_physical_model": 1
+    },
+    "integration_trace_pass_count": 34
+  },
+  "cases": [
+    {
+      "event_id": "396",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "Leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "401",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "Leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "402",
+      "public_physical_effect": "No Hydrogen Release",
+      "public_consequence_nature": "Near miss",
+      "source_family": "no_release",
+      "required_runtime_families": [],
+      "forbidden_runtime_families": [
+        "gas_release",
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "compressor_thermal"
+      ],
+      "representation": "proxy_partial_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "403",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "Leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "404",
+      "public_physical_effect": "No Hydrogen Release",
+      "public_consequence_nature": "Near miss",
+      "source_family": "no_release",
+      "required_runtime_families": [],
+      "forbidden_runtime_families": [
+        "gas_release",
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "fueling_fault"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "411",
+      "public_physical_effect": "No Hydrogen Release",
+      "public_consequence_nature": "Near miss",
+      "source_family": "no_release",
+      "required_runtime_families": [],
+      "forbidden_runtime_families": [
+        "gas_release",
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "compressor_thermal"
+      ],
+      "representation": "proxy_partial_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "454",
+      "public_physical_effect": "No Hydrogen Release",
+      "public_consequence_nature": "near miss",
+      "source_family": "no_release",
+      "required_runtime_families": [],
+      "forbidden_runtime_families": [
+        "gas_release",
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [],
+      "representation": "response_only_no_physical_model",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "463",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "702",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "803",
+      "public_physical_effect": "No Hydrogen Release",
+      "public_consequence_nature": "Near miss",
+      "source_family": "no_release",
+      "required_runtime_families": [],
+      "forbidden_runtime_families": [
+        "gas_release",
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "metadata_runtime_conflict",
+      "concordance_reason": "public metadata indicates no release but the candidate runtime includes a release family"
+    },
+    {
+      "event_id": "884",
+      "public_physical_effect": "Hydrogen release and ignition",
+      "public_consequence_nature": "Explosion",
+      "source_family": "release_with_ignition",
+      "required_runtime_families": [
+        "gas_release",
+        "hydrogen_fire"
+      ],
+      "forbidden_runtime_families": [],
+      "executed_recipe_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "953",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "Leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1038",
+      "public_physical_effect": "No Hydrogen Release",
+      "public_consequence_nature": "near miss",
+      "source_family": "no_release",
+      "required_runtime_families": [],
+      "forbidden_runtime_families": [
+        "gas_release",
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "hose_connection",
+        "precooling_fault"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1062",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release",
+        "overpressure"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1063",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1064",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "near miss",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1106",
+      "public_physical_effect": "Hydrogen Release and Ignition",
+      "public_consequence_nature": "Explosion",
+      "source_family": "release_with_ignition",
+      "required_runtime_families": [
+        "gas_release",
+        "hydrogen_fire"
+      ],
+      "forbidden_runtime_families": [],
+      "executed_recipe_ids": [
+        "hydrogen_fire",
+        "gas_release"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1159",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release",
+        "overpressure"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1161",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release",
+        "overpressure"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1163",
+      "public_physical_effect": "Hydrogen Release and Ignition",
+      "public_consequence_nature": "fire",
+      "source_family": "release_with_ignition",
+      "required_runtime_families": [
+        "gas_release",
+        "hydrogen_fire"
+      ],
+      "forbidden_runtime_families": [],
+      "executed_recipe_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1173",
+      "public_physical_effect": "Hydrogen Release and Ignition",
+      "public_consequence_nature": "explosion followed by a fire",
+      "source_family": "release_with_ignition",
+      "required_runtime_families": [
+        "gas_release",
+        "hydrogen_fire"
+      ],
+      "forbidden_runtime_families": [],
+      "executed_recipe_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1191",
+      "public_physical_effect": "Hydrogen Release and Ignition",
+      "public_consequence_nature": "fire",
+      "source_family": "release_with_ignition",
+      "required_runtime_families": [
+        "gas_release",
+        "hydrogen_fire"
+      ],
+      "forbidden_runtime_families": [],
+      "executed_recipe_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "overpressure"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1193",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1194",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1195",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1196",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1198",
+      "public_physical_effect": "Hydrogen Release and Ignition",
+      "public_consequence_nature": "explosion",
+      "source_family": "release_with_ignition",
+      "required_runtime_families": [
+        "gas_release",
+        "hydrogen_fire"
+      ],
+      "forbidden_runtime_families": [],
+      "executed_recipe_ids": [
+        "hydrogen_fire",
+        "gas_release",
+        "hose_connection"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1202",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1203",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release",
+        "compressor_thermal"
+      ],
+      "representation": "proxy_partial_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1204",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1205",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release",
+        "compressor_thermal"
+      ],
+      "representation": "proxy_partial_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1206",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release",
+        "hose_connection"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1207",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    },
+    {
+      "event_id": "1208",
+      "public_physical_effect": "Unignited Hydrogen Release",
+      "public_consequence_nature": "leak no ignition",
+      "source_family": "unignited_release",
+      "required_runtime_families": [
+        "gas_release"
+      ],
+      "forbidden_runtime_families": [
+        "hydrogen_fire"
+      ],
+      "executed_recipe_ids": [
+        "gas_release",
+        "fueling_fault"
+      ],
+      "representation": "direct_physical_replay",
+      "integration_trace_pass": true,
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
+    }
+  ],
+  "claim_boundary": [
+    "This table compares coarse HIAD outcome metadata with the runtime family labels already used in the digital-twin trace audit.",
+    "The comparison is retrospective traceability evidence, not independent accident reconstruction, frequency validation, or a safe-distance validation.",
+    "A matched category does not show that pressure, temperature, release size, geometry, timing, or consequence magnitude are correct.",
+    "The 803 metadata/runtime conflict is retained as an explicit limitation rather than being silently tuned away.",
+    "It does not evaluate operator performance, human factors, ethics, or SAGA response effectiveness."
+  ]
+}
