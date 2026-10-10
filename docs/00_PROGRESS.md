@@ -873,3 +873,17 @@ Verification:
 
 - Core, API integration, HyRAM adapter parity, public validation, virtual
   safety and emergency-response suites: 60 passed.
+
+## 2026-10-10 - NREL HDVS high-flow data lead added
+
+Status: evidence lead recorded; no validation gate promoted.
+
+- The official DOE/NREL heavy-duty fueling report describes an 82.3 kg HDVS
+  high-flow fill and exposes the relevant channel family: station/hose/
+  receptacle/HDVS pressures and mass-flow rate.
+- No rights-cleared common-clock raw logger archive was located, so the source
+  is recorded as a custodian-data request lead rather than treated as an
+  external holdout. The full-loop gate remains open.
+- Added the lead to
+  `research/public_full_loop_search_recheck_2026_10_10.json` with its claim
+  limit and privacy-safe channel list.

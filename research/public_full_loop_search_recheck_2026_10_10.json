@@ -213,9 +213,27 @@
         "raw_synchronized_archive_located": false,
         "decision": "EXCLUDE_FROM_FULL_LOOP",
         "eligible_use": "inventory, layout and availability context"
+      },
+      {
+        "id": "nrel_hdvs_high_flow_protocol_report",
+        "url": "https://www.energy.gov/sites/default/files/2022-12/h2iq-121922.pdf",
+        "role": "official heavy-duty HDVS fueling experiment report",
+        "raw_synchronized_archive_located": false,
+        "decision": "REQUEST_CUSTODIAN_DATA",
+        "reported_channels": [
+          "station pressure",
+          "hose pressure",
+          "vehicle receptacle pressure",
+          "HDVS manifold pressure",
+          "HDVS tank internal pressure",
+          "mass flow rate"
+        ],
+        "reported_scope": "82.3 kg high-flow fill with pressure ramp, mass-flow and tank-array context",
+        "eligible_use": "high-flow protocol and station-to-vehicle schema lead; not a new raw holdout",
+        "claim_limit": "The official report provides synchronized-channel descriptions and aggregate experiment outcomes, but no rights-cleared common-clock logger export was located."
       }
     ],
-    "decision": "No new eligible raw full-loop cohort; continue station-side/component validation.",
+    "decision": "No new eligible raw full-loop cohort; retain the NREL HDVS report as the highest-priority custodian-data lead and continue station-side/component validation.",
     "privacy": {
       "private_source_paths_published": false,
       "private_site_or_company_identity_published": false,

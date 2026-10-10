@@ -29,11 +29,17 @@ def test_public_full_loop_recheck_is_explicitly_claim_limited() -> None:
     additions = record["latest_search_additions"]
     assert additions["decision"].startswith("No new eligible raw full-loop")
     assert additions["privacy"]["private_raw_rows_persisted"] is False
-    assert len(additions["new_public_leads"]) == 4
+    assert len(additions["new_public_leads"]) == 5
     assert all(
         item["raw_synchronized_archive_located"] is False
         for item in additions["new_public_leads"]
     )
+    nrel = next(
+        item for item in additions["new_public_leads"]
+        if item["id"] == "nrel_hdvs_high_flow_protocol_report"
+    )
+    assert nrel["decision"] == "REQUEST_CUSTODIAN_DATA"
+    assert "mass flow rate" in nrel["reported_channels"]
     protocol = record["additional_protocol_recheck"]
     assert len(protocol["sources"]) == 2
     assert all(item["full_loop_external_holdout_eligible"] is False for item in protocol["sources"])
