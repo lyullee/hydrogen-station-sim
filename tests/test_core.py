@@ -107,6 +107,25 @@ def test_short_nominal_closed_loop():
     assert all(np.isfinite(sample.precooler_outlet_temperature_k) for sample in samples)
 
 
+def test_nominal_closed_loop_uses_event_free_solver(monkeypatch):
+    import h2station.safe_operation as safe_operation
+
+    methods: list[str] = []
+    original = safe_operation.solve_ivp
+
+    def record_solver(*args, **kwargs):
+        methods.append(str(kwargs.get("method")))
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(safe_operation, "solve_ivp", record_solver)
+    config = ReferenceScenario(duration_s=0.4, control_period_s=0.2)
+    built = build_reference_scenario(config, UnavailableHyRAMBackend())
+    built.simulator.simulate(built.initial_state, config.duration_s, config.control_period_s)
+
+    assert methods
+    assert set(methods) == {"LSODA"}
+
+
 def test_leak_concentration_trips_esd():
     leak = FaultEvent(
         event_id="test-leak",
