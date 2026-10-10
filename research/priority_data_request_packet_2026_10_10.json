@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "artifact_type": "priority_privacy_safe_data_request_packet",
+  "recorded_at": "2026-10-10",
+  "contact_sent": false,
+  "minimum_event_count": 3,
+  "required_channels": [
+    "elapsed_time_s",
+    "station_or_dispenser_pressure",
+    "delivered_gas_or_boundary_temperature",
+    "mass_flow_or_transferred_mass",
+    "protocol_phase",
+    "units_initial_conditions_quality_flags"
+  ],
+  "preferred_channels": [
+    "vehicle_or_receptacle_pressure_temperature",
+    "tank_capacity",
+    "cascade_state",
+    "precooler_outlet_temperature",
+    "esd_fault_calibration_state"
+  ],
+  "candidates": [
+    {
+      "rank": 1,
+      "id": "rheadhy_2026_mid_flow_twin_campaign",
+      "source": "https://doi.org/10.5281/zenodo.16992589",
+      "expected_gate_impact": ["full_loop_external_validation"],
+      "raw_trace_status": "not_publicly_located"
+    },
+    {
+      "rank": 2,
+      "id": "wan_2026_type_iii_iv_aspect_ratio",
+      "source": "https://doi.org/10.1016/j.ijhydene.2026.156406",
+      "expected_gate_impact": ["dickens_typeiii_prospective_validation"],
+      "raw_trace_status": "request_required"
+    },
+    {
+      "rank": 3,
+      "id": "deng_2025_highflow",
+      "source": "https://doi.org/10.1016/j.ijhydene.2025.151093",
+      "expected_gate_impact": ["tank_thermal_transfer", "transient_mass_flow_boundary"],
+      "raw_trace_status": "request_required"
+    }
+  ],
+  "privacy": {
+    "raw_rows_persisted": false,
+    "site_identity_published": false,
+    "company_or_manufacturer_published": false,
+    "calendar_dates_published": false
+  },
+  "decision": {
+    "full_loop_validation_supported": false,
+    "goal_completion_permitted": false,
+    "next_action": "Use an approved institutional contact channel; freeze protocol before numerical access."
+  }
+}
