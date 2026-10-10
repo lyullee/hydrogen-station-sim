@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-10T06:35:01.177573+00:00",
-  "source_commit": "e95e3fd5d1fa52c0a70a3e7d4ca57a8cbdab4884",
+  "generated_at": "2026-10-10T10:26:33.327656+00:00",
+  "source_commit": "c8ed6d29cdacd9ae483ea92807c2f1edcf3b7988",
   "diagnostic_type": "MC Default measured-boundary vehicle-tank replay",
   "evidence_role": "development_diagnostic_only",
   "post_outcome": true,

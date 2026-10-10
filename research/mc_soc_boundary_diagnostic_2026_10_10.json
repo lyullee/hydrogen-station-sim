@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-10T07:00:57.340753+00:00",
-  "source_commit": "a0c92f637b4295c471eb961e491d8252b31d70f2",
+  "generated_at": "2026-10-10T10:26:30.483946+00:00",
+  "source_commit": "c8ed6d29cdacd9ae483ea92807c2f1edcf3b7988",
   "artifact_type": "mc_soc_and_mass_boundary_diagnostic",
   "evidence_role": "development_diagnostic_only",
   "post_outcome": true,
