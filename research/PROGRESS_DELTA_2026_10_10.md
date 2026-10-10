@@ -84,5 +84,6 @@ will not move the readiness count.
 - `research/DATA_COVERAGE_SUMMARY_2026_10_10.md`
 - `research/ijhe_readiness_audit.json`
 - `research/priority_validation_run_2026_10_10.json`
+- `research/local_workspace_candidate_scan_recheck_2026_10_10.json`
 - `research/nrel_h2fills_geometry_diagnostic_2026_10_10.json`
 - `research/h2protocol_capacity_eos_sensitivity_2026_10_10.json`
