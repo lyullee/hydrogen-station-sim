@@ -1,5 +1,31 @@
 # Development Progress
 
+## 2026-10-10 - Run P0/P1 work in parallel and close the MC boundary probe
+
+Status: implemented; the fast lane now confirms the high-impact tracks without
+waiting for a full regression pass, and the remaining MC boundary variants were
+checked before any model change was considered.
+
+- P0 software/evidence checks and MC boundary diagnostics ran concurrently and
+  completed in about **3.6 s**; both returned **PASS** as execution checks.
+- P1 software/safety checks and the Dickens, H2SAFE and Schefer diagnostics ran
+  concurrently and completed in about **11.1 s**; all three diagnostic runners
+  returned **PASS** as process checks.
+- The MC partial-station replay was compared under a constant source pressure,
+  both published source-pressure channels, and the published protocol-pressure
+  schedule. All four variants remained **0/8 joint screening passes**; mean
+  pressure RMSE stayed about **3.48--3.79 MPa**, so no boundary variant was
+  promoted or silently used to close the full-loop gate.
+- The readiness audit remains **127 PASS / 10 FAIL / 7 PENDING**. This is a
+  deliberate stop on low-value sequential tuning: the material blocker is still
+  synchronized receiving-vessel/controller channels with independent provenance.
+
+Verification:
+
+- `scripts/run_priority_focus.py --priority P0 --max-workers 4`: **PASS**.
+- `scripts/run_priority_focus.py --priority P1 --max-workers 4`: **PASS**.
+- Four MC boundary probes: **0/8** each; no validation claim changed.
+
 ## 2026-10-10 - Recheck official public full-loop data sources
 
 Status: no new eligible raw station-to-vehicle holdout was found; the search
