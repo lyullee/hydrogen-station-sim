@@ -44,6 +44,7 @@ _SCOPES = frozenset({
     "cascade_resolved_station_to_vehicle",
 })
 _BANKS = ("low", "medium", "high")
+_TEMPERATURE_OBSERVATION_ROLES = frozenset({"gas_bulk", "gas_bulk_mean"})
 _NUMERIC_TRACE_COLUMNS = (
     "time_s",
     "vehicle_pressure_mpa_abs",
@@ -231,7 +232,9 @@ class FrozenProtocol:
     payload: dict[str, Any]
     scope: str
     vehicle_volume_m3: float
+    vehicle_vessel_count: int
     vehicle_nominal_pressure_mpa: float
+    vehicle_temperature_observation_role: str
     ambient_temperature_c: float
     target_pressure_mpa: float
     pressure_ramp_rate_mpa_min: float
@@ -281,6 +284,16 @@ def _protocol(payload: dict[str, Any], *, trace_sha256: str, receipt: dict[str, 
     vehicle = _mapping(payload.get("vehicle"), field="protocol.vehicle")
     if vehicle.get("initial_state_policy") != "trace_first_sample":
         raise ValueError("vehicle.initial_state_policy must be trace_first_sample")
+    vessel_count_raw = vehicle.get("vessel_count")
+    if isinstance(vessel_count_raw, bool) or not isinstance(vessel_count_raw, int) or vessel_count_raw <= 0:
+        raise ValueError("vehicle.vessel_count must be a positive integer")
+    temperature_observation_role = vehicle.get("temperature_observation_role")
+    if temperature_observation_role not in _TEMPERATURE_OBSERVATION_ROLES:
+        allowed = ", ".join(sorted(_TEMPERATURE_OBSERVATION_ROLES))
+        raise ValueError(
+            "vehicle.temperature_observation_role must identify a bulk-gas "
+            f"observation ({allowed})"
+        )
     control = _mapping(payload.get("control"), field="protocol.control")
     station = _mapping(payload.get("station"), field="protocol.station")
     process = _mapping(payload.get("process"), field="protocol.process")
@@ -344,7 +357,9 @@ def _protocol(payload: dict[str, Any], *, trace_sha256: str, receipt: dict[str, 
         payload=payload,
         scope=scope,
         vehicle_volume_m3=_positive(vehicle.get("internal_volume_m3"), field="vehicle.internal_volume_m3"),
+        vehicle_vessel_count=vessel_count_raw,
         vehicle_nominal_pressure_mpa=_positive(vehicle.get("nominal_working_pressure_mpa"), field="vehicle.nominal_working_pressure_mpa"),
+        vehicle_temperature_observation_role=temperature_observation_role,
         ambient_temperature_c=_finite(payload.get("ambient_temperature_c"), field="ambient_temperature_c"),
         target_pressure_mpa=_positive(control.get("target_pressure_mpa"), field="control.target_pressure_mpa"),
         pressure_ramp_rate_mpa_min=_positive(control.get("pressure_ramp_rate_mpa_min"), field="control.pressure_ramp_rate_mpa_min"),

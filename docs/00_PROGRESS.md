@@ -1,5 +1,16 @@
 # Development Progress
 
+## 2026-10-11 - Require resolved vessel geometry and gas-temperature semantics
+
+The controlled full-loop evaluator now fails closed unless the frozen protocol
+declares a positive integer `vehicle.vessel_count` and explicitly identifies
+the compared temperature as `gas_bulk` or `gas_bulk_mean`. Tank-wall, liner,
+shell, and unspecified observations can no longer be scored as the model's
+bulk-gas state. This addresses the geometry-transfer diagnostic without
+changing production parameters or promoting a post-outcome fit. Protocol
+drafts expose both fields as mandatory pre-outcome placeholders; focused tests
+cover valid and rejected values.
+
 ## 2026-10-11 - Separate H2FillS model outputs from raw full-loop evidence
 
 The latest official NREL H2FillS page and user manual were rechecked. The

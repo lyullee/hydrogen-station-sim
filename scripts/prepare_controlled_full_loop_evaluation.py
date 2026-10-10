@@ -101,7 +101,9 @@ def draft_protocol(receipt_path: Path) -> dict[str, Any]:
         "vehicle": {
             "initial_state_policy": "trace_first_sample",
             "internal_volume_m3": None,
+            "vessel_count": None,
             "nominal_working_pressure_mpa": None,
+            "temperature_observation_role": None,
         },
         "control": {
             "target_pressure_mpa": None,

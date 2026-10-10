@@ -30,7 +30,9 @@ def _protocol(trace_sha256: str) -> dict:
         "vehicle": {
             "initial_state_policy": "trace_first_sample",
             "internal_volume_m3": 0.12,
+            "vessel_count": 1,
             "nominal_working_pressure_mpa": 70.0,
+            "temperature_observation_role": "gas_bulk_mean",
         },
         "control": {
             "target_pressure_mpa": 70.0,
@@ -82,7 +84,9 @@ def _synthetic_trace() -> list[dict[str, str]]:
         payload={},
         scope="cascade_resolved_station_to_vehicle",
         vehicle_volume_m3=0.12,
+        vehicle_vessel_count=1,
         vehicle_nominal_pressure_mpa=70.0,
+        vehicle_temperature_observation_role="gas_bulk_mean",
         ambient_temperature_c=25.0,
         target_pressure_mpa=70.0,
         pressure_ramp_rate_mpa_min=10.0,
@@ -178,4 +182,31 @@ def test_rejects_trace_substitution_before_model_execution(tmp_path, monkeypatch
     monkeypatch.setattr(evaluator, "_worktree_clean", lambda: True)
 
     with pytest.raises(ValueError, match="expected_trace_sha256"):
+        evaluator.evaluate(trace_path, receipt_path, protocol_path)
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("vessel_count", 0, "vessel_count"),
+        ("vessel_count", 1.5, "vessel_count"),
+        ("temperature_observation_role", "tank_wall", "temperature_observation_role"),
+    ],
+)
+def test_rejects_unresolved_vehicle_geometry_or_temperature_semantics(
+    tmp_path, monkeypatch, field, value, message,
+):
+    """A frozen score must not silently treat wall/unknown temperature as gas."""
+    trace_path = tmp_path / "controlled.csv"
+    receipt_path = tmp_path / "receipt.json"
+    protocol_path = tmp_path / "frozen_protocol.json"
+    _write_trace(trace_path)
+    _write_receipt(receipt_path, trace_path)
+    protocol = _protocol(_hash(trace_path))
+    protocol["vehicle"][field] = value
+    protocol_path.write_text(json.dumps(protocol), encoding="utf-8")
+    monkeypatch.setattr(evaluator, "_git_commit", lambda: "frozen-test-commit")
+    monkeypatch.setattr(evaluator, "_worktree_clean", lambda: True)
+
+    with pytest.raises(ValueError, match=message):
         evaluator.evaluate(trace_path, receipt_path, protocol_path)

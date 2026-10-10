@@ -30,6 +30,8 @@ def test_draft_carries_only_hash_scope_and_preoutcome_placeholders(tmp_path):
     assert draft["frozen_before_outcomes"] is False
     assert draft["expected_trace_sha256"] == "a" * 64
     assert draft["station"]["initial_bank_pressure_mpa"]["high"] is None
+    assert draft["vehicle"]["vessel_count"] is None
+    assert draft["vehicle"]["temperature_observation_role"] is None
     assert draft["acceptance_criteria"]["dispatch_accuracy_min"] is None
     assert "cascade_bank_pressure_rmse_mpa_max" in draft["acceptance_criteria"]
 
