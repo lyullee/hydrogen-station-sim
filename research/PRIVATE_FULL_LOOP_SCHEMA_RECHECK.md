@@ -18,3 +18,8 @@ station/dispenser/vehicle event linkage, calibration uncertainty, declared
 reuse rights and a frozen outcome-free split before numerical scoring.
 
 The recheck utility is [audit_private_full_loop_schema.py](../scripts/audit_private_full_loop_schema.py).
+
+The separate eight-trace recharge bundle is summarized in
+`private_recharge_multitrace_schema_recheck_2026_10_10.json`. It has complete
+time, pressure, temperature, flow and controller-state groups with monotonic
+time axes, but no vehicle group; it is therefore station-side evidence only.

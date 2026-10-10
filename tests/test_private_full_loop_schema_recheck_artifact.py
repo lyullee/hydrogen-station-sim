@@ -17,3 +17,17 @@ def test_private_full_loop_recheck_is_explicitly_non_admitting_and_redacted():
     assert "candidate_" not in serialized
     assert "C:\\Users" not in serialized
 
+
+def test_private_recharge_multitrace_is_station_side_only():
+    root = Path(__file__).resolve().parents[1]
+    report = json.loads(
+        (root / "research/private_recharge_multitrace_schema_recheck_2026_10_10.json")
+        .read_text(encoding="utf-8")
+    )
+    aggregate = report["aggregate"]
+    assert aggregate["csv_files_seen"] == 8
+    assert aggregate["files_with_all_required_full_loop_groups"] == 0
+    assert "vehicle" not in aggregate["observed_semantic_groups"]
+    assert aggregate["monotonic_numeric_time_files"] == 8
+    assert aggregate["duplicate_numeric_time_files"] == 0
+    assert report["admission"]["full_loop_external_holdout_eligible"] is False
