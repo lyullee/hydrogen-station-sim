@@ -8,7 +8,7 @@
 - 제한된 투고 준비: **아직 불가**.
 - 현재 주 목표: **station-side 안전 디지털 트윈·구성요소 검증·근거 기반 SAGA 응답**.
 - 동기화 station-to-vehicle full-loop 검증: **주 목표에서 제외하고 논문 한계로 명시**.
-- 개정 주 목표 보조 지표: **기록 없음 PASS / 기록 없음 FAIL / 기록 없음 PENDING = 기록 없음%**. 범위 조정 결과이지 새 검증 통과가 아닙니다.
+- 개정 주 목표 보조 지표: **127 PASS / 9 FAIL / 2 PENDING = 92.0%**. 범위 조정 결과이지 새 검증 통과가 아닙니다.
 
 ## 지금 바로 사용할 수 있는 근거
 
@@ -16,6 +16,7 @@
 - 같은 자료의 시간순 holdout: 압력 경계 30점, cascade 3,664쌍, 재충전 예측 394건. 차량 충전 정확도나 현장 안전한계로 확대하지 않습니다.
 - 공개 Type-IV 탱크 경계 검증: 12건, 탱크 경계 구성요소 검증으로 유지합니다.
 - 사고 전례·대응 플레이북·가상 조치 실행은 시나리오와 단계별 대응 근거로 사용하며, 사고 빈도나 현장 대응 효과를 추정하지 않습니다.
+- HIAD 사고 34건은 공개 물리효과 범주와 디지털 트윈 실행 family를 대조했습니다. 33건은 범주가 일치했고, 1건은 metadata/runtime 충돌로 제한사항에 남겼습니다. 이 표는 사고 재구성이나 대응 효과 검증이 아닙니다.
 
 ## 실패 또는 제한된 결과도 그대로 유지
 
@@ -46,6 +47,7 @@
 - `research/local_candidate_full_loop_screen_2026_10_09.json`
 - `research/GOAL_SCOPE_AMENDMENT_2026_10_11.md`
 - `research/PUBLIC_STATION_TO_VEHICLE_SEARCH_2026_10_11.md`
+- `research/HIAD_EVENT_CATEGORY_CONCORDANCE_2026_10_11.md`
 - `data/public_validation/results/closed_loop_external_holdout/validation.json`
 
 이 브리프는 모델이나 검증 게이트를 변경하지 않습니다. 새로운 자료가 들어오면 동일한 동결·시간축·권한 검사를 거친 뒤 다시 생성합니다.
