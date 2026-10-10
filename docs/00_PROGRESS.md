@@ -1564,3 +1564,28 @@ Status: implemented; direct-QA and sensor-workbench regressions passed.
 Verification:
 
 - Direct-QA, SAGA-chat and sensor-workbench suites: 50 passed.
+
+## 2026-10-10 - Recheck public actual-hydrogen spatial evidence without promoting a weak prior
+
+Status: implemented; public intake, diagnostic and grounding regressions passed.
+
+- Re-audited the local Figshare release used for the open-channel hydrogen
+  experiments. The intake remains 23 manifest files with 22 locally available
+  experiment archives, each retained by hash and schema summary; no raw rows
+  are added to the assistant evidence envelope.
+- Re-ran the post-access spatial diagnostic on all 22 experiments and 638
+  sensor-case observations. A geometry-only distance/downward ranking is not
+  transferable (median response-rank Spearman rho 0.0318; top-quartile recall
+  0.3864), so the runtime detector routing and risk-distance model were not
+  changed.
+- The bounded actual-hydrogen placement evidence remains descriptive: the
+  higher sensor layer and near-source lower sensors provide a rationale for
+  layered coverage in confined spaces, but it is not an outdoor HRS map,
+  independent spatial validation, or full-loop station validation.
+
+Verification:
+
+- Targeted Figshare, USN spatial, grounding, validation API and readiness
+  suites: 36 passed.
+- IJHE readiness audit remains 127 PASS / 10 FAIL / 7 PENDING;
+  `bounded_ijhe_submission_ready=false` and `full_user_objective_ready=false`.

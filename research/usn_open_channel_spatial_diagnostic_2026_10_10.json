@@ -32,7 +32,7 @@
       "23_FFI_P101_T00045.zip": "81e31b7262b6f590957bce4129539376a029019c8d858bb3a52013f79dac9e07"
     },
     "coordinate_artifact": "research/usn_open_channel_sensor_coordinates_2026_10_10.json",
-    "coordinate_artifact_sha256": "fa8e301994fe762c1e539b173505fa599ed021a6993e634eb5fbf1b297118d30"
+    "coordinate_artifact_sha256": "9b4cb85dfbc50d1254673f88a76ed846c0ace61457dbea2b660aa14343495686"
   },
   "method": {
     "status": "POST_ACCESS_DEVELOPMENT_DIAGNOSTIC_NOT_VALIDATION",
