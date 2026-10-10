@@ -37,6 +37,52 @@ OPTIONAL_COLUMNS = (
     "esd_state",
     "fault_state",
 )
+
+# Custodian exports often use a stable engineering name with a unit suffix
+# instead of the canonical intake role.  These aliases are deliberately
+# explicit: generic names such as ``pressure`` or ``temperature`` are not
+# inferred because they could silently select the wrong boundary.  A
+# custodian may still provide a private role map for vendor-specific tags.
+# The aliases are used only during intake and are never emitted in the public
+# report.
+_CHANNEL_ALIASES: dict[str, frozenset[str]] = {
+    "elapsed_time_s": frozenset({
+        "elapsed_s", "elapsed time s", "time_s", "seconds",
+        "seconds_since_start", "경과시간", "경과 시간(s)",
+    }),
+    "station_pressure_mpa": frozenset({
+        "station_pressure", "dispenser_pressure_mpa",
+        "dispensing_pressure_mpa", "supply_pressure_mpa",
+        "hose_pressure_mpa", "충전소 압력(mpa)",
+    }),
+    "delivered_gas_temperature_c": frozenset({
+        "delivered_temperature_c", "gas_temperature_c",
+        "dispensed_gas_temperature_c", "delivery_temperature_c",
+        "delivered gas temperature (c)", "공급가스 온도(c)",
+    }),
+    "mass_flow_g_s": frozenset({
+        "mass_flow", "mass_flow_rate_g_s", "hydrogen_mass_flow_g_s",
+        "flow_g_s", "flow_rate_g_s", "질량유량(g/s)",
+    }),
+    "transferred_mass_kg": frozenset({
+        "transferred_mass", "cumulative_mass_kg", "dispensed_mass_kg",
+        "hydrogen_transferred_mass_kg", "누적이송질량(kg)",
+    }),
+    "protocol_phase": frozenset({
+        "phase", "fill_phase", "operation_phase", "protocol_state",
+        "충전단계", "공정단계",
+    }),
+    "vehicle_pressure_mpa": frozenset({
+        "vehicle_pressure", "receptacle_pressure_mpa",
+        "tank_pressure_mpa", "vehicle_tank_pressure_mpa",
+        "vehicle_or_receptacle_pressure_mpa", "차량 압력(mpa)",
+    }),
+    "vehicle_temperature_c": frozenset({
+        "vehicle_temperature", "receptacle_temperature_c",
+        "tank_temperature_c", "vehicle_tank_temperature_c",
+        "vehicle_or_receptacle_temperature_c", "차량 온도(c)",
+    }),
+}
 FORBIDDEN_IDENTITY_TOKENS = (
     "site",
     "company",
@@ -76,6 +122,40 @@ def _phase_marker_flags(value: Any) -> tuple[str, bool, bool]:
         bool(tokens.intersection(_PHASE_START_MARKERS)),
         bool(tokens.intersection(_PHASE_TERMINAL_MARKERS)),
     )
+
+
+def _resolve_channel_headers(
+    headers: Sequence[str],
+) -> tuple[dict[str, str], list[str]]:
+    """Map explicit aliases to canonical roles without guessing boundaries.
+
+    The returned map is canonical role -> source header.  Duplicate aliases
+    for the same role are reported as an intake error instead of choosing one
+    arbitrarily.  Source header names remain local to the caller and are never
+    included in the privacy-safe report.
+    """
+
+    by_normalized = {
+        str(header or "").strip().casefold(): str(header or "").strip()
+        for header in headers
+        if str(header or "").strip()
+    }
+    resolved: dict[str, str] = {}
+    errors: list[str] = []
+    for canonical in (
+        *PILOT_REQUIRED_COLUMNS,
+        *MASS_COLUMNS,
+        *VEHICLE_COLUMNS,
+        *OPTIONAL_COLUMNS,
+    ):
+        candidates = {canonical.casefold()}
+        candidates.update(alias.casefold() for alias in _CHANNEL_ALIASES.get(canonical, ()))
+        matches = [by_normalized[name] for name in candidates if name in by_normalized]
+        if len(matches) > 1:
+            errors.append("ambiguous_channel_alias")
+        elif matches:
+            resolved[canonical] = matches[0]
+    return resolved, errors
 
 
 @dataclass(frozen=True)
@@ -127,7 +207,8 @@ def _inspect_event_rows(
     """Inspect a row iterator from CSV or XLSX without retaining raw rows."""
 
     headers = tuple(str(value or "").strip() for value in headers)
-    normalized = {header.lower() for header in headers if header}
+    channel_map, alias_errors = _resolve_channel_headers(headers)
+    normalized = set(channel_map)
     identity_columns = sorted(
         header for header in headers
         if any(token in header.lower() for token in FORBIDDEN_IDENTITY_TOKENS)
@@ -138,6 +219,7 @@ def _inspect_event_rows(
     mass_present = [column for column in MASS_COLUMNS if column in normalized]
     vehicle_present = [column for column in VEHICLE_COLUMNS if column in normalized]
     errors: list[str] = []
+    errors.extend(alias_errors)
     if identity_columns:
         errors.append("forbidden_identity_or_calendar_column")
     if missing_required:
@@ -167,15 +249,14 @@ def _inspect_event_rows(
     protocol_phase_start_marker_present = False
     protocol_phase_terminal_marker_present = False
     previous_phase_key: str | None = None
-    if not missing_required and not identity_columns:
-        by_lower = {header.lower(): header for header in headers}
+    if not missing_required and not identity_columns and not alias_errors:
         parse_error: str | None = None
         for row_number, row in enumerate(rows, start=2):
             row_count += 1
             try:
                 if "elapsed_time_s" in normalized:
                     current_time = _finite_float(
-                        row.get(by_lower["elapsed_time_s"], ""),
+                        row.get(channel_map["elapsed_time_s"], ""),
                         column="elapsed_time_s", row_number=row_number,
                     )
                     time_count += 1
@@ -194,7 +275,7 @@ def _inspect_event_rows(
                 if "mass_flow_g_s" in normalized:
                     mass_column = "mass_flow_g_s"
                     current_mass = _finite_float(
-                        row.get(by_lower[mass_column], ""),
+                        row.get(channel_map[mass_column], ""),
                         column=mass_column, row_number=row_number,
                     )
                     if current_mass < 0.0:
@@ -202,7 +283,7 @@ def _inspect_event_rows(
                 elif "transferred_mass_kg" in normalized:
                     mass_column = "transferred_mass_kg"
                     current_mass = _finite_float(
-                        row.get(by_lower[mass_column], ""),
+                        row.get(channel_map[mass_column], ""),
                         column=mass_column, row_number=row_number,
                     )
                     if mass_previous is not None and current_mass < mass_previous:
@@ -219,11 +300,11 @@ def _inspect_event_rows(
                 ):
                     if column in normalized:
                         _finite_float(
-                            row.get(by_lower[column], ""),
+                            row.get(channel_map[column], ""),
                             column=column, row_number=row_number,
                         )
                 if "protocol_phase" in normalized:
-                    phase = str(row.get(by_lower["protocol_phase"], "") or "").strip()
+                    phase = str(row.get(channel_map["protocol_phase"], "") or "").strip()
                     if not phase:
                         raise ValueError(f"protocol_phase at row {row_number} is empty")
                     protocol_phase_nonempty_count += 1
@@ -297,6 +378,9 @@ def _inspect_event_rows(
             "vehicle_boundary": vehicle_present,
             "optional": sorted(set(OPTIONAL_COLUMNS).intersection(normalized)),
         },
+        "channel_aliases_resolved": sum(
+            channel_map.get(column, "") != column for column in channel_map
+        ),
         "forbidden_identity_columns_detected": bool(identity_columns),
         "forbidden_identity_column_count": len(identity_columns),
         "errors": errors,
@@ -427,8 +511,10 @@ def _read_split_event(
         station_headers = station_channel[0]
     with _channel_rows(vehicle_path, worksheet=vehicle_worksheet) as vehicle_channel:
         vehicle_headers = vehicle_channel[0]
-    station_normalized = {header.lower() for header in station_headers if header}
-    vehicle_normalized = {header.lower() for header in vehicle_headers if header}
+    station_map, station_alias_errors = _resolve_channel_headers(station_headers)
+    vehicle_map, vehicle_alias_errors = _resolve_channel_headers(vehicle_headers)
+    station_normalized = set(station_map)
+    vehicle_normalized = set(vehicle_map)
     all_headers = station_headers + vehicle_headers
     identity_columns = sorted(
         header for header in all_headers
@@ -450,6 +536,8 @@ def _read_split_event(
 
     if identity_columns:
         add_error("forbidden_identity_or_calendar_column")
+    for alias_error in (*station_alias_errors, *vehicle_alias_errors):
+        add_error(alias_error)
     if missing_station:
         add_error("missing_required_station_column")
     if not mass_present:
@@ -457,8 +545,6 @@ def _read_split_event(
     if missing_vehicle:
         add_error("missing_vehicle_boundary_column")
 
-    station_map = {header.lower(): header for header in station_headers}
-    vehicle_map = {header.lower(): header for header in vehicle_headers}
     row_count = 0
     time_count = 0
     time_start: float | None = None
@@ -620,6 +706,10 @@ def _read_split_event(
                 | (set(OPTIONAL_COLUMNS).intersection(vehicle_normalized))
             ),
         },
+        "channel_aliases_resolved": (
+            sum(key != value for key, value in station_map.items())
+            + sum(key != value for key, value in vehicle_map.items())
+        ),
         "forbidden_identity_columns_detected": bool(identity_columns),
         "forbidden_identity_column_count": len(identity_columns),
         "errors": errors,

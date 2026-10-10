@@ -1,5 +1,25 @@
 # Development Progress
 
+## 2026-10-10 - Remove full-loop intake naming friction on the P0 path
+
+Status: implemented; safety and validation gates remain fail-closed.
+
+- The privacy-safe full-loop intake now recognizes a small, explicit set of
+  common engineering aliases for elapsed time, station/dispenser pressure,
+  delivered-gas temperature, mass flow, protocol phase, and vehicle/receptacle
+  pressure and temperature. This lets a custodian run the quality screen
+  without first renaming every column.
+- Generic names such as `pressure` and `temperature` are intentionally not
+  inferred. If two headers could represent the same role, intake reports an
+  ambiguity and stops; it never silently chooses a boundary.
+- Raw headers remain outside the report. The public result contains only
+  canonical channel-presence flags and an alias-count diagnostic. No evidence
+  gate, model parameter, or external-validation claim was promoted.
+
+Verification:
+
+- Full-loop intake and CLI suites: **18 passed**.
+
 ## 2026-10-10 - Make the balanced control cadence the operator default
 
 Status: implemented; precision mode remains available.

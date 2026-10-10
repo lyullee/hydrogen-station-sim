@@ -66,6 +66,56 @@ def test_three_events_produce_raw_row_free_pilot_report(tmp_path: Path) -> None:
     assert "event_0.csv" not in str(report)
 
 
+def test_common_engineering_aliases_are_resolved_without_relaxing_the_gate(
+    tmp_path: Path,
+) -> None:
+    fields = [
+        "time_s", "station_pressure", "gas_temperature_c", "flow_g_s",
+        "phase", "tank_pressure_mpa", "tank_temperature_c",
+    ]
+    for index in range(3):
+        path = tmp_path / f"event_{index}.csv"
+        path.write_text(
+            ",".join(fields) + "\n"
+            "0,45,-35,10,start,5,25\n"
+            "1,46,-34,10,fill,6,28\n"
+            "2,47,-33,10,stop,7,30\n",
+            encoding="utf-8",
+        )
+
+    report = validate_privacy_safe_pilot_bundle(
+        [tmp_path / f"event_{index}.csv" for index in range(3)]
+    )
+
+    assert report["status"] == "READY_FOR_FULL_LOOP_PROTOCOL_FREEZE"
+    event = report["event_reports"][0]
+    assert event["channel_aliases_resolved"] == 7
+    assert event["channel_presence"]["vehicle_boundary"] == [
+        "vehicle_pressure_mpa", "vehicle_temperature_c"
+    ]
+    assert "tank_pressure_mpa" not in str(report)
+
+
+def test_ambiguous_aliases_fail_closed(tmp_path: Path) -> None:
+    path = tmp_path / "event.csv"
+    path.write_text(
+        "elapsed_time_s,time_s,station_pressure_mpa,delivered_gas_temperature_c,"
+        "mass_flow_g_s,protocol_phase,vehicle_pressure_mpa,vehicle_temperature_c\n"
+        "0,0,45,-35,10,start,5,25\n"
+        "1,1,46,-34,10,fill,6,28\n",
+        encoding="utf-8",
+    )
+
+    report = validate_privacy_safe_pilot_bundle(
+        [path], rules=PilotIntakeRules(minimum_event_count=1)
+    )
+
+    event = report["event_reports"][0]
+    assert report["status"] == "SCHEMA_INCOMPLETE"
+    assert event["schema_valid"] is False
+    assert "ambiguous_channel_alias" in event["errors"]
+
+
 def test_identity_and_time_quality_errors_fail_closed(tmp_path: Path) -> None:
     path = tmp_path / "event.csv"
     fields = [
