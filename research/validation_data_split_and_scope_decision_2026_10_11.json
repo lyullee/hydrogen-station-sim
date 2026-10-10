@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "artifact_type": "validation_data_split_and_scope_decision",
+  "recorded_at": "2026-10-11",
+  "data_lanes": {
+    "owner_station_side_time_ordered_holdout": {
+      "status": "SAME_SITE_STATION_SIDE_HOLDOUT",
+      "source_artifact": "research/confidential_station_side_integrated_validation_2026_10_09.json",
+      "deduplicated_rows": 56854143,
+      "pressure_boundary": {"calibration_points": 998, "holdout_points": 30},
+      "cascade_sequence": {"calibration_pairs": 8106, "holdout_pairs": 3664},
+      "recharge_pressure_forecast": {"calibration_cases": 1024, "holdout_cases": 394},
+      "independent_external_validation": false,
+      "claim_boundary": "Same-site station-side pressure, cascade and recharge diagnostics only; no vehicle-side or field-safety claim."
+    },
+    "public_type_iv_component_holdout": {
+      "status": "READY_WITH_FROZEN_PUBLIC_SPLIT",
+      "source_artifact": "research/independent_component_holdout_reanalysis_2026_10_11.json",
+      "split_rule": "lab_test_number modulo 3 equals 0 is validation",
+      "calibration_cases": 23,
+      "validation_cases": 12,
+      "excluded_for_mass_closure": 1,
+      "new_parameter_fit": false,
+      "claim_boundary": "Independent external receiving-tank component evidence only; no station controller, dispenser, ESD, vehicle or field-safety claim."
+    }
+  },
+  "station_to_vehicle_public_search": {
+    "status": "NO_ELIGIBLE_PUBLIC_SYNCHRONIZED_RAW_SET_IDENTIFIED",
+    "search_boundary": [
+      "station or dispenser channels",
+      "vehicle or receptacle channels",
+      "common elapsed time",
+      "pressure, temperature and mass-flow or transferred-mass fields",
+      "protocol and unit metadata",
+      "reuse rights"
+    ],
+    "reviewed_leads": [
+      {"id": "fch2rail_d61", "url": "https://fch2rail.eu/wp-content/uploads/2025/01/FCH2RAIL_D6.1_Report-on-KPI-assessment.pdf", "decision": "REPORT_OR_REQUEST_ONLY"},
+      {"id": "dlr_fch2rail_refueling", "url": "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf", "decision": "PLOT_OR_REQUEST_ONLY"},
+      {"id": "nrel_h2fills", "url": "https://www.nrel.gov/hydrogen/h2fills", "decision": "MODEL_SOFTWARE_NOT_RAW_HOLDOUT"},
+      {"id": "elvhys_42", "url": "https://doi.org/10.18710/JXJP0H", "decision": "OPEN_COMPONENT_RELEASE_DATA_NOT_VEHICLE_LOOP"}
+    ],
+    "primary_goal_effect": "REMOVE_FULL_LOOP_EXTERNAL_VALIDATION_FROM_PRIMARY_GOAL",
+    "paper_limitation": "No openly reusable synchronized station-to-vehicle raw trace was identified; vehicle-side controller/ESD and complete full-loop field validation are outside the claim boundary.",
+    "optional_reentry": "Custodian-provided, de-identified, synchronized events may be frozen and evaluated as a separately scoped extension."
+  },
+  "ethics_and_expert_evaluation": {
+    "physics_paper_required": false,
+    "required_for_saga_human_safety_effect_claim": true,
+    "ethics_meaning": "Institutional determination of approval, exemption or not-required status for a human-facing study.",
+    "expert_meaning": "Independent blinded qualified reviewers score SAGA versus alarm-only responses for action correctness, priority, stabilization, prevention, grounding, usability and unsafe omissions; no LLM-as-judge.",
+    "current_status": "NOT_COLLECTED_AND_NOT_A_PRIMARY_GOAL_GATE"
+  }
+}
