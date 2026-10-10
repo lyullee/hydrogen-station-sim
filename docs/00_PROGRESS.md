@@ -18,6 +18,9 @@ Status: implemented; focused API/stream regression passed.
   the display boundary while preserving every ESD, leak, relief, dispatch,
   recharge, alarm, and process-state transition. The complete physical frame
   history remains available through the HTTP cursor and final result APIs.
+- On job completion the browser replaces the live projection with that full
+  result, so trend replay and CSV export retain every physical sample even
+  when the live view used coalesced frames.
 - This changes transport and presentation overhead only. Physical integration,
   HAZOP sampling, safety actions, and stored replay frames are unchanged.
 

@@ -212,8 +212,11 @@ function applyLiveFrame(frame) {
 async function loadFinalResult(id,autoplay) {
   const response=await fetch(`/api/simulations/${id}/result`);if(!response.ok)throw new Error('결과 조회 실패');
   const result=await response.json();if(id!==state.activeJobId)return;
-  if(!state.result?.series?.time_s?.length)state.result=result;
-  else {state.result.summary=result.summary;state.result.risk_updates=result.risk_updates;}
+  // Live websocket delivery may coalesce quiet continuous frames for
+  // responsiveness. Once the job is complete, replace the live projection
+  // with the authoritative full-resolution result so charts, replay and CSV
+  // export never lose the physical sample history.
+  state.result=result;
   completeCalculationMonitor();$('timeline').max=Math.max(0,state.result.series.time_s.length-1);
   renderEvents(state.result.events||[]);updateFrame(state.result.series.time_s.length-1);
   if(autoplay)startPlayback();
