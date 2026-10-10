@@ -4739,6 +4739,8 @@ def audit(root: Path) -> dict[str, object]:
     dispersion_intake = _json(dispersion_intake_path)
     dispersion_intake_source = (dispersion_intake or {}).get("source") or {}
     dispersion_intake_eligibility = (dispersion_intake or {}).get("eligibility") or {}
+    dispersion_intake_local = (dispersion_intake or {}).get("local_file_audit") or {}
+    dispersion_intake_local_files = dispersion_intake_local.get("files") or []
     dispersion_intake_pass = bool(
         (dispersion_intake or {}).get("artifact_type")
         == "figshare_open_channel_hydrogen_dispersion_intake"
@@ -4749,6 +4751,10 @@ def audit(root: Path) -> dict[str, object]:
         == "DISPERSION_COMPONENT_HOLDOUT_CANDIDATE"
         and dispersion_intake_eligibility.get("full_loop_external_holdout_eligible") is False
         and dispersion_intake_eligibility.get("raw_files_committed") is False
+        and dispersion_intake_local.get("audited_zip_count") == 22
+        and len(dispersion_intake_local_files) == 22
+        and all(item.get("api_size_matches") is True for item in dispersion_intake_local_files)
+        and all((item.get("csv_schema") or {}).get("header_found") is True for item in dispersion_intake_local_files)
     )
     dispersion_proxy_pass = bool(
         (dispersion_proxy or {}).get("status")
@@ -4777,6 +4783,7 @@ def audit(root: Path) -> dict[str, object]:
             "case_count": dispersion_proxy_method.get("case_count"),
             "intake_file_count": dispersion_intake_source.get("file_count"),
             "intake_classification": dispersion_intake_eligibility.get("classification"),
+            "intake_audited_zip_count": dispersion_intake_local.get("audited_zip_count"),
             "coefficient_volpct_per_g_s": dispersion_proxy_method.get("coefficient_volpct_per_g_s"),
             "runtime_formula": dispersion_proxy_runtime.get("formula"),
             "claim_boundary": (dispersion_proxy or {}).get("claim_boundary"),

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-10T02:13:00.949702+00:00",
+  "generated_at": "2026-10-10T02:18:10.544647+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -3250,6 +3250,7 @@
         "case_count": 22,
         "intake_file_count": 23,
         "intake_classification": "DISPERSION_COMPONENT_HOLDOUT_CANDIDATE",
+        "intake_audited_zip_count": 22,
         "coefficient_volpct_per_g_s": 28.449493830243835,
         "runtime_formula": "clip(release_mass_flow_g_s * coefficient_volpct_per_g_s * ventilation_multiplier, 0, 100)",
         "claim_boundary": "This coefficient is a bounded advisory virtual-detector proxy derived from an open-ended channel concentration dataset. It does not validate outdoor station dispersion, detector placement, detector response dynamics, ESD effectiveness, consequence distances, or the complete hydrogen-refuelling process model. A site-specific CFD or detector calibration study remains required for engineering or regulatory decisions."

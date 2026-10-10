@@ -211,6 +211,11 @@ def build_record(metadata: dict[str, Any], raw_dir: Path | None) -> dict[str, An
             if path is None:
                 continue
             audit = inspect_zip(path)
+            audit["api_size_matches"] = (
+                audit["size_bytes"] == int(item["size_bytes"])
+                if item.get("size_bytes") is not None
+                else None
+            )
             audit["api_md5_available"] = bool(item.get("md5"))
             audit["api_md5_matches"] = (
                 audit["md5"].lower() == str(item["md5"]).lower()

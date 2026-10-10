@@ -21,8 +21,10 @@ therefore not change the full-loop gate, runtime parameters, or safety-distance
 claims.  A spatial screen must be frozen before scoring the locally available
 cases; any fitted or outcome-dependent model remains development-only.
 
-The checked local exemplar is T00014.  It contains 29 sensor columns, a
-monotonic 187.9 s flow timebase, 505 rows with sensor observations, and a
-maximum recorded mass flow of 0.0416 g/s.  Figshare does not expose an MD5 for
-that file in the API response, so the local SHA-256 is retained and the API
-checksum comparison is explicitly marked unavailable.
+All 22 local ZIP files were size-checked against the API manifest and their
+CSV schemas were read without publishing raw rows.  The checked T00014
+exemplar contains 29 sensor columns, a monotonic 187.9 s flow timebase, 505
+rows with sensor observations, and a maximum recorded mass flow of 0.0416 g/s.
+Figshare does not expose MD5 values for these files in the API response, so
+the local SHA-256 values are retained and the API checksum comparison is
+explicitly marked unavailable.

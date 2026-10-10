@@ -23,7 +23,7 @@ def test_figshare_exemplar_schema_is_explicit() -> None:
     path = ROOT / "research/figshare_h2_dispersion_intake_2026_10_10.json"
     record = json.loads(path.read_text(encoding="utf-8"))
     files = record["local_file_audit"]["files"]
-    assert record["local_file_audit"]["audited_zip_count"] == 1
+    assert record["local_file_audit"]["audited_zip_count"] == 22
     exemplar = files[0]
     schema = exemplar["csv_schema"]
     assert schema["header_found"] is True
@@ -31,5 +31,6 @@ def test_figshare_exemplar_schema_is_explicit() -> None:
     assert schema["flow_time_monotonic"] is True
     assert schema["sensor_time_monotonic"] is True
     assert exemplar["sha256"]
+    assert exemplar["api_size_matches"] is True
     assert exemplar["api_md5_available"] is False
     assert exemplar["api_md5_matches"] is None
