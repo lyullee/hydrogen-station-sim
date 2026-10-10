@@ -86,6 +86,62 @@ def _sanitize(output: str) -> str:
     return re.sub(r"(?i)[A-Z]:\\[^\r\n]+", "<local-path>", output)
 
 
+def _parse_stdout_payload(stdout: str) -> dict[str, object] | None:
+    """Parse a diagnostic's machine-readable stdout when it is available.
+
+    The child diagnostics intentionally keep their process exit code independent
+    from a scientific screening result: a failed screen is useful negative
+    evidence and should still produce a complete artifact.  The fast-lane
+    runner therefore parses JSON separately instead of treating exit code 0 as
+    a model pass.
+    """
+
+    candidate = stdout.strip()
+    if not candidate:
+        return None
+    try:
+        payload = json.loads(candidate)
+    except json.JSONDecodeError:
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def _scientific_screen(payload: dict[str, object] | None) -> dict[str, object]:
+    """Extract an explicit screening outcome without inventing one.
+
+    A diagnostic may report a joint pass fraction or a count of passing
+    sub-screens.  When neither is present the result stays ``NOT_REPORTED``;
+    process completion alone never becomes a scientific PASS.
+    """
+
+    if not payload:
+        return {"status": "NOT_REPORTED"}
+    aggregate = payload.get("aggregate")
+    if isinstance(aggregate, dict):
+        nested = _scientific_screen({**aggregate, "case_count": payload.get("case_count")})
+        if nested["status"] != "NOT_REPORTED":
+            return nested
+    case_count = payload.get("case_count")
+    joint_fraction = payload.get("joint_screening_pass_fraction")
+    if isinstance(joint_fraction, (int, float)) and isinstance(case_count, int):
+        status = "PASS" if float(joint_fraction) >= 0.8 else "FAIL"
+        return {
+            "status": status,
+            "case_count": case_count,
+            "joint_screening_pass_fraction": float(joint_fraction),
+        }
+    pass_count = payload.get("soc_definition_screen_pass_count")
+    if isinstance(pass_count, int) and isinstance(case_count, int):
+        fraction = pass_count / case_count if case_count else 0.0
+        return {
+            "status": "PASS" if fraction >= 0.8 else "FAIL",
+            "case_count": case_count,
+            "screen_pass_count": pass_count,
+            "screen_pass_fraction": fraction,
+        }
+    return {"status": "NOT_REPORTED"}
+
+
 def _run_one(diagnostic: Diagnostic, timeout_s: float) -> dict[str, object]:
     started = time.perf_counter()
     environment = os.environ.copy()
@@ -110,6 +166,7 @@ def _run_one(diagnostic: Diagnostic, timeout_s: float) -> dict[str, object]:
                 timeout=timeout_s,
                 check=False,
             )
+        payload = _parse_stdout_payload(completed.stdout)
         output = _sanitize((completed.stdout + "\n" + completed.stderr).strip())
         return {
             "name": diagnostic.name,
@@ -118,6 +175,7 @@ def _run_one(diagnostic: Diagnostic, timeout_s: float) -> dict[str, object]:
             "status": "PASS" if completed.returncode == 0 else "FAIL",
             "exit_code": completed.returncode,
             "duration_s": round(time.perf_counter() - started, 3),
+            "scientific_screen": _scientific_screen(payload),
             "output_tail": output[-1600:],
         }
     except subprocess.TimeoutExpired as exc:
@@ -129,6 +187,7 @@ def _run_one(diagnostic: Diagnostic, timeout_s: float) -> dict[str, object]:
             "status": "TIMEOUT",
             "exit_code": None,
             "duration_s": round(time.perf_counter() - started, 3),
+            "scientific_screen": {"status": "TIMEOUT"},
             "output_tail": output[-1600:],
         }
 
@@ -161,6 +220,16 @@ def run_priority_diagnostics(
         for future in as_completed(futures):
             results.append(future.result())
     results.sort(key=lambda item: (str(item["priority"]), str(item["name"])))
+    scientific_failures = [
+        str(item["name"])
+        for item in results
+        if (item.get("scientific_screen") or {}).get("status") == "FAIL"
+    ]
+    reported_screens = [
+        (item.get("scientific_screen") or {}).get("status")
+        for item in results
+        if (item.get("scientific_screen") or {}).get("status") in {"PASS", "FAIL"}
+    ]
     return {
         "schema_version": 1,
         "artifact_type": "parallel_priority_diagnostic_run",
@@ -170,6 +239,10 @@ def run_priority_diagnostics(
         "diagnostic_count": len(selected),
         "duration_s": round(time.perf_counter() - started, 3),
         "status": "PASS" if all(item["status"] == "PASS" for item in results) else "FAIL",
+        "scientific_screen_status": (
+            "FAIL" if scientific_failures else "PASS" if reported_screens else "NOT_REPORTED"
+        ),
+        "scientific_screen_failures": scientific_failures,
         "results": results,
         "claim_boundary": (
             "Process status only. These are bounded development diagnostics; "

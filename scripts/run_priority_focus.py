@@ -72,6 +72,7 @@ def run_priority_focus(
         diagnostics = diagnostic_future.result()
 
     status = "PASS" if software["status"] == "PASS" and diagnostics["status"] == "PASS" else "FAIL"
+    scientific_screen_status = diagnostics.get("scientific_screen_status", "NOT_REPORTED")
     return {
         "schema_version": 1,
         "artifact_type": "parallel_priority_focus_run",
@@ -80,6 +81,8 @@ def run_priority_focus(
         "selected_priority": priority,
         "duration_s": round(time.perf_counter() - started, 3),
         "status": status,
+        "scientific_screen_status": scientific_screen_status,
+        "scientific_screen_failures": diagnostics.get("scientific_screen_failures", []),
         "software_checks": software,
         "physics_diagnostics": diagnostics,
         "claim_boundary": (

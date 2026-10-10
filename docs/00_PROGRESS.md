@@ -1614,3 +1614,24 @@ Verification:
   suites: 36 passed.
 - IJHE readiness audit remains 127 PASS / 10 FAIL / 7 PENDING;
   `bounded_ijhe_submission_ready=false` and `full_user_objective_ready=false`.
+## 2026-10-10 - Fast-lane scientific-screen separation
+
+Status: implemented; P0 execution is now parallel and reports process health
+separately from the scientific screening outcome.
+
+- `scripts/run_priority_diagnostics.py` now parses each child diagnostic's
+  machine-readable summary. A zero exit code means the diagnostic completed;
+  it no longer implies that the model passed its declared screen.
+- `scripts/run_priority_focus.py --priority P0` completed in 3.6 s. The two
+  software tracks passed, the MC SOC/EOS boundary screen passed 8/8, and the
+  measured-boundary vehicle-tank replay is explicitly reported as
+  `scientific_screen_status=FAIL` with 0/8 joint passes.
+- This keeps the negative MC result visible instead of allowing a fast process
+  check to look like model validation. It does not change runtime parameters,
+  the frozen protocol, or the readiness gate.
+
+Verification:
+
+- `tests/test_priority_diagnostics.py tests/test_priority_focus.py`: 4 passed.
+- P0 fast lane: process PASS, scientific screen FAIL only for
+  `mc_tank_boundary`; duration 3.6 s.

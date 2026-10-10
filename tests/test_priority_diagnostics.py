@@ -7,6 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from run_priority_diagnostics import (  # noqa: E402
     DEFAULT_DIAGNOSTICS,
+    _scientific_screen,
     select_diagnostics,
 )
 
@@ -24,3 +25,18 @@ def test_diagnostic_scripts_are_repository_relative() -> None:
         assert item.script.startswith("scripts/")
         assert item.script.endswith(".py")
         assert item.output_argument is True
+
+
+def test_scientific_screen_is_separate_from_process_completion() -> None:
+    failed = _scientific_screen(
+        {"case_count": 8, "joint_screening_pass_fraction": 0.0}
+    )
+    assert failed["status"] == "FAIL"
+    passed = _scientific_screen(
+        {
+            "case_count": 8,
+            "aggregate": {"soc_definition_screen_pass_count": 8},
+        }
+    )
+    assert passed["status"] == "PASS"
+    assert _scientific_screen({"case_count": 8})["status"] == "NOT_REPORTED"
