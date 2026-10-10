@@ -11,6 +11,8 @@ Status: implemented; P0/P1 software and physics checks can now start together.
   boundaries and does not alter model parameters or readiness gates.
 - This avoids waiting for a serial “software first, diagnostics second” cycle while
   keeping the full regression suite available for broad changes.
+- The priority-validation workflow now uses this combined command so CI exercises
+  both tracks in the same fast lane.
 
 Verification:
 
