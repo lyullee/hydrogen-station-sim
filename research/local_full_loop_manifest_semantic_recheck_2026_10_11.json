@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "artifact_type": "privacy_bounded_private_full_loop_candidate_semantic_recheck",
+  "recorded_at": "2026-10-11",
+  "decision": "NO_ELIGIBLE_MEASURED_FULL_LOOP_CANDIDATE",
+  "screen": {
+    "manifest_entry_count": 247,
+    "existing_csv_or_tsv_count": 247,
+    "parsed_csv_or_tsv_count": 247,
+    "parse_error_count": 0,
+    "header_family_candidate_counts": {
+      "common_clock": 240,
+      "control_or_esd": 35,
+      "mass_or_flow": 239,
+      "station_pressure": 18,
+      "temperature": 239,
+      "vehicle_pressure": 1,
+      "vehicle_temperature": 6
+    },
+    "complete_nonempty_full_loop_schema_count": 0,
+    "empty_full_loop_schema_template_count": 1,
+    "aggregate_rows_in_complete_nonempty_candidates": 0,
+    "complete_candidate_row_count_min": 0,
+    "complete_candidate_row_count_max": 0
+  },
+  "eligibility": {
+    "header_screen_is_sufficient_for_validation": false,
+    "raw_rows_are_persisted": false,
+    "common_clock_and_units_attested": false,
+    "station_vehicle_boundary_attested": false,
+    "controller_protocol_esd_attested": false,
+    "rights_and_custodian_attested": false,
+    "full_loop_holdout_eligible": false,
+    "runtime_parameter_application": false
+  },
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "raw_rows_persisted": false,
+    "candidate_values_persisted": false,
+    "site_company_manufacturer_published": false,
+    "calendar_dates_published": false
+  },
+  "claim_boundary": "This is a header-family and non-empty-row screen only. A complete schema candidate still requires pre-access freezing, engineering-unit and role attestation, rights confirmation, checksum and independent scoring before it can support validation."
+}

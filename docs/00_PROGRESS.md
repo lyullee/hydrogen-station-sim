@@ -2091,3 +2091,23 @@ The same-day public-source recheck also screened official H2FillS/FCEV data
 routes and a real-fill report. These remain software, aggregate-chart, or
 custodian-request leads rather than an eligible raw full-loop cohort; the
 exclusion is recorded in `research/public_full_loop_search_addendum_2026_10_11.json`.
+
+## 2026-10-11 - Semantic full-loop candidate recheck
+
+The private vehicle/full-loop candidate manifest was re-screened using both
+semantic header families and non-empty-row presence. All 247 existing CSV/TSV
+files were parseable. One broad full-loop schema match was an empty template;
+zero files contained a complete non-empty station-to-vehicle measurement loop.
+The aggregate result is recorded in
+`research/local_full_loop_manifest_semantic_recheck_2026_10_11.json` and the
+method boundary in `research/LOCAL_FULL_LOOP_MANIFEST_SEMANTIC_RECHECK_2026_10_11.md`.
+
+This closes a false-positive candidate path without promoting any data to
+validation. No private source identity, path, filename, header, identifier,
+calendar date, or raw value is persisted. The readiness snapshot remains
+**127 PASS / 10 FAIL / 7 PENDING (88.2% gate closure)**; the remaining blocker
+is an attested synchronized station--vehicle full-loop cohort with independent
+holdout scoring.
+
+Verification: semantic candidate screen and regression test pass (1 focused
+test); runtime behavior and validation parameters are unchanged.
