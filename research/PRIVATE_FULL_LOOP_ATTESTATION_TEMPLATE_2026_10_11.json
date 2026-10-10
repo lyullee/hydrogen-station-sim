@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "artifact_type": "privacy_bounded_private_full_loop_attestation_template",
+  "purpose": "Allow an authorized data custodian to attest full-loop channel roles without depositing raw rows, site identity, company identity, equipment serials, or exact dates.",
+  "privacy_boundary": {
+    "raw_rows_in_repository": false,
+    "original_column_names_in_repository": false,
+    "source_paths_in_repository": false,
+    "site_or_company_identity_in_repository": false,
+    "exact_dates_in_repository": false,
+    "equipment_manufacturer_or_serials_in_repository": false,
+    "masked_period_required": true
+  },
+  "custodian_attestation": {
+    "authorized_data_owner": false,
+    "release_rights_for_research": false,
+    "rights_scope": "",
+    "masked_collection_period": "YYYY or YYYY-Qn",
+    "independent_reviewer_access_possible": false
+  },
+  "channel_attestations": [
+    {
+      "role": "common_time",
+      "required": true,
+      "present": false,
+      "unit": "s",
+      "sampling_interval_s": null,
+      "clock_alignment_method": "",
+      "clock_alignment_uncertainty_s": null,
+      "tag_alias_hash": ""
+    },
+    {
+      "role": "station_pressure",
+      "required": true,
+      "present": false,
+      "unit": "MPa_abs",
+      "measurement_location": "station-side, location masked",
+      "calibration_status": "",
+      "uncertainty": null,
+      "tag_alias_hash": ""
+    },
+    {
+      "role": "delivered_temperature",
+      "required": true,
+      "present": false,
+      "unit": "degC",
+      "measurement_location": "dispenser outlet or vehicle inlet, location masked",
+      "calibration_status": "",
+      "uncertainty": null,
+      "tag_alias_hash": ""
+    },
+    {
+      "role": "mass_flow",
+      "required": true,
+      "present": false,
+      "unit": "g/s",
+      "measurement_location": "station/dispenser boundary, location masked",
+      "calibration_status": "",
+      "uncertainty": null,
+      "tag_alias_hash": ""
+    },
+    {
+      "role": "cascade_or_storage",
+      "required": true,
+      "present": false,
+      "identity_resolution": "masked bank identity or stable pseudonym",
+      "unit": "",
+      "state_or_pressure_available": false,
+      "tag_alias_hash": ""
+    },
+    {
+      "role": "vehicle_identity",
+      "required": true,
+      "present": false,
+      "identity_resolution": "vehicle-1/vehicle-2 pseudonym only",
+      "vehicle_count": null,
+      "tank_geometry_available": false,
+      "tag_alias_hash": ""
+    },
+    {
+      "role": "vehicle_pressure",
+      "required": true,
+      "present": false,
+      "unit": "MPa_abs",
+      "measurement_location": "vehicle-side, location masked",
+      "calibration_status": "",
+      "uncertainty": null,
+      "tag_alias_hash": ""
+    },
+    {
+      "role": "vehicle_temperature",
+      "required": true,
+      "present": false,
+      "unit": "degC",
+      "measurement_location": "vehicle-side, location masked",
+      "calibration_status": "",
+      "uncertainty": null,
+      "tag_alias_hash": ""
+    },
+    {
+      "role": "controller_state",
+      "required": true,
+      "present": false,
+      "state_vocabulary_attested": false,
+      "required_states": ["valve", "compressor", "pre_cooler", "ESD", "alarm", "fueling_phase"],
+      "tag_alias_hash": ""
+    }
+  ],
+  "holdout_controls": {
+    "event_linkage_id_pseudonymized": false,
+    "minimum_independent_events": 3,
+    "model_and_parameters_frozen_before_outcome_access": false,
+    "split_manifest_hash": "",
+    "outcome_access_timestamp_masked": "",
+    "independent_reviewer_confirmed": false
+  },
+  "admission_rule": {
+    "full_loop_candidate_requires_all_required_roles": true,
+    "missing_role_blocks_holdout": true,
+    "attestation_alone_does_not_prove_model_accuracy": true,
+    "raw_data_remains_outside_repository": true
+  }
+}
