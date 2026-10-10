@@ -110,8 +110,17 @@ evaluation service or an embargoed reviewer package with the same scoring API.
 
 ## Candidate custodians and public lead records
 
+The [GTI station-evaluation report](https://www.osti.gov/biblio/1824631) is now
+listed as a priority custodian lead. It explicitly identifies the useful
+station-evaluation channels (vehicle start/end pressure and temperature,
+dispensed mass, compressor/dispenser temperatures, flow, power and safety
+incident markers), but the public report does not provide a reuse-cleared,
+synchronized raw archive. It is therefore a request route only; no numerical
+rows or validation result are admitted from this record.
+
 | Custodian route | Public lead | Requested scope |
 | --- | --- | --- |
+| GTI station-evaluation custodian | [OSTI report](https://www.osti.gov/biblio/1824631) | De-identified station acquisition and fueling-log traces, vehicle start/end pressure-temperature, mass/flow, compressor/precooler state and safety markers |
 | NLR/NREL HITRF | [HITRF programme](https://www.nrel.gov/hydrogen/hitrf-animation) | H70/H35 station, dispenser, protocol and vehicle logger rows |
 | Cal State LA HRFF | [HRFF operation](https://www.calstatela.edu/ecst/h2station/operation) | Light-duty station event logs and vehicle pressure/temperature/mass flow |
 | KGS/Oh study custodians | [Published study](https://doi.org/10.1007/s11814-025-00551-9) | Six real-HRS scenarios reported with vehicle pressure, temperature and mass flow |

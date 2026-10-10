@@ -3,6 +3,12 @@
   "recorded_at": "2026-10-05",
   "status": "REQUEST_SPECIFICATION_ONLY",
   "purpose": "Prepare a custodian request for an independently reusable synchronized HRS station-to-vehicle holdout.",
+  "update_note_2026_10_10": {
+    "reason": "The official GTI station-evaluation report was rechecked as a concrete custodian lead; it lists the required logger channels but does not expose a reuse-cleared raw archive.",
+    "source_boundary": "Report metadata and channel requirements only; no numerical rows admitted.",
+    "raw_trace_obtained": false,
+    "full_loop_external_validation_supported": false
+  },
   "minimum_channels": [
     "common elapsed time or timestamp",
     "vehicle_or_receptacle_pressure",
@@ -67,6 +73,11 @@
     "rationale": "A small de-identified bundle can close a useful component-evidence gap without asking the custodian for the full historian. It is intentionally below the eight-event full-loop requirement."
   },
   "custodian_routes": [
+    {
+      "id": "gti_hrs_station_evaluation_osti",
+      "url": "https://www.osti.gov/biblio/1824631",
+      "requested_scope": "De-identified station acquisition and fueling-log traces: vehicle start pressure/temperature, vehicle end pressure, dispenser inlet pressure/temperature, compressor/precooler state, flow or dispensed mass, fill type and safety incident markers"
+    },
     {
       "id": "nrel_hitrf",
       "url": "https://www.nrel.gov/hydrogen/hitrf-animation",
