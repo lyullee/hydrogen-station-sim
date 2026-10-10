@@ -50,6 +50,42 @@
       "full_loop_external_holdout_eligible": false,
       "admission_status": "PARTIAL_STATION_TO_TANK_BOUNDARY_ONLY",
       "claim_boundary": "Common-clock hose and seven-tank pressure/temperature/mass boundary; no station controller, cascade, ESD, nozzle/receptacle, vehicle protocol or full-loop claim."
+    },
+    {
+      "id": "dlr_rail_h2_refueling_measurement_2025",
+      "title": "Development, application and optimization of hydrogen refueling processes for railway vehicles",
+      "article_url": "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf",
+      "reported_measurements": [
+        "tank-module pressure",
+        "dispenser pressure",
+        "dispenser temperature",
+        "dispenser mass flow",
+        "rail-vehicle refueling demonstration"
+      ],
+      "raw_data_status": "figure_level_measurement_only_in_public_manuscript",
+      "channel_dictionary_status": "reported_channel_roles_but_no_downloadable_raw_logger",
+      "license_status": "article_access_and_raw_data_reuse_terms_not_resolved",
+      "full_loop_external_holdout_eligible": false,
+      "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
+      "next_action": "Request a de-identified machine-readable exemplar and channel/clock attestation from the corresponding project data custodian; keep the published figure as context only until that request is approved.",
+      "claim_boundary": "The public manuscript shows a real railway refueling measurement example and useful channel roles, but a figure is not a reproducible synchronized station-to-vehicle holdout."
+    },
+    {
+      "id": "european_hydrogen_observatory_hrs_inventory_2026",
+      "title": "European Hydrogen Observatory public hydrogen refuelling-station inventory",
+      "article_url": "https://observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations",
+      "reported_measurements": [
+        "station location and public availability inventory",
+        "dispenser pressure class",
+        "station type and status"
+      ],
+      "raw_data_status": "static_inventory_only",
+      "channel_dictionary_status": "inventory_schema_available; no process historian channels",
+      "license_status": "public dataset terms apply to inventory; no process-data reuse implied",
+      "full_loop_external_holdout_eligible": false,
+      "admission_status": "INVENTORY_CONTEXT_ONLY",
+      "next_action": "Use only for station-scale/layout and pressure-class context; do not treat inventory availability as fueling-process telemetry.",
+      "claim_boundary": "This is a public station roster, not a pressure-temperature-flow event dataset, and it cannot validate the digital twin or safety response."
     }
   ],
   "decision": {

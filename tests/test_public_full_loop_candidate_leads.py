@@ -22,4 +22,17 @@ def test_candidate_leads_do_not_relax_full_loop_gate() -> None:
     nrel = next(item for item in record["candidates"] if item["id"].startswith("nrel_"))
     assert nrel["admission_status"] == "PARTIAL_STATION_TO_TANK_BOUNDARY_ONLY"
     assert nrel["full_loop_external_holdout_eligible"] is False
+    dlr = next(
+        item for item in record["candidates"]
+        if item["id"] == "dlr_rail_h2_refueling_measurement_2025"
+    )
+    assert dlr["admission_status"] == "CONTACT_REQUEST_CANDIDATE_ONLY"
+    assert dlr["full_loop_external_holdout_eligible"] is False
+    assert "figure" in dlr["raw_data_status"]
+    eho = next(
+        item for item in record["candidates"]
+        if item["id"] == "european_hydrogen_observatory_hrs_inventory_2026"
+    )
+    assert eho["admission_status"] == "INVENTORY_CONTEXT_ONLY"
+    assert eho["full_loop_external_holdout_eligible"] is False
     assert record["privacy"]["raw_rows_persisted"] is False

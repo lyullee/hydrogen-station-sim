@@ -14,6 +14,13 @@ marked `CONTACT_REQUEST_CANDIDATE_ONLY`.
 The NREL H2FillS trace remains useful but limited to a partial hose and
 receiving-tank boundary. It is not a station-to-vehicle full-loop holdout.
 
+The DLR railway-refuelling manuscript is another useful contact lead: it shows
+real tank-module, dispenser pressure, temperature and mass-flow channels, but
+the public material is a figure-level example rather than a downloadable,
+clock-aligned logger archive. The European Hydrogen Observatory roster is
+useful for pressure-class and station-layout context only; it contains no
+process historian channels.
+
 The privacy-safe route is to request three de-identified events with a common
 elapsed time, station/dispenser pressure, delivered-gas temperature, transferred
 mass or mass flow, protocol phase, and (if available) vehicle/receptacle,
@@ -22,3 +29,7 @@ model before scoring and must not publish raw rows or facility identity.
 
 For the BAM/KETI lead, the staged request text is in
 [`BAM_KETI_DATA_REQUEST_DRAFT_2026_10_10.md`](BAM_KETI_DATA_REQUEST_DRAFT_2026_10_10.md).
+
+These additional leads do not change the gate: no candidate is admitted as a
+full-loop holdout until raw/de-identified rows, channel semantics, a common
+clock, reuse terms and a pre-access frozen scoring protocol are all verified.
