@@ -5569,11 +5569,11 @@ def audit(root: Path) -> dict[str, object]:
         and saga_measurement_runtime.get("provider_calls") == 0
         and len(str(saga_measurement_runtime.get("saga_commit") or "")) == 40
         and len(str(saga_measurement_runtime.get("api_sha256") or "")) == 64
-        and saga_measurement_aggregate.get("case_count") == 5
-        and saga_measurement_aggregate.get("pass_count") == 5
-        and saga_measurement_aggregate.get("equivalent_grounded_case_count") == 4
+        and saga_measurement_aggregate.get("case_count") == 6
+        and saga_measurement_aggregate.get("pass_count") == 6
+        and saga_measurement_aggregate.get("equivalent_grounded_case_count") == 5
         and saga_measurement_aggregate.get("unsupported_rejection_case_count") == 1
-        and len(saga_measurement_cases) == 5
+        and len(saga_measurement_cases) == 6
         and all(case.get("passed") is True for case in saga_measurement_cases)
         and "does not establish" in str(
             (saga_measurement_guard or {}).get("claim_boundary", "")
@@ -5586,7 +5586,7 @@ def audit(root: Path) -> dict[str, object]:
         ),
         "The direct SAGA guard preserves grounded measurements across equivalent unit and range spellings while still rejecting an absent value.",
         str(saga_measurement_guard_path.relative_to(root)),
-        "Five deterministic, provider-free cases: four grounded-equivalence cases and one unsupported-value rejection, with exact SAGA source identity and a non-effectiveness boundary.",
+        "Six deterministic, provider-free cases: five grounded-equivalence cases (including a corrupted degree-marker spelling) and one unsupported-value rejection, with exact SAGA source identity and a non-effectiveness boundary.",
         {
             "runtime": saga_measurement_runtime,
             "aggregate": saga_measurement_aggregate,

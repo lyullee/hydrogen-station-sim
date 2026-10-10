@@ -55,6 +55,15 @@ def run(saga_repo: Path) -> dict[str, Any]:
             "notice_expected": False,
         },
         {
+            "id": "mojibake_degree_marker_equivalence",
+            "allowed": "Hydrogen was pre-chilled between -33oC and -40 C.",
+            "answer": "The test range was -33��C to -40��C.",
+            "language": "en",
+            "must_keep": ["-33��C", "-40��C"],
+            "must_remove": [],
+            "notice_expected": False,
+        },
+        {
             "id": "time_unit_equivalence",
             "allowed": "Responders arrived within 10 min.",
             "answer": "Responders arrived within 10 minutes.",
@@ -127,7 +136,7 @@ def run(saga_repo: Path) -> dict[str, Any]:
         "aggregate": {
             "case_count": len(rows),
             "pass_count": sum(row["passed"] for row in rows),
-            "equivalent_grounded_case_count": 4,
+            "equivalent_grounded_case_count": 5,
             "unsupported_rejection_case_count": 1,
         },
         "cases": rows,
