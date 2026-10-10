@@ -80,6 +80,28 @@ def _tank_volume_from_nominal_capacity(capacity_kg: float) -> float:
     return 0.122 * capacity_kg / 4.7
 
 
+def _effective_volume_multiplier_for_geometry_basis(
+    tank_fit: dict[str, float], geometry_basis: str
+) -> float:
+    """Return the volume multiplier without applying geometry twice.
+
+    ``capacity_eos`` derives the gas volume directly from the declared
+    capacity and the tabulated reference density.  The historical fitted
+    multiplier belongs to the legacy 0.122 m³/4.7 kg surrogate and must not be
+    silently applied to the EOS-derived volume.  Keeping this decision in one
+    small pure helper makes the provenance testable and keeps the validation
+    runner from changing the production scenario defaults.
+    """
+
+    if geometry_basis not in {"capacity_scaled", "capacity_eos"}:
+        raise ValueError(
+            "geometry_basis must be 'capacity_scaled' or 'capacity_eos'"
+        )
+    if geometry_basis == "capacity_eos":
+        return 1.0
+    return float(tank_fit["effective_volume_multiplier"])
+
+
 def equivalent_capsule_geometry(
     volume_m3: float,
     cylindrical_length_to_diameter: float,
@@ -197,6 +219,17 @@ def run_case(
     model_target_pressure_mpa = float(
         summary.get("target_vehicle_pressure_mpa") or exp_pressure[-1]
     )
+    # ``capacity_eos`` already derives the physical gas volume from the
+    # declared capacity and the reference EOS state.  Applying the fitted
+    # effective-volume multiplier on top of that would count the geometry
+    # correction twice and makes the validation label misleading.  Keep the
+    # frozen volume fit for the historical capacity-scaled surrogate; the
+    # capacity-EOS path uses one.  Any alternative multiplier must be made a
+    # separately named validation variant; it must not be smuggled in through
+    # the historical fit dictionary.
+    effective_volume_multiplier = _effective_volume_multiplier_for_geometry_basis(
+        tank_fit, geometry_basis
+    )
     config = ReferenceScenario(
         duration_s=float(exp_time[-1]),
         control_period_s=dt,
@@ -215,7 +248,7 @@ def run_case(
         ),
         vehicle_capacity_kg=(tank_capacity if geometry_basis == "capacity_eos" else None),
         vehicle_2_capacity_kg=(tank_capacity if geometry_basis == "capacity_eos" else None),
-        vehicle_effective_volume_multiplier=float(tank_fit["effective_volume_multiplier"]),
+        vehicle_effective_volume_multiplier=effective_volume_multiplier,
         vehicle_gas_liner_ua_multiplier=float(tank_fit["gas_liner_ua_multiplier"]),
         vehicle_tank_thermal_model=vehicle_tank_thermal_model,
         vehicle_internal_diameter_m=vehicle_internal_diameter_m,
@@ -346,7 +379,7 @@ def run_case(
         "nominal_working_pressure_mpa": nominal_pressure_mpa,
         "tank_volume_assumed_m3": tank_volume,
         "geometry_basis": geometry_basis,
-        "effective_volume_multiplier": float(tank_fit["effective_volume_multiplier"]),
+        "effective_volume_multiplier": effective_volume_multiplier,
         "gas_liner_ua_multiplier": float(tank_fit["gas_liner_ua_multiplier"]),
         "vehicle_tank_thermal_model": vehicle_tank_thermal_model,
         "vehicle_internal_diameter_m": vehicle_internal_diameter_m,
