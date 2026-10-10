@@ -2591,6 +2591,32 @@ def _direct_hazop_answer(result: dict[str, Any]) -> str:
     return "현재 스냅샷은 일부 HAZOP 기준과 연결되지 않아 상태를 완전한 정상으로 확정할 수 없습니다."
 
 
+def _should_call_direct_hazop(
+    frame: dict[str, Any], active_rows: list[dict[str, Any]], question: str,
+) -> bool:
+    """Gate the optional remote deterministic HAZOP call by operator need.
+
+    Normal status questions used to incur a remote timeout even though the
+    local snapshot already contains the status and signals. Keep the remote
+    cross-check for live/retained faults and explicit threshold or alarm
+    questions, while allowing routine Q&A to return immediately.
+    """
+
+    hazop = frame.get("hazop") or {}
+    if active_rows or hazop.get("releases") or frame.get("active_faults"):
+        return True
+    if frame.get("relief_valves_open"):
+        return True
+    analysis_status = str((frame.get("analysis") or {}).get("status") or "NORMAL").upper()
+    if analysis_status != "NORMAL":
+        return True
+    return bool(re.search(
+        r"(?:hazop|경보|알람|임계|기준값|판정|트립|차단|누출|화재|과압|안전밸브)",
+        str(question or ""),
+        re.IGNORECASE,
+    ))
+
+
 # Natural-language control is deliberately a proposal layer.  It translates
 # an explicit operator imperative into the same reviewed virtual actions used
 # by the safety console, but never writes to the runtime by itself.  This keeps
@@ -3211,9 +3237,11 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         # alarms. Consequences are calculated first from this same snapshot;
         # an unavailable SAGA process falls back to local deterministic data,
         # never to the slower generative chat endpoint.
-        direct_result = await asyncio.to_thread(
-            _invoke_saga_hazop_direct, frame, catalog, str(job_id), request.question, impact_results
-        )
+        direct_result = None
+        if _should_call_direct_hazop(frame, active, request.question):
+            direct_result = await asyncio.to_thread(
+                _invoke_saga_hazop_direct, frame, catalog, str(job_id), request.question, impact_results
+            )
         direct_result = _align_direct_evaluation(direct_result, active, alert_status)
         virtual_action_proposals = _requested_virtual_actions(
             request.question, language=request.language
@@ -4164,10 +4192,15 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         # rules and staged plans are already returned by the sensor detail API.
         focused_frame = {**frame, "hazop": {**(frame.get("hazop") or {}),
                          "signals": payload["related_signals"]}}
-        direct_result = await asyncio.to_thread(
-            _invoke_saga_hazop_direct, focused_frame, catalog, str(job_id),
-            request.question or f"{sensor_id} 현재 상태", impact_results,
-        )
+        direct_result = None
+        if _should_call_direct_hazop(
+            focused_frame, active_rules + related_rules,
+            request.question or f"{sensor_id} 현재 상태",
+        ):
+            direct_result = await asyncio.to_thread(
+                _invoke_saga_hazop_direct, focused_frame, catalog, str(job_id),
+                request.question or f"{sensor_id} 현재 상태", impact_results,
+            )
         direct_result = _align_direct_evaluation(
             direct_result, active_rules + related_rules,
             "WARNING" if current_triggers else "NORMAL",

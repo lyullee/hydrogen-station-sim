@@ -1360,3 +1360,19 @@ Status: implemented; evidence and grounding regressions passed.
 Verification:
 
 - Local evidence, validation API and LLM grounding suites: 31 passed.
+
+## 2026-10-10 - Skip remote HAZOP cross-checks for routine status questions
+
+Status: implemented; direct-QA and sensor-workbench regressions passed.
+
+- Normal status questions no longer wait for the optional SAGA deterministic
+  HAZOP endpoint. The local snapshot answers routine status immediately.
+- Remote HAZOP cross-checks remain enabled for active/retained faults, releases,
+  relief-valve openings, non-normal analysis states and explicit alarm,
+  threshold, leak, fire or isolation questions.
+- Emergency impact calculation and the separate one-pass LLM assistant route
+  are unchanged, so this optimization does not suppress consequence analysis.
+
+Verification:
+
+- Direct-QA, SAGA-chat and sensor-workbench suites: 50 passed.

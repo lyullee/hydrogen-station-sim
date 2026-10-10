@@ -450,7 +450,9 @@ def test_idle_zero_flow_does_not_become_a_false_alarm_from_saga(monkeypatch):
                                  json={"question": "현재 상태는?"}).json()
         assert result["risk_assessment"]["status"] == "NORMAL"
         assert result["hazop_hit_count"] == 0
-        assert result["hazop_direct"]["status"] == "NORMAL"
+        # Routine normal-status questions no longer incur a remote HAZOP
+        # cross-check; the local snapshot is authoritative for this path.
+        assert result["hazop_direct"] is None
         assert result["hazop_sop"] == {}
         assert result["show_impact_results"] is False
     finally:
