@@ -40,6 +40,33 @@ def test_add_and_remove_live_leak_changes_process():
             client.post(f"/api/simulations/{job_id}/stop")
 
 
+def test_bank_leak_consumes_inventory_and_reduces_bank_pressure():
+    """A sustained bank leak cannot be represented as a release-only flag."""
+    with TestClient(app) as client:
+        job_id = client.post("/api/simulations", json={"continuous": True,
+            "duration_s": 4.0, "control_period_s": .2}).json()["id"]
+        try:
+            frames = _wait_for(client, job_id, lambda rows: len(rows) >= 2)
+            baseline = frames[-1]["bank_pressure_mpa"]["high"]
+            response = client.post(f"/api/simulations/{job_id}/faults", json={
+                "event_id": "pressure-decay-leak", "kind": "hydrogen-leak",
+                "target": "cascade.high", "start_time_s": 0,
+                "leak_diameter_mm": 1.0,
+            })
+            assert response.status_code == 202, response.text
+            frames = _wait_for(client, job_id, lambda rows: any(
+                "hydrogen-leak:cascade.high" in frame["active_faults"]
+                and frame["bank_pressure_mpa"]["high"] < baseline - 1e-6
+                for frame in rows
+            ))
+            active = [frame for frame in frames
+                      if "hydrogen-leak:cascade.high" in frame["active_faults"]]
+            assert active
+            assert active[-1]["bank_mass_kg"]["high"] < frames[0]["bank_mass_kg"]["high"]
+        finally:
+            client.post(f"/api/simulations/{job_id}/stop")
+
+
 def test_live_flow_limited_leak_preserves_boundary_and_caps_flow():
     with TestClient(app) as client:
         job_id = client.post("/api/simulations", json={"continuous": True,
