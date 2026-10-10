@@ -57,6 +57,9 @@ multi-year study (DOI `10.1016/j.ijhydene.2023.04.084`). It reports roughly
 exist, but the public article exposes aggregate KPIs rather than a reusable,
 synchronized vehicle-side logger archive. It is now an explicit custodian
 route in the request package; it does not close the full-loop gate.
+The same lead is now carried into the LLM candidate-lead manifest with an
+explicit `CONTACT_REQUEST_CANDIDATE_ONLY` status, so operator answers can cite
+the lead without presenting aggregate KPIs as raw validation.
 
 ## Geometry evidence boundary synchronized with LLM grounding
 

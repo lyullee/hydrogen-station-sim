@@ -11,6 +11,7 @@
       "Kuroki et al. 2023 Energy Technology article and Wiley data-availability statement",
       "UCI Gen IV HRS performance article and data-access notes",
       "Cal State LA back-to-back fueling article and data-access notes",
+      "Cal State LA multi-year HRFF performance article and data-access notes",
       "NIST Transient Flow Facility public technical page",
       "NBSDC public dataset landing record for station and fuel-cell-vehicle operational datasets",
       "official NBSDC detail page for the 35/70 MPa fixed hydrogenation-station demonstration dataset; entity-file listing and access-control check"
@@ -22,6 +23,7 @@
       "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf",
       "https://doi.org/10.1016/j.ijhydene.2020.08.251",
       "https://doi.org/10.1016/j.jclepro.2021.129737",
+      "https://doi.org/10.1016/j.ijhydene.2023.04.084",
       "https://www.nist.gov/programs-projects/transient-flow-facility",
       "https://xiaopeiwang.com/en/result/r-057159df",
       "https://www.nbsdc.cn/general/dataDetail?id=64f08267bb16e06dfdc78c57&type=1",
@@ -190,6 +192,25 @@
       "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
       "next_action": "Request three privacy-safe common-clock station-to-vehicle events and a frozen channel-role/unit attestation before any scoring.",
       "claim_boundary": "The study supplies high-value real-operation context and potential data provenance, but aggregate article results cannot validate the digital twin or emergency response."
+    },
+    {
+      "id": "calstate_la_multiyear_hrff_performance_2024",
+      "title": "Multi-year energy performance data for an electrolysis-based hydrogen refueling station",
+      "persistent_identifier": "10.1016/j.ijhydene.2023.04.084",
+      "article_url": "https://doi.org/10.1016/j.ijhydene.2023.04.084",
+      "reported_measurements": [
+        "4,500 reported refueling events",
+        "dispensed hydrogen and storage totals",
+        "compressor, precooler and station energy KPIs",
+        "station historian and fueling-report channels"
+      ],
+      "raw_data_status": "article_reports_aggregate_multi_year_kpis; downloadable_synchronized_vehicle_side_logger_not_located",
+      "channel_dictionary_status": "article_describes_sql_databases_and_report_roles; reusable_channel_dictionary_not_public",
+      "license_status": "article_is_open_access; raw_logger_reuse_terms_require_custodian_confirmation",
+      "full_loop_external_holdout_eligible": false,
+      "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
+      "next_action": "Request a de-identified 2016-2020 event/historian export, channel dictionary, calibration metadata and independent-scoring permission; freeze model and split before opening numerical rows.",
+      "claim_boundary": "The article is a high-value provenance and operating-envelope lead, but its public aggregate tables do not constitute a synchronized station-to-vehicle holdout or safety validation."
     },
     {
       "id": "nbsdc_hydrogen_refuelling_station_operational_dataset_2023",

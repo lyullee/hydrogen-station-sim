@@ -1348,6 +1348,12 @@ def test_full_loop_candidate_leads_are_grounded_without_being_admitted():
         item["id"]: item
         for item in projected["public_full_loop_candidate_leads"]["candidates"]
     }
+    assert projected_by_id["calstate_la_multiyear_hrff_performance_2024"][
+        "admission_status"
+    ] == "CONTACT_REQUEST_CANDIDATE_ONLY"
+    assert projected_by_id["calstate_la_multiyear_hrff_performance_2024"][
+        "full_loop_external_holdout_eligible"
+    ] is False
     assert projected_by_id["dlr_rail_h2_refueling_measurement_2025"][
         "admission_status"
     ] == "CONTACT_REQUEST_CANDIDATE_ONLY"
