@@ -1,0 +1,328 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-11",
+  "status": "POST_OUTCOME_DIAGNOSTIC_ONLY",
+  "purpose": "Diameter/regime sensitivity screen for PRESLHY Part-B. No coefficient is promoted and frozen primary result is unchanged.",
+  "protocol": "research/preslhy_partb_holdout_protocol.json",
+  "outcome_dependency": "Numerical outcomes were already accessed before this diagnostic; do not use for validation claims or case-specific fitting.",
+  "discharge_coefficient_grid": [
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    1.0
+  ],
+  "rows": [
+    {
+      "case_id": "20200520-143038_290K-2mm-5bar_W01-Final",
+      "nozzle_diameter_mm": 2.0,
+      "initial_pressure_bar_abs": 6.012978,
+      "discharge_coefficient": 0.5,
+      "pressure_nrmse_percent": 4.370415757992642,
+      "experimental_half_time_s": 63.27959542743536,
+      "predicted_half_time_s": 73.78449987617304,
+      "half_time_error_percent": 16.600776881995046
+    },
+    {
+      "case_id": "20200520-143038_290K-2mm-5bar_W01-Final",
+      "nozzle_diameter_mm": 2.0,
+      "initial_pressure_bar_abs": 6.012978,
+      "discharge_coefficient": 0.6,
+      "pressure_nrmse_percent": 0.9659945829046396,
+      "experimental_half_time_s": 63.27959542743536,
+      "predicted_half_time_s": 61.48709047408701,
+      "half_time_error_percent": 2.8326744841532197
+    },
+    {
+      "case_id": "20200520-143038_290K-2mm-5bar_W01-Final",
+      "nozzle_diameter_mm": 2.0,
+      "initial_pressure_bar_abs": 6.012978,
+      "discharge_coefficient": 0.7,
+      "pressure_nrmse_percent": 4.928058957380635,
+      "experimental_half_time_s": 63.27959542743536,
+      "predicted_half_time_s": 52.70323579261676,
+      "half_time_error_percent": 16.71369667169702
+    },
+    {
+      "case_id": "20200520-143038_290K-2mm-5bar_W01-Final",
+      "nozzle_diameter_mm": 2.0,
+      "initial_pressure_bar_abs": 6.012978,
+      "discharge_coefficient": 0.8,
+      "pressure_nrmse_percent": 8.151699585485444,
+      "experimental_half_time_s": 63.27959542743536,
+      "predicted_half_time_s": 46.11534253783431,
+      "half_time_error_percent": 27.124466858015587
+    },
+    {
+      "case_id": "20200520-143038_290K-2mm-5bar_W01-Final",
+      "nozzle_diameter_mm": 2.0,
+      "initial_pressure_bar_abs": 6.012978,
+      "discharge_coefficient": 0.9,
+      "pressure_nrmse_percent": 10.768314377468625,
+      "experimental_half_time_s": 63.27959542743536,
+      "predicted_half_time_s": 40.99142023343865,
+      "half_time_error_percent": 35.221740978978346
+    },
+    {
+      "case_id": "20200520-143038_290K-2mm-5bar_W01-Final",
+      "nozzle_diameter_mm": 2.0,
+      "initial_pressure_bar_abs": 6.012978,
+      "discharge_coefficient": 1.0,
+      "pressure_nrmse_percent": 12.930044942579485,
+      "experimental_half_time_s": 63.27959542743536,
+      "predicted_half_time_s": 36.8922873413875,
+      "half_time_error_percent": 41.69955245100609
+    },
+    {
+      "case_id": "20200520-144544_290K-2mm-3bar2_W02-Final",
+      "nozzle_diameter_mm": 2.0,
+      "initial_pressure_bar_abs": 4.163456,
+      "discharge_coefficient": 0.5,
+      "pressure_nrmse_percent": 4.029181163406016,
+      "experimental_half_time_s": 55.88964612326045,
+      "predicted_half_time_s": 65.1645450302733,
+      "half_time_error_percent": 16.595021708596537
+    },
+    {
+      "case_id": "20200520-144544_290K-2mm-3bar2_W02-Final",
+      "nozzle_diameter_mm": 2.0,
+      "initial_pressure_bar_abs": 4.163456,
+      "discharge_coefficient": 0.6,
+      "pressure_nrmse_percent": 1.1818237776960145,
+      "experimental_half_time_s": 55.88964612326045,
+      "predicted_half_time_s": 54.30380917411114,
+      "half_time_error_percent": 2.83744317445107
+    },
+    {
+      "case_id": "20200520-144544_290K-2mm-3bar2_W02-Final",
+      "nozzle_diameter_mm": 2.0,
+      "initial_pressure_bar_abs": 4.163456,
+      "discharge_coefficient": 0.7,
+      "pressure_nrmse_percent": 5.34818225608513,
+      "experimental_half_time_s": 55.88964612326045,
+      "predicted_half_time_s": 46.54611638508731,
+      "half_time_error_percent": 16.717818748693954
+    },
+    {
+      "case_id": "20200520-144544_290K-2mm-3bar2_W02-Final",
+      "nozzle_diameter_mm": 2.0,
+      "initial_pressure_bar_abs": 4.163456,
+      "discharge_coefficient": 0.8,
+      "pressure_nrmse_percent": 9.026482456107862,
+      "experimental_half_time_s": 55.88964612326045,
+      "predicted_half_time_s": 40.72786695025514,
+      "half_time_error_percent": 27.12806436377703
+    },
+    {
+      "case_id": "20200520-144544_290K-2mm-3bar2_W02-Final",
+      "nozzle_diameter_mm": 2.0,
+      "initial_pressure_bar_abs": 4.163456,
+      "discharge_coefficient": 0.9,
+      "pressure_nrmse_percent": 12.145168845486324,
+      "experimental_half_time_s": 55.88964612326045,
+      "predicted_half_time_s": 36.20256219810139,
+      "half_time_error_percent": 35.22492141342363
+    },
+    {
+      "case_id": "20200520-144544_290K-2mm-3bar2_W02-Final",
+      "nozzle_diameter_mm": 2.0,
+      "initial_pressure_bar_abs": 4.163456,
+      "discharge_coefficient": 1.0,
+      "pressure_nrmse_percent": 14.744844163877948,
+      "experimental_half_time_s": 55.88964612326045,
+      "predicted_half_time_s": 32.58230976854016,
+      "half_time_error_percent": 41.70242249041565
+    },
+    {
+      "case_id": "20200520-145506_290K-4mm-5bar_W03-Final",
+      "nozzle_diameter_mm": 4.0,
+      "initial_pressure_bar_abs": 5.990312,
+      "discharge_coefficient": 0.5,
+      "pressure_nrmse_percent": 7.410942547999901,
+      "experimental_half_time_s": 13.63819302465424,
+      "predicted_half_time_s": 18.361284261779062,
+      "half_time_error_percent": 34.63135643106622
+    },
+    {
+      "case_id": "20200520-145506_290K-4mm-5bar_W03-Final",
+      "nozzle_diameter_mm": 4.0,
+      "initial_pressure_bar_abs": 5.990312,
+      "discharge_coefficient": 0.6,
+      "pressure_nrmse_percent": 6.50159110881605,
+      "experimental_half_time_s": 13.63819302465424,
+      "predicted_half_time_s": 15.301075840882643,
+      "half_time_error_percent": 12.192838253736035
+    },
+    {
+      "case_id": "20200520-145506_290K-4mm-5bar_W03-Final",
+      "nozzle_diameter_mm": 4.0,
+      "initial_pressure_bar_abs": 5.990312,
+      "discharge_coefficient": 0.7,
+      "pressure_nrmse_percent": 6.760276046972022,
+      "experimental_half_time_s": 13.63819302465424,
+      "predicted_half_time_s": 13.115200566953124,
+      "half_time_error_percent": 3.8347635698929072
+    },
+    {
+      "case_id": "20200520-145506_290K-4mm-5bar_W03-Final",
+      "nozzle_diameter_mm": 4.0,
+      "initial_pressure_bar_abs": 5.990312,
+      "discharge_coefficient": 0.8,
+      "pressure_nrmse_percent": 7.594578239141948,
+      "experimental_half_time_s": 13.63819302465424,
+      "predicted_half_time_s": 11.47584154683386,
+      "half_time_error_percent": 15.855117125204352
+    },
+    {
+      "case_id": "20200520-145506_290K-4mm-5bar_W03-Final",
+      "nozzle_diameter_mm": 4.0,
+      "initial_pressure_bar_abs": 5.990312,
+      "discharge_coefficient": 0.9,
+      "pressure_nrmse_percent": 8.606762575406076,
+      "experimental_half_time_s": 13.63819302465424,
+      "predicted_half_time_s": 10.200729364446495,
+      "half_time_error_percent": 25.20468550337806
+    },
+    {
+      "case_id": "20200520-145506_290K-4mm-5bar_W03-Final",
+      "nozzle_diameter_mm": 4.0,
+      "initial_pressure_bar_abs": 5.990312,
+      "discharge_coefficient": 1.0,
+      "pressure_nrmse_percent": 9.61443357218382,
+      "experimental_half_time_s": 13.63819302465424,
+      "predicted_half_time_s": 9.18070666460285,
+      "half_time_error_percent": 32.68384860071591
+    },
+    {
+      "case_id": "20200520-150010_290K-4mm-3bar2_W04-Final",
+      "nozzle_diameter_mm": 4.0,
+      "initial_pressure_bar_abs": 4.246606,
+      "discharge_coefficient": 0.5,
+      "pressure_nrmse_percent": 8.11606846634248,
+      "experimental_half_time_s": 12.154268784998049,
+      "predicted_half_time_s": 16.37357218455384,
+      "half_time_error_percent": 34.7145803190041
+    },
+    {
+      "case_id": "20200520-150010_290K-4mm-3bar2_W04-Final",
+      "nozzle_diameter_mm": 4.0,
+      "initial_pressure_bar_abs": 4.246606,
+      "discharge_coefficient": 0.6,
+      "pressure_nrmse_percent": 7.549905307131276,
+      "experimental_half_time_s": 12.154268784998049,
+      "predicted_half_time_s": 13.644640852796439,
+      "half_time_error_percent": 12.262128591708851
+    },
+    {
+      "case_id": "20200520-150010_290K-4mm-3bar2_W04-Final",
+      "nozzle_diameter_mm": 4.0,
+      "initial_pressure_bar_abs": 4.246606,
+      "discharge_coefficient": 0.7,
+      "pressure_nrmse_percent": 7.922065035975827,
+      "experimental_half_time_s": 12.154268784998049,
+      "predicted_half_time_s": 11.695432403202009,
+      "half_time_error_percent": 3.7751047793379335
+    },
+    {
+      "case_id": "20200520-150010_290K-4mm-3bar2_W04-Final",
+      "nozzle_diameter_mm": 4.0,
+      "initial_pressure_bar_abs": 4.246606,
+      "discharge_coefficient": 0.8,
+      "pressure_nrmse_percent": 8.74152798122952,
+      "experimental_half_time_s": 12.154268784998049,
+      "predicted_half_time_s": 10.233504182250167,
+      "half_time_error_percent": 15.803209857582479
+    },
+    {
+      "case_id": "20200520-150010_290K-4mm-3bar2_W04-Final",
+      "nozzle_diameter_mm": 4.0,
+      "initial_pressure_bar_abs": 4.246606,
+      "discharge_coefficient": 0.9,
+      "pressure_nrmse_percent": 9.70599494263177,
+      "experimental_half_time_s": 12.154268784998049,
+      "predicted_half_time_s": 9.096476361899041,
+      "half_time_error_percent": 25.158176745878986
+    },
+    {
+      "case_id": "20200520-150010_290K-4mm-3bar2_W04-Final",
+      "nozzle_diameter_mm": 4.0,
+      "initial_pressure_bar_abs": 4.246606,
+      "discharge_coefficient": 1.0,
+      "pressure_nrmse_percent": 10.669470415764556,
+      "experimental_half_time_s": 12.154268784998049,
+      "predicted_half_time_s": 8.186866078511526,
+      "half_time_error_percent": 32.64205174879354
+    },
+    {
+      "case_id": "20200520-150332_290K-4mm-4bar8_W05-Final",
+      "nozzle_diameter_mm": 4.0,
+      "initial_pressure_bar_abs": 5.769725,
+      "discharge_coefficient": 0.5,
+      "pressure_nrmse_percent": 7.3774609355966385,
+      "experimental_half_time_s": 13.288817812817117,
+      "predicted_half_time_s": 18.09466523270306,
+      "half_time_error_percent": 36.164597088920026
+    },
+    {
+      "case_id": "20200520-150332_290K-4mm-4bar8_W05-Final",
+      "nozzle_diameter_mm": 4.0,
+      "initial_pressure_bar_abs": 5.769725,
+      "discharge_coefficient": 0.6,
+      "pressure_nrmse_percent": 6.234465601729306,
+      "experimental_half_time_s": 13.288817812817117,
+      "predicted_half_time_s": 15.07892683002314,
+      "half_time_error_percent": 13.470792078129442
+    },
+    {
+      "case_id": "20200520-150332_290K-4mm-4bar8_W05-Final",
+      "nozzle_diameter_mm": 4.0,
+      "initial_pressure_bar_abs": 5.769725,
+      "discharge_coefficient": 0.7,
+      "pressure_nrmse_percent": 6.540297325055497,
+      "experimental_half_time_s": 13.288817812817117,
+      "predicted_half_time_s": 12.924637915057897,
+      "half_time_error_percent": 2.7404988381131012
+    },
+    {
+      "case_id": "20200520-150332_290K-4mm-4bar8_W05-Final",
+      "nozzle_diameter_mm": 4.0,
+      "initial_pressure_bar_abs": 5.769725,
+      "discharge_coefficient": 0.8,
+      "pressure_nrmse_percent": 7.555528181836063,
+      "experimental_half_time_s": 13.288817812817117,
+      "predicted_half_time_s": 11.309145371509654,
+      "half_time_error_percent": 14.897280323898043
+    },
+    {
+      "case_id": "20200520-150332_290K-4mm-4bar8_W05-Final",
+      "nozzle_diameter_mm": 4.0,
+      "initial_pressure_bar_abs": 5.769725,
+      "discharge_coefficient": 0.9,
+      "pressure_nrmse_percent": 8.765444003921422,
+      "experimental_half_time_s": 13.288817812817117,
+      "predicted_half_time_s": 10.052348826710599,
+      "half_time_error_percent": 24.35482999085841
+    },
+    {
+      "case_id": "20200520-150332_290K-4mm-4bar8_W05-Final",
+      "nozzle_diameter_mm": 4.0,
+      "initial_pressure_bar_abs": 5.769725,
+      "discharge_coefficient": 1.0,
+      "pressure_nrmse_percent": 9.952148427217114,
+      "experimental_half_time_s": 13.288817812817117,
+      "predicted_half_time_s": 9.047067472111726,
+      "half_time_error_percent": 31.919696698785394
+    }
+  ],
+  "interpretation": {
+    "finding": "The 2 mm cases require a materially lower effective flow coefficient than the 4 mm cases to reduce half-time error, indicating unresolved nozzle/manifold/discharge-regime physics rather than a global wall-heat-transfer deficiency.",
+    "required_new_measurements": [
+      "effective aperture and edge geometry",
+      "upstream pressure and temperature at the restriction",
+      "downstream pressure and line/manifold dimensions",
+      "release-regime or calibrated flow coefficient measured on an untouched campaign"
+    ],
+    "claim_boundary": "No impact on research/preslhy_partb_ambient_validation.json; primary joint pass fraction remains 3/5 (0.6)."
+  }
+}
